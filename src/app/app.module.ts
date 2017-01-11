@@ -7,6 +7,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppComponent } from './components/app.component';
 import { TermedService } from './services/termed.service';
 import { NavigationBarComponent } from './components/navigation-bar.component';
+import { TermedHttp } from './services/termed-http.service';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,7 @@ import { NavigationBarComponent } from './components/navigation-bar.component';
     HttpModule,
     NgbModule.forRoot()
   ],
-  providers: [TermedService],
+  providers: [TermedHttp, TermedService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
