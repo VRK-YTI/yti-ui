@@ -1,8 +1,0 @@
-<ul>
-  <li *ngFor="let graph of graphs | async">
-    <span *ngFor="let localization of graph.properties.prefLabel; let last = last">
-      {{localization.lang}}: {{localization.value}}
-      <span *ngIf="!last">,</span>
-    </span>
-  </li>
-</ul>

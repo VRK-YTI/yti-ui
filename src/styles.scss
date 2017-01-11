@@ -1,3 +1,12 @@
 @import './variables';
 @import '~bootstrap/scss/bootstrap';
 @import './vendor/bootswatch';
+
+body {
+  padding-top: 80px;
+}
+
+.container {
+  margin-left: 0;
+  margin-right: 0;
+}

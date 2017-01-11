@@ -5,8 +5,35 @@ import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  template: `
+    <navigation-bar></navigation-bar>
+
+    <div class="container">
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="page-header">
+            <h1>Sanastot</h1>
+          </div>        
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <ul>
+            <li *ngFor="let graph of graphs | async">
+              <span *ngFor="let localization of graph.properties.prefLabel; let last = last">
+                {{localization.lang}}: {{localization.value}}
+                <span *ngIf="!last">,</span>
+              </span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+    </div>
+  `
 })
 export class AppComponent {
 
@@ -16,4 +43,3 @@ export class AppComponent {
     this.graphs = termedService.getGraphs();
   }
 }
-

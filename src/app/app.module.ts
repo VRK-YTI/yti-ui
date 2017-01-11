@@ -6,10 +6,12 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppComponent } from './components/app.component';
 import { TermedService } from './services/termed.service';
+import { NavigationBarComponent } from './components/navigation-bar.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    NavigationBarComponent
   ],
   imports: [
     BrowserModule,
