@@ -4,12 +4,13 @@
   "license": "EUPL-1.1",
   "angular-cli": {},
   "scripts": {
-    "ng": "ng",
-    "start": "ng serve --proxy-config proxy.conf.json",
-    "lint": "tslint \"src/**/*.ts\"",
-    "test": "ng test",
+    "ng": "node -- node_modules/angular-cli/bin/ng",
+    "start": "node -- node_modules/angular-cli/bin/ng serve --proxy-config proxy.conf.json",
+    "build": "node -- node_modules/angular-cli/bin/ng build",
+    "lint": "node -- node_modules/tslint/bin/tslint \"src/**/*.ts\"",
+    "test": "node -- node_modules/angular-cli/bin/ng test",
     "pree2e": "webdriver-manager update --standalone false --gecko false",
-    "e2e": "protractor",
+    "e2e": "node -- node_modules/protractor/bin/protractor",
     "create-translations": "node -- node_modules/@biesbjerg/ng2-translate-extract/bin/extract.js ./src/app --output ./po --format=pot --clean"
   },
   "private": true,
