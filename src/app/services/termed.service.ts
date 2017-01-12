@@ -1,4 +1,3 @@
-import '../rxjs-operators';
 import { Injectable } from '@angular/core';
 import { Graph } from '../entities/graph';
 import { Observable } from 'rxjs';
