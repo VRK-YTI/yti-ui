@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TermedService } from '../services/termed.service';
 import { Graph } from '../entities/graph';
 import { Observable } from 'rxjs';
@@ -33,11 +33,14 @@ import { Observable } from 'rxjs';
     </div>
   `
 })
-export class VocabulariesComponent {
+export class VocabulariesComponent implements OnInit {
 
   graphs: Observable<Graph[]>;
 
   constructor(private termedService: TermedService) {
-    this.graphs = termedService.getGraphs();
+  }
+
+  ngOnInit() {
+    this.graphs = this.termedService.getGraphs();
   }
 }
