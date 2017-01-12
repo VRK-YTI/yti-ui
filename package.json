@@ -9,7 +9,8 @@
     "lint": "tslint \"src/**/*.ts\"",
     "test": "ng test",
     "pree2e": "webdriver-manager update --standalone false --gecko false",
-    "e2e": "protractor"
+    "e2e": "protractor",
+    "create-translations": "node -- node_modules/@biesbjerg/ng2-translate-extract/bin/extract.js ./src/app --output ./po --format=pot --clean"
   },
   "private": true,
   "dependencies": {
@@ -24,12 +25,14 @@
     "@ng-bootstrap/ng-bootstrap": "^1.0.0-alpha.18",
     "bootstrap": "^4.0.0-alpha.6",
     "core-js": "2.4.1",
+    "ng2-translate": "^5.0.0",
     "rxjs": "5.0.1",
     "ts-helpers": "1.1.1",
     "zone.js": "0.7.2"
   },
   "devDependencies": {
     "@angular/compiler-cli": "2.3.1",
+    "@biesbjerg/ng2-translate-extract": "0.3.5",
     "@types/jasmine": "2.5.38",
     "@types/node": "6.0.42",
     "angular-cli": "1.0.0-beta.24",
@@ -41,6 +44,8 @@
     "karma-cli": "1.0.1",
     "karma-jasmine": "1.0.2",
     "karma-remap-istanbul": "0.2.1",
+    "po-loader": "0.3.1",
+    "po2json": "0.4.5",
     "protractor": "4.0.13",
     "ts-node": "1.7.0",
     "tslint": "4.0.2",

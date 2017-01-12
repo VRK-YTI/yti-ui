@@ -12,7 +12,7 @@ import { Observable } from 'rxjs';
       <div class="row">
         <div class="col-md-12">
           <div class="page-header">
-            <h1>Sanastot</h1>
+            <h1 translate>Vocabularies</h1>
           </div>        
         </div>
       </div>
