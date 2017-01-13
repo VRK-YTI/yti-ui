@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TermedService } from '../services/termed.service';
-import { Graph } from '../entities/graph';
 import { Observable } from 'rxjs';
+import { ConceptScheme } from '../entities/conceptScheme';
 
 @Component({
   selector: 'app-root',
@@ -20,10 +20,9 @@ import { Observable } from 'rxjs';
       <div class="row">
         <div class="col-md-12">
           <ul>
-            <li *ngFor="let graph of graphs | async">
-              <span *ngFor="let localization of graph.properties.prefLabel; let last = last">
-                {{localization.lang}}: {{localization.value}}
-                <span *ngIf="!last">,</span>
+            <li *ngFor="let conceptScheme of conceptSchemes | async">
+              <span *ngFor="let localization of conceptScheme.properties.prefLabel; let last = last">
+                {{localization.lang}}: {{localization.value}}<span *ngIf="!last">,</span>
               </span>
             </li>
           </ul>
@@ -35,12 +34,12 @@ import { Observable } from 'rxjs';
 })
 export class VocabulariesComponent implements OnInit {
 
-  graphs: Observable<Graph[]>;
+  conceptSchemes: Observable<ConceptScheme[]>;
 
   constructor(private termedService: TermedService) {
   }
 
   ngOnInit() {
-    this.graphs = this.termedService.getGraphs();
+    this.conceptSchemes = this.termedService.getConceptSchemes();
   }
 }
