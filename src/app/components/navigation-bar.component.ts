@@ -7,7 +7,7 @@ import { LanguageService, Language } from '../services/language.service';
   template: `
     <nav class="navbar navbar-toggleable-md fixed-top navbar-inverse bg-primary">
 
-      <a class="navbar-brand" href="/"><span>IOW-TERMED</span></a>
+      <a class="navbar-brand" [routerLink]="['/']"><span>IOW-TERMED</span></a>
     
       <div class="collapse navbar-collapse">
         <ul class="navbar-nav ml-auto">
