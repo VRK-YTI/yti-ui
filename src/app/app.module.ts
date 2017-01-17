@@ -19,7 +19,7 @@ import { TranslateValuePipe } from './pipes/translate-value.pipe';
 import { LanguageService } from './services/language.service';
 import { ConceptsComponent } from './components/concepts.component';
 
-const localizations = {
+const localizations: { [lang: string]: string} = {
   fi: require('json!po?format=mf!../../po/fi.po'),
   en: require('json!po?format=mf!../../po/en.po')
 };
@@ -29,7 +29,7 @@ export function createTranslateLoader(): TranslateLoader {
 }
 
 export function createMissingTranslationHandler(): MissingTranslationHandler {
-  return { handle: (params: MissingTranslationHandlerParams) => undefined }; // undefined means key will be used
+  return { handle: (_params: MissingTranslationHandlerParams) => undefined }; // undefined means key will be used
 }
 
 const appRoutes: Routes = [
