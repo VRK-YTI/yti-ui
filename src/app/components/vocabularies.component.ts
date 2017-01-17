@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { TermedService } from '../services/termed.service';
+import { TermedService, ConceptSchemeListItem } from '../services/termed.service';
 import { Observable } from 'rxjs';
-import { ConceptScheme } from '../entities/conceptScheme';
 
 @Component({
-  selector: 'app-root',
-  styleUrls: ['./app.component.scss'],
+  selector: 'vocabularies',
+  styleUrls: ['./vocabularies.component.scss'],
   template: `
     <div class="container">
 
@@ -21,9 +20,9 @@ import { ConceptScheme } from '../entities/conceptScheme';
         <div class="col-md-12">
           <ul>
             <li *ngFor="let conceptScheme of conceptSchemes | async">
-              <span *ngFor="let localization of conceptScheme.properties.prefLabel; let last = last">
-                {{localization.lang}}: {{localization.value}}<span *ngIf="!last">,</span>
-              </span>
+              <a [routerLink]="['/concepts', conceptScheme.graphId]">
+                {{conceptScheme.label | translateValue}}
+              </a>
             </li>
           </ul>
         </div>
@@ -34,12 +33,12 @@ import { ConceptScheme } from '../entities/conceptScheme';
 })
 export class VocabulariesComponent implements OnInit {
 
-  conceptSchemes: Observable<ConceptScheme[]>;
+  conceptSchemes: Observable<ConceptSchemeListItem[]>;
 
   constructor(private termedService: TermedService) {
   }
 
   ngOnInit() {
-    this.conceptSchemes = this.termedService.getConceptSchemes();
+    this.conceptSchemes = this.termedService.getConceptSchemeListItems();
   }
 }

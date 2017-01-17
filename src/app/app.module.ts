@@ -17,6 +17,7 @@ import {
 import { Observable } from 'rxjs';
 import { TranslateValuePipe } from './pipes/translate-value.pipe';
 import { LanguageService } from './services/language.service';
+import { ConceptsComponent } from './components/concepts.component';
 
 const localizations = {
   fi: require('json!po?format=mf!../../po/fi.po'),
@@ -32,7 +33,8 @@ export function createMissingTranslationHandler(): MissingTranslationHandler {
 }
 
 const appRoutes: Routes = [
-  { path: '**', component: VocabulariesComponent }
+  { path: '', component: VocabulariesComponent },
+  { path: 'concepts/:graphId', component: ConceptsComponent }
 ];
 
 @NgModule({
@@ -40,6 +42,7 @@ const appRoutes: Routes = [
     AppComponent,
     NavigationBarComponent,
     VocabulariesComponent,
+    ConceptsComponent,
     TranslateValuePipe
   ],
   imports: [
