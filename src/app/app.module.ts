@@ -15,6 +15,7 @@ import {
   MissingTranslationHandlerParams
 } from 'ng2-translate';
 import { Observable } from 'rxjs';
+import { LanguageService } from './services/language.service';
 
 const localizations = {
   fi: require('json!po?format=mf!../../po/fi.po'),
@@ -50,7 +51,8 @@ const appRoutes: Routes = [
   providers: [
     TermedHttp,
     TermedService,
-    { provide: MissingTranslationHandler, useFactory: createMissingTranslationHandler }
+    { provide: MissingTranslationHandler, useFactory: createMissingTranslationHandler },
+    LanguageService
   ],
   bootstrap: [AppComponent]
 })

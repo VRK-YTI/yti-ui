@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TranslateService } from 'ng2-translate';
+import { LanguageService, Language } from '../services/language.service';
 
 @Component({
   selector: 'navigation-bar',
@@ -22,14 +22,14 @@ import { TranslateService } from 'ng2-translate';
 export class NavigationBarComponent {
 
   languages = [
-    { code: 'fi', name: 'Suomeksi' },
-    { code: 'en', name: 'In english' }
+    { code: 'fi' as Language, name: 'Suomeksi' },
+    { code: 'en' as Language, name: 'In english' }
   ];
 
-  constructor(private translate: TranslateService) {
+  constructor(private languageService: LanguageService) {
   }
 
-  setLanguage(lang: string) {
-    this.translate.use(lang);
+  setLanguage(language: Language) {
+    this.languageService.language = language;
   }
 }

@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { TranslateService } from 'ng2-translate';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -9,14 +8,5 @@ import { TranslateService } from 'ng2-translate';
     <router-outlet></router-outlet>
   `
 })
-export class AppComponent implements OnInit {
-
-  constructor(private translate: TranslateService) {
-  }
-
-  ngOnInit() {
-    this.translate.addLangs(['fi', 'en']);
-    this.translate.setDefaultLang('fi');
-    this.translate.use('fi');
-  }
+export class AppComponent {
 }
