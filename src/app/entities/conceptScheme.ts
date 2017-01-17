@@ -1,18 +1,17 @@
-import { Localization } from './localization';
+import { Node, Attribute } from './node';
+import { Identifier } from './identifier';
 
-export interface ConceptScheme {
-  createdBy: string;
-  createdDate: string;
-  id: string;
-  lastModifiedBy: string;
-  lastModifiedDate: string;
-  uri: string;
+export interface ConceptScheme extends Node<'ConceptScheme'> {
+
   properties: {
-    prefLabel: Localization[];
+    prefLabel: Attribute[];
   };
-  references: any[];
+
+  references: {
+    hasTopConcept: Identifier<'Concept'>[]
+  }
+
   referrers: {
-    inScheme: { id: string, type: { graph: { id: string }, id: 'Concept' } }[];
+    inScheme: Identifier<'Concept'>[]
   };
-  type: { graph: { id: string }, id: 'ConceptScheme' }
 }
