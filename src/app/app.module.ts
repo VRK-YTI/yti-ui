@@ -15,6 +15,7 @@ import {
   MissingTranslationHandlerParams
 } from 'ng2-translate';
 import { Observable } from 'rxjs';
+import { TranslateValuePipe } from './pipes/translate-value.pipe';
 import { LanguageService } from './services/language.service';
 
 const localizations = {
@@ -38,7 +39,8 @@ const appRoutes: Routes = [
   declarations: [
     AppComponent,
     NavigationBarComponent,
-    VocabulariesComponent
+    VocabulariesComponent,
+    TranslateValuePipe
   ],
   imports: [
     BrowserModule,
