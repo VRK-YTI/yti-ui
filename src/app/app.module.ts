@@ -29,7 +29,15 @@ export function createTranslateLoader(): TranslateLoader {
 }
 
 export function createMissingTranslationHandler(): MissingTranslationHandler {
-  return { handle: (_params: MissingTranslationHandlerParams) => undefined }; // undefined means key will be used
+  return {
+    handle: (params: MissingTranslationHandlerParams) => {
+      if (params.translateService.currentLang === 'en') {
+        return params.key;
+      } else {
+        return '[MISSING]: ' + params.key;
+      }
+    }
+  };
 }
 
 const appRoutes: Routes = [
