@@ -104,18 +104,18 @@ $pink:   #ff5b77 !default;
 $purple: #613d7c !default;
 
 // Create grayscale
-$gray-dark:                 #222;
-$gray:                      #333;
-$gray-light:                #888;
-$gray-lighter:              #ccc;
+//$gray-dark:                 #222;
+//$gray:                      #333;
+//$gray-light:                #888;
+//$gray-lighter:              #ccc;
 $gray-lightest:             #eee;
 
 // Reassign color vars to semantic color scheme
-$brand-primary:             #008cba;
-$brand-success:             #43ac6a;
-$brand-info:                #5bc0de;
-$brand-warning:             #E99002;
-$brand-danger:              #F04124;
+//$brand-primary:             #008cba;
+//$brand-success:             #43ac6a;
+//$brand-info:                #5bc0de;
+//$brand-warning:             #E99002;
+//$brand-danger:              #F04124;
 $brand-inverse:             $gray-dark !default;
 
 
@@ -612,7 +612,7 @@ $navbar-toggler-padding-y:           .25rem !default;
 $navbar-toggler-font-size:           $font-size-lg !default;
 $navbar-toggler-border-radius:       $btn-border-radius !default;
 
-$navbar-inverse-color:                 rgba(255,255,255,.7);
+//$navbar-inverse-color:                 rgba(255,255,255,.7);
 $navbar-inverse-hover-color:           rgba(255,255,255,1);
 $navbar-inverse-active-color:          rgba(255,255,255,1) !default;
 $navbar-inverse-disabled-color:        rgba(255,255,255,.25) !default;
@@ -908,7 +908,7 @@ $breadcrumb-padding-y:          .75rem !default;
 $breadcrumb-padding-x:          1rem !default;
 $breadcrumb-item-padding:       .5rem !default;
 
-$breadcrumb-bg:                 $gray-lightest;
+//$breadcrumb-bg:                 $gray-lightest;
 $breadcrumb-divider-color:      $gray-light !default;
 $breadcrumb-active-color:       $gray-light !default;
 $breadcrumb-divider:            "/" !default;
