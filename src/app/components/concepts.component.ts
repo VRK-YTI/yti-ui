@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Renderer, ViewChild, ElementRef } from '@angular/core';
 import { TermedService, ConceptListItem } from '../services/termed.service';
 import { ActivatedRoute } from '@angular/router';
 import { LocationService } from '../services/location.service';
@@ -21,7 +21,8 @@ import { LanguageService } from '../services/language.service';
       <div class="row">
           <div class="col-md-4">
             <div class="input-group input-group-lg">
-              <input (keydown)="onSearch($event.target.value)"
+              <input #searchInput
+                     (keydown)="onSearch($event.target.value)"
                      type="text" 
                      class="form-control" 
                      [placeholder]="'search...' | translate" />
@@ -47,13 +48,16 @@ import { LanguageService } from '../services/language.service';
     </div>
   `
 })
-export class ConceptsComponent implements OnInit {
+export class ConceptsComponent implements OnInit, AfterViewInit {
 
   loading = true;
   searchResults: Observable<ConceptListItem[]>;
   search$ = new BehaviorSubject('');
 
+  @ViewChild('searchInput') searchInput: ElementRef;
+
   constructor(private route: ActivatedRoute,
+              private renderer: Renderer,
               private termedService: TermedService,
               private locationService: LocationService,
               private languageService: LanguageService) {
@@ -84,5 +88,9 @@ export class ConceptsComponent implements OnInit {
       .subscribe(scheme => this.locationService.atConceptScheme(scheme));
 
     concepts.subscribe(() => this.loading = false);
+  }
+
+  ngAfterViewInit() {
+    this.renderer.invokeElementMethod(this.searchInput.nativeElement, 'focus');
   }
 }
