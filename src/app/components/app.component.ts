@@ -5,6 +5,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss'],
   template: `
     <navigation-bar></navigation-bar>
+    <breadcrumb></breadcrumb>
     <router-outlet></router-outlet>
   `
 })

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { TermedService, ConceptListItem } from '../services/termed.service';
 import { ActivatedRoute } from '@angular/router';
+import { LocationService } from '../services/location.service';
 
 @Component({
   selector: 'concepts',
@@ -35,10 +36,13 @@ export class ConceptsComponent implements OnInit {
 
   concepts: ConceptListItem[];
 
-  constructor(private route: ActivatedRoute, private termedService: TermedService) {
+  constructor(private route: ActivatedRoute, private termedService: TermedService, private locationService: LocationService) {
   }
 
   ngOnInit() {
+    this.route.params.switchMap(params => this.termedService.getConceptScheme(params['graphId']))
+      .subscribe(scheme => this.locationService.atConceptScheme(scheme));
+
     this.route.params.switchMap(params => this.termedService.getConceptListItems(params['graphId']))
       .subscribe(concepts => this.concepts = concepts);
   }

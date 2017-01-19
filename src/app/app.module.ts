@@ -18,6 +18,8 @@ import { Observable } from 'rxjs';
 import { TranslateValuePipe } from './pipes/translate-value.pipe';
 import { LanguageService } from './services/language.service';
 import { ConceptsComponent } from './components/concepts.component';
+import { BreadcrumbComponent } from './components/breadcrumb.component';
+import { LocationService } from './services/location.service';
 import { ConceptComponent } from './components/concept.component';
 import { AjaxLoadingIndicatorComponent } from './components/ajax-loading-indicator.component';
 
@@ -52,6 +54,7 @@ const appRoutes: Routes = [
   declarations: [
     AppComponent,
     NavigationBarComponent,
+    BreadcrumbComponent,
     VocabulariesComponent,
     ConceptsComponent,
     ConceptComponent,
@@ -70,7 +73,8 @@ const appRoutes: Routes = [
     TermedHttp,
     TermedService,
     { provide: MissingTranslationHandler, useFactory: createMissingTranslationHandler },
-    LanguageService
+    LanguageService,
+    LocationService
   ],
   bootstrap: [AppComponent]
 })

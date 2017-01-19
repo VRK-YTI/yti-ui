@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { TermedService, ConceptItem } from '../services/termed.service';
+import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { LocationService } from '../services/location.service';
 
 @Component({
   selector: 'concept',
@@ -52,11 +54,17 @@ export class ConceptComponent implements OnInit {
 
   concept: ConceptItem;
 
-  constructor(private route: ActivatedRoute, private termedService: TermedService) {
+  constructor(private route: ActivatedRoute, private termedService: TermedService, private locationService: LocationService) {
   }
 
   ngOnInit() {
-    this.route.params.switchMap(params => this.termedService.getConceptItem(params['graphId'], params['conceptId']))
-      .subscribe(concept => this.concept = concept);
+    const conceptScheme = this.route.params.switchMap(params => this.termedService.getConceptScheme(params['graphId']));
+    const concept = this.route.params.switchMap(params => this.termedService.getConceptItem(params['graphId'], params['conceptId']));
+
+    Observable.zip(conceptScheme, concept)
+      .subscribe(([conceptScheme, concept]) => {
+        this.locationService.atConcept(conceptScheme, concept);
+        this.concept = concept;
+      });
   }
 }
