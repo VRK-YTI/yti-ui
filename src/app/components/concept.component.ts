@@ -17,7 +17,7 @@ import { LocationService } from '../services/location.service';
           </div>        
         </div>
       </div>
-      <div class="row" *ngIf="concept">
+      <div class="row">
         <div class="col-md-12">
           <div *ngIf="concept">
             <dl>
@@ -45,6 +45,7 @@ import { LocationService } from '../services/location.service';
               <dd>{{concept.lastModifiedDate}}</dd>
             </dl>
           </div>
+          <ajax-loading-indicator *ngIf="!concept"></ajax-loading-indicator>
         </div>
       </div>
     </div>
