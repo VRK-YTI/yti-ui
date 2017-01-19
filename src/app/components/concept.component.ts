@@ -13,7 +13,7 @@ import { LocationService } from '../services/location.service';
       <div class="row">
         <div class="col-md-12">
           <div class="page-header">
-            <h1>{{'Concept' | translate}}</h1>
+            <h1 translate>Concept</h1>
           </div>        
         </div>
       </div>
