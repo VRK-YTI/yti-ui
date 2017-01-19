@@ -18,6 +18,7 @@ import { Observable } from 'rxjs';
 import { TranslateValuePipe } from './pipes/translate-value.pipe';
 import { LanguageService } from './services/language.service';
 import { ConceptsComponent } from './components/concepts.component';
+import { AjaxLoadingIndicatorComponent } from './components/ajax-loading-indicator.component';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json!po?format=mf!../../po/fi.po'),
@@ -51,6 +52,7 @@ const appRoutes: Routes = [
     NavigationBarComponent,
     VocabulariesComponent,
     ConceptsComponent,
+    AjaxLoadingIndicatorComponent,
     TranslateValuePipe
   ],
   imports: [

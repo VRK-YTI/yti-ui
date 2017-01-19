@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { TermedService, ConceptListItem } from '../services/termed.service';
-import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -18,11 +17,12 @@ import { ActivatedRoute } from '@angular/router';
       </div>
       <div class="row">
         <div class="col-md-12">
-          <ul>
-            <li *ngFor="let concept of concepts | async">
-              {{concept.label | translateValue}}          
+          <ul *ngIf="concepts">
+            <li *ngFor="let concept of concepts">
+              {{concept.label | translateValue}}
             </li>
           </ul>
+          <ajax-loading-indicator *ngIf="!concepts"></ajax-loading-indicator>
         </div>
       </div>
       
@@ -31,12 +31,13 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ConceptsComponent implements OnInit {
 
-  concepts: Observable<ConceptListItem[]>;
+  concepts: ConceptListItem[];
 
   constructor(private route: ActivatedRoute, private termedService: TermedService) {
   }
 
   ngOnInit() {
-    this.concepts = this.route.params.switchMap(params => this.termedService.getConceptListItems(params['graphId']));
+    this.route.params.switchMap(params => this.termedService.getConceptListItems(params['graphId']))
+      .subscribe(concepts => this.concepts = concepts);
   }
 }
