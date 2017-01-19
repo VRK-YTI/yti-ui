@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform, OnDestroy } from '@angular/core';
-import { LanguageService, Language } from '../services/language.service';
+import { LanguageService } from '../services/language.service';
 import { isDefined } from '../utils/object';
 import { Subscription } from 'rxjs';
 import { Localizable } from '../entities/localization';
@@ -19,28 +19,14 @@ export class TranslateValuePipe implements PipeTransform, OnDestroy {
   transform(value: Localizable): string {
 
     if (!isDefined(this.localization)) {
-      this.localization = TranslateValuePipe.getLocalization(value, this.languageService.language);
+      this.localization = this.languageService.translate(value);
     }
 
-    this.languageService.languageChange$.subscribe(language => {
-      this.localization = TranslateValuePipe.getLocalization(value, language);
+    this.languageService.languageChange$.subscribe(() => {
+      this.localization = this.languageService.translate(value);
     });
 
     return this.localization;
-  }
-
-  private static getLocalization(value: Localizable, language: Language) {
-
-    if (value.hasOwnProperty(language)) {
-      return value[language];
-    } else {
-
-      for (const entry of Object.entries(value)) {
-        return `${entry[1]} (${entry[0]})`;
-      }
-
-      return '';
-    }
   }
 
   ngOnDestroy() {
