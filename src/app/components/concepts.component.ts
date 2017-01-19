@@ -19,7 +19,9 @@ import { ActivatedRoute } from '@angular/router';
         <div class="col-md-12">
           <ul *ngIf="concepts">
             <li *ngFor="let concept of concepts">
-              {{concept.label | translateValue}}
+              <a [routerLink]="['concept', concept.id]">
+                {{concept.label | translateValue}}
+              </a>
             </li>
           </ul>
           <ajax-loading-indicator *ngIf="!concepts"></ajax-loading-indicator>

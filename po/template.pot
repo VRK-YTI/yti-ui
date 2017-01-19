@@ -4,8 +4,47 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+msgid "Concept"
+msgstr ""
+
+msgid "Label"
+msgstr ""
+
+msgid "Definition"
+msgstr ""
+
+msgid "Status"
+msgstr ""
+
+msgid "Id"
+msgstr ""
+
+msgid "Created at"
+msgstr ""
+
+msgid "Modified at"
+msgstr ""
+
 msgid "Concepts"
 msgstr ""
 
 msgid "Vocabularies"
+msgstr ""
+
+msgid "Front page"
+msgstr ""
+
+msgid "Unstable"
+msgstr ""
+
+msgid "Draft"
+msgstr ""
+
+msgid "Recommendation"
+msgstr ""
+
+msgid "Deprecated"
+msgstr ""
+
+msgid "Suggestion"
 msgstr ""

@@ -18,6 +18,7 @@ import { Observable } from 'rxjs';
 import { TranslateValuePipe } from './pipes/translate-value.pipe';
 import { LanguageService } from './services/language.service';
 import { ConceptsComponent } from './components/concepts.component';
+import { ConceptComponent } from './components/concept.component';
 import { AjaxLoadingIndicatorComponent } from './components/ajax-loading-indicator.component';
 
 const localizations: { [lang: string]: string} = {
@@ -43,7 +44,8 @@ export function createMissingTranslationHandler(): MissingTranslationHandler {
 
 const appRoutes: Routes = [
   { path: '', component: VocabulariesComponent },
-  { path: 'concepts/:graphId', component: ConceptsComponent }
+  { path: 'concepts/:graphId', component: ConceptsComponent },
+  { path: 'concepts/:graphId/concept/:conceptId', component: ConceptComponent }
 ];
 
 @NgModule({
@@ -52,6 +54,7 @@ const appRoutes: Routes = [
     NavigationBarComponent,
     VocabulariesComponent,
     ConceptsComponent,
+    ConceptComponent,
     AjaxLoadingIndicatorComponent,
     TranslateValuePipe
   ],
