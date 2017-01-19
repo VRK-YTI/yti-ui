@@ -157,7 +157,7 @@ function asLocalizable(localizations: Localization[]): Localizable {
 
   const result: Localizable = {};
 
-  for (const localization of localizations) {
+  for (const localization of normalizeAsArray(localizations)) {
     result[localization.lang] = localization.value;
   }
 
