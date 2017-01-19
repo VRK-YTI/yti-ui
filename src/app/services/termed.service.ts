@@ -8,7 +8,7 @@ import { Concept } from '../entities/concept';
 import { MetaModel } from '../entities/metaModel';
 import { Term } from '../entities/term';
 import { normalizeAsArray, index, filterDefined, flatten } from '../utils/array';
-import { Localization, Localizable } from '../entities/localization';
+import { Localizable, asLocalizable } from '../entities/localization';
 
 const infiniteResultsParams = new URLSearchParams();
 infiniteResultsParams.append('max', '-1');
@@ -151,17 +151,6 @@ export class ConceptItem {
     this.createdDate = concept.createdDate;
     this.lastModifiedDate = concept.lastModifiedDate;
   }
-}
-
-function asLocalizable(localizations: Localization[]): Localizable {
-
-  const result: Localizable = {};
-
-  for (const localization of normalizeAsArray(localizations)) {
-    result[localization.lang] = localization.value;
-  }
-
-  return result;
 }
 
 function requireSingle(json: any): any {
