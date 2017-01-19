@@ -14,7 +14,7 @@ export class LanguageService {
     this._language = 'fi';
     translateService.addLangs(['fi', 'en']);
     translateService.use('fi');
-    translateService.setDefaultLang('fi');
+    translateService.setDefaultLang('en');
   }
 
   get language(): Language {
