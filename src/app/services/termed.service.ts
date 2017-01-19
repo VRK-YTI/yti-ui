@@ -8,7 +8,7 @@ import { Concept } from '../entities/concept';
 import { MetaModel } from '../entities/metaModel';
 import { Term } from '../entities/term';
 import { normalizeAsArray, index, filterDefined, flatten } from '../utils/array';
-import { Localization } from '../entities/localization';
+import { Localization, Localizable } from '../entities/localization';
 
 const infiniteResultsParams = new URLSearchParams();
 infiniteResultsParams.append('max', '-1');
@@ -75,6 +75,16 @@ export class TermedService {
     return this.getNodesOfType(graphId, 'Concept');
   }
 
+  getConceptItem(graphId: string, conceptId: string): Observable<ConceptItem> {
+    const concept = this.getConcept(graphId, conceptId);
+    const terms = this.getTerms(graphId).map(terms => index(terms, term => term.id));
+
+    return Observable.combineLatest([concept, terms], (concept: Concept, termMap: Map<string, Term>) => {
+      const terms = normalizeAsArray(concept.references.prefLabelXl);
+      return new ConceptItem(concept, filterDefined(terms.map(termRef => termMap.get(termRef.id))));
+    });
+  }
+
   getConcept(graphId: string, conceptId: string): Observable<Concept> {
     return this.getNodeOfType(graphId, 'Concept', conceptId);
   }
@@ -111,7 +121,6 @@ export class ConceptSchemeListItem {
   }
 }
 
-
 export class ConceptListItem {
 
   id: string;
@@ -123,7 +132,26 @@ export class ConceptListItem {
   }
 }
 
-export type Localizable = { [language: string]: string; }
+export class ConceptItem {
+
+  id: string;
+  label: Localizable;
+  definition: Localizable;
+  status: string;
+  uri: string;
+  createdDate: string;
+  lastModifiedDate: string;
+
+  constructor(concept: Concept, terms: Term[]) {
+    this.id = concept.id;
+    this.label = asLocalizable(flatten(terms.map(term => term.properties.prefLabel)));
+    this.definition = asLocalizable(concept.properties.definition);
+    this.status = concept.properties.term_status[0].value;
+    this.uri = concept.uri;
+    this.createdDate = concept.createdDate;
+    this.lastModifiedDate = concept.lastModifiedDate;
+  }
+}
 
 function asLocalizable(localizations: Localization[]): Localizable {
 

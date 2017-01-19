@@ -1,8 +1,8 @@
 import { Pipe, PipeTransform, OnDestroy } from '@angular/core';
-import { Localizable } from '../services/termed.service';
 import { LanguageService, Language } from '../services/language.service';
 import { isDefined } from '../utils/object';
 import { Subscription } from 'rxjs';
+import { Localizable } from '../entities/localization';
 
 @Pipe({
   name: 'translateValue',
