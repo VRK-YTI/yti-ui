@@ -22,7 +22,7 @@ import { LanguageService } from '../services/language.service';
           <div class="col-md-4">
             <div class="input-group input-group-lg">
               <input #searchInput
-                     (keyup)="onSearch($event.target.value)"
+                     (input)="onSearch($event.target.value)"
                      type="text" 
                      class="form-control" 
                      [placeholder]="'search...' | translate" />
