@@ -80,7 +80,7 @@ export class ConceptsComponent implements OnInit, AfterViewInit {
 
     const concepts = this.route.params.switchMap(params => this.termedService.getConceptListItems(params['graphId']));
 
-    this.searchResults = Observable.combineLatest([concepts, this.search$], (concepts: ConceptListItem[], search: string) => {
+    this.searchResults = Observable.combineLatest([concepts, this.search$.debounceTime(500)], (concepts: ConceptListItem[], search: string) => {
 
       const scoreFilter = (item: TextAnalysis<ConceptListItem>) => !search || isDefined(item.matchScore) || item.score < 2;
       const labelExtractor: ContentExtractor<ConceptListItem> = concept => concept.label;
