@@ -4,6 +4,11 @@ import { ActivatedRoute } from '@angular/router';
 import { LocationService } from '../services/location.service';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { LanguageService } from '../services/language.service';
+import {
+  filterAndSortSearchResults, TextAnalysis, scoreComparator, labelComparator,
+  ContentExtractor
+} from '../utils/text-analyzer';
+import { isDefined } from '../utils/object';
 
 @Component({
   selector: 'concepts',
@@ -77,15 +82,11 @@ export class ConceptsComponent implements OnInit, AfterViewInit {
 
     this.searchResults = Observable.combineLatest([concepts, this.search$], (concepts: ConceptListItem[], search: string) => {
 
-      // TODO: use levenshtein for matching and sorting
-      return concepts.filter(concept => {
-        if (!search) {
-          return true;
-        } else {
-          const localized = this.languageService.translate(concept.label);
-          return localized.toLowerCase().indexOf(search.toLowerCase()) !== -1;
-        }
-      });
+      const scoreFilter = (item: TextAnalysis<ConceptListItem>) => !search || isDefined(item.matchScore) || item.score < 2;
+      const labelExtractor: ContentExtractor<ConceptListItem> = concept => concept.label;
+      const comparator = scoreComparator().andThen(labelComparator(this.languageService));
+
+      return filterAndSortSearchResults(concepts, search, [labelExtractor], [scoreFilter], comparator);
     });
 
     this.route.params.switchMap(params => this.termedService.getConceptScheme(params['graphId']))
