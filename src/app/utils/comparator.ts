@@ -23,11 +23,15 @@ export const comparingString = comparingPrimitive;
 export const comparingBoolean = comparingPrimitive;
 
 export function comparingLocalizable<T>(localizer: Localizer, propertyExtractor: (item: T) => Optional<Localizable>): ChainableComparator<T> {
-  return makeChainable(property(propertyExtractor, optional(localized(localizer))));
+  return makeChainable(property(propertyExtractor, optional(localized(localizer, stringComparatorIgnoringCase))));
 }
 
 function primitiveComparator<T extends string|number|boolean>(lhs: T, rhs: T) {
   return lhs === rhs ? 0 : lhs > rhs ? 1 : -1;
+}
+
+function stringComparatorIgnoringCase(lhs: string, rhs: string) {
+  return primitiveComparator(lhs.toLowerCase(), rhs.toLowerCase());
 }
 
 function localized<T extends Localizable>(localizer: Localizer, localizedComparator: Comparator<string> = primitiveComparator): Comparator<T> {
