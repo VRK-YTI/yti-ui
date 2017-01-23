@@ -22,7 +22,7 @@ import { LanguageService } from '../services/language.service';
           <div class="col-md-4">
             <div class="input-group input-group-lg">
               <input #searchInput
-                     (input)="onSearch($event.target.value)"
+                     [(ngModel)]="search"
                      type="text" 
                      class="form-control" 
                      [placeholder]="'search...' | translate" />
@@ -32,9 +32,7 @@ import { LanguageService } from '../services/language.service';
             
             <ul *ngIf="!loading">
               <li *ngFor="let concept of searchResults | async">
-                <a [routerLink]="['concept', concept.id]">
-                  {{concept.label | translateValue}}
-                </a>
+                <a [routerLink]="['concept', concept.id]" [innerHTML]="concept.label | translateValue | highlight: search"></a>
               </li>
             </ul>
             
@@ -53,6 +51,7 @@ export class ConceptsComponent implements OnInit, AfterViewInit {
   loading = true;
   searchResults: Observable<ConceptListItem[]>;
   search$ = new BehaviorSubject('');
+  _search = '';
 
   @ViewChild('searchInput') searchInput: ElementRef;
 
@@ -63,7 +62,12 @@ export class ConceptsComponent implements OnInit, AfterViewInit {
               private languageService: LanguageService) {
   }
 
-  onSearch(value: string) {
+  get search() {
+    return this._search;
+  }
+
+  set search(value: string) {
+    this._search = value;
     this.search$.next(value);
   }
 
