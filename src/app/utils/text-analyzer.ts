@@ -3,9 +3,7 @@ import { Localizable } from '../entities/localization';
 import { isDefined } from './object';
 import { Comparator, comparingNumber, comparingLocalizable } from './comparator';
 import { Localizer } from '../services/language.service';
-import { all, limit } from './array';
-
-const defaultSearchLimit = 100;
+import { all } from './array';
 
 export interface TextAnalysis<T> {
   item: T;
@@ -36,8 +34,8 @@ export interface SearchFilter<T> {
   (analyzedItem: TextAnalysis<T>): boolean;
 }
 
-export function applyFilters<T>(searchResults: TextAnalysis<T>[], filters: SearchFilter<T>[], limitResults = defaultSearchLimit) {
-  return limit(searchResults.filter(results => all(filters, filter => filter(results))), limitResults);
+export function applyFilters<T>(searchResults: TextAnalysis<T>[], filters: SearchFilter<T>[]) {
+  return searchResults.filter(results => all(filters, filter => filter(results)));
 }
 
 export function scoreComparator<S>() {
