@@ -44,12 +44,8 @@ export function scoreComparator<S>() {
   return comparingNumber<TextAnalysis<S>>(item => item.matchScore ? item.matchScore : item.score);
 }
 
-export function localizableComparator<S>(localizer: Localizer, contentExtractor: (item: S) => Localizable) {
-  return comparingLocalizable<TextAnalysis<S>>(localizer, item => contentExtractor(item.item));
-}
-
 export function labelComparator<S extends { label: Localizable }>(localizer: Localizer) {
-  return localizableComparator<S>(localizer, item => item.label);
+  return comparingLocalizable<TextAnalysis<S>>(localizer, item => item.item.label);
 }
 
 export function analyze<T>(search: string, item: T, extractors: ContentExtractor<T>[]): TextAnalysis<T> {
