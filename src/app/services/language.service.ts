@@ -5,8 +5,12 @@ import { Localizable } from '../entities/localization';
 
 export type Language = string;
 
+export interface Localizer {
+  translate(localizable: Localizable): string;
+}
+
 @Injectable()
-export class LanguageService {
+export class LanguageService implements Localizer {
 
   private _language: Language;
   languageChange$ = new Subject<Language>();
