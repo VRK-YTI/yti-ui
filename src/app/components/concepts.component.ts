@@ -24,28 +24,28 @@ import { isDefined } from '../utils/object';
         </div>
       </div>
       <div class="row">
-          <div class="col-md-4">
-            <div class="input-group input-group-lg">
-              <input #searchInput
-                     [(ngModel)]="search"
-                     type="text" 
-                     class="form-control" 
-                     [placeholder]="'search...' | translate" />
-            </div>
+      
+        <div class="col-md-4">
+          <div class="input-group input-group-lg">
+            <input #searchInput
+                   [(ngModel)]="search"
+                   type="text" 
+                   class="form-control" 
+                   [placeholder]="'search...' | translate" />
           </div>
-          <div class="col-md-8">
-            
-            <ul *ngIf="!loading">
-              <li *ngFor="let concept of searchResults | async">
-                <a [routerLink]="['concept', concept.id]" [innerHTML]="concept.label | translateValue | highlight: search"></a>
-              </li>
-            </ul>
-            
-            <div *ngIf="loading">
-              <ajax-loading-indicator></ajax-loading-indicator>
-            </div>
-            
-          </div>
+        </div>
+        
+        <div class="col-md-8">
+          
+          <ul *ngIf="!loading">
+            <li *ngFor="let concept of searchResults | async">
+              <a [routerLink]="['concept', concept.id]" [innerHTML]="concept.label | translateValue | highlight: search"></a>
+            </li>
+          </ul>
+          
+          <ajax-loading-indicator *ngIf="loading"></ajax-loading-indicator>
+          
+        </div>
       </div>
       
     </div>
