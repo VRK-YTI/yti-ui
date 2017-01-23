@@ -23,6 +23,7 @@ import { LocationService } from './services/location.service';
 import { ConceptComponent } from './components/concept.component';
 import { AjaxLoadingIndicatorComponent } from './components/ajax-loading-indicator.component';
 import { HighlightPipe } from './pipes/highlight.pipe';
+import { TranslateSearchValuePipe } from './pipes/translate-search-value.pipe';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json!po?format=mf!../../po/fi.po'),
@@ -61,6 +62,7 @@ const appRoutes: Routes = [
     ConceptComponent,
     AjaxLoadingIndicatorComponent,
     TranslateValuePipe,
+    TranslateSearchValuePipe,
     HighlightPipe
   ],
   imports: [

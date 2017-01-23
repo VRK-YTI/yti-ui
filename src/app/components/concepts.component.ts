@@ -39,7 +39,7 @@ import { isDefined } from '../utils/object';
           
           <ul *ngIf="!loading">
             <li *ngFor="let concept of searchResults | async">
-              <a [routerLink]="['concept', concept.id]" [innerHTML]="concept.label | translateValue | highlight: search"></a>
+              <a [routerLink]="['concept', concept.id]" [innerHTML]="concept.label | translateSearchValue: search | highlight: search"></a>
             </li>
           </ul>
           
