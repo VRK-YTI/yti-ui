@@ -24,6 +24,8 @@ import { ConceptComponent } from './components/concept.component';
 import { AjaxLoadingIndicatorComponent } from './components/ajax-loading-indicator.component';
 import { HighlightPipe } from './pipes/highlight.pipe';
 import { TranslateSearchValuePipe } from './pipes/translate-search-value.pipe';
+import { EntriesPipe } from './pipes/entries.pipe';
+import { LocalizedComponent } from './components/localized.component';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json!po?format=mf!../../po/fi.po'),
@@ -61,9 +63,11 @@ const appRoutes: Routes = [
     ConceptsComponent,
     ConceptComponent,
     AjaxLoadingIndicatorComponent,
+    LocalizedComponent,
     TranslateValuePipe,
     TranslateSearchValuePipe,
-    HighlightPipe
+    HighlightPipe,
+    EntriesPipe
   ],
   imports: [
     BrowserModule,

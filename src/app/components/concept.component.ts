@@ -20,29 +20,29 @@ import { LocationService } from '../services/location.service';
       <div class="row">
         <div class="col-md-12">
           <div *ngIf="concept">
-            <dl>
-              <dt translate>Label</dt>
-              <dd>{{concept.label | translateValue}}</dd>
+            <dl class="row">
+              <dt class="col-md-3" translate>Label</dt>
+              <dd class="col-md-9"><localized [value]="concept.label"></localized></dd>
+            </dl>            
+            <dl class="row">
+              <dt class="col-md-3" translate>Definition</dt>
+              <dd class="col-md-9"><localized [value]="concept.definition"></localized></dd>
             </dl>
-            <dl>
-              <dt translate>Definition</dt>
-              <dd>{{concept.definition | translateValue}}</dd>
+            <dl class="row">
+              <dt class="col-md-3" translate>Status</dt>
+              <dd class="col-md-9">{{concept.status | translate}}</dd>
             </dl>
-            <dl>
-              <dt translate>Status</dt>
-              <dd>{{concept.status | translate}}</dd>
+            <dl class="row">
+              <dt class="col-md-3" translate>Id</dt>
+              <dd class="col-md-9">{{concept.uri}}</dd>
             </dl>
-            <dl>
-              <dt translate>Id</dt>
-              <dd>{{concept.uri}}</dd>
+            <dl class="row">
+              <dt class="col-md-3" translate>Created at</dt>
+              <dd class="col-md-9">{{concept.createdDate}}</dd>
             </dl>
-            <dl>
-              <dt translate>Created at</dt>
-              <dd>{{concept.createdDate}}</dd>
-            </dl>
-            <dl>
-              <dt translate>Modified at</dt>
-              <dd>{{concept.lastModifiedDate}}</dd>
+            <dl class="row">
+              <dt class="col-md-3" translate>Modified at</dt>
+              <dd class="col-md-9">{{concept.lastModifiedDate}}</dd>
             </dl>
           </div>
           <ajax-loading-indicator *ngIf="!concept"></ajax-loading-indicator>

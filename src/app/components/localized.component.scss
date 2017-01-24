@@ -1,0 +1,27 @@
+$language-width: 30px;
+$language-height: 30px;
+
+div.localized {
+
+  margin-bottom: 5px;
+  display: inline-block;
+  width: 100%;
+
+  div.language {
+    float: left;
+    background: #ddd;
+    width: $language-width;
+    height: $language-height;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  div.localization {
+    float: left;
+    border-bottom: 1px solid #ddd;
+    width: calc(100% - #{$language-width});
+    height: $language-height;
+    padding-left: 10px;
+  }
+}
