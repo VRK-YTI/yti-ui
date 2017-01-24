@@ -3,7 +3,7 @@ import { Graph } from '../entities/graph';
 import { URLSearchParams, ResponseOptionsArgs } from '@angular/http';
 import { Observable } from 'rxjs';
 import { TermedHttp } from './termed-http.service';
-import { ConceptScheme } from '../entities/conceptScheme';
+import { ConceptScheme } from '../entities/concept-scheme';
 import { Concept } from '../entities/concept';
 import { MetaModel } from '../entities/metaModel';
 import { Term } from '../entities/term';

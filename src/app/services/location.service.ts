@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ConceptScheme } from '../entities/conceptScheme';
+import { ConceptScheme } from '../entities/concept-scheme';
 import { asLocalizable, Localizable } from '../entities/localization';
 import { Subject } from 'rxjs';
 import { ConceptItem } from './termed.service';
