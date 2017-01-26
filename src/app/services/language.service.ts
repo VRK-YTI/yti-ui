@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { TranslateService } from 'ng2-translate';
 import { Subject } from 'rxjs';
 import { Localizable } from '../entities/localization';
+import { isDefined } from '../utils/object';
 
 export type Language = string;
 
@@ -33,6 +34,11 @@ export class LanguageService implements Localizer {
   }
 
   translate(localizable: Localizable) {
+
+    if (!isDefined(localizable)) {
+      return '';
+    }
+
     if (localizable.hasOwnProperty(this.language)) {
       return localizable[this.language];
     } else {
