@@ -89,7 +89,7 @@ export class ConceptsComponent implements OnInit, AfterViewInit {
       return filterAndSortSearchResults(concepts, search, [labelExtractor], [scoreFilter], comparator);
     });
 
-    this.route.params.switchMap(params => this.termedService.getConceptScheme(params['graphId']))
+    this.route.params.switchMap(params => this.termedService.getConceptSchemeItem(params['graphId']))
       .subscribe(scheme => this.locationService.atConceptScheme(scheme));
 
     concepts.subscribe(() => this.loading = false);

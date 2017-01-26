@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Graph } from '../entities/graph';
 import { URLSearchParams, ResponseOptionsArgs } from '@angular/http';
 import { Observable } from 'rxjs';
 import { TermedHttp } from './termed-http.service';
-import { ConceptScheme } from '../entities/concept-scheme';
-import { Concept } from '../entities/concept';
-import { MetaModel } from '../entities/metaModel';
-import { Term } from '../entities/term';
-import { normalizeAsArray, index, filterDefined, flatten } from '../utils/array';
+import { normalizeAsArray, flatten } from '../utils/array';
 import { Localizable, asLocalizable } from '../entities/localization';
+import { ConceptSchemeListNode, ConceptSchemeNode } from '../entities/external/concept-scheme';
+import { ConceptListNode, ConceptDetailsNode } from '../entities/external/concept';
+import { Graph } from '../entities/internal/graph';
+import { MetaModel } from '../entities/internal/metaModel';
 
 const infiniteResultsParams = new URLSearchParams();
 infiniteResultsParams.append('max', '-1');
@@ -36,75 +35,84 @@ export class TermedService {
       .map(response => requireSingle(response.json() as MetaModel));
   }
 
+  getConceptSchemeItem(graphId: string): Observable<ConceptSchemeItem> {
+    return this.getConceptScheme(graphId).map(conceptScheme => new ConceptSchemeItem(conceptScheme));
+  }
+
+  getConceptScheme(graphId: string): Observable<ConceptSchemeNode> {
+
+    const params = new URLSearchParams();
+    params.append('max', '-1');
+    params.append('graphId', graphId);
+    params.append('typeId', 'ConceptScheme');
+    params.append('select.references', '');
+    params.append('select.referrers', '');
+
+    return this.http.get(`/api/ext.json`, { search: params } )
+      .map(response => requireSingle(response.json() as ConceptSchemeNode));
+  }
+
   getConceptSchemeListItems(): Observable<ConceptSchemeListItem[]> {
     return this.getConceptSchemes().map(schemes => schemes.map(scheme => new ConceptSchemeListItem(scheme)));
   }
 
-  // FIXME: makes n+1 requests and needs proper API
-  getConceptSchemes(): Observable<ConceptScheme[]> {
+  getConceptSchemes(): Observable<ConceptSchemeListNode[]> {
 
-    return this.getGraphs()
-      .flatMap(graphs => {
+    const params = new URLSearchParams();
+    params.append('max', '-1');
+    params.append('typeId', 'ConceptScheme');
+    params.append('select.references', '');
+    params.append('select.referrers', '');
 
-        const conceptSchemes: Observable<(ConceptScheme|null)>[] =
-          graphs.map(graph => this.getConceptScheme(graph.id).catch(notFoundAsDefault(null)));
-
-        return Observable.forkJoin(conceptSchemes);
-      })
-      .map(conceptSchemes => conceptSchemes.filter(conceptScheme => conceptScheme !== null));
-  }
-
-  getConceptScheme(graphId: string): Observable<ConceptScheme> {
-    return this.getNodesOfType(graphId, 'ConceptScheme')
-      .map(schemes => requireSingle(schemes) as ConceptScheme);
+    return this.http.get(`/api/ext.json`, { search: params } )
+      .map(response => normalizeAsArray(response.json() as ConceptSchemeListNode[])).catch(notFoundAsDefault([]));
   }
 
   getConceptListItems(graphId: string): Observable<ConceptListItem[]> {
-    const concepts = this.getConcepts(graphId);
-    const terms = this.getTerms(graphId).map(terms => index(terms, term => term.id));
-
-    return Observable.combineLatest([concepts, terms], (concepts: Concept[], termMap: Map<string, Term>) => {
-      return concepts.map(concept => {
-        const terms = normalizeAsArray(concept.references.prefLabelXl);
-        return new ConceptListItem(concept, filterDefined(terms.map(termRef => termMap.get(termRef.id))));
-      })
-    });
+    return this.getConcepts(graphId).map(concepts => concepts.map(concept => new ConceptListItem(concept)));
   }
 
-  getConcepts(graphId: string): Observable<Concept[]> {
-    return this.getNodesOfType(graphId, 'Concept');
+  getConcepts(graphId: string): Observable<ConceptListNode[]> {
+
+    const params = new URLSearchParams();
+    params.append('max', '-1');
+    params.append('graphId', graphId);
+    params.append('typeId', 'Concept');
+    params.append('select.referrers', '');
+    params.append('select.references', 'prefLabelXl');
+    params.append('select.properties', 'prefLabel');
+
+    return this.http.get(`/api/ext.json`, { search: params } )
+      .map(response => normalizeAsArray(response.json() as ConceptListNode[])).catch(notFoundAsDefault([]));
   }
+
 
   getConceptItem(graphId: string, conceptId: string): Observable<ConceptItem> {
-    const concept = this.getConcept(graphId, conceptId);
-    const terms = this.getTerms(graphId).map(terms => index(terms, term => term.id));
-
-    return Observable.combineLatest([concept, terms], (concept: Concept, termMap: Map<string, Term>) => {
-      const terms = normalizeAsArray(concept.references.prefLabelXl);
-      return new ConceptItem(concept, filterDefined(terms.map(termRef => termMap.get(termRef.id))));
-    });
+    return this.getConceptDetails(graphId, conceptId).map(concept => new ConceptItem(concept));
   }
 
-  getConcept(graphId: string, conceptId: string): Observable<Concept> {
-    return this.getNodeOfType(graphId, 'Concept', conceptId);
-  }
+  getConceptDetails(graphId: string, conceptId: string): Observable<ConceptDetailsNode> {
 
-  getTerms(graphId: string): Observable<Term[]> {
-    return this.getNodesOfType(graphId, 'Term');
-  }
+    const params = new URLSearchParams();
+    params.append('max', '-1');
+    params.append('graphId', graphId);
+    params.append('uri', 'urn:uuid:' + conceptId);
 
-  getTerm(graphId: string, termId: string): Observable<Term> {
-    return this.getNodeOfType(graphId, 'Term', termId);
+    return this.http.get(`/api/ext.json`, { search: params } )
+      .map(response => requireSingle(response.json() as ConceptDetailsNode));
   }
+}
 
-  private getNodesOfType<T>(graphId: string, nodeType: string): Observable<T[]> {
-    return this.http.get(`/api/graphs/${graphId}/types/${nodeType}/nodes`, infiniteResultsOptions)
-      .map(response => normalizeAsArray(response.json() as T[])).catch(notFoundAsDefault([]))
-  }
+export class ConceptSchemeItem {
 
-  private getNodeOfType<T>(graphId: string, nodeType: string, nodeId: string): Observable<T> {
-    return this.http.get(`/api/graphs/${graphId}/types/${nodeType}/nodes/${nodeId}`, infiniteResultsOptions)
-      .map(response => requireSingle(response.json() as T));
+  id: string;
+  graphId: string;
+  label: Localizable;
+
+  constructor(conceptScheme: ConceptSchemeNode) {
+    this.id = conceptScheme.id;
+    this.graphId = conceptScheme.type.graph.id;
+    this.label = asLocalizable(conceptScheme.properties.prefLabel);
   }
 }
 
@@ -114,7 +122,7 @@ export class ConceptSchemeListItem {
   graphId: string;
   label: Localizable;
 
-  constructor(conceptScheme: ConceptScheme) {
+  constructor(conceptScheme: ConceptSchemeListNode) {
     this.id = conceptScheme.id;
     this.graphId = conceptScheme.type.graph.id;
     this.label = asLocalizable(conceptScheme.properties.prefLabel);
@@ -126,9 +134,9 @@ export class ConceptListItem {
   id: string;
   label: Localizable;
 
-  constructor(concept: Concept, terms: Term[]) {
+  constructor(concept: ConceptListNode) {
     this.id = concept.id;
-    this.label = asLocalizable(flatten(terms.map(term => term.properties.prefLabel)));
+    this.label = asLocalizable(flatten(normalizeAsArray(concept.references.prefLabelXl).map(term => term.properties.prefLabel)));
   }
 }
 
@@ -142,9 +150,9 @@ export class ConceptItem {
   createdDate: string;
   lastModifiedDate: string;
 
-  constructor(concept: Concept, terms: Term[]) {
+  constructor(concept: ConceptDetailsNode) {
     this.id = concept.id;
-    this.label = asLocalizable(flatten(terms.map(term => term.properties.prefLabel)));
+    this.label = asLocalizable(flatten(concept.references.prefLabelXl.map(term => term.properties.prefLabel)));
     this.definition = asLocalizable(concept.properties.definition);
     this.status = concept.properties.term_status[0].value;
     this.uri = concept.uri;

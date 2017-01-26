@@ -1,7 +1,8 @@
-import { Node, Attribute } from './node';
-import { Identifier } from './identifier';
+import { NodeInternal } from './node';
+import { Identifier } from '../identifier';
+import { Attribute } from '../attribute';
 
-export interface Concept extends Node<'Concept'> {
+export interface ConceptInternal extends NodeInternal<'Concept'> {
 
   properties: {
     definition: Attribute[];

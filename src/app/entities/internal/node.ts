@@ -1,6 +1,7 @@
-import { Identifier } from './identifier';
+import { Identifier } from '../identifier';
+import { Attribute } from '../attribute';
 
-export interface Node<T> extends Identifier<T> {
+export interface NodeInternal<T> extends Identifier<T> {
 
   code: string;
   createdBy: string;
@@ -12,11 +13,4 @@ export interface Node<T> extends Identifier<T> {
   properties: { [key: string]: Attribute[] };
   references: { [key: string]: Identifier<string>[] };
   referrers: { [key: string]: Identifier<string>[] };
-}
-
-export interface Attribute {
-
-  lang: string;
-  regex: string;
-  value: string;
 }

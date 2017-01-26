@@ -59,7 +59,7 @@ export class ConceptComponent implements OnInit {
   }
 
   ngOnInit() {
-    const conceptScheme = this.route.params.switchMap(params => this.termedService.getConceptScheme(params['graphId']));
+    const conceptScheme = this.route.params.switchMap(params => this.termedService.getConceptSchemeItem(params['graphId']));
     const concept = this.route.params.switchMap(params => this.termedService.getConceptItem(params['graphId'], params['conceptId']));
 
     Observable.zip(conceptScheme, concept)

@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { ConceptScheme } from '../entities/concept-scheme';
-import { asLocalizable, Localizable } from '../entities/localization';
+import { Localizable } from '../entities/localization';
 import { Subject } from 'rxjs';
-import { ConceptItem } from './termed.service';
+import { ConceptItem, ConceptSchemeItem } from './termed.service';
 
 export interface Location {
   localizationKey?: string;
@@ -22,22 +21,22 @@ export class LocationService {
     this.location.next(location);
   }
 
-  atConceptScheme(conceptScheme: ConceptScheme): void {
+  atConceptScheme(conceptScheme: ConceptSchemeItem): void {
     this.changeLocation([{
-      label: asLocalizable(conceptScheme.properties.prefLabel),
-      route: ['concepts', conceptScheme.type.graph.id]
+      label: conceptScheme.label,
+      route: ['concepts', conceptScheme.graphId]
     }]);
   }
 
-  atConcept(conceptScheme: ConceptScheme, concept: ConceptItem): void {
+  atConcept(conceptScheme: ConceptSchemeItem, concept: ConceptItem): void {
     this.changeLocation([
       {
-        label: asLocalizable(conceptScheme.properties.prefLabel),
-        route: ['concepts', conceptScheme.type.graph.id]
+        label: conceptScheme.label,
+        route: ['concepts', conceptScheme.graphId]
       },
       {
         label: concept.label,
-        route: ['concepts', conceptScheme.type.graph.id, 'concept', concept.id]
+        route: ['concepts', conceptScheme.graphId, 'concept', concept.id]
       }
     ]);
   }
