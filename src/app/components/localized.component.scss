@@ -20,8 +20,9 @@ div.localized {
   div.localization {
     float: left;
     border-bottom: 1px solid #ddd;
+    border-left: 1px solid #ddd;
     width: calc(100% - #{$language-width});
-    height: $language-height;
+    min-height: $language-height;
     padding-left: 10px;
   }
 }
