@@ -8,7 +8,7 @@ import { Node } from '../entities/node';
   selector: 'vocabularies',
   styleUrls: ['./vocabularies.component.scss'],
   template: `
-    <div class="container">
+    <div class="container-fluid">
 
       <div class="row">
         <div class="col-md-12">

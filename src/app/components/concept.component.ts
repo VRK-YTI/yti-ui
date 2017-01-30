@@ -1,15 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
-import { TermedService } from '../services/termed.service';
-import { LocationService } from '../services/location.service';
 import { Node } from '../entities/node';
+import { LocationService } from '../services/location.service';
+import { TermedService } from '../services/termed.service';
+import { ConceptsComponent } from './concepts.component';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'concept',
   styleUrls: ['./concepts.component.scss'],
   template: `
-    <div class="container" *ngIf="concept">
+    <div *ngIf="concept">
 
       <div class="row">
         <div class="col-md-12">
@@ -52,17 +53,26 @@ export class ConceptComponent implements OnInit {
 
   concept: Node<'Concept'>;
 
-  constructor(private route: ActivatedRoute, private termedService: TermedService, private locationService: LocationService) {
+  constructor(private route: ActivatedRoute,
+              private termedService: TermedService,
+              private locationService: LocationService,
+              private conceptsComponent: ConceptsComponent) {
+  }
+
+  get graphId() {
+    return this.route.snapshot.parent.params['graphId'] as string;
   }
 
   ngOnInit() {
-    const conceptScheme = this.route.params.switchMap(params => this.termedService.getConceptScheme(params['graphId']));
-    const concept = this.route.params.switchMap(params => this.termedService.getConcept(params['graphId'], params['conceptId']));
 
-    Observable.zip(conceptScheme, concept)
+    const concept$ = this.route.params.switchMap(params => this.termedService.getConcept(this.graphId, params['conceptId']));
+
+    Observable.combineLatest(this.conceptsComponent.conceptScheme$, concept$)
       .subscribe(([conceptScheme, concept]) => {
-        this.locationService.atConcept(conceptScheme, concept);
-        this.concept = concept;
+        if (conceptScheme && concept) {
+          this.locationService.atConcept(conceptScheme, concept);
+          this.concept = concept;
+        }
       });
   }
 }

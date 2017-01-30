@@ -31,6 +31,7 @@ import { ReferencesPipe } from './pipes/references.pipe';
 import { PropertyComponent } from './components/property.component';
 import { ReferenceComponent } from './components/reference.component';
 import { TermsComponent } from './components/terms.component';
+import { NoSelectionComponent } from './components/no-selection.component';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json!po?format=mf!../../po/fi.po'),
@@ -55,8 +56,10 @@ export function createMissingTranslationHandler(): MissingTranslationHandler {
 
 const appRoutes: Routes = [
   { path: '', component: VocabulariesComponent },
-  { path: 'concepts/:graphId', component: ConceptsComponent },
-  { path: 'concepts/:graphId/concept/:conceptId', component: ConceptComponent }
+  { path: 'concepts/:graphId', component: ConceptsComponent, children: [
+    { path: '', component: NoSelectionComponent },
+    { path: 'concept/:conceptId', component: ConceptComponent }
+  ]}
 ];
 
 @NgModule({
@@ -67,6 +70,7 @@ const appRoutes: Routes = [
     VocabulariesComponent,
     ConceptsComponent,
     ConceptComponent,
+    NoSelectionComponent,
     PropertyComponent,
     ReferenceComponent,
     TermsComponent,
