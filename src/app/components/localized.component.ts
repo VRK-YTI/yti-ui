@@ -4,8 +4,8 @@ import { Component, Input } from '@angular/core';
   selector: 'localized',
   styleUrls: ['./localized.component.scss'],
   template: `
-    <div class="localized" *ngFor="let localization of value | entries">
-      <div class="language">{{localization.key}}</div>
+    <div class="localized" *ngFor="let localization of value">
+      <div class="language">{{localization.lang}}</div>
       <div class="localization">{{localization.value}}</div>
     </div>
   `

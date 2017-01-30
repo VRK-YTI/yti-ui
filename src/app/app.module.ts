@@ -24,8 +24,13 @@ import { ConceptComponent } from './components/concept.component';
 import { AjaxLoadingIndicatorComponent } from './components/ajax-loading-indicator.component';
 import { HighlightPipe } from './pipes/highlight.pipe';
 import { TranslateSearchValuePipe } from './pipes/translate-search-value.pipe';
-import { EntriesPipe } from './pipes/entries.pipe';
 import { LocalizedComponent } from './components/localized.component';
+import { MetaModelService } from './services/meta-model.service';
+import { PropertiesPipe } from './pipes/properties.pipe';
+import { ReferencesPipe } from './pipes/references.pipe';
+import { PropertyComponent } from './components/property.component';
+import { ReferenceComponent } from './components/reference.component';
+import { TermsComponent } from './components/terms.component';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json!po?format=mf!../../po/fi.po'),
@@ -62,12 +67,16 @@ const appRoutes: Routes = [
     VocabulariesComponent,
     ConceptsComponent,
     ConceptComponent,
+    PropertyComponent,
+    ReferenceComponent,
+    TermsComponent,
     AjaxLoadingIndicatorComponent,
     LocalizedComponent,
     TranslateValuePipe,
     TranslateSearchValuePipe,
     HighlightPipe,
-    EntriesPipe
+    PropertiesPipe,
+    ReferencesPipe
   ],
   imports: [
     BrowserModule,
@@ -80,6 +89,7 @@ const appRoutes: Routes = [
   providers: [
     TermedHttp,
     TermedService,
+    MetaModelService,
     { provide: MissingTranslationHandler, useFactory: createMissingTranslationHandler },
     LanguageService,
     LocationService

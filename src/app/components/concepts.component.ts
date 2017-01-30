@@ -1,9 +1,10 @@
 import { Component, OnInit, AfterViewInit, Renderer, ViewChild, ElementRef } from '@angular/core';
-import { TermedService, ConceptListItem } from '../services/termed.service';
 import { ActivatedRoute } from '@angular/router';
-import { LocationService } from '../services/location.service';
 import { Observable, BehaviorSubject } from 'rxjs';
+import { TermedService } from '../services/termed.service';
+import { LocationService } from '../services/location.service';
 import { LanguageService } from '../services/language.service';
+import { Node } from '../entities/node';
 import {
   filterAndSortSearchResults, TextAnalysis, scoreComparator, labelComparator,
   ContentExtractor
@@ -19,7 +20,7 @@ import { isDefined } from '../utils/object';
       <div class="row">
         <div class="col-md-12">
           <div class="page-header">
-            <h1 translate>Concepts</h1>
+            <h1 *ngIf="conceptScheme">{{conceptScheme.meta.label | translateValue}}</h1>
           </div>
         </div>
       </div>
@@ -54,7 +55,8 @@ import { isDefined } from '../utils/object';
 export class ConceptsComponent implements OnInit, AfterViewInit {
 
   loading = true;
-  searchResults: Observable<ConceptListItem[]>;
+  conceptScheme: Node<'ConceptScheme'>;
+  searchResults: Observable<Node<'Concept'>[]>;
   search$ = new BehaviorSubject('');
   _search = '';
 
@@ -78,19 +80,24 @@ export class ConceptsComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
 
-    const concepts = this.route.params.switchMap(params => this.termedService.getConceptListItems(params['graphId']));
+    const concepts = this.route.params.switchMap(params => this.termedService.getConceptList(params['graphId']))
+      .publishReplay()
+      .refCount();
 
-    this.searchResults = Observable.combineLatest([concepts, this.search$.debounceTime(500)], (concepts: ConceptListItem[], search: string) => {
+    this.searchResults = Observable.combineLatest([concepts, this.search$.debounceTime(500)], (concepts: Node<'Concept'>[], search: string) => {
 
-      const scoreFilter = (item: TextAnalysis<ConceptListItem>) => !search || isDefined(item.matchScore) || item.score < 2;
-      const labelExtractor: ContentExtractor<ConceptListItem> = concept => concept.label;
+      const scoreFilter = (item: TextAnalysis<Node<'Concept'>>) => !search || isDefined(item.matchScore) || item.score < 2;
+      const labelExtractor: ContentExtractor<Node<'Concept'>> = concept => concept.label;
       const comparator = scoreComparator().andThen(labelComparator(this.languageService));
 
       return filterAndSortSearchResults(concepts, search, [labelExtractor], [scoreFilter], comparator);
     });
 
-    this.route.params.switchMap(params => this.termedService.getConceptSchemeItem(params['graphId']))
-      .subscribe(scheme => this.locationService.atConceptScheme(scheme));
+    this.route.params.switchMap(params => this.termedService.getConceptScheme(params['graphId']))
+      .subscribe(scheme => {
+        this.conceptScheme = scheme;
+        this.locationService.atConceptScheme(scheme);
+      });
 
     concepts.subscribe(() => this.loading = false);
   }

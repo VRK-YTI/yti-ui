@@ -1,49 +1,46 @@
 import { Component, OnInit } from '@angular/core';
-import { TermedService, ConceptItem } from '../services/termed.service';
-import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { Observable } from 'rxjs';
+import { TermedService } from '../services/termed.service';
 import { LocationService } from '../services/location.service';
+import { Node } from '../entities/node';
 
 @Component({
   selector: 'concept',
   styleUrls: ['./concepts.component.scss'],
   template: `
-    <div class="container">
+    <div class="container" *ngIf="concept">
 
       <div class="row">
         <div class="col-md-12">
           <div class="page-header">
-            <h1 translate>Concept</h1>
+            <h1>{{concept.meta.label | translateValue}}</h1>
           </div>        
         </div>
       </div>
       <div class="row">
         <div class="col-md-12">
-          <div *ngIf="concept">
-            <dl class="row">
-              <dt class="col-md-3" translate>Label</dt>
-              <dd class="col-md-9"><localized [value]="concept.label"></localized></dd>
-            </dl>            
-            <dl class="row">
-              <dt class="col-md-3" translate>Definition</dt>
-              <dd class="col-md-9"><localized [value]="concept.definition"></localized></dd>
-            </dl>
-            <dl class="row">
-              <dt class="col-md-3" translate>Status</dt>
-              <dd class="col-md-9">{{concept.status | translate}}</dd>
-            </dl>
+          <div>
+            <!-- Special handling for primary term, could be solved with mixed property/reference sorting -->
+            <reference [value]="concept.references['prefLabelXl']" *ngIf="concept.references['prefLabelXl']"></reference>
+            <property [value]="property" *ngFor="let property of concept | properties"></property>
+            <reference [value]="reference" *ngFor="let reference of concept | references: ['prefLabelXl']"></reference>
+            
             <dl class="row">
               <dt class="col-md-3" translate>Id</dt>
               <dd class="col-md-9">{{concept.uri}}</dd>
             </dl>
+            
             <dl class="row">
               <dt class="col-md-3" translate>Created at</dt>
               <dd class="col-md-9">{{concept.createdDate}}</dd>
             </dl>
+            
             <dl class="row">
               <dt class="col-md-3" translate>Modified at</dt>
               <dd class="col-md-9">{{concept.lastModifiedDate}}</dd>
             </dl>
+            
           </div>
           <ajax-loading-indicator *ngIf="!concept"></ajax-loading-indicator>
         </div>
@@ -53,14 +50,14 @@ import { LocationService } from '../services/location.service';
 })
 export class ConceptComponent implements OnInit {
 
-  concept: ConceptItem;
+  concept: Node<'Concept'>;
 
   constructor(private route: ActivatedRoute, private termedService: TermedService, private locationService: LocationService) {
   }
 
   ngOnInit() {
-    const conceptScheme = this.route.params.switchMap(params => this.termedService.getConceptSchemeItem(params['graphId']));
-    const concept = this.route.params.switchMap(params => this.termedService.getConceptItem(params['graphId'], params['conceptId']));
+    const conceptScheme = this.route.params.switchMap(params => this.termedService.getConceptScheme(params['graphId']));
+    const concept = this.route.params.switchMap(params => this.termedService.getConcept(params['graphId'], params['conceptId']));
 
     Observable.zip(conceptScheme, concept)
       .subscribe(([conceptScheme, concept]) => {

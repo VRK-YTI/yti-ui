@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { TermedService, ConceptSchemeListItem } from '../services/termed.service';
+import { TermedService } from '../services/termed.service';
 import { Observable } from 'rxjs';
 import { LocationService } from '../services/location.service';
+import { Node } from '../entities/node';
 
 @Component({
   selector: 'vocabularies',
@@ -34,13 +35,13 @@ import { LocationService } from '../services/location.service';
 })
 export class VocabulariesComponent implements OnInit {
 
-  conceptSchemes: Observable<ConceptSchemeListItem[]>;
+  conceptSchemes: Observable<Node<'ConceptScheme'>[]>;
 
   constructor(private termedService: TermedService, locationService: LocationService) {
     locationService.atFrontPage();
   }
 
   ngOnInit() {
-    this.conceptSchemes = this.termedService.getConceptSchemeListItems();
+    this.conceptSchemes = this.termedService.getConceptSchemeList();
   }
 }
