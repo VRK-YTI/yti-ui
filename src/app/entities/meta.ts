@@ -53,10 +53,6 @@ export class ReferenceMeta {
   get term(): boolean {
     return this.targetType === 'Term';
   }
-
-  get localizable(): boolean {
-    return this.term;
-  }
 }
 
 export class NodeMeta {
