@@ -32,7 +32,7 @@ export class Reference {
   }
 
   get term(): boolean {
-    return this.meta.targetType === 'Term';
+    return this.meta.term;
   }
 }
 
