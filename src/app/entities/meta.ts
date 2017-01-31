@@ -53,6 +53,10 @@ export class ReferenceMeta {
   get term(): boolean {
     return this.targetType === 'Term';
   }
+
+  get concept(): boolean {
+    return this.targetType === 'Concept';
+  }
 }
 
 export class NodeMeta {
@@ -60,10 +64,12 @@ export class NodeMeta {
   label: Localizable;
   properties: PropertyMeta[];
   references: ReferenceMeta[];
+  type: NodeType;
 
   constructor(metaNode: NodeMetaInternal) {
 
     this.label = asLocalizable(metaNode.properties.prefLabel);
+    this.type = metaNode.id;
 
     this.properties = normalizeAsArray(metaNode.textAttributes)
       .sort(comparingNumber<TextAttributeInternal>(x => x.index))
@@ -72,5 +78,13 @@ export class NodeMeta {
     this.references = normalizeAsArray(metaNode.referenceAttributes)
       .sort(comparingNumber<ReferenceAttributeInternal>(x => x.index))
       .map(x => new ReferenceMeta(x));
+  }
+
+  get term(): boolean {
+    return this.type === 'Term';
+  }
+
+  get concept(): boolean {
+    return this.type === 'Concept';
   }
 }

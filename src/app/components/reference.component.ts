@@ -11,7 +11,8 @@ import { Reference } from '../entities/node';
         <terms *ngIf="reference.term" [value]="reference"></terms>
         <div *ngIf="!reference.term">
           <span *ngFor="let referenceNode of reference.values; let last = last">
-            {{referenceNode.label | translateValue}}<span *ngIf="!last">, </span>
+            <a *ngIf="referenceNode.concept" [routerLink]="['/concepts', referenceNode.graphId, 'concept', referenceNode.id]">{{referenceNode.label | translateValue}}<span *ngIf="!last">, </span></a>
+            <span *ngIf="!referenceNode.concept">{{referenceNode.label | translateValue}}<span *ngIf="!last">, </span></span>
           </span>
         </div>
       </dd>

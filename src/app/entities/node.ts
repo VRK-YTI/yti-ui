@@ -36,6 +36,10 @@ export class Reference {
   get term(): boolean {
     return this.meta.term;
   }
+
+  get concept(): boolean {
+    return this.meta.concept;
+  }
 }
 
 export class Node<T extends NodeType> {
@@ -72,6 +76,14 @@ export class Node<T extends NodeType> {
     this.uri = node.uri;
     this.createdDate = moment(node.createdDate);
     this.lastModifiedDate = moment(node.lastModifiedDate);
+  }
+
+  get concept(): boolean {
+    return this.meta.concept;
+  }
+
+  get term(): boolean {
+    return this.meta.term;
   }
 
   get label(): Localizable {
