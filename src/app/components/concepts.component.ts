@@ -19,9 +19,9 @@ import { LocationService } from '../services/location.service';
 
       <div class="row">
       
-        <div class="col-md-4">
+        <div class="col-lg-4">
           <div class="row">
-            <div class="col-md-12">
+            <div class="col-lg-12">
               <div class="input-group input-group-lg">
                 <input #searchInput
                        [(ngModel)]="search"
@@ -33,12 +33,24 @@ import { LocationService } from '../services/location.service';
           </div>
 
           <div class="row">
-            <div class="col-md-12">
-              <ul *ngIf="!loading" class="search-results">
-                <li *ngFor="let concept of searchResults | async">
-                  <a [routerLink]="['/concepts', concept.graphId, 'concept', concept.id]" [innerHTML]="concept.label | translateSearchValue: search | highlight: search"></a>
-                </li>
-              </ul>
+            <div class="col-lg-12 search-results">
+            
+              <table class="table table-hover table-striped table-sm" *ngIf="!loading">
+                <thead>
+                  <tr>
+                    <th translate>Preferred term</th>
+                    <th translate>Status</th>
+                    <th translate>Modified</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let concept of searchResults | async">
+                    <td><a [routerLink]="['/concepts', concept.graphId, 'concept', concept.id]" [innerHTML]="concept.label | translateSearchValue: search | highlight: search"></a></td>
+                    <td>{{concept.status | translate}}</td>
+                    <td>{{concept.lastModifiedDate | timestamp}}</td>
+                  </tr>
+                </tbody>
+              </table>
               
               <ajax-loading-indicator *ngIf="loading"></ajax-loading-indicator>
             </div>
@@ -46,7 +58,7 @@ import { LocationService } from '../services/location.service';
           
         </div>
         
-        <div class="col-md-8 selection">
+        <div class="col-lg-8 selection">
           <router-outlet></router-outlet>
         </div>
       </div>

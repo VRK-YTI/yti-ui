@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-01-17 17:57+0200\n"
+"PO-Revision-Date: 2017-01-31 15:15+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -13,8 +13,44 @@ msgstr ""
 "X-Poedit-Basepath: .\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid "Concepts"
+msgid "Id"
+msgstr ""
+
+msgid "Created at"
+msgstr ""
+
+msgid "Modified at"
+msgstr ""
+
+msgid "search..."
+msgstr ""
+
+msgid "Preferred term"
+msgstr ""
+
+msgid "Status"
+msgstr ""
+
+msgid "Modified"
 msgstr ""
 
 msgid "Vocabularies"
+msgstr ""
+
+msgid "Front page"
+msgstr ""
+
+msgid "Unstable"
+msgstr ""
+
+msgid "Draft"
+msgstr ""
+
+msgid "Recommendation"
+msgstr ""
+
+msgid "Deprecated"
+msgstr ""
+
+msgid "Suggestion"
 msgstr ""

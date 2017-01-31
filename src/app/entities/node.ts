@@ -84,6 +84,16 @@ export class Node<T extends NodeType> {
     }
   }
 
+  get status(): string {
+    if (this.properties['term_status']) {
+      return this.getPropertyAsString('term_status');
+    } else if (this.properties['termStatus']) {
+      return this.getPropertyAsString('termStatus');
+    } else {
+      throw new Error('Status not found');
+    }
+  }
+
   getPropertyAsLocalizable(property: string): Localizable {
     const propertyValue = requireDefined(this.properties[property]).value;
 
@@ -92,5 +102,15 @@ export class Node<T extends NodeType> {
     }
 
     return asLocalizable(propertyValue);
+  }
+
+  getPropertyAsString(property: string): string {
+    const propertyValue = requireDefined(this.properties[property]).value;
+
+    if (typeof propertyValue !== 'string') {
+      throw new Error('Property must be string');
+    }
+
+    return propertyValue;
   }
 }
