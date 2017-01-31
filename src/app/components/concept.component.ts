@@ -34,12 +34,12 @@ import { Observable } from 'rxjs';
             
             <dl class="row">
               <dt class="col-md-3" translate>Created at</dt>
-              <dd class="col-md-9">{{concept.createdDate}}</dd>
+              <dd class="col-md-9">{{concept.createdDate | timestamp}}</dd>
             </dl>
             
             <dl class="row">
               <dt class="col-md-3" translate>Modified at</dt>
-              <dd class="col-md-9">{{concept.lastModifiedDate}}</dd>
+              <dd class="col-md-9">{{concept.lastModifiedDate | timestamp}}</dd>
             </dl>
             
           </div>

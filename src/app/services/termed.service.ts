@@ -83,6 +83,7 @@ export class TermedService {
     params.append('graphId', graphId);
     params.append('uri', 'urn:uuid:' + conceptId);
     params.append('recurse.references.prefLabelXl', '1');
+    params.append('select.audit', 'true');
 
     return this.http.get(`/api/ext.json`, { search: params } )
       .map(response => requireSingle(response.json() as NodeExternal<'Concept'>));

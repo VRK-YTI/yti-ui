@@ -32,6 +32,7 @@ import { PropertyComponent } from './components/property.component';
 import { ReferenceComponent } from './components/reference.component';
 import { TermsComponent } from './components/terms.component';
 import { NoSelectionComponent } from './components/no-selection.component';
+import { TimestampPipe } from './pipes/timestamp.pipe';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json!po?format=mf!../../po/fi.po'),
@@ -80,7 +81,8 @@ const appRoutes: Routes = [
     TranslateSearchValuePipe,
     HighlightPipe,
     PropertiesPipe,
-    ReferencesPipe
+    ReferencesPipe,
+    TimestampPipe
   ],
   imports: [
     BrowserModule,

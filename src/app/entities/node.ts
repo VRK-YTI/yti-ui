@@ -3,6 +3,8 @@ import { requireDefined } from '../utils/object';
 import { normalizeAsArray, filter } from '../utils/array';
 import { NodeExternal, NodeType, Attribute } from './node-api';
 import { PropertyMeta, ReferenceMeta, NodeMeta } from './meta';
+import { Moment } from 'moment';
+import * as moment from 'moment';
 
 export class Property {
 
@@ -44,8 +46,8 @@ export class Node<T extends NodeType> {
 
   graphId: string;
 
-  createdDate: string;
-  lastModifiedDate: string;
+  createdDate: Moment;
+  lastModifiedDate: Moment;
 
   properties: { [key: string]: Property } = {};
   references: { [key: string]: Reference } = {};
@@ -68,8 +70,8 @@ export class Node<T extends NodeType> {
     }
 
     this.uri = node.uri;
-    this.createdDate = node.createdDate;
-    this.lastModifiedDate = node.lastModifiedDate;
+    this.createdDate = moment(node.createdDate);
+    this.lastModifiedDate = moment(node.lastModifiedDate);
   }
 
   get label(): Localizable {
