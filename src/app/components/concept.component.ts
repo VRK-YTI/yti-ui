@@ -5,6 +5,7 @@ import { LocationService } from '../services/location.service';
 import { TermedService } from '../services/termed.service';
 import { ConceptsComponent } from './concepts.component';
 import { Observable } from 'rxjs';
+import { normalizeAsArray } from '../utils/array';
 
 @Component({
   selector: 'concept',
@@ -24,7 +25,7 @@ import { Observable } from 'rxjs';
           <div>
             <!-- Special handling for primary term, could be solved with mixed property/reference sorting -->
             <reference [value]="concept.references['prefLabelXl']" *ngIf="concept.references['prefLabelXl']"></reference>
-            <property [value]="property" *ngFor="let property of concept | properties"></property>
+            <property [value]="property" [relatedConcepts]="relatedConcepts" *ngFor="let property of concept | properties"></property>
             <reference [value]="reference" *ngFor="let reference of concept | references: ['prefLabelXl']"></reference>
             
             <dl class="row">
@@ -57,6 +58,10 @@ export class ConceptComponent implements OnInit {
               private termedService: TermedService,
               private locationService: LocationService,
               private conceptsComponent: ConceptsComponent) {
+  }
+
+  get relatedConcepts(): Node<'Concept'>[] {
+    return normalizeAsArray(this.concept.references['related'].values);
   }
 
   get graphId() {

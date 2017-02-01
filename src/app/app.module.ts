@@ -33,6 +33,8 @@ import { ReferenceComponent } from './components/reference.component';
 import { TermsComponent } from './components/terms.component';
 import { NoSelectionComponent } from './components/no-selection.component';
 import { TimestampPipe } from './pipes/timestamp.pipe';
+import { MarkdownComponent } from './components/markdown/markdown.component';
+import { MarkdownElementComponent } from './components/markdown/markdown-element.component';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json!po?format=mf!../../po/fi.po'),
@@ -77,6 +79,8 @@ const appRoutes: Routes = [
     TermsComponent,
     AjaxLoadingIndicatorComponent,
     LocalizedComponent,
+    MarkdownComponent,
+    MarkdownElementComponent,
     TranslateValuePipe,
     TranslateSearchValuePipe,
     HighlightPipe,
