@@ -45,6 +45,7 @@ export class Reference {
 export class Node<T extends NodeType> {
 
   id: string;
+  code: string;
   uri: string;
   meta: NodeMeta;
 
@@ -61,6 +62,7 @@ export class Node<T extends NodeType> {
     this.meta = metas.get(node.type.id)!;
 
     this.id = node.id;
+    this.code = node.code;
     this.graphId = node.type.graph.id;
 
     for (const propertyMeta of this.meta.properties) {
