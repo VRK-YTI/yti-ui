@@ -17,50 +17,62 @@ import { LocationService } from '../services/location.service';
   template: `
     <div class="container-fluid">
 
-      <div class="row">
-      
-        <div class="col-lg-4">
-          <div class="row">
-            <div class="col-lg-12">
-              <div class="input-group input-group-lg">
-                <input #searchInput
-                       [(ngModel)]="search"
-                       type="text" 
-                       class="form-control" 
-                       [placeholder]="'search...' | translate" />
-              </div>
-            </div>
-          </div>
+      <ajax-loading-indicator *ngIf="loading"></ajax-loading-indicator>
 
-          <div class="row">
-            <div class="col-lg-12 search-results">
-            
-              <table class="table table-hover table-striped table-sm" *ngIf="!loading">
-                <thead>
-                  <tr>
-                    <th translate>Preferred term</th>
-                    <th translate>Status</th>
-                    <th translate>Modified</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let concept of searchResults | async">
-                    <td><a [routerLink]="['/concepts', concept.graphId, 'concept', concept.id]" [innerHTML]="concept.label | translateSearchValue: search | highlight: search"></a></td>
-                    <td>{{concept.status | translate}}</td>
-                    <td>{{concept.lastModifiedDate | timestamp}}</td>
-                  </tr>
-                </tbody>
-              </table>
+      <div [hidden]="loading">
+
+        <div class="row">
+          <div class="col-12">
+            <vocabulary *ngIf="conceptScheme" [value]="conceptScheme"></vocabulary>
+          </div>
+        </div>
+  
+        <div class="bottom">
+          <div class="row">        
+            <div class="col-lg-4">
+              <div class="row">
+                <div class="col-lg-12">
+                  <div class="input-group input-group-lg">
+                    <input #searchInput
+                           [(ngModel)]="search"
+                           type="text" 
+                           class="form-control" 
+                           [placeholder]="'search...' | translate" />
+                  </div>
+                </div>
+              </div>
+    
+              <div class="row">
+                <div class="col-lg-12 search-results">
+                
+                  <table class="table table-hover table-striped table-sm" *ngIf="!loading">
+                    <thead>
+                      <tr>
+                        <th translate>Preferred term</th>
+                        <th translate>Status</th>
+                        <th translate>Modified</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let concept of searchResults | async">
+                        <td><a [routerLink]="['/concepts', concept.graphId, 'concept', concept.id]" [innerHTML]="concept.label | translateSearchValue: search | highlight: search"></a></td>
+                        <td>{{concept.status | translate}}</td>
+                        <td>{{concept.lastModifiedDate | timestamp}}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
               
-              <ajax-loading-indicator *ngIf="loading"></ajax-loading-indicator>
+            </div>
+            
+            <div class="col-lg-8 selection">
+              <router-outlet></router-outlet>
             </div>
           </div>
-          
-        </div>
         
-        <div class="col-lg-8 selection">
-          <router-outlet></router-outlet>
         </div>
+      
       </div>
       
     </div>

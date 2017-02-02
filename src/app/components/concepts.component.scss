@@ -1,6 +1,8 @@
 .search-results {
+
+  margin-top: 15px;
   overflow-y: auto;
-  height: calc(100vh - 170px);
+  height: calc(100vh - 155px);
 
   table td:nth-child(2) {
     width: 100px;
@@ -13,5 +15,9 @@
 
 .selection {
   overflow-y: auto;
-  height: calc(100vh - 105px);
+  height: calc(100vh - 90px);
+}
+
+.bottom {
+  margin-top: 15px;
 }

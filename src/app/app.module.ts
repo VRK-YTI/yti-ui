@@ -35,6 +35,8 @@ import { NoSelectionComponent } from './components/no-selection.component';
 import { TimestampPipe } from './pipes/timestamp.pipe';
 import { MarkdownComponent } from './components/markdown/markdown.component';
 import { MarkdownElementComponent } from './components/markdown/markdown-element.component';
+import { VocabularyComponent } from './components/vocabulary.component';
+import { AccordionChevronComponent } from './components/accordion-chevron.component';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json!po?format=mf!../../po/fi.po'),
@@ -71,6 +73,7 @@ const appRoutes: Routes = [
     NavigationBarComponent,
     BreadcrumbComponent,
     VocabulariesComponent,
+    VocabularyComponent,
     ConceptsComponent,
     ConceptComponent,
     NoSelectionComponent,
@@ -81,6 +84,7 @@ const appRoutes: Routes = [
     LocalizedComponent,
     MarkdownComponent,
     MarkdownElementComponent,
+    AccordionChevronComponent,
     TranslateValuePipe,
     TranslateSearchValuePipe,
     HighlightPipe,

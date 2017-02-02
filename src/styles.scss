@@ -3,7 +3,7 @@
 @import './vendor/bootswatch';
 
 body {
-  padding-top: 100px;
+  padding-top: 85px;
 }
 
 .container {
@@ -13,4 +13,8 @@ body {
 
 span.highlight {
   font-weight: bold;
+}
+
+[hidden] {
+  display: none !important;
 }
