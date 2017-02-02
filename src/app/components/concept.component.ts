@@ -9,7 +9,7 @@ import { normalizeAsArray } from '../utils/array';
 
 @Component({
   selector: 'concept',
-  styleUrls: ['./concepts.component.scss'],
+  styleUrls: ['./concept.component.scss'],
   template: `
     <div *ngIf="concept">
 
