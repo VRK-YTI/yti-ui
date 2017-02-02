@@ -9,6 +9,7 @@ const supportedNodeTypes = ['document', 'paragraph'];
 // FIXME: less naive approach to markdown parse tree
 @Component({
   selector: '[markdown-element]',
+  styleUrls: ['./markdown-element.component.scss'],
   template: `
     <ng-container *ngIf="node.type === 'document'">
       <ng-container *ngFor="let child of children(node)">
