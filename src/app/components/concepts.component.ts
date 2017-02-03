@@ -55,7 +55,10 @@ import { LocationService } from '../services/location.service';
                     </thead>
                     <tbody>
                       <tr *ngFor="let concept of searchResults | async">
-                        <td><a [routerLink]="['/concepts', concept.graphId, 'concept', concept.id]" [innerHTML]="concept.label | translateSearchValue: search | highlight: search"></a></td>
+                        <td>
+                          <a [routerLink]="['/concepts', concept.graphId, 'concept', concept.id]" 
+                             [innerHTML]="concept.label | translateSearchValue: search | highlight: search"></a>
+                           </td>
                         <td>{{concept.status | translate}}</td>
                         <td>{{concept.lastModifiedDate | timestamp}}</td>
                       </tr>
