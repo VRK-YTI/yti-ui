@@ -2,7 +2,8 @@
 export type NodeType = 'Concept'
                      | 'ConceptScheme'
                      | 'Term'
-                     | 'Collection';
+                     | 'Collection'
+                     | 'Group';
 
 export interface Identifier<T> {
 
