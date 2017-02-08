@@ -1,11 +1,11 @@
 import { PipeTransform, Pipe } from '@angular/core';
-import {isDefined} from "../utils/object";
+import { isDefined } from '../utils/object';
+import * as removeMd from 'remove-markdown';
 
 @Pipe({ name: 'stripMarkdown' })
 export class StripMarkdownPipe implements PipeTransform {
 
   transform(value: string): string {
-    let removeMd = require('remove-markdown');
     let retVal = value;
     if (isDefined(value)) {
       value = value.replace(')[', ') [');

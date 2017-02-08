@@ -43,6 +43,7 @@
     "@types/fast-levenshtein": "^0.0.1",
     "@types/jasmine": "2.5.38",
     "@types/node": "6.0.42",
+    "@types/remove-markdown": "file:./src/types/remove-markdown",
     "angular-cli": "1.0.0-beta.24",
     "codelyzer": "2.0.0-beta.1",
     "jasmine-core": "2.5.2",
