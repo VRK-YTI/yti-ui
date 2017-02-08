@@ -3,7 +3,7 @@ import { Node as MarkdownNode } from 'commonmark';
 import { Node } from '../../entities/node';
 import { isDefined } from '../../utils/object';
 import { contains, first } from '../../utils/array';
-import {Localizable} from "../../entities/localization";
+import { Localizable } from '../../entities/localization';
 
 const supportedNodeTypes = ['document', 'paragraph'];
 
@@ -20,7 +20,7 @@ const supportedNodeTypes = ['document', 'paragraph'];
     
     <ng-container *ngIf="node.type === 'paragraph'">
       <ng-container *ngFor="let child of children(node)">
-        <template  #popContent>{{conceptDefinition(child) | translateValue | stripMarkdown}}</template>
+        <template #popContent>{{conceptDefinition(child) | translateValue | stripMarkdown}}</template>
         <a *ngIf="child.type === 'link'" [routerLink]="link(child)" [ngbPopover]="popContent" triggers="mouseenter:mouseleave">{{child.firstChild.literal}}</a>
         <span *ngIf="child.type === 'text'">{{child.literal}}</span>
       </ng-container>
@@ -54,7 +54,7 @@ export class MarkdownElementComponent implements OnInit {
 
   conceptDefinition(node: MarkdownNode): Localizable|null {
     const target = this.getTargetConceptNode(node);
-    if(target) {
+    if (target) {
       return target.getPropertyAsLocalizable('definition');
     }
     return null;
