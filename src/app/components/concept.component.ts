@@ -11,7 +11,13 @@ import { normalizeAsArray } from '../utils/array';
   selector: 'concept',
   styleUrls: ['./concept.component.scss'],
   template: `
-    <div *ngIf="concept">
+    <form class="editable" *ngIf="concept">
+
+      <div class="row">
+        <div class="col-md-12">
+          <editable-buttons (save)="save()"></editable-buttons>
+        </div>
+      </div>
 
       <div class="row">
         <div class="col-md-12">
@@ -23,6 +29,7 @@ import { normalizeAsArray } from '../utils/array';
       <div class="row">
         <div class="col-md-12">
           <div>
+          
             <!-- Special handling for primary term, could be solved with mixed property/reference sorting -->
             <reference [value]="concept.references['prefLabelXl']" *ngIf="concept.references['prefLabelXl']"></reference>
             <property [value]="property" [relatedConcepts]="relatedConcepts" *ngFor="let property of concept | properties"></property>
@@ -47,7 +54,7 @@ import { normalizeAsArray } from '../utils/array';
           <ajax-loading-indicator *ngIf="!concept"></ajax-loading-indicator>
         </div>
       </div>
-    </div>
+    </form>
   `
 })
 export class ConceptComponent implements OnInit {
@@ -58,6 +65,11 @@ export class ConceptComponent implements OnInit {
               private termedService: TermedService,
               private locationService: LocationService,
               private conceptsComponent: ConceptsComponent) {
+  }
+
+  save() {
+    // TODO
+    console.log('saving concept');
   }
 
   get relatedConcepts(): Node<'Concept'>[] {

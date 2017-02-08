@@ -18,3 +18,23 @@ span.highlight {
 [hidden] {
   display: none !important;
 }
+
+.btn-default {
+  color: white;
+  background-color: $brand-accent-light;
+  border: 1px solid $brand-accent-light;
+}
+
+.btn {
+  padding: 8px 12px;
+}
+
+.btn-default:hover, .btn-default:focus, .btn-default:active {
+  color: white;
+  background-color: $brand-accent-dark;
+  border: 1px solid $brand-accent-light;
+}
+
+.btn-link {
+  color: $brand-primary;
+}

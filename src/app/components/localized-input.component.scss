@@ -1,5 +1,5 @@
 $language-width: 30px;
-$language-height: 30px;
+$language-height: 32px;
 
 div.localized {
 
@@ -10,12 +10,26 @@ div.localized {
 
   div.language {
     float: left;
-    background: #ddd;
+    background-color: #ddd;
     width: $language-width;
     height: $language-height;
     display: inline-block;
     text-align: center;
-    vertical-align: middle;
+    line-height: 29px;
+
+    &.editing {
+      border: none;
+    }
+
+    div.form-group {
+      margin-bottom: 0;
+    }
+
+    input {
+      padding: 6px;
+      text-align: center;
+      background-color: #ddd;
+    }
   }
 
   div.localization {
@@ -25,5 +39,18 @@ div.localized {
     width: calc(100% - #{$language-width});
     min-height: $language-height;
     padding-left: 10px;
+
+    &.editing {
+      border: none;
+    }
+
+    div.form-group {
+      margin-bottom: 0;
+    }
+
+    input {
+      margin-left: -10px;
+      padding: 6px 10px;
+    }
   }
 }

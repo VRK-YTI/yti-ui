@@ -15,7 +15,14 @@ import { Node } from '../entities/node';
         <template ngbPanelContent>
           <div class="row">
             <div class="col-md-12">
-              <div>
+              <form class="editable">
+              
+                <div class="row">
+                  <div class="col-md-12">
+                    <editable-buttons (save)="save()"></editable-buttons>
+                  </div>
+                </div>
+              
                 <property [value]="property" *ngFor="let property of conceptScheme | properties"></property>
                 <reference [value]="reference" *ngFor="let reference of conceptScheme | references"></reference>
                 
@@ -33,7 +40,7 @@ import { Node } from '../entities/node';
                   <dt class="col-md-3" translate>Modified at</dt>
                   <dd class="col-md-9">{{conceptScheme.lastModifiedDate | timestamp}}</dd>
                 </dl>
-              </div>
+              </form>
             </div>
           </div>
         </template>
@@ -44,4 +51,9 @@ import { Node } from '../entities/node';
 export class VocabularyComponent {
 
   @Input('value') conceptScheme: Node<'ConceptScheme'>;
+
+  save() {
+    // TODO
+    console.log('saving vocabulary');
+  }
 }

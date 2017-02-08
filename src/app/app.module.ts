@@ -24,7 +24,7 @@ import { ConceptComponent } from './components/concept.component';
 import { AjaxLoadingIndicatorComponent } from './components/ajax-loading-indicator.component';
 import { HighlightPipe } from './pipes/highlight.pipe';
 import { TranslateSearchValuePipe } from './pipes/translate-search-value.pipe';
-import { LocalizedComponent } from './components/localized.component';
+import { LocalizedInputComponent } from './components/localized-input.component';
 import { MetaModelService } from './services/meta-model.service';
 import { PropertiesPipe } from './pipes/properties.pipe';
 import { ReferencesPipe } from './pipes/references.pipe';
@@ -37,7 +37,15 @@ import { MarkdownComponent } from './components/markdown/markdown.component';
 import { MarkdownElementComponent } from './components/markdown/markdown-element.component';
 import { VocabularyComponent } from './components/vocabulary.component';
 import { AccordionChevronComponent } from './components/accordion-chevron.component';
+import { LiteralInputComponent } from './components/literal-input.component';
+import { MetaModelValidator } from './components/validators/meta-model.validator';
+import { KeysPipe } from './pipes/keys.pipe';
+import { ErrorMessagesComponent } from './components/error-messages.component';
+import { EditableFormDirective } from './components/directives/editable-form.directive';
+import { EditableButtonsComponent } from './components/editable-buttons.component';
 import { StripMarkdownPipe } from './pipes/strip-markdown.pipe';
+import { LanguageValidator } from './components/validators/language.validator';
+import { LocalizationValidator } from './components/validators/localization.validator';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json!po?format=mf!../../po/fi.po'),
@@ -82,17 +90,25 @@ const appRoutes: Routes = [
     ReferenceComponent,
     TermsComponent,
     AjaxLoadingIndicatorComponent,
-    LocalizedComponent,
+    LocalizedInputComponent,
     MarkdownComponent,
     MarkdownElementComponent,
     AccordionChevronComponent,
+    LiteralInputComponent,
+    ErrorMessagesComponent,
+    EditableButtonsComponent,
+    EditableFormDirective,
+    MetaModelValidator,
+    LanguageValidator,
+    LocalizationValidator,
     TranslateValuePipe,
     TranslateSearchValuePipe,
     HighlightPipe,
     PropertiesPipe,
     ReferencesPipe,
     TimestampPipe,
-    StripMarkdownPipe
+    StripMarkdownPipe,
+    KeysPipe
   ],
   imports: [
     BrowserModule,

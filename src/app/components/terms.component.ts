@@ -8,7 +8,7 @@ import { Reference } from '../entities/node';
     <ngb-accordion>
       <ngb-panel *ngFor="let term of termReference.values">
         <template ngbPanelTitle>
-          <localized [value]="term.properties.prefLabel.value"></localized>
+          <localized-input [value]="term.properties.prefLabel.value"></localized-input>
         </template>
         <template ngbPanelContent>
           <property [value]="property" *ngFor="let property of term | properties: ['prefLabel']"></property>
