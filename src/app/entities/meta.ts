@@ -3,6 +3,7 @@ import { comparingNumber } from '../utils/comparator';
 import { normalizeAsArray } from '../utils/array';
 import { asLocalizable, Localizable } from './localization';
 import { NodeType } from './node-api';
+
 export type PropertyType = 'localizable' | 'translation-key' | 'string';
 
 export class PropertyMeta {
@@ -24,6 +25,7 @@ export class PropertyMeta {
     switch(this.id) {
       case 'prefLabel':
       case 'definition':
+      case 'description':
       case 'note':
         return 'localizable';
       case 'term_status':
