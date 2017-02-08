@@ -37,6 +37,7 @@ import { MarkdownComponent } from './components/markdown/markdown.component';
 import { MarkdownElementComponent } from './components/markdown/markdown-element.component';
 import { VocabularyComponent } from './components/vocabulary.component';
 import { AccordionChevronComponent } from './components/accordion-chevron.component';
+import { StripMarkdownPipe } from './pipes/strip-markdown.pipe';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json!po?format=mf!../../po/fi.po'),
@@ -90,7 +91,8 @@ const appRoutes: Routes = [
     HighlightPipe,
     PropertiesPipe,
     ReferencesPipe,
-    TimestampPipe
+    TimestampPipe,
+    StripMarkdownPipe
   ],
   imports: [
     BrowserModule,

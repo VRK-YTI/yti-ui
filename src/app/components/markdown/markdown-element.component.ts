@@ -3,6 +3,7 @@ import { Node as MarkdownNode } from 'commonmark';
 import { Node } from '../../entities/node';
 import { isDefined } from '../../utils/object';
 import { contains, first } from '../../utils/array';
+import {Localizable} from "../../entities/localization";
 
 const supportedNodeTypes = ['document', 'paragraph'];
 
@@ -19,7 +20,8 @@ const supportedNodeTypes = ['document', 'paragraph'];
     
     <ng-container *ngIf="node.type === 'paragraph'">
       <ng-container *ngFor="let child of children(node)">
-        <a *ngIf="child.type === 'link'" [routerLink]="link(child)">{{child.firstChild.literal}}</a>
+        <template  #popContent>{{conceptDefinition(child) | translateValue | stripMarkdown}}</template>
+        <a *ngIf="child.type === 'link'" [routerLink]="link(child)" [ngbPopover]="popContent" triggers="mouseenter:mouseleave">{{child.firstChild.literal}}</a>
         <span *ngIf="child.type === 'text'">{{child.literal}}</span>
       </ng-container>
     </ng-container>
@@ -36,16 +38,26 @@ export class MarkdownElementComponent implements OnInit {
     }
   }
 
-  link(node: MarkdownNode) {
-
+  private getTargetConceptNode(node: MarkdownNode): Node<'Concept'>|null {
     // FIXME: proper mapping
-    const target = first(this.relatedConcepts, concept => node.destination.indexOf(concept.code) !== -1);
+    return first(this.relatedConcepts, concept => node.destination.indexOf(concept.code) !== -1);
+  }
 
+  link(node: MarkdownNode) {
+    const target = this.getTargetConceptNode(node);
     if (target) {
       return ['/concepts', target.graphId, 'concept', target.id];
     } else {
       return [];
     }
+  }
+
+  conceptDefinition(node: MarkdownNode): Localizable|null {
+    const target = this.getTargetConceptNode(node);
+    if(target) {
+      return target.getPropertyAsLocalizable('definition');
+    }
+    return null;
   }
 
   children(node: MarkdownNode) {
