@@ -6,11 +6,15 @@ import * as removeMd from 'remove-markdown';
 export class StripMarkdownPipe implements PipeTransform {
 
   transform(value: string): string {
-    let retVal = value;
     if (isDefined(value)) {
-      value = value.replace(')[', ') [');
-      retVal = removeMd(value);
+      return removeMd(StripMarkdownPipe.sanitize(value));
+    } else {
+      return value;
     }
-    return retVal;
+  }
+
+  static sanitize(markdown: string) {
+    // FIXME: Hack, goes around problem in remove-markdown library
+    return markdown.replace(')[', ') [');
   }
 }
