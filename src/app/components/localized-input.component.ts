@@ -2,6 +2,7 @@ import { Component, Input, ViewChild } from '@angular/core';
 import { Node } from '../entities/node';
 import { EditableService } from '../services/editable.service';
 import { NgModel } from '@angular/forms';
+import { PropertyMeta } from '../entities/meta';
 
 @Component({
   selector: 'localized-input',
@@ -22,14 +23,29 @@ import { NgModel } from '@angular/forms';
       </div> 
       <div class="localization" [class.editing]="editing">
         <div *ngIf="!editing" markdown [value]="localization.value" [relatedConcepts]="relatedConcepts"></div>
-        <div *ngIf="editing" class="form-group" [ngClass]="{'has-danger': valueNgModel.control.errors}"> 
-          <input type="text" class="form-control"
-                 autocomplete="off"
-                 validateLocalization
-                 [(ngModel)]="localization.value"
-                 #valueNgModel="ngModel" />
-                         
-          <error-messages [control]="valueNgModel.control"></error-messages>
+        <div *ngIf="editing" class="form-group" [ngClass]="{'has-danger': valueInError}">
+        
+          <div *ngIf="!area">
+            <input type="text" 
+                   class="form-control"
+                   autocomplete="off"
+                   validateLocalization
+                   [(ngModel)]="localization.value"
+                   #valueNgModel="ngModel" />
+                 
+            <error-messages [control]="valueNgModel.control"></error-messages>
+          </div>
+                
+          <div *ngIf="area">
+            <textarea class="form-control"
+                      autocomplete="off"
+                      rows="4"
+                      validateLocalization
+                      [(ngModel)]="localization.value"
+                      #areaValueNgModel="ngModel"></textarea>
+                      
+            <error-messages [control]="areaValueNgModel.control"></error-messages>
+          </div>                         
         </div>
       </div>
     </div>
@@ -37,13 +53,23 @@ import { NgModel } from '@angular/forms';
 })
 export class LocalizedInputComponent {
 
+  @Input() meta: PropertyMeta;
   @Input() value: { [language: string]: string; };
   @Input() relatedConcepts: Node<'Concept'>[];
 
   @ViewChild('valueNgModel') valueNgModel: NgModel;
+  @ViewChild('areaValueNgModel') areaValueNgModel: NgModel;
   @ViewChild('langNgModel') langNgModel: NgModel;
 
   constructor(private editingService: EditableService) {
+  }
+
+  get valueInError() {
+    return (this.valueNgModel && this.valueNgModel.errors) || (this.areaValueNgModel && this.areaValueNgModel.errors);
+  }
+
+  get area() {
+    return this.meta.area;
   }
 
   get editing() {

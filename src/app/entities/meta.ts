@@ -35,6 +35,17 @@ export class PropertyMeta {
         return 'string';
     }
   }
+
+  get area() {
+    switch(this.id) {
+      case 'definition':
+      case 'description':
+      case 'note':
+        return true;
+      default:
+        return false;
+    }
+  }
 }
 
 export class ReferenceMeta {

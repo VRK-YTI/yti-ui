@@ -9,14 +9,29 @@ import { EditableService } from '../services/editable.service';
   selector: 'literal-input',
   template: `
     <span *ngIf="!editing">{{property.value}}</span>
-    <div *ngIf="editing" class="form-group" [ngClass]="{'has-danger': ngModel.control.errors}"> 
-        <input type="text" class="form-control" [name]="meta.id"
-               autocomplete="off"
-               [(ngModel)]="property.value"
-               [validateMeta]="meta"
-               #ngModel="ngModel" />
+    <div *ngIf="editing" class="form-group" [ngClass]="{'has-danger': valueInError}">
+        <div *ngIf="!area">
+          <input type="text" 
+                 class="form-control" 
+                 [name]="meta.id"
+                 autocomplete="off"
+                 [(ngModel)]="property.value"
+                 [validateMeta]="meta"
+                 #ngModel="ngModel" />
+               
+           <error-messages [control]="ngModel.control"></error-messages>
+        </div>
+        
+       <div *ngIf="area">
+         <textarea class="form-control" 
+                   [name]="meta.id"
+                   autocomplete="off"
+                   [(ngModel)]="property.value"
+                   [validateMeta]="meta"
+                   #areaNgModel="ngModel"></textarea>
                        
-        <error-messages [control]="ngModel.control"></error-messages>
+          <error-messages [control]="areaNgModel.control"></error-messages> 
+       </div>
     </div>
   `
 })
@@ -26,8 +41,17 @@ export class LiteralInputComponent {
   @Input() meta: PropertyMeta;
 
   @ViewChild('ngModel') ngModel: NgModel;
+  @ViewChild('areaNgModel') areaNgModel: NgModel;
 
   constructor(private editableService: EditableService) {
+  }
+
+  get valueInError() {
+    return (this.ngModel && this.ngModel.errors) || (this.areaNgModel && this.areaNgModel.errors);
+  }
+
+  get area() {
+    return this.meta ? this.meta.area : false;
   }
 
   get editing() {
