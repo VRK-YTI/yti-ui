@@ -17,6 +17,14 @@ import { Node } from '../entities/node';
           </div>        
         </div>
       </div>
+      
+      <div class="row">
+        <div class="col-md-12">
+          <div class="wrapper">
+            <autocomplete (selected)="autocompleteChanged($event)" (found)=foundItemsChanged($event)></autocomplete>
+          </div>
+        </div>
+      </div>
 
       <div class="row">
         <div class="col-md-12">
@@ -30,12 +38,27 @@ import { Node } from '../entities/node';
         </div>
       </div>
       
+      <!-- this div only for debugging -->
+      <div class="row">
+        <div class="col-md-12">
+          <div *ngIf='!!selectedValue'>
+            <div><strong>Selected item:</strong></div>
+            <br>
+            <i>
+            {{selectedValue}}
+            </i>
+          </div>
+        </div>
+      </div>
+      
     </div>
   `
 })
+
 export class VocabulariesComponent implements OnInit {
 
   conceptSchemes: Observable<Node<'ConceptScheme'>[]>;
+  selectedValue: string;
 
   constructor(private termedService: TermedService, locationService: LocationService) {
     locationService.atFrontPage();
@@ -43,5 +66,14 @@ export class VocabulariesComponent implements OnInit {
 
   ngOnInit() {
     this.conceptSchemes = this.termedService.getConceptSchemeList();
+  }
+
+  autocompleteChanged(value: any) {
+    console.log("AUTOCOMPLETE CHANGED");
+    this.selectedValue = JSON.stringify(value);
+  }
+
+  foundItemsChanged(items: any) {
+    console.log("FOUND ITEMS CHANGED ", items);
   }
 }

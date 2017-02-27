@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { Routes, RouterModule } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -46,6 +46,8 @@ import { EditableButtonsComponent } from './components/editable-buttons.componen
 import { StripMarkdownPipe } from './pipes/strip-markdown.pipe';
 import { LanguageValidator } from './components/validators/language.validator';
 import { LocalizationValidator } from './components/validators/localization.validator';
+import {ElasticSearchService} from "./services/elasticsearch.service";
+import { AutoComplete } from './components/autocomplete/autocomplete.component';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json!po?format=mf!../../po/fi.po'),
@@ -97,6 +99,7 @@ const appRoutes: Routes = [
     LiteralInputComponent,
     ErrorMessagesComponent,
     EditableButtonsComponent,
+    AutoComplete,
     EditableFormDirective,
     MetaModelValidator,
     LanguageValidator,
@@ -113,6 +116,7 @@ const appRoutes: Routes = [
   imports: [
     BrowserModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpModule,
     NgbModule.forRoot(),
     RouterModule.forRoot(appRoutes),
@@ -124,7 +128,8 @@ const appRoutes: Routes = [
     MetaModelService,
     { provide: MissingTranslationHandler, useFactory: createMissingTranslationHandler },
     LanguageService,
-    LocationService
+    LocationService,
+    ElasticSearchService
   ],
   bootstrap: [AppComponent]
 })
