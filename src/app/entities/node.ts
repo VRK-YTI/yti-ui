@@ -56,6 +56,7 @@ export class Node<T extends NodeType> {
 
   properties: { [key: string]: Property } = {};
   references: { [key: string]: Reference } = {};
+  referrers: { [key: string]: Node<any>[] } = {};
 
   constructor(node: NodeExternal<T>, metas: Map<string, NodeMeta>) {
 
@@ -73,6 +74,10 @@ export class Node<T extends NodeType> {
     for (const referenceMeta of this.meta.references) {
       const reference = normalizeAsArray(node.references[referenceMeta.id]);
       this.references[referenceMeta.id] = new Reference(reference, referenceMeta, metas);
+    }
+
+    for (const [name, referrerNodes] of Object.entries(node.referrers)) {
+      this.referrers[name] = normalizeAsArray(referrerNodes).map(referrerNode => new Node<any>(referrerNode, metas));
     }
 
     this.uri = node.uri;
