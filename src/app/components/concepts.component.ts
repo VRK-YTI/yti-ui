@@ -120,8 +120,7 @@ export class ConceptsComponent implements OnInit, AfterViewInit {
       .publishReplay()
       .refCount();
 
-    Observable.zip(concepts$, this.conceptScheme$).subscribe(zipped => {
-      const conceptScheme = zipped[1];
+    Observable.zip(concepts$, this.conceptScheme$).subscribe(([_, conceptScheme]) => {
       this.locationService.atConceptScheme(conceptScheme);
       this.conceptScheme = conceptScheme;
       this.loading = false;
