@@ -35,7 +35,7 @@ import { Node } from '../entities/node';
 })
 export class VocabulariesComponent implements OnInit {
 
-  conceptSchemes: Observable<Node<'ConceptScheme'>[]>;
+  conceptSchemes: Observable<Node<'TerminologicalVocabulary'>[]>;
 
   constructor(private termedService: TermedService, locationService: LocationService) {
     locationService.atFrontPage();

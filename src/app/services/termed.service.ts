@@ -17,14 +17,14 @@ export class TermedService {
   constructor(private http: TermedHttp, private metaModelService: MetaModelService) {
   }
 
-  getConceptScheme(graphId: string): Observable<Node<'ConceptScheme'>> {
-    return Observable.zip(this.metaModelService.getMetaForGraph(graphId), this.getUniqueNodeWithoutReferences(graphId, 'ConceptScheme'))
-      .map(([meta, conceptScheme]) => new Node<'ConceptScheme'>(conceptScheme, meta));
+  getConceptScheme(graphId: string): Observable<Node<'TerminologicalVocabulary'>> {
+    return Observable.zip(this.metaModelService.getMetaForGraph(graphId), this.getUniqueNodeWithoutReferences(graphId, 'TerminologicalVocabulary'))
+      .map(([meta, conceptScheme]) => new Node<'TerminologicalVocabulary'>(conceptScheme, meta));
   }
 
-  getConceptSchemeList(): Observable<Node<'ConceptScheme'>[]> {
-    return Observable.zip(this.metaModelService.getMeta(), this.getAllNodesWithoutReferences('ConceptScheme'))
-      .map(([meta, conceptSchemes]) => conceptSchemes.map(scheme => new Node<'ConceptScheme'>(scheme, requireDefined(meta.get(scheme.type.graph.id)))));
+  getConceptSchemeList(): Observable<Node<'TerminologicalVocabulary'>[]> {
+    return Observable.zip(this.metaModelService.getMeta(), this.getAllNodesWithoutReferences('TerminologicalVocabulary'))
+      .map(([meta, conceptSchemes]) => conceptSchemes.map(scheme => new Node<'TerminologicalVocabulary'>(scheme, requireDefined(meta.get(scheme.type.graph.id)))));
   }
 
   getConcept(graphId: string, conceptId: string): Observable<Node<'Concept'>> {
@@ -47,7 +47,7 @@ export class TermedService {
     params.append('select.referrers', '');
 
     return this.http.get(`/api/ext.json`, { search: params } )
-      .map(response => requireSingle(response.json() as NodeExternal<'ConceptScheme'>));
+      .map(response => requireSingle(response.json() as NodeExternal<'TerminologicalVocabulary'>));
   }
 
   private getAllNodesWithoutReferences<T extends NodeType>(type: T): Observable<NodeExternal<T>[]> {
@@ -59,7 +59,7 @@ export class TermedService {
     params.append('select.referrers', '');
 
     return this.http.get(`/api/ext.json`, { search: params } )
-      .map(response => normalizeAsArray(response.json() as NodeExternal<'ConceptScheme'>[])).catch(notFoundAsDefault([]));
+      .map(response => normalizeAsArray(response.json() as NodeExternal<'TerminologicalVocabulary'>[])).catch(notFoundAsDefault([]));
   }
 
   private getConceptListNodes(graphId: string): Observable<NodeExternal<'Concept'>[]> {

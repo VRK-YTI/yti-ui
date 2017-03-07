@@ -21,14 +21,14 @@ export class LocationService {
     this.location.next(location);
   }
 
-  atConceptScheme(conceptScheme: Node<'ConceptScheme'>): void {
+  atConceptScheme(conceptScheme: Node<'TerminologicalVocabulary'>): void {
     this.changeLocation([{
       label: conceptScheme.label,
       route: ['concepts', conceptScheme.graphId]
     }]);
   }
 
-  atConcept(conceptScheme: Node<'ConceptScheme'>, concept: Node<'Concept'>): void {
+  atConcept(conceptScheme: Node<'TerminologicalVocabulary'>, concept: Node<'Concept'>): void {
     this.changeLocation([
       {
         label: conceptScheme.label,

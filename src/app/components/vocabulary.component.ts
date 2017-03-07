@@ -50,7 +50,7 @@ import { Node } from '../entities/node';
 })
 export class VocabularyComponent {
 
-  @Input('value') conceptScheme: Node<'ConceptScheme'>;
+  @Input('value') conceptScheme: Node<'TerminologicalVocabulary'>;
 
   save() {
     // TODO

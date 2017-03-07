@@ -84,8 +84,8 @@ import { LocationService } from '../services/location.service';
 export class ConceptsComponent implements OnInit, AfterViewInit {
 
   loading = true;
-  conceptScheme: Node<'ConceptScheme'>;
-  conceptScheme$: Observable<Node<'ConceptScheme'>>;
+  conceptScheme: Node<'TerminologicalVocabulary'>;
+  conceptScheme$: Observable<Node<'TerminologicalVocabulary'>>;
   searchResults: Observable<Node<'Concept'>[]>;
   search$ = new BehaviorSubject('');
   _search = '';

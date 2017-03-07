@@ -1,6 +1,6 @@
 
 export type NodeType = 'Concept'
-                     | 'ConceptScheme'
+                     | 'TerminologicalVocabulary'
                      | 'Term'
                      | 'Collection'
                      | 'Group';
