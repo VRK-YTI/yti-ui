@@ -32,7 +32,6 @@ import { LanguageService } from '../services/language.service';
             <tr>
               <th translate>Preferred term</th>
               <th translate>Status</th>
-              <th translate>Modified</th>
             </tr>
           </thead>
           <tbody>
@@ -42,7 +41,6 @@ import { LanguageService } from '../services/language.service';
                    [innerHTML]="concept.label | translateSearchValue: debouncedSearch | highlight: debouncedSearch"></a>
                  </td>
               <td>{{concept.status | translate}}</td>
-              <td>{{concept.lastModifiedDate | timestamp}}</td>
             </tr>
           </tbody>
         </table>
