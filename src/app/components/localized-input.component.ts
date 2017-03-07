@@ -22,7 +22,7 @@ import { PropertyMeta } from '../entities/meta';
         </div>        
       </div> 
       <div class="localization" [class.editing]="editing">
-        <div *ngIf="!editing" markdown [value]="localization.value" [relatedConcepts]="relatedConcepts"></div>
+        <div *ngIf="!editing" markdown-links [value]="localization.value" [relatedConcepts]="relatedConcepts"></div>
         <div *ngIf="editing" class="form-group" [ngClass]="{'has-danger': valueInError}">
         
           <div *ngIf="!area">

@@ -9,12 +9,12 @@ const supportedNodeTypes = ['document', 'paragraph'];
 
 // FIXME: less naive approach to markdown parse tree
 @Component({
-  selector: '[markdown-element]',
-  styleUrls: ['./markdown-element.component.scss'],
+  selector: '[markdown-links-element]',
+  styleUrls: ['./markdown-links-element.component.scss'],
   template: `
     <ng-container *ngIf="node.type === 'document'">
       <ng-container *ngFor="let child of children(node)">
-        <p *ngIf="child.type === 'paragraph'" markdown-element [node]="child" [relatedConcepts]="relatedConcepts"></p>
+        <p *ngIf="child.type === 'paragraph'" markdown-links-element [node]="child" [relatedConcepts]="relatedConcepts"></p>
       </ng-container>
     </ng-container>
     
@@ -27,7 +27,7 @@ const supportedNodeTypes = ['document', 'paragraph'];
     </ng-container>
   `
 })
-export class MarkdownElementComponent implements OnInit {
+export class MarkdownLinksElementComponent implements OnInit {
 
   @Input() node: MarkdownNode;
   @Input() relatedConcepts: Node<'Concept'>[];

@@ -33,8 +33,8 @@ import { ReferenceComponent } from './components/reference.component';
 import { TermsComponent } from './components/terms.component';
 import { NoSelectionComponent } from './components/no-selection.component';
 import { TimestampPipe } from './pipes/timestamp.pipe';
-import { MarkdownComponent } from './components/markdown/markdown.component';
-import { MarkdownElementComponent } from './components/markdown/markdown-element.component';
+import { MarkdownLinksComponent } from './components/markdown/markdown-links.component';
+import { MarkdownLinksElementComponent } from './components/markdown/markdown-links-element.component';
 import { VocabularyComponent } from './components/vocabulary.component';
 import { AccordionChevronComponent } from './components/accordion-chevron.component';
 import { LiteralInputComponent } from './components/literal-input.component';
@@ -91,8 +91,8 @@ const appRoutes: Routes = [
     TermsComponent,
     AjaxLoadingIndicatorComponent,
     LocalizedInputComponent,
-    MarkdownComponent,
-    MarkdownElementComponent,
+    MarkdownLinksComponent,
+    MarkdownLinksElementComponent,
     AccordionChevronComponent,
     LiteralInputComponent,
     ErrorMessagesComponent,

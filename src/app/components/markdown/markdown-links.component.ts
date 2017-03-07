@@ -5,10 +5,10 @@ import { Node } from '../../entities/node';
 const parser = new Parser();
 
 @Component({
-  selector: '[markdown]',
-  template: `<div markdown-element [node]="node" [relatedConcepts]="relatedConcepts"></div>`
+  selector: '[markdown-links]',
+  template: `<div markdown-links-element [node]="node" [relatedConcepts]="relatedConcepts"></div>`
 })
-export class MarkdownComponent implements OnInit {
+export class MarkdownLinksComponent implements OnInit {
 
   @Input() value: string;
   @Input() relatedConcepts: Node<'Concept'>[];
