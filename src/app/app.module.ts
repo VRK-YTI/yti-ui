@@ -38,13 +38,13 @@ import { MarkdownLinksElementComponent } from './components/markdown/markdown-li
 import { VocabularyComponent } from './components/vocabulary.component';
 import { AccordionChevronComponent } from './components/accordion-chevron.component';
 import { LiteralInputComponent } from './components/literal-input.component';
-import { MetaModelValidator } from './components/validators/meta-model.validator';
+import { MetaModelValidator } from './directives/validators/meta-model.validator';
 import { KeysPipe } from './pipes/keys.pipe';
 import { ErrorMessagesComponent } from './components/error-messages.component';
 import { EditableFormDirective } from './directives/editable-form.directive';
 import { EditableButtonsComponent } from './components/editable-buttons.component';
-import { LanguageValidator } from './components/validators/language.validator';
-import { LocalizationValidator } from './components/validators/localization.validator';
+import { LanguageValidator } from './directives/validators/language.validator';
+import { LocalizationValidator } from './directives/validators/localization.validator';
 import { MarkdownComponent } from './components/markdown/markdown.component';
 import { MarkdownElementComponent } from './components/markdown/markdown-element.component';
 
