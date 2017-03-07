@@ -1,0 +1,14 @@
+.search-results {
+
+  margin-top: 15px;
+  overflow-y: auto;
+  height: calc(100vh - 155px);
+
+  table td:nth-child(2) {
+    width: 100px;
+  }
+
+  table td:nth-child(3) {
+    width: 125px;
+  }
+}

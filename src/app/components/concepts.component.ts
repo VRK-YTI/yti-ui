@@ -1,14 +1,8 @@
-import { Component, OnInit, AfterViewInit, Renderer, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { TermedService } from '../services/termed.service';
-import { LanguageService } from '../services/language.service';
 import { Node } from '../entities/node';
-import {
-  filterAndSortSearchResults, TextAnalysis, scoreComparator, labelComparator,
-  ContentExtractor
-} from '../utils/text-analyzer';
-import { isDefined } from '../utils/object';
 import { LocationService } from '../services/location.service';
 
 @Component({
@@ -30,43 +24,7 @@ import { LocationService } from '../services/location.service';
         <div class="bottom">
           <div class="row">        
             <div class="col-lg-4">
-              <div class="row">
-                <div class="col-lg-12">
-                  <div class="input-group input-group-lg">
-                    <input #searchInput
-                           [(ngModel)]="search"
-                           type="text" 
-                           class="form-control" 
-                           [placeholder]="'search...' | translate" />
-                  </div>
-                </div>
-              </div>
-    
-              <div class="row">
-                <div class="col-lg-12 search-results">
-                
-                  <table class="table table-hover table-striped table-sm" *ngIf="!loading">
-                    <thead>
-                      <tr>
-                        <th translate>Preferred term</th>
-                        <th translate>Status</th>
-                        <th translate>Modified</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr *ngFor="let concept of searchResults | async">
-                        <td>
-                          <a [routerLink]="['/concepts', concept.graphId, 'concept', concept.id]" 
-                             [innerHTML]="concept.label | translateSearchValue: search | highlight: search"></a>
-                           </td>
-                        <td>{{concept.status | translate}}</td>
-                        <td>{{concept.lastModifiedDate | timestamp}}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              
+              <concept-list *ngIf="concepts" [concepts]="concepts"></concept-list>              
             </div>
             
             <div class="col-lg-8 selection">
@@ -81,31 +39,17 @@ import { LocationService } from '../services/location.service';
     </div>
   `
 })
-export class ConceptsComponent implements OnInit, AfterViewInit {
+export class ConceptsComponent implements OnInit {
 
   loading = true;
   conceptScheme: Node<'TerminologicalVocabulary'>;
-  conceptScheme$: Observable<Node<'TerminologicalVocabulary'>>;
-  searchResults: Observable<Node<'Concept'>[]>;
-  search$ = new BehaviorSubject('');
-  _search = '';
+  concepts: Node<'Concept'>[];
 
-  @ViewChild('searchInput') searchInput: ElementRef;
+  conceptScheme$: Observable<Node<'TerminologicalVocabulary'>>;
 
   constructor(private route: ActivatedRoute,
-              private renderer: Renderer,
               private termedService: TermedService,
-              private locationService: LocationService,
-              private languageService: LanguageService) {
-  }
-
-  get search() {
-    return this._search;
-  }
-
-  set search(value: string) {
-    this._search = value;
-    this.search$.next(value);
+              private locationService: LocationService) {
   }
 
   ngOnInit() {
@@ -120,23 +64,11 @@ export class ConceptsComponent implements OnInit, AfterViewInit {
       .publishReplay()
       .refCount();
 
-    Observable.zip(concepts$, this.conceptScheme$).subscribe(([_, conceptScheme]) => {
+    Observable.zip(concepts$, this.conceptScheme$).subscribe(([concepts, conceptScheme]) => {
       this.locationService.atConceptScheme(conceptScheme);
       this.conceptScheme = conceptScheme;
+      this.concepts = concepts;
       this.loading = false;
     });
-
-    this.searchResults = Observable.combineLatest([concepts$, this.search$.debounceTime(500)], (concepts: Node<'Concept'>[], search: string) => {
-
-      const scoreFilter = (item: TextAnalysis<Node<'Concept'>>) => !search || isDefined(item.matchScore) || item.score < 2;
-      const labelExtractor: ContentExtractor<Node<'Concept'>> = concept => concept.label;
-      const comparator = scoreComparator().andThen(labelComparator(this.languageService));
-
-      return filterAndSortSearchResults(concepts, search, [labelExtractor], [scoreFilter], comparator);
-    });
-  }
-
-  ngAfterViewInit() {
-    this.renderer.invokeElementMethod(this.searchInput.nativeElement, 'focus');
   }
 }
