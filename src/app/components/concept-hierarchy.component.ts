@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'concept-hierarchy',
@@ -8,4 +8,5 @@ import { Component } from '@angular/core';
   `
 })
 export class ConceptHierarchyComponent {
+  @Input() graphId: string;
 }

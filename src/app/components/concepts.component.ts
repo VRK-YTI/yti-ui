@@ -24,14 +24,14 @@ import { LocationService } from '../services/location.service';
         <div class="bottom">
           <div class="row">
             <div class="col-lg-4">
-              <ngb-tabset *ngIf="concepts">
+              <ngb-tabset *ngIf="graphId">
                 <ngb-tab>
                   <template ngbTabTitle>{{'Alphabetic' | translate}}</template>
-                  <template ngbTabContent><concept-list [concepts]="concepts"></concept-list></template>
+                  <template ngbTabContent><concept-list [graphId]="graphId"></concept-list></template>
                 </ngb-tab>
                 <ngb-tab>
                   <template ngbTabTitle>{{'Hierarchical' | translate}}</template>
-                  <template ngbTabContent><concept-hierarchy></concept-hierarchy></template>
+                  <template ngbTabContent><concept-hierarchy [graphId]="graphId"></concept-hierarchy></template>
                 </ngb-tab>
               </ngb-tabset>
             </div>
@@ -50,10 +50,8 @@ import { LocationService } from '../services/location.service';
 })
 export class ConceptsComponent implements OnInit {
 
-  loading = true;
+  graphId: string;
   conceptScheme: Node<'TerminologicalVocabulary'>;
-  concepts: Node<'Concept'>[];
-
   conceptScheme$: Observable<Node<'TerminologicalVocabulary'>>;
 
   constructor(private route: ActivatedRoute,
@@ -61,23 +59,23 @@ export class ConceptsComponent implements OnInit {
               private locationService: LocationService) {
   }
 
+  get loading() {
+    return !this.conceptScheme;
+  }
+
   ngOnInit() {
 
     const graphId$ = this.route.params.map(params => params['graphId'] as string);
 
-    const concepts$ = graphId$.switchMap(graphId => this.termedService.getConceptList(graphId))
-      .publishReplay()
-      .refCount();
+    graphId$.subscribe(graphId => this.graphId = graphId);
 
     this.conceptScheme$ = graphId$.switchMap(graphId => this.termedService.getConceptScheme(graphId))
       .publishReplay()
       .refCount();
 
-    Observable.zip(concepts$, this.conceptScheme$).subscribe(([concepts, conceptScheme]) => {
+    this.conceptScheme$.subscribe(conceptScheme => {
       this.locationService.atConceptScheme(conceptScheme);
       this.conceptScheme = conceptScheme;
-      this.concepts = concepts;
-      this.loading = false;
     });
   }
 }

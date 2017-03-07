@@ -7,6 +7,7 @@ import {
 } from '../utils/text-analyzer';
 import { isDefined } from '../utils/object';
 import { LanguageService } from '../services/language.service';
+import { TermedService } from '../services/termed.service';
 
 @Component({
   selector: 'concept-list',
@@ -50,7 +51,7 @@ import { LanguageService } from '../services/language.service';
 })
 export class ConceptListComponent implements OnInit, AfterViewInit {
 
-  @Input() concepts: Node<'Concept'>[];
+  @Input() graphId: string;
   @ViewChild('searchInput') searchInput: ElementRef;
 
   searchResults: Observable<Node<'Concept'>[]>;
@@ -59,6 +60,7 @@ export class ConceptListComponent implements OnInit, AfterViewInit {
   debouncedSearch = this._search;
 
   constructor(private languageService: LanguageService,
+              private termedService: TermedService,
               private renderer: Renderer) {
   }
 
@@ -72,14 +74,19 @@ export class ConceptListComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.searchResults = this.search$.debounceTime(500).map(search => {
+
+    const concepts$ = this.termedService.getConceptList(this.graphId)
+      .publishReplay()
+      .refCount();
+
+    this.searchResults = Observable.combineLatest([concepts$, this.search$.debounceTime(500)], (concepts: Node<'Concept'>[], search: string) => {
 
       this.debouncedSearch = search;
       const scoreFilter = (item: TextAnalysis<Node<'Concept'>>) => !search || isDefined(item.matchScore) || item.score < 2;
       const labelExtractor: ContentExtractor<Node<'Concept'>> = concept => concept.label;
       const comparator = scoreComparator().andThen(labelComparator(this.languageService));
 
-      return filterAndSortSearchResults(this.concepts, search, [labelExtractor], [scoreFilter], comparator);
+      return filterAndSortSearchResults(concepts, search, [labelExtractor], [scoreFilter], comparator);
     });
   }
 
