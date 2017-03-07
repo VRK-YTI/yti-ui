@@ -22,11 +22,20 @@ import { LocationService } from '../services/location.service';
         </div>
   
         <div class="bottom">
-          <div class="row">        
+          <div class="row">
             <div class="col-lg-4">
-              <concept-list *ngIf="concepts" [concepts]="concepts"></concept-list>              
+              <ngb-tabset *ngIf="concepts">
+                <ngb-tab>
+                  <template ngbTabTitle>{{'Alphabetic' | translate}}</template>
+                  <template ngbTabContent><concept-list [concepts]="concepts"></concept-list></template>
+                </ngb-tab>
+                <ngb-tab>
+                  <template ngbTabTitle>{{'Hierarchical' | translate}}</template>
+                  <template ngbTabContent><concept-hierarchy></concept-hierarchy></template>
+                </ngb-tab>
+              </ngb-tabset>
             </div>
-            
+
             <div class="col-lg-8 selection">
               <router-outlet></router-outlet>
             </div>

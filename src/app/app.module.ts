@@ -48,6 +48,7 @@ import { LocalizationValidator } from './directives/validators/localization.vali
 import { MarkdownComponent } from './components/markdown/markdown.component';
 import { MarkdownElementComponent } from './components/markdown/markdown-element.component';
 import { ConceptListComponent } from './components/concept-list.component';
+import { ConceptHierarchyComponent } from './components/concept-hierarchy.component';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json!po?format=mf!../../po/fi.po'),
@@ -87,6 +88,7 @@ const appRoutes: Routes = [
     VocabularyComponent,
     ConceptsComponent,
     ConceptListComponent,
+    ConceptHierarchyComponent,
     ConceptComponent,
     NoSelectionComponent,
     PropertyComponent,
