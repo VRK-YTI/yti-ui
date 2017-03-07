@@ -41,7 +41,7 @@ import { LiteralInputComponent } from './components/literal-input.component';
 import { MetaModelValidator } from './components/validators/meta-model.validator';
 import { KeysPipe } from './pipes/keys.pipe';
 import { ErrorMessagesComponent } from './components/error-messages.component';
-import { EditableFormDirective } from './components/directives/editable-form.directive';
+import { EditableFormDirective } from './directives/editable-form.directive';
 import { EditableButtonsComponent } from './components/editable-buttons.component';
 import { LanguageValidator } from './components/validators/language.validator';
 import { LocalizationValidator } from './components/validators/localization.validator';
