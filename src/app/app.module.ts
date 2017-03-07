@@ -46,6 +46,8 @@ import { EditableButtonsComponent } from './components/editable-buttons.componen
 import { StripMarkdownPipe } from './pipes/strip-markdown.pipe';
 import { LanguageValidator } from './components/validators/language.validator';
 import { LocalizationValidator } from './components/validators/localization.validator';
+import { MarkdownComponent } from './components/markdown/markdown.component';
+import { MarkdownElementComponent } from './components/markdown/markdown-element.component';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json!po?format=mf!../../po/fi.po'),
@@ -91,6 +93,8 @@ const appRoutes: Routes = [
     TermsComponent,
     AjaxLoadingIndicatorComponent,
     LocalizedInputComponent,
+    MarkdownComponent,
+    MarkdownElementComponent,
     MarkdownLinksComponent,
     MarkdownLinksElementComponent,
     AccordionChevronComponent,
