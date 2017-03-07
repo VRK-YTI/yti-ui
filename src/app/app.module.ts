@@ -43,7 +43,6 @@ import { KeysPipe } from './pipes/keys.pipe';
 import { ErrorMessagesComponent } from './components/error-messages.component';
 import { EditableFormDirective } from './components/directives/editable-form.directive';
 import { EditableButtonsComponent } from './components/editable-buttons.component';
-import { StripMarkdownPipe } from './pipes/strip-markdown.pipe';
 import { LanguageValidator } from './components/validators/language.validator';
 import { LocalizationValidator } from './components/validators/localization.validator';
 import { MarkdownComponent } from './components/markdown/markdown.component';
@@ -111,7 +110,6 @@ const appRoutes: Routes = [
     PropertiesPipe,
     ReferencesPipe,
     TimestampPipe,
-    StripMarkdownPipe,
     KeysPipe
   ],
   imports: [

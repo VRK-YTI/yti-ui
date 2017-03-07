@@ -20,7 +20,11 @@ const supportedNodeTypes = ['document', 'paragraph'];
     
     <ng-container *ngIf="node.type === 'paragraph'">
       <ng-container *ngFor="let child of children(node)">
-        <template #popContent>{{conceptDefinition(child) | translateValue | stripMarkdown}}</template>
+      
+        <template #popContent>
+          <div markdown [value]="conceptDefinition(child) | translateValue"></div>
+        </template>
+      
         <a *ngIf="child.type === 'link'" [routerLink]="link(child)" [ngbPopover]="popContent" triggers="mouseenter:mouseleave">{{child.firstChild.literal}}</a>
         <span *ngIf="child.type === 'text'">{{child.literal}}</span>
       </ng-container>
