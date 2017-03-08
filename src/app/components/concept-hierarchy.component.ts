@@ -29,7 +29,7 @@ export class ConceptHierarchyComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.termedService.getRootConceptList(this.graphId).subscribe(concepts => {
+    this.termedService.getTopConceptList(this.graphId).subscribe(concepts => {
       this.topConcepts = concepts.sort(comparingLocalizable<Node<'Concept'>>(this.languageService, concept => concept.label));
     });
   }

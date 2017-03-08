@@ -37,7 +37,7 @@ export class TermedService {
       .map(([meta, concepts]) => concepts.map(concept => new Node<'Concept'>(concept, meta)));
   }
 
-  getRootConceptList(graphId: string): Observable<Node<'Concept'>[]> {
+  getTopConceptList(graphId: string): Observable<Node<'Concept'>[]> {
     return Observable.zip(this.metaModelService.getMetaForGraph(graphId), this.getConceptSchemeWithTopConcepts(graphId))
       .map(([meta, conceptScheme]) => normalizeAsArray(conceptScheme.references['hasTopConcept']).map(concept => new Node<'Concept'>(concept, meta)));
   }
