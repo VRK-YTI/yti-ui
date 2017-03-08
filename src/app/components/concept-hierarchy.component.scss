@@ -1,0 +1,17 @@
+.tree {
+
+  margin-top: 15px;
+  overflow-y: auto;
+  height: calc(100vh - 155px);
+}
+
+:host /deep/ {
+  ul {
+    padding-left: 18px;
+    list-style: none;
+  }
+
+  i {
+    margin-left: -16px;
+  }
+}

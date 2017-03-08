@@ -42,6 +42,11 @@ export class TermedService {
       .map(([meta, conceptScheme]) => normalizeAsArray(conceptScheme.references['hasTopConcept']).map(concept => new Node<'Concept'>(concept, meta)));
   }
 
+  getNarrowerConcepts(graphId: string, broaderConceptId: string): Observable<Node<'Concept'>[]> {
+    return Observable.zip(this.metaModelService.getMetaForGraph(graphId), this.getNarrowerConceptNodes(graphId, broaderConceptId))
+      .map(([meta, concepts]) => concepts.map(concept => new Node<'Concept'>(concept, meta)));
+  }
+
   private getUniqueNodeWithoutReferences<T extends NodeType>(graphId: string, type: T): Observable<NodeExternal<T>> {
 
     const params = new URLSearchParams();
@@ -99,6 +104,23 @@ export class TermedService {
 
     return this.http.get(`/api/ext.json`, { search: params } )
       .map(response => requireSingle(response.json() as NodeExternal<'TerminologicalVocabulary'>[]));
+  }
+
+  private getNarrowerConceptNodes(graphId: string, broaderConceptId: string): Observable<NodeExternal<'Concept'>[]> {
+
+    const params = new URLSearchParams();
+    params.append('max', '-1');
+    params.append('graphId', graphId);
+    params.append('typeId', 'Concept');
+    params.append('recurse.referrers.broader', '1');
+    params.append('recurse.references.prefLabelXl', '1');
+    params.append('select.references', 'prefLabelXl');
+    params.append('select.properties', 'prefLabel');
+    params.append('select.referrers', 'broader');
+    params.append('where.references.broader', broaderConceptId);
+
+    return this.http.get(`/api/ext.json`, { search: params } )
+      .map(response => normalizeAsArray(response.json() as NodeExternal<'Concept'>[])).catch(notFoundAsDefault([]));
   }
 
   private getConceptDetailsNode(graphId: string, conceptId: string): Observable<NodeExternal<'Concept'>> {

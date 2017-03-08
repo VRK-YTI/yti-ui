@@ -49,6 +49,7 @@ import { MarkdownComponent } from './components/markdown/markdown.component';
 import { MarkdownElementComponent } from './components/markdown/markdown-element.component';
 import { ConceptListComponent } from './components/concept-list.component';
 import { ConceptHierarchyComponent } from './components/concept-hierarchy.component';
+import { ConceptHierarchyNodeComponent } from './components/concept-hierarchy-node.component';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json!po?format=mf!../../po/fi.po'),
@@ -89,6 +90,7 @@ const appRoutes: Routes = [
     ConceptsComponent,
     ConceptListComponent,
     ConceptHierarchyComponent,
+    ConceptHierarchyNodeComponent,
     ConceptComponent,
     NoSelectionComponent,
     PropertyComponent,
