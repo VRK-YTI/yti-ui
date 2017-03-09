@@ -3,7 +3,6 @@ import { requireDefined } from '../utils/object';
 import { normalizeAsArray, filter } from '../utils/array';
 import { NodeExternal, NodeType, Attribute } from './node-api';
 import { PropertyMeta, ReferenceMeta, NodeMeta } from './meta';
-import { Moment } from 'moment';
 import * as moment from 'moment';
 
 export class Property {
@@ -44,27 +43,15 @@ export class Reference {
 
 export class Node<T extends NodeType> {
 
-  id: string;
-  code: string;
-  uri: string;
   meta: NodeMeta;
-
-  graphId: string;
-
-  createdDate: Moment;
-  lastModifiedDate: Moment;
 
   properties: { [key: string]: Property } = {};
   references: { [key: string]: Reference } = {};
   referrers: { [key: string]: Node<any>[] } = {};
 
-  constructor(node: NodeExternal<T>, metas: Map<string, NodeMeta>) {
+  constructor(private node: NodeExternal<T>, private metas: Map<string, NodeMeta>) {
 
     this.meta = metas.get(node.type.id)!;
-
-    this.id = node.id;
-    this.code = node.code;
-    this.graphId = node.type.graph.id;
 
     for (const propertyMeta of this.meta.properties) {
       const property = normalizeAsArray(node.properties[propertyMeta.id]);
@@ -79,10 +66,38 @@ export class Node<T extends NodeType> {
     for (const [name, referrerNodes] of Object.entries(node.referrers)) {
       this.referrers[name] = normalizeAsArray(referrerNodes).map(referrerNode => new Node<any>(referrerNode, metas));
     }
+  }
 
-    this.uri = node.uri;
-    this.createdDate = moment(node.createdDate);
-    this.lastModifiedDate = moment(node.lastModifiedDate);
+  get id() {
+    return this.node.id;
+  }
+
+  get code() {
+    return this.node.code;
+  }
+
+  get uri() {
+    return this.node.uri;
+  }
+
+  get graphId() {
+    return this.node.type.graph.id;
+  }
+
+  get type(): T {
+    return this.node.type.id;
+  }
+
+  get createdDate() {
+    return moment(this.node.createdDate);
+  }
+
+  get lastModifiedDate() {
+    return moment(this.node.lastModifiedDate);
+  }
+
+  clone() {
+    return new Node<T>(JSON.parse(JSON.stringify(this.node)), this.metas);
   }
 
   get concept(): boolean {

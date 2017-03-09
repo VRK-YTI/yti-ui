@@ -6,16 +6,18 @@ import { TermedService } from '../services/termed.service';
 import { ConceptsComponent } from './concepts.component';
 import { Observable } from 'rxjs';
 import { normalizeAsArray } from '../utils/array';
+import { EditableService } from '../services/editable.service';
 
 @Component({
   selector: 'concept',
   styleUrls: ['./concept.component.scss'],
+  providers: [EditableService],
   template: `
-    <form class="editable" *ngIf="concept">
+    <form *ngIf="concept">
 
       <div class="row">
         <div class="col-md-12">
-          <editable-buttons (save)="save()"></editable-buttons>
+          <editable-buttons></editable-buttons>
         </div>
       </div>
 
@@ -59,25 +61,24 @@ import { normalizeAsArray } from '../utils/array';
 })
 export class ConceptComponent implements OnInit {
 
+  persistentConcept: Node<'Concept'>;
   concept: Node<'Concept'>;
 
   constructor(private route: ActivatedRoute,
               private termedService: TermedService,
               private locationService: LocationService,
+              private editableService: EditableService,
               private conceptsComponent: ConceptsComponent) {
-  }
 
-  save() {
-    // TODO
-    console.log('saving concept');
-  }
+    editableService.save$.subscribe(() => {
+      // TODO
+      console.log('saving concept');
+      this.persistentConcept = this.concept;
+    });
 
-  get relatedConcepts(): Node<'Concept'>[] {
-    return normalizeAsArray(this.concept.references['related'].values);
-  }
-
-  get graphId() {
-    return this.route.snapshot.parent.params['graphId'] as string;
+    editableService.cancel$.subscribe(() => {
+      this.concept = this.persistentConcept.clone();
+    });
   }
 
   ngOnInit() {
@@ -88,8 +89,17 @@ export class ConceptComponent implements OnInit {
       .subscribe(([conceptScheme, concept]) => {
         if (conceptScheme && concept) {
           this.locationService.atConcept(conceptScheme, concept);
-          this.concept = concept;
+          this.persistentConcept = concept;
+          this.concept = concept.clone();
         }
       });
+  }
+
+  get relatedConcepts(): Node<'Concept'>[] {
+    return normalizeAsArray(this.concept.references['related'].values);
+  }
+
+  get graphId() {
+    return this.route.snapshot.parent.params['graphId'] as string;
   }
 }

@@ -1,9 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Node } from '../entities/node';
+import { EditableService } from '../services/editable.service';
 
 @Component({
   selector: 'vocabulary',
   styleUrls: ['./vocabulary.component.scss'],
+  providers: [EditableService],
   template: `
     <ngb-accordion>
       <ngb-panel>
@@ -19,7 +21,7 @@ import { Node } from '../entities/node';
               
                 <div class="row">
                   <div class="col-md-12">
-                    <editable-buttons (save)="save()"></editable-buttons>
+                    <editable-buttons></editable-buttons>
                   </div>
                 </div>
               
@@ -48,12 +50,24 @@ import { Node } from '../entities/node';
     </ngb-accordion>
   `
 })
-export class VocabularyComponent {
+export class VocabularyComponent implements OnInit {
 
-  @Input('value') conceptScheme: Node<'TerminologicalVocabulary'>;
+  @Input('value') persistentConceptScheme: Node<'TerminologicalVocabulary'>;
+  conceptScheme: Node<'TerminologicalVocabulary'>;
 
-  save() {
-    // TODO
-    console.log('saving vocabulary');
+  constructor(editableService: EditableService) {
+    editableService.save$.subscribe(() => {
+      // TODO
+      console.log('saving concept scheme');
+      this.persistentConceptScheme = this.conceptScheme;
+    });
+
+    editableService.cancel$.subscribe(() => {
+      this.conceptScheme = this.persistentConceptScheme.clone();
+    });
+  }
+
+  ngOnInit() {
+    this.conceptScheme = this.persistentConceptScheme.clone();
   }
 }
