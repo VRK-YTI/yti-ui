@@ -34,7 +34,7 @@ import { TermsComponent } from './components/terms.component';
 import { NoSelectionComponent } from './components/no-selection.component';
 import { TimestampPipe } from './pipes/timestamp.pipe';
 import { MarkdownLinksComponent } from './components/markdown/markdown-links.component';
-import { MarkdownLinksElementComponent } from './components/markdown/markdown-links-element.component';
+import { MarkdownLinksElementComponent } from './components/markdown/markdown-links.component';
 import { VocabularyComponent } from './components/vocabulary.component';
 import { AccordionChevronComponent } from './components/accordion-chevron.component';
 import { LiteralInputComponent } from './components/literal-input.component';
@@ -46,7 +46,7 @@ import { EditableButtonsComponent } from './components/editable-buttons.componen
 import { LanguageValidator } from './directives/validators/language.validator';
 import { LocalizationValidator } from './directives/validators/localization.validator';
 import { MarkdownComponent } from './components/markdown/markdown.component';
-import { MarkdownElementComponent } from './components/markdown/markdown-element.component';
+import { MarkdownElementComponent } from './components/markdown/markdown.component';
 import { ConceptListComponent } from './components/concept-list.component';
 import { ConceptHierarchyComponent } from './components/concept-hierarchy.component';
 import { ConceptHierarchyNodeComponent } from './components/concept-hierarchy-node.component';
