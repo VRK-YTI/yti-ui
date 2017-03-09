@@ -6,7 +6,7 @@ import { children } from './markdown-utils';
   selector: '[markdown-element]',
   styleUrls: ['./markdown-element.component.scss'],
   template: `    
-    <ng-container *ngIf="node.isContainer">
+    <ng-container>
       <ng-container *ngFor="let child of children">
         <p *ngIf="child.type === 'paragraph'" markdown-element [node]="child"></p>
         <u *ngIf="child.type === 'link'">{{child.firstChild.literal}}</u>

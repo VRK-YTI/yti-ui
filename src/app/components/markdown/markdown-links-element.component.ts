@@ -9,7 +9,7 @@ import { children } from './markdown-utils';
   selector: '[markdown-links-element]',
   styleUrls: ['./markdown-links-element.component.scss'],
   template: `
-    <ng-container *ngIf="node.isContainer">
+    <ng-container>
       <ng-container *ngFor="let child of children">
       
         <template #popContent>
