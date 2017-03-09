@@ -10,15 +10,16 @@ import { children } from './markdown-utils';
   styleUrls: ['./markdown-links-element.component.scss'],
   template: `
     <ng-container>
-      <ng-container *ngFor="let child of children">
-      
+      <ng-container *ngFor="let child of children" [ngSwitch]="child.type">
+              
+        <p *ngSwitchCase="'paragraph'" markdown-links-element [node]="child" [relatedConcepts]="relatedConcepts"></p>
+        <a *ngSwitchCase="'link'" [routerLink]="link(child)" [ngbPopover]="popContent" triggers="mouseenter:mouseleave">{{child.firstChild.literal}}</a>
+        <span *ngSwitchCase="'text'">{{child.literal}}</span>
+        
         <template #popContent>
           <div markdown [value]="conceptDefinition(child) | translateValue"></div>
         </template>
       
-        <p *ngIf="child.type === 'paragraph'" markdown-links-element [node]="child" [relatedConcepts]="relatedConcepts"></p>
-        <a *ngIf="child.type === 'link'" [routerLink]="link(child)" [ngbPopover]="popContent" triggers="mouseenter:mouseleave">{{child.firstChild.literal}}</a>
-        <span *ngIf="child.type === 'text'">{{child.literal}}</span>
       </ng-container>
     </ng-container>
   `

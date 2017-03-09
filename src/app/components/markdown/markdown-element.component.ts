@@ -7,10 +7,12 @@ import { children } from './markdown-utils';
   styleUrls: ['./markdown-element.component.scss'],
   template: `    
     <ng-container>
-      <ng-container *ngFor="let child of children">
-        <p *ngIf="child.type === 'paragraph'" markdown-element [node]="child"></p>
-        <u *ngIf="child.type === 'link'">{{child.firstChild.literal}}</u>
-        <span *ngIf="child.type === 'text'">{{child.literal}}</span>
+      <ng-container *ngFor="let child of children" [ngSwitch]="child.type">
+      
+        <p *ngSwitchCase="'paragraph'" markdown-element [node]="child"></p>
+        <u *ngSwitchCase="'link'">{{child.firstChild.literal}}</u>
+        <span *ngSwitchCase="'text'">{{child.literal}}</span>
+      
       </ng-container>
     </ng-container>
   `
