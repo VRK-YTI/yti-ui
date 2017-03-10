@@ -148,6 +148,10 @@ export class Node<T extends NodeType> {
     }
   }
 
+  get definition(): Localizable {
+    return this.getPropertyAsLocalizable('definition');
+  }
+
   get status(): string {
     if (this.properties['term_status']) {
       return this.getPropertyAsString('term_status');

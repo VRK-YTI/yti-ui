@@ -56,6 +56,12 @@ import { EditableService } from '../services/editable.service';
           <ajax-loading-indicator *ngIf="!concept"></ajax-loading-indicator>
         </div>
       </div>
+      <div class="row">
+        <div class="col-md-12">
+            <concept-network [rootConcept]="concept"></concept-network>
+        </div>
+      </div>
+      
     </form>
   `
 })

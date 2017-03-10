@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { Routes, RouterModule } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { VisModule } from 'ng2-vis';
 
 import { AppComponent } from './components/app.component';
 import { TermedService } from './services/termed.service';
@@ -35,6 +36,7 @@ import { NoSelectionComponent } from './components/no-selection.component';
 import { TimestampPipe } from './pipes/timestamp.pipe';
 import { MarkdownLinksComponent } from './components/markdown/markdown-links.component';
 import { MarkdownLinksElementComponent } from './components/markdown/markdown-links.component';
+import { ConceptNetworkComponent } from './components/vis/concept-network.component';
 import { VocabularyComponent } from './components/vocabulary.component';
 import { AccordionChevronComponent } from './components/accordion-chevron.component';
 import { LiteralInputComponent } from './components/literal-input.component';
@@ -105,6 +107,8 @@ const appRoutes: Routes = [
     LiteralInputComponent,
     ErrorMessagesComponent,
     EditableButtonsComponent,
+    ConceptNetworkComponent,
+    EditableFormDirective,
     MetaModelValidator,
     LanguageValidator,
     LocalizationValidator,
@@ -122,7 +126,8 @@ const appRoutes: Routes = [
     HttpModule,
     NgbModule.forRoot(),
     RouterModule.forRoot(appRoutes),
-    TranslateModule.forRoot({ provide: TranslateLoader, useFactory: createTranslateLoader })
+    TranslateModule.forRoot({ provide: TranslateLoader, useFactory: createTranslateLoader }),
+    VisModule
   ],
   providers: [
     TermedHttp,
