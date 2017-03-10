@@ -1,8 +1,9 @@
 import { asLocalizable, Localizable, combineLocalizables, isLocalization, Localization } from './localization';
 import { requireDefined } from '../utils/object';
 import { normalizeAsArray, filter } from '../utils/array';
-import { NodeExternal, NodeType, Attribute } from './node-api';
+import { NodeExternal, NodeType, Attribute, Identifier, NodeInternal } from './node-api';
 import { PropertyMeta, ReferenceMeta, NodeMeta } from './meta';
+import { Moment } from 'moment';
 import * as moment from 'moment';
 
 export class Property {
@@ -11,7 +12,7 @@ export class Property {
 
   constructor(attributes: Attribute[], public meta: PropertyMeta) {
 
-    if (meta.type === 'localizable') {
+    if (this.localizable()) {
       this.value = filter(attributes, isLocalization);
     } else {
       // TODO: cardinality
@@ -20,6 +21,18 @@ export class Property {
       } else {
         this.value = '';
       }
+    }
+  }
+
+  localizable() {
+    return this.meta.type == 'localizable';
+  }
+
+  toAttributes(): Attribute[] {
+    if (typeof this.value === 'string') {
+      return [{ lang: '', regex: this.meta.regex, value: this.value }];
+    } else {
+      return this.value.map(value => Object.assign({ regex: this.meta.regex }, value));
     }
   }
 }
@@ -38,6 +51,10 @@ export class Reference {
 
   get concept(): boolean {
     return this.meta.concept;
+  }
+
+  toIdentifiers(): Identifier<any>[] {
+    return this.values.map(node => node.identifier);
   }
 }
 
@@ -68,6 +85,15 @@ export class Node<T extends NodeType> {
     }
   }
 
+  toInternalNode(): NodeInternal<T> {
+    // TODO: would be better to not send inlined objects as references but only id and type (Identifier)
+    return this.node;
+  }
+
+  get identifier(): Identifier<T> {
+    return { id: this.id, type: this.node.type };
+  }
+
   get id() {
     return this.node.id;
   }
@@ -94,6 +120,10 @@ export class Node<T extends NodeType> {
 
   get lastModifiedDate() {
     return moment(this.node.lastModifiedDate);
+  }
+
+  set lastModifiedDate(date: Moment) {
+    this.node.lastModifiedDate = date.toISOString();
   }
 
   clone() {

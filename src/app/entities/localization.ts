@@ -3,7 +3,7 @@ import { Attribute } from './node-api';
 import { isDefined } from '../utils/object';
 
 export interface Localization {
-
+  regex: '';
   lang: string;
   value: string;
 }

@@ -71,8 +71,7 @@ export class ConceptComponent implements OnInit {
               private conceptsComponent: ConceptsComponent) {
 
     editableService.save$.subscribe(() => {
-      // TODO
-      console.log('saving concept');
+      this.termedService.updateNode(this.concept);
       this.persistentConcept = this.concept;
     });
 

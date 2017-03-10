@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
-import { URLSearchParams, ResponseOptionsArgs } from '@angular/http';
+import { URLSearchParams, ResponseOptionsArgs, Response } from '@angular/http';
 import { Observable } from 'rxjs';
 import { TermedHttp } from './termed-http.service';
 import { normalizeAsArray } from '../utils/array';
 import { MetaModelService } from './meta-model.service';
-import { NodeExternal, NodeType } from '../entities/node-api';
+import { NodeExternal, NodeType, NodeInternal } from '../entities/node-api';
 import { Node } from '../entities/node';
 import { requireDefined } from '../utils/object';
+import * as moment from 'moment';
 
 const infiniteResultsParams = new URLSearchParams();
 infiniteResultsParams.append('max', '-1');
@@ -47,6 +48,31 @@ export class TermedService {
       .map(([meta, concepts]) => concepts.map(concept => new Node<'Concept'>(concept, meta)));
   }
 
+  updateNode<T extends NodeType>(node: Node<T>) {
+
+    node.lastModifiedDate = moment();
+
+    const termNodes: NodeInternal<any>[] = [];
+
+    for (const reference of Object.values(node.references)) {
+      if (reference.term) {
+        for (const node of reference.values) {
+          termNodes.push(node.toInternalNode());
+        }
+      }
+    }
+
+    this.updateUpdateInternalNodes([node.toInternalNode(), ...termNodes]).subscribe();
+  }
+
+  private updateUpdateInternalNodes(nodes: NodeInternal<any>[]): Observable<Response> {
+
+    const params = new URLSearchParams();
+    params.append('batch', 'true');
+
+    return this.http.post('/api/nodes', nodes, { search: params });
+  }
+
   private getUniqueNodeWithoutReferences<T extends NodeType>(graphId: string, type: T): Observable<NodeExternal<T>> {
 
     const params = new URLSearchParams();
@@ -57,7 +83,7 @@ export class TermedService {
     params.append('select.referrers', '');
 
     return this.http.get(`/api/ext.json`, { search: params } )
-      .map(response => requireSingle(response.json() as NodeExternal<'TerminologicalVocabulary'>));
+      .map(response => requireSingle(response.json() as NodeExternal<T>));
   }
 
   private getAllNodesWithoutReferences<T extends NodeType>(type: T): Observable<NodeExternal<T>[]> {
@@ -69,7 +95,7 @@ export class TermedService {
     params.append('select.referrers', '');
 
     return this.http.get(`/api/ext.json`, { search: params } )
-      .map(response => normalizeAsArray(response.json() as NodeExternal<'TerminologicalVocabulary'>[])).catch(notFoundAsDefault([]));
+      .map(response => normalizeAsArray(response.json() as NodeExternal<T>[])).catch(notFoundAsDefault([]));
   }
 
   private getConceptListNodes(graphId: string): Observable<NodeExternal<'Concept'>[]> {

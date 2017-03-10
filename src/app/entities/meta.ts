@@ -10,7 +10,7 @@ export class PropertyMeta {
 
   id: string;
   label: Localizable;
-  regex?: string;
+  regex: string;
   index: number;
 
   constructor(textAttribute: TextAttributeInternal) {

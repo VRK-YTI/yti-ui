@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Node } from '../entities/node';
 import { EditableService } from '../services/editable.service';
+import { TermedService } from '../services/termed.service';
 
 @Component({
   selector: 'vocabulary',
@@ -55,10 +56,9 @@ export class VocabularyComponent implements OnInit {
   @Input('value') persistentConceptScheme: Node<'TerminologicalVocabulary'>;
   conceptScheme: Node<'TerminologicalVocabulary'>;
 
-  constructor(editableService: EditableService) {
+  constructor(editableService: EditableService, termedService: TermedService) {
     editableService.save$.subscribe(() => {
-      // TODO
-      console.log('saving concept scheme');
+      termedService.updateNode(this.conceptScheme);
       this.persistentConceptScheme = this.conceptScheme;
     });
 
