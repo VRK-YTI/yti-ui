@@ -1,7 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ElementRef, ViewChild, AfterViewChecked } from '@angular/core';
 import { Parser, Node as MarkdownNode } from 'commonmark';
 import { Node } from '../../entities/node';
-import { children, logNotSupportedNodes } from './markdown-utils';
+import { children, logNotSupportedNodes, removeWhiteSpaceNodes } from './markdown-utils';
 import { first } from '../../utils/array';
 import { Localizable } from '../../entities/localization';
 
@@ -10,17 +10,27 @@ const parser = new Parser();
 
 @Component({
   selector: '[markdown-links]',
-  template: `<div markdown-links-element [node]="node" [relatedConcepts]="relatedConcepts"></div>`
+  template: `
+    <div #self>
+      <div markdown-links-element [node]="node" [relatedConcepts]="relatedConcepts"></div>
+    </div>
+  `
 })
-export class MarkdownLinksComponent implements OnInit {
+export class MarkdownLinksComponent implements OnInit, AfterViewChecked {
 
   @Input() value: string;
   @Input() relatedConcepts: Node<'Concept'>[];
   node: MarkdownNode;
 
+  @ViewChild('self') self: ElementRef;
+
   ngOnInit() {
     this.node = parser.parse(this.value);
     logNotSupportedNodes(this.node, supportedNodeTypes);
+  }
+
+  ngAfterViewChecked() {
+    removeWhiteSpaceNodes(this.self.nativeElement as HTMLElement);
   }
 }
 
