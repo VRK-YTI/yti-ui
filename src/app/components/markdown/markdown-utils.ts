@@ -15,19 +15,19 @@ export function children(node: MarkdownNode): MarkdownNode[] {
   return result;
 }
 
-export function logNotSupportedNode(node: MarkdownNode, supportedNodeTypes: string[]) {
+export function logUnsupportedNode(node: MarkdownNode, supportedNodeTypes: string[]) {
   if (!contains(supportedNodeTypes, node.type)) {
     console.log('Node type NOT SUPPORTED: ' + node.type);
   }
 }
 
-export function logNotSupportedNodes(node: MarkdownNode, supportedNodeTypes: string[]) {
+export function logUnsupportedNodes(node: MarkdownNode, supportedNodeTypes: string[]) {
 
-  logNotSupportedNode(node, supportedNodeTypes);
+  logUnsupportedNode(node, supportedNodeTypes);
 
   if (node.isContainer) {
     for (const child of children(node)) {
-      logNotSupportedNodes(child, supportedNodeTypes);
+      logUnsupportedNodes(child, supportedNodeTypes);
     }
   }
 }

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ElementRef, ViewChild, AfterViewChecked } from '@angular/core';
 import { Parser, Node as MarkdownNode } from 'commonmark';
-import { children, logNotSupportedNodes, removeWhiteSpaceNodes } from './markdown-utils';
+import { children, logUnsupportedNodes, removeWhiteSpaceNodes } from './markdown-utils';
 
 const supportedNodeTypes = ['document', 'paragraph', 'link', 'text'];
 const parser = new Parser();
@@ -22,7 +22,7 @@ export class MarkdownComponent implements OnInit, AfterViewChecked {
 
   ngOnInit() {
     this.node = parser.parse(this.value);
-    logNotSupportedNodes(this.node, supportedNodeTypes);
+    logUnsupportedNodes(this.node, supportedNodeTypes);
   }
 
   ngAfterViewChecked() {
