@@ -17,9 +17,7 @@ import { PropertyMeta } from '../entities/meta';
                  validateLanguage
                  [(ngModel)]="localization.lang"
                  #langNgModel="ngModel" />
-                         
-          <error-messages [control]="langNgModel.control"></error-messages>
-        </div>        
+        </div>
       </div> 
       <div class="localization" [class.editing]="editing">
         <div *ngIf="!editing" markdown-links [value]="localization.value" [relatedConcepts]="relatedConcepts"></div>
@@ -43,7 +41,7 @@ import { PropertyMeta } from '../entities/meta';
                       validateLocalization
                       [(ngModel)]="localization.value"
                       #areaValueNgModel="ngModel"></textarea>
-                      
+           
             <error-messages [control]="areaValueNgModel.control"></error-messages>
           </div>                         
         </div>

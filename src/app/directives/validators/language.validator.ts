@@ -1,12 +1,21 @@
 import { Directive } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, NG_VALIDATORS } from '@angular/forms';
 
 @Directive({
-  selector: '[validateLanguage][ngModel]'
+  selector: '[validateLanguage][ngModel]',
+  providers: [
+    { provide: NG_VALIDATORS, useValue: validate, multi: true }
+  ]
 })
-export class LanguageValidator {
-  validate(_control: FormControl) {
-    // TODO
-    return null;
+export class LanguageValidator {}
+
+function validate(control: FormControl) {
+
+  const valid = control.value && typeof control.value === 'string' && control.value.length === 2;
+
+  return valid ? null : {
+    validateLanguage: {
+      valid: false
+    }
   }
 }

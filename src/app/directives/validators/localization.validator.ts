@@ -1,12 +1,15 @@
 import { Directive } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, NG_VALIDATORS } from '@angular/forms';
 
 @Directive({
-  selector: '[validateLocalization][ngModel]'
+  selector: '[validateLocalization][ngModel]',
+  providers: [
+    { provide: NG_VALIDATORS, useValue: validate, multi: true }
+  ]
 })
-export class LocalizationValidator {
-  validate(_control: FormControl) {
-    // TODO
-    return null;
-  }
+export class LocalizationValidator {}
+
+function validate(control: FormControl) {
+  // TODO
+  return null;
 }
