@@ -1,12 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component } from '@angular/core';
 import { Node } from '../entities/node';
-import { LocationService } from '../services/location.service';
-import { TermedService } from '../services/termed.service';
-import { ConceptsComponent } from './concepts.component';
-import { Observable } from 'rxjs';
 import { normalizeAsArray } from '../utils/array';
 import { EditableService } from '../services/editable.service';
+import { ConceptViewModelService } from '../services/concept.view.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'concept',
@@ -59,46 +56,22 @@ import { EditableService } from '../services/editable.service';
     </form>
   `
 })
-export class ConceptComponent implements OnInit {
-
-  persistentConcept: Node<'Concept'>;
-  concept: Node<'Concept'>;
+export class ConceptComponent {
 
   constructor(private route: ActivatedRoute,
-              private termedService: TermedService,
-              private locationService: LocationService,
-              private editableService: EditableService,
-              private conceptsComponent: ConceptsComponent) {
+              private conceptViewModel: ConceptViewModelService,
+              private editableService: EditableService) {
 
-    editableService.save$.subscribe(() => {
-      this.termedService.updateNode(this.concept);
-      this.persistentConcept = this.concept;
-    });
-
-    editableService.cancel$.subscribe(() => {
-      this.concept = this.persistentConcept.clone();
-    });
+    route.params.subscribe(params => conceptViewModel.initializeConcept(params['conceptId']));
+    editableService.save$.subscribe(() => this.conceptViewModel.saveConcept());
+    editableService.cancel$.subscribe(() => this.conceptViewModel.resetConcept());
   }
 
-  ngOnInit() {
-
-    const concept$ = this.route.params.switchMap(params => this.termedService.getConcept(this.graphId, params['conceptId']));
-
-    Observable.combineLatest(this.conceptsComponent.conceptScheme$, concept$)
-      .subscribe(([conceptScheme, concept]) => {
-        if (conceptScheme && concept) {
-          this.locationService.atConcept(conceptScheme, concept);
-          this.persistentConcept = concept;
-          this.concept = concept.clone();
-        }
-      });
+  get concept() {
+    return this.conceptViewModel.concept;
   }
 
   get relatedConcepts(): Node<'Concept'>[] {
-    return normalizeAsArray(this.concept.references['related'].values);
-  }
-
-  get graphId() {
-    return this.route.snapshot.parent.params['graphId'] as string;
+    return normalizeAsArray(this.conceptViewModel.concept.references['related'].values);
   }
 }

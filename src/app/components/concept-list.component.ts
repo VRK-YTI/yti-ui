@@ -1,4 +1,4 @@
-import { Component, Input, AfterViewInit, OnInit, ElementRef, ViewChild, Renderer } from '@angular/core';
+import { Component, AfterViewInit, OnInit, ElementRef, ViewChild, Renderer } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { Node } from '../entities/node';
 import {
@@ -7,7 +7,7 @@ import {
 } from '../utils/text-analyzer';
 import { isDefined } from '../utils/object';
 import { LanguageService } from '../services/language.service';
-import { TermedService } from '../services/termed.service';
+import { ConceptViewModelService } from '../services/concept.view.service';
 
 @Component({
   selector: 'concept-list',
@@ -51,7 +51,6 @@ import { TermedService } from '../services/termed.service';
 })
 export class ConceptListComponent implements OnInit, AfterViewInit {
 
-  @Input() graphId: string;
   @ViewChild('searchInput') searchInput: ElementRef;
 
   searchResults: Observable<Node<'Concept'>[]>;
@@ -60,7 +59,7 @@ export class ConceptListComponent implements OnInit, AfterViewInit {
   debouncedSearch = this._search;
 
   constructor(private languageService: LanguageService,
-              private termedService: TermedService,
+              private conceptViewModel: ConceptViewModelService,
               private renderer: Renderer) {
   }
 
@@ -75,11 +74,11 @@ export class ConceptListComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
 
-    const concepts$ = this.termedService.getConceptList(this.graphId)
-      .publishReplay()
-      .refCount();
+    const initialSearch = this.search$.take(1);
+    const debouncedSearch = this.search$.skip(1).debounceTime(500);
+    const search = initialSearch.concat(debouncedSearch);
 
-    this.searchResults = Observable.combineLatest([concepts$, this.search$.debounceTime(500)], (concepts: Node<'Concept'>[], search: string) => {
+    this.searchResults = Observable.combineLatest([this.conceptViewModel.allConcepts$, search], (concepts: Node<'Concept'>[], search: string) => {
 
       this.debouncedSearch = search;
       const scoreFilter = (item: TextAnalysis<Node<'Concept'>>) => !search || isDefined(item.matchScore) || item.score < 2;

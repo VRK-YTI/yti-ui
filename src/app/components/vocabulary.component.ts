@@ -1,14 +1,13 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Node } from '../entities/node';
+import { Component } from '@angular/core';
 import { EditableService } from '../services/editable.service';
-import { TermedService } from '../services/termed.service';
+import { ConceptViewModelService } from '../services/concept.view.service';
 
 @Component({
   selector: 'vocabulary',
   styleUrls: ['./vocabulary.component.scss'],
   providers: [EditableService],
   template: `
-    <ngb-accordion>
+    <ngb-accordion *ngIf="conceptScheme">
       <ngb-panel>
         <template ngbPanelTitle>
           <div class="main-panel-header">
@@ -51,23 +50,16 @@ import { TermedService } from '../services/termed.service';
     </ngb-accordion>
   `
 })
-export class VocabularyComponent implements OnInit {
+export class VocabularyComponent {
 
-  @Input('value') persistentConceptScheme: Node<'TerminologicalVocabulary'>;
-  conceptScheme: Node<'TerminologicalVocabulary'>;
+  constructor(editableService: EditableService,
+              private conceptViewModel: ConceptViewModelService) {
 
-  constructor(editableService: EditableService, termedService: TermedService) {
-    editableService.save$.subscribe(() => {
-      termedService.updateNode(this.conceptScheme);
-      this.persistentConceptScheme = this.conceptScheme;
-    });
-
-    editableService.cancel$.subscribe(() => {
-      this.conceptScheme = this.persistentConceptScheme.clone();
-    });
+    editableService.save$.subscribe(() => conceptViewModel.saveConceptScheme());
+    editableService.cancel$.subscribe(() => conceptViewModel.resetConceptScheme());
   }
 
-  ngOnInit() {
-    this.conceptScheme = this.persistentConceptScheme.clone();
+  get conceptScheme() {
+    return this.conceptViewModel.conceptScheme;
   }
 }

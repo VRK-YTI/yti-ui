@@ -1,13 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs';
-import { TermedService } from '../services/termed.service';
-import { Node } from '../entities/node';
-import { LocationService } from '../services/location.service';
+import { ConceptViewModelService } from '../services/concept.view.service';
 
 @Component({
   selector: 'concepts',
   styleUrls: ['./concepts.component.scss'],
+  providers: [ConceptViewModelService],
   template: `
     <div class="container-fluid">
 
@@ -17,21 +15,21 @@ import { LocationService } from '../services/location.service';
 
         <div class="row">
           <div class="col-12">
-            <vocabulary *ngIf="conceptScheme" [value]="conceptScheme"></vocabulary>
+            <vocabulary></vocabulary>
           </div>
         </div>
   
         <div class="bottom">
           <div class="row">
             <div class="col-lg-4">
-              <ngb-tabset *ngIf="graphId">
+              <ngb-tabset>
                 <ngb-tab>
                   <template ngbTabTitle>{{'Alphabetic' | translate}}</template>
-                  <template ngbTabContent><concept-list [graphId]="graphId"></concept-list></template>
+                  <template ngbTabContent><concept-list></concept-list></template>
                 </ngb-tab>
                 <ngb-tab>
                   <template ngbTabTitle>{{'Hierarchical' | translate}}</template>
-                  <template ngbTabContent><concept-hierarchy [graphId]="graphId"></concept-hierarchy></template>
+                  <template ngbTabContent><concept-hierarchy></concept-hierarchy></template>
                 </ngb-tab>
               </ngb-tabset>
             </div>
@@ -40,7 +38,6 @@ import { LocationService } from '../services/location.service';
               <router-outlet></router-outlet>
             </div>
           </div>
-        
         </div>
       
       </div>
@@ -50,32 +47,18 @@ import { LocationService } from '../services/location.service';
 })
 export class ConceptsComponent implements OnInit {
 
-  graphId: string;
-  conceptScheme: Node<'TerminologicalVocabulary'>;
-  conceptScheme$: Observable<Node<'TerminologicalVocabulary'>>;
-
   constructor(private route: ActivatedRoute,
-              private termedService: TermedService,
-              private locationService: LocationService) {
+              private viewModel: ConceptViewModelService) {
   }
 
   get loading() {
-    return !this.conceptScheme;
+    return !this.viewModel.conceptScheme;
   }
 
   ngOnInit() {
-
-    const graphId$ = this.route.params.map(params => params['graphId'] as string);
-
-    graphId$.subscribe(graphId => this.graphId = graphId);
-
-    this.conceptScheme$ = graphId$.switchMap(graphId => this.termedService.getConceptScheme(graphId))
-      .publishReplay()
-      .refCount();
-
-    this.conceptScheme$.subscribe(conceptScheme => {
-      this.locationService.atConceptScheme(conceptScheme);
-      this.conceptScheme = conceptScheme;
+    this.route.params.subscribe(params => {
+      this.viewModel.initializeConceptScheme(params['graphId']);
     });
   }
 }
+

@@ -19,7 +19,7 @@ export class TermedService {
   }
 
   getConceptScheme(graphId: string): Observable<Node<'TerminologicalVocabulary'>> {
-    return Observable.zip(this.metaModelService.getMetaForGraph(graphId), this.getUniqueNodeWithoutReferences(graphId, 'TerminologicalVocabulary'))
+    return Observable.zip(this.metaModelService.getMetaForGraph(graphId), this.getUniqueNodeWithoutReferrers(graphId, 'TerminologicalVocabulary'))
       .map(([meta, conceptScheme]) => new Node<'TerminologicalVocabulary'>(conceptScheme, meta));
   }
 
@@ -73,13 +73,12 @@ export class TermedService {
     return this.http.post('/api/nodes', nodes, { search: params });
   }
 
-  private getUniqueNodeWithoutReferences<T extends NodeType>(graphId: string, type: T): Observable<NodeExternal<T>> {
+  private getUniqueNodeWithoutReferrers<T extends NodeType>(graphId: string, type: T): Observable<NodeExternal<T>> {
 
     const params = new URLSearchParams();
     params.append('max', '-1');
     params.append('graphId', graphId);
     params.append('typeId', type);
-    params.append('select.references', '');
     params.append('select.referrers', '');
 
     return this.http.get(`/api/ext.json`, { search: params } )
