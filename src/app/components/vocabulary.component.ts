@@ -15,16 +15,21 @@ import { ConceptViewModelService } from '../services/concept.view.service';
           </div>
         </template>
         <template ngbPanelContent>
-          <div class="row">
-            <div class="col-md-12">
-              <form class="editable">
-              
-                <div class="row">
-                  <div class="col-md-12">
-                    <editable-buttons></editable-buttons>
-                  </div>
-                </div>
-              
+          <form>
+            <div class="row">
+              <div class="col-md-12">
+                <editable-buttons></editable-buttons>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="page-header">
+                  <h1>{{conceptScheme.meta.label | translateValue}}</h1>
+                </div>        
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">              
                 <property [value]="property" *ngFor="let property of conceptScheme | properties"></property>
                 <reference [value]="reference" *ngFor="let reference of conceptScheme | references"></reference>
                 
@@ -42,9 +47,9 @@ import { ConceptViewModelService } from '../services/concept.view.service';
                   <dt class="col-md-3" translate>Modified at</dt>
                   <dd class="col-md-9">{{conceptScheme.lastModifiedDate | timestamp}}</dd>
                 </dl>
-              </form>
+              </div>
             </div>
-          </div>
+          </form>
         </template>
       </ngb-panel>
     </ngb-accordion>
