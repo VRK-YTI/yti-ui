@@ -20,6 +20,8 @@ export class ConceptViewModelService {
   topConcepts$ = new BehaviorSubject<Node<'Concept'>[]>([]);
   allConcepts$ = new BehaviorSubject<Node<'Concept'>[]>([]);
 
+  languages = ['fi', 'en', 'sv'];
+
   constructor(private termedService: TermedService,
               private locationService: LocationService,
               private languageService: LanguageService) {
@@ -27,18 +29,18 @@ export class ConceptViewModelService {
 
   initializeConceptScheme(graphId: string) {
 
-    this.termedService.getConceptScheme(graphId).subscribe(conceptScheme => {
+    this.termedService.getConceptScheme(graphId, this.languages).subscribe(conceptScheme => {
       this.locationService.atConceptScheme(conceptScheme);
       this.conceptScheme$.next(conceptScheme);
       this.conceptScheme = conceptScheme;
       this.persistentConceptScheme = conceptScheme.clone();
     });
 
-    this.termedService.getTopConceptList(graphId).subscribe(concepts => {
+    this.termedService.getTopConceptList(graphId, this.languages).subscribe(concepts => {
       this.topConcepts$.next(concepts.sort(comparingLocalizable<Node<'Concept'>>(this.languageService, concept => concept.label)));
     });
 
-    this.termedService.getConceptList(graphId).subscribe(concepts => {
+    this.termedService.getConceptList(graphId, this.languages).subscribe(concepts => {
       this.allConcepts$.next(concepts.sort(comparingLocalizable<Node<'Concept'>>(this.languageService, concept => concept.label)));
     });
   }
@@ -46,7 +48,7 @@ export class ConceptViewModelService {
   initializeConcept(conceptId: string) {
 
     this.conceptScheme$.subscribe(conceptScheme => {
-      this.termedService.getConcept(conceptScheme.graphId, conceptId).subscribe(concept => {
+      this.termedService.getConcept(conceptScheme.graphId, conceptId, this.languages).subscribe(concept => {
         this.locationService.atConcept(conceptScheme, concept);
         this.concept$.next(concept);
         this.concept = concept;
