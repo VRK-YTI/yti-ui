@@ -42,6 +42,7 @@ export class VocabulariesComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.conceptSchemes = this.termedService.getConceptSchemeList();
+    const languages = ['fi', 'en', 'sv']; // TODO concept scheme itself will define the languages in the future
+    this.conceptSchemes = this.termedService.getConceptSchemeList(languages);
   }
 }

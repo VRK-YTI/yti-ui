@@ -9,16 +9,9 @@ import { Localization } from '../entities/localization';
   selector: 'localized-input',
   styleUrls: ['./localized-input.component.scss'],
   template: `
-    <div class="localized" *ngFor="let localization of value">
-      <div class="language" [class.editing]="editing">
-        <span *ngIf="!editing">{{localization.lang}}</span>
-        <div *ngIf="editing" class="form-group" [ngClass]="{'has-danger': langNgModel.control.errors}"> 
-          <input type="text" class="form-control"
-                 autocomplete="off"
-                 validateLanguage
-                 [(ngModel)]="localization.lang"
-                 #langNgModel="ngModel" />
-        </div>
+    <div class="localized" *ngFor="let localization of visibleValues">
+      <div class="language">
+        <span>{{localization.lang}}</span>
       </div> 
       <div class="localization" [class.editing]="editing">
         <div *ngIf="!editing" markdown-links [value]="localization.value" [relatedConcepts]="relatedConcepts"></div>
@@ -61,6 +54,10 @@ export class LocalizedInputComponent {
   @ViewChild('langNgModel') langNgModel: NgModel;
 
   constructor(private editingService: EditableService) {
+  }
+
+  get visibleValues() {
+    return this.value.filter(localization => this.editing || !!localization.value.trim());
   }
 
   get valueInError() {
