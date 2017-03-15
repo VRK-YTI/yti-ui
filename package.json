@@ -52,9 +52,11 @@
     "karma-cli": "1.0.1",
     "karma-jasmine": "1.0.2",
     "karma-remap-istanbul": "0.2.1",
+    "ng2-vis": "0.0.5",
     "po-loader": "0.3.1",
     "po2json": "0.4.5",
     "protractor": "4.0.13",
+    "remove-markdown": "^0.1.0",
     "ts-node": "1.7.0",
     "tslint": "4.0.2",
     "typescript": "2.1.4"

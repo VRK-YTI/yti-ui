@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, Input} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
 import { TermedService } from '../services/termed.service';
@@ -23,7 +23,7 @@ import { LocationService } from '../services/location.service';
   
         <div class="bottom">
           <div class="row">
-            <div class="col-lg-4">
+            <div class="col-lg-3">
               <ngb-tabset *ngIf="graphId">
                 <ngb-tab>
                   <template ngbTabTitle>{{'Alphabetic' | translate}}</template>
@@ -36,7 +36,7 @@ import { LocationService } from '../services/location.service';
               </ngb-tabset>
             </div>
 
-            <div class="col-lg-8 selection">
+            <div class="col-lg-9 selection">
               <router-outlet></router-outlet>
             </div>
           </div>

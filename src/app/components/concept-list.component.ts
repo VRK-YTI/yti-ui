@@ -38,7 +38,7 @@ import { TermedService } from '../services/termed.service';
           <tbody>
             <tr *ngFor="let concept of searchResults | async">
               <td>
-                <a [routerLink]="['/concepts', concept.graphId, 'concept', concept.id]" 
+                <a [routerLink]="['/concepts', concept.graphId, 'rootConcept', concept.id]" 
                    [innerHTML]="concept.label | translateSearchValue: debouncedSearch | highlight: debouncedSearch"></a>
                  </td>
               <td>{{concept.status | translate}}</td>

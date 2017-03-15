@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import {Component, Input, OnInit} from '@angular/core';
 import { Node } from '../entities/node';
-import { LocationService } from '../services/location.service';
-import { TermedService } from '../services/termed.service';
-import { ConceptsComponent } from './concepts.component';
-import { Observable } from 'rxjs';
 import { normalizeAsArray } from '../utils/array';
 import { EditableService } from '../services/editable.service';
+import {TermedService} from "../services/termed.service";
+import {ActivatedRoute} from "@angular/router";
+import {Observable} from "rxjs";
+import {ConceptsComponent} from "./concepts.component";
+import {LocationService} from "../services/location.service";
+import {ConceptSplitPanelComponent} from "./concept-split-panel.component";
 
 @Component({
   selector: 'concept',
@@ -56,11 +57,6 @@ import { EditableService } from '../services/editable.service';
           <ajax-loading-indicator *ngIf="!concept"></ajax-loading-indicator>
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-12">
-            <concept-network [rootConcept]="concept"></concept-network>
-        </div>
-      </div>
       
     </form>
   `
@@ -74,7 +70,8 @@ export class ConceptComponent implements OnInit {
               private termedService: TermedService,
               private locationService: LocationService,
               private editableService: EditableService,
-              private conceptsComponent: ConceptsComponent) {
+              private conceptsComponent: ConceptsComponent,
+              private conceptSplitPanelComponent: ConceptSplitPanelComponent) {
 
     editableService.save$.subscribe(() => {
       this.termedService.updateNode(this.concept);
@@ -87,24 +84,27 @@ export class ConceptComponent implements OnInit {
   }
 
   ngOnInit() {
+    const concept$ = this.route.params.switchMap(params => {
+      let conceptId: string;
+      if(params['conceptId']) {
+        conceptId = params['conceptId'];
+      } else {
+        conceptId = this.conceptSplitPanelComponent.rootConceptId;
+      }
+      return this.termedService.getConcept(this.conceptsComponent.graphId, conceptId)
+    });
 
-    const concept$ = this.route.params.switchMap(params => this.termedService.getConcept(this.graphId, params['conceptId']));
-
-    Observable.combineLatest(this.conceptsComponent.conceptScheme$, concept$)
-      .subscribe(([conceptScheme, concept]) => {
-        if (conceptScheme && concept) {
-          this.locationService.atConcept(conceptScheme, concept);
-          this.persistentConcept = concept;
-          this.concept = concept.clone();
-        }
-      });
+    Observable.combineLatest(this.conceptsComponent.conceptScheme$, this.conceptSplitPanelComponent.rootConcept$, concept$)
+        .subscribe(([conceptScheme, rootConcept, concept]) => {
+          if (conceptScheme && rootConcept && concept) {
+            this.locationService.atConcept(conceptScheme, rootConcept, concept);
+            this.persistentConcept = concept;
+            this.concept = concept.clone();
+          }
+        });
   }
 
   get relatedConcepts(): Node<'Concept'>[] {
     return normalizeAsArray(this.concept.references['related'].values);
-  }
-
-  get graphId() {
-    return this.route.snapshot.parent.params['graphId'] as string;
   }
 }

@@ -51,6 +51,7 @@ import { MarkdownElementComponent } from './components/markdown/markdown.compone
 import { ConceptListComponent } from './components/concept-list.component';
 import { ConceptHierarchyComponent } from './components/concept-hierarchy.component';
 import { ConceptHierarchyNodeComponent } from './components/concept-hierarchy-node.component';
+import { ConceptSplitPanelComponent } from './components/concept-split-panel.component';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json!po?format=mf!../../po/fi.po'),
@@ -77,7 +78,10 @@ const appRoutes: Routes = [
   { path: '', component: VocabulariesComponent },
   { path: 'concepts/:graphId', component: ConceptsComponent, children: [
     { path: '', component: NoSelectionComponent },
-    { path: 'concept/:conceptId', component: ConceptComponent }
+    { path: 'rootConcept/:rootConceptId', component: ConceptSplitPanelComponent, children: [
+      { path: '', component: ConceptComponent},
+      { path: 'concept/:conceptId', component: ConceptComponent}
+    ]}
   ]}
 ];
 
@@ -93,6 +97,7 @@ const appRoutes: Routes = [
     ConceptHierarchyComponent,
     ConceptHierarchyNodeComponent,
     ConceptComponent,
+    ConceptSplitPanelComponent,
     NoSelectionComponent,
     PropertyComponent,
     ReferenceComponent,
@@ -108,7 +113,6 @@ const appRoutes: Routes = [
     ErrorMessagesComponent,
     EditableButtonsComponent,
     ConceptNetworkComponent,
-    EditableFormDirective,
     MetaModelValidator,
     LanguageValidator,
     LocalizationValidator,
