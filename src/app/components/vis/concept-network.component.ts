@@ -13,6 +13,7 @@ import {LanguageService} from "../../services/language.service";
 import {TermedService} from "../../services/termed.service";
 import {ConceptSplitPanelComponent} from "../concept-split-panel.component";
 import {ConceptsComponent} from "../concepts.component";
+import {ConceptViewModelService} from "../../services/concept.view.service";
 
 class ConceptNetworkData implements VisNetworkData {
   public nodes: VisNodes;
@@ -39,8 +40,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
                      private languageService: LanguageService,
                      private termedService: TermedService,
                      private router: Router,
-                     private conceptsComponent: ConceptsComponent,
-                     private conceptSplitPanelComponent: ConceptSplitPanelComponent) { }
+                     private conceptViewModel: ConceptViewModelService) { }
 
 
   public networkInitialized(): void {
@@ -62,14 +62,14 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
             if (clicks === 1) {
               timer = setTimeout(() => {
                 let conceptId = eventData[1].nodes[0];
-                this.router.navigate(['/concepts', this.conceptsComponent.graphId, 'rootConcept', this.rootConceptId, 'concept', conceptId])
+                this.router.navigate(['/concepts', this.conceptViewModel.graphId, 'rootConcept', this.rootConceptId, 'concept', conceptId])
                 clicks = 0;
               }, DELAY);
             } else {
               clearTimeout(timer);
               let rootId = eventData[1].nodes[0];
               // Fetch data for the double-clicked node and then add the edge nodes for it
-              let rootConcept$ = this.termedService.getConcept(this.conceptsComponent.graphId, rootId);
+              let rootConcept$ = this.termedService.getConcept(this.conceptViewModel.graphId, rootId);
               rootConcept$.subscribe(concept => {
                 this.addEdgeNodesForConcept(concept);
               });
@@ -83,7 +83,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
   Initialize network with root node, set network options and finally add edge nodes
    */
   public ngOnInit(): void {
-    this.conceptSplitPanelComponent.rootConcept$.subscribe(rootConcept => {
+    this.conceptViewModel.rootConcept$.subscribe(rootConcept => {
       if (rootConcept) {
         this.rootConceptId = rootConcept.id;
         let rootVisNode = {

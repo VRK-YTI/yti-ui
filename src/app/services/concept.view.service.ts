@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { LocationService } from './location.service';
 import { TermedService } from './termed.service';
-import { BehaviorSubject, ReplaySubject } from 'rxjs';
+import {BehaviorSubject, ReplaySubject, Observable} from 'rxjs';
 import { Node } from '../entities/node';
 import { comparingLocalizable } from '../utils/comparator';
 import { LanguageService } from './language.service';
@@ -17,8 +17,13 @@ export class ConceptViewModelService {
   persistentConcept: Node<'Concept'>;
   concept$ = new ReplaySubject<Node<'Concept'>>();
 
+  rootConcept: Node<'Concept'>;
+  rootConcept$ = new ReplaySubject<Node<'Concept'>>();
+
   topConcepts$ = new BehaviorSubject<Node<'Concept'>[]>([]);
   allConcepts$ = new BehaviorSubject<Node<'Concept'>[]>([]);
+
+  graphId: string;
 
   constructor(private termedService: TermedService,
               private locationService: LocationService,
@@ -26,6 +31,8 @@ export class ConceptViewModelService {
   }
 
   initializeConceptScheme(graphId: string) {
+
+    this.graphId = graphId;
 
     this.termedService.getConceptScheme(graphId).subscribe(conceptScheme => {
       this.locationService.atConceptScheme(conceptScheme);
@@ -43,16 +50,39 @@ export class ConceptViewModelService {
     });
   }
 
-  initializeConcept(conceptId: string) {
+  initializeRootConcept(rootConceptId: string) {
 
     this.conceptScheme$.subscribe(conceptScheme => {
-      this.termedService.getConcept(conceptScheme.graphId, conceptId).subscribe(concept => {
-        this.locationService.atConcept(conceptScheme, concept);
-        this.concept$.next(concept);
-        this.concept = concept;
-        this.persistentConcept = concept.clone();
+      this.termedService.getConcept(conceptScheme.graphId, rootConceptId).subscribe(rootConcept => {
+        this.locationService.atRootConcept(conceptScheme, rootConcept);
+        this.rootConcept$.next(rootConcept);
+        this.rootConcept = rootConcept;
       });
     });
+  }
+
+  initializeConcept(conceptId: string) {
+
+    // this.rootConcept$.subscribe(rootConcept => {
+    //   this.termedService.getConcept(this.conceptScheme.graphId, conceptId).subscribe(concept => {
+    //     console.log(this.conceptScheme.graphId);
+    //     console.log(concept.id);
+    //     this.locationService.atConcept(this.conceptScheme, rootConcept, concept);
+    //     this.concept$.next(concept);
+    //     this.concept = concept;
+    //     this.persistentConcept = concept.clone();
+    //   });
+    // });
+
+    Observable.combineLatest(this.conceptScheme$, this.rootConcept$)
+      .subscribe(([conceptScheme, rootConcept]) => {
+        this.termedService.getConcept(this.conceptScheme.graphId, conceptId).subscribe(concept => {
+          this.locationService.atConcept(conceptScheme, rootConcept, concept);
+          this.concept$.next(concept);
+          this.concept = concept.clone();
+          this.persistentConcept = concept;
+        });
+      });
   }
 
   saveConcept() {

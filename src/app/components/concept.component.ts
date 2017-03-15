@@ -1,13 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import { Node } from '../entities/node';
-import { TermedService } from '../services/termed.service';
-import { Observable } from 'rxjs';
 import { normalizeAsArray } from '../utils/array';
 import { EditableService } from '../services/editable.service';
 import {ActivatedRoute} from "@angular/router";
-import {ConceptsComponent} from "./concepts.component";
-import {LocationService} from "../services/location.service";
-import {ConceptSplitPanelComponent} from "./concept-split-panel.component";
 import { ConceptViewModelService } from '../services/concept.view.service';
 
 @Component({
@@ -68,7 +63,14 @@ export class ConceptComponent {
               private conceptViewModel: ConceptViewModelService,
               private editableService: EditableService) {
 
-    route.params.subscribe(params => conceptViewModel.initializeConcept(params['conceptId']));
+    route.params.subscribe(params => {
+      let conceptId: string;
+      if(params['conceptId']) {
+        conceptViewModel.initializeConcept(params['conceptId']);
+      } else {
+        this.conceptViewModel.rootConcept$.subscribe(rootConcept => conceptViewModel.initializeConcept(rootConcept.id));
+      }
+    });
     editableService.save$.subscribe(() => this.conceptViewModel.saveConcept());
     editableService.cancel$.subscribe(() => this.conceptViewModel.resetConcept());
   }
