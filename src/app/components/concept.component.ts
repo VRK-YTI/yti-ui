@@ -1,13 +1,14 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { Node } from '../entities/node';
+import { TermedService } from '../services/termed.service';
+import { Observable } from 'rxjs';
 import { normalizeAsArray } from '../utils/array';
 import { EditableService } from '../services/editable.service';
-import {TermedService} from "../services/termed.service";
 import {ActivatedRoute} from "@angular/router";
-import {Observable} from "rxjs";
 import {ConceptsComponent} from "./concepts.component";
 import {LocationService} from "../services/location.service";
 import {ConceptSplitPanelComponent} from "./concept-split-panel.component";
+import { ConceptViewModelService } from '../services/concept.view.service';
 
 @Component({
   selector: 'concept',
@@ -61,50 +62,22 @@ import {ConceptSplitPanelComponent} from "./concept-split-panel.component";
     </form>
   `
 })
-export class ConceptComponent implements OnInit {
-
-  persistentConcept: Node<'Concept'>;
-  concept: Node<'Concept'>;
+export class ConceptComponent {
 
   constructor(private route: ActivatedRoute,
-              private termedService: TermedService,
-              private locationService: LocationService,
-              private editableService: EditableService,
-              private conceptsComponent: ConceptsComponent,
-              private conceptSplitPanelComponent: ConceptSplitPanelComponent) {
+              private conceptViewModel: ConceptViewModelService,
+              private editableService: EditableService) {
 
-    editableService.save$.subscribe(() => {
-      this.termedService.updateNode(this.concept);
-      this.persistentConcept = this.concept;
-    });
-
-    editableService.cancel$.subscribe(() => {
-      this.concept = this.persistentConcept.clone();
-    });
+    route.params.subscribe(params => conceptViewModel.initializeConcept(params['conceptId']));
+    editableService.save$.subscribe(() => this.conceptViewModel.saveConcept());
+    editableService.cancel$.subscribe(() => this.conceptViewModel.resetConcept());
   }
 
-  ngOnInit() {
-    const concept$ = this.route.params.switchMap(params => {
-      let conceptId: string;
-      if(params['conceptId']) {
-        conceptId = params['conceptId'];
-      } else {
-        conceptId = this.conceptSplitPanelComponent.rootConceptId;
-      }
-      return this.termedService.getConcept(this.conceptsComponent.graphId, conceptId)
-    });
-
-    Observable.combineLatest(this.conceptsComponent.conceptScheme$, this.conceptSplitPanelComponent.rootConcept$, concept$)
-        .subscribe(([conceptScheme, rootConcept, concept]) => {
-          if (conceptScheme && rootConcept && concept) {
-            this.locationService.atConcept(conceptScheme, rootConcept, concept);
-            this.persistentConcept = concept;
-            this.concept = concept.clone();
-          }
-        });
+  get concept() {
+    return this.conceptViewModel.concept;
   }
 
   get relatedConcepts(): Node<'Concept'>[] {
-    return normalizeAsArray(this.concept.references['related'].values);
+    return normalizeAsArray(this.conceptViewModel.concept.references['related'].values);
   }
 }

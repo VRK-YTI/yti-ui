@@ -1,8 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Node } from '../entities/node';
-import { TermedService } from '../services/termed.service';
-import { LanguageService } from '../services/language.service';
-import { comparingLocalizable } from '../utils/comparator';
+import { Component } from '@angular/core';
+import { ConceptViewModelService } from '../services/concept.view.service';
 
 @Component({
   selector: 'concept-hierarchy',
@@ -11,7 +8,7 @@ import { comparingLocalizable } from '../utils/comparator';
     <div class="row">
       <div class="col-lg-12 tree">
         <ul>
-          <li *ngFor="let concept of topConcepts">
+          <li *ngFor="let concept of topConcepts | async">
             <concept-hierarchy-node [concept]="concept"></concept-hierarchy-node>
           </li>
         </ul>
@@ -19,18 +16,12 @@ import { comparingLocalizable } from '../utils/comparator';
     </div>
   `
 })
-export class ConceptHierarchyComponent implements OnInit {
+export class ConceptHierarchyComponent {
 
-  @Input() graphId: string;
-
-  topConcepts: Node<'Concept'>[];
-
-  constructor(private termedService: TermedService, private languageService: LanguageService) {
+  constructor(private conceptViewModel: ConceptViewModelService) {
   }
 
-  ngOnInit() {
-    this.termedService.getTopConceptList(this.graphId).subscribe(concepts => {
-      this.topConcepts = concepts.sort(comparingLocalizable<Node<'Concept'>>(this.languageService, concept => concept.label));
-    });
+  get topConcepts() {
+    return this.conceptViewModel.topConcepts$;
   }
 }

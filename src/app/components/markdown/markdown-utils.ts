@@ -15,19 +15,47 @@ export function children(node: MarkdownNode): MarkdownNode[] {
   return result;
 }
 
-export function logNotSupportedNode(node: MarkdownNode, supportedNodeTypes: string[]) {
+export function logUnsupportedNode(node: MarkdownNode, supportedNodeTypes: string[]) {
   if (!contains(supportedNodeTypes, node.type)) {
     console.log('Node type NOT SUPPORTED: ' + node.type);
   }
 }
 
-export function logNotSupportedNodes(node: MarkdownNode, supportedNodeTypes: string[]) {
+export function logUnsupportedNodes(node: MarkdownNode, supportedNodeTypes: string[]) {
 
-  logNotSupportedNode(node, supportedNodeTypes);
+  logUnsupportedNode(node, supportedNodeTypes);
 
   if (node.isContainer) {
     for (const child of children(node)) {
-      logNotSupportedNodes(child, supportedNodeTypes);
+      logUnsupportedNodes(child, supportedNodeTypes);
     }
+  }
+}
+
+export function removeWhiteSpaceNodes(node: Node) {
+
+  const children = node.childNodes;
+  const removeChildNodes: Node[] = [];
+
+  for (let i = 0; i < children.length; i++) {
+
+    const child = children[i];
+
+    switch (child.nodeType) {
+      case Node.TEXT_NODE:
+        if (!child.nodeValue!.trim()) {
+          removeChildNodes.push(child);
+        }
+        break;
+      case Node.ELEMENT_NODE:
+        removeWhiteSpaceNodes(child);
+        break;
+      default:
+      // NOP
+    }
+  }
+
+  for (const childNode of removeChildNodes) {
+    node.removeChild(childNode);
   }
 }
