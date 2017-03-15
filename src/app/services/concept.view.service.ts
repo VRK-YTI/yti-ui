@@ -72,4 +72,8 @@ export class ConceptViewModelService {
   resetConceptScheme() {
     this.conceptScheme = this.persistentConceptScheme.clone();
   }
+
+  getNarrowerConcepts(concept: Node<'Concept'>) {
+    return this.termedService.getNarrowerConcepts(concept.graphId, concept.id, this.languages);
+  }
 }
