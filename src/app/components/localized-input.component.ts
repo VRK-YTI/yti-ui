@@ -3,6 +3,7 @@ import { Node } from '../entities/node';
 import { EditableService } from '../services/editable.service';
 import { NgModel } from '@angular/forms';
 import { PropertyMeta } from '../entities/meta';
+import { Localization } from '../entities/localization';
 
 @Component({
   selector: 'localized-input',
@@ -52,7 +53,7 @@ import { PropertyMeta } from '../entities/meta';
 export class LocalizedInputComponent {
 
   @Input() meta: PropertyMeta;
-  @Input() value: { [language: string]: string; };
+  @Input() value: Localization[];
   @Input() relatedConcepts: Node<'Concept'>[];
 
   @ViewChild('valueNgModel') valueNgModel: NgModel;
