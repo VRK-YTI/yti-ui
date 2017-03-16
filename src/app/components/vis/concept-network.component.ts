@@ -11,8 +11,6 @@ import {
   VisNetworkOptions } from 'ng2-vis';
 import {LanguageService} from "../../services/language.service";
 import {TermedService} from "../../services/termed.service";
-import {ConceptSplitPanelComponent} from "../concept-split-panel.component";
-import {ConceptsComponent} from "../concepts.component";
 import {ConceptViewModelService} from "../../services/concept.view.service";
 
 class ConceptNetworkData implements VisNetworkData {
