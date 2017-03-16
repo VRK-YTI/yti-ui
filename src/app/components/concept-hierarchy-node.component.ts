@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Node } from '../entities/node';
-import { TermedService } from '../services/termed.service';
+import { ConceptViewModelService } from '../services/concept.view.service';
 
 @Component({
   selector: 'concept-hierarchy-node',
@@ -23,7 +23,7 @@ export class ConceptHierarchyNodeComponent implements OnInit {
   collapsed = true;
   children: Node<'Concept'>[];
 
-  constructor(private termedService: TermedService) {
+  constructor(private conceptViewModel: ConceptViewModelService) {
   }
 
   ngOnInit() {
@@ -46,7 +46,8 @@ export class ConceptHierarchyNodeComponent implements OnInit {
     this.collapsed = false;
 
     if (!this.children) {
-      this.termedService.getNarrowerConcepts(this.concept.graphId, this.concept.id).subscribe(concepts => this.children = concepts);
+      this.conceptViewModel.getNarrowerConcepts(this.concept)
+        .subscribe(concepts => this.children = concepts);
     }
   }
 }

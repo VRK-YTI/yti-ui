@@ -25,6 +25,8 @@ export class ConceptViewModelService {
 
   graphId: string;
 
+  languages = ['fi', 'en', 'sv'];
+
   constructor(private termedService: TermedService,
               private locationService: LocationService,
               private languageService: LanguageService) {
@@ -34,18 +36,18 @@ export class ConceptViewModelService {
 
     this.graphId = graphId;
 
-    this.termedService.getConceptScheme(graphId).subscribe(conceptScheme => {
+    this.termedService.getConceptScheme(graphId, this.languages).subscribe(conceptScheme => {
       this.locationService.atConceptScheme(conceptScheme);
       this.conceptScheme$.next(conceptScheme);
       this.conceptScheme = conceptScheme;
       this.persistentConceptScheme = conceptScheme.clone();
     });
 
-    this.termedService.getTopConceptList(graphId).subscribe(concepts => {
+    this.termedService.getTopConceptList(graphId, this.languages).subscribe(concepts => {
       this.topConcepts$.next(concepts.sort(comparingLocalizable<Node<'Concept'>>(this.languageService, concept => concept.label)));
     });
 
-    this.termedService.getConceptList(graphId).subscribe(concepts => {
+    this.termedService.getConceptList(graphId, this.languages).subscribe(concepts => {
       this.allConcepts$.next(concepts.sort(comparingLocalizable<Node<'Concept'>>(this.languageService, concept => concept.label)));
     });
   }
@@ -53,7 +55,7 @@ export class ConceptViewModelService {
   initializeRootConcept(rootConceptId: string) {
 
     this.conceptScheme$.subscribe(conceptScheme => {
-      this.termedService.getConcept(conceptScheme.graphId, rootConceptId).subscribe(rootConcept => {
+      this.termedService.getConcept(conceptScheme.graphId, rootConceptId, this.languages).subscribe(rootConcept => {
         this.locationService.atRootConcept(conceptScheme, rootConcept);
         this.rootConcept$.next(rootConcept);
         this.rootConcept = rootConcept;
@@ -63,26 +65,15 @@ export class ConceptViewModelService {
 
   initializeConcept(conceptId: string) {
 
-    // this.rootConcept$.subscribe(rootConcept => {
-    //   this.termedService.getConcept(this.conceptScheme.graphId, conceptId).subscribe(concept => {
-    //     console.log(this.conceptScheme.graphId);
-    //     console.log(concept.id);
-    //     this.locationService.atConcept(this.conceptScheme, rootConcept, concept);
-    //     this.concept$.next(concept);
-    //     this.concept = concept;
-    //     this.persistentConcept = concept.clone();
-    //   });
-    // });
-
     Observable.combineLatest(this.conceptScheme$, this.rootConcept$)
-      .subscribe(([conceptScheme, rootConcept]) => {
-        this.termedService.getConcept(this.conceptScheme.graphId, conceptId).subscribe(concept => {
-          this.locationService.atConcept(conceptScheme, rootConcept, concept);
-          this.concept$.next(concept);
-          this.concept = concept.clone();
-          this.persistentConcept = concept;
+        .subscribe(([conceptScheme, rootConcept]) => {
+          this.termedService.getConcept(this.conceptScheme.graphId, conceptId, this.languages).subscribe(concept => {
+            this.locationService.atConcept(conceptScheme, rootConcept, concept);
+            this.concept$.next(concept);
+            this.concept = concept;
+            this.persistentConcept = concept.clone();
+          });
         });
-      });
   }
 
   saveConcept() {
@@ -101,5 +92,9 @@ export class ConceptViewModelService {
 
   resetConceptScheme() {
     this.conceptScheme = this.persistentConceptScheme.clone();
+  }
+
+  getNarrowerConcepts(concept: Node<'Concept'>) {
+    return this.termedService.getNarrowerConcepts(concept.graphId, concept.id, this.languages);
   }
 }
