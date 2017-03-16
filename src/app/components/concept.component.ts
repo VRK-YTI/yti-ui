@@ -34,19 +34,19 @@ import { ConceptViewModelService } from '../services/concept.view.service';
             <property [value]="property" [relatedConcepts]="relatedConcepts" *ngFor="let property of concept | properties"></property>
             <reference [value]="reference" *ngFor="let reference of concept | references: ['prefLabelXl']"></reference>
             
-            <dl class="row">
-              <dt class="col-md-3" translate>Id</dt>
-              <dd class="col-md-9">{{concept.uri}}</dd>
+            <dl>
+              <dt translate>Id</dt>
+              <dd>{{concept.uri}}</dd>
             </dl>
             
-            <dl class="row">
-              <dt class="col-md-3" translate>Created at</dt>
-              <dd class="col-md-9">{{concept.createdDate | timestamp}}</dd>
+            <dl>
+              <dt translate>Created at</dt>
+              <dd>{{concept.createdDate | timestamp}}</dd>
             </dl>
             
-            <dl class="row">
-              <dt class="col-md-3" translate>Modified at</dt>
-              <dd class="col-md-9">{{concept.lastModifiedDate | timestamp}}</dd>
+            <dl>
+              <dt translate>Modified at</dt>
+              <dd>{{concept.lastModifiedDate | timestamp}}</dd>
             </dl>
             
           </div>

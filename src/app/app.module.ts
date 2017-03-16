@@ -51,6 +51,7 @@ import { MarkdownElementComponent } from './components/markdown/markdown.compone
 import { ConceptListComponent } from './components/concept-list.component';
 import { ConceptHierarchyComponent } from './components/concept-hierarchy.component';
 import { ConceptHierarchyNodeComponent } from './components/concept-hierarchy-node.component';
+import { StatusInputComponent } from './components/status-input.component';
 import { ConceptSplitPanelComponent } from './components/concept-split-panel.component';
 
 const localizations: { [lang: string]: string} = {
@@ -103,13 +104,14 @@ const appRoutes: Routes = [
     ReferenceComponent,
     TermsComponent,
     AjaxLoadingIndicatorComponent,
-    LocalizedInputComponent,
     MarkdownComponent,
     MarkdownElementComponent,
     MarkdownLinksComponent,
     MarkdownLinksElementComponent,
     AccordionChevronComponent,
     LiteralInputComponent,
+    StatusInputComponent,
+    LocalizedInputComponent,
     ErrorMessagesComponent,
     EditableButtonsComponent,
     ConceptNetworkComponent,

@@ -6,7 +6,7 @@ import { NodeType, NodeExternal } from './node-api';
 import { v4 as uuid } from 'node-uuid';
 import * as moment from 'moment';
 
-export type PropertyType = 'localizable' | 'translation-key' | 'string';
+export type PropertyType = 'localizable' | 'status' | 'string';
 
 export class PropertyMeta {
 
@@ -32,7 +32,7 @@ export class PropertyMeta {
         return 'localizable';
       case 'term_status':
       case 'termStatus':
-        return 'translation-key';
+        return 'status';
       default:
         return 'string';
     }
