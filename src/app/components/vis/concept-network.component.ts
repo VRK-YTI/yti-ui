@@ -62,14 +62,14 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
             if (clicks === 1) {
               timer = setTimeout(() => {
                 let conceptId = eventData[1].nodes[0];
-                this.router.navigate(['/concepts', this.conceptViewModel.graphId, 'rootConcept', this.rootConceptId, 'concept', conceptId])
+                this.router.navigate(['/concepts', this.conceptViewModel.graphId, 'concept', conceptId]);
                 clicks = 0;
               }, DELAY);
             } else {
               clearTimeout(timer);
               let rootId = eventData[1].nodes[0];
               // Fetch data for the double-clicked node and then add the edge nodes for it
-              let rootConcept$ = this.termedService.getConcept(this.conceptViewModel.graphId, rootId);
+              let rootConcept$ = this.termedService.getConcept(this.conceptViewModel.graphId, rootId, this.conceptViewModel.languages);
               rootConcept$.subscribe(concept => {
                 this.addEdgeNodesForConcept(concept);
               });
@@ -83,7 +83,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
   Initialize network with root node, set network options and finally add edge nodes
    */
   public ngOnInit(): void {
-    this.conceptViewModel.rootConcept$.subscribe(rootConcept => {
+    this.conceptViewModel.concept$.subscribe(rootConcept => {
       if (rootConcept) {
         this.rootConceptId = rootConcept.id;
         let rootVisNode = {
@@ -139,7 +139,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
           interaction: {
             hideEdgesOnDrag: false,
             hideNodesOnDrag: false,
-            navigationButtons: false,
+            navigationButtons: true,
             hover: true,
             selectable: true,
             hoverConnectedEdges: true,

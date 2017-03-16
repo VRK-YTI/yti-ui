@@ -1,4 +1,7 @@
-import { Component, AfterViewInit, OnInit, ElementRef, ViewChild, Renderer } from '@angular/core';
+import {
+  Component, AfterViewInit, OnInit, ElementRef, ViewChild, Renderer, OnChanges,
+  SimpleChanges, ChangeDetectionStrategy
+} from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { Node } from '../entities/node';
 import {
@@ -12,6 +15,7 @@ import { ConceptViewModelService } from '../services/concept.view.service';
 @Component({
   selector: 'concept-list',
   styleUrls: ['./concept-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="row">
       <div class="col-lg-12">
@@ -38,7 +42,7 @@ import { ConceptViewModelService } from '../services/concept.view.service';
           <tbody>
             <tr *ngFor="let concept of searchResults | async">
               <td>
-                <a [routerLink]="['/concepts', concept.graphId, 'rootConcept', concept.id]" 
+                <a [routerLink]="['/concepts', concept.graphId, 'concept', concept.id]" 
                    [innerHTML]="concept.label | translateSearchValue: debouncedSearch | highlight: debouncedSearch"></a>
                  </td>
               <td>{{concept.status | translate}}</td>
@@ -49,7 +53,11 @@ import { ConceptViewModelService } from '../services/concept.view.service';
     </div>
   `
 })
-export class ConceptListComponent implements OnInit, AfterViewInit {
+export class ConceptListComponent implements OnInit, AfterViewInit, OnChanges {
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log("!!");
+    console.log(changes);
+  }
 
   @ViewChild('searchInput') searchInput: ElementRef;
 
@@ -61,25 +69,30 @@ export class ConceptListComponent implements OnInit, AfterViewInit {
   constructor(private languageService: LanguageService,
               private conceptViewModel: ConceptViewModelService,
               private renderer: Renderer) {
+    console.log('construct');
   }
 
   get search() {
+    // console.log('get search');
     return this._search;
   }
 
   set search(value: string) {
+    console.log('set search');
     this._search = value;
     this.search$.next(value);
   }
 
   ngOnInit() {
 
+    console.log('init');
     const initialSearch = this.search$.take(1);
     const debouncedSearch = this.search$.skip(1).debounceTime(500);
     const search = initialSearch.concat(debouncedSearch);
 
     this.searchResults = Observable.combineLatest([this.conceptViewModel.allConcepts$, search], (concepts: Node<'Concept'>[], search: string) => {
 
+      console.log('forming search results');
       this.debouncedSearch = search;
       const scoreFilter = (item: TextAnalysis<Node<'Concept'>>) => !search || isDefined(item.matchScore) || item.score < 2;
       const labelExtractor: ContentExtractor<Node<'Concept'>> = concept => concept.label;

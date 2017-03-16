@@ -33,12 +33,7 @@ export class TermedService {
       .map(([meta, concept]) => new Node(concept, meta, languages));
   }
 
-  getConceptForGraph(graphId: string, conceptId: string): Observable<Node<'Concept'>> {
-    return Observable.zip(this.metaModelService.getMetaForGraph(graphId), this.getConceptDetailsNodeForGraph(graphId, conceptId))
-        .map(([meta, concept]) => new Node(concept, meta));
-  }
-
-  getConceptList(graphId: string): Observable<Node<'Concept'>[]> {
+  getConceptList(graphId: string, languages: string[]): Observable<Node<'Concept'>[]> {
     return Observable.zip(this.metaModelService.getMetaForGraph(graphId), this.getConceptListNodes(graphId))
       .map(([meta, concepts]) => concepts.map(concept => new Node<'Concept'>(concept, meta, languages)));
   }
@@ -160,21 +155,6 @@ export class TermedService {
     params.append('graphId', graphId);
     params.append('uri', 'urn:uuid:' + conceptId);
     params.append('recurse.references.prefLabelXl', '1');
-    params.append('select.audit', 'true');
-
-    return this.http.get(`/api/ext.json`, { search: params } )
-      .map(response => requireSingle(response.json() as NodeExternal<'Concept'>));
-  }
-
-  private getConceptDetailsNodeForGraph(graphId: string, conceptId: string): Observable<NodeExternal<'Concept'>> {
-
-    const params = new URLSearchParams();
-    params.append('max', '-1');
-    params.append('graphId', graphId);
-    params.append('uri', 'urn:uuid:' + conceptId);
-    params.append('recurse.references.prefLabelXl', '2');
-    params.append('recurse.referrers.broader', '1');
-    params.append('recurse.referrers.isPartOf', '1');
     params.append('select.audit', 'true');
 
     return this.http.get(`/api/ext.json`, { search: params } )

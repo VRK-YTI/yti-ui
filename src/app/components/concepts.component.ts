@@ -34,8 +34,12 @@ import { ConceptViewModelService } from '../services/concept.view.service';
               </ngb-tabset>
             </div>
 
-            <div class="col-lg-9 selection">
+            <div class="col-lg-4 selection">
               <router-outlet></router-outlet>
+            </div>
+            
+            <div class="col-lg-5 selection">
+                <concept-network></concept-network>    
             </div>
           </div>
         </div>

@@ -28,32 +28,15 @@ export class LocationService {
     }]);
   }
 
-  atRootConcept(conceptScheme: Node<'TerminologicalVocabulary'>, rootConcept: Node<'Concept'>): void {
+  atConcept(conceptScheme: Node<'TerminologicalVocabulary'>, concept: Node<'Concept'>): void {
     this.changeLocation([
       {
         label: conceptScheme.label,
         route: ['concepts', conceptScheme.graphId]
-      },
-      {
-        label: rootConcept.label,
-        route: ['concepts', conceptScheme.graphId, 'rootConcept', rootConcept.id]
-      }
-    ]);
-  }
-
-  atConcept(conceptScheme: Node<'TerminologicalVocabulary'>, rootConcept: Node<'Concept'>, concept: Node<'Concept'>): void {
-    this.changeLocation([
-      {
-        label: conceptScheme.label,
-        route: ['concepts', conceptScheme.graphId]
-      },
-      {
-        label: rootConcept.label,
-        route: ['concepts', conceptScheme.graphId, 'rootConcept', rootConcept.id]
       },
       {
         label: concept.label,
-        route: ['concepts', conceptScheme.graphId, 'rootConcept', rootConcept.id, 'concept', concept.id]
+        route: ['concepts', conceptScheme.graphId, 'concept', concept.id]
       }
     ]);
   }

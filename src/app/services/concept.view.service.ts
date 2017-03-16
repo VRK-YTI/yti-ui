@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { LocationService } from './location.service';
 import { TermedService } from './termed.service';
-import {BehaviorSubject, ReplaySubject, Observable} from 'rxjs';
+import {BehaviorSubject, ReplaySubject } from 'rxjs';
 import { Node } from '../entities/node';
 import { comparingLocalizable } from '../utils/comparator';
 import { LanguageService } from './language.service';
@@ -16,9 +16,6 @@ export class ConceptViewModelService {
   concept: Node<'Concept'>;
   persistentConcept: Node<'Concept'>;
   concept$ = new ReplaySubject<Node<'Concept'>>();
-
-  rootConcept: Node<'Concept'>;
-  rootConcept$ = new ReplaySubject<Node<'Concept'>>();
 
   topConcepts$ = new BehaviorSubject<Node<'Concept'>[]>([]);
   allConcepts$ = new BehaviorSubject<Node<'Concept'>[]>([]);
@@ -52,28 +49,15 @@ export class ConceptViewModelService {
     });
   }
 
-  initializeRootConcept(rootConceptId: string) {
-
-    this.conceptScheme$.subscribe(conceptScheme => {
-      this.termedService.getConcept(conceptScheme.graphId, rootConceptId, this.languages).subscribe(rootConcept => {
-        this.locationService.atRootConcept(conceptScheme, rootConcept);
-        this.rootConcept$.next(rootConcept);
-        this.rootConcept = rootConcept;
-      });
-    });
-  }
-
   initializeConcept(conceptId: string) {
 
-    Observable.combineLatest(this.conceptScheme$, this.rootConcept$)
-        .subscribe(([conceptScheme, rootConcept]) => {
-          this.termedService.getConcept(this.conceptScheme.graphId, conceptId, this.languages).subscribe(concept => {
-            this.locationService.atConcept(conceptScheme, rootConcept, concept);
-            this.concept$.next(concept);
-            this.concept = concept;
-            this.persistentConcept = concept.clone();
-          });
-        });
+    this.conceptScheme$.subscribe(conceptScheme => {
+      this.termedService.getConcept(conceptScheme.graphId, conceptId, this.languages).subscribe(concept => {
+        this.locationService.atConcept(conceptScheme, concept);
+        this.concept$.next(concept);
+        this.concept = concept;
+      });
+    });
   }
 
   saveConcept() {

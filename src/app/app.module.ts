@@ -79,10 +79,7 @@ const appRoutes: Routes = [
   { path: '', component: VocabulariesComponent },
   { path: 'concepts/:graphId', component: ConceptsComponent, children: [
     { path: '', component: NoSelectionComponent },
-    { path: 'rootConcept/:rootConceptId', component: ConceptSplitPanelComponent, children: [
-      { path: '', component: ConceptComponent},
-      { path: 'concept/:conceptId', component: ConceptComponent}
-    ]}
+    { path: 'concept/:conceptId', component: ConceptComponent }
   ]}
 ];
 
@@ -98,7 +95,6 @@ const appRoutes: Routes = [
     ConceptHierarchyComponent,
     ConceptHierarchyNodeComponent,
     ConceptComponent,
-    ConceptSplitPanelComponent,
     NoSelectionComponent,
     PropertyComponent,
     ReferenceComponent,

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import { Node } from '../entities/node';
 import { normalizeAsArray } from '../utils/array';
 import { EditableService } from '../services/editable.service';
@@ -64,11 +64,8 @@ export class ConceptComponent {
               private editableService: EditableService) {
 
     route.params.subscribe(params => {
-      let conceptId: string;
       if(params['conceptId']) {
         conceptViewModel.initializeConcept(params['conceptId']);
-      } else {
-        this.conceptViewModel.rootConcept$.subscribe(rootConcept => conceptViewModel.initializeConcept(rootConcept.id));
       }
     });
     editableService.save$.subscribe(() => this.conceptViewModel.saveConcept());
