@@ -1,6 +1,5 @@
 import { Component, Input, ViewChild } from '@angular/core';
 import { NgModel } from '@angular/forms';
-import { PropertyMeta } from '../entities/meta';
 import { Property } from '../entities/node';
 import { EditableService } from '../services/editable.service';
 
@@ -13,10 +12,10 @@ import { EditableService } from '../services/editable.service';
         <div *ngIf="!area">
           <input type="text" 
                  class="form-control" 
-                 [name]="meta.id"
+                 [id]="property.meta.id"
                  autocomplete="off"
                  [(ngModel)]="property.value"
-                 [validateMeta]="meta"
+                 [validateMeta]="property.meta"
                  #ngModel="ngModel" />
                
            <error-messages [control]="ngModel.control"></error-messages>
@@ -24,10 +23,10 @@ import { EditableService } from '../services/editable.service';
         
        <div *ngIf="area">
          <textarea class="form-control" 
-                   [name]="meta.id"
+                   [id]="property.meta.id"
                    autocomplete="off"
                    [(ngModel)]="property.value"
-                   [validateMeta]="meta"
+                   [validateMeta]="property.meta"
                    #areaNgModel="ngModel"></textarea>
                        
           <error-messages [control]="areaNgModel.control"></error-messages> 
@@ -38,7 +37,6 @@ import { EditableService } from '../services/editable.service';
 export class LiteralInputComponent {
 
   @Input() property: Property;
-  @Input() meta: PropertyMeta;
 
   @ViewChild('ngModel') ngModel: NgModel;
   @ViewChild('areaNgModel') areaNgModel: NgModel;
@@ -51,7 +49,7 @@ export class LiteralInputComponent {
   }
 
   get area() {
-    return this.meta ? this.meta.area : false;
+    return this.property.meta.area;
   }
 
   get editing() {

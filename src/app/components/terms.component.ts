@@ -9,7 +9,7 @@ import { EditableService } from '../services/editable.service';
     <ngb-accordion>
       <ngb-panel *ngFor="let term of termReference.values">
         <template ngbPanelTitle>
-          <localized-input [value]="term.properties.prefLabel.value" [meta]="term.properties.prefLabel.meta"></localized-input>
+          <localized-input [property]="term.properties.prefLabel"></localized-input>
         </template>
         <template ngbPanelContent>
           <div class="row" style="margin-left: 50px">

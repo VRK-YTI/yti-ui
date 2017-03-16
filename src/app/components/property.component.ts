@@ -8,10 +8,11 @@ import { EditableService } from '../services/editable.service';
   template: `
     <dl *ngIf="show">
       <dt><label [for]="property.meta.id">{{property.meta.label | translateValue}}</label></dt>
-      <dd>
-        <localized-input *ngIf="property.meta.type === 'localizable'" [meta]="property.meta" [value]="property.value" [relatedConcepts]="relatedConcepts"></localized-input>
-        <literal-input *ngIf="property.meta.type === 'string'" [meta]="property.meta" [property]="property"></literal-input>
-        <span *ngIf="property.meta.type === 'translation-key'">{{property.value | translate}}</span>
+      <dd [ngSwitch]="property.meta.type">
+        <localized-input *ngSwitchCase="'localizable'" [property]="property" [relatedConcepts]="relatedConcepts"></localized-input>
+        <literal-input *ngSwitchCase="'string'" [property]="property"></literal-input>
+        <status-input *ngSwitchCase="'status'" [property]="property"></status-input>
+        <span *ngSwitchDefault>ERROR - unknown property type</span>
       </dd>
     </dl>
   `

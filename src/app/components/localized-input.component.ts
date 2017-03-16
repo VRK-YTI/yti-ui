@@ -1,8 +1,7 @@
 import { Component, Input, ViewChild } from '@angular/core';
-import { Node } from '../entities/node';
+import { Node, Property } from '../entities/node';
 import { EditableService } from '../services/editable.service';
 import { NgModel } from '@angular/forms';
-import { PropertyMeta } from '../entities/meta';
 import { Localization } from '../entities/localization';
 
 @Component({
@@ -18,8 +17,9 @@ import { Localization } from '../entities/localization';
         <div *ngIf="editing" class="form-group" [ngClass]="{'has-danger': valueInError}">
         
           <div *ngIf="!area">
-            <input type="text" 
+            <input type="text"
                    class="form-control"
+                   [id]="property.meta.id"
                    autocomplete="off"
                    validateLocalization
                    [(ngModel)]="localization.value"
@@ -30,6 +30,7 @@ import { Localization } from '../entities/localization';
                 
           <div *ngIf="area">
             <textarea class="form-control"
+                      [id]="property.meta.id"
                       autocomplete="off"
                       rows="4"
                       validateLocalization
@@ -45,8 +46,7 @@ import { Localization } from '../entities/localization';
 })
 export class LocalizedInputComponent {
 
-  @Input() meta: PropertyMeta;
-  @Input() value: Localization[];
+  @Input() property: Property;
   @Input() relatedConcepts: Node<'Concept'>[];
 
   @ViewChild('valueNgModel') valueNgModel: NgModel;
@@ -54,6 +54,10 @@ export class LocalizedInputComponent {
   @ViewChild('langNgModel') langNgModel: NgModel;
 
   constructor(private editingService: EditableService) {
+  }
+
+  get value() {
+    return this.property.value as Localization[];
   }
 
   get visibleValues() {
@@ -65,7 +69,7 @@ export class LocalizedInputComponent {
   }
 
   get area() {
-    return this.meta.area;
+    return this.property.meta.area;
   }
 
   get editing() {

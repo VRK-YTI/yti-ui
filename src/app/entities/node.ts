@@ -1,5 +1,5 @@
 import { asLocalizable, Localizable, combineLocalizables, Localization } from './localization';
-import { requireDefined } from '../utils/object';
+import { requireDefined, assertNever } from '../utils/object';
 import { normalizeAsArray, any } from '../utils/array';
 import { NodeExternal, NodeType, Attribute, Identifier, NodeInternal } from './node-api';
 import { PropertyMeta, ReferenceMeta, NodeMeta } from './meta';
@@ -12,8 +12,7 @@ export class Property {
 
   constructor(attributes: Attribute[], public meta: PropertyMeta, private languages: string[]) {
 
-    if (this.localizable()) {
-
+    const initializeLocalizable = () => {
       this.value = [];
 
       for (const language of languages) {
@@ -25,13 +24,33 @@ export class Property {
           this.value.push({ lang: language, value: '' });
         }
       }
-    } else {
-      // TODO: cardinality
-      if (attributes.length > 0) {
-        this.value = attributes[0].value;
-      } else {
-        this.value = '';
+    };
+
+    const initializeString = (defaultValue = '') => {
+      switch (attributes.length) {
+        case 0:
+          this.value = defaultValue;
+          break;
+        case 1:
+          this.value = attributes[0].value || defaultValue;
+          break;
+        default:
+          throw new Error('Literal with multiple values: ' + attributes.map(a => a.value).join(','));
       }
+    };
+
+    switch (meta.type) {
+      case 'localizable':
+        initializeLocalizable();
+        break;
+      case 'status':
+        initializeString('Unstable');
+        break;
+      case 'string':
+        initializeString();
+        break;
+      default:
+        assertNever(meta.type, 'Unknown meta type: ' + meta.type);
     }
   }
 
