@@ -38,11 +38,6 @@ export class TermedService {
       .map(([meta, concepts]) => concepts.map(concept => new Node<'Concept'>(concept, meta, languages)));
   }
 
-  getTopConceptList(graphId: string, languages: string[]): Observable<Node<'Concept'>[]> {
-    return Observable.zip(this.metaModelService.getMetaForGraph(graphId), this.getConceptSchemeWithTopConcepts(graphId))
-      .map(([meta, conceptScheme]) => normalizeAsArray(conceptScheme.references['hasTopConcept']).map(concept => new Node<'Concept'>(concept, meta, languages)));
-  }
-
   getNarrowerConcepts(graphId: string, broaderConceptId: string, languages: string[]): Observable<Node<'Concept'>[]> {
     return Observable.zip(this.metaModelService.getMetaForGraph(graphId), this.getNarrowerConceptNodes(graphId, broaderConceptId))
       .map(([meta, concepts]) => concepts.map(concept => new Node<'Concept'>(concept, meta, languages)));
@@ -103,7 +98,7 @@ export class TermedService {
     params.append('max', '-1');
     params.append('graphId', graphId);
     params.append('typeId', 'Concept');
-    params.append('select.referrers', '');
+    params.append('select.referrers', 'broader');
     params.append('select.references', 'prefLabelXl');
     params.append('select.properties', 'prefLabel');
     params.append('select.properties', 'term_status');
