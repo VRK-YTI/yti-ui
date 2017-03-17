@@ -105,7 +105,8 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
           title: stripMarkdown(this.languageService.translate(rootConcept.definition)),
           group: 'rootGroup',
           color: 'blue',
-          physics: false
+          physics: false,
+          fixed: false
         };
 
         this.conceptNetworkData = {
@@ -127,12 +128,11 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
           layout: {
             hierarchical: {
               enabled: false,
-              direction: 'UD',
+              direction: 'DU',
               sortMethod: 'hubsize',
               parentCentralization: true,
-              nodeSpacing: 300,
-              // blockShifting: false,
-              // edgeMinimization: false
+              nodeSpacing: 250,
+              levelSeparation: 100,
             },
             improvedLayout: true
           },
@@ -140,9 +140,9 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
             smooth: {
               enabled: true,
               type: 'cubicBezier', // 'continuous', 'discrete', 'diagonalCross', 'straightCross', 'horizontal', 'vertical', 'curvedCW', 'curvedCCW', 'cubicBezier'
-              roundness: 0.15
+              roundness: 0.25
             },
-            length: 300,
+            length: 250,
             hoverWidth: 3,
             color: {
               color: 'black',
@@ -162,17 +162,19 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
             enabled: true,
             solver: 'forceAtlas2Based', // hierarchicalRepulsion, repulsion, forceAtlas2Based, barnesHut
             forceAtlas2Based: {
-              gravitationalConstant: -500,
-              centralGravity: 0.05,
-              springConstant: 0.3,
-              damping: 0.8
+              gravitationalConstant: -2000,
+              centralGravity: 0.01,
+              springConstant: 3,
+              springLength: 100,
+              damping: 1.5,
+              avoidOverlap: 0
             },
             stabilization: {
-              enabled: true,
-              iterations: 15000,
-              onlyDynamicEdges: true,
-              fit: true
-            }
+              enabled: false,
+              fit: true,
+              iterations: 1
+            },
+            timestep: 0.4
           }
         };
 

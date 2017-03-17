@@ -67,31 +67,25 @@ export class ConceptListComponent implements OnInit, AfterViewInit, OnChanges {
 
   constructor(private languageService: LanguageService,
               private conceptViewModel: ConceptViewModelService,
-              private renderer: Renderer) {
-    console.log('construct');
-  }
+              private renderer: Renderer) {}
 
   get search() {
-    // console.log('get search');
     return this._search;
   }
 
   set search(value: string) {
-    console.log('set search');
     this._search = value;
     this.search$.next(value);
   }
 
   ngOnInit() {
 
-    console.log('init');
     const initialSearch = this.search$.take(1);
     const debouncedSearch = this.search$.skip(1).debounceTime(500);
     const search = initialSearch.concat(debouncedSearch);
 
     this.searchResults = Observable.combineLatest([this.conceptViewModel.allConcepts$, search], (concepts: Node<'Concept'>[], search: string) => {
 
-      console.log('forming search results');
       this.debouncedSearch = search;
       const scoreFilter = (item: TextAnalysis<Node<'Concept'>>) => !search || isDefined(item.matchScore) || item.score < 2;
       const labelExtractor: ContentExtractor<Node<'Concept'>> = concept => concept.label;
