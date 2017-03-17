@@ -12,7 +12,6 @@ import {
 import {LanguageService} from "../../services/language.service";
 import {TermedService} from "../../services/termed.service";
 import {ConceptViewModelService} from "../../services/concept.view.service";
-import {root} from "rxjs/util/root";
 
 class ConceptNetworkData implements VisNetworkData {
   public nodes: VisNodes;
@@ -24,7 +23,7 @@ class ConceptNetworkData implements VisNetworkData {
   styleUrls: ['./concept-network.component.scss'],
   template: `
     <h2>Concept Network</h2>
-    <div class="network-canvas" [visNetwork]="conceptNetwork" [visNetworkData]="conceptNetworkData" [visNetworkOptions]="conceptNetworkOptions" (initialized)="networkInitialized()" (mouseleave)="hidePopup()"></div>
+    <div class="network-canvas" [visNetworkPatched]="conceptNetwork" [visNetworkData]="conceptNetworkData" [visNetworkOptions]="conceptNetworkOptions" (initialized)="networkInitialized()" (mouseleave)="hidePopup()"></div>
   `
 })
 export class ConceptNetworkComponent implements OnInit, OnDestroy {

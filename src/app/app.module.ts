@@ -52,6 +52,7 @@ import { ConceptListComponent } from './components/concept-list.component';
 import { ConceptHierarchyComponent } from './components/concept-hierarchy.component';
 import { ConceptHierarchyNodeComponent } from './components/concept-hierarchy-node.component';
 import { StatusInputComponent } from './components/status-input.component';
+import { VisNetworkPatchedDirective } from './components/vis/vis-network-patched.directive';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json!po?format=mf!../../po/fi.po'),
@@ -110,6 +111,7 @@ const appRoutes: Routes = [
     ErrorMessagesComponent,
     EditableButtonsComponent,
     ConceptNetworkComponent,
+    VisNetworkPatchedDirective,
     MetaModelValidator,
     LanguageValidator,
     LocalizationValidator,

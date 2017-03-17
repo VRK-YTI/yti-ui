@@ -1,10 +1,9 @@
-import {Component, ChangeDetectionStrategy} from '@angular/core';
+import { Component } from '@angular/core';
 import { ConceptViewModelService } from '../services/concept.view.service';
 
 @Component({
   selector: 'concept-hierarchy',
   styleUrls: ['./concept-hierarchy.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="row">
       <div class="col-lg-12 tree">

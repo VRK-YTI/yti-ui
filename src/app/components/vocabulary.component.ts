@@ -1,4 +1,4 @@
-import {Component, ChangeDetectionStrategy} from '@angular/core';
+import { Component } from '@angular/core';
 import { EditableService } from '../services/editable.service';
 import { ConceptViewModelService } from '../services/concept.view.service';
 
@@ -6,7 +6,6 @@ import { ConceptViewModelService } from '../services/concept.view.service';
   selector: 'vocabulary',
   styleUrls: ['./vocabulary.component.scss'],
   providers: [EditableService],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <ngb-accordion *ngIf="conceptScheme">
       <ngb-panel>

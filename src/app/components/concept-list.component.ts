@@ -1,6 +1,6 @@
 import {
   Component, AfterViewInit, OnInit, ElementRef, ViewChild, Renderer, OnChanges,
-  SimpleChanges, ChangeDetectionStrategy
+  SimpleChanges
 } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { Node } from '../entities/node';
@@ -15,7 +15,6 @@ import { ConceptViewModelService } from '../services/concept.view.service';
 @Component({
   selector: 'concept-list',
   styleUrls: ['./concept-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="row">
       <div class="col-lg-12">
