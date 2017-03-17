@@ -282,10 +282,8 @@ export class Node<T extends NodeType> {
   }
 
   get status(): string {
-    if (this.properties['term_status']) {
-      return this.getPropertyAsString('term_status');
-    } else if (this.properties['termStatus']) {
-      return this.getPropertyAsString('termStatus');
+    if (this.properties['status']) {
+      return this.getPropertyAsString('status');
     } else {
       throw new Error('Status not found');
     }
