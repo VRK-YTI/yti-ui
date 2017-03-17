@@ -33,6 +33,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
   public conceptNetworkOptions: VisNetworkOptions;
 
   private rootConceptId: string;
+  private skipNextConcept = false;
 
   public constructor( private visNetworkService: VisNetworkService,
                       private languageService: LanguageService,
@@ -73,6 +74,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
             if (clicks === 1) {
               timer = setTimeout(() => {
                 let conceptId = eventData[1].nodes[0];
+                this.skipNextConcept = true;
                 this.router.navigate(['/concepts', this.conceptViewModel.graphId, 'concept', conceptId]);
                 clicks = 0;
               }, DELAY);
@@ -95,7 +97,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
    */
   public ngOnInit(): void {
     this.conceptViewModel.concept$.subscribe(rootConcept => {
-      if (rootConcept) {
+      if (rootConcept && !this.skipNextConcept) {
         this.rootConceptId = rootConcept.id;
         let rootVisNode = {
           id: this.rootConceptId,
@@ -176,6 +178,8 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
 
         this.addEdgeNodesForConcept(rootConcept);
       }
+
+      this.skipNextConcept = false;
     });
   }
 
