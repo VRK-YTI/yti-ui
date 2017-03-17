@@ -30,8 +30,7 @@ export class PropertyMeta {
       case 'description':
       case 'note':
         return 'localizable';
-      case 'term_status':
-      case 'termStatus':
+      case 'status':
         return 'status';
       default:
         return 'string';

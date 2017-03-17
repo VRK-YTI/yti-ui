@@ -134,7 +134,7 @@ export class Node<T extends NodeType> {
 
   constructor(private node: NodeExternal<T>, private metas: Map<string, NodeMeta>, private languages: string[]) {
 
-    this.meta = metas.get(node.type.id)!;
+    this.meta = requireDefined(metas.get(node.type.id), 'Meta not found for ' + node.type.id);
 
     for (const propertyMeta of this.meta.properties) {
       const property = normalizeAsArray(node.properties[propertyMeta.id]);
@@ -286,10 +286,8 @@ export class Node<T extends NodeType> {
   }
 
   get status(): string {
-    if (this.properties['term_status']) {
-      return this.getPropertyAsString('term_status');
-    } else if (this.properties['termStatus']) {
-      return this.getPropertyAsString('termStatus');
+    if (this.properties['status']) {
+      return this.getPropertyAsString('status');
     } else {
       throw new Error('Status not found');
     }
