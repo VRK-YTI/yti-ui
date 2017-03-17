@@ -134,7 +134,7 @@ export class Node<T extends NodeType> {
 
   constructor(private node: NodeExternal<T>, private metas: Map<string, NodeMeta>, private languages: string[]) {
 
-    this.meta = metas.get(node.type.id)!;
+    this.meta = requireDefined(metas.get(node.type.id), 'Meta not found for ' + node.type.id);
 
     for (const propertyMeta of this.meta.properties) {
       const property = normalizeAsArray(node.properties[propertyMeta.id]);
