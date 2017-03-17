@@ -3,7 +3,7 @@ import { Observable, ReplaySubject } from 'rxjs';
 import { normalizeAsArray, flatten } from '../utils/array';
 import { Injectable } from '@angular/core';
 import { TermedHttp } from './termed-http.service';
-import { isDefined, requireDefined } from '../utils/object';
+import { isDefined } from '../utils/object';
 import { Graph } from '../entities/graph';
 import { NodeMeta } from '../entities/meta';
 import { NodeMetaInternal } from '../entities/meta-api';
@@ -38,10 +38,6 @@ export class MetaModelService {
 
   getMeta(): Observable<Map<string, Map<string, NodeMeta>>> {
     return this.meta;
-  }
-
-  getMetaForGraph(graphId: string): Observable<Map<string, NodeMeta>> {
-    return this.meta.map(m => requireDefined(m.get(graphId)));
   }
 
   private getGraphs(): Observable<Graph[]> {
