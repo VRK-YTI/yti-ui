@@ -6,7 +6,6 @@ import { normalizeAsArray } from '../utils/array';
 import { MetaModelService } from './meta-model.service';
 import { NodeExternal, NodeType, NodeInternal } from '../entities/node-api';
 import { Node } from '../entities/node';
-import { requireDefined } from '../utils/object';
 import * as moment from 'moment';
 
 const infiniteResultsParams = new URLSearchParams();
@@ -19,27 +18,27 @@ export class TermedService {
   }
 
   getConceptScheme(graphId: string, languages: string[]): Observable<Node<'TerminologicalVocabulary'>> {
-    return Observable.zip(this.metaModelService.getMetaForGraph(graphId), this.getUniqueNodeWithoutReferrers(graphId, 'TerminologicalVocabulary'))
+    return Observable.zip(this.metaModelService.getMeta(), this.getUniqueNodeWithoutReferrers(graphId, 'TerminologicalVocabulary'))
       .map(([meta, conceptScheme]) => new Node<'TerminologicalVocabulary'>(conceptScheme, meta, languages));
   }
 
   getConceptSchemeList(languages: string[]): Observable<Node<'TerminologicalVocabulary'>[]> {
     return Observable.zip(this.metaModelService.getMeta(), this.getAllNodesWithoutReferences('TerminologicalVocabulary'))
-      .map(([meta, conceptSchemes]) => conceptSchemes.map(scheme => new Node<'TerminologicalVocabulary'>(scheme, requireDefined(meta.get(scheme.type.graph.id)), languages)));
+      .map(([meta, conceptSchemes]) => conceptSchemes.map(scheme => new Node<'TerminologicalVocabulary'>(scheme, meta, languages)));
   }
 
   getConcept(graphId: string, conceptId: string, languages: string[]): Observable<Node<'Concept'>> {
-    return Observable.zip(this.metaModelService.getMetaForGraph(graphId), this.getConceptDetailsNode(graphId, conceptId))
+    return Observable.zip(this.metaModelService.getMeta(), this.getConceptDetailsNode(graphId, conceptId))
       .map(([meta, concept]) => new Node(concept, meta, languages));
   }
 
   getConceptList(graphId: string, languages: string[]): Observable<Node<'Concept'>[]> {
-    return Observable.zip(this.metaModelService.getMetaForGraph(graphId), this.getConceptListNodes(graphId))
+    return Observable.zip(this.metaModelService.getMeta(), this.getConceptListNodes(graphId))
       .map(([meta, concepts]) => concepts.map(concept => new Node<'Concept'>(concept, meta, languages)));
   }
 
   getNarrowerConcepts(graphId: string, broaderConceptId: string, languages: string[]): Observable<Node<'Concept'>[]> {
-    return Observable.zip(this.metaModelService.getMetaForGraph(graphId), this.getNarrowerConceptNodes(graphId, broaderConceptId))
+    return Observable.zip(this.metaModelService.getMeta(), this.getNarrowerConceptNodes(graphId, broaderConceptId))
       .map(([meta, concepts]) => concepts.map(concept => new Node<'Concept'>(concept, meta, languages)));
   }
 
