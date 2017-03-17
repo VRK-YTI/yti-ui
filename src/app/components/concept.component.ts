@@ -1,8 +1,8 @@
-import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import { Component } from '@angular/core';
 import { Node } from '../entities/node';
 import { normalizeAsArray } from '../utils/array';
 import { EditableService } from '../services/editable.service';
-import {ActivatedRoute} from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { ConceptViewModelService } from '../services/concept.view.service';
 
 @Component({

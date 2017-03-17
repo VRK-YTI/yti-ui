@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy, Input} from '@angular/core';
+import {Component, OnInit, OnDestroy, ElementRef} from '@angular/core';
 import {Node} from '../../entities/node';
 import { stripMarkdown } from '../../utils/markdown';
 import { Router } from '@angular/router';
@@ -12,6 +12,7 @@ import {
 import {LanguageService} from "../../services/language.service";
 import {TermedService} from "../../services/termed.service";
 import {ConceptViewModelService} from "../../services/concept.view.service";
+import {root} from "rxjs/util/root";
 
 class ConceptNetworkData implements VisNetworkData {
   public nodes: VisNodes;
@@ -23,7 +24,7 @@ class ConceptNetworkData implements VisNetworkData {
   styleUrls: ['./concept-network.component.scss'],
   template: `
     <h2>Concept Network</h2>
-    <div class="network-canvas" [visNetwork]="conceptNetwork" [visNetworkData]="conceptNetworkData" [visNetworkOptions]="conceptNetworkOptions" (initialized)="networkInitialized()"></div>
+    <div class="network-canvas" [visNetwork]="conceptNetwork" [visNetworkData]="conceptNetworkData" [visNetworkOptions]="conceptNetworkOptions" (initialized)="networkInitialized()" (mouseleave)="hidePopup()"></div>
   `
 })
 export class ConceptNetworkComponent implements OnInit, OnDestroy {
@@ -34,25 +35,38 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
 
   private rootConceptId: string;
 
-  public constructor(private visNetworkService: VisNetworkService,
-                     private languageService: LanguageService,
-                     private termedService: TermedService,
-                     private router: Router,
-                     private conceptViewModel: ConceptViewModelService) { }
+  public constructor( private visNetworkService: VisNetworkService,
+                      private languageService: LanguageService,
+                      private termedService: TermedService,
+                      private router: Router,
+                      private conceptViewModel: ConceptViewModelService,
+                      private elRef: ElementRef) { }
 
 
-  public networkInitialized(): void {
-    this.visNetworkService.on(this.conceptNetwork, 'stabilizationIterationsDone');
+  private hidePopup(): void {
+    let tooltip = this.elRef.nativeElement.querySelector('.vis-tooltip');
+    if(tooltip !== null) {
+      tooltip.style.visibility = 'hidden';
+    }
+  }
+
+  private networkInitialized(): void {
     this.visNetworkService.on(this.conceptNetwork, 'click');
-
-    this.visNetworkService.stabilizationIterationsDone.subscribe((eventData: any) => {
-      if (eventData === this.conceptNetwork) {
-        // Do something after network has stabilized
-      }
-    });
+    this.visNetworkService.on(this.conceptNetwork, 'dragStart');
 
     // Distinguish between single click and double click
     var DELAY: number = 600, clicks: number = 0, timer: any;
+
+    // If user starts dragging, reset click timer
+    // NOTE: If user clicks the node and does not move cursor within 600ms, it will be interpreted as a click
+    // leading to changing the concept
+    this.visNetworkService.dragStart.subscribe((eventData: any[]) => {
+      if (eventData[0] === this.conceptNetwork) {
+        clearTimeout(timer);
+        clicks = 0;
+      }
+    });
+
     this.visNetworkService.click
         .subscribe((eventData: any[]) => {
           if (eventData[0] === this.conceptNetwork && eventData[1] && eventData[1].nodes.length > 0) {
@@ -89,7 +103,8 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
           label: this.languageService.translate(rootConcept.label),
           title: stripMarkdown(this.languageService.translate(rootConcept.definition)),
           group: 'rootGroup',
-          color: 'blue'
+          color: 'blue',
+          physics: false
         };
 
         this.conceptNetworkData = {
@@ -100,7 +115,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
         this.conceptNetworkOptions = {
           nodes: {
             shape: 'ellipse',
-            fixed: true
+            fixed: false
           },
           groups: {
             rootGroup: {font: {color: 'black'}},
@@ -110,11 +125,11 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
           },
           layout: {
             hierarchical: {
-              enabled: true,
+              enabled: false,
               direction: 'UD',
-              sortMethod: 'directed',
-              parentCentralization: false,
-              nodeSpacing: 200,
+              sortMethod: 'hubsize',
+              parentCentralization: true,
+              nodeSpacing: 300,
               // blockShifting: false,
               // edgeMinimization: false
             },
@@ -124,13 +139,12 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
             smooth: {
               enabled: true,
               type: 'cubicBezier', // 'continuous', 'discrete', 'diagonalCross', 'straightCross', 'horizontal', 'vertical', 'curvedCW', 'curvedCCW', 'cubicBezier'
-              roundness: 0.5
+              roundness: 0.15
             },
-            length: 250,
+            length: 300,
             hoverWidth: 3,
             color: {
               color: 'black',
-              highlight: 'blue',
               hover: 'blue'
             }
           },
@@ -141,15 +155,23 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
             hover: true,
             selectable: true,
             hoverConnectedEdges: true,
-            selectConnectedEdges: false,
+            selectConnectedEdges: false
           },
           physics: {
             enabled: true,
-            barnesHut: {
-              avoidOverlap: 1
+            solver: 'forceAtlas2Based', // hierarchicalRepulsion, repulsion, forceAtlas2Based, barnesHut
+            forceAtlas2Based: {
+              gravitationalConstant: -500,
+              centralGravity: 0.05,
+              springConstant: 0.3,
+              damping: 0.8
             },
-            hierarchicalRepulsion: {},
-            solver: 'hierarchicalRepulsion' // try forceAtlas2Based
+            stabilization: {
+              enabled: true,
+              iterations: 15000,
+              onlyDynamicEdges: true,
+              fit: true
+            }
           }
         };
 
@@ -158,12 +180,12 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
     });
   }
 
-  private addEdgeNodesForConcept(rootConceptNode: Node<'Concept'>) {
-    if(rootConceptNode) {
-      let rootConceptNodeId = rootConceptNode.id;
-      let relatedConcepts: Node<'Concept'>[] = rootConceptNode.references['related']['values'];
-      let broaderConcepts: Node<'Concept'>[] = rootConceptNode.referrers['broader'];
-      let isPartOfConcepts: Node<'Concept'>[] = rootConceptNode.referrers['isPartOf'];
+  private addEdgeNodesForConcept(rootConcept: Node<'Concept'>) {
+    if(rootConcept) {
+      let rootConceptId = rootConcept.id;
+      let relatedConcepts: Node<'Concept'>[] = rootConcept.references['related']['values'];
+      let broaderConcepts: Node<'Concept'>[] = rootConcept.referrers['broader'];
+      let isPartOfConcepts: Node<'Concept'>[] = rootConcept.referrers['isPartOf'];
 
       if(relatedConcepts) {
         relatedConcepts.forEach(relConcept => {
@@ -191,7 +213,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
           }
 
           let relEdge = {
-            from: rootConceptNodeId,
+            from: rootConceptId,
             to: relNode.id,
             arrows: {
               to: {
@@ -200,9 +222,13 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
                 type: 'arrow'
               }
             },
-            id: rootConceptNodeId + relNode.id
+            id: rootConceptId + relNode.id,
+            title: this.languageService.translate(rootConcept.label) + ' - ' + relNode.label
           };
-          this.conceptNetworkData.edges.add(relEdge);
+
+          if(!this.conceptNetworkData.edges.getById(relEdge.id)) {
+            this.conceptNetworkData.edges.add(relEdge);
+          }
         });
       }
 
@@ -231,11 +257,15 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
           }
 
           let broaderEdge = {
-            from: rootConceptNodeId,
+            from: rootConceptId,
             to: broaderNode.id,
-            id: rootConceptNodeId + broaderNode.id
+            id: rootConceptId + broaderNode.id,
+            title: this.languageService.translate(rootConcept.label) + ' - ' + broaderNode.label
           };
-          this.conceptNetworkData.edges.add(broaderEdge);
+
+          if(!this.conceptNetworkData.edges.getById(broaderEdge.id)) {
+            this.conceptNetworkData.edges.add(broaderEdge);
+          }
         });
       }
 
@@ -266,19 +296,23 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
           }
 
           let isPartOfEdge = {
-            from: rootConceptNodeId,
+            from: rootConceptId,
             to: isPartOfNode.id,
             dashes: true,
-            id: rootConceptNodeId + isPartOfNode.id
+            id: rootConceptId + isPartOfNode.id,
+            title: this.languageService.translate(rootConcept.label) + ' - ' + isPartOfNode.label
           };
-          this.conceptNetworkData.edges.add(isPartOfEdge);
+
+          if(!this.conceptNetworkData.edges.getById(isPartOfEdge.id)) {
+            this.conceptNetworkData.edges.add(isPartOfEdge);
+          }
         });
       }
     };
   }
 
   public ngOnDestroy(): void {
-    this.visNetworkService.off(this.conceptNetwork, 'stabilizationIterationsDone');
     this.visNetworkService.off(this.conceptNetwork, 'click');
+    this.visNetworkService.off(this.conceptNetwork, 'dragStart');
   }
 }
