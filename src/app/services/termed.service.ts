@@ -101,8 +101,7 @@ export class TermedService {
     params.append('select.referrers', 'broader');
     params.append('select.references', 'prefLabelXl');
     params.append('select.properties', 'prefLabel');
-    params.append('select.properties', 'term_status');
-    params.append('select.properties', 'termStatus');
+    params.append('select.properties', 'status');
     params.append('select.audit', 'true');
 
     return this.http.get(`/api/ext.json`, { search: params } )
