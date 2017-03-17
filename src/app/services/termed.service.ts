@@ -109,23 +109,6 @@ export class TermedService {
       .map(response => normalizeAsArray(response.json() as NodeExternal<'Concept'>[])).catch(notFoundAsDefault([]));
   }
 
-  private getConceptSchemeWithTopConcepts(graphId: string): Observable<NodeExternal<'TerminologicalVocabulary'>> {
-
-    const params = new URLSearchParams();
-    params.append('max', '-1');
-    params.append('graphId', graphId);
-    params.append('typeId', 'TerminologicalVocabulary');
-    params.append('recurse.referrers.broader', '1');
-    params.append('recurse.references.prefLabelXl', '1');
-    params.append('select.properties', 'prefLabel');
-    params.append('select.references', 'hasTopConcept');
-    params.append('select.references', 'prefLabelXl');
-    params.append('select.referrers', 'broader');
-
-    return this.http.get(`/api/ext.json`, { search: params } )
-      .map(response => requireSingle(response.json() as NodeExternal<'TerminologicalVocabulary'>[]));
-  }
-
   private getNarrowerConceptNodes(graphId: string, broaderConceptId: string): Observable<NodeExternal<'Concept'>[]> {
 
     const params = new URLSearchParams();
