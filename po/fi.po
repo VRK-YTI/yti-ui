@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-03-20 15:06+0200\n"
+"PO-Revision-Date: 2017-03-20 18:39+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -69,6 +69,12 @@ msgstr ""
 msgid "Not implemented yet!"
 msgstr "Ei vielä toteutettu!"
 
+msgid "vocabulary"
+msgstr "sanasto"
+
+msgid "vocabularies"
+msgstr "sanastoa"
+
 msgid "Front page"
 msgstr "Etusivu"
 
@@ -86,6 +92,15 @@ msgstr "Käytöstä poistunut"
 
 msgid "Suggestion"
 msgstr "Ehdotus"
+
+msgid "Vocabulary type"
+msgstr "Sanastotyyppi"
+
+msgid "Group"
+msgstr "Toimiala / Ryhmä"
+
+msgid "Organization"
+msgstr "Organisaatio"
 
 #~ msgid "Vocabularies"
 #~ msgstr "Sanastot"

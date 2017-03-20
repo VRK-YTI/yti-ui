@@ -1,6 +1,6 @@
 import { asLocalizable, Localizable, combineLocalizables, Localization } from './localization';
 import { requireDefined, assertNever } from '../utils/object';
-import { normalizeAsArray, any } from '../utils/array';
+import { normalizeAsArray, any, requireSingle } from '../utils/array';
 import { NodeExternal, NodeType, Attribute, Identifier, NodeInternal } from './node-api';
 import { PropertyMeta, ReferenceMeta, NodeMeta } from './meta';
 import { Moment } from 'moment';
@@ -279,6 +279,22 @@ export class Node<T extends NodeType> {
     } else {
       throw new Error('No label found');
     }
+  }
+
+  get description(): Localizable {
+    return this.getPropertyAsLocalizable('description');
+  }
+
+  get publisher(): Node<any> {
+    return requireSingle(this.references['publisher'].values);
+  }
+
+  get group(): Node<any> {
+    return requireSingle(this.references['inGroup'].values);
+  }
+
+  get typeLabel(): Localizable {
+    return this.meta.label;
   }
 
   get status(): string {

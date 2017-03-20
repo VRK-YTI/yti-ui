@@ -58,6 +58,12 @@ msgstr ""
 msgid "Not implemented yet!"
 msgstr ""
 
+msgid "vocabulary"
+msgstr ""
+
+msgid "vocabularies"
+msgstr ""
+
 msgid "Front page"
 msgstr ""
 
@@ -74,4 +80,13 @@ msgid "Deprecated"
 msgstr ""
 
 msgid "Suggestion"
+msgstr ""
+
+msgid "Vocabulary type"
+msgstr ""
+
+msgid "Group"
+msgstr ""
+
+msgid "Organization"
 msgstr ""

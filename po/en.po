@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-03-20 15:04+0200\n"
+"PO-Revision-Date: 2017-03-20 18:39+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -69,6 +69,12 @@ msgstr ""
 msgid "Not implemented yet!"
 msgstr ""
 
+msgid "vocabulary"
+msgstr ""
+
+msgid "vocabularies"
+msgstr ""
+
 msgid "Front page"
 msgstr ""
 
@@ -85,4 +91,13 @@ msgid "Deprecated"
 msgstr ""
 
 msgid "Suggestion"
+msgstr ""
+
+msgid "Vocabulary type"
+msgstr ""
+
+msgid "Group"
+msgstr ""
+
+msgid "Organization"
 msgstr ""
