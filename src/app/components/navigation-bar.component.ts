@@ -5,7 +5,7 @@ import { LanguageService, Language } from '../services/language.service';
   selector: 'navigation-bar',
   styleUrls: ['./navigation-bar.component.scss'],
   template: `
-    <nav class="navbar navbar-toggleable-md fixed-top navbar-inverse bg-primary">
+    <nav class="navbar navbar-toggleable-md navbar-inverse bg-primary">
 
       <a class="navbar-brand" [routerLink]="['/']"><span>Sanasto- ja käsitevälineistö</span></a>
     
