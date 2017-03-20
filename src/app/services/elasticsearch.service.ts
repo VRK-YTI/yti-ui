@@ -42,7 +42,7 @@ export class ElasticSearchService {
     //   return data.json();
     // });
 
-    return this.http.get('dist/ext2.json').map(data => {
+    return this.http.get('dist/ext.json').map(data => {
       return data.json();
     });
   }
@@ -217,12 +217,5 @@ export class ElasticSearchService {
 
   indexExists(indexName: string): PromiseLike<boolean> {
     return this._client.indices.exists({index: indexName});
-  }
-
-  isAvailable(): any {
-    return this._client.ping({
-      requestTimeout: Infinity,
-      hello: "elasticsearch!"
-    });
   }
 }
