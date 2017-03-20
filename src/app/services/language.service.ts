@@ -39,12 +39,16 @@ export class LanguageService implements Localizer {
       return '';
     }
 
-    if (localizable.hasOwnProperty(this.language)) {
-      return localizable[this.language];
+    const primaryLocalization = localizable[this.language];
+
+    if (primaryLocalization) {
+      return primaryLocalization;
     } else {
 
-      for (const entry of Object.entries(localizable)) {
-        return `${entry[1]} (${entry[0]})`;
+      for (const [language, value] of Object.entries(localizable)) {
+        if (value) {
+          return `${value} (${language})`;
+        }
       }
 
       return '';
