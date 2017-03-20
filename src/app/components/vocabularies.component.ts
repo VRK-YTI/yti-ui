@@ -10,14 +10,38 @@ import { Node } from '../entities/node';
   template: `
     <div class="container-fluid">
 
-      <div class="row">
-        <div class="col-md-12">
-          <div class="page-header">
-            <h1 translate>Vocabularies</h1>
-          </div>        
-        </div>
-      </div>
+      <div class="page-header row">
+        <div class="col-md-12 mx-auto">
 
+          <div class="row">
+            <div class="col-md-12">
+              <span class="welcome" translate>Welcome to vocabulary and concept workbench</span>
+              <p translate>Frontpage information</p>
+            </div>          
+          </div>
+          
+          <div class="row">
+            <div class="col-md-12">
+              <div class="input-group input-group-lg input-group-search">
+                <input [(ngModel)]="searchConcept"
+                       type="text" 
+                       class="form-control" 
+                       [placeholder]="'Search concept...' | translate" />
+              </div>
+            </div>
+          </div>
+          
+          <div class="row" *ngIf="searchConcept" style="padding-top: 16px">
+            <div class="col-md-12">
+              <div class="alert alert-danger" role="alert">
+                <span translate>Not implemented yet!</span>
+              </div>
+            </div>
+          </div>
+          
+        </div>        
+      </div>
+          
       <div class="row">
         <div class="col-md-12">
           <ul>
@@ -36,6 +60,7 @@ import { Node } from '../entities/node';
 export class VocabulariesComponent implements OnInit {
 
   conceptSchemes: Observable<Node<'TerminologicalVocabulary'>[]>;
+  searchConcept: string;
 
   constructor(private termedService: TermedService, locationService: LocationService) {
     locationService.atFrontPage();

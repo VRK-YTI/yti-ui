@@ -28,7 +28,16 @@ msgstr ""
 msgid "Hierarchical"
 msgstr ""
 
-msgid "Vocabularies"
+msgid "Search concept..."
+msgstr ""
+
+msgid "Welcome to vocabulary and concept workbench"
+msgstr ""
+
+msgid "Frontpage information"
+msgstr ""
+
+msgid "Not implemented yet!"
 msgstr ""
 
 msgid "Front page"

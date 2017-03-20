@@ -1,6 +1,7 @@
 @import './variables';
 @import '~bootstrap/scss/bootstrap';
 @import './vendor/bootswatch';
+@import "~font-awesome/scss/variables";
 
 .container {
   margin-left: 0;
@@ -33,4 +34,23 @@ span.highlight {
 
 .btn-link {
   color: $brand-primary;
+}
+
+.input-group.input-group-search {
+
+  position: relative !important;
+
+  .form-control {
+    padding-left: 3rem !important;
+  }
+
+  &:before {
+    content: $fa-var-search;
+    font-family: FontAwesome;
+    top: 10px;
+    left: 15px;
+    font-size: $font-size-lg;
+    position: absolute;
+    z-index: 10;
+  }
 }

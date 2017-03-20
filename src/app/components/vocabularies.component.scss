@@ -1,0 +1,20 @@
+@import '~bootstrap/scss/bootstrap';
+
+.page-header {
+
+  text-align: center;
+  background-color: $gray-lighter;
+  padding: 40px 40px 20px 40px;
+
+  .welcome {
+    display: inline-block;
+    color: $brand-primary;
+    margin-bottom: 10px;
+    font-size: large;
+  }
+
+  div {
+    max-width: 550px;
+  }
+}
+
