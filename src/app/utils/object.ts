@@ -26,3 +26,7 @@ export function requireDefined<T>(obj: Optional<T>, msg?: string): T {
   }
   return obj;
 }
+
+export function assertNever(_x: never, msg?: string): never {
+  throw new Error(msg);
+}

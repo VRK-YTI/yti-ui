@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component } from '@angular/core';
 import { EditableService } from '../services/editable.service';
 import { NgForm } from '@angular/forms';
 
@@ -15,8 +15,6 @@ import { NgForm } from '@angular/forms';
 })
 export class EditableButtonsComponent {
 
-  @Output('save') save = new EventEmitter();
-
   constructor(public form: NgForm, private editableService: EditableService) {
   }
 
@@ -25,19 +23,18 @@ export class EditableButtonsComponent {
   }
 
   startEditing() {
-    this.editableService.editing = true;
-  }
-
-  cancelEditing() {
-    this.editableService.editing = false;
+    this.editableService.edit();
   }
 
   canSave() {
     return !this.form.invalid && !this.form.pending;
   }
 
+  cancelEditing() {
+    this.editableService.cancel();
+  }
+
   saveEdited() {
-    this.save.next();
-    this.cancelEditing();
+    this.editableService.save();
   }
 }

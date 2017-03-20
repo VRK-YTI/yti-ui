@@ -1,16 +1,18 @@
 import { Component, Input } from '@angular/core';
 import { Node, Property } from '../entities/node';
+import { EditableService } from '../services/editable.service';
 
 @Component({
   selector: 'property',
   styleUrls: ['./property.component.scss'],
   template: `
-    <dl class="row">
-      <dt class="col-md-3"><label [for]="property.meta.id">{{property.meta.label | translateValue}}</label></dt>
-      <dd class="col-md-9">
-        <localized-input *ngIf="property.meta.type === 'localizable'" [value]="property.value" [relatedConcepts]="relatedConcepts"></localized-input>
-        <literal-input *ngIf="property.meta.type === 'string'" [meta]="property.meta" [property]="property"></literal-input>
-        <span *ngIf="property.meta.type === 'translation-key'">{{property.value | translate}}</span>
+    <dl *ngIf="show">
+      <dt><label [for]="property.meta.id">{{property.meta.label | translateValue}}</label></dt>
+      <dd [ngSwitch]="property.meta.type">
+        <localized-input *ngSwitchCase="'localizable'" [property]="property" [relatedConcepts]="relatedConcepts"></localized-input>
+        <literal-input *ngSwitchCase="'string'" [property]="property"></literal-input>
+        <status-input *ngSwitchCase="'status'" [property]="property"></status-input>
+        <span *ngSwitchDefault>ERROR - unknown property type</span>
       </dd>
     </dl>
   `
@@ -19,4 +21,11 @@ export class PropertyComponent {
 
   @Input('value') property: Property;
   @Input() relatedConcepts: Node<'Concept'>[];
+
+  constructor(private editableService: EditableService) {
+  }
+
+  get show() {
+    return this.editableService.editing || !this.property.empty;
+  }
 }

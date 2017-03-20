@@ -4,7 +4,6 @@ $language-height: 32px;
 div.localized {
 
   margin-bottom: 5px;
-  margin-left: -40px;
   display: inline-block;
   width: 100%;
 
@@ -16,10 +15,6 @@ div.localized {
     display: inline-block;
     text-align: center;
     line-height: 29px;
-
-    &.editing {
-      border: none;
-    }
 
     div.form-group {
       margin-bottom: 0;
@@ -48,7 +43,7 @@ div.localized {
       margin-bottom: 0;
     }
 
-    input {
+    input, textarea {
       margin-left: -10px;
       padding: 6px 10px;
     }

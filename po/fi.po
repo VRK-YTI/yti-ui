@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-01-31 15:15+0200\n"
+"PO-Revision-Date: 2017-03-07 18:17+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -13,15 +13,6 @@ msgstr ""
 "X-Poedit-Basepath: .\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid "Id"
-msgstr "Tunniste"
-
-msgid "Created at"
-msgstr "Luotu"
-
-msgid "Modified at"
-msgstr "Muokattu"
-
 msgid "search..."
 msgstr "etsi…"
 
@@ -31,8 +22,20 @@ msgstr "Suositettava termi"
 msgid "Status"
 msgstr "Tila"
 
-msgid "Modified"
+msgid "Id"
+msgstr "Tunniste"
+
+msgid "Created at"
+msgstr "Luotu"
+
+msgid "Modified at"
 msgstr "Muokattu"
+
+msgid "Alphabetic"
+msgstr "Aakkosellinen"
+
+msgid "Hierarchical"
+msgstr "Hierarkinen"
 
 msgid "Vocabularies"
 msgstr "Sanastot"
@@ -54,6 +57,9 @@ msgstr "Käytöstä poistunut"
 
 msgid "Suggestion"
 msgstr "Ehdotus"
+
+#~ msgid "Modified"
+#~ msgstr "Muokattu"
 
 #~ msgid "Concept"
 #~ msgstr "Käsite"

@@ -1,9 +1,7 @@
 import { normalizeAsArray } from '../utils/array';
 import { Attribute } from './node-api';
-import { isDefined } from '../utils/object';
 
 export interface Localization {
-
   lang: string;
   value: string;
 }
@@ -36,8 +34,4 @@ export function combineLocalizables(localizables: Localizable[]): Localizable {
   }
 
   return result;
-}
-
-export function isLocalization(attribute: Attribute): attribute is Localization {
-  return isDefined(attribute.lang) && isDefined(attribute.value);
 }

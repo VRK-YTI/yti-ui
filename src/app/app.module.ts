@@ -33,21 +33,25 @@ import { ReferenceComponent } from './components/reference.component';
 import { TermsComponent } from './components/terms.component';
 import { NoSelectionComponent } from './components/no-selection.component';
 import { TimestampPipe } from './pipes/timestamp.pipe';
-import { MarkdownComponent } from './components/markdown/markdown.component';
-import { MarkdownElementComponent } from './components/markdown/markdown-element.component';
+import { MarkdownLinksComponent } from './components/markdown/markdown-links.component';
+import { MarkdownLinksElementComponent } from './components/markdown/markdown-links.component';
 import { VocabularyComponent } from './components/vocabulary.component';
 import { AccordionChevronComponent } from './components/accordion-chevron.component';
 import { LiteralInputComponent } from './components/literal-input.component';
-import { MetaModelValidator } from './components/validators/meta-model.validator';
+import { MetaModelValidator } from './directives/validators/meta-model.validator';
 import { KeysPipe } from './pipes/keys.pipe';
 import { ErrorMessagesComponent } from './components/error-messages.component';
-import { EditableFormDirective } from './components/directives/editable-form.directive';
 import { EditableButtonsComponent } from './components/editable-buttons.component';
-import { StripMarkdownPipe } from './pipes/strip-markdown.pipe';
-import { LanguageValidator } from './components/validators/language.validator';
-import { LocalizationValidator } from './components/validators/localization.validator';
 import {ElasticSearchService} from "./services/elasticsearch.service";
 import { AutoComplete } from './components/autocomplete/autocomplete.component';
+import { LanguageValidator } from './directives/validators/language.validator';
+import { LocalizationValidator } from './directives/validators/localization.validator';
+import { MarkdownComponent } from './components/markdown/markdown.component';
+import { MarkdownElementComponent } from './components/markdown/markdown.component';
+import { ConceptListComponent } from './components/concept-list.component';
+import { ConceptHierarchyComponent } from './components/concept-hierarchy.component';
+import { ConceptHierarchyNodeComponent } from './components/concept-hierarchy-node.component';
+import { StatusInputComponent } from './components/status-input.component';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json!po?format=mf!../../po/fi.po'),
@@ -86,21 +90,26 @@ const appRoutes: Routes = [
     VocabulariesComponent,
     VocabularyComponent,
     ConceptsComponent,
+    ConceptListComponent,
+    ConceptHierarchyComponent,
+    ConceptHierarchyNodeComponent,
     ConceptComponent,
     NoSelectionComponent,
     PropertyComponent,
     ReferenceComponent,
     TermsComponent,
     AjaxLoadingIndicatorComponent,
-    LocalizedInputComponent,
     MarkdownComponent,
     MarkdownElementComponent,
+    MarkdownLinksComponent,
+    MarkdownLinksElementComponent,
     AccordionChevronComponent,
     LiteralInputComponent,
+    StatusInputComponent,
+    LocalizedInputComponent,
     ErrorMessagesComponent,
     EditableButtonsComponent,
     AutoComplete,
-    EditableFormDirective,
     MetaModelValidator,
     LanguageValidator,
     LocalizationValidator,
@@ -110,7 +119,6 @@ const appRoutes: Routes = [
     PropertiesPipe,
     ReferencesPipe,
     TimestampPipe,
-    StripMarkdownPipe,
     KeysPipe
   ],
   imports: [

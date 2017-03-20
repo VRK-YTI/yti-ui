@@ -1,5 +1,5 @@
 import { ReplaySubject } from 'rxjs';
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 
 @Injectable()
 export class EditableService {
@@ -7,6 +7,9 @@ export class EditableService {
   private _editing = false;
   _editing$ = new ReplaySubject<boolean>();
   editing$ = this._editing$.distinctUntilChanged();
+
+  save$ = new EventEmitter();
+  cancel$ = new EventEmitter();
 
   constructor() {
     this._editing$.next(this._editing);
@@ -19,5 +22,19 @@ export class EditableService {
   set editing(value: boolean) {
     this._editing = value;
     this._editing$.next(value);
+  }
+
+  edit() {
+    this.editing = true;
+  }
+
+  cancel() {
+    this.cancel$.next();
+    this.editing = false;
+  }
+
+  save() {
+    this.save$.next();
+    this.editing = false;
   }
 }

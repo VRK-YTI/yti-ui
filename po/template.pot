@@ -4,15 +4,6 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "Id"
-msgstr ""
-
-msgid "Created at"
-msgstr ""
-
-msgid "Modified at"
-msgstr ""
-
 msgid "search..."
 msgstr ""
 
@@ -22,7 +13,19 @@ msgstr ""
 msgid "Status"
 msgstr ""
 
-msgid "Modified"
+msgid "Id"
+msgstr ""
+
+msgid "Created at"
+msgstr ""
+
+msgid "Modified at"
+msgstr ""
+
+msgid "Alphabetic"
+msgstr ""
+
+msgid "Hierarchical"
 msgstr ""
 
 msgid "Vocabularies"

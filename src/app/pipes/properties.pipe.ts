@@ -6,10 +6,10 @@ import { normalizeAsArray, any } from '../utils/array';
 @Pipe({ name: 'properties' })
 export class PropertiesPipe implements PipeTransform {
 
-  transform(obj: Node<any>, rejectTypes?: string[]): Property[] {
+  transform(obj: Node<any>, showEmpty = true, rejectTypes?: string[]): Property[] {
 
     const rejects = normalizeAsArray(rejectTypes);
-    const properties = Object.values(obj.properties).filter(property => !any(rejects, reject => property.meta.id === reject));
+    const properties = Object.values(obj.properties).filter(property => (showEmpty || !property.empty) && !any(rejects, reject => property.meta.id === reject));
 
     properties.sort(comparingNumber<Property>(property => property.meta.index));
     return properties;

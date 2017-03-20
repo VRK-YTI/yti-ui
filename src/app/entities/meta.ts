@@ -2,15 +2,17 @@ import { ReferenceAttributeInternal, TextAttributeInternal, NodeMetaInternal } f
 import { comparingNumber } from '../utils/comparator';
 import { normalizeAsArray } from '../utils/array';
 import { asLocalizable, Localizable } from './localization';
-import { NodeType } from './node-api';
+import { NodeType, NodeExternal } from './node-api';
+import { v4 as uuid } from 'node-uuid';
+import * as moment from 'moment';
 
-export type PropertyType = 'localizable' | 'translation-key' | 'string';
+export type PropertyType = 'localizable' | 'status' | 'string';
 
 export class PropertyMeta {
 
   id: string;
   label: Localizable;
-  regex?: string;
+  regex: string;
   index: number;
 
   constructor(textAttribute: TextAttributeInternal) {
@@ -30,9 +32,20 @@ export class PropertyMeta {
         return 'localizable';
       case 'term_status':
       case 'termStatus':
-        return 'translation-key';
+        return 'status';
       default:
         return 'string';
+    }
+  }
+
+  get area() {
+    switch(this.id) {
+      case 'definition':
+      case 'description':
+      case 'note':
+        return true;
+      default:
+        return false;
     }
   }
 }
@@ -67,11 +80,13 @@ export class NodeMeta {
   properties: PropertyMeta[];
   references: ReferenceMeta[];
   type: NodeType;
+  graphId: string;
 
   constructor(metaNode: NodeMetaInternal) {
 
     this.label = asLocalizable(metaNode.properties.prefLabel);
     this.type = metaNode.id;
+    this.graphId = metaNode.graph.id;
 
     this.properties = normalizeAsArray(metaNode.textAttributes)
       .sort(comparingNumber<TextAttributeInternal>(x => x.index))
@@ -88,5 +103,35 @@ export class NodeMeta {
 
   get concept(): boolean {
     return this.type === 'Concept';
+  }
+
+  createEmptyNode(): NodeExternal<any> {
+
+    const result: NodeExternal<any> = {
+      id: uuid(),
+      type: {
+        id: this.type,
+        graph: { id: this.graphId }
+      },
+      code: '',
+      createdBy: '',
+      createdDate: moment().toISOString(),
+      lastModifiedBy: '',
+      lastModifiedDate: moment().toISOString(),
+      uri: '',
+      properties: {},
+      references: {},
+      referrers: {}
+    };
+
+    for (const property of this.properties) {
+      result.properties[property.id] = [];
+    }
+
+    for (const reference of this.references) {
+      result.references[reference.id] = [];
+    }
+
+    return result;
   }
 }

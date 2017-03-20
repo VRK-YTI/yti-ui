@@ -1,11 +1,11 @@
 
 export type NodeType = 'Concept'
-                     | 'ConceptScheme'
+                     | 'TerminologicalVocabulary'
                      | 'Term'
                      | 'Collection'
                      | 'Group';
 
-export interface Identifier<T> {
+export interface Identifier<T extends NodeType> {
 
   id: string;
   type: {
@@ -16,8 +16,8 @@ export interface Identifier<T> {
 
 export interface Attribute {
 
-  lang?: string;
-  regex?: string;
+  lang: string;
+  regex: string;
   value: string;
 }
 
@@ -45,7 +45,7 @@ export interface NodeInternal<T extends NodeType> extends Identifier<T> {
   uri: string;
 
   properties: { [key: string]: Attribute[] };
-  references: { [key: string]: Identifier<string>[] };
-  referrers: { [key: string]: Identifier<string>[] };
+  references: { [key: string]: Identifier<any>[] };
+  referrers: { [key: string]: Identifier<any>[] };
 }
 
