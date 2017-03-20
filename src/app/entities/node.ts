@@ -79,11 +79,11 @@ export class Reference {
 
   values: Node<any>[];
 
-  constructor(nodes: NodeExternal<any>[], public meta: ReferenceMeta, metas: Map<string, NodeMeta>, languages: string[]) {
+  constructor(nodes: NodeExternal<any>[], public meta: ReferenceMeta, metas: Map<string, Map<string, NodeMeta>>, languages: string[]) {
     if (this.term) {
 
       this.values = [];
-      const nodeMeta = requireDefined(metas.get(meta.targetType));
+      const nodeMeta = requireDefined(requireDefined(metas.get(meta.graphId)).get(meta.targetType));
 
       for (const language of languages) {
 
@@ -132,9 +132,9 @@ export class Node<T extends NodeType> {
   references: { [key: string]: Reference } = {};
   referrers: { [key: string]: Node<any>[] } = {};
 
-  constructor(private node: NodeExternal<T>, private metas: Map<string, NodeMeta>, private languages: string[]) {
+  constructor(private node: NodeExternal<T>, private metas: Map<string, Map<string, NodeMeta>>, private languages: string[]) {
 
-    this.meta = metas.get(node.type.id)!;
+    this.meta = requireDefined(requireDefined(metas.get(node.type.graph.id)).get(node.type.id), 'Meta not found for ' + node.type.id);
 
     for (const propertyMeta of this.meta.properties) {
       const property = normalizeAsArray(node.properties[propertyMeta.id]);
@@ -282,10 +282,8 @@ export class Node<T extends NodeType> {
   }
 
   get status(): string {
-    if (this.properties['term_status']) {
-      return this.getPropertyAsString('term_status');
-    } else if (this.properties['termStatus']) {
-      return this.getPropertyAsString('termStatus');
+    if (this.properties['status']) {
+      return this.getPropertyAsString('status');
     } else {
       throw new Error('Status not found');
     }

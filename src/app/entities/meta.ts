@@ -30,8 +30,7 @@ export class PropertyMeta {
       case 'description':
       case 'note':
         return 'localizable';
-      case 'term_status':
-      case 'termStatus':
+      case 'status':
         return 'status';
       default:
         return 'string';
@@ -56,12 +55,14 @@ export class ReferenceMeta {
   label: Localizable;
   targetType: NodeType;
   index: number;
+  graphId: string;
 
   constructor(referenceAttribute: ReferenceAttributeInternal) {
 
     this.id = referenceAttribute.id;
     this.label = asLocalizable(referenceAttribute.properties.prefLabel);
     this.targetType = referenceAttribute.range.id;
+    this.graphId = referenceAttribute.range.graph.id;
     this.index = referenceAttribute.index;
   }
 

@@ -36,12 +36,10 @@ export class ConceptViewModelService {
       this.persistentConceptScheme = conceptScheme.clone();
     });
 
-    this.termedService.getTopConceptList(graphId, this.languages).subscribe(concepts => {
-      this.topConcepts$.next(concepts.sort(comparingLocalizable<Node<'Concept'>>(this.languageService, concept => concept.label)));
-    });
-
     this.termedService.getConceptList(graphId, this.languages).subscribe(concepts => {
-      this.allConcepts$.next(concepts.sort(comparingLocalizable<Node<'Concept'>>(this.languageService, concept => concept.label)));
+      const sortedConcepts = concepts.sort(comparingLocalizable<Node<'Concept'>>(this.languageService, concept => concept.label));
+      this.allConcepts$.next(sortedConcepts);
+      this.topConcepts$.next(sortedConcepts.filter(concept => concept.references['broader'].empty));
     });
   }
 

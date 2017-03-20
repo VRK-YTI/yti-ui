@@ -6,7 +6,6 @@ import { normalizeAsArray } from '../utils/array';
 import { MetaModelService } from './meta-model.service';
 import { NodeExternal, NodeType, NodeInternal } from '../entities/node-api';
 import { Node } from '../entities/node';
-import { requireDefined } from '../utils/object';
 import * as moment from 'moment';
 
 const infiniteResultsParams = new URLSearchParams();
@@ -19,32 +18,27 @@ export class TermedService {
   }
 
   getConceptScheme(graphId: string, languages: string[]): Observable<Node<'TerminologicalVocabulary'>> {
-    return Observable.zip(this.metaModelService.getMetaForGraph(graphId), this.getUniqueNodeWithoutReferrers(graphId, 'TerminologicalVocabulary'))
+    return Observable.zip(this.metaModelService.getMeta(), this.getUniqueNodeWithoutReferrers(graphId, 'TerminologicalVocabulary'))
       .map(([meta, conceptScheme]) => new Node<'TerminologicalVocabulary'>(conceptScheme, meta, languages));
   }
 
   getConceptSchemeList(languages: string[]): Observable<Node<'TerminologicalVocabulary'>[]> {
     return Observable.zip(this.metaModelService.getMeta(), this.getAllNodesWithoutReferences('TerminologicalVocabulary'))
-      .map(([meta, conceptSchemes]) => conceptSchemes.map(scheme => new Node<'TerminologicalVocabulary'>(scheme, requireDefined(meta.get(scheme.type.graph.id)), languages)));
+      .map(([meta, conceptSchemes]) => conceptSchemes.map(scheme => new Node<'TerminologicalVocabulary'>(scheme, meta, languages)));
   }
 
   getConcept(graphId: string, conceptId: string, languages: string[]): Observable<Node<'Concept'>> {
-    return Observable.zip(this.metaModelService.getMetaForGraph(graphId), this.getConceptDetailsNode(graphId, conceptId))
+    return Observable.zip(this.metaModelService.getMeta(), this.getConceptDetailsNode(graphId, conceptId))
       .map(([meta, concept]) => new Node(concept, meta, languages));
   }
 
   getConceptList(graphId: string, languages: string[]): Observable<Node<'Concept'>[]> {
-    return Observable.zip(this.metaModelService.getMetaForGraph(graphId), this.getConceptListNodes(graphId))
+    return Observable.zip(this.metaModelService.getMeta(), this.getConceptListNodes(graphId))
       .map(([meta, concepts]) => concepts.map(concept => new Node<'Concept'>(concept, meta, languages)));
   }
 
-  getTopConceptList(graphId: string, languages: string[]): Observable<Node<'Concept'>[]> {
-    return Observable.zip(this.metaModelService.getMetaForGraph(graphId), this.getConceptSchemeWithTopConcepts(graphId))
-      .map(([meta, conceptScheme]) => normalizeAsArray(conceptScheme.references['hasTopConcept']).map(concept => new Node<'Concept'>(concept, meta, languages)));
-  }
-
   getNarrowerConcepts(graphId: string, broaderConceptId: string, languages: string[]): Observable<Node<'Concept'>[]> {
-    return Observable.zip(this.metaModelService.getMetaForGraph(graphId), this.getNarrowerConceptNodes(graphId, broaderConceptId))
+    return Observable.zip(this.metaModelService.getMeta(), this.getNarrowerConceptNodes(graphId, broaderConceptId))
       .map(([meta, concepts]) => concepts.map(concept => new Node<'Concept'>(concept, meta, languages)));
   }
 
@@ -103,32 +97,14 @@ export class TermedService {
     params.append('max', '-1');
     params.append('graphId', graphId);
     params.append('typeId', 'Concept');
-    params.append('select.referrers', '');
+    params.append('select.referrers', 'broader');
     params.append('select.references', 'prefLabelXl');
     params.append('select.properties', 'prefLabel');
-    params.append('select.properties', 'term_status');
-    params.append('select.properties', 'termStatus');
+    params.append('select.properties', 'status');
     params.append('select.audit', 'true');
 
     return this.http.get(`/api/ext.json`, { search: params } )
       .map(response => normalizeAsArray(response.json() as NodeExternal<'Concept'>[])).catch(notFoundAsDefault([]));
-  }
-
-  private getConceptSchemeWithTopConcepts(graphId: string): Observable<NodeExternal<'TerminologicalVocabulary'>> {
-
-    const params = new URLSearchParams();
-    params.append('max', '-1');
-    params.append('graphId', graphId);
-    params.append('typeId', 'TerminologicalVocabulary');
-    params.append('recurse.referrers.broader', '1');
-    params.append('recurse.references.prefLabelXl', '1');
-    params.append('select.properties', 'prefLabel');
-    params.append('select.references', 'hasTopConcept');
-    params.append('select.references', 'prefLabelXl');
-    params.append('select.referrers', 'broader');
-
-    return this.http.get(`/api/ext.json`, { search: params } )
-      .map(response => requireSingle(response.json() as NodeExternal<'TerminologicalVocabulary'>[]));
   }
 
   private getNarrowerConceptNodes(graphId: string, broaderConceptId: string): Observable<NodeExternal<'Concept'>[]> {
