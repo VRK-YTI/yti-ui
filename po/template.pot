@@ -28,6 +28,24 @@ msgstr ""
 msgid "Hierarchical"
 msgstr ""
 
+msgid "Contact info"
+msgstr ""
+
+msgid "CSC - IT Center for Science Ltd"
+msgstr ""
+
+msgid "Source code"
+msgstr ""
+
+msgid "Frontend"
+msgstr ""
+
+msgid "Backend"
+msgstr ""
+
+msgid "licensed under the"
+msgstr ""
+
 msgid "Search concept..."
 msgstr ""
 

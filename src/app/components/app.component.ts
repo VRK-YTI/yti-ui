@@ -8,15 +8,18 @@ import { LocationService } from '../services/location.service';
     <navigation-bar></navigation-bar>
     <breadcrumb [hidden]="!showBreadcrumb"></breadcrumb>
     <router-outlet></router-outlet>
+    <footer *ngIf="showFooter"></footer>
   `
 })
 export class AppComponent {
 
   showBreadcrumb: boolean;
+  showFooter: boolean;
 
   constructor(locationService: LocationService) {
     locationService.location.subscribe(location => {
       this.showBreadcrumb = location.length > 1;
+      this.showFooter = location.length === 1;
     })
   }
 }
