@@ -25,10 +25,8 @@ import { ConceptViewModelService } from '../services/concept.view.service';
               </div>
             </div>
             <div class="row">
-              <div class="col-md-12">              
-                <property [value]="property" *ngFor="let property of conceptScheme | properties"></property>
-                <reference [value]="reference" *ngFor="let reference of conceptScheme | references"></reference>
-              </div>
+              <property class="col-md-6" [value]="property" *ngFor="let property of conceptScheme | properties"></property>
+              <reference class="col-md-6" [value]="reference" *ngFor="let reference of conceptScheme | references"></reference>
             </div>
             <meta-information [node]="conceptScheme"></meta-information>
           </form>
