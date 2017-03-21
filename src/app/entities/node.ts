@@ -247,8 +247,16 @@ export class Node<T extends NodeType> {
     return this.node.type.id;
   }
 
+  get createdBy() {
+    return this.node.createdBy;
+  }
+
   get createdDate() {
     return moment(this.node.createdDate);
+  }
+
+  get lastModifiedBy() {
+    return this.node.lastModifiedBy;
   }
 
   get lastModifiedDate() {

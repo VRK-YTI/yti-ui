@@ -51,6 +51,7 @@ import { ConceptHierarchyComponent } from './components/concept-hierarchy.compon
 import { ConceptHierarchyNodeComponent } from './components/concept-hierarchy-node.component';
 import { StatusInputComponent } from './components/status-input.component';
 import { FooterComponent } from './components/footer.component';
+import { MetaInformationComponent } from './components/meta-information.component';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json!po?format=mf!../../po/fi.po'),
@@ -109,6 +110,7 @@ const appRoutes: Routes = [
     LocalizedInputComponent,
     ErrorMessagesComponent,
     EditableButtonsComponent,
+    MetaInformationComponent,
     MetaModelValidator,
     LanguageValidator,
     LocalizationValidator,

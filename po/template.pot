@@ -13,15 +13,6 @@ msgstr ""
 msgid "All statuses"
 msgstr ""
 
-msgid "Id"
-msgstr ""
-
-msgid "Created at"
-msgstr ""
-
-msgid "Modified at"
-msgstr ""
-
 msgid "Alphabetic"
 msgstr ""
 
@@ -44,6 +35,18 @@ msgid "Backend"
 msgstr ""
 
 msgid "licensed under the"
+msgstr ""
+
+msgid "Created at"
+msgstr ""
+
+msgid "Created by"
+msgstr ""
+
+msgid "Modified at"
+msgstr ""
+
+msgid "Modified by"
 msgstr ""
 
 msgid "Welcome to vocabulary and concept workbench"
