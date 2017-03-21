@@ -20,30 +20,30 @@ import { ConceptViewModelService } from '../services/concept.view.service';
         </div>
   
         <div class="bottom">
-          <div class="row">
-            <div class="col-lg-4">
-              <ngb-tabset>
-                <ngb-tab>
-                  <template ngbTabTitle>
-                    <i class="fa fa-sort-alpha-asc"></i>
-                    <p>{{'Alphabetic' | translate}}</p>
-                  </template>
-                  <template ngbTabContent><concept-list></concept-list></template>
-                </ngb-tab>
-                <ngb-tab>
-                  <template ngbTabTitle>
-                    <i class="fa fa-sitemap"></i>
-                    <p>{{'Hierarchical' | translate}}</p>
-                  </template>
-                  <template ngbTabContent><concept-hierarchy></concept-hierarchy></template>
-                </ngb-tab>
-              </ngb-tabset>
-            </div>
-
-            <div class="col-lg-8">
-              <router-outlet></router-outlet>
-            </div>
+        
+          <div class="panel-left">
+            <ngb-tabset>
+              <ngb-tab>
+                <template ngbTabTitle>
+                  <i class="fa fa-sort-alpha-asc"></i>
+                  <p>{{'Alphabetic' | translate}}</p>
+                </template>
+                <template ngbTabContent><concept-list></concept-list></template>
+              </ngb-tab>
+              <ngb-tab>
+                <template ngbTabTitle>
+                  <i class="fa fa-sitemap"></i>
+                  <p>{{'Hierarchical' | translate}}</p>
+                </template>
+                <template ngbTabContent><concept-hierarchy></concept-hierarchy></template>
+              </ngb-tab>
+            </ngb-tabset>
           </div>
+
+          <div class="panel-right">
+            <router-outlet></router-outlet>
+          </div>
+
         </div>
       
       </div>

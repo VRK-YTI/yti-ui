@@ -1,14 +1,28 @@
+@import '../../variables';
+
 .search-results {
 
-  margin-top: 15px;
-  overflow-y: auto;
-  height: calc(100vh - 155px);
+  ul {
 
-  table td:nth-child(2) {
-    width: 100px;
-  }
+    overflow-y: auto;
+    height: calc(100vh - 130px);
+    padding: 0;
 
-  table td:nth-child(3) {
-    width: 125px;
+    li {
+      cursor: pointer;
+      padding: 3px 5px;
+      margin: 0;
+      font-size: 14px;
+      list-style: none;
+
+      &.selection {
+        background-color: #f5f5f5;
+      }
+    }
+
+    li:hover {
+      color: $brand-primary;
+      background-color: $list-group-hover-bg;
+    }
   }
 }

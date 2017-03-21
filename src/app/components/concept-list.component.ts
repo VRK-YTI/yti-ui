@@ -8,6 +8,7 @@ import {
 import { isDefined } from '../utils/object';
 import { LanguageService } from '../services/language.service';
 import { ConceptViewModelService } from '../services/concept.view.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'concept-list',
@@ -15,36 +16,23 @@ import { ConceptViewModelService } from '../services/concept.view.service';
   template: `
     <div class="row">
       <div class="col-lg-12">
-        <div class="input-group input-group-lg">
+        <div class="input-group input-group-lg input-group-search">
           <input #searchInput
                  [(ngModel)]="search"
                  type="text" 
                  class="form-control" 
-                 [placeholder]="'search...' | translate" />
+                 [placeholder]="'Search concept...' | translate" />
         </div>
       </div>
     </div>
   
     <div class="row">
       <div class="col-lg-12 search-results">
-      
-        <table class="table table-hover table-striped table-sm">
-          <thead>
-            <tr>
-              <th translate>Preferred term</th>
-              <th translate>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let concept of searchResults | async">
-              <td>
-                <a [routerLink]="['/concepts', concept.graphId, 'concept', concept.id]" 
-                   [innerHTML]="concept.label | translateSearchValue: debouncedSearch | highlight: debouncedSearch"></a>
-                 </td>
-              <td>{{concept.status | translate}}</td>
-            </tr>
-          </tbody>
-        </table>
+        <ul>
+          <li *ngFor="let concept of searchResults | async" (click)="navigate(concept)" [class.selection]="isSelected(concept)">
+            <span [innerHTML]="concept.label | translateSearchValue: debouncedSearch | highlight: debouncedSearch"></span>
+          </li>
+        </ul>
       </div>
     </div>
   `
@@ -60,16 +48,8 @@ export class ConceptListComponent implements OnInit, AfterViewInit {
 
   constructor(private languageService: LanguageService,
               private conceptViewModel: ConceptViewModelService,
-              private renderer: Renderer) {
-  }
-
-  get search() {
-    return this._search;
-  }
-
-  set search(value: string) {
-    this._search = value;
-    this.search$.next(value);
+              private renderer: Renderer,
+              private router: Router) {
   }
 
   ngOnInit() {
@@ -91,5 +71,22 @@ export class ConceptListComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.renderer.invokeElementMethod(this.searchInput.nativeElement, 'focus');
+  }
+
+  get search() {
+    return this._search;
+  }
+
+  set search(value: string) {
+    this._search = value;
+    this.search$.next(value);
+  }
+
+  navigate(concept: Node<'Concept'>) {
+    this.router.navigate(['/concepts', concept.graphId, 'concept', concept.id]);
+  }
+
+  isSelected(concept: Node<'Concept'>) {
+    return this.conceptViewModel.conceptId === concept.id;
   }
 }

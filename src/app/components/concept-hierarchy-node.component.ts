@@ -1,14 +1,17 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Node } from '../entities/node';
 import { ConceptViewModelService } from '../services/concept.view.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'concept-hierarchy-node',
   styleUrls: ['./concept-hierarchy-node.component.scss'],
   template: `
-    <i [hidden]="!hasChildren() || expanded" class="fa fa-plus-square-o" (click)="expand()"></i>
-    <i [hidden]="!hasChildren() || collapsed" class="fa fa-minus-square-o" (click)="collapse()"></i>
-    <a [routerLink]="['/concepts', concept.graphId, 'concept', concept.id]">{{concept.label | translateValue}}</a>
+    <div [class.selection]="selected" (click)="navigate()">
+      <i [hidden]="!hasChildren() || expanded" class="fa fa-plus-square-o" (click)="expand()"></i>
+      <i [hidden]="!hasChildren() || collapsed" class="fa fa-minus-square-o" (click)="collapse()"></i>
+      <span>{{concept.label | translateValue}}</span>
+    </div>
     
     <ul *ngIf="expanded && children">
       <li *ngFor="let child of children">
@@ -17,16 +20,22 @@ import { ConceptViewModelService } from '../services/concept.view.service';
     </ul>
   `
 })
-export class ConceptHierarchyNodeComponent implements OnInit {
+export class ConceptHierarchyNodeComponent {
 
   @Input() concept: Node<'Concept'>;
   collapsed = true;
   children: Node<'Concept'>[];
 
-  constructor(private conceptViewModel: ConceptViewModelService) {
+  constructor(private conceptViewModel: ConceptViewModelService,
+              private router: Router) {
   }
 
-  ngOnInit() {
+  navigate() {
+    this.router.navigate(['/concepts', this.concept.graphId, 'concept', this.concept.id]);
+  }
+
+  get selected() {
+    return this.conceptViewModel.conceptId === this.concept.id;
   }
 
   get expanded() {

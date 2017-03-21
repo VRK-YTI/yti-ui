@@ -13,6 +13,7 @@ export class ConceptViewModelService {
   persistentConceptScheme: Node<'TerminologicalVocabulary'>;
   conceptScheme$ = new ReplaySubject<Node<'TerminologicalVocabulary'>>();
 
+  conceptId: string;
   concept: Node<'Concept'>;
   persistentConcept: Node<'Concept'>;
   concept$ = new ReplaySubject<Node<'Concept'>>();
@@ -55,6 +56,7 @@ export class ConceptViewModelService {
   initializeConcept(conceptId: string) {
 
     this.loadingConcept = true;
+    this.conceptId = conceptId;
 
     this.conceptScheme$.subscribe(conceptScheme => {
       this.termedService.getConcept(conceptScheme.graphId, conceptId, this.languages).subscribe(concept => {

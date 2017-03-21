@@ -1,17 +1,41 @@
-.tree {
+@import '../../variables';
 
-  margin-top: 15px;
+.tree ul {
   overflow-y: auto;
-  height: calc(100vh - 155px);
+  height: calc(100vh - 80px);
 }
 
-:host /deep/ {
-  ul {
-    padding-left: 18px;
-    list-style: none;
-  }
+:host /deep/ .tree {
 
   i {
-    margin-left: -16px;
+    margin-left: -20px;
+    padding-right: 5px;
+  }
+
+  ul {
+
+    padding: 0;
+
+    li {
+      padding: 0 0 0 15px;
+      margin: 0;
+      font-size: 14px;
+      list-style: none;
+
+      div {
+        cursor: pointer;
+        padding: 3px 5px;
+        margin: 0;
+
+        &:hover {
+          color: $brand-primary;
+          background-color: $list-group-hover-bg;
+        }
+      }
+
+      .selection {
+        background-color: #f5f5f5;
+      }
+    }
   }
 }
