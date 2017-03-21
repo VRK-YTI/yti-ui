@@ -28,23 +28,9 @@ import { ConceptViewModelService } from '../services/concept.view.service';
               <div class="col-md-12">              
                 <property [value]="property" *ngFor="let property of conceptScheme | properties"></property>
                 <reference [value]="reference" *ngFor="let reference of conceptScheme | references"></reference>
-                
-                <dl>
-                  <dt translate>Id</dt>
-                  <dd>{{conceptScheme.uri}}</dd>
-                </dl>
-                
-                <dl>
-                  <dt translate>Created at</dt>
-                  <dd>{{conceptScheme.createdDate | timestamp}}</dd>
-                </dl>
-                
-                <dl>
-                  <dt translate>Modified at</dt>
-                  <dd>{{conceptScheme.lastModifiedDate | timestamp}}</dd>
-                </dl>
               </div>
             </div>
+            <meta-information [node]="conceptScheme"></meta-information>
           </form>
         </template>
       </ngb-panel>
