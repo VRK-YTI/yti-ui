@@ -1,10 +1,12 @@
+@import '../../variables';
+
 :host /deep/ {
   .card {
     border-left: none;
     border-right: none;
   }
   .card-header {
-    background-color: #ebeff2;
+    background-color: $brand-accent-lighter;
     border: none;
     padding: 5px 0 5px 5px;
 
