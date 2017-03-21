@@ -58,7 +58,7 @@ export class ConceptsComponent implements OnInit {
   }
 
   get loading() {
-    return !this.viewModel.conceptScheme;
+    return this.viewModel.loadingConceptScheme || this.viewModel.loadingConcepts;
   }
 
   ngOnInit() {
