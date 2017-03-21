@@ -1,3 +1,45 @@
+@import '../../variables';
+
 .bottom {
-  margin-top: 15px;
+  margin-top: 10px;
+}
+
+:host /deep/ {
+
+  .nav-tabs {
+
+    border-bottom: none;
+    margin-bottom: 5px;
+
+    li.nav-item {
+
+      width: 50%;
+
+      > a {
+        padding: 0;
+        margin: 0 0 0 2px;
+        background-color: $brand-accent-lighter;
+        color: #444;
+
+        &.active {
+          background-color: white;
+          color: #6f6f6f;
+        }
+      }
+
+      i {
+        width: 100%;
+        padding-top: 5px;
+        text-align: center;
+        font-size: x-large;
+      }
+
+      p {
+        width: 100%;
+        text-align: center;
+        font-size: x-small;
+        margin-bottom: 5px;
+      }
+    }
+  }
 }

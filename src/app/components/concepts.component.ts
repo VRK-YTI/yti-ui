@@ -24,17 +24,23 @@ import { ConceptViewModelService } from '../services/concept.view.service';
             <div class="col-lg-4">
               <ngb-tabset>
                 <ngb-tab>
-                  <template ngbTabTitle>{{'Alphabetic' | translate}}</template>
+                  <template ngbTabTitle>
+                    <i class="fa fa-sort-alpha-asc"></i>
+                    <p>{{'Alphabetic' | translate}}</p>
+                  </template>
                   <template ngbTabContent><concept-list></concept-list></template>
                 </ngb-tab>
                 <ngb-tab>
-                  <template ngbTabTitle>{{'Hierarchical' | translate}}</template>
+                  <template ngbTabTitle>
+                    <i class="fa fa-sitemap"></i>
+                    <p>{{'Hierarchical' | translate}}</p>
+                  </template>
                   <template ngbTabContent><concept-hierarchy></concept-hierarchy></template>
                 </ngb-tab>
               </ngb-tabset>
             </div>
 
-            <div class="col-lg-8 selection">
+            <div class="col-lg-8">
               <router-outlet></router-outlet>
             </div>
           </div>
