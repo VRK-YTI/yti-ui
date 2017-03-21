@@ -1,10 +1,10 @@
 @import '../../variables';
 
+$left-width: 400px;
+
 .bottom {
   margin-top: 10px;
 }
-
-$left-width: 400px;
 
 .panel-left {
   width: $left-width;
@@ -14,7 +14,7 @@ $left-width: 400px;
 .panel-right {
   width: calc(100% - #{$left-width});
   float: right;
-  padding-left: 15px;
+  padding-left: 10px;
 }
 
 :host /deep/ {

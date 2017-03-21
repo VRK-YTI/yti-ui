@@ -1,43 +1,33 @@
+@import '../../variables';
+
 $language-width: 30px;
 $language-height: 32px;
 
 div.localized {
 
-  margin-bottom: 5px;
   display: inline-block;
   width: 100%;
 
   div.language {
+
     float: left;
-    background-color: #ddd;
+    color: white;
+    background-color: $brand-primary;
     width: $language-width;
     height: $language-height;
     display: inline-block;
     text-align: center;
-    line-height: 29px;
-
-    div.form-group {
-      margin-bottom: 0;
-    }
-
-    input {
-      padding: 6px;
-      text-align: center;
-      background-color: #ddd;
-    }
+    line-height: 33px;
   }
 
   div.localization {
+
     float: left;
-    border-bottom: 1px solid #ddd;
-    border-left: 1px solid #ddd;
+    border: 2px solid $brand-primary;
     width: calc(100% - #{$language-width});
     min-height: $language-height;
     padding-left: 10px;
-
-    &.editing {
-      border: none;
-    }
+    line-height: 28px;
 
     div.form-group {
       margin-bottom: 0;
@@ -46,6 +36,11 @@ div.localized {
     input, textarea {
       margin-left: -10px;
       padding: 6px 10px;
+      border: none;
+    }
+
+    input {
+      height: 28px;
     }
   }
 }

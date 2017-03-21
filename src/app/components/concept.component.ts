@@ -10,50 +10,36 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./concept.component.scss'],
   providers: [EditableService],
   template: `
-    <form *ngIf="concept">
-
-      <div class="row">
-        <div class="col-md-12">
-          <editable-buttons></editable-buttons>
-        </div>
+    <div class="component" *ngIf="concept">
+    
+      <div class="component-header">
+        <h3>{{persistentConcept.label | translateValue}}</h3>
       </div>
-
-      <div class="row">
-        <div class="col-md-12">
-          <div class="page-header">
-            <h1>{{concept.meta.label | translateValue}}</h1>
-          </div>        
+    
+      <form *ngIf="concept" class="component-content">
+  
+        <div class="row">
+          <div class="col-md-12">
+            <editable-buttons></editable-buttons>
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          <div>
-          
+  
+        <div class="row">
+          <div class="col-md-12">
+            
             <!-- Special handling for primary term, could be solved with mixed property/reference sorting -->
             <reference [value]="concept.references['prefLabelXl']" *ngIf="concept.references['prefLabelXl']"></reference>
             <property [value]="property" [relatedConcepts]="relatedConcepts" *ngFor="let property of concept | properties"></property>
             <reference [value]="reference" *ngFor="let reference of concept | references: ['prefLabelXl']"></reference>
-            
-            <dl>
-              <dt translate>Id</dt>
-              <dd>{{concept.uri}}</dd>
-            </dl>
-            
-            <dl>
-              <dt translate>Created at</dt>
-              <dd>{{concept.createdDate | timestamp}}</dd>
-            </dl>
-            
-            <dl>
-              <dt translate>Modified at</dt>
-              <dd>{{concept.lastModifiedDate | timestamp}}</dd>
-            </dl>
-            
           </div>
-          <ajax-loading-indicator *ngIf="!concept"></ajax-loading-indicator>
         </div>
-      </div>
-    </form>
+        
+        <meta-information [node]="concept"></meta-information>
+      </form>
+      
+    </div>
+    
+    <ajax-loading-indicator *ngIf="!concept"></ajax-loading-indicator>
   `
 })
 export class ConceptComponent {
@@ -69,6 +55,10 @@ export class ConceptComponent {
 
   get concept() {
     return this.conceptViewModel.concept;
+  }
+
+  get persistentConcept() {
+    return this.conceptViewModel.persistentConcept;
   }
 
   get relatedConcepts(): Node<'Concept'>[] {
