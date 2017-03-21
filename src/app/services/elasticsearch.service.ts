@@ -23,7 +23,7 @@ export class ElasticSearchService {
     });
   }
 
-  frontPageSearch(indexName: string, typeName: string, queryObj: Object): any {
+  frontPageSearch(indexName: string, typeName: string, queryObj: Object, resultAmt: number): any {
     if (indexName && typeName && queryObj) {
       return this._client.search({
         index: indexName,
@@ -32,7 +32,7 @@ export class ElasticSearchService {
           query: queryObj,
           sort: [ "_score" ],
           from : 0,
-          size : 20,
+          size : resultAmt,
           _source: [
             "id",
             "type.graph.id",

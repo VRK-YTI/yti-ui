@@ -6,9 +6,27 @@ import {LanguageService} from "../../services/language.service";
 
 @Component({
   selector: "autocomplete",
-  templateUrl: "./autocomplete.component.html",
   styleUrls: ['./autocomplete.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+      <input [(ngModel)]="searchConcept"
+               type="text"
+               class="form-control"
+               (blur)="onBlur()"
+               (focus)="onFocus()"
+               [formControl]="searchText"
+               [placeholder]="'Search concept...' | translate" />
+      <div class="sb-message" *ngIf="!!message && active"><span>{{ message }}</span></div>
+      <!-- Search results -->
+      <div class="sb-searchresults" [class.hidden]="!active">
+          <ul class="sb-results-dropdown-menu" >
+              <li *ngFor="let result of results$ | async" (mousedown)="resultSelected(result)">
+                  <span [routerLink]="['/concepts', result.graphId, 'concept', result.conceptId]"
+                     [innerHTML]="result.value | highlight: searchTextModel"></span>
+              </li>
+          </ul>
+      </div>
+  `
 })
 
 export class AutoComplete implements AfterViewInit {
@@ -18,7 +36,7 @@ export class AutoComplete implements AfterViewInit {
   @Output()
   selected: EventEmitter<any> = new EventEmitter<any>();
 
-  searchTextModel: string;
+  searchConcept: string;
   results$: Subject<Array<any>> = new Subject<Array<any>>();
   message: string = "";
   active: boolean = false;
@@ -32,7 +50,7 @@ export class AutoComplete implements AfterViewInit {
 
   onBlur() {
     this.active = false;
-    this.searchTextModel = "";
+    this.searchConcept = "";
   }
 
   onFocus() {
@@ -49,7 +67,7 @@ export class AutoComplete implements AfterViewInit {
         .switchMap(searchString => {
           return new Promise<Array<any>>((resolve, reject) => {
             this._ngZone.runOutsideAngular(() => {                                          // perform search operation outside of angular boundaries
-              this.es.frontPageSearch("concepts", "concept", this._frontPageQuery(searchString))
+              this.es.frontPageSearch("concepts", "concept", this._frontPageQuery(searchString), 15)
                   .then((searchResult: any) => {
                     this._ngZone.run(() => {
                       let results: Array<any> = ((searchResult.hits || {}).hits || [])// extract results from elastic response
@@ -75,7 +93,7 @@ export class AutoComplete implements AfterViewInit {
                       if (results.length > 0) {
                         this.message = "";
                       }
-                      else if (searchString.length > 2 && this.searchTextModel && this.searchTextModel.trim()) {
+                      else if (searchString.length > 2 && this.searchConcept && this.searchConcept.trim()) {
                           this.message = "nothing was found";
                       }
                       resolve(results);

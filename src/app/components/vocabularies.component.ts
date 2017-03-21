@@ -26,10 +26,7 @@ import { requireDefined } from '../utils/object';
           <div class="row">
             <div class="col-md-12">
               <div class="input-group input-group-lg input-group-search">
-                <input [(ngModel)]="searchConcept"
-                       type="text" 
-                       class="form-control" 
-                       [placeholder]="'Search concept...' | translate" />
+                <autocomplete (selected)="autocompleteChanged($event)" (found)=foundItemsChanged($event)></autocomplete>
               </div>
             </div>
           </div>
@@ -130,6 +127,14 @@ export class VocabulariesComponent {
 
   navigate(conceptScheme: Node<'TerminologicalVocabulary'>) {
     this.router.navigate(['/concepts', conceptScheme.graphId]);
+  }
+
+  autocompleteChanged(value: any) {
+    console.log("AUTOCOMPLETE CHANGED");
+  }
+
+  foundItemsChanged(items: any) {
+    console.log("FOUND ITEMS CHANGED");
   }
 }
 
