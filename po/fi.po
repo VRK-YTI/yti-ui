@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-03-20 18:39+0200\n"
+"PO-Revision-Date: 2017-03-21 15:15+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -13,14 +13,14 @@ msgstr ""
 "X-Poedit-Basepath: .\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid "search..."
-msgstr "etsi…"
+msgid "Search concept..."
+msgstr "Hae käsitettä…"
 
-msgid "Preferred term"
-msgstr "Suositettava termi"
+msgid "Order by modified date"
+msgstr "Järjestä muokkausajan mukaan"
 
-msgid "Status"
-msgstr "Tila"
+msgid "All statuses"
+msgstr "Kaikki tilat"
 
 msgid "Id"
 msgstr "Tunniste"
@@ -54,9 +54,6 @@ msgstr "Taustajärjestelmä"
 
 msgid "licensed under the"
 msgstr "lisenssillä"
-
-msgid "Search concept..."
-msgstr "Hae käsitettä…"
 
 msgid "Welcome to vocabulary and concept workbench"
 msgstr "Tervetuloa sanasto- ja käsitevälineistöön"
@@ -101,6 +98,15 @@ msgstr "Toimiala / Ryhmä"
 
 msgid "Organization"
 msgstr "Organisaatio"
+
+#~ msgid "search..."
+#~ msgstr "etsi…"
+
+#~ msgid "Preferred term"
+#~ msgstr "Suositettava termi"
+
+#~ msgid "Status"
+#~ msgstr "Tila"
 
 #~ msgid "Vocabularies"
 #~ msgstr "Sanastot"

@@ -5,7 +5,7 @@
   ul {
 
     overflow-y: auto;
-    height: calc(100vh - 130px);
+    height: calc(100vh - 185px);
     padding: 0;
 
     li {
@@ -24,5 +24,17 @@
       color: $brand-primary;
       background-color: $list-group-hover-bg;
     }
+  }
+}
+
+.filters {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.14902);
+  padding: 0 0 4px 0;
+  display: inline-block;
+  width: 100%;
+  margin-top: 5px;
+
+  .form-check {
+    margin-top: 0.5rem;
   }
 }
