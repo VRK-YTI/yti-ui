@@ -52,6 +52,7 @@ import { ConceptListComponent } from './components/concept-list.component';
 import { ConceptHierarchyComponent } from './components/concept-hierarchy.component';
 import { ConceptHierarchyNodeComponent } from './components/concept-hierarchy-node.component';
 import { StatusInputComponent } from './components/status-input.component';
+import { FooterComponent } from './components/footer.component';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json!po?format=mf!../../po/fi.po'),
@@ -87,6 +88,7 @@ const appRoutes: Routes = [
     AppComponent,
     NavigationBarComponent,
     BreadcrumbComponent,
+    FooterComponent,
     VocabulariesComponent,
     VocabularyComponent,
     ConceptsComponent,

@@ -23,8 +23,10 @@ export class TermedService {
   }
 
   getConceptSchemeList(languages: string[]): Observable<Node<'TerminologicalVocabulary'>[]> {
-    return Observable.zip(this.metaModelService.getMeta(), this.getAllNodesWithoutReferences('TerminologicalVocabulary'))
-      .map(([meta, conceptSchemes]) => conceptSchemes.map(scheme => new Node<'TerminologicalVocabulary'>(scheme, meta, languages)));
+    return Observable.zip(this.metaModelService.getMeta(), this.getVocabularyNodes())
+      .map(([meta, conceptSchemes]) =>
+        conceptSchemes.map(scheme => new Node<'TerminologicalVocabulary'>(scheme, meta, languages))
+          .filter(scheme => !scheme.references['inGroup'].empty));
   }
 
   getConcept(graphId: string, conceptId: string, languages: string[]): Observable<Node<'Concept'>> {
@@ -79,16 +81,17 @@ export class TermedService {
       .map(response => requireSingle(response.json() as NodeExternal<T>));
   }
 
-  private getAllNodesWithoutReferences<T extends NodeType>(type: T): Observable<NodeExternal<T>[]> {
+  private getVocabularyNodes(): Observable<NodeExternal<'TerminologicalVocabulary'>[]> {
 
     const params = new URLSearchParams();
     params.append('max', '-1');
-    params.append('typeId', type);
-    params.append('select.references', '');
+    params.append('typeId', 'TerminologicalVocabulary');
+    params.append('select.references', 'publisher');
+    params.append('select.references', 'inGroup');
     params.append('select.referrers', '');
 
     return this.http.get(`/api/ext.json`, { search: params } )
-      .map(response => normalizeAsArray(response.json() as NodeExternal<T>[])).catch(notFoundAsDefault([]));
+      .map(response => normalizeAsArray(response.json() as NodeExternal<'TerminologicalVocabulary'>[])).catch(notFoundAsDefault([]));
   }
 
   private getConceptListNodes(graphId: string): Observable<NodeExternal<'Concept'>[]> {
