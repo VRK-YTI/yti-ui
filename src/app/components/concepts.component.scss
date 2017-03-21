@@ -1,3 +1,60 @@
+@import '../../variables';
+
 .bottom {
-  margin-top: 15px;
+  margin-top: 10px;
+}
+
+$left-width: 400px;
+
+.panel-left {
+  width: $left-width;
+  float: left;
+}
+
+.panel-right {
+  width: calc(100% - #{$left-width});
+  float: right;
+  padding-left: 15px;
+}
+
+:host /deep/ {
+
+  .nav-tabs {
+
+    border-bottom: none;
+    margin-bottom: 5px;
+
+    li.nav-item {
+
+      width: 50%;
+
+      > a {
+        padding: 0;
+        margin: 0 0 0 2px;
+        background-color: $brand-accent-lighter;
+        color: #444;
+        border-color: white;
+
+        &.active {
+          border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) #fff;
+          background-color: white;
+          color: #6f6f6f;
+        }
+      }
+
+      i {
+        width: 100%;
+        padding-top: 5px;
+        text-align: center;
+        font-size: x-large;
+      }
+
+      p {
+        width: 100%;
+        text-align: center;
+        font-size: x-small;
+        margin-bottom: 5px;
+      }
+    }
+  }
 }

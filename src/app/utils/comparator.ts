@@ -1,6 +1,7 @@
 import { Optional, isDefined } from './object';
 import { Localizable } from '../entities/localization';
 import { Localizer } from '../services/language.service';
+import { Moment } from 'moment';
 
 export interface Comparator<T> {
   (lhs: T, rhs: T): number;
@@ -24,6 +25,20 @@ export const comparingBoolean = comparingPrimitive;
 
 export function comparingLocalizable<T>(localizer: Localizer, propertyExtractor: (item: T) => Optional<Localizable>): ChainableComparator<T> {
   return makeChainable(property(propertyExtractor, optional(localized(localizer, stringComparatorIgnoringCase))));
+}
+
+export function comparingDate<T>(propertyExtractor: (item: T) => Optional<Moment>): ChainableComparator<T> {
+  return makeChainable(property(propertyExtractor, optional(dateComparator)));
+}
+
+function dateComparator(lhs: Moment, rhs: Moment) {
+  if (lhs.isAfter(rhs)) {
+    return 1;
+  } else if (lhs.isBefore(rhs)) {
+    return -1;
+  } else {
+    return 0;
+  }
 }
 
 function primitiveComparator<T extends string|number|boolean>(lhs: T, rhs: T) {
