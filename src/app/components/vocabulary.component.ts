@@ -18,14 +18,10 @@ import { ConceptViewModelService } from '../services/concept.view.service';
           <form>
             <div class="row">
               <div class="col-md-12">
-                <editable-buttons></editable-buttons>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-12">
+                <editable-buttons class="pull-right"></editable-buttons>
                 <div class="page-header">
                   <h1>{{conceptScheme.meta.label | translateValue}}</h1>
-                </div>        
+                </div>
               </div>
             </div>
             <div class="row">
