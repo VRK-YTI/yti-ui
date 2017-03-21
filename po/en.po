@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-03-07 18:17+0200\n"
+"PO-Revision-Date: 2017-03-20 18:39+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -37,7 +37,42 @@ msgstr ""
 msgid "Hierarchical"
 msgstr ""
 
-msgid "Vocabularies"
+msgid "Contact info"
+msgstr ""
+
+msgid "CSC - IT Center for Science Ltd"
+msgstr ""
+
+msgid "Source code"
+msgstr ""
+
+msgid "Frontend"
+msgstr ""
+
+msgid "Backend"
+msgstr ""
+
+msgid "licensed under the"
+msgstr ""
+
+msgid "Search concept..."
+msgstr ""
+
+msgid "Welcome to vocabulary and concept workbench"
+msgstr ""
+
+msgid "Frontpage information"
+msgstr ""
+"Definitions released in the workbench are freely browsable. Content is "
+"produced by experts in different domains."
+
+msgid "Not implemented yet!"
+msgstr ""
+
+msgid "vocabulary"
+msgstr ""
+
+msgid "vocabularies"
 msgstr ""
 
 msgid "Front page"
@@ -56,4 +91,13 @@ msgid "Deprecated"
 msgstr ""
 
 msgid "Suggestion"
+msgstr ""
+
+msgid "Vocabulary type"
+msgstr ""
+
+msgid "Group"
+msgstr ""
+
+msgid "Organization"
 msgstr ""

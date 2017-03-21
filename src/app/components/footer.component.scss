@@ -1,0 +1,17 @@
+@import '../../variables';
+
+.panel-footer {
+  position: fixed;
+  bottom: 0;
+  height: $footer-height;
+  width: 100%;
+  font-size: small;
+  border: none;
+  padding: 15px;
+  background-color: $brand-primary;
+  color: white;
+  border: 0;
+  a {
+    color: white;
+  }
+}

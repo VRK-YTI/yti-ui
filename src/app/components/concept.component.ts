@@ -77,6 +77,9 @@ export class ConceptComponent {
   }
 
   get relatedConcepts(): Node<'Concept'>[] {
-    return normalizeAsArray(this.conceptViewModel.concept.references['related'].values);
+    return [
+      ...normalizeAsArray(this.conceptViewModel.concept.references['related'].values),
+      ...normalizeAsArray(this.conceptViewModel.concept.references['broader'].values)
+    ];
   }
 }

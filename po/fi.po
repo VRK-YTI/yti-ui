@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-03-07 18:17+0200\n"
+"PO-Revision-Date: 2017-03-20 18:39+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -37,8 +37,43 @@ msgstr "Aakkosellinen"
 msgid "Hierarchical"
 msgstr "Hierarkinen"
 
-msgid "Vocabularies"
-msgstr "Sanastot"
+msgid "Contact info"
+msgstr "Yhteystiedot"
+
+msgid "CSC - IT Center for Science Ltd"
+msgstr "CSC - Tieteen tietotekniikan keskus Oy"
+
+msgid "Source code"
+msgstr "Lähdekoodi"
+
+msgid "Frontend"
+msgstr "Käyttöliittymä"
+
+msgid "Backend"
+msgstr "Taustajärjestelmä"
+
+msgid "licensed under the"
+msgstr "lisenssillä"
+
+msgid "Search concept..."
+msgstr "Hae käsitettä…"
+
+msgid "Welcome to vocabulary and concept workbench"
+msgstr "Tervetuloa sanasto- ja käsitevälineistöön"
+
+msgid "Frontpage information"
+msgstr ""
+"Välineistössä julkaistut määritykset ovat vapaasti selattavissa. Sisältöjä "
+"sanastoihin tuottavat eri kohdealueiden asiantutijat."
+
+msgid "Not implemented yet!"
+msgstr "Ei vielä toteutettu!"
+
+msgid "vocabulary"
+msgstr "sanasto"
+
+msgid "vocabularies"
+msgstr "sanastoa"
 
 msgid "Front page"
 msgstr "Etusivu"
@@ -57,6 +92,18 @@ msgstr "Käytöstä poistunut"
 
 msgid "Suggestion"
 msgstr "Ehdotus"
+
+msgid "Vocabulary type"
+msgstr "Sanastotyyppi"
+
+msgid "Group"
+msgstr "Toimiala / Ryhmä"
+
+msgid "Organization"
+msgstr "Organisaatio"
+
+#~ msgid "Vocabularies"
+#~ msgstr "Sanastot"
 
 #~ msgid "Modified"
 #~ msgstr "Muokattu"
