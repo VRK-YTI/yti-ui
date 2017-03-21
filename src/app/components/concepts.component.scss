@@ -20,8 +20,10 @@
         margin: 0 0 0 2px;
         background-color: $brand-accent-lighter;
         color: #444;
+        border-color: white;
 
         &.active {
+          border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) #fff;
           background-color: white;
           color: #6f6f6f;
         }
