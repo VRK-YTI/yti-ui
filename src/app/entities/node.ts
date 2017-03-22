@@ -289,6 +289,10 @@ export class Node<T extends NodeType> {
     }
   }
 
+  get definition(): Localizable {
+    return this.getPropertyAsLocalizable('definition');
+  }
+
   get description(): Localizable {
     return this.getPropertyAsLocalizable('description');
   }

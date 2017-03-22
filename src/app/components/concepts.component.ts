@@ -41,12 +41,14 @@ import { ConceptViewModelService } from '../services/concept.view.service';
           </div>
 
           <div class="panel-right">
-            <div class="col-lg-4 selection">
-              <router-outlet></router-outlet>
-            </div>
-            
-            <div class="col-lg-5 selection">
-                <concept-network></concept-network>    
+            <div class="row">
+              <div class="col-lg-6 selection">
+                <router-outlet></router-outlet>
+              </div>
+              
+              <div class="col-lg-6 selection">
+                  <concept-network></concept-network>    
+              </div>
             </div>
           </div>
 
