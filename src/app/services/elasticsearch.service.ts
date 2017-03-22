@@ -5,7 +5,7 @@ import {Injectable} from "@angular/core";
 export class ElasticSearchService {
 
   private _client: Client;
-  private elasticSearchBaseUrl: string = 'http://localhost:9200';
+  private elasticSearchBaseUrl: string = 'https://86.50.169.29/es';
 
   // private indexName: string = 'concepts';
   // private typeName: string = 'concept';
