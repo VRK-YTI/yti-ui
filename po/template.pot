@@ -19,6 +19,15 @@ msgstr ""
 msgid "Hierarchical"
 msgstr ""
 
+msgid "Cancel edit"
+msgstr ""
+
+msgid "Save changes"
+msgstr ""
+
+msgid "Edit"
+msgstr ""
+
 msgid "Contact info"
 msgstr ""
 
