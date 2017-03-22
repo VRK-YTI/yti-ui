@@ -43,7 +43,7 @@ export function removeWhiteSpaceNodes(node: Node) {
 
     switch (child.nodeType) {
       case Node.TEXT_NODE:
-        if (!child.nodeValue!.trim()) {
+        if (!child.nodeValue!.trim() && child.nodeValue!.indexOf('\n') !== -1) {
           removeChildNodes.push(child);
         }
         break;
