@@ -18,37 +18,17 @@ import { ConceptViewModelService } from '../services/concept.view.service';
           <form>
             <div class="row">
               <div class="col-md-12">
-                <editable-buttons></editable-buttons>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-12">
+                <editable-buttons class="pull-right"></editable-buttons>
                 <div class="page-header">
                   <h1>{{conceptScheme.meta.label | translateValue}}</h1>
-                </div>        
+                </div>
               </div>
             </div>
             <div class="row">
-              <div class="col-md-12">              
-                <property [value]="property" *ngFor="let property of conceptScheme | properties"></property>
-                <reference [value]="reference" *ngFor="let reference of conceptScheme | references"></reference>
-                
-                <dl>
-                  <dt translate>Id</dt>
-                  <dd>{{conceptScheme.uri}}</dd>
-                </dl>
-                
-                <dl>
-                  <dt translate>Created at</dt>
-                  <dd>{{conceptScheme.createdDate | timestamp}}</dd>
-                </dl>
-                
-                <dl>
-                  <dt translate>Modified at</dt>
-                  <dd>{{conceptScheme.lastModifiedDate | timestamp}}</dd>
-                </dl>
-              </div>
+              <property class="col-md-6" [value]="property" *ngFor="let property of conceptScheme | properties"></property>
+              <reference class="col-md-6" [value]="reference" *ngFor="let reference of conceptScheme | references"></reference>
             </div>
+            <meta-information [node]="conceptScheme"></meta-information>
           </form>
         </template>
       </ngb-panel>

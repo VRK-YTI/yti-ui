@@ -1,0 +1,23 @@
+@import '../../variables';
+
+.component {
+  border-left: 1px solid #ddd;
+  min-height: calc(100vh - 10px);
+}
+
+.component-header {
+  background-color: $brand-primary;
+  color: white;
+  padding: 11px 20px;
+  border-bottom: solid 1px #ddd;
+  font-size: 26px;
+  height: 53px;
+
+  h3 {
+    margin: 0;
+  }
+}
+
+.component-content {
+  padding: 15px;
+}

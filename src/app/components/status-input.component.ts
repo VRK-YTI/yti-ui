@@ -2,8 +2,7 @@ import { Component, Input, ViewChild } from '@angular/core';
 import { EditableService } from '../services/editable.service';
 import { Property } from '../entities/node';
 import { NgModel } from '@angular/forms';
-
-const statuses = ['Unstable', 'Draft', 'Recommendation', 'Deprecated', 'Suggestion'];
+import { statuses } from '../entities/constants';
 
 @Component({
   selector: 'status-input',

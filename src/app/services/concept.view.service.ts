@@ -13,6 +13,7 @@ export class ConceptViewModelService {
   persistentConceptScheme: Node<'TerminologicalVocabulary'>;
   conceptScheme$ = new ReplaySubject<Node<'TerminologicalVocabulary'>>();
 
+  conceptId: string;
   concept: Node<'Concept'>;
   persistentConcept: Node<'Concept'>;
   concept$ = new ReplaySubject<Node<'Concept'>>();
@@ -20,9 +21,11 @@ export class ConceptViewModelService {
   topConcepts$ = new BehaviorSubject<Node<'Concept'>[]>([]);
   allConcepts$ = new BehaviorSubject<Node<'Concept'>[]>([]);
 
-  graphId: string;
-
   languages = ['fi', 'en', 'sv'];
+
+  loadingConceptScheme = true;
+  loadingConcepts = true;
+  loadingConcept = true;
 
   constructor(private termedService: TermedService,
               private locationService: LocationService,
@@ -31,29 +34,37 @@ export class ConceptViewModelService {
 
   initializeConceptScheme(graphId: string) {
 
-    this.graphId = graphId;
+    this.loadingConceptScheme = true;
+    this.loadingConcepts = true;
 
     this.termedService.getConceptScheme(graphId, this.languages).subscribe(conceptScheme => {
       this.locationService.atConceptScheme(conceptScheme);
       this.conceptScheme$.next(conceptScheme);
       this.conceptScheme = conceptScheme;
       this.persistentConceptScheme = conceptScheme.clone();
+      this.loadingConceptScheme = false;
     });
 
     this.termedService.getConceptList(graphId, this.languages).subscribe(concepts => {
       const sortedConcepts = concepts.sort(comparingLocalizable<Node<'Concept'>>(this.languageService, concept => concept.label));
       this.allConcepts$.next(sortedConcepts);
       this.topConcepts$.next(sortedConcepts.filter(concept => concept.references['broader'].empty));
+      this.loadingConcepts = false;
     });
   }
 
   initializeConcept(conceptId: string) {
+
+    this.loadingConcept = true;
+    this.conceptId = conceptId;
 
     this.conceptScheme$.subscribe(conceptScheme => {
       this.termedService.getConcept(conceptScheme.graphId, conceptId, this.languages).subscribe(concept => {
         this.locationService.atConcept(conceptScheme, concept);
         this.concept$.next(concept);
         this.concept = concept;
+        this.persistentConcept = concept.clone();
+        this.loadingConcept = false;
       });
     });
   }

@@ -18,9 +18,7 @@ export class TranslateValuePipe implements PipeTransform, OnDestroy {
 
   transform(value: Localizable): string {
 
-    if (!isDefined(this.localization)) {
-      this.localization = this.languageService.translate(value);
-    }
+    this.localization = this.languageService.translate(value);
 
     this.languageService.languageChange$.subscribe(() => {
       this.localization = this.languageService.translate(value);

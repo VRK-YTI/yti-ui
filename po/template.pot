@@ -4,22 +4,13 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "search..."
+msgid "Search concept..."
 msgstr ""
 
-msgid "Preferred term"
+msgid "Order by modified date"
 msgstr ""
 
-msgid "Status"
-msgstr ""
-
-msgid "Id"
-msgstr ""
-
-msgid "Created at"
-msgstr ""
-
-msgid "Modified at"
+msgid "All statuses"
 msgstr ""
 
 msgid "Alphabetic"
@@ -46,7 +37,16 @@ msgstr ""
 msgid "licensed under the"
 msgstr ""
 
-msgid "Search concept..."
+msgid "Created at"
+msgstr ""
+
+msgid "Created by"
+msgstr ""
+
+msgid "Modified at"
+msgstr ""
+
+msgid "Modified by"
 msgstr ""
 
 msgid "Welcome to vocabulary and concept workbench"

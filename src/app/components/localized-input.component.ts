@@ -10,7 +10,7 @@ import { Localization } from '../entities/localization';
   template: `
     <div class="localized" *ngFor="let localization of visibleValues">
       <div class="language">
-        <span>{{localization.lang}}</span>
+        <span>{{localization.lang.toUpperCase()}}</span>
       </div> 
       <div class="localization" [class.editing]="editing">
         <div *ngIf="!editing" markdown-links [value]="localization.value" [relatedConcepts]="relatedConcepts"></div>

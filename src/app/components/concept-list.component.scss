@@ -1,14 +1,40 @@
+@import '../../variables';
+
 .search-results {
 
-  margin-top: 15px;
-  overflow-y: auto;
-  height: calc(100vh - 155px);
+  ul {
 
-  table td:nth-child(2) {
-    width: 100px;
+    overflow-y: auto;
+    height: calc(100vh - 185px);
+    padding: 0;
+
+    li {
+      cursor: pointer;
+      padding: 3px 5px;
+      margin: 0;
+      font-size: 14px;
+      list-style: none;
+
+      &.selection {
+        background-color: #f5f5f5;
+      }
+    }
+
+    li:hover {
+      color: $brand-primary;
+      background-color: $list-group-hover-bg;
+    }
   }
+}
 
-  table td:nth-child(3) {
-    width: 125px;
+.filters {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.14902);
+  padding: 0 0 4px 0;
+  display: inline-block;
+  width: 100%;
+  margin-top: 5px;
+
+  .form-check {
+    margin-top: 0.5rem;
   }
 }

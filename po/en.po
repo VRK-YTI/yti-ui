@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-03-20 18:39+0200\n"
+"PO-Revision-Date: 2017-03-21 17:33+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -13,22 +13,13 @@ msgstr ""
 "X-Poedit-Basepath: .\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid "search..."
+msgid "Search concept..."
 msgstr ""
 
-msgid "Preferred term"
+msgid "Order by modified date"
 msgstr ""
 
-msgid "Status"
-msgstr ""
-
-msgid "Id"
-msgstr ""
-
-msgid "Created at"
-msgstr ""
-
-msgid "Modified at"
+msgid "All statuses"
 msgstr ""
 
 msgid "Alphabetic"
@@ -55,7 +46,16 @@ msgstr ""
 msgid "licensed under the"
 msgstr ""
 
-msgid "Search concept..."
+msgid "Created at"
+msgstr ""
+
+msgid "Created by"
+msgstr ""
+
+msgid "Modified at"
+msgstr ""
+
+msgid "Modified by"
 msgstr ""
 
 msgid "Welcome to vocabulary and concept workbench"
