@@ -8,8 +8,8 @@ import { Router } from '@angular/router';
   styleUrls: ['./concept-hierarchy-node.component.scss'],
   template: `
     <div [class.selection]="selected" (click)="navigate()">
-      <i [hidden]="!hasChildren() || expanded" class="fa fa-plus-square-o" (click)="expand()"></i>
-      <i [hidden]="!hasChildren() || collapsed" class="fa fa-minus-square-o" (click)="collapse()"></i>
+      <i [hidden]="!hasChildren() || expanded" class="fa fa-plus-square-o" (click)="expand($event)"></i>
+      <i [hidden]="!hasChildren() || collapsed" class="fa fa-minus-square-o" (click)="collapse($event)"></i>
       <span>{{concept.label | translateValue}}</span>
     </div>
     
@@ -47,11 +47,13 @@ export class ConceptHierarchyNodeComponent {
     return narrower && narrower.length > 0;
   }
 
-  collapse() {
+  collapse(event: Event) {
+    event.cancelBubble = true;
     this.collapsed = true;
   }
 
-  expand() {
+  expand(event: Event) {
+    event.cancelBubble = true;
     this.collapsed = false;
 
     if (!this.children) {

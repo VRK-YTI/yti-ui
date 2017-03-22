@@ -18,7 +18,7 @@ export class TermedService {
   }
 
   getConceptScheme(graphId: string, languages: string[]): Observable<Node<'TerminologicalVocabulary'>> {
-    return Observable.zip(this.metaModelService.getMeta(), this.getUniqueNodeWithoutReferrers(graphId, 'TerminologicalVocabulary'))
+    return Observable.zip(this.metaModelService.getMeta(), this.getConceptSchemeNode(graphId))
       .map(([meta, conceptScheme]) => new Node<'TerminologicalVocabulary'>(conceptScheme, meta, languages));
   }
 
@@ -69,16 +69,17 @@ export class TermedService {
     return this.http.post('/api/nodes', nodes, { search: params });
   }
 
-  private getUniqueNodeWithoutReferrers<T extends NodeType>(graphId: string, type: T): Observable<NodeExternal<T>> {
+  private getConceptSchemeNode(graphId: string): Observable<NodeExternal<'TerminologicalVocabulary'>> {
 
     const params = new URLSearchParams();
     params.append('max', '-1');
     params.append('graphId', graphId);
-    params.append('typeId', type);
+    params.append('typeId', 'TerminologicalVocabulary');
     params.append('select.referrers', '');
+    params.append('select.audit', 'true');
 
     return this.http.get(`/api/ext.json`, { search: params } )
-      .map(response => requireSingle(response.json() as NodeExternal<T>));
+      .map(response => requireSingle(response.json() as NodeExternal<'TerminologicalVocabulary'>));
   }
 
   private getVocabularyNodes(): Observable<NodeExternal<'TerminologicalVocabulary'>[]> {
