@@ -53,6 +53,7 @@ import { StatusInputComponent } from './components/status-input.component';
 import { FooterComponent } from './components/footer.component';
 import { MetaInformationComponent } from './components/meta-information.component';
 import { FloatDirective } from './directives/float.directive';
+import { ConceptReferenceInputComponent } from './components/concept-reference-input.component';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json!po?format=mf!../../po/fi.po'),
@@ -99,6 +100,7 @@ const appRoutes: Routes = [
     NoSelectionComponent,
     PropertyComponent,
     ReferenceComponent,
+    ConceptReferenceInputComponent,
     TermsComponent,
     AjaxLoadingIndicatorComponent,
     MarkdownComponent,

@@ -10,10 +10,12 @@ import { EditableService } from '../services/editable.service';
       <dt><label [for]="reference.meta.id">{{reference.meta.label | translateValue}}</label></dt>
       <dd>
         <terms *ngIf="reference.term" [value]="reference"></terms>
-        <div *ngIf="!reference.term">
+        
+        <concept-reference-input *ngIf="!reference.term && reference.concept" [concept]="reference"></concept-reference-input>
+        
+        <div *ngIf="!reference.term && !reference.concept">
           <span *ngFor="let referenceNode of reference.values; let last = last">
-            <a *ngIf="referenceNode.concept" [routerLink]="['/concepts', referenceNode.graphId, 'concept', referenceNode.id]">{{referenceNode.label | translateValue}}<span *ngIf="!last">, </span></a>
-            <span *ngIf="!referenceNode.concept">{{referenceNode.label | translateValue}}<span *ngIf="!last">, </span></span>
+            <span>{{referenceNode.label | translateValue}}<span *ngIf="!last">, </span></span>
           </span>
         </div>
       </dd>
