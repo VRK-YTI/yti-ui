@@ -54,3 +54,8 @@ span.highlight {
     z-index: 10;
   }
 }
+
+.floating {
+  position: fixed;
+  backface-visibility: hidden;
+}

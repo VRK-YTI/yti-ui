@@ -2,13 +2,13 @@
 
 $left-width: 400px;
 
-.bottom {
-  margin-top: 10px;
-}
-
 .panel-left {
   width: $left-width;
   float: left;
+
+  > [float] {
+    padding-top: 10px;
+  }
 }
 
 .panel-right {
