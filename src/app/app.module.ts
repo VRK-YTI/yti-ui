@@ -54,6 +54,7 @@ import { FooterComponent } from './components/footer.component';
 import { MetaInformationComponent } from './components/meta-information.component';
 import { FloatDirective } from './directives/float.directive';
 import { ConceptReferenceInputComponent } from './components/concept-reference-input.component';
+import { SearchConceptModal, SearchConceptModalService } from './components/search-concept.modal';
 import { StripMarkdownPipe } from './pipes/strip-markdown.pipe';
 import { ConceptFormComponent } from './components/concept-form.component';
 
@@ -117,6 +118,7 @@ const appRoutes: Routes = [
     ErrorMessagesComponent,
     EditableButtonsComponent,
     MetaInformationComponent,
+    SearchConceptModal,
     MetaModelValidator,
     LanguageValidator,
     LocalizationValidator,
@@ -129,6 +131,9 @@ const appRoutes: Routes = [
     TimestampPipe,
     StripMarkdownPipe,
     KeysPipe
+  ],
+  entryComponents: [
+    SearchConceptModal
   ],
   imports: [
     BrowserModule,
@@ -144,7 +149,8 @@ const appRoutes: Routes = [
     MetaModelService,
     { provide: MissingTranslationHandler, useFactory: createMissingTranslationHandler },
     LanguageService,
-    LocationService
+    LocationService,
+    SearchConceptModalService
   ],
   bootstrap: [AppComponent]
 })

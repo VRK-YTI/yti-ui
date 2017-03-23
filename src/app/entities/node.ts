@@ -10,7 +10,7 @@ export class Property {
 
   value: string|Localization[];
 
-  constructor(attributes: Attribute[], public meta: PropertyMeta, private languages: string[]) {
+  constructor(attributes: Attribute[], public meta: PropertyMeta, public languages: string[]) {
 
     const initializeLocalizable = () => {
       this.value = [];
@@ -79,7 +79,7 @@ export class Reference {
 
   values: Node<any>[];
 
-  constructor(nodes: NodeExternal<any>[], public meta: ReferenceMeta, metas: Map<string, Map<string, NodeMeta>>, languages: string[]) {
+  constructor(nodes: NodeExternal<any>[], public meta: ReferenceMeta, metas: Map<string, Map<string, NodeMeta>>, public languages: string[]) {
     if (this.term) {
 
       this.values = [];
@@ -132,7 +132,7 @@ export class Node<T extends NodeType> {
   references: { [key: string]: Reference } = {};
   referrers: { [key: string]: Node<any>[] } = {};
 
-  constructor(private node: NodeExternal<T>, private metas: Map<string, Map<string, NodeMeta>>, private languages: string[]) {
+  constructor(private node: NodeExternal<T>, private metas: Map<string, Map<string, NodeMeta>>, public languages: string[]) {
 
     this.meta = requireDefined(requireDefined(metas.get(node.type.graph.id)).get(node.type.id), 'Meta not found for ' + node.type.id);
 
@@ -291,6 +291,10 @@ export class Node<T extends NodeType> {
 
   get description(): Localizable {
     return this.getPropertyAsLocalizable('description');
+  }
+
+  get definition(): Localizable {
+    return this.getPropertyAsLocalizable('definition');
   }
 
   get publisher(): Node<any> {
