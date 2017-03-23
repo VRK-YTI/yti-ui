@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, ElementRef, ViewChild, AfterViewChecked } from '@angular/core';
 import { Parser, Node as MarkdownNode } from 'commonmark';
 import { Node } from '../../entities/node';
-import { children, logUnsupportedNodes, removeWhiteSpaceNodes } from './markdown-utils';
+import { logUnsupportedNodes, removeWhiteSpaceNodes, children } from '../../utils/markdown';
 import { first } from '../../utils/array';
 import { Localizable } from '../../entities/localization';
 

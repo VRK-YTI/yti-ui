@@ -1,6 +1,6 @@
-import { Node as MarkdownNode } from 'commonmark';
-import { isDefined } from '../../utils/object';
-import { contains } from '../../utils/array';
+import { Parser, Node as MarkdownNode } from 'commonmark';
+import { isDefined } from './object';
+import { contains } from './array';
 
 export function children(node: MarkdownNode): MarkdownNode[] {
 
