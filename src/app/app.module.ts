@@ -54,6 +54,7 @@ import { FooterComponent } from './components/footer.component';
 import { MetaInformationComponent } from './components/meta-information.component';
 import { FloatDirective } from './directives/float.directive';
 import { ConceptReferenceInputComponent } from './components/concept-reference-input.component';
+import { ConceptFormComponent } from './components/concept-form.component';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json-loader!po-loader?format=mf!../../po/fi.po'),
@@ -97,6 +98,7 @@ const appRoutes: Routes = [
     ConceptHierarchyComponent,
     ConceptHierarchyNodeComponent,
     ConceptComponent,
+    ConceptFormComponent,
     NoSelectionComponent,
     PropertyComponent,
     ReferenceComponent,
