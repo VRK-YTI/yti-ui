@@ -7,9 +7,30 @@ import { NgForm } from '@angular/forms';
   selector: 'editable-buttons',
   template: `
     <div class="top-actions">
-      <button type="button" class="btn btn-default pull-right cancel" (click)="cancelEditing()" [hidden]="!editing"><i class="fa fa-undo"></i></button>
-      <button type="button" class="btn btn-default pull-right save" (click)="saveEdited()" [hidden]="!editing" [disabled]="!canSave()"><i class="fa fa-floppy-o"></i></button>
-      <button type="button" class="btn btn-default pull-right edit" (click)="startEditing()" [hidden]="editing"><i class="fa fa-pencil"></i></button>
+      <button type="button" 
+              ngbTooltip="{{'Cancel edit' | translate}}" placement="left"
+              class="btn btn-default pull-right cancel" 
+              (click)="cancelEditing()" 
+              [hidden]="!editing">
+              <i class="fa fa-undo"></i>
+      </button>
+      
+      <button type="button" 
+              ngbTooltip="{{'Save changes' | translate}}"
+              class="btn btn-default pull-right save" 
+              (click)="saveEdited()" 
+              [hidden]="!editing" 
+              [disabled]="!canSave()">
+              <i class="fa fa-floppy-o"></i>
+      </button>
+      
+      <button type="button"
+              ngbTooltip="{{'Edit' | translate}}"
+              class="btn btn-default pull-right edit" 
+              (click)="startEditing()" 
+              [hidden]="editing">
+              <i class="fa fa-pencil"></i>
+      </button>
     </div>
   `
 })

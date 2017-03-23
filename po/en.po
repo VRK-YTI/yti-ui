@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-03-21 17:33+0200\n"
+"PO-Revision-Date: 2017-03-22 10:16+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -26,6 +26,15 @@ msgid "Alphabetic"
 msgstr ""
 
 msgid "Hierarchical"
+msgstr ""
+
+msgid "Cancel edit"
+msgstr ""
+
+msgid "Save changes"
+msgstr ""
+
+msgid "Edit"
 msgstr ""
 
 msgid "Contact info"

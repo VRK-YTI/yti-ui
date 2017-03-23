@@ -102,6 +102,7 @@ export class TermedService {
     params.append('graphId', graphId);
     params.append('typeId', 'Concept');
     params.append('select.referrers', 'broader');
+    params.append('select.references', 'broader');
     params.append('select.references', 'prefLabelXl');
     params.append('select.properties', 'prefLabel');
     params.append('select.properties', 'status');

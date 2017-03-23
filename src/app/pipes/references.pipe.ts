@@ -6,10 +6,10 @@ import { any, normalizeAsArray } from '../utils/array';
 @Pipe({ name: 'references' })
 export class ReferencesPipe implements PipeTransform {
 
-  transform(obj: Node<any>, rejectTypes?: string[]): Reference[] {
+  transform(obj: Node<any>, showEmpty = true, rejectTypes?: string[]): Reference[] {
 
     const rejects = normalizeAsArray(rejectTypes);
-    const references = Object.values(obj.references).filter(reference => !any(rejects, reject => reference.meta.id === reject));
+    const references = Object.values(obj.references).filter(reference => (showEmpty || !reference.empty) && !any(rejects, reject => reference.meta.id === reject));
 
     references.sort(comparingNumber<Reference>(reference => reference.meta.index));
     return references;

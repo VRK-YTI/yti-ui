@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-03-21 17:33+0200\n"
+"PO-Revision-Date: 2017-03-22 10:16+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -27,6 +27,15 @@ msgstr "Aakkosellinen"
 
 msgid "Hierarchical"
 msgstr "Hierarkinen"
+
+msgid "Cancel edit"
+msgstr "Peruuta muokkaus"
+
+msgid "Save changes"
+msgstr "Tallenna muutokset"
+
+msgid "Edit"
+msgstr "Muokkaa"
 
 msgid "Contact info"
 msgstr "Yhteystiedot"

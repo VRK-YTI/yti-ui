@@ -25,13 +25,10 @@ import { ActivatedRoute } from '@angular/router';
         </div>
   
         <div class="row">
-          <div class="col-md-12">
-            
-            <!-- Special handling for primary term, could be solved with mixed property/reference sorting -->
-            <reference [value]="concept.references['prefLabelXl']" *ngIf="concept.references['prefLabelXl']"></reference>
-            <property [value]="property" [relatedConcepts]="relatedConcepts" *ngFor="let property of concept | properties"></property>
-            <reference [value]="reference" *ngFor="let reference of concept | references: ['prefLabelXl']"></reference>
-          </div>
+          <!-- Special handling for primary term, could be solved with mixed property/reference sorting -->
+          <reference class="col-md-12" [value]="concept.references['prefLabelXl']" *ngIf="concept.references['prefLabelXl']"></reference>
+          <property class="col-md-12 col-xl-6" [value]="property" [relatedConcepts]="relatedConcepts" *ngFor="let property of concept | properties: showEmpty"></property>
+          <reference class="col-md-12 col-xl-6" [value]="reference" *ngFor="let reference of concept | references: showEmpty : ['prefLabelXl']"></reference>
         </div>
         
         <meta-information [node]="concept"></meta-information>
@@ -66,5 +63,9 @@ export class ConceptComponent {
       ...normalizeAsArray(this.conceptViewModel.concept.references['related'].values),
       ...normalizeAsArray(this.conceptViewModel.concept.references['broader'].values)
     ];
+  }
+
+  get showEmpty() {
+    return this.editableService.editing;
   }
 }
