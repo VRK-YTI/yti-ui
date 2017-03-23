@@ -97,7 +97,6 @@ export class VocabulariesComponent {
   conceptSchemes: Node<'TerminologicalVocabulary'>[];
   filterResults: Node<'TerminologicalVocabulary'>[];
 
-  searchConcept: string;
   filters: Filter[];
 
   constructor(termedService: TermedService,
@@ -127,14 +126,6 @@ export class VocabulariesComponent {
 
   navigate(conceptScheme: Node<'TerminologicalVocabulary'>) {
     this.router.navigate(['/concepts', conceptScheme.graphId]);
-  }
-
-  autocompleteChanged(value: any) {
-    console.log("AUTOCOMPLETE CHANGED");
-  }
-
-  foundItemsChanged(items: any) {
-    console.log("FOUND ITEMS CHANGED");
   }
 }
 

@@ -7,9 +7,6 @@ export class ElasticSearchService {
   private _client: Client;
   private elasticSearchBaseUrl: string = 'https://86.50.169.29/es';
 
-  // private indexName: string = 'concepts';
-  // private typeName: string = 'concept';
-
   constructor() {
     if (!this._client) {
       this._connect();
@@ -31,9 +28,18 @@ export class ElasticSearchService {
         body: {
           query: queryObj,
           sort: [ "_score" ],
+          min_score: 1.0,
+          highlight : {
+            pre_tags : ["<b>"],
+            post_tags : ["</b>"],
+            fields : {
+              "properties.prefLabel.value" : {},
+              "references.prefLabelXl.properties.prefLabel.value": {}
+            }
+          },
           from : 0,
           size : resultAmt,
-          _source: [
+          _source: [ // What data to bring in addition to the hits
             "id",
             "type.graph.id",
           //   "properties.prefLabel.lang",
