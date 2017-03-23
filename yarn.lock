@@ -43,6 +43,10 @@
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/@angular/http/-/http-2.3.1.tgz#3dda85771dccea49d5e08a47366a7168e3435141"
 
+"@angular/language-service@^2.4.10":
+  version "2.4.10"
+  resolved "https://registry.yarnpkg.com/@angular/language-service/-/language-service-2.4.10.tgz#26bbcb17c42cdf8aa0d8fbf260a843ba6db5c9a3"
+
 "@angular/platform-browser-dynamic@2.3.1":
   version "2.3.1"
   resolved "https://registry.yarnpkg.com/@angular/platform-browser-dynamic/-/platform-browser-dynamic-2.3.1.tgz#d01f3c0c25c628be83c308e83d53128222f558fa"
@@ -103,13 +107,13 @@
   dependencies:
     "@types/node" "*"
 
-"@types/node@*", "@types/node@^6.0.46":
-  version "6.0.57"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-6.0.57.tgz#100f9d4390331297bc3b6160ac4805b46de6e752"
-
-"@types/node@6.0.42":
+"@types/node@*", "@types/node@6.0.42":
   version "6.0.42"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-6.0.42.tgz#fc6d167399a4022b396e59a2c66166d3820e5688"
+
+"@types/node@^6.0.46":
+  version "6.0.57"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-6.0.57.tgz#100f9d4390331297bc3b6160ac4805b46de6e752"
 
 "@types/q@^0.0.32":
   version "0.0.32"
