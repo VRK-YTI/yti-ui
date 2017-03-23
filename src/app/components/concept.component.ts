@@ -22,7 +22,7 @@ import { ActivatedRoute } from '@angular/router';
           </div>
         </div>
   
-        <concept-form [concept]="concept" [conceptsProvider]="conceptsProvider"></concept-form>
+        <concept-form [concept]="concept" [conceptsProvider]="conceptsProvider" [multiColumn]="true"></concept-form>
       </form>
       
     </div>

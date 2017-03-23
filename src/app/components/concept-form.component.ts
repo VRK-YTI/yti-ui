@@ -8,9 +8,9 @@ import { EditableService } from '../services/editable.service';
   template: `
     <div class="row">
       <!-- Special handling for primary term, could be solved with mixed property/reference sorting -->
-      <reference class="col-md-12" [multiColumnTerms]="true" [conceptsProvider]="conceptsProvider" [value]="concept.references['prefLabelXl']" *ngIf="concept.references['prefLabelXl']"></reference>
-      <property class="col-md-12 col-xl-6" [value]="property" [relatedConcepts]="relatedConcepts" *ngFor="let property of concept | properties: showEmpty"></property>
-      <reference class="col-md-12 col-xl-6" [value]="reference" [conceptsProvider]="conceptsProvider" *ngFor="let reference of concept | references: showEmpty : ['prefLabelXl']"></reference>
+      <reference class="col-md-12" [multiColumnTerms]="multiColumn" [conceptsProvider]="conceptsProvider" [value]="concept.references['prefLabelXl']" *ngIf="concept.references['prefLabelXl']"></reference>
+      <property class="col-md-12" [class.col-xl-6]="multiColumn" [value]="property" [relatedConcepts]="relatedConcepts" *ngFor="let property of concept | properties: showEmpty"></property>
+      <reference class="col-md-12" [class.col-xl-6]="multiColumn" [value]="reference" [conceptsProvider]="conceptsProvider" *ngFor="let reference of concept | references: showEmpty : ['prefLabelXl']"></reference>
     </div>
 
     <meta-information [node]="concept"></meta-information>
@@ -20,6 +20,7 @@ export class ConceptFormComponent {
 
   @Input() concept: Node<'Concept'>;
   @Input() conceptsProvider: () => Node<'Concept'>[];
+  @Input() multiColumn = false;
 
   constructor(private editableService: EditableService) {
   }
