@@ -54,6 +54,7 @@ import { FooterComponent } from './components/footer.component';
 import { MetaInformationComponent } from './components/meta-information.component';
 import { FloatDirective } from './directives/float.directive';
 import { ConceptReferenceInputComponent } from './components/concept-reference-input.component';
+import { StripMarkdownPipe } from './pipes/strip-markdown.pipe';
 import { ConceptFormComponent } from './components/concept-form.component';
 
 const localizations: { [lang: string]: string} = {
@@ -126,6 +127,7 @@ const appRoutes: Routes = [
     PropertiesPipe,
     ReferencesPipe,
     TimestampPipe,
+    StripMarkdownPipe,
     KeysPipe
   ],
   imports: [
