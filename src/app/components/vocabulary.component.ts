@@ -25,8 +25,8 @@ import { ConceptViewModelService } from '../services/concept.view.service';
               </div>
             </div>
             <div class="row">
-              <property class="col-md-6" [value]="property" *ngFor="let property of conceptScheme | properties"></property>
-              <reference class="col-md-6" [value]="reference" *ngFor="let reference of conceptScheme | references"></reference>
+              <property class="col-md-6" [value]="property" *ngFor="let property of conceptScheme | properties: showEmpty"></property>
+              <reference class="col-md-6" [value]="reference" [conceptsProvider]="conceptsProvider" *ngFor="let reference of conceptScheme | references: showEmpty"></reference>
             </div>
             <meta-information [node]="conceptScheme"></meta-information>
           </form>
@@ -37,14 +37,22 @@ import { ConceptViewModelService } from '../services/concept.view.service';
 })
 export class VocabularyComponent {
 
-  constructor(editableService: EditableService,
+  constructor(private editableService: EditableService,
               private conceptViewModel: ConceptViewModelService) {
 
     editableService.save$.subscribe(() => conceptViewModel.saveConceptScheme());
     editableService.cancel$.subscribe(() => conceptViewModel.resetConceptScheme());
   }
 
+  get conceptsProvider() {
+    return () => this.conceptViewModel.allConcepts$.getValue();
+  }
+
   get conceptScheme() {
     return this.conceptViewModel.conceptScheme;
+  }
+
+  get showEmpty() {
+    return this.editableService.editing;
   }
 }

@@ -1,7 +1,6 @@
 @import '../../variables';
 
-$language-width: 30px;
-$language-height: 32px;
+$language-size: 32px;
 
 :host /deep/ {
 
@@ -37,19 +36,19 @@ $language-height: 32px;
     float: left;
     color: white;
     background-color: $brand-primary;
-    width: $language-width;
-    height: $language-height;
+    width: $language-size;
+    height: $language-size;
     display: inline-block;
     text-align: center;
-    line-height: 33px;
+    line-height: $language-size;
   }
 
   div.localization {
     float: left;
-    width: calc(100% - #{$language-width});
-    min-height: $language-height;
+    width: calc(100% - #{$language-size});
+    min-height: $language-size;
     padding-left: 10px;
-    line-height: 28px;
+    line-height: $language-size;
   }
 
   accordion-chevron {

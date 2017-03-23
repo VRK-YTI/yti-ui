@@ -16,7 +16,7 @@ import { Localization } from '../entities/localization';
         </template>
         <template ngbPanelContent>
           <div class="row">
-            <div class="col-md-6" *ngFor="let property of term | properties: showEmpty">
+            <div class="col-md-12 col-xl-6" [class.col-xl-6]="multiColumn" *ngFor="let property of term | properties: showEmpty">
               <property [value]="property"></property>
             </div>
           </div>
@@ -28,7 +28,7 @@ import { Localization } from '../entities/localization';
 export class TermsComponent {
 
   @Input('value') termReference: Reference;
-
+  @Input() multiColumn = false;
 
   constructor(private editableService: EditableService) {
   }

@@ -15,6 +15,10 @@
       font-size: 14px;
       list-style: none;
 
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
       &.selection {
         background-color: #f5f5f5;
       }
@@ -28,11 +32,11 @@
 }
 
 .filters {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.14902);
-  padding: 0 0 4px 0;
+  border: 1px solid rgba(0, 0, 0, 0.14902);
+  border-top: none;
+  padding: 10px;
   display: inline-block;
   width: 100%;
-  margin-top: 5px;
 
   .form-check {
     margin-top: 0.5rem;

@@ -102,9 +102,11 @@ export class TermedService {
     params.append('graphId', graphId);
     params.append('typeId', 'Concept');
     params.append('select.referrers', 'broader');
+    params.append('select.references', 'broader');
     params.append('select.references', 'prefLabelXl');
     params.append('select.properties', 'prefLabel');
     params.append('select.properties', 'status');
+    params.append('select.properties', 'definition');
     params.append('select.audit', 'true');
 
     return this.http.get(`/api/ext.json`, { search: params } )
@@ -121,6 +123,8 @@ export class TermedService {
     params.append('recurse.references.prefLabelXl', '1');
     params.append('select.references', 'prefLabelXl');
     params.append('select.properties', 'prefLabel');
+    params.append('select.properties', 'status');
+    params.append('select.properties', 'definition');
     params.append('select.referrers', 'broader');
     params.append('where.references.broader', broaderConceptId);
 
