@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Reference, Node } from '../entities/node';
 import { EditableService } from '../services/editable.service';
+import { SearchConceptModalService } from './search-concept.modal';
 import { remove } from '../utils/array';
 
 @Component({
@@ -19,13 +20,20 @@ import { remove } from '../utils/array';
         <span>{{concept.label | translateValue}}</span>
       </div>
     </div>
+
+    <button type="button"
+            class="btn btn-default"
+            *ngIf="editing"
+            (click)="addReference()" translate>Add concept</button>
   `
 })
 export class ConceptReferenceInputComponent {
 
   @Input('concept') conceptReference: Reference;
+  @Input() conceptsProvider: () => Node<'Concept'>[];
 
-  constructor(private editableService: EditableService) {
+  constructor(private editableService: EditableService,
+              private searchConceptModal: SearchConceptModalService) {
   }
 
   get editing() {
@@ -34,5 +42,11 @@ export class ConceptReferenceInputComponent {
 
   removeReference(concept: Node<'Concept'>) {
     remove(this.conceptReference.values, concept);
+  }
+
+  addReference() {
+    this.searchConceptModal.open(this.conceptsProvider).then(result => {
+      this.conceptReference.values.push(result);
+    });
   }
 }
