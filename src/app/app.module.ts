@@ -56,8 +56,8 @@ import { FloatDirective } from './directives/float.directive';
 import { ConceptReferenceInputComponent } from './components/concept-reference-input.component';
 
 const localizations: { [lang: string]: string} = {
-  fi: require('json!po?format=mf!../../po/fi.po'),
-  en: require('json!po?format=mf!../../po/en.po')
+  fi: require('json-loader!po-loader?format=mf!../../po/fi.po'),
+  en: require('json-loader!po-loader?format=mf!../../po/en.po')
 };
 
 export function createTranslateLoader(): TranslateLoader {

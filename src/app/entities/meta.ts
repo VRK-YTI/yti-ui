@@ -3,7 +3,7 @@ import { comparingNumber } from '../utils/comparator';
 import { normalizeAsArray } from '../utils/array';
 import { asLocalizable, Localizable } from './localization';
 import { NodeType, NodeExternal } from './node-api';
-import { v4 as uuid } from 'node-uuid';
+import { v4 as uuid } from 'uuid';
 import * as moment from 'moment';
 
 export type PropertyType = 'localizable' | 'status' | 'string';
