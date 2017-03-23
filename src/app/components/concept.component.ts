@@ -26,7 +26,7 @@ import { ActivatedRoute } from '@angular/router';
   
         <div class="row">
           <!-- Special handling for primary term, could be solved with mixed property/reference sorting -->
-          <reference class="col-md-12" [value]="concept.references['prefLabelXl']" *ngIf="concept.references['prefLabelXl']"></reference>
+          <reference class="col-md-12" [multiColumnTerms]="true" [value]="concept.references['prefLabelXl']" *ngIf="concept.references['prefLabelXl']"></reference>
           <property class="col-md-12 col-xl-6" [value]="property" [relatedConcepts]="relatedConcepts" *ngFor="let property of concept | properties: showEmpty"></property>
           <reference class="col-md-12 col-xl-6" [value]="reference" *ngFor="let reference of concept | references: showEmpty : ['prefLabelXl']"></reference>
         </div>

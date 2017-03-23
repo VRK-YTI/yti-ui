@@ -9,7 +9,7 @@ import { EditableService } from '../services/editable.service';
     <dl *ngIf="show">
       <dt><label [for]="reference.meta.id">{{reference.meta.label | translateValue}}</label></dt>
       <dd>
-        <terms *ngIf="reference.term" [value]="reference"></terms>
+        <terms *ngIf="reference.term" [value]="reference" [multiColumn]="multiColumnTerms"></terms>
         
         <concept-reference-input *ngIf="!reference.term && reference.concept" [concept]="reference"></concept-reference-input>
         
@@ -25,6 +25,7 @@ import { EditableService } from '../services/editable.service';
 export class ReferenceComponent {
 
   @Input('value') reference: Reference;
+  @Input() multiColumnTerms = false;
 
   constructor(private editableService: EditableService) {
   }
