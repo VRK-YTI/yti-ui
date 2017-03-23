@@ -5,12 +5,14 @@ import { Reference } from '../entities/node';
   selector: 'concept-reference-input',
   styleUrls: ['./concept-reference-input.component.scss'],
   template: `
-    <span *ngFor="let node of concept.values; let last = last">
-      <a [routerLink]="['/concepts', node.graphId, 'concept', node.id]">{{node.label | translateValue}}<span *ngIf="!last">, </span></a>
-    </span>
+    <ul>
+      <li *ngFor="let concept of conceptReference.values; let last = last">
+        <a [routerLink]="['/concepts', concept.graphId, 'concept', concept.id]">{{concept.label | translateValue}}</a>
+      </li>
+    </ul>
   `
 })
 export class ConceptReferenceInputComponent {
 
-  @Input() concept: Reference;
+  @Input('concept') conceptReference: Reference;
 }
