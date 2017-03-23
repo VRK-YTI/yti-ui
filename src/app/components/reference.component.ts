@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Reference } from '../entities/node';
 import { EditableService } from '../services/editable.service';
+import { Node } from '../entities/node';
 
 @Component({
   selector: 'reference',
@@ -9,11 +10,13 @@ import { EditableService } from '../services/editable.service';
     <dl *ngIf="show">
       <dt><label [for]="reference.meta.id">{{reference.meta.label | translateValue}}</label></dt>
       <dd>
-        <terms *ngIf="reference.term" [value]="reference"></terms>
-        <div *ngIf="!reference.term">
+        <terms *ngIf="reference.term" [value]="reference" [multiColumn]="multiColumnTerms"></terms>
+        
+        <concept-reference-input *ngIf="!reference.term && reference.concept" [concept]="reference" [conceptsProvider]="conceptsProvider"></concept-reference-input>
+        
+        <div *ngIf="!reference.term && !reference.concept">
           <span *ngFor="let referenceNode of reference.values; let last = last">
-            <a *ngIf="referenceNode.concept" [routerLink]="['/concepts', referenceNode.graphId, 'concept', referenceNode.id]">{{referenceNode.label | translateValue}}<span *ngIf="!last">, </span></a>
-            <span *ngIf="!referenceNode.concept">{{referenceNode.label | translateValue}}<span *ngIf="!last">, </span></span>
+            <span>{{referenceNode.label | translateValue}}<span *ngIf="!last">, </span></span>
           </span>
         </div>
       </dd>
@@ -23,6 +26,8 @@ import { EditableService } from '../services/editable.service';
 export class ReferenceComponent {
 
   @Input('value') reference: Reference;
+  @Input() multiColumnTerms = false;
+  @Input() conceptsProvider: () => Node<'Concept'>[];
 
   constructor(private editableService: EditableService) {
   }

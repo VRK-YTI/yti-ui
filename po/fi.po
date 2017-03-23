@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-03-22 10:16+0200\n"
+"PO-Revision-Date: 2017-03-23 18:29+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -21,6 +21,9 @@ msgstr "Järjestä muokkausajan mukaan"
 
 msgid "All statuses"
 msgstr "Kaikki tilat"
+
+msgid "Add concept"
+msgstr "Lisää käsite"
 
 msgid "Alphabetic"
 msgstr "Aakkosellinen"
@@ -66,6 +69,21 @@ msgstr "Muokattu"
 
 msgid "Modified by"
 msgstr "Muokkaaja"
+
+msgid "Choose concept"
+msgstr "Valitse käsite"
+
+msgid "Filter results"
+msgstr "Rajaa hakutuloksia"
+
+msgid "Status"
+msgstr "Tila"
+
+msgid "Cancel"
+msgstr "Peruuta"
+
+msgid "Select concept"
+msgstr "Valitse käsite"
 
 msgid "Welcome to vocabulary and concept workbench"
 msgstr "Tervetuloa sanasto- ja käsitevälineistöön"
@@ -119,9 +137,6 @@ msgstr "Organisaatio"
 
 #~ msgid "Preferred term"
 #~ msgstr "Suositettava termi"
-
-#~ msgid "Status"
-#~ msgstr "Tila"
 
 #~ msgid "Vocabularies"
 #~ msgstr "Sanastot"

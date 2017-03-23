@@ -55,10 +55,14 @@ import { StatusInputComponent } from './components/status-input.component';
 import { FooterComponent } from './components/footer.component';
 import { MetaInformationComponent } from './components/meta-information.component';
 import { FloatDirective } from './directives/float.directive';
+import { ConceptReferenceInputComponent } from './components/concept-reference-input.component';
+import { SearchConceptModal, SearchConceptModalService } from './components/search-concept.modal';
+import { StripMarkdownPipe } from './pipes/strip-markdown.pipe';
+import { ConceptFormComponent } from './components/concept-form.component';
 
 const localizations: { [lang: string]: string} = {
-  fi: require('json!po?format=mf!../../po/fi.po'),
-  en: require('json!po?format=mf!../../po/en.po')
+  fi: require('json-loader!po-loader?format=mf!../../po/fi.po'),
+  en: require('json-loader!po-loader?format=mf!../../po/en.po')
 };
 
 export function createTranslateLoader(): TranslateLoader {
@@ -98,9 +102,11 @@ const appRoutes: Routes = [
     ConceptHierarchyComponent,
     ConceptHierarchyNodeComponent,
     ConceptComponent,
+    ConceptFormComponent,
     NoSelectionComponent,
     PropertyComponent,
     ReferenceComponent,
+    ConceptReferenceInputComponent,
     TermsComponent,
     AjaxLoadingIndicatorComponent,
     MarkdownComponent,
@@ -115,6 +121,7 @@ const appRoutes: Routes = [
     EditableButtonsComponent,
     AutoComplete,
     MetaInformationComponent,
+    SearchConceptModal,
     MetaModelValidator,
     LanguageValidator,
     LocalizationValidator,
@@ -125,7 +132,11 @@ const appRoutes: Routes = [
     PropertiesPipe,
     ReferencesPipe,
     TimestampPipe,
+    StripMarkdownPipe,
     KeysPipe
+  ],
+  entryComponents: [
+    SearchConceptModal
   ],
   imports: [
     BrowserModule,
@@ -143,6 +154,7 @@ const appRoutes: Routes = [
     { provide: MissingTranslationHandler, useFactory: createMissingTranslationHandler },
     LanguageService,
     LocationService,
+    SearchConceptModalService,
     ElasticSearchService
   ],
   bootstrap: [AppComponent]

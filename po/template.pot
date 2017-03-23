@@ -13,6 +13,9 @@ msgstr ""
 msgid "All statuses"
 msgstr ""
 
+msgid "Add concept"
+msgstr ""
+
 msgid "Alphabetic"
 msgstr ""
 
@@ -56,6 +59,21 @@ msgid "Modified at"
 msgstr ""
 
 msgid "Modified by"
+msgstr ""
+
+msgid "Choose concept"
+msgstr ""
+
+msgid "Filter results"
+msgstr ""
+
+msgid "Status"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Select concept"
 msgstr ""
 
 msgid "Welcome to vocabulary and concept workbench"
