@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { Routes, RouterModule } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { VisModule } from 'ng2-vis';
 
 import { AppComponent } from './components/app.component';
 import { TermedService } from './services/termed.service';
@@ -52,7 +51,6 @@ import { ConceptListComponent } from './components/concept-list.component';
 import { ConceptHierarchyComponent } from './components/concept-hierarchy.component';
 import { ConceptHierarchyNodeComponent } from './components/concept-hierarchy-node.component';
 import { StatusInputComponent } from './components/status-input.component';
-import { VisNetworkPatchedDirective } from './components/vis/vis-network-patched.directive';
 import { FooterComponent } from './components/footer.component';
 import { MetaInformationComponent } from './components/meta-information.component';
 import { FloatDirective } from './directives/float.directive';
@@ -121,7 +119,6 @@ const appRoutes: Routes = [
     ErrorMessagesComponent,
     EditableButtonsComponent,
     ConceptNetworkComponent,
-    VisNetworkPatchedDirective,
     MetaInformationComponent,
     SearchConceptModal,
     MetaModelValidator,
@@ -146,8 +143,7 @@ const appRoutes: Routes = [
     HttpModule,
     NgbModule.forRoot(),
     RouterModule.forRoot(appRoutes),
-    TranslateModule.forRoot({ provide: TranslateLoader, useFactory: createTranslateLoader }),
-    VisModule
+    TranslateModule.forRoot({ provide: TranslateLoader, useFactory: createTranslateLoader })
   ],
   providers: [
     TermedHttp,
