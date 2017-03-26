@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-03-23 18:29+0200\n"
+"PO-Revision-Date: 2017-03-26 21:21+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -84,6 +84,9 @@ msgstr "Peruuta"
 
 msgid "Select concept"
 msgstr "Valitse käsite"
+
+msgid "Visualization"
+msgstr "Visualisointi"
 
 msgid "Welcome to vocabulary and concept workbench"
 msgstr "Tervetuloa sanasto- ja käsitevälineistöön"

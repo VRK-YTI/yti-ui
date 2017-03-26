@@ -76,6 +76,9 @@ msgstr ""
 msgid "Select concept"
 msgstr ""
 
+msgid "Visualization"
+msgstr ""
+
 msgid "Welcome to vocabulary and concept workbench"
 msgstr ""
 

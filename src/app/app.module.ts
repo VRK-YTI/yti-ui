@@ -35,6 +35,7 @@ import { NoSelectionComponent } from './components/no-selection.component';
 import { TimestampPipe } from './pipes/timestamp.pipe';
 import { MarkdownLinksComponent } from './components/markdown/markdown-links.component';
 import { MarkdownLinksElementComponent } from './components/markdown/markdown-links.component';
+import { ConceptNetworkComponent } from './components/vis/concept-network.component';
 import { VocabularyComponent } from './components/vocabulary.component';
 import { AccordionChevronComponent } from './components/accordion-chevron.component';
 import { LiteralInputComponent } from './components/literal-input.component';
@@ -117,6 +118,7 @@ const appRoutes: Routes = [
     LocalizedInputComponent,
     ErrorMessagesComponent,
     EditableButtonsComponent,
+    ConceptNetworkComponent,
     MetaInformationComponent,
     SearchConceptModal,
     MetaModelValidator,

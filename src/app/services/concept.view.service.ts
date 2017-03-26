@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { LocationService } from './location.service';
 import { TermedService } from './termed.service';
-import { BehaviorSubject, ReplaySubject } from 'rxjs';
+import {BehaviorSubject, ReplaySubject } from 'rxjs';
 import { Node } from '../entities/node';
 import { comparingLocalizable } from '../utils/comparator';
 import { LanguageService } from './language.service';
