@@ -97,8 +97,15 @@ const options: VisNetworkOptions = {
   selector: 'concept-network',
   styleUrls: ['./concept-network.component.scss'],
   template: `
-    <h2>Concept Network</h2>
-    <div #canvas class="network-canvas" (mouseleave)="hidePopup()"></div>
+    <div class="component">
+
+      <div class="component-header">
+        <h3 translate>Visualization</h3>
+      </div>
+
+      <div #canvas class="network-canvas" (mouseleave)="hidePopup()"></div>
+
+    </div>
   `
 })
 export class ConceptNetworkComponent implements OnInit, OnDestroy {

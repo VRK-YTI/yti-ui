@@ -49,7 +49,9 @@ import { ConceptViewModelService } from '../services/concept.view.service';
               </div>
               
               <div class="col-lg-6 selection">
-                  <concept-network></concept-network>    
+                <div float>
+                  <concept-network></concept-network>
+                </div>
               </div>
             </div>
           </div>
