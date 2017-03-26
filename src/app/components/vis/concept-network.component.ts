@@ -118,7 +118,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
   private timer: any;
 
   private network: VisNetwork;
-  private networkData = {
+  private networkData: ConceptNetworkData = {
     nodes: new DataSet<VisNode>(),
     edges: new DataSet<VisEdge>()
   };
