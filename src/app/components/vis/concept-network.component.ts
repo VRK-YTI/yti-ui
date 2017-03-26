@@ -23,21 +23,72 @@ const DELAY = 600;
 
 const options: VisNetworkOptions = {
   nodes: {
-    shape: 'ellipse',
-    fixed: false
+    shape: 'box',
+    fixed: false,
+    font: {
+      color: 'black',
+      face: 'Open Sans'
+    }
   },
   groups: {
     rootGroup: {
-      font: { color: 'black' }
+      font: {
+        color: 'white'
+      },
+      color: {
+        background: '#375e97',
+        border: 'white',
+        highlight: {
+          background: 'white',
+          border: 'black'
+        },
+        hover: {
+          background: 'white',
+          border: 'black'
+        }
+      }
     },
     relatedGroup: {
-      font: { color: 'black' }
+      color: {
+        background: '#ebeff2',
+        border: 'white',
+        highlight: {
+          background: 'white',
+          border: 'black'
+        },
+        hover: {
+          background: 'white',
+          border: 'black'
+        }
+      }
     },
     broaderGroup: {
-      font: { color: 'black' }
+      color: {
+        background: '#59a3ff',
+        border: 'white',
+        highlight: {
+          background: 'white',
+          border: 'black'
+        },
+        hover: {
+          background: 'white',
+          border: 'black'
+        }
+      }
     },
     isPartOfGroup: {
-      font: { color: 'black' }
+      color: {
+        background: '#00ffcc',
+        border: 'white',
+        highlight: {
+          background: 'white',
+          border: 'black'
+        },
+        hover: {
+          background: 'white',
+          border: 'black'
+        }
+      }
     }
   },
   layout: {
@@ -60,8 +111,7 @@ const options: VisNetworkOptions = {
     length: 250,
     hoverWidth: 3,
     color: {
-      color: 'black',
-      hover: 'blue'
+      color: 'black'
     }
   },
   interaction: {
@@ -167,62 +217,21 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
   private createRootNode(concept: Node<'Concept'>) {
     return Object.assign(this.createNodeData(concept), {
       group: 'rootGroup',
-      color: 'blue',
       physics: false,
       fixed: false
     });
   }
 
   private createRelatedConceptNode(relatedConcept: Node<'Concept'>) {
-    return Object.assign(this.createNodeData(relatedConcept), {
-      group: 'relatedGroup',
-      color: {
-        background: '#4ce9ff',
-        highlight: {
-          background: 'white',
-          border: 'black'
-        },
-        hover: {
-          background: 'white',
-          border: 'black'
-        }
-      },
-      shadow: true
-    });
+    return Object.assign(this.createNodeData(relatedConcept), { group: 'relatedGroup' });
   }
 
   private createBroaderConceptNode(broaderConcept: Node<'Concept'>) {
-    return Object.assign(this.createNodeData(broaderConcept), {
-      group: 'broaderGroup',
-      color: {
-        background: '#59a3ff',
-        highlight: {
-          background: 'white',
-          border: 'black'
-        },
-        hover: {
-          background: 'white',
-          border: 'black'
-        }
-      }
-    });
+    return Object.assign(this.createNodeData(broaderConcept), { group: 'broaderGroup' });
   }
 
   private createIsPartOfConceptNode(isPartOfConcept: Node<'Concept'>) {
-    return Object.assign(this.createNodeData(isPartOfConcept), {
-      group: 'isPartOfGroup',
-      color: {
-        background: '#00ffcc',
-        highlight: {
-          background: 'white',
-          border: 'black'
-        },
-        hover: {
-          background: 'white',
-          border: 'black'
-        }
-      }
-    });
+    return Object.assign(this.createNodeData(isPartOfConcept), { group: 'isPartOfGroup' });
   }
 
   private createEdgeData(from: Node<'Concept'>, to: Node<'Concept'>) {
