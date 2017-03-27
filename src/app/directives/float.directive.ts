@@ -1,4 +1,4 @@
-import { Directive, HostListener, ElementRef, OnDestroy, AfterViewInit } from '@angular/core';
+import { Directive, ElementRef, OnDestroy, AfterViewInit, NgZone } from '@angular/core';
 import { requireDefined } from '../utils/object';
 
 interface Location {
@@ -15,11 +15,15 @@ export class FloatDirective implements AfterViewInit, OnDestroy {
   floating = false;
   elementStaticLocation: Location;
 
-  constructor(element: ElementRef) {
+  constructor(element: ElementRef, private zone: NgZone) {
     this.element = element.nativeElement as HTMLElement;
   }
 
   ngAfterViewInit() {
+
+    this.zone.runOutsideAngular(() => {
+      window.addEventListener('scroll', this.onWindowScroll);
+    });
 
     this.elementStaticLocation = this.calculateElementLocation();
 
@@ -32,6 +36,7 @@ export class FloatDirective implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    window.removeEventListener('scroll', this.onWindowScroll);
     requireDefined(this.placeholder.parentElement).removeChild(this.placeholder);
   }
 
@@ -80,8 +85,7 @@ export class FloatDirective implements AfterViewInit, OnDestroy {
     this.placeholder.hidden = true;
   }
 
-  @HostListener("window:scroll")
-  onWindowScroll() {
+  onWindowScroll = () => {
 
     if (!this.floating) {
 

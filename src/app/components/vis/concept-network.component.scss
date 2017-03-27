@@ -1,0 +1,26 @@
+@import '../../../variables';
+
+.component {
+
+  border-left: 1px solid #ddd;
+  margin-left: -18px;
+
+  .component-header {
+    // TODO duplication with concept.component
+    background-color: $brand-accent-lighter;
+    padding: 11px 20px;
+    border-bottom: solid 1px #ddd;
+    font-size: 26px;
+    height: 53px;
+
+    h3 {
+      margin: 0;
+    }
+  }
+
+  .network-canvas {
+    width: 100%;
+    height: calc(100vh - 70px);
+  }
+}
+

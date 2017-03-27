@@ -35,6 +35,7 @@ import { NoSelectionComponent } from './components/no-selection.component';
 import { TimestampPipe } from './pipes/timestamp.pipe';
 import { MarkdownLinksComponent } from './components/markdown/markdown-links.component';
 import { MarkdownLinksElementComponent } from './components/markdown/markdown-links.component';
+import { ConceptNetworkComponent } from './components/vis/concept-network.component';
 import { VocabularyComponent } from './components/vocabulary.component';
 import { AccordionChevronComponent } from './components/accordion-chevron.component';
 import { LiteralInputComponent } from './components/literal-input.component';
@@ -55,10 +56,14 @@ import { StatusInputComponent } from './components/status-input.component';
 import { FooterComponent } from './components/footer.component';
 import { MetaInformationComponent } from './components/meta-information.component';
 import { FloatDirective } from './directives/float.directive';
+import { ConceptReferenceInputComponent } from './components/concept-reference-input.component';
+import { SearchConceptModal, SearchConceptModalService } from './components/search-concept.modal';
+import { StripMarkdownPipe } from './pipes/strip-markdown.pipe';
+import { ConceptFormComponent } from './components/concept-form.component';
 
 const localizations: { [lang: string]: string} = {
-  fi: require('json!po?format=mf!../../po/fi.po'),
-  en: require('json!po?format=mf!../../po/en.po')
+  fi: require('json-loader!po-loader?format=mf!../../po/fi.po'),
+  en: require('json-loader!po-loader?format=mf!../../po/en.po')
 };
 
 export function createTranslateLoader(): TranslateLoader {
@@ -98,9 +103,11 @@ const appRoutes: Routes = [
     ConceptHierarchyComponent,
     ConceptHierarchyNodeComponent,
     ConceptComponent,
+    ConceptFormComponent,
     NoSelectionComponent,
     PropertyComponent,
     ReferenceComponent,
+    ConceptReferenceInputComponent,
     TermsComponent,
     AjaxLoadingIndicatorComponent,
     MarkdownComponent,
@@ -114,7 +121,9 @@ const appRoutes: Routes = [
     ErrorMessagesComponent,
     EditableButtonsComponent,
     AutoComplete,
+    ConceptNetworkComponent,
     MetaInformationComponent,
+    SearchConceptModal,
     MetaModelValidator,
     LanguageValidator,
     LocalizationValidator,
@@ -125,7 +134,11 @@ const appRoutes: Routes = [
     PropertiesPipe,
     ReferencesPipe,
     TimestampPipe,
+    StripMarkdownPipe,
     KeysPipe
+  ],
+  entryComponents: [
+    SearchConceptModal
   ],
   imports: [
     BrowserModule,
@@ -143,6 +156,7 @@ const appRoutes: Routes = [
     { provide: MissingTranslationHandler, useFactory: createMissingTranslationHandler },
     LanguageService,
     LocationService,
+    SearchConceptModalService,
     ElasticSearchService
   ],
   bootstrap: [AppComponent]

@@ -1,26 +1,30 @@
-$gray-base:             #222;
-$gray-dark:             lighten($gray-base, 20%);
-$gray:                  #6f6f6f;
-$gray-light:            lighten($gray-base, 60%);
-$gray-lighter:          lighten($gray-base, 84%);
+$gray-base:               #222;
+$gray-dark:               lighten($gray-base, 20%);
+$gray:                    #6f6f6f;
+$gray-light:              lighten($gray-base, 60%);
+$gray-lighter:            lighten($gray-base, 84%);
 
-$brand-primary:         #375e97;
-$brand-success:         #43ac6a;
-$brand-info:            #5bc0de;
-$brand-warning:         #E99002;
-$brand-danger:          #D32F2F;
+$brand-primary:           #375e97;
+$brand-success:           #43ac6a;
+$brand-info:              #5bc0de;
+$brand-warning:           #E99002;
+$brand-danger:            #D32F2F;
 
-$brand-accent-lighter:  #ebeff2;
-$brand-accent-light:    #7e9cad;
-$brand-accent-dark:     #375e97;
+$brand-accent-lighter:    #ebeff2;
+$brand-accent-light:      #7e9cad;
+$brand-accent-dark:       #375e97;
 
-$navbar-inverse-color:  rgba(255,255,255,1);
+$navbar-inverse-color:    rgba(255,255,255,1);
 
-$breadcrumb-bg: #ffffff solid;
+$breadcrumb-bg:           #ffffff solid;
 $breadcrumb-active-color: $gray-dark;
 
 $input-color-placeholder: $gray-light !important;
 
-$footer-height: 50px;
+$footer-height:           50px;
+
+$modal-lg:                95% !default;
+$modal-md:                60% !default;
+$modal-sm:                30% !default;
 
 @import './vendor/variables';

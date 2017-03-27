@@ -26,7 +26,7 @@ import { ConceptViewModelService } from '../services/concept.view.service';
             </div>
             <div class="row">
               <property class="col-md-6" [value]="property" *ngFor="let property of conceptScheme | properties: showEmpty"></property>
-              <reference class="col-md-6" [value]="reference" *ngFor="let reference of conceptScheme | references: showEmpty"></reference>
+              <reference class="col-md-6" [value]="reference" [conceptsProvider]="conceptsProvider" *ngFor="let reference of conceptScheme | references: showEmpty"></reference>
             </div>
             <meta-information [node]="conceptScheme"></meta-information>
           </form>
@@ -42,6 +42,10 @@ export class VocabularyComponent {
 
     editableService.save$.subscribe(() => conceptViewModel.saveConceptScheme());
     editableService.cancel$.subscribe(() => conceptViewModel.resetConceptScheme());
+  }
+
+  get conceptsProvider() {
+    return () => this.conceptViewModel.allConcepts$.getValue();
   }
 
   get conceptScheme() {

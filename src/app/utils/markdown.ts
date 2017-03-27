@@ -1,6 +1,8 @@
-import { Node as MarkdownNode } from 'commonmark';
-import { isDefined } from '../../utils/object';
-import { contains } from '../../utils/array';
+import { Parser, Node as MarkdownNode } from 'commonmark';
+import { isDefined } from './object';
+import { contains } from './array';
+
+const parser = new Parser();
 
 export function children(node: MarkdownNode): MarkdownNode[] {
 
@@ -58,4 +60,36 @@ export function removeWhiteSpaceNodes(node: Node) {
   for (const childNode of removeChildNodes) {
     node.removeChild(childNode);
   }
+}
+
+class StringBuilder {
+
+  private _value = '';
+
+  append(s: string) {
+    this._value += s;
+  }
+
+  get value() {
+    return this._value;
+  }
+}
+
+export function stripMarkdown(md: string): string {
+
+  const sb = new StringBuilder();
+
+  const visit = (node: MarkdownNode) => {
+    if (node.literal !== null) {
+      sb.append(node.literal);
+    }
+
+    for (const child of children(node)) {
+      visit(child);
+    }
+  };
+
+  visit(parser.parse(md));
+
+  return sb.value;
 }

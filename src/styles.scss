@@ -60,3 +60,51 @@ span.highlight {
   position: fixed;
   backface-visibility: hidden;
 }
+
+.modal-header {
+
+  color: white;
+  border-color: darken($brand-primary, 5%);
+  background-color: $brand-primary;
+
+  h4 {
+    width: 100%;
+  }
+
+  span {
+    float: left;
+  }
+
+  a {
+    float: right;
+    cursor: pointer;
+  }
+}
+
+.modal-footer {
+  border-top: 1px solid #e5e5e5;
+}
+
+.modal-body {
+
+  display: inline-block;
+  width: 100%;
+
+  &.full-height {
+    height: calc(100vh - 200px);
+
+    > div.row {
+
+      height: 100%;
+
+      > div.col-md-4, div.col-md-6, div.col-md-12 {
+        height: 100%;
+        overflow-y: auto;
+      }
+    }
+  }
+}
+
+.network-canvas .vis-tooltip {
+  white-space: normal !important;
+}

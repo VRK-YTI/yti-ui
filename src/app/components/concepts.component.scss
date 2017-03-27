@@ -5,10 +5,10 @@ $left-width: 400px;
 .panel-left {
   width: $left-width;
   float: left;
+}
 
-  > [float] {
-    padding-top: 10px;
-  }
+[float] {
+  padding-top: 10px;
 }
 
 .panel-right {
