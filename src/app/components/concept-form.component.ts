@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Node, Property } from '../entities/node';
+import { Node } from '../entities/node';
 import { normalizeAsArray } from '../utils/array';
 import { EditableService } from '../services/editable.service';
 
