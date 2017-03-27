@@ -6,6 +6,12 @@ const selectionWidthKey = 'selectionWidth';
 @Injectable()
 export class SessionService {
 
+  constructor() {
+    if (!this.selectionWidth) {
+      this.selectionWidth = 720;
+    }
+  }
+
   private static get<T>(key: string): T {
     const value = window.sessionStorage.getItem(key);
     return isDefined(value) ? JSON.parse(value) : null;

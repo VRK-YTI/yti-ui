@@ -3,7 +3,6 @@ import { SessionService } from '../services/session.service';
 
 const leftWidth = 400; // should match variable in concepts.component.scss
 const minSelectionWidth = 500;
-const normalSelectionWidth = 720;
 const minVisualizationWidth = 300;
 
 @Component({
@@ -14,7 +13,7 @@ const minVisualizationWidth = 300;
 export class DividerComponent {
 
   constructor(private sessionService: SessionService) {
-    this.initWidth();
+    this.setConstrainedSelectionWidth(this.sessionService.selectionWidth);
   }
 
   get selectionWidth() {
@@ -26,8 +25,13 @@ export class DividerComponent {
   }
 
   @HostListener('window:resize')
-  initWidth() {
-    this.selectionWidth = Math.min(DividerComponent.maxWidth - minVisualizationWidth, this.sessionService.selectionWidth || normalSelectionWidth);
+  onResize() {
+    this.setConstrainedSelectionWidth(this.selectionWidth);
+  }
+
+  setConstrainedSelectionWidth(selectionWidth: number) {
+    const maxSelectionWidth = DividerComponent.maxWidth - minVisualizationWidth;
+    this.selectionWidth = Math.max(minSelectionWidth, Math.min(maxSelectionWidth, selectionWidth));
   }
 
   static get maxWidth() {
@@ -41,13 +45,7 @@ export class DividerComponent {
     const offset = mouseDown.clientX - this.selectionWidth;
 
     const onMouseMove = (event: MouseEvent) => {
-      const newWidth = event.clientX - offset;
-
-      if ((newWidth >= minSelectionWidth && newWidth < this.selectionWidth)
-        || (newWidth <= (DividerComponent.maxWidth - minVisualizationWidth) && newWidth > this.selectionWidth)) {
-        this.sessionService.selectionWidth = newWidth;
-        this.selectionWidth = newWidth;
-      }
+      this.setConstrainedSelectionWidth(event.clientX - offset)
     };
 
     const onMouseUp = () => {
