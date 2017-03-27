@@ -65,19 +65,36 @@ export class AutoComplete implements AfterViewInit {
                       let results: Array<any> = ((searchResult.hits || {}).hits || [])  // extract results from elastic response
                           .map((hit: any) => {
                             console.log(hit);
-                            let prefLabel = hit.highlight["properties.prefLabel.value"];
-                            let prefLabelXl = hit.highlight["references.prefLabelXl.properties.prefLabel.value"];
-                            if (prefLabel && prefLabel.length > 0) {
+                            let prefLabel = hit.inner_hits["properties.prefLabel"];
+                            let prefLabelXl = hit.inner_hits["references.prefLabelXl"];
+
+                            // if (prefLabel && prefLabel.length > 0) {
+                            //   return {
+                            //     graphId: hit._source.type.graph.id,
+                            //     conceptId: hit._source.id,
+                            //     value: prefLabel[0]
+                            //   }
+                            // } else if (prefLabelXl && prefLabelXl.length > 0) {
+                            //   return {
+                            //     graphId: hit._source.type.graph.id,
+                            //     conceptId: hit._source.id,
+                            //     value: prefLabelXl[0]
+                            //   }
+
+                            if(prefLabel && prefLabel.hits.total > 0) {
+                              // TODO: This is idiotic but the highlight system does not take into account the language filtering, so it returns sometimes too many results (e.g. in english type "indi" and see the second object in console. The highlight field contains both swedish and english hits even though one would think the filter should prevent the swedish hit.
+                              let prefLabelHi = hit.highlight["properties.prefLabel.value"].filter((label: string) => label.replace("<b>", "").replace("</b>", "") === prefLabel.hits.hits[0]._source.value)[0];
                               return {
                                 graphId: hit._source.type.graph.id,
                                 conceptId: hit._source.id,
-                                value: prefLabel[0]
+                                value: prefLabelHi
                               }
-                            } else if (prefLabelXl && prefLabelXl.length > 0) {
+                            } else if(prefLabelXl && prefLabelXl.hits.total > 0) {
+                              let prefLabelXlHi = hit.highlight["references.prefLabelXl.properties.prefLabel.value"].filter((label: string) => label.replace("<b>", "").replace("</b>", "") === prefLabelXl.hits.hits[0]._source.properties.prefLabel[0].value)[0];
                               return {
                                 graphId: hit._source.type.graph.id,
                                 conceptId: hit._source.id,
-                                value: prefLabelXl[0]
+                                value: prefLabelXlHi
                               }
                             }
                             return hit._source;

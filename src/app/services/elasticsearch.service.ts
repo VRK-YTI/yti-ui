@@ -6,6 +6,7 @@ export class ElasticSearchService {
 
   private _client: Client;
   private elasticSearchBaseUrl: string = 'https://86.50.169.29/es';
+  // private elasticSearchBaseUrl: string = 'http://localhost:9200';
 
   constructor() {
     if (!this._client) {
