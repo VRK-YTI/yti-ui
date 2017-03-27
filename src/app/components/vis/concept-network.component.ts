@@ -310,20 +310,20 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
       this.clicks++;
       if (this.clicks === 1) {
         this.timer = setTimeout(() => {
-          let conceptId = eventData.nodes[0];
+          const conceptId = eventData.nodes[0];
           this.skipNextConcept = true;
 
           this.zone.run(() => {
-            this.router.navigate(['/concepts', this.conceptViewModel.concept.graphId, 'concept', conceptId]);
+            this.router.navigate(['/concepts', this.conceptViewModel.conceptScheme.graphId, 'concept', conceptId]);
           });
 
           this.clicks = 0;
         }, DELAY);
       } else {
         clearTimeout(this.timer);
-        let rootId = eventData.nodes[0];
+        const rootId = eventData.nodes[0];
         // Fetch data for the double-clicked node and then add the edge nodes for it
-        const rootConcept$ = this.termedService.getConcept(this.conceptViewModel.concept.graphId, rootId, this.conceptViewModel.languages);
+        const rootConcept$ = this.termedService.getConcept(this.conceptViewModel.conceptScheme.graphId, rootId, this.conceptViewModel.languages);
         rootConcept$.subscribe(concept => this.addEdgeNodesForConcept(concept));
         this.clicks = 0;
       }
