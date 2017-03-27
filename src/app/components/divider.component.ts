@@ -25,7 +25,7 @@ export class DividerComponent {
     this.sessionService.selectionWidth = value;
   }
 
-  @HostListener('window:resize', ['$event'])
+  @HostListener('window:resize')
   initWidth() {
     this.selectionWidth = Math.min(DividerComponent.maxWidth - minVisualizationWidth, this.sessionService.selectionWidth || normalSelectionWidth);
   }
