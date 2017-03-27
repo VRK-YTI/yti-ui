@@ -196,6 +196,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
         this.networkData.nodes.add(this.createRootNode(rootConcept));
 
         this.addEdgeNodesForConcept(rootConcept);
+        this.network.once('afterDrawing', () => this.network.fit());
       }
 
       this.skipNextConcept = false;
