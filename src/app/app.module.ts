@@ -58,6 +58,8 @@ import { ConceptReferenceInputComponent } from './components/concept-reference-i
 import { SearchConceptModal, SearchConceptModalService } from './components/search-concept.modal';
 import { StripMarkdownPipe } from './pipes/strip-markdown.pipe';
 import { ConceptFormComponent } from './components/concept-form.component';
+import { DividerComponent } from './components/divider.component';
+import { SessionService } from './services/session.service';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json-loader!po-loader?format=mf!../../po/fi.po'),
@@ -120,6 +122,7 @@ const appRoutes: Routes = [
     EditableButtonsComponent,
     ConceptNetworkComponent,
     MetaInformationComponent,
+    DividerComponent,
     SearchConceptModal,
     MetaModelValidator,
     LanguageValidator,
@@ -152,7 +155,8 @@ const appRoutes: Routes = [
     { provide: MissingTranslationHandler, useFactory: createMissingTranslationHandler },
     LanguageService,
     LocationService,
-    SearchConceptModalService
+    SearchConceptModalService,
+    SessionService
   ],
   bootstrap: [AppComponent]
 })
