@@ -33,10 +33,10 @@ const options: VisNetworkOptions = {
   groups: {
     rootGroup: {
       font: {
-        color: 'white'
+        color: 'black',
       },
       color: {
-        background: '#375e97',
+        background: '#4f75ad',
         border: 'white',
         highlight: {
           background: 'white',
