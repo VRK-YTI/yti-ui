@@ -147,7 +147,7 @@ const options: VisNetworkOptions = {
   selector: 'concept-network',
   styleUrls: ['./concept-network.component.scss'],
   template: `
-    <div class="component">
+    <div class="component" [hidden]="!initialized">
 
       <div class="component-header">
         <h3 translate>Visualization</h3>
@@ -204,6 +204,10 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy(): void {
     this.network.destroy();
+  }
+
+  get initialized() {
+    return this.networkData.nodes.length > 0;
   }
 
   private createNodeData(concept: Node<'Concept'>) {
