@@ -46,13 +46,15 @@ import { SessionService } from '../services/session.service';
 
           <div class="panel-right">
             
-            <div class="pull-left" [style.width]="selectionWidth" [hidden]="!showSelection">
+            <div class="selection-container" [style.width]="selectionWidth" [hidden]="!showSelection">
               <router-outlet></router-outlet>
             </div>
-            
-            <div float>
-              <concept-network class="pull-right" [style.width]="visualizationWidth"></concept-network>
-              <divider *ngIf="showDivider" class="pull-right"></divider>
+
+            <div class="visualization-container" [style.width]="visualizationWidth">
+              <div float>
+                <divider *ngIf="showDivider"></divider>
+                <concept-network [class.without-divider]="!showDivider"></concept-network>
+              </div>
             </div>
             
           </div>
@@ -96,7 +98,7 @@ export class ConceptsComponent implements OnInit {
 
   get visualizationWidth() {
     return this.domSanitizer.bypassSecurityTrustStyle(
-      this.showSelection ? `calc(100% - ${this.sessionService.selectionWidth + 10}px)` : '100%'
+      this.showSelection ? `calc(100% - ${this.sessionService.selectionWidth}px)` : '100%'
     );
   }
 }
