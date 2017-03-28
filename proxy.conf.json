@@ -1,6 +1,6 @@
 {
   "/api/*": {
-    "target": "http://termed.csc.fi",
+    "target": "https://sanasto.csc.fi",
     "secure": false
   }
 }
