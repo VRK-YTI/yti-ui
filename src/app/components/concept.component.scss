@@ -9,7 +9,7 @@
 .component-header {
   background-color: $brand-primary;
   color: white;
-  padding: 11px 20px;
+  padding: 9px 20px;
   border-bottom: solid 1px #ddd;
   font-size: 26px;
   height: 53px;
@@ -17,8 +17,9 @@
   h3 {
     margin: 0;
     white-space: nowrap;
-    overflow: hidden;
+    overflow-x: hidden;
     text-overflow: ellipsis;
+    line-height: 35px;
   }
 }
 
