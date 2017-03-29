@@ -18,26 +18,44 @@ import { comparingDate, reversed } from '../utils/comparator';
   template: `
     <div class="row">
       <div class="col-lg-12">
-                
-        <div class="input-group input-group-lg input-group-search">
-          <input #searchInput
-                 [(ngModel)]="search"
-                 type="text" 
-                 class="form-control" 
-                 [placeholder]="'Search concept...' | translate" />
-        </div>
-        
-        <div class="filters">
-          <div class="form-check pull-left">
-            <label class="form-check-label">
-              <input class="form-check-input" type="checkbox" [(ngModel)]="sortByTime" /> {{'Order by modified date' | translate}}
-            </label>
+
+        <div class="actions">
+
+          <div class="input-group input-group-lg input-group-search">
+            <input #searchInput
+                   [(ngModel)]="search"
+                   type="text"
+                   class="form-control"
+                   [placeholder]="'Search concept...' | translate" />
           </div>
           
-          <select class="form-control pull-right" style="width: auto" [(ngModel)]="onlyStatus">
-            <option [ngValue]="null" translate>All statuses</option>
-            <option *ngFor="let status of statuses" [ngValue]="status">{{status | translate}}</option>        
-          </select>
+          <div class="button btn-default btn-lg btn-filters"
+               [ngbPopover]="filters" triggers="manual" placement="right" #p="ngbPopover" (click)="p.toggle()">
+            <i class="fa fa-tasks"></i>
+          </div>
+          
+          <template #filters>
+            <div class="filters">
+
+              <span class="title" translate>Filter results</span>
+
+              <div class="form-group">
+                <label for="status" translate>Status</label>
+                <select id="status" class="form-control" style="width: auto" [(ngModel)]="onlyStatus">
+                  <option [ngValue]="null" translate>All statuses</option>
+                  <option *ngFor="let status of statuses" [ngValue]="status">{{status | translate}}</option>
+                </select>
+              </div>
+              
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="checkbox" [(ngModel)]="sortByTime" /> {{'Order by modified date' | translate}}
+                </label>
+              </div>
+              
+            </div>
+          </template>
+          
         </div>
         
       </div>

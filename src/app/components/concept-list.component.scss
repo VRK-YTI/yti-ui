@@ -31,14 +31,39 @@
   }
 }
 
-.filters {
-  border: 1px solid rgba(0, 0, 0, 0.14902);
-  border-top: none;
-  padding: 10px;
-  display: inline-block;
-  width: 100%;
+.actions {
 
-  .form-check {
-    margin-top: 0.5rem;
+  padding-left: 5px;
+  padding-right: 5px;
+
+  .input-group-search {
+    width: calc(100% - 42px);
+    float: left;
   }
+
+  .btn-filters {
+    float: left;
+    padding: 10px 10px 9px 10px;
+  }
+}
+
+.filters {
+
+  width: 250px;
+  display: inline-block;
+  background-color: white;
+
+  span.title {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+    color: #959595;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+}
+
+:host /deep/ ngb-popover-window {
+  z-index: 1040; // prevent from showing on top of modal
 }
