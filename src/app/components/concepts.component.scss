@@ -15,6 +15,28 @@ $left-width: 400px;
   width: calc(100% - #{$left-width});
   float: right;
   padding-left: 10px;
+
+  div.selection-container {
+    float: left;
+  }
+
+  div.visualization-container {
+    float: right;
+
+    divider {
+      float: left;
+      width: 10px;
+    }
+
+    concept-network {
+      float: left;
+      width: calc(100% - 10px);
+
+      &.without-divider {
+        width: 100%;
+      }
+    }
+  }
 }
 
 :host /deep/ {

@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ConceptViewModelService } from '../services/concept.view.service';
+import { SessionService } from '../services/session.service';
 
 @Component({
   selector: 'concepts',
@@ -43,17 +45,18 @@ import { ConceptViewModelService } from '../services/concept.view.service';
           </div>
 
           <div class="panel-right">
-            <div class="row">
-              <div class="col-lg-6 selection">
-                <router-outlet></router-outlet>
-              </div>
-              
-              <div class="col-lg-6 selection">
-                <div float>
-                  <concept-network></concept-network>
-                </div>
+            
+            <div class="selection-container" [style.width]="selectionWidth" [hidden]="!showSelection">
+              <router-outlet></router-outlet>
+            </div>
+
+            <div class="visualization-container" [style.width]="visualizationWidth">
+              <div float>
+                <divider *ngIf="showDivider"></divider>
+                <concept-network [class.without-divider]="!showDivider"></concept-network>
               </div>
             </div>
+            
           </div>
 
         </div>
@@ -66,7 +69,9 @@ import { ConceptViewModelService } from '../services/concept.view.service';
 export class ConceptsComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
-              private viewModel: ConceptViewModelService) {
+              private viewModel: ConceptViewModelService,
+              private sessionService: SessionService,
+              private domSanitizer: DomSanitizer) {
   }
 
   get loading() {
@@ -77,6 +82,24 @@ export class ConceptsComponent implements OnInit {
     this.route.params.subscribe(params => {
       this.viewModel.initializeConceptScheme(params['graphId']);
     });
+  }
+
+  get showDivider() {
+    return this.showSelection;
+  }
+
+  get showSelection() {
+    return !!this.viewModel.concept;
+  }
+
+  get selectionWidth() {
+    return this.sessionService.selectionWidth + 'px';
+  }
+
+  get visualizationWidth() {
+    return this.domSanitizer.bypassSecurityTrustStyle(
+      this.showSelection ? `calc(100% - ${this.sessionService.selectionWidth}px)` : '100%'
+    );
   }
 }
 

@@ -14,9 +14,9 @@ export class ConceptViewModelService {
   conceptScheme$ = new ReplaySubject<Node<'TerminologicalVocabulary'>>();
 
   conceptId: string;
-  concept: Node<'Concept'>;
-  persistentConcept: Node<'Concept'>;
-  concept$ = new ReplaySubject<Node<'Concept'>>();
+  concept: Node<'Concept'>|null;
+  persistentConcept: Node<'Concept'>|null;
+  concept$ = new ReplaySubject<Node<'Concept'>|null>();
 
   topConcepts$ = new BehaviorSubject<Node<'Concept'>[]>([]);
   allConcepts$ = new BehaviorSubject<Node<'Concept'>[]>([]);
@@ -53,29 +53,46 @@ export class ConceptViewModelService {
     });
   }
 
-  initializeConcept(conceptId: string) {
+  initializeConcept(conceptId: string|null) {
 
-    this.loadingConcept = true;
-    this.conceptId = conceptId;
+    if (conceptId) {
+      this.loadingConcept = true;
+      this.conceptId = conceptId;
 
-    this.conceptScheme$.subscribe(conceptScheme => {
-      this.termedService.getConcept(conceptScheme.graphId, conceptId, this.languages).subscribe(concept => {
-        this.locationService.atConcept(conceptScheme, concept);
-        this.concept$.next(concept);
-        this.concept = concept;
-        this.persistentConcept = concept.clone();
-        this.loadingConcept = false;
+      this.conceptScheme$.subscribe(conceptScheme => {
+        this.termedService.getConcept(conceptScheme.graphId, conceptId, this.languages).subscribe(concept => {
+          this.locationService.atConcept(conceptScheme, concept);
+          this.concept$.next(concept);
+          this.concept = concept;
+          this.persistentConcept = concept.clone();
+          this.loadingConcept = false;
+        });
       });
-    });
+    } else {
+      this.loadingConcept = false;
+
+      this.conceptScheme$.subscribe(conceptScheme => {
+        this.locationService.atConceptScheme(conceptScheme);
+        this.concept$.next(null);
+        this.concept = null;
+        this.persistentConcept = null;
+      });
+    }
   }
 
   saveConcept() {
+    if (!this.concept) {
+      throw new Error('Cannot save when there is no concept');
+    }
+
     this.termedService.updateNode(this.concept);
     this.persistentConcept = this.concept.clone();
   }
 
   resetConcept() {
-    this.concept = this.persistentConcept.clone();
+    if (this.persistentConcept) {
+      this.concept = this.persistentConcept.clone();
+    }
   }
 
   saveConceptScheme() {

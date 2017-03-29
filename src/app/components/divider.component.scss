@@ -1,0 +1,18 @@
+@import '../../variables';
+
+div {
+  display: inline-block;
+  float: left;
+  height: calc(100vh - 11px);
+  width: 10px;
+
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  &:hover {
+    cursor: col-resize;
+    border: 1px dashed;
+  }
+}

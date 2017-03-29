@@ -3,7 +3,6 @@
 .component {
 
   border-left: 1px solid #ddd;
-  margin-left: -18px;
 
   .component-header {
     // TODO duplication with concept.component
@@ -20,7 +19,7 @@
 
   .network-canvas {
     width: 100%;
-    height: calc(100vh - 70px);
+    height: calc(100vh - 63px);
   }
 }
 
