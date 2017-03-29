@@ -1,0 +1,126 @@
+[
+  {
+    "id": "Collection",
+    "index": 0,
+    "graph": {
+      "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+    },
+    "permissions": {},
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "fi",
+          "value": "Luokitus"
+        }
+      ]
+    },
+    "textAttributes": [
+      {
+        "regex": "(?s)^.*$",
+        "id": "prefLabel",
+        "index": 0,
+        "domain": {
+          "id": "Collection",
+          "graph": {
+            "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Nimi"
+            }
+          ]
+        }
+      }
+    ],
+    "referenceAttributes": [
+      {
+        "range": {
+          "id": "Group",
+          "graph": {
+            "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+          }
+        },
+        "id": "member",
+        "index": 0,
+        "domain": {
+          "id": "Collection",
+          "graph": {
+            "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "luokka"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "Group",
+    "index": 0,
+    "graph": {
+      "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+    },
+    "permissions": {},
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "fi",
+          "value": "Luokka"
+        }
+      ]
+    },
+    "textAttributes": [
+      {
+        "regex": "(?s)^.*$",
+        "id": "prefLabel",
+        "index": 0,
+        "domain": {
+          "id": "Group",
+          "graph": {
+            "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Nimi"
+            }
+          ]
+        }
+      },
+      {
+        "regex": "(?s)^.*$",
+        "id": "definition",
+        "index": 1,
+        "domain": {
+          "id": "Group",
+          "graph": {
+            "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Määritelmä"
+            }
+          ]
+        }
+      }
+    ],
+    "referenceAttributes": []
+  }
+]
