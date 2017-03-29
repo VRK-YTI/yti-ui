@@ -21,7 +21,6 @@ export class SearchConceptModalService {
   open(conceptsProvider: () => Node<'Concept'>[]): Promise<any> {
     const modalRef = this.modalService.open(SearchConceptModal, { size: 'lg' });
     const instance = modalRef.componentInstance as SearchConceptModal;
-    instance.name = 'foo';
     instance.concepts = conceptsProvider();
     return modalRef.result;
   }
@@ -85,7 +84,6 @@ export class SearchConceptModal implements OnInit, AfterViewInit {
 
   @ViewChild('searchInput') searchInput: ElementRef;
 
-  @Input() name: string;
   @Input() concepts: Node<'Concept'>[];
 
   searchResults: Observable<Node<'Concept'>[]>;
