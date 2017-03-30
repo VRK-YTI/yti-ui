@@ -1,12 +1,11 @@
 import { Client } from "elasticsearch";
 import {Injectable} from "@angular/core";
+import { environment } from "../../environments/environment"
 
 @Injectable()
 export class ElasticSearchService {
 
   private _client: Client;
-  private elasticSearchBaseUrl: string = 'https://sanasto.csc.fi/es';
-  // private elasticSearchBaseUrl: string = 'http://localhost:9200';
 
   constructor() {
     if (!this._client) {
@@ -16,7 +15,7 @@ export class ElasticSearchService {
 
   private _connect() {
     this._client = new Client({
-      host: this.elasticSearchBaseUrl,
+      host: environment.es_host,
       log: 'trace'
     });
   }
