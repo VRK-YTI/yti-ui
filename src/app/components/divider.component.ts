@@ -2,7 +2,7 @@ import { Component, HostListener } from '@angular/core';
 import { SessionService } from '../services/session.service';
 
 const leftWidth = 400; // should match variable in concepts.component.scss
-const minSelectionWidth = 500;
+const minSelectionWidth = 300;
 const minVisualizationWidth = 300;
 
 @Component({
