@@ -1,0 +1,84 @@
+[
+  {
+    "id": "42c81e91-9c23-40a5-9b3c-1f6c502c48a4",
+    "createdBy": "admin",
+    "createdDate": "2017-03-17T10:00:37.807+02:00",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-03-17T10:01:38.271+02:00",
+    "type": {
+      "id": "Organization",
+      "graph": {
+        "id": "228cce1e-8360-4039-a3f7-725df5643354"
+      }
+    },
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "fi",
+          "value": "Opetus- ja Kulttuuriministeriö",
+          "regex": "(?s)^.*$"
+        },
+        {
+          "lang": "en",
+          "value": "Ministry of Education and Culture",
+          "regex": "(?s)^.*$"
+        }
+      ]
+    },
+    "references": {},
+    "referrers": {
+      "publisher": [
+        {
+          "id": "a8414060-9320-3186-949f-675d2c3fa2d0",
+          "type": {
+            "id": "TerminologicalVocabulary",
+            "graph": {
+              "id": "9c2782be-5f75-4cd7-80fa-806a8abfd4e2"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "5cc44d9e-a1f6-49c9-b03b-b22d880abb99",
+    "createdBy": "admin",
+    "createdDate": "2017-03-17T09:58:42.105+02:00",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-03-17T10:00:33.609+02:00",
+    "type": {
+      "id": "Organization",
+      "graph": {
+        "id": "228cce1e-8360-4039-a3f7-725df5643354"
+      }
+    },
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "fi",
+          "value": "Terveyden ja hyvinvoinnin laitos",
+          "regex": "(?s)^.*$"
+        },
+        {
+          "lang": "en",
+          "value": "National Institute for Health and Welfare",
+          "regex": "(?s)^.*$"
+        }
+      ]
+    },
+    "references": {},
+    "referrers": {
+      "publisher": [
+        {
+          "id": "e51b0ccb-4ac2-3e16-a117-4cdaae902675",
+          "type": {
+            "id": "TerminologicalVocabulary",
+            "graph": {
+              "id": "ada55715-c565-4477-8227-0b8a51010bc5"
+            }
+          }
+        }
+      ]
+    }
+  }
+]

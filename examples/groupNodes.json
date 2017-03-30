@@ -1,0 +1,759 @@
+[
+  {
+    "id": "1189dd88-c646-4676-a00c-ef401c177dc8",
+    "code": "P5",
+    "uri": "http://urn.fi/URN:NBN:fi:au:ptvl:P5",
+    "createdBy": "admin",
+    "createdDate": "2017-02-27T16:02:38.301+02:00",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-02-27T16:19:26.943+02:00",
+    "type": {
+      "id": "Group",
+      "graph": {
+        "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+      }
+    },
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "fi",
+          "value": "Terveydenhuolto, sairaanhoito ja ravitsemus",
+          "regex": "(?s)^.*$"
+        }
+      ]
+    },
+    "references": {},
+    "referrers": {}
+  },
+  {
+    "id": "0748fcfa-329a-46e8-b070-ab42f2f2cfbc",
+    "code": "P10",
+    "uri": "http://urn.fi/URN:NBN:fi:au:ptvl:P10",
+    "createdBy": "admin",
+    "createdDate": "2017-02-27T16:04:51.223+02:00",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-02-27T16:19:33.748+02:00",
+    "type": {
+      "id": "Group",
+      "graph": {
+        "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+      }
+    },
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "fi",
+          "value": "Työ ja työttömyys",
+          "regex": "(?s)^.*$"
+        }
+      ]
+    },
+    "references": {},
+    "referrers": {}
+  },
+  {
+    "id": "2cb91710-f512-4b4f-80a7-6729ec2de308",
+    "code": "P2",
+    "uri": "http://urn.fi/URN:NBN:fi:au:ptvl:P2",
+    "createdBy": "admin",
+    "createdDate": "2017-02-27T15:56:24.044+02:00",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-02-27T16:18:55.308+02:00",
+    "type": {
+      "id": "Group",
+      "graph": {
+        "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+      }
+    },
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "fi",
+          "value": "Rakennettu ympäristö",
+          "regex": "(?s)^.*$"
+        }
+      ]
+    },
+    "references": {},
+    "referrers": {}
+  },
+  {
+    "id": "76b9dbd2-0246-497e-9dac-0cd5f1066415",
+    "code": "P3",
+    "uri": "http://urn.fi/URN:NBN:fi:au:ptvl:P3",
+    "createdBy": "admin",
+    "createdDate": "2017-02-27T16:01:30.040+02:00",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-02-27T16:19:40.005+02:00",
+    "type": {
+      "id": "Group",
+      "graph": {
+        "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+      }
+    },
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "fi",
+          "value": "Perheiden palvelut",
+          "regex": "(?s)^.*$"
+        }
+      ]
+    },
+    "references": {},
+    "referrers": {}
+  },
+  {
+    "id": "02ec05fb-1a9f-42d9-987a-6a3c5897a905",
+    "code": "P7",
+    "uri": "http://urn.fi/URN:NBN:fi:au:ptvl:P7",
+    "createdBy": "admin",
+    "createdDate": "2017-02-27T16:03:36.103+02:00",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-02-27T16:19:56.018+02:00",
+    "type": {
+      "id": "Group",
+      "graph": {
+        "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+      }
+    },
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "fi",
+          "value": "Oikeusturva",
+          "regex": "(?s)^.*$"
+        }
+      ]
+    },
+    "references": {},
+    "referrers": {}
+  },
+  {
+    "id": "42165f0f-06ba-43bd-875e-a252b61b8c56",
+    "code": "P1",
+    "uri": "http://urn.fi/URN:NBN:fi:au:ptvl:P1",
+    "createdBy": "admin",
+    "createdDate": "2017-02-27T15:55:23.241+02:00",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-02-27T16:19:12.028+02:00",
+    "type": {
+      "id": "Group",
+      "graph": {
+        "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+      }
+    },
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "fi",
+          "value": "Asuminen",
+          "regex": "(?s)^.*$"
+        }
+      ]
+    },
+    "references": {},
+    "referrers": {}
+  },
+  {
+    "id": "709db4fc-5ba3-4f4b-b38e-ced06473c50a",
+    "code": "P15",
+    "uri": "http://urn.fi/URN:NBN:fi:au:ptvl:P15",
+    "createdBy": "admin",
+    "createdDate": "2017-02-27T16:06:25.452+02:00",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-02-27T16:20:15.925+02:00",
+    "type": {
+      "id": "Group",
+      "graph": {
+        "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+      }
+    },
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "fi",
+          "value": "Yksityinen talous ja rahoitus",
+          "regex": "(?s)^.*$"
+        }
+      ]
+    },
+    "references": {},
+    "referrers": {}
+  },
+  {
+    "id": "5df9f907-5fac-429f-9202-0cc584718def",
+    "code": "P14",
+    "uri": "http://urn.fi/URN:NBN:fi:au:ptvl:P14",
+    "createdBy": "admin",
+    "createdDate": "2017-02-27T16:06:11.015+02:00",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-02-27T16:20:22.905+02:00",
+    "type": {
+      "id": "Group",
+      "graph": {
+        "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+      }
+    },
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "fi",
+          "value": "Verotus ja julkinen talous",
+          "regex": "(?s)^.*$"
+        }
+      ]
+    },
+    "references": {},
+    "referrers": {}
+  },
+  {
+    "id": "33bbbc30-596b-4471-8b21-d8c61a2b573f",
+    "code": "P12",
+    "uri": "http://urn.fi/URN:NBN:fi:au:ptvl:P12",
+    "createdBy": "admin",
+    "createdDate": "2017-02-27T16:05:30.950+02:00",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-02-27T16:20:30.205+02:00",
+    "type": {
+      "id": "Group",
+      "graph": {
+        "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+      }
+    },
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "fi",
+          "value": "Työnantajan palvelut",
+          "regex": "(?s)^.*$"
+        }
+      ]
+    },
+    "references": {},
+    "referrers": {}
+  },
+  {
+    "id": "ff75ed2d-80fc-4058-893b-e3766307c35a",
+    "code": "P11",
+    "uri": "http://urn.fi/URN:NBN:fi:au:ptvl:P11",
+    "createdBy": "admin",
+    "createdDate": "2017-02-27T16:05:11.254+02:00",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-02-27T16:20:43.170+02:00",
+    "type": {
+      "id": "Group",
+      "graph": {
+        "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+      }
+    },
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "fi",
+          "value": "Elinkeinot",
+          "regex": "(?s)^.*$"
+        }
+      ]
+    },
+    "references": {},
+    "referrers": {}
+  },
+  {
+    "id": "44c3f520-1e23-41d1-ac04-05d405921e49",
+    "code": "P13",
+    "uri": "http://urn.fi/URN:NBN:fi:au:ptvl:P13",
+    "createdBy": "admin",
+    "createdDate": "2017-02-27T16:05:51.255+02:00",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-02-27T16:20:37.051+02:00",
+    "type": {
+      "id": "Group",
+      "graph": {
+        "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+      }
+    },
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "fi",
+          "value": "Eläkkeet",
+          "regex": "(?s)^.*$"
+        }
+      ]
+    },
+    "references": {},
+    "referrers": {}
+  },
+  {
+    "id": "8aad88e0-f4bb-40b9-b229-24f28df71647",
+    "code": "P8",
+    "uri": "http://urn.fi/URN:NBN:fi:au:ptvl:P8",
+    "createdBy": "admin",
+    "createdDate": "2017-02-27T16:03:52.434+02:00",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-02-27T16:20:02.674+02:00",
+    "type": {
+      "id": "Group",
+      "graph": {
+        "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+      }
+    },
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "fi",
+          "value": "Demokratia",
+          "regex": "(?s)^.*$"
+        }
+      ]
+    },
+    "references": {},
+    "referrers": {}
+  },
+  {
+    "id": "cf70c479-e6c9-4074-93c5-bb179b3b10a5",
+    "code": "P16-9",
+    "uri": "http://urn.fi/URN:NBN:fi:au:ptvl:P16.9",
+    "createdBy": "admin",
+    "createdDate": "2017-02-27T16:07:19.462+02:00",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-02-27T16:21:08.960+02:00",
+    "type": {
+      "id": "Group",
+      "graph": {
+        "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+      }
+    },
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "fi",
+          "value": "Matkailu",
+          "regex": "(?s)^.*$"
+        }
+      ]
+    },
+    "references": {},
+    "referrers": {}
+  },
+  {
+    "id": "69107bdd-4b02-485f-9517-a8c178b6e7b9",
+    "code": "P16",
+    "uri": "http://urn.fi/URN:NBN:fi:au:ptvl:P16",
+    "createdBy": "admin",
+    "createdDate": "2017-02-27T16:07:01.955+02:00",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-02-27T16:21:18.294+02:00",
+    "type": {
+      "id": "Group",
+      "graph": {
+        "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+      }
+    },
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "fi",
+          "value": "Liikenne",
+          "regex": "(?s)^.*$"
+        }
+      ]
+    },
+    "references": {},
+    "referrers": {}
+  },
+  {
+    "id": "98a6bd40-1f2f-4559-9768-d91ed40ac5c6",
+    "code": "P9",
+    "uri": "http://urn.fi/URN:NBN:fi:au:ptvl:P9",
+    "createdBy": "admin",
+    "createdDate": "2017-02-27T16:04:31.663+02:00",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-02-27T16:20:09.241+02:00",
+    "type": {
+      "id": "Group",
+      "graph": {
+        "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+      }
+    },
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "fi",
+          "value": "Hallinto",
+          "regex": "(?s)^.*$"
+        }
+      ]
+    },
+    "references": {},
+    "referrers": {}
+  },
+  {
+    "id": "9ca969da-606a-4c81-9a17-baf467357771",
+    "code": "P24",
+    "uri": "http://urn.fi/URN:NBN:fi:au:ptvl:P24",
+    "createdBy": "admin",
+    "createdDate": "2017-02-27T16:16:26.445+02:00",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-02-27T16:21:34.207+02:00",
+    "type": {
+      "id": "Group",
+      "graph": {
+        "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+      }
+    },
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "fi",
+          "value": "Luonnonvarat, eläimet ja kasvit",
+          "regex": "(?s)^.*$"
+        }
+      ]
+    },
+    "references": {},
+    "referrers": {}
+  },
+  {
+    "id": "ce44f011-46ef-47d4-9251-0bda07d433c1",
+    "code": "P22",
+    "uri": "http://urn.fi/URN:NBN:fi:au:ptvl:P22",
+    "createdBy": "admin",
+    "createdDate": "2017-02-27T16:15:52.740+02:00",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-02-27T16:21:41.142+02:00",
+    "type": {
+      "id": "Group",
+      "graph": {
+        "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+      }
+    },
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "fi",
+          "value": "Maahan- ja maastamuutto",
+          "regex": "(?s)^.*$"
+        }
+      ]
+    },
+    "references": {},
+    "referrers": {}
+  },
+  {
+    "id": "338441f2-3c83-4b76-84ab-2b59d39c7381",
+    "code": "P21",
+    "uri": "http://urn.fi/URN:NBN:fi:au:ptvl:P21",
+    "createdBy": "admin",
+    "createdDate": "2017-02-27T16:08:32.672+02:00",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-02-27T16:21:49.864+02:00",
+    "type": {
+      "id": "Group",
+      "graph": {
+        "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+      }
+    },
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "fi",
+          "value": "Kuluttaja-asiat",
+          "regex": "(?s)^.*$"
+        }
+      ]
+    },
+    "references": {},
+    "referrers": {}
+  },
+  {
+    "id": "51b4cac3-e350-4de1-8886-baadd5ed2e83",
+    "code": "P23",
+    "uri": "http://urn.fi/URN:NBN:fi:au:ptvl:P23",
+    "createdBy": "admin",
+    "createdDate": "2017-02-27T16:16:13.789+02:00",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-02-27T16:21:56.279+02:00",
+    "type": {
+      "id": "Group",
+      "graph": {
+        "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+      }
+    },
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "fi",
+          "value": "Ympäristö",
+          "regex": "(?s)^.*$"
+        }
+      ]
+    },
+    "references": {},
+    "referrers": {}
+  },
+  {
+    "id": "d105c3a8-3d32-4543-9248-7a9ad03e3284",
+    "code": "P19",
+    "uri": "http://urn.fi/URN:NBN:fi:au:ptvl:P19",
+    "createdBy": "admin",
+    "createdDate": "2017-02-27T16:07:49.912+02:00",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-02-27T16:22:03.245+02:00",
+    "type": {
+      "id": "Group",
+      "graph": {
+        "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+      }
+    },
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "fi",
+          "value": "Turvallisuus",
+          "regex": "(?s)^.*$"
+        }
+      ]
+    },
+    "references": {},
+    "referrers": {}
+  },
+  {
+    "id": "ec6ac9c9-7f50-45da-9909-d5343725b744",
+    "code": "P26",
+    "uri": "http://urn.fi/URN:NBN:fi:au:ptvl:P26",
+    "createdBy": "admin",
+    "createdDate": "2017-02-27T16:17:30.873+02:00",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-02-27T16:22:11.956+02:00",
+    "type": {
+      "id": "Group",
+      "graph": {
+        "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+      }
+    },
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "fi",
+          "value": "Viestintä",
+          "regex": "(?s)^.*$"
+        }
+      ]
+    },
+    "references": {},
+    "referrers": {}
+  },
+  {
+    "id": "856ffa99-b677-4a51-85f6-40e6be9b35d7",
+    "code": "P20",
+    "uri": "http://urn.fi/URN:NBN:fi:au:ptvl:P20",
+    "createdBy": "admin",
+    "createdDate": "2017-02-27T16:08:09.773+02:00",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-02-27T16:22:19.836+02:00",
+    "type": {
+      "id": "Group",
+      "graph": {
+        "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+      }
+    },
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "fi",
+          "value": "Järjestys",
+          "regex": "(?s)^.*$"
+        }
+      ]
+    },
+    "references": {},
+    "referrers": {}
+  },
+  {
+    "id": "7a760f2d-11c6-47e5-8b75-a00ff908ff00",
+    "code": "P25",
+    "uri": "http://urn.fi/URN:NBN:fi:au:ptvl:P25",
+    "createdBy": "admin",
+    "createdDate": "2017-02-27T16:17:03.805+02:00",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-02-27T16:22:27.693+02:00",
+    "type": {
+      "id": "Group",
+      "graph": {
+        "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+      }
+    },
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "fi",
+          "value": "Kulttuuri",
+          "regex": "(?s)^.*$"
+        }
+      ]
+    },
+    "references": {},
+    "referrers": {}
+  },
+  {
+    "id": "a85308c7-d24d-4716-b18c-559d12e2a262",
+    "code": "P18",
+    "uri": "http://urn.fi/URN:NBN:fi:au:ptvl:P18",
+    "createdBy": "admin",
+    "createdDate": "2017-02-27T16:07:39.125+02:00",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-02-27T16:21:27.007+02:00",
+    "type": {
+      "id": "Group",
+      "graph": {
+        "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+      }
+    },
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "fi",
+          "value": "Kartat",
+          "regex": "(?s)^.*$"
+        }
+      ]
+    },
+    "references": {},
+    "referrers": {}
+  },
+  {
+    "id": "f6e5240a-ed82-4737-8033-3c5c28a39292",
+    "code": "P27",
+    "uri": "http://urn.fi/URN:NBN:fi:au:ptvl:P27",
+    "createdBy": "admin",
+    "createdDate": "2017-02-27T16:17:41.145+02:00",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-02-27T16:22:35.663+02:00",
+    "type": {
+      "id": "Group",
+      "graph": {
+        "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+      }
+    },
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "fi",
+          "value": "Liikunta ja ulkoilu",
+          "regex": "(?s)^.*$"
+        }
+      ]
+    },
+    "references": {},
+    "referrers": {}
+  },
+  {
+    "id": "1145c41d-10ec-4b13-a97a-7d28328070af",
+    "code": "P6",
+    "uri": "http://urn.fi/URN:NBN:fi:au:ptvl:P6",
+    "createdBy": "admin",
+    "createdDate": "2017-01-24T11:49:16.081+02:00",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-02-27T16:19:19.210+02:00",
+    "type": {
+      "id": "Group",
+      "graph": {
+        "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+      }
+    },
+    "properties": {
+      "definition": [
+        {
+          "lang": "fi",
+          "value": "...",
+          "regex": "(?s)^.*$"
+        }
+      ],
+      "prefLabel": [
+        {
+          "lang": "fi",
+          "value": "Koulutus",
+          "regex": "(?s)^.*$"
+        }
+      ]
+    },
+    "references": {},
+    "referrers": {
+      "inGroup": [
+        {
+          "id": "a8414060-9320-3186-949f-675d2c3fa2d0",
+          "type": {
+            "id": "TerminologicalVocabulary",
+            "graph": {
+              "id": "9c2782be-5f75-4cd7-80fa-806a8abfd4e2"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "eef62fe8-c3f4-4ca8-aae5-8bcff3c50508",
+    "code": "P4",
+    "uri": "http://urn.fi/URN:NBN:fi:au:ptvl:P4",
+    "createdBy": "admin",
+    "createdDate": "2017-02-27T16:01:57.745+02:00",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-02-27T16:19:47.402+02:00",
+    "type": {
+      "id": "Group",
+      "graph": {
+        "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+      }
+    },
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "fi",
+          "value": "Sosiaalipalvelut",
+          "regex": "(?s)^.*$"
+        }
+      ]
+    },
+    "references": {},
+    "referrers": {
+      "inGroup": [
+        {
+          "id": "e51b0ccb-4ac2-3e16-a117-4cdaae902675",
+          "type": {
+            "id": "TerminologicalVocabulary",
+            "graph": {
+              "id": "ada55715-c565-4477-8227-0b8a51010bc5"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "7577af9d-97eb-49d2-95b6-3b2f2e294239",
+    "createdBy": "admin",
+    "createdDate": "2017-03-13T11:08:26.669+02:00",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-03-13T11:08:46.095+02:00",
+    "type": {
+      "id": "Collection",
+      "graph": {
+        "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+      }
+    },
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "fi",
+          "value": "Ryhmäluokitus",
+          "regex": "(?s)^.*$"
+        }
+      ]
+    },
+    "references": {},
+    "referrers": {}
+  }
+]

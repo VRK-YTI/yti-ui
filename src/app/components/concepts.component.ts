@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ConceptViewModelService } from '../services/concept.view.service';
 import { SessionService } from '../services/session.service';
+import { ConceptNetworkComponent } from './vis/concept-network.component';
 
 @Component({
   selector: 'concepts',
@@ -50,10 +51,10 @@ import { SessionService } from '../services/session.service';
               <router-outlet></router-outlet>
             </div>
 
-            <div class="visualization-container" [style.width]="visualizationWidth">
+            <div class="visualization-container" [style.width]="visualizationWidth" [hidden]="!showVisualization">
               <div float>
                 <divider *ngIf="showDivider"></divider>
-                <concept-network [class.without-divider]="!showDivider"></concept-network>
+                <concept-network #network [class.without-divider]="!showDivider"></concept-network>
               </div>
             </div>
             
@@ -67,6 +68,8 @@ import { SessionService } from '../services/session.service';
   `
 })
 export class ConceptsComponent implements OnInit {
+
+  @ViewChild('network') conceptNetwork: ConceptNetworkComponent;
 
   constructor(private route: ActivatedRoute,
               private viewModel: ConceptViewModelService,
@@ -90,6 +93,10 @@ export class ConceptsComponent implements OnInit {
 
   get showSelection() {
     return !!this.viewModel.concept;
+  }
+
+  get showVisualization() {
+    return !this.conceptNetwork.isEmpty();
   }
 
   get selectionWidth() {

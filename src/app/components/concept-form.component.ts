@@ -11,7 +11,8 @@ import { EditableService } from '../services/editable.service';
       <reference class="col-md-12" 
                  [multiColumnTerms]="multiColumn" 
                  [conceptsProvider]="conceptsProvider" 
-                 [value]="concept.references['prefLabelXl']" 
+                 [value]="concept.references['prefLabelXl']"
+                 [primaryTerm]="true"
                  *ngIf="concept.references['prefLabelXl']"></reference>
       
       <property class="col-md-12" 

@@ -147,7 +147,7 @@ const options: VisNetworkOptions = {
   selector: 'concept-network',
   styleUrls: ['./concept-network.component.scss'],
   template: `
-    <div class="component" [hidden]="!initialized">
+    <div class="component">
 
       <div class="component-header">
         <h3 translate>Visualization</h3>
@@ -161,6 +161,8 @@ const options: VisNetworkOptions = {
 export class ConceptNetworkComponent implements OnInit, OnDestroy {
 
   @ViewChild('canvas') canvasRef: ElementRef;
+
+  persistentRoot: boolean;
 
   private skipNextConcept = false;
 
@@ -191,6 +193,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
     this.conceptViewModel.concept$.subscribe(rootConcept => {
 
       if (rootConcept && !this.skipNextConcept) {
+        this.persistentRoot = rootConcept.persistent;
         this.networkData.nodes.clear();
         this.networkData.edges.clear();
         this.networkData.nodes.add(this.createRootNode(rootConcept));
@@ -207,8 +210,8 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
     this.network.destroy();
   }
 
-  get initialized() {
-    return this.networkData.nodes.length > 0;
+  isEmpty() {
+    return this.networkData.nodes.length === 0;
   }
 
   private createNodeData(concept: Node<'Concept'>) {
