@@ -10,7 +10,7 @@ import { Node } from '../entities/node';
     <dl *ngIf="show">
       <dt><label [for]="reference.meta.id">{{reference.meta.label | translateValue}}</label></dt>
       <dd>
-        <terms *ngIf="reference.term" [value]="reference" [multiColumn]="multiColumnTerms"></terms>
+        <terms *ngIf="reference.term" [primary]="primaryTerm" [value]="reference" [multiColumn]="multiColumnTerms"></terms>
         
         <concept-reference-input *ngIf="!reference.term && reference.concept" [concept]="reference" [conceptsProvider]="conceptsProvider"></concept-reference-input>
         
@@ -28,6 +28,7 @@ export class ReferenceComponent {
   @Input('value') reference: Reference;
   @Input() multiColumnTerms = false;
   @Input() conceptsProvider: () => Node<'Concept'>[];
+  @Input() primaryTerm = false;
 
   constructor(private editableService: EditableService) {
   }

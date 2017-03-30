@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Reference } from '../entities/node';
 import { EditableService } from '../services/editable.service';
 import { Node } from '../entities/node';
@@ -8,14 +8,14 @@ import { Localization } from '../entities/localization';
   selector: 'terms',
   styleUrls: ['./terms.component.scss'],
   template: `              
-    <ngb-accordion>
-      <ngb-panel *ngFor="let term of nonEmptyTerms">
+    <ngb-accordion [activeIds]="openTermLanguages">
+      <ngb-panel [id]="languageOfTerm(term)" *ngFor="let term of nonEmptyTerms">
         <template ngbPanelTitle>
-          <div class="language">{{term.properties['prefLabel'].value[0].lang.toUpperCase()}}</div> 
-          <div class="localization">{{term.properties['prefLabel'].value[0].value}} <accordion-chevron class="pull-right"></accordion-chevron></div>
+          <div class="language">{{languageOfTerm(term).toUpperCase()}}</div> 
+          <div class="localization">{{localizationOfTerm(term).value}} <accordion-chevron class="pull-right"></accordion-chevron></div>
         </template>
         <template ngbPanelContent>
-          <div class="row">
+          <div class="row" [class.primary-term]="primary">
             <div class="col-md-12 col-xl-6" [class.col-xl-6]="multiColumn" *ngFor="let property of term | properties: showEmpty">
               <property [value]="property"></property>
             </div>
@@ -25,16 +25,31 @@ import { Localization } from '../entities/localization';
     </ngb-accordion>
   `
 })
-export class TermsComponent {
+export class TermsComponent implements OnInit {
 
   @Input('value') termReference: Reference;
   @Input() multiColumn = false;
+  @Input() primary = false;
+
+  openTermLanguages: string[] = [];
 
   constructor(private editableService: EditableService) {
   }
 
+  ngOnInit() {
+    this.editableService.editing$.subscribe(editing => {
+      if (this.primary && editing) {
+        this.openTermLanguages = this.termReference.languages.slice();
+      }
+    });
+  }
+
   get nonEmptyTerms() {
     return this.termReference.values.filter(term => this.editableService.editing || !!this.localizationOfTerm(term).value.trim());
+  }
+
+  languageOfTerm(term: Node<'Term'>): string {
+    return this.localizationOfTerm(term).lang;
   }
 
   localizationOfTerm(term: Node<'Term'>): Localization {
