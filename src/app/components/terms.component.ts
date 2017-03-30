@@ -38,8 +38,12 @@ export class TermsComponent implements OnInit {
 
   ngOnInit() {
     this.editableService.editing$.subscribe(editing => {
-      if (this.primary && editing) {
-        this.openTermLanguages = this.termReference.languages.slice();
+      if (this.primary) {
+        if (editing) {
+          this.openTermLanguages = this.termReference.languages.slice();
+        } else {
+          this.openTermLanguages = [];
+        }
       }
     });
   }
