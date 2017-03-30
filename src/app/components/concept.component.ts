@@ -37,8 +37,8 @@ export class ConceptComponent {
               editableService: EditableService) {
 
     route.params.subscribe(params => conceptViewModel.initializeConcept(params['conceptId']));
-    editableService.save$.subscribe(() => this.conceptViewModel.saveConcept());
-    editableService.cancel$.subscribe(() => this.conceptViewModel.resetConcept());
+    editableService.onSave = () => this.conceptViewModel.saveConcept();
+    editableService.onCancel = () => this.conceptViewModel.resetConcept();
   }
 
   get conceptsProvider() {

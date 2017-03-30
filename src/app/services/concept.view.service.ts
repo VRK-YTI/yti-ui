@@ -80,13 +80,14 @@ export class ConceptViewModelService {
     }
   }
 
-  saveConcept() {
+  saveConcept(): Promise<any> {
     if (!this.concept) {
       throw new Error('Cannot save when there is no concept');
     }
 
-    this.termedService.updateNode(this.concept);
-    this.persistentConcept = this.concept.clone();
+    return this.termedService.updateNode(this.concept).toPromise().then(() => {
+      this.persistentConcept = this.concept!.clone();
+    });
   }
 
   resetConcept() {
@@ -95,9 +96,10 @@ export class ConceptViewModelService {
     }
   }
 
-  saveConceptScheme() {
-    this.termedService.updateNode(this.conceptScheme);
-    this.persistentConceptScheme = this.conceptScheme.clone();
+  saveConceptScheme(): Promise<any> {
+    return this.termedService.updateNode(this.conceptScheme).toPromise().then(() => {
+      this.persistentConceptScheme = this.conceptScheme.clone();
+    });
   }
 
   resetConceptScheme() {

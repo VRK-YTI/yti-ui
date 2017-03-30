@@ -40,8 +40,8 @@ export class VocabularyComponent {
   constructor(private editableService: EditableService,
               private conceptViewModel: ConceptViewModelService) {
 
-    editableService.save$.subscribe(() => conceptViewModel.saveConceptScheme());
-    editableService.cancel$.subscribe(() => conceptViewModel.resetConceptScheme());
+    editableService.onSave = () => conceptViewModel.saveConceptScheme();
+    editableService.onCancel = () => conceptViewModel.resetConceptScheme();
   }
 
   get conceptsProvider() {

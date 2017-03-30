@@ -1,40 +1,49 @@
-import { ReplaySubject } from 'rxjs';
-import { Injectable, EventEmitter } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { Injectable } from '@angular/core';
 
 @Injectable()
 export class EditableService {
 
-  private _editing = false;
-  _editing$ = new ReplaySubject<boolean>();
-  editing$ = this._editing$.distinctUntilChanged();
+  editing$ = new BehaviorSubject<boolean>(false);
+  saving$ = new BehaviorSubject<boolean>(false);
 
-  save$ = new EventEmitter();
-  cancel$ = new EventEmitter();
-
-  constructor() {
-    this._editing$.next(this._editing);
-  }
+  onSave: () => Promise<any>|void;
+  onCancel: () => Promise<any>|void;
 
   get editing() {
-    return this._editing;
+    return this.editing$.getValue();
   }
 
-  set editing(value: boolean) {
-    this._editing = value;
-    this._editing$.next(value);
+  get saving() {
+    return this.saving$.getValue();
   }
 
   edit() {
-    this.editing = true;
+    this.editing$.next(true);
   }
 
   cancel() {
-    this.cancel$.next();
-    this.editing = false;
+    if (!this.onCancel) {
+      throw new Error('Cancel handler missing');
+    }
+
+    Promise.resolve(this.onCancel()).then(() => {
+      this.editing$.next(false);
+    });
   }
 
   save() {
-    this.save$.next();
-    this.editing = false;
+    if (!this.onSave) {
+      throw new Error('Save handler missing');
+    }
+
+    this.saving$.next(true);
+
+    Promise.resolve(this.onSave()).then(() => {
+      this.saving$.next(false);
+      this.editing$.next(false);
+    }, err => {
+      this.saving$.next(false);
+    });
   }
 }

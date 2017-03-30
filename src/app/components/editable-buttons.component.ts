@@ -10,7 +10,8 @@ import { NgForm } from '@angular/forms';
       <button type="button" 
               ngbTooltip="{{'Cancel edit' | translate}}" placement="left"
               class="btn btn-default pull-right cancel" 
-              (click)="cancelEditing()" 
+              (click)="cancelEditing()"
+              [disabled]="saving"
               [hidden]="!editing">
               <i class="fa fa-undo"></i>
       </button>
@@ -20,14 +21,15 @@ import { NgForm } from '@angular/forms';
               class="btn btn-default pull-right save" 
               (click)="saveEdited()" 
               [hidden]="!editing" 
-              [disabled]="!canSave()">
+              [disabled]="!canSave() || saving">
               <i class="fa fa-floppy-o"></i>
       </button>
       
       <button type="button"
               ngbTooltip="{{'Edit' | translate}}"
               class="btn btn-default pull-right edit" 
-              (click)="startEditing()" 
+              (click)="startEditing()"
+              [disabled]="saving"
               [hidden]="editing">
               <i class="fa fa-pencil"></i>
       </button>
@@ -41,6 +43,10 @@ export class EditableButtonsComponent {
 
   get editing() {
     return this.editableService.editing;
+  }
+
+  get saving() {
+    return this.editableService.saving;
   }
 
   startEditing() {

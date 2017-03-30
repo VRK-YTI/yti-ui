@@ -58,7 +58,7 @@ export class TermedService {
       }
     }
 
-    this.updateUpdateInternalNodes([...termNodes, node.toInternalNode()]).subscribe();
+    return this.updateUpdateInternalNodes([...termNodes, node.toInternalNode()]);
   }
 
   private updateUpdateInternalNodes(nodes: NodeInternal<any>[]): Observable<Response> {
