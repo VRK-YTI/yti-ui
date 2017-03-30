@@ -132,11 +132,11 @@ export class AutoComplete implements AfterViewInit {
                 path: "properties.prefLabel",
                 query: {
                   bool: {
-                    filter: {
-                      term: {
-                        "properties.prefLabel.lang": this.ls.language
-                      }
-                    },
+                    // filter: {
+                    //   term: {
+                    //     "properties.prefLabel.lang": this.ls.language
+                    //   }
+                    // },
                     should: [
                       {
                         match: { // Try match_phrase_prefix also
@@ -156,11 +156,11 @@ export class AutoComplete implements AfterViewInit {
                 path: "references.prefLabelXl",
                 query: {
                   bool: {
-                    filter: {
-                      term: {
-                        "references.prefLabelXl.properties.prefLabel.lang": this.ls.language
-                      }
-                    },
+                    // filter: {
+                    //   term: {
+                    //     "references.prefLabelXl.properties.prefLabel.lang": this.ls.language
+                    //   }
+                    // },
                     should: [
                       {
                         match: { // Try match_phrase_prefix also
