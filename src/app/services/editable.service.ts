@@ -8,7 +8,7 @@ export class EditableService {
   saving$ = new BehaviorSubject<boolean>(false);
 
   onSave: () => Promise<any>|void;
-  onCancel: () => Promise<any>|void;
+  onCanceled: () => void;
 
   get editing() {
     return this.editing$.getValue();
@@ -23,13 +23,12 @@ export class EditableService {
   }
 
   cancel() {
-    if (!this.onCancel) {
+    if (!this.onCanceled) {
       throw new Error('Cancel handler missing');
     }
 
-    Promise.resolve(this.onCancel()).then(() => {
-      this.editing$.next(false);
-    });
+    this.editing$.next(false);
+    this.onCanceled();
   }
 
   save() {

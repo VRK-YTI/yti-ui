@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-03-26 21:21+0300\n"
+"PO-Revision-Date: 2017-03-30 10:19+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -19,11 +19,17 @@ msgstr "Hae käsitettä…"
 msgid "Order by modified date"
 msgstr "Järjestä muokkausajan mukaan"
 
-msgid "All statuses"
-msgstr "Kaikki tilat"
-
 msgid "Add concept"
 msgstr "Lisää käsite"
+
+msgid "Filter results"
+msgstr "Rajaa hakutuloksia"
+
+msgid "Status"
+msgstr "Tila"
+
+msgid "All statuses"
+msgstr "Kaikki tilat"
 
 msgid "Alphabetic"
 msgstr "Aakkosellinen"
@@ -73,12 +79,6 @@ msgstr "Muokkaaja"
 msgid "Choose concept"
 msgstr "Valitse käsite"
 
-msgid "Filter results"
-msgstr "Rajaa hakutuloksia"
-
-msgid "Status"
-msgstr "Tila"
-
 msgid "Cancel"
 msgstr "Peruuta"
 
@@ -104,6 +104,9 @@ msgstr "sanasto"
 
 msgid "vocabularies"
 msgstr "sanastoa"
+
+msgid "New concept"
+msgstr "Uusi käsite"
 
 msgid "Front page"
 msgstr "Etusivu"

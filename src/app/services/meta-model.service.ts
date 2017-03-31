@@ -3,10 +3,12 @@ import { Observable, ReplaySubject } from 'rxjs';
 import { normalizeAsArray, flatten } from '../utils/array';
 import { Injectable } from '@angular/core';
 import { TermedHttp } from './termed-http.service';
-import { isDefined } from '../utils/object';
+import { isDefined, requireDefined } from '../utils/object';
 import { Graph } from '../entities/graph';
 import { NodeMeta } from '../entities/meta';
 import { NodeMetaInternal } from '../entities/meta-api';
+import { NodeType } from '../entities/node-api';
+import { Node } from '../entities/node';
 
 const infiniteResultsParams = new URLSearchParams();
 infiniteResultsParams.append('max', '-1');
@@ -38,6 +40,16 @@ export class MetaModelService {
 
   getMeta(): Observable<Map<string, Map<string, NodeMeta>>> {
     return this.meta;
+  }
+
+  createEmptyNode<T extends NodeType>(graphId: string, nodeId: string, nodeType: T, languages: string[]): Observable<Node<T>> {
+    return this.meta.map(metas => {
+      const graphMeta = requireDefined(metas.get(graphId), 'Graph not found: '+ graphId);
+      const conceptMeta = requireDefined(graphMeta.get(nodeType), 'Node type not found: ' + nodeType);
+      const node = new Node<T>(conceptMeta.createEmptyNode(nodeId), metas, languages);
+      node.persistent = false;
+      return node;
+    });
   }
 
   private getGraphs(): Observable<Graph[]> {

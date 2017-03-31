@@ -1,22 +1,26 @@
 import { Injectable } from '@angular/core';
 import { LocationService } from './location.service';
 import { TermedService } from './termed.service';
-import {BehaviorSubject, ReplaySubject } from 'rxjs';
-import { Node } from '../entities/node';
+import { BehaviorSubject, ReplaySubject } from 'rxjs';
+import { Node, Property } from '../entities/node';
 import { comparingLocalizable } from '../utils/comparator';
 import { LanguageService } from './language.service';
+import { MetaModelService } from './meta-model.service';
+import { Localization } from '../entities/localization';
+import { TranslateService } from 'ng2-translate';
 
 @Injectable()
 export class ConceptViewModelService {
 
-  conceptScheme: Node<'TerminologicalVocabulary'>;
   persistentConceptScheme: Node<'TerminologicalVocabulary'>;
+  conceptScheme: Node<'TerminologicalVocabulary'>;
   conceptScheme$ = new ReplaySubject<Node<'TerminologicalVocabulary'>>();
 
-  conceptId: string;
-  concept: Node<'Concept'>|null;
   persistentConcept: Node<'Concept'>|null;
-  concept$ = new ReplaySubject<Node<'Concept'>|null>();
+  concept$ = new BehaviorSubject<Node<'Concept'>|null>(null);
+
+  graphId: string;
+  conceptId: string|null;
 
   topConcepts$ = new BehaviorSubject<Node<'Concept'>[]>([]);
   allConcepts$ = new BehaviorSubject<Node<'Concept'>[]>([]);
@@ -28,21 +32,28 @@ export class ConceptViewModelService {
   loadingConcept = true;
 
   constructor(private termedService: TermedService,
+              private metaModelService: MetaModelService,
               private locationService: LocationService,
-              private languageService: LanguageService) {
+              private languageService: LanguageService,
+              private translateService: TranslateService) {
+  }
+
+  get concept() {
+    return this.concept$.getValue();
   }
 
   initializeConceptScheme(graphId: string) {
 
+    this.graphId = graphId;
     this.loadingConceptScheme = true;
     this.loadingConcepts = true;
 
     this.termedService.getConceptScheme(graphId, this.languages).subscribe(conceptScheme => {
       this.locationService.atConceptScheme(conceptScheme);
-      this.conceptScheme$.next(conceptScheme);
-      this.conceptScheme = conceptScheme;
       this.persistentConceptScheme = conceptScheme.clone();
       this.loadingConceptScheme = false;
+      this.conceptScheme = conceptScheme;
+      this.conceptScheme$.next(conceptScheme);
     });
 
     this.termedService.getConceptList(graphId, this.languages).subscribe(concepts => {
@@ -55,27 +66,53 @@ export class ConceptViewModelService {
 
   initializeConcept(conceptId: string|null) {
 
-    if (conceptId) {
-      this.loadingConcept = true;
-      this.conceptId = conceptId;
-
+    const init = (concept: Node<'Concept'>|null) => {
       this.conceptScheme$.subscribe(conceptScheme => {
-        this.termedService.getConcept(conceptScheme.graphId, conceptId, this.languages).subscribe(concept => {
+        if (concept) {
           this.locationService.atConcept(conceptScheme, concept);
-          this.concept$.next(concept);
-          this.concept = concept;
-          this.persistentConcept = concept.clone();
-          this.loadingConcept = false;
-        });
+        } else {
+          this.locationService.atConceptScheme(conceptScheme);
+        }
+        this.persistentConcept = concept ? concept.clone() : null;
+        this.concept$.next(concept);
+        this.loadingConcept = false;
       });
-    } else {
-      this.loadingConcept = false;
+    };
 
+    this.loadingConcept = true;
+    this.conceptId = conceptId;
+
+    if (!conceptId) {
+      init(null);
+    } else {
       this.conceptScheme$.subscribe(conceptScheme => {
-        this.locationService.atConceptScheme(conceptScheme);
-        this.concept$.next(null);
-        this.concept = null;
-        this.persistentConcept = null;
+        this.termedService.getConcept(conceptScheme.graphId, conceptId, this.languages).subscribe(init, () => {
+          this.metaModelService.createEmptyNode(this.graphId, conceptId, 'Concept', this.languages).subscribe(concept => {
+
+            function findTermForLanguage(terms: Node<'Term'>[], language: string): Node<'Term'>|undefined {
+              return terms.find(term => {
+                const label: Property = term.properties['prefLabel'];
+                const localizations = label.value as Localization[];
+                return localizations[0].lang === language;
+              });
+            }
+
+            function setTermValue(value: string, language: string) {
+              const terms: Node<'Term'>[] = concept.references['prefLabelXl'].values;
+              const matchingTerm: Node<'Term'> = findTermForLanguage(terms, language) || terms[0];
+              const label: Property = matchingTerm.properties['prefLabel'];
+              const localizations = label.value as Localization[];
+              localizations[0].value = value;
+            }
+
+            concept.references['inScheme'].values.push(conceptScheme.clone());
+
+            this.translateService.get('New concept').subscribe(newConceptLabel => {
+              setTermValue(newConceptLabel, this.languageService.language);
+              init(concept);
+            });
+          });
+        });
       });
     }
   }
@@ -85,21 +122,36 @@ export class ConceptViewModelService {
       throw new Error('Cannot save when there is no concept');
     }
 
-    return this.termedService.updateNode(this.concept).toPromise().then(() => {
-      this.persistentConcept = this.concept!.clone();
-    });
+    const conceptId = this.concept.id;
+
+    // TODO Error handling
+    return this.termedService.updateNode(this.concept).toPromise()
+      .then(() => this.termedService.getConcept(this.graphId, conceptId, this.languages).toPromise())
+      .then(persistentConcept => {
+        this.persistentConcept = persistentConcept;
+        this.concept$.next(persistentConcept.clone());
+      });
   }
 
   resetConcept() {
+    if (!this.concept) {
+      throw new Error('Cannot reset when there is no concept');
+    }
+
     if (this.persistentConcept) {
-      this.concept = this.persistentConcept.clone();
+      this.concept$.next(this.persistentConcept.clone());
     }
   }
 
   saveConceptScheme(): Promise<any> {
-    return this.termedService.updateNode(this.conceptScheme).toPromise().then(() => {
-      this.persistentConceptScheme = this.conceptScheme.clone();
-    });
+
+    // TODO Error handling
+    return this.termedService.updateNode(this.conceptScheme).toPromise()
+      .then(() => this.termedService.getConceptScheme(this.graphId, this.languages).toPromise())
+      .then(persistentConceptScheme => {
+        this.persistentConceptScheme = persistentConceptScheme;
+        this.conceptScheme = persistentConceptScheme.clone();
+      });
   }
 
   resetConceptScheme() {

@@ -41,7 +41,7 @@ export class VocabularyComponent {
               private conceptViewModel: ConceptViewModelService) {
 
     editableService.onSave = () => conceptViewModel.saveConceptScheme();
-    editableService.onCancel = () => conceptViewModel.resetConceptScheme();
+    editableService.onCanceled = () => conceptViewModel.resetConceptScheme();
   }
 
   get conceptsProvider() {

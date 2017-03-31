@@ -106,10 +106,10 @@ export class NodeMeta {
     return this.type === 'Concept';
   }
 
-  createEmptyNode(): NodeExternal<any> {
+  createEmptyNode(id = uuid()): NodeExternal<any> {
 
     const result: NodeExternal<any> = {
-      id: uuid(),
+      id: id,
       type: {
         id: this.type,
         graph: { id: this.graphId }

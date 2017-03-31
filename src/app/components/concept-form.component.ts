@@ -29,7 +29,7 @@ import { EditableService } from '../services/editable.service';
                  *ngFor="let reference of concept | references: showEmpty : ['prefLabelXl']"></reference>
     </div>
 
-    <meta-information [node]="concept"></meta-information>
+    <meta-information [hidden]="!concept.persistent" [node]="concept"></meta-information>
   `
 })
 export class ConceptFormComponent {

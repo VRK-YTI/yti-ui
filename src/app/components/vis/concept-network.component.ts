@@ -162,6 +162,8 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
 
   @ViewChild('canvas') canvasRef: ElementRef;
 
+  persistentRoot: boolean;
+
   private skipNextConcept = false;
 
   private clicks = 0;
@@ -191,6 +193,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
     this.conceptViewModel.concept$.subscribe(rootConcept => {
 
       if (rootConcept && !this.skipNextConcept) {
+        this.persistentRoot = rootConcept.persistent;
         this.networkData.nodes.clear();
         this.networkData.edges.clear();
         this.networkData.nodes.add(this.createRootNode(rootConcept));

@@ -11,6 +11,7 @@ import { ConceptViewModelService } from '../services/concept.view.service';
 import { Router } from '@angular/router';
 import { statuses } from '../entities/constants';
 import { comparingDate, reversed } from '../utils/comparator';
+import { v4 as uuid } from 'uuid';
 
 @Component({
   selector: 'concept-list',
@@ -20,6 +21,11 @@ import { comparingDate, reversed } from '../utils/comparator';
       <div class="col-lg-12">
 
         <div class="actions">
+
+          <button class="button btn-default btn-add-new" (click)="addConcept()">
+            <i class="fa fa-plus"></i>
+            <span translate>Add concept</span>
+          </button>
 
           <div class="input-group input-group-lg input-group-search">
             <input #searchInput
@@ -142,6 +148,10 @@ export class ConceptListComponent implements OnInit, AfterViewInit {
 
   navigate(concept: Node<'Concept'>) {
     this.router.navigate(['/concepts', concept.graphId, 'concept', concept.id]);
+  }
+
+  addConcept() {
+    this.router.navigate(['/concepts', this.conceptViewModel.graphId, 'concept', uuid()]);
   }
 
   isSelected(concept: Node<'Concept'>) {

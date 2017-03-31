@@ -132,6 +132,8 @@ export class Node<T extends NodeType> {
   references: { [key: string]: Reference } = {};
   referrers: { [key: string]: Node<any>[] } = {};
 
+  persistent = true;
+
   constructor(private node: NodeExternal<T>, private metas: Map<string, Map<string, NodeMeta>>, public languages: string[]) {
 
     this.meta = requireDefined(requireDefined(metas.get(node.type.graph.id)).get(node.type.id), 'Meta not found for ' + node.type.id);
@@ -268,7 +270,9 @@ export class Node<T extends NodeType> {
   }
 
   clone() {
-    return new Node<T>(JSON.parse(JSON.stringify(this.toExternalNode())), this.metas, this.languages);
+    const cloned = new Node<T>(JSON.parse(JSON.stringify(this.toExternalNode())), this.metas, this.languages);
+    cloned.persistent = this.persistent;
+    return cloned;
   }
 
   get concept(): boolean {

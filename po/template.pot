@@ -10,10 +10,16 @@ msgstr ""
 msgid "Order by modified date"
 msgstr ""
 
-msgid "All statuses"
+msgid "Add concept"
 msgstr ""
 
-msgid "Add concept"
+msgid "Filter results"
+msgstr ""
+
+msgid "Status"
+msgstr ""
+
+msgid "All statuses"
 msgstr ""
 
 msgid "Alphabetic"
@@ -64,12 +70,6 @@ msgstr ""
 msgid "Choose concept"
 msgstr ""
 
-msgid "Filter results"
-msgstr ""
-
-msgid "Status"
-msgstr ""
-
 msgid "Cancel"
 msgstr ""
 
@@ -92,6 +92,9 @@ msgid "vocabulary"
 msgstr ""
 
 msgid "vocabularies"
+msgstr ""
+
+msgid "New concept"
 msgstr ""
 
 msgid "Front page"

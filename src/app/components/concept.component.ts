@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { EditableService } from '../services/editable.service';
 import { ConceptViewModelService } from '../services/concept.view.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'concept',
@@ -14,7 +15,7 @@ import { ActivatedRoute } from '@angular/router';
         <h3>{{persistentConcept.label | translateValue}}</h3>
       </div>
     
-      <form *ngIf="concept" class="component-content">
+      <form class="component-content">
   
         <div class="row">
           <div class="col-md-12">
@@ -30,15 +31,40 @@ import { ActivatedRoute } from '@angular/router';
     <ajax-loading-indicator *ngIf="!concept"></ajax-loading-indicator>
   `
 })
-export class ConceptComponent {
+export class ConceptComponent implements OnDestroy {
+
+  private subscriptionToClean: Subscription[] = [];
 
   constructor(private route: ActivatedRoute,
+              private router: Router,
               private conceptViewModel: ConceptViewModelService,
               editableService: EditableService) {
 
     route.params.subscribe(params => conceptViewModel.initializeConcept(params['conceptId']));
     editableService.onSave = () => this.conceptViewModel.saveConcept();
-    editableService.onCancel = () => this.conceptViewModel.resetConcept();
+    editableService.onCanceled = () => this.conceptViewModel.resetConcept();
+
+    this.subscriptionToClean.push(this.conceptViewModel.concept$.subscribe(concept => {
+      if (concept) {
+        if (!concept.persistent && !editableService.editing) {
+          editableService.edit();
+        } else if (editableService.editing) {
+          editableService.cancel();
+        }
+      }
+    }));
+
+    editableService.editing$.subscribe(editing => {
+      if (!editing && this.conceptViewModel.concept && !this.conceptViewModel.concept.persistent) {
+        this.router.navigate(['/concepts', this.conceptViewModel.graphId]);
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    for (const subscription of this.subscriptionToClean) {
+      subscription.unsubscribe();
+    }
   }
 
   get conceptsProvider() {
