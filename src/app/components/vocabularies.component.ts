@@ -25,9 +25,7 @@ import { requireDefined } from '../utils/object';
           
           <div class="row">
             <div class="col-md-12">
-              <div class="input-group input-group-lg input-group-search">
-                <autocomplete (selected)="autocompleteChanged($event)" (found)=foundItemsChanged($event)></autocomplete>
-              </div>
+              <autocomplete (selected)="autocompleteChanged($event)" (found)=foundItemsChanged($event)></autocomplete>
             </div>
           </div>
           

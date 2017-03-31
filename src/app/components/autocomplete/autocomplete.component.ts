@@ -1,20 +1,22 @@
-import {Component, AfterViewInit, NgZone, ChangeDetectionStrategy} from "@angular/core";
-import {FormControl} from "@angular/forms";
-import {Subject} from "rxjs";
-import {ElasticSearchService} from "../../services/elasticsearch.service";
-import {LanguageService} from "../../services/language.service";
+import { Component, AfterViewInit, NgZone, ChangeDetectionStrategy } from "@angular/core";
+import { FormControl } from "@angular/forms";
+import { Subject } from "rxjs";
+import { ElasticSearchService } from "../../services/elasticsearch.service";
+import { LanguageService } from "../../services/language.service";
 
 @Component({
   selector: "autocomplete",
   styleUrls: ['./autocomplete.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-      <input [(ngModel)]="searchString"
+      <div class="input-group input-group-lg input-group-search">
+        <input [(ngModel)]="searchString"
                type="text"
                class="form-control"
                (blur)="onBlur()"
                [formControl]="searchText"
                [placeholder]="'Search concept...' | translate" />
+      </div>
       <div class="sb-message" *ngIf="!!message"><span>{{ message }}</span></div>
       <!-- Search results -->
       <div class="sb-searchresults">

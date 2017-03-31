@@ -42,13 +42,12 @@ span.highlight {
 
   .form-control {
     padding-left: 3rem !important;
-    width: 100% !important;
   }
 
   &:before {
     content: $fa-var-search;
     font-family: FontAwesome;
-    top: 3px;
+    top: 10px;
     left: 15px;
     font-size: $font-size-lg;
     position: absolute;

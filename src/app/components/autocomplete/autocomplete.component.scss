@@ -4,10 +4,10 @@
 
 ul.sb-results-dropdown-menu {
     margin: 0;
-    padding: 0;    
+    padding: 0;
 }
 
-ul.sb-results-dropdown-menu > li {    
+ul.sb-results-dropdown-menu > li {
     position: relative;
     border-bottom: 1px solid rgba(239, 239, 239, 0.25);
     height: 35px;
@@ -32,7 +32,7 @@ ul.sb-results-dropdown-menu > li span {
     overflow:hidden;
     white-space: nowrap;
     display: block;
-}   
+}
 
 ul.sb-results-dropdown-menu > li:nth-child(odd) {
     background: #f7f7f7;
@@ -47,20 +47,20 @@ ul.sb-results-dropdown-menu > li:last-child {
 
 .sb-searchresults {
     position: absolute;
-    top: 36px;
+    top: 50px;
     z-index: 5;
-    width: 100%;    
+    width: 100%;
     border-radius: 3px;
     box-shadow: 0 0px 20px 0 rgba(0, 0, 0, 0.18);
 }
 
 .sb-message{
     position: absolute;
-    top: 36px;
+    top: 50px;
     background: #f7f7f7;
-    height: 20px;  
+    height: 20px;
     width:100%;
-    box-shadow: #eaeaea 1px 1px;  
+    box-shadow: #eaeaea 1px 1px;
 }
 
 .sb-message span {
