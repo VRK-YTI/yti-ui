@@ -11,7 +11,8 @@ import { ConceptViewModelService } from '../services/concept.view.service';
       <ngb-panel>
         <template ngbPanelTitle>
           <div class="main-panel-header">
-            <h2>{{vocabulary.label | translateValue}}
+            <h2>
+              <span>{{vocabulary.label | translateValue}}</span>
               <accordion-chevron></accordion-chevron>
             </h2>
           </div>
