@@ -78,12 +78,12 @@ export class ConceptsComponent implements OnInit {
   }
 
   get loading() {
-    return this.viewModel.loadingConceptScheme || this.viewModel.loadingConcepts;
+    return this.viewModel.loadingVocabulary || this.viewModel.loadingConcepts;
   }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
-      this.viewModel.initializeConceptScheme(params['graphId']);
+      this.viewModel.initializeVocabulary(params['graphId']);
     });
   }
 

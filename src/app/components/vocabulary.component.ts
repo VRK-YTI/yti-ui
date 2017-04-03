@@ -7,11 +7,13 @@ import { ConceptViewModelService } from '../services/concept.view.service';
   styleUrls: ['./vocabulary.component.scss'],
   providers: [EditableService],
   template: `
-    <ngb-accordion *ngIf="conceptScheme">
+    <ngb-accordion *ngIf="vocabulary">
       <ngb-panel>
         <template ngbPanelTitle>
           <div class="main-panel-header">
-            <h2>{{conceptScheme.label | translateValue}} <accordion-chevron></accordion-chevron></h2>
+            <h2>{{vocabulary.label | translateValue}}
+              <accordion-chevron></accordion-chevron>
+            </h2>
           </div>
         </template>
         <template ngbPanelContent>
@@ -20,15 +22,17 @@ import { ConceptViewModelService } from '../services/concept.view.service';
               <div class="col-md-12">
                 <editable-buttons class="pull-right"></editable-buttons>
                 <div class="page-header">
-                  <h1>{{conceptScheme.meta.label | translateValue}}</h1>
+                  <h1>{{vocabulary.meta.label | translateValue}}</h1>
                 </div>
               </div>
             </div>
             <div class="row">
-              <property class="col-md-6" [value]="property" *ngFor="let property of conceptScheme | properties: showEmpty"></property>
-              <reference class="col-md-6" [value]="reference" [conceptsProvider]="conceptsProvider" *ngFor="let reference of conceptScheme | references: showEmpty"></reference>
+              <property class="col-md-6" [value]="property"
+                        *ngFor="let property of vocabulary | properties: showEmpty"></property>
+              <reference class="col-md-6" [value]="reference" [conceptsProvider]="conceptsProvider"
+                         *ngFor="let reference of vocabulary | references: showEmpty"></reference>
             </div>
-            <meta-information [node]="conceptScheme"></meta-information>
+            <meta-information [node]="vocabulary"></meta-information>
           </form>
         </template>
       </ngb-panel>
@@ -40,16 +44,16 @@ export class VocabularyComponent {
   constructor(private editableService: EditableService,
               private conceptViewModel: ConceptViewModelService) {
 
-    editableService.onSave = () => conceptViewModel.saveConceptScheme();
-    editableService.onCanceled = () => conceptViewModel.resetConceptScheme();
+    editableService.onSave = () => conceptViewModel.saveVocabulary();
+    editableService.onCanceled = () => conceptViewModel.resetVocabulary();
   }
 
   get conceptsProvider() {
     return () => this.conceptViewModel.allConcepts$.getValue();
   }
 
-  get conceptScheme() {
-    return this.conceptViewModel.conceptScheme;
+  get vocabulary() {
+    return this.conceptViewModel.vocabulary;
   }
 
   get showEmpty() {

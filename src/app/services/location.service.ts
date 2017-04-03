@@ -21,22 +21,22 @@ export class LocationService {
     this.location.next(location);
   }
 
-  atConceptScheme(conceptScheme: Node<'TerminologicalVocabulary'>): void {
+  atVocabulary(vocabulary: Node<'TerminologicalVocabulary'>): void {
     this.changeLocation([{
-      label: conceptScheme.label,
-      route: ['concepts', conceptScheme.graphId]
+      label: vocabulary.label,
+      route: ['concepts', vocabulary.graphId]
     }]);
   }
 
-  atConcept(conceptScheme: Node<'TerminologicalVocabulary'>, concept: Node<'Concept'>): void {
+  atConcept(vocabulary: Node<'TerminologicalVocabulary'>, concept: Node<'Concept'>): void {
     this.changeLocation([
       {
-        label: conceptScheme.label,
-        route: ['concepts', conceptScheme.graphId]
+        label: vocabulary.label,
+        route: ['concepts', vocabulary.graphId]
       },
       {
         label: concept.label,
-        route: ['concepts', conceptScheme.graphId, 'concept', concept.id]
+        route: ['concepts', vocabulary.graphId, 'concept', concept.id]
       }
     ]);
   }

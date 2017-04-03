@@ -20,15 +20,15 @@ import { requireDefined } from '../utils/object';
             <div class="col-md-12">
               <span class="welcome" translate>Welcome to vocabulary and concept workbench</span>
               <p translate>Frontpage information</p>
-            </div>          
+            </div>
           </div>
-          
+
           <div class="row">
             <div class="col-md-12">
               <autocomplete (selected)="autocompleteChanged($event)" (found)=foundItemsChanged($event)></autocomplete>
             </div>
           </div>
-          
+
           <div class="row" *ngIf="searchConcept" style="padding-top: 16px">
             <div class="col-md-12">
               <div class="alert alert-danger" role="alert">
@@ -36,63 +36,64 @@ import { requireDefined } from '../utils/object';
               </div>
             </div>
           </div>
-          
-        </div>        
+
+        </div>
       </div>
-          
-      <div class="row vocabularies" *ngIf="conceptSchemes">
-        
+
+      <div class="row vocabularies" *ngIf="vocabularies">
+
         <div class="col-md-4">
           <div class="filters">
-          
+
             <div *ngFor="let filter of filters; let hideSeparator = last">
-              
+
               <div class="filter">
                 <span class="title">{{filter.title | translate}}</span>
-                <div class="item" [class.selected]="item.selected" (click)="item.toggle()" *ngFor="let item of filter.items">
+                <div class="item" [class.selected]="item.selected" (click)="item.toggle()"
+                     *ngFor="let item of filter.items">
                   <span class="name">{{item.name | translateValue}}</span>
                   <span class="count">({{item.count}})</span>
                 </div>
               </div>
-              
+
               <div [hidden]="hideSeparator" class="separator"></div>
             </div>
-            
+
           </div>
         </div>
-        
+
         <div class="col-md-8">
-            
+
           <div class="row">
             <div class="col-md-12">
               <div class="amount">
-                <strong>{{filterResults.length}}</strong> 
+                <strong>{{filterResults.length}}</strong>
                 <span *ngIf="filterResults.length === 1" translate>vocabulary</span>
                 <span *ngIf="filterResults.length !== 1" translate>vocabularies</span>
               </div>
             </div>
           </div>
-                  
-          <div class="search-result" *ngFor="let conceptScheme of filterResults" (click)="navigate(conceptScheme)">
+
+          <div class="search-result" *ngFor="let vocabulary of filterResults" (click)="navigate(vocabulary)">
             <div class="content">
-              <span class="title">{{conceptScheme.label | translateValue}}</span>
-              <p>{{conceptScheme.description | translateValue}}</p>
+              <span class="title">{{vocabulary.label | translateValue}}</span>
+              <p>{{vocabulary.description | translateValue}}</p>
             </div>
             <div class="origin">
-              <span class="publisher">{{conceptScheme.publisher.label | translateValue}}</span>
-              <span class="group">{{conceptScheme.group.label | translateValue}}</span>
-              <span class="type">{{conceptScheme.typeLabel | translateValue}}</span>
+              <span class="publisher">{{vocabulary.publisher.label | translateValue}}</span>
+              <span class="group">{{vocabulary.group.label | translateValue}}</span>
+              <span class="type">{{vocabulary.typeLabel | translateValue}}</span>
             </div>
           </div>
         </div>
       </div>
-      
+
     </div>
   `
 })
 export class VocabulariesComponent {
 
-  conceptSchemes: Node<'TerminologicalVocabulary'>[];
+  vocabularies: Node<'TerminologicalVocabulary'>[];
   filterResults: Node<'TerminologicalVocabulary'>[];
 
   filters: Filter[];
@@ -103,17 +104,17 @@ export class VocabulariesComponent {
 
     const languages = ['fi', 'en', 'sv']; // TODO concept scheme itself will define the languages in the future
 
-    termedService.getConceptSchemeList(languages).subscribe(conceptSchemes => {
-      this.conceptSchemes = conceptSchemes;
+    termedService.getVocabularyList(languages).subscribe(vocabularies => {
+      this.vocabularies = vocabularies;
 
       const recalculateResults = () => {
-        this.filterResults = conceptSchemes.filter(node => all(this.filters, filter => filter.matches(node)));
+        this.filterResults = vocabularies.filter(node => all(this.filters, filter => filter.matches(node)));
       };
 
       this.filters = [
-        new Filter('Vocabulary type', conceptSchemes, (node) => node.meta.type, (node) => node.meta.label, recalculateResults),
-        new Filter('Group', conceptSchemes, (node) => node.group.id, (node) => node.group.label, recalculateResults),
-        new Filter('Organization', conceptSchemes, (node) => node.publisher.id, (node) => node.publisher.label, recalculateResults)
+        new Filter('Vocabulary type', vocabularies, (node) => node.meta.type, (node) => node.meta.label, recalculateResults),
+        new Filter('Group', vocabularies, (node) => node.group.id, (node) => node.group.label, recalculateResults),
+        new Filter('Organization', vocabularies, (node) => node.publisher.id, (node) => node.publisher.label, recalculateResults)
       ];
 
       recalculateResults();
@@ -122,8 +123,8 @@ export class VocabulariesComponent {
     locationService.atFrontPage();
   }
 
-  navigate(conceptScheme: Node<'TerminologicalVocabulary'>) {
-    this.router.navigate(['/concepts', conceptScheme.graphId]);
+  navigate(vocabulary: Node<'TerminologicalVocabulary'>) {
+    this.router.navigate(['/concepts', vocabulary.graphId]);
   }
 }
 

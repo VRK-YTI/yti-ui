@@ -17,15 +17,15 @@ export class TermedService {
   constructor(private http: TermedHttp, private metaModelService: MetaModelService) {
   }
 
-  getConceptScheme(graphId: string, languages: string[]): Observable<Node<'TerminologicalVocabulary'>> {
-    return Observable.zip(this.metaModelService.getMeta(), this.getConceptSchemeNode(graphId))
-      .map(([meta, conceptScheme]) => new Node<'TerminologicalVocabulary'>(conceptScheme, meta, languages));
+  getVocabulary(graphId: string, languages: string[]): Observable<Node<'TerminologicalVocabulary'>> {
+    return Observable.zip(this.metaModelService.getMeta(), this.getVocabularyNode(graphId))
+      .map(([meta, vocabulary]) => new Node<'TerminologicalVocabulary'>(vocabulary, meta, languages));
   }
 
-  getConceptSchemeList(languages: string[]): Observable<Node<'TerminologicalVocabulary'>[]> {
+  getVocabularyList(languages: string[]): Observable<Node<'TerminologicalVocabulary'>[]> {
     return Observable.zip(this.metaModelService.getMeta(), this.getVocabularyNodes())
-      .map(([meta, conceptSchemes]) =>
-        conceptSchemes.map(scheme => new Node<'TerminologicalVocabulary'>(scheme, meta, languages))
+      .map(([meta, vocabularies]) =>
+        vocabularies.map(scheme => new Node<'TerminologicalVocabulary'>(scheme, meta, languages))
           .filter(scheme => !scheme.references['inGroup'].empty));
   }
 
@@ -69,7 +69,7 @@ export class TermedService {
     return this.http.post('/api/nodes', nodes, { search: params });
   }
 
-  private getConceptSchemeNode(graphId: string): Observable<NodeExternal<'TerminologicalVocabulary'>> {
+  private getVocabularyNode(graphId: string): Observable<NodeExternal<'TerminologicalVocabulary'>> {
 
     const params = new URLSearchParams();
     params.append('max', '-1');
