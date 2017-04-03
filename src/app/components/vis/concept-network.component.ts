@@ -180,6 +180,10 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
               private termedService: TermedService,
               private router: Router,
               private conceptViewModel: ConceptViewModelService) {
+
+      this.languageService.languageChange$.subscribe(() => {
+        this.ngOnInit();
+      });
   }
 
   public ngOnInit(): void {
