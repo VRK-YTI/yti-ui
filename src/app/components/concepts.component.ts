@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ConceptViewModelService } from '../services/concept.view.service';
@@ -52,7 +52,7 @@ import { ConceptNetworkComponent } from './vis/concept-network.component';
             </div>
 
             <div class="visualization-container" [style.width]="visualizationWidth" [hidden]="!showVisualization">
-              <div float>
+              <div float [setWidth]="false">
                 <divider *ngIf="showDivider"></divider>
                 <concept-network #network [class.without-divider]="!showDivider"></concept-network>
               </div>

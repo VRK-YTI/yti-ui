@@ -1,4 +1,4 @@
-import { Directive, ElementRef, OnDestroy, AfterViewInit, NgZone } from '@angular/core';
+import { Directive, ElementRef, OnDestroy, AfterViewInit, NgZone, Input } from '@angular/core';
 import { requireDefined } from '../utils/object';
 
 interface Location {
@@ -8,6 +8,8 @@ interface Location {
 
 @Directive({ selector: '[float]' })
 export class FloatDirective implements AfterViewInit, OnDestroy {
+
+  @Input() setWidth = true;
 
   element: HTMLElement;
   placeholder: HTMLElement;
@@ -72,7 +74,10 @@ export class FloatDirective implements AfterViewInit, OnDestroy {
     this.placeholder.style.height = height + 'px';
 
     this.element.style.top = '0';
-    this.element.style.width = width + 'px';
+
+    if (this.setWidth) {
+      this.element.style.width = width + 'px';
+    }
 
     this.element.classList.add('floating');
   }
@@ -80,7 +85,11 @@ export class FloatDirective implements AfterViewInit, OnDestroy {
   setStatic() {
     this.floating = false;
     this.element.style.top = '';
-    this.element.style.width = '';
+
+    if (this.setWidth) {
+      this.element.style.width = '';
+    }
+
     this.element.classList.remove('floating');
     this.placeholder.hidden = true;
   }

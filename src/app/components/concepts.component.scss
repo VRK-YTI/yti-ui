@@ -11,6 +11,12 @@ $left-width: 400px;
   padding-top: 10px;
 }
 
+.visualization-container {
+  .floating {
+    padding-right: 15px;
+  }
+}
+
 .panel-right {
   width: calc(100% - #{$left-width});
   float: right;
