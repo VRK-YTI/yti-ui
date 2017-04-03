@@ -14,8 +14,8 @@ import {
 } from 'vis';
 
 interface ConceptNetworkData {
-  nodes: DataSet<VisNode>;
-  edges: DataSet<VisEdge>;
+  nodes: DataSet<UpdatableVisNode>;
+  edges: DataSet<UpdatableVisEdge>;
 }
 
 // Distinguish between single click and double click
@@ -143,6 +143,16 @@ const options: VisNetworkOptions = {
   }
 };
 
+interface UpdatableVisNode extends VisNode {
+  title: string;
+  update: () => VisNode;
+}
+
+interface UpdatableVisEdge extends VisEdge {
+  title: string;
+  update: () => VisEdge;
+}
+
 @Component({
   selector: 'concept-network',
   styleUrls: ['./concept-network.component.scss'],
@@ -171,8 +181,8 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
 
   private network: VisNetwork;
   private networkData: ConceptNetworkData = {
-    nodes: new DataSet<VisNode>(),
-    edges: new DataSet<VisEdge>()
+    nodes: new DataSet<UpdatableVisNode>(),
+    edges: new DataSet<UpdatableVisEdge>()
   };
 
   constructor(private zone: NgZone,
@@ -181,9 +191,16 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
               private router: Router,
               private conceptViewModel: ConceptViewModelService) {
 
-      this.languageService.languageChange$.subscribe(() => {
-        this.ngOnInit();
-      });
+    const updateNetworkData = () => {
+
+      const newNodes = this.networkData.nodes.map(node => node.update());
+      this.networkData.nodes.update(newNodes);
+
+      const newEdges = this.networkData.edges.map(edge => edge.update());
+      this.networkData.edges.update(newEdges);
+    };
+
+    this.languageService.languageChange$.subscribe(updateNetworkData);
   }
 
   public ngOnInit(): void {
@@ -218,12 +235,19 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
     return this.networkData.nodes.length === 0;
   }
 
-  private createNodeData(concept: Node<'Concept'>) {
-    return {
-      id: concept.id,
-      label: this.languageService.translate(concept.label),
-      title: stripMarkdown(this.languageService.translate(concept.definition))
+  private createNodeData(concept: Node<'Concept'>): UpdatableVisNode {
+
+    const createNode = () => {
+      const node = {
+        id: concept.id,
+        label: this.languageService.translate(concept.label),
+        title: stripMarkdown(this.languageService.translate(concept.definition))
+      };
+
+      return Object.assign(node, { update: createNode })
     };
+
+    return createNode();
   }
 
   private createRootNode(concept: Node<'Concept'>) {
@@ -246,13 +270,20 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
     return Object.assign(this.createNodeData(isPartOfConcept), { group: 'isPartOfGroup' });
   }
 
-  private createEdgeData(from: Node<'Concept'>, to: Node<'Concept'>) {
-    return {
-      from: from.id,
-      to: to.id,
-      id: from.id + to.id,
-      title: this.languageService.translate(from.label) + ' - ' + this.languageService.translate(to.label)
-    }
+  private createEdgeData(from: Node<'Concept'>, to: Node<'Concept'>): UpdatableVisEdge {
+
+    const createEdge = () => {
+      const edge = {
+        from: from.id,
+        to: to.id,
+        id: from.id + to.id,
+        title: this.languageService.translate(from.label) + ' - ' + this.languageService.translate(to.label)
+      };
+
+      return Object.assign(edge, { update: createEdge })
+    };
+
+    return createEdge();
   }
 
   private createRelatedConceptEdge(from: Node<'Concept'>, to: Node<'Concept'>) {
@@ -280,13 +311,13 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
 
   private addEdgeNodesForConcept(rootConcept: Node<'Concept'>) {
 
-    const addNodeIfDoesNotExist = (node: VisNode) => {
+    const addNodeIfDoesNotExist = (node: UpdatableVisNode) => {
       if (!this.networkData.nodes.get(node.id)) {
         this.networkData.nodes.add(node);
       }
     };
 
-    const addEdgeIfDoesNotExist = (edge: VisEdge) => {
+    const addEdgeIfDoesNotExist = (edge: UpdatableVisEdge) => {
       if (!this.networkData.edges.get(edge.id)) {
         this.networkData.edges.add(edge);
       }
