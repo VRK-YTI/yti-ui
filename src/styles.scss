@@ -79,6 +79,26 @@ span.highlight {
     float: right;
     cursor: pointer;
   }
+
+  &.modal-header-warning {
+    color: $alert-warning-text;
+    border-color: $alert-warning-border;
+    background-color: $alert-warning-bg;
+
+    i {
+      color: $alert-warning-text;
+    }
+  }
+
+  &.modal-header-danger {
+    color: $alert-danger-text;
+    border-color: $alert-danger-border;
+    background-color: $alert-danger-bg;
+
+    i {
+      color: $alert-danger-text;
+    }
+  }
 }
 
 .modal-footer {

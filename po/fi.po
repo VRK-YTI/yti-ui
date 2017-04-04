@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-03-30 10:19+0300\n"
+"PO-Revision-Date: 2017-04-04 13:01+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -37,6 +37,21 @@ msgstr "Aakkosellinen"
 msgid "Hierarchical"
 msgstr "Hierarkinen"
 
+msgid "Confirm remove"
+msgstr "Poistamisen hyväksyntä"
+
+msgid "Following items are referring to the deleted item"
+msgstr "Seuraavat asiat viittaavat poistettavaan asiaan"
+
+msgid "Are you sure that you want to remove?"
+msgstr "Oletko varma, että haluat poistaa?"
+
+msgid "Yes"
+msgstr "Kyllä"
+
+msgid "Cancel"
+msgstr "Peruuta"
+
 msgid "Cancel edit"
 msgstr "Peruuta muokkaus"
 
@@ -45,6 +60,9 @@ msgstr "Tallenna muutokset"
 
 msgid "Edit"
 msgstr "Muokkaa"
+
+msgid "Remove"
+msgstr "Poista"
 
 msgid "Contact info"
 msgstr "Yhteystiedot"
@@ -78,9 +96,6 @@ msgstr "Muokkaaja"
 
 msgid "Choose concept"
 msgstr "Valitse käsite"
-
-msgid "Cancel"
-msgstr "Peruuta"
 
 msgid "Select concept"
 msgstr "Valitse käsite"

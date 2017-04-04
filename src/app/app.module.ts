@@ -62,6 +62,7 @@ import { StripMarkdownPipe } from './pipes/strip-markdown.pipe';
 import { ConceptFormComponent } from './components/concept-form.component';
 import { DividerComponent } from './components/divider.component';
 import { SessionService } from './services/session.service';
+import { DeleteConfirmationModal, DeleteConfirmationModalService } from './components/delete-confirmation.modal';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json-loader!po-loader?format=mf!../../po/fi.po'),
@@ -127,6 +128,7 @@ const appRoutes: Routes = [
     MetaInformationComponent,
     DividerComponent,
     SearchConceptModal,
+    DeleteConfirmationModal,
     MetaModelValidator,
     LanguageValidator,
     LocalizationValidator,
@@ -141,7 +143,8 @@ const appRoutes: Routes = [
     KeysPipe
   ],
   entryComponents: [
-    SearchConceptModal
+    SearchConceptModal,
+    DeleteConfirmationModal,
   ],
   imports: [
     BrowserModule,
@@ -160,6 +163,7 @@ const appRoutes: Routes = [
     LanguageService,
     LocationService,
     SearchConceptModalService,
+    DeleteConfirmationModalService,
     SessionService,
     ElasticSearchService
   ],

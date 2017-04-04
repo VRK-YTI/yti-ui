@@ -28,6 +28,21 @@ msgstr ""
 msgid "Hierarchical"
 msgstr ""
 
+msgid "Confirm remove"
+msgstr ""
+
+msgid "Following items are referring to the deleted item"
+msgstr ""
+
+msgid "Are you sure that you want to remove?"
+msgstr ""
+
+msgid "Yes"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
 msgid "Cancel edit"
 msgstr ""
 
@@ -35,6 +50,9 @@ msgid "Save changes"
 msgstr ""
 
 msgid "Edit"
+msgstr ""
+
+msgid "Remove"
 msgstr ""
 
 msgid "Contact info"
@@ -68,9 +86,6 @@ msgid "Modified by"
 msgstr ""
 
 msgid "Choose concept"
-msgstr ""
-
-msgid "Cancel"
 msgstr ""
 
 msgid "Select concept"
