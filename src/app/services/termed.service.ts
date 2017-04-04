@@ -54,7 +54,8 @@ export class TermedService {
         .map(ref => ref.values.map(term => term.toInternalNode()))
       );
 
-    return this.updateUpdateInternalNodes([...termNodes, node.toInternalNode()]);
+    return this.updateUpdateInternalNodes([...termNodes, node.toInternalNode()])
+      .delay(1000); // FIXME Remove delay when api supports blocking modifications
   }
 
   removeNode<T extends NodeType>(node: Node<T>) {
