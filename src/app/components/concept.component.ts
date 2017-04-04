@@ -3,6 +3,8 @@ import { EditableService } from '../services/editable.service';
 import { ConceptViewModelService } from '../services/concept.view.service';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { DeleteConfirmationModalService } from './delete-confirmation.modal';
+import { requireDefined } from '../utils/object';
 
 @Component({
   selector: 'concept',
@@ -19,7 +21,7 @@ import { Subscription } from 'rxjs';
   
         <div class="row">
           <div class="col-md-12">
-            <editable-buttons></editable-buttons>
+            <editable-buttons [canRemove]="true"></editable-buttons>
           </div>
         </div>
   
@@ -37,11 +39,15 @@ export class ConceptComponent implements OnDestroy {
 
   constructor(private route: ActivatedRoute,
               private conceptViewModel: ConceptViewModelService,
+              deleteConfirmationModal: DeleteConfirmationModalService,
               editableService: EditableService) {
 
     route.params.subscribe(params => conceptViewModel.initializeConcept(params['conceptId']));
     editableService.onSave = () => this.conceptViewModel.saveConcept();
     editableService.onCanceled = () => this.conceptViewModel.resetConcept();
+    editableService.onRemove = () =>
+      deleteConfirmationModal.open(requireDefined(this.concept))
+        .then(() => this.conceptViewModel.removeConcept());
 
     this.subscriptionToClean.push(this.conceptViewModel.concept$.subscribe(concept => {
       if (concept) {

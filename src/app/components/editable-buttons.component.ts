@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { EditableService } from '../services/editable.service';
 import { NgForm } from '@angular/forms';
 
@@ -36,10 +36,23 @@ import { NgForm } from '@angular/forms';
               [hidden]="editing">
         <i class="fa fa-pencil"></i>
       </button>
+
+      <button type="button"
+              ngbTooltip="{{'Remove' | translate}}"
+              #removeTooltip="ngbTooltip"
+              [triggers]="'hover:blur'"
+              class="btn btn-default pull-right remove"
+              (click)="removeTooltip.close(); remove()"
+              [disabled]="removing"
+              [hidden]="editing || !canRemove">
+        <i class="fa fa-trash"></i>
+      </button>
     </div>
   `
 })
 export class EditableButtonsComponent {
+
+  @Input('canRemove') canRemove: boolean;
 
   constructor(public form: NgForm, private editableService: EditableService) {
   }
@@ -50,6 +63,10 @@ export class EditableButtonsComponent {
 
   get saving() {
     return this.editableService.saving;
+  }
+
+  get removing() {
+    return this.editableService.removing;
   }
 
   startEditing() {
@@ -66,5 +83,9 @@ export class EditableButtonsComponent {
 
   saveEdited() {
     this.editableService.save();
+  }
+
+  remove() {
+    this.editableService.remove();
   }
 }

@@ -6,8 +6,10 @@ export class EditableService {
 
   editing$ = new BehaviorSubject<boolean>(false);
   saving$ = new BehaviorSubject<boolean>(false);
+  removing$ = new BehaviorSubject<boolean>(false);
 
   onSave: () => Promise<any>|void;
+  onRemove: () => Promise<any>|void;
   onCanceled: () => void;
 
   get editing() {
@@ -16,6 +18,10 @@ export class EditableService {
 
   get saving() {
     return this.saving$.getValue();
+  }
+
+  get removing() {
+    return this.removing$.getValue();
   }
 
   edit() {
@@ -43,6 +49,20 @@ export class EditableService {
       this.editing$.next(false);
     }, err => {
       this.saving$.next(false);
+    });
+  }
+
+  remove() {
+    if (!this.onRemove) {
+      throw new Error('Remove handler missing');
+    }
+
+    this.removing$.next(true);
+
+    Promise.resolve(this.onRemove()).then(() => {
+      this.removing$.next(false);
+    }, err => {
+      this.removing$.next(false);
     });
   }
 }

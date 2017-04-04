@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { URLSearchParams, ResponseOptionsArgs, Response } from '@angular/http';
 import { Observable } from 'rxjs';
 import { TermedHttp } from './termed-http.service';
-import { normalizeAsArray } from '../utils/array';
+import { flatten, normalizeAsArray } from '../utils/array';
 import { MetaModelService } from './meta-model.service';
-import { NodeExternal, NodeType, NodeInternal } from '../entities/node-api';
+import { NodeExternal, NodeType, NodeInternal, Identifier } from '../entities/node-api';
 import { Node } from '../entities/node';
 import * as moment from 'moment';
 
@@ -48,17 +48,35 @@ export class TermedService {
 
     node.lastModifiedDate = moment();
 
-    const termNodes: NodeInternal<any>[] = [];
-
-    for (const reference of Object.values(node.references)) {
-      if (reference.term) {
-        for (const node of reference.values) {
-          termNodes.push(node.toInternalNode());
-        }
-      }
-    }
+    const termNodes =
+      flatten(Object.values(node.references)
+        .filter(ref => ref.term)
+        .map(ref => ref.values.map(term => term.toInternalNode()))
+      );
 
     return this.updateUpdateInternalNodes([...termNodes, node.toInternalNode()]);
+  }
+
+  removeNode<T extends NodeType>(node: Node<T>) {
+
+    const termIdentifiers =
+      flatten(Object.values(node.references)
+        .filter(ref => ref.term)
+        .map(ref => ref.values.map(term => term.identifier))
+      );
+
+    return this.removeNodeIdentifiers([...termIdentifiers, node.identifier]);
+  }
+
+  private removeNodeIdentifiers(nodeIds: Identifier<any>[]) {
+
+    const params = new URLSearchParams();
+    params.append('batch', 'true');
+
+    return this.http.delete('/api/nodes', {
+      search: params,
+      body: nodeIds
+    });
   }
 
   private updateUpdateInternalNodes(nodes: NodeInternal<any>[]): Observable<Response> {

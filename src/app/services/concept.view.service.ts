@@ -136,6 +136,16 @@ export class ConceptViewModelService {
       });
   }
 
+  removeConcept(): Promise<any> {
+    if (!this.concept) {
+      throw new Error('Cannot remove when there is no concept');
+    }
+
+    // TODO Error handling
+    return this.termedService.removeNode(this.concept).toPromise()
+      .then(() => this.router.navigate(['/concepts', this.graphId]));
+  }
+
   resetConcept() {
     if (!this.concept) {
       throw new Error('Cannot reset when there is no concept');

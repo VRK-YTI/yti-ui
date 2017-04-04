@@ -21,7 +21,7 @@ import { ConceptViewModelService } from '../services/concept.view.service';
           <form>
             <div class="row">
               <div class="col-md-12">
-                <editable-buttons class="pull-right"></editable-buttons>
+                <editable-buttons [canRemove]="false"></editable-buttons>
                 <div class="page-header">
                   <h1>{{vocabulary.meta.label | translateValue}}</h1>
                 </div>
