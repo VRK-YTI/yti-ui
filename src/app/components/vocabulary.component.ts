@@ -29,9 +29,9 @@ import { ConceptViewModelService } from '../services/concept.view.service';
             </div>
             <div class="row">
               <property class="col-md-6" [value]="property"
-                        *ngFor="let property of vocabulary | properties: showEmpty"></property>
+                        *ngFor="let property of vocabularyInEdit | properties: showEmpty"></property>
               <reference class="col-md-6" [value]="reference" [conceptsProvider]="conceptsProvider"
-                         *ngFor="let reference of vocabulary | references: showEmpty"></reference>
+                         *ngFor="let reference of vocabularyInEdit | references: showEmpty"></reference>
             </div>
             <meta-information [node]="vocabulary"></meta-information>
           </form>
@@ -55,6 +55,10 @@ export class VocabularyComponent {
 
   get vocabulary() {
     return this.conceptViewModel.vocabulary;
+  }
+
+  get vocabularyInEdit() {
+    return this.conceptViewModel.vocabularyInEdit;
   }
 
   get showEmpty() {

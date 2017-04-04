@@ -8,16 +8,15 @@ import { comparingLocalizable } from '../utils/comparator';
 import { LanguageService } from './language.service';
 import { MetaModelService } from './meta-model.service';
 import { TranslateService } from 'ng2-translate';
-import { requireDefined } from '../utils/object';
 
 @Injectable()
 export class ConceptViewModelService {
 
-  persistentVocabulary: VocabularyNode;
+  vocabularyInEdit: VocabularyNode;
   vocabulary: VocabularyNode;
   vocabulary$ = new ReplaySubject<VocabularyNode>();
 
-  persistentConcept: ConceptNode|null;
+  conceptInEdit: ConceptNode|null;
   concept$ = new BehaviorSubject<ConceptNode|null>(null);
 
   graphId: string;
@@ -52,10 +51,10 @@ export class ConceptViewModelService {
 
     this.termedService.getVocabulary(graphId, this.languages).subscribe(vocabulary => {
       this.locationService.atVocabulary(vocabulary);
-      this.persistentVocabulary = vocabulary.clone();
-      this.loadingVocabulary = false;
+      this.vocabularyInEdit = vocabulary.clone();
       this.vocabulary = vocabulary;
       this.vocabulary$.next(vocabulary);
+      this.loadingVocabulary = false;
     });
 
     this.termedService.getConceptList(graphId, this.languages).subscribe(concepts => {
@@ -75,7 +74,7 @@ export class ConceptViewModelService {
         } else {
           this.locationService.atVocabulary(vocabulary);
         }
-        this.persistentConcept = concept ? concept.clone() : null;
+        this.conceptInEdit = concept ? concept.clone() : null;
         this.concept$.next(concept);
         this.loadingConcept = false;
       });
@@ -105,17 +104,17 @@ export class ConceptViewModelService {
   }
 
   saveConcept(): Promise<any> {
-    if (!this.concept) {
+    if (!this.conceptInEdit) {
       throw new Error('Cannot save when there is no concept');
     }
 
-    const conceptId = this.concept.id;
+    const conceptId = this.conceptInEdit.id;
 
     // TODO Error handling
-    return this.termedService.updateNode(this.concept).toPromise()
+    return this.termedService.updateNode(this.conceptInEdit).toPromise()
       .then(() => this.termedService.getConcept(this.graphId, conceptId, this.languages).toPromise())
       .then(persistentConcept => {
-        this.persistentConcept = persistentConcept;
+        this.conceptInEdit = persistentConcept;
         this.concept$.next(persistentConcept.clone());
       });
   }
@@ -138,23 +137,23 @@ export class ConceptViewModelService {
     if (!this.concept.persistent) {
       this.router.navigate(['/concepts', this.graphId]);
     } else {
-      this.concept$.next(requireDefined(this.persistentConcept).clone());
+      this.conceptInEdit = this.concept.clone();
     }
   }
 
   saveVocabulary(): Promise<any> {
 
     // TODO Error handling
-    return this.termedService.updateNode(this.vocabulary).toPromise()
+    return this.termedService.updateNode(this.vocabularyInEdit).toPromise()
       .then(() => this.termedService.getVocabulary(this.graphId, this.languages).toPromise())
       .then(persistentVocabulary => {
-        this.persistentVocabulary = persistentVocabulary;
+        this.vocabularyInEdit = persistentVocabulary;
         this.vocabulary = persistentVocabulary.clone();
       });
   }
 
   resetVocabulary() {
-    this.vocabulary = this.persistentVocabulary.clone();
+    this.vocabularyInEdit = this.vocabulary.clone();
   }
 
   getNarrowerConcepts(concept: ConceptNode) {
