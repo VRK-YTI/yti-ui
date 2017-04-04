@@ -9,29 +9,32 @@ import { NgForm } from '@angular/forms';
     <div class="top-actions">
       <button type="button" 
               ngbTooltip="{{'Cancel edit' | translate}}" placement="left"
+              #cancelTooltip="ngbTooltip"
               class="btn btn-default pull-right cancel" 
-              (click)="cancelEditing()"
+              (click)="cancelTooltip.close(); cancelEditing()"
               [disabled]="saving"
               [hidden]="!editing">
-              <i class="fa fa-undo"></i>
+        <i class="fa fa-undo"></i>
       </button>
       
       <button type="button" 
               ngbTooltip="{{'Save changes' | translate}}"
+              #saveTooltip="ngbTooltip"
               class="btn btn-default pull-right save" 
-              (click)="saveEdited()" 
+              (click)="saveTooltip.close(); saveEdited()" 
               [hidden]="!editing" 
               [disabled]="!canSave() || saving">
-              <i class="fa fa-floppy-o"></i>
+        <i class="fa fa-floppy-o"></i>
       </button>
       
       <button type="button"
               ngbTooltip="{{'Edit' | translate}}"
+              #editTooltip="ngbTooltip"
               class="btn btn-default pull-right edit" 
-              (click)="startEditing()"
+              (click)="editTooltip.close(); startEditing()"
               [disabled]="saving"
               [hidden]="editing">
-              <i class="fa fa-pencil"></i>
+        <i class="fa fa-pencil"></i>
       </button>
     </div>
   `
