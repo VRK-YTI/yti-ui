@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { LocationService } from './location.service';
 import { TermedService } from './termed.service';
 import { BehaviorSubject, ReplaySubject } from 'rxjs';
@@ -8,6 +9,7 @@ import { LanguageService } from './language.service';
 import { MetaModelService } from './meta-model.service';
 import { Localization } from '../entities/localization';
 import { TranslateService } from 'ng2-translate';
+import { requireDefined } from '../utils/object';
 
 @Injectable()
 export class ConceptViewModelService {
@@ -31,7 +33,8 @@ export class ConceptViewModelService {
   loadingConcepts = true;
   loadingConcept = true;
 
-  constructor(private termedService: TermedService,
+  constructor(private router: Router,
+              private termedService: TermedService,
               private metaModelService: MetaModelService,
               private locationService: LocationService,
               private languageService: LanguageService,
@@ -138,8 +141,10 @@ export class ConceptViewModelService {
       throw new Error('Cannot reset when there is no concept');
     }
 
-    if (this.persistentConcept) {
-      this.concept$.next(this.persistentConcept.clone());
+    if (!this.concept.persistent) {
+      this.router.navigate(['/concepts', this.graphId]);
+    } else {
+      this.concept$.next(requireDefined(this.persistentConcept).clone());
     }
   }
 

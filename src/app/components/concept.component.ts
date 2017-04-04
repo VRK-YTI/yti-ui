@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { EditableService } from '../services/editable.service';
 import { ConceptViewModelService } from '../services/concept.view.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -36,7 +36,6 @@ export class ConceptComponent implements OnDestroy {
   private subscriptionToClean: Subscription[] = [];
 
   constructor(private route: ActivatedRoute,
-              private router: Router,
               private conceptViewModel: ConceptViewModelService,
               editableService: EditableService) {
 
@@ -53,12 +52,6 @@ export class ConceptComponent implements OnDestroy {
         }
       }
     }));
-
-    editableService.editing$.subscribe(editing => {
-      if (!editing && this.conceptViewModel.concept && !this.conceptViewModel.concept.persistent) {
-        this.router.navigate(['/concepts', this.conceptViewModel.graphId]);
-      }
-    });
   }
 
   ngOnDestroy() {
