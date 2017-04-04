@@ -1,6 +1,6 @@
 import { Component, Input, Injectable, OnInit, ElementRef, ViewChild, Renderer, AfterViewInit } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Node } from '../entities/node';
+import { ConceptNode } from '../entities/node';
 import { BehaviorSubject, Observable } from 'rxjs';
 import {
   ContentExtractor, filterAndSortSearchResults, labelComparator, scoreComparator,
@@ -18,7 +18,7 @@ export class SearchConceptModalService {
   constructor(private modalService: NgbModal) {
   }
 
-  open(conceptsProvider: () => Node<'Concept'>[]): Promise<any> {
+  open(conceptsProvider: () => ConceptNode[]): Promise<any> {
     const modalRef = this.modalService.open(SearchConceptModal, { size: 'lg' });
     const instance = modalRef.componentInstance as SearchConceptModal;
     instance.concepts = conceptsProvider();
@@ -84,12 +84,12 @@ export class SearchConceptModal implements OnInit, AfterViewInit {
 
   @ViewChild('searchInput') searchInput: ElementRef;
 
-  @Input() concepts: Node<'Concept'>[];
+  @Input() concepts: ConceptNode[];
 
-  searchResults: Observable<Node<'Concept'>[]>;
+  searchResults: Observable<ConceptNode[]>;
 
-  selectedItem: Node<'Concept'>|null = null;
-  selection: Node<'Concept'>|null = null;
+  selectedItem: ConceptNode|null = null;
+  selection: ConceptNode|null = null;
 
   search$ = new BehaviorSubject('');
   debouncedSearch = this.search;
@@ -112,10 +112,10 @@ export class SearchConceptModal implements OnInit, AfterViewInit {
     const update = (search: string, onlyStatus: string|null) => {
 
       this.debouncedSearch = search;
-      const scoreFilter = (item: TextAnalysis<Node<'Concept'>>) => !search || isDefined(item.matchScore) || item.score < 2;
-      const statusFilter = (item: TextAnalysis<Node<'Concept'>>) => !onlyStatus || item.item.status === onlyStatus;
-      const labelExtractor: ContentExtractor<Node<'Concept'>> = concept => concept.label;
-      const definitionExtractor: ContentExtractor<Node<'Concept'>> = concept => concept.definition;
+      const scoreFilter = (item: TextAnalysis<ConceptNode>) => !search || isDefined(item.matchScore) || item.score < 2;
+      const statusFilter = (item: TextAnalysis<ConceptNode>) => !onlyStatus || item.item.status === onlyStatus;
+      const labelExtractor: ContentExtractor<ConceptNode> = concept => concept.label;
+      const definitionExtractor: ContentExtractor<ConceptNode> = concept => concept.definition;
       const comparator = scoreComparator().andThen(labelComparator(this.languageService));
 
       return filterAndSortSearchResults(this.concepts, search, [labelExtractor, definitionExtractor], [scoreFilter, statusFilter], comparator);
@@ -124,7 +124,7 @@ export class SearchConceptModal implements OnInit, AfterViewInit {
     this.searchResults = Observable.combineLatest([search, this.onlyStatus$], update);
   }
 
-  select(concept: Node<'Concept'>) {
+  select(concept: ConceptNode) {
 
     this.selectedItem = concept;
 

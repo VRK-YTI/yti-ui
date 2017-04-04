@@ -1,6 +1,6 @@
 import { Component, AfterViewInit, OnInit, ElementRef, ViewChild, Renderer } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { Node } from '../entities/node';
+import { ConceptNode } from '../entities/node';
 import {
   filterAndSortSearchResults, labelComparator, scoreComparator, ContentExtractor,
   TextAnalysis
@@ -82,7 +82,7 @@ export class ConceptListComponent implements OnInit, AfterViewInit {
 
   @ViewChild('searchInput') searchInput: ElementRef;
 
-  searchResults: Observable<Node<'Concept'>[]>;
+  searchResults: Observable<ConceptNode[]>;
   search$ = new BehaviorSubject('');
   sortByTime$ = new BehaviorSubject<boolean>(false);
   onlyStatus$ = new BehaviorSubject<string|null>(null);
@@ -102,14 +102,14 @@ export class ConceptListComponent implements OnInit, AfterViewInit {
     const debouncedSearch = this.search$.skip(1).debounceTime(500);
     const search = initialSearch.concat(debouncedSearch);
 
-    const update = (concepts: Node<'Concept'>[], search: string, sortByTime: boolean, onlyStatus: string|null) => {
+    const update = (concepts: ConceptNode[], search: string, sortByTime: boolean, onlyStatus: string|null) => {
 
       this.debouncedSearch = search;
-      const scoreFilter = (item: TextAnalysis<Node<'Concept'>>) => !search || isDefined(item.matchScore) || item.score < 2;
-      const statusFilter = (item: TextAnalysis<Node<'Concept'>>) => !onlyStatus || item.item.status === onlyStatus;
-      const labelExtractor: ContentExtractor<Node<'Concept'>> = concept => concept.label;
+      const scoreFilter = (item: TextAnalysis<ConceptNode>) => !search || isDefined(item.matchScore) || item.score < 2;
+      const statusFilter = (item: TextAnalysis<ConceptNode>) => !onlyStatus || item.item.status === onlyStatus;
+      const labelExtractor: ContentExtractor<ConceptNode> = concept => concept.label;
       const scoreAndLabelComparator = scoreComparator().andThen(labelComparator(this.languageService));
-      const dateComparator = reversed(comparingDate<TextAnalysis<Node<'Concept'>>>(item => item.item.lastModifiedDate));
+      const dateComparator = reversed(comparingDate<TextAnalysis<ConceptNode>>(item => item.item.lastModifiedDate));
       const comparator = sortByTime ? dateComparator.andThen(scoreAndLabelComparator) : scoreAndLabelComparator;
 
       return filterAndSortSearchResults(concepts, search, [labelExtractor], [scoreFilter, statusFilter], comparator);
@@ -146,7 +146,7 @@ export class ConceptListComponent implements OnInit, AfterViewInit {
     this.onlyStatus$.next(value);
   }
 
-  navigate(concept: Node<'Concept'>) {
+  navigate(concept: ConceptNode) {
     this.router.navigate(['/concepts', concept.graphId, 'concept', concept.id]);
   }
 
@@ -154,7 +154,7 @@ export class ConceptListComponent implements OnInit, AfterViewInit {
     this.router.navigate(['/concepts', this.conceptViewModel.graphId, 'concept', uuid()]);
   }
 
-  isSelected(concept: Node<'Concept'>) {
+  isSelected(concept: ConceptNode) {
     return this.conceptViewModel.conceptId === concept.id;
   }
 }

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ElementRef, ViewChild, AfterViewChecked } from '@angular/core';
 import { Parser, Node as MarkdownNode } from 'commonmark';
-import { Node } from '../../entities/node';
+import { ConceptNode } from '../../entities/node';
 import { logUnsupportedNodes, removeWhiteSpaceNodes, children } from '../../utils/markdown';
 import { first } from '../../utils/array';
 import { Localizable } from '../../entities/localization';
@@ -19,7 +19,7 @@ const parser = new Parser();
 export class MarkdownLinksComponent implements OnInit, AfterViewChecked {
 
   @Input() value: string;
-  @Input() relatedConcepts: Node<'Concept'>[];
+  @Input() relatedConcepts: ConceptNode[];
   node: MarkdownNode;
 
   @ViewChild('self') self: ElementRef;
@@ -56,9 +56,9 @@ export class MarkdownLinksComponent implements OnInit, AfterViewChecked {
 export class MarkdownLinksElementComponent {
 
   @Input() node: MarkdownNode;
-  @Input() relatedConcepts: Node<'Concept'>[];
+  @Input() relatedConcepts: ConceptNode[];
 
-  private getTargetConceptNode(node: MarkdownNode): Node<'Concept'>|null {
+  private getTargetConceptNode(node: MarkdownNode): ConceptNode|null {
     // FIXME: proper mapping
     return first(this.relatedConcepts, concept => node.destination.indexOf(concept.code) !== -1);
   }

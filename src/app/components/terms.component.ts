@@ -1,18 +1,16 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Reference } from '../entities/node';
+import { Reference, TermNode } from '../entities/node';
 import { EditableService } from '../services/editable.service';
-import { Node } from '../entities/node';
-import { Localization } from '../entities/localization';
 
 @Component({
   selector: 'terms',
   styleUrls: ['./terms.component.scss'],
   template: `              
     <ngb-accordion [activeIds]="openTermLanguages">
-      <ngb-panel [id]="languageOfTerm(term)" *ngFor="let term of nonEmptyTerms">
+      <ngb-panel [id]="term.language" *ngFor="let term of nonEmptyTerms">
         <template ngbPanelTitle>
-          <div class="language">{{languageOfTerm(term).toUpperCase()}}</div> 
-          <div class="localization">{{localizationOfTerm(term).value}} <accordion-chevron class="pull-right"></accordion-chevron></div>
+          <div class="language">{{term.language | uppercase}}</div> 
+          <div class="localization">{{term.value}} <accordion-chevron class="pull-right"></accordion-chevron></div>
         </template>
         <template ngbPanelContent>
           <div class="row" [class.primary-term]="primary">
@@ -27,7 +25,7 @@ import { Localization } from '../entities/localization';
 })
 export class TermsComponent implements OnInit {
 
-  @Input('value') termReference: Reference;
+  @Input('value') termReference: Reference<TermNode>;
   @Input() multiColumn = false;
   @Input() primary = false;
 
@@ -49,15 +47,11 @@ export class TermsComponent implements OnInit {
   }
 
   get nonEmptyTerms() {
-    return this.termReference.values.filter(term => this.editableService.editing || !!this.localizationOfTerm(term).value.trim());
-  }
-
-  languageOfTerm(term: Node<'Term'>): string {
-    return this.localizationOfTerm(term).lang;
-  }
-
-  localizationOfTerm(term: Node<'Term'>): Localization {
-    return term.properties['prefLabel'].value[0] as Localization;
+    if (this.editableService.editing) {
+      return this.termReference.values;
+    } else {
+      return this.termReference.values.filter(term => !term.empty!);
+    }
   }
 
   get showEmpty() {

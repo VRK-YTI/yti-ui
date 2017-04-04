@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Node } from '../entities/node';
+import { ConceptNode } from '../entities/node';
 import { ConceptViewModelService } from '../services/concept.view.service';
 import { Router } from '@angular/router';
 
@@ -24,9 +24,9 @@ import { Router } from '@angular/router';
 })
 export class ConceptHierarchyNodeComponent {
 
-  @Input() concept: Node<'Concept'>;
+  @Input() concept: ConceptNode;
   collapsed = true;
-  children: Node<'Concept'>[];
+  children: ConceptNode[];
 
   constructor(private conceptViewModel: ConceptViewModelService,
               private router: Router) {
@@ -45,8 +45,7 @@ export class ConceptHierarchyNodeComponent {
   }
 
   hasChildren() {
-    const narrower = this.concept.referrers['broader'];
-    return narrower && narrower.length > 0;
+    return this.concept.narrowerConcepts.length > 0;
   }
 
   collapse() {

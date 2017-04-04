@@ -1,10 +1,17 @@
 import { asLocalizable, Localizable, combineLocalizables, Localization } from './localization';
 import { requireDefined, assertNever } from '../utils/object';
-import { normalizeAsArray, any, requireSingle } from '../utils/array';
-import { NodeExternal, NodeType, Attribute, Identifier, NodeInternal } from './node-api';
+import { normalizeAsArray, any, requireSingle, all } from '../utils/array';
+import { NodeExternal, NodeType, Attribute, Identifier, NodeInternal, VocabularyNodeType } from './node-api';
 import { PropertyMeta, ReferenceMeta, NodeMeta } from './meta';
 import { Moment } from 'moment';
 import * as moment from 'moment';
+
+export type KnownNode = VocabularyNode
+  | ConceptNode
+  | TermNode
+  | CollectionNode
+  | GroupNode
+  | OrganizationNode;
 
 export class Property {
 
@@ -75,9 +82,9 @@ export class Property {
   }
 }
 
-export class Reference {
+export class Reference<N extends KnownNode | Node<any>> {
 
-  values: Node<any>[];
+  values: N[];
 
   constructor(nodes: NodeExternal<any>[], public meta: ReferenceMeta, metas: Map<string, Map<string, NodeMeta>>, public languages: string[]) {
     if (this.term) {
@@ -93,13 +100,13 @@ export class Reference {
         });
 
         if (node) {
-          this.values.push(new Node<any>(node, metas, [language]));
+          this.values.push(Node.create(node, metas, [language]) as N);
         } else {
-          this.values.push(new Node<any>(nodeMeta.createEmptyNode(), metas, [language]));
+          this.values.push(Node.create(nodeMeta.createEmptyNode(), metas, [language]) as N);
         }
       }
     } else {
-      this.values = nodes.map(node => new Node<any>(node, metas, languages));
+      this.values = nodes.map(node => Node.create(node, metas, languages) as N);
     }
   }
 
@@ -117,7 +124,7 @@ export class Reference {
 
   get empty() {
     if (this.term) {
-      return !any(this.values, term => !!(term.properties['prefLabel'].value as Localization[])[0].value.trim());
+      return all((this.values as TermNode[]), term => term.empty);
     } else {
       return this.values.length === 0;
     }
@@ -129,12 +136,12 @@ export class Node<T extends NodeType> {
   meta: NodeMeta;
 
   properties: { [key: string]: Property } = {};
-  references: { [key: string]: Reference } = {};
+  references: { [key: string]: Reference<any> } = {};
   referrers: { [key: string]: Node<any>[] } = {};
 
   persistent = true;
 
-  constructor(private node: NodeExternal<T>, private metas: Map<string, Map<string, NodeMeta>>, public languages: string[]) {
+  protected constructor(protected node: NodeExternal<T>, protected metas: Map<string, Map<string, NodeMeta>>, public languages: string[]) {
 
     this.meta = requireDefined(requireDefined(metas.get(node.type.graph.id)).get(node.type.id), 'Meta not found for ' + node.type.id);
 
@@ -149,7 +156,27 @@ export class Node<T extends NodeType> {
     }
 
     for (const [name, referrerNodes] of Object.entries(node.referrers)) {
-      this.referrers[name] = normalizeAsArray(referrerNodes).map(referrerNode => new Node<any>(referrerNode, metas, languages));
+      this.referrers[name] = normalizeAsArray(referrerNodes).map(referrerNode => Node.create(referrerNode, metas, languages));
+    }
+  }
+
+  static create(node: NodeExternal<any>, metas: Map<string, Map<string, NodeMeta>>, languages: string[]): KnownNode | Node<any> {
+    switch (node.type.id) {
+      case 'Vocabulary':
+      case 'TerminologicalVocabulary':
+        return new VocabularyNode(node, metas, languages);
+      case 'Concept':
+        return new ConceptNode(node, metas, languages);
+      case 'Term':
+        return new TermNode(node, metas, languages);
+      case 'Collection':
+        return new CollectionNode(node, metas, languages);
+      case 'Group':
+        return new GroupNode(node, metas, languages);
+      case 'Organization':
+        return new OrganizationNode(node, metas, languages);
+      default:
+        return new Node<any>(node, metas, languages);
     }
   }
 
@@ -269,12 +296,6 @@ export class Node<T extends NodeType> {
     this.node.lastModifiedDate = date.toISOString();
   }
 
-  clone() {
-    const cloned = new Node<T>(JSON.parse(JSON.stringify(this.toExternalNode())), this.metas, this.languages);
-    cloned.persistent = this.persistent;
-    return cloned;
-  }
-
   get concept(): boolean {
     return this.meta.concept;
   }
@@ -283,42 +304,8 @@ export class Node<T extends NodeType> {
     return this.meta.term;
   }
 
-  get label(): Localizable {
-    if (this.properties['prefLabel']) {
-      return this.getPropertyAsLocalizable('prefLabel');
-    } else if (this.references['prefLabelXl']) {
-      return combineLocalizables(this.references['prefLabelXl'].values.map(term => term.getPropertyAsLocalizable('prefLabel')));
-    } else {
-      throw new Error('No label found');
-    }
-  }
-
-  get description(): Localizable {
-    return this.getPropertyAsLocalizable('description');
-  }
-
-  get definition(): Localizable {
-    return this.getPropertyAsLocalizable('definition');
-  }
-
-  get publisher(): Node<any> {
-    return requireSingle(this.references['publisher'].values);
-  }
-
-  get group(): Node<any> {
-    return requireSingle(this.references['inGroup'].values);
-  }
-
   get typeLabel(): Localizable {
     return this.meta.label;
-  }
-
-  get status(): string {
-    if (this.properties['status']) {
-      return this.getPropertyAsString('status');
-    } else {
-      throw new Error('Status not found');
-    }
   }
 
   getPropertyAsLocalizable(property: string): Localizable {
@@ -332,12 +319,164 @@ export class Node<T extends NodeType> {
   }
 
   getPropertyAsString(property: string): string {
-    const propertyValue = requireDefined(this.properties[property]).value;
+    const propertyValue = requireDefined(this.properties[property], 'Property not found: ' + property).value;
 
     if (typeof propertyValue !== 'string') {
       throw new Error('Property must be string');
     }
 
     return propertyValue;
+  }
+}
+
+export class VocabularyNode extends Node<VocabularyNodeType> {
+  constructor(node: NodeExternal<VocabularyNodeType>, metas: Map<string, Map<string, NodeMeta>>,languages: string[]) {
+    super(node, metas, languages);
+  }
+
+  clone(): VocabularyNode {
+    const cloned = new VocabularyNode(JSON.parse(JSON.stringify(this.toExternalNode())), this.metas, this.languages);
+    cloned.persistent = this.persistent;
+    return cloned;
+  }
+
+  get label(): Localizable {
+    return this.getPropertyAsLocalizable('prefLabel');
+  }
+
+  get description(): Localizable {
+    return this.getPropertyAsLocalizable('description');
+  }
+
+  get publisher(): OrganizationNode {
+    return requireSingle(this.references['publisher'].values) as OrganizationNode;
+  }
+
+  get group(): GroupNode {
+    return requireSingle(this.references['inGroup'].values) as GroupNode;
+  }
+
+  hasGroup() {
+    return !this.references['inGroup'].empty;
+  }
+}
+
+export class ConceptNode extends Node<'Concept'> {
+  constructor(node: NodeExternal<'Concept'>, metas: Map<string, Map<string, NodeMeta>>,languages: string[]) {
+    super(node, metas, languages);
+  }
+
+  clone(): ConceptNode {
+    const cloned = new ConceptNode(JSON.parse(JSON.stringify(this.toExternalNode())), this.metas, this.languages);
+    cloned.persistent = this.persistent;
+    return cloned;
+  }
+
+  get label(): Localizable {
+    if (this.properties['prefLabel']) {
+      return this.getPropertyAsLocalizable('prefLabel');
+    } else if (this.references['prefLabelXl']) {
+      return combineLocalizables(this.references['prefLabelXl'].values.map(term => term.getPropertyAsLocalizable('prefLabel')));
+    } else {
+      throw new Error('No label found');
+    }
+  }
+
+  get definition(): Localizable {
+    return this.getPropertyAsLocalizable('definition');
+  }
+
+  get vocabulary(): VocabularyNode {
+    return requireSingle(this.references['inScheme'].values) as VocabularyNode;
+  }
+
+  set vocabulary(vocabulary: VocabularyNode) {
+    this.references['inScheme'].values = [vocabulary];
+  }
+
+  get status(): string {
+    return this.getPropertyAsString('status');
+  }
+
+  get terms(): TermNode[] {
+    return normalizeAsArray(this.references['prefLabelXl'].values as TermNode[]);
+  }
+
+  findTermForLanguage(language: string): TermNode|undefined {
+    return this.terms.find(term => term.language === language);
+  }
+
+  get relatedConcepts(): ConceptNode[] {
+    return normalizeAsArray(this.references['related'].values as ConceptNode[]);
+  }
+
+  get broaderConcepts(): ConceptNode[] {
+    return normalizeAsArray(this.references['broader'].values as ConceptNode[]);
+  }
+
+  get narrowerConcepts(): ConceptNode[] {
+    return normalizeAsArray(this.referrers['broader'] as ConceptNode[]);
+  }
+
+  get partOfThisConcepts(): ConceptNode[] {
+    return normalizeAsArray(this.referrers['isPartOf'] as ConceptNode[]);
+  }
+}
+
+export class TermNode extends Node<'Term'> {
+  constructor(node: NodeExternal<'Term'>, metas: Map<string, Map<string, NodeMeta>>,languages: string[]) {
+    super(node, metas, languages);
+  }
+
+  get empty() {
+    return !this.value.trim();
+  }
+
+  get language(): string {
+    return this.localization.lang;
+  }
+
+  get value() {
+    return this.localization.value;
+  }
+
+  set value(value: string) {
+    this.localization.value = value;
+  }
+
+  get localization(): Localization {
+    return this.properties['prefLabel'].value[0] as Localization;
+  }
+}
+
+export class CollectionNode extends Node<'Collection'> {
+  constructor(node: NodeExternal<'Collection'>, metas: Map<string, Map<string, NodeMeta>>,languages: string[]) {
+    super(node, metas, languages);
+  }
+
+  clone(): CollectionNode {
+    const cloned = new CollectionNode(JSON.parse(JSON.stringify(this.toExternalNode())), this.metas, this.languages);
+    cloned.persistent = this.persistent;
+    return cloned;
+  }
+}
+
+export class GroupNode extends Node<'Group'> {
+  constructor(node: NodeExternal<'Group'>, metas: Map<string, Map<string, NodeMeta>>,languages: string[]) {
+    super(node, metas, languages);
+  }
+
+  get label(): Localizable {
+    return this.getPropertyAsLocalizable('prefLabel');
+  }
+}
+
+export class OrganizationNode extends Node<'Organization'> {
+  constructor(node: NodeExternal<'Organization'>, metas: Map<string, Map<string, NodeMeta>>,languages: string[]) {
+    super(node, metas, languages);
+  }
+
+  get label(): Localizable {
+    return this.getPropertyAsLocalizable('prefLabel');
   }
 }

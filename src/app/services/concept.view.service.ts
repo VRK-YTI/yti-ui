@@ -3,30 +3,28 @@ import { Router } from '@angular/router';
 import { LocationService } from './location.service';
 import { TermedService } from './termed.service';
 import { BehaviorSubject, ReplaySubject } from 'rxjs';
-import { Node, Property } from '../entities/node';
+import { ConceptNode, VocabularyNode } from '../entities/node';
 import { comparingLocalizable } from '../utils/comparator';
 import { LanguageService } from './language.service';
 import { MetaModelService } from './meta-model.service';
-import { Localization } from '../entities/localization';
 import { TranslateService } from 'ng2-translate';
 import { requireDefined } from '../utils/object';
-import { VocabularyNodeType } from '../entities/node-api';
 
 @Injectable()
 export class ConceptViewModelService {
 
-  persistentVocabulary: Node<VocabularyNodeType>;
-  vocabulary: Node<VocabularyNodeType>;
-  vocabulary$ = new ReplaySubject<Node<VocabularyNodeType>>();
+  persistentVocabulary: VocabularyNode;
+  vocabulary: VocabularyNode;
+  vocabulary$ = new ReplaySubject<VocabularyNode>();
 
-  persistentConcept: Node<'Concept'>|null;
-  concept$ = new BehaviorSubject<Node<'Concept'>|null>(null);
+  persistentConcept: ConceptNode|null;
+  concept$ = new BehaviorSubject<ConceptNode|null>(null);
 
   graphId: string;
   conceptId: string|null;
 
-  topConcepts$ = new BehaviorSubject<Node<'Concept'>[]>([]);
-  allConcepts$ = new BehaviorSubject<Node<'Concept'>[]>([]);
+  topConcepts$ = new BehaviorSubject<ConceptNode[]>([]);
+  allConcepts$ = new BehaviorSubject<ConceptNode[]>([]);
 
   languages = ['fi', 'en', 'sv'];
 
@@ -61,16 +59,16 @@ export class ConceptViewModelService {
     });
 
     this.termedService.getConceptList(graphId, this.languages).subscribe(concepts => {
-      const sortedConcepts = concepts.sort(comparingLocalizable<Node<'Concept'>>(this.languageService, concept => concept.label));
+      const sortedConcepts = concepts.sort(comparingLocalizable<ConceptNode>(this.languageService, concept => concept.label));
       this.allConcepts$.next(sortedConcepts);
-      this.topConcepts$.next(sortedConcepts.filter(concept => concept.references['broader'].empty));
+      this.topConcepts$.next(sortedConcepts.filter(concept => concept.broaderConcepts.length === 0));
       this.loadingConcepts = false;
     });
   }
 
   initializeConcept(conceptId: string|null) {
 
-    const init = (concept: Node<'Concept'>|null) => {
+    const init = (concept: ConceptNode|null) => {
       this.vocabulary$.subscribe(vocabulary => {
         if (concept) {
           this.locationService.atConcept(vocabulary, concept);
@@ -91,28 +89,13 @@ export class ConceptViewModelService {
     } else {
       this.vocabulary$.subscribe(vocabulary => {
         this.termedService.getConcept(vocabulary.graphId, conceptId, this.languages).subscribe(init, () => {
-          this.metaModelService.createEmptyNode(this.graphId, conceptId, 'Concept', this.languages).subscribe(concept => {
+          this.metaModelService.createEmptyNode(this.graphId, conceptId, 'Concept', this.languages).subscribe((concept: ConceptNode) => {
 
-            function findTermForLanguage(terms: Node<'Term'>[], language: string): Node<'Term'>|undefined {
-              return terms.find(term => {
-                const label: Property = term.properties['prefLabel'];
-                const localizations = label.value as Localization[];
-                return localizations[0].lang === language;
-              });
-            }
-
-            function setTermValue(value: string, language: string) {
-              const terms: Node<'Term'>[] = concept.references['prefLabelXl'].values;
-              const matchingTerm: Node<'Term'> = findTermForLanguage(terms, language) || terms[0];
-              const label: Property = matchingTerm.properties['prefLabel'];
-              const localizations = label.value as Localization[];
-              localizations[0].value = value;
-            }
-
-            concept.references['inScheme'].values.push(vocabulary.clone());
+            concept.vocabulary = vocabulary.clone();
 
             this.translateService.get('New concept').subscribe(newConceptLabel => {
-              setTermValue(newConceptLabel, this.languageService.language);
+              const matchingTerm = concept.findTermForLanguage(this.languageService.language) || concept.terms[0];
+              matchingTerm.value = newConceptLabel;
               init(concept);
             });
           });
@@ -174,7 +157,7 @@ export class ConceptViewModelService {
     this.vocabulary = this.persistentVocabulary.clone();
   }
 
-  getNarrowerConcepts(concept: Node<'Concept'>) {
+  getNarrowerConcepts(concept: ConceptNode) {
     return this.termedService.getNarrowerConcepts(concept.graphId, concept.id, this.languages);
   }
 }

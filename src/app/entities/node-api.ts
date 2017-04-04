@@ -6,7 +6,8 @@ export type NodeType = VocabularyNodeType
                      | 'Concept'
                      | 'Term'
                      | 'Collection'
-                     | 'Group';
+                     | 'Group'
+                     | 'Organization';
 
 export interface Identifier<T extends NodeType> {
 

@@ -43,11 +43,11 @@ export class MetaModelService {
     return this.meta;
   }
 
-  createEmptyNode<T extends NodeType>(graphId: string, nodeId: string, nodeType: T, languages: string[]): Observable<Node<T>> {
+  createEmptyNode<N extends Node<T>, T extends NodeType>(graphId: string, nodeId: string, nodeType: T, languages: string[]): Observable<N> {
     return this.meta.map(metas => {
       const graphMeta = requireDefined(metas.get(graphId), 'Graph not found: '+ graphId);
       const conceptMeta = requireDefined(graphMeta.get(nodeType), 'Node type not found: ' + nodeType);
-      const node = new Node<T>(conceptMeta.createEmptyNode(nodeId), metas, languages);
+      const node = Node.create(conceptMeta.createEmptyNode(nodeId), metas, languages);
       node.persistent = false;
       return node;
     });

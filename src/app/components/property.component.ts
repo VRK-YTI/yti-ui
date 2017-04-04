@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Node, Property } from '../entities/node';
+import { ConceptNode, Property } from '../entities/node';
 import { EditableService } from '../services/editable.service';
 
 @Component({
@@ -20,7 +20,7 @@ import { EditableService } from '../services/editable.service';
 export class PropertyComponent {
 
   @Input('value') property: Property;
-  @Input() relatedConcepts: Node<'Concept'>[];
+  @Input() relatedConcepts: ConceptNode[];
 
   constructor(private editableService: EditableService) {
   }
