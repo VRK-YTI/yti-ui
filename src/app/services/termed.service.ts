@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { TermedHttp } from './termed-http.service';
 import { flatten, normalizeAsArray } from '../utils/array';
 import { MetaModelService } from './meta-model.service';
-import { NodeExternal, NodeType, NodeInternal, Identifier } from '../entities/node-api';
+import { NodeExternal, NodeType, NodeInternal, Identifier, VocabularyNodeType } from '../entities/node-api';
 import { Node } from '../entities/node';
 import * as moment from 'moment';
 
@@ -17,15 +17,27 @@ export class TermedService {
   constructor(private http: TermedHttp, private metaModelService: MetaModelService) {
   }
 
-  getVocabulary(graphId: string, languages: string[]): Observable<Node<'TerminologicalVocabulary'>> {
-    return Observable.zip(this.metaModelService.getMeta(), this.getVocabularyNode(graphId))
-      .map(([meta, vocabulary]) => new Node<'TerminologicalVocabulary'>(vocabulary, meta, languages));
+  getVocabulary(graphId: string, languages: string[]): Observable<Node<VocabularyNodeType>> {
+
+    const vocabulary: Observable<NodeExternal<VocabularyNodeType>|null> =
+      Observable.forkJoin([
+        this.getVocabularyNode(graphId, 'Vocabulary').catch(notFoundAsDefault(null)),
+        this.getVocabularyNode(graphId, 'TerminologicalVocabulary').catch(notFoundAsDefault(null))
+      ], (vocabulary, terminologicalVocabulary) => vocabulary || terminologicalVocabulary);
+
+    return Observable.zip(this.metaModelService.getMeta(), vocabulary)
+      .map(([meta, vocabulary]) => {
+        if (!vocabulary) {
+          throw new Error('Vocabulary not found for graph: ' + graphId);
+        }
+        return new Node<VocabularyNodeType>(vocabulary, meta, languages)
+      });
   }
 
-  getVocabularyList(languages: string[]): Observable<Node<'TerminologicalVocabulary'>[]> {
-    return Observable.zip(this.metaModelService.getMeta(), this.getVocabularyNodes())
-      .map(([meta, vocabularies]) =>
-        vocabularies.map(scheme => new Node<'TerminologicalVocabulary'>(scheme, meta, languages))
+  getVocabularyList(languages: string[]): Observable<Node<VocabularyNodeType>[]> {
+    return Observable.zip(this.metaModelService.getMeta(), this.getVocabularyNodes('Vocabulary'), this.getVocabularyNodes('TerminologicalVocabulary'))
+      .map(([meta, vocabularies, terminologicalVocabularies]) =>
+      [...vocabularies, ...terminologicalVocabularies].map(vocabulary => new Node<VocabularyNodeType>(vocabulary, meta, languages))
           .filter(scheme => !scheme.references['inGroup'].empty));
   }
 
@@ -88,30 +100,30 @@ export class TermedService {
     return this.http.post('/api/nodes', nodes, { search: params });
   }
 
-  private getVocabularyNode(graphId: string): Observable<NodeExternal<'TerminologicalVocabulary'>> {
+  private getVocabularyNode<T extends VocabularyNodeType>(graphId: string, type: T): Observable<NodeExternal<VocabularyNodeType>> {
 
     const params = new URLSearchParams();
     params.append('max', '-1');
     params.append('graphId', graphId);
-    params.append('typeId', 'TerminologicalVocabulary');
+    params.append('typeId', type);
     params.append('select.referrers', '');
     params.append('select.audit', 'true');
 
     return this.http.get(`/api/ext.json`, { search: params } )
-      .map(response => requireSingle(response.json() as NodeExternal<'TerminologicalVocabulary'>));
+      .map(response => requireSingle(response.json() as NodeExternal<VocabularyNodeType>));
   }
 
-  private getVocabularyNodes(): Observable<NodeExternal<'TerminologicalVocabulary'>[]> {
+  private getVocabularyNodes<T extends VocabularyNodeType>(type: T): Observable<NodeExternal<T>[]> {
 
     const params = new URLSearchParams();
     params.append('max', '-1');
-    params.append('typeId', 'TerminologicalVocabulary');
+    params.append('typeId', type);
     params.append('select.references', 'publisher');
     params.append('select.references', 'inGroup');
     params.append('select.referrers', '');
 
     return this.http.get(`/api/ext.json`, { search: params } )
-      .map(response => normalizeAsArray(response.json() as NodeExternal<'TerminologicalVocabulary'>[])).catch(notFoundAsDefault([]));
+      .map(response => normalizeAsArray(response.json() as NodeExternal<T>[])).catch(notFoundAsDefault([]));
   }
 
   private getConceptListNodes(graphId: string): Observable<NodeExternal<'Concept'>[]> {

@@ -1,6 +1,9 @@
 
-export type NodeType = 'Concept'
-                     | 'TerminologicalVocabulary'
+export type VocabularyNodeType = 'Vocabulary'
+                               | 'TerminologicalVocabulary';
+
+export type NodeType = VocabularyNodeType
+                     | 'Concept'
                      | 'Term'
                      | 'Collection'
                      | 'Group';

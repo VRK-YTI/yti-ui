@@ -10,13 +10,14 @@ import { MetaModelService } from './meta-model.service';
 import { Localization } from '../entities/localization';
 import { TranslateService } from 'ng2-translate';
 import { requireDefined } from '../utils/object';
+import { VocabularyNodeType } from '../entities/node-api';
 
 @Injectable()
 export class ConceptViewModelService {
 
-  persistentVocabulary: Node<'TerminologicalVocabulary'>;
-  vocabulary: Node<'TerminologicalVocabulary'>;
-  vocabulary$ = new ReplaySubject<Node<'TerminologicalVocabulary'>>();
+  persistentVocabulary: Node<VocabularyNodeType>;
+  vocabulary: Node<VocabularyNodeType>;
+  vocabulary$ = new ReplaySubject<Node<VocabularyNodeType>>();
 
   persistentConcept: Node<'Concept'>|null;
   concept$ = new BehaviorSubject<Node<'Concept'>|null>(null);

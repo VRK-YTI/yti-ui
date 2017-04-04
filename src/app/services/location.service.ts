@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Localizable } from '../entities/localization';
 import { Subject } from 'rxjs';
 import { Node } from '../entities/node';
+import { VocabularyNodeType } from '../entities/node-api';
 
 export interface Location {
   localizationKey?: string;
@@ -21,14 +22,14 @@ export class LocationService {
     this.location.next(location);
   }
 
-  atVocabulary(vocabulary: Node<'TerminologicalVocabulary'>): void {
+  atVocabulary(vocabulary: Node<VocabularyNodeType>): void {
     this.changeLocation([{
       label: vocabulary.label,
       route: ['concepts', vocabulary.graphId]
     }]);
   }
 
-  atConcept(vocabulary: Node<'TerminologicalVocabulary'>, concept: Node<'Concept'>): void {
+  atConcept(vocabulary: Node<VocabularyNodeType>, concept: Node<'Concept'>): void {
     this.changeLocation([
       {
         label: vocabulary.label,

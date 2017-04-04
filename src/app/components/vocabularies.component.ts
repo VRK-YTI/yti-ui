@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { Localizable } from '../entities/localization';
 import { groupBy, all } from '../utils/array';
 import { requireDefined } from '../utils/object';
+import { VocabularyNodeType } from '../entities/node-api';
 
 @Component({
   selector: 'vocabularies',
@@ -93,8 +94,8 @@ import { requireDefined } from '../utils/object';
 })
 export class VocabulariesComponent {
 
-  vocabularies: Node<'TerminologicalVocabulary'>[];
-  filterResults: Node<'TerminologicalVocabulary'>[];
+  vocabularies: Node<VocabularyNodeType>[];
+  filterResults: Node<VocabularyNodeType>[];
 
   filters: Filter[];
 
@@ -123,7 +124,7 @@ export class VocabulariesComponent {
     locationService.atFrontPage();
   }
 
-  navigate(vocabulary: Node<'TerminologicalVocabulary'>) {
+  navigate(vocabulary: Node<VocabularyNodeType>) {
     this.router.navigate(['/concepts', vocabulary.graphId]);
   }
 }
