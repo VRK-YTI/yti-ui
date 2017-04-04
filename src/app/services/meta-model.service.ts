@@ -3,12 +3,13 @@ import { Observable, ReplaySubject } from 'rxjs';
 import { normalizeAsArray, flatten } from '../utils/array';
 import { Injectable } from '@angular/core';
 import { TermedHttp } from './termed-http.service';
-import { isDefined, requireDefined } from '../utils/object';
+import { requireDefined } from '../utils/object';
 import { Graph } from '../entities/graph';
 import { NodeMeta } from '../entities/meta';
 import { NodeMetaInternal } from '../entities/meta-api';
 import { NodeType } from '../entities/node-api';
 import { Node } from '../entities/node';
+import { getOrCreate } from '../utils/map';
 
 const infiniteResultsParams = new URLSearchParams();
 infiniteResultsParams.append('max', '-1');
@@ -60,18 +61,5 @@ export class MetaModelService {
   private getMetaModels(graphId: string): Observable<NodeMetaInternal[]> {
     return this.http.get(`/api/graphs/${graphId}/types`, infiniteResultsOptions)
       .map(response => normalizeAsArray(response.json()) as NodeMetaInternal[]);
-  }
-}
-
-function getOrCreate<K, V>(map: Map<K, V>, key: K, create: () => V): V {
-
-  const result = map.get(key);
-
-  if (isDefined(result)) {
-    return result;
-  } else {
-    const created = create();
-    map.set(key, created);
-    return created;
   }
 }
