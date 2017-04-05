@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ConceptViewModelService } from '../services/concept.view.service';
@@ -40,6 +40,13 @@ import { ConceptNetworkComponent } from './vis/concept-network.component';
                     <p>{{'Hierarchical' | translate}}</p>
                   </template>
                   <template ngbTabContent><concept-hierarchy></concept-hierarchy></template>
+                </ngb-tab>
+                <ngb-tab>
+                  <template ngbTabTitle>
+                    <i class="fa fa-clone"></i>
+                    <p>{{'Collection' | translate}}</p>
+                  </template>
+                  <template ngbTabContent><collection-list></collection-list></template>
                 </ngb-tab>
               </ngb-tabset>
             </div>
@@ -92,11 +99,11 @@ export class ConceptsComponent implements OnInit {
   }
 
   get showSelection() {
-    return !!this.viewModel.concept;
+    return this.viewModel.selection;
   }
 
   get showVisualization() {
-    return !this.conceptNetwork.isEmpty() && (this.viewModel.concept || this.conceptNetwork.persistentRoot);
+    return !this.conceptNetwork.isEmpty() && (this.viewModel.selection || this.conceptNetwork.persistentSelection);
   }
 
   get selectionWidth() {

@@ -63,6 +63,8 @@ import { ConceptFormComponent } from './components/concept-form.component';
 import { DividerComponent } from './components/divider.component';
 import { SessionService } from './services/session.service';
 import { DeleteConfirmationModal, DeleteConfirmationModalService } from './components/delete-confirmation.modal';
+import { CollectionComponent } from './components/collection.component';
+import { CollectionListComponent } from './components/collection-list.component';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json-loader!po-loader?format=mf!../../po/fi.po'),
@@ -89,7 +91,8 @@ const appRoutes: Routes = [
   { path: '', component: VocabulariesComponent },
   { path: 'concepts/:graphId', component: ConceptsComponent, children: [
     { path: '', component: NoSelectionComponent },
-    { path: 'concept/:conceptId', component: ConceptComponent }
+    { path: 'concept/:conceptId', component: ConceptComponent },
+    { path: 'collection/:collectionId', component: CollectionComponent }
   ]}
 ];
 
@@ -107,6 +110,8 @@ const appRoutes: Routes = [
     ConceptHierarchyNodeComponent,
     ConceptComponent,
     ConceptFormComponent,
+    CollectionListComponent,
+    CollectionComponent,
     NoSelectionComponent,
     PropertyComponent,
     ReferenceComponent,

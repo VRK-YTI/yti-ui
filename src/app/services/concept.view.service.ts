@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { LocationService } from './location.service';
 import { TermedService } from './termed.service';
-import { BehaviorSubject, ReplaySubject } from 'rxjs';
-import { ConceptNode, VocabularyNode } from '../entities/node';
+import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
+import { CollectionNode, ConceptNode, VocabularyNode } from '../entities/node';
 import { comparingLocalizable } from '../utils/comparator';
 import { LanguageService } from './language.service';
 import { MetaModelService } from './meta-model.service';
@@ -19,17 +19,26 @@ export class ConceptViewModelService {
   conceptInEdit: ConceptNode|null;
   concept$ = new BehaviorSubject<ConceptNode|null>(null);
 
+  collectionInEdit: CollectionNode|null;
+  collection$ = new BehaviorSubject(<CollectionNode|null>(null));
+
+  selection$: Observable<ConceptNode|CollectionNode|null> = Observable.merge(this.concept$, this.collection$);
+
   graphId: string;
   conceptId: string|null;
+  collectionId: string|null;
 
   topConcepts$ = new BehaviorSubject<ConceptNode[]>([]);
   allConcepts$ = new BehaviorSubject<ConceptNode[]>([]);
+  allCollections$ = new BehaviorSubject(<CollectionNode[]>([]));
 
   languages = ['fi', 'en', 'sv'];
 
   loadingVocabulary = true;
   loadingConcepts = true;
   loadingConcept = true;
+  loadingCollections = true;
+  loadingCollection = true;
 
   constructor(private router: Router,
               private termedService: TermedService,
@@ -41,6 +50,14 @@ export class ConceptViewModelService {
 
   get concept() {
     return this.concept$.getValue();
+  }
+
+  get collection() {
+    return this.collection$.getValue();
+  }
+
+  get selection() {
+    return this.concept || this.collection;
   }
 
   initializeVocabulary(graphId: string) {
@@ -63,6 +80,12 @@ export class ConceptViewModelService {
       this.topConcepts$.next(sortedConcepts.filter(concept => concept.broaderConcepts.length === 0));
       this.loadingConcepts = false;
     });
+
+    this.termedService.getCollectionList(graphId, this.languages).subscribe(collections => {
+      const sortedCollections = collections.sort(comparingLocalizable<CollectionNode>(this.languageService, collection => collection.label));
+      this.allCollections$.next(sortedCollections);
+      this.loadingCollections = false;
+    });
   }
 
   initializeConcept(conceptId: string|null) {
@@ -83,6 +106,10 @@ export class ConceptViewModelService {
     this.loadingConcept = true;
     this.conceptId = conceptId;
 
+    if (this.collection) {
+      this.initializeCollection(null);
+    }
+
     if (!conceptId) {
       init(null);
     } else {
@@ -96,6 +123,47 @@ export class ConceptViewModelService {
               const matchingTerm = concept.findTermForLanguage(this.languageService.language) || concept.terms[0];
               matchingTerm.value = newConceptLabel;
               init(concept);
+            });
+          });
+        });
+      });
+    }
+  }
+
+
+  initializeCollection(collectionId: string|null) {
+
+    const init = (collection: CollectionNode|null) => {
+      this.vocabulary$.subscribe(vocabulary => {
+        if (collection) {
+          this.locationService.atCollection(vocabulary, collection);
+        } else {
+          this.locationService.atVocabulary(vocabulary);
+        }
+        this.collectionInEdit = collection ? collection.clone() : null;
+        this.collection$.next(collection);
+        this.loadingCollection = false;
+      });
+    };
+
+    this.loadingCollection = true;
+    this.collectionId = collectionId;
+
+    if (this.concept) {
+      this.initializeConcept(null);
+    }
+
+    if (!collectionId) {
+      init(null);
+    } else {
+      this.vocabulary$.subscribe(vocabulary => {
+        this.termedService.getCollection(vocabulary.graphId, collectionId, this.languages).subscribe(init, () => {
+          this.metaModelService.createEmptyNode(this.graphId, collectionId, 'Collection', this.languages).subscribe((collection: CollectionNode) => {
+            this.translateService.get('New collection').subscribe(newCollectionLabel => {
+
+              const matchingLocalization = collection.findLocalizationForLanguage(this.languageService.language) || collection.anyLocalization();
+              matchingLocalization.value = newCollectionLabel;
+              init(collection);
             });
           });
         });
@@ -138,6 +206,45 @@ export class ConceptViewModelService {
       this.router.navigate(['/concepts', this.graphId]);
     } else {
       this.conceptInEdit = this.concept.clone();
+    }
+  }
+
+
+  saveCollection(): Promise<any> {
+    if (!this.collectionInEdit) {
+      throw new Error('Cannot save when there is no collection');
+    }
+
+    const collectionId = this.collectionInEdit.id;
+
+    // TODO Error handling
+    return this.termedService.updateNode(this.collectionInEdit).toPromise()
+      .then(() => this.termedService.getCollection(this.graphId, collectionId, this.languages).toPromise())
+      .then(persistentCollection => {
+        this.collectionInEdit = persistentCollection;
+        this.collection$.next(persistentCollection.clone());
+      });
+  }
+
+  removeCollection(): Promise<any> {
+    if (!this.collection) {
+      throw new Error('Cannot remove when there is no collection');
+    }
+
+    // TODO Error handling
+    return this.termedService.removeNode(this.collection).toPromise()
+      .then(() => this.router.navigate(['/concepts', this.graphId]));
+  }
+
+  resetCollection() {
+    if (!this.collection) {
+      throw new Error('Cannot reset when there is no collection');
+    }
+
+    if (!this.collection.persistent) {
+      this.router.navigate(['/concepts', this.graphId]);
+    } else {
+      this.collectionInEdit = this.collection.clone();
     }
   }
 

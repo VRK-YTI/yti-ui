@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ElementRef, ViewChild, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
-import { ConceptNode } from '../../entities/node';
+import { CollectionNode, ConceptNode } from '../../entities/node';
 import { stripMarkdown } from '../../utils/markdown';
 import { LanguageService } from '../../services/language.service';
 import { TermedService } from '../../services/termed.service';
@@ -89,6 +89,41 @@ const options: VisNetworkOptions = {
           border: 'black'
         }
       }
+    },
+    collectionGroup: {
+      margin: 20,
+      font: {
+        color: 'white',
+      },
+      color: {
+        background: '#375e97',
+        border: 'black',
+        highlight: {
+          background: 'black',
+          border: 'white'
+        },
+        hover: {
+          background: 'black',
+          border: 'white'
+        }
+      }
+    },
+    memberGroup: {
+      font: {
+        color: 'white',
+      },
+      color: {
+        background: '#375e97',
+        border: 'white',
+        highlight: {
+          background: 'black',
+          border: 'white'
+        },
+        hover: {
+          background: 'black',
+          border: 'white'
+        }
+      }
     }
   },
   layout: {
@@ -172,9 +207,9 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
 
   @ViewChild('canvas') canvasRef: ElementRef;
 
-  persistentRoot: boolean;
+  persistentSelection: boolean;
 
-  private skipNextConcept = false;
+  private skipNextSelection = false;
 
   private clicks = 0;
   private timer: any;
@@ -211,19 +246,25 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
       this.network.on('click', this.onClick.bind(this));
     });
 
-    this.conceptViewModel.concept$.subscribe(rootConcept => {
+    this.conceptViewModel.selection$.subscribe(selection => {
 
-      if (rootConcept && !this.skipNextConcept) {
-        this.persistentRoot = rootConcept.persistent;
+      if (selection && !this.skipNextSelection) {
+        this.persistentSelection = selection.persistent;
         this.networkData.nodes.clear();
         this.networkData.edges.clear();
-        this.networkData.nodes.add(this.createRootNode(rootConcept));
 
-        this.addEdgeNodesForConcept(rootConcept);
+        if (selection.type === 'Concept') {
+          this.networkData.nodes.add(this.createRootConceptNode(selection));
+          this.addEdgeNodesForConcept(selection);
+        } else {
+          this.networkData.nodes.add(this.createCollectionNode(selection));
+          this.addEdgeNodesForCollection(selection);
+        }
+
         this.network.once('afterDrawing', () => this.network.fit());
       }
 
-      this.skipNextConcept = false;
+      this.skipNextSelection = false;
     });
   }
 
@@ -235,7 +276,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
     return this.networkData.nodes.length === 0;
   }
 
-  private createNodeData(concept: ConceptNode): UpdatableVisNode {
+  private createConceptNodeData(concept: ConceptNode): UpdatableVisNode {
 
     const createNode = () => {
       const node = {
@@ -250,27 +291,49 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
     return createNode();
   }
 
-  private createRootNode(concept: ConceptNode) {
-    return Object.assign(this.createNodeData(concept), {
+  private createRootConceptNode(concept: ConceptNode) {
+    return Object.assign(this.createConceptNodeData(concept), {
       group: 'rootGroup',
       physics: false,
       fixed: false
     });
   }
 
+  private createCollectionNode(collection: CollectionNode) {
+
+    const createNode = () => {
+      const node = {
+        id: collection.id,
+        label: this.languageService.translate(collection.label),
+        title: stripMarkdown(this.languageService.translate(collection.definition)),
+        group: 'collectionGroup',
+        physics: false,
+        fixed: false
+      };
+
+      return Object.assign(node, { update: createNode })
+    };
+
+    return createNode();
+  }
+
   private createRelatedConceptNode(relatedConcept: ConceptNode) {
-    return Object.assign(this.createNodeData(relatedConcept), { group: 'relatedGroup' });
+    return Object.assign(this.createConceptNodeData(relatedConcept), { group: 'relatedGroup' });
   }
 
   private createBroaderConceptNode(broaderConcept: ConceptNode) {
-    return Object.assign(this.createNodeData(broaderConcept), { group: 'broaderGroup' });
+    return Object.assign(this.createConceptNodeData(broaderConcept), { group: 'broaderGroup' });
   }
 
   private createIsPartOfConceptNode(isPartOfConcept: ConceptNode) {
-    return Object.assign(this.createNodeData(isPartOfConcept), { group: 'isPartOfGroup' });
+    return Object.assign(this.createConceptNodeData(isPartOfConcept), { group: 'isPartOfGroup' });
   }
 
-  private createEdgeData(from: ConceptNode, to: ConceptNode): UpdatableVisEdge {
+  private createMemberConceptNode(memberConcept: ConceptNode) {
+    return Object.assign(this.createConceptNodeData(memberConcept), { group: 'memberGroup' });
+  }
+
+  private createEdgeData(from: ConceptNode|CollectionNode, to: ConceptNode): UpdatableVisEdge {
 
     const createEdge = () => {
       const edge = {
@@ -309,33 +372,46 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
     });
   }
 
-  private addEdgeNodesForConcept(rootConcept: ConceptNode) {
+  private createMemberConceptEdge(from: CollectionNode, to: ConceptNode) {
+    return Object.assign(this.createEdgeData(from, to), {
+    });
+  }
 
-    const addNodeIfDoesNotExist = (node: UpdatableVisNode) => {
-      if (!this.networkData.nodes.get(node.id)) {
-        this.networkData.nodes.add(node);
-      }
-    };
+  private addNodeIfDoesNotExist(node: UpdatableVisNode) {
+    if (!this.networkData.nodes.get(node.id)) {
+      this.networkData.nodes.add(node);
+    }
+  }
 
-    const addEdgeIfDoesNotExist = (edge: UpdatableVisEdge) => {
-      if (!this.networkData.edges.get(edge.id)) {
-        this.networkData.edges.add(edge);
-      }
-    };
+  private addEdgeIfDoesNotExist(edge: UpdatableVisEdge) {
+    if (!this.networkData.edges.get(edge.id)) {
+      this.networkData.edges.add(edge);
+    }
+  }
 
-    for (const relatedConcept of rootConcept.relatedConcepts) {
-      addNodeIfDoesNotExist(this.createRelatedConceptNode(relatedConcept));
-      addEdgeIfDoesNotExist(this.createRelatedConceptEdge(rootConcept, relatedConcept));
+  private addEdgeNodesForConcept(concept: ConceptNode) {
+
+    for (const relatedConcept of concept.relatedConcepts) {
+      this.addNodeIfDoesNotExist(this.createRelatedConceptNode(relatedConcept));
+      this.addEdgeIfDoesNotExist(this.createRelatedConceptEdge(concept, relatedConcept));
     }
 
-    for (const narrowerConcept of rootConcept.narrowerConcepts) {
-      addNodeIfDoesNotExist(this.createBroaderConceptNode(narrowerConcept));
-      addEdgeIfDoesNotExist(this.createBroaderConceptEdge(rootConcept, narrowerConcept));
+    for (const narrowerConcept of concept.narrowerConcepts) {
+      this.addNodeIfDoesNotExist(this.createBroaderConceptNode(narrowerConcept));
+      this.addEdgeIfDoesNotExist(this.createBroaderConceptEdge(concept, narrowerConcept));
     }
 
-    for (const isPartOfConcept of rootConcept.partOfThisConcepts) {
-      addNodeIfDoesNotExist(this.createIsPartOfConceptNode(isPartOfConcept));
-      addEdgeIfDoesNotExist(this.createIsPartOfConceptEdge(rootConcept, isPartOfConcept));
+    for (const isPartOfConcept of concept.partOfThisConcepts) {
+      this.addNodeIfDoesNotExist(this.createIsPartOfConceptNode(isPartOfConcept));
+      this.addEdgeIfDoesNotExist(this.createIsPartOfConceptEdge(concept, isPartOfConcept));
+    }
+  }
+
+  private addEdgeNodesForCollection(collection: CollectionNode) {
+
+    for (const memberConcept of collection.members) {
+      this.addNodeIfDoesNotExist(this.createMemberConceptNode(memberConcept));
+      this.addEdgeIfDoesNotExist(this.createMemberConceptEdge(collection, memberConcept));
     }
   }
 
@@ -345,25 +421,37 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
     // NOTE: If user clicks the node and does not move cursor within 600ms, it will be interpreted as a click
     // leading to changing the concept
 
+    const conceptId = eventData.nodes[0];
+    const visNode: VisNode = this.networkData.nodes.get(conceptId);
+    const isConcept = visNode.group !== 'collectionGroup';
+
+    const onSingleClick = () => {
+      if (isConcept) {
+        this.skipNextSelection = true;
+
+        this.zone.run(() => {
+          this.router.navigate(['/concepts', this.conceptViewModel.vocabulary.graphId, 'concept', conceptId]);
+        });
+      }
+    };
+
+    const onDoubleClick = () => {
+      if (isConcept) {
+        const rootConcept$ = this.termedService.getConcept(this.conceptViewModel.vocabulary.graphId, conceptId, this.conceptViewModel.languages);
+        rootConcept$.subscribe(concept => this.addEdgeNodesForConcept(concept));
+      }
+    };
+
     if (eventData.nodes.length > 0) {
       this.clicks++;
       if (this.clicks === 1) {
         this.timer = setTimeout(() => {
-          const conceptId = eventData.nodes[0];
-          this.skipNextConcept = true;
-
-          this.zone.run(() => {
-            this.router.navigate(['/concepts', this.conceptViewModel.vocabulary.graphId, 'concept', conceptId]);
-          });
-
+          onSingleClick();
           this.clicks = 0;
         }, DELAY);
       } else {
         clearTimeout(this.timer);
-        const rootId = eventData.nodes[0];
-        // Fetch data for the double-clicked node and then add the edge nodes for it
-        const rootConcept$ = this.termedService.getConcept(this.conceptViewModel.vocabulary.graphId, rootId, this.conceptViewModel.languages);
-        rootConcept$.subscribe(concept => this.addEdgeNodesForConcept(concept));
+        onDoubleClick();
         this.clicks = 0;
       }
     }

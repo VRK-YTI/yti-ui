@@ -7,6 +7,12 @@ msgstr ""
 msgid "Search concept..."
 msgstr ""
 
+msgid "Search collection..."
+msgstr ""
+
+msgid "Add collection"
+msgstr ""
+
 msgid "Order by modified date"
 msgstr ""
 
@@ -26,6 +32,9 @@ msgid "Alphabetic"
 msgstr ""
 
 msgid "Hierarchical"
+msgstr ""
+
+msgid "Collection"
 msgstr ""
 
 msgid "Confirm remove"
@@ -110,6 +119,9 @@ msgid "vocabularies"
 msgstr ""
 
 msgid "New concept"
+msgstr ""
+
+msgid "New collection"
 msgstr ""
 
 msgid "Front page"

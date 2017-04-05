@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-04-04 14:00+0300\n"
+"PO-Revision-Date: 2017-04-05 12:38+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -14,6 +14,12 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "Search concept..."
+msgstr ""
+
+msgid "Search collection..."
+msgstr ""
+
+msgid "Add collection"
 msgstr ""
 
 msgid "Order by modified date"
@@ -35,6 +41,9 @@ msgid "Alphabetic"
 msgstr ""
 
 msgid "Hierarchical"
+msgstr ""
+
+msgid "Collection"
 msgstr ""
 
 msgid "Confirm remove"
@@ -122,6 +131,9 @@ msgstr ""
 
 msgid "New concept"
 msgstr "new concept"
+
+msgid "New collection"
+msgstr "new collection"
 
 msgid "Front page"
 msgstr ""

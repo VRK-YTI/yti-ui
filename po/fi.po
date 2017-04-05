@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-04-04 14:00+0300\n"
+"PO-Revision-Date: 2017-04-05 12:38+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -15,6 +15,12 @@ msgstr ""
 
 msgid "Search concept..."
 msgstr "Hae käsitettä…"
+
+msgid "Search collection..."
+msgstr "Hae käsitevalikoimaa…"
+
+msgid "Add collection"
+msgstr "Lisää käsitevalikoima"
 
 msgid "Order by modified date"
 msgstr "Järjestä muokkausajan mukaan"
@@ -36,6 +42,9 @@ msgstr "Aakkosellinen"
 
 msgid "Hierarchical"
 msgstr "Hierarkinen"
+
+msgid "Collection"
+msgstr "Käsitevalikoima"
 
 msgid "Confirm remove"
 msgstr "Poistamisen hyväksyntä"
@@ -122,6 +131,9 @@ msgstr "sanastoa"
 
 msgid "New concept"
 msgstr "uusi käsite"
+
+msgid "New collection"
+msgstr "uusi käsitevalikoima"
 
 msgid "Front page"
 msgstr "Etusivu"
