@@ -330,6 +330,7 @@ export class Node<T extends NodeType> {
 }
 
 export class VocabularyNode extends Node<VocabularyNodeType> {
+
   constructor(node: NodeExternal<VocabularyNodeType>, metas: Map<string, Map<string, NodeMeta>>,languages: string[]) {
     super(node, metas, languages);
   }
@@ -362,6 +363,7 @@ export class VocabularyNode extends Node<VocabularyNodeType> {
 }
 
 export class ConceptNode extends Node<'Concept'> {
+
   constructor(node: NodeExternal<'Concept'>, metas: Map<string, Map<string, NodeMeta>>,languages: string[]) {
     super(node, metas, languages);
   }
@@ -424,6 +426,7 @@ export class ConceptNode extends Node<'Concept'> {
 }
 
 export class TermNode extends Node<'Term'> {
+
   constructor(node: NodeExternal<'Term'>, metas: Map<string, Map<string, NodeMeta>>,languages: string[]) {
     super(node, metas, languages);
   }
@@ -450,6 +453,7 @@ export class TermNode extends Node<'Term'> {
 }
 
 export class CollectionNode extends Node<'Collection'> {
+
   constructor(node: NodeExternal<'Collection'>, metas: Map<string, Map<string, NodeMeta>>,languages: string[]) {
     super(node, metas, languages);
   }
@@ -459,9 +463,30 @@ export class CollectionNode extends Node<'Collection'> {
     cloned.persistent = this.persistent;
     return cloned;
   }
+
+  findLocalizationForLanguage(language: string): Localization|undefined {
+    return (this.properties['prefLabel'].value as Localization[]).find(localization => localization.lang === language);
+  }
+
+  anyLocalization(): Localization {
+    return this.properties['prefLabel'].value[0] as Localization;
+  }
+
+  get label(): Localizable {
+    return this.getPropertyAsLocalizable('prefLabel');
+  }
+
+  get definition(): Localizable {
+    return this.getPropertyAsLocalizable('definition');
+  }
+
+  get members() {
+    return normalizeAsArray(this.references['member'].values as ConceptNode[]);
+  }
 }
 
 export class GroupNode extends Node<'Group'> {
+
   constructor(node: NodeExternal<'Group'>, metas: Map<string, Map<string, NodeMeta>>,languages: string[]) {
     super(node, metas, languages);
   }
@@ -472,6 +497,7 @@ export class GroupNode extends Node<'Group'> {
 }
 
 export class OrganizationNode extends Node<'Organization'> {
+
   constructor(node: NodeExternal<'Organization'>, metas: Map<string, Map<string, NodeMeta>>,languages: string[]) {
     super(node, metas, languages);
   }
