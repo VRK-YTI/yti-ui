@@ -5,7 +5,7 @@ import { TermedHttp } from './termed-http.service';
 import { flatten, normalizeAsArray } from '../utils/array';
 import { MetaModelService } from './meta-model.service';
 import { NodeExternal, NodeType, NodeInternal, Identifier, VocabularyNodeType } from '../entities/node-api';
-import { ConceptNode, Node, VocabularyNode } from '../entities/node';
+import { CollectionNode, ConceptNode, Node, VocabularyNode } from '../entities/node';
 import * as moment from 'moment';
 
 const infiniteResultsParams = new URLSearchParams();
@@ -49,6 +49,16 @@ export class TermedService {
   getConceptList(graphId: string, languages: string[]): Observable<ConceptNode[]> {
     return Observable.zip(this.metaModelService.getMeta(), this.getConceptListNodes(graphId))
       .map(([meta, concepts]) => concepts.map(concept => Node.create(concept, meta, languages)));
+  }
+
+  getCollection(graphId: string, conceptId: string, languages: string[]): Observable<CollectionNode> {
+    return Observable.zip(this.metaModelService.getMeta(), this.getCollectionDetailsNode(graphId, conceptId))
+      .map(([meta, collection]) => Node.create(collection, meta, languages));
+  }
+
+  getCollectionList(graphId: string, languages: string[]): Observable<CollectionNode[]> {
+    return Observable.zip(this.metaModelService.getMeta(), this.getCollectionListNodes(graphId))
+      .map(([meta, concepts]) => concepts.map(collection => Node.create(collection, meta, languages)));
   }
 
   getNarrowerConcepts(graphId: string, broaderConceptId: string, languages: string[]): Observable<ConceptNode[]> {
@@ -174,6 +184,32 @@ export class TermedService {
 
     return this.http.get(`/api/ext.json`, { search: params } )
       .map(response => requireSingle(response.json() as NodeExternal<'Concept'>));
+  }
+
+  private getCollectionListNodes(graphId: string): Observable<NodeExternal<'Collection'>[]> {
+
+    const params = new URLSearchParams();
+    params.append('max', '-1');
+    params.append('graphId', graphId);
+    params.append('typeId', 'Collection');
+    params.append('select.properties', 'prefLabel');
+    params.append('select.audit', 'true');
+
+    return this.http.get(`/api/ext.json`, { search: params } )
+      .map(response => normalizeAsArray(response.json() as NodeExternal<'Collection'>[])).catch(notFoundAsDefault([]));
+  }
+
+  private getCollectionDetailsNode(graphId: string, collectionId: string): Observable<NodeExternal<'Collection'>> {
+
+    const params = new URLSearchParams();
+    params.append('max', '-1');
+    params.append('graphId', graphId);
+    params.append('uri', 'urn:uuid:' + collectionId);
+    params.append('select.audit', 'true');
+    params.append('recurse.references.prefLabelXl', '1');
+
+    return this.http.get(`/api/ext.json`, { search: params } )
+      .map(response => requireSingle(response.json() as NodeExternal<'Collection'>));
   }
 }
 
