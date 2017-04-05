@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Reference, Node } from '../entities/node';
+import { Reference, ConceptNode } from '../entities/node';
 import { EditableService } from '../services/editable.service';
 import { SearchConceptModalService } from './search-concept.modal';
 import { remove } from '../utils/array';
@@ -29,8 +29,8 @@ import { remove } from '../utils/array';
 })
 export class ConceptReferenceInputComponent {
 
-  @Input('concept') conceptReference: Reference;
-  @Input() conceptsProvider: () => Node<'Concept'>[];
+  @Input('concept') conceptReference: Reference<ConceptNode>;
+  @Input() conceptsProvider: () => ConceptNode[];
 
   constructor(private editableService: EditableService,
               private searchConceptModal: SearchConceptModalService) {
@@ -40,7 +40,7 @@ export class ConceptReferenceInputComponent {
     return this.editableService.editing;
   }
 
-  removeReference(concept: Node<'Concept'>) {
+  removeReference(concept: ConceptNode) {
     remove(this.conceptReference.values, concept);
   }
 

@@ -1,5 +1,5 @@
 import { Component, Input, ViewChild } from '@angular/core';
-import { Node, Property } from '../entities/node';
+import { ConceptNode, Property } from '../entities/node';
 import { EditableService } from '../services/editable.service';
 import { NgModel } from '@angular/forms';
 import { Localization } from '../entities/localization';
@@ -47,7 +47,7 @@ import { Localization } from '../entities/localization';
 export class LocalizedInputComponent {
 
   @Input() property: Property;
-  @Input() relatedConcepts: Node<'Concept'>[];
+  @Input() relatedConcepts: ConceptNode[];
 
   @ViewChild('valueNgModel') valueNgModel: NgModel;
   @ViewChild('areaValueNgModel') areaValueNgModel: NgModel;

@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { Reference } from '../entities/node';
+import { ConceptNode, Reference } from '../entities/node';
 import { EditableService } from '../services/editable.service';
-import { Node } from '../entities/node';
 
 @Component({
   selector: 'reference',
@@ -25,9 +24,9 @@ import { Node } from '../entities/node';
 })
 export class ReferenceComponent {
 
-  @Input('value') reference: Reference;
+  @Input('value') reference: Reference<any>;
   @Input() multiColumnTerms = false;
-  @Input() conceptsProvider: () => Node<'Concept'>[];
+  @Input() conceptsProvider: () => ConceptNode[];
   @Input() primaryTerm = false;
 
   constructor(private editableService: EditableService) {

@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { TermedService } from '../services/termed.service';
 import { LocationService } from '../services/location.service';
-import { Node } from '../entities/node';
+import { VocabularyNode } from '../entities/node';
 import { Router } from '@angular/router';
 import { Localizable } from '../entities/localization';
 import { groupBy, all } from '../utils/array';
@@ -93,8 +93,8 @@ import { requireDefined } from '../utils/object';
 })
 export class VocabulariesComponent {
 
-  vocabularies: Node<'TerminologicalVocabulary'>[];
-  filterResults: Node<'TerminologicalVocabulary'>[];
+  vocabularies: VocabularyNode[];
+  filterResults: VocabularyNode[];
 
   filters: Filter[];
 
@@ -123,12 +123,12 @@ export class VocabulariesComponent {
     locationService.atFrontPage();
   }
 
-  navigate(vocabulary: Node<'TerminologicalVocabulary'>) {
+  navigate(vocabulary: VocabularyNode) {
     this.router.navigate(['/concepts', vocabulary.graphId]);
   }
 }
 
-type Extractor<T> = (node: Node<any>) => T;
+type Extractor<T> = (node: VocabularyNode) => T;
 
 class Filter {
 
@@ -136,7 +136,7 @@ class Filter {
   selected = new Set<any>();
 
   constructor(public title: string,
-              nodes: Node<any>[],
+              nodes: VocabularyNode[],
               private idExtractor: Extractor<any>,
               nameExtractor: Extractor<Localizable>,
               onChange: () => void) {
@@ -145,7 +145,7 @@ class Filter {
         .map(([id, nodes]) => new Item(this, id, nameExtractor(requireDefined(nodes[0])), nodes.length, onChange));
   }
 
-  matches(node: Node<any>) {
+  matches(node: VocabularyNode) {
     return this.selected.size === 0 || this.selected.has(this.idExtractor(node));
   }
 }

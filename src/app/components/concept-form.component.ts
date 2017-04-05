@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Node } from '../entities/node';
-import { normalizeAsArray } from '../utils/array';
+import { ConceptNode } from '../entities/node';
 import { EditableService } from '../services/editable.service';
 
 @Component({
@@ -34,18 +33,15 @@ import { EditableService } from '../services/editable.service';
 })
 export class ConceptFormComponent {
 
-  @Input() concept: Node<'Concept'>;
-  @Input() conceptsProvider: () => Node<'Concept'>[];
+  @Input() concept: ConceptNode;
+  @Input() conceptsProvider: () => ConceptNode[];
   @Input() multiColumn = false;
 
   constructor(private editableService: EditableService) {
   }
 
-  get relatedConcepts(): Node<'Concept'>[] {
-    return [
-      ...normalizeAsArray(this.concept.references['related'].values),
-      ...normalizeAsArray(this.concept.references['broader'].values)
-    ];
+  get relatedConcepts(): ConceptNode[] {
+    return [...this.concept.relatedConcepts, ...this.concept.broaderConcepts];
   }
 
   get showEmpty() {

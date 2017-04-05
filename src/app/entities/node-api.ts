@@ -1,9 +1,13 @@
 
-export type NodeType = 'Concept'
-                     | 'TerminologicalVocabulary'
+export type VocabularyNodeType = 'Vocabulary'
+                               | 'TerminologicalVocabulary';
+
+export type NodeType = VocabularyNodeType
+                     | 'Concept'
                      | 'Term'
                      | 'Collection'
-                     | 'Group';
+                     | 'Group'
+                     | 'Organization';
 
 export interface Identifier<T extends NodeType> {
 

@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ElementRef, ViewChild, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
-import { Node } from '../../entities/node';
+import { ConceptNode } from '../../entities/node';
 import { stripMarkdown } from '../../utils/markdown';
 import { LanguageService } from '../../services/language.service';
 import { TermedService } from '../../services/termed.service';
@@ -235,7 +235,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
     return this.networkData.nodes.length === 0;
   }
 
-  private createNodeData(concept: Node<'Concept'>): UpdatableVisNode {
+  private createNodeData(concept: ConceptNode): UpdatableVisNode {
 
     const createNode = () => {
       const node = {
@@ -250,7 +250,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
     return createNode();
   }
 
-  private createRootNode(concept: Node<'Concept'>) {
+  private createRootNode(concept: ConceptNode) {
     return Object.assign(this.createNodeData(concept), {
       group: 'rootGroup',
       physics: false,
@@ -258,19 +258,19 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
     });
   }
 
-  private createRelatedConceptNode(relatedConcept: Node<'Concept'>) {
+  private createRelatedConceptNode(relatedConcept: ConceptNode) {
     return Object.assign(this.createNodeData(relatedConcept), { group: 'relatedGroup' });
   }
 
-  private createBroaderConceptNode(broaderConcept: Node<'Concept'>) {
+  private createBroaderConceptNode(broaderConcept: ConceptNode) {
     return Object.assign(this.createNodeData(broaderConcept), { group: 'broaderGroup' });
   }
 
-  private createIsPartOfConceptNode(isPartOfConcept: Node<'Concept'>) {
+  private createIsPartOfConceptNode(isPartOfConcept: ConceptNode) {
     return Object.assign(this.createNodeData(isPartOfConcept), { group: 'isPartOfGroup' });
   }
 
-  private createEdgeData(from: Node<'Concept'>, to: Node<'Concept'>): UpdatableVisEdge {
+  private createEdgeData(from: ConceptNode, to: ConceptNode): UpdatableVisEdge {
 
     const createEdge = () => {
       const edge = {
@@ -286,7 +286,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
     return createEdge();
   }
 
-  private createRelatedConceptEdge(from: Node<'Concept'>, to: Node<'Concept'>) {
+  private createRelatedConceptEdge(from: ConceptNode, to: ConceptNode) {
     return Object.assign(this.createEdgeData(from, to), {
       arrows: {
         to: {
@@ -298,18 +298,18 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
     });
   }
 
-  private createBroaderConceptEdge(from: Node<'Concept'>, to: Node<'Concept'>) {
+  private createBroaderConceptEdge(from: ConceptNode, to: ConceptNode) {
     return Object.assign(this.createEdgeData(from, to), {
     });
   }
 
-  private createIsPartOfConceptEdge(from: Node<'Concept'>, to: Node<'Concept'>) {
+  private createIsPartOfConceptEdge(from: ConceptNode, to: ConceptNode) {
     return Object.assign(this.createEdgeData(from, to), {
       dashes: true
     });
   }
 
-  private addEdgeNodesForConcept(rootConcept: Node<'Concept'>) {
+  private addEdgeNodesForConcept(rootConcept: ConceptNode) {
 
     const addNodeIfDoesNotExist = (node: UpdatableVisNode) => {
       if (!this.networkData.nodes.get(node.id)) {
@@ -323,17 +323,17 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
       }
     };
 
-    for (const relatedConcept of rootConcept.references['related'].values || []) {
+    for (const relatedConcept of rootConcept.relatedConcepts) {
       addNodeIfDoesNotExist(this.createRelatedConceptNode(relatedConcept));
       addEdgeIfDoesNotExist(this.createRelatedConceptEdge(rootConcept, relatedConcept));
     }
 
-    for (const broaderConcept of rootConcept.referrers['broader'] || []) {
-      addNodeIfDoesNotExist(this.createBroaderConceptNode(broaderConcept));
-      addEdgeIfDoesNotExist(this.createBroaderConceptEdge(rootConcept, broaderConcept));
+    for (const narrowerConcept of rootConcept.narrowerConcepts) {
+      addNodeIfDoesNotExist(this.createBroaderConceptNode(narrowerConcept));
+      addEdgeIfDoesNotExist(this.createBroaderConceptEdge(rootConcept, narrowerConcept));
     }
 
-    for (const isPartOfConcept of rootConcept.referrers['isPartOf'] || []) {
+    for (const isPartOfConcept of rootConcept.partOfThisConcepts) {
       addNodeIfDoesNotExist(this.createIsPartOfConceptNode(isPartOfConcept));
       addEdgeIfDoesNotExist(this.createIsPartOfConceptEdge(rootConcept, isPartOfConcept));
     }

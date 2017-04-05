@@ -14,7 +14,7 @@ import { requireDefined } from '../utils/object';
     <div class="component" *ngIf="concept">
     
       <div class="component-header">
-        <h3>{{persistentConcept.label | translateValue}}</h3>
+        <h3>{{concept.label | translateValue}}</h3>
       </div>
     
       <form class="component-content">
@@ -25,7 +25,7 @@ import { requireDefined } from '../utils/object';
           </div>
         </div>
   
-        <concept-form [concept]="concept" [conceptsProvider]="conceptsProvider" [multiColumn]="true"></concept-form>
+        <concept-form [concept]="conceptInEdit" [conceptsProvider]="conceptsProvider" [multiColumn]="true"></concept-form>
       </form>
       
     </div>
@@ -74,7 +74,7 @@ export class ConceptComponent implements OnDestroy {
     return this.conceptViewModel.concept;
   }
 
-  get persistentConcept() {
-    return this.conceptViewModel.persistentConcept;
+  get conceptInEdit() {
+    return this.conceptViewModel.conceptInEdit;
   }
 }

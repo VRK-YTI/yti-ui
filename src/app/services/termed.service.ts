@@ -4,8 +4,8 @@ import { Observable } from 'rxjs';
 import { TermedHttp } from './termed-http.service';
 import { flatten, normalizeAsArray } from '../utils/array';
 import { MetaModelService } from './meta-model.service';
-import { NodeExternal, NodeType, NodeInternal, Identifier } from '../entities/node-api';
-import { Node } from '../entities/node';
+import { NodeExternal, NodeType, NodeInternal, Identifier, VocabularyNodeType } from '../entities/node-api';
+import { ConceptNode, Node, VocabularyNode } from '../entities/node';
 import * as moment from 'moment';
 
 const infiniteResultsParams = new URLSearchParams();
@@ -17,31 +17,43 @@ export class TermedService {
   constructor(private http: TermedHttp, private metaModelService: MetaModelService) {
   }
 
-  getVocabulary(graphId: string, languages: string[]): Observable<Node<'TerminologicalVocabulary'>> {
-    return Observable.zip(this.metaModelService.getMeta(), this.getVocabularyNode(graphId))
-      .map(([meta, vocabulary]) => new Node<'TerminologicalVocabulary'>(vocabulary, meta, languages));
+  getVocabulary(graphId: string, languages: string[]): Observable<VocabularyNode> {
+
+    const vocabulary: Observable<NodeExternal<VocabularyNodeType>|null> =
+      Observable.forkJoin([
+        this.getVocabularyNode(graphId, 'Vocabulary').catch(notFoundAsDefault(null)),
+        this.getVocabularyNode(graphId, 'TerminologicalVocabulary').catch(notFoundAsDefault(null))
+      ], (vocabulary, terminologicalVocabulary) => vocabulary || terminologicalVocabulary);
+
+    return Observable.zip(this.metaModelService.getMeta(), vocabulary)
+      .map(([meta, vocabulary]) => {
+        if (!vocabulary) {
+          throw new Error('Vocabulary not found for graph: ' + graphId);
+        }
+        return Node.create(vocabulary, meta, languages)
+      });
   }
 
-  getVocabularyList(languages: string[]): Observable<Node<'TerminologicalVocabulary'>[]> {
-    return Observable.zip(this.metaModelService.getMeta(), this.getVocabularyNodes())
-      .map(([meta, vocabularies]) =>
-        vocabularies.map(scheme => new Node<'TerminologicalVocabulary'>(scheme, meta, languages))
-          .filter(scheme => !scheme.references['inGroup'].empty));
+  getVocabularyList(languages: string[]): Observable<VocabularyNode[]> {
+    return Observable.zip(this.metaModelService.getMeta(), this.getVocabularyNodes('Vocabulary'), this.getVocabularyNodes('TerminologicalVocabulary'))
+      .map(([meta, vocabularies, terminologicalVocabularies]) =>
+      [...vocabularies, ...terminologicalVocabularies].map(vocabulary => Node.create(vocabulary, meta, languages) as VocabularyNode)
+          .filter(vocabulary => vocabulary.hasGroup()));
   }
 
-  getConcept(graphId: string, conceptId: string, languages: string[]): Observable<Node<'Concept'>> {
+  getConcept(graphId: string, conceptId: string, languages: string[]): Observable<ConceptNode> {
     return Observable.zip(this.metaModelService.getMeta(), this.getConceptDetailsNode(graphId, conceptId))
-      .map(([meta, concept]) => new Node(concept, meta, languages));
+      .map(([meta, concept]) => Node.create(concept, meta, languages));
   }
 
-  getConceptList(graphId: string, languages: string[]): Observable<Node<'Concept'>[]> {
+  getConceptList(graphId: string, languages: string[]): Observable<ConceptNode[]> {
     return Observable.zip(this.metaModelService.getMeta(), this.getConceptListNodes(graphId))
-      .map(([meta, concepts]) => concepts.map(concept => new Node<'Concept'>(concept, meta, languages)));
+      .map(([meta, concepts]) => concepts.map(concept => Node.create(concept, meta, languages)));
   }
 
-  getNarrowerConcepts(graphId: string, broaderConceptId: string, languages: string[]): Observable<Node<'Concept'>[]> {
+  getNarrowerConcepts(graphId: string, broaderConceptId: string, languages: string[]): Observable<ConceptNode[]> {
     return Observable.zip(this.metaModelService.getMeta(), this.getNarrowerConceptNodes(graphId, broaderConceptId))
-      .map(([meta, concepts]) => concepts.map(concept => new Node<'Concept'>(concept, meta, languages)));
+      .map(([meta, concepts]) => concepts.map(concept => Node.create(concept, meta, languages)));
   }
 
   updateNode<T extends NodeType>(node: Node<T>) {
@@ -88,30 +100,30 @@ export class TermedService {
     return this.http.post('/api/nodes', nodes, { search: params });
   }
 
-  private getVocabularyNode(graphId: string): Observable<NodeExternal<'TerminologicalVocabulary'>> {
+  private getVocabularyNode<T extends VocabularyNodeType>(graphId: string, type: T): Observable<NodeExternal<VocabularyNodeType>> {
 
     const params = new URLSearchParams();
     params.append('max', '-1');
     params.append('graphId', graphId);
-    params.append('typeId', 'TerminologicalVocabulary');
+    params.append('typeId', type);
     params.append('select.referrers', '');
     params.append('select.audit', 'true');
 
     return this.http.get(`/api/ext.json`, { search: params } )
-      .map(response => requireSingle(response.json() as NodeExternal<'TerminologicalVocabulary'>));
+      .map(response => requireSingle(response.json() as NodeExternal<VocabularyNodeType>));
   }
 
-  private getVocabularyNodes(): Observable<NodeExternal<'TerminologicalVocabulary'>[]> {
+  private getVocabularyNodes<T extends VocabularyNodeType>(type: T): Observable<NodeExternal<T>[]> {
 
     const params = new URLSearchParams();
     params.append('max', '-1');
-    params.append('typeId', 'TerminologicalVocabulary');
+    params.append('typeId', type);
     params.append('select.references', 'publisher');
     params.append('select.references', 'inGroup');
     params.append('select.referrers', '');
 
     return this.http.get(`/api/ext.json`, { search: params } )
-      .map(response => normalizeAsArray(response.json() as NodeExternal<'TerminologicalVocabulary'>[])).catch(notFoundAsDefault([]));
+      .map(response => normalizeAsArray(response.json() as NodeExternal<T>[])).catch(notFoundAsDefault([]));
   }
 
   private getConceptListNodes(graphId: string): Observable<NodeExternal<'Concept'>[]> {
