@@ -82,12 +82,14 @@ export class NodeMeta {
   references: ReferenceMeta[];
   type: NodeType;
   graphId: string;
+  uri: string;
 
   constructor(metaNode: NodeMetaInternal) {
 
     this.label = asLocalizable(metaNode.properties.prefLabel);
     this.type = metaNode.id;
     this.graphId = metaNode.graph.id;
+    this.uri = metaNode.uri;
 
     this.properties = normalizeAsArray(metaNode.textAttributes)
       .sort(comparingNumber<TextAttributeInternal>(x => x.index))
@@ -112,7 +114,10 @@ export class NodeMeta {
       id: id,
       type: {
         id: this.type,
-        graph: { id: this.graphId }
+        uri: this.uri,
+        graph: {
+          id: this.graphId
+        }
       },
       code: '',
       createdBy: '',

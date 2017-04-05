@@ -14,6 +14,7 @@ export interface Identifier<T extends NodeType> {
   id: string;
   type: {
     id: T;
+    uri: string;
     graph: { id: string; }
   }
 }
