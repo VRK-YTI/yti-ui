@@ -20,7 +20,7 @@ import { EditableService } from '../services/editable.service';
 export class PropertyComponent {
 
   @Input('value') property: Property;
-  @Input() relatedConcepts: ConceptNode[];
+  @Input() relatedConcepts: ConceptNode[] = [];
 
   constructor(private editableService: EditableService) {
   }
