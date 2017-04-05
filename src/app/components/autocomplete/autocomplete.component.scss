@@ -9,9 +9,7 @@ ul.sb-results-dropdown-menu {
 
 ul.sb-results-dropdown-menu > li {
     position: relative;
-    border-bottom: 1px solid rgba(239, 239, 239, 0.25);
-    height: 35px;
-    //padding: 5px;
+    height: 30px;
     list-style: none;
     background: white;
     cursor:pointer;
@@ -26,7 +24,6 @@ ul.sb-results-dropdown-menu > li span {
     font-family: Arial, Helvetica, sans-serif;
     color: black;
     font-size:16px;
-    //padding-left:5px;
     cursor:pointer;
     text-overflow: ellipsis;
     overflow:hidden;

@@ -33,20 +33,13 @@ export class ElasticSearchService {
             pre_tags : ["<b>"],
             post_tags : ["</b>"],
             fields : {
-              "properties.prefLabel.value" : {},
-              "references.prefLabelXl.properties.prefLabel.value": {}
+              "label.fi" : {},
+              "label.en": {},
+              "label.sv": {}
             }
           },
           from : 0,
-          size : resultAmt,
-          _source: [ // What data to bring in addition to the hits
-            "id",
-            "type.graph.id",
-          //   "properties.prefLabel.lang",
-          //   "properties.prefLabel.value",
-          //   "references.prefLabelXl.properties.prefLabel.lang",
-          //   "references.prefLabelXl.properties.prefLabel.value"
-          ]
+          size : resultAmt
         }
       });
     } else {

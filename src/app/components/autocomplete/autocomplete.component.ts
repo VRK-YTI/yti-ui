@@ -23,7 +23,11 @@ import { LanguageService } from "../../services/language.service";
           <ul class="sb-results-dropdown-menu" >
               <li *ngFor="let result of results$ | async">
                   <span [routerLink]="['/concepts', result.graphId, 'concept', result.conceptId]"
-                     [innerHTML]="result.value"></span>
+                     [innerHTML]="result.label" [ngbPopover]="popContent" placement="right" triggers="mouseenter:mouseleave"></span>
+                   
+                 <template #popContent>
+                    <div markdown [value]="result.definition"></div>
+                 </template>  
               </li>
           </ul>
       </div>
@@ -40,6 +44,16 @@ export class AutoComplete implements AfterViewInit {
   searchString: string;
 
   MIN_SEARCH_STRING_LENGTH: number = 3
+
+  LABEL_FI_TAG: string = "label.fi";
+  LABEL_SV_TAG: string = "label.sv";
+  LABEL_EN_TAG: string = "label.en";
+  ALTLABEL_FI_TAG: string = "altLabel.fi";
+  ALTLABEL_SV_TAG: string = "altLabel.sv";
+  ALTLABEL_EN_TAG: string = "altLabel.en";
+  DEFINITION_FI_TAG: string = "definition.fi";
+  DEFINITION_SV_TAG: string = "definition.sv";
+  DEFINITION_EN_TAG: string = "definition.en";
 
   constructor(private es: ElasticSearchService, private _ngZone: NgZone, private ls: LanguageService) {}
 
@@ -67,39 +81,76 @@ export class AutoComplete implements AfterViewInit {
                       let results: Array<any> = ((searchResult.hits || {}).hits || [])  // extract results from elastic response
                           .map((hit: any) => {
                             console.log(hit);
-                            let prefLabel = hit.inner_hits["properties.prefLabel"];
-                            let prefLabelXl = hit.inner_hits["references.prefLabelXl"];
 
-                            // if (prefLabel && prefLabel.length > 0) {
-                            //   return {
-                            //     graphId: hit._source.type.graph.id,
-                            //     conceptId: hit._source.id,
-                            //     value: prefLabel[0]
-                            //   }
-                            // } else if (prefLabelXl && prefLabelXl.length > 0) {
-                            //   return {
-                            //     graphId: hit._source.type.graph.id,
-                            //     conceptId: hit._source.id,
-                            //     value: prefLabelXl[0]
-                            //   }
+                            let source = hit._source;
+                            let matchedFields: Array<string> = hit.matched_queries;
+                            let highlight = hit.highlight;
+                            let label = '';
+                            let labelHi = '';
+                            let definition = '';
 
-                            if(prefLabel && prefLabel.hits.total > 0) {
-                              // TODO: This is idiotic but the highlight system does not take into account the language filtering, so it returns sometimes too many results (e.g. in english type "indi" and see the second object in console. The highlight field contains both swedish and english hits even though one would think the filter should prevent the swedish hit.
-                              let prefLabelHi = hit.highlight["properties.prefLabel.value"].filter((label: string) => label.replace("<b>", "").replace("</b>", "") === prefLabel.hits.hits[0]._source.value)[0];
-                              return {
-                                graphId: hit._source.type.graph.id,
-                                conceptId: hit._source.id,
-                                value: prefLabelHi
-                              }
-                            } else if(prefLabelXl && prefLabelXl.hits.total > 0) {
-                              let prefLabelXlHi = hit.highlight["references.prefLabelXl.properties.prefLabel.value"].filter((label: string) => label.replace("<b>", "").replace("</b>", "") === prefLabelXl.hits.hits[0]._source.properties.prefLabel[0].value)[0];
-                              return {
-                                graphId: hit._source.type.graph.id,
-                                conceptId: hit._source.id,
-                                value: prefLabelXlHi
+                            if(matchedFields.includes(this.LABEL_FI_TAG) && this.ls.language === "fi") {
+                              label = source.label.fi;
+                              labelHi = highlight[this.LABEL_FI_TAG][0];
+                            } else if(matchedFields.includes(this.LABEL_EN_TAG) && this.ls.language === "en") {
+                              label = source.label.en;
+                              labelHi = highlight[this.LABEL_EN_TAG][0];
+                            } else if(matchedFields.includes(this.LABEL_FI_TAG)) {
+                              label = source.label.fi;
+                              labelHi = highlight[this.LABEL_FI_TAG][0];
+                            } else if(matchedFields.includes(this.LABEL_EN_TAG)) {
+                              label = source.label.en;
+                              labelHi = highlight[this.LABEL_EN_TAG][0];
+                            } else if(matchedFields.includes(this.LABEL_SV_TAG)) {
+                              label = source.label.sv;
+                              labelHi = highlight[this.LABEL_SV_TAG][0];
+                            } else {
+                              if(this.ls.language === 'fi') {
+                                if(source.label.fi) {
+                                  label = source.label.fi;
+                                } else if(source.label.en) {
+                                  label = source.label.en;
+                                } else if(source.label.sv) {
+                                  label = source.label.sv;
+                                }
+                              } else if(this.ls.language === 'en') {
+                                if(source.label.en) {
+                                  label = source.label.en;
+                                } else if(source.label.fi) {
+                                  label = source.label.fi;
+                                } else if(source.label.sv) {
+                                  label = source.label.sv;
+                                }
                               }
                             }
-                            return hit._source;
+
+                            if(this.ls.language === 'fi') {
+                              if(source.definition.fi) {
+                                definition = source.definition.fi;
+                              } else if(source.definition.en) {
+                                definition = source.definition.en;
+                              } else if(source.definition.sv) {
+                                definition = source.definition.sv;
+                              }
+                            } else if(this.ls.language === 'en') {
+                              if(source.definition.en) {
+                                definition = source.definition.en;
+                              } else if(source.definition.fi) {
+                                definition = source.definition.fi;
+                              } else if(source.definition.sv) {
+                                definition = source.definition.sv;
+                              }
+                            }
+
+                            if(label) {
+                              return {
+                                graphId: source.graphId,
+                                conceptId: source.id,
+                                label: labelHi ? labelHi : label,
+                                definition: definition
+                              }
+                            }
+                            return source;
                           });
                       if (results.length > 0) {
                         this.message = "";
@@ -125,104 +176,99 @@ export class AutoComplete implements AfterViewInit {
 
   _frontPageQuery(searchStr: string): any {
     if (searchStr) {
+      let boostLabelSearchStr = searchStr + "^4";
+      let altLabelSearchStr = searchStr + "^2";
       return {
         bool: {
           should: [
             {
-              nested: {
-                inner_hits : {},
-                path: "properties.prefLabel",
-                query: {
-                  bool: {
-                    // filter: {
-                    //   term: {
-                    //     "properties.prefLabel.lang": this.ls.language
-                    //   }
-                    // },
-                    should: [
-                      {
-                        match: { // Try match_phrase_prefix also
-                          "properties.prefLabel.value": {
-                            query: searchStr,
-                          }
-                        }
-                      }
-                    ]
-                  }
+              match: {
+                [this.LABEL_FI_TAG]: {
+                  query: this.ls.language === "fi" ? boostLabelSearchStr : searchStr,
+                  _name: this.LABEL_FI_TAG,
+                  operator: "or"
                 }
               }
             },
             {
-              nested: {
-                inner_hits : {},
-                path: "references.prefLabelXl",
-                query: {
-                  bool: {
-                    // filter: {
-                    //   term: {
-                    //     "references.prefLabelXl.properties.prefLabel.lang": this.ls.language
-                    //   }
-                    // },
-                    should: [
-                      {
-                        match: { // Try match_phrase_prefix also
-                          "references.prefLabelXl.properties.prefLabel.value": {
-                            query: searchStr,
-                          }
-                        }
-                      }
-                    ]
-                  }
+              match: {
+                [this.LABEL_SV_TAG]: {
+                  query: searchStr,
+                  _name: this.LABEL_SV_TAG,
+                  operator: "or"
+
+                }
+              }
+            },
+            {
+              match: {
+                [this.LABEL_EN_TAG]: {
+                  query: this.ls.language === "en" ? boostLabelSearchStr : searchStr,
+                  _name: this.LABEL_EN_TAG,
+                  operator: "or"
+
+                }
+              }
+            },
+            {
+              match: {
+                [this.ALTLABEL_FI_TAG]: {
+                  query: this.ls.language === "fi" ? altLabelSearchStr : searchStr,
+                  _name: this.ALTLABEL_FI_TAG,
+                  operator: "or"
+
+                }
+              }
+            },
+            {
+              match: {
+                [this.ALTLABEL_SV_TAG]: {
+                  query: searchStr,
+                  _name: this.ALTLABEL_SV_TAG,
+                  operator: "or"
+
+                }
+              }
+            },
+            {
+              match: {
+                [this.ALTLABEL_EN_TAG]: {
+                  query: this.ls.language === "en" ? altLabelSearchStr : searchStr,
+                  _name: this.ALTLABEL_EN_TAG,
+                  operator: "or"
+
+                }
+              }
+            },
+            {
+              match: {
+                [this.DEFINITION_FI_TAG]: {
+                  query: searchStr,
+                  _name: this.DEFINITION_FI_TAG,
+                  operator: "or"
+                }
+              }
+            },
+            {
+              match: {
+                [this.DEFINITION_SV_TAG]: {
+                  query: searchStr,
+                  _name: this.DEFINITION_SV_TAG,
+                  operator: "or"
+                }
+              }
+            },
+            {
+              match: {
+                [this.DEFINITION_EN_TAG]: {
+                  query: searchStr,
+                  _name: this.DEFINITION_EN_TAG,
+                  operator: "or"
                 }
               }
             }
           ]
         }
-
-        // bool: {
-        //   should: [
-        //     {
-        //       bool: {
-        //         filter: {
-        //           term: {
-        //             "properties.prefLabel.lang": this.ls.language
-        //           }
-        //         },
-        //         should: [
-        //           {
-        //             match: {
-        //               "properties.prefLabel.value": {
-        //                 query: searchStr,
-        //                 // operator: "and"
-        //                 // minimum_should_match: "50%"
-        //               }
-        //             }
-        //           }
-        //         ]
-        //       }
-        //     },
-        //     {
-        //       bool: {
-        //         filter: {
-        //           term: {
-        //             "references.prefLabelXl.properties.prefLabel.lang": this.ls.language
-        //           }
-        //         },
-        //         should: [
-        //           {
-        //             match: {
-        //               "references.prefLabelXl.properties.prefLabel.value": {
-        //                 query: searchStr,
-        //                 // operator: "and"
-        //                 // minimum_should_match: "50%"
-        //               }
-        //             }
-        //           }
-        //         ]
-        //       }
-        //     }
-        //   ]
-        // }
       }
     }
     return null;
