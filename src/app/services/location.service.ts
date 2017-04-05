@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Localizable } from '../entities/localization';
 import { Subject } from 'rxjs';
-import { ConceptNode, VocabularyNode } from '../entities/node';
+import { CollectionNode, ConceptNode, VocabularyNode } from '../entities/node';
 
 export interface Location {
   localizationKey?: string;
@@ -37,6 +37,19 @@ export class LocationService {
       {
         label: concept.label,
         route: ['concepts', vocabulary.graphId, 'concept', concept.id]
+      }
+    ]);
+  }
+
+  atCollection(vocabulary: VocabularyNode, collection: CollectionNode): void {
+    this.changeLocation([
+      {
+        label: vocabulary.label,
+        route: ['concepts', vocabulary.graphId]
+      },
+      {
+        label: collection.label,
+        route: ['concepts', vocabulary.graphId, 'concept', collection.id]
       }
     ]);
   }
