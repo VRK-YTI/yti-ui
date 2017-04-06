@@ -30,40 +30,40 @@ export class TermedService {
         if (!vocabulary) {
           throw new Error('Vocabulary not found for graph: ' + graphId);
         }
-        return Node.create(vocabulary, meta, languages)
+        return Node.create(vocabulary, meta, languages, true);
       });
   }
 
   getVocabularyList(languages: string[]): Observable<VocabularyNode[]> {
     return Observable.zip(this.metaModelService.getMeta(), this.getVocabularyNodes('Vocabulary'), this.getVocabularyNodes('TerminologicalVocabulary'))
       .map(([meta, vocabularies, terminologicalVocabularies]) =>
-      [...vocabularies, ...terminologicalVocabularies].map(vocabulary => Node.create(vocabulary, meta, languages) as VocabularyNode)
+      [...vocabularies, ...terminologicalVocabularies].map(vocabulary => Node.create(vocabulary, meta, languages, true) as VocabularyNode)
           .filter(vocabulary => vocabulary.hasGroup()));
   }
 
   getConcept(graphId: string, conceptId: string, languages: string[]): Observable<ConceptNode> {
     return Observable.zip(this.metaModelService.getMeta(), this.getConceptDetailsNode(graphId, conceptId))
-      .map(([meta, concept]) => Node.create(concept, meta, languages));
+      .map(([meta, concept]) => Node.create(concept, meta, languages, true));
   }
 
   getConceptList(graphId: string, languages: string[]): Observable<ConceptNode[]> {
     return Observable.zip(this.metaModelService.getMeta(), this.getConceptListNodes(graphId))
-      .map(([meta, concepts]) => concepts.map(concept => Node.create(concept, meta, languages)));
+      .map(([meta, concepts]) => concepts.map(concept => Node.create(concept, meta, languages, true)));
   }
 
   getCollection(graphId: string, conceptId: string, languages: string[]): Observable<CollectionNode> {
     return Observable.zip(this.metaModelService.getMeta(), this.getCollectionDetailsNode(graphId, conceptId))
-      .map(([meta, collection]) => Node.create(collection, meta, languages));
+      .map(([meta, collection]) => Node.create(collection, meta, languages, true));
   }
 
   getCollectionList(graphId: string, languages: string[]): Observable<CollectionNode[]> {
     return Observable.zip(this.metaModelService.getMeta(), this.getCollectionListNodes(graphId))
-      .map(([meta, concepts]) => concepts.map(collection => Node.create(collection, meta, languages)));
+      .map(([meta, concepts]) => concepts.map(collection => Node.create(collection, meta, languages, true)));
   }
 
   getNarrowerConcepts(graphId: string, broaderConceptId: string, languages: string[]): Observable<ConceptNode[]> {
     return Observable.zip(this.metaModelService.getMeta(), this.getNarrowerConceptNodes(graphId, broaderConceptId))
-      .map(([meta, concepts]) => concepts.map(concept => Node.create(concept, meta, languages)));
+      .map(([meta, concepts]) => concepts.map(concept => Node.create(concept, meta, languages, true)));
   }
 
   updateNode<T extends NodeType>(node: Node<T>) {
@@ -85,7 +85,7 @@ export class TermedService {
     const termIdentifiers =
       flatten(Object.values(node.references)
         .filter(ref => ref.term)
-        .map(ref => ref.values.map(term => term.identifier))
+        .map(ref => ref.values.filter(term => term.persistent).map(term => term.identifier))
       );
 
     return this.removeNodeIdentifiers([...termIdentifiers, node.identifier]);

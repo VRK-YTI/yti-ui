@@ -100,13 +100,13 @@ export class Reference<N extends KnownNode | Node<any>> {
         });
 
         if (node) {
-          this.values.push(Node.create(node, metas, [language]) as N);
+          this.values.push(Node.create(node, metas, [language], true) as N);
         } else {
-          this.values.push(Node.create(nodeMeta.createEmptyNode(), metas, [language]) as N);
+          this.values.push(Node.create(nodeMeta.createEmptyNode(), metas, [language], false) as N);
         }
       }
     } else {
-      this.values = nodes.map(node => Node.create(node, metas, languages) as N);
+      this.values = nodes.map(node => Node.create(node, metas, languages, true) as N);
     }
   }
 
@@ -139,9 +139,10 @@ export class Node<T extends NodeType> {
   references: { [key: string]: Reference<any> } = {};
   referrers: { [key: string]: Node<any>[] } = {};
 
-  persistent = true;
-
-  protected constructor(protected node: NodeExternal<T>, protected metas: Map<string, Map<string, NodeMeta>>, public languages: string[]) {
+  protected constructor(protected node: NodeExternal<T>,
+                        protected metas: Map<string, Map<string, NodeMeta>>,
+                        public readonly languages: string[],
+                        public persistent: boolean) {
 
     this.meta = requireDefined(requireDefined(metas.get(node.type.graph.id)).get(node.type.id), 'Meta not found for ' + node.type.id);
 
@@ -156,31 +157,31 @@ export class Node<T extends NodeType> {
     }
 
     for (const [name, referrerNodes] of Object.entries(node.referrers)) {
-      this.referrers[name] = normalizeAsArray(referrerNodes).map(referrerNode => Node.create(referrerNode, metas, languages));
+      this.referrers[name] = normalizeAsArray(referrerNodes).map(referrerNode => Node.create(referrerNode, metas, languages, true));
     }
   }
 
-  static create(node: NodeExternal<any>, metas: Map<string, Map<string, NodeMeta>>, languages: string[]): KnownNode | Node<any> {
+  static create(node: NodeExternal<any>, metas: Map<string, Map<string, NodeMeta>>, languages: string[], persistent: boolean): KnownNode | Node<any> {
     switch (node.type.id) {
       case 'Vocabulary':
       case 'TerminologicalVocabulary':
-        return new VocabularyNode(node, metas, languages);
+        return new VocabularyNode(node, metas, languages, persistent);
       case 'Concept':
-        return new ConceptNode(node, metas, languages);
+        return new ConceptNode(node, metas, languages, persistent);
       case 'Term':
-        return new TermNode(node, metas, languages);
+        return new TermNode(node, metas, languages, persistent);
       case 'Collection':
-        return new CollectionNode(node, metas, languages);
+        return new CollectionNode(node, metas, languages, persistent);
       case 'Group':
-        return new GroupNode(node, metas, languages);
+        return new GroupNode(node, metas, languages, persistent);
       case 'Organization':
-        return new OrganizationNode(node, metas, languages);
+        return new OrganizationNode(node, metas, languages, persistent);
       default:
-        return new Node<any>(node, metas, languages);
+        return new Node<any>(node, metas, languages, persistent);
     }
   }
 
-  private toNode() {
+  protected toNodeWithoutReferencesAndReferrers() {
 
     const serializeProperties = () => {
 
@@ -206,6 +207,26 @@ export class Node<T extends NodeType> {
     };
   }
 
+  clone<N extends Node<T>>(): N {
+
+    const setPersistent = (original: Node<any>, clone: Node<any>) => {
+
+      clone.persistent = original.persistent;
+
+      for (const [key, reference] of Object.entries(original.references)) {
+        const cloneReferenceValues = clone.references[key].values;
+
+        for (const refNode of reference.values) {
+          setPersistent(refNode, requireDefined(cloneReferenceValues.find(clonedRefNode => refNode.id === clonedRefNode.id)));
+        }
+      }
+    };
+
+    const cloned = Node.create(JSON.parse(JSON.stringify(this.toExternalNode())), this.metas, this.languages, this.persistent) as N;
+    setPersistent(this, cloned);
+    return cloned;
+  }
+
   toExternalNode(): NodeExternal<T> {
 
     const extractReferences = () => {
@@ -218,7 +239,7 @@ export class Node<T extends NodeType> {
       return result;
     };
 
-    return Object.assign(this.toNode(), {
+    return Object.assign(this.toNodeWithoutReferencesAndReferrers(), {
       referrers: this.node.referrers,
       references: extractReferences()
     });
@@ -246,7 +267,7 @@ export class Node<T extends NodeType> {
       return result;
     };
 
-    return Object.assign(this.toNode(), {
+    return Object.assign(this.toNodeWithoutReferencesAndReferrers(), {
       referrers: extractReferrers(),
       references: extractReferences()
     });
@@ -331,14 +352,12 @@ export class Node<T extends NodeType> {
 
 export class VocabularyNode extends Node<VocabularyNodeType> {
 
-  constructor(node: NodeExternal<VocabularyNodeType>, metas: Map<string, Map<string, NodeMeta>>,languages: string[]) {
-    super(node, metas, languages);
+  constructor(node: NodeExternal<VocabularyNodeType>, metas: Map<string, Map<string, NodeMeta>>,languages: string[], persistent: boolean) {
+    super(node, metas, languages, persistent);
   }
 
   clone(): VocabularyNode {
-    const cloned = new VocabularyNode(JSON.parse(JSON.stringify(this.toExternalNode())), this.metas, this.languages);
-    cloned.persistent = this.persistent;
-    return cloned;
+    return super.clone<VocabularyNode>();
   }
 
   get label(): Localizable {
@@ -364,14 +383,12 @@ export class VocabularyNode extends Node<VocabularyNodeType> {
 
 export class ConceptNode extends Node<'Concept'> {
 
-  constructor(node: NodeExternal<'Concept'>, metas: Map<string, Map<string, NodeMeta>>,languages: string[]) {
-    super(node, metas, languages);
+  constructor(node: NodeExternal<'Concept'>, metas: Map<string, Map<string, NodeMeta>>,languages: string[], persistent: boolean) {
+    super(node, metas, languages, persistent);
   }
 
   clone(): ConceptNode {
-    const cloned = new ConceptNode(JSON.parse(JSON.stringify(this.toExternalNode())), this.metas, this.languages);
-    cloned.persistent = this.persistent;
-    return cloned;
+    return super.clone<ConceptNode>();
   }
 
   get label(): Localizable {
@@ -427,8 +444,8 @@ export class ConceptNode extends Node<'Concept'> {
 
 export class TermNode extends Node<'Term'> {
 
-  constructor(node: NodeExternal<'Term'>, metas: Map<string, Map<string, NodeMeta>>,languages: string[]) {
-    super(node, metas, languages);
+  constructor(node: NodeExternal<'Term'>, metas: Map<string, Map<string, NodeMeta>>,languages: string[], persistent: boolean) {
+    super(node, metas, languages, persistent);
   }
 
   get empty() {
@@ -454,14 +471,12 @@ export class TermNode extends Node<'Term'> {
 
 export class CollectionNode extends Node<'Collection'> {
 
-  constructor(node: NodeExternal<'Collection'>, metas: Map<string, Map<string, NodeMeta>>,languages: string[]) {
-    super(node, metas, languages);
+  constructor(node: NodeExternal<'Collection'>, metas: Map<string, Map<string, NodeMeta>>,languages: string[], persistent: boolean) {
+    super(node, metas, languages, persistent);
   }
 
   clone(): CollectionNode {
-    const cloned = new CollectionNode(JSON.parse(JSON.stringify(this.toExternalNode())), this.metas, this.languages);
-    cloned.persistent = this.persistent;
-    return cloned;
+    return super.clone<CollectionNode>();
   }
 
   findLocalizationForLanguage(language: string): Localization|undefined {
@@ -487,8 +502,8 @@ export class CollectionNode extends Node<'Collection'> {
 
 export class GroupNode extends Node<'Group'> {
 
-  constructor(node: NodeExternal<'Group'>, metas: Map<string, Map<string, NodeMeta>>,languages: string[]) {
-    super(node, metas, languages);
+  constructor(node: NodeExternal<'Group'>, metas: Map<string, Map<string, NodeMeta>>,languages: string[], persistent: boolean) {
+    super(node, metas, languages, persistent);
   }
 
   get label(): Localizable {
@@ -498,8 +513,8 @@ export class GroupNode extends Node<'Group'> {
 
 export class OrganizationNode extends Node<'Organization'> {
 
-  constructor(node: NodeExternal<'Organization'>, metas: Map<string, Map<string, NodeMeta>>,languages: string[]) {
-    super(node, metas, languages);
+  constructor(node: NodeExternal<'Organization'>, metas: Map<string, Map<string, NodeMeta>>,languages: string[], persistent: boolean) {
+    super(node, metas, languages, persistent);
   }
 
   get label(): Localizable {

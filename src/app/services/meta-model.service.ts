@@ -47,9 +47,7 @@ export class MetaModelService {
     return this.meta.map(metas => {
       const graphMeta = requireDefined(metas.get(graphId), 'Graph not found: '+ graphId);
       const conceptMeta = requireDefined(graphMeta.get(nodeType), 'Node type not found: ' + nodeType);
-      const node = Node.create(conceptMeta.createEmptyNode(nodeId), metas, languages);
-      node.persistent = false;
-      return node;
+      return Node.create(conceptMeta.createEmptyNode(nodeId), metas, languages, false);
     });
   }
 
