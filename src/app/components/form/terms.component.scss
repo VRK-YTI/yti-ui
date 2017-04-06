@@ -1,0 +1,58 @@
+@import '../../../variables';
+
+$language-size: 32px;
+
+:host /deep/ {
+
+  .card-header {
+    background-color: $brand-accent-lighter;
+    border: none;
+    padding: 0;
+    margin-bottom: 5px;
+
+    a {
+      color: rgb(68, 68, 68);
+      text-decoration: none !important;
+    }
+  }
+  .card {
+    border: none;
+  }
+  .card-block {
+    padding: 0 30px 0 0;
+    border: 1px solid $brand-accent-lighter;
+    margin-top: -5px;
+    margin-bottom: 5px;
+  }
+
+  .row {
+    margin-top: 10px;
+    margin-left: 22px;
+  }
+
+  // FIXME: duplication with localized-input component styles
+  div.language {
+
+    float: left;
+    color: white;
+    background-color: $brand-primary;
+    width: $language-size;
+    height: $language-size;
+    display: inline-block;
+    text-align: center;
+    line-height: $language-size;
+  }
+
+  div.localization {
+    float: left;
+    width: calc(100% - #{$language-size});
+    min-height: $language-size;
+    padding-left: 10px;
+    line-height: $language-size;
+  }
+
+  accordion-chevron {
+    font-size: x-large;
+    padding-right: 10px;
+  }
+}

@@ -1,0 +1,137 @@
+@import '../../../variables';
+
+.page-header {
+
+  text-align: center;
+  background-color: $brand-accent-lighter;
+  padding: 40px 40px 20px 40px;
+
+  .welcome {
+    display: inline-block;
+    color: $brand-primary;
+    margin-bottom: 10px;
+    font-size: large;
+  }
+
+  div {
+    max-width: 550px;
+  }
+}
+
+.vocabularies {
+  padding-top: 30px;
+  padding-bottom: 30px;
+  margin-bottom: $footer-height;
+}
+
+.amount {
+  color: $brand-primary;
+  width: calc(100% - 20px);
+  margin-left: 10px;
+  margin-bottom: 10px;
+  padding-bottom: 5px;
+  border-bottom: 2px solid $brand-accent-lighter;
+}
+
+.filters {
+  border: 2px solid $brand-accent-lighter;
+  padding: 10px;
+
+  .filter {
+
+    .title {
+      display: inline-block;
+      font-weight: bold;
+      margin-bottom: 7px;
+    }
+
+    .item {
+
+      padding: 7px;
+      user-select: none;
+
+      &:hover {
+        cursor: pointer;
+      }
+
+      .name {
+        color: $brand-primary;
+      }
+      .count {
+        float: right;
+        color: $gray-light;
+      }
+
+      &.selected {
+        background-color: $brand-accent-lighter;
+        font-weight: bold;
+      }
+    }
+  }
+
+  .separator {
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-bottom: 2px solid $brand-accent-lighter;
+  }
+}
+
+.search-result {
+
+  display: inline-block;
+  width: 100%;
+  padding: 10px;
+
+  &:hover {
+    cursor: pointer;
+    background-color: $brand-accent-lighter;
+
+    .type {
+      border: 1px solid rgba(0, 0, 0, 0.15) !important;
+    }
+  }
+
+  .content {
+    display: inline-block;
+    float: left;
+    padding-right: 50px;
+    width: calc(100% - 250px);
+
+    .title {
+      font-size: medium;
+      color: $brand-primary;
+    }
+
+    p {
+      font-size: small;
+      margin-bottom: 0;
+    }
+  }
+
+  .origin {
+    display: inline-block;
+    float: right;
+    text-align: right;
+    width: 250px;
+
+    .publisher {
+      color: $brand-primary;
+      margin-bottom: 10px;
+      display: inline-block;
+    }
+
+    .group {
+      color: $brand-primary;
+      margin-bottom: 10px;
+      display: inline-block;
+    }
+
+    .type {
+      display: inline-block;
+      padding: 10px;
+      background-color: $brand-accent-lighter;
+      border: 1px solid $brand-accent-lighter;
+    }
+  }
+}

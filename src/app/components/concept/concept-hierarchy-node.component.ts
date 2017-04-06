@@ -1,0 +1,63 @@
+import { Component, Input } from '@angular/core';
+import { Router } from '@angular/router';
+import { ConceptNode } from '../../entities/node';
+import { ConceptViewModelService } from '../../services/concept.view.service';
+
+@Component({
+  selector: 'concept-hierarchy-node',
+  styleUrls: ['./concept-hierarchy-node.component.scss'],
+  template: `
+    
+    <i [hidden]="!hasChildren() || expanded" class="fa fa-plus-square-o" (click)="expand()"></i>
+    <i [hidden]="!hasChildren() || collapsed" class="fa fa-minus-square-o" (click)="collapse()"></i>
+      
+    <div class="text" [class.selection]="selected" (click)="navigate()">
+      <span>{{concept.label | translateValue}}</span>
+    </div>
+    
+    <ul *ngIf="expanded && children">
+      <li *ngFor="let child of children">
+        <concept-hierarchy-node [concept]="child"></concept-hierarchy-node>
+      </li>
+    </ul>
+  `
+})
+export class ConceptHierarchyNodeComponent {
+
+  @Input() concept: ConceptNode;
+  collapsed = true;
+  children: ConceptNode[];
+
+  constructor(private conceptViewModel: ConceptViewModelService,
+              private router: Router) {
+  }
+
+  navigate() {
+    this.router.navigate(['/concepts', this.concept.graphId, 'concept', this.concept.id]);
+  }
+
+  get selected() {
+    return this.conceptViewModel.conceptId === this.concept.id;
+  }
+
+  get expanded() {
+    return !this.collapsed;
+  }
+
+  hasChildren() {
+    return this.concept.narrowerConcepts.length > 0;
+  }
+
+  collapse() {
+    this.collapsed = true;
+  }
+
+  expand() {
+    this.collapsed = false;
+
+    if (!this.children) {
+      this.conceptViewModel.getNarrowerConcepts(this.concept)
+        .subscribe(concepts => this.children = concepts);
+    }
+  }
+}

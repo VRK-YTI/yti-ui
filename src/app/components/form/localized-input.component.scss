@@ -1,0 +1,45 @@
+@import '../../../variables';
+
+$language-size: 32px;
+
+div.localized {
+
+  display: inline-block;
+  width: 100%;
+
+  div.language {
+
+    float: left;
+    color: white;
+    background-color: $brand-primary;
+    width: $language-size;
+    height: $language-size;
+    display: inline-block;
+    text-align: center;
+    line-height: $language-size;
+  }
+
+  div.localization {
+
+    float: left;
+    border: 2px solid $brand-primary;
+    width: calc(100% - #{$language-size});
+    min-height: $language-size;
+    padding-left: 10px;
+    line-height: calc(#{$language-size} - 4px);
+
+    div.form-group {
+      margin-bottom: 0;
+    }
+
+    input, textarea {
+      margin-left: -10px;
+      padding: 6px 10px;
+      border: none;
+    }
+
+    input {
+      height: calc(#{$language-size} - 4px);
+    }
+  }
+}
