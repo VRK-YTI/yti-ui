@@ -1,6 +1,6 @@
 import { ReferenceAttributeInternal, TextAttributeInternal, NodeMetaInternal } from './meta-api';
 import { comparingNumber } from '../utils/comparator';
-import { groupBy, index, normalizeAsArray } from '../utils/array';
+import { any, groupBy, index, normalizeAsArray } from '../utils/array';
 import { asLocalizable, Localizable } from './localization';
 import { NodeType, NodeExternal } from './node-api';
 import { Node } from './node';
@@ -188,5 +188,9 @@ export class NodeMeta {
     }
 
     return result;
+  }
+
+  hasReference(referenceId: string) {
+    return any(this.references, ref => ref.id === referenceId);
   }
 }

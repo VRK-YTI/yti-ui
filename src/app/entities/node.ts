@@ -405,6 +405,10 @@ export class ConceptNode extends Node<'Concept'> {
     return this.getPropertyAsLocalizable('definition');
   }
 
+  hasVocabulary() {
+    return this.meta.hasReference('inScheme');
+  }
+
   get vocabulary(): VocabularyNode {
     return requireSingle(this.references['inScheme'].values) as VocabularyNode;
   }

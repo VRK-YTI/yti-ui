@@ -43,7 +43,10 @@ export class MetaModelService {
     return Observable.zip(this.translateService.get('New concept'), this.createEmptyNode<ConceptNode, 'Concept'>(vocabulary.graphId, nodeId, 'Concept', vocabulary.languages))
       .map(([newConceptLabel, newConcept]) => {
 
-        newConcept.vocabulary = vocabulary.clone();
+        if (newConcept.hasVocabulary()) {
+          newConcept.vocabulary = vocabulary.clone();
+        }
+
         const matchingTerm = newConcept.findTermForLanguage(this.languageService.language) || newConcept.terms[0];
         matchingTerm.value = newConceptLabel;
 
