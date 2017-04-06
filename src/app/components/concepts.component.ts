@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ConceptViewModelService } from '../services/concept.view.service';
 import { SessionService } from '../services/session.service';
-import { ConceptNetworkComponent } from './vis/concept-network.component';
+import { ConceptNetworkComponent } from './visualization/concept-network.component';
 
 @Component({
   selector: 'concepts',
