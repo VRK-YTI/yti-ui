@@ -1,10 +1,12 @@
 import { ReferenceAttributeInternal, TextAttributeInternal, NodeMetaInternal } from './meta-api';
 import { comparingNumber } from '../utils/comparator';
-import { normalizeAsArray } from '../utils/array';
+import { groupBy, index, normalizeAsArray } from '../utils/array';
 import { asLocalizable, Localizable } from './localization';
 import { NodeType, NodeExternal } from './node-api';
+import { Node } from './node';
 import { v4 as uuid } from 'uuid';
 import * as moment from 'moment';
+import { requireDefined } from '../utils/object';
 
 export type PropertyType = 'localizable' | 'status' | 'string';
 
@@ -72,6 +74,53 @@ export class ReferenceMeta {
 
   get concept(): boolean {
     return this.targetType === 'Concept';
+  }
+}
+
+export class MetaModel {
+
+  private meta = new Map<string, GraphMeta>();
+
+  constructor(nodeMetas: NodeMetaInternal[]) {
+
+    const nodeMetasByGroup = groupBy(nodeMetas, meta => meta.graph.id);
+
+    for (const [graphId, nodeMetasInGroup] of Array.from(nodeMetasByGroup.entries())) {
+      this.meta.set(graphId, new GraphMeta(graphId, nodeMetasInGroup));
+    }
+  }
+
+  graphHas(graphId: string, nodeType: NodeType) {
+    return this.getGraphMeta(graphId).has(nodeType);
+  }
+
+  getGraphMeta(graphId: string): GraphMeta {
+    return requireDefined(this.meta.get(graphId), 'Meta not found for graph: ' + graphId);
+  }
+
+  getNodeMeta(graphId: string, nodeType: NodeType): NodeMeta {
+    return this.getGraphMeta(graphId).getNodeMeta(nodeType);
+  }
+
+  createEmptyNode<N extends Node<T>, T extends NodeType>(graphId: string, nodeId: string, nodeType: T, languages: string[]): N {
+    return Node.create(this.getNodeMeta(graphId, nodeType).createEmptyNode(nodeId), this, languages, false) as N;
+  }
+}
+
+export class GraphMeta {
+
+  private meta = new Map<NodeType, NodeMeta>();
+
+  constructor(public graphId: string, nodeMetas: NodeMetaInternal[]) {
+    this.meta = index(nodeMetas.map(m => new NodeMeta(m)), m => m.type);
+  }
+
+  has(nodeType: NodeType) {
+    return this.meta.has(nodeType);
+  }
+
+  getNodeMeta(type: NodeType): NodeMeta {
+    return requireDefined(this.meta.get(type), `Meta not found for graph: ${this.graphId} and node type: ${type}`);
   }
 }
 

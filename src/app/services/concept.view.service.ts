@@ -116,16 +116,7 @@ export class ConceptViewModelService {
     } else {
       this.vocabulary$.subscribe(vocabulary => {
         this.termedService.getConcept(vocabulary.graphId, conceptId, this.languages).subscribe(init, () => {
-          this.metaModelService.createEmptyNode(this.graphId, conceptId, 'Concept', this.languages).subscribe((concept: ConceptNode) => {
-
-            concept.vocabulary = vocabulary.clone();
-
-            this.translateService.get('New concept').subscribe(newConceptLabel => {
-              const matchingTerm = concept.findTermForLanguage(this.languageService.language) || concept.terms[0];
-              matchingTerm.value = newConceptLabel;
-              init(concept);
-            });
-          });
+          this.metaModelService.createEmptyConcept(this.vocabulary, conceptId).subscribe(init);
         });
       });
     }
@@ -160,14 +151,7 @@ export class ConceptViewModelService {
     } else {
       this.vocabulary$.subscribe(vocabulary => {
         this.termedService.getCollection(vocabulary.graphId, collectionId, this.languages).subscribe(init, () => {
-          this.metaModelService.createEmptyNode(this.graphId, collectionId, 'Collection', this.languages).subscribe((collection: CollectionNode) => {
-            this.translateService.get('New collection').subscribe(newCollectionLabel => {
-
-              const matchingLocalization = collection.findLocalizationForLanguage(this.languageService.language) || collection.anyLocalization();
-              matchingLocalization.value = newCollectionLabel;
-              init(collection);
-            });
-          });
+          this.metaModelService.createEmptyCollection(this.vocabulary, collectionId).subscribe(init);
         });
       });
     }

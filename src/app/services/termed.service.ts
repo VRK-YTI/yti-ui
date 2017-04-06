@@ -7,7 +7,6 @@ import { MetaModelService } from './meta-model.service';
 import { NodeExternal, NodeType, NodeInternal, Identifier, VocabularyNodeType } from '../entities/node-api';
 import { CollectionNode, ConceptNode, Node, VocabularyNode } from '../entities/node';
 import * as moment from 'moment';
-import { requireDefined } from '../utils/object';
 
 const infiniteResultsParams = new URLSearchParams();
 infiniteResultsParams.append('max', '-1');
@@ -19,16 +18,13 @@ export class TermedService {
   }
 
   getVocabulary(graphId: string, languages: string[]): Observable<VocabularyNode> {
-
-    return this.metaModelService.getMeta().flatMap(metas => {
-      const meta = requireDefined(metas.get(graphId));
-
-      if (meta.has('Vocabulary')) {
+    return this.metaModelService.getMeta().flatMap(metaModel => {
+      if (metaModel.graphHas(graphId, 'Vocabulary')) {
         return this.getVocabularyNode(graphId, 'Vocabulary')
-          .map(vocabulary => Node.create(vocabulary, metas, languages, true));
+          .map(vocabulary => Node.create(vocabulary, metaModel, languages, true));
       } else {
         return this.getVocabularyNode(graphId, 'TerminologicalVocabulary')
-          .map(vocabulary => Node.create(vocabulary, metas, languages, true));
+          .map(vocabulary => Node.create(vocabulary, metaModel, languages, true));
       }
     });
   }
