@@ -423,23 +423,26 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
     // NOTE: If user clicks the node and does not move cursor within 600ms, it will be interpreted as a click
     // leading to changing the concept
 
-    const conceptId = eventData.nodes[0];
-    const visNode: VisNode = this.networkData.nodes.get(conceptId);
+    const nodeId = eventData.nodes[0];
+    const visNode: VisNode = this.networkData.nodes.get(nodeId);
     const isConcept = visNode.group !== 'collectionGroup';
 
     const onSingleClick = () => {
-      if (isConcept) {
-        this.skipNextSelection = true;
 
-        this.zone.run(() => {
-          this.router.navigate(['/concepts', this.conceptViewModel.vocabulary.graphId, 'concept', conceptId]);
-        });
-      }
+      this.skipNextSelection = true;
+
+      this.zone.run(() => {
+        if (isConcept) {
+          this.router.navigate(['/concepts', this.conceptViewModel.vocabulary.graphId, 'concept', nodeId]);
+        } else {
+          this.router.navigate(['/concepts', this.conceptViewModel.vocabulary.graphId, 'collection', nodeId]);
+        }
+      });
     };
 
     const onDoubleClick = () => {
       if (isConcept) {
-        const rootConcept$ = this.termedService.getConcept(this.conceptViewModel.vocabulary.graphId, conceptId, this.conceptViewModel.languages);
+        const rootConcept$ = this.termedService.getConcept(this.conceptViewModel.vocabulary.graphId, nodeId, this.conceptViewModel.languages);
         rootConcept$.subscribe(concept => this.addEdgeNodesForConcept(concept));
       }
     };
