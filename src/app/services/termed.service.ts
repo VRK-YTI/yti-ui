@@ -7,6 +7,7 @@ import { MetaModelService } from './meta-model.service';
 import { NodeExternal, NodeType, NodeInternal, Identifier, VocabularyNodeType } from '../entities/node-api';
 import { CollectionNode, ConceptNode, Node, VocabularyNode } from '../entities/node';
 import * as moment from 'moment';
+import { requireDefined } from '../utils/object';
 
 const infiniteResultsParams = new URLSearchParams();
 infiniteResultsParams.append('max', '-1');
@@ -19,19 +20,17 @@ export class TermedService {
 
   getVocabulary(graphId: string, languages: string[]): Observable<VocabularyNode> {
 
-    const vocabulary: Observable<NodeExternal<VocabularyNodeType>|null> =
-      Observable.forkJoin([
-        this.getVocabularyNode(graphId, 'Vocabulary').catch(notFoundAsDefault(null)),
-        this.getVocabularyNode(graphId, 'TerminologicalVocabulary').catch(notFoundAsDefault(null))
-      ], (vocabulary, terminologicalVocabulary) => vocabulary || terminologicalVocabulary);
+    return this.metaModelService.getMeta().flatMap(metas => {
+      const meta = requireDefined(metas.get(graphId));
 
-    return Observable.zip(this.metaModelService.getMeta(), vocabulary)
-      .map(([meta, vocabulary]) => {
-        if (!vocabulary) {
-          throw new Error('Vocabulary not found for graph: ' + graphId);
-        }
-        return Node.create(vocabulary, meta, languages, true);
-      });
+      if (meta.has('Vocabulary')) {
+        return this.getVocabularyNode(graphId, 'Vocabulary')
+          .map(vocabulary => Node.create(vocabulary, metas, languages, true));
+      } else {
+        return this.getVocabularyNode(graphId, 'TerminologicalVocabulary')
+          .map(vocabulary => Node.create(vocabulary, metas, languages, true));
+      }
+    });
   }
 
   getVocabularyList(languages: string[]): Observable<VocabularyNode[]> {
