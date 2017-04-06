@@ -24,16 +24,20 @@ import { requireDefined } from '../../utils/object';
             <editable-buttons [canRemove]="true"></editable-buttons>
           </div>
         </div>
+        
+        <div class="row">
+          <property class="col-md-12"
+                    [value]="property"
+                    *ngFor="let property of collectionInEdit | properties: showEmpty"></property>
+  
+          <reference class="col-md-12"
+                     [value]="reference"
+                     [conceptsProvider]="conceptsProvider"
+                     *ngFor="let reference of collectionInEdit | references: showEmpty"></reference>
+        </div>
 
-        <property class="col-md-12"
-                  [class.col-xl-6]="!property.meta.area"
-                  [value]="property"
-                  *ngFor="let property of collectionInEdit | properties: showEmpty"></property>
-
-        <reference class="col-md-12"
-                   [value]="reference"
-                   [conceptsProvider]="conceptsProvider"
-                   *ngFor="let reference of collectionInEdit | references: showEmpty"></reference>
+        <meta-information [hidden]="!collection.persistent" [node]="collection"></meta-information>
+        
       </form>
 
     </div>
@@ -48,7 +52,7 @@ export class CollectionComponent implements OnDestroy {
   constructor(private route: ActivatedRoute,
               private conceptViewModel: ConceptViewModelService,
               deleteConfirmationModal: DeleteConfirmationModalService,
-              editableService: EditableService) {
+              private editableService: EditableService) {
 
     route.params.subscribe(params => conceptViewModel.initializeCollection(params['collectionId']));
     editableService.onSave = () => this.conceptViewModel.saveCollection();
@@ -72,6 +76,10 @@ export class CollectionComponent implements OnDestroy {
     for (const subscription of this.subscriptionToClean) {
       subscription.unsubscribe();
     }
+  }
+
+  get showEmpty() {
+    return this.editableService.editing;
   }
 
   get conceptsProvider() {
