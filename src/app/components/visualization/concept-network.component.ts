@@ -398,14 +398,24 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
       this.addEdgeIfDoesNotExist(this.createRelatedConceptEdge(concept, relatedConcept));
     }
 
-    for (const narrowerConcept of concept.narrowerConcepts) {
-      this.addNodeIfDoesNotExist(this.createBroaderConceptNode(narrowerConcept));
-      this.addEdgeIfDoesNotExist(this.createBroaderConceptEdge(concept, narrowerConcept));
+    for (const broaderConcept of concept.broaderConcepts) {
+      this.addNodeIfDoesNotExist(this.createBroaderConceptNode(broaderConcept));
+      this.addEdgeIfDoesNotExist(this.createBroaderConceptEdge(concept, broaderConcept));
     }
 
-    for (const isPartOfConcept of concept.partOfThisConcepts) {
+    for (const narrowerConcept of concept.narrowerConcepts) {
+      this.addNodeIfDoesNotExist(this.createBroaderConceptNode(narrowerConcept));
+      this.addEdgeIfDoesNotExist(this.createBroaderConceptEdge(narrowerConcept, concept));
+    }
+
+    for (const isPartOfConcept of concept.isPartOfConcepts) {
       this.addNodeIfDoesNotExist(this.createIsPartOfConceptNode(isPartOfConcept));
       this.addEdgeIfDoesNotExist(this.createIsPartOfConceptEdge(concept, isPartOfConcept));
+    }
+
+    for (const partOfThisConcept of concept.partOfThisConcepts) {
+      this.addNodeIfDoesNotExist(this.createIsPartOfConceptNode(partOfThisConcept));
+      this.addEdgeIfDoesNotExist(this.createIsPartOfConceptEdge(partOfThisConcept, concept));
     }
   }
 

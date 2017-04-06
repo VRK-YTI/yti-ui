@@ -437,6 +437,10 @@ export class ConceptNode extends Node<'Concept'> {
     return normalizeAsArray(this.referrers['broader'] as ConceptNode[]);
   }
 
+  get isPartOfConcepts(): ConceptNode[] {
+    return normalizeAsArray(this.references['isPartOf'].values as ConceptNode[]);
+  }
+
   get partOfThisConcepts(): ConceptNode[] {
     return normalizeAsArray(this.referrers['isPartOf'] as ConceptNode[]);
   }
