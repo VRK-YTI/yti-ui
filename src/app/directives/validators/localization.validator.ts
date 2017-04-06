@@ -9,7 +9,7 @@ import { FormControl, NG_VALIDATORS } from '@angular/forms';
 })
 export class LocalizationValidator {}
 
-function validate(control: FormControl) {
+export function validate(control: FormControl) {
   // TODO
   return null;
 }

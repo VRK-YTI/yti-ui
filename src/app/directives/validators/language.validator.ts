@@ -9,7 +9,7 @@ import { FormControl, NG_VALIDATORS } from '@angular/forms';
 })
 export class LanguageValidator {}
 
-function validate(control: FormControl) {
+export function validate(control: FormControl) {
 
   const valid = control.value && typeof control.value === 'string' && control.value.length === 2;
 
