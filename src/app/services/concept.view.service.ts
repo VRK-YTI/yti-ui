@@ -7,7 +7,6 @@ import { CollectionNode, ConceptNode, VocabularyNode } from '../entities/node';
 import { comparingLocalizable } from '../utils/comparator';
 import { LanguageService } from './language.service';
 import { MetaModelService } from './meta-model.service';
-import { TranslateService } from 'ng2-translate';
 
 @Injectable()
 export class ConceptViewModelService {
@@ -44,8 +43,7 @@ export class ConceptViewModelService {
               private termedService: TermedService,
               private metaModelService: MetaModelService,
               private locationService: LocationService,
-              private languageService: LanguageService,
-              private translateService: TranslateService) {
+              private languageService: LanguageService) {
   }
 
   get concept() {
