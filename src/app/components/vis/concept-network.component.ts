@@ -264,7 +264,9 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
         this.network.once('afterDrawing', () => this.network.fit());
       }
 
-      this.skipNextSelection = false;
+      if (selection) {
+        this.skipNextSelection = false;
+      }
     });
   }
 
