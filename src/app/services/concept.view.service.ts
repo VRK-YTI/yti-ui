@@ -91,6 +91,11 @@ export class ConceptViewModelService {
   initializeConcept(conceptId: string|null) {
 
     const init = (concept: ConceptNode|null) => {
+
+      if (this.collection) {
+        this.initializeCollection(null);
+      }
+
       this.vocabulary$.subscribe(vocabulary => {
         if (concept) {
           this.locationService.atConcept(vocabulary, concept);
@@ -105,10 +110,6 @@ export class ConceptViewModelService {
 
     this.loadingConcept = true;
     this.conceptId = conceptId;
-
-    if (this.collection) {
-      this.initializeCollection(null);
-    }
 
     if (!conceptId) {
       init(null);
@@ -134,6 +135,11 @@ export class ConceptViewModelService {
   initializeCollection(collectionId: string|null) {
 
     const init = (collection: CollectionNode|null) => {
+
+      if (this.concept) {
+        this.initializeConcept(null);
+      }
+
       this.vocabulary$.subscribe(vocabulary => {
         if (collection) {
           this.locationService.atCollection(vocabulary, collection);
@@ -148,10 +154,6 @@ export class ConceptViewModelService {
 
     this.loadingCollection = true;
     this.collectionId = collectionId;
-
-    if (this.concept) {
-      this.initializeConcept(null);
-    }
 
     if (!collectionId) {
       init(null);
