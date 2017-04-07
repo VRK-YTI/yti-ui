@@ -55,6 +55,8 @@ export class AutoComplete implements AfterViewInit {
   DEFINITION_SV_TAG: string = "definition.sv";
   DEFINITION_EN_TAG: string = "definition.en";
 
+  EXACT_TAG: string = ".exact";
+
   constructor(private es: ElasticSearchService, private _ngZone: NgZone, private ls: LanguageService) {}
 
   onBlur() {
@@ -89,10 +91,10 @@ export class AutoComplete implements AfterViewInit {
                             let labelHi = '';
                             let definition = '';
 
-                            if(matchedFields.includes(this.LABEL_FI_TAG) && this.ls.language === "fi") {
+                            if(this.ls.language === "fi" && matchedFields.includes(this.LABEL_FI_TAG)) {
                               label = source.label.fi;
                               labelHi = highlight[this.LABEL_FI_TAG][0];
-                            } else if(matchedFields.includes(this.LABEL_EN_TAG) && this.ls.language === "en") {
+                            } else if(this.ls.language === "en" && matchedFields.includes(this.LABEL_EN_TAG)) {
                               label = source.label.en;
                               labelHi = highlight[this.LABEL_EN_TAG][0];
                             } else if(matchedFields.includes(this.LABEL_FI_TAG)) {
@@ -176,46 +178,55 @@ export class AutoComplete implements AfterViewInit {
 
   _frontPageQuery(searchStr: string): any {
     if (searchStr) {
-      let boostLabelSearchStr = searchStr + "^4";
-      let altLabelSearchStr = searchStr + "^2";
       return {
         bool: {
           should: [
             {
-              match: {
-                [this.LABEL_FI_TAG]: {
-                  query: this.ls.language === "fi" ? boostLabelSearchStr : searchStr,
-                  _name: this.LABEL_FI_TAG,
-                  operator: "or"
-                }
+              multi_match: {
+                query: searchStr,
+                fields:[
+                  this.LABEL_FI_TAG,
+                  this.LABEL_FI_TAG + this.EXACT_TAG
+                ],
+                type: "most_fields",
+                _name: this.LABEL_FI_TAG,
+                operator: "or",
+                boost: this.ls.language === "fi" ? 6 : 4
               }
             },
             {
-              match: {
-                [this.LABEL_SV_TAG]: {
-                  query: searchStr,
-                  _name: this.LABEL_SV_TAG,
-                  operator: "or"
-
-                }
+              multi_match: {
+                query: searchStr,
+                fields:[
+                  this.LABEL_SV_TAG,
+                  this.LABEL_SV_TAG + this.EXACT_TAG
+                ],
+                type: "most_fields",
+                _name: this.LABEL_SV_TAG,
+                operator: "or",
+                boost: 6
               }
             },
             {
-              match: {
-                [this.LABEL_EN_TAG]: {
-                  query: this.ls.language === "en" ? boostLabelSearchStr : searchStr,
-                  _name: this.LABEL_EN_TAG,
-                  operator: "or"
-
-                }
+              multi_match: {
+                query: searchStr,
+                fields:[
+                  this.LABEL_EN_TAG,
+                  this.LABEL_EN_TAG + this.EXACT_TAG
+                ],
+                type: "most_fields",
+                _name: this.LABEL_EN_TAG,
+                operator: "or",
+                boost: this.ls.language === "en" ? 6 : 4
               }
             },
             {
               match: {
                 [this.ALTLABEL_FI_TAG]: {
-                  query: this.ls.language === "fi" ? altLabelSearchStr : searchStr,
+                  query: searchStr,
                   _name: this.ALTLABEL_FI_TAG,
-                  operator: "or"
+                  operator: "or",
+                  boost: this.ls.language === "fi" ? 2 : 1
 
                 }
               }
@@ -225,17 +236,18 @@ export class AutoComplete implements AfterViewInit {
                 [this.ALTLABEL_SV_TAG]: {
                   query: searchStr,
                   _name: this.ALTLABEL_SV_TAG,
-                  operator: "or"
-
+                  operator: "or",
+                  boost: 1
                 }
               }
             },
             {
               match: {
                 [this.ALTLABEL_EN_TAG]: {
-                  query: this.ls.language === "en" ? altLabelSearchStr : searchStr,
+                  query: searchStr,
                   _name: this.ALTLABEL_EN_TAG,
-                  operator: "or"
+                  operator: "or",
+                  boost: this.ls.language === "en" ? 2 : 1
 
                 }
               }
@@ -245,7 +257,8 @@ export class AutoComplete implements AfterViewInit {
                 [this.DEFINITION_FI_TAG]: {
                   query: searchStr,
                   _name: this.DEFINITION_FI_TAG,
-                  operator: "or"
+                  operator: "or",
+                  boost: 1
                 }
               }
             },
@@ -254,7 +267,8 @@ export class AutoComplete implements AfterViewInit {
                 [this.DEFINITION_SV_TAG]: {
                   query: searchStr,
                   _name: this.DEFINITION_SV_TAG,
-                  operator: "or"
+                  operator: "or",
+                  boost: 1
                 }
               }
             },
@@ -263,7 +277,8 @@ export class AutoComplete implements AfterViewInit {
                 [this.DEFINITION_EN_TAG]: {
                   query: searchStr,
                   _name: this.DEFINITION_EN_TAG,
-                  operator: "or"
+                  operator: "or",
+                  boost: 1
                 }
               }
             }
