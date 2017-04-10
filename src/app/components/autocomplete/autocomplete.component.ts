@@ -23,7 +23,7 @@ import { LanguageService } from "../../services/language.service";
           <ul class="sb-results-dropdown-menu" >
               <li *ngFor="let result of results$ | async">
                   <span [routerLink]="['/concepts', result.graphId, 'concept', result.conceptId]"
-                     [innerHTML]="result.label" [ngbPopover]="popContent" placement="right" triggers="mouseenter:mouseleave"></span>
+                     [innerHTML]="result.label + '<br><em class=\\'font-small\\'>' + result.vocabulary + '</em>'" [ngbPopover]="popContent" placement="right" triggers="mouseenter:mouseleave"></span>
                    
                  <template #popContent>
                     <div markdown [value]="result.definition"></div>
@@ -90,22 +90,28 @@ export class AutoComplete implements AfterViewInit {
                             let label = '';
                             let labelHi = '';
                             let definition = '';
+                            let vocabulary = '';
 
                             if(this.ls.language === "fi" && matchedFields.includes(this.LABEL_FI_TAG)) {
                               label = source.label.fi;
                               labelHi = highlight[this.LABEL_FI_TAG][0];
+                              vocabulary = this._getVocabularyLabel(source, "fi");
                             } else if(this.ls.language === "en" && matchedFields.includes(this.LABEL_EN_TAG)) {
                               label = source.label.en;
                               labelHi = highlight[this.LABEL_EN_TAG][0];
+                              vocabulary = this._getVocabularyLabel(source, "en");
                             } else if(matchedFields.includes(this.LABEL_FI_TAG)) {
                               label = source.label.fi;
                               labelHi = highlight[this.LABEL_FI_TAG][0];
+                              vocabulary = this._getVocabularyLabel(source, "fi");
                             } else if(matchedFields.includes(this.LABEL_EN_TAG)) {
                               label = source.label.en;
                               labelHi = highlight[this.LABEL_EN_TAG][0];
+                              vocabulary = this._getVocabularyLabel(source, "en");
                             } else if(matchedFields.includes(this.LABEL_SV_TAG)) {
                               label = source.label.sv;
                               labelHi = highlight[this.LABEL_SV_TAG][0];
+                              vocabulary = this._getVocabularyLabel(source, "sv");
                             } else {
                               if(this.ls.language === 'fi') {
                                 if(source.label.fi) {
@@ -115,6 +121,7 @@ export class AutoComplete implements AfterViewInit {
                                 } else if(source.label.sv) {
                                   label = source.label.sv;
                                 }
+                                vocabulary = this._getVocabularyLabel(source, "fi");
                               } else if(this.ls.language === 'en') {
                                 if(source.label.en) {
                                   label = source.label.en;
@@ -123,6 +130,7 @@ export class AutoComplete implements AfterViewInit {
                                 } else if(source.label.sv) {
                                   label = source.label.sv;
                                 }
+                                vocabulary = this._getVocabularyLabel(source, "en");
                               }
                             }
 
@@ -149,7 +157,8 @@ export class AutoComplete implements AfterViewInit {
                                 graphId: source.graphId,
                                 conceptId: source.id,
                                 label: labelHi ? labelHi : label,
-                                definition: definition
+                                definition: definition,
+                                vocabulary: vocabulary
                               }
                             }
                             return source;
@@ -174,6 +183,37 @@ export class AutoComplete implements AfterViewInit {
           });
         })
         .subscribe(this.results$);
+  }
+
+  _getVocabularyLabel(source: any, lang: string): string {
+    if(source.vocabulary && source.vocabulary.label) {
+      if (lang === 'fi') {
+        if (source.vocabulary.label.fi) {
+          return source.vocabulary.label.fi;
+        } else if (source.vocabulary.label.en) {
+          return source.vocabulary.label.en;
+        } else if (source.vocabulary.label.sv) {
+          return source.vocabulary.label.sv;
+        }
+      } else if (lang === 'sv') {
+        if (source.vocabulary.label.sv) {
+          return source.vocabulary.label.sv;
+        } else if (source.vocabulary.label.fi) {
+          return source.vocabulary.label.fi;
+        } else if (source.vocabulary.label.en) {
+          return source.vocabulary.label.en;
+        }
+      } else if (lang === 'en') {
+        if (source.vocabulary.label.en) {
+          return source.vocabulary.label.en;
+        } else if (source.vocabulary.label.fi) {
+          return source.vocabulary.label.fi;
+        } else if (source.vocabulary.label.sv) {
+          return source.vocabulary.label.sv;
+        }
+      }
+    }
+    return "N/A";
   }
 
   _frontPageQuery(searchStr: string): any {
