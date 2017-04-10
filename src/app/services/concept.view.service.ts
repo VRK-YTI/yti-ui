@@ -160,15 +160,18 @@ export class ConceptViewModelService {
       throw new Error('Cannot save when there is no concept');
     }
 
-    const conceptId = this.conceptInEdit.id;
+    const concept = this.conceptInEdit;
 
     // TODO Error handling
-    return this.termedService.updateNode(this.conceptInEdit).toPromise()
-      .then(() => this.termedService.getConcept(this.graphId, conceptId, this.languages).toPromise())
-      .then(persistentConcept => {
-        this.conceptInEdit = persistentConcept;
-        this.concept$.next(persistentConcept.clone());
-      });
+    return new Promise(resolve => {
+      this.termedService.updateNode(concept)
+        .flatMap(() => this.termedService.getConcept(this.graphId, concept.id, this.languages))
+        .subscribe(persistentConcept => {
+          this.conceptInEdit = persistentConcept;
+          this.concept$.next(persistentConcept.clone());
+          resolve();
+        });
+    });
   }
 
   removeConcept(): Promise<any> {
@@ -176,9 +179,15 @@ export class ConceptViewModelService {
       throw new Error('Cannot remove when there is no concept');
     }
 
+    const concept = this.concept;
+
     // TODO Error handling
-    return this.termedService.removeNode(this.concept).toPromise()
-      .then(() => this.router.navigate(['/concepts', this.graphId]));
+    return new Promise(resolve => {
+      this.termedService.removeNode(concept).subscribe(() => {
+          this.router.navigate(['/concepts', this.graphId]);
+          resolve();
+        });
+    });
   }
 
   resetConcept() {
@@ -199,15 +208,18 @@ export class ConceptViewModelService {
       throw new Error('Cannot save when there is no collection');
     }
 
-    const collectionId = this.collectionInEdit.id;
+    const collection = this.collectionInEdit;
 
     // TODO Error handling
-    return this.termedService.updateNode(this.collectionInEdit).toPromise()
-      .then(() => this.termedService.getCollection(this.graphId, collectionId, this.languages).toPromise())
-      .then(persistentCollection => {
-        this.collectionInEdit = persistentCollection;
-        this.collection$.next(persistentCollection.clone());
-      });
+    return new Promise(resolve => {
+      this.termedService.updateNode(collection)
+        .flatMap(() => this.termedService.getCollection(this.graphId, collection.id, this.languages))
+        .subscribe(persistentCollection => {
+          this.collectionInEdit = persistentCollection;
+          this.collection$.next(persistentCollection.clone());
+          resolve();
+        });
+    });
   }
 
   removeCollection(): Promise<any> {
@@ -235,12 +247,15 @@ export class ConceptViewModelService {
   saveVocabulary(): Promise<any> {
 
     // TODO Error handling
-    return this.termedService.updateNode(this.vocabularyInEdit).toPromise()
-      .then(() => this.termedService.getVocabulary(this.graphId, this.languages).toPromise())
-      .then(persistentVocabulary => {
-        this.vocabularyInEdit = persistentVocabulary;
-        this.vocabulary = persistentVocabulary.clone();
-      });
+    return new Promise(resolve => {
+      this.termedService.updateNode(this.vocabularyInEdit)
+        .flatMap(() => this.termedService.getVocabulary(this.graphId, this.languages))
+        .subscribe(persistentVocabulary => {
+          this.vocabularyInEdit = persistentVocabulary;
+          this.vocabulary = persistentVocabulary.clone();
+          resolve();
+        });
+    });
   }
 
   resetVocabulary() {
