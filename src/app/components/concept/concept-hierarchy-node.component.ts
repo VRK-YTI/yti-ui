@@ -45,7 +45,7 @@ export class ConceptHierarchyNodeComponent {
   }
 
   hasChildren() {
-    return this.concept.narrowerConcepts.length > 0;
+    return !this.concept.narrowerConcepts.empty;
   }
 
   collapse() {

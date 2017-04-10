@@ -75,7 +75,7 @@ export class ConceptViewModelService {
     this.termedService.getConceptList(graphId, this.languages).subscribe(concepts => {
       const sortedConcepts = concepts.sort(comparingLocalizable<ConceptNode>(this.languageService, concept => concept.label));
       this.allConcepts$.next(sortedConcepts);
-      this.topConcepts$.next(sortedConcepts.filter(concept => concept.broaderConcepts.length === 0));
+      this.topConcepts$.next(sortedConcepts.filter(concept => concept.broaderConcepts.empty));
       this.loadingConcepts = false;
     });
 

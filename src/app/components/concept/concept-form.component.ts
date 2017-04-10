@@ -41,7 +41,7 @@ export class ConceptFormComponent {
   }
 
   get relatedConcepts(): ConceptNode[] {
-    return [...this.concept.relatedConcepts, ...this.concept.broaderConcepts];
+    return [...this.concept.relatedConcepts.values, ...this.concept.broaderConcepts.values];
   }
 
   get showEmpty() {

@@ -393,27 +393,27 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
 
   private addEdgeNodesForConcept(concept: ConceptNode) {
 
-    for (const relatedConcept of concept.relatedConcepts) {
+    for (const relatedConcept of concept.relatedConcepts.values) {
       this.addNodeIfDoesNotExist(this.createRelatedConceptNode(relatedConcept));
       this.addEdgeIfDoesNotExist(this.createRelatedConceptEdge(concept, relatedConcept));
     }
 
-    for (const broaderConcept of concept.broaderConcepts) {
+    for (const broaderConcept of concept.broaderConcepts.values) {
       this.addNodeIfDoesNotExist(this.createBroaderConceptNode(broaderConcept));
       this.addEdgeIfDoesNotExist(this.createBroaderConceptEdge(concept, broaderConcept));
     }
 
-    for (const narrowerConcept of concept.narrowerConcepts) {
+    for (const narrowerConcept of concept.narrowerConcepts.values) {
       this.addNodeIfDoesNotExist(this.createBroaderConceptNode(narrowerConcept));
       this.addEdgeIfDoesNotExist(this.createBroaderConceptEdge(narrowerConcept, concept));
     }
 
-    for (const isPartOfConcept of concept.isPartOfConcepts) {
+    for (const isPartOfConcept of concept.isPartOfConcepts.values) {
       this.addNodeIfDoesNotExist(this.createIsPartOfConceptNode(isPartOfConcept));
       this.addEdgeIfDoesNotExist(this.createIsPartOfConceptEdge(concept, isPartOfConcept));
     }
 
-    for (const partOfThisConcept of concept.partOfThisConcepts) {
+    for (const partOfThisConcept of concept.partOfThisConcepts.values) {
       this.addNodeIfDoesNotExist(this.createIsPartOfConceptNode(partOfThisConcept));
       this.addEdgeIfDoesNotExist(this.createIsPartOfConceptEdge(partOfThisConcept, concept));
     }
@@ -421,7 +421,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
 
   private addEdgeNodesForCollection(collection: CollectionNode) {
 
-    for (const memberConcept of collection.members) {
+    for (const memberConcept of collection.members.values) {
       this.addNodeIfDoesNotExist(this.createMemberConceptNode(memberConcept));
       this.addEdgeIfDoesNotExist(this.createMemberConceptEdge(collection, memberConcept));
     }

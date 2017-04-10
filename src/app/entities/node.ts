@@ -5,6 +5,7 @@ import { NodeExternal, NodeType, Attribute, Identifier, NodeInternal, Vocabulary
 import { PropertyMeta, ReferenceMeta, NodeMeta, MetaModel } from './meta';
 import { Moment } from 'moment';
 import * as moment from 'moment';
+import { getOrCreate } from '../utils/map';
 
 export type KnownNode = VocabularyNode
   | ConceptNode
@@ -131,13 +132,39 @@ export class Reference<N extends KnownNode | Node<any>> {
   }
 }
 
+export class Referrer<N extends KnownNode | Node<any>> {
+
+  values: N[];
+  valuesByMeta: { meta: ReferenceMeta, nodes: N[] }[] = [];
+
+  constructor(referenceId: string, referrers: NodeExternal<any>[], metaModel: MetaModel, languages: string[]) {
+
+    this.values = referrers.map(referrer => Node.create(referrer, metaModel, languages, true) as N);
+
+    const references = new Map<ReferenceMeta, N[]>();
+
+    for (const value of this.values) {
+      const meta = value.meta.references.find(ref => ref.id === referenceId);
+      getOrCreate(references, meta, () => []).push(value);
+    }
+
+    for (const [meta, nodes] of Array.from(references.entries())) {
+      this.valuesByMeta.push({meta, nodes});
+    }
+  }
+
+  get empty() {
+    return this.values.length > 0;
+  }
+}
+
 export class Node<T extends NodeType> {
 
   meta: NodeMeta;
 
   properties: { [key: string]: Property } = {};
   references: { [key: string]: Reference<any> } = {};
-  referrers: { [key: string]: Node<any>[] } = {};
+  referrers: { [key: string]: Referrer<Node<any>> } = {};
 
   protected constructor(protected node: NodeExternal<T>,
                         protected metaModel: MetaModel,
@@ -157,7 +184,7 @@ export class Node<T extends NodeType> {
     }
 
     for (const [name, referrerNodes] of Object.entries(node.referrers)) {
-      this.referrers[name] = normalizeAsArray(referrerNodes).map(referrerNode => Node.create(referrerNode, metaModel, languages, true));
+      this.referrers[name] = new Referrer(name, normalizeAsArray(referrerNodes), metaModel, languages);
     }
   }
 
@@ -260,8 +287,8 @@ export class Node<T extends NodeType> {
     const extractReferrers = () => {
       const result: { [key: string]: Identifier<any>[] } = {};
 
-      for (const [key, referrers] of Object.entries(this.referrers)) {
-        result[key] = referrers.map(referrer => referrer.identifier);
+      for (const [key, referrer] of Object.entries(this.referrers)) {
+        result[key] = referrer.values.map(referrer => referrer.identifier);
       }
 
       return result;
@@ -327,6 +354,10 @@ export class Node<T extends NodeType> {
 
   get typeLabel(): Localizable {
     return this.meta.label;
+  }
+
+  getNormalizedReferrer<N extends KnownNode | Node<any>>(referenceId: string): Referrer<N> {
+    return this.referrers[referenceId] as Referrer<N> || new Referrer<N>(referenceId, [], this.metaModel, this.languages);
   }
 
   getPropertyAsLocalizable(property: string): Localizable {
@@ -429,24 +460,24 @@ export class ConceptNode extends Node<'Concept'> {
     return this.terms.find(term => term.language === language);
   }
 
-  get relatedConcepts(): ConceptNode[] {
-    return normalizeAsArray(this.references['related'].values as ConceptNode[]);
+  get relatedConcepts(): Reference<ConceptNode> {
+    return this.references['related'];
   }
 
-  get broaderConcepts(): ConceptNode[] {
-    return normalizeAsArray(this.references['broader'].values as ConceptNode[]);
+  get broaderConcepts(): Reference<ConceptNode> {
+    return this.references['broader'];
   }
 
-  get narrowerConcepts(): ConceptNode[] {
-    return normalizeAsArray(this.referrers['broader'] as ConceptNode[]);
+  get narrowerConcepts(): Referrer<ConceptNode> {
+    return this.getNormalizedReferrer<ConceptNode>('broader');
   }
 
-  get isPartOfConcepts(): ConceptNode[] {
-    return normalizeAsArray(this.references['isPartOf'].values as ConceptNode[]);
+  get isPartOfConcepts(): Reference<ConceptNode> {
+    return this.references['isPartOf'];
   }
 
-  get partOfThisConcepts(): ConceptNode[] {
-    return normalizeAsArray(this.referrers['isPartOf'] as ConceptNode[]);
+  get partOfThisConcepts(): Referrer<ConceptNode> {
+    return this.getNormalizedReferrer<ConceptNode>('isPartOf');
   }
 }
 
@@ -503,8 +534,8 @@ export class CollectionNode extends Node<'Collection'> {
     return this.getPropertyAsLocalizable('definition');
   }
 
-  get members() {
-    return normalizeAsArray(this.references['member'].values as ConceptNode[]);
+  get members(): Reference<ConceptNode> {
+    return this.references['member'];
   }
 }
 

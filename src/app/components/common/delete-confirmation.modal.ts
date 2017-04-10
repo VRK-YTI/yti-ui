@@ -2,7 +2,7 @@ import { Component, Injectable, Input, OnInit } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Node } from '../../entities/node';
 import { ReferenceMeta } from '../../entities/meta';
-import { getOrCreate } from '../../utils/map';
+import { flatten } from '../../utils/array';
 
 @Injectable()
 export class DeleteConfirmationModalService {
@@ -71,20 +71,8 @@ export class DeleteConfirmationModal implements OnInit {
   constructor(private modal: NgbActiveModal) {
   }
 
-  ngOnInit() {
-
-    const references = new Map<ReferenceMeta, Node<any>[]>();
-
-    for (const [referenceId, nodes] of Object.entries(this.node.referrers)) {
-      for (const node of nodes) {
-        const meta = node.meta.references.find(ref => ref.id === referenceId);
-        getOrCreate(references, meta, () => []).push(node);
-      }
-    }
-
-    for (const [meta, nodes] of Array.from(references.entries())) {
-      this.references.push({meta, nodes});
-    }
+  ngOnInit(): void {
+    this.references = flatten(Object.values(this.node.referrers).map(ref => ref.valuesByMeta));
   }
 
   cancel() {
