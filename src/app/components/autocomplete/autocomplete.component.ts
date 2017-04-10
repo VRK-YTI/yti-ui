@@ -154,7 +154,7 @@ export class AutoComplete implements AfterViewInit {
 
                             if(label) {
                               return {
-                                graphId: source.graphId,
+                                graphId: source.vocabulary.id,
                                 conceptId: source.id,
                                 label: labelHi ? labelHi : label,
                                 definition: definition,
