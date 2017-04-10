@@ -12,6 +12,7 @@ import {
   Network as VisNetwork,
   Options as VisNetworkOptions
 } from 'vis';
+import { ReferenceMeta } from '../../entities/meta';
 
 interface ConceptNetworkData {
   nodes: DataSet<UpdatableVisNode>;
@@ -335,14 +336,14 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
     return Object.assign(this.createConceptNodeData(memberConcept), { group: 'memberGroup' });
   }
 
-  private createEdgeData(from: ConceptNode|CollectionNode, to: ConceptNode): UpdatableVisEdge {
+  private createEdgeData(from: ConceptNode|CollectionNode, to: ConceptNode, meta: ReferenceMeta): UpdatableVisEdge {
 
     const createEdge = () => {
       const edge = {
         from: from.id,
         to: to.id,
         id: from.id + to.id,
-        title: this.languageService.translate(from.label) + ' - ' + this.languageService.translate(to.label)
+        title: this.languageService.translate(meta.label) + ': ' + this.languageService.translate(from.label) + ' &rarr; ' + this.languageService.translate(to.label)
       };
 
       return Object.assign(edge, { update: createEdge })
@@ -351,8 +352,8 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
     return createEdge();
   }
 
-  private createRelatedConceptEdge(from: ConceptNode, to: ConceptNode) {
-    return Object.assign(this.createEdgeData(from, to), {
+  private createRelatedConceptEdge(from: ConceptNode, to: ConceptNode, meta: ReferenceMeta) {
+    return Object.assign(this.createEdgeData(from, to, meta), {
       arrows: {
         to: {
           enabled: true,
@@ -363,19 +364,19 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
     });
   }
 
-  private createBroaderConceptEdge(from: ConceptNode, to: ConceptNode) {
-    return Object.assign(this.createEdgeData(from, to), {
+  private createBroaderConceptEdge(from: ConceptNode, to: ConceptNode, meta: ReferenceMeta) {
+    return Object.assign(this.createEdgeData(from, to, meta), {
     });
   }
 
-  private createIsPartOfConceptEdge(from: ConceptNode, to: ConceptNode) {
-    return Object.assign(this.createEdgeData(from, to), {
+  private createIsPartOfConceptEdge(from: ConceptNode, to: ConceptNode, meta: ReferenceMeta) {
+    return Object.assign(this.createEdgeData(from, to, meta), {
       dashes: true
     });
   }
 
-  private createMemberConceptEdge(from: CollectionNode, to: ConceptNode) {
-    return Object.assign(this.createEdgeData(from, to), {
+  private createMemberConceptEdge(from: CollectionNode, to: ConceptNode, meta: ReferenceMeta) {
+    return Object.assign(this.createEdgeData(from, to, meta), {
     });
   }
 
@@ -395,27 +396,31 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
 
     for (const relatedConcept of concept.relatedConcepts.values) {
       this.addNodeIfDoesNotExist(this.createRelatedConceptNode(relatedConcept));
-      this.addEdgeIfDoesNotExist(this.createRelatedConceptEdge(concept, relatedConcept));
+      this.addEdgeIfDoesNotExist(this.createRelatedConceptEdge(concept, relatedConcept, concept.relatedConcepts.meta));
     }
 
     for (const broaderConcept of concept.broaderConcepts.values) {
       this.addNodeIfDoesNotExist(this.createBroaderConceptNode(broaderConcept));
-      this.addEdgeIfDoesNotExist(this.createBroaderConceptEdge(concept, broaderConcept));
+      this.addEdgeIfDoesNotExist(this.createBroaderConceptEdge(concept, broaderConcept, concept.broaderConcepts.meta));
     }
 
-    for (const narrowerConcept of concept.narrowerConcepts.values) {
-      this.addNodeIfDoesNotExist(this.createBroaderConceptNode(narrowerConcept));
-      this.addEdgeIfDoesNotExist(this.createBroaderConceptEdge(narrowerConcept, concept));
+    for (const {meta, nodes} of concept.narrowerConcepts.valuesByMeta) {
+      for (const narrowerConcept of nodes) {
+        this.addNodeIfDoesNotExist(this.createBroaderConceptNode(narrowerConcept));
+        this.addEdgeIfDoesNotExist(this.createBroaderConceptEdge(narrowerConcept, concept, meta));
+      }
     }
 
     for (const isPartOfConcept of concept.isPartOfConcepts.values) {
       this.addNodeIfDoesNotExist(this.createIsPartOfConceptNode(isPartOfConcept));
-      this.addEdgeIfDoesNotExist(this.createIsPartOfConceptEdge(concept, isPartOfConcept));
+      this.addEdgeIfDoesNotExist(this.createIsPartOfConceptEdge(concept, isPartOfConcept, concept.isPartOfConcepts.meta));
     }
 
-    for (const partOfThisConcept of concept.partOfThisConcepts.values) {
-      this.addNodeIfDoesNotExist(this.createIsPartOfConceptNode(partOfThisConcept));
-      this.addEdgeIfDoesNotExist(this.createIsPartOfConceptEdge(partOfThisConcept, concept));
+    for (const {meta, nodes} of concept.partOfThisConcepts.valuesByMeta) {
+      for (const partOfThisConcept of nodes) {
+        this.addNodeIfDoesNotExist(this.createIsPartOfConceptNode(partOfThisConcept));
+        this.addEdgeIfDoesNotExist(this.createIsPartOfConceptEdge(partOfThisConcept, concept, meta));
+      }
     }
   }
 
@@ -423,7 +428,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
 
     for (const memberConcept of collection.members.values) {
       this.addNodeIfDoesNotExist(this.createMemberConceptNode(memberConcept));
-      this.addEdgeIfDoesNotExist(this.createMemberConceptEdge(collection, memberConcept));
+      this.addEdgeIfDoesNotExist(this.createMemberConceptEdge(collection, memberConcept, collection.members.meta));
     }
   }
 
