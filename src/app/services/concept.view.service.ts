@@ -56,6 +56,22 @@ export class ConceptViewModelService {
               private metaModelService: MetaModelService,
               private locationService: LocationService,
               private languageService: LanguageService) {
+
+    this.concept$.subscribe(action => {
+      switch (action.type) {
+        case 'edit':
+        case 'remove':
+          this.initializeConceptList(this.graphId);
+      }
+    });
+
+    this.collection$.subscribe(action => {
+      switch (action.type) {
+        case 'edit':
+        case 'remove':
+          this.initializeCollectionList(this.graphId);
+      }
+    });
   }
 
   get concept(): ConceptNode|null {
@@ -84,6 +100,23 @@ export class ConceptViewModelService {
     return this.concept || this.collection;
   }
 
+  initializeConceptList(graphId: string) {
+    this.termedService.getConceptList(graphId, this.languages).subscribe(concepts => {
+      const sortedConcepts = concepts.sort(comparingLocalizable<ConceptNode>(this.languageService, concept => concept.label));
+      this.allConcepts$.next(sortedConcepts);
+      this.topConcepts$.next(sortedConcepts.filter(concept => concept.broaderConcepts.empty));
+      this.loadingConcepts = false;
+    });
+  }
+
+  initializeCollectionList(graphId: string) {
+    this.termedService.getCollectionList(graphId, this.languages).subscribe(collections => {
+      const sortedCollections = collections.sort(comparingLocalizable<CollectionNode>(this.languageService, collection => collection.label));
+      this.allCollections$.next(sortedCollections);
+      this.loadingCollections = false;
+    });
+  }
+
   initializeVocabulary(graphId: string) {
 
     this.graphId = graphId;
@@ -98,18 +131,8 @@ export class ConceptViewModelService {
       this.loadingVocabulary = false;
     });
 
-    this.termedService.getConceptList(graphId, this.languages).subscribe(concepts => {
-      const sortedConcepts = concepts.sort(comparingLocalizable<ConceptNode>(this.languageService, concept => concept.label));
-      this.allConcepts$.next(sortedConcepts);
-      this.topConcepts$.next(sortedConcepts.filter(concept => concept.broaderConcepts.empty));
-      this.loadingConcepts = false;
-    });
-
-    this.termedService.getCollectionList(graphId, this.languages).subscribe(collections => {
-      const sortedCollections = collections.sort(comparingLocalizable<CollectionNode>(this.languageService, collection => collection.label));
-      this.allCollections$.next(sortedCollections);
-      this.loadingCollections = false;
-    });
+    this.initializeConceptList(graphId);
+    this.initializeCollectionList(graphId);
   }
 
   initializeConcept(conceptId: string|null) {
