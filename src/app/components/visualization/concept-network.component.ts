@@ -27,104 +27,36 @@ const options: VisNetworkOptions = {
     shape: 'box',
     fixed: false,
     font: {
-      color: 'black',
+      color: '#000000',
       face: 'Open Sans'
+    },
+    color: {
+      background: '#ffffff',
+      border: '#000000',
+      highlight: {
+        background: '#d3d3d3',
+        border: '#000000'
+      },
+      hover: {
+        background: '#d3d3d3',
+        border: '#000000'
+      }
     }
   },
   groups: {
-    rootGroup: {
-      font: {
-        color: 'white',
-      },
-      color: {
-        background: '#375e97',
-        border: 'white',
-        highlight: {
-          background: 'black',
-          border: 'white'
-        },
-        hover: {
-          background: 'black',
-          border: 'white'
-        }
-      }
+    rootConceptGroup: {
+    },
+    rootCollectionGroup: {
+      margin: 20,
+      borderWidth: 0,
     },
     relatedGroup: {
-      color: {
-        background: '#ebeff2',
-        border: 'white',
-        highlight: {
-          background: 'white',
-          border: 'black'
-        },
-        hover: {
-          background: 'white',
-          border: 'black'
-        }
-      }
     },
     broaderGroup: {
-      color: {
-        background: '#59a3ff',
-        border: 'white',
-        highlight: {
-          background: 'white',
-          border: 'black'
-        },
-        hover: {
-          background: 'white',
-          border: 'black'
-        }
-      }
     },
     isPartOfGroup: {
-      color: {
-        background: '#00ffcc',
-        border: 'white',
-        highlight: {
-          background: 'white',
-          border: 'black'
-        },
-        hover: {
-          background: 'white',
-          border: 'black'
-        }
-      }
-    },
-    collectionGroup: {
-      margin: 20,
-      font: {
-        color: 'white',
-      },
-      color: {
-        background: '#375e97',
-        border: 'black',
-        highlight: {
-          background: 'black',
-          border: 'white'
-        },
-        hover: {
-          background: 'black',
-          border: 'white'
-        }
-      }
     },
     memberGroup: {
-      font: {
-        color: 'white',
-      },
-      color: {
-        background: '#375e97',
-        border: 'white',
-        highlight: {
-          background: 'black',
-          border: 'white'
-        },
-        hover: {
-          background: 'black',
-          border: 'white'
-        }
-      }
     }
   },
   layout: {
@@ -296,7 +228,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
 
   private createRootConceptNode(concept: ConceptNode) {
     return Object.assign(this.createConceptNodeData(concept), {
-      group: 'rootGroup',
+      group: 'rootConceptGroup',
       physics: false,
       fixed: false
     });
@@ -309,7 +241,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
         id: collection.id,
         label: this.languageService.translate(collection.label),
         title: stripMarkdown(this.languageService.translate(collection.definition)),
-        group: 'collectionGroup',
+        group: 'rootCollectionGroup',
         physics: false,
         fixed: false
       };

@@ -103,11 +103,19 @@ export class AutoComplete implements AfterViewInit {
                             } else if(matchedFields.includes(this.LABEL_FI_TAG)) {
                               label = source.label.fi;
                               labelHi = highlight[this.LABEL_FI_TAG][0];
-                              vocabulary = this._getVocabularyLabel(source, "fi");
+                              if(this.ls.language === "en") {
+                                vocabulary = this._getVocabularyLabel(source, "en");
+                              } else {
+                                vocabulary = this._getVocabularyLabel(source, "fi");
+                              }
                             } else if(matchedFields.includes(this.LABEL_EN_TAG)) {
                               label = source.label.en;
                               labelHi = highlight[this.LABEL_EN_TAG][0];
-                              vocabulary = this._getVocabularyLabel(source, "en");
+                              if(this.ls.language === "en") {
+                                vocabulary = this._getVocabularyLabel(source, "en");
+                              } else {
+                                vocabulary = this._getVocabularyLabel(source, "fi");
+                              }
                             } else if(matchedFields.includes(this.LABEL_SV_TAG)) {
                               label = source.label.sv;
                               labelHi = highlight[this.LABEL_SV_TAG][0];
