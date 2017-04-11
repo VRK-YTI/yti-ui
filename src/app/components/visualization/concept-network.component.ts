@@ -483,7 +483,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
 
     const nodeId = eventData.nodes[0];
     const visNode: VisNode = this.networkData.nodes.get(nodeId);
-    const isConcept = visNode.group !== 'collectionGroup';
+    const isConcept = visNode.group !== 'rootCollectionGroup';
 
     const onSingleClick = () => {
 
