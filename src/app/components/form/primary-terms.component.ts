@@ -3,8 +3,8 @@ import { Reference, TermNode } from '../../entities/node';
 import { EditableService } from '../../services/editable.service';
 
 @Component({
-  selector: 'terms',
-  styleUrls: ['./terms.component.scss'],
+  selector: 'primary-terms',
+  styleUrls: ['./primary-terms.component.scss'],
   template: `              
     <ngb-accordion [activeIds]="openTermLanguages">
       <ngb-panel [id]="term.language" *ngFor="let term of nonEmptyTerms">
@@ -13,8 +13,8 @@ import { EditableService } from '../../services/editable.service';
           <div class="localization">{{term.value}} <accordion-chevron class="pull-right"></accordion-chevron></div>
         </template>
         <template ngbPanelContent>
-          <div class="row" [class.primary-term]="primary">
-            <div class="col-md-12 col-xl-6" [class.col-xl-6]="multiColumn" *ngFor="let property of term | properties: showEmpty">
+          <div class="row">
+            <div class="col-md-12" [class.col-xl-6]="multiColumn" *ngFor="let property of term | properties: showEmpty">
               <property [value]="property"></property>
             </div>
           </div>
@@ -23,11 +23,10 @@ import { EditableService } from '../../services/editable.service';
     </ngb-accordion>
   `
 })
-export class TermsComponent implements OnInit {
+export class PrimaryTermsComponent implements OnInit {
 
   @Input('value') termReference: Reference<TermNode>;
   @Input() multiColumn = false;
-  @Input() primary = false;
 
   openTermLanguages: string[] = [];
 
@@ -36,18 +35,16 @@ export class TermsComponent implements OnInit {
 
   ngOnInit() {
     this.editableService.editing$.subscribe(editing => {
-      if (this.primary) {
-        if (editing) {
-          this.openTermLanguages = this.termReference.languages.slice();
-        } else {
-          this.openTermLanguages = [];
-        }
+      if (editing) {
+        this.openTermLanguages = this.termReference.languages.slice();
+      } else {
+        this.openTermLanguages = [];
       }
     });
   }
 
   get nonEmptyTerms() {
-    if (this.editableService.editing) {
+    if (this.showEmpty) {
       return this.termReference.values;
     } else {
       return this.termReference.values.filter(term => !term.empty!);

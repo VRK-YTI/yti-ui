@@ -47,7 +47,7 @@ export class MetaModelService {
           newConcept.vocabulary = vocabulary.clone();
         }
 
-        const matchingTerm = newConcept.findTermForLanguage(this.languageService.language) || newConcept.terms[0];
+        const matchingTerm = newConcept.findTermForLanguage(this.languageService.language) || newConcept.terms.values[0];
         matchingTerm.value = newConceptLabel;
 
         return newConcept;

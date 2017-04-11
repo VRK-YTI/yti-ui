@@ -1,6 +1,6 @@
 import { asLocalizable, Localizable, combineLocalizables, Localization } from './localization';
 import { requireDefined, assertNever } from '../utils/object';
-import { normalizeAsArray, any, requireSingle, all } from '../utils/array';
+import { normalizeAsArray, any, requireSingle, all, remove } from '../utils/array';
 import { NodeExternal, NodeType, Attribute, Identifier, NodeInternal, VocabularyNodeType } from './node-api';
 import { PropertyMeta, ReferenceMeta, NodeMeta, MetaModel } from './meta';
 import { Moment } from 'moment';
@@ -87,8 +87,8 @@ export class Reference<N extends KnownNode | Node<any>> {
 
   values: N[];
 
-  constructor(nodes: NodeExternal<any>[], public meta: ReferenceMeta, metaModel: MetaModel, public languages: string[]) {
-    if (this.term) {
+  constructor(nodes: NodeExternal<any>[], public meta: ReferenceMeta, private metaModel: MetaModel, public languages: string[]) {
+    if (this.type === 'PrimaryTerm') {
 
       this.values = [];
       const nodeMeta = metaModel.getNodeMeta(meta.graphId, meta.targetType);
@@ -106,12 +106,35 @@ export class Reference<N extends KnownNode | Node<any>> {
           this.values.push(Node.create(nodeMeta.createEmptyNode(), metaModel, [language], false) as N);
         }
       }
+    } else if (this.type === 'Synonym') {
+      this.values = nodes.map(node => {
+        const nodeLang = node.properties['prefLabel'].map(attr => attr.lang);
+        return Node.create(node, metaModel, nodeLang, true) as N;
+      });
     } else {
       this.values = nodes.map(node => Node.create(node, metaModel, languages, true) as N);
     }
   }
 
-  get term(): boolean {
+  createNewReference(languages = this.languages) {
+    const newReference = Node.create(this.targetMeta.createEmptyNode(), this.metaModel, languages, false) as N;
+    this.values.push(newReference);
+    return newReference;
+  }
+
+  removeReference(node: N) {
+    remove(this.values, node);
+  }
+
+  get targetMeta() {
+    return this.metaModel.getNodeMeta(this.meta.graphId, this.meta.targetType);
+  }
+
+  get type() {
+    return this.meta.referenceType;
+  }
+
+  get term() {
     return this.meta.term;
   }
 
@@ -440,6 +463,10 @@ export class ConceptNode extends Node<'Concept'> {
     return this.meta.hasReference('inScheme');
   }
 
+  hasTerms() {
+    return this.meta.hasReference('prefLabelXl');
+  }
+
   get vocabulary(): VocabularyNode {
     return requireSingle(this.references['inScheme'].values) as VocabularyNode;
   }
@@ -452,12 +479,12 @@ export class ConceptNode extends Node<'Concept'> {
     return this.getPropertyAsString('status');
   }
 
-  get terms(): TermNode[] {
-    return normalizeAsArray(this.references['prefLabelXl'].values as TermNode[]);
+  get terms(): Reference<TermNode> {
+    return this.references['prefLabelXl'];
   }
 
   findTermForLanguage(language: string): TermNode|undefined {
-    return this.terms.find(term => term.language === language);
+    return this.terms.values.find(term => term.language === language);
   }
 
   get relatedConcepts(): Reference<ConceptNode> {
@@ -493,6 +520,10 @@ export class TermNode extends Node<'Term'> {
 
   get language(): string {
     return this.localization.lang;
+  }
+
+  set language(value: string) {
+    this.localization.lang = value;
   }
 
   get value() {

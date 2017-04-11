@@ -9,15 +9,23 @@ import { EditableService } from '../../services/editable.service';
     <dl *ngIf="show">
       <dt><label [for]="reference.meta.id">{{reference.meta.label | translateValue}}</label></dt>
       <dd>
-        <terms *ngIf="reference.term" [primary]="primaryTerm" [value]="reference" [multiColumn]="multiColumnTerms"></terms>
-        
-        <concept-reference-input *ngIf="!reference.term && reference.concept" [concept]="reference" [conceptsProvider]="conceptsProvider"></concept-reference-input>
-        
-        <div *ngIf="!reference.term && !reference.concept">
-          <span *ngFor="let referenceNode of reference.values; let last = last">
-            <span>{{referenceNode.label | translateValue}}<span *ngIf="!last">, </span></span>
-          </span>
-        </div>
+        <ng-container [ngSwitch]="reference.type">
+
+          <primary-terms *ngSwitchCase="'PrimaryTerm'" [value]="reference"
+                         [multiColumn]="multiColumnTerms"></primary-terms>
+
+          <synonyms *ngSwitchCase="'Synonym'" [value]="reference" [multiColumn]="multiColumnTerms"></synonyms>
+
+          <concept-reference-input *ngSwitchCase="'Concept'" [concept]="reference"
+                                   [conceptsProvider]="conceptsProvider"></concept-reference-input>
+
+          <div *ngSwitchDefault>
+            <span *ngFor="let referenceNode of reference.values; let last = last">
+              <span>{{referenceNode.label | translateValue}}<span *ngIf="!last">, </span></span>
+            </span>
+          </div>
+
+        </ng-container>
       </dd>
     </dl>
   `
@@ -27,7 +35,6 @@ export class ReferenceComponent {
   @Input('value') reference: Reference<any>;
   @Input() multiColumnTerms = false;
   @Input() conceptsProvider: () => ConceptNode[];
-  @Input() primaryTerm = false;
 
   constructor(private editableService: EditableService) {
   }

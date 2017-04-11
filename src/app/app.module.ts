@@ -30,7 +30,7 @@ import { PropertiesPipe } from './pipes/properties.pipe';
 import { ReferencesPipe } from './pipes/references.pipe';
 import { PropertyComponent } from './components/form/property.component';
 import { ReferenceComponent } from './components/form/reference.component';
-import { TermsComponent } from './components/form/terms.component';
+import { PrimaryTermsComponent } from './components/form/primary-terms.component';
 import { NoSelectionComponent } from './components/concept/no-selection.component';
 import { TimestampPipe } from './pipes/timestamp.pipe';
 import { MarkdownLinksComponent } from './components/markdown/markdown-links.component';
@@ -43,7 +43,7 @@ import { MetaModelValidator } from './directives/validators/meta-model.validator
 import { KeysPipe } from './pipes/keys.pipe';
 import { ErrorMessagesComponent } from './components/form/error-messages.component';
 import { EditableButtonsComponent } from './components/form/editable-buttons.component';
-import {ElasticSearchService} from "./services/elasticsearch.service";
+import { ElasticSearchService } from "./services/elasticsearch.service";
 import { AutoComplete } from './components/autocomplete/autocomplete.component';
 import { LanguageValidator } from './directives/validators/language.validator';
 import { LocalizationValidator } from './directives/validators/localization.validator';
@@ -65,6 +65,7 @@ import { SessionService } from './services/session.service';
 import { DeleteConfirmationModal, DeleteConfirmationModalService } from './components/common/delete-confirmation.modal';
 import { CollectionComponent } from './components/concept/collection.component';
 import { CollectionListComponent } from './components/concept/collection-list.component';
+import { SynonymsComponent } from './components/form/synonyms.component';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json-loader!po-loader?format=mf!../../po/fi.po'),
@@ -116,7 +117,8 @@ const appRoutes: Routes = [
     PropertyComponent,
     ReferenceComponent,
     ConceptReferenceInputComponent,
-    TermsComponent,
+    PrimaryTermsComponent,
+    SynonymsComponent,
     AjaxLoadingIndicatorComponent,
     MarkdownComponent,
     MarkdownElementComponent,

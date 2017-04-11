@@ -7,25 +7,24 @@ import { EditableService } from '../../services/editable.service';
   template: `
     <div class="row">
       <!-- Special handling for primary term, could be solved with mixed property/reference sorting -->
-      <reference class="col-md-12" 
+      <reference *ngIf="concept.hasTerms()"
+                 class="col-md-12"
                  [multiColumnTerms]="multiColumn" 
                  [conceptsProvider]="conceptsProvider" 
-                 [value]="concept.references['prefLabelXl']"
-                 [primaryTerm]="true"
-                 *ngIf="concept.references['prefLabelXl']"></reference>
+                 [value]="concept.terms"></reference>
       
-      <property class="col-md-12" 
+      <property *ngFor="let property of concept | properties: showEmpty"
+                class="col-md-12" 
                 [class.col-xl-6]="multiColumn && !property.meta.area" 
                 [value]="property" 
-                [relatedConcepts]="relatedConcepts" 
-                *ngFor="let property of concept | properties: showEmpty"></property>
+                [relatedConcepts]="relatedConcepts"></property>
       
-      <reference class="col-md-12" 
+      <reference *ngFor="let reference of concept | references: showEmpty : ['prefLabelXl']" 
+                 class="col-md-12" 
                  [class.col-xl-6]="multiColumn && !reference.term"
                  [multiColumnTerms]="multiColumn"
                  [value]="reference" 
-                 [conceptsProvider]="conceptsProvider" 
-                 *ngFor="let reference of concept | references: showEmpty : ['prefLabelXl']"></reference>
+                 [conceptsProvider]="conceptsProvider"></reference>
     </div>
 
     <meta-information [hidden]="!concept.persistent" [node]="concept"></meta-information>

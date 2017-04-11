@@ -82,6 +82,15 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
+msgid "Add term"
+msgstr ""
+
+msgid "Remove term"
+msgstr ""
+
+msgid "No terms yet"
+msgstr ""
+
 msgid "Give feedback:"
 msgstr ""
 

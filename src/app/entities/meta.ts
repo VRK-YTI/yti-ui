@@ -1,6 +1,6 @@
 import { ReferenceAttributeInternal, TextAttributeInternal, NodeMetaInternal } from './meta-api';
 import { comparingNumber } from '../utils/comparator';
-import { any, groupBy, index, normalizeAsArray } from '../utils/array';
+import { any, contains, groupBy, index, normalizeAsArray } from '../utils/array';
 import { asLocalizable, Localizable } from './localization';
 import { NodeType, NodeExternal } from './node-api';
 import { Node } from './node';
@@ -51,6 +51,8 @@ export class PropertyMeta {
   }
 }
 
+export type ReferenceType = 'PrimaryTerm' | 'Synonym' | 'Concept' | 'Other';
+
 export class ReferenceMeta {
 
   id: string;
@@ -68,12 +70,24 @@ export class ReferenceMeta {
     this.index = referenceAttribute.index;
   }
 
+  get referenceType(): ReferenceType {
+    switch (this.targetType) {
+      case 'Concept':
+        return 'Concept';
+      case 'Term':
+        return this.id === 'prefLabelXl' ? 'PrimaryTerm' : 'Synonym';
+      default:
+        return 'Other';
+    }
+  }
+
   get term(): boolean {
-    return this.targetType === 'Term';
+    const termTypes: ReferenceType[] = ['PrimaryTerm', 'Synonym'];
+    return contains(termTypes, this.referenceType);
   }
 
   get concept(): boolean {
-    return this.targetType === 'Concept';
+    return this.referenceType === 'Concept';
   }
 }
 
