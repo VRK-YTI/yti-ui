@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
   template: `
     <div class="panel-footer">
 
-      <span>{{'Contact info' | translate}} <a href="mailto:iow@postit.csc.fi" translate>CSC - IT Center for Science Ltd</a></span>
+      <span>{{'Give feedback:' | translate}} <a href="mailto:iow@postit.csc.fi" translate>CSC - IT Center for Science Ltd</a></span>
     
       <span class="pull-right">
         <span translate>Source code</span>:

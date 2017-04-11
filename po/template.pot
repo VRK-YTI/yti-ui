@@ -7,6 +7,33 @@ msgstr ""
 msgid "Search concept..."
 msgstr ""
 
+msgid "Confirm remove"
+msgstr ""
+
+msgid "Following items are referring to the deleted item"
+msgstr ""
+
+msgid "Are you sure that you want to remove?"
+msgstr ""
+
+msgid "Yes"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Created at"
+msgstr ""
+
+msgid "Created by"
+msgstr ""
+
+msgid "Modified at"
+msgstr ""
+
+msgid "Modified by"
+msgstr ""
+
 msgid "Search collection..."
 msgstr ""
 
@@ -37,19 +64,10 @@ msgstr ""
 msgid "Collection"
 msgstr ""
 
-msgid "Confirm remove"
+msgid "Choose concept"
 msgstr ""
 
-msgid "Following items are referring to the deleted item"
-msgstr ""
-
-msgid "Are you sure that you want to remove?"
-msgstr ""
-
-msgid "Yes"
-msgstr ""
-
-msgid "Cancel"
+msgid "Select concept"
 msgstr ""
 
 msgid "Cancel edit"
@@ -64,7 +82,7 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-msgid "Contact info"
+msgid "Give feedback:"
 msgstr ""
 
 msgid "CSC - IT Center for Science Ltd"
@@ -80,24 +98,6 @@ msgid "Backend"
 msgstr ""
 
 msgid "licensed under the"
-msgstr ""
-
-msgid "Created at"
-msgstr ""
-
-msgid "Created by"
-msgstr ""
-
-msgid "Modified at"
-msgstr ""
-
-msgid "Modified by"
-msgstr ""
-
-msgid "Choose concept"
-msgstr ""
-
-msgid "Select concept"
 msgstr ""
 
 msgid "Visualization"
@@ -118,10 +118,14 @@ msgstr ""
 msgid "vocabularies"
 msgstr ""
 
-msgid "New concept"
+msgid ""
+"New concept'), this.createEmptyNode<ConceptNode, "
+"'Concept'>(vocabulary.graphId, nodeId, 'Concept"
 msgstr ""
 
-msgid "New collection"
+msgid ""
+"New collection'), this.createEmptyNode<CollectionNode, "
+"'Collection'>(vocabulary.graphId, nodeId, 'Collection"
 msgstr ""
 
 msgid "Front page"
@@ -149,4 +153,7 @@ msgid "Group"
 msgstr ""
 
 msgid "Organization"
+msgstr ""
+
+msgid "New concept"
 msgstr ""

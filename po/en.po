@@ -2,18 +2,45 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-04-05 12:38+0300\n"
+"PO-Revision-Date: 2017-04-11 13:00+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.5\n"
+"X-Generator: Poedit 2.0.1\n"
 "X-Poedit-Basepath: .\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "Search concept..."
+msgstr ""
+
+msgid "Confirm remove"
+msgstr ""
+
+msgid "Following items are referring to the deleted item"
+msgstr ""
+
+msgid "Are you sure that you want to remove?"
+msgstr ""
+
+msgid "Yes"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Created at"
+msgstr ""
+
+msgid "Created by"
+msgstr ""
+
+msgid "Modified at"
+msgstr ""
+
+msgid "Modified by"
 msgstr ""
 
 msgid "Search collection..."
@@ -46,19 +73,10 @@ msgstr ""
 msgid "Collection"
 msgstr ""
 
-msgid "Confirm remove"
+msgid "Choose concept"
 msgstr ""
 
-msgid "Following items are referring to the deleted item"
-msgstr ""
-
-msgid "Are you sure that you want to remove?"
-msgstr ""
-
-msgid "Yes"
-msgstr ""
-
-msgid "Cancel"
+msgid "Select concept"
 msgstr ""
 
 msgid "Cancel edit"
@@ -73,7 +91,7 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-msgid "Contact info"
+msgid "Give feedback:"
 msgstr ""
 
 msgid "CSC - IT Center for Science Ltd"
@@ -91,24 +109,6 @@ msgstr ""
 msgid "licensed under the"
 msgstr ""
 
-msgid "Created at"
-msgstr ""
-
-msgid "Created by"
-msgstr ""
-
-msgid "Modified at"
-msgstr ""
-
-msgid "Modified by"
-msgstr ""
-
-msgid "Choose concept"
-msgstr ""
-
-msgid "Select concept"
-msgstr ""
-
 msgid "Visualization"
 msgstr ""
 
@@ -118,7 +118,10 @@ msgstr ""
 msgid "Frontpage information"
 msgstr ""
 "Definitions released in the workbench are freely browsable. Content is "
-"produced by experts in different domains."
+"produced by experts in different domains.\n"
+"Note: this is the development environment of the service. Thus the contents "
+"of this service are not official versions of the vocabularies but rather "
+"meant for testing purposes"
 
 msgid "Not implemented yet!"
 msgstr ""
@@ -129,11 +132,15 @@ msgstr ""
 msgid "vocabularies"
 msgstr ""
 
-msgid "New concept"
-msgstr "new concept"
+msgid ""
+"New concept'), this.createEmptyNode<ConceptNode, 'Concept'>(vocabulary."
+"graphId, nodeId, 'Concept"
+msgstr ""
 
-msgid "New collection"
-msgstr "new collection"
+msgid ""
+"New collection'), this.createEmptyNode<CollectionNode, "
+"'Collection'>(vocabulary.graphId, nodeId, 'Collection"
+msgstr ""
 
 msgid "Front page"
 msgstr ""
@@ -161,3 +168,9 @@ msgstr ""
 
 msgid "Organization"
 msgstr ""
+
+msgid "New concept"
+msgstr "new concept"
+
+#~ msgid "New collection"
+#~ msgstr "new collection"
