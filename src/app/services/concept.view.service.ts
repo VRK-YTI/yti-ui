@@ -8,13 +8,25 @@ import { comparingLocalizable } from '../utils/comparator';
 import { LanguageService } from './language.service';
 import { MetaModelService } from './meta-model.service';
 import {
-  Action, createEditAction, createNoSelection, createRemoveAction, createSelectAction, isSelect,
+  Action, createEditAction, createNoSelection, createRemoveAction, createSelectAction, EditAction, isEdit, isRemove,
+  isSelect,
+  RemoveAction,
   SelectAction
 } from './action';
 
 function onlySelect<T>(action: Observable<Action<T>>): Observable<T> {
   const selectAction: Observable<SelectAction<T>> = action.filter(isSelect);
   return selectAction.map(action => action.item);
+}
+
+function onlyEdit<T>(action: Observable<Action<T>>): Observable<T> {
+  const editAction: Observable<EditAction<T>> = action.filter(isEdit);
+  return editAction.map(action => action.item);
+}
+
+function onlyRemove<T>(action: Observable<Action<T>>): Observable<T> {
+  const removeAction: Observable<RemoveAction<T>> = action.filter(isRemove);
+  return removeAction.map(action => action.item);
 }
 
 @Injectable()
@@ -24,16 +36,22 @@ export class ConceptViewModelService {
   vocabulary: VocabularyNode;
   vocabulary$ = new BehaviorSubject<Action<VocabularyNode>>(createNoSelection());
   vocabularySelect$ = onlySelect(this.vocabulary$);
+  vocabularyEdit$ = onlyEdit(this.vocabulary$);
+  vocabularyRemove$ = onlyRemove(this.vocabulary$);
 
   conceptInEdit: ConceptNode|null;
-  concept$ = new BehaviorSubject<Action<ConceptNode>>(createNoSelection());
-  conceptSelect$ = onlySelect(this.concept$);
+  conceptAction$ = new BehaviorSubject<Action<ConceptNode>>(createNoSelection());
+  conceptSelect$ = onlySelect(this.conceptAction$);
+  conceptEdit$ = onlyEdit(this.conceptAction$);
+  conceptRemove$ = onlyRemove(this.conceptAction$);
 
   collectionInEdit: CollectionNode|null;
-  collection$ = new BehaviorSubject<Action<CollectionNode>>(createNoSelection());
-  collectionSelect$ = onlySelect(this.collection$);
+  collectionAction$ = new BehaviorSubject<Action<CollectionNode>>(createNoSelection());
+  collectionSelect$ = onlySelect(this.collectionAction$);
+  collectionEdit$ = onlyEdit(this.collectionAction$);
+  collectionRemove$ = onlyRemove(this.collectionAction$);
 
-  selection$: Observable<ConceptNode|CollectionNode> = Observable.merge(this.conceptSelect$, this.collectionSelect$);
+  action$ = Observable.merge(this.conceptAction$, this.collectionAction$);
 
   graphId: string;
   conceptId: string|null;
@@ -57,26 +75,22 @@ export class ConceptViewModelService {
               private locationService: LocationService,
               private languageService: LanguageService) {
 
-    this.concept$.subscribe(action => {
+    this.action$.subscribe(action => {
       switch (action.type) {
         case 'edit':
         case 'remove':
-          this.initializeConceptList(this.graphId);
-      }
-    });
-
-    this.collection$.subscribe(action => {
-      switch (action.type) {
-        case 'edit':
-        case 'remove':
-          this.initializeCollectionList(this.graphId);
+          if (action.item.type === 'Concept') {
+            this.initializeConceptList(this.graphId);
+          } else {
+            this.initializeCollectionList(this.graphId);
+          }
       }
     });
   }
 
   get concept(): ConceptNode|null {
 
-    const action = this.concept$.getValue();
+    const action = this.conceptAction$.getValue();
 
     if (action.type === 'noselect' || action.type === 'remove') {
       return null;
@@ -87,7 +101,7 @@ export class ConceptViewModelService {
 
   get collection(): CollectionNode|null {
 
-    const action = this.collection$.getValue();
+    const action = this.collectionAction$.getValue();
 
     if (action.type === 'noselect' || action.type === 'remove') {
       return null;
@@ -150,7 +164,7 @@ export class ConceptViewModelService {
           this.locationService.atVocabulary(vocabulary);
         }
         this.conceptInEdit = concept ? concept.clone() : null;
-        this.concept$.next(concept ? createSelectAction(concept) : createNoSelection());
+        this.conceptAction$.next(concept ? createSelectAction(concept) : createNoSelection());
         this.loadingConcept = false;
       });
     };
@@ -185,7 +199,7 @@ export class ConceptViewModelService {
           this.locationService.atVocabulary(vocabulary);
         }
         this.collectionInEdit = collection ? collection.clone() : null;
-        this.collection$.next(collection ? createSelectAction(collection) : createNoSelection());
+        this.collectionAction$.next(collection ? createSelectAction(collection) : createNoSelection());
         this.loadingCollection = false;
       });
     };
@@ -217,7 +231,7 @@ export class ConceptViewModelService {
         .flatMap(() => this.termedService.getConcept(this.graphId, concept.id, this.languages))
         .subscribe(persistentConcept => {
           this.conceptInEdit = persistentConcept;
-          this.concept$.next(createEditAction(persistentConcept.clone()));
+          this.conceptAction$.next(createEditAction(persistentConcept.clone()));
           resolve();
         });
     });
@@ -233,7 +247,7 @@ export class ConceptViewModelService {
     // TODO Error handling
     return new Promise(resolve => {
       this.termedService.removeNode(concept).subscribe(() => {
-        this.concept$.next(createRemoveAction(concept));
+        this.conceptAction$.next(createRemoveAction(concept));
         this.router.navigate(['/concepts', this.graphId]);
         resolve();
       });
@@ -266,7 +280,7 @@ export class ConceptViewModelService {
         .flatMap(() => this.termedService.getCollection(this.graphId, collection.id, this.languages))
         .subscribe(persistentCollection => {
           this.collectionInEdit = persistentCollection;
-          this.collection$.next(createEditAction(persistentCollection.clone()));
+          this.collectionAction$.next(createEditAction(persistentCollection.clone()));
           resolve();
         });
     });
@@ -282,7 +296,7 @@ export class ConceptViewModelService {
     // TODO Error handling
     return new Promise(resolve => {
       this.termedService.removeNode(collection).subscribe(() => {
-        this.collection$.next(createRemoveAction(collection));
+        this.collectionAction$.next(createRemoveAction(collection));
         this.router.navigate(['/concepts', this.graphId])
         resolve();
       });

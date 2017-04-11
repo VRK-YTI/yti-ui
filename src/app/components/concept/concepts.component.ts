@@ -103,7 +103,7 @@ export class ConceptsComponent implements OnInit {
   }
 
   get showVisualization() {
-    return !this.conceptNetwork.isEmpty() && (this.viewModel.selection || this.conceptNetwork.persistentSelection);
+    return !this.conceptNetwork.isEmpty();
   }
 
   get selectionWidth() {

@@ -10,9 +10,19 @@ import {
   Edge as VisEdge,
   DataSet,
   Network as VisNetwork,
-  Options as VisNetworkOptions
+  Options as VisNetworkOptions, IdType
 } from 'vis';
 import { ReferenceMeta } from '../../entities/meta';
+import { Node } from '../../entities/node';
+import { collectProperties } from '../../utils/array';
+import { assertNever } from '../../utils/object';
+
+type KnownGroup = 'rootConceptGroup'
+                | 'rootCollectionGroup'
+                | 'relatedGroup'
+                | 'broaderGroup'
+                | 'isPartOfGroup'
+                | 'memberGroup';
 
 interface ConceptNetworkData {
   nodes: DataSet<UpdatableVisNode>;
@@ -113,12 +123,12 @@ const options: VisNetworkOptions = {
 
 interface UpdatableVisNode extends VisNode {
   title: string;
-  update: () => VisNode;
+  update: () => UpdatableVisNode;
 }
 
 interface UpdatableVisEdge extends VisEdge {
   title: string;
-  update: () => VisEdge;
+  update: () => UpdatableVisEdge;
 }
 
 @Component({
@@ -140,7 +150,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
 
   @ViewChild('canvas') canvasRef: ElementRef;
 
-  persistentSelection: boolean;
+  rootNode: Node<any>|null = null;
 
   private skipNextSelection = false;
 
@@ -179,26 +189,33 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
       this.network.on('click', this.onClick.bind(this));
     });
 
-    this.conceptViewModel.selection$.subscribe(selection => {
-
-      if (selection && !this.skipNextSelection) {
-        this.persistentSelection = selection.persistent;
-        this.networkData.nodes.clear();
-        this.networkData.edges.clear();
-
-        if (selection.type === 'Concept') {
-          this.networkData.nodes.add(this.createRootConceptNode(selection));
-          this.addEdgeNodesForConcept(selection);
-        } else {
-          this.networkData.nodes.add(this.createCollectionNode(selection));
-          this.addEdgeNodesForCollection(selection);
-        }
-
-        this.network.once('afterDrawing', () => this.network.fit());
-      }
-
-      if (selection) {
-        this.skipNextSelection = false;
+    this.conceptViewModel.action$.subscribe(action => {
+      switch (action.type) {
+        case 'select':
+          if (!this.skipNextSelection) {
+            this.resetRootNode(action.item);
+            this.network.once('afterDrawing', () => this.network.fit());
+          }
+          this.skipNextSelection = false;
+          break;
+        case 'edit':
+          this.updateNode(action.item);
+          if (this.rootNode && this.rootNode.id === action.item.id) {
+            this.rootNode = action.item;
+          }
+          break;
+        case 'remove':
+          if (this.rootNode && this.rootNode.id === action.item.id) {
+            this.resetRootNode(null);
+          } else {
+            this.removeNode(action.item.id);
+          }
+          break;
+        case 'noselect':
+          // nop
+          break;
+        default:
+          assertNever(action, 'Unsupported action: ' + action);
       }
     });
   }
@@ -209,6 +226,18 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
 
   isEmpty() {
     return this.networkData.nodes.length === 0;
+  }
+
+  private resetRootNode(node: ConceptNode|CollectionNode|null) {
+
+    this.rootNode = node;
+    this.networkData.nodes.clear();
+    this.networkData.edges.clear();
+
+    if (node) {
+      this.createRootNode(node);
+      this.updateEdgeNodes(node);
+    }
   }
 
   private createConceptNodeData(concept: ConceptNode): UpdatableVisNode {
@@ -224,6 +253,14 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
     };
 
     return createNode();
+  }
+
+  private createRootNode(node: ConceptNode|CollectionNode) {
+    if (node.type === 'Concept') {
+      this.networkData.nodes.add(this.createRootConceptNode(node));
+    } else {
+      this.networkData.nodes.add(this.createCollectionNode(node));
+    }
   }
 
   private createRootConceptNode(concept: ConceptNode) {
@@ -324,6 +361,47 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
     }
   }
 
+  private updateNode(node: ConceptNode|CollectionNode) {
+
+    const previous = this.networkData.nodes.get(node.id);
+    const group = previous.group as KnownGroup;
+
+    const createUpdatedNode: () => UpdatableVisNode = () => {
+      switch (group) {
+        case 'rootConceptGroup':
+          return this.createRootConceptNode(node as ConceptNode);
+        case 'rootCollectionGroup':
+          return this.createCollectionNode(node as CollectionNode);
+        case 'relatedGroup':
+          return this.createRootConceptNode(node as ConceptNode);
+        case 'broaderGroup':
+          return this.createBroaderConceptNode(node as ConceptNode);
+        case 'isPartOfGroup':
+          return this.createIsPartOfConceptNode(node as ConceptNode);
+        case 'memberGroup':
+          return this.createMemberConceptNode(node as ConceptNode);
+        default:
+          return assertNever(group, 'Unsupported group: ' + group);
+      }
+    };
+
+    this.networkData.nodes.update(createUpdatedNode());
+    this.updateEdgeNodes(node);
+  }
+
+  private updateEdgeNodes(node: ConceptNode|CollectionNode) {
+    if (node.type === 'Concept') {
+      this.updateEdgeNodesForConcept(node);
+    } else {
+      this.updateEdgeNodesForCollection(node);
+    }
+  }
+
+  private updateEdgeNodesForConcept(concept: ConceptNode) {
+    this.addEdgeNodesForConcept(concept);
+    this.removeEdgeNodesFromConcept(concept);
+  }
+
   private addEdgeNodesForConcept(concept: ConceptNode) {
 
     for (const relatedConcept of concept.relatedConcepts.values) {
@@ -356,12 +434,69 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
     }
   }
 
+  private removeEdgeNodesFromConcept(concept: ConceptNode) {
+    this.removeEdgeNodesFromNode(concept.id, collectProperties([
+      ...concept.relatedConcepts.values,
+      ...concept.broaderConcepts.values,
+      ...concept.narrowerConcepts.values,
+      ...concept.isPartOfConcepts.values,
+      ...concept.partOfThisConcepts.values
+    ], concept => concept.id));
+  }
+
+  private updateEdgeNodesForCollection(collection: CollectionNode) {
+    this.addEdgeNodesForCollection(collection);
+    this.removeEdgeNodesFromCollection(collection);
+  }
+
   private addEdgeNodesForCollection(collection: CollectionNode) {
 
     for (const memberConcept of collection.members.values) {
       this.addNodeIfDoesNotExist(this.createMemberConceptNode(memberConcept));
       this.addEdgeIfDoesNotExist(this.createMemberConceptEdge(collection, memberConcept, collection.members.meta));
     }
+  }
+
+  private removeEdgeNodesFromCollection(collection: CollectionNode) {
+    this.removeEdgeNodesFromNode(collection.id, collectProperties(collection.members.values, concept => concept.id));
+  }
+
+  private removeNode(nodeId: string) {
+
+    const edgesToRemove: IdType[] = [];
+
+    for (const edge of this.networkData.edges.get(createConnectedEdgeFilter(nodeId))) {
+      edgesToRemove.push(edge.id!);
+    }
+
+    this.networkData.edges.remove(edgesToRemove);
+    this.networkData.nodes.remove(nodeId);
+  }
+
+  private removeEdgeNodesFromNode(nodeId: string, knownNeighbours: Set<IdType>) {
+
+    const edgesToRemove: IdType[] = [];
+    const nodesToRemove: IdType[] = [];
+
+    for (const connectedEdge of this.networkData.edges.get(createConnectedEdgeFilter(nodeId))) {
+      if (!knownNeighbours.has(connectedEdge.from!) && !knownNeighbours.has(connectedEdge.to!)) {
+        edgesToRemove.push(connectedEdge.id!);
+      }
+    }
+
+    this.networkData.edges.remove(edgesToRemove);
+
+    for (const node of this.networkData.nodes.get()) {
+
+      const isNotRootNode = this.rootNode && this.rootNode.id !== node.id;
+      const isDisconnectedNode = this.networkData.edges.get(createConnectedEdgeFilter(node.id!)).length === 0;
+
+      if (isNotRootNode && isDisconnectedNode) {
+        nodesToRemove.push(node.id!);
+      }
+    }
+
+    this.networkData.nodes.remove(nodesToRemove);
   }
 
   private onClick(eventData: any) {
@@ -419,6 +554,14 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
 
     if (tooltip !== null) {
       tooltip.style.visibility = 'hidden';
+    }
+  }
+}
+
+function createConnectedEdgeFilter(id: IdType) {
+  return {
+    filter(edge: VisEdge) {
+      return edge.from === id || edge.to === id;
     }
   }
 }
