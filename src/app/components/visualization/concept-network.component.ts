@@ -17,13 +17,6 @@ import { Node } from '../../entities/node';
 import { collectProperties } from '../../utils/array';
 import { assertNever } from '../../utils/object';
 
-type KnownGroup = 'rootConceptGroup'
-                | 'rootCollectionGroup'
-                | 'relatedGroup'
-                | 'broaderGroup'
-                | 'isPartOfGroup'
-                | 'memberGroup';
-
 interface ConceptNetworkData {
   nodes: DataSet<UpdatableVisNode>;
   edges: DataSet<UpdatableVisEdge>;
@@ -363,29 +356,12 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
 
   private updateNode(node: ConceptNode|CollectionNode) {
 
-    const previous = this.networkData.nodes.get(node.id);
-    const group = previous.group as KnownGroup;
+    if (node.type === 'Concept') {
+      this.networkData.nodes.update(this.createConceptNodeData(node));
+    } else {
+      this.networkData.nodes.update(this.createCollectionNode(node));
+    }
 
-    const createUpdatedNode: () => UpdatableVisNode = () => {
-      switch (group) {
-        case 'rootConceptGroup':
-          return this.createRootConceptNode(node as ConceptNode);
-        case 'rootCollectionGroup':
-          return this.createCollectionNode(node as CollectionNode);
-        case 'relatedGroup':
-          return this.createRootConceptNode(node as ConceptNode);
-        case 'broaderGroup':
-          return this.createBroaderConceptNode(node as ConceptNode);
-        case 'isPartOfGroup':
-          return this.createIsPartOfConceptNode(node as ConceptNode);
-        case 'memberGroup':
-          return this.createMemberConceptNode(node as ConceptNode);
-        default:
-          return assertNever(group, 'Unsupported group: ' + group);
-      }
-    };
-
-    this.networkData.nodes.update(createUpdatedNode());
     this.updateEdgeNodes(node);
   }
 
