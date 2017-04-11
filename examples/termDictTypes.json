@@ -58,7 +58,7 @@
 		},
 		"id": "publisher",
 		"uri": "http://purl.org/dc/terms/publisher",
-		"index": 1,
+		"index": 0,
 		"domain": {
 			"id": "TerminologicalVocabulary"
 		},
@@ -167,6 +167,26 @@
 			}, {
 				"lang": "en",
 				"value": "Member"
+			}]
+		}
+	}, {
+		"range": {
+			"id": "Collection"
+		},
+		"id": "isPartOfCollection",
+		"uri": "http://purl.org/dc/terms/isPartOf",
+		"index": 1,
+		"domain": {
+			"id": "Collection"
+		},
+		"permissions": {},
+		"properties": {
+			"prefLabel": [{
+				"lang": "fi",
+				"value": "Partitiivinen koostumussuhde"
+			}, {
+				"lang": "en",
+				"value": "Is part of collection"
 			}]
 		}
 	}]
@@ -315,7 +335,7 @@
 		"regex": "(?s)^.*$",
 		"id": "prefLabel",
 		"uri": "http://www.w3.org/2008/05/skos-xl#literalForm",
-		"index": 8,
+		"index": 7,
 		"domain": {
 			"id": "Term"
 		},
@@ -529,13 +549,13 @@
 				"value": "Preferred term"
 			}]
 		}
-	}, {
+	},  {
 		"range": {
 			"id": "Term"
 		},
 		"id": "altLabelXl",
 		"uri": "http://iow.csc.fi/ns/st#synonym",
-		"index": 1,
+		"index": 2,
 		"domain": {
 			"id": "Concept"
 		},
@@ -549,27 +569,7 @@
 				"value": "Synonym"
 			}]
 		}
-	}, {
-		"range": {
-			"id": "TerminologicalVocabulary"
-		},
-		"id": "inScheme",
-		"uri": "http://www.w3.org/2004/02/skos/core#inScheme",
-		"index": 2,
-		"domain": {
-			"id": "Concept"
-		},
-		"permissions": {},
-		"properties": {
-			"prefLabel": [{
-				"lang": "fi",
-				"value": "Kuuluu käsitejärjestelmään"
-			}, {
-				"lang": "en",
-				"value": "In scheme"
-			}]
-		}
-	}, {
+	},  {
 		"range": {
 			"id": "Concept"
 		},
@@ -595,7 +595,7 @@
 		},
 		"id": "related",
 		"uri": "http://www.w3.org/2004/02/skos/core#related",
-		"index": 5,
+		"index": 4,
 		"domain": {
 			"id": "Concept"
 		},
@@ -615,7 +615,7 @@
 		},
 		"id": "isPartOf",
 		"uri": "http://purl.org/dc/terms/isPartOf",
-		"index": 6,
+		"index": 5,
 		"domain": {
 			"id": "Concept"
 		},

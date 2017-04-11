@@ -773,36 +773,6 @@
       },
       {
         "range": {
-          "id": "TerminologicalVocabulary",
-          "graph": {
-            "id": "ada55715-c565-4477-8227-0b8a51010bc5"
-          }
-        },
-        "id": "inScheme",
-        "uri": "http://www.w3.org/2004/02/skos/core#inScheme",
-        "index": 2,
-        "domain": {
-          "id": "Concept",
-          "graph": {
-            "id": "ada55715-c565-4477-8227-0b8a51010bc5"
-          }
-        },
-        "permissions": {},
-        "properties": {
-          "prefLabel": [
-            {
-              "lang": "fi",
-              "value": "Kuuluu käsitejärjestelmään"
-            },
-            {
-              "lang": "en",
-              "value": "In scheme"
-            }
-          ]
-        }
-      },
-      {
-        "range": {
           "id": "Concept",
           "graph": {
             "id": "ada55715-c565-4477-8227-0b8a51010bc5"
