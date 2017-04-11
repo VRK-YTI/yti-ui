@@ -61,7 +61,7 @@ export class CollectionComponent implements OnDestroy {
       deleteConfirmationModal.open(requireDefined(this.collection))
         .then(() => this.conceptViewModel.removeCollection());
 
-    this.subscriptionToClean.push(this.conceptViewModel.collection$.subscribe(collection => {
+    this.subscriptionToClean.push(this.conceptViewModel.collectionSelect$.subscribe(collection => {
       if (collection) {
         if (!collection.persistent && !editableService.editing) {
           editableService.edit();

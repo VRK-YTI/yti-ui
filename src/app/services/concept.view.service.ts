@@ -2,26 +2,38 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { LocationService } from './location.service';
 import { TermedService } from './termed.service';
-import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { CollectionNode, ConceptNode, VocabularyNode } from '../entities/node';
 import { comparingLocalizable } from '../utils/comparator';
 import { LanguageService } from './language.service';
 import { MetaModelService } from './meta-model.service';
+import {
+  Action, createEditAction, createNoSelection, createRemoveAction, createSelectAction, isSelect,
+  SelectAction
+} from './action';
+
+function onlySelect<T>(action: Observable<Action<T>>): Observable<T> {
+  const selectAction: Observable<SelectAction<T>> = action.filter(isSelect);
+  return selectAction.map(action => action.item);
+}
 
 @Injectable()
 export class ConceptViewModelService {
 
   vocabularyInEdit: VocabularyNode;
   vocabulary: VocabularyNode;
-  vocabulary$ = new ReplaySubject<VocabularyNode>();
+  vocabulary$ = new BehaviorSubject<Action<VocabularyNode>>(createNoSelection());
+  vocabularySelect$ = onlySelect(this.vocabulary$);
 
   conceptInEdit: ConceptNode|null;
-  concept$ = new BehaviorSubject<ConceptNode|null>(null);
+  concept$ = new BehaviorSubject<Action<ConceptNode>>(createNoSelection());
+  conceptSelect$ = onlySelect(this.concept$);
 
   collectionInEdit: CollectionNode|null;
-  collection$ = new BehaviorSubject(<CollectionNode|null>(null));
+  collection$ = new BehaviorSubject<Action<CollectionNode>>(createNoSelection());
+  collectionSelect$ = onlySelect(this.collection$);
 
-  selection$: Observable<ConceptNode|CollectionNode|null> = Observable.merge(this.concept$, this.collection$);
+  selection$: Observable<ConceptNode|CollectionNode> = Observable.merge(this.conceptSelect$, this.collectionSelect$);
 
   graphId: string;
   conceptId: string|null;
@@ -46,12 +58,26 @@ export class ConceptViewModelService {
               private languageService: LanguageService) {
   }
 
-  get concept() {
-    return this.concept$.getValue();
+  get concept(): ConceptNode|null {
+
+    const action = this.concept$.getValue();
+
+    if (action.type === 'noselect' || action.type === 'remove') {
+      return null;
+    }
+
+    return action.item;
   }
 
-  get collection() {
-    return this.collection$.getValue();
+  get collection(): CollectionNode|null {
+
+    const action = this.collection$.getValue();
+
+    if (action.type === 'noselect' || action.type === 'remove') {
+      return null;
+    }
+
+    return action.item;
   }
 
   get selection() {
@@ -68,7 +94,7 @@ export class ConceptViewModelService {
       this.locationService.atVocabulary(vocabulary);
       this.vocabularyInEdit = vocabulary.clone();
       this.vocabulary = vocabulary;
-      this.vocabulary$.next(vocabulary);
+      this.vocabulary$.next(createSelectAction(vocabulary));
       this.loadingVocabulary = false;
     });
 
@@ -94,14 +120,14 @@ export class ConceptViewModelService {
         this.initializeCollection(null);
       }
 
-      this.vocabulary$.subscribe(vocabulary => {
+      this.vocabularySelect$.subscribe(vocabulary => {
         if (concept) {
           this.locationService.atConcept(vocabulary, concept);
         } else {
           this.locationService.atVocabulary(vocabulary);
         }
         this.conceptInEdit = concept ? concept.clone() : null;
-        this.concept$.next(concept);
+        this.concept$.next(concept ? createSelectAction(concept) : createNoSelection());
         this.loadingConcept = false;
       });
     };
@@ -112,7 +138,7 @@ export class ConceptViewModelService {
     if (!conceptId) {
       init(null);
     } else {
-      this.vocabulary$.subscribe(vocabulary => {
+      this.vocabularySelect$.subscribe(vocabulary => {
         this.termedService.getConcept(vocabulary.graphId, conceptId, this.languages).subscribe(init, () => {
           this.metaModelService.createEmptyConcept(this.vocabulary, conceptId).subscribe(init);
         });
@@ -129,14 +155,14 @@ export class ConceptViewModelService {
         this.initializeConcept(null);
       }
 
-      this.vocabulary$.subscribe(vocabulary => {
+      this.vocabularySelect$.subscribe(vocabulary => {
         if (collection) {
           this.locationService.atCollection(vocabulary, collection);
         } else {
           this.locationService.atVocabulary(vocabulary);
         }
         this.collectionInEdit = collection ? collection.clone() : null;
-        this.collection$.next(collection);
+        this.collection$.next(collection ? createSelectAction(collection) : createNoSelection());
         this.loadingCollection = false;
       });
     };
@@ -147,7 +173,7 @@ export class ConceptViewModelService {
     if (!collectionId) {
       init(null);
     } else {
-      this.vocabulary$.subscribe(vocabulary => {
+      this.vocabularySelect$.subscribe(vocabulary => {
         this.termedService.getCollection(vocabulary.graphId, collectionId, this.languages).subscribe(init, () => {
           this.metaModelService.createEmptyCollection(this.vocabulary, collectionId).subscribe(init);
         });
@@ -168,7 +194,7 @@ export class ConceptViewModelService {
         .flatMap(() => this.termedService.getConcept(this.graphId, concept.id, this.languages))
         .subscribe(persistentConcept => {
           this.conceptInEdit = persistentConcept;
-          this.concept$.next(persistentConcept.clone());
+          this.concept$.next(createEditAction(persistentConcept.clone()));
           resolve();
         });
     });
@@ -184,9 +210,10 @@ export class ConceptViewModelService {
     // TODO Error handling
     return new Promise(resolve => {
       this.termedService.removeNode(concept).subscribe(() => {
-          this.router.navigate(['/concepts', this.graphId]);
-          resolve();
-        });
+        this.concept$.next(createRemoveAction(concept));
+        this.router.navigate(['/concepts', this.graphId]);
+        resolve();
+      });
     });
   }
 
@@ -216,7 +243,7 @@ export class ConceptViewModelService {
         .flatMap(() => this.termedService.getCollection(this.graphId, collection.id, this.languages))
         .subscribe(persistentCollection => {
           this.collectionInEdit = persistentCollection;
-          this.collection$.next(persistentCollection.clone());
+          this.collection$.next(createEditAction(persistentCollection.clone()));
           resolve();
         });
     });
@@ -227,9 +254,16 @@ export class ConceptViewModelService {
       throw new Error('Cannot remove when there is no collection');
     }
 
+    const collection = this.collection;
+
     // TODO Error handling
-    return this.termedService.removeNode(this.collection).toPromise()
-      .then(() => this.router.navigate(['/concepts', this.graphId]));
+    return new Promise(resolve => {
+      this.termedService.removeNode(collection).subscribe(() => {
+        this.collection$.next(createRemoveAction(collection));
+        this.router.navigate(['/concepts', this.graphId])
+        resolve();
+      });
+    });
   }
 
   resetCollection() {

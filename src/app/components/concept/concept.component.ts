@@ -49,13 +49,11 @@ export class ConceptComponent implements OnDestroy {
       deleteConfirmationModal.open(requireDefined(this.concept))
         .then(() => this.conceptViewModel.removeConcept());
 
-    this.subscriptionToClean.push(this.conceptViewModel.concept$.subscribe(concept => {
-      if (concept) {
-        if (!concept.persistent && !editableService.editing) {
-          editableService.edit();
-        } else if (editableService.editing) {
-          editableService.cancel();
-        }
+    this.subscriptionToClean.push(this.conceptViewModel.conceptSelect$.subscribe(concept => {
+      if (!concept.persistent && !editableService.editing) {
+        editableService.edit();
+      } else if (editableService.editing) {
+        editableService.cancel();
       }
     }));
   }
