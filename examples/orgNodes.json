@@ -1,4 +1,33 @@
 [
+ {
+    "id": "53cc3de0-7ca0-4c5e-a6b8-e84123bf64e0",
+    "createdBy": "admin",
+    "createdDate": "2017-03-17T10:00:37.807+02:00",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-03-17T10:01:38.271+02:00",
+    "type": {
+      "id": "Organization",
+      "graph": {
+        "id": "228cce1e-8360-4039-a3f7-725df5643354"
+      }
+    },
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "fi",
+          "value": "Kansalliskirjasto",
+          "regex": "(?s)^.*$"
+        },
+        {
+          "lang": "en",
+          "value": "The National Library Of Finland",
+          "regex": "(?s)^.*$"
+        }
+      ]
+    },
+    "references": {},
+    "referrers": {}
+  },
   {
     "id": "520dc3ac-2f67-4ec0-b535-218428ed3758",
     "createdBy": "admin",
