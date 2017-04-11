@@ -154,7 +154,7 @@ export class Referrer<N extends KnownNode | Node<any>> {
   }
 
   get empty() {
-    return this.values.length > 0;
+    return this.values.length === 0;
   }
 }
 
