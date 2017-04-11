@@ -91,10 +91,8 @@ export class TermedService {
     const params = new URLSearchParams();
     params.append('batch', 'true');
 
-    return this.http.delete('/api/nodes', {
-      search: params,
-      body: nodeIds
-    });
+    return this.http.delete('/api/nodes', { search: params, body: nodeIds })
+      .delay(1000); // FIXME Remove delay when api supports blocking modifications
   }
 
   private updateUpdateInternalNodes(nodes: NodeInternal<any>[]): Observable<Response> {
