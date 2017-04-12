@@ -176,13 +176,16 @@ export class ConceptViewModelService {
       init(null);
     } else {
       this.vocabularySelect$.subscribe(vocabulary => {
-        this.termedService.getConcept(vocabulary.graphId, conceptId, this.languages).subscribe(init, () => {
-          this.metaModelService.createEmptyConcept(this.vocabulary, conceptId).subscribe(init);
+        this.termedService.findConcept(vocabulary.graphId, conceptId, this.languages).subscribe(concept => {
+          if (concept) {
+            init(concept);
+          } else {
+            this.metaModelService.createEmptyConcept(this.vocabulary, conceptId).subscribe(init);
+          }
         });
       });
     }
   }
-
 
   initializeCollection(collectionId: string|null) {
 
@@ -211,8 +214,12 @@ export class ConceptViewModelService {
       init(null);
     } else {
       this.vocabularySelect$.subscribe(vocabulary => {
-        this.termedService.getCollection(vocabulary.graphId, collectionId, this.languages).subscribe(init, () => {
-          this.metaModelService.createEmptyCollection(this.vocabulary, collectionId).subscribe(init);
+        this.termedService.findCollection(vocabulary.graphId, collectionId, this.languages).subscribe(collection => {
+          if (collection) {
+            init(collection);
+          } else {
+            this.metaModelService.createEmptyCollection(this.vocabulary, collectionId).subscribe(init);
+          }
         });
       });
     }

@@ -41,6 +41,11 @@ export class TermedService {
       .map(([meta, concept]) => Node.create(concept, meta, languages, true));
   }
 
+  findConcept(graphId: string, conceptId: string, languages: string[]): Observable<ConceptNode|null> {
+    return Observable.zip(this.metaModelService.getMeta(), this.findConceptDetailsNode(graphId, conceptId))
+      .map(([meta, concept]) => concept ? Node.create(concept, meta, languages, true) : null);
+  }
+
   getConceptList(graphId: string, languages: string[]): Observable<ConceptNode[]> {
     return Observable.zip(this.metaModelService.getMeta(), this.getConceptListNodes(graphId))
       .map(([meta, concepts]) => concepts.map(concept => Node.create(concept, meta, languages, true)));
@@ -49,6 +54,11 @@ export class TermedService {
   getCollection(graphId: string, conceptId: string, languages: string[]): Observable<CollectionNode> {
     return Observable.zip(this.metaModelService.getMeta(), this.getCollectionDetailsNode(graphId, conceptId))
       .map(([meta, collection]) => Node.create(collection, meta, languages, true));
+  }
+
+  findCollection(graphId: string, conceptId: string, languages: string[]): Observable<CollectionNode|null> {
+    return Observable.zip(this.metaModelService.getMeta(), this.findCollectionDetailsNode(graphId, conceptId))
+      .map(([meta, collection]) => collection ? Node.create(collection, meta, languages, true) : null);
   }
 
   getCollectionList(graphId: string, languages: string[]): Observable<CollectionNode[]> {
@@ -165,7 +175,17 @@ export class TermedService {
   }
 
   private getConceptDetailsNode(graphId: string, conceptId: string): Observable<NodeExternal<'Concept'>> {
+    return this.conceptDetailsNodeRequest(graphId, conceptId)
+      .map(response => requireSingle(response.json() as NodeExternal<'Concept'>));
+  }
 
+
+  private findConceptDetailsNode(graphId: string, conceptId: string): Observable<NodeExternal<'Concept'>|null> {
+    return this.conceptDetailsNodeRequest(graphId, conceptId)
+      .map(response => requireSingle(response.json() as NodeExternal<'Concept'>)).catch(notFoundAsDefault(null));
+  }
+
+  private conceptDetailsNodeRequest(graphId: string, conceptId: string): Observable<Response> {
     const params = new URLSearchParams();
     params.append('max', '-1');
     params.append('graphId', graphId);
@@ -173,8 +193,7 @@ export class TermedService {
     params.append('recurse.references.prefLabelXl', '1');
     params.append('select.audit', 'true');
 
-    return this.http.get(`/api/ext.json`, { search: params } )
-      .map(response => requireSingle(response.json() as NodeExternal<'Concept'>));
+    return this.http.get(`/api/ext.json`, { search: params } );
   }
 
   private getCollectionListNodes(graphId: string): Observable<NodeExternal<'Collection'>[]> {
@@ -191,7 +210,16 @@ export class TermedService {
   }
 
   private getCollectionDetailsNode(graphId: string, collectionId: string): Observable<NodeExternal<'Collection'>> {
+    return this.collectionDetailsNodeRequest(graphId, collectionId)
+      .map(response => requireSingle(response.json() as NodeExternal<'Collection'>));
+  }
 
+  private findCollectionDetailsNode(graphId: string, collectionId: string): Observable<NodeExternal<'Collection'>|null> {
+    return this.collectionDetailsNodeRequest(graphId, collectionId)
+      .map(response => requireSingle(response.json() as NodeExternal<'Collection'>)).catch(notFoundAsDefault(null));
+  }
+
+  private collectionDetailsNodeRequest(graphId: string, collectionId: string): Observable<Response> {
     const params = new URLSearchParams();
     params.append('max', '-1');
     params.append('graphId', graphId);
@@ -199,8 +227,7 @@ export class TermedService {
     params.append('select.audit', 'true');
     params.append('recurse.references.prefLabelXl', '1');
 
-    return this.http.get(`/api/ext.json`, { search: params } )
-      .map(response => requireSingle(response.json() as NodeExternal<'Collection'>));
+    return this.http.get(`/api/ext.json`, { search: params } );
   }
 }
 
