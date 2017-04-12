@@ -44,7 +44,7 @@
     "@angular/cli": "1.0.0-rc.4",
     "@angular/compiler-cli": "2.4.0",
     "@angular/language-service": "2.4.0",
-    "@biesbjerg/ng2-translate-extract": "0.3.5",
+    "@biesbjerg/ng2-translate-extract": "^0.6.0",
     "@types/commonmark": "^0.22.29",
     "@types/elasticsearch": "^5.0.13",
     "@types/fast-levenshtein": "^0.0.1",

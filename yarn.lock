@@ -116,12 +116,13 @@
   dependencies:
     tsickle "^0.2"
 
-"@biesbjerg/ng2-translate-extract@0.3.5":
-  version "0.3.5"
-  resolved "https://registry.yarnpkg.com/@biesbjerg/ng2-translate-extract/-/ng2-translate-extract-0.3.5.tgz#d8190b33c4969da9bd3b4300508ac0059e7babac"
+"@biesbjerg/ng2-translate-extract@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@biesbjerg/ng2-translate-extract/-/ng2-translate-extract-0.6.0.tgz#39bc75b7e5384c65d1d774c0af5e28781a219cb0"
   dependencies:
     cheerio "0.22.0"
     cli "1.0.1"
+    flat "2.0.1"
     fs "0.0.1-security"
     gettext-parser "1.2.1"
     glob "7.1.1"
@@ -1884,6 +1885,12 @@ findup-sync@~0.3.0:
   dependencies:
     glob "~5.0.0"
 
+flat@2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/flat/-/flat-2.0.1.tgz#70e29188a74be0c3c89409eed1fa9577907ae32f"
+  dependencies:
+    is-buffer "~1.1.2"
+
 flatten@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/flatten/-/flatten-1.0.2.tgz#dae46a9d78fbe25292258cc1e780a41d95c03782"
@@ -2510,7 +2517,7 @@ is-binary-path@^1.0.0:
   dependencies:
     binary-extensions "^1.0.0"
 
-is-buffer@^1.0.2:
+is-buffer@^1.0.2, is-buffer@~1.1.2:
   version "1.1.5"
   resolved "https://registry.yarnpkg.com/is-buffer/-/is-buffer-1.1.5.tgz#1f3b26ef613b214b88cbca23cc6c01d87961eecc"
 
@@ -3168,7 +3175,7 @@ lodash@^3.8.0:
   version "3.10.1"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-3.10.1.tgz#5bf45e8e49ba4189e17d482789dfd15bd140b7b6"
 
-lodash@^4.0.0, lodash@^4.11.1, lodash@^4.14.0, lodash@^4.17.2, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.2.0, lodash@^4.3.0, lodash@^4.5.0:
+lodash@^4.0.0, lodash@^4.11.1, lodash@^4.12.0, lodash@^4.14.0, lodash@^4.17.2, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.2.0, lodash@^4.3.0, lodash@^4.5.0:
   version "4.17.4"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
 
