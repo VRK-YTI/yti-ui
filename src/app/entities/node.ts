@@ -108,7 +108,8 @@ export class Reference<N extends KnownNode | Node<any>> {
       }
     } else if (this.type === 'Synonym') {
       this.values = nodes.map(node => {
-        const nodeLang = node.properties['prefLabel'].map(attr => attr.lang);
+        const prefLabel = node.properties['prefLabel'];
+        const nodeLang = prefLabel ? prefLabel.map(attr => attr.lang) : ['fi'];
         return Node.create(node, metaModel, nodeLang, true) as N;
       });
     } else {
