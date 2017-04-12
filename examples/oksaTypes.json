@@ -33,6 +33,12 @@
         },
         "permissions": {},
         "properties": {
+		  "type": [
+           {
+            "lang":"",
+           "value":"localizable"
+           }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -58,6 +64,12 @@
         },
         "permissions": {},
         "properties": {
+		  "type": [
+           {
+            "lang":"",
+           "value":"localizable"
+           }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -168,6 +180,12 @@
         },
         "permissions": {},
         "properties": {
+		  "type": [
+           {
+            "lang":"",
+           "value":"localizable"
+           }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -193,6 +211,12 @@
         },
         "permissions": {},
         "properties": {
+		  "type": [
+           {
+            "lang":"",
+           "value":"localizable"
+           }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -298,6 +322,12 @@
         },
         "permissions": {},
         "properties": {
+		  "type": [
+           {
+            "lang":"",
+           "value":"string:single,area"
+           }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -323,6 +353,12 @@
         },
         "permissions": {},
         "properties": {
+		  "type": [
+           {
+            "lang":"",
+           "value":"string:single,area"
+           }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -348,6 +384,12 @@
         },
         "permissions": {},
         "properties": {
+		  "type": [
+           {
+            "lang":"",
+           "value":"string:single,area"
+           }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -373,6 +415,12 @@
         },
         "permissions": {},
         "properties": {
+		  "type": [
+           {
+            "lang":"",
+           "value":"string:single,area"
+           }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -398,6 +446,12 @@
         },
         "permissions": {},
         "properties": {
+		  "type": [
+           {
+            "lang":"",
+           "value":"string:single,area"
+           }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -423,6 +477,12 @@
         },
         "permissions": {},
         "properties": {
+		  "type": [
+           {
+            "lang":"",
+           "value":"string:single,area"
+           }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -448,6 +508,12 @@
         },
         "permissions": {},
         "properties": {
+		  "type": [
+           {
+            "lang":"",
+           "value":"status"
+           }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -497,6 +563,12 @@
         },
         "permissions": {},
         "properties": {
+		  "type": [
+           {
+            "lang":"",
+           "value":"localizable:multiple,area"
+           }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -522,6 +594,12 @@
         },
         "permissions": {},
         "properties": {
+		  "type": [
+           {
+            "lang":"",
+           "value":"localizable:multiple,area"
+           }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -547,6 +625,12 @@
         },
         "permissions": {},
         "properties": {
+		  "type": [
+           {
+            "lang":"",
+           "value":"localizable:multiple,area"
+           }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -572,6 +656,12 @@
         },
         "permissions": {},
         "properties": {
+		  "type": [
+           {
+            "lang":"",
+           "value":"localizable:multiple,area"
+           }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -597,6 +687,12 @@
         },
         "permissions": {},
         "properties": {
+		  "type": [
+           {
+            "lang":"",
+           "value":"string:single,area"
+           }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -622,6 +718,12 @@
         },
         "permissions": {},
         "properties": {
+		  "type": [
+           {
+            "lang":"",
+           "value":"string:single,area"
+           }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -647,6 +749,12 @@
         },
         "permissions": {},
         "properties": {
+		  "type": [
+           {
+            "lang":"",
+           "value":"status"
+           }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -697,6 +805,12 @@
         },
         "permissions": {},
         "properties": {
+		  "type": [
+           {
+            "lang":"",
+           "value":"string:single,area"
+           }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
