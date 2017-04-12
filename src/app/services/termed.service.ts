@@ -71,8 +71,7 @@ export class TermedService {
         .map(ref => ref.values.map(term => term.toInternalNode()))
       );
 
-    return this.updateUpdateInternalNodes([...termNodes, node.toInternalNode()])
-      .delay(1000); // FIXME Remove delay when api supports blocking modifications
+    return this.updateUpdateInternalNodes([...termNodes, node.toInternalNode()]);
   }
 
   removeNode<T extends NodeType>(node: Node<T>) {
@@ -91,8 +90,7 @@ export class TermedService {
     const params = new URLSearchParams();
     params.append('batch', 'true');
 
-    return this.http.delete('/api/nodes', { search: params, body: nodeIds })
-      .delay(1000); // FIXME Remove delay when api supports blocking modifications
+    return this.http.delete('/api/nodes', { search: params, body: nodeIds });
   }
 
   private updateUpdateInternalNodes(nodes: NodeInternal<any>[]): Observable<Response> {
