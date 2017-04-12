@@ -127,14 +127,10 @@ msgstr ""
 msgid "vocabularies"
 msgstr ""
 
-msgid ""
-"New concept'), this.createEmptyNode<ConceptNode, "
-"'Concept'>(vocabulary.graphId, nodeId, 'Concept"
+msgid "New concept"
 msgstr ""
 
-msgid ""
-"New collection'), this.createEmptyNode<CollectionNode, "
-"'Collection'>(vocabulary.graphId, nodeId, 'Collection"
+msgid "New collection"
 msgstr ""
 
 msgid "Front page"
@@ -162,7 +158,4 @@ msgid "Group"
 msgstr ""
 
 msgid "Organization"
-msgstr ""
-
-msgid "New concept"
 msgstr ""

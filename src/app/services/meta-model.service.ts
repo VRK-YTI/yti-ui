@@ -40,7 +40,10 @@ export class MetaModelService {
   }
 
   createEmptyConcept(vocabulary: VocabularyNode, nodeId: string): Observable<ConceptNode> {
-    return Observable.zip(this.translateService.get('New concept'), this.createEmptyNode<ConceptNode, 'Concept'>(vocabulary.graphId, nodeId, 'Concept', vocabulary.languages))
+
+    const label$ = this.translateService.get('New concept');
+
+    return Observable.zip(label$, this.createEmptyNode<ConceptNode, 'Concept'>(vocabulary.graphId, nodeId, 'Concept', vocabulary.languages))
       .map(([newConceptLabel, newConcept]) => {
 
         if (newConcept.hasVocabulary()) {
@@ -54,7 +57,10 @@ export class MetaModelService {
   }
 
   createEmptyCollection(vocabulary: VocabularyNode, nodeId: string): Observable<CollectionNode> {
-    return Observable.zip(this.translateService.get('New collection'), this.createEmptyNode<CollectionNode, 'Collection'>(vocabulary.graphId, nodeId, 'Collection', vocabulary.languages))
+
+    const label = this.translateService.get('New collection');
+
+    return Observable.zip(label, this.createEmptyNode<CollectionNode, 'Collection'>(vocabulary.graphId, nodeId, 'Collection', vocabulary.languages))
       .map(([newCollectionLabel, newCollection]) => {
 
         newCollection.setPrimaryLabel(this.languageService.language, newCollectionLabel);
