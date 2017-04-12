@@ -14,7 +14,7 @@ import { EditableService } from '../../services/editable.service';
         </template>
         <template ngbPanelContent>
           <div class="row">
-            <div class="col-md-12" [class.col-xl-6]="multiColumn" *ngFor="let property of term | properties: showEmpty">
+            <div class="col-md-12" [class.col-xl-6]="multiColumn && property.multiColumn" *ngFor="let property of term | properties: showEmpty">
               <property [value]="property"></property>
             </div>
           </div>
