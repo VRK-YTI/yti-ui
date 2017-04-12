@@ -59,7 +59,7 @@ export class ConceptViewModelService {
 
   topConcepts$ = new BehaviorSubject<ConceptNode[]>([]);
   allConcepts$ = new BehaviorSubject<ConceptNode[]>([]);
-  allCollections$ = new BehaviorSubject(<CollectionNode[]>([]));
+  allCollections$ = new BehaviorSubject<CollectionNode[]>([]);
 
   languages = ['fi', 'en', 'sv'];
 
