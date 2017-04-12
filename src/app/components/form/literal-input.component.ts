@@ -49,7 +49,12 @@ export class LiteralInputComponent {
   }
 
   get area() {
-    return this.property.meta.area;
+
+    if (this.property.meta.type.type !== 'string') {
+      throw new Error('Property is not string literal');
+    }
+
+    return this.property.meta.type.area;
   }
 
   get editing() {

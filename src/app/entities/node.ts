@@ -8,11 +8,11 @@ import * as moment from 'moment';
 import { getOrCreate } from '../utils/map';
 
 export type KnownNode = VocabularyNode
-  | ConceptNode
-  | TermNode
-  | CollectionNode
-  | GroupNode
-  | OrganizationNode;
+                      | ConceptNode
+                      | TermNode
+                      | CollectionNode
+                      | GroupNode
+                      | OrganizationNode;
 
 export class Property {
 
@@ -47,7 +47,7 @@ export class Property {
       }
     };
 
-    switch (meta.type) {
+    switch (meta.type.type) {
       case 'localizable':
         initializeLocalizable();
         break;

@@ -8,7 +8,7 @@ import { EditableService } from '../../services/editable.service';
   template: `
     <dl *ngIf="show">
       <dt><label [for]="property.meta.id">{{property.meta.label | translateValue}}</label></dt>
-      <dd [ngSwitch]="property.meta.type">
+      <dd [ngSwitch]="property.meta.type.type">
         <localized-input *ngSwitchCase="'localizable'" [property]="property" [relatedConcepts]="relatedConcepts"></localized-input>
         <literal-input *ngSwitchCase="'string'" [property]="property"></literal-input>
         <status-input *ngSwitchCase="'status'" [property]="property"></status-input>

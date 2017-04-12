@@ -1,5 +1,5 @@
 import { Localization } from './localization';
-import { NodeType } from './node-api';
+import { Attribute, NodeType } from './node-api';
 
 export interface NodeMetaInternal {
 
@@ -24,7 +24,8 @@ export interface TextAttributeInternal {
   domain: { id: NodeType, graph: { id: string } };
   permissions: any[];
   properties: {
-    prefLabel: Localization[]
+    prefLabel: Localization[],
+    type: Attribute[]
   };
 }
 

@@ -6,9 +6,43 @@ import { NodeType, NodeExternal } from './node-api';
 import { Node } from './node';
 import { v4 as uuid } from 'uuid';
 import * as moment from 'moment';
-import { requireDefined } from '../utils/object';
+import { assertNever, requireDefined } from '../utils/object';
 
-export type PropertyType = 'localizable' | 'status' | 'string';
+export type Cardinality = 'single' | 'multiple';
+export type TypeName = 'string' | 'localizable' | 'status';
+
+export type PropertyType = StringProperty
+                         | LocalizableProperty
+                         | StatusProperty;
+
+export type StringProperty = { type: 'string', cardinality: Cardinality, area: boolean };
+export type LocalizableProperty = { type: 'localizable', cardinality: Cardinality, area: boolean };
+export type StatusProperty = { type: 'status' };
+
+function createString(multiple: boolean, area: boolean): StringProperty {
+  return { type: 'string', cardinality: (multiple ? 'multiple' : 'single'), area };
+}
+
+function createLocalizable(single: boolean, area: boolean): LocalizableProperty {
+  return { type: 'localizable', cardinality: (single ? 'single' : 'multiple'), area };
+}
+
+function createStatus(): StatusProperty {
+  return { type: 'status' };
+}
+
+function createPropertyType(name: TypeName, attributes: Set<string>): PropertyType {
+  switch (name) {
+    case 'string':
+      return createString(attributes.has('multiple'), attributes.has('area'));
+    case 'localizable':
+      return createLocalizable(attributes.has('single'), attributes.has('area'));
+    case 'status':
+      return createStatus();
+    default:
+      return assertNever(name, 'Unsupported type: ' + name);
+  }
+}
 
 export class PropertyMeta {
 
@@ -16,15 +50,33 @@ export class PropertyMeta {
   label: Localizable;
   regex: string;
   index: number;
+  type: PropertyType;
 
   constructor(textAttribute: TextAttributeInternal) {
     this.id = textAttribute.id;
     this.label = asLocalizable(textAttribute.properties.prefLabel);
     this.regex = textAttribute.regex;
     this.index = textAttribute.index;
+
+    if (textAttribute.properties.type && textAttribute.properties.type.length > 0) {
+
+      const typeString = textAttribute.properties.type[0].value;
+
+      if (typeString.indexOf(':') !== -1) {
+
+        const [type, attributesString] = typeString.split(':');
+        const attributes = attributesString.split(',');
+
+        this.type = createPropertyType(type.trim() as TypeName, new Set<string>(attributes.map(a => a.trim())));
+      } else {
+        this.type = createPropertyType(typeString as TypeName, new Set<string>());
+      }
+    } else {
+      this.type = createPropertyType(this.resolveTypeName(), this.resolveAttributes());
+    }
   }
 
-  get type(): PropertyType {
+  private resolveTypeName(): 'localizable'|'status'|'string' {
     switch(this.id) {
       case 'prefLabel':
       case 'altLabel':
@@ -43,7 +95,9 @@ export class PropertyMeta {
     }
   }
 
-  get area() {
+  private resolveAttributes(): Set<string> {
+    const attrs = new Set<string>();
+
     switch(this.id) {
       case 'definition':
       case 'description':
@@ -51,15 +105,19 @@ export class PropertyMeta {
       case 'scopeNote':
       case 'historyNote':
       case 'changeNote':
-        return true;
-      default:
-        return false;
+        attrs.add('area');
     }
+
+    if (this.id === 'prefLabel') {
+      attrs.add('single');
+    }
+
+    return attrs;
   }
 
   get multiColumn() {
 
-    if (this.area) {
+    if ((this.type.type === 'string' || this.type.type === 'localizable') && this.type.area) {
       return false;
     }
 

@@ -69,7 +69,12 @@ export class LocalizedInputComponent {
   }
 
   get area() {
-    return this.property.meta.area;
+
+    if (this.property.meta.type.type !== 'localizable') {
+      throw new Error('Property is not localizable');
+    }
+
+    return this.property.meta.type.area;
   }
 
   get editing() {
