@@ -47,8 +47,7 @@ export class MetaModelService {
           newConcept.vocabulary = vocabulary.clone();
         }
 
-        const matchingTerm = newConcept.findTermForLanguage(this.languageService.language) || newConcept.terms.values[0];
-        matchingTerm.value = newConceptLabel;
+        newConcept.setPrimaryLabel(this.languageService.language, newConceptLabel);
 
         return newConcept;
       });
@@ -58,8 +57,7 @@ export class MetaModelService {
     return Observable.zip(this.translateService.get('New collection'), this.createEmptyNode<CollectionNode, 'Collection'>(vocabulary.graphId, nodeId, 'Collection', vocabulary.languages))
       .map(([newCollectionLabel, newCollection]) => {
 
-        const matchingLocalization = newCollection.findLocalizationForLanguage(this.languageService.language) || newCollection.anyLocalization();
-        matchingLocalization.value = newCollectionLabel;
+        newCollection.setPrimaryLabel(this.languageService.language, newCollectionLabel);
 
         return newCollection;
       });

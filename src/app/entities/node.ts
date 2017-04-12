@@ -70,8 +70,8 @@ export class Property {
     }
   }
 
-  localizable() {
-    return this.meta.type == 'localizable';
+  get multiColumn() {
+    return this.meta.multiColumn;
   }
 
   toAttributes(): Attribute[] {
@@ -463,10 +463,6 @@ export class ConceptNode extends Node<'Concept'> {
     return this.meta.hasReference('inScheme');
   }
 
-  hasTerms() {
-    return this.meta.hasReference('prefLabelXl');
-  }
-
   get vocabulary(): VocabularyNode {
     return requireSingle(this.references['inScheme'].values) as VocabularyNode;
   }
@@ -479,16 +475,46 @@ export class ConceptNode extends Node<'Concept'> {
     return this.getPropertyAsString('status');
   }
 
+  hasTerms() {
+    return this.meta.hasReference('prefLabelXl');
+  }
+
   get terms(): Reference<TermNode> {
     return this.references['prefLabelXl'];
   }
 
-  findTermForLanguage(language: string): TermNode|undefined {
+  setPrimaryLabel(language: string, value: string) {
+    if (this.hasTerms()) {
+      const matchingTerm = this.findTermForLanguage(language) || this.terms.values[0];
+      matchingTerm.value = value;
+    } else {
+      const matchingLocalization = this.findLabelLocalizationForLanguage(language) || this.anyLabelLocalization();
+      matchingLocalization.value = value;
+    }
+  }
+
+  private findTermForLanguage(language: string): TermNode|undefined {
     return this.terms.values.find(term => term.language === language);
+  }
+
+  private findLabelLocalizationForLanguage(language: string): Localization|undefined {
+    return (this.properties['prefLabel'].value as Localization[]).find(localization => localization.lang === language);
+  }
+
+  private anyLabelLocalization(): Localization {
+    return this.properties['prefLabel'].value[0] as Localization;
+  }
+
+  hasRelatedConcepts() {
+    return this.meta.hasReference('related');
   }
 
   get relatedConcepts(): Reference<ConceptNode> {
     return this.references['related'];
+  }
+
+  hasBroaderConcepts() {
+    return this.meta.hasReference('broader');
   }
 
   get broaderConcepts(): Reference<ConceptNode> {
@@ -497,6 +523,10 @@ export class ConceptNode extends Node<'Concept'> {
 
   get narrowerConcepts(): Referrer<ConceptNode> {
     return this.getNormalizedReferrer<ConceptNode>('broader');
+  }
+
+  hasIsPartOfConcepts() {
+    return this.meta.hasReference('isPartOf');
   }
 
   get isPartOfConcepts(): Reference<ConceptNode> {
@@ -549,11 +579,16 @@ export class CollectionNode extends Node<'Collection'> {
     return super.clone<CollectionNode>();
   }
 
-  findLocalizationForLanguage(language: string): Localization|undefined {
+  setPrimaryLabel(language: string, value: string) {
+    const matchingLocalization = this.findLabelLocalizationForLanguage(language) || this.anyLabelLocalization();
+    matchingLocalization.value = value;
+  }
+
+  private findLabelLocalizationForLanguage(language: string): Localization|undefined {
     return (this.properties['prefLabel'].value as Localization[]).find(localization => localization.lang === language);
   }
 
-  anyLocalization(): Localization {
+  private anyLabelLocalization(): Localization {
     return this.properties['prefLabel'].value[0] as Localization;
   }
 

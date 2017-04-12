@@ -15,7 +15,7 @@ import { EditableService } from '../../services/editable.service';
       
       <property *ngFor="let property of concept | properties: showEmpty"
                 class="col-md-12" 
-                [class.col-xl-6]="multiColumn && !property.meta.area" 
+                [class.col-xl-6]="multiColumn && property.multiColumn" 
                 [value]="property" 
                 [relatedConcepts]="relatedConcepts"></property>
       

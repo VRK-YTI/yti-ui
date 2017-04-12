@@ -25,12 +25,16 @@ export class PropertyMeta {
   }
 
   get type(): PropertyType {
-
     switch(this.id) {
       case 'prefLabel':
+      case 'altLabel':
+      case 'hiddenLabel':
       case 'definition':
       case 'description':
       case 'note':
+      case 'scopeNote':
+      case 'historyNote':
+      case 'changeNote':
         return 'localizable';
       case 'status':
         return 'status';
@@ -44,9 +48,28 @@ export class PropertyMeta {
       case 'definition':
       case 'description':
       case 'note':
+      case 'scopeNote':
+      case 'historyNote':
+      case 'changeNote':
         return true;
       default:
         return false;
+    }
+  }
+
+  get multiColumn() {
+
+    if (this.area) {
+      return false;
+    }
+
+    switch(this.id) {
+      case 'prefLabel':
+      case 'altLabel':
+      case 'hiddenLabel':
+        return false;
+      default:
+        return true;
     }
   }
 }

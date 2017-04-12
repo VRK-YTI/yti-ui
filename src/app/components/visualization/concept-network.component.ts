@@ -380,14 +380,18 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
 
   private addEdgeNodesForConcept(concept: ConceptNode) {
 
-    for (const relatedConcept of concept.relatedConcepts.values) {
-      this.addNodeIfDoesNotExist(this.createRelatedConceptNode(relatedConcept));
-      this.addEdgeIfDoesNotExist(this.createRelatedConceptEdge(concept, relatedConcept, concept.relatedConcepts.meta));
+    if (concept.hasRelatedConcepts()) {
+      for (const relatedConcept of concept.relatedConcepts.values) {
+        this.addNodeIfDoesNotExist(this.createRelatedConceptNode(relatedConcept));
+        this.addEdgeIfDoesNotExist(this.createRelatedConceptEdge(concept, relatedConcept, concept.relatedConcepts.meta));
+      }
     }
 
-    for (const broaderConcept of concept.broaderConcepts.values) {
-      this.addNodeIfDoesNotExist(this.createBroaderConceptNode(broaderConcept));
-      this.addEdgeIfDoesNotExist(this.createBroaderConceptEdge(concept, broaderConcept, concept.broaderConcepts.meta));
+    if (concept.hasBroaderConcepts()) {
+      for (const broaderConcept of concept.broaderConcepts.values) {
+        this.addNodeIfDoesNotExist(this.createBroaderConceptNode(broaderConcept));
+        this.addEdgeIfDoesNotExist(this.createBroaderConceptEdge(concept, broaderConcept, concept.broaderConcepts.meta));
+      }
     }
 
     for (const {meta, nodes} of concept.narrowerConcepts.valuesByMeta) {
@@ -397,9 +401,11 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
       }
     }
 
-    for (const isPartOfConcept of concept.isPartOfConcepts.values) {
-      this.addNodeIfDoesNotExist(this.createIsPartOfConceptNode(isPartOfConcept));
-      this.addEdgeIfDoesNotExist(this.createIsPartOfConceptEdge(concept, isPartOfConcept, concept.isPartOfConcepts.meta));
+    if (concept.hasIsPartOfConcepts()) {
+      for (const isPartOfConcept of concept.isPartOfConcepts.values) {
+        this.addNodeIfDoesNotExist(this.createIsPartOfConceptNode(isPartOfConcept));
+        this.addEdgeIfDoesNotExist(this.createIsPartOfConceptEdge(concept, isPartOfConcept, concept.isPartOfConcepts.meta));
+      }
     }
 
     for (const {meta, nodes} of concept.partOfThisConcepts.valuesByMeta) {
@@ -412,10 +418,10 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
 
   private removeEdgeNodesFromConcept(concept: ConceptNode) {
     this.removeEdgeNodesFromNode(concept.id, collectProperties([
-      ...concept.relatedConcepts.values,
-      ...concept.broaderConcepts.values,
+      ...concept.hasRelatedConcepts() ? concept.relatedConcepts.values : [],
+      ...concept.hasBroaderConcepts() ? concept.broaderConcepts.values : [],
       ...concept.narrowerConcepts.values,
-      ...concept.isPartOfConcepts.values,
+      ...concept.hasIsPartOfConcepts() ? concept.isPartOfConcepts.values : [],
       ...concept.partOfThisConcepts.values
     ], concept => concept.id));
   }
