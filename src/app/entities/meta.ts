@@ -8,8 +8,17 @@ import { v4 as uuid } from 'uuid';
 import * as moment from 'moment';
 import { assertNever, requireDefined } from '../utils/object';
 
-export type Cardinality = 'single' | 'multiple';
-export type TypeName = 'string' | 'localizable' | 'status';
+export type Cardinality = 'single'
+                        | 'multiple';
+
+export type TypeName = 'string'
+                     | 'localizable'
+                     | 'status';
+
+export type ReferenceType = 'PrimaryTerm'
+                          | 'Synonym'
+                          | 'Concept'
+                          | 'Other';
 
 export type PropertyType = StringProperty
                          | LocalizableProperty
@@ -44,40 +53,33 @@ function createPropertyType(name: TypeName, attributes: Set<string>): PropertyTy
   }
 }
 
-export class PropertyMeta {
+function parseTypeAndAttributes(textAttribute: TextAttributeInternal): [TypeName, string[]] {
 
-  id: string;
-  label: Localizable;
-  regex: string;
-  index: number;
-  type: PropertyType;
+  function findTypePropertyValue(): string {
 
-  constructor(textAttribute: TextAttributeInternal) {
-    this.id = textAttribute.id;
-    this.label = asLocalizable(textAttribute.properties.prefLabel);
-    this.regex = textAttribute.regex;
-    this.index = textAttribute.index;
+    const property = textAttribute.properties.type;
 
-    if (textAttribute.properties.type && textAttribute.properties.type.length > 0) {
-
-      const typeString = textAttribute.properties.type[0].value;
-
-      if (typeString.indexOf(':') !== -1) {
-
-        const [type, attributesString] = typeString.split(':');
-        const attributes = attributesString.split(',');
-
-        this.type = createPropertyType(type.trim() as TypeName, new Set<string>(attributes.map(a => a.trim())));
-      } else {
-        this.type = createPropertyType(typeString as TypeName, new Set<string>());
-      }
+    if (property && property.length > 0) {
+      return property[0].value;
     } else {
-      this.type = createPropertyType(this.resolveTypeName(), this.resolveAttributes());
+      return '';
     }
   }
 
-  private resolveTypeName(): 'localizable'|'status'|'string' {
-    switch(this.id) {
+  const typePropertyValue = findTypePropertyValue();
+
+  if (typePropertyValue.indexOf(':') !== -1) {
+    const [type, attributesString] = typePropertyValue.split(':');
+    return [type.trim() as TypeName, attributesString.split(',').map(a => a.trim())];
+  } else {
+    return [typePropertyValue.trim() as TypeName, []];
+  }
+}
+
+function createDefaultPropertyType(propertyId: string) {
+
+  function resolveTypeName(): TypeName {
+    switch(propertyId) {
       case 'prefLabel':
       case 'altLabel':
       case 'hiddenLabel':
@@ -95,10 +97,10 @@ export class PropertyMeta {
     }
   }
 
-  private resolveAttributes(): Set<string> {
+  function resolveAttributes(): Set<string> {
     const attrs = new Set<string>();
 
-    switch(this.id) {
+    switch(propertyId) {
       case 'definition':
       case 'description':
       case 'note':
@@ -108,11 +110,37 @@ export class PropertyMeta {
         attrs.add('area');
     }
 
-    if (this.id === 'prefLabel') {
+    if (propertyId === 'prefLabel') {
       attrs.add('single');
     }
 
     return attrs;
+  }
+
+  return createPropertyType(resolveTypeName(), resolveAttributes());
+}
+
+export class PropertyMeta {
+
+  id: string;
+  label: Localizable;
+  regex: string;
+  index: number;
+  type: PropertyType;
+
+  constructor(textAttribute: TextAttributeInternal) {
+    this.id = textAttribute.id;
+    this.label = asLocalizable(textAttribute.properties.prefLabel);
+    this.regex = textAttribute.regex;
+    this.index = textAttribute.index;
+
+    const [type, attributes] = parseTypeAndAttributes(textAttribute);
+
+    if (type) {
+      this.type = createPropertyType(type, new Set<string>(attributes));
+    } else {
+      this.type = createDefaultPropertyType(this.id);
+    }
   }
 
   get multiColumn() {
@@ -131,8 +159,6 @@ export class PropertyMeta {
     }
   }
 }
-
-export type ReferenceType = 'PrimaryTerm' | 'Synonym' | 'Concept' | 'Other';
 
 export class ReferenceMeta {
 
