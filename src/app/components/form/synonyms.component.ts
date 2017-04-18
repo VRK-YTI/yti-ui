@@ -9,7 +9,7 @@ import { EditableService } from '../../services/editable.service';
     
     <div class="clearfix" *ngIf="editing">
       <div ngbDropdown class="add-button">
-        <button class="btn btn-default" ngbDropdownToggle ngbTooltip="{{'Add term' | translate}}"><i class="fa fa-plus"></i></button>
+        <button class="btn btn-default" ngbDropdownToggle ngbTooltip="{{'Add' | translate}} {{termReference.meta.label | translateValue | lowercase}}"><i class="fa fa-plus"></i></button>
         <div class="dropdown-menu">
           <button class="dropdown-item" *ngFor="let language of termReference.languages" (click)="addTerm(language)">{{language | uppercase}}</button>
         </div>
