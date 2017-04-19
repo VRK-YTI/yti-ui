@@ -205,7 +205,9 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
           }
           break;
         case 'noselect':
-          // nop
+          if (this.rootNode && !this.rootNode.persistent) {
+            this.resetRootNode(null);
+          }
           break;
         default:
           assertNever(action, 'Unsupported action: ' + action);
