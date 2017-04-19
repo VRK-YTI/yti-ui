@@ -99,6 +99,7 @@ export class TermedService {
 
     const params = new URLSearchParams();
     params.append('batch', 'true');
+    params.append('sync', 'true');
 
     return this.http.delete('/api/nodes', { search: params, body: nodeIds });
   }
@@ -107,6 +108,7 @@ export class TermedService {
 
     const params = new URLSearchParams();
     params.append('batch', 'true');
+    params.append('sync', 'true');
 
     return this.http.post('/api/nodes', nodes, { search: params });
   }
