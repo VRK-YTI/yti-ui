@@ -307,12 +307,12 @@ export class NodeMeta {
           id: this.graphId
         }
       },
-      code: '',
+      code: undefined,
       createdBy: '',
       createdDate: moment().toISOString(),
       lastModifiedBy: '',
       lastModifiedDate: moment().toISOString(),
-      uri: '',
+      uri: undefined,
       properties: {},
       references: {},
       referrers: {}

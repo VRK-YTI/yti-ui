@@ -4,6 +4,7 @@ import { ConceptNode } from '../../entities/node';
 import { logUnsupportedNodes, removeWhiteSpaceNodes, children } from '../../utils/markdown';
 import { first } from '../../utils/array';
 import { Localizable } from '../../entities/localization';
+import { isDefined } from '../../utils/object';
 
 const supportedNodeTypes = ['document', 'paragraph', 'link', 'text'];
 const parser = new Parser();
@@ -60,7 +61,7 @@ export class MarkdownLinksElementComponent {
 
   private getTargetConceptNode(node: MarkdownNode): ConceptNode|null {
     // FIXME: proper mapping
-    return first(this.relatedConcepts, concept => node.destination.indexOf(concept.code) !== -1);
+    return first(this.relatedConcepts, concept => isDefined(concept.code) && node.destination.indexOf(concept.code) !== -1);
   }
 
   link(node: MarkdownNode) {

@@ -28,12 +28,12 @@ export interface Attribute {
 
 export interface NodeExternal<T extends NodeType> extends Identifier<T> {
 
-  code: string;
+  code?: string;
   createdBy: string;
   createdDate: string;
   lastModifiedBy: string;
   lastModifiedDate: string;
-  uri: string;
+  uri?: string;
 
   properties: { [key: string]: Attribute[] };
   references: { [key: string]: NodeExternal<any>[] };
@@ -42,12 +42,12 @@ export interface NodeExternal<T extends NodeType> extends Identifier<T> {
 
 export interface NodeInternal<T extends NodeType> extends Identifier<T> {
 
-  code: string;
+  code?: string;
   createdBy: string;
   createdDate: string;
   lastModifiedBy: string;
   lastModifiedDate: string;
-  uri: string;
+  uri?: string;
 
   properties: { [key: string]: Attribute[] };
   references: { [key: string]: Identifier<any>[] };
