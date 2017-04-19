@@ -1,5 +1,5 @@
 import { ReferenceAttributeInternal, TextAttributeInternal, NodeMetaInternal } from './meta-api';
-import { comparingNumber } from '../utils/comparator';
+import { comparingPrimitive } from '../utils/comparator';
 import { any, contains, groupBy, index, normalizeAsArray } from '../utils/array';
 import { asLocalizable, Localizable } from './localization';
 import { NodeType, NodeExternal } from './node-api';
@@ -280,11 +280,11 @@ export class NodeMeta {
     this.uri = metaNode.uri;
 
     this.properties = normalizeAsArray(metaNode.textAttributes)
-      .sort(comparingNumber<TextAttributeInternal>(x => x.index))
+      .sort(comparingPrimitive<TextAttributeInternal>(x => x.index))
       .map(x => new PropertyMeta(x));
 
     this.references = normalizeAsArray(metaNode.referenceAttributes)
-      .sort(comparingNumber<ReferenceAttributeInternal>(x => x.index))
+      .sort(comparingPrimitive<ReferenceAttributeInternal>(x => x.index))
       .map(x => new ReferenceMeta(x));
   }
 

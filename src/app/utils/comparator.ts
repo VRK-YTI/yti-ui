@@ -19,10 +19,6 @@ export function comparingPrimitive<T>(propertyExtractor: (item: T) => Optional<s
   return makeChainable(property(propertyExtractor, optional(primitiveComparator)));
 }
 
-export const comparingNumber = comparingPrimitive;
-export const comparingString = comparingPrimitive;
-export const comparingBoolean = comparingPrimitive;
-
 export function comparingLocalizable<T>(localizer: Localizer, propertyExtractor: (item: T) => Optional<Localizable>): ChainableComparator<T> {
   return makeChainable(property(propertyExtractor, optional(localized(localizer, stringComparatorIgnoringCase))));
 }

@@ -1,7 +1,7 @@
 import * as levenshtein from 'fast-levenshtein';
 import { Localizable } from '../entities/localization';
 import { isDefined } from './object';
-import { Comparator, comparingNumber, comparingLocalizable } from './comparator';
+import { Comparator, comparingPrimitive, comparingLocalizable } from './comparator';
 import { Localizer } from '../services/language.service';
 import { all } from './array';
 
@@ -39,7 +39,7 @@ export function applyFilters<T>(searchResults: TextAnalysis<T>[], filters: Searc
 }
 
 export function scoreComparator<S>() {
-  return comparingNumber<TextAnalysis<S>>(item => item.matchScore ? item.matchScore : item.score);
+  return comparingPrimitive<TextAnalysis<S>>(item => item.matchScore ? item.matchScore : item.score);
 }
 
 export function labelComparator<S extends { label: Localizable }>(localizer: Localizer) {
