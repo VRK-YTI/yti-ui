@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-04-19 10:52+0300\n"
+"PO-Revision-Date: 2017-04-19 15:36+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -37,6 +37,9 @@ msgstr "Kyllä"
 msgid "Cancel"
 msgstr "Peruuta"
 
+msgid "Close"
+msgstr "Sulje"
+
 msgid "Created at"
 msgstr "Luotu"
 
@@ -55,11 +58,11 @@ msgstr "Hae käsitevalikoimaa…"
 msgid "Add collection"
 msgstr "Lisää käsitevalikoima"
 
-msgid "Order by modified date"
-msgstr "Järjestä muokkausajan mukaan"
-
 msgid "Add concept"
 msgstr "Lisää käsite"
+
+msgid "Order by modified date"
+msgstr "Järjestä muokkausajan mukaan"
 
 msgid "Filter results"
 msgstr "Rajaa hakutuloksia"
@@ -137,8 +140,8 @@ msgid "Frontpage information"
 msgstr ""
 "Välineistössä julkaistut määritykset ovat vapaasti selattavissa. Sisältöjä "
 "sanastoihin tuottavat eri kohdealueiden asiantuntijat.\n"
-"Huom: tämä verkkopalvelu on Sanastoeditorin kehitysversio ja sisällöt "
-"eivät ole virallisia versioita sanastoista, vaan testiaineistoja."
+"Huom: tämä verkkopalvelu on Sanastoeditorin kehitysversio ja sisällöt eivät "
+"ole virallisia versioita sanastoista, vaan testiaineistoja."
 
 msgid "Not implemented yet!"
 msgstr "Ei vielä toteutettu!"
@@ -155,11 +158,11 @@ msgstr "uusi käsite"
 msgid "New collection"
 msgstr "uusi käsitevalikoima"
 
+msgid "Vocabulary type"
+msgstr "Sanastotyyppi"
+
 msgid "Front page"
 msgstr "Etusivu"
-
-msgid "Unstable"
-msgstr "Keskeneräinen"
 
 msgid "Draft"
 msgstr "Luonnos"
@@ -173,14 +176,20 @@ msgstr "Käytöstä poistunut"
 msgid "Suggestion"
 msgstr "Ehdotus"
 
-msgid "Vocabulary type"
-msgstr "Sanastotyyppi"
+msgid "Unstable"
+msgstr "Keskeneräinen"
 
 msgid "Group"
 msgstr "Toimiala / Ryhmä"
 
 msgid "Organization"
 msgstr "Organisaatio"
+
+msgid "Submit error"
+msgstr "Toiminnossa tapahtui virhe"
+
+msgid "Unexpected error"
+msgstr "Tapahtui odottamaton virhe"
 
 #~ msgid "Add term"
 #~ msgstr "Lisää termi"

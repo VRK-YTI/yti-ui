@@ -28,6 +28,9 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
+msgid "Close"
+msgstr ""
+
 msgid "Created at"
 msgstr ""
 
@@ -46,10 +49,10 @@ msgstr ""
 msgid "Add collection"
 msgstr ""
 
-msgid "Order by modified date"
+msgid "Add concept"
 msgstr ""
 
-msgid "Add concept"
+msgid "Order by modified date"
 msgstr ""
 
 msgid "Filter results"
@@ -142,10 +145,10 @@ msgstr ""
 msgid "New collection"
 msgstr ""
 
-msgid "Front page"
+msgid "Vocabulary type"
 msgstr ""
 
-msgid "Unstable"
+msgid "Front page"
 msgstr ""
 
 msgid "Draft"
@@ -160,11 +163,17 @@ msgstr ""
 msgid "Suggestion"
 msgstr ""
 
-msgid "Vocabulary type"
+msgid "Unstable"
 msgstr ""
 
 msgid "Group"
 msgstr ""
 
 msgid "Organization"
+msgstr ""
+
+msgid "Submit error"
+msgstr ""
+
+msgid "Unexpected error"
 msgstr ""

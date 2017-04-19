@@ -66,6 +66,7 @@ import { DeleteConfirmationModal, DeleteConfirmationModalService } from './compo
 import { CollectionComponent } from './components/concept/collection.component';
 import { CollectionListComponent } from './components/concept/collection-list.component';
 import { SynonymsComponent } from './components/form/synonyms.component';
+import { ErrorModal, ErrorModalService } from './components/common/error.modal';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json-loader!po-loader?format=mf!../../po/fi.po'),
@@ -136,6 +137,7 @@ const appRoutes: Routes = [
     DividerComponent,
     SearchConceptModal,
     DeleteConfirmationModal,
+    ErrorModal,
     MetaModelValidator,
     LanguageValidator,
     LocalizationValidator,
@@ -152,6 +154,7 @@ const appRoutes: Routes = [
   entryComponents: [
     SearchConceptModal,
     DeleteConfirmationModal,
+    ErrorModal,
   ],
   imports: [
     BrowserModule,
@@ -171,6 +174,7 @@ const appRoutes: Routes = [
     LocationService,
     SearchConceptModalService,
     DeleteConfirmationModalService,
+    ErrorModalService,
     SessionService,
     ElasticSearchService
   ],

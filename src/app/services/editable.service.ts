@@ -1,5 +1,6 @@
 import { BehaviorSubject } from 'rxjs';
 import { Injectable } from '@angular/core';
+import { ErrorModalService } from '../components/common/error.modal';
 
 @Injectable()
 export class EditableService {
@@ -11,6 +12,9 @@ export class EditableService {
   onSave: () => Promise<any>|void;
   onRemove: () => Promise<any>|void;
   onCanceled: () => void;
+
+  constructor(private errorModalService: ErrorModalService) {
+  }
 
   get editing() {
     return this.editing$.getValue();
@@ -44,10 +48,11 @@ export class EditableService {
 
     this.saving$.next(true);
 
-    Promise.resolve(this.onSave()).then(() => {
+    return Promise.resolve(this.onSave()).then(() => {
       this.saving$.next(false);
       this.editing$.next(false);
     }, err => {
+      this.errorModalService.openSubmitError(err);
       this.saving$.next(false);
     });
   }
@@ -62,6 +67,7 @@ export class EditableService {
     Promise.resolve(this.onRemove()).then(() => {
       this.removing$.next(false);
     }, err => {
+      this.errorModalService.openSubmitError(err);
       this.removing$.next(false);
     });
   }
