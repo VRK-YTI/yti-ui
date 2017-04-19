@@ -2,6 +2,27 @@
 
 $language-size: 32px;
 
+.add-button {
+
+  float: right;
+  display: inline-block;
+  margin-top: -34px;
+  margin-bottom: 5px;
+
+  button {
+    padding: 5px 8px;
+  }
+
+  i {
+    padding-right: 5px;
+  }
+}
+
+.remove-button {
+  float: right;
+  padding: 5px 8px;
+}
+
 div.localized {
 
   display: inline-block;
@@ -27,6 +48,11 @@ div.localized {
     min-height: $language-size;
     padding-left: 10px;
     line-height: calc(#{$language-size} - 4px);
+
+    &.removable {
+      float: left;
+      width: calc(100% - #{$language-size + 32});
+    }
 
     div.form-group {
       margin-bottom: 0;

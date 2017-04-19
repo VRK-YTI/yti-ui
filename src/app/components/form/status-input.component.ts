@@ -8,17 +8,17 @@ import { statuses } from '../../entities/constants';
   selector: 'status-input',
   styleUrls: ['./status-input.component.scss'],
   template: `
-    <span *ngIf="!editing">{{property.value | translate}}</span>
+    <span *ngIf="!editing">{{property.singleLiteralValue | translate}}</span>
     <div *ngIf="editing" class="form-group" [ngClass]="{'has-danger': valueInError}">
       <div>
-        <select class="form-control" 
+        <select class="form-control"
                 [id]="property.meta.id"
-                [(ngModel)]="property.value"
+                [(ngModel)]="property.singleLiteralValue"
                 #ngModel="ngModel">
-          <option *ngFor="let status of statuses" [ngValue]="status">{{status | translate}}</option>        
+          <option *ngFor="let status of statuses" [ngValue]="status">{{status | translate}}</option>
         </select>
-             
-         <error-messages [control]="ngModel.control"></error-messages>
+
+        <error-messages [control]="ngModel.control"></error-messages>
       </div>
     </div>
   `

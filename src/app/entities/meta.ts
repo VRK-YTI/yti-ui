@@ -143,6 +143,24 @@ export class PropertyMeta {
     }
   }
 
+  get typeAsString(): StringProperty {
+
+    if (this.type.type !== 'string') {
+      throw new Error('Property is not string literal');
+    }
+
+    return this.type;
+  }
+
+  get typeAsLocalizable(): LocalizableProperty {
+
+    if (this.type.type !== 'localizable') {
+      throw new Error('Property is not localizable');
+    }
+
+    return this.type;
+  }
+
   get multiColumn() {
 
     if ((this.type.type === 'string' || this.type.type === 'localizable') && this.type.area) {

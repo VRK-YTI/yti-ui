@@ -2,7 +2,10 @@ import { asLocalizable, Localizable, combineLocalizables, Localization } from '.
 import { requireDefined, assertNever } from '../utils/object';
 import { normalizeAsArray, any, requireSingle, all, remove } from '../utils/array';
 import { NodeExternal, NodeType, Attribute, Identifier, NodeInternal, VocabularyNodeType } from './node-api';
-import { PropertyMeta, ReferenceMeta, NodeMeta, MetaModel } from './meta';
+import {
+  PropertyMeta, ReferenceMeta, NodeMeta, MetaModel, LocalizableProperty, StringProperty,
+  StatusProperty
+} from './meta';
 import { Moment } from 'moment';
 import * as moment from 'moment';
 import { getOrCreate } from '../utils/map';
@@ -16,70 +19,111 @@ export type KnownNode = VocabularyNode
 
 export class Property {
 
-  value: string|Localization[];
+  attributes: Attribute[];
 
   constructor(attributes: Attribute[], public meta: PropertyMeta, public languages: string[]) {
 
-    const initializeLocalizable = () => {
-      this.value = [];
-
-      for (const language of languages) {
-        const attribute = attributes.find(a => a.lang === language);
-
-        if (attribute) {
-          this.value.push(attribute);
-        } else {
-          this.value.push({ lang: language, value: '' });
-        }
+    const initializeLocalizable = (localizableProperty: LocalizableProperty) => {
+      if (localizableProperty.cardinality === 'single') {
+        this.attributes = languages.map(lang => attributes.find(a => a.lang === lang) || this.createLocalizedAttribute(lang, ''));
+      } else {
+        this.attributes = attributes;
       }
     };
 
-    const initializeString = (defaultValue = '') => {
+    const initializeString = (stringProperty: StringProperty, defaultValue = '') => {
+
+      if (stringProperty.cardinality === 'single') {
+        switch (attributes.length) {
+          case 0:
+            this.attributes = [this.createLiteralAttribute(defaultValue)];
+            break;
+          case 1:
+            this.attributes = attributes;
+            break;
+          default:
+            throw new Error('Literal with multiple values: ' + attributes.map(a => a.value).join(','));
+        }
+      } else {
+        this.attributes = attributes;
+      }
+    };
+
+    const initializeStatus = (statusProperty: StatusProperty, defaultValue = 'Unstable') => {
+
       switch (attributes.length) {
         case 0:
-          this.value = defaultValue;
+          this.attributes = [this.createLiteralAttribute(defaultValue)];
           break;
         case 1:
-          this.value = attributes[0].value || defaultValue;
+          this.attributes = attributes[0].value ? attributes : [this.createLiteralAttribute(defaultValue)];
           break;
         default:
-          throw new Error('Literal with multiple values: ' + attributes.map(a => a.value).join(','));
+          throw new Error('Status with multiple values: ' + attributes.map(a => a.value).join(','));
       }
     };
 
     switch (meta.type.type) {
       case 'localizable':
-        initializeLocalizable();
+        initializeLocalizable(meta.type);
         break;
       case 'status':
-        initializeString('Unstable');
+        initializeStatus(meta.type);
         break;
       case 'string':
-        initializeString();
+        initializeString(meta.type);
         break;
       default:
         assertNever(meta.type, 'Unknown meta type: ' + meta.type);
     }
   }
 
+  private createLiteralAttribute(value: string): Attribute {
+    return { lang: '', value, regex: this.meta.regex };
+  }
+
+  private createLocalizedAttribute(lang: string, value: string): Attribute {
+    return { lang, value, regex: this.meta.regex };
+  }
+
+  newLiteral(value: string = '') {
+    this.attributes.push(this.createLiteralAttribute(value));
+  }
+
+  newLocalization(language: string, value = '') {
+    this.attributes.push(this.createLocalizedAttribute(language, value));
+  }
+
+  remove(attribute: Attribute) {
+    remove(this.attributes, attribute);
+  }
+
+  get singleLiteralValue() {
+    return this.attributes[0].value;
+  }
+
+  set singleLiteralValue(value: string) {
+    this.attributes[0].value = value;
+  }
+
+  asValues() {
+    return this.attributes.map(attr => attr.value.trim()).filter(v => !!v);
+  }
+
+  asLocalizable() {
+    return asLocalizable(this.attributes);
+  }
+
+  asString() {
+    return this.asValues().join(',');
+  }
+
   get empty() {
-    if (typeof this.value === 'string') {
-      return !this.value.trim();
-    } else {
-      return !any(this.value, localization => !!localization.value.trim());
-    }
+    return !any(this.attributes, localization => !!localization.value.trim());
   }
 
   get multiColumn() {
     return this.meta.multiColumn;
-  }
-
-  toAttributes(): Attribute[] {
-    if (typeof this.value === 'string') {
-      return [{ lang: '', regex: this.meta.regex, value: this.value }];
-    } else {
-      return this.value.map(value => Object.assign({ regex: this.meta.regex }, value));
-    }
   }
 }
 
@@ -239,7 +283,7 @@ export class Node<T extends NodeType> {
       const result: { [key: string]: Attribute[] } = {};
 
       for (const [key, property] of Object.entries(this.properties)) {
-        result[key] = property.toAttributes();
+        result[key] = property.attributes;
       }
 
       return result;
@@ -384,24 +428,20 @@ export class Node<T extends NodeType> {
     return this.referrers[referenceId] as Referrer<N> || new Referrer<N>(referenceId, [], this.metaModel, this.languages);
   }
 
+  getProperty(property: string): Property {
+    return requireDefined(this.properties[property], 'Property not found: ' + property);
+  }
+
   getPropertyAsLocalizable(property: string): Localizable {
-    const propertyValue = requireDefined(this.properties[property]).value;
-
-    if (typeof propertyValue === 'string') {
-      throw new Error('Property must be localizable');
-    }
-
-    return asLocalizable(propertyValue);
+    return this.getProperty(property).asLocalizable();
   }
 
   getPropertyAsString(property: string): string {
-    const propertyValue = requireDefined(this.properties[property], 'Property not found: ' + property).value;
+    return this.getProperty(property).asString();
+  }
 
-    if (typeof propertyValue !== 'string') {
-      throw new Error('Property must be string');
-    }
-
-    return propertyValue;
+  getPropertyAsValues(property: string): string[] {
+    return this.getProperty(property).asValues();
   }
 }
 
@@ -499,11 +539,11 @@ export class ConceptNode extends Node<'Concept'> {
   }
 
   private findLabelLocalizationForLanguage(language: string): Localization|undefined {
-    return (this.properties['prefLabel'].value as Localization[]).find(localization => localization.lang === language);
+    return (this.properties['prefLabel'].attributes as Localization[]).find(localization => localization.lang === language);
   }
 
   private anyLabelLocalization(): Localization {
-    return this.properties['prefLabel'].value[0] as Localization;
+    return this.properties['prefLabel'].attributes[0] as Localization;
   }
 
   hasRelatedConcepts() {
@@ -566,7 +606,7 @@ export class TermNode extends Node<'Term'> {
   }
 
   get localization(): Localization {
-    return this.properties['prefLabel'].value[0] as Localization;
+    return this.properties['prefLabel'].attributes[0] as Localization;
   }
 }
 
@@ -586,11 +626,11 @@ export class CollectionNode extends Node<'Collection'> {
   }
 
   private findLabelLocalizationForLanguage(language: string): Localization|undefined {
-    return (this.properties['prefLabel'].value as Localization[]).find(localization => localization.lang === language);
+    return (this.properties['prefLabel'].attributes).find(localization => localization.lang === language);
   }
 
   private anyLabelLocalization(): Localization {
-    return this.properties['prefLabel'].value[0] as Localization;
+    return this.properties['prefLabel'].attributes[0];
   }
 
   get label(): Localizable {

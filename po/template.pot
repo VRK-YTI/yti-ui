@@ -91,6 +91,9 @@ msgstr ""
 msgid "Add"
 msgstr ""
 
+msgid "No values yet"
+msgstr ""
+
 msgid "Remove term"
 msgstr ""
 
