@@ -65,7 +65,7 @@ export class CollectionComponent implements OnDestroy {
       if (collection) {
         if (!collection.persistent && !editableService.editing) {
           editableService.edit();
-        } else if (editableService.editing) {
+        } else if (collection.persistent && editableService.editing) {
           editableService.cancel();
         }
       }

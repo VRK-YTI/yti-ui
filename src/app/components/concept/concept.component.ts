@@ -52,7 +52,7 @@ export class ConceptComponent implements OnDestroy {
     this.subscriptionToClean.push(this.conceptViewModel.conceptSelect$.subscribe(concept => {
       if (!concept.persistent && !editableService.editing) {
         editableService.edit();
-      } else if (editableService.editing) {
+      } else if (concept.persistent && editableService.editing) {
         editableService.cancel();
       }
     }));
