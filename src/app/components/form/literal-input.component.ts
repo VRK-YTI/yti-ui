@@ -40,6 +40,7 @@ import { Attribute } from '../../entities/node-api';
              <textarea class="form-control"
                        [id]="property.meta.id + index"
                        autocomplete="off"
+                       rows="4"
                        [(ngModel)]="attribute.value"
                        [validateMeta]="property.meta"
                        #areaNgModel="ngModel"></textarea>
