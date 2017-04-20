@@ -1,12 +1,13 @@
 import { Component, Input } from '@angular/core';
 import { EditableService } from '../../services/editable.service';
 import { NgForm } from '@angular/forms';
+import { UserService } from '../../services/user.service';
 
 @Component({
   styleUrls: ['./editable-buttons.component.scss'],
   selector: 'editable-buttons',
   template: `
-    <div class="top-actions">
+    <div class="top-actions" *ngIf="isLoggedIn()">
       <button type="button" 
               ngbTooltip="{{'Cancel edit' | translate}}" placement="left"
               #cancelTooltip="ngbTooltip"
@@ -54,7 +55,13 @@ export class EditableButtonsComponent {
 
   @Input('canRemove') canRemove: boolean;
 
-  constructor(public form: NgForm, private editableService: EditableService) {
+  constructor(public form: NgForm,
+              private editableService: EditableService,
+              private userService: UserService) {
+  }
+
+  isLoggedIn() {
+    return this.userService.isLoggedIn();
   }
 
   get editing() {

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { ConceptViewModelService } from '../../services/concept.view.service';
 import { v4 as uuid } from 'uuid';
 import { Router } from '@angular/router';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'concept-hierarchy',
@@ -11,13 +12,13 @@ import { Router } from '@angular/router';
       <div class="col-lg-12 tree">
 
         <div class="actions">
-          <button class="button btn-default btn-add-new" (click)="addConcept()">
+          <button class="button btn-default btn-add-new" (click)="addConcept()" *ngIf="canAddConcept()">
             <i class="fa fa-plus"></i>
             <span translate>Add concept</span>
           </button>
         </div>
-        
-        <ul>
+
+        <ul [ngClass]="{'has-button': canAddConcept()}">
           <li *ngFor="let concept of topConcepts | async">
             <concept-hierarchy-node [concept]="concept"></concept-hierarchy-node>
           </li>
@@ -28,8 +29,13 @@ import { Router } from '@angular/router';
 })
 export class ConceptHierarchyComponent {
 
-  constructor(private router: Router,
+  constructor(private userService: UserService,
+              private router: Router,
               private conceptViewModel: ConceptViewModelService) {
+  }
+
+  canAddConcept() {
+    return this.userService.isLoggedIn();
   }
 
   get topConcepts() {

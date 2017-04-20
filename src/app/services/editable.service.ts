@@ -1,7 +1,9 @@
 import { BehaviorSubject } from 'rxjs';
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { ErrorModalService } from '../components/common/error.modal';
 import { ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { UserService } from './user.service';
+import { Subscription } from 'rxjs/Subscription';
 
 export interface EditingComponent {
   isEditing(): boolean;
@@ -9,7 +11,7 @@ export interface EditingComponent {
 }
 
 @Injectable()
-export class EditableService {
+export class EditableService implements OnDestroy {
 
   editing$ = new BehaviorSubject<boolean>(false);
   saving$ = new BehaviorSubject<boolean>(false);
@@ -19,7 +21,20 @@ export class EditableService {
   onRemove: () => Promise<any>|void;
   onCanceled: () => void;
 
-  constructor(private errorModalService: ErrorModalService) {
+  private loggedInSubscription: Subscription;
+
+  constructor(private errorModalService: ErrorModalService,
+              private userService: UserService) {
+
+    this.loggedInSubscription = userService.loggedIn$.subscribe(loggedIn => {
+      if (!loggedIn) {
+        this.cancel();
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    this.loggedInSubscription.unsubscribe();
   }
 
   get editing() {

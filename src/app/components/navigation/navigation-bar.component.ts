@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { LanguageService, Language } from '../../services/language.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'navigation-bar',
@@ -14,6 +15,15 @@ import { LanguageService, Language } from '../../services/language.service';
           <li class="nav-item" *ngFor="let language of languages">
             <a class="nav-link" (click)="setLanguage(language.code)">{{language.name}}</a>
           </li>
+          <li class="nav-item" *ngIf="!isLoggedIn()">
+            <a class="nav-link" (click)="logIn()" translate>Login</a>
+          </li>
+          <li class="nav-item bg-inverse" *ngIf="isLoggedIn()" ngbDropdown>
+            <a class="dropdown-toggle nav-link" ngbDropdownToggle>{{username}}</a>
+            <div class="dropdown-menu dropdown-menu-right">
+              <a class="dropdown-item" (click)="logOut()" translate>Logout</a>
+            </div>
+          </li>
         </ul>
       </div>
     </nav>
@@ -26,10 +36,27 @@ export class NavigationBarComponent {
     { code: 'en' as Language, name: 'In english' }
   ];
 
-  constructor(private languageService: LanguageService) {
+  constructor(private languageService: LanguageService,
+              private userService: UserService) {
   }
 
   setLanguage(language: Language) {
     this.languageService.language = language;
+  }
+
+  logIn() {
+    this.userService.logInAsAdmin();
+  }
+
+  logOut() {
+    this.userService.logout();
+  }
+
+  get username() {
+    return this.userService.user!.name;
+  }
+
+  isLoggedIn() {
+    return this.userService.isLoggedIn();
   }
 }

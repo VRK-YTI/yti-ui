@@ -1,3 +1,5 @@
+@import '../../../_variables.scss';
+
 a {
   cursor: pointer;
 }
@@ -6,4 +8,8 @@ img {
   width: 40px;
   height: 40px;
   margin: 0 0 0 15px;
+}
+
+.nav-item.bg-inverse > a {
+  background-color: $brand-primary;
 }

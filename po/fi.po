@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-04-20 12:26+0300\n"
+"PO-Revision-Date: 2017-04-20 14:12+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -129,6 +129,12 @@ msgstr "Taustajärjestelmä"
 
 msgid "licensed under the"
 msgstr "lisenssillä"
+
+msgid "Login"
+msgstr "Kirjaudu"
+
+msgid "Logout"
+msgstr "Kirjaudu ulos"
 
 msgid "Visualization"
 msgstr "Visualisointi"

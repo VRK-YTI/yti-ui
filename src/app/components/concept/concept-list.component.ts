@@ -12,6 +12,7 @@ import { ConceptViewModelService } from '../../services/concept.view.service';
 import { statuses } from '../../entities/constants';
 import { comparingDate, reversed } from '../../utils/comparator';
 import { v4 as uuid } from 'uuid';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'concept-list',
@@ -22,7 +23,7 @@ import { v4 as uuid } from 'uuid';
 
         <div class="actions">
 
-          <button class="button btn-default btn-add-new" (click)="addConcept()">
+          <button class="button btn-default btn-add-new" *ngIf="canAddConcept()" (click)="addConcept()">
             <i class="fa fa-plus"></i>
             <span translate>Add concept</span>
           </button>
@@ -32,14 +33,14 @@ import { v4 as uuid } from 'uuid';
                    [(ngModel)]="search"
                    type="text"
                    class="form-control"
-                   [placeholder]="'Search concept...' | translate" />
+                   [placeholder]="'Search concept...' | translate"/>
           </div>
-          
+
           <div class="button btn-default btn-lg btn-filters"
                [ngbPopover]="filters" triggers="manual" placement="right" #p="ngbPopover" (click)="p.toggle()">
             <i class="fa fa-tasks"></i>
           </div>
-          
+
           <template #filters>
             <div class="filters">
 
@@ -52,26 +53,29 @@ import { v4 as uuid } from 'uuid';
                   <option *ngFor="let status of statuses" [ngValue]="status">{{status | translate}}</option>
                 </select>
               </div>
-              
+
               <div class="form-check">
                 <label class="form-check-label">
-                  <input class="form-check-input" type="checkbox" [(ngModel)]="sortByTime" /> {{'Order by modified date' | translate}}
+                  <input class="form-check-input" type="checkbox" [(ngModel)]="sortByTime"/>
+                  {{'Order by modified date' | translate}}
                 </label>
               </div>
-              
+
             </div>
           </template>
-          
+
         </div>
-        
+
       </div>
     </div>
-  
+
     <div class="row">
       <div class="col-lg-12 search-results">
-        <ul>
-          <li *ngFor="let concept of searchResults | async" (click)="navigate(concept)" [class.selection]="isSelected(concept)">
-            <span [innerHTML]="concept.label | translateSearchValue: debouncedSearch | highlight: debouncedSearch"></span>
+        <ul [ngClass]="{'has-button': canAddConcept()}">
+          <li *ngFor="let concept of searchResults | async" (click)="navigate(concept)"
+              [class.selection]="isSelected(concept)">
+            <span
+              [innerHTML]="concept.label | translateSearchValue: debouncedSearch | highlight: debouncedSearch"></span>
           </li>
         </ul>
       </div>
@@ -91,6 +95,7 @@ export class ConceptListComponent implements OnInit, AfterViewInit {
   statuses = statuses;
 
   constructor(private languageService: LanguageService,
+              private userService: UserService,
               private conceptViewModel: ConceptViewModelService,
               private renderer: Renderer,
               private router: Router) {
@@ -120,6 +125,10 @@ export class ConceptListComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.renderer.invokeElementMethod(this.searchInput.nativeElement, 'focus');
+  }
+
+  canAddConcept() {
+    return this.userService.isLoggedIn();
   }
 
   get search() {

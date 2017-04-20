@@ -68,6 +68,7 @@ import { SynonymsComponent } from './components/form/synonyms.component';
 import { ErrorModal, ErrorModalService } from './components/common/error.modal';
 import { ConfirmationModal, ConfirmationModalService } from './components/common/confirmation.modal';
 import { ConfirmCancelEditGuard } from './components/common/edit.guard';
+import { UserService } from './services/user.service';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json-loader!po-loader?format=mf!../../po/fi.po'),
@@ -181,7 +182,8 @@ const appRoutes: Routes = [
     ConfirmationModalService,
     SessionService,
     ElasticSearchService,
-    ConfirmCancelEditGuard
+    ConfirmCancelEditGuard,
+    UserService
   ],
   bootstrap: [AppComponent]
 })

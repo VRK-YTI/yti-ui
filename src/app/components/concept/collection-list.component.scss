@@ -2,13 +2,20 @@
 
 // FIXME duplication with concept-list.component.scss
 
+$button-height: 47px;
+$buttonless-height: 137px;
+
 .search-results {
 
   ul {
 
     overflow-y: auto;
-    height: calc(100vh - 184px);
+    height: calc(100vh - #{$buttonless-height});
     padding: 0;
+
+    &.has-button {
+      height: calc(100vh - #{$buttonless-height + $button-height});
+    }
 
     li {
       cursor: pointer;

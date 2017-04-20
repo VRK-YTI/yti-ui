@@ -10,6 +10,7 @@ import { LanguageService } from '../../services/language.service';
 import { ConceptViewModelService } from '../../services/concept.view.service';
 import { Router } from '@angular/router';
 import { v4 as uuid } from 'uuid';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'collection-list',
@@ -20,7 +21,7 @@ import { v4 as uuid } from 'uuid';
 
         <div class="actions">
 
-          <button class="button btn-default btn-add-new" (click)="addCollection()">
+          <button class="button btn-default btn-add-new" (click)="addCollection()" *ngIf="canAddCollection()">
             <i class="fa fa-plus"></i>
             <span translate>Add collection</span>
           </button>
@@ -40,7 +41,7 @@ import { v4 as uuid } from 'uuid';
 
     <div class="row">
       <div class="col-lg-12 search-results">
-        <ul>
+        <ul [ngClass]="{'has-button': canAddCollection()}">
           <li *ngFor="let collection of searchResults | async" (click)="navigate(collection)" [class.selection]="isSelected(collection)">
             <span [innerHTML]="collection.label | translateSearchValue: debouncedSearch | highlight: debouncedSearch"></span>
           </li>
@@ -57,7 +58,8 @@ export class CollectionListComponent implements OnInit, AfterViewInit {
   search$ = new BehaviorSubject('');
   debouncedSearch = this.search;
 
-  constructor(private languageService: LanguageService,
+  constructor(private userService: UserService,
+              private languageService: LanguageService,
               private conceptViewModel: ConceptViewModelService,
               private renderer: Renderer,
               private router: Router) {
@@ -84,6 +86,10 @@ export class CollectionListComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit() {
     this.renderer.invokeElementMethod(this.searchInput.nativeElement, 'focus');
+  }
+
+  canAddCollection() {
+    return this.userService.isLoggedIn();
   }
 
   get search() {

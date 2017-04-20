@@ -1,5 +1,8 @@
 @import '../../../variables';
 
+$button-height: 47px;
+$buttonless-height: 86px;
+
 .actions {
 
   padding-left: 5px;
@@ -15,7 +18,11 @@
 
 .tree ul {
   overflow-y: auto;
-  height: calc(100vh - 133px);
+  height: calc(100vh - #{$buttonless-height});
+
+  &.has-button {
+    height: calc(100vh - #{$buttonless-height + $button-height});
+  }
 }
 
 :host /deep/ .tree {

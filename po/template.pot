@@ -121,6 +121,12 @@ msgstr ""
 msgid "licensed under the"
 msgstr ""
 
+msgid "Login"
+msgstr ""
+
+msgid "Logout"
+msgstr ""
+
 msgid "Visualization"
 msgstr ""
 
