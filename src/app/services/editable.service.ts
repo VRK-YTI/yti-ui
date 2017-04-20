@@ -1,6 +1,7 @@
 import { BehaviorSubject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { ErrorModalService } from '../components/common/error.modal';
+import { ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 
 export interface EditingComponent {
   isEditing(): boolean;
@@ -72,7 +73,9 @@ export class EditableService {
     Promise.resolve(this.onRemove()).then(() => {
       this.removing$.next(false);
     }, err => {
-      this.errorModalService.openSubmitError(err);
+      if (err !== 'cancel' && err !== ModalDismissReasons.BACKDROP_CLICK && err !== ModalDismissReasons.ESC) {
+        this.errorModalService.openSubmitError(err);
+      }
       this.removing$.next(false);
     });
   }

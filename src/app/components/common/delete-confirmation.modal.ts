@@ -76,7 +76,7 @@ export class DeleteConfirmationModal implements OnInit {
   }
 
   cancel() {
-    this.modal.dismiss();
+    this.modal.dismiss('cancel');
   }
 
   confirm() {
