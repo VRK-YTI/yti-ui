@@ -62,12 +62,10 @@ export class CollectionComponent implements EditingComponent, OnDestroy {
         .then(() => this.conceptViewModel.removeCollection());
 
     this.subscriptionToClean.push(this.conceptViewModel.collectionSelect$.subscribe(collection => {
-      if (collection) {
-        if (!collection.persistent && !editableService.editing) {
-          editableService.edit();
-        } else if (collection.persistent && editableService.editing) {
-          editableService.cancel();
-        }
+      if (!collection.persistent && !editableService.editing) {
+        editableService.edit();
+      } else if (collection.persistent && editableService.editing) {
+        editableService.cancel();
       }
     }));
   }
