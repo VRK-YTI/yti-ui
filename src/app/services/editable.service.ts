@@ -53,7 +53,7 @@ export class EditableService {
 
     this.saving$.next(true);
 
-    return Promise.resolve(this.onSave()).then(() => {
+    Promise.resolve(this.onSave()).then(() => {
       this.saving$.next(false);
       this.editing$.next(false);
     }, err => {
