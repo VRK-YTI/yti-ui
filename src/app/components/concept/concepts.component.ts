@@ -4,6 +4,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { ConceptViewModelService } from '../../services/concept.view.service';
 import { SessionService } from '../../services/session.service';
 import { ConceptNetworkComponent } from '../visualization/concept-network.component';
+import { EditingComponent } from '../../services/editable.service';
+import { VocabularyComponent } from '../vocabulary/vocabulary.component';
 
 @Component({
   selector: 'concepts',
@@ -18,7 +20,7 @@ import { ConceptNetworkComponent } from '../visualization/concept-network.compon
 
         <div class="row">
           <div class="col-12">
-            <vocabulary></vocabulary>
+            <vocabulary #vocabularyComponent></vocabulary>
           </div>
         </div>
   
@@ -74,9 +76,10 @@ import { ConceptNetworkComponent } from '../visualization/concept-network.compon
     </div>
   `
 })
-export class ConceptsComponent implements OnInit {
+export class ConceptsComponent implements EditingComponent, OnInit {
 
   @ViewChild('network') conceptNetwork: ConceptNetworkComponent;
+  @ViewChild('vocabularyComponent') vocabularyComponent: VocabularyComponent;
 
   constructor(private route: ActivatedRoute,
               private viewModel: ConceptViewModelService,
@@ -114,6 +117,14 @@ export class ConceptsComponent implements OnInit {
     return this.domSanitizer.bypassSecurityTrustStyle(
       this.showSelection ? `calc(100% - ${this.sessionService.selectionWidth}px)` : '100%'
     );
+  }
+
+  isEditing(): boolean {
+    return this.vocabularyComponent.isEditing();
+  }
+
+  cancelEditing() {
+    this.vocabularyComponent.cancelEditing();
   }
 }
 
