@@ -529,7 +529,7 @@ export class ConceptNode extends Node<'Concept'> {
       const matchingTerm = this.findTermForLanguage(language) || this.terms.values[0];
       matchingTerm.value = value;
     } else {
-      const matchingLocalization = this.findLabelLocalizationForLanguage(language) || this.anyLabelLocalization();
+      const matchingLocalization = this.findLabelLocalizationForLanguage(language) || this.anyLabelLocalization() || this.createLabelLocalization(language);
       matchingLocalization.value = value;
     }
   }
@@ -540,6 +540,11 @@ export class ConceptNode extends Node<'Concept'> {
 
   private findLabelLocalizationForLanguage(language: string): Localization|undefined {
     return (this.properties['prefLabel'].attributes as Localization[]).find(localization => localization.lang === language);
+  }
+
+  private createLabelLocalization(language: string) {
+    this.properties['prefLabel'].newLocalization(language);
+    return this.anyLabelLocalization();
   }
 
   private anyLabelLocalization(): Localization {
@@ -621,7 +626,7 @@ export class CollectionNode extends Node<'Collection'> {
   }
 
   setPrimaryLabel(language: string, value: string) {
-    const matchingLocalization = this.findLabelLocalizationForLanguage(language) || this.anyLabelLocalization();
+    const matchingLocalization = this.findLabelLocalizationForLanguage(language) || this.anyLabelLocalization() || this.createLabelLocalization(language);
     matchingLocalization.value = value;
   }
 
@@ -631,6 +636,11 @@ export class CollectionNode extends Node<'Collection'> {
 
   private anyLabelLocalization(): Localization {
     return this.properties['prefLabel'].attributes[0];
+  }
+
+  private createLabelLocalization(language: string) {
+    this.properties['prefLabel'].newLocalization(language);
+    return this.anyLabelLocalization();
   }
 
   get label(): Localizable {
