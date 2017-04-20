@@ -55,7 +55,7 @@ export class ErrorModal {
   }
 
   close() {
-    this.modal.dismiss();
+    this.modal.dismiss('cancel');
   }
 
   get showError() {

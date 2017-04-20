@@ -52,7 +52,7 @@ export class ConfirmationModal {
   }
 
   cancel() {
-    this.modal.dismiss();
+    this.modal.dismiss('cancel');
   }
 
   confirm() {

@@ -1,9 +1,9 @@
 import { BehaviorSubject } from 'rxjs';
 import { Injectable, OnDestroy } from '@angular/core';
 import { ErrorModalService } from '../components/common/error.modal';
-import { ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { UserService } from './user.service';
 import { Subscription } from 'rxjs/Subscription';
+import { isModalClose } from '../utils/modal';
 
 export interface EditingComponent {
   isEditing(): boolean;
@@ -88,7 +88,7 @@ export class EditableService implements OnDestroy {
     Promise.resolve(this.onRemove()).then(() => {
       this.removing$.next(false);
     }, err => {
-      if (err !== 'cancel' && err !== ModalDismissReasons.BACKDROP_CLICK && err !== ModalDismissReasons.ESC) {
+      if (!isModalClose(err)) {
         this.errorModalService.openSubmitError(err);
       }
       this.removing$.next(false);

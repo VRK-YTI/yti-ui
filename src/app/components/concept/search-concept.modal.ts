@@ -162,7 +162,7 @@ export class SearchConceptModal implements OnInit, AfterViewInit {
   }
 
   cancel() {
-    this.modal.dismiss();
+    this.modal.dismiss('cancel');
   }
 
   confirm() {

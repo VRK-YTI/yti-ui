@@ -3,6 +3,7 @@ import { Reference, ConceptNode } from '../../entities/node';
 import { EditableService } from '../../services/editable.service';
 import { SearchConceptModalService } from './search-concept.modal';
 import { remove } from '../../utils/array';
+import { ignoreModalClose } from '../../utils/modal';
 
 @Component({
   selector: 'concept-reference-input',
@@ -45,8 +46,7 @@ export class ConceptReferenceInputComponent {
   }
 
   addReference() {
-    this.searchConceptModal.open(this.conceptsProvider).then(result => {
-      this.conceptReference.values.push(result);
-    });
+    this.searchConceptModal.open(this.conceptsProvider)
+      .then(result => this.conceptReference.values.push(result), ignoreModalClose);
   }
 }
