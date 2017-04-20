@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-04-19 15:36+0300\n"
+"PO-Revision-Date: 2017-04-20 12:26+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -22,6 +22,12 @@ msgstr ""
 msgid "Search concept..."
 msgstr ""
 
+msgid "Yes"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
 msgid "Confirm remove"
 msgstr ""
 
@@ -29,12 +35,6 @@ msgid "Following items are referring to the deleted item"
 msgstr ""
 
 msgid "Are you sure that you want to remove?"
-msgstr ""
-
-msgid "Yes"
-msgstr ""
-
-msgid "Cancel"
 msgstr ""
 
 msgid "Close"
@@ -159,7 +159,7 @@ msgstr "new concept"
 msgid "New collection"
 msgstr "new collection"
 
-msgid "Vocabulary type"
+msgid "Group"
 msgstr ""
 
 msgid "Front page"
@@ -177,10 +177,10 @@ msgstr ""
 msgid "Suggestion"
 msgstr ""
 
-msgid "Unstable"
+msgid "Vocabulary type"
 msgstr ""
 
-msgid "Group"
+msgid "Unstable"
 msgstr ""
 
 msgid "Organization"
@@ -190,4 +190,12 @@ msgid "Submit error"
 msgstr ""
 
 msgid "Unexpected error"
+msgstr ""
+
+msgid "Edit in progress"
+msgstr ""
+
+msgid ""
+"Are you sure that you want to continue? By continuing unsaved changes will "
+"be lost."
 msgstr ""

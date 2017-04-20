@@ -1,6 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { EditableService } from '../../services/editable.service';
+import { EditableService, EditingComponent } from '../../services/editable.service';
 import { ConceptViewModelService } from '../../services/concept.view.service';
 import { Subscription } from 'rxjs';
 import { DeleteConfirmationModalService } from '../common/delete-confirmation.modal';
@@ -33,14 +33,14 @@ import { requireDefined } from '../../utils/object';
     <ajax-loading-indicator *ngIf="!concept"></ajax-loading-indicator>
   `
 })
-export class ConceptComponent implements OnDestroy {
+export class ConceptComponent implements EditingComponent, OnDestroy {
 
   private subscriptionToClean: Subscription[] = [];
 
   constructor(private route: ActivatedRoute,
               private conceptViewModel: ConceptViewModelService,
               deleteConfirmationModal: DeleteConfirmationModalService,
-              editableService: EditableService) {
+              private editableService: EditableService) {
 
     route.params.subscribe(params => conceptViewModel.initializeConcept(params['conceptId']));
     editableService.onSave = () => this.conceptViewModel.saveConcept();
@@ -74,5 +74,13 @@ export class ConceptComponent implements OnDestroy {
 
   get conceptInEdit() {
     return this.conceptViewModel.conceptInEdit;
+  }
+
+  isEditing(): boolean {
+    return this.editableService.editing;
+  }
+
+  cancelEditing(): void {
+    this.editableService.cancel();
   }
 }

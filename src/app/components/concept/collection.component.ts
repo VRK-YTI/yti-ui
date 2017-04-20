@@ -1,6 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { EditableService } from '../../services/editable.service';
+import { EditableService, EditingComponent } from '../../services/editable.service';
 import { ConceptViewModelService } from '../../services/concept.view.service';
 import { Subscription } from 'rxjs';
 import { DeleteConfirmationModalService } from '../common/delete-confirmation.modal';
@@ -45,7 +45,7 @@ import { requireDefined } from '../../utils/object';
     <ajax-loading-indicator *ngIf="!collection"></ajax-loading-indicator>
   `
 })
-export class CollectionComponent implements OnDestroy {
+export class CollectionComponent implements EditingComponent, OnDestroy {
 
   private subscriptionToClean: Subscription[] = [];
 
@@ -92,5 +92,13 @@ export class CollectionComponent implements OnDestroy {
 
   get collectionInEdit() {
     return this.conceptViewModel.collectionInEdit;
+  }
+
+  isEditing(): boolean {
+    return this.editableService.editing;
+  }
+
+  cancelEditing(): void {
+    this.editableService.cancel();
   }
 }

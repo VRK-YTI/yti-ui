@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-04-19 15:36+0300\n"
+"PO-Revision-Date: 2017-04-20 12:26+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -22,6 +22,12 @@ msgstr ""
 msgid "Search concept..."
 msgstr "Hae käsitettä…"
 
+msgid "Yes"
+msgstr "Kyllä"
+
+msgid "Cancel"
+msgstr "Peruuta"
+
 msgid "Confirm remove"
 msgstr "Poistamisen hyväksyntä"
 
@@ -30,12 +36,6 @@ msgstr "Seuraavat asiat viittaavat poistettavaan asiaan"
 
 msgid "Are you sure that you want to remove?"
 msgstr "Oletko varma, että haluat poistaa?"
-
-msgid "Yes"
-msgstr "Kyllä"
-
-msgid "Cancel"
-msgstr "Peruuta"
 
 msgid "Close"
 msgstr "Sulje"
@@ -158,8 +158,8 @@ msgstr "uusi käsite"
 msgid "New collection"
 msgstr "uusi käsitevalikoima"
 
-msgid "Vocabulary type"
-msgstr "Sanastotyyppi"
+msgid "Group"
+msgstr "Toimiala / Ryhmä"
 
 msgid "Front page"
 msgstr "Etusivu"
@@ -176,11 +176,11 @@ msgstr "Käytöstä poistunut"
 msgid "Suggestion"
 msgstr "Ehdotus"
 
+msgid "Vocabulary type"
+msgstr "Sanastotyyppi"
+
 msgid "Unstable"
 msgstr "Keskeneräinen"
-
-msgid "Group"
-msgstr "Toimiala / Ryhmä"
 
 msgid "Organization"
 msgstr "Organisaatio"
@@ -190,6 +190,16 @@ msgstr "Toiminnossa tapahtui virhe"
 
 msgid "Unexpected error"
 msgstr "Tapahtui odottamaton virhe"
+
+msgid "Edit in progress"
+msgstr "Muokkaaminen on kesken"
+
+msgid ""
+"Are you sure that you want to continue? By continuing unsaved changes will "
+"be lost."
+msgstr ""
+"Oletko varma, että haluat jatkaa? Jatkaessasi tallentamattomat muutokset "
+"katoavat."
 
 #~ msgid "Add term"
 #~ msgstr "Lisää termi"

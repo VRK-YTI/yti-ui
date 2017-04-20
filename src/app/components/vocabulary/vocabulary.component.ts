@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { EditableService } from '../../services/editable.service';
+import { EditableService, EditingComponent } from '../../services/editable.service';
 import { ConceptViewModelService } from '../../services/concept.view.service';
 
 @Component({
@@ -40,7 +40,7 @@ import { ConceptViewModelService } from '../../services/concept.view.service';
     </ngb-accordion>
   `
 })
-export class VocabularyComponent {
+export class VocabularyComponent implements EditingComponent {
 
   constructor(private editableService: EditableService,
               private conceptViewModel: ConceptViewModelService) {
@@ -63,5 +63,13 @@ export class VocabularyComponent {
 
   get showEmpty() {
     return this.editableService.editing;
+  }
+
+  isEditing(): boolean {
+    return this.editableService.editing;
+  }
+
+  cancelEditing(): void {
+    this.editableService.cancel();
   }
 }

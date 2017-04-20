@@ -2,6 +2,11 @@ import { BehaviorSubject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { ErrorModalService } from '../components/common/error.modal';
 
+export interface EditingComponent {
+  isEditing(): boolean;
+  cancelEditing(): void;
+}
+
 @Injectable()
 export class EditableService {
 

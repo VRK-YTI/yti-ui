@@ -13,6 +13,12 @@ msgstr ""
 msgid "Search concept..."
 msgstr ""
 
+msgid "Yes"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
 msgid "Confirm remove"
 msgstr ""
 
@@ -20,12 +26,6 @@ msgid "Following items are referring to the deleted item"
 msgstr ""
 
 msgid "Are you sure that you want to remove?"
-msgstr ""
-
-msgid "Yes"
-msgstr ""
-
-msgid "Cancel"
 msgstr ""
 
 msgid "Close"
@@ -145,7 +145,7 @@ msgstr ""
 msgid "New collection"
 msgstr ""
 
-msgid "Vocabulary type"
+msgid "Group"
 msgstr ""
 
 msgid "Front page"
@@ -163,10 +163,10 @@ msgstr ""
 msgid "Suggestion"
 msgstr ""
 
-msgid "Unstable"
+msgid "Vocabulary type"
 msgstr ""
 
-msgid "Group"
+msgid "Unstable"
 msgstr ""
 
 msgid "Organization"
@@ -176,4 +176,12 @@ msgid "Submit error"
 msgstr ""
 
 msgid "Unexpected error"
+msgstr ""
+
+msgid "Edit in progress"
+msgstr ""
+
+msgid ""
+"Are you sure that you want to continue? By continuing unsaved changes will "
+"be lost."
 msgstr ""

@@ -4,7 +4,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { Routes, RouterModule } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-
 import { AppComponent } from './components/app.component';
 import { TermedService } from './services/termed.service';
 import { NavigationBarComponent } from './components/navigation/navigation-bar.component';
@@ -67,6 +66,8 @@ import { CollectionComponent } from './components/concept/collection.component';
 import { CollectionListComponent } from './components/concept/collection-list.component';
 import { SynonymsComponent } from './components/form/synonyms.component';
 import { ErrorModal, ErrorModalService } from './components/common/error.modal';
+import { ConfirmationModal, ConfirmationModalService } from './components/common/confirmation.modal';
+import { ConfirmCancelEditGuard } from './components/common/edit.guard';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json-loader!po-loader?format=mf!../../po/fi.po'),
@@ -91,10 +92,10 @@ export function createMissingTranslationHandler(): MissingTranslationHandler {
 
 const appRoutes: Routes = [
   { path: '', component: VocabulariesComponent },
-  { path: 'concepts/:graphId', component: ConceptsComponent, children: [
+  { path: 'concepts/:graphId', component: ConceptsComponent, canDeactivate: [ConfirmCancelEditGuard], children: [
     { path: '', component: NoSelectionComponent },
-    { path: 'concept/:conceptId', component: ConceptComponent },
-    { path: 'collection/:collectionId', component: CollectionComponent }
+    { path: 'concept/:conceptId', component: ConceptComponent, canDeactivate: [ConfirmCancelEditGuard] },
+    { path: 'collection/:collectionId', component: CollectionComponent, canDeactivate: [ConfirmCancelEditGuard] }
   ]}
 ];
 
@@ -138,6 +139,7 @@ const appRoutes: Routes = [
     SearchConceptModal,
     DeleteConfirmationModal,
     ErrorModal,
+    ConfirmationModal,
     MetaModelValidator,
     LanguageValidator,
     LocalizationValidator,
@@ -155,6 +157,7 @@ const appRoutes: Routes = [
     SearchConceptModal,
     DeleteConfirmationModal,
     ErrorModal,
+    ConfirmationModal
   ],
   imports: [
     BrowserModule,
@@ -175,8 +178,10 @@ const appRoutes: Routes = [
     SearchConceptModalService,
     DeleteConfirmationModalService,
     ErrorModalService,
+    ConfirmationModalService,
     SessionService,
-    ElasticSearchService
+    ElasticSearchService,
+    ConfirmCancelEditGuard
   ],
   bootstrap: [AppComponent]
 })
