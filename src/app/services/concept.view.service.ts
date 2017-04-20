@@ -319,7 +319,7 @@ export class ConceptViewModelService {
       this.termedService.removeNode(collection).subscribe({
         next() {
           that.collectionAction$.next(createRemoveAction(collection));
-          that.router.navigate(['/concepts', that.graphId])
+          that.router.navigate(['/concepts', that.graphId]);
           resolve();
         },
         error(err: any) {
