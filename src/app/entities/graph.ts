@@ -6,7 +6,8 @@ export interface Graph {
   id: string;
   permissions: any[];
   properties: {
-    prefLabel: Localization[]
+    prefLabel: Localization[],
+    type?: [{lang: '', value: 'Metamodel'}]
   }
   roles: any[];
 }

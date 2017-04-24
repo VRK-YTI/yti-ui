@@ -26,8 +26,8 @@ export class MetaModelService {
               private languageService: LanguageService) {
 
     this.getGraphs()
-      .flatMap(graphs => Observable.forkJoin(graphs.map(graph => this.getMetaModels(graph.id))))
-      .map(metaModels => new MetaModel(flatten(metaModels)))
+      .flatMap(graphs => Observable.forkJoin(graphs.map(graph => Observable.zip(Observable.of(graph), this.getMetaNodes(graph.id)))))
+      .map(graphAndNodes => new MetaModel(graphAndNodes))
       .subscribe(meta => this.meta.next(meta));
   }
 
@@ -74,7 +74,7 @@ export class MetaModelService {
       .map(response => normalizeAsArray(response.json()) as Graph[]);
   }
 
-  private getMetaModels(graphId: string): Observable<NodeMetaInternal[]> {
+  private getMetaNodes(graphId: string): Observable<NodeMetaInternal[]> {
     return this.http.get(`/api/graphs/${graphId}/types`, infiniteResultsOptions)
       .map(response => normalizeAsArray(response.json()) as NodeMetaInternal[]);
   }

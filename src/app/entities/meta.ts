@@ -1,12 +1,13 @@
 import { ReferenceAttributeInternal, TextAttributeInternal, NodeMetaInternal } from './meta-api';
 import { comparingPrimitive } from '../utils/comparator';
-import { any, contains, groupBy, index, normalizeAsArray } from '../utils/array';
+import { any, contains, index, normalizeAsArray } from '../utils/array';
 import { asLocalizable, Localizable } from './localization';
 import { NodeType, NodeExternal } from './node-api';
 import { Node } from './node';
 import { v4 as uuid } from 'uuid';
 import * as moment from 'moment';
 import { assertNever, requireDefined } from '../utils/object';
+import { Graph } from './graph';
 
 export type Cardinality = 'single'
                         | 'multiple';
@@ -220,12 +221,11 @@ export class MetaModel {
 
   private meta = new Map<string, GraphMeta>();
 
-  constructor(nodeMetas: NodeMetaInternal[]) {
+  constructor(nodeMetas: [Graph, NodeMetaInternal[]][]) {
 
-    const nodeMetasByGroup = groupBy(nodeMetas, meta => meta.graph.id);
-
-    for (const [graphId, nodeMetasInGroup] of Array.from(nodeMetasByGroup.entries())) {
-      this.meta.set(graphId, new GraphMeta(graphId, nodeMetasInGroup));
+    for (const [graph, nodeMetasInGraph] of nodeMetas) {
+      const template = graph.properties.type ? graph.properties.type[0].value === 'Metamodel' : false;
+      this.meta.set(graph.id, new GraphMeta(graph.id, nodeMetasInGraph, template));
     }
   }
 
@@ -235,6 +235,10 @@ export class MetaModel {
 
   getGraphMeta(graphId: string): GraphMeta {
     return requireDefined(this.meta.get(graphId), 'Meta not found for graph: ' + graphId);
+  }
+
+  getMetaTemplates() {
+    return Array.from(this.meta.values()).filter(meta => meta.template);
   }
 
   getNodeMeta(graphId: string, nodeType: NodeType): NodeMeta {
@@ -250,7 +254,7 @@ export class GraphMeta {
 
   private meta = new Map<NodeType, NodeMeta>();
 
-  constructor(public graphId: string, nodeMetas: NodeMetaInternal[]) {
+  constructor(public graphId: string, nodeMetas: NodeMetaInternal[], public template: boolean) {
     this.meta = index(nodeMetas.map(m => new NodeMeta(m)), m => m.type);
   }
 
