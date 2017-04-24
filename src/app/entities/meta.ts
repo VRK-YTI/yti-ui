@@ -129,7 +129,7 @@ export class PropertyMeta {
   index: number;
   type: PropertyType;
 
-  constructor(textAttribute: TextAttributeInternal) {
+  constructor(private textAttribute: TextAttributeInternal) {
     this.id = textAttribute.id;
     this.label = asLocalizable(textAttribute.properties.prefLabel);
     this.regex = textAttribute.regex;
@@ -177,6 +177,17 @@ export class PropertyMeta {
         return true;
     }
   }
+
+  copyToGraph(graphId: string): TextAttributeInternal {
+    return Object.assign({}, this.textAttribute, {
+      domain: {
+        id: this.textAttribute.domain.id,
+        graph: {
+          id: graphId
+        }
+      }
+    });
+  }
 }
 
 export class ReferenceMeta {
@@ -187,7 +198,7 @@ export class ReferenceMeta {
   index: number;
   graphId: string;
 
-  constructor(referenceAttribute: ReferenceAttributeInternal) {
+  constructor(private referenceAttribute: ReferenceAttributeInternal) {
 
     this.id = referenceAttribute.id;
     this.label = asLocalizable(referenceAttribute.properties.prefLabel);
@@ -214,6 +225,28 @@ export class ReferenceMeta {
 
   get concept(): boolean {
     return this.referenceType === 'Concept';
+  }
+
+  copyToGraph(graphId: string): ReferenceAttributeInternal {
+
+    const domainGraph = this.referenceAttribute.domain.graph.id;
+    const rangeGraph = this.referenceAttribute.range.graph.id;
+    const newRangeGraph = domainGraph === rangeGraph ? graphId : rangeGraph;
+
+    return Object.assign({}, this.referenceAttribute, {
+      domain: {
+        id: this.referenceAttribute.domain.id,
+        graph: {
+          id: graphId
+        }
+      },
+      range: {
+        id: graphId,
+        graph: {
+          id: newRangeGraph
+        }
+      }
+    });
   }
 }
 
@@ -254,7 +287,7 @@ export class GraphMeta {
 
   private meta = new Map<NodeType, NodeMeta>();
 
-  constructor(public graphId: string, nodeMetas: NodeMetaInternal[], public template: boolean) {
+  constructor(public graphId: string, private nodeMetas: NodeMetaInternal[], public template: boolean) {
     this.meta = index(nodeMetas.map(m => new NodeMeta(m)), m => m.type);
   }
 
@@ -264,6 +297,10 @@ export class GraphMeta {
 
   getNodeMeta(type: NodeType): NodeMeta {
     return requireDefined(this.meta.get(type), `Meta not found for graph: ${this.graphId} and node type: ${type}`);
+  }
+
+  copyToGraph(graphId: string): NodeMetaInternal[] {
+    return Array.from(this.meta.values()).map(m => m.copyToGraph(graphId));
   }
 }
 
@@ -276,7 +313,7 @@ export class NodeMeta {
   graphId: string;
   uri: string;
 
-  constructor(metaNode: NodeMetaInternal) {
+  constructor(private metaNode: NodeMetaInternal) {
 
     this.label = asLocalizable(metaNode.properties.prefLabel);
     this.type = metaNode.id;
@@ -335,5 +372,15 @@ export class NodeMeta {
 
   hasReference(referenceId: string) {
     return any(this.references, ref => ref.id === referenceId);
+  }
+
+  copyToGraph(graphId: string): NodeMetaInternal {
+    return Object.assign({}, this.metaNode, {
+      graph: {
+        id: graphId
+      },
+      textAttributes: this.properties.map(p => p.copyToGraph(graphId)),
+      referenceAttributes: this.references.map(r => r.copyToGraph(graphId))
+    });
   }
 }
