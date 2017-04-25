@@ -10,7 +10,7 @@ import {
   Edge as VisEdge,
   DataSet,
   Network as VisNetwork,
-  Options as VisNetworkOptions, IdType
+  Options as VisNetworkOptions, IdType, EdgeOptions
 } from 'vis';
 import { ReferenceMeta } from '../../entities/meta';
 import { Node } from '../../entities/node';
@@ -403,15 +403,14 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
 
       const edgeInstance = getEdgeById(edge.id!);
 
-      edgeInstance.drawArrows = (ctx: VisCanvasRenderingContext2D, arrowData: ArrowData, values: any) => {
-
-        const drawArrowHead = (arrowData: ArrowEndData) => edgeInstance.edgeType.drawArrowHead(ctx, values, edgeInstance.selected, edgeInstance.hover, arrowData);
-        ConceptNetworkComponent.drawEdge(edge.type, ctx, arrowData, drawArrowHead);
+      edgeInstance.drawArrows = (ctx: VisCanvasRenderingContext2D, arrowData: ArrowData, options: EdgeOptions) => {
+        const drawArrowHead = (arrowData: ArrowEndData) => edgeInstance.edgeType.drawArrowHead(ctx, options, edgeInstance.selected, edgeInstance.hover, arrowData);
+        ConceptNetworkComponent.drawEdgeArrows(ctx, edge.type, arrowData, drawArrowHead);
       }
     }
   }
 
-  private static drawEdge(edgeType: EdgeType, ctx: VisCanvasRenderingContext2D, arrowData: ArrowData, drawArrowHead: (data: ArrowEndData) => void) {
+  private static drawEdgeArrows(ctx: VisCanvasRenderingContext2D, edgeType: EdgeType, arrowData: ArrowData, drawArrowHead: (data: ArrowEndData) => void) {
 
     switch (edgeType) {
       case 'relation':
