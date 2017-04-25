@@ -378,7 +378,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
   private createBroaderConceptEdge(from: ConceptNode, to: ConceptNode, meta: ReferenceMeta) {
     return Object.assign(this.createEdgeData(from, to, meta, 'inheritance'), {
       arrows: {
-        to: true
+        from: true
       }
     });
   }
@@ -424,14 +424,18 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
 
     switch (edgeType) {
       case 'relation':
-        drawArrowHead(arrowData.to);
+        ctx.fillStyle = '#000000';
+        ctx.arrowEndpoint(arrowData.to.point.x, arrowData.to.point.y, arrowData.to.angle, 15);
+        ctx.fill();
         break;
       case 'inheritance':
-        drawArrowHead(arrowData.to);
+        ctx.strokeStyle = '#000000';
+        ctx.arrowEndpoint(arrowData.from.point.x, arrowData.from.point.y, arrowData.from.angle, 15);
+        ctx.stroke();
         break;
       case 'composition':
-        ctx.fillStyle = '#ff0000';
-        ctx.diamond(arrowData.from.point.x, arrowData.from.point.y, 15);
+        ctx.fillStyle = '#000000';
+        ctx.diamond(arrowData.from.point.x - arrowData.from.length * 0.4 * Math.cos(arrowData.from.angle), arrowData.from.point.y - arrowData.from.length * 0.4 * Math.sin(arrowData.from.angle), 10);
         ctx.fill();
         break;
       default:
