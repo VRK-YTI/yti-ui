@@ -17,11 +17,11 @@ import { requireDefined } from '../../utils/object';
         <h3>{{collection.label | translateValue}}</h3>
       </div>
 
-      <form class="component-content">
+      <form #form class="component-content">
 
         <div class="row">
           <div class="col-md-12">
-            <editable-buttons [canRemove]="true"></editable-buttons>
+            <editable-buttons [form]="form" [canRemove]="true"></editable-buttons>
           </div>
         </div>
         

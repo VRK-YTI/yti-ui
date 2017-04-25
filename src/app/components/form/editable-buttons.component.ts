@@ -53,10 +53,10 @@ import { UserService } from '../../services/user.service';
 })
 export class EditableButtonsComponent {
 
-  @Input('canRemove') canRemove: boolean;
+  @Input() form: NgForm;
+  @Input() canRemove: boolean;
 
-  constructor(public form: NgForm,
-              private editableService: EditableService,
+  constructor(private editableService: EditableService,
               private userService: UserService) {
   }
 
