@@ -22,6 +22,38 @@ interface ConceptNetworkData {
   edges: DataSet<UpdatableVisEdge>;
 }
 
+interface ArrowEndData {
+
+  angle: number;
+
+  core: {
+    x: number;
+    y: number;
+  }
+
+  length: number;
+
+  point: {
+    t: number;
+    x: number;
+    y: number;
+  }
+
+  type: string;
+}
+
+interface ArrowData {
+  from: ArrowEndData;
+  middle: ArrowEndData;
+  to: ArrowEndData;
+}
+
+interface VisCanvasRenderingContext2D extends CanvasRenderingContext2D {
+
+  circle(x: string|number, y: string|number, radius: string|number): void;
+  diamond(x: string|number, y: string|number, size: string|number): void;
+}
+
 // Distinguish between single click and double click
 const DELAY = 600;
 
@@ -119,7 +151,15 @@ interface UpdatableVisNode extends VisNode {
   update: () => UpdatableVisNode;
 }
 
-interface UpdatableVisEdge extends VisEdge {
+type EdgeType = 'relation'
+              | 'inheritance'
+              | 'composition'
+
+interface CustomizedVisEdge extends VisEdge {
+  type: EdgeType;
+}
+
+interface UpdatableVisEdge extends CustomizedVisEdge {
   title: string;
   update: () => UpdatableVisEdge;
 }
@@ -300,14 +340,15 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
     return Object.assign(this.createConceptNodeData(memberConcept), { group: 'memberGroup' });
   }
 
-  private createEdgeData(from: ConceptNode|CollectionNode, to: ConceptNode, meta: ReferenceMeta): UpdatableVisEdge {
+  private createEdgeData(from: ConceptNode|CollectionNode, to: ConceptNode, meta: ReferenceMeta, type: EdgeType): UpdatableVisEdge {
 
     const createEdge = () => {
       const edge = {
         from: from.id,
         to: to.id,
         id: from.id + to.id,
-        title: this.languageService.translate(meta.label) + ': ' + this.languageService.translate(from.label) + ' &rarr; ' + this.languageService.translate(to.label)
+        title: this.languageService.translate(meta.label) + ': ' + this.languageService.translate(from.label) + ' &rarr; ' + this.languageService.translate(to.label),
+        type: type
       };
 
       return Object.assign(edge, { update: createEdge })
@@ -317,30 +358,31 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
   }
 
   private createRelatedConceptEdge(from: ConceptNode, to: ConceptNode, meta: ReferenceMeta) {
-    return Object.assign(this.createEdgeData(from, to, meta), {
+    return Object.assign(this.createEdgeData(from, to, meta, 'relation'), {
       arrows: {
-        to: {
-          enabled: true,
-          scaleFactor: 0.7,
-          type: 'arrow'
-        }
+        to: true
       }
     });
   }
 
   private createBroaderConceptEdge(from: ConceptNode, to: ConceptNode, meta: ReferenceMeta) {
-    return Object.assign(this.createEdgeData(from, to, meta), {
+    return Object.assign(this.createEdgeData(from, to, meta, 'inheritance'), {
+      arrows: {
+        to: true
+      }
     });
   }
 
   private createIsPartOfConceptEdge(from: ConceptNode, to: ConceptNode, meta: ReferenceMeta) {
-    return Object.assign(this.createEdgeData(from, to, meta), {
-      dashes: true
+    return Object.assign(this.createEdgeData(from, to, meta, 'composition'), {
+      arrows: {
+        from: true
+      }
     });
   }
 
   private createMemberConceptEdge(from: CollectionNode, to: ConceptNode, meta: ReferenceMeta) {
-    return Object.assign(this.createEdgeData(from, to, meta), {
+    return Object.assign(this.createEdgeData(from, to, meta, 'relation'), {
     });
   }
 
@@ -353,6 +395,38 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
   private addEdgeIfDoesNotExist(edge: UpdatableVisEdge) {
     if (!this.networkData.edges.get(edge.id)) {
       this.networkData.edges.add(edge);
+
+      const getEdgeById = (id: IdType) => {
+        const n = this.network as any;
+        return n.edgesHandler.body.edges[id];
+      };
+
+      const edgeInstance = getEdgeById(edge.id!);
+
+      edgeInstance.drawArrows = (ctx: VisCanvasRenderingContext2D, arrowData: ArrowData, values: any) => {
+
+        const drawArrowHead = (arrowData: ArrowEndData) => edgeInstance.edgeType.drawArrowHead(ctx, values, edgeInstance.selected, edgeInstance.hover, arrowData);
+        ConceptNetworkComponent.drawEdge(edge.type, ctx, arrowData, drawArrowHead);
+      }
+    }
+  }
+
+  private static drawEdge(edgeType: EdgeType, ctx: VisCanvasRenderingContext2D, arrowData: ArrowData, drawArrowHead: (data: ArrowEndData) => void) {
+
+    switch (edgeType) {
+      case 'relation':
+        drawArrowHead(arrowData.to);
+        break;
+      case 'inheritance':
+        drawArrowHead(arrowData.to);
+        break;
+      case 'composition':
+        ctx.fillStyle = '#ff0000';
+        ctx.diamond(arrowData.from.point.x, arrowData.from.point.y, 15);
+        ctx.fill();
+        break;
+      default:
+        assertNever(edgeType, 'Unsupported edge type: ' + edgeType);
     }
   }
 
