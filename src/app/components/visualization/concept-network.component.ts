@@ -51,7 +51,17 @@ interface ArrowData {
 interface VisCanvasRenderingContext2D extends CanvasRenderingContext2D {
 
   circle(x: string|number, y: string|number, radius: string|number): void;
-  diamond(x: string|number, y: string|number, size: string|number): void;
+  square(x: string|number, y: string|number, radius: string|number): void;
+  triangle(x: string|number, y: string|number, radius: string|number): void;
+  triangleDown(x: string|number, y: string|number, radius: string|number): void;
+  star(x: string|number, y: string|number, radius: string|number): void;
+  diamond(x: string|number, y: string|number, radius: string|number): void;
+  roundRect(x: string|number, y: string|number, width: string|number, height: string|number, radius: string|number): void;
+  ellipse(x: string|number, y: string|number, width: string|number, height: string|number): void;
+  database(x: string|number, y: string|number, width: string|number, height: string|number): void;
+  arrowEndpoint(x: string|number, y: string|number, angle: string|number, length: string|number): void;
+  circleEndpoint(x: string|number, y: string|number, angle: string|number, length: string|number): void;
+  dashedLine(x: string|number, y: string|number, x2: string|number, y2: string|number, pattern: string): void;
 }
 
 // Distinguish between single click and double click
