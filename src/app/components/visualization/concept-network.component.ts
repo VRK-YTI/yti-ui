@@ -390,9 +390,6 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
 
   private createMemberConceptEdge(from: CollectionNode, to: ConceptNode, meta: ReferenceMeta) {
     return Object.assign(this.createEdgeData(from, to, meta, 'relation'), {
-      arrows: {
-        to: true
-      }
     });
   }
 
