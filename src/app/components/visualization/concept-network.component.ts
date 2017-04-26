@@ -427,7 +427,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
     const legendCanvas = this.legendCanvasRef.nativeElement;
     const ctx = legendCanvas.getContext('2d');
 
-    const dpp = 4;
+    const dpp = 16;
     const width = 247;
     const height = 55;
 
@@ -438,7 +438,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
     legendCanvas.style.height = height + 'px';
 
     ctx.clearRect(0, 0, legendCanvas.width, legendCanvas.height);
-    ctx.scale(3.3, 3.3);
+    ctx.scale(0.825 * dpp, 0.825 * dpp);
 
     this.translateService.get('Hierarchical').subscribe(text => {
       ConceptNetworkComponent.drawText(ctx, { x: 47.5, y: 50 }, text.toUpperCase());
