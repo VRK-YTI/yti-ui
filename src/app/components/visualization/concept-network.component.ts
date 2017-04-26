@@ -462,13 +462,15 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
       const xr = xt + length / 2 * Math.cos(angle - 0.5 * Math.PI);
       const yr = yt + length / 2 * Math.sin(angle - 0.5 * Math.PI);
 
-      ctx.fillStyle = '#000000';
+      ctx.fillStyle = '#ffffff';
       ctx.beginPath();
       ctx.moveTo(x, y);
       ctx.lineTo(xl, yl);
       ctx.lineTo(xb, yb);
       ctx.lineTo(xr, yr);
       ctx.closePath();
+      ctx.lineWidth = 3;
+      ctx.stroke();
       ctx.fill();
     };
 
