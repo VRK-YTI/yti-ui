@@ -1,633 +1,980 @@
-[{
-	"id": "TerminologicalVocabulary",
-	"uri": "http://www.w3.org/2004/02/skos/core#ConceptScheme",
-	"index": 0,
-	"permissions": {},
-	"properties": {
-		"prefLabel": [{
-			"lang": "fi",
-			"value": "Terminologinen sanasto"
-		}, {
-			"lang": "en",
-			"value": "Terminological Dictionary"
-		}]
-	},
-	"textAttributes": [{
-		"regex": "(?s)^.*$",
-		"id": "prefLabel",
-		"uri": "http://purl.org/dc/terms/title",
-		"index": 0,
-		"domain": {
-			"id": "TerminologicalVocabulary"
-		},
-		"permissions": {},
-		"properties": {
-			"prefLabel": [{
-				"lang": "fi",
-				"value": "Nimi"
-			}, {
-				"lang": "en",
-				"value": "Title"
-			}]
-		}
-	}, {
-		"regex": "(?s)^.*$",
-		"id": "description",
-		"uri": "http://purl.org/dc/terms/description",
-		"index": 1,
-		"domain": {
-			"id": "TerminologicalVocabulary"
-		},
-		"permissions": {},
-		"properties": {
-			"prefLabel": [{
-				"lang": "fi",
-				"value": "Kuvaus"
-			}, {
-				"lang": "en",
-				"value": "Description"
-			}]
-		}
-	}],
-	"referenceAttributes": [{
-		"range": {
-			"id": "Organization",
-			"graph": {
-				"id": "228cce1e-8360-4039-a3f7-725df5643354"
-			}
-		},
-		"id": "publisher",
-		"uri": "http://purl.org/dc/terms/publisher",
-		"index": 0,
-		"domain": {
-			"id": "TerminologicalVocabulary"
-		},
-		"permissions": {},
-		"properties": {
-			"prefLabel": [{
-				"lang": "fi",
-				"value": "Julkaisija"
-			}, {
-				"lang": "en",
-				"value": "Publisher"
-			}]
-		}
-	}, {
-		"range": {
-			"id": "Group",
-			"graph": {
-				"id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
-			}
-		},
-		"id": "inGroup",
-		"uri": "http://purl.org/dc/terms/isPartOf",
-		"index": 1,
-		"domain": {
-			"id": "TerminologicalVocabulary"
-		},
-		"permissions": {},
-		"properties": {
-			"prefLabel": [{
-					"lang": "fi",
-					"value": "Ryhmä"
-				}, {
-					"lang": "en",
-					"value": "Group"
-				}
-
-			]
-		}
-	}]
-}, {
-	"id": "Collection",
-	"uri": "http://www.w3.org/2004/02/skos/core#Collection",
-	"index": 0,
-	"permissions": {},
-	"properties": {
-		"prefLabel": [{
-			"lang": "fi",
-			"value": "Käsitevalikoima"
-		}, {
-			"lang": "en",
-			"value": "Collection"
-		}]
-	},
-	"textAttributes": [{
-		"regex": "(?s)^.*$",
-		"id": "prefLabel",
-		"uri": "http://purl.org/dc/terms/title",
-		"index": 0,
-		"domain": {
-			"id": "Collection"
-		},
-		"permissions": {},
-		"properties": {
-			"prefLabel": [{
-				"lang": "fi",
-				"value": "Nimi"
-			}, {
-				"lang": "en",
-				"value": "Name"
-			}]
-		}
-	}, {
-		"regex": "(?s)^.*$",
-		"id": "definition",
-		"uri": "http://www.w3.org/2004/02/skos/core#definition",
-		"index": 1,
-		"domain": {
-			"id": "Collection"
-		},
-		"permissions": {},
-		"properties": {
-			"prefLabel": [{
-				"lang": "fi",
-				"value": "Kuvaus"
-			}, {
-				"lang": "en",
-				"value": "Description"
-			}]
-		}
-	}],
-	"referenceAttributes": [{
-		"range": {
-			"id": "Concept"
-		},
-		"id": "member",
-		"uri": "http://www.w3.org/2004/02/skos/core#member",
-		"index": 0,
-		"domain": {
-			"id": "Collection"
-		},
-		"permissions": {},
-		"properties": {
-			"prefLabel": [{
-				"lang": "fi",
-				"value": "Valikoimaan kuuluva käsite"
-			}, {
-				"lang": "en",
-				"value": "Member"
-			}]
-		}
-	}, {
-		"range": {
-			"id": "Collection"
-		},
-		"id": "isPartOfCollection",
-		"uri": "http://purl.org/dc/terms/isPartOf",
-		"index": 1,
-		"domain": {
-			"id": "Collection"
-		},
-		"permissions": {},
-		"properties": {
-			"prefLabel": [{
-				"lang": "fi",
-				"value": "Partitiivinen koostumussuhde"
-			}, {
-				"lang": "en",
-				"value": "Is part of collection"
-			}]
-		}
-	}]
-}, {
-	"id": "Term",
-	"uri": "http://www.w3.org/2008/05/skos-xl#Label",
-	"index": 0,
-
-	"permissions": {},
-	"properties": {
-		"prefLabel": [{
-			"lang": "fi",
-			"value": "Termi"
-		}, {
-			"lang": "en",
-			"value": "Term"
-		}]
-	},
-	"textAttributes": [{
-		"regex": "(?s)^.*$",
-		"id": "Source",
-		"uri": "http://purl.org/dc/terms/source",
-		"index": 0,
-		"domain": {
-			"id": "Term"
-		},
-		"permissions": {},
-		"properties": {
-			"prefLabel": [{
-				"lang": "fi",
-				"value": "Lähde"
-			}, {
-				"lang": "en",
-				"value": "Source"
-			}]
-		}
-	}, {
-		"regex": "(?s)^.*$",
-		"id": "Scope",
-		"uri": "http://iow.csc.fi/ns/st#scope",
-		"index": 1,
-		"domain": {
-			"id": "Term"
-		},
-		"permissions": {},
-		"properties": {
-			"prefLabel": [{
-				"lang": "fi",
-				"value": "Käyttöala"
-			}, {
-				"lang": "en",
-				"value": "Scope"
-			}]
-		}
-	}, {
-		"regex": "(?s)^.*$",
-		"id": "editorialNote",
-		"uri": "http://www.w3.org/2004/02/skos/core#editorialNote",
-		"index": 2,
-		"domain": {
-			"id": "Term"
-		},
-		"permissions": {},
-		"properties": {
-			"prefLabel": [{
-				"lang": "fi",
-				"value": "Ylläpitäjän muistiinpano"
-			}, {
-				"lang": "en",
-				"value": "Editorial note"
-			}]
-		}
-	}, {
-		"regex": "(?s)^.*$",
-		"id": "draftComment",
-		"uri": "http://www.w3.org/2000/01/rdf-schema#comment",
-		"index": 3,
-		"domain": {
-			"id": "Term"
-		},
-		"permissions": {},
-		"properties": {
-			"prefLabel": [{
-				"lang": "fi",
-				"value": "Luonnosvaiheen kommentti"
-			}, {
-				"lang": "en",
-				"value": "Draft comment"
-			}]
-		}
-	}, {
-		"regex": "(?s)^.*$",
-		"id": "historyNote",
-		"uri": "http://www.w3.org/2004/02/skos/core#historyNote",
-		"index": 4,
-		"domain": {
-			"id": "Term"
-		},
-		"permissions": {},
-		"properties": {
-			"prefLabel": [{
-				"lang": "fi",
-				"value": "Termin käytön historiatieto"
-			}, {
-				"lang": "en",
-				"value": "History note"
-			}]
-		}
-	}, {
-		"regex": "(?s)^.*$",
-		"id": "changeNote",
-		"uri": "http://www.w3.org/2004/02/skos/core#changeNote",
-		"index": 5,
-		"domain": {
-			"id": "Term"
-		},
-		"permissions": {},
-		"properties": {
-			"prefLabel": [{
-				"lang": "fi",
-				"value": "Termin muutoshistoriatieto"
-			}, {
-				"lang": "en",
-				"value": "Change note"
-			}]
-		}
-	}, {
-		"regex": "(?s)^.*$",
-		"id": "status",
-		"uri": "http://www.w3.org/2003/06/sw-vocab-status/ns#term_status",
-		"index": 6,
-		"domain": {
-			"id": "Term"
-		},
-		"permissions": {},
-		"properties": {
-			"prefLabel": [{
-				"lang": "fi",
-				"value": "Termin tila"
-			}, {
-				"lang": "en",
-				"value": "Term status"
-			}]
-		}
-	}, {
-		"regex": "(?s)^.*$",
-		"id": "prefLabel",
-		"uri": "http://www.w3.org/2008/05/skos-xl#literalForm",
-		"index": 7,
-		"domain": {
-			"id": "Term"
-		},
-		"permissions": {},
-		"properties": {
-			"prefLabel": [{
-				"lang": "fi",
-				"value": "Termin arvo"
-			}, {
-				"lang": "en",
-				"value": "Term literal value"
-			}]
-		}
-	}],
-	"referenceAttributes": []
-}, {
-	"id": "Concept",
-	"uri": "http://www.w3.org/2004/02/skos/core#Concept",
-	"index": 0,
-
-	"permissions": {},
-	"properties": {
-		"prefLabel": [{
-			"lang": "fi",
-			"value": "Käsite"
-		}, {
-			"lang": "en",
-			"value": "Concept"
-		}]
-	},
-	"textAttributes": [{
-		"regex": "(?s)^.*$",
-		"id": "definition",
-		"uri": "http://www.w3.org/2004/02/skos/core#definition",
-		"index": 0,
-		"domain": {
-			"id": "Concept"
-		},
-		"permissions": {},
-		"properties": {
-			"prefLabel": [{
-				"lang": "fi",
-				"value": "Määritelmä"
-			}, {
-				"lang": "en",
-				"value": "Definition"
-			}]
-		}
-	}, {
-		"regex": "(?s)^.*$",
-		"id": "note",
-		"uri": "http://www.w3.org/2004/02/skos/core#note",
-		"index": 1,
-		"domain": {
-			"id": "Concept"
-		},
-		"permissions": {},
-		"properties": {
-			"prefLabel": [{
-				"lang": "fi",
-				"value": "Huomautus"
-			}, {
-				"lang": "en",
-				"value": "Note"
-			}]
-		}
-	}, {
-		"regex": "(?s)^.*$",
-		"id": "editorialNote",
-		"uri": "http://www.w3.org/2004/02/skos/core#editorialNote",
-		"index": 2,
-		"domain": {
-			"id": "Concept"
-		},
-		"permissions": {},
-		"properties": {
-			"prefLabel": [{
-				"lang": "fi",
-				"value": "Ylläpitäjän muistiinpano"
-			}, {
-				"lang": "en",
-				"value": "Editorial note"
-			}]
-		}
-	}, {
-		"regex": "(?s)^.*$",
-		"id": "example",
-		"uri": "http://www.w3.org/2004/02/skos/core#example",
-		"index": 3,
-		"domain": {
-			"id": "Concept"
-		},
-		"permissions": {},
-		"properties": {
-			"prefLabel": [{
-				"lang": "fi",
-				"value": "Käyttöesimerkki"
-			}, {
-				"lang": "en",
-				"value": "Example"
-			}]
-		}
-	}, {
-		"regex": "(?s)^.*$",
-		"id": "changeNote",
-		"uri": "http://www.w3.org/2004/02/skos/core#changeNote",
-		"index": 4,
-		"domain": {
-			"id": "Concept"
-		},
-		"permissions": {},
-		"properties": {
-			"prefLabel": [{
-				"lang": "fi",
-				"value": "Muutoshistoriatieto"
-			}, {
-				"lang": "en",
-				"value": "Change note"
-			}]
-		}
-	}, {
-		"regex": "(?s)^.*$",
-		"id": "historyNote",
-		"uri": "http://www.w3.org/2004/02/skos/core#historyNote",
-		"index": 5,
-		"domain": {
-			"id": "Concept"
-		},
-		"permissions": {},
-		"properties": {
-			"prefLabel": [{
-				"lang": "fi",
-				"value": "Käsitemerkityksen historiatieto"
-			}, {
-				"lang": "en",
-				"value": "History note"
-			}]
-		}
-	}, {
-		"regex": "(?s)^.*$",
-		"id": "status",
-		"uri": "http://www.w3.org/2003/06/sw-vocab-status/ns#term_status",
-		"index": 6,
-		"domain": {
-			"id": "Concept"
-		},
-		"permissions": {},
-		"properties": {
-			"prefLabel": [{
-				"lang": "fi",
-				"value": "Käsitteen tila"
-			}, {
-				"lang": "en",
-				"value": "Concept status"
-			}]
-		}
-	}, {
-		"regex": "(?s)^.*$",
-		"id": "notation",
-		"uri": "http://www.w3.org/2004/02/skos/core#notation",
-		"index": 7,
-		"domain": {
-			"id": "Concept"
-		},
-		"permissions": {},
-		"properties": {
-			"prefLabel": [{
-				"lang": "fi",
-				"value": "Systemaattinen merkintätapa"
-			}, {
-				"lang": "en",
-				"value": "Notation"
-			}]
-		}
-	}, {
-		"regex": "(?s)^.*$",
-		"id": "source",
-		"uri": "http://purl.org/dc/terms/source",
-		"index": 8,
-		"domain": {
-			"id": "Concept"
-		},
-		"permissions": {},
-		"properties": {
-			"prefLabel": [{
-				"lang": "fi",
-				"value": "Lähde"
-			}, {
-				"lang": "en",
-				"value": "Source"
-			}]
-		}
-	}],
-	"referenceAttributes": [{
-		"range": {
-			"id": "Term"
-		},
-		"id": "prefLabelXl",
-		"uri": "http://www.w3.org/2008/05/skos-xl#prefLabel",
-		"index": 0,
-		"domain": {
-			"id": "Concept"
-		},
-		"permissions": {},
-		"properties": {
-			"prefLabel": [{
-				"lang": "fi",
-				"value": "Suositettava termi"
-			}, {
-				"lang": "en",
-				"value": "Preferred term"
-			}]
-		}
-	},  {
-		"range": {
-			"id": "Term"
-		},
-		"id": "altLabelXl",
-		"uri": "http://iow.csc.fi/ns/st#synonym",
-		"index": 2,
-		"domain": {
-			"id": "Concept"
-		},
-		"permissions": {},
-		"properties": {
-			"prefLabel": [{
-				"lang": "fi",
-				"value": "Synonyymi"
-			}, {
-				"lang": "en",
-				"value": "Synonym"
-			}]
-		}
-	},  {
-		"range": {
-			"id": "Concept"
-		},
-		"id": "broader",
-		"uri": "http://www.w3.org/2004/02/skos/core#broader",
-		"index": 3,
-		"domain": {
-			"id": "Concept"
-		},
-		"permissions": {},
-		"properties": {
-			"prefLabel": [{
-				"lang": "fi",
-				"value": "Hierarkkinen yläkäsite"
-			}, {
-				"lang": "en",
-				"value": "Broader concept"
-			}]
-		}
-	}, {
-		"range": {
-			"id": "Concept"
-		},
-		"id": "related",
-		"uri": "http://www.w3.org/2004/02/skos/core#related",
-		"index": 4,
-		"domain": {
-			"id": "Concept"
-		},
-		"permissions": {},
-		"properties": {
-			"prefLabel": [{
-				"lang": "fi",
-				"value": "Liittyvä käsite"
-			}, {
-				"lang": "en",
-				"value": "Related concept"
-			}]
-		}
-	}, {
-		"range": {
-			"id": "Concept"
-		},
-		"id": "isPartOf",
-		"uri": "http://purl.org/dc/terms/isPartOf",
-		"index": 5,
-		"domain": {
-			"id": "Concept"
-		},
-		"permissions": {},
-		"properties": {
-			"prefLabel": [{
-				"lang": "fi",
-				"value": "Partitiivinen koostumussuhde"
-			}, {
-				"lang": "en",
-				"value": "Is part of concept"
-			}]
-		}
-	}]
-}]
+[
+  {
+    "id": "TerminologicalVocabulary",
+    "uri": "http://www.w3.org/2004/02/skos/core#ConceptScheme",
+    "index": 0,
+    "graph": {
+      "id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8"
+    },
+    "permissions": {},
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "fi",
+          "value": "Terminologinen sanasto"
+        },
+        {
+          "lang": "en",
+          "value": "Terminological Dictionary"
+        }
+      ]
+    },
+    "textAttributes": [
+      {
+        "regex": "(?s)^.*$",
+        "id": "prefLabel",
+        "uri": "http://purl.org/dc/terms/title",
+        "index": 0,
+        "domain": {
+          "id": "TerminologicalVocabulary",
+          "graph": {
+            "id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "localizable:single"
+            }
+          ],
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Nimi"
+            },
+            {
+              "lang": "en",
+              "value": "Title"
+            }
+          ]
+        }
+      },
+      {
+        "regex": "(?s)^.*$",
+        "id": "description",
+        "uri": "http://purl.org/dc/terms/description",
+        "index": 1,
+        "domain": {
+          "id": "TerminologicalVocabulary",
+          "graph": {
+            "id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "localizable"
+            }
+          ],
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Kuvaus"
+            },
+            {
+              "lang": "en",
+              "value": "Description"
+            }
+          ]
+        }
+      }
+    ],
+    "referenceAttributes": [
+      {
+        "range": {
+          "id": "Organization",
+          "graph": {
+            "id": "228cce1e-8360-4039-a3f7-725df5643354"
+          }
+        },
+        "id": "publisher",
+        "uri": "http://purl.org/dc/terms/publisher",
+        "index": 0,
+        "domain": {
+          "id": "TerminologicalVocabulary",
+          "graph": {
+            "id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Julkaisija"
+            },
+            {
+              "lang": "en",
+              "value": "Publisher"
+            }
+          ]
+        }
+      },
+      {
+        "range": {
+          "id": "Group",
+          "graph": {
+            "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+          }
+        },
+        "id": "inGroup",
+        "uri": "http://purl.org/dc/terms/isPartOf",
+        "index": 1,
+        "domain": {
+          "id": "TerminologicalVocabulary",
+          "graph": {
+            "id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Ryhmä"
+            },
+            {
+              "lang": "en",
+              "value": "Group"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "Collection",
+    "uri": "http://www.w3.org/2004/02/skos/core#Collection",
+    "index": 0,
+    "graph": {
+      "id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8"
+    },
+    "permissions": {},
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "fi",
+          "value": "Käsitevalikoima"
+        },
+        {
+          "lang": "en",
+          "value": "Collection"
+        }
+      ]
+    },
+    "textAttributes": [
+      {
+        "regex": "(?s)^.*$",
+        "id": "prefLabel",
+        "uri": "http://purl.org/dc/terms/title",
+        "index": 0,
+        "domain": {
+          "id": "Collection",
+          "graph": {
+            "id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "localizable:single"
+            }
+          ],
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Nimi"
+            },
+            {
+              "lang": "en",
+              "value": "Name"
+            }
+          ]
+        }
+      },
+      {
+        "regex": "(?s)^.*$",
+        "id": "definition",
+        "uri": "http://www.w3.org/2004/02/skos/core#definition",
+        "index": 1,
+        "domain": {
+          "id": "Collection",
+          "graph": {
+            "id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "localizable"
+            }
+          ],
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Kuvaus"
+            },
+            {
+              "lang": "en",
+              "value": "Description"
+            }
+          ]
+        }
+      }
+    ],
+    "referenceAttributes": [
+      {
+        "range": {
+          "id": "Concept",
+          "graph": {
+            "id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8"
+          }
+        },
+        "id": "member",
+        "uri": "http://www.w3.org/2004/02/skos/core#member",
+        "index": 0,
+        "domain": {
+          "id": "Collection",
+          "graph": {
+            "id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Valikoimaan kuuluva käsite"
+            },
+            {
+              "lang": "en",
+              "value": "Member"
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "Term",
+    "uri": "http://www.w3.org/2008/05/skos-xl#Label",
+    "index": 0,
+    "graph": {
+      "id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8"
+    },
+    "permissions": {},
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "fi",
+          "value": "Termi"
+        },
+        {
+          "lang": "en",
+          "value": "Term"
+        }
+      ]
+    },
+    "textAttributes": [
+      {
+        "regex": "(?s)^.*$",
+        "id": "prefLabel",
+        "uri": "http://www.w3.org/2008/05/skos-xl#literalForm",
+        "index": 0,
+        "domain": {
+          "id": "Term",
+          "graph": {
+            "id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Termin arvo"
+            },
+            {
+              "lang": "en",
+              "value": "Term literal value"
+            }
+          ]
+        }
+      },
+      {
+        "regex": "(?s)^.*$",
+        "id": "Source",
+        "uri": "http://purl.org/dc/terms/source",
+        "index": 1,
+        "domain": {
+          "id": "Term",
+          "graph": {
+            "id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "string:single,area"
+            }
+          ],
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Lähde"
+            },
+            {
+              "lang": "en",
+              "value": "Source"
+            }
+          ]
+        }
+      },
+      {
+        "regex": "(?s)^.*$",
+        "id": "Scope",
+        "uri": "http://iow.csc.fi/ns/st#scope",
+        "index": 2,
+        "domain": {
+          "id": "Term",
+          "graph": {
+            "id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "string:single,area"
+            }
+          ],
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Käyttöala"
+            },
+            {
+              "lang": "en",
+              "value": "Scope"
+            }
+          ]
+        }
+      },
+      {
+        "regex": "(?s)^.*$",
+        "id": "editorialNote",
+        "uri": "http://www.w3.org/2004/02/skos/core#editorialNote",
+        "index": 3,
+        "domain": {
+          "id": "Term",
+          "graph": {
+            "id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "string:single,area"
+            }
+          ],
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Ylläpitäjän muistiinpano"
+            },
+            {
+              "lang": "en",
+              "value": "Editorial note"
+            }
+          ]
+        }
+      },
+      {
+        "regex": "(?s)^.*$",
+        "id": "draftComment",
+        "uri": "http://www.w3.org/2000/01/rdf-schema#comment",
+        "index": 4,
+        "domain": {
+          "id": "Term",
+          "graph": {
+            "id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "string:single,area"
+            }
+          ],
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Luonnosvaiheen kommentti"
+            },
+            {
+              "lang": "en",
+              "value": "Draft comment"
+            }
+          ]
+        }
+      },
+      {
+        "regex": "(?s)^.*$",
+        "id": "historyNote",
+        "uri": "http://www.w3.org/2004/02/skos/core#historyNote",
+        "index": 5,
+        "domain": {
+          "id": "Term",
+          "graph": {
+            "id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "string:single,area"
+            }
+          ],
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Termin käytön historiatieto"
+            },
+            {
+              "lang": "en",
+              "value": "History note"
+            }
+          ]
+        }
+      },
+      {
+        "regex": "(?s)^.*$",
+        "id": "changeNote",
+        "uri": "http://www.w3.org/2004/02/skos/core#changeNote",
+        "index": 6,
+        "domain": {
+          "id": "Term",
+          "graph": {
+            "id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "string:single,area"
+            }
+          ],
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Termin muutoshistoriatieto"
+            },
+            {
+              "lang": "en",
+              "value": "Change note"
+            }
+          ]
+        }
+      },
+      {
+        "regex": "(?s)^.*$",
+        "id": "status",
+        "uri": "http://www.w3.org/2003/06/sw-vocab-status/ns#term_status",
+        "index": 7,
+        "domain": {
+          "id": "Term",
+          "graph": {
+            "id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "status"
+            }
+          ],
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Termin tila"
+            },
+            {
+              "lang": "en",
+              "value": "Term status"
+            }
+          ]
+        }
+      }
+    ],
+    "referenceAttributes": []
+  },
+  {
+    "id": "Concept",
+    "uri": "http://www.w3.org/2004/02/skos/core#Concept",
+    "index": 0,
+    "graph": {
+      "id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8"
+    },
+    "permissions": {},
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "fi",
+          "value": "Käsite"
+        },
+        {
+          "lang": "en",
+          "value": "Concept"
+        }
+      ]
+    },
+    "textAttributes": [
+      {
+        "regex": "(?s)^.*$",
+        "id": "definition",
+        "uri": "http://www.w3.org/2004/02/skos/core#definition",
+        "index": 0,
+        "domain": {
+          "id": "Concept",
+          "graph": {
+            "id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "localizable:multiple,area"
+            }
+          ],
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Määritelmä"
+            },
+            {
+              "lang": "en",
+              "value": "Definition"
+            }
+          ]
+        }
+      },
+      {
+        "regex": "(?s)^.*$",
+        "id": "note",
+        "uri": "http://www.w3.org/2004/02/skos/core#note",
+        "index": 1,
+        "domain": {
+          "id": "Concept",
+          "graph": {
+            "id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "localizable:multiple,area"
+            }
+          ],
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Huomautus"
+            },
+            {
+              "lang": "en",
+              "value": "Note"
+            }
+          ]
+        }
+      },
+      {
+        "regex": "(?s)^.*$",
+        "id": "editorialNote",
+        "uri": "http://www.w3.org/2004/02/skos/core#editorialNote",
+        "index": 2,
+        "domain": {
+          "id": "Concept",
+          "graph": {
+            "id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "localizable:multiple,area"
+            }
+          ],
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Ylläpitäjän muistiinpano"
+            },
+            {
+              "lang": "en",
+              "value": "Editorial note"
+            }
+          ]
+        }
+      },
+      {
+        "regex": "(?s)^.*$",
+        "id": "example",
+        "uri": "http://www.w3.org/2004/02/skos/core#example",
+        "index": 3,
+        "domain": {
+          "id": "Concept",
+          "graph": {
+            "id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "localizable:multiple,area"
+            }
+          ],
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Käyttöesimerkki"
+            },
+            {
+              "lang": "en",
+              "value": "Example"
+            }
+          ]
+        }
+      },
+      {
+        "regex": "(?s)^.*$",
+        "id": "changeNote",
+        "uri": "http://www.w3.org/2004/02/skos/core#changeNote",
+        "index": 4,
+        "domain": {
+          "id": "Concept",
+          "graph": {
+            "id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "string:single,area"
+            }
+          ],
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Muutoshistoriatieto"
+            },
+            {
+              "lang": "en",
+              "value": "Change note"
+            }
+          ]
+        }
+      },
+      {
+        "regex": "(?s)^.*$",
+        "id": "historyNote",
+        "uri": "http://www.w3.org/2004/02/skos/core#historyNote",
+        "index": 5,
+        "domain": {
+          "id": "Concept",
+          "graph": {
+            "id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "string:single,area"
+            }
+          ],
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Käsitemerkityksen historiatieto"
+            },
+            {
+              "lang": "en",
+              "value": "History note"
+            }
+          ]
+        }
+      },
+      {
+        "regex": "(?s)^.*$",
+        "id": "status",
+        "uri": "http://www.w3.org/2003/06/sw-vocab-status/ns#term_status",
+        "index": 6,
+        "domain": {
+          "id": "Concept",
+          "graph": {
+            "id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "status"
+            }
+          ],
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Käsitteen tila"
+            },
+            {
+              "lang": "en",
+              "value": "Concept status"
+            }
+          ]
+        }
+      },
+      {
+        "regex": "(?s)^.*$",
+        "id": "notation",
+        "uri": "http://www.w3.org/2004/02/skos/core#notation",
+        "index": 7,
+        "domain": {
+          "id": "Concept",
+          "graph": {
+            "id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Systemaattinen merkintätapa"
+            },
+            {
+              "lang": "en",
+              "value": "Notation"
+            }
+          ]
+        }
+      },
+      {
+        "regex": "(?s)^.*$",
+        "id": "source",
+        "uri": "http://purl.org/dc/terms/source",
+        "index": 8,
+        "domain": {
+          "id": "Concept",
+          "graph": {
+            "id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "string:single,area"
+            }
+          ],
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Lähde"
+            },
+            {
+              "lang": "en",
+              "value": "Source"
+            }
+          ]
+        }
+      }
+    ],
+    "referenceAttributes": [
+      {
+        "range": {
+          "id": "Term",
+          "graph": {
+            "id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8"
+          }
+        },
+        "id": "prefLabelXl",
+        "uri": "http://www.w3.org/2008/05/skos-xl#prefLabel",
+        "index": 0,
+        "domain": {
+          "id": "Concept",
+          "graph": {
+            "id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Suositettava termi"
+            },
+            {
+              "lang": "en",
+              "value": "Preferred term"
+            }
+          ]
+        }
+      },
+      {
+        "range": {
+          "id": "Term",
+          "graph": {
+            "id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8"
+          }
+        },
+        "id": "altLabelXl",
+        "uri": "http://iow.csc.fi/ns/st#synonym",
+        "index": 1,
+        "domain": {
+          "id": "Concept",
+          "graph": {
+            "id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Synonyymi"
+            },
+            {
+              "lang": "en",
+              "value": "Synonym"
+            }
+          ]
+        }
+      },
+      {
+        "range": {
+          "id": "Concept",
+          "graph": {
+            "id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8"
+          }
+        },
+        "id": "broader",
+        "uri": "http://www.w3.org/2004/02/skos/core#broader",
+        "index": 2,
+        "domain": {
+          "id": "Concept",
+          "graph": {
+            "id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Hierarkkinen yläkäsite"
+            },
+            {
+              "lang": "en",
+              "value": "Broader concept"
+            }
+          ]
+        }
+      },
+      {
+        "range": {
+          "id": "Concept",
+          "graph": {
+            "id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8"
+          }
+        },
+        "id": "related",
+        "uri": "http://www.w3.org/2004/02/skos/core#related",
+        "index": 3,
+        "domain": {
+          "id": "Concept",
+          "graph": {
+            "id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Liittyvä käsite"
+            },
+            {
+              "lang": "en",
+              "value": "Related concept"
+            }
+          ]
+        }
+      },
+      {
+        "range": {
+          "id": "Concept",
+          "graph": {
+            "id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8"
+          }
+        },
+        "id": "isPartOf",
+        "uri": "http://purl.org/dc/terms/isPartOf",
+        "index": 4,
+        "domain": {
+          "id": "Concept",
+          "graph": {
+            "id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Partitiivinen koostumussuhde"
+            },
+            {
+              "lang": "en",
+              "value": "Is part of concept"
+            }
+          ]
+        }
+      }
+    ]
+  }
+]
