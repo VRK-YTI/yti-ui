@@ -576,14 +576,24 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
 
   private addEdgeNodesForCollection(collection: CollectionNode) {
 
-    for (const memberConcept of collection.members.values) {
+    for (const memberConcept of collection.memberConcepts.values) {
       this.addNodeIfDoesNotExist(this.createMemberConceptNode(memberConcept));
-      this.addEdgeIfDoesNotExist(this.createMemberConceptEdge(collection, memberConcept, collection.members.meta));
+      this.addEdgeIfDoesNotExist(this.createMemberConceptEdge(collection, memberConcept, collection.memberConcepts.meta));
+    }
+
+    if (collection.hasBroaderConcepts()) {
+      for (const broaderConcept of collection.broaderConcepts.values) {
+        this.addNodeIfDoesNotExist(this.createBroaderConceptNode(broaderConcept));
+        this.addEdgeIfDoesNotExist(this.createBroaderConceptEdge(collection, broaderConcept, collection.broaderConcepts.meta));
+      }
     }
   }
 
   private removeEdgeNodesFromCollection(collection: CollectionNode) {
-    this.removeEdgeNodesFromNode(collection.id, collectProperties(collection.members.values, concept => concept.id));
+    this.removeEdgeNodesFromNode(collection.id, collectProperties([
+      ...collection.memberConcepts.values,
+      ...collection.hasBroaderConcepts() ? collection.broaderConcepts.values : []
+    ], concept => concept.id));
   }
 
   private removeNode(nodeId: string) {

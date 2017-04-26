@@ -651,8 +651,15 @@ export class CollectionNode extends Node<'Collection'> {
     return this.getPropertyAsLocalizable('definition');
   }
 
-  get members(): Reference<ConceptNode> {
+  get memberConcepts(): Reference<ConceptNode> {
     return this.references['member'];
+  }
+
+  hasBroaderConcepts() {
+    return this.meta.hasReference('broader');
+  }
+  get broaderConcepts(): Reference<ConceptNode> {
+    return this.references['broader'];
   }
 }
 
