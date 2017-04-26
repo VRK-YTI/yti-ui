@@ -17,9 +17,22 @@
     }
   }
 
-  .network-canvas {
-    width: 100%;
-    height: calc(100vh - 64px);
+  .canvas-container {
+
+    position: relative;
+
+    .network-canvas {
+      width: 100%;
+      height: calc(100vh - 64px);
+    }
+
+    .legend {
+      top: 1px;
+      right: 1px;
+      position: absolute;
+      border: solid 1px black;
+      background-color: rgba(255, 255, 255, 0.5);
+    }
   }
 }
 

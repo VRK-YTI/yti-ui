@@ -16,15 +16,23 @@ import { ReferenceMeta } from '../../entities/meta';
 import { Node } from '../../entities/node';
 import { collectProperties } from '../../utils/array';
 import { assertNever, requireDefined } from '../../utils/object';
+import { TranslateService } from 'ng2-translate';
 
 interface ConceptNetworkData {
   nodes: DataSet<UpdatableVisNode>;
   edges: DataSet<UpdatableVisEdge>;
 }
 
-interface ArrowEndData {
+interface PointAndAngle {
 
   angle: number;
+  point: {
+    x: number;
+    y: number;
+  }
+}
+
+interface ArrowEndData extends PointAndAngle {
 
   core: {
     x: number;
@@ -32,13 +40,6 @@ interface ArrowEndData {
   }
 
   length: number;
-
-  point: {
-    t: number;
-    x: number;
-    y: number;
-  }
-
   type: string;
 }
 
@@ -184,14 +185,18 @@ interface UpdatableVisEdge extends CustomizedVisEdge {
         <h3 translate>Visualization</h3>
       </div>
 
-      <div #canvas class="network-canvas" (mouseleave)="hidePopup()"></div>
+      <div class="canvas-container">
+        <div #networkCanvas class="network-canvas" (mouseleave)="hidePopup()"></div>
+        <canvas class="legend" #legendCanvas></canvas>
+      </div>
 
     </div>
   `
 })
 export class ConceptNetworkComponent implements OnInit, OnDestroy {
 
-  @ViewChild('canvas') canvasRef: ElementRef;
+  @ViewChild('networkCanvas') networkCanvasRef: ElementRef;
+  @ViewChild('legendCanvas') legendCanvasRef: ElementRef;
 
   rootNode: Node<any>|null = null;
 
@@ -207,6 +212,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
   };
 
   constructor(private zone: NgZone,
+              private translateService: TranslateService,
               private languageService: LanguageService,
               private termedService: TermedService,
               private router: Router,
@@ -226,8 +232,14 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
 
   public ngOnInit(): void {
 
+    this.drawLegend();
+
+    this.languageService.languageChange$.subscribe(() => {
+      this.drawLegend();
+    });
+
     this.zone.runOutsideAngular(() => {
-      this.network = new VisNetwork(this.canvasRef.nativeElement, this.networkData, options);
+      this.network = new VisNetwork(this.networkCanvasRef.nativeElement, this.networkData, options);
       this.network.on('dragStart', this.onDragStart.bind(this));
       this.network.on('click', this.onClick.bind(this));
     });
@@ -410,65 +422,135 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
     }
   }
 
+  private drawLegend() {
+
+    const legendCanvas = this.legendCanvasRef.nativeElement;
+    const ctx = legendCanvas.getContext('2d');
+
+    const dpp = 4;
+    const width = 247;
+    const height = 55;
+
+    legendCanvas.width = width * dpp;
+    legendCanvas.height = height * dpp;
+
+    legendCanvas.style.width = width + 'px';
+    legendCanvas.style.height = height + 'px';
+
+    ctx.clearRect(0, 0, legendCanvas.width, legendCanvas.height);
+    ctx.scale(3.3, 3.3);
+
+    this.translateService.get('Hierarchical').subscribe(text => {
+      ConceptNetworkComponent.drawText(ctx, { x: 47.5, y: 50 }, text.toUpperCase());
+    });
+
+    this.translateService.get('Compositive').subscribe(text => {
+      ConceptNetworkComponent.drawText(ctx, { x: 142.5, y: 50 }, text.toUpperCase());
+    });
+
+    this.translateService.get('Associative').subscribe(text => {
+      ConceptNetworkComponent.drawText(ctx, { x: 247.5, y: 50 }, text.toUpperCase());
+    });
+
+    ConceptNetworkComponent.drawLine(ctx, { x: 20, y: 20 }, { x: 75, y: 20 });
+    ConceptNetworkComponent.drawLine(ctx, { x: 115, y: 20 }, { x: 170, y: 20 });
+    ConceptNetworkComponent.drawLine(ctx, { x: 220, y: 20 }, { x: 275, y: 20 });
+
+    ConceptNetworkComponent.drawInheritanceArrow(ctx, {
+      angle: 0,
+      point: {
+        x: 75,
+        y: 20
+      }
+    });
+
+    ConceptNetworkComponent.drawCompositionArrow(ctx, {
+      angle: 0,
+      point: {
+        x: 170,
+        y: 20
+      }
+    });
+  }
+
+  private static drawText(ctx: CanvasRenderingContext2D, to: { x: number, y: number }, text: string) {
+
+    ctx.font = "300 12px Helvetica neue";
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#000000';
+    ctx.fillText(text , to.x, to.y);
+  }
+
+  private static drawLine(ctx: CanvasRenderingContext2D, from: { x: number, y: number }, to: { x: number, y: number }, lineWidth = 2) {
+
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = lineWidth;
+
+    ctx.beginPath();
+    ctx.moveTo(from.x, from.y);
+    ctx.lineTo(to.x, to.y);
+    ctx.closePath();
+    ctx.stroke();
+  }
+
+  private static drawInheritanceArrow(ctx: CanvasRenderingContext2D, data: PointAndAngle, lineWidth = 3) {
+
+    const { angle, point } = data;
+    const { x, y } = point;
+    const length = 15;
+
+    ctx.fillStyle = '#ffffff';
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = lineWidth;
+
+    const top = { x: x - length * Math.cos(angle), y: y - length * Math.sin(angle) };
+    const left = { x: top.x + length / 2 * Math.cos(angle + 0.5 * Math.PI), y: top.y + length / 2 * Math.sin(angle + 0.5 * Math.PI) };
+    const right = { x: top.x + length / 2 * Math.cos(angle - 0.5 * Math.PI), y: top.y + length / 2 * Math.sin(angle - 0.5 * Math.PI) };
+
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(left.x, left.y);
+    ctx.lineTo(right.x, right.y);
+    ctx.closePath();
+    ctx.stroke();
+    ctx.fill();
+  }
+
+  private static drawCompositionArrow(ctx: CanvasRenderingContext2D, data: PointAndAngle, lineWidth = 3) {
+
+    const { point, angle } = data;
+    const { x, y } = point;
+    const length = 15;
+
+    ctx.fillStyle = '#ffffff';
+    ctx.strokeStyle = '#000000';
+    ctx.lineWidth = lineWidth;
+
+    const top = { x: x - length * Math.cos(angle), y: y - length * Math.sin(angle) };
+    const bottom = { x: x - length * 2 * Math.cos(angle), y: y - length * 2 * Math.sin(angle) };
+    const left = { x: top.x + length / 2 * Math.cos(angle + 0.5 * Math.PI), y: top.y + length / 2 * Math.sin(angle + 0.5 * Math.PI) };
+    const right = { x: top.x + length / 2 * Math.cos(angle - 0.5 * Math.PI), y: top.y + length / 2 * Math.sin(angle - 0.5 * Math.PI) };
+
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(left.x, left.y);
+    ctx.lineTo(bottom.x, bottom.y);
+    ctx.lineTo(right.x, right.y);
+    ctx.closePath();
+    ctx.stroke();
+    ctx.fill();
+  }
+
   private static drawEdgeArrows(ctx: VisCanvasRenderingContext2D, edgeType: EdgeType, arrowData: ArrowData) {
-
-    const drawInheritance = (data: ArrowEndData) => {
-
-      const { angle, point } = data;
-      const { x, y } = point;
-      const length = 15;
-
-      ctx.fillStyle = '#ffffff';
-      ctx.strokeStyle = '#000000';
-      ctx.lineWidth = 3;
-
-      const top = { x: x - length * Math.cos(angle), y: y - length * Math.sin(angle) };
-      const left = { x: top.x + length / 2 * Math.cos(angle + 0.5 * Math.PI), y: top.y + length / 2 * Math.sin(angle + 0.5 * Math.PI) };
-      const right = { x: top.x + length / 2 * Math.cos(angle - 0.5 * Math.PI), y: top.y + length / 2 * Math.sin(angle - 0.5 * Math.PI) };
-
-      ctx.beginPath();
-      ctx.moveTo(x, y);
-      ctx.lineTo(left.x, left.y);
-      ctx.lineTo(right.x, right.y);
-      ctx.closePath();
-      ctx.stroke();
-      ctx.fill();
-    };
-
-    const drawComposition = (data: ArrowEndData) => {
-
-      const { point, angle } = data;
-      const { x, y } = point;
-      const length = 15;
-
-      ctx.fillStyle = '#ffffff';
-      ctx.strokeStyle = '#000000';
-      ctx.lineWidth = 3;
-
-      const top = { x: x - length * Math.cos(angle), y: y - length * Math.sin(angle) };
-      const bottom = { x: x - length * 2 * Math.cos(angle), y: y - length * 2 * Math.sin(angle) };
-      const left = { x: top.x + length / 2 * Math.cos(angle + 0.5 * Math.PI), y: top.y + length / 2 * Math.sin(angle + 0.5 * Math.PI) };
-      const right = { x: top.x + length / 2 * Math.cos(angle - 0.5 * Math.PI), y: top.y + length / 2 * Math.sin(angle - 0.5 * Math.PI) };
-
-      ctx.beginPath();
-      ctx.moveTo(x, y);
-      ctx.lineTo(left.x, left.y);
-      ctx.lineTo(bottom.x, bottom.y);
-      ctx.lineTo(right.x, right.y);
-      ctx.closePath();
-      ctx.stroke();
-      ctx.fill();
-    };
-
     switch (edgeType) {
       case 'relation':
         // no arrow
         break;
       case 'inheritance':
-        drawInheritance(arrowData.to);
+        ConceptNetworkComponent.drawInheritanceArrow(ctx, arrowData.to);
         break;
       case 'composition':
-        drawComposition(arrowData.to);
+        ConceptNetworkComponent.drawCompositionArrow(ctx, arrowData.to);
         break;
       default:
         assertNever(edgeType, 'Unsupported edge type: ' + edgeType);
@@ -663,7 +745,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
   };
 
   private hidePopup(): void {
-    const tooltip = this.canvasRef.nativeElement.querySelector('.vis-tooltip');
+    const tooltip = this.networkCanvasRef.nativeElement.querySelector('.vis-tooltip');
 
     if (tooltip !== null) {
       tooltip.style.visibility = 'hidden';

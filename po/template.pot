@@ -130,6 +130,12 @@ msgstr ""
 msgid "Visualization"
 msgstr ""
 
+msgid "Compositive"
+msgstr ""
+
+msgid "Associative"
+msgstr ""
+
 msgid "Welcome to vocabulary and concept workbench"
 msgstr ""
 
