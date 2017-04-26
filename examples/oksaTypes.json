@@ -33,11 +33,11 @@
         },
         "permissions": {},
         "properties": {
-		  "type": [
-           {
-            "lang":"",
-           "value":"localizable"
-           }
+          "type": [
+            {
+              "lang": "",
+              "value": "localizable:single"
+            }
           ],
           "prefLabel": [
             {
@@ -64,11 +64,11 @@
         },
         "permissions": {},
         "properties": {
-		  "type": [
-           {
-            "lang":"",
-           "value":"localizable"
-           }
+          "type": [
+            {
+              "lang": "",
+              "value": "localizable"
+            }
           ],
           "prefLabel": [
             {
@@ -180,11 +180,11 @@
         },
         "permissions": {},
         "properties": {
-		  "type": [
-           {
-            "lang":"",
-           "value":"localizable"
-           }
+          "type": [
+            {
+              "lang": "",
+              "value": "localizable:single"
+            }
           ],
           "prefLabel": [
             {
@@ -211,11 +211,11 @@
         },
         "permissions": {},
         "properties": {
-		  "type": [
-           {
-            "lang":"",
-           "value":"localizable"
-           }
+          "type": [
+            {
+              "lang": "",
+              "value": "localizable"
+            }
           ],
           "prefLabel": [
             {
@@ -238,9 +238,45 @@
             "id": "9c2782be-5f75-4cd7-80fa-806a8abfd4e2"
           }
         },
+        "id": "broader",
+        "uri": "http://www.w3.org/2004/02/skos/core#broader",
+        "index": 0,
+        "domain": {
+          "id": "Collection",
+          "graph": {
+            "id": "9c2782be-5f75-4cd7-80fa-806a8abfd4e2"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Jaottelu yläkäsitteen mukaan"
+            },
+            {
+              "lang": "en",
+              "value": "Collection broader"
+            }
+          ],
+          "type": [
+            {
+              "lang": "",
+              "value": "reference:single"
+            }
+          ]
+        }
+      },
+      {
+        "range": {
+          "id": "Concept",
+          "graph": {
+            "id": "9c2782be-5f75-4cd7-80fa-806a8abfd4e2"
+          }
+        },
         "id": "member",
         "uri": "http://www.w3.org/2004/02/skos/core#member",
-        "index": 0,
+        "index": 1,
         "domain": {
           "id": "Collection",
           "graph": {
@@ -322,11 +358,11 @@
         },
         "permissions": {},
         "properties": {
-		  "type": [
-           {
-            "lang":"",
-           "value":"string:single,area"
-           }
+          "type": [
+            {
+              "lang": "",
+              "value": "string:single,area"
+            }
           ],
           "prefLabel": [
             {
@@ -353,11 +389,11 @@
         },
         "permissions": {},
         "properties": {
-		  "type": [
-           {
-            "lang":"",
-           "value":"string:single,area"
-           }
+          "type": [
+            {
+              "lang": "",
+              "value": "string:single,area"
+            }
           ],
           "prefLabel": [
             {
@@ -384,11 +420,11 @@
         },
         "permissions": {},
         "properties": {
-		  "type": [
-           {
-            "lang":"",
-           "value":"string:single,area"
-           }
+          "type": [
+            {
+              "lang": "",
+              "value": "string:single,area"
+            }
           ],
           "prefLabel": [
             {
@@ -415,11 +451,11 @@
         },
         "permissions": {},
         "properties": {
-		  "type": [
-           {
-            "lang":"",
-           "value":"string:single,area"
-           }
+          "type": [
+            {
+              "lang": "",
+              "value": "string:single,area"
+            }
           ],
           "prefLabel": [
             {
@@ -446,11 +482,11 @@
         },
         "permissions": {},
         "properties": {
-		  "type": [
-           {
-            "lang":"",
-           "value":"string:single,area"
-           }
+          "type": [
+            {
+              "lang": "",
+              "value": "string:single,area"
+            }
           ],
           "prefLabel": [
             {
@@ -477,11 +513,11 @@
         },
         "permissions": {},
         "properties": {
-		  "type": [
-           {
-            "lang":"",
-           "value":"string:single,area"
-           }
+          "type": [
+            {
+              "lang": "",
+              "value": "string:single,area"
+            }
           ],
           "prefLabel": [
             {
@@ -508,11 +544,11 @@
         },
         "permissions": {},
         "properties": {
-		  "type": [
-           {
-            "lang":"",
-           "value":"status"
-           }
+          "type": [
+            {
+              "lang": "",
+              "value": "status"
+            }
           ],
           "prefLabel": [
             {
@@ -563,11 +599,11 @@
         },
         "permissions": {},
         "properties": {
-		  "type": [
-           {
-            "lang":"",
-           "value":"localizable:multiple,area"
-           }
+          "type": [
+            {
+              "lang": "",
+              "value": "localizable:multiple,area"
+            }
           ],
           "prefLabel": [
             {
@@ -594,11 +630,11 @@
         },
         "permissions": {},
         "properties": {
-		  "type": [
-           {
-            "lang":"",
-           "value":"localizable:multiple,area"
-           }
+          "type": [
+            {
+              "lang": "",
+              "value": "localizable:multiple,area"
+            }
           ],
           "prefLabel": [
             {
@@ -625,11 +661,11 @@
         },
         "permissions": {},
         "properties": {
-		  "type": [
-           {
-            "lang":"",
-           "value":"localizable:multiple,area"
-           }
+          "type": [
+            {
+              "lang": "",
+              "value": "localizable:multiple,area"
+            }
           ],
           "prefLabel": [
             {
@@ -656,11 +692,11 @@
         },
         "permissions": {},
         "properties": {
-		  "type": [
-           {
-            "lang":"",
-           "value":"localizable:multiple,area"
-           }
+          "type": [
+            {
+              "lang": "",
+              "value": "localizable:multiple,area"
+            }
           ],
           "prefLabel": [
             {
@@ -687,11 +723,11 @@
         },
         "permissions": {},
         "properties": {
-		  "type": [
-           {
-            "lang":"",
-           "value":"string:single,area"
-           }
+          "type": [
+            {
+              "lang": "",
+              "value": "string:single,area"
+            }
           ],
           "prefLabel": [
             {
@@ -718,11 +754,11 @@
         },
         "permissions": {},
         "properties": {
-		  "type": [
-           {
-            "lang":"",
-           "value":"string:single,area"
-           }
+          "type": [
+            {
+              "lang": "",
+              "value": "string:single,area"
+            }
           ],
           "prefLabel": [
             {
@@ -749,11 +785,11 @@
         },
         "permissions": {},
         "properties": {
-		  "type": [
-           {
-            "lang":"",
-           "value":"status"
-           }
+          "type": [
+            {
+              "lang": "",
+              "value": "status"
+            }
           ],
           "prefLabel": [
             {
@@ -805,11 +841,11 @@
         },
         "permissions": {},
         "properties": {
-		  "type": [
-           {
-            "lang":"",
-           "value":"string:single,area"
-           }
+          "type": [
+            {
+              "lang": "",
+              "value": "string:single,area"
+            }
           ],
           "prefLabel": [
             {
@@ -894,7 +930,7 @@
         },
         "id": "broader",
         "uri": "http://www.w3.org/2004/02/skos/core#broader",
-        "index": 3,
+        "index": 2,
         "domain": {
           "id": "Concept",
           "graph": {
@@ -924,7 +960,7 @@
         },
         "id": "related",
         "uri": "http://www.w3.org/2004/02/skos/core#related",
-        "index": 5,
+        "index": 3,
         "domain": {
           "id": "Concept",
           "graph": {
@@ -954,7 +990,7 @@
         },
         "id": "isPartOf",
         "uri": "http://purl.org/dc/terms/isPartOf",
-        "index": 6,
+        "index": 4,
         "domain": {
           "id": "Concept",
           "graph": {

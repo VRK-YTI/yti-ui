@@ -33,6 +33,12 @@
         },
         "permissions": {},
         "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "localizable:single"
+            }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -58,6 +64,12 @@
         },
         "permissions": {},
         "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "localizable"
+            }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -168,6 +180,12 @@
         },
         "permissions": {},
         "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "localizable:single"
+            }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -193,6 +211,12 @@
         },
         "permissions": {},
         "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "localizable"
+            }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -207,6 +231,42 @@
       }
     ],
     "referenceAttributes": [
+	   {
+        "range": {
+          "id": "Concept",
+          "graph": {
+            "id": "ada55715-c565-4477-8227-0b8a51010bc5"
+          }
+        },
+        "id": "broader",
+        "uri": "http://www.w3.org/2004/02/skos/core#broader",
+        "index": 2,
+        "domain": {
+          "id": "Collection",
+          "graph": {
+            "id": "ada55715-c565-4477-8227-0b8a51010bc5"
+          }
+        },
+        "permissions": {},
+        "properties": {
+		  "type": [
+            {
+              "lang": "",
+              "value": "reference:single"
+            }
+          ],
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Jaottelu yläkäsitteen mukaan"
+            },
+            {
+              "lang": "en",
+              "value": "Collection broader"
+            }
+          ]
+        }
+      },
       {
         "range": {
           "id": "Concept",
@@ -298,6 +358,12 @@
         },
         "permissions": {},
         "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "string:single,area"
+            }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -323,6 +389,12 @@
         },
         "permissions": {},
         "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "string:single,area"
+            }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -348,6 +420,12 @@
         },
         "permissions": {},
         "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "string:single,area"
+            }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -373,6 +451,12 @@
         },
         "permissions": {},
         "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "string:single,area"
+            }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -398,6 +482,12 @@
         },
         "permissions": {},
         "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "string:single,area"
+            }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -423,6 +513,12 @@
         },
         "permissions": {},
         "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "string:single,area"
+            }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -448,6 +544,12 @@
         },
         "permissions": {},
         "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "status"
+            }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -497,6 +599,12 @@
         },
         "permissions": {},
         "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "localizable:multiple,area"
+            }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -522,6 +630,12 @@
         },
         "permissions": {},
         "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "localizable:multiple,area"
+            }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -547,6 +661,12 @@
         },
         "permissions": {},
         "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "localizable:multiple,area"
+            }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -572,6 +692,12 @@
         },
         "permissions": {},
         "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "localizable:multiple,area"
+            }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -597,6 +723,12 @@
         },
         "permissions": {},
         "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "string:single,area"
+            }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -622,6 +754,12 @@
         },
         "permissions": {},
         "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "string:single,area"
+            }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -647,6 +785,12 @@
         },
         "permissions": {},
         "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "status"
+            }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -697,6 +841,12 @@
         },
         "permissions": {},
         "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "string:single,area"
+            }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -780,7 +930,7 @@
         },
         "id": "broader",
         "uri": "http://www.w3.org/2004/02/skos/core#broader",
-        "index": 3,
+        "index": 2,
         "domain": {
           "id": "Concept",
           "graph": {
@@ -808,39 +958,9 @@
             "id": "ada55715-c565-4477-8227-0b8a51010bc5"
           }
         },
-        "id": "narrower",
-        "uri": "http://www.w3.org/2004/02/skos/core#narrower",
-        "index": 4,
-        "domain": {
-          "id": "Concept",
-          "graph": {
-            "id": "ada55715-c565-4477-8227-0b8a51010bc5"
-          }
-        },
-        "permissions": {},
-        "properties": {
-          "prefLabel": [
-            {
-              "lang": "fi",
-              "value": "Hierarkkinen alakäsite"
-            },
-            {
-              "lang": "en",
-              "value": "Narrower concept"
-            }
-          ]
-        }
-      },
-      {
-        "range": {
-          "id": "Concept",
-          "graph": {
-            "id": "ada55715-c565-4477-8227-0b8a51010bc5"
-          }
-        },
         "id": "related",
         "uri": "http://www.w3.org/2004/02/skos/core#related",
-        "index": 5,
+        "index": 3,
         "domain": {
           "id": "Concept",
           "graph": {
@@ -870,7 +990,7 @@
         },
         "id": "isPartOf",
         "uri": "http://purl.org/dc/terms/isPartOf",
-        "index": 6,
+        "index": 4,
         "domain": {
           "id": "Concept",
           "graph": {

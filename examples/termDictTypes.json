@@ -249,14 +249,20 @@
         },
         "permissions": {},
         "properties": {
+		  "type": [
+            {
+              "lang": "",
+              "value": "reference:single"
+            }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
-              "value": "Yläkäsite"
+              "value": "Jaottelu yläkäsitteen mukaan"
             },
             {
               "lang": "en",
-              "value": "Broader"
+              "value": "Collection broader"
             }
           ]
         }
