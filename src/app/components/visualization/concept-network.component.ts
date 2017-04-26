@@ -369,16 +369,13 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
 
   private createRelatedConceptEdge(from: ConceptNode, to: ConceptNode, meta: ReferenceMeta) {
     return Object.assign(this.createEdgeData(from, to, meta, 'relation'), {
-      arrows: {
-        to: true
-      }
     });
   }
 
-  private createBroaderConceptEdge(from: ConceptNode, to: ConceptNode, meta: ReferenceMeta) {
+  private createBroaderConceptEdge(from: ConceptNode|CollectionNode, to: ConceptNode, meta: ReferenceMeta) {
     return Object.assign(this.createEdgeData(from, to, meta, 'inheritance'), {
       arrows: {
-        from: true
+        to: true
       }
     });
   }
@@ -386,13 +383,16 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
   private createIsPartOfConceptEdge(from: ConceptNode, to: ConceptNode, meta: ReferenceMeta) {
     return Object.assign(this.createEdgeData(from, to, meta, 'composition'), {
       arrows: {
-        from: true
+        to: true
       }
     });
   }
 
   private createMemberConceptEdge(from: CollectionNode, to: ConceptNode, meta: ReferenceMeta) {
     return Object.assign(this.createEdgeData(from, to, meta, 'relation'), {
+      arrows: {
+        to: true
+      }
     });
   }
 
@@ -422,21 +422,75 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
 
   private static drawEdgeArrows(ctx: VisCanvasRenderingContext2D, edgeType: EdgeType, arrowData: ArrowData, drawArrowHead: (data: ArrowEndData) => void) {
 
+    const drawInheritance = (data: ArrowEndData) => {
+
+      const { angle, point } = data;
+      const { x, y } = point;
+      const length = 15;
+
+      ctx.fillStyle = '#ffffff';
+      ctx.strokeStyle = '#000000';
+
+      const xt = x - length * Math.cos(angle);
+      const yt = y - length * Math.sin(angle);
+
+      // left
+      const xl = xt + length / 2 * Math.cos(angle + 0.5 * Math.PI);
+      const yl = yt + length / 2 * Math.sin(angle + 0.5 * Math.PI);
+
+      // right
+      const xr = xt + length / 2 * Math.cos(angle - 0.5 * Math.PI);
+      const yr = yt + length / 2 * Math.sin(angle - 0.5 * Math.PI);
+
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(xl, yl);
+      ctx.lineTo(xr, yr);
+      ctx.closePath();
+      ctx.lineWidth = 3;
+      ctx.stroke();
+      ctx.fill();
+    };
+
+    const drawComposition = (data: ArrowEndData) => {
+      const { point, angle } = data;
+      const { x, y } = point;
+      const length = 15;
+
+      const xt = x - length * Math.cos(angle);
+      const yt = y - length * Math.sin(angle);
+
+      // bottom
+      const xb = x - length * 2 * Math.cos(angle);
+      const yb = y - length * 2 * Math.sin(angle);
+
+      // left
+      const xl = xt + length / 2 * Math.cos(angle + 0.5 * Math.PI);
+      const yl = yt + length / 2 * Math.sin(angle + 0.5 * Math.PI);
+
+      // right
+      const xr = xt + length / 2 * Math.cos(angle - 0.5 * Math.PI);
+      const yr = yt + length / 2 * Math.sin(angle - 0.5 * Math.PI);
+
+      ctx.fillStyle = '#000000';
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(xl, yl);
+      ctx.lineTo(xb, yb);
+      ctx.lineTo(xr, yr);
+      ctx.closePath();
+      ctx.fill();
+    };
+
     switch (edgeType) {
       case 'relation':
-        ctx.fillStyle = '#000000';
-        ctx.arrowEndpoint(arrowData.to.point.x, arrowData.to.point.y, arrowData.to.angle, 15);
-        ctx.fill();
+        // no arrow
         break;
       case 'inheritance':
-        ctx.strokeStyle = '#000000';
-        ctx.arrowEndpoint(arrowData.from.point.x, arrowData.from.point.y, arrowData.from.angle, 15);
-        ctx.stroke();
+        drawInheritance(arrowData.to);
         break;
       case 'composition':
-        ctx.fillStyle = '#000000';
-        ctx.diamond(arrowData.from.point.x - arrowData.from.length * 0.4 * Math.cos(arrowData.from.angle), arrowData.from.point.y - arrowData.from.length * 0.4 * Math.sin(arrowData.from.angle), 10);
-        ctx.fill();
+        drawComposition(arrowData.to);
         break;
       default:
         assertNever(edgeType, 'Unsupported edge type: ' + edgeType);
