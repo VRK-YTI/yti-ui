@@ -420,56 +420,42 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
 
       ctx.fillStyle = '#ffffff';
       ctx.strokeStyle = '#000000';
+      ctx.lineWidth = 3;
 
-      const xt = x - length * Math.cos(angle);
-      const yt = y - length * Math.sin(angle);
-
-      // left
-      const xl = xt + length / 2 * Math.cos(angle + 0.5 * Math.PI);
-      const yl = yt + length / 2 * Math.sin(angle + 0.5 * Math.PI);
-
-      // right
-      const xr = xt + length / 2 * Math.cos(angle - 0.5 * Math.PI);
-      const yr = yt + length / 2 * Math.sin(angle - 0.5 * Math.PI);
+      const top = { x: x - length * Math.cos(angle), y: y - length * Math.sin(angle) };
+      const left = { x: top.x + length / 2 * Math.cos(angle + 0.5 * Math.PI), y: top.y + length / 2 * Math.sin(angle + 0.5 * Math.PI) };
+      const right = { x: top.x + length / 2 * Math.cos(angle - 0.5 * Math.PI), y: top.y + length / 2 * Math.sin(angle - 0.5 * Math.PI) };
 
       ctx.beginPath();
       ctx.moveTo(x, y);
-      ctx.lineTo(xl, yl);
-      ctx.lineTo(xr, yr);
+      ctx.lineTo(left.x, left.y);
+      ctx.lineTo(right.x, right.y);
       ctx.closePath();
-      ctx.lineWidth = 3;
       ctx.stroke();
       ctx.fill();
     };
 
     const drawComposition = (data: ArrowEndData) => {
+
       const { point, angle } = data;
       const { x, y } = point;
       const length = 15;
 
-      const xt = x - length * Math.cos(angle);
-      const yt = y - length * Math.sin(angle);
-
-      // bottom
-      const xb = x - length * 2 * Math.cos(angle);
-      const yb = y - length * 2 * Math.sin(angle);
-
-      // left
-      const xl = xt + length / 2 * Math.cos(angle + 0.5 * Math.PI);
-      const yl = yt + length / 2 * Math.sin(angle + 0.5 * Math.PI);
-
-      // right
-      const xr = xt + length / 2 * Math.cos(angle - 0.5 * Math.PI);
-      const yr = yt + length / 2 * Math.sin(angle - 0.5 * Math.PI);
-
       ctx.fillStyle = '#ffffff';
+      ctx.strokeStyle = '#000000';
+      ctx.lineWidth = 3;
+
+      const top = { x: x - length * Math.cos(angle), y: y - length * Math.sin(angle) };
+      const bottom = { x: x - length * 2 * Math.cos(angle), y: y - length * 2 * Math.sin(angle) };
+      const left = { x: top.x + length / 2 * Math.cos(angle + 0.5 * Math.PI), y: top.y + length / 2 * Math.sin(angle + 0.5 * Math.PI) };
+      const right = { x: top.x + length / 2 * Math.cos(angle - 0.5 * Math.PI), y: top.y + length / 2 * Math.sin(angle - 0.5 * Math.PI) };
+
       ctx.beginPath();
       ctx.moveTo(x, y);
-      ctx.lineTo(xl, yl);
-      ctx.lineTo(xb, yb);
-      ctx.lineTo(xr, yr);
+      ctx.lineTo(left.x, left.y);
+      ctx.lineTo(bottom.x, bottom.y);
+      ctx.lineTo(right.x, right.y);
       ctx.closePath();
-      ctx.lineWidth = 3;
       ctx.stroke();
       ctx.fill();
     };
