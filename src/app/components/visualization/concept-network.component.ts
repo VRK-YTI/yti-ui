@@ -410,14 +410,12 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
 
       const edgeInstance = getEdgeById(edge.id!);
 
-      edgeInstance.drawArrows = (ctx: VisCanvasRenderingContext2D, arrowData: ArrowData, options: EdgeOptions) => {
-        const drawArrowHead = (arrowData: ArrowEndData) => edgeInstance.edgeType.drawArrowHead(ctx, options, edgeInstance.selected, edgeInstance.hover, arrowData);
-        ConceptNetworkComponent.drawEdgeArrows(ctx, edge.type, arrowData, drawArrowHead);
-      }
+      edgeInstance.drawArrows = (ctx: VisCanvasRenderingContext2D, arrowData: ArrowData, options: EdgeOptions) =>
+        ConceptNetworkComponent.drawEdgeArrows(ctx, edge.type, arrowData);
     }
   }
 
-  private static drawEdgeArrows(ctx: VisCanvasRenderingContext2D, edgeType: EdgeType, arrowData: ArrowData, drawArrowHead: (data: ArrowEndData) => void) {
+  private static drawEdgeArrows(ctx: VisCanvasRenderingContext2D, edgeType: EdgeType, arrowData: ArrowData) {
 
     const drawInheritance = (data: ArrowEndData) => {
 
