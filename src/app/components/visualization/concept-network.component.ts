@@ -15,7 +15,7 @@ import {
 import { ReferenceMeta } from '../../entities/meta';
 import { Node } from '../../entities/node';
 import { collectProperties } from '../../utils/array';
-import { assertNever } from '../../utils/object';
+import { assertNever, requireDefined } from '../../utils/object';
 
 interface ConceptNetworkData {
   nodes: DataSet<UpdatableVisNode>;
@@ -403,12 +403,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
     if (!this.networkData.edges.get(edge.id)) {
       this.networkData.edges.add(edge);
 
-      const getEdgeById = (id: IdType) => {
-        const n = this.network as any;
-        return n.edgesHandler.body.edges[id];
-      };
-
-      const edgeInstance = getEdgeById(edge.id!);
+      const edgeInstance = (this.network as any).edgesHandler.body.edges[requireDefined(edge.id)];
 
       edgeInstance.drawArrows = (ctx: VisCanvasRenderingContext2D, arrowData: ArrowData, options: EdgeOptions) =>
         ConceptNetworkComponent.drawEdgeArrows(ctx, edge.type, arrowData);
