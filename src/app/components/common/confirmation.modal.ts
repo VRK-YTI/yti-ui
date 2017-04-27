@@ -21,8 +21,8 @@ export class ConfirmationModalService {
 }
 
 @Component({
-  selector: 'edit-cancel-confirmation-modal',
-  styleUrls: ['./delete-confirmation.modal.scss'],
+  selector: 'confirmation-modal',
+  styleUrls: ['./confirmation.modal.scss'],
   template: `
     <div class="modal-header modal-header-warning">
       <h4 class="modal-title">
