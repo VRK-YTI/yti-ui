@@ -475,7 +475,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
 
   private static drawText(ctx: CanvasRenderingContext2D, to: { x: number, y: number }, text: string) {
 
-    ctx.font = '300 12px Open Sans, Helvetica Neue, Helvetica, Arial';
+    ctx.font = '600 12px Open Sans, Helvetica Neue, Helvetica, Arial';
     ctx.textAlign = 'center';
     ctx.fillStyle = '#000000';
     ctx.fillText(text , to.x, to.y);
