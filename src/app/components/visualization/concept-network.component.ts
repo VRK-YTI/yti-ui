@@ -427,7 +427,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
     const legendCanvas = this.legendCanvasRef.nativeElement;
     const ctx = legendCanvas.getContext('2d');
 
-    const dpp = 16;
+    const dpp = 4;
     const width = 247;
     const height = 55;
 
