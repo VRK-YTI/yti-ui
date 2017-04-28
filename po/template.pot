@@ -136,6 +136,12 @@ msgstr ""
 msgid "Associative"
 msgstr ""
 
+msgid "No group"
+msgstr ""
+
+msgid "No organization"
+msgstr ""
+
 msgid "Welcome to vocabulary and concept workbench"
 msgstr ""
 
@@ -145,10 +151,16 @@ msgstr ""
 msgid "Not implemented yet!"
 msgstr ""
 
+msgid "Add vocabulary"
+msgstr ""
+
 msgid "vocabulary"
 msgstr ""
 
 msgid "vocabularies"
+msgstr ""
+
+msgid "New vocabulary"
 msgstr ""
 
 msgid "New concept"

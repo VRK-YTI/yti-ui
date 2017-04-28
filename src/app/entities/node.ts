@@ -171,6 +171,20 @@ export class Reference<N extends KnownNode | Node<any>> {
     remove(this.values, node);
   }
 
+  get singleValue(): N|null {
+    if (this.values.length === 0) {
+      return null;
+    } else if (this.values.length === 1) {
+      return this.values[0];
+    } else {
+      throw new Error('Multiple values when single is required: ' + this.values.length);
+    }
+  }
+
+  set singleValue(value: N|null) {
+    this.values = value ? [value] : [];
+  }
+
   get targetMeta() {
     return this.metaModel.getNodeMeta(this.meta.graphId, this.meta.targetType);
   }

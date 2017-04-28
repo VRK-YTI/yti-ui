@@ -19,6 +19,10 @@ import { EditableService } from '../../services/editable.service';
           <concept-reference-input *ngSwitchCase="'Concept'" [concept]="reference"
                                    [conceptsProvider]="conceptsProvider"></concept-reference-input>
 
+          <group-input *ngSwitchCase="'Group'" [group]="reference"></group-input>
+          
+          <organization-input *ngSwitchCase="'Organization'" [organization]="reference"></organization-input>
+          
           <div *ngSwitchDefault>
             <span *ngFor="let referenceNode of reference.values; let last = last">
               <span>{{referenceNode.label | translateValue}}<span *ngIf="!last">, </span></span>

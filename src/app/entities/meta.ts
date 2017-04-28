@@ -7,7 +7,6 @@ import { Node } from './node';
 import { v4 as uuid } from 'uuid';
 import * as moment from 'moment';
 import { assertNever, requireDefined } from '../utils/object';
-import { Graph } from './graph';
 
 export type Cardinality = 'single'
                         | 'multiple';
@@ -19,6 +18,8 @@ export type TypeName = 'string'
 export type ReferenceType = 'PrimaryTerm'
                           | 'Synonym'
                           | 'Concept'
+                          | 'Organization'
+                          | 'Group'
                           | 'Other';
 
 export type PropertyType = StringProperty
@@ -213,6 +214,10 @@ export class ReferenceMeta {
         return 'Concept';
       case 'Term':
         return this.id === 'prefLabelXl' ? 'PrimaryTerm' : 'Synonym';
+      case 'Organization':
+        return 'Organization';
+      case 'Group':
+        return 'Group';
       default:
         return 'Other';
     }

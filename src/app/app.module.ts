@@ -69,6 +69,8 @@ import { ErrorModal, ErrorModalService } from './components/common/error.modal';
 import { ConfirmationModal, ConfirmationModalService } from './components/common/confirmation.modal';
 import { ConfirmCancelEditGuard } from './components/common/edit.guard';
 import { UserService } from './services/user.service';
+import { GroupInputComponent } from './components/vocabulary/group-input.component';
+import { OrganizationInputComponent } from './components/vocabulary/organization-input.component';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json-loader!po-loader?format=mf!../../po/fi.po'),
@@ -137,6 +139,8 @@ const appRoutes: Routes = [
     ConceptNetworkComponent,
     MetaInformationComponent,
     DividerComponent,
+    GroupInputComponent,
+    OrganizationInputComponent,
     SearchConceptModal,
     DeleteConfirmationModal,
     ErrorModal,

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-04-26 16:29+0300\n"
+"PO-Revision-Date: 2017-04-27 08:18+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -145,6 +145,12 @@ msgstr "Koostumus"
 msgid "Associative"
 msgstr "Assosiatiivinen"
 
+msgid "No group"
+msgstr "Ei ryhmää"
+
+msgid "No organization"
+msgstr "Ei organisaatiota"
+
 msgid "Welcome to vocabulary and concept workbench"
 msgstr "Tervetuloa sanasto- ja käsitevälineistöön"
 
@@ -158,11 +164,17 @@ msgstr ""
 msgid "Not implemented yet!"
 msgstr "Ei vielä toteutettu!"
 
+msgid "Add vocabulary"
+msgstr "Lisää sanasto"
+
 msgid "vocabulary"
 msgstr "sanasto"
 
 msgid "vocabularies"
 msgstr "sanastoa"
+
+msgid "New vocabulary"
+msgstr "uusi sanasto"
 
 msgid "New concept"
 msgstr "uusi käsite"
@@ -215,9 +227,6 @@ msgstr ""
 
 #~ msgid "Composition"
 #~ msgstr "Koostumus"
-
-#~ msgid "Add vocabulary"
-#~ msgstr "Lisää sanasto"
 
 #~ msgid "Add term"
 #~ msgstr "Lisää termi"

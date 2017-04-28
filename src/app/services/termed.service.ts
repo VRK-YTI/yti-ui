@@ -5,7 +5,7 @@ import { TermedHttp } from './termed-http.service';
 import { flatten, normalizeAsArray } from '../utils/array';
 import { MetaModelService } from './meta-model.service';
 import { NodeExternal, NodeType, NodeInternal, Identifier, VocabularyNodeType } from '../entities/node-api';
-import { CollectionNode, ConceptNode, Node, VocabularyNode } from '../entities/node';
+import { CollectionNode, ConceptNode, GroupNode, Node, OrganizationNode, VocabularyNode } from '../entities/node';
 import * as moment from 'moment';
 
 const infiniteResultsParams = new URLSearchParams();
@@ -69,6 +69,16 @@ export class TermedService {
   getNarrowerConcepts(graphId: string, broaderConceptId: string, languages: string[]): Observable<ConceptNode[]> {
     return Observable.zip(this.metaModelService.getMeta(), this.getNarrowerConceptNodes(graphId, broaderConceptId))
       .map(([meta, concepts]) => concepts.map(concept => Node.create(concept, meta, languages, true)));
+  }
+
+  getOrganizationList(): Observable<OrganizationNode[]> {
+    return Observable.zip(this.metaModelService.getMeta(), this.getNodeListWithoutReferencesOrReferrers('Organization'))
+      .map(([meta, organizations]) => organizations.map(organization => Node.create(organization, meta, ['fi', 'en'], true)));
+  }
+
+  getGroupList(): Observable<GroupNode[]> {
+    return Observable.zip(this.metaModelService.getMeta(), this.getNodeListWithoutReferencesOrReferrers('Group'))
+      .map(([meta, organizations]) => organizations.map(organization => Node.create(organization, meta, ['fi', 'en'], true)));
   }
 
   updateNode<T extends NodeType>(node: Node<T>) {
@@ -230,6 +240,18 @@ export class TermedService {
     params.append('recurse.references.prefLabelXl', '1');
 
     return this.http.get(`/api/ext.json`, { search: params } );
+  }
+
+  private getNodeListWithoutReferencesOrReferrers<T extends NodeType>(type: T): Observable<NodeExternal<T>[]> {
+
+    const params = new URLSearchParams();
+    params.append('max', '-1');
+    params.append('typeId', type);
+    params.append('select.references', '');
+    params.append('select.referrers', '');
+
+    return this.http.get(`/api/ext.json`, { search: params } )
+      .map(response => normalizeAsArray(response.json() as NodeExternal<T>[])).catch(notFoundAsDefault([]));
   }
 }
 

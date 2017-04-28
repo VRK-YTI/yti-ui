@@ -111,6 +111,14 @@ export function removeMatching<T>(arr: T[], predicate: (item: T) => boolean) {
   }
 }
 
+export function replaceMatching<T>(arr: T[], predicate: (item: T) => boolean, replaceWith: T) {
+  for (let i = 0; i < arr.length; i++) {
+    if (predicate(arr[i])) {
+      arr[i] = replaceWith;
+    }
+  }
+}
+
 export function keepMatching<T>(arr: T[], predicate: (item: T) => boolean) {
   removeMatching(arr, item => !predicate(item));
 }
