@@ -1,0 +1,19 @@
+{
+  "id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8",
+  "roles": [],
+  "permissions": {},
+  "properties": {
+    "prefLabel": [
+      {
+        "lang": "fi",
+        "value": "Terminologinen sanasto"
+      }
+    ],
+    "type": [
+      {
+        "lang": "",
+        "value": "Metamodel"
+      }
+    ]
+  }
+}
