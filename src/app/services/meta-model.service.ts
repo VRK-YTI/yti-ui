@@ -73,6 +73,18 @@ export class MetaModelService {
     return this.meta.map(meta => meta.addMeta(graphMeta));
   }
 
+  removeGraphMeta(graphId: string): Observable<any> {
+    return this.getMeta().flatMap(meta => this.removeMetaNodes(graphId, meta.getGraphMeta(graphId).toNodes()));
+  }
+
+  private removeMetaNodes(graphId: string, nodes: NodeMetaInternal[]) {
+
+    const params = new URLSearchParams();
+    params.append('batch', 'true');
+
+    return this.http.delete(`/api/graphs/${graphId}/types`, { search: params, body: nodes });
+  }
+
   private getGraphs(): Observable<Graph[]> {
     return this.http.get('/api/graphs', infiniteResultsOptions)
       .map(response => normalizeAsArray(response.json()) as Graph[]);

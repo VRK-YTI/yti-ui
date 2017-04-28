@@ -92,6 +92,15 @@ export class TermedService {
       .flatMap(() => this.updateNode(vocabulary));
   }
 
+  removeVocabulary(vocabulary: VocabularyNode): Observable<any> {
+
+    const graphId = vocabulary.graphId;
+
+    return this.removeGraphNodes(graphId)
+      .flatMap(() => this.metaModelService.removeGraphMeta(graphId))
+      .flatMap(() => this.removeGraph(graphId));
+  }
+
   updateNode<T extends NodeType>(node: Node<T>) {
 
     node.lastModifiedDate = moment();
@@ -114,6 +123,15 @@ export class TermedService {
       );
 
     return this.removeNodeIdentifiers([...termIdentifiers, node.identifier]);
+  }
+
+  private removeGraphNodes(graphId: string): Observable<any> {
+    // TODO all node ids should be enough or even api for forcing graph removal
+    return this.getAllNodes(graphId).flatMap(nodes => this.removeNodeIdentifiers(nodes));
+  }
+
+  private removeGraph(graphId: string): Observable<any> {
+    return this.http.delete(`/api/graphs/${graphId}`);
   }
 
   private createGraph(graphId: string, label: Localizable): Observable<Response> {
@@ -283,6 +301,15 @@ export class TermedService {
 
     return this.http.get(`/api/ext.json`, { search: params } )
       .map(response => normalizeAsArray(response.json() as NodeExternal<T>[])).catch(notFoundAsDefault([]));
+  }
+
+  private getAllNodes(graphId: string): Observable<NodeInternal<any>[]> {
+
+    const params = new URLSearchParams();
+    params.append('max', '-1');
+
+    return this.http.get(`/api/graphs/${graphId}/nodes`, { search: params } )
+      .map(response => normalizeAsArray(response.json() as NodeInternal<any>[])).catch(notFoundAsDefault([]));
   }
 }
 

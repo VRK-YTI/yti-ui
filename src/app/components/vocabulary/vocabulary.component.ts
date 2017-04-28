@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { EditableService, EditingComponent } from '../../services/editable.service';
 import { ConceptViewModelService } from '../../services/concept.view.service';
+import { requireDefined } from '../../utils/object';
+import { DeleteConfirmationModalService } from '../common/delete-confirmation.modal';
 
 @Component({
   selector: 'vocabulary',
@@ -21,7 +23,7 @@ import { ConceptViewModelService } from '../../services/concept.view.service';
           <form #form>
             <div class="row">
               <div class="col-md-12">
-                <editable-buttons [form]="form" [canRemove]="false"></editable-buttons>
+                <editable-buttons [form]="form" [canRemove]="true"></editable-buttons>
                 <div class="page-header">
                   <h1>{{vocabulary.meta.label | translateValue}}</h1>
                 </div>
@@ -39,10 +41,14 @@ import { ConceptViewModelService } from '../../services/concept.view.service';
 export class VocabularyComponent implements EditingComponent {
 
   constructor(private editableService: EditableService,
-              private conceptViewModel: ConceptViewModelService) {
+              private conceptViewModel: ConceptViewModelService,
+              deleteConfirmationModal: DeleteConfirmationModalService) {
 
     editableService.onSave = () => conceptViewModel.saveVocabulary();
     editableService.onCanceled = () => conceptViewModel.resetVocabulary();
+    editableService.onRemove = () =>
+      deleteConfirmationModal.open(requireDefined(this.vocabulary))
+        .then(() => conceptViewModel.removeVocabulary());
   }
 
   get conceptsProvider() {

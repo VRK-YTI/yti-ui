@@ -361,6 +361,28 @@ export class ConceptViewModelService {
     });
   }
 
+  removeVocabulary() {
+
+    if (!this.vocabulary) {
+      throw new Error('Cannot remove when there is no vocabulary');
+    }
+
+    const that = this;
+    const vocabulary = this.vocabulary;
+
+    return new Promise((resolve, reject) => {
+      this.termedService.removeVocabulary(vocabulary).subscribe({
+        next() {
+          that.router.navigate(['/']);
+          resolve();
+        },
+        error(err: any) {
+          reject(err);
+        }
+      });
+    });
+  }
+
   resetVocabulary() {
     this.vocabularyInEdit = this.vocabulary.clone();
   }
