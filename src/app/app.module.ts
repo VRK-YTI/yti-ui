@@ -73,6 +73,7 @@ import { NewVocabularyComponent } from './components/concept/new-vocabulary.comp
 import { VocabularyFormComponent } from './components/concept/vocabulary-form.component';
 import { GroupInputComponent } from './components/vocabulary/group-input.component';
 import { OrganizationInputComponent } from './components/vocabulary/organization-input.component';
+import { AjaxLoadingIndicatorSmallComponent } from './components/common/ajax-loading-indicator-small.component';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json-loader!po-loader?format=mf!../../po/fi.po'),
@@ -128,6 +129,7 @@ const appRoutes: Routes = [
     PrimaryTermsComponent,
     SynonymsComponent,
     AjaxLoadingIndicatorComponent,
+    AjaxLoadingIndicatorSmallComponent,
     MarkdownComponent,
     MarkdownElementComponent,
     MarkdownLinksComponent,

@@ -13,7 +13,7 @@ import { UserService } from '../../services/user.service';
               #cancelTooltip="ngbTooltip"
               class="btn btn-default pull-right cancel" 
               (click)="cancelTooltip.close(); cancelEditing()"
-              [disabled]="saving"
+              [disabled]="operationPending"
               [hidden]="!editing">
         <i class="fa fa-undo"></i>
       </button>
@@ -24,7 +24,7 @@ import { UserService } from '../../services/user.service';
               class="btn btn-default pull-right save" 
               (click)="saveTooltip.close(); saveEdited()" 
               [hidden]="!editing" 
-              [disabled]="!canSave() || saving">
+              [disabled]="!canSave() || operationPending">
         <i class="fa fa-floppy-o"></i>
       </button>
       
@@ -33,7 +33,7 @@ import { UserService } from '../../services/user.service';
               #editTooltip="ngbTooltip"
               class="btn btn-default pull-right edit" 
               (click)="editTooltip.close(); startEditing()"
-              [disabled]="saving"
+              [disabled]="operationPending"
               [hidden]="editing">
         <i class="fa fa-pencil"></i>
       </button>
@@ -44,10 +44,12 @@ import { UserService } from '../../services/user.service';
               [triggers]="'hover:blur'"
               class="btn btn-default pull-right remove"
               (click)="removeTooltip.close(); remove()"
-              [disabled]="removing"
+              [disabled]="operationPending"
               [hidden]="editing || !canRemove">
         <i class="fa fa-trash"></i>
       </button>
+
+      <ajax-loading-indicator-small class="pull-right" *ngIf="operationPending"></ajax-loading-indicator-small>
     </div>
   `
 })
@@ -58,6 +60,10 @@ export class EditableButtonsComponent {
 
   constructor(private editableService: EditableService,
               private userService: UserService) {
+  }
+
+  get operationPending() {
+    return this.saving || this.removing;
   }
 
   isLoggedIn() {
