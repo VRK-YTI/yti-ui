@@ -7,6 +7,7 @@ import { Node } from './node';
 import { v4 as uuid } from 'uuid';
 import * as moment from 'moment';
 import { assertNever, requireDefined } from '../utils/object';
+import { Graph } from './graph';
 
 export type Cardinality = 'single'
                         | 'multiple';
@@ -246,7 +247,7 @@ export class ReferenceMeta {
         }
       },
       range: {
-        id: graphId,
+        id: this.referenceAttribute.range.id,
         graph: {
           id: newRangeGraph
         }
