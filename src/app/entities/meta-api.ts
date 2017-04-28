@@ -7,7 +7,7 @@ export interface NodeMetaInternal {
   uri: string;
   index: number;
   graph: { id: string };
-  permissions: any[];
+  permissions: {};
   properties: {
     prefLabel: Localization[]
   };
@@ -22,7 +22,7 @@ export interface TextAttributeInternal {
   uri: string;
   index: number;
   domain: { id: NodeType, graph: { id: string } };
-  permissions: any[];
+  permissions: {};
   properties: {
     prefLabel: Localization[],
     type: Attribute[]
@@ -36,7 +36,7 @@ export interface ReferenceAttributeInternal {
   uri: string;
   index: number;
   domain: { id: NodeType, graph: { id: string } };
-  permissions: any[];
+  permissions: {};
   properties: {
     prefLabel: Localization[]
   };

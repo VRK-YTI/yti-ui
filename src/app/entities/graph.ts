@@ -4,7 +4,7 @@ export interface Graph {
 
   code: string;
   id: string;
-  permissions: any[];
+  permissions: {};
   properties: {
     prefLabel: Localization[],
     type?: [{lang: '', value: 'Metamodel'}]
