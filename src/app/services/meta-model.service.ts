@@ -1,15 +1,16 @@
 import { URLSearchParams } from '@angular/http';
 import { Observable, ReplaySubject } from 'rxjs';
-import { normalizeAsArray, flatten } from '../utils/array';
+import { normalizeAsArray } from '../utils/array';
 import { Injectable } from '@angular/core';
 import { TermedHttp } from './termed-http.service';
 import { Graph } from '../entities/graph';
-import { MetaModel } from '../entities/meta';
+import { GraphMeta, MetaModel } from '../entities/meta';
 import { NodeMetaInternal } from '../entities/meta-api';
 import { NodeType } from '../entities/node-api';
 import { CollectionNode, ConceptNode, Node, VocabularyNode } from '../entities/node';
 import { TranslateService } from 'ng2-translate';
 import { LanguageService } from './language.service';
+import { asLocalizable } from '../entities/localization';
 
 const infiniteResultsParams = new URLSearchParams();
 infiniteResultsParams.append('max', '-1');
@@ -27,7 +28,18 @@ export class MetaModelService {
 
     this.getGraphs()
       .flatMap(graphs => Observable.forkJoin(graphs.map(graph => Observable.zip(Observable.of(graph), this.getMetaNodes(graph.id)))))
-      .map(graphAndNodes => new MetaModel(graphAndNodes))
+      .map(graphAndNodes => {
+
+        const meta = new Map<string, GraphMeta>();
+
+        for (const [graph, nodeMetasInGraph] of graphAndNodes) {
+          const template = graph.properties.type ? graph.properties.type[0].value === 'Metamodel' : false;
+          const label = asLocalizable(graph.properties['prefLabel']);
+          meta.set(graph.id, new GraphMeta(graph.id, label, nodeMetasInGraph, template));
+        }
+
+        return new MetaModel(meta);
+      })
       .subscribe(meta => this.meta.next(meta));
   }
 
@@ -43,30 +55,22 @@ export class MetaModelService {
 
     const label$ = this.translateService.get('New concept');
 
-    return Observable.zip(label$, this.createEmptyNode<ConceptNode, 'Concept'>(vocabulary.graphId, nodeId, 'Concept', vocabulary.languages))
-      .map(([newConceptLabel, newConcept]) => {
-
-        if (newConcept.hasVocabulary()) {
-          newConcept.vocabulary = vocabulary.clone();
-        }
-
-        newConcept.setPrimaryLabel(this.languageService.language, newConceptLabel);
-
-        return newConcept;
-      });
+    return Observable.zip(label$, this.meta).map(([newConceptLabel, meta]) => {
+      return meta.createEmptyConcept(vocabulary, nodeId, newConceptLabel, this.languageService.language);
+    });
   }
 
   createEmptyCollection(vocabulary: VocabularyNode, nodeId: string): Observable<CollectionNode> {
 
-    const label = this.translateService.get('New collection');
+    const label$ = this.translateService.get('New collection');
 
-    return Observable.zip(label, this.createEmptyNode<CollectionNode, 'Collection'>(vocabulary.graphId, nodeId, 'Collection', vocabulary.languages))
-      .map(([newCollectionLabel, newCollection]) => {
+    return Observable.zip(label$, this.meta).map(([newCollectionLabel, meta]) => {
+      return meta.createEmptyCollection(vocabulary, nodeId, newCollectionLabel, this.languageService.language);
+    });
+  }
 
-        newCollection.setPrimaryLabel(this.languageService.language, newCollectionLabel);
-
-        return newCollection;
-      });
+  addMeta(graphMeta: GraphMeta): Observable<any> {
+    return this.meta.map(meta => meta.addMeta(graphMeta));
   }
 
   private getGraphs(): Observable<Graph[]> {

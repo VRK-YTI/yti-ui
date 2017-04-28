@@ -2,12 +2,11 @@ import { ReferenceAttributeInternal, TextAttributeInternal, NodeMetaInternal } f
 import { comparingPrimitive } from '../utils/comparator';
 import { any, contains, index, normalizeAsArray } from '../utils/array';
 import { asLocalizable, Localizable } from './localization';
-import { NodeType, NodeExternal } from './node-api';
-import { Node } from './node';
+import { NodeType, NodeExternal, VocabularyNodeType } from './node-api';
+import { CollectionNode, ConceptNode, Node, VocabularyNode } from './node';
 import { v4 as uuid } from 'uuid';
 import * as moment from 'moment';
 import { assertNever, requireDefined } from '../utils/object';
-import { Graph } from './graph';
 
 export type Cardinality = 'single'
                         | 'multiple';
@@ -258,14 +257,11 @@ export class ReferenceMeta {
 
 export class MetaModel {
 
-  private meta = new Map<string, GraphMeta>();
+  constructor(private meta: Map<string, GraphMeta>) {
+  }
 
-  constructor(nodeMetas: [Graph, NodeMetaInternal[]][]) {
-
-    for (const [graph, nodeMetasInGraph] of nodeMetas) {
-      const template = graph.properties.type ? graph.properties.type[0].value === 'Metamodel' : false;
-      this.meta.set(graph.id, new GraphMeta(graph.id, nodeMetasInGraph, template));
-    }
+  addMeta(graphMeta: GraphMeta) {
+    this.meta.set(graphMeta.graphId, graphMeta);
   }
 
   graphHas(graphId: string, nodeType: NodeType) {
@@ -287,13 +283,49 @@ export class MetaModel {
   createEmptyNode<N extends Node<T>, T extends NodeType>(graphId: string, nodeId: string, nodeType: T, languages: string[]): N {
     return Node.create(this.getNodeMeta(graphId, nodeType).createEmptyNode(nodeId), this, languages, false) as N;
   }
+
+  createEmptyVocabulary(graphId: string, nodeId: string, label: string, language: string): VocabularyNode {
+
+    const vocabularyType: VocabularyNodeType = this.graphHas(graphId, 'Vocabulary') ? 'Vocabulary' : 'TerminologicalVocabulary';
+
+    const newVocabulary = this.createEmptyNode<VocabularyNode, VocabularyNodeType>(graphId, nodeId, vocabularyType, ['fi', 'en', 'sv']);
+    newVocabulary.setPrimaryLabel(language, label);
+    return newVocabulary;
+  }
+
+  createEmptyConcept(vocabulary: VocabularyNode, nodeId: string, label: string, language: string): ConceptNode {
+
+    const newConcept = this.createEmptyNode<ConceptNode, 'Concept'>(vocabulary.graphId, nodeId, 'Concept', vocabulary.languages);
+
+    if (newConcept.hasVocabulary()) {
+      newConcept.vocabulary = vocabulary.clone();
+    }
+
+    newConcept.setPrimaryLabel(language, label);
+
+    return newConcept;
+  }
+
+  createEmptyCollection(vocabulary: VocabularyNode, nodeId: string, label: string, language: string): CollectionNode {
+
+    const newCollection = this.createEmptyNode<CollectionNode, 'Collection'>(vocabulary.graphId, nodeId, 'Collection', vocabulary.languages);
+    newCollection.setPrimaryLabel(language, label);
+    return newCollection;
+  }
+
+  copyTemplateToGraph(templateMeta: GraphMeta, graphId: string): MetaModel {
+
+    const newMeta = new MetaModel(new Map<string, GraphMeta>(this.meta));
+    newMeta.addMeta(templateMeta.copyToGraph(graphId));
+    return newMeta;
+  }
 }
 
 export class GraphMeta {
 
   private meta = new Map<NodeType, NodeMeta>();
 
-  constructor(public graphId: string, private nodeMetas: NodeMetaInternal[], public template: boolean) {
+  constructor(public graphId: string, public label: Localizable, private nodeMetas: NodeMetaInternal[], public template: boolean) {
     this.meta = index(nodeMetas.map(m => new NodeMeta(m)), m => m.type);
   }
 
@@ -305,8 +337,12 @@ export class GraphMeta {
     return requireDefined(this.meta.get(type), `Meta not found for graph: ${this.graphId} and node type: ${type}`);
   }
 
-  copyToGraph(graphId: string): NodeMetaInternal[] {
-    return Array.from(this.meta.values()).map(m => m.copyToGraph(graphId));
+  toNodes(): NodeMetaInternal[] {
+    return this.nodeMetas;
+  }
+
+  copyToGraph(graphId: string): GraphMeta {
+    return new GraphMeta(graphId, this.label, Array.from(this.meta.values()).map(m => m.copyToGraph(graphId)), false);
   }
 }
 

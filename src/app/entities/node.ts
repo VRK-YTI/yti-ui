@@ -488,6 +488,24 @@ export class VocabularyNode extends Node<VocabularyNodeType> {
   hasGroup() {
     return !this.references['inGroup'].empty;
   }
+
+  setPrimaryLabel(language: string, value: string) {
+    const matchingLocalization = this.findLabelLocalizationForLanguage(language) || this.anyLabelLocalization() || this.createLabelLocalization(language);
+    matchingLocalization.value = value;
+  }
+
+  private createLabelLocalization(language: string) {
+    this.properties['prefLabel'].newLocalization(language);
+    return this.anyLabelLocalization();
+  }
+
+  private findLabelLocalizationForLanguage(language: string): Localization|undefined {
+    return (this.properties['prefLabel'].attributes).find(localization => localization.lang === language);
+  }
+
+  private anyLabelLocalization(): Localization {
+    return this.properties['prefLabel'].attributes[0];
+  }
 }
 
 export class ConceptNode extends Node<'Concept'> {

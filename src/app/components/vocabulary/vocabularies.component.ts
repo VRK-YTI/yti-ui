@@ -6,6 +6,7 @@ import { VocabularyNode } from '../../entities/node';
 import { Localizable } from '../../entities/localization';
 import { groupBy, all } from '../../utils/array';
 import { requireDefined } from '../../utils/object';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'vocabularies',
@@ -40,6 +41,15 @@ import { requireDefined } from '../../utils/object';
         </div>
       </div>
 
+      <div class="row add-vocabulary">
+        <div class="col-md-12">
+          <button class="button btn-default pull-right" *ngIf="canAddVocabulary()" (click)="addVocabulary()">
+            <i class="fa fa-plus"></i>
+            <span translate>Add vocabulary</span>
+          </button>
+        </div>
+      </div>
+      
       <div class="row vocabularies" *ngIf="vocabularies">
 
         <div class="col-md-4">
@@ -100,6 +110,7 @@ export class VocabulariesComponent {
 
   constructor(termedService: TermedService,
               locationService: LocationService,
+              private userService: UserService,
               private router: Router) {
 
     const languages = ['fi', 'en', 'sv']; // TODO concept scheme itself will define the languages in the future
@@ -125,6 +136,14 @@ export class VocabulariesComponent {
 
   navigate(vocabulary: VocabularyNode) {
     this.router.navigate(['/concepts', vocabulary.graphId]);
+  }
+
+  canAddVocabulary() {
+    return this.userService.isLoggedIn();
+  }
+
+  addVocabulary() {
+    this.router.navigate(['/newVocabulary']);
   }
 }
 

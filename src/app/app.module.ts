@@ -69,6 +69,7 @@ import { ErrorModal, ErrorModalService } from './components/common/error.modal';
 import { ConfirmationModal, ConfirmationModalService } from './components/common/confirmation.modal';
 import { ConfirmCancelEditGuard } from './components/common/edit.guard';
 import { UserService } from './services/user.service';
+import { NewVocabularyComponent } from './components/concept/new-vocabulary.component';
 import { VocabularyFormComponent } from './components/concept/vocabulary-form.component';
 import { GroupInputComponent } from './components/vocabulary/group-input.component';
 import { OrganizationInputComponent } from './components/vocabulary/organization-input.component';
@@ -96,6 +97,7 @@ export function createMissingTranslationHandler(): MissingTranslationHandler {
 
 const appRoutes: Routes = [
   { path: '', component: VocabulariesComponent },
+  { path: 'newVocabulary', component: NewVocabularyComponent },
   { path: 'concepts/:graphId', component: ConceptsComponent, canDeactivate: [ConfirmCancelEditGuard], children: [
     { path: '', component: NoSelectionComponent },
     { path: 'concept/:conceptId', component: ConceptComponent, canDeactivate: [ConfirmCancelEditGuard] },
@@ -140,6 +142,7 @@ const appRoutes: Routes = [
     ConceptNetworkComponent,
     MetaInformationComponent,
     DividerComponent,
+    NewVocabularyComponent,
     VocabularyFormComponent,
     GroupInputComponent,
     OrganizationInputComponent,

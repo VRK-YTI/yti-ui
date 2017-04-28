@@ -7,6 +7,8 @@ import { MetaModelService } from './meta-model.service';
 import { NodeExternal, NodeType, NodeInternal, Identifier, VocabularyNodeType } from '../entities/node-api';
 import { CollectionNode, ConceptNode, GroupNode, Node, OrganizationNode, VocabularyNode } from '../entities/node';
 import * as moment from 'moment';
+import { GraphMeta } from '../entities/meta';
+import { Localizable } from '../entities/localization';
 
 const infiniteResultsParams = new URLSearchParams();
 infiniteResultsParams.append('max', '-1');
@@ -32,7 +34,7 @@ export class TermedService {
   getVocabularyList(languages: string[]): Observable<VocabularyNode[]> {
     return Observable.zip(this.metaModelService.getMeta(), this.getVocabularyNodes('Vocabulary'), this.getVocabularyNodes('TerminologicalVocabulary'))
       .map(([meta, vocabularies, terminologicalVocabularies]) =>
-      [...vocabularies, ...terminologicalVocabularies].map(vocabulary => Node.create(vocabulary, meta, languages, true) as VocabularyNode)
+        [...vocabularies, ...terminologicalVocabularies].map(vocabulary => Node.create(vocabulary, meta, languages, true) as VocabularyNode)
           .filter(vocabulary => vocabulary.hasGroup()));
   }
 
@@ -81,6 +83,15 @@ export class TermedService {
       .map(([meta, organizations]) => organizations.map(organization => Node.create(organization, meta, ['fi', 'en'], true)));
   }
 
+  createVocabulary(template: GraphMeta, vocabulary: VocabularyNode): Observable<Response> {
+
+    const graphId = vocabulary.graphId;
+
+    return this.createGraph(graphId, template.label)
+      .flatMap(() => this.updateMeta(template.copyToGraph(graphId)))
+      .flatMap(() => this.updateNode(vocabulary));
+  }
+
   updateNode<T extends NodeType>(node: Node<T>) {
 
     node.lastModifiedDate = moment();
@@ -103,6 +114,26 @@ export class TermedService {
       );
 
     return this.removeNodeIdentifiers([...termIdentifiers, node.identifier]);
+  }
+
+  private createGraph(graphId: string, label: Localizable): Observable<Response> {
+    return this.http.post(`/api/graphs`, {
+      id: graphId,
+      permissions: {},
+      properties: {
+        prefLabel: Object.entries(label).map(([lang, value]) => ({lang, value}))
+      },
+      roles: []
+    });
+  }
+
+  private updateMeta(graphMeta: GraphMeta): Observable<any> {
+
+    const params = new URLSearchParams();
+    params.append('batch', 'true');
+
+    return this.http.post(`/api/graphs/${graphMeta.graphId}/types`, graphMeta.toNodes(), { search: params })
+      .flatMap(() => this.metaModelService.addMeta(graphMeta));
   }
 
   private removeNodeIdentifiers(nodeIds: Identifier<any>[]) {
