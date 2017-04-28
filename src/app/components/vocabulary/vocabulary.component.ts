@@ -27,12 +27,8 @@ import { ConceptViewModelService } from '../../services/concept.view.service';
                 </div>
               </div>
             </div>
-            <div class="row">
-              <property class="col-md-6" [value]="property"
-                        *ngFor="let property of vocabularyInEdit | properties: showEmpty"></property>
-              <reference class="col-md-6" [value]="reference" [conceptsProvider]="conceptsProvider"
-                         *ngFor="let reference of vocabularyInEdit | references: showEmpty"></reference>
-            </div>
+
+            <vocabulary-form [vocabulary]="vocabularyInEdit" [conceptsProvider]="conceptsProvider"></vocabulary-form>
             <meta-information [node]="vocabulary"></meta-information>
           </form>
         </template>

@@ -69,6 +69,7 @@ import { ErrorModal, ErrorModalService } from './components/common/error.modal';
 import { ConfirmationModal, ConfirmationModalService } from './components/common/confirmation.modal';
 import { ConfirmCancelEditGuard } from './components/common/edit.guard';
 import { UserService } from './services/user.service';
+import { VocabularyFormComponent } from './components/concept/vocabulary-form.component';
 import { GroupInputComponent } from './components/vocabulary/group-input.component';
 import { OrganizationInputComponent } from './components/vocabulary/organization-input.component';
 
@@ -139,6 +140,7 @@ const appRoutes: Routes = [
     ConceptNetworkComponent,
     MetaInformationComponent,
     DividerComponent,
+    VocabularyFormComponent,
     GroupInputComponent,
     OrganizationInputComponent,
     SearchConceptModal,
