@@ -5,7 +5,7 @@ import { LocationService } from '../../services/location.service';
 import { VocabularyNode } from '../../entities/node';
 import { Localizable } from '../../entities/localization';
 import { groupBy, all } from '../../utils/array';
-import { requireDefined } from '../../utils/object';
+import { isDefined, requireDefined } from '../../utils/object';
 import { UserService } from '../../services/user.service';
 
 @Component({
@@ -90,8 +90,8 @@ import { UserService } from '../../services/user.service';
               <p>{{vocabulary.description | translateValue}}</p>
             </div>
             <div class="origin">
-              <span class="publisher">{{vocabulary.publisher.label | translateValue}}</span>
-              <span class="group">{{vocabulary.group.label | translateValue}}</span>
+              <span class="publisher" *ngIf="vocabulary.hasPublisher()">{{vocabulary.publisher.label | translateValue}}</span>
+              <span class="group" *ngIf="vocabulary.hasGroup()">{{vocabulary.group.label | translateValue}}</span>
               <span class="type">{{vocabulary.typeLabel | translateValue}}</span>
             </div>
           </div>
@@ -124,8 +124,8 @@ export class VocabulariesComponent {
 
       this.filters = [
         new Filter('Vocabulary type', vocabularies, (node) => node.meta.type, (node) => node.meta.label, recalculateResults),
-        new Filter('Group', vocabularies, (node) => node.group.id, (node) => node.group.label, recalculateResults),
-        new Filter('Organization', vocabularies, (node) => node.publisher.id, (node) => node.publisher.label, recalculateResults)
+        new Filter('Group', vocabularies, (node) => node.hasGroup() ? node.group.id : null, (node) => node.group.label, recalculateResults),
+        new Filter('Organization', vocabularies, (node) => node.hasPublisher() ? node.publisher.id : null, (node) => node.publisher.label, recalculateResults)
       ];
 
       recalculateResults();
@@ -160,7 +160,9 @@ class Filter {
               nameExtractor: Extractor<Localizable>,
               onChange: () => void) {
 
-    this.items = Array.from(groupBy(nodes, idExtractor).entries())
+    const nodesWithId = nodes.filter(node => isDefined(idExtractor(node)));
+
+    this.items = Array.from(groupBy(nodesWithId, idExtractor).entries())
         .map(([id, nodes]) => new Item(this, id, nameExtractor(requireDefined(nodes[0])), nodes.length, onChange));
   }
 

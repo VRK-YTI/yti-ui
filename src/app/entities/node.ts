@@ -481,6 +481,10 @@ export class VocabularyNode extends Node<VocabularyNodeType> {
     return requireSingle(this.references['publisher'].values) as OrganizationNode;
   }
 
+  hasPublisher() {
+    return !this.references['publisher'].empty;
+  }
+
   get group(): GroupNode {
     return requireSingle(this.references['inGroup'].values) as GroupNode;
   }

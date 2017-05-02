@@ -34,8 +34,8 @@ export class TermedService {
   getVocabularyList(languages: string[]): Observable<VocabularyNode[]> {
     return Observable.zip(this.metaModelService.getMeta(), this.getVocabularyNodes('Vocabulary'), this.getVocabularyNodes('TerminologicalVocabulary'))
       .map(([meta, vocabularies, terminologicalVocabularies]) =>
-        [...vocabularies, ...terminologicalVocabularies].map(vocabulary => Node.create(vocabulary, meta, languages, true) as VocabularyNode)
-          .filter(vocabulary => vocabulary.hasGroup()));
+        [...vocabularies, ...terminologicalVocabularies]
+          .map(vocabulary => Node.create(vocabulary, meta, languages, true) as VocabularyNode));
   }
 
   getConcept(graphId: string, conceptId: string, languages: string[]): Observable<ConceptNode> {
