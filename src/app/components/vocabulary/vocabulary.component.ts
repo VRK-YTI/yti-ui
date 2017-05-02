@@ -11,15 +11,15 @@ import { DeleteConfirmationModalService } from '../common/delete-confirmation.mo
   template: `
     <ngb-accordion *ngIf="vocabulary">
       <ngb-panel>
-        <template ngbPanelTitle>
+        <ng-template ngbPanelTitle>
           <div class="main-panel-header">
             <h2>
               <span>{{vocabulary.label | translateValue}}</span>
               <accordion-chevron></accordion-chevron>
             </h2>
           </div>
-        </template>
-        <template ngbPanelContent>
+        </ng-template>
+        <ng-template ngbPanelContent>
           <form #form>
             <div class="row">
               <div class="col-md-12">
@@ -33,7 +33,7 @@ import { DeleteConfirmationModalService } from '../common/delete-confirmation.mo
             <vocabulary-form [vocabulary]="vocabularyInEdit"></vocabulary-form>
             <meta-information [node]="vocabulary"></meta-information>
           </form>
-        </template>
+        </ng-template>
       </ngb-panel>
     </ngb-accordion>
   `

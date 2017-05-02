@@ -1,15 +1,6 @@
 {
+  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "sourceMap": true,
-    "declaration": false,
-    "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "lib": [
-      "es2016",
-      "es2017.object",
-      "dom"
-    ],
     "outDir": "../out-tsc/spec",
     "module": "commonjs",
     "target": "es5",
@@ -17,14 +8,7 @@
     "types": [
       "jasmine",
       "node"
-    ],
-    "noImplicitAny": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitReturns": true,
-    "noUnusedLocals": false,
-    "noUnusedParameters": false,
-    "noImplicitThis": true,
-    "strictNullChecks": true
+    ]
   },
   "files": [
     "test.ts"

@@ -34,7 +34,7 @@ import { IndexedConcept } from '../../services/elasticsearch.service';
             <i class="fa fa-tasks"></i>
           </div>
 
-          <template #filters>
+          <ng-template #filters>
             <div class="filters">
 
               <span class="title" translate>Filter results</span>
@@ -55,7 +55,7 @@ import { IndexedConcept } from '../../services/elasticsearch.service';
               </div>
 
             </div>
-          </template>
+          </ng-template>
 
         </div>
 

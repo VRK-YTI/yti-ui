@@ -745,7 +745,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
     this.clicks = 0;
   };
 
-  private hidePopup(): void {
+  hidePopup(): void {
     const tooltip = this.networkCanvasRef.nativeElement.querySelector('.vis-tooltip');
 
     if (tooltip !== null) {

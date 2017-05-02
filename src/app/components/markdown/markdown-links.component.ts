@@ -46,9 +46,9 @@ export class MarkdownLinksComponent implements OnInit, AfterViewChecked {
         <a *ngSwitchCase="'link'" [routerLink]="link(child)" [ngbPopover]="popContent" triggers="mouseenter:mouseleave">{{child.firstChild.literal}}</a>
         <span *ngSwitchCase="'text'">{{child.literal}}</span>
         
-        <template #popContent>
+        <ng-template #popContent>
           <div markdown [value]="conceptDefinition(child) | translateValue"></div>
-        </template>
+        </ng-template>
       
       </ng-container>
     </ng-container>

@@ -18,11 +18,11 @@ import { EditableService } from '../../services/editable.service';
     
     <ngb-accordion *ngIf="nonEmptyTerms.length > 0" [activeIds]="openTerms">
       <ngb-panel [id]="term.id" *ngFor="let term of nonEmptyTerms">
-        <template ngbPanelTitle>
+        <ng-template ngbPanelTitle>
           <div class="language">{{term.language | uppercase}}</div>
           <div class="localization">{{term.value}} <accordion-chevron class="pull-right"></accordion-chevron></div>
-        </template>
-        <template ngbPanelContent>
+        </ng-template>
+        <ng-template ngbPanelContent>
           <div class="row" *ngIf="editing">
             <div class="col-md-12">
               <div class="remove-button">
@@ -35,7 +35,7 @@ import { EditableService } from '../../services/editable.service';
               <property [value]="property"></property>
             </div>
           </div>
-        </template>
+        </ng-template>
       </ngb-panel>
     </ngb-accordion>
 

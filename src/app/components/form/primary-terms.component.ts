@@ -8,17 +8,17 @@ import { EditableService } from '../../services/editable.service';
   template: `              
     <ngb-accordion [activeIds]="openTermLanguages">
       <ngb-panel [id]="term.language" *ngFor="let term of nonEmptyTerms">
-        <template ngbPanelTitle>
+        <ng-template ngbPanelTitle>
           <div class="language">{{term.language | uppercase}}</div> 
           <div class="localization">{{term.value}} <accordion-chevron class="pull-right"></accordion-chevron></div>
-        </template>
-        <template ngbPanelContent>
+        </ng-template>
+        <ng-template ngbPanelContent>
           <div class="row">
             <div class="col-md-12" [class.col-xl-6]="multiColumn && property.multiColumn" *ngFor="let property of term | properties: showEmpty">
               <property [value]="property"></property>
             </div>
           </div>
-        </template>
+        </ng-template>
       </ngb-panel>
     </ngb-accordion>
   `

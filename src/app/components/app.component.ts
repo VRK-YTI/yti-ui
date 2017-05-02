@@ -5,7 +5,7 @@ import { LocationService } from '../services/location.service';
   selector: 'app-root',
   styleUrls: ['./app.component.scss'],
   template: `
-    <template ngbModalContainer></template>
+    <ng-template ngbModalContainer></ng-template>
     <navigation-bar></navigation-bar>
     <breadcrumb [hidden]="!showBreadcrumb"></breadcrumb>
     <router-outlet></router-outlet>

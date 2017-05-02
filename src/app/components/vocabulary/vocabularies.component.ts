@@ -31,14 +31,6 @@ import { defaultLanguages } from '../../utils/language';
             </div>
           </div>
 
-          <div class="row" *ngIf="searchConcept" style="padding-top: 16px">
-            <div class="col-md-12">
-              <div class="alert alert-danger" role="alert">
-                <span translate>Not implemented yet!</span>
-              </div>
-            </div>
-          </div>
-
         </div>
       </div>
 

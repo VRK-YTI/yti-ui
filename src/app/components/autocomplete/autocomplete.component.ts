@@ -31,9 +31,9 @@ const MIN_SEARCH_STRING_LENGTH = 3;
             <em class="font-small">{{result.vocabulary.label | translateValue}}</em>
           </span>
           
-          <template #popContent>
+          <ng-template #popContent>
             <div markdown [value]="result.definition | translateValue"></div>
-          </template>
+          </ng-template>
         </li>
       </ul>
     </div>

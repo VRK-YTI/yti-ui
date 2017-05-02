@@ -26,31 +26,31 @@ import { VocabularyComponent } from '../vocabulary/vocabulary.component';
           <div float>
             <ngb-tabset>
               <ngb-tab>
-                <template ngbTabTitle>
+                <ng-template ngbTabTitle>
                   <i class="fa fa-sort-alpha-asc"></i>
                   <p>{{'Alphabetic' | translate}}</p>
-                </template>
-                <template ngbTabContent>
+                </ng-template>
+                <ng-template ngbTabContent>
                   <concept-list></concept-list>
-                </template>
+                </ng-template>
               </ngb-tab>
               <ngb-tab>
-                <template ngbTabTitle>
+                <ng-template ngbTabTitle>
                   <i class="fa fa-sitemap"></i>
                   <p>{{'Hierarchical' | translate}}</p>
-                </template>
-                <template ngbTabContent>
+                </ng-template>
+                <ng-template ngbTabContent>
                   <concept-hierarchy></concept-hierarchy>
-                </template>
+                </ng-template>
               </ngb-tab>
               <ngb-tab>
-                <template ngbTabTitle>
+                <ng-template ngbTabTitle>
                   <i class="fa fa-clone"></i>
                   <p>{{'Collection' | translate}}</p>
-                </template>
-                <template ngbTabContent>
+                </ng-template>
+                <ng-template ngbTabContent>
                   <collection-list></collection-list>
-                </template>
+                </ng-template>
               </ngb-tab>
             </ngb-tabset>
           </div>
