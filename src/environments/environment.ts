@@ -5,5 +5,6 @@
 
 export const environment = {
   production: false,
-  es_host: 'http://localhost:9200'
+  api_url: '/api',
+  es_url: '/es'
 };

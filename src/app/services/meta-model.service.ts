@@ -11,6 +11,7 @@ import { CollectionNode, ConceptNode, Node, VocabularyNode } from '../entities/n
 import { TranslateService } from 'ng2-translate';
 import { LanguageService } from './language.service';
 import { asLocalizable } from '../entities/localization';
+import { environment } from '../../environments/environment';
 
 const infiniteResultsParams = new URLSearchParams();
 infiniteResultsParams.append('max', '-1');
@@ -82,16 +83,16 @@ export class MetaModelService {
     const params = new URLSearchParams();
     params.append('batch', 'true');
 
-    return this.http.delete(`/api/graphs/${graphId}/types`, { search: params, body: nodes });
+    return this.http.delete(`${environment.api_url}/graphs/${graphId}/types`, { search: params, body: nodes });
   }
 
   private getGraphs(): Observable<Graph[]> {
-    return this.http.get('/api/graphs', infiniteResultsOptions)
+    return this.http.get(`${environment.api_url}/graphs`, infiniteResultsOptions)
       .map(response => normalizeAsArray(response.json()) as Graph[]);
   }
 
   private getMetaNodes(graphId: string): Observable<NodeMetaInternal[]> {
-    return this.http.get(`/api/graphs/${graphId}/types`, infiniteResultsOptions)
+    return this.http.get(`${environment.api_url}/graphs/${graphId}/types`, infiniteResultsOptions)
       .map(response => normalizeAsArray(response.json()) as NodeMetaInternal[]);
   }
 }

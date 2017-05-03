@@ -9,6 +9,7 @@ import { CollectionNode, ConceptNode, GroupNode, Node, OrganizationNode, Vocabul
 import * as moment from 'moment';
 import { GraphMeta } from '../entities/meta';
 import { Localizable } from '../entities/localization';
+import { environment } from '../../environments/environment';
 
 const infiniteResultsParams = new URLSearchParams();
 infiniteResultsParams.append('max', '-1');
@@ -150,7 +151,7 @@ export class TermedService {
     const params = new URLSearchParams();
     params.append('batch', 'true');
 
-    return this.http.post(`/api/graphs/${graphMeta.graphId}/types`, graphMeta.toNodes(), { search: params })
+    return this.http.post(`${environment.api_url}/graphs/${graphMeta.graphId}/types`, graphMeta.toNodes(), { search: params })
       .flatMap(() => this.metaModelService.addMeta(graphMeta));
   }
 
@@ -160,7 +161,7 @@ export class TermedService {
     params.append('batch', 'true');
     params.append('sync', 'true');
 
-    return this.http.delete('/api/nodes', { search: params, body: nodeIds });
+    return this.http.delete(`${environment.api_url}/nodes`, { search: params, body: nodeIds });
   }
 
   private updateUpdateInternalNodes(nodes: NodeInternal<any>[]): Observable<Response> {
@@ -169,7 +170,7 @@ export class TermedService {
     params.append('batch', 'true');
     params.append('sync', 'true');
 
-    return this.http.post('/api/nodes', nodes, { search: params });
+    return this.http.post(`${environment.api_url}/nodes`, nodes, { search: params });
   }
 
   private getVocabularyNode<T extends VocabularyNodeType>(graphId: string, type: T): Observable<NodeExternal<VocabularyNodeType>> {
@@ -181,7 +182,7 @@ export class TermedService {
     params.append('select.referrers', '');
     params.append('select.audit', 'true');
 
-    return this.http.get(`/api/ext.json`, { search: params } )
+    return this.http.get(`${environment.api_url}/ext.json`, { search: params } )
       .map(response => requireSingle(response.json() as NodeExternal<VocabularyNodeType>));
   }
 
@@ -194,7 +195,7 @@ export class TermedService {
     params.append('select.references', 'inGroup');
     params.append('select.referrers', '');
 
-    return this.http.get(`/api/ext.json`, { search: params } )
+    return this.http.get(`${environment.api_url}/ext.json`, { search: params } )
       .map(response => normalizeAsArray(response.json() as NodeExternal<T>[])).catch(notFoundAsDefault([]));
   }
 
@@ -212,7 +213,7 @@ export class TermedService {
     params.append('select.properties', 'definition');
     params.append('select.audit', 'true');
 
-    return this.http.get(`/api/ext.json`, { search: params } )
+    return this.http.get(`${environment.api_url}/ext.json`, { search: params } )
       .map(response => normalizeAsArray(response.json() as NodeExternal<'Concept'>[])).catch(notFoundAsDefault([]));
   }
 
@@ -231,7 +232,7 @@ export class TermedService {
     params.append('select.referrers', 'broader');
     params.append('where.references.broader', broaderConceptId);
 
-    return this.http.get(`/api/ext.json`, { search: params } )
+    return this.http.get(`${environment.api_url}/ext.json`, { search: params } )
       .map(response => normalizeAsArray(response.json() as NodeExternal<'Concept'>[])).catch(notFoundAsDefault([]));
   }
 
@@ -254,7 +255,7 @@ export class TermedService {
     params.append('recurse.references.prefLabelXl', '1');
     params.append('select.audit', 'true');
 
-    return this.http.get(`/api/ext.json`, { search: params } );
+    return this.http.get(`${environment.api_url}/ext.json`, { search: params } );
   }
 
   private getCollectionListNodes(graphId: string): Observable<NodeExternal<'Collection'>[]> {
@@ -266,7 +267,7 @@ export class TermedService {
     params.append('select.properties', 'prefLabel');
     params.append('select.audit', 'true');
 
-    return this.http.get(`/api/ext.json`, { search: params } )
+    return this.http.get(`${environment.api_url}/ext.json`, { search: params } )
       .map(response => normalizeAsArray(response.json() as NodeExternal<'Collection'>[])).catch(notFoundAsDefault([]));
   }
 
@@ -288,7 +289,7 @@ export class TermedService {
     params.append('select.audit', 'true');
     params.append('recurse.references.prefLabelXl', '1');
 
-    return this.http.get(`/api/ext.json`, { search: params } );
+    return this.http.get(`${environment.api_url}/ext.json`, { search: params } );
   }
 
   private getNodeListWithoutReferencesOrReferrers<T extends NodeType>(type: T): Observable<NodeExternal<T>[]> {
@@ -299,7 +300,7 @@ export class TermedService {
     params.append('select.references', '');
     params.append('select.referrers', '');
 
-    return this.http.get(`/api/ext.json`, { search: params } )
+    return this.http.get(`${environment.api_url}/ext.json`, { search: params } )
       .map(response => normalizeAsArray(response.json() as NodeExternal<T>[])).catch(notFoundAsDefault([]));
   }
 
@@ -308,7 +309,7 @@ export class TermedService {
     const params = new URLSearchParams();
     params.append('max', '-1');
 
-    return this.http.get(`/api/graphs/${graphId}/nodes`, { search: params } )
+    return this.http.get(`${environment.api_url}/graphs/${graphId}/nodes`, { search: params } )
       .map(response => normalizeAsArray(response.json() as NodeInternal<any>[])).catch(notFoundAsDefault([]));
   }
 }

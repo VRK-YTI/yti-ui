@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  es_host: 'https://sanasto.csc.fi/es'
+  api_url: '/api',
+  es_url: '/es'
 };
