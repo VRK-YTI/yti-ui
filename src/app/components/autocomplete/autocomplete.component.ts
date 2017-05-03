@@ -130,7 +130,7 @@ class AutocompleteItem {
     }
 
     // replace localizable values with highlights if found
-    for (const [propertyPath, highlighted] of Object.entries(hit.highlight)) {
+    for (const [propertyPath, highlighted] of Object.entries(hit.highlight || {})) {
       setPropertyPath(this, propertyPath, normalizeAsArray(highlighted)[0]);
     }
   }
