@@ -1,10 +1,11 @@
-import { Component, OnInit } from "@angular/core";
+import { Component } from "@angular/core";
 import {
   ElasticSearchService, IndexedConcept,
   SearchResponseHit
 } from "../../services/elasticsearch.service";
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Localizable } from '../../entities/localization';
+import { Localizable, withFirstLocalizations } from '../../entities/localization';
+import { normalizeAsArray } from '../../utils/array';
 
 const MIN_SEARCH_STRING_LENGTH = 3;
 
@@ -95,6 +96,7 @@ class AutocompleteItem {
 
   id: string;
   label: Localizable;
+  altLabel: Localizable;
   definition: Localizable;
   vocabulary: {
     id: string, // actually graphId
@@ -103,9 +105,13 @@ class AutocompleteItem {
 
   constructor(hit: SearchResponseHit<IndexedConcept>) {
     this.id = hit._source.id;
-    this.label = hit._source.label;
-    this.definition = hit._source.definition;
-    this.vocabulary = hit._source.vocabulary;
+    this.label = withFirstLocalizations(hit._source.label);
+    this.altLabel = withFirstLocalizations(hit._source.altLabel);
+    this.definition = withFirstLocalizations(hit._source.definition);
+    this.vocabulary = {
+      id: hit._source.vocabulary.id,
+      label: withFirstLocalizations(hit._source.vocabulary.label)
+    };
 
     function setPropertyPath(obj: any, path: string, value: any) {
 
@@ -125,7 +131,7 @@ class AutocompleteItem {
 
     // replace localizable values with highlights if found
     for (const [propertyPath, highlighted] of Object.entries(hit.highlight)) {
-      setPropertyPath(this, propertyPath, highlighted);
+      setPropertyPath(this, propertyPath, normalizeAsArray(highlighted)[0]);
     }
   }
 }

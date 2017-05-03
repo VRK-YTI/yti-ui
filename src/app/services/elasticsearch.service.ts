@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Localizable } from '../entities/localization';
+import { Localizable, LocalizableArray } from '../entities/localization';
 import { LanguageService } from './language.service';
 import { Http, URLSearchParams } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
@@ -9,11 +9,11 @@ export interface IndexedConcept {
   id: string,
   vocabulary: {
     id: string, // actually graphId
-    label: Localizable
+    label: Localizable|LocalizableArray
   }
-  label: Localizable,
-  altLabel: Localizable,
-  definition: Localizable,
+  label: Localizable|LocalizableArray,
+  altLabel: Localizable|LocalizableArray,
+  definition: Localizable|LocalizableArray,
   broader: string[],
   narrower: string[],
   modified: string,

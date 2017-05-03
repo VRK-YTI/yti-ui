@@ -6,7 +6,8 @@ export interface Localization {
   value: string;
 }
 
-export type Localizable = { [language: string]: string; }
+export type Localizable = { [language: string]: string; };
+export type LocalizableArray = { [language: string]: string[]; };
 
 export function asLocalizable(localizations: (Localization|Attribute)[]): Localizable {
 
@@ -16,6 +17,17 @@ export function asLocalizable(localizations: (Localization|Attribute)[]): Locali
     if (localization.lang) {
       result[localization.lang] = localization.value;
     }
+  }
+
+  return result;
+}
+
+export function withFirstLocalizations(localizable: Localizable|LocalizableArray): Localizable {
+
+  const result: Localizable = {};
+
+  for (const [lang, value] of Object.entries(localizable)) {
+    result[lang] = normalizeAsArray(value)[0];
   }
 
   return result;
