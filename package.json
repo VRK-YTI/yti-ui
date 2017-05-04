@@ -11,7 +11,8 @@
     "test": "node -- node_modules/@angular/cli/bin/ng test",
     "pree2e": "webdriver-manager update --standalone false --gecko false",
     "e2e": "node -- node_modules/protractor/bin/protractor",
-    "create-translations": "node -- node_modules/@biesbjerg/ng2-translate-extract/bin/extract.js ./src/app --output ./po --format=pot --clean"
+    "create-translations": "node -- node_modules/@biesbjerg/ng2-translate-extract/bin/extract.js ./src/app --output ./po --format=pot --clean",
+    "load-examples": "node -- node_modules/ts-node/dist/bin.js scripts/load-examples.ts"
   },
   "private": true,
   "dependencies": {
@@ -48,6 +49,7 @@
     "@types/fast-levenshtein": "^0.0.1",
     "@types/jasmine": "2.5.38",
     "@types/node": "6.0.42",
+    "@types/node-fetch": "^1.6.7",
     "@types/uuid": "2.0.29",
     "@types/vis": "^4.17.4",
     "codelyzer": "2.0.0",
@@ -58,6 +60,7 @@
     "karma-cli": "1.0.1",
     "karma-jasmine": "1.1.0",
     "karma-remap-istanbul": "0.2.2",
+    "node-fetch": "^1.6.3",
     "po-loader": "0.3.1",
     "po2json": "0.4.5",
     "protractor": "4.0.13",
