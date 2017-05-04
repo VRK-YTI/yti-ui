@@ -70,12 +70,21 @@ export class MetaModelService {
     });
   }
 
-  addMeta(graphMeta: GraphMeta): Observable<any> {
-    return this.meta.map(meta => meta.addMeta(graphMeta));
+  updateMeta(graphMeta: GraphMeta): Observable<any> {
+
+    const params = new URLSearchParams();
+    params.append('batch', 'true');
+
+    return this.http.post(`${environment.api_url}/graphs/${graphMeta.graphId}/types`, graphMeta.toNodes(), { search: params })
+      .flatMap(() => this.addMeta(graphMeta));
   }
 
   removeGraphMeta(graphId: string): Observable<any> {
     return this.getMeta().flatMap(meta => this.removeMetaNodes(graphId, meta.getGraphMeta(graphId).toNodes()));
+  }
+
+  private addMeta(graphMeta: GraphMeta): Observable<any> {
+    return this.meta.map(meta => meta.addMeta(graphMeta));
   }
 
   private removeMetaNodes(graphId: string, nodes: NodeMetaInternal[]) {

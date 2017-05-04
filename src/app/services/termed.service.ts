@@ -89,7 +89,7 @@ export class TermedService {
     const graphId = vocabulary.graphId;
 
     return this.createGraph(graphId, template.label)
-      .flatMap(() => this.updateMeta(template.copyToGraph(graphId)))
+      .flatMap(() => this.metaModelService.updateMeta(template.copyToGraph(graphId)))
       .flatMap(() => this.updateNode(vocabulary));
   }
 
@@ -144,15 +144,6 @@ export class TermedService {
       },
       roles: []
     });
-  }
-
-  private updateMeta(graphMeta: GraphMeta): Observable<any> {
-
-    const params = new URLSearchParams();
-    params.append('batch', 'true');
-
-    return this.http.post(`${environment.api_url}/graphs/${graphMeta.graphId}/types`, graphMeta.toNodes(), { search: params })
-      .flatMap(() => this.metaModelService.addMeta(graphMeta));
   }
 
   private removeNodeIdentifiers(nodeIds: Identifier<any>[]) {
