@@ -128,7 +128,7 @@ export class TermedService {
 
   private removeGraphNodes(graphId: string): Observable<any> {
     // TODO all node ids should be enough or even api for forcing graph removal
-    return this.getAllNodes(graphId).flatMap(nodes => this.removeNodeIdentifiers(nodes));
+    return this.getAllNodeIds(graphId).flatMap(nodeIds => this.removeNodeIdentifiers(nodeIds));
   }
 
   private removeGraph(graphId: string): Observable<any> {
@@ -176,63 +176,73 @@ export class TermedService {
   private getVocabularyNode<T extends VocabularyNodeType>(graphId: string, type: T): Observable<NodeExternal<VocabularyNodeType>> {
 
     const params = new URLSearchParams();
+    params.append('select', 'id');
+    params.append('select', 'type');
+    params.append('select', 'code');
+    params.append('select', 'uri');
+    params.append('select', 'createdBy');
+    params.append('select', 'createdDate');
+    params.append('select', 'lastModifiedBy');
+    params.append('select', 'lastModifiedDate');
+    params.append('select', 'properties.*');
+    params.append('select', 'references.*');
+    params.append('where', 'graph.id:' + graphId);
+    params.append('where', 'type.id:' + type);
     params.append('max', '-1');
-    params.append('graphId', graphId);
-    params.append('typeId', type);
-    params.append('select.referrers', '');
-    params.append('select.audit', 'true');
 
-    return this.http.get(`${environment.api_url}/ext.json`, { search: params } )
+    return this.http.get(`${environment.api_url}/node-trees`, { search: params } )
       .map(response => requireSingle(response.json() as NodeExternal<VocabularyNodeType>));
   }
 
   private getVocabularyNodes<T extends VocabularyNodeType>(type: T): Observable<NodeExternal<T>[]> {
 
     const params = new URLSearchParams();
+    params.append('select', 'id');
+    params.append('select', 'type');
+    params.append('select', 'properties.*');
+    params.append('select', 'references.publisher');
+    params.append('select', 'references.inGroup');
+    params.append('where', 'type.id:' + type);
     params.append('max', '-1');
-    params.append('typeId', type);
-    params.append('select.references', 'publisher');
-    params.append('select.references', 'inGroup');
-    params.append('select.referrers', '');
 
-    return this.http.get(`${environment.api_url}/ext.json`, { search: params } )
+    return this.http.get(`${environment.api_url}/node-trees`, { search: params } )
       .map(response => normalizeAsArray(response.json() as NodeExternal<T>[])).catch(notFoundAsDefault([]));
   }
 
   private getConceptListNodes(graphId: string): Observable<NodeExternal<'Concept'>[]> {
 
     const params = new URLSearchParams();
+    params.append('select', 'id');
+    params.append('select', 'type');
+    params.append('select', 'referrers.broader');
+    params.append('select', 'references.broader');
+    params.append('select', 'references.prefLabelXl');
+    params.append('select', 'properties.prefLabel');
+    params.append('select', 'properties.status');
+    params.append('select', 'lastModifiedDate');
+    params.append('where', 'graph.id:' + graphId);
+    params.append('where', 'type.id:' + 'Concept');
     params.append('max', '-1');
-    params.append('graphId', graphId);
-    params.append('typeId', 'Concept');
-    params.append('select.referrers', 'broader');
-    params.append('select.references', 'broader');
-    params.append('select.references', 'prefLabelXl');
-    params.append('select.properties', 'prefLabel');
-    params.append('select.properties', 'status');
-    params.append('select.properties', 'definition');
-    params.append('select.audit', 'true');
 
-    return this.http.get(`${environment.api_url}/ext.json`, { search: params } )
+    return this.http.get(`${environment.api_url}/node-trees`, { search: params } )
       .map(response => normalizeAsArray(response.json() as NodeExternal<'Concept'>[])).catch(notFoundAsDefault([]));
   }
 
   private getNarrowerConceptNodes(graphId: string, broaderConceptId: string): Observable<NodeExternal<'Concept'>[]> {
 
     const params = new URLSearchParams();
+    params.append('select', 'id');
+    params.append('select', 'type');
+    params.append('select', 'referrers.broader');
+    params.append('select', 'references.prefLabelXl');
+    params.append('select', 'properties.prefLabel');
+    params.append('select', 'properties.status');
+    params.append('select', 'lastModifiedDate');
+    params.append('where', 'graph.id:' + graphId);
+    params.append('where', 'references.broader.id:' + broaderConceptId);
     params.append('max', '-1');
-    params.append('graphId', graphId);
-    params.append('typeId', 'Concept');
-    params.append('recurse.referrers.broader', '1');
-    params.append('recurse.references.prefLabelXl', '1');
-    params.append('select.references', 'prefLabelXl');
-    params.append('select.properties', 'prefLabel');
-    params.append('select.properties', 'status');
-    params.append('select.properties', 'definition');
-    params.append('select.referrers', 'broader');
-    params.append('where.references.broader', broaderConceptId);
 
-    return this.http.get(`${environment.api_url}/ext.json`, { search: params } )
+    return this.http.get(`${environment.api_url}/node-trees`, { search: params } )
       .map(response => normalizeAsArray(response.json() as NodeExternal<'Concept'>[])).catch(notFoundAsDefault([]));
   }
 
@@ -248,26 +258,41 @@ export class TermedService {
   }
 
   private conceptDetailsNodeRequest(graphId: string, conceptId: string): Observable<Response> {
-    const params = new URLSearchParams();
-    params.append('max', '-1');
-    params.append('graphId', graphId);
-    params.append('uri', 'urn:uuid:' + conceptId);
-    params.append('recurse.references.prefLabelXl', '1');
-    params.append('select.audit', 'true');
 
-    return this.http.get(`${environment.api_url}/ext.json`, { search: params } );
+    const params = new URLSearchParams();
+    params.append('select', 'id');
+    params.append('select', 'type');
+    params.append('select', 'code');
+    params.append('select', 'uri');
+    params.append('select', 'createdBy');
+    params.append('select', 'createdDate');
+    params.append('select', 'lastModifiedBy');
+    params.append('select', 'lastModifiedDate');
+    params.append('select', 'properties.*');
+    params.append('select', 'references.*');
+    params.append('select', 'references.prefLabelXl:2');
+    params.append('select', 'referrers.*');
+    params.append('select', 'referrers.prefLabelXl:2');
+    params.append('where', 'graph.id:' + graphId);
+    params.append('where', 'id:' + conceptId);
+    params.append('max', '-1');
+
+    return this.http.get(`${environment.api_url}/node-trees`, { search: params } );
   }
 
   private getCollectionListNodes(graphId: string): Observable<NodeExternal<'Collection'>[]> {
 
     const params = new URLSearchParams();
+    params.append('select', 'id');
+    params.append('select', 'type');
+    params.append('select', 'properties.prefLabel');
+    params.append('select', 'properties.status');
+    params.append('select', 'lastModifiedDate');
+    params.append('where', 'graph.id:' + graphId);
+    params.append('where', 'type.id:' + 'Collection');
     params.append('max', '-1');
-    params.append('graphId', graphId);
-    params.append('typeId', 'Collection');
-    params.append('select.properties', 'prefLabel');
-    params.append('select.audit', 'true');
 
-    return this.http.get(`${environment.api_url}/ext.json`, { search: params } )
+    return this.http.get(`${environment.api_url}/node-trees`, { search: params } )
       .map(response => normalizeAsArray(response.json() as NodeExternal<'Collection'>[])).catch(notFoundAsDefault([]));
   }
 
@@ -282,35 +307,49 @@ export class TermedService {
   }
 
   private collectionDetailsNodeRequest(graphId: string, collectionId: string): Observable<Response> {
-    const params = new URLSearchParams();
-    params.append('max', '-1');
-    params.append('graphId', graphId);
-    params.append('uri', 'urn:uuid:' + collectionId);
-    params.append('select.audit', 'true');
-    params.append('recurse.references.prefLabelXl', '1');
 
-    return this.http.get(`${environment.api_url}/ext.json`, { search: params } );
+    const params = new URLSearchParams();
+    params.append('select', 'id');
+    params.append('select', 'type');
+    params.append('select', 'code');
+    params.append('select', 'uri');
+    params.append('select', 'createdBy');
+    params.append('select', 'createdDate');
+    params.append('select', 'lastModifiedBy');
+    params.append('select', 'lastModifiedDate');
+    params.append('select', 'properties.*');
+    params.append('select', 'references.*');
+    params.append('select', 'references.prefLabelXl:2');
+    params.append('where', 'graph.id:' + graphId);
+    params.append('where', 'id:' + collectionId);
+    params.append('max', '-1');
+
+    return this.http.get(`${environment.api_url}/node-trees`, { search: params } );
   }
 
   private getNodeListWithoutReferencesOrReferrers<T extends NodeType>(type: T): Observable<NodeExternal<T>[]> {
 
     const params = new URLSearchParams();
+    params.append('select', 'id');
+    params.append('select', 'type');
+    params.append('select', 'properties.*');
+    params.append('where', 'type.id:' + type);
     params.append('max', '-1');
-    params.append('typeId', type);
-    params.append('select.references', '');
-    params.append('select.referrers', '');
 
-    return this.http.get(`${environment.api_url}/ext.json`, { search: params } )
+    return this.http.get(`${environment.api_url}/node-trees`, { search: params } )
       .map(response => normalizeAsArray(response.json() as NodeExternal<T>[])).catch(notFoundAsDefault([]));
   }
 
-  private getAllNodes(graphId: string): Observable<NodeInternal<any>[]> {
+  private getAllNodeIds(graphId: string): Observable<Identifier<any>[]> {
 
     const params = new URLSearchParams();
+    params.append('select', 'id');
+    params.append('select', 'type');
+    params.append('where', 'graph.id:' + graphId);
     params.append('max', '-1');
 
-    return this.http.get(`${environment.api_url}/graphs/${graphId}/nodes`, { search: params } )
-      .map(response => normalizeAsArray(response.json() as NodeInternal<any>[])).catch(notFoundAsDefault([]));
+    return this.http.get(`${environment.api_url}/node-trees`, { search: params } )
+      .map(response => normalizeAsArray(response.json() as Identifier<any>[])).catch(notFoundAsDefault([]));
   }
 }
 
