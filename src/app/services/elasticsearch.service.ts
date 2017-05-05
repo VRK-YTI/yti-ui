@@ -159,8 +159,7 @@ export class ElasticSearchService {
           post_tags : ['</b>'],
           fields : {
             'label.*': {},
-            'altLabel.*': {},
-            'definition.*': {}
+            'altLabel.*': {}
           }
         },
         from: 0,
