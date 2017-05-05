@@ -26,7 +26,7 @@ import { UserService } from '../../services/user.service';
 
           <div class="row">
             <div class="col-md-12">
-              <autocomplete (selected)="autocompleteChanged($event)" (found)=foundItemsChanged($event)></autocomplete>
+              <autocomplete></autocomplete>
             </div>
           </div>
 
