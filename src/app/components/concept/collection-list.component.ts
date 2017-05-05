@@ -1,13 +1,6 @@
-import { Component, AfterViewInit, OnInit, ElementRef, ViewChild, Renderer } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Component, AfterViewInit, ElementRef, ViewChild, Renderer } from '@angular/core';
 import { CollectionNode } from '../../entities/node';
-import {
-  filterAndSortSearchResults, labelComparator, scoreComparator, ContentExtractor,
-  TextAnalysis
-} from '../../utils/text-analyzer';
-import { isDefined } from '../../utils/object';
-import { LanguageService } from '../../services/language.service';
-import { ConceptViewModelService } from '../../services/concept.view.service';
+import { CollectionListModel, ConceptViewModelService } from '../../services/concept.view.service';
 import { Router } from '@angular/router';
 import { v4 as uuid } from 'uuid';
 import { UserService } from '../../services/user.service';
@@ -50,38 +43,18 @@ import { UserService } from '../../services/user.service';
     </div>
   `
 })
-export class CollectionListComponent implements OnInit, AfterViewInit {
+export class CollectionListComponent implements AfterViewInit {
 
   @ViewChild('searchInput') searchInput: ElementRef;
 
-  searchResults: Observable<CollectionNode[]>;
-  search$ = new BehaviorSubject('');
-  debouncedSearch = this.search;
+  model: CollectionListModel;
 
   constructor(private userService: UserService,
-              private languageService: LanguageService,
               private conceptViewModel: ConceptViewModelService,
               private renderer: Renderer,
               private router: Router) {
-  }
 
-  ngOnInit() {
-
-    const initialSearch = this.search$.take(1);
-    const debouncedSearch = this.search$.skip(1).debounceTime(500);
-    const search = initialSearch.concat(debouncedSearch);
-
-    const update = (collections: CollectionNode[], search: string) => {
-
-      this.debouncedSearch = search;
-      const scoreFilter = (item: TextAnalysis<CollectionNode>) => !search || isDefined(item.matchScore) || item.score < 2;
-      const labelExtractor: ContentExtractor<CollectionNode> = collection => collection.label;
-      const scoreAndLabelComparator = scoreComparator().andThen(labelComparator(this.languageService));
-
-      return filterAndSortSearchResults(collections, search, [labelExtractor], [scoreFilter], scoreAndLabelComparator);
-    };
-
-    this.searchResults = Observable.combineLatest([this.conceptViewModel.allCollections$, search], update);
+    this.model = conceptViewModel.collectionList;
   }
 
   ngAfterViewInit() {
@@ -93,11 +66,19 @@ export class CollectionListComponent implements OnInit, AfterViewInit {
   }
 
   get search() {
-    return this.search$.getValue();
+    return this.model.search$.getValue();
   }
 
   set search(value: string) {
-    this.search$.next(value);
+    this.model.search$.next(value);
+  }
+
+  get searchResults() {
+    return this.model.searchResults;
+  }
+
+  get debouncedSearch() {
+    return this.model.debouncedSearch;
   }
 
   navigate(collection: CollectionNode) {

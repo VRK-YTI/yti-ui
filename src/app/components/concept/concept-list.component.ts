@@ -1,18 +1,10 @@
-import { Component, AfterViewInit, OnInit, ElementRef, ViewChild, Renderer } from '@angular/core';
+import { Component, AfterViewInit, ElementRef, ViewChild, Renderer } from '@angular/core';
 import { Router } from '@angular/router';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { ConceptNode } from '../../entities/node';
-import {
-  filterAndSortSearchResults, labelComparator, scoreComparator, ContentExtractor,
-  TextAnalysis
-} from '../../utils/text-analyzer';
-import { isDefined } from '../../utils/object';
-import { LanguageService } from '../../services/language.service';
-import { ConceptViewModelService } from '../../services/concept.view.service';
+import { ConceptListModel, ConceptViewModelService } from '../../services/concept.view.service';
 import { statuses } from '../../entities/constants';
-import { comparingDate, reversed } from '../../utils/comparator';
 import { v4 as uuid } from 'uuid';
 import { UserService } from '../../services/user.service';
+import { IndexedConcept } from '../../services/elasticsearch.service';
 
 @Component({
   selector: 'concept-list',
@@ -34,6 +26,7 @@ import { UserService } from '../../services/user.service';
                    type="text"
                    class="form-control"
                    [placeholder]="'Search concept...' | translate"/>
+            <ajax-loading-indicator-small *ngIf="model.loading"></ajax-loading-indicator-small>
           </div>
 
           <div class="button btn-default btn-lg btn-filters"
@@ -74,53 +67,26 @@ import { UserService } from '../../services/user.service';
         <ul [ngClass]="{'has-button': canAddConcept()}">
           <li *ngFor="let concept of searchResults | async" (click)="navigate(concept)"
               [class.selection]="isSelected(concept)">
-            <span
-              [innerHTML]="concept.label | translateSearchValue: debouncedSearch | highlight: debouncedSearch"></span>
+            <span [innerHTML]="concept.label | translateValue"></span>
           </li>
         </ul>
       </div>
     </div>
   `
 })
-export class ConceptListComponent implements OnInit, AfterViewInit {
+export class ConceptListComponent implements AfterViewInit {
 
   @ViewChild('searchInput') searchInput: ElementRef;
 
-  searchResults: Observable<ConceptNode[]>;
-  search$ = new BehaviorSubject('');
-  sortByTime$ = new BehaviorSubject<boolean>(false);
-  onlyStatus$ = new BehaviorSubject<string|null>(null);
-  debouncedSearch = this.search;
-
   statuses = statuses;
+  model: ConceptListModel;
 
-  constructor(private languageService: LanguageService,
-              private userService: UserService,
+  constructor(private userService: UserService,
               private conceptViewModel: ConceptViewModelService,
               private renderer: Renderer,
               private router: Router) {
-  }
 
-  ngOnInit() {
-
-    const initialSearch = this.search$.take(1);
-    const debouncedSearch = this.search$.skip(1).debounceTime(500);
-    const search = initialSearch.concat(debouncedSearch);
-
-    const update = (concepts: ConceptNode[], search: string, sortByTime: boolean, onlyStatus: string|null) => {
-
-      this.debouncedSearch = search;
-      const scoreFilter = (item: TextAnalysis<ConceptNode>) => !search || isDefined(item.matchScore) || item.score < 2;
-      const statusFilter = (item: TextAnalysis<ConceptNode>) => !onlyStatus || item.item.status === onlyStatus;
-      const labelExtractor: ContentExtractor<ConceptNode> = concept => concept.label;
-      const scoreAndLabelComparator = scoreComparator().andThen(labelComparator(this.languageService));
-      const dateComparator = reversed(comparingDate<TextAnalysis<ConceptNode>>(item => item.item.lastModifiedDate));
-      const comparator = sortByTime ? dateComparator.andThen(scoreAndLabelComparator) : scoreAndLabelComparator;
-
-      return filterAndSortSearchResults(concepts, search, [labelExtractor], [scoreFilter, statusFilter], comparator);
-    };
-
-    this.searchResults = Observable.combineLatest([this.conceptViewModel.allConcepts$, search, this.sortByTime$, this.onlyStatus$], update);
+    this.model = conceptViewModel.conceptList;
   }
 
   ngAfterViewInit() {
@@ -131,39 +97,43 @@ export class ConceptListComponent implements OnInit, AfterViewInit {
     return this.userService.isLoggedIn();
   }
 
+  get searchResults() {
+    return this.model.searchResults;
+  }
+
   get search() {
-    return this.search$.getValue();
+    return this.model.search$.getValue();
   }
 
   set search(value: string) {
-    this.search$.next(value);
+    this.model.search$.next(value);
   }
 
   get sortByTime() {
-    return this.sortByTime$.getValue();
+    return this.model.sortByTime$.getValue();
   }
 
   set sortByTime(value: boolean) {
-    this.sortByTime$.next(value);
+    this.model.sortByTime$.next(value);
   }
 
   get onlyStatus() {
-    return this.onlyStatus$.getValue();
+    return this.model.onlyStatus$.getValue();
   }
 
   set onlyStatus(value: string|null) {
-    this.onlyStatus$.next(value);
+    this.model.onlyStatus$.next(value);
   }
 
-  navigate(concept: ConceptNode) {
-    this.router.navigate(['/concepts', concept.graphId, 'concept', concept.id]);
+  navigate(concept: IndexedConcept) {
+    this.router.navigate(['/concepts', concept.vocabulary.id, 'concept', concept.id]);
   }
 
   addConcept() {
     this.router.navigate(['/concepts', this.conceptViewModel.graphId, 'concept', uuid()]);
   }
 
-  isSelected(concept: ConceptNode) {
+  isSelected(concept: IndexedConcept) {
     return this.conceptViewModel.conceptId === concept.id;
   }
 }

@@ -25,7 +25,7 @@ import { requireDefined } from '../../utils/object';
           </div>
         </div>
   
-        <concept-form [concept]="conceptInEdit" [conceptsProvider]="conceptsProvider" [multiColumn]="true"></concept-form>
+        <concept-form [concept]="conceptInEdit" [multiColumn]="true"></concept-form>
       </form>
       
     </div>
@@ -62,10 +62,6 @@ export class ConceptComponent implements EditingComponent, OnDestroy {
     for (const subscription of this.subscriptionToClean) {
       subscription.unsubscribe();
     }
-  }
-
-  get conceptsProvider() {
-    return () => this.conceptViewModel.allConcepts$.getValue();
   }
 
   get concept() {

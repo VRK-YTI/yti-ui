@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ConceptViewModelService } from '../../services/concept.view.service';
+import { ConceptHierarchyModel, ConceptViewModelService } from '../../services/concept.view.service';
 import { v4 as uuid } from 'uuid';
 import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
@@ -29,9 +29,13 @@ import { UserService } from '../../services/user.service';
 })
 export class ConceptHierarchyComponent {
 
+  model: ConceptHierarchyModel;
+
   constructor(private userService: UserService,
               private router: Router,
               private conceptViewModel: ConceptViewModelService) {
+
+    this.model = conceptViewModel.conceptHierarchy;
   }
 
   canAddConcept() {
@@ -39,7 +43,7 @@ export class ConceptHierarchyComponent {
   }
 
   get topConcepts() {
-    return this.conceptViewModel.topConcepts$;
+    return this.model.topConcepts$;
   }
 
   addConcept() {

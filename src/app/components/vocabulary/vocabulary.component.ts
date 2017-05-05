@@ -30,7 +30,7 @@ import { DeleteConfirmationModalService } from '../common/delete-confirmation.mo
               </div>
             </div>
 
-            <vocabulary-form [vocabulary]="vocabularyInEdit" [conceptsProvider]="conceptsProvider"></vocabulary-form>
+            <vocabulary-form [vocabulary]="vocabularyInEdit"></vocabulary-form>
             <meta-information [node]="vocabulary"></meta-information>
           </form>
         </template>
@@ -49,10 +49,6 @@ export class VocabularyComponent implements EditingComponent {
     editableService.onRemove = () =>
       deleteConfirmationModal.open(requireDefined(this.vocabulary))
         .then(() => conceptViewModel.removeVocabulary());
-  }
-
-  get conceptsProvider() {
-    return () => this.conceptViewModel.allConcepts$.getValue();
   }
 
   get vocabulary() {

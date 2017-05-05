@@ -9,8 +9,7 @@ import { EditableService } from '../../services/editable.service';
       <!-- Special handling for primary term, could be solved with mixed property/reference sorting -->
       <reference *ngIf="concept.hasTerms()"
                  class="col-md-12"
-                 [multiColumnTerms]="multiColumn" 
-                 [conceptsProvider]="conceptsProvider" 
+                 [multiColumnTerms]="multiColumn"
                  [value]="concept.terms"></reference>
       
       <property *ngFor="let property of concept | properties: showEmpty"
@@ -23,8 +22,7 @@ import { EditableService } from '../../services/editable.service';
                  class="col-md-12" 
                  [class.col-xl-6]="multiColumn && !reference.term"
                  [multiColumnTerms]="multiColumn"
-                 [value]="reference" 
-                 [conceptsProvider]="conceptsProvider"></reference>
+                 [value]="reference"></reference>
     </div>
 
     <meta-information [hidden]="!concept.persistent" [node]="concept"></meta-information>
@@ -33,7 +31,6 @@ import { EditableService } from '../../services/editable.service';
 export class ConceptFormComponent {
 
   @Input() concept: ConceptNode;
-  @Input() conceptsProvider: () => ConceptNode[];
   @Input() multiColumn = false;
 
   constructor(private editableService: EditableService) {

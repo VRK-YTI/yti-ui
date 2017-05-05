@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { ConceptNode } from '../../entities/node';
-import { ConceptViewModelService } from '../../services/concept.view.service';
+import { ConceptHierarchyModel, ConceptViewModelService } from '../../services/concept.view.service';
+import { IndexedConcept } from '../../services/elasticsearch.service';
 
 @Component({
   selector: 'concept-hierarchy-node',
@@ -16,7 +16,7 @@ import { ConceptViewModelService } from '../../services/concept.view.service';
     </div>
     
     <ul *ngIf="expanded && children">
-      <li *ngFor="let child of children">
+      <li *ngFor="let child of children | async">
         <concept-hierarchy-node [concept]="child"></concept-hierarchy-node>
       </li>
     </ul>
@@ -24,16 +24,17 @@ import { ConceptViewModelService } from '../../services/concept.view.service';
 })
 export class ConceptHierarchyNodeComponent {
 
-  @Input() concept: ConceptNode;
-  collapsed = true;
-  children: ConceptNode[];
+  @Input() concept: IndexedConcept;
+  model: ConceptHierarchyModel;
 
   constructor(private conceptViewModel: ConceptViewModelService,
               private router: Router) {
+
+    this.model = conceptViewModel.conceptHierarchy;
   }
 
   navigate() {
-    this.router.navigate(['/concepts', this.concept.graphId, 'concept', this.concept.id]);
+    this.router.navigate(['/concepts', this.concept.vocabulary.id, 'concept', this.concept.id]);
   }
 
   get selected() {
@@ -41,23 +42,26 @@ export class ConceptHierarchyNodeComponent {
   }
 
   get expanded() {
-    return !this.collapsed;
+    return this.model.isExpanded(this.concept);
+  }
+
+  get collapsed() {
+    return !this.expanded;
   }
 
   hasChildren() {
-    return !this.concept.narrowerConcepts.empty;
+    return this.concept.hasNarrower;
+  }
+
+  get children() {
+    return this.model.getNarrowerConcepts(this.concept);
   }
 
   collapse() {
-    this.collapsed = true;
+    this.model.collapse(this.concept);
   }
 
   expand() {
-    this.collapsed = false;
-
-    if (!this.children) {
-      this.conceptViewModel.getNarrowerConcepts(this.concept)
-        .subscribe(concepts => this.children = concepts);
-    }
+    this.model.expand(this.concept);
   }
 }

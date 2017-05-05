@@ -14,65 +14,65 @@ import { VocabularyComponent } from '../vocabulary/vocabulary.component';
   template: `
     <div class="container-fluid">
 
-      <ajax-loading-indicator *ngIf="loading"></ajax-loading-indicator>
-
-      <div [hidden]="loading">
-
-        <div class="row">
-          <div class="col-12">
-            <vocabulary #vocabularyComponent></vocabulary>
-          </div>
+      <div class="row" [hidden]="viewModel.loadingVocabulary">
+        <div class="col-12">
+          <vocabulary #vocabularyComponent></vocabulary>
         </div>
-  
-        <div class="bottom">
-        
-          <div class="panel-left">
-            <div float>
-              <ngb-tabset>
-                <ngb-tab>
-                  <template ngbTabTitle>
-                    <i class="fa fa-sort-alpha-asc"></i>
-                    <p>{{'Alphabetic' | translate}}</p>
-                  </template>
-                  <template ngbTabContent><concept-list></concept-list></template>
-                </ngb-tab>
-                <ngb-tab>
-                  <template ngbTabTitle>
-                    <i class="fa fa-sitemap"></i>
-                    <p>{{'Hierarchical' | translate}}</p>
-                  </template>
-                  <template ngbTabContent><concept-hierarchy></concept-hierarchy></template>
-                </ngb-tab>
-                <ngb-tab>
-                  <template ngbTabTitle>
-                    <i class="fa fa-clone"></i>
-                    <p>{{'Collection' | translate}}</p>
-                  </template>
-                  <template ngbTabContent><collection-list></collection-list></template>
-                </ngb-tab>
-              </ngb-tabset>
-            </div>
-          </div>
-
-          <div class="panel-right">
-            
-            <div class="selection-container" [style.width]="selectionWidth" [hidden]="!showSelection">
-              <router-outlet></router-outlet>
-            </div>
-
-            <div class="visualization-container" [style.width]="visualizationWidth" [hidden]="!showVisualization">
-              <div float [setWidth]="false">
-                <divider *ngIf="showDivider"></divider>
-                <concept-network #network [class.without-divider]="!showDivider"></concept-network>
-              </div>
-            </div>
-            
-          </div>
-
-        </div>
-      
       </div>
+
+      <div class="bottom">
       
+        <div class="panel-left">
+          <div float>
+            <ngb-tabset>
+              <ngb-tab>
+                <template ngbTabTitle>
+                  <i class="fa fa-sort-alpha-asc"></i>
+                  <p>{{'Alphabetic' | translate}}</p>
+                </template>
+                <template ngbTabContent>
+                  <concept-list></concept-list>
+                </template>
+              </ngb-tab>
+              <ngb-tab>
+                <template ngbTabTitle>
+                  <i class="fa fa-sitemap"></i>
+                  <p>{{'Hierarchical' | translate}}</p>
+                </template>
+                <template ngbTabContent>
+                  <concept-hierarchy></concept-hierarchy>
+                </template>
+              </ngb-tab>
+              <ngb-tab>
+                <template ngbTabTitle>
+                  <i class="fa fa-clone"></i>
+                  <p>{{'Collection' | translate}}</p>
+                </template>
+                <template ngbTabContent>
+                  <collection-list></collection-list>
+                </template>
+              </ngb-tab>
+            </ngb-tabset>
+          </div>
+        </div>
+
+        <div class="panel-right">
+          
+          <div class="selection-container" [style.width]="selectionWidth" [hidden]="!showSelection">
+            <router-outlet></router-outlet>
+          </div>
+
+          <div class="visualization-container" [style.width]="visualizationWidth" [hidden]="!showVisualization">
+            <div float [setWidth]="false">
+              <divider *ngIf="showDivider"></divider>
+              <concept-network #network [class.without-divider]="!showDivider"></concept-network>
+            </div>
+          </div>
+          
+        </div>
+
+      </div>
+    
     </div>
   `
 })
@@ -82,13 +82,9 @@ export class ConceptsComponent implements EditingComponent, OnInit {
   @ViewChild('vocabularyComponent') vocabularyComponent: VocabularyComponent;
 
   constructor(private route: ActivatedRoute,
-              private viewModel: ConceptViewModelService,
+              public viewModel: ConceptViewModelService,
               private sessionService: SessionService,
               private domSanitizer: DomSanitizer) {
-  }
-
-  get loading() {
-    return this.viewModel.loadingVocabulary || this.viewModel.loadingConcepts;
   }
 
   ngOnInit() {

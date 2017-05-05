@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ConceptNode, VocabularyNode } from '../../entities/node';
+import { VocabularyNode } from '../../entities/node';
 import { EditableService } from '../../services/editable.service';
 
 @Component({
@@ -8,7 +8,7 @@ import { EditableService } from '../../services/editable.service';
     <div class="row">
       <property class="col-md-6" [value]="property"
                 *ngFor="let property of vocabulary | properties: showEmpty"></property>
-      <reference class="col-md-6" [value]="reference" [conceptsProvider]="conceptsProvider"
+      <reference class="col-md-6" [value]="reference"
                  *ngFor="let reference of vocabulary | references: showEmpty"></reference>
     </div>
   `
@@ -16,7 +16,6 @@ import { EditableService } from '../../services/editable.service';
 export class VocabularyFormComponent {
 
   @Input() vocabulary: VocabularyNode;
-  @Input() conceptsProvider: () => ConceptNode[];
 
   constructor(private editableService: EditableService) {
   }

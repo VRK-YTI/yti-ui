@@ -1,11 +1,8 @@
 import { Component } from "@angular/core";
 import {
   ElasticSearchService, IndexedConcept,
-  SearchResponseHit
 } from "../../services/elasticsearch.service";
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Localizable, withFirstLocalizations } from '../../entities/localization';
-import { normalizeAsArray } from '../../utils/array';
 
 const MIN_SEARCH_STRING_LENGTH = 3;
 
@@ -44,11 +41,11 @@ const MIN_SEARCH_STRING_LENGTH = 3;
 })
 export class AutoComplete {
 
-  results: AutocompleteItem[];
+  results: IndexedConcept[];
   search$ = new BehaviorSubject('');
   searching = false;
 
-  constructor(es: ElasticSearchService) {
+  constructor(elasticSearchService: ElasticSearchService) {
 
     this.search$
       .map(search => search.trim())
@@ -62,8 +59,8 @@ export class AutoComplete {
         if (search.length >= MIN_SEARCH_STRING_LENGTH) {
           this.searching = true;
 
-          es.frontPageSearch(search, 15).subscribe(searchResult => {
-            this.results = searchResult.hits.hits.map(hit => new AutocompleteItem(hit));
+          elasticSearchService.frontPageSearch(search, 15).subscribe(searchResult => {
+            this.results = searchResult;
             this.searching = false;
           });
         } else {
@@ -88,50 +85,5 @@ export class AutoComplete {
   clearSearch() {
     // delay so that click has time to invoke
     setTimeout(() => this.search = '', 100);
-  }
-}
-
-
-class AutocompleteItem {
-
-  id: string;
-  label: Localizable;
-  altLabel: Localizable;
-  definition: Localizable;
-  vocabulary: {
-    id: string, // actually graphId
-    label: Localizable
-  };
-
-  constructor(hit: SearchResponseHit<IndexedConcept>) {
-    this.id = hit._source.id;
-    this.label = withFirstLocalizations(hit._source.label);
-    this.altLabel = withFirstLocalizations(hit._source.altLabel);
-    this.definition = withFirstLocalizations(hit._source.definition);
-    this.vocabulary = {
-      id: hit._source.vocabulary.id,
-      label: withFirstLocalizations(hit._source.vocabulary.label)
-    };
-
-    function setPropertyPath(obj: any, path: string, value: any) {
-
-      const split = path.split('.');
-      let objectAtPath = obj;
-
-      for (let i = 0; i < split.length - 1; i++) {
-        objectAtPath = objectAtPath[split[i]];
-      }
-
-      const lastProperty = split[split.length - 1];
-
-      if (lastProperty !== 'exact') {
-        objectAtPath[lastProperty] = value;
-      }
-    }
-
-    // replace localizable values with highlights if found
-    for (const [propertyPath, highlighted] of Object.entries(hit.highlight || {})) {
-      setPropertyPath(this, propertyPath, normalizeAsArray(highlighted)[0]);
-    }
   }
 }

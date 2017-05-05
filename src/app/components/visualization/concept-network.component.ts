@@ -4,7 +4,7 @@ import { CollectionNode, ConceptNode } from '../../entities/node';
 import { stripMarkdown } from '../../utils/markdown';
 import { LanguageService } from '../../services/language.service';
 import { TermedService } from '../../services/termed.service';
-import { ConceptViewModelService } from '../../services/concept.view.service';
+import { ConceptViewModelService, defaultLanguages } from '../../services/concept.view.service';
 import {
   Node as VisNode,
   Edge as VisEdge,
@@ -719,7 +719,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
 
     const onDoubleClick = () => {
       if (isConcept) {
-        const rootConcept$ = this.termedService.getConcept(this.conceptViewModel.vocabulary.graphId, nodeId, this.conceptViewModel.languages);
+        const rootConcept$ = this.termedService.getConcept(this.conceptViewModel.vocabulary.graphId, nodeId, defaultLanguages);
         rootConcept$.subscribe(concept => this.addEdgeNodesForConcept(concept));
       }
     };

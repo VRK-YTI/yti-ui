@@ -49,11 +49,6 @@ export class TermedService {
       .map(([meta, concept]) => concept ? Node.create(concept, meta, languages, true) : null);
   }
 
-  getConceptList(graphId: string, languages: string[]): Observable<ConceptNode[]> {
-    return Observable.zip(this.metaModelService.getMeta(), this.getConceptListNodes(graphId))
-      .map(([meta, concepts]) => concepts.map(concept => Node.create(concept, meta, languages, true)));
-  }
-
   getCollection(graphId: string, conceptId: string, languages: string[]): Observable<CollectionNode> {
     return Observable.zip(this.metaModelService.getMeta(), this.getCollectionDetailsNode(graphId, conceptId))
       .map(([meta, collection]) => Node.create(collection, meta, languages, true));
@@ -67,11 +62,6 @@ export class TermedService {
   getCollectionList(graphId: string, languages: string[]): Observable<CollectionNode[]> {
     return Observable.zip(this.metaModelService.getMeta(), this.getCollectionListNodes(graphId))
       .map(([meta, concepts]) => concepts.map(collection => Node.create(collection, meta, languages, true)));
-  }
-
-  getNarrowerConcepts(graphId: string, broaderConceptId: string, languages: string[]): Observable<ConceptNode[]> {
-    return Observable.zip(this.metaModelService.getMeta(), this.getNarrowerConceptNodes(graphId, broaderConceptId))
-      .map(([meta, concepts]) => concepts.map(concept => Node.create(concept, meta, languages, true)));
   }
 
   getOrganizationList(): Observable<OrganizationNode[]> {
@@ -127,7 +117,6 @@ export class TermedService {
   }
 
   private removeGraphNodes(graphId: string): Observable<any> {
-    // TODO all node ids should be enough or even api for forcing graph removal
     return this.getAllNodeIds(graphId).flatMap(nodeIds => this.removeNodeIdentifiers(nodeIds));
   }
 
@@ -198,43 +187,6 @@ export class TermedService {
 
     return this.http.get(`${environment.api_url}/node-trees`, { search: params } )
       .map(response => normalizeAsArray(response.json() as NodeExternal<T>[])).catch(notFoundAsDefault([]));
-  }
-
-  private getConceptListNodes(graphId: string): Observable<NodeExternal<'Concept'>[]> {
-
-    const params = new URLSearchParams();
-    params.append('select', 'id');
-    params.append('select', 'type');
-    params.append('select', 'referrers.broader');
-    params.append('select', 'references.broader');
-    params.append('select', 'references.prefLabelXl');
-    params.append('select', 'properties.prefLabel');
-    params.append('select', 'properties.status');
-    params.append('select', 'lastModifiedDate');
-    params.append('where', 'graph.id:' + graphId);
-    params.append('where', 'type.id:' + 'Concept');
-    params.append('max', '-1');
-
-    return this.http.get(`${environment.api_url}/node-trees`, { search: params } )
-      .map(response => normalizeAsArray(response.json() as NodeExternal<'Concept'>[])).catch(notFoundAsDefault([]));
-  }
-
-  private getNarrowerConceptNodes(graphId: string, broaderConceptId: string): Observable<NodeExternal<'Concept'>[]> {
-
-    const params = new URLSearchParams();
-    params.append('select', 'id');
-    params.append('select', 'type');
-    params.append('select', 'referrers.broader');
-    params.append('select', 'references.prefLabelXl');
-    params.append('select', 'properties.prefLabel');
-    params.append('select', 'properties.status');
-    params.append('select', 'lastModifiedDate');
-    params.append('where', 'graph.id:' + graphId);
-    params.append('where', 'references.broader.id:' + broaderConceptId);
-    params.append('max', '-1');
-
-    return this.http.get(`${environment.api_url}/node-trees`, { search: params } )
-      .map(response => normalizeAsArray(response.json() as NodeExternal<'Concept'>[])).catch(notFoundAsDefault([]));
   }
 
   private getConceptDetailsNode(graphId: string, conceptId: string): Observable<NodeExternal<'Concept'>> {

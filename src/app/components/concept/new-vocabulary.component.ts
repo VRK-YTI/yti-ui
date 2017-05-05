@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MetaModelService } from '../../services/meta-model.service';
 import { v4 as uuid } from 'uuid';
-import { ConceptNode, VocabularyNode } from '../../entities/node';
+import { VocabularyNode } from '../../entities/node';
 import { EditableService } from '../../services/editable.service';
 import { Router } from '@angular/router';
 import { TermedService } from '../../services/termed.service';
@@ -45,7 +45,7 @@ import { LanguageService } from '../../services/language.service';
             </div>
           </div>
           
-          <vocabulary-form [vocabulary]="vocabulary" [conceptsProvider]="conceptsProvider"></vocabulary-form>
+          <vocabulary-form [vocabulary]="vocabulary"></vocabulary-form>
         </form>
 
       </div>
@@ -94,10 +94,6 @@ export class NewVocabularyComponent {
   set selectedTemplate(value: GraphMeta) {
     this._selectedTemplate = value;
     this.createVocabulary();
-  }
-
-  get conceptsProvider(): () => ConceptNode[] {
-    return () => [];
   }
 
   saveVocabulary(): Promise<any> {

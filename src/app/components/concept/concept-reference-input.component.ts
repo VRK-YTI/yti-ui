@@ -31,7 +31,6 @@ import { ignoreModalClose } from '../../utils/modal';
 export class ConceptReferenceInputComponent {
 
   @Input('concept') conceptReference: Reference<ConceptNode>;
-  @Input() conceptsProvider: () => ConceptNode[];
 
   constructor(private editableService: EditableService,
               private searchConceptModal: SearchConceptModalService) {
@@ -46,7 +45,7 @@ export class ConceptReferenceInputComponent {
   }
 
   addReference() {
-    this.searchConceptModal.open(this.conceptsProvider)
+    this.searchConceptModal.open(this.conceptReference.meta.graphId)
       .then(result => this.conceptReference.values.push(result), ignoreModalClose);
   }
 }

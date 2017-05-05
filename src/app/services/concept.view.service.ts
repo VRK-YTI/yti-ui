@@ -13,6 +13,15 @@ import {
   RemoveAction,
   SelectAction
 } from './action';
+import { ElasticSearchService, IndexedConcept } from './elasticsearch.service';
+import {
+  ContentExtractor, filterAndSortSearchResults, labelComparator, scoreComparator,
+  TextAnalysis
+} from '../utils/text-analyzer';
+import { isDefined } from '../utils/object';
+
+// TODO: languages shouldn't be fixed set but determined by vocabulary node
+export const defaultLanguages = ['fi', 'en', 'sv'];
 
 function onlySelect<T>(action: Observable<Action<T>>): Observable<T> {
   const selectAction: Observable<SelectAction<T>> = action.filter(isSelect);
@@ -27,6 +36,123 @@ function onlyEdit<T>(action: Observable<Action<T>>): Observable<T> {
 function onlyRemove<T>(action: Observable<Action<T>>): Observable<T> {
   const removeAction: Observable<RemoveAction<T>> = action.filter(isRemove);
   return removeAction.map(action => action.item);
+}
+
+export class ConceptListModel {
+
+  search$ = new BehaviorSubject('');
+  sortByTime$ = new BehaviorSubject<boolean>(false);
+  onlyStatus$ = new BehaviorSubject<string|null>(null);
+  searchResults = new BehaviorSubject<IndexedConcept[]>([]);
+  loading = false;
+
+  private graphId: string;
+
+  constructor(elasticSearchService: ElasticSearchService) {
+
+    const initialSearch = this.search$.take(1);
+    const debouncedSearch = this.search$.skip(1).debounceTime(500);
+    const search = initialSearch.concat(debouncedSearch);
+
+    Observable.combineLatest(search, this.sortByTime$, this.onlyStatus$)
+      .debounceTime(10)
+      .subscribe(([search, sort, status]) => {
+
+        this.loading = true;
+
+        elasticSearchService.getConceptsForVocabulary(this.graphId, search, sort, status)
+          .subscribe(concepts => {
+            this.searchResults.next(concepts);
+            this.loading = false;
+          });
+      });
+  }
+
+  initializeGraph(graphId: string) {
+    this.graphId = graphId;
+  }
+}
+
+export class ConceptHierarchyModel {
+
+  topConcepts$ = new BehaviorSubject<IndexedConcept[]>([]);
+  nodes = new Map<string, { expanded: boolean, narrowerConcepts: Observable<IndexedConcept[]> } >();
+  loading = false;
+
+  constructor(private elasticSearchService: ElasticSearchService) {
+  }
+
+  initializeGraph(graphId: string) {
+
+    this.loading = true;
+
+    this.elasticSearchService.getTopConceptsForVocabulary(graphId)
+      .subscribe(topConcepts => {
+        this.topConcepts$.next(topConcepts);
+        this.loading = false;
+      });
+  }
+
+  getNarrowerConcepts(concept: IndexedConcept): Observable<IndexedConcept[]> {
+    return this.nodes.get(concept.id)!.narrowerConcepts;
+  }
+
+  collapse(concept: IndexedConcept) {
+    this.nodes.get(concept.id)!.expanded = false;
+  }
+
+  expand(concept: IndexedConcept) {
+
+    if (!this.nodes.has(concept.id)) {
+      const subject = new BehaviorSubject<IndexedConcept[]>([]);
+      this.nodes.set(concept.id, { expanded: true, narrowerConcepts: subject });
+
+      this.elasticSearchService.getNarrowerConcepts(concept.vocabulary.id, concept.id)
+        .subscribe(concepts => subject.next(concepts));
+    }
+  }
+
+  isExpanded(concept: IndexedConcept) {
+    const node = this.nodes.get(concept.id);
+    return !!node && node.expanded;
+  }
+}
+
+export class CollectionListModel {
+
+  search$ = new BehaviorSubject('');
+  debouncedSearch = this.search$.getValue();
+  searchResults: Observable<CollectionNode[]>;
+  allCollections$ = new BehaviorSubject<CollectionNode[]>([]);
+  loading = false;
+
+  constructor(private termedService: TermedService, private languageService: LanguageService) {
+
+    const initialSearch = this.search$.take(1);
+    const debouncedSearch = this.search$.skip(1).debounceTime(500);
+    const search = initialSearch.concat(debouncedSearch);
+
+    this.searchResults = Observable.combineLatest([this.allCollections$, search], (collections: CollectionNode[], search: string) => {
+
+      this.debouncedSearch = search;
+      const scoreFilter = (item: TextAnalysis<CollectionNode>) => !search || isDefined(item.matchScore) || item.score < 2;
+      const labelExtractor: ContentExtractor<CollectionNode> = collection => collection.label;
+      const scoreAndLabelComparator = scoreComparator().andThen(labelComparator(languageService));
+
+      return filterAndSortSearchResults(collections, search, [labelExtractor], [scoreFilter], scoreAndLabelComparator);
+    });
+  }
+
+  initializeGraph(graphId: string) {
+
+    this.loading = true;
+
+    this.termedService.getCollectionList(graphId, defaultLanguages).subscribe(collections => {
+      const sortedCollections = collections.sort(comparingLocalizable<CollectionNode>(this.languageService, collection => collection.label));
+      this.allCollections$.next(sortedCollections);
+      this.loading = false;
+    });
+  }
 }
 
 @Injectable()
@@ -57,20 +183,17 @@ export class ConceptViewModelService {
   conceptId: string|null;
   collectionId: string|null;
 
-  topConcepts$ = new BehaviorSubject<ConceptNode[]>([]);
-  allConcepts$ = new BehaviorSubject<ConceptNode[]>([]);
-  allCollections$ = new BehaviorSubject<CollectionNode[]>([]);
-
-  languages = ['fi', 'en', 'sv'];
+  conceptList = new ConceptListModel(this.elasticSearchService);
+  conceptHierarchy = new ConceptHierarchyModel(this.elasticSearchService);
+  collectionList = new CollectionListModel(this.termedService, this.languageService);
 
   loadingVocabulary = true;
-  loadingConcepts = true;
   loadingConcept = true;
-  loadingCollections = true;
   loadingCollection = true;
 
   constructor(private router: Router,
               private termedService: TermedService,
+              private elasticSearchService: ElasticSearchService,
               private metaModelService: MetaModelService,
               private locationService: LocationService,
               private languageService: LanguageService) {
@@ -115,29 +238,23 @@ export class ConceptViewModelService {
   }
 
   initializeConceptList(graphId: string) {
-    this.termedService.getConceptList(graphId, this.languages).subscribe(concepts => {
-      const sortedConcepts = concepts.sort(comparingLocalizable<ConceptNode>(this.languageService, concept => concept.label));
-      this.allConcepts$.next(sortedConcepts);
-      this.topConcepts$.next(sortedConcepts.filter(concept => concept.broaderConcepts.empty));
-      this.loadingConcepts = false;
-    });
+    this.conceptList.search$.next('');
+    this.conceptList.sortByTime$.next(false);
+    this.conceptList.onlyStatus$.next(null);
+    this.conceptList.initializeGraph(graphId);
+    this.conceptHierarchy.initializeGraph(graphId);
   }
 
   initializeCollectionList(graphId: string) {
-    this.termedService.getCollectionList(graphId, this.languages).subscribe(collections => {
-      const sortedCollections = collections.sort(comparingLocalizable<CollectionNode>(this.languageService, collection => collection.label));
-      this.allCollections$.next(sortedCollections);
-      this.loadingCollections = false;
-    });
+    this.collectionList.initializeGraph(graphId);
   }
 
   initializeVocabulary(graphId: string) {
 
     this.graphId = graphId;
     this.loadingVocabulary = true;
-    this.loadingConcepts = true;
 
-    this.termedService.getVocabulary(graphId, this.languages).subscribe(vocabulary => {
+    this.termedService.getVocabulary(graphId, defaultLanguages).subscribe(vocabulary => {
       this.locationService.atVocabulary(vocabulary);
       this.vocabularyInEdit = vocabulary.clone();
       this.vocabulary = vocabulary;
@@ -176,7 +293,7 @@ export class ConceptViewModelService {
       init(null);
     } else {
       this.vocabularySelect$.subscribe(vocabulary => {
-        this.termedService.findConcept(vocabulary.graphId, conceptId, this.languages).subscribe(concept => {
+        this.termedService.findConcept(vocabulary.graphId, conceptId, defaultLanguages).subscribe(concept => {
           if (concept) {
             init(concept);
           } else {
@@ -214,7 +331,7 @@ export class ConceptViewModelService {
       init(null);
     } else {
       this.vocabularySelect$.subscribe(vocabulary => {
-        this.termedService.findCollection(vocabulary.graphId, collectionId, this.languages).subscribe(collection => {
+        this.termedService.findCollection(vocabulary.graphId, collectionId, defaultLanguages).subscribe(collection => {
           if (collection) {
             init(collection);
           } else {
@@ -235,7 +352,7 @@ export class ConceptViewModelService {
 
     return new Promise((resolve, reject) => {
       this.termedService.updateNode(concept)
-        .flatMap(() => this.termedService.getConcept(this.graphId, concept.id, this.languages))
+        .flatMap(() => this.termedService.getConcept(this.graphId, concept.id, defaultLanguages))
         .subscribe({
           next(persistentConcept: ConceptNode) {
             that.conceptInEdit = persistentConcept;
@@ -293,7 +410,7 @@ export class ConceptViewModelService {
 
     return new Promise((resolve, reject) => {
       this.termedService.updateNode(collection)
-        .flatMap(() => this.termedService.getCollection(this.graphId, collection.id, this.languages))
+        .flatMap(() => this.termedService.getCollection(this.graphId, collection.id, defaultLanguages))
         .subscribe({
           next(persistentCollection: CollectionNode) {
             that.collectionInEdit = persistentCollection;
@@ -347,7 +464,7 @@ export class ConceptViewModelService {
 
     return new Promise((resolve, reject) => {
       this.termedService.updateNode(this.vocabularyInEdit)
-        .flatMap(() => this.termedService.getVocabulary(this.graphId, this.languages))
+        .flatMap(() => this.termedService.getVocabulary(this.graphId, defaultLanguages))
         .subscribe({
           next(persistentVocabulary: VocabularyNode) {
             that.vocabularyInEdit = persistentVocabulary;
@@ -385,9 +502,5 @@ export class ConceptViewModelService {
 
   resetVocabulary() {
     this.vocabularyInEdit = this.vocabulary.clone();
-  }
-
-  getNarrowerConcepts(concept: ConceptNode) {
-    return this.termedService.getNarrowerConcepts(concept.graphId, concept.id, this.languages);
   }
 }

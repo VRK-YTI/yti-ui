@@ -82,3 +82,11 @@ $buttonless-height: 137px;
 :host /deep/ ngb-popover-window {
   z-index: 1040; // prevent from showing on top of modal
 }
+
+ajax-loading-indicator-small {
+
+  position: absolute;
+  right: 5px;
+  top: 12px;
+  z-index: 100;
+}

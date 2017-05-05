@@ -32,7 +32,6 @@ import { requireDefined } from '../../utils/object';
   
           <reference class="col-md-12"
                      [value]="reference"
-                     [conceptsProvider]="conceptsProvider"
                      *ngFor="let reference of collectionInEdit | references: showEmpty"></reference>
         </div>
 
@@ -78,10 +77,6 @@ export class CollectionComponent implements EditingComponent, OnDestroy {
 
   get showEmpty() {
     return this.editableService.editing;
-  }
-
-  get conceptsProvider() {
-    return () => this.conceptViewModel.allConcepts$.getValue();
   }
 
   get collection() {

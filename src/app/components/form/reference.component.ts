@@ -16,8 +16,7 @@ import { EditableService } from '../../services/editable.service';
 
           <synonyms *ngSwitchCase="'Synonym'" [value]="reference" [multiColumn]="multiColumnTerms"></synonyms>
 
-          <concept-reference-input *ngSwitchCase="'Concept'" [concept]="reference"
-                                   [conceptsProvider]="conceptsProvider"></concept-reference-input>
+          <concept-reference-input *ngSwitchCase="'Concept'" [concept]="reference"></concept-reference-input>
 
           <group-input *ngSwitchCase="'Group'" [group]="reference"></group-input>
           
@@ -38,7 +37,6 @@ export class ReferenceComponent {
 
   @Input('value') reference: Reference<any>;
   @Input() multiColumnTerms = false;
-  @Input() conceptsProvider: () => ConceptNode[];
 
   constructor(private editableService: EditableService) {
   }

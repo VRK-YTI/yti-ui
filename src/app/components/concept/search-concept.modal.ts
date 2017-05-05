@@ -2,15 +2,11 @@ import { Component, Input, Injectable, OnInit, ElementRef, ViewChild, Renderer, 
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConceptNode } from '../../entities/node';
 import { BehaviorSubject, Observable } from 'rxjs';
-import {
-  ContentExtractor, filterAndSortSearchResults, labelComparator, scoreComparator,
-  TextAnalysis
-} from '../../utils/text-analyzer';
-import { isDefined } from '../../utils/object';
-import { LanguageService } from '../../services/language.service';
 import { statuses } from '../../entities/constants';
 import { TermedService } from '../../services/termed.service';
 import { EditableService } from '../../services/editable.service';
+import { ElasticSearchService, IndexedConcept } from '../../services/elasticsearch.service';
+import { defaultLanguages } from '../../services/concept.view.service';
 
 @Injectable()
 export class SearchConceptModalService {
@@ -18,10 +14,10 @@ export class SearchConceptModalService {
   constructor(private modalService: NgbModal) {
   }
 
-  open(conceptsProvider: () => ConceptNode[]): Promise<any> {
+  open(graphId: string): Promise<any> {
     const modalRef = this.modalService.open(SearchConceptModal, { size: 'lg' });
     const instance = modalRef.componentInstance as SearchConceptModal;
-    instance.concepts = conceptsProvider();
+    instance.graphId = graphId;
     return modalRef.result;
   }
 }
@@ -61,14 +57,14 @@ export class SearchConceptModalService {
         <div class="col-md-4">
           <div class="search-results">
             <div class="search-result" [class.selected]="concept === selectedItem" *ngFor="let concept of searchResults | async" (click)="select(concept)">
-              <h6 [innerHTML]="concept.label | translateSearchValue: debouncedSearch | highlight: debouncedSearch"></h6>
-              <p [innerHTML]="concept.definition | translateSearchValue: debouncedSearch | stripMarkdown | highlight: debouncedSearch"></p>
+              <h6 [innerHTML]="concept.label | translateValue"></h6>
+              <p [innerHTML]="concept.definition | translateValue | stripMarkdown"></p>
             </div>
           </div>
         </div>
         <div class="col-md-4">
           <form>
-            <concept-form *ngIf="selection && !loadingSelection" [concept]="selection" [conceptsProvider]="conceptsProvider"></concept-form>
+            <concept-form *ngIf="selection && !loadingSelection" [concept]="selection"></concept-form>
           </form>
           <ajax-loading-indicator *ngIf="loadingSelection"></ajax-loading-indicator>
         </div>
@@ -84,57 +80,54 @@ export class SearchConceptModal implements OnInit, AfterViewInit {
 
   @ViewChild('searchInput') searchInput: ElementRef;
 
-  @Input() concepts: ConceptNode[];
+  @Input() graphId: string;
 
-  searchResults: Observable<ConceptNode[]>;
+  searchResults = new BehaviorSubject<IndexedConcept[]>([]);
 
-  selectedItem: ConceptNode|null = null;
+  selectedItem: IndexedConcept|null = null;
   selection: ConceptNode|null = null;
 
   search$ = new BehaviorSubject('');
-  debouncedSearch = this.search;
 
   onlyStatus$ = new BehaviorSubject<string|null>(null);
+
+  loading = false;
 
   statuses = statuses;
 
   constructor(public modal: NgbActiveModal,
-              private languageService: LanguageService,
               private termedService: TermedService,
+              private elasticSearchService: ElasticSearchService,
               private renderer: Renderer) {
   }
 
   ngOnInit() {
+
     const initialSearch = this.search$.take(1);
     const debouncedSearch = this.search$.skip(1).debounceTime(500);
     const search = initialSearch.concat(debouncedSearch);
 
-    const update = (search: string, onlyStatus: string|null) => {
+    Observable.combineLatest(search, this.onlyStatus$)
+      .debounceTime(10)
+      .subscribe(([search, status]) => {
 
-      this.debouncedSearch = search;
-      const scoreFilter = (item: TextAnalysis<ConceptNode>) => !search || isDefined(item.matchScore) || item.score < 2;
-      const statusFilter = (item: TextAnalysis<ConceptNode>) => !onlyStatus || item.item.status === onlyStatus;
-      const labelExtractor: ContentExtractor<ConceptNode> = concept => concept.label;
-      const definitionExtractor: ContentExtractor<ConceptNode> = concept => concept.definition;
-      const comparator = scoreComparator().andThen(labelComparator(this.languageService));
+        this.loading = true;
 
-      return filterAndSortSearchResults(this.concepts, search, [labelExtractor, definitionExtractor], [scoreFilter, statusFilter], comparator);
-    };
-
-    this.searchResults = Observable.combineLatest([search, this.onlyStatus$], update);
+        this.elasticSearchService.getConceptsForVocabulary(this.graphId, search, false, status)
+          .subscribe(concepts => {
+            this.searchResults.next(concepts);
+            this.loading = false;
+          });
+      });
   }
 
-  select(concept: ConceptNode) {
+  select(concept: IndexedConcept) {
 
     this.selectedItem = concept;
 
-    this.termedService.getConcept(concept.graphId, concept.id, concept.languages).subscribe(concept => {
+    this.termedService.getConcept(concept.vocabulary.id, concept.id, defaultLanguages).subscribe(concept => {
       this.selection = concept;
     })
-  }
-
-  get conceptsProvider() {
-    return () => this.concepts;
   }
 
   get loadingSelection() {
