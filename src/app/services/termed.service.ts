@@ -50,13 +50,13 @@ export class TermedService {
       .map(([meta, concept]) => concept ? Node.create(concept, meta, languages, true) : null);
   }
 
-  getCollection(graphId: string, conceptId: string, languages: string[]): Observable<CollectionNode> {
-    return Observable.zip(this.metaModelService.getMeta(), this.getCollectionDetailsNode(graphId, conceptId))
+  getCollection(graphId: string, collectionId: string, languages: string[]): Observable<CollectionNode> {
+    return Observable.zip(this.metaModelService.getMeta(), this.getCollectionDetailsNode(graphId, collectionId))
       .map(([meta, collection]) => Node.create(collection, meta, languages, true));
   }
 
-  findCollection(graphId: string, conceptId: string, languages: string[]): Observable<CollectionNode|null> {
-    return Observable.zip(this.metaModelService.getMeta(), this.findCollectionDetailsNode(graphId, conceptId))
+  findCollection(graphId: string, collectionId: string, languages: string[]): Observable<CollectionNode|null> {
+    return Observable.zip(this.metaModelService.getMeta(), this.findCollectionDetailsNode(graphId, collectionId))
       .map(([meta, collection]) => collection ? Node.create(collection, meta, languages, true) : null);
   }
 
