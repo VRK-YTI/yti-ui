@@ -21,6 +21,7 @@ import { IndexedConcept } from '../../services/elasticsearch.service';
 
         <ul [ngClass]="{'has-button': canAddConcept()}"
             infinite-scroll
+            [infiniteScrollDistance]="2.5"
             [scrollWindow]="false"
             (scrolled)="onScrollDown()">
           <li *ngFor="let concept of model.topConcepts; trackBy: conceptIdentity">
