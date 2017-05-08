@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { URLSearchParams, ResponseOptionsArgs, Response } from '@angular/http';
 import { Observable } from 'rxjs';
 import { TermedHttp } from './termed-http.service';
-import { flatten, normalizeAsArray } from '../utils/array';
+import { flatten, normalizeAsArray, removeMatching } from '../utils/array';
 import { MetaModelService } from './meta-model.service';
 import { NodeExternal, NodeType, NodeInternal, Identifier, VocabularyNodeType } from '../entities/node-api';
 import { CollectionNode, ConceptNode, GroupNode, Node, OrganizationNode, VocabularyNode } from '../entities/node';
@@ -81,7 +81,7 @@ export class TermedService {
 
     return this.createGraph(graphId, template.label)
       .flatMap(() => this.metaModelService.updateMeta(template.copyToGraph(graphId)))
-      .flatMap(() => this.updateNode(vocabulary));
+      .flatMap(() => this.updateNode(vocabulary, null));
   }
 
   removeVocabulary(vocabulary: VocabularyNode): Observable<any> {
@@ -93,7 +93,7 @@ export class TermedService {
       .flatMap(() => this.removeGraph(graphId));
   }
 
-  updateNode<T extends NodeType>(node: Node<T>) {
+  updateNode<T extends NodeType>(node: Node<T>, previous: Node<T>|null) {
 
     node.lastModifiedDate = moment();
 
@@ -103,7 +103,25 @@ export class TermedService {
         .map(ref => ref.values.map(term => term.toInternalNode()))
       );
 
-    return this.updateUpdateInternalNodes([...termNodes, node.toInternalNode()]);
+    function resolveDeletedTermsIds() {
+
+      if (!previous) {
+        return [];
+      }
+
+      const previousTermIds =
+        flatten(Object.values(previous.references)
+          .filter(ref => ref.term)
+          .map(ref => ref.values.map(term => term.identifier)));
+
+      for (const termNode of termNodes) {
+        removeMatching(previousTermIds, deletedTermId => deletedTermId.id === termNode.id);
+      }
+
+      return previousTermIds;
+    }
+
+    return this.updateAndDeleteInternalNodes([...termNodes, node.toInternalNode()], resolveDeletedTermsIds());
   }
 
   removeNode<T extends NodeType>(node: Node<T>) {
@@ -145,13 +163,18 @@ export class TermedService {
     return this.http.delete(`${environment.api_url}/nodes`, { search: params, body: nodeIds });
   }
 
-  private updateUpdateInternalNodes(nodes: NodeInternal<any>[]): Observable<Response> {
+  private updateAndDeleteInternalNodes(toUpdate: NodeInternal<any>[], toDelete: Identifier<any>[]): Observable<Response> {
 
     const params = new URLSearchParams();
-    params.append('batch', 'true');
+    params.append('deleteAndSave', 'true');
     params.append('sync', 'true');
 
-    return this.http.post(`${environment.api_url}/nodes`, nodes, { search: params });
+    const body = {
+      "delete": toDelete,
+      "save": toUpdate
+    };
+
+    return this.http.post(`${environment.api_url}/nodes`, body, { search: params });
   }
 
   private getVocabularyNode<T extends VocabularyNodeType>(graphId: string, type: T): Observable<NodeExternal<VocabularyNodeType>> {

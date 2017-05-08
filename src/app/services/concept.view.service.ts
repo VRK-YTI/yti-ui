@@ -466,7 +466,7 @@ export class ConceptViewModelService {
     const concept = this.conceptInEdit;
 
     return new Promise((resolve, reject) => {
-      this.termedService.updateNode(concept)
+      this.termedService.updateNode(concept, this.concept)
         .flatMap(() => this.termedService.getConcept(this.graphId, concept.id, defaultLanguages))
         .subscribe({
           next(persistentConcept: ConceptNode) {
@@ -524,7 +524,7 @@ export class ConceptViewModelService {
     const collection = this.collectionInEdit;
 
     return new Promise((resolve, reject) => {
-      this.termedService.updateNode(collection)
+      this.termedService.updateNode(collection, this.collection)
         .flatMap(() => this.termedService.getCollection(this.graphId, collection.id, defaultLanguages))
         .subscribe({
           next(persistentCollection: CollectionNode) {
@@ -578,7 +578,7 @@ export class ConceptViewModelService {
     const that = this;
 
     return new Promise((resolve, reject) => {
-      this.termedService.updateNode(this.vocabularyInEdit)
+      this.termedService.updateNode(this.vocabularyInEdit, this.vocabulary)
         .flatMap(() => this.termedService.getVocabulary(this.graphId, defaultLanguages))
         .subscribe({
           next(persistentVocabulary: VocabularyNode) {
