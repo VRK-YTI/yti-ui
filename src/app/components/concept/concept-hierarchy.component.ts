@@ -3,6 +3,7 @@ import { ConceptHierarchyModel, ConceptViewModelService } from '../../services/c
 import { v4 as uuid } from 'uuid';
 import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
+import { IndexedConcept } from '../../services/elasticsearch.service';
 
 @Component({
   selector: 'concept-hierarchy',
@@ -19,7 +20,7 @@ import { UserService } from '../../services/user.service';
         </div>
 
         <ul [ngClass]="{'has-button': canAddConcept()}">
-          <li *ngFor="let concept of topConcepts | async">
+          <li *ngFor="let concept of model.topConcepts; trackBy: conceptIdentity">
             <concept-hierarchy-node [concept]="concept"></concept-hierarchy-node>
           </li>
         </ul>
@@ -38,12 +39,12 @@ export class ConceptHierarchyComponent {
     this.model = conceptViewModel.conceptHierarchy;
   }
 
-  canAddConcept() {
-    return this.userService.isLoggedIn();
+  conceptIdentity(index: number, item: IndexedConcept) {
+    return item.id + item.modified.toISOString();
   }
 
-  get topConcepts() {
-    return this.model.topConcepts$;
+  canAddConcept() {
+    return this.userService.isLoggedIn();
   }
 
   addConcept() {

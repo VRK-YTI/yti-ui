@@ -35,7 +35,7 @@ import { UserService } from '../../services/user.service';
     <div class="row">
       <div class="col-lg-12 search-results">
         <ul [ngClass]="{'has-button': canAddCollection()}">
-          <li *ngFor="let collection of searchResults | async" (click)="navigate(collection)" [class.selection]="isSelected(collection)">
+          <li *ngFor="let collection of searchResults | async; trackBy: collectionIdentity" (click)="navigate(collection)" [class.selection]="isSelected(collection)">
             <span [innerHTML]="collection.label | translateSearchValue: debouncedSearch | highlight: debouncedSearch"></span>
           </li>
         </ul>
@@ -59,6 +59,10 @@ export class CollectionListComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     this.renderer.invokeElementMethod(this.searchInput.nativeElement, 'focus');
+  }
+
+  collectionIdentity(index: number, item: CollectionNode) {
+    return item.id + item.lastModifiedDate.toISOString();
   }
 
   canAddCollection() {

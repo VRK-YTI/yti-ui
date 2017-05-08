@@ -56,7 +56,7 @@ export class SearchConceptModalService {
         </div>
         <div class="col-md-4">
           <div class="search-results">
-            <div class="search-result" [class.selected]="concept === selectedItem" *ngFor="let concept of searchResults | async" (click)="select(concept)">
+            <div class="search-result" [class.selected]="concept === selectedItem" *ngFor="let concept of searchResults | async; trackBy: conceptIdentity" (click)="select(concept)">
               <h6 [innerHTML]="concept.label | translateValue"></h6>
               <p [innerHTML]="concept.definition | translateValue | stripMarkdown"></p>
             </div>
@@ -119,6 +119,10 @@ export class SearchConceptModal implements OnInit, AfterViewInit {
             this.loading = false;
           });
       });
+  }
+
+  conceptIdentity(index: number, item: IndexedConcept) {
+    return item.id + item.modified.toISOString();
   }
 
   select(concept: IndexedConcept) {

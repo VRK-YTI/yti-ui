@@ -126,6 +126,10 @@ export class ConceptHierarchyModel {
       });
   }
 
+  get topConcepts() {
+    return this.topConcepts$.getValue();
+  }
+
   getNarrowerConcepts(concept: IndexedConcept): Observable<IndexedConcept[]> {
     return this.nodes.get(concept.id)!.narrowerConcepts;
   }
