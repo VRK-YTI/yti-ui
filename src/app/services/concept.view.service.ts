@@ -20,6 +20,7 @@ import {
 } from '../utils/text-analyzer';
 import { isDefined } from '../utils/object';
 import { defaultLanguages } from '../utils/language';
+import { Subject } from 'rxjs/Subject';
 
 function onlySelect<T>(action: Observable<Action<T>>): Observable<T> {
   const selectAction: Observable<SelectAction<T>> = action.filter(isSelect);
@@ -45,15 +46,16 @@ export class ConceptListModel {
   loading = false;
 
   private graphId: string;
+  private initializing$ = new Subject<boolean>();
 
-  constructor(elasticSearchService: ElasticSearchService) {
+  constructor(private elasticSearchService: ElasticSearchService) {
 
     const initialSearch = this.search$.take(1);
     const debouncedSearch = this.search$.skip(1).debounceTime(500);
     const search = initialSearch.concat(debouncedSearch);
+    const conditionChange = Observable.combineLatest(search, this.sortByTime$, this.onlyStatus$);
 
-    Observable.combineLatest(search, this.sortByTime$, this.onlyStatus$)
-      .debounceTime(10)
+    this.initializing$.switchMap(initializing => initializing ? Observable.never() : conditionChange)
       .subscribe(([search, sort, status]) => {
 
         this.loading = true;
@@ -67,7 +69,12 @@ export class ConceptListModel {
   }
 
   initializeGraph(graphId: string) {
+    this.initializing$.next(true);
     this.graphId = graphId;
+    this.search$.next('');
+    this.sortByTime$.next(false);
+    this.onlyStatus$.next(null);
+    this.initializing$.next(false);
   }
 
   get searchResults() {
@@ -264,9 +271,6 @@ export class ConceptViewModelService {
   }
 
   initializeConceptList(graphId: string) {
-    this.conceptList.search$.next('');
-    this.conceptList.sortByTime$.next(false);
-    this.conceptList.onlyStatus$.next(null);
     this.conceptList.initializeGraph(graphId);
     this.conceptHierarchy.initializeGraph(graphId);
   }
