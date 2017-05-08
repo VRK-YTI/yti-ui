@@ -64,7 +64,10 @@ import { IndexedConcept } from '../../services/elasticsearch.service';
 
     <div class="row">
       <div class="col-lg-12 search-results">
-        <ul [ngClass]="{'has-button': canAddConcept()}">
+        <ul [ngClass]="{'has-button': canAddConcept()}"
+            infinite-scroll
+            [scrollWindow]="false"
+            (scrolled)="onScrollDown()">
           <li *ngFor="let concept of model.searchResults; trackBy: conceptIdentity" (click)="navigate(concept)"
               [class.selection]="isSelected(concept)">
             <span [innerHTML]="concept.label | translateValue"></span>
@@ -91,6 +94,10 @@ export class ConceptListComponent implements AfterViewInit {
 
   conceptIdentity(index: number, item: IndexedConcept) {
     return item.id + item.modified.toISOString();
+  }
+
+  onScrollDown() {
+    this.model.loadConcepts();
   }
 
   ngAfterViewInit() {

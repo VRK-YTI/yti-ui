@@ -19,7 +19,10 @@ import { IndexedConcept } from '../../services/elasticsearch.service';
           </button>
         </div>
 
-        <ul [ngClass]="{'has-button': canAddConcept()}">
+        <ul [ngClass]="{'has-button': canAddConcept()}"
+            infinite-scroll
+            [scrollWindow]="false"
+            (scrolled)="onScrollDown()">
           <li *ngFor="let concept of model.topConcepts; trackBy: conceptIdentity">
             <concept-hierarchy-node [concept]="concept"></concept-hierarchy-node>
           </li>
@@ -41,6 +44,10 @@ export class ConceptHierarchyComponent {
 
   conceptIdentity(index: number, item: IndexedConcept) {
     return item.id + item.modified.toISOString();
+  }
+
+  onScrollDown() {
+    this.model.loadConcepts();
   }
 
   canAddConcept() {

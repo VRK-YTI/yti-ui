@@ -74,6 +74,7 @@ import { VocabularyFormComponent } from './components/concept/vocabulary-form.co
 import { GroupInputComponent } from './components/vocabulary/group-input.component';
 import { OrganizationInputComponent } from './components/vocabulary/organization-input.component';
 import { AjaxLoadingIndicatorSmallComponent } from './components/common/ajax-loading-indicator-small.component';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json-loader!po-loader?format=mf!../../po/fi.po'),
@@ -176,6 +177,7 @@ const appRoutes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     HttpModule,
+    InfiniteScrollModule,
     NgbModule.forRoot(),
     RouterModule.forRoot(appRoutes),
     TranslateModule.forRoot({ provide: TranslateLoader, useFactory: createTranslateLoader })

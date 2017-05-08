@@ -167,7 +167,7 @@ export class ElasticSearchService {
     }).map(result => result.hits.hits.map(hit => new IndexedConcept(hit)));
   }
 
-  getConceptsForVocabulary(graphId: string, filter: string, sortByModified: boolean, onlyStatus: string|null): Observable<IndexedConcept[]> {
+  getConceptsForVocabulary(graphId: string, filter: string, sortByModified: boolean, onlyStatus: string|null, from: number, size: number): Observable<IndexedConcept[]> {
 
     const conditions: any[] = [
       {
@@ -218,13 +218,13 @@ export class ElasticSearchService {
           'label.*': {},
         }
       },
-      from: 0,
-      size: 10000,
+      from,
+      size,
       sort
     }).map(result => result.hits.hits.map(hit => new IndexedConcept(hit)));
   }
 
-  getTopConceptsForVocabulary(graphId: string): Observable<IndexedConcept[]> {
+  getTopConceptsForVocabulary(graphId: string, from: number, size: number): Observable<IndexedConcept[]> {
 
     return this.search({
       query: {
@@ -241,8 +241,8 @@ export class ElasticSearchService {
           }
         }
       },
-      from: 0,
-      size: 10000,
+      from,
+      size,
       sort: [`label.${this.languageService.language}.exact`]
     }).map(result => result.hits.hits.map(hit => new IndexedConcept(hit)));
   }

@@ -36,14 +36,15 @@ export class SearchConceptModalService {
     <div class="modal-body full-height">
       <div class="row">
         <div class="col-md-4">
-          
+
           <div class="input-group input-group-lg input-group-search">
-            <input #searchInput type="text" class="form-control" placeholder="{{'Search concept...' | translate}}" [(ngModel)]="search" />
+            <input #searchInput type="text" class="form-control" placeholder="{{'Search concept...' | translate}}"
+                   [(ngModel)]="search"/>
           </div>
 
           <div class="search-panel">
             <span class="title" translate>Filter results</span>
-            
+
             <div class="form-group">
               <label for="status" translate>Status</label>
               <select id="status " class="form-control" [(ngModel)]="onlyStatus">
@@ -52,11 +53,16 @@ export class SearchConceptModalService {
               </select>
             </div>
           </div>
-          
+
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4"
+             infinite-scroll
+             [infiniteScrollDistance]="3"
+             [scrollWindow]="false"
+             (scrolled)="loadConcepts()">
           <div class="search-results">
-            <div class="search-result" [class.selected]="concept === selectedItem" *ngFor="let concept of searchResults | async; trackBy: conceptIdentity" (click)="select(concept)">
+            <div class="search-result" [class.selected]="concept === selectedItem"
+                 *ngFor="let concept of searchResults$ | async; trackBy: conceptIdentity" (click)="select(concept)">
               <h6 [innerHTML]="concept.label | translateValue"></h6>
               <p [innerHTML]="concept.definition | translateValue | stripMarkdown"></p>
             </div>
@@ -72,7 +78,9 @@ export class SearchConceptModalService {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary cancel" (click)="cancel()" translate>Cancel</button>
-      <button type="button" class="btn btn-default confirm" (click)="confirm()" [disabled]="!selection" translate>Select concept</button>
+      <button type="button" class="btn btn-default confirm" (click)="confirm()" [disabled]="!selection" translate>Select
+        concept
+      </button>
     </div>
   `
 })
@@ -82,7 +90,7 @@ export class SearchConceptModal implements OnInit, AfterViewInit {
 
   @Input() graphId: string;
 
-  searchResults = new BehaviorSubject<IndexedConcept[]>([]);
+  searchResults$ = new BehaviorSubject<IndexedConcept[]>([]);
 
   selectedItem: IndexedConcept|null = null;
   selection: ConceptNode|null = null;
@@ -94,6 +102,9 @@ export class SearchConceptModal implements OnInit, AfterViewInit {
   loading = false;
 
   statuses = statuses;
+
+  loaded = 0;
+  canLoadMore = true;
 
   constructor(public modal: NgbActiveModal,
               private termedService: TermedService,
@@ -108,17 +119,39 @@ export class SearchConceptModal implements OnInit, AfterViewInit {
     const search = initialSearch.concat(debouncedSearch);
 
     Observable.combineLatest(search, this.onlyStatus$)
-      .debounceTime(10)
-      .subscribe(([search, status]) => {
+      .subscribe(() => this.loadConcepts(true));
+  }
 
-        this.loading = true;
+  loadConcepts(reset = false) {
 
-        this.elasticSearchService.getConceptsForVocabulary(this.graphId, search, false, status)
-          .subscribe(concepts => {
-            this.searchResults.next(concepts);
-            this.loading = false;
-          });
-      });
+    const batchSize = 100;
+
+    if (reset) {
+      this.loaded = 0;
+      this.canLoadMore = true;
+    }
+
+    if (this.canLoadMore) {
+
+      this.loading = true;
+
+      this.elasticSearchService.getConceptsForVocabulary(this.graphId, this.search, false, this.onlyStatus, this.loaded, batchSize)
+        .subscribe(concepts => {
+
+          if (concepts.length < batchSize) {
+            this.canLoadMore = false;
+          }
+
+          this.loaded += concepts.length;
+
+          this.searchResults$.next(reset ? concepts : [...this.searchResults, ...concepts]);
+          this.loading = false;
+        });
+    }
+  }
+
+  get searchResults() {
+    return this.searchResults$.getValue();
   }
 
   conceptIdentity(index: number, item: IndexedConcept) {

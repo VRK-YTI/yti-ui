@@ -48,6 +48,9 @@ export class ConceptListModel {
   private graphId: string;
   private initializing$ = new Subject<boolean>();
 
+  private loaded = 0;
+  private canLoadMore = true;
+
   constructor(private elasticSearchService: ElasticSearchService) {
 
     const initialSearch = this.search$.take(1);
@@ -56,16 +59,35 @@ export class ConceptListModel {
     const conditionChange = Observable.combineLatest(search, this.sortByTime$, this.onlyStatus$);
 
     this.initializing$.switchMap(initializing => initializing ? Observable.never() : conditionChange)
-      .subscribe(([search, sort, status]) => {
+      .subscribe(() => this.loadConcepts(true));
+  }
 
-        this.loading = true;
+  loadConcepts(reset = false) {
 
-        elasticSearchService.getConceptsForVocabulary(this.graphId, search, sort, status)
-          .subscribe(concepts => {
-            this.searchResults$.next(concepts);
-            this.loading = false;
-          });
-      });
+    const batchSize = 100;
+
+    if (reset) {
+      this.loaded = 0;
+      this.canLoadMore = true;
+    }
+
+    if (this.canLoadMore) {
+
+      this.loading = true;
+
+      this.elasticSearchService.getConceptsForVocabulary(this.graphId, this.search, this.sortByTime, this.onlyStatus, this.loaded, batchSize)
+        .subscribe(concepts => {
+
+          if (concepts.length < batchSize) {
+            this.canLoadMore = false;
+          }
+
+          this.loaded += concepts.length;
+
+          this.searchResults$.next(reset ? concepts : [...this.searchResults, ...concepts]);
+          this.loading = false;
+        });
+    }
   }
 
   initializeGraph(graphId: string) {
@@ -112,18 +134,46 @@ export class ConceptHierarchyModel {
   nodes = new Map<string, { expanded: boolean, narrowerConcepts: Observable<IndexedConcept[]> } >();
   loading = false;
 
+  private graphId: string;
+  private loaded = 0;
+  private canLoadMore = true;
+
   constructor(private elasticSearchService: ElasticSearchService) {
   }
 
   initializeGraph(graphId: string) {
 
+    this.graphId = graphId;
     this.loading = true;
+    this.loadConcepts(true);
+  }
 
-    this.elasticSearchService.getTopConceptsForVocabulary(graphId)
-      .subscribe(topConcepts => {
-        this.topConcepts$.next(topConcepts);
-        this.loading = false;
-      });
+  loadConcepts(reset = false) {
+
+    const batchSize = 100;
+
+    if (reset) {
+      this.loaded = 0;
+      this.canLoadMore = true;
+    }
+
+    if (this.canLoadMore) {
+
+      this.loading = true;
+
+      this.elasticSearchService.getTopConceptsForVocabulary(this.graphId, this.loaded, batchSize)
+        .subscribe(concepts => {
+
+          if (concepts.length < batchSize) {
+            this.canLoadMore = false;
+          }
+
+          this.loaded += concepts.length;
+
+          this.topConcepts$.next(reset ? concepts : [...this.topConcepts, ...concepts]);
+          this.loading = false;
+        });
+    }
   }
 
   get topConcepts() {
