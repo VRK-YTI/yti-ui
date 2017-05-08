@@ -41,7 +41,7 @@ export class ConceptListModel {
   search$ = new BehaviorSubject('');
   sortByTime$ = new BehaviorSubject<boolean>(false);
   onlyStatus$ = new BehaviorSubject<string|null>(null);
-  searchResults = new BehaviorSubject<IndexedConcept[]>([]);
+  searchResults$ = new BehaviorSubject<IndexedConcept[]>([]);
   loading = false;
 
   private graphId: string;
@@ -60,7 +60,7 @@ export class ConceptListModel {
 
         elasticSearchService.getConceptsForVocabulary(this.graphId, search, sort, status)
           .subscribe(concepts => {
-            this.searchResults.next(concepts);
+            this.searchResults$.next(concepts);
             this.loading = false;
           });
       });
@@ -68,6 +68,34 @@ export class ConceptListModel {
 
   initializeGraph(graphId: string) {
     this.graphId = graphId;
+  }
+
+  get searchResults() {
+    return this.searchResults$.getValue();
+  }
+
+  get search() {
+    return this.search$.getValue();
+  }
+
+  set search(value: string) {
+    this.search$.next(value);
+  }
+
+  get sortByTime() {
+    return this.sortByTime$.getValue();
+  }
+
+  set sortByTime(value: boolean) {
+    this.sortByTime$.next(value);
+  }
+
+  get onlyStatus() {
+    return this.onlyStatus$.getValue();
+  }
+
+  set onlyStatus(value: string|null) {
+    this.onlyStatus$.next(value);
   }
 }
 
