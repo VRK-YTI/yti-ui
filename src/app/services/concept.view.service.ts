@@ -19,9 +19,7 @@ import {
   TextAnalysis
 } from '../utils/text-analyzer';
 import { isDefined } from '../utils/object';
-
-// TODO: languages shouldn't be fixed set but determined by vocabulary node
-export const defaultLanguages = ['fi', 'en', 'sv'];
+import { defaultLanguages } from '../utils/language';
 
 function onlySelect<T>(action: Observable<Action<T>>): Observable<T> {
   const selectAction: Observable<SelectAction<T>> = action.filter(isSelect);

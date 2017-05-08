@@ -10,6 +10,7 @@ import * as moment from 'moment';
 import { GraphMeta } from '../entities/meta';
 import { Localizable } from '../entities/localization';
 import { environment } from '../../environments/environment';
+import { defaultLanguages } from '../utils/language';
 
 const infiniteResultsParams = new URLSearchParams();
 infiniteResultsParams.append('max', '-1');
@@ -66,12 +67,12 @@ export class TermedService {
 
   getOrganizationList(): Observable<OrganizationNode[]> {
     return Observable.zip(this.metaModelService.getMeta(), this.getNodeListWithoutReferencesOrReferrers('Organization'))
-      .map(([meta, organizations]) => organizations.map(organization => Node.create(organization, meta, ['fi', 'en'], true)));
+      .map(([meta, organizations]) => organizations.map(organization => Node.create(organization, meta, defaultLanguages, true)));
   }
 
   getGroupList(): Observable<GroupNode[]> {
     return Observable.zip(this.metaModelService.getMeta(), this.getNodeListWithoutReferencesOrReferrers('Group'))
-      .map(([meta, organizations]) => organizations.map(organization => Node.create(organization, meta, ['fi', 'en'], true)));
+      .map(([meta, organizations]) => organizations.map(organization => Node.create(organization, meta, defaultLanguages, true)));
   }
 
   createVocabulary(template: GraphMeta, vocabulary: VocabularyNode): Observable<Response> {

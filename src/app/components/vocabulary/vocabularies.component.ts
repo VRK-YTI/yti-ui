@@ -7,6 +7,7 @@ import { Localizable } from '../../entities/localization';
 import { groupBy, all } from '../../utils/array';
 import { isDefined, requireDefined } from '../../utils/object';
 import { UserService } from '../../services/user.service';
+import { defaultLanguages } from '../../utils/language';
 
 @Component({
   selector: 'vocabularies',
@@ -113,9 +114,7 @@ export class VocabulariesComponent {
               private userService: UserService,
               private router: Router) {
 
-    const languages = ['fi', 'en', 'sv']; // TODO concept scheme itself will define the languages in the future
-
-    termedService.getVocabularyList(languages).subscribe(vocabularies => {
+    termedService.getVocabularyList(defaultLanguages).subscribe(vocabularies => {
       this.vocabularies = vocabularies;
 
       const recalculateResults = () => {

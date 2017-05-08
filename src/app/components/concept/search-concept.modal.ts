@@ -6,7 +6,7 @@ import { statuses } from '../../entities/constants';
 import { TermedService } from '../../services/termed.service';
 import { EditableService } from '../../services/editable.service';
 import { ElasticSearchService, IndexedConcept } from '../../services/elasticsearch.service';
-import { defaultLanguages } from '../../services/concept.view.service';
+import { defaultLanguages } from '../../utils/language';
 
 @Injectable()
 export class SearchConceptModalService {

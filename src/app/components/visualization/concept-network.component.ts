@@ -4,7 +4,7 @@ import { CollectionNode, ConceptNode } from '../../entities/node';
 import { stripMarkdown } from '../../utils/markdown';
 import { LanguageService } from '../../services/language.service';
 import { TermedService } from '../../services/termed.service';
-import { ConceptViewModelService, defaultLanguages } from '../../services/concept.view.service';
+import { ConceptViewModelService } from '../../services/concept.view.service';
 import {
   Node as VisNode,
   Edge as VisEdge,
@@ -17,6 +17,7 @@ import { Node } from '../../entities/node';
 import { collectProperties } from '../../utils/array';
 import { assertNever, requireDefined } from '../../utils/object';
 import { TranslateService } from 'ng2-translate';
+import { defaultLanguages } from '../../utils/language';
 
 interface ConceptNetworkData {
   nodes: DataSet<UpdatableVisNode>;

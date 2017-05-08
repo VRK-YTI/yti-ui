@@ -7,6 +7,7 @@ import { CollectionNode, ConceptNode, Node, VocabularyNode } from './node';
 import { v4 as uuid } from 'uuid';
 import * as moment from 'moment';
 import { assertNever, requireDefined } from '../utils/object';
+import { defaultLanguages } from '../utils/language';
 
 export type Cardinality = 'single'
                         | 'multiple';
@@ -288,7 +289,7 @@ export class MetaModel {
 
     const vocabularyType: VocabularyNodeType = this.graphHas(graphId, 'Vocabulary') ? 'Vocabulary' : 'TerminologicalVocabulary';
 
-    const newVocabulary = this.createEmptyNode<VocabularyNode, VocabularyNodeType>(graphId, nodeId, vocabularyType, ['fi', 'en', 'sv']);
+    const newVocabulary = this.createEmptyNode<VocabularyNode, VocabularyNodeType>(graphId, nodeId, vocabularyType, defaultLanguages);
     newVocabulary.setPrimaryLabel(language, label);
     return newVocabulary;
   }
