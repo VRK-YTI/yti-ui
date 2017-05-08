@@ -167,7 +167,22 @@ export class ElasticSearchService {
     }).map(result => result.hits.hits.map(hit => new IndexedConcept(hit)));
   }
 
-  getConceptsForVocabulary(graphId: string, filter: string, sortByModified: boolean, onlyStatus: string|null, from: number, size: number): Observable<IndexedConcept[]> {
+  getSingleConceptForVocabulary(graphId: string, conceptId: string, filter: string, sortByModified: boolean, onlyStatus: string|null): Observable<IndexedConcept|null> {
+    return this.getConceptsForVocabulary(graphId, conceptId, filter, sortByModified, onlyStatus, 0, 1)
+      .map(concepts => {
+        if (concepts.length === 0) {
+          return null;
+        } else {
+          return concepts[0];
+        }
+      });
+  }
+
+  getAllConceptsForVocabulary(graphId: string, filter: string, sortByModified: boolean, onlyStatus: string|null, from: number, size: number): Observable<IndexedConcept[]> {
+    return this.getConceptsForVocabulary(graphId, null, filter, sortByModified, onlyStatus, from, size);
+  }
+
+  private getConceptsForVocabulary(graphId: string, conceptId: string|null, filter: string, sortByModified: boolean, onlyStatus: string|null, from: number, size: number): Observable<IndexedConcept[]> {
 
     const conditions: any[] = [
       {
@@ -176,6 +191,14 @@ export class ElasticSearchService {
         }
       }
     ];
+
+    if (conceptId) {
+      conditions.push({
+        match: {
+          'id': conceptId
+        }
+      });
+    }
 
     if (filter) {
       conditions.push({

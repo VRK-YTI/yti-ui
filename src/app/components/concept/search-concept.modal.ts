@@ -135,7 +135,7 @@ export class SearchConceptModal implements OnInit, AfterViewInit {
 
       this.loading = true;
 
-      this.elasticSearchService.getConceptsForVocabulary(this.graphId, this.search, false, this.onlyStatus, this.loaded, batchSize)
+      this.elasticSearchService.getAllConceptsForVocabulary(this.graphId, this.search, false, this.onlyStatus, this.loaded, batchSize)
         .subscribe(concepts => {
 
           if (concepts.length < batchSize) {
