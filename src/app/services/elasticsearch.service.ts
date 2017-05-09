@@ -21,7 +21,7 @@ export interface IndexedConceptData {
   narrower: string[],
   modified: string,
   status: string,
-  hasNarrower: 'true'|'false', // FIXME: should be boolean
+  hasNarrower: boolean
 }
 
 export interface SearchResponse<T> {
@@ -87,7 +87,7 @@ export class IndexedConcept {
     };
     this.status = hit._source.status;
     this.modified = moment(hit._source.modified);
-    this.hasNarrower = hit._source.hasNarrower === 'true';
+    this.hasNarrower = hit._source.hasNarrower;
 
     function setPropertyPath(obj: any, path: string, value: any) {
 
