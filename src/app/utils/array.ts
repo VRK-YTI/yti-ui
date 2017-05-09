@@ -95,6 +95,7 @@ export function findFirstMatching<T>(arr: T[], values: T[], equals: EqualityChec
   return first(arr, item => contains(values, item, equals));
 }
 
+// return true if removed
 export function removeMatching<T>(arr: T[], predicate: (item: T) => boolean) {
 
   const matchingIndices: number[] = [];
@@ -109,14 +110,19 @@ export function removeMatching<T>(arr: T[], predicate: (item: T) => boolean) {
   for (const index of matchingIndices) {
     arr.splice(index, 1);
   }
+
+  return matchingIndices.length > 0;
 }
 
+// returns true is replaced
 export function replaceMatching<T>(arr: T[], predicate: (item: T) => boolean, replaceWith: T) {
   for (let i = 0; i < arr.length; i++) {
     if (predicate(arr[i])) {
       arr[i] = replaceWith;
+      return true;
     }
   }
+  return false;
 }
 
 export function keepMatching<T>(arr: T[], predicate: (item: T) => boolean) {

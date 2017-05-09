@@ -42,13 +42,19 @@ function updateItem<T extends { id: string }>(subject: BehaviorSubject<T[]>, id:
 
   const previousCopy = subject.getValue().slice();
 
+  let updated = false;
+
   if (newItem) {
-    replaceMatching(previousCopy, item => item.id === id, newItem);
+    updated = replaceMatching(previousCopy, item => item.id === id, newItem);
   } else {
-    removeMatching(previousCopy, item => item.id === id);
+    updated = removeMatching(previousCopy, item => item.id === id);
   }
 
-  subject.next(previousCopy);
+  if (updated) {
+    subject.next(previousCopy);
+  }
+
+  return updated;
 }
 
 export class ConceptListModel {
@@ -106,7 +112,11 @@ export class ConceptListModel {
 
   refresh(conceptId: string) {
     this.elasticSearchService.findSingleConceptForVocabulary(this.graphId, conceptId, this.search, this.sortByTime, this.onlyStatus)
-      .subscribe(indexedConcept => updateItem(this.searchResults$, conceptId, indexedConcept));
+      .subscribe(indexedConcept => {
+        if (!updateItem(this.searchResults$, conceptId, indexedConcept)) {
+          this.loadConcepts(true);
+        }
+      });
   }
 
   initializeGraph(graphId: string) {
@@ -200,10 +210,16 @@ export class ConceptHierarchyModel {
     this.elasticSearchService.findSingleConceptForVocabulary(this.graphId, conceptId, '', false, null)
       .subscribe(indexedConcept => {
 
-        updateItem(this.topConcepts$, conceptId, indexedConcept);
+        let updated = false;
+
+        updated = updated || updateItem(this.topConcepts$, conceptId, indexedConcept);
 
         for (const {narrowerConcepts} of Array.from(this.nodes.values())) {
-          updateItem(narrowerConcepts, conceptId, indexedConcept);
+          updated = updated || updateItem(narrowerConcepts, conceptId, indexedConcept);
+        }
+
+        if (!updated) {
+          this.loadConcepts(true);
         }
       });
   }
@@ -277,7 +293,11 @@ export class CollectionListModel {
 
   refresh(collectionId: string) {
     this.termedService.getCollection(this.graphId, collectionId, defaultLanguages)
-      .subscribe(collection => updateItem(this.allCollections$, collectionId, collection));
+      .subscribe(collection => {
+        if (!updateItem(this.allCollections$, collectionId, collection)) {
+          this.initializeGraph(this.graphId);
+        }
+      });
   }
 }
 
