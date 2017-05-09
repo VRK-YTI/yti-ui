@@ -174,6 +174,7 @@ export class ConceptHierarchyModel {
     if (reset) {
       this.loaded = 0;
       this.canLoadMore = true;
+      this.nodes.clear();
     }
 
     if (this.canLoadMore) {
