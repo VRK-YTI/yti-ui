@@ -34,7 +34,7 @@ export class StatusInputComponent {
   }
 
   get valueInError() {
-    return this.ngModel && this.ngModel.errors;
+    return !this.ngModel || this.ngModel.valid;
   }
 
   get editing() {
