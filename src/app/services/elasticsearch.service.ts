@@ -15,6 +15,7 @@ export interface IndexedConceptData {
     label: Localizable|LocalizableArray
   }
   label: Localizable|LocalizableArray,
+  sortByLabel: Localizable,
   altLabel: Localizable|LocalizableArray,
   definition: Localizable|LocalizableArray,
   broader: string[],
@@ -99,10 +100,7 @@ export class IndexedConcept {
       }
 
       const lastProperty = split[split.length - 1];
-
-      if (lastProperty !== 'exact') {
-        objectAtPath[lastProperty] = value;
-      }
+      objectAtPath[lastProperty] = value;
     }
 
     // replace localizable values with highlights if found
@@ -222,7 +220,7 @@ export class ElasticSearchService {
       });
     }
 
-    const sort: any[] = filter ? ['_score'] : [`label.${this.languageService.language}.exact`];
+    const sort: any[] = filter ? ['_score'] : [`sortByLabel.${this.languageService.language}`];
 
     if (sortByModified) {
       sort.unshift({ 'modified': { 'order' : 'desc' } });
@@ -266,7 +264,7 @@ export class ElasticSearchService {
       },
       from,
       size,
-      sort: [`label.${this.languageService.language}.exact`]
+      sort: [`sortByLabel.${this.languageService.language}`]
     }).map(result => result.hits.hits.map(hit => new IndexedConcept(hit)));
   }
 
@@ -291,7 +289,7 @@ export class ElasticSearchService {
       },
       from: 0,
       size: 10000,
-      sort: [`label.${this.languageService.language}.exact`]
+      sort: [`sortByLabel.${this.languageService.language}`]
     }).map(result => result.hits.hits.map(hit => new IndexedConcept(hit)));
   }
 
