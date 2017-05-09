@@ -38,23 +38,37 @@ function onlyRemove<T>(action: Observable<Action<T>>): Observable<T> {
   return removeAction.map(action => action.item);
 }
 
-function updateItem<T extends { id: string }>(subject: BehaviorSubject<T[]>, id: string, newItem: T|null) {
+function updateOrRemoveItem<T extends { id: string }>(subject: BehaviorSubject<T[]>, id: string, newItem: T|null) {
+
+  if (newItem) {
+    return updateItem(subject, id, newItem);
+  } else {
+    return removeItem(subject, id);
+  }
+}
+
+function updateItem<T extends { id: string }>(subject: BehaviorSubject<T[]>, id: string, newItem: T) {
 
   const previousCopy = subject.getValue().slice();
 
-  let updated = false;
-
-  if (newItem) {
-    updated = replaceMatching(previousCopy, item => item.id === id, newItem);
-  } else {
-    updated = removeMatching(previousCopy, item => item.id === id);
-  }
-
-  if (updated) {
+  if (replaceMatching(previousCopy, item => item.id === id, newItem)) {
     subject.next(previousCopy);
+    return true;
+  } else {
+    return false;
   }
+}
 
-  return updated;
+function removeItem<T extends { id: string }>(subject: BehaviorSubject<T[]>, id: string) {
+
+  const previousCopy = subject.getValue().slice();
+
+  if (removeMatching(previousCopy, item => item.id === id)) {
+    subject.next(previousCopy);
+    return true;
+  } else {
+    return false;
+  }
 }
 
 export class ConceptListModel {
@@ -110,13 +124,17 @@ export class ConceptListModel {
     }
   }
 
-  refresh(conceptId: string) {
-    this.elasticSearchService.findSingleConceptForVocabulary(this.graphId, conceptId, this.search, this.sortByTime, this.onlyStatus)
-      .subscribe(indexedConcept => {
-        if (!updateItem(this.searchResults$, conceptId, indexedConcept)) {
-          this.loadConcepts(true);
-        }
-      });
+  refresh(conceptId: string, remove: boolean) {
+    if (remove) {
+      removeItem(this.searchResults$, conceptId);
+    } else {
+      this.elasticSearchService.findSingleConceptForVocabulary(this.graphId, conceptId, this.search, this.sortByTime, this.onlyStatus)
+        .subscribe(indexedConcept => {
+          if (!updateOrRemoveItem(this.searchResults$, conceptId, indexedConcept)) {
+            this.loadConcepts(true);
+          }
+        });
+    }
   }
 
   initializeGraph(graphId: string) {
@@ -206,22 +224,33 @@ export class ConceptHierarchyModel {
     }
   }
 
-  refresh(conceptId: string) {
-    this.elasticSearchService.findSingleConceptForVocabulary(this.graphId, conceptId, '', false, null)
-      .subscribe(indexedConcept => {
+  refresh(conceptId: string, remove: boolean) {
 
-        let updated = false;
+    if (remove) {
 
-        updated = updated || updateItem(this.topConcepts$, conceptId, indexedConcept);
+      removeItem(this.topConcepts$, conceptId);
 
-        for (const {narrowerConcepts} of Array.from(this.nodes.values())) {
-          updated = updated || updateItem(narrowerConcepts, conceptId, indexedConcept);
-        }
+      for (const {narrowerConcepts} of Array.from(this.nodes.values())) {
+        removeItem(narrowerConcepts, conceptId);
+      }
+    } else {
 
-        if (!updated) {
-          this.loadConcepts(true);
-        }
-      });
+      this.elasticSearchService.findSingleConceptForVocabulary(this.graphId, conceptId, '', false, null)
+        .subscribe(indexedConcept => {
+
+          let updated = false;
+
+          updated = updated || updateOrRemoveItem(this.topConcepts$, conceptId, indexedConcept);
+
+          for (const {narrowerConcepts} of Array.from(this.nodes.values())) {
+            updated = updated || updateOrRemoveItem(narrowerConcepts, conceptId, indexedConcept);
+          }
+
+          if (!updated) {
+            this.loadConcepts(true);
+          }
+        });
+    }
   }
 
   get topConcepts() {
@@ -291,13 +320,17 @@ export class CollectionListModel {
     });
   }
 
-  refresh(collectionId: string) {
-    this.termedService.getCollection(this.graphId, collectionId, defaultLanguages)
-      .subscribe(collection => {
-        if (!updateItem(this.allCollections$, collectionId, collection)) {
-          this.initializeGraph(this.graphId);
-        }
-      });
+  refresh(collectionId: string, remove: boolean) {
+    if (remove) {
+      removeItem(this.allCollections$, collectionId);
+    } else {
+      this.termedService.getCollection(this.graphId, collectionId, defaultLanguages)
+        .subscribe(collection => {
+          if (!updateItem(this.allCollections$, collectionId, collection)) {
+            this.initializeGraph(this.graphId);
+          }
+        });
+    }
   }
 }
 
@@ -348,11 +381,13 @@ export class ConceptViewModelService {
       switch (action.type) {
         case 'edit':
         case 'remove':
+          const remove = action.type === 'remove';
+
           if (action.item.type === 'Concept') {
-            this.conceptList.refresh(action.item.id);
-            this.conceptHierarchy.refresh(action.item.id);
+            this.conceptList.refresh(action.item.id, remove);
+            this.conceptHierarchy.refresh(action.item.id, remove);
           } else {
-            this.collectionList.refresh(action.item.id)
+            this.collectionList.refresh(action.item.id, remove)
           }
       }
     });
