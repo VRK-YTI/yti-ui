@@ -105,7 +105,7 @@ export class ConceptListModel {
   }
 
   refresh(conceptId: string) {
-    this.elasticSearchService.getSingleConceptForVocabulary(this.graphId, conceptId, this.search, this.sortByTime, this.onlyStatus)
+    this.elasticSearchService.findSingleConceptForVocabulary(this.graphId, conceptId, this.search, this.sortByTime, this.onlyStatus)
       .subscribe(indexedConcept => updateItem(this.searchResults$, conceptId, indexedConcept));
   }
 
@@ -196,7 +196,7 @@ export class ConceptHierarchyModel {
   }
 
   refresh(conceptId: string) {
-    this.elasticSearchService.getSingleConceptForVocabulary(this.graphId, conceptId, '', false, null)
+    this.elasticSearchService.findSingleConceptForVocabulary(this.graphId, conceptId, '', false, null)
       .subscribe(indexedConcept => {
 
         updateItem(this.topConcepts$, conceptId, indexedConcept);

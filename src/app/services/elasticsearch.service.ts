@@ -167,7 +167,7 @@ export class ElasticSearchService {
     }).map(result => result.hits.hits.map(hit => new IndexedConcept(hit)));
   }
 
-  getSingleConceptForVocabulary(graphId: string, conceptId: string, filter: string, sortByModified: boolean, onlyStatus: string|null): Observable<IndexedConcept|null> {
+  findSingleConceptForVocabulary(graphId: string, conceptId: string, filter: string, sortByModified: boolean, onlyStatus: string|null): Observable<IndexedConcept|null> {
     return this.getConceptsForVocabulary(graphId, conceptId, filter, sortByModified, onlyStatus, 0, 1)
       .map(concepts => {
         if (concepts.length === 0) {
