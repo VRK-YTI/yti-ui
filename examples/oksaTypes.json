@@ -33,12 +33,6 @@
         },
         "permissions": {},
         "properties": {
-          "type": [
-            {
-              "lang": "",
-              "value": "localizable:single"
-            }
-          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -47,6 +41,12 @@
             {
               "lang": "en",
               "value": "Title"
+            }
+          ],
+          "type": [
+            {
+              "lang": "",
+              "value": "localizable:single"
             }
           ]
         }
@@ -64,12 +64,6 @@
         },
         "permissions": {},
         "properties": {
-          "type": [
-            {
-              "lang": "",
-              "value": "localizable"
-            }
-          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -78,6 +72,12 @@
             {
               "lang": "en",
               "value": "Description"
+            }
+          ],
+          "type": [
+            {
+              "lang": "",
+              "value": "localizable"
             }
           ]
         }
@@ -149,7 +149,7 @@
   {
     "id": "Collection",
     "uri": "http://www.w3.org/2004/02/skos/core#Collection",
-    "index": 0,
+    "index": 1,
     "graph": {
       "id": "9c2782be-5f75-4cd7-80fa-806a8abfd4e2"
     },
@@ -211,12 +211,6 @@
         },
         "permissions": {},
         "properties": {
-          "type": [
-            {
-              "lang": "",
-              "value": "localizable"
-            }
-          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -225,6 +219,12 @@
             {
               "lang": "en",
               "value": "Description"
+            }
+          ],
+          "type": [
+            {
+              "lang": "",
+              "value": "localizable"
             }
           ]
         }
@@ -302,7 +302,7 @@
   {
     "id": "Term",
     "uri": "http://www.w3.org/2008/05/skos-xl#Label",
-    "index": 0,
+    "index": 2,
     "graph": {
       "id": "9c2782be-5f75-4cd7-80fa-806a8abfd4e2"
     },
@@ -358,12 +358,6 @@
         },
         "permissions": {},
         "properties": {
-          "type": [
-            {
-              "lang": "",
-              "value": "string:single,area"
-            }
-          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -372,6 +366,12 @@
             {
               "lang": "en",
               "value": "Source"
+            }
+          ],
+          "type": [
+            {
+              "lang": "",
+              "value": "string:single,area"
             }
           ]
         }
@@ -389,12 +389,6 @@
         },
         "permissions": {},
         "properties": {
-          "type": [
-            {
-              "lang": "",
-              "value": "string:single,area"
-            }
-          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -403,6 +397,12 @@
             {
               "lang": "en",
               "value": "Scope"
+            }
+          ],
+          "type": [
+            {
+              "lang": "",
+              "value": "string:single,area"
             }
           ]
         }
@@ -420,12 +420,6 @@
         },
         "permissions": {},
         "properties": {
-          "type": [
-            {
-              "lang": "",
-              "value": "string:single,area"
-            }
-          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -434,6 +428,12 @@
             {
               "lang": "en",
               "value": "Editorial note"
+            }
+          ],
+          "type": [
+            {
+              "lang": "",
+              "value": "string:single,area"
             }
           ]
         }
@@ -451,12 +451,6 @@
         },
         "permissions": {},
         "properties": {
-          "type": [
-            {
-              "lang": "",
-              "value": "string:single,area"
-            }
-          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -465,6 +459,12 @@
             {
               "lang": "en",
               "value": "Draft comment"
+            }
+          ],
+          "type": [
+            {
+              "lang": "",
+              "value": "string:single,area"
             }
           ]
         }
@@ -482,12 +482,6 @@
         },
         "permissions": {},
         "properties": {
-          "type": [
-            {
-              "lang": "",
-              "value": "string:single,area"
-            }
-          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -496,6 +490,12 @@
             {
               "lang": "en",
               "value": "History note"
+            }
+          ],
+          "type": [
+            {
+              "lang": "",
+              "value": "string:single,area"
             }
           ]
         }
@@ -513,12 +513,6 @@
         },
         "permissions": {},
         "properties": {
-          "type": [
-            {
-              "lang": "",
-              "value": "string:single,area"
-            }
-          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -527,6 +521,12 @@
             {
               "lang": "en",
               "value": "Change note"
+            }
+          ],
+          "type": [
+            {
+              "lang": "",
+              "value": "string:single,area"
             }
           ]
         }
@@ -544,12 +544,6 @@
         },
         "permissions": {},
         "properties": {
-          "type": [
-            {
-              "lang": "",
-              "value": "status"
-            }
-          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -558,6 +552,12 @@
             {
               "lang": "en",
               "value": "Term status"
+            }
+          ],
+          "type": [
+            {
+              "lang": "",
+              "value": "status"
             }
           ]
         }
@@ -568,7 +568,7 @@
   {
     "id": "Concept",
     "uri": "http://www.w3.org/2004/02/skos/core#Concept",
-    "index": 0,
+    "index": 3,
     "graph": {
       "id": "9c2782be-5f75-4cd7-80fa-806a8abfd4e2"
     },
@@ -841,12 +841,6 @@
         },
         "permissions": {},
         "properties": {
-          "type": [
-            {
-              "lang": "",
-              "value": "string:single,area"
-            }
-          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -855,6 +849,12 @@
             {
               "lang": "en",
               "value": "Source"
+            }
+          ],
+          "type": [
+            {
+              "lang": "",
+              "value": "string:single,area"
             }
           ]
         }
@@ -1010,7 +1010,201 @@
             }
           ]
         }
+      },
+      {
+        "range": {
+          "id": "LinkNode",
+          "graph": {
+            "id": "9c2782be-5f75-4cd7-80fa-806a8abfd4e2"
+          }
+        },
+        "id": "relatedMatch",
+        "uri": "http://www.w3.org/2004/02/skos/core#relatedMatch",
+        "index": 5,
+        "domain": {
+          "id": "Concept",
+          "graph": {
+            "id": "9c2782be-5f75-4cd7-80fa-806a8abfd4e2"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "link"
+            }
+          ],
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Liittyvä käsite"
+            },
+            {
+              "lang": "en",
+              "value": "Related concept"
+            }
+          ]
+        }
+      },
+      {
+        "range": {
+          "id": "LinkNode",
+          "graph": {
+            "id": "9c2782be-5f75-4cd7-80fa-806a8abfd4e2"
+          }
+        },
+        "id": "exactMatch",
+        "uri": "http://www.w3.org/2004/02/skos/core#exactMatch",
+        "index": 6,
+        "domain": {
+          "id": "Concept",
+          "graph": {
+            "id": "9c2782be-5f75-4cd7-80fa-806a8abfd4e2"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "link"
+            }
+          ],
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Vastaava käsite"
+            },
+            {
+              "lang": "en",
+              "value": "Related concept"
+            }
+          ]
+        }
+      },
+      {
+        "range": {
+          "id": "LinkNode",
+          "graph": {
+            "id": "9c2782be-5f75-4cd7-80fa-806a8abfd4e2"
+          }
+        },
+        "id": "closeMatch",
+        "uri": "http://www.w3.org/2004/02/skos/core#closeMatch",
+        "index": 7,
+        "domain": {
+          "id": "Concept",
+          "graph": {
+            "id": "9c2782be-5f75-4cd7-80fa-806a8abfd4e2"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "link"
+            }
+          ],
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Lähes vastaava käsite"
+            },
+            {
+              "lang": "en",
+              "value": "Close match"
+            }
+          ]
+        }
       }
     ]
+  },
+  {
+    "id": "LinkNode",
+    "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Resource",
+    "index": 4,
+    "graph": {
+      "id": "9c2782be-5f75-4cd7-80fa-806a8abfd4e2"
+    },
+    "permissions": {},
+    "properties": {
+      "type": [
+        {
+          "lang": "",
+          "value": "abstract"
+        }
+      ],
+      "prefLabel": [
+        {
+          "lang": "fi",
+          "value": "Linkitetty käsite"
+        },
+        {
+          "lang": "en",
+          "value": "Linked concept"
+        }
+      ]
+    },
+    "textAttributes": [
+      {
+        "regex": "(?s)^.*$",
+        "id": "prefLabel",
+        "uri": "http://www.w3.org/2004/02/skos/core#prefLabel",
+        "index": 0,
+        "domain": {
+          "id": "LinkNode",
+          "graph": {
+            "id": "9c2782be-5f75-4cd7-80fa-806a8abfd4e2"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Nimi"
+            },
+            {
+              "lang": "en",
+              "value": "Title"
+            }
+          ],
+          "type": [
+            {
+              "lang": "",
+              "value": "localizable:single"
+            }
+          ]
+        }
+      },
+      {
+        "regex": "(?s)^.*$",
+        "id": "source",
+        "uri": "http://purl.org/dc/terms/source",
+        "index": 1,
+        "domain": {
+          "id": "LinkNode",
+          "graph": {
+            "id": "9c2782be-5f75-4cd7-80fa-806a8abfd4e2"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Viitegraafi"
+            },
+            {
+              "lang": "en",
+              "value": "Source graph"
+            }
+          ]
+        }
+      }
+    ],
+    "referenceAttributes": []
   }
 ]
