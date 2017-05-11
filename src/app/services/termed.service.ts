@@ -166,7 +166,7 @@ export class TermedService {
   private updateAndDeleteInternalNodes(toUpdate: NodeInternal<any>[], toDelete: Identifier<any>[]): Observable<Response> {
 
     const params = new URLSearchParams();
-    params.append('deleteAndSave', 'true');
+    params.append('changeset', 'true');
     params.append('sync', 'true');
 
     const body = {
