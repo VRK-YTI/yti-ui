@@ -132,11 +132,11 @@ export class TermedService {
         .map(ref => ref.values.filter(term => term.persistent).map(term => term.identifier))
       );
 
-    return this.removeNodeIdentifiers([...termIdentifiers, node.identifier]);
+    return this.removeNodeIdentifiers([...termIdentifiers, node.identifier], true);
   }
 
   private removeGraphNodes(graphId: string): Observable<any> {
-    return this.getAllNodeIds(graphId).flatMap(nodeIds => this.removeNodeIdentifiers(nodeIds));
+    return this.getAllNodeIds(graphId).flatMap(nodeIds => this.removeNodeIdentifiers(nodeIds, false));
   }
 
   private removeGraph(graphId: string): Observable<any> {
@@ -154,11 +154,11 @@ export class TermedService {
     });
   }
 
-  private removeNodeIdentifiers(nodeIds: Identifier<any>[]) {
+  private removeNodeIdentifiers(nodeIds: Identifier<any>[], sync: boolean) {
 
     const params = new URLSearchParams();
     params.append('batch', 'true');
-    params.append('sync', 'true');
+    params.append('sync', sync.toString());
 
     return this.http.delete(`${environment.api_url}/nodes`, { search: params, body: nodeIds });
   }
