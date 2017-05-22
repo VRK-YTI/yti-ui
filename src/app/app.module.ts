@@ -75,6 +75,7 @@ import { GroupInputComponent } from './components/vocabulary/group-input.compone
 import { OrganizationInputComponent } from './components/vocabulary/organization-input.component';
 import { AjaxLoadingIndicatorSmallComponent } from './components/common/ajax-loading-indicator-small.component';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+import { ConceptLinkReferenceInputComponent } from './components/concept/concept-link-reference-input.component';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json-loader!po-loader?format=mf!../../po/fi.po'),
@@ -127,6 +128,7 @@ const appRoutes: Routes = [
     PropertyComponent,
     ReferenceComponent,
     ConceptReferenceInputComponent,
+    ConceptLinkReferenceInputComponent,
     PrimaryTermsComponent,
     SynonymsComponent,
     AjaxLoadingIndicatorComponent,

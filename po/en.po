@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-04-26 16:29+0300\n"
+"PO-Revision-Date: 2017-05-22 16:41+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -61,6 +61,9 @@ msgstr ""
 msgid "Add concept"
 msgstr ""
 
+msgid "mouseenter:mouseleave'\" [popoverTitle]=\"'Vocabulary"
+msgstr ""
+
 msgid "Order by modified date"
 msgstr ""
 
@@ -82,7 +85,19 @@ msgstr ""
 msgid "Collection"
 msgstr ""
 
+msgid "Vocabulary type"
+msgstr ""
+
+msgid "New vocabulary"
+msgstr ""
+
 msgid "Choose concept"
+msgstr ""
+
+msgid "Vocabulary"
+msgstr ""
+
+msgid "All vocabularies"
 msgstr ""
 
 msgid "Select concept"
@@ -145,6 +160,12 @@ msgstr ""
 msgid "Associative"
 msgstr ""
 
+msgid "No group"
+msgstr ""
+
+msgid "No organization"
+msgstr ""
+
 msgid "Welcome to vocabulary and concept workbench"
 msgstr ""
 
@@ -156,7 +177,7 @@ msgstr ""
 "of this service are not official versions of the vocabularies but rather "
 "meant for testing purposes"
 
-msgid "Not implemented yet!"
+msgid "Add vocabulary"
 msgstr ""
 
 msgid "vocabulary"
@@ -170,9 +191,6 @@ msgstr "new concept"
 
 msgid "New collection"
 msgstr "new collection"
-
-msgid "Group"
-msgstr ""
 
 msgid "Front page"
 msgstr ""
@@ -189,10 +207,10 @@ msgstr ""
 msgid "Suggestion"
 msgstr ""
 
-msgid "Vocabulary type"
+msgid "Unstable"
 msgstr ""
 
-msgid "Unstable"
+msgid "Group"
 msgstr ""
 
 msgid "Organization"

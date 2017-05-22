@@ -52,6 +52,9 @@ msgstr ""
 msgid "Add concept"
 msgstr ""
 
+msgid "mouseenter:mouseleave'\" [popoverTitle]=\"'Vocabulary"
+msgstr ""
+
 msgid "Order by modified date"
 msgstr ""
 
@@ -73,7 +76,19 @@ msgstr ""
 msgid "Collection"
 msgstr ""
 
+msgid "Vocabulary type"
+msgstr ""
+
+msgid "New vocabulary"
+msgstr ""
+
 msgid "Choose concept"
+msgstr ""
+
+msgid "Vocabulary"
+msgstr ""
+
+msgid "All vocabularies"
 msgstr ""
 
 msgid "Select concept"
@@ -148,9 +163,6 @@ msgstr ""
 msgid "Frontpage information"
 msgstr ""
 
-msgid "Not implemented yet!"
-msgstr ""
-
 msgid "Add vocabulary"
 msgstr ""
 
@@ -160,16 +172,10 @@ msgstr ""
 msgid "vocabularies"
 msgstr ""
 
-msgid "New vocabulary"
-msgstr ""
-
 msgid "New concept"
 msgstr ""
 
 msgid "New collection"
-msgstr ""
-
-msgid "Group"
 msgstr ""
 
 msgid "Front page"
@@ -187,10 +193,10 @@ msgstr ""
 msgid "Suggestion"
 msgstr ""
 
-msgid "Vocabulary type"
+msgid "Unstable"
 msgstr ""
 
-msgid "Unstable"
+msgid "Group"
 msgstr ""
 
 msgid "Organization"

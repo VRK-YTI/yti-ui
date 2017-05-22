@@ -5,6 +5,7 @@ export type VocabularyNodeType = 'Vocabulary'
 export type NodeType = VocabularyNodeType
                      | 'Concept'
                      | 'Term'
+                     | 'LinkNode'
                      | 'Collection'
                      | 'Group'
                      | 'Organization';

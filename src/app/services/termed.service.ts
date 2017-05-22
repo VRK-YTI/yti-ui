@@ -97,42 +97,42 @@ export class TermedService {
 
     node.lastModifiedDate = moment();
 
-    const termNodes =
+    const inlineNodes =
       flatten(Object.values(node.references)
-        .filter(ref => ref.term)
-        .map(ref => ref.values.map(term => term.toInternalNode()))
+        .filter(ref => ref.inline)
+        .map(ref => ref.values.map(node => node.toInternalNode()))
       );
 
-    function resolveDeletedTermsIds() {
+    function resolveDeletedInlineReferenceIds() {
 
       if (!previous) {
         return [];
       }
 
-      const previousTermIds =
+      const previousInlineNodeIds =
         flatten(Object.values(previous.references)
-          .filter(ref => ref.term)
+          .filter(ref => ref.inline)
           .map(ref => ref.values.map(term => term.identifier)));
 
-      for (const termNode of termNodes) {
-        removeMatching(previousTermIds, deletedTermId => deletedTermId.id === termNode.id);
+      for (const inlineNode of inlineNodes) {
+        removeMatching(previousInlineNodeIds, deletedInlineNodeId => deletedInlineNodeId.id === inlineNode.id);
       }
 
-      return previousTermIds;
+      return previousInlineNodeIds;
     }
 
-    return this.updateAndDeleteInternalNodes([...termNodes, node.toInternalNode()], resolveDeletedTermsIds());
+    return this.updateAndDeleteInternalNodes([...inlineNodes, node.toInternalNode()], resolveDeletedInlineReferenceIds());
   }
 
   removeNode<T extends NodeType>(node: Node<T>) {
 
-    const termIdentifiers =
+    const inlineNodeIds =
       flatten(Object.values(node.references)
-        .filter(ref => ref.term)
+        .filter(ref => ref.inline)
         .map(ref => ref.values.filter(term => term.persistent).map(term => term.identifier))
       );
 
-    return this.removeNodeIdentifiers([...termIdentifiers, node.identifier], true);
+    return this.removeNodeIdentifiers([...inlineNodeIds, node.identifier], true);
   }
 
   private removeGraphNodes(graphId: string): Observable<any> {

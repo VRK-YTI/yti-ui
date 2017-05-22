@@ -1,6 +1,6 @@
 import { Component, Input, Injectable, OnInit, ElementRef, ViewChild, Renderer, AfterViewInit } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ConceptNode } from '../../entities/node';
+import { ConceptNode, VocabularyNode } from '../../entities/node';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { statuses } from '../../entities/constants';
 import { TermedService } from '../../services/termed.service';
@@ -8,16 +8,27 @@ import { EditableService } from '../../services/editable.service';
 import { ElasticSearchService, IndexedConcept } from '../../services/elasticsearch.service';
 import { defaultLanguages } from '../../utils/language';
 
+type Mode = 'include'|'exclude';
+
 @Injectable()
 export class SearchConceptModalService {
 
   constructor(private modalService: NgbModal) {
   }
 
-  open(graphId: string): Promise<any> {
+  openForGraph(graphId: string): Promise<any> {
     const modalRef = this.modalService.open(SearchConceptModal, { size: 'lg' });
     const instance = modalRef.componentInstance as SearchConceptModal;
     instance.graphId = graphId;
+    instance.mode = 'include';
+    return modalRef.result;
+  }
+
+  openOtherThanGraph(graphId: string): Promise<any> {
+    const modalRef = this.modalService.open(SearchConceptModal, { size: 'lg' });
+    const instance = modalRef.componentInstance as SearchConceptModal;
+    instance.graphId = graphId;
+    instance.mode = 'exclude';
     return modalRef.result;
   }
 }
@@ -52,6 +63,14 @@ export class SearchConceptModalService {
                 <option *ngFor="let status of statuses" [ngValue]="status">{{status | translate}}</option>
               </select>
             </div>
+
+            <div class="form-group" *ngIf="mode === 'exclude'">
+              <label for="status" translate>Vocabulary</label>
+              <select id="status " class="form-control" [(ngModel)]="onlyVocabulary">
+                <option [ngValue]="null" translate>All vocabularies</option>
+                <option *ngFor="let vocabulary of vocabularies | async" [ngValue]="vocabulary">{{vocabulary.label | translateValue}}</option>
+              </select>
+            </div>
           </div>
 
         </div>
@@ -65,6 +84,10 @@ export class SearchConceptModalService {
                  *ngFor="let concept of searchResults$ | async; trackBy: conceptIdentity" (click)="select(concept)">
               <h6 [innerHTML]="concept.label | translateValue"></h6>
               <p [innerHTML]="concept.definition | translateValue | stripMarkdown"></p>
+
+              <div class="origin">
+                <span class="pull-left">{{concept.vocabulary.label | translateValue}}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -78,9 +101,7 @@ export class SearchConceptModalService {
     </div>
     <div class="modal-footer">
       <button type="button" class="btn btn-secondary cancel" (click)="cancel()" translate>Cancel</button>
-      <button type="button" class="btn btn-default confirm" (click)="confirm()" [disabled]="!selection" translate>Select
-        concept
-      </button>
+      <button type="button" class="btn btn-default confirm" (click)="confirm()" [disabled]="!selection" translate>Select concept</button>
     </div>
   `
 })
@@ -88,6 +109,7 @@ export class SearchConceptModal implements OnInit, AfterViewInit {
 
   @ViewChild('searchInput') searchInput: ElementRef;
 
+  @Input() mode: Mode;
   @Input() graphId: string;
 
   searchResults$ = new BehaviorSubject<IndexedConcept[]>([]);
@@ -96,12 +118,13 @@ export class SearchConceptModal implements OnInit, AfterViewInit {
   selection: ConceptNode|null = null;
 
   search$ = new BehaviorSubject('');
-
   onlyStatus$ = new BehaviorSubject<string|null>(null);
+  onlyVocabulary$ = new BehaviorSubject<VocabularyNode|null>(null);
 
   loading = false;
 
   statuses = statuses;
+  vocabularies: Observable<VocabularyNode[]>;
 
   loaded = 0;
   canLoadMore = true;
@@ -118,7 +141,10 @@ export class SearchConceptModal implements OnInit, AfterViewInit {
     const debouncedSearch = this.search$.skip(1).debounceTime(500);
     const search = initialSearch.concat(debouncedSearch);
 
-    Observable.combineLatest(search, this.onlyStatus$)
+    this.vocabularies = this.termedService.getVocabularyList(defaultLanguages)
+      .map(vocabularies => vocabularies.filter(vocabulary => vocabulary.graphId !== this.graphId));
+
+    Observable.combineLatest(search, this.onlyStatus$, this.onlyVocabulary$)
       .subscribe(() => this.loadConcepts(true));
   }
 
@@ -135,18 +161,26 @@ export class SearchConceptModal implements OnInit, AfterViewInit {
 
       this.loading = true;
 
-      this.elasticSearchService.getAllConceptsForVocabulary(this.graphId, this.search, false, this.onlyStatus, this.loaded, batchSize)
-        .subscribe(concepts => {
+      const appendResults = (concepts: IndexedConcept[]) => {
+        if (concepts.length < batchSize) {
+          this.canLoadMore = false;
+        }
 
-          if (concepts.length < batchSize) {
-            this.canLoadMore = false;
-          }
+        this.loaded += concepts.length;
 
-          this.loaded += concepts.length;
+        this.searchResults$.next(reset ? concepts : [...this.searchResults, ...concepts]);
+        this.loading = false;
+      };
 
-          this.searchResults$.next(reset ? concepts : [...this.searchResults, ...concepts]);
-          this.loading = false;
-        });
+      if (this.onlyVocabulary) {
+        this.elasticSearchService.getAllConceptsForVocabulary(this.onlyVocabulary.graphId, this.search, false, this.onlyStatus, this.loaded, batchSize).subscribe(appendResults);
+      } else {
+        if (this.mode === 'include') {
+          this.elasticSearchService.getAllConceptsForVocabulary(this.graphId, this.search, false, this.onlyStatus, this.loaded, batchSize).subscribe(appendResults);
+        } else {
+          this.elasticSearchService.getAllConceptsNotInVocabulary(this.graphId, this.search, false, this.onlyStatus, this.loaded, batchSize).subscribe(appendResults);
+        }
+      }
     }
   }
 
@@ -189,6 +223,14 @@ export class SearchConceptModal implements OnInit, AfterViewInit {
 
   set onlyStatus(value: string|null) {
     this.onlyStatus$.next(value);
+  }
+
+  get onlyVocabulary() {
+    return this.onlyVocabulary$.getValue();
+  }
+
+  set onlyVocabulary(vocabulary: VocabularyNode|null) {
+    this.onlyVocabulary$.next(vocabulary);
   }
 
   cancel() {

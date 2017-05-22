@@ -6,8 +6,7 @@ import { TermedHttp } from './termed-http.service';
 import { Graph } from '../entities/graph';
 import { GraphMeta, MetaModel } from '../entities/meta';
 import { NodeMetaInternal } from '../entities/meta-api';
-import { NodeType } from '../entities/node-api';
-import { CollectionNode, ConceptNode, Node, VocabularyNode } from '../entities/node';
+import { CollectionNode, ConceptNode, VocabularyNode } from '../entities/node';
 import { TranslateService } from 'ng2-translate';
 import { LanguageService } from './language.service';
 import { asLocalizable } from '../entities/localization';
@@ -48,10 +47,6 @@ export class MetaModelService {
     return this.meta.asObservable();
   }
 
-  createEmptyNode<N extends Node<T>, T extends NodeType>(graphId: string, nodeId: string, nodeType: T, languages: string[]): Observable<N> {
-    return this.meta.map(metaModel => metaModel.createEmptyNode<N, T>(graphId, nodeId, nodeType, languages));
-  }
-
   createEmptyConcept(vocabulary: VocabularyNode, nodeId: string): Observable<ConceptNode> {
 
     const label$ = this.translateService.get('New concept');
@@ -68,6 +63,10 @@ export class MetaModelService {
     return Observable.zip(label$, this.meta).map(([newCollectionLabel, meta]) => {
       return meta.createEmptyCollection(vocabulary, nodeId, newCollectionLabel, this.languageService.language);
     });
+  }
+
+  createConceptLink(toGraphId: string, fromVocabulary: VocabularyNode, concept: ConceptNode) {
+    return this.meta.map(meta => meta.createConceptLink(toGraphId, fromVocabulary, concept));
   }
 
   updateMeta(graphMeta: GraphMeta): Observable<any> {

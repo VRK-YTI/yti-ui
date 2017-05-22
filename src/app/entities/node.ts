@@ -99,11 +99,19 @@ export class Property {
   }
 
   get singleLiteralValue() {
-    return this.attributes[0].value;
+    if (this.attributes.length > 0) {
+      return this.attributes[0].value;
+    } else {
+      return '';
+    }
   }
 
   set singleLiteralValue(value: string) {
-    this.attributes[0].value = value;
+    if (this.attributes.length > 0) {
+      this.attributes[0].value = value;
+    } else {
+      this.newLiteral(value);
+    }
   }
 
   asValues() {
@@ -112,6 +120,12 @@ export class Property {
 
   asLocalizable() {
     return asLocalizable(this.attributes);
+  }
+
+  setLocalizable(localizable: Localizable) {
+    for (const attribute of this.attributes) {
+      attribute.value = localizable[attribute.lang];
+    }
   }
 
   asString() {
@@ -193,12 +207,20 @@ export class Reference<N extends KnownNode | Node<any>> {
     return this.meta.referenceType;
   }
 
-  get term() {
+  get term(): boolean {
     return this.meta.term;
+  }
+
+  get conceptLink(): boolean {
+    return this.meta.conceptLink;
   }
 
   get concept(): boolean {
     return this.meta.concept;
+  }
+
+  get inline(): boolean {
+    return this.term || this.conceptLink;
   }
 
   toIdentifiers(): Identifier<any>[] {
@@ -277,6 +299,8 @@ export class Node<T extends NodeType> {
         return new VocabularyNode(node, metaModel, languages, persistent);
       case 'Concept':
         return new ConceptNode(node, metaModel, languages, persistent);
+      case 'LinkNode':
+        return new ConceptLinkNode(node, metaModel, languages, persistent);
       case 'Term':
         return new TermNode(node, metaModel, languages, persistent);
       case 'Collection':
@@ -442,16 +466,24 @@ export class Node<T extends NodeType> {
     return this.referrers[referenceId] as Referrer<N> || new Referrer<N>(referenceId, [], this.metaModel, this.languages);
   }
 
-  getProperty(property: string): Property {
-    return requireDefined(this.properties[property], 'Property not found: ' + property);
+  getProperty(propertyName: string): Property {
+    return requireDefined(this.properties[propertyName], 'Property not found: ' + propertyName);
   }
 
-  getPropertyAsLocalizable(property: string): Localizable {
-    return this.getProperty(property).asLocalizable();
+  getPropertyAsLocalizable(propertyName: string): Localizable {
+    return this.getProperty(propertyName).asLocalizable();
+  }
+
+  setPropertyAsLocalizable(propertyName: string, localizable: Localizable) {
+    this.getProperty(propertyName).setLocalizable(localizable);
   }
 
   getPropertyAsString(property: string): string {
     return this.getProperty(property).asString();
+  }
+
+  setPropertyAsLiteral(property: string, value: string) {
+    this.getProperty(property).singleLiteralValue = value;
   }
 
   getPropertyAsValues(property: string): string[] {
@@ -648,6 +680,45 @@ export class TermNode extends Node<'Term'> {
 
   get localization(): Localization {
     return this.properties['prefLabel'].attributes[0] as Localization;
+  }
+}
+
+export class ConceptLinkNode extends Node<'LinkNode'> {
+
+  constructor(node: NodeExternal<'LinkNode'>, metaModel: MetaModel, languages: string[], persistent: boolean) {
+    super(node, metaModel, languages, persistent);
+  }
+
+  get label(): Localizable {
+    return this.getPropertyAsLocalizable('prefLabel');
+  }
+
+  set label(value: Localizable) {
+    this.setPropertyAsLocalizable('prefLabel', value);
+  }
+
+  get vocabularyLabel(): Localizable {
+    return this.getPropertyAsLocalizable('vocabularyLabel');
+  }
+
+  set vocabularyLabel(value: Localizable) {
+    this.setPropertyAsLocalizable('vocabularyLabel', value);
+  }
+
+  get source(): string {
+    return this.getPropertyAsString('source');
+  }
+
+  set source(value: string) {
+    this.setPropertyAsLiteral('source', value);
+  }
+
+  get linkedConceptId(): string {
+    return this.getPropertyAsString('id');
+  }
+
+  setLinkedConceptId(value: string) {
+    this.setPropertyAsLiteral('id', value);
   }
 }
 

@@ -19,6 +19,8 @@ import { EditableService } from '../../services/editable.service';
 
           <concept-reference-input *ngSwitchCase="'Concept'" [concept]="reference"></concept-reference-input>
 
+          <concept-link-reference-input *ngSwitchCase="'ConceptLink'" [concept]="reference"></concept-link-reference-input>
+          
           <group-input *ngSwitchCase="'Group'" [group]="reference"></group-input>
           
           <organization-input *ngSwitchCase="'Organization'" [organization]="reference"></organization-input>

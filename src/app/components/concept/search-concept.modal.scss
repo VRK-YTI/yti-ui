@@ -47,5 +47,13 @@
     h6 {
       margin-top: 0.5rem;
     }
+
+    .origin {
+      font-size: x-small;
+      border-top: #dddddd solid 1px;
+      margin: 0 10px 0 0;
+      width: calc(100% - 10px);
+      display: inline-block;
+    }
   }
 }

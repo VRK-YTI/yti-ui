@@ -166,7 +166,7 @@ export class ElasticSearchService {
   }
 
   findSingleConceptForVocabulary(graphId: string, conceptId: string, filter: string, sortByModified: boolean, onlyStatus: string|null): Observable<IndexedConcept|null> {
-    return this.getConceptsForVocabulary(graphId, conceptId, filter, sortByModified, onlyStatus, 0, 1)
+    return this.getConceptsForVocabularies(graphId, 'include', conceptId, filter, sortByModified, onlyStatus, 0, 1)
       .map(concepts => {
         if (concepts.length === 0) {
           return null;
@@ -177,21 +177,39 @@ export class ElasticSearchService {
   }
 
   getAllConceptsForVocabulary(graphId: string, filter: string, sortByModified: boolean, onlyStatus: string|null, from: number, size: number): Observable<IndexedConcept[]> {
-    return this.getConceptsForVocabulary(graphId, null, filter, sortByModified, onlyStatus, from, size);
+    return this.getConceptsForVocabularies(graphId, 'include', null, filter, sortByModified, onlyStatus, from, size);
   }
 
-  private getConceptsForVocabulary(graphId: string, conceptId: string|null, filter: string, sortByModified: boolean, onlyStatus: string|null, from: number, size: number): Observable<IndexedConcept[]> {
+  getAllConceptsNotInVocabulary(notInGraphId: string, filter: string, sortByModified: boolean, onlyStatus: string|null, from: number, size: number): Observable<IndexedConcept[]> {
+    return this.getConceptsForVocabularies(notInGraphId, 'exclude', null, filter, sortByModified, onlyStatus, from, size);
+  }
 
-    const conditions: any[] = [
-      {
-        match: {
-          'vocabulary.id': graphId
-        }
+  private getConceptsForVocabularies(graphId: string,
+                                     graphMode: 'include'|'exclude',
+                                     conceptId: string|null,
+                                     filter: string,
+                                     sortByModified: boolean,
+                                     onlyStatus: string|null,
+                                     from: number,
+                                     size: number): Observable<IndexedConcept[]> {
+
+    const mustConditions: any[] = [];
+    const mustNotConditions: any[] = [];
+
+    let vocabularyMatch = {
+      match: {
+        'vocabulary.id': graphId
       }
-    ];
+    };
+
+    if (graphMode === 'include') {
+      mustConditions.push(vocabularyMatch);
+    } else {
+      mustNotConditions.push(vocabularyMatch);
+    }
 
     if (conceptId) {
-      conditions.push({
+      mustConditions.push({
         match: {
           'id': conceptId
         }
@@ -199,7 +217,7 @@ export class ElasticSearchService {
     }
 
     if (filter) {
-      conditions.push({
+      mustConditions.push({
         multi_match: {
           query: filter,
           fields: [
@@ -213,7 +231,7 @@ export class ElasticSearchService {
     }
 
     if (onlyStatus) {
-      conditions.push({
+      mustConditions.push({
         match: {
           'status': onlyStatus
         }
@@ -229,7 +247,8 @@ export class ElasticSearchService {
     return this.search({
       query: {
         bool: {
-          must: conditions
+          must: mustConditions,
+          must_not: mustNotConditions
         }
       },
       highlight : {

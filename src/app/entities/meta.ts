@@ -3,7 +3,7 @@ import { comparingPrimitive } from '../utils/comparator';
 import { any, contains, index, normalizeAsArray } from '../utils/array';
 import { asLocalizable, Localizable } from './localization';
 import { NodeType, NodeExternal, VocabularyNodeType } from './node-api';
-import { CollectionNode, ConceptNode, Node, VocabularyNode } from './node';
+import { CollectionNode, ConceptLinkNode, ConceptNode, Node, VocabularyNode } from './node';
 import { v4 as uuid } from 'uuid';
 import * as moment from 'moment';
 import { assertNever, requireDefined } from '../utils/object';
@@ -19,6 +19,7 @@ export type TypeName = 'string'
 export type ReferenceType = 'PrimaryTerm'
                           | 'Synonym'
                           | 'Concept'
+                          | 'ConceptLink'
                           | 'Organization'
                           | 'Group'
                           | 'Other';
@@ -213,6 +214,8 @@ export class ReferenceMeta {
     switch (this.targetType) {
       case 'Concept':
         return 'Concept';
+      case 'LinkNode':
+        return 'ConceptLink';
       case 'Term':
         return this.id === 'prefLabelXl' ? 'PrimaryTerm' : 'Synonym';
       case 'Organization':
@@ -231,6 +234,10 @@ export class ReferenceMeta {
 
   get concept(): boolean {
     return this.referenceType === 'Concept';
+  }
+
+  get conceptLink(): boolean {
+    return this.referenceType === 'ConceptLink';
   }
 
   copyToGraph(graphId: string): ReferenceAttributeInternal {
@@ -312,6 +319,18 @@ export class MetaModel {
     const newCollection = this.createEmptyNode<CollectionNode, 'Collection'>(vocabulary.graphId, nodeId, 'Collection', vocabulary.languages);
     newCollection.setPrimaryLabel(language, label);
     return newCollection;
+  }
+
+  createConceptLink(toGraphId: string, fromVocabulary: VocabularyNode, concept: ConceptNode): ConceptLinkNode {
+
+    const newConceptLink = this.createEmptyNode<ConceptLinkNode, 'LinkNode'>(toGraphId, uuid(), 'LinkNode', defaultLanguages /* TODO */);
+
+    newConceptLink.label = concept.label;
+    newConceptLink.vocabularyLabel = fromVocabulary.label;
+    newConceptLink.source = concept.graphId;
+    newConceptLink.setLinkedConceptId(concept.id);
+
+    return newConceptLink;
   }
 
   copyTemplateToGraph(templateMeta: GraphMeta, graphId: string): MetaModel {
