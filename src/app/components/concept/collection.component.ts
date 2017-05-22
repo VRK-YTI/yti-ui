@@ -32,6 +32,7 @@ import { requireDefined } from '../../utils/object';
   
           <reference class="col-md-12"
                      [value]="reference"
+                     [unsaved]="unsaved"
                      *ngFor="let reference of collectionInEdit | references: showEmpty"></reference>
         </div>
 
@@ -67,6 +68,11 @@ export class CollectionComponent implements EditingComponent, OnDestroy {
         editableService.cancel();
       }
     }));
+  }
+
+  get unsaved() {
+    const collection = this.conceptViewModel.collection;
+    return collection && !collection.persistent;
   }
 
   ngOnDestroy() {

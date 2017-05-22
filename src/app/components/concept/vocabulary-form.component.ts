@@ -9,6 +9,7 @@ import { EditableService } from '../../services/editable.service';
       <property class="col-md-6" [value]="property"
                 *ngFor="let property of vocabulary | properties: showEmpty"></property>
       <reference class="col-md-6" [value]="reference"
+                 [unsaved]="!vocabulary.persistent"
                  *ngFor="let reference of vocabulary | references: showEmpty"></reference>
     </div>
   `

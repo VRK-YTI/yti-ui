@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ConceptNode, Reference } from '../../entities/node';
+import { Reference } from '../../entities/node';
 import { EditableService } from '../../services/editable.service';
 
 @Component({
@@ -12,7 +12,8 @@ import { EditableService } from '../../services/editable.service';
         <ng-container [ngSwitch]="reference.type">
 
           <primary-terms *ngSwitchCase="'PrimaryTerm'" [value]="reference"
-                         [multiColumn]="multiColumnTerms"></primary-terms>
+                         [multiColumn]="multiColumnTerms"
+                         [unsaved]="unsaved"></primary-terms>
 
           <synonyms *ngSwitchCase="'Synonym'" [value]="reference" [multiColumn]="multiColumnTerms"></synonyms>
 
@@ -36,6 +37,7 @@ import { EditableService } from '../../services/editable.service';
 export class ReferenceComponent {
 
   @Input('value') reference: Reference<any>;
+  @Input() unsaved: boolean;
   @Input() multiColumnTerms = false;
 
   constructor(private editableService: EditableService) {

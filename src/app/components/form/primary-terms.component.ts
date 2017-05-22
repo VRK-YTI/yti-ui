@@ -26,6 +26,7 @@ import { EditableService } from '../../services/editable.service';
 export class PrimaryTermsComponent implements OnInit {
 
   @Input('value') termReference: Reference<TermNode>;
+  @Input() unsaved: boolean;
   @Input() multiColumn = false;
 
   openTermLanguages: string[] = [];
@@ -35,10 +36,8 @@ export class PrimaryTermsComponent implements OnInit {
 
   ngOnInit() {
     this.editableService.editing$.subscribe(editing => {
-      if (editing) {
+      if (this.unsaved && editing) {
         this.openTermLanguages = this.termReference.languages.slice();
-      } else {
-        this.openTermLanguages = [];
       }
     });
   }

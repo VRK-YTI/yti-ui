@@ -10,6 +10,7 @@ import { EditableService } from '../../services/editable.service';
       <reference *ngIf="concept.hasTerms()"
                  class="col-md-12"
                  [multiColumnTerms]="multiColumn"
+                 [unsaved]="!concept.persistent"
                  [value]="concept.terms"></reference>
       
       <property *ngFor="let property of concept | properties: showEmpty"
@@ -22,6 +23,7 @@ import { EditableService } from '../../services/editable.service';
                  class="col-md-12" 
                  [class.col-xl-6]="multiColumn && !reference.term"
                  [multiColumnTerms]="multiColumn"
+                 [unsaved]="!concept.persistent"
                  [value]="reference"></reference>
     </div>
 
