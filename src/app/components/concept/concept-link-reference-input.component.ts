@@ -14,8 +14,10 @@ import { ignoreModalClose } from '../../utils/modal';
   template: `
     <ul *ngIf="!editing">
       <li *ngFor="let conceptLink of conceptLinkReference.values">
-        <a [routerLink]="['/concepts', conceptLink.source, 'concept', conceptLink.linkedConceptId]"
-           [ngbPopover]="conceptLink.vocabularyLabel | translateValue" [triggers]="'mouseenter:mouseleave'" [popoverTitle]="'Vocabulary' | translate">
+        <a [routerLink]="['/concepts', conceptLink.targetGraph, 'concept', conceptLink.targetId]"
+           [ngbPopover]="conceptLink.vocabularyLabel | translateValue" 
+           [triggers]="'mouseenter:mouseleave'"
+           [popoverTitle]="'Vocabulary' | translate">
           {{conceptLink.label | translateValue}}
         </a>
       </li>
@@ -24,7 +26,9 @@ import { ignoreModalClose } from '../../utils/modal';
     <div *ngIf="editing">
       <div *ngFor="let conceptLink of conceptLinkReference.values">
         <a><i class="fa fa-times" (click)="removeReference(conceptLink)"></i></a>
-        <span [ngbPopover]="conceptLink.vocabularyLabel | translateValue" [triggers]="'mouseenter:mouseleave'" [popoverTitle]="'Vocabulary' | translate">
+        <span [ngbPopover]="conceptLink.vocabularyLabel | translateValue" 
+              [triggers]="'mouseenter:mouseleave'"
+              [popoverTitle]="'Vocabulary' | translate">
           {{conceptLink.label | translateValue}}
         </span>
       </div>

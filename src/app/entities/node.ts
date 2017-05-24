@@ -299,7 +299,7 @@ export class Node<T extends NodeType> {
         return new VocabularyNode(node, metaModel, languages, persistent);
       case 'Concept':
         return new ConceptNode(node, metaModel, languages, persistent);
-      case 'LinkNode':
+      case 'ConceptLink':
         return new ConceptLinkNode(node, metaModel, languages, persistent);
       case 'Term':
         return new TermNode(node, metaModel, languages, persistent);
@@ -683,9 +683,9 @@ export class TermNode extends Node<'Term'> {
   }
 }
 
-export class ConceptLinkNode extends Node<'LinkNode'> {
+export class ConceptLinkNode extends Node<'ConceptLink'> {
 
-  constructor(node: NodeExternal<'LinkNode'>, metaModel: MetaModel, languages: string[], persistent: boolean) {
+  constructor(node: NodeExternal<'ConceptLink'>, metaModel: MetaModel, languages: string[], persistent: boolean) {
     super(node, metaModel, languages, persistent);
   }
 
@@ -705,20 +705,20 @@ export class ConceptLinkNode extends Node<'LinkNode'> {
     this.setPropertyAsLocalizable('vocabularyLabel', value);
   }
 
-  get source(): string {
-    return this.getPropertyAsString('source');
+  get targetGraph(): string {
+    return this.getPropertyAsString('targetGraph');
   }
 
-  set source(value: string) {
-    this.setPropertyAsLiteral('source', value);
+  set targetGraph(value: string) {
+    this.setPropertyAsLiteral('targetGraph', value);
   }
 
-  get linkedConceptId(): string {
-    return this.getPropertyAsString('id');
+  get targetId(): string {
+    return this.getPropertyAsString('targetId');
   }
 
-  setLinkedConceptId(value: string) {
-    this.setPropertyAsLiteral('id', value);
+  set targetId(value: string) {
+    this.setPropertyAsLiteral('targetId', value);
   }
 }
 

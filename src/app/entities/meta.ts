@@ -214,7 +214,7 @@ export class ReferenceMeta {
     switch (this.targetType) {
       case 'Concept':
         return 'Concept';
-      case 'LinkNode':
+      case 'ConceptLink':
         return 'ConceptLink';
       case 'Term':
         return this.id === 'prefLabelXl' ? 'PrimaryTerm' : 'Synonym';
@@ -323,12 +323,12 @@ export class MetaModel {
 
   createConceptLink(toGraphId: string, fromVocabulary: VocabularyNode, concept: ConceptNode): ConceptLinkNode {
 
-    const newConceptLink = this.createEmptyNode<ConceptLinkNode, 'LinkNode'>(toGraphId, uuid(), 'LinkNode', defaultLanguages /* TODO */);
+    const newConceptLink = this.createEmptyNode<ConceptLinkNode, 'ConceptLink'>(toGraphId, uuid(), 'ConceptLink', defaultLanguages /* TODO */);
 
     newConceptLink.label = concept.label;
     newConceptLink.vocabularyLabel = fromVocabulary.label;
-    newConceptLink.source = concept.graphId;
-    newConceptLink.setLinkedConceptId(concept.id);
+    newConceptLink.targetGraph = concept.graphId;
+    newConceptLink.targetId = concept.id;
 
     return newConceptLink;
   }
