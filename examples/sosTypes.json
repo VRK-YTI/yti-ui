@@ -53,6 +53,37 @@
       },
       {
         "regex": "(?s)^.*$",
+        "id": "language",
+        "uri": "http://purl.org/dc/terms/language",
+        "index": 0,
+        "domain": {
+          "id": "TerminologicalVocabulary",
+          "graph": {
+            "id": "ada55715-c565-4477-8227-0b8a51010bc5"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Kieli"
+            },
+            {
+              "lang": "en",
+              "value": "Language"
+            }
+          ],
+          "type": [
+            {
+              "lang": "",
+              "value": "string:multiple"
+            }
+          ]
+        }
+      },
+      {
+        "regex": "(?s)^.*$",
         "id": "description",
         "uri": "http://purl.org/dc/terms/description",
         "index": 1,
