@@ -180,12 +180,6 @@
         },
         "permissions": {},
         "properties": {
-          "type": [
-            {
-              "lang": "",
-              "value": "localizable:single"
-            }
-          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -194,6 +188,12 @@
             {
               "lang": "en",
               "value": "Name"
+            }
+          ],
+          "type": [
+            {
+              "lang": "",
+              "value": "localizable:single"
             }
           ]
         }
@@ -420,6 +420,12 @@
         },
         "permissions": {},
         "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "string:single,area"
+            }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -428,12 +434,6 @@
             {
               "lang": "en",
               "value": "Editorial note"
-            }
-          ],
-          "type": [
-            {
-              "lang": "",
-              "value": "string:single,area"
             }
           ]
         }
@@ -482,6 +482,12 @@
         },
         "permissions": {},
         "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "string:single,area"
+            }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -490,12 +496,6 @@
             {
               "lang": "en",
               "value": "History note"
-            }
-          ],
-          "type": [
-            {
-              "lang": "",
-              "value": "string:single,area"
             }
           ]
         }
@@ -513,6 +513,12 @@
         },
         "permissions": {},
         "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "string:single,area"
+            }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -521,12 +527,6 @@
             {
               "lang": "en",
               "value": "Change note"
-            }
-          ],
-          "type": [
-            {
-              "lang": "",
-              "value": "string:single,area"
             }
           ]
         }
@@ -544,6 +544,12 @@
         },
         "permissions": {},
         "properties": {
+          "type": [
+            {
+              "lang": "",
+              "value": "status"
+            }
+          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -552,12 +558,6 @@
             {
               "lang": "en",
               "value": "Term status"
-            }
-          ],
-          "type": [
-            {
-              "lang": "",
-              "value": "status"
             }
           ]
         }
@@ -599,12 +599,6 @@
         },
         "permissions": {},
         "properties": {
-          "type": [
-            {
-              "lang": "",
-              "value": "localizable:multiple,area"
-            }
-          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -613,6 +607,12 @@
             {
               "lang": "en",
               "value": "Definition"
+            }
+          ],
+          "type": [
+            {
+              "lang": "",
+              "value": "localizable:multiple,area"
             }
           ]
         }
@@ -630,12 +630,6 @@
         },
         "permissions": {},
         "properties": {
-          "type": [
-            {
-              "lang": "",
-              "value": "localizable:multiple,area"
-            }
-          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -644,6 +638,12 @@
             {
               "lang": "en",
               "value": "Note"
+            }
+          ],
+          "type": [
+            {
+              "lang": "",
+              "value": "localizable:multiple,area"
             }
           ]
         }
@@ -661,12 +661,6 @@
         },
         "permissions": {},
         "properties": {
-          "type": [
-            {
-              "lang": "",
-              "value": "localizable:multiple,area"
-            }
-          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -675,6 +669,12 @@
             {
               "lang": "en",
               "value": "Editorial note"
+            }
+          ],
+          "type": [
+            {
+              "lang": "",
+              "value": "localizable:multiple,area"
             }
           ]
         }
@@ -692,12 +692,6 @@
         },
         "permissions": {},
         "properties": {
-          "type": [
-            {
-              "lang": "",
-              "value": "localizable:multiple,area"
-            }
-          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -706,6 +700,12 @@
             {
               "lang": "en",
               "value": "Example"
+            }
+          ],
+          "type": [
+            {
+              "lang": "",
+              "value": "localizable:multiple,area"
             }
           ]
         }
@@ -723,12 +723,6 @@
         },
         "permissions": {},
         "properties": {
-          "type": [
-            {
-              "lang": "",
-              "value": "string:single,area"
-            }
-          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -737,6 +731,12 @@
             {
               "lang": "en",
               "value": "Change note"
+            }
+          ],
+          "type": [
+            {
+              "lang": "",
+              "value": "string:single,area"
             }
           ]
         }
@@ -754,12 +754,6 @@
         },
         "permissions": {},
         "properties": {
-          "type": [
-            {
-              "lang": "",
-              "value": "string:single,area"
-            }
-          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -768,6 +762,12 @@
             {
               "lang": "en",
               "value": "History note"
+            }
+          ],
+          "type": [
+            {
+              "lang": "",
+              "value": "string:single,area"
             }
           ]
         }
@@ -785,12 +785,6 @@
         },
         "permissions": {},
         "properties": {
-          "type": [
-            {
-              "lang": "",
-              "value": "status"
-            }
-          ],
           "prefLabel": [
             {
               "lang": "fi",
@@ -799,6 +793,12 @@
             {
               "lang": "en",
               "value": "Concept status"
+            }
+          ],
+          "type": [
+            {
+              "lang": "",
+              "value": "status"
             }
           ]
         }
@@ -1013,7 +1013,7 @@
       },
       {
         "range": {
-          "id": "LinkNode",
+          "id": "ConceptLink",
           "graph": {
             "id": "9c2782be-5f75-4cd7-80fa-806a8abfd4e2"
           }
@@ -1038,18 +1038,18 @@
           "prefLabel": [
             {
               "lang": "fi",
-              "value": "Liittyvä käsite"
+              "value": "Liittyvä käsite toisessa sanastossa"
             },
             {
               "lang": "en",
-              "value": "Related concept"
+              "value": "Related concept in other vocabulary"
             }
           ]
         }
       },
       {
         "range": {
-          "id": "LinkNode",
+          "id": "ConceptLink",
           "graph": {
             "id": "9c2782be-5f75-4cd7-80fa-806a8abfd4e2"
           }
@@ -1074,18 +1074,18 @@
           "prefLabel": [
             {
               "lang": "fi",
-              "value": "Vastaava käsite"
+              "value": "Vastaava käsite toisessa sanastossa"
             },
             {
               "lang": "en",
-              "value": "Related concept"
+              "value": "Related concept from other vocabulary"
             }
           ]
         }
       },
       {
         "range": {
-          "id": "LinkNode",
+          "id": "ConceptLink",
           "graph": {
             "id": "9c2782be-5f75-4cd7-80fa-806a8abfd4e2"
           }
@@ -1110,11 +1110,11 @@
           "prefLabel": [
             {
               "lang": "fi",
-              "value": "Lähes vastaava käsite"
+              "value": "Lähes vastaava käsite toisessa sanastossa"
             },
             {
               "lang": "en",
-              "value": "Close match"
+              "value": "Close match in other vocabulary"
             }
           ]
         }
@@ -1122,7 +1122,7 @@
     ]
   },
   {
-    "id": "LinkNode",
+    "id": "ConceptLink",
     "uri": "http://www.w3.org/1999/02/22-rdf-syntax-ns#Resource",
     "index": 4,
     "graph": {
@@ -1154,7 +1154,7 @@
         "uri": "http://www.w3.org/2004/02/skos/core#prefLabel",
         "index": 0,
         "domain": {
-          "id": "LinkNode",
+          "id": "ConceptLink",
           "graph": {
             "id": "9c2782be-5f75-4cd7-80fa-806a8abfd4e2"
           }
@@ -1181,11 +1181,11 @@
       },
       {
         "regex": "(?s)^.*$",
-        "id": "source",
-        "uri": "http://purl.org/dc/terms/source",
+        "id": "vocabularyLabel",
+        "uri": "http://iow.csc.fi/ns/st#vocabularyLabel",
         "index": 1,
         "domain": {
-          "id": "LinkNode",
+          "id": "ConceptLink",
           "graph": {
             "id": "9c2782be-5f75-4cd7-80fa-806a8abfd4e2"
           }
@@ -1195,11 +1195,67 @@
           "prefLabel": [
             {
               "lang": "fi",
-              "value": "Viitegraafi"
+              "value": "Sanaston nimi"
             },
             {
               "lang": "en",
-              "value": "Source graph"
+              "value": "Vocabulary label"
+            }
+          ],
+          "type": [
+            {
+              "lang": "",
+              "value": "localizable:single"
+            }
+          ]
+        }
+      },
+      {
+        "regex": "(?s)^.*$",
+        "id": "targetId",
+        "uri": "http://iow.csc.fi/ns/st#targetId",
+        "index": 3,
+        "domain": {
+          "id": "ConceptLink",
+          "graph": {
+            "id": "9c2782be-5f75-4cd7-80fa-806a8abfd4e2"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Viitatun käsitteen id"
+            },
+            {
+              "lang": "en",
+              "value": "Target identifier"
+            }
+          ]
+        }
+      },
+      {
+        "regex": "(?s)^.*$",
+        "id": "targetGraph",
+        "uri": "http://iow.csc.fi/ns/st#targetUri",
+        "index": 4,
+        "domain": {
+          "id": "ConceptLink",
+          "graph": {
+            "id": "9c2782be-5f75-4cd7-80fa-806a8abfd4e2"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Viitatun käsitteen uri"
+            },
+            {
+              "lang": "en",
+              "value": "Target uri"
             }
           ]
         }
