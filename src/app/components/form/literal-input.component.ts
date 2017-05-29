@@ -24,29 +24,31 @@ import { Attribute } from '../../entities/node-api';
       <div *ngFor="let attribute of property.attributes; let index = index">
         <div class="form-group" 
              [ngClass]="{'has-danger': valueInError(index), 'removable': canRemove()}">
-          <div *ngIf="!area">
-            <input type="text"
-                   class="form-control"
-                   [id]="property.meta.id + index"
-                   autocomplete="off"
-                   [(ngModel)]="attribute.value"
-                   [validateMeta]="property.meta"
-                   #ngModel="ngModel"/>
-  
-            <error-messages [control]="ngModel.control"></error-messages>
-          </div>
-  
-          <div *ngIf="area">
-             <textarea class="form-control"
-                       [id]="property.meta.id + index"
-                       autocomplete="off"
-                       rows="4"
-                       [(ngModel)]="attribute.value"
-                       [validateMeta]="property.meta"
-                       #areaNgModel="ngModel"></textarea>
-  
-            <error-messages [control]="areaNgModel.control"></error-messages>
-          </div>
+
+          <ng-container [ngSwitch]="editorType">
+
+            <div *ngSwitchCase="'input'">
+              <input type="text"
+                     class="form-control"
+                     [id]="property.meta.id + index"
+                     autocomplete="off"
+                     [(ngModel)]="attribute.value"
+                     [validateMeta]="property.meta"
+                     #ngModel="ngModel"/>
+    
+              <error-messages [control]="ngModel.control"></error-messages>
+            </div>
+
+            <div *ngSwitchCase="'markdown'">
+              <markdown-input [id]="property.meta.id + index"
+                              [(ngModel)]="attribute.value"
+                              [validateMeta]="property.meta"
+                              #ngModel="ngModel"></markdown-input>
+
+              <error-messages [control]="ngModel.control"></error-messages>
+            </div>
+            
+          </ng-container>
         </div>
   
         <button *ngIf="canRemove()" 
@@ -65,7 +67,6 @@ export class LiteralInputComponent {
   @Input() property: Property;
 
   @ViewChildren('ngModel') ngModel: QueryList<NgModel>;
-  @ViewChildren('areaNgModel') areaNgModel: QueryList<NgModel>;
 
   constructor(private editableService: EditableService) {
   }
@@ -81,7 +82,7 @@ export class LiteralInputComponent {
       }
     }
 
-    return !isNgModelValid(this.area ? this.areaNgModel : this.ngModel);
+    return !isNgModelValid(this.ngModel);
   }
 
   addNewValue() {
@@ -92,8 +93,8 @@ export class LiteralInputComponent {
     this.property.remove(attribute);
   }
 
-  get area() {
-    return this.property.meta.typeAsString.area;
+  get editorType() {
+    return this.property.meta.typeAsString.editorType;
   }
 
   canAdd() {

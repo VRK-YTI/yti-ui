@@ -176,3 +176,59 @@ export function requireSingle<T>(arr: T[]): T {
 
   return arr[0];
 }
+
+export function insertBefore<T>(arr: T[], item: T, ref: T) {
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i] === ref) {
+      arr.splice(i, 0, item);
+      return;
+    }
+  }
+
+  throw new Error('Reference item not in array');
+}
+
+export interface Mapper<T, R> {
+  (item: T): R;
+}
+
+export function nextOf<T>(arr: T[], item: T) {
+  return nextOfMapped(arr, x => x, item);
+}
+
+export function nextOfMapped<T, M>(arr: T[], mapper: Mapper<T, M>, item: M): T|null {
+
+  for (let i = 0; i < arr.length; i++) {
+    if (mapper(arr[i]) === item) {
+
+      const isLast = i === arr.length - 1;
+
+      if (isLast) {
+        return null;
+      } else {
+        return arr[i + 1];
+      }
+    }
+  }
+
+  throw new Error('Item not in array');
+}
+
+export function previousOf<T>(arr: T[], item: T) {
+  return previousOfMapped(arr, x => x, item);
+}
+
+export function previousOfMapped<T, M>(arr: T[], mapper: Mapper<T, M>, item: M): T|null {
+
+  for (let i = 0; i < arr.length; i++) {
+    if (mapper(arr[i]) === item) {
+      if (i === 0) {
+        return null;
+      } else {
+        return arr[i - 1];
+      }
+    }
+  }
+
+  throw new Error('Item not in array');
+}

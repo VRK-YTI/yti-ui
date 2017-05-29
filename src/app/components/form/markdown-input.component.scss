@@ -1,0 +1,39 @@
+@import '../../../_variables';
+
+:host /deep/ {
+  span.link {
+    color: $link-color;
+  }
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+
+  [contenteditable] {
+
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
+.action {
+
+  position: absolute;
+  display: inline-block;
+  width: calc(100% - 83px);
+  top: -4px;
+  left: 15px;
+
+  .btn {
+    float: right;
+    font-size: 20px;
+    padding: 1px 5px;
+  }
+
+  .content {
+    float: right;
+    line-height: 29px;
+    padding-right: 10px;
+  }
+}

@@ -27,30 +27,31 @@ import { Attribute } from '../../entities/node-api';
         <div class="localization" [class.editing]="editing" [class.removable]="canRemove()">
           <div *ngIf="!editing" markdown-links [value]="localization.value" [relatedConcepts]="relatedConcepts"></div>
           <div *ngIf="editing" class="form-group" [ngClass]="{'has-danger': valueInError(index)}">
-          
-            <div *ngIf="!area">
-              <input type="text"
-                     class="form-control"
-                     [id]="property.meta.id + localization.lang"
-                     autocomplete="off"
-                     validateLocalization
-                     [(ngModel)]="localization.value"
-                     #ngModel="ngModel" />
-                   
-              <error-messages [control]="ngModel.control"></error-messages>
-            </div>
-                  
-            <div *ngIf="area">
-              <textarea class="form-control"
-                        [id]="property.meta.id + localization.lang"
-                        autocomplete="off"
-                        rows="4"
-                        validateLocalization
-                        [(ngModel)]="localization.value"
-                        #areaNgModel="ngModel"></textarea>
-             
-              <error-messages [control]="areaNgModel.control"></error-messages>
-            </div>                         
+
+            <ng-container [ngSwitch]="editorType">
+              
+              <div *ngSwitchCase="'input'">
+                <input type="text"
+                       class="form-control"
+                       [id]="property.meta.id + localization.lang"
+                       autocomplete="off"
+                       validateLocalization
+                       [(ngModel)]="localization.value"
+                       #ngModel="ngModel" />
+                     
+                <error-messages [control]="ngModel.control"></error-messages>
+              </div>
+              
+              <div *ngSwitchCase="'markdown'">
+                <markdown-input [id]="property.meta.id + localization.lang"
+                                validateLocalization
+                                [(ngModel)]="localization.value"
+                                #ngModel="ngModel"></markdown-input>
+               
+                <error-messages [control]="ngModel.control"></error-messages>
+              </div>
+            
+            </ng-container>
           </div>
         </div>
         
@@ -72,7 +73,6 @@ export class LocalizedInputComponent {
   @Input() relatedConcepts: ConceptNode[];
 
   @ViewChildren('ngModel') ngModel: QueryList<NgModel>;
-  @ViewChildren('areaNgModel') areaNgModel: QueryList<NgModel>;
 
   constructor(private editingService: EditableService) {
   }
@@ -104,7 +104,7 @@ export class LocalizedInputComponent {
       }
     }
 
-    return !isNgModelValid(this.area ? this.areaNgModel : this.ngModel);
+    return !isNgModelValid(this.ngModel);
   }
 
   addNewLocalization(language: string) {
@@ -115,8 +115,8 @@ export class LocalizedInputComponent {
     this.property.remove(attribute);
   }
 
-  get area() {
-    return this.property.meta.typeAsLocalizable.area;
+  get editorType() {
+    return this.property.meta.typeAsLocalizable.editorType;
   }
 
   get cardinality() {

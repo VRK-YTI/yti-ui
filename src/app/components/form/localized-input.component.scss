@@ -47,6 +47,7 @@ div.localized {
     width: calc(100% - #{$language-size});
     min-height: $language-size;
     padding-left: 10px;
+    padding-right: 10px;
     line-height: calc(#{$language-size} - 4px);
 
     &.removable {

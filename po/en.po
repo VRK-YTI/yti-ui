@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-05-22 16:41+0300\n"
+"PO-Revision-Date: 2017-05-30 20:57+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -61,7 +61,7 @@ msgstr ""
 msgid "Add concept"
 msgstr ""
 
-msgid "mouseenter:mouseleave'\" [popoverTitle]=\"'Vocabulary"
+msgid "Vocabulary"
 msgstr ""
 
 msgid "Order by modified date"
@@ -94,9 +94,6 @@ msgstr ""
 msgid "Choose concept"
 msgstr ""
 
-msgid "Vocabulary"
-msgstr ""
-
 msgid "All vocabularies"
 msgstr ""
 
@@ -119,6 +116,12 @@ msgid "Add"
 msgstr ""
 
 msgid "No values yet"
+msgstr ""
+
+msgid "Link"
+msgstr ""
+
+msgid "Unlink"
 msgstr ""
 
 msgid "Remove term"

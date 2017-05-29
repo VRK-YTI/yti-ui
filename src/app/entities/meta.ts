@@ -28,16 +28,19 @@ export type PropertyType = StringProperty
                          | LocalizableProperty
                          | StatusProperty;
 
-export type StringProperty = { type: 'string', cardinality: Cardinality, area: boolean };
-export type LocalizableProperty = { type: 'localizable', cardinality: Cardinality, area: boolean };
+export type EditorType = 'input'
+                       | 'markdown';
+
+export type StringProperty = { type: 'string', cardinality: Cardinality, editorType: EditorType };
+export type LocalizableProperty = { type: 'localizable', cardinality: Cardinality, editorType: EditorType };
 export type StatusProperty = { type: 'status' };
 
-function createString(multiple: boolean, area: boolean): StringProperty {
-  return { type: 'string', cardinality: (multiple ? 'multiple' : 'single'), area };
+function createString(multiple: boolean, editorType: EditorType): StringProperty {
+  return { type: 'string', cardinality: (multiple ? 'multiple' : 'single'), editorType };
 }
 
-function createLocalizable(single: boolean, area: boolean): LocalizableProperty {
-  return { type: 'localizable', cardinality: (single ? 'single' : 'multiple'), area };
+function createLocalizable(single: boolean, editorType: EditorType): LocalizableProperty {
+  return { type: 'localizable', cardinality: (single ? 'single' : 'multiple'), editorType };
 }
 
 function createStatus(): StatusProperty {
@@ -45,11 +48,14 @@ function createStatus(): StatusProperty {
 }
 
 function createPropertyType(name: TypeName, attributes: Set<string>): PropertyType {
+
+  const editorType: EditorType = attributes.has('area') ? 'markdown' : 'input';
+
   switch (name) {
     case 'string':
-      return createString(attributes.has('multiple'), attributes.has('area'));
+      return createString(attributes.has('multiple'), editorType);
     case 'localizable':
-      return createLocalizable(attributes.has('single'), attributes.has('area'));
+      return createLocalizable(attributes.has('single'), editorType);
     case 'status':
       return createStatus();
     default:
@@ -167,7 +173,7 @@ export class PropertyMeta {
 
   get multiColumn() {
 
-    if ((this.type.type === 'string' || this.type.type === 'localizable') && this.type.area) {
+    if ((this.type.type === 'string' || this.type.type === 'localizable') && this.type.editorType === 'markdown') {
       return false;
     }
 

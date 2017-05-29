@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-05-22 16:41+0300\n"
+"PO-Revision-Date: 2017-05-30 20:58+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -61,8 +61,8 @@ msgstr "Lisää käsitevalikoima"
 msgid "Add concept"
 msgstr "Lisää käsite"
 
-msgid "mouseenter:mouseleave'\" [popoverTitle]=\"'Vocabulary"
-msgstr ""
+msgid "Vocabulary"
+msgstr "Sanasto"
 
 msgid "Order by modified date"
 msgstr "Järjestä muokkausajan mukaan"
@@ -94,9 +94,6 @@ msgstr "uusi sanasto"
 msgid "Choose concept"
 msgstr "Valitse käsite"
 
-msgid "Vocabulary"
-msgstr "Sanasto"
-
 msgid "All vocabularies"
 msgstr "Kaikki sanastot"
 
@@ -120,6 +117,12 @@ msgstr "Lisää"
 
 msgid "No values yet"
 msgstr "Ei vielä yhtään arvoa"
+
+msgid "Link"
+msgstr "Linkitä"
+
+msgid "Unlink"
+msgstr "Poista linkitys"
 
 msgid "Remove term"
 msgstr "Poista termi"
