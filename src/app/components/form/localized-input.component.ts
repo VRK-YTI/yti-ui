@@ -100,7 +100,7 @@ export class LocalizedInputComponent {
         return true;
       } else {
         const ngModels = ngModel.toArray();
-        return ngModels.length === 0 || ngModels[index].valid;
+        return ngModels.length === 0 || ngModels.length <= index || ngModels[index].valid;
       }
     }
 

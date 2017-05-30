@@ -78,7 +78,7 @@ export class LiteralInputComponent {
         return true;
       } else {
         const ngModels = ngModel.toArray();
-        return ngModels.length > index && ngModels[index].valid;
+        return ngModels.length === 0 || ngModels.length <= index || ngModels[index].valid;
       }
     }
 
