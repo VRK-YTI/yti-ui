@@ -48,11 +48,7 @@ class Model {
 
     const selection = requireDefined(this.getSelection());
 
-    if (selection.isRange()) {
-      selection.remove();
-    }
-
-    const {text, offset} = selection.start;
+    const {text, offset} = selection.remove()!;
     const newParagraph = new Paragraph(this);
     this.insertParagraphBefore(newParagraph, text.containingParagraph);
     Model.moveCursor(text.containingParagraph.splitTo(newParagraph, text, offset));
@@ -62,12 +58,8 @@ class Model {
 
     const selection = requireDefined(this.getSelection());
 
-    if (selection.isRange()) {
-      selection.remove();
-    }
-
-    const {text, offset} = selection.start;
-    Model.moveCursor(text.insertChar(char, offset));
+    const {text, offset} = selection.remove()!;
+    Model.moveCursor(text.insertText(char, offset));
   }
 
   removeNextChar() {
@@ -232,16 +224,37 @@ class Model {
     console.log('redo, not implemented yet');  // TODO
   }
 
-  paste() {
-    console.log('paste, not implemented yet');  // TODO
+  copy(): string {
+
+    const selection = this.getSelection();
+
+    if (selection) {
+      return selection.toPlainString();
+    } else {
+      return '';
+    }
   }
 
-  cut() {
-    console.log('cut, not implemented yet');  // TODO
+  paste(text: string) {
+
+    const selection = this.getSelection();
+
+    if (selection) {
+      const pointAfterRemoval = requireDefined(selection.remove());
+      Model.moveCursor(pointAfterRemoval.text.append(text));
+    }
   }
 
-  copy() {
-    console.log('copy, not implemented yet');  // TODO
+  cut(): string {
+
+    const text = this.copy();
+    const selection = this.getSelection();
+
+    if (selection) {
+      Model.moveCursor(selection.remove());
+    }
+
+    return text;
   }
 }
 
@@ -715,17 +728,18 @@ class Text {
     }
   }
 
-  insertChar(char: string, offset: number): Point {
+  insertText(text: string, offset: number): Point {
 
     const start = this.content.substring(0, offset);
     const end = this.content.substring(offset, this.content.length);
-    this.content = start + char + end;
-
-    return new Point(this, offset + 1)
+    this.content = start + text + end;
+    return new Point(this, offset + text.length)
   }
 
-  append(text: string) {
+  append(text: string): Point {
+
     this.content = this.content + text;
+    return new Point(this, this.content.length);
   }
 
   findTextForPath(indicesFromRoot: number[]): Text {
@@ -838,6 +852,10 @@ class Selection {
 
   remove(): Point|null {
 
+    if (this.isRange()) {
+      return this.start;
+    }
+
     if (this.start.text !== this.end.text) {
 
       for (const text of this.textBetween) {
@@ -853,6 +871,27 @@ class Selection {
       return pointAfterRemoval;
     } else {
       return this.start.text.removeRange(this.start.offset, this.end.offset);
+    }
+  }
+
+  toPlainString() {
+
+    const start = this.start.text.content;
+    const end = this.end.text.content;
+
+    if (this.start.text === this.end.text) {
+      return start.substring(this.start.offset, this.end.offset);
+    } else {
+
+      let result = start.substring(this.start.offset, start.length);
+
+      for (const text of this.textBetween) {
+        result += text.content;
+      }
+
+      result += end.substring(0, this.end.offset);
+
+      return result;
     }
   }
 
@@ -1092,20 +1131,19 @@ export class MarkdownInputComponent implements OnInit, ControlValueAccessor {
       }, 200);
     });
 
-    element.addEventListener('copy', (event: Event) => {
-      this.model.copy();
+    element.addEventListener('copy', (event: ClipboardEvent) => {
+      event.clipboardData.setData('text/plain', this.model.copy());
+      event.preventDefault();
+    });
+
+    element.addEventListener('paste', (event: ClipboardEvent) => {
+      this.model.paste(event.clipboardData.getData('Text'));
       this.reportChange();
       event.preventDefault();
     });
 
-    element.addEventListener('paste', (event: Event) => {
-      this.model.paste();
-      this.reportChange();
-      event.preventDefault();
-    });
-
-    element.addEventListener('cut', (event: Event) => {
-      this.model.cut();
+    element.addEventListener('cut', (event: ClipboardEvent) => {
+      event.clipboardData.setData('text/plain', this.model.cut());
       this.reportChange();
       event.preventDefault();
     });
