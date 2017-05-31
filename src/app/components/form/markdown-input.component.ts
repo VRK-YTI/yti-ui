@@ -46,7 +46,7 @@ class Model {
 
   insertNewParagraph() {
 
-    const selection = this.getSelection();
+    const selection = requireDefined(this.getSelection());
 
     if (selection.isRange()) {
       selection.remove();
@@ -60,7 +60,7 @@ class Model {
 
   insertChar(char: string) {
 
-    const selection = this.getSelection();
+    const selection = requireDefined(this.getSelection());
 
     if (selection.isRange()) {
       selection.remove();
@@ -72,7 +72,7 @@ class Model {
 
   removeNextChar() {
 
-    const selection = this.getSelection();
+    const selection = requireDefined(this.getSelection());
 
     if (selection.isRange()) {
       Model.moveCursor(selection.remove());
@@ -84,7 +84,7 @@ class Model {
 
   removePreviousChar() {
 
-    const selection = this.getSelection();
+    const selection = requireDefined(this.getSelection());
 
     if (selection.isRange()) {
       Model.moveCursor(selection.remove());
@@ -126,7 +126,7 @@ class Model {
     remove(this.content, paragraph);
   }
 
-  getSelection(): Selection {
+  getSelection(): Selection|null {
 
     if (this.content.length === 0) {
 
@@ -190,9 +190,13 @@ class Model {
   }
 
   updateSelection() {
+
     const selection = this.getSelection();
-    this.linkableSelection = selection.linkable;
-    this.linkedSelection = selection.link;
+
+    if (selection) {
+      this.linkableSelection = selection.linkable;
+      this.linkedSelection = selection.link;
+    }
   }
 
   removeLinkSelections() {
@@ -400,6 +404,12 @@ class Paragraph {
   }
 
   findTextForPath(indicesFromRoot: number[]): Text {
+
+    if (indicesFromRoot.length === 0) {
+      // at least chrome seems to return paragraph in selection
+      return this.firstText;
+    }
+
     const index = indicesFromRoot.shift()!;
     return this.content[index].findTextForPath(indicesFromRoot);
   }
@@ -761,23 +771,30 @@ class Selection {
   constructor(private model: Model, public start: Point, public end: Point) {
 
     if (this.start.text !== this.end.text) {
-      for (let t = this.end.text.getPrecedingText()!; t !== this.start.text; t = t.getPrecedingText()!) {
+      for (let t = this.start.text.getFollowingText()!; t !== this.end.text; t = t.getFollowingText()!) {
         this.textBetween.push(t);
       }
     }
   }
 
-  static ofDomSelection(model: Model, domSelection: DomSelection): Selection {
+  static ofDomSelection(model: Model, domSelection: DomSelection): Selection|null {
 
     function createPoint(domPoint: DomPoint) {
 
       const indicesFromRoot = domPoint.path.indicesFromRoot;
       const text = model.findTextForPath(indicesFromRoot);
 
-      return new Point(text, domPoint.offset);
+      return text ? new Point(text, domPoint.offset) : null;
     }
 
-    return new Selection(model, createPoint(domSelection.start), createPoint(domSelection.end));
+    const startPoint = createPoint(domSelection.start);
+    const endPoint = createPoint(domSelection.end);
+
+    if (startPoint && endPoint) {
+      return new Selection(model, startPoint, endPoint);
+    } else {
+      return null;
+    }
   }
 
   private isLinkable() {
@@ -827,11 +844,13 @@ class Selection {
         text.remove();
       }
 
-      this.start.text.removeAfter(this.start.offset);
+      const startParagraph = this.start.text.containingParagraph;
+      const endParagraph = this.end.text.containingParagraph;
+      const pointAfterRemoval = this.start.text.removeAfter(this.start.offset);
       this.end.text.removeBefore(this.end.offset);
-      this.start.text.containingParagraph.combineWith(this.end.text.containingParagraph);
+      startParagraph.combineWith(endParagraph);
 
-      return new Point(this.start.text, this.start.offset);
+      return pointAfterRemoval;
     } else {
       return this.start.text.removeRange(this.start.offset, this.end.offset);
     }
