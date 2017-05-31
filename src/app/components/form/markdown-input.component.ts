@@ -200,6 +200,57 @@ class Model {
     return this.content.map(c => c.toMarkdown()).join('').trim();
   }
 
+  get cursorOffset(): number {
+
+    try {
+      const selection = this.getSelection();
+
+      if (selection) {
+
+        let offset = selection.start.offset;
+
+        for (let text = selection.start.text.getPrecedingText(); text !== null; text = text.getPrecedingText()) {
+          offset += text.length;
+        }
+
+        return offset;
+      } else {
+        return 0;
+      }
+
+    } catch (e) {
+      return 0;
+    }
+  }
+
+  private cursorOffsetToPoint(offset: number): Point|null {
+
+    if (this.content.length === 0) {
+      return null;
+    } else {
+
+      let offsetWalked = 0;
+
+      for (let text: Text|null = this.content[0].firstText; text !== null; text = text.getFollowingText()) {
+
+        offsetWalked += text.length;
+
+        if (offset <= offsetWalked) {
+          return new Point(text, text.length - (offsetWalked - offset));
+        }
+      }
+
+      const lastParagraph = this.content[this.content.length - 1];
+      const lastText = lastParagraph.lastText;
+
+      return new Point(lastText, lastText.length);
+    }
+  }
+
+  moveCursorToOffset(offset: number) {
+    Model.moveCursor(this.cursorOffsetToPoint(offset));
+  }
+
   removeStartOfLine() {
     console.log('remove start of line, not implemented yet'); // TODO
   }
@@ -214,14 +265,6 @@ class Model {
 
   removePreviousWord() {
     console.log('remove previous word, not implemented yet'); // TODO
-  }
-
-  undo() {
-    console.log('undo, not implemented yet');  // TODO
-  }
-
-  redo() {
-    console.log('redo, not implemented yet');  // TODO
   }
 
   copy(): string {
@@ -795,6 +838,10 @@ class Selection {
 
     function createPoint(domPoint: DomPoint) {
 
+      if (domPoint.node === model.node) {
+        return null;
+      }
+
       const indicesFromRoot = domPoint.path.indicesFromRoot;
       const text = model.findTextForPath(indicesFromRoot);
 
@@ -1037,18 +1084,22 @@ function isRemoveRestOfLine(event: KeyboardEvent) {
 export class MarkdownInputComponent implements OnInit, ControlValueAccessor {
 
   @Input('formControlClass') formControl = true;
-
-  model: Model;
-  handleBlur = false;
-  propagateChange: (fn: any) => void = () => {};
-  propagateTouched: (fn: any) => void = () => {};
-
   @ViewChild('editable') editableElement: ElementRef;
+
+  private model: Model;
+  private undoStack: { markdown: string, cursorOffset: number }[] = [];
+  private redoStack: { markdown: string, cursorOffset: number }[] = [];
+
+  private handleBlur = false;
+  private propagateChange: (fn: any) => void = () => {};
+  private propagateTouched: (fn: any) => void = () => {};
+
+  private undoDebounceTimeoutHandle: any = null;
 
   ngOnInit(): void {
 
     const element = this.editableElement.nativeElement as HTMLElement;
-    this.model = new Model(this.editableElement.nativeElement as HTMLElement);
+    this.model = new Model(element);
 
     element.addEventListener('keydown', (event: KeyboardEvent) => {
 
@@ -1062,36 +1113,28 @@ export class MarkdownInputComponent implements OnInit, ControlValueAccessor {
         console.log('bold command prevented');
         event.preventDefault();
       } else if (isRemoveStartOfLine(event)) {
-        this.model.removeStartOfLine();
-        this.reportChange();
+        this.reportChange(() => this.model.removeStartOfLine());
         event.preventDefault();
       } else if (isRemoveRestOfLine(event)) {
-        this.model.removeEndOfLine();
-        this.reportChange();
+        this.reportChange(() => this.model.removeEndOfLine());
         event.preventDefault();
       } else if (isRemovePreviousWord(event)) {
-        this.model.removePreviousWord();
-        this.reportChange();
+        this.reportChange(() => this.model.removePreviousWord());
         event.preventDefault();
       } else if (isRemoveNextWord(event)) {
-        this.model.removeNextWord();
-        this.reportChange();
+        this.reportChange(() => this.model.removeNextWord());
         event.preventDefault();
       } else if (isRemoveNextChar(event)) {
-        this.model.removeNextChar();
-        this.reportChange();
+        this.reportChange(() => this.model.removeNextChar());
         event.preventDefault();
       } else if (isRemovePreviousChar(event)) {
-        this.model.removePreviousChar();
-        this.reportChange();
+        this.reportChange(() => this.model.removePreviousChar());
         event.preventDefault();
       } else if (isRedo(event)) {
-        this.model.redo();
-        this.reportChange();
+        this.redo();
         event.preventDefault();
       } else if (isUndo(event)) {
-        this.model.undo();
-        this.reportChange();
+        this.undo();
         event.preventDefault();
       } else {
         // catch rest in key press handler which handles all text appending
@@ -1101,12 +1144,10 @@ export class MarkdownInputComponent implements OnInit, ControlValueAccessor {
     element.addEventListener('keypress', (event: KeyboardEvent) => {
 
       if (event.keyCode === keyCodes.enter) {
-        this.model.insertNewParagraph();
-        this.reportChange();
+        this.reportChange(() => this.model.insertNewParagraph());
         event.preventDefault();
       } else if (event.charCode) {
-        this.model.insertChar(event.key);
-        this.reportChange();
+        this.reportChange(() => this.model.insertChar(event.key));
         event.preventDefault();
       }
     });
@@ -1137,14 +1178,12 @@ export class MarkdownInputComponent implements OnInit, ControlValueAccessor {
     });
 
     element.addEventListener('paste', (event: ClipboardEvent) => {
-      this.model.paste(event.clipboardData.getData('Text'));
-      this.reportChange();
+      this.reportChange(() => this.model.paste(event.clipboardData.getData('Text')));
       event.preventDefault();
     });
 
     element.addEventListener('cut', (event: ClipboardEvent) => {
-      event.clipboardData.setData('text/plain', this.model.cut());
-      this.reportChange();
+      this.reportChange(() => event.clipboardData.setData('text/plain', this.model.cut()));
       event.preventDefault();
     });
   }
@@ -1166,17 +1205,89 @@ export class MarkdownInputComponent implements OnInit, ControlValueAccessor {
   }
 
   link() {
-    this.model.link(prompt('target') || 'dummy');
-    this.reportChange();
+    this.reportChange(() => this.model.link(prompt('target') || 'dummy'));
   }
 
   unlink() {
-    this.model.unlink();
-    this.reportChange();
+    this.reportChange(() => this.model.unlink());
   }
 
-  private reportChange() {
+  undo() {
+    if (this.undoStack.length > 1) {
+      this.pushUndoIfChanged(false);
+      // current state is at the top the stack
+      this.redoStack.push(this.undoStack.pop()!);
+      const {markdown, cursorOffset} = this.undoStack[this.undoStack.length - 1];
+      this.resetModel(markdown, cursorOffset);
+      this.propagateChange(markdown);
+    }
+  }
+
+  redo() {
+
+    if (this.undoDebounceTimeoutHandle) {
+      this.pushUndoIfChanged(true);
+    }
+
+    if (this.redoStack.length > 0) {
+      const historyItem = this.redoStack.pop()!;
+      this.undoStack.push(historyItem);
+      this.resetModel(historyItem.markdown, historyItem.cursorOffset);
+      this.propagateChange(historyItem.markdown);
+    }
+  }
+
+  private pushUndoIfChanged(resetRedo: boolean) {
+
+    if (this.undoDebounceTimeoutHandle) {
+      clearTimeout(this.undoDebounceTimeoutHandle);
+      this.undoDebounceTimeoutHandle = null;
+    }
+
+    const historyItem = { markdown: this.model.toMarkdown(), cursorOffset: this.model.cursorOffset };
+    const topOfStack = this.undoStack.length > 0 ? this.undoStack[this.undoStack.length - 1] : null;
+
+    if (!topOfStack || topOfStack.markdown !== historyItem.markdown) {
+
+      this.undoStack.push(historyItem);
+
+      if (resetRedo) {
+        this.redoStack = [];
+      }
+    }
+  }
+
+  private undoDebounce() {
+
+    const debounceTime = 500;
+
+    if (this.undoDebounceTimeoutHandle) {
+      clearTimeout(this.undoDebounceTimeoutHandle);
+    }
+
+    this.undoDebounceTimeoutHandle = setTimeout(() => this.pushUndoIfChanged(true), debounceTime);
+  }
+
+  private reportChange(modifyingAction: () => void) {
+
+    if (!this.undoDebounceTimeoutHandle) {
+      // do an initial push
+      this.pushUndoIfChanged(true);
+    }
+
+    this.undoDebounce();
+    modifyingAction();
     this.propagateChange(this.model.toMarkdown());
+  }
+
+  private resetModel(markdown: string, cursorOffset?: number) {
+
+    const element = this.editableElement.nativeElement as HTMLElement;
+    this.model = Model.ofMarkdown(element, new Parser().parse(markdown));
+
+    if (cursorOffset) {
+      this.model.moveCursorToOffset(cursorOffset);
+    }
   }
 
   writeValue(obj: any): void {
@@ -1187,8 +1298,10 @@ export class MarkdownInputComponent implements OnInit, ControlValueAccessor {
       throw new Error('Value must be a string');
     }
 
-    const element = this.editableElement.nativeElement as HTMLElement;
-    this.model = Model.ofMarkdown(element, new Parser().parse(value));
+    this.undoStack = [];
+    this.redoStack = [];
+
+    this.resetModel(value);
   }
 
   registerOnChange(fn: any): void {
