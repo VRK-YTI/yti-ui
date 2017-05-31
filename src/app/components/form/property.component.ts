@@ -9,7 +9,10 @@ import { EditableService } from '../../services/editable.service';
     <dl *ngIf="show">
       <dt><label [for]="property.meta.id">{{property.meta.label | translateValue}}</label></dt>
       <dd [ngSwitch]="property.meta.type.type">
-        <localized-input *ngSwitchCase="'localizable'" [property]="property" [relatedConcepts]="relatedConcepts"></localized-input>
+        <localized-input *ngSwitchCase="'localizable'" 
+                         [property]="property"
+                         [conceptSelector]="conceptSelector"
+                         [relatedConcepts]="relatedConcepts"></localized-input>
         <literal-input *ngSwitchCase="'string'" [property]="property"></literal-input>
         <status-input *ngSwitchCase="'status'" [property]="property"></status-input>
         <span *ngSwitchDefault>ERROR - unknown property type</span>
@@ -20,6 +23,7 @@ import { EditableService } from '../../services/editable.service';
 export class PropertyComponent {
 
   @Input('value') property: Property;
+  @Input() conceptSelector: (name: string) => Promise<ConceptNode>;
   @Input() relatedConcepts: ConceptNode[] = [];
 
   constructor(private editableService: EditableService) {

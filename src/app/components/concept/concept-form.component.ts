@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { ConceptNode } from '../../entities/node';
 import { EditableService } from '../../services/editable.service';
+import { SearchConceptModalService } from './search-concept.modal';
 
 @Component({
   selector: 'concept-form',
@@ -16,7 +17,8 @@ import { EditableService } from '../../services/editable.service';
       <property *ngFor="let property of concept | properties: showEmpty"
                 class="col-md-12" 
                 [class.col-xl-6]="multiColumn && property.multiColumn" 
-                [value]="property" 
+                [value]="property"
+                [conceptSelector]="conceptSelector"
                 [relatedConcepts]="relatedConcepts"></property>
       
       <reference *ngFor="let reference of concept | references: showEmpty : ['prefLabelXl']" 
@@ -35,7 +37,10 @@ export class ConceptFormComponent {
   @Input() concept: ConceptNode;
   @Input() multiColumn = false;
 
-  constructor(private editableService: EditableService) {
+  conceptSelector = (name: string) => this.searchConceptModalService.openForGraph(this.concept.graphId, name);
+
+  constructor(private editableService: EditableService,
+              private searchConceptModalService: SearchConceptModalService) {
   }
 
   get relatedConcepts(): ConceptNode[] {

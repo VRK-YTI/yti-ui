@@ -61,7 +61,8 @@ export class MarkdownLinksElementComponent {
 
   private getTargetConceptNode(node: MarkdownNode): ConceptNode|null {
     // FIXME: proper mapping
-    return first(this.relatedConcepts, concept => isDefined(concept.code) && node.destination.indexOf(concept.code) !== -1);
+    return first(this.relatedConcepts, concept => isDefined(concept.code) &&
+      (node.destination.indexOf(concept.code) !== -1) || node.destination.indexOf(concept.id) !== -1);
   }
 
   link(node: MarkdownNode) {

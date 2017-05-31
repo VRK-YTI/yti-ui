@@ -7,6 +7,8 @@ import { insertBefore, nextOf, nextOfMapped, previousOf, previousOfMapped, remov
 import { children } from '../../utils/markdown';
 import { wordAtOffset } from '../../utils/string';
 import { isDefined, requireDefined } from '../../utils/object';
+import { ConceptNode } from '../../entities/node';
+import { isModalClose } from '../../utils/modal';
 
 class Model {
 
@@ -1072,14 +1074,14 @@ function isRemoveRestOfLine(event: KeyboardEvent) {
   template: `
     
     <div *ngIf="hasLinkableSelection()" class="action">
-      <span class="btn btn-default" (mousedown)="handleBlur = false" (click)="link()" ngbTooltip="{{'Link' | translate}}" [placement]="'left'">
+      <span class="btn btn-default" (click)="link()" ngbTooltip="{{'Link' | translate}}" [placement]="'left'">
         <i class="fa fa-link"></i>
       </span>
       <span class="content">{{linkableSelection.content}}</span>
     </div>
 
     <div *ngIf="hasLinkedSelection()" class="action">
-      <span class="btn btn-default" (mousedown)="handleBlur = false" (click)="unlink()" ngbTooltip="{{'Unlink' | translate}}" [placement]="'left'">
+      <span class="btn btn-default" (click)="unlink()" ngbTooltip="{{'Unlink' | translate}}" [placement]="'left'">
         <i class="fa fa-unlink"></i>
       </span>
       <span class="content">{{linkedSelection.content}}</span>
@@ -1090,6 +1092,9 @@ function isRemoveRestOfLine(event: KeyboardEvent) {
 })
 export class MarkdownInputComponent implements OnInit, ControlValueAccessor {
 
+  @Input() conceptSelector: (name: string) => Promise<ConceptNode>;
+  @Input() relatedConcepts: ConceptNode[];
+
   @Input('formControlClass') formControl = true;
   @ViewChild('editable') editableElement: ElementRef;
 
@@ -1097,7 +1102,7 @@ export class MarkdownInputComponent implements OnInit, ControlValueAccessor {
   private undoStack: { markdown: string, cursorOffset: number }[] = [];
   private redoStack: { markdown: string, cursorOffset: number }[] = [];
 
-  private handleBlur = false;
+  linkingInProgress = false;
   private propagateChange: (fn: any) => void = () => {};
   private propagateTouched: (fn: any) => void = () => {};
 
@@ -1170,10 +1175,8 @@ export class MarkdownInputComponent implements OnInit, ControlValueAccessor {
 
     element.addEventListener('blur', () => {
 
-      this.handleBlur = true;
-
       setTimeout(() => {
-        if (this.handleBlur) {
+        if (!this.linkingInProgress) {
           this.model.removeLinkSelections();
         }
       }, 200);
@@ -1196,6 +1199,11 @@ export class MarkdownInputComponent implements OnInit, ControlValueAccessor {
   }
 
   hasLinkableSelection() {
+
+    if (!this.conceptSelector) {
+      return false;
+    }
+
     return this.model.linkableSelection !== null;
   }
 
@@ -1212,7 +1220,21 @@ export class MarkdownInputComponent implements OnInit, ControlValueAccessor {
   }
 
   link() {
-    this.reportChange(() => this.model.link(prompt('target') || 'dummy'));
+    this.linkingInProgress = true;
+
+    this.conceptSelector(this.linkableSelection.content)
+      .then(concept => {
+        this.reportChange(() => {
+          this.model.link(concept.id);
+          this.linkingInProgress = false;
+        });
+      }, err => {
+        this.linkingInProgress = false;
+
+        if (!isModalClose(err)) {
+          throw err;
+        }
+      });
   }
 
   unlink() {

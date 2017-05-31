@@ -47,6 +47,8 @@ import { Attribute } from '../../entities/node-api';
                                 validateLocalization
                                 [(ngModel)]="localization.value"
                                 [formControlClass]="false"
+                                [conceptSelector]="conceptSelector"
+                                [relatedConcepts]="relatedConcepts"
                                 #ngModel="ngModel"></markdown-input>
                
                 <error-messages [control]="ngModel.control"></error-messages>
@@ -71,6 +73,7 @@ import { Attribute } from '../../entities/node-api';
 export class LocalizedInputComponent {
 
   @Input() property: Property;
+  @Input() conceptSelector: (name: string) => Promise<ConceptNode>;
   @Input() relatedConcepts: ConceptNode[];
 
   @ViewChildren('ngModel') ngModel: QueryList<NgModel>;

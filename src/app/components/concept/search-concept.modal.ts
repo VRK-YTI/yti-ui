@@ -16,19 +16,21 @@ export class SearchConceptModalService {
   constructor(private modalService: NgbModal) {
   }
 
-  openForGraph(graphId: string): Promise<any> {
+  openForGraph(graphId: string, initialSearch = ''): Promise<ConceptNode> {
     const modalRef = this.modalService.open(SearchConceptModal, { size: 'lg' });
     const instance = modalRef.componentInstance as SearchConceptModal;
     instance.graphId = graphId;
     instance.mode = 'include';
+    instance.initialSearch = initialSearch;
     return modalRef.result;
   }
 
-  openOtherThanGraph(graphId: string): Promise<any> {
+  openOtherThanGraph(graphId: string, initialSearch = ''): Promise<ConceptNode> {
     const modalRef = this.modalService.open(SearchConceptModal, { size: 'lg' });
     const instance = modalRef.componentInstance as SearchConceptModal;
     instance.graphId = graphId;
     instance.mode = 'exclude';
+    instance.initialSearch = initialSearch;
     return modalRef.result;
   }
 }
@@ -111,6 +113,7 @@ export class SearchConceptModal implements OnInit, AfterViewInit {
 
   @Input() mode: Mode;
   @Input() graphId: string;
+  @Input() initialSearch: string;
 
   searchResults$ = new BehaviorSubject<IndexedConcept[]>([]);
 
@@ -136,6 +139,8 @@ export class SearchConceptModal implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+
+    this.search = this.initialSearch;
 
     const initialSearch = this.search$.take(1);
     const debouncedSearch = this.search$.skip(1).debounceTime(500);
