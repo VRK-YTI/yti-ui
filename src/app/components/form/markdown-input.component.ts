@@ -852,7 +852,7 @@ class Selection {
 
   remove(): Point|null {
 
-    if (this.isRange()) {
+    if (!this.isRange()) {
       return this.start;
     }
 
