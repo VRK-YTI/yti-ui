@@ -1,4 +1,4 @@
-import { Component, ElementRef, forwardRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, forwardRef, Input, OnInit, ViewChild } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
 import { Node as MarkdownNode, Parser } from 'commonmark';
@@ -973,10 +973,12 @@ function isRemoveRestOfLine(event: KeyboardEvent) {
       <span class="content">{{linkedSelection.content}}</span>
     </div>
       
-    <div #editable contenteditable="true"></div>
+    <div #editable contenteditable="true" [class.form-control]="formControl"></div>
   `
 })
 export class MarkdownInputComponent implements OnInit, ControlValueAccessor {
+
+  @Input('formControlClass') formControl = true;
 
   model: Model;
   handleBlur = false;

@@ -1,6 +1,11 @@
 @import '../../../_variables';
 
 :host /deep/ {
+
+  display: inline-block;
+  position: relative;
+  width: 100%;
+
   span.link {
     color: $link-color;
   }
@@ -21,9 +26,9 @@
 
   position: absolute;
   display: inline-block;
-  width: calc(100% - 83px);
-  top: -4px;
-  left: 15px;
+  width: 100%;
+  top: -34px;
+  right: 0;
 
   .btn {
     float: right;

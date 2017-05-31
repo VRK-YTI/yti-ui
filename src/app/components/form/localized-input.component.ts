@@ -46,6 +46,7 @@ import { Attribute } from '../../entities/node-api';
                 <markdown-input [id]="property.meta.id + localization.lang"
                                 validateLocalization
                                 [(ngModel)]="localization.value"
+                                [formControlClass]="false"
                                 #ngModel="ngModel"></markdown-input>
                
                 <error-messages [control]="ngModel.control"></error-messages>
