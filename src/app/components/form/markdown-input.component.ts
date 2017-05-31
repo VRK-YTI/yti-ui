@@ -44,6 +44,10 @@ class Model {
     this.node.insertBefore(newParagraph.node, ref.node);
   }
 
+  has(paragraph: Paragraph) {
+    return this.content.indexOf(paragraph) !== -1;
+  }
+
   insertNewParagraph() {
 
     const selection = requireDefined(this.getSelection());
@@ -913,7 +917,10 @@ class Selection {
       const endParagraph = this.end.text.containingParagraph;
       const pointAfterRemoval = this.start.text.removeAfter(this.start.offset);
       this.end.text.removeBefore(this.end.offset);
-      startParagraph.combineWith(endParagraph);
+
+      if (this.model.has(startParagraph) && this.model.has(endParagraph)) {
+        startParagraph.combineWith(endParagraph);
+      }
 
       return pointAfterRemoval;
     } else {
