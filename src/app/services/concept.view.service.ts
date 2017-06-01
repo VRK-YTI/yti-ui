@@ -273,6 +273,8 @@ export class ConceptHierarchyModel {
 
       this.elasticSearchService.getNarrowerConcepts(concept.vocabulary.id, concept.id)
         .subscribe(concepts => subject.next(concepts));
+    } else {
+      this.nodes.get(concept.id)!.expanded = true;
     }
   }
 
