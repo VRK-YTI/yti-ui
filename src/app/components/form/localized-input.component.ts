@@ -73,7 +73,7 @@ import { Attribute } from '../../entities/node-api';
 export class LocalizedInputComponent {
 
   @Input() property: Property;
-  @Input() conceptSelector: (name: string) => Promise<ConceptNode>;
+  @Input() conceptSelector: (name: string) => Promise<ConceptNode|null>;
   @Input() relatedConcepts: ConceptNode[];
 
   @ViewChildren('ngModel') ngModel: QueryList<NgModel>;

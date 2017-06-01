@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-06-01 18:01+0300\n"
+"PO-Revision-Date: 2017-06-01 18:51+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -98,6 +98,19 @@ msgid "All vocabularies"
 msgstr ""
 
 msgid "Select concept"
+msgstr ""
+
+msgid "Choose reference type"
+msgstr ""
+
+msgid ""
+"Selected concept is not yet formally referenced. Choose the reference type."
+msgstr ""
+
+msgid "Reference type"
+msgstr ""
+
+msgid "Select reference"
 msgstr ""
 
 msgid "Cancel edit"

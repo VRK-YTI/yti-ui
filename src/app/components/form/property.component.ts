@@ -23,7 +23,7 @@ import { EditableService } from '../../services/editable.service';
 export class PropertyComponent {
 
   @Input('value') property: Property;
-  @Input() conceptSelector: (name: string) => Promise<ConceptNode>;
+  @Input() conceptSelector: (name: string) => Promise<ConceptNode|null>;
   @Input() relatedConcepts: ConceptNode[] = [];
 
   constructor(private editableService: EditableService) {

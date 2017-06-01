@@ -1093,7 +1093,7 @@ function isRemoveRestOfLine(event: KeyboardEvent) {
 })
 export class MarkdownInputComponent implements OnInit, ControlValueAccessor {
 
-  @Input() conceptSelector: (name: string) => Promise<ConceptNode>;
+  @Input() conceptSelector: (name: string) => Promise<ConceptNode|null>;
   @Input() relatedConcepts: ConceptNode[];
 
   @Input('formControlClass') formControl = true;
@@ -1239,18 +1239,14 @@ export class MarkdownInputComponent implements OnInit, ControlValueAccessor {
   link() {
     this.linkingInProgress = true;
 
-    this.conceptSelector(this.linkableSelection.content)
-      .then(concept => {
-        this.reportChange(() => this.model.link(concept.id));
-        this.linkingInProgress = false;
-        this.focusEditor();
-      }, err => {
-        this.linkingInProgress = false;
-        this.focusEditor();
+    this.conceptSelector(this.linkableSelection.content).then(concept => {
 
-        if (!isModalClose(err)) {
-          throw err;
+        if (concept) {
+          this.reportChange(() => this.model.link(concept.id));
         }
+
+        this.linkingInProgress = false;
+        this.focusEditor();
       });
   }
 

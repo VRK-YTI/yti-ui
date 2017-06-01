@@ -2,7 +2,8 @@ import { Component, Input } from '@angular/core';
 import { ConceptNode } from '../../entities/node';
 import { EditableService } from '../../services/editable.service';
 import { SearchConceptModalService } from './search-concept.modal';
-import { flatten } from '../../utils/array';
+import { SelectConceptReferenceModalService } from './select-concept-reference.modal';
+import { ignoreModalClose, isModalClose } from '../../utils/modal';
 
 @Component({
   selector: 'concept-form',
@@ -20,7 +21,7 @@ import { flatten } from '../../utils/array';
                 [class.col-xl-6]="multiColumn && property.multiColumn" 
                 [value]="property"
                 [conceptSelector]="conceptSelector"
-                [relatedConcepts]="relatedConcepts"></property>
+                [relatedConcepts]="concept.referencedConcepts"></property>
       
       <reference *ngFor="let reference of concept | references: showEmpty : ['prefLabelXl']" 
                  class="col-md-12" 
@@ -38,21 +39,35 @@ export class ConceptFormComponent {
   @Input() concept: ConceptNode;
   @Input() multiColumn = false;
 
-  conceptSelector = (name: string) => this.searchConceptModalService.openForGraph(this.concept.graphId, name);
+  conceptSelector = (name: string) => this.selectConcept(name);
 
   constructor(private editableService: EditableService,
-              private searchConceptModalService: SearchConceptModalService) {
-  }
-
-  get relatedConcepts(): ConceptNode[] {
-    return flatten(
-      Object.values(this.concept.references)
-        .filter(ref => ref.type === 'Concept')
-        .map(ref => ref.values)
-    );
+              private searchConceptModalService: SearchConceptModalService,
+              private selectConceptReferenceModalService: SelectConceptReferenceModalService) {
   }
 
   get showEmpty() {
     return this.editableService.editing;
+  }
+
+  selectConcept(name: string): Promise<ConceptNode|null> {
+    return this.searchConceptModalService.openForGraph(this.concept.graphId, name)
+      .then(concept => {
+        if (!this.concept.hasConceptReference(concept.id)) {
+          return this.selectConceptReferenceModalService.open(this.concept)
+            .then(reference => {
+              reference.values.push(concept);
+              return concept;
+            }, ignoreModalClose)
+        } else {
+          return concept;
+        }
+      }, err => {
+        if (isModalClose(err)) {
+          return null;
+        } else {
+          throw new Error(err);
+        }
+      });
   }
 }

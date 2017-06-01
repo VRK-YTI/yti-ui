@@ -1,6 +1,6 @@
 import { asLocalizable, Localizable, combineLocalizables, Localization } from './localization';
 import { requireDefined, assertNever } from '../utils/object';
-import { normalizeAsArray, any, requireSingle, all, remove } from '../utils/array';
+import { normalizeAsArray, any, requireSingle, all, remove, flatten } from '../utils/array';
 import { NodeExternal, NodeType, Attribute, Identifier, NodeInternal, VocabularyNodeType } from './node-api';
 import {
   PropertyMeta, ReferenceMeta, NodeMeta, MetaModel, LocalizableProperty, StringProperty,
@@ -590,6 +590,18 @@ export class ConceptNode extends Node<'Concept'> {
 
   get terms(): Reference<TermNode> {
     return this.references['prefLabelXl'];
+  }
+
+  get referencedConcepts(): ConceptNode[] {
+    return flatten(
+      Object.values(this.references)
+        .filter(ref => ref.type === 'Concept')
+        .map(ref => ref.values)
+    );
+  }
+
+  hasConceptReference(conceptId: string) {
+    return any(this.referencedConcepts, c => c.id === conceptId);
   }
 
   setPrimaryLabel(language: string, value: string) {

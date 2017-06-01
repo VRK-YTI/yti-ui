@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-06-01 18:00+0300\n"
+"PO-Revision-Date: 2017-06-01 18:51+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -99,6 +99,21 @@ msgstr "Kaikki sanastot"
 
 msgid "Select concept"
 msgstr "Valitse käsite"
+
+msgid "Choose reference type"
+msgstr "Valitse viittauksen tyyppi"
+
+msgid ""
+"Selected concept is not yet formally referenced. Choose the reference type."
+msgstr ""
+"Valittuun käsitteeseen ei ole vielä formaalia viittausta. Valitse viitteen "
+"tyyppi."
+
+msgid "Reference type"
+msgstr "Viitteen tyyppi"
+
+msgid "Select reference"
+msgstr "Valitse viite"
 
 msgid "Cancel edit"
 msgstr "Peruuta muokkaus"

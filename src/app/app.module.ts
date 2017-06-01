@@ -81,6 +81,10 @@ import {
   MarkdownInputLinkPopoverComponent,
   MarkdownInputUnlinkPopoverComponent
 } from './components/form/markdown-input-popover.component';
+import {
+  SelectConceptReferenceModal,
+  SelectConceptReferenceModalService
+} from './components/concept/select-concept-reference.modal';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json-loader!po-loader?format=mf!../../po/fi.po'),
@@ -163,6 +167,7 @@ const appRoutes: Routes = [
     DeleteConfirmationModal,
     ErrorModal,
     ConfirmationModal,
+    SelectConceptReferenceModal,
     MetaModelValidator,
     LanguageValidator,
     LocalizationValidator,
@@ -180,7 +185,8 @@ const appRoutes: Routes = [
     SearchConceptModal,
     DeleteConfirmationModal,
     ErrorModal,
-    ConfirmationModal
+    ConfirmationModal,
+    SelectConceptReferenceModal,
   ],
   imports: [
     BrowserModule,
@@ -203,6 +209,7 @@ const appRoutes: Routes = [
     DeleteConfirmationModalService,
     ErrorModalService,
     ConfirmationModalService,
+    SelectConceptReferenceModalService,
     SessionService,
     ElasticSearchService,
     ConfirmCancelEditGuard,
