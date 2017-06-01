@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Reference, ConceptNode } from '../../entities/node';
 import { EditableService } from '../../services/editable.service';
 import { SearchConceptModalService } from './search-concept.modal';
@@ -31,6 +31,7 @@ import { ignoreModalClose } from '../../utils/modal';
 export class ConceptReferenceInputComponent {
 
   @Input('concept') conceptReference: Reference<ConceptNode>;
+  @Output('conceptRemove') conceptRemove = new EventEmitter<ConceptNode>();
 
   constructor(private editableService: EditableService,
               private searchConceptModal: SearchConceptModalService) {
@@ -42,6 +43,7 @@ export class ConceptReferenceInputComponent {
 
   removeReference(concept: ConceptNode) {
     remove(this.conceptReference.values, concept);
+    this.conceptRemove.next(concept);
   }
 
   addReference() {

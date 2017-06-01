@@ -1,5 +1,5 @@
-import { Component, Input } from '@angular/core';
-import { Reference } from '../../entities/node';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ConceptNode, Reference } from '../../entities/node';
 import { EditableService } from '../../services/editable.service';
 
 @Component({
@@ -17,7 +17,7 @@ import { EditableService } from '../../services/editable.service';
 
           <synonyms *ngSwitchCase="'Synonym'" [value]="reference" [multiColumn]="multiColumnTerms"></synonyms>
 
-          <concept-reference-input *ngSwitchCase="'Concept'" [concept]="reference"></concept-reference-input>
+          <concept-reference-input *ngSwitchCase="'Concept'" [concept]="reference" (conceptRemove)="conceptRemove.next($event)"></concept-reference-input>
 
           <concept-link-reference-input *ngSwitchCase="'ConceptLink'" [concept]="reference"></concept-link-reference-input>
           
@@ -41,8 +41,13 @@ export class ReferenceComponent {
   @Input('value') reference: Reference<any>;
   @Input() unsaved: boolean;
   @Input() multiColumnTerms = false;
+  @Output() conceptRemove = new EventEmitter<ConceptNode>();
 
   constructor(private editableService: EditableService) {
+  }
+
+  onConceptRemove(concept: ConceptNode) {
+    this.conceptRemove.next(concept);
   }
 
   get show() {

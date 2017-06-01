@@ -8,7 +8,6 @@ import { children } from '../../utils/markdown';
 import { wordAtOffset } from '../../utils/string';
 import { isDefined, requireDefined } from '../../utils/object';
 import { ConceptNode } from '../../entities/node';
-import { isModalClose } from '../../utils/modal';
 
 class Model {
 
@@ -1226,10 +1225,7 @@ export class MarkdownInputComponent implements OnInit, ControlValueAccessor {
   }
 
   get linkedConcept(): ConceptNode|null {
-    // FIXME: proper mapping
-    const target = this.linkedSelection.target;
-    return first(this.relatedConcepts, concept => (isDefined(concept.code) &&
-      (target.indexOf(concept.code) !== -1)) || target.indexOf(concept.id) !== -1);
+    return first(this.relatedConcepts, concept => concept.isTargetOfLink(this.linkedSelection.target));
   }
 
   focusEditor() {

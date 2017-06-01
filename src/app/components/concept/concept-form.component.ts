@@ -28,6 +28,7 @@ import { ignoreModalClose, isModalClose } from '../../utils/modal';
                  [class.col-xl-6]="multiColumn && !reference.term"
                  [multiColumnTerms]="multiColumn"
                  [unsaved]="!concept.persistent"
+                 (conceptRemove)="onConceptRemove($event)"
                  [value]="reference"></reference>
     </div>
 
@@ -48,6 +49,10 @@ export class ConceptFormComponent {
 
   get showEmpty() {
     return this.editableService.editing;
+  }
+
+  onConceptRemove(concept: ConceptNode) {
+    this.concept.removeMarkdownReferences(concept);
   }
 
   selectConcept(name: string): Promise<ConceptNode|null> {

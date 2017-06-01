@@ -1,5 +1,5 @@
 import { asLocalizable, Localizable, combineLocalizables, Localization } from './localization';
-import { requireDefined, assertNever } from '../utils/object';
+import { requireDefined, assertNever, isDefined } from '../utils/object';
 import { normalizeAsArray, any, requireSingle, all, remove, flatten } from '../utils/array';
 import { NodeExternal, NodeType, Attribute, Identifier, NodeInternal, VocabularyNodeType } from './node-api';
 import {
@@ -9,6 +9,8 @@ import {
 import { Moment } from 'moment';
 import * as moment from 'moment';
 import { getOrCreate } from '../utils/map';
+import { Parser, Node as MarkdownNode } from 'commonmark';
+import { children } from '../utils/markdown';
 
 export type KnownNode = VocabularyNode
                       | ConceptNode
@@ -564,6 +566,11 @@ export class ConceptNode extends Node<'Concept'> {
     }
   }
 
+  isTargetOfLink(link: string) {
+    // FIXME: proper mapping
+    return (isDefined(this.code) && (link.indexOf(this.code) !== -1)) || link.indexOf(this.id) !== -1;
+  }
+
   get definition(): Localizable {
     return this.getPropertyAsLocalizable('definition');
   }
@@ -590,6 +597,54 @@ export class ConceptNode extends Node<'Concept'> {
 
   get terms(): Reference<TermNode> {
     return this.references['prefLabelXl'];
+  }
+
+  get localizableMarkdownProperties(): Property[] {
+    return Object.values(this.properties).filter(p => p.meta.type.type === 'localizable' && p.meta.type.editorType === 'markdown');
+  }
+
+  removeMarkdownReferences(concept: ConceptNode) {
+    for (const property of this.localizableMarkdownProperties) {
+      for (const localization of property.attributes) {
+        localization.value = this.removeReferencesTo(localization.value, concept);
+      }
+    }
+  }
+
+  // TODO: unify with other markdown printing algorithms
+  removeReferencesTo(localization: string, concept: ConceptNode): string {
+
+    let result = '';
+    let referenceRemoved = false;
+
+    const visit = (node: MarkdownNode) => {
+
+      switch (node.type) {
+        case 'paragraph':
+          result += '\n\n';
+          break;
+        case 'link':
+          if (concept.isTargetOfLink(node.destination)) {
+            result += node.firstChild.literal;
+            referenceRemoved = true;
+          } else {
+            result += `[${node.firstChild.literal}](${node.destination})`;
+          }
+          return;
+      }
+
+      if (node.literal) {
+        result += node.literal;
+      }
+
+      for (const child of children(node)) {
+        visit(child);
+      }
+    };
+
+    visit(new Parser().parse(localization));
+
+    return referenceRemoved ? result : localization;
   }
 
   get referencedConcepts(): ConceptNode[] {
