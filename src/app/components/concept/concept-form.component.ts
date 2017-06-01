@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { ConceptNode } from '../../entities/node';
 import { EditableService } from '../../services/editable.service';
 import { SearchConceptModalService } from './search-concept.modal';
+import { flatten } from '../../utils/array';
 
 @Component({
   selector: 'concept-form',
@@ -44,7 +45,11 @@ export class ConceptFormComponent {
   }
 
   get relatedConcepts(): ConceptNode[] {
-    return [...this.concept.relatedConcepts.values, ...this.concept.broaderConcepts.values];
+    return flatten(
+      Object.values(this.concept.references)
+        .filter(ref => ref.type === 'Concept')
+        .map(ref => ref.values)
+    );
   }
 
   get showEmpty() {
