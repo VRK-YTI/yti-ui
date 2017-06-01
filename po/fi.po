@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-06-01 17:21+0300\n"
+"PO-Revision-Date: 2017-06-01 18:00+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -194,8 +194,8 @@ msgstr "uusi käsite"
 msgid "New collection"
 msgstr "uusi käsitevalikoima"
 
-msgid "Group"
-msgstr "Toimiala / Ryhmä"
+msgid "Organization"
+msgstr "Organisaatio"
 
 msgid "Front page"
 msgstr "Etusivu"
@@ -212,11 +212,11 @@ msgstr "Käytöstä poistunut"
 msgid "Suggestion"
 msgstr "Ehdotus"
 
+msgid "Group"
+msgstr "Toimiala / Ryhmä"
+
 msgid "Unstable"
 msgstr "Keskeneräinen"
-
-msgid "Organization"
-msgstr "Organisaatio"
 
 msgid "Submit error"
 msgstr "Toiminnossa tapahtui virhe"
@@ -234,11 +234,11 @@ msgstr ""
 "Oletko varma, että haluat jatkaa? Jatkaessasi tallentamattomat muutokset "
 "katoavat."
 
+msgid "Unlink"
+msgstr "Poista linkitys"
+
 msgid "Concept not in references"
 msgstr "Käsite ei löydy viitteistä"
-
-#~ msgid "Unlink"
-#~ msgstr "Poista linkitys"
 
 #~ msgid "Not implemented yet!"
 #~ msgstr "Ei vielä toteutettu!"
