@@ -112,7 +112,7 @@ msgstr ""
 msgid "Link"
 msgstr ""
 
-msgid "Unlink"
+msgid "Unlinked selected text"
 msgstr ""
 
 msgid "Remove term"
@@ -181,6 +181,9 @@ msgstr ""
 msgid "New collection"
 msgstr ""
 
+msgid "Group"
+msgstr ""
+
 msgid "Front page"
 msgstr ""
 
@@ -199,9 +202,6 @@ msgstr ""
 msgid "Unstable"
 msgstr ""
 
-msgid "Group"
-msgstr ""
-
 msgid "Organization"
 msgstr ""
 
@@ -217,4 +217,7 @@ msgstr ""
 msgid ""
 "Are you sure that you want to continue? By continuing unsaved changes will "
 "be lost."
+msgstr ""
+
+msgid "Concept not in references"
 msgstr ""

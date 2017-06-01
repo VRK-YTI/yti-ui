@@ -21,24 +21,3 @@
     }
   }
 }
-
-.action {
-
-  position: absolute;
-  display: inline-block;
-  width: 100%;
-  top: -34px;
-  right: 0;
-
-  .btn {
-    float: right;
-    font-size: 20px;
-    padding: 1px 5px;
-  }
-
-  .content {
-    float: right;
-    line-height: 29px;
-    padding-right: 10px;
-  }
-}

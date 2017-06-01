@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-05-30 20:57+0300\n"
+"PO-Revision-Date: 2017-06-01 17:21+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -121,7 +121,7 @@ msgstr ""
 msgid "Link"
 msgstr ""
 
-msgid "Unlink"
+msgid "Unlinked selected text"
 msgstr ""
 
 msgid "Remove term"
@@ -195,6 +195,9 @@ msgstr "new concept"
 msgid "New collection"
 msgstr "new collection"
 
+msgid "Group"
+msgstr ""
+
 msgid "Front page"
 msgstr ""
 
@@ -213,9 +216,6 @@ msgstr ""
 msgid "Unstable"
 msgstr ""
 
-msgid "Group"
-msgstr ""
-
 msgid "Organization"
 msgstr ""
 
@@ -231,4 +231,7 @@ msgstr ""
 msgid ""
 "Are you sure that you want to continue? By continuing unsaved changes will "
 "be lost."
+msgstr ""
+
+msgid "Concept not in references"
 msgstr ""

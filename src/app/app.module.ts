@@ -77,6 +77,10 @@ import { AjaxLoadingIndicatorSmallComponent } from './components/common/ajax-loa
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { ConceptLinkReferenceInputComponent } from './components/concept/concept-link-reference-input.component';
 import { MarkdownInputComponent } from './components/form/markdown-input.component';
+import {
+  MarkdownInputLinkPopoverComponent,
+  MarkdownInputUnlinkPopoverComponent
+} from './components/form/markdown-input-popover.component';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json-loader!po-loader?format=mf!../../po/fi.po'),
@@ -153,6 +157,8 @@ const appRoutes: Routes = [
     GroupInputComponent,
     OrganizationInputComponent,
     MarkdownInputComponent,
+    MarkdownInputLinkPopoverComponent,
+    MarkdownInputUnlinkPopoverComponent,
     SearchConceptModal,
     DeleteConfirmationModal,
     ErrorModal,

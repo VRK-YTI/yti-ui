@@ -1,0 +1,30 @@
+
+$offset: 46;
+
+:host {
+
+  padding: 15px 35px 10px 35px;
+  display: inline-block;
+  position: absolute;
+  left: #{-$offset}px;
+  width: calc(100% + #{$offset * 2}px);
+  min-height: 20px;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.popover {
+
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  max-width: 100%;
+  bottom: 11px;
+
+  .btn {
+    float: right;
+    font-size: 20px;
+    padding: 1px 5px;
+    margin-top: -7px;
+    margin-right: -13px;
+  }
+}

@@ -3,7 +3,7 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
 import { Node as MarkdownNode, Parser } from 'commonmark';
 import { DomPath, DomPoint, DomSelection, formatTextContent, moveCursor, removeChildren } from '../../utils/dom';
-import { insertBefore, nextOf, nextOfMapped, previousOf, previousOfMapped, remove } from '../../utils/array';
+import { insertBefore, nextOf, nextOfMapped, previousOf, previousOfMapped, remove, first } from '../../utils/array';
 import { children } from '../../utils/markdown';
 import { wordAtOffset } from '../../utils/string';
 import { isDefined, requireDefined } from '../../utils/object';
@@ -983,6 +983,10 @@ class LinkedSelection {
   get paragraph() {
     return this.link.paragraph;
   }
+
+  get target() {
+    return this.link.target;
+  }
 }
 
 const keyCodes = {
@@ -1073,22 +1077,17 @@ function isRemoveRestOfLine(event: KeyboardEvent) {
     useExisting: forwardRef(() => MarkdownInputComponent),
     multi: true
   }],
-  template: `
+  template: `    
+    <markdown-input-link-popover *ngIf="hasLinkableSelection()"
+                            [selectedText]="linkableSelection.content"
+                            (link)="link()">
+    </markdown-input-link-popover>
     
-    <div *ngIf="hasLinkableSelection()" class="action">
-      <span class="btn btn-default" (click)="link()" ngbTooltip="{{'Link' | translate}}" [placement]="'left'">
-        <i class="fa fa-link"></i>
-      </span>
-      <span class="content">{{linkableSelection.content}}</span>
-    </div>
-
-    <div *ngIf="hasLinkedSelection()" class="action">
-      <span class="btn btn-default" (click)="unlink()" ngbTooltip="{{'Unlink' | translate}}" [placement]="'left'">
-        <i class="fa fa-unlink"></i>
-      </span>
-      <span class="content">{{linkedSelection.content}}</span>
-    </div>
-      
+    <markdown-input-unlink-popover *ngIf="hasLinkedSelection()"
+                            [concept]="linkedConcept"
+                            (unlink)="unlink()">
+    </markdown-input-unlink-popover>
+    
     <div #editable contenteditable="true" [class.form-control]="formControl"></div>
   `
 })
@@ -1224,6 +1223,13 @@ export class MarkdownInputComponent implements OnInit, ControlValueAccessor {
 
   get linkedSelection() {
     return requireDefined(this.model.linkedSelection);
+  }
+
+  get linkedConcept(): ConceptNode|null {
+    // FIXME: proper mapping
+    const target = this.linkedSelection.target;
+    return first(this.relatedConcepts, concept => (isDefined(concept.code) &&
+      (target.indexOf(concept.code) !== -1)) || target.indexOf(concept.id) !== -1);
   }
 
   link() {
