@@ -1232,17 +1232,21 @@ export class MarkdownInputComponent implements OnInit, ControlValueAccessor {
       (target.indexOf(concept.code) !== -1)) || target.indexOf(concept.id) !== -1);
   }
 
+  focusEditor() {
+    (this.editableElement.nativeElement as HTMLElement).focus();
+  }
+
   link() {
     this.linkingInProgress = true;
 
     this.conceptSelector(this.linkableSelection.content)
       .then(concept => {
-        this.reportChange(() => {
-          this.model.link(concept.id);
-          this.linkingInProgress = false;
-        });
+        this.reportChange(() => this.model.link(concept.id));
+        this.linkingInProgress = false;
+        this.focusEditor();
       }, err => {
         this.linkingInProgress = false;
+        this.focusEditor();
 
         if (!isModalClose(err)) {
           throw err;
@@ -1252,6 +1256,7 @@ export class MarkdownInputComponent implements OnInit, ControlValueAccessor {
 
   unlink() {
     this.reportChange(() => this.model.unlink());
+    this.focusEditor();
   }
 
   undo() {
