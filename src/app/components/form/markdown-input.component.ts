@@ -988,6 +988,8 @@ class LinkedSelection {
 const keyCodes = {
   backspace: 8,
   enter: 13,
+  esc: 27,
+  space: 32,
   del: 46,
   a: 65,
   b: 66,
@@ -1158,6 +1160,11 @@ export class MarkdownInputComponent implements OnInit, ControlValueAccessor {
       if (event.keyCode === keyCodes.enter) {
         this.reportChange(() => this.model.insertNewParagraph());
         event.preventDefault();
+      } else if(event.keyCode === keyCodes.space) {
+        this.reportChange(() => this.model.insertChar(' '));
+        event.preventDefault();
+      } else if (event.charCode === keyCodes.esc) {
+        // nothing to do
       } else if (event.charCode) {
         this.reportChange(() => this.model.insertChar(event.key));
         event.preventDefault();
