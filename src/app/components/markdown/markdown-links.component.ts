@@ -43,7 +43,7 @@ export class MarkdownLinksComponent implements OnInit, AfterViewChecked {
       <ng-container *ngFor="let child of children" [ngSwitch]="child.type">
               
         <p *ngSwitchCase="'paragraph'" markdown-links-element [node]="child" [relatedConcepts]="relatedConcepts"></p>
-        <a *ngSwitchCase="'link'" [routerLink]="link(child)" [ngbPopover]="popContent" triggers="mouseenter:mouseleave">{{child.firstChild.literal}}</a>
+        <a *ngSwitchCase="'link'" [routerLink]="link(child)" [popoverTitle]="conceptLabel(child) | translateValue" [ngbPopover]="popContent" triggers="mouseenter:mouseleave">{{child.firstChild.literal}}</a>
         <span *ngSwitchCase="'text'">{{child.literal}}</span>
         
         <ng-template #popContent>
@@ -61,8 +61,9 @@ export class MarkdownLinksElementComponent {
 
   private getTargetConceptNode(node: MarkdownNode): ConceptNode|null {
     // FIXME: proper mapping
-    return first(this.relatedConcepts, concept => isDefined(concept.code) &&
-      (node.destination.indexOf(concept.code) !== -1) || node.destination.indexOf(concept.id) !== -1);
+    const target = node.destination;
+    return first(this.relatedConcepts, concept => (isDefined(concept.code) &&
+      (target.indexOf(concept.code) !== -1)) || target.indexOf(concept.id) !== -1);
   }
 
   link(node: MarkdownNode) {
@@ -74,12 +75,14 @@ export class MarkdownLinksElementComponent {
     }
   }
 
+  conceptLabel(node: MarkdownNode): Localizable|null {
+    const target = this.getTargetConceptNode(node);
+    return target ? target.label : null;
+  }
+
   conceptDefinition(node: MarkdownNode): Localizable|null {
     const target = this.getTargetConceptNode(node);
-    if (target) {
-      return target.getPropertyAsLocalizable('definition');
-    }
-    return null;
+    return target ? target.definition : null;
   }
 
   get children() {
