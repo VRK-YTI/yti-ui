@@ -1,5 +1,5 @@
 import {
-  AfterViewInit, Component, ElementRef, EventEmitter, Input, NgZone,
+  AfterViewInit, Component, ElementRef, EventEmitter, Input, NgZone, OnDestroy,
   Output
 } from '@angular/core';
 import { ConceptNode } from '../../entities/node';
@@ -24,16 +24,23 @@ import { ConceptNode } from '../../entities/node';
     </div>
   `
 })
-export class MarkdownInputLinkPopoverComponent implements AfterViewInit {
+export class MarkdownInputLinkPopoverComponent implements AfterViewInit, OnDestroy {
 
   @Input() selectedText: string;
   @Output() link = new EventEmitter<any>();
 
-  constructor(private element: ElementRef, private zone: NgZone) {
+  private positionRefresher: PopoverPositionRefresher;
+
+  constructor(element: ElementRef, zone: NgZone) {
+    this.positionRefresher = new PopoverPositionRefresher(zone, element);
   }
 
   ngAfterViewInit(): void {
-    new PopoverPositionSetter(this.zone, this.element).update();
+    this.positionRefresher.start();
+  }
+
+  ngOnDestroy(): void {
+    this.positionRefresher.stop();
   }
 }
 
@@ -56,43 +63,47 @@ export class MarkdownInputLinkPopoverComponent implements AfterViewInit {
     </div>
   `
 })
-export class MarkdownInputUnlinkPopoverComponent implements AfterViewInit {
+export class MarkdownInputUnlinkPopoverComponent implements AfterViewInit, OnDestroy {
 
   @Input() concept: ConceptNode;
   @Output() unlink = new EventEmitter<any>();
 
-  constructor(private element: ElementRef, private zone: NgZone) {
+  private positionRefresher: PopoverPositionRefresher;
+
+  constructor(element: ElementRef, zone: NgZone) {
+    this.positionRefresher = new PopoverPositionRefresher(zone, element);
   }
 
   ngAfterViewInit(): void {
-    new PopoverPositionSetter(this.zone, this.element).update();
+    this.positionRefresher.start();
+  }
+
+  ngOnDestroy(): void {
+    this.positionRefresher.stop();
   }
 }
 
-class PopoverPositionSetter {
+class PopoverPositionRefresher {
 
-  private timesUpdated = 0;
   private intervalHandle: any;
 
   constructor(private zone: NgZone, private element: ElementRef) {
   }
 
-  update() {
+  start() {
     this.updateTop();
-    this.intervalHandle = setInterval(() => this.updateTop(), 100);
+    this.zone.runOutsideAngular(() => {
+      this.intervalHandle = setInterval(() => this.updateTop(), 100);
+    });
+  }
+
+  stop() {
+    clearInterval(this.intervalHandle);
+    this.intervalHandle = null;
   }
 
   updateTop() {
-    this.zone.runOutsideAngular(() => {
-
-      if (this.timesUpdated > 20) {
-        clearInterval(this.intervalHandle);
-        this.intervalHandle = null;
-      }
-
-      this.timesUpdated++;
-      const element = this.element.nativeElement as HTMLElement;
-      element.style.top = '-' + (element.getBoundingClientRect().height + 2) + 'px';
-    });
+    const element = this.element.nativeElement as HTMLElement;
+    element.style.top = '-' + (element.getBoundingClientRect().height + 2) + 'px';
   }
 }
