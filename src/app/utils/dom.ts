@@ -1,9 +1,18 @@
 
 export class DomPoint {
 
-  public path = new DomPath(this.root, this.node);
+  private constructor(public node: Node, public offset: number, public path: DomPath) {
+  }
 
-  constructor(private root: Node, public node: Node, public offset: number) {
+  static create(root: Node, node: Node, offset: number): DomPoint|null {
+
+    const path = DomPath.create(root, node);
+
+    if (!path) {
+      return null;
+    }
+
+    return new DomPoint(node, offset, path);
   }
 }
 
@@ -12,12 +21,7 @@ export class DomSelection {
   public start: DomPoint;
   public end: DomPoint;
 
-  constructor(root: Node) {
-
-    const s = window.getSelection();
-
-    const anchor = new DomPoint(root, s.anchorNode, s.anchorOffset);
-    const focus = new DomPoint(root, s.focusNode, s.focusOffset);
+  private constructor(anchor: DomPoint, focus: DomPoint) {
 
     function compareDomPoints(a: DomPoint, b: DomPoint): number {
 
@@ -57,20 +61,46 @@ export class DomSelection {
     this.start = points[0];
     this.end = points[1];
   }
+
+  static create(root: Node): DomSelection|null {
+
+    const s = window.getSelection();
+
+    const anchor = DomPoint.create(root, s.anchorNode, s.anchorOffset);
+    const focus = DomPoint.create(root, s.focusNode, s.focusOffset);
+
+    if (!anchor || !focus) {
+      return null;
+    }
+
+    return new DomSelection(anchor, focus);
+  }
 }
 
 export class DomPath {
 
-  private path: { node: Node, index: number}[] = [];
+  private constructor(private path: { node: Node, index: number}[]) {
+  }
 
-  constructor(root: Node, public node: Node) {
+  static create(root: Node, node: Node): DomPath|null {
+
+    const path: { node: Node, index: number}[] = [];
 
     let walk = node;
 
     while (walk !== root) {
-      this.path.unshift({node: walk, index: indexInParent(walk)});
+
+      const index = indexInParent(walk);
+
+      if (index === null) {
+        return null;
+      }
+
+      path.unshift({node: walk, index});
       walk = walk.parentNode!;
     }
+
+    return new DomPath(path);
   }
 
   get indicesFromRoot() {
@@ -109,7 +139,12 @@ export function removeChildren(node: Node) {
   }
 }
 
-export function indexInParent(child: Node): number {
+function indexInParent(child: Node): number|null {
+
+  if (!child.parentNode) {
+    // TODO check why detached node can actually exist here
+    return null;
+  }
 
   const children = child.parentNode!.childNodes;
 

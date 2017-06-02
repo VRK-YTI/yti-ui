@@ -152,7 +152,8 @@ class Model {
   }
 
   getSelection(): Selection|null {
-    return Selection.ofDomSelection(this, new DomSelection(this.node));
+    const domSelection = DomSelection.create(this.node);
+    return domSelection ? Selection.ofDomSelection(this, domSelection) : null;
   }
 
   private static moveCursor(point: Point|null) {
@@ -980,7 +981,7 @@ class Selection {
   }
 
   toString() {
-    const createDomPath = (point: Point) => new DomPath(this.model.node, point.text.node);
+    const createDomPath = (point: Point) => requireDefined(DomPath.create(this.model.node, point.text.node));
     return `From ${createDomPath(this.start).toString()}(${this.start.offset}) to ${createDomPath(this.end).toString()}(${this.end.offset})`;
   }
 }
