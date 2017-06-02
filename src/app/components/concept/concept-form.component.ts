@@ -4,6 +4,7 @@ import { EditableService } from '../../services/editable.service';
 import { SearchConceptModalService } from './search-concept.modal';
 import { SelectConceptReferenceModalService } from './select-concept-reference.modal';
 import { ignoreModalClose, isModalClose } from '../../utils/modal';
+import { any } from '../../utils/array';
 
 @Component({
   selector: 'concept-form',
@@ -52,7 +53,12 @@ export class ConceptFormComponent {
   }
 
   onConceptRemove(concept: ConceptNode) {
-    this.concept.removeMarkdownReferences(concept);
+
+    const lastReferenceRemoved = !any(this.concept.referencedConcepts, ref => ref.id === concept.id);
+
+    if (lastReferenceRemoved) {
+      this.concept.removeMarkdownReferences(concept);
+    }
   }
 
   selectConcept(name: string): Promise<ConceptNode|null> {
