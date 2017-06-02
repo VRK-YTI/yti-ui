@@ -370,7 +370,14 @@ class Paragraph {
       const isSplittingText = content.text === fromText;
 
       if (isSplittingText) {
-        prependingParagraph.appendText(content.text.beforeOffset(fromOffset));
+
+        const beforeSplitPointContent = content.text.beforeOffset(fromOffset);
+
+        if (content instanceof Link) {
+          prependingParagraph.addContent(new Link(prependingParagraph, beforeSplitPointContent, content.target));
+        } else {
+          prependingParagraph.appendText(beforeSplitPointContent);
+        }
         content.content = content.text.afterOffset(fromOffset);
         break; // nothing to do after split point is handled
       }
