@@ -3,7 +3,10 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
 import { Node as MarkdownNode, Parser } from 'commonmark';
 import { DomPath, DomPoint, DomSelection, formatTextContent, moveCursor, removeChildren } from '../../utils/dom';
-import { insertBefore, nextOf, nextOfMapped, previousOf, previousOfMapped, remove, first } from '../../utils/array';
+import {
+  insertBefore, nextOf, nextOfMapped, previousOf, previousOfMapped, remove, first,
+  last, all
+} from '../../utils/array';
 import { children } from '../../utils/markdown';
 import { wordAtOffset } from '../../utils/string';
 import { isDefined, requireDefined } from '../../utils/object';
@@ -29,21 +32,21 @@ class Model {
     const result = new Model(container);
 
     for (const paragraphNode of children(documentNode)) {
-      result.addParagraph(Paragraph.ofMarkdown(result, paragraphNode));
+      result.appendParagraph(Paragraph.ofMarkdown(result, paragraphNode));
     }
 
     if (result.content.length === 0) {
       const newParagraph = new Paragraph(result);
       const newText = new Text(newParagraph);
       newParagraph.addContent(newText);
-      result.addParagraph(newParagraph);
+      result.appendParagraph(newParagraph);
       Model.moveCursor(new Point(newText, 0));
     }
 
     return result;
   }
 
-  private addParagraph(paragraph: Paragraph) {
+  private appendParagraph(paragraph: Paragraph) {
     this.content.push(paragraph);
     this.node.appendChild(paragraph.node);
   }
@@ -53,7 +56,7 @@ class Model {
     this.node.insertBefore(newParagraph.node, ref.node);
   }
 
-  has(paragraph: Paragraph) {
+  hasParagraph(paragraph: Paragraph) {
     return this.content.indexOf(paragraph) !== -1;
   }
 
@@ -333,7 +336,7 @@ class Paragraph {
       return null;
     }
 
-    const lastOfThis = this.content[this.content.length - 1];
+    const lastOfThis = last(this.content);
     const lastContentBeforeChanges = lastOfThis.text.content;
 
     let firstChild = true;
@@ -342,7 +345,7 @@ class Paragraph {
 
       if (firstChild && lastOfThis instanceof Text && content instanceof Text) {
 
-        if (lastOfThis.content.trim() !== '') {
+        if (!lastOfThis.hasEmptyContent()) {
           lastOfThis.append(content.content);
         } else {
           lastOfThis.content = content.content;
@@ -367,9 +370,8 @@ class Paragraph {
       const isSplittingText = content.text === fromText;
 
       if (isSplittingText) {
-        const contentText = content.content;
-        prependingParagraph.appendText(contentText.substring(0, fromOffset));
-        content.content = contentText.substring(fromOffset, fromText.length);
+        prependingParagraph.appendText(content.text.beforeOffset(fromOffset));
+        content.content = content.text.afterOffset(fromOffset);
         break; // nothing to do after split point is handled
       }
 
@@ -387,16 +389,11 @@ class Paragraph {
   }
 
   hasEmptyContent(): boolean {
-    return this.toMarkdown().trim() === '';
+    return all(this.content, c => c.hasEmptyContent());
   }
 
   get firstPoint(): Point {
     return new Point(this.firstText, 0);
-  }
-
-  get lastPoint(): Point {
-    const lastText = this.lastText;
-    return new Point(lastText, lastText.length);
   }
 
   appendText(text: string) {
@@ -509,11 +506,7 @@ class Paragraph {
   }
 
   get lastContent(): Text|Link {
-    if (this.content.length === 0) {
-      throw new Error('No content in paragraph');
-    }
-
-    return this.content[this.content.length - 1];
+    return last(this.content);
   }
 
   get lastText(): Text {
@@ -601,6 +594,10 @@ class Link {
     this.node.dataset['target'] = value;
   }
 
+  hasEmptyContent(): boolean {
+    return this.text.hasEmptyContent();
+  }
+
   remove(): void {
     this.parent.removeContent(this);
   }
@@ -685,6 +682,22 @@ class Text {
     return this.content.length;
   }
 
+  hasEmptyContent() {
+    return this.content.trim() === ''
+  }
+
+  beforeOffset(offset: number) {
+    return this.content.substring(0, offset);
+  }
+
+  afterOffset(offset: number) {
+    return this.content.substring(offset, this.content.length);
+  }
+
+  betweenOffsets(startOffset: number, endOffset: number) {
+    return this.content.substring(startOffset, endOffset);
+  }
+
   isInLink() {
     return this.parent instanceof Link;
   }
@@ -709,7 +722,7 @@ class Text {
 
   removeNextChar(offset: number): Point|null {
 
-    if (offset >= this.content.length) {
+    if (offset >= this.length) {
       const next = this.getFollowingText();
 
       if (next) {
@@ -746,7 +759,7 @@ class Text {
   }
 
   removeAfter(offset: number): Point|null {
-    return this.removeRange(offset, this.content.length);
+    return this.removeRange(offset, this.length);
   }
 
   removeBefore(offset: number): Point|null {
@@ -779,9 +792,7 @@ class Text {
     if (start === 0 && end === this.content.length) {
       return this.remove();
     } else {
-      const beforeStart = this.content.substring(0, start);
-      const afterEnd = this.content.substring(end);
-      this.content = beforeStart + afterEnd;
+      this.content = this.beforeOffset(start) + this.afterOffset(end);
 
       return new Point(this, start);
     }
@@ -790,22 +801,23 @@ class Text {
   insertText(text: string, offset: number, updateDom: boolean): Point {
 
     const actualOffset = updateDom ? offset : offset - text.length;
-
-    const start = this.content.substring(0, actualOffset);
-    const end = this.content.substring(actualOffset, this.content.length);
+    const newContent = this.beforeOffset(actualOffset) + text + this.afterOffset(actualOffset);
 
     if (updateDom) {
-      this.content = start + text + end;
+      this.content = newContent;
     } else {
-      this._content = start + text + end;
+      this._content = newContent;
     }
 
     return new Point(this, actualOffset + text.length)
   }
 
   append(text: string): Point {
-
     this.content = this.content + text;
+    return this.lastPoint;
+  }
+
+  get lastPoint(): Point {
     return new Point(this, this.content.length);
   }
 
@@ -938,7 +950,7 @@ class Selection {
       const pointAfterRemoval = this.start.text.removeAfter(this.start.offset);
       this.end.text.removeBefore(this.end.offset);
 
-      if (this.model.has(startParagraph) && this.model.has(endParagraph)) {
+      if (this.model.hasParagraph(startParagraph) && this.model.hasParagraph(endParagraph)) {
         startParagraph.combineWith(endParagraph);
       }
 
