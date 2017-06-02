@@ -59,12 +59,16 @@ class Model {
     Model.moveCursor(text.containingParagraph.splitTo(newParagraph, text, offset));
   }
 
-  insertChar(char: string) {
+  insertTextToSelection(text: string, updateDom: boolean) {
 
     const selection = requireDefined(this.getSelection());
 
-    const {text, offset} = selection.remove()!;
-    Model.moveCursor(text.insertText(char, offset));
+    const position = selection.remove()!;
+    Model.moveCursor(position.text.insertText(text, position.offset, updateDom));
+  }
+
+  removeSelection() {
+    Model.moveCursor(requireDefined(this.getSelection()).remove());
   }
 
   removeNextChar() {
@@ -273,35 +277,17 @@ class Model {
   }
 
   copy(): string {
-
-    const selection = this.getSelection();
-
-    if (selection) {
-      return selection.toPlainString();
-    } else {
-      return '';
-    }
+    return requireDefined(this.getSelection()).toPlainString();
   }
 
   paste(text: string) {
-
-    const selection = this.getSelection();
-
-    if (selection) {
-      const pointAfterRemoval = requireDefined(selection.remove());
-      Model.moveCursor(pointAfterRemoval.text.append(text));
-    }
+    this.insertTextToSelection(text, true);
   }
 
   cut(): string {
 
     const text = this.copy();
-    const selection = this.getSelection();
-
-    if (selection) {
-      Model.moveCursor(selection.remove());
-    }
-
+    Model.moveCursor(requireDefined(this.getSelection()).remove());
     return text;
   }
 }
@@ -776,12 +762,20 @@ class Text {
     }
   }
 
-  insertText(text: string, offset: number): Point {
+  insertText(text: string, offset: number, updateDom: boolean): Point {
 
-    const start = this.content.substring(0, offset);
-    const end = this.content.substring(offset, this.content.length);
-    this.content = start + text + end;
-    return new Point(this, offset + text.length)
+    const actualOffset = updateDom ? offset : offset - text.length;
+
+    const start = this.content.substring(0, actualOffset);
+    const end = this.content.substring(actualOffset, this.content.length);
+
+    if (updateDom) {
+      this.content = start + text + end;
+    } else {
+      this._content = start + text + end;
+    }
+
+    return new Point(this, actualOffset + text.length)
   }
 
   append(text: string): Point {
@@ -1159,14 +1153,22 @@ export class MarkdownInputComponent implements OnInit, ControlValueAccessor {
         this.reportChange(() => this.model.insertNewParagraph());
         event.preventDefault();
       } else if(event.keyCode === keyCodes.space) {
-        this.reportChange(() => this.model.insertChar(' '));
+        this.reportChange(() => this.model.insertTextToSelection(' ', true));
         event.preventDefault();
       } else if (event.charCode === keyCodes.esc) {
         // nothing to do
       } else if (event.charCode) {
-        this.reportChange(() => this.model.insertChar(event.key));
+        this.reportChange(() => this.model.insertTextToSelection(event.key, true));
         event.preventDefault();
       }
+    });
+
+    element.addEventListener('compositionstart', (event: CompositionEvent) => {
+      this.reportChange(() => this.model.removeSelection());
+    });
+
+    element.addEventListener('compositionend', (event: CompositionEvent) => {
+      this.reportChange(() => this.model.insertTextToSelection(event.data, false));
     });
 
     element.addEventListener('keyup', () => {
