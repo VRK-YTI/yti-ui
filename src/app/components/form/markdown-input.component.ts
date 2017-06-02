@@ -225,23 +225,18 @@ class Model {
 
   get cursorOffset(): number {
 
-    try {
-      const selection = this.getSelection();
+    const selection = this.getSelection();
 
-      if (selection) {
+    if (selection) {
 
-        let offset = selection.start.offset;
+      let offset = selection.start.offset;
 
-        for (let text = selection.start.text.getPrecedingText(); text !== null; text = text.getPrecedingText()) {
-          offset += text.length;
-        }
-
-        return offset;
-      } else {
-        return 0;
+      for (let text = selection.start.text.getPrecedingText(); text !== null; text = text.getPrecedingText()) {
+        offset += text.length;
       }
 
-    } catch (e) {
+      return offset;
+    } else {
       return 0;
     }
   }
