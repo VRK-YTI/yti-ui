@@ -17,7 +17,7 @@ class Model {
   linkedSelection: LinkedSelection|null = null;
 
   constructor(public node: Element) {
-    removeChildren(node);
+    removeChildren(node); // clear previous nodes
   }
 
   static ofMarkdown(container: HTMLElement, documentNode: MarkdownNode): Model {
@@ -30,6 +30,14 @@ class Model {
 
     for (const paragraphNode of children(documentNode)) {
       result.addParagraph(Paragraph.ofMarkdown(result, paragraphNode));
+    }
+
+    if (result.content.length === 0) {
+      const newParagraph = new Paragraph(result);
+      const newText = new Text(newParagraph);
+      newParagraph.addContent(newText);
+      result.addParagraph(newParagraph);
+      Model.moveCursor(new Point(newText, 0));
     }
 
     return result;
@@ -122,22 +130,19 @@ class Model {
     }
   }
 
-  removeContent(paragraph: Paragraph) {
-    this.node.removeChild(paragraph.node);
-    remove(this.content, paragraph);
+  removeContent(paragraph: Paragraph): boolean {
+
+    const canRemove = this.content.length > 1;
+
+    if (canRemove) {
+      this.node.removeChild(paragraph.node);
+      remove(this.content, paragraph);
+    }
+
+    return canRemove;
   }
 
   getSelection(): Selection|null {
-
-    if (this.content.length === 0) {
-
-      const newParagraph = new Paragraph(this);
-      const newText = new Text(newParagraph);
-      newParagraph.addContent(newText);
-      this.addParagraph(newParagraph);
-      Model.moveCursor(new Point(newText, 0));
-    }
-
     return Selection.ofDomSelection(this, new DomSelection(this.node));
   }
 
@@ -437,16 +442,19 @@ class Paragraph {
     return this.content.length === 0;
   }
 
-  remove() {
-    this.parent.removeContent(this);
+  remove(): boolean {
+    return this.parent.removeContent(this);
   }
 
-  removeContent(content: Text|Link): void {
-    if (this.content.length === 1) {
-      this.parent.removeContent(this);
-    } else {
-      this.node.removeChild(content.node);
-      remove(this.content, content);
+  removeContent(content: Text|Link) {
+
+    this.node.removeChild(content.node);
+    remove(this.content, content);
+
+    if (this.content.length === 0) {
+      if (!this.parent.removeContent(this)) {
+        this.addContent(new Text(this));
+      }
     }
   }
 
