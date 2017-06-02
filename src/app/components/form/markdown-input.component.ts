@@ -701,10 +701,6 @@ class Text {
     return this.content.substring(offset, this.content.length);
   }
 
-  betweenOffsets(startOffset: number, endOffset: number) {
-    return this.content.substring(startOffset, endOffset);
-  }
-
   isInLink() {
     return this.parent instanceof Link;
   }
