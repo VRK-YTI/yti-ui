@@ -60,11 +60,17 @@ class Model {
   insertNewParagraph() {
 
     const selection = requireDefined(this.getSelection());
-
     const {text, offset} = selection.remove()!;
-    const newParagraph = new Paragraph(this);
-    this.insertParagraphBefore(newParagraph, text.containingParagraph);
-    Model.moveCursor(text.containingParagraph.splitTo(newParagraph, text, offset));
+
+    const paragraph = text.containingParagraph;
+
+    // prevent two consecutive empty paragraphs which doesn't have equivalent markdown representation
+    if (!paragraph.hasEmptyContent()) {
+      const newPrependingParagraph = new Paragraph(this);
+      this.insertParagraphBefore(newPrependingParagraph, text.containingParagraph);
+      paragraph.splitTo(newPrependingParagraph, text, offset);
+      Model.moveCursor(paragraph.firstPoint);
+    }
   }
 
   insertTextToSelection(text: string, updateDom: boolean) {
@@ -352,7 +358,7 @@ class Paragraph {
     return new Point(lastOfThis.text, lastContentBeforeChanges.trim() === '' ? 0 : lastContentBeforeChanges.length);
   }
 
-  splitTo(prependingParagraph: Paragraph, fromText: Text, fromOffset: number): Point {
+  splitTo(prependingParagraph: Paragraph, fromText: Text, fromOffset: number) {
 
     const contentToRemove: (Link|Text)[] = [];
 
@@ -378,8 +384,19 @@ class Paragraph {
     if (prependingParagraph.empty) {
       prependingParagraph.addContent(new Text(prependingParagraph));
     }
+  }
 
+  hasEmptyContent(): boolean {
+    return this.toMarkdown().trim() === '';
+  }
+
+  get firstPoint(): Point {
     return new Point(this.firstText, 0);
+  }
+
+  get lastPoint(): Point {
+    const lastText = this.lastText;
+    return new Point(lastText, lastText.length);
   }
 
   appendText(text: string) {
