@@ -196,6 +196,15 @@ export function nextOf<T>(arr: T[], item: T) {
   return nextOfMapped(arr, x => x, item);
 }
 
+export function first<T>(arr: T[]): T {
+
+  if (arr.length === 0) {
+    throw new Error('Cannot get first since array is empty');
+  }
+
+  return arr[0];
+}
+
 export function last<T>(arr: T[]): T {
 
   if (arr.length === 0) {

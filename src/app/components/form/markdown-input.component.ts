@@ -5,7 +5,7 @@ import { Node as MarkdownNode, Parser } from 'commonmark';
 import { DomPath, DomPoint, DomSelection, formatTextContent, moveCursor, removeChildren } from '../../utils/dom';
 import {
   insertBefore, nextOf, nextOfMapped, previousOf, previousOfMapped, remove, firstMatching,
-  last, allMatching
+  last, allMatching, first
 } from '../../utils/array';
 import { children } from '../../utils/markdown';
 import { wordAtOffset } from '../../utils/string';
@@ -250,7 +250,7 @@ class Model {
 
       let offsetWalked = 0;
 
-      for (let text: Text|null = this.content[0].firstText; text !== null; text = text.getFollowingText()) {
+      for (let text: Text|null = this.firstParagraph.firstText; text !== null; text = text.getFollowingText()) {
 
         offsetWalked += text.length;
 
@@ -261,6 +261,10 @@ class Model {
 
       return this.lastParagraph.lastText.lastPoint;
     }
+  }
+
+  get firstParagraph(): Paragraph {
+    return first(this.content);
   }
 
   get lastParagraph(): Paragraph {
@@ -518,11 +522,7 @@ class Paragraph {
   }
 
   get firstContent(): Text|Link {
-    if (this.content.length === 0) {
-      throw new Error('No content in paragraph');
-    }
-
-    return this.content[0];
+    return first(this.content);
   }
 
   get firstText(): Text {
