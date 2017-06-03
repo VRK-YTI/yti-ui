@@ -35,15 +35,17 @@ class Model {
       result.appendParagraph(Paragraph.ofMarkdown(result, paragraphNode));
     }
 
-    if (result.content.length === 0) {
-      const newParagraph = new Paragraph(result);
-      const newText = new Text(newParagraph);
-      newParagraph.addContent(newText);
-      result.appendParagraph(newParagraph);
-      Model.moveCursor(new Point(newText, 0));
-    }
+    result.ensureNonEmptyContent();
 
     return result;
+  }
+
+  ensureNonEmptyContent() {
+    if (this.content.length === 0) {
+      const newParagraph = new Paragraph(this);
+      this.appendParagraph(newParagraph);
+      newParagraph.ensureNonEmptyContent();
+    }
   }
 
   private appendParagraph(paragraph: Paragraph) {
@@ -79,8 +81,7 @@ class Model {
   insertTextToSelection(text: string, updateDom: boolean) {
 
     const selection = requireDefined(this.getSelection());
-
-    const position = selection.remove()!;
+    const position = requireDefined(selection.remove());
     Model.moveCursor(position.text.insertText(text, position.offset, updateDom));
   }
 
@@ -174,13 +175,13 @@ class Model {
     const selectionAsLink = new Link(paragraph, this.linkableSelection.content, target);
 
     if (start > 0) {
-      paragraph.addContentBefore(new Text(paragraph, text.content.substring(0, start)), text);
+      paragraph.insertContentBefore(new Text(paragraph, text.contentBeforeOffset(start)), text);
     }
 
-    paragraph.addContentBefore(selectionAsLink, text);
+    paragraph.insertContentBefore(selectionAsLink, text);
 
     if (end < text.length) {
-      paragraph.addContentBefore(new Text(paragraph, text.content.substring(end, text.length)), text);
+      paragraph.insertContentBefore(new Text(paragraph, text.contentAfterOffset(end)), text);
     }
 
     text.remove();
@@ -199,7 +200,7 @@ class Model {
     const link = this.linkedSelection.link;
     const linkAsText = new Text(paragraph, link.content);
 
-    paragraph.addContentBefore(linkAsText, link);
+    paragraph.insertContentBefore(linkAsText, link);
     link.remove();
     paragraph.mergeConsecutiveTexts(new Point(linkAsText, this.linkedSelection.cursor));
     this.updateSelection();
@@ -210,8 +211,8 @@ class Model {
     const selection = this.getSelection();
 
     if (selection) {
-      this.linkableSelection = selection.linkable;
-      this.linkedSelection = selection.link;
+      this.linkableSelection = selection.linkableSelection;
+      this.linkedSelection = selection.linkedSelection;
     }
   }
 
@@ -323,7 +324,7 @@ class Paragraph {
     const result = new Paragraph(parent);
 
     for (const child of children(paragraphNode)) {
-      result.addContent(child.type === 'link' ? Link.ofMarkdown(result, child) : Text.ofMarkdown(result, child));
+      result.appendContent(child.type === 'link' ? Link.ofMarkdown(result, child) : Text.ofMarkdown(result, child));
     }
 
     return result;
@@ -351,7 +352,7 @@ class Paragraph {
           lastOfThis.content = content.content;
         }
       } else {
-        this.addContent(content.copyToParent(this));
+        this.appendContent(content.copyToParent(this));
       }
 
       firstChild = false;
@@ -371,18 +372,18 @@ class Paragraph {
 
       if (isSplittingText) {
 
-        const beforeSplitPointContent = content.text.beforeOffset(fromOffset);
+        const beforeSplitPointContent = content.text.contentBeforeOffset(fromOffset);
 
         if (content instanceof Link) {
-          prependingParagraph.addContent(new Link(prependingParagraph, beforeSplitPointContent, content.target));
+          prependingParagraph.appendContent(new Link(prependingParagraph, beforeSplitPointContent, content.target));
         } else {
           prependingParagraph.appendText(beforeSplitPointContent);
         }
-        content.content = content.text.afterOffset(fromOffset);
+        content.content = content.text.contentAfterOffset(fromOffset);
         break; // nothing to do after split point is handled
       }
 
-      prependingParagraph.addContent(content.copyToParent(prependingParagraph));
+      prependingParagraph.appendContent(content.copyToParent(prependingParagraph));
       contentToRemove.push(content);
     }
 
@@ -390,8 +391,12 @@ class Paragraph {
       content.remove();
     }
 
-    if (prependingParagraph.empty) {
-      prependingParagraph.addContent(new Text(prependingParagraph));
+    this.ensureNonEmptyContent();
+  }
+
+  ensureNonEmptyContent() {
+    if (this.content.length === 0) {
+      this.appendContent(new Text(this));
     }
   }
 
@@ -404,10 +409,10 @@ class Paragraph {
   }
 
   appendText(text: string) {
-    if (this.content.length > 0 && this.lastContent instanceof Text) {
+    if (this.lastContent instanceof Text) {
       this.lastContent.append(text);
     } else {
-      this.addContent(new Text(this, text));
+      this.appendContent(new Text(this, text));
     }
   }
 
@@ -445,22 +450,18 @@ class Paragraph {
     moveCursor(cursorAfterMerging.text.node, cursorAfterMerging.offset);
   }
 
-  addContent(content: Link|Text) {
+  appendContent(content: Link|Text) {
     this.content.push(content);
     this.node.appendChild(content.node);
   }
 
-  addContentBefore(content: Link|Text, ref: Link|Text) {
+  insertContentBefore(content: Link|Text, ref: Link|Text) {
     insertBefore(this.content, content, ref);
     this.node.insertBefore(content.node, ref.node);
   }
 
   get paragraph(): Paragraph {
     return this;
-  }
-
-  get empty() {
-    return this.content.length === 0;
   }
 
   remove(): boolean {
@@ -474,7 +475,7 @@ class Paragraph {
 
     if (this.content.length === 0) {
       if (!this.parent.removeContent(this)) {
-        this.addContent(new Text(this));
+        this.appendContent(new Text(this));
       }
     }
   }
@@ -689,11 +690,11 @@ class Text {
     return this.content.trim() === ''
   }
 
-  beforeOffset(offset: number) {
+  contentBeforeOffset(offset: number) {
     return this.content.substring(0, offset);
   }
 
-  afterOffset(offset: number) {
+  contentAfterOffset(offset: number) {
     return this.content.substring(offset, this.content.length);
   }
 
@@ -791,7 +792,7 @@ class Text {
     if (start === 0 && end === this.content.length) {
       return this.remove();
     } else {
-      this.content = this.beforeOffset(start) + this.afterOffset(end);
+      this.content = this.contentBeforeOffset(start) + this.contentAfterOffset(end);
 
       return new Point(this, start);
     }
@@ -800,7 +801,7 @@ class Text {
   insertText(text: string, offset: number, updateDom: boolean): Point {
 
     const actualOffset = updateDom ? offset : offset - text.length;
-    const newContent = this.beforeOffset(actualOffset) + text + this.afterOffset(actualOffset);
+    const newContent = this.contentBeforeOffset(actualOffset) + text + this.contentAfterOffset(actualOffset);
 
     if (updateDom) {
       this.content = newContent;
@@ -901,7 +902,7 @@ class Selection {
     return this.start.text === this.end.text && this.start.text.isInLink();
   }
 
-  get link(): LinkedSelection|null {
+  get linkedSelection(): LinkedSelection|null {
     if (this.isLink()) {
       return new LinkedSelection(this.end.text.parent as Link, this.end.offset);
     } else {
@@ -909,7 +910,7 @@ class Selection {
     }
   }
 
-  get linkable(): LinkableSelection|null {
+  get linkableSelection(): LinkableSelection|null {
     if (this.isLinkable()) {
       if (this.isRange()) {
         return new LinkableSelection(this.start.text, this.start.offset, this.end.offset, this.end.offset);
