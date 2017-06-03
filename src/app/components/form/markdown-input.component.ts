@@ -242,7 +242,7 @@ class Model {
     }
   }
 
-  private cursorOffsetToPoint(offset: number): Point|null {
+  private offsetToPoint(offset: number): Point|null {
 
     if (this.content.length === 0) {
       return null;
@@ -259,15 +259,16 @@ class Model {
         }
       }
 
-      const lastParagraph = this.content[this.content.length - 1];
-      const lastText = lastParagraph.lastText;
-
-      return new Point(lastText, lastText.length);
+      return this.lastParagraph.lastText.lastPoint;
     }
   }
 
+  get lastParagraph(): Paragraph {
+    return last(this.content);
+  }
+
   moveCursorToOffset(offset: number) {
-    Model.moveCursor(this.cursorOffsetToPoint(offset));
+    Model.moveCursor(this.offsetToPoint(offset));
   }
 
   removeStartOfLine() {
