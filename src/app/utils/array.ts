@@ -48,7 +48,7 @@ export function referenceEquality<T>(lhs: T, rhs: T) {
   return lhs === rhs;
 }
 
-export function any<T>(arr: T[], predicate: (item: T) => boolean) {
+export function anyMatching<T>(arr: T[], predicate: (item: T) => boolean) {
   for (const item of arr) {
     if (predicate(item)) {
       return true;
@@ -57,7 +57,7 @@ export function any<T>(arr: T[], predicate: (item: T) => boolean) {
   return false;
 }
 
-export function all<T>(arr: T[], predicate: (item: T) => boolean) {
+export function allMatching<T>(arr: T[], predicate: (item: T) => boolean) {
   for (const item of arr) {
     if (!predicate(item)) {
       return false;
@@ -66,7 +66,7 @@ export function all<T>(arr: T[], predicate: (item: T) => boolean) {
   return true;
 }
 
-export function first<T>(arr: T[], predicate: (item: T) => boolean): T|null {
+export function firstMatching<T>(arr: T[], predicate: (item: T) => boolean): T|null {
   for (const item of arr) {
     if (predicate(item)) {
       return item;
@@ -76,23 +76,23 @@ export function first<T>(arr: T[], predicate: (item: T) => boolean): T|null {
 }
 
 export function contains<T>(arr: T[], value: T, equals: EqualityChecker<T> = referenceEquality): boolean {
-  return any(arr, (item: T) => equals(item, value));
+  return anyMatching(arr, (item: T) => equals(item, value));
 }
 
 export function containsAny<T>(arr: T[], values: T[], equals: EqualityChecker<T> = referenceEquality): boolean {
-  return any(values, (value: T) => contains(arr, value, equals));
+  return anyMatching(values, (value: T) => contains(arr, value, equals));
 }
 
 export function containsAll<T>(arr: T[], values: T[], equals: EqualityChecker<T> = referenceEquality): boolean {
-  return all(values, (value: T) => contains(arr, value, equals));
+  return allMatching(values, (value: T) => contains(arr, value, equals));
 }
 
 export function arraysAreEqual<T>(lhs: T[], rhs: T[], equals: EqualityChecker<T> = referenceEquality) {
   return containsAll(lhs, rhs, equals) && containsAll(rhs, lhs, equals);
 }
 
-export function findFirstMatching<T>(arr: T[], values: T[], equals: EqualityChecker<T> = referenceEquality): T|null {
-  return first(arr, item => contains(values, item, equals));
+export function firstMatchingValue<T>(arr: T[], values: T[], equals: EqualityChecker<T> = referenceEquality): T|null {
+  return firstMatching(arr, item => contains(values, item, equals));
 }
 
 // return true if removed

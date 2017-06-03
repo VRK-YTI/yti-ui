@@ -2,7 +2,7 @@ import { Component, Input, OnInit, ElementRef, ViewChild, AfterViewChecked } fro
 import { Parser, Node as MarkdownNode } from 'commonmark';
 import { ConceptNode } from '../../entities/node';
 import { logUnsupportedNodes, removeWhiteSpaceNodes, children } from '../../utils/markdown';
-import { first } from '../../utils/array';
+import { firstMatching } from '../../utils/array';
 import { Localizable } from '../../entities/localization';
 import { isDefined } from '../../utils/object';
 
@@ -60,7 +60,7 @@ export class MarkdownLinksElementComponent {
   @Input() relatedConcepts: ConceptNode[];
 
   private getTargetConceptNode(node: MarkdownNode): ConceptNode|null {
-    return first(this.relatedConcepts, concept => concept.isTargetOfLink(node.destination));
+    return firstMatching(this.relatedConcepts, concept => concept.isTargetOfLink(node.destination));
   }
 
   link(node: MarkdownNode) {

@@ -4,8 +4,8 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { Node as MarkdownNode, Parser } from 'commonmark';
 import { DomPath, DomPoint, DomSelection, formatTextContent, moveCursor, removeChildren } from '../../utils/dom';
 import {
-  insertBefore, nextOf, nextOfMapped, previousOf, previousOfMapped, remove, first,
-  last, all
+  insertBefore, nextOf, nextOfMapped, previousOf, previousOfMapped, remove, firstMatching,
+  last, allMatching
 } from '../../utils/array';
 import { children } from '../../utils/markdown';
 import { wordAtOffset } from '../../utils/string';
@@ -393,7 +393,7 @@ class Paragraph {
   }
 
   hasEmptyContent(): boolean {
-    return all(this.content, c => c.hasEmptyContent());
+    return allMatching(this.content, c => c.hasEmptyContent());
   }
 
   get firstPoint(): Point {
@@ -1264,7 +1264,7 @@ export class MarkdownInputComponent implements OnInit, ControlValueAccessor {
   }
 
   get linkedConcept(): ConceptNode|null {
-    return first(this.relatedConcepts, concept => concept.isTargetOfLink(this.linkedSelection.target));
+    return firstMatching(this.relatedConcepts, concept => concept.isTargetOfLink(this.linkedSelection.target));
   }
 
   focusEditor() {

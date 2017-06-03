@@ -3,7 +3,7 @@ import { Localizable } from '../entities/localization';
 import { isDefined } from './object';
 import { Comparator, comparingPrimitive, comparingLocalizable } from './comparator';
 import { Localizer } from '../services/language.service';
-import { all } from './array';
+import { allMatching } from './array';
 
 export interface TextAnalysis<T> {
   item: T;
@@ -35,7 +35,7 @@ export interface SearchFilter<T> {
 }
 
 export function applyFilters<T>(searchResults: TextAnalysis<T>[], filters: SearchFilter<T>[]) {
-  return searchResults.filter(results => all(filters, filter => filter(results)));
+  return searchResults.filter(results => allMatching(filters, filter => filter(results)));
 }
 
 export function scoreComparator<S>() {

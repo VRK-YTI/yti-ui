@@ -4,7 +4,7 @@ import { TermedService } from '../../services/termed.service';
 import { LocationService } from '../../services/location.service';
 import { VocabularyNode } from '../../entities/node';
 import { Localizable } from '../../entities/localization';
-import { groupBy, all } from '../../utils/array';
+import { groupBy, allMatching } from '../../utils/array';
 import { isDefined, requireDefined } from '../../utils/object';
 import { UserService } from '../../services/user.service';
 import { defaultLanguages } from '../../utils/language';
@@ -110,7 +110,7 @@ export class VocabulariesComponent {
       this.vocabularies = vocabularies;
 
       const recalculateResults = () => {
-        this.filterResults = vocabularies.filter(node => all(this.filters, filter => filter.matches(node)));
+        this.filterResults = vocabularies.filter(node => allMatching(this.filters, filter => filter.matches(node)));
       };
 
       this.filters = [

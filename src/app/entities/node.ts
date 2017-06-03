@@ -1,6 +1,6 @@
 import { asLocalizable, Localizable, combineLocalizables, Localization } from './localization';
 import { requireDefined, assertNever, isDefined } from '../utils/object';
-import { normalizeAsArray, any, requireSingle, all, remove, flatten } from '../utils/array';
+import { normalizeAsArray, anyMatching, requireSingle, allMatching, remove, flatten } from '../utils/array';
 import { NodeExternal, NodeType, Attribute, Identifier, NodeInternal, VocabularyNodeType } from './node-api';
 import {
   PropertyMeta, ReferenceMeta, NodeMeta, MetaModel, LocalizableProperty, StringProperty,
@@ -135,7 +135,7 @@ export class Property {
   }
 
   get empty() {
-    return !any(this.attributes, localization => !!localization.value.trim());
+    return !anyMatching(this.attributes, localization => !!localization.value.trim());
   }
 
   get multiColumn() {
@@ -231,7 +231,7 @@ export class Reference<N extends KnownNode | Node<any>> {
 
   get empty() {
     if (this.term) {
-      return all((this.values as TermNode[]), term => term.empty);
+      return allMatching((this.values as TermNode[]), term => term.empty);
     } else {
       return this.values.length === 0;
     }
@@ -656,7 +656,7 @@ export class ConceptNode extends Node<'Concept'> {
   }
 
   hasConceptReference(conceptId: string) {
-    return any(this.referencedConcepts, c => c.id === conceptId);
+    return anyMatching(this.referencedConcepts, c => c.id === conceptId);
   }
 
   setPrimaryLabel(language: string, value: string) {
