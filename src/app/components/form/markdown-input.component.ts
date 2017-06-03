@@ -242,25 +242,20 @@ class Model {
     }
   }
 
-  private offsetToPoint(offset: number): Point|null {
+  private offsetToPoint(offset: number): Point {
 
-    if (this.content.length === 0) {
-      return null;
-    } else {
+    let offsetWalked = 0;
 
-      let offsetWalked = 0;
+    for (let text: Text|null = this.firstParagraph.firstText; text !== null; text = text.getFollowingText()) {
 
-      for (let text: Text|null = this.firstParagraph.firstText; text !== null; text = text.getFollowingText()) {
+      offsetWalked += text.length;
 
-        offsetWalked += text.length;
-
-        if (offset <= offsetWalked) {
-          return new Point(text, text.length - (offsetWalked - offset));
-        }
+      if (offset <= offsetWalked) {
+        return new Point(text, text.length - (offsetWalked - offset));
       }
-
-      return this.lastParagraph.lastText.lastPoint;
     }
+
+    return this.lastParagraph.lastText.lastPoint;
   }
 
   get firstParagraph(): Paragraph {
