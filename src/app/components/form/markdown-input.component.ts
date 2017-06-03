@@ -224,22 +224,26 @@ class Model {
     return this.content.map(c => c.toMarkdown()).join('').trim();
   }
 
-  get cursorOffset(): number {
+  get selectionOffset(): number {
 
     const selection = this.getSelection();
 
     if (selection) {
-
-      let offset = selection.start.offset;
-
-      for (let text = selection.start.text.getPrecedingText(); text !== null; text = text.getPrecedingText()) {
-        offset += text.length;
-      }
-
-      return offset;
+      return Model.pointToOffset(selection.start);
     } else {
       return 0;
     }
+  }
+
+  private static pointToOffset(point: Point): number {
+
+    let offset = point.offset;
+
+    for (let text = point.text.getPrecedingText(); text !== null; text = text.getPrecedingText()) {
+      offset += text.length;
+    }
+
+    return offset;
   }
 
   private offsetToPoint(offset: number): Point {
@@ -1317,7 +1321,7 @@ export class MarkdownInputComponent implements OnInit, ControlValueAccessor {
       this.undoDebounceTimeoutHandle = null;
     }
 
-    const historyItem = { markdown: this.model.toMarkdown(), cursorOffset: this.model.cursorOffset };
+    const historyItem = { markdown: this.model.toMarkdown(), cursorOffset: this.model.selectionOffset };
     const topOfStack = this.undoStack.length > 0 ? this.undoStack[this.undoStack.length - 1] : null;
 
     if (!topOfStack || topOfStack.markdown !== historyItem.markdown) {
