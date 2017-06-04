@@ -192,10 +192,6 @@ export interface Mapper<T, R> {
   (item: T): R;
 }
 
-export function nextOf<T>(arr: T[], item: T) {
-  return nextOfMapped(arr, x => x, item);
-}
-
 export function first<T>(arr: T[]): T {
 
   if (arr.length === 0) {
@@ -214,10 +210,14 @@ export function last<T>(arr: T[]): T {
   return arr[arr.length - 1];
 }
 
-export function nextOfMapped<T, M>(arr: T[], mapper: Mapper<T, M>, item: M): T|null {
+export function nextOf<T>(arr: T[], item: T) {
+  return nextOfMatching(arr, x => x === item);
+}
+
+export function nextOfMatching<T, M>(arr: T[], predicate: (item: T) => boolean): T|null {
 
   for (let i = 0; i < arr.length; i++) {
-    if (mapper(arr[i]) === item) {
+    if (predicate(arr[i])) {
 
       const isLast = i === arr.length - 1;
 
@@ -233,13 +233,13 @@ export function nextOfMapped<T, M>(arr: T[], mapper: Mapper<T, M>, item: M): T|n
 }
 
 export function previousOf<T>(arr: T[], item: T) {
-  return previousOfMapped(arr, x => x, item);
+  return previousOfMatching(arr, x => x === item);
 }
 
-export function previousOfMapped<T, M>(arr: T[], mapper: Mapper<T, M>, item: M): T|null {
+export function previousOfMatching<T>(arr: T[], predicate: (item: T) => boolean): T|null {
 
   for (let i = 0; i < arr.length; i++) {
-    if (mapper(arr[i]) === item) {
+    if (predicate(arr[i])) {
       if (i === 0) {
         return null;
       } else {

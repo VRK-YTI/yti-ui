@@ -4,8 +4,8 @@ import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { Node as MarkdownNode, Parser } from 'commonmark';
 import { DomPath, DomPoint, DomSelection, formatTextContent, moveCursor, removeChildren } from '../../utils/dom';
 import {
-  insertBefore, nextOf, nextOfMapped, previousOf, previousOfMapped, remove, firstMatching,
-  last, allMatching, first
+  insertBefore, nextOf, previousOf, remove, firstMatching,
+  last, allMatching, first, previousOfMatching, nextOfMatching
 } from '../../utils/array';
 import { children } from '../../utils/markdown';
 import { wordAtOffset } from '../../utils/string';
@@ -493,7 +493,7 @@ class Paragraph {
 
   getPrecedingText(text: Text): Text|null {
 
-    const previous = previousOfMapped(this.content, c => c.text, text);
+    const previous = previousOfMatching(this.content, c => c.text === text);
 
     if (previous) {
       return previous.text;
@@ -504,7 +504,7 @@ class Paragraph {
 
   getFollowingText(text: Text): Text|null {
 
-    const next = nextOfMapped(this.content, c => c.text, text);
+    const next = nextOfMatching(this.content, c => c.text === text);
 
     if (next) {
       return next.text;
