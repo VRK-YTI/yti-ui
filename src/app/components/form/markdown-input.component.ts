@@ -390,8 +390,6 @@ class Paragraph {
     for (const content of contentToRemove) {
       content.remove();
     }
-
-    this.ensureNonEmptyContent();
   }
 
   ensureNonEmptyContent() {
