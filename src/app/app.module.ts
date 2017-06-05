@@ -84,6 +84,7 @@ import {
   SelectConceptReferenceModal,
   SelectConceptReferenceModalService
 } from './components/concept/select-concept-reference.modal';
+import { FrontpageComponent } from './components/fronpage.component';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json-loader!po-loader?format=mf!../../po/fi.po'),
@@ -107,7 +108,7 @@ export function createMissingTranslationHandler(): MissingTranslationHandler {
 }
 
 const appRoutes: Routes = [
-  { path: '', component: VocabulariesComponent },
+  { path: '', component: FrontpageComponent },
   { path: 'newVocabulary', component: NewVocabularyComponent },
   { path: 'concepts/:graphId', component: ConceptsComponent, canDeactivate: [ConfirmCancelEditGuard], children: [
     { path: '', component: NoSelectionComponent },
@@ -122,6 +123,7 @@ const appRoutes: Routes = [
     NavigationBarComponent,
     BreadcrumbComponent,
     FooterComponent,
+    FrontpageComponent,
     VocabulariesComponent,
     VocabularyComponent,
     ConceptsComponent,
