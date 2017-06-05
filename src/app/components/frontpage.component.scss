@@ -13,77 +13,67 @@
     font-size: large;
   }
 
-  div {
+  > div.mx-auto {
     max-width: 550px;
   }
 }
 
-ul.sb-results-dropdown-menu {
-  margin: 0;
-  padding: 0;
-}
+.search-results-container {
 
-ul.sb-results-dropdown-menu > li {
-  position: relative;
-  height: 50px;
-  list-style: none;
-  background: white;
-  cursor:pointer;
+  background-color: $brand-accent-lighter;
+  padding: 0 40px 20px 40px;
+  margin-left: -15px;
+  margin-right: -15px;
 
-  &:hover {
-    background: cornflowerblue;
+  .search-panel {
+
+    margin-right: 0;
+    margin-left: 0;
+    margin-bottom: 10px;
+    background-color: #fff;
+    border: 1px #ddd solid;
+    box-shadow: none;
+    position: relative;
+    padding: 45px 15px 15px;
+
+    span.title {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #959595;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
   }
-}
 
-ul.sb-results-dropdown-menu > li span {
-  line-height:22px;
-  font-family: Arial, Helvetica, sans-serif;
-  color: black;
-  font-size:16px;
-  cursor:pointer;
-  text-overflow: ellipsis;
-  overflow:hidden;
-  white-space: nowrap;
-  display: block;
-  margin-left: 10px;
-  margin-right: 10px;
-}
+  .search-results {
 
-ul.sb-results-dropdown-menu > li:nth-child(odd) {
-  background: #f7f7f7;
+    max-height: 500px;
+    overflow-y: auto;
 
-  &:hover {
-    background: cornflowerblue;
+    .search-result {
+      background-color: white;
+      font-size: small;
+      cursor: pointer;
+      border: 1px solid #bbb;
+      margin-bottom: 10px;
+      padding-left: 10px;
+      padding-right: 10px;
+      box-shadow: 2px 2px 2px #7e9cad;
+
+      h6 {
+        margin-top: 0.5rem;
+      }
+
+      .origin {
+        font-size: x-small;
+        border-top: #dddddd solid 1px;
+        margin: 0 10px 0 0;
+        width: calc(100% - 10px);
+        display: inline-block;
+      }
+    }
   }
-}
-ul.sb-results-dropdown-menu > li:last-child {
-  border-bottom: 0;
-}
-
-.sb-searchresults {
-  position: absolute;
-  top: 50px;
-  z-index: 5;
-  width: 100%;
-  border-radius: 3px;
-  box-shadow: 0 0px 20px 0 rgba(0, 0, 0, 0.18);
-}
-
-.sb-message{
-  position: absolute;
-  top: 50px;
-  background: #f7f7f7;
-  height: 20px;
-  width:100%;
-  box-shadow: #eaeaea 1px 1px;
-}
-
-.sb-message span {
-  color: dimgrey;
-  text-align: right;
-  line-height: 10px;
-  padding: 5px;
-  font-size: 12px;
-  font-family: Arial, Helvetica, sans-serif;
-  display: block;
 }

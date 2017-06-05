@@ -132,36 +132,55 @@ export class ElasticSearchService {
       .map(response => response.json() as SearchResponse<IndexedConceptData>);
   }
 
-  frontPageSearch(search: string, resultSize: number): Observable<IndexedConcept[]> {
+  frontpageSearch(filter: string, onlyGraph: string|null, onlyStatus: string|null, from: number, size: number): Observable<IndexedConcept[]> {
+
+    const mustConditions: any[] = [{
+      multi_match: {
+        query: filter,
+        fields: [
+          field('label', this.language, 10),
+          field('label', '*'),
+          field('definition', this.language, 2),
+          field('definition', '*'),
+        ],
+        type: 'best_fields',
+        minimum_should_match: '90%'
+      },
+    }];
+
+    if (onlyGraph) {
+      mustConditions.push({
+        match: {
+          'vocabulary.id': onlyGraph
+        }
+      });
+    }
+
+    if (onlyStatus) {
+      mustConditions.push({
+        match: {
+          'status': onlyStatus
+        }
+      });
+    }
 
     return this.search({
-        query: {
-          multi_match: {
-            query: search,
-            fields: [
-              field('label', this.language, 10),
-              field('label', '*'),
-              field('altLabel', this.language, 8),
-              field('altLabel', '*'),
-              field('definition', this.language, 2),
-              field('definition', '*'),
-            ],
-            type: 'best_fields',
-            analyzer: 'termed',
-            minimum_should_match: '90%'
-          }
-        },
-        sort: ['_score'],
-        highlight : {
-          pre_tags : ['<b>'],
-          post_tags : ['</b>'],
-          fields : {
-            'label.*': {},
-            'altLabel.*': {}
-          }
-        },
-        from: 0,
-        size: resultSize
+      query: {
+        bool: {
+          must: mustConditions
+        }
+      },
+      sort: ['_score'],
+      highlight : {
+        pre_tags : ['<b>'],
+        post_tags : ['</b>'],
+        fields : {
+          'label.*': {},
+          'altLabel.*': {}
+        }
+      },
+      from,
+      size,
     }).map(result => result.hits.hits.map(hit => new IndexedConcept(hit)));
   }
 

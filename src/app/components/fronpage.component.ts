@@ -2,8 +2,12 @@ import { Component } from '@angular/core';
 import { LocationService } from '../services/location.service';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ElasticSearchService, IndexedConcept } from '../services/elasticsearch.service';
-
-const MIN_SEARCH_STRING_LENGTH = 3;
+import { Router } from '@angular/router';
+import { TermedService } from '../services/termed.service';
+import { defaultLanguages } from '../utils/language';
+import { Observable } from 'rxjs/Observable';
+import { VocabularyNode } from '../entities/node';
+import { statuses } from '../entities/constants';
 
 @Component({
   selector: 'frontpage',
@@ -23,92 +27,170 @@ const MIN_SEARCH_STRING_LENGTH = 3;
 
           <div class="row">
             <div class="col-md-12">
+
               <div class="input-group input-group-lg input-group-search">
                 <input [(ngModel)]="search"
                        type="text"
                        class="form-control"
-                       (blur)="clearSearch()"
                        [placeholder]="'Search concept...' | translate"/>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-              <div class="sb-message" *ngIf="conceptSearchInProgress"><span>searching...</span></div>
-              <div class="sb-message" *ngIf="noResults"><span>nothing was found</span></div>
+      <div class="search-results-container row" *ngIf="debouncedSearch$ | async">
+        
+        <div class="col-md-3 offset-2">
+          <div class="search-panel">
+            <span class="title" translate>Filter results</span>
 
-              <div class="sb-searchresults">
-                <ul class="sb-results-dropdown-menu">
-                  <li *ngFor="let result of conceptSearchResults">
-                    <span [routerLink]="['/concepts', result.vocabulary.id, 'concept', result.id]"
-                          [ngbPopover]="popContent" placement="right" triggers="mouseenter:mouseleave">
-                      
-                      <div [innerHTML]="result.label | translateValue"></div>
-                      <em class="font-small">{{result.vocabulary.label | translateValue}}</em>
-                    </span>
+            <div class="form-group">
+              <label for="statusFilter" translate>Status</label>
+              <select id="statusFilter" class="form-control" [(ngModel)]="onlyStatus">
+                <option [ngValue]="null" translate>All statuses</option>
+                <option *ngFor="let status of statuses" [ngValue]="status">{{status | translate}}</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <label for="vocabularyFilter" translate>Vocabulary</label>
+              <select id="vocabularyFilter " class="form-control" [(ngModel)]="onlyVocabulary">
+                <option [ngValue]="null" translate>All vocabularies</option>
+                <option *ngFor="let vocabulary of vocabularies" [ngValue]="vocabulary">{{vocabulary.label | translateValue}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-md-5">
 
-                    <ng-template #popContent>
-                      <div markdown [value]="result.definition | translateValue"></div>
-                    </ng-template>
-                  </li>
-                </ul>
+          <div class="search-results"
+               infinite-scroll
+               [infiniteScrollDistance]="3"
+               [scrollWindow]="false"
+               (scrolled)="loadConcepts()">
+            
+            <div class="search-result"
+                 *ngFor="let concept of searchResults; trackBy: conceptIdentity" (click)="navigate(concept)">
+              <h6 [innerHTML]="concept.label | translateValue"></h6>
+              <p [innerHTML]="concept.definition | translateValue | stripMarkdown"></p>
+
+              <div class="origin">
+                <span class="pull-left">{{concept.vocabulary.label | translateValue}}</span>
               </div>
             </div>
+
           </div>
 
         </div>
       </div>
 
-      <vocabularies></vocabularies>
+      <vocabularies *ngIf="vocabularies" [vocabularies]="vocabularies"></vocabularies>
 
     </div>
   `
 })
 export class FrontpageComponent {
 
-  conceptSearchResults: IndexedConcept[];
-  conceptSearch$ = new BehaviorSubject('');
-  conceptSearchInProgress = false;
+  searchResults$ = new BehaviorSubject<IndexedConcept[]>([]);
+
+  search$ = new BehaviorSubject('');
+  debouncedSearch$ = this.search$.debounceTime(500);
+  onlyStatus$ = new BehaviorSubject<string|null>(null);
+  onlyVocabulary$ = new BehaviorSubject<VocabularyNode|null>(null);
+
+  loading = false;
+
+  loaded = 0;
+  canLoadMore = true;
+
+  vocabularies: VocabularyNode[] = [];
+
+  statuses = statuses;
 
   constructor(locationService: LocationService,
-              elasticSearchService: ElasticSearchService) {
+              termedService: TermedService,
+              private router: Router,
+              private elasticSearchService: ElasticSearchService) {
 
-    this.conceptSearch$
-      .map(search => search.trim())
-      .filter(search => search.length >= MIN_SEARCH_STRING_LENGTH)
-      .subscribe(() => this.conceptSearchInProgress = true);
+    termedService.getVocabularyList(defaultLanguages)
+      .subscribe(vocabularies => this.vocabularies = vocabularies);
 
-    this.conceptSearch$
-      .map(search => search.trim())
-      .debounceTime(500)
-      .subscribe(search => {
-        if (search.length >= MIN_SEARCH_STRING_LENGTH) {
-          this.conceptSearchInProgress = true;
-
-          elasticSearchService.frontPageSearch(search, 15).subscribe(searchResult => {
-            this.conceptSearchResults = searchResult;
-            this.conceptSearchInProgress = false;
-          });
-        } else {
-          this.conceptSearchResults = [];
-          this.conceptSearchInProgress = false;
-        }
-      });
+    Observable.combineLatest(this.debouncedSearch$, this.onlyStatus$, this.onlyVocabulary$)
+      .subscribe(() => this.loadConcepts(true));
 
     locationService.atFrontPage();
   }
 
+  loadConcepts(reset = false) {
+
+    const search = this.search;
+    const batchSize = 100;
+
+    if (reset) {
+      this.loaded = 0;
+      this.canLoadMore = true;
+    }
+
+    if (search) {
+      if (this.canLoadMore) {
+
+        this.loading = true;
+
+        const appendResults = (concepts: IndexedConcept[]) => {
+
+          if (concepts.length < batchSize) {
+            this.canLoadMore = false;
+          }
+
+          this.loaded += concepts.length;
+
+          this.searchResults$.next(reset ? concepts : [...this.searchResults, ...concepts]);
+          this.loading = false;
+        };
+
+        const onlyGraphId = this.onlyVocabulary ? this.onlyVocabulary.graphId : null;
+        this.elasticSearchService.frontpageSearch(this.search, onlyGraphId, this.onlyStatus, this.loaded, batchSize).subscribe(appendResults);
+      }
+    } else {
+      this.searchResults$.next([]);
+    }
+  }
+
+  get onlyStatus() {
+    return this.onlyStatus$.getValue();
+  }
+
+  set onlyStatus(value: string|null) {
+    this.onlyStatus$.next(value);
+  }
+
+  get onlyVocabulary() {
+    return this.onlyVocabulary$.getValue();
+  }
+
+  set onlyVocabulary(vocabulary: VocabularyNode|null) {
+    this.onlyVocabulary$.next(vocabulary);
+  }
+
+  navigate(concept: IndexedConcept) {
+    this.router.navigate(['/concepts', concept.vocabulary.id, 'concept', concept.id]);
+  }
+
+  conceptIdentity(index: number, item: IndexedConcept) {
+    return item.id + item.modified.toISOString();
+  }
+
   get search() {
-    return this.conceptSearch$.value;
+    return this.search$.value;
   }
 
   set search(value: string) {
-    this.conceptSearch$.next(value);
+    this.search$.next(value);
   }
 
-  get noResults() {
-    return this.search.length >= MIN_SEARCH_STRING_LENGTH && !this.conceptSearchInProgress && this.conceptSearchResults.length === 0;
-  }
-
-  clearSearch() {
-    // delay so that click has time to invoke
-    setTimeout(() => this.search = '', 100);
+  get searchResults() {
+    return this.searchResults$.getValue();
   }
 }

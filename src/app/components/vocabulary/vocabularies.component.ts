@@ -1,13 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { Router } from '@angular/router';
-import { TermedService } from '../../services/termed.service';
-import { LocationService } from '../../services/location.service';
 import { VocabularyNode } from '../../entities/node';
 import { Localizable } from '../../entities/localization';
 import { groupBy, allMatching } from '../../utils/array';
 import { isDefined, requireDefined } from '../../utils/object';
 import { UserService } from '../../services/user.service';
-import { defaultLanguages } from '../../utils/language';
 
 @Component({
   selector: 'vocabularies',
@@ -71,34 +68,29 @@ import { defaultLanguages } from '../../utils/language';
     </div>
   `
 })
-export class VocabulariesComponent {
+export class VocabulariesComponent implements OnChanges {
 
-  vocabularies: VocabularyNode[];
+  @Input() vocabularies: VocabularyNode[];
   filteredVocabularies: VocabularyNode[];
   vocabularyFilters: Filter[];
 
-  constructor(termedService: TermedService,
-              locationService: LocationService,
-              private userService: UserService,
+  constructor(private userService: UserService,
               private router: Router) {
+  }
 
-    termedService.getVocabularyList(defaultLanguages).subscribe(vocabularies => {
-      this.vocabularies = vocabularies;
+  ngOnChanges() {
 
-      const recalculateResults = () => {
-        this.filteredVocabularies = vocabularies.filter(node => allMatching(this.vocabularyFilters, filter => filter.matches(node)));
-      };
+    const recalculateResults = () => {
+      this.filteredVocabularies = this.vocabularies.filter(node => allMatching(this.vocabularyFilters, filter => filter.matches(node)));
+    };
 
-      this.vocabularyFilters = [
-        new Filter('Vocabulary type', vocabularies, (node) => node.meta.type, (node) => node.meta.label, recalculateResults),
-        new Filter('Group', vocabularies, (node) => node.hasGroup() ? node.group.id : null, (node) => node.group.label, recalculateResults),
-        new Filter('Organization', vocabularies, (node) => node.hasPublisher() ? node.publisher.id : null, (node) => node.publisher.label, recalculateResults)
-      ];
+    this.vocabularyFilters = [
+      new Filter('Vocabulary type', this.vocabularies, (node) => node.meta.type, (node) => node.meta.label, recalculateResults),
+      new Filter('Group', this.vocabularies, (node) => node.hasGroup() ? node.group.id : null, (node) => node.group.label, recalculateResults),
+      new Filter('Organization', this.vocabularies, (node) => node.hasPublisher() ? node.publisher.id : null, (node) => node.publisher.label, recalculateResults)
+    ];
 
-      recalculateResults();
-    });
-
-    locationService.atFrontPage();
+    recalculateResults();
   }
 
   navigate(vocabulary: VocabularyNode) {
