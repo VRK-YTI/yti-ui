@@ -43,7 +43,6 @@ import { KeysPipe } from './pipes/keys.pipe';
 import { ErrorMessagesComponent } from './components/form/error-messages.component';
 import { EditableButtonsComponent } from './components/form/editable-buttons.component';
 import { ElasticSearchService } from "./services/elasticsearch.service";
-import { AutoComplete } from './components/autocomplete/autocomplete.component';
 import { LanguageValidator } from './directives/validators/language.validator';
 import { LocalizationValidator } from './directives/validators/localization.validator';
 import { MarkdownComponent } from './components/markdown/markdown.component';
@@ -152,7 +151,6 @@ const appRoutes: Routes = [
     LocalizedInputComponent,
     ErrorMessagesComponent,
     EditableButtonsComponent,
-    AutoComplete,
     ConceptNetworkComponent,
     MetaInformationComponent,
     DividerComponent,
