@@ -409,7 +409,7 @@ class Paragraph {
   }
 
   appendText(text: string) {
-    if (this.lastContent instanceof Text) {
+    if (this.content.length > 0 && this.lastContent instanceof Text) {
       this.lastContent.append(text);
     } else {
       this.appendContent(new Text(this, text));
