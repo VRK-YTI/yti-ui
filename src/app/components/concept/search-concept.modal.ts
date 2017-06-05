@@ -59,16 +59,16 @@ export class SearchConceptModalService {
             <span class="title" translate>Filter results</span>
 
             <div class="form-group">
-              <label for="status" translate>Status</label>
-              <select id="status " class="form-control" [(ngModel)]="onlyStatus">
+              <label for="statusFilter" translate>Status</label>
+              <select id="statusFilter" class="form-control" [(ngModel)]="onlyStatus">
                 <option [ngValue]="null" translate>All statuses</option>
                 <option *ngFor="let status of statuses" [ngValue]="status">{{status | translate}}</option>
               </select>
             </div>
 
             <div class="form-group" *ngIf="mode === 'exclude'">
-              <label for="status" translate>Vocabulary</label>
-              <select id="status " class="form-control" [(ngModel)]="onlyVocabulary">
+              <label for="vocabularyFilter" translate>Vocabulary</label>
+              <select id="vocabularyFilter" class="form-control" [(ngModel)]="onlyVocabulary">
                 <option [ngValue]="null" translate>All vocabularies</option>
                 <option *ngFor="let vocabulary of vocabularies | async" [ngValue]="vocabulary">{{vocabulary.label | translateValue}}</option>
               </select>
