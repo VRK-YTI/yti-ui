@@ -1,6 +1,6 @@
 
 function isNotWordCharacter(s: string): boolean {
-  return !!s.match(/[\s,\.]+/);
+  return !!s.match(/[\s,\."]+/);
 }
 
 function rangeOrNull(s: string, start: number|null, end: number): { start: number, end: number }|null {
