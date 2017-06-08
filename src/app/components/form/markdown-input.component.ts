@@ -473,7 +473,7 @@ class Paragraph {
 
     if (this.content.length === 0) {
       if (!this.parent.removeContent(this)) {
-        this.appendContent(new Text(this));
+        this.ensureNonEmptyContent();
       }
     }
   }
