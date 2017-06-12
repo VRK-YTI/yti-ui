@@ -1,62 +1,40 @@
-import { Component, Input, QueryList, ViewChildren } from '@angular/core';
-import { NgModel } from '@angular/forms';
-import { Property } from '../../entities/node';
+import { Component, Input  } from '@angular/core';
 import { EditableService } from '../../services/editable.service';
-import { Attribute } from '../../entities/node-api';
+import { FormPropertyLiteral } from '../../services/form-state';
 
 @Component({
   styleUrls: ['./literal-input.component.scss'],
   selector: 'literal-input',
   template: `
-    <span *ngIf="!editing">{{property.asString()}}</span>
+    
+    <span *ngIf="!editing && property.valueIsLocalizationKey">{{property.value | translate}}</span>
+    <span *ngIf="!editing && !property.valueIsLocalizationKey">{{property.value}}</span>
 
     <div *ngIf="editing">
 
-      <div *ngIf="canAdd()" class="clearfix">
-        <button type="button"
-                ngbTooltip="{{'Add' | translate}} {{property.meta.label | translateValue | lowercase}}" [placement]="'left'"
-                class="btn btn-default add-button"
-                (click)="addNewValue()">
-          <i class="fa fa-plus"></i>
-        </button>
-      </div>
+      <div class="form-group" [ngClass]="{'has-danger': valueInError(index)}">
       
-      <div *ngFor="let attribute of property.attributes; let index = index">
-        <div class="form-group" 
-             [ngClass]="{'has-danger': valueInError(index), 'removable': canRemove()}">
-
-          <ng-container [ngSwitch]="editorType">
-
-            <div *ngSwitchCase="'input'">
-              <input type="text"
-                     class="form-control"
-                     [id]="property.meta.id + index"
-                     autocomplete="off"
-                     [(ngModel)]="attribute.value"
-                     [validateMeta]="property.meta"
-                     #ngModel="ngModel"/>
-    
-              <error-messages [control]="ngModel.control"></error-messages>
-            </div>
-
-            <div *ngSwitchCase="'markdown'">
-              <markdown-input [id]="property.meta.id + index"
-                              [(ngModel)]="attribute.value"
-                              [validateMeta]="property.meta"
-                              #ngModel="ngModel"></markdown-input>
-
-              <error-messages [control]="ngModel.control"></error-messages>
-            </div>
-            
-          </ng-container>
-        </div>
+        <ng-container [ngSwitch]="property.editorType">
+          
+          <input *ngSwitchCase="'input'" 
+                 type="text"
+                 class="form-control"
+                 [id]="id"
+                 autocomplete="off"
+                 [formControl]="property.control" />
+          
+          <markdown-input *ngSwitchCase="'markdown'" 
+                          [id]="id"
+                          [formControl]="property.control"></markdown-input>
+          
+          <status-input *ngSwitchCase="'status'"
+                        [id]="id"
+                        [formControl]="property.control"></status-input>
   
-        <button *ngIf="canRemove()" 
-                class="btn btn-default remove-button"
-                (click)="removeValue(attribute)"
-                ngbTooltip="{{'Remove' | translate}} {{property.meta.label | translateValue | lowercase}}" [placement]="'left'">
-          <i class="fa fa-trash"></i>
-        </button>
+          <error-messages [control]="property.control"></error-messages>
+          
+        </ng-container>
+        
       </div>
       
     </div>
@@ -64,45 +42,14 @@ import { Attribute } from '../../entities/node-api';
 })
 export class LiteralInputComponent {
 
-  @Input() property: Property;
-
-  @ViewChildren('ngModel') ngModel: QueryList<NgModel>;
+  @Input() id: string;
+  @Input() property: FormPropertyLiteral;
 
   constructor(private editableService: EditableService) {
   }
 
-  valueInError(index: number) {
-
-    function isNgModelValid(ngModel: QueryList<NgModel>) {
-      if (!ngModel) {
-        return true;
-      } else {
-        const ngModels = ngModel.toArray();
-        return ngModels.length === 0 || ngModels.length <= index || ngModels[index].valid;
-      }
-    }
-
-    return !isNgModelValid(this.ngModel);
-  }
-
-  addNewValue() {
-    this.property.newLiteral();
-  }
-
-  removeValue(attribute: Attribute) {
-    this.property.remove(attribute);
-  }
-
-  get editorType() {
-    return this.property.meta.typeAsString.editorType;
-  }
-
-  canAdd() {
-    return this.property.meta.typeAsString.cardinality === 'multiple'
-  }
-
-  canRemove() {
-    return this.property.attributes.length > 1;
+  valueInError() {
+    return !this.property.control.valid;
   }
 
   get editing() {

@@ -19,9 +19,10 @@ import {
   TextAnalysis
 } from '../utils/text-analyzer';
 import { isDefined } from '../utils/object';
-import { defaultLanguages } from '../utils/language';
 import { Subject } from 'rxjs/Subject';
 import { removeMatching, replaceMatching } from '../utils/array';
+import { FormNode } from './form-state';
+import { defaultLanguages } from '../utils/language';
 
 function onlySelect<T>(action: Observable<Action<T>>): Observable<T> {
   const selectAction: Observable<SelectAction<T>> = action.filter(isSelect);
@@ -315,7 +316,7 @@ export class CollectionListModel {
     this.graphId = graphId;
     this.loading = true;
 
-    this.termedService.getCollectionList(graphId, defaultLanguages).subscribe(collections => {
+    this.termedService.getCollectionList(graphId).subscribe(collections => {
       const sortedCollections = collections.sort(comparingLocalizable<CollectionNode>(this.languageService, collection => collection.label));
       this.allCollections$.next(sortedCollections);
       this.loading = false;
@@ -326,7 +327,7 @@ export class CollectionListModel {
     if (remove) {
       removeItem(this.allCollections$, collectionId);
     } else {
-      this.termedService.getCollection(this.graphId, collectionId, defaultLanguages)
+      this.termedService.getCollection(this.graphId, collectionId)
         .subscribe(collection => {
           if (!updateItem(this.allCollections$, collectionId, collection)) {
             this.initializeGraph(this.graphId);
@@ -339,20 +340,20 @@ export class CollectionListModel {
 @Injectable()
 export class ConceptViewModelService {
 
-  vocabularyInEdit: VocabularyNode;
+  vocabularyForm: FormNode;
   vocabulary: VocabularyNode;
   vocabulary$ = new BehaviorSubject<Action<VocabularyNode>>(createNoSelection());
   vocabularySelect$ = onlySelect(this.vocabulary$);
   vocabularyEdit$ = onlyEdit(this.vocabulary$);
   vocabularyRemove$ = onlyRemove(this.vocabulary$);
 
-  conceptInEdit: ConceptNode|null;
+  conceptForm: FormNode|null;
   conceptAction$ = new BehaviorSubject<Action<ConceptNode>>(createNoSelection());
   conceptSelect$ = onlySelect(this.conceptAction$);
   conceptEdit$ = onlyEdit(this.conceptAction$);
   conceptRemove$ = onlyRemove(this.conceptAction$);
 
-  collectionInEdit: CollectionNode|null;
+  collectionForm: FormNode|null;
   collectionAction$ = new BehaviorSubject<Action<CollectionNode>>(createNoSelection());
   collectionSelect$ = onlySelect(this.collectionAction$);
   collectionEdit$ = onlyEdit(this.collectionAction$);
@@ -395,6 +396,10 @@ export class ConceptViewModelService {
     });
   }
 
+  get languages(): string[] {
+    return defaultLanguages; // TODO
+  }
+
   get concept(): ConceptNode|null {
 
     const action = this.conceptAction$.getValue();
@@ -426,9 +431,9 @@ export class ConceptViewModelService {
     this.graphId = graphId;
     this.loadingVocabulary = true;
 
-    this.termedService.getVocabulary(graphId, defaultLanguages).subscribe(vocabulary => {
+    this.termedService.getVocabulary(graphId).subscribe(vocabulary => {
       this.locationService.atVocabulary(vocabulary);
-      this.vocabularyInEdit = vocabulary.clone();
+      this.vocabularyForm = new FormNode(vocabulary, this.languages);
       this.vocabulary = vocabulary;
       this.vocabulary$.next(createSelectAction(vocabulary));
       this.loadingVocabulary = false;
@@ -453,7 +458,7 @@ export class ConceptViewModelService {
         } else {
           this.locationService.atVocabulary(vocabulary);
         }
-        this.conceptInEdit = concept ? concept.clone() : null;
+        this.conceptForm = concept ? new FormNode(concept, this.languages) : null;
         this.conceptAction$.next(concept ? createSelectAction(concept) : createNoSelection());
         this.loadingConcept = false;
       });
@@ -466,7 +471,7 @@ export class ConceptViewModelService {
       init(null);
     } else {
       this.vocabularySelect$.subscribe(vocabulary => {
-        this.termedService.findConcept(vocabulary.graphId, conceptId, defaultLanguages).subscribe(concept => {
+        this.termedService.findConcept(vocabulary.graphId, conceptId).subscribe(concept => {
           if (concept) {
             init(concept);
           } else {
@@ -491,7 +496,7 @@ export class ConceptViewModelService {
         } else {
           this.locationService.atVocabulary(vocabulary);
         }
-        this.collectionInEdit = collection ? collection.clone() : null;
+        this.collectionForm = collection ? new FormNode(collection, this.languages) : null;
         this.collectionAction$.next(collection ? createSelectAction(collection) : createNoSelection());
         this.loadingCollection = false;
       });
@@ -504,7 +509,7 @@ export class ConceptViewModelService {
       init(null);
     } else {
       this.vocabularySelect$.subscribe(vocabulary => {
-        this.termedService.findCollection(vocabulary.graphId, collectionId, defaultLanguages).subscribe(collection => {
+        this.termedService.findCollection(vocabulary.graphId, collectionId).subscribe(collection => {
           if (collection) {
             init(collection);
           } else {
@@ -516,19 +521,21 @@ export class ConceptViewModelService {
   }
 
   saveConcept(): Promise<any> {
-    if (!this.conceptInEdit) {
+
+    if (!this.concept || !this.conceptForm) {
       throw new Error('Cannot save when there is no concept');
     }
 
     const that = this;
-    const concept = this.conceptInEdit;
+    const concept = this.concept.clone();
+    this.conceptForm.assignChanges(concept);
 
     return new Promise((resolve, reject) => {
       this.termedService.updateNode(concept, this.concept)
-        .flatMap(() => this.termedService.getConcept(this.graphId, concept.id, defaultLanguages))
+        .flatMap(() => this.termedService.getConcept(this.graphId, concept.id))
         .subscribe({
           next(persistentConcept: ConceptNode) {
-            that.conceptInEdit = persistentConcept;
+            that.conceptForm = new FormNode(persistentConcept, that.languages);
             that.conceptAction$.next(createEditAction(persistentConcept.clone()));
             resolve();
           },
@@ -569,24 +576,26 @@ export class ConceptViewModelService {
     if (!this.concept.persistent) {
       this.router.navigate(['/concepts', this.graphId]);
     } else {
-      this.conceptInEdit = this.concept.clone();
+      this.conceptForm = new FormNode(this.concept, this.languages);
     }
   }
 
   saveCollection(): Promise<any> {
-    if (!this.collectionInEdit) {
+
+    if (!this.collection || !this.collectionForm) {
       throw new Error('Cannot save when there is no collection');
     }
 
     const that = this;
-    const collection = this.collectionInEdit;
+    const collection = this.collection.clone();
+    this.collectionForm.assignChanges(collection);
 
     return new Promise((resolve, reject) => {
       this.termedService.updateNode(collection, this.collection)
-        .flatMap(() => this.termedService.getCollection(this.graphId, collection.id, defaultLanguages))
+        .flatMap(() => this.termedService.getCollection(this.graphId, collection.id))
         .subscribe({
           next(persistentCollection: CollectionNode) {
-            that.collectionInEdit = persistentCollection;
+            that.collectionForm = new FormNode(persistentCollection, that.languages);
             that.collectionAction$.next(createEditAction(persistentCollection.clone()));
             resolve();
           },
@@ -627,7 +636,7 @@ export class ConceptViewModelService {
     if (!this.collection.persistent) {
       this.router.navigate(['/concepts', this.graphId]);
     } else {
-      this.collectionInEdit = this.collection.clone();
+      this.collectionForm = new FormNode(this.collection, this.languages);
     }
   }
 
@@ -635,12 +644,15 @@ export class ConceptViewModelService {
 
     const that = this;
 
+    const vocabulary = this.vocabulary.clone();
+    this.vocabularyForm.assignChanges(vocabulary);
+
     return new Promise((resolve, reject) => {
-      this.termedService.updateNode(this.vocabularyInEdit, this.vocabulary)
-        .flatMap(() => this.termedService.getVocabulary(this.graphId, defaultLanguages))
+      this.termedService.updateNode(vocabulary, this.vocabulary)
+        .flatMap(() => this.termedService.getVocabulary(this.graphId))
         .subscribe({
           next(persistentVocabulary: VocabularyNode) {
-            that.vocabularyInEdit = persistentVocabulary;
+            that.vocabularyForm = new FormNode(persistentVocabulary, that.languages);
             that.vocabulary = persistentVocabulary.clone();
             resolve();
           },
@@ -674,6 +686,6 @@ export class ConceptViewModelService {
   }
 
   resetVocabulary() {
-    this.vocabularyInEdit = this.vocabulary.clone();
+    this.vocabularyForm = new FormNode(this.vocabulary, this.languages);
   }
 }

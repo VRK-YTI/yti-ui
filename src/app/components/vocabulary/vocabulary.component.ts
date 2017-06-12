@@ -20,7 +20,7 @@ import { DeleteConfirmationModalService } from '../common/delete-confirmation.mo
           </div>
         </ng-template>
         <ng-template ngbPanelContent>
-          <form #form>
+          <form #form [formGroup]="formNode.control">
             <div class="row">
               <div class="col-md-12">
                 <editable-buttons [form]="form" [canRemove]="true"></editable-buttons>
@@ -30,7 +30,7 @@ import { DeleteConfirmationModalService } from '../common/delete-confirmation.mo
               </div>
             </div>
 
-            <vocabulary-form [vocabulary]="vocabularyInEdit"></vocabulary-form>
+            <vocabulary-form [vocabulary]="vocabulary" [form]="formNode"></vocabulary-form>
             <meta-information [node]="vocabulary"></meta-information>
           </form>
         </ng-template>
@@ -51,16 +51,12 @@ export class VocabularyComponent implements EditingComponent {
         .then(() => conceptViewModel.removeVocabulary());
   }
 
+  get formNode() {
+    return this.conceptViewModel.vocabularyForm;
+  }
+
   get vocabulary() {
     return this.conceptViewModel.vocabulary;
-  }
-
-  get vocabularyInEdit() {
-    return this.conceptViewModel.vocabularyInEdit;
-  }
-
-  get showEmpty() {
-    return this.editableService.editing;
   }
 
   isEditing(): boolean {

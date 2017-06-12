@@ -1,43 +1,46 @@
-import { Component, Input, ViewChild } from '@angular/core';
-import { NgModel } from '@angular/forms';
-import { EditableService } from '../../services/editable.service';
-import { Property } from '../../entities/node';
+import { Component, forwardRef, Input } from '@angular/core';
+import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { statuses } from '../../entities/constants';
 
 @Component({
   selector: 'status-input',
   styleUrls: ['./status-input.component.scss'],
-  template: `
-    <span *ngIf="!editing">{{property.singleLiteralValue | translate}}</span>
-    <div *ngIf="editing" class="form-group" [ngClass]="{'has-danger': valueInError}">
-      <div>
-        <select class="form-control"
-                [id]="property.meta.id"
-                [(ngModel)]="property.singleLiteralValue"
-                #ngModel="ngModel">
-          <option *ngFor="let status of statuses" [ngValue]="status">{{status | translate}}</option>
-        </select>
-
-        <error-messages [control]="ngModel.control"></error-messages>
-      </div>
-    </div>
+  providers: [{
+    provide: NG_VALUE_ACCESSOR,
+    useExisting: forwardRef(() => StatusInputComponent),
+    multi: true
+  }],
+  template: `    
+    <select class="form-control"
+            [id]="id"
+            [formControl]="select">
+      <option *ngFor="let status of statuses" [ngValue]="status">{{status | translate}}</option>
+    </select>
   `
 })
-export class StatusInputComponent {
+export class StatusInputComponent implements ControlValueAccessor {
 
-  @Input() property: Property;
-  @ViewChild('ngModel') ngModel: NgModel;
-
+  @Input() id: string;
   statuses = statuses;
 
-  constructor(private editableService: EditableService) {
+  select = new FormControl();
+
+  private propagateChange: (fn: any) => void = () => {};
+  private propagateTouched: (fn: any) => void = () => {};
+
+  constructor() {
+    this.select.valueChanges.subscribe(x => this.propagateChange(x));
   }
 
-  get valueInError() {
-    return !!this.ngModel && !this.ngModel.valid;
+  writeValue(obj: any): void {
+    this.select.setValue(obj);
   }
 
-  get editing() {
-    return this.editableService.editing;
+  registerOnChange(fn: any): void {
+    this.propagateChange = fn;
+  }
+
+  registerOnTouched(fn: any): void {
+    this.propagateTouched = fn;
   }
 }

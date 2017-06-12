@@ -17,7 +17,7 @@ import { requireDefined } from '../../utils/object';
         <h3>{{collection.label | translateValue}}</h3>
       </div>
 
-      <form #form class="component-content">
+      <form #form [formGroup]="formNode.control" class="component-content">
 
         <div class="row">
           <div class="col-md-12">
@@ -27,13 +27,15 @@ import { requireDefined } from '../../utils/object';
         
         <div class="row">
           <property class="col-md-12"
-                    [value]="property"
-                    *ngFor="let property of collectionInEdit | properties: showEmpty"></property>
+                    [property]="property.property"
+                    [id]="property.name"
+                    *ngFor="let property of formNode.properties"></property>
   
           <reference class="col-md-12"
-                     [value]="reference"
+                     [reference]="reference.reference"
+                     [id]="reference.name"
                      [unsaved]="unsaved"
-                     *ngFor="let reference of collectionInEdit | references: showEmpty"></reference>
+                     *ngFor="let reference of formNode.references"></reference>
         </div>
 
         <meta-information [hidden]="!collection.persistent" [node]="collection"></meta-information>
@@ -70,6 +72,10 @@ export class CollectionComponent implements EditingComponent, OnDestroy {
     }));
   }
 
+  get formNode() {
+    return this.conceptViewModel.collectionForm!;
+  }
+
   get unsaved() {
     const collection = this.conceptViewModel.collection;
     return collection && !collection.persistent;
@@ -81,16 +87,8 @@ export class CollectionComponent implements EditingComponent, OnDestroy {
     }
   }
 
-  get showEmpty() {
-    return this.editableService.editing;
-  }
-
   get collection() {
-    return this.conceptViewModel.collection;
-  }
-
-  get collectionInEdit() {
-    return this.conceptViewModel.collectionInEdit;
+    return this.conceptViewModel.collection!;
   }
 
   isEditing(): boolean {

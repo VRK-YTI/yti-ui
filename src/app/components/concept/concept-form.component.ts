@@ -1,36 +1,39 @@
 import { Component, Input } from '@angular/core';
 import { ConceptNode } from '../../entities/node';
-import { EditableService } from '../../services/editable.service';
 import { SearchConceptModalService } from './search-concept.modal';
 import { SelectConceptReferenceModalService } from './select-concept-reference.modal';
 import { ignoreModalClose, isModalClose } from '../../utils/modal';
 import { anyMatching } from '../../utils/array';
+import { FormNode } from '../../services/form-state';
 
 @Component({
   selector: 'concept-form',
   template: `
     <div class="row">
       <!-- Special handling for primary term, could be solved with mixed property/reference sorting -->
-      <reference *ngIf="concept.hasTerms()"
+      <reference *ngIf="form.hasPrimaryTerm()"
                  class="col-md-12"
                  [multiColumnTerms]="multiColumn"
                  [unsaved]="!concept.persistent"
-                 [value]="concept.terms"></reference>
+                 [reference]="form.primaryTermReference">
+                 [id]="'prefLabelXl'"</reference>
       
-      <property *ngFor="let property of concept | properties: showEmpty"
+      <property *ngFor="let child of form.properties"
                 class="col-md-12" 
-                [class.col-xl-6]="multiColumn && property.multiColumn" 
-                [value]="property"
+                [class.col-xl-6]="multiColumn && child.property.multiColumn" 
+                [property]="child.property"
+                [id]="child.name"
                 [conceptSelector]="conceptSelector"
-                [relatedConcepts]="concept.referencedConcepts"></property>
+                [relatedConcepts]="form.referencedConcepts"></property>
       
-      <reference *ngFor="let reference of concept | references: showEmpty : ['prefLabelXl']" 
+      <reference *ngFor="let reference of form.nonPrimaryTermReferences" 
                  class="col-md-12" 
-                 [class.col-xl-6]="multiColumn && !reference.term"
+                 [class.col-xl-6]="multiColumn && !reference.reference.term"
                  [multiColumnTerms]="multiColumn"
                  [unsaved]="!concept.persistent"
                  (conceptRemove)="onConceptRemove($event)"
-                 [value]="reference"></reference>
+                 [reference]="reference.reference"
+                 [id]="reference.name"></reference>
     </div>
 
     <meta-information [hidden]="!concept.persistent" [node]="concept"></meta-information>
@@ -39,32 +42,28 @@ import { anyMatching } from '../../utils/array';
 export class ConceptFormComponent {
 
   @Input() concept: ConceptNode;
+  @Input() form: FormNode;
   @Input() multiColumn = false;
 
   conceptSelector = (name: string) => this.selectConcept(name);
 
-  constructor(private editableService: EditableService,
-              private searchConceptModalService: SearchConceptModalService,
+  constructor(private searchConceptModalService: SearchConceptModalService,
               private selectConceptReferenceModalService: SelectConceptReferenceModalService) {
-  }
-
-  get showEmpty() {
-    return this.editableService.editing;
   }
 
   onConceptRemove(concept: ConceptNode) {
 
-    const lastReferenceRemoved = !anyMatching(this.concept.referencedConcepts, ref => ref.id === concept.id);
+    const lastReferenceRemoved = !anyMatching(this.form.referencedConcepts, ref => ref.id === concept.id);
 
     if (lastReferenceRemoved) {
-      this.concept.removeMarkdownReferences(concept);
+      this.form.removeMarkdownReferences(concept);
     }
   }
 
   selectConcept(name: string): Promise<ConceptNode|null> {
     return this.searchConceptModalService.openForGraph(this.concept.graphId, name)
       .then(concept => {
-        if (!this.concept.hasConceptReference(concept.id)) {
+        if (!this.form.hasConceptReference(concept.id)) {
           return this.selectConceptReferenceModalService.open(this.concept)
             .then(reference => {
               reference.values.push(concept);

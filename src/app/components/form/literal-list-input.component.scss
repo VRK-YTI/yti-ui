@@ -1,0 +1,16 @@
+.add-button {
+  float: right;
+  margin-top: -34px;
+  margin-bottom: 5px;
+  padding: 5px 8px;
+}
+
+.remove-button {
+  float: right;
+  padding: 8px;
+}
+
+.removable {
+  float: left;
+  width: calc(100% - 30px);
+}

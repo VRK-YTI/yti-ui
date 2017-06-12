@@ -1,19 +1,19 @@
 import { Component, Input } from '@angular/core';
-import { Reference, ConceptLinkNode } from '../../entities/node';
+import { ConceptLinkNode } from '../../entities/node';
 import { EditableService } from '../../services/editable.service';
 import { SearchConceptModalService } from './search-concept.modal';
 import { remove } from '../../utils/array';
 import { MetaModelService } from '../../services/meta-model.service';
 import { TermedService } from '../../services/termed.service';
-import { defaultLanguages } from '../../utils/language';
 import { ignoreModalClose } from '../../utils/modal';
+import { FormReferenceLiteral } from '../../services/form-state';
 
 @Component({
   selector: 'concept-link-reference-input',
   styleUrls: ['./concept-link-reference-input.component.scss'],
   template: `
     <ul *ngIf="!editing">
-      <li *ngFor="let conceptLink of conceptLinkReference.values">
+      <li *ngFor="let conceptLink of reference.value">
         <a [routerLink]="['/concepts', conceptLink.targetGraph, 'concept', conceptLink.targetId]"
            [ngbPopover]="conceptLink.vocabularyLabel | translateValue" 
            [triggers]="'mouseenter:mouseleave'"
@@ -24,7 +24,7 @@ import { ignoreModalClose } from '../../utils/modal';
     </ul>
 
     <div *ngIf="editing">
-      <div *ngFor="let conceptLink of conceptLinkReference.values">
+      <div *ngFor="let conceptLink of reference.value">
         <a><i class="fa fa-times" (click)="removeReference(conceptLink)"></i></a>
         <span [ngbPopover]="conceptLink.vocabularyLabel | translateValue" 
               [triggers]="'mouseenter:mouseleave'"
@@ -43,7 +43,7 @@ import { ignoreModalClose } from '../../utils/modal';
 })
 export class ConceptLinkReferenceInputComponent {
 
-  @Input('concept') conceptLinkReference: Reference<ConceptLinkNode>;
+  @Input() reference: FormReferenceLiteral<ConceptLinkNode>;
 
   constructor(private editableService: EditableService,
               private termedService: TermedService,
@@ -56,17 +56,17 @@ export class ConceptLinkReferenceInputComponent {
   }
 
   removeReference(conceptLink: ConceptLinkNode) {
-    remove(this.conceptLinkReference.values, conceptLink);
+    remove(this.reference.value, conceptLink);
   }
 
   addReference() {
 
-    const graphId = this.conceptLinkReference.meta.graphId;
+    const graphId = this.reference.targetGraph;
 
     this.searchConceptModal.openOtherThanGraph(graphId).then(concept => {
-      this.termedService.getVocabulary(concept.graphId, defaultLanguages)
+      this.termedService.getVocabulary(concept.graphId)
         .flatMap(vocabulary => this.metaModelService.createConceptLink(graphId, vocabulary, concept))
-        .subscribe(conceptLink => this.conceptLinkReference.values.push(conceptLink));
+        .subscribe(conceptLink => this.reference.value.push(conceptLink));
     }, ignoreModalClose);
   }
 }

@@ -1,16 +1,14 @@
 import { asLocalizable, Localizable, combineLocalizables, Localization } from './localization';
-import { requireDefined, assertNever, isDefined } from '../utils/object';
-import { normalizeAsArray, anyMatching, requireSingle, allMatching, remove, flatten } from '../utils/array';
+import { requireDefined, isDefined } from '../utils/object';
+import { normalizeAsArray, requireSingle, remove } from '../utils/array';
 import { NodeExternal, NodeType, Attribute, Identifier, NodeInternal, VocabularyNodeType } from './node-api';
 import {
-  PropertyMeta, ReferenceMeta, NodeMeta, MetaModel, LocalizableProperty, StringProperty,
-  StatusProperty
+  PropertyMeta, ReferenceMeta, NodeMeta, MetaModel
 } from './meta';
 import { Moment } from 'moment';
 import * as moment from 'moment';
 import { getOrCreate } from '../utils/map';
-import { Parser, Node as MarkdownNode } from 'commonmark';
-import { children } from '../utils/markdown';
+import { defaultLanguages } from '../utils/language';
 
 export type KnownNode = VocabularyNode
                       | ConceptNode
@@ -21,99 +19,11 @@ export type KnownNode = VocabularyNode
 
 export class Property {
 
-  attributes: Attribute[];
-
-  constructor(attributes: Attribute[], public meta: PropertyMeta, public languages: string[]) {
-
-    const initializeLocalizable = (localizableProperty: LocalizableProperty) => {
-      if (localizableProperty.cardinality === 'single') {
-        this.attributes = languages.map(lang => attributes.find(a => a.lang === lang) || this.createLocalizedAttribute(lang, ''));
-      } else {
-        this.attributes = attributes;
-      }
-    };
-
-    const initializeString = (stringProperty: StringProperty, defaultValue = '') => {
-
-      if (stringProperty.cardinality === 'single') {
-        switch (attributes.length) {
-          case 0:
-            this.attributes = [this.createLiteralAttribute(defaultValue)];
-            break;
-          case 1:
-            this.attributes = attributes;
-            break;
-          default:
-            throw new Error('Literal with multiple values: ' + attributes.map(a => a.value).join(','));
-        }
-      } else {
-        this.attributes = attributes;
-      }
-    };
-
-    const initializeStatus = (statusProperty: StatusProperty, defaultValue = 'Unstable') => {
-
-      switch (attributes.length) {
-        case 0:
-          this.attributes = [this.createLiteralAttribute(defaultValue)];
-          break;
-        case 1:
-          this.attributes = attributes[0].value ? attributes : [this.createLiteralAttribute(defaultValue)];
-          break;
-        default:
-          throw new Error('Status with multiple values: ' + attributes.map(a => a.value).join(','));
-      }
-    };
-
-    switch (meta.type.type) {
-      case 'localizable':
-        initializeLocalizable(meta.type);
-        break;
-      case 'status':
-        initializeStatus(meta.type);
-        break;
-      case 'string':
-        initializeString(meta.type);
-        break;
-      default:
-        assertNever(meta.type, 'Unknown meta type: ' + meta.type);
-    }
-  }
-
-  private createLiteralAttribute(value: string): Attribute {
-    return { lang: '', value, regex: this.meta.regex };
-  }
-
-  private createLocalizedAttribute(lang: string, value: string): Attribute {
-    return { lang, value, regex: this.meta.regex };
-  }
-
-  newLiteral(value: string = '') {
-    this.attributes.push(this.createLiteralAttribute(value));
-  }
-
-  newLocalization(language: string, value = '') {
-    this.attributes.push(this.createLocalizedAttribute(language, value));
+  constructor(public attributes: Attribute[], public meta: PropertyMeta) {
   }
 
   remove(attribute: Attribute) {
     remove(this.attributes, attribute);
-  }
-
-  get singleLiteralValue() {
-    if (this.attributes.length > 0) {
-      return this.attributes[0].value;
-    } else {
-      return '';
-    }
-  }
-
-  set singleLiteralValue(value: string) {
-    if (this.attributes.length > 0) {
-      this.attributes[0].value = value;
-    } else {
-      this.newLiteral(value);
-    }
   }
 
   asValues() {
@@ -125,21 +35,31 @@ export class Property {
   }
 
   setLocalizable(localizable: Localizable) {
-    for (const attribute of this.attributes) {
-      attribute.value = localizable[attribute.lang];
-    }
+    this.attributes = Object.entries(localizable).map(([lang, value]) => ({ lang, value, regex: this.meta.regex }));
+  }
+
+  setLiteralValue(value: string) {
+    this.attributes = [{ lang: '', value, regex: this.meta.regex }];
+  }
+
+  setValues(values: string[]) {
+    this.attributes = values.map(value => ({ lang: '', value, regex: this.meta.regex }));
   }
 
   asString() {
     return this.asValues().join(',');
   }
 
-  get empty() {
-    return !anyMatching(this.attributes, localization => !!localization.value.trim());
+  newLocalization(lang: string, value = '') {
+    this.attributes.push({ lang, value, regex: this.meta.regex });
   }
 
-  get multiColumn() {
-    return this.meta.multiColumn;
+  get literalValue() {
+    if (this.attributes.length > 0) {
+      return this.attributes[0].value;
+    } else {
+      return '';
+    }
   }
 }
 
@@ -147,58 +67,12 @@ export class Reference<N extends KnownNode | Node<any>> {
 
   values: N[];
 
-  constructor(nodes: NodeExternal<any>[], public meta: ReferenceMeta, private metaModel: MetaModel, public languages: string[]) {
-    if (this.type === 'PrimaryTerm') {
-
-      this.values = [];
-      const nodeMeta = metaModel.getNodeMeta(meta.graphId, meta.targetType);
-
-      for (const language of languages) {
-
-        const node = nodes.find(node => {
-          const prefLabel = node.properties['prefLabel'];
-          return prefLabel && prefLabel[0].lang === language
-        });
-
-        if (node) {
-          this.values.push(Node.create(node, metaModel, [language], true) as N);
-        } else {
-          this.values.push(Node.create(nodeMeta.createEmptyNode(), metaModel, [language], false) as N);
-        }
-      }
-    } else if (this.type === 'Synonym') {
-      this.values = nodes.map(node => {
-        const prefLabel = node.properties['prefLabel'];
-        const nodeLang = prefLabel ? prefLabel.map(attr => attr.lang) : ['fi'];
-        return Node.create(node, metaModel, nodeLang, true) as N;
-      });
-    } else {
-      this.values = nodes.map(node => Node.create(node, metaModel, languages, true) as N);
-    }
+  constructor(nodes: NodeExternal<any>[], public meta: ReferenceMeta, private metaModel: MetaModel) {
+    this.values = nodes.map(node => Node.create(node, metaModel, true) as N);
   }
 
-  createNewReference(languages = this.languages) {
-    const newReference = Node.create(this.targetMeta.createEmptyNode(), this.metaModel, languages, false) as N;
-    this.values.push(newReference);
-    return newReference;
-  }
-
-  removeReference(node: N) {
-    remove(this.values, node);
-  }
-
-  get singleValue(): N|null {
-    if (this.values.length === 0) {
-      return null;
-    } else if (this.values.length === 1) {
-      return this.values[0];
-    } else {
-      throw new Error('Multiple values when single is required: ' + this.values.length);
-    }
-  }
-
-  set singleValue(value: N|null) {
-    this.values = value ? [value] : [];
+  createNewReference() {
+    return Node.create(this.targetMeta.createEmptyNode(), this.metaModel, false) as N;
   }
 
   get targetMeta() {
@@ -230,11 +104,7 @@ export class Reference<N extends KnownNode | Node<any>> {
   }
 
   get empty() {
-    if (this.term) {
-      return allMatching((this.values as TermNode[]), term => term.empty);
-    } else {
-      return this.values.length === 0;
-    }
+    return this.values.length === 0;
   }
 }
 
@@ -243,9 +113,9 @@ export class Referrer<N extends KnownNode | Node<any>> {
   values: N[];
   valuesByMeta: { meta: ReferenceMeta, nodes: N[] }[] = [];
 
-  constructor(referenceId: string, referrers: NodeExternal<any>[], metaModel: MetaModel, languages: string[]) {
+  constructor(referenceId: string, referrers: NodeExternal<any>[], metaModel: MetaModel) {
 
-    this.values = referrers.map(referrer => Node.create(referrer, metaModel, languages, true) as N);
+    this.values = referrers.map(referrer => Node.create(referrer, metaModel, true) as N);
 
     const references = new Map<ReferenceMeta, N[]>();
 
@@ -257,10 +127,6 @@ export class Referrer<N extends KnownNode | Node<any>> {
     for (const [meta, nodes] of Array.from(references.entries())) {
       this.valuesByMeta.push({meta, nodes});
     }
-  }
-
-  get empty() {
-    return this.values.length === 0;
   }
 }
 
@@ -274,45 +140,44 @@ export class Node<T extends NodeType> {
 
   protected constructor(protected node: NodeExternal<T>,
                         protected metaModel: MetaModel,
-                        public readonly languages: string[],
                         public persistent: boolean) {
 
     this.meta = metaModel.getNodeMeta(this.graphId, this.type);
 
     for (const propertyMeta of this.meta.properties) {
       const property = normalizeAsArray(node.properties[propertyMeta.id]);
-      this.properties[propertyMeta.id] = new Property(property, propertyMeta, languages);
+      this.properties[propertyMeta.id] = new Property(property, propertyMeta);
     }
 
     for (const referenceMeta of this.meta.references) {
       const reference = normalizeAsArray(node.references[referenceMeta.id]);
-      this.references[referenceMeta.id] = new Reference(reference, referenceMeta, metaModel, languages);
+      this.references[referenceMeta.id] = new Reference(reference, referenceMeta, metaModel);
     }
 
     for (const [name, referrerNodes] of Object.entries(node.referrers)) {
-      this.referrers[name] = new Referrer(name, normalizeAsArray(referrerNodes), metaModel, languages);
+      this.referrers[name] = new Referrer(name, normalizeAsArray(referrerNodes), metaModel);
     }
   }
 
-  static create(node: NodeExternal<any>, metaModel: MetaModel, languages: string[], persistent: boolean): KnownNode | Node<any> {
+  static create(node: NodeExternal<any>, metaModel: MetaModel, persistent: boolean): KnownNode | Node<any> {
     switch (node.type.id) {
       case 'Vocabulary':
       case 'TerminologicalVocabulary':
-        return new VocabularyNode(node, metaModel, languages, persistent);
+        return new VocabularyNode(node, metaModel, persistent);
       case 'Concept':
-        return new ConceptNode(node, metaModel, languages, persistent);
+        return new ConceptNode(node, metaModel, persistent);
       case 'ConceptLink':
-        return new ConceptLinkNode(node, metaModel, languages, persistent);
+        return new ConceptLinkNode(node, metaModel, persistent);
       case 'Term':
-        return new TermNode(node, metaModel, languages, persistent);
+        return new TermNode(node, metaModel, persistent);
       case 'Collection':
-        return new CollectionNode(node, metaModel, languages, persistent);
+        return new CollectionNode(node, metaModel, persistent);
       case 'Group':
-        return new GroupNode(node, metaModel, languages, persistent);
+        return new GroupNode(node, metaModel, persistent);
       case 'Organization':
-        return new OrganizationNode(node, metaModel, languages, persistent);
+        return new OrganizationNode(node, metaModel, persistent);
       default:
-        return new Node<any>(node, metaModel, languages, persistent);
+        return new Node<any>(node, metaModel, persistent);
     }
   }
 
@@ -357,7 +222,7 @@ export class Node<T extends NodeType> {
       }
     };
 
-    const cloned = Node.create(JSON.parse(JSON.stringify(this.toExternalNode())), this.metaModel, this.languages, this.persistent) as N;
+    const cloned = Node.create(JSON.parse(JSON.stringify(this.toExternalNode())), this.metaModel, this.persistent) as N;
     setPersistent(this, cloned);
     return cloned;
   }
@@ -465,7 +330,7 @@ export class Node<T extends NodeType> {
   }
 
   getNormalizedReferrer<N extends KnownNode | Node<any>>(referenceId: string): Referrer<N> {
-    return this.referrers[referenceId] as Referrer<N> || new Referrer<N>(referenceId, [], this.metaModel, this.languages);
+    return this.referrers[referenceId] as Referrer<N> || new Referrer<N>(referenceId, [], this.metaModel);
   }
 
   getProperty(propertyName: string): Property {
@@ -485,18 +350,22 @@ export class Node<T extends NodeType> {
   }
 
   setPropertyAsLiteral(property: string, value: string) {
-    this.getProperty(property).singleLiteralValue = value;
+    this.getProperty(property).setLiteralValue(value);
   }
 
   getPropertyAsValues(property: string): string[] {
     return this.getProperty(property).asValues();
   }
+
+  setPropertyAsValues(property: string, values: string[]) {
+    this.getProperty(property).setValues(values);
+  }
 }
 
 export class VocabularyNode extends Node<VocabularyNodeType> {
 
-  constructor(node: NodeExternal<VocabularyNodeType>, metaModel: MetaModel,languages: string[], persistent: boolean) {
-    super(node, metaModel, languages, persistent);
+  constructor(node: NodeExternal<VocabularyNodeType>, metaModel: MetaModel, persistent: boolean) {
+    super(node, metaModel, persistent);
   }
 
   clone(): VocabularyNode {
@@ -548,8 +417,8 @@ export class VocabularyNode extends Node<VocabularyNodeType> {
 
 export class ConceptNode extends Node<'Concept'> {
 
-  constructor(node: NodeExternal<'Concept'>, metaModel: MetaModel, languages: string[], persistent: boolean) {
-    super(node, metaModel, languages, persistent);
+  constructor(node: NodeExternal<'Concept'>, metaModel: MetaModel, persistent: boolean) {
+    super(node, metaModel, persistent);
   }
 
   clone(): ConceptNode {
@@ -591,101 +460,6 @@ export class ConceptNode extends Node<'Concept'> {
     return this.getPropertyAsString('status');
   }
 
-  hasTerms() {
-    return this.meta.hasReference('prefLabelXl');
-  }
-
-  get terms(): Reference<TermNode> {
-    return this.references['prefLabelXl'];
-  }
-
-  get localizableMarkdownProperties(): Property[] {
-    return Object.values(this.properties).filter(p => p.meta.type.type === 'localizable' && p.meta.type.editorType === 'markdown');
-  }
-
-  removeMarkdownReferences(concept: ConceptNode) {
-    for (const property of this.localizableMarkdownProperties) {
-      for (const localization of property.attributes) {
-        localization.value = this.removeReferencesTo(localization.value, concept);
-      }
-    }
-  }
-
-  // TODO: unify with other markdown printing algorithms
-  removeReferencesTo(localization: string, concept: ConceptNode): string {
-
-    let result = '';
-    let referenceRemoved = false;
-
-    const visit = (node: MarkdownNode) => {
-
-      switch (node.type) {
-        case 'paragraph':
-          result += '\n\n';
-          break;
-        case 'link':
-          if (concept.isTargetOfLink(node.destination)) {
-            result += node.firstChild.literal;
-            referenceRemoved = true;
-          } else {
-            result += `[${node.firstChild.literal}](${node.destination})`;
-          }
-          return;
-      }
-
-      if (node.literal) {
-        result += node.literal;
-      }
-
-      for (const child of children(node)) {
-        visit(child);
-      }
-    };
-
-    visit(new Parser().parse(localization));
-
-    return referenceRemoved ? result : localization;
-  }
-
-  get referencedConcepts(): ConceptNode[] {
-    return flatten(
-      Object.values(this.references)
-        .filter(ref => ref.type === 'Concept')
-        .map(ref => ref.values)
-    );
-  }
-
-  hasConceptReference(conceptId: string) {
-    return anyMatching(this.referencedConcepts, c => c.id === conceptId);
-  }
-
-  setPrimaryLabel(language: string, value: string) {
-    if (this.hasTerms()) {
-      const matchingTerm = this.findTermForLanguage(language) || this.terms.values[0];
-      matchingTerm.value = value;
-    } else {
-      const matchingLocalization = this.findLabelLocalizationForLanguage(language) || this.anyLabelLocalization() || this.createLabelLocalization(language);
-      matchingLocalization.value = value;
-    }
-  }
-
-  private findTermForLanguage(language: string): TermNode|undefined {
-    return this.terms.values.find(term => term.language === language);
-  }
-
-  private findLabelLocalizationForLanguage(language: string): Localization|undefined {
-    return (this.properties['prefLabel'].attributes as Localization[]).find(localization => localization.lang === language);
-  }
-
-  private createLabelLocalization(language: string) {
-    this.properties['prefLabel'].newLocalization(language);
-    return this.anyLabelLocalization();
-  }
-
-  private anyLabelLocalization(): Localization {
-    return this.properties['prefLabel'].attributes[0] as Localization;
-  }
-
   hasRelatedConcepts() {
     return this.meta.hasReference('related');
   }
@@ -717,43 +491,81 @@ export class ConceptNode extends Node<'Concept'> {
   get partOfThisConcepts(): Referrer<ConceptNode> {
     return this.getNormalizedReferrer<ConceptNode>('isPartOf');
   }
+
+  hasPrimaryTerm() {
+    return this.meta.hasReference('prefLabelXl');
+  }
+
+  get primaryTerm(): Reference<TermNode> {
+    return this.references['prefLabelXl'];
+  }
+
+  setPrimaryLabel(language: string, value: string) {
+    if (this.hasPrimaryTerm()) {
+      const matchingTerm = this.findPrimaryTermForLanguage(language) || this.primaryTerm.values[0];
+      matchingTerm.setLocalization(language, value);
+    } else {
+      const matchingLocalization = this.findLabelLocalizationForLanguage(language) || this.anyLabelLocalization() || this.createLabelLocalization(language);
+      matchingLocalization.value = value;
+    }
+  }
+
+  private findPrimaryTermForLanguage(language: string): TermNode|undefined {
+    return this.primaryTerm.values.find(term => term.language === language);
+  }
+
+  private findLabelLocalizationForLanguage(language: string): Localization|undefined {
+    return (this.properties['prefLabel'].attributes as Localization[]).find(localization => localization.lang === language);
+  }
+
+  private createLabelLocalization(language: string) {
+    this.properties['prefLabel'].newLocalization(language);
+    return this.anyLabelLocalization();
+  }
+
+  private anyLabelLocalization(): Localization {
+    return this.properties['prefLabel'].attributes[0] as Localization;
+  }
 }
 
 export class TermNode extends Node<'Term'> {
 
-  constructor(node: NodeExternal<'Term'>, metaModel: MetaModel, languages: string[], persistent: boolean) {
-    super(node, metaModel, languages, persistent);
+  constructor(node: NodeExternal<'Term'>, metaModel: MetaModel, persistent: boolean) {
+    super(node, metaModel, persistent);
   }
 
-  get empty() {
-    return !this.value.trim();
+  setLocalization(language: string, value: string) {
+    this.setPropertyAsLocalizable('prefLabel', { [language]: value });
+  }
+
+  hasLocalization() {
+    const prefLabel = this.properties['prefLabel'];
+    return prefLabel && prefLabel.attributes.length > 0 && prefLabel.attributes[0].lang.trim() !== '';
   }
 
   get language(): string {
-    return this.localization.lang;
+
+    if (!this.hasLocalization()) {
+      throw new Error('Term has no localization');
+    }
+
+    return this.properties['prefLabel'].attributes[0].lang;
   }
 
-  set language(value: string) {
-    this.localization.lang = value;
-  }
+  get localization(): string {
 
-  get value() {
-    return this.localization.value;
-  }
+    if (!this.hasLocalization()) {
+      throw new Error('Term has no localization');
+    }
 
-  set value(value: string) {
-    this.localization.value = value;
-  }
-
-  get localization(): Localization {
-    return this.properties['prefLabel'].attributes[0] as Localization;
+    return this.properties['prefLabel'].attributes[0].value || '';
   }
 }
 
 export class ConceptLinkNode extends Node<'ConceptLink'> {
 
-  constructor(node: NodeExternal<'ConceptLink'>, metaModel: MetaModel, languages: string[], persistent: boolean) {
-    super(node, metaModel, languages, persistent);
+  constructor(node: NodeExternal<'ConceptLink'>, metaModel: MetaModel, persistent: boolean) {
+    super(node, metaModel, persistent);
   }
 
   get label(): Localizable {
@@ -791,8 +603,8 @@ export class ConceptLinkNode extends Node<'ConceptLink'> {
 
 export class CollectionNode extends Node<'Collection'> {
 
-  constructor(node: NodeExternal<'Collection'>, metaModel: MetaModel, languages: string[], persistent: boolean) {
-    super(node, metaModel, languages, persistent);
+  constructor(node: NodeExternal<'Collection'>, metaModel: MetaModel, persistent: boolean) {
+    super(node, metaModel, persistent);
   }
 
   clone(): CollectionNode {
@@ -839,8 +651,8 @@ export class CollectionNode extends Node<'Collection'> {
 
 export class GroupNode extends Node<'Group'> {
 
-  constructor(node: NodeExternal<'Group'>, metaModel: MetaModel, languages: string[], persistent: boolean) {
-    super(node, metaModel, languages, persistent);
+  constructor(node: NodeExternal<'Group'>, metaModel: MetaModel, persistent: boolean) {
+    super(node, metaModel, persistent);
   }
 
   get label(): Localizable {
@@ -850,8 +662,8 @@ export class GroupNode extends Node<'Group'> {
 
 export class OrganizationNode extends Node<'Organization'> {
 
-  constructor(node: NodeExternal<'Organization'>, metaModel: MetaModel, languages: string[], persistent: boolean) {
-    super(node, metaModel, languages, persistent);
+  constructor(node: NodeExternal<'Organization'>, metaModel: MetaModel, persistent: boolean) {
+    super(node, metaModel, persistent);
   }
 
   get label(): Localizable {

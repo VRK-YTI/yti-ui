@@ -17,7 +17,6 @@ import { Node } from '../../entities/node';
 import { collectProperties } from '../../utils/array';
 import { assertNever, requireDefined } from '../../utils/object';
 import { TranslateService } from 'ng2-translate';
-import { defaultLanguages } from '../../utils/language';
 
 interface ConceptNetworkData {
   nodes: DataSet<UpdatableVisNode>;
@@ -720,7 +719,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
 
     const onDoubleClick = () => {
       if (isConcept) {
-        const rootConcept$ = this.termedService.getConcept(this.conceptViewModel.vocabulary.graphId, nodeId, defaultLanguages);
+        const rootConcept$ = this.termedService.getConcept(this.conceptViewModel.vocabulary.graphId, nodeId);
         rootConcept$.subscribe(concept => this.addEdgeNodesForConcept(concept));
       }
     };

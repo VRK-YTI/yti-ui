@@ -25,8 +25,6 @@ import { HighlightPipe } from './pipes/highlight.pipe';
 import { TranslateSearchValuePipe } from './pipes/translate-search-value.pipe';
 import { LocalizedInputComponent } from './components/form/localized-input.component';
 import { MetaModelService } from './services/meta-model.service';
-import { PropertiesPipe } from './pipes/properties.pipe';
-import { ReferencesPipe } from './pipes/references.pipe';
 import { PropertyComponent } from './components/form/property.component';
 import { ReferenceComponent } from './components/form/reference.component';
 import { PrimaryTermsComponent } from './components/form/primary-terms.component';
@@ -85,6 +83,7 @@ import {
   SelectConceptReferenceModalService
 } from './components/concept/select-concept-reference.modal';
 import { FrontpageComponent } from './components/fronpage.component';
+import { LiteralListInputComponent } from './components/form/literal-list-input.component';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json-loader!po-loader?format=mf!../../po/fi.po'),
@@ -149,6 +148,7 @@ const appRoutes: Routes = [
     MarkdownLinksElementComponent,
     AccordionChevronComponent,
     LiteralInputComponent,
+    LiteralListInputComponent,
     StatusInputComponent,
     LocalizedInputComponent,
     ErrorMessagesComponent,
@@ -175,8 +175,6 @@ const appRoutes: Routes = [
     TranslateValuePipe,
     TranslateSearchValuePipe,
     HighlightPipe,
-    PropertiesPipe,
-    ReferencesPipe,
     TimestampPipe,
     StripMarkdownPipe,
     KeysPipe

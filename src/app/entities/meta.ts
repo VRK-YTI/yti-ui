@@ -7,7 +7,6 @@ import { CollectionNode, ConceptLinkNode, ConceptNode, Node, VocabularyNode } fr
 import { v4 as uuid } from 'uuid';
 import * as moment from 'moment';
 import { assertNever, requireDefined } from '../utils/object';
-import { defaultLanguages } from '../utils/language';
 
 export type Cardinality = 'single'
                         | 'multiple';
@@ -25,15 +24,14 @@ export type ReferenceType = 'PrimaryTerm'
                           | 'Other';
 
 export type PropertyType = StringProperty
-                         | LocalizableProperty
-                         | StatusProperty;
-
-export type EditorType = 'input'
-                       | 'markdown';
+                         | LocalizableProperty;
 
 export type StringProperty = { type: 'string', cardinality: Cardinality, editorType: EditorType };
 export type LocalizableProperty = { type: 'localizable', cardinality: Cardinality, editorType: EditorType };
-export type StatusProperty = { type: 'status' };
+
+export type EditorType = 'input'
+                       | 'markdown'
+                       | 'status';
 
 function createString(multiple: boolean, editorType: EditorType): StringProperty {
   return { type: 'string', cardinality: (multiple ? 'multiple' : 'single'), editorType };
@@ -43,21 +41,15 @@ function createLocalizable(single: boolean, editorType: EditorType): Localizable
   return { type: 'localizable', cardinality: (single ? 'single' : 'multiple'), editorType };
 }
 
-function createStatus(): StatusProperty {
-  return { type: 'status' };
-}
-
 function createPropertyType(name: TypeName, attributes: Set<string>): PropertyType {
-
-  const editorType: EditorType = attributes.has('area') ? 'markdown' : 'input';
 
   switch (name) {
     case 'string':
-      return createString(attributes.has('multiple'), editorType);
+      return createString(attributes.has('multiple'), attributes.has('area') ? 'markdown' : 'input');
     case 'localizable':
-      return createLocalizable(attributes.has('single'), editorType);
+      return createLocalizable(attributes.has('single'), attributes.has('area') ? 'markdown' : 'input');
     case 'status':
-      return createStatus();
+      return createString(false, 'status');
     default:
       return assertNever(name, 'Unsupported type: ' + name);
   }
@@ -294,22 +286,22 @@ export class MetaModel {
     return this.getGraphMeta(graphId).getNodeMeta(nodeType);
   }
 
-  createEmptyNode<N extends Node<T>, T extends NodeType>(graphId: string, nodeId: string, nodeType: T, languages: string[]): N {
-    return Node.create(this.getNodeMeta(graphId, nodeType).createEmptyNode(nodeId), this, languages, false) as N;
+  createEmptyNode<N extends Node<T>, T extends NodeType>(graphId: string, nodeId: string, nodeType: T): N {
+    return Node.create(this.getNodeMeta(graphId, nodeType).createEmptyNode(nodeId), this, false) as N;
   }
 
   createEmptyVocabulary(graphId: string, nodeId: string, label: string, language: string): VocabularyNode {
 
     const vocabularyType: VocabularyNodeType = this.graphHas(graphId, 'Vocabulary') ? 'Vocabulary' : 'TerminologicalVocabulary';
 
-    const newVocabulary = this.createEmptyNode<VocabularyNode, VocabularyNodeType>(graphId, nodeId, vocabularyType, defaultLanguages);
+    const newVocabulary = this.createEmptyNode<VocabularyNode, VocabularyNodeType>(graphId, nodeId, vocabularyType);
     newVocabulary.setPrimaryLabel(language, label);
     return newVocabulary;
   }
 
   createEmptyConcept(vocabulary: VocabularyNode, nodeId: string, label: string, language: string): ConceptNode {
 
-    const newConcept = this.createEmptyNode<ConceptNode, 'Concept'>(vocabulary.graphId, nodeId, 'Concept', vocabulary.languages);
+    const newConcept = this.createEmptyNode<ConceptNode, 'Concept'>(vocabulary.graphId, nodeId, 'Concept');
 
     if (newConcept.hasVocabulary()) {
       newConcept.vocabulary = vocabulary.clone();
@@ -322,14 +314,14 @@ export class MetaModel {
 
   createEmptyCollection(vocabulary: VocabularyNode, nodeId: string, label: string, language: string): CollectionNode {
 
-    const newCollection = this.createEmptyNode<CollectionNode, 'Collection'>(vocabulary.graphId, nodeId, 'Collection', vocabulary.languages);
+    const newCollection = this.createEmptyNode<CollectionNode, 'Collection'>(vocabulary.graphId, nodeId, 'Collection');
     newCollection.setPrimaryLabel(language, label);
     return newCollection;
   }
 
   createConceptLink(toGraphId: string, fromVocabulary: VocabularyNode, concept: ConceptNode): ConceptLinkNode {
 
-    const newConceptLink = this.createEmptyNode<ConceptLinkNode, 'ConceptLink'>(toGraphId, uuid(), 'ConceptLink', defaultLanguages /* TODO */);
+    const newConceptLink = this.createEmptyNode<ConceptLinkNode, 'ConceptLink'>(toGraphId, uuid(), 'ConceptLink');
 
     newConceptLink.label = concept.label;
     newConceptLink.vocabularyLabel = fromVocabulary.label;

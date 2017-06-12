@@ -17,7 +17,7 @@ import { requireDefined } from '../../utils/object';
         <h3>{{concept.label | translateValue}}</h3>
       </div>
     
-      <form #form class="component-content">
+      <form #form [formGroup]="formNode.control" class="component-content">
   
         <div class="row">
           <div class="col-md-12">
@@ -25,7 +25,7 @@ import { requireDefined } from '../../utils/object';
           </div>
         </div>
   
-        <concept-form [concept]="conceptInEdit" [multiColumn]="true"></concept-form>
+        <concept-form [form]="formNode" [concept]="concept" [multiColumn]="true"></concept-form>
       </form>
       
     </div>
@@ -64,12 +64,12 @@ export class ConceptComponent implements EditingComponent, OnDestroy {
     }
   }
 
-  get concept() {
-    return this.conceptViewModel.concept;
+  get formNode() {
+    return this.conceptViewModel.conceptForm!;
   }
 
-  get conceptInEdit() {
-    return this.conceptViewModel.conceptInEdit;
+  get concept() {
+    return this.conceptViewModel.concept!;
   }
 
   isEditing(): boolean {

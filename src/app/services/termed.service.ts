@@ -10,7 +10,6 @@ import * as moment from 'moment';
 import { GraphMeta } from '../entities/meta';
 import { Localizable } from '../entities/localization';
 import { environment } from '../../environments/environment';
-import { defaultLanguages } from '../utils/language';
 
 const infiniteResultsParams = new URLSearchParams();
 infiniteResultsParams.append('max', '-1');
@@ -21,58 +20,58 @@ export class TermedService {
   constructor(private http: TermedHttp, private metaModelService: MetaModelService) {
   }
 
-  getVocabulary(graphId: string, languages: string[]): Observable<VocabularyNode> {
+  getVocabulary(graphId: string): Observable<VocabularyNode> {
     return this.metaModelService.getMeta().flatMap(metaModel => {
       if (metaModel.graphHas(graphId, 'Vocabulary')) {
         return this.getVocabularyNode(graphId, 'Vocabulary')
-          .map(vocabulary => Node.create(vocabulary, metaModel, languages, true));
+          .map(vocabulary => Node.create(vocabulary, metaModel, true));
       } else {
         return this.getVocabularyNode(graphId, 'TerminologicalVocabulary')
-          .map(vocabulary => Node.create(vocabulary, metaModel, languages, true));
+          .map(vocabulary => Node.create(vocabulary, metaModel, true));
       }
     });
   }
 
-  getVocabularyList(languages: string[]): Observable<VocabularyNode[]> {
+  getVocabularyList(): Observable<VocabularyNode[]> {
     return Observable.zip(this.metaModelService.getMeta(), this.getVocabularyNodes('Vocabulary'), this.getVocabularyNodes('TerminologicalVocabulary'))
       .map(([meta, vocabularies, terminologicalVocabularies]) =>
         [...vocabularies, ...terminologicalVocabularies]
-          .map(vocabulary => Node.create(vocabulary, meta, languages, true) as VocabularyNode));
+          .map(vocabulary => Node.create(vocabulary, meta, true) as VocabularyNode));
   }
 
-  getConcept(graphId: string, conceptId: string, languages: string[]): Observable<ConceptNode> {
+  getConcept(graphId: string, conceptId: string): Observable<ConceptNode> {
     return Observable.zip(this.metaModelService.getMeta(), this.getConceptDetailsNode(graphId, conceptId))
-      .map(([meta, concept]) => Node.create(concept, meta, languages, true));
+      .map(([meta, concept]) => Node.create(concept, meta, true));
   }
 
-  findConcept(graphId: string, conceptId: string, languages: string[]): Observable<ConceptNode|null> {
+  findConcept(graphId: string, conceptId: string): Observable<ConceptNode|null> {
     return Observable.zip(this.metaModelService.getMeta(), this.findConceptDetailsNode(graphId, conceptId))
-      .map(([meta, concept]) => concept ? Node.create(concept, meta, languages, true) : null);
+      .map(([meta, concept]) => concept ? Node.create(concept, meta, true) : null);
   }
 
-  getCollection(graphId: string, collectionId: string, languages: string[]): Observable<CollectionNode> {
+  getCollection(graphId: string, collectionId: string): Observable<CollectionNode> {
     return Observable.zip(this.metaModelService.getMeta(), this.getCollectionDetailsNode(graphId, collectionId))
-      .map(([meta, collection]) => Node.create(collection, meta, languages, true));
+      .map(([meta, collection]) => Node.create(collection, meta, true));
   }
 
-  findCollection(graphId: string, collectionId: string, languages: string[]): Observable<CollectionNode|null> {
+  findCollection(graphId: string, collectionId: string): Observable<CollectionNode|null> {
     return Observable.zip(this.metaModelService.getMeta(), this.findCollectionDetailsNode(graphId, collectionId))
-      .map(([meta, collection]) => collection ? Node.create(collection, meta, languages, true) : null);
+      .map(([meta, collection]) => collection ? Node.create(collection, meta, true) : null);
   }
 
-  getCollectionList(graphId: string, languages: string[]): Observable<CollectionNode[]> {
+  getCollectionList(graphId: string): Observable<CollectionNode[]> {
     return Observable.zip(this.metaModelService.getMeta(), this.getCollectionListNodes(graphId))
-      .map(([meta, concepts]) => concepts.map(collection => Node.create(collection, meta, languages, true)));
+      .map(([meta, concepts]) => concepts.map(collection => Node.create(collection, meta, true)));
   }
 
   getOrganizationList(): Observable<OrganizationNode[]> {
     return Observable.zip(this.metaModelService.getMeta(), this.getNodeListWithoutReferencesOrReferrers('Organization'))
-      .map(([meta, organizations]) => organizations.map(organization => Node.create(organization, meta, defaultLanguages, true)));
+      .map(([meta, organizations]) => organizations.map(organization => Node.create(organization, meta, true)));
   }
 
   getGroupList(): Observable<GroupNode[]> {
     return Observable.zip(this.metaModelService.getMeta(), this.getNodeListWithoutReferencesOrReferrers('Group'))
-      .map(([meta, organizations]) => organizations.map(organization => Node.create(organization, meta, defaultLanguages, true)));
+      .map(([meta, organizations]) => organizations.map(organization => Node.create(organization, meta, true)));
   }
 
   createVocabulary(template: GraphMeta, vocabulary: VocabularyNode): Observable<Response> {

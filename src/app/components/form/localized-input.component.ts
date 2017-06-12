@@ -1,9 +1,9 @@
-import { Component, Input, QueryList, ViewChildren } from '@angular/core';
-import { NgModel } from '@angular/forms';
-import { ConceptNode, Property } from '../../entities/node';
+import { Component, Input } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { ConceptNode } from '../../entities/node';
 import { EditableService } from '../../services/editable.service';
-import { Localization } from '../../entities/localization';
-import { Attribute } from '../../entities/node-api';
+import { FormPropertyLocalizable } from '../../services/form-state';
+import { remove } from '../../utils/array';
 
 @Component({
   selector: 'localized-input',
@@ -12,119 +12,100 @@ import { Attribute } from '../../entities/node-api';
 
     <div *ngIf="canAdd()" class="clearfix">
       <div ngbDropdown class="add-button">
-        <button class="btn btn-default" ngbDropdownToggle ngbTooltip="{{'Add' | translate}} {{property.meta.label | translateValue | lowercase}}"><i class="fa fa-plus"></i></button>
+        <button class="btn btn-default" ngbDropdownToggle ngbTooltip="{{'Add' | translate}} {{property.label | translateValue | lowercase}}"><i class="fa fa-plus"></i></button>
         <div class="dropdown-menu">
-          <button class="dropdown-item" *ngFor="let language of property.languages" (click)="addNewLocalization(language)">{{language | uppercase}}</button>
+          <button class="dropdown-item" *ngFor="let language of addableLanguages" (click)="addNewLocalization(language)">{{language | uppercase}}</button>
         </div>
       </div>
     </div>
     
-    <div *ngIf="visibleValues.length > 0">
-      <div class="localized" *ngFor="let localization of visibleValues; let index = index">
+    <div *ngIf="property.value.length > 0">
+      <div class="localized" *ngFor="let child of property.children">
         <div class="language">
-          <span>{{localization.lang.toUpperCase()}}</span>
+          <span>{{child.lang.toUpperCase()}}</span>
         </div> 
         <div class="localization" [class.editing]="editing" [class.removable]="canRemove()">
-          <div *ngIf="!editing" markdown-links [value]="localization.value" [relatedConcepts]="relatedConcepts"></div>
-          <div *ngIf="editing" class="form-group" [ngClass]="{'has-danger': valueInError(index)}">
+          <div *ngIf="!editing" markdown-links [value]="child.control.value" [relatedConcepts]="relatedConcepts"></div>
+          <div *ngIf="editing" class="form-group" [ngClass]="{'has-danger': !child.control.valid}">
 
-            <ng-container [ngSwitch]="editorType">
+            <ng-container [ngSwitch]="property.editorType">
               
-              <div *ngSwitchCase="'input'">
-                <input type="text"
+                <input *ngSwitchCase="'input'"
+                       type="text"
                        class="form-control"
-                       [id]="property.meta.id + localization.lang"
+                       [id]="id"
                        autocomplete="off"
-                       validateLocalization
-                       [(ngModel)]="localization.value"
-                       #ngModel="ngModel" />
-                     
-                <error-messages [control]="ngModel.control"></error-messages>
-              </div>
+                       [formControl]="child.control" />
               
-              <div *ngSwitchCase="'markdown'">
-                <markdown-input [id]="property.meta.id + localization.lang"
-                                validateLocalization
-                                [(ngModel)]="localization.value"
+                <markdown-input *ngSwitchCase="'markdown'"
+                                [id]="id"
                                 [formControlClass]="false"
                                 [conceptSelector]="conceptSelector"
                                 [relatedConcepts]="relatedConcepts"
-                                #ngModel="ngModel"></markdown-input>
-               
-                <error-messages [control]="ngModel.control"></error-messages>
-              </div>
-            
+                                [formControl]="child.control"></markdown-input>
+
             </ng-container>
+
+            <error-messages [control]="child.control"></error-messages>
           </div>
         </div>
         
         <button *ngIf="canRemove()"
                 class="btn btn-default remove-button"
-                (click)="removeValue(localization)"
-                ngbTooltip="{{'Remove' | translate}} {{property.meta.label | translateValue | lowercase}}" [placement]="'left'">
+                (click)="removeValue(child)"
+                ngbTooltip="{{'Remove' | translate}} {{property.label | translateValue | lowercase}}" [placement]="'left'">
           <i class="fa fa-trash"></i>
         </button>
       </div>
     </div>
 
-    <div *ngIf="visibleValues.length === 0" translate>No values yet</div>
+    <div *ngIf="property.value.length === 0" translate>No values yet</div>
   `
 })
 export class LocalizedInputComponent {
 
-  @Input() property: Property;
+  @Input() id: string;
+  @Input() property: FormPropertyLocalizable;
   @Input() conceptSelector: (name: string) => Promise<ConceptNode|null>;
   @Input() relatedConcepts: ConceptNode[];
-
-  @ViewChildren('ngModel') ngModel: QueryList<NgModel>;
 
   constructor(private editingService: EditableService) {
   }
 
+  get languages() {
+    return this.property.languages;
+  }
+
+  get addableLanguages() {
+
+    if (this.property.cardinality === 'multiple') {
+      return this.languages;
+    } else {
+
+      const result = this.languages.slice();
+
+      for (const addedLanguage of this.property.value.map(v => v.lang)) {
+        remove(result, addedLanguage);
+      }
+
+      return result;
+    }
+  }
+
   canAdd() {
-    return this.editing && this.property.meta.typeAsLocalizable.cardinality === 'multiple';
+    return !this.property.fixed && this.editing && this.addableLanguages.length > 0;
   }
 
   canRemove() {
-    return this.canAdd();
-  }
-
-  get value() {
-    return this.property.attributes as Localization[];
-  }
-
-  get visibleValues() {
-    return this.value.filter(localization => this.editing || !!localization.value.trim());
-  }
-
-  valueInError(index: number) {
-
-    function isNgModelValid(ngModel: QueryList<NgModel>) {
-      if (!ngModel) {
-        return true;
-      } else {
-        const ngModels = ngModel.toArray();
-        return ngModels.length === 0 || ngModels.length <= index || ngModels[index].valid;
-      }
-    }
-
-    return !isNgModelValid(this.ngModel);
+    return !this.property.fixed;
   }
 
   addNewLocalization(language: string) {
-    this.property.newLocalization(language);
+    this.property.append(language, '');
   }
 
-  removeValue(attribute: Attribute) {
-    this.property.remove(attribute);
-  }
-
-  get editorType() {
-    return this.property.meta.typeAsLocalizable.editorType;
-  }
-
-  get cardinality() {
-    return this.property.meta.typeAsLocalizable.cardinality;
+  removeValue(child: { lang: string, control: FormControl }) {
+    this.property.remove(child);
   }
 
   get editing() {

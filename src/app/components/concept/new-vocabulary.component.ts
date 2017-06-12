@@ -8,6 +8,9 @@ import { TermedService } from '../../services/termed.service';
 import { GraphMeta, MetaModel } from '../../entities/meta';
 import { TranslateService } from 'ng2-translate';
 import { LanguageService } from '../../services/language.service';
+import { FormNode } from '../../services/form-state';
+import { defaultLanguages } from '../../utils/language';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'new-vocabulary',
@@ -20,7 +23,7 @@ import { LanguageService } from '../../services/language.service';
 
       <div *ngIf="vocabulary">
 
-        <form #form name="newVocabularyForm">
+        <form [formGroup]="form.control" name="newVocabularyForm">
 
           <div class="row">
             <div class="col-6">
@@ -29,8 +32,7 @@ import { LanguageService } from '../../services/language.service';
                 <dd>
                   <select class="form-control"
                           id="vocabularyType"
-                          name="vocabularyType"
-                          [(ngModel)]="selectedTemplate"
+                          [formControl]="templateControl"
                           *ngIf="selectedTemplate">
                     <option *ngFor="let templateMeta of templates" [ngValue]="templateMeta">
                       {{templateMeta.label | translateValue}}
@@ -45,7 +47,7 @@ import { LanguageService } from '../../services/language.service';
             </div>
           </div>
           
-          <vocabulary-form [vocabulary]="vocabulary"></vocabulary-form>
+          <vocabulary-form [vocabulary]="vocabulary" [form]="form"></vocabulary-form>
         </form>
 
       </div>
@@ -56,9 +58,10 @@ import { LanguageService } from '../../services/language.service';
 export class NewVocabularyComponent {
 
   vocabulary: VocabularyNode;
-  _selectedTemplate: GraphMeta;
   templates: GraphMeta[];
   meta: MetaModel;
+  form: FormNode;
+  templateControl = new FormControl();
 
   constructor(private router: Router,
               metaModelService: MetaModelService,
@@ -76,6 +79,8 @@ export class NewVocabularyComponent {
       this.templates = meta.getMetaTemplates();
       this.selectedTemplate = this.templates[0];
     });
+
+    this.templateControl.valueChanges.subscribe(() => this.createVocabulary());
   }
 
   createVocabulary() {
@@ -83,16 +88,17 @@ export class NewVocabularyComponent {
       const graphId = uuid();
       const vocabularyId = uuid();
       const newMeta = this.meta.copyTemplateToGraph(this.selectedTemplate, graphId);
-      this.vocabulary = newMeta.createEmptyVocabulary(graphId, vocabularyId, label, this.languageService.language)
+      this.vocabulary = newMeta.createEmptyVocabulary(graphId, vocabularyId, label, this.languageService.language);
+      this.form = new FormNode(this.vocabulary, defaultLanguages);
     });
   }
 
-  get selectedTemplate() {
-    return this._selectedTemplate;
+  get selectedTemplate(): GraphMeta {
+    return this.templateControl.value;
   }
 
   set selectedTemplate(value: GraphMeta) {
-    this._selectedTemplate = value;
+    this.templateControl.setValue(value);
     this.createVocabulary();
   }
 

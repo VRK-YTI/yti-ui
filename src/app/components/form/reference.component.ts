@@ -1,32 +1,39 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ConceptNode, Reference } from '../../entities/node';
+import { ConceptNode } from '../../entities/node';
 import { EditableService } from '../../services/editable.service';
+import { FormReferenceLiteral, FormReferenceTerm } from '../../services/form-state';
+
+export type FormReference = FormReferenceLiteral<any>
+                          | FormReferenceTerm;
 
 @Component({
   selector: 'reference',
   styleUrls: ['./reference.component.scss'],
   template: `
     <dl *ngIf="show">
-      <dt><label [for]="reference.meta.id">{{reference.meta.label | translateValue}}</label></dt>
+      <dt><label [for]="id">{{reference.label | translateValue}}</label></dt>
       <dd>
-        <ng-container [ngSwitch]="reference.type">
-
-          <primary-terms *ngSwitchCase="'PrimaryTerm'" [value]="reference"
+        <ng-container [ngSwitch]="reference.referenceType">
+          
+          <primary-terms *ngSwitchCase="'PrimaryTerm'" 
+                         [reference]="reference"
                          [multiColumn]="multiColumnTerms"
                          [unsaved]="unsaved"></primary-terms>
 
-          <synonyms *ngSwitchCase="'Synonym'" [value]="reference" [multiColumn]="multiColumnTerms"></synonyms>
+          <synonyms *ngSwitchCase="'Synonym'" 
+                    [reference]="reference"
+                    [multiColumn]="multiColumnTerms"></synonyms>
 
-          <concept-reference-input *ngSwitchCase="'Concept'" [concept]="reference" (conceptRemove)="conceptRemove.next($event)"></concept-reference-input>
+          <concept-reference-input *ngSwitchCase="'Concept'" [reference]="reference" (conceptRemove)="conceptRemove.next($event)"></concept-reference-input>
 
-          <concept-link-reference-input *ngSwitchCase="'ConceptLink'" [concept]="reference"></concept-link-reference-input>
+          <concept-link-reference-input *ngSwitchCase="'ConceptLink'" [reference]="reference"></concept-link-reference-input>
           
-          <group-input *ngSwitchCase="'Group'" [group]="reference"></group-input>
+          <group-input *ngSwitchCase="'Group'" [reference]="reference"></group-input>
           
-          <organization-input *ngSwitchCase="'Organization'" [organization]="reference"></organization-input>
+          <organization-input *ngSwitchCase="'Organization'" [reference]="reference"></organization-input>
           
           <div *ngSwitchDefault>
-            <span *ngFor="let referenceNode of reference.values; let last = last">
+            <span *ngFor="let referenceNode of reference.value; let last = last">
               <span>{{referenceNode.label | translateValue}}<span *ngIf="!last">, </span></span>
             </span>
           </div>
@@ -38,7 +45,8 @@ import { EditableService } from '../../services/editable.service';
 })
 export class ReferenceComponent {
 
-  @Input('value') reference: Reference<any>;
+  @Input() id: string;
+  @Input() reference: FormReference;
   @Input() unsaved: boolean;
   @Input() multiColumnTerms = false;
   @Output() conceptRemove = new EventEmitter<ConceptNode>();
@@ -51,6 +59,6 @@ export class ReferenceComponent {
   }
 
   get show() {
-    return this.editableService.editing || !this.reference.empty;
+    return this.editableService.editing || this.reference.value.length > 0;
   }
 }

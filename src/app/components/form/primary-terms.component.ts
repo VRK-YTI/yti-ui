@@ -1,21 +1,21 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Reference, TermNode } from '../../entities/node';
 import { EditableService } from '../../services/editable.service';
+import { FormReferenceTerm } from '../../services/form-state';
 
 @Component({
   selector: 'primary-terms',
   styleUrls: ['./primary-terms.component.scss'],
   template: `              
     <ngb-accordion [activeIds]="openTermLanguages">
-      <ngb-panel [id]="term.language" *ngFor="let term of nonEmptyTerms">
+      <ngb-panel [id]="node.language" *ngFor="let node of children">
         <ng-template ngbPanelTitle>
-          <div class="language">{{term.language | uppercase}}</div> 
-          <div class="localization">{{term.value}} <accordion-chevron class="pull-right"></accordion-chevron></div>
+          <div class="language">{{node.language | uppercase}}</div> 
+          <div class="localization">{{node.formNode.prefLabelProperty[0].value}} <accordion-chevron class="pull-right"></accordion-chevron></div>
         </ng-template>
         <ng-template ngbPanelContent>
           <div class="row">
-            <div class="col-md-12" [class.col-xl-6]="multiColumn && property.multiColumn" *ngFor="let property of term | properties: showEmpty">
-              <property [value]="property"></property>
+            <div class="col-md-12" [class.col-xl-6]="multiColumn && child.property.multiColumn" *ngFor="let child of node.formNode.properties">
+              <property [id]="child.name" [property]="child.property"></property>
             </div>
           </div>
         </ng-template>
@@ -25,7 +25,7 @@ import { EditableService } from '../../services/editable.service';
 })
 export class PrimaryTermsComponent implements OnInit {
 
-  @Input('value') termReference: Reference<TermNode>;
+  @Input() reference: FormReferenceTerm;
   @Input() unsaved: boolean;
   @Input() multiColumn = false;
 
@@ -37,16 +37,16 @@ export class PrimaryTermsComponent implements OnInit {
   ngOnInit() {
     this.editableService.editing$.subscribe(editing => {
       if (this.unsaved && editing) {
-        this.openTermLanguages = this.termReference.languages.slice();
+        this.openTermLanguages = this.reference.languages.slice();
       }
     });
   }
 
-  get nonEmptyTerms() {
+  get children() {
     if (this.showEmpty) {
-      return this.termReference.values;
+      return this.reference.children;
     } else {
-      return this.termReference.values.filter(term => !term.empty!);
+      return this.reference.children.filter(child => child.formNode.hasNonEmptyPrefLabel);
     }
   }
 

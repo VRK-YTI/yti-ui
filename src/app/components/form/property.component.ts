@@ -1,20 +1,27 @@
 import { Component, Input } from '@angular/core';
-import { ConceptNode, Property } from '../../entities/node';
+import { ConceptNode } from '../../entities/node';
 import { EditableService } from '../../services/editable.service';
+import { FormPropertyLiteral, FormPropertyLiteralList, FormPropertyLocalizable } from '../../services/form-state';
+
+type FormProperty = FormPropertyLiteral
+                  | FormPropertyLiteralList
+                  | FormPropertyLocalizable;
 
 @Component({
   selector: 'property',
   styleUrls: ['./property.component.scss'],
   template: `
     <dl *ngIf="show">
-      <dt><label [for]="property.meta.id">{{property.meta.label | translateValue}}</label></dt>
-      <dd [ngSwitch]="property.meta.type.type">
-        <localized-input *ngSwitchCase="'localizable'" 
+      <dt><label [for]="id">{{property.label | translateValue}}</label></dt>
+      <dd [ngSwitch]="property.type">
+        <localized-input *ngSwitchCase="'localizable'"
+                         [id]="id"
                          [property]="property"
                          [conceptSelector]="conceptSelector"
                          [relatedConcepts]="relatedConcepts"></localized-input>
-        <literal-input *ngSwitchCase="'string'" [property]="property"></literal-input>
-        <status-input *ngSwitchCase="'status'" [property]="property"></status-input>
+        <literal-input *ngSwitchCase="'literal'" [id]="id" [property]="property"></literal-input>
+        <literal-list-input *ngSwitchCase="'literal-list'" [id]="id" [property]="property"></literal-list-input>
+        
         <span *ngSwitchDefault>ERROR - unknown property type</span>
       </dd>
     </dl>
@@ -22,7 +29,9 @@ import { EditableService } from '../../services/editable.service';
 })
 export class PropertyComponent {
 
-  @Input('value') property: Property;
+  @Input() id: string;
+  @Input() property: FormProperty;
+
   @Input() conceptSelector: (name: string) => Promise<ConceptNode|null>;
   @Input() relatedConcepts: ConceptNode[] = [];
 
@@ -30,6 +39,6 @@ export class PropertyComponent {
   }
 
   get show() {
-    return this.editableService.editing || !this.property.empty;
+    return this.editableService.editing || !this.property.valueEmpty;
   }
 }

@@ -4,7 +4,6 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { ElasticSearchService, IndexedConcept } from '../services/elasticsearch.service';
 import { Router } from '@angular/router';
 import { TermedService } from '../services/termed.service';
-import { defaultLanguages } from '../utils/language';
 import { Observable } from 'rxjs/Observable';
 import { VocabularyNode } from '../entities/node';
 import { statuses } from '../entities/constants';
@@ -114,7 +113,7 @@ export class FrontpageComponent {
               private router: Router,
               private elasticSearchService: ElasticSearchService) {
 
-    termedService.getVocabularyList(defaultLanguages)
+    termedService.getVocabularyList()
       .subscribe(vocabularies => this.vocabularies = vocabularies);
 
     Observable.combineLatest(this.debouncedSearch$, this.onlyStatus$, this.onlyVocabulary$)

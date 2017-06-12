@@ -1,22 +1,23 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Reference, ConceptNode } from '../../entities/node';
+import { ConceptNode } from '../../entities/node';
 import { EditableService } from '../../services/editable.service';
 import { SearchConceptModalService } from './search-concept.modal';
 import { remove } from '../../utils/array';
 import { ignoreModalClose } from '../../utils/modal';
+import { FormReferenceLiteral } from '../../services/form-state';
 
 @Component({
   selector: 'concept-reference-input',
   styleUrls: ['./concept-reference-input.component.scss'],
   template: `
     <ul *ngIf="!editing">
-      <li *ngFor="let concept of conceptReference.values">
+      <li *ngFor="let concept of reference.value">
         <a [routerLink]="['/concepts', concept.graphId, 'concept', concept.id]">{{concept.label | translateValue}}</a>
       </li>
     </ul>
 
     <div *ngIf="editing">
-      <div *ngFor="let concept of conceptReference.values">
+      <div *ngFor="let concept of reference.value">
         <a><i class="fa fa-times" (click)="removeReference(concept)"></i></a>
         <span>{{concept.label | translateValue}}</span>
       </div>
@@ -30,7 +31,7 @@ import { ignoreModalClose } from '../../utils/modal';
 })
 export class ConceptReferenceInputComponent {
 
-  @Input('concept') conceptReference: Reference<ConceptNode>;
+  @Input() reference: FormReferenceLiteral<ConceptNode>;
   @Output('conceptRemove') conceptRemove = new EventEmitter<ConceptNode>();
 
   constructor(private editableService: EditableService,
@@ -42,12 +43,12 @@ export class ConceptReferenceInputComponent {
   }
 
   removeReference(concept: ConceptNode) {
-    remove(this.conceptReference.values, concept);
+    remove(this.reference.value, concept);
     this.conceptRemove.next(concept);
   }
 
   addReference() {
-    this.searchConceptModal.openForGraph(this.conceptReference.meta.graphId)
-      .then(result => this.conceptReference.values.push(result), ignoreModalClose);
+    this.searchConceptModal.openForGraph(this.reference.targetGraph)
+      .then(result => this.reference.value.push(result), ignoreModalClose);
   }
 }

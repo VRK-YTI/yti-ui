@@ -6,7 +6,6 @@ import { statuses } from '../../entities/constants';
 import { TermedService } from '../../services/termed.service';
 import { EditableService } from '../../services/editable.service';
 import { ElasticSearchService, IndexedConcept } from '../../services/elasticsearch.service';
-import { defaultLanguages } from '../../utils/language';
 
 type Mode = 'include'|'exclude';
 
@@ -146,7 +145,7 @@ export class SearchConceptModal implements OnInit, AfterViewInit {
     const debouncedSearch = this.search$.skip(1).debounceTime(500);
     const search = initialSearch.concat(debouncedSearch);
 
-    this.vocabularies = this.termedService.getVocabularyList(defaultLanguages)
+    this.vocabularies = this.termedService.getVocabularyList()
       .map(vocabularies => vocabularies.filter(vocabulary => vocabulary.graphId !== this.graphId));
 
     Observable.combineLatest(search, this.onlyStatus$, this.onlyVocabulary$)
@@ -201,7 +200,7 @@ export class SearchConceptModal implements OnInit, AfterViewInit {
 
     this.selectedItem = concept;
 
-    this.termedService.getConcept(concept.vocabulary.id, concept.id, defaultLanguages).subscribe(concept => {
+    this.termedService.getConcept(concept.vocabulary.id, concept.id).subscribe(concept => {
       this.selection = concept;
     })
   }
