@@ -384,6 +384,18 @@ export class VocabularyNode extends Node<VocabularyNodeType> {
     return requireSingle(this.references['publisher'].values) as OrganizationNode;
   }
 
+  get languages(): string[] {
+    if (this.meta.hasProperty('language')) {
+      return this.getPropertyAsValues('language');
+    } else {
+      return defaultLanguages;
+    }
+  }
+
+  set languages(value: string[]) {
+    this.setPropertyAsValues('language', value);
+  }
+
   hasPublisher() {
     return !this.references['publisher'].empty;
   }

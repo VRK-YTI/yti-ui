@@ -430,6 +430,10 @@ export class NodeMeta {
     return result;
   }
 
+  hasProperty(propertyId: string) {
+    return anyMatching(this.properties, ref => ref.id === propertyId);
+  }
+
   hasReference(referenceId: string) {
     return anyMatching(this.references, ref => ref.id === referenceId);
   }

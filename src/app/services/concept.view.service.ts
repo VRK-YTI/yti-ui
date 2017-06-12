@@ -397,7 +397,7 @@ export class ConceptViewModelService {
   }
 
   get languages(): string[] {
-    return defaultLanguages; // TODO
+    return this.vocabulary ? this.vocabulary.languages : [];
   }
 
   get concept(): ConceptNode|null {
