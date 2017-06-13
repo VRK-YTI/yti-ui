@@ -17,6 +17,6 @@ export class ErrorMessagesComponent {
   @Input() control: FormControl;
 
   isVisible() {
-    return !this.control.pristine && !this.control.valid;
+    return !this.control.valid;
   }
 }
