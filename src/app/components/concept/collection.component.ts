@@ -29,13 +29,13 @@ import { requireDefined } from '../../utils/object';
           <property class="col-md-12"
                     [property]="property.property"
                     [id]="property.name"
-                    *ngFor="let property of formNode.properties"></property>
+                    *ngFor="let property of properties"></property>
   
           <reference class="col-md-12"
                      [reference]="reference.reference"
                      [id]="reference.name"
                      [unsaved]="unsaved"
-                     *ngFor="let reference of formNode.references"></reference>
+                     *ngFor="let reference of references"></reference>
         </div>
 
         <meta-information [hidden]="!collection.persistent" [node]="collection"></meta-information>
@@ -70,6 +70,18 @@ export class CollectionComponent implements EditingComponent, OnDestroy {
         editableService.cancel();
       }
     }));
+  }
+
+  get showEmpty() {
+    return this.editableService.editing;
+  }
+
+  get properties() {
+    return this.formNode.properties.filter(prop => this.showEmpty || !prop.property.valueEmpty);
+  }
+
+  get references() {
+    return this.formNode.references.filter(ref => this.showEmpty || !ref.reference.valueEmpty);
   }
 
   get formNode() {

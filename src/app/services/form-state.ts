@@ -84,18 +84,6 @@ export class FormNode {
     return (label.property as FormPropertyLocalizable).value;
   }
 
-  get primaryTermReference(): FormReferenceTerm {
-    return firstMatching(this.references, child => child.name === 'prefLabelXl')!.reference as FormReferenceTerm;
-  }
-
-  get nonPrimaryTermReferences(): { reference: FormReference, name: string }[] {
-    return this.references.filter(child => child.name !== 'prefLabelXl');
-  }
-
-  hasPrimaryTerm() {
-    return anyMatching(this.references, child => child.name === 'prefLabelXl');
-  }
-
   hasConceptReference(conceptId: string) {
     return anyMatching(this.referencedConcepts, concept => concept.id === conceptId);
   }
@@ -193,6 +181,10 @@ export class FormReferenceLiteral<N extends KnownNode | Node<any>>{
     return false;
   }
 
+  get valueEmpty(): boolean {
+    return this.value.length === 0;
+  }
+
   assignChanges(reference: Reference<any>) {
     reference.values = this.value;
   }
@@ -266,6 +258,10 @@ export class FormReferenceTerm {
 
   get term() {
     return true;
+  }
+
+  get valueEmpty(): boolean {
+    return this.value.length === 0;
   }
 
   assignChanges(reference: Reference<any>) {
