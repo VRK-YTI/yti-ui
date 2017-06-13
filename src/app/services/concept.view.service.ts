@@ -397,7 +397,7 @@ export class ConceptViewModelService {
   }
 
   get languages(): string[] {
-    return this.vocabulary ? this.vocabulary.languages : [];
+    return this.vocabulary.languages;
   }
 
   get concept(): ConceptNode|null {
@@ -433,9 +433,9 @@ export class ConceptViewModelService {
 
     this.termedService.getVocabulary(graphId).subscribe(vocabulary => {
       this.locationService.atVocabulary(vocabulary);
-      this.vocabularyForm = new FormNode(vocabulary, this.languages);
       this.vocabulary = vocabulary;
       this.vocabulary$.next(createSelectAction(vocabulary));
+      this.vocabularyForm = new FormNode(vocabulary, this.languages);
       this.loadingVocabulary = false;
     });
 
@@ -458,8 +458,8 @@ export class ConceptViewModelService {
         } else {
           this.locationService.atVocabulary(vocabulary);
         }
-        this.conceptForm = concept ? new FormNode(concept, this.languages) : null;
         this.conceptAction$.next(concept ? createSelectAction(concept) : createNoSelection());
+        this.conceptForm = concept ? new FormNode(concept, this.languages) : null;
         this.loadingConcept = false;
       });
     };
@@ -496,8 +496,8 @@ export class ConceptViewModelService {
         } else {
           this.locationService.atVocabulary(vocabulary);
         }
-        this.collectionForm = collection ? new FormNode(collection, this.languages) : null;
         this.collectionAction$.next(collection ? createSelectAction(collection) : createNoSelection());
+        this.collectionForm = collection ? new FormNode(collection, this.languages) : null;
         this.loadingCollection = false;
       });
     };
@@ -535,8 +535,8 @@ export class ConceptViewModelService {
         .flatMap(() => this.termedService.getConcept(this.graphId, concept.id))
         .subscribe({
           next(persistentConcept: ConceptNode) {
-            that.conceptForm = new FormNode(persistentConcept, that.languages);
             that.conceptAction$.next(createEditAction(persistentConcept.clone()));
+            that.conceptForm = new FormNode(persistentConcept, that.languages);
             resolve();
           },
           error(err: any) {
@@ -595,8 +595,8 @@ export class ConceptViewModelService {
         .flatMap(() => this.termedService.getCollection(this.graphId, collection.id))
         .subscribe({
           next(persistentCollection: CollectionNode) {
-            that.collectionForm = new FormNode(persistentCollection, that.languages);
             that.collectionAction$.next(createEditAction(persistentCollection.clone()));
+            that.collectionForm = new FormNode(persistentCollection, that.languages);
             resolve();
           },
           error(err: any) {
@@ -652,8 +652,8 @@ export class ConceptViewModelService {
         .flatMap(() => this.termedService.getVocabulary(this.graphId))
         .subscribe({
           next(persistentVocabulary: VocabularyNode) {
-            that.vocabularyForm = new FormNode(persistentVocabulary, that.languages);
             that.vocabulary = persistentVocabulary.clone();
+            that.vocabularyForm = new FormNode(persistentVocabulary, that.languages);
             resolve();
           },
           error(err: any) {

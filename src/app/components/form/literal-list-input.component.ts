@@ -49,6 +49,9 @@ import { FormControl } from '@angular/forms';
         </button>
       </div>
 
+      <div *ngIf="property.value.length === 0" translate>No values yet</div>
+      <error-messages [control]="property.control"></error-messages>
+
     </div>
   `
 })
@@ -69,7 +72,7 @@ export class LiteralListInputComponent {
   }
 
   canRemove() {
-    return this.property.value.length > 1;
+    return true;
   }
 
   get editing() {

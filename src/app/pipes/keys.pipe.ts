@@ -4,6 +4,11 @@ import { PipeTransform, Pipe } from '@angular/core';
 export class KeysPipe implements PipeTransform {
 
   transform(obj: { [key: string]: any} ): string[] {
+
+    if (!obj) {
+      return [];
+    }
+
     return Object.keys(obj);
   }
 }

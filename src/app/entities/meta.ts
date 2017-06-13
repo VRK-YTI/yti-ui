@@ -26,30 +26,30 @@ export type ReferenceType = 'PrimaryTerm'
 export type PropertyType = StringProperty
                          | LocalizableProperty;
 
-export type StringProperty = { type: 'string', cardinality: Cardinality, editorType: EditorType };
-export type LocalizableProperty = { type: 'localizable', cardinality: Cardinality, editorType: EditorType };
+export type StringProperty = { type: 'string', cardinality: Cardinality, required: boolean, editorType: EditorType };
+export type LocalizableProperty = { type: 'localizable', cardinality: Cardinality, required: boolean, editorType: EditorType };
 
 export type EditorType = 'input'
                        | 'markdown'
                        | 'status';
 
-function createString(multiple: boolean, editorType: EditorType): StringProperty {
-  return { type: 'string', cardinality: (multiple ? 'multiple' : 'single'), editorType };
+function createString(multiple: boolean, required: boolean, editorType: EditorType): StringProperty {
+  return { type: 'string', cardinality: (multiple ? 'multiple' : 'single'), required, editorType };
 }
 
-function createLocalizable(single: boolean, editorType: EditorType): LocalizableProperty {
-  return { type: 'localizable', cardinality: (single ? 'single' : 'multiple'), editorType };
+function createLocalizable(single: boolean, required: boolean, editorType: EditorType): LocalizableProperty {
+  return { type: 'localizable', cardinality: (single ? 'single' : 'multiple'), required, editorType };
 }
 
 function createPropertyType(name: TypeName, attributes: Set<string>): PropertyType {
 
   switch (name) {
     case 'string':
-      return createString(attributes.has('multiple'), attributes.has('area') ? 'markdown' : 'input');
+      return createString(attributes.has('multiple'), attributes.has('required'), attributes.has('area') ? 'markdown' : 'input');
     case 'localizable':
-      return createLocalizable(attributes.has('single'), attributes.has('area') ? 'markdown' : 'input');
+      return createLocalizable(attributes.has('single'), attributes.has('required'), attributes.has('area') ? 'markdown' : 'input');
     case 'status':
-      return createString(false, 'status');
+      return createString(false, true, 'status');
     default:
       return assertNever(name, 'Unsupported type: ' + name);
   }
@@ -114,6 +114,11 @@ function createDefaultPropertyType(propertyId: string) {
 
     if (propertyId === 'prefLabel') {
       attrs.add('single');
+      attrs.add('required');
+    }
+
+    if (propertyId === 'language') {
+      attrs.add('required');
     }
 
     return attrs;

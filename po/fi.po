@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-06-13 13:13+0300\n"
+"PO-Revision-Date: 2017-06-13 18:19+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -257,6 +257,9 @@ msgstr "Käsite ei löydy viitteistä"
 
 msgid "validateMeta"
 msgstr "Epävalidi syöte"
+
+msgid "required"
+msgstr "Pakollinen syöte"
 
 #~ msgid "Not implemented yet!"
 #~ msgstr "Ei vielä toteutettu!"

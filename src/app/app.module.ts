@@ -84,6 +84,7 @@ import {
 } from './components/concept/select-concept-reference.modal';
 import { FrontpageComponent } from './components/fronpage.component';
 import { LiteralListInputComponent } from './components/form/literal-list-input.component';
+import { RequiredListValidator } from './directives/validators/required-list.validator';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json-loader!po-loader?format=mf!../../po/fi.po'),
@@ -171,6 +172,7 @@ const appRoutes: Routes = [
     MetaModelValidator,
     LanguageValidator,
     LocalizationValidator,
+    RequiredListValidator,
     FloatDirective,
     TranslateValuePipe,
     TranslateSearchValuePipe,

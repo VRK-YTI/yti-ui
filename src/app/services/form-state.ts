@@ -1,4 +1,4 @@
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { assertNever } from '../utils/object';
 import { allMatching, anyMatching, firstMatching, flatten } from "app/utils/array";
 import { ConceptNode, KnownNode, Node, Property, Reference, TermNode } from '../entities/node';
@@ -11,6 +11,7 @@ import { NodeType } from "app/entities/node-api";
 import { children } from '../utils/markdown';
 import { Parser, Node as MarkdownNode } from 'commonmark';
 import { validateMeta } from '../directives/validators/meta-model.validator';
+import { requiredList } from '../directives/validators/required-list.validator';
 
 export type FormReference = FormReferenceLiteral<any>
                           | FormReferenceTerm;
@@ -276,13 +277,24 @@ export class FormPropertyLiteral {
 
   constructor(property: Property) {
 
-    const isStatus = property.meta.type.editorType === 'status';
-    const value = property.literalValue;
-
-    this.control = new FormControl((!value && isStatus) ? 'Unstable' : value,
-      (control: FormControl) => validateMeta(control, property.meta));
-
     this.meta = property.meta;
+    this.control = this.createControl(property.literalValue);
+  }
+
+  get required(): boolean {
+    return this.meta.type.required;
+  }
+
+  private createControl(initial: string) {
+
+    const isStatus = this.meta.type.editorType === 'status';
+    const validators: ValidatorFn[] = [(control: FormControl) => validateMeta(control, this.meta)];
+
+    if (this.required) {
+      validators.push(Validators.required);
+    }
+
+    return new FormControl((!initial && isStatus) ? 'Unstable' : initial, validators);
   }
 
   get label(): Localizable {
@@ -323,25 +335,38 @@ export class FormPropertyLiteral {
 export class FormPropertyLiteralList {
 
   type: 'literal-list' = 'literal-list';
-  control: FormGroup = new FormGroup({});
+  control: FormGroup;
   children: FormControl[];
   private meta: PropertyMeta;
 
   constructor(property: Property) {
 
-    const initialValues = property.attributes.map(a => a.value);
-
-    this.children = initialValues.map(value => new FormControl(value, (control: FormControl) => validateMeta(control, property.meta)));
+    this.meta = property.meta;
+    this.control = this.required ? new FormGroup({}, requiredList) : new FormGroup({});
+    this.children = property.attributes.map(a => a.value).map(value => this.createChildControl(value));
 
     this.children.forEach((control, index) => {
       this.control.addControl(index.toString(), control);
     });
+  }
 
-    this.meta = property.meta;
+  private createChildControl(initial: string): FormControl {
+
+    const validators: ValidatorFn[] = [(control: FormControl) => validateMeta(control, this.meta)];
+
+    if (this.required) {
+      validators.push(Validators.required);
+    }
+
+    return new FormControl(initial, validators);
   }
 
   get label(): Localizable {
     return this.meta.label;
+  }
+
+  get required(): boolean {
+    return this.meta.type.required;
   }
 
   get editorType(): EditorType {
@@ -357,7 +382,7 @@ export class FormPropertyLiteralList {
   }
 
   append(initial: string) {
-    const control = new FormControl(initial);
+    const control = this.createChildControl(initial);
     this.children.push(control);
     this.control.addControl((this.children.length - 1).toString(), control);
   }
@@ -390,26 +415,41 @@ export class FormPropertyLiteralList {
 export class FormPropertyLocalizable {
 
   type: 'localizable' = 'localizable';
-  control: FormGroup = new FormGroup({});
+  control: FormGroup;
   children: { lang: string, control: FormControl }[];
   private meta: PropertyMeta;
 
   constructor(property: Property, public languages: string[], public fixed: boolean) {
 
+    this.meta = property.meta;
+    this.control = this.required ? new FormGroup({}, requiredList) : new FormGroup({});
     this.children = property.attributes.map(attribute => ({
       lang: attribute.lang,
-      control: new FormControl(attribute.value, (control: FormControl) => validateMeta(control, property.meta))
+      control: this.createChildControl(attribute.value)
     }));
 
     this.children.forEach((control, index) => {
       this.control.addControl(index.toString(), control.control);
     });
+  }
 
-    this.meta = property.meta;
+  private createChildControl(initial: string): FormControl {
+
+    const validators: ValidatorFn[] = [(control: FormControl) => validateMeta(control, this.meta)];
+
+    if (this.required) {
+      validators.push(Validators.required);
+    }
+
+    return new FormControl(initial, validators);
   }
 
   get label(): Localizable {
     return this.meta.label;
+  }
+
+  get required(): boolean {
+    return this.meta.type.required;
   }
 
   get editorType(): EditorType {
@@ -425,7 +465,7 @@ export class FormPropertyLocalizable {
   }
 
   append(lang: string, initial: string) {
-    const control = new FormControl(initial);
+    const control = this.createChildControl(initial);
     this.children.push({lang, control});
     this.control.addControl((this.children.length - 1).toString(), control);
   }
