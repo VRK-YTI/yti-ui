@@ -17,7 +17,7 @@ import { requireDefined } from '../../utils/object';
         <h3>{{collection.label | translateValue}}</h3>
       </div>
 
-      <form #form [formGroup]="formNode.control" class="component-content">
+      <form #form="ngForm" [formGroup]="formNode.control" class="component-content">
 
         <div class="row">
           <div class="col-md-12">

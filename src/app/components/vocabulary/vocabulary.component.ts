@@ -20,7 +20,7 @@ import { DeleteConfirmationModalService } from '../common/delete-confirmation.mo
           </div>
         </ng-template>
         <ng-template ngbPanelContent>
-          <form #form [formGroup]="formNode.control">
+          <form #form="ngForm" [formGroup]="formNode.control">
             <div class="row">
               <div class="col-md-12">
                 <editable-buttons [form]="form" [canRemove]="true"></editable-buttons>

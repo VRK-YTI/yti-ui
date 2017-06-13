@@ -23,7 +23,7 @@ import { FormControl } from '@angular/forms';
 
       <div *ngIf="vocabulary">
 
-        <form [formGroup]="form.control" name="newVocabularyForm">
+        <form #form="ngForm" [formGroup]="formNode.control" name="newVocabularyForm">
 
           <div class="row">
             <div class="col-6">
@@ -60,7 +60,7 @@ export class NewVocabularyComponent {
   vocabulary: VocabularyNode;
   templates: GraphMeta[];
   meta: MetaModel;
-  form: FormNode;
+  formNode: FormNode;
   templateControl = new FormControl();
 
   constructor(private router: Router,
@@ -89,7 +89,7 @@ export class NewVocabularyComponent {
       const vocabularyId = uuid();
       const newMeta = this.meta.copyTemplateToGraph(this.selectedTemplate, graphId);
       this.vocabulary = newMeta.createEmptyVocabulary(graphId, vocabularyId, label, this.languageService.language);
-      this.form = new FormNode(this.vocabulary, defaultLanguages);
+      this.formNode = new FormNode(this.vocabulary, defaultLanguages);
     });
   }
 
