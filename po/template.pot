@@ -10,9 +10,6 @@ msgstr ""
 msgid "You are expected at {{time}}', {time: moment.format('H:mm"
 msgstr ""
 
-msgid "Search concept..."
-msgstr ""
-
 msgid "Yes"
 msgstr ""
 
@@ -53,6 +50,9 @@ msgid "Add concept"
 msgstr ""
 
 msgid "Vocabulary"
+msgstr ""
+
+msgid "Search concept..."
 msgstr ""
 
 msgid "Order by modified date"
@@ -133,6 +133,12 @@ msgstr ""
 msgid "No terms yet"
 msgstr ""
 
+msgid "Welcome to vocabulary and concept workbench"
+msgstr ""
+
+msgid "Frontpage information"
+msgstr ""
+
 msgid "Give feedback:"
 msgstr ""
 
@@ -170,12 +176,6 @@ msgid "No group"
 msgstr ""
 
 msgid "No organization"
-msgstr ""
-
-msgid "Welcome to vocabulary and concept workbench"
-msgstr ""
-
-msgid "Frontpage information"
 msgstr ""
 
 msgid "Add vocabulary"
@@ -235,4 +235,7 @@ msgid "Unlink"
 msgstr ""
 
 msgid "Concept not in references"
+msgstr ""
+
+msgid "validateMeta"
 msgstr ""

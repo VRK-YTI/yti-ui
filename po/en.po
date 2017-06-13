@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-06-01 18:51+0300\n"
+"PO-Revision-Date: 2017-06-13 13:12+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -17,9 +17,6 @@ msgid "Email: { email }"
 msgstr ""
 
 msgid "You are expected at {{time}}', {time: moment.format('H:mm"
-msgstr ""
-
-msgid "Search concept..."
 msgstr ""
 
 msgid "Yes"
@@ -62,6 +59,9 @@ msgid "Add concept"
 msgstr ""
 
 msgid "Vocabulary"
+msgstr ""
+
+msgid "Search concept..."
 msgstr ""
 
 msgid "Order by modified date"
@@ -143,6 +143,17 @@ msgstr ""
 msgid "No terms yet"
 msgstr ""
 
+msgid "Welcome to vocabulary and concept workbench"
+msgstr ""
+
+msgid "Frontpage information"
+msgstr ""
+"Definitions released in the workbench are freely browsable. Content is "
+"produced by experts in different domains.\n"
+"Note: this is the development environment of the service. Thus the contents "
+"of this service are not official versions of the vocabularies but rather "
+"meant for testing purposes"
+
 msgid "Give feedback:"
 msgstr ""
 
@@ -181,17 +192,6 @@ msgstr ""
 
 msgid "No organization"
 msgstr ""
-
-msgid "Welcome to vocabulary and concept workbench"
-msgstr ""
-
-msgid "Frontpage information"
-msgstr ""
-"Definitions released in the workbench are freely browsable. Content is "
-"produced by experts in different domains.\n"
-"Note: this is the development environment of the service. Thus the contents "
-"of this service are not official versions of the vocabularies but rather "
-"meant for testing purposes"
 
 msgid "Add vocabulary"
 msgstr ""
@@ -251,3 +251,6 @@ msgstr ""
 
 msgid "Concept not in references"
 msgstr ""
+
+msgid "validateMeta"
+msgstr "Invalid"

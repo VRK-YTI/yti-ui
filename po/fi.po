@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-06-01 18:51+0300\n"
+"PO-Revision-Date: 2017-06-13 13:13+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -18,9 +18,6 @@ msgstr ""
 
 msgid "You are expected at {{time}}', {time: moment.format('H:mm"
 msgstr ""
-
-msgid "Search concept..."
-msgstr "Hae käsitettä…"
 
 msgid "Yes"
 msgstr "Kyllä"
@@ -63,6 +60,9 @@ msgstr "Lisää käsite"
 
 msgid "Vocabulary"
 msgstr "Sanasto"
+
+msgid "Search concept..."
+msgstr "Hae käsitettä…"
 
 msgid "Order by modified date"
 msgstr "Järjestä muokkausajan mukaan"
@@ -145,6 +145,16 @@ msgstr "Poista termi"
 msgid "No terms yet"
 msgstr "Ei vielä yhtään termiä"
 
+msgid "Welcome to vocabulary and concept workbench"
+msgstr "Tervetuloa sanasto- ja käsitevälineistöön"
+
+msgid "Frontpage information"
+msgstr ""
+"Välineistössä julkaistut määritykset ovat vapaasti selattavissa. Sisältöjä "
+"sanastoihin tuottavat eri kohdealueiden asiantuntijat.\n"
+"Huom: tämä verkkopalvelu on Sanastoeditorin kehitysversio ja sisällöt eivät "
+"ole virallisia versioita sanastoista, vaan testiaineistoja."
+
 msgid "Give feedback:"
 msgstr "Anna palautetta:"
 
@@ -183,16 +193,6 @@ msgstr "Ei ryhmää"
 
 msgid "No organization"
 msgstr "Ei organisaatiota"
-
-msgid "Welcome to vocabulary and concept workbench"
-msgstr "Tervetuloa sanasto- ja käsitevälineistöön"
-
-msgid "Frontpage information"
-msgstr ""
-"Välineistössä julkaistut määritykset ovat vapaasti selattavissa. Sisältöjä "
-"sanastoihin tuottavat eri kohdealueiden asiantuntijat.\n"
-"Huom: tämä verkkopalvelu on Sanastoeditorin kehitysversio ja sisällöt eivät "
-"ole virallisia versioita sanastoista, vaan testiaineistoja."
 
 msgid "Add vocabulary"
 msgstr "Lisää sanasto"
@@ -254,6 +254,9 @@ msgstr "Poista linkitys"
 
 msgid "Concept not in references"
 msgstr "Käsite ei löydy viitteistä"
+
+msgid "validateMeta"
+msgstr "Epävalidi syöte"
 
 #~ msgid "Not implemented yet!"
 #~ msgstr "Ei vielä toteutettu!"
