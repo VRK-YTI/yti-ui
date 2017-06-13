@@ -386,7 +386,8 @@ export class VocabularyNode extends Node<VocabularyNodeType> {
 
   get languages(): string[] {
     if (this.meta.hasProperty('language')) {
-      return this.getPropertyAsValues('language');
+      const languages = this.getPropertyAsValues('language');
+      return languages.length > 0 ? languages : defaultLanguages;
     } else {
       return defaultLanguages;
     }

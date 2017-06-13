@@ -11,7 +11,6 @@ import { NodeType } from "app/entities/node-api";
 import { children } from '../utils/markdown';
 import { Parser, Node as MarkdownNode } from 'commonmark';
 import { validateMeta } from '../directives/validators/meta-model.validator';
-import { defaultLanguages } from '../utils/language';
 
 export type FormReference = FormReferenceLiteral<any>
                           | FormReferenceTerm;
@@ -330,7 +329,7 @@ export class FormPropertyLiteralList {
 
   constructor(property: Property) {
 
-    const initialValues = property.attributes.length === 0 && property.meta.id === 'language' ? defaultLanguages : property.attributes.map(a => a.value);
+    const initialValues = property.attributes.map(a => a.value);
 
     this.children = initialValues.map(value => new FormControl(value, (control: FormControl) => validateMeta(control, property.meta)));
 
