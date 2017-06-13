@@ -70,7 +70,7 @@ export class ConceptFormComponent {
   }
 
   hasPrimaryTerm() {
-    return anyMatching(this.references, child => child.name === 'prefLabelXl');
+    return anyMatching(this.form.references, child => child.name === 'prefLabelXl');
   }
 
   onConceptRemove(concept: ConceptNode) {
