@@ -12,7 +12,7 @@ import { FormPropertyLiteral } from '../../services/form-state';
 
     <div *ngIf="editing">
 
-      <div class="form-group" [ngClass]="{'has-danger': valueInError(index)}">
+      <div class="form-group" [ngClass]="{'has-danger': valueInError()}">
       
         <ng-container [ngSwitch]="property.editorType">
           
