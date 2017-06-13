@@ -23,7 +23,7 @@ import { FormControl } from '@angular/forms';
 
       <div *ngIf="vocabulary">
 
-        <form #form="ngForm" [formGroup]="formNode.control" name="newVocabularyForm">
+        <form #form="ngForm" [formGroup]="formNode.control">
 
           <div class="row">
             <div class="col-6">
@@ -32,8 +32,7 @@ import { FormControl } from '@angular/forms';
                 <dd>
                   <select class="form-control"
                           id="vocabularyType"
-                          [formControl]="templateControl"
-                          *ngIf="selectedTemplate">
+                          [formControl]="templateControl">
                     <option *ngFor="let templateMeta of templates" [ngValue]="templateMeta">
                       {{templateMeta.label | translateValue}}
                     </option>
@@ -47,7 +46,7 @@ import { FormControl } from '@angular/forms';
             </div>
           </div>
           
-          <vocabulary-form [vocabulary]="vocabulary" [form]="form"></vocabulary-form>
+          <vocabulary-form [vocabulary]="vocabulary" [form]="formNode"></vocabulary-form>
         </form>
 
       </div>
@@ -78,6 +77,7 @@ export class NewVocabularyComponent {
       this.meta = meta;
       this.templates = meta.getMetaTemplates();
       this.selectedTemplate = this.templates[0];
+      this.createVocabulary();
     });
 
     this.templateControl.valueChanges.subscribe(() => this.createVocabulary());
@@ -89,6 +89,12 @@ export class NewVocabularyComponent {
       const vocabularyId = uuid();
       const newMeta = this.meta.copyTemplateToGraph(this.selectedTemplate, graphId);
       this.vocabulary = newMeta.createEmptyVocabulary(graphId, vocabularyId, label, this.languageService.language);
+
+      // TODO all meta models don't defined language but they should
+      if (this.vocabulary.meta.hasProperty('language')) {
+        this.vocabulary.languages = defaultLanguages.slice();
+      }
+
       this.formNode = new FormNode(this.vocabulary, defaultLanguages);
     });
   }
@@ -99,15 +105,16 @@ export class NewVocabularyComponent {
 
   set selectedTemplate(value: GraphMeta) {
     this.templateControl.setValue(value);
-    this.createVocabulary();
   }
 
   saveVocabulary(): Promise<any> {
 
     const that = this;
+    const vocabulary = this.vocabulary.clone();
+    this.formNode.assignChanges(vocabulary);
 
     return new Promise((resolve, reject) => {
-      this.termedService.createVocabulary(this.selectedTemplate, this.vocabulary)
+      this.termedService.createVocabulary(this.selectedTemplate, vocabulary)
         .subscribe({
           next: () => that.router.navigate(['/concepts', that.vocabulary.graphId]),
           error: (err: any) => reject(err)
