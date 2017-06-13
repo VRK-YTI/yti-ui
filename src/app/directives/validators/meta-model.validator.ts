@@ -1,6 +1,7 @@
 import { Directive, Input, forwardRef } from '@angular/core';
 import { PropertyMeta } from '../../entities/meta';
 import { FormControl, NG_VALIDATORS } from '@angular/forms';
+import { allMatching } from '../../utils/array';
 
 @Directive({
   selector: '[validateMeta][ngModel]',
@@ -17,17 +18,20 @@ export class MetaModelValidator {
   }
 }
 
+function match(regexpString: string, value: string) {
 
-export function validateMeta(control: FormControl, meta: PropertyMeta) {
-
-  function normalize(regex: string) {
-    // FIXME: figure out purpose of (?s)
-    return regex.startsWith('(?s)') ? regex.substr(4) : regex;
+  if (!regexpString) {
+    return true;
   }
 
-  const regex = meta.regex ? new RegExp(normalize(meta.regex)) : new RegExp('.*');
+  const singleLineMode = regexpString.startsWith('(?s)');
+  const regexp = new RegExp(singleLineMode ? regexpString.substring(4) : regexpString);
 
-  return regex.test(control.value) ? null : {
+  return allMatching(singleLineMode ? value.split(/\n+/) : [value], line => regexp.test(line));
+}
+
+export function validateMeta(control: FormControl, meta: PropertyMeta) {
+  return match(meta.regex, control.value) ? null : {
     validateMeta: {
       valid: false
     }
