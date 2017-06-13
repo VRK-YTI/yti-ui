@@ -230,6 +230,10 @@ export class ReferenceMeta {
     }
   }
 
+  get required(): boolean {
+    return this.referenceType === 'Organization' || this.referenceType === 'Group';
+  }
+
   get term(): boolean {
     const termTypes: ReferenceType[] = ['PrimaryTerm', 'Synonym'];
     return contains(termTypes, this.referenceType);

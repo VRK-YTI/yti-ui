@@ -1,6 +1,6 @@
 import { FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { assertNever } from '../utils/object';
-import { allMatching, anyMatching, firstMatching, flatten } from "app/utils/array";
+import { allMatching, anyMatching, firstMatching, flatten, normalizeAsArray } from "app/utils/array";
 import { ConceptNode, KnownNode, Node, Property, Reference, TermNode } from '../entities/node';
 import {
   Cardinality, EditorType, MetaModel, NodeMeta, PropertyMeta, ReferenceMeta,
@@ -138,13 +138,30 @@ export class FormReferenceLiteral<N extends KnownNode | Node<any>>{
   private targetMeta: NodeMeta;
 
   constructor(reference: Reference<N>) {
-    this.control = new FormControl(reference.values);
+
     this.meta = reference.meta;
+
+    function mapValue(values: N[]): N|N[]|null {
+      switch (values.length) {
+        case 0:
+          return null;
+        case 1:
+          return values[0];
+        default:
+          return values;
+      }
+    }
+
+    this.control = new FormControl(mapValue(reference.values), this.required ? [Validators.required] : []);
     this.targetMeta = reference.targetMeta;
   }
 
   get label(): Localizable {
     return this.meta.label;
+  }
+
+  get required(): boolean {
+    return this.meta.required;
   }
 
   get referenceType(): ReferenceType {
@@ -156,7 +173,7 @@ export class FormReferenceLiteral<N extends KnownNode | Node<any>>{
   }
 
   get value(): N[] {
-    return this.control.value;
+    return normalizeAsArray(this.control.value);
   }
 
   get singleValue(): N|null {
@@ -170,7 +187,7 @@ export class FormReferenceLiteral<N extends KnownNode | Node<any>>{
   }
 
   set singleValue(value: N|null) {
-    this.control.setValue(value ? [value] : []);
+    this.control.setValue(value);
   }
 
   get targetGraph() {

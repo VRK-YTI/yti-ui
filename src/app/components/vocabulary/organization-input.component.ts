@@ -1,35 +1,32 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { OrganizationNode } from '../../entities/node';
 import { TermedService } from '../../services/termed.service';
 import { EditableService } from '../../services/editable.service';
 import { replaceMatching } from '../../utils/array';
-import { FormControl } from '@angular/forms';
 import { FormReferenceLiteral } from '../../services/form-state';
 
 @Component({
   selector: 'organization-input',
   template: `
 
-    <span *ngIf="!editing">{{value.label | translateValue}}</span>
+    <span *ngIf="!editing">{{reference.singleValue.label | translateValue}}</span>
     
-    <div *ngIf="editing && organizations" class="form-group" [ngClass]="{'has-danger': valueInError}">
+    <div *ngIf="editing && organizations" class="form-group" [ngClass]="{'has-danger': valueInError()}">
       <div>
-        <select class="form-control" required [formControl]="formControl">
-          <option [ngValue]="null" translate>No organization</option>
+        <select class="form-control" [formControl]="reference.control">
+          <option *ngIf="reference.valueEmpty" [ngValue]="null" translate>No organization</option>
           <option *ngFor="let organization of organizations" [ngValue]="organization">{{organization.label | translateValue}}</option>
         </select>
 
-        <error-messages [control]="formControl"></error-messages>
+        <error-messages [control]="reference.control"></error-messages>
       </div>
     </div>
   `
 })
-export class OrganizationInputComponent implements OnChanges {
+export class OrganizationInputComponent {
 
   @Input() reference: FormReferenceLiteral<OrganizationNode>;
   organizations: OrganizationNode[];
-
-  formControl = new FormControl();
 
   constructor(private editableService: EditableService,
               termedService: TermedService) {
@@ -39,7 +36,7 @@ export class OrganizationInputComponent implements OnChanges {
       if (editing && !this.organizations) {
         termedService.getOrganizationList().subscribe(organizations => {
 
-          const organization = this.value;
+          const organization = this.reference.singleValue;
 
           if (organization) {
             replaceMatching(organizations, o => o.id === organization.id, organization);
@@ -49,23 +46,13 @@ export class OrganizationInputComponent implements OnChanges {
         });
       }
     });
-
-    this.formControl.valueChanges.subscribe(value => this.value = value);
   }
 
-  ngOnChanges() {
-    this.formControl.setValue(this.reference.singleValue);
+  valueInError() {
+    return !this.reference.control.valid;
   }
 
   get editing() {
     return this.editableService.editing;
-  }
-
-  get value() {
-    return this.reference.singleValue as OrganizationNode;
-  }
-
-  set value(value: OrganizationNode) {
-    this.reference.singleValue = value;
   }
 }
