@@ -86,9 +86,9 @@ export class ConceptFormComponent {
     return this.searchConceptModalService.openForGraph(this.concept.graphId, name)
       .then(concept => {
         if (!this.form.hasConceptReference(concept.id)) {
-          return this.selectConceptReferenceModalService.open(this.concept)
+          return this.selectConceptReferenceModalService.open(this.form)
             .then(reference => {
-              reference.values.push(concept);
+              reference.addReference(concept);
               return concept;
             }, ignoreModalClose)
         } else {

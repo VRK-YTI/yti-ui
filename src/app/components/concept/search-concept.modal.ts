@@ -6,6 +6,8 @@ import { statuses } from '../../entities/constants';
 import { TermedService } from '../../services/termed.service';
 import { EditableService } from '../../services/editable.service';
 import { ElasticSearchService, IndexedConcept } from '../../services/elasticsearch.service';
+import { FormNode } from '../../services/form-state';
+import { defaultLanguages } from '../../utils/language';
 
 type Mode = 'include'|'exclude';
 
@@ -94,7 +96,7 @@ export class SearchConceptModalService {
         </div>
         <div class="col-md-4">
           <form>
-            <concept-form *ngIf="selection && !loadingSelection" [concept]="selection"></concept-form>
+            <concept-form *ngIf="selection && !loadingSelection" [concept]="selection" [form]="formNode"></concept-form>
           </form>
           <ajax-loading-indicator *ngIf="loadingSelection"></ajax-loading-indicator>
         </div>
@@ -118,6 +120,7 @@ export class SearchConceptModal implements OnInit, AfterViewInit {
 
   selectedItem: IndexedConcept|null = null;
   selection: ConceptNode|null = null;
+  formNode: FormNode|null;
 
   search$ = new BehaviorSubject('');
   onlyStatus$ = new BehaviorSubject<string|null>(null);
@@ -202,6 +205,7 @@ export class SearchConceptModal implements OnInit, AfterViewInit {
 
     this.termedService.getConcept(concept.vocabulary.id, concept.id).subscribe(concept => {
       this.selection = concept;
+      this.formNode = this.selection ? new FormNode(this.selection, defaultLanguages) : null;
     })
   }
 

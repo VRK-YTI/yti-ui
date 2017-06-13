@@ -66,7 +66,7 @@ export class ConceptLinkReferenceInputComponent {
     this.searchConceptModal.openOtherThanGraph(graphId).then(concept => {
       this.termedService.getVocabulary(concept.graphId)
         .flatMap(vocabulary => this.metaModelService.createConceptLink(graphId, vocabulary, concept))
-        .subscribe(conceptLink => this.reference.value.push(conceptLink));
+        .subscribe(conceptLink => this.reference.addReference(conceptLink));
     }, ignoreModalClose);
   }
 }

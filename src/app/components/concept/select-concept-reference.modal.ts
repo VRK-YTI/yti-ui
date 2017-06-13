@@ -1,6 +1,7 @@
 import { Component, Injectable, Input, OnInit } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ConceptNode, Reference } from '../../entities/node';
+import { ConceptNode } from '../../entities/node';
+import { FormNode, FormReferenceLiteral } from '../../services/form-state';
 
 @Injectable()
 export class SelectConceptReferenceModalService {
@@ -8,10 +9,10 @@ export class SelectConceptReferenceModalService {
   constructor(private modalService: NgbModal) {
   }
 
-  open(concept: ConceptNode): Promise<Reference<ConceptNode>> {
+  open(formNode: FormNode): Promise<FormReferenceLiteral<ConceptNode>> {
     const modalRef = this.modalService.open(SelectConceptReferenceModal, { size: 'sm' });
     const instance = modalRef.componentInstance as SelectConceptReferenceModal;
-    instance.concept = concept;
+    instance.formNode = formNode;
     return modalRef.result;
   }
 }
@@ -35,7 +36,7 @@ export class SelectConceptReferenceModalService {
           <div class="form-group">
             <label for="status" translate>Reference type</label>
             <select id="status " class="form-control" [(ngModel)]="selection">
-              <option *ngFor="let reference of conceptReferences" [ngValue]="reference">{{reference.meta.label | translateValue}}</option>
+              <option *ngFor="let reference of conceptReferences" [ngValue]="reference">{{reference.label | translateValue}}</option>
             </select>
           </div>
           
@@ -50,20 +51,22 @@ export class SelectConceptReferenceModalService {
 })
 export class SelectConceptReferenceModal implements OnInit {
 
-  @Input() concept: ConceptNode;
+  @Input() formNode: FormNode;
 
-  selection: Reference<ConceptNode>;
-  conceptReferences: Reference<ConceptNode>[];
+  selection: FormReferenceLiteral<ConceptNode>;
+  conceptReferences: FormReferenceLiteral<ConceptNode>[];
 
   constructor(public modal: NgbActiveModal) {
   }
 
   ngOnInit(): void {
 
-    this.conceptReferences = Object.values(this.concept.references).filter(ref => ref.type === 'Concept');
+    this.conceptReferences = this.formNode.references
+      .filter(ref => ref.reference.targetType === 'Concept')
+      .map(ref => ref.reference as FormReferenceLiteral<ConceptNode>);
 
-    if (this.concept.hasRelatedConcepts()) {
-      this.selection = this.concept.relatedConcepts;
+    if (this.formNode.hasRelatedConcepts()) {
+      this.selection = this.formNode.relatedConcepts;
     } else {
       this.selection = this.conceptReferences[0];
     }

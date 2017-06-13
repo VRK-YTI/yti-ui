@@ -49,6 +49,6 @@ export class ConceptReferenceInputComponent {
 
   addReference() {
     this.searchConceptModal.openForGraph(this.reference.targetGraph)
-      .then(result => this.reference.value.push(result), ignoreModalClose);
+      .then(result => this.reference.addReference(result), ignoreModalClose);
   }
 }

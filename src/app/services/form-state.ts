@@ -88,6 +88,14 @@ export class FormNode {
     return anyMatching(this.referencedConcepts, concept => concept.id === conceptId);
   }
 
+  hasRelatedConcepts() {
+    return anyMatching(this.references, child => child.name === 'related');
+  }
+
+  get relatedConcepts() {
+    return firstMatching(this.references, child => child.name === 'related')!.reference as FormReferenceLiteral<ConceptNode>;
+  }
+
   get referencedConcepts(): ConceptNode[] {
     return flatten(this.references
       .filter(child => child.reference.targetType === 'Concept')
@@ -170,6 +178,10 @@ export class FormReferenceLiteral<N extends KnownNode | Node<any>>{
 
   get targetType(): NodeType {
     return this.meta.targetType;
+  }
+
+  addReference(target: N) {
+    this.control.setValue([...this.value, ...[target]]);
   }
 
   get value(): N[] {
