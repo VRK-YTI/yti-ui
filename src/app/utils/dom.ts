@@ -97,7 +97,12 @@ export class DomPath {
       }
 
       path.unshift({node: walk, index});
-      walk = walk.parentNode!;
+
+      if (!walk.parentNode) {
+        return null;
+      }
+
+      walk = walk.parentNode;
     }
 
     return new DomPath(path);
