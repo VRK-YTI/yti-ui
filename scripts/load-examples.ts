@@ -25,6 +25,10 @@ const sosGraph = require('../examples/sosGraph.json');
 const sosTypes = require('../examples/sosTypes.json');
 const sosNodes = require('../examples/sosNodes.json');
 
+const kiraGraph = require('../examples/kiraGraph.json');
+const kiraTypes = require('../examples/kiraTypes.json');
+const kiraNodes = require('../examples/kiraNodes.json');
+
 const username = 'admin';
 const password = 'admin';
 
@@ -74,5 +78,6 @@ Promise.all([
   initData('Vocabulary template', thesaurusGraph, thesaurusTypes),
   initData('JHS', jhsGraph, jhsTypes, jhsNodes),
   initData('SOS', sosGraph, sosTypes, sosNodes),
-  initData('OKSA', oksaGraph, oksaTypes, oksaNodes)
+  initData('OKSA', oksaGraph, oksaTypes, oksaNodes),
+  initData('KIRA', kiraGraph, kiraTypes, kiraNodes)
 ])).then(() => console.log('========\nOK'));
