@@ -35,7 +35,7 @@ export class DividerComponent {
   }
 
   static get maxWidth() {
-    return window.innerWidth - leftWidth;
+    return document.body.clientWidth - leftWidth;
   }
 
   moveDivider(mouseDown: MouseEvent) {
