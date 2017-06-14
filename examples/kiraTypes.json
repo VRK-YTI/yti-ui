@@ -166,7 +166,7 @@
           "prefLabel": [
             {
               "lang": "fi",
-              "value": "Ryhm‰"
+              "value": "Ryhm√§"
             },
             {
               "lang": "en",
@@ -189,7 +189,7 @@
       "prefLabel": [
         {
           "lang": "fi",
-          "value": "K‰sitevalikoima"
+          "value": "K√§sitevalikoima"
         },
         {
           "lang": "en",
@@ -289,7 +289,7 @@
           "prefLabel": [
             {
               "lang": "fi",
-              "value": "Jaottelu yl‰k‰sitteen mukaan"
+              "value": "Jaottelu yl√§k√§sitteen mukaan"
             },
             {
               "lang": "en",
@@ -319,7 +319,7 @@
           "prefLabel": [
             {
               "lang": "fi",
-              "value": "Valikoimaan kuuluva k‰site"
+              "value": "Valikoimaan kuuluva k√§site"
             },
             {
               "lang": "en",
@@ -398,7 +398,7 @@
           "prefLabel": [
             {
               "lang": "fi",
-              "value": "L‰hde"
+              "value": "L√§hde"
             },
             {
               "lang": "en",
@@ -429,7 +429,7 @@
           "prefLabel": [
             {
               "lang": "fi",
-              "value": "K‰yttˆala"
+              "value": "K√§ytt√∂ala"
             },
             {
               "lang": "en",
@@ -454,7 +454,7 @@
           "prefLabel": [
             {
               "lang": "fi",
-              "value": "Yll‰pit‰j‰n muistiinpano"
+              "value": "Yll√§pit√§j√§n muistiinpano"
             },
             {
               "lang": "en",
@@ -516,7 +516,7 @@
           "prefLabel": [
             {
               "lang": "fi",
-              "value": "Termin k‰ytˆn historiatieto"
+              "value": "Termin k√§yt√∂n historiatieto"
             },
             {
               "lang": "en",
@@ -608,7 +608,7 @@
       "prefLabel": [
         {
           "lang": "fi",
-          "value": "K‰site"
+          "value": "K√§site"
         },
         {
           "lang": "en",
@@ -633,7 +633,7 @@
           "prefLabel": [
             {
               "lang": "fi",
-              "value": "M‰‰ritelm‰"
+              "value": "M√§√§ritelm√§"
             },
             {
               "lang": "en",
@@ -695,7 +695,7 @@
           "prefLabel": [
             {
               "lang": "fi",
-              "value": "Yll‰pit‰j‰n muistiinpano"
+              "value": "Yll√§pit√§j√§n muistiinpano"
             },
             {
               "lang": "en",
@@ -726,7 +726,7 @@
           "prefLabel": [
             {
               "lang": "fi",
-              "value": "K‰yttˆesimerkki"
+              "value": "K√§ytt√∂esimerkki"
             },
             {
               "lang": "en",
@@ -788,7 +788,7 @@
           "prefLabel": [
             {
               "lang": "fi",
-              "value": "K‰sitemerkityksen historiatieto"
+              "value": "K√§sitemerkityksen historiatieto"
             },
             {
               "lang": "en",
@@ -819,7 +819,7 @@
           "prefLabel": [
             {
               "lang": "fi",
-              "value": "K‰sitteen tila"
+              "value": "K√§sitteen tila"
             },
             {
               "lang": "en",
@@ -850,7 +850,7 @@
           "prefLabel": [
             {
               "lang": "fi",
-              "value": "Systemaattinen merkint‰tapa"
+              "value": "Systemaattinen merkint√§tapa"
             },
             {
               "lang": "en",
@@ -881,7 +881,7 @@
           "prefLabel": [
             {
               "lang": "fi",
-              "value": "L‰hde"
+              "value": "L√§hde"
             },
             {
               "lang": "en",
@@ -973,7 +973,7 @@
           "prefLabel": [
             {
               "lang": "fi",
-              "value": "Hierarkkinen yl‰k‰site"
+              "value": "Hierarkkinen yl√§k√§site"
             },
             {
               "lang": "en",
@@ -1003,7 +1003,7 @@
           "prefLabel": [
             {
               "lang": "fi",
-              "value": "Liittyv‰ k‰site"
+              "value": "Liittyv√§ k√§site"
             },
             {
               "lang": "en",
@@ -1069,7 +1069,7 @@
           "prefLabel": [
             {
               "lang": "fi",
-              "value": "Liittyv‰ k‰site toisessa sanastossa"
+              "value": "Liittyv√§ k√§site toisessa sanastossa"
             },
             {
               "lang": "en",
@@ -1105,7 +1105,7 @@
           "prefLabel": [
             {
               "lang": "fi",
-              "value": "Vastaava k‰site toisessa sanastossa"
+              "value": "Vastaava k√§site toisessa sanastossa"
             },
             {
               "lang": "en",
@@ -1141,7 +1141,7 @@
           "prefLabel": [
             {
               "lang": "fi",
-              "value": "L‰hes vastaava k‰site toisessa sanastossa"
+              "value": "L√§hes vastaava k√§site toisessa sanastossa"
             },
             {
               "lang": "en",
@@ -1170,7 +1170,7 @@
       "prefLabel": [
         {
           "lang": "fi",
-          "value": "Linkitetty k‰site"
+          "value": "Linkitetty k√§site"
         },
         {
           "lang": "en",
@@ -1257,7 +1257,7 @@
           "prefLabel": [
             {
               "lang": "fi",
-              "value": "Viitatun k‰sitteen id"
+              "value": "Viitatun k√§sitteen id"
             },
             {
               "lang": "en",
@@ -1282,7 +1282,7 @@
           "prefLabel": [
             {
               "lang": "fi",
-              "value": "Viitatun k‰sitteen uri"
+              "value": "Viitatun k√§sitteen uri"
             },
             {
               "lang": "en",
