@@ -1,10 +1,10 @@
 [
- {
+  {
     "id": "53cc3de0-7ca0-4c5e-a6b8-e84123bf64e0",
     "createdBy": "admin",
-    "createdDate": "2017-03-17T10:00:37.807+02:00",
+    "createdDate": "2017-05-10T06:37:53.863Z",
     "lastModifiedBy": "admin",
-    "lastModifiedDate": "2017-03-17T10:01:38.271+02:00",
+    "lastModifiedDate": "2017-05-17T13:30:27.582Z",
     "type": {
       "id": "Organization",
       "graph": {
@@ -26,72 +26,26 @@
       ]
     },
     "references": {},
-    "referrers": {}
-  },
-  {
-    "id": "520dc3ac-2f67-4ec0-b535-218428ed3758",
-    "createdBy": "admin",
-    "createdDate": "2017-03-17T10:00:37.807+02:00",
-    "lastModifiedBy": "admin",
-    "lastModifiedDate": "2017-03-17T10:01:38.271+02:00",
-    "type": {
-      "id": "Organization",
-      "graph": {
-        "id": "228cce1e-8360-4039-a3f7-725df5643354"
-      }
-    },
-    "properties": {
-      "prefLabel": [
+    "referrers": {
+      "publisher": [
         {
-          "lang": "fi",
-          "value": "Valtiovarainministeriö",
-          "regex": "(?s)^.*$"
-        },
-        {
-          "lang": "en",
-          "value": "Ministry of Finance",
-          "regex": "(?s)^.*$"
+          "id": "5d2d2b70-62ca-3109-bf5e-061a22ee54c4",
+          "type": {
+            "id": "Vocabulary",
+            "graph": {
+              "id": "fea40a05-6a7d-4bc5-8db5-2fba38a7457f"
+            }
+          }
         }
       ]
-    },
-    "references": {},
-    "referrers": {}
-  },
-  {
-    "id": "42c81e91-9c23-40a5-9b3c-1f6c502c48a4",
-    "createdBy": "admin",
-    "createdDate": "2017-03-17T10:00:37.807+02:00",
-    "lastModifiedBy": "admin",
-    "lastModifiedDate": "2017-03-17T10:01:38.271+02:00",
-    "type": {
-      "id": "Organization",
-      "graph": {
-        "id": "228cce1e-8360-4039-a3f7-725df5643354"
-      }
-    },
-    "properties": {
-      "prefLabel": [
-        {
-          "lang": "fi",
-          "value": "Opetus- ja Kulttuuriministeriö",
-          "regex": "(?s)^.*$"
-        },
-        {
-          "lang": "en",
-          "value": "Ministry of Education and Culture",
-          "regex": "(?s)^.*$"
-        }
-      ]
-    },
-    "references": {},
-    "referrers": {}
+    }
   },
   {
     "id": "5cc44d9e-a1f6-49c9-b03b-b22d880abb99",
     "createdBy": "admin",
-    "createdDate": "2017-03-17T09:58:42.105+02:00",
+    "createdDate": "2017-05-10T06:37:53.863Z",
     "lastModifiedBy": "admin",
-    "lastModifiedDate": "2017-03-17T10:00:33.609+02:00",
+    "lastModifiedDate": "2017-05-17T13:30:27.599Z",
     "type": {
       "id": "Organization",
       "graph": {
@@ -113,6 +67,141 @@
       ]
     },
     "references": {},
-    "referrers": {}
+    "referrers": {
+      "publisher": [
+        {
+          "id": "e51b0ccb-4ac2-3e16-a117-4cdaae902675",
+          "type": {
+            "id": "TerminologicalVocabulary",
+            "graph": {
+              "id": "ada55715-c565-4477-8227-0b8a51010bc5"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "520dc3ac-2f67-4ec0-b535-218428ed3758",
+    "createdBy": "admin",
+    "createdDate": "2017-05-10T06:37:53.863Z",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-05-17T13:30:27.584Z",
+    "type": {
+      "id": "Organization",
+      "graph": {
+        "id": "228cce1e-8360-4039-a3f7-725df5643354"
+      }
+    },
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "fi",
+          "value": "Valtiovarainministeriö",
+          "regex": "(?s)^.*$"
+        },
+        {
+          "lang": "en",
+          "value": "Ministry of Finance",
+          "regex": "(?s)^.*$"
+        }
+      ]
+    },
+    "references": {},
+    "referrers": {
+      "publisher": [
+        {
+          "id": "61bec1e5-70b4-34fc-acfb-ab70428fb6f8",
+          "type": {
+            "id": "TerminologicalVocabulary",
+            "graph": {
+              "id": "0043fa54-18b2-4f31-80cf-32eeb0bbb297"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "42c81e91-9c23-40a5-9b3c-1f6c502c48a4",
+    "createdBy": "admin",
+    "createdDate": "2017-05-10T06:37:53.863Z",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-05-17T13:30:27.586Z",
+    "type": {
+      "id": "Organization",
+      "graph": {
+        "id": "228cce1e-8360-4039-a3f7-725df5643354"
+      }
+    },
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "fi",
+          "value": "Opetus- ja Kulttuuriministeriö",
+          "regex": "(?s)^.*$"
+        },
+        {
+          "lang": "en",
+          "value": "Ministry of Education and Culture",
+          "regex": "(?s)^.*$"
+        }
+      ]
+    },
+    "references": {},
+    "referrers": {
+      "publisher": [
+        {
+          "id": "a8414060-9320-3186-949f-675d2c3fa2d0",
+          "type": {
+            "id": "TerminologicalVocabulary",
+            "graph": {
+              "id": "9c2782be-5f75-4cd7-80fa-806a8abfd4e2"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "48dff4f2-af8c-4963-b2f7-34797ccfc8b1",
+    "createdBy": "admin",
+    "createdDate": "2017-06-14T08:25:17.962Z",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-06-14T08:25:17.962Z",
+    "type": {
+      "id": "Organization",
+      "graph": {
+        "id": "228cce1e-8360-4039-a3f7-725df5643354"
+      }
+    },
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "fi",
+          "value": "Ympäristöministeriö",
+          "regex": "(?s)^.*$"
+        },
+        {
+          "lang": "en",
+          "value": "Ministry of the Environment",
+          "regex": "(?s)^.*$"
+        }
+      ]
+    },
+    "references": {},
+    "referrers": {
+      "publisher": [
+        {
+          "id": "8687eb1a-9d15-4201-80a4-258238146218",
+          "type": {
+            "id": "TerminologicalVocabulary",
+            "graph": {
+              "id": "128d0546-b4ba-4812-a7e0-3b2313fdc5e5"
+            }
+          }
+        }
+      ]
+    }
   }
 ]
