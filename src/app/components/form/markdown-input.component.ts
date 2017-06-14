@@ -74,7 +74,7 @@ class Model {
       const newPrependingParagraph = new Paragraph(this);
       this.insertParagraphBefore(newPrependingParagraph, text.containingParagraph);
       paragraph.splitTo(newPrependingParagraph, text, offset);
-      Model.moveCursor(paragraph.firstPoint);
+      paragraph.firstPoint.moveCursor();
     }
   }
 
@@ -82,11 +82,11 @@ class Model {
 
     const selection = requireDefined(this.getSelection());
     const position = requireDefined(selection.remove());
-    Model.moveCursor(position.text.insertText(text, position.offset, updateDom));
+    position.text.insertText(text, position.offset, updateDom).moveCursor();
   }
 
   removeSelection() {
-    Model.moveCursor(requireDefined(this.getSelection()).remove());
+    requireDefined(this.getSelection()).remove().moveCursor();
   }
 
   removeNextChar() {
@@ -94,10 +94,10 @@ class Model {
     const selection = requireDefined(this.getSelection());
 
     if (selection.isRange()) {
-      Model.moveCursor(selection.remove());
+      selection.remove().moveCursor();
     } else {
       const {text, offset} = selection.start;
-      Model.moveCursor(text.removeNextChar(offset));
+      text.removeNextChar(offset).moveCursor();
     }
   }
 
@@ -106,10 +106,10 @@ class Model {
     const selection = requireDefined(this.getSelection());
 
     if (selection.isRange()) {
-      Model.moveCursor(selection.remove());
+      selection.remove().moveCursor();
     } else {
       const {text, offset} = selection.start;
-      Model.moveCursor(text.removePreviousChar(offset));
+      text.removePreviousChar(offset).moveCursor();
     }
   }
 
@@ -157,12 +157,6 @@ class Model {
     return domSelection ? Selection.ofDomSelection(this, domSelection) : null;
   }
 
-  private static moveCursor(point: Point|null) {
-    if (point) {
-      moveCursor(point.text.node, point.offset);
-    }
-  }
-
   link(target: string) {
 
     if (this.linkableSelection === null) {
@@ -186,7 +180,7 @@ class Model {
 
     text.remove();
 
-    Model.moveCursor(new Point(selectionAsLink.text, cursor - start));
+    new Point(selectionAsLink.text, cursor - start).moveCursor();
     this.updateSelection();
   }
 
@@ -272,7 +266,7 @@ class Model {
   }
 
   moveCursorToOffset(offset: number) {
-    Model.moveCursor(this.offsetToPoint(offset));
+    this.offsetToPoint(offset).moveCursor();
   }
 
   removeStartOfLine() {
@@ -302,7 +296,7 @@ class Model {
   cut(): string {
 
     const text = this.copy();
-    Model.moveCursor(requireDefined(this.getSelection()).remove());
+    requireDefined(this.getSelection()).remove().moveCursor();
     return text;
   }
 }
@@ -311,7 +305,7 @@ class Paragraph {
 
   node: HTMLElement;
 
-  constructor(private parent: Model, private content: (Link|Text)[] = []) {
+  constructor(private parent: Model, public content: (Link|Text)[] = []) {
     this.node = document.createElement('p');
   }
 
@@ -330,12 +324,7 @@ class Paragraph {
     return result;
   }
 
-  combineWith(paragraph: Paragraph): Point|null {
-
-    if (paragraph === this) {
-      // nothing to do
-      return null;
-    }
+  combineWith(paragraph: Paragraph): Point {
 
     const lastOfThis = last(this.content);
     const lastContentBeforeChanges = lastOfThis.text.content;
@@ -466,16 +455,20 @@ class Paragraph {
     return this.parent.removeContent(this);
   }
 
-  removeContent(content: Text|Link) {
+  removeContent(content: Text|Link): Point {
+
+    const previous = this.getPrecedingText(content.text);
+    const next = this.getFollowingText(content.text);
 
     this.node.removeChild(content.node);
     remove(this.content, content);
 
-    if (this.content.length === 0) {
-      if (!this.parent.removeContent(this)) {
-        this.ensureNonEmptyContent();
-      }
+    if (this.content.length === 0 && !this.parent.removeContent(this)) {
+      this.ensureNonEmptyContent();
+      return this.firstPoint;
     }
+
+    return previous ? previous.lastPoint : next!.firstPoint;
   }
 
   findTextForPath(indicesFromRoot: number[]): Text {
@@ -600,17 +593,17 @@ class Link {
     return this.text.hasEmptyContent();
   }
 
-  remove(): void {
-    this.parent.removeContent(this);
+  remove(): Point {
+    return this.parent.removeContent(this);
   }
 
-  removeContent(text: Text): void {
+  removeContent(text: Text): Point {
 
     if (text !== this.text) {
       throw new Error('Illegal argument');
     }
 
-    this.remove();
+    return this.remove();
   }
 
   findTextForPath(indicesFromRoot: number[]): Text {
@@ -700,25 +693,13 @@ class Text {
     return this.parent instanceof Link;
   }
 
-  remove(): Point|null {
-
-    const previous = this.getPrecedingText();
-
+  remove(): Point {
     // FIXME: typescript won't type check without this no-op type guard
-    if (this.parent instanceof Paragraph ) {
-      this.parent.removeContent(this);
-    } else {
-      this.parent.removeContent(this);
-    }
-
-    if (previous) {
-      return new Point(previous.text, previous.text.length);
-    } else {
-      return null;
-    }
+    return this.parent instanceof Paragraph ? this.parent.removeContent(this)
+                                            : this.parent.removeContent(this);
   }
 
-  removeNextChar(offset: number): Point|null {
+  removeNextChar(offset: number): Point {
 
     if (offset >= this.length) {
       const next = this.getFollowingText();
@@ -730,14 +711,14 @@ class Text {
           return next.removeFirstCharacter();
         }
       } else {
-        return null;
+        return new Point(this, offset);
       }
     } else {
       return this.removeRange(offset, offset + 1);
     }
   }
 
-  removePreviousChar(offset: number): Point|null {
+  removePreviousChar(offset: number): Point {
 
     if (offset <= 0) {
       const previous = this.getPrecedingText();
@@ -749,22 +730,22 @@ class Text {
           return previous.removeLastCharacter();
         }
       } else {
-        return null;
+        return new Point(this, offset);
       }
     } else {
       return this.removeRange(offset - 1, offset);
     }
   }
 
-  removeAfter(offset: number): Point|null {
+  removeAfter(offset: number): Point {
     return this.removeRange(offset, this.length);
   }
 
-  removeBefore(offset: number): Point|null {
+  removeBefore(offset: number): Point {
     return this.removeRange(0, offset);
   }
 
-  removeLastCharacter(): Point|null {
+  removeLastCharacter(): Point {
 
     if (this.content.length <= 1) {
       return this.remove();
@@ -773,7 +754,7 @@ class Text {
     }
   }
 
-  removeFirstCharacter(): Point|null {
+  removeFirstCharacter(): Point {
     if (this.content.length <= 1) {
       return this.remove();
     } else {
@@ -781,7 +762,7 @@ class Text {
     }
   }
 
-  removeRange(start: number, end: number): Point|null {
+  removeRange(start: number, end: number): Point {
 
     if (start < 0 || end > this.content.length) {
       throw new Error('remove range not in bounds, ' + start + ' .. ' + end + ' of [' + this.content + '] (' + this.content.length + ')');
@@ -813,6 +794,10 @@ class Text {
   append(text: string): Point {
     this.content = this.content + text;
     return this.lastPoint;
+  }
+
+  get firstPoint(): Point {
+    return new Point(this, 0);
   }
 
   get lastPoint(): Point {
@@ -852,6 +837,10 @@ class Text {
 
 class Point {
   constructor(public text: Text, public offset: number) {
+  }
+
+  moveCursor() {
+    moveCursor(this.text.node, this.offset);
   }
 }
 
@@ -931,7 +920,7 @@ class Selection {
     return this.start.text !== this.end.text || this.start.offset !== this.end.offset;
   }
 
-  remove(): Point|null {
+  remove(): Point {
 
     if (!this.isRange()) {
       return this.start;
@@ -945,14 +934,14 @@ class Selection {
 
       const startParagraph = this.start.text.containingParagraph;
       const endParagraph = this.end.text.containingParagraph;
-      const pointAfterRemoval = this.start.text.removeAfter(this.start.offset);
-      this.end.text.removeBefore(this.end.offset);
+      this.start.text.removeAfter(this.start.offset);
+      const pointAfterRemoval = this.end.text.removeBefore(this.end.offset);
 
-      if (this.model.hasParagraph(startParagraph) && this.model.hasParagraph(endParagraph)) {
-        startParagraph.combineWith(endParagraph);
+      if (startParagraph !== endParagraph && this.model.hasParagraph(startParagraph) && this.model.hasParagraph(endParagraph)) {
+        return startParagraph.combineWith(endParagraph);
+      } else {
+        return pointAfterRemoval;
       }
-
-      return pointAfterRemoval;
     } else {
       return this.start.text.removeRange(this.start.offset, this.end.offset);
     }
