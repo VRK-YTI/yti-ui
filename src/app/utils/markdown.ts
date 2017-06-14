@@ -62,26 +62,13 @@ export function removeWhiteSpaceNodes(node: Node) {
   }
 }
 
-class StringBuilder {
-
-  private _value = '';
-
-  append(s: string) {
-    this._value += s;
-  }
-
-  get value() {
-    return this._value;
-  }
-}
-
 export function stripMarkdown(md: string): string {
 
-  const sb = new StringBuilder();
+  let result = '';
 
   const visit = (node: MarkdownNode) => {
     if (node.literal !== null) {
-      sb.append(node.literal);
+      result += node.literal;
     }
 
     for (const child of children(node)) {
@@ -91,5 +78,5 @@ export function stripMarkdown(md: string): string {
 
   visit(parser.parse(md));
 
-  return sb.value;
+  return result;
 }
