@@ -52,11 +52,11 @@ export class FloatDirective implements AfterViewInit, OnDestroy {
   }
 
   isFloatingPosition() {
-    return window.pageYOffset >= this.elementStaticLocation.top;
+    return window.pageYOffset > this.elementStaticLocation.top;
   }
 
   isStaticPosition() {
-    return window.pageYOffset < this.elementStaticLocation.top;
+    return window.pageYOffset <= this.elementStaticLocation.top;
   }
 
   isInitialized() {
