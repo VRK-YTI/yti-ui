@@ -57,9 +57,7 @@ export class TermsComponent implements OnChanges {
   }
 
   ngOnChanges() {
-    this.editableService.editing$.subscribe(editing => {
-      this.openTerms = this.unsaved && editing ? [0] : [];
-    });
+    this.openTerms = this.unsaved && this.editableService.editing ? [0] : [];
   }
 
   get languages() {
