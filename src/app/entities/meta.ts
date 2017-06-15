@@ -287,10 +287,6 @@ export class MetaModel {
     return requireDefined(this.meta.get(graphId), 'Meta not found for graph: ' + graphId);
   }
 
-  getMetaTemplates() {
-    return Array.from(this.meta.values()).filter(meta => meta.template);
-  }
-
   getNodeMeta(graphId: string, nodeType: NodeType): NodeMeta {
     return this.getGraphMeta(graphId).getNodeMeta(nodeType);
   }
@@ -339,13 +335,6 @@ export class MetaModel {
 
     return newConceptLink;
   }
-
-  copyTemplateToGraph(templateMeta: GraphMeta, graphId: string): MetaModel {
-
-    const newMeta = new MetaModel(new Map<string, GraphMeta>(this.meta));
-    newMeta.addMeta(templateMeta.copyToGraph(graphId));
-    return newMeta;
-  }
 }
 
 export class GraphMeta {
@@ -362,6 +351,10 @@ export class GraphMeta {
 
   getNodeMeta(type: NodeType): NodeMeta {
     return requireDefined(this.meta.get(type), `Meta not found for graph: ${this.graphId} and node type: ${type}`);
+  }
+
+  getNodeMetas() {
+    return Array.from(this.meta.values());
   }
 
   toNodes(): NodeMetaInternal[] {

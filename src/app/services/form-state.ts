@@ -184,6 +184,10 @@ export class FormReferenceLiteral<N extends KnownNode | Node<any>>{
     this.control.setValue([...this.value, ...[target]]);
   }
 
+  get graphId() {
+    return this.meta.graphId;
+  }
+
   get value(): N[] {
     return normalizeAsArray(this.control.value);
   }
@@ -267,6 +271,10 @@ export class FormReferenceTerm {
 
   get targetType(): NodeType {
     return this.meta.targetType;
+  }
+
+  get graphId() {
+    return this.meta.graphId;
   }
 
   get value(): TermNode[] {

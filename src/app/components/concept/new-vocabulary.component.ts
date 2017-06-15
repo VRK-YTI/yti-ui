@@ -5,7 +5,7 @@ import { VocabularyNode } from '../../entities/node';
 import { EditableService } from '../../services/editable.service';
 import { Router } from '@angular/router';
 import { TermedService } from '../../services/termed.service';
-import { GraphMeta, MetaModel } from '../../entities/meta';
+import { GraphMeta } from '../../entities/meta';
 import { TranslateService } from 'ng2-translate';
 import { LanguageService } from '../../services/language.service';
 import { FormNode } from '../../services/form-state';
@@ -58,12 +58,11 @@ export class NewVocabularyComponent {
 
   vocabulary: VocabularyNode;
   templates: GraphMeta[];
-  meta: MetaModel;
   formNode: FormNode;
   templateControl = new FormControl();
 
   constructor(private router: Router,
-              metaModelService: MetaModelService,
+              private metaModelService: MetaModelService,
               private termedService: TermedService,
               private translateService: TranslateService,
               private languageService: LanguageService,
@@ -73,9 +72,8 @@ export class NewVocabularyComponent {
     editableService.onSave = () => this.saveVocabulary();
     editableService.onCanceled = () => router.navigate(['/']);
 
-    metaModelService.getMeta().subscribe(meta => {
-      this.meta = meta;
-      this.templates = meta.getMetaTemplates();
+    metaModelService.getMetaTemplates().subscribe(templates => {
+      this.templates = templates;
       this.selectedTemplate = this.templates[0];
       this.createVocabulary();
     });
@@ -87,15 +85,17 @@ export class NewVocabularyComponent {
     this.translateService.get('New vocabulary').subscribe(label => {
       const graphId = uuid();
       const vocabularyId = uuid();
-      const newMeta = this.meta.copyTemplateToGraph(this.selectedTemplate, graphId);
-      this.vocabulary = newMeta.createEmptyVocabulary(graphId, vocabularyId, label, this.languageService.language);
 
-      // TODO all meta models don't defined language but they should
-      if (this.vocabulary.meta.hasProperty('language')) {
-        this.vocabulary.languages = defaultLanguages.slice();
-      }
+      this.metaModelService.copyTemplateToGraph(this.selectedTemplate, graphId).subscribe(newMeta => {
+        this.vocabulary = newMeta.createEmptyVocabulary(graphId, vocabularyId, label, this.languageService.language);
 
-      this.formNode = new FormNode(this.vocabulary, defaultLanguages);
+        // TODO all meta models don't define language but they should
+        if (this.vocabulary.meta.hasProperty('language')) {
+          this.vocabulary.languages = defaultLanguages.slice();
+        }
+
+        this.formNode = new FormNode(this.vocabulary, defaultLanguages);
+      });
     });
   }
 

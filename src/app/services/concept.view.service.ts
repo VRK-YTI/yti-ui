@@ -22,7 +22,8 @@ import { isDefined } from '../utils/object';
 import { Subject } from 'rxjs/Subject';
 import { removeMatching, replaceMatching } from '../utils/array';
 import { FormNode } from './form-state';
-import { defaultLanguages } from '../utils/language';
+import { MetaModel } from '../entities/meta';
+import { TranslateService } from 'ng2-translate';
 
 function onlySelect<T>(action: Observable<Action<T>>): Observable<T> {
   const selectAction: Observable<SelectAction<T>> = action.filter(isSelect);
@@ -373,12 +374,15 @@ export class ConceptViewModelService {
   loadingConcept = true;
   loadingCollection = true;
 
+  metaModel: Observable<MetaModel>;
+
   constructor(private router: Router,
               private termedService: TermedService,
               private elasticSearchService: ElasticSearchService,
               private metaModelService: MetaModelService,
               private locationService: LocationService,
-              private languageService: LanguageService) {
+              private languageService: LanguageService,
+              private translateService: TranslateService) {
 
     this.action$.subscribe(action => {
       switch (action.type) {
@@ -429,6 +433,7 @@ export class ConceptViewModelService {
   initializeVocabulary(graphId: string) {
 
     this.graphId = graphId;
+    this.metaModel = this.metaModelService.getMeta(graphId);
     this.loadingVocabulary = true;
 
     this.termedService.getVocabulary(graphId).subscribe(vocabulary => {
@@ -475,7 +480,7 @@ export class ConceptViewModelService {
           if (concept) {
             init(concept);
           } else {
-            this.metaModelService.createEmptyConcept(this.vocabulary, conceptId).subscribe(init);
+            this.createEmptyConcept(this.vocabulary, conceptId).subscribe(init);
           }
         });
       });
@@ -513,7 +518,7 @@ export class ConceptViewModelService {
           if (collection) {
             init(collection);
           } else {
-            this.metaModelService.createEmptyCollection(this.vocabulary, collectionId).subscribe(init);
+            this.createEmptyCollection(this.vocabulary, collectionId).subscribe(init);
           }
         });
       });
@@ -687,5 +692,23 @@ export class ConceptViewModelService {
 
   resetVocabulary() {
     this.vocabularyForm = new FormNode(this.vocabulary, this.languages);
+  }
+
+  createEmptyConcept(vocabulary: VocabularyNode, nodeId: string): Observable<ConceptNode> {
+
+    const label$ = this.translateService.get('New concept');
+
+    return Observable.zip(label$, this.metaModel).map(([newConceptLabel, meta]) => {
+      return meta.createEmptyConcept(vocabulary, nodeId, newConceptLabel, this.languageService.language);
+    });
+  }
+
+  createEmptyCollection(vocabulary: VocabularyNode, nodeId: string): Observable<CollectionNode> {
+
+    const label$ = this.translateService.get('New collection');
+
+    return Observable.zip(label$, this.metaModel).map(([newCollectionLabel, meta]) => {
+      return meta.createEmptyCollection(vocabulary, nodeId, newCollectionLabel, this.languageService.language);
+    });
   }
 }

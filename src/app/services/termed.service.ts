@@ -21,7 +21,7 @@ export class TermedService {
   }
 
   getVocabulary(graphId: string): Observable<VocabularyNode> {
-    return this.metaModelService.getMeta().flatMap(metaModel => {
+    return this.metaModelService.getMeta(graphId).flatMap(metaModel => {
       if (metaModel.graphHas(graphId, 'Vocabulary')) {
         return this.getVocabularyNode(graphId, 'Vocabulary')
           .map(vocabulary => Node.create(vocabulary, metaModel, true));
@@ -33,45 +33,59 @@ export class TermedService {
   }
 
   getVocabularyList(): Observable<VocabularyNode[]> {
-    return Observable.zip(this.metaModelService.getMeta(), this.getVocabularyNodes('Vocabulary'), this.getVocabularyNodes('TerminologicalVocabulary'))
-      .map(([meta, vocabularies, terminologicalVocabularies]) =>
-        [...vocabularies, ...terminologicalVocabularies]
-          .map(vocabulary => Node.create(vocabulary, meta, true) as VocabularyNode));
+    return Observable.zip(this.getVocabularyNodes('Vocabulary'), this.getVocabularyNodes('TerminologicalVocabulary'))
+      .flatMap(([vocabularies, terminologicalVocabularies]) =>
+        Observable.forkJoin([...vocabularies, ...terminologicalVocabularies]
+          .map(vocabulary =>
+            this.metaModelService.getMeta(vocabulary.type.graph.id)
+              .map(metaModel => Node.create(vocabulary, metaModel, true) as VocabularyNode))
+        )
+      );
   }
 
   getConcept(graphId: string, conceptId: string): Observable<ConceptNode> {
-    return Observable.zip(this.metaModelService.getMeta(), this.getConceptDetailsNode(graphId, conceptId))
+    return Observable.zip(this.metaModelService.getMeta(graphId), this.getConceptDetailsNode(graphId, conceptId))
       .map(([meta, concept]) => Node.create(concept, meta, true));
   }
 
   findConcept(graphId: string, conceptId: string): Observable<ConceptNode|null> {
-    return Observable.zip(this.metaModelService.getMeta(), this.findConceptDetailsNode(graphId, conceptId))
+    return Observable.zip(this.metaModelService.getMeta(graphId), this.findConceptDetailsNode(graphId, conceptId))
       .map(([meta, concept]) => concept ? Node.create(concept, meta, true) : null);
   }
 
   getCollection(graphId: string, collectionId: string): Observable<CollectionNode> {
-    return Observable.zip(this.metaModelService.getMeta(), this.getCollectionDetailsNode(graphId, collectionId))
+    return Observable.zip(this.metaModelService.getMeta(graphId), this.getCollectionDetailsNode(graphId, collectionId))
       .map(([meta, collection]) => Node.create(collection, meta, true));
   }
 
   findCollection(graphId: string, collectionId: string): Observable<CollectionNode|null> {
-    return Observable.zip(this.metaModelService.getMeta(), this.findCollectionDetailsNode(graphId, collectionId))
+    return Observable.zip(this.metaModelService.getMeta(graphId), this.findCollectionDetailsNode(graphId, collectionId))
       .map(([meta, collection]) => collection ? Node.create(collection, meta, true) : null);
   }
 
   getCollectionList(graphId: string): Observable<CollectionNode[]> {
-    return Observable.zip(this.metaModelService.getMeta(), this.getCollectionListNodes(graphId))
+    return Observable.zip(this.metaModelService.getMeta(graphId), this.getCollectionListNodes(graphId))
       .map(([meta, concepts]) => concepts.map(collection => Node.create(collection, meta, true)));
   }
 
   getOrganizationList(): Observable<OrganizationNode[]> {
-    return Observable.zip(this.metaModelService.getMeta(), this.getNodeListWithoutReferencesOrReferrers('Organization'))
-      .map(([meta, organizations]) => organizations.map(organization => Node.create(organization, meta, true)));
+    return this.getNodeListWithoutReferencesOrReferrers('Organization')
+      .flatMap(organizations =>
+        Observable.forkJoin(organizations.map(organization =>
+          this.metaModelService.getMeta(organization.type.graph.id)
+            .map(metaModel => Node.create(organization, metaModel, true))
+        ))
+      );
   }
 
   getGroupList(): Observable<GroupNode[]> {
-    return Observable.zip(this.metaModelService.getMeta(), this.getNodeListWithoutReferencesOrReferrers('Group'))
-      .map(([meta, organizations]) => organizations.map(organization => Node.create(organization, meta, true)));
+    return this.getNodeListWithoutReferencesOrReferrers('Group')
+      .flatMap(groups =>
+        Observable.forkJoin(groups.map(group =>
+          this.metaModelService.getMeta(group.type.graph.id)
+            .map(metaModel => Node.create(group, metaModel, true))
+        ))
+      );
   }
 
   createVocabulary(template: GraphMeta, vocabulary: VocabularyNode): Observable<Response> {

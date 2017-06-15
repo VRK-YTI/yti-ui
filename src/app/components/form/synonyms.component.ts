@@ -75,7 +75,7 @@ export class SynonymsComponent {
   }
 
   addTerm(language: string) {
-    this.metaModelModel.getMeta().subscribe(metaModel => {
+    this.metaModelModel.getMeta(this.reference.graphId).subscribe(metaModel => {
       this.reference.addTerm(metaModel, language);
       this.openTerms.push((this.children.length - 1));
     });

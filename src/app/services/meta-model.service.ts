@@ -1,14 +1,11 @@
 import { URLSearchParams } from '@angular/http';
 import { Observable, ReplaySubject } from 'rxjs';
-import { normalizeAsArray } from '../utils/array';
+import { index, normalizeAsArray } from '../utils/array';
 import { Injectable } from '@angular/core';
 import { TermedHttp } from './termed-http.service';
 import { Graph } from '../entities/graph';
 import { GraphMeta, MetaModel } from '../entities/meta';
 import { NodeMetaInternal } from '../entities/meta-api';
-import { CollectionNode, ConceptNode, VocabularyNode } from '../entities/node';
-import { TranslateService } from 'ng2-translate';
-import { LanguageService } from './language.service';
 import { asLocalizable } from '../entities/localization';
 import { environment } from '../../environments/environment';
 
@@ -20,53 +17,74 @@ const infiniteResultsOptions = { search: infiniteResultsParams };
 @Injectable()
 export class MetaModelService {
 
-  private meta = new ReplaySubject<MetaModel>();
+  private metaCache = new ReplaySubject<Map<string, GraphMeta>>();
+  private templates = new ReplaySubject<GraphMeta[]>();
 
-  constructor(private http: TermedHttp,
-              private translateService: TranslateService,
-              private languageService: LanguageService) {
+  constructor(private http: TermedHttp) {
 
     this.getGraphs()
-      .flatMap(graphs => Observable.forkJoin(graphs.map(graph => Observable.zip(Observable.of(graph), this.getMetaNodes(graph.id)))))
-      .map(graphAndNodes => {
-
-        const meta = new Map<string, GraphMeta>();
-
-        for (const [graph, nodeMetasInGraph] of graphAndNodes) {
-          const template = graph.properties.type ? graph.properties.type[0].value === 'Metamodel' : false;
-          const label = asLocalizable(graph.properties['prefLabel']);
-          meta.set(graph.id, new GraphMeta(graph.id, label, nodeMetasInGraph, template));
-        }
-
-        return new MetaModel(meta);
-      })
-      .subscribe(meta => this.meta.next(meta));
+      .flatMap(graphs => Observable.forkJoin(graphs.map(graph => this.createGraphMeta(graph))))
+      .subscribe(graphMetas => {
+        this.metaCache.next(index(graphMetas, graphMeta => graphMeta.graphId));
+        this.metaCache.complete();
+        this.templates.next(graphMetas.filter(graphMeta => graphMeta.template));
+        this.templates.complete();
+      });
   }
 
-  getMeta(): Observable<MetaModel> {
-    return this.meta.asObservable();
+  getMeta(graphId: string): Observable<MetaModel> {
+    return this.getGraphMeta(graphId).flatMap(graphMeta => this.createMetaModel(graphMeta));
   }
 
-  createEmptyConcept(vocabulary: VocabularyNode, nodeId: string): Observable<ConceptNode> {
+  copyTemplateToGraph(templateMeta: GraphMeta, graphId: string): Observable<MetaModel> {
+    return this.createMetaModel(templateMeta.copyToGraph(graphId));
+  }
 
-    const label$ = this.translateService.get('New concept');
+  getGraphMeta(graphId: string): Observable<GraphMeta> {
 
-    return Observable.zip(label$, this.meta).map(([newConceptLabel, meta]) => {
-      return meta.createEmptyConcept(vocabulary, nodeId, newConceptLabel, this.languageService.language);
+    return this.metaCache.flatMap(metaCache => {
+
+      if (metaCache.has(graphId)) {
+        return Observable.of(metaCache.get(graphId));
+      } else {
+        return this.getGraph(graphId)
+          .flatMap(graph => this.createGraphMeta(graph))
+          .do(graphMeta => metaCache.set(graphId, graphMeta));
+      }
     });
   }
 
-  createEmptyCollection(vocabulary: VocabularyNode, nodeId: string): Observable<CollectionNode> {
-
-    const label$ = this.translateService.get('New collection');
-
-    return Observable.zip(label$, this.meta).map(([newCollectionLabel, meta]) => {
-      return meta.createEmptyCollection(vocabulary, nodeId, newCollectionLabel, this.languageService.language);
+  private createGraphMeta(graph: Graph): Observable<GraphMeta> {
+    return this.getMetaNodes(graph.id).map(nodeMetasInGraph => {
+      const template = graph.properties.type ? graph.properties.type[0].value === 'Metamodel' : false;
+      const label = asLocalizable(graph.properties['prefLabel']);
+      return new GraphMeta(graph.id, label, nodeMetasInGraph, template);
     });
   }
 
-  createConceptLink(toGraphId: string, fromVocabulary: VocabularyNode, concept: ConceptNode) {
-    return this.meta.map(meta => meta.createConceptLink(toGraphId, fromVocabulary, concept));
+  private createMetaModel(graphMeta: GraphMeta): Observable<MetaModel> {
+
+    const externalGraphs = new Set<string>();
+
+    for (const nodeMeta of graphMeta.getNodeMetas()) {
+      for (const reference of nodeMeta.references) {
+        externalGraphs.add(reference.graphId);
+      }
+    }
+
+    externalGraphs.delete(graphMeta.graphId);
+
+    // necessary optimization since forkJoin doesn't ever complete with empty observables array
+    if (externalGraphs.size === 0) {
+      return Observable.of(new MetaModel(index([graphMeta], graphMeta => graphMeta.graphId)));
+    }
+
+    return Observable.forkJoin(Array.from(externalGraphs).map(graph => this.getGraphMeta(graph)))
+      .map(graphMetas => new MetaModel(index([graphMeta, ...graphMetas], graphMeta => graphMeta.graphId)));
+  }
+
+  getMetaTemplates(): Observable<GraphMeta[]> {
+    return this.templates.asObservable();
   }
 
   updateMeta(graphMeta: GraphMeta): Observable<any> {
@@ -74,16 +92,14 @@ export class MetaModelService {
     const params = new URLSearchParams();
     params.append('batch', 'true');
 
-    return this.http.post(`${environment.api_url}/graphs/${graphMeta.graphId}/types`, graphMeta.toNodes(), { search: params })
-      .flatMap(() => this.addMeta(graphMeta));
+    return Observable.zip(this.metaCache, this.http.post(`${environment.api_url}/graphs/${graphMeta.graphId}/types`, graphMeta.toNodes(), { search: params }))
+      .do(([metaCache, response]) => metaCache.set(graphMeta.graphId, graphMeta));
   }
 
   removeGraphMeta(graphId: string): Observable<any> {
-    return this.getMeta().flatMap(meta => this.removeMetaNodes(graphId, meta.getGraphMeta(graphId).toNodes()));
-  }
-
-  private addMeta(graphMeta: GraphMeta): Observable<any> {
-    return this.meta.map(meta => meta.addMeta(graphMeta));
+    return this.getGraphMeta(graphId)
+      .flatMap(meta => Observable.zip(this.metaCache, this.removeMetaNodes(graphId, meta.toNodes()))
+        .do(([metaCache, response]) => metaCache.delete(graphId)));
   }
 
   private removeMetaNodes(graphId: string, nodes: NodeMetaInternal[]) {
@@ -92,6 +108,11 @@ export class MetaModelService {
     params.append('batch', 'true');
 
     return this.http.delete(`${environment.api_url}/graphs/${graphId}/types`, { search: params, body: nodes });
+  }
+
+  private getGraph(graphId: string): Observable<Graph> {
+    return this.http.get(`${environment.api_url}/graphs/${graphId}`)
+      .map(response => response.json() as Graph);
   }
 
   private getGraphs(): Observable<Graph[]> {
