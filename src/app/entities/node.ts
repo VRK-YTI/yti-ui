@@ -108,25 +108,9 @@ export class Reference<N extends KnownNode | Node<any>> {
   }
 }
 
-export class Referrer<N extends KnownNode | Node<any>> {
+export class Referrer {
 
-  values: N[];
-  valuesByMeta: { meta: ReferenceMeta, nodes: N[] }[] = [];
-
-  constructor(referenceId: string, referrers: NodeExternal<any>[], metaModel: MetaModel) {
-
-    this.values = referrers.map(referrer => Node.create(referrer, metaModel, true) as N);
-
-    const references = new Map<ReferenceMeta, N[]>();
-
-    for (const value of this.values) {
-      const meta = value.meta.references.find(ref => ref.id === referenceId);
-      getOrCreate(references, meta, () => []).push(value);
-    }
-
-    for (const [meta, nodes] of Array.from(references.entries())) {
-      this.valuesByMeta.push({meta, nodes});
-    }
+  constructor(public referenceId: string, public values: NodeExternal<any>[]) {
   }
 }
 
@@ -136,7 +120,7 @@ export class Node<T extends NodeType> {
 
   properties: { [key: string]: Property } = {};
   references: { [key: string]: Reference<any> } = {};
-  referrers: { [key: string]: Referrer<Node<any>> } = {};
+  referrers: { [key: string]: Referrer } = {};
 
   protected constructor(protected node: NodeExternal<T>,
                         protected metaModel: MetaModel,
@@ -155,7 +139,7 @@ export class Node<T extends NodeType> {
     }
 
     for (const [name, referrerNodes] of Object.entries(node.referrers)) {
-      this.referrers[name] = new Referrer(name, normalizeAsArray(referrerNodes), metaModel);
+      this.referrers[name] = new Referrer(name, normalizeAsArray(referrerNodes));
     }
   }
 
@@ -261,7 +245,10 @@ export class Node<T extends NodeType> {
       const result: { [key: string]: Identifier<any>[] } = {};
 
       for (const [key, referrer] of Object.entries(this.referrers)) {
-        result[key] = referrer.values.map(referrer => referrer.identifier);
+        result[key] = referrer.values.map(referrer => ({
+          id: referrer.id,
+          type: referrer.type
+        }));
       }
 
       return result;
@@ -329,8 +316,8 @@ export class Node<T extends NodeType> {
     return this.meta.label;
   }
 
-  getNormalizedReferrer<N extends KnownNode | Node<any>>(referenceId: string): Referrer<N> {
-    return this.referrers[referenceId] as Referrer<N> || new Referrer<N>(referenceId, [], this.metaModel);
+  getNormalizedReferrer<N extends NodeType>(referenceId: string): Referrer {
+    return this.referrers[referenceId] || new Referrer(referenceId, []);
   }
 
   getProperty(propertyName: string): Property {
@@ -489,8 +476,8 @@ export class ConceptNode extends Node<'Concept'> {
     return this.references['broader'];
   }
 
-  get narrowerConcepts(): Referrer<ConceptNode> {
-    return this.getNormalizedReferrer<ConceptNode>('broader');
+  get narrowerConcepts(): Referrer {
+    return this.getNormalizedReferrer<'Concept'>('broader');
   }
 
   hasIsPartOfConcepts() {
@@ -501,8 +488,8 @@ export class ConceptNode extends Node<'Concept'> {
     return this.references['isPartOf'];
   }
 
-  get partOfThisConcepts(): Referrer<ConceptNode> {
-    return this.getNormalizedReferrer<ConceptNode>('isPartOf');
+  get partOfThisConcepts(): Referrer {
+    return this.getNormalizedReferrer<'Concept'>('isPartOf');
   }
 
   hasPrimaryTerm() {

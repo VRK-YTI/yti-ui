@@ -4,10 +4,12 @@ import { index, normalizeAsArray } from '../utils/array';
 import { Injectable } from '@angular/core';
 import { TermedHttp } from './termed-http.service';
 import { Graph } from '../entities/graph';
-import { GraphMeta, MetaModel } from '../entities/meta';
+import { GraphMeta, MetaModel, ReferenceMeta } from '../entities/meta';
 import { NodeMetaInternal } from '../entities/meta-api';
 import { asLocalizable } from '../entities/localization';
 import { environment } from '../../environments/environment';
+import { KnownNode, Node, Referrer } from '../entities/node';
+import { getOrCreate } from '../utils/map';
 
 const infiniteResultsParams = new URLSearchParams();
 infiniteResultsParams.append('max', '-1');
@@ -81,6 +83,19 @@ export class MetaModelService {
 
     return Observable.forkJoin(Array.from(externalGraphs).map(graph => this.getGraphMeta(graph)))
       .map(graphMetas => new MetaModel(index([graphMeta, ...graphMetas], graphMeta => graphMeta.graphId)));
+  }
+
+  getReferrersByMeta<N extends KnownNode | Node<any>>(referrer: Referrer): Observable<{ meta: ReferenceMeta, nodes: N[] }[]> {
+
+    return Observable.forkJoin(referrer.values.map(nodeExternal => this.getMeta(nodeExternal.type.graph.id).flatMap(meta => {
+
+      const references = new Map<ReferenceMeta, N[]>();
+      const node = Node.create(nodeExternal, meta, true) as N;
+      const referenceMeta = node.meta.references.find(ref => ref.id === referrer.referenceId);
+      getOrCreate(references, referenceMeta, () => []).push(node);
+
+      return Array.from(references.entries()).map(([meta, nodes]) => ({meta, nodes}));
+    })));
   }
 
   getMetaTemplates(): Observable<GraphMeta[]> {

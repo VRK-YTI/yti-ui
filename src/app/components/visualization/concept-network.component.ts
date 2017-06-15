@@ -17,6 +17,7 @@ import { Node } from '../../entities/node';
 import { collectProperties } from '../../utils/array';
 import { assertNever, requireDefined } from '../../utils/object';
 import { TranslateService } from 'ng2-translate';
+import { MetaModelService } from '../../services/meta-model.service';
 
 interface ConceptNetworkData {
   nodes: DataSet<UpdatableVisNode>;
@@ -215,6 +216,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
               private translateService: TranslateService,
               private languageService: LanguageService,
               private termedService: TermedService,
+              private metaModelService: MetaModelService,
               private router: Router,
               private conceptViewModel: ConceptViewModelService) {
 
@@ -597,12 +599,14 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
       }
     }
 
-    for (const {meta, nodes} of concept.narrowerConcepts.valuesByMeta) {
-      for (const narrowerConcept of nodes) {
-        this.addNodeIfDoesNotExist(this.createBroaderConceptNode(narrowerConcept));
-        this.addEdgeIfDoesNotExist(this.createBroaderConceptEdge(narrowerConcept, concept, meta));
+    this.metaModelService.getReferrersByMeta<ConceptNode>(concept.narrowerConcepts).subscribe(referrers => {
+      for (const {meta, nodes} of referrers) {
+        for (const narrowerConcept of nodes) {
+          this.addNodeIfDoesNotExist(this.createBroaderConceptNode(narrowerConcept));
+          this.addEdgeIfDoesNotExist(this.createBroaderConceptEdge(narrowerConcept, concept, meta));
+        }
       }
-    }
+    });
 
     if (concept.hasIsPartOfConcepts()) {
       for (const isPartOfConcept of concept.isPartOfConcepts.values) {
@@ -611,12 +615,14 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
       }
     }
 
-    for (const {meta, nodes} of concept.partOfThisConcepts.valuesByMeta) {
-      for (const partOfThisConcept of nodes) {
-        this.addNodeIfDoesNotExist(this.createIsPartOfConceptNode(partOfThisConcept));
-        this.addEdgeIfDoesNotExist(this.createIsPartOfConceptEdge(partOfThisConcept, concept, meta));
+    this.metaModelService.getReferrersByMeta<ConceptNode>(concept.partOfThisConcepts).subscribe(referrers => {
+      for (const {meta, nodes} of referrers) {
+        for (const partOfThisConcept of nodes) {
+          this.addNodeIfDoesNotExist(this.createIsPartOfConceptNode(partOfThisConcept));
+          this.addEdgeIfDoesNotExist(this.createIsPartOfConceptEdge(partOfThisConcept, concept, meta));
+        }
       }
-    }
+    });
   }
 
   private removeEdgeNodesFromConcept(concept: ConceptNode) {

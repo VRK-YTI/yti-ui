@@ -3,6 +3,8 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Node } from '../../entities/node';
 import { ReferenceMeta } from '../../entities/meta';
 import { flatten } from '../../utils/array';
+import { MetaModelService } from '../../services/meta-model.service';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class DeleteConfirmationModalService {
@@ -68,11 +70,14 @@ export class DeleteConfirmationModal implements OnInit {
 
   references: Reference[] = [];
 
-  constructor(private modal: NgbActiveModal) {
+  constructor(private modal: NgbActiveModal,
+              private metaModelService: MetaModelService) {
   }
 
   ngOnInit(): void {
-    this.references = flatten(Object.values(this.node.referrers).map(ref => ref.valuesByMeta));
+    Observable.forkJoin(Object.values(this.node.referrers)
+      .map(referrer => this.metaModelService.getReferrersByMeta<Node<any>>(referrer))
+    ).subscribe(referrers => this.references = flatten(referrers));
   }
 
   cancel() {
