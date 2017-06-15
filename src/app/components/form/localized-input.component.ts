@@ -85,7 +85,7 @@ export class LocalizedInputComponent {
 
       const result = this.languages.slice();
 
-      for (const addedLanguage of this.property.value.map(v => v.lang)) {
+      for (const addedLanguage of this.property.addedLanguages) {
         remove(result, addedLanguage);
       }
 

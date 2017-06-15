@@ -502,7 +502,7 @@ export class ConceptNode extends Node<'Concept'> {
 
   setPrimaryLabel(language: string, value: string) {
     if (this.hasPrimaryTerm()) {
-      const matchingTerm = this.findPrimaryTermForLanguage(language) || this.primaryTerm.values[0];
+      const matchingTerm = this.findPrimaryTermForLanguage(language) || this.primaryTerm.values[0] || this.addNewTerm();
       matchingTerm.setLocalization(language, value);
     } else {
       const matchingLocalization = this.findLabelLocalizationForLanguage(language) || this.anyLabelLocalization() || this.createLabelLocalization(language);
@@ -516,6 +516,12 @@ export class ConceptNode extends Node<'Concept'> {
 
   private findLabelLocalizationForLanguage(language: string): Localization|undefined {
     return (this.properties['prefLabel'].attributes as Localization[]).find(localization => localization.lang === language);
+  }
+
+  private addNewTerm() {
+    const term = this.primaryTerm.createNewReference();
+    this.primaryTerm.values.push(term);
+    return term;
   }
 
   private createLabelLocalization(language: string) {

@@ -15,14 +15,15 @@ export type FormReference = FormReferenceLiteral<any>
       <dd>
         <ng-container [ngSwitch]="reference.referenceType">
           
-          <primary-terms *ngSwitchCase="'PrimaryTerm'" 
-                         [reference]="reference"
-                         [multiColumn]="multiColumnTerms"
-                         [unsaved]="unsaved"></primary-terms>
+          <terms *ngSwitchCase="'PrimaryTerm'" 
+                 [reference]="reference"
+                 [multiColumn]="multiColumnTerms"
+                 [unsaved]="unsaved"></terms>
 
-          <synonyms *ngSwitchCase="'Synonym'" 
-                    [reference]="reference"
-                    [multiColumn]="multiColumnTerms"></synonyms>
+          <terms *ngSwitchCase="'Synonym'" 
+                 [reference]="reference"
+                 [multiColumn]="multiColumnTerms"
+                 [unsaved]="unsaved"></terms>
 
           <concept-reference-input *ngSwitchCase="'Concept'" [reference]="reference" (conceptRemove)="conceptRemove.next($event)"></concept-reference-input>
 
@@ -52,10 +53,6 @@ export class ReferenceComponent {
   @Output() conceptRemove = new EventEmitter<ConceptNode>();
 
   constructor(private editableService: EditableService) {
-  }
-
-  onConceptRemove(concept: ConceptNode) {
-    this.conceptRemove.next(concept);
   }
 
   get show() {

@@ -27,7 +27,6 @@ import { LocalizedInputComponent } from './components/form/localized-input.compo
 import { MetaModelService } from './services/meta-model.service';
 import { PropertyComponent } from './components/form/property.component';
 import { ReferenceComponent } from './components/form/reference.component';
-import { PrimaryTermsComponent } from './components/form/primary-terms.component';
 import { NoSelectionComponent } from './components/concept/no-selection.component';
 import { TimestampPipe } from './pipes/timestamp.pipe';
 import { MarkdownLinksComponent } from './components/markdown/markdown-links.component';
@@ -61,7 +60,6 @@ import { SessionService } from './services/session.service';
 import { DeleteConfirmationModal, DeleteConfirmationModalService } from './components/common/delete-confirmation.modal';
 import { CollectionComponent } from './components/concept/collection.component';
 import { CollectionListComponent } from './components/concept/collection-list.component';
-import { SynonymsComponent } from './components/form/synonyms.component';
 import { ErrorModal, ErrorModalService } from './components/common/error.modal';
 import { ConfirmationModal, ConfirmationModalService } from './components/common/confirmation.modal';
 import { ConfirmCancelEditGuard } from './components/common/edit.guard';
@@ -85,6 +83,7 @@ import {
 import { FrontpageComponent } from './components/fronpage.component';
 import { LiteralListInputComponent } from './components/form/literal-list-input.component';
 import { RequiredListValidator } from './directives/validators/required-list.validator';
+import { TermsComponent } from './components/form/terms.component';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json-loader!po-loader?format=mf!../../po/fi.po'),
@@ -139,8 +138,7 @@ const appRoutes: Routes = [
     ReferenceComponent,
     ConceptReferenceInputComponent,
     ConceptLinkReferenceInputComponent,
-    PrimaryTermsComponent,
-    SynonymsComponent,
+    TermsComponent,
     AjaxLoadingIndicatorComponent,
     AjaxLoadingIndicatorSmallComponent,
     MarkdownComponent,

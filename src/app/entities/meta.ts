@@ -231,7 +231,7 @@ export class ReferenceMeta {
   }
 
   get required(): boolean {
-    return this.referenceType === 'Organization' || this.referenceType === 'Group';
+    return contains(['Organization', 'Group', 'PrimaryTerm'] as ReferenceType[], this.referenceType);
   }
 
   get term(): boolean {
@@ -245,6 +245,10 @@ export class ReferenceMeta {
 
   get conceptLink(): boolean {
     return this.referenceType === 'ConceptLink';
+  }
+
+  get cardinality(): Cardinality {
+    return this.referenceType === 'PrimaryTerm' ? 'single' : 'multiple';
   }
 
   copyToGraph(graphId: string): ReferenceAttributeInternal {

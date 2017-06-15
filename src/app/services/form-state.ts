@@ -226,39 +226,28 @@ export class FormReferenceLiteral<N extends KnownNode | Node<any>>{
 export class FormReferenceTerm {
 
   type: 'term' = 'term';
-  control: FormGroup = new FormGroup({});
+  control: FormGroup;
   children: { formNode: FormNode, language: string }[];
   private meta: ReferenceMeta;
   private targetMeta: NodeMeta;
 
   constructor(reference: Reference<TermNode>, public languages: string[]) {
 
-    function getOrCreateTerm(language: string): TermNode {
-      const existingTerm = firstMatching(reference.values, term => term.hasLocalization() && term.language === language);
+    this.meta = reference.meta;
+    this.targetMeta = reference.targetMeta;
+    this.control = this.required ? new FormGroup({}, requiredList) : new FormGroup({});
 
-      if (existingTerm) {
-        return existingTerm;
-      } else {
-        const newTerm = reference.createNewReference();
-        newTerm.setLocalization(language, '');
-        return newTerm;
-      }
-    }
-
-    if (reference.meta.referenceType === 'PrimaryTerm') {
-      this.children = languages.map(language => ({ formNode: new FormNode(getOrCreateTerm(language), languages), language }))
-    } else {
-      this.children = reference.values
-        .filter(term => term.hasLocalization())
-        .map(term => ({ formNode: new FormNode(term, languages), language: term.language! }));
-    }
+    this.children = reference.values
+      .filter(term => term.hasLocalization())
+      .map(term => ({ formNode: new FormNode(term, languages), language: term.language! }));
 
     this.children.forEach((child, index) => {
       this.control.addControl(index.toString(), child.formNode.control);
     });
+  }
 
-    this.meta = reference.meta;
-    this.targetMeta = reference.targetMeta;
+  get addedLanguages() {
+    return Array.from(new Set(this.children.map(c => c.language)));
   }
 
   get label(): Localizable {
@@ -271,6 +260,14 @@ export class FormReferenceTerm {
 
   get targetType(): NodeType {
     return this.meta.targetType;
+  }
+
+  get required(): boolean {
+    return this.meta.required;
+  }
+
+  get cardinality() {
+    return this.meta.cardinality;
   }
 
   get graphId() {
@@ -479,6 +476,10 @@ export class FormPropertyLocalizable {
     }
 
     return new FormControl(initial, validators);
+  }
+
+  get addedLanguages() {
+    return Array.from(new Set(this.value.map(v => v.lang)));
   }
 
   get label(): Localizable {

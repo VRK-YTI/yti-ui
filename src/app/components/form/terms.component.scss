@@ -56,3 +56,25 @@ $language-size: 32px;
     padding-right: 10px;
   }
 }
+
+.add-button {
+
+  float: right;
+  display: inline-block;
+  margin-top: -34px;
+  margin-bottom: 5px;
+
+  button {
+    padding: 5px 8px;
+  }
+
+  i {
+    padding-right: 5px;
+  }
+}
+
+.remove-button {
+
+  display: inline-block;
+  float: right;
+}

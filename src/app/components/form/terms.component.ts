@@ -1,18 +1,19 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { EditableService } from '../../services/editable.service';
 import { FormNode, FormReferenceTerm } from '../../services/form-state';
 import { MetaModelService } from '../../services/meta-model.service';
+import { remove } from '../../utils/array';
 
 @Component({
-  selector: 'synonyms',
-  styleUrls: ['./synonyms.component.scss'],
+  selector: 'terms',
+  styleUrls: ['./terms.component.scss'],
   template: `
     
-    <div class="clearfix" *ngIf="editing">
+    <div class="clearfix" *ngIf="canAdd()">
       <div ngbDropdown class="add-button">
         <button class="btn btn-default" ngbDropdownToggle ngbTooltip="{{'Add' | translate}} {{reference.label | translateValue | lowercase}}"><i class="fa fa-plus"></i></button>
         <div class="dropdown-menu">
-          <button class="dropdown-item" *ngFor="let language of languages" (click)="addTerm(language)">{{language | uppercase}}</button>
+          <button class="dropdown-item" *ngFor="let language of addableLanguages" (click)="addTerm(language)">{{language | uppercase}}</button>
         </div>
       </div>
     </div>
@@ -24,7 +25,7 @@ import { MetaModelService } from '../../services/meta-model.service';
           <div class="localization">{{node.formNode.prefLabelProperty[0].value}} <accordion-chevron class="pull-right"></accordion-chevron></div>
         </ng-template>
         <ng-template ngbPanelContent>
-          <div class="row" *ngIf="editing">
+          <div class="row" *ngIf="canRemove()">
             <div class="col-md-12">
               <div class="remove-button">
                 <button class="btn btn-default" ngbTooltip="{{'Remove term' | translate}}" (click)="removeTerm(node)"><i class="fa fa-trash"></i></button>
@@ -43,9 +44,10 @@ import { MetaModelService } from '../../services/meta-model.service';
     <div *ngIf="children.length === 0" translate>No terms yet</div>
   `
 })
-export class SynonymsComponent {
+export class TermsComponent implements OnInit {
 
   @Input() reference: FormReferenceTerm;
+  @Input() unsaved: boolean;
   @Input() multiColumn = false;
 
   openTerms: number[] = [];
@@ -54,8 +56,40 @@ export class SynonymsComponent {
               private metaModelModel: MetaModelService) {
   }
 
+  ngOnInit() {
+    this.editableService.editing$.subscribe(editing => {
+      if (this.unsaved && editing) {
+        this.openTerms = [0];
+      }
+    });
+  }
+
   get languages() {
     return this.reference.languages;
+  }
+
+  get addableLanguages() {
+
+    if (this.reference.cardinality === 'multiple') {
+      return this.languages;
+    } else {
+
+      const result = this.languages.slice();
+
+      for (const addedLanguage of this.reference.addedLanguages) {
+        remove(result, addedLanguage);
+      }
+
+      return result;
+    }
+  }
+
+  canAdd() {
+    return this.editing && this.addableLanguages.length > 0;
+  }
+
+  canRemove() {
+    return this.editing;
   }
 
   get children() {
