@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { EditableService } from '../../services/editable.service';
 import { FormNode, FormReferenceTerm } from '../../services/form-state';
 import { MetaModelService } from '../../services/meta-model.service';
@@ -44,7 +44,7 @@ import { remove } from '../../utils/array';
     <div *ngIf="children.length === 0" translate>No terms yet</div>
   `
 })
-export class TermsComponent implements OnInit {
+export class TermsComponent implements OnChanges {
 
   @Input() reference: FormReferenceTerm;
   @Input() unsaved: boolean;
@@ -56,11 +56,9 @@ export class TermsComponent implements OnInit {
               private metaModelModel: MetaModelService) {
   }
 
-  ngOnInit() {
+  ngOnChanges() {
     this.editableService.editing$.subscribe(editing => {
-      if (this.unsaved && editing) {
-        this.openTerms = [0];
-      }
+      this.openTerms = this.unsaved && editing ? [0] : [];
     });
   }
 
