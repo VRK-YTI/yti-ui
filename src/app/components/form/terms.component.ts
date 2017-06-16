@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { EditableService } from '../../services/editable.service';
 import { FormNode, FormReferenceTerm } from '../../services/form-state';
 import { MetaModelService } from '../../services/meta-model.service';
