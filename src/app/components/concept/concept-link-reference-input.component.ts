@@ -69,8 +69,9 @@ export class ConceptLinkReferenceInputComponent implements OnInit {
   addReference() {
 
     const graphId = this.reference.targetGraph;
+    const restricts = this.reference.value.map(ref => ({ graphId: ref.targetGraph, conceptId: ref.targetId, reason: 'already added error'}));
 
-    this.searchConceptModal.openOtherThanGraph(graphId).then(concept => {
+    this.searchConceptModal.openOtherThanGraph(graphId, '', restricts).then(concept => {
       this.termedService.getVocabulary(concept.graphId)
         .flatMap(vocabulary => this.createConceptLink(graphId, vocabulary, concept))
         .subscribe(conceptLink => this.reference.addReference(conceptLink));

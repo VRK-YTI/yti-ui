@@ -16,8 +16,9 @@ import { EditableService } from '../../services/editable.service';
                  class="col-md-12"
                  [multiColumnTerms]="multiColumn"
                  [unsaved]="!concept.persistent"
-                 [reference]="primaryTermReference">
-                 [id]="'prefLabelXl'"</reference>
+                 [reference]="primaryTermReference"
+                 [concept]="concept"
+                 [id]="'prefLabelXl'"></reference>
       
       <property *ngFor="let child of properties"
                 class="col-md-12" 
@@ -34,6 +35,7 @@ import { EditableService } from '../../services/editable.service';
                  [unsaved]="!concept.persistent"
                  (conceptRemove)="onConceptRemove($event)"
                  [reference]="reference.reference"
+                 [concept]="concept"
                  [id]="reference.name"></reference>
     </div>
 
@@ -83,7 +85,10 @@ export class ConceptFormComponent {
   }
 
   selectConcept(name: string): Promise<ConceptNode|null> {
-    return this.searchConceptModalService.openForGraph(this.concept.graphId, name)
+
+    const restricts = [{ graphId: this.concept.graphId, conceptId: this.concept.id, reason: 'self reference error'}];
+
+    return this.searchConceptModalService.openForGraph(this.concept.graphId, name, restricts)
       .then(concept => {
         if (!this.form.hasConceptReference(concept.id)) {
           return this.selectConceptReferenceModalService.open(this.form)

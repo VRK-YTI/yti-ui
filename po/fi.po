@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-06-13 18:19+0300\n"
+"PO-Revision-Date: 2017-06-16 17:27+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -209,9 +209,6 @@ msgstr "uusi käsite"
 msgid "New collection"
 msgstr "uusi käsitevalikoima"
 
-msgid "Organization"
-msgstr "Organisaatio"
-
 msgid "Front page"
 msgstr "Etusivu"
 
@@ -229,6 +226,9 @@ msgstr "Ehdotus"
 
 msgid "Group"
 msgstr "Toimiala / Ryhmä"
+
+msgid "Organization"
+msgstr "Organisaatio"
 
 msgid "Unstable"
 msgstr "Keskeneräinen"
@@ -254,6 +254,12 @@ msgstr "Poista linkitys"
 
 msgid "Concept not in references"
 msgstr "Käsite ei löydy viitteistä"
+
+msgid "self reference error"
+msgstr "Valinta ei voi viitata itseensä"
+
+msgid "already added error"
+msgstr "Valinta on jo lisätty"
 
 msgid "validateMeta"
 msgstr "Epävalidi syöte"

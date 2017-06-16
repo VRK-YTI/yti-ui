@@ -8,6 +8,7 @@ import { EditableService } from '../../services/editable.service';
 import { ElasticSearchService, IndexedConcept } from '../../services/elasticsearch.service';
 import { FormNode } from '../../services/form-state';
 import { defaultLanguages } from '../../utils/language';
+import { firstMatching } from '../../utils/array';
 
 type Mode = 'include'|'exclude';
 
@@ -17,21 +18,23 @@ export class SearchConceptModalService {
   constructor(private modalService: NgbModal) {
   }
 
-  openForGraph(graphId: string, initialSearch = ''): Promise<ConceptNode> {
+  openForGraph(graphId: string, initialSearch: string, restricts: { conceptId: string, reason: string }[]): Promise<ConceptNode> {
     const modalRef = this.modalService.open(SearchConceptModal, { size: 'lg' });
     const instance = modalRef.componentInstance as SearchConceptModal;
     instance.graphId = graphId;
     instance.mode = 'include';
     instance.initialSearch = initialSearch;
+    instance.restricts = restricts.map(({ conceptId, reason }) => ({ conceptId, graphId, reason }));
     return modalRef.result;
   }
 
-  openOtherThanGraph(graphId: string, initialSearch = ''): Promise<ConceptNode> {
+  openOtherThanGraph(graphId: string, initialSearch = '', restrictIds: { graphId: string, conceptId: string, reason: string }[]): Promise<ConceptNode> {
     const modalRef = this.modalService.open(SearchConceptModal, { size: 'lg' });
     const instance = modalRef.componentInstance as SearchConceptModal;
     instance.graphId = graphId;
     instance.mode = 'exclude';
     instance.initialSearch = initialSearch;
+    instance.restricts = restrictIds;
     return modalRef.result;
   }
 }
@@ -103,8 +106,12 @@ export class SearchConceptModalService {
       </div>
     </div>
     <div class="modal-footer">
+      <div class="alert alert-danger" style="display: inline; padding: 6px; margin: 0 5px 0 0;" role="alert" *ngIf="restrictionReasonForSelection">
+        <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
+        <span>{{restrictionReasonForSelection | translate}}</span>
+      </div>
       <button type="button" class="btn btn-secondary cancel" (click)="cancel()" translate>Cancel</button>
-      <button type="button" class="btn btn-default confirm" (click)="confirm()" [disabled]="!selection" translate>Select concept</button>
+      <button type="button" class="btn btn-default confirm" (click)="confirm()" [disabled]="cannotSelect()" translate>Select concept</button>
     </div>
   `
 })
@@ -115,6 +122,7 @@ export class SearchConceptModal implements OnInit, AfterViewInit {
   @Input() mode: Mode;
   @Input() graphId: string;
   @Input() initialSearch: string;
+  @Input() restricts: { graphId: string, conceptId: string, reason: string }[];
 
   searchResults$ = new BehaviorSubject<IndexedConcept[]>([]);
 
@@ -153,6 +161,22 @@ export class SearchConceptModal implements OnInit, AfterViewInit {
 
     Observable.combineLatest(search, this.onlyStatus$, this.onlyVocabulary$)
       .subscribe(() => this.loadConcepts(true));
+  }
+
+  get restrictionReasonForSelection(): string|null {
+
+    const selection = this.selection;
+
+    if (!selection) {
+      return null;
+    }
+
+    const restriction = firstMatching(this.restricts, restrict => restrict.graphId === selection.graphId && restrict.conceptId === selection.id);
+    return restriction ? restriction.reason : null;
+  }
+
+  cannotSelect() {
+    return !this.selection || this.restrictionReasonForSelection !== null;
   }
 
   loadConcepts(reset = false) {

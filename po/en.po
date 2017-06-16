@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-06-13 18:19+0300\n"
+"PO-Revision-Date: 2017-06-16 17:26+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -208,9 +208,6 @@ msgstr "new concept"
 msgid "New collection"
 msgstr "new collection"
 
-msgid "Organization"
-msgstr ""
-
 msgid "Front page"
 msgstr ""
 
@@ -227,6 +224,9 @@ msgid "Suggestion"
 msgstr ""
 
 msgid "Group"
+msgstr ""
+
+msgid "Organization"
 msgstr ""
 
 msgid "Unstable"
@@ -251,6 +251,12 @@ msgstr ""
 
 msgid "Concept not in references"
 msgstr ""
+
+msgid "self reference error"
+msgstr "Selection references itself"
+
+msgid "already added error"
+msgstr "Selection is already added"
 
 msgid "validateMeta"
 msgstr "Invalid"

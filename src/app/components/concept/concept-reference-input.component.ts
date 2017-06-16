@@ -31,6 +31,7 @@ import { FormReferenceLiteral } from '../../services/form-state';
 })
 export class ConceptReferenceInputComponent {
 
+  @Input() concept: ConceptNode;
   @Input() reference: FormReferenceLiteral<ConceptNode>;
   @Output('conceptRemove') conceptRemove = new EventEmitter<ConceptNode>();
 
@@ -48,7 +49,13 @@ export class ConceptReferenceInputComponent {
   }
 
   addReference() {
-    this.searchConceptModal.openForGraph(this.reference.targetGraph)
+
+    const restricts = [
+      { graphId: this.concept.graphId, conceptId: this.concept.id, reason: 'self reference error'},
+      ...this.reference.value.map(({ graphId, id }) => ({ graphId, conceptId: id, reason: 'already added error'}))
+    ];
+
+    this.searchConceptModal.openForGraph(this.reference.targetGraph, '', restricts)
       .then(result => this.reference.addReference(result), ignoreModalClose);
   }
 }

@@ -193,9 +193,6 @@ msgstr ""
 msgid "New collection"
 msgstr ""
 
-msgid "Organization"
-msgstr ""
-
 msgid "Front page"
 msgstr ""
 
@@ -212,6 +209,9 @@ msgid "Suggestion"
 msgstr ""
 
 msgid "Group"
+msgstr ""
+
+msgid "Organization"
 msgstr ""
 
 msgid "Unstable"
@@ -235,6 +235,12 @@ msgid "Unlink"
 msgstr ""
 
 msgid "Concept not in references"
+msgstr ""
+
+msgid "self reference error"
+msgstr ""
+
+msgid "already added error"
 msgstr ""
 
 msgid "validateMeta"

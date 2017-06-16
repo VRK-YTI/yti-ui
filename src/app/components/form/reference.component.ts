@@ -25,7 +25,7 @@ export type FormReference = FormReferenceLiteral<any>
                  [multiColumn]="multiColumnTerms"
                  [unsaved]="unsaved"></terms>
 
-          <concept-reference-input *ngSwitchCase="'Concept'" [reference]="reference" (conceptRemove)="conceptRemove.next($event)"></concept-reference-input>
+          <concept-reference-input *ngSwitchCase="'Concept'" [reference]="reference" [concept]="concept" (conceptRemove)="conceptRemove.next($event)"></concept-reference-input>
 
           <concept-link-reference-input *ngSwitchCase="'ConceptLink'" [reference]="reference"></concept-link-reference-input>
           
@@ -49,6 +49,7 @@ export class ReferenceComponent {
   @Input() id: string;
   @Input() reference: FormReference;
   @Input() unsaved: boolean;
+  @Input() concept: ConceptNode;
   @Input() multiColumnTerms = false;
   @Output() conceptRemove = new EventEmitter<ConceptNode>();
 
