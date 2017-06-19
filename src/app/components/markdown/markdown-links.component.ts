@@ -4,7 +4,6 @@ import { ConceptNode } from '../../entities/node';
 import { logUnsupportedNodes, removeWhiteSpaceNodes, children } from '../../utils/markdown';
 import { firstMatching } from '../../utils/array';
 import { Localizable } from '../../entities/localization';
-import { isDefined } from '../../utils/object';
 
 const supportedNodeTypes = ['document', 'paragraph', 'link', 'text'];
 const parser = new Parser();
