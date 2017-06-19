@@ -229,7 +229,7 @@ export class SearchConceptModal implements OnInit, AfterViewInit {
 
     this.termedService.getConcept(concept.vocabulary.id, concept.id).subscribe(concept => {
       this.selection = concept;
-      this.formNode = this.selection ? new FormNode(this.selection, defaultLanguages) : null;
+      this.formNode = this.selection ? new FormNode(this.selection, () => defaultLanguages) : null;
     })
   }
 

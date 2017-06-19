@@ -94,7 +94,7 @@ export class NewVocabularyComponent {
           this.vocabulary.languages = defaultLanguages.slice();
         }
 
-        this.formNode = new FormNode(this.vocabulary, defaultLanguages);
+        this.formNode = new FormNode(this.vocabulary, () => defaultLanguages);
       });
     });
   }

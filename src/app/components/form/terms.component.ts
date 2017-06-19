@@ -61,7 +61,7 @@ export class TermsComponent implements OnChanges {
   }
 
   get languages() {
-    return this.reference.languages;
+    return this.reference.languagesProvider();
   }
 
   get addableLanguages() {

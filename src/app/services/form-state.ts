@@ -26,11 +26,11 @@ export class FormNode {
   properties: { property: FormProperty, name: string }[] = [];
   references: { reference: FormReference, name: string }[] = [];
 
-  constructor(private node: Node<any>, public languages: string[]) {
+  constructor(private node: Node<any>, public languagesProvider: () => string[]) {
 
     const createFormReference = (name: string, reference: Reference<any>) => {
       if (reference.term) {
-        return new FormReferenceTerm(reference, languages);
+        return new FormReferenceTerm(reference, languagesProvider);
       } else {
         return new FormReferenceLiteral(reference);
       }
@@ -41,7 +41,7 @@ export class FormNode {
       switch (property.meta.type.type) {
         case 'localizable':
           const fixed = node.type === 'Term' && property.meta.id === 'prefLabel';
-          return new FormPropertyLocalizable(property, languages, fixed);
+          return new FormPropertyLocalizable(property, languagesProvider, fixed);
         case 'string':
           switch (property.meta.type.cardinality) {
             case 'single':
@@ -231,7 +231,7 @@ export class FormReferenceTerm {
   private meta: ReferenceMeta;
   private targetMeta: NodeMeta;
 
-  constructor(reference: Reference<TermNode>, public languages: string[]) {
+  constructor(reference: Reference<TermNode>, public languagesProvider: () => string[]) {
 
     this.meta = reference.meta;
     this.targetMeta = reference.targetMeta;
@@ -239,7 +239,7 @@ export class FormReferenceTerm {
 
     this.children = reference.values
       .filter(term => term.hasLocalization())
-      .map(term => ({ formNode: new FormNode(term, languages), language: term.language! }));
+      .map(term => ({ formNode: new FormNode(term, languagesProvider), language: term.language! }));
 
     this.children.forEach((child, index) => {
       this.control.addControl(index.toString(), child.formNode.control);
@@ -281,7 +281,7 @@ export class FormReferenceTerm {
   addTerm(metaModel: MetaModel, language: string) {
     const newTerm = Node.create(this.targetMeta.createEmptyNode(), metaModel, false) as TermNode;
     newTerm.setLocalization(language, '');
-    const newChild = { formNode: new FormNode(newTerm, this.languages), language: language };
+    const newChild = { formNode: new FormNode(newTerm, this.languagesProvider), language: language };
     this.children.push(newChild);
     this.control.addControl((this.children.length - 1).toString(), newChild.formNode.control);
   }
@@ -453,7 +453,7 @@ export class FormPropertyLocalizable {
   children: { lang: string, control: FormControl }[];
   private meta: PropertyMeta;
 
-  constructor(property: Property, public languages: string[], public fixed: boolean) {
+  constructor(property: Property, private languagesProvider: () => string[], public fixed: boolean) {
 
     this.meta = property.meta;
     this.control = this.required ? new FormGroup({}, requiredList) : new FormGroup({});
@@ -465,6 +465,10 @@ export class FormPropertyLocalizable {
     this.children.forEach((control, index) => {
       this.control.addControl(index.toString(), control.control);
     });
+  }
+
+  get languages() {
+    return this.languagesProvider();
   }
 
   private createChildControl(initial: string): FormControl {

@@ -440,7 +440,7 @@ export class ConceptViewModelService {
       this.locationService.atVocabulary(vocabulary);
       this.vocabulary = vocabulary;
       this.vocabulary$.next(createSelectAction(vocabulary));
-      this.vocabularyForm = new FormNode(vocabulary, this.languages);
+      this.vocabularyForm = new FormNode(vocabulary, () => this.vocabulary.languages);
       this.loadingVocabulary = false;
     });
 
@@ -464,7 +464,7 @@ export class ConceptViewModelService {
           this.locationService.atVocabulary(vocabulary);
         }
         this.conceptAction$.next(concept ? createSelectAction(concept) : createNoSelection());
-        this.conceptForm = concept ? new FormNode(concept, this.languages) : null;
+        this.conceptForm = concept ? new FormNode(concept, () => this.languages) : null;
         this.loadingConcept = false;
       });
     };
@@ -502,7 +502,7 @@ export class ConceptViewModelService {
           this.locationService.atVocabulary(vocabulary);
         }
         this.collectionAction$.next(collection ? createSelectAction(collection) : createNoSelection());
-        this.collectionForm = collection ? new FormNode(collection, this.languages) : null;
+        this.collectionForm = collection ? new FormNode(collection, () => this.languages) : null;
         this.loadingCollection = false;
       });
     };
@@ -541,7 +541,7 @@ export class ConceptViewModelService {
         .subscribe({
           next(persistentConcept: ConceptNode) {
             that.conceptAction$.next(createEditAction(persistentConcept.clone()));
-            that.conceptForm = new FormNode(persistentConcept, that.languages);
+            that.conceptForm = new FormNode(persistentConcept, () => that.languages);
             resolve();
           },
           error(err: any) {
@@ -581,7 +581,7 @@ export class ConceptViewModelService {
     if (!this.concept.persistent) {
       this.router.navigate(['/concepts', this.graphId]);
     } else {
-      this.conceptForm = new FormNode(this.concept, this.languages);
+      this.conceptForm = new FormNode(this.concept, () => this.languages);
     }
   }
 
@@ -601,7 +601,7 @@ export class ConceptViewModelService {
         .subscribe({
           next(persistentCollection: CollectionNode) {
             that.collectionAction$.next(createEditAction(persistentCollection.clone()));
-            that.collectionForm = new FormNode(persistentCollection, that.languages);
+            that.collectionForm = new FormNode(persistentCollection, () => that.languages);
             resolve();
           },
           error(err: any) {
@@ -641,7 +641,7 @@ export class ConceptViewModelService {
     if (!this.collection.persistent) {
       this.router.navigate(['/concepts', this.graphId]);
     } else {
-      this.collectionForm = new FormNode(this.collection, this.languages);
+      this.collectionForm = new FormNode(this.collection, () => this.languages);
     }
   }
 
@@ -658,7 +658,7 @@ export class ConceptViewModelService {
         .subscribe({
           next(persistentVocabulary: VocabularyNode) {
             that.vocabulary = persistentVocabulary.clone();
-            that.vocabularyForm = new FormNode(persistentVocabulary, that.languages);
+            that.vocabularyForm = new FormNode(persistentVocabulary, () => that.languages);
             resolve();
           },
           error(err: any) {
@@ -691,7 +691,7 @@ export class ConceptViewModelService {
   }
 
   resetVocabulary() {
-    this.vocabularyForm = new FormNode(this.vocabulary, this.languages);
+    this.vocabularyForm = new FormNode(this.vocabulary, () => this.languages);
   }
 
   createEmptyConcept(vocabulary: VocabularyNode, nodeId: string): Observable<ConceptNode> {
