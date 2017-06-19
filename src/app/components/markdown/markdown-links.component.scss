@@ -2,6 +2,10 @@
   margin-bottom: 0;
 }
 
+:host /deep/ .popover {
+  max-width: 500px !important;
+}
+
 [markdown-links-element] {
   overflow-wrap: break-word;
 }
