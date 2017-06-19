@@ -70,7 +70,7 @@ import { GroupInputComponent } from './components/vocabulary/group-input.compone
 import { OrganizationInputComponent } from './components/vocabulary/organization-input.component';
 import { AjaxLoadingIndicatorSmallComponent } from './components/common/ajax-loading-indicator-small.component';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
-import { ConceptLinkReferenceInputComponent } from './components/concept/concept-link-reference-input.component';
+import { ConceptLinkReferenceInputComponent, ConceptLinkReferencePopover } from './components/concept/concept-link-reference-input.component';
 import { MarkdownInputComponent } from './components/form/markdown-input.component';
 import {
   MarkdownInputLinkPopoverComponent,
@@ -138,6 +138,7 @@ const appRoutes: Routes = [
     ReferenceComponent,
     ConceptReferenceInputComponent,
     ConceptLinkReferenceInputComponent,
+    ConceptLinkReferencePopover,
     TermsComponent,
     AjaxLoadingIndicatorComponent,
     AjaxLoadingIndicatorSmallComponent,

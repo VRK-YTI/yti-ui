@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Directive, Input, OnInit } from '@angular/core';
 import { ConceptLinkNode, ConceptNode, VocabularyNode } from '../../entities/node';
 import { EditableService } from '../../services/editable.service';
 import { SearchConceptModalService } from './search-concept.modal';
@@ -17,25 +17,33 @@ import { Observable } from 'rxjs/Observable';
     <ul *ngIf="!editing">
       <li *ngFor="let conceptLink of reference.value">
         <a [routerLink]="['/concepts', conceptLink.targetGraph, 'concept', conceptLink.targetId]"
-           [ngbPopover]="conceptLink.vocabularyLabel | translateValue" 
+           [ngbPopover]="popContent" 
            [triggers]="'mouseenter:mouseleave'"
-           [popoverTitle]="'Vocabulary' | translate">
+           [popoverTitle]="conceptLink.label | translateValue">
           {{conceptLink.label | translateValue}}
         </a>
+
+        <ng-template #popContent>
+          <concept-link-reference-popover [link]="conceptLink"></concept-link-reference-popover>
+        </ng-template>
       </li>
     </ul>
 
     <div *ngIf="editing">
       <div *ngFor="let conceptLink of reference.value">
         <a><i class="fa fa-times" (click)="removeReference(conceptLink)"></i></a>
-        <span [ngbPopover]="conceptLink.vocabularyLabel | translateValue" 
+        <span [ngbPopover]="editingPopContent" 
               [triggers]="'mouseenter:mouseleave'"
-              [popoverTitle]="'Vocabulary' | translate">
+              [popoverTitle]="conceptLink.label | translateValue">
           {{conceptLink.label | translateValue}}
         </span>
+
+        <ng-template #editingPopContent>
+          <concept-link-reference-popover [link]="conceptLink"></concept-link-reference-popover>
+        </ng-template>
       </div>
     </div>
-
+    
     <button type="button"
             class="btn btn-default"
             *ngIf="editing"
@@ -80,5 +88,28 @@ export class ConceptLinkReferenceInputComponent implements OnInit {
 
   createConceptLink(toGraphId: string, fromVocabulary: VocabularyNode, concept: ConceptNode) {
     return this.metaModel.map(meta => meta.createConceptLink(toGraphId, fromVocabulary, concept));
+  }
+}
+
+@Component({
+  selector: 'concept-link-reference-popover',
+  template: `
+    <dl>
+      <dt>
+        <label>{{link.vocabularyMetaLabel | translateValue}}</label>
+      </dt>
+      <dd>
+        <span>{{link.vocabularyLabel | translateValue}}</span>
+      </dd>
+    </dl>
+    
+    <meta-information [hidden]="!link.persistent" [showModified]="false" [node]="link"></meta-information>
+  `
+})
+export class ConceptLinkReferencePopover implements Directive {
+
+  @Input() link: ConceptLinkNode;
+
+  constructor() {
   }
 }

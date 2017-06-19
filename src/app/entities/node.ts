@@ -7,7 +7,6 @@ import {
 } from './meta';
 import { Moment } from 'moment';
 import * as moment from 'moment';
-import { getOrCreate } from '../utils/map';
 import { defaultLanguages } from '../utils/language';
 
 export type KnownNode = VocabularyNode
@@ -580,6 +579,10 @@ export class ConceptLinkNode extends Node<'ConceptLink'> {
 
   set label(value: Localizable) {
     this.setPropertyAsLocalizable('prefLabel', value);
+  }
+
+  get vocabularyMetaLabel(): Localizable {
+    return this.getProperty('vocabularyLabel').meta.label;
   }
 
   get vocabularyLabel(): Localizable {

@@ -10,24 +10,37 @@ import { Node } from '../../entities/node';
         <div class="meta-information">
           <div class="row">
             <div class="col-sm-6">
-              <dl><dt translate>Created at</dt><dd>{{node.createdDate | timestamp}}</dd></dl>
+              <dl>
+                <dt translate>Created at</dt>
+                <dd>{{node.createdDate | timestamp}}</dd>
+              </dl>
             </div>
             <div class="col-sm-6">
-              <dl><dt translate>Created by</dt><dd>{{node.createdBy}}</dd></dl>
+              <dl>
+                <dt translate>Created by</dt>
+                <dd>{{node.createdBy}}</dd>
+              </dl>
             </div>
-            <div class="col-sm-6">
-              <dl><dt translate>Modified at</dt><dd>{{node.lastModifiedDate | timestamp}}</dd></dl>
+            <div class="col-sm-6" *ngIf="showModified">
+              <dl>
+                <dt translate>Modified at</dt>
+                <dd>{{node.lastModifiedDate | timestamp}}</dd>
+              </dl>
             </div>
-            <div class="col-sm-6">
-              <dl><dt translate>Modified by</dt><dd>{{node.lastModifiedBy}}</dd></dl>
+            <div class="col-sm-6" *ngIf="showModified">
+              <dl>
+                <dt translate>Modified by</dt>
+                <dd>{{node.lastModifiedBy}}</dd>
+              </dl>
             </div>
           </div>
         </div>
       </div>
-    </div>    
+    </div>
   `
 })
 export class MetaInformationComponent {
 
   @Input() node: Node<any>;
+  @Input() showModified = true;
 }

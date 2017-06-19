@@ -9,3 +9,8 @@ button {
 a {
   cursor: pointer;
 }
+
+:host /deep/ .popover {
+  max-width: 500px !important;
+  width: 500px !important;
+}
