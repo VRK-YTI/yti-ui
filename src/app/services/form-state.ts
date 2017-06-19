@@ -1,4 +1,4 @@
-import { FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { assertNever } from '../utils/object';
 import { allMatching, anyMatching, firstMatching, flatten, normalizeAsArray } from "app/utils/array";
 import { ConceptNode, KnownNode, Node, Property, Reference, TermNode } from '../entities/node';
@@ -226,7 +226,7 @@ export class FormReferenceLiteral<N extends KnownNode | Node<any>>{
 export class FormReferenceTerm {
 
   type: 'term' = 'term';
-  control: FormGroup;
+  control: FormArray;
   children: { formNode: FormNode, language: string }[];
   private meta: ReferenceMeta;
   private targetMeta: NodeMeta;
@@ -235,15 +235,13 @@ export class FormReferenceTerm {
 
     this.meta = reference.meta;
     this.targetMeta = reference.targetMeta;
-    this.control = this.required ? new FormGroup({}, requiredList) : new FormGroup({});
 
     this.children = reference.values
       .filter(term => term.hasLocalization())
       .map(term => ({ formNode: new FormNode(term, languagesProvider), language: term.language! }));
 
-    this.children.forEach((child, index) => {
-      this.control.addControl(index.toString(), child.formNode.control);
-    });
+    const childControls = this.children.map(c => c.formNode.control);
+    this.control = this.required ? new FormArray(childControls, requiredList) : new FormArray([]);
   }
 
   get addedLanguages() {
@@ -283,11 +281,13 @@ export class FormReferenceTerm {
     newTerm.setLocalization(language, '');
     const newChild = { formNode: new FormNode(newTerm, this.languagesProvider), language: language };
     this.children.push(newChild);
-    this.control.addControl((this.children.length - 1).toString(), newChild.formNode.control);
+    this.control.push(newChild.formNode.control);
   }
 
   remove(child: { formNode: FormNode, language: string }) {
-    removeChild(this.children, child, this.control);
+    const index = this.children.indexOf(child);
+    this.children.splice(index, 1);
+    this.control.removeAt(index);
   }
 
   get term() {
@@ -369,19 +369,14 @@ export class FormPropertyLiteral {
 export class FormPropertyLiteralList {
 
   type: 'literal-list' = 'literal-list';
-  control: FormGroup;
-  children: FormControl[];
+  control: FormArray;
   private meta: PropertyMeta;
 
   constructor(property: Property) {
 
     this.meta = property.meta;
-    this.control = this.required ? new FormGroup({}, requiredList) : new FormGroup({});
-    this.children = property.attributes.map(a => a.value).map(value => this.createChildControl(value));
-
-    this.children.forEach((control, index) => {
-      this.control.addControl(index.toString(), control);
-    });
+    const children = property.attributes.map(a => a.value).map(value => this.createChildControl(value));
+    this.control = this.required ? new FormArray(children, requiredList) : new FormArray(children);
   }
 
   private createChildControl(initial: string): FormControl {
@@ -393,6 +388,10 @@ export class FormPropertyLiteralList {
     }
 
     return new FormControl(initial, validators);
+  }
+
+  get children() {
+    return this.control.controls;
   }
 
   get label(): Localizable {
@@ -417,12 +416,11 @@ export class FormPropertyLiteralList {
 
   append(initial: string) {
     const control = this.createChildControl(initial);
-    this.children.push(control);
-    this.control.addControl((this.children.length - 1).toString(), control);
+    this.control.push(control);
   }
 
   remove(child: FormControl) {
-    removeChild(this.children, child, this.control);
+    this.control.removeAt(this.children.indexOf(child));
   }
 
   removeMarkdownReferencesTo(concept: ConceptNode) {
@@ -449,22 +447,19 @@ export class FormPropertyLiteralList {
 export class FormPropertyLocalizable {
 
   type: 'localizable' = 'localizable';
-  control: FormGroup;
+  control: FormArray;
   children: { lang: string, control: FormControl }[];
   private meta: PropertyMeta;
 
   constructor(property: Property, private languagesProvider: () => string[], public fixed: boolean) {
 
     this.meta = property.meta;
-    this.control = this.required ? new FormGroup({}, requiredList) : new FormGroup({});
     this.children = property.attributes.map(attribute => ({
       lang: attribute.lang,
       control: this.createChildControl(attribute.value)
     }));
-
-    this.children.forEach((control, index) => {
-      this.control.addControl(index.toString(), control.control);
-    });
+    const childControls = this.children.map(c => c.control);
+    this.control = this.required ? new FormArray(childControls, requiredList) : new FormArray(childControls);
   }
 
   get languages() {
@@ -509,11 +504,13 @@ export class FormPropertyLocalizable {
   append(lang: string, initial: string) {
     const control = this.createChildControl(initial);
     this.children.push({lang, control});
-    this.control.addControl((this.children.length - 1).toString(), control);
+    this.control.push(control);
   }
 
   remove(child: { lang: string, control: FormControl }) {
-    removeChild(this.children, child, this.control);
+    const index = this.children.indexOf(child);
+    this.children.splice(index, 1);
+    this.control.removeAt(index);
   }
 
   removeMarkdownReferencesTo(concept: ConceptNode) {
@@ -535,24 +532,6 @@ export class FormPropertyLocalizable {
     const regex = this.meta.regex;
     property.attributes = this.value.map(localization => ({ lang: localization.lang, value: localization.value, regex }));
   }
-}
-
-function removeChild<T>(children: T[], child: T, parentGroup: FormGroup) {
-  let removeIndex: number | null = null;
-
-  for (let i = 0; i < children.length; i++) {
-    if (children[i] === child) {
-      removeIndex = i;
-      break;
-    }
-  }
-
-  if (removeIndex === null) {
-    throw new Error('Child not found');
-  }
-
-  children.splice(removeIndex, 1);
-  parentGroup.removeControl(removeIndex.toString());
 }
 
 // TODO: unify with other markdown printing algorithms

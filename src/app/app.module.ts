@@ -40,8 +40,6 @@ import { KeysPipe } from './pipes/keys.pipe';
 import { ErrorMessagesComponent } from './components/form/error-messages.component';
 import { EditableButtonsComponent } from './components/form/editable-buttons.component';
 import { ElasticSearchService } from "./services/elasticsearch.service";
-import { LanguageValidator } from './directives/validators/language.validator';
-import { LocalizationValidator } from './directives/validators/localization.validator';
 import { MarkdownComponent } from './components/markdown/markdown.component';
 import { MarkdownElementComponent } from './components/markdown/markdown.component';
 import { ConceptListComponent } from './components/concept/concept-list.component';
@@ -169,8 +167,6 @@ const appRoutes: Routes = [
     ConfirmationModal,
     SelectConceptReferenceModal,
     MetaModelValidator,
-    LanguageValidator,
-    LocalizationValidator,
     RequiredListValidator,
     FloatDirective,
     TranslateValuePipe,
