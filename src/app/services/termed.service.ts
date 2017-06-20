@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { URLSearchParams, ResponseOptionsArgs, Response } from '@angular/http';
 import { Observable } from 'rxjs';
 import { TermedHttp } from './termed-http.service';
-import { flatten, normalizeAsArray, removeMatching } from '../utils/array';
+import { anyMatching, flatten, normalizeAsArray } from '../utils/array';
 import { MetaModelService } from './meta-model.service';
 import { NodeExternal, NodeType, NodeInternal, Identifier, VocabularyNodeType } from '../entities/node-api';
 import { CollectionNode, ConceptNode, GroupNode, Node, OrganizationNode, VocabularyNode } from '../entities/node';
@@ -120,18 +120,12 @@ export class TermedService {
 
       if (!previous) {
         return [];
-      }
-
-      const previousInlineNodeIds =
-        flatten(Object.values(previous.references)
+      } else {
+        return flatten(Object.values(previous.references)
           .filter(ref => ref.inline)
-          .map(ref => ref.values.map(term => term.identifier)));
-
-      for (const inlineNode of inlineNodes) {
-        removeMatching(previousInlineNodeIds, deletedInlineNodeId => deletedInlineNodeId.id === inlineNode.id);
+          .map(ref => ref.values.map(term => term.identifier)))
+          .filter(id => !anyMatching(inlineNodes, inlineNode => inlineNode.id === id));
       }
-
-      return previousInlineNodeIds;
     }
 
     return this.updateAndDeleteInternalNodes([...inlineNodes, node.toInternalNode()], resolveDeletedInlineReferenceIds());
