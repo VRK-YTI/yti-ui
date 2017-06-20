@@ -1,6 +1,6 @@
 import { URLSearchParams } from '@angular/http';
 import { Observable, ReplaySubject } from 'rxjs';
-import { index, normalizeAsArray } from '../utils/array';
+import { groupBy, index, normalizeAsArray } from '../utils/array';
 import { Injectable } from '@angular/core';
 import { TermedHttp } from './termed-http.service';
 import { Graph } from '../entities/graph';
@@ -24,9 +24,9 @@ export class MetaModelService {
 
   constructor(private http: TermedHttp) {
 
-    this.getGraphs()
-      .flatMap(graphs => Observable.forkJoin(graphs.map(graph => this.createGraphMeta(graph))))
-      .subscribe(graphMetas => {
+    Observable.zip(this.getGraphs(), this.getAllMetaNodesByGraph())
+      .subscribe(([graphs, metaNodesByGraph]) => {
+        const graphMetas = graphs.map(graph => MetaModelService.createGraphMetaFromNodeMetas(graph, metaNodesByGraph.get(graph.id)!));
         this.metaCache.next(index(graphMetas, graphMeta => graphMeta.graphId));
         this.metaCache.complete();
         this.templates.next(graphMetas.filter(graphMeta => graphMeta.template));
@@ -57,11 +57,14 @@ export class MetaModelService {
   }
 
   private createGraphMeta(graph: Graph): Observable<GraphMeta> {
-    return this.getMetaNodes(graph.id).map(nodeMetasInGraph => {
-      const template = graph.properties.type ? graph.properties.type[0].value === 'Metamodel' : false;
-      const label = asLocalizable(graph.properties['prefLabel']);
-      return new GraphMeta(graph.id, label, nodeMetasInGraph, template);
-    });
+    return this.getMetaNodes(graph.id).map(nodeMetasInGraph =>
+      MetaModelService.createGraphMetaFromNodeMetas(graph, nodeMetasInGraph));
+  }
+
+  private static createGraphMetaFromNodeMetas(graph: Graph, nodeMetasInGraph: NodeMetaInternal[]) {
+    const template = graph.properties.type ? graph.properties.type[0].value === 'Metamodel' : false;
+    const label = asLocalizable(graph.properties['prefLabel']);
+    return new GraphMeta(graph.id, label, nodeMetasInGraph, template);
   }
 
   private createMetaModel(graphMeta: GraphMeta): Observable<MetaModel> {
@@ -138,5 +141,11 @@ export class MetaModelService {
   private getMetaNodes(graphId: string): Observable<NodeMetaInternal[]> {
     return this.http.get(`${environment.api_url}/graphs/${graphId}/types`, infiniteResultsOptions)
       .map(response => normalizeAsArray(response.json()) as NodeMetaInternal[]);
+  }
+
+  private getAllMetaNodesByGraph(): Observable<Map<string, NodeMetaInternal[]>> {
+    return this.http.get(`${environment.api_url}/types`, infiniteResultsOptions)
+      .map(response => normalizeAsArray(response.json()) as NodeMetaInternal[])
+      .map(allNodes => groupBy(allNodes, node => node.graph.id));
   }
 }
