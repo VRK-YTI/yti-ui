@@ -15,8 +15,7 @@ export type TypeName = 'string'
                      | 'localizable'
                      | 'status';
 
-export type ReferenceType = 'PrimaryTerm'
-                          | 'Synonym'
+export type ReferenceType = 'Term'
                           | 'Concept'
                           | 'ConceptLink'
                           | 'Organization'
@@ -202,7 +201,7 @@ export class ReferenceMeta {
       case 'ConceptLink':
         return 'ConceptLink';
       case 'Term':
-        return this.id === 'prefLabelXl' ? 'PrimaryTerm' : 'Synonym';
+        return 'Term';
       case 'Organization':
         return 'Organization';
       case 'Group':
@@ -217,8 +216,7 @@ export class ReferenceMeta {
   }
 
   get term(): boolean {
-    const termTypes: ReferenceType[] = ['PrimaryTerm', 'Synonym'];
-    return contains(termTypes, this.referenceType);
+    return this.referenceType === 'Term';
   }
 
   get concept(): boolean {
@@ -230,7 +228,7 @@ export class ReferenceMeta {
   }
 
   get cardinality(): Cardinality {
-    return this.referenceType === 'PrimaryTerm' ? 'single' : 'multiple';
+    return this.id === 'prefLabelXl' ? 'single' : 'multiple';
   }
 
   copyToGraph(graphId: string): ReferenceAttributeInternal {

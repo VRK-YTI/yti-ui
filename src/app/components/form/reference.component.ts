@@ -15,12 +15,7 @@ export type FormReference = FormReferenceLiteral<any>
       <dd>
         <ng-container [ngSwitch]="reference.referenceType">
           
-          <terms *ngSwitchCase="'PrimaryTerm'" 
-                 [reference]="reference"
-                 [multiColumn]="multiColumnTerms"
-                 [unsaved]="unsaved"></terms>
-
-          <terms *ngSwitchCase="'Synonym'" 
+          <terms *ngSwitchCase="'Term'" 
                  [reference]="reference"
                  [multiColumn]="multiColumnTerms"
                  [unsaved]="unsaved"></terms>
