@@ -71,7 +71,7 @@ function parseTypeAndAttributes(textAttribute: TextAttributeInternal): [TypeName
 
   if (typePropertyValue.indexOf(':') !== -1) {
     const [type, attributesString] = typePropertyValue.split(':');
-    return [type.trim() as TypeName, [...(textAttribute.id === 'language' ? ['required'] : []), ...attributesString.split(',').map(a => a.trim())]];
+    return [type.trim() as TypeName, attributesString.split(',').map(a => a.trim())];
   } else {
     return [typePropertyValue.trim() as TypeName, []];
   }
