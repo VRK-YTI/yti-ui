@@ -72,7 +72,7 @@ function parseTypeAndAttributes(textAttribute: TextAttributeInternal): [TypeName
 
   if (typePropertyValue.indexOf(':') !== -1) {
     const [type, attributesString] = typePropertyValue.split(':');
-    return [type.trim() as TypeName, attributesString.split(',').map(a => a.trim())];
+    return [type.trim() as TypeName, [...(textAttribute.id === 'language' ? ['required'] : []), ...attributesString.split(',').map(a => a.trim())]];
   } else {
     return [typePropertyValue.trim() as TypeName, []];
   }
@@ -148,24 +148,6 @@ export class PropertyMeta {
     } else {
       this.type = createDefaultPropertyType(this.id);
     }
-  }
-
-  get typeAsString(): StringProperty {
-
-    if (this.type.type !== 'string') {
-      throw new Error('Property is not string literal');
-    }
-
-    return this.type;
-  }
-
-  get typeAsLocalizable(): LocalizableProperty {
-
-    if (this.type.type !== 'localizable') {
-      throw new Error('Property is not localizable');
-    }
-
-    return this.type;
   }
 
   get multiColumn() {
@@ -277,10 +259,6 @@ export class ReferenceMeta {
 export class MetaModel {
 
   constructor(private meta: Map<string, GraphMeta>) {
-  }
-
-  addMeta(graphMeta: GraphMeta) {
-    this.meta.set(graphMeta.graphId, graphMeta);
   }
 
   graphHas(graphId: string, nodeType: NodeType) {
