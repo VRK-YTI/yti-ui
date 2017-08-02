@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ConceptNode } from '../../entities/node';
 import { EditableService } from '../../services/editable.service';
 import { SearchConceptModalService } from './search-concept.modal';
-import { remove } from '../../utils/array';
 import { ignoreModalClose } from '../../utils/modal';
 import { FormReferenceLiteral } from '../../services/form-state';
 
@@ -44,7 +43,7 @@ export class ConceptReferenceInputComponent {
   }
 
   removeReference(concept: ConceptNode) {
-    remove(this.reference.value, concept);
+    this.reference.removeReference(concept);
     this.conceptRemove.next(concept);
   }
 

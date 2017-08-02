@@ -184,6 +184,10 @@ export class FormReferenceLiteral<N extends KnownNode | Node<any>>{
     this.control.setValue([...this.value, ...[target]]);
   }
 
+  removeReference(target: N) {
+    this.control.setValue(this.value.filter(v => v !== target));
+  }
+
   get graphId() {
     return this.meta.graphId;
   }
