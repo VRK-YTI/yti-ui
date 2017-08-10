@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { LanguageService, Language } from '../../services/language.service';
 import { UserService } from '../../services/user.service';
+import { LoginModalService } from './login.modal';
 
 @Component({
   selector: 'navigation-bar',
@@ -16,7 +17,7 @@ import { UserService } from '../../services/user.service';
             <a class="nav-link" (click)="setLanguage(language.code)">{{language.name}}</a>
           </li>
           <li class="nav-item" *ngIf="!isLoggedIn()">
-            <a class="nav-link" (click)="logIn()" translate>Login</a>
+            <a class="nav-link" (click)="logIn()" translate>Log In</a>
           </li>
           <li class="nav-item bg-inverse" *ngIf="isLoggedIn()" ngbDropdown>
             <a class="dropdown-toggle nav-link" ngbDropdownToggle>{{username}}</a>
@@ -37,7 +38,8 @@ export class NavigationBarComponent {
   ];
 
   constructor(private languageService: LanguageService,
-              private userService: UserService) {
+              private userService: UserService,
+              private loginModal: LoginModalService) {
   }
 
   setLanguage(language: Language) {
@@ -45,7 +47,7 @@ export class NavigationBarComponent {
   }
 
   logIn() {
-    this.userService.logInAsAdmin();
+    this.loginModal.open();
   }
 
   logOut() {

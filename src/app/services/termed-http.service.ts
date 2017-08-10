@@ -1,14 +1,22 @@
 import { Injectable } from '@angular/core';
 import { Http, Response, RequestOptionsArgs, Headers } from '@angular/http';
 import { Observable } from 'rxjs';
+import { UserService } from './user.service';
 
-const username = 'admin';
-const password = 'admin';
+export interface UserCredentials {
+  username: string;
+  password: string;
+}
+
+const readOnlyCredentials: UserCredentials = {
+  username: 'admin',
+  password: 'admin'
+};
 
 @Injectable()
 export class TermedHttp {
 
-  constructor(private http: Http) {
+  constructor(private http: Http, private userService: UserService) {
   }
 
   get(url: string, options?: RequestOptionsArgs): Observable<Response> {
@@ -27,6 +35,12 @@ export class TermedHttp {
     return this.http.delete(url, this.authorize(options));
   }
 
+  static addAuthorizationHeader(headers: Headers, credentials: UserCredentials) {
+    if (!headers.has('Authorization')) {
+      headers.append('Authorization', `Basic ${btoa(`${credentials.username}:${credentials.password}`)}`);
+    }
+  }
+
   private authorize(options?: RequestOptionsArgs) {
 
     const opts = options || {};
@@ -35,9 +49,9 @@ export class TermedHttp {
       opts.headers = new Headers();
     }
 
-    if (!opts.headers.has('Authorization')) {
-      opts.headers.append('Authorization', `Basic ${btoa(`${username}:${password}`)}`);
-    }
+    opts.headers.append('X-Requested-With', 'XMLHttpRequest');
+
+    TermedHttp.addAuthorizationHeader(opts.headers, this.userService.isLoggedIn() ? this.userService.user! : readOnlyCredentials);
 
     return opts;
   }

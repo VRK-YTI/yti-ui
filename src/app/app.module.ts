@@ -82,6 +82,7 @@ import { FrontpageComponent } from './components/fronpage.component';
 import { LiteralListInputComponent } from './components/form/literal-list-input.component';
 import { RequiredListValidator } from './directives/validators/required-list.validator';
 import { TermsComponent } from './components/form/terms.component';
+import { LoginModal, LoginModalService } from './components/navigation/login.modal';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json-loader!po-loader?format=mf!../../po/fi.po'),
@@ -166,6 +167,7 @@ const appRoutes: Routes = [
     ErrorModal,
     ConfirmationModal,
     SelectConceptReferenceModal,
+    LoginModal,
     MetaModelValidator,
     RequiredListValidator,
     FloatDirective,
@@ -182,6 +184,7 @@ const appRoutes: Routes = [
     ErrorModal,
     ConfirmationModal,
     SelectConceptReferenceModal,
+    LoginModal
   ],
   imports: [
     BrowserModule,
@@ -205,6 +208,7 @@ const appRoutes: Routes = [
     ErrorModalService,
     ConfirmationModalService,
     SelectConceptReferenceModalService,
+    LoginModalService,
     SessionService,
     ElasticSearchService,
     ConfirmCancelEditGuard,

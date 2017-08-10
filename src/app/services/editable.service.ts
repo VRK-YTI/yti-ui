@@ -27,7 +27,7 @@ export class EditableService implements OnDestroy {
               private userService: UserService) {
 
     this.loggedInSubscription = userService.loggedIn$.subscribe(loggedIn => {
-      if (!loggedIn) {
+      if (!loggedIn && this.editing) {
         this.cancel();
       }
     });

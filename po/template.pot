@@ -49,9 +49,6 @@ msgstr ""
 msgid "Add concept"
 msgstr ""
 
-msgid "Vocabulary"
-msgstr ""
-
 msgid "Search concept..."
 msgstr ""
 
@@ -83,6 +80,9 @@ msgid "New vocabulary"
 msgstr ""
 
 msgid "Choose concept"
+msgstr ""
+
+msgid "Vocabulary"
 msgstr ""
 
 msgid "All vocabularies"
@@ -158,6 +158,18 @@ msgid "licensed under the"
 msgstr ""
 
 msgid "Login"
+msgstr ""
+
+msgid "Username"
+msgstr ""
+
+msgid "Password"
+msgstr ""
+
+msgid "Login failed"
+msgstr ""
+
+msgid "Log In"
 msgstr ""
 
 msgid "Logout"

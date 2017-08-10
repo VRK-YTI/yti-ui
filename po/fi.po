@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-06-16 17:27+0300\n"
+"PO-Revision-Date: 2017-08-10 14:41+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -58,9 +58,6 @@ msgstr "Lisää käsitevalikoima"
 msgid "Add concept"
 msgstr "Lisää käsite"
 
-msgid "Vocabulary"
-msgstr "Sanasto"
-
 msgid "Search concept..."
 msgstr "Hae käsitettä…"
 
@@ -93,6 +90,9 @@ msgstr "uusi sanasto"
 
 msgid "Choose concept"
 msgstr "Valitse käsite"
+
+msgid "Vocabulary"
+msgstr "Sanasto"
 
 msgid "All vocabularies"
 msgstr "Kaikki sanastot"
@@ -174,7 +174,19 @@ msgid "licensed under the"
 msgstr "lisenssillä"
 
 msgid "Login"
-msgstr "Kirjaudu"
+msgstr "Sisäänkirjautuminen"
+
+msgid "Username"
+msgstr "Käyttäjätunnus"
+
+msgid "Password"
+msgstr "Salasana"
+
+msgid "Login failed"
+msgstr "Kirjautuminen epäonnistui"
+
+msgid "Log In"
+msgstr "Kirjaudu sisään"
 
 msgid "Logout"
 msgstr "Kirjaudu ulos"

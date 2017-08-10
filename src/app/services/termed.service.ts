@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { URLSearchParams, ResponseOptionsArgs, Response } from '@angular/http';
+import { URLSearchParams, ResponseOptionsArgs, Response, Headers } from '@angular/http';
 import { Observable } from 'rxjs';
-import { TermedHttp } from './termed-http.service';
+import { TermedHttp, UserCredentials } from './termed-http.service';
 import { anyMatching, flatten, normalizeAsArray } from '../utils/array';
 import { MetaModelService } from './meta-model.service';
 import { NodeExternal, NodeType, NodeInternal, Identifier, VocabularyNodeType } from '../entities/node-api';
@@ -18,6 +18,18 @@ infiniteResultsParams.append('max', '-1');
 export class TermedService {
 
   constructor(private http: TermedHttp, private metaModelService: MetaModelService) {
+  }
+
+  checkCredentials(credentials: UserCredentials): Observable<boolean> {
+
+    const options = { headers: new Headers() };
+
+    TermedHttp.addAuthorizationHeader(options.headers, credentials);
+
+    // uses an arbitrary url for checking authentication
+    return this.http.get(`${environment.api_url}/graphs`, options)
+      .map(() => true)
+      .catch(unauthorizedAsFalse);
   }
 
   getVocabulary(graphId: string): Observable<VocabularyNode> {
@@ -339,9 +351,15 @@ function requireSingle(json: any): any {
   }
 }
 
+const unauthorizedAsFalse = responseCodeAsDefault(401, false);
+
 function notFoundAsDefault<T>(defaultValue: T) {
+  return responseCodeAsDefault(404, defaultValue);
+}
+
+function responseCodeAsDefault<T>(responseCode: number, defaultValue: T) {
   return (error: ResponseOptionsArgs, observable: Observable<T>) => {
-    if (error.status = 404) {
+    if (error.status = responseCode) {
       return Observable.of(defaultValue);
     } else {
       return observable;

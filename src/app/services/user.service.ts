@@ -1,28 +1,38 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { environment } from '../../environments/environment';
 
-interface User {
+export interface User {
   name: string;
+  username: string;
+  password: string;
 }
 
 const adminUser: User = {
-  name: 'Admin'
+  name: 'Admin',
+  username: 'admin',
+  password: 'admin'
 };
 
 @Injectable()
 export class UserService {
 
-  user: User|null = adminUser;
+  user: User|null = null;
 
   loggedIn$ = new BehaviorSubject(this.isLoggedIn());
+
+  constructor() {
+    if (!environment.production) {
+      this.login(adminUser);
+    }
+  }
 
   isLoggedIn() {
     return this.user !== null;
   }
 
-  logInAsAdmin() {
-    this.user = adminUser;
-    this.updateLoggedIn();
+  login(user: User) {
+    this.user = user;
   }
 
   logout() {
