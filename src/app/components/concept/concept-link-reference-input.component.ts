@@ -71,7 +71,7 @@ export class ConceptLinkReferenceInputComponent implements OnInit {
   }
 
   removeReference(conceptLink: ConceptLinkNode) {
-    remove(this.reference.value, conceptLink);
+    this.reference.removeReference(conceptLink);
   }
 
   addReference() {
