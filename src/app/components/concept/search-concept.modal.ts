@@ -12,29 +12,35 @@ import { firstMatching } from '../../utils/array';
 
 type Mode = 'include'|'exclude';
 
+export interface Restrict {
+  graphId: string;
+  conceptId: string;
+  reason: string;
+}
+
 @Injectable()
 export class SearchConceptModalService {
 
   constructor(private modalService: NgbModal) {
   }
 
-  openForGraph(graphId: string, initialSearch: string, restricts: { conceptId: string, reason: string }[]): Promise<ConceptNode> {
+  openForGraph(graphId: string, initialSearch: string, restricts: Restrict[]): Promise<ConceptNode> {
     const modalRef = this.modalService.open(SearchConceptModal, { size: 'lg' });
     const instance = modalRef.componentInstance as SearchConceptModal;
     instance.graphId = graphId;
     instance.mode = 'include';
     instance.initialSearch = initialSearch;
-    instance.restricts = restricts.map(({ conceptId, reason }) => ({ conceptId, graphId, reason }));
+    instance.restricts = restricts;
     return modalRef.result;
   }
 
-  openOtherThanGraph(graphId: string, initialSearch = '', restrictIds: { graphId: string, conceptId: string, reason: string }[]): Promise<ConceptNode> {
+  openOtherThanGraph(graphId: string, initialSearch = '', restricts: Restrict[]): Promise<ConceptNode> {
     const modalRef = this.modalService.open(SearchConceptModal, { size: 'lg' });
     const instance = modalRef.componentInstance as SearchConceptModal;
     instance.graphId = graphId;
     instance.mode = 'exclude';
     instance.initialSearch = initialSearch;
-    instance.restricts = restrictIds;
+    instance.restricts = restricts;
     return modalRef.result;
   }
 }
@@ -122,7 +128,7 @@ export class SearchConceptModal implements OnInit, AfterViewInit {
   @Input() mode: Mode;
   @Input() graphId: string;
   @Input() initialSearch: string;
-  @Input() restricts: { graphId: string, conceptId: string, reason: string }[];
+  @Input() restricts: Restrict[];
 
   searchResults$ = new BehaviorSubject<IndexedConcept[]>([]);
 

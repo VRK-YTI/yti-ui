@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ConceptNode } from '../../entities/node';
 import { EditableService } from '../../services/editable.service';
-import { SearchConceptModalService } from './search-concept.modal';
+import { Restrict, SearchConceptModalService } from './search-concept.modal';
 import { ignoreModalClose } from '../../utils/modal';
 import { FormReferenceLiteral } from '../../services/form-state';
+import { isDefined } from '../../utils/object';
 
 @Component({
   selector: 'concept-reference-input',
@@ -30,7 +31,7 @@ import { FormReferenceLiteral } from '../../services/form-state';
 })
 export class ConceptReferenceInputComponent {
 
-  @Input() concept: ConceptNode;
+  @Input() self?: ConceptNode;
   @Input() reference: FormReferenceLiteral<ConceptNode>;
   @Output('conceptRemove') conceptRemove = new EventEmitter<ConceptNode>();
 
@@ -49,8 +50,8 @@ export class ConceptReferenceInputComponent {
 
   addReference() {
 
-    const restricts = [
-      { graphId: this.concept.graphId, conceptId: this.concept.id, reason: 'self reference error'},
+    const restricts: Restrict[] = [
+      ...(isDefined(this.self) ? [{ graphId: this.self.graphId, conceptId: this.self.id, reason: 'self reference error'}] : []),
       ...this.reference.value.map(({ graphId, id }) => ({ graphId, conceptId: id, reason: 'already added error'}))
     ];
 

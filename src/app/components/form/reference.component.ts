@@ -14,20 +14,24 @@ export type FormReference = FormReferenceLiteral<any>
       <dt><label [for]="id">{{reference.label | translateValue}}</label></dt>
       <dd>
         <ng-container [ngSwitch]="reference.referenceType">
-          
-          <terms *ngSwitchCase="'Term'" 
+
+          <terms *ngSwitchCase="'Term'"
                  [reference]="reference"
                  [multiColumn]="multiColumnTerms"
                  [unsaved]="unsaved"></terms>
 
-          <concept-reference-input *ngSwitchCase="'Concept'" [reference]="reference" [concept]="concept" (conceptRemove)="conceptRemove.next($event)"></concept-reference-input>
+          <concept-reference-input *ngSwitchCase="'Concept'" 
+                                   [reference]="reference" 
+                                   [self]="concept"
+                                   (conceptRemove)="conceptRemove.next($event)"></concept-reference-input>
 
-          <concept-link-reference-input *ngSwitchCase="'ConceptLink'" [reference]="reference"></concept-link-reference-input>
-          
+          <concept-link-reference-input *ngSwitchCase="'ConceptLink'"
+                                        [reference]="reference"></concept-link-reference-input>
+
           <group-input *ngSwitchCase="'Group'" [reference]="reference"></group-input>
-          
+
           <organization-input *ngSwitchCase="'Organization'" [reference]="reference"></organization-input>
-          
+
           <div *ngSwitchDefault>
             <span *ngFor="let referenceNode of reference.value; let last = last">
               <span>{{referenceNode.label | translateValue}}<span *ngIf="!last">, </span></span>
