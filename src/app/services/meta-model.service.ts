@@ -11,11 +11,6 @@ import { environment } from '../../environments/environment';
 import { KnownNode, Node, Referrer } from '../entities/node';
 import { getOrCreate } from '../utils/map';
 
-const infiniteResultsParams = new URLSearchParams();
-infiniteResultsParams.append('max', '-1');
-
-const infiniteResultsOptions = { search: infiniteResultsParams };
-
 @Injectable()
 export class MetaModelService {
 
@@ -134,17 +129,21 @@ export class MetaModelService {
   }
 
   private getGraphs(): Observable<Graph[]> {
-    return this.http.get(`${environment.api_url}/graphs`, infiniteResultsOptions)
+    return this.http.get(`${environment.api_url}/graphs`)
       .map(response => normalizeAsArray(response.json()) as Graph[]);
   }
 
   private getMetaNodes(graphId: string): Observable<NodeMetaInternal[]> {
-    return this.http.get(`${environment.api_url}/graphs/${graphId}/types`, infiniteResultsOptions)
+
+    const params = new URLSearchParams();
+    params.append('graphId', graphId);
+
+    return this.http.get(`${environment.api_url}/types`, { params })
       .map(response => normalizeAsArray(response.json()) as NodeMetaInternal[]);
   }
 
   private getAllMetaNodesByGraph(): Observable<Map<string, NodeMetaInternal[]>> {
-    return this.http.get(`${environment.api_url}/types`, infiniteResultsOptions)
+    return this.http.get(`${environment.api_url}/types`)
       .map(response => normalizeAsArray(response.json()) as NodeMetaInternal[])
       .map(allNodes => groupBy(allNodes, node => node.graph.id));
   }
