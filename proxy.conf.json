@@ -2,10 +2,5 @@
   "/frontend/*": {
     "target": "http://localhost:8001",
     "secure": false
-  },
-  "/es/*": {
-    "pathRewrite": { "^/es" : "" },
-    "target": "http://localhost:9200",
-    "secure": false
   }
 }

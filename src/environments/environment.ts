@@ -5,6 +5,5 @@
 
 export const environment = {
   production: false,
-  api_url: '/frontend',
-  es_url: '/es'
+  api_url: '/frontend'
 };
