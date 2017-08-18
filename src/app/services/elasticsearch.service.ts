@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Localizable, LocalizableArray, withFirstLocalizations } from '../entities/localization';
 import { LanguageService } from './language.service';
-import { Http, URLSearchParams } from '@angular/http';
+import { Http, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { environment } from '../../environments/environment';
 import { normalizeAsArray } from '../utils/array';
@@ -122,13 +122,9 @@ export class ElasticSearchService {
 
   private search(body: any): Observable<SearchResponse<IndexedConceptData>> {
 
-    // uses GET because posting search to sanasto.csc.fi results in 403 response
+    const headers = new Headers({ 'Content-Type': 'application/json' });
 
-    const params = new URLSearchParams();
-    params.set('source', JSON.stringify(body));
-    params.set('source_content_type', 'application/json');
-
-    return this.http.get(`${environment.es_url}/concepts/concept/_search`, { search: params })
+    return this.http.post(`${environment.api_url}/searchConcept`, JSON.stringify(body), { headers } )
       .map(response => response.json() as SearchResponse<IndexedConceptData>);
   }
 
