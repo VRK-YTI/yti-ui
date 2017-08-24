@@ -1,6 +1,7 @@
 @import '../../../variables';
 
 $language-size: 32px;
+$language-width: 42px;
 
 .add-button {
 
@@ -33,7 +34,7 @@ div.localized {
     float: left;
     color: white;
     background-color: $brand-primary;
-    width: $language-size;
+    width: $language-width;
     height: $language-size;
     display: inline-block;
     text-align: center;
@@ -44,7 +45,7 @@ div.localized {
 
     float: left;
     border: 2px solid $brand-primary;
-    width: calc(100% - #{$language-size});
+    width: calc(100% - #{$language-width});
     min-height: $language-size;
     padding-left: 10px;
     padding-right: 10px;
@@ -52,7 +53,7 @@ div.localized {
 
     &.removable {
       float: left;
-      width: calc(100% - #{$language-size + 32});
+      width: calc(100% - #{$language-width + 32});
     }
 
     div.form-group {
