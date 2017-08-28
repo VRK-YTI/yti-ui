@@ -13,7 +13,8 @@ export type Cardinality = 'single'
 
 export type TypeName = 'string'
                      | 'localizable'
-                     | 'status';
+                     | 'status'
+                     | 'language';
 
 export type ReferenceType = 'Term'
                           | 'Concept'
@@ -30,7 +31,8 @@ export type LocalizableProperty = { type: 'localizable', cardinality: Cardinalit
 
 export type EditorType = 'input'
                        | 'markdown'
-                       | 'status';
+                       | 'status'
+                       | 'language';
 
 function createString(multiple: boolean, required: boolean, editorType: EditorType): StringProperty {
   return { type: 'string', cardinality: (multiple ? 'multiple' : 'single'), required, editorType };
@@ -49,6 +51,8 @@ function createPropertyType(name: TypeName, attributes: Set<string>): PropertyTy
       return createLocalizable(attributes.has('single'), attributes.has('required'), attributes.has('area') ? 'markdown' : 'input');
     case 'status':
       return createString(false, true, 'status');
+    case 'language':
+      return createString(attributes.has('multiple'), attributes.has('required'), 'language');
     default:
       return assertNever(name, 'Unsupported type: ' + name);
   }
@@ -77,7 +81,7 @@ function parseTypeAndAttributes(textAttribute: TextAttributeInternal): [TypeName
   }
 }
 
-function createDefaultPropertyType(propertyId: string) {
+function createDefaultPropertyType(propertyId: string): PropertyType {
 
   function resolve(): [TypeName, string[]] {
     switch(propertyId) {
@@ -96,7 +100,7 @@ function createDefaultPropertyType(propertyId: string) {
       case 'status':
         return ['status', []];
       case 'language':
-        return ['string', ['multiple', 'required']];
+        return ['language', ['multiple', 'required']];
       default:
         return ['string', ['single']];
     }

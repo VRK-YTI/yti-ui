@@ -12,6 +12,7 @@ import { children } from '../utils/markdown';
 import { Parser, Node as MarkdownNode } from 'commonmark';
 import { validateMeta } from '../directives/validators/meta-model.validator';
 import { requiredList } from '../directives/validators/required-list.validator';
+import { validateLanguage } from '../directives/validators/language.validator';
 
 export type FormReference = FormReferenceLiteral<any>
                           | FormReferenceTerm;
@@ -332,6 +333,10 @@ export class FormPropertyLiteral {
       validators.push(Validators.required);
     }
 
+    if (this.editorType === 'language') {
+      validators.push(validateLanguage);
+    }
+
     return new FormControl((!initial && isStatus) ? 'Unstable' : initial, validators);
   }
 
@@ -389,6 +394,10 @@ export class FormPropertyLiteralList {
 
     if (this.required) {
       validators.push(Validators.required);
+    }
+
+    if (this.editorType === 'language') {
+      validators.push(validateLanguage);
     }
 
     return new FormControl(initial, validators);

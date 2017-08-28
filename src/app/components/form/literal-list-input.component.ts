@@ -35,7 +35,11 @@ import { FormControl } from '@angular/forms';
             <markdown-input *ngSwitchCase="'markdown'"
                             [id]="id"
                             [formControl]="control"></markdown-input>
-
+            
+            <language-input *ngSwitchCase="'language'"
+                            [id]="id"
+                            [formControl]="control"></language-input>
+                            
           </ng-container>
 
           <error-messages [control]="control"></error-messages>

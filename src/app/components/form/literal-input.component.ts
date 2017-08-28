@@ -30,7 +30,11 @@ import { FormPropertyLiteral } from '../../services/form-state';
           <status-input *ngSwitchCase="'status'"
                         [id]="id"
                         [formControl]="property.control"></status-input>
-  
+
+          <language-input *ngSwitchCase="'language'"
+                          [id]="id"
+                          [formControl]="property.control"></language-input>          
+          
           <error-messages [control]="property.control"></error-messages>
           
         </ng-container>

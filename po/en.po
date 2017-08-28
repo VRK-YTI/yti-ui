@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-06-16 17:26+0300\n"
+"PO-Revision-Date: 2017-08-28 15:47+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -58,9 +58,6 @@ msgstr ""
 msgid "Add concept"
 msgstr ""
 
-msgid "Vocabulary"
-msgstr ""
-
 msgid "Search concept..."
 msgstr ""
 
@@ -92,6 +89,9 @@ msgid "New vocabulary"
 msgstr ""
 
 msgid "Choose concept"
+msgstr ""
+
+msgid "Vocabulary"
 msgstr ""
 
 msgid "All vocabularies"
@@ -173,6 +173,18 @@ msgid "licensed under the"
 msgstr ""
 
 msgid "Login"
+msgstr ""
+
+msgid "Username"
+msgstr ""
+
+msgid "Password"
+msgstr ""
+
+msgid "Login failed"
+msgstr ""
+
+msgid "Log In"
 msgstr ""
 
 msgid "Logout"
@@ -263,3 +275,6 @@ msgstr "Invalid"
 
 msgid "required"
 msgstr "Required"
+
+msgid "validateLanguage"
+msgstr "Invalid language"
