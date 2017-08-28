@@ -1,6 +1,6 @@
 @import '../../../variables';
 
-$language-size: 32px;
+$language-height: 32px;
 $language-width: 42px;
 
 .add-button {
@@ -35,10 +35,10 @@ div.localized {
     color: white;
     background-color: $brand-primary;
     width: $language-width;
-    height: $language-size;
+    height: $language-height;
     display: inline-block;
     text-align: center;
-    line-height: $language-size;
+    line-height: $language-height;
   }
 
   div.localization {
@@ -46,10 +46,10 @@ div.localized {
     float: left;
     border: 2px solid $brand-primary;
     width: calc(100% - #{$language-width});
-    min-height: $language-size;
+    min-height: $language-height;
     padding-left: 10px;
     padding-right: 10px;
-    line-height: calc(#{$language-size} - 4px);
+    line-height: calc(#{$language-height} - 4px);
 
     &.removable {
       float: left;
@@ -67,7 +67,7 @@ div.localized {
     }
 
     input {
-      height: calc(#{$language-size} - 4px);
+      height: calc(#{$language-height} - 4px);
     }
 
     /deep/ markdown-input {
