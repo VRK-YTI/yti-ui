@@ -78,7 +78,7 @@ import {
   SelectConceptReferenceModal,
   SelectConceptReferenceModalService
 } from './components/concept/select-concept-reference.modal';
-import { FrontpageComponent } from './components/fronpage.component';
+import { FrontpageComponent } from './components/frontpage.component';
 import { LiteralListInputComponent } from './components/form/literal-list-input.component';
 import { RequiredListValidator } from './directives/validators/required-list.validator';
 import { TermsComponent } from './components/form/terms.component';
