@@ -22,19 +22,19 @@ import { FormPropertyLiteral } from '../../services/form-state';
                  [id]="id"
                  autocomplete="off"
                  [formControl]="property.control" />
-          
-          <app-markdown-input *ngSwitchCase="'markdown'" 
-                          [id]="id"
-                          [formControl]="property.control"></app-markdown-input>
-          
+
+          <app-markdown-input *ngSwitchCase="'markdown'"
+                              [id]="id"
+                              [formControl]="property.control"></app-markdown-input>
+
           <app-status-input *ngSwitchCase="'status'"
-                        [id]="id"
-                        [formControl]="property.control"></app-status-input>
+                            [id]="id"
+                            [formControl]="property.control"></app-status-input>
 
           <app-language-input *ngSwitchCase="'language'"
-                          [id]="id"
-                          [formControl]="property.control"></app-language-input>          
-          
+                              [id]="id"
+                              [formControl]="property.control"></app-language-input>
+
           <app-error-messages [control]="property.control"></app-error-messages>
           
         </ng-container>

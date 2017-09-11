@@ -14,14 +14,21 @@ type FormProperty = FormPropertyLiteral
     <dl *ngIf="show">
       <dt><label [for]="id">{{property.label | translateValue}}</label></dt>
       <dd [ngSwitch]="property.type">
+        
         <app-localized-input *ngSwitchCase="'localizable'"
-                         [id]="id"
-                         [property]="property"
-                         [conceptSelector]="conceptSelector"
-                         [relatedConcepts]="relatedConcepts"
-                         [filterLanguage]="filterLanguage"></app-localized-input>
-        <app-literal-input *ngSwitchCase="'literal'" [id]="id" [property]="property"></app-literal-input>
-        <app-literal-list-input *ngSwitchCase="'literal-list'" [id]="id" [property]="property"></app-literal-list-input>
+                             [id]="id"
+                             [property]="property"
+                             [conceptSelector]="conceptSelector"
+                             [relatedConcepts]="relatedConcepts"
+                             [filterLanguage]="filterLanguage"></app-localized-input>
+        
+        <app-literal-input *ngSwitchCase="'literal'" 
+                           [id]="id" 
+                           [property]="property"></app-literal-input>
+        
+        <app-literal-list-input *ngSwitchCase="'literal-list'" 
+                                [id]="id" 
+                                [property]="property"></app-literal-list-input>
         
         <span *ngSwitchDefault>ERROR - unknown property type</span>
       </dd>

@@ -1097,13 +1097,13 @@ function isRemoveRestOfLine(event: KeyboardEvent) {
   }],
   template: `
     <app-markdown-input-link-popover *ngIf="hasLinkableSelection()"
-                                 [selectedText]="linkableSelection.content"
-                                 (link)="link()">
+                                     [selectedText]="linkableSelection.content"
+                                     (link)="link()">
     </app-markdown-input-link-popover>
 
     <app-markdown-input-unlink-popover *ngIf="hasLinkedSelection()"
-                                   [concept]="linkedConcept"
-                                   (unlink)="unlink()">
+                                       [concept]="linkedConcept"
+                                       (unlink)="unlink()">
     </app-markdown-input-unlink-popover>
 
     <div #editable contenteditable="true" [class.form-control]="formControlClass"></div>

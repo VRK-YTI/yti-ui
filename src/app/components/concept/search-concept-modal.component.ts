@@ -107,22 +107,27 @@ export class SearchConceptModalService {
         </div>
         <div class="col-md-4">
           <form>
-            <app-concept-form *ngIf="selection && !loadingSelection" 
-                          [concept]="selection" 
-                          [form]="formNode"></app-concept-form>
+            <app-concept-form *ngIf="selection && !loadingSelection"
+                              [concept]="selection"
+                              [form]="formNode"></app-concept-form>
           </form>
           <app-ajax-loading-indicator *ngIf="loadingSelection"></app-ajax-loading-indicator>
         </div>
       </div>
     </div>
     <div class="modal-footer">
+
       <div class="alert alert-danger" style="display: inline; padding: 6px; margin: 0 5px 0 0;" role="alert" *ngIf="restrictionReasonForSelection">
         <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
         <span>{{restrictionReasonForSelection | translate}}</span>
       </div>
-      <button type="button" class="btn btn-secondary cancel" 
+      
+      <button type="button" 
+              class="btn btn-secondary cancel" 
               (click)="cancel()" translate>Cancel</button>
-      <button type="button" class="btn btn-default confirm" 
+      
+      <button type="button" 
+              class="btn btn-default confirm" 
               (click)="confirm()" 
               [disabled]="cannotSelect()" translate>Select concept</button>
     </div>

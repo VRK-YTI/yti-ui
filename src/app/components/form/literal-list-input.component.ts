@@ -24,22 +24,22 @@ import { FormControl } from '@angular/forms';
         <div class="form-group" [ngClass]="{'has-danger': !control.valid, 'removable': canRemove()}">
 
           <ng-container [ngSwitch]="property.editorType">
-            
+
             <input *ngSwitchCase="'input'"
                    type="text"
                    class="form-control"
                    [id]="id"
-                   autocomplete="off" 
+                   autocomplete="off"
                    [formControl]="control" />
-              
+
             <app-markdown-input *ngSwitchCase="'markdown'"
-                            [id]="id"
-                            [formControl]="control"></app-markdown-input>
-            
+                                [id]="id"
+                                [formControl]="control"></app-markdown-input>
+
             <app-language-input *ngSwitchCase="'language'"
-                            [id]="id"
-                            [formControl]="control"></app-language-input>
-                            
+                                [id]="id"
+                                [formControl]="control"></app-language-input>
+
           </ng-container>
 
           <app-error-messages [control]="control"></app-error-messages>

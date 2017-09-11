@@ -16,22 +16,24 @@ export type FormReference = FormReferenceLiteral<any>
         <ng-container [ngSwitch]="reference.referenceType">
 
           <app-terms *ngSwitchCase="'Term'"
-                 [reference]="reference"
-                 [multiColumn]="multiColumnTerms"
-                 [unsaved]="unsaved"
-                 [filterLanguage]="filterLanguage"></app-terms>
+                     [reference]="reference"
+                     [multiColumn]="multiColumnTerms"
+                     [unsaved]="unsaved"
+                     [filterLanguage]="filterLanguage"></app-terms>
 
-          <app-concept-reference-input *ngSwitchCase="'Concept'" 
-                                   [reference]="reference" 
-                                   [self]="concept"
-                                   (conceptRemove)="conceptRemove.next($event)"></app-concept-reference-input>
+          <app-concept-reference-input *ngSwitchCase="'Concept'"
+                                       [reference]="reference"
+                                       [self]="concept"
+                                       (conceptRemove)="conceptRemove.next($event)"></app-concept-reference-input>
 
           <app-concept-link-reference-input *ngSwitchCase="'ConceptLink'"
-                                        [reference]="reference"></app-concept-link-reference-input>
+                                            [reference]="reference"></app-concept-link-reference-input>
+          
+          <app-group-input *ngSwitchCase="'Group'" 
+                           [reference]="reference"></app-group-input>
 
-          <app-group-input *ngSwitchCase="'Group'" [reference]="reference"></app-group-input>
-
-          <app-organization-input *ngSwitchCase="'Organization'" [reference]="reference"></app-organization-input>
+          <app-organization-input *ngSwitchCase="'Organization'" 
+                                  [reference]="reference"></app-organization-input>
 
           <div *ngSwitchDefault>
             <span *ngFor="let referenceNode of reference.value; let last = last">

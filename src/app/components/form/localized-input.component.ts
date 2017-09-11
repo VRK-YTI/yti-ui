@@ -43,12 +43,12 @@ import { remove } from '../../utils/array';
                       autocomplete="off"
                       [formControl]="child.control" />
 
-                <app-markdown-input *ngSwitchCase="'markdown'"
-                                [id]="id"
-                                [formControlClass]="false"
-                                [conceptSelector]="conceptSelector"
-                                [relatedConcepts]="relatedConcepts"
-                                [formControl]="child.control"></app-markdown-input>
+              <app-markdown-input *ngSwitchCase="'markdown'"
+                              [id]="id"
+                              [formControlClass]="false"
+                              [conceptSelector]="conceptSelector"
+                              [relatedConcepts]="relatedConcepts"
+                              [formControl]="child.control"></app-markdown-input>
 
               </ng-container>
 
