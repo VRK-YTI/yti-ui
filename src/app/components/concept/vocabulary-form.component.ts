@@ -7,17 +7,22 @@ import { EditableService } from '../../services/editable.service';
   selector: 'app-vocabulary-form',
   template: `
     <div class="row">
-      <app-property class="col-md-6"
-                *ngFor="let child of properties"
-                [property]="child.property"
-                [id]="child.name"
-                [filterLanguage]="filterLanguage"></app-property>
-      
-      <app-reference class="col-md-6"
-                 *ngFor="let child of references"
-                 [reference]="child.reference"
-                 [id]="child.name"
-                 [unsaved]="!vocabulary.persistent"></app-reference>
+
+      <ng-container *ngFor="let field of fields" [ngSwitch]="field.value.fieldType">
+
+        <app-property *ngSwitchCase="'property'"
+                      class="col-md-6"
+                      [property]="field.value"
+                      [id]="field.name"
+                      [filterLanguage]="filterLanguage"></app-property>
+
+        <app-reference *ngSwitchCase="'reference'"
+                       class="col-md-6"
+                       [reference]="field.value"
+                       [id]="field.name"
+                       [unsaved]="!vocabulary.persistent"></app-reference>
+
+      </ng-container>
     </div>
   `
 })
@@ -34,11 +39,7 @@ export class VocabularyFormComponent {
     return this.editableService.editing;
   }
 
-  get properties() {
-    return this.form.properties.filter(prop => this.showEmpty || !prop.property.valueEmpty);
-  }
-
-  get references() {
-    return this.form.references.filter(ref => this.showEmpty || !ref.reference.valueEmpty);
+  get fields() {
+    return this.form.fields.filter(f => this.showEmpty || !f.value.valueEmpty);
   }
 }

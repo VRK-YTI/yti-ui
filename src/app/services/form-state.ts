@@ -13,6 +13,7 @@ import { Parser, Node as MarkdownNode } from 'commonmark';
 import { validateMeta } from '../directives/validators/meta-model.validator';
 import { requiredList } from '../directives/validators/required-list.validator';
 import { validateLanguage } from '../directives/validators/language.validator';
+import { comparingPrimitive } from '../utils/comparator';
 
 export type FormReference = FormReferenceLiteral<any>
                           | FormReferenceTerm;
@@ -21,11 +22,13 @@ export type FormProperty = FormPropertyLiteral
                          | FormPropertyLiteralList
                          | FormPropertyLocalizable;
 
+export type FormField = FormProperty
+                      | FormReference;
+
 export class FormNode {
 
   control = new FormGroup({});
-  properties: { property: FormProperty, name: string }[] = [];
-  references: { reference: FormReference, name: string }[] = [];
+  fields: { name: string, value: FormField }[] = [];
 
   constructor(private node: Node<any>, public languagesProvider: () => string[]) {
 
@@ -57,32 +60,53 @@ export class FormNode {
       }
     };
 
-    for (const [name, prop] of Object.entries(node.properties)) {
-      const property = createFormProperty(prop);
-      this.control.addControl('property-' + name, property.control);
-      this.properties.push({property, name});
-    }
+    const fields = [... Object.values(node.properties), ...Object.values(node.references)];
 
-    for (const [name, ref] of Object.entries(node.references)) {
-      const reference = createFormReference(name, ref);
-      this.control.addControl('reference-' + name, reference.control);
-      this.references.push({reference, name});
+    fields.sort(
+      comparingPrimitive<Property|Reference<any>>(f => f.meta.index)
+        .andThen(comparingPrimitive<Property|Reference<any>>(f => f instanceof Property)));
+
+    for (const field of fields) {
+
+      const name = field.meta.id;
+
+      if (field instanceof Property) {
+        const property = createFormProperty(field);
+        this.control.addControl('property-' + name, property.control);
+        this.fields.push({value: property, name});
+      } else {
+        const reference = createFormReference(name, field);
+        this.control.addControl('reference-' + name, reference.control);
+        this.fields.push({value: reference, name});
+      }
     }
+  }
+
+  get properties() {
+    return this.fields
+      .filter(f => f.value.fieldType === 'property')
+      .map( f => f as { name: string, value: FormProperty });
+  }
+
+  get references() {
+    return this.fields
+      .filter(f => f.value.fieldType === 'reference')
+      .map( f => f as { name: string, value: FormReference });
   }
 
   get prefLabelProperty(): { lang: string, value: string }[] {
 
-    const label = firstMatching(this.properties, child => child.name === 'prefLabel');
+    const property = firstMatching(this.properties, child => child.name === 'prefLabel');
 
-    if (!label) {
+    if (!property) {
       throw new Error('prefLabel not found in properties');
     }
 
-    if (!(label.property instanceof FormPropertyLocalizable)) {
+    if (!(property.value instanceof FormPropertyLocalizable)) {
       throw new Error('prefLabel is not localizable');
     }
 
-    return (label.property as FormPropertyLocalizable).value;
+    return (property.value as FormPropertyLocalizable).value;
   }
 
   hasConceptReference(conceptId: string) {
@@ -94,19 +118,19 @@ export class FormNode {
   }
 
   get relatedConcepts() {
-    return firstMatching(this.references, child => child.name === 'related')!.reference as FormReferenceLiteral<ConceptNode>;
+    return firstMatching(this.references, child => child.name === 'related')!.value as FormReferenceLiteral<ConceptNode>;
   }
 
   get referencedConcepts(): ConceptNode[] {
     return flatten(this.references
-      .filter(child => child.reference.targetType === 'Concept')
-      .map(child => child.reference.value as ConceptNode[])
+      .filter(ref => ref.value.targetType === 'Concept')
+      .map(ref => ref.value.value as ConceptNode[])
     );
   }
 
   get markdownProperties(): FormProperty[] {
     return this.properties
-      .map(child => child.property)
+      .map(p => p.value)
       .filter(p => p.editorType === 'markdown');
   }
 
@@ -117,8 +141,8 @@ export class FormNode {
   }
 
   get hasNonEmptyPrefLabel(): boolean {
-    const prefLabel = firstMatching(this.properties, property => property.name === 'prefLabel');
-    return !!prefLabel && !prefLabel.property.valueEmpty;
+    const property = firstMatching(this.properties, p => p.name === 'prefLabel');
+    return !!property && !property.value.valueEmpty;
   }
 
   get value(): Node<any> {
@@ -129,18 +153,19 @@ export class FormNode {
 
   assignChanges(node: Node<any>) {
 
-    for (const {property, name} of this.properties) {
-      property.assignChanges(node.properties[name]);
+    for (const {name, value} of this.properties) {
+      value.assignChanges(node.properties[name]);
     }
 
-    for (const {reference, name} of this.references) {
-      reference.assignChanges(node.references[name]);
+    for (const {name, value} of this.references) {
+      value.assignChanges(node.references[name]);
     }
   }
 }
 
 export class FormReferenceLiteral<N extends KnownNode | Node<any>>{
 
+  fieldType: 'reference' = 'reference';
   type: 'literal' = 'literal';
   control: FormControl;
   private meta: ReferenceMeta;
@@ -230,6 +255,7 @@ export class FormReferenceLiteral<N extends KnownNode | Node<any>>{
 
 export class FormReferenceTerm {
 
+  fieldType: 'reference' = 'reference';
   type: 'term' = 'term';
   control: FormArray;
   children: { formNode: FormNode, language: string }[];
@@ -310,6 +336,7 @@ export class FormReferenceTerm {
 
 export class FormPropertyLiteral {
 
+  fieldType: 'property' = 'property';
   type: 'literal' = 'literal';
   control: FormControl;
   private meta: PropertyMeta;
@@ -377,6 +404,7 @@ export class FormPropertyLiteral {
 
 export class FormPropertyLiteralList {
 
+  fieldType: 'property' = 'property';
   type: 'literal-list' = 'literal-list';
   control: FormArray;
   private meta: PropertyMeta;
@@ -459,6 +487,7 @@ export class FormPropertyLiteralList {
 
 export class FormPropertyLocalizable {
 
+  fieldType: 'property' = 'property';
   type: 'localizable' = 'localizable';
   control: FormArray;
   children: { lang: string, control: FormControl }[];

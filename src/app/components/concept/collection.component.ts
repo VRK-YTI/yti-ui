@@ -27,23 +27,29 @@ import { requireDefined } from '../../utils/object';
             <app-editable-buttons [form]="form" [canRemove]="true"></app-editable-buttons>
           </div>
         </div>
-        
+
         <div class="row">
-          <app-property class="col-md-12"
-                    [property]="property.property"
-                    [id]="property.name"
-                    [filterLanguage]="filterLanguage"
-                    *ngFor="let property of properties"></app-property>
-  
-          <app-reference class="col-md-12"
-                     [reference]="reference.reference"
-                     [id]="reference.name"
-                     [unsaved]="unsaved"
-                     *ngFor="let reference of references"></app-reference>
+
+          <ng-container *ngFor="let field of fields" [ngSwitch]="field.value.fieldType">
+
+            <app-property *ngSwitchCase="'property'"
+                          class="col-md-12"
+                          [property]="field.value"
+                          [id]="field.name"
+                          [filterLanguage]="filterLanguage"></app-property>
+
+            <app-reference *ngSwitchCase="'reference'"
+                           class="col-md-12"
+                           [reference]="field.value"
+                           [id]="field.name"
+                           [unsaved]="unsaved"></app-reference>
+
+          </ng-container>
+
         </div>
 
         <app-meta-information [hidden]="!collection.persistent" [node]="collection"></app-meta-information>
-        
+
       </form>
 
     </div>
@@ -80,12 +86,8 @@ export class CollectionComponent implements EditingComponent, OnDestroy {
     return this.editableService.editing;
   }
 
-  get properties() {
-    return this.formNode.properties.filter(prop => this.showEmpty || !prop.property.valueEmpty);
-  }
-
-  get references() {
-    return this.formNode.references.filter(ref => this.showEmpty || !ref.reference.valueEmpty);
+  get fields() {
+    return this.formNode.fields.filter(f => this.showEmpty || !f.value.valueEmpty);
   }
 
   get formNode() {

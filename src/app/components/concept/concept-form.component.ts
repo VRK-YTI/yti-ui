@@ -3,42 +3,39 @@ import { ConceptNode } from '../../entities/node';
 import { SearchConceptModalService } from './search-concept-modal.component';
 import { SelectConceptReferenceModalService } from './select-concept-reference-modal.component';
 import { ignoreModalClose, isModalClose } from '../../utils/modal';
-import { anyMatching, firstMatching } from '../../utils/array';
-import { FormNode, FormReferenceTerm } from '../../services/form-state';
+import { anyMatching } from '../../utils/array';
+import { FormNode } from '../../services/form-state';
 import { EditableService } from '../../services/editable.service';
 
 @Component({
   selector: 'app-concept-form',
   template: `
     <div class="row">
-      <!-- Special handling for primary term, could be solved with mixed property/reference sorting -->
-      <app-reference *ngIf="hasPrimaryTerm()"
-                 class="col-md-12"
-                 [multiColumnTerms]="multiColumn"
-                 [unsaved]="!concept.persistent"
-                 [reference]="primaryTermReference"
-                 [concept]="concept"
-                 [id]="'prefLabelXl'"
-                 [filterLanguage]="filterLanguage"></app-reference>
-      
-      <app-property *ngFor="let child of properties"
-                class="col-md-12" 
-                [class.col-xl-6]="multiColumn && child.property.multiColumn" 
-                [property]="child.property"
-                [id]="child.name"
-                [conceptSelector]="conceptSelector"
-                [relatedConcepts]="form.referencedConcepts"
-                [filterLanguage]="filterLanguage"></app-property>
-      
-      <app-reference *ngFor="let reference of references" 
-                 class="col-md-12" 
-                 [class.col-xl-6]="multiColumn && !reference.reference.term"
-                 [multiColumnTerms]="multiColumn"
-                 [unsaved]="!concept.persistent"
-                 (conceptRemove)="onConceptRemove($event)"
-                 [reference]="reference.reference"
-                 [concept]="concept"
-                 [id]="reference.name"></app-reference>
+
+      <ng-container *ngFor="let field of fields" [ngSwitch]="field.value.fieldType">
+
+        <app-property *ngSwitchCase="'property'"
+                      class="col-md-12"
+                      [class.col-xl-6]="multiColumn && field.value.multiColumn"
+                      [property]="field.value"
+                      [id]="field.name"
+                      [conceptSelector]="conceptSelector"
+                      [relatedConcepts]="form.referencedConcepts"
+                      [filterLanguage]="filterLanguage"></app-property>
+
+        <app-reference *ngSwitchCase="'reference'"
+                       class="col-md-12"
+                       [class.col-xl-6]="multiColumn && !field.value.term"
+                       [multiColumnTerms]="multiColumn"
+                       [unsaved]="!concept.persistent"
+                       (conceptRemove)="onConceptRemove($event)"
+                       [reference]="field.value"
+                       [concept]="concept"
+                       [id]="field.name"
+                       [filterLanguage]="filterLanguage"></app-reference>
+
+      </ng-container>
+
     </div>
 
     <app-meta-information [hidden]="!concept.persistent" [node]="concept"></app-meta-information>
@@ -62,20 +59,8 @@ export class ConceptFormComponent {
     return this.editableService.editing;
   }
 
-  get properties() {
-    return this.form.properties.filter(prop => this.showEmpty || !prop.property.valueEmpty);
-  }
-
-  get references() {
-    return this.form.references.filter(ref => ref.name !== 'prefLabelXl' && (this.showEmpty || !ref.reference.valueEmpty));
-  }
-
-  get primaryTermReference(): FormReferenceTerm {
-    return firstMatching(this.form.references, child => child.name === 'prefLabelXl')!.reference as FormReferenceTerm;
-  }
-
-  hasPrimaryTerm() {
-    return anyMatching(this.form.references, child => child.name === 'prefLabelXl');
+  get fields() {
+    return this.form.fields.filter(f => this.showEmpty || !f.value.valueEmpty);
   }
 
   onConceptRemove(concept: ConceptNode) {

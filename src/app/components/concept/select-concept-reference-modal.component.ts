@@ -62,8 +62,8 @@ export class SelectConceptReferenceModalComponent implements OnInit {
   ngOnInit(): void {
 
     this.conceptReferences = this.formNode.references
-      .filter(ref => ref.reference.targetType === 'Concept')
-      .map(ref => ref.reference as FormReferenceLiteral<ConceptNode>);
+      .filter(ref => ref.value.targetType === 'Concept')
+      .map(ref => ref.value as FormReferenceLiteral<ConceptNode>);
 
     if (this.formNode.hasRelatedConcepts()) {
       this.selection = this.formNode.relatedConcepts;

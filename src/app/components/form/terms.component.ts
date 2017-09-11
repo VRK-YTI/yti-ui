@@ -46,8 +46,8 @@ import { remove } from '../../utils/array';
             </div>
           </div>
           <div class="row">
-            <div class="col-md-12" [class.col-xl-6]="multiColumn" *ngFor="let child of node.formNode.properties">
-              <app-property [id]="child.name" [property]="child.property" [filterLanguage]="filterLanguage"></app-property>
+            <div class="col-md-12" [class.col-xl-6]="multiColumn" *ngFor="let property of node.formNode.properties">
+              <app-property [id]="property.name" [property]="property.value" [filterLanguage]="filterLanguage"></app-property>
             </div>
           </div>
         </ng-template>
