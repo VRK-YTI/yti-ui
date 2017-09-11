@@ -7,7 +7,7 @@ import { isDefined, requireDefined } from '../../utils/object';
 import { UserService } from '../../services/user.service';
 
 @Component({
-  selector: 'vocabularies',
+  selector: 'app-vocabularies',
   styleUrls: ['./vocabularies.component.scss'],
   template: `
     <div class="row add-vocabulary">
@@ -114,12 +114,12 @@ class Filter {
   selected = new Set<any>();
 
   constructor(public title: string,
-              nodes: VocabularyNode[],
+              vocabularyNodes: VocabularyNode[],
               private idExtractor: Extractor<any>,
               nameExtractor: Extractor<Localizable>,
               onChange: () => void) {
 
-    const nodesWithId = nodes.filter(node => isDefined(idExtractor(node)));
+    const nodesWithId = vocabularyNodes.filter(node => isDefined(idExtractor(node)));
 
     this.items = Array.from(groupBy(nodesWithId, idExtractor).entries())
         .map(([id, nodes]) => new Item(this, id, nameExtractor(requireDefined(nodes[0])), nodes.length, onChange));

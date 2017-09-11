@@ -6,7 +6,7 @@ import { replaceMatching } from '../../utils/array';
 import { FormReferenceLiteral } from '../../services/form-state';
 
 @Component({
-  selector: 'group-input',
+  selector: 'app-group-input',
   template: `
 
     <span *ngIf="!editing">{{reference.singleValue.label | translateValue}}</span>
@@ -18,7 +18,7 @@ import { FormReferenceLiteral } from '../../services/form-state';
           <option *ngFor="let group of groups" [ngValue]="group">{{group.label | translateValue}}</option>
         </select>
 
-        <error-messages [control]="reference.control"></error-messages>
+        <app-error-messages [control]="reference.control"></app-error-messages>
       </div>
     </div>
   `

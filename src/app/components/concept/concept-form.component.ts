@@ -1,36 +1,36 @@
 import { Component, Input } from '@angular/core';
 import { ConceptNode } from '../../entities/node';
-import { SearchConceptModalService } from './search-concept.modal';
-import { SelectConceptReferenceModalService } from './select-concept-reference.modal';
+import { SearchConceptModalService } from './search-concept-modal.component';
+import { SelectConceptReferenceModalService } from './select-concept-reference-modal.component';
 import { ignoreModalClose, isModalClose } from '../../utils/modal';
 import { anyMatching, firstMatching } from '../../utils/array';
 import { FormNode, FormReferenceTerm } from '../../services/form-state';
 import { EditableService } from '../../services/editable.service';
 
 @Component({
-  selector: 'concept-form',
+  selector: 'app-concept-form',
   template: `
     <div class="row">
       <!-- Special handling for primary term, could be solved with mixed property/reference sorting -->
-      <reference *ngIf="hasPrimaryTerm()"
+      <app-reference *ngIf="hasPrimaryTerm()"
                  class="col-md-12"
                  [multiColumnTerms]="multiColumn"
                  [unsaved]="!concept.persistent"
                  [reference]="primaryTermReference"
                  [concept]="concept"
                  [id]="'prefLabelXl'"
-                 [filterLanguage]="filterLanguage"></reference>
+                 [filterLanguage]="filterLanguage"></app-reference>
       
-      <property *ngFor="let child of properties"
+      <app-property *ngFor="let child of properties"
                 class="col-md-12" 
                 [class.col-xl-6]="multiColumn && child.property.multiColumn" 
                 [property]="child.property"
                 [id]="child.name"
                 [conceptSelector]="conceptSelector"
                 [relatedConcepts]="form.referencedConcepts"
-                [filterLanguage]="filterLanguage"></property>
+                [filterLanguage]="filterLanguage"></app-property>
       
-      <reference *ngFor="let reference of references" 
+      <app-reference *ngFor="let reference of references" 
                  class="col-md-12" 
                  [class.col-xl-6]="multiColumn && !reference.reference.term"
                  [multiColumnTerms]="multiColumn"
@@ -38,10 +38,10 @@ import { EditableService } from '../../services/editable.service';
                  (conceptRemove)="onConceptRemove($event)"
                  [reference]="reference.reference"
                  [concept]="concept"
-                 [id]="reference.name"></reference>
+                 [id]="reference.name"></app-reference>
     </div>
 
-    <meta-information [hidden]="!concept.persistent" [node]="concept"></meta-information>
+    <app-meta-information [hidden]="!concept.persistent" [node]="concept"></app-meta-information>
   `
 })
 export class ConceptFormComponent {

@@ -70,7 +70,7 @@ div.localized {
       height: calc(#{$language-height} - 4px);
     }
 
-    /deep/ markdown-input {
+    /deep/ app-markdown-input {
       .action {
         top: -37px;
         right: 10px;

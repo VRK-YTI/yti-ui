@@ -188,9 +188,7 @@ export function insertBefore<T>(arr: T[], item: T, ref: T) {
   throw new Error('Reference item not in array');
 }
 
-export interface Mapper<T, R> {
-  (item: T): R;
-}
+export type Mapper<T, R> = (item: T) => R;
 
 export function first<T>(arr: T[]): T {
 

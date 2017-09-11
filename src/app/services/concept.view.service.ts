@@ -27,17 +27,17 @@ import { TranslateService } from 'ng2-translate';
 
 function onlySelect<T>(action: Observable<Action<T>>): Observable<T> {
   const selectAction: Observable<SelectAction<T>> = action.filter(isSelect);
-  return selectAction.map(action => action.item);
+  return selectAction.map(a => a.item);
 }
 
 function onlyEdit<T>(action: Observable<Action<T>>): Observable<T> {
   const editAction: Observable<EditAction<T>> = action.filter(isEdit);
-  return editAction.map(action => action.item);
+  return editAction.map(a => a.item);
 }
 
 function onlyRemove<T>(action: Observable<Action<T>>): Observable<T> {
   const removeAction: Observable<RemoveAction<T>> = action.filter(isRemove);
-  return removeAction.map(action => action.item);
+  return removeAction.map(a => a.item);
 }
 
 function updateOrRemoveItem<T extends { id: string }>(subject: BehaviorSubject<T[]>, id: string, newItem: T|null) {
@@ -297,11 +297,11 @@ export class CollectionListModel {
 
   constructor(private termedService: TermedService, private languageService: LanguageService) {
 
-    const initialSearch = this.search$.take(1);
-    const debouncedSearch = this.search$.skip(1).debounceTime(500);
-    const search = initialSearch.concat(debouncedSearch);
+    const initialSearch$ = this.search$.take(1);
+    const debouncedSearch$ = this.search$.skip(1).debounceTime(500);
+    const search$ = initialSearch$.concat(debouncedSearch$);
 
-    this.searchResults = Observable.combineLatest([this.allCollections$, search], (collections: CollectionNode[], search: string) => {
+    this.searchResults = Observable.combineLatest([this.allCollections$, search$], (collections: CollectionNode[], search: string) => {
 
       this.debouncedSearch = search;
       const scoreFilter = (item: TextAnalysis<CollectionNode>) => !search || isDefined(item.matchScore) || item.score < 2;

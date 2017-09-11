@@ -5,15 +5,21 @@ import { MetaModelService } from '../../services/meta-model.service';
 import { remove } from '../../utils/array';
 
 @Component({
-  selector: 'terms',
+  selector: 'app-terms',
   styleUrls: ['./terms.component.scss'],
   template: `
     
     <div class="clearfix" *ngIf="canAdd()">
       <div ngbDropdown class="add-button">
-        <button class="btn btn-default" ngbDropdownToggle ngbTooltip="{{'Add' | translate}} {{reference.label | translateValue | lowercase}}"><i class="fa fa-plus"></i></button>
+        <button class="btn btn-default" 
+                ngbDropdownToggle 
+                ngbTooltip="{{'Add' | translate}} {{reference.label | translateValue | lowercase}}">
+          <i class="fa fa-plus"></i>
+        </button>
         <div class="dropdown-menu">
-          <button class="dropdown-item" *ngFor="let language of addableLanguages" (click)="addTerm(language)">{{language | uppercase}}</button>
+          <button class="dropdown-item" 
+                  *ngFor="let language of addableLanguages" 
+                  (click)="addTerm(language)">{{language | uppercase}}</button>
         </div>
       </div>
     </div>
@@ -22,19 +28,26 @@ import { remove } from '../../utils/array';
       <ngb-panel [id]="index" *ngFor="let node of visibleChildren; let index = index">
         <ng-template ngbPanelTitle>
           <div class="language">{{node.language | uppercase}}</div>
-          <div class="localization">{{node.formNode.prefLabelProperty[0].value}} <accordion-chevron class="pull-right"></accordion-chevron></div>
+          <div class="localization">
+            {{node.formNode.prefLabelProperty[0].value}} 
+            <app-accordion-chevron class="pull-right"></app-accordion-chevron>
+          </div>
         </ng-template>
         <ng-template ngbPanelContent>
           <div class="row" *ngIf="canRemove()">
             <div class="col-md-12">
               <div class="remove-button">
-                <button class="btn btn-default" ngbTooltip="{{'Remove term' | translate}}" (click)="removeTerm(node)"><i class="fa fa-trash"></i></button>
+                <button class="btn btn-default" 
+                        ngbTooltip="{{'Remove term' | translate}}" 
+                        (click)="removeTerm(node)">
+                  <i class="fa fa-trash"></i>
+                </button>
               </div>
             </div>
           </div>
           <div class="row">
             <div class="col-md-12" [class.col-xl-6]="multiColumn" *ngFor="let child of node.formNode.properties">
-              <property [id]="child.name" [property]="child.property" [filterLanguage]="filterLanguage"></property>
+              <app-property [id]="child.name" [property]="child.property" [filterLanguage]="filterLanguage"></app-property>
             </div>
           </div>
         </ng-template>
@@ -117,7 +130,7 @@ export class TermsComponent implements OnChanges {
   }
 
   get visibleChildren() {
-    return this.children.filter(child => 
+    return this.children.filter(child =>
         !this.filterLanguage || child.language === this.filterLanguage);
   }
 

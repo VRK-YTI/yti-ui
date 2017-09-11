@@ -6,7 +6,7 @@ import { v4 as uuid } from 'uuid';
 import { UserService } from '../../services/user.service';
 
 @Component({
-  selector: 'collection-list',
+  selector: 'app-collection-list',
   styleUrls: ['./collection-list.component.scss'],
   template: `
     <div class="row">
@@ -35,7 +35,9 @@ import { UserService } from '../../services/user.service';
     <div class="row">
       <div class="col-lg-12 search-results">
         <ul [ngClass]="{'has-button': canAddCollection()}">
-          <li *ngFor="let collection of searchResults | async; trackBy: collectionIdentity" (click)="navigate(collection)" [class.selection]="isSelected(collection)">
+          <li *ngFor="let collection of searchResults | async; trackBy: collectionIdentity" 
+              (click)="navigate(collection)" 
+              [class.selection]="isSelected(collection)">
             <span [innerHTML]="collection.label | translateSearchValue: debouncedSearch | highlight: debouncedSearch"></span>
           </li>
         </ul>

@@ -3,11 +3,11 @@ import { ActivatedRoute } from '@angular/router';
 import { EditableService, EditingComponent } from '../../services/editable.service';
 import { ConceptViewModelService } from '../../services/concept.view.service';
 import { Subscription } from 'rxjs';
-import { DeleteConfirmationModalService } from '../common/delete-confirmation.modal';
+import { DeleteConfirmationModalService } from '../common/delete-confirmation-modal.component';
 import { requireDefined } from '../../utils/object';
 
 @Component({
-  selector: 'concept',
+  selector: 'app-concept',
   styleUrls: ['./concept.component.scss'],
   providers: [EditableService],
   template: `
@@ -24,16 +24,16 @@ import { requireDefined } from '../../utils/object';
   
         <div class="row">
           <div class="col-md-12">
-            <editable-buttons [form]="form" [canRemove]="true"></editable-buttons>
+            <app-editable-buttons [form]="form" [canRemove]="true"></app-editable-buttons>
           </div>
         </div>
   
-        <concept-form [form]="formNode" [concept]="concept" [multiColumn]="true" [filterLanguage]="filterLanguage"></concept-form>
+        <app-concept-form [form]="formNode" [concept]="concept" [multiColumn]="true" [filterLanguage]="filterLanguage"></app-concept-form>
       </form>
       
     </div>
     
-    <ajax-loading-indicator *ngIf="!concept"></ajax-loading-indicator>
+    <app-ajax-loading-indicator *ngIf="!concept"></app-ajax-loading-indicator>
   `
 })
 export class ConceptComponent implements EditingComponent, OnDestroy {

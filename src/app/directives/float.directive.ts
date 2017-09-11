@@ -6,7 +6,7 @@ interface Location {
   top: number;
 }
 
-@Directive({ selector: '[float]' })
+@Directive({ selector: '[appFloat]' })
 export class FloatDirective implements AfterViewInit, OnDestroy {
 
   @Input() setWidth = true;

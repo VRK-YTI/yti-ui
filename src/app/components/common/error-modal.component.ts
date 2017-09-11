@@ -9,8 +9,8 @@ export class ErrorModalService {
   }
 
   openSubmitError(err?: any) {
-    const modalRef = this.modalService.open(ErrorModal, { size: 'sm' });
-    const instance = modalRef.componentInstance as ErrorModal;
+    const modalRef = this.modalService.open(ErrorModalComponent, { size: 'sm' });
+    const instance = modalRef.componentInstance as ErrorModalComponent;
     instance.title = 'Submit error';
     instance.body = 'Unexpected error';
     instance.error = err;
@@ -18,8 +18,8 @@ export class ErrorModalService {
 }
 
 @Component({
-  selector: 'error-modal',
-  styleUrls: ['./error.modal.scss'],
+  selector: 'app-error-modal',
+  styleUrls: ['./error-modal.component.scss'],
   template: `
     <div class="modal-header modal-header-danger">
       <h4 class="modal-title">
@@ -45,7 +45,7 @@ export class ErrorModalService {
     </div>
   `
 })
-export class ErrorModal {
+export class ErrorModalComponent {
 
   @Input() title: string;
   @Input() body: string;

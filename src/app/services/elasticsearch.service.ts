@@ -184,7 +184,12 @@ export class ElasticSearchService {
     }).map(result => result.hits.hits.map(hit => new IndexedConcept(hit)));
   }
 
-  findSingleConceptForVocabulary(graphId: string, conceptId: string, filter: string, sortByModified: boolean, onlyStatus: string|null): Observable<IndexedConcept|null> {
+  findSingleConceptForVocabulary(graphId: string,
+                                 conceptId: string,
+                                 filter: string,
+                                 sortByModified: boolean,
+                                 onlyStatus: string|null): Observable<IndexedConcept|null> {
+
     return this.getConceptsForVocabularies(graphId, 'include', conceptId, filter, sortByModified, onlyStatus, 0, 1)
       .map(concepts => {
         if (concepts.length === 0) {
@@ -195,11 +200,23 @@ export class ElasticSearchService {
       });
   }
 
-  getAllConceptsForVocabulary(graphId: string, filter: string, sortByModified: boolean, onlyStatus: string|null, from: number, size: number): Observable<IndexedConcept[]> {
+  getAllConceptsForVocabulary(graphId: string,
+                              filter: string,
+                              sortByModified: boolean,
+                              onlyStatus: string|null,
+                              from: number,
+                              size: number): Observable<IndexedConcept[]> {
+
     return this.getConceptsForVocabularies(graphId, 'include', null, filter, sortByModified, onlyStatus, from, size);
   }
 
-  getAllConceptsNotInVocabulary(notInGraphId: string, filter: string, sortByModified: boolean, onlyStatus: string|null, from: number, size: number): Observable<IndexedConcept[]> {
+  getAllConceptsNotInVocabulary(notInGraphId: string,
+                                filter: string,
+                                sortByModified: boolean,
+                                onlyStatus: string|null,
+                                from: number,
+                                size: number): Observable<IndexedConcept[]> {
+
     return this.getConceptsForVocabularies(notInGraphId, 'exclude', null, filter, sortByModified, onlyStatus, from, size);
   }
 
@@ -215,7 +232,7 @@ export class ElasticSearchService {
     const mustConditions: any[] = [];
     const mustNotConditions: any[] = [];
 
-    let vocabularyMatch = {
+    const vocabularyMatch = {
       match: {
         'vocabulary.id': graphId
       }

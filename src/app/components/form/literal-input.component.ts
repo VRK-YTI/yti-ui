@@ -4,7 +4,7 @@ import { FormPropertyLiteral } from '../../services/form-state';
 
 @Component({
   styleUrls: ['./literal-input.component.scss'],
-  selector: 'literal-input',
+  selector: 'app-literal-input',
   template: `
     
     <span *ngIf="!editing && property.valueIsLocalizationKey">{{property.value | translate}}</span>
@@ -23,19 +23,19 @@ import { FormPropertyLiteral } from '../../services/form-state';
                  autocomplete="off"
                  [formControl]="property.control" />
           
-          <markdown-input *ngSwitchCase="'markdown'" 
+          <app-markdown-input *ngSwitchCase="'markdown'" 
                           [id]="id"
-                          [formControl]="property.control"></markdown-input>
+                          [formControl]="property.control"></app-markdown-input>
           
-          <status-input *ngSwitchCase="'status'"
+          <app-status-input *ngSwitchCase="'status'"
                         [id]="id"
-                        [formControl]="property.control"></status-input>
+                        [formControl]="property.control"></app-status-input>
 
-          <language-input *ngSwitchCase="'language'"
+          <app-language-input *ngSwitchCase="'language'"
                           [id]="id"
-                          [formControl]="property.control"></language-input>          
+                          [formControl]="property.control"></app-language-input>          
           
-          <error-messages [control]="property.control"></error-messages>
+          <app-error-messages [control]="property.control"></app-error-messages>
           
         </ng-container>
         

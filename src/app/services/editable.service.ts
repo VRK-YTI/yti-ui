@@ -1,6 +1,6 @@
 import { BehaviorSubject } from 'rxjs';
 import { Injectable, OnDestroy } from '@angular/core';
-import { ErrorModalService } from '../components/common/error.modal';
+import { ErrorModalService } from '../components/common/error-modal.component';
 import { UserService } from './user.service';
 import { Subscription } from 'rxjs/Subscription';
 import { isModalClose } from '../utils/modal';

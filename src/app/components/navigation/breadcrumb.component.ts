@@ -3,7 +3,7 @@ import { LocationService, Location } from '../../services/location.service';
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'breadcrumb',
+  selector: 'app-breadcrumb',
   styleUrls: ['./breadcrumb.component.scss'],
   template: `
     <ol class="breadcrumb">

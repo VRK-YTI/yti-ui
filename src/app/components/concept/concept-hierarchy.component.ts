@@ -6,7 +6,7 @@ import { UserService } from '../../services/user.service';
 import { IndexedConcept } from '../../services/elasticsearch.service';
 
 @Component({
-  selector: 'concept-hierarchy',
+  selector: 'app-concept-hierarchy',
   styleUrls: ['./concept-hierarchy.component.scss'],
   template: `
     <div class="row">
@@ -25,7 +25,7 @@ import { IndexedConcept } from '../../services/elasticsearch.service';
             [scrollWindow]="false"
             (scrolled)="onScrollDown()">
           <li *ngFor="let concept of model.topConcepts; trackBy: conceptIdentity">
-            <concept-hierarchy-node [concept]="concept"></concept-hierarchy-node>
+            <app-concept-hierarchy-node [concept]="concept"></app-concept-hierarchy-node>
           </li>
         </ul>
       </div>

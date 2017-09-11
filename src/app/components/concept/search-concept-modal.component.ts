@@ -25,8 +25,8 @@ export class SearchConceptModalService {
   }
 
   openForGraph(graphId: string, initialSearch: string, restricts: Restrict[]): Promise<ConceptNode> {
-    const modalRef = this.modalService.open(SearchConceptModal, { size: 'lg' });
-    const instance = modalRef.componentInstance as SearchConceptModal;
+    const modalRef = this.modalService.open(SearchConceptModalComponent, { size: 'lg' });
+    const instance = modalRef.componentInstance as SearchConceptModalComponent;
     instance.graphId = graphId;
     instance.mode = 'include';
     instance.initialSearch = initialSearch;
@@ -35,8 +35,8 @@ export class SearchConceptModalService {
   }
 
   openOtherThanGraph(graphId: string, initialSearch = '', restricts: Restrict[]): Promise<ConceptNode> {
-    const modalRef = this.modalService.open(SearchConceptModal, { size: 'lg' });
-    const instance = modalRef.componentInstance as SearchConceptModal;
+    const modalRef = this.modalService.open(SearchConceptModalComponent, { size: 'lg' });
+    const instance = modalRef.componentInstance as SearchConceptModalComponent;
     instance.graphId = graphId;
     instance.mode = 'exclude';
     instance.initialSearch = initialSearch;
@@ -46,8 +46,8 @@ export class SearchConceptModalService {
 }
 
 @Component({
-  selector: 'search-concept-modal',
-  styleUrls: ['./search-concept.modal.scss'],
+  selector: 'app-search-concept-modal',
+  styleUrls: ['./search-concept-modal.component.scss'],
   providers: [EditableService],
   template: `
     <div class="modal-header">
@@ -80,7 +80,8 @@ export class SearchConceptModalService {
               <label for="vocabularyFilter" translate>Vocabulary</label>
               <select id="vocabularyFilter" class="form-control" [(ngModel)]="onlyVocabulary">
                 <option [ngValue]="null" translate>All vocabularies</option>
-                <option *ngFor="let vocabulary of vocabularies | async" [ngValue]="vocabulary">{{vocabulary.label | translateValue}}</option>
+                <option *ngFor="let vocabulary of vocabularies | async" 
+                        [ngValue]="vocabulary">{{vocabulary.label | translateValue}}</option>
               </select>
             </div>
           </div>
@@ -93,7 +94,8 @@ export class SearchConceptModalService {
              (scrolled)="loadConcepts()">
           <div class="search-results">
             <div class="search-result" [class.selected]="concept === selectedItem"
-                 *ngFor="let concept of searchResults$ | async; trackBy: conceptIdentity" (click)="select(concept)">
+                 *ngFor="let concept of searchResults$ | async; trackBy: conceptIdentity" 
+                 (click)="select(concept)">
               <h6 [innerHTML]="concept.label | translateValue"></h6>
               <p [innerHTML]="concept.definition | translateValue | stripMarkdown"></p>
 
@@ -105,9 +107,11 @@ export class SearchConceptModalService {
         </div>
         <div class="col-md-4">
           <form>
-            <concept-form *ngIf="selection && !loadingSelection" [concept]="selection" [form]="formNode"></concept-form>
+            <app-concept-form *ngIf="selection && !loadingSelection" 
+                          [concept]="selection" 
+                          [form]="formNode"></app-concept-form>
           </form>
-          <ajax-loading-indicator *ngIf="loadingSelection"></ajax-loading-indicator>
+          <app-ajax-loading-indicator *ngIf="loadingSelection"></app-ajax-loading-indicator>
         </div>
       </div>
     </div>
@@ -116,12 +120,15 @@ export class SearchConceptModalService {
         <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
         <span>{{restrictionReasonForSelection | translate}}</span>
       </div>
-      <button type="button" class="btn btn-secondary cancel" (click)="cancel()" translate>Cancel</button>
-      <button type="button" class="btn btn-default confirm" (click)="confirm()" [disabled]="cannotSelect()" translate>Select concept</button>
+      <button type="button" class="btn btn-secondary cancel" 
+              (click)="cancel()" translate>Cancel</button>
+      <button type="button" class="btn btn-default confirm" 
+              (click)="confirm()" 
+              [disabled]="cannotSelect()" translate>Select concept</button>
     </div>
   `
 })
-export class SearchConceptModal implements OnInit, AfterViewInit {
+export class SearchConceptModalComponent implements OnInit, AfterViewInit {
 
   @ViewChild('searchInput') searchInput: ElementRef;
 
@@ -229,11 +236,11 @@ export class SearchConceptModal implements OnInit, AfterViewInit {
     return item.id + item.modified.toISOString();
   }
 
-  select(concept: IndexedConcept) {
+  select(indexedConcept: IndexedConcept) {
 
-    this.selectedItem = concept;
+    this.selectedItem = indexedConcept;
 
-    this.termedService.getConcept(concept.vocabulary.id, concept.id).subscribe(concept => {
+    this.termedService.getConcept(indexedConcept.vocabulary.id, indexedConcept.id).subscribe(concept => {
       this.selection = concept;
       this.formNode = this.selection ? new FormNode(this.selection, () => defaultLanguages) : null;
     })

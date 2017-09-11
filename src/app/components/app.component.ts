@@ -6,10 +6,10 @@ import { LocationService } from '../services/location.service';
   styleUrls: ['./app.component.scss'],
   template: `
     <ng-template ngbModalContainer></ng-template>
-    <navigation-bar></navigation-bar>
-    <breadcrumb [hidden]="!showBreadcrumb"></breadcrumb>
+    <app-navigation-bar></app-navigation-bar>
+    <app-breadcrumb [hidden]="!showBreadcrumb"></app-breadcrumb>
     <router-outlet></router-outlet>
-    <footer *ngIf="showFooter"></footer>
+    <app-footer *ngIf="showFooter"></app-footer>
   `
 })
 export class AppComponent {

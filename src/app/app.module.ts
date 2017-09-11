@@ -35,11 +35,11 @@ import { ConceptNetworkComponent } from './components/visualization/concept-netw
 import { VocabularyComponent } from './components/vocabulary/vocabulary.component';
 import { AccordionChevronComponent } from './components/common/accordion-chevron.component';
 import { LiteralInputComponent } from './components/form/literal-input.component';
-import { MetaModelValidator } from './directives/validators/meta-model.validator';
+import { MetaModelValidatorDirective } from './directives/validators/meta-model.validator';
 import { KeysPipe } from './pipes/keys.pipe';
 import { ErrorMessagesComponent } from './components/form/error-messages.component';
 import { EditableButtonsComponent } from './components/form/editable-buttons.component';
-import { ElasticSearchService } from "./services/elasticsearch.service";
+import { ElasticSearchService } from './services/elasticsearch.service';
 import { MarkdownComponent } from './components/markdown/markdown.component';
 import { MarkdownElementComponent } from './components/markdown/markdown.component';
 import { ConceptListComponent } from './components/concept/concept-list.component';
@@ -50,16 +50,16 @@ import { FooterComponent } from './components/navigation/footer.component';
 import { MetaInformationComponent } from './components/common/meta-information.component';
 import { FloatDirective } from './directives/float.directive';
 import { ConceptReferenceInputComponent } from './components/concept/concept-reference-input.component';
-import { SearchConceptModal, SearchConceptModalService } from './components/concept/search-concept.modal';
+import { SearchConceptModalComponent, SearchConceptModalService } from './components/concept/search-concept-modal.component';
 import { StripMarkdownPipe } from './pipes/strip-markdown.pipe';
 import { ConceptFormComponent } from './components/concept/concept-form.component';
 import { DividerComponent } from './components/concept/divider.component';
 import { SessionService } from './services/session.service';
-import { DeleteConfirmationModal, DeleteConfirmationModalService } from './components/common/delete-confirmation.modal';
+import { DeleteConfirmationModalComponent, DeleteConfirmationModalService } from './components/common/delete-confirmation-modal.component';
 import { CollectionComponent } from './components/concept/collection.component';
 import { CollectionListComponent } from './components/concept/collection-list.component';
-import { ErrorModal, ErrorModalService } from './components/common/error.modal';
-import { ConfirmationModal, ConfirmationModalService } from './components/common/confirmation.modal';
+import { ErrorModalComponent, ErrorModalService } from './components/common/error-modal.component';
+import { ConfirmationModalComponent, ConfirmationModalService } from './components/common/confirmation-modal.component';
 import { ConfirmCancelEditGuard } from './components/common/edit.guard';
 import { UserService } from './services/user.service';
 import { NewVocabularyComponent } from './components/concept/new-vocabulary.component';
@@ -68,23 +68,23 @@ import { GroupInputComponent } from './components/vocabulary/group-input.compone
 import { OrganizationInputComponent } from './components/vocabulary/organization-input.component';
 import { AjaxLoadingIndicatorSmallComponent } from './components/common/ajax-loading-indicator-small.component';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
-import { ConceptLinkReferenceInputComponent, ConceptLinkReferencePopover } from './components/concept/concept-link-reference-input.component';
+import { ConceptLinkReferenceInputComponent, ConceptLinkReferencePopoverComponent } from './components/concept/concept-link-reference-input.component';
 import { MarkdownInputComponent } from './components/form/markdown-input.component';
 import {
   MarkdownInputLinkPopoverComponent,
   MarkdownInputUnlinkPopoverComponent
 } from './components/form/markdown-input-popover.component';
 import {
-  SelectConceptReferenceModal,
+  SelectConceptReferenceModalComponent,
   SelectConceptReferenceModalService
-} from './components/concept/select-concept-reference.modal';
+} from './components/concept/select-concept-reference-modal.component';
 import { FrontpageComponent } from './components/frontpage.component';
 import { LiteralListInputComponent } from './components/form/literal-list-input.component';
-import { RequiredListValidator } from './directives/validators/required-list.validator';
+import { RequiredListValidatorDirective } from './directives/validators/required-list.validator';
 import { TermsComponent } from './components/form/terms.component';
-import { LoginModal, LoginModalService } from './components/navigation/login.modal';
+import { LoginModalComponent, LoginModalService } from './components/navigation/login-modal.component';
 import { LanguageInputComponent } from './components/form/language-input.component';
-import { LanguageValidator } from './directives/validators/language.validator';
+import { LanguageValidatorDirective } from './directives/validators/language.validator';
 import { FilterLanguageComponent } from './components/form/filter-language.component';
 
 const localizations: { [lang: string]: string} = {
@@ -140,7 +140,7 @@ const appRoutes: Routes = [
     ReferenceComponent,
     ConceptReferenceInputComponent,
     ConceptLinkReferenceInputComponent,
-    ConceptLinkReferencePopover,
+    ConceptLinkReferencePopoverComponent,
     TermsComponent,
     AjaxLoadingIndicatorComponent,
     AjaxLoadingIndicatorSmallComponent,
@@ -166,15 +166,15 @@ const appRoutes: Routes = [
     MarkdownInputComponent,
     MarkdownInputLinkPopoverComponent,
     MarkdownInputUnlinkPopoverComponent,
-    SearchConceptModal,
-    DeleteConfirmationModal,
-    ErrorModal,
-    ConfirmationModal,
-    SelectConceptReferenceModal,
-    LoginModal,
-    MetaModelValidator,
-    RequiredListValidator,
-    LanguageValidator,
+    SearchConceptModalComponent,
+    DeleteConfirmationModalComponent,
+    ErrorModalComponent,
+    ConfirmationModalComponent,
+    SelectConceptReferenceModalComponent,
+    LoginModalComponent,
+    MetaModelValidatorDirective,
+    RequiredListValidatorDirective,
+    LanguageValidatorDirective,
     FloatDirective,
     TranslateValuePipe,
     TranslateSearchValuePipe,
@@ -185,12 +185,12 @@ const appRoutes: Routes = [
     FilterLanguageComponent
   ],
   entryComponents: [
-    SearchConceptModal,
-    DeleteConfirmationModal,
-    ErrorModal,
-    ConfirmationModal,
-    SelectConceptReferenceModal,
-    LoginModal
+    SearchConceptModalComponent,
+    DeleteConfirmationModalComponent,
+    ErrorModalComponent,
+    ConfirmationModalComponent,
+    SelectConceptReferenceModalComponent,
+    LoginModalComponent
   ],
   imports: [
     BrowserModule,

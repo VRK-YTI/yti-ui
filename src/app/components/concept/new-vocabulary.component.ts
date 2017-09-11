@@ -13,13 +13,13 @@ import { defaultLanguages } from '../../utils/language';
 import { FormControl } from '@angular/forms';
 
 @Component({
-  selector: 'new-vocabulary',
+  selector: 'app-new-vocabulary',
   styleUrls: ['./new-vocabulary.component.scss'],
   providers: [EditableService],
   template: `
     <div class="container-fluid">
 
-      <ajax-loading-indicator *ngIf="!vocabulary"></ajax-loading-indicator>
+      <app-ajax-loading-indicator *ngIf="!vocabulary"></app-ajax-loading-indicator>
 
       <div *ngIf="vocabulary">
 
@@ -42,11 +42,11 @@ import { FormControl } from '@angular/forms';
             </div>
 
             <div class="col-6">
-              <editable-buttons [form]="form" [canRemove]="false"></editable-buttons>
+              <app-editable-buttons [form]="form" [canRemove]="false"></app-editable-buttons>
             </div>
           </div>
           
-          <vocabulary-form [vocabulary]="vocabulary" [form]="formNode"></vocabulary-form>
+          <app-vocabulary-form [vocabulary]="vocabulary" [form]="formNode"></app-vocabulary-form>
         </form>
 
       </div>

@@ -11,13 +11,13 @@ export class LoginModalService {
   }
 
   open(): Promise<any> {
-    return this.modalService.open(LoginModal, { size: 'sm' }).result
+    return this.modalService.open(LoginModalComponent, { size: 'sm' }).result
   }
 }
 
 @Component({
-  selector: 'login-modal',
-  styleUrls: ['./login.modal.scss'],
+  selector: 'app-login-modal',
+  styleUrls: ['./login-modal.component.scss'],
   template: `
     <form>
       <div class="modal-header">
@@ -54,7 +54,7 @@ export class LoginModalService {
     </form>
   `
 })
-export class LoginModal implements AfterViewInit {
+export class LoginModalComponent implements AfterViewInit {
 
   @ViewChild('usernameInput')
   usernameInput: ElementRef;

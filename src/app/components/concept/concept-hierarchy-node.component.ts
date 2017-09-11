@@ -4,7 +4,7 @@ import { ConceptHierarchyModel, ConceptViewModelService } from '../../services/c
 import { IndexedConcept } from '../../services/elasticsearch.service';
 
 @Component({
-  selector: 'concept-hierarchy-node',
+  selector: 'app-concept-hierarchy-node',
   styleUrls: ['./concept-hierarchy-node.component.scss'],
   template: `
     
@@ -17,7 +17,7 @@ import { IndexedConcept } from '../../services/elasticsearch.service';
     
     <ul *ngIf="expanded && children">
       <li *ngFor="let child of children | async">
-        <concept-hierarchy-node [concept]="child"></concept-hierarchy-node>
+        <app-concept-hierarchy-node [concept]="child"></app-concept-hierarchy-node>
       </li>
     </ul>
   `

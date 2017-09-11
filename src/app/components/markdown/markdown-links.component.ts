@@ -9,10 +9,10 @@ const supportedNodeTypes = ['document', 'paragraph', 'link', 'text'];
 const parser = new Parser();
 
 @Component({
-  selector: '[markdown-links]',
+  selector: '[app-markdown-links]',
   template: `
     <div #self>
-      <div markdown-links-element [node]="node" [relatedConcepts]="relatedConcepts"></div>
+      <div app-markdown-links-element [node]="node" [relatedConcepts]="relatedConcepts"></div>
     </div>
   `
 })
@@ -35,18 +35,27 @@ export class MarkdownLinksComponent implements OnInit, AfterViewChecked {
 }
 
 @Component({
-  selector: '[markdown-links-element]',
+  selector: '[app-markdown-links-element]',
   styleUrls: ['./markdown-links.component.scss'],
   template: `
     <ng-container>
       <ng-container *ngFor="let child of children" [ngSwitch]="child.type">
               
-        <p *ngSwitchCase="'paragraph'" markdown-links-element [node]="child" [relatedConcepts]="relatedConcepts"></p>
-        <a *ngSwitchCase="'link'" [routerLink]="link(child)" [popoverTitle]="conceptLabel(child) | translateValue" [ngbPopover]="popContent" triggers="mouseenter:mouseleave">{{child.firstChild.literal}}</a>
+        <p *ngSwitchCase="'paragraph'" 
+           app-markdown-links-element 
+           [node]="child" 
+           [relatedConcepts]="relatedConcepts"></p>
+        
+        <a *ngSwitchCase="'link'" 
+           [routerLink]="link(child)" 
+           [popoverTitle]="conceptLabel(child) | translateValue" 
+           [ngbPopover]="popContent" 
+           triggers="mouseenter:mouseleave">{{child.firstChild.literal}}</a>
+        
         <span *ngSwitchCase="'text'">{{child.literal}}</span>
         
         <ng-template #popContent>
-          <div markdown [value]="conceptDefinition(child) | translateValue"></div>
+          <div app-markdown [value]="conceptDefinition(child) | translateValue"></div>
         </ng-template>
       
       </ng-container>

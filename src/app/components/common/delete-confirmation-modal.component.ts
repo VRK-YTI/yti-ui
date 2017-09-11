@@ -13,21 +13,21 @@ export class DeleteConfirmationModalService {
   }
 
   open(node: Node<any>): Promise<any> {
-    const modalRef = this.modalService.open(DeleteConfirmationModal, { size: 'sm' });
-    const instance = modalRef.componentInstance as DeleteConfirmationModal;
+    const modalRef = this.modalService.open(DeleteConfirmationModalComponent, { size: 'sm' });
+    const instance = modalRef.componentInstance as DeleteConfirmationModalComponent;
     instance.node = node;
     return modalRef.result;
   }
 }
 
-type Reference = {
-  meta: ReferenceMeta
+interface Reference {
+  meta: ReferenceMeta;
   nodes: Node<any>[];
 }
 
 @Component({
-  selector: 'delete-confirmation-modal',
-  styleUrls: ['./delete-confirmation.modal.scss'],
+  selector: 'app-delete-confirmation-modal',
+  styleUrls: ['./delete-confirmation-modal.component.scss'],
   template: `
     <div class="modal-header modal-header-warning">
       <h4 class="modal-title">
@@ -64,7 +64,7 @@ type Reference = {
     </div>
   `
 })
-export class DeleteConfirmationModal implements OnInit {
+export class DeleteConfirmationModalComponent implements OnInit {
 
   @Input() node: Node<any>;
 

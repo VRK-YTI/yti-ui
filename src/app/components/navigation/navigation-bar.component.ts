@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { LanguageService, Language } from '../../services/language.service';
 import { UserService } from '../../services/user.service';
-import { LoginModalService } from './login.modal';
+import { LoginModalService } from './login-modal.component';
 
 @Component({
-  selector: 'navigation-bar',
+  selector: 'app-navigation-bar',
   styleUrls: ['./navigation-bar.component.scss'],
   template: `
     <nav class="navbar navbar-toggleable-md navbar-inverse bg-primary">

@@ -6,7 +6,7 @@ import { replaceMatching } from '../../utils/array';
 import { FormReferenceLiteral } from '../../services/form-state';
 
 @Component({
-  selector: 'organization-input',
+  selector: 'app-organization-input',
   template: `
 
     <span *ngIf="!editing">{{reference.singleValue.label | translateValue}}</span>
@@ -18,7 +18,7 @@ import { FormReferenceLiteral } from '../../services/form-state';
           <option *ngFor="let organization of organizations" [ngValue]="organization">{{organization.label | translateValue}}</option>
         </select>
 
-        <error-messages [control]="reference.control"></error-messages>
+        <app-error-messages [control]="reference.control"></app-error-messages>
       </div>
     </div>
   `

@@ -10,16 +10,16 @@ export class SelectConceptReferenceModalService {
   }
 
   open(formNode: FormNode): Promise<FormReferenceLiteral<ConceptNode>> {
-    const modalRef = this.modalService.open(SelectConceptReferenceModal, { size: 'sm' });
-    const instance = modalRef.componentInstance as SelectConceptReferenceModal;
+    const modalRef = this.modalService.open(SelectConceptReferenceModalComponent, { size: 'sm' });
+    const instance = modalRef.componentInstance as SelectConceptReferenceModalComponent;
     instance.formNode = formNode;
     return modalRef.result;
   }
 }
 
 @Component({
-  selector: 'select-concept-reference-modal',
-  styleUrls: ['./select-concept-reference.modal.scss'],
+  selector: 'app-select-concept-reference-modal',
+  styleUrls: ['./select-concept-reference-modal.component.scss'],
   template: `
     <div class="modal-header">
       <h4 class="modal-title">
@@ -49,7 +49,7 @@ export class SelectConceptReferenceModalService {
     </div>
   `
 })
-export class SelectConceptReferenceModal implements OnInit {
+export class SelectConceptReferenceModalComponent implements OnInit {
 
   @Input() formNode: FormNode;
 

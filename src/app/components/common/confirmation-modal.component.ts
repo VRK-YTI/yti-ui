@@ -8,8 +8,8 @@ export class ConfirmationModalService {
   }
 
   private open(title: string, body: string): Promise<any> {
-    const modalRef = this.modalService.open(ConfirmationModal, { size: 'sm' });
-    const instance = modalRef.componentInstance as ConfirmationModal;
+    const modalRef = this.modalService.open(ConfirmationModalComponent, { size: 'sm' });
+    const instance = modalRef.componentInstance as ConfirmationModalComponent;
     instance.title = title;
     instance.body = body;
     return modalRef.result;
@@ -21,8 +21,8 @@ export class ConfirmationModalService {
 }
 
 @Component({
-  selector: 'confirmation-modal',
-  styleUrls: ['./confirmation.modal.scss'],
+  selector: 'app-confirmation-modal',
+  styleUrls: ['./confirmation-modal.component.scss'],
   template: `
     <div class="modal-header modal-header-warning">
       <h4 class="modal-title">
@@ -43,7 +43,7 @@ export class ConfirmationModalService {
     </div>
   `
 })
-export class ConfirmationModal {
+export class ConfirmationModalComponent {
 
   @Input() title: string;
   @Input() body: string;

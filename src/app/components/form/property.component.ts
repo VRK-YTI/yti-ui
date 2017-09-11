@@ -8,20 +8,20 @@ type FormProperty = FormPropertyLiteral
                   | FormPropertyLocalizable;
 
 @Component({
-  selector: 'property',
+  selector: 'app-property',
   styleUrls: ['./property.component.scss'],
   template: `
     <dl *ngIf="show">
       <dt><label [for]="id">{{property.label | translateValue}}</label></dt>
       <dd [ngSwitch]="property.type">
-        <localized-input *ngSwitchCase="'localizable'"
+        <app-localized-input *ngSwitchCase="'localizable'"
                          [id]="id"
                          [property]="property"
                          [conceptSelector]="conceptSelector"
                          [relatedConcepts]="relatedConcepts"
-                         [filterLanguage]="filterLanguage"></localized-input>
-        <literal-input *ngSwitchCase="'literal'" [id]="id" [property]="property"></literal-input>
-        <literal-list-input *ngSwitchCase="'literal-list'" [id]="id" [property]="property"></literal-list-input>
+                         [filterLanguage]="filterLanguage"></app-localized-input>
+        <app-literal-input *ngSwitchCase="'literal'" [id]="id" [property]="property"></app-literal-input>
+        <app-literal-list-input *ngSwitchCase="'literal-list'" [id]="id" [property]="property"></app-literal-list-input>
         
         <span *ngSwitchDefault>ERROR - unknown property type</span>
       </dd>

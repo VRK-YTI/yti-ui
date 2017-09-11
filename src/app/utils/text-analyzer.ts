@@ -12,9 +12,7 @@ export interface TextAnalysis<T> {
   search: string|null;
 }
 
-export interface ContentExtractor<T> {
-  (item: T): Localizable|string;
-}
+export type ContentExtractor<T> = (item: T) => Localizable|string;
 
 export function filterAndSortSearchResults<S>(items: S[],
                                               searchText: string,
@@ -30,9 +28,7 @@ export function filterAndSortSearchResults<S>(items: S[],
   return filteredAnalyzedItems.map(ai => ai.item);
 }
 
-export interface SearchFilter<T> {
-  (analyzedItem: TextAnalysis<T>): boolean;
-}
+export type SearchFilter<T> = (analyzedItem: TextAnalysis<T>) => boolean;
 
 export function applyFilters<T>(searchResults: TextAnalysis<T>[], filters: SearchFilter<T>[]) {
   return searchResults.filter(results => allMatching(filters, filter => filter(results)));
@@ -91,7 +87,7 @@ function valueContains(value: Localizable|string, searchString: string) {
 
 function anyLocalization(predicate: (localized: string) => boolean, localizable: Localizable) {
   if (localizable) {
-    for (let localized of Object.values(localizable)) {
+    for (const localized of Object.values(localizable)) {
       if (predicate(localized)) {
         return true;
       }

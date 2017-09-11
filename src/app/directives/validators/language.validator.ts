@@ -5,12 +5,12 @@ import { contains } from '../../utils/array';
 const languages: string[] = require('../../../assets/ietf-language-tags.json');
 
 @Directive({
-  selector: '[validateLanguage][ngModel]',
+  selector: '[appValidateLanguage][ngModel]',
   providers: [
-    { provide: NG_VALIDATORS, useExisting: forwardRef(() => LanguageValidator), multi: true }
+    { provide: NG_VALIDATORS, useExisting: forwardRef(() => LanguageValidatorDirective), multi: true }
   ]
 })
-export class LanguageValidator {
+export class LanguageValidatorDirective {
 
   validate(control: FormControl) {
     return validateLanguage(control);

@@ -7,7 +7,7 @@ export type FormReference = FormReferenceLiteral<any>
                           | FormReferenceTerm;
 
 @Component({
-  selector: 'reference',
+  selector: 'app-reference',
   styleUrls: ['./reference.component.scss'],
   template: `
     <dl *ngIf="show">
@@ -15,23 +15,23 @@ export type FormReference = FormReferenceLiteral<any>
       <dd>
         <ng-container [ngSwitch]="reference.referenceType">
 
-          <terms *ngSwitchCase="'Term'"
+          <app-terms *ngSwitchCase="'Term'"
                  [reference]="reference"
                  [multiColumn]="multiColumnTerms"
                  [unsaved]="unsaved"
-                 [filterLanguage]="filterLanguage"></terms>
+                 [filterLanguage]="filterLanguage"></app-terms>
 
-          <concept-reference-input *ngSwitchCase="'Concept'" 
+          <app-concept-reference-input *ngSwitchCase="'Concept'" 
                                    [reference]="reference" 
                                    [self]="concept"
-                                   (conceptRemove)="conceptRemove.next($event)"></concept-reference-input>
+                                   (conceptRemove)="conceptRemove.next($event)"></app-concept-reference-input>
 
-          <concept-link-reference-input *ngSwitchCase="'ConceptLink'"
-                                        [reference]="reference"></concept-link-reference-input>
+          <app-concept-link-reference-input *ngSwitchCase="'ConceptLink'"
+                                        [reference]="reference"></app-concept-link-reference-input>
 
-          <group-input *ngSwitchCase="'Group'" [reference]="reference"></group-input>
+          <app-group-input *ngSwitchCase="'Group'" [reference]="reference"></app-group-input>
 
-          <organization-input *ngSwitchCase="'Organization'" [reference]="reference"></organization-input>
+          <app-organization-input *ngSwitchCase="'Organization'" [reference]="reference"></app-organization-input>
 
           <div *ngSwitchDefault>
             <span *ngFor="let referenceNode of reference.value; let last = last">

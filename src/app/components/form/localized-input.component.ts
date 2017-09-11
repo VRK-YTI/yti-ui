@@ -6,15 +6,21 @@ import { FormPropertyLocalizable } from '../../services/form-state';
 import { remove } from '../../utils/array';
 
 @Component({
-  selector: 'localized-input',
+  selector: 'app-localized-input',
   styleUrls: ['./localized-input.component.scss'],
   template: `
 
     <div *ngIf="canAdd()" class="clearfix">
       <div ngbDropdown class="add-button">
-        <button class="btn btn-default" ngbDropdownToggle ngbTooltip="{{'Add' | translate}} {{property.label | translateValue | lowercase}}"><i class="fa fa-plus"></i></button>
+        <button class="btn btn-default" 
+                ngbDropdownToggle 
+                ngbTooltip="{{'Add' | translate}} {{property.label | translateValue | lowercase}}">
+          <i class="fa fa-plus"></i>
+        </button>
         <div class="dropdown-menu">
-          <button class="dropdown-item" *ngFor="let language of addableLanguages" (click)="addNewLocalization(language)">{{language | uppercase}}</button>
+          <button class="dropdown-item" 
+                  *ngFor="let language of addableLanguages" 
+                  (click)="addNewLocalization(language)">{{language | uppercase}}</button>
         </div>
       </div>
     </div>
@@ -25,7 +31,7 @@ import { remove } from '../../utils/array';
             <span>{{child.lang.toUpperCase()}}</span>
           </div>
           <div class="localization" [class.editing]="editing" [class.removable]="canRemove()">
-            <div *ngIf="!editing" markdown-links [value]="child.control.value" [relatedConcepts]="relatedConcepts"></div>
+            <div *ngIf="!editing" app-markdown-links [value]="child.control.value" [relatedConcepts]="relatedConcepts"></div>
             <div *ngIf="editing" class="form-group" [ngClass]="{'has-danger': !child.control.valid}">
 
               <ng-container [ngSwitch]="property.editorType">
@@ -37,16 +43,16 @@ import { remove } from '../../utils/array';
                       autocomplete="off"
                       [formControl]="child.control" />
 
-                <markdown-input *ngSwitchCase="'markdown'"
+                <app-markdown-input *ngSwitchCase="'markdown'"
                                 [id]="id"
                                 [formControlClass]="false"
                                 [conceptSelector]="conceptSelector"
                                 [relatedConcepts]="relatedConcepts"
-                                [formControl]="child.control"></markdown-input>
+                                [formControl]="child.control"></app-markdown-input>
 
               </ng-container>
 
-              <error-messages [control]="child.control"></error-messages>
+              <app-error-messages [control]="child.control"></app-error-messages>
             </div>
           </div>
 
@@ -60,7 +66,7 @@ import { remove } from '../../utils/array';
     </div>
 
     <div *ngIf="property.value.length === 0" translate>No values yet</div>
-    <error-messages [control]="property.control"></error-messages>
+    <app-error-messages [control]="property.control"></app-error-messages>
   `
 })
 export class LocalizedInputComponent {
@@ -115,7 +121,7 @@ export class LocalizedInputComponent {
   }
 
   get visibleLocalizations() {
-    return this.property.children.filter(child => 
+    return this.property.children.filter(child =>
         !this.filterLanguage || child.lang === this.filterLanguage);
   }
 }

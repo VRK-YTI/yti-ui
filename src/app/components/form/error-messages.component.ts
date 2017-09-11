@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 @Component({
-  selector: 'error-messages',
+  selector: 'app-error-messages',
   styleUrls: ['./error-messages.component.scss'],
   template: `
     <div *ngIf="isVisible()">

@@ -81,11 +81,11 @@ export class MetaModelService {
 
     // necessary optimization since forkJoin doesn't ever complete with empty observables array
     if (externalGraphs.size === 0) {
-      return Observable.of(new MetaModel(index([graphMeta], graphMeta => graphMeta.graphId)));
+      return Observable.of(new MetaModel(index([graphMeta], gm => gm.graphId)));
     }
 
     return Observable.forkJoin(Array.from(externalGraphs).map(graph => this.getGraphMeta(graph)))
-      .map(graphMetas => new MetaModel(index([graphMeta, ...graphMetas], graphMeta => graphMeta.graphId)));
+      .map(graphMetas => new MetaModel(index([graphMeta, ...graphMetas], gm => gm.graphId)));
   }
 
   getReferrersByMeta<N extends KnownNode | Node<any>>(referrer: Referrer): Observable<{ meta: ReferenceMeta, nodes: N[] }[]> {
@@ -97,7 +97,7 @@ export class MetaModelService {
       const referenceMeta = node.meta.references.find(ref => ref.id === referrer.referenceId);
       getOrCreate(references, referenceMeta, () => []).push(node);
 
-      return Array.from(references.entries()).map(([meta, nodes]) => ({meta, nodes}));
+      return Array.from(references.entries()).map(([refMeta, nodes]) => ({meta: refMeta, nodes}));
     })));
   }
 

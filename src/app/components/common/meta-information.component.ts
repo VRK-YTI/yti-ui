@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { Node } from '../../entities/node';
 
 @Component({
-  selector: 'meta-information',
+  selector: 'app-meta-information',
   styleUrls: ['./meta-information.component.scss'],
   template: `
     <div class="row" *ngIf="node">

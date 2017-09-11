@@ -7,7 +7,7 @@ import { UserService } from '../../services/user.service';
 import { IndexedConcept } from '../../services/elasticsearch.service';
 
 @Component({
-  selector: 'concept-list',
+  selector: 'app-concept-list',
   styleUrls: ['./concept-list.component.scss'],
   template: `
     <div class="row">
@@ -26,7 +26,7 @@ import { IndexedConcept } from '../../services/elasticsearch.service';
                    type="text"
                    class="form-control"
                    [placeholder]="'Search concept...' | translate"/>
-            <ajax-loading-indicator-small *ngIf="model.loading"></ajax-loading-indicator-small>
+            <app-ajax-loading-indicator-small *ngIf="model.loading"></app-ajax-loading-indicator-small>
           </div>
 
           <div class="button btn-default btn-lg btn-filters"

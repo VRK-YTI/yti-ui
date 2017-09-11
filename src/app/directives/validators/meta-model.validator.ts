@@ -4,17 +4,17 @@ import { FormControl, NG_VALIDATORS } from '@angular/forms';
 import { allMatching } from '../../utils/array';
 
 @Directive({
-  selector: '[validateMeta][ngModel]',
+  selector: '[appValidateMeta][ngModel]',
   providers: [
-    { provide: NG_VALIDATORS, useExisting: forwardRef(() => MetaModelValidator), multi: true }
+    { provide: NG_VALIDATORS, useExisting: forwardRef(() => MetaModelValidatorDirective), multi: true }
   ]
 })
-export class MetaModelValidator {
+export class MetaModelValidatorDirective {
 
-  @Input('validateMeta') meta: PropertyMeta;
+  @Input() validateMeta: PropertyMeta;
 
   validate(control: FormControl) {
-    return validateMeta(control, this.meta);
+    return validateMeta(control, this.validateMeta);
   }
 }
 

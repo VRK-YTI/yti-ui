@@ -5,7 +5,7 @@ import { UserService } from '../../services/user.service';
 
 @Component({
   styleUrls: ['./editable-buttons.component.scss'],
-  selector: 'editable-buttons',
+  selector: 'app-editable-buttons',
   template: `
     <div class="top-actions" *ngIf="isLoggedIn()">
       <button type="button" 
@@ -49,7 +49,7 @@ import { UserService } from '../../services/user.service';
         <i class="fa fa-trash"></i>
       </button>
 
-      <ajax-loading-indicator-small class="pull-right" *ngIf="operationPending"></ajax-loading-indicator-small>
+      <app-ajax-loading-indicator-small class="pull-right" *ngIf="operationPending"></app-ajax-loading-indicator-small>
     </div>
   `
 })

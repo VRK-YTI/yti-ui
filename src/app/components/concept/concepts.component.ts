@@ -8,7 +8,7 @@ import { EditingComponent } from '../../services/editable.service';
 import { VocabularyComponent } from '../vocabulary/vocabulary.component';
 
 @Component({
-  selector: 'concepts',
+  selector: 'app-concepts',
   styleUrls: ['./concepts.component.scss'],
   providers: [ConceptViewModelService],
   template: `
@@ -16,14 +16,14 @@ import { VocabularyComponent } from '../vocabulary/vocabulary.component';
 
       <div class="row" [hidden]="viewModel.loadingVocabulary">
         <div class="col-12">
-          <vocabulary #vocabularyComponent></vocabulary>
+          <app-vocabulary #vocabularyComponent></app-vocabulary>
         </div>
       </div>
 
       <div class="bottom">
       
         <div class="panel-left">
-          <div float>
+          <div appFloat>
             <ngb-tabset>
               <ngb-tab>
                 <ng-template ngbTabTitle>
@@ -31,7 +31,7 @@ import { VocabularyComponent } from '../vocabulary/vocabulary.component';
                   <p>{{'Alphabetic' | translate}}</p>
                 </ng-template>
                 <ng-template ngbTabContent>
-                  <concept-list></concept-list>
+                  <app-concept-list></app-concept-list>
                 </ng-template>
               </ngb-tab>
               <ngb-tab>
@@ -40,7 +40,7 @@ import { VocabularyComponent } from '../vocabulary/vocabulary.component';
                   <p>{{'Hierarchical' | translate}}</p>
                 </ng-template>
                 <ng-template ngbTabContent>
-                  <concept-hierarchy></concept-hierarchy>
+                  <app-concept-hierarchy></app-concept-hierarchy>
                 </ng-template>
               </ngb-tab>
               <ngb-tab>
@@ -49,7 +49,7 @@ import { VocabularyComponent } from '../vocabulary/vocabulary.component';
                   <p>{{'Collection' | translate}}</p>
                 </ng-template>
                 <ng-template ngbTabContent>
-                  <collection-list></collection-list>
+                  <app-collection-list></app-collection-list>
                 </ng-template>
               </ngb-tab>
             </ngb-tabset>
@@ -63,9 +63,9 @@ import { VocabularyComponent } from '../vocabulary/vocabulary.component';
           </div>
 
           <div class="visualization-container" [style.width]="visualizationWidth" [hidden]="!showVisualization">
-            <div float [setWidth]="false">
-              <divider *ngIf="showDivider"></divider>
-              <concept-network #network [class.without-divider]="!showDivider"></concept-network>
+            <div appFloat [setWidth]="false">
+              <app-divider *ngIf="showDivider"></app-divider>
+              <app-concept-network #network [class.without-divider]="!showDivider"></app-concept-network>
             </div>
           </div>
           

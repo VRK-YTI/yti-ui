@@ -1,7 +1,7 @@
-export type NoSelectionAction<T> = { type: 'noselect' };
-export type SelectAction<T> = { item: T, type: 'select' };
-export type EditAction<T> = { item: T, type: 'edit' };
-export type RemoveAction<T> = { item: T, type: 'remove' };
+export interface NoSelectionAction<T> { type: 'noselect' }
+export interface SelectAction<T> { item: T, type: 'select' }
+export interface EditAction<T> { item: T, type: 'edit' }
+export interface RemoveAction<T> { item: T, type: 'remove' }
 
 export type Action<T> = NoSelectionAction<T>
                       | SelectAction<T>

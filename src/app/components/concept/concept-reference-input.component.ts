@@ -1,13 +1,13 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ConceptNode } from '../../entities/node';
 import { EditableService } from '../../services/editable.service';
-import { Restrict, SearchConceptModalService } from './search-concept.modal';
+import { Restrict, SearchConceptModalService } from './search-concept-modal.component';
 import { ignoreModalClose } from '../../utils/modal';
 import { FormReferenceLiteral } from '../../services/form-state';
 import { isDefined } from '../../utils/object';
 
 @Component({
-  selector: 'concept-reference-input',
+  selector: 'app-concept-reference-input',
   styleUrls: ['./concept-reference-input.component.scss'],
   template: `
     <ul *ngIf="!editing">

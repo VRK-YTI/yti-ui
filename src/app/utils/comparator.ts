@@ -3,9 +3,7 @@ import { Localizable } from '../entities/localization';
 import { Localizer } from '../services/language.service';
 import { Moment } from 'moment';
 
-export interface Comparator<T> {
-  (lhs: T, rhs: T): number;
-}
+export type Comparator<T> = (lhs: T, rhs: T) => number;
 
 export interface ChainableComparator<T> extends Comparator<T> {
   andThen(other: Comparator<T>): ChainableComparator<T>;

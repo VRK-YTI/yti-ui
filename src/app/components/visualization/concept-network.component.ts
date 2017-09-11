@@ -120,7 +120,7 @@ const options: VisNetworkOptions = {
   edges: {
     smooth: {
       enabled: true,
-      type: 'cubicBezier', // 'continuous', 'discrete', 'diagonalCross', 'straightCross', 'horizontal', 'vertical', 'curvedCW', 'curvedCCW', 'cubicBezier'
+      type: 'cubicBezier',
       roundness: 0.25
     },
     length: 250,
@@ -177,7 +177,7 @@ interface UpdatableVisEdge extends CustomizedVisEdge {
 }
 
 @Component({
-  selector: 'concept-network',
+  selector: 'app-concept-network',
   styleUrls: ['./concept-network.component.scss'],
   template: `
     <div class="component">
@@ -366,12 +366,17 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
 
   private createEdgeData(from: ConceptNode|CollectionNode, to: ConceptNode, meta: ReferenceMeta, type: EdgeType): UpdatableVisEdge {
 
+    const title = this.languageService.translate(meta.label) + ': ' +
+      this.languageService.translate(from.label) +
+      ' &rarr; ' +
+      this.languageService.translate(to.label);
+
     const createEdge = () => {
       const edge = {
         from: from.id,
         to: to.id,
         id: from.id + to.id,
-        title: this.languageService.translate(meta.label) + ': ' + this.languageService.translate(from.label) + ' &rarr; ' + this.languageService.translate(to.label),
+        title,
         type: type
       };
 
@@ -419,7 +424,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
 
       const edgeInstance = (this.network as any).edgesHandler.body.edges[requireDefined(edge.id)];
 
-      edgeInstance.drawArrows = (ctx: VisCanvasRenderingContext2D, arrowData: ArrowData, options: EdgeOptions) =>
+      edgeInstance.drawArrows = (ctx: VisCanvasRenderingContext2D, arrowData: ArrowData, o: EdgeOptions) =>
         ConceptNetworkComponent.drawEdgeArrows(ctx, edge.type, arrowData);
     }
   }
@@ -632,7 +637,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
       ...concept.narrowerConcepts.values,
       ...concept.hasIsPartOfConcepts() ? concept.isPartOfConcepts.values : [],
       ...concept.partOfThisConcepts.values
-    ], concept => concept.id));
+    ], c => c.id));
   }
 
   private updateEdgeNodesForCollection(collection: CollectionNode) {

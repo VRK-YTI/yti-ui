@@ -5,7 +5,7 @@ import { FormControl } from '@angular/forms';
 
 @Component({
   styleUrls: ['./literal-list-input.component.scss'],
-  selector: 'literal-list-input',
+  selector: 'app-literal-list-input',
   template: `    
     <span *ngIf="!editing">{{property.valueAsString}}</span>
 
@@ -32,17 +32,17 @@ import { FormControl } from '@angular/forms';
                    autocomplete="off" 
                    [formControl]="control" />
               
-            <markdown-input *ngSwitchCase="'markdown'"
+            <app-markdown-input *ngSwitchCase="'markdown'"
                             [id]="id"
-                            [formControl]="control"></markdown-input>
+                            [formControl]="control"></app-markdown-input>
             
-            <language-input *ngSwitchCase="'language'"
+            <app-language-input *ngSwitchCase="'language'"
                             [id]="id"
-                            [formControl]="control"></language-input>
+                            [formControl]="control"></app-language-input>
                             
           </ng-container>
 
-          <error-messages [control]="control"></error-messages>
+          <app-error-messages [control]="control"></app-error-messages>
         </div>
 
         <button *ngIf="canRemove()"
@@ -54,7 +54,7 @@ import { FormControl } from '@angular/forms';
       </div>
 
       <div *ngIf="property.value.length === 0" translate>No values yet</div>
-      <error-messages [control]="property.control"></error-messages>
+      <app-error-messages [control]="property.control"></app-error-messages>
 
     </div>
   `

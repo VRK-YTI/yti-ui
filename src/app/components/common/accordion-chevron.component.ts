@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { NgbAccordion, NgbPanel } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
-  selector: 'accordion-chevron',
+  selector: 'app-accordion-chevron',
   template: `<span class="fa" [class.fa-angle-down]="open" [class.fa-angle-right]="!open"></span>`
 })
 export class AccordionChevronComponent {

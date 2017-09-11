@@ -6,7 +6,7 @@ const minSelectionWidth = 300;
 const minVisualizationWidth = 300;
 
 @Component({
-  selector: 'divider',
+  selector: 'app-divider',
   styleUrls: ['./divider.component.scss'],
   template: `<div class="divider" (mousedown)="moveDivider($event)"></div>`,
 })

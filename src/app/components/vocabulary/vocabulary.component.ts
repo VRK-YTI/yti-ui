@@ -2,10 +2,10 @@ import { Component } from '@angular/core';
 import { EditableService, EditingComponent } from '../../services/editable.service';
 import { ConceptViewModelService } from '../../services/concept.view.service';
 import { requireDefined } from '../../utils/object';
-import { DeleteConfirmationModalService } from '../common/delete-confirmation.modal';
+import { DeleteConfirmationModalService } from '../common/delete-confirmation-modal.component';
 
 @Component({
-  selector: 'vocabulary',
+  selector: 'app-vocabulary',
   styleUrls: ['./vocabulary.component.scss'],
   providers: [EditableService],
   template: `
@@ -15,7 +15,7 @@ import { DeleteConfirmationModalService } from '../common/delete-confirmation.mo
           <div class="main-panel-header">
             <h2>
               <span>{{vocabulary.label | translateValue}}</span>
-              <accordion-chevron></accordion-chevron>
+              <app-accordion-chevron></app-accordion-chevron>
             </h2>            
           </div>
         </ng-template>        
@@ -27,15 +27,15 @@ import { DeleteConfirmationModalService } from '../common/delete-confirmation.mo
           <form #form="ngForm" [formGroup]="formNode.control">
             <div class="row">
               <div class="col-md-12">
-                <editable-buttons [form]="form" [canRemove]="true"></editable-buttons>
+                <app-editable-buttons [form]="form" [canRemove]="true"></app-editable-buttons>
                 <div class="page-header">
                   <h1>{{vocabulary.meta.label | translateValue}}</h1>
                 </div>
               </div>
             </div>
 
-            <vocabulary-form [vocabulary]="vocabulary" [form]="formNode" [filterLanguage]="filterLanguage"></vocabulary-form>
-            <meta-information [node]="vocabulary"></meta-information>
+            <app-vocabulary-form [vocabulary]="vocabulary" [form]="formNode" [filterLanguage]="filterLanguage"></app-vocabulary-form>
+            <app-meta-information [node]="vocabulary"></app-meta-information>
           </form>
         </ng-template>
       </ngb-panel>
@@ -58,11 +58,11 @@ export class VocabularyComponent implements EditingComponent {
   get formNode() {
     return this.conceptViewModel.vocabularyForm;
   }
-  
+
   get vocabulary() {
     return this.conceptViewModel.vocabulary;
   }
-  
+
   isEditing(): boolean {
     return this.editableService.editing;
   }

@@ -5,7 +5,7 @@ import {
 import { ConceptNode } from '../../entities/node';
 
 @Component({
-  selector: 'markdown-input-link-popover',
+  selector: 'app-markdown-input-link-popover',
   styleUrls: ['./markdown-input-popover.component.scss'],
   template: `
     <div #popover role="tooltip" class="popover popover-top">
@@ -45,7 +45,7 @@ export class MarkdownInputLinkPopoverComponent implements AfterViewInit, OnDestr
 }
 
 @Component({
-  selector: 'markdown-input-unlink-popover',
+  selector: 'app-markdown-input-unlink-popover',
   styleUrls: ['./markdown-input-popover.component.scss'],
   template: `
     <div #popover role="tooltip" class="popover popover-top">
@@ -59,7 +59,7 @@ export class MarkdownInputLinkPopoverComponent implements AfterViewInit, OnDestr
         </span>
       </h3>
 
-      <div class="popover-content" *ngIf="concept" markdown [value]="concept.definition | translateValue"></div>
+      <div class="popover-content" *ngIf="concept" app-markdown [value]="concept.definition | translateValue"></div>
     </div>
   `
 })

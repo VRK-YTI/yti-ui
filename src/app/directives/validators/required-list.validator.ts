@@ -3,14 +3,14 @@ import { PropertyMeta } from '../../entities/meta';
 import { FormControl, NG_VALIDATORS } from '@angular/forms';
 
 @Directive({
-  selector: '[requiredList][ngModel]',
+  selector: '[appRequiredList][ngModel]',
   providers: [
-    { provide: NG_VALIDATORS, useExisting: forwardRef(() => RequiredListValidator), multi: true }
+    { provide: NG_VALIDATORS, useExisting: forwardRef(() => RequiredListValidatorDirective), multi: true }
   ]
 })
-export class RequiredListValidator {
+export class RequiredListValidatorDirective {
 
-  @Input('validateMeta') meta: PropertyMeta;
+  @Input() validateMeta: PropertyMeta;
 
   validate(control: FormControl) {
     return requiredList(control);

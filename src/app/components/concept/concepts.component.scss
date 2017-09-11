@@ -7,7 +7,7 @@ $left-width: 400px;
   float: left;
 }
 
-[float] {
+[appFloat] {
   padding-top: 10px;
 }
 
@@ -29,12 +29,12 @@ $left-width: 400px;
   div.visualization-container {
     float: right;
 
-    divider {
+    app-divider {
       float: left;
       width: 10px;
     }
 
-    concept-network {
+    app-concept-network {
       float: left;
       width: calc(100% - 10px);
 

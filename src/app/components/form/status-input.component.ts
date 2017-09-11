@@ -3,7 +3,7 @@ import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/f
 import { statuses } from '../../entities/constants';
 
 @Component({
-  selector: 'status-input',
+  selector: 'app-status-input',
   styleUrls: ['./status-input.component.scss'],
   providers: [{
     provide: NG_VALUE_ACCESSOR,

@@ -244,9 +244,9 @@ export class Node<T extends NodeType> {
       const result: { [key: string]: Identifier<any>[] } = {};
 
       for (const [key, referrer] of Object.entries(this.referrers)) {
-        result[key] = referrer.values.map(referrer => ({
-          id: referrer.id,
-          type: referrer.type
+        result[key] = referrer.values.map(ref => ({
+          id: ref.id,
+          type: ref.type
         }));
       }
 

@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { ConceptViewModelService } from '../../services/concept.view.service';
 
 @Component({
-  selector: 'no-selection',
-  template: ''
+  selector: 'app-no-selection',
+  template: '<div></div>'
 })
 export class NoSelectionComponent {
   constructor(conceptViewModel: ConceptViewModelService) {

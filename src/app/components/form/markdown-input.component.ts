@@ -415,7 +415,7 @@ class Paragraph {
 
       while (i < this.content.length) {
 
-        const previous = this.content[i-1];
+        const previous = this.content[i - 1];
         const current = this.content[i];
 
         if (previous instanceof Text && current instanceof Text) {
@@ -970,7 +970,8 @@ class Selection {
 
   toString() {
     const createDomPath = (point: Point) => requireDefined(DomPath.create(this.model.node, point.text.node));
-    return `From ${createDomPath(this.start).toString()}(${this.start.offset}) to ${createDomPath(this.end).toString()}(${this.end.offset})`;
+    return `From ${createDomPath(this.start).toString()}(${this.start.offset}) ` +
+           `to ${createDomPath(this.end).toString()}(${this.end.offset})`;
   }
 }
 
@@ -1087,25 +1088,25 @@ function isRemoveRestOfLine(event: KeyboardEvent) {
 }
 
 @Component({
-  selector: 'markdown-input',
+  selector: 'app-markdown-input',
   styleUrls: ['./markdown-input.component.scss'],
   providers: [{
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => MarkdownInputComponent),
     multi: true
   }],
-  template: `    
-    <markdown-input-link-popover *ngIf="hasLinkableSelection()"
-                            [selectedText]="linkableSelection.content"
-                            (link)="link()">
-    </markdown-input-link-popover>
-    
-    <markdown-input-unlink-popover *ngIf="hasLinkedSelection()"
-                            [concept]="linkedConcept"
-                            (unlink)="unlink()">
-    </markdown-input-unlink-popover>
-    
-    <div #editable contenteditable="true" [class.form-control]="formControl"></div>
+  template: `
+    <app-markdown-input-link-popover *ngIf="hasLinkableSelection()"
+                                 [selectedText]="linkableSelection.content"
+                                 (link)="link()">
+    </app-markdown-input-link-popover>
+
+    <app-markdown-input-unlink-popover *ngIf="hasLinkedSelection()"
+                                   [concept]="linkedConcept"
+                                   (unlink)="unlink()">
+    </app-markdown-input-unlink-popover>
+
+    <div #editable contenteditable="true" [class.form-control]="formControlClass"></div>
   `
 })
 export class MarkdownInputComponent implements OnInit, ControlValueAccessor {
@@ -1113,7 +1114,7 @@ export class MarkdownInputComponent implements OnInit, ControlValueAccessor {
   @Input() conceptSelector: (name: string) => Promise<ConceptNode|null>;
   @Input() relatedConcepts: ConceptNode[];
 
-  @Input('formControlClass') formControl = true;
+  @Input() formControlClass = true;
   @ViewChild('editable') editableElement: ElementRef;
 
   private model: Model;
@@ -1121,10 +1122,9 @@ export class MarkdownInputComponent implements OnInit, ControlValueAccessor {
   private redoStack: { markdown: string, cursorOffset: number }[] = [];
 
   linkingInProgress = false;
+  private undoDebounceTimeoutHandle: any = null;
   private propagateChange: (fn: any) => void = () => {};
   private propagateTouched: (fn: any) => void = () => {};
-
-  private undoDebounceTimeoutHandle: any = null;
 
   ngOnInit(): void {
 
@@ -1176,7 +1176,7 @@ export class MarkdownInputComponent implements OnInit, ControlValueAccessor {
       if (event.keyCode === keyCodes.enter) {
         this.reportChange(() => this.model.insertNewParagraph());
         event.preventDefault();
-      } else if(event.keyCode === keyCodes.space) {
+      } else if (event.keyCode === keyCodes.space) {
         this.reportChange(() => this.model.insertTextToSelection(' ', true));
         event.preventDefault();
       } else if (event.charCode === keyCodes.esc) {

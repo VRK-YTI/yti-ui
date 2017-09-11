@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 const languages: string[] = require('../../../assets/ietf-language-tags.json');
 
 @Component({
-  selector: 'language-input',
+  selector: 'app-language-input',
   styleUrls: ['./language-input.component.scss'],
   providers: [{
     provide: NG_VALUE_ACCESSOR,

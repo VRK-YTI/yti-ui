@@ -9,7 +9,7 @@ import { VocabularyNode } from '../entities/node';
 import { statuses } from '../entities/constants';
 
 @Component({
-  selector: 'frontpage',
+  selector: 'app-frontpage',
   styleUrls: ['./frontpage.component.scss'],
   template: `
     <div class="container-fluid">
@@ -85,7 +85,7 @@ import { statuses } from '../entities/constants';
         </div>
       </div>
 
-      <vocabularies *ngIf="vocabularies" [vocabularies]="vocabularies"></vocabularies>
+      <app-vocabularies *ngIf="vocabularies" [vocabularies]="vocabularies"></app-vocabularies>
 
     </div>
   `
@@ -150,7 +150,8 @@ export class FrontpageComponent {
         };
 
         const onlyGraphId = this.onlyVocabulary ? this.onlyVocabulary.graphId : null;
-        this.elasticSearchService.frontpageSearch(this.search, onlyGraphId, this.onlyStatus, this.loaded, batchSize).subscribe(appendResults);
+        this.elasticSearchService.frontpageSearch(this.search, onlyGraphId, this.onlyStatus, this.loaded, batchSize)
+          .subscribe(appendResults);
       }
     } else {
       this.searchResults$.next([]);

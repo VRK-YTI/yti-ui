@@ -1,8 +1,7 @@
-import { Component, Directive, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ConceptLinkNode, ConceptNode, VocabularyNode } from '../../entities/node';
 import { EditableService } from '../../services/editable.service';
-import { SearchConceptModalService } from './search-concept.modal';
-import { remove } from '../../utils/array';
+import { SearchConceptModalService } from './search-concept-modal.component';
 import { MetaModelService } from '../../services/meta-model.service';
 import { TermedService } from '../../services/termed.service';
 import { ignoreModalClose } from '../../utils/modal';
@@ -11,7 +10,7 @@ import { MetaModel } from '../../entities/meta';
 import { Observable } from 'rxjs/Observable';
 
 @Component({
-  selector: 'concept-link-reference-input',
+  selector: 'app-concept-link-reference-input',
   styleUrls: ['./concept-link-reference-input.component.scss'],
   template: `
     <ul *ngIf="!editing">
@@ -24,7 +23,7 @@ import { Observable } from 'rxjs/Observable';
         </a>
 
         <ng-template #popContent>
-          <concept-link-reference-popover [link]="conceptLink"></concept-link-reference-popover>
+          <app-concept-link-reference-popover [link]="conceptLink"></app-concept-link-reference-popover>
         </ng-template>
       </li>
     </ul>
@@ -39,7 +38,7 @@ import { Observable } from 'rxjs/Observable';
         </span>
 
         <ng-template #editingPopContent>
-          <concept-link-reference-popover [link]="conceptLink"></concept-link-reference-popover>
+          <app-concept-link-reference-popover [link]="conceptLink"></app-concept-link-reference-popover>
         </ng-template>
       </div>
     </div>
@@ -92,7 +91,7 @@ export class ConceptLinkReferenceInputComponent implements OnInit {
 }
 
 @Component({
-  selector: 'concept-link-reference-popover',
+  selector: 'app-concept-link-reference-popover',
   template: `
     <dl>
       <dt>
@@ -103,10 +102,10 @@ export class ConceptLinkReferenceInputComponent implements OnInit {
       </dd>
     </dl>
     
-    <meta-information [hidden]="!link.persistent" [showModified]="false" [node]="link"></meta-information>
+    <app-meta-information [hidden]="!link.persistent" [showModified]="false" [node]="link"></app-meta-information>
   `
 })
-export class ConceptLinkReferencePopover implements Directive {
+export class ConceptLinkReferencePopoverComponent  {
 
   @Input() link: ConceptLinkNode;
 

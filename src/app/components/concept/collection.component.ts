@@ -3,11 +3,11 @@ import { ActivatedRoute } from '@angular/router';
 import { EditableService, EditingComponent } from '../../services/editable.service';
 import { ConceptViewModelService } from '../../services/concept.view.service';
 import { Subscription } from 'rxjs';
-import { DeleteConfirmationModalService } from '../common/delete-confirmation.modal';
+import { DeleteConfirmationModalService } from '../common/delete-confirmation-modal.component';
 import { requireDefined } from '../../utils/object';
 
 @Component({
-  selector: 'collection',
+  selector: 'app-collection',
   styleUrls: ['./collection.component.scss'],
   providers: [EditableService],
   template: `
@@ -24,31 +24,31 @@ import { requireDefined } from '../../utils/object';
 
         <div class="row">
           <div class="col-md-12">
-            <editable-buttons [form]="form" [canRemove]="true"></editable-buttons>
+            <app-editable-buttons [form]="form" [canRemove]="true"></app-editable-buttons>
           </div>
         </div>
         
         <div class="row">
-          <property class="col-md-12"
+          <app-property class="col-md-12"
                     [property]="property.property"
                     [id]="property.name"
                     [filterLanguage]="filterLanguage"
-                    *ngFor="let property of properties"></property>
+                    *ngFor="let property of properties"></app-property>
   
-          <reference class="col-md-12"
+          <app-reference class="col-md-12"
                      [reference]="reference.reference"
                      [id]="reference.name"
                      [unsaved]="unsaved"
-                     *ngFor="let reference of references"></reference>
+                     *ngFor="let reference of references"></app-reference>
         </div>
 
-        <meta-information [hidden]="!collection.persistent" [node]="collection"></meta-information>
+        <app-meta-information [hidden]="!collection.persistent" [node]="collection"></app-meta-information>
         
       </form>
 
     </div>
 
-    <ajax-loading-indicator *ngIf="!collection"></ajax-loading-indicator>
+    <app-ajax-loading-indicator *ngIf="!collection"></app-ajax-loading-indicator>
   `
 })
 export class CollectionComponent implements EditingComponent, OnDestroy {
@@ -126,5 +126,5 @@ export class CollectionComponent implements EditingComponent, OnDestroy {
   get filterLanguages() {
     return this.conceptViewModel.languages;
   }
-  
+
 }

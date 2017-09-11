@@ -125,7 +125,7 @@ export class TermedService {
     const inlineNodes =
       flatten(Object.values(node.references)
         .filter(ref => ref.inline)
-        .map(ref => ref.values.map(node => node.toInternalNode()))
+        .map(ref => ref.values.map(n => n.toInternalNode()))
       );
 
     function resolveDeletedInlineReferenceIds() {
@@ -189,8 +189,8 @@ export class TermedService {
     params.append('sync', 'true');
 
     const body = {
-      "delete": toDelete,
-      "save": toUpdate
+      'delete': toDelete,
+      'save': toUpdate
     };
 
     return this.http.post(`${environment.api_url}/nodes`, body, { search: params });

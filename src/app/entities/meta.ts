@@ -26,8 +26,19 @@ export type ReferenceType = 'Term'
 export type PropertyType = StringProperty
                          | LocalizableProperty;
 
-export type StringProperty = { type: 'string', cardinality: Cardinality, required: boolean, editorType: EditorType };
-export type LocalizableProperty = { type: 'localizable', cardinality: Cardinality, required: boolean, editorType: EditorType };
+export interface StringProperty {
+  type: 'string';
+  cardinality: Cardinality;
+  required: boolean;
+  editorType: EditorType;
+}
+
+export interface LocalizableProperty {
+  type: 'localizable';
+  cardinality: Cardinality;
+  required: boolean;
+  editorType: EditorType;
+}
 
 export type EditorType = 'input'
                        | 'markdown'
@@ -84,7 +95,7 @@ function parseTypeAndAttributes(textAttribute: TextAttributeInternal): [TypeName
 function createDefaultPropertyType(propertyId: string): PropertyType {
 
   function resolve(): [TypeName, string[]] {
-    switch(propertyId) {
+    switch (propertyId) {
       case 'prefLabel':
         return ['localizable', ['single', 'required']];
       case 'altLabel':
@@ -140,7 +151,7 @@ export class PropertyMeta {
       return false;
     }
 
-    switch(this.id) {
+    switch (this.id) {
       case 'prefLabel':
       case 'altLabel':
       case 'hiddenLabel':
