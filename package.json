@@ -46,6 +46,7 @@
     "@angular/cli": "1.1.0-rc.0",
     "@angular/compiler-cli": "4.1.1",
     "@angular/language-service": "4.1.1",
+    "@biesbjerg/ngx-translate-extract": "^2.3.2",
     "@types/commonmark": "^0.22.29",
     "@types/fast-levenshtein": "^0.0.1",
     "@types/jasmine": "2.5.38",
