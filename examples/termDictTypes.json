@@ -77,7 +77,7 @@
           "type": [
             {
               "lang": "",
-              "value": "string:multiple"
+              "value": "language:multiple"
             }
           ]
         }
