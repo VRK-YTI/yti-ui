@@ -16,14 +16,16 @@ import { requireDefined } from '../../utils/object';
       <div class="component-header">
         <h3>{{collection.label | translateValue}}</h3>
       </div>
-      <div class="form-group col-md-2">
-        <label translate>Filter language</label>
-        <app-filter-language [(ngModel)]="filterLanguage" [languages]="filterLanguages"></app-filter-language>
-      </div>
+      
       <form #form="ngForm" [formGroup]="formNode.control" class="component-content">
 
         <div class="row">
-          <div class="col-md-12">
+          <div class="col-md-4">
+            <app-filter-language [(ngModel)]="filterLanguage"
+                             [ngModelOptions]="{standalone: true}"
+                             [languages]="filterLanguages"></app-filter-language>
+          </div>
+          <div class="col-md-8">
             <app-editable-buttons [form]="form" [canRemove]="true"></app-editable-buttons>
           </div>
         </div>

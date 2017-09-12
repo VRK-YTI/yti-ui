@@ -18,22 +18,30 @@ import { DeleteConfirmationModalService } from '../common/delete-confirmation-mo
               <app-accordion-chevron></app-accordion-chevron>
             </h2>            
           </div>
-        </ng-template>        
+        </ng-template>
         <ng-template ngbPanelContent>
-          <div class="form-group col-md-2">
-            <label translate>Filter language</label>
-            <app-filter-language [(ngModel)]="filterLanguage" [languages]="filterLanguages"></app-filter-language>
-          </div>         
           <form #form="ngForm" [formGroup]="formNode.control">
+            
+            <div class="row">
+              <div class="col-md-4">
+                <app-filter-language [(ngModel)]="filterLanguage"
+                                 [ngModelOptions]="{standalone: true}"
+                                 [languages]="filterLanguages"
+                                 style="width: auto"></app-filter-language>
+              </div>
+              <div class="col-md-8">
+                <app-editable-buttons [form]="form" [canRemove]="true"></app-editable-buttons>
+              </div>
+            </div>
+
             <div class="row">
               <div class="col-md-12">
-                <app-editable-buttons [form]="form" [canRemove]="true"></app-editable-buttons>
                 <div class="page-header">
                   <h1>{{vocabulary.meta.label | translateValue}}</h1>
                 </div>
               </div>
             </div>
-
+            
             <app-vocabulary-form [vocabulary]="vocabulary" [form]="formNode" [filterLanguage]="filterLanguage"></app-vocabulary-form>
             <app-meta-information [node]="vocabulary"></app-meta-information>
           </form>
