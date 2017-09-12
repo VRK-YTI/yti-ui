@@ -2,7 +2,7 @@ import { Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
-  selector: 'filter-language',
+  selector: 'app-filter-language',
   providers: [{
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => FilterLanguageComponent),

@@ -22,7 +22,7 @@ import { DeleteConfirmationModalService } from '../common/delete-confirmation-mo
         <ng-template ngbPanelContent>
           <div class="form-group col-md-2">
             <label translate>Filter language</label>
-            <filter-language [(ngModel)]="filterLanguage" [languages]="filterLanguages"></filter-language>
+            <app-filter-language [(ngModel)]="filterLanguage" [languages]="filterLanguages"></app-filter-language>
           </div>         
           <form #form="ngForm" [formGroup]="formNode.control">
             <div class="row">
