@@ -9,7 +9,7 @@ import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/f
     multi: true
   }],
   template: `    
-    <select class="form-control" [(ngModel)]="selectedValue">
+    <select class="form-control" [formControl]="control">
       <option value="" translate>All languages</option>
       <option *ngFor="let lang of languages" [ngValue]="lang">{{lang.toUpperCase()}}</option>
     </select>
@@ -20,13 +20,17 @@ export class FilterLanguageComponent implements ControlValueAccessor {
 
   @Input() languages: string[];
 
-  languageValue: string;
+  control = new FormControl();
 
   private propagateChange: (fn: any) => void = () => {};
   private propagateTouched: (fn: any) => void = () => {};
 
-  writeValue(obj: any): void {    
-    this.languageValue = obj;
+  constructor() {
+    this.control.valueChanges.subscribe(x => this.propagateChange(x));
+  }
+
+  writeValue(obj: any): void {
+    this.control.setValue(obj);
   }
 
   registerOnChange(fn: any): void {
@@ -36,14 +40,4 @@ export class FilterLanguageComponent implements ControlValueAccessor {
   registerOnTouched(fn: any): void {
     this.propagateTouched = fn;
   }
-
-  get selectedValue() {
-    return this.languageValue;
-  }
-
-  set selectedValue(value: string) {
-    this.languageValue = value;
-    this.propagateChange(value);
-  }
-
 }
