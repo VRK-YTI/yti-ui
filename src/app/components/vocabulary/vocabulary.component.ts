@@ -25,9 +25,9 @@ import { DeleteConfirmationModalService } from '../common/delete-confirmation-mo
             <div class="row">
               <div class="col-md-4">
                 <app-filter-language [(ngModel)]="filterLanguage"
-                                 [ngModelOptions]="{standalone: true}"
-                                 [languages]="filterLanguages"
-                                 style="width: auto"></app-filter-language>
+                                     [ngModelOptions]="{standalone: true}"
+                                     [languages]="filterLanguages"
+                                     style="width: auto"></app-filter-language>
               </div>
               <div class="col-md-8">
                 <app-editable-buttons [form]="form" [canRemove]="true"></app-editable-buttons>

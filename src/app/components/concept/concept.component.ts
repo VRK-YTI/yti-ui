@@ -21,8 +21,8 @@ import { requireDefined } from '../../utils/object';
         <div class="row">
           <div class="col-md-4">
             <app-filter-language [(ngModel)]="filterLanguage"
-                             [ngModelOptions]="{standalone: true}"
-                             [languages]="filterLanguages"></app-filter-language>
+                                 [ngModelOptions]="{standalone: true}"
+                                 [languages]="filterLanguages"></app-filter-language>
           </div>
           <div class="col-md-8">
             <app-editable-buttons [form]="form" [canRemove]="true"></app-editable-buttons>
