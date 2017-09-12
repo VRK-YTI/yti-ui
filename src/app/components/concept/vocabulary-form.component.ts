@@ -20,7 +20,8 @@ import { EditableService } from '../../services/editable.service';
                        class="col-md-6"
                        [reference]="field.value"
                        [id]="field.name"
-                       [unsaved]="!vocabulary.persistent"></app-reference>
+                       [unsaved]="!vocabulary.persistent"
+                       [filterLanguage]="filterLanguage"></app-reference>
 
       </ng-container>
     </div>

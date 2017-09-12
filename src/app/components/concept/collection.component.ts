@@ -42,7 +42,8 @@ import { requireDefined } from '../../utils/object';
                            class="col-md-12"
                            [reference]="field.value"
                            [id]="field.name"
-                           [unsaved]="unsaved"></app-reference>
+                           [unsaved]="unsaved"
+                           [filterLanguage]="filterLanguage"></app-reference>
 
           </ng-container>
 
