@@ -376,7 +376,7 @@ export class ConceptViewModelService {
 
   metaModel: Observable<MetaModel>;
 
-  filterLanguage: string;
+  filterLanguage = '';
 
   constructor(private router: Router,
               private termedService: TermedService,
@@ -398,6 +398,12 @@ export class ConceptViewModelService {
           } else {
             this.collectionList.refresh(action.item.id, remove)
           }
+      }
+    });
+
+    Observable.merge(this.vocabularySelect$, this.vocabularyEdit$).subscribe(vocabulary => {
+      if (this.filterLanguage && !vocabulary.languages.includes(this.filterLanguage)) {
+        this.filterLanguage = '';
       }
     });
   }
@@ -437,7 +443,6 @@ export class ConceptViewModelService {
     this.graphId = graphId;
     this.metaModel = this.metaModelService.getMeta(graphId);
     this.loadingVocabulary = true;
-    this.filterLanguage = '';
 
     this.termedService.getVocabulary(graphId).subscribe(vocabulary => {
       this.locationService.atVocabulary(vocabulary);
@@ -654,17 +659,14 @@ export class ConceptViewModelService {
 
     const vocabulary = this.vocabulary.clone();
     this.vocabularyForm.assignChanges(vocabulary);
-    
+
     return new Promise((resolve, reject) => {
       this.termedService.updateNode(vocabulary, this.vocabulary)
         .flatMap(() => this.termedService.getVocabulary(this.graphId))
         .subscribe({
           next(persistentVocabulary: VocabularyNode) {
             that.vocabulary = persistentVocabulary.clone();
-            that.vocabularyForm = new FormNode(persistentVocabulary, () => that.languages);            
-            // Deselect selected filter language if it is removed from vocabulary.
-            if (!that.vocabulary.languages.includes(that.filterLanguage))
-              that.filterLanguage = '';
+            that.vocabularyForm = new FormNode(persistentVocabulary, () => that.languages);
             resolve();
           },
           error(err: any) {
