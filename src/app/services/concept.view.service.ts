@@ -376,8 +376,6 @@ export class ConceptViewModelService {
 
   metaModel: Observable<MetaModel>;
 
-  filterLanguage = '';
-
   constructor(private router: Router,
               private termedService: TermedService,
               private elasticSearchService: ElasticSearchService,
@@ -402,8 +400,8 @@ export class ConceptViewModelService {
     });
 
     Observable.merge(this.vocabularySelect$, this.vocabularyEdit$).subscribe(vocabulary => {
-      if (this.filterLanguage && !vocabulary.languages.includes(this.filterLanguage)) {
-        this.filterLanguage = '';
+      if (languageService.filterLanguage && !vocabulary.languages.includes(languageService.filterLanguage)) {
+        languageService.filterLanguage = '';
       }
     });
   }

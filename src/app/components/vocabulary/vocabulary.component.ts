@@ -3,6 +3,7 @@ import { EditableService, EditingComponent } from '../../services/editable.servi
 import { ConceptViewModelService } from '../../services/concept.view.service';
 import { requireDefined } from '../../utils/object';
 import { DeleteConfirmationModalService } from '../common/delete-confirmation-modal.component';
+import { LanguageService } from '../../services/language.service';
 
 @Component({
   selector: 'app-vocabulary',
@@ -54,7 +55,8 @@ export class VocabularyComponent implements EditingComponent {
 
   constructor(private editableService: EditableService,
               private conceptViewModel: ConceptViewModelService,
-              deleteConfirmationModal: DeleteConfirmationModalService) {
+              deleteConfirmationModal: DeleteConfirmationModalService,
+              private languageService: LanguageService) {
 
     editableService.onSave = () => conceptViewModel.saveVocabulary();
     editableService.onCanceled = () => conceptViewModel.resetVocabulary();
@@ -80,11 +82,11 @@ export class VocabularyComponent implements EditingComponent {
   }
 
   get filterLanguage() {
-    return this.conceptViewModel.filterLanguage;
+    return this.languageService.filterLanguage;
   }
 
   set filterLanguage(lang: string) {
-    this.conceptViewModel.filterLanguage = lang;
+    this.languageService.filterLanguage = lang;
   }
 
   get filterLanguages() {

@@ -5,6 +5,7 @@ import { ConceptViewModelService } from '../../services/concept.view.service';
 import { Subscription } from 'rxjs';
 import { DeleteConfirmationModalService } from '../common/delete-confirmation-modal.component';
 import { requireDefined } from '../../utils/object';
+import { LanguageService } from '../../services/language.service';
 
 @Component({
   selector: 'app-concept',
@@ -44,7 +45,8 @@ export class ConceptComponent implements EditingComponent, OnDestroy {
   constructor(private route: ActivatedRoute,
               private conceptViewModel: ConceptViewModelService,
               deleteConfirmationModal: DeleteConfirmationModalService,
-              private editableService: EditableService) {
+              private editableService: EditableService,
+              private languageService: LanguageService) {
 
     route.params.subscribe(params => conceptViewModel.initializeConcept(params['conceptId']));
     editableService.onSave = () => this.conceptViewModel.saveConcept();
@@ -85,11 +87,11 @@ export class ConceptComponent implements EditingComponent, OnDestroy {
   }
 
   get filterLanguage() {
-    return this.conceptViewModel.filterLanguage;
+    return this.languageService.filterLanguage;
   }
 
   set filterLanguage(lang: string) {
-    this.conceptViewModel.filterLanguage = lang;
+    this.languageService.filterLanguage = lang;
   }
 
   get filterLanguages() {

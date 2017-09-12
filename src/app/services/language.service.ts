@@ -16,6 +16,8 @@ export class LanguageService implements Localizer {
   private _language: Language;
   languageChange$ = new Subject<Language>();
 
+  filterLanguage: Language = '';
+
   constructor(private translateService: TranslateService) {
     this._language = 'fi';
     translateService.addLangs(['fi', 'en']);
