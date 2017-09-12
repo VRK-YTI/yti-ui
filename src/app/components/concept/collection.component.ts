@@ -16,7 +16,10 @@ import { requireDefined } from '../../utils/object';
       <div class="component-header">
         <h3>{{collection.label | translateValue}}</h3>
       </div>
-
+      <div class="form-group col-md-2">
+        <label translate>Filter language</label>
+        <filter-language [(ngModel)]="filterLanguage" [languages]="filterLanguages"></filter-language>
+      </div>
       <form #form="ngForm" [formGroup]="formNode.control" class="component-content">
 
         <div class="row">
@@ -29,6 +32,7 @@ import { requireDefined } from '../../utils/object';
           <property class="col-md-12"
                     [property]="property.property"
                     [id]="property.name"
+                    [filterLanguage]="filterLanguage"
                     *ngFor="let property of properties"></property>
   
           <reference class="col-md-12"
@@ -110,4 +114,17 @@ export class CollectionComponent implements EditingComponent, OnDestroy {
   cancelEditing(): void {
     this.editableService.cancel();
   }
+
+  get filterLanguage() {
+    return this.conceptViewModel.filterLanguage;
+  }
+
+  set filterLanguage(lang: string) {
+    this.conceptViewModel.filterLanguage = lang;
+  }
+
+  get filterLanguages() {
+    return this.conceptViewModel.languages;
+  }
+  
 }

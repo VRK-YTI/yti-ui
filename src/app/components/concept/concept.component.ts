@@ -16,7 +16,10 @@ import { requireDefined } from '../../utils/object';
       <div class="component-header">
         <h3>{{concept.label | translateValue}}</h3>
       </div>
-    
+      <div class="form-group col-md-2">
+        <label translate>Filter language</label>
+        <filter-language [(ngModel)]="filterLanguage" [languages]="filterLanguages"></filter-language>
+      </div>
       <form #form="ngForm" [formGroup]="formNode.control" class="component-content">
   
         <div class="row">
@@ -25,7 +28,7 @@ import { requireDefined } from '../../utils/object';
           </div>
         </div>
   
-        <concept-form [form]="formNode" [concept]="concept" [multiColumn]="true"></concept-form>
+        <concept-form [form]="formNode" [concept]="concept" [multiColumn]="true" [filterLanguage]="filterLanguage"></concept-form>
       </form>
       
     </div>
@@ -79,4 +82,17 @@ export class ConceptComponent implements EditingComponent, OnDestroy {
   cancelEditing(): void {
     this.editableService.cancel();
   }
+
+  get filterLanguage() {
+    return this.conceptViewModel.filterLanguage;
+  }
+
+  set filterLanguage(lang: string) {
+    this.conceptViewModel.filterLanguage = lang;
+  }
+
+  get filterLanguages() {
+    return this.conceptViewModel.languages;
+  }
+
 }

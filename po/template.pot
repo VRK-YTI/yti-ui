@@ -4,12 +4,6 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-msgid "Email: { email }"
-msgstr ""
-
-msgid "You are expected at {{time}}', {time: moment.format('H:mm"
-msgstr ""
-
 msgid "Yes"
 msgstr ""
 
@@ -197,6 +191,12 @@ msgid "vocabulary"
 msgstr ""
 
 msgid "vocabularies"
+msgstr ""
+
+msgid "Filter language"
+msgstr ""
+
+msgid "All languages"
 msgstr ""
 
 msgid "New concept"

@@ -18,7 +18,8 @@ type FormProperty = FormPropertyLiteral
                          [id]="id"
                          [property]="property"
                          [conceptSelector]="conceptSelector"
-                         [relatedConcepts]="relatedConcepts"></localized-input>
+                         [relatedConcepts]="relatedConcepts"
+                         [filterLanguage]="filterLanguage"></localized-input>
         <literal-input *ngSwitchCase="'literal'" [id]="id" [property]="property"></literal-input>
         <literal-list-input *ngSwitchCase="'literal-list'" [id]="id" [property]="property"></literal-list-input>
         
@@ -34,6 +35,8 @@ export class PropertyComponent {
 
   @Input() conceptSelector: (name: string) => Promise<ConceptNode|null>;
   @Input() relatedConcepts: ConceptNode[] = [];
+
+  @Input() filterLanguage: string;
 
   constructor(private editableService: EditableService) {
   }

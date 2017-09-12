@@ -16,10 +16,14 @@ import { DeleteConfirmationModalService } from '../common/delete-confirmation.mo
             <h2>
               <span>{{vocabulary.label | translateValue}}</span>
               <accordion-chevron></accordion-chevron>
-            </h2>
+            </h2>            
           </div>
-        </ng-template>
+        </ng-template>        
         <ng-template ngbPanelContent>
+          <div class="form-group col-md-2">
+            <label translate>Filter language</label>
+            <filter-language [(ngModel)]="filterLanguage" [languages]="filterLanguages"></filter-language>
+          </div>         
           <form #form="ngForm" [formGroup]="formNode.control">
             <div class="row">
               <div class="col-md-12">
@@ -30,7 +34,7 @@ import { DeleteConfirmationModalService } from '../common/delete-confirmation.mo
               </div>
             </div>
 
-            <vocabulary-form [vocabulary]="vocabulary" [form]="formNode"></vocabulary-form>
+            <vocabulary-form [vocabulary]="vocabulary" [form]="formNode" [filterLanguage]="filterLanguage"></vocabulary-form>
             <meta-information [node]="vocabulary"></meta-information>
           </form>
         </ng-template>
@@ -54,11 +58,11 @@ export class VocabularyComponent implements EditingComponent {
   get formNode() {
     return this.conceptViewModel.vocabularyForm;
   }
-
+  
   get vocabulary() {
     return this.conceptViewModel.vocabulary;
   }
-
+  
   isEditing(): boolean {
     return this.editableService.editing;
   }
@@ -66,4 +70,17 @@ export class VocabularyComponent implements EditingComponent {
   cancelEditing(): void {
     this.editableService.cancel();
   }
+
+  get filterLanguage() {
+    return this.conceptViewModel.filterLanguage;
+  }
+
+  set filterLanguage(lang: string) {
+    this.conceptViewModel.filterLanguage = lang;
+  }
+
+  get filterLanguages() {
+    return this.conceptViewModel.languages;
+  }
+
 }

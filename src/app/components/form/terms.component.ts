@@ -19,7 +19,7 @@ import { remove } from '../../utils/array';
     </div>
     
     <ngb-accordion *ngIf="children.length > 0" [activeIds]="openTerms">
-      <ngb-panel [id]="index" *ngFor="let node of children; let index = index">
+      <ngb-panel [id]="index" *ngFor="let node of visibleChildren; let index = index">
         <ng-template ngbPanelTitle>
           <div class="language">{{node.language | uppercase}}</div>
           <div class="localization">{{node.formNode.prefLabelProperty[0].value}} <accordion-chevron class="pull-right"></accordion-chevron></div>
@@ -34,7 +34,7 @@ import { remove } from '../../utils/array';
           </div>
           <div class="row">
             <div class="col-md-12" [class.col-xl-6]="multiColumn" *ngFor="let child of node.formNode.properties">
-              <property [id]="child.name" [property]="child.property"></property>
+              <property [id]="child.name" [property]="child.property" [filterLanguage]="filterLanguage"></property>
             </div>
           </div>
         </ng-template>
@@ -49,6 +49,7 @@ export class TermsComponent implements OnChanges {
   @Input() reference: FormReferenceTerm;
   @Input() unsaved: boolean;
   @Input() multiColumn = false;
+  @Input() filterLanguage: string;
 
   openTerms: number[] = [];
 
@@ -114,4 +115,10 @@ export class TermsComponent implements OnChanges {
   removeTerm(node: { formNode: FormNode, language: string }) {
     this.reference.remove(node);
   }
+
+  get visibleChildren() {
+    return this.children.filter(child => 
+        !this.filterLanguage || child.language === this.filterLanguage);
+  }
+
 }

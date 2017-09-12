@@ -10,7 +10,8 @@ import { EditableService } from '../../services/editable.service';
       <property class="col-md-6"
                 *ngFor="let child of properties"
                 [property]="child.property"
-                [id]="child.name"></property>
+                [id]="child.name"
+                [filterLanguage]="filterLanguage"></property>
       
       <reference class="col-md-6"
                  *ngFor="let child of references"
@@ -24,6 +25,7 @@ export class VocabularyFormComponent {
 
   @Input() vocabulary: VocabularyNode;
   @Input() form: FormNode;
+  @Input() filterLanguage: string;
 
   constructor(private editableService: EditableService) {
   }

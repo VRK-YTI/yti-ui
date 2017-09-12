@@ -20,42 +20,42 @@ import { remove } from '../../utils/array';
     </div>
 
     <div *ngIf="property.value.length > 0">
-      <div class="localized" *ngFor="let child of property.children">
-        <div class="language">
-          <span>{{child.lang.toUpperCase()}}</span>
-        </div>
-        <div class="localization" [class.editing]="editing" [class.removable]="canRemove()">
-          <div *ngIf="!editing" markdown-links [value]="child.control.value" [relatedConcepts]="relatedConcepts"></div>
-          <div *ngIf="editing" class="form-group" [ngClass]="{'has-danger': !child.control.valid}">
-
-            <ng-container [ngSwitch]="property.editorType">
-
-              <input *ngSwitchCase="'input'"
-                     type="text"
-                     class="form-control"
-                     [id]="id"
-                     autocomplete="off"
-                     [formControl]="child.control" />
-
-              <markdown-input *ngSwitchCase="'markdown'"
-                              [id]="id"
-                              [formControlClass]="false"
-                              [conceptSelector]="conceptSelector"
-                              [relatedConcepts]="relatedConcepts"
-                              [formControl]="child.control"></markdown-input>
-
-            </ng-container>
-
-            <error-messages [control]="child.control"></error-messages>
+      <div class="localized" *ngFor="let child of visibleLocalizations">
+          <div class="language">
+            <span>{{child.lang.toUpperCase()}}</span>
           </div>
-        </div>
+          <div class="localization" [class.editing]="editing" [class.removable]="canRemove()">
+            <div *ngIf="!editing" markdown-links [value]="child.control.value" [relatedConcepts]="relatedConcepts"></div>
+            <div *ngIf="editing" class="form-group" [ngClass]="{'has-danger': !child.control.valid}">
 
-        <button *ngIf="canRemove()"
-                class="btn btn-default remove-button"
-                (click)="removeValue(child)"
-                ngbTooltip="{{'Remove' | translate}} {{property.label | translateValue | lowercase}}" [placement]="'left'">
-          <i class="fa fa-trash"></i>
-        </button>
+              <ng-container [ngSwitch]="property.editorType">
+
+                <input *ngSwitchCase="'input'"
+                      type="text"
+                      class="form-control"
+                      [id]="id"
+                      autocomplete="off"
+                      [formControl]="child.control" />
+
+                <markdown-input *ngSwitchCase="'markdown'"
+                                [id]="id"
+                                [formControlClass]="false"
+                                [conceptSelector]="conceptSelector"
+                                [relatedConcepts]="relatedConcepts"
+                                [formControl]="child.control"></markdown-input>
+
+              </ng-container>
+
+              <error-messages [control]="child.control"></error-messages>
+            </div>
+          </div>
+
+          <button *ngIf="canRemove()"
+                  class="btn btn-default remove-button"
+                  (click)="removeValue(child)"
+                  ngbTooltip="{{'Remove' | translate}} {{property.label | translateValue | lowercase}}" [placement]="'left'">
+            <i class="fa fa-trash"></i>
+          </button>
       </div>
     </div>
 
@@ -69,6 +69,7 @@ export class LocalizedInputComponent {
   @Input() property: FormPropertyLocalizable;
   @Input() conceptSelector: (name: string) => Promise<ConceptNode|null>;
   @Input() relatedConcepts: ConceptNode[];
+  @Input() filterLanguage: string;
 
   constructor(private editingService: EditableService) {
   }
@@ -111,5 +112,10 @@ export class LocalizedInputComponent {
 
   get editing() {
     return this.editingService.editing;
+  }
+
+  get visibleLocalizations() {
+    return this.property.children.filter(child => 
+        !this.filterLanguage || child.lang === this.filterLanguage);
   }
 }

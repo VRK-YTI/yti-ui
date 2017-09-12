@@ -85,6 +85,7 @@ import { TermsComponent } from './components/form/terms.component';
 import { LoginModal, LoginModalService } from './components/navigation/login.modal';
 import { LanguageInputComponent } from './components/form/language-input.component';
 import { LanguageValidator } from './directives/validators/language.validator';
+import { FilterLanguageComponent } from './components/form/filter-language.component';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json-loader!po-loader?format=mf!../../po/fi.po'),
@@ -180,7 +181,8 @@ const appRoutes: Routes = [
     HighlightPipe,
     TimestampPipe,
     StripMarkdownPipe,
-    KeysPipe
+    KeysPipe,
+    FilterLanguageComponent
   ],
   entryComponents: [
     SearchConceptModal,

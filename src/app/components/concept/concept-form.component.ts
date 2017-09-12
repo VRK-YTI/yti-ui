@@ -18,7 +18,8 @@ import { EditableService } from '../../services/editable.service';
                  [unsaved]="!concept.persistent"
                  [reference]="primaryTermReference"
                  [concept]="concept"
-                 [id]="'prefLabelXl'"></reference>
+                 [id]="'prefLabelXl'"
+                 [filterLanguage]="filterLanguage"></reference>
       
       <property *ngFor="let child of properties"
                 class="col-md-12" 
@@ -26,7 +27,8 @@ import { EditableService } from '../../services/editable.service';
                 [property]="child.property"
                 [id]="child.name"
                 [conceptSelector]="conceptSelector"
-                [relatedConcepts]="form.referencedConcepts"></property>
+                [relatedConcepts]="form.referencedConcepts"
+                [filterLanguage]="filterLanguage"></property>
       
       <reference *ngFor="let reference of references" 
                  class="col-md-12" 
@@ -47,6 +49,7 @@ export class ConceptFormComponent {
   @Input() concept: ConceptNode;
   @Input() form: FormNode;
   @Input() multiColumn = false;
+  @Input() filterLanguage: string;
 
   conceptSelector = (name: string) => this.selectConcept(name);
 
