@@ -720,17 +720,21 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
       this.skipNextSelection = true;
 
       this.zone.run(() => {
+
+        const graphId = requireDefined(this.conceptViewModel.vocabulary).graphId;
+
         if (isConcept) {
-          this.router.navigate(['/concepts', this.conceptViewModel.vocabulary.graphId, 'concept', nodeId]);
+          this.router.navigate(['/concepts', graphId, 'concept', nodeId]);
         } else {
-          this.router.navigate(['/concepts', this.conceptViewModel.vocabulary.graphId, 'collection', nodeId]);
+          this.router.navigate(['/concepts', graphId, 'collection', nodeId]);
         }
       });
     };
 
     const onDoubleClick = () => {
       if (isConcept) {
-        const rootConcept$ = this.termedService.getConcept(this.conceptViewModel.vocabulary.graphId, nodeId);
+        const graphId = requireDefined(this.conceptViewModel.vocabulary).graphId;
+        const rootConcept$ = this.termedService.getConcept(graphId, nodeId);
         rootConcept$.subscribe(concept => this.addEdgeNodesForConcept(concept));
       }
     };

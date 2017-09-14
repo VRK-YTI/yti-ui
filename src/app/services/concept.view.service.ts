@@ -18,7 +18,7 @@ import {
   ContentExtractor, filterAndSortSearchResults, labelComparator, scoreComparator,
   TextAnalysis
 } from '../utils/text-analyzer';
-import { isDefined } from '../utils/object';
+import { isDefined, requireDefined } from '../utils/object';
 import { Subject } from 'rxjs/Subject';
 import { removeMatching, replaceMatching } from '../utils/array';
 import { FormNode } from './form-state';
@@ -342,11 +342,10 @@ export class CollectionListModel {
 export class ConceptViewModelService {
 
   vocabularyForm: FormNode;
-  vocabulary: VocabularyNode;
-  vocabulary$ = new BehaviorSubject<Action<VocabularyNode>>(createNoSelection());
-  vocabularySelect$ = onlySelect(this.vocabulary$);
-  vocabularyEdit$ = onlyEdit(this.vocabulary$);
-  vocabularyRemove$ = onlyRemove(this.vocabulary$);
+  vocabularyAction$ = new BehaviorSubject<Action<VocabularyNode>>(createNoSelection());
+  vocabularySelect$ = onlySelect(this.vocabularyAction$);
+  vocabularyEdit$ = onlyEdit(this.vocabularyAction$);
+  vocabularyRemove$ = onlyRemove(this.vocabularyAction$);
 
   conceptForm: FormNode|null;
   conceptAction$ = new BehaviorSubject<Action<ConceptNode>>(createNoSelection());
@@ -407,7 +406,18 @@ export class ConceptViewModelService {
   }
 
   get languages(): string[] {
-    return this.vocabulary.languages;
+    return requireDefined(this.vocabulary).languages;
+  }
+
+  get vocabulary(): VocabularyNode|null {
+
+    const action = this.vocabularyAction$.getValue();
+
+    if (action.type === 'noselect' || action.type === 'remove') {
+      return null;
+    }
+
+    return action.item;
   }
 
   get concept(): ConceptNode|null {
@@ -444,9 +454,8 @@ export class ConceptViewModelService {
 
     this.termedService.getVocabulary(graphId).subscribe(vocabulary => {
       this.locationService.atVocabulary(vocabulary);
-      this.vocabulary = vocabulary;
-      this.vocabulary$.next(createSelectAction(vocabulary));
-      this.vocabularyForm = new FormNode(vocabulary, () => this.vocabulary.languages);
+      this.vocabularyAction$.next(createSelectAction(vocabulary));
+      this.vocabularyForm = new FormNode(vocabulary, () => vocabulary.languages);
       this.loadingVocabulary = false;
     });
 
@@ -486,7 +495,7 @@ export class ConceptViewModelService {
           if (concept) {
             init(concept);
           } else {
-            this.createEmptyConcept(this.vocabulary, conceptId).subscribe(init);
+            this.createEmptyConcept(requireDefined(this.vocabulary), conceptId).subscribe(init);
           }
         });
       });
@@ -524,7 +533,7 @@ export class ConceptViewModelService {
           if (collection) {
             init(collection);
           } else {
-            this.createEmptyCollection(this.vocabulary, collectionId).subscribe(init);
+            this.createEmptyCollection(requireDefined(this.vocabulary), collectionId).subscribe(init);
           }
         });
       });
@@ -653,6 +662,10 @@ export class ConceptViewModelService {
 
   saveVocabulary(): Promise<any> {
 
+    if (!this.vocabulary) {
+      throw new Error('Cannot save when there is no vocabulary');
+    }
+
     const that = this;
 
     const vocabulary = this.vocabulary.clone();
@@ -663,7 +676,7 @@ export class ConceptViewModelService {
         .flatMap(() => this.termedService.getVocabulary(this.graphId))
         .subscribe({
           next(persistentVocabulary: VocabularyNode) {
-            that.vocabulary = persistentVocabulary.clone();
+            that.vocabularyAction$.next(createEditAction(persistentVocabulary.clone()));
             that.vocabularyForm = new FormNode(persistentVocabulary, () => that.languages);
             resolve();
           },
@@ -697,6 +710,11 @@ export class ConceptViewModelService {
   }
 
   resetVocabulary() {
+
+    if (!this.vocabulary) {
+      throw new Error('Cannot reset when there is no vocabulary');
+    }
+
     this.vocabularyForm = new FormNode(this.vocabulary, () => this.languages);
   }
 
