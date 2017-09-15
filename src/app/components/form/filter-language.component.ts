@@ -1,5 +1,6 @@
 import { Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { TranslateService } from 'ng2-translate';
 
 @Component({
   selector: 'app-filter-language',
@@ -9,11 +10,18 @@ import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/f
     useExisting: forwardRef(() => FilterLanguageComponent),
     multi: true
   }],
-  template: `    
-    <select class="form-control" [formControl]="control">
-      <option value="" translate>All languages</option>
-      <option *ngFor="let lang of languages" [ngValue]="lang">{{lang.toUpperCase()}}</option>
-    </select>
+  template: ` 
+    <div ngbDropdown class="d-inline-block">
+      <button class="btn btn-default" id="dropdownFilterLanguage" ngbDropdownToggle>{{selection}}</button>
+      <div ngbDropdownMenu aria-labelledby="dropdownFilterLanguage">
+        <button class="dropdown-item" (click)="writeValue('')" translate>All languages</button>
+        <button class="dropdown-item" 
+                *ngFor="let lang of languages"
+                (click)="writeValue(lang)"
+                [value]="lang"><span translate>Content in</span> {{lang.toUpperCase()}}
+        </button>
+      </div>
+    </div>
   `
 })
 
@@ -26,8 +34,13 @@ export class FilterLanguageComponent implements ControlValueAccessor {
   private propagateChange: (fn: any) => void = () => {};
   private propagateTouched: (fn: any) => void = () => {};
 
-  constructor() {
+  constructor(private translateService: TranslateService) {
     this.control.valueChanges.subscribe(x => this.propagateChange(x));
+  }
+
+  get selection() {
+    return this.control.value ? this.translateService.instant('Content in') + " " + this.control.value.toUpperCase()
+                              : this.translateService.instant('All languages');
   }
 
   writeValue(obj: any): void {

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-09-07 11:39+0300\n"
+"PO-Revision-Date: 2017-09-15 15:40+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -119,6 +119,12 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
+msgid "All languages"
+msgstr ""
+
+msgid "Content in"
+msgstr ""
+
 msgid "Add"
 msgstr ""
 
@@ -206,12 +212,6 @@ msgid "vocabulary"
 msgstr ""
 
 msgid "vocabularies"
-msgstr ""
-
-msgid "Filter language"
-msgstr ""
-
-msgid "All languages"
 msgstr ""
 
 msgid "New concept"

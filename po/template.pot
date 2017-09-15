@@ -109,6 +109,12 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
+msgid "All languages"
+msgstr ""
+
+msgid "Content in"
+msgstr ""
+
 msgid "Add"
 msgstr ""
 
@@ -191,12 +197,6 @@ msgid "vocabulary"
 msgstr ""
 
 msgid "vocabularies"
-msgstr ""
-
-msgid "Filter language"
-msgstr ""
-
-msgid "All languages"
 msgstr ""
 
 msgid "New concept"

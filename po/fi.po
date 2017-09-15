@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-09-07 11:38+0300\n"
+"PO-Revision-Date: 2017-09-15 15:36+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -121,6 +121,12 @@ msgstr "Muokkaa"
 msgid "Remove"
 msgstr "Poista"
 
+msgid "All languages"
+msgstr "Kaikki kielet"
+
+msgid "Content in"
+msgstr "Sisältö kielellä"
+
 msgid "Add"
 msgstr "Lisää"
 
@@ -209,12 +215,6 @@ msgstr "sanasto"
 msgid "vocabularies"
 msgstr "sanastoa"
 
-msgid "Filter language"
-msgstr "Suodata kieli"
-
-msgid "All languages"
-msgstr "Kaikki kielet"
-
 msgid "New concept"
 msgstr "uusi käsite"
 
@@ -282,6 +282,12 @@ msgstr "Pakollinen syöte"
 msgid "validateLanguage"
 msgstr "Epävalidi kieli"
 
+#~ msgid "Language of content"
+#~ msgstr "Sisällön kieli"
+
+#~ msgid "Filter language"
+#~ msgstr "Suodata kieli"
+
 #~ msgid "Not implemented yet!"
 #~ msgstr "Ei vielä toteutettu!"
 
@@ -290,9 +296,6 @@ msgstr "Epävalidi kieli"
 
 #~ msgid "Add term"
 #~ msgstr "Lisää termi"
-
-#~ msgid "Contact info"
-#~ msgstr "Yhteystiedot"
 
 #~ msgid "Id"
 #~ msgstr "Tunniste"
