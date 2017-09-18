@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input } from '@angular/core';
+import { Component, forwardRef, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TranslateService } from 'ng2-translate';
 
@@ -14,20 +14,19 @@ import { TranslateService } from 'ng2-translate';
     <div ngbDropdown class="d-inline-block lang-filter">
       <button class="btn btn-default" id="dropdownFilterLanguage" ngbDropdownToggle>{{selection}}</button>
       <div ngbDropdownMenu aria-labelledby="dropdownFilterLanguage">
-        <button class="dropdown-item" (click)="writeValue('')" translate>All languages</button>
         <button class="dropdown-item" 
-                *ngFor="let lang of languages"
-                (click)="writeValue(lang)"
-                [value]="lang"><span translate>Content in</span> {{lang.toUpperCase()}}
+                *ngFor="let selection of selections"
+                (click)="writeValue(selection.lang)">
+          {{selection.name}}
         </button>
       </div>
     </div>
   `
 })
-
-export class FilterLanguageComponent implements ControlValueAccessor {
+export class FilterLanguageComponent implements ControlValueAccessor, OnChanges {
 
   @Input() languages: string[];
+  selections: { lang: string, name: string }[];
 
   control = new FormControl();
 
@@ -38,9 +37,15 @@ export class FilterLanguageComponent implements ControlValueAccessor {
     this.control.valueChanges.subscribe(x => this.propagateChange(x));
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    this.selections = ['', ...this.languages].map(lang => ({
+      lang: lang,
+      name: this.languageToSelectionName(lang)
+    }));
+  }
+
   get selection() {
-    return this.control.value ? this.translateService.instant('Content in') + " " + this.control.value.toUpperCase()
-                              : this.translateService.instant('All languages');
+    return this.languageToSelectionName(this.control.value);
   }
 
   writeValue(obj: any): void {
@@ -53,5 +58,10 @@ export class FilterLanguageComponent implements ControlValueAccessor {
 
   registerOnTouched(fn: any): void {
     this.propagateTouched = fn;
+  }
+
+  private languageToSelectionName(lang: string) {
+    return lang ? this.translateService.instant('Content in') + ' '  + lang.toUpperCase()
+                : this.translateService.instant('All languages');
   }
 }
