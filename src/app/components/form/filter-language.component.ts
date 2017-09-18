@@ -11,7 +11,7 @@ import { TranslateService } from 'ng2-translate';
     multi: true
   }],
   template: ` 
-    <div ngbDropdown class="d-inline-block">
+    <div ngbDropdown class="d-inline-block lang-filter">
       <button class="btn btn-default" id="dropdownFilterLanguage" ngbDropdownToggle>{{selection}}</button>
       <div ngbDropdownMenu aria-labelledby="dropdownFilterLanguage">
         <button class="dropdown-item" (click)="writeValue('')" translate>All languages</button>
