@@ -85,19 +85,12 @@ export class LocalizedInputComponent {
   }
 
   get addableLanguages() {
-    
-    if (this.property.cardinality === 'multiple') {
-      return this.visibleLanguages;
-    } else {
 
-      const result = this.visibleLanguages.slice();
-
-      for (const addedLanguage of this.property.addedLanguages) {
-        remove(result, addedLanguage);
-      }
-
-      return result;
-    }
+    const allowMultiple = this.property.cardinality === 'multiple';
+    const isNotAddedYet = (lang: string) => !this.property.addedLanguages.includes(lang);
+  
+    return this.languages.filter(lang =>
+      this.isLanguageVisible(lang) && (allowMultiple || isNotAddedYet(lang)));
   }
 
   canAdd() {
@@ -121,13 +114,11 @@ export class LocalizedInputComponent {
   }
 
   get visibleLocalizations() {
-    return this.property.children.filter(child =>
-        !this.filterLanguage || child.lang === this.filterLanguage);
+    return this.property.children.filter(child => this.isLanguageVisible(child.lang));
   }
 
-  get visibleLanguages() {
-    return this.languages.filter(lang =>
-      !this.filterLanguage || lang === this.filterLanguage);
+  isLanguageVisible(language: string) {
+    return !this.filterLanguage || language === this.filterLanguage;
   }
 
 }

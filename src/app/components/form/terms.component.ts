@@ -79,20 +79,14 @@ export class TermsComponent implements OnChanges {
   }
 
   get addableLanguages() {
-
-    if (this.reference.cardinality === 'multiple') {
-      return this.visibleLanguages;
-    } else {
-
-      const result = this.visibleLanguages.slice();
-
-      for (const addedLanguage of this.reference.addedLanguages) {
-        remove(result, addedLanguage);
-      }
-
-      return result;
-    }
+    
+      const allowMultiple = this.reference.cardinality === 'multiple';
+      const isNotAddedYet = (lang: string) => !this.reference.addedLanguages.includes(lang);
+    
+      return this.languages.filter(lang =>
+        this.isLanguageVisible(lang) && (allowMultiple || isNotAddedYet(lang)));
   }
+  
 
   canAdd() {
     return this.editing && this.addableLanguages.length > 0;
@@ -130,13 +124,11 @@ export class TermsComponent implements OnChanges {
   }
 
   get visibleChildren() {
-    return this.children.filter(child =>
-        !this.filterLanguage || child.language === this.filterLanguage);
+    return this.children.filter(child => this.isLanguageVisible(child.language));
   }
 
-  get visibleLanguages() {
-    return this.languages.filter(lang =>
-      !this.filterLanguage || lang === this.filterLanguage);
+  isLanguageVisible(language: string) {
+    return !this.filterLanguage || language === this.filterLanguage;
   }
 
 }
