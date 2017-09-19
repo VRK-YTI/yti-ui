@@ -81,10 +81,10 @@ export class TermsComponent implements OnChanges {
   get addableLanguages() {
 
     if (this.reference.cardinality === 'multiple') {
-      return this.languages;
+      return this.visibleLanguages;
     } else {
 
-      const result = this.languages.slice();
+      const result = this.visibleLanguages.slice();
 
       for (const addedLanguage of this.reference.addedLanguages) {
         remove(result, addedLanguage);
@@ -132,6 +132,11 @@ export class TermsComponent implements OnChanges {
   get visibleChildren() {
     return this.children.filter(child =>
         !this.filterLanguage || child.language === this.filterLanguage);
+  }
+
+  get visibleLanguages() {
+    return this.languages.filter(lang =>
+      !this.filterLanguage || lang === this.filterLanguage);
   }
 
 }

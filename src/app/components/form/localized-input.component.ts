@@ -20,7 +20,7 @@ import { remove } from '../../utils/array';
         <div class="dropdown-menu">
           <button class="dropdown-item" 
                   *ngFor="let language of addableLanguages" 
-                  (click)="addNewLocalization(language)">{{language | uppercase}}</button>
+                  (click)="addNewLocalization(language)">{{language | uppercase}}</button>                  
         </div>
       </div>
     </div>
@@ -85,12 +85,12 @@ export class LocalizedInputComponent {
   }
 
   get addableLanguages() {
-
+    
     if (this.property.cardinality === 'multiple') {
-      return this.languages;
+      return this.visibleLanguages;
     } else {
 
-      const result = this.languages.slice();
+      const result = this.visibleLanguages.slice();
 
       for (const addedLanguage of this.property.addedLanguages) {
         remove(result, addedLanguage);
@@ -124,4 +124,10 @@ export class LocalizedInputComponent {
     return this.property.children.filter(child =>
         !this.filterLanguage || child.lang === this.filterLanguage);
   }
+
+  get visibleLanguages() {
+    return this.languages.filter(lang =>
+      !this.filterLanguage || lang === this.filterLanguage);
+  }
+
 }
