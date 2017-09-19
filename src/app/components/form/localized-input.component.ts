@@ -3,7 +3,6 @@ import { FormControl } from '@angular/forms';
 import { ConceptNode } from '../../entities/node';
 import { EditableService } from '../../services/editable.service';
 import { FormPropertyLocalizable } from '../../services/form-state';
-import { remove } from '../../utils/array';
 
 @Component({
   selector: 'app-localized-input',
@@ -88,7 +87,7 @@ export class LocalizedInputComponent {
 
     const allowMultiple = this.property.cardinality === 'multiple';
     const isNotAddedYet = (lang: string) => !this.property.addedLanguages.includes(lang);
-  
+
     return this.languages.filter(lang =>
       this.isLanguageVisible(lang) && (allowMultiple || isNotAddedYet(lang)));
   }

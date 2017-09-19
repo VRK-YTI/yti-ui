@@ -2,7 +2,6 @@ import { Component, Input, OnChanges } from '@angular/core';
 import { EditableService } from '../../services/editable.service';
 import { FormNode, FormReferenceTerm } from '../../services/form-state';
 import { MetaModelService } from '../../services/meta-model.service';
-import { remove } from '../../utils/array';
 
 @Component({
   selector: 'app-terms',
@@ -79,14 +78,14 @@ export class TermsComponent implements OnChanges {
   }
 
   get addableLanguages() {
-    
+
       const allowMultiple = this.reference.cardinality === 'multiple';
       const isNotAddedYet = (lang: string) => !this.reference.addedLanguages.includes(lang);
-    
+
       return this.languages.filter(lang =>
         this.isLanguageVisible(lang) && (allowMultiple || isNotAddedYet(lang)));
   }
-  
+
 
   canAdd() {
     return this.editing && this.addableLanguages.length > 0;
