@@ -621,7 +621,7 @@
         "regex": "(?s)^.*$",
         "id": "definition",
         "uri": "http://www.w3.org/2004/02/skos/core#definition",
-        "index": 0,
+        "index": 2,
         "domain": {
           "id": "Concept",
           "graph": {
@@ -652,7 +652,7 @@
         "regex": "(?s)^.*$",
         "id": "note",
         "uri": "http://www.w3.org/2004/02/skos/core#note",
-        "index": 1,
+        "index": 3,
         "domain": {
           "id": "Concept",
           "graph": {
@@ -683,7 +683,7 @@
         "regex": "(?s)^.*$",
         "id": "editorialNote",
         "uri": "http://www.w3.org/2004/02/skos/core#editorialNote",
-        "index": 2,
+        "index": 4,
         "domain": {
           "id": "Concept",
           "graph": {
@@ -714,7 +714,7 @@
         "regex": "(?s)^.*$",
         "id": "example",
         "uri": "http://www.w3.org/2004/02/skos/core#example",
-        "index": 3,
+        "index": 5,
         "domain": {
           "id": "Concept",
           "graph": {
@@ -745,7 +745,7 @@
         "regex": "(?s)^.*$",
         "id": "changeNote",
         "uri": "http://www.w3.org/2004/02/skos/core#changeNote",
-        "index": 4,
+        "index": 6,
         "domain": {
           "id": "Concept",
           "graph": {
@@ -776,7 +776,7 @@
         "regex": "(?s)^.*$",
         "id": "historyNote",
         "uri": "http://www.w3.org/2004/02/skos/core#historyNote",
-        "index": 5,
+        "index": 7,
         "domain": {
           "id": "Concept",
           "graph": {
@@ -807,7 +807,7 @@
         "regex": "(?s)^.*$",
         "id": "status",
         "uri": "http://www.w3.org/2003/06/sw-vocab-status/ns#term_status",
-        "index": 6,
+        "index": 8,
         "domain": {
           "id": "Concept",
           "graph": {
@@ -838,7 +838,7 @@
         "regex": "(?s)^.*$",
         "id": "notation",
         "uri": "http://www.w3.org/2004/02/skos/core#notation",
-        "index": 7,
+        "index": 9,
         "domain": {
           "id": "Concept",
           "graph": {
@@ -863,7 +863,7 @@
         "regex": "(?s)^.*$",
         "id": "source",
         "uri": "http://purl.org/dc/terms/source",
-        "index": 8,
+        "index": 10,
         "domain": {
           "id": "Concept",
           "graph": {
@@ -961,7 +961,7 @@
         },
         "id": "broader",
         "uri": "http://www.w3.org/2004/02/skos/core#broader",
-        "index": 2,
+        "index": 11,
         "domain": {
           "id": "Concept",
           "graph": {
@@ -991,7 +991,7 @@
         },
         "id": "related",
         "uri": "http://www.w3.org/2004/02/skos/core#related",
-        "index": 3,
+        "index": 12,
         "domain": {
           "id": "Concept",
           "graph": {
@@ -1021,7 +1021,7 @@
         },
         "id": "isPartOf",
         "uri": "http://purl.org/dc/terms/isPartOf",
-        "index": 4,
+        "index": 13,
         "domain": {
           "id": "Concept",
           "graph": {
@@ -1051,7 +1051,7 @@
         },
         "id": "relatedMatch",
         "uri": "http://www.w3.org/2004/02/skos/core#relatedMatch",
-        "index": 5,
+        "index": 14,
         "domain": {
           "id": "Concept",
           "graph": {
@@ -1087,7 +1087,7 @@
         },
         "id": "exactMatch",
         "uri": "http://www.w3.org/2004/02/skos/core#exactMatch",
-        "index": 6,
+        "index": 15,
         "domain": {
           "id": "Concept",
           "graph": {
@@ -1123,7 +1123,7 @@
         },
         "id": "closeMatch",
         "uri": "http://www.w3.org/2004/02/skos/core#closeMatch",
-        "index": 7,
+        "index": 16,
         "domain": {
           "id": "Concept",
           "graph": {
