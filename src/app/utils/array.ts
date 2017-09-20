@@ -4,18 +4,6 @@ export function limit<T>(arr: T[], limit: number): T[] {
   return arr.slice(0, Math.min(limit, arr.length));
 }
 
-export function filter<T, R extends T>(arr: T[], predicate: (item: T) => item is R): R[] {
-  const result: R[] = [];
-
-  for (const item of arr) {
-    if (predicate(item)) {
-      result.push(item);
-    }
-  }
-
-  return result;
-}
-
 export function normalizeAsArray<T>(obj: T|T[]|undefined): T[] {
   return Array.isArray(obj) ? obj : isDefined(obj) ? [obj] : [];
 }
