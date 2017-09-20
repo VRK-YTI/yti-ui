@@ -251,6 +251,10 @@ export class FormReferenceLiteral<N extends KnownNode | Node<any>>{
   assignChanges(reference: Reference<any>) {
     reference.values = this.value;
   }
+
+  hasContentForLanguage(language: string) {
+    return !this.valueEmpty;
+  }
 }
 
 export class FormReferenceTerm {
@@ -332,6 +336,17 @@ export class FormReferenceTerm {
   assignChanges(reference: Reference<any>) {
     reference.values = this.value;
   }
+
+  hasContentForLanguage(language: string) {
+    let contentFound = false;
+    
+        for (let child of this.value) {
+          if (child.language === language && child.properties)
+            contentFound = true;
+        }
+
+    return contentFound;
+  }
 }
 
 export class FormPropertyLiteral {
@@ -399,6 +414,10 @@ export class FormPropertyLiteral {
 
     const regex = this.meta.regex;
     property.attributes = [{ lang: '', value: this.value, regex }];
+  }
+
+  hasContentForLanguage(language: string) {
+    return !this.valueEmpty;
   }
 }
 
@@ -482,6 +501,10 @@ export class FormPropertyLiteralList {
 
     const regex = this.meta.regex;
     property.attributes = this.value.map(value => ({ lang: '', value, regex }));
+  }
+
+  hasContentForLanguage(language: string) {
+    return !this.valueEmpty;
   }
 }
 
@@ -573,6 +596,18 @@ export class FormPropertyLocalizable {
 
     const regex = this.meta.regex;
     property.attributes = this.value.map(localization => ({ lang: localization.lang, value: localization.value, regex }));
+  }
+
+  hasContentForLanguage(language: string) {
+    let contentFound = false;
+
+    for (let child of this.value) {
+      if (child.lang === language && child.value.trim() !== '')
+        contentFound = true;
+    }
+
+
+    return contentFound;
   }
 }
 

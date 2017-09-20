@@ -90,9 +90,10 @@ export class CollectionComponent implements EditingComponent, OnDestroy {
   get showEmpty() {
     return this.editableService.editing;
   }
-
+  
   get fields() {
-    return this.formNode.fields.filter(f => this.showEmpty || !f.value.valueEmpty);
+    return this.formNode.fields.filter(f =>
+      this.showEmpty || (!f.value.valueEmpty && (!this.filterLanguage || f.value.hasContentForLanguage(this.filterLanguage))));
   }
 
   get formNode() {

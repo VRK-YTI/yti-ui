@@ -60,7 +60,8 @@ export class ConceptFormComponent {
   }
 
   get fields() {
-    return this.form.fields.filter(f => this.showEmpty || !f.value.valueEmpty);
+    return this.form.fields.filter(f =>
+      this.showEmpty || (!f.value.valueEmpty && (!this.filterLanguage || f.value.hasContentForLanguage(this.filterLanguage))));
   }
 
   onConceptRemove(concept: ConceptNode) {
