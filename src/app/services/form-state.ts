@@ -338,14 +338,8 @@ export class FormReferenceTerm {
   }
 
   hasContentForLanguage(language: string) {
-    let contentFound = false;
-    
-        for (let child of this.value) {
-          if (child.language === language && child.properties)
-            contentFound = true;
-        }
-
-    return contentFound;
+    const isNotEmpty = (value: TermNode) => value.term;
+    return anyMatching(this.value, v => v.language === language && isNotEmpty(v));
   }
 }
 
@@ -599,15 +593,8 @@ export class FormPropertyLocalizable {
   }
 
   hasContentForLanguage(language: string) {
-    let contentFound = false;
-
-    for (let child of this.value) {
-      if (child.lang === language && child.value.trim() !== '')
-        contentFound = true;
-    }
-
-
-    return contentFound;
+    const isNotEmpty = (value: string) => value.trim() !== '';
+    return anyMatching(this.value, v => v.lang === language && isNotEmpty(v.value));
   }
 }
 

@@ -4,7 +4,7 @@ import { SearchConceptModalService } from './search-concept-modal.component';
 import { SelectConceptReferenceModalService } from './select-concept-reference-modal.component';
 import { ignoreModalClose, isModalClose } from '../../utils/modal';
 import { anyMatching } from '../../utils/array';
-import { FormNode } from '../../services/form-state';
+import { FormNode, FormField } from '../../services/form-state';
 import { EditableService } from '../../services/editable.service';
 
 @Component({
@@ -60,8 +60,12 @@ export class ConceptFormComponent {
   }
 
   get fields() {
-    return this.form.fields.filter(f =>
-      this.showEmpty || (!f.value.valueEmpty && (!this.filterLanguage || f.value.hasContentForLanguage(this.filterLanguage))));
+    
+    const hasContent = (field: FormField) =>
+      this.filterLanguage ? field.hasContentForLanguage(this.filterLanguage)
+                          : !field.valueEmpty;
+  
+    return this.form.fields.filter(f => this.showEmpty || hasContent(f.value));
   }
 
   onConceptRemove(concept: ConceptNode) {

@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { DeleteConfirmationModalService } from '../common/delete-confirmation-modal.component';
 import { requireDefined } from '../../utils/object';
 import { LanguageService } from '../../services/language.service';
+import { FormField } from 'app/services/form-state';
 
 @Component({
   selector: 'app-collection',
@@ -90,10 +91,14 @@ export class CollectionComponent implements EditingComponent, OnDestroy {
   get showEmpty() {
     return this.editableService.editing;
   }
-  
+
   get fields() {
-    return this.formNode.fields.filter(f =>
-      this.showEmpty || (!f.value.valueEmpty && (!this.filterLanguage || f.value.hasContentForLanguage(this.filterLanguage))));
+    
+    const hasContent = (field: FormField) =>
+      this.filterLanguage ? field.hasContentForLanguage(this.filterLanguage)
+                          : !field.valueEmpty;
+  
+    return this.formNode.fields.filter(f => this.showEmpty || hasContent(f.value));
   }
 
   get formNode() {
