@@ -1,11 +1,6 @@
 {
-  "/api/*": {
-    "target": "http://localhost:8080",
-    "secure": false
-  },
-  "/es/*": {
-    "pathRewrite": { "^/es" : "" },
-    "target": "http://localhost:9200",
+  "/frontend/*": {
+    "target": "http://localhost:8001",
     "secure": false
   }
 }
