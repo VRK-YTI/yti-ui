@@ -1,4 +1,4 @@
 #!/bin/bash
 #
 #
-docker build $* -t iow-termed-ui .
+docker build $* -t yti-terminology-ui .

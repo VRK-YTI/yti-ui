@@ -1,5 +1,6 @@
-# iow-termed-ui
-New user interface for termed project
+# yti-terminology-ui
+
+User interface for terminology editor
 
 ## Prepare tools
 
