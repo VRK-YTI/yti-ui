@@ -21,7 +21,7 @@ export class MetaModelService {
 
     Observable.zip(this.getGraphs(), this.getAllMetaNodesByGraph())
       .subscribe(([graphs, metaNodesByGraph]) => {
-        const graphMetas = graphs.map(graph => MetaModelService.createGraphMetaFromNodeMetas(graph, metaNodesByGraph.get(graph.id)!));
+        const graphMetas = graphs.map(graph => MetaModelService.createGraphMetaFromNodeMetas(graph, metaNodesByGraph.get(graph.id) || []));
         this.metaCache.next(index(graphMetas, graphMeta => graphMeta.graphId));
         this.metaCache.complete();
         this.templates.next(graphMetas.filter(graphMeta => graphMeta.template));
