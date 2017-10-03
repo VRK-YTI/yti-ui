@@ -103,9 +103,9 @@ export class MetaModelService {
   updateMeta(graphMeta: GraphMeta): Observable<any> {
 
     const params = new URLSearchParams();
-    params.append('batch', 'true');
+    params.append('graphId', graphMeta.graphId);
 
-    return Observable.zip(this.metaCache, this.http.post(`${environment.api_url}/graphs/${graphMeta.graphId}/types`, graphMeta.toNodes(), { search: params }))
+    return Observable.zip(this.metaCache, this.http.post(`${environment.api_url}/types`, graphMeta.toNodes(), { search: params }))
       .do(([metaCache, response]) => metaCache.set(graphMeta.graphId, graphMeta));
   }
 
@@ -118,9 +118,9 @@ export class MetaModelService {
   private removeMetaNodes(graphId: string, nodes: NodeMetaInternal[]) {
 
     const params = new URLSearchParams();
-    params.append('batch', 'true');
+    params.append('graphId', graphId);
 
-    return this.http.delete(`${environment.api_url}/graphs/${graphId}/types`, { search: params, body: nodes });
+    return this.http.delete(`${environment.api_url}/types`, { search: params, body: nodes });
   }
 
   private getGraph(graphId: string): Observable<Graph> {
