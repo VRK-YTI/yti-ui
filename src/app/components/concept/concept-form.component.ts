@@ -1,17 +1,18 @@
 import { Component, Input } from '@angular/core';
-import { ConceptNode } from '../../entities/node';
+import { ConceptNode, VocabularyNode } from '../../entities/node';
 import { SearchConceptModalService } from './search-concept-modal.component';
 import { SelectConceptReferenceModalService } from './select-concept-reference-modal.component';
 import { ignoreModalClose, isModalClose } from '../../utils/modal';
 import { anyMatching } from '../../utils/array';
 import { FormNode, FormField } from '../../services/form-state';
 import { EditableService } from '../../services/editable.service';
+import { requireDefined } from '../../utils/object';
 
 @Component({
   selector: 'app-concept-form',
   template: `
     <div class="row">
-
+    
       <ng-container *ngFor="let field of fields" [ngSwitch]="field.value.fieldType">
 
         <app-property *ngSwitchCase="'property'"
@@ -32,10 +33,11 @@ import { EditableService } from '../../services/editable.service';
                        [reference]="field.value"
                        [concept]="concept"
                        [id]="field.name"
-                       [filterLanguage]="filterLanguage"></app-reference>
+                       [filterLanguage]="filterLanguage"
+                       [vocabulary]="vocabulary"></app-reference>
 
       </ng-container>
-
+      
     </div>
 
     <app-meta-information [hidden]="!concept.persistent" [node]="concept"></app-meta-information>
@@ -43,6 +45,7 @@ import { EditableService } from '../../services/editable.service';
 })
 export class ConceptFormComponent {
 
+  @Input() vocabulary: VocabularyNode;
   @Input() concept: ConceptNode;
   @Input() form: FormNode;
   @Input() multiColumn = false;
@@ -81,7 +84,7 @@ export class ConceptFormComponent {
 
     const restricts = [{ graphId: this.concept.graphId, conceptId: this.concept.id, reason: 'self reference error'}];
 
-    return this.searchConceptModalService.openForGraph(this.concept.graphId, name, restricts)
+    return this.searchConceptModalService.openForVocabulary(requireDefined(this.vocabulary), name, restricts)
       .then(concept => {
         if (!this.form.hasConceptReference(concept.id)) {
           return this.selectConceptReferenceModalService.open(this.form)

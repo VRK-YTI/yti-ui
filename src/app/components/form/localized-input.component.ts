@@ -13,7 +13,7 @@ import { FormPropertyLocalizable } from '../../services/form-state';
       <div ngbDropdown class="add-button">
         <button class="btn btn-default" 
                 ngbDropdownToggle 
-                ngbTooltip="{{'Add' | translate}} {{property.label | translateValue | lowercase}}">
+                ngbTooltip="{{'Add' | translate}} {{property.label | translateValue:false | lowercase}}">
           <i class="fa fa-plus"></i>
         </button>
         <div class="dropdown-menu">
@@ -58,7 +58,7 @@ import { FormPropertyLocalizable } from '../../services/form-state';
           <button *ngIf="canRemove()"
                   class="btn btn-default remove-button"
                   (click)="removeValue(child)"
-                  ngbTooltip="{{'Remove' | translate}} {{property.label | translateValue | lowercase}}" [placement]="'left'">
+                  ngbTooltip="{{'Remove' | translate}} {{property.label | translateValue:false | lowercase}}" [placement]="'left'">
             <i class="fa fa-trash"></i>
           </button>
       </div>

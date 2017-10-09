@@ -9,19 +9,19 @@ import { Localizable } from '../entities/localization';
   pure: false
 })
 export class TranslateValuePipe implements PipeTransform, OnDestroy {
-
+  
   localization?: string;
   changeSubscription?: Subscription;
 
   constructor(private languageService: LanguageService) {
   }
 
-  transform(value: Localizable): string {
+  transform(value: Localizable, useFilterLanguage = true): string {
 
-    this.localization = this.languageService.translate(value);
+    this.localization = this.languageService.translate(value, useFilterLanguage);
 
     this.languageService.languageChange$.subscribe(() => {
-      this.localization = this.languageService.translate(value);
+      this.localization = this.languageService.translate(value, useFilterLanguage);
     });
 
     return this.localization;

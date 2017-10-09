@@ -21,7 +21,8 @@ import { EditableService } from '../../services/editable.service';
                        [reference]="field.value"
                        [id]="field.name"
                        [unsaved]="!vocabulary.persistent"
-                       [filterLanguage]="filterLanguage"></app-reference>
+                       [filterLanguage]="filterLanguage"
+                       [vocabulary]="vocabulary"></app-reference>
 
       </ng-container>
     </div>

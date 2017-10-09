@@ -36,7 +36,7 @@ export class SelectConceptReferenceModalService {
           <div class="form-group">
             <label for="status" translate>Reference type</label>
             <select id="status " class="form-control" [(ngModel)]="selection">
-              <option *ngFor="let reference of conceptReferences" [ngValue]="reference">{{reference.label | translateValue}}</option>
+              <option *ngFor="let reference of conceptReferences" [ngValue]="reference">{{reference.label | translateValue:false}}</option>
             </select>
           </div>
           

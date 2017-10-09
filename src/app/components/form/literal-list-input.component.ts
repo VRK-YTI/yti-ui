@@ -13,7 +13,7 @@ import { FormControl } from '@angular/forms';
 
       <div class="clearfix">
         <button type="button"
-                ngbTooltip="{{'Add' | translate}} {{property.label | translateValue | lowercase}}" [placement]="'left'"
+                ngbTooltip="{{'Add' | translate}} {{property.label | translateValue:false | lowercase}}" [placement]="'left'"
                 class="btn btn-default add-button"
                 (click)="addNewValue()">
           <i class="fa fa-plus"></i>
@@ -48,7 +48,7 @@ import { FormControl } from '@angular/forms';
         <button *ngIf="canRemove()"
                 class="btn btn-default remove-button"
                 (click)="removeValue(control)"
-                ngbTooltip="{{'Remove' | translate}} {{property.label | translateValue | lowercase}}" [placement]="'left'">
+                ngbTooltip="{{'Remove' | translate}} {{property.label | translateValue:false | lowercase}}" [placement]="'left'">
           <i class="fa fa-trash"></i>
         </button>
       </div>

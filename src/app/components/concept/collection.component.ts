@@ -47,7 +47,8 @@ import { FormField } from 'app/services/form-state';
                            [reference]="field.value"
                            [id]="field.name"
                            [unsaved]="unsaved"
-                           [filterLanguage]="filterLanguage"></app-reference>
+                           [filterLanguage]="filterLanguage"
+                           [vocabulary]="vocabulary"></app-reference>
 
           </ng-container>
 
@@ -138,6 +139,10 @@ export class CollectionComponent implements EditingComponent, OnDestroy {
 
   get filterLanguages() {
     return this.conceptViewModel.languages;
+  }
+
+  get vocabulary() {
+    return this.conceptViewModel.vocabulary;
   }
 
 }

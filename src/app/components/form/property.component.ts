@@ -12,7 +12,7 @@ type FormProperty = FormPropertyLiteral
   styleUrls: ['./property.component.scss'],
   template: `
     <dl *ngIf="show">
-      <dt><label [for]="id">{{property.label | translateValue}}</label></dt>
+      <dt><label [for]="id">{{property.label | translateValue:false}}</label></dt>
       <dd [ngSwitch]="property.type">
         
         <app-localized-input *ngSwitchCase="'localizable'"

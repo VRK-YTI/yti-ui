@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ConceptNode } from '../../entities/node';
+import { ConceptNode, VocabularyNode } from '../../entities/node';
 import { EditableService } from '../../services/editable.service';
 import { Restrict, SearchConceptModalService } from './search-concept-modal.component';
 import { ignoreModalClose } from '../../utils/modal';
 import { FormReferenceLiteral } from '../../services/form-state';
-import { isDefined } from '../../utils/object';
+import { isDefined, requireDefined } from '../../utils/object';
 
 @Component({
   selector: 'app-concept-reference-input',
@@ -31,6 +31,7 @@ import { isDefined } from '../../utils/object';
 })
 export class ConceptReferenceInputComponent {
 
+  @Input() vocabulary: VocabularyNode;
   @Input() self?: ConceptNode;
   @Input() reference: FormReferenceLiteral<ConceptNode>;
   @Output('conceptRemove') conceptRemove = new EventEmitter<ConceptNode>();
@@ -55,7 +56,7 @@ export class ConceptReferenceInputComponent {
       ...this.reference.value.map(({ graphId, id }) => ({ graphId, conceptId: id, reason: 'already added error'}))
     ];
 
-    this.searchConceptModal.openForGraph(this.reference.targetGraph, '', restricts)
+    this.searchConceptModal.openForVocabulary(requireDefined(this.vocabulary), '', restricts)
       .then(result => this.reference.addReference(result), ignoreModalClose);
   }
 }

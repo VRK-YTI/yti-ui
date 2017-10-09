@@ -34,7 +34,7 @@ import { FormControl } from '@angular/forms';
                           id="vocabularyType"
                           [formControl]="templateControl">
                     <option *ngFor="let templateMeta of templates" [ngValue]="templateMeta">
-                      {{templateMeta.label | translateValue}}
+                      {{templateMeta.label | translateValue:false}}
                     </option>
                   </select>
                 </dd>

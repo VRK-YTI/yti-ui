@@ -38,7 +38,7 @@ import { LanguageService } from '../../services/language.service';
             <div class="row">
               <div class="col-md-12">
                 <div class="page-header">
-                  <h1>{{vocabulary.meta.label | translateValue}}</h1>
+                  <h1>{{vocabulary.meta.label | translateValue:false}}</h1>
                 </div>
               </div>
             </div>

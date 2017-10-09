@@ -9,6 +9,7 @@ import { ElasticSearchService, IndexedConcept } from '../../services/elasticsear
 import { FormNode } from '../../services/form-state';
 import { defaultLanguages } from '../../utils/language';
 import { firstMatching } from '../../utils/array';
+import { LanguageService } from '../../services/language.service';
 
 type Mode = 'include'|'exclude';
 
@@ -24,20 +25,24 @@ export class SearchConceptModalService {
   constructor(private modalService: NgbModal) {
   }
 
-  openForGraph(graphId: string, initialSearch: string, restricts: Restrict[]): Promise<ConceptNode> {
+  openForVocabulary(vocabulary: VocabularyNode, initialSearch: string, restricts: Restrict[]): Promise<ConceptNode> {
     const modalRef = this.modalService.open(SearchConceptModalComponent, { size: 'lg' });
     const instance = modalRef.componentInstance as SearchConceptModalComponent;
-    instance.graphId = graphId;
+    instance.graphId = vocabulary.graphId;
+    instance.vocabulary = vocabulary;
+    instance.filterLanguages = vocabulary.languages;
     instance.mode = 'include';
     instance.initialSearch = initialSearch;
     instance.restricts = restricts;
     return modalRef.result;
   }
 
-  openOtherThanGraph(graphId: string, initialSearch = '', restricts: Restrict[]): Promise<ConceptNode> {
+  openOtherThanVocabulary(vocabulary: VocabularyNode, initialSearch = '', restricts: Restrict[]): Promise<ConceptNode> {
     const modalRef = this.modalService.open(SearchConceptModalComponent, { size: 'lg' });
     const instance = modalRef.componentInstance as SearchConceptModalComponent;
-    instance.graphId = graphId;
+    instance.graphId = vocabulary.graphId;
+    instance.vocabulary = vocabulary;
+    instance.filterLanguages = vocabulary.languages;
     instance.mode = 'exclude';
     instance.initialSearch = initialSearch;
     instance.restricts = restricts;
@@ -59,7 +64,12 @@ export class SearchConceptModalService {
     <div class="modal-body full-height">
       <div class="row">
         <div class="col-md-4">
-
+        
+          <div class="col-md-4">
+            <app-filter-language [(ngModel)]="filterLanguage"
+                                 [ngModelOptions]="{standalone: true}"
+                                 [languages]="filterLanguages"></app-filter-language>
+          </div>
           <div class="input-group input-group-lg input-group-search">
             <input #searchInput type="text" class="form-control" placeholder="{{'Search concept...' | translate}}"
                    [(ngModel)]="search"/>
@@ -109,7 +119,9 @@ export class SearchConceptModalService {
           <form>
             <app-concept-form *ngIf="selection && !loadingSelection"
                               [concept]="selection"
-                              [form]="formNode"></app-concept-form>
+                              [form]="formNode"
+                              [filterLanguage]="filterLanguage"
+                              [vocabulary]="vocabulary"></app-concept-form>
           </form>
           <app-ajax-loading-indicator *ngIf="loadingSelection"></app-ajax-loading-indicator>
         </div>
@@ -141,6 +153,8 @@ export class SearchConceptModalComponent implements OnInit, AfterViewInit {
   @Input() graphId: string;
   @Input() initialSearch: string;
   @Input() restricts: Restrict[];
+  @Input() vocabulary: VocabularyNode;
+  @Input() filterLanguages: string[];
 
   searchResults$ = new BehaviorSubject<IndexedConcept[]>([]);
 
@@ -163,7 +177,8 @@ export class SearchConceptModalComponent implements OnInit, AfterViewInit {
   constructor(public modal: NgbActiveModal,
               private termedService: TermedService,
               private elasticSearchService: ElasticSearchService,
-              private renderer: Renderer) {
+              private renderer: Renderer,
+              private languageService: LanguageService) {
   }
 
   ngOnInit() {
@@ -290,4 +305,13 @@ export class SearchConceptModalComponent implements OnInit, AfterViewInit {
   confirm() {
     this.modal.close(this.selection);
   }
+
+  get filterLanguage() {
+    return this.languageService.filterLanguage;
+  }
+
+  set filterLanguage(lang: string) {
+    this.languageService.filterLanguage = lang;
+  }
+
 }

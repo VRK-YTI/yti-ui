@@ -30,7 +30,7 @@ import { UserService } from '../../services/user.service';
               <span class="title">{{filter.title | translate}}</span>
               <div class="item" [class.selected]="item.selected" (click)="item.toggle()"
                    *ngFor="let item of filter.items">
-                <span class="name">{{item.name | translateValue}}</span>
+                <span class="name">{{item.name | translateValue:false}}</span>
                 <span class="count">({{item.count}})</span>
               </div>
             </div>
@@ -54,14 +54,14 @@ import { UserService } from '../../services/user.service';
 
         <div class="filter-result" *ngFor="let vocabulary of filteredVocabularies" (click)="navigate(vocabulary)">
           <div class="content">
-            <span class="title">{{vocabulary.label | translateValue}}</span>
-            <p>{{vocabulary.description | translateValue}}</p>
+            <span class="title">{{vocabulary.label | translateValue:false}}</span>
+            <p>{{vocabulary.description | translateValue:false}}</p>
           </div>
           <div class="origin">
               <span class="publisher"
-                    *ngIf="vocabulary.hasPublisher()">{{vocabulary.publisher.label | translateValue}}</span>
-            <span class="group" *ngIf="vocabulary.hasGroup()">{{vocabulary.group.label | translateValue}}</span>
-            <span class="type">{{vocabulary.typeLabel | translateValue}}</span>
+                    *ngIf="vocabulary.hasPublisher()">{{vocabulary.publisher.label | translateValue:false}}</span>
+            <span class="group" *ngIf="vocabulary.hasGroup()">{{vocabulary.group.label | translateValue:false}}</span>
+            <span class="type">{{vocabulary.typeLabel | translateValue:false}}</span>
           </div>
         </div>
       </div>

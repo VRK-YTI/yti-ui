@@ -12,7 +12,7 @@ import { MetaModelService } from '../../services/meta-model.service';
       <div ngbDropdown class="add-button">
         <button class="btn btn-default" 
                 ngbDropdownToggle 
-                ngbTooltip="{{'Add' | translate}} {{reference.label | translateValue | lowercase}}">
+                ngbTooltip="{{'Add' | translate}} {{reference.label | translateValue:false | lowercase}}">
           <i class="fa fa-plus"></i>
         </button>
         <div class="dropdown-menu">

@@ -34,25 +34,25 @@ export class LanguageService implements Localizer {
     this.translateService.use(language);
     this.languageChange$.next(language);
   }
-
-  translate(localizable: Localizable) {
-
+  
+  translate(localizable: Localizable, useFilterLanguage = true) {
+    
     if (!isDefined(localizable)) {
       return '';
     }
-
-    const primaryLocalization = localizable[this.language];
-
+  
+    const primaryLocalization = localizable[(useFilterLanguage && this.filterLanguage) || this.language];
+  
     if (primaryLocalization) {
       return primaryLocalization;
     } else {
-
+  
       for (const [language, value] of Object.entries(localizable)) {
         if (value) {
           return `${value} (${language})`;
         }
       }
-
+  
       return '';
     }
   }

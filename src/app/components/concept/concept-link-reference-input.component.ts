@@ -27,7 +27,7 @@ import { Observable } from 'rxjs/Observable';
         </ng-template>
       </li>
     </ul>
-
+    
     <div *ngIf="editing">
       <div *ngFor="let conceptLink of reference.value">
         <a><i class="fa fa-times" (click)="removeReference(conceptLink)"></i></a>
@@ -52,6 +52,7 @@ import { Observable } from 'rxjs/Observable';
 })
 export class ConceptLinkReferenceInputComponent implements OnInit {
 
+  @Input() vocabulary: VocabularyNode;
   @Input() reference: FormReferenceLiteral<ConceptLinkNode>;
   metaModel: Observable<MetaModel>;
 
@@ -78,7 +79,7 @@ export class ConceptLinkReferenceInputComponent implements OnInit {
     const graphId = this.reference.targetGraph;
     const restricts = this.reference.value.map(ref => ({ graphId: ref.targetGraph, conceptId: ref.targetId, reason: 'already added error'}));
 
-    this.searchConceptModal.openOtherThanGraph(graphId, '', restricts).then(concept => {
+    this.searchConceptModal.openOtherThanVocabulary(this.vocabulary, '', restricts).then(concept => {
       this.termedService.getVocabulary(concept.graphId)
         .flatMap(vocabulary => this.createConceptLink(graphId, vocabulary, concept))
         .subscribe(conceptLink => this.reference.addReference(conceptLink));
@@ -95,7 +96,7 @@ export class ConceptLinkReferenceInputComponent implements OnInit {
   template: `
     <dl>
       <dt>
-        <label>{{link.vocabularyMetaLabel | translateValue}}</label>
+        <label>{{link.vocabularyMetaLabel | translateValue:false}}</label>
       </dt>
       <dd>
         <span>{{link.vocabularyLabel | translateValue}}</span>

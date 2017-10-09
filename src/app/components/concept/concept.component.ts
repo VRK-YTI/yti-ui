@@ -30,7 +30,7 @@ import { LanguageService } from '../../services/language.service';
           </div>
         </div>
   
-        <app-concept-form [form]="formNode" [concept]="concept" [multiColumn]="true" [filterLanguage]="filterLanguage"></app-concept-form>
+        <app-concept-form [form]="formNode" [concept]="concept" [multiColumn]="true" [filterLanguage]="filterLanguage" [vocabulary]="vocabulary"></app-concept-form>
       </form>
       
     </div>
@@ -96,6 +96,10 @@ export class ConceptComponent implements EditingComponent, OnDestroy {
 
   get filterLanguages() {
     return this.conceptViewModel.languages;
+  }
+
+  get vocabulary() {
+    return this.conceptViewModel.vocabulary;
   }
 
 }

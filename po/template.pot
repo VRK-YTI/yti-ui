@@ -109,10 +109,10 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-msgid "All languages"
+msgid "Content in"
 msgstr ""
 
-msgid "Content in"
+msgid "All languages"
 msgstr ""
 
 msgid "Add"

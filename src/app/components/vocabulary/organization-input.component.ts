@@ -9,13 +9,13 @@ import { FormReferenceLiteral } from '../../services/form-state';
   selector: 'app-organization-input',
   template: `
 
-    <span *ngIf="!editing">{{reference.singleValue.label | translateValue}}</span>
+    <span *ngIf="!editing">{{reference.singleValue.label | translateValue:false}}</span>
     
     <div *ngIf="editing && organizations" class="form-group" [ngClass]="{'has-danger': valueInError()}">
       <div>
         <select class="form-control" [formControl]="reference.control">
           <option *ngIf="reference.valueEmpty" [ngValue]="null" translate>No organization</option>
-          <option *ngFor="let organization of organizations" [ngValue]="organization">{{organization.label | translateValue}}</option>
+          <option *ngFor="let organization of organizations" [ngValue]="organization">{{organization.label | translateValue:false}}</option>
         </select>
 
         <app-error-messages [control]="reference.control"></app-error-messages>

@@ -44,7 +44,7 @@ interface Reference {
   
             <ul>
               <li *ngFor="let reference of references">
-                {{reference.meta.label | translateValue}}
+                {{reference.meta.label | translateValue:false}}
                 <ul>
                   <li *ngFor="let node of reference.nodes">
                     {{node.label | translateValue}}

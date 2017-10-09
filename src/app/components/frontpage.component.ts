@@ -56,7 +56,7 @@ import { statuses } from '../entities/constants';
               <label for="vocabularyFilter" translate>Vocabulary</label>
               <select id="vocabularyFilter " class="form-control" [(ngModel)]="onlyVocabulary">
                 <option [ngValue]="null" translate>All vocabularies</option>
-                <option *ngFor="let vocabulary of vocabularies" [ngValue]="vocabulary">{{vocabulary.label | translateValue}}</option>
+                <option *ngFor="let vocabulary of vocabularies" [ngValue]="vocabulary">{{vocabulary.label | translateValue:false}}</option>
               </select>
             </div>
           </div>
@@ -72,11 +72,11 @@ import { statuses } from '../entities/constants';
             
             <div class="search-result"
                  *ngFor="let concept of searchResults; trackBy: conceptIdentity" (click)="navigate(concept)">
-              <h6 [innerHTML]="concept.label | translateValue"></h6>
-              <p [innerHTML]="concept.definition | translateValue | stripMarkdown"></p>
+              <h6 [innerHTML]="concept.label | translateValue:false"></h6>
+              <p [innerHTML]="concept.definition | translateValue:false | stripMarkdown"></p>
 
               <div class="origin">
-                <span class="pull-left">{{concept.vocabulary.label | translateValue}}</span>
+                <span class="pull-left">{{concept.vocabulary.label | translateValue:false}}</span>
               </div>
             </div>
 
