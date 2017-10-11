@@ -230,3 +230,13 @@ function formatSpaces(amount: number, singleAsNbsp: boolean): string {
     return result;
   }
 }
+
+export function isInDocument(node: Node|null) {
+  while (node !== null) {
+    if (node === document) {
+      return true;
+    }
+    node = node.parentNode;
+  }
+  return false;
+}

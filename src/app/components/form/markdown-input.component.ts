@@ -2,7 +2,7 @@ import { Component, ElementRef, forwardRef, Input, OnInit, ViewChild } from '@an
 import { NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 
 import { Node as MarkdownNode, Parser } from 'commonmark';
-import { DomPath, DomPoint, DomSelection, formatTextContent, moveCursor, removeChildren } from '../../utils/dom';
+import { DomPath, DomPoint, DomSelection, formatTextContent, isInDocument, moveCursor, removeChildren } from '../../utils/dom';
 import {
   insertBefore, nextOf, previousOf, remove, firstMatching,
   last, allMatching, first, previousOfMatching, nextOfMatching
@@ -180,8 +180,14 @@ class Model {
 
     text.remove();
 
-    new Point(selectionAsLink.text, cursor - start).moveCursor();
-    this.updateSelection();
+    if (!this.isDetached()) {
+      new Point(selectionAsLink.text, cursor - start).moveCursor();
+      this.updateSelection();
+    }
+  }
+
+  isDetached() {
+    return !isInDocument(this.node);
   }
 
   unlink() {
