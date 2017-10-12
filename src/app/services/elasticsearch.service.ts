@@ -270,7 +270,7 @@ export class ElasticSearchService {
       });
     }
 
-    const sort: any[] = filter ? ['_score'] : [`sortByLabel.${this.languageService.language}`];
+    const sort: any[] = filter ? ['_score'] : [`sortByLabel.${this.language}`];
 
     if (sortByModified) {
       sort.unshift({ 'modified': { 'order' : 'desc' } });
@@ -315,7 +315,7 @@ export class ElasticSearchService {
       },
       from,
       size,
-      sort: [`sortByLabel.${this.languageService.language}`]
+      sort: [`sortByLabel.${this.language}`]
     }).map(result => result.hits.hits.map(hit => new IndexedConcept(hit)));
   }
 
@@ -340,11 +340,11 @@ export class ElasticSearchService {
       },
       from: 0,
       size: 10000,
-      sort: [`sortByLabel.${this.languageService.language}`]
+      sort: [`sortByLabel.${this.language}`]
     }).map(result => result.hits.hits.map(hit => new IndexedConcept(hit)));
   }
 
   private get language() {
-    return this.languageService.language;
+    return this.languageService.translateLanguage;
   }
 }
