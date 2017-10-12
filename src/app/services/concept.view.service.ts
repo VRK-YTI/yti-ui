@@ -87,12 +87,13 @@ export class ConceptListModel {
   private loaded = 0;
   private canLoadMore = true;
 
-  constructor(private elasticSearchService: ElasticSearchService) {
+  constructor(private elasticSearchService: ElasticSearchService,
+              languageService: LanguageService) {
 
     const initialSearch = this.search$.take(1);
     const debouncedSearch = this.search$.skip(1).debounceTime(500);
     const search = initialSearch.concat(debouncedSearch);
-    const conditionChange = Observable.combineLatest(search, this.sortByTime$, this.onlyStatus$);
+    const conditionChange = Observable.combineLatest(search, this.sortByTime$, this.onlyStatus$, languageService.translateLanguage$);
 
     this.initializing$.switchMap(initializing => initializing ? Observable.never() : conditionChange)
       .subscribe(() => this.loadConcepts(true));
@@ -182,19 +183,26 @@ export class ConceptHierarchyModel {
   topConcepts$ = new BehaviorSubject<IndexedConcept[]>([]);
   nodes = new Map<string, { expanded: boolean, narrowerConcepts: BehaviorSubject<IndexedConcept[]> } >();
   loading = false;
+  private initializing$ = new Subject<boolean>();
 
   private graphId: string;
   private loaded = 0;
   private canLoadMore = true;
 
-  constructor(private elasticSearchService: ElasticSearchService) {
+  constructor(private elasticSearchService: ElasticSearchService,
+              languageService: LanguageService) {
+
+    const conditionChange = Observable.combineLatest(languageService.translateLanguage$);
+
+    this.initializing$.switchMap(initializing => initializing ? Observable.never() : conditionChange)
+      .subscribe(() => this.loadConcepts(true));
   }
 
   initializeGraph(graphId: string) {
-
+    this.initializing$.next(true);
     this.graphId = graphId;
     this.loading = true;
-    this.loadConcepts(true);
+    this.initializing$.next(false);
   }
 
   loadConcepts(reset = false) {
@@ -365,8 +373,8 @@ export class ConceptViewModelService {
   conceptId: string|null;
   collectionId: string|null;
 
-  conceptList = new ConceptListModel(this.elasticSearchService);
-  conceptHierarchy = new ConceptHierarchyModel(this.elasticSearchService);
+  conceptList = new ConceptListModel(this.elasticSearchService, this.languageService);
+  conceptHierarchy = new ConceptHierarchyModel(this.elasticSearchService, this.languageService);
   collectionList = new CollectionListModel(this.termedService, this.languageService);
 
   loadingVocabulary = true;
@@ -387,15 +395,15 @@ export class ConceptViewModelService {
       (vocabulary: Action<VocabularyNode>, concept: Action<ConceptNode>, collection: Action<CollectionNode>) => [vocabulary, concept, collection])
       .subscribe(([vocabularyAction, conceptAction, collectionAction]: [Action<VocabularyNode>, Action<ConceptNode>, Action<CollectionNode>]) => {
 
-          if (isSelect(vocabularyAction) || isEdit(vocabularyAction)) {
-            if (isSelect(conceptAction) || isEdit(conceptAction)) {
-              locationService.atConcept(vocabularyAction.item, conceptAction.item);
-            } else if (isSelect(collectionAction) || isEdit(collectionAction)) {
-              locationService.atCollection(vocabularyAction.item, collectionAction.item);
-            } else {
-              locationService.atVocabulary(vocabularyAction.item);
-            }
+        if (isSelect(vocabularyAction) || isEdit(vocabularyAction)) {
+          if (isSelect(conceptAction) || isEdit(conceptAction)) {
+            locationService.atConcept(vocabularyAction.item, conceptAction.item);
+          } else if (isSelect(collectionAction) || isEdit(collectionAction)) {
+            locationService.atCollection(vocabularyAction.item, collectionAction.item);
+          } else {
+            locationService.atVocabulary(vocabularyAction.item);
           }
+        }
       });
 
     this.action$.subscribe(action => {
