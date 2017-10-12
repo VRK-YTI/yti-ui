@@ -24,7 +24,7 @@ export class TranslateSearchValuePipe implements PipeTransform, OnDestroy {
       this.localization = this.formatText(value, search);
     }
 
-    this.languageService.languageChange$.subscribe(() => {
+    this.languageService.language$.subscribe(() => {
       this.localization = this.formatText(value, search);
     });
 

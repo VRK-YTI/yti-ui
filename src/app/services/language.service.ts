@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from 'ng2-translate';
-import { Subject } from 'rxjs';
 import { Localizable } from '../entities/localization';
 import { isDefined } from '../utils/object';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable } from 'rxjs/Observable';
 
 export type Language = string;
 
@@ -13,46 +14,58 @@ export interface Localizer {
 @Injectable()
 export class LanguageService implements Localizer {
 
-  private _language: Language;
-  languageChange$ = new Subject<Language>();
-
-  filterLanguage: Language = '';
+  language$ = new BehaviorSubject<Language>('fi');
+  filterLanguage$ = new BehaviorSubject<Language>('');
+  translateLanguage$ = new BehaviorSubject<Language>(this.language);
 
   constructor(private translateService: TranslateService) {
-    this._language = 'fi';
+
     translateService.addLangs(['fi', 'en']);
-    translateService.use('fi');
     translateService.setDefaultLang('en');
+    this.language$.subscribe(lang => this.translateService.use(lang));
+
+    Observable.combineLatest(this.language$, this.filterLanguage$)
+      .subscribe(([lang, filterLang]) => this.translateLanguage$.next(filterLang || lang));
   }
 
   get language(): Language {
-    return this._language;
+    return this.language$.getValue();
   }
 
   set language(language: Language) {
-    this._language = language;
-    this.translateService.use(language);
-    this.languageChange$.next(language);
+    this.language$.next(language);
   }
-  
+
+  get filterLanguage(): Language {
+    return this.filterLanguage$.getValue();
+  }
+
+  set filterLanguage(language: Language) {
+    this.filterLanguage$.next(language);
+  }
+
+  get translateLanguage(): Language {
+    return this.translateLanguage$.getValue();
+  }
+
   translate(localizable: Localizable, useFilterLanguage = true) {
-    
+
     if (!isDefined(localizable)) {
       return '';
     }
-  
+
     const primaryLocalization = localizable[(useFilterLanguage && this.filterLanguage) || this.language];
-  
+
     if (primaryLocalization) {
       return primaryLocalization;
     } else {
-  
+
       for (const [language, value] of Object.entries(localizable)) {
         if (value) {
           return `${value} (${language})`;
         }
       }
-  
+
       return '';
     }
   }

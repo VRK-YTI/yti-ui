@@ -229,14 +229,14 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
       this.networkData.edges.update(newEdges);
     };
 
-    this.languageService.languageChange$.subscribe(updateNetworkData);
+    this.languageService.language$.subscribe(updateNetworkData);
   }
 
   public ngOnInit(): void {
 
     this.drawLegend();
 
-    this.languageService.languageChange$.subscribe(() => {
+    this.languageService.language$.subscribe(() => {
       this.drawLegend();
     });
 

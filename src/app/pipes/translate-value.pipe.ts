@@ -9,7 +9,7 @@ import { Localizable } from '../entities/localization';
   pure: false
 })
 export class TranslateValuePipe implements PipeTransform, OnDestroy {
-  
+
   localization?: string;
   changeSubscription?: Subscription;
 
@@ -20,7 +20,7 @@ export class TranslateValuePipe implements PipeTransform, OnDestroy {
 
     this.localization = this.languageService.translate(value, useFilterLanguage);
 
-    this.languageService.languageChange$.subscribe(() => {
+    this.languageService.language$.subscribe(() => {
       this.localization = this.languageService.translate(value, useFilterLanguage);
     });
 
