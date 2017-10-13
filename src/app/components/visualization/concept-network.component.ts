@@ -229,7 +229,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
       this.networkData.edges.update(newEdges);
     };
 
-    this.languageService.language$.subscribe(updateNetworkData);
+    this.languageService.translateLanguage$.subscribe(updateNetworkData);
   }
 
   public ngOnInit(): void {
@@ -366,7 +366,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
 
   private createEdgeData(from: ConceptNode|CollectionNode, to: ConceptNode, meta: ReferenceMeta, type: EdgeType): UpdatableVisEdge {
 
-    const title = this.languageService.translate(meta.label) + ': ' +
+    const createTitle = () => this.languageService.translate(meta.label, false) + ': ' +
       this.languageService.translate(from.label) +
       ' &rarr; ' +
       this.languageService.translate(to.label);
@@ -376,7 +376,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
         from: from.id,
         to: to.id,
         id: from.id + to.id,
-        title,
+        title: createTitle(),
         type: type
       };
 
