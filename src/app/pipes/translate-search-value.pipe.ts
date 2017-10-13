@@ -18,7 +18,7 @@ export class TranslateSearchValuePipe implements PipeTransform, OnDestroy {
   constructor(private languageService: LanguageService) {
   }
 
-  transform(value: Localizable, search: string): string {
+  transform(value: Localizable, search: string, useFilterLanguage = true): string {
 
     if (!isDefined(this.localization) || this.previousSearch !== search) {
       this.localization = this.formatText(value, search);
@@ -33,18 +33,18 @@ export class TranslateSearchValuePipe implements PipeTransform, OnDestroy {
     return this.localization;
   }
 
-  formatText(value: Localizable, search: string) {
+  formatText(value: Localizable, search: string, useFilterLanguage = true) {
 
     if (!value) {
       return '';
     }
 
     if (!search) {
-      this.languageService.translate(value);
+      this.languageService.translate(value, useFilterLanguage);
     }
 
     const regex = createSearchRegex(search);
-    const primaryTranslation = this.languageService.translate(value);
+    const primaryTranslation = this.languageService.translate(value, useFilterLanguage);
 
     if (regex.test(primaryTranslation)) {
       return primaryTranslation;
