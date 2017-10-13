@@ -302,14 +302,14 @@ export class CollectionListModel {
   allCollections$ = new BehaviorSubject<CollectionNode[]>([]);
   loading = false;
   graphId: string;
-
+  
   constructor(private termedService: TermedService, private languageService: LanguageService) {
 
     const initialSearch$ = this.search$.take(1);
     const debouncedSearch$ = this.search$.skip(1).debounceTime(500);
     const search$ = initialSearch$.concat(debouncedSearch$);
 
-    this.searchResults = Observable.combineLatest([this.allCollections$, search$], (collections: CollectionNode[], search: string) => {
+    this.searchResults = Observable.combineLatest([this.allCollections$, search$, languageService.translateLanguage$], (collections: CollectionNode[], search: string) => {
 
       this.debouncedSearch = search;
       const scoreFilter = (item: TextAnalysis<CollectionNode>) => !search || isDefined(item.matchScore) || item.score < 2;
