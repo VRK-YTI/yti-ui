@@ -271,16 +271,14 @@ export class MetaModel {
     return Node.create(this.getNodeMeta(graphId, nodeType).createEmptyNode(nodeId), this, false) as N;
   }
 
-  createEmptyVocabulary(graphId: string, nodeId: string, label: string, language: string): VocabularyNode {
+  createEmptyVocabulary(graphId: string, nodeId: string = uuid()): VocabularyNode {
 
     const vocabularyType: VocabularyNodeType = this.graphHas(graphId, 'Vocabulary') ? 'Vocabulary' : 'TerminologicalVocabulary';
 
-    const newVocabulary = this.createEmptyNode<VocabularyNode, VocabularyNodeType>(graphId, nodeId, vocabularyType);
-    newVocabulary.setPrimaryLabel(language, label);
-    return newVocabulary;
+    return this.createEmptyNode<VocabularyNode, VocabularyNodeType>(graphId, nodeId, vocabularyType);
   }
 
-  createEmptyConcept(vocabulary: VocabularyNode, nodeId: string, label: string, language: string): ConceptNode {
+  createEmptyConcept(vocabulary: VocabularyNode, nodeId: string = uuid()): ConceptNode {
 
     const newConcept = this.createEmptyNode<ConceptNode, 'Concept'>(vocabulary.graphId, nodeId, 'Concept');
 
@@ -288,16 +286,11 @@ export class MetaModel {
       newConcept.vocabulary = vocabulary.clone();
     }
 
-    newConcept.setPrimaryLabel(language, label);
-
     return newConcept;
   }
 
-  createEmptyCollection(vocabulary: VocabularyNode, nodeId: string, label: string, language: string): CollectionNode {
-
-    const newCollection = this.createEmptyNode<CollectionNode, 'Collection'>(vocabulary.graphId, nodeId, 'Collection');
-    newCollection.setPrimaryLabel(language, label);
-    return newCollection;
+  createEmptyCollection(vocabulary: VocabularyNode, nodeId: string = uuid()): CollectionNode {
+    return this.createEmptyNode<CollectionNode, 'Collection'>(vocabulary.graphId, nodeId, 'Collection');
   }
 
   createConceptLink(toGraphId: string, fromVocabulary: VocabularyNode, concept: ConceptNode): ConceptLinkNode {

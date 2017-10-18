@@ -302,7 +302,7 @@ export class CollectionListModel {
   allCollections$ = new BehaviorSubject<CollectionNode[]>([]);
   loading = false;
   graphId: string;
-  
+
   constructor(private termedService: TermedService, private languageService: LanguageService) {
 
     const initialSearch$ = this.search$.take(1);
@@ -737,7 +737,9 @@ export class ConceptViewModelService {
     const label$ = this.translateService.get('New concept');
 
     return Observable.zip(label$, this.metaModel).map(([newConceptLabel, meta]) => {
-      return meta.createEmptyConcept(vocabulary, nodeId, newConceptLabel, this.languageService.language);
+      const newConcept = meta.createEmptyConcept(vocabulary, nodeId);
+      newConcept.setPrimaryLabel(this.languageService.language, newConceptLabel);
+      return newConcept;
     });
   }
 
@@ -746,7 +748,9 @@ export class ConceptViewModelService {
     const label$ = this.translateService.get('New collection');
 
     return Observable.zip(label$, this.metaModel).map(([newCollectionLabel, meta]) => {
-      return meta.createEmptyCollection(vocabulary, nodeId, newCollectionLabel, this.languageService.language);
+      const newCollection = meta.createEmptyCollection(vocabulary, nodeId);
+      newCollection.setPrimaryLabel(this.languageService.language, newCollectionLabel);
+      return newCollection;
     });
   }
 }
