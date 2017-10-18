@@ -117,6 +117,17 @@ export class TermedService {
       .flatMap(() => this.removeGraph(graphId));
   }
 
+  saveNodes<T extends NodeType>(nodes: Node<T>[]) {
+
+    const inlineNodes =
+      flatten(flatten(nodes.map(node => node.getAllReferences()))
+        .filter(ref => ref.inline)
+        .map(ref => ref.values.map(n => n.toInternalNode()))
+      );
+
+    this.updateAndDeleteInternalNodes([...inlineNodes, ...nodes.map(node => node.toInternalNode())], []);
+  }
+
   updateNode<T extends NodeType>(node: Node<T>, previous: Node<T>|null) {
 
     node.lastModifiedDate = moment();
