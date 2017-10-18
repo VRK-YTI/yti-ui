@@ -37,8 +37,8 @@ export class Property {
     return this.attributes as Localization[];
   }
 
-  asLocalizable() {
-    return asLocalizable(this.attributes);
+  asLocalizable(ignoreConflicts = false) {
+    return asLocalizable(this.attributes, ignoreConflicts);
   }
 
   setLocalizable(localizable: Localizable) {
@@ -376,20 +376,17 @@ export class VocabularyNode extends Node<VocabularyNodeType> {
     return asLocalizable(this.prefLabel);
   }
 
+  get description(): Localizable {
+    // FIXME: How to handle multiple descriptions?
+    return this.getProperty('description').asLocalizable(true);
+  }
+
   set prefLabel(value: Localization[]) {
     this.getProperty('prefLabel').setLocalizations(value);
   }
 
   get prefLabel(): Localization[] {
     return this.getProperty('prefLabel').asLocalizations();
-  }
-
-  get description(): Localization[] {
-    return this.getProperty('description').asLocalizations();
-  }
-
-  set description(value: Localization[]) {
-    this.getProperty('description').setLocalizations(value);
   }
 
   get publisher(): OrganizationNode {
