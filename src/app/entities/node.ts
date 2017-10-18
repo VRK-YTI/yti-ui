@@ -441,30 +441,62 @@ export class ConceptNode extends Node<'Concept'> {
   }
 
   get prefLabel(): Localization[] {
+    return this.getTermOrPropertyLabel('prefLabelXl', 'prefLabel');
+  }
 
-    const primaryLabel = this.findProperty('prefLabel');
-    const primaryTerms = this.findReference<TermNode>('prefLabelXl');
+  set prefLabel(localizations: Localization[]) {
+    this.setTermOrPropertyLabel('prefLabelXl', 'prefLabel', localizations);
+  }
 
-    if (primaryLabel) {
-      return primaryLabel.asLocalizations();
-    } else if (primaryTerms) {
-      return flatten(primaryTerms.values.map(term => term.getProperty('prefLabel').asLocalizations()));
+  get altLabel(): Localization[] {
+    return this.getTermOrPropertyLabel('altLabelXl', 'altLabel');
+  }
+
+  set altLabel(value: Localization[]) {
+    this.setTermOrPropertyLabel('altLabelXl', 'altLabel', value);
+  }
+
+  get example(): Localization[] {
+    return this.getProperty('example').asLocalizations();
+  }
+
+  set example(value: Localization[]) {
+    this.getProperty('example').setLocalizations(value);
+  }
+
+  get note(): Localization[] {
+    return this.getProperty('note').asLocalizations();
+  }
+
+  set note(value: Localization[]) {
+    this.getProperty('note').setLocalizations(value);
+  }
+
+  private getTermOrPropertyLabel(termName: string, propertyName: string) {
+
+    const labelProperty = this.findProperty(propertyName);
+    const termReference = this.findReference<TermNode>(termName);
+
+    if (labelProperty) {
+      return labelProperty.asLocalizations();
+    } else if (termReference) {
+      return flatten(termReference.values.map(term => term.getProperty('prefLabel').asLocalizations()));
     } else {
       throw new Error('No label found');
     }
   }
 
-  set prefLabel(localizations: Localization[]) {
+  private setTermOrPropertyLabel(termName: string, propertyName: string, localizations: Localization[]) {
 
-    const primaryLabel = this.findProperty('prefLabel');
-    const primaryTerms = this.findReference<TermNode>('prefLabelXl');
+    const labelProperty = this.findProperty(propertyName);
+    const termReference = this.findReference<TermNode>(termName);
 
-    if (primaryLabel) {
-      primaryLabel.setLocalizations(localizations);
-    } else if (primaryTerms) {
+    if (labelProperty) {
+      labelProperty.setLocalizations(localizations);
+    } else if (termReference) {
 
       for (const {lang, value} of localizations) {
-        const term = firstMatching(primaryTerms.values, t => t.language === lang) || primaryTerms.addNewReference();
+        const term = firstMatching(termReference.values, t => t.language === lang) || termReference.addNewReference();
         term.prefLabel = { [lang]: value };
       }
     }
