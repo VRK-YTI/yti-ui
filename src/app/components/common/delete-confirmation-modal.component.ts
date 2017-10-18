@@ -75,7 +75,7 @@ export class DeleteConfirmationModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    Observable.forkJoin(Object.values(this.node.referrers)
+    Observable.forkJoin(this.node.getAllReferrers()
       .map(referrer => this.metaModelService.getReferrersByMeta<Node<any>>(referrer))
     ).subscribe(referrers => this.references = flatten(referrers));
   }

@@ -88,10 +88,10 @@ export class NewVocabularyComponent {
 
       this.metaModelService.copyTemplateToGraph(this.selectedTemplate, graphId).subscribe(newMeta => {
         this.vocabulary = newMeta.createEmptyVocabulary(graphId, vocabularyId);
-        this.vocabulary.setPrimaryLabel(this.languageService.language, label);
+        this.vocabulary.prefLabel = [ { lang: this.languageService.language, value: label} ];
 
         // TODO all meta models don't define language but they should
-        if (this.vocabulary.meta.hasProperty('language')) {
+        if (this.vocabulary.hasLanguage()) {
           this.vocabulary.languages = defaultLanguages.slice();
         }
 

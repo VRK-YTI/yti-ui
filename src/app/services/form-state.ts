@@ -60,7 +60,7 @@ export class FormNode {
       }
     };
 
-    const fields = [... Object.values(node.properties), ...Object.values(node.references)];
+    const fields = [...node.getAllProperties(), ...node.getAllReferences()];
 
     fields.sort(
       comparingPrimitive<Property|Reference<any>>(f => f.meta.index)
@@ -154,11 +154,11 @@ export class FormNode {
   assignChanges(node: Node<any>) {
 
     for (const {name, value} of this.properties) {
-      value.assignChanges(node.properties[name]);
+      value.assignChanges(node.getProperty(name));
     }
 
     for (const {name, value} of this.references) {
-      value.assignChanges(node.references[name]);
+      value.assignChanges(node.getReference(name));
     }
   }
 }
@@ -272,7 +272,6 @@ export class FormReferenceTerm {
     this.targetMeta = reference.targetMeta;
 
     this.children = reference.values
-      .filter(term => term.hasLocalization())
       .map(term => ({ formNode: new FormNode(term, languagesProvider), language: term.language! }));
 
     const childControls = this.children.map(c => c.formNode.control);
@@ -313,7 +312,7 @@ export class FormReferenceTerm {
 
   addTerm(metaModel: MetaModel, language: string) {
     const newTerm = Node.create(this.targetMeta.createEmptyNode(), metaModel, false) as TermNode;
-    newTerm.setLocalization(language, '');
+    newTerm.prefLabel = { [language]: '' };
     const newChild = { formNode: new FormNode(newTerm, this.languagesProvider), language: language };
     this.children.push(newChild);
     this.control.push(newChild.formNode.control);

@@ -738,7 +738,7 @@ export class ConceptViewModelService {
 
     return Observable.zip(label$, this.metaModel).map(([newConceptLabel, meta]) => {
       const newConcept = meta.createEmptyConcept(vocabulary, nodeId);
-      newConcept.setPrimaryLabel(this.languageService.language, newConceptLabel);
+      newConcept.prefLabel = [{ lang: this.languageService.language, value: newConceptLabel }];
       return newConcept;
     });
   }
@@ -749,7 +749,7 @@ export class ConceptViewModelService {
 
     return Observable.zip(label$, this.metaModel).map(([newCollectionLabel, meta]) => {
       const newCollection = meta.createEmptyCollection(vocabulary, nodeId);
-      newCollection.setPrimaryLabel(this.languageService.language, newCollectionLabel);
+      newCollection.prefLabel = [ { lang: this.languageService.language, value: newCollectionLabel }];
       return newCollection;
     });
   }

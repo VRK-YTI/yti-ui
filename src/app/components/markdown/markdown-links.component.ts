@@ -3,7 +3,7 @@ import { Parser, Node as MarkdownNode } from 'commonmark';
 import { ConceptNode } from '../../entities/node';
 import { logUnsupportedNodes, removeWhiteSpaceNodes, children } from '../../utils/markdown';
 import { firstMatching } from '../../utils/array';
-import { Localizable } from '../../entities/localization';
+import { asLocalizable, Localizable } from '../../entities/localization';
 
 const supportedNodeTypes = ['document', 'paragraph', 'link', 'text'];
 const parser = new Parser();
@@ -87,7 +87,8 @@ export class MarkdownLinksElementComponent {
 
   conceptDefinition(node: MarkdownNode): Localizable|null {
     const target = this.getTargetConceptNode(node);
-    return target ? target.definition : null;
+    return target ? asLocalizable(target.definition, true) // FIXME: how to handle multiple definitions?
+                  : null;
   }
 
   get children() {

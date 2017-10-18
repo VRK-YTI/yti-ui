@@ -18,6 +18,7 @@ import { collectProperties } from '../../utils/array';
 import { assertNever, requireDefined } from '../../utils/object';
 import { TranslateService } from 'ng2-translate';
 import { MetaModelService } from '../../services/meta-model.service';
+import { asLocalizable } from '../../entities/localization';
 
 interface ConceptNetworkData {
   nodes: DataSet<UpdatableVisNode>;
@@ -305,7 +306,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
       const node = {
         id: concept.id,
         label: this.languageService.translate(concept.label),
-        title: stripMarkdown(this.languageService.translate(concept.definition))
+        title: stripMarkdown(this.languageService.translate(asLocalizable(concept.definition, true))) // FIXME: how to handle multiple definitions?
       };
 
       return Object.assign(node, { update: createNode })
@@ -336,7 +337,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
       const node = {
         id: collection.id,
         label: this.languageService.translate(collection.label),
-        title: stripMarkdown(this.languageService.translate(collection.definition)),
+        title: stripMarkdown(this.languageService.translate(asLocalizable(collection.definition, true))), // FIXME: how to handle multiple definitions?
         group: 'rootCollectionGroup',
         physics: false,
         fixed: false

@@ -1,6 +1,6 @@
-import { asLocalizable, Localizable, combineLocalizables, Localization } from './localization';
+import { asLocalizable, Localizable, Localization } from './localization';
 import { requireDefined, isDefined } from '../utils/object';
-import { normalizeAsArray, requireSingle, remove } from '../utils/array';
+import { normalizeAsArray, requireSingle, remove, firstMatching, flatten } from '../utils/array';
 import { NodeExternal, NodeType, Attribute, Identifier, NodeInternal, VocabularyNodeType } from './node-api';
 import {
   PropertyMeta, ReferenceMeta, NodeMeta, MetaModel
@@ -21,6 +21,10 @@ export class Property {
   constructor(public attributes: Attribute[], public meta: PropertyMeta) {
   }
 
+  getSingle(): Attribute {
+    return requireSingle(this.attributes);
+  }
+
   remove(attribute: Attribute) {
     remove(this.attributes, attribute);
   }
@@ -29,16 +33,20 @@ export class Property {
     return this.attributes.map(attr => attr.value.trim()).filter(v => !!v);
   }
 
+  asLocalizations() {
+    return this.attributes as Localization[];
+  }
+
   asLocalizable() {
     return asLocalizable(this.attributes);
   }
 
   setLocalizable(localizable: Localizable) {
-    this.attributes = Object.entries(localizable).map(([lang, value]) => ({ lang, value, regex: this.meta.regex }));
+    this.setLocalizations(Object.entries(localizable).map(([lang, value]) => ({ lang, value })));
   }
 
-  setLiteralValue(value: string) {
-    this.attributes = [{ lang: '', value, regex: this.meta.regex }];
+  setLocalizations(localizations: Localization[]) {
+    this.attributes = localizations.map(({lang, value}) => ({ lang, value, regex: this.meta.regex }));
   }
 
   setValues(values: string[]) {
@@ -49,16 +57,16 @@ export class Property {
     return this.asValues().join(',');
   }
 
-  newLocalization(lang: string, value = '') {
-    this.attributes.push({ lang, value, regex: this.meta.regex });
-  }
-
   get literalValue() {
     if (this.attributes.length > 0) {
       return this.attributes[0].value;
     } else {
       return '';
     }
+  }
+
+  set literalValue(value: string) {
+    this.attributes = [{ lang: '', value, regex: this.meta.regex }];
   }
 }
 
@@ -70,8 +78,14 @@ export class Reference<N extends KnownNode | Node<any>> {
     this.values = nodes.map(node => Node.create(node, metaModel, true) as N);
   }
 
-  createNewReference() {
-    return Node.create(this.targetMeta.createEmptyNode(), this.metaModel, false) as N;
+  addNewReference(): N {
+    const value = Node.create(this.targetMeta.createEmptyNode(), this.metaModel, false) as N;
+    this.values.push(value);
+    return value;
+  }
+
+  getSingle(): N {
+    return requireSingle(this.values);
   }
 
   get targetMeta() {
@@ -117,9 +131,9 @@ export class Node<T extends NodeType> {
 
   meta: NodeMeta;
 
-  properties: { [key: string]: Property } = {};
-  references: { [key: string]: Reference<any> } = {};
-  referrers: { [key: string]: Referrer } = {};
+  private properties: { [key: string]: Property } = {};
+  private references: { [key: string]: Reference<any> } = {};
+  private referrers: { [key: string]: Referrer } = {};
 
   protected constructor(protected node: NodeExternal<T>,
                         protected metaModel: MetaModel,
@@ -164,7 +178,7 @@ export class Node<T extends NodeType> {
     }
   }
 
-  protected toNodeWithoutReferencesAndReferrers() {
+  private toNodeWithoutReferencesAndReferrers() {
 
     const serializeProperties = () => {
 
@@ -188,26 +202,6 @@ export class Node<T extends NodeType> {
       uri: this.node.uri,
       properties: serializeProperties()
     };
-  }
-
-  clone<N extends Node<T>>(): N {
-
-    const setPersistent = (original: Node<any>, clone: Node<any>) => {
-
-      clone.persistent = original.persistent;
-
-      for (const [key, reference] of Object.entries(original.references)) {
-        const cloneReferenceValues = clone.references[key].values;
-
-        for (const refNode of reference.values) {
-          setPersistent(refNode, requireDefined(cloneReferenceValues.find(clonedRefNode => refNode.id === clonedRefNode.id)));
-        }
-      }
-    };
-
-    const cloned = Node.create(JSON.parse(JSON.stringify(this.toExternalNode())), this.metaModel, this.persistent) as N;
-    setPersistent(this, cloned);
-    return cloned;
   }
 
   toExternalNode(): NodeExternal<T> {
@@ -257,6 +251,26 @@ export class Node<T extends NodeType> {
       referrers: extractReferrers(),
       references: extractReferences()
     });
+  }
+
+  clone<N extends Node<T>>(): N {
+
+    const setPersistent = (original: Node<any>, clone: Node<any>) => {
+
+      clone.persistent = original.persistent;
+
+      for (const [key, reference] of Object.entries(original.references)) {
+        const cloneReferenceValues = clone.references[key].values;
+
+        for (const refNode of reference.values) {
+          setPersistent(refNode, requireDefined(cloneReferenceValues.find(clonedRefNode => refNode.id === clonedRefNode.id)));
+        }
+      }
+    };
+
+    const cloned = Node.create(JSON.parse(JSON.stringify(this.toExternalNode())), this.metaModel, this.persistent) as N;
+    setPersistent(this, cloned);
+    return cloned;
   }
 
   get identifier(): Identifier<T> {
@@ -315,36 +329,36 @@ export class Node<T extends NodeType> {
     return this.meta.label;
   }
 
+  getAllProperties(): Property[] {
+    return Object.values(this.properties);
+  }
+
+  getAllReferences(): Reference<any>[] {
+    return Object.values(this.references);
+  }
+
+  getAllReferrers(): Referrer[] {
+    return Object.values(this.referrers);
+  }
+
   getNormalizedReferrer<N extends NodeType>(referenceId: string): Referrer {
     return this.referrers[referenceId] || new Referrer(referenceId, []);
   }
 
+  getReference<N extends KnownNode | Node<any>>(referenceId: string): Reference<N> {
+    return requireDefined(this.findReference<N>(referenceId), 'Reference not found: ' + referenceId);
+  }
+
+  findReference<N extends KnownNode | Node<any>>(referenceId: string): Reference<N>|null {
+    return this.references[referenceId] || null;
+  }
+
   getProperty(propertyName: string): Property {
-    return requireDefined(this.properties[propertyName], 'Property not found: ' + propertyName);
+    return requireDefined(this.findProperty(propertyName), 'Property not found: ' + propertyName);
   }
 
-  getPropertyAsLocalizable(propertyName: string): Localizable {
-    return this.getProperty(propertyName).asLocalizable();
-  }
-
-  setPropertyAsLocalizable(propertyName: string, localizable: Localizable) {
-    this.getProperty(propertyName).setLocalizable(localizable);
-  }
-
-  getPropertyAsString(property: string): string {
-    return this.getProperty(property).asString();
-  }
-
-  setPropertyAsLiteral(property: string, value: string) {
-    this.getProperty(property).setLiteralValue(value);
-  }
-
-  getPropertyAsValues(property: string): string[] {
-    return this.getProperty(property).asValues();
-  }
-
-  setPropertyAsValues(property: string, values: string[]) {
-    this.getProperty(property).setValues(values);
+  findProperty(propertyName: string): Property|null {
+    return this.properties[propertyName] || null;
   }
 }
 
@@ -359,20 +373,36 @@ export class VocabularyNode extends Node<VocabularyNodeType> {
   }
 
   get label(): Localizable {
-    return this.getPropertyAsLocalizable('prefLabel');
+    return asLocalizable(this.prefLabel);
   }
 
-  get description(): Localizable {
-    return this.getPropertyAsLocalizable('description');
+  set prefLabel(value: Localization[]) {
+    this.getProperty('prefLabel').setLocalizations(value);
+  }
+
+  get prefLabel(): Localization[] {
+    return this.getProperty('prefLabel').asLocalizations();
+  }
+
+  get description(): Localization[] {
+    return this.getProperty('description').asLocalizations();
+  }
+
+  set description(value: Localization[]) {
+    this.getProperty('description').setLocalizations(value);
   }
 
   get publisher(): OrganizationNode {
-    return requireSingle(this.references['publisher'].values) as OrganizationNode;
+    return this.getReference<OrganizationNode>('publisher').getSingle();
+  }
+
+  hasLanguage() {
+    return this.meta.hasProperty('language')
   }
 
   get languages(): string[] {
     if (this.meta.hasProperty('language')) {
-      const languages = this.getPropertyAsValues('language');
+      const languages = this.getProperty('language').asValues();
       return languages.length > 0 ? languages : defaultLanguages;
     } else {
       return defaultLanguages;
@@ -380,37 +410,19 @@ export class VocabularyNode extends Node<VocabularyNodeType> {
   }
 
   set languages(value: string[]) {
-    this.setPropertyAsValues('language', value);
+    this.getProperty('language').setValues(value);
   }
 
   hasPublisher() {
-    return !this.references['publisher'].empty;
+    return !this.getReference('publisher').empty;
   }
 
   get group(): GroupNode {
-    return requireSingle(this.references['inGroup'].values) as GroupNode;
+    return this.getReference<GroupNode>('inGroup').getSingle();
   }
 
   hasGroup() {
-    return !this.references['inGroup'].empty;
-  }
-
-  setPrimaryLabel(language: string, value: string) {
-    const matchingLocalization = this.findLabelLocalizationForLanguage(language) || this.anyLabelLocalization() || this.createLabelLocalization(language);
-    matchingLocalization.value = value;
-  }
-
-  private createLabelLocalization(language: string) {
-    this.properties['prefLabel'].newLocalization(language);
-    return this.anyLabelLocalization();
-  }
-
-  private findLabelLocalizationForLanguage(language: string): Localization|undefined {
-    return (this.properties['prefLabel'].attributes).find(localization => localization.lang === language);
-  }
-
-  private anyLabelLocalization(): Localization {
-    return this.properties['prefLabel'].attributes[0];
+    return !this.getReference('inGroup').empty;
   }
 }
 
@@ -425,13 +437,45 @@ export class ConceptNode extends Node<'Concept'> {
   }
 
   get label(): Localizable {
-    if (this.properties['prefLabel']) {
-      return this.getPropertyAsLocalizable('prefLabel');
-    } else if (this.references['prefLabelXl']) {
-      return combineLocalizables(this.references['prefLabelXl'].values.map(term => term.getPropertyAsLocalizable('prefLabel')));
+    return asLocalizable(this.prefLabel);
+  }
+
+  get prefLabel(): Localization[] {
+
+    const primaryLabel = this.findProperty('prefLabel');
+    const primaryTerms = this.findReference<TermNode>('prefLabelXl');
+
+    if (primaryLabel) {
+      return primaryLabel.asLocalizations();
+    } else if (primaryTerms) {
+      return flatten(primaryTerms.values.map(term => term.getProperty('prefLabel').asLocalizations()));
     } else {
       throw new Error('No label found');
     }
+  }
+
+  set prefLabel(localizations: Localization[]) {
+
+    const primaryLabel = this.findProperty('prefLabel');
+    const primaryTerms = this.findReference<TermNode>('prefLabelXl');
+
+    if (primaryLabel) {
+      primaryLabel.setLocalizations(localizations);
+    } else if (primaryTerms) {
+
+      for (const {lang, value} of localizations) {
+        const term = firstMatching(primaryTerms.values, t => t.language === lang) || primaryTerms.addNewReference();
+        term.prefLabel = { [lang]: value };
+      }
+    }
+  }
+
+  get definition(): Localization[] {
+    return this.getProperty('definition').asLocalizations();
+  }
+
+  set definition(value: Localization[]) {
+    this.getProperty('definition').setLocalizations(value);
   }
 
   isTargetOfLink(link: string) {
@@ -439,24 +483,20 @@ export class ConceptNode extends Node<'Concept'> {
     return (isDefined(this.code) && (link.indexOf(this.code) !== -1)) || link.indexOf(this.id) !== -1;
   }
 
-  get definition(): Localizable {
-    return this.getPropertyAsLocalizable('definition');
-  }
-
   hasVocabulary() {
     return this.meta.hasReference('inScheme');
   }
 
   get vocabulary(): VocabularyNode {
-    return requireSingle(this.references['inScheme'].values) as VocabularyNode;
+    return this.getReference<VocabularyNode>('inScheme').getSingle();
   }
 
   set vocabulary(vocabulary: VocabularyNode) {
-    this.references['inScheme'].values = [vocabulary];
+    this.getReference<VocabularyNode>('inScheme').values = [vocabulary];
   }
 
   get status(): string {
-    return this.getPropertyAsString('status');
+    return this.getProperty('status').asString();
   }
 
   hasRelatedConcepts() {
@@ -464,7 +504,7 @@ export class ConceptNode extends Node<'Concept'> {
   }
 
   get relatedConcepts(): Reference<ConceptNode> {
-    return this.references['related'];
+    return this.getReference<ConceptNode>('related');
   }
 
   hasBroaderConcepts() {
@@ -472,7 +512,7 @@ export class ConceptNode extends Node<'Concept'> {
   }
 
   get broaderConcepts(): Reference<ConceptNode> {
-    return this.references['broader'];
+    return this.getReference<ConceptNode>('broader');
   }
 
   get narrowerConcepts(): Referrer {
@@ -484,52 +524,11 @@ export class ConceptNode extends Node<'Concept'> {
   }
 
   get isPartOfConcepts(): Reference<ConceptNode> {
-    return this.references['isPartOf'];
+    return this.getReference<ConceptNode>('isPartOf');
   }
 
   get partOfThisConcepts(): Referrer {
     return this.getNormalizedReferrer<'Concept'>('isPartOf');
-  }
-
-  hasPrimaryTerm() {
-    return this.meta.hasReference('prefLabelXl');
-  }
-
-  get primaryTerm(): Reference<TermNode> {
-    return this.references['prefLabelXl'];
-  }
-
-  setPrimaryLabel(language: string, value: string) {
-    if (this.hasPrimaryTerm()) {
-      const matchingTerm = this.findPrimaryTermForLanguage(language) || this.primaryTerm.values[0] || this.addNewTerm();
-      matchingTerm.setLocalization(language, value);
-    } else {
-      const matchingLocalization = this.findLabelLocalizationForLanguage(language) || this.anyLabelLocalization() || this.createLabelLocalization(language);
-      matchingLocalization.value = value;
-    }
-  }
-
-  private findPrimaryTermForLanguage(language: string): TermNode|undefined {
-    return this.primaryTerm.values.find(term => term.language === language);
-  }
-
-  private findLabelLocalizationForLanguage(language: string): Localization|undefined {
-    return (this.properties['prefLabel'].attributes as Localization[]).find(localization => localization.lang === language);
-  }
-
-  private addNewTerm() {
-    const term = this.primaryTerm.createNewReference();
-    this.primaryTerm.values.push(term);
-    return term;
-  }
-
-  private createLabelLocalization(language: string) {
-    this.properties['prefLabel'].newLocalization(language);
-    return this.anyLabelLocalization();
-  }
-
-  private anyLabelLocalization(): Localization {
-    return this.properties['prefLabel'].attributes[0] as Localization;
   }
 }
 
@@ -539,31 +538,27 @@ export class TermNode extends Node<'Term'> {
     super(node, metaModel, persistent);
   }
 
-  setLocalization(language: string, value: string) {
-    this.setPropertyAsLocalizable('prefLabel', { [language]: value });
-  }
-
-  hasLocalization() {
-    const prefLabel = this.properties['prefLabel'];
-    return prefLabel && prefLabel.attributes.length > 0 && prefLabel.attributes[0].lang.trim() !== '';
-  }
-
   get language(): string {
 
-    if (!this.hasLocalization()) {
-      throw new Error('Term has no localization');
+    const attribute = this.getProperty('prefLabel').getSingle();
+
+    if (attribute.lang.trim() === '') {
+      throw new Error('Cannot determine language');
     }
 
-    return this.properties['prefLabel'].attributes[0].lang;
+    return attribute.lang;
   }
 
-  get localization(): string {
+  isEmpty() {
+    return this.getProperty('prefLabel').getSingle().value.trim() !== '';
+  }
 
-    if (!this.hasLocalization()) {
-      throw new Error('Term has no localization');
-    }
+  get prefLabel(): Localizable {
+    return this.getProperty('prefLabel').asLocalizable();
+  }
 
-    return this.properties['prefLabel'].attributes[0].value || '';
+  set prefLabel(value: Localizable) {
+    this.getProperty('prefLabel').setLocalizable(value);
   }
 }
 
@@ -574,11 +569,15 @@ export class ConceptLinkNode extends Node<'ConceptLink'> {
   }
 
   get label(): Localizable {
-    return this.getPropertyAsLocalizable('prefLabel');
+    return asLocalizable(this.prefLabel);
   }
 
-  set label(value: Localizable) {
-    this.setPropertyAsLocalizable('prefLabel', value);
+  get prefLabel(): Localization[] {
+    return this.getProperty('prefLabel').asLocalizations();
+  }
+
+  set prefLabel(value: Localization[]) {
+    this.getProperty('prefLabel').setLocalizations(value);
   }
 
   get vocabularyMetaLabel(): Localizable {
@@ -586,27 +585,27 @@ export class ConceptLinkNode extends Node<'ConceptLink'> {
   }
 
   get vocabularyLabel(): Localizable {
-    return this.getPropertyAsLocalizable('vocabularyLabel');
+    return this.getProperty('vocabularyLabel').asLocalizable();
   }
 
   set vocabularyLabel(value: Localizable) {
-    this.setPropertyAsLocalizable('vocabularyLabel', value);
+    this.getProperty('vocabularyLabel').setLocalizable(value);
   }
 
   get targetGraph(): string {
-    return this.getPropertyAsString('targetGraph');
+    return this.getProperty('targetGraph').literalValue;
   }
 
   set targetGraph(value: string) {
-    this.setPropertyAsLiteral('targetGraph', value);
+    this.getProperty('targetGraph').literalValue = value;
   }
 
   get targetId(): string {
-    return this.getPropertyAsString('targetId');
+    return this.getProperty('targetId').literalValue;
   }
 
   set targetId(value: string) {
-    this.setPropertyAsLiteral('targetId', value);
+    this.getProperty('targetId').literalValue = value;
   }
 }
 
@@ -620,41 +619,36 @@ export class CollectionNode extends Node<'Collection'> {
     return super.clone<CollectionNode>();
   }
 
-  setPrimaryLabel(language: string, value: string) {
-    const matchingLocalization = this.findLabelLocalizationForLanguage(language) || this.anyLabelLocalization() || this.createLabelLocalization(language);
-    matchingLocalization.value = value;
-  }
-
-  private findLabelLocalizationForLanguage(language: string): Localization|undefined {
-    return (this.properties['prefLabel'].attributes).find(localization => localization.lang === language);
-  }
-
-  private anyLabelLocalization(): Localization {
-    return this.properties['prefLabel'].attributes[0];
-  }
-
-  private createLabelLocalization(language: string) {
-    this.properties['prefLabel'].newLocalization(language);
-    return this.anyLabelLocalization();
-  }
-
   get label(): Localizable {
-    return this.getPropertyAsLocalizable('prefLabel');
+    return asLocalizable(this.prefLabel);
   }
 
-  get definition(): Localizable {
-    return this.getPropertyAsLocalizable('definition');
+  get prefLabel(): Localization[] {
+    return this.getProperty('prefLabel').asLocalizations();
+  }
+
+  set prefLabel(value: Localization[]) {
+    this.getProperty('prefLabel').setLocalizations(value);
+  }
+
+  get definition(): Localization[] {
+    return this.getProperty('definition').asLocalizations();
+  }
+
+  set definition(value: Localization[]) {
+    this.getProperty('definition').setLocalizations(value);
   }
 
   get memberConcepts(): Reference<ConceptNode> {
-    return this.references['member'];
+    return this.getReference<ConceptNode>('member');
   }
 
   hasBroaderConcepts() {
     return this.meta.hasReference('broader');
   }
+
   get broaderConcepts(): Reference<ConceptNode> {
-    return this.references['broader'];
+    return this.getReference<ConceptNode>('broader')
   }
 }
 
@@ -665,7 +659,7 @@ export class GroupNode extends Node<'Group'> {
   }
 
   get label(): Localizable {
-    return this.getPropertyAsLocalizable('prefLabel');
+    return this.getProperty('prefLabel').asLocalizable();
   }
 }
 
@@ -676,6 +670,6 @@ export class OrganizationNode extends Node<'Organization'> {
   }
 
   get label(): Localizable {
-    return this.getPropertyAsLocalizable('prefLabel');
+    return this.getProperty('prefLabel').asLocalizable();
   }
 }

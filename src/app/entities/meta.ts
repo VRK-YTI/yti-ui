@@ -1,6 +1,6 @@
 import { ReferenceAttributeInternal, TextAttributeInternal, NodeMetaInternal } from './meta-api';
 import { comparingPrimitive } from '../utils/comparator';
-import { anyMatching, contains, index, normalizeAsArray } from '../utils/array';
+import { anyMatching, contains, firstMatching, index, normalizeAsArray } from '../utils/array';
 import { asLocalizable, Localizable } from './localization';
 import { NodeType, NodeExternal, VocabularyNodeType } from './node-api';
 import { CollectionNode, ConceptLinkNode, ConceptNode, Node, VocabularyNode } from './node';
@@ -297,7 +297,7 @@ export class MetaModel {
 
     const newConceptLink = this.createEmptyNode<ConceptLinkNode, 'ConceptLink'>(toGraphId, uuid(), 'ConceptLink');
 
-    newConceptLink.label = concept.label;
+    newConceptLink.prefLabel = concept.prefLabel;
     newConceptLink.vocabularyLabel = fromVocabulary.label;
     newConceptLink.targetGraph = concept.graphId;
     newConceptLink.targetId = concept.id;
@@ -407,6 +407,10 @@ export class NodeMeta {
 
   hasReference(referenceId: string) {
     return anyMatching(this.references, ref => ref.id === referenceId);
+  }
+
+  getReference(referenceId: string) {
+    return requireDefined(firstMatching(this.references, ref => ref.id === referenceId));
   }
 
   copyToGraph(graphId: string): NodeMetaInternal {

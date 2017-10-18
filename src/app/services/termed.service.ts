@@ -122,7 +122,7 @@ export class TermedService {
     node.lastModifiedDate = moment();
 
     const inlineNodes =
-      flatten(Object.values(node.references)
+      flatten(node.getAllReferences()
         .filter(ref => ref.inline)
         .map(ref => ref.values.map(n => n.toInternalNode()))
       );
@@ -132,7 +132,7 @@ export class TermedService {
       if (!previous) {
         return [];
       } else {
-        return flatten(Object.values(previous.references)
+        return flatten(previous.getAllReferences()
           .filter(ref => ref.inline)
           .map(ref => ref.values.map(term => term.identifier)))
           .filter(id => !anyMatching(inlineNodes, inlineNode => inlineNode.id === id));
@@ -145,7 +145,7 @@ export class TermedService {
   removeNode<T extends NodeType>(node: Node<T>) {
 
     const inlineNodeIds =
-      flatten(Object.values(node.references)
+      flatten(node.getAllReferences()
         .filter(ref => ref.inline)
         .map(ref => ref.values.filter(term => term.persistent).map(term => term.identifier))
       );
