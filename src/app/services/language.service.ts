@@ -33,7 +33,9 @@ export class LanguageService implements Localizer {
   }
 
   set language(language: Language) {
-    this.language$.next(language);
+    if (this.language !== language) {
+      this.language$.next(language);
+    }
   }
 
   get filterLanguage(): Language {
@@ -41,7 +43,9 @@ export class LanguageService implements Localizer {
   }
 
   set filterLanguage(language: Language) {
-    this.filterLanguage$.next(language);
+    if (this.filterLanguage !== language) {
+      this.filterLanguage$.next(language);
+    }
   }
 
   get translateLanguage(): Language {
