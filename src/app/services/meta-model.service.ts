@@ -85,15 +85,27 @@ export class MetaModelService {
 
   getReferrersByMeta<N extends KnownNode | Node<any>>(referrer: Referrer): Observable<{ meta: ReferenceMeta, nodes: N[] }[]> {
 
-    return Observable.forkJoin(referrer.values.map(nodeExternal => this.getMeta(nodeExternal.type.graph.id).flatMap(meta => {
+    const referenceId = referrer.referenceId;
+
+    function groupByMeta(nodes: N[]): { meta: ReferenceMeta, nodes: N[] }[] {
 
       const references = new Map<ReferenceMeta, N[]>();
-      const node = Node.create(nodeExternal, meta, true) as N;
-      const referenceMeta = node.meta.references.find(ref => ref.id === referrer.referenceId);
-      getOrCreate(references, referenceMeta, () => []).push(node);
 
-      return Array.from(references.entries()).map(([refMeta, nodes]) => ({meta: refMeta, nodes}));
-    })));
+      for (const node of nodes) {
+        const referenceMeta = node.meta.getReference(referenceId);
+        getOrCreate(references, referenceMeta, () => []).push(node);
+      }
+
+      return Array.from(references.entries()).map((entry => ({meta: entry[0], nodes: entry[1]})));
+    }
+
+    const referrerNodes = Observable.forkJoin(
+      referrer.values.map(nodeExternal =>
+        this.getMeta(nodeExternal.type.graph.id).map(meta =>
+          Node.create(nodeExternal, meta, true) as N))
+    );
+
+    return referrerNodes.map(nodes => groupByMeta(nodes));
   }
 
   getMetaTemplates(): Observable<GraphMeta[]> {
