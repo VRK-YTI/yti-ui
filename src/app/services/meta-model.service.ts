@@ -14,20 +14,19 @@ import { getOrCreate } from '../utils/map';
 @Injectable()
 export class MetaModelService {
 
-  // TODO: Separate caching logic from service logic by creating Cache class on similar abstraction
-  private metaCache = new ReplaySubject<Map<string, GraphMeta>>();
+  private metaCache = new Cache<string, GraphMeta>(graphMeta => graphMeta.graphId);
   private templates = new ReplaySubject<GraphMeta[]>();
 
   constructor(private http: TermedHttp) {
 
-    Observable.zip(this.getGraphs(), this.getAllMetaNodesByGraph())
-      .subscribe(([graphs, metaNodesByGraph]) => {
-        const graphMetas = graphs.map(graph => MetaModelService.createGraphMetaFromNodeMetas(graph, metaNodesByGraph.get(graph.id) || []));
-        this.metaCache.next(index(graphMetas, graphMeta => graphMeta.graphId));
-        this.metaCache.complete();
-        this.templates.next(graphMetas.filter(graphMeta => graphMeta.template));
-        this.templates.complete();
-      });
+    const graphMetas$ = this.createAllGraphMetas();
+
+    this.metaCache.init(graphMetas$);
+
+    graphMetas$.subscribe(graphMetas => {
+      this.templates.next(graphMetas.filter(graphMeta => graphMeta.template));
+      this.templates.complete();
+    });
   }
 
   getMeta(graphId: string): Observable<MetaModel> {
@@ -40,16 +39,13 @@ export class MetaModelService {
 
   getGraphMeta(graphId: string): Observable<GraphMeta> {
 
-    return this.metaCache.flatMap(metaCache => {
+    return this.metaCache.getOrCreate(graphId, () =>
+      this.getGraph(graphId).flatMap(graph => this.createGraphMeta(graph)));
+  }
 
-      if (metaCache.has(graphId)) {
-        return Observable.of(metaCache.get(graphId));
-      } else {
-        return this.getGraph(graphId)
-          .flatMap(graph => this.createGraphMeta(graph))
-          .do(graphMeta => metaCache.set(graphId, graphMeta));
-      }
-    });
+  private createAllGraphMetas(): Observable<GraphMeta[]> {
+    return Observable.zip(this.getGraphs(), this.getAllMetaNodesByGraph())
+      .map(([graphs, metaNodesByGraph]) => graphs.map(graph => MetaModelService.createGraphMetaFromNodeMetas(graph, metaNodesByGraph.get(graph.id) || [])));
   }
 
   private createGraphMeta(graph: Graph): Observable<GraphMeta> {
@@ -113,19 +109,19 @@ export class MetaModelService {
     return this.templates.asObservable();
   }
 
-  updateMeta(graphMeta: GraphMeta): Observable<any> {
+  updateMeta(graphMeta: GraphMeta): Observable<GraphMeta> {
 
     const params = new URLSearchParams();
     params.append('graphId', graphMeta.graphId);
 
-    return Observable.zip(this.metaCache, this.http.post(`${environment.api_url}/types`, graphMeta.toNodes(), { search: params }))
-      .do(([metaCache, response]) => metaCache.set(graphMeta.graphId, graphMeta));
+    const response = this.http.post(`${environment.api_url}/types`, graphMeta.toNodes(), { search: params });
+
+    return this.metaCache.update(response.map(() => graphMeta));
   }
 
-  removeGraphMeta(graphId: string): Observable<any> {
-    return this.getGraphMeta(graphId)
-      .flatMap(meta => Observable.zip(this.metaCache, this.removeMetaNodes(graphId, meta.toNodes()))
-        .do(([metaCache, response]) => metaCache.delete(graphId)));
+  removeGraphMeta(graphId: string): Observable<string> {
+    const response = this.getGraphMeta(graphId).flatMap(meta => this.removeMetaNodes(graphId, meta.toNodes()));
+    return this.metaCache.remove(response.map(() => graphId));
   }
 
   private removeMetaNodes(graphId: string, nodes: NodeMetaInternal[]) {
@@ -161,3 +157,41 @@ export class MetaModelService {
       .map(allNodes => groupBy(allNodes, node => node.graph.id));
   }
 }
+
+class Cache<K, V> {
+
+  private cache = new ReplaySubject<Map<K, V>>();
+
+  constructor(private keyExtractor: (value: V) => K) {
+  }
+
+  init(values$: Observable<V[]>) {
+    values$.subscribe(values => {
+      this.cache.next(index(values, this.keyExtractor));
+      this.cache.complete();
+    });
+  }
+
+  update(value$: Observable<V>): Observable<V> {
+    return Observable.zip(this.cache, value$)
+      .do(([cache, value]) => cache.set(this.keyExtractor(value), value))
+      .map(([cache, value]) => value);
+  }
+
+  remove(key$: Observable<K>): Observable<K> {
+    return Observable.zip(this.cache, key$)
+      .do(([cache, key]) => cache.delete(key))
+      .map(([cache, key]) => key);
+  }
+
+  getOrCreate(key: K, create: () => Observable<V>): Observable<V> {
+    return this.cache.flatMap(cache => {
+      if (cache.has(key)) {
+        return Observable.of(cache.get(key));
+      } else {
+        return create().do(value => cache.set(key, value));
+      }
+    });
+  }
+}
+
