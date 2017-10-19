@@ -272,6 +272,7 @@ export class FormReferenceTerm {
     this.targetMeta = reference.targetMeta;
 
     this.children = reference.values
+      .filter(term => term.isValid())
       .map(term => ({ formNode: new FormNode(term, languagesProvider), language: term.language! }));
 
     const childControls = this.children.map(c => c.formNode.control);

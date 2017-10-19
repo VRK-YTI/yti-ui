@@ -578,8 +578,9 @@ export class TermNode extends Node<'Term'> {
     return attribute.lang;
   }
 
-  isEmpty() {
-    return this.getProperty('prefLabel').getSingle().value.trim() !== '';
+  isValid() {
+    const prefLabel = this.findProperty('prefLabel');
+    return prefLabel && prefLabel.attributes.length === 1 && prefLabel.getSingle().lang !== '';
   }
 
   get prefLabel(): Localizable {
