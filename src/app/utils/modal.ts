@@ -7,5 +7,5 @@ export function ignoreModalClose(err: any) {
 }
 
 export function isModalClose(err: any) {
-  return err === 'cancel' || err !== ModalDismissReasons.BACKDROP_CLICK || err === ModalDismissReasons.ESC;
+  return err === 'cancel' || err === ModalDismissReasons.BACKDROP_CLICK || err === ModalDismissReasons.ESC;
 }
