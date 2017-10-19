@@ -14,6 +14,7 @@ import { getOrCreate } from '../utils/map';
 @Injectable()
 export class MetaModelService {
 
+  // TODO: Separate caching logic from service logic by creating Cache class on similar abstraction
   private metaCache = new ReplaySubject<Map<string, GraphMeta>>();
   private templates = new ReplaySubject<GraphMeta[]>();
 
