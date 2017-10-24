@@ -86,6 +86,7 @@ import { LoginModalComponent, LoginModalService } from './components/navigation/
 import { LanguageInputComponent } from './components/form/language-input.component';
 import { LanguageValidatorDirective } from './directives/validators/language.validator';
 import { FilterLanguageComponent } from './components/form/filter-language.component';
+import { ImportVocabularyModalComponent, ImportVocabularyModalService } from './components/vocabulary/import-vocabulary-modal.component';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json-loader!po-loader?format=mf!../../po/fi.po'),
@@ -182,7 +183,8 @@ const appRoutes: Routes = [
     TimestampPipe,
     StripMarkdownPipe,
     KeysPipe,
-    FilterLanguageComponent
+    FilterLanguageComponent,
+    ImportVocabularyModalComponent
   ],
   entryComponents: [
     SearchConceptModalComponent,
@@ -190,7 +192,8 @@ const appRoutes: Routes = [
     ErrorModalComponent,
     ConfirmationModalComponent,
     SelectConceptReferenceModalComponent,
-    LoginModalComponent
+    LoginModalComponent,
+    ImportVocabularyModalComponent
   ],
   imports: [
     BrowserModule,
@@ -218,7 +221,8 @@ const appRoutes: Routes = [
     SessionService,
     ElasticSearchService,
     ConfirmCancelEditGuard,
-    UserService
+    UserService,
+    ImportVocabularyModalService
   ],
   bootstrap: [AppComponent]
 })

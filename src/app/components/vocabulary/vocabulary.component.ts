@@ -1,9 +1,12 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { EditableService, EditingComponent } from '../../services/editable.service';
 import { ConceptViewModelService } from '../../services/concept.view.service';
 import { requireDefined } from '../../utils/object';
 import { DeleteConfirmationModalService } from '../common/delete-confirmation-modal.component';
 import { LanguageService } from '../../services/language.service';
+import * as Papa from 'papaparse';
+import { ImportVocabularyModalService } from 'app/components/vocabulary/import-vocabulary-modal.component';
+import { ignoreModalClose } from 'app/utils/modal';
 
 @Component({
   selector: 'app-vocabulary',
@@ -24,13 +27,17 @@ import { LanguageService } from '../../services/language.service';
           <form #form="ngForm" [formGroup]="formNode.control">
             
             <div class="row">
-              <div class="col-md-4">
+              <div class="col-md-8">
                 <app-filter-language [(ngModel)]="filterLanguage"
                                      [ngModelOptions]="{standalone: true}"
                                      [languages]="filterLanguages"
                                      style="width: auto"></app-filter-language>
               </div>
-              <div class="col-md-8">
+              <div class="col-md-2">
+                <input #fileInput type="file" id="fileElem" accept=".csv" style="display:none" (change)="selectFile(fileInput.files)">
+                <label for="fileElem" class="btn btn-default import-button" translate>Import vocabulary</label> 
+              </div>
+              <div class="col-md-2">
                 <app-editable-buttons [form]="form" [canRemove]="true"></app-editable-buttons>
               </div>
             </div>
@@ -53,10 +60,13 @@ import { LanguageService } from '../../services/language.service';
 })
 export class VocabularyComponent implements EditingComponent {
 
+  @ViewChild('fileInput') fileInput: ElementRef;
+
   constructor(private editableService: EditableService,
               private conceptViewModel: ConceptViewModelService,
               deleteConfirmationModal: DeleteConfirmationModalService,
-              private languageService: LanguageService) {
+              private languageService: LanguageService,
+              private importVocabularyModal: ImportVocabularyModalService,) {
 
     editableService.onSave = () => conceptViewModel.saveVocabulary();
     editableService.onCanceled = () => conceptViewModel.resetVocabulary();
@@ -91,6 +101,26 @@ export class VocabularyComponent implements EditingComponent {
 
   get filterLanguages() {
     return this.conceptViewModel.languages;
+  }
+
+  selectFile(files: FileList) {   
+    const selectedFile = files[0] || false;
+    
+    if (selectedFile) {
+
+      Papa.parse(selectedFile, {
+        header: true,
+        skipEmptyLines: true,
+        newline: "\r\n",
+        complete: results => 
+          this.importVocabularyModal.open(results.data)
+          .then(() => {
+              console.log('Tuodaan sanasto');
+            }, ignoreModalClose)    
+      });
+
+      this.fileInput.nativeElement.value = "";
+    }
   }
 
 }

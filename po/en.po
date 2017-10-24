@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-10-06 11:16+0300\n"
+"PO-Revision-Date: 2017-10-24 10:18+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -202,6 +202,17 @@ msgstr ""
 msgid "No group"
 msgstr ""
 
+msgid "Confirm import"
+msgstr ""
+
+msgid "Importing"
+msgstr ""
+
+#, fuzzy
+#| msgid "New concept"
+msgid "concepts"
+msgstr "new concept"
+
 msgid "No organization"
 msgstr ""
 
@@ -212,6 +223,9 @@ msgid "vocabulary"
 msgstr ""
 
 msgid "vocabularies"
+msgstr ""
+
+msgid "Import vocabulary"
 msgstr ""
 
 msgid "New concept"

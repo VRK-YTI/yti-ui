@@ -187,6 +187,15 @@ msgstr ""
 msgid "No group"
 msgstr ""
 
+msgid "Confirm import"
+msgstr ""
+
+msgid "Importing"
+msgstr ""
+
+msgid "concepts"
+msgstr ""
+
 msgid "No organization"
 msgstr ""
 
@@ -197,6 +206,9 @@ msgid "vocabulary"
 msgstr ""
 
 msgid "vocabularies"
+msgstr ""
+
+msgid "Import vocabulary"
 msgstr ""
 
 msgid "New concept"

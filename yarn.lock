@@ -168,6 +168,10 @@
   version "6.0.60"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-6.0.60.tgz#e7e134ebc674ae6ed93c36c767739b110d2c57fc"
 
+"@types/papaparse@^4.1.31":
+  version "4.1.31"
+  resolved "https://registry.yarnpkg.com/@types/papaparse/-/papaparse-4.1.31.tgz#4cf1b3588f91f7f64d73bf9f14f5ff8754d43312"
+
 "@types/q@^0.0.32":
   version "0.0.32"
   resolved "https://registry.yarnpkg.com/@types/q/-/q-0.0.32.tgz#bd284e57c84f1325da702babfc82a5328190c0c5"
@@ -3513,6 +3517,10 @@ p-locate@^2.0.0:
 pako@~0.2.0:
   version "0.2.9"
   resolved "https://registry.yarnpkg.com/pako/-/pako-0.2.9.tgz#f3f7522f4ef782348da8161bad9ecfd51bf83a75"
+
+papaparse@^4.3.6:
+  version "4.3.6"
+  resolved "https://registry.yarnpkg.com/papaparse/-/papaparse-4.3.6.tgz#9566eda0ecab13afcb740a62381c699f486cb145"
 
 param-case@2.1.x:
   version "2.1.1"
