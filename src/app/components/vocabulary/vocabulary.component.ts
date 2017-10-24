@@ -66,7 +66,7 @@ export class VocabularyComponent implements EditingComponent {
               private conceptViewModel: ConceptViewModelService,
               deleteConfirmationModal: DeleteConfirmationModalService,
               private languageService: LanguageService,
-              private importVocabularyModal: ImportVocabularyModalService,) {
+              private importVocabularyModal: ImportVocabularyModalService) {
 
     editableService.onSave = () => conceptViewModel.saveVocabulary();
     editableService.onCanceled = () => conceptViewModel.resetVocabulary();
@@ -111,7 +111,7 @@ export class VocabularyComponent implements EditingComponent {
       Papa.parse(selectedFile, {
         header: true,
         skipEmptyLines: true,
-        newline: "\r\n",
+        newline: '\r\n',
         complete: results => 
           this.importVocabularyModal.open(results.data)
           .then(() => {
@@ -119,7 +119,7 @@ export class VocabularyComponent implements EditingComponent {
             }, ignoreModalClose)    
       });
 
-      this.fileInput.nativeElement.value = "";
+      this.fileInput.nativeElement.value = '';
     }
   }
 
