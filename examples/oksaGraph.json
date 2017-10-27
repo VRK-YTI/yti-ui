@@ -1,6 +1,8 @@
 {
   "id": "9c2782be-5f75-4cd7-80fa-806a8abfd4e2",
   "roles": [],
+  "uri": "http://pid.suomi.fi/terminology/oksa/",
+  "code": "oksa",
   "permissions": {},
   "properties": {
     "prefLabel": [
