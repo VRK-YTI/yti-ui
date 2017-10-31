@@ -117,7 +117,7 @@ export class TermedService {
       .flatMap(() => this.removeGraph(graphId));
   }
 
-  saveNodes<T extends NodeType>(nodes: Node<T>[]) {
+  saveNodes<T extends NodeType>(nodes: Node<T>[]): Observable<Response> {
 
     const inlineNodes =
       flatten(flatten(nodes.map(node => node.getAllReferences()))
@@ -125,7 +125,7 @@ export class TermedService {
         .map(ref => ref.values.map(n => n.toInternalNode()))
       );
 
-    this.updateAndDeleteInternalNodes([...inlineNodes, ...nodes.map(node => node.toInternalNode())], []);
+    return this.updateAndDeleteInternalNodes([...inlineNodes, ...nodes.map(node => node.toInternalNode())], []);
   }
 
   updateNode<T extends NodeType>(node: Node<T>, previous: Node<T>|null) {

@@ -753,4 +753,10 @@ export class ConceptViewModelService {
       return newCollection;
     });
   }
+
+  refreshConcepts() {
+    this.conceptList.loadConcepts(true);
+    this.conceptHierarchy.loadConcepts(true);
+  }
+
 }

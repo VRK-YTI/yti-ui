@@ -1,8 +1,67 @@
 import { Component, Injectable, Input, OnInit } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ignoreModalClose } from 'app/utils/modal';
-import { Localization } from 'app/entities/localization';
+import { Localization, Localizable } from 'app/entities/localization';
 import { flatten } from '../../utils/array';
+import { requireDefined } from '../../utils/object';
+import { VocabularyNode, ConceptNode } from 'app/entities/node';
+import { MetaModelService } from 'app/services/meta-model.service';
+import { MetaModel } from 'app/entities/meta';
+import { TermedService } from 'app/services/termed.service';
+
+class CsvConceptDetails {
+
+  constructor(public prefLabel: Localization[],
+    public definition: Localization[],
+    public note: Localization[],
+    public example: Localization[],
+    public synonym: Localization[]) {
+  }
+
+  static createFromCsvRow(csvJsonObject: any): CsvConceptDetails {
+    
+    function splitValuesAsOwnLocalizations(localization: Localization) {
+      return localization.value.split('\r\n').map(v => ({ lang: localization.lang, value: v}));
+    }
+
+    function parseLocalizationsForProperty(propertyName: string) {
+
+      const entriesRelatedToProperty = Object.entries(csvJsonObject)
+        .filter(([key, value]) => key.startsWith(propertyName) && value !== '');
+
+      const localizations = entriesRelatedToProperty.map(([key, value]) => {
+        return {
+          lang: key.replace(propertyName + '_', ''),
+          value: value
+        };
+      });
+
+      return flatten(localizations.map(localization => splitValuesAsOwnLocalizations(localization)));
+    }
+
+    return new CsvConceptDetails(
+      parseLocalizationsForProperty('prefLabel'),
+      parseLocalizationsForProperty('definition'),
+      parseLocalizationsForProperty('note'),
+      parseLocalizationsForProperty('example'),
+      parseLocalizationsForProperty('synonym')
+    );
+  }
+
+  nonEmptyProperties(): {name: string, localizations: Localization[]}[] {
+
+    const propertyIsNotEmpty = (localizations: Localization[]) => localizations.length > 0;
+
+    const allProperties = [
+      { name: 'prefLabel', localizations: this.prefLabel },
+      { name: 'definition', localizations: this.definition },
+      { name: 'note', localizations: this.note },
+      { name: 'example', localizations: this.example },
+      { name: 'synonym', localizations: this.synonym }
+    ];
+
+    return allProperties.filter(property => propertyIsNotEmpty(property.localizations));
+  } 
+}
 
 @Injectable()
 export class ImportVocabularyModalService {
@@ -10,43 +69,20 @@ export class ImportVocabularyModalService {
   constructor(private modalService: NgbModal) {
   }
 
-  open(importData: any[]): Promise<any> {
+  open(importData: any[], vocabulary: VocabularyNode): Promise<any> {
     const modalRef = this.modalService.open(ImportVocabularyModalComponent, { size: 'lg' });
     const instance = modalRef.componentInstance as ImportVocabularyModalComponent;
     instance.importData = importData;
+    instance.vocabulary = vocabulary;
     return modalRef.result;
-  }
-  
+  }  
 }
-
-// Testing these functions here. This is not necessarily a final place for them.
-
-function splitValuesAsOwnLocalizations(localization: Localization): Localization[] {
-  return localization.value.split('\r\n').map(v => ({ lang: localization.lang, value: v}));
-}
-
-function parseLocalizationsForProperty(csvJsonObject: any, propertyName: string): Localization[] {
-
-  const entries: [string, string][] = Object.entries(csvJsonObject);
-
-  const entriesRelatedToProperty = entries.filter(([key, value]) => key.startsWith(propertyName) && value !== '');
-
-  const localizations: Localization[] = entriesRelatedToProperty.map(([key, value]: [string, string]) => {
-    const language = key.replace(propertyName + '_', '');
-    return { lang: language, value: value };
-  });
-
-  const result: Localization[][] = localizations.map(localization => splitValuesAsOwnLocalizations(localization));
-
-  return flatten(result);
-}
-
 
 @Component({
   selector: 'app-import-vocabulary-modal',
   styleUrls: ['./import-vocabulary-modal.component.scss'],
   template: `
-    <div class="modal-header modal-header-warning">
+    <div class="modal-header">
       <h4 class="modal-title">
         <a><i class="fa fa-times" (click)="cancel()"></i></a>
         <span translate>Confirm import</span>
@@ -59,63 +95,69 @@ function parseLocalizationsForProperty(csvJsonObject: any, propertyName: string)
         </div>
         <div class="col-md-4">
           <div class="pull-right">
+            <div class="error-alert alert-danger" role="alert" *ngIf="importError">
+              <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
+              <span translate>Import failed</span>
+            </div>
             <button type="button" class="btn btn-secondary confirm" (click)="confirm()" translate>Yes</button>
             <button type="button" class="btn btn-default cancel" (click)="cancel()" translate>Cancel</button>  
           </div>      
         </div>        
       </div>
       <div>
-        <div *ngFor="let concept of concepts">
-          <div *ngFor="let prefLabel of concept.prefLabel"><b>prefLabel ({{ prefLabel.lang }}):</b> {{ prefLabel.value }}</div>
-          <div *ngFor="let definition of concept.definition"><b>definition ({{ definition.lang }}):</b> {{ definition.value }}</div>
-          <div *ngFor="let note of concept.note"><b>note ({{ note.lang }}):</b> {{ note.value }}</div>
-          <div *ngFor="let example of concept.example"><b>example ({{ example.lang }}):</b> {{ example.value }}</div>
-          <div *ngFor="let synonym of concept.synonym"><b>synonym ({{ synonym.lang }}):</b> {{ synonym.value }}</div>          
+        <div *ngFor="let concept of conceptsFromCsv">
+          <div *ngFor="let property of properties(concept)"><b>{{property.name}}:</b>
+            <div *ngFor="let localization of property.localizations">{{ localization.lang }}: {{ localization.value }}</div>
+          </div>       
           <br />
-        </div>      
-        <!--<pre>{{processedConceptData | json}}</pre>-->
+        </div>
       </div>
-      
     </div>    
-    <div class="modal-footer">
-
-    </div>
-
+    <div class="modal-footer"></div>
   `
 })
 export class ImportVocabularyModalComponent implements OnInit {
 
   @Input() importData: any[];
-  processedConceptData: any[];
+  @Input() vocabulary: VocabularyNode;
 
-  constructor(private modal: NgbActiveModal) {
+  processedConceptData: CsvConceptDetails[];
+  importError = false;
+
+  constructor(private modal: NgbActiveModal,
+              private metaModelService: MetaModelService,
+              private termedService: TermedService
+            ) {
   }
 
   ngOnInit(): void {
-
     const data: any[] = this.importData;
-
-    const processedData = data.map((datum: any) => {
-      
-      const prefLabel: Localization[] = parseLocalizationsForProperty(datum, 'prefLabel');
-      const definition: Localization[] = parseLocalizationsForProperty(datum, 'definition');
-      const note: Localization[] = parseLocalizationsForProperty(datum, 'note');
-      const example: Localization[] = parseLocalizationsForProperty(datum, 'example');
-      const synonym: Localization[] = parseLocalizationsForProperty(datum, 'synonym');
-    
-      return { prefLabel, definition, note, example, synonym };
-    });
-
-    this.processedConceptData = processedData;
-
+    this.processedConceptData = data.map(datum => CsvConceptDetails.createFromCsvRow(datum));
   }
 
-  get concepts() {
+  get conceptsFromCsv() {
     return this.processedConceptData;
   }
 
   get numberOfConcepts() {
-    return this.processedConceptData ? this.processedConceptData.length : 0;
+    return this.conceptsFromCsv ? this.conceptsFromCsv.length : 0;
+  }
+
+  properties(concept: CsvConceptDetails) {
+    return concept.nonEmptyProperties();
+  }
+
+  convertToConceptNode(conceptFromCsv: CsvConceptDetails, metaModel: MetaModel): ConceptNode {
+
+    const concept: ConceptNode = metaModel.createEmptyConcept(this.vocabulary);
+
+    concept.prefLabel = conceptFromCsv.prefLabel;
+    concept.definition = conceptFromCsv.definition;
+    concept.note = conceptFromCsv.note;
+    concept.example = conceptFromCsv.example;
+    concept.altLabel = conceptFromCsv.synonym;
+
+    return concept;
   }
 
   cancel() {
@@ -123,6 +165,14 @@ export class ImportVocabularyModalComponent implements OnInit {
   }
 
   confirm() {
-    this.modal.close();
+    const conceptsToSave = this.conceptsFromCsv;
+
+    this.metaModelService.getMeta(this.vocabulary.graphId).subscribe(metaModel =>
+      this.termedService.saveNodes(conceptsToSave.map(concept => this.convertToConceptNode(concept, metaModel)))
+        .subscribe({
+          next: () => this.modal.close(),
+          error: () => this.importError = true
+        })
+    );
   }
 }

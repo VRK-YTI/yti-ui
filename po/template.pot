@@ -196,6 +196,9 @@ msgstr ""
 msgid "concepts"
 msgstr ""
 
+msgid "Import failed"
+msgstr ""
+
 msgid "No organization"
 msgstr ""
 

@@ -113,10 +113,8 @@ export class VocabularyComponent implements EditingComponent {
         skipEmptyLines: true,
         newline: '\r\n',
         complete: results => 
-          this.importVocabularyModal.open(results.data)
-          .then(() => {
-              console.log('Tuodaan sanasto');
-            }, ignoreModalClose)    
+          this.importVocabularyModal.open(results.data, requireDefined(this.vocabulary))
+            .then(() => this.conceptViewModel.refreshConcepts(), ignoreModalClose)    
       });
 
       this.fileInput.nativeElement.value = '';
