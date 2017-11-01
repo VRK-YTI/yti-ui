@@ -2,11 +2,6 @@ import { Injectable } from '@angular/core';
 import { Http, Response, RequestOptionsArgs, Headers } from '@angular/http';
 import { Observable } from 'rxjs';
 
-export interface UserCredentials {
-  username: string;
-  password: string;
-}
-
 @Injectable()
 export class TermedHttp {
 

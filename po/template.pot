@@ -160,16 +160,16 @@ msgstr ""
 msgid "Login"
 msgstr ""
 
-msgid "Username"
+msgid "eDuuni information"
 msgstr ""
 
-msgid "Password"
-msgstr ""
-
-msgid "Login failed"
+msgid "Login information"
 msgstr ""
 
 msgid "Log In"
+msgstr ""
+
+msgid "Register"
 msgstr ""
 
 msgid "Logout"

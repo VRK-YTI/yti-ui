@@ -1,8 +1,7 @@
-import { AfterViewInit, Component, ElementRef, Injectable, Renderer, ViewChild } from '@angular/core';
+import { Component, Injectable } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { UserCredentials } from '../../services/termed-http.service';
-import { TermedService } from '../../services/termed.service';
-import { UserService } from '../../services/user.service';
+
+declare const window: Window;
 
 @Injectable()
 export class LoginModalService {
@@ -29,72 +28,33 @@ export class LoginModalService {
       <div class="modal-body">
         <div class="row">
           <div class="col-md-12">
-            
-            <div class="form-group">
-              <label for="username" translate>Username</label>
-              <input #usernameInput type="text" id="username" name="username" class="form-control" autofocus [(ngModel)]="username" />
-              
-              <label for="password" translate>Password</label>
-              <input type="password" id="username" name="password" class="form-control" [(ngModel)]="password" />
-            </div>
-            
+            <p translate>eDuuni information</p>
+            <p translate>Login information</p>
           </div>
         </div>
       </div>
       <div class="modal-footer">
-  
-        <div class="alert alert-danger" style="display: inline; padding: 6px; margin: 0 5px 0 0;" role="alert" *ngIf="authenticationError">
-          <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
-          <span translate>Login failed</span>
-        </div>
-        
-        <button type="button" class="btn btn-secondary cancel" (click)="cancel()" translate>Cancel</button>
-        <button type="submit" class="btn btn-default confirm" (click)="confirm()" translate>Log In</button>
+        <button type="submit" class="btn btn-default" (click)="login()" translate>Log In</button>
+        <button type="button" class="btn btn-default" (click)="register()" translate>Register</button>
       </div>
     </form>
   `
 })
-export class LoginModalComponent implements AfterViewInit {
+export class LoginModalComponent {
 
-  @ViewChild('usernameInput')
-  usernameInput: ElementRef;
-
-  username: string;
-  password: string;
-  authenticationError = false;
-
-  constructor(private modal: NgbActiveModal,
-              private termedService: TermedService,
-              private userService: UserService,
-              private renderer: Renderer) {
+  constructor(private modal: NgbActiveModal) {
   }
 
   cancel() {
     this.modal.dismiss('cancel');
   }
 
-  confirm() {
-
-    const credentials: UserCredentials = {
-      username: this.username,
-      password: this.password
-    };
-
-    this.termedService.checkCredentials(credentials).subscribe(authenticated => {
-      if (authenticated) {
-        this.userService.login({
-          name: credentials.username,
-          username: credentials.username,
-          password: credentials.password
-        });
-        this.modal.close();
-      } else {
-        this.authenticationError = true;
-      }
-    });
+  login() {
+    const currentUrl = window.location.href;
+    window.location.href = `/Shibboleth.sso/Login?target=${encodeURIComponent(currentUrl)}`;
   }
 
-  ngAfterViewInit() {
-    this.renderer.invokeElementMethod(this.usernameInput.nativeElement, 'focus');
+  register() {
+    window.open('http://id.eduuni.fi/signup', '_blank');
   }
 }

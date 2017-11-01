@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { URLSearchParams, ResponseOptionsArgs, Response } from '@angular/http';
 import { Observable } from 'rxjs';
-import { TermedHttp, UserCredentials } from './termed-http.service';
+import { TermedHttp } from './termed-http.service';
 import { anyMatching, flatten, normalizeAsArray } from '../utils/array';
 import { MetaModelService } from './meta-model.service';
 import { NodeExternal, NodeType, NodeInternal, Identifier, VocabularyNodeType } from '../entities/node-api';
@@ -19,16 +19,6 @@ export class TermedService {
   constructor(private http: TermedHttp,
               private metaModelService: MetaModelService,
               private userService: UserService) {
-  }
-
-  checkCredentials(credentials: UserCredentials): Observable<boolean> {
-
-    const params = new URLSearchParams();
-    params.append('username', credentials.username);
-    params.append('password', credentials.password);
-
-    return this.http.get(`${environment.api_url}/checkCredentials`, { params })
-      .map(response => response.json() as boolean);
   }
 
   getVocabulary(graphId: string): Observable<VocabularyNode> {
@@ -189,11 +179,7 @@ export class TermedService {
 
   private removeNodeIdentifiers(nodeIds: Identifier<any>[], sync: boolean) {
 
-    const user = requireDefined(this.userService.user);
-
     const params = new URLSearchParams();
-    params.append('username', user.username);
-    params.append('password', user.password);
     params.append('sync', sync.toString());
 
     return this.http.delete(`${environment.api_url}/remove`, { params, body: nodeIds });
@@ -201,18 +187,12 @@ export class TermedService {
 
   private updateAndDeleteInternalNodes(toUpdate: NodeInternal<any>[], toDelete: Identifier<any>[]): Observable<Response> {
 
-    const user = requireDefined(this.userService.user);
-
-    const params = new URLSearchParams();
-    params.append('username', user.username);
-    params.append('password', user.password);
-
     const body = {
       'delete': toDelete,
       'save': toUpdate
     };
 
-    return this.http.post(`${environment.api_url}/modify`, body, { params });
+    return this.http.post(`${environment.api_url}/modify`, body);
   }
 
   private getVocabularyNode<T extends VocabularyNodeType>(graphId: string, type: T): Observable<NodeExternal<VocabularyNodeType>> {
