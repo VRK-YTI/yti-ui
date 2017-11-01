@@ -18,26 +18,24 @@ export class LoginModalService {
   selector: 'app-login-modal',
   styleUrls: ['./login-modal.component.scss'],
   template: `
-    <form>
-      <div class="modal-header">
-        <h4 class="modal-title">
-          <a><i class="fa fa-times" (click)="cancel()"></i></a>
-          <span translate>Login</span>
-        </h4>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-md-12">
-            <p translate>eDuuni information</p>
-            <p translate>Login information</p>
-          </div>
+    <div class="modal-header">
+      <h4 class="modal-title">
+        <a><i class="fa fa-times" (click)="cancel()"></i></a>
+        <span translate>Login</span>
+      </h4>
+    </div>
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-md-12">
+          <p translate>eDuuni information</p>
+          <p translate>Login information</p>
         </div>
       </div>
-      <div class="modal-footer">
-        <button type="submit" class="btn btn-default" (click)="login()" translate>Log In</button>
-        <button type="button" class="btn btn-default" (click)="register()" translate>Register</button>
-      </div>
-    </form>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-default" (click)="login()" translate>Log In</button>
+      <button type="button" class="btn btn-default" (click)="register()" translate>Register</button>
+    </div>
   `
 })
 export class LoginModalComponent {
