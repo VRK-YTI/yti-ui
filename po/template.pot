@@ -187,13 +187,28 @@ msgstr ""
 msgid "No group"
 msgstr ""
 
+msgid "Note"
+msgstr ""
+
 msgid "Confirm import"
+msgstr ""
+
+msgid "concepts"
+msgstr ""
+
+msgid "Preferred term"
+msgstr ""
+
+msgid "Definition"
 msgstr ""
 
 msgid "Importing"
 msgstr ""
 
-msgid "concepts"
+msgid "Example"
+msgstr ""
+
+msgid "Synonym"
 msgstr ""
 
 msgid "Import failed"

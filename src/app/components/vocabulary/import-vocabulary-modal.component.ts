@@ -88,32 +88,53 @@ export class ImportVocabularyModalService {
         <span translate>Confirm import</span>
       </h4>
     </div>
-    <div class="modal-body">
+    <div class="modal-body full-height">
       <div class="row">
-        <div class="col-md-8">
-          <span translate>Importing</span> {{numberOfConcepts}} <span translate>concepts</span>         
-        </div>
-        <div class="col-md-4">
-          <div class="pull-right">
-            <div class="error-alert alert-danger" role="alert" *ngIf="importError">
-              <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
-              <span translate>Import failed</span>
+
+        <div class="col-md-12">
+          <div class="headline-row">
+            <h6>
+              <span translate>Importing</span> {{numberOfConcepts}} <span translate>concepts</span>
+            </h6>
+          </div>
+
+          <div class="concepts-from-csv">
+            <div class="concept-from-csv" *ngFor="let concept of conceptsFromCsv">
+              <div class="concept-property" *ngFor="let property of properties(concept)" [ngSwitch]="property.name">                
+                <b>
+                  <span *ngSwitchCase="'prefLabel'" translate>Preferred term</span>
+                  <span *ngSwitchCase="'definition'" translate>Definition</span>
+                  <span *ngSwitchCase="'note'" translate>Note</span>
+                  <span *ngSwitchCase="'example'" translate>Example</span>
+                  <span *ngSwitchCase="'synonym'" translate>Synonym</span>
+                  <span *ngSwitchDefault>{{property.name}}</span>
+                </b>
+                <div *ngFor="let localization of property.localizations">
+                  <div class="localization-lang">{{localization.lang.toUpperCase()}}</div> 
+                  <div class="localization-value">{{localization.value}}</div>
+                </div>
+              </div>
             </div>
-            <button type="button" class="btn btn-secondary confirm" (click)="confirm()" translate>Yes</button>
-            <button type="button" class="btn btn-default cancel" (click)="cancel()" translate>Cancel</button>  
-          </div>      
-        </div>        
-      </div>
-      <div>
-        <div *ngFor="let concept of conceptsFromCsv">
-          <div *ngFor="let property of properties(concept)"><b>{{property.name}}:</b>
-            <div *ngFor="let localization of property.localizations">{{ localization.lang }}: {{ localization.value }}</div>
-          </div>       
-          <br />
+          </div>
+
         </div>
+        
+      </div>       
+        
+    </div>
+
+    <div class="modal-footer">
+
+      <div class="error-alert alert-danger" role="alert" *ngIf="importError">
+        <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
+        <span translate>Import failed</span>
       </div>
-    </div>    
-    <div class="modal-footer"></div>
+
+      <button type="button" class="btn btn-secondary cancel" (click)="cancel()" translate>Cancel</button>     
+      <button type="button" class="btn btn-default confirm" (click)="confirm()" translate>Yes</button>
+    </div>
+
+    
   `
 })
 export class ImportVocabularyModalComponent implements OnInit {
