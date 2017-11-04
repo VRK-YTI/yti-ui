@@ -10,15 +10,12 @@ import * as moment from 'moment';
 import { GraphMeta } from '../entities/meta';
 import { Localizable } from '../entities/localization';
 import { environment } from '../../environments/environment';
-import { UserService } from './user.service';
-import { requireDefined } from '../utils/object';
 
 @Injectable()
 export class TermedService {
 
   constructor(private http: TermedHttp,
-              private metaModelService: MetaModelService,
-              private userService: UserService) {
+              private metaModelService: MetaModelService) {
   }
 
   getVocabulary(graphId: string): Observable<VocabularyNode> {
@@ -151,7 +148,7 @@ export class TermedService {
         .map(ref => ref.values.filter(term => term.persistent).map(term => term.identifier))
       );
 
-    return this.removeNodeIdentifiers([...inlineNodeIds, node.identifier], true);
+    return this.removeNodeIdentifiers([...inlineNodeIds, node.identifier], true, true);
   }
 
   private createGraph(graphId: string, label: Localizable): Observable<Response> {
@@ -166,7 +163,7 @@ export class TermedService {
   }
 
   private removeGraphNodes(graphId: string): Observable<any> {
-    return this.getAllNodeIds(graphId).flatMap(nodeIds => this.removeNodeIdentifiers(nodeIds, false));
+    return this.getAllNodeIds(graphId).flatMap(nodeIds => this.removeNodeIdentifiers(nodeIds, false, false));
   }
 
   private removeGraph(graphId: string): Observable<any> {
@@ -177,10 +174,11 @@ export class TermedService {
     return this.http.delete(`${environment.api_url}/graph`, { params });
   }
 
-  private removeNodeIdentifiers(nodeIds: Identifier<any>[], sync: boolean) {
+  private removeNodeIdentifiers(nodeIds: Identifier<any>[], sync: boolean, disconnect: boolean) {
 
     const params = new URLSearchParams();
     params.append('sync', sync.toString());
+    params.append('disconnect', disconnect.toString());
 
     return this.http.delete(`${environment.api_url}/remove`, { params, body: nodeIds });
   }
