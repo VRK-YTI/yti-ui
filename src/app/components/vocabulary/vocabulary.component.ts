@@ -37,7 +37,7 @@ import { UserService } from '../../services/user.service';
 
               <app-editable-buttons [form]="form" [canRemove]="true"></app-editable-buttons>
 
-              <div class="pull-right">
+              <div class="pull-right" *ngIf="!isEditing() && isLoggedIn()">
                 <input #fileInput type="file" id="fileElem" accept=".csv" style="display:none" (change)="selectFile(fileInput.files)">
                 <label for="fileElem" class="btn btn-default import-button" translate>Import vocabulary</label>
               </div>
@@ -68,13 +68,18 @@ export class VocabularyComponent implements EditingComponent {
               private conceptViewModel: ConceptViewModelService,
               deleteConfirmationModal: DeleteConfirmationModalService,
               private languageService: LanguageService,
-              private importVocabularyModal: ImportVocabularyModalService) {
+              private importVocabularyModal: ImportVocabularyModalService,
+              private userService: UserService) {
 
     editableService.onSave = () => conceptViewModel.saveVocabulary();
     editableService.onCanceled = () => conceptViewModel.resetVocabulary();
     editableService.onRemove = () =>
       deleteConfirmationModal.open(requireDefined(this.vocabulary))
         .then(() => conceptViewModel.removeVocabulary());
+  }
+
+  isLoggedIn() {
+    return this.userService.isLoggedIn();
   }
 
   get formNode() {
