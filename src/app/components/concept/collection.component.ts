@@ -21,15 +21,15 @@ import { FormField } from 'app/services/form-state';
       
       <form #form="ngForm" [formGroup]="formNode.control" class="component-content">
 
-        <div class="row">
-          <div class="col-md-4">
+        <div class="top-actions">
+
             <app-filter-language [(ngModel)]="filterLanguage"
                                  [ngModelOptions]="{standalone: true}"
-                                 [languages]="filterLanguages"></app-filter-language>
-          </div>
-          <div class="col-md-8">
+                                 [languages]="filterLanguages"
+                                 class="pull-left"></app-filter-language>
+
             <app-editable-buttons [form]="form" [canRemove]="true"></app-editable-buttons>
-          </div>
+          
         </div>
 
         <div class="row">
@@ -94,11 +94,11 @@ export class CollectionComponent implements EditingComponent, OnDestroy {
   }
 
   get fields() {
-    
+
     const hasContent = (field: FormField) =>
       this.filterLanguage ? field.hasContentForLanguage(this.filterLanguage)
                           : !field.valueEmpty;
-  
+
     return this.formNode.fields.filter(f => this.showEmpty || hasContent(f.value));
   }
 

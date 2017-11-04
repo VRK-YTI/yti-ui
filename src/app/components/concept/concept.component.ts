@@ -13,28 +13,28 @@ import { LanguageService } from '../../services/language.service';
   providers: [EditableService],
   template: `
     <div class="component" *ngIf="concept">
-    
+
       <div class="component-header">
         <h3>{{concept.label | translateValue}}</h3>
       </div>
       <form #form="ngForm" [formGroup]="formNode.control" class="component-content">
-  
-        <div class="row">
-          <div class="col-md-4">
-            <app-filter-language [(ngModel)]="filterLanguage"
-                                 [ngModelOptions]="{standalone: true}"
-                                 [languages]="filterLanguages"></app-filter-language>
-          </div>
-          <div class="col-md-8">
-            <app-editable-buttons [form]="form" [canRemove]="true"></app-editable-buttons>
-          </div>
+
+        <div class="top-actions">
+
+          <app-filter-language [(ngModel)]="filterLanguage"
+                               [ngModelOptions]="{standalone: true}"
+                               [languages]="filterLanguages"
+                               class="pull-left"></app-filter-language>
+
+          <app-editable-buttons [form]="form" [canRemove]="true"></app-editable-buttons>
+
         </div>
-  
+
         <app-concept-form [form]="formNode" [concept]="concept" [multiColumn]="true" [filterLanguage]="filterLanguage" [vocabulary]="vocabulary"></app-concept-form>
       </form>
-      
+
     </div>
-    
+
     <app-ajax-loading-indicator *ngIf="!concept"></app-ajax-loading-indicator>
   `
 })

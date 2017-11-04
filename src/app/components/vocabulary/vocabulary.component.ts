@@ -7,6 +7,7 @@ import { LanguageService } from '../../services/language.service';
 import * as Papa from 'papaparse';
 import { ImportVocabularyModalService } from 'app/components/vocabulary/import-vocabulary-modal.component';
 import { ignoreModalClose } from 'app/utils/modal';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-vocabulary',
@@ -20,26 +21,27 @@ import { ignoreModalClose } from 'app/utils/modal';
             <h2>
               <span>{{vocabulary.label | translateValue}}</span>
               <app-accordion-chevron></app-accordion-chevron>
-            </h2>            
+            </h2>
           </div>
         </ng-template>
         <ng-template ngbPanelContent>
           <form #form="ngForm" [formGroup]="formNode.control">
-            
-            <div class="row">
-              <div class="col-md-8">
-                <app-filter-language [(ngModel)]="filterLanguage"
-                                     [ngModelOptions]="{standalone: true}"
-                                     [languages]="filterLanguages"
-                                     style="width: auto"></app-filter-language>
-              </div>
-              <div class="col-md-2">
+
+            <div class="top-actions">
+
+              <app-filter-language [(ngModel)]="filterLanguage"
+                                   [ngModelOptions]="{standalone: true}"
+                                   [languages]="filterLanguages"
+                                   class="pull-left"
+                                   style="width: auto"></app-filter-language>
+
+              <app-editable-buttons [form]="form" [canRemove]="true"></app-editable-buttons>
+
+              <div class="pull-right">
                 <input #fileInput type="file" id="fileElem" accept=".csv" style="display:none" (change)="selectFile(fileInput.files)">
-                <label for="fileElem" class="btn btn-default import-button" translate>Import vocabulary</label> 
+                <label for="fileElem" class="btn btn-default import-button" translate>Import vocabulary</label>
               </div>
-              <div class="col-md-2">
-                <app-editable-buttons [form]="form" [canRemove]="true"></app-editable-buttons>
-              </div>
+
             </div>
 
             <div class="row">
@@ -49,7 +51,7 @@ import { ignoreModalClose } from 'app/utils/modal';
                 </div>
               </div>
             </div>
-            
+
             <app-vocabulary-form [vocabulary]="vocabulary" [form]="formNode" [filterLanguage]="filterLanguage"></app-vocabulary-form>
             <app-meta-information [node]="vocabulary"></app-meta-information>
           </form>
@@ -103,18 +105,18 @@ export class VocabularyComponent implements EditingComponent {
     return this.conceptViewModel.languages;
   }
 
-  selectFile(files: FileList) {   
+  selectFile(files: FileList) {
     const selectedFile = files[0] || false;
-    
+
     if (selectedFile) {
 
       Papa.parse(selectedFile, {
         header: true,
         skipEmptyLines: true,
         newline: '\r\n',
-        complete: results => 
+        complete: results =>
           this.importVocabularyModal.open(results.data, requireDefined(this.vocabulary))
-            .then(() => this.conceptViewModel.refreshConcepts(), ignoreModalClose)    
+            .then(() => this.conceptViewModel.refreshConcepts(), ignoreModalClose)
       });
 
       this.fileInput.nativeElement.value = '';

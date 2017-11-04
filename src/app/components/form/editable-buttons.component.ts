@@ -7,7 +7,8 @@ import { UserService } from '../../services/user.service';
   styleUrls: ['./editable-buttons.component.scss'],
   selector: 'app-editable-buttons',
   template: `
-    <div class="top-actions" *ngIf="isLoggedIn()">
+    <div *ngIf="isLoggedIn()">
+      
       <button type="button" 
               ngbTooltip="{{'Cancel edit' | translate}}" placement="left"
               #cancelTooltip="ngbTooltip"
