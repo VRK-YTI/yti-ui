@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { URLSearchParams, ResponseOptionsArgs, Response } from '@angular/http';
 import { Observable } from 'rxjs';
 import { TermedHttp } from './termed-http.service';
-import { anyMatching, flatten, normalizeAsArray } from '../utils/array';
+import { contains, flatten, normalizeAsArray } from '../utils/array';
 import { MetaModelService } from './meta-model.service';
 import { NodeExternal, NodeType, NodeInternal, Identifier, VocabularyNodeType } from '../entities/node-api';
 import { CollectionNode, ConceptNode, GroupNode, Node, OrganizationNode, VocabularyNode } from '../entities/node';
@@ -115,29 +115,36 @@ export class TermedService {
     return this.updateAndDeleteInternalNodes([...inlineNodes, ...nodes.map(node => node.toInternalNode())], []);
   }
 
-  updateNode<T extends NodeType>(node: Node<T>, previous: Node<T>|null) {
+  updateNode<T extends NodeType>(updatedNode: Node<T>, previousNode: Node<T>|null) {
 
-    node.lastModifiedDate = moment();
+    updatedNode.lastModifiedDate = moment();
 
-    const inlineNodes =
-      flatten(node.getAllReferences()
+    function inlineNodes(node: Node<any>) {
+      return flatten(node.getAllReferences()
         .filter(ref => ref.inline)
         .map(ref => ref.values.map(n => n.toInternalNode()))
       );
-
-    function resolveDeletedInlineReferenceIds() {
-
-      if (!previous) {
-        return [];
-      } else {
-        return flatten(previous.getAllReferences()
-          .filter(ref => ref.inline)
-          .map(ref => ref.values.map(term => term.identifier)))
-          .filter(id => !anyMatching(inlineNodes, inlineNode => inlineNode.id === id));
-      }
     }
 
-    return this.updateAndDeleteInternalNodes([...inlineNodes, node.toInternalNode()], resolveDeletedInlineReferenceIds());
+    function inlineNodeIds(node: Node<any>) {
+      return flatten(node.getAllReferences()
+        .filter(ref => ref.inline)
+        .map(ref => ref.values.map(n => n.identifier))
+      );
+    }
+
+    const updatedInlineNodes = inlineNodes(updatedNode);
+    const previousInlineNodeIds  = previousNode ? inlineNodeIds(previousNode) : [];
+
+    function nodeIdsAreEqual(left: Identifier<any>, right: Identifier<any>) {
+      return left.id === right.id && left.type.id
+        && left.type.id === right.type.id
+        && left.type.graph.id === right.type.graph.id;
+    }
+
+    const deletedInlineNodeIds = previousInlineNodeIds.filter(id => !contains(updatedInlineNodes, id, nodeIdsAreEqual));
+
+    return this.updateAndDeleteInternalNodes([...updatedInlineNodes, updatedNode.toInternalNode()], deletedInlineNodeIds);
   }
 
   removeNode<T extends NodeType>(node: Node<T>) {
