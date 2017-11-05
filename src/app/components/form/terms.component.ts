@@ -44,11 +44,7 @@ import { MetaModelService } from '../../services/meta-model.service';
               </div>
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-12" [class.col-xl-6]="multiColumn" *ngFor="let property of node.formNode.properties">
-              <app-property [id]="property.name" [property]="property.value" [filterLanguage]="filterLanguage"></app-property>
-            </div>
-          </div>
+          <app-term [term]="node.formNode" [multiColumn]="multiColumn" [filterLanguage]="filterLanguage"></app-term>
         </ng-template>
       </ngb-panel>
     </ngb-accordion>
@@ -129,5 +125,4 @@ export class TermsComponent implements OnChanges {
   isLanguageVisible(language: string) {
     return !this.filterLanguage || language === this.filterLanguage;
   }
-
 }

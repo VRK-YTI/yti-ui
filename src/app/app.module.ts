@@ -2,17 +2,14 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppComponent } from './components/app.component';
 import { TermedService } from './services/termed.service';
 import { NavigationBarComponent } from './components/navigation/navigation-bar.component';
 import { TermedHttp } from './services/termed-http.service';
 import { VocabulariesComponent } from './components/vocabulary/vocabularies.component';
-import {
-  TranslateModule, TranslateLoader, MissingTranslationHandler,
-  MissingTranslationHandlerParams
-} from 'ng2-translate';
+import { MissingTranslationHandler, MissingTranslationHandlerParams, TranslateLoader, TranslateModule } from 'ng2-translate';
 import { Observable } from 'rxjs';
 import { TranslateValuePipe } from './pipes/translate-value.pipe';
 import { LanguageService } from './services/language.service';
@@ -29,8 +26,7 @@ import { PropertyComponent } from './components/form/property.component';
 import { ReferenceComponent } from './components/form/reference.component';
 import { NoSelectionComponent } from './components/concept/no-selection.component';
 import { TimestampPipe } from './pipes/timestamp.pipe';
-import { MarkdownLinksComponent } from './components/markdown/markdown-links.component';
-import { MarkdownLinksElementComponent } from './components/markdown/markdown-links.component';
+import { MarkdownLinksComponent, MarkdownLinksElementComponent } from './components/markdown/markdown-links.component';
 import { ConceptNetworkComponent } from './components/visualization/concept-network.component';
 import { VocabularyComponent } from './components/vocabulary/vocabulary.component';
 import { AccordionChevronComponent } from './components/common/accordion-chevron.component';
@@ -40,8 +36,7 @@ import { KeysPipe } from './pipes/keys.pipe';
 import { ErrorMessagesComponent } from './components/form/error-messages.component';
 import { EditableButtonsComponent } from './components/form/editable-buttons.component';
 import { ElasticSearchService } from './services/elasticsearch.service';
-import { MarkdownComponent } from './components/markdown/markdown.component';
-import { MarkdownElementComponent } from './components/markdown/markdown.component';
+import { MarkdownComponent, MarkdownElementComponent } from './components/markdown/markdown.component';
 import { ConceptListComponent } from './components/concept/concept-list.component';
 import { ConceptHierarchyComponent } from './components/concept/concept-hierarchy.component';
 import { ConceptHierarchyNodeComponent } from './components/concept/concept-hierarchy-node.component';
@@ -70,18 +65,13 @@ import { AjaxLoadingIndicatorSmallComponent } from './components/common/ajax-loa
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { ConceptLinkReferenceInputComponent, ConceptLinkReferencePopoverComponent } from './components/concept/concept-link-reference-input.component';
 import { MarkdownInputComponent } from './components/form/markdown-input.component';
-import {
-  MarkdownInputLinkPopoverComponent,
-  MarkdownInputUnlinkPopoverComponent
-} from './components/form/markdown-input-popover.component';
-import {
-  SelectConceptReferenceModalComponent,
-  SelectConceptReferenceModalService
-} from './components/concept/select-concept-reference-modal.component';
+import { MarkdownInputLinkPopoverComponent, MarkdownInputUnlinkPopoverComponent } from './components/form/markdown-input-popover.component';
+import { SelectConceptReferenceModalComponent, SelectConceptReferenceModalService } from './components/concept/select-concept-reference-modal.component';
 import { FrontpageComponent } from './components/frontpage.component';
 import { LiteralListInputComponent } from './components/form/literal-list-input.component';
 import { RequiredListValidatorDirective } from './directives/validators/required-list.validator';
 import { TermsComponent } from './components/form/terms.component';
+import { TermComponent } from './components/form/term.component';
 import { LoginModalComponent, LoginModalService } from './components/navigation/login-modal.component';
 import { LanguageInputComponent } from './components/form/language-input.component';
 import { LanguageValidatorDirective } from './directives/validators/language.validator';
@@ -143,6 +133,7 @@ const appRoutes: Routes = [
     ConceptLinkReferenceInputComponent,
     ConceptLinkReferencePopoverComponent,
     TermsComponent,
+    TermComponent,
     AjaxLoadingIndicatorComponent,
     AjaxLoadingIndicatorSmallComponent,
     MarkdownComponent,
