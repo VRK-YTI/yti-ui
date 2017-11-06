@@ -1,5 +1,10 @@
 @import '../../../variables';
 
+app-filter-language {
+  display: inline-block;
+  margin-bottom: 15px;
+}
+
 .search-panel {
 
   margin-right: 0;
@@ -40,9 +45,9 @@
 
     &.selected {
       color: inherit;
-      background-color: $brand-accent-lighter;
-      border: 1px solid $brand-accent-dark;
-      box-shadow: 2px 2px 2px $brand-accent-dark;
+      background-color: $lighter;
+      border: 1px solid $dark;
+      box-shadow: 2px 2px 2px $dark;
     }
 
     h6 {

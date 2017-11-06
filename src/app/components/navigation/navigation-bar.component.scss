@@ -10,6 +10,7 @@ img {
   margin: 0 0 0 15px;
 }
 
-.nav-item.bg-inverse > a {
-  background-color: $brand-primary;
+// FIXME: shouldn't be necessary to hack visibility like this
+li.show .dropdown-menu {
+  display: inline-block;
 }

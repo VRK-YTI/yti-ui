@@ -503,6 +503,10 @@ export class ConceptNode extends Node<'Concept'> {
     return this.getProperty('definition').asLocalizations();
   }
 
+  get definitionAsLocalizable(): Localizable {
+    return asLocalizable(this.definition);
+  }
+
   set definition(value: Localization[]) {
     this.getProperty('definition').setLocalizations(value);
   }

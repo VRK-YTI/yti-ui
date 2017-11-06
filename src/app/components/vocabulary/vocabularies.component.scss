@@ -15,16 +15,16 @@
 }
 
 .amount {
-  color: $brand-primary;
+  color: $primary;
   width: calc(100% - 20px);
   margin-left: 10px;
   margin-bottom: 10px;
   padding-bottom: 5px;
-  border-bottom: 2px solid $brand-accent-lighter;
+  border-bottom: 2px solid $lighter;
 }
 
 .filters {
-  border: 2px solid $brand-accent-lighter;
+  border: 2px solid $lighter;
   padding: 10px;
 
   .filter {
@@ -45,15 +45,15 @@
       }
 
       .name {
-        color: $brand-primary;
+        color: $primary;
       }
       .count {
         float: right;
-        color: $gray-light;
+        color: $gray-500;
       }
 
       &.selected {
-        background-color: $brand-accent-lighter;
+        background-color: $lighter;
         font-weight: bold;
       }
     }
@@ -63,7 +63,7 @@
     width: 100%;
     margin-top: 10px;
     margin-bottom: 10px;
-    border-bottom: 2px solid $brand-accent-lighter;
+    border-bottom: 2px solid $lighter;
   }
 }
 
@@ -75,7 +75,7 @@
 
   &:hover {
     cursor: pointer;
-    background-color: $brand-accent-lighter;
+    background-color: $lighter;
 
     .type {
       border: 1px solid rgba(0, 0, 0, 0.15) !important;
@@ -90,7 +90,7 @@
 
     .title {
       font-size: medium;
-      color: $brand-primary;
+      color: $primary;
     }
 
     p {
@@ -106,13 +106,13 @@
     width: 250px;
 
     .publisher {
-      color: $brand-primary;
+      color: $primary;
       margin-bottom: 10px;
       display: block;
     }
 
     .group {
-      color: $brand-primary;
+      color: $primary;
       margin-bottom: 10px;
       display: block;
     }
@@ -120,8 +120,8 @@
     .type {
       display: inline-block;
       padding: 10px;
-      background-color: $brand-accent-lighter;
-      border: 1px solid $brand-accent-lighter;
+      background-color: $lighter;
+      border: 1px solid $lighter;
     }
   }
 }

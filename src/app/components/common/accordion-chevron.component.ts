@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NgbAccordion, NgbPanel } from '@ng-bootstrap/ng-bootstrap';
+import { NgbPanel } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-accordion-chevron',
@@ -7,16 +7,10 @@ import { NgbAccordion, NgbPanel } from '@ng-bootstrap/ng-bootstrap';
 })
 export class AccordionChevronComponent {
 
-  constructor(private ngbAccordion: NgbAccordion, private ngbPanel: NgbPanel) {
+  constructor(private ngbPanel: NgbPanel) {
   }
 
   get open() {
-    const accordion = this.ngbAccordion as Accordion;
-    return accordion.isOpen(this.ngbPanel.id);
+    return this.ngbPanel.isOpen;
   }
-}
-
-interface Accordion extends NgbAccordion {
-  // FIXME relies on internal implementation
-  isOpen(panelId: string): boolean;
 }

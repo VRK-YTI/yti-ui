@@ -33,7 +33,7 @@ div.localized {
 
     float: left;
     color: white;
-    background-color: $brand-primary;
+    background-color: $primary;
     width: $language-width;
     height: $language-height;
     display: inline-block;
@@ -44,7 +44,7 @@ div.localized {
   div.localization {
 
     float: left;
-    border: 2px solid $brand-primary;
+    border: 2px solid $primary;
     width: calc(100% - #{$language-width});
     min-height: $language-height;
     padding-left: 10px;

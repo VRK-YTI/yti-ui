@@ -6,7 +6,7 @@ $language-width: 42px;
 :host /deep/ {
 
   .card-header {
-    background-color: $brand-accent-lighter;
+    background-color: $lighter;
     border: none;
     padding: 0;
     margin-bottom: 5px;
@@ -21,7 +21,7 @@ $language-width: 42px;
   }
   .card-block {
     padding: 0 30px 0 0;
-    border: 1px solid $brand-accent-lighter;
+    border: 1px solid $lighter;
     margin-top: -5px;
     margin-bottom: 5px;
   }
@@ -36,7 +36,7 @@ $language-width: 42px;
 
     float: left;
     color: white;
-    background-color: $brand-primary;
+    background-color: $primary;
     width: $language-width;
     height: $language-height;
     display: inline-block;

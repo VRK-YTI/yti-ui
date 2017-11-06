@@ -10,7 +10,7 @@ import { UserService } from '../../services/user.service';
     <div *ngIf="isLoggedIn()">
       
       <button type="button" 
-              ngbTooltip="{{'Cancel edit' | translate}}" placement="left"
+              ngbTooltip="{{'Cancel edit' | translate}}"
               #cancelTooltip="ngbTooltip"
               class="btn btn-default pull-right cancel" 
               (click)="cancelTooltip.close(); cancelEditing()"

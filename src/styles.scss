@@ -18,8 +18,8 @@ span.highlight {
 
 .btn-default {
   color: white;
-  background-color: $brand-accent-light;
-  border: 1px solid $brand-accent-light;
+  background-color: $light;
+  border: 1px solid $light;
 }
 
 .btn {
@@ -28,12 +28,12 @@ span.highlight {
 
 .btn-default:hover, .btn-default:focus, .btn-default:active {
   color: white;
-  background-color: $brand-accent-dark;
-  border: 1px solid $brand-accent-light;
+  background-color: $dark;
+  border: 1px solid $light;
 }
 
 .btn-link {
-  color: $brand-primary;
+  color: $primary;
 }
 
 .input-group.input-group-search {
@@ -42,6 +42,10 @@ span.highlight {
 
   .form-control {
     padding-left: 3rem !important;
+
+    &:focus {
+      outline: 0 none;
+    }
   }
 
   &:before {
@@ -64,8 +68,8 @@ span.highlight {
 .modal-header {
 
   color: white;
-  border-color: darken($brand-primary, 5%);
-  background-color: $brand-primary;
+  border-color: darken($primary, 5%);
+  background-color: $primary;
 
   h4 {
     width: 100%;
@@ -81,23 +85,15 @@ span.highlight {
   }
 
   &.modal-header-warning {
-    color: $alert-warning-text;
-    border-color: $alert-warning-border;
-    background-color: $alert-warning-bg;
-
-    i {
-      color: $alert-warning-text;
-    }
+    color: theme-color-level('warning', 6);
+    background-color: theme-color-level('warning', -10);
+    border-color: theme-color-level('warning', -9);
   }
 
   &.modal-header-danger {
-    color: $alert-danger-text;
-    border-color: $alert-danger-border;
-    background-color: $alert-danger-bg;
-
-    i {
-      color: $alert-danger-text;
-    }
+    color: theme-color-level('danger', 6);
+    background-color: theme-color-level('danger', -10);
+    border-color: theme-color-level('danger', -9);
   }
 }
 
