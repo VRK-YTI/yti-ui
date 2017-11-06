@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-11-01 15:30+0200\n"
+"PO-Revision-Date: 2017-11-06 11:12+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -175,16 +175,16 @@ msgstr ""
 msgid "Login"
 msgstr ""
 
-msgid "Username"
+msgid "eDuuni information"
 msgstr ""
 
-msgid "Password"
-msgstr ""
-
-msgid "Login failed"
+msgid "Login information"
 msgstr ""
 
 msgid "Log In"
+msgstr ""
+
+msgid "Register"
 msgstr ""
 
 msgid "Logout"
@@ -202,7 +202,7 @@ msgstr ""
 msgid "No group"
 msgstr ""
 
-msgid "Note"
+msgid "Definition"
 msgstr ""
 
 msgid "Confirm import"
@@ -211,13 +211,19 @@ msgstr ""
 msgid "concepts"
 msgstr ""
 
+msgid "Import is not allowed because some of the concepts lack preferred term."
+msgstr ""
+
+msgid "Line numbers in the import file"
+msgstr ""
+
 msgid "Preferred term"
 msgstr ""
 
-msgid "Definition"
+msgid "Importing"
 msgstr ""
 
-msgid "Importing"
+msgid "Note"
 msgstr ""
 
 msgid "Example"

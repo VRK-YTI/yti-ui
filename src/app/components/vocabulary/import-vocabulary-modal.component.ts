@@ -14,10 +14,11 @@ class CsvConceptDetails {
     public definition: Localization[],
     public note: Localization[],
     public example: Localization[],
-    public synonym: Localization[]) {
+    public synonym: Localization[],
+    public lineNumber: number) {
   }
 
-  static createFromCsvRow(csvJsonObject: any): CsvConceptDetails {
+  static createFromCsvRow(csvJsonObject: any, lineNumber: number): CsvConceptDetails {
     
     function splitValuesAsOwnLocalizations(localization: Localization) {
       return localization.value.split('\r\n').map(v => ({ lang: localization.lang, value: v}));
@@ -43,7 +44,8 @@ class CsvConceptDetails {
       parseLocalizationsForProperty('definition'),
       parseLocalizationsForProperty('note'),
       parseLocalizationsForProperty('example'),
-      parseLocalizationsForProperty('synonym')
+      parseLocalizationsForProperty('synonym'),
+      lineNumber
     );
   }
 
@@ -96,6 +98,11 @@ export class ImportVocabularyModalService {
             <h6>
               <span translate>Importing</span> {{numberOfConcepts}} <span translate>concepts</span>
             </h6>
+            <div *ngIf="numberOfConceptsWithEmptyPrefLabels" class="error-alert alert-danger">
+              <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
+              <span translate>Import is not allowed because some of the concepts lack preferred term.</span>
+              <span translate>Line numbers in the import file</span>: {{lineNumbersOfEmptyPrefLabels}}
+            </div>
           </div>
 
           <div class="concepts-from-csv">
@@ -131,7 +138,7 @@ export class ImportVocabularyModalService {
       </div>
 
       <button type="button" class="btn btn-secondary cancel" (click)="cancel()" translate>Cancel</button>     
-      <button type="button" class="btn btn-default confirm" (click)="confirm()" translate>Yes</button>
+      <button type="button" class="btn btn-default confirm" (click)="confirm()" [disabled]="cannotImport()" translate>Yes</button>
     </div>
 
     
@@ -153,7 +160,9 @@ export class ImportVocabularyModalComponent implements OnInit {
 
   ngOnInit(): void {
     const data: any[] = this.importData;
-    this.processedConceptData = data.map(datum => CsvConceptDetails.createFromCsvRow(datum));
+    const lineNumber = (datum: any) => data.indexOf(datum) + 2;
+
+    this.processedConceptData = data.map(datum => CsvConceptDetails.createFromCsvRow(datum, lineNumber(datum)));    
   }
 
   get conceptsFromCsv() {
@@ -168,6 +177,18 @@ export class ImportVocabularyModalComponent implements OnInit {
     return concept.nonEmptyProperties();
   }
 
+  get conceptsWithEmptyPrefLabels() {
+    return this.conceptsFromCsv.filter(concept => concept.prefLabel.length === 0);
+  }
+
+  get numberOfConceptsWithEmptyPrefLabels() {
+    return this.conceptsWithEmptyPrefLabels ? this.conceptsWithEmptyPrefLabels.length : 0;
+  }
+
+  get lineNumbersOfEmptyPrefLabels() {
+    return this.conceptsWithEmptyPrefLabels.map(concept => concept.lineNumber).join(', ');
+  }
+
   convertToConceptNode(conceptFromCsv: CsvConceptDetails, metaModel: MetaModel): ConceptNode {
 
     const concept: ConceptNode = metaModel.createEmptyConcept(this.vocabulary);
@@ -179,6 +200,10 @@ export class ImportVocabularyModalComponent implements OnInit {
     concept.altLabel = conceptFromCsv.synonym;
 
     return concept;
+  }
+
+  cannotImport() {
+    return this.numberOfConceptsWithEmptyPrefLabels > 0;
   }
 
   cancel() {

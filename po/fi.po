@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-11-02 12:55+0200\n"
+"PO-Revision-Date: 2017-11-06 11:13+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -207,8 +207,8 @@ msgstr "Assosiatiivinen"
 msgid "No group"
 msgstr "Ei ryhmää"
 
-msgid "Note"
-msgstr "Huomautus"
+msgid "Definition"
+msgstr "Määritelmä"
 
 msgid "Confirm import"
 msgstr "Tuonnin hyväksyntä"
@@ -216,14 +216,21 @@ msgstr "Tuonnin hyväksyntä"
 msgid "concepts"
 msgstr "käsitettä"
 
+msgid "Import is not allowed because some of the concepts lack preferred term."
+msgstr ""
+"Tuontia ei sallita, koska joistakin käsitteistä puuttuu suositettava termi."
+
+msgid "Line numbers in the import file"
+msgstr "Rivinumerot aineistossa"
+
 msgid "Preferred term"
 msgstr "Suositettava termi"
 
-msgid "Definition"
-msgstr "Määritelmä"
-
 msgid "Importing"
 msgstr "Tuodaan"
+
+msgid "Note"
+msgstr "Huomautus"
 
 msgid "Example"
 msgstr "Käyttöesimerkki"
@@ -315,6 +322,9 @@ msgstr "Pakollinen syöte"
 
 msgid "validateLanguage"
 msgstr "Epävalidi kieli"
+
+#~ msgid "Line numbers"
+#~ msgstr "Rivinumerot"
 
 #~ msgid "Username"
 #~ msgstr "Käyttäjätunnus"
