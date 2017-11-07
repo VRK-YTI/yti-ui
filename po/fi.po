@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-11-06 11:13+0200\n"
+"PO-Revision-Date: 2017-11-07 10:15+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -207,11 +207,11 @@ msgstr "Assosiatiivinen"
 msgid "No group"
 msgstr "Ei ryhmää"
 
-msgid "Definition"
-msgstr "Määritelmä"
-
 msgid "Confirm import"
 msgstr "Tuonnin hyväksyntä"
+
+msgid "Importing"
+msgstr "Tuodaan"
 
 msgid "concepts"
 msgstr "käsitettä"
@@ -222,21 +222,6 @@ msgstr ""
 
 msgid "Line numbers in the import file"
 msgstr "Rivinumerot aineistossa"
-
-msgid "Preferred term"
-msgstr "Suositettava termi"
-
-msgid "Importing"
-msgstr "Tuodaan"
-
-msgid "Note"
-msgstr "Huomautus"
-
-msgid "Example"
-msgstr "Käyttöesimerkki"
-
-msgid "Synonym"
-msgstr "Synonyymi"
 
 msgid "Import failed"
 msgstr "Tuonti epäonnistui"
@@ -262,6 +247,9 @@ msgstr "uusi käsite"
 msgid "New collection"
 msgstr "uusi käsitevalikoima"
 
+msgid "Unexpected error"
+msgstr "Tapahtui odottamaton virhe"
+
 msgid "Front page"
 msgstr "Etusivu"
 
@@ -283,14 +271,11 @@ msgstr "Toimiala / Ryhmä"
 msgid "Organization"
 msgstr "Organisaatio"
 
-msgid "Unstable"
-msgstr "Keskeneräinen"
-
 msgid "Submit error"
 msgstr "Toiminnossa tapahtui virhe"
 
-msgid "Unexpected error"
-msgstr "Tapahtui odottamaton virhe"
+msgid "Unstable"
+msgstr "Keskeneräinen"
 
 msgid "Edit in progress"
 msgstr "Muokkaaminen on kesken"
@@ -314,6 +299,21 @@ msgstr "Valinta ei voi viitata itseensä"
 msgid "already added error"
 msgstr "Valinta on jo lisätty"
 
+msgid "prefLabel"
+msgstr "Suositettava termi"
+
+msgid "definition"
+msgstr "Määritelmä"
+
+msgid "note"
+msgstr "Huomautus"
+
+msgid "example"
+msgstr "Käyttöesimerkki"
+
+msgid "synonym"
+msgstr "Synonyymi"
+
 msgid "validateMeta"
 msgstr "Epävalidi syöte"
 
@@ -322,6 +322,12 @@ msgstr "Pakollinen syöte"
 
 msgid "validateLanguage"
 msgstr "Epävalidi kieli"
+
+#~ msgid "Preferred term"
+#~ msgstr "Suositettava termi"
+
+#~ msgid "Note"
+#~ msgstr "Huomautus"
 
 #~ msgid "Line numbers"
 #~ msgstr "Rivinumerot"
@@ -370,6 +376,3 @@ msgstr "Epävalidi kieli"
 
 #~ msgid "Concept"
 #~ msgstr "Käsite"
-
-#~ msgid "Label"
-#~ msgstr "Nimi"

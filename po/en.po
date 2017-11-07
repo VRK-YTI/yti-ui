@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-11-06 11:12+0200\n"
+"PO-Revision-Date: 2017-11-07 10:20+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -202,10 +202,10 @@ msgstr ""
 msgid "No group"
 msgstr ""
 
-msgid "Definition"
+msgid "Confirm import"
 msgstr ""
 
-msgid "Confirm import"
+msgid "Importing"
 msgstr ""
 
 msgid "concepts"
@@ -215,21 +215,6 @@ msgid "Import is not allowed because some of the concepts lack preferred term."
 msgstr ""
 
 msgid "Line numbers in the import file"
-msgstr ""
-
-msgid "Preferred term"
-msgstr ""
-
-msgid "Importing"
-msgstr ""
-
-msgid "Note"
-msgstr ""
-
-msgid "Example"
-msgstr ""
-
-msgid "Synonym"
 msgstr ""
 
 msgid "Import failed"
@@ -256,6 +241,9 @@ msgstr "new concept"
 msgid "New collection"
 msgstr "new collection"
 
+msgid "Unexpected error"
+msgstr ""
+
 msgid "Front page"
 msgstr ""
 
@@ -277,13 +265,10 @@ msgstr ""
 msgid "Organization"
 msgstr ""
 
-msgid "Unstable"
-msgstr ""
-
 msgid "Submit error"
 msgstr ""
 
-msgid "Unexpected error"
+msgid "Unstable"
 msgstr ""
 
 msgid "Edit in progress"
@@ -306,6 +291,21 @@ msgstr "Selection references itself"
 msgid "already added error"
 msgstr "Selection is already added"
 
+msgid "prefLabel"
+msgstr "Preferred term"
+
+msgid "definition"
+msgstr "Definition"
+
+msgid "note"
+msgstr "Note"
+
+msgid "example"
+msgstr "Example"
+
+msgid "synonym"
+msgstr "Synonym"
+
 msgid "validateMeta"
 msgstr "Invalid"
 
@@ -314,9 +314,3 @@ msgstr "Required"
 
 msgid "validateLanguage"
 msgstr "Invalid language"
-
-#~ msgid "prefLabel"
-#~ msgstr "Preferred term"
-
-#~ msgid "note"
-#~ msgstr "Note"

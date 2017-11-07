@@ -1,8 +1,7 @@
 import { Component, Injectable, Input, OnInit } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Localization, Localizable } from 'app/entities/localization';
+import { Localization } from 'app/entities/localization';
 import { flatten } from '../../utils/array';
-import { requireDefined } from '../../utils/object';
 import { VocabularyNode, ConceptNode } from 'app/entities/node';
 import { MetaModelService } from 'app/services/meta-model.service';
 import { MetaModel } from 'app/entities/meta';
@@ -19,7 +18,7 @@ class CsvConceptDetails {
   }
 
   static createFromCsvRow(csvJsonObject: any, lineNumber: number): CsvConceptDetails {
-
+    
     function splitValuesAsOwnLocalizations(localization: Localization) {
       return localization.value.split('\r\n').map(v => ({ lang: localization.lang, value: v}));
     }
@@ -49,7 +48,7 @@ class CsvConceptDetails {
     );
   }
 
-  nonEmptyProperties(): {name: string, localizations: Localization[]}[] {
+  get nonEmptyProperties(): {name: string, localizations: Localization[]}[] {
 
     const propertyIsNotEmpty = (localizations: Localization[]) => localizations.length > 0;
 
@@ -62,7 +61,7 @@ class CsvConceptDetails {
     ];
 
     return allProperties.filter(property => propertyIsNotEmpty(property.localizations));
-  }
+  } 
 }
 
 @Injectable()
@@ -77,7 +76,7 @@ export class ImportVocabularyModalService {
     instance.importData = importData;
     instance.vocabulary = vocabulary;
     return modalRef.result;
-  }
+  }  
 }
 
 @Component({
@@ -98,7 +97,7 @@ export class ImportVocabularyModalService {
             <h6>
               <span translate>Importing</span> {{numberOfConcepts}} <span translate>concepts</span>
             </h6>
-            <div *ngIf="numberOfConceptsWithEmptyPrefLabels" class="error-alert alert-danger">
+            <div *ngIf="invalid" class="alert alert-danger">
               <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
               <span translate>Import is not allowed because some of the concepts lack preferred term.</span>
               <span translate>Line numbers in the import file</span>: {{lineNumbersOfEmptyPrefLabels}}
@@ -107,14 +106,9 @@ export class ImportVocabularyModalService {
 
           <div class="concepts-from-csv">
             <div class="concept-from-csv" *ngFor="let concept of conceptsFromCsv">
-              <div class="concept-property" *ngFor="let property of properties(concept)" [ngSwitch]="property.name">                
+              <div class="concept-property" *ngFor="let property of concept.nonEmptyProperties" [ngSwitch]="property.name">                
                 <b>
-                  <span *ngSwitchCase="'prefLabel'" translate>Preferred term</span>
-                  <span *ngSwitchCase="'definition'" translate>Definition</span>
-                  <span *ngSwitchCase="'note'" translate>Note</span>
-                  <span *ngSwitchCase="'example'" translate>Example</span>
-                  <span *ngSwitchCase="'synonym'" translate>Synonym</span>
-                  <span *ngSwitchDefault>{{property.name}}</span>
+                  <span>{{property.name | translate}}</span>
                 </b>
                 <div *ngFor="let localization of property.localizations">
                   <div class="localization-lang">{{localization.lang.toUpperCase()}}</div> 
@@ -138,10 +132,8 @@ export class ImportVocabularyModalService {
       </div>
 
       <button type="button" class="btn btn-secondary cancel" (click)="cancel()" translate>Cancel</button>     
-      <button type="button" class="btn btn-default confirm" (click)="confirm()" [disabled]="cannotImport()" translate>Yes</button>
-    </div>
-
-    
+      <button type="button" class="btn btn-default confirm" (click)="confirm()" [disabled]="invalid" translate>Yes</button>
+    </div> 
   `
 })
 export class ImportVocabularyModalComponent implements OnInit {
@@ -149,32 +141,21 @@ export class ImportVocabularyModalComponent implements OnInit {
   @Input() importData: any[];
   @Input() vocabulary: VocabularyNode;
 
-  processedConceptData: CsvConceptDetails[];
+  conceptsFromCsv: CsvConceptDetails[] = [];
   importError = false;
 
   constructor(private modal: NgbActiveModal,
               private metaModelService: MetaModelService,
-              private termedService: TermedService
-            ) {
+              private termedService: TermedService) {
   }
 
   ngOnInit(): void {
     const data: any[] = this.importData;
-    const lineNumber = (datum: any) => data.indexOf(datum) + 2;
-
-    this.processedConceptData = data.map(datum => CsvConceptDetails.createFromCsvRow(datum, lineNumber(datum)));
-  }
-
-  get conceptsFromCsv() {
-    return this.processedConceptData;
+    this.conceptsFromCsv = data.map((datum, index) => CsvConceptDetails.createFromCsvRow(datum, index + 2));
   }
 
   get numberOfConcepts() {
     return this.conceptsFromCsv ? this.conceptsFromCsv.length : 0;
-  }
-
-  properties(concept: CsvConceptDetails) {
-    return concept.nonEmptyProperties();
   }
 
   get conceptsWithEmptyPrefLabels() {
@@ -182,7 +163,7 @@ export class ImportVocabularyModalComponent implements OnInit {
   }
 
   get numberOfConceptsWithEmptyPrefLabels() {
-    return this.conceptsWithEmptyPrefLabels ? this.conceptsWithEmptyPrefLabels.length : 0;
+    return this.conceptsWithEmptyPrefLabels.length;
   }
 
   get lineNumbersOfEmptyPrefLabels() {
@@ -202,7 +183,7 @@ export class ImportVocabularyModalComponent implements OnInit {
     return concept;
   }
 
-  cannotImport() {
+  get invalid() {
     return this.numberOfConceptsWithEmptyPrefLabels > 0;
   }
 

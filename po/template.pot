@@ -187,10 +187,10 @@ msgstr ""
 msgid "No group"
 msgstr ""
 
-msgid "Definition"
+msgid "Confirm import"
 msgstr ""
 
-msgid "Confirm import"
+msgid "Importing"
 msgstr ""
 
 msgid "concepts"
@@ -200,21 +200,6 @@ msgid "Import is not allowed because some of the concepts lack preferred term."
 msgstr ""
 
 msgid "Line numbers in the import file"
-msgstr ""
-
-msgid "Preferred term"
-msgstr ""
-
-msgid "Importing"
-msgstr ""
-
-msgid "Note"
-msgstr ""
-
-msgid "Example"
-msgstr ""
-
-msgid "Synonym"
 msgstr ""
 
 msgid "Import failed"
@@ -241,6 +226,9 @@ msgstr ""
 msgid "New collection"
 msgstr ""
 
+msgid "Unexpected error"
+msgstr ""
+
 msgid "Front page"
 msgstr ""
 
@@ -262,13 +250,10 @@ msgstr ""
 msgid "Organization"
 msgstr ""
 
-msgid "Unstable"
-msgstr ""
-
 msgid "Submit error"
 msgstr ""
 
-msgid "Unexpected error"
+msgid "Unstable"
 msgstr ""
 
 msgid "Edit in progress"
@@ -289,6 +274,21 @@ msgid "self reference error"
 msgstr ""
 
 msgid "already added error"
+msgstr ""
+
+msgid "prefLabel"
+msgstr ""
+
+msgid "definition"
+msgstr ""
+
+msgid "note"
+msgstr ""
+
+msgid "example"
+msgstr ""
+
+msgid "synonym"
 msgstr ""
 
 msgid "validateMeta"
