@@ -10,13 +10,13 @@ import { FormPropertyLocalizable } from '../../services/form-state';
   template: `
 
     <div *ngIf="canAdd()" class="clearfix">
-      <div ngbDropdown class="add-button">
+      <div ngbDropdown class="add-button" placement="bottom-right">
         <button class="btn btn-default" 
                 ngbDropdownToggle 
                 ngbTooltip="{{'Add' | translate}} {{property.label | translateValue:false | lowercase}}">
           <i class="fa fa-plus"></i>
         </button>
-        <div class="dropdown-menu">
+        <div ngbDropdownMenu>
           <button class="dropdown-item" 
                   *ngFor="let language of addableLanguages" 
                   (click)="addNewLocalization(language)">{{language | uppercase}}</button>                  
@@ -119,5 +119,4 @@ export class LocalizedInputComponent {
   isLanguageVisible(language: string) {
     return !this.filterLanguage || language === this.filterLanguage;
   }
-
 }

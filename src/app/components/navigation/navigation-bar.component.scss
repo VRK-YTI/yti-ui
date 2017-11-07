@@ -9,8 +9,3 @@ img {
   height: 40px;
   margin: 0 0 0 15px;
 }
-
-// FIXME: shouldn't be necessary to hack visibility like this
-li.show .dropdown-menu {
-  display: inline-block;
-}

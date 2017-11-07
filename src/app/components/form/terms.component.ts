@@ -9,13 +9,13 @@ import { MetaModelService } from '../../services/meta-model.service';
   template: `
     
     <div class="clearfix" *ngIf="canAdd()">
-      <div ngbDropdown class="add-button">
+      <div ngbDropdown class="add-button" placement="bottom-right">
         <button class="btn btn-default" 
                 ngbDropdownToggle 
                 ngbTooltip="{{'Add' | translate}} {{reference.label | translateValue:false | lowercase}}">
           <i class="fa fa-plus"></i>
         </button>
-        <div class="dropdown-menu">
+        <div ngbDropdownMenu>
           <button class="dropdown-item" 
                   *ngFor="let language of addableLanguages" 
                   (click)="addTerm(language)">{{language | uppercase}}</button>
