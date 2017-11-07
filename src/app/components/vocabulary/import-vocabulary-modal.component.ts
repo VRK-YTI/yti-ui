@@ -19,7 +19,7 @@ class CsvConceptDetails {
   }
 
   static createFromCsvRow(csvJsonObject: any, lineNumber: number): CsvConceptDetails {
-    
+
     function splitValuesAsOwnLocalizations(localization: Localization) {
       return localization.value.split('\r\n').map(v => ({ lang: localization.lang, value: v}));
     }
@@ -62,7 +62,7 @@ class CsvConceptDetails {
     ];
 
     return allProperties.filter(property => propertyIsNotEmpty(property.localizations));
-  } 
+  }
 }
 
 @Injectable()
@@ -77,7 +77,7 @@ export class ImportVocabularyModalService {
     instance.importData = importData;
     instance.vocabulary = vocabulary;
     return modalRef.result;
-  }  
+  }
 }
 
 @Component({
@@ -132,7 +132,7 @@ export class ImportVocabularyModalService {
 
     <div class="modal-footer">
 
-      <div class="error-alert alert-danger" role="alert" *ngIf="importError">
+      <div class="alert alert-danger modal-alert" role="alert" *ngIf="importError">
         <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
         <span translate>Import failed</span>
       </div>
@@ -162,7 +162,7 @@ export class ImportVocabularyModalComponent implements OnInit {
     const data: any[] = this.importData;
     const lineNumber = (datum: any) => data.indexOf(datum) + 2;
 
-    this.processedConceptData = data.map(datum => CsvConceptDetails.createFromCsvRow(datum, lineNumber(datum)));    
+    this.processedConceptData = data.map(datum => CsvConceptDetails.createFromCsvRow(datum, lineNumber(datum)));
   }
 
   get conceptsFromCsv() {

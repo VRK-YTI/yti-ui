@@ -129,7 +129,7 @@ export class SearchConceptModalService {
     </div>
     <div class="modal-footer">
 
-      <div class="alert alert-danger" style="display: inline; padding: 6px; margin: 0 5px 0 0;" role="alert" *ngIf="restrictionReasonForSelection">
+      <div class="alert alert-danger modal-alert" role="alert" *ngIf="restrictionReasonForSelection">
         <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
         <span>{{restrictionReasonForSelection | translate}}</span>
       </div>
