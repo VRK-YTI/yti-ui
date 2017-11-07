@@ -6,6 +6,7 @@ import { VocabularyNode, ConceptNode } from 'app/entities/node';
 import { MetaModelService } from 'app/services/meta-model.service';
 import { MetaModel } from 'app/entities/meta';
 import { TermedService } from 'app/services/termed.service';
+import * as Papa from 'papaparse';
 
 class CsvConceptDetails {
 
@@ -69,14 +70,14 @@ export class ImportVocabularyModalService {
 
   constructor(private modalService: NgbModal) {
   }
-
-  open(importData: any[], vocabulary: VocabularyNode): Promise<any> {
+  
+  open(importFile: File, vocabulary: VocabularyNode): Promise<any> {
     const modalRef = this.modalService.open(ImportVocabularyModalComponent, { size: 'lg' });
     const instance = modalRef.componentInstance as ImportVocabularyModalComponent;
-    instance.importData = importData;
+    instance.importFile = importFile;
     instance.vocabulary = vocabulary;
     return modalRef.result;
-  }  
+  }
 }
 
 @Component({
@@ -138,7 +139,7 @@ export class ImportVocabularyModalService {
 })
 export class ImportVocabularyModalComponent implements OnInit {
 
-  @Input() importData: any[];
+  @Input() importFile: File;
   @Input() vocabulary: VocabularyNode;
 
   conceptsFromCsv: CsvConceptDetails[] = [];
@@ -150,8 +151,13 @@ export class ImportVocabularyModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const data: any[] = this.importData;
-    this.conceptsFromCsv = data.map((datum, index) => CsvConceptDetails.createFromCsvRow(datum, index + 2));
+    Papa.parse(this.importFile, {
+      header: true,
+      skipEmptyLines: true,
+      newline: '\r\n',
+      complete: results =>
+        this.conceptsFromCsv = results.data.map((datum, index) => CsvConceptDetails.createFromCsvRow(datum, index + 2))
+    });
   }
 
   get numberOfConcepts() {

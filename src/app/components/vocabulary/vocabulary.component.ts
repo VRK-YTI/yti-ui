@@ -4,7 +4,6 @@ import { ConceptViewModelService } from '../../services/concept.view.service';
 import { requireDefined } from '../../utils/object';
 import { DeleteConfirmationModalService } from '../common/delete-confirmation-modal.component';
 import { LanguageService } from '../../services/language.service';
-import * as Papa from 'papaparse';
 import { ImportVocabularyModalService } from 'app/components/vocabulary/import-vocabulary-modal.component';
 import { ignoreModalClose } from 'app/utils/modal';
 import { UserService } from '../../services/user.service';
@@ -114,15 +113,8 @@ export class VocabularyComponent implements EditingComponent {
     const selectedFile = files[0] || false;
 
     if (selectedFile) {
-
-      Papa.parse(selectedFile, {
-        header: true,
-        skipEmptyLines: true,
-        newline: '\r\n',
-        complete: results =>
-          this.importVocabularyModal.open(results.data, requireDefined(this.vocabulary))
-            .then(() => this.conceptViewModel.refreshConcepts(), ignoreModalClose)
-      });
+      this.importVocabularyModal.open(selectedFile, requireDefined(this.vocabulary))
+        .then(() => this.conceptViewModel.refreshConcepts(), ignoreModalClose)
 
       this.fileInput.nativeElement.value = '';
     }
