@@ -389,8 +389,8 @@ export class VocabularyNode extends Node<VocabularyNodeType> {
     return this.getProperty('prefLabel').asLocalizations();
   }
 
-  get publisher(): OrganizationNode {
-    return this.getReference<OrganizationNode>('publisher').getSingle();
+  get publishers(): OrganizationNode[] {
+    return this.getReference<OrganizationNode>('publisher').values;
   }
 
   hasLanguage() {
@@ -408,10 +408,6 @@ export class VocabularyNode extends Node<VocabularyNodeType> {
 
   set languages(value: string[]) {
     this.getProperty('language').setValues(value);
-  }
-
-  hasPublisher() {
-    return !this.getReference('publisher').empty;
   }
 
   get group(): GroupNode {

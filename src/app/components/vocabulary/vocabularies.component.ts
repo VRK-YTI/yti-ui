@@ -2,8 +2,7 @@ import { Component, Input, OnChanges } from '@angular/core';
 import { Router } from '@angular/router';
 import { VocabularyNode } from '../../entities/node';
 import { Localizable } from '../../entities/localization';
-import { groupBy, allMatching } from '../../utils/array';
-import { isDefined, requireDefined } from '../../utils/object';
+import { groupBy, allMatching, flatten } from '../../utils/array';
 import { UserService } from '../../services/user.service';
 
 @Component({
@@ -58,8 +57,11 @@ import { UserService } from '../../services/user.service';
             <p>{{vocabulary.description | translateValue:false}}</p>
           </div>
           <div class="origin">
-              <span class="publisher"
-                    *ngIf="vocabulary.hasPublisher()">{{vocabulary.publisher.label | translateValue:false}}</span>
+              <span class="publisher">
+                <span *ngFor="let publisher of vocabulary.publishers">
+                    {{publisher.label | translateValue:false}}
+                </span>
+              </span>
             <span class="group" *ngIf="vocabulary.hasGroup()">{{vocabulary.group.label | translateValue:false}}</span>
             <span class="type">{{vocabulary.typeLabel | translateValue:false}}</span>
           </div>
@@ -85,9 +87,9 @@ export class VocabulariesComponent implements OnChanges {
     };
 
     this.vocabularyFilters = [
-      new Filter('Vocabulary type', this.vocabularies, (node) => node.meta.type, (node) => node.meta.label, recalculateResults),
-      new Filter('Group', this.vocabularies, (node) => node.hasGroup() ? node.group.id : null, (node) => node.group.label, recalculateResults),
-      new Filter('Organization', this.vocabularies, (node) => node.hasPublisher() ? node.publisher.id : null, (node) => node.publisher.label, recalculateResults)
+      new Filter('Vocabulary type', this.vocabularies, (node) => ([{ id: node.meta.type, value: node.meta.label}]), recalculateResults),
+      new Filter('Group', this.vocabularies, (node) => node.hasGroup() ? ([{ id: node.group.id, value: node.group.label }]) : [], recalculateResults),
+      new Filter('Organization', this.vocabularies, (node) => node.publishers.map(p => ({ id: p.id, value: p.label})), recalculateResults)
     ];
 
     recalculateResults();
@@ -106,27 +108,33 @@ export class VocabulariesComponent implements OnChanges {
   }
 }
 
-type Extractor<T> = (node: VocabularyNode) => T;
+type Extractor = (node: VocabularyNode) => { id: any, value: Localizable }[];
 
 class Filter {
 
   items: Item[];
-  selected = new Set<any>();
+  selectedIds = new Set<any>();
 
   constructor(public title: string,
               vocabularyNodes: VocabularyNode[],
-              private idExtractor: Extractor<any>,
-              nameExtractor: Extractor<Localizable>,
+              private extractor: Extractor,
               onChange: () => void) {
 
-    const nodesWithId = vocabularyNodes.filter(node => isDefined(idExtractor(node)));
+    this.items = Array.from(groupBy(flatten(vocabularyNodes.map(n => extractor(n))), n => n.id).entries())
+        .map(([id, values]) => new Item(this, id, values[0].value, values.length, onChange));
+  }
 
-    this.items = Array.from(groupBy(nodesWithId, idExtractor).entries())
-        .map(([id, nodes]) => new Item(this, id, nameExtractor(requireDefined(nodes[0])), nodes.length, onChange));
+  hasAnyId(values: any[]) {
+    for (const value of values) {
+      if (this.selectedIds.has(value)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   matches(node: VocabularyNode) {
-    return this.selected.size === 0 || this.selected.has(this.idExtractor(node));
+    return this.selectedIds.size === 0 || this.hasAnyId(this.extractor(node).map(e => e.id));
   }
 }
 
@@ -140,16 +148,16 @@ class Item {
   }
 
   get selected() {
-    return this.filter.selected.has(this.id);
+    return this.filter.selectedIds.has(this.id);
   }
 
   deselect() {
-    this.filter.selected.delete(this.id);
+    this.filter.selectedIds.delete(this.id);
     this.onChange();
   }
 
   select() {
-    this.filter.selected.add(this.id);
+    this.filter.selectedIds.add(this.id);
     this.onChange();
   }
 
