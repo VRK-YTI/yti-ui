@@ -205,7 +205,13 @@ msgstr ""
 msgid "Import failed"
 msgstr ""
 
-msgid "No organization"
+msgid "Add organization"
+msgstr ""
+
+msgid "Search organization..."
+msgstr ""
+
+msgid "Choose organization"
 msgstr ""
 
 msgid "Add vocabulary"

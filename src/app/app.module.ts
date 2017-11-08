@@ -77,6 +77,7 @@ import { LanguageInputComponent } from './components/form/language-input.compone
 import { LanguageValidatorDirective } from './directives/validators/language.validator';
 import { FilterLanguageComponent } from './components/form/filter-language.component';
 import { ImportVocabularyModalComponent, ImportVocabularyModalService } from './components/vocabulary/import-vocabulary-modal.component';
+import { SearchOrganizationModalComponent, SearchOrganizationModalService } from './components/vocabulary/search-organization-modal.component';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json-loader!po-loader?format=mf!../../po/fi.po'),
@@ -159,6 +160,7 @@ const appRoutes: Routes = [
     MarkdownInputLinkPopoverComponent,
     MarkdownInputUnlinkPopoverComponent,
     SearchConceptModalComponent,
+    SearchOrganizationModalComponent,
     DeleteConfirmationModalComponent,
     ErrorModalComponent,
     ConfirmationModalComponent,
@@ -179,6 +181,7 @@ const appRoutes: Routes = [
   ],
   entryComponents: [
     SearchConceptModalComponent,
+    SearchOrganizationModalComponent,
     DeleteConfirmationModalComponent,
     ErrorModalComponent,
     ConfirmationModalComponent,
@@ -204,6 +207,7 @@ const appRoutes: Routes = [
     LanguageService,
     LocationService,
     SearchConceptModalService,
+    SearchOrganizationModalService,
     DeleteConfirmationModalService,
     ErrorModalService,
     ConfirmationModalService,

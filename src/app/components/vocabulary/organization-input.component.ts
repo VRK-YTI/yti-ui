@@ -1,58 +1,51 @@
 import { Component, Input } from '@angular/core';
 import { OrganizationNode } from '../../entities/node';
-import { TermedService } from '../../services/termed.service';
 import { EditableService } from '../../services/editable.service';
-import { replaceMatching } from '../../utils/array';
 import { FormReferenceLiteral } from '../../services/form-state';
+import { SearchOrganizationModalService } from './search-organization-modal.component';
+import { ignoreModalClose } from '../../utils/modal';
 
 @Component({
   selector: 'app-organization-input',
   template: `
+    <ul *ngIf="!editing">
+      <li *ngFor="let organization of reference.value">{{organization.label | translateValue}}</li>
+    </ul>
 
-    <span *ngIf="!editing">{{reference.singleValue.label | translateValue:false}}</span>
-    
-    <div *ngIf="editing && organizations" class="form-group" [ngClass]="{'has-danger': valueInError()}">
-      <div>
-        <select class="form-control" [formControl]="reference.control">
-          <option *ngIf="reference.valueEmpty" [ngValue]="null" translate>No organization</option>
-          <option *ngFor="let organization of organizations" [ngValue]="organization">{{organization.label | translateValue:false}}</option>
-        </select>
-
-        <app-error-messages [control]="reference.control"></app-error-messages>
+    <div *ngIf="editing">
+      <div *ngFor="let organization of reference.value">
+        <a><i class="fa fa-times" (click)="removeReference(organization)"></i></a>
+        <span>{{organization.label | translateValue}}</span>
       </div>
     </div>
+
+    <button type="button"
+            class="btn btn-default"
+            *ngIf="editing"
+            (click)="addReference()" translate>Add organization</button>
   `
 })
 export class OrganizationInputComponent {
 
   @Input() reference: FormReferenceLiteral<OrganizationNode>;
-  organizations: OrganizationNode[];
 
   constructor(private editableService: EditableService,
-              termedService: TermedService) {
-
-    editableService.editing$.subscribe(editing => {
-
-      if (editing && !this.organizations) {
-        termedService.getOrganizationList().subscribe(organizations => {
-
-          const organization = this.reference.singleValue;
-
-          if (organization) {
-            replaceMatching(organizations, o => o.id === organization.id, organization);
-          }
-
-          this.organizations = organizations;
-        });
-      }
-    });
-  }
-
-  valueInError() {
-    return !this.reference.control.valid;
+              private searchOrganizationModal: SearchOrganizationModalService) {
   }
 
   get editing() {
     return this.editableService.editing;
+  }
+
+  removeReference(organization: OrganizationNode) {
+    this.reference.removeReference(organization);
+  }
+
+  addReference() {
+
+    const restricts = this.reference.value.map(({ id }) => id);
+
+    this.searchOrganizationModal.open(restricts)
+      .then(result => this.reference.addReference(result), ignoreModalClose);
   }
 }
