@@ -1,28 +1,33 @@
 @import './vendor/variables';
 
-$body-color:              $gray-700;
+$input-focus-color:          none;
+$input-focus-bg:             none;
+$input-focus-border-color:   none;
+$input-btn-focus-box-shadow: none;
 
-$primary:                 #375e97;
-$success:                 #43ac6a;
-$info:                    #5bc0de;
-$warning:                 #e99002;
-$danger:                  #d32f2f;
+$body-color:                 $gray-700;
 
-$lighter:                 #ebeff2;
-$light:                   #7e9cad;
-$dark:                    #375e97;
+$primary:                    #375e97;
+$success:                    #43ac6a;
+$info:                       #5bc0de;
+$warning:                    #e99002;
+$danger:                     #d32f2f;
 
-$navbar-dark-color:       rgba(255,255,255,1);
+$lighter:                    #ebeff2;
+$light:                      #7e9cad;
+$dark:                       #375e97;
 
-$breadcrumb-bg:           #ffffff solid;
-$breadcrumb-active-color: $gray-800;
+$navbar-dark-color:          rgba(255,255,255,1);
 
-$input-color-placeholder: $gray-200 !important;
+$breadcrumb-bg:              #ffffff solid;
+$breadcrumb-active-color:    $gray-800;
 
-$list-group-hover-bg:     $gray-100 !default;
+$input-color-placeholder:    $gray-200 !important;
 
-$footer-height:           50px;
+$list-group-hover-bg:        $gray-100 !default;
 
-$modal-lg:                95% !default;
-$modal-md:                60% !default;
-$modal-sm:                30% !default;
+$footer-height:              50px;
+
+$modal-lg:                   95% !default;
+$modal-md:                   60% !default;
+$modal-sm:                   30% !default;
