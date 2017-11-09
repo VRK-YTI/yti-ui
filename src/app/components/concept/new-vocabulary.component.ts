@@ -42,7 +42,9 @@ import { FormControl } from '@angular/forms';
             </div>
 
             <div class="col-6">
-              <app-editable-buttons [form]="form" [canRemove]="false"></app-editable-buttons>
+              <div class="top-actions">
+                <app-editable-buttons [form]="form" [canRemove]="false"></app-editable-buttons>
+              </div>
             </div>
           </div>
           
