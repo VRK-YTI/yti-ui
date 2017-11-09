@@ -21,13 +21,14 @@ import { FormControl } from '@angular/forms';
       </div>
 
       <div *ngFor="let control of property.children">
-        <div class="form-group" [ngClass]="{'has-danger': !control.valid, 'removable': canRemove()}">
+        <div class="form-group" [ngClass]="{'removable': canRemove()}">
 
           <ng-container [ngSwitch]="property.editorType">
 
             <input *ngSwitchCase="'input'"
                    type="text"
                    class="form-control"
+                   [ngClass]="{'is-invalid': !control.valid}"
                    [id]="id"
                    autocomplete="off"
                    [formControl]="control" />

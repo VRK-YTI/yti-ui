@@ -12,6 +12,7 @@ import { statuses } from '../../entities/constants';
   }],
   template: `    
     <select class="form-control"
+            [ngClass]="{'is-invalid': !control.valid}"
             [id]="id"
             [formControl]="select">
       <option *ngFor="let status of statuses" [ngValue]="status">{{status | translate}}</option>

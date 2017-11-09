@@ -1112,7 +1112,10 @@ function isRemoveRestOfLine(event: KeyboardEvent) {
                                        (unlink)="unlink()">
     </app-markdown-input-unlink-popover>
 
-    <div #editable contenteditable="true" [class.form-control]="formControlClass"></div>
+    <div #editable 
+         contenteditable="true" 
+         [class.form-control]="formControlClass" 
+         [ngClass]="{'is-invalid': !control.valid}"></div>
   `
 })
 export class MarkdownInputComponent implements OnInit, ControlValueAccessor {

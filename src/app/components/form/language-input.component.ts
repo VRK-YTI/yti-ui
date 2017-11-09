@@ -14,6 +14,7 @@ const languages: string[] = require('../../../assets/ietf-language-tags.json');
   }],
   template: `
     <input class="form-control"
+           [ngClass]="{'is-invalid': !control.valid}"
            [editable]="false"
            [id]="id"
            [formControl]="control"

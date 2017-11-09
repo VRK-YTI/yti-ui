@@ -11,9 +11,9 @@ import { FormReferenceLiteral } from '../../services/form-state';
 
     <span *ngIf="!editing">{{reference.singleValue.label | translateValue:false}}</span>
 
-    <div *ngIf="editing && groups" class="form-group" [ngClass]="{'has-danger': valueInError()}">
+    <div *ngIf="editing && groups" class="form-group">
       <div>
-        <select class="form-control" [formControl]="reference.control">
+        <select class="form-control" [ngClass]="{'is-invalid': valueInError()}" [formControl]="reference.control">
           <option *ngIf="reference.valueEmpty" [ngValue]="null" translate>No group</option>
           <option *ngFor="let group of groups" [ngValue]="group">{{group.label | translateValue:false}}</option>
         </select>

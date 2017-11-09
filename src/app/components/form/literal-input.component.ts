@@ -12,13 +12,14 @@ import { FormPropertyLiteral } from '../../services/form-state';
 
     <div *ngIf="editing">
 
-      <div class="form-group" [ngClass]="{'has-danger': valueInError()}">
+      <div class="form-group">
       
         <ng-container [ngSwitch]="property.editorType">
           
           <input *ngSwitchCase="'input'" 
                  type="text"
                  class="form-control"
+                 [ngClass]="{'is-invalid': valueInError()}"
                  [id]="id"
                  autocomplete="off"
                  [formControl]="property.control" />
