@@ -11,56 +11,57 @@ import { FormPropertyLocalizable } from '../../services/form-state';
 
     <div *ngIf="canAdd()" class="clearfix">
       <div ngbDropdown class="add-button" placement="bottom-right">
-        <button class="btn btn-default" 
-                ngbDropdownToggle 
+        <button class="btn btn-default"
+                ngbDropdownToggle
                 ngbTooltip="{{'Add' | translate}} {{property.label | translateValue:false | lowercase}}">
           <i class="fa fa-plus"></i>
         </button>
         <div ngbDropdownMenu>
-          <button class="dropdown-item" 
-                  *ngFor="let language of addableLanguages" 
-                  (click)="addNewLocalization(language)">{{language | uppercase}}</button>                  
+          <button class="dropdown-item"
+                  *ngFor="let language of addableLanguages"
+                  (click)="addNewLocalization(language)">{{language | uppercase}}</button>
         </div>
       </div>
     </div>
 
     <div *ngIf="property.value.length > 0">
       <div class="localized" *ngFor="let child of visibleLocalizations">
-          <div class="language">
-            <span>{{child.lang.toUpperCase()}}</span>
-          </div>
-          <div class="localization" [class.editing]="editing" [class.removable]="canRemove()">
-            <div *ngIf="!editing" app-markdown-links [value]="child.control.value" [relatedConcepts]="relatedConcepts"></div>
-            <div *ngIf="editing" class="form-group" [ngClass]="{'has-danger': !child.control.valid}">
+        <div class="language">
+          <span>{{child.lang.toUpperCase()}}</span>
+        </div>
+        <div class="localization" [class.editing]="editing" [class.removable]="canRemove()">
+          <div *ngIf="!editing" app-markdown-links [value]="child.control.value" [relatedConcepts]="relatedConcepts"></div>
+          <div *ngIf="editing" class="form-group">
 
-              <ng-container [ngSwitch]="property.editorType">
+            <ng-container [ngSwitch]="property.editorType">
 
-                <input *ngSwitchCase="'input'"
-                      type="text"
-                      class="form-control"
-                      [id]="id"
-                      autocomplete="off"
-                      [formControl]="child.control" />
+              <input *ngSwitchCase="'input'"
+                     type="text"
+                     class="form-control"
+                     [ngClass]="{'is-invalid': !child.control.valid}"
+                     [id]="id"
+                     autocomplete="off"
+                     [formControl]="child.control" />
 
               <app-markdown-input *ngSwitchCase="'markdown'"
-                              [id]="id"
-                              [formControlClass]="false"
-                              [conceptSelector]="conceptSelector"
-                              [relatedConcepts]="relatedConcepts"
-                              [formControl]="child.control"></app-markdown-input>
+                                  [id]="id"
+                                  [formControlClass]="false"
+                                  [conceptSelector]="conceptSelector"
+                                  [relatedConcepts]="relatedConcepts"
+                                  [formControl]="child.control"></app-markdown-input>
 
-              </ng-container>
+            </ng-container>
 
-              <app-error-messages [control]="child.control"></app-error-messages>
-            </div>
+            <app-error-messages [control]="child.control"></app-error-messages>
           </div>
+        </div>
 
-          <button *ngIf="canRemove()"
-                  class="btn btn-default remove-button"
-                  (click)="removeValue(child)"
-                  ngbTooltip="{{'Remove' | translate}} {{property.label | translateValue:false | lowercase}}" [placement]="'left'">
-            <i class="fa fa-trash"></i>
-          </button>
+        <button *ngIf="canRemove()"
+                class="btn btn-default remove-button"
+                (click)="removeValue(child)"
+                ngbTooltip="{{'Remove' | translate}} {{property.label | translateValue:false | lowercase}}" [placement]="'left'">
+          <i class="fa fa-trash"></i>
+        </button>
       </div>
     </div>
 

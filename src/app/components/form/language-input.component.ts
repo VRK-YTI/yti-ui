@@ -1,5 +1,5 @@
-import { Component, forwardRef, Input } from '@angular/core';
-import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Component, Input, Optional, Self } from '@angular/core';
+import { ControlValueAccessor, FormControl, NgControl } from '@angular/forms';
 import { Observable } from 'rxjs/Observable';
 
 const languages: string[] = require('../../../assets/ietf-language-tags.json');
@@ -7,14 +7,9 @@ const languages: string[] = require('../../../assets/ietf-language-tags.json');
 @Component({
   selector: 'app-language-input',
   styleUrls: ['./language-input.component.scss'],
-  providers: [{
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => LanguageInputComponent),
-    multi: true
-  }],
   template: `
     <input class="form-control"
-           [ngClass]="{'is-invalid': !control.valid}"
+           [ngClass]="{'is-invalid': !valid}"
            [editable]="false"
            [id]="id"
            [formControl]="control"
@@ -29,8 +24,17 @@ export class LanguageInputComponent implements ControlValueAccessor {
   private propagateChange: (fn: any) => void = () => {};
   private propagateTouched: (fn: any) => void = () => {};
 
-  constructor() {
+  constructor(@Self() @Optional() private ngControl: NgControl) {
+
+    if (ngControl) {
+      ngControl.valueAccessor = this;
+    }
+
     this.control.valueChanges.subscribe(x => this.propagateChange(x));
+  }
+
+  get valid() {
+    return !this.ngControl || this.ngControl.valid;
   }
 
   languageProvider(text$: Observable<string>): Observable<string[]> {

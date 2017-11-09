@@ -1,18 +1,13 @@
-import { Component, forwardRef, Input } from '@angular/core';
-import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { Component, Input, Optional, Self } from '@angular/core';
+import { ControlValueAccessor, FormControl, NgControl } from '@angular/forms';
 import { statuses } from '../../entities/constants';
 
 @Component({
   selector: 'app-status-input',
   styleUrls: ['./status-input.component.scss'],
-  providers: [{
-    provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => StatusInputComponent),
-    multi: true
-  }],
-  template: `    
+  template: `
     <select class="form-control"
-            [ngClass]="{'is-invalid': !control.valid}"
+            [ngClass]="{'is-invalid': !valid}"
             [id]="id"
             [formControl]="select">
       <option *ngFor="let status of statuses" [ngValue]="status">{{status | translate}}</option>
@@ -22,6 +17,7 @@ import { statuses } from '../../entities/constants';
 export class StatusInputComponent implements ControlValueAccessor {
 
   @Input() id: string;
+
   statuses = statuses;
 
   select = new FormControl();
@@ -29,8 +25,15 @@ export class StatusInputComponent implements ControlValueAccessor {
   private propagateChange: (fn: any) => void = () => {};
   private propagateTouched: (fn: any) => void = () => {};
 
-  constructor() {
+  constructor(@Self() @Optional() private ngControl: NgControl) {
+    if (ngControl) {
+      ngControl.valueAccessor = this;
+    }
     this.select.valueChanges.subscribe(x => this.propagateChange(x));
+  }
+
+  get valid() {
+    return !this.ngControl || this.ngControl.valid;
   }
 
   writeValue(obj: any): void {
