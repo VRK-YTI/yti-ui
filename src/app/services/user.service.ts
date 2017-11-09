@@ -4,13 +4,9 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { environment } from '../../environments/environment';
 
 export type Role = 'ADMIN'
-                 | 'DATA_MODEL_ADMIN'
                  | 'DATA_MODEL_EDITOR'
-                 | 'TERMINOLOGY_ADMIN'
                  | 'TERMINOLOGY_EDITOR'
-                 | 'CODE_LIST_ADMIN'
-                 | 'CODE_LIST_EDITOR'
-                 | 'TRANSLATOR';
+                 | 'CODE_LIST_EDITOR';
 
 export type UUID = string;
 
