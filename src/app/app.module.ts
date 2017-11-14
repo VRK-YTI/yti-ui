@@ -78,6 +78,7 @@ import { LanguageValidatorDirective } from './directives/validators/language.val
 import { FilterLanguageComponent } from './components/form/filter-language.component';
 import { ImportVocabularyModalComponent, ImportVocabularyModalService } from './components/vocabulary/import-vocabulary-modal.component';
 import { SearchOrganizationModalComponent, SearchOrganizationModalService } from './components/vocabulary/search-organization-modal.component';
+import { PrefixInputComponent } from './components/concept/prefix-input.component';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json-loader!po-loader?format=mf!../../po/fi.po'),
@@ -177,7 +178,8 @@ const appRoutes: Routes = [
     StripMarkdownPipe,
     KeysPipe,
     FilterLanguageComponent,
-    ImportVocabularyModalComponent
+    ImportVocabularyModalComponent,
+    PrefixInputComponent
   ],
   entryComponents: [
     SearchConceptModalComponent,

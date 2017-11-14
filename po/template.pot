@@ -73,6 +73,12 @@ msgstr ""
 msgid "New vocabulary"
 msgstr ""
 
+msgid "Prefix"
+msgstr ""
+
+msgid "Namespace"
+msgstr ""
+
 msgid "Choose concept"
 msgstr ""
 
@@ -304,4 +310,10 @@ msgid "required"
 msgstr ""
 
 msgid "validateLanguage"
+msgstr ""
+
+msgid "prefixInUse"
+msgstr ""
+
+msgid "upperCaseInPrefix"
 msgstr ""

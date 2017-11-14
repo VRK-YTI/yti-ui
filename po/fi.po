@@ -2,14 +2,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-11-08 18:10+0200\n"
+"PO-Revision-Date: 2017-11-13 17:04+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.5\n"
+"X-Generator: Poedit 2.0.4\n"
 "X-Poedit-Basepath: .\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
@@ -81,6 +81,12 @@ msgstr "Sanastotyyppi"
 
 msgid "New vocabulary"
 msgstr "uusi sanasto"
+
+msgid "Prefix"
+msgstr "Etuliite"
+
+msgid "Namespace"
+msgstr "Nimiavaruus"
 
 msgid "Choose concept"
 msgstr "Valitse käsite"
@@ -328,6 +334,12 @@ msgstr "Pakollinen syöte"
 
 msgid "validateLanguage"
 msgstr "Epävalidi kieli"
+
+msgid "prefixInUse"
+msgstr "Etuliite on jo käytössä"
+
+msgid "upperCaseInPrefix"
+msgstr "Etuliite oltava pienillä kirjaimilla"
 
 #~ msgid "No organization"
 #~ msgstr "Ei organisaatiota"

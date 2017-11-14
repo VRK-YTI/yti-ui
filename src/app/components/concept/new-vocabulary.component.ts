@@ -10,7 +10,7 @@ import { TranslateService } from 'ng2-translate';
 import { LanguageService } from '../../services/language.service';
 import { FormNode } from '../../services/form-state';
 import { defaultLanguages } from '../../utils/language';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators, AbstractControl, AsyncValidatorFn } from '@angular/forms';
 
 @Component({
   selector: 'app-new-vocabulary',
@@ -49,6 +49,7 @@ import { FormControl } from '@angular/forms';
           </div>
           
           <app-vocabulary-form [vocabulary]="vocabulary" [form]="formNode"></app-vocabulary-form>
+          <app-prefix-input [formControl]="prefixFormControl"></app-prefix-input>
         </form>
 
       </div>
@@ -62,6 +63,7 @@ export class NewVocabularyComponent {
   templates: GraphMeta[];
   formNode: FormNode;
   templateControl = new FormControl();
+  prefixFormControl: FormControl;
 
   constructor(private router: Router,
               private metaModelService: MetaModelService,
@@ -98,6 +100,8 @@ export class NewVocabularyComponent {
         }
 
         this.formNode = new FormNode(this.vocabulary, () => defaultLanguages);
+        this.prefixFormControl = new FormControl('', [Validators.required, this.isPrefixLowerCaseValidator], this.isPrefixInUseValidator());
+        this.formNode.control.addControl('prefix', this.prefixFormControl);
       });
     });
   }
@@ -111,17 +115,34 @@ export class NewVocabularyComponent {
   }
 
   saveVocabulary(): Promise<any> {
-
+    
     const that = this;
     const vocabulary = this.vocabulary.clone();
     this.formNode.assignChanges(vocabulary);
 
     return new Promise((resolve, reject) => {
-      this.termedService.createVocabulary(this.selectedTemplate, vocabulary)
+      this.termedService.createVocabulary(this.selectedTemplate, vocabulary, this.prefixFormControl.value)
         .subscribe({
           next: () => that.router.navigate(['/concepts', that.vocabulary.graphId]),
           error: (err: any) => reject(err)
         });
     });
+  }
+
+  isPrefixInUseValidator(): AsyncValidatorFn {        
+    return (control: AbstractControl) => {      
+      const validationError = {
+        prefixInUse: {
+          valid: false
+        }
+      };      
+      return this.termedService.isNamespaceInUse(control.value)
+        .map(inUse => inUse ? validationError : null);
+    }
+  }
+
+  isPrefixLowerCaseValidator (control: AbstractControl) {
+    const lowerCase = control.value === control.value.toLowerCase();
+    return !lowerCase ? {'upperCaseInPrefix': {value: control.value}} : null;
   }
 }

@@ -10,6 +10,7 @@ import * as moment from 'moment';
 import { GraphMeta } from '../entities/meta';
 import { Localizable } from '../entities/localization';
 import { environment } from '../../environments/environment';
+import { namespace } from '../entities/constants';
 
 @Injectable()
 export class TermedService {
@@ -86,11 +87,11 @@ export class TermedService {
       );
   }
 
-  createVocabulary(template: GraphMeta, vocabulary: VocabularyNode): Observable<Response> {
+  createVocabulary(template: GraphMeta, vocabulary: VocabularyNode, prefix: string): Observable<Response> {
 
     const graphId = vocabulary.graphId;
 
-    return this.createGraph(graphId, template.label)
+    return this.createGraph(graphId, template.label, prefix)
       .flatMap(() => this.metaModelService.updateMeta(template.copyToGraph(graphId)))
       .flatMap(() => this.updateNode(vocabulary, null));
   }
@@ -158,9 +159,11 @@ export class TermedService {
     return this.removeNodeIdentifiers([...inlineNodeIds, node.identifier], true, true);
   }
 
-  private createGraph(graphId: string, label: Localizable): Observable<Response> {
+  private createGraph(graphId: string, label: Localizable, prefix: string): Observable<Response> {
     return this.http.post(`${environment.api_url}/graph`, {
       id: graphId,
+      code: prefix,
+      uri: namespace + prefix + '/',
       permissions: {},
       properties: {
         prefLabel: Object.entries(label).map(([lang, value]) => ({lang, value}))
@@ -285,6 +288,17 @@ export class TermedService {
     return this.http.get(`${environment.api_url}/nodes`, { params } )
       .map(response => normalizeAsArray(response.json() as Identifier<any>[]));
   }
+
+  isNamespaceInUse(prefix: string): Observable<boolean> {
+    
+    const params = new URLSearchParams();
+    params.append('prefix', prefix);
+    params.append('namespace', namespace + prefix);
+
+    return this.http.get(`${environment.api_url}/namespaceInUse`, { params } )
+      .map(response => response.json() as boolean);
+  }
+
 }
 
 function requireSingle(json: any): any {
