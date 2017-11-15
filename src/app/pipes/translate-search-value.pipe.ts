@@ -13,7 +13,7 @@ export class TranslateSearchValuePipe implements PipeTransform, OnDestroy {
 
   previousSearch: string;
   localization?: string;
-  changeSubscription?: Subscription;
+  languageSubscription?: Subscription;
 
   constructor(private languageService: LanguageService) {
   }
@@ -24,7 +24,7 @@ export class TranslateSearchValuePipe implements PipeTransform, OnDestroy {
       this.localization = this.formatText(value, search);
     }
 
-    this.languageService.language$.subscribe(() => {
+    this.languageSubscription = this.languageService.translateLanguage$.subscribe(() => {
       this.localization = this.formatText(value, search);
     });
 
@@ -61,8 +61,8 @@ export class TranslateSearchValuePipe implements PipeTransform, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (isDefined(this.changeSubscription)) {
-      this.changeSubscription.unsubscribe();
+    if (isDefined(this.languageSubscription)) {
+      this.languageSubscription.unsubscribe();
     }
   }
 }

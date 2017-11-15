@@ -11,7 +11,7 @@ import { Localizable } from '../entities/localization';
 export class TranslateValuePipe implements PipeTransform, OnDestroy {
 
   localization?: string;
-  changeSubscription?: Subscription;
+  languageSubscription?: Subscription;
 
   constructor(private languageService: LanguageService) {
   }
@@ -20,7 +20,7 @@ export class TranslateValuePipe implements PipeTransform, OnDestroy {
 
     this.localization = this.languageService.translate(value, useFilterLanguage);
 
-    this.languageService.language$.subscribe(() => {
+    this.languageSubscription = this.languageService.translateLanguage$.subscribe(() => {
       this.localization = this.languageService.translate(value, useFilterLanguage);
     });
 
@@ -28,8 +28,8 @@ export class TranslateValuePipe implements PipeTransform, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (isDefined(this.changeSubscription)) {
-      this.changeSubscription.unsubscribe();
+    if (isDefined(this.languageSubscription)) {
+      this.languageSubscription.unsubscribe();
     }
   }
 }
