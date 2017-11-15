@@ -53,7 +53,7 @@ import { UserService } from '../../services/user.service';
 
             <app-vocabulary-form [vocabulary]="vocabulary" [form]="formNode" [filterLanguage]="filterLanguage"></app-vocabulary-form>
             
-            <div class="row">
+            <div class="row" *ngIf="namespace">
               <div class="col-md-12">
                 <dl>
                   <dt><label translate>Namespace</label></dt>
