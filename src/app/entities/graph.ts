@@ -4,6 +4,7 @@ export interface Graph {
 
   code: string;
   id: string;
+  uri: string;
   permissions: {};
   properties: {
     prefLabel: Localization[],
