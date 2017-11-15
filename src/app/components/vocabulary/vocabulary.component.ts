@@ -52,6 +52,20 @@ import { UserService } from '../../services/user.service';
             </div>
 
             <app-vocabulary-form [vocabulary]="vocabulary" [form]="formNode" [filterLanguage]="filterLanguage"></app-vocabulary-form>
+            
+            <div class="row">
+              <div class="col-md-12">
+                <dl>
+                  <dt><label translate>Namespace</label></dt>
+                  <dd>
+                    <div class="form-group">
+                      {{namespace}}
+                    </div>
+                  </dd>
+                </dl>
+              </div>
+            </div>
+
             <app-meta-information [node]="vocabulary"></app-meta-information>
           </form>
         </ng-template>
@@ -120,4 +134,7 @@ export class VocabularyComponent implements EditingComponent {
     }
   }
 
+  get namespace() {
+    return this.conceptViewModel.prefixAndNamespace ? this.conceptViewModel.prefixAndNamespace.namespace : null;
+  }
 }

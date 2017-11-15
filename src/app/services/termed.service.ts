@@ -11,6 +11,8 @@ import { GraphMeta } from '../entities/meta';
 import { Localizable } from '../entities/localization';
 import { environment } from '../../environments/environment';
 import { namespace } from '../entities/constants';
+import { Graph } from 'app/entities/graph';
+import { PrefixAndNamespace } from 'app/entities/prefix-and-namespace';
 
 @Injectable()
 export class TermedService {
@@ -299,6 +301,16 @@ export class TermedService {
       .map(response => response.json() as boolean);
   }
 
+  getGraphNamespace(graphId: string): Observable<PrefixAndNamespace> {
+    return this.http.get(`${environment.api_url}/graphs/${graphId}`)
+      .map(response => {
+        const graph = response.json() as Graph;
+        return {
+          prefix: graph.code,
+          namespace: graph.uri
+        };
+      })
+  }
 }
 
 function requireSingle(json: any): any {

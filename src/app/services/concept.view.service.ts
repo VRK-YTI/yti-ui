@@ -24,6 +24,7 @@ import { removeMatching, replaceMatching } from '../utils/array';
 import { FormNode } from './form-state';
 import { MetaModel } from '../entities/meta';
 import { TranslateService } from 'ng2-translate';
+import { PrefixAndNamespace } from 'app/entities/prefix-and-namespace';
 
 function onlySelect<T>(action: Observable<Action<T>>): Observable<T> {
   const selectAction: Observable<SelectAction<T>> = action.filter(isSelect);
@@ -372,6 +373,7 @@ export class ConceptViewModelService {
   graphId: string;
   conceptId: string|null;
   collectionId: string|null;
+  prefixAndNamespace: PrefixAndNamespace|null;
 
   conceptList = new ConceptListModel(this.elasticSearchService, this.languageService);
   conceptHierarchy = new ConceptHierarchyModel(this.elasticSearchService, this.languageService);
@@ -486,6 +488,8 @@ export class ConceptViewModelService {
       this.vocabularyForm = new FormNode(vocabulary, () => vocabulary.languages);
       this.loadingVocabulary = false;
     });
+
+    this.termedService.getGraphNamespace(graphId).subscribe(graphNamespace => this.prefixAndNamespace = graphNamespace);
   }
 
   initializeConcept(conceptId: string|null) {
