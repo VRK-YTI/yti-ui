@@ -19,6 +19,7 @@ import { assertNever, requireDefined } from '../../utils/object';
 import { TranslateService } from 'ng2-translate';
 import { MetaModelService } from '../../services/meta-model.service';
 import { asLocalizable } from '../../entities/localization';
+import { Subscription } from 'rxjs';
 
 interface ConceptNetworkData {
   nodes: DataSet<UpdatableVisNode>;
@@ -213,6 +214,9 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
     edges: new DataSet<UpdatableVisEdge>()
   };
 
+  private languageSubscription: Subscription;
+  private translateLanguageSubscription: Subscription;
+
   constructor(private zone: NgZone,
               private translateService: TranslateService,
               private languageService: LanguageService,
@@ -230,14 +234,14 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
       this.networkData.edges.update(newEdges);
     };
 
-    this.languageService.translateLanguage$.subscribe(updateNetworkData);
+    this.translateLanguageSubscription = this.languageService.translateLanguage$.subscribe(updateNetworkData);
   }
 
   public ngOnInit(): void {
 
     this.drawLegend();
 
-    this.languageService.language$.subscribe(() => {
+    this.languageSubscription = this.languageService.language$.subscribe(() => {
       this.drawLegend();
     });
 
@@ -282,6 +286,8 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
 
   public ngOnDestroy(): void {
     this.network.destroy();
+    this.languageSubscription.unsubscribe();
+    this.translateLanguageSubscription.unsubscribe();
   }
 
   isEmpty() {
