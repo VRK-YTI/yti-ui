@@ -1,4 +1,4 @@
-import { Component, Input, Optional, Self } from '@angular/core';
+import { Component, Optional, Self } from '@angular/core';
 import { ControlValueAccessor, FormControl, NgControl } from '@angular/forms';
 import { namespace } from '../../entities/constants';
 
@@ -17,7 +17,7 @@ import { namespace } from '../../entities/constants';
                     class="form-control"
                     id="prefix"
                     autocomplete="off"
-                    [ngClass]="{'is-invalid': !control.valid}"
+                    [ngClass]="{'is-invalid': !valid}"
                     [formControl]="control" />
               <app-error-messages [control]="parentControl"></app-error-messages>
             </div>
@@ -40,7 +40,7 @@ import { namespace } from '../../entities/constants';
   `
 })
 export class PrefixInputComponent implements ControlValueAccessor {
-  
+
   control = new FormControl();
   namespace = namespace;
 
@@ -70,5 +70,5 @@ export class PrefixInputComponent implements ControlValueAccessor {
 
   registerOnTouched(fn: any): void {
     this.propagateTouched = fn;
-  } 
+  }
 }
