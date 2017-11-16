@@ -18,6 +18,7 @@ export class TranslateValuePipe implements PipeTransform, OnDestroy {
 
   transform(value: Localizable, useFilterLanguage = true): string {
 
+    this.cleanSubscription();
     this.localization = this.languageService.translate(value, useFilterLanguage);
 
     this.languageSubscription = this.languageService.translateLanguage$.subscribe(() => {
@@ -27,9 +28,13 @@ export class TranslateValuePipe implements PipeTransform, OnDestroy {
     return this.localization;
   }
 
-  ngOnDestroy() {
+  cleanSubscription() {
     if (isDefined(this.languageSubscription)) {
       this.languageSubscription.unsubscribe();
     }
+  }
+
+  ngOnDestroy() {
+    this.cleanSubscription();
   }
 }

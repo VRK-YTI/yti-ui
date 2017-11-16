@@ -20,6 +20,8 @@ export class TranslateSearchValuePipe implements PipeTransform, OnDestroy {
 
   transform(value: Localizable, search: string, useFilterLanguage = true): string {
 
+    this.cleanSubscription();
+
     if (!isDefined(this.localization) || this.previousSearch !== search) {
       this.localization = this.formatText(value, search);
     }
@@ -60,10 +62,14 @@ export class TranslateSearchValuePipe implements PipeTransform, OnDestroy {
     }
   }
 
-  ngOnDestroy() {
+  cleanSubscription() {
     if (isDefined(this.languageSubscription)) {
       this.languageSubscription.unsubscribe();
     }
+  }
+
+  ngOnDestroy() {
+    this.cleanSubscription();
   }
 }
 
