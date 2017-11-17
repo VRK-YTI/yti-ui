@@ -2,16 +2,22 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-11-13 17:04+0200\n"
+"PO-Revision-Date: 2017-11-17 16:08+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.4\n"
+"X-Generator: Poedit 1.8.5\n"
 "X-Poedit-Basepath: .\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Search collection..."
+msgstr ""
+
+msgid "Add collection"
+msgstr ""
 
 msgid "Yes"
 msgstr ""
@@ -43,12 +49,6 @@ msgstr ""
 msgid "Modified by"
 msgstr ""
 
-msgid "Search collection..."
-msgstr ""
-
-msgid "Add collection"
-msgstr ""
-
 msgid "Add concept"
 msgstr ""
 
@@ -74,12 +74,6 @@ msgid "Hierarchical"
 msgstr ""
 
 msgid "Collection"
-msgstr ""
-
-msgid "Vocabulary type"
-msgstr ""
-
-msgid "New vocabulary"
 msgstr ""
 
 msgid "Prefix"
@@ -205,7 +199,7 @@ msgstr ""
 msgid "Associative"
 msgstr ""
 
-msgid "No group"
+msgid "Add group"
 msgstr ""
 
 msgid "Confirm import"
@@ -226,7 +220,19 @@ msgstr ""
 msgid "Import failed"
 msgstr ""
 
+msgid "Vocabulary type"
+msgstr ""
+
+msgid "New vocabulary"
+msgstr ""
+
 msgid "Add organization"
+msgstr ""
+
+msgid "Search group..."
+msgstr ""
+
+msgid "Choose group"
 msgstr ""
 
 msgid "Search organization..."

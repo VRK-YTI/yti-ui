@@ -79,6 +79,7 @@ import { FilterLanguageComponent } from './components/form/filter-language.compo
 import { ImportVocabularyModalComponent, ImportVocabularyModalService } from './components/vocabulary/import-vocabulary-modal.component';
 import { SearchOrganizationModalComponent, SearchOrganizationModalService } from './components/vocabulary/search-organization-modal.component';
 import { PrefixInputComponent } from './components/concept/prefix-input.component';
+import { SearchGroupModalComponent, SearchGroupModalService } from './components/vocabulary/search-group-modal.component';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json-loader!po-loader?format=mf!../../po/fi.po'),
@@ -162,6 +163,7 @@ const appRoutes: Routes = [
     MarkdownInputUnlinkPopoverComponent,
     SearchConceptModalComponent,
     SearchOrganizationModalComponent,
+    SearchGroupModalComponent,
     DeleteConfirmationModalComponent,
     ErrorModalComponent,
     ConfirmationModalComponent,
@@ -184,6 +186,7 @@ const appRoutes: Routes = [
   entryComponents: [
     SearchConceptModalComponent,
     SearchOrganizationModalComponent,
+    SearchGroupModalComponent,
     DeleteConfirmationModalComponent,
     ErrorModalComponent,
     ConfirmationModalComponent,
@@ -210,6 +213,7 @@ const appRoutes: Routes = [
     LocationService,
     SearchConceptModalService,
     SearchOrganizationModalService,
+    SearchGroupModalService,
     DeleteConfirmationModalService,
     ErrorModalService,
     ConfirmationModalService,

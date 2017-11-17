@@ -1,57 +1,52 @@
 import { Component, Input } from '@angular/core';
 import { GroupNode } from '../../entities/node';
 import { EditableService } from '../../services/editable.service';
-import { TermedService } from '../../services/termed.service';
-import { replaceMatching } from '../../utils/array';
 import { FormReferenceLiteral } from '../../services/form-state';
+import { ignoreModalClose } from '../../utils/modal';
+import { SearchGroupModalService } from './search-group-modal.component';
 
 @Component({
   selector: 'app-group-input',
   template: `
 
-    <span *ngIf="!editing">{{reference.singleValue.label | translateValue:false}}</span>
+    <ul *ngIf="!editing">
+      <li *ngFor="let group of reference.value">{{group.label | translateValue}}</li>
+    </ul>
 
-    <div *ngIf="editing && groups" class="form-group">
-      <div>
-        <select class="form-control" [ngClass]="{'is-invalid': valueInError()}" [formControl]="reference.control">
-          <option *ngIf="reference.valueEmpty" [ngValue]="null" translate>No group</option>
-          <option *ngFor="let group of groups" [ngValue]="group">{{group.label | translateValue:false}}</option>
-        </select>
-
-        <app-error-messages [control]="reference.control"></app-error-messages>
+    <div *ngIf="editing">
+      <div *ngFor="let group of reference.value">
+        <a><i class="fa fa-times" (click)="removeReference(group)"></i></a>
+        <span>{{group.label | translateValue}}</span>
       </div>
     </div>
+
+    <button type="button"
+            class="btn btn-default"
+            *ngIf="editing"
+            (click)="addReference()" translate>Add group</button>
   `
 })
 export class GroupInputComponent {
 
   @Input() reference: FormReferenceLiteral<GroupNode>;
-  groups: GroupNode[];
 
   constructor(private editableService: EditableService,
-              termedService: TermedService) {
-
-    editableService.editing$.subscribe(editing => {
-      if (editing && !this.groups) {
-        termedService.getGroupList().subscribe(groups => {
-
-          const group = this.reference.singleValue;
-
-          if (group) {
-            replaceMatching(groups, g => g.id === group.id, group);
-          }
-
-          this.groups = groups;
-        });
-      }
-    });
-  }
-
-  valueInError() {
-    return !this.reference.control.valid;
+              private searchGroupModal: SearchGroupModalService) {
   }
 
   get editing() {
     return this.editableService.editing;
+  }
+
+  removeReference(group: GroupNode) {
+    this.reference.removeReference(group);
+  }
+
+  addReference() {
+
+    const restricts = this.reference.value.map(({ id }) => id);
+
+    this.searchGroupModal.open(restricts)
+      .then(result => this.reference.addReference(result), ignoreModalClose);
   }
 }

@@ -4,6 +4,12 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+msgid "Search collection..."
+msgstr ""
+
+msgid "Add collection"
+msgstr ""
+
 msgid "Yes"
 msgstr ""
 
@@ -34,12 +40,6 @@ msgstr ""
 msgid "Modified by"
 msgstr ""
 
-msgid "Search collection..."
-msgstr ""
-
-msgid "Add collection"
-msgstr ""
-
 msgid "Add concept"
 msgstr ""
 
@@ -65,12 +65,6 @@ msgid "Hierarchical"
 msgstr ""
 
 msgid "Collection"
-msgstr ""
-
-msgid "Vocabulary type"
-msgstr ""
-
-msgid "New vocabulary"
 msgstr ""
 
 msgid "Prefix"
@@ -190,7 +184,7 @@ msgstr ""
 msgid "Associative"
 msgstr ""
 
-msgid "No group"
+msgid "Add group"
 msgstr ""
 
 msgid "Confirm import"
@@ -211,7 +205,19 @@ msgstr ""
 msgid "Import failed"
 msgstr ""
 
+msgid "Vocabulary type"
+msgstr ""
+
+msgid "New vocabulary"
+msgstr ""
+
 msgid "Add organization"
+msgstr ""
+
+msgid "Search group..."
+msgstr ""
+
+msgid "Choose group"
 msgstr ""
 
 msgid "Search organization..."
