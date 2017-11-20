@@ -12,20 +12,6 @@
 			}
 		},
 		"properties": {
-			"namespace": [
-				{
-					"lang": "",
-					"value": "http://pid.suomi.fi/terminology/kira/",
-					"regex": "(?s)^.*$"
-				}
-			],
-			"prefix": [
-				{
-					"lang": "",
-					"value": "kira",
-					"regex": "(?s)^.*$"
-				}
-			],
 			"prefLabel": [
 				{
 					"lang": "fi",

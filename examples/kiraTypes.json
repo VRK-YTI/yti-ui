@@ -116,58 +116,6 @@
 						}
 					]
 				}
-			},
-			{
-				"regex": "(?s)^.*$",
-				"id": "namespace",
-				"uri": "https://www.w3.org/ns/shacl#namespace",
-				"index": 3,
-				"domain": {
-					"id": "TerminologicalVocabulary",
-					"graph": {
-						"id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8"
-					}
-				},
-				"permissions": {
-				},
-				"properties": {
-					"prefLabel": [
-						{
-							"lang": "fi",
-							"value": "Nimiavaruus"
-						},
-						{
-							"lang": "en",
-							"value": "Namespace"
-						}
-					]
-				}
-			},
-			{
-				"regex": "(?s)^.*$",
-				"id": "prefix",
-				"uri": "https://www.w3.org/ns/shacl#prefix",
-				"index": 3,
-				"domain": {
-					"id": "TerminologicalVocabulary",
-					"graph": {
-						"id": "61cf6bde-46e6-40bb-b465-9b2c66bf4ad8"
-					}
-				},
-				"permissions": {
-				},
-				"properties": {
-					"prefLabel": [
-						{
-							"lang": "fi",
-							"value": "Prefix"
-						},
-						{
-							"lang": "en",
-							"value": "Prefix"
-						}
-					]
-				}
 			}
 		],
 		"referenceAttributes": [

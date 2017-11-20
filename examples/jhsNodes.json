@@ -12,20 +12,6 @@
 			}
 		},
 		"properties": {
-			"namespace": [
-				{
-					"lang": "",
-					"value": "http://pid.suomi.fi/terminology/jhs/",
-					"regex": "(?s)^.*$"
-				}
-			],
-			"prefix": [
-				{
-					"lang": "",
-					"value": "jhs",
-					"regex": "(?s)^.*$"
-				}
-			],
 			"description": [
 				{
 					"lang": "fi",

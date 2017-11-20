@@ -13,20 +13,6 @@
 			}
 		},
 		"properties": {
-			"namespace": [
-				{
-					"lang": "",
-					"value": "http://pid.suomi.fi/sos/",
-					"regex": "(?s)^.*$"
-				}
-			],
-			"prefix": [
-				{
-					"lang": "",
-					"value": "sos",
-					"regex": "(?s)^.*$"
-				}
-			],
 			"description": [
 				{
 					"lang": "fi",
