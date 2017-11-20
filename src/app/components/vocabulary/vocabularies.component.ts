@@ -57,13 +57,17 @@ import { UserService } from '../../services/user.service';
             <p>{{vocabulary.description | translateValue:false}}</p>
           </div>
           <div class="origin">
-              <span class="publisher">
-                <span *ngFor="let publisher of vocabulary.publishers">
-                    {{publisher.label | translateValue:false}}
-                </span>
-              </span>
-            <span class="group" *ngIf="vocabulary.hasGroup()">{{vocabulary.group.label | translateValue:false}}</span>
+
+            <span class="publisher" *ngFor="let publisher of vocabulary.publishers">
+              {{publisher.label | translateValue:false}}
+            </span>
+            
+            <span class="group" *ngFor="let group of vocabulary.groups">
+              {{group.label | translateValue:false}}
+            </span>
+
             <span class="type">{{vocabulary.typeLabel | translateValue:false}}</span>
+
           </div>
         </div>
       </div>
@@ -88,7 +92,7 @@ export class VocabulariesComponent implements OnChanges {
 
     this.vocabularyFilters = [
       new Filter('Vocabulary type', this.vocabularies, (node) => ([{ id: node.meta.type, value: node.meta.label}]), recalculateResults),
-      new Filter('Group', this.vocabularies, (node) => node.hasGroup() ? ([{ id: node.group.id, value: node.group.label }]) : [], recalculateResults),
+      new Filter('Group', this.vocabularies, (node) => node.groups.map(g => ({ id: g.id, value: g.label })), recalculateResults),
       new Filter('Organization', this.vocabularies, (node) => node.publishers.map(p => ({ id: p.id, value: p.label})), recalculateResults)
     ];
 
@@ -121,7 +125,7 @@ class Filter {
               onChange: () => void) {
 
     this.items = Array.from(groupBy(flatten(vocabularyNodes.map(n => extractor(n))), n => n.id).entries())
-        .map(([id, values]) => new Item(this, id, values[0].value, values.length, onChange));
+      .map(([id, values]) => new Item(this, id, values[0].value, values.length, onChange));
   }
 
   hasAnyId(values: any[]) {

@@ -410,8 +410,8 @@ export class VocabularyNode extends Node<VocabularyNodeType> {
     this.getProperty('language').setValues(value);
   }
 
-  get group(): GroupNode {
-    return this.getReference<GroupNode>('inGroup').getSingle();
+  get groups(): GroupNode[] {
+    return this.getReference<GroupNode>('inGroup').values;
   }
 
   hasGroup() {
