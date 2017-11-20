@@ -3,7 +3,7 @@ import { CollectionNode } from '../../entities/node';
 import { CollectionListModel, ConceptViewModelService } from '../../services/concept.view.service';
 import { Router } from '@angular/router';
 import { v4 as uuid } from 'uuid';
-import { UserService } from '../../services/user.service';
+import { AuthorizationManager } from '../../services/authorization-manager.sevice';
 
 @Component({
   selector: 'app-collection-list',
@@ -51,8 +51,8 @@ export class CollectionListComponent implements AfterViewInit {
 
   model: CollectionListModel;
 
-  constructor(private userService: UserService,
-              private conceptViewModel: ConceptViewModelService,
+  constructor(private conceptViewModel: ConceptViewModelService,
+              private authorizationManager: AuthorizationManager,
               private renderer: Renderer,
               private router: Router) {
 
@@ -68,7 +68,12 @@ export class CollectionListComponent implements AfterViewInit {
   }
 
   canAddCollection() {
-    return this.userService.isLoggedIn();
+
+    if (!this.conceptViewModel.vocabulary) {
+      return false;
+    }
+
+    return this.authorizationManager.canAddCollection(this.conceptViewModel.vocabulary);
   }
 
   get search() {

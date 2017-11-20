@@ -1,13 +1,14 @@
 import { Component, Input } from '@angular/core';
 import { EditableService } from '../../services/editable.service';
 import { NgForm } from '@angular/forms';
-import { UserService } from '../../services/user.service';
+import { VocabularyNode } from '../../entities/node';
+import { AuthorizationManager } from '../../services/authorization-manager.sevice';
 
 @Component({
   styleUrls: ['./editable-buttons.component.scss'],
   selector: 'app-editable-buttons',
   template: `
-    <div *ngIf="isLoggedIn()">
+    <div *ngIf="canEdit()">
       
       <button type="button" 
               ngbTooltip="{{'Cancel edit' | translate}}"
@@ -56,19 +57,21 @@ import { UserService } from '../../services/user.service';
 })
 export class EditableButtonsComponent {
 
+  @Input() vocabulary?: VocabularyNode;
   @Input() form: NgForm;
   @Input() canRemove: boolean;
 
   constructor(private editableService: EditableService,
-              private userService: UserService) {
+              private authorizationManager: AuthorizationManager) {
   }
 
   get operationPending() {
     return this.saving || this.removing;
   }
 
-  isLoggedIn() {
-    return this.userService.isLoggedIn();
+  canEdit() {
+    // when creating new vocabulary the vocabulary is not present
+    return !this.vocabulary || this.authorizationManager.canEdit(this.vocabulary);
   }
 
   get editing() {

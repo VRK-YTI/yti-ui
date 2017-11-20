@@ -80,6 +80,7 @@ import { ImportVocabularyModalComponent, ImportVocabularyModalService } from './
 import { SearchOrganizationModalComponent, SearchOrganizationModalService } from './components/vocabulary/search-organization-modal.component';
 import { PrefixInputComponent } from './components/concept/prefix-input.component';
 import { SearchGroupModalComponent, SearchGroupModalService } from './components/vocabulary/search-group-modal.component';
+import { AuthorizationManager } from './services/authorization-manager.sevice';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json-loader!po-loader?format=mf!../../po/fi.po'),
@@ -223,6 +224,7 @@ const appRoutes: Routes = [
     ElasticSearchService,
     ConfirmCancelEditGuard,
     UserService,
+    AuthorizationManager,
     ImportVocabularyModalService
   ],
   bootstrap: [AppComponent]

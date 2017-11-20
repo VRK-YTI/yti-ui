@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { VocabularyNode } from '../../entities/node';
 import { Localizable } from '../../entities/localization';
 import { groupBy, allMatching, flatten } from '../../utils/array';
-import { UserService } from '../../services/user.service';
+import { AuthorizationManager } from '../../services/authorization-manager.sevice';
 
 @Component({
   selector: 'app-vocabularies',
@@ -80,7 +80,7 @@ export class VocabulariesComponent implements OnChanges {
   filteredVocabularies: VocabularyNode[];
   vocabularyFilters: Filter[];
 
-  constructor(private userService: UserService,
+  constructor(private authorizationManager: AuthorizationManager,
               private router: Router) {
   }
 
@@ -104,7 +104,7 @@ export class VocabulariesComponent implements OnChanges {
   }
 
   canAddVocabulary() {
-    return this.userService.isLoggedIn();
+    return this.authorizationManager.canAddVocabulary();
   }
 
   addVocabulary() {

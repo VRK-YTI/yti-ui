@@ -43,7 +43,8 @@ import { FormControl, Validators, AbstractControl, AsyncValidatorFn } from '@ang
 
             <div class="col-6">
               <div class="top-actions">
-                <app-editable-buttons [form]="form" [canRemove]="false"></app-editable-buttons>
+                <app-editable-buttons [form]="form" 
+                                      [canRemove]="false"></app-editable-buttons>
               </div>
             </div>
           </div>
@@ -115,7 +116,7 @@ export class NewVocabularyComponent {
   }
 
   saveVocabulary(): Promise<any> {
-    
+
     const that = this;
     const vocabulary = this.vocabulary.clone();
     this.formNode.assignChanges(vocabulary);
@@ -129,13 +130,13 @@ export class NewVocabularyComponent {
     });
   }
 
-  isPrefixInUseValidator(): AsyncValidatorFn {        
-    return (control: AbstractControl) => {      
+  isPrefixInUseValidator(): AsyncValidatorFn {
+    return (control: AbstractControl) => {
       const validationError = {
         prefixInUse: {
           valid: false
         }
-      };      
+      };
       return this.termedService.isNamespaceInUse(control.value)
         .map(inUse => inUse ? validationError : null);
     }

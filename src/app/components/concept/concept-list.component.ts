@@ -3,8 +3,8 @@ import { Router } from '@angular/router';
 import { ConceptListModel, ConceptViewModelService } from '../../services/concept.view.service';
 import { statuses } from '../../entities/constants';
 import { v4 as uuid } from 'uuid';
-import { UserService } from '../../services/user.service';
 import { IndexedConcept } from '../../services/elasticsearch.service';
+import { AuthorizationManager } from '../../services/authorization-manager.sevice';
 
 @Component({
   selector: 'app-concept-list',
@@ -85,8 +85,8 @@ export class ConceptListComponent implements AfterViewInit {
   statuses = statuses;
   model: ConceptListModel;
 
-  constructor(private userService: UserService,
-              private conceptViewModel: ConceptViewModelService,
+  constructor(private conceptViewModel: ConceptViewModelService,
+              private authorizationManager: AuthorizationManager,
               private renderer: Renderer,
               private router: Router) {
 
@@ -106,7 +106,13 @@ export class ConceptListComponent implements AfterViewInit {
   }
 
   canAddConcept() {
-    return this.userService.isLoggedIn();
+
+    if (!this.conceptViewModel.vocabulary) {
+      return false;
+    }
+
+    return this.authorizationManager.canAddConcept(this.conceptViewModel.vocabulary);
+
   }
 
   navigate(concept: IndexedConcept) {

@@ -26,7 +26,9 @@ import { LanguageService } from '../../services/language.service';
                                [languages]="filterLanguages"
                                class="pull-left"></app-filter-language>
 
-          <app-editable-buttons [form]="form" [canRemove]="true"></app-editable-buttons>
+          <app-editable-buttons [form]="form" 
+                                [canRemove]="true" 
+                                [vocabulary]="vocabulary"></app-editable-buttons>
 
         </div>
 
@@ -101,5 +103,4 @@ export class ConceptComponent implements EditingComponent, OnDestroy {
   get vocabulary() {
     return this.conceptViewModel.vocabulary;
   }
-
 }

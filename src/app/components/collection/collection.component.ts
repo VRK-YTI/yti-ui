@@ -28,7 +28,9 @@ import { FormField } from 'app/services/form-state';
                                  [languages]="filterLanguages"
                                  class="pull-left"></app-filter-language>
 
-            <app-editable-buttons [form]="form" [canRemove]="true"></app-editable-buttons>
+            <app-editable-buttons [vocabulary]="vocabulary" 
+                                  [form]="form"
+                                  [canRemove]="true"></app-editable-buttons>
           
         </div>
 
@@ -144,5 +146,4 @@ export class CollectionComponent implements EditingComponent, OnDestroy {
   get vocabulary() {
     return this.conceptViewModel.vocabulary;
   }
-
 }

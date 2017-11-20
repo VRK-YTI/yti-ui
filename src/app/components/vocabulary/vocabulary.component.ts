@@ -6,7 +6,7 @@ import { DeleteConfirmationModalService } from '../common/delete-confirmation-mo
 import { LanguageService } from '../../services/language.service';
 import { ImportVocabularyModalService } from 'app/components/vocabulary/import-vocabulary-modal.component';
 import { ignoreModalClose } from 'app/utils/modal';
-import { UserService } from '../../services/user.service';
+import { AuthorizationManager } from '../../services/authorization-manager.sevice';
 
 @Component({
   selector: 'app-vocabulary',
@@ -34,9 +34,11 @@ import { UserService } from '../../services/user.service';
                                    class="pull-left"
                                    style="width: auto"></app-filter-language>
 
-              <app-editable-buttons [form]="form" [canRemove]="true"></app-editable-buttons>
+              <app-editable-buttons [form]="form" 
+                                    [canRemove]="true"
+                                    [vocabulary]="vocabulary"></app-editable-buttons>
 
-              <div class="pull-right" *ngIf="!isEditing() && isLoggedIn()">
+              <div class="pull-right" *ngIf="canImport()">
                 <input #fileInput type="file" id="fileElem" accept=".csv" style="display:none" (change)="selectFile(fileInput.files)">
                 <label for="fileElem" class="btn btn-default import-button" translate>Import vocabulary</label>
               </div>
@@ -82,7 +84,7 @@ export class VocabularyComponent implements EditingComponent {
               deleteConfirmationModal: DeleteConfirmationModalService,
               private languageService: LanguageService,
               private importVocabularyModal: ImportVocabularyModalService,
-              private userService: UserService) {
+              private authorizationManager: AuthorizationManager) {
 
     editableService.onSave = () => conceptViewModel.saveVocabulary();
     editableService.onCanceled = () => conceptViewModel.resetVocabulary();
@@ -91,8 +93,13 @@ export class VocabularyComponent implements EditingComponent {
         .then(() => conceptViewModel.removeVocabulary());
   }
 
-  isLoggedIn() {
-    return this.userService.isLoggedIn();
+  canImport() {
+
+    if (!this.conceptViewModel.vocabulary) {
+      return false;
+    }
+
+    return !this.isEditing() && this.authorizationManager.canEdit(this.conceptViewModel.vocabulary);
   }
 
   get formNode() {

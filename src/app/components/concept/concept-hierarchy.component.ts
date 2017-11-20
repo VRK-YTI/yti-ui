@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { ConceptHierarchyModel, ConceptViewModelService } from '../../services/concept.view.service';
 import { v4 as uuid } from 'uuid';
 import { Router } from '@angular/router';
-import { UserService } from '../../services/user.service';
 import { IndexedConcept } from '../../services/elasticsearch.service';
+import { AuthorizationManager } from '../../services/authorization-manager.sevice';
 
 @Component({
   selector: 'app-concept-hierarchy',
@@ -36,9 +36,9 @@ export class ConceptHierarchyComponent {
 
   model: ConceptHierarchyModel;
 
-  constructor(private userService: UserService,
-              private router: Router,
-              private conceptViewModel: ConceptViewModelService) {
+  constructor(private router: Router,
+              private conceptViewModel: ConceptViewModelService,
+              private authorizationManager: AuthorizationManager) {
 
     this.model = conceptViewModel.conceptHierarchy;
   }
@@ -52,7 +52,12 @@ export class ConceptHierarchyComponent {
   }
 
   canAddConcept() {
-    return this.userService.isLoggedIn();
+
+    if (!this.conceptViewModel.vocabulary) {
+      return false;
+    }
+
+    return this.authorizationManager.canAddConcept(this.conceptViewModel.vocabulary);
   }
 
   addConcept() {

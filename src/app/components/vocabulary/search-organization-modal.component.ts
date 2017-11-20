@@ -5,6 +5,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { TermedService } from '../../services/termed.service';
 import { LanguageService } from '../../services/language.service';
 import { contains } from '../../utils/array';
+import { isDefined } from '../../utils/object';
 
 @Injectable()
 export class SearchOrganizationModalService {
@@ -12,10 +13,11 @@ export class SearchOrganizationModalService {
   constructor(private modalService: NgbModal) {
   }
 
-  open(restrictOrganizationIds: string[]): Promise<OrganizationNode> {
+  open(restrictOrganizationIds: string[], allowOnlyOrganizationIds: string[]|null): Promise<OrganizationNode> {
     const modalRef = this.modalService.open(SearchOrganizationModalComponent, { size: 'lg' });
     const instance = modalRef.componentInstance as SearchOrganizationModalComponent;
-    instance.restricts = restrictOrganizationIds;
+    instance.restrictOrganizationIds = restrictOrganizationIds;
+    instance.allowOnlyOrganizationIds = allowOnlyOrganizationIds;
     return modalRef.result;
   }
 }
@@ -63,7 +65,8 @@ export class SearchOrganizationModalComponent implements AfterViewInit {
 
   @ViewChild('searchInput') searchInput: ElementRef;
 
-  @Input() restricts: string[];
+  @Input() restrictOrganizationIds: string[];
+  @Input() allowOnlyOrganizationIds: string[]|null;
 
   searchResults$: Observable<OrganizationNode[]>;
 
@@ -84,8 +87,9 @@ export class SearchOrganizationModalComponent implements AfterViewInit {
         return organizations.filter(organization => {
           const label = languageService.translate(organization.label, false);
           const searchMatches = !search || label.toLowerCase().indexOf(search.toLowerCase()) !== -1;
-          const isNotRestricted = !contains(this.restricts, organization.id);
-          return searchMatches && isNotRestricted;
+          const isNotRestricted = !contains(this.restrictOrganizationIds, organization.id);
+          const isAllowed = !isDefined(this.allowOnlyOrganizationIds) || contains(this.allowOnlyOrganizationIds, organization.id);
+          return searchMatches && isNotRestricted && isAllowed;
         });
       });
   }

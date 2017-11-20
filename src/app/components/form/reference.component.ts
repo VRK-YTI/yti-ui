@@ -35,7 +35,8 @@ export type FormReference = FormReferenceLiteral<any>
                            [reference]="reference"></app-group-input>
 
           <app-organization-input *ngSwitchCase="'Organization'" 
-                                  [reference]="reference"></app-organization-input>
+                                  [reference]="reference"
+                                  [vocabulary]="vocabulary"></app-organization-input>
 
           <div *ngSwitchDefault>
             <span *ngFor="let referenceNode of reference.value; let last = last">

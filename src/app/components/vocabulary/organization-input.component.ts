@@ -1,9 +1,12 @@
 import { Component, Input } from '@angular/core';
-import { OrganizationNode } from '../../entities/node';
+import { OrganizationNode, VocabularyNode } from '../../entities/node';
 import { EditableService } from '../../services/editable.service';
 import { FormReferenceLiteral } from '../../services/form-state';
 import { SearchOrganizationModalService } from './search-organization-modal.component';
 import { ignoreModalClose } from '../../utils/modal';
+import { UserService } from '../../services/user.service';
+import { requireDefined } from '../../utils/object';
+import { AuthorizationManager } from '../../services/authorization-manager.sevice';
 
 @Component({
   selector: 'app-organization-input',
@@ -27,10 +30,13 @@ import { ignoreModalClose } from '../../utils/modal';
 })
 export class OrganizationInputComponent {
 
+  @Input() vocabulary: VocabularyNode;
   @Input() reference: FormReferenceLiteral<OrganizationNode>;
 
   constructor(private editableService: EditableService,
-              private searchOrganizationModal: SearchOrganizationModalService) {
+              private searchOrganizationModal: SearchOrganizationModalService,
+              private userService: UserService,
+              private authorizationManager: AuthorizationManager) {
   }
 
   get editing() {
@@ -43,9 +49,12 @@ export class OrganizationInputComponent {
 
   addReference() {
 
-    const restricts = this.reference.value.map(({ id }) => id);
+    const user = requireDefined(this.userService.user);
 
-    this.searchOrganizationModal.open(restricts)
+    const canEditOnlyOrganizations = user.superuser ? null : this.authorizationManager.canEditOrganizationsIds();
+    const restrictOrganizationIds = this.reference.value.map(({ id }) => id);
+
+    this.searchOrganizationModal.open(restrictOrganizationIds, canEditOnlyOrganizations)
       .then(result => this.reference.addReference(result), ignoreModalClose);
   }
 }
