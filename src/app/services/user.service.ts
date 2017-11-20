@@ -81,7 +81,7 @@ export class UserService {
 }
 
 function normalizeArray<T>(obj: T|T[]): T[] {
-  return Array.isArray(obj) ? obj : [obj]
+  return Array.isArray(obj) ? obj : [obj];
 }
 
 function hasAny<T>(set: Set<T>, values: T|T[]) {
