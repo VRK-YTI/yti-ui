@@ -33,7 +33,7 @@ import { Node } from '../../entities/node';
                 <dd>{{node.lastModifiedBy}}</dd>
               </dl>
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-12">
               <dl>
                 <dt>URI</dt>
                 <dd>{{node.uri}}</dd>
