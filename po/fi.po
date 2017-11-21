@@ -2,14 +2,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-11-17 16:08+0200\n"
+"PO-Revision-Date: 2017-11-21 10:11+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.5\n"
+"X-Generator: Poedit 2.0.4\n"
 "X-Poedit-Basepath: .\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
@@ -192,8 +192,23 @@ msgstr "Kirjaudu sisään"
 msgid "Register"
 msgstr "Luo tunnukset"
 
+msgid "User details"
+msgstr "Käyttäjätiedot"
+
 msgid "Logout"
 msgstr "Kirjaudu ulos"
+
+msgid "Email"
+msgstr "Sähköposti"
+
+msgid "Name"
+msgstr "Nimi"
+
+msgid "Organizations and roles"
+msgstr "Organisaatio ja roolit"
+
+msgid "Unknown organization"
+msgstr "Tuntematon organisaatio"
 
 msgid "Visualization"
 msgstr "Visualisointi"
@@ -265,8 +280,12 @@ msgstr "uusi käsite"
 msgid "New collection"
 msgstr "uusi käsitevalikoima"
 
-msgid "Unexpected error"
-msgstr "Tapahtui odottamaton virhe"
+msgid ""
+"Are you sure that you want to continue? By continuing unsaved changes will "
+"be lost."
+msgstr ""
+"Oletko varma, että haluat jatkaa? Jatkaessasi tallentamattomat muutokset "
+"katoavat."
 
 msgid "Front page"
 msgstr "Etusivu"
@@ -292,18 +311,14 @@ msgstr "Organisaatio"
 msgid "Submit error"
 msgstr "Toiminnossa tapahtui virhe"
 
-msgid "Unstable"
-msgstr "Keskeneräinen"
+msgid "Unexpected error"
+msgstr "Tapahtui odottamaton virhe"
 
 msgid "Edit in progress"
 msgstr "Muokkaaminen on kesken"
 
-msgid ""
-"Are you sure that you want to continue? By continuing unsaved changes will "
-"be lost."
-msgstr ""
-"Oletko varma, että haluat jatkaa? Jatkaessasi tallentamattomat muutokset "
-"katoavat."
+msgid "Unstable"
+msgstr "Keskeneräinen"
 
 msgid "Unlink"
 msgstr "Poista linkitys"
@@ -332,6 +347,18 @@ msgstr "Käyttöesimerkki"
 msgid "synonym"
 msgstr "Synonyymi"
 
+msgid "ADMIN"
+msgstr "Ylläpitäjä"
+
+msgid "DATA_MODEL_EDITOR"
+msgstr "Tietomallintaja"
+
+msgid "TERMINOLOGY_EDITOR"
+msgstr "Sanastotyöntekijä"
+
+msgid "CODE_LIST_EDITOR"
+msgstr "Koodistotyöntekijä"
+
 msgid "validateMeta"
 msgstr "Epävalidi syöte"
 
@@ -349,9 +376,6 @@ msgstr "Etuliite oltava pienillä kirjaimilla"
 
 #~ msgid "No group"
 #~ msgstr "Ei ryhmää"
-
-#~ msgid "No organization"
-#~ msgstr "Ei organisaatiota"
 
 #~ msgid "Preferred term"
 #~ msgstr "Suositettava termi"

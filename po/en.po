@@ -2,14 +2,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-11-17 16:08+0200\n"
+"PO-Revision-Date: 2017-11-21 10:28+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.5\n"
+"X-Generator: Poedit 2.0.4\n"
 "X-Poedit-Basepath: .\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
@@ -187,7 +187,22 @@ msgstr ""
 msgid "Register"
 msgstr ""
 
+msgid "User details"
+msgstr ""
+
 msgid "Logout"
+msgstr ""
+
+msgid "Email"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "Organizations and roles"
+msgstr ""
+
+msgid "Unknown organization"
 msgstr ""
 
 msgid "Visualization"
@@ -259,7 +274,9 @@ msgstr "new concept"
 msgid "New collection"
 msgstr "new collection"
 
-msgid "Unexpected error"
+msgid ""
+"Are you sure that you want to continue? By continuing unsaved changes will "
+"be lost."
 msgstr ""
 
 msgid "Front page"
@@ -286,15 +303,13 @@ msgstr ""
 msgid "Submit error"
 msgstr ""
 
-msgid "Unstable"
+msgid "Unexpected error"
 msgstr ""
 
 msgid "Edit in progress"
 msgstr ""
 
-msgid ""
-"Are you sure that you want to continue? By continuing unsaved changes will "
-"be lost."
+msgid "Unstable"
 msgstr ""
 
 msgid "Unlink"
@@ -323,6 +338,18 @@ msgstr "Example"
 
 msgid "synonym"
 msgstr "Synonym"
+
+msgid "ADMIN"
+msgstr "Admin"
+
+msgid "DATA_MODEL_EDITOR"
+msgstr "Data model editor"
+
+msgid "TERMINOLOGY_EDITOR"
+msgstr "Terminology editor"
+
+msgid "CODE_LIST_EDITOR"
+msgstr "Code list editor"
 
 msgid "validateMeta"
 msgstr "Invalid"

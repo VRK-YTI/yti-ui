@@ -21,6 +21,7 @@ import { LoginModalService } from './login-modal.component';
         <li class="nav-item dropdown bg-primary" *ngIf="isLoggedIn()" placement="bottom-right" ngbDropdown>
           <a class="dropdown-toggle nav-link" ngbDropdownToggle>{{username}}</a>
           <div ngbDropdownMenu class="bg-light">
+            <a class="dropdown-item" [routerLink]="['/userDetails']" translate>User details</a>
             <a class="dropdown-item" (click)="logOut()" translate>Logout</a>
           </div>
         </li>

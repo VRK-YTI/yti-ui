@@ -172,7 +172,22 @@ msgstr ""
 msgid "Register"
 msgstr ""
 
+msgid "User details"
+msgstr ""
+
 msgid "Logout"
+msgstr ""
+
+msgid "Email"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "Organizations and roles"
+msgstr ""
+
+msgid "Unknown organization"
 msgstr ""
 
 msgid "Visualization"
@@ -244,7 +259,9 @@ msgstr ""
 msgid "New collection"
 msgstr ""
 
-msgid "Unexpected error"
+msgid ""
+"Are you sure that you want to continue? By continuing unsaved changes will "
+"be lost."
 msgstr ""
 
 msgid "Front page"
@@ -271,15 +288,13 @@ msgstr ""
 msgid "Submit error"
 msgstr ""
 
-msgid "Unstable"
+msgid "Unexpected error"
 msgstr ""
 
 msgid "Edit in progress"
 msgstr ""
 
-msgid ""
-"Are you sure that you want to continue? By continuing unsaved changes will "
-"be lost."
+msgid "Unstable"
 msgstr ""
 
 msgid "Unlink"
@@ -307,6 +322,18 @@ msgid "example"
 msgstr ""
 
 msgid "synonym"
+msgstr ""
+
+msgid "ADMIN"
+msgstr ""
+
+msgid "DATA_MODEL_EDITOR"
+msgstr ""
+
+msgid "TERMINOLOGY_EDITOR"
+msgstr ""
+
+msgid "CODE_LIST_EDITOR"
 msgstr ""
 
 msgid "validateMeta"

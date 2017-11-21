@@ -81,6 +81,7 @@ import { SearchOrganizationModalComponent, SearchOrganizationModalService } from
 import { PrefixInputComponent } from './components/concept/prefix-input.component';
 import { SearchGroupModalComponent, SearchGroupModalService } from './components/vocabulary/search-group-modal.component';
 import { AuthorizationManager } from './services/authorization-manager.sevice';
+import { UserDetailsComponent } from './components/user-details.component';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json-loader!po-loader?format=mf!../../po/fi.po'),
@@ -110,7 +111,8 @@ const appRoutes: Routes = [
     { path: '', component: NoSelectionComponent },
     { path: 'concept/:conceptId', component: ConceptComponent, canDeactivate: [ConfirmCancelEditGuard] },
     { path: 'collection/:collectionId', component: CollectionComponent, canDeactivate: [ConfirmCancelEditGuard] }
-  ]}
+  ]},
+  {path: 'userDetails', component: UserDetailsComponent }
 ];
 
 @NgModule({
@@ -182,7 +184,8 @@ const appRoutes: Routes = [
     KeysPipe,
     FilterLanguageComponent,
     ImportVocabularyModalComponent,
-    PrefixInputComponent
+    PrefixInputComponent,
+    UserDetailsComponent
   ],
   entryComponents: [
     SearchConceptModalComponent,
