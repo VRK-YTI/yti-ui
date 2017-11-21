@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { TermedService } from 'app/services/termed.service';
 import { OrganizationNode } from 'app/entities/node';
 import { index } from 'app/utils/array';
+import { LocationService } from 'app/services/location.service';
 
 @Component({
   selector: 'app-user-details',
@@ -72,7 +73,8 @@ export class UserDetailsComponent implements OnDestroy  {
 
   constructor(private router: Router,
               private userService: UserService,
-              private termedService: TermedService) {
+              private termedService: TermedService,
+              private locationService: LocationService) {
 
     this.loggedInSubscription = this.userService.loggedIn$.subscribe(loggedIn => {
       if (!loggedIn) {
@@ -84,6 +86,7 @@ export class UserDetailsComponent implements OnDestroy  {
       this.organizationsById = index(organizationNodes, org => org.id);  
     });
     
+    locationService.atUserDetails();    
   }
   
   ngOnDestroy() {

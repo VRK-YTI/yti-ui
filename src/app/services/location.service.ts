@@ -57,4 +57,11 @@ export class LocationService {
   atFrontPage(): void {
     this.changeLocation([]);
   }
+
+  atUserDetails(): void {
+    this.changeLocation([{
+      localizationKey: 'User details',
+      route: ['userDetails']
+    }]);
+  } 
 }
