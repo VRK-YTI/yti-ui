@@ -4,8 +4,6 @@ import { EditableService } from '../../services/editable.service';
 import { FormReferenceLiteral } from '../../services/form-state';
 import { SearchOrganizationModalService } from './search-organization-modal.component';
 import { ignoreModalClose } from '../../utils/modal';
-import { UserService } from '../../services/user.service';
-import { requireDefined } from '../../utils/object';
 import { AuthorizationManager } from '../../services/authorization-manager.sevice';
 
 @Component({
@@ -35,7 +33,6 @@ export class OrganizationInputComponent {
 
   constructor(private editableService: EditableService,
               private searchOrganizationModal: SearchOrganizationModalService,
-              private userService: UserService,
               private authorizationManager: AuthorizationManager) {
   }
 
@@ -49,12 +46,11 @@ export class OrganizationInputComponent {
 
   addReference() {
 
-    const user = requireDefined(this.userService.user);
-
-    const canEditOnlyOrganizations = user.superuser ? null : this.authorizationManager.canEditOrganizationsIds();
+    const canEditOnlyOrganizations = this.authorizationManager.canEditOrganizationsIds();
+    const allowOnlyOrganizationIds = canEditOnlyOrganizations === 'ALL' ? null : canEditOnlyOrganizations;
     const restrictOrganizationIds = this.reference.value.map(({ id }) => id);
 
-    this.searchOrganizationModal.open(restrictOrganizationIds, canEditOnlyOrganizations)
+    this.searchOrganizationModal.open(restrictOrganizationIds, allowOnlyOrganizationIds)
       .then(result => this.reference.addReference(result), ignoreModalClose);
   }
 }

@@ -18,6 +18,10 @@ export class AuthorizationManager {
       return false;
     }
 
+    if (this.user.superuser) {
+      return true;
+    }
+
     const organizationIds = vocabulary.publishers.map(org => org.id);
 
     return this.user.isInRole(['ADMIN', 'TERMINOLOGY_EDITOR'], organizationIds);
@@ -44,10 +48,14 @@ export class AuthorizationManager {
     return this.user.getOrganizations(['ADMIN', 'TERMINOLOGY_EDITOR']).size > 0;
   }
 
-  canEditOrganizationsIds(): UUID[] {
+  canEditOrganizationsIds(): UUID[]|'ALL' {
 
     if (!this.user) {
       return [];
+    }
+
+    if (this.user.superuser) {
+      return 'ALL';
     }
 
     return Array.from(this.user.getOrganizations(['ADMIN', 'TERMINOLOGY_EDITOR']));
