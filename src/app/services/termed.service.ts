@@ -22,24 +22,17 @@ export class TermedService {
   }
 
   getVocabulary(graphId: string): Observable<VocabularyNode> {
-    return this.metaModelService.getMeta(graphId).flatMap(metaModel => {
-      if (metaModel.graphHas(graphId, 'Vocabulary')) {
-        return this.getVocabularyNode(graphId, 'Vocabulary')
-          .map(vocabulary => Node.create(vocabulary, metaModel, true));
-      } else {
-        return this.getVocabularyNode(graphId, 'TerminologicalVocabulary')
-          .map(vocabulary => Node.create(vocabulary, metaModel, true));
-      }
-    });
+    return Observable.zip(this.metaModelService.getMeta(graphId), this.getVocabularyNode(graphId))
+      .map(([meta, vocabulary]) => Node.create(vocabulary, meta, true));
   }
 
   getVocabularyList(): Observable<VocabularyNode[]> {
-    return Observable.zip(this.getVocabularyNodes('Vocabulary'), this.getVocabularyNodes('TerminologicalVocabulary'))
-      .flatMap(([vocabularies, terminologicalVocabularies]) =>
-        Observable.forkJoin([...vocabularies, ...terminologicalVocabularies]
-          .map(vocabulary =>
+    return this.getVocabularyNodes()
+      .flatMap(vocabularies =>
+        Observable.forkJoin(vocabularies.map(vocabulary =>
             this.metaModelService.getMeta(vocabulary.type.graph.id)
-              .map(metaModel => Node.create(vocabulary, metaModel, true) as VocabularyNode))
+              .map(metaModel => Node.create(vocabulary, metaModel, true) as VocabularyNode)
+          )
         )
       );
   }
@@ -205,22 +198,17 @@ export class TermedService {
     return this.http.post(`${environment.api_url}/modify`, body);
   }
 
-  private getVocabularyNode<T extends VocabularyNodeType>(graphId: string, type: T): Observable<NodeExternal<VocabularyNodeType>> {
+  private getVocabularyNode<T extends VocabularyNodeType>(graphId: string): Observable<NodeExternal<VocabularyNodeType>> {
 
     const params = new URLSearchParams();
     params.append('graphId', graphId);
-    params.append('vocabularyType', type);
 
     return this.http.get(`${environment.api_url}/vocabulary`, { params } )
       .map(response => requireSingle(response.json() as NodeExternal<VocabularyNodeType>));
   }
 
-  private getVocabularyNodes<T extends VocabularyNodeType>(type: T): Observable<NodeExternal<T>[]> {
-
-    const params = new URLSearchParams();
-    params.append('vocabularyType', type);
-
-    return this.http.get(`${environment.api_url}/vocabularies`, { params } )
+  private getVocabularyNodes<T extends VocabularyNodeType>(): Observable<NodeExternal<T>[]> {
+    return this.http.get(`${environment.api_url}/vocabularies`)
       .map(response => normalizeAsArray(response.json() as NodeExternal<VocabularyNodeType>));
   }
 
@@ -292,7 +280,7 @@ export class TermedService {
   }
 
   isNamespaceInUse(prefix: string): Observable<boolean> {
-    
+
     const params = new URLSearchParams();
     params.append('prefix', prefix);
     params.append('namespace', namespace + prefix);
