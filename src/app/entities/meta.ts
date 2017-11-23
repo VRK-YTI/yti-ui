@@ -160,17 +160,6 @@ export class PropertyMeta {
         return true;
     }
   }
-
-  copyToGraph(graphId: string): TextAttributeInternal {
-    return Object.assign({}, this.textAttribute, {
-      domain: {
-        id: this.textAttribute.domain.id,
-        graph: {
-          id: graphId
-        }
-      }
-    });
-  }
 }
 
 export class ReferenceMeta {
@@ -226,33 +215,14 @@ export class ReferenceMeta {
   get cardinality(): Cardinality {
     return this.id === 'prefLabelXl' ? 'single' : 'multiple';
   }
-
-  copyToGraph(graphId: string): ReferenceAttributeInternal {
-
-    const domainGraph = this.referenceAttribute.domain.graph.id;
-    const rangeGraph = this.referenceAttribute.range.graph.id;
-    const newRangeGraph = domainGraph === rangeGraph ? graphId : rangeGraph;
-
-    return Object.assign({}, this.referenceAttribute, {
-      domain: {
-        id: this.referenceAttribute.domain.id,
-        graph: {
-          id: graphId
-        }
-      },
-      range: {
-        id: this.referenceAttribute.range.id,
-        graph: {
-          id: newRangeGraph
-        }
-      }
-    });
-  }
 }
 
 export class MetaModel {
 
-  constructor(private meta: Map<string, GraphMeta>) {
+  meta: Map<string, GraphMeta>;
+
+  constructor(private graphMeta: GraphMeta[]) {
+    this.meta = index(graphMeta, gm => gm.graphId);
   }
 
   graphHas(graphId: string, nodeType: NodeType) {
@@ -324,14 +294,6 @@ export class GraphMeta {
 
   getNodeMetas() {
     return Array.from(this.meta.values());
-  }
-
-  toNodes(): NodeMetaInternal[] {
-    return this.nodeMetas;
-  }
-
-  copyToGraph(graphId: string): GraphMeta {
-    return new GraphMeta(graphId, this.label, Array.from(this.meta.values()).map(m => m.copyToGraph(graphId)), false);
   }
 }
 
@@ -411,15 +373,5 @@ export class NodeMeta {
 
   getReference(referenceId: string) {
     return requireDefined(firstMatching(this.references, ref => ref.id === referenceId));
-  }
-
-  copyToGraph(graphId: string): NodeMetaInternal {
-    return Object.assign({}, this.metaNode, {
-      graph: {
-        id: graphId
-      },
-      textAttributes: this.properties.map(p => p.copyToGraph(graphId)),
-      referenceAttributes: this.references.map(r => r.copyToGraph(graphId))
-    });
   }
 }

@@ -715,7 +715,7 @@ export class ConceptViewModelService {
     const vocabulary = this.vocabulary;
 
     return new Promise((resolve, reject) => {
-      this.termedService.removeVocabulary(vocabulary).subscribe({
+      this.termedService.removeVocabulary(vocabulary.graphId).subscribe({
         next() {
           that.router.navigate(['/']);
           resolve();

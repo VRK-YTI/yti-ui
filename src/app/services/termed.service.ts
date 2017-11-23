@@ -1,16 +1,13 @@
 import { Injectable } from '@angular/core';
-import { URLSearchParams, ResponseOptionsArgs, Response } from '@angular/http';
+import { Response, ResponseOptionsArgs, URLSearchParams } from '@angular/http';
 import { Observable } from 'rxjs';
 import { TermedHttp } from './termed-http.service';
 import { contains, flatten, normalizeAsArray } from '../utils/array';
 import { MetaModelService } from './meta-model.service';
-import { NodeExternal, NodeType, NodeInternal, Identifier, VocabularyNodeType } from '../entities/node-api';
+import { Identifier, NodeExternal, NodeInternal, NodeType, VocabularyNodeType } from '../entities/node-api';
 import { CollectionNode, ConceptNode, GroupNode, Node, OrganizationNode, VocabularyNode } from '../entities/node';
 import * as moment from 'moment';
-import { GraphMeta } from '../entities/meta';
-import { Localizable } from '../entities/localization';
 import { environment } from '../../environments/environment';
-import { namespace } from '../entities/constants';
 import { Graph } from 'app/entities/graph';
 import { PrefixAndNamespace } from 'app/entities/prefix-and-namespace';
 
@@ -82,22 +79,22 @@ export class TermedService {
       );
   }
 
-  createVocabulary(template: GraphMeta, vocabulary: VocabularyNode, prefix: string): Observable<Response> {
+  createVocabulary(templateGraphId: string, vocabulary: VocabularyNode, prefix: string): Observable<string> {
 
-    const graphId = vocabulary.graphId;
+    const params = new URLSearchParams();
+    params.append('templateGraphId', templateGraphId);
+    params.append('prefix', prefix);
 
-    return this.createGraph(graphId, template.label, prefix)
-      .flatMap(() => this.metaModelService.updateMeta(template.copyToGraph(graphId)))
-      .flatMap(() => this.updateNode(vocabulary, null));
+    return this.http.post(`${environment.api_url}/vocabulary`, vocabulary.toInternalNode(), { params })
+      .map(response => response.json());
   }
 
-  removeVocabulary(vocabulary: VocabularyNode): Observable<any> {
+  removeVocabulary(graphId: string): Observable<any> {
 
-    const graphId = vocabulary.graphId;
+    const params = new URLSearchParams();
+    params.append('graphId', graphId);
 
-    return this.removeGraphNodes(graphId)
-      .flatMap(() => this.metaModelService.removeGraphMeta(graphId))
-      .flatMap(() => this.removeGraph(graphId));
+    return this.http.delete(`${environment.api_url}/vocabulary`, { params });
   }
 
   saveNodes<T extends NodeType>(nodes: Node<T>[]): Observable<Response> {
@@ -154,29 +151,29 @@ export class TermedService {
     return this.removeNodeIdentifiers([...inlineNodeIds, node.identifier], true, true);
   }
 
-  private createGraph(graphId: string, label: Localizable, prefix: string): Observable<Response> {
-    return this.http.post(`${environment.api_url}/graph`, {
-      id: graphId,
-      code: prefix,
-      uri: namespace + prefix + '/',
-      permissions: {},
-      properties: {
-        prefLabel: Object.entries(label).map(([lang, value]) => ({lang, value}))
-      },
-      roles: []
-    });
-  }
-
-  private removeGraphNodes(graphId: string): Observable<any> {
-    return this.getAllNodeIds(graphId).flatMap(nodeIds => this.removeNodeIdentifiers(nodeIds, false, false));
-  }
-
-  private removeGraph(graphId: string): Observable<any> {
+  isNamespaceInUse(prefix: string): Observable<boolean> {
 
     const params = new URLSearchParams();
-    params.append('graphId', graphId);
+    params.append('prefix', prefix);
 
-    return this.http.delete(`${environment.api_url}/graph`, { params });
+    return this.http.get(`${environment.api_url}/namespaceInUse`, { params } )
+      .map(response => response.json() as boolean);
+  }
+
+  getNamespaceRoot(): Observable<string> {
+    return this.http.get(`${environment.api_url}/namespaceRoot`)
+      .map(response => response.text());
+  }
+
+  getGraphNamespace(graphId: string): Observable<PrefixAndNamespace> {
+    return this.http.get(`${environment.api_url}/graphs/${graphId}`)
+      .map(response => {
+        const graph = response.json() as Graph;
+        return {
+          prefix: graph.code,
+          namespace: graph.uri
+        };
+      })
   }
 
   private removeNodeIdentifiers(nodeIds: Identifier<any>[], sync: boolean, disconnect: boolean) {
@@ -268,36 +265,6 @@ export class TermedService {
   private getOrganizationListNodes(): Observable<NodeExternal<'Organization'>[]> {
     return this.http.get(`${environment.api_url}/organizations`)
       .map(response => normalizeAsArray(response.json() as NodeExternal<'Organization'>)).catch(notFoundAsDefault([]));
-  }
-
-  private getAllNodeIds(graphId: string): Observable<Identifier<any>[]> {
-
-    const params = new URLSearchParams();
-    params.append('graphId', graphId);
-
-    return this.http.get(`${environment.api_url}/nodes`, { params } )
-      .map(response => normalizeAsArray(response.json() as Identifier<any>[]));
-  }
-
-  isNamespaceInUse(prefix: string): Observable<boolean> {
-
-    const params = new URLSearchParams();
-    params.append('prefix', prefix);
-    params.append('namespace', namespace + prefix);
-
-    return this.http.get(`${environment.api_url}/namespaceInUse`, { params } )
-      .map(response => response.json() as boolean);
-  }
-
-  getGraphNamespace(graphId: string): Observable<PrefixAndNamespace> {
-    return this.http.get(`${environment.api_url}/graphs/${graphId}`)
-      .map(response => {
-        const graph = response.json() as Graph;
-        return {
-          prefix: graph.code,
-          namespace: graph.uri
-        };
-      })
   }
 }
 

@@ -33,10 +33,6 @@ export class MetaModelService {
     return this.getGraphMeta(graphId).flatMap(graphMeta => this.createMetaModel(graphMeta));
   }
 
-  copyTemplateToGraph(templateMeta: GraphMeta, graphId: string): Observable<MetaModel> {
-    return this.createMetaModel(templateMeta.copyToGraph(graphId));
-  }
-
   getGraphMeta(graphId: string): Observable<GraphMeta> {
 
     return this.metaCache.getOrCreate(graphId, () =>
@@ -73,11 +69,11 @@ export class MetaModelService {
 
     // necessary optimization since forkJoin doesn't ever complete with empty observables array
     if (externalGraphs.size === 0) {
-      return Observable.of(new MetaModel(index([graphMeta], gm => gm.graphId)));
+      return Observable.of(new MetaModel([graphMeta]));
     }
 
     return Observable.forkJoin(Array.from(externalGraphs).map(graph => this.getGraphMeta(graph)))
-      .map(graphMetas => new MetaModel(index([graphMeta, ...graphMetas], gm => gm.graphId)));
+      .map(graphMetas => new MetaModel([graphMeta, ...graphMetas]));
   }
 
   getReferrersByMeta<N extends KnownNode | Node<any>>(referrer: Referrer): Observable<{ meta: ReferenceMeta, nodes: N[] }[]> {
@@ -107,29 +103,6 @@ export class MetaModelService {
 
   getMetaTemplates(): Observable<GraphMeta[]> {
     return this.templates.asObservable();
-  }
-
-  updateMeta(graphMeta: GraphMeta): Observable<GraphMeta> {
-
-    const params = new URLSearchParams();
-    params.append('graphId', graphMeta.graphId);
-
-    const response = this.http.post(`${environment.api_url}/types`, graphMeta.toNodes(), { search: params });
-
-    return this.metaCache.update(response.map(() => graphMeta));
-  }
-
-  removeGraphMeta(graphId: string): Observable<string> {
-    const response = this.getGraphMeta(graphId).flatMap(meta => this.removeMetaNodes(graphId, meta.toNodes()));
-    return this.metaCache.remove(response.map(() => graphId));
-  }
-
-  private removeMetaNodes(graphId: string, nodes: NodeMetaInternal[]) {
-
-    const params = new URLSearchParams();
-    params.append('graphId', graphId);
-
-    return this.http.delete(`${environment.api_url}/types`, { search: params, body: nodes });
   }
 
   private getGraph(graphId: string): Observable<Graph> {

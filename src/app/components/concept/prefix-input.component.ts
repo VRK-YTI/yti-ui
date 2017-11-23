@@ -1,6 +1,6 @@
 import { Component, Optional, Self } from '@angular/core';
 import { ControlValueAccessor, FormControl, NgControl } from '@angular/forms';
-import { namespace } from '../../entities/constants';
+import { TermedService } from '../../services/termed.service';
 
 @Component({
   selector: 'app-prefix-input',
@@ -42,12 +42,15 @@ import { namespace } from '../../entities/constants';
 export class PrefixInputComponent implements ControlValueAccessor {
 
   control = new FormControl();
-  namespace = namespace;
+  namespace: string;
 
   private propagateChange: (fn: any) => void = () => {};
   private propagateTouched: (fn: any) => void = () => {};
 
-  constructor(@Self() @Optional() public parentControl: NgControl) {
+  constructor(@Self() @Optional() public parentControl: NgControl,
+              termedService: TermedService) {
+
+    termedService.getNamespaceRoot().subscribe(namespace => this.namespace = namespace);
 
     if (parentControl) {
       parentControl.valueAccessor = this;

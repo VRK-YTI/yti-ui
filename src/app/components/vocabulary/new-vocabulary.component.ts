@@ -77,33 +77,34 @@ export class NewVocabularyComponent {
     editableService.onSave = () => this.saveVocabulary();
     editableService.onCanceled = () => router.navigate(['/']);
 
+    this.templateControl.valueChanges.subscribe(() => this.createVocabulary());
+
     metaModelService.getMetaTemplates().subscribe(templates => {
       this.templates = templates;
       this.selectedTemplate = this.templates[0];
-      this.createVocabulary();
     });
-
-    this.templateControl.valueChanges.subscribe(() => this.createVocabulary());
   }
 
   createVocabulary() {
-    this.translateService.get('New vocabulary').subscribe(label => {
-      const graphId = uuid();
-      const vocabularyId = uuid();
 
-      this.metaModelService.copyTemplateToGraph(this.selectedTemplate, graphId).subscribe(newMeta => {
-        this.vocabulary = newMeta.createEmptyVocabulary(graphId, vocabularyId);
-        this.vocabulary.prefLabel = [ { lang: this.languageService.language, value: label} ];
+    const label = this.translateService.instant('New vocabulary');
+    const templateGraphId = this.selectedTemplate.graphId;
+    const vocabularyId = uuid();
 
-        // TODO all meta models don't define language but they should
-        if (this.vocabulary.hasLanguage()) {
-          this.vocabulary.languages = defaultLanguages.slice();
-        }
+    this.metaModelService.getMeta(templateGraphId).subscribe(templateMetaModel => {
 
-        this.formNode = new FormNode(this.vocabulary, () => defaultLanguages);
-        this.prefixFormControl = new FormControl('', [Validators.required, this.isPrefixLowerCaseValidator], this.isPrefixInUseValidator());
-        this.formNode.control.addControl('prefix', this.prefixFormControl);
-      });
+      this.vocabulary = templateMetaModel.createEmptyVocabulary(templateGraphId, vocabularyId);
+      this.vocabulary.prefLabel = [ { lang: this.languageService.language, value: label } ];
+
+      // TODO all meta models don't define language but they should
+      if (this.vocabulary.hasLanguage()) {
+        this.vocabulary.languages = defaultLanguages.slice();
+      }
+
+      this.formNode = new FormNode(this.vocabulary, () => this.vocabulary.languages);
+
+      this.prefixFormControl = new FormControl('', [Validators.required, this.isPrefixLowerCaseValidator], this.isPrefixInUseValidator());
+      this.formNode.control.addControl('prefix', this.prefixFormControl);
     });
   }
 
@@ -122,9 +123,9 @@ export class NewVocabularyComponent {
     this.formNode.assignChanges(vocabulary);
 
     return new Promise((resolve, reject) => {
-      this.termedService.createVocabulary(this.selectedTemplate, vocabulary, this.prefixFormControl.value)
+      this.termedService.createVocabulary(this.selectedTemplate.graphId, vocabulary, this.prefixFormControl.value)
         .subscribe({
-          next: () => that.router.navigate(['/concepts', that.vocabulary.graphId]),
+          next: (graphId) => that.router.navigate(['/concepts', graphId]),
           error: (err: any) => reject(err)
         });
     });
