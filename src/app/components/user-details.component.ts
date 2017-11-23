@@ -11,65 +11,68 @@ import { LocationService } from 'app/services/location.service';
   selector: 'app-user-details',
   styleUrls: ['./user-details.component.scss'],
   template: `
-      <div class="container-fluid" *ngIf="isLoggedIn">
-        <div class="row">
-          <div class="col-md-12">
-            <div class="page-header">
-              <h2 translate>User details</h2>
-            </div>
+    <div class="container-fluid" *ngIf="isLoggedIn">
+      <div class="row">
+        <div class="col-md-12">
+          <div class="page-header">
+            <h2 translate>User details</h2>
           </div>
         </div>
-
-        <div class="row">
-
-          <div class="col-md-12">
-            <dl>
-              <dt><label translate>Name</label></dt>
-              <dd>
-                <div class="form-group">
-                  {{name}}
-                </div>
-              </dd>
-            </dl>
-          </div>
-
-          <div class="col-md-12">
-            <dl>
-              <dt><label translate>Email</label></dt>
-              <dd>
-                <div class="form-group">
-                  {{email}}
-                </div>
-              </dd>
-            </dl>
-          </div>
-
-          <div class="col-md-12">
-            <dl>
-              <dt><label translate>Organizations and roles</label></dt>
-              <dd>
-                <div class="form-group" *ngIf="userOrganizations">
-                  <div *ngFor="let userOrganization of userOrganizations">
-                    <div *ngIf="userOrganization.organization">{{userOrganization.organization.label | translateValue:false}}</div>
-                    <div *ngIf="!userOrganization.organization" translate>Unknown organization</div>
-                    <ul>
-                      <li *ngFor="let role of userOrganization.roles">{{role | translate}}</li>
-                    </ul>
-                  </div>
-                </div>
-              </dd>
-            </dl>
-          </div>
-
-        </div>
-        
       </div>
+
+      <div class="row">
+
+        <div class="col-md-12">
+          <dl>
+            <dt><label translate>Name</label></dt>
+            <dd>
+              <div class="form-group">
+                {{name}}
+              </div>
+            </dd>
+          </dl>
+        </div>
+
+        <div class="col-md-12">
+          <dl>
+            <dt><label translate>Email</label></dt>
+            <dd>
+              <div class="form-group">
+                {{email}}
+              </div>
+            </dd>
+          </dl>
+        </div>
+
+        <div class="col-md-12">
+          <dl>
+            <dt><label translate>Organizations and roles</label></dt>
+            <dd>
+              <div class="form-group" *ngIf="userOrganizations">
+                <div *ngFor="let userOrganization of userOrganizations">
+                  <div *ngIf="userOrganization.organization">{{userOrganization.organization.label | translateValue:false}}</div>
+                  <div *ngIf="!userOrganization.organization" translate>Unknown organization</div>
+                  <ul>
+                    <li *ngFor="let role of userOrganization.roles">{{role | translate}}</li>
+                  </ul>
+                </div>
+              </div>
+            </dd>
+          </dl>
+        </div>
+
+      </div>
+
+      <app-user-access-request [organizationsById]="organizationsById"></app-user-access-request>
+      
+    </div>
   `
 })
 export class UserDetailsComponent implements OnDestroy  {
 
   private loggedInSubscription: Subscription;
-  private organizationsById: Map<string, OrganizationNode>;
+
+  organizationsById: Map<string, OrganizationNode>;
 
   constructor(private router: Router,
               private userService: UserService,

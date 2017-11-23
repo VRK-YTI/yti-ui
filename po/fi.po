@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-11-21 12:31+0200\n"
+"PO-Revision-Date: 2017-11-23 17:02+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -198,11 +198,20 @@ msgstr "Käyttäjätiedot"
 msgid "Logout"
 msgstr "Kirjaudu ulos"
 
-msgid "Email"
-msgstr "Sähköposti"
+msgid "Send access request"
+msgstr "Lähetä käyttöoikeuspyyntö"
+
+msgid "Choose organization"
+msgstr "Valitse organisaatio"
+
+msgid "Send"
+msgstr "Lähetä"
 
 msgid "Name"
 msgstr "Nimi"
+
+msgid "Email"
+msgstr "Sähköposti"
 
 msgid "Organizations and roles"
 msgstr "Organisaatiot ja roolit"
@@ -258,9 +267,6 @@ msgstr "Valitse ryhmä"
 
 msgid "Search organization..."
 msgstr "Etsi organisaatiota…"
-
-msgid "Choose organization"
-msgstr "Valitse organisaatio"
 
 msgid "Add vocabulary"
 msgstr "Lisää sanasto"

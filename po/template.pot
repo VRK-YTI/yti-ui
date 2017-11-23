@@ -178,10 +178,19 @@ msgstr ""
 msgid "Logout"
 msgstr ""
 
-msgid "Email"
+msgid "Send access request"
+msgstr ""
+
+msgid "Choose organization"
+msgstr ""
+
+msgid "Send"
 msgstr ""
 
 msgid "Name"
+msgstr ""
+
+msgid "Email"
 msgstr ""
 
 msgid "Organizations and roles"
@@ -236,9 +245,6 @@ msgid "Choose group"
 msgstr ""
 
 msgid "Search organization..."
-msgstr ""
-
-msgid "Choose organization"
 msgstr ""
 
 msgid "Add vocabulary"
