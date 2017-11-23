@@ -11,6 +11,7 @@ import { LanguageService } from '../../services/language.service';
 import { FormNode } from '../../services/form-state';
 import { defaultLanguages } from '../../utils/language';
 import { FormControl, Validators, AbstractControl, AsyncValidatorFn } from '@angular/forms';
+import { firstMatching } from '../../utils/array';
 
 @Component({
   selector: 'app-new-vocabulary',
@@ -101,7 +102,12 @@ export class NewVocabularyComponent {
         this.vocabulary.languages = defaultLanguages.slice();
       }
 
-      this.formNode = new FormNode(this.vocabulary, () => this.vocabulary.languages);
+      const languageProvider = () => {
+        const languageProperty = firstMatching(this.formNode.properties, property => property.name === 'language');
+        return languageProperty ? languageProperty.value.value.filter((v: string) => !!v) : defaultLanguages;
+      };
+
+      this.formNode = new FormNode(this.vocabulary, languageProvider);
 
       this.prefixFormControl = new FormControl('', [Validators.required, this.isPrefixLowerCaseValidator], this.isPrefixInUseValidator());
       this.formNode.control.addControl('prefix', this.prefixFormControl);
