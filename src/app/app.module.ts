@@ -82,7 +82,6 @@ import { PrefixInputComponent } from './components/concept/prefix-input.componen
 import { SearchGroupModalComponent, SearchGroupModalService } from './components/vocabulary/search-group-modal.component';
 import { AuthorizationManager } from './services/authorization-manager.sevice';
 import { UserDetailsComponent } from './components/user-details.component';
-import { UserAccessRequestComponent } from './components/user-access-request.component';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json-loader!po-loader?format=mf!../../po/fi.po'),
@@ -186,8 +185,7 @@ const appRoutes: Routes = [
     FilterLanguageComponent,
     ImportVocabularyModalComponent,
     PrefixInputComponent,
-    UserDetailsComponent,
-    UserAccessRequestComponent
+    UserDetailsComponent
   ],
   entryComponents: [
     SearchConceptModalComponent,

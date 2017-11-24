@@ -63,7 +63,35 @@ import { LocationService } from 'app/services/location.service';
 
       </div>
 
-      <app-user-access-request [organizationsById]="organizationsById"></app-user-access-request>
+      <div class="row">
+      
+        <div class="col-md-4">
+
+          <div class="form-group">
+            <dl>
+              <dt><label for="organizationsForRequest" translate>Send access request</label></dt>
+              <dd>
+                <select id="organizationsForRequest" class="form-control" [(ngModel)]="organization">
+                  <option [ngValue]="null" translate>Choose organization</option>
+                  <option *ngFor="let organizationById of organizations"
+                          [ngValue]="organizationById">
+                    {{organizationById.label | translateValue}}
+                  </option>
+                </select>
+              </dd>
+            </dl>
+          </div>
+
+        </div>
+
+        <div class="col-md-8">
+          <button type="button"
+                  class="btn btn-default send-button"
+                  *ngIf="organization"
+                  (click)="sendRequest()" translate>Send</button>
+        </div>
+  
+      </div>
       
     </div>
   `
@@ -73,6 +101,7 @@ export class UserDetailsComponent implements OnDestroy  {
   private loggedInSubscription: Subscription;
 
   organizationsById: Map<string, OrganizationNode>;
+  organization: OrganizationNode|null = null;
 
   constructor(private router: Router,
               private userService: UserService,
@@ -85,11 +114,12 @@ export class UserDetailsComponent implements OnDestroy  {
       }
     });
 
+    locationService.atUserDetails();
+
     termedService.getOrganizationList().subscribe(organizationNodes => {
       this.organizationsById = index(organizationNodes, org => org.id);  
     });
-    
-    locationService.atUserDetails();    
+        
   }
   
   ngOnDestroy() {
@@ -121,4 +151,22 @@ export class UserDetailsComponent implements OnDestroy  {
       }
     });
   }
+
+  get organizations() {
+    
+        if (!this.organizationsById) {
+          return [];
+        }
+    
+        return Array.from(this.organizationsById.entries()).map(([organizationId, organizationById]) => {
+          return organizationById;
+        });
+      }
+    
+      sendRequest() {
+        
+        if (this.organization) {
+          console.log(this.organization.label.fi);
+        }
+      }
 }
