@@ -71,8 +71,8 @@ export class UserService {
   }
 
   logout() {
-    this.user = null;
-    this.updateLoggedIn();
+    const currentUrl = window.location.href;
+    window.location.href = `/Shibboleth.sso/Logout?return=${encodeURIComponent(currentUrl)}`;
   }
 
   private updateLoggedIn() {
