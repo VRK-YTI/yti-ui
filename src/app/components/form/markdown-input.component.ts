@@ -1,5 +1,5 @@
-import { Component, ElementRef, Input, OnInit, Optional, Self, ViewChild } from '@angular/core';
-import { ControlValueAccessor, NgControl } from '@angular/forms';
+import { Component, ElementRef, forwardRef, Input, OnInit, ViewChild } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { Node as MarkdownNode, Parser } from 'commonmark';
 import { DomPath, DomPoint, DomSelection, formatTextContent, isInDocument, moveCursor, removeChildren } from '../../utils/dom';
@@ -1093,6 +1093,11 @@ function isRemoveRestOfLine(event: KeyboardEvent) {
 @Component({
   selector: 'app-markdown-input',
   styleUrls: ['./markdown-input.component.scss'],
+  providers: [{
+    provide: NG_VALUE_ACCESSOR,
+    useExisting: forwardRef(() => MarkdownInputComponent),
+    multi: true
+  }],
   template: `
     <app-markdown-input-link-popover *ngIf="hasLinkableSelection()"
                                      [selectedText]="linkableSelection.content"
@@ -1106,8 +1111,7 @@ function isRemoveRestOfLine(event: KeyboardEvent) {
 
     <div #editable 
          contenteditable="true" 
-         [class.form-control]="formControlClass" 
-         [ngClass]="{'is-invalid': !valid}"></div>
+         [class.form-control]="formControlClass"></div>
   `
 })
 export class MarkdownInputComponent implements OnInit, ControlValueAccessor {
@@ -1126,12 +1130,6 @@ export class MarkdownInputComponent implements OnInit, ControlValueAccessor {
   private undoDebounceTimeoutHandle: any = null;
   private propagateChange: (fn: any) => void = () => {};
   private propagateTouched: (fn: any) => void = () => {};
-
-  constructor(@Self() @Optional() private ngControl: NgControl) {
-    if (ngControl) {
-      ngControl.valueAccessor = this;
-    }
-  }
 
   ngOnInit(): void {
 
@@ -1234,10 +1232,6 @@ export class MarkdownInputComponent implements OnInit, ControlValueAccessor {
       this.reportChange(() => event.clipboardData.setData('text/plain', this.model.cut()));
       event.preventDefault();
     });
-  }
-
-  get valid() {
-    return !this.ngControl || this.ngControl.valid;
   }
 
   hasLinkableSelection() {
