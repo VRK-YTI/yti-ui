@@ -73,33 +73,31 @@ interface UserOrganizationRoles {
       </div>
 
       <div class="row">
-
-        <div class="col-md-4">
+        <div class="col-md-12">
 
           <div class="form-group">
             <dl>
               <dt><label for="organizations" translate>Send access request</label></dt>
               <dd>
-                <select id="organizations" class="form-control" [(ngModel)]="selectedOrganization">
+                <select id="organizations" class="form-control pull-left" [(ngModel)]="selectedOrganization">
                   <option [ngValue]="null" translate>Choose organization</option>
                   <option *ngFor="let organizationById of organizationsForRequest"
                           [ngValue]="organizationById">
                     {{organizationById.label | translateValue}}
                   </option>
                 </select>
+
+                <button type="button"
+                        class="btn btn-default pull-left ml-2"
+                        [disabled]="!selectedOrganization"
+                        (click)="sendRequest()" translate>Send</button>
               </dd>
             </dl>
           </div>
 
         </div>
-
-        <div class="col-md-8">
-          <button type="button"
-                  class="btn btn-default send-button"
-                  *ngIf="selectedOrganization"
-                  (click)="sendRequest()" translate>Send</button>
-        </div>
       </div>
+
     </div>
   `
 })
