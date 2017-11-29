@@ -90,7 +90,7 @@ interface UserOrganizationRoles {
                 </select>
 
                 <button type="button"
-                        class="btn btn-action pull-left ml-2"
+                        class="btn btn-default pull-left ml-2"
                         [disabled]="!selectedOrganization"
                         (click)="sendRequest()" translate>Send</button>
               </dd>
