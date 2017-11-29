@@ -19,7 +19,7 @@ import { LoginModalService } from './login-modal.component';
           <a class="nav-link" (click)="logIn()" translate>Log In</a>
         </li>
         <li class="nav-item dropdown bg-primary" *ngIf="isLoggedIn()" placement="bottom-right" ngbDropdown>
-          <a class="dropdown-toggle nav-link" ngbDropdownToggle>{{username}}</a>
+          <a class="dropdown-toggle nav-link" ngbDropdownToggle>{{user.name}}</a>
           <div ngbDropdownMenu class="bg-light">
             <a class="dropdown-item" [routerLink]="['/userDetails']" translate>User details</a>
             <a class="dropdown-item" (click)="logOut()" translate>Logout</a>
@@ -54,8 +54,8 @@ export class NavigationBarComponent {
     this.userService.logout();
   }
 
-  get username() {
-    return this.userService.user!.name;
+  get user() {
+    return this.userService.user;
   }
 
   isLoggedIn() {

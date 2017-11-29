@@ -14,10 +14,6 @@ export class AuthorizationManager {
 
   canEdit(vocabulary: VocabularyNode): boolean {
 
-    if (!this.user) {
-      return false;
-    }
-
     if (this.user.superuser) {
       return true;
     }
@@ -37,10 +33,6 @@ export class AuthorizationManager {
 
   canAddVocabulary(): boolean {
 
-    if (!this.user) {
-      return false;
-    }
-
     if (this.user.superuser) {
       return true;
     }
@@ -49,10 +41,6 @@ export class AuthorizationManager {
   }
 
   canEditOrganizationsIds(): UUID[]|'ALL' {
-
-    if (!this.user) {
-      return [];
-    }
 
     if (this.user.superuser) {
       return 'ALL';

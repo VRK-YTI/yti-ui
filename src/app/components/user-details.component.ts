@@ -10,7 +10,7 @@ import { comparingLocalizable } from '../utils/comparator';
 import { LanguageService } from '../services/language.service';
 
 interface UserOrganizationRoles {
-  organization: OrganizationNode|undefined;
+  organization?: OrganizationNode;
   roles: Role[];
   requests: Role[];
 }
@@ -35,7 +35,7 @@ interface UserOrganizationRoles {
             <dt><label translate>Name</label></dt>
             <dd>
               <div class="form-group">
-                {{name}}
+                {{user.name}}
               </div>
             </dd>
           </dl>
@@ -46,7 +46,7 @@ interface UserOrganizationRoles {
             <dt><label translate>Email</label></dt>
             <dd>
               <div class="form-group">
-                {{email}}
+                {{user.email}}
               </div>
             </dd>
           </dl>
@@ -136,35 +136,29 @@ export class UserDetailsComponent implements OnDestroy  {
     this.loggedInSubscription.unsubscribe();
   }
 
+  get user() {
+    return this.userService.user;
+  }
+
   isLoggedIn() {
     return this.userService.isLoggedIn();
   }
 
-  get name() {
-    return this.userService.user ? this.userService.user.name : null;
-  }
-
-  get email() {
-    return this.userService.user ? this.userService.user.email : null;
-  }
-
   get userOrganizations(): UserOrganizationRoles[]  {
 
-    if (!this.organizationsById || !this.userService.user || !this.requestsInOrganizations) {
+    if (!this.organizationsById || !this.requestsInOrganizations) {
       return [];
     }
 
-    const rolesInOrganizations = this.userService.user!.rolesInOrganizations;
-
     const organizationIds = new Set<string>([
-      ...Array.from(rolesInOrganizations.keys()),
+      ...Array.from(this.user.rolesInOrganizations.keys()),
       ...Array.from(this.requestsInOrganizations.keys())
     ]);
 
     const result = Array.from(organizationIds.values()).map(organizationId => {
       return {
         organization: this.organizationsById.get(organizationId),
-        roles: Array.from(rolesInOrganizations.get(organizationId) || []),
+        roles: Array.from(this.user.getRoles(organizationId)),
         requests: Array.from(this.requestsInOrganizations.get(organizationId) || [])
       }
     });
@@ -186,7 +180,7 @@ export class UserDetailsComponent implements OnDestroy  {
     const hasExistingRoleOrRequest = (org: OrganizationNode) => {
 
       const requestsInOrg = this.requestsInOrganizations.get(org.id) || new Set<Role>();
-      const rolesInOrg = this.userService.user!.getRoles(org.id);
+      const rolesInOrg = this.user.getRoles(org.id);
 
       return rolesInOrg.has('TERMINOLOGY_EDITOR')
         || rolesInOrg.has('ADMIN')
