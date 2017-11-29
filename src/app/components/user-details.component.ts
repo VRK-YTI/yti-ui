@@ -6,6 +6,8 @@ import { TermedService } from 'app/services/termed.service';
 import { OrganizationNode } from 'app/entities/node';
 import { index } from 'app/utils/array';
 import { LocationService } from 'app/services/location.service';
+import { comparingLocalizable } from '../utils/comparator';
+import { LanguageService } from '../services/language.service';
 
 interface UserOrganizationRoles {
   organization: OrganizationNode|undefined;
@@ -88,7 +90,7 @@ interface UserOrganizationRoles {
                 </select>
 
                 <button type="button"
-                        class="btn btn-default pull-left ml-2"
+                        class="btn btn-action pull-left ml-2"
                         [disabled]="!selectedOrganization"
                         (click)="sendRequest()" translate>Send</button>
               </dd>
@@ -112,7 +114,8 @@ export class UserDetailsComponent implements OnDestroy  {
   constructor(private router: Router,
               private userService: UserService,
               private termedService: TermedService,
-              private locationService: LocationService) {
+              private locationService: LocationService,
+              private languageService: LanguageService) {
 
     this.loggedInSubscription = this.userService.loggedIn$.subscribe(loggedIn => {
       if (!loggedIn) {
@@ -158,13 +161,17 @@ export class UserDetailsComponent implements OnDestroy  {
       ...Array.from(this.requestsInOrganizations.keys())
     ]);
 
-    return Array.from(organizationIds.values()).map(organizationId => {
+    const result = Array.from(organizationIds.values()).map(organizationId => {
       return {
         organization: this.organizationsById.get(organizationId),
         roles: Array.from(rolesInOrganizations.get(organizationId) || []),
         requests: Array.from(this.requestsInOrganizations.get(organizationId) || [])
       }
     });
+
+    result.sort(comparingLocalizable<UserOrganizationRoles>(this.languageService, org => org.organization ? org.organization.label : {}));
+
+    return result;
   }
 
   get organizationsForRequest() {
@@ -174,6 +181,7 @@ export class UserDetailsComponent implements OnDestroy  {
     }
 
     const allOrganizations = Array.from(this.organizationsById.values());
+    allOrganizations.sort(comparingLocalizable<OrganizationNode>(this.languageService, org => org.label));
 
     const hasExistingRoleOrRequest = (org: OrganizationNode) => {
 
