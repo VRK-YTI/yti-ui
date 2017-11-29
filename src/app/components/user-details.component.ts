@@ -73,7 +73,7 @@ interface UserOrganizationRoles {
       </div>
 
       <div class="row">
-      
+
         <div class="col-md-4">
 
           <div class="form-group">
@@ -99,7 +99,7 @@ interface UserOrganizationRoles {
                   *ngIf="selectedOrganization"
                   (click)="sendRequest()" translate>Send</button>
         </div>
-      </div>      
+      </div>
     </div>
   `
 })
@@ -109,7 +109,7 @@ export class UserDetailsComponent implements OnDestroy  {
 
   organizationsById: Map<string, OrganizationNode>;
   selectedOrganization: OrganizationNode|null = null;
-  requestsInOrganizations: Map<string, Role[]>;
+  requestsInOrganizations = new Map<string, Set<Role>>();
 
   constructor(private router: Router,
               private userService: UserService,
@@ -125,12 +125,12 @@ export class UserDetailsComponent implements OnDestroy  {
     locationService.atUserDetails();
 
     termedService.getOrganizationList().subscribe(organizationNodes => {
-      this.organizationsById = index(organizationNodes, org => org.id);  
+      this.organizationsById = index(organizationNodes, org => org.id);
     });
 
-    this.getUserRequests();
+    this.refreshRequests();
   }
-  
+
   ngOnDestroy() {
     this.loggedInSubscription.unsubscribe();
   }
@@ -138,7 +138,7 @@ export class UserDetailsComponent implements OnDestroy  {
   isLoggedIn() {
     return this.userService.isLoggedIn();
   }
-  
+
   get name() {
     return this.userService.user ? this.userService.user.name : null;
   }
@@ -147,24 +147,24 @@ export class UserDetailsComponent implements OnDestroy  {
     return this.userService.user ? this.userService.user.email : null;
   }
 
-  get userOrganizations(): UserOrganizationRoles[] {
-    
+  get userOrganizations(): UserOrganizationRoles[]  {
+
     if (!this.organizationsById || !this.userService.user || !this.requestsInOrganizations) {
       return [];
     }
-  
+
     const rolesInOrganizations = this.userService.user!.rolesInOrganizations;
-  
+
     const organizationIds = new Set<string>([
       ...Array.from(rolesInOrganizations.keys()),
       ...Array.from(this.requestsInOrganizations.keys())
     ]);
-  
+
     return Array.from(organizationIds.values()).map(organizationId => {
       return {
         organization: this.organizationsById.get(organizationId),
         roles: Array.from(rolesInOrganizations.get(organizationId) || []),
-        requests: this.requestsInOrganizations.get(organizationId) || []
+        requests: Array.from(this.requestsInOrganizations.get(organizationId) || [])
       }
     });
   }
@@ -175,38 +175,42 @@ export class UserDetailsComponent implements OnDestroy  {
       return [];
     }
 
-    const allOrganizations = Array.from(this.organizationsById.entries()).map(([organizationId, organizationById]) => {
-      return organizationById;
-    });
+    const allOrganizations = Array.from(this.organizationsById.values());
 
-    const userOrganizations = this.userOrganizations.filter(userOrganization =>
-      userOrganization.roles.includes('TERMINOLOGY_EDITOR') || userOrganization.requests.includes('TERMINOLOGY_EDITOR'))
-        .map(userOrganization =>
-          userOrganization.organization ? userOrganization.organization : undefined);
+    const hasExistingRoleOrRequest = (org: OrganizationNode) => {
 
-    return allOrganizations.filter(organization => !userOrganizations.includes(organization));
+      const requestsInOrg = this.requestsInOrganizations.get(org.id) || new Set<Role>();
+      const rolesInOrg = this.userService.user!.getRoles(org.id);
+
+      return rolesInOrg.has('TERMINOLOGY_EDITOR')
+        || rolesInOrg.has('ADMIN')
+        || requestsInOrg.has('TERMINOLOGY_EDITOR');
+    };
+
+    return allOrganizations.filter(organization => !hasExistingRoleOrRequest(organization));
   }
 
   sendRequest() {
 
-    this.termedService.sendRequest(this.selectedOrganization!.id)
-      .subscribe({
-        next: () => {
-          this.selectedOrganization = null;
-          this.getUserRequests();
-        }
-      });
+    if (!this.selectedOrganization) {
+      throw new Error('No organization selected for request');
+    }
+
+    this.termedService.sendRequest(this.selectedOrganization.id)
+      .subscribe(() => this.refreshRequests());
   }
 
-  getUserRequests() {
-    
+  refreshRequests() {
+
+    this.selectedOrganization = null;
+
     this.termedService.getUserRequests().subscribe(userRequests => {
 
-      this.requestsInOrganizations = new Map<string, Role[]>();
-      
+      this.requestsInOrganizations.clear();
+
       for (const userRequest of userRequests) {
-        this.requestsInOrganizations.set(userRequest.organizationId, userRequest.role);
-      }        
+        this.requestsInOrganizations.set(userRequest.organizationId, new Set<Role>(userRequest.role));
+      }
     });
-  }  
+  }
 }
