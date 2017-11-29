@@ -10,6 +10,7 @@ import * as moment from 'moment';
 import { environment } from '../../environments/environment';
 import { Graph } from 'app/entities/graph';
 import { PrefixAndNamespace } from 'app/entities/prefix-and-namespace';
+import { UserRequest } from 'app/entities/user-request';
 
 @Injectable()
 export class TermedService {
@@ -174,6 +175,19 @@ export class TermedService {
           namespace: graph.uri
         };
       })
+  }
+
+  getUserRequests(): Observable<UserRequest[]> {
+    return this.http.get(`${environment.api_url}/requests`)
+      .map(response => response.json() as UserRequest[]);
+  }
+
+  sendRequest(organizationId: string): Observable<Response> {
+
+    const params = new URLSearchParams();
+    params.append('organizationId', organizationId);
+
+    return this.http.post(`${environment.api_url}/request`, null, { params } );
   }
 
   private removeNodeIdentifiers(nodeIds: Identifier<any>[], sync: boolean, disconnect: boolean) {

@@ -7,6 +7,12 @@ import { OrganizationNode } from 'app/entities/node';
 import { index } from 'app/utils/array';
 import { LocationService } from 'app/services/location.service';
 
+interface UserOrganizationRoles {
+  organization: OrganizationNode|undefined;
+  roles: Role[];
+  requests: Role[];
+}
+
 @Component({
   selector: 'app-user-details',
   styleUrls: ['./user-details.component.scss'],
@@ -54,6 +60,9 @@ import { LocationService } from 'app/services/location.service';
                   <div *ngIf="!userOrganization.organization" translate>Unknown organization</div>
                   <ul>
                     <li *ngFor="let role of userOrganization.roles">{{role | translate}}</li>
+                    <li *ngFor="let requestRole of userOrganization.requests">
+                      {{requestRole | translate}} (<span translate>Waiting for approval</span>)
+                    </li>
                   </ul>
                 </div>
               </div>
@@ -69,11 +78,11 @@ import { LocationService } from 'app/services/location.service';
 
           <div class="form-group">
             <dl>
-              <dt><label for="organizationsForRequest" translate>Send access request</label></dt>
+              <dt><label for="organizations" translate>Send access request</label></dt>
               <dd>
-                <select id="organizationsForRequest" class="form-control" [(ngModel)]="organization">
+                <select id="organizations" class="form-control" [(ngModel)]="selectedOrganization">
                   <option [ngValue]="null" translate>Choose organization</option>
-                  <option *ngFor="let organizationById of organizations"
+                  <option *ngFor="let organizationById of organizationsForRequest"
                           [ngValue]="organizationById">
                     {{organizationById.label | translateValue}}
                   </option>
@@ -87,12 +96,10 @@ import { LocationService } from 'app/services/location.service';
         <div class="col-md-8">
           <button type="button"
                   class="btn btn-default send-button"
-                  *ngIf="organization"
+                  *ngIf="selectedOrganization"
                   (click)="sendRequest()" translate>Send</button>
         </div>
-  
-      </div>
-      
+      </div>      
     </div>
   `
 })
@@ -101,7 +108,8 @@ export class UserDetailsComponent implements OnDestroy  {
   private loggedInSubscription: Subscription;
 
   organizationsById: Map<string, OrganizationNode>;
-  organization: OrganizationNode|null = null;
+  selectedOrganization: OrganizationNode|null = null;
+  requestsInOrganizations: Map<string, Role[]>;
 
   constructor(private router: Router,
               private userService: UserService,
@@ -119,7 +127,8 @@ export class UserDetailsComponent implements OnDestroy  {
     termedService.getOrganizationList().subscribe(organizationNodes => {
       this.organizationsById = index(organizationNodes, org => org.id);  
     });
-        
+
+    this.getUserRequests();
   }
   
   ngOnDestroy() {
@@ -138,35 +147,66 @@ export class UserDetailsComponent implements OnDestroy  {
     return this.userService.user ? this.userService.user.email : null;
   }
 
-  get userOrganizations(): { organization: OrganizationNode|undefined, roles: Role[] }[] {
-  
-    if (!this.organizationsById || !this.userService.user) {
+  get userOrganizations(): UserOrganizationRoles[] {
+    
+    if (!this.organizationsById || !this.userService.user || !this.requestsInOrganizations) {
       return [];
     }
-    
-    return Array.from(this.userService.user!.rolesInOrganizations.entries()).map(([organizationId, roles]) => {
+  
+    const rolesInOrganizations = this.userService.user!.rolesInOrganizations;
+  
+    const organizationIds = new Set<string>([
+      ...Array.from(rolesInOrganizations.keys()),
+      ...Array.from(this.requestsInOrganizations.keys())
+    ]);
+  
+    return Array.from(organizationIds.values()).map(organizationId => {
       return {
         organization: this.organizationsById.get(organizationId),
-        roles: Array.from(roles)
+        roles: Array.from(rolesInOrganizations.get(organizationId) || []),
+        requests: this.requestsInOrganizations.get(organizationId) || []
       }
     });
   }
 
-  get organizations() {
-    
-        if (!this.organizationsById) {
-          return [];
+  get organizationsForRequest() {
+
+    if (!this.organizationsById) {
+      return [];
+    }
+
+    const allOrganizations = Array.from(this.organizationsById.entries()).map(([organizationId, organizationById]) => {
+      return organizationById;
+    });
+
+    const userOrganizations = this.userOrganizations.filter(userOrganization =>
+      userOrganization.roles.includes('TERMINOLOGY_EDITOR') || userOrganization.requests.includes('TERMINOLOGY_EDITOR'))
+        .map(userOrganization =>
+          userOrganization.organization ? userOrganization.organization : undefined);
+
+    return allOrganizations.filter(organization => !userOrganizations.includes(organization));
+  }
+
+  sendRequest() {
+
+    this.termedService.sendRequest(this.selectedOrganization!.id)
+      .subscribe({
+        next: () => {
+          this.selectedOrganization = null;
+          this.getUserRequests();
         }
+      });
+  }
+
+  getUserRequests() {
     
-        return Array.from(this.organizationsById.entries()).map(([organizationId, organizationById]) => {
-          return organizationById;
-        });
-      }
-    
-      sendRequest() {
-        
-        if (this.organization) {
-          console.log(this.organization.label.fi);
-        }
-      }
+    this.termedService.getUserRequests().subscribe(userRequests => {
+
+      this.requestsInOrganizations = new Map<string, Role[]>();
+      
+      for (const userRequest of userRequests) {
+        this.requestsInOrganizations.set(userRequest.organizationId, userRequest.role);
+      }        
+    });
+  }  
 }

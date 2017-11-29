@@ -178,15 +178,6 @@ msgstr ""
 msgid "Logout"
 msgstr ""
 
-msgid "Send access request"
-msgstr ""
-
-msgid "Choose organization"
-msgstr ""
-
-msgid "Send"
-msgstr ""
-
 msgid "Name"
 msgstr ""
 
@@ -197,6 +188,18 @@ msgid "Organizations and roles"
 msgstr ""
 
 msgid "Unknown organization"
+msgstr ""
+
+msgid "Waiting for approval"
+msgstr ""
+
+msgid "Send access request"
+msgstr ""
+
+msgid "Choose organization"
+msgstr ""
+
+msgid "Send"
 msgstr ""
 
 msgid "Visualization"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-11-23 17:47+0200\n"
+"PO-Revision-Date: 2017-11-28 19:43+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -193,15 +193,6 @@ msgstr ""
 msgid "Logout"
 msgstr ""
 
-msgid "Send access request"
-msgstr ""
-
-msgid "Choose organization"
-msgstr ""
-
-msgid "Send"
-msgstr ""
-
 msgid "Name"
 msgstr ""
 
@@ -212,6 +203,18 @@ msgid "Organizations and roles"
 msgstr ""
 
 msgid "Unknown organization"
+msgstr ""
+
+msgid "Waiting for approval"
+msgstr ""
+
+msgid "Send access request"
+msgstr ""
+
+msgid "Choose organization"
+msgstr ""
+
+msgid "Send"
 msgstr ""
 
 msgid "Visualization"

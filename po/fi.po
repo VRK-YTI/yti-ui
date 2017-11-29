@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-11-23 17:02+0200\n"
+"PO-Revision-Date: 2017-11-28 18:01+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -198,15 +198,6 @@ msgstr "Käyttäjätiedot"
 msgid "Logout"
 msgstr "Kirjaudu ulos"
 
-msgid "Send access request"
-msgstr "Lähetä käyttöoikeuspyyntö"
-
-msgid "Choose organization"
-msgstr "Valitse organisaatio"
-
-msgid "Send"
-msgstr "Lähetä"
-
 msgid "Name"
 msgstr "Nimi"
 
@@ -218,6 +209,18 @@ msgstr "Organisaatiot ja roolit"
 
 msgid "Unknown organization"
 msgstr "Tuntematon organisaatio"
+
+msgid "Waiting for approval"
+msgstr "Odottaa hyväksymistä"
+
+msgid "Send access request"
+msgstr "Lähetä käyttöoikeuspyyntö"
+
+msgid "Choose organization"
+msgstr "Valitse organisaatio"
+
+msgid "Send"
+msgstr "Lähetä"
 
 msgid "Visualization"
 msgstr "Visualisointi"
