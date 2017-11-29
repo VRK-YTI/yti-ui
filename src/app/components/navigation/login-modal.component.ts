@@ -9,7 +9,7 @@ export class LoginModalService {
   constructor(private modalService: NgbModal) {
   }
 
-  open(): Promise<any> {
+  open() {
     return this.modalService.open(LoginModalComponent, { size: 'sm' }).result
   }
 }
