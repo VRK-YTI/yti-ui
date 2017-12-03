@@ -6,6 +6,7 @@
   "scripts": {
     "ng": "node -- node_modules/@angular/cli/bin/ng",
     "start": "node -- node_modules/@angular/cli/bin/ng serve --proxy-config proxy.conf.json",
+    "start-dev": "node -- node_modules/@angular/cli/bin/ng serve --proxy-config proxy-dev.conf.json",
     "build": "node -- node_modules/@angular/cli/bin/ng build",
     "lint": "node -- node_modules/tslint/bin/tslint \"src/**/*.ts\"",
     "test": "node -- node_modules/@angular/cli/bin/ng test",
