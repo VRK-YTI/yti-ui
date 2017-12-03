@@ -25,7 +25,7 @@ import { VocabularyComponent } from '../vocabulary/vocabulary.component';
 
           <div class="panel-left" appFloat>
             <div>
-              <ngb-tabset>
+              <ngb-tabset [justify]="'justified'">
                 <ngb-tab>
                   <ng-template ngbTabTitle>
                     <p>{{'Alphabetic' | translate}}</p>
