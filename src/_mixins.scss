@@ -19,6 +19,7 @@
     overflow-y: auto;
     height: calc(100vh - #{$buttonless-height});
     padding: 0;
+    margin-bottom: 0;
 
     &.has-button {
       height: calc(100vh - #{$buttonless-height + $button-height});

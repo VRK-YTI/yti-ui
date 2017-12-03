@@ -1,8 +1,8 @@
 @import '../../../theme/variables';
 @import '../../../mixins';
 
-$button-height: 56px;
-$buttonless-height: 67px;
+$button-height: 40px;
+$buttonless-height: 78px;
 
 .selectable-actions {
   @include selectable-actions();
@@ -26,6 +26,7 @@ $buttonless-height: 67px;
   ul {
 
     padding: 0;
+    margin-bottom: 0;
 
     li {
       padding: 2px 5px 2px 15px;
