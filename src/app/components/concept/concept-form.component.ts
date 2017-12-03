@@ -27,7 +27,6 @@ import { requireDefined } from '../../utils/object';
         <app-reference *ngSwitchCase="'reference'"
                        class="col-md-12"
                        [class.col-xl-6]="multiColumn && !field.value.term"
-                       [multiColumnTerms]="multiColumn"
                        [unsaved]="!concept.persistent"
                        (conceptRemove)="onConceptRemove($event)"
                        [reference]="field.value"
@@ -63,11 +62,11 @@ export class ConceptFormComponent {
   }
 
   get fields() {
-    
+
     const hasContent = (field: FormField) =>
       this.filterLanguage ? field.hasContentForLanguage(this.filterLanguage)
                           : !field.valueEmpty;
-  
+
     return this.form.fields.filter(f => this.showEmpty || hasContent(f.value));
   }
 

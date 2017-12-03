@@ -1,20 +1,20 @@
-@import '../../../variables';
+@import '../../../theme/variables';
 
 $left-width: 400px;
+
+.top {
+  margin-bottom: 20px;
+}
+
+.bottom {
+  padding-top: 20px;
+  border-top: 1px solid $gray;
+}
 
 .panel-left {
   width: $left-width;
   float: left;
-}
-
-[appFloat] {
-  padding-top: 10px;
-}
-
-.visualization-container {
-  .floating {
-    padding-right: 15px;
-  }
+  border: 1px solid $gray;
 }
 
 .panel-right {
@@ -28,6 +28,10 @@ $left-width: 400px;
 
   div.visualization-container {
     float: right;
+
+    .floating {
+      padding-right: 46px;
+    }
 
     app-divider {
       float: left;
@@ -47,41 +51,21 @@ $left-width: 400px;
 
 :host /deep/ {
 
-  .nav-tabs {
+  ul.nav-tabs {
 
-    border-bottom: none;
-    margin-bottom: 5px;
+    padding: 0;
+    width: 100%;
+    margin: 10px 0;
 
-    li.nav-item {
-
-      width: 33%;
+    .nav-item {
 
       > a {
-        padding: 0;
-        margin: 0 0 0 2px;
-        background-color: $lighter;
-        color: #444;
-        border-color: white;
+        font-size: small;
+        padding: 5px 0;
 
-        &.active {
-          border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) #fff;
-          background-color: white;
-          color: #6f6f6f;
+        > p {
+          margin-bottom: 10px;
         }
-      }
-
-      i {
-        width: 100%;
-        padding-top: 5px;
-        text-align: center;
-        font-size: x-large;
-      }
-
-      p {
-        width: 100%;
-        text-align: center;
-        font-size: x-small;
-        margin-bottom: 5px;
       }
     }
   }

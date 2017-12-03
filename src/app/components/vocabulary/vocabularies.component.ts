@@ -1,72 +1,103 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { VocabularyNode } from '../../entities/node';
-import { Localizable } from '../../entities/localization';
-import { groupBy, allMatching, flatten } from '../../utils/array';
+import { GroupNode, OrganizationNode, VocabularyNode } from '../../entities/node';
 import { AuthorizationManager } from '../../services/authorization-manager.sevice';
+import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { TermedService } from '../../services/termed.service';
+import { anyMatching } from '../../utils/array';
+import { matches } from '../../utils/string';
+import { comparingLocalizable } from '../../utils/comparator';
+import { LanguageService } from '../../services/language.service';
+import { VocabularyNodeType } from '../../entities/node-api';
+import { FilterOptions } from '../common/filter-dropdown.component';
+import { TranslateService } from 'ng2-translate';
 
 @Component({
   selector: 'app-vocabularies',
   styleUrls: ['./vocabularies.component.scss'],
   template: `
-    <div class="row add-vocabulary">
-      <div class="col-md-12">
-        <button class="button btn-default pull-right" *ngIf="canAddVocabulary()" (click)="addVocabulary()">
-          <i class="fa fa-plus"></i>
-          <span translate>Add vocabulary</span>
-        </button>
+    <div *ngIf="!loading">
+
+      <div class="row">
+        <div class="col-md-3 mb-3">
+          <div class="input-group input-group-lg input-group-search">
+            <input class="form-control"
+                   type="text"
+                   [(ngModel)]="search"
+                   placeholder="{{'Search' | translate}}"/>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <div class="row vocabularies" *ngIf="vocabularies">
+      <div class="row">
 
-      <div class="col-md-4">
-        <div class="filters">
+        <div class="col-md-3">
+          <div class="content-box">
+            <h4 class="strong" translate>Classification</h4>
 
-          <div *ngFor="let filter of vocabularyFilters; let hideSeparator = last">
+            <div class="classification"
+                 *ngFor="let classification of classifications"
+                 [class.active]="isClassificationSelected(classification.node)"
+                 (click)="toggleClassification(classification.node)">
 
-            <div class="filter">
-              <span class="title">{{filter.title | translate}}</span>
-              <div class="item" [class.selected]="item.selected" (click)="item.toggle()"
-                   *ngFor="let item of filter.items">
-                <span class="name">{{item.name | translateValue:false}}</span>
-                <span class="count">({{item.count}})</span>
+              <span class="name">{{classification.node.label | translateValue:false}}</span>
+              <span class="count">({{classification.count}})</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-9">
+
+          <div class="row mb-4">
+            <div class="col-md-12">
+
+              <app-organization-filter-dropdown [filterSubject]="organization$" 
+                                                [organizations]="organizations$"></app-organization-filter-dropdown>
+              
+              <app-filter-dropdown class="pull-left ml-2"
+                                   [options]="vocabularyTypes"
+                                   [filterSubject]="vocabularyType$"></app-filter-dropdown>
+
+
+              <button class="btn btn-action pull-right" *ngIf="canAddVocabulary()" (click)="addVocabulary()">
+                <i class="fa fa-plus"></i>
+                <span translate>Add vocabulary</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="content-box">
+
+            <div class="row mb-4">
+              <div class="col-md-12">
+                <div>
+                  <strong>{{filteredVocabularies.length}}</strong>
+                  <span *ngIf="filteredVocabularies.length === 1" translate>vocabulary</span>
+                  <span *ngIf="filteredVocabularies.length !== 1" translate>vocabularies</span>
+                </div>
               </div>
             </div>
 
-            <div [hidden]="hideSeparator" class="separator"></div>
-          </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="vocabulary" *ngFor="let vocabulary of filteredVocabularies" (click)="navigate(vocabulary)">
 
-        </div>
-      </div>
+                  <span class="name">{{vocabulary.label | translateValue:false}}</span>
 
-      <div class="col-md-8">
-        <div class="row">
-          <div class="col-md-12">
-            <div class="amount">
-              <strong>{{filteredVocabularies.length}}</strong>
-              <span *ngIf="filteredVocabularies.length === 1" translate>vocabulary</span>
-              <span *ngIf="filteredVocabularies.length !== 1" translate>vocabularies</span>
+                  <span class="organization" *ngFor="let publisher of vocabulary.publishers">
+                    {{publisher.label | translateValue:false}}
+                  </span>
+
+                  <span class="group" *ngFor="let group of vocabulary.groups">
+                    {{group.label | translateValue:false}}
+                  </span>
+
+                  <span class="type">{{vocabulary.typeLabel | translateValue:false}}</span>
+
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-
-        <div class="filter-result" *ngFor="let vocabulary of filteredVocabularies" (click)="navigate(vocabulary)">
-          <div class="content">
-            <span class="title">{{vocabulary.label | translateValue:false}}</span>
-            <p>{{vocabulary.description | translateValue:false}}</p>
-          </div>
-          <div class="origin">
-
-            <span class="publisher" *ngFor="let publisher of vocabulary.publishers">
-              {{publisher.label | translateValue:false}}
-            </span>
-            
-            <span class="group" *ngFor="let group of vocabulary.groups">
-              {{group.label | translateValue:false}}
-            </span>
-
-            <span class="type">{{vocabulary.typeLabel | translateValue:false}}</span>
 
           </div>
         </div>
@@ -74,29 +105,86 @@ import { AuthorizationManager } from '../../services/authorization-manager.sevic
     </div>
   `
 })
-export class VocabulariesComponent implements OnChanges {
+export class VocabulariesComponent {
 
-  @Input() vocabularies: VocabularyNode[];
-  filteredVocabularies: VocabularyNode[];
-  vocabularyFilters: Filter[];
+  vocabularies: VocabularyNode[] = [];
+
+  search$ = new BehaviorSubject('');
+  classification$ = new BehaviorSubject<GroupNode|null>(null);
+  organization$ = new BehaviorSubject<OrganizationNode|null>(null);
+  vocabularyType$ = new BehaviorSubject<VocabularyNodeType|null>(null);
+
+  classifications: { node: GroupNode, count: number }[];
+  organizations$: Observable<OrganizationNode[]>;
+  vocabularyTypes: FilterOptions<VocabularyNodeType>;
+
+  filteredVocabularies: VocabularyNode[] = [];
 
   constructor(private authorizationManager: AuthorizationManager,
+              languageService: LanguageService,
+              translateService: TranslateService,
+              termedService: TermedService,
               private router: Router) {
+
+    const vocabularies$ = termedService.getVocabularyList();
+
+    vocabularies$.subscribe(vocabularies => this.vocabularies = vocabularies);
+
+    this.vocabularyTypes = [null, 'Vocabulary', 'TerminologicalVocabulary'].map(type => {
+      return {
+        value: type as VocabularyNodeType,
+        name: () => translateService.instant(type ? type + 'Type' : 'All vocabulary types')
+      }
+    });
+
+    this.organizations$ = termedService.getOrganizationList();
+
+    Observable.zip(termedService.getGroupList(), vocabularies$)
+      .subscribe(([groups, vocabularies]) => {
+
+        const vocabularyCount = (group: GroupNode) => {
+          return vocabularies.filter(voc => anyMatching(voc.groups, vocGroup => vocGroup.id === group.id)).length;
+        };
+
+        this.classifications = groups.map(group => ({ node: group, count: vocabularyCount(group) }));
+        this.classifications.sort(comparingLocalizable<{ node: GroupNode }>(languageService, c => c.node.label));
+      });
+
+    Observable.combineLatest(vocabularies$, this.search$, this.classification$, this.organization$, this.vocabularyType$)
+      .subscribe(([vocabularies, search, classification, organization, vocabularyType]) => {
+
+        this.filteredVocabularies = vocabularies.filter(vocabulary => {
+
+          const searchMatches = !search || anyMatching(vocabulary.prefLabel, attr => matches(attr.value, search));
+          const classificationMatches = !classification || anyMatching(vocabulary.groups, group => group.id === classification.id);
+          const organizationMatches = !organization || anyMatching(vocabulary.publishers, publisher => publisher.id === organization.id);
+          const vocabularyTypeMatches = !vocabularyType || vocabulary.type === vocabularyType;
+
+          return searchMatches && classificationMatches && organizationMatches && vocabularyTypeMatches;
+        });
+
+        this.filteredVocabularies.sort(comparingLocalizable<VocabularyNode>(languageService, voc => voc.label));
+      });
   }
 
-  ngOnChanges() {
+  get loading() {
+    return !this.vocabularies || !this.classifications || !this.organizations$;
+  }
 
-    const recalculateResults = () => {
-      this.filteredVocabularies = this.vocabularies.filter(node => allMatching(this.vocabularyFilters, filter => filter.matches(node)));
-    };
+  get search() {
+    return this.search$.getValue();
+  }
 
-    this.vocabularyFilters = [
-      new Filter('Vocabulary type', this.vocabularies, (node) => ([{ id: node.meta.type, value: node.meta.label}]), recalculateResults),
-      new Filter('Group', this.vocabularies, (node) => node.groups.map(g => ({ id: g.id, value: g.label })), recalculateResults),
-      new Filter('Organization', this.vocabularies, (node) => node.publishers.map(p => ({ id: p.id, value: p.label})), recalculateResults)
-    ];
+  set search(value: string) {
+    this.search$.next(value);
+  }
 
-    recalculateResults();
+  isClassificationSelected(classification: GroupNode) {
+    return this.classification$.getValue() === classification;
+  }
+
+  toggleClassification(classification: GroupNode) {
+    this.classification$.next(this.isClassificationSelected(classification) ? null : classification);
   }
 
   navigate(vocabulary: VocabularyNode) {
@@ -109,67 +197,5 @@ export class VocabulariesComponent implements OnChanges {
 
   addVocabulary() {
     this.router.navigate(['/newVocabulary']);
-  }
-}
-
-type Extractor = (node: VocabularyNode) => { id: any, value: Localizable }[];
-
-class Filter {
-
-  items: Item[];
-  selectedIds = new Set<any>();
-
-  constructor(public title: string,
-              vocabularyNodes: VocabularyNode[],
-              private extractor: Extractor,
-              onChange: () => void) {
-
-    this.items = Array.from(groupBy(flatten(vocabularyNodes.map(n => extractor(n))), n => n.id).entries())
-      .map(([id, values]) => new Item(this, id, values[0].value, values.length, onChange));
-  }
-
-  hasAnyId(values: any[]) {
-    for (const value of values) {
-      if (this.selectedIds.has(value)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  matches(node: VocabularyNode) {
-    return this.selectedIds.size === 0 || this.hasAnyId(this.extractor(node).map(e => e.id));
-  }
-}
-
-class Item {
-
-  constructor(private filter: Filter,
-              private id: any,
-              public name: Localizable,
-              public count: number,
-              private onChange: () => void) {
-  }
-
-  get selected() {
-    return this.filter.selectedIds.has(this.id);
-  }
-
-  deselect() {
-    this.filter.selectedIds.delete(this.id);
-    this.onChange();
-  }
-
-  select() {
-    this.filter.selectedIds.add(this.id);
-    this.onChange();
-  }
-
-  toggle() {
-    if (this.selected) {
-      this.deselect();
-    } else {
-      this.select();
-    }
   }
 }

@@ -2,6 +2,8 @@ import { Component, Injectable, Input, OnInit } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConceptNode } from '../../entities/node';
 import { FormNode, FormReferenceLiteral } from '../../services/form-state';
+import { Options } from '../form/dropdown-component';
+import { LanguageService } from 'app/services/language.service';
 
 @Injectable()
 export class SelectConceptReferenceModalService {
@@ -32,20 +34,18 @@ export class SelectConceptReferenceModalService {
         <div class="col-md-12">
           
           <p translate>Selected concept is not yet formally referenced. Choose the reference type.</p>
-
+          
           <div class="form-group">
             <label for="status" translate>Reference type</label>
-            <select id="status " class="form-control" [(ngModel)]="selection">
-              <option *ngFor="let reference of conceptReferences" [ngValue]="reference">{{reference.label | translateValue:false}}</option>
-            </select>
+            <app-dropdown [(ngModel)]="selection" [options]="referenceOptions"></app-dropdown>
           </div>
           
         </div>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary cancel" (click)="cancel()" translate>Cancel</button>
-      <button type="button" class="btn btn-default confirm" (click)="confirm()" translate>Select reference</button>
+      <button type="button" class="btn btn-link cancel" (click)="cancel()" translate>Cancel</button>
+      <button type="button" class="btn btn-action confirm" (click)="confirm()" translate>Select reference</button>
     </div>
   `
 })
@@ -54,21 +54,30 @@ export class SelectConceptReferenceModalComponent implements OnInit {
   @Input() formNode: FormNode;
 
   selection: FormReferenceLiteral<ConceptNode>;
-  conceptReferences: FormReferenceLiteral<ConceptNode>[];
+  referenceOptions: Options<FormReferenceLiteral<ConceptNode>>;
 
-  constructor(public modal: NgbActiveModal) {
+  constructor(public modal: NgbActiveModal,
+              private languageService: LanguageService) {
   }
 
   ngOnInit(): void {
 
-    this.conceptReferences = this.formNode.references
+    this.referenceOptions = this.formNode.references
       .filter(ref => ref.value.targetType === 'Concept')
-      .map(ref => ref.value as FormReferenceLiteral<ConceptNode>);
+      .map(ref => {
+
+        const value = ref.value as FormReferenceLiteral<ConceptNode>;
+
+        return {
+          value: value,
+          name: () => this.languageService.translate(value.label, false)
+        }
+      });
 
     if (this.formNode.hasRelatedConcepts()) {
       this.selection = this.formNode.relatedConcepts;
     } else {
-      this.selection = this.conceptReferences[0];
+      this.selection = this.referenceOptions[0].value!;
     }
   }
 

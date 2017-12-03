@@ -10,10 +10,9 @@ import { MetaModelService } from '../../services/meta-model.service';
     
     <div class="clearfix" *ngIf="canAdd()">
       <div ngbDropdown class="add-button" placement="bottom-right">
-        <button class="btn btn-default" 
-                ngbDropdownToggle 
-                ngbTooltip="{{'Add' | translate}} {{reference.label | translateValue:false | lowercase}}">
-          <i class="fa fa-plus"></i>
+        <button class="btn btn-link" 
+                ngbDropdownToggle>
+          <span>{{'Add' | translate}} {{reference.label | translateValue:false | lowercase}}</span>
         </button>
         <div ngbDropdownMenu>
           <button class="dropdown-item" 
@@ -26,25 +25,30 @@ import { MetaModelService } from '../../services/meta-model.service';
     <ngb-accordion *ngIf="children.length > 0" [activeIds]="openTerms">
       <ngb-panel [id]="index" *ngFor="let node of visibleChildren; let index = index">
         <ng-template ngbPanelTitle>
-          <div class="language">{{node.language | uppercase}}</div>
-          <div class="localization">
-            {{node.formNode.prefLabelProperty[0].value}} 
-            <app-accordion-chevron class="pull-right"></app-accordion-chevron>
+          <div class="localized">
+            <div class="language">{{node.language | uppercase}}</div>
+            <div class="localization">
+              {{node.formNode.prefLabelProperty[0].value}}
+              <app-accordion-chevron class="pull-right"></app-accordion-chevron>
+            </div>
           </div>
         </ng-template>
         <ng-template ngbPanelContent>
-          <div class="row" *ngIf="canRemove()">
+          <div class="row">
             <div class="col-md-12">
-              <div class="remove-button">
-                <button class="btn btn-default" 
-                        ngbTooltip="{{'Remove term' | translate}}" 
+              
+              <app-status [status]="node.formNode.status"></app-status>
+              
+              <div *ngIf="canRemove()" class="remove-button">
+                <button class="btn btn-link"
                         (click)="removeTerm(node)">
                   <i class="fa fa-trash"></i>
+                  <span translate>Remove term</span>
                 </button>
               </div>
             </div>
           </div>
-          <app-term [term]="node.formNode" [multiColumn]="multiColumn" [filterLanguage]="filterLanguage"></app-term>
+          <app-term [term]="node.formNode" [filterLanguage]="filterLanguage"></app-term>
         </ng-template>
       </ngb-panel>
     </ngb-accordion>
@@ -56,7 +60,6 @@ export class TermsComponent implements OnChanges {
 
   @Input() reference: FormReferenceTerm;
   @Input() unsaved: boolean;
-  @Input() multiColumn = false;
   @Input() filterLanguage: string;
 
   openTerms: number[] = [];
@@ -81,7 +84,6 @@ export class TermsComponent implements OnChanges {
       return this.languages.filter(lang =>
         this.isLanguageVisible(lang) && (allowMultiple || isNotAddedYet(lang)));
   }
-
 
   canAdd() {
     return this.editing && this.addableLanguages.length > 0;

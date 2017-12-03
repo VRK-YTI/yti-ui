@@ -14,7 +14,7 @@ export class SearchOrganizationModalService {
   }
 
   open(restrictOrganizationIds: string[], allowOnlyOrganizationIds: string[]|null): Promise<OrganizationNode> {
-    const modalRef = this.modalService.open(SearchOrganizationModalComponent, { size: 'lg' });
+    const modalRef = this.modalService.open(SearchOrganizationModalComponent, { size: 'sm' });
     const instance = modalRef.componentInstance as SearchOrganizationModalComponent;
     instance.restrictOrganizationIds = restrictOrganizationIds;
     instance.allowOnlyOrganizationIds = allowOnlyOrganizationIds;
@@ -33,30 +33,35 @@ export class SearchOrganizationModalService {
       </h4>
     </div>
     <div class="modal-body full-height">
-      <div class="row">
-        <div class="col-md-6">
-
+      <div class="row mb-2">
+        <div class="col-12">
           <div class="input-group input-group-lg input-group-search">
-            <input #searchInput type="text" class="form-control" placeholder="{{'Search organization...' | translate}}"
+            <input #searchInput type="text" class="form-control" placeholder="{{'Search organization' | translate}}"
                    [(ngModel)]="search"/>
           </div>
-          
         </div>
-        <div class="col-md-6">
-          <div class="search-results">
-            <div class="search-result"
-                 *ngFor="let organization of searchResults$ | async" 
-                 (click)="select(organization)">
-              <h6 [innerHTML]="organization.label | translateValue"></h6>
+      </div>
+      <div class="row full-height">
+        <div class="col-12">
+          <div class="content-box">
+            <div class="search-results">
+              <div class="search-result"
+                   *ngFor="let organization of searchResults$ | async; let last = last"
+                   (click)="select(organization)">
+                <div class="content" [class.last]="last">
+                  <span class="title" [innerHTML]="organization.label | translateValue:false"></span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+
     <div class="modal-footer">
 
-      <button type="button" 
-              class="btn btn-secondary cancel" 
+      <button type="button"
+              class="btn btn-link cancel"
               (click)="cancel()" translate>Cancel</button>
     </div>
   `

@@ -1,0 +1,22 @@
+@import "../../../theme/variables";
+
+div {
+
+  display: inline-block;
+  text-align: center;
+
+  svg {
+    width: 30px;
+    height: 30px;
+  }
+
+  .menu-text {
+
+    color: $body-color;
+    text-transform: uppercase;
+    display: block;
+
+    font-size: xx-small;
+    line-height: 0;
+  }
+}

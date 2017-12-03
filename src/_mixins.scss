@@ -1,0 +1,49 @@
+@import "theme/variables";
+
+@mixin selectable-actions() {
+
+  text-align: center;
+  padding: 0 15px;
+
+  .input-group-search {
+    width: 100%;
+  }
+}
+
+@mixin selectable-items($button-height, $buttonless-height) {
+
+  padding: 5px 15px;
+
+  ul {
+
+    overflow-y: auto;
+    height: calc(100vh - #{$buttonless-height});
+    padding: 0;
+
+    &.has-button {
+      height: calc(100vh - #{$buttonless-height + $button-height});
+    }
+
+    li {
+      cursor: pointer;
+      padding: 5px 5px 5px 10px;
+      margin: 0;
+      font-size: 14px;
+      list-style: none;
+
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      border-left: $active-indicator-width solid $white;
+
+      &.selection {
+        font-weight: bold;
+      }
+
+      &:hover, &.selection {
+        border-left: $active-indicator-width solid $primary;
+      }
+    }
+  }
+}

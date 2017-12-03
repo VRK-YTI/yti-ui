@@ -4,17 +4,43 @@ import { Component } from '@angular/core';
   selector: 'app-footer',
   styleUrls: ['./footer.component.scss'],
   template: `
-    <div class="panel-footer">
 
-      <span>{{'Give feedback:' | translate}} <a href="mailto:iow@postit.csc.fi" translate>CSC - IT Center for Science Ltd</a></span>
-    
-      <span class="pull-right">
-        <span translate>Source code</span>:
-        <a href="https://github.com/CSC-IT-Center-for-Science/iow-termed-ui" target="_blank" translate>Frontend</a>,
-        <a href="https://github.com/THLfi/termed-api" translate target="_blank">Backend</a>,
-        <span translate>licensed under the</span>
-        <a href="https://github.com/THLfi/termed-api/blob/master/LICENSE.txt" target="_blank">European Union Public Licence</a>
-      </span>
+    <div class="container-fluid">
+
+      <div class="row">
+        <div class="col-12 pb-2">
+          <a href="/"><h4 class="title">Sanastot</h4></a>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-4">
+          <p translate>This service is developed and maintained by Population Registry Center of Finland</p>
+        </div>
+
+        <div class="col-md-4">
+
+          <ul class="link-list">
+            <li>
+              <a href="/tietoa-suomifi-verkkopalvelusta" translate>Information about the web service</a>
+            </li>
+            <li>
+              <a href="/tietosuojaseloste" translate>Description of file</a>
+            </li>
+            <li>
+              <a href="/ohjeet" translate>User support</a>
+            </li>
+            <li>
+              <a href="/ohjeet" translate>Feedback</a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="col-md-4">
+          <a href="/" translate>Sourcecode is licensed under EUPL-1.2 license.</a>
+        </div>
+      </div>
+
     </div>
   `
 })

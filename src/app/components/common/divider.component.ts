@@ -3,7 +3,7 @@ import { SessionService } from '../../services/session.service';
 
 const leftWidth = 400; // should match variable in concepts.component.scss
 const minSelectionWidth = 300;
-const minVisualizationWidth = 300;
+const minVisualizationWidth = 361;
 
 @Component({
   selector: 'app-divider',

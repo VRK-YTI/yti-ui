@@ -1,17 +1,26 @@
-@import '../../../variables';
+@import '../../../theme/variables';
 
-.panel-footer {
-  position: fixed;
-  bottom: 0;
-  height: $footer-height;
-  width: 100%;
-  font-size: small;
-  border: none;
-  padding: 15px;
-  background-color: $primary;
-  color: white;
-  border: 0;
-  a {
-    color: white;
-  }
+.container-fluid {
+  background-color: $white;
+}
+
+.title {
+  color: $brand-color;
+}
+
+a {
+  cursor: pointer;
+  font-size: smaller;
+}
+
+h4 {
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+ul {
+  list-style: none;
+}
+
+p {
+  font-size: 18px;
 }

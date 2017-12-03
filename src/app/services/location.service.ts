@@ -63,5 +63,12 @@ export class LocationService {
       localizationKey: 'User details',
       route: ['userDetails']
     }]);
-  } 
+  }
+
+  atNewVocabulary() {
+    this.changeLocation([{
+      localizationKey: 'New vocabulary',
+      route: ['newVocabulary']
+    }]);
+  }
 }

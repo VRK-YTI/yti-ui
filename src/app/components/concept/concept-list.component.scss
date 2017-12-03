@@ -1,82 +1,33 @@
-@import '../../../variables';
+@import '../../../theme/variables';
+@import '../../../mixins';
 
-$button-height: 49px;
-$buttonless-height: 149px;
+$button-height: 56px;
+$buttonless-height: 141px;
 
-.search-results {
-
-  ul {
-
-    overflow-y: auto;
-    height: calc(100vh - #{$buttonless-height});
-    padding: 0;
-
-    &.has-button {
-      height: calc(100vh - #{$buttonless-height + $button-height});
-    }
-
-    li {
-      cursor: pointer;
-      padding: 3px 5px;
-      margin: 0;
-      font-size: 14px;
-      list-style: none;
-
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-
-      &.selection {
-        background-color: #f5f5f5;
-      }
-    }
-
-    li:hover {
-      color: $primary;
-      background-color: $list-group-hover-bg;
-    }
-  }
-}
-
-.actions {
-
-  padding-left: 5px;
-  padding-right: 5px;
+.selectable-actions {
+  @include selectable-actions();
 
   .input-group-search {
-    width: calc(100% - 43px);
+    width: calc(100% - 28px);
     float: left;
   }
 
   .btn-filters {
+    color: $primary;
     float: left;
-    padding: 10px 10px 6px 10px;
+    padding: 10px 15px;
+    margin-left: 5px;
+    margin-right: -12px;
     cursor: pointer;
   }
 
-  .btn-add-new {
-    padding: 10px;
-    width: 100%;
-    text-align: center;
-    margin-bottom: 5px;
+  .filters {
+    width: 250px;
   }
 }
 
-.filters {
-
-  width: 250px;
-  display: inline-block;
-  background-color: white;
-
-  span.title {
-    display: inline-block;
-    font-size: 12px;
-    font-weight: 700;
-    color: #959595;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 10px;
-  }
+.selectable-concepts {
+  @include selectable-items($button-height, $buttonless-height);
 }
 
 :host /deep/ ngb-popover-window {

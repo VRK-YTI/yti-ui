@@ -1111,7 +1111,7 @@ function isRemoveRestOfLine(event: KeyboardEvent) {
 
     <div #editable 
          contenteditable="true" 
-         [class.form-control]="formControlClass"></div>
+         class="form-control"></div>
   `
 })
 export class MarkdownInputComponent implements OnInit, ControlValueAccessor {
@@ -1119,7 +1119,6 @@ export class MarkdownInputComponent implements OnInit, ControlValueAccessor {
   @Input() conceptSelector: (name: string) => Promise<ConceptNode|null>;
   @Input() relatedConcepts: ConceptNode[];
 
-  @Input() formControlClass = true;
   @ViewChild('editable') editableElement: ElementRef;
 
   private model: Model;

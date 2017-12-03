@@ -109,6 +109,10 @@ export class FormNode {
     return (property.value as FormPropertyLocalizable).value;
   }
 
+  get status(): string {
+    return this.node.getProperty('status').asString() || 'Unstable';
+  }
+
   hasConceptReference(conceptId: string) {
     return anyMatching(this.referencedConcepts, concept => concept.id === conceptId);
   }

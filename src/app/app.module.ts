@@ -82,6 +82,14 @@ import { PrefixInputComponent } from './components/concept/prefix-input.componen
 import { SearchGroupModalComponent, SearchGroupModalService } from './components/vocabulary/search-group-modal.component';
 import { AuthorizationManager } from './services/authorization-manager.sevice';
 import { UserDetailsComponent } from './components/user-details.component';
+import { MenuComponent } from './components/common/menu.component';
+import { StatusComponent } from './components/common/status.component';
+import { FilterDropdownComponent } from './components/common/filter-dropdown.component';
+import { OrganizationFilterDropdownComponent } from './components/common/organization-filter-dropdown.component';
+import { VocabularyFilterDropdownComponent } from './components/common/vocabulary-filter-dropdown.component';
+import { StatusFilterDropdownComponent } from './components/common/status-filter-dropdown.component';
+import { DropdownComponent } from './components/form/dropdown-component';
+import { PopoverCloseComponent } from './components/common/popover-close.component';
 
 const localizations: { [lang: string]: string} = {
   fi: require('json-loader!po-loader?format=mf!../../po/fi.po'),
@@ -112,7 +120,7 @@ const appRoutes: Routes = [
     { path: 'concept/:conceptId', component: ConceptComponent, canDeactivate: [ConfirmCancelEditGuard] },
     { path: 'collection/:collectionId', component: CollectionComponent, canDeactivate: [ConfirmCancelEditGuard] }
   ]},
-  {path: 'userDetails', component: UserDetailsComponent }
+  { path: 'userDetails', component: UserDetailsComponent }
 ];
 
 @NgModule({
@@ -185,7 +193,15 @@ const appRoutes: Routes = [
     FilterLanguageComponent,
     ImportVocabularyModalComponent,
     PrefixInputComponent,
-    UserDetailsComponent
+    UserDetailsComponent,
+    MenuComponent,
+    StatusComponent,
+    DropdownComponent,
+    FilterDropdownComponent,
+    OrganizationFilterDropdownComponent,
+    VocabularyFilterDropdownComponent,
+    StatusFilterDropdownComponent,
+    PopoverCloseComponent
   ],
   entryComponents: [
     SearchConceptModalComponent,

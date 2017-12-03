@@ -2,21 +2,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-11-28 19:43+0200\n"
+"PO-Revision-Date: 2017-12-03 23:23+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.4\n"
+"X-Generator: Poedit 1.8.5\n"
 "X-Poedit-Basepath: .\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-msgid "Search collection..."
+msgid "Search collection"
 msgstr ""
 
-msgid "Add collection"
+msgid "Add new collection"
 msgstr ""
 
 msgid "Yes"
@@ -49,22 +49,28 @@ msgstr ""
 msgid "Modified by"
 msgstr ""
 
+msgid "All organizations"
+msgstr ""
+
+msgid "All vocabularies"
+msgstr ""
+
+msgid "Add new concept"
+msgstr ""
+
 msgid "Add concept"
 msgstr ""
 
-msgid "Search concept..."
-msgstr ""
-
-msgid "Order by modified date"
+msgid "Search concept"
 msgstr ""
 
 msgid "Filter results"
 msgstr ""
 
-msgid "Status"
+msgid "Order by modified date"
 msgstr ""
 
-msgid "All statuses"
+msgid "Status"
 msgstr ""
 
 msgid "Alphabetic"
@@ -85,12 +91,6 @@ msgstr ""
 msgid "Choose concept"
 msgstr ""
 
-msgid "Vocabulary"
-msgstr ""
-
-msgid "All vocabularies"
-msgstr ""
-
 msgid "Select concept"
 msgstr ""
 
@@ -107,22 +107,22 @@ msgstr ""
 msgid "Select reference"
 msgstr ""
 
-msgid "Cancel edit"
-msgstr ""
-
-msgid "Save changes"
-msgstr ""
-
 msgid "Edit"
+msgstr ""
+
+msgid "Save"
 msgstr ""
 
 msgid "Remove"
 msgstr ""
 
+msgid "All"
+msgstr ""
+
 msgid "Content in"
 msgstr ""
 
-msgid "All languages"
+msgid "Content in all languages"
 msgstr ""
 
 msgid "Add"
@@ -137,39 +137,30 @@ msgstr ""
 msgid "Unlinked selected text"
 msgstr ""
 
-msgid "Remove term"
-msgstr ""
-
 msgid "No terms yet"
 msgstr ""
 
-msgid "Welcome to vocabulary and concept workbench"
+msgid "Remove term"
 msgstr ""
 
-msgid "Frontpage information"
-msgstr ""
-"Definitions released in the workbench are freely browsable. Content is "
-"produced by experts in different domains.\n"
-"Note: this is the development environment of the service. Thus the contents "
-"of this service are not official versions of the vocabularies but rather "
-"meant for testing purposes"
-
-msgid "Give feedback:"
+msgid ""
+"This service is developed and maintained by Population Registry Center of "
+"Finland"
 msgstr ""
 
-msgid "CSC - IT Center for Science Ltd"
+msgid "Information about the web service"
 msgstr ""
 
-msgid "Source code"
+msgid "Description of file"
 msgstr ""
 
-msgid "Frontend"
+msgid "User support"
 msgstr ""
 
-msgid "Backend"
+msgid "Feedback"
 msgstr ""
 
-msgid "licensed under the"
+msgid "Sourcecode is licensed under EUPL-1.2 license."
 msgstr ""
 
 msgid "Login"
@@ -187,10 +178,13 @@ msgstr ""
 msgid "Register"
 msgstr ""
 
-msgid "User details"
+msgid "LOG IN"
 msgstr ""
 
-msgid "Logout"
+msgid "LOG OUT"
+msgstr ""
+
+msgid "User details"
 msgstr ""
 
 msgid "Name"
@@ -211,13 +205,7 @@ msgstr ""
 msgid "Send access request"
 msgstr ""
 
-msgid "Choose organization"
-msgstr ""
-
 msgid "Send"
-msgstr ""
-
-msgid "Visualization"
 msgstr ""
 
 msgid "Compositive"
@@ -265,6 +253,15 @@ msgstr ""
 msgid "Search organization..."
 msgstr ""
 
+msgid "Choose organization"
+msgstr ""
+
+msgid "Search"
+msgstr ""
+
+msgid "Classification"
+msgstr ""
+
 msgid "Add vocabulary"
 msgstr ""
 
@@ -272,6 +269,9 @@ msgid "vocabulary"
 msgstr ""
 
 msgid "vocabularies"
+msgstr ""
+
+msgid "Show vocabulary details"
 msgstr ""
 
 msgid "Import vocabulary"
@@ -283,12 +283,13 @@ msgstr "new concept"
 msgid "New collection"
 msgstr "new collection"
 
-msgid ""
-"Are you sure that you want to continue? By continuing unsaved changes will "
-"be lost."
+msgid "MENU"
 msgstr ""
 
 msgid "Front page"
+msgstr ""
+
+msgid "Unstable"
 msgstr ""
 
 msgid "Draft"
@@ -301,6 +302,9 @@ msgid "Deprecated"
 msgstr ""
 
 msgid "Suggestion"
+msgstr ""
+
+msgid "Vocabulary"
 msgstr ""
 
 msgid "Group"
@@ -318,7 +322,12 @@ msgstr ""
 msgid "Edit in progress"
 msgstr ""
 
-msgid "Unstable"
+msgid ""
+"Are you sure that you want to continue? By continuing unsaved changes will "
+"be lost."
+msgstr ""
+
+msgid "All statuses"
 msgstr ""
 
 msgid "Unlink"
@@ -360,6 +369,15 @@ msgstr "Terminology editor"
 msgid "CODE_LIST_EDITOR"
 msgstr "Code list editor"
 
+msgid "All vocabulary types"
+msgstr ""
+
+msgid "VocabularyType"
+msgstr "Vocabulary"
+
+msgid "TerminologicalVocabularyType"
+msgstr "Terminological vocabulary"
+
 msgid "validateMeta"
 msgstr "Invalid"
 
@@ -374,3 +392,11 @@ msgstr "Prefix is already in use"
 
 msgid "upperCaseInPrefix"
 msgstr "Prefix must be in lower case"
+
+#~ msgid "Frontpage information"
+#~ msgstr ""
+#~ "Definitions released in the workbench are freely browsable. Content is "
+#~ "produced by experts in different domains.\n"
+#~ "Note: this is the development environment of the service. Thus the "
+#~ "contents of this service are not official versions of the vocabularies "
+#~ "but rather meant for testing purposes"

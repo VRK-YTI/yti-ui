@@ -21,7 +21,7 @@ import { AuthorizationManager } from '../../services/authorization-manager.sevic
     </div>
 
     <button type="button"
-            class="btn btn-default"
+            class="btn btn-sm btn-action mt-2"
             *ngIf="editing"
             (click)="addReference()" translate>Add organization</button>
   `

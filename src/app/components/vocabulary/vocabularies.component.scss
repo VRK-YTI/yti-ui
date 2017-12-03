@@ -1,127 +1,66 @@
-@import '../../../variables';
+@import '../../../theme/variables';
 
-.add-vocabulary {
-  padding-top: 30px;
-
-  button {
-    padding: 10px;
-  }
-}
-
-.vocabularies {
-  padding-top: 30px;
-  padding-bottom: 30px;
-  margin-bottom: $footer-height;
-}
-
-.amount {
-  color: $primary;
-  width: calc(100% - 20px);
-  margin-left: 10px;
-  margin-bottom: 10px;
-  padding-bottom: 5px;
-  border-bottom: 2px solid $lighter;
-}
-
-.filters {
-  border: 2px solid $lighter;
-  padding: 10px;
-
-  .filter {
-
-    .title {
-      display: inline-block;
-      font-weight: bold;
-      margin-bottom: 7px;
-    }
-
-    .item {
-
-      padding: 7px;
-      user-select: none;
-
-      &:hover {
-        cursor: pointer;
-      }
-
-      .name {
-        color: $primary;
-      }
-      .count {
-        float: right;
-        color: $gray-500;
-      }
-
-      &.selected {
-        background-color: $lighter;
-        font-weight: bold;
-      }
-    }
-  }
-
-  .separator {
-    width: 100%;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    border-bottom: 2px solid $lighter;
-  }
-}
-
-.filter-result {
+.classification {
 
   display: inline-block;
   width: 100%;
-  padding: 10px;
+  padding: 5px 10px 5px 5px;
+  cursor: pointer;
+  border-left: $active-indicator-width solid $white;
+
+  &:hover, &.active {
+    border-left: $active-indicator-width solid $primary;
+  }
+
+  &.active {
+    font-weight: 500;
+  }
+
+  .name {
+    float: left;
+  }
+
+  .count {
+    float: right;
+    color: $primary;
+  }
+}
+
+.vocabulary {
+
+  display: inline-block;
+  width: 100%;
+  padding: 5px 10px 5px 5px;
+  cursor: pointer;
+  border-left: $active-indicator-width solid $white;
 
   &:hover {
-    cursor: pointer;
-    background-color: $lighter;
-
-    .type {
-      border: 1px solid rgba(0, 0, 0, 0.15) !important;
-    }
+    border-left: $active-indicator-width solid $primary;
   }
 
-  .content {
-    display: inline-block;
+  .name {
+    color: $primary;
+    font-size: large;
     float: left;
-    padding-right: 50px;
-    width: calc(100% - 250px);
-
-    .title {
-      font-size: medium;
-      color: $primary;
-    }
-
-    p {
-      font-size: small;
-      margin-bottom: 0;
-    }
+    clear: left;
+    width: calc(100% - 300px);
   }
 
-  .origin {
-    display: inline-block;
+  @mixin info() {
     float: right;
-    text-align: right;
-    width: 250px;
+    clear: right;
+    color: $gray-700;
+  }
 
-    .publisher {
-      color: $primary;
-      margin-bottom: 10px;
-      display: block;
-    }
+  .organization {
+    @include info;
+  }
 
-    .group {
-      color: $primary;
-      margin-bottom: 10px;
-      display: block;
-    }
+  .group {
+    @include info;
+  }
 
-    .type {
-      display: inline-block;
-      padding: 10px;
-      background-color: $lighter;
-      border: 1px solid $lighter;
-    }
+  .type {
+    @include info;
   }
 }

@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import { UserService, Role } from '../services/user.service';
+import { Role, UserService } from '../services/user.service';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { TermedService } from 'app/services/termed.service';
@@ -8,6 +8,8 @@ import { index } from 'app/utils/array';
 import { LocationService } from 'app/services/location.service';
 import { comparingLocalizable } from '../utils/comparator';
 import { LanguageService } from '../services/language.service';
+import { Options } from './form/dropdown-component';
+import { TranslateService } from 'ng2-translate';
 
 interface UserOrganizationRoles {
   organization?: OrganizationNode;
@@ -19,7 +21,8 @@ interface UserOrganizationRoles {
   selector: 'app-user-details',
   styleUrls: ['./user-details.component.scss'],
   template: `
-    <div class="container-fluid" *ngIf="isLoggedIn">
+    <div class="content-box" *ngIf="isLoggedIn">
+
       <div class="row">
         <div class="col-md-12">
           <div class="page-header">
@@ -81,16 +84,13 @@ interface UserOrganizationRoles {
             <dl>
               <dt><label for="organizations" translate>Send access request</label></dt>
               <dd>
-                <select id="organizations" class="form-control pull-left" [(ngModel)]="selectedOrganization">
-                  <option [ngValue]="null" translate>Choose organization</option>
-                  <option *ngFor="let organizationById of organizationsForRequest"
-                          [ngValue]="organizationById">
-                    {{organizationById.label | translateValue}}
-                  </option>
-                </select>
-
+                <app-dropdown class="pull-left"
+                              [options]="organizationOptions" 
+                              [showNullOption]="false"
+                              [(ngModel)]="selectedOrganization"></app-dropdown>
+                
                 <button type="button"
-                        class="btn btn-default pull-left ml-2"
+                        class="btn btn-action pull-left ml-2"
                         [disabled]="!selectedOrganization"
                         (click)="sendRequest()" translate>Send</button>
               </dd>
@@ -111,11 +111,14 @@ export class UserDetailsComponent implements OnDestroy  {
   selectedOrganization: OrganizationNode|null = null;
   requestsInOrganizations = new Map<string, Set<Role>>();
 
+  organizationOptions: Options<OrganizationNode>;
+
   constructor(private router: Router,
               private userService: UserService,
               private termedService: TermedService,
               private locationService: LocationService,
-              private languageService: LanguageService) {
+              private languageService: LanguageService,
+              private translateService: TranslateService) {
 
     this.loggedInSubscription = this.userService.loggedIn$.subscribe(loggedIn => {
       if (!loggedIn) {
@@ -127,6 +130,13 @@ export class UserDetailsComponent implements OnDestroy  {
 
     termedService.getOrganizationList().subscribe(organizationNodes => {
       this.organizationsById = index(organizationNodes, org => org.id);
+      this.organizationOptions = [null, ...organizationNodes].map(org => {
+        return {
+          value: org,
+          name: () => org ? languageService.translate(org.label, false)
+                          : translateService.instant('Choose organization')
+        }
+      });
     });
 
     this.refreshRequests();

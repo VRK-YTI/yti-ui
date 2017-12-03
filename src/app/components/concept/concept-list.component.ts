@@ -13,11 +13,10 @@ import { AuthorizationManager } from '../../services/authorization-manager.sevic
     <div class="row">
       <div class="col-lg-12">
 
-        <div class="actions">
+        <div class="selectable-actions">
 
-          <button class="button btn-default btn-add-new" *ngIf="canAddConcept()" (click)="addConcept()">
-            <i class="fa fa-plus"></i>
-            <span translate>Add concept</span>
+          <button class="btn btn-action mb-3" *ngIf="canAddConcept()" (click)="addConcept()">
+            <span translate>Add new concept</span>
           </button>
 
           <div class="input-group input-group-lg input-group-search">
@@ -25,35 +24,36 @@ import { AuthorizationManager } from '../../services/authorization-manager.sevic
                    [(ngModel)]="model.search"
                    type="text"
                    class="form-control"
-                   [placeholder]="'Search concept...' | translate"/>
+                   [placeholder]="'Search concept' | translate"/>
             <app-ajax-loading-indicator-small *ngIf="model.loading"></app-ajax-loading-indicator-small>
           </div>
 
           <div class="button btn-default btn-lg btn-filters"
-               [ngbPopover]="filters" triggers="manual" placement="right" #p="ngbPopover" (click)="p.toggle()">
-            <i class="fa fa-tasks"></i>
+               [ngbPopover]="filters" 
+               triggers="manual" 
+               placement="right" 
+               #p="ngbPopover"
+               [popoverTitle]="'Filter results' | translate"
+               (click)="p.toggle()">
+            <i class="fa fa-ellipsis-v"></i>
           </div>
 
           <ng-template #filters>
+            
+            <app-popover-close [popover]="p"></app-popover-close>
+            
             <div class="filters">
-
-              <span class="title" translate>Filter results</span>
-
               <div class="form-group">
-                <label for="status" translate>Status</label>
-                <select id="status" class="form-control" style="width: auto" [(ngModel)]="model.onlyStatus">
-                  <option [ngValue]="null" translate>All statuses</option>
-                  <option *ngFor="let status of statuses" [ngValue]="status">{{status | translate}}</option>
-                </select>
+                <label translate>Status</label>
+                <app-status-filter-dropdown [filterSubject]="model.onlyStatus$"></app-status-filter-dropdown>
               </div>
-
+                
               <div class="form-check">
                 <label class="form-check-label">
                   <input class="form-check-input" type="checkbox" [(ngModel)]="model.sortByTime"/>
                   {{'Order by modified date' | translate}}
                 </label>
               </div>
-
             </div>
           </ng-template>
 
@@ -63,17 +63,20 @@ import { AuthorizationManager } from '../../services/authorization-manager.sevic
     </div>
 
     <div class="row">
-      <div class="col-lg-12 search-results">
-        <ul [ngClass]="{'has-button': canAddConcept()}"
-            infinite-scroll
-            [infiniteScrollDistance]="2.5"
-            [scrollWindow]="false"
-            (scrolled)="onScrollDown()">
-          <li *ngFor="let concept of model.searchResults; trackBy: conceptIdentity" (click)="navigate(concept)"
-              [class.selection]="isSelected(concept)">
-            <span [innerHTML]="concept.label | translateValue"></span>
-          </li>
-        </ul>
+      <div class="col-lg-12">
+        <div class="selectable-concepts">
+          <ul [ngClass]="{'has-button': canAddConcept()}"
+              infinite-scroll
+              [infiniteScrollDistance]="2.5"
+              [scrollWindow]="false"
+              (scrolled)="onScrollDown()">
+            <li *ngFor="let concept of model.searchResults; trackBy: conceptIdentity"
+                (click)="navigate(concept)"
+                [class.selection]="isSelected(concept)">
+              <span [innerHTML]="concept.label | translateValue"></span>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   `

@@ -1,35 +1,38 @@
 import { Component, Input, Optional, Self } from '@angular/core';
 import { ControlValueAccessor, FormControl, NgControl } from '@angular/forms';
-import { statuses } from '../../entities/constants';
+import { Status, statuses } from '../../entities/constants';
+import { Options } from './dropdown-component';
+import { TranslateService } from 'ng2-translate';
 
 @Component({
   selector: 'app-status-input',
   styleUrls: ['./status-input.component.scss'],
   template: `
-    <select class="form-control"
-            [ngClass]="{'is-invalid': !valid}"
-            [id]="id"
-            [formControl]="select">
-      <option *ngFor="let status of statuses" [ngValue]="status">{{status | translate}}</option>
-    </select>
+    <app-dropdown [formControl]="select" [options]="statusOptions"></app-dropdown>
   `
 })
 export class StatusInputComponent implements ControlValueAccessor {
 
   @Input() id: string;
 
-  statuses = statuses;
-
+  statusOptions: Options<Status>;
   select = new FormControl();
 
   private propagateChange: (fn: any) => void = () => {};
   private propagateTouched: (fn: any) => void = () => {};
 
-  constructor(@Self() @Optional() private ngControl: NgControl) {
+  constructor(@Self() @Optional() private ngControl: NgControl,
+              translateService: TranslateService) {
+
     if (ngControl) {
       ngControl.valueAccessor = this;
     }
+
     this.select.valueChanges.subscribe(x => this.propagateChange(x));
+    this.statusOptions = statuses.map(status => ({
+      value: status,
+      name: () => translateService.instant(status)
+    }));
   }
 
   get valid() {

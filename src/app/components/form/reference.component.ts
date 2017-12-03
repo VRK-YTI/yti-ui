@@ -17,7 +17,6 @@ export type FormReference = FormReferenceLiteral<any>
 
           <app-terms *ngSwitchCase="'Term'"
                      [reference]="reference"
-                     [multiColumn]="multiColumnTerms"
                      [unsaved]="unsaved"
                      [filterLanguage]="filterLanguage"></app-terms>
 
@@ -56,7 +55,6 @@ export class ReferenceComponent {
   @Input() unsaved: boolean;
   @Input() vocabulary: VocabularyNode;
   @Input() concept: ConceptNode;
-  @Input() multiColumnTerms = false;
   @Input() filterLanguage: string;
   @Output() conceptRemove = new EventEmitter<ConceptNode>();
 

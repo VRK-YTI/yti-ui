@@ -10,14 +10,15 @@ import { TranslateService } from 'ng2-translate';
     useExisting: forwardRef(() => FilterLanguageComponent),
     multi: true
   }],
-  template: ` 
-    <div ngbDropdown class="d-inline-block lang-filter">
-      <button class="btn btn-default" id="dropdownFilterLanguage" ngbDropdownToggle>{{selection}}</button>
+  template: `
+    <div ngbDropdown [placement]="'bottom-right'">
+      <button class="btn btn-language" id="dropdownFilterLanguage" ngbDropdownToggle>{{selectionName}}</button>
       <div ngbDropdownMenu aria-labelledby="dropdownFilterLanguage">
-        <button class="dropdown-item" 
-                *ngFor="let selection of selections"
-                (click)="writeValue(selection.lang)">
-          {{selection.name}}
+        <button class="dropdown-item"
+                [class.active]="option.lang === selection"
+                *ngFor="let option of options"
+                (click)="writeValue(option.lang)">
+          {{option.name}}
         </button>
       </div>
     </div>
@@ -26,7 +27,7 @@ import { TranslateService } from 'ng2-translate';
 export class FilterLanguageComponent implements ControlValueAccessor, OnChanges {
 
   @Input() languages: string[];
-  selections: { lang: string, name: string }[];
+  options: { lang: string, name: string }[];
 
   control = new FormControl();
 
@@ -38,14 +39,18 @@ export class FilterLanguageComponent implements ControlValueAccessor, OnChanges 
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.selections = ['', ...this.languages].map(lang => ({
+    this.options = ['', ...this.languages].map(lang => ({
       lang: lang,
-      name: this.languageToSelectionName(lang)
+      name: this.languageToOptionName(lang)
     }));
   }
 
   get selection() {
-    return this.languageToSelectionName(this.control.value);
+    return this.control.value;
+  }
+
+  get selectionName() {
+    return this.languageToSelectionName(this.selection);
   }
 
   writeValue(obj: any): void {
@@ -61,7 +66,12 @@ export class FilterLanguageComponent implements ControlValueAccessor, OnChanges 
   }
 
   private languageToSelectionName(lang: string) {
+    return lang ? lang.toUpperCase()
+                : this.translateService.instant('All');
+  }
+
+  private languageToOptionName(lang: string) {
     return lang ? this.translateService.instant('Content in') + ' '  + lang.toUpperCase()
-                : this.translateService.instant('All languages');
+                : this.translateService.instant('Content in all languages');
   }
 }

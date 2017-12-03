@@ -1,6 +1,15 @@
-@import '../../../variables';
+@import '../../../theme/variables';
 
-app-filter-language {
-  display: inline-block;
-  margin-bottom: 15px;
+.input-group-search {
+  width: 400px;
+}
+
+.content-box {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.search-results, form {
+  height: 100%;
 }

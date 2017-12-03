@@ -11,15 +11,15 @@ import * as Papa from 'papaparse';
 class CsvConceptDetails {
 
   constructor(public prefLabel: Localization[],
-    public definition: Localization[],
-    public note: Localization[],
-    public example: Localization[],
-    public synonym: Localization[],
-    public lineNumber: number) {
+              public definition: Localization[],
+              public note: Localization[],
+              public example: Localization[],
+              public synonym: Localization[],
+              public lineNumber: number) {
   }
 
   static createFromCsvRow(csvJsonObject: any, lineNumber: number): CsvConceptDetails {
-    
+
     function splitValuesAsOwnLocalizations(localization: Localization) {
       return localization.value.split('\r\n').map(v => ({ lang: localization.lang, value: v}));
     }
@@ -62,7 +62,7 @@ class CsvConceptDetails {
     ];
 
     return allProperties.filter(property => propertyIsNotEmpty(property.localizations));
-  } 
+  }
 }
 
 @Injectable()
@@ -70,7 +70,7 @@ export class ImportVocabularyModalService {
 
   constructor(private modalService: NgbModal) {
   }
-  
+
   open(importFile: File, vocabulary: VocabularyNode): Promise<any> {
     const modalRef = this.modalService.open(ImportVocabularyModalComponent, { size: 'lg' });
     const instance = modalRef.componentInstance as ImportVocabularyModalComponent;
@@ -91,50 +91,51 @@ export class ImportVocabularyModalService {
       </h4>
     </div>
     <div class="modal-body full-height">
-      <div class="row">
-
+      <div class="row mb-2">
         <div class="col-md-12">
-          <div class="headline-row">
-            <h6>
-              <span translate>Importing</span> {{numberOfConcepts}} <span translate>concepts</span>
-            </h6>
-            <div *ngIf="invalid" class="alert alert-danger">
-              <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
-              <span translate>Import is not allowed because some of the concepts lack preferred term.</span>
-              <span translate>Line numbers in the import file</span>: {{lineNumbersOfEmptyPrefLabels}}
-            </div>
-          </div>
 
-          <div class="concepts-from-csv">
-            <div class="concept-from-csv" *ngFor="let concept of conceptsFromCsv">
-              <div class="concept-property" *ngFor="let property of concept.nonEmptyProperties" [ngSwitch]="property.name">                
-                <b>
-                  <span>{{property.name | translate}}</span>
-                </b>
-                <div *ngFor="let localization of property.localizations">
-                  <div class="localization-lang">{{localization.lang.toUpperCase()}}</div> 
-                  <div class="localization-value">{{localization.value}}</div>
+          <h6>
+            <span translate>Importing</span> {{numberOfConcepts}} <span translate>concepts</span>
+          </h6>
+
+          <div *ngIf="invalid" class="alert alert-danger">
+            <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
+            <span translate>Import is not allowed because some of the concepts lack preferred term.</span>
+            <span translate>Line numbers in the import file</span>: {{lineNumbersOfEmptyPrefLabels}}
+          </div>
+          
+          <div class="search-results">
+            <div class="search-result" *ngFor="let concept of conceptsFromCsv">
+              <div *ngFor="let property of concept.nonEmptyProperties; let last = last"
+                   class="content"
+                   [class.last]="last"
+                   [ngSwitch]="property.name">
+                <span class="name">{{property.name | translate}}</span>
+                <div class="body">
+                  <div class="localized" *ngFor="let localization of property.localizations">
+                    <div class="language">{{localization.lang.toUpperCase()}}</div>
+                    <div class="localization">{{localization.value}}</div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
         </div>
-        
-      </div>       
-        
+
+      </div>
+
     </div>
 
     <div class="modal-footer">
-
+      <button type="button" class="btn btn-action confirm" (click)="confirm()" [disabled]="invalid" translate>Yes</button>
+      <button type="button" class="btn btn-link cancel" (click)="cancel()" translate>Cancel</button>
+      
       <div class="alert alert-danger modal-alert" role="alert" *ngIf="importError">
         <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
         <span translate>Import failed</span>
       </div>
-
-      <button type="button" class="btn btn-secondary cancel" (click)="cancel()" translate>Cancel</button>     
-      <button type="button" class="btn btn-default confirm" (click)="confirm()" [disabled]="invalid" translate>Yes</button>
-    </div> 
+    </div>
   `
 })
 export class ImportVocabularyModalComponent implements OnInit {

@@ -11,10 +11,8 @@ import { FormPropertyLocalizable } from '../../services/form-state';
 
     <div *ngIf="canAdd()" class="clearfix">
       <div ngbDropdown class="add-button" placement="bottom-right">
-        <button class="btn btn-default"
-                ngbDropdownToggle
-                ngbTooltip="{{'Add' | translate}} {{property.label | translateValue:false | lowercase}}">
-          <i class="fa fa-plus"></i>
+        <button class="btn btn-link" ngbDropdownToggle>
+          <span>{{'Add' | translate}} {{property.label | translateValue:false | lowercase}}</span>
         </button>
         <div ngbDropdownMenu>
           <button class="dropdown-item"
@@ -45,7 +43,6 @@ import { FormPropertyLocalizable } from '../../services/form-state';
 
               <app-markdown-input *ngSwitchCase="'markdown'"
                                   [id]="id"
-                                  [formControlClass]="false"
                                   [conceptSelector]="conceptSelector"
                                   [relatedConcepts]="relatedConcepts"
                                   [formControl]="child.control"></app-markdown-input>
@@ -57,7 +54,7 @@ import { FormPropertyLocalizable } from '../../services/form-state';
         </div>
 
         <button *ngIf="canRemove()"
-                class="btn btn-default remove-button"
+                class="btn btn-link remove-button"
                 (click)="removeValue(child)"
                 ngbTooltip="{{'Remove' | translate}} {{property.label | translateValue:false | lowercase}}" [placement]="'left'">
           <i class="fa fa-trash"></i>

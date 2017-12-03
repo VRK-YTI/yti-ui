@@ -1,40 +1,13 @@
-@import '../../../variables';
+// TODO more generic mechanism for result lists instead of abusing search-results
 
-$language-height: 15px;
-$language-width: 25px;
+.search-results {
+  .search-result {
 
-.headline-row {
-  margin: 0 0 10px 0;
-}
+    border-left: none;
+    cursor: default;
 
-.concepts-from-csv {
-  .concept-from-csv {
-    font-size: small;
-    border: 1px solid #bbb;
-    margin-bottom: 10px;
-    padding-left: 10px;
-    padding-right: 10px;
-    box-shadow: 2px 2px 2px #7e9cad;
-    overflow-wrap: break-word;
-  }
-
-  .concept-property {
-    margin-top: 5px;
-    margin-bottom: 5px;
-  }
-
-  .localization-lang {
-    float: left;
-    color: white;
-    background-color: $primary;
-    width: $language-width;
-    height: $language-height;
-    display: inline-block;
-    text-align: center;
-    line-height: $language-height;
-  }
-
-  .localization-value {
-    margin-left: 30px;
+    .content {
+      margin-left: 0;
+    }
   }
 }

@@ -12,14 +12,15 @@ import { FormNode } from '../../services/form-state';
 import { defaultLanguages } from '../../utils/language';
 import { FormControl, Validators, AbstractControl, AsyncValidatorFn } from '@angular/forms';
 import { firstMatching } from '../../utils/array';
+import { LocationService } from '../../services/location.service';
+import { Options } from '../form/dropdown-component';
 
 @Component({
   selector: 'app-new-vocabulary',
   styleUrls: ['./new-vocabulary.component.scss'],
   providers: [EditableService],
   template: `
-    <div class="container-fluid">
-
+    <div class="content-box">
       <app-ajax-loading-indicator *ngIf="!vocabulary"></app-ajax-loading-indicator>
 
       <div *ngIf="vocabulary">
@@ -31,38 +32,31 @@ import { firstMatching } from '../../utils/array';
               <dl>
                 <dt><label for="vocabularyType" translate>Vocabulary type</label></dt>
                 <dd>
-                  <select class="form-control"
-                          id="vocabularyType"
-                          [formControl]="templateControl">
-                    <option *ngFor="let templateMeta of templates" [ngValue]="templateMeta">
-                      {{templateMeta.label | translateValue:false}}
-                    </option>
-                  </select>
+                  <app-dropdown [formControl]="templateControl" [options]="templateOptions"></app-dropdown>
                 </dd>
               </dl>
             </div>
 
             <div class="col-6">
               <div class="top-actions">
-                <app-editable-buttons [form]="form" 
+                <app-editable-buttons [form]="form"
                                       [canRemove]="false"></app-editable-buttons>
               </div>
             </div>
           </div>
-          
+
           <app-vocabulary-form [vocabulary]="vocabulary" [form]="formNode"></app-vocabulary-form>
           <app-prefix-input [formControl]="prefixFormControl"></app-prefix-input>
         </form>
 
       </div>
-
     </div>
   `
 })
 export class NewVocabularyComponent {
 
   vocabulary: VocabularyNode;
-  templates: GraphMeta[];
+  templateOptions: Options<GraphMeta>;
   formNode: FormNode;
   templateControl = new FormControl();
   prefixFormControl: FormControl;
@@ -72,7 +66,8 @@ export class NewVocabularyComponent {
               private termedService: TermedService,
               private translateService: TranslateService,
               private languageService: LanguageService,
-              public editableService: EditableService) {
+              public editableService: EditableService,
+              locationService: LocationService) {
 
     editableService.edit();
     editableService.onSave = () => this.saveVocabulary();
@@ -81,9 +76,14 @@ export class NewVocabularyComponent {
     this.templateControl.valueChanges.subscribe(() => this.createVocabulary());
 
     metaModelService.getMetaTemplates().subscribe(templates => {
-      this.templates = templates;
-      this.selectedTemplate = this.templates[0];
+      this.templateOptions = templates.map(template => ({
+        value: template,
+        name: () => this.languageService.translate(template.label, false)
+      }));
+      this.selectedTemplate = templates[0];
     });
+
+    locationService.atNewVocabulary();
   }
 
   createVocabulary() {

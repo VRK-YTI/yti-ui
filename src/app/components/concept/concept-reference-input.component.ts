@@ -24,7 +24,7 @@ import { isDefined, requireDefined } from '../../utils/object';
     </div>
 
     <button type="button"
-            class="btn btn-default"
+            class="btn btn-sm btn-action"
             *ngIf="editing"
             (click)="addReference()" translate>Add concept</button>
   `

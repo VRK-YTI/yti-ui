@@ -10,45 +10,37 @@ import { AuthorizationManager } from '../../services/authorization-manager.sevic
   template: `
     <div *ngIf="canEdit()">
       
-      <button type="button" 
-              ngbTooltip="{{'Cancel edit' | translate}}"
-              #cancelTooltip="ngbTooltip"
-              class="btn btn-default pull-right cancel" 
-              (click)="cancelTooltip.close(); cancelEditing()"
+      <button type="button"
+              class="btn btn-link pull-right cancel" 
+              (click)="cancelEditing()"
               [disabled]="operationPending"
               [hidden]="!editing">
-        <i class="fa fa-undo"></i>
-      </button>
-      
-      <button type="button" 
-              ngbTooltip="{{'Save changes' | translate}}"
-              #saveTooltip="ngbTooltip"
-              class="btn btn-default pull-right save" 
-              (click)="saveTooltip.close(); saveEdited()" 
-              [hidden]="!editing" 
-              [disabled]="!canSave() || operationPending">
-        <i class="fa fa-floppy-o"></i>
+        <span translate>Cancel</span>
       </button>
       
       <button type="button"
-              ngbTooltip="{{'Edit' | translate}}"
-              #editTooltip="ngbTooltip"
-              class="btn btn-default pull-right edit" 
-              (click)="editTooltip.close(); startEditing()"
+              class="btn btn-action pull-right save" 
+              (click)="saveEdited()" 
+              [hidden]="!editing" 
+              [disabled]="!canSave() || operationPending">
+        <span translate>Save</span>
+      </button>
+      
+      <button type="button"
+              class="btn btn-action pull-right edit" 
+              (click)="startEditing()"
               [disabled]="operationPending"
               [hidden]="editing">
-        <i class="fa fa-pencil"></i>
+        <span translate>Edit</span>
       </button>
 
       <button type="button"
-              ngbTooltip="{{'Remove' | translate}}"
-              #removeTooltip="ngbTooltip"
-              [triggers]="'hover:blur'"
-              class="btn btn-default pull-right remove"
-              (click)="removeTooltip.close(); remove()"
+              class="btn btn-link pull-right remove"
+              (click)="remove()"
               [disabled]="operationPending"
               [hidden]="editing || !canRemove">
         <i class="fa fa-trash"></i>
+        <span translate>Remove</span>
       </button>
 
       <app-ajax-loading-indicator-small class="pull-right" *ngIf="operationPending"></app-ajax-loading-indicator-small>

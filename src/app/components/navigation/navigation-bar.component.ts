@@ -7,34 +7,60 @@ import { LoginModalService } from './login-modal.component';
   selector: 'app-navigation-bar',
   styleUrls: ['./navigation-bar.component.scss'],
   template: `
-    <nav class="navbar navbar-expand-md navbar-dark bg-primary">
+    <nav class="navbar navbar-expand-md navbar-light">
 
-      <a class="navbar-brand" [routerLink]="['/']"><span>Sanasto- ja käsitevälineistö</span></a>
+      <a class="navbar-brand" [routerLink]="['/']"><span>Sanastot</span></a>
 
       <ul class="navbar-nav ml-auto">
-        <li class="nav-item" *ngFor="let language of languages">
-          <a class="nav-link" (click)="setLanguage(language.code)">{{language.name}}</a>
-        </li>
+        
         <li class="nav-item" *ngIf="!isLoggedIn()">
-          <a class="nav-link" (click)="logIn()" translate>Log In</a>
+          <a class="nav-link" (click)="logIn()" translate>LOG IN</a>
         </li>
-        <li class="nav-item dropdown bg-primary" *ngIf="isLoggedIn()" placement="bottom-right" ngbDropdown>
-          <a class="dropdown-toggle nav-link" ngbDropdownToggle>{{user.name}}</a>
-          <div ngbDropdownMenu class="bg-light">
+        
+        <li class="nav-item logged-in" *ngIf="isLoggedIn()">
+          <span>{{user.name}}</span>
+          <a class="nav-link" (click)="logOut()" translate>LOG OUT</a>
+        </li>
+        
+        <li class="nav-item dropdown" placement="bottom-right" ngbDropdown>
+          <a class="dropdown-toggle nav-link btn btn-language" ngbDropdownToggle>{{language.toUpperCase()}}</a>
+          <div ngbDropdownMenu>
+            <a *ngFor="let availableLanguage of availableLanguages"
+               class="dropdown-item"
+               [class.active]="availableLanguage.code === language"
+               (click)="language = availableLanguage.code">
+              <span>{{availableLanguage.name}}</span>
+            </a>
+          </div>
+        </li>
+
+        <li class="nav-item dropdown" placement="bottom-right" ngbDropdown>
+          <a class="nav-link btn-menu" ngbDropdownToggle>
+            <app-menu></app-menu>
+          </a>
+          <div ngbDropdownMenu>
+            <a class="dropdown-item" *ngIf="isLoggedIn()" (click)="logOut()">
+              <i class="fa fa-sign-out"></i>
+              <span translate>LOG OUT</span>
+            </a>
+            <a class="dropdown-item" *ngIf="!isLoggedIn()" (click)="logIn()">
+              <i class="fa fa-sign-in"></i>
+              <span translate>LOG IN</span>
+            </a>
+            <div class="dropdown-divider"></div>
             <a class="dropdown-item" [routerLink]="['/userDetails']" translate>User details</a>
-            <a class="dropdown-item" (click)="logOut()" translate>Logout</a>
           </div>
         </li>
       </ul>
-
     </nav>
   `
 })
 export class NavigationBarComponent {
 
-  languages = [
-    { code: 'fi' as Language, name: 'Suomeksi' },
-    { code: 'en' as Language, name: 'In english' }
+  availableLanguages = [
+    { code: 'fi' as Language, name: 'Suomeksi (FI)' },
+    { code: 'sv' as Language, name: 'På svenska (SV)' },
+    { code: 'en' as Language, name: 'In English (EN)' }
   ];
 
   constructor(private languageService: LanguageService,
@@ -42,8 +68,12 @@ export class NavigationBarComponent {
               private loginModal: LoginModalService) {
   }
 
-  setLanguage(language: Language) {
+  set language(language: Language) {
     this.languageService.language = language;
+  }
+
+  get language(): Language {
+    return this.languageService.language;
   }
 
   logIn() {

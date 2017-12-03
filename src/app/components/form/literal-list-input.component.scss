@@ -1,3 +1,9 @@
+:host /deep/ {
+  input {
+    width: calc(100% - 10px);
+  }
+}
+
 .add-button {
   float: right;
   margin-top: -34px;

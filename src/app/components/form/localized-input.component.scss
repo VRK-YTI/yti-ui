@@ -1,7 +1,4 @@
-@import '../../../variables';
-
-$language-height: 32px;
-$language-width: 42px;
+@import '../../../theme/variables';
 
 .add-button {
 
@@ -21,60 +18,4 @@ $language-width: 42px;
 
 .remove-button {
   float: right;
-  padding: 6px;
-}
-
-div.localized {
-
-  display: inline-block;
-  width: 100%;
-
-  div.language {
-
-    float: left;
-    color: white;
-    background-color: $primary;
-    width: $language-width;
-    height: $language-height;
-    display: inline-block;
-    text-align: center;
-    line-height: $language-height;
-  }
-
-  div.localization {
-
-    float: left;
-    border: 2px solid $primary;
-    width: calc(100% - #{$language-width});
-    min-height: $language-height;
-    padding-left: 10px;
-    padding-right: 10px;
-    line-height: calc(#{$language-height} - 4px);
-
-    &.removable {
-      float: left;
-      width: calc(100% - #{$language-width + 32});
-    }
-
-    div.form-group {
-      margin-bottom: 0;
-    }
-
-    input, textarea {
-      margin-left: -10px;
-      padding: 6px 10px;
-      border: none;
-    }
-
-    input {
-      height: calc(#{$language-height} - 4px);
-    }
-
-    /deep/ app-markdown-input {
-      .action {
-        top: -37px;
-        right: 10px;
-      }
-    }
-  }
 }

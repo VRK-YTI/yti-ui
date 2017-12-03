@@ -12,67 +12,65 @@ import { VocabularyComponent } from '../vocabulary/vocabulary.component';
   styleUrls: ['./concepts.component.scss'],
   providers: [ConceptViewModelService],
   template: `
-    <div class="container-fluid">
+    <div class="content-box">
 
-      <div class="row" [hidden]="viewModel.loadingVocabulary">
+      <div class="row top" [hidden]="viewModel.loadingVocabulary">
         <div class="col-12">
           <app-vocabulary #vocabularyComponent></app-vocabulary>
         </div>
       </div>
 
-      <div class="bottom">
-      
-        <div class="panel-left">
-          <div appFloat>
-            <ngb-tabset>
-              <ngb-tab>
-                <ng-template ngbTabTitle>
-                  <i class="fa fa-sort-alpha-asc"></i>
-                  <p>{{'Alphabetic' | translate}}</p>
-                </ng-template>
-                <ng-template ngbTabContent>
-                  <app-concept-list></app-concept-list>
-                </ng-template>
-              </ngb-tab>
-              <ngb-tab>
-                <ng-template ngbTabTitle>
-                  <i class="fa fa-sitemap"></i>
-                  <p>{{'Hierarchical' | translate}}</p>
-                </ng-template>
-                <ng-template ngbTabContent>
-                  <app-concept-hierarchy></app-concept-hierarchy>
-                </ng-template>
-              </ngb-tab>
-              <ngb-tab>
-                <ng-template ngbTabTitle>
-                  <i class="fa fa-clone"></i>
-                  <p>{{'Collection' | translate}}</p>
-                </ng-template>
-                <ng-template ngbTabContent>
-                  <app-collection-list></app-collection-list>
-                </ng-template>
-              </ngb-tab>
-            </ngb-tabset>
-          </div>
-        </div>
+      <div class="row bottom">
+        <div class="col-12">
 
-        <div class="panel-right">
-          
-          <div class="selection-container" [style.width]="selectionWidth" [hidden]="!showSelection">
-            <router-outlet></router-outlet>
-          </div>
-
-          <div class="visualization-container" [style.width]="visualizationWidth" [hidden]="!showVisualization">
-            <div appFloat [setWidth]="false">
-              <app-divider *ngIf="showDivider"></app-divider>
-              <app-concept-network #network [class.without-divider]="!showDivider"></app-concept-network>
+          <div class="panel-left" appFloat>
+            <div>
+              <ngb-tabset>
+                <ngb-tab>
+                  <ng-template ngbTabTitle>
+                    <p>{{'Alphabetic' | translate}}</p>
+                  </ng-template>
+                  <ng-template ngbTabContent>
+                    <app-concept-list></app-concept-list>
+                  </ng-template>
+                </ngb-tab>
+                <ngb-tab>
+                  <ng-template ngbTabTitle>
+                    <p>{{'Hierarchical' | translate}}</p>
+                  </ng-template>
+                  <ng-template ngbTabContent>
+                    <app-concept-hierarchy></app-concept-hierarchy>
+                  </ng-template>
+                </ngb-tab>
+                <ngb-tab>
+                  <ng-template ngbTabTitle>
+                    <p>{{'Collection' | translate}}</p>
+                  </ng-template>
+                  <ng-template ngbTabContent>
+                    <app-collection-list></app-collection-list>
+                  </ng-template>
+                </ngb-tab>
+              </ngb-tabset>
             </div>
           </div>
-          
-        </div>
 
+          <div class="panel-right">
+
+            <div class="selection-container" [style.width]="selectionWidth" [hidden]="!showSelection">
+              <router-outlet></router-outlet>
+            </div>
+
+            <div class="visualization-container" [style.width]="visualizationWidth" [hidden]="!showVisualization">
+              <div appFloat [setWidth]="false">
+                <app-divider *ngIf="showDivider"></app-divider>
+                <app-concept-network #network [class.without-divider]="!showDivider"></app-concept-network>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
       </div>
-    
     </div>
   `
 })

@@ -1,12 +1,9 @@
-@import '../../../variables';
-
-$language-height: 32px;
-$language-width: 42px;
+@import '../../../theme/variables';
 
 :host /deep/ {
 
   .card-header {
-    background-color: $lighter;
+    background-color: $light;
     border: none;
     padding: 0;
     margin-bottom: 5px;
@@ -19,9 +16,10 @@ $language-width: 42px;
   .card {
     border: none;
   }
+
   .card-block {
     padding: 0 30px 0 0;
-    border: 1px solid $lighter;
+    border: 1px solid $light;
     margin-top: -5px;
     margin-bottom: 5px;
   }
@@ -31,25 +29,9 @@ $language-width: 42px;
     margin-left: 22px;
   }
 
-  // FIXME: duplication with localized-input component styles
-  div.language {
-
-    float: left;
-    color: white;
-    background-color: $primary;
-    width: $language-width;
-    height: $language-height;
-    display: inline-block;
-    text-align: center;
-    line-height: $language-height;
-  }
-
   div.localization {
-    float: left;
-    width: calc(100% - #{$language-width});
-    min-height: $language-height;
-    padding-left: 10px;
     line-height: $language-height;
+    padding-right: 0 !important;
   }
 
   app-accordion-chevron {

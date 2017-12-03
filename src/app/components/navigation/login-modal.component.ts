@@ -33,8 +33,8 @@ export class LoginModalService {
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-default" (click)="login()" translate>Log In</button>
-      <button type="button" class="btn btn-default" (click)="register()" translate>Register</button>
+      <button type="button" class="btn btn-action" (click)="login()" translate>Log In</button>
+      <button type="button" class="btn btn-action" (click)="register()" translate>Register</button>
     </div>
   `
 })

@@ -1,11 +1,17 @@
-@import '../../../_variables.scss';
+@import '../../../theme/variables';
 
-a {
-  cursor: pointer;
-}
 
-img {
-  width: 40px;
-  height: 40px;
-  margin: 0 0 0 15px;
+.nav-item.logged-in {
+
+  text-align: right;
+  margin-bottom: -10px;
+
+  > a {
+    padding-top: 0;
+  }
+
+  > span {
+    color: $body-color;
+    padding-right: 10px;
+  }
 }

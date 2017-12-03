@@ -20,12 +20,9 @@ import { LanguageService } from '../../services/language.service';
       <form #form="ngForm" [formGroup]="formNode.control" class="component-content">
 
         <div class="top-actions">
-
-          <app-filter-language [(ngModel)]="filterLanguage"
-                               [ngModelOptions]="{standalone: true}"
-                               [languages]="filterLanguages"
-                               class="pull-left"></app-filter-language>
-
+          
+          <app-status [status]="concept.status" class="pull-left"></app-status>
+          
           <app-editable-buttons [form]="form" 
                                 [canRemove]="true" 
                                 [vocabulary]="vocabulary"></app-editable-buttons>
@@ -90,14 +87,6 @@ export class ConceptComponent implements EditingComponent, OnDestroy {
 
   get filterLanguage() {
     return this.languageService.filterLanguage;
-  }
-
-  set filterLanguage(lang: string) {
-    this.languageService.filterLanguage = lang;
-  }
-
-  get filterLanguages() {
-    return this.conceptViewModel.languages;
   }
 
   get vocabulary() {

@@ -12,11 +12,10 @@ import { AuthorizationManager } from '../../services/authorization-manager.sevic
     <div class="row">
       <div class="col-lg-12">
 
-        <div class="actions">
+        <div class="selectable-actions">
 
-          <button class="button btn-default btn-add-new" (click)="addCollection()" *ngIf="canAddCollection()">
-            <i class="fa fa-plus"></i>
-            <span translate>Add collection</span>
+          <button class="btn btn-action mb-3" (click)="addCollection()" *ngIf="canAddCollection()">
+            <span translate>Add new collection</span>
           </button>
 
           <div class="input-group input-group-lg input-group-search">
@@ -24,23 +23,25 @@ import { AuthorizationManager } from '../../services/authorization-manager.sevic
                    [(ngModel)]="search"
                    type="text"
                    class="form-control"
-                   [placeholder]="'Search collection...' | translate" />
+                   [placeholder]="'Search collection' | translate" />
           </div>
-          
+
         </div>
 
       </div>
     </div>
 
     <div class="row">
-      <div class="col-lg-12 search-results">
-        <ul [ngClass]="{'has-button': canAddCollection()}">
-          <li *ngFor="let collection of searchResults | async; trackBy: collectionIdentity" 
-              (click)="navigate(collection)" 
-              [class.selection]="isSelected(collection)">
-            <span [innerHTML]="collection.label | translateSearchValue: debouncedSearch | highlight: debouncedSearch"></span>
-          </li>
-        </ul>
+      <div class="col-lg-12">
+        <div class="selectable-collections">
+          <ul [ngClass]="{'has-button': canAddCollection()}">
+            <li *ngFor="let collection of searchResults | async; trackBy: collectionIdentity"
+                (click)="navigate(collection)"
+                [class.selection]="isSelected(collection)">
+              <span [innerHTML]="collection.label | translateSearchValue: debouncedSearch | highlight: debouncedSearch"></span>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   `

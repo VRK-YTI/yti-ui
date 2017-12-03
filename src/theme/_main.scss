@@ -1,0 +1,657 @@
+// Suomi.fi
+@import 'variables';
+
+$web-font-path: 'https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,200,900italic,900,700italic,700,600italic,600,400italic,300italic,300,200italic' !default;
+@import url($web-font-path);
+
+// Search results ==============================================================
+
+.search-results {
+
+  overflow-y: auto;
+
+  .search-result {
+
+    border-left: $active-indicator-width solid $white;
+    cursor: pointer;
+
+    &:hover, &.active {
+      border-left: $active-indicator-width solid $primary;
+    }
+
+    &.active {
+      background-color: $gray-200;
+    }
+
+    .content {
+
+      margin: 0 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid $gray;
+
+      &.last {
+        border-bottom: none;
+      }
+
+      .title {
+        display: block;
+        color: $primary;
+        font-size: $font-size-base;
+        width: 100%;
+        padding-bottom: 5px;
+      }
+
+      .body {
+        display: block;
+        width: 100%;
+        padding-bottom: 15px;
+      }
+
+      .origin {
+        @include clearfix();
+        display: block;
+        width: 100%;
+        font-size: $font-size-sm;
+        color: $gray;
+      }
+    }
+  }
+}
+
+
+// Modal =======================================================================
+
+.modal-content {
+  border: 1px solid $gray-700;
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.4);
+  padding: 10px;
+}
+
+.modal-header {
+
+  color: $body-color;
+  background-color: $white;
+  border-bottom: none;
+
+  .modal-title {
+    font-weight: 600;
+    width: 100%;
+  }
+
+  span {
+    float: left;
+  }
+
+  a {
+    float: right;
+    cursor: pointer;
+  }
+
+  &.modal-header-warning {
+    color: $white;
+    background-color: $warning;
+  }
+
+  &.modal-header-danger {
+    color: $white;
+    background-color: $danger;
+  }
+}
+
+.modal-footer {
+  justify-content: flex-start;
+  border-top: none;
+}
+
+.modal-body {
+  display: inline-block;
+  width: 100%;
+
+  &.full-height {
+    height: calc(100vh - 225px);
+    padding-bottom: 0;
+    overflow-y: auto;
+
+    .row.full-height {
+      height: calc(100% - 104px);
+
+      > div {
+        height: 100%;
+      }
+    }
+  }
+}
+
+// Popover =====================================================================
+
+.popover {
+
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
+
+  .popover-header {
+    font-size: $font-size-sm;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-bottom: none;
+  }
+}
+
+// Content =====================================================================
+
+[hidden] {
+  display: none !important;
+}
+
+.content-box {
+  border: 1px solid $gray;
+  background: $white;
+  padding: 25px;
+}
+
+a {
+  cursor: pointer;
+}
+
+h1,h2,h3,h4,h5,h6 {
+  &.strong {
+    font-weight: 300;
+  }
+}
+
+$label-size: $font-size-sm;
+
+.form-group {
+  label {
+    font-weight: bold;
+    font-size: $label-size !important;
+  }
+}
+
+dl > dt {
+  font-size: $label-size;
+}
+
+// Tabs =====================================================================
+
+ul.nav-tabs {
+
+  padding: 0 0 0 20px;
+  width: calc(100% + 50px);
+  margin: 40px -25px;
+  border-bottom: $active-indicator-width solid lighten($primary, 50%);
+
+  .nav-item {
+
+    margin-bottom: -$active-indicator-width;
+    margin-left: 20px;
+
+    > a {
+      color: $primary !important;
+      background-color: transparent;
+      border: none;
+      text-transform: uppercase;
+      font-size: larger;
+      font-weight: 500;
+      padding-left: 30px;
+      padding-right: 30px;
+
+      &.active, &:hover {
+        background-color: transparent;
+        border-bottom: $active-indicator-width solid $primary;
+      }
+    }
+  }
+}
+
+// Buttons =====================================================================
+
+.btn {
+  cursor: pointer;
+  font-weight: 400;
+
+  &.disabled, &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+.btn-language {
+  @include button-outline-variant($primary, $white);
+  color: $body-color !important;
+  border-color: $gray !important;
+  background-color: $white !important;
+
+  .dropdown-item:focus {
+    color: $body-color;
+    background: $white;
+  }
+}
+
+.btn-action             { @include button-variant($primary, $primary); }
+.btn-secondary-action   { @include button-outline-variant($primary, $primary); }
+.btn-dropdown           { @include button-variant($light, $gray); }
+
+// Navbar ======================================================================
+
+.navbar-light {
+  .navbar-brand {
+    color: $brand-color;
+    font-weight: 600;
+    font-size: 1.5rem;
+  }
+}
+
+.navbar {
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.navbar-light {
+
+  color: $primary;
+
+  .dropdown {
+    padding-left: 20px;
+  }
+}
+
+// Dropdown =====================================================================
+
+@mixin disable-default-caret() {
+  &:after {
+    // Disable bootstrap default caret
+    width: auto;
+    height: auto;
+    margin-left: auto;
+    vertical-align: baseline;
+    border: none;
+  }
+}
+
+@mixin action-caret($color) {
+
+  @include disable-default-caret;
+
+  &:after {
+    display: inline-block;
+    font-family: FontAwesome;
+    padding-left: 5px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    content: $fa-var-chevron-down;
+    color: $color;
+  }
+}
+
+.dropdown-toggle {
+
+  &.btn-action {
+    @include action-caret(white);
+  }
+
+  &.btn-language {
+    @include action-caret($primary);
+  }
+
+  &.btn-menu {
+    @include disable-default-caret;
+    padding: 0;
+  }
+}
+
+.show .dropdown-item {
+  color: $body-color !important;
+  background: $white !important;
+  border-left: $active-indicator-width solid $white;
+  cursor: pointer;
+
+  &.active, :active {
+    border-left: $active-indicator-width solid $primary;
+    font-weight: bold;
+  }
+
+  &:hover {
+    border-left: $active-indicator-width solid $primary;
+  }
+}
+
+// Buttons =====================================================================
+
+.btn {
+  &-primary {
+    border-color: darken($primary, 5%);
+  }
+
+  &-success {
+    border-color: darken($success, 5%);
+  }
+
+  &-info {
+    border-color: darken($info, 5%);
+    color: $white;
+  }
+
+  &-danger {
+    border-color: darken($danger, 5%);
+  }
+
+  &-warning {
+    border-color: darken($warning, 5%);
+    color: $white;
+  }
+
+  &-light {
+    border-color: darken($light, 5%);
+  }
+
+  &-dark {
+    border-color: darken($dark, 5%);
+  }
+}
+
+.btn-group {
+
+  .dropdown-menu {
+    border-top-width: 0;
+  }
+
+  .dropdown-toggle {
+
+    &.btn-primary ~ .dropdown-menu {
+      background-color: $primary;
+      border-color: darken($primary, 5%);
+
+      .dropdown-item {
+        color: $white;
+      }
+
+      .dropdown-item:hover,
+      .dropdown-item:focus {
+        background-color: darken($primary, 8%);
+      }
+    }
+
+    &.btn-success ~ .dropdown-menu {
+      background-color: $success;
+      border-color: darken($success, 5%);
+
+      .dropdown-item {
+        color: $white;
+      }
+
+      .dropdown-item:hover,
+      .dropdown-item:focus {
+        background-color: darken($success, 8%);
+      }
+    }
+
+    &.btn-info ~ .dropdown-menu {
+      background-color: $info;
+      border-color: darken($info, 5%);
+
+      .dropdown-item {
+        color: $white;
+      }
+
+      .dropdown-item:hover,
+      .dropdown-item:focus {
+        background-color: darken($info, 8%);
+      }
+    }
+
+    &.btn-warning ~ .dropdown-menu {
+      background-color: $warning;
+      border-color: darken($warning, 5%);
+
+      .dropdown-item {
+        color: $white;
+      }
+
+      .dropdown-item:hover,
+      .dropdown-item:focus {
+        background-color: darken($warning, 8%);
+      }
+    }
+
+    &.btn-danger ~ .dropdown-menu {
+      background-color: $danger;
+      border-color: darken($primary, 5%);
+
+      .dropdown-item {
+        color: $white;
+      }
+
+      .dropdown-item:hover,
+      .dropdown-item:focus {
+        background-color: darken($danger, 8%);
+      }
+    }
+  }
+}
+
+// Typography ==================================================================
+
+.blockquote-footer {
+  color: $gray-600;
+}
+
+// Tables ======================================================================
+
+table {
+  font-size: $font-size-sm;
+}
+
+.table {
+
+  &-success,
+  &-info,
+  &-warning,
+  &-danger {
+    color: $white;
+  }
+
+  &-success {
+    &, > th, > td {
+      background-color: $success;
+    }
+  }
+
+  &-info {
+    &, > th, > td {
+      background-color: $info;
+    }
+  }
+
+  &-danger {
+    &, > th, > td {
+      background-color: $danger;
+    }
+  }
+
+  &-warning {
+    &, > th, > td {
+      background-color: $warning;
+    }
+  }
+
+  &-hover {
+
+    .table-success:hover {
+      &, > th, > td {
+        background-color: darken($success, 5%);
+      }
+    }
+
+    .table-info:hover {
+      &, > th, > td {
+        background-color: darken($info, 5%);
+      }
+    }
+
+    .table-danger:hover {
+      &, > th, > td {
+        background-color: darken($danger, 5%);
+      }
+    }
+
+    .table-warning:hover {
+      &, > th, > td {
+        background-color: darken($warning, 5%);
+      }
+    }
+
+  }
+}
+
+// Forms =======================================================================
+
+label,
+.control-label,
+.help-block,
+.checkbox,
+.radio,
+.form-control-feedback {
+  font-size: $font-size-sm;
+}
+
+.form-control {
+  &::placeholder {
+    font-style: italic;
+    font-size: small;
+    font-weight: 600;
+  }
+}
+
+
+// Navs ========================================================================
+
+.dropdown-item {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  font-size: $font-size-sm;
+  font-weight: 300;
+}
+
+.nav-tabs {
+  .nav-link,
+  .nav-link.disabled,
+  .nav-link.disabled:hover,
+  .nav-link.disabled:focus {
+    border-color: $nav-tabs-border-color;
+    background-color: $gray-200;
+  }
+
+  .nav-link:hover,
+  .nav-link:focus {
+    background-color: lighten($gray-200, 5%);
+  }
+}
+
+.nav-pills {
+  .active {
+    border: 1px solid darken($primary, 5%);
+  }
+}
+
+.breadcrumb {
+  border: 1px solid $dropdown-border-color;
+  border-radius: 3px;
+  font-size: $font-size-sm;
+  font-weight: 300;
+  text-transform: uppercase;
+}
+
+.pagination {
+  font-weight: 300;
+
+  .page-link {
+    border-color: transparent;
+    border-radius: 3px;
+    margin-left: 0.1em;
+    margin-right: 0.1em;
+
+    &:hover,
+    &:focus {
+      text-decoration: none;
+    }
+  }
+
+  .page-item.disabled {
+    .page-link {
+      border-color: transparent;
+    }
+  }
+}
+
+.list-group {
+  font-size: $font-size-sm;
+  font-weight: 300;
+}
+
+// Indicators ==================================================================
+
+.close {
+  opacity: 0.6;
+  text-shadow: none;
+
+  &:hover,
+  &:focus {
+    opacity: 1;
+  }
+}
+
+.alert {
+  font-size: $font-size-sm;
+  font-weight: 300;
+  color: $white;
+
+  &-success {
+    &, > th, > td {
+      background: $success none !important;
+    }
+  }
+
+  &-info {
+    &, > th, > td {
+      background: $info none !important;
+    }
+  }
+
+  &-danger {
+    &, > th, > td {
+      background: $danger none !important;
+    }
+  }
+
+  &-warning {
+    &, > th, > td {
+      background: $warning none !important;
+    }
+  }
+
+  .alert-link {
+    font-weight: normal;
+    color: $white;
+    text-decoration: underline;
+  }
+}
+
+.badge {
+  padding-bottom: .3em;
+
+  &-warning,
+  &-info {
+    color: $white;
+  }
+}
+
+// Progress bars ===============================================================
+
+.progress[value] {
+  height: 22px;
+  padding: 2px;
+  background-color: #f6f6f6;
+  border: 1px solid #ccc;
+  @include box-shadow(none);
+}
+
+// Containers ==================================================================

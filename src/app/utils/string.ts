@@ -1,4 +1,12 @@
 
+export function matches(text: string, search: string) {
+
+  const normalizedText = (text || '').toLowerCase();
+  const normalizedSearch = (search || '').toLowerCase();
+
+  return normalizedText.indexOf(normalizedSearch) !== -1;
+}
+
 function isNotWordCharacter(s: string): boolean {
   return !!s.match(/[\s,\."]+/);
 }

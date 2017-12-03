@@ -12,10 +12,7 @@ import { ConceptNode } from '../../entities/node';
 
       <h3 class="popover-header">
         <span>{{selectedText}}</span>
-        
-        <span  class="btn btn-default" (click)="link.next()" ngbTooltip="{{'Link' | translate}}" [placement]="'left'">
-          <i class="fa fa-link"></i>
-        </span>
+        <span class="btn btn-sm btn-action" (click)="link.next()" translate>Link</span>
       </h3>
 
       <div class="popover-body">
@@ -53,10 +50,7 @@ export class MarkdownInputLinkPopoverComponent implements AfterViewInit, OnDestr
       <h3 class="popover-header">
         <span *ngIf="!concept" translate>Concept not in references</span>
         <span *ngIf="concept">{{concept.label | translateValue}}</span>
-
-        <span class="btn btn-default" (click)="unlink.next()" ngbTooltip="{{'Unlink' | translate}}" [placement]="'left'">
-          <i class="fa fa-unlink"></i>
-        </span>
+        <span class="btn btn-sm btn-action" (click)="unlink.next()" translate>Unlink</span>
       </h3>
 
       <div class="popover-body" *ngIf="concept" app-markdown [value]="concept.definitionAsLocalizable | translateValue"></div>

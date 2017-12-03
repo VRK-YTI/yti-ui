@@ -1,36 +1,23 @@
-@import '../../../variables';
+@import '../../../theme/variables';
 
 .component {
 
-  border-left: 1px solid #ddd;
-
-  .component-header {
-    // TODO duplication with concept.component
-    background-color: $lighter;
-    padding: 11px 20px;
-    border-bottom: solid 1px #ddd;
-    font-size: 26px;
-    height: 53px;
-
-    h3 {
-      margin: 0;
-    }
-  }
-
   .canvas-container {
 
+    border: 1px solid $gray;
     position: relative;
 
     .network-canvas {
       width: 100%;
-      height: calc(100vh - 64px);
+      height: calc(100vh - 2px);
     }
 
     .legend {
       top: 1px;
       right: 1px;
       position: absolute;
-      border: solid 1px black;
+      border-bottom: solid 1px $gray;
+      border-left: solid 1px $gray;
       background-color: rgba(255, 255, 255, 0.5);
     }
   }

@@ -1,8 +1,7 @@
-import { Component, Input, Injectable, OnInit, ElementRef, ViewChild, Renderer, AfterViewInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Injectable, Input, OnInit, Renderer, ViewChild } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConceptNode, VocabularyNode } from '../../entities/node';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { statuses } from '../../entities/constants';
 import { TermedService } from '../../services/termed.service';
 import { EditableService } from '../../services/editable.service';
 import { ElasticSearchService, IndexedConcept } from '../../services/elasticsearch.service';
@@ -62,60 +61,64 @@ export class SearchConceptModalService {
       </h4>
     </div>
     <div class="modal-body full-height">
-      <div class="row">
-        <div class="col-md-4">
-          
+
+      <div class="row mb-2">
+        <div class="col-12">
+
+          <div class="input-group input-group-lg input-group-search pull-left">
+            <input #searchInput
+                   type="text"
+                   class="form-control"
+                   placeholder="{{'Search concept' | translate}}"
+                   [(ngModel)]="search" />
+          </div>
+
           <app-filter-language [(ngModel)]="filterLanguage"
                                [ngModelOptions]="{standalone: true}"
-                               [languages]="filterLanguages"></app-filter-language>
+                               [languages]="filterLanguages"
+                               class="pull-right"></app-filter-language>
+        </div>
+      </div>
 
+      <div class="row mb-2">
+        <div class="col-12">
 
-          <div class="input-group input-group-lg input-group-search">
-            <input #searchInput type="text" class="form-control" placeholder="{{'Search concept...' | translate}}"
-                   [(ngModel)]="search"/>
-          </div>
+          <app-vocabulary-filter-dropdown [filterSubject]="onlyVocabulary$"
+                                          [vocabularies]="vocabularies"
+                                          class="pull-left"></app-vocabulary-filter-dropdown>
 
-          <div class="search-panel">
-            <span class="title" translate>Filter results</span>
-
-            <div class="form-group">
-              <label for="statusFilter" translate>Status</label>
-              <select id="statusFilter" class="form-control" [(ngModel)]="onlyStatus">
-                <option [ngValue]="null" translate>All statuses</option>
-                <option *ngFor="let status of statuses" [ngValue]="status">{{status | translate}}</option>
-              </select>
-            </div>
-
-            <div class="form-group" *ngIf="mode === 'exclude'">
-              <label for="vocabularyFilter" translate>Vocabulary</label>
-              <select id="vocabularyFilter" class="form-control" [(ngModel)]="onlyVocabulary">
-                <option [ngValue]="null" translate>All vocabularies</option>
-                <option *ngFor="let vocabulary of vocabularies | async" 
-                        [ngValue]="vocabulary">{{vocabulary.label | translateValue}}</option>
-              </select>
-            </div>
-          </div>
+          <app-status-filter-dropdown [filterSubject]="onlyStatus$"
+                                      class="pull-left ml-2"></app-status-filter-dropdown>
 
         </div>
-        <div class="col-md-4"
-             infinite-scroll
-             [infiniteScrollDistance]="3"
-             [scrollWindow]="false"
-             (scrolled)="loadConcepts()">
-          <div class="search-results">
-            <div class="search-result" [class.selected]="concept === selectedItem"
-                 *ngFor="let concept of searchResults$ | async; trackBy: conceptIdentity" 
-                 (click)="select(concept)">
-              <h6 [innerHTML]="concept.label | translateValue"></h6>
-              <p [innerHTML]="concept.definition | translateValue | stripMarkdown"></p>
+      </div>
 
-              <div class="origin">
-                <span class="pull-left">{{concept.vocabulary.label | translateValue}}</span>
+      <div class="row full-height">
+        <div class="col-md-6">
+          <div class="content-box">
+            <div class="search-results"
+                 infinite-scroll
+                 [infiniteScrollDistance]="3"
+                 [scrollWindow]="false"
+                 (scrolled)="loadConcepts()">
+
+              <div *ngFor="let concept of searchResults$ | async; trackBy: conceptIdentity; let last = last"
+                   class="search-result"
+                   [class.active]="concept === selectedItem"
+                   (click)="select(concept)">
+                <div class="content" [class.last]="last">
+                  <span class="title" [innerHTML]="concept.label | translateValue"></span>
+                  <span class="body" [innerHTML]="concept.definition | translateValue | stripMarkdown"></span>
+                  <div class="origin">
+                    <span class="pull-left">{{concept.vocabulary.label | translateValue}}</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="col-md-4">
+
+        <div class="col-md-6">
           <form>
             <app-concept-form *ngIf="selection && !loadingSelection"
                               [concept]="selection"
@@ -123,25 +126,28 @@ export class SearchConceptModalService {
                               [filterLanguage]="filterLanguage"
                               [vocabulary]="vocabulary"></app-concept-form>
           </form>
+
           <app-ajax-loading-indicator *ngIf="loadingSelection"></app-ajax-loading-indicator>
         </div>
       </div>
     </div>
+
     <div class="modal-footer">
+
+      <button type="button"
+              class="btn btn-action confirm"
+              (click)="confirm()"
+              [disabled]="cannotSelect()" translate>Select concept</button>
+
+      <button type="button"
+              class="btn btn-link cancel"
+              (click)="cancel()" translate>Cancel</button>
 
       <div class="alert alert-danger modal-alert" role="alert" *ngIf="restrictionReasonForSelection">
         <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
         <span>{{restrictionReasonForSelection | translate}}</span>
       </div>
-      
-      <button type="button" 
-              class="btn btn-secondary cancel" 
-              (click)="cancel()" translate>Cancel</button>
-      
-      <button type="button" 
-              class="btn btn-default confirm" 
-              (click)="confirm()" 
-              [disabled]="cannotSelect()" translate>Select concept</button>
+
     </div>
   `
 })
@@ -168,7 +174,6 @@ export class SearchConceptModalComponent implements OnInit, AfterViewInit {
 
   loading = false;
 
-  statuses = statuses;
   vocabularies: Observable<VocabularyNode[]>;
 
   loaded = 0;
@@ -286,16 +291,8 @@ export class SearchConceptModalComponent implements OnInit, AfterViewInit {
     return this.onlyStatus$.getValue();
   }
 
-  set onlyStatus(value: string|null) {
-    this.onlyStatus$.next(value);
-  }
-
   get onlyVocabulary() {
     return this.onlyVocabulary$.getValue();
-  }
-
-  set onlyVocabulary(vocabulary: VocabularyNode|null) {
-    this.onlyVocabulary$.next(vocabulary);
   }
 
   cancel() {
@@ -313,5 +310,4 @@ export class SearchConceptModalComponent implements OnInit, AfterViewInit {
   set filterLanguage(lang: string) {
     this.languageService.filterLanguage = lang;
   }
-
 }

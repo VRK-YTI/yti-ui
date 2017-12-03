@@ -173,10 +173,6 @@ export class ConceptListModel {
   get onlyStatus() {
     return this.onlyStatus$.getValue();
   }
-
-  set onlyStatus(value: string|null) {
-    this.onlyStatus$.next(value);
-  }
 }
 
 export class ConceptHierarchyModel {

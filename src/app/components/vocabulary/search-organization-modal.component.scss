@@ -1,0 +1,19 @@
+.input-group-search {
+  width: 400px;
+}
+
+.content-box {
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.search-results {
+  height: 100%;
+}
+
+.modal-body.full-height {
+  .row.full-height {
+    height: calc(100% - 54px);
+  }
+}

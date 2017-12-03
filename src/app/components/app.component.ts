@@ -7,8 +7,10 @@ import { LocationService } from '../services/location.service';
   template: `
     <ng-template ngbModalContainer></ng-template>
     <app-navigation-bar></app-navigation-bar>
-    <app-breadcrumb [hidden]="!showBreadcrumb"></app-breadcrumb>
-    <router-outlet></router-outlet>
+    <div class="container-fluid" [class.without-footer]="!showFooter">
+      <app-breadcrumb [hidden]="!showBreadcrumb"></app-breadcrumb>
+      <router-outlet></router-outlet>
+    </div>
     <app-footer *ngIf="showFooter"></app-footer>
   `
 })
@@ -18,9 +20,10 @@ export class AppComponent {
   showFooter: boolean;
 
   constructor(locationService: LocationService) {
+
     locationService.location.subscribe(location => {
       this.showBreadcrumb = location.length > 1;
       this.showFooter = location.length === 1;
-    })
+    });
   }
 }

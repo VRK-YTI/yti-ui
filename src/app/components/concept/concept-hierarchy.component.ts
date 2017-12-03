@@ -10,24 +10,29 @@ import { AuthorizationManager } from '../../services/authorization-manager.sevic
   styleUrls: ['./concept-hierarchy.component.scss'],
   template: `
     <div class="row">
-      <div class="col-lg-12 tree">
+      <div class="col-lg-12">
 
-        <div class="actions">
-          <button class="button btn-default btn-add-new" (click)="addConcept()" *ngIf="canAddConcept()">
-            <i class="fa fa-plus"></i>
-            <span translate>Add concept</span>
+        <div class="selectable-actions">
+          <button class="btn btn-action btn-add-new" (click)="addConcept()" *ngIf="canAddConcept()">
+            <span translate>Add new concept</span>
           </button>
         </div>
-
-        <ul [ngClass]="{'has-button': canAddConcept()}"
-            infinite-scroll
-            [infiniteScrollDistance]="2.5"
-            [scrollWindow]="false"
-            (scrolled)="onScrollDown()">
-          <li *ngFor="let concept of model.topConcepts; trackBy: conceptIdentity">
-            <app-concept-hierarchy-node [concept]="concept"></app-concept-hierarchy-node>
-          </li>
-        </ul>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="selectable-concepts">
+          <ul [ngClass]="{'has-button': canAddConcept()}"
+              infinite-scroll
+              [infiniteScrollDistance]="2.5"
+              [scrollWindow]="false"
+              (scrolled)="onScrollDown()">
+            <li *ngFor="let concept of model.topConcepts; trackBy: conceptIdentity">
+              <app-concept-hierarchy-node [concept]="concept"></app-concept-hierarchy-node>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   `

@@ -1,58 +1,13 @@
-@import '../../../variables';
-
-// FIXME duplication with concept-list.component.scss
+@import '../../../theme/variables';
+@import '../../../mixins';
 
 $button-height: 47px;
 $buttonless-height: 137px;
 
-.search-results {
-
-  ul {
-
-    overflow-y: auto;
-    height: calc(100vh - #{$buttonless-height});
-    padding: 0;
-
-    &.has-button {
-      height: calc(100vh - #{$buttonless-height + $button-height});
-    }
-
-    li {
-      cursor: pointer;
-      padding: 3px 5px;
-      margin: 0;
-      font-size: 14px;
-      list-style: none;
-
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-
-      &.selection {
-        background-color: #f5f5f5;
-      }
-    }
-
-    li:hover {
-      color: $primary;
-      background-color: $list-group-hover-bg;
-    }
-  }
+.selectable-actions {
+  @include selectable-actions();
 }
 
-.actions {
-
-  padding-left: 5px;
-  padding-right: 5px;
-
-  .input-group-search {
-    width: 100%;
-  }
-
-  .btn-add-new {
-    padding: 10px;
-    width: 100%;
-    text-align: center;
-    margin-bottom: 5px;
-  }
+.selectable-collections {
+  @include selectable-items($button-height, $buttonless-height);
 }

@@ -13,7 +13,7 @@ export class SearchGroupModalService {
   }
 
   open(restrictGroupIds: string[]): Promise<GroupNode> {
-    const modalRef = this.modalService.open(SearchGroupModalComponent, { size: 'lg' });
+    const modalRef = this.modalService.open(SearchGroupModalComponent, { size: 'sm' });
     const instance = modalRef.componentInstance as SearchGroupModalComponent;
     instance.restricts = restrictGroupIds;
     return modalRef.result;
@@ -31,21 +31,29 @@ export class SearchGroupModalService {
       </h4>
     </div>
     <div class="modal-body full-height">
-      <div class="row">
-        <div class="col-md-6">
+
+      <div class="row mb-2">
+        <div class="col-12">
 
           <div class="input-group input-group-lg input-group-search">
-            <input #searchInput type="text" class="form-control" placeholder="{{'Search group...' | translate}}"
+            <input #searchInput type="text" class="form-control" placeholder="{{'Search group' | translate}}"
                    [(ngModel)]="search"/>
           </div>
-          
+
         </div>
-        <div class="col-md-6">
-          <div class="search-results">
-            <div class="search-result"
-                 *ngFor="let group of searchResults$ | async" 
-                 (click)="select(group)">
-              <h6 [innerHTML]="group.label | translateValue"></h6>
+      </div>
+
+      <div class="row full-height">
+        <div class="col-12">
+          <div class="content-box">
+            <div class="search-results">
+              <div class="search-result"
+                   *ngFor="let group of searchResults$ | async; let last = last"
+                   (click)="select(group)">
+                <div class="content" [class.last]="last">
+                  <span class="title" [innerHTML]="group.label | translateValue:false"></span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -53,8 +61,8 @@ export class SearchGroupModalService {
     </div>
     <div class="modal-footer">
 
-      <button type="button" 
-              class="btn btn-secondary cancel" 
+      <button type="button"
+              class="btn btn-link cancel"
               (click)="cancel()" translate>Cancel</button>
     </div>
   `

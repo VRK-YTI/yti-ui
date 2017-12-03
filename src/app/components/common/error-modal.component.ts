@@ -41,7 +41,7 @@ export class ErrorModalService {
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-default" (click)="close()" translate>Close</button>
+      <button type="button" class="btn btn-action" (click)="close()" translate>Close</button>
     </div>
   `
 })

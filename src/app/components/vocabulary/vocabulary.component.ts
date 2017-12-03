@@ -13,71 +13,69 @@ import { AuthorizationManager } from '../../services/authorization-manager.sevic
   styleUrls: ['./vocabulary.component.scss'],
   providers: [EditableService],
   template: `
-    <ngb-accordion *ngIf="vocabulary">
-      <ngb-panel>
-        <ng-template ngbPanelTitle>
-          <div class="main-panel-header">
-            <h2>
-              <span>{{vocabulary.label | translateValue}}</span>
-              <app-accordion-chevron></app-accordion-chevron>
-            </h2>
-          </div>
-        </ng-template>
-        <ng-template ngbPanelContent>
-          <form #form="ngForm" [formGroup]="formNode.control">
+    <div *ngIf="vocabulary">
 
-            <div class="top-actions">
+      <div class="header row">
+        <div class="col-12">
+          <h2>
 
-              <app-filter-language [(ngModel)]="filterLanguage"
-                                   [ngModelOptions]="{standalone: true}"
-                                   [languages]="filterLanguages"
-                                   class="pull-left"
-                                   style="width: auto"></app-filter-language>
+            <span class="mr-4">{{vocabulary.label | translateValue}}</span>
 
-              <app-editable-buttons [form]="form" 
-                                    [canRemove]="true"
-                                    [vocabulary]="vocabulary"></app-editable-buttons>
+            <button class="btn btn-action"
+                    [disabled]="open"
+                    (click)="open = true" translate>Show vocabulary details</button>
+          </h2>
 
-              <div class="pull-right" *ngIf="canImport()">
-                <input #fileInput type="file" id="fileElem" accept=".csv" style="display:none" (change)="selectFile(fileInput.files)">
-                <label for="fileElem" class="btn btn-default import-button" translate>Import vocabulary</label>
-              </div>
+          <app-filter-language [(ngModel)]="filterLanguage"
+                               [languages]="filterLanguages"
+                               class="pull-right mt-2"></app-filter-language>
+        </div>
+      </div>
 
-            </div>
+      <div *ngIf="open">
 
-            <div class="row">
-              <div class="col-md-12">
-                <div class="page-header">
-                  <h1>{{vocabulary.meta.label | translateValue:false}}</h1>
-                </div>
-              </div>
-            </div>
+        <hr />
 
-            <app-vocabulary-form [vocabulary]="vocabulary" [form]="formNode" [filterLanguage]="filterLanguage"></app-vocabulary-form>
+        <form #form="ngForm" [formGroup]="formNode.control">
+
+          <div class="top-actions">
             
-            <div class="row" *ngIf="namespace">
-              <div class="col-md-12">
-                <dl>
-                  <dt><label translate>Namespace</label></dt>
-                  <dd>
-                    <div class="form-group">
-                      {{namespace}}
-                    </div>
-                  </dd>
-                </dl>
-              </div>
+            <button type="button"
+                    *ngIf="!isEditing()"
+                    class="btn btn-link pull-right"
+                    (click)="open = false">
+              <i class="fa fa-times"></i>
+              <span translate>Close</span>
+            </button>
+            
+            <app-editable-buttons [form]="form"
+                                  [canRemove]="true"
+                                  [vocabulary]="vocabulary"></app-editable-buttons>
+
+            <div class="pull-right" *ngIf="canImport()">
+              <input #fileInput type="file" id="fileElem" accept=".csv" style="display:none" (change)="selectFile(fileInput.files)">
+              <label for="fileElem" class="btn btn-secondary-action" translate>Import vocabulary</label>
             </div>
 
-            <app-meta-information [node]="vocabulary"></app-meta-information>
-          </form>
-        </ng-template>
-      </ngb-panel>
-    </ngb-accordion>
+          </div>
+
+          <app-vocabulary-form [vocabulary]="vocabulary"
+                               [form]="formNode"
+                               [filterLanguage]="filterLanguage"
+                               [namespace]="namespace"></app-vocabulary-form>
+
+          <app-meta-information [node]="vocabulary"></app-meta-information>
+
+        </form>
+      </div>
+    </div>
   `
 })
 export class VocabularyComponent implements EditingComponent {
 
   @ViewChild('fileInput') fileInput: ElementRef;
+
+  open = false;
 
   constructor(private editableService: EditableService,
               private conceptViewModel: ConceptViewModelService,
