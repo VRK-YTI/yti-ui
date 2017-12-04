@@ -2,8 +2,9 @@ import { Component, forwardRef, Input, OnChanges } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { firstMatching } from '../../utils/array';
 import { requireDefined } from '../../utils/object';
-import { Placement } from '@ng-bootstrap/ng-bootstrap';
+import { Placement as NgbPlacement } from '@ng-bootstrap/ng-bootstrap';
 
+export type Placement = NgbPlacement;
 export type Options<T> = Option<T>[];
 
 export interface Option<T> {
