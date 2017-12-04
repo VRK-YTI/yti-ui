@@ -48,7 +48,9 @@ import { LoginModalService } from './login-modal.component';
               <span translate>LOG IN</span>
             </a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" [routerLink]="['/userDetails']" translate>User details</a>
+            <a class="dropdown-item"
+               *ngIf="isLoggedIn()"
+               [routerLink]="['/userDetails']" translate>User details</a>
           </div>
         </li>
       </ul>
