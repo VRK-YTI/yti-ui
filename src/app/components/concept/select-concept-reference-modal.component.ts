@@ -2,7 +2,7 @@ import { Component, Injectable, Input, OnInit } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConceptNode } from '../../entities/node';
 import { FormNode, FormReferenceLiteral } from '../../services/form-state';
-import { Options } from '../form/dropdown-component';
+import { Options } from '../common/dropdown-component';
 import { LanguageService } from 'app/services/language.service';
 
 @Injectable()

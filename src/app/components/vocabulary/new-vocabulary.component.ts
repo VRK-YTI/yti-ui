@@ -13,7 +13,7 @@ import { defaultLanguages } from '../../utils/language';
 import { FormControl, Validators, AbstractControl, AsyncValidatorFn } from '@angular/forms';
 import { firstMatching } from '../../utils/array';
 import { LocationService } from '../../services/location.service';
-import { Options } from '../form/dropdown-component';
+import { Options } from '../common/dropdown-component';
 
 @Component({
   selector: 'app-new-vocabulary',

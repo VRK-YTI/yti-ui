@@ -88,7 +88,7 @@ import { FilterDropdownComponent } from './components/common/filter-dropdown.com
 import { OrganizationFilterDropdownComponent } from './components/common/organization-filter-dropdown.component';
 import { VocabularyFilterDropdownComponent } from './components/common/vocabulary-filter-dropdown.component';
 import { StatusFilterDropdownComponent } from './components/common/status-filter-dropdown.component';
-import { DropdownComponent } from './components/form/dropdown-component';
+import { DropdownComponent } from './components/common/dropdown-component';
 import { PopoverCloseComponent } from './components/common/popover-close.component';
 
 const localizations: { [lang: string]: string} = {

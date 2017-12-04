@@ -8,7 +8,7 @@ import { index } from 'app/utils/array';
 import { LocationService } from 'app/services/location.service';
 import { comparingLocalizable } from '../utils/comparator';
 import { LanguageService } from '../services/language.service';
-import { Options } from './form/dropdown-component';
+import { Options } from './common/dropdown-component';
 import { TranslateService } from 'ng2-translate';
 import { combineSets, hasAny } from '../utils/set';
 
@@ -116,10 +116,6 @@ export class UserDetailsComponent implements OnDestroy  {
 
   get user() {
     return this.userService.user;
-  }
-
-  isLoggedIn() {
-    return this.userService.isLoggedIn();
   }
 
   get loading() {

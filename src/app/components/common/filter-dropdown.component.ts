@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Options } from '../form/dropdown-component';
+import { Options } from './dropdown-component';
 
 export type FilterOptions<T> = Options<T>;
 
