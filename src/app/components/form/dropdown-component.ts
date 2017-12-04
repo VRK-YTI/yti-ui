@@ -2,6 +2,7 @@ import { Component, forwardRef, Input, OnChanges } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { firstMatching } from '../../utils/array';
 import { requireDefined } from '../../utils/object';
+import { Placement } from '@ng-bootstrap/ng-bootstrap';
 
 export type Options<T> = Option<T>[];
 
@@ -18,7 +19,7 @@ export interface Option<T> {
     multi: true
   }],
   template: `
-    <div ngbDropdown *ngIf="initialized">
+    <div ngbDropdown *ngIf="initialized" [placement]="placement">
       <button class="btn btn-dropdown" ngbDropdownToggle>
         <span>{{selectionName}}</span>
       </button>
@@ -38,6 +39,7 @@ export class DropdownComponent<T> implements OnChanges, ControlValueAccessor {
 
   @Input() options: Options<T>;
   @Input() showNullOption = false;
+  @Input() placement: Placement = 'bottom-left';
 
   selection: T|null;
   initialized = false;

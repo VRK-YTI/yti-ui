@@ -87,6 +87,7 @@ interface UserOrganizationRoles {
                 <app-dropdown class="pull-left"
                               [options]="organizationOptions" 
                               [showNullOption]="false"
+                              [placement]="'top-left'"
                               [(ngModel)]="selectedOrganization"></app-dropdown>
                 
                 <button type="button"
