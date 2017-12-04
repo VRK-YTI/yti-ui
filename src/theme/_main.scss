@@ -282,6 +282,11 @@ ul.nav-tabs {
   }
 }
 
+.dropdown-menu {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
 .dropdown-toggle {
 
   &.btn-action {
