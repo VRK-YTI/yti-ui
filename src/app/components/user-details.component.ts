@@ -8,7 +8,7 @@ import { index } from 'app/utils/array';
 import { LocationService } from 'app/services/location.service';
 import { comparingLocalizable } from '../utils/comparator';
 import { LanguageService } from '../services/language.service';
-import { Options } from './form/dropdown-component';
+import { Option, Options } from './form/dropdown-component';
 import { TranslateService } from 'ng2-translate';
 
 interface UserOrganizationRoles {
@@ -130,6 +130,8 @@ export class UserDetailsComponent implements OnDestroy  {
     locationService.atUserDetails();
 
     termedService.getOrganizationList().subscribe(organizationNodes => {
+
+      organizationNodes.sort(comparingLocalizable<OrganizationNode>(languageService, org => org.label));
       this.organizationsById = index(organizationNodes, org => org.id);
       this.organizationOptions = [null, ...organizationNodes].map(org => {
         return {
