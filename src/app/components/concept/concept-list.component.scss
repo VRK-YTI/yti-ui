@@ -2,7 +2,7 @@
 @import '../../../mixins';
 
 $button-height: 57px;
-$buttonless-height: 125px;
+$buttonless-height: 127px;
 
 .selectable-actions {
   @include selectable-actions();
@@ -16,9 +16,18 @@ $buttonless-height: 125px;
     color: $primary;
     float: left;
     padding: 10px 15px;
-    margin-left: 5px;
+    margin-left: 3px;
     margin-right: -12px;
     cursor: pointer;
+    position: relative;
+
+    .tooltip-overlay {
+      width: 40px;
+      height: 44px;
+      left: -5px;
+      top: 0;
+      position: absolute;
+    }
   }
 
   .filters {

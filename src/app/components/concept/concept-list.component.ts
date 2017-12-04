@@ -28,13 +28,19 @@ import { AuthorizationManager } from '../../services/authorization-manager.sevic
             <app-ajax-loading-indicator-small *ngIf="model.loading"></app-ajax-loading-indicator-small>
           </div>
 
-          <div class="button btn-default btn-lg btn-filters"
-               [ngbPopover]="filters" 
-               triggers="manual" 
-               placement="right" 
+          <div class="btn btn-lg btn-filters"
+               [ngbPopover]="filters"
+               [triggers]="'manual'"
+               [placement]="'right'"
                #p="ngbPopover"
                [popoverTitle]="'Filter results' | translate"
                (click)="p.toggle()">
+            
+            <div class="tooltip-overlay" 
+                 ngbTooltip="{{'Filter results' | translate}}"
+                 #filterTooltip="ngbTooltip"
+                 (click)="filterTooltip.close()"></div>
+            
             <i class="fa fa-ellipsis-v"></i>
           </div>
 
