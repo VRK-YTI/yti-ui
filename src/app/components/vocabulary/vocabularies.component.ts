@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { GroupNode, OrganizationNode, VocabularyNode } from '../../entities/node';
 import { AuthorizationManager } from '../../services/authorization-manager.sevice';
@@ -12,6 +12,7 @@ import { LanguageService } from '../../services/language.service';
 import { VocabularyNodeType } from '../../entities/node-api';
 import { FilterOptions } from '../common/filter-dropdown.component';
 import { TranslateService } from 'ng2-translate';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'app-vocabularies',
@@ -105,7 +106,7 @@ import { TranslateService } from 'ng2-translate';
     </div>
   `
 })
-export class VocabulariesComponent {
+export class VocabulariesComponent implements OnDestroy {
 
   vocabularies: VocabularyNode[] = [];
 
@@ -120,6 +121,8 @@ export class VocabulariesComponent {
 
   filteredVocabularies: VocabularyNode[] = [];
 
+  subscriptionToClean: Subscription[] = [];
+
   constructor(private authorizationManager: AuthorizationManager,
               languageService: LanguageService,
               translateService: TranslateService,
@@ -128,7 +131,11 @@ export class VocabulariesComponent {
 
     const vocabularies$ = termedService.getVocabularyList();
 
-    vocabularies$.subscribe(vocabularies => this.vocabularies = vocabularies);
+    this.subscriptionToClean.push(Observable.combineLatest(vocabularies$, languageService.language$)
+      .subscribe(([vocabularies]) => {
+        this.vocabularies = vocabularies;
+        this.vocabularies.sort(comparingLocalizable<VocabularyNode>(languageService, voc => voc.label));
+      }));
 
     this.vocabularyTypes = [null, 'Vocabulary', 'TerminologicalVocabulary'].map(type => {
       return {
@@ -139,12 +146,32 @@ export class VocabulariesComponent {
 
     this.organizations$ = termedService.getOrganizationList();
 
-    Observable.zip(termedService.getGroupList(), vocabularies$)
-      .subscribe(([groups, vocabularies]) => {
+    function searchMatches(search: string, vocabulary: VocabularyNode) {
+      return !search || anyMatching(vocabulary.prefLabel, attr => matches(attr.value, search));
+    }
 
-        const vocabularyCount = (group: GroupNode) => {
-          return vocabularies.filter(voc => anyMatching(voc.groups, vocGroup => vocGroup.id === group.id)).length;
-        };
+    function classificationMatches(classification: GroupNode|null, vocabulary: VocabularyNode) {
+      return !classification || anyMatching(vocabulary.groups, group => group.id === classification.id);
+    }
+
+    function organizationMatches(organization: OrganizationNode|null, vocabulary: VocabularyNode) {
+      return !organization || anyMatching(vocabulary.publishers, publisher => publisher.id === organization.id);
+    }
+
+    function vocabularyTypeMatches(vocabularyType: VocabularyNodeType|null, vocabulary: VocabularyNode) {
+      return !vocabularyType || vocabulary.type === vocabularyType;
+    }
+
+    Observable.combineLatest(termedService.getGroupList(), vocabularies$, this.search$, this.organization$, this.vocabularyType$)
+      .subscribe(([groups, vocabularies, search, organization, vocabularyType]) => {
+
+        const matchingVocabularies = vocabularies.filter(vocabulary =>
+          searchMatches(search, vocabulary) &&
+          organizationMatches(organization, vocabulary) &&
+          vocabularyTypeMatches(vocabularyType, vocabulary));
+
+        const vocabularyCount = (classification: GroupNode) =>
+          matchingVocabularies.filter(voc => classificationMatches(classification, voc)).length;
 
         this.classifications = groups.map(group => ({ node: group, count: vocabularyCount(group) }));
         this.classifications.sort(comparingLocalizable<{ node: GroupNode }>(languageService, c => c.node.label));
@@ -153,17 +180,11 @@ export class VocabulariesComponent {
     Observable.combineLatest(vocabularies$, this.search$, this.classification$, this.organization$, this.vocabularyType$)
       .subscribe(([vocabularies, search, classification, organization, vocabularyType]) => {
 
-        this.filteredVocabularies = vocabularies.filter(vocabulary => {
-
-          const searchMatches = !search || anyMatching(vocabulary.prefLabel, attr => matches(attr.value, search));
-          const classificationMatches = !classification || anyMatching(vocabulary.groups, group => group.id === classification.id);
-          const organizationMatches = !organization || anyMatching(vocabulary.publishers, publisher => publisher.id === organization.id);
-          const vocabularyTypeMatches = !vocabularyType || vocabulary.type === vocabularyType;
-
-          return searchMatches && classificationMatches && organizationMatches && vocabularyTypeMatches;
-        });
-
-        this.filteredVocabularies.sort(comparingLocalizable<VocabularyNode>(languageService, voc => voc.label));
+        this.filteredVocabularies = vocabularies.filter(vocabulary =>
+          searchMatches(search, vocabulary) &&
+          classificationMatches(classification, vocabulary) &&
+          organizationMatches(organization, vocabulary) &&
+          vocabularyTypeMatches(vocabularyType, vocabulary));
       });
   }
 
@@ -197,5 +218,9 @@ export class VocabulariesComponent {
 
   addVocabulary() {
     this.router.navigate(['/newVocabulary']);
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptionToClean.forEach(s => s.unsubscribe());
   }
 }
