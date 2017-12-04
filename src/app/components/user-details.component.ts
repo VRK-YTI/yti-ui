@@ -10,6 +10,7 @@ import { comparingLocalizable } from '../utils/comparator';
 import { LanguageService } from '../services/language.service';
 import { Options } from './form/dropdown-component';
 import { TranslateService } from 'ng2-translate';
+import { combineSets, hasAny } from '../utils/set';
 
 interface UserOrganizationRoles {
   organization?: OrganizationNode;
@@ -21,86 +22,57 @@ interface UserOrganizationRoles {
   selector: 'app-user-details',
   styleUrls: ['./user-details.component.scss'],
   template: `
-    <div class="content-box" *ngIf="isLoggedIn">
+    <div class="content-box" *ngIf="!loading">
 
-      <div class="row">
-        <div class="col-md-12">
-          <div class="page-header">
-            <h2 translate>User details</h2>
+      <div class="page-header">
+        <h2 translate>User details</h2>
+      </div>
+
+      <div class="form-group">
+        <label translate>Name</label>
+        <p class="form-control-static">{{user.name}}</p>
+      </div>
+
+      <div class="form-group">
+        <label translate>Email</label>
+        <p class="form-control-static">{{user.email}}</p>
+      </div>
+
+      <div class="form-group">
+        <label translate>Organizations and roles</label>
+        <div class="form-control-static">
+          <div *ngFor="let userOrganization of userOrganizations">
+            <div *ngIf="userOrganization.organization">{{userOrganization.organization.label | translateValue:false}}</div>
+            <div *ngIf="!userOrganization.organization" translate>Unknown organization</div>
+            <ul>
+              <li *ngFor="let role of userOrganization.roles">{{role | translate}}</li>
+              <li *ngFor="let requestRole of userOrganization.requests">
+                {{requestRole | translate}} (<span translate>Waiting for approval</span>)
+              </li>
+            </ul>
           </div>
         </div>
       </div>
 
-      <div class="row">
+      <div class="form-group">
 
-        <div class="col-md-12">
-          <dl>
-            <dt><label translate>Name</label></dt>
-            <dd>
-              <div class="form-group">
-                {{user.name}}
-              </div>
-            </dd>
-          </dl>
-        </div>
+        <label translate>Send access request</label>
+        
+        <div class="input-group">
+          
+          <app-dropdown [options]="organizationOptions"
+                        [showNullOption]="false"
+                        [placement]="'top-left'"
+                        [(ngModel)]="selectedOrganization"></app-dropdown>
 
-        <div class="col-md-12">
-          <dl>
-            <dt><label translate>Email</label></dt>
-            <dd>
-              <div class="form-group">
-                {{user.email}}
-              </div>
-            </dd>
-          </dl>
-        </div>
-
-        <div class="col-md-12">
-          <dl>
-            <dt><label translate>Organizations and roles</label></dt>
-            <dd>
-              <div class="form-group" *ngIf="userOrganizations">
-                <div *ngFor="let userOrganization of userOrganizations">
-                  <div *ngIf="userOrganization.organization">{{userOrganization.organization.label | translateValue:false}}</div>
-                  <div *ngIf="!userOrganization.organization" translate>Unknown organization</div>
-                  <ul>
-                    <li *ngFor="let role of userOrganization.roles">{{role | translate}}</li>
-                    <li *ngFor="let requestRole of userOrganization.requests">
-                      {{requestRole | translate}} (<span translate>Waiting for approval</span>)
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </dd>
-          </dl>
-        </div>
-
-      </div>
-
-      <div class="row">
-        <div class="col-md-12">
-
-          <div class="form-group">
-            <dl>
-              <dt><label for="organizations" translate>Send access request</label></dt>
-              <dd>
-                <app-dropdown class="pull-left"
-                              [options]="organizationOptions" 
-                              [showNullOption]="false"
-                              [placement]="'top-left'"
-                              [(ngModel)]="selectedOrganization"></app-dropdown>
-                
-                <button type="button"
-                        class="btn btn-action pull-left ml-2"
-                        [disabled]="!selectedOrganization"
-                        (click)="sendRequest()" translate>Send</button>
-              </dd>
-            </dl>
+          <div class="input-group-btn">
+            <button type="button"
+                    class="btn btn-action"
+                    [disabled]="!selectedOrganization"
+                    (click)="sendRequest()" translate>Send</button>
           </div>
-
         </div>
       </div>
-
     </div>
   `
 })
@@ -108,11 +80,10 @@ export class UserDetailsComponent implements OnDestroy  {
 
   private loggedInSubscription: Subscription;
 
-  organizationsById: Map<string, OrganizationNode>;
+  allOrganizations: OrganizationNode[];
+  allOrganizationsById: Map<string, OrganizationNode>;
   selectedOrganization: OrganizationNode|null = null;
   requestsInOrganizations = new Map<string, Set<Role>>();
-
-  organizationOptions: Options<OrganizationNode>;
 
   constructor(private router: Router,
               private userService: UserService,
@@ -132,14 +103,8 @@ export class UserDetailsComponent implements OnDestroy  {
     termedService.getOrganizationList().subscribe(organizationNodes => {
 
       organizationNodes.sort(comparingLocalizable<OrganizationNode>(languageService, org => org.label));
-      this.organizationsById = index(organizationNodes, org => org.id);
-      this.organizationOptions = [null, ...organizationNodes].map(org => {
-        return {
-          value: org,
-          name: () => org ? languageService.translate(org.label, false)
-                          : translateService.instant('Choose organization')
-        }
-      });
+      this.allOrganizations = organizationNodes;
+      this.allOrganizationsById = index(organizationNodes, org => org.id);
     });
 
     this.refreshRequests();
@@ -157,11 +122,11 @@ export class UserDetailsComponent implements OnDestroy  {
     return this.userService.isLoggedIn();
   }
 
-  get userOrganizations(): UserOrganizationRoles[]  {
+  get loading() {
+    return !this.allOrganizations || !this.requestsInOrganizations;
+  }
 
-    if (!this.organizationsById || !this.requestsInOrganizations) {
-      return [];
-    }
+  get userOrganizations(): UserOrganizationRoles[] {
 
     const organizationIds = new Set<string>([
       ...Array.from(this.user.rolesInOrganizations.keys()),
@@ -170,7 +135,7 @@ export class UserDetailsComponent implements OnDestroy  {
 
     const result = Array.from(organizationIds.values()).map(organizationId => {
       return {
-        organization: this.organizationsById.get(organizationId),
+        organization: this.allOrganizationsById.get(organizationId),
         roles: Array.from(this.user.getRoles(organizationId)),
         requests: Array.from(this.requestsInOrganizations.get(organizationId) || [])
       }
@@ -181,26 +146,27 @@ export class UserDetailsComponent implements OnDestroy  {
     return result;
   }
 
-  get organizationsForRequest() {
-
-    if (!this.organizationsById) {
-      return [];
-    }
-
-    const allOrganizations = Array.from(this.organizationsById.values());
-    allOrganizations.sort(comparingLocalizable<OrganizationNode>(this.languageService, org => org.label));
+  get organizationOptions(): Options<OrganizationNode> {
 
     const hasExistingRoleOrRequest = (org: OrganizationNode) => {
 
-      const requestsInOrg = this.requestsInOrganizations.get(org.id) || new Set<Role>();
-      const rolesInOrg = this.user.getRoles(org.id);
+      const rolesOrRequests = combineSets([
+        this.user.getRoles(org.id),
+        this.requestsInOrganizations.get(org.id) || new Set<Role>()
+      ]);
 
-      return rolesInOrg.has('TERMINOLOGY_EDITOR')
-        || rolesInOrg.has('ADMIN')
-        || requestsInOrg.has('TERMINOLOGY_EDITOR');
+      return hasAny(rolesOrRequests, ['TERMINOLOGY_EDITOR', 'ADMIN']);
     };
 
-    return allOrganizations.filter(organization => !hasExistingRoleOrRequest(organization));
+    const requestableOrganizations = this.allOrganizations.filter(organization => !hasExistingRoleOrRequest(organization));
+
+    return [null, ...requestableOrganizations].map(org => {
+      return {
+        value: org,
+        name: () => org ? this.languageService.translate(org.label, false)
+          : this.translateService.instant('Choose organization')
+      };
+    })
   }
 
   sendRequest() {
