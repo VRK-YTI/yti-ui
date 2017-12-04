@@ -11,34 +11,34 @@ import { Node } from '../../entities/node';
       
       <div class="row">
         <div class="col-sm-6">
-          <dl>
-            <dt translate>Created at</dt>
-            <dd>{{node.createdDate | timestamp}}</dd>
-          </dl>
+          <div class="form-group">
+            <label translate>Created at</label>
+            <p class="form-control-static">{{node.createdDate | timestamp}}</p>
+          </div>
         </div>
         <div class="col-sm-6">
-          <dl>
-            <dt translate>Created by</dt>
-            <dd>{{node.createdBy}}</dd>
-          </dl>
+          <div class="form-group">
+            <label translate>Created by</label>
+            <p class="form-control-static">{{node.createdBy}}</p>
+          </div>
         </div>
         <div class="col-sm-6" *ngIf="showModified">
-          <dl>
-            <dt translate>Modified at</dt>
-            <dd>{{node.lastModifiedDate | timestamp}}</dd>
-          </dl>
+          <div class="form-group">
+            <label translate>Modified at</label>
+            <p class="form-control-static">{{node.lastModifiedDate | timestamp}}</p>
+          </div>
         </div>
         <div class="col-sm-6" *ngIf="showModified">
-          <dl>
-            <dt translate>Modified by</dt>
-            <dd>{{node.lastModifiedBy}}</dd>
-          </dl>
+          <div class="form-group">
+            <label translate>Modified by</label>
+            <p class="form-control-static">{{node.lastModifiedBy}}</p>
+          </div>
         </div>
         <div class="col-sm-12">
-          <dl>
-            <dt>URI</dt>
-            <dd>{{node.uri}}</dd>
-          </dl>
+          <div class="form-group">
+            <label>URI</label>
+            <p class="form-control-static">{{node.uri}}</p>
+          </div>
         </div>
       </div>
     </div>

@@ -29,12 +29,10 @@ import { Options } from '../form/dropdown-component';
 
           <div class="row">
             <div class="col-6">
-              <dl>
-                <dt><label for="vocabularyType" translate>Vocabulary type</label></dt>
-                <dd>
-                  <app-dropdown [formControl]="templateControl" [options]="templateOptions"></app-dropdown>
-                </dd>
-              </dl>
+              <div class="form-group">
+                <label for="vocabularyType" translate>Vocabulary type</label>
+                <app-dropdown [formControl]="templateControl" [options]="templateOptions"></app-dropdown>
+              </div>
             </div>
 
             <div class="col-6">

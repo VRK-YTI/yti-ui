@@ -7,33 +7,23 @@ import { TermedService } from '../../services/termed.service';
   styleUrls: ['./prefix-input.component.scss'],
   template: `
     <div class="row">
-    
       <div class="col-md-6">
-        <dl>
-          <dt><label for="prefix" translate>Prefix</label></dt>
-          <dd>
-            <div class="form-group">
-              <input type="text"
-                    class="form-control"
-                    id="prefix"
-                    autocomplete="off"
-                    [ngClass]="{'is-invalid': !valid}"
-                    [formControl]="control" />
-              <app-error-messages [control]="parentControl"></app-error-messages>
-            </div>
-          </dd>
-        </dl>
+        <div class="form-group">
+          <label for="prefix" translate>Prefix</label>
+          <input type="text"
+                 class="form-control"
+                 id="prefix"
+                 autocomplete="off"
+                 [ngClass]="{'is-invalid': !valid}"
+                 [formControl]="control" />
+          <app-error-messages [control]="parentControl"></app-error-messages>
+        </div>
       </div>
     
       <div class="col-md-6">
-        <dl>
-          <dt><label translate>Namespace</label></dt>
-          <dd>
-            <div class="form-group">
-              {{namespace}}{{control.value}}
-            </div>
-          </dd>
-        </dl>
+        <div class="form-group"></div>
+        <label translate>Namespace</label>
+        <p class="form-control-static">{{namespace}}{{control.value}}</p>
       </div>
     
     </div>

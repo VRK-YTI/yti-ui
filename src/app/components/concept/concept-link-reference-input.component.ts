@@ -94,14 +94,10 @@ export class ConceptLinkReferenceInputComponent implements OnInit {
 @Component({
   selector: 'app-concept-link-reference-popover',
   template: `
-    <dl>
-      <dt>
-        <label>{{link.vocabularyMetaLabel | translateValue:false}}</label>
-      </dt>
-      <dd>
-        <span>{{link.vocabularyLabel | translateValue}}</span>
-      </dd>
-    </dl>
+    <div class="form-group">
+      <label>{{link.vocabularyMetaLabel | translateValue:false}}</label>
+      <p class="form-control-static">{{link.vocabularyLabel | translateValue}}</p>
+    </div>
     
     <app-meta-information [hidden]="!link.persistent" [showModified]="false" [node]="link"></app-meta-information>
   `
