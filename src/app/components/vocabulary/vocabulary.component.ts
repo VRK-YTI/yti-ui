@@ -22,8 +22,12 @@ import { AuthorizationManager } from '../../services/authorization-manager.sevic
             <span class="mr-4">{{vocabulary.label | translateValue}}</span>
 
             <button class="btn btn-action"
-                    [disabled]="open"
+                    [hidden]="open"
                     (click)="open = true" translate>Show vocabulary details</button>
+
+            <button class="btn btn-action"
+                    [hidden]="!open"
+                    (click)="open = false" translate>Hide vocabulary details</button>
           </h2>
 
           <app-filter-language [(ngModel)]="filterLanguage"

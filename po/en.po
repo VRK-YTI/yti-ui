@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-12-03 23:23+0200\n"
+"PO-Revision-Date: 2017-12-04 14:33+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -107,10 +107,10 @@ msgstr ""
 msgid "Select reference"
 msgstr ""
 
-msgid "Edit"
+msgid "Save"
 msgstr ""
 
-msgid "Save"
+msgid "Edit"
 msgstr ""
 
 msgid "Remove"
@@ -244,13 +244,13 @@ msgstr ""
 msgid "Add organization"
 msgstr ""
 
-msgid "Search group..."
+msgid "Search group"
 msgstr ""
 
 msgid "Choose group"
 msgstr ""
 
-msgid "Search organization..."
+msgid "Search organization"
 msgstr ""
 
 msgid "Choose organization"
@@ -272,6 +272,9 @@ msgid "vocabularies"
 msgstr ""
 
 msgid "Show vocabulary details"
+msgstr ""
+
+msgid "Hide vocabulary details"
 msgstr ""
 
 msgid "Import vocabulary"

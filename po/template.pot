@@ -97,10 +97,10 @@ msgstr ""
 msgid "Select reference"
 msgstr ""
 
-msgid "Edit"
+msgid "Save"
 msgstr ""
 
-msgid "Save"
+msgid "Edit"
 msgstr ""
 
 msgid "Remove"
@@ -262,6 +262,9 @@ msgid "vocabularies"
 msgstr ""
 
 msgid "Show vocabulary details"
+msgstr ""
+
+msgid "Hide vocabulary details"
 msgstr ""
 
 msgid "Import vocabulary"

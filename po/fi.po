@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-12-03 23:26+0200\n"
+"PO-Revision-Date: 2017-12-04 14:33+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -109,11 +109,11 @@ msgstr "Viitteen tyyppi"
 msgid "Select reference"
 msgstr "Valitse viite"
 
-msgid "Edit"
-msgstr "Muokkaa"
-
 msgid "Save"
 msgstr "Tallenna"
+
+msgid "Edit"
+msgstr "Muokkaa"
 
 msgid "Remove"
 msgstr "Poista"
@@ -280,6 +280,9 @@ msgstr "sanastoa"
 
 msgid "Show vocabulary details"
 msgstr "Näytä sanaston tiedot"
+
+msgid "Hide vocabulary details"
+msgstr "Piilota sanaston tiedot"
 
 msgid "Import vocabulary"
 msgstr "Tuo sanasto"
