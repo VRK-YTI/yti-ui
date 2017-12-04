@@ -164,7 +164,7 @@ export class UserDetailsComponent implements OnDestroy  {
       return {
         value: org,
         name: () => org ? this.languageService.translate(org.label, false)
-          : this.translateService.instant('Choose organization')
+                        : this.translateService.instant('Choose organization')
       };
     })
   }
