@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ConceptViewModelService } from '../../services/concept.view.service';
+import { ConceptViewModelService } from 'app/services/concept.view.service';
 
 @Component({
   selector: 'app-no-selection',

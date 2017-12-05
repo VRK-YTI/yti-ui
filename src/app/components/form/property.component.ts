@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { ConceptNode } from '../../entities/node';
-import { EditableService } from '../../services/editable.service';
-import { FormPropertyLiteral, FormPropertyLiteralList, FormPropertyLocalizable } from '../../services/form-state';
+import { ConceptNode } from 'app/entities/node';
+import { EditableService } from 'app/services/editable.service';
+import { FormPropertyLiteral, FormPropertyLiteralList, FormPropertyLocalizable } from 'app/services/form-state';
 
 type FormProperty = FormPropertyLiteral
                   | FormPropertyLiteralList

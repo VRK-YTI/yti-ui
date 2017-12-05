@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { UserService, UUID } from 'yti-common-ui/services/user.service';
-import { VocabularyNode } from '../entities/node';
+import { VocabularyNode } from 'app/entities/node';
 
 @Injectable()
 export class AuthorizationManager {

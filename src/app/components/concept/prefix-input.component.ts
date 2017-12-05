@@ -1,6 +1,6 @@
 import { Component, Optional, Self } from '@angular/core';
 import { ControlValueAccessor, FormControl, NgControl } from '@angular/forms';
-import { TermedService } from '../../services/termed.service';
+import { TermedService } from 'app/services/termed.service';
 
 @Component({
   selector: 'app-prefix-input',

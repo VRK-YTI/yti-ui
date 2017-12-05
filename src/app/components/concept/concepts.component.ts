@@ -1,11 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ConceptViewModelService } from '../../services/concept.view.service';
-import { SessionService } from '../../services/session.service';
-import { ConceptNetworkComponent } from '../visualization/concept-network.component';
-import { EditingComponent } from '../../services/editable.service';
-import { VocabularyComponent } from '../vocabulary/vocabulary.component';
+import { ConceptViewModelService } from 'app/services/concept.view.service';
+import { SessionService } from 'app/services/session.service';
+import { ConceptNetworkComponent } from 'app/components/visualization/concept-network.component';
+import { EditingComponent } from 'app/services/editable.service';
+import { VocabularyComponent } from 'app/components/vocabulary/vocabulary.component';
 
 @Component({
   selector: 'app-concepts',

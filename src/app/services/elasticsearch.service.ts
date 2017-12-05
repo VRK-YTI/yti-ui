@@ -3,7 +3,7 @@ import { withFirstLocalizations } from 'yti-common-ui/utils/localization';
 import { LanguageService } from './language.service';
 import { Http, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
-import { environment } from '../../environments/environment';
+import { environment } from 'environments/environment';
 import { normalizeAsArray } from 'yti-common-ui/utils/array';
 import { Moment } from 'moment';
 import * as moment from 'moment';

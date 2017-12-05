@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, ElementRef, ViewChild, AfterViewChecked } from '@angular/core';
 import { Parser, Node as MarkdownNode } from 'commonmark';
-import { ConceptNode } from '../../entities/node';
-import { logUnsupportedNodes, removeWhiteSpaceNodes, children } from '../../utils/markdown';
+import { ConceptNode } from 'app/entities/node';
+import { logUnsupportedNodes, removeWhiteSpaceNodes, children } from 'app/utils/markdown';
 import { firstMatching } from 'yti-common-ui/utils/array';
 import { Localizable } from 'yti-common-ui/types/localization';
 import { asLocalizable } from 'yti-common-ui/utils/localization';

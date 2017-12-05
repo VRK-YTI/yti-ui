@@ -2,7 +2,7 @@ import {
   AfterViewInit, Component, ElementRef, EventEmitter, Input, NgZone, OnDestroy,
   Output
 } from '@angular/core';
-import { ConceptNode } from '../../entities/node';
+import { ConceptNode } from 'app/entities/node';
 
 @Component({
   selector: 'app-markdown-input-link-popover',

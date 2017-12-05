@@ -1,12 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ConceptLinkNode, ConceptNode, VocabularyNode } from '../../entities/node';
-import { EditableService } from '../../services/editable.service';
+import { ConceptLinkNode, ConceptNode, VocabularyNode } from 'app/entities/node';
+import { EditableService } from 'app/services/editable.service';
 import { SearchConceptModalService } from './search-concept-modal.component';
-import { MetaModelService } from '../../services/meta-model.service';
-import { TermedService } from '../../services/termed.service';
+import { MetaModelService } from 'app/services/meta-model.service';
+import { TermedService } from 'app/services/termed.service';
 import { ignoreModalClose } from 'yti-common-ui/utils/modal';
-import { FormReferenceLiteral } from '../../services/form-state';
-import { MetaModel } from '../../entities/meta';
+import { FormReferenceLiteral } from 'app/services/form-state';
+import { MetaModel } from 'app/entities/meta';
 import { Observable } from 'rxjs/Observable';
 
 @Component({

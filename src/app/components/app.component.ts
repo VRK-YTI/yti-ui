@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { LocationService } from '../services/location.service';
+import { LocationService } from 'app/services/location.service';
 
 @Component({
   selector: 'app-root',

@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { LocationService } from './location.service';
 import { TermedService } from './termed.service';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { CollectionNode, ConceptNode, VocabularyNode } from '../entities/node';
+import { CollectionNode, ConceptNode, VocabularyNode } from 'app/entities/node';
 import { comparingLocalizable } from 'yti-common-ui/utils/comparator';
 import { LanguageService } from './language.service';
 import { MetaModelService } from './meta-model.service';
@@ -17,12 +17,12 @@ import { ElasticSearchService, IndexedConcept } from './elasticsearch.service';
 import {
   ContentExtractor, filterAndSortSearchResults, labelComparator, scoreComparator,
   TextAnalysis
-} from '../utils/text-analyzer';
+} from 'app/utils/text-analyzer';
 import { isDefined } from 'yti-common-ui/utils/object';
 import { Subject } from 'rxjs/Subject';
 import { removeMatching, replaceMatching } from 'yti-common-ui/utils/array';
 import { FormNode } from './form-state';
-import { MetaModel } from '../entities/meta';
+import { MetaModel } from 'app/entities/meta';
 import { TranslateService } from 'ng2-translate';
 import { PrefixAndNamespace } from 'app/entities/prefix-and-namespace';
 

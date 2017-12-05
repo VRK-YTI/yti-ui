@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ElementRef, ViewChild, AfterViewChecked } from '@angular/core';
 import { Parser, Node as MarkdownNode } from 'commonmark';
-import { logUnsupportedNodes, removeWhiteSpaceNodes, children } from '../../utils/markdown';
+import { logUnsupportedNodes, removeWhiteSpaceNodes, children } from 'app/utils/markdown';
 
 const supportedNodeTypes = ['document', 'paragraph', 'link', 'text'];
 const parser = new Parser();

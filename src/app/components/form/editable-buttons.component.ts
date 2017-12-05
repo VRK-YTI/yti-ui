@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
-import { EditableService } from '../../services/editable.service';
+import { EditableService } from 'app/services/editable.service';
 import { NgForm } from '@angular/forms';
-import { VocabularyNode } from '../../entities/node';
-import { AuthorizationManager } from '../../services/authorization-manager.sevice';
+import { VocabularyNode } from 'app/entities/node';
+import { AuthorizationManager } from 'app/services/authorization-manager.sevice';
 
 @Component({
   styleUrls: ['./editable-buttons.component.scss'],

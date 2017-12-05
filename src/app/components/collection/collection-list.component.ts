@@ -1,9 +1,9 @@
 import { Component, AfterViewInit, ElementRef, ViewChild, Renderer } from '@angular/core';
-import { CollectionNode } from '../../entities/node';
-import { CollectionListModel, ConceptViewModelService } from '../../services/concept.view.service';
+import { CollectionNode } from 'app/entities/node';
+import { CollectionListModel, ConceptViewModelService } from 'app/services/concept.view.service';
 import { Router } from '@angular/router';
 import { v4 as uuid } from 'uuid';
-import { AuthorizationManager } from '../../services/authorization-manager.sevice';
+import { AuthorizationManager } from 'app/services/authorization-manager.sevice';
 
 @Component({
   selector: 'app-collection-list',

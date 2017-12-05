@@ -1,10 +1,10 @@
 import { Component, AfterViewInit, ElementRef, ViewChild, Renderer } from '@angular/core';
 import { Router } from '@angular/router';
-import { ConceptListModel, ConceptViewModelService } from '../../services/concept.view.service';
-import { statuses } from '../../entities/constants';
+import { ConceptListModel, ConceptViewModelService } from 'app/services/concept.view.service';
+import { statuses } from 'app/entities/constants';
 import { v4 as uuid } from 'uuid';
-import { IndexedConcept } from '../../services/elasticsearch.service';
-import { AuthorizationManager } from '../../services/authorization-manager.sevice';
+import { IndexedConcept } from 'app/services/elasticsearch.service';
+import { AuthorizationManager } from 'app/services/authorization-manager.sevice';
 
 @Component({
   selector: 'app-concept-list',

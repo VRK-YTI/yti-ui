@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform, OnDestroy } from '@angular/core';
 import { Localizable } from 'yti-common-ui/types/localization';
-import { LanguageService, Language } from '../services/language.service';
+import { LanguageService, Language } from 'app/services/language.service';
 import { Subscription } from 'rxjs';
 import { isDefined } from 'yti-common-ui/utils/object';
 import { createSearchRegex } from 'yti-common-ui/utils/regex';

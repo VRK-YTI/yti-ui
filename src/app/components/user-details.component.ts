@@ -7,7 +7,7 @@ import { OrganizationNode } from 'app/entities/node';
 import { index } from 'yti-common-ui/utils/array';
 import { LocationService } from 'app/services/location.service';
 import { comparingLocalizable } from 'yti-common-ui/utils/comparator';
-import { LanguageService } from '../services/language.service';
+import { LanguageService } from 'app/services/language.service';
 import { Options } from 'yti-common-ui/components/dropdown.component';
 import { TranslateService } from 'ng2-translate';
 import { combineSets, hasAny } from 'yti-common-ui/utils/set';

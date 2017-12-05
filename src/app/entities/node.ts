@@ -8,7 +8,7 @@ import {
 } from './meta';
 import { Moment } from 'moment';
 import * as moment from 'moment';
-import { defaultLanguages } from '../utils/language';
+import { defaultLanguages } from 'app/utils/language';
 
 export type KnownNode = VocabularyNode
                       | ConceptNode

@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { VocabularyNode } from '../../entities/node';
-import { FormNode, FormField } from '../../services/form-state';
-import { EditableService } from '../../services/editable.service';
+import { VocabularyNode } from 'app/entities/node';
+import { FormNode, FormField } from 'app/services/form-state';
+import { EditableService } from 'app/services/editable.service';
 
 @Component({
   selector: 'app-vocabulary-form',

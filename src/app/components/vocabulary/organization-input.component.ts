@@ -1,10 +1,10 @@
 import { Component, Input } from '@angular/core';
-import { OrganizationNode, VocabularyNode } from '../../entities/node';
-import { EditableService } from '../../services/editable.service';
-import { FormReferenceLiteral } from '../../services/form-state';
+import { OrganizationNode, VocabularyNode } from 'app/entities/node';
+import { EditableService } from 'app/services/editable.service';
+import { FormReferenceLiteral } from 'app/services/form-state';
 import { SearchOrganizationModalService } from './search-organization-modal.component';
 import { ignoreModalClose } from 'yti-common-ui/utils/modal';
-import { AuthorizationManager } from '../../services/authorization-manager.sevice';
+import { AuthorizationManager } from 'app/services/authorization-manager.sevice';
 
 @Component({
   selector: 'app-organization-input',

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Node } from '../../entities/node';
+import { Node } from 'app/entities/node';
 
 @Component({
   selector: 'app-meta-information',

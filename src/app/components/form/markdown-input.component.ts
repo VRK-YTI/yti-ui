@@ -2,12 +2,12 @@ import { Component, ElementRef, forwardRef, Input, OnInit, ViewChild } from '@an
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { Node as MarkdownNode, Parser } from 'commonmark';
-import { DomPath, DomPoint, DomSelection, formatTextContent, isInDocument, moveCursor, removeChildren } from '../../utils/dom';
+import { DomPath, DomPoint, DomSelection, formatTextContent, isInDocument, moveCursor, removeChildren } from 'app/utils/dom';
 import { allMatching, first, firstMatching, insertBefore, last, nextOf, nextOfMatching, previousOf, previousOfMatching, remove } from 'yti-common-ui/utils/array';
-import { children } from '../../utils/markdown';
+import { children } from 'app/utils/markdown';
 import { wordAtOffset } from 'yti-common-ui/utils/string';
 import { isDefined, requireDefined } from 'yti-common-ui/utils/object';
-import { ConceptNode } from '../../entities/node';
+import { ConceptNode } from 'app/entities/node';
 
 class Model {
 

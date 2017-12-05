@@ -1,6 +1,6 @@
 import { Component, Input  } from '@angular/core';
-import { EditableService } from '../../services/editable.service';
-import { FormPropertyLiteral } from '../../services/form-state';
+import { EditableService } from 'app/services/editable.service';
+import { FormPropertyLiteral } from 'app/services/form-state';
 
 @Component({
   styleUrls: ['./literal-input.component.scss'],

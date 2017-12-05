@@ -1,11 +1,11 @@
 import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { EditableService, EditingComponent } from '../../services/editable.service';
-import { ConceptViewModelService } from '../../services/concept.view.service';
+import { EditableService, EditingComponent } from 'app/services/editable.service';
+import { ConceptViewModelService } from 'app/services/concept.view.service';
 import { Subscription } from 'rxjs';
-import { DeleteConfirmationModalService } from '../common/delete-confirmation-modal.component';
+import { DeleteConfirmationModalService } from 'app/components/common/delete-confirmation-modal.component';
 import { requireDefined } from 'yti-common-ui/utils/object';
-import { LanguageService } from '../../services/language.service';
+import { LanguageService } from 'app/services/language.service';
 import { FormField } from 'app/services/form-state';
 
 @Component({

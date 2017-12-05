@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy, ElementRef, ViewChild, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
-import { CollectionNode, ConceptNode } from '../../entities/node';
-import { stripMarkdown } from '../../utils/markdown';
-import { LanguageService } from '../../services/language.service';
-import { TermedService } from '../../services/termed.service';
-import { ConceptViewModelService } from '../../services/concept.view.service';
+import { CollectionNode, ConceptNode } from 'app/entities/node';
+import { stripMarkdown } from 'app/utils/markdown';
+import { LanguageService } from 'app/services/language.service';
+import { TermedService } from 'app/services/termed.service';
+import { ConceptViewModelService } from 'app/services/concept.view.service';
 import {
   Node as VisNode,
   Edge as VisEdge,
@@ -12,12 +12,12 @@ import {
   Network as VisNetwork,
   Options as VisNetworkOptions, IdType, EdgeOptions
 } from 'vis';
-import { ReferenceMeta } from '../../entities/meta';
-import { Node } from '../../entities/node';
+import { ReferenceMeta } from 'app/entities/meta';
+import { Node } from 'app/entities/node';
 import { collectProperties } from 'yti-common-ui/utils/array';
 import { assertNever, requireDefined } from 'yti-common-ui/utils/object';
 import { TranslateService } from 'ng2-translate';
-import { MetaModelService } from '../../services/meta-model.service';
+import { MetaModelService } from 'app/services/meta-model.service';
 import { asLocalizable } from 'yti-common-ui/utils/localization';
 import { Subscription } from 'rxjs';
 

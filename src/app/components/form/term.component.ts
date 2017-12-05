@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { FormNode, FormProperty } from '../../services/form-state';
-import { EditableService } from '../../services/editable.service';
+import { FormNode, FormProperty } from 'app/services/form-state';
+import { EditableService } from 'app/services/editable.service';
 
 @Component({
   selector: 'app-term',

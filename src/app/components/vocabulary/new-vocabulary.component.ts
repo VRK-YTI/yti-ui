@@ -1,18 +1,18 @@
 import { Component } from '@angular/core';
-import { MetaModelService } from '../../services/meta-model.service';
+import { MetaModelService } from 'app/services/meta-model.service';
 import { v4 as uuid } from 'uuid';
-import { VocabularyNode } from '../../entities/node';
-import { EditableService } from '../../services/editable.service';
+import { VocabularyNode } from 'app/entities/node';
+import { EditableService } from 'app/services/editable.service';
 import { Router } from '@angular/router';
-import { TermedService } from '../../services/termed.service';
-import { GraphMeta } from '../../entities/meta';
+import { TermedService } from 'app/services/termed.service';
+import { GraphMeta } from 'app/entities/meta';
 import { TranslateService } from 'ng2-translate';
-import { LanguageService } from '../../services/language.service';
-import { FormNode } from '../../services/form-state';
-import { defaultLanguages } from '../../utils/language';
+import { LanguageService } from 'app/services/language.service';
+import { FormNode } from 'app/services/form-state';
+import { defaultLanguages } from 'app/utils/language';
 import { FormControl, Validators, AbstractControl, AsyncValidatorFn } from '@angular/forms';
 import { firstMatching } from 'yti-common-ui/utils/array';
-import { LocationService } from '../../services/location.service';
+import { LocationService } from 'app/services/location.service';
 import { Options } from 'yti-common-ui/components/dropdown.component';
 
 @Component({

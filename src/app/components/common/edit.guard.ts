@@ -1,6 +1,6 @@
 import { CanDeactivate } from '@angular/router';
 import { Injectable } from '@angular/core';
-import { EditingComponent } from '../../services/editable.service';
+import { EditingComponent } from 'app/services/editable.service';
 import { ConfirmationModalService } from 'yti-common-ui/components/confirmation-modal.component';
 
 @Injectable()

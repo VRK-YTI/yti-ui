@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
-import { ConceptHierarchyModel, ConceptViewModelService } from '../../services/concept.view.service';
-import { IndexedConcept } from '../../services/elasticsearch.service';
+import { ConceptHierarchyModel, ConceptViewModelService } from 'app/services/concept.view.service';
+import { IndexedConcept } from 'app/services/elasticsearch.service';
 
 @Component({
   selector: 'app-concept-hierarchy-node',

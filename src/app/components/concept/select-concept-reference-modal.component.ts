@@ -1,7 +1,7 @@
 import { Component, Injectable, Input, OnInit } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ConceptNode } from '../../entities/node';
-import { FormNode, FormReferenceLiteral } from '../../services/form-state';
+import { ConceptNode } from 'app/entities/node';
+import { FormNode, FormReferenceLiteral } from 'app/services/form-state';
 import { Options } from 'yti-common-ui/components/dropdown.component';
 import { LanguageService } from 'app/services/language.service';
 

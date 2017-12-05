@@ -1,9 +1,9 @@
 import { AfterViewInit, Component, ElementRef, Injectable, Input, Renderer, ViewChild } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { GroupNode } from '../../entities/node';
+import { GroupNode } from 'app/entities/node';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { TermedService } from '../../services/termed.service';
-import { LanguageService } from '../../services/language.service';
+import { TermedService } from 'app/services/termed.service';
+import { LanguageService } from 'app/services/language.service';
 import { contains } from 'yti-common-ui/utils/array';
 
 @Injectable()

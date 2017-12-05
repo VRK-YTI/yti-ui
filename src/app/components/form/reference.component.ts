@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ConceptNode, VocabularyNode } from '../../entities/node';
-import { EditableService } from '../../services/editable.service';
-import { FormReferenceLiteral, FormReferenceTerm } from '../../services/form-state';
+import { ConceptNode, VocabularyNode } from 'app/entities/node';
+import { EditableService } from 'app/services/editable.service';
+import { FormReferenceLiteral, FormReferenceTerm } from 'app/services/form-state';
 
 export type FormReference = FormReferenceLiteral<any>
                           | FormReferenceTerm;

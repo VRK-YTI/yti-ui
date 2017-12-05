@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { EditableService } from '../../services/editable.service';
-import { FormNode, FormReferenceTerm } from '../../services/form-state';
-import { MetaModelService } from '../../services/meta-model.service';
+import { EditableService } from 'app/services/editable.service';
+import { FormNode, FormReferenceTerm } from 'app/services/form-state';
+import { MetaModelService } from 'app/services/meta-model.service';
 
 @Component({
   selector: 'app-terms',

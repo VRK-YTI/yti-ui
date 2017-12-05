@@ -3,12 +3,12 @@ import { Observable, ReplaySubject } from 'rxjs';
 import { groupBy, index, normalizeAsArray } from 'yti-common-ui/utils/array';
 import { Injectable } from '@angular/core';
 import { TermedHttp } from './termed-http.service';
-import { Graph } from '../entities/graph';
-import { GraphMeta, MetaModel, ReferenceMeta } from '../entities/meta';
-import { NodeMetaInternal } from '../entities/meta-api';
+import { Graph } from 'app/entities/graph';
+import { GraphMeta, MetaModel, ReferenceMeta } from 'app/entities/meta';
+import { NodeMetaInternal } from 'app/entities/meta-api';
 import { asLocalizable } from 'yti-common-ui/utils/localization';
-import { environment } from '../../environments/environment';
-import { KnownNode, Node, Referrer } from '../entities/node';
+import { environment } from 'environments/environment';
+import { KnownNode, Node, Referrer } from 'app/entities/node';
 import { getOrCreate } from 'yti-common-ui/utils/map';
 
 @Injectable()

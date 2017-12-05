@@ -1,14 +1,14 @@
 import { AfterViewInit, Component, ElementRef, Injectable, Input, OnInit, Renderer, ViewChild } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ConceptNode, VocabularyNode } from '../../entities/node';
+import { ConceptNode, VocabularyNode } from 'app/entities/node';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { TermedService } from '../../services/termed.service';
-import { EditableService } from '../../services/editable.service';
-import { ElasticSearchService, IndexedConcept } from '../../services/elasticsearch.service';
-import { FormNode } from '../../services/form-state';
-import { defaultLanguages } from '../../utils/language';
+import { TermedService } from 'app/services/termed.service';
+import { EditableService } from 'app/services/editable.service';
+import { ElasticSearchService, IndexedConcept } from 'app/services/elasticsearch.service';
+import { FormNode } from 'app/services/form-state';
+import { defaultLanguages } from 'app/utils/language';
 import { firstMatching } from 'yti-common-ui/utils/array';
-import { LanguageService } from '../../services/language.service';
+import { LanguageService } from 'app/services/language.service';
 
 type Mode = 'include'|'exclude';
 

@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Status } from '../../entities/constants';
+import { Status } from 'app/entities/constants';
 
 @Component({
   selector: 'app-status',

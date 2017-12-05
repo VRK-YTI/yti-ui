@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Localizable } from 'yti-common-ui/types/localization';
 import { Subject } from 'rxjs';
-import { CollectionNode, ConceptNode, VocabularyNode } from '../entities/node';
+import { CollectionNode, ConceptNode, VocabularyNode } from 'app/entities/node';
 
 export interface Location {
   localizationKey?: string;

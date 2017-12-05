@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { ConceptHierarchyModel, ConceptViewModelService } from '../../services/concept.view.service';
+import { ConceptHierarchyModel, ConceptViewModelService } from 'app/services/concept.view.service';
 import { v4 as uuid } from 'uuid';
 import { Router } from '@angular/router';
-import { IndexedConcept } from '../../services/elasticsearch.service';
-import { AuthorizationManager } from '../../services/authorization-manager.sevice';
+import { IndexedConcept } from 'app/services/elasticsearch.service';
+import { AuthorizationManager } from 'app/services/authorization-manager.sevice';
 
 @Component({
   selector: 'app-concept-hierarchy',

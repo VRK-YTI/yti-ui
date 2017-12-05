@@ -1,10 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { OrganizationNode } from '../../entities/node';
+import { OrganizationNode } from 'app/entities/node';
 import { FilterOptions } from 'yti-common-ui/components/filter-dropdown.component';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 import { comparingLocalizable } from 'yti-common-ui/utils/comparator';
-import { LanguageService } from '../../services/language.service';
+import { LanguageService } from 'app/services/language.service';
 import { TranslateService } from 'ng2-translate';
 
 @Component({

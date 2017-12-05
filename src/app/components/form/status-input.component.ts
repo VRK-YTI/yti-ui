@@ -1,6 +1,6 @@
 import { Component, Input, Optional, Self } from '@angular/core';
 import { ControlValueAccessor, FormControl, NgControl } from '@angular/forms';
-import { Status, statuses } from '../../entities/constants';
+import { Status, statuses } from 'app/entities/constants';
 import { Options } from 'yti-common-ui/components/dropdown.component';
 import { TranslateService } from 'ng2-translate';
 

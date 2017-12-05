@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { EditableService } from '../../services/editable.service';
-import { FormPropertyLiteralList } from '../../services/form-state';
+import { EditableService } from 'app/services/editable.service';
+import { FormPropertyLiteralList } from 'app/services/form-state';
 import { FormControl } from '@angular/forms';
 
 @Component({

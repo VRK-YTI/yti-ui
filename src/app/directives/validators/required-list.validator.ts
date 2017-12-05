@@ -1,5 +1,5 @@
 import { Directive, Input, forwardRef } from '@angular/core';
-import { PropertyMeta } from '../../entities/meta';
+import { PropertyMeta } from 'app/entities/meta';
 import { FormControl, NG_VALIDATORS } from '@angular/forms';
 
 @Directive({

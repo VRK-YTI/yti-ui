@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { ConceptNode } from '../../entities/node';
-import { EditableService } from '../../services/editable.service';
-import { FormPropertyLocalizable } from '../../services/form-state';
+import { ConceptNode } from 'app/entities/node';
+import { EditableService } from 'app/services/editable.service';
+import { FormPropertyLocalizable } from 'app/services/form-state';
 
 @Component({
   selector: 'app-localized-input',

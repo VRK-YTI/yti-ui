@@ -2,7 +2,7 @@ import * as levenshtein from 'fast-levenshtein';
 import { Localizable } from 'yti-common-ui/types/localization';
 import { isDefined } from 'yti-common-ui/utils/object';
 import { Comparator, comparingPrimitive, comparingLocalizable } from 'yti-common-ui/utils/comparator';
-import { Localizer } from '../services/language.service';
+import { Localizer } from 'app/services/language.service';
 import { allMatching } from 'yti-common-ui/utils/array';
 
 export interface TextAnalysis<T> {
