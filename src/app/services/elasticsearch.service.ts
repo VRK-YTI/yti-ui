@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Localizable, LocalizableArray, withFirstLocalizations } from '../entities/localization';
+import { withFirstLocalizations } from 'yti-common-ui/utils/localization';
 import { LanguageService } from './language.service';
 import { Http, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { environment } from '../../environments/environment';
-import { normalizeAsArray } from '../utils/array';
+import { normalizeAsArray } from 'yti-common-ui/utils/array';
 import { Moment } from 'moment';
 import * as moment from 'moment';
+import { Localizable, LocalizableArray } from 'yti-common-ui/types/localization';
 
 export interface IndexedConceptData {
   id: string,

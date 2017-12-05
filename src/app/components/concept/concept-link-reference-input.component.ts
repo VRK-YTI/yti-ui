@@ -4,7 +4,7 @@ import { EditableService } from '../../services/editable.service';
 import { SearchConceptModalService } from './search-concept-modal.component';
 import { MetaModelService } from '../../services/meta-model.service';
 import { TermedService } from '../../services/termed.service';
-import { ignoreModalClose } from '../../utils/modal';
+import { ignoreModalClose } from 'yti-common-ui/utils/modal';
 import { FormReferenceLiteral } from '../../services/form-state';
 import { MetaModel } from '../../entities/meta';
 import { Observable } from 'rxjs/Observable';

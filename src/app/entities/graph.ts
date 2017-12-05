@@ -1,4 +1,4 @@
-import { Localization } from './localization';
+import { Localization } from 'yti-common-ui/types/localization';
 
 export interface Graph {
 

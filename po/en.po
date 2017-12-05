@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-12-04 14:33+0200\n"
+"PO-Revision-Date: 2017-12-05 16:33+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -19,12 +19,6 @@ msgstr ""
 msgid "Add new collection"
 msgstr ""
 
-msgid "Yes"
-msgstr ""
-
-msgid "Cancel"
-msgstr ""
-
 msgid "Confirm remove"
 msgstr ""
 
@@ -34,7 +28,10 @@ msgstr ""
 msgid "Are you sure that you want to remove?"
 msgstr ""
 
-msgid "Close"
+msgid "Yes"
+msgstr ""
+
+msgid "Cancel"
 msgstr ""
 
 msgid "Created at"
@@ -143,41 +140,6 @@ msgstr ""
 msgid "Remove term"
 msgstr ""
 
-msgid ""
-"This service is developed and maintained by Population Registry Center of "
-"Finland"
-msgstr ""
-
-msgid "Information about the web service"
-msgstr ""
-
-msgid "Description of file"
-msgstr ""
-
-msgid "User support"
-msgstr ""
-
-msgid "Feedback"
-msgstr ""
-
-msgid "Sourcecode is licensed under EUPL-1.2 license."
-msgstr ""
-
-msgid "Login"
-msgstr ""
-
-msgid "eDuuni information"
-msgstr ""
-
-msgid "Login information"
-msgstr ""
-
-msgid "Log In"
-msgstr ""
-
-msgid "Register"
-msgstr ""
-
 msgid "LOG IN"
 msgstr ""
 
@@ -206,6 +168,9 @@ msgid "Send access request"
 msgstr ""
 
 msgid "Send"
+msgstr ""
+
+msgid "Choose organization"
 msgstr ""
 
 msgid "Compositive"
@@ -253,9 +218,6 @@ msgstr ""
 msgid "Search organization"
 msgstr ""
 
-msgid "Choose organization"
-msgstr ""
-
 msgid "Search"
 msgstr ""
 
@@ -277,6 +239,9 @@ msgstr ""
 msgid "Hide vocabulary details"
 msgstr ""
 
+msgid "Close"
+msgstr ""
+
 msgid "Import vocabulary"
 msgstr ""
 
@@ -285,9 +250,6 @@ msgstr "new concept"
 
 msgid "New collection"
 msgstr "new collection"
-
-msgid "MENU"
-msgstr ""
 
 msgid "Front page"
 msgstr ""
@@ -395,11 +357,3 @@ msgstr "Prefix is already in use"
 
 msgid "upperCaseInPrefix"
 msgstr "Prefix must be in lower case"
-
-#~ msgid "Frontpage information"
-#~ msgstr ""
-#~ "Definitions released in the workbench are freely browsable. Content is "
-#~ "produced by experts in different domains.\n"
-#~ "Note: this is the development environment of the service. Thus the "
-#~ "contents of this service are not official versions of the vocabularies "
-#~ "but rather meant for testing purposes"

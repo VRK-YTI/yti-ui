@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Response, ResponseOptionsArgs, URLSearchParams } from '@angular/http';
 import { Observable } from 'rxjs';
 import { TermedHttp } from './termed-http.service';
-import { contains, flatten, normalizeAsArray } from '../utils/array';
+import { contains, flatten, normalizeAsArray } from 'yti-common-ui/utils/array';
 import { MetaModelService } from './meta-model.service';
 import { Identifier, NodeExternal, NodeInternal, NodeType, VocabularyNodeType } from '../entities/node-api';
 import { CollectionNode, ConceptNode, GroupNode, Node, OrganizationNode, VocabularyNode } from '../entities/node';

@@ -5,12 +5,12 @@ import { AuthorizationManager } from '../../services/authorization-manager.sevic
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { TermedService } from '../../services/termed.service';
-import { anyMatching } from '../../utils/array';
-import { matches } from '../../utils/string';
-import { comparingLocalizable } from '../../utils/comparator';
+import { anyMatching } from 'yti-common-ui/utils/array';
+import { matches } from 'yti-common-ui/utils/string';
+import { comparingLocalizable } from 'yti-common-ui/utils/comparator';
 import { LanguageService } from '../../services/language.service';
 import { VocabularyNodeType } from '../../entities/node-api';
-import { FilterOptions } from '../common/filter-dropdown.component';
+import { FilterOptions } from 'yti-common-ui/components/filter-dropdown.component';
 import { TranslateService } from 'ng2-translate';
 import { Subscription } from 'rxjs/Subscription';
 

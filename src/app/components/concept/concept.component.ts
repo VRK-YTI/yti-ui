@@ -4,7 +4,7 @@ import { EditableService, EditingComponent } from '../../services/editable.servi
 import { ConceptViewModelService } from '../../services/concept.view.service';
 import { Subscription } from 'rxjs';
 import { DeleteConfirmationModalService } from '../common/delete-confirmation-modal.component';
-import { requireDefined } from '../../utils/object';
+import { requireDefined } from 'yti-common-ui/utils/object';
 import { LanguageService } from '../../services/language.service';
 
 @Component({

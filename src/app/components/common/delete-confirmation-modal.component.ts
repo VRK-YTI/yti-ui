@@ -2,7 +2,7 @@ import { Component, Injectable, Input, OnInit } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Node } from '../../entities/node';
 import { ReferenceMeta } from '../../entities/meta';
-import { flatten } from '../../utils/array';
+import { flatten } from 'yti-common-ui/utils/array';
 import { MetaModelService } from '../../services/meta-model.service';
 import { Observable } from 'rxjs/Observable';
 

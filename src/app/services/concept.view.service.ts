@@ -4,7 +4,7 @@ import { LocationService } from './location.service';
 import { TermedService } from './termed.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { CollectionNode, ConceptNode, VocabularyNode } from '../entities/node';
-import { comparingLocalizable } from '../utils/comparator';
+import { comparingLocalizable } from 'yti-common-ui/utils/comparator';
 import { LanguageService } from './language.service';
 import { MetaModelService } from './meta-model.service';
 import {
@@ -18,9 +18,9 @@ import {
   ContentExtractor, filterAndSortSearchResults, labelComparator, scoreComparator,
   TextAnalysis
 } from '../utils/text-analyzer';
-import { isDefined } from '../utils/object';
+import { isDefined } from 'yti-common-ui/utils/object';
 import { Subject } from 'rxjs/Subject';
-import { removeMatching, replaceMatching } from '../utils/array';
+import { removeMatching, replaceMatching } from 'yti-common-ui/utils/array';
 import { FormNode } from './form-state';
 import { MetaModel } from '../entities/meta';
 import { TranslateService } from 'ng2-translate';

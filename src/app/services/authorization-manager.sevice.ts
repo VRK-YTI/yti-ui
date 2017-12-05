@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { UserService, UUID } from './user.service';
+import { UserService, UUID } from 'yti-common-ui/services/user.service';
 import { VocabularyNode } from '../entities/node';
 
 @Injectable()

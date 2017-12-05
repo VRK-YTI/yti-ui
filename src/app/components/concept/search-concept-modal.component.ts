@@ -7,7 +7,7 @@ import { EditableService } from '../../services/editable.service';
 import { ElasticSearchService, IndexedConcept } from '../../services/elasticsearch.service';
 import { FormNode } from '../../services/form-state';
 import { defaultLanguages } from '../../utils/language';
-import { firstMatching } from '../../utils/array';
+import { firstMatching } from 'yti-common-ui/utils/array';
 import { LanguageService } from '../../services/language.service';
 
 type Mode = 'include'|'exclude';

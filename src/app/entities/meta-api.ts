@@ -1,4 +1,4 @@
-import { Localization } from './localization';
+import { Localization } from 'yti-common-ui/types/localization';
 import { Attribute, NodeType } from './node-api';
 
 export interface NodeMetaInternal {

@@ -1,12 +1,13 @@
 import { ReferenceAttributeInternal, TextAttributeInternal, NodeMetaInternal } from './meta-api';
-import { comparingPrimitive } from '../utils/comparator';
-import { anyMatching, contains, firstMatching, index, normalizeAsArray } from '../utils/array';
-import { asLocalizable, Localizable } from './localization';
+import { comparingPrimitive } from 'yti-common-ui/utils/comparator';
+import { anyMatching, contains, firstMatching, index, normalizeAsArray } from 'yti-common-ui/utils/array';
+import { asLocalizable } from 'yti-common-ui/utils/localization';
+import { Localizable } from 'yti-common-ui/types/localization';
 import { NodeType, NodeExternal, VocabularyNodeType } from './node-api';
 import { CollectionNode, ConceptLinkNode, ConceptNode, Node, VocabularyNode } from './node';
 import { v4 as uuid } from 'uuid';
 import * as moment from 'moment';
-import { assertNever, requireDefined } from '../utils/object';
+import { assertNever, requireDefined } from 'yti-common-ui/utils/object';
 
 export type Cardinality = 'single'
                         | 'multiple';

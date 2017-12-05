@@ -1,7 +1,7 @@
 import { Component, Injectable, Input, OnInit } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Localization } from 'app/entities/localization';
-import { flatten } from '../../utils/array';
+import { Localization } from 'yti-common-ui/types/localization';
+import { flatten } from 'yti-common-ui/utils/array';
 import { VocabularyNode, ConceptNode } from 'app/entities/node';
 import { MetaModelService } from 'app/services/meta-model.service';
 import { MetaModel } from 'app/entities/meta';

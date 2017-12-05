@@ -3,10 +3,10 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { Node as MarkdownNode, Parser } from 'commonmark';
 import { DomPath, DomPoint, DomSelection, formatTextContent, isInDocument, moveCursor, removeChildren } from '../../utils/dom';
-import { allMatching, first, firstMatching, insertBefore, last, nextOf, nextOfMatching, previousOf, previousOfMatching, remove } from '../../utils/array';
+import { allMatching, first, firstMatching, insertBefore, last, nextOf, nextOfMatching, previousOf, previousOfMatching, remove } from 'yti-common-ui/utils/array';
 import { children } from '../../utils/markdown';
-import { wordAtOffset } from '../../utils/string';
-import { isDefined, requireDefined } from '../../utils/object';
+import { wordAtOffset } from 'yti-common-ui/utils/string';
+import { isDefined, requireDefined } from 'yti-common-ui/utils/object';
 import { ConceptNode } from '../../entities/node';
 
 class Model {

@@ -4,7 +4,7 @@ import { GroupNode } from '../../entities/node';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { TermedService } from '../../services/termed.service';
 import { LanguageService } from '../../services/language.service';
-import { contains } from '../../utils/array';
+import { contains } from 'yti-common-ui/utils/array';
 
 @Injectable()
 export class SearchGroupModalService {

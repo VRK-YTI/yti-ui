@@ -1,19 +1,19 @@
 import { FormArray, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
-import { assertNever } from '../utils/object';
-import { allMatching, anyMatching, firstMatching, flatten, normalizeAsArray } from 'app/utils/array';
+import { assertNever } from 'yti-common-ui/utils/object';
+import { allMatching, anyMatching, firstMatching, flatten, normalizeAsArray } from 'yti-common-ui/utils/array';
 import { ConceptNode, KnownNode, Node, Property, Reference, TermNode } from '../entities/node';
 import {
   Cardinality, EditorType, MetaModel, NodeMeta, PropertyMeta, ReferenceMeta,
   ReferenceType
 } from '../entities/meta';
-import { Localizable } from '../entities/localization';
+import { Localizable } from 'yti-common-ui/types/localization';
 import { NodeType } from 'app/entities/node-api';
 import { children } from '../utils/markdown';
 import { Parser, Node as MarkdownNode } from 'commonmark';
 import { validateMeta } from '../directives/validators/meta-model.validator';
 import { requiredList } from '../directives/validators/required-list.validator';
 import { validateLanguage } from '../directives/validators/language.validator';
-import { comparingPrimitive } from '../utils/comparator';
+import { comparingPrimitive } from 'yti-common-ui/utils/comparator';
 
 export type FormReference = FormReferenceLiteral<any>
                           | FormReferenceTerm;

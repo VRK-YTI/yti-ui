@@ -3,7 +3,7 @@ import { OrganizationNode, VocabularyNode } from '../../entities/node';
 import { EditableService } from '../../services/editable.service';
 import { FormReferenceLiteral } from '../../services/form-state';
 import { SearchOrganizationModalService } from './search-organization-modal.component';
-import { ignoreModalClose } from '../../utils/modal';
+import { ignoreModalClose } from 'yti-common-ui/utils/modal';
 import { AuthorizationManager } from '../../services/authorization-manager.sevice';
 
 @Component({

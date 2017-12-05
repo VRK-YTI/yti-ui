@@ -1,5 +1,5 @@
 import { Directive, ElementRef, OnDestroy, AfterViewInit, NgZone, Input } from '@angular/core';
-import { requireDefined } from '../utils/object';
+import { requireDefined } from 'yti-common-ui/utils/object';
 
 interface Location {
   left: number;

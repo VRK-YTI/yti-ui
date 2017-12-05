@@ -1,7 +1,7 @@
 import { Directive, Input, forwardRef } from '@angular/core';
 import { PropertyMeta } from '../../entities/meta';
 import { FormControl, NG_VALIDATORS } from '@angular/forms';
-import { allMatching } from '../../utils/array';
+import { allMatching } from 'yti-common-ui/utils/array';
 
 @Directive({
   selector: '[appValidateMeta][ngModel]',

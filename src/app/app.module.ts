@@ -14,11 +14,9 @@ import { Observable } from 'rxjs';
 import { TranslateValuePipe } from './pipes/translate-value.pipe';
 import { LanguageService } from './services/language.service';
 import { ConceptsComponent } from './components/concept/concepts.component';
-import { BreadcrumbComponent } from './components/navigation/breadcrumb.component';
+import { BreadcrumbComponent } from 'yti-common-ui/components/breadcrumb.component';
 import { LocationService } from './services/location.service';
 import { ConceptComponent } from './components/concept/concept.component';
-import { AjaxLoadingIndicatorComponent } from './components/common/ajax-loading-indicator.component';
-import { HighlightPipe } from './pipes/highlight.pipe';
 import { TranslateSearchValuePipe } from './pipes/translate-search-value.pipe';
 import { LocalizedInputComponent } from './components/form/localized-input.component';
 import { MetaModelService } from './services/meta-model.service';
@@ -29,10 +27,8 @@ import { TimestampPipe } from './pipes/timestamp.pipe';
 import { MarkdownLinksComponent, MarkdownLinksElementComponent } from './components/markdown/markdown-links.component';
 import { ConceptNetworkComponent } from './components/visualization/concept-network.component';
 import { VocabularyComponent } from './components/vocabulary/vocabulary.component';
-import { AccordionChevronComponent } from './components/common/accordion-chevron.component';
 import { LiteralInputComponent } from './components/form/literal-input.component';
 import { MetaModelValidatorDirective } from './directives/validators/meta-model.validator';
-import { KeysPipe } from './pipes/keys.pipe';
 import { ErrorMessagesComponent } from './components/form/error-messages.component';
 import { EditableButtonsComponent } from './components/form/editable-buttons.component';
 import { ElasticSearchService } from './services/elasticsearch.service';
@@ -41,7 +37,7 @@ import { ConceptListComponent } from './components/concept/concept-list.componen
 import { ConceptHierarchyComponent } from './components/concept/concept-hierarchy.component';
 import { ConceptHierarchyNodeComponent } from './components/concept/concept-hierarchy-node.component';
 import { StatusInputComponent } from './components/form/status-input.component';
-import { FooterComponent } from './components/navigation/footer.component';
+import { FooterComponent } from 'yti-common-ui/components/footer.component';
 import { MetaInformationComponent } from './components/common/meta-information.component';
 import { FloatDirective } from './directives/float.directive';
 import { ConceptReferenceInputComponent } from './components/concept/concept-reference-input.component';
@@ -53,15 +49,11 @@ import { SessionService } from './services/session.service';
 import { DeleteConfirmationModalComponent, DeleteConfirmationModalService } from './components/common/delete-confirmation-modal.component';
 import { CollectionComponent } from './components/collection/collection.component';
 import { CollectionListComponent } from './components/collection/collection-list.component';
-import { ErrorModalComponent, ErrorModalService } from './components/common/error-modal.component';
-import { ConfirmationModalComponent, ConfirmationModalService } from './components/common/confirmation-modal.component';
 import { ConfirmCancelEditGuard } from './components/common/edit.guard';
-import { UserService } from './services/user.service';
 import { NewVocabularyComponent } from './components/vocabulary/new-vocabulary.component';
 import { VocabularyFormComponent } from './components/vocabulary/vocabulary-form.component';
 import { GroupInputComponent } from './components/vocabulary/group-input.component';
 import { OrganizationInputComponent } from './components/vocabulary/organization-input.component';
-import { AjaxLoadingIndicatorSmallComponent } from './components/common/ajax-loading-indicator-small.component';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { ConceptLinkReferenceInputComponent, ConceptLinkReferencePopoverComponent } from './components/concept/concept-link-reference-input.component';
 import { MarkdownInputComponent } from './components/form/markdown-input.component';
@@ -72,7 +64,6 @@ import { LiteralListInputComponent } from './components/form/literal-list-input.
 import { RequiredListValidatorDirective } from './directives/validators/required-list.validator';
 import { TermsComponent } from './components/form/terms.component';
 import { TermComponent } from './components/form/term.component';
-import { LoginModalComponent, LoginModalService } from './components/navigation/login-modal.component';
 import { LanguageInputComponent } from './components/form/language-input.component';
 import { LanguageValidatorDirective } from './directives/validators/language.validator';
 import { FilterLanguageComponent } from './components/form/filter-language.component';
@@ -82,19 +73,41 @@ import { PrefixInputComponent } from './components/concept/prefix-input.componen
 import { SearchGroupModalComponent, SearchGroupModalService } from './components/vocabulary/search-group-modal.component';
 import { AuthorizationManager } from './services/authorization-manager.sevice';
 import { UserDetailsComponent } from './components/user-details.component';
-import { MenuComponent } from './components/common/menu.component';
 import { StatusComponent } from './components/common/status.component';
-import { FilterDropdownComponent } from './components/common/filter-dropdown.component';
 import { OrganizationFilterDropdownComponent } from './components/common/organization-filter-dropdown.component';
 import { VocabularyFilterDropdownComponent } from './components/common/vocabulary-filter-dropdown.component';
 import { StatusFilterDropdownComponent } from './components/common/status-filter-dropdown.component';
-import { DropdownComponent } from './components/common/dropdown-component';
-import { PopoverCloseComponent } from './components/common/popover-close.component';
+import { AjaxLoadingIndicatorComponent } from 'yti-common-ui/components/ajax-loading-indicator.component';
+import { AjaxLoadingIndicatorSmallComponent } from 'yti-common-ui/components/ajax-loading-indicator-small.component';
+import { AccordionChevronComponent } from 'yti-common-ui/components/accordion-chevron.component';
+import { ErrorModalComponent, ErrorModalService } from 'yti-common-ui/components/error-modal.component';
+import { ConfirmationModalComponent, ConfirmationModalService } from 'yti-common-ui/components/confirmation-modal.component';
+import { LoginModalComponent, LoginModalService } from 'yti-common-ui/components/login-modal.component';
+import { HighlightPipe } from 'yti-common-ui/pipes/highlight.pipe';
+import { KeysPipe } from 'yti-common-ui/pipes/keys.pipe';
+import { MenuComponent } from 'yti-common-ui/components/menu.component';
+import { DropdownComponent } from 'yti-common-ui/components/dropdown.component';
+import { FilterDropdownComponent } from 'yti-common-ui/components/filter-dropdown.component';
+import { PopoverCloseComponent } from 'yti-common-ui/components/popover-close.component';
+import { UserService } from 'yti-common-ui/services/user.service';
+import { AUTHENTICATED_USER_ENDPOINT } from 'yti-common-ui';
+import { environment } from '../environments/environment';
 
 const localizations: { [lang: string]: string} = {
-  fi: require('json-loader!po-loader?format=mf!../../po/fi.po'),
-  en: require('json-loader!po-loader?format=mf!../../po/en.po')
+  fi: Object.assign({},
+    require('json-loader!po-loader?format=mf!../../po/fi.po'),
+    require('json-loader!po-loader?format=mf!yti-common-ui/po/fi.po')
+  )
+  ,
+  en: Object.assign({},
+    require('json-loader!po-loader?format=mf!../../po/en.po'),
+    require('json-loader!po-loader?format=mf!yti-common-ui/po/en.po')
+  )
 };
+
+export function resolveAuthenticatedUserEndpoint() {
+  return `${environment.api_url}/authenticated-user`;
+}
 
 export function createTranslateLoader(): TranslateLoader {
   return { getTranslation: (lang: string) => Observable.of(localizations[lang]) };
@@ -225,6 +238,7 @@ const appRoutes: Routes = [
     TranslateModule.forRoot({ provide: TranslateLoader, useFactory: createTranslateLoader })
   ],
   providers: [
+    { provide: AUTHENTICATED_USER_ENDPOINT, useFactory: resolveAuthenticatedUserEndpoint },
     TermedHttp,
     TermedService,
     MetaModelService,

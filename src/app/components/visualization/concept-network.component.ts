@@ -14,11 +14,11 @@ import {
 } from 'vis';
 import { ReferenceMeta } from '../../entities/meta';
 import { Node } from '../../entities/node';
-import { collectProperties } from '../../utils/array';
-import { assertNever, requireDefined } from '../../utils/object';
+import { collectProperties } from 'yti-common-ui/utils/array';
+import { assertNever, requireDefined } from 'yti-common-ui/utils/object';
 import { TranslateService } from 'ng2-translate';
 import { MetaModelService } from '../../services/meta-model.service';
-import { asLocalizable } from '../../entities/localization';
+import { asLocalizable } from 'yti-common-ui/utils/localization';
 import { Subscription } from 'rxjs';
 
 interface ConceptNetworkData {

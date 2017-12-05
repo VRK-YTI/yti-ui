@@ -1,11 +1,11 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { EditableService, EditingComponent } from '../../services/editable.service';
 import { ConceptViewModelService } from '../../services/concept.view.service';
-import { requireDefined } from '../../utils/object';
+import { requireDefined } from 'yti-common-ui/utils/object';
 import { DeleteConfirmationModalService } from '../common/delete-confirmation-modal.component';
 import { LanguageService } from '../../services/language.service';
 import { ImportVocabularyModalService } from 'app/components/vocabulary/import-vocabulary-modal.component';
-import { ignoreModalClose } from 'app/utils/modal';
+import { ignoreModalClose } from 'yti-common-ui/utils/modal';
 import { AuthorizationManager } from '../../services/authorization-manager.sevice';
 
 @Component({

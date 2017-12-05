@@ -1,4 +1,4 @@
-import { Role } from 'app/services/user.service';
+import { Role } from 'yti-common-ui/services/user.service';
 
 export interface UserRequest {
   organizationId: string;

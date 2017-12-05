@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-12-04 14:33+0200\n"
+"PO-Revision-Date: 2017-12-05 16:33+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -19,12 +19,6 @@ msgstr "Hae käsitevalikoimaa"
 msgid "Add new collection"
 msgstr "Lisää uusi käsitevalikoima"
 
-msgid "Yes"
-msgstr "Kyllä"
-
-msgid "Cancel"
-msgstr "Peruuta"
-
 msgid "Confirm remove"
 msgstr "Poistamisen hyväksyntä"
 
@@ -34,8 +28,11 @@ msgstr "Seuraavat asiat viittaavat poistettavaan asiaan"
 msgid "Are you sure that you want to remove?"
 msgstr "Oletko varma, että haluat poistaa?"
 
-msgid "Close"
-msgstr "Sulje"
+msgid "Yes"
+msgstr "Kyllä"
+
+msgid "Cancel"
+msgstr "Peruuta"
 
 msgid "Created at"
 msgstr "Luotu"
@@ -145,45 +142,6 @@ msgstr "Ei vielä yhtään termiä"
 msgid "Remove term"
 msgstr "Poista termi"
 
-msgid ""
-"This service is developed and maintained by Population Registry Center of "
-"Finland"
-msgstr "Verkkopalvelun kehittämisestä vastaa Väestörekisterikeskus"
-
-msgid "Information about the web service"
-msgstr "Tietoa verkkopalvelusta"
-
-msgid "Description of file"
-msgstr "Tietosuojaseloste"
-
-msgid "User support"
-msgstr "Käytön tuki"
-
-msgid "Feedback"
-msgstr "Ota yhteyttä"
-
-msgid "Sourcecode is licensed under EUPL-1.2 license."
-msgstr "Lähdekoodi on lisenssoitu EUPL-1.2 -lisenssillä."
-
-msgid "Login"
-msgstr "Sisäänkirjautuminen"
-
-msgid "eDuuni information"
-msgstr ""
-"Palveluun kirjaudutaan eDuuni-tunnuksilla. Kirjautumista vaaditaan jos "
-"haluat muokata palvelun sisältöä."
-
-msgid "Login information"
-msgstr ""
-"Alla olevalla painikkeella ohjaudut eDuuni-palvelun kirjautumiseen. Palaa "
-"sen jälkeen takaisin palveluun."
-
-msgid "Log In"
-msgstr "Kirjaudu sisään"
-
-msgid "Register"
-msgstr "Luo tunnukset"
-
 msgid "LOG IN"
 msgstr "KIRJAUDU SISÄÄN"
 
@@ -213,6 +171,9 @@ msgstr "Lähetä käyttöoikeuspyyntö"
 
 msgid "Send"
 msgstr "Lähetä"
+
+msgid "Choose organization"
+msgstr "Valitse organisaatio"
 
 msgid "Compositive"
 msgstr "Koostumus"
@@ -260,9 +221,6 @@ msgstr "Valitse luokitus"
 msgid "Search organization"
 msgstr "Hae organisaatiota"
 
-msgid "Choose organization"
-msgstr "Valitse organisaatio"
-
 msgid "Search"
 msgstr "Hae"
 
@@ -284,6 +242,9 @@ msgstr "Näytä sanaston tiedot"
 msgid "Hide vocabulary details"
 msgstr "Piilota sanaston tiedot"
 
+msgid "Close"
+msgstr "Sulje"
+
 msgid "Import vocabulary"
 msgstr "Tuo sanasto"
 
@@ -292,9 +253,6 @@ msgstr "uusi käsite"
 
 msgid "New collection"
 msgstr "uusi käsitevalikoima"
-
-msgid "MENU"
-msgstr "VALIKKO"
 
 msgid "Front page"
 msgstr "Etusivu"
@@ -404,118 +362,3 @@ msgstr "Etuliite on jo käytössä"
 
 msgid "upperCaseInPrefix"
 msgstr "Etuliite oltava pienillä kirjaimilla"
-
-#~ msgid "Search group..."
-#~ msgstr "Etsi ryhmää…"
-
-#~ msgid "Search organization..."
-#~ msgstr "Etsi organisaatiota…"
-
-#~ msgid "Search collection..."
-#~ msgstr "Hae käsitevalikoimaa…"
-
-#~ msgid "Add collection"
-#~ msgstr "Lisää käsitevalikoima"
-
-#~ msgid "Search concept..."
-#~ msgstr "Hae käsitettä…"
-
-#~ msgid "Cancel edit"
-#~ msgstr "Peruuta muokkaus"
-
-#~ msgid "Save changes"
-#~ msgstr "Tallenna muutokset"
-
-#~ msgid "All languages"
-#~ msgstr "Kaikki kielet"
-
-#~ msgid "Welcome to vocabulary and concept workbench"
-#~ msgstr "Tervetuloa sanasto- ja käsitevälineistöön"
-
-#~ msgid "Frontpage information"
-#~ msgstr ""
-#~ "Välineistössä julkaistut määritykset ovat vapaasti selattavissa. "
-#~ "Sisältöjä sanastoihin tuottavat eri kohdealueiden asiantuntijat.\n"
-#~ "Huom: tämä verkkopalvelu on Sanastoeditorin kehitysversio ja sisällöt "
-#~ "eivät ole virallisia versioita sanastoista, vaan testiaineistoja."
-
-#~ msgid "Give feedback:"
-#~ msgstr "Anna palautetta:"
-
-#~ msgid "CSC - IT Center for Science Ltd"
-#~ msgstr "CSC - Tieteen tietotekniikan keskus Oy"
-
-#~ msgid "Source code"
-#~ msgstr "Lähdekoodi"
-
-#~ msgid "Frontend"
-#~ msgstr "Käyttöliittymä"
-
-#~ msgid "Backend"
-#~ msgstr "Taustajärjestelmä"
-
-#~ msgid "licensed under the"
-#~ msgstr "lisenssillä"
-
-#~ msgid "Logout"
-#~ msgstr "Kirjaudu ulos"
-
-#~ msgid "Visualization"
-#~ msgstr "Visualisointi"
-
-#~ msgid "No group"
-#~ msgstr "Ei ryhmää"
-
-#~ msgid "Preferred term"
-#~ msgstr "Suositettava termi"
-
-#~ msgid "Note"
-#~ msgstr "Huomautus"
-
-#~ msgid "Line numbers"
-#~ msgstr "Rivinumerot"
-
-#~ msgid "Username"
-#~ msgstr "Käyttäjätunnus"
-
-#~ msgid "Password"
-#~ msgstr "Salasana"
-
-#~ msgid "Login failed"
-#~ msgstr "Kirjautuminen epäonnistui"
-
-#~ msgid "Import following concepts"
-#~ msgstr "Tuodaan seuraavat käsitteet"
-
-#~ msgid "Content not found in"
-#~ msgstr "Ei löydy kielellä"
-
-#~ msgid "Language of content"
-#~ msgstr "Sisällön kieli"
-
-#~ msgid "Filter language"
-#~ msgstr "Suodata kieli"
-
-#~ msgid "Not implemented yet!"
-#~ msgstr "Ei vielä toteutettu!"
-
-#~ msgid "Composition"
-#~ msgstr "Koostumus"
-
-#~ msgid "Add term"
-#~ msgstr "Lisää termi"
-
-#~ msgid "Id"
-#~ msgstr "Tunniste"
-
-#~ msgid "search..."
-#~ msgstr "etsi…"
-
-#~ msgid "Vocabularies"
-#~ msgstr "Sanastot"
-
-#~ msgid "Modified"
-#~ msgstr "Muokattu"
-
-#~ msgid "Concept"
-#~ msgstr "Käsite"

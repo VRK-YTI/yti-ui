@@ -4,8 +4,8 @@ import { OrganizationNode } from '../../entities/node';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { TermedService } from '../../services/termed.service';
 import { LanguageService } from '../../services/language.service';
-import { contains } from '../../utils/array';
-import { isDefined } from '../../utils/object';
+import { contains } from 'yti-common-ui/utils/array';
+import { isDefined } from 'yti-common-ui/utils/object';
 
 @Injectable()
 export class SearchOrganizationModalService {

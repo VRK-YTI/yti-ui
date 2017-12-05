@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from 'ng2-translate';
-import { Localizable } from '../entities/localization';
-import { isDefined } from '../utils/object';
+import { Localizable } from 'yti-common-ui/types/localization';
+import { isDefined } from 'yti-common-ui/utils/object';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 

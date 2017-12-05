@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FilterOptions } from './filter-dropdown.component';
+import { FilterOptions } from 'yti-common-ui/components/filter-dropdown.component';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { TranslateService } from 'ng2-translate';
 import { Status, statuses } from '../../entities/constants';

@@ -10,12 +10,6 @@ msgstr ""
 msgid "Add new collection"
 msgstr ""
 
-msgid "Yes"
-msgstr ""
-
-msgid "Cancel"
-msgstr ""
-
 msgid "Confirm remove"
 msgstr ""
 
@@ -25,7 +19,10 @@ msgstr ""
 msgid "Are you sure that you want to remove?"
 msgstr ""
 
-msgid "Close"
+msgid "Yes"
+msgstr ""
+
+msgid "Cancel"
 msgstr ""
 
 msgid "Created at"
@@ -133,41 +130,6 @@ msgstr ""
 msgid "Remove term"
 msgstr ""
 
-msgid ""
-"This service is developed and maintained by Population Registry Center of "
-"Finland"
-msgstr ""
-
-msgid "Information about the web service"
-msgstr ""
-
-msgid "Description of file"
-msgstr ""
-
-msgid "User support"
-msgstr ""
-
-msgid "Feedback"
-msgstr ""
-
-msgid "Sourcecode is licensed under EUPL-1.2 license."
-msgstr ""
-
-msgid "Login"
-msgstr ""
-
-msgid "eDuuni information"
-msgstr ""
-
-msgid "Login information"
-msgstr ""
-
-msgid "Log In"
-msgstr ""
-
-msgid "Register"
-msgstr ""
-
 msgid "LOG IN"
 msgstr ""
 
@@ -196,6 +158,9 @@ msgid "Send access request"
 msgstr ""
 
 msgid "Send"
+msgstr ""
+
+msgid "Choose organization"
 msgstr ""
 
 msgid "Compositive"
@@ -243,9 +208,6 @@ msgstr ""
 msgid "Search organization"
 msgstr ""
 
-msgid "Choose organization"
-msgstr ""
-
 msgid "Search"
 msgstr ""
 
@@ -267,6 +229,9 @@ msgstr ""
 msgid "Hide vocabulary details"
 msgstr ""
 
+msgid "Close"
+msgstr ""
+
 msgid "Import vocabulary"
 msgstr ""
 
@@ -274,9 +239,6 @@ msgid "New concept"
 msgstr ""
 
 msgid "New collection"
-msgstr ""
-
-msgid "MENU"
 msgstr ""
 
 msgid "Front page"

@@ -1,6 +1,7 @@
-import { asLocalizable, Localizable, Localization } from './localization';
-import { requireDefined, isDefined } from '../utils/object';
-import { normalizeAsArray, requireSingle, remove, firstMatching, flatten } from '../utils/array';
+import { asLocalizable } from 'yti-common-ui/utils/localization';
+import { Localizable, Localization } from 'yti-common-ui/types/localization';
+import { requireDefined, isDefined } from 'yti-common-ui/utils/object';
+import { normalizeAsArray, requireSingle, remove, firstMatching, flatten } from 'yti-common-ui/utils/array';
 import { NodeExternal, NodeType, Attribute, Identifier, NodeInternal, VocabularyNodeType } from './node-api';
 import {
   PropertyMeta, ReferenceMeta, NodeMeta, MetaModel

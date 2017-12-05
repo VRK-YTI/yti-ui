@@ -1,8 +1,7 @@
 import { Directive, forwardRef } from '@angular/core';
 import { FormControl, NG_VALIDATORS } from '@angular/forms';
-import { contains } from '../../utils/array';
-
-const languages: string[] = require('../../../assets/ietf-language-tags.json');
+import { contains } from 'yti-common-ui/utils/array';
+import { ietfLanguageTags } from 'yti-common-ui';
 
 @Directive({
   selector: '[appValidateLanguage][ngModel]',
@@ -18,7 +17,7 @@ export class LanguageValidatorDirective {
 }
 
 export function validateLanguage(control: FormControl) {
-  return contains(languages, control.value)  ? null : {
+  return contains(ietfLanguageTags, control.value)  ? null : {
     validateLanguage: {
       valid: false
     }

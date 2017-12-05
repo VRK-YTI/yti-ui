@@ -1,6 +1,6 @@
 import { Parser, Node as MarkdownNode } from 'commonmark';
-import { isDefined } from './object';
-import { contains } from './array';
+import { isDefined } from 'yti-common-ui/utils/object';
+import { contains } from 'yti-common-ui/utils/array';
 
 const parser = new Parser();
 

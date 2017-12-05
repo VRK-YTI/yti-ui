@@ -2,11 +2,11 @@ import { Component, Input } from '@angular/core';
 import { ConceptNode, VocabularyNode } from '../../entities/node';
 import { SearchConceptModalService } from './search-concept-modal.component';
 import { SelectConceptReferenceModalService } from './select-concept-reference-modal.component';
-import { ignoreModalClose, isModalClose } from '../../utils/modal';
-import { anyMatching } from '../../utils/array';
+import { ignoreModalClose, isModalClose } from 'yti-common-ui/utils/modal';
+import { anyMatching } from 'yti-common-ui/utils/array';
 import { FormNode, FormField } from '../../services/form-state';
 import { EditableService } from '../../services/editable.service';
-import { requireDefined } from '../../utils/object';
+import { requireDefined } from 'yti-common-ui/utils/object';
 
 @Component({
   selector: 'app-concept-form',

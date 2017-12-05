@@ -2,9 +2,9 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ConceptNode, VocabularyNode } from '../../entities/node';
 import { EditableService } from '../../services/editable.service';
 import { Restrict, SearchConceptModalService } from './search-concept-modal.component';
-import { ignoreModalClose } from '../../utils/modal';
+import { ignoreModalClose } from 'yti-common-ui/utils/modal';
 import { FormReferenceLiteral } from '../../services/form-state';
-import { isDefined, requireDefined } from '../../utils/object';
+import { isDefined, requireDefined } from 'yti-common-ui/utils/object';
 
 @Component({
   selector: 'app-concept-reference-input',

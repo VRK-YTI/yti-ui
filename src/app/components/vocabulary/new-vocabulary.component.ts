@@ -11,9 +11,9 @@ import { LanguageService } from '../../services/language.service';
 import { FormNode } from '../../services/form-state';
 import { defaultLanguages } from '../../utils/language';
 import { FormControl, Validators, AbstractControl, AsyncValidatorFn } from '@angular/forms';
-import { firstMatching } from '../../utils/array';
+import { firstMatching } from 'yti-common-ui/utils/array';
 import { LocationService } from '../../services/location.service';
-import { Options } from '../common/dropdown-component';
+import { Options } from 'yti-common-ui/components/dropdown.component';
 
 @Component({
   selector: 'app-new-vocabulary',

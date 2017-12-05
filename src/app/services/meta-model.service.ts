@@ -1,15 +1,15 @@
 import { URLSearchParams } from '@angular/http';
 import { Observable, ReplaySubject } from 'rxjs';
-import { groupBy, index, normalizeAsArray } from '../utils/array';
+import { groupBy, index, normalizeAsArray } from 'yti-common-ui/utils/array';
 import { Injectable } from '@angular/core';
 import { TermedHttp } from './termed-http.service';
 import { Graph } from '../entities/graph';
 import { GraphMeta, MetaModel, ReferenceMeta } from '../entities/meta';
 import { NodeMetaInternal } from '../entities/meta-api';
-import { asLocalizable } from '../entities/localization';
+import { asLocalizable } from 'yti-common-ui/utils/localization';
 import { environment } from '../../environments/environment';
 import { KnownNode, Node, Referrer } from '../entities/node';
-import { getOrCreate } from '../utils/map';
+import { getOrCreate } from 'yti-common-ui/utils/map';
 
 @Injectable()
 export class MetaModelService {
