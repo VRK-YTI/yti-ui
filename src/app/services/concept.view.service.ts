@@ -20,7 +20,7 @@ import {
 } from 'app/utils/text-analyzer';
 import { isDefined } from 'yti-common-ui/utils/object';
 import { Subject } from 'rxjs/Subject';
-import { removeMatching, replaceMatching } from 'yti-common-ui/utils/array';
+import { removeMatching, replaceMatching, contains } from 'yti-common-ui/utils/array';
 import { FormNode } from './form-state';
 import { MetaModel } from 'app/entities/meta';
 import { TranslateService } from 'ng2-translate';
@@ -420,7 +420,7 @@ export class ConceptViewModelService {
     });
 
     Observable.merge(this.vocabularySelect$, this.vocabularyEdit$).subscribe(vocabulary => {
-      if (languageService.filterLanguage && !vocabulary.languages.includes(languageService.filterLanguage)) {
+      if (languageService.filterLanguage && !contains(vocabulary.languages, languageService.filterLanguage)) {
         languageService.filterLanguage = '';
       }
     });

@@ -3,6 +3,7 @@ import { FormControl } from '@angular/forms';
 import { ConceptNode } from 'app/entities/node';
 import { EditableService } from 'app/services/editable.service';
 import { FormPropertyLocalizable } from 'app/services/form-state';
+import { contains } from 'yti-common-ui/utils/array';
 
 @Component({
   selector: 'app-localized-input',
@@ -84,7 +85,7 @@ export class LocalizedInputComponent {
   get addableLanguages() {
 
     const allowMultiple = this.property.cardinality === 'multiple';
-    const isNotAddedYet = (lang: string) => !this.property.addedLanguages.includes(lang);
+    const isNotAddedYet = (lang: string) => !contains(this.property.addedLanguages, lang);
 
     return this.languages.filter(lang =>
       this.isLanguageVisible(lang) && (allowMultiple || isNotAddedYet(lang)));
