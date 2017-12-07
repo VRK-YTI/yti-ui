@@ -8,7 +8,7 @@ export class SessionService {
 
   constructor() {
     if (!this.selectionWidth) {
-      this.selectionWidth = 720;
+      this.selectionWidth = 550;
     }
   }
 
