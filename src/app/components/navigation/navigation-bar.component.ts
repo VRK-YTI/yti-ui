@@ -47,7 +47,7 @@ import { LoginModalService } from 'yti-common-ui/components/login-modal.componen
               <i class="fa fa-sign-in"></i>
               <span translate>LOG IN</span>
             </a>
-            <div class="dropdown-divider" [hidden]="!noMenuItemsAvailable"></div>
+            <div class="dropdown-divider" [hidden]="noMenuItemsAvailable"></div>
             <a class="dropdown-item"
                *ngIf="isLoggedIn()"
                [routerLink]="['/userDetails']" translate>User details</a>
