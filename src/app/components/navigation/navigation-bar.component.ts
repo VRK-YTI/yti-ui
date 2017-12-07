@@ -47,7 +47,7 @@ import { LoginModalService } from 'yti-common-ui/components/login-modal.componen
               <i class="fa fa-sign-in"></i>
               <span translate>LOG IN</span>
             </a>
-            <div class="dropdown-divider"></div>
+            <div class="dropdown-divider" [hidden]="!noMenuItemsAvailable"></div>
             <a class="dropdown-item"
                *ngIf="isLoggedIn()"
                [routerLink]="['/userDetails']" translate>User details</a>
@@ -68,6 +68,10 @@ export class NavigationBarComponent {
   constructor(private languageService: LanguageService,
               private userService: UserService,
               private loginModal: LoginModalService) {
+  }
+
+  get noMenuItemsAvailable() {
+    return !this.userService.isLoggedIn();
   }
 
   set language(language: Language) {
