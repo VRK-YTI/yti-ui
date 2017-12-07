@@ -97,7 +97,7 @@ function anyLocalization(predicate: (localized: string) => boolean, localizable:
 }
 
 function stringContains(value: string, searchString: string) {
-  return value.toLocaleLowerCase().indexOf(searchString.toLowerCase()) !== -1;
+  return value.toLowerCase().indexOf(searchString.toLowerCase()) !== -1;
 }
 
 function localizableContains(localizable: Localizable, searchString: string) {
