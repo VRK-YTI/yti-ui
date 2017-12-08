@@ -49,7 +49,7 @@ export class SearchOrganizationModalService {
                    *ngFor="let organization of searchResults$ | async; let last = last"
                    (click)="select(organization)">
                 <div class="content" [class.last]="last">
-                  <span class="title" [innerHTML]="organization.label | translateValue:false"></span>
+                  <span class="title" [innerHTML]="organization.label | translateValue:true"></span>
                 </div>
               </div>
             </div>
@@ -90,7 +90,7 @@ export class SearchOrganizationModalComponent implements AfterViewInit {
       .do(() => this.loading = false)
       .map(([organizations, search]) => {
         return organizations.filter(organization => {
-          const label = languageService.translate(organization.label, false);
+          const label = languageService.translate(organization.label, true);
           const searchMatches = !search || label.toLowerCase().indexOf(search.toLowerCase()) !== -1;
           const isNotRestricted = !contains(this.restrictOrganizationIds, organization.id);
           const isAllowed = !isDefined(this.allowOnlyOrganizationIds) || contains(this.allowOnlyOrganizationIds, organization.id);

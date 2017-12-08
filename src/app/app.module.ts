@@ -11,10 +11,8 @@ import { TermedHttp } from 'app/services/termed-http.service';
 import { VocabulariesComponent } from 'app/components/vocabulary/vocabularies.component';
 import { MissingTranslationHandler, MissingTranslationHandlerParams, TranslateLoader, TranslateModule } from 'ng2-translate';
 import { Observable } from 'rxjs';
-import { TranslateValuePipe } from 'app/pipes/translate-value.pipe';
 import { LanguageService } from 'app/services/language.service';
 import { ConceptsComponent } from 'app/components/concept/concepts.component';
-import { BreadcrumbComponent } from 'yti-common-ui/components/breadcrumb.component';
 import { LocationService } from 'app/services/location.service';
 import { ConceptComponent } from 'app/components/concept/concept.component';
 import { TranslateSearchValuePipe } from 'app/pipes/translate-search-value.pipe';
@@ -37,7 +35,6 @@ import { ConceptListComponent } from 'app/components/concept/concept-list.compon
 import { ConceptHierarchyComponent } from 'app/components/concept/concept-hierarchy.component';
 import { ConceptHierarchyNodeComponent } from 'app/components/concept/concept-hierarchy-node.component';
 import { StatusInputComponent } from 'app/components/form/status-input.component';
-import { FooterComponent } from 'yti-common-ui/components/footer.component';
 import { MetaInformationComponent } from 'app/components/common/meta-information.component';
 import { FloatDirective } from 'app/directives/float.directive';
 import { ConceptReferenceInputComponent } from 'app/components/concept/concept-reference-input.component';
@@ -77,20 +74,7 @@ import { StatusComponent } from 'app/components/common/status.component';
 import { OrganizationFilterDropdownComponent } from 'app/components/common/organization-filter-dropdown.component';
 import { VocabularyFilterDropdownComponent } from 'app/components/common/vocabulary-filter-dropdown.component';
 import { StatusFilterDropdownComponent } from 'app/components/common/status-filter-dropdown.component';
-import { AjaxLoadingIndicatorComponent } from 'yti-common-ui/components/ajax-loading-indicator.component';
-import { AjaxLoadingIndicatorSmallComponent } from 'yti-common-ui/components/ajax-loading-indicator-small.component';
-import { AccordionChevronComponent } from 'yti-common-ui/components/accordion-chevron.component';
-import { ErrorModalComponent, ErrorModalService } from 'yti-common-ui/components/error-modal.component';
-import { ConfirmationModalComponent, ConfirmationModalService } from 'yti-common-ui/components/confirmation-modal.component';
-import { LoginModalComponent, LoginModalService } from 'yti-common-ui/components/login-modal.component';
-import { HighlightPipe } from 'yti-common-ui/pipes/highlight.pipe';
-import { KeysPipe } from 'yti-common-ui/pipes/keys.pipe';
-import { MenuComponent } from 'yti-common-ui/components/menu.component';
-import { DropdownComponent } from 'yti-common-ui/components/dropdown.component';
-import { FilterDropdownComponent } from 'yti-common-ui/components/filter-dropdown.component';
-import { PopoverCloseComponent } from 'yti-common-ui/components/popover-close.component';
-import { UserService } from 'yti-common-ui/services/user.service';
-import { AUTHENTICATED_USER_ENDPOINT } from 'yti-common-ui';
+import { YtiCommonModule, AUTHENTICATED_USER_ENDPOINT, LOCALIZER } from 'yti-common-ui';
 import { environment } from 'environments/environment';
 
 const localizations: { [lang: string]: string} = {
@@ -140,8 +124,6 @@ const appRoutes: Routes = [
   declarations: [
     AppComponent,
     NavigationBarComponent,
-    BreadcrumbComponent,
-    FooterComponent,
     FrontpageComponent,
     VocabulariesComponent,
     VocabularyComponent,
@@ -161,13 +143,10 @@ const appRoutes: Routes = [
     ConceptLinkReferencePopoverComponent,
     TermsComponent,
     TermComponent,
-    AjaxLoadingIndicatorComponent,
-    AjaxLoadingIndicatorSmallComponent,
     MarkdownComponent,
     MarkdownElementComponent,
     MarkdownLinksComponent,
     MarkdownLinksElementComponent,
-    AccordionChevronComponent,
     LiteralInputComponent,
     LiteralListInputComponent,
     StatusInputComponent,
@@ -189,42 +168,29 @@ const appRoutes: Routes = [
     SearchOrganizationModalComponent,
     SearchGroupModalComponent,
     DeleteConfirmationModalComponent,
-    ErrorModalComponent,
-    ConfirmationModalComponent,
     SelectConceptReferenceModalComponent,
-    LoginModalComponent,
     MetaModelValidatorDirective,
     RequiredListValidatorDirective,
     LanguageValidatorDirective,
     FloatDirective,
-    TranslateValuePipe,
     TranslateSearchValuePipe,
-    HighlightPipe,
     TimestampPipe,
     StripMarkdownPipe,
-    KeysPipe,
     FilterLanguageComponent,
     ImportVocabularyModalComponent,
     PrefixInputComponent,
     UserDetailsComponent,
-    MenuComponent,
     StatusComponent,
-    DropdownComponent,
-    FilterDropdownComponent,
     OrganizationFilterDropdownComponent,
     VocabularyFilterDropdownComponent,
-    StatusFilterDropdownComponent,
-    PopoverCloseComponent
+    StatusFilterDropdownComponent
   ],
   entryComponents: [
     SearchConceptModalComponent,
     SearchOrganizationModalComponent,
     SearchGroupModalComponent,
     DeleteConfirmationModalComponent,
-    ErrorModalComponent,
-    ConfirmationModalComponent,
     SelectConceptReferenceModalComponent,
-    LoginModalComponent,
     ImportVocabularyModalComponent
   ],
   imports: [
@@ -235,10 +201,12 @@ const appRoutes: Routes = [
     InfiniteScrollModule,
     NgbModule.forRoot(),
     RouterModule.forRoot(appRoutes),
-    TranslateModule.forRoot({ provide: TranslateLoader, useFactory: createTranslateLoader })
+    TranslateModule.forRoot({ provide: TranslateLoader, useFactory: createTranslateLoader }),
+    YtiCommonModule
   ],
   providers: [
     { provide: AUTHENTICATED_USER_ENDPOINT, useFactory: resolveAuthenticatedUserEndpoint },
+    { provide: LOCALIZER, useExisting: LanguageService },
     TermedHttp,
     TermedService,
     MetaModelService,
@@ -249,14 +217,10 @@ const appRoutes: Routes = [
     SearchOrganizationModalService,
     SearchGroupModalService,
     DeleteConfirmationModalService,
-    ErrorModalService,
-    ConfirmationModalService,
     SelectConceptReferenceModalService,
-    LoginModalService,
     SessionService,
     ElasticSearchService,
     ConfirmCancelEditGuard,
-    UserService,
     AuthorizationManager,
     ImportVocabularyModalService
   ],

@@ -76,7 +76,7 @@ export class NewVocabularyComponent {
     metaModelService.getMetaTemplates().subscribe(templates => {
       this.templateOptions = templates.map(template => ({
         value: template,
-        name: () => this.languageService.translate(template.label, false)
+        name: () => this.languageService.translate(template.label, true)
       }));
       this.selectedTemplate = templates[0];
     });

@@ -13,7 +13,7 @@ import { contains } from 'yti-common-ui/utils/array';
       <div ngbDropdown class="add-button" placement="bottom-right">
         <button class="btn btn-link" 
                 ngbDropdownToggle>
-          <span>{{'Add' | translate}} {{reference.label | translateValue:false | lowercase}}</span>
+          <span>{{'Add' | translate}} {{reference.label | translateValue:true | lowercase}}</span>
         </button>
         <div ngbDropdownMenu>
           <button class="dropdown-item" 

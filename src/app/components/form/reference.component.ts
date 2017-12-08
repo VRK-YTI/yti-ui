@@ -11,7 +11,7 @@ export type FormReference = FormReferenceLiteral<any>
   styleUrls: ['./reference.component.scss'],
   template: `
     <dl *ngIf="show">
-      <dt><label [for]="id">{{reference.label | translateValue:false}}</label></dt>
+      <dt><label [for]="id">{{reference.label | translateValue:true}}</label></dt>
       <dd>
         <ng-container [ngSwitch]="reference.referenceType">
 

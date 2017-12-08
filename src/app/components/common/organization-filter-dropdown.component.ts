@@ -33,7 +33,7 @@ export class OrganizationFilterDropdownComponent implements OnInit {
 
       this.organizationOptions = [
         { value: null, name: () => this.translateService.instant('All organizations') },
-        ...orgs.map(org => ({ value: org, name: () => this.languageService.translate(org.label, false)}))
+        ...orgs.map(org => ({ value: org, name: () => this.languageService.translate(org.label, true)}))
       ];
     });
   }

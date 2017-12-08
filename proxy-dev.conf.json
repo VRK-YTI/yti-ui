@@ -1,6 +1,6 @@
 {
-  "/api/*": {
-    "target": "https://sanasto.csc.fi",
+  "/frontend/*": {
+    "target": "https://sanastot-dev.suomi.fi",
     "secure": false
   }
 }

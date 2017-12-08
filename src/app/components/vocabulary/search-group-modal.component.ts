@@ -51,7 +51,7 @@ export class SearchGroupModalService {
                    *ngFor="let group of searchResults$ | async; let last = last"
                    (click)="select(group)">
                 <div class="content" [class.last]="last">
-                  <span class="title" [innerHTML]="group.label | translateValue:false"></span>
+                  <span class="title" [innerHTML]="group.label | translateValue:true"></span>
                 </div>
               </div>
             </div>
@@ -90,7 +90,7 @@ export class SearchGroupModalComponent implements AfterViewInit {
       .do(() => this.loading = false)
       .map(([groups, search]) => {
         return groups.filter(group => {
-          const label = languageService.translate(group.label, false);
+          const label = languageService.translate(group.label, true);
           const searchMatches = !search || label.toLowerCase().indexOf(search.toLowerCase()) !== -1;
           const isNotRestricted = !contains(this.restricts, group.id);
           return searchMatches && isNotRestricted;

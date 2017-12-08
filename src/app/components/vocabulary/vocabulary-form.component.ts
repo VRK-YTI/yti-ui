@@ -28,7 +28,7 @@ import { EditableService } from 'app/services/editable.service';
 
       <div class="col-md-6 form-group">
         <label translate>Vocabulary type</label>
-        <p class="form-control-static">{{vocabulary.meta.label | translateValue:false}}</p>
+        <p class="form-control-static">{{vocabulary.meta.label | translateValue:true}}</p>
       </div>
       
       <div class="col-md-6 form-group">

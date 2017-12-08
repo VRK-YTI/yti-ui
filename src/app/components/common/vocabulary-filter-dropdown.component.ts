@@ -33,8 +33,8 @@ export class VocabularyFilterDropdownComponent implements OnInit {
 
       this.vocabularyOptions = [
         { value: null, name: () => this.translateService.instant('All vocabularies') },
-        ...vocabs.map(org => ({ value: org, name: () => this.languageService.translate(org.label, false)}))
+        ...vocabs.map(org => ({ value: org, name: () => this.languageService.translate(org.label, true)}))
       ];
-    })
+    });
   }
 }

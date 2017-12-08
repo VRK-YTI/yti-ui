@@ -42,7 +42,7 @@ interface UserOrganizationRoles {
         <label translate>Organizations and roles</label>
         <div class="form-control-static">
           <div *ngFor="let userOrganization of userOrganizations">
-            <div *ngIf="userOrganization.organization">{{userOrganization.organization.label | translateValue:false}}</div>
+            <div *ngIf="userOrganization.organization">{{userOrganization.organization.label | translateValue:true}}</div>
             <div *ngIf="!userOrganization.organization" translate>Unknown organization</div>
             <ul>
               <li *ngFor="let role of userOrganization.roles">{{role | translate}}</li>
@@ -159,7 +159,7 @@ export class UserDetailsComponent implements OnDestroy  {
     return [null, ...requestableOrganizations].map(org => {
       return {
         value: org,
-        name: () => org ? this.languageService.translate(org.label, false)
+        name: () => org ? this.languageService.translate(org.label, true)
                         : this.translateService.instant('Choose organization')
       };
     })

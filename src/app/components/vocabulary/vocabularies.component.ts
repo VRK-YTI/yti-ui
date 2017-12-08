@@ -42,7 +42,7 @@ import { Subscription } from 'rxjs/Subscription';
                  [class.active]="isClassificationSelected(classification.node)"
                  (click)="toggleClassification(classification.node)">
 
-              <span class="name">{{classification.node.label | translateValue:false}}</span>
+              <span class="name">{{classification.node.label | translateValue:true}}</span>
               <span class="count">({{classification.count}})</span>
             </div>
           </div>
@@ -84,17 +84,17 @@ import { Subscription } from 'rxjs/Subscription';
               <div class="col-md-12">
                 <div class="vocabulary" *ngFor="let vocabulary of filteredVocabularies" (click)="navigate(vocabulary)">
 
-                  <span class="name">{{vocabulary.label | translateValue:false}}</span>
+                  <span class="name">{{vocabulary.label | translateValue:true}}</span>
 
                   <span class="organization" *ngFor="let publisher of vocabulary.publishers">
-                    {{publisher.label | translateValue:false}}
+                    {{publisher.label | translateValue:true}}
                   </span>
 
                   <span class="group" *ngFor="let group of vocabulary.groups">
-                    {{group.label | translateValue:false}}
+                    {{group.label | translateValue:true}}
                   </span>
 
-                  <span class="type">{{vocabulary.typeLabel | translateValue:false}}</span>
+                  <span class="type">{{vocabulary.typeLabel | translateValue:true}}</span>
 
                 </div>
               </div>

@@ -13,7 +13,7 @@ import { contains } from 'yti-common-ui/utils/array';
     <div *ngIf="canAdd()" class="clearfix">
       <div ngbDropdown class="add-button" placement="bottom-right">
         <button class="btn btn-link" ngbDropdownToggle>
-          <span>{{'Add' | translate}} {{property.label | translateValue:false | lowercase}}</span>
+          <span>{{'Add' | translate}} {{property.label | translateValue:true | lowercase}}</span>
         </button>
         <div ngbDropdownMenu>
           <button class="dropdown-item"
@@ -57,7 +57,7 @@ import { contains } from 'yti-common-ui/utils/array';
         <button *ngIf="canRemove()"
                 class="btn btn-link remove-button"
                 (click)="removeValue(child)"
-                ngbTooltip="{{'Remove' | translate}} {{property.label | translateValue:false | lowercase}}" [placement]="'left'">
+                ngbTooltip="{{'Remove' | translate}} {{property.label | translateValue:true | lowercase}}" [placement]="'left'">
           <i class="fa fa-trash"></i>
         </button>
       </div>

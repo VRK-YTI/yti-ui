@@ -1,15 +1,11 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from 'ng2-translate';
-import { Localizable } from 'yti-common-ui/types/localization';
+import { Localizable, Localizer, Language } from 'yti-common-ui/types/localization';
 import { isDefined } from 'yti-common-ui/utils/object';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
 
-export type Language = string;
-
-export interface Localizer {
-  translate(localizable: Localizable): string;
-}
+export { Language, Localizer };
 
 @Injectable()
 export class LanguageService implements Localizer {
@@ -52,13 +48,13 @@ export class LanguageService implements Localizer {
     return this.translateLanguage$.getValue();
   }
 
-  translate(localizable: Localizable, useFilterLanguage = true) {
+  translate(localizable: Localizable, useUILanguage = false) {
 
     if (!isDefined(localizable)) {
       return '';
     }
 
-    const primaryLocalization = localizable[(useFilterLanguage && this.filterLanguage) || this.language];
+    const primaryLocalization = localizable[(!useUILanguage && this.filterLanguage) || this.language];
 
     if (primaryLocalization) {
       return primaryLocalization;

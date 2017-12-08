@@ -70,7 +70,7 @@ export class SelectConceptReferenceModalComponent implements OnInit {
 
         return {
           value: value,
-          name: () => this.languageService.translate(value.label, false)
+          name: () => this.languageService.translate(value.label, true)
         }
       });
 
