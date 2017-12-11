@@ -190,6 +190,11 @@ export class TermedService {
     return this.http.post(`${environment.api_url}/request`, null, { params } );
   }
 
+  getFakeableUsers(): Observable<{ email: string, firstName: string, lastName: string }[]> {
+    return this.http.get(`${environment.api_url}/fakeableUsers`)
+      .map(response => response.json());
+  }
+
   private removeNodeIdentifiers(nodeIds: Identifier<any>[], sync: boolean, disconnect: boolean) {
 
     const params = new URLSearchParams();

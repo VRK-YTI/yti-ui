@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { LanguageService, Language } from 'app/services/language.service';
+import { Language, LanguageService } from 'app/services/language.service';
 import { UserService } from 'yti-common-ui/services/user.service';
 import { LoginModalService } from 'yti-common-ui/components/login-modal.component';
+import { TermedService } from '../../services/termed.service';
 
 @Component({
   selector: 'app-navigation-bar',
@@ -12,6 +13,15 @@ import { LoginModalService } from 'yti-common-ui/components/login-modal.componen
       <a class="navbar-brand" [routerLink]="['/']"><span>Sanastot</span></a>
 
       <ul class="navbar-nav ml-auto">
+
+        <li *ngIf="fakeableUsers.length > 0" class="nav-item dropdown" ngbDropdown>
+          <a class="nav-link" ngbDropdownToggle translate>Impersonate user</a>
+          <div ngbDropdownMenu>
+            <a class="dropdown-item" *ngFor="let user of fakeableUsers" (click)="fakeUser(user.email)">
+              {{user.firstName}} {{user.lastName}}
+            </a>
+          </div>
+        </li>
         
         <li class="nav-item" *ngIf="!isLoggedIn()">
           <a class="nav-link" (click)="logIn()" translate>LOG IN</a>
@@ -65,9 +75,20 @@ export class NavigationBarComponent {
     { code: 'en' as Language, name: 'In English (EN)' }
   ];
 
+  fakeableUsers: { email: string, firstName: string, lastName: string }[] = [];
+
   constructor(private languageService: LanguageService,
               private userService: UserService,
-              private loginModal: LoginModalService) {
+              private loginModal: LoginModalService,
+              termedService: TermedService) {
+
+    termedService.getFakeableUsers().subscribe(users => {
+      this.fakeableUsers = users;
+    });
+  }
+
+  fakeUser(userEmail: string) {
+    this.userService.updateLoggedInUser(userEmail);
   }
 
   get noMenuItemsAvailable() {

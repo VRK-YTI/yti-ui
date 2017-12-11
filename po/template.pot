@@ -130,6 +130,9 @@ msgstr ""
 msgid "Remove term"
 msgstr ""
 
+msgid "Impersonate user"
+msgstr ""
+
 msgid "LOG IN"
 msgstr ""
 

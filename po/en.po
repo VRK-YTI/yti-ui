@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-12-05 16:33+0200\n"
+"PO-Revision-Date: 2017-12-11 20:42+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -138,6 +138,9 @@ msgid "No terms yet"
 msgstr ""
 
 msgid "Remove term"
+msgstr ""
+
+msgid "Impersonate user"
 msgstr ""
 
 msgid "LOG IN"

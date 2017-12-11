@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2017-12-05 16:33+0200\n"
+"PO-Revision-Date: 2017-12-11 20:33+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -141,6 +141,9 @@ msgstr "Ei vielä yhtään termiä"
 
 msgid "Remove term"
 msgstr "Poista termi"
+
+msgid "Impersonate user"
+msgstr "Esiinny käyttäjänä"
 
 msgid "LOG IN"
 msgstr "KIRJAUDU SISÄÄN"
@@ -362,3 +365,6 @@ msgstr "Etuliite on jo käytössä"
 
 msgid "upperCaseInPrefix"
 msgstr "Etuliite oltava pienillä kirjaimilla"
+
+#~ msgid "Logged out user"
+#~ msgstr "Kirjautumaton käyttäjä"
