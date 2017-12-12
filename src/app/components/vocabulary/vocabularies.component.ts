@@ -129,7 +129,7 @@ export class VocabulariesComponent implements OnDestroy {
               termedService: TermedService,
               private router: Router) {
 
-    const vocabularies$ = termedService.getVocabularyList();
+    const vocabularies$ = termedService.getVocabularyList().publishReplay(1).refCount();
 
     this.subscriptionToClean.push(Observable.combineLatest(vocabularies$, languageService.language$)
       .subscribe(([vocabularies]) => {

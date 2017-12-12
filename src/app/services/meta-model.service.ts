@@ -19,7 +19,7 @@ export class MetaModelService {
 
   constructor(private http: TermedHttp) {
 
-    const graphMetas$ = this.createAllGraphMetas();
+    const graphMetas$ = this.createAllGraphMetas().publishReplay(1).refCount();
 
     this.metaCache.init(graphMetas$);
 
