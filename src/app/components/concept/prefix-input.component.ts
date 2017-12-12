@@ -19,11 +19,12 @@ import { TermedService } from 'app/services/termed.service';
           <app-error-messages [control]="parentControl"></app-error-messages>
         </div>
       </div>
-    
+
       <div class="col-md-6">
-        <div class="form-group"></div>
-        <label translate>Namespace</label>
-        <p class="form-control-static">{{namespace}}{{control.value}}</p>
+        <div class="form-group">
+          <label translate>Namespace</label>
+          <p class="form-control-static">{{namespace}}{{control.value}}</p>
+        </div>
       </div>
     
     </div>
