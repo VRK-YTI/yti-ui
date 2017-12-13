@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Node } from 'app/entities/node';
+import { UserService } from 'yti-common-ui/services/user.service';
 
 @Component({
   selector: 'app-meta-information',
@@ -16,7 +17,7 @@ import { Node } from 'app/entities/node';
             <p class="form-control-static">{{node.createdDate | timestamp}}</p>
           </div>
         </div>
-        <div class="col-sm-6">
+        <div class="col-sm-6" *ngIf="showCreatedBy()">
           <div class="form-group">
             <label translate>Created by</label>
             <p class="form-control-static">{{node.createdBy}}</p>
@@ -28,7 +29,7 @@ import { Node } from 'app/entities/node';
             <p class="form-control-static">{{node.lastModifiedDate | timestamp}}</p>
           </div>
         </div>
-        <div class="col-sm-6" *ngIf="showModified">
+        <div class="col-sm-6" *ngIf="showModifiedBy()">
           <div class="form-group">
             <label translate>Modified by</label>
             <p class="form-control-static">{{node.lastModifiedBy}}</p>
@@ -48,4 +49,15 @@ export class MetaInformationComponent {
 
   @Input() node: Node<any>;
   @Input() showModified = true;
+
+  constructor(private userService: UserService) {
+  }
+  
+  showCreatedBy() {
+    return this.userService.isLoggedIn();
+  }
+
+  showModifiedBy() {
+    return !this.showModified ? false : this.userService.isLoggedIn();
+  }
 }
