@@ -62,7 +62,6 @@ import { Subscription } from 'rxjs/Subscription';
 
 
               <button class="btn btn-action pull-right" *ngIf="canAddVocabulary()" (click)="addVocabulary()">
-                <i class="fa fa-plus"></i>
                 <span translate>Add vocabulary</span>
               </button>
             </div>
