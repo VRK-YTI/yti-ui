@@ -61,6 +61,9 @@ import { TermedService } from '../../services/termed.service';
             <a class="dropdown-item"
                *ngIf="isLoggedIn()"
                [routerLink]="['/userDetails']" translate>User details</a>
+            <a class="dropdown-item"
+               *ngIf="isUserAdmin()"
+               href="{{groupManagementUrl}}" target="_blank" translate>Group management service</a>
           </div>
         </li>
       </ul>
@@ -77,6 +80,8 @@ export class NavigationBarComponent {
 
   fakeableUsers: { email: string, firstName: string, lastName: string }[] = [];
 
+  groupManagementUrl: string;
+
   constructor(private languageService: LanguageService,
               private userService: UserService,
               private loginModal: LoginModalService,
@@ -84,6 +89,10 @@ export class NavigationBarComponent {
 
     termedService.getFakeableUsers().subscribe(users => {
       this.fakeableUsers = users;
+    });
+
+    termedService.getGroupManagementUrl().subscribe(url => {
+      this.groupManagementUrl = url;
     });
   }
 
@@ -117,5 +126,9 @@ export class NavigationBarComponent {
 
   isLoggedIn() {
     return this.userService.isLoggedIn();
+  }
+
+  isUserAdmin() {
+    return this.user.isAdminInAnyOrganization();
   }
 }
