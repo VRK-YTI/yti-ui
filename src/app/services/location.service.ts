@@ -1,13 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Localizable } from 'yti-common-ui/types/localization';
+import { Location } from 'yti-common-ui/types/location';
 import { Subject } from 'rxjs';
 import { CollectionNode, ConceptNode, VocabularyNode } from 'app/entities/node';
-
-export interface Location {
-  localizationKey?: string;
-  label?: Localizable;
-  route?: string[];
-}
 
 const frontPage = { localizationKey: 'Front page', route: [''] };
 
