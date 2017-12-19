@@ -195,7 +195,7 @@ export class TermedService {
       .map(response => response.json());
   }
 
-  getGroupManagementUrl(): Observable<string>{
+  getGroupManagementUrl(): Observable<string> {
     return this.http.get(`${environment.api_url}/groupManagementUrl`)
       .map(response => response.text() as string);
   }
