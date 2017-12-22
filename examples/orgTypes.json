@@ -1,44 +1,5 @@
 [
   {
-    "id": "Colleciton",
-    "index": 0,
-    "graph": {
-      "id": "228cce1e-8360-4039-a3f7-725df5643354"
-    },
-    "permissions": {},
-    "properties": {
-      "prefLabel": [
-        {
-          "lang": "fi",
-          "value": "Luokitus"
-        }
-      ]
-    },
-    "textAttributes": [
-      {
-        "regex": "(?s)^.*$",
-        "id": "prefLabel",
-        "index": 0,
-        "domain": {
-          "id": "Colleciton",
-          "graph": {
-            "id": "228cce1e-8360-4039-a3f7-725df5643354"
-          }
-        },
-        "permissions": {},
-        "properties": {
-          "prefLabel": [
-            {
-              "lang": "fi",
-              "value": "Luokituksen nimi"
-            }
-          ]
-        }
-      }
-    ],
-    "referenceAttributes": []
-  },
-  {
     "id": "Organization",
     "index": 0,
     "graph": {

@@ -82,11 +82,42 @@
           ]
         }
       },
+	  	  {
+        "regex": "(?s)^.*$",
+        "id": "status",
+        "uri": "http://www.w3.org/2003/06/sw-vocab-status/ns#term_status",
+        "index": 2,
+         "domain": {
+          "id": "TerminologicalVocabulary",
+          "graph": {
+            "id": "ada55715-c565-4477-8227-0b8a51010bc5"
+          }
+        },
+        "permissions": {},
+        "properties": {
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Sanaston tila"
+            },
+            {
+              "lang": "en",
+              "value": "Terminology status"
+            }
+          ],
+          "type": [
+            {
+              "lang": "",
+              "value": "status"
+            }
+          ]
+        }
+      },
       {
         "regex": "(?s)^.*$",
         "id": "description",
         "uri": "http://purl.org/dc/terms/description",
-        "index": 2,
+        "index": 3,
         "domain": {
           "id": "TerminologicalVocabulary",
           "graph": {
@@ -112,7 +143,7 @@
             }
           ]
         }
-      }
+      } 
     ],
     "referenceAttributes": [
       {

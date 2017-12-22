@@ -1,10 +1,11 @@
 [
   {
-    "id": "53cc3de0-7ca0-4c5e-a6b8-e84123bf64e0",
+    "id": "d9c76d52-03d3-4480-8c2c-b66e6d9c57f2",
+    "number": 6,
     "createdBy": "admin",
-    "createdDate": "2017-05-10T06:37:53.863Z",
+    "createdDate": "2017-11-20T10:40:00.121Z",
     "lastModifiedBy": "admin",
-    "lastModifiedDate": "2017-05-17T13:30:27.582Z",
+    "lastModifiedDate": "2017-12-22T13:10:00.040Z",
     "type": {
       "id": "Organization",
       "graph": {
@@ -14,136 +15,18 @@
     "properties": {
       "prefLabel": [
         {
-          "lang": "fi",
-          "value": "Kansalliskirjasto",
+          "lang": "en",
+          "value": "Population Register Centre",
           "regex": "(?s)^.*$"
         },
         {
-          "lang": "en",
-          "value": "The National Library Of Finland",
-          "regex": "(?s)^.*$"
-        }
-      ]
-    },
-    "references": {},
-    "referrers": {
-      "publisher": [
-        {
-          "id": "5d2d2b70-62ca-3109-bf5e-061a22ee54c4",
-          "type": {
-            "id": "Vocabulary",
-            "graph": {
-              "id": "fea40a05-6a7d-4bc5-8db5-2fba38a7457f"
-            }
-          }
-        }
-      ]
-    }
-  },
-  {
-    "id": "5cc44d9e-a1f6-49c9-b03b-b22d880abb99",
-    "createdBy": "admin",
-    "createdDate": "2017-05-10T06:37:53.863Z",
-    "lastModifiedBy": "admin",
-    "lastModifiedDate": "2017-05-17T13:30:27.599Z",
-    "type": {
-      "id": "Organization",
-      "graph": {
-        "id": "228cce1e-8360-4039-a3f7-725df5643354"
-      }
-    },
-    "properties": {
-      "prefLabel": [
-        {
           "lang": "fi",
-          "value": "Terveyden ja hyvinvoinnin laitos",
+          "value": "Väestörekisterikeskus",
           "regex": "(?s)^.*$"
         },
         {
-          "lang": "en",
-          "value": "National Institute for Health and Welfare",
-          "regex": "(?s)^.*$"
-        }
-      ]
-    },
-    "references": {},
-    "referrers": {
-      "publisher": [
-        {
-          "id": "e51b0ccb-4ac2-3e16-a117-4cdaae902675",
-          "type": {
-            "id": "TerminologicalVocabulary",
-            "graph": {
-              "id": "ada55715-c565-4477-8227-0b8a51010bc5"
-            }
-          }
-        }
-      ]
-    }
-  },
-  {
-    "id": "520dc3ac-2f67-4ec0-b535-218428ed3758",
-    "createdBy": "admin",
-    "createdDate": "2017-05-10T06:37:53.863Z",
-    "lastModifiedBy": "admin",
-    "lastModifiedDate": "2017-05-17T13:30:27.584Z",
-    "type": {
-      "id": "Organization",
-      "graph": {
-        "id": "228cce1e-8360-4039-a3f7-725df5643354"
-      }
-    },
-    "properties": {
-      "prefLabel": [
-        {
-          "lang": "fi",
-          "value": "Valtiovarainministeriö",
-          "regex": "(?s)^.*$"
-        },
-        {
-          "lang": "en",
-          "value": "Ministry of Finance",
-          "regex": "(?s)^.*$"
-        }
-      ]
-    },
-    "references": {},
-    "referrers": {
-      "publisher": [
-        {
-          "id": "61bec1e5-70b4-34fc-acfb-ab70428fb6f8",
-          "type": {
-            "id": "TerminologicalVocabulary",
-            "graph": {
-              "id": "0043fa54-18b2-4f31-80cf-32eeb0bbb297"
-            }
-          }
-        }
-      ]
-    }
-  },
-  {
-    "id": "42c81e91-9c23-40a5-9b3c-1f6c502c48a4",
-    "createdBy": "admin",
-    "createdDate": "2017-05-10T06:37:53.863Z",
-    "lastModifiedBy": "admin",
-    "lastModifiedDate": "2017-05-17T13:30:27.586Z",
-    "type": {
-      "id": "Organization",
-      "graph": {
-        "id": "228cce1e-8360-4039-a3f7-725df5643354"
-      }
-    },
-    "properties": {
-      "prefLabel": [
-        {
-          "lang": "fi",
-          "value": "Opetus- ja Kulttuuriministeriö",
-          "regex": "(?s)^.*$"
-        },
-        {
-          "lang": "en",
-          "value": "Ministry of Education and Culture",
+          "lang": "sv",
+          "value": "Befolkningsregistercentralen",
           "regex": "(?s)^.*$"
         }
       ]
@@ -164,11 +47,12 @@
     }
   },
   {
-    "id": "48dff4f2-af8c-4963-b2f7-34797ccfc8b1",
+    "id": "e8b0e24e-ad54-4ae0-bf69-051c59a0142d",
+    "number": 14,
     "createdBy": "admin",
-    "createdDate": "2017-06-14T08:25:17.962Z",
+    "createdDate": "2017-11-20T12:35:00.056Z",
     "lastModifiedBy": "admin",
-    "lastModifiedDate": "2017-06-14T08:25:17.962Z",
+    "lastModifiedDate": "2017-12-22T13:10:00.040Z",
     "type": {
       "id": "Organization",
       "graph": {
@@ -178,30 +62,293 @@
     "properties": {
       "prefLabel": [
         {
-          "lang": "fi",
-          "value": "Ympäristöministeriö",
+          "lang": "en",
+          "value": "Sanaston testiorganisaatio en",
           "regex": "(?s)^.*$"
         },
         {
-          "lang": "en",
-          "value": "Ministry of the Environment",
+          "lang": "fi",
+          "value": "Sanaston testiorganisaatio",
           "regex": "(?s)^.*$"
         }
       ]
     },
     "references": {},
-    "referrers": {
-      "publisher": [
+    "referrers": {}
+  },
+  {
+    "id": "74a41211-8c99-4835-a519-7a61612b1098",
+    "number": 10,
+    "createdBy": "admin",
+    "createdDate": "2017-11-20T10:40:00.121Z",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-12-22T13:10:00.040Z",
+    "type": {
+      "id": "Organization",
+      "graph": {
+        "id": "228cce1e-8360-4039-a3f7-725df5643354"
+      }
+    },
+    "properties": {
+      "prefLabel": [
         {
-          "id": "8687eb1a-9d15-4201-80a4-258238146218",
-          "type": {
-            "id": "TerminologicalVocabulary",
-            "graph": {
-              "id": "128d0546-b4ba-4812-a7e0-3b2313fdc5e5"
-            }
-          }
+          "lang": "en",
+          "value": "testiorganisaatio en",
+          "regex": "(?s)^.*$"
+        },
+        {
+          "lang": "fi",
+          "value": "Testiorganisaatio",
+          "regex": "(?s)^.*$"
         }
       ]
-    }
+    },
+    "references": {},
+    "referrers": {}
+  },
+  {
+    "id": "2f9eab0b-d6f0-42ce-b3aa-9f3647618b4d",
+    "number": 7,
+    "createdBy": "admin",
+    "createdDate": "2017-11-20T10:40:00.121Z",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-12-22T13:10:00.040Z",
+    "type": {
+      "id": "Organization",
+      "graph": {
+        "id": "228cce1e-8360-4039-a3f7-725df5643354"
+      }
+    },
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "en",
+          "value": "National Institute for Health and Welfare",
+          "regex": "(?s)^.*$"
+        },
+        {
+          "lang": "fi",
+          "value": "Terveyden ja hyvinvoinnin laitos",
+          "regex": "(?s)^.*$"
+        },
+        {
+          "lang": "sv",
+          "value": "Institutet för hälsa och välfärd",
+          "regex": "(?s)^.*$"
+        }
+      ]
+    },
+    "references": {},
+    "referrers": {}
+  },
+  {
+    "id": "88ce73b9-376c-4ff1-8c51-e4159b0af75c",
+    "number": 8,
+    "createdBy": "admin",
+    "createdDate": "2017-11-20T10:40:00.121Z",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-12-22T13:10:00.040Z",
+    "type": {
+      "id": "Organization",
+      "graph": {
+        "id": "228cce1e-8360-4039-a3f7-725df5643354"
+      }
+    },
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "en",
+          "value": "Statistics Finland",
+          "regex": "(?s)^.*$"
+        },
+        {
+          "lang": "fi",
+          "value": "Tilastokeskus",
+          "regex": "(?s)^.*$"
+        },
+        {
+          "lang": "sv",
+          "value": "Statistikcentralen",
+          "regex": "(?s)^.*$"
+        }
+      ]
+    },
+    "references": {},
+    "referrers": {}
+  },
+  {
+    "id": "09bf60ab-cca0-48b6-ab45-0a7f27ff9f88",
+    "number": 9,
+    "createdBy": "admin",
+    "createdDate": "2017-11-20T10:40:00.121Z",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-12-22T13:10:00.040Z",
+    "type": {
+      "id": "Organization",
+      "graph": {
+        "id": "228cce1e-8360-4039-a3f7-725df5643354"
+      }
+    },
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "en",
+          "value": "Public Administration Conceptual Modelling Group",
+          "regex": "(?s)^.*$"
+        },
+        {
+          "lang": "fi",
+          "value": "Julkisen hallinnon käsitemalliryhmä",
+          "regex": "(?s)^.*$"
+        },
+        {
+          "lang": "sv",
+          "value": "Konceptuell modelleringsgrupp för offentlig förvaltning",
+          "regex": "(?s)^.*$"
+        }
+      ]
+    },
+    "references": {},
+    "referrers": {}
+  },
+  {
+    "id": "2c7a35c4-4445-4a42-ac14-0da671882219",
+    "number": 11,
+    "createdBy": "admin",
+    "createdDate": "2017-11-20T10:40:00.121Z",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-12-22T13:10:00.040Z",
+    "type": {
+      "id": "Organization",
+      "graph": {
+        "id": "228cce1e-8360-4039-a3f7-725df5643354"
+      }
+    },
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "en",
+          "value": "testi 2",
+          "regex": "(?s)^.*$"
+        },
+        {
+          "lang": "fi",
+          "value": "Testi",
+          "regex": "(?s)^.*$"
+        },
+        {
+          "lang": "sv",
+          "value": "test 3",
+          "regex": "(?s)^.*$"
+        }
+      ]
+    },
+    "references": {},
+    "referrers": {}
+  },
+  {
+    "id": "7d3a3c00-5a6b-489b-a3ed-63bb58c26a63",
+    "number": 12,
+    "createdBy": "admin",
+    "createdDate": "2017-11-20T10:40:00.121Z",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-12-22T13:10:00.040Z",
+    "type": {
+      "id": "Organization",
+      "graph": {
+        "id": "228cce1e-8360-4039-a3f7-725df5643354"
+      }
+    },
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "en",
+          "value": "Interoperability platform developers ",
+          "regex": "(?s)^.*$"
+        },
+        {
+          "lang": "fi",
+          "value": "Yhteentoimivuusvälineistön ylläpito",
+          "regex": "(?s)^.*$"
+        },
+        {
+          "lang": "sv",
+          "value": "Utvecklare av interoperabilitetsplattformar",
+          "regex": "(?s)^.*$"
+        }
+      ]
+    },
+    "references": {},
+    "referrers": {}
+  },
+  {
+    "id": "c09996e0-7503-4760-8285-0346ee98b050",
+    "number": 15,
+    "createdBy": "admin",
+    "createdDate": "2017-11-21T11:35:00.154Z",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-12-22T13:10:00.040Z",
+    "type": {
+      "id": "Organization",
+      "graph": {
+        "id": "228cce1e-8360-4039-a3f7-725df5643354"
+      }
+    },
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "en",
+          "value": "test2 en s ",
+          "regex": "(?s)^.*$"
+        },
+        {
+          "lang": "fi",
+          "value": "Test 2a",
+          "regex": "(?s)^.*$"
+        },
+        {
+          "lang": "sv",
+          "value": "s",
+          "regex": "(?s)^.*$"
+        }
+      ]
+    },
+    "references": {},
+    "referrers": {}
+  },
+  {
+    "id": "d8c0f756-3a05-4f77-8180-142f64772a17",
+    "number": 13,
+    "createdBy": "admin",
+    "createdDate": "2017-11-20T10:40:00.121Z",
+    "lastModifiedBy": "admin",
+    "lastModifiedDate": "2017-12-22T13:10:00.040Z",
+    "type": {
+      "id": "Organization",
+      "graph": {
+        "id": "228cce1e-8360-4039-a3f7-725df5643354"
+      }
+    },
+    "properties": {
+      "prefLabel": [
+        {
+          "lang": "en",
+          "value": "CSC - IT Center of Science",
+          "regex": "(?s)^.*$"
+        },
+        {
+          "lang": "fi",
+          "value": "CSC - Tieteen tietotekniikan keskus",
+          "regex": "(?s)^.*$"
+        },
+        {
+          "lang": "sv",
+          "value": "CSC - IT-centret för vetenskap",
+          "regex": "(?s)^.*$"
+        }
+      ]
+    },
+    "references": {},
+    "referrers": {}
   }
 ]
