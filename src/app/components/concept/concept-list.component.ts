@@ -1,7 +1,7 @@
 import { Component, AfterViewInit, ElementRef, ViewChild, Renderer } from '@angular/core';
 import { Router } from '@angular/router';
 import { ConceptListModel, ConceptViewModelService } from 'app/services/concept.view.service';
-import { statuses } from 'app/entities/constants';
+import { selectableStatuses } from 'yti-common-ui/entities/status';
 import { v4 as uuid } from 'uuid';
 import { IndexedConcept } from 'app/services/elasticsearch.service';
 import { AuthorizationManager } from 'app/services/authorization-manager.sevice';
@@ -91,7 +91,7 @@ export class ConceptListComponent implements AfterViewInit {
 
   @ViewChild('searchInput') searchInput: ElementRef;
 
-  statuses = statuses;
+  statuses = selectableStatuses;
   model: ConceptListModel;
 
   constructor(private conceptViewModel: ConceptViewModelService,

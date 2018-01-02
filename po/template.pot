@@ -247,22 +247,10 @@ msgstr ""
 msgid "New collection"
 msgstr ""
 
+msgid "self reference error"
+msgstr ""
+
 msgid "Front page"
-msgstr ""
-
-msgid "Unstable"
-msgstr ""
-
-msgid "Draft"
-msgstr ""
-
-msgid "Recommendation"
-msgstr ""
-
-msgid "Deprecated"
-msgstr ""
-
-msgid "Suggestion"
 msgstr ""
 
 msgid "Vocabulary"
@@ -288,16 +276,13 @@ msgid ""
 "be lost."
 msgstr ""
 
-msgid "All statuses"
-msgstr ""
-
 msgid "Unlink"
 msgstr ""
 
 msgid "Concept not in references"
 msgstr ""
 
-msgid "self reference error"
+msgid "All statuses"
 msgstr ""
 
 msgid "already added error"

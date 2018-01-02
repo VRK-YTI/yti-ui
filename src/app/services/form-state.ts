@@ -110,7 +110,7 @@ export class FormNode {
   }
 
   get status(): string {
-    return this.node.getProperty('status').asString() || 'Unstable';
+    return this.node.getProperty('status').asString() || 'DRAFT';
   }
 
   hasConceptReference(conceptId: string) {
@@ -377,7 +377,7 @@ export class FormPropertyLiteral {
       validators.push(validateLanguage);
     }
 
-    return new FormControl((!initial && isStatus) ? 'Unstable' : initial, validators);
+    return new FormControl((!initial && isStatus) ? 'DRAFT' : initial, validators);
   }
 
   get label(): Localizable {

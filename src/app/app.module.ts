@@ -70,7 +70,7 @@ import { PrefixInputComponent } from 'app/components/concept/prefix-input.compon
 import { SearchGroupModalComponent, SearchGroupModalService } from 'app/components/vocabulary/search-group-modal.component';
 import { AuthorizationManager } from 'app/services/authorization-manager.sevice';
 import { UserDetailsComponent } from 'app/components/user-details.component';
-import { StatusComponent } from 'app/components/common/status.component';
+import { StatusComponent } from 'yti-common-ui/components/status.component';
 import { OrganizationFilterDropdownComponent } from 'app/components/common/organization-filter-dropdown.component';
 import { VocabularyFilterDropdownComponent } from 'app/components/common/vocabulary-filter-dropdown.component';
 import { StatusFilterDropdownComponent } from 'app/components/common/status-filter-dropdown.component';

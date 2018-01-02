@@ -1,6 +1,6 @@
 import { Component, Input, Optional, Self } from '@angular/core';
 import { ControlValueAccessor, FormControl, NgControl } from '@angular/forms';
-import { Status, statuses } from 'app/entities/constants';
+import { Status, selectableStatuses } from 'yti-common-ui/entities/status';
 import { Options } from 'yti-common-ui/components/dropdown.component';
 import { TranslateService } from 'ng2-translate';
 
@@ -29,7 +29,7 @@ export class StatusInputComponent implements ControlValueAccessor {
     }
 
     this.select.valueChanges.subscribe(x => this.propagateChange(x));
-    this.statusOptions = statuses.map(status => ({
+    this.statusOptions = selectableStatuses.map(status => ({
       value: status,
       name: () => translateService.instant(status)
     }));
