@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FilterOptions } from 'yti-common-ui/components/filter-dropdown.component';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { TranslateService } from 'ng2-translate';
-import { Status, selectableStatuses } from 'yti-common-ui/entities/status';
+import { Status, allStatuses } from 'yti-common-ui/entities/status';
 
 @Component({
   selector: 'app-status-filter-dropdown',
@@ -21,7 +21,7 @@ export class StatusFilterDropdownComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.statusOptions = [null, ...selectableStatuses].map(status => {
+    this.statusOptions = [null, ...allStatuses].map(status => {
       return {
         value: status,
         name: () => this.translateService.instant(status ? status : 'All statuses')
