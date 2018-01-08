@@ -1,6 +1,7 @@
 {
   "/frontend/*": {
     "target": "https://sanastot-dev.suomi.fi",
+    "changeOrigin": true,
     "secure": false
   }
 }
