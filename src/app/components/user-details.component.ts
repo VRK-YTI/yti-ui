@@ -98,6 +98,8 @@ export class UserDetailsComponent implements OnDestroy  {
       }
     });
 
+    userService.updateLoggedInUser();
+
     locationService.atUserDetails();
 
     termedService.getOrganizationList().subscribe(organizationNodes => {
