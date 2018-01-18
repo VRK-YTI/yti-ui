@@ -1268,7 +1268,7 @@ export class MarkdownInputComponent implements OnInit, ControlValueAccessor {
     this.conceptSelector(this.linkableSelection.content).then(concept => {
 
         if (concept) {
-          this.reportChange(() => this.model.link(concept.id));
+          this.reportChange(() => this.model.link(requireDefined(concept.uri)));
         }
 
         this.linkingInProgress = false;

@@ -509,8 +509,11 @@ export class ConceptNode extends Node<'Concept'> {
   }
 
   isTargetOfLink(link: string) {
+
     // FIXME: proper mapping
-    return (isDefined(this.code) && (link.indexOf(this.code) !== -1)) || link.indexOf(this.id) !== -1;
+    const mightBeRelatedToThisFromImportedData = (isDefined(this.code) && (link.indexOf(this.code) !== -1));
+
+    return link === this.uri || mightBeRelatedToThisFromImportedData;
   }
 
   hasVocabulary() {
