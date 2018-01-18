@@ -23,6 +23,14 @@ nav.navbar {
   display: none !important;
 }
 
+// TODO move to yti-common-ui
+.modal-footer {
+  .alert {
+    margin-bottom: 0;
+    border: 0;
+  }
+}
+
 .input-group.input-group-search {
 
   position: relative !important;
