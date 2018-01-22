@@ -21,7 +21,7 @@ import { Subscription } from 'rxjs/Subscription';
     <div *ngIf="!loading">
 
       <div class="row">
-        <div class="col-md-3 mb-3">
+        <div class="col-md-4 mb-3">
           <div class="input-group input-group-lg input-group-search">
             <input class="form-control"
                    type="text"
@@ -33,7 +33,7 @@ import { Subscription } from 'rxjs/Subscription';
 
       <div class="row">
 
-        <div class="col-md-3">
+        <div class="col-md-4">
           <div class="content-box">
             <h4 class="strong" translate>Classification</h4>
 
@@ -48,7 +48,7 @@ import { Subscription } from 'rxjs/Subscription';
           </div>
         </div>
 
-        <div class="col-md-9">
+        <div class="col-md-8">
 
           <div class="row mb-4">
             <div class="col-md-12">
