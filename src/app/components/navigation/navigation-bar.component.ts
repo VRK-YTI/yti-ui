@@ -74,7 +74,7 @@ export class NavigationBarComponent {
 
   availableLanguages = [
     { code: 'fi' as Language, name: 'Suomeksi (FI)' },
-    { code: 'sv' as Language, name: 'På svenska (SV)' },
+    // { code: 'sv' as Language, name: 'På svenska (SV)' },
     { code: 'en' as Language, name: 'In English (EN)' }
   ];
 
