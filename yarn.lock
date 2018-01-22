@@ -5708,6 +5708,10 @@ yn@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/yn/-/yn-1.2.0.tgz#d237a4c533f279b2b89d3acac2db4b8c795e4a63"
 
+"yti-common-ui@https://github.com/VRK-YTI/yti-common-ui.git\\#39d2cbee4412e1e730b023d401e21961ff88d23e":
+  version "0.0.0"
+  resolved "https://github.com/VRK-YTI/yti-common-ui.git\\#39d2cbee4412e1e730b023d401e21961ff88d23e"
+
 "yti-common-ui@https://github.com/VRK-YTI/yti-common-ui.git\\#b62d20772d3cf653eb50b1c42dbbe7c5cfcfa48d":
   version "0.0.0"
   resolved "https://github.com/VRK-YTI/yti-common-ui.git\\#b62d20772d3cf653eb50b1c42dbbe7c5cfcfa48d"

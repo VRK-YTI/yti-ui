@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { LocationService } from 'app/services/location.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +12,7 @@ import { LocationService } from 'app/services/location.service';
       <app-breadcrumb [location]="location" [hidden]="!showBreadcrumb"></app-breadcrumb>
       <router-outlet></router-outlet>
     </div>
-    <app-footer [title]="'Sanastot'" *ngIf="showFooter"></app-footer>
+    <app-footer [title]="'Sanastot'" [onInformationClick]="navigateToInformation" *ngIf="showFooter"></app-footer>
   `
 })
 export class AppComponent {
@@ -19,7 +20,8 @@ export class AppComponent {
   showBreadcrumb: boolean;
   showFooter: boolean;
 
-  constructor(private locationService: LocationService) {
+  constructor(private locationService: LocationService,
+              private router: Router) {
 
     locationService.location.subscribe(location => {
       this.showBreadcrumb = location.length > 1;
@@ -30,4 +32,6 @@ export class AppComponent {
   get location() {
     return this.locationService.location;
   }
+
+  navigateToInformation = () => this.router.navigate(['/information']);
 }
