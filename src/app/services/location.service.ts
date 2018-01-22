@@ -65,4 +65,11 @@ export class LocationService {
       route: ['newVocabulary']
     }]);
   }
+  
+  atInformationAboutService(): void {
+    this.changeLocation([{
+      localizationKey: 'Information about the web service',
+      route: ['information']
+    }]);
+  }
 }

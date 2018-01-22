@@ -76,6 +76,7 @@ import { VocabularyFilterDropdownComponent } from 'app/components/common/vocabul
 import { StatusFilterDropdownComponent } from 'app/components/common/status-filter-dropdown.component';
 import { YtiCommonModule, AUTHENTICATED_USER_ENDPOINT, LOCALIZER } from 'yti-common-ui';
 import { environment } from 'environments/environment';
+import { InformationAboutServiceComponent } from 'app/components/information/information-about-service.component';
 
 const localizations: { [lang: string]: string} = {
   fi: Object.assign({},
@@ -117,7 +118,8 @@ const appRoutes: Routes = [
     { path: 'concept/:conceptId', component: ConceptComponent, canDeactivate: [ConfirmCancelEditGuard] },
     { path: 'collection/:collectionId', component: CollectionComponent, canDeactivate: [ConfirmCancelEditGuard] }
   ]},
-  { path: 'userDetails', component: UserDetailsComponent }
+  { path: 'userDetails', component: UserDetailsComponent },
+  { path: 'information', component: InformationAboutServiceComponent }
 ];
 
 @NgModule({
@@ -183,7 +185,8 @@ const appRoutes: Routes = [
     StatusComponent,
     OrganizationFilterDropdownComponent,
     VocabularyFilterDropdownComponent,
-    StatusFilterDropdownComponent
+    StatusFilterDropdownComponent,
+    InformationAboutServiceComponent
   ],
   entryComponents: [
     SearchConceptModalComponent,
