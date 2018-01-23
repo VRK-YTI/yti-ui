@@ -24,8 +24,11 @@ export class AppComponent {
               private router: Router) {
 
     locationService.location.subscribe(location => {
-      this.showBreadcrumb = location.length > 1;
-      this.showFooter = location.length === 1;
+      this.showBreadcrumb = location.length > 1;   
+    });
+
+    locationService.showFooter.subscribe(showFooter => {
+      this.showFooter = showFooter;     
     });
   }
 

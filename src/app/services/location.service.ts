@@ -9,17 +9,19 @@ const frontPage = { localizationKey: 'Front page', route: [''] };
 export class LocationService {
 
   location = new Subject<Location[]>();
+  showFooter = new Subject<boolean>();
 
-  private changeLocation(location: Location[]): void {
+  private changeLocation(location: Location[], showFooter: boolean = true): void {
     location.unshift(frontPage);
     this.location.next(location);
+    this.showFooter.next(showFooter);
   }
 
   atVocabulary(vocabulary: VocabularyNode): void {
     this.changeLocation([{
       label: vocabulary.label,
       route: ['concepts', vocabulary.graphId]
-    }]);
+    }], false);
   }
 
   atConcept(vocabulary: VocabularyNode, concept: ConceptNode): void {
@@ -32,7 +34,7 @@ export class LocationService {
         label: concept.label,
         route: ['concepts', vocabulary.graphId, 'concept', concept.id]
       }
-    ]);
+    ], false);
   }
 
   atCollection(vocabulary: VocabularyNode, collection: CollectionNode): void {
@@ -45,7 +47,7 @@ export class LocationService {
         label: collection.label,
         route: ['concepts', vocabulary.graphId, 'concept', collection.id]
       }
-    ]);
+    ], false);
   }
 
   atFrontPage(): void {
