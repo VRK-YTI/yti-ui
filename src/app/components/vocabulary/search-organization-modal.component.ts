@@ -1,16 +1,17 @@
 import { AfterViewInit, Component, ElementRef, Injectable, Input, Renderer, ViewChild } from '@angular/core';
-import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { OrganizationNode } from 'app/entities/node';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { TermedService } from 'app/services/termed.service';
 import { LanguageService } from 'app/services/language.service';
 import { contains } from 'yti-common-ui/utils/array';
 import { isDefined } from 'yti-common-ui/utils/object';
+import { ModalService } from 'app/services/modal.service';
 
 @Injectable()
 export class SearchOrganizationModalService {
 
-  constructor(private modalService: NgbModal) {
+  constructor(private modalService: ModalService) {
   }
 
   open(restrictOrganizationIds: string[], allowOnlyOrganizationIds: string[]|null): Promise<OrganizationNode> {

@@ -1,14 +1,15 @@
 import { Component, Injectable, Input, OnInit } from '@angular/core';
-import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConceptNode } from 'app/entities/node';
 import { FormNode, FormReferenceLiteral } from 'app/services/form-state';
 import { Options } from 'yti-common-ui/components/dropdown.component';
 import { LanguageService } from 'app/services/language.service';
+import { ModalService } from 'app/services/modal.service';
 
 @Injectable()
 export class SelectConceptReferenceModalService {
 
-  constructor(private modalService: NgbModal) {
+  constructor(private modalService: ModalService) {
   }
 
   open(formNode: FormNode): Promise<FormReferenceLiteral<ConceptNode>> {

@@ -1,12 +1,13 @@
 import { Component, Injectable, Input, OnInit } from '@angular/core';
-import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Localization } from 'yti-common-ui/types/localization';
 import { flatten } from 'yti-common-ui/utils/array';
-import { VocabularyNode, ConceptNode } from 'app/entities/node';
+import { ConceptNode, VocabularyNode } from 'app/entities/node';
 import { MetaModelService } from 'app/services/meta-model.service';
 import { MetaModel } from 'app/entities/meta';
 import { TermedService } from 'app/services/termed.service';
 import * as Papa from 'papaparse';
+import { ModalService } from 'app/services/modal.service';
 
 class CsvConceptDetails {
 
@@ -68,7 +69,7 @@ class CsvConceptDetails {
 @Injectable()
 export class ImportVocabularyModalService {
 
-  constructor(private modalService: NgbModal) {
+  constructor(private modalService: ModalService) {
   }
 
   open(importFile: File, vocabulary: VocabularyNode): Promise<any> {

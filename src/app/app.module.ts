@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-import { RouterModule, Routes } from '@angular/router';
+import { ResolveEnd, Router, RouterModule, Routes } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppComponent } from 'app/components/app.component';
 import { TermedService } from 'app/services/termed.service';
@@ -77,6 +77,7 @@ import { StatusFilterDropdownComponent } from 'app/components/common/status-filt
 import { YtiCommonModule, AUTHENTICATED_USER_ENDPOINT, LOCALIZER } from 'yti-common-ui';
 import { environment } from 'environments/environment';
 import { InformationAboutServiceComponent } from 'app/components/information/information-about-service.component';
+import { ModalService } from './services/modal.service';
 
 const localizations: { [lang: string]: string} = {
   fi: Object.assign({},
@@ -114,10 +115,10 @@ const appRoutes: Routes = [
   { path: '', component: FrontpageComponent },
   { path: 'newVocabulary', component: NewVocabularyComponent },
   { path: 'concepts/:graphId', component: ConceptsComponent, canDeactivate: [ConfirmCancelEditGuard], children: [
-    { path: '', component: NoSelectionComponent },
-    { path: 'concept/:conceptId', component: ConceptComponent, canDeactivate: [ConfirmCancelEditGuard] },
-    { path: 'collection/:collectionId', component: CollectionComponent, canDeactivate: [ConfirmCancelEditGuard] }
-  ]},
+      { path: '', component: NoSelectionComponent },
+      { path: 'concept/:conceptId', component: ConceptComponent, canDeactivate: [ConfirmCancelEditGuard] },
+      { path: 'collection/:collectionId', component: CollectionComponent, canDeactivate: [ConfirmCancelEditGuard] }
+    ]},
   { path: 'userDetails', component: UserDetailsComponent },
   { path: 'information', component: InformationAboutServiceComponent }
 ];
@@ -225,8 +226,20 @@ const appRoutes: Routes = [
     ElasticSearchService,
     ConfirmCancelEditGuard,
     AuthorizationManager,
-    ImportVocabularyModalService
+    ImportVocabularyModalService,
+    ModalService
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+
+  constructor(router: Router,
+              modalService: ModalService) {
+
+    router.events.subscribe(event => {
+      if (event instanceof ResolveEnd) {
+        modalService.closeAllModals();
+      }
+    });
+  }
+}

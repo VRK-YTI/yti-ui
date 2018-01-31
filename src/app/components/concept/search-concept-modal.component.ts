@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, Injectable, Input, OnInit, Renderer, ViewChild } from '@angular/core';
-import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConceptNode, VocabularyNode } from 'app/entities/node';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { TermedService } from 'app/services/termed.service';
@@ -9,6 +9,7 @@ import { FormNode } from 'app/services/form-state';
 import { defaultLanguages } from 'app/utils/language';
 import { firstMatching } from 'yti-common-ui/utils/array';
 import { LanguageService } from 'app/services/language.service';
+import { ModalService } from 'app/services/modal.service';
 
 type Mode = 'include'|'exclude';
 
@@ -21,7 +22,7 @@ export interface Restrict {
 @Injectable()
 export class SearchConceptModalService {
 
-  constructor(private modalService: NgbModal) {
+  constructor(private modalService: ModalService) {
   }
 
   openForVocabulary(vocabulary: VocabularyNode, initialSearch: string, restricts: Restrict[]): Promise<ConceptNode> {

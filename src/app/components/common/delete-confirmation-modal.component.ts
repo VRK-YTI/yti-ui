@@ -1,15 +1,16 @@
 import { Component, Injectable, Input, OnInit } from '@angular/core';
-import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Node } from 'app/entities/node';
 import { ReferenceMeta } from 'app/entities/meta';
 import { flatten } from 'yti-common-ui/utils/array';
 import { MetaModelService } from 'app/services/meta-model.service';
 import { Observable } from 'rxjs/Observable';
+import { ModalService } from 'app/services/modal.service';
 
 @Injectable()
 export class DeleteConfirmationModalService {
 
-  constructor(private modalService: NgbModal) {
+  constructor(private modalService: ModalService) {
   }
 
   open(node: Node<any>): Promise<any> {
