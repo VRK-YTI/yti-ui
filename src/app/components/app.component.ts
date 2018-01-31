@@ -12,7 +12,8 @@ import { Router } from '@angular/router';
       <app-breadcrumb [location]="location" [hidden]="!showBreadcrumb"></app-breadcrumb>
       <router-outlet></router-outlet>
     </div>
-    <app-footer [title]="'Sanastot'" [onInformationClick]="navigateToInformation" *ngIf="showFooter"></app-footer>
+    <app-footer [title]="'Sanastot'" 
+                (informationClick)="navigateToInformation()" *ngIf="showFooter"></app-footer>
   `
 })
 export class AppComponent {
@@ -24,11 +25,11 @@ export class AppComponent {
               private router: Router) {
 
     locationService.location.subscribe(location => {
-      this.showBreadcrumb = location.length > 1;   
+      this.showBreadcrumb = location.length > 1;
     });
 
     locationService.showFooter.subscribe(showFooter => {
-      this.showFooter = showFooter;     
+      this.showFooter = showFooter;
     });
   }
 
@@ -36,5 +37,7 @@ export class AppComponent {
     return this.locationService.location;
   }
 
-  navigateToInformation = () => this.router.navigate(['/information']);
+  navigateToInformation() {
+    this.router.navigate(['/information']);
+  }
 }
