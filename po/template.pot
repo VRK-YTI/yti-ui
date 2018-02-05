@@ -142,7 +142,7 @@ msgstr ""
 msgid "User details"
 msgstr ""
 
-msgid "Group management service"
+msgid "User right management"
 msgstr ""
 
 msgid "Name"
