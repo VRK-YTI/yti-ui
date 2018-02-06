@@ -63,7 +63,7 @@ import { TermedService } from '../../services/termed.service';
                [routerLink]="['/userDetails']" translate>User details</a>
             <a class="dropdown-item"
                *ngIf="isUserAdmin()"
-               href="{{groupManagementUrl}}" target="_blank" translate>Group management service</a>
+               [href]="groupManagementUrl" target="_blank" translate>User right management</a>
           </div>
         </li>
       </ul>
