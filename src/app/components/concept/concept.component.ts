@@ -47,7 +47,10 @@ export class ConceptComponent implements EditingComponent, OnDestroy {
               private editableService: EditableService,
               private languageService: LanguageService) {
 
-    route.params.subscribe(params => conceptViewModel.initializeConcept(params['conceptId']));
+    this.route.params.subscribe(params => {
+      this.conceptViewModel.initializeConcept(params['conceptId']);
+    });
+
     editableService.onSave = () => this.conceptViewModel.saveConcept();
     editableService.onCanceled = () => this.conceptViewModel.resetConcept();
     editableService.onRemove = () =>

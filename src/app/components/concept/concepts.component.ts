@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ConceptViewModelService } from 'app/services/concept.view.service';
@@ -74,7 +74,7 @@ import { VocabularyComponent } from 'app/components/vocabulary/vocabulary.compon
     </div>
   `
 })
-export class ConceptsComponent implements EditingComponent, OnInit {
+export class ConceptsComponent implements EditingComponent {
 
   @ViewChild('network') conceptNetwork: ConceptNetworkComponent;
   @ViewChild('vocabularyComponent') vocabularyComponent: VocabularyComponent;
@@ -83,9 +83,7 @@ export class ConceptsComponent implements EditingComponent, OnInit {
               public viewModel: ConceptViewModelService,
               private sessionService: SessionService,
               private domSanitizer: DomSanitizer) {
-  }
 
-  ngOnInit() {
     this.route.params.subscribe(params => {
       this.viewModel.initializeVocabulary(params['graphId']);
     });
