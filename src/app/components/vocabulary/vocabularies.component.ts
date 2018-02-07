@@ -107,8 +107,6 @@ import { Subscription } from 'rxjs/Subscription';
 })
 export class VocabulariesComponent implements OnDestroy {
 
-  vocabularies: VocabularyNode[] = [];
-
   search$ = new BehaviorSubject('');
   classification$ = new BehaviorSubject<GroupNode|null>(null);
   organization$ = new BehaviorSubject<OrganizationNode|null>(null);
@@ -120,6 +118,7 @@ export class VocabulariesComponent implements OnDestroy {
 
   filteredVocabularies: VocabularyNode[] = [];
 
+  vocabulariesLoaded = false;
   subscriptionToClean: Subscription[] = [];
 
   constructor(private authorizationManager: AuthorizationManager,
@@ -128,13 +127,8 @@ export class VocabulariesComponent implements OnDestroy {
               termedService: TermedService,
               private router: Router) {
 
-    const vocabularies$ = termedService.getVocabularyList().publishReplay(1).refCount();
-
-    this.subscriptionToClean.push(Observable.combineLatest(vocabularies$, languageService.language$)
-      .subscribe(([vocabularies]) => {
-        this.vocabularies = vocabularies;
-        this.vocabularies.sort(comparingLocalizable<VocabularyNode>(languageService, voc => voc.label));
-      }));
+    const vocabularies$ = termedService.getVocabularyList().publishReplay(1).refCount()
+      .do(() => this.vocabulariesLoaded = true);
 
     this.vocabularyTypes = [null, 'Vocabulary', 'TerminologicalVocabulary'].map(type => {
       return {
@@ -176,19 +170,24 @@ export class VocabulariesComponent implements OnDestroy {
         this.classifications.sort(comparingLocalizable<{ node: GroupNode }>(languageService, c => c.node.label));
       });
 
-    Observable.combineLatest(vocabularies$, this.search$, this.classification$, this.organization$, this.vocabularyType$)
-      .subscribe(([vocabularies, search, classification, organization, vocabularyType]) => {
+    this.subscriptionToClean.push(
+      Observable.combineLatest(vocabularies$, this.search$, this.classification$, this.organization$, this.vocabularyType$, languageService.language$)
+        .subscribe(([vocabularies, search, classification, organization, vocabularyType]) => {
 
-        this.filteredVocabularies = vocabularies.filter(vocabulary =>
-          searchMatches(search, vocabulary) &&
-          classificationMatches(classification, vocabulary) &&
-          organizationMatches(organization, vocabulary) &&
-          vocabularyTypeMatches(vocabularyType, vocabulary));
-      });
+          this.filteredVocabularies =
+            vocabularies.filter(vocabulary =>
+              searchMatches(search, vocabulary) &&
+              classificationMatches(classification, vocabulary) &&
+              organizationMatches(organization, vocabulary) &&
+              vocabularyTypeMatches(vocabularyType, vocabulary));
+
+          this.filteredVocabularies.sort(comparingLocalizable<VocabularyNode>(languageService, voc => voc.label));
+        })
+    );
   }
 
   get loading() {
-    return !this.vocabularies || !this.classifications || !this.organizations$;
+    return !this.vocabulariesLoaded || !this.classifications || !this.organizations$;
   }
 
   get search() {
