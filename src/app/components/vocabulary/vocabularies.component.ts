@@ -155,20 +155,22 @@ export class VocabulariesComponent implements OnDestroy {
       return !vocabularyType || vocabulary.type === vocabularyType;
     }
 
-    Observable.combineLatest(termedService.getGroupList(), vocabularies$, this.search$, this.organization$, this.vocabularyType$)
-      .subscribe(([groups, vocabularies, search, organization, vocabularyType]) => {
+    this.subscriptionToClean.push(
+      Observable.combineLatest(termedService.getGroupList(), vocabularies$, this.search$, this.organization$, this.vocabularyType$, languageService.language$)
+        .subscribe(([groups, vocabularies, search, organization, vocabularyType]) => {
 
-        const matchingVocabularies = vocabularies.filter(vocabulary =>
-          searchMatches(search, vocabulary) &&
-          organizationMatches(organization, vocabulary) &&
-          vocabularyTypeMatches(vocabularyType, vocabulary));
+          const matchingVocabularies = vocabularies.filter(vocabulary =>
+            searchMatches(search, vocabulary) &&
+            organizationMatches(organization, vocabulary) &&
+            vocabularyTypeMatches(vocabularyType, vocabulary));
 
-        const vocabularyCount = (classification: GroupNode) =>
-          matchingVocabularies.filter(voc => classificationMatches(classification, voc)).length;
+          const vocabularyCount = (classification: GroupNode) =>
+            matchingVocabularies.filter(voc => classificationMatches(classification, voc)).length;
 
-        this.classifications = groups.map(group => ({ node: group, count: vocabularyCount(group) }));
-        this.classifications.sort(comparingLocalizable<{ node: GroupNode }>(languageService, c => c.node.label));
-      });
+          this.classifications = groups.map(group => ({ node: group, count: vocabularyCount(group) }));
+          this.classifications.sort(comparingLocalizable<{ node: GroupNode }>(languageService, c => c.node.label));
+        })      
+    );
 
     this.subscriptionToClean.push(
       Observable.combineLatest(vocabularies$, this.search$, this.classification$, this.organization$, this.vocabularyType$, languageService.language$)
