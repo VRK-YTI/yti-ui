@@ -11,6 +11,7 @@ import { LanguageService } from 'app/services/language.service';
 import { Options } from 'yti-common-ui/components/dropdown.component';
 import { TranslateService } from 'ng2-translate';
 import { combineSets, hasAny } from 'yti-common-ui/utils/set';
+import { Observable } from 'rxjs/Observable';
 
 interface UserOrganizationRoles {
   organization?: OrganizationNode;
@@ -78,7 +79,7 @@ interface UserOrganizationRoles {
 })
 export class UserDetailsComponent implements OnDestroy  {
 
-  private loggedInSubscription: Subscription;
+  private subscriptionToClean: Subscription[] = [];
 
   allOrganizations: OrganizationNode[];
   allOrganizationsById: Map<string, OrganizationNode>;
@@ -92,28 +93,31 @@ export class UserDetailsComponent implements OnDestroy  {
               private languageService: LanguageService,
               private translateService: TranslateService) {
 
-    this.loggedInSubscription = this.userService.loggedIn$.subscribe(loggedIn => {
+    this.subscriptionToClean.push(this.userService.loggedIn$.subscribe(loggedIn => {
       if (!loggedIn) {
         router.navigate(['/']);
       }
-    });
+    }));
 
     userService.updateLoggedInUser();
 
     locationService.atUserDetails();
 
-    termedService.getOrganizationList().subscribe(organizationNodes => {
+    this.subscriptionToClean.push(
+      Observable.combineLatest(termedService.getOrganizationList(), languageService.language$)
+        .subscribe(([organizationNodes]) => {
 
-      organizationNodes.sort(comparingLocalizable<OrganizationNode>(languageService, org => org.label));
-      this.allOrganizations = organizationNodes;
-      this.allOrganizationsById = index(organizationNodes, org => org.id);
-    });
+        organizationNodes.sort(comparingLocalizable<OrganizationNode>(languageService, org => org.label));
+        this.allOrganizations = organizationNodes;
+        this.allOrganizationsById = index(organizationNodes, org => org.id);
+      })
+    );
 
     this.refreshRequests();
   }
 
   ngOnDestroy() {
-    this.loggedInSubscription.unsubscribe();
+    this.subscriptionToClean.forEach(s => s.unsubscribe());
   }
 
   get user() {
