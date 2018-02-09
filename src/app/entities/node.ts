@@ -1,14 +1,13 @@
 import { asLocalizable } from 'yti-common-ui/utils/localization';
 import { Localizable, Localization } from 'yti-common-ui/types/localization';
-import { requireDefined, isDefined } from 'yti-common-ui/utils/object';
-import { normalizeAsArray, requireSingle, remove, firstMatching, flatten } from 'yti-common-ui/utils/array';
-import { NodeExternal, NodeType, Attribute, Identifier, NodeInternal, VocabularyNodeType } from './node-api';
-import {
-  PropertyMeta, ReferenceMeta, NodeMeta, MetaModel
-} from './meta';
-import { Moment } from 'moment';
+import { isDefined, requireDefined } from 'yti-common-ui/utils/object';
+import { firstMatching, flatten, normalizeAsArray, remove, requireSingle } from 'yti-common-ui/utils/array';
+import { Attribute, Identifier, NodeExternal, NodeInternal, NodeType, VocabularyNodeType } from './node-api';
+import { MetaModel, NodeMeta, PropertyMeta, ReferenceMeta } from './meta';
 import * as moment from 'moment';
+import { Moment } from 'moment';
 import { defaultLanguages } from 'app/utils/language';
+import { stripSemanticMarkup } from 'app/utils/semantic';
 
 export type KnownNode = VocabularyNode
                       | ConceptNode
@@ -38,8 +37,21 @@ export class Property {
     return this.attributes as Localization[];
   }
 
+  asLocalizationsWithoutSemantics() {
+    if (this.meta.type.editor.type === 'semantic') {
+      return this.asLocalizations().map(({lang, value}) =>
+        ({lang, value: stripSemanticMarkup(value, this.meta.semanticTextFormat)}));
+    } else {
+      return this.asLocalizations();
+    }
+  }
+
   asLocalizable(ignoreConflicts = false) {
-    return asLocalizable(this.attributes, ignoreConflicts);
+    return asLocalizable(this.asLocalizations(), ignoreConflicts);
+  }
+
+  asLocalizableWithoutSemantics(ignoreConflicts = false) {
+    return asLocalizable(this.asLocalizationsWithoutSemantics(), ignoreConflicts);
   }
 
   setLocalizable(localizable: Localizable) {
@@ -500,6 +512,14 @@ export class ConceptNode extends Node<'Concept'> {
     return this.getProperty('definition').asLocalizations();
   }
 
+  get definitionSemanticTextFormat() {
+    return this.getProperty('definition').meta.semanticTextFormat;
+  }
+
+  get definitionWithoutSemantics(): Localization[] {
+    return this.getProperty('definition').asLocalizationsWithoutSemantics();
+  }
+
   get definitionAsLocalizable(): Localizable {
     return asLocalizable(this.definition);
   }
@@ -667,6 +687,10 @@ export class CollectionNode extends Node<'Collection'> {
 
   get definition(): Localization[] {
     return this.getProperty('definition').asLocalizations();
+  }
+
+  get definitionWithoutSemantics(): Localization[] {
+    return this.getProperty('definition').asLocalizationsWithoutSemantics();
   }
 
   set definition(value: Localization[]) {

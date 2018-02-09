@@ -22,7 +22,7 @@ import { FormControl } from '@angular/forms';
       <div *ngFor="let control of property.children">
         <div class="form-group" [ngClass]="{'removable': canRemove()}">
 
-          <ng-container [ngSwitch]="property.editorType">
+          <ng-container [ngSwitch]="property.editor.type">
 
             <input *ngSwitchCase="'input'"
                    type="text"
@@ -32,10 +32,17 @@ import { FormControl } from '@angular/forms';
                    autocomplete="off"
                    [formControl]="control" />
 
-            <app-markdown-input *ngSwitchCase="'markdown'"
-                                [id]="id"
-                                [formControl]="control"></app-markdown-input>
-
+            <textarea *ngSwitchCase="'textarea'"
+                      class="form-control"
+                      [ngClass]="{'is-invalid': valueInError()}"
+                      [id]="id"
+                      [formControl]="property.control"></textarea>            
+            
+            <app-semantic-text-input *ngSwitchCase="'semantic'"
+                                    [id]="id"
+                                    [format]="property.editor.format"
+                                    [formControl]="control"></app-semantic-text-input>
+            
             <app-language-input *ngSwitchCase="'language'"
                                 [id]="id"
                                 [formControl]="control"></app-language-input>

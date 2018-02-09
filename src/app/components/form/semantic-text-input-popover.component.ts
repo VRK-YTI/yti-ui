@@ -5,8 +5,8 @@ import {
 import { ConceptNode } from 'app/entities/node';
 
 @Component({
-  selector: 'app-markdown-input-link-popover',
-  styleUrls: ['./markdown-input-popover.component.scss'],
+  selector: 'app-semantic-text-input-link-popover',
+  styleUrls: ['./semantic-text-input-popover.component.scss'],
   template: `
     <div #popover role="tooltip" class="popover">
 
@@ -21,7 +21,7 @@ import { ConceptNode } from 'app/entities/node';
     </div>
   `
 })
-export class MarkdownInputLinkPopoverComponent implements AfterViewInit, OnDestroy {
+export class SemanticTextInputLinkPopoverComponent implements AfterViewInit, OnDestroy {
 
   @Input() selectedText: string;
   @Output() link = new EventEmitter<any>();
@@ -42,8 +42,8 @@ export class MarkdownInputLinkPopoverComponent implements AfterViewInit, OnDestr
 }
 
 @Component({
-  selector: 'app-markdown-input-unlink-popover',
-  styleUrls: ['./markdown-input-popover.component.scss'],
+  selector: 'app-semantic-text-input-unlink-popover',
+  styleUrls: ['./semantic-text-input-popover.component.scss'],
   template: `
     <div #popover role="tooltip" class="popover">
 
@@ -53,11 +53,15 @@ export class MarkdownInputLinkPopoverComponent implements AfterViewInit, OnDestr
         <span class="btn btn-sm btn-action" (click)="unlink.next()" translate>Unlink</span>
       </h3>
 
-      <div class="popover-body" *ngIf="concept" app-markdown [value]="concept.definitionAsLocalizable | translateValue"></div>
+      <div class="popover-body" *ngIf="concept" 
+           app-semantic-text-plain 
+           [value]="concept.definitionAsLocalizable | translateValue"
+           [format]="concept.definitionSemanticTextFormat">
+      </div>
     </div>
   `
 })
-export class MarkdownInputUnlinkPopoverComponent implements AfterViewInit, OnDestroy {
+export class SemanticTextInputUnlinkPopoverComponent implements AfterViewInit, OnDestroy {
 
   @Input() concept: ConceptNode;
   @Output() unlink = new EventEmitter<any>();

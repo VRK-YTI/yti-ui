@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy, ElementRef, ViewChild, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { CollectionNode, ConceptNode } from 'app/entities/node';
-import { stripMarkdown } from 'app/utils/markdown';
 import { LanguageService } from 'app/services/language.service';
 import { TermedService } from 'app/services/termed.service';
 import { ConceptViewModelService } from 'app/services/concept.view.service';
@@ -308,7 +307,8 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
       const node = {
         id: concept.id,
         label: this.languageService.translate(concept.label),
-        title: stripMarkdown(this.languageService.translate(asLocalizable(concept.definition, true))) // FIXME: how to handle multiple definitions?
+        // FIXME: how to handle multiple definitions?
+        title: this.languageService.translate(asLocalizable(concept.definitionWithoutSemantics, true))
       };
 
       return Object.assign(node, { update: createNode })
@@ -339,7 +339,8 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
       const node = {
         id: collection.id,
         label: this.languageService.translate(collection.label),
-        title: stripMarkdown(this.languageService.translate(asLocalizable(collection.definition, true))), // FIXME: how to handle multiple definitions?
+        // FIXME: how to handle multiple definitions?
+        title: this.languageService.translate(asLocalizable(collection.definitionWithoutSemantics, true)),
         group: 'rootCollectionGroup',
         physics: false,
         fixed: false

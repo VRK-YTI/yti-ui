@@ -8,6 +8,7 @@ import { CollectionNode, ConceptLinkNode, ConceptNode, Node, VocabularyNode } fr
 import { v4 as uuid } from 'uuid';
 import * as moment from 'moment';
 import { assertNever, requireDefined } from 'yti-common-ui/utils/object';
+import { SemanticTextFormat } from './semantic';
 
 export type Cardinality = 'single'
                         | 'multiple';
@@ -27,44 +28,72 @@ export type ReferenceType = 'Term'
 export type PropertyType = StringProperty
                          | LocalizableProperty;
 
+export interface InputEditor {
+  type: 'input';
+}
+
+export interface TextAreaEditor {
+  type: 'textarea';
+}
+
+export interface SemanticEditor {
+  type: 'semantic';
+  format: SemanticTextFormat;
+}
+
+export interface StatusEditor {
+  type: 'status';
+}
+
+export interface LanguageEditor {
+  type: 'language';
+}
+
+export type Editor = InputEditor
+                   | TextAreaEditor
+                   | SemanticEditor
+                   | StatusEditor
+                   | LanguageEditor;
+
 export interface StringProperty {
   type: 'string';
   cardinality: Cardinality;
   required: boolean;
-  editorType: EditorType;
+  editor: Editor;
 }
 
 export interface LocalizableProperty {
   type: 'localizable';
   cardinality: Cardinality;
   required: boolean;
-  editorType: EditorType;
+  editor: Editor;
 }
 
-export type EditorType = 'input'
-                       | 'markdown'
-                       | 'status'
-                       | 'language';
-
-function createString(multiple: boolean, required: boolean, editorType: EditorType): StringProperty {
-  return { type: 'string', cardinality: (multiple ? 'multiple' : 'single'), required, editorType };
+function createString(multiple: boolean, required: boolean, editor: Editor): StringProperty {
+  return { type: 'string', cardinality: (multiple ? 'multiple' : 'single'), required, editor };
 }
 
-function createLocalizable(single: boolean, required: boolean, editorType: EditorType): LocalizableProperty {
-  return { type: 'localizable', cardinality: (single ? 'single' : 'multiple'), required, editorType };
+function createLocalizable(single: boolean, required: boolean, editor: Editor): LocalizableProperty {
+  return { type: 'localizable', cardinality: (single ? 'single' : 'multiple'), required, editor };
 }
 
 function createPropertyType(name: TypeName, attributes: Set<string>): PropertyType {
 
+  // XXX: Dummy mapping from area always to semantic markdown, this could be parametrized in the meta
+
+  function resolveStringOrLocalizableEditor(): Editor {
+    return attributes.has('area') ? { type: 'semantic', format: 'markdown' } : { type: 'input' };
+  }
+
   switch (name) {
     case 'string':
-      return createString(attributes.has('multiple'), attributes.has('required'), attributes.has('area') ? 'markdown' : 'input');
+      return createString(attributes.has('multiple'), attributes.has('required'), resolveStringOrLocalizableEditor());
     case 'localizable':
-      return createLocalizable(attributes.has('single'), attributes.has('required'), attributes.has('area') ? 'markdown' : 'input');
+      return createLocalizable(attributes.has('single'), attributes.has('required'), resolveStringOrLocalizableEditor());
     case 'status':
-      return createString(false, true, 'status');
+      return createString(false, true, { type: 'status' });
     case 'language':
-      return createString(attributes.has('multiple'), attributes.has('required'), 'language');
+      return createString(attributes.has('multiple'), attributes.has('required'), { type: 'language' });
     default:
       return assertNever(name, 'Unsupported type: ' + name);
   }
@@ -148,7 +177,7 @@ export class PropertyMeta {
 
   get multiColumn() {
 
-    if ((this.type.type === 'string' || this.type.type === 'localizable') && this.type.editorType === 'markdown') {
+    if (contains(['semantic', 'textarea', ], this.type.editor.type)) {
       return false;
     }
 
@@ -160,6 +189,14 @@ export class PropertyMeta {
       default:
         return true;
     }
+  }
+
+  get semanticTextFormat() {
+    if (this.type.editor.type !== 'semantic') {
+      throw new Error('Not a semantic text property, but is of type: ' + this.type.editor.type);
+    }
+
+    return this.type.editor.format;
   }
 }
 

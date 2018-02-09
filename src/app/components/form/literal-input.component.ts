@@ -14,7 +14,7 @@ import { FormPropertyLiteral } from 'app/services/form-state';
 
       <div class="form-group">
       
-        <ng-container [ngSwitch]="property.editorType">
+        <ng-container [ngSwitch]="property.editor.type">
           
           <input *ngSwitchCase="'input'" 
                  type="text"
@@ -23,11 +23,18 @@ import { FormPropertyLiteral } from 'app/services/form-state';
                  [id]="id"
                  autocomplete="off"
                  [formControl]="property.control" />
+          
+          <textarea *ngSwitchCase="'textarea'"
+                    class="form-control"
+                    [ngClass]="{'is-invalid': valueInError()}"
+                    [id]="id"
+                    [formControl]="property.control"></textarea>
 
-          <app-markdown-input *ngSwitchCase="'markdown'"
-                              [id]="id"
-                              [formControl]="property.control"></app-markdown-input>
-
+          <app-semantic-text-input *ngSwitchCase="'semantic'"
+                                   [id]="id"
+                                   [format]="property.editor.format"
+                                   [formControl]="property.control"></app-semantic-text-input>
+          
           <app-status-input *ngSwitchCase="'status'"
                             [id]="id"
                             [formControl]="property.control"></app-status-input>

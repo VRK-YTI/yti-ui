@@ -22,7 +22,7 @@ import { PropertyComponent } from 'app/components/form/property.component';
 import { ReferenceComponent } from 'app/components/form/reference.component';
 import { NoSelectionComponent } from 'app/components/common/no-selection.component';
 import { TimestampPipe } from 'app/pipes/timestamp.pipe';
-import { MarkdownLinksComponent, MarkdownLinksElementComponent } from 'app/components/markdown/markdown-links.component';
+import { SemanticTextLinksComponent, SemanticTextLinksElementComponent } from 'app/components/semantic-text/semantic-text-links.component';
 import { ConceptNetworkComponent } from 'app/components/visualization/concept-network.component';
 import { VocabularyComponent } from 'app/components/vocabulary/vocabulary.component';
 import { LiteralInputComponent } from 'app/components/form/literal-input.component';
@@ -30,7 +30,7 @@ import { MetaModelValidatorDirective } from 'app/directives/validators/meta-mode
 import { ErrorMessagesComponent } from 'app/components/form/error-messages.component';
 import { EditableButtonsComponent } from 'app/components/form/editable-buttons.component';
 import { ElasticSearchService } from 'app/services/elasticsearch.service';
-import { MarkdownComponent, MarkdownElementComponent } from 'app/components/markdown/markdown.component';
+import { SemanticTextPlainComponent, SemanticTextPlainElementComponent } from 'app/components/semantic-text/semantic-text-plain.component';
 import { ConceptListComponent } from 'app/components/concept/concept-list.component';
 import { ConceptHierarchyComponent } from 'app/components/concept/concept-hierarchy.component';
 import { ConceptHierarchyNodeComponent } from 'app/components/concept/concept-hierarchy-node.component';
@@ -39,7 +39,6 @@ import { MetaInformationComponent } from 'app/components/common/meta-information
 import { FloatDirective } from 'app/directives/float.directive';
 import { ConceptReferenceInputComponent } from 'app/components/concept/concept-reference-input.component';
 import { SearchConceptModalComponent, SearchConceptModalService } from 'app/components/concept/search-concept-modal.component';
-import { StripMarkdownPipe } from 'app/pipes/strip-markdown.pipe';
 import { ConceptFormComponent } from 'app/components/concept/concept-form.component';
 import { DividerComponent } from 'app/components/common/divider.component';
 import { SessionService } from 'app/services/session.service';
@@ -53,8 +52,8 @@ import { GroupInputComponent } from 'app/components/vocabulary/group-input.compo
 import { OrganizationInputComponent } from 'app/components/vocabulary/organization-input.component';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 import { ConceptLinkReferenceInputComponent, ConceptLinkReferencePopoverComponent } from 'app/components/concept/concept-link-reference-input.component';
-import { MarkdownInputComponent } from 'app/components/form/markdown-input.component';
-import { MarkdownInputLinkPopoverComponent, MarkdownInputUnlinkPopoverComponent } from 'app/components/form/markdown-input-popover.component';
+import { SemanticTextInputComponent } from 'app/components/form/semantic-text-input.component';
+import { SemanticTextInputLinkPopoverComponent, SemanticTextInputUnlinkPopoverComponent } from 'app/components/form/semantic-text-input-popover.component';
 import { SelectConceptReferenceModalComponent, SelectConceptReferenceModalService } from 'app/components/concept/select-concept-reference-modal.component';
 import { FrontpageComponent } from 'app/components/frontpage.component';
 import { LiteralListInputComponent } from 'app/components/form/literal-list-input.component';
@@ -146,10 +145,10 @@ const appRoutes: Routes = [
     ConceptLinkReferencePopoverComponent,
     TermsComponent,
     TermComponent,
-    MarkdownComponent,
-    MarkdownElementComponent,
-    MarkdownLinksComponent,
-    MarkdownLinksElementComponent,
+    SemanticTextPlainComponent,
+    SemanticTextPlainElementComponent,
+    SemanticTextLinksComponent,
+    SemanticTextLinksElementComponent,
     LiteralInputComponent,
     LiteralListInputComponent,
     StatusInputComponent,
@@ -164,9 +163,9 @@ const appRoutes: Routes = [
     VocabularyFormComponent,
     GroupInputComponent,
     OrganizationInputComponent,
-    MarkdownInputComponent,
-    MarkdownInputLinkPopoverComponent,
-    MarkdownInputUnlinkPopoverComponent,
+    SemanticTextInputComponent,
+    SemanticTextInputLinkPopoverComponent,
+    SemanticTextInputUnlinkPopoverComponent,
     SearchConceptModalComponent,
     SearchOrganizationModalComponent,
     SearchGroupModalComponent,
@@ -178,7 +177,6 @@ const appRoutes: Routes = [
     FloatDirective,
     TranslateSearchValuePipe,
     TimestampPipe,
-    StripMarkdownPipe,
     FilterLanguageComponent,
     ImportVocabularyModalComponent,
     PrefixInputComponent,

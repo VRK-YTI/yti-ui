@@ -1,13 +1,21 @@
 import { Component, ElementRef, forwardRef, Input, OnInit, ViewChild } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { Node as MarkdownNode, Parser } from 'commonmark';
 import { DomPath, DomPoint, DomSelection, formatTextContent, isInDocument, moveCursor, removeChildren } from 'app/utils/dom';
 import { allMatching, first, firstMatching, insertBefore, last, nextOf, nextOfMatching, previousOf, previousOfMatching, remove } from 'yti-common-ui/utils/array';
-import { children } from 'app/utils/markdown';
 import { wordAtOffset } from 'yti-common-ui/utils/string';
 import { isDefined, requireDefined } from 'yti-common-ui/utils/object';
 import { ConceptNode } from 'app/entities/node';
+import {
+  SemanticTextDocument,
+  SemanticTextFormat as SemanticTextFormatImported,
+  SemanticTextLink,
+  SemanticTextLiteral,
+  SemanticTextParagraph
+} from 'app/entities/semantic';
+import { areNodesEqual, resolveSerializer } from 'app/utils/semantic';
+
+type SemanticTextFormat = SemanticTextFormatImported;
 
 class Model {
 
@@ -20,16 +28,12 @@ class Model {
     removeChildren(node); // clear previous nodes
   }
 
-  static ofMarkdown(container: HTMLElement, documentNode: MarkdownNode): Model {
-
-    if (documentNode.type !== 'document') {
-      throw new Error('Not an document, was: ' + documentNode.type);
-    }
+  static ofSemanticTextNode(container: HTMLElement, document: SemanticTextDocument): Model {
 
     const result = new Model(container);
 
-    for (const paragraphNode of children(documentNode)) {
-      result.appendParagraph(Paragraph.ofMarkdown(result, paragraphNode));
+    for (const paragraph of document.children) {
+      result.appendParagraph(Paragraph.ofSemanticTextNode(result, paragraph));
     }
 
     result.ensureNonEmptyContent();
@@ -218,8 +222,8 @@ class Model {
     this.linkedSelection = null;
   }
 
-  toMarkdown(): string {
-    return this.content.map(c => c.toMarkdown()).join('').trim();
+  toSemanticTextNode(): SemanticTextDocument {
+    return new SemanticTextDocument(this.content.map(c => c.toSemanticTextNode()));
   }
 
   get selectionOffset(): number {
@@ -307,21 +311,19 @@ class Model {
 class Paragraph {
 
   node: HTMLElement;
+  content: (Link|Text)[] = [];
 
-  constructor(private parent: Model, public content: (Link|Text)[] = []) {
+  constructor(private parent: Model) {
     this.node = document.createElement('p');
   }
 
-  static ofMarkdown(parent: Model, paragraphNode: MarkdownNode): Paragraph {
-
-    if (paragraphNode.type !== 'paragraph') {
-      throw new Error('Not a paragraph, was: ' + paragraphNode.type);
-    }
+  static ofSemanticTextNode(parent: Model, paragraphNode: SemanticTextParagraph): Paragraph {
 
     const result = new Paragraph(parent);
 
-    for (const child of children(paragraphNode)) {
-      result.appendContent(child.type === 'link' ? Link.ofMarkdown(result, child) : Text.ofMarkdown(result, child));
+    for (const child of paragraphNode.children) {
+      result.appendContent(child.type === 'link' ? Link.ofSemanticTextNode(result, child)
+                                                         : Text.ofSemanticTextNode(result, child));
     }
 
     return result;
@@ -523,8 +525,8 @@ class Paragraph {
     return this.firstContent.text;
   }
 
-  toMarkdown(): string {
-    return '\n\n' + this.content.map(c => c.toMarkdown()).join('');
+  toSemanticTextNode(): SemanticTextParagraph {
+    return new SemanticTextParagraph(this.content.map(c => c.toSemanticTextNode()));
   }
 }
 
@@ -541,19 +543,8 @@ class Link {
     this.target = target;
   }
 
-  static ofMarkdown(parent: Paragraph, link: MarkdownNode): Link {
-
-    if (link.type !== 'link') {
-      throw new Error('Not a paragraph, was: ' + link.type);
-    }
-
-    const text = children(link);
-
-    if (text.length !== 1) {
-      throw new Error('Not a single child, was: ' + text.length);
-    }
-
-    return new Link(parent, text[0].literal, link.destination);
+  static ofSemanticTextNode(parent: Paragraph, link: SemanticTextLink): Link {
+    return new Link(parent, link.text, link.destination);
   }
 
   copyToParent(parent: Paragraph): Link {
@@ -631,8 +622,8 @@ class Link {
     return this.parent;
   }
 
-  toMarkdown(): string {
-    return `[${this.content}](${this.target})`;
+  toSemanticTextNode(): SemanticTextLink {
+    return new SemanticTextLink(this.content, this.target);
   }
 }
 
@@ -646,13 +637,8 @@ class Text {
     this.content = content;
   }
 
-  static ofMarkdown(parent: Paragraph|Link, text: MarkdownNode): Text {
-
-    if (text.type !== 'text') {
-      throw new Error('Not a text, was: ' + text.type);
-    }
-
-    return new Text(parent, text.literal);
+  static ofSemanticTextNode(parent: Paragraph|Link, text: SemanticTextLiteral): Text {
+    return new Text(parent, text.text);
   }
 
   copyToParent(parent: Paragraph): Text {
@@ -832,8 +818,8 @@ class Text {
     }
   }
 
-  toMarkdown(): string {
-    return this.content;
+  toSemanticTextNode(): SemanticTextLiteral {
+    return new SemanticTextLiteral(this.content);
   }
 }
 
@@ -1091,39 +1077,40 @@ function isRemoveRestOfLine(event: KeyboardEvent) {
 }
 
 @Component({
-  selector: 'app-markdown-input',
-  styleUrls: ['./markdown-input.component.scss'],
+  selector: 'app-semantic-text-input',
+  styleUrls: ['./semantic-text-input.component.scss'],
   providers: [{
     provide: NG_VALUE_ACCESSOR,
-    useExisting: forwardRef(() => MarkdownInputComponent),
+    useExisting: forwardRef(() => SemanticTextInputComponent),
     multi: true
   }],
   template: `
-    <app-markdown-input-link-popover *ngIf="hasLinkableSelection()"
-                                     [selectedText]="linkableSelection.content"
-                                     (link)="link()">
-    </app-markdown-input-link-popover>
+    <app-semantic-text-input-link-popover *ngIf="hasLinkableSelection()"
+                                          [selectedText]="linkableSelection.content"
+                                          (link)="link()">
+    </app-semantic-text-input-link-popover>
 
-    <app-markdown-input-unlink-popover *ngIf="hasLinkedSelection()"
-                                       [concept]="linkedConcept"
-                                       (unlink)="unlink()">
-    </app-markdown-input-unlink-popover>
+    <app-semantic-text-input-unlink-popover *ngIf="hasLinkedSelection()"
+                                           [concept]="linkedConcept"
+                                           (unlink)="unlink()">
+    </app-semantic-text-input-unlink-popover>
 
     <div #editable 
          contenteditable="true" 
          class="form-control"></div>
   `
 })
-export class MarkdownInputComponent implements OnInit, ControlValueAccessor {
+export class SemanticTextInputComponent implements OnInit, ControlValueAccessor {
 
   @Input() conceptSelector: (name: string) => Promise<ConceptNode|null>;
   @Input() relatedConcepts: ConceptNode[];
+  @Input() format: SemanticTextFormat;
 
   @ViewChild('editable') editableElement: ElementRef;
 
   private model: Model;
-  private undoStack: { markdown: string, cursorOffset: number }[] = [];
-  private redoStack: { markdown: string, cursorOffset: number }[] = [];
+  private undoStack: { semanticTextNode: SemanticTextDocument, cursorOffset: number }[] = [];
+  private redoStack: { semanticTextNode: SemanticTextDocument, cursorOffset: number }[] = [];
 
   linkingInProgress = false;
   private undoDebounceTimeoutHandle: any = null;
@@ -1286,9 +1273,9 @@ export class MarkdownInputComponent implements OnInit, ControlValueAccessor {
       this.pushUndoIfChanged(false);
       // current state is at the top the stack
       this.redoStack.push(this.undoStack.pop()!);
-      const {markdown, cursorOffset} = this.undoStack[this.undoStack.length - 1];
-      this.resetModel(markdown, cursorOffset);
-      this.propagateChange(markdown);
+      const {semanticTextNode, cursorOffset} = this.undoStack[this.undoStack.length - 1];
+      this.resetModel(semanticTextNode, cursorOffset);
+      this.propagateChange(resolveSerializer(this.format).serialize(semanticTextNode));
     }
   }
 
@@ -1301,8 +1288,8 @@ export class MarkdownInputComponent implements OnInit, ControlValueAccessor {
     if (this.redoStack.length > 0) {
       const historyItem = this.redoStack.pop()!;
       this.undoStack.push(historyItem);
-      this.resetModel(historyItem.markdown, historyItem.cursorOffset);
-      this.propagateChange(historyItem.markdown);
+      this.resetModel(historyItem.semanticTextNode, historyItem.cursorOffset);
+      this.propagateChange(resolveSerializer(this.format).serialize(historyItem.semanticTextNode));
     }
   }
 
@@ -1313,10 +1300,10 @@ export class MarkdownInputComponent implements OnInit, ControlValueAccessor {
       this.undoDebounceTimeoutHandle = null;
     }
 
-    const historyItem = { markdown: this.model.toMarkdown(), cursorOffset: this.model.selectionOffset };
+    const historyItem = { semanticTextNode: this.model.toSemanticTextNode(), cursorOffset: this.model.selectionOffset };
     const topOfStack = this.undoStack.length > 0 ? this.undoStack[this.undoStack.length - 1] : null;
 
-    if (!topOfStack || topOfStack.markdown !== historyItem.markdown) {
+    if (!topOfStack || !areNodesEqual(topOfStack.semanticTextNode, historyItem.semanticTextNode)) {
 
       this.undoStack.push(historyItem);
 
@@ -1346,13 +1333,13 @@ export class MarkdownInputComponent implements OnInit, ControlValueAccessor {
 
     this.undoDebounce();
     modifyingAction();
-    this.propagateChange(this.model.toMarkdown());
+    this.propagateChange(resolveSerializer(this.format).serialize(this.model.toSemanticTextNode()));
   }
 
-  private resetModel(markdown: string, cursorOffset?: number) {
+  private resetModel(semanticTextNode: SemanticTextDocument, cursorOffset?: number) {
 
     const element = this.editableElement.nativeElement as HTMLElement;
-    this.model = Model.ofMarkdown(element, new Parser().parse(markdown));
+    this.model = Model.ofSemanticTextNode(element, semanticTextNode);
 
     if (cursorOffset) {
       this.model.moveCursorToOffset(cursorOffset);
@@ -1370,7 +1357,7 @@ export class MarkdownInputComponent implements OnInit, ControlValueAccessor {
     this.undoStack = [];
     this.redoStack = [];
 
-    this.resetModel(value);
+    this.resetModel(resolveSerializer(this.format).deserialize(value));
   }
 
   registerOnChange(fn: any): void {

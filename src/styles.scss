@@ -136,7 +136,7 @@ div.localized {
       width: calc(100% - #{$language-width + 32});
     }
 
-    /deep/ app-markdown-input {
+    /deep/ app-semantic-text-input {
       .action {
         top: -37px;
         right: 10px;

@@ -71,7 +71,7 @@ export class SearchConceptModalService {
                    type="text"
                    class="form-control"
                    placeholder="{{'Search concept' | translate}}"
-                   [(ngModel)]="search" />
+                   [(ngModel)]="search"/>
           </div>
 
           <app-filter-language [(ngModel)]="filterLanguage"
@@ -109,7 +109,7 @@ export class SearchConceptModalService {
                    (click)="select(concept)">
                 <div class="content" [class.last]="last">
                   <span class="title" [innerHTML]="concept.label | translateValue"></span>
-                  <span class="body" [innerHTML]="concept.definition | translateValue | stripMarkdown"></span>
+                  <span class="body" [innerHTML]="concept.definitionWithoutSemantics | translateValue"></span>
                   <div class="origin">
                     <span class="pull-left">{{concept.vocabulary.label | translateValue}}</span>
                   </div>
@@ -138,11 +138,13 @@ export class SearchConceptModalService {
       <button type="button"
               class="btn btn-action confirm"
               (click)="confirm()"
-              [disabled]="cannotSelect()" translate>Select concept</button>
+              [disabled]="cannotSelect()" translate>Select concept
+      </button>
 
       <button type="button"
               class="btn btn-link cancel"
-              (click)="cancel()" translate>Cancel</button>
+              (click)="cancel()" translate>Cancel
+      </button>
 
       <div class="alert alert-danger modal-alert" role="alert" *ngIf="restrictionReasonForSelection">
         <span class="fa fa-exclamation-circle" aria-hidden="true"></span>

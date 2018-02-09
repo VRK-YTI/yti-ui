@@ -3,17 +3,16 @@ import { assertNever } from 'yti-common-ui/utils/object';
 import { allMatching, anyMatching, firstMatching, flatten, normalizeAsArray } from 'yti-common-ui/utils/array';
 import { ConceptNode, KnownNode, Node, Property, Reference, TermNode } from 'app/entities/node';
 import {
-  Cardinality, EditorType, MetaModel, NodeMeta, PropertyMeta, ReferenceMeta,
+  Cardinality, Editor, MetaModel, NodeMeta, PropertyMeta, ReferenceMeta,
   ReferenceType
 } from 'app/entities/meta';
 import { Localizable } from 'yti-common-ui/types/localization';
 import { NodeType } from 'app/entities/node-api';
-import { children } from 'app/utils/markdown';
-import { Parser, Node as MarkdownNode } from 'commonmark';
 import { validateMeta } from 'app/directives/validators/meta-model.validator';
 import { requiredList } from 'app/directives/validators/required-list.validator';
 import { validateLanguage } from 'app/directives/validators/language.validator';
 import { comparingPrimitive } from 'yti-common-ui/utils/comparator';
+import { removeMatchingLinks } from 'app/utils/semantic';
 
 export type FormReference = FormReferenceLiteral<any>
                           | FormReferenceTerm;
@@ -132,15 +131,15 @@ export class FormNode {
     );
   }
 
-  get markdownProperties(): FormProperty[] {
+  get semanticProperties(): FormProperty[] {
     return this.properties
       .map(p => p.value)
-      .filter(p => p.editorType === 'markdown');
+      .filter(p => p.editor.type === 'semantic');
   }
 
-  removeMarkdownReferences(concept: ConceptNode) {
-    for (const property of this.markdownProperties) {
-      property.removeMarkdownReferencesTo(concept);
+  removeSemanticReferencesTo(concept: ConceptNode) {
+    for (const property of this.semanticProperties) {
+      property.removeSemanticReferencesTo(concept);
     }
   }
 
@@ -366,14 +365,14 @@ export class FormPropertyLiteral {
 
   private createControl(initial: string) {
 
-    const isStatus = this.meta.type.editorType === 'status';
+    const isStatus = this.meta.type.editor.type === 'status';
     const validators: ValidatorFn[] = [(control: FormControl) => validateMeta(control, this.meta)];
 
     if (this.required) {
       validators.push(Validators.required);
     }
 
-    if (this.editorType === 'language') {
+    if (this.editor.type === 'language') {
       validators.push(validateLanguage);
     }
 
@@ -384,8 +383,8 @@ export class FormPropertyLiteral {
     return this.meta.label;
   }
 
-  get editorType(): EditorType {
-    return this.meta.type.editorType;
+  get editor(): Editor {
+    return this.meta.type.editor;
   }
 
   get value() {
@@ -393,7 +392,7 @@ export class FormPropertyLiteral {
   }
 
   get valueIsLocalizationKey() {
-    return this.meta.type.editorType === 'status';
+    return this.meta.type.editor.type === 'status';
   }
 
   get multiColumn() {
@@ -404,8 +403,12 @@ export class FormPropertyLiteral {
     return this.value.trim() === '';
   }
 
-  removeMarkdownReferencesTo(concept: ConceptNode) {
-    this.control.setValue(removeMarkdownReferencesTo(this.value, concept));
+  removeSemanticReferencesTo(concept: ConceptNode) {
+
+    if (this.editor.type === 'semantic') {
+      const shouldRemoveDestination = (dest: string) => concept.isTargetOfLink(dest);
+      this.control.setValue(removeMatchingLinks(this.value, this.editor.format, shouldRemoveDestination));
+    }
   }
 
   assignChanges(property: Property) {
@@ -441,7 +444,7 @@ export class FormPropertyLiteralList {
       validators.push(Validators.required);
     }
 
-    if (this.editorType === 'language') {
+    if (this.editor.type === 'language') {
       validators.push(validateLanguage);
     }
 
@@ -460,8 +463,8 @@ export class FormPropertyLiteralList {
     return this.meta.type.required;
   }
 
-  get editorType(): EditorType {
-    return this.meta.type.editorType;
+  get editor(): Editor {
+    return this.meta.type.editor;
   }
 
   get value(): string[] {
@@ -481,9 +484,15 @@ export class FormPropertyLiteralList {
     this.control.removeAt(this.children.indexOf(child));
   }
 
-  removeMarkdownReferencesTo(concept: ConceptNode) {
-    for (const child of this.children) {
-      child.setValue(removeMarkdownReferencesTo(child.value, concept));
+  removeSemanticReferencesTo(concept: ConceptNode) {
+
+    if (this.editor.type === 'semantic') {
+
+      const shouldRemoveDestination = (dest: string) => concept.isTargetOfLink(dest);
+
+      for (const child of this.children) {
+        child.setValue(removeMatchingLinks(child.value, this.editor.format, shouldRemoveDestination));
+      }
     }
   }
 
@@ -552,8 +561,8 @@ export class FormPropertyLocalizable {
     return this.meta.type.required;
   }
 
-  get editorType(): EditorType {
-    return this.meta.type.editorType;
+  get editor(): Editor {
+    return this.meta.type.editor;
   }
 
   get cardinality(): Cardinality {
@@ -576,9 +585,14 @@ export class FormPropertyLocalizable {
     this.control.removeAt(index);
   }
 
-  removeMarkdownReferencesTo(concept: ConceptNode) {
-    for (const child of this.children) {
-      child.control.setValue(removeMarkdownReferencesTo(child.control.value, concept));
+  removeSemanticReferencesTo(concept: ConceptNode) {
+    if (this.editor.type === 'semantic') {
+
+      const shouldRemoveDestination = (destination: string) => concept.isTargetOfLink(destination);
+
+      for (const child of this.children) {
+        child.control.setValue(removeMatchingLinks(child.control.value, this.editor.format, shouldRemoveDestination));
+      }
     }
   }
 
@@ -600,40 +614,4 @@ export class FormPropertyLocalizable {
     const isNotEmpty = (value: string) => value.trim() !== '';
     return anyMatching(this.value, v => v.lang === language && isNotEmpty(v.value));
   }
-}
-
-// TODO: unify with other markdown printing algorithms
-function removeMarkdownReferencesTo(value: string, concept: ConceptNode): string {
-
-  let result = '';
-  let referenceRemoved = false;
-
-  const visit = (node: MarkdownNode) => {
-
-    switch (node.type) {
-      case 'paragraph':
-        result += '\n\n';
-        break;
-      case 'link':
-        if (concept.isTargetOfLink(node.destination)) {
-          result += node.firstChild.literal;
-          referenceRemoved = true;
-        } else {
-          result += `[${node.firstChild.literal}](${node.destination})`;
-        }
-        return;
-    }
-
-    if (node.literal) {
-      result += node.literal;
-    }
-
-    for (const child of children(node)) {
-      visit(child);
-    }
-  };
-
-  visit(new Parser().parse(value));
-
-  return referenceRemoved ? result : value;
 }

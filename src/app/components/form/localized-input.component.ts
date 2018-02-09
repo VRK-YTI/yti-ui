@@ -29,10 +29,27 @@ import { contains } from 'yti-common-ui/utils/array';
           <span>{{child.lang.toUpperCase()}}</span>
         </div>
         <div class="localization" [class.editing]="editing" [class.removable]="canRemove()">
-          <div *ngIf="!editing" app-markdown-links [value]="child.control.value" [relatedConcepts]="relatedConcepts"></div>
+
+          <div *ngIf="!editing">
+            <ng-container [ngSwitch]="property.editor.type">
+
+              <div *ngSwitchCase="'semantic'"
+                   app-semantic-text-links
+                   [format]="property.editor.format"
+                   [value]="child.control.value"
+                   [relatedConcepts]="relatedConcepts">
+              </div>
+
+              <div *ngSwitchDefault>
+                {{child.control.value}}
+              </div>
+
+            </ng-container>  
+          </div>
+          
           <div *ngIf="editing" class="form-group">
 
-            <ng-container [ngSwitch]="property.editorType">
+            <ng-container [ngSwitch]="property.editor.type">
 
               <input *ngSwitchCase="'input'"
                      type="text"
@@ -42,11 +59,18 @@ import { contains } from 'yti-common-ui/utils/array';
                      autocomplete="off"
                      [formControl]="child.control" />
 
-              <app-markdown-input *ngSwitchCase="'markdown'"
-                                  [id]="id"
-                                  [conceptSelector]="conceptSelector"
-                                  [relatedConcepts]="relatedConcepts"
-                                  [formControl]="child.control"></app-markdown-input>
+              <textarea *ngSwitchCase="'textarea'"
+                        class="form-control"
+                        [ngClass]="{'is-invalid': valueInError()}"
+                        [id]="id"
+                        [formControl]="property.control"></textarea>              
+
+              <app-semantic-text-input *ngSwitchCase="'semantic'"
+                                       [id]="id"
+                                       [format]="property.editor.format"
+                                       [conceptSelector]="conceptSelector"
+                                       [relatedConcepts]="relatedConcepts"
+                                       [formControl]="child.control"></app-semantic-text-input>
 
             </ng-container>
 

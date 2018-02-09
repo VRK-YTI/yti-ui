@@ -75,7 +75,7 @@ export class ConceptFormComponent {
     const lastReferenceRemoved = !anyMatching(this.form.referencedConcepts, ref => ref.id === concept.id);
 
     if (lastReferenceRemoved) {
-      this.form.removeMarkdownReferences(concept);
+      this.form.removeSemanticReferencesTo(concept);
     }
   }
 

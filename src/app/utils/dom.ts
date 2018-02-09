@@ -240,3 +240,31 @@ export function isInDocument(node: Node|null) {
   }
   return false;
 }
+
+export function removeWhiteSpaceNodes(node: Node) {
+
+  const children = node.childNodes;
+  const removeChildNodes: Node[] = [];
+
+  for (let i = 0; i < children.length; i++) {
+
+    const child = children[i];
+
+    switch (child.nodeType) {
+      case Node.TEXT_NODE:
+        if (!child.nodeValue!.trim() && child.nodeValue!.indexOf('\n') !== -1) {
+          removeChildNodes.push(child);
+        }
+        break;
+      case Node.ELEMENT_NODE:
+        removeWhiteSpaceNodes(child);
+        break;
+      default:
+      // NOP
+    }
+  }
+
+  for (const childNode of removeChildNodes) {
+    node.removeChild(childNode);
+  }
+}
