@@ -35,6 +35,10 @@ export function stripSemanticMarkup(text: string, format: SemanticTextFormat): s
 
   const visit = (n: SemanticTextNode) => {
 
+    if (n.type === 'paragraph') {
+      result += '\n\n';
+    }
+
     result += n.text;
 
     for (const child of n.children) {
@@ -44,7 +48,7 @@ export function stripSemanticMarkup(text: string, format: SemanticTextFormat): s
 
   visit(resolveSerializer(format).deserialize(text));
 
-  return result;
+  return result.trim();
 }
 
 export function removeMatchingLinks(value: string,
@@ -62,7 +66,7 @@ class MarkdownSerializer implements SemanticTextSerializer {
     function visit(node: SemanticTextNode): string {
       switch (node.type) {
         case 'document':
-          return node.children.map(c => visit(c)).join('');
+          return node.children.map(c => visit(c)).join('').trim();
         case 'paragraph':
           return '\n\n' + node.children.map(c => visit(c)).join('');
         case 'link':
