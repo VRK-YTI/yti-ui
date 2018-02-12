@@ -59,6 +59,15 @@ export function removeMatchingLinks(value: string,
   return serializer.serialize(serializer.deserialize(value).removeMatchingLinks(predicate));
 }
 
+
+function ensureType<T extends SemanticTextNode>(node: SemanticTextNode, ...type: string[]): T {
+  if (!contains(type, node.type)) {
+    throw new Error('Illegal child type');
+  }
+
+  return node as T;
+}
+
 class MarkdownSerializer implements SemanticTextSerializer {
 
   serialize(document: SemanticTextDocument) {
@@ -94,15 +103,6 @@ class MarkdownSerializer implements SemanticTextSerializer {
       }
 
       return result;
-    }
-
-
-    function ensureType<T extends SemanticTextNode>(node: SemanticTextNode, ...type: string[]): T {
-      if (!contains(type, node.type)) {
-        throw new Error('Illegal child type');
-      }
-
-      return node as T;
     }
 
     function getSingleTextChild(parent: MarkdownNode) {
@@ -154,10 +154,124 @@ class MarkdownSerializer implements SemanticTextSerializer {
   }
 }
 
+class XmlSerializer implements SemanticTextSerializer {
+
+  serialize(document: SemanticTextDocument): string {
+
+    function visit(node: SemanticTextNode): string {
+      switch (node.type) {
+        case 'document':
+          return node.children.map(c => visit(c)).join('').trim();
+        case 'paragraph':
+          return '<p>' + node.children.map(c => visit(c)).join('') + '</p>';
+        case 'link':
+          return `<a href="${node.destination}">${node.text}</a>`;
+        case 'text':
+          return node.text;
+        default:
+          return assertNever(node);
+      }
+    }
+
+    return visit(document);
+  }
+
+  deserialize(serialized: string): SemanticTextDocument {
+
+    function getChildren(node: Node): Node[] {
+      return Array.prototype.slice.call(node.childNodes);
+    }
+
+    function getSingleTextChild(parent: Node) {
+
+      if (parent.childNodes.length !== 1) {
+        throw new Error('Exactly one child required, was: ' + parent.childNodes.length);
+      }
+
+      const child = parent.firstChild!;
+
+      if (child.nodeType !== Node.TEXT_NODE) {
+        throw new Error('Child must be TEXT_NODE, was: ' + child.nodeType);
+      }
+
+      return child;
+    }
+
+    function visit(node: Node): SemanticTextNode|null {
+
+      switch (node.nodeType) {
+        case Node.TEXT_NODE:
+          return new SemanticTextLiteral(node.nodeValue || '');
+        case Node.ELEMENT_NODE:
+          switch (node.nodeName) {
+            case 'document':
+              return new SemanticTextDocument(getChildren(node)
+                .map(n => visit(n))
+                .filter(n => n != null)
+                .map(n => ensureType<SemanticTextParagraph>(requireDefined(n), 'paragraph')));
+            case 'p':
+              return new SemanticTextParagraph(getChildren(node)
+                .map(n => visit(n))
+                .filter(n => n != null)
+                .map(n => ensureType<SemanticTextLink|SemanticTextLiteral>(requireDefined(n), 'link', 'text')));
+            case 'a':
+              const text = getSingleTextChild(node).nodeValue || '';
+              const destination = node.attributes.getNamedItem('href').value;
+              return new SemanticTextLink(text, destination);
+            default:
+              console.log('Element NOT SUPPORTED: ' + node.nodeName);
+              return null;
+          }
+        default:
+          console.log('Node type NOT SUPPORTED: ' + node.nodeType);
+          return null;
+      }
+    }
+
+    const document = new DOMParser().parseFromString(`
+          <document>${serialized}</document>
+      `, 'application/xml');
+
+    if (document.getElementsByTagName('parsererror').length > 0) {
+      throw new Error('Cannot parse XML: ' + serialized);
+    }
+
+    const documentNode = document.getElementsByTagName('document')[0];
+
+    if (documentNode.childNodes.length > 1) {
+      console.log(documentNode);
+      throw new Error('Cannot parse XML, only one child element needed');
+    }
+
+    const firstChild = documentNode.firstChild!;
+
+    if (!firstChild) {
+      const paragraph = document.createElement('p');
+      paragraph.appendChild(document.createTextNode(''));
+      documentNode.appendChild(paragraph);
+    } else if (firstChild.nodeType === Node.TEXT_NODE) {
+      documentNode.removeChild(firstChild);
+      const paragraph = document.createElement('p');
+      paragraph.appendChild(firstChild);
+      documentNode.appendChild(paragraph);
+    }
+
+    const result = visit(documentNode);
+
+    if (result == null || result.type !== 'document') {
+      throw new Error('Cannot parse xml: ' + documentNode);
+    }
+
+    return result;
+  }
+}
+
 export function resolveSerializer(type: SemanticTextFormat): SemanticTextSerializer {
   switch (type) {
     case 'markdown':
       return new MarkdownSerializer();
+    case 'xml':
+      return new XmlSerializer();
     default:
       return assertNever(type);
   }

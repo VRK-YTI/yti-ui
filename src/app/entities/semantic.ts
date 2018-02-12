@@ -1,4 +1,5 @@
-export type SemanticTextFormat = 'markdown';
+export type SemanticTextFormat = 'markdown'
+                               | 'xml';
 
 export type SemanticTextNode = SemanticTextDocument
                              | SemanticTextParagraph
