@@ -1,10 +1,10 @@
 [
   {
     "id": "Collection",
-    "index": 0,
     "graph": {
       "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
     },
+    "index": 0,
     "permissions": {},
     "properties": {
       "prefLabel": [
@@ -18,13 +18,13 @@
       {
         "regex": "(?s)^.*$",
         "id": "prefLabel",
-        "index": 0,
         "domain": {
           "id": "Collection",
           "graph": {
             "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
           }
         },
+        "index": 0,
         "permissions": {},
         "properties": {
           "prefLabel": [
@@ -45,13 +45,13 @@
           }
         },
         "id": "member",
-        "index": 0,
         "domain": {
           "id": "Collection",
           "graph": {
             "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
           }
         },
+        "index": 0,
         "permissions": {},
         "properties": {
           "prefLabel": [
@@ -66,10 +66,11 @@
   },
   {
     "id": "Group",
-    "index": 0,
     "graph": {
       "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
     },
+    "uri": "http://www.w3.org/2004/02/skos/core#Concept",
+    "index": 1,
     "permissions": {},
     "properties": {
       "prefLabel": [
@@ -83,13 +84,14 @@
       {
         "regex": "(?s)^.*$",
         "id": "prefLabel",
-        "index": 0,
         "domain": {
           "id": "Group",
           "graph": {
             "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
           }
         },
+        "uri": "http://www.w3.org/2004/02/skos/core#prefLabel",
+        "index": 0,
         "permissions": {},
         "properties": {
           "prefLabel": [
@@ -103,13 +105,14 @@
       {
         "regex": "(?s)^.*$",
         "id": "definition",
-        "index": 1,
         "domain": {
           "id": "Group",
           "graph": {
             "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
           }
         },
+        "uri": "http://www.w3.org/2004/02/skos/core#note",
+        "index": 1,
         "permissions": {},
         "properties": {
           "prefLabel": [
@@ -119,8 +122,77 @@
             }
           ]
         }
+      },
+      {
+        "regex": "(?s)^.*$",
+        "id": "order",
+        "domain": {
+          "id": "Group",
+          "graph": {
+            "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+          }
+        },
+        "uri": "http://www.w3.org/ns/shacl#order",
+        "index": 2,
+        "permissions": {},
+        "properties": {
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Järjestysnumero"
+            }
+          ]
+        }
+      },
+      {
+        "regex": "(?s)^.*$",
+        "id": "notation",
+        "domain": {
+          "id": "Group",
+          "graph": {
+            "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+          }
+        },
+        "uri": "http://www.w3.org/2004/02/skos/core#notation",
+        "index": 3,
+        "permissions": {},
+        "properties": {
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "Koodiarvo"
+            }
+          ]
+        }
       }
     ],
-    "referenceAttributes": []
+    "referenceAttributes": [
+      {
+        "range": {
+          "id": "Group",
+          "graph": {
+            "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+          }
+        },
+        "id": "broader",
+        "domain": {
+          "id": "Group",
+          "graph": {
+            "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+          }
+        },
+        "uri": "http://www.w3.org/2004/02/skos/core#broader",
+        "index": 0,
+        "permissions": {},
+        "properties": {
+          "prefLabel": [
+            {
+              "lang": "fi",
+              "value": "yläluokka"
+            }
+          ]
+        }
+      }
+    ]
   }
 ]
