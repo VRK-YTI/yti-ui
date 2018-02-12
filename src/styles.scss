@@ -145,6 +145,6 @@ div.localized {
   }
 }
 
-textarea {
-  height: 150px;
+textarea, [contenteditable] {
+  min-height: 150px;
 }
