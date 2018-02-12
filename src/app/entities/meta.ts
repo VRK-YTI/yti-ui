@@ -79,10 +79,18 @@ function createLocalizable(single: boolean, required: boolean, editor: Editor): 
 
 function createPropertyType(name: TypeName, attributes: Set<string>): PropertyType {
 
-  // XXX: Dummy mapping from area always to semantic markdown, this could be parametrized in the meta
-
   function resolveStringOrLocalizableEditor(): Editor {
-    return attributes.has('area') ? { type: 'semantic', format: 'markdown' } : { type: 'input' };
+    if (attributes.has('area')) {
+      if (attributes.has('markdown')) {
+        return { type: 'semantic', format: 'markdown' }
+      } else if (attributes.has('xml')) {
+        return { type: 'semantic', format: 'xml' }
+      } else {
+        return { type: 'textarea' };
+      }
+    } else {
+      return { type: 'input' };
+    }
   }
 
   switch (name) {
