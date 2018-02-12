@@ -262,14 +262,16 @@ class XmlSerializer implements SemanticTextSerializer {
         return orderedList;
 
       } else {
-        throw new Error('Cannot parse xml: ' + documentNode);
+        console.log(documentNode);
+        throw new Error('Cannot parse xml');
       }
     }
 
     const result = visit(normalizeOrderedList());
 
     if (result == null || result.type !== 'document') {
-      throw new Error('Cannot parse xml: ' + documentNode);
+      console.log(documentNode);
+      throw new Error('Cannot parse xml');
     }
 
     return result;
