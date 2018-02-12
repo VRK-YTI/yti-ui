@@ -61,9 +61,9 @@ import { contains } from 'yti-common-ui/utils/array';
 
               <textarea *ngSwitchCase="'textarea'"
                         class="form-control"
-                        [ngClass]="{'is-invalid': valueInError()}"
+                        [ngClass]="{'is-invalid': !child.control.valid}"
                         [id]="id"
-                        [formControl]="property.control"></textarea>              
+                        [formControl]="child.control"></textarea>              
 
               <app-semantic-text-input *ngSwitchCase="'semantic'"
                                        [id]="id"

@@ -53,9 +53,9 @@ import { FormControl } from '@angular/forms';
 
             <textarea *ngSwitchCase="'textarea'"
                       class="form-control"
-                      [ngClass]="{'is-invalid': valueInError()}"
+                      [ngClass]="{'is-invalid': !control.valid}"
                       [id]="id"
-                      [formControl]="property.control"></textarea>            
+                      [formControl]="control"></textarea>            
             
             <app-semantic-text-input *ngSwitchCase="'semantic'"
                                     [id]="id"
