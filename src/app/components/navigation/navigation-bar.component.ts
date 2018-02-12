@@ -62,7 +62,7 @@ import { TermedService } from '../../services/termed.service';
                *ngIf="isLoggedIn()"
                [routerLink]="['/userDetails']" translate>User details</a>
             <a class="dropdown-item"
-               *ngIf="isUserAdmin()"
+               *ngIf="showGroupManagementUrl()"
                [href]="groupManagementUrl" target="_blank" translate>User right management</a>
           </div>
         </li>
@@ -128,7 +128,7 @@ export class NavigationBarComponent {
     return this.userService.isLoggedIn();
   }
 
-  isUserAdmin() {
-    return this.user.isAdminInAnyOrganization();
+  showGroupManagementUrl() {
+    return this.user.superuser || this.user.isAdminInAnyOrganization();
   }
 }
