@@ -161,11 +161,11 @@ class XmlSerializer implements SemanticTextSerializer {
     function visit(node: SemanticTextNode): string {
       switch (node.type) {
         case 'document':
-          return node.children.map(c => visit(c)).join('').trim();
+          return '<ol>' + node.children.map(c => visit(c)).join('').trim() + '</ol>';
         case 'paragraph':
-          return '<p>' + node.children.map(c => visit(c)).join('') + '</p>';
+          return '<li>' + node.children.map(c => visit(c)).join('') + '</li>';
         case 'link':
-          return `<a href="${node.destination}">${node.text}</a>`;
+          return `<a href='${node.destination}'>${node.text}</a>`;
         case 'text':
           return node.text;
         default:
@@ -204,12 +204,12 @@ class XmlSerializer implements SemanticTextSerializer {
           return new SemanticTextLiteral(node.nodeValue || '');
         case Node.ELEMENT_NODE:
           switch (node.nodeName) {
-            case 'document':
+            case 'ol':
               return new SemanticTextDocument(getChildren(node)
                 .map(n => visit(n))
                 .filter(n => n != null)
                 .map(n => ensureType<SemanticTextParagraph>(requireDefined(n), 'paragraph')));
-            case 'p':
+            case 'li':
               return new SemanticTextParagraph(getChildren(node)
                 .map(n => visit(n))
                 .filter(n => n != null)
@@ -243,20 +243,25 @@ class XmlSerializer implements SemanticTextSerializer {
       throw new Error('Cannot parse XML, only one child element needed');
     }
 
-    const firstChild = documentNode.firstChild!;
+    function normalizeOrderedList() {
 
-    if (!firstChild) {
-      const paragraph = document.createElement('p');
-      paragraph.appendChild(document.createTextNode(''));
-      documentNode.appendChild(paragraph);
-    } else if (firstChild.nodeType === Node.TEXT_NODE) {
-      documentNode.removeChild(firstChild);
-      const paragraph = document.createElement('p');
-      paragraph.appendChild(firstChild);
-      documentNode.appendChild(paragraph);
+      const firstChild = documentNode.firstChild!;
+
+      if (!firstChild || firstChild.nodeType === Node.TEXT_NODE) {
+        const orderedList = document.createElement('ol');
+        const listItem = document.createElement('li');
+        const text = firstChild ? firstChild.nodeValue || '' : '';
+        listItem.appendChild(document.createTextNode(text));
+        orderedList.appendChild(listItem);
+        return orderedList;
+      } else if (firstChild.nodeName === 'ol') {
+        return firstChild;
+      } else {
+        throw new Error('Cannot parse xml: ' + firstChild);
+      }
     }
 
-    const result = visit(documentNode);
+    const result = visit(normalizeOrderedList());
 
     if (result == null || result.type !== 'document') {
       throw new Error('Cannot parse xml: ' + documentNode);
