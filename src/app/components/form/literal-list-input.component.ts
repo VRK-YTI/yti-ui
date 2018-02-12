@@ -6,8 +6,27 @@ import { FormControl } from '@angular/forms';
 @Component({
   styleUrls: ['./literal-list-input.component.scss'],
   selector: 'app-literal-list-input',
-  template: `    
-    <span *ngIf="!editing">{{property.valueAsString}}</span>
+  template: `
+
+    <div *ngIf="!editing">
+      <ng-container [ngSwitch]="property.editor.type">
+
+        <div *ngSwitchCase="'semantic'">
+          
+          <div *ngFor="let value of property.value">
+            <div app-semantic-text-links
+                 [format]="property.editor.format"
+                 [value]="value">
+            </div>
+          </div>
+        </div>
+
+        <div *ngSwitchDefault>
+          {{property.valueAsString}}
+        </div>
+
+      </ng-container>
+    </div>
 
     <div *ngIf="editing">
 

@@ -7,8 +7,25 @@ import { FormPropertyLiteral } from 'app/services/form-state';
   selector: 'app-literal-input',
   template: `
     
-    <span *ngIf="!editing && property.valueIsLocalizationKey">{{property.value | translate}}</span>
-    <span *ngIf="!editing && !property.valueIsLocalizationKey">{{property.value}}</span>
+    <div *ngIf="!editing">
+      <ng-container [ngSwitch]="property.editor.type">
+
+        <div *ngSwitchCase="'semantic'"
+             app-semantic-text-links
+             [format]="property.editor.format"
+             [value]="property.value">
+        </div>
+
+        <div *ngSwitchCase="'status'">
+          {{property.value | translate}}
+        </div>
+        
+        <div *ngSwitchDefault>
+          {{property.value}}
+        </div>
+
+      </ng-container>
+    </div>
 
     <div *ngIf="editing">
 
