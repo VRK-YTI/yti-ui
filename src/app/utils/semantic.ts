@@ -246,9 +246,10 @@ class XmlSerializer implements SemanticTextSerializer {
 
       const children = getChildren(documentNode);
       const normalizedChildren = children.length > 0 ? children : [document.createTextNode('')];
+      const firstChild = normalizedChildren[0];
 
-      if (normalizedChildren.length === 1 && normalizedChildren[0].nodeName === 'ol') {
-        return documentNode.firstChild!;
+      if (normalizedChildren.length === 1 && firstChild.nodeName === 'ol') {
+        return firstChild;
       } else if (allMatching(normalizedChildren, child => isTextOrLink(child))) {
 
         const orderedList = document.createElement('ol');
