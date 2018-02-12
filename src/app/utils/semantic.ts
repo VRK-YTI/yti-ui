@@ -4,7 +4,7 @@ import {
 } from 'app/entities/semantic';
 import { assertNever, isDefined, requireDefined } from 'yti-common-ui/utils/object';
 import { Node as MarkdownNode, Parser as MarkdownParser } from 'commonmark';
-import { contains } from 'yti-common-ui/utils/array';
+import { contains, allMatching } from 'yti-common-ui/utils/array';
 
 export function areNodesEqual(lhs: SemanticTextNode, rhs: SemanticTextNode) {
 
@@ -238,26 +238,31 @@ class XmlSerializer implements SemanticTextSerializer {
 
     const documentNode = document.getElementsByTagName('document')[0];
 
-    if (documentNode.childNodes.length > 1) {
-      console.log(documentNode);
-      throw new Error('Cannot parse XML, only one child element needed');
+    function isTextOrLink(node: Node) {
+      return node.nodeType === Node.TEXT_NODE || node.nodeName === 'a';
     }
 
-    function normalizeOrderedList() {
+    function normalizeOrderedList(): Node {
 
-      const firstChild = documentNode.firstChild!;
+      const children = getChildren(documentNode);
+      const normalizedChildren = children.length > 0 ? children : [document.createTextNode('')];
 
-      if (!firstChild || firstChild.nodeType === Node.TEXT_NODE) {
+      if (normalizedChildren.length === 1 && normalizedChildren[0].nodeName === 'ol') {
+        return documentNode.firstChild!;
+      } else if (allMatching(normalizedChildren, child => isTextOrLink(child))) {
+
         const orderedList = document.createElement('ol');
         const listItem = document.createElement('li');
-        const text = firstChild ? firstChild.nodeValue || '' : '';
-        listItem.appendChild(document.createTextNode(text));
         orderedList.appendChild(listItem);
+
+        for (const child of normalizedChildren) {
+          listItem.appendChild(child);
+        }
+
         return orderedList;
-      } else if (firstChild.nodeName === 'ol') {
-        return firstChild;
+
       } else {
-        throw new Error('Cannot parse xml: ' + firstChild);
+        throw new Error('Cannot parse xml: ' + documentNode);
       }
     }
 
