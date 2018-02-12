@@ -166,7 +166,7 @@ export class VocabulariesComponent implements OnDestroy {
         const vocabularyCount = (classification: GroupNode) =>
           matchingVocabularies.filter(voc => classificationMatches(classification, voc)).length;
 
-        this.classifications = groups.map(group => ({ node: group, count: vocabularyCount(group) }));
+        this.classifications = groups.map(group => ({ node: group, count: vocabularyCount(group) })).filter(c => c.count > 0);
       });
 
     this.subscriptionToClean.push(
