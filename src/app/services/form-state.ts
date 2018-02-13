@@ -1,7 +1,7 @@
 import { FormArray, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { assertNever } from 'yti-common-ui/utils/object';
 import { allMatching, anyMatching, firstMatching, flatten, normalizeAsArray } from 'yti-common-ui/utils/array';
-import { ConceptNode, KnownNode, Node, Property, Reference, TermNode } from 'app/entities/node';
+import { CollectionNode, ConceptNode, KnownNode, Node, Property, Reference, TermNode, VocabularyNode } from 'app/entities/node';
 import {
   Cardinality, Editor, MetaModel, NodeMeta, PropertyMeta, ReferenceMeta,
   ReferenceType
@@ -24,12 +24,17 @@ export type FormProperty = FormPropertyLiteral
 export type FormField = FormProperty
                       | FormReference;
 
+export type EditableNode = ConceptNode
+                         | TermNode
+                         | CollectionNode
+                         | VocabularyNode;
+
 export class FormNode {
 
   control = new FormGroup({});
   fields: { name: string, value: FormField }[] = [];
 
-  constructor(private node: Node<any>, public languagesProvider: () => string[]) {
+  constructor(private node: EditableNode, public languagesProvider: () => string[]) {
 
     const createFormReference = (name: string, reference: Reference<any>) => {
       if (reference.term) {
@@ -109,7 +114,7 @@ export class FormNode {
   }
 
   get status(): string {
-    return this.node.getProperty('status').asString() || 'DRAFT';
+    return this.node.status;
   }
 
   hasConceptReference(conceptId: string) {
@@ -148,8 +153,8 @@ export class FormNode {
     return !!property && !property.value.valueEmpty;
   }
 
-  get value(): Node<any> {
-    const result = this.node.clone();
+  get value(): EditableNode {
+    const result = (this.node as Node<any>).clone() as EditableNode;
     this.assignChanges(result);
     return result;
   }
@@ -365,7 +370,6 @@ export class FormPropertyLiteral {
 
   private createControl(initial: string) {
 
-    const isStatus = this.meta.type.editor.type === 'status';
     const validators: ValidatorFn[] = [(control: FormControl) => validateMeta(control, this.meta)];
 
     if (this.required) {
@@ -376,7 +380,7 @@ export class FormPropertyLiteral {
       validators.push(validateLanguage);
     }
 
-    return new FormControl((!initial && isStatus) ? 'DRAFT' : initial, validators);
+    return new FormControl(initial, validators);
   }
 
   get label(): Localizable {

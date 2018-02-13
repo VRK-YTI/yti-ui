@@ -10,6 +10,9 @@ import { defaultLanguages } from 'app/utils/language';
 import { stripSemanticMarkup } from 'app/utils/semantic';
 import { Status } from 'yti-common-ui/entities/status';
 
+
+const defaultStatus = 'DRAFT';
+
 export type KnownNode = VocabularyNode
                       | ConceptNode
                       | TermNode
@@ -407,6 +410,15 @@ export class VocabularyNode extends Node<VocabularyNodeType> {
     return this.getReference<OrganizationNode>('publisher').values;
   }
 
+  get status(): Status {
+    const status = this.getProperty('status').literalValue as Status;
+    return status ? status : defaultStatus;
+  }
+
+  set status(status: Status) {
+    this.getProperty('status').literalValue = status;
+  }
+
   hasLanguage() {
     return this.meta.hasProperty('language')
   }
@@ -550,7 +562,8 @@ export class ConceptNode extends Node<'Concept'> {
   }
 
   get status(): Status {
-    return this.getProperty('status').literalValue as Status;
+    const status = this.getProperty('status').literalValue as Status;
+    return status ? status : defaultStatus;
   }
 
   set status(status: Status) {
@@ -610,6 +623,15 @@ export class TermNode extends Node<'Term'> {
   isValid() {
     const prefLabel = this.findProperty('prefLabel');
     return prefLabel && prefLabel.attributes.length === 1 && prefLabel.getSingle().lang !== '';
+  }
+
+  get status(): Status {
+    const status = this.getProperty('status').literalValue as Status;
+    return status ? status : defaultStatus;
+  }
+
+  set status(status: Status) {
+    this.getProperty('status').literalValue = status;
   }
 
   get prefLabel(): Localizable {
@@ -700,6 +722,15 @@ export class CollectionNode extends Node<'Collection'> {
 
   set definition(value: Localization[]) {
     this.getProperty('definition').setLocalizations(value);
+  }
+
+  get status(): Status {
+    const status = this.getProperty('status').literalValue as Status;
+    return status ? status : defaultStatus;
+  }
+
+  set status(status: Status) {
+    this.getProperty('status').literalValue = status;
   }
 
   get memberConcepts(): Reference<ConceptNode> {
