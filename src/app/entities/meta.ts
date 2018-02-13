@@ -302,6 +302,8 @@ export class MetaModel {
       newConcept.vocabulary = vocabulary.clone();
     }
 
+    newConcept.status = 'DRAFT';
+
     return newConcept;
   }
 

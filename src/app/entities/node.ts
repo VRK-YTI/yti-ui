@@ -8,6 +8,7 @@ import * as moment from 'moment';
 import { Moment } from 'moment';
 import { defaultLanguages } from 'app/utils/language';
 import { stripSemanticMarkup } from 'app/utils/semantic';
+import { Status } from 'yti-common-ui/entities/status';
 
 export type KnownNode = VocabularyNode
                       | ConceptNode
@@ -548,8 +549,12 @@ export class ConceptNode extends Node<'Concept'> {
     this.getReference<VocabularyNode>('inScheme').values = [vocabulary];
   }
 
-  get status(): string {
-    return this.getProperty('status').asString();
+  get status(): Status {
+    return this.getProperty('status').literalValue as Status;
+  }
+
+  set status(status: Status) {
+    this.getProperty('status').literalValue = status;
   }
 
   hasRelatedConcepts() {
