@@ -320,7 +320,9 @@ export class FormReferenceTerm {
   }
 
   addTerm(metaModel: MetaModel, language: string) {
+    // TODO move node empty node creation to MetaModel
     const newTerm = Node.create(this.targetMeta.createEmptyNode(), metaModel, false) as TermNode;
+    newTerm.status = 'DRAFT';
     newTerm.prefLabel = { [language]: '' };
     const newChild = { formNode: new FormNode(newTerm, this.languagesProvider), language: language };
     this.children.push(newChild);

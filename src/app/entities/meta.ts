@@ -291,7 +291,11 @@ export class MetaModel {
 
     const vocabularyType: VocabularyNodeType = this.graphHas(graphId, 'Vocabulary') ? 'Vocabulary' : 'TerminologicalVocabulary';
 
-    return this.createEmptyNode<VocabularyNode, VocabularyNodeType>(graphId, nodeId, vocabularyType);
+    const newVocabulary = this.createEmptyNode<VocabularyNode, VocabularyNodeType>(graphId, nodeId, vocabularyType);
+
+    newVocabulary.status = 'DRAFT';
+
+    return newVocabulary;
   }
 
   createEmptyConcept(vocabulary: VocabularyNode, nodeId: string = uuid()): ConceptNode {
@@ -308,7 +312,12 @@ export class MetaModel {
   }
 
   createEmptyCollection(vocabulary: VocabularyNode, nodeId: string = uuid()): CollectionNode {
-    return this.createEmptyNode<CollectionNode, 'Collection'>(vocabulary.graphId, nodeId, 'Collection');
+
+    const newCollection = this.createEmptyNode<CollectionNode, 'Collection'>(vocabulary.graphId, nodeId, 'Collection');
+
+    newCollection.status = 'DRAFT';
+
+    return newCollection;
   }
 
   createConceptLink(toGraphId: string, fromVocabulary: VocabularyNode, concept: ConceptNode): ConceptLinkNode {
