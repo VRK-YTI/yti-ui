@@ -51,7 +51,8 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
             <div class="filters">
               <div class="form-group">
                 <label translate>Status</label>
-                <app-status-filter-dropdown [filterSubject]="model.onlyStatus$"></app-status-filter-dropdown>
+                <app-status-filter-dropdown *ngIf="hasStatus()" 
+                                            [filterSubject]="model.onlyStatus$"></app-status-filter-dropdown>
               </div>
                 
               <div class="form-check">
@@ -134,5 +135,10 @@ export class ConceptListComponent implements AfterViewInit {
 
   isSelected(concept: IndexedConcept) {
     return this.conceptViewModel.conceptId === concept.id;
+  }
+
+  hasStatus(): boolean {
+    // TODO check from meta model if concept has status or not for this vocabulary
+    return true;
   }
 }

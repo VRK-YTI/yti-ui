@@ -346,6 +346,19 @@ export class Node<T extends NodeType> {
     return this.meta.label;
   }
 
+  hasStatus(): boolean {
+    return this.meta.hasProperty('status');
+  }
+
+  get status(): Status {
+    const status = this.getProperty('status').literalValue as Status;
+    return status ? status : defaultStatus;
+  }
+
+  set status(status: Status) {
+    this.getProperty('status').literalValue = status;
+  }
+
   getAllProperties(): Property[] {
     return Object.values(this.properties);
   }
@@ -408,15 +421,6 @@ export class VocabularyNode extends Node<VocabularyNodeType> {
 
   get publishers(): OrganizationNode[] {
     return this.getReference<OrganizationNode>('publisher').values;
-  }
-
-  get status(): Status {
-    const status = this.getProperty('status').literalValue as Status;
-    return status ? status : defaultStatus;
-  }
-
-  set status(status: Status) {
-    this.getProperty('status').literalValue = status;
   }
 
   hasLanguage() {
@@ -517,7 +521,9 @@ export class ConceptNode extends Node<'Concept'> {
       for (const {lang, value} of localizations) {
         const term = firstMatching(termReference.values, t => t.language === lang) || termReference.addNewReference();
         // TODO unify term initialization logic with form-state
-        term.status = 'DRAFT';
+        if (term.hasStatus()) {
+          term.status = 'DRAFT';
+        }
         term.prefLabel = { [lang]: value };
       }
     }
@@ -561,15 +567,6 @@ export class ConceptNode extends Node<'Concept'> {
 
   set vocabulary(vocabulary: VocabularyNode) {
     this.getReference<VocabularyNode>('inScheme').values = [vocabulary];
-  }
-
-  get status(): Status {
-    const status = this.getProperty('status').literalValue as Status;
-    return status ? status : defaultStatus;
-  }
-
-  set status(status: Status) {
-    this.getProperty('status').literalValue = status;
   }
 
   hasRelatedConcepts() {
@@ -625,15 +622,6 @@ export class TermNode extends Node<'Term'> {
   isValid() {
     const prefLabel = this.findProperty('prefLabel');
     return prefLabel && prefLabel.attributes.length === 1 && prefLabel.getSingle().lang !== '';
-  }
-
-  get status(): Status {
-    const status = this.getProperty('status').literalValue as Status;
-    return status ? status : defaultStatus;
-  }
-
-  set status(status: Status) {
-    this.getProperty('status').literalValue = status;
   }
 
   get prefLabel(): Localizable {
@@ -724,15 +712,6 @@ export class CollectionNode extends Node<'Collection'> {
 
   set definition(value: Localization[]) {
     this.getProperty('definition').setLocalizations(value);
-  }
-
-  get status(): Status {
-    const status = this.getProperty('status').literalValue as Status;
-    return status ? status : defaultStatus;
-  }
-
-  set status(status: Status) {
-    this.getProperty('status').literalValue = status;
   }
 
   get memberConcepts(): Reference<ConceptNode> {

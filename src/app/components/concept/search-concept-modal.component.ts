@@ -88,7 +88,8 @@ export class SearchConceptModalService {
                                           [vocabularies]="vocabularies"
                                           class="pull-left"></app-vocabulary-filter-dropdown>
 
-          <app-status-filter-dropdown [filterSubject]="onlyStatus$"
+          <app-status-filter-dropdown *ngIf="hasStatus()" 
+                                      [filterSubject]="onlyStatus$"
                                       class="pull-left ml-2"></app-status-filter-dropdown>
 
         </div>
@@ -214,6 +215,11 @@ export class SearchConceptModalComponent implements OnInit, AfterViewInit {
 
     const restriction = firstMatching(this.restricts, restrict => restrict.graphId === selection.graphId && restrict.conceptId === selection.id);
     return restriction ? restriction.reason : null;
+  }
+
+  hasStatus(): boolean {
+    // TODO check from meta model if concept has status or not for this vocabulary
+    return true;
   }
 
   cannotSelect() {

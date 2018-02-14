@@ -21,7 +21,9 @@ import { LanguageService } from 'app/services/language.service';
 
         <div class="top-actions">
           
-          <app-status [status]="concept.status" class="pull-left"></app-status>
+          <app-status *ngIf="concept.hasStatus()" 
+                      [status]="concept.status" 
+                      class="pull-left"></app-status>
           
           <app-editable-buttons [form]="form" 
                                 [canRemove]="true" 

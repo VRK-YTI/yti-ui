@@ -38,7 +38,8 @@ import { contains } from 'yti-common-ui/utils/array';
           <div class="row">
             <div class="col-md-12">
               
-              <app-status [status]="node.formNode.status"></app-status>
+              <app-status *ngIf="node.hasStatus()" 
+                          [status]="node.formNode.status"></app-status>
               
               <div *ngIf="canRemove()" class="remove-button">
                 <button class="btn btn-link"

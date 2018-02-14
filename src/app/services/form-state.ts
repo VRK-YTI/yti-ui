@@ -24,17 +24,12 @@ export type FormProperty = FormPropertyLiteral
 export type FormField = FormProperty
                       | FormReference;
 
-export type EditableNode = ConceptNode
-                         | TermNode
-                         | CollectionNode
-                         | VocabularyNode;
-
 export class FormNode {
 
   control = new FormGroup({});
   fields: { name: string, value: FormField }[] = [];
 
-  constructor(private node: EditableNode, public languagesProvider: () => string[]) {
+  constructor(private node: Node<any>, public languagesProvider: () => string[]) {
 
     const createFormReference = (name: string, reference: Reference<any>) => {
       if (reference.term) {
@@ -113,7 +108,18 @@ export class FormNode {
     return (property.value as FormPropertyLocalizable).value;
   }
 
+  // TODO refactor term component to not use this method
+  hasStatus(): boolean {
+    return this.node.hasStatus();
+  }
+
+  // TODO refactor term component to not use this method
   get status(): string {
+
+    if (!this.node.hasStatus()) {
+      throw new Error('Node does not have status');
+    }
+
     return this.node.status;
   }
 
@@ -153,8 +159,8 @@ export class FormNode {
     return !!property && !property.value.valueEmpty;
   }
 
-  get value(): EditableNode {
-    const result = (this.node as Node<any>).clone() as EditableNode;
+  get value(): Node<any> {
+    const result = this.node.clone();
     this.assignChanges(result);
     return result;
   }
@@ -322,7 +328,11 @@ export class FormReferenceTerm {
   addTerm(metaModel: MetaModel, language: string) {
     // TODO move node empty node creation to MetaModel
     const newTerm = Node.create(this.targetMeta.createEmptyNode(), metaModel, false) as TermNode;
-    newTerm.status = 'DRAFT';
+
+    if (newTerm.hasStatus()) {
+      newTerm.status = 'DRAFT';
+    }
+
     newTerm.prefLabel = { [language]: '' };
     const newChild = { formNode: new FormNode(newTerm, this.languagesProvider), language: language };
     this.children.push(newChild);
@@ -395,10 +405,6 @@ export class FormPropertyLiteral {
 
   get value() {
     return this.control.value;
-  }
-
-  get valueIsLocalizationKey() {
-    return this.meta.type.editor.type === 'status';
   }
 
   get multiColumn() {

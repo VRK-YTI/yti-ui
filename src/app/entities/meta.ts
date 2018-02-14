@@ -293,7 +293,9 @@ export class MetaModel {
 
     const newVocabulary = this.createEmptyNode<VocabularyNode, VocabularyNodeType>(graphId, nodeId, vocabularyType);
 
-    newVocabulary.status = 'DRAFT';
+    if (newVocabulary.hasStatus()) {
+      newVocabulary.status = 'DRAFT';
+    }
 
     return newVocabulary;
   }
@@ -306,7 +308,9 @@ export class MetaModel {
       newConcept.vocabulary = vocabulary.clone();
     }
 
-    newConcept.status = 'DRAFT';
+    if (newConcept.hasStatus()) {
+      newConcept.status = 'DRAFT';
+    }
 
     return newConcept;
   }
@@ -315,7 +319,9 @@ export class MetaModel {
 
     const newCollection = this.createEmptyNode<CollectionNode, 'Collection'>(vocabulary.graphId, nodeId, 'Collection');
 
-    newCollection.status = 'DRAFT';
+    if (newCollection.hasStatus()) {
+      newCollection.status = 'DRAFT';
+    }
 
     return newCollection;
   }

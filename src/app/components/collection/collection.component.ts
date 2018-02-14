@@ -23,6 +23,10 @@ import { FormField } from 'app/services/form-state';
 
         <div class="top-actions">
 
+          <app-status *ngIf="collection.hasStatus()"
+                      [status]="collection.status"
+                      class="pull-left"></app-status>
+          
             <app-editable-buttons [vocabulary]="vocabulary" 
                                   [form]="form"
                                   [canRemove]="true"></app-editable-buttons>
