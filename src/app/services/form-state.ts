@@ -1,11 +1,8 @@
 import { FormArray, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { assertNever } from 'yti-common-ui/utils/object';
 import { allMatching, anyMatching, firstMatching, flatten, normalizeAsArray } from 'yti-common-ui/utils/array';
-import { CollectionNode, ConceptNode, KnownNode, Node, Property, Reference, TermNode, VocabularyNode } from 'app/entities/node';
-import {
-  Cardinality, Editor, MetaModel, NodeMeta, PropertyMeta, ReferenceMeta,
-  ReferenceType
-} from 'app/entities/meta';
+import { ConceptNode, KnownNode, Node, Property, Reference, TermNode } from 'app/entities/node';
+import { Cardinality, Editor, MetaModel, NodeMeta, PropertyMeta, ReferenceMeta, ReferenceType } from 'app/entities/meta';
 import { Localizable } from 'yti-common-ui/types/localization';
 import { NodeType } from 'app/entities/node-api';
 import { validateMeta } from 'app/directives/validators/meta-model.validator';
@@ -188,19 +185,7 @@ export class FormReferenceLiteral<N extends KnownNode | Node<any>>{
   constructor(reference: Reference<N>) {
 
     this.meta = reference.meta;
-
-    function mapValue(values: N[]): N|N[]|null {
-      switch (values.length) {
-        case 0:
-          return null;
-        case 1:
-          return values[0];
-        default:
-          return values;
-      }
-    }
-
-    this.control = new FormControl(mapValue(reference.values), this.required ? [Validators.required] : []);
+    this.control = new FormControl(reference.values, this.required ? [requiredList] : []);
     this.targetMeta = reference.targetMeta;
   }
 
@@ -221,7 +206,7 @@ export class FormReferenceLiteral<N extends KnownNode | Node<any>>{
   }
 
   addReference(target: N) {
-    this.control.setValue([...this.value, ...[target]]);
+    this.control.setValue([...this.value, target]);
   }
 
   removeReference(target: N) {
@@ -234,20 +219,6 @@ export class FormReferenceLiteral<N extends KnownNode | Node<any>>{
 
   get value(): N[] {
     return normalizeAsArray(this.control.value);
-  }
-
-  get singleValue(): N|null {
-    if (this.value.length === 0) {
-      return null;
-    } else if (this.value.length === 1) {
-      return this.value[0];
-    } else {
-      throw new Error('Multiple values when single is required: ' + this.value.length);
-    }
-  }
-
-  set singleValue(value: N|null) {
-    this.control.setValue(value);
   }
 
   get targetGraph() {
@@ -290,7 +261,7 @@ export class FormReferenceTerm {
       .map(term => ({ formNode: new FormNode(term, languagesProvider), language: term.language! }));
 
     const childControls = this.children.map(c => c.formNode.control);
-    this.control = this.required ? new FormArray(childControls, requiredList) : new FormArray([]);
+    this.control = new FormArray(childControls, this.required ? requiredList : null);
   }
 
   get addedLanguages() {
@@ -445,7 +416,7 @@ export class FormPropertyLiteralList {
 
     this.meta = property.meta;
     const children = property.attributes.map(a => a.value).map(value => this.createChildControl(value));
-    this.control = this.required ? new FormArray(children, requiredList) : new FormArray(children);
+    this.control = new FormArray(children, this.required ? requiredList : null);
   }
 
   private createChildControl(initial: string): FormControl {
@@ -543,7 +514,7 @@ export class FormPropertyLocalizable {
       control: this.createChildControl(attribute.value)
     }));
     const childControls = this.children.map(c => c.control);
-    this.control = this.required ? new FormArray(childControls, requiredList) : new FormArray(childControls);
+    this.control = new FormArray(childControls, this.required ? requiredList : null);
   }
 
   get languages() {
