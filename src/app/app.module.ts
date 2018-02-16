@@ -26,7 +26,6 @@ import { SemanticTextLinksComponent, SemanticTextLinksElementComponent } from 'a
 import { ConceptNetworkComponent } from 'app/components/visualization/concept-network.component';
 import { VocabularyComponent } from 'app/components/vocabulary/vocabulary.component';
 import { LiteralInputComponent } from 'app/components/form/literal-input.component';
-import { MetaModelValidatorDirective } from 'app/directives/validators/meta-model.validator';
 import { ErrorMessagesComponent } from 'app/components/form/error-messages.component';
 import { EditableButtonsComponent } from 'app/components/form/editable-buttons.component';
 import { ElasticSearchService } from 'app/services/elasticsearch.service';
@@ -57,11 +56,9 @@ import { SemanticTextInputLinkPopoverComponent, SemanticTextInputUnlinkPopoverCo
 import { SelectConceptReferenceModalComponent, SelectConceptReferenceModalService } from 'app/components/concept/select-concept-reference-modal.component';
 import { FrontpageComponent } from 'app/components/frontpage.component';
 import { LiteralListInputComponent } from 'app/components/form/literal-list-input.component';
-import { RequiredListValidatorDirective } from 'app/directives/validators/required-list.validator';
 import { TermsComponent } from 'app/components/form/terms.component';
 import { TermComponent } from 'app/components/form/term.component';
 import { LanguageInputComponent } from 'app/components/form/language-input.component';
-import { LanguageValidatorDirective } from 'app/directives/validators/language.validator';
 import { FilterLanguageComponent } from 'app/components/form/filter-language.component';
 import { ImportVocabularyModalComponent, ImportVocabularyModalService } from 'app/components/vocabulary/import-vocabulary-modal.component';
 import { SearchOrganizationModalComponent, SearchOrganizationModalService } from 'app/components/vocabulary/search-organization-modal.component';
@@ -171,9 +168,6 @@ const appRoutes: Routes = [
     SearchGroupModalComponent,
     DeleteConfirmationModalComponent,
     SelectConceptReferenceModalComponent,
-    MetaModelValidatorDirective,
-    RequiredListValidatorDirective,
-    LanguageValidatorDirective,
     FloatDirective,
     TranslateSearchValuePipe,
     TimestampPipe,

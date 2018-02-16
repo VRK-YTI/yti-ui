@@ -1,22 +1,7 @@
-import { Directive, Input, forwardRef } from '@angular/core';
 import { PropertyMeta } from 'app/entities/meta';
-import { FormControl, NG_VALIDATORS } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { allMatching } from 'yti-common-ui/utils/array';
 
-@Directive({
-  selector: '[appValidateMeta][ngModel]',
-  providers: [
-    { provide: NG_VALIDATORS, useExisting: forwardRef(() => MetaModelValidatorDirective), multi: true }
-  ]
-})
-export class MetaModelValidatorDirective {
-
-  @Input() validateMeta: PropertyMeta;
-
-  validate(control: FormControl) {
-    return validateMeta(control, this.validateMeta);
-  }
-}
 
 function match(regexpString: string, value: string) {
 
