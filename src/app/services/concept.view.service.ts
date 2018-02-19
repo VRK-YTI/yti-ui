@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { LocationService } from './location.service';
 import { TermedService } from './termed.service';
@@ -25,6 +25,7 @@ import { FormNode } from './form-state';
 import { MetaModel } from 'app/entities/meta';
 import { TranslateService } from 'ng2-translate';
 import { PrefixAndNamespace } from 'app/entities/prefix-and-namespace';
+import { Subscription } from 'rxjs/Subscription';
 
 function onlySelect<T>(action: Observable<Action<T>>): Observable<T> {
   const selectAction: Observable<SelectAction<T>> = action.filter(isSelect);
@@ -88,6 +89,8 @@ export class ConceptListModel {
   private loaded = 0;
   private canLoadMore = true;
 
+  private subscriptionToClean: Subscription[] = [];
+
   constructor(private elasticSearchService: ElasticSearchService,
               languageService: LanguageService) {
 
@@ -96,8 +99,10 @@ export class ConceptListModel {
     const search = initialSearch.concat(debouncedSearch);
     const conditionChange = Observable.combineLatest(search, this.sortByTime$, this.onlyStatus$, languageService.translateLanguage$);
 
-    this.initializing$.switchMap(initializing => initializing ? Observable.never() : conditionChange)
-      .subscribe(() => this.loadConcepts(true));
+    this.subscriptionToClean.push(
+      this.initializing$.switchMap(initializing => initializing ? Observable.never() : conditionChange)
+        .subscribe(() => this.loadConcepts(true))
+    );
   }
 
   loadConcepts(reset = false) {
@@ -173,6 +178,10 @@ export class ConceptListModel {
   get onlyStatus() {
     return this.onlyStatus$.getValue();
   }
+
+  clean() {
+    this.subscriptionToClean.forEach(s => s.unsubscribe());
+  }
 }
 
 export class ConceptHierarchyModel {
@@ -186,13 +195,17 @@ export class ConceptHierarchyModel {
   private loaded = 0;
   private canLoadMore = true;
 
+  private subscriptionToClean: Subscription[] = [];
+
   constructor(private elasticSearchService: ElasticSearchService,
               languageService: LanguageService) {
 
     const conditionChange = Observable.combineLatest(languageService.translateLanguage$);
 
-    this.initializing$.switchMap(initializing => initializing ? Observable.never() : conditionChange)
-      .subscribe(() => this.loadConcepts(true));
+    this.subscriptionToClean.push(
+      this.initializing$.switchMap(initializing => initializing ? Observable.never() : conditionChange)
+        .subscribe(() => this.loadConcepts(true))
+    );
   }
 
   initializeGraph(graphId: string) {
@@ -289,6 +302,10 @@ export class ConceptHierarchyModel {
     const node = this.nodes.get(concept.id);
     return !!node && node.expanded;
   }
+
+  clean() {
+    this.subscriptionToClean.forEach(s => s.unsubscribe());
+  }
 }
 
 export class CollectionListModel {
@@ -341,10 +358,14 @@ export class CollectionListModel {
         });
     }
   }
+
+  clean() {
+    // nop for now
+  }
 }
 
 @Injectable()
-export class ConceptViewModelService {
+export class ConceptViewModelService implements OnDestroy {
 
   vocabularyForm: FormNode;
   vocabularyAction$ = new BehaviorSubject<Action<VocabularyNode>>(createNoSelection());
@@ -759,4 +780,9 @@ export class ConceptViewModelService {
     this.conceptHierarchy.loadConcepts(true);
   }
 
+  ngOnDestroy() {
+    this.conceptList.clean();
+    this.conceptHierarchy.clean();
+    this.collectionList.clean();
+  }
 }
