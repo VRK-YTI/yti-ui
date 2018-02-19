@@ -18,6 +18,7 @@ import { SearchGroupModalService } from './search-group-modal.component';
         <a><i class="fa fa-times" (click)="removeReference(group)"></i></a>
         <span>{{group.label | translateValue}}</span>
       </div>
+      <app-error-messages [control]="reference.control"></app-error-messages>
     </div>
 
     <button type="button"

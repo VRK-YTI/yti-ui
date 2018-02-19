@@ -18,6 +18,7 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
         <a><i class="fa fa-times" (click)="removeReference(organization)"></i></a>
         <span>{{organization.label | translateValue}}</span>
       </div>
+      <app-error-messages [control]="reference.control"></app-error-messages>
     </div>
 
     <button type="button"
