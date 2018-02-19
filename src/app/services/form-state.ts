@@ -5,7 +5,8 @@ import { ConceptNode, KnownNode, Node, Property, Reference, TermNode } from 'app
 import { Cardinality, Editor, MetaModel, NodeMeta, PropertyMeta, ReferenceMeta, ReferenceType } from 'app/entities/meta';
 import { Localizable } from 'yti-common-ui/types/localization';
 import { NodeType } from 'app/entities/node-api';
-import { validateMeta, requiredList, validateLanguage } from 'app/utils/validator';
+import { validateMeta } from 'app/utils/validator';
+import { requiredList, validateLanguage } from 'yti-common-ui/utils/validator';
 import { comparingPrimitive } from 'yti-common-ui/utils/comparator';
 import { removeMatchingLinks } from 'app/utils/semantic';
 
