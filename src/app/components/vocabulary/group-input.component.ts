@@ -24,7 +24,7 @@ import { SearchGroupModalService } from './search-group-modal.component';
     <button type="button"
             class="btn btn-sm btn-action mt-2"
             *ngIf="editing"
-            (click)="addReference()" translate>Add group</button>
+            (click)="addReference()" translate>Add classification</button>
   `
 })
 export class GroupInputComponent {

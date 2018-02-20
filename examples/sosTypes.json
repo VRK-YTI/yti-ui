@@ -197,11 +197,11 @@
           "prefLabel": [
             {
               "lang": "fi",
-              "value": "Ryhmä"
+              "value": "Luokitus"
             },
             {
               "lang": "en",
-              "value": "Group"
+              "value": "Classification"
             }
           ]
         }

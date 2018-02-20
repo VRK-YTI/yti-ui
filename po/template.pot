@@ -175,7 +175,7 @@ msgstr ""
 msgid "Associative"
 msgstr ""
 
-msgid "Add group"
+msgid "Add classification"
 msgstr ""
 
 msgid "Confirm import"
