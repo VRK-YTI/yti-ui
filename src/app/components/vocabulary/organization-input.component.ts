@@ -10,13 +10,13 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
   selector: 'app-organization-input',
   template: `
     <ul *ngIf="!editing">
-      <li *ngFor="let organization of reference.value">{{organization.label | translateValue}}</li>
+      <li *ngFor="let organization of reference.value">{{organization.label | translateValue:true}}</li>
     </ul>
 
     <div *ngIf="editing">
       <div *ngFor="let organization of reference.value">
         <a><i class="fa fa-times" (click)="removeReference(organization)"></i></a>
-        <span>{{organization.label | translateValue}}</span>
+        <span>{{organization.label | translateValue:true}}</span>
       </div>
       <app-error-messages [control]="reference.control"></app-error-messages>
     </div>

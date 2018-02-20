@@ -10,13 +10,13 @@ import { SearchGroupModalService } from './search-group-modal.component';
   template: `
 
     <ul *ngIf="!editing">
-      <li *ngFor="let group of reference.value">{{group.label | translateValue}}</li>
+      <li *ngFor="let group of reference.value">{{group.label | translateValue:true}}</li>
     </ul>
 
     <div *ngIf="editing">
       <div *ngFor="let group of reference.value">
         <a><i class="fa fa-times" (click)="removeReference(group)"></i></a>
-        <span>{{group.label | translateValue}}</span>
+        <span>{{group.label | translateValue:true}}</span>
       </div>
       <app-error-messages [control]="reference.control"></app-error-messages>
     </div>
