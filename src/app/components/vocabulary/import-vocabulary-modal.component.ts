@@ -85,56 +85,62 @@ export class ImportVocabularyModalService {
   selector: 'app-import-vocabulary-modal',
   styleUrls: ['./import-vocabulary-modal.component.scss'],
   template: `
-    <div class="modal-header">
-      <h4 class="modal-title">
-        <a><i class="fa fa-times" (click)="cancel()"></i></a>
-        <span translate>Confirm import</span>
-      </h4>
+    <div *ngIf="uploading">
+      <app-ajax-loading-indicator></app-ajax-loading-indicator>
     </div>
-    <div class="modal-body full-height">
-      <div class="row mb-2">
-        <div class="col-md-12">
 
-          <h6>
-            <span translate>Importing</span> {{numberOfConcepts}} <span translate>concepts</span>
-          </h6>
+    <div *ngIf="!uploading">    
+      <div class="modal-header">
+        <h4 class="modal-title">
+          <a><i class="fa fa-times" (click)="cancel()"></i></a>
+          <span translate>Confirm import</span>
+        </h4>
+      </div>
+      <div class="modal-body full-height">
+        <div class="row mb-2">
+          <div class="col-md-12">
 
-          <div *ngIf="invalid" class="alert alert-danger">
-            <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
-            <span translate>Import is not allowed because some of the concepts lack preferred term.</span>
-            <span translate>Line numbers in the import file</span>: {{lineNumbersOfEmptyPrefLabels}}
-          </div>
-          
-          <div class="search-results">
-            <div class="search-result" *ngFor="let concept of conceptsFromCsv">
-              <div *ngFor="let property of concept.nonEmptyProperties; let last = last"
-                   class="content"
-                   [class.last]="last"
-                   [ngSwitch]="property.name">
-                <span class="name">{{property.name | translate}}</span>
-                <div class="body">
-                  <div class="localized" *ngFor="let localization of property.localizations">
-                    <div class="language">{{localization.lang.toUpperCase()}}</div>
-                    <div class="localization">{{localization.value}}</div>
+            <h6>
+              <span translate>Importing</span> {{numberOfConcepts}} <span translate>concepts</span>
+            </h6>
+
+            <div *ngIf="invalid" class="alert alert-danger">
+              <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
+              <span translate>Import is not allowed because some of the concepts lack preferred term.</span>
+              <span translate>Line numbers in the import file</span>: {{lineNumbersOfEmptyPrefLabels}}
+            </div>
+            
+            <div class="search-results">
+              <div class="search-result" *ngFor="let concept of conceptsFromCsv">
+                <div *ngFor="let property of concept.nonEmptyProperties; let last = last"
+                    class="content"
+                    [class.last]="last"
+                    [ngSwitch]="property.name">
+                  <span class="name">{{property.name | translate}}</span>
+                  <div class="body">
+                    <div class="localized" *ngFor="let localization of property.localizations">
+                      <div class="language">{{localization.lang.toUpperCase()}}</div>
+                      <div class="localization">{{localization.value}}</div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+
           </div>
 
         </div>
 
       </div>
 
-    </div>
-
-    <div class="modal-footer">
-      <button type="button" class="btn btn-action confirm" (click)="confirm()" [disabled]="invalid" translate>Yes</button>
-      <button type="button" class="btn btn-link cancel" (click)="cancel()" translate>Cancel</button>
-      
-      <div class="alert alert-danger modal-alert" role="alert" *ngIf="importError">
-        <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
-        <span translate>Import failed</span>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-action confirm" (click)="confirm()" [disabled]="invalid" translate>Yes</button>
+        <button type="button" class="btn btn-link cancel" (click)="cancel()" translate>Cancel</button>
+        
+        <div class="alert alert-danger modal-alert" role="alert" *ngIf="importError">
+          <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
+          <span translate>Import failed</span>
+        </div>
       </div>
     </div>
   `
@@ -146,6 +152,7 @@ export class ImportVocabularyModalComponent implements OnInit {
 
   conceptsFromCsv: CsvConceptDetails[] = [];
   importError = false;
+  uploading = false;
 
   constructor(private modal: NgbActiveModal,
               private metaModelService: MetaModelService,
@@ -200,13 +207,19 @@ export class ImportVocabularyModalComponent implements OnInit {
   }
 
   confirm() {
+    
+    this.uploading = true;
+
     const conceptsToSave = this.conceptsFromCsv;
 
     this.metaModelService.getMeta(this.vocabulary.graphId).subscribe(metaModel =>
       this.termedService.saveNodes(conceptsToSave.map(concept => this.convertToConceptNode(concept, metaModel)))
         .subscribe({
           next: () => this.modal.close(),
-          error: () => this.importError = true
+          error: () => {
+            this.importError = true;
+            this.uploading = false;
+          }
         })
     );
   }
