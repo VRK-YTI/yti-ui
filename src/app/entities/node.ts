@@ -77,6 +77,8 @@ export class Property {
   get literalValue() {
     if (this.attributes.length > 0) {
       return this.attributes[0].value;
+    } else if (this.meta.id === 'status') {
+      return defaultStatus;
     } else {
       return '';
     }
