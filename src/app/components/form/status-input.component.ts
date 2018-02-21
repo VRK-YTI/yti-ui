@@ -1,6 +1,5 @@
 import { Component, Input, Optional, Self } from '@angular/core';
 import { ControlValueAccessor, FormControl, NgControl } from '@angular/forms';
-import { TranslateService } from 'ng2-translate';
 
 @Component({
   selector: 'app-status-input',
@@ -12,14 +11,13 @@ import { TranslateService } from 'ng2-translate';
 export class StatusInputComponent implements ControlValueAccessor {
 
   @Input() id: string;
-  
+
   select = new FormControl();
 
   private propagateChange: (fn: any) => void = () => {};
   private propagateTouched: (fn: any) => void = () => {};
 
-  constructor(@Self() @Optional() private ngControl: NgControl,
-              translateService: TranslateService) {
+  constructor(@Self() @Optional() private ngControl: NgControl) {
 
     if (ngControl) {
       ngControl.valueAccessor = this;
