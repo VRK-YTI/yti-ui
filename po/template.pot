@@ -205,10 +205,10 @@ msgstr ""
 msgid "Add organization"
 msgstr ""
 
-msgid "Search group"
+msgid "Search classification"
 msgstr ""
 
-msgid "Choose group"
+msgid "Choose classification"
 msgstr ""
 
 msgid "Search organization"

@@ -28,7 +28,7 @@ export class SearchGroupModalService {
     <div class="modal-header">
       <h4 class="modal-title">
         <a><i class="fa fa-times" (click)="cancel()"></i></a>
-        <span translate>Choose group</span>
+        <span translate>Choose classification</span>
       </h4>
     </div>
     <div class="modal-body full-height">
@@ -37,7 +37,7 @@ export class SearchGroupModalService {
         <div class="col-12">
 
           <div class="input-group input-group-lg input-group-search">
-            <input #searchInput type="text" class="form-control" placeholder="{{'Search group' | translate}}"
+            <input #searchInput type="text" class="form-control" placeholder="{{'Search classification' | translate}}"
                    [(ngModel)]="search"/>
           </div>
 

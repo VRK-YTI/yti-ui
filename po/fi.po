@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-02-20 17:08+0200\n"
+"PO-Revision-Date: 2018-02-21 10:13+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -218,10 +218,10 @@ msgstr "uusi sanasto"
 msgid "Add organization"
 msgstr "Lisää organisaatio"
 
-msgid "Search group"
+msgid "Search classification"
 msgstr "Hae luokitusta"
 
-msgid "Choose group"
+msgid "Choose classification"
 msgstr "Valitse luokitus"
 
 msgid "Search organization"
@@ -353,6 +353,12 @@ msgstr "Etuliite on jo käytössä"
 
 msgid "upperCaseInPrefix"
 msgstr "Etuliite oltava pienillä kirjaimilla"
+
+#~ msgid "Search group"
+#~ msgstr "Hae luokitusta"
+
+#~ msgid "Choose group"
+#~ msgstr "Valitse luokitus"
 
 #~ msgid "Add group"
 #~ msgstr "Lisää luokitus"
