@@ -522,10 +522,6 @@ export class ConceptNode extends Node<'Concept'> {
 
       for (const {lang, value} of localizations) {
         const term = firstMatching(termReference.values, t => t.language === lang) || termReference.addNewReference();
-        // TODO unify term initialization logic with form-state
-        if (term.hasStatus()) {
-          term.status = 'DRAFT';
-        }
         term.prefLabel = { [lang]: value };
       }
     }

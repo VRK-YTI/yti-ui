@@ -4,11 +4,12 @@ import { anyMatching, contains, firstMatching, index, normalizeAsArray } from 'y
 import { asLocalizable } from 'yti-common-ui/utils/localization';
 import { Localizable } from 'yti-common-ui/types/localization';
 import { NodeType, NodeExternal, VocabularyNodeType } from './node-api';
-import { CollectionNode, ConceptLinkNode, ConceptNode, Node, VocabularyNode } from './node';
+import { CollectionNode, ConceptLinkNode, ConceptNode, Node, TermNode, VocabularyNode } from './node';
 import { v4 as uuid } from 'uuid';
 import * as moment from 'moment';
 import { assertNever, requireDefined } from 'yti-common-ui/utils/object';
 import { SemanticTextFormat } from './semantic';
+import { Language } from 'app/services/language.service';
 
 export type Cardinality = 'single'
                         | 'multiple';
@@ -313,6 +314,20 @@ export class MetaModel {
     }
 
     return newConcept;
+  }
+
+
+  createEmptyTerm(graphId: string, language: Language, nodeId: string = uuid()): TermNode {
+
+    const newTerm = this.createEmptyNode<TermNode, 'Term'>(graphId, nodeId, 'Term');
+
+    if (newTerm.hasStatus()) {
+      newTerm.status = 'DRAFT';
+    }
+
+    newTerm.prefLabel = { [language]: '' };
+
+    return newTerm;
   }
 
   createEmptyCollection(vocabulary: VocabularyNode, nodeId: string = uuid()): CollectionNode {

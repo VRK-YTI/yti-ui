@@ -28,12 +28,15 @@ import { Observable } from 'rxjs/Observable';
       </li>
     </ul>
     
-    <div *ngIf="editing">
-      <div *ngFor="let conceptLink of reference.value">
+    <div *ngIf="editing" [appDragSortable]="reference" [dragDisabled]="!canReorder()">
+      <div *ngFor="let conceptLink of reference.value; let i = index">
         <a><i class="fa fa-times" (click)="removeReference(conceptLink)"></i></a>
-        <span [ngbPopover]="editingPopContent" 
+        <span [ngbPopover]="editingPopContent"
               [triggers]="'mouseenter:mouseleave'"
-              [popoverTitle]="conceptLink.label | translateValue">
+              #p="ngbPopover"
+              (mousedown)="p.close()"
+              [popoverTitle]="conceptLink.label | translateValue"
+              [appDragSortableItem]="conceptLink" [index]="i">
           {{conceptLink.label | translateValue}}
         </span>
 
@@ -88,6 +91,10 @@ export class ConceptLinkReferenceInputComponent implements OnInit {
 
   createConceptLink(toGraphId: string, fromVocabulary: VocabularyNode, concept: ConceptNode) {
     return this.metaModel.map(meta => meta.createConceptLink(toGraphId, fromVocabulary, concept));
+  }
+
+  canReorder() {
+    return this.editing && this.reference.value.length > 1;
   }
 }
 

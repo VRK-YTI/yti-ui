@@ -1,46 +1,52 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { EditableService } from 'app/services/editable.service';
-import { FormNode, FormReferenceTerm } from 'app/services/form-state';
+import { FormReferenceTerm, TermChild } from 'app/services/form-state';
 import { MetaModelService } from 'app/services/meta-model.service';
-import { contains } from 'yti-common-ui/utils/array';
+import { contains, last } from 'yti-common-ui/utils/array';
 
 @Component({
   selector: 'app-terms',
   styleUrls: ['./terms.component.scss'],
   template: `
-    
+
     <div class="clearfix" *ngIf="canAdd()">
       <div ngbDropdown class="add-button" placement="bottom-right">
-        <button class="btn btn-link" 
+        <button class="btn btn-link"
                 ngbDropdownToggle>
           <span>{{'Add' | translate}} {{reference.label | translateValue:true | lowercase}}</span>
         </button>
         <div ngbDropdownMenu>
-          <button class="dropdown-item" 
-                  *ngFor="let language of addableLanguages" 
+          <button class="dropdown-item"
+                  *ngFor="let language of addableLanguages"
                   (click)="addTerm(language)">{{language | uppercase}}</button>
         </div>
       </div>
     </div>
-    
-    <ngb-accordion *ngIf="children.length > 0" [activeIds]="openTerms">
-      <ngb-panel [id]="index" *ngFor="let node of visibleChildren; let index = index">
+
+    <ngb-accordion *ngIf="children.length > 0"
+                   [activeIds]="openTerms"
+                   [appDragSortable]="reference"
+                   [dragDisabled]="!canReorder()">
+      <ngb-panel [id]="node.id" *ngFor="let node of visibleChildren; let i = index">
         <ng-template ngbPanelTitle>
-          <div class="localized">
+          <div class="localized" [appDragSortableItem]="node" [index]="i">
             <div class="language">{{node.language | uppercase}}</div>
             <div class="localization">
-              {{node.formNode.prefLabelProperty[0].value}}
+              <span>{{node.formNode.prefLabelProperty[0].value}}</span>
               <app-accordion-chevron class="pull-right"></app-accordion-chevron>
+            </div>
+            <div class="property-ordering" [hidden]="!editing">
+              <span class="fa fa-bars"></span>
             </div>
           </div>
         </ng-template>
         <ng-template ngbPanelContent>
           <div class="row">
             <div class="col-md-12">
-              
-              <app-status *ngIf="node.formNode.hasStatus()" 
+
+              <app-status *ngIf="node.formNode.hasStatus()"
                           [status]="node.formNode.status"></app-status>
-              
+
               <div *ngIf="canRemove()" class="remove-button">
                 <button class="btn btn-link"
                         (click)="removeTerm(node)">
@@ -64,14 +70,14 @@ export class TermsComponent implements OnChanges {
   @Input() unsaved: boolean;
   @Input() filterLanguage: string;
 
-  openTerms: number[] = [];
+  openTerms: string[] = [];
 
   constructor(private editableService: EditableService,
               private metaModelModel: MetaModelService) {
   }
 
   ngOnChanges() {
-    this.openTerms = this.unsaved && this.editableService.editing ? [0] : [];
+    this.openTerms = this.unsaved && this.editableService.editing && this.reference.value.length > 0 ? [this.reference.value[0].id] : [];
   }
 
   get languages() {
@@ -80,11 +86,11 @@ export class TermsComponent implements OnChanges {
 
   get addableLanguages() {
 
-      const allowMultiple = this.reference.cardinality === 'multiple';
-      const isNotAddedYet = (lang: string) => !contains(this.reference.addedLanguages, lang);
+    const allowMultiple = this.reference.cardinality === 'multiple';
+    const isNotAddedYet = (lang: string) => !contains(this.reference.addedLanguages, lang);
 
-      return this.languages.filter(lang =>
-        this.isLanguageVisible(lang) && (allowMultiple || isNotAddedYet(lang)));
+    return this.languages.filter(lang =>
+      this.isLanguageVisible(lang) && (allowMultiple || isNotAddedYet(lang)));
   }
 
   canAdd() {
@@ -114,11 +120,11 @@ export class TermsComponent implements OnChanges {
   addTerm(language: string) {
     this.metaModelModel.getMeta(this.reference.graphId).subscribe(metaModel => {
       this.reference.addTerm(metaModel, language);
-      this.openTerms.push((this.children.length - 1));
+      this.openTerms.push(last(this.children).id);
     });
   }
 
-  removeTerm(node: { formNode: FormNode, language: string }) {
+  removeTerm(node: TermChild) {
     this.reference.remove(node);
   }
 
@@ -128,5 +134,9 @@ export class TermsComponent implements OnChanges {
 
   isLanguageVisible(language: string) {
     return !this.filterLanguage || language === this.filterLanguage;
+  }
+
+  canReorder() {
+    return this.editing && !this.filterLanguage && this.visibleChildren.length > 1;
   }
 }

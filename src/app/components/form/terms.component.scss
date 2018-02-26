@@ -8,6 +8,18 @@
     padding: 0;
     margin-bottom: 5px;
 
+    .property-ordering {
+      position: absolute;
+      left: 50%;
+
+      span {
+        font-size: xx-small;
+        position: absolute;
+        padding: 10px;
+        left: -10px;
+      }
+    }
+
     a {
       color: rgb(68, 68, 68);
       text-decoration: none !important;

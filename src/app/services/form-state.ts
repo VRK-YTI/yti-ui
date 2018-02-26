@@ -1,6 +1,6 @@
-import { FormArray, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { assertNever } from 'yti-common-ui/utils/object';
-import { allMatching, anyMatching, firstMatching, flatten, normalizeAsArray } from 'yti-common-ui/utils/array';
+import { allMatching, anyMatching, firstMatching, flatten, normalizeAsArray, moveElement } from 'yti-common-ui/utils/array';
 import { ConceptNode, KnownNode, Node, Property, Reference, TermNode } from 'app/entities/node';
 import { Cardinality, Editor, MetaModel, NodeMeta, PropertyMeta, ReferenceMeta, ReferenceType } from 'app/entities/meta';
 import { Localizable } from 'yti-common-ui/types/localization';
@@ -9,6 +9,7 @@ import { validateMeta } from 'app/utils/validator';
 import { requiredList, validateLanguage } from 'yti-common-ui/utils/validator';
 import { comparingPrimitive } from 'yti-common-ui/utils/comparator';
 import { removeMatchingLinks } from 'app/utils/semantic';
+import { Sortable } from 'app/directives/drag-sortable.directive';
 
 export type FormReference = FormReferenceLiteral<any>
                           | FormReferenceTerm;
@@ -25,11 +26,11 @@ export class FormNode {
   control = new FormGroup({});
   fields: { name: string, value: FormField }[] = [];
 
-  constructor(private node: Node<any>, public languagesProvider: () => string[]) {
+  constructor(private node: Node<any>, public languagesProvider: () => string[], metaModel: MetaModel) {
 
     const createFormReference = (name: string, reference: Reference<any>) => {
       if (reference.term) {
-        return new FormReferenceTerm(reference, languagesProvider);
+        return new FormReferenceTerm(reference, languagesProvider, metaModel);
       } else {
         return new FormReferenceLiteral(reference);
       }
@@ -173,7 +174,7 @@ export class FormNode {
   }
 }
 
-export class FormReferenceLiteral<N extends KnownNode | Node<any>>{
+export class FormReferenceLiteral<N extends KnownNode | Node<any>> implements Sortable<N> {
 
   fieldType: 'reference' = 'reference';
   type: 'literal' = 'literal';
@@ -186,6 +187,20 @@ export class FormReferenceLiteral<N extends KnownNode | Node<any>>{
     this.meta = reference.meta;
     this.control = new FormControl(reference.values, this.required ? [requiredList] : []);
     this.targetMeta = reference.targetMeta;
+  }
+
+  get sortableValues(): N[] {
+    return this.value;
+  }
+
+  set sortableValues(values: N[]) {
+    this.control.setValue(values);
+  }
+
+  moveItem(fromIndex: number, toIndex: number): void {
+    const copy = this.value.slice();
+    moveElement(copy, fromIndex, toIndex);
+    this.control.setValue(copy);
   }
 
   get label(): Localizable {
@@ -241,26 +256,51 @@ export class FormReferenceLiteral<N extends KnownNode | Node<any>>{
   }
 }
 
-export class FormReferenceTerm {
+export interface TermChild {
+  formNode: FormNode;
+  language: string;
+  id: string;
+}
+
+export class FormReferenceTerm implements Sortable<TermChild> {
 
   fieldType: 'reference' = 'reference';
   type: 'term' = 'term';
   control: FormArray;
-  children: { formNode: FormNode, language: string }[];
+  children: TermChild[];
   private meta: ReferenceMeta;
   private targetMeta: NodeMeta;
 
-  constructor(reference: Reference<TermNode>, public languagesProvider: () => string[]) {
+  constructor(reference: Reference<TermNode>, public languagesProvider: () => string[], private metaModel: MetaModel) {
 
     this.meta = reference.meta;
     this.targetMeta = reference.targetMeta;
 
     this.children = reference.values
       .filter(term => term.isValid())
-      .map(term => ({ formNode: new FormNode(term, languagesProvider), language: term.language! }));
+      .map(term => ({
+        formNode: new FormNode(term, languagesProvider, metaModel),
+        language: term.language!,
+        id: term.id
+      }));
 
     const childControls = this.children.map(c => c.formNode.control);
     this.control = new FormArray(childControls, this.required ? requiredList : null);
+  }
+
+  get sortableValues(): TermChild[] {
+    return this.children;
+  }
+
+  set sortableValues(values: TermChild[]) {
+    values.forEach((c, i) => this.control.setControl(i, c.formNode.control));
+    this.children = values;
+  }
+
+  moveItem(fromIndex: number, toIndex: number): void {
+    const copy = this.children.slice();
+    moveElement(copy, fromIndex, toIndex);
+    this.sortableValues = copy;
   }
 
   get addedLanguages() {
@@ -296,20 +336,20 @@ export class FormReferenceTerm {
   }
 
   addTerm(metaModel: MetaModel, language: string) {
-    // TODO move node empty node creation to MetaModel
-    const newTerm = Node.create(this.targetMeta.createEmptyNode(), metaModel, false) as TermNode;
 
-    if (newTerm.hasStatus()) {
-      newTerm.status = 'DRAFT';
-    }
+    const newTerm = this.metaModel.createEmptyTerm(this.graphId, language);
 
-    newTerm.prefLabel = { [language]: '' };
-    const newChild = { formNode: new FormNode(newTerm, this.languagesProvider), language: language };
+    const newChild = {
+      formNode: new FormNode(newTerm, this.languagesProvider, this.metaModel),
+      language: language,
+      id: newTerm.id
+    };
+
     this.children.push(newChild);
     this.control.push(newChild.formNode.control);
   }
 
-  remove(child: { formNode: FormNode, language: string }) {
+  remove(child: TermChild) {
     const index = this.children.indexOf(child);
     this.children.splice(index, 1);
     this.control.removeAt(index);
@@ -404,7 +444,7 @@ export class FormPropertyLiteral {
   }
 }
 
-export class FormPropertyLiteralList {
+export class FormPropertyLiteralList implements Sortable<AbstractControl> {
 
   fieldType: 'property' = 'property';
   type: 'literal-list' = 'literal-list';
@@ -431,6 +471,21 @@ export class FormPropertyLiteralList {
     }
 
     return new FormControl(initial, validators);
+  }
+
+  get sortableValues(): AbstractControl[] {
+    return this.children;
+  }
+
+  moveItem(fromIndex: number, toIndex: number): void {
+
+    const copy = this.control.controls.slice();
+    moveElement(copy, fromIndex, toIndex);
+    this.sortableValues = copy;
+  }
+
+  set sortableValues(values: AbstractControl[]) {
+    values.forEach((c, i) => this.control.setControl(i, c));
   }
 
   get children() {
@@ -497,12 +552,17 @@ export class FormPropertyLiteralList {
   }
 }
 
-export class FormPropertyLocalizable {
+interface LocalizedControl {
+  lang: string;
+  control: FormControl;
+}
+
+export class FormPropertyLocalizable implements Sortable<LocalizedControl> {
 
   fieldType: 'property' = 'property';
   type: 'localizable' = 'localizable';
   control: FormArray;
-  children: { lang: string, control: FormControl }[];
+  children: LocalizedControl[];
   private meta: PropertyMeta;
 
   constructor(property: Property, private languagesProvider: () => string[], public fixed: boolean) {
@@ -514,6 +574,21 @@ export class FormPropertyLocalizable {
     }));
     const childControls = this.children.map(c => c.control);
     this.control = new FormArray(childControls, this.required ? requiredList : null);
+  }
+
+  get sortableValues(): LocalizedControl[] {
+    return this.children;
+  }
+
+  set sortableValues(values: LocalizedControl[]) {
+    values.forEach((c, i) => this.control.setControl(i, c.control));
+    this.children = values;
+  }
+
+  moveItem(fromIndex: number, toIndex: number): void {
+    const copy = this.children.slice();
+    moveElement(copy, fromIndex, toIndex);
+    this.sortableValues = copy;
   }
 
   get languages() {

@@ -105,7 +105,7 @@ export class NewVocabularyComponent {
         return languageProperty ? languageProperty.value.value.filter((v: string) => !!v) : defaultLanguages;
       };
 
-      this.formNode = new FormNode(this.vocabulary, languageProvider);
+      this.formNode = new FormNode(this.vocabulary, languageProvider, templateMetaModel);
 
       this.prefixFormControl = new FormControl('', [Validators.required, this.isPrefixLowerCaseValidator], this.isPrefixInUseValidator());
       this.formNode.control.addControl('prefix', this.prefixFormControl);

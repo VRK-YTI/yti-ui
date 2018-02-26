@@ -500,11 +500,12 @@ export class ConceptViewModelService implements OnDestroy {
     this.conceptHierarchy.initializeGraph(graphId);
     this.collectionList.initializeGraph(graphId);
 
-    this.termedService.getVocabulary(graphId).subscribe(vocabulary => {
-      this.vocabularyAction$.next(createSelectAction(vocabulary));
-      this.vocabularyForm = new FormNode(vocabulary, () => vocabulary.languages);
-      this.loadingVocabulary = false;
-    });
+    Observable.combineLatest(this.termedService.getVocabulary(graphId), this.metaModel)
+      .subscribe(([vocabulary, metaModel]) => {
+        this.vocabularyAction$.next(createSelectAction(vocabulary));
+        this.vocabularyForm = new FormNode(vocabulary, () => vocabulary.languages, metaModel);
+        this.loadingVocabulary = false;
+      });
 
     this.termedService.getGraphNamespace(graphId).subscribe(graphNamespace => this.prefixAndNamespace = graphNamespace);
   }
@@ -516,9 +517,11 @@ export class ConceptViewModelService implements OnDestroy {
     }
 
     const init = (concept: ConceptNode|null) => {
-      this.conceptAction$.next(concept ? createSelectAction(concept) : createNoSelection());
-      this.conceptForm = concept ? new FormNode(concept, () => this.languages) : null;
-      this.loadingConcept = false;
+      this.metaModel.subscribe(metaModel => {
+        this.conceptAction$.next(concept ? createSelectAction(concept) : createNoSelection());
+        this.conceptForm = concept ? new FormNode(concept, () => this.languages, metaModel) : null;
+        this.loadingConcept = false;
+      });
     };
 
     this.initializeCollection(null);
@@ -549,9 +552,11 @@ export class ConceptViewModelService implements OnDestroy {
     }
 
     const init = (collection: CollectionNode|null) => {
-      this.collectionAction$.next(collection ? createSelectAction(collection) : createNoSelection());
-      this.collectionForm = collection ? new FormNode(collection, () => this.languages) : null;
-      this.loadingCollection = false;
+      this.metaModel.subscribe(metaModel => {
+        this.collectionAction$.next(collection ? createSelectAction(collection) : createNoSelection());
+        this.collectionForm = collection ? new FormNode(collection, () => this.languages, metaModel) : null;
+        this.loadingCollection = false;
+      });
     };
 
     this.initializeConcept(null);
@@ -586,18 +591,21 @@ export class ConceptViewModelService implements OnDestroy {
     this.conceptForm.assignChanges(concept);
 
     return new Promise((resolve, reject) => {
-      this.termedService.updateNode(concept, this.concept)
-        .flatMap(() => this.termedService.getConcept(this.graphId, concept.id))
-        .subscribe({
-          next(persistentConcept: ConceptNode) {
-            that.conceptAction$.next(createEditAction(persistentConcept.clone()));
-            that.conceptForm = new FormNode(persistentConcept, () => that.languages);
-            resolve();
-          },
-          error(err: any) {
-            reject(err);
-          }
-        });
+
+      this.metaModel.subscribe(metaModel => {
+        this.termedService.updateNode(concept, this.concept)
+          .flatMap(() => this.termedService.getConcept(this.graphId, concept.id))
+          .subscribe({
+            next(persistentConcept: ConceptNode) {
+              that.conceptAction$.next(createEditAction(persistentConcept.clone()));
+              that.conceptForm = new FormNode(persistentConcept, () => that.languages, metaModel);
+              resolve();
+            },
+            error(err: any) {
+              reject(err);
+            }
+          });
+      });
     });
   }
 
@@ -631,7 +639,10 @@ export class ConceptViewModelService implements OnDestroy {
     if (!this.concept.persistent) {
       this.router.navigate(['/concepts', this.graphId]);
     } else {
-      this.conceptForm = new FormNode(this.concept, () => this.languages);
+      const concept = this.concept;
+      this.metaModel.subscribe(metaModel => {
+        this.conceptForm = new FormNode(concept, () => this.languages, metaModel);
+      });
     }
   }
 
@@ -646,18 +657,21 @@ export class ConceptViewModelService implements OnDestroy {
     this.collectionForm.assignChanges(collection);
 
     return new Promise((resolve, reject) => {
-      this.termedService.updateNode(collection, this.collection)
-        .flatMap(() => this.termedService.getCollection(this.graphId, collection.id))
-        .subscribe({
-          next(persistentCollection: CollectionNode) {
-            that.collectionAction$.next(createEditAction(persistentCollection.clone()));
-            that.collectionForm = new FormNode(persistentCollection, () => that.languages);
-            resolve();
-          },
-          error(err: any) {
-            reject(err);
-          }
-        });
+
+      this.metaModel.subscribe(metaModel => {
+        this.termedService.updateNode(collection, this.collection)
+          .flatMap(() => this.termedService.getCollection(this.graphId, collection.id))
+          .subscribe({
+            next(persistentCollection: CollectionNode) {
+              that.collectionAction$.next(createEditAction(persistentCollection.clone()));
+              that.collectionForm = new FormNode(persistentCollection, () => that.languages, metaModel);
+              resolve();
+            },
+            error(err: any) {
+              reject(err);
+            }
+          });
+      });
     });
   }
 
@@ -691,7 +705,10 @@ export class ConceptViewModelService implements OnDestroy {
     if (!this.collection.persistent) {
       this.router.navigate(['/concepts', this.graphId]);
     } else {
-      this.collectionForm = new FormNode(this.collection, () => this.languages);
+      const collection = this.collection;
+      this.metaModel.subscribe(metaModel => {
+        this.collectionForm = new FormNode(collection, () => this.languages, metaModel);
+      });
     }
   }
 
@@ -707,18 +724,21 @@ export class ConceptViewModelService implements OnDestroy {
     this.vocabularyForm.assignChanges(vocabulary);
 
     return new Promise((resolve, reject) => {
-      this.termedService.updateNode(vocabulary, this.vocabulary)
-        .flatMap(() => this.termedService.getVocabulary(this.graphId))
-        .subscribe({
-          next(persistentVocabulary: VocabularyNode) {
-            that.vocabularyAction$.next(createEditAction(persistentVocabulary.clone()));
-            that.vocabularyForm = new FormNode(persistentVocabulary, () => that.languages);
-            resolve();
-          },
-          error(err: any) {
-            reject(err);
-          }
-        });
+
+      this.metaModel.subscribe(metaModel => {
+        this.termedService.updateNode(vocabulary, this.vocabulary)
+          .flatMap(() => this.termedService.getVocabulary(this.graphId))
+          .subscribe({
+            next(persistentVocabulary: VocabularyNode) {
+              that.vocabularyAction$.next(createEditAction(persistentVocabulary.clone()));
+              that.vocabularyForm = new FormNode(persistentVocabulary, () => that.languages, metaModel);
+              resolve();
+            },
+            error(err: any) {
+              reject(err);
+            }
+          });
+      });
     });
   }
 
@@ -750,7 +770,11 @@ export class ConceptViewModelService implements OnDestroy {
       throw new Error('Cannot reset when there is no vocabulary');
     }
 
-    this.vocabularyForm = new FormNode(this.vocabulary, () => this.languages);
+    const vocabulary = this.vocabulary;
+
+    this.metaModel.subscribe(metaModel => {
+      this.vocabularyForm = new FormNode(vocabulary, () => this.languages, metaModel);
+    });
   }
 
   createEmptyConcept(vocabulary: VocabularyNode, nodeId: string): Observable<ConceptNode> {
@@ -758,6 +782,7 @@ export class ConceptViewModelService implements OnDestroy {
     const label$ = this.translateService.get('New concept');
 
     return Observable.zip(label$, this.metaModel).map(([newConceptLabel, meta]) => {
+
       const newConcept = meta.createEmptyConcept(vocabulary, nodeId);
       newConcept.prefLabel = [{ lang: this.languageService.language, value: newConceptLabel }];
       return newConcept;

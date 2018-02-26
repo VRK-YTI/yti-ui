@@ -3,6 +3,32 @@
 
 $page-padding: 20px;
 
+.dragged {
+  background-color: $body-bg !important;
+  color: $body-bg;
+  border: 1px dashed $warning;
+
+  &.droppable {
+    border-color: black;
+  }
+}
+
+[draggable=true] {
+  .fa-bars {
+    color: $gray-500;
+
+    &:hover {
+      cursor: move;
+    }
+  }
+}
+
+[draggable=false] {
+  .fa-bars {
+    display: none !important;
+  }
+}
+
 nav.navbar {
   padding-left: $page-padding;
   padding-right: $page-padding;

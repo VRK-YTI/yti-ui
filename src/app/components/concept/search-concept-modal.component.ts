@@ -10,6 +10,7 @@ import { defaultLanguages } from 'app/utils/language';
 import { firstMatching } from 'yti-common-ui/utils/array';
 import { LanguageService } from 'app/services/language.service';
 import { ModalService } from 'app/services/modal.service';
+import { MetaModelService } from 'app/services/meta-model.service';
 
 type Mode = 'include'|'exclude';
 
@@ -187,7 +188,8 @@ export class SearchConceptModalComponent implements OnInit, AfterViewInit {
               private termedService: TermedService,
               private elasticSearchService: ElasticSearchService,
               private renderer: Renderer,
-              private languageService: LanguageService) {
+              private languageService: LanguageService,
+              private metaModelService: MetaModelService) {
   }
 
   ngOnInit() {
@@ -273,11 +275,13 @@ export class SearchConceptModalComponent implements OnInit, AfterViewInit {
   select(indexedConcept: IndexedConcept) {
 
     this.selectedItem = indexedConcept;
+    const graphId = indexedConcept.vocabulary.id;
 
-    this.termedService.getConcept(indexedConcept.vocabulary.id, indexedConcept.id).subscribe(concept => {
-      this.selection = concept;
-      this.formNode = this.selection ? new FormNode(this.selection, () => defaultLanguages) : null;
-    })
+    Observable.combineLatest(this.termedService.getConcept(graphId, indexedConcept.id), this.metaModelService.getMeta(graphId))
+      .subscribe(([concept, metaModel]) => {
+        this.selection = concept;
+        this.formNode = this.selection ? new FormNode(this.selection, () => defaultLanguages, metaModel) : null;
+      });
   }
 
   get loadingSelection() {

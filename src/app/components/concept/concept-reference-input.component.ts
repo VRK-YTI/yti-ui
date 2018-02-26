@@ -16,10 +16,10 @@ import { isDefined, requireDefined } from 'yti-common-ui/utils/object';
       </li>
     </ul>
 
-    <div *ngIf="editing">
-      <div *ngFor="let concept of reference.value">
+    <div *ngIf="editing" [appDragSortable]="reference" [dragDisabled]="!canReorder()">
+      <div *ngFor="let concept of reference.value; let i = index">
         <a><i class="fa fa-times" (click)="removeReference(concept)"></i></a>
-        <span>{{concept.label | translateValue}}</span>
+        <span [appDragSortableItem]="concept" [index]="i">{{concept.label | translateValue}}</span>
       </div>
     </div>
 
@@ -46,7 +46,7 @@ export class ConceptReferenceInputComponent {
 
   removeReference(concept: ConceptNode) {
     this.reference.removeReference(concept);
-    this.conceptRemove.next(concept);
+    this.conceptRemove.emit(concept);
   }
 
   addReference() {
@@ -58,5 +58,9 @@ export class ConceptReferenceInputComponent {
 
     this.searchConceptModal.openForVocabulary(requireDefined(this.vocabulary), '', restricts)
       .then(result => this.reference.addReference(result), ignoreModalClose);
+  }
+
+  canReorder() {
+    return this.editing && this.reference.value.length > 1;
   }
 }

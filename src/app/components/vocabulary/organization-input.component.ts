@@ -8,15 +8,16 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
 
 @Component({
   selector: 'app-organization-input',
+  styleUrls: ['./organization-input.component.scss'],
   template: `
     <ul *ngIf="!editing">
       <li *ngFor="let organization of reference.value">{{organization.label | translateValue:true}}</li>
     </ul>
 
-    <div *ngIf="editing">
-      <div *ngFor="let organization of reference.value">
+    <div *ngIf="editing" [appDragSortable]="reference" [dragDisabled]="!canReorder()">
+      <div *ngFor="let organization of reference.value; let i = index">
         <a><i class="fa fa-times" (click)="removeReference(organization)"></i></a>
-        <span>{{organization.label | translateValue:true}}</span>
+        <span [appDragSortableItem]="organization" [index]="i">{{organization.label | translateValue:true}}</span>
       </div>
       <app-error-messages [control]="reference.control"></app-error-messages>
     </div>
@@ -53,5 +54,9 @@ export class OrganizationInputComponent {
 
     this.searchOrganizationModal.open(restrictOrganizationIds, allowOnlyOrganizationIds)
       .then(result => this.reference.addReference(result), ignoreModalClose);
+  }
+
+  canReorder() {
+    return this.editing && this.reference.value.length > 1;
   }
 }

@@ -12,7 +12,7 @@ import { FormControl } from '@angular/forms';
       <ng-container [ngSwitch]="property.editor.type">
 
         <div *ngSwitchCase="'semantic'">
-          
+
           <div *ngFor="let value of property.value">
             <div app-semantic-text-links
                  [format]="property.editor.format"
@@ -38,45 +38,55 @@ import { FormControl } from '@angular/forms';
         </button>
       </div>
 
-      <div *ngFor="let control of property.children">
-        <div class="form-group" [ngClass]="{'removable': canRemove()}">
+      <div [appDragSortable]="property" [dragDisabled]="!canReorder()">
+        <div *ngFor="let control of property.children; let i = index">
 
-          <ng-container [ngSwitch]="property.editor.type">
+          <div class="d-inline-block" style="width: 100%" [appDragSortableItem]="control" [index]="i">
+            <div class="form-group" [ngClass]="{'removable': canRemove()}">
 
-            <input *ngSwitchCase="'input'"
-                   type="text"
-                   class="form-control"
-                   [ngClass]="{'is-invalid': !control.valid}"
-                   [id]="id"
-                   autocomplete="off"
-                   [formControl]="control" />
+              <div [ngSwitch]="property.editor.type">
 
-            <textarea *ngSwitchCase="'textarea'"
-                      class="form-control"
-                      [ngClass]="{'is-invalid': !control.valid}"
-                      [id]="id"
-                      [formControl]="control"></textarea>            
-            
-            <app-semantic-text-input *ngSwitchCase="'semantic'"
+                <input *ngSwitchCase="'input'"
+                       type="text"
+                       class="form-control"
+                       [ngClass]="{'is-invalid': !control.valid}"
+                       [id]="id"
+                       autocomplete="off"
+                       [formControl]="control" />
+
+                <textarea *ngSwitchCase="'textarea'"
+                          class="form-control"
+                          [ngClass]="{'is-invalid': !control.valid}"
+                          [id]="id"
+                          [formControl]="control"></textarea>
+
+                <app-semantic-text-input *ngSwitchCase="'semantic'"
+                                         [id]="id"
+                                         [format]="property.editor.format"
+                                         [formControl]="control"></app-semantic-text-input>
+
+                <app-language-input *ngSwitchCase="'language'"
                                     [id]="id"
-                                    [format]="property.editor.format"
-                                    [formControl]="control"></app-semantic-text-input>
-            
-            <app-language-input *ngSwitchCase="'language'"
-                                [id]="id"
-                                [formControl]="control"></app-language-input>
+                                    [formControl]="control"></app-language-input>
 
-          </ng-container>
+              </div>
 
-          <app-error-messages [control]="control"></app-error-messages>
+              <app-error-messages [control]="control"></app-error-messages>
+            </div>
+
+            <button *ngIf="canRemove()"
+                    class="btn btn-link remove-button"
+                    (click)="removeValue(control)"
+                    ngbTooltip="{{'Remove' | translate}} {{property.label | translateValue:true | lowercase}}" [placement]="'left'">
+              <i class="fa fa-trash"></i>
+            </button>
+
+            <div class="reorder-handle">
+              <span class="fa fa-bars"></span>
+            </div>
+
+          </div>
         </div>
-
-        <button *ngIf="canRemove()"
-                class="btn btn-link remove-button"
-                (click)="removeValue(control)"
-                ngbTooltip="{{'Remove' | translate}} {{property.label | translateValue:true | lowercase}}" [placement]="'left'">
-          <i class="fa fa-trash"></i>
-        </button>
       </div>
 
       <div *ngIf="property.value.length === 0" translate>No values yet</div>
@@ -107,5 +117,9 @@ export class LiteralListInputComponent {
 
   get editing() {
     return this.editableService.editing;
+  }
+
+  canReorder() {
+    return this.editing && this.property.children.length > 1;
   }
 }

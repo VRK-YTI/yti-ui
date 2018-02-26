@@ -74,6 +74,7 @@ import { YtiCommonModule, AUTHENTICATED_USER_ENDPOINT, LOCALIZER } from 'yti-com
 import { environment } from 'environments/environment';
 import { InformationAboutServiceComponent } from 'app/components/information/information-about-service.component';
 import { ModalService } from './services/modal.service';
+import { DragSortableDirective, DragSortableItemDirective } from './directives/drag-sortable.directive';
 
 const localizations: { [lang: string]: string} = {
   fi: Object.assign({},
@@ -179,7 +180,9 @@ const appRoutes: Routes = [
     OrganizationFilterDropdownComponent,
     VocabularyFilterDropdownComponent,
     StatusFilterDropdownComponent,
-    InformationAboutServiceComponent
+    InformationAboutServiceComponent,
+    DragSortableDirective,
+    DragSortableItemDirective
   ],
   entryComponents: [
     SearchConceptModalComponent,

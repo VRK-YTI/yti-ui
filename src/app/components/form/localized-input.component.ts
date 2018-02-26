@@ -23,8 +23,8 @@ import { contains } from 'yti-common-ui/utils/array';
       </div>
     </div>
 
-    <div *ngIf="property.value.length > 0">
-      <div class="localized" *ngFor="let child of visibleLocalizations">
+    <div *ngIf="property.value.length > 0" [appDragSortable]="property" [dragDisabled]="!canReorder()">
+      <div class="localized" *ngFor="let child of visibleLocalizations; let i = index" [appDragSortableItem]="child" [index]="i">
         <div class="language">
           <span>{{child.lang.toUpperCase()}}</span>
         </div>
@@ -84,6 +84,10 @@ import { contains } from 'yti-common-ui/utils/array';
                 ngbTooltip="{{'Remove' | translate}} {{property.label | translateValue:true | lowercase}}" [placement]="'left'">
           <i class="fa fa-trash"></i>
         </button>
+
+        <div class="reorder-handle">
+          <span class="fa fa-bars"></span>
+        </div>
       </div>
     </div>
 
@@ -141,5 +145,9 @@ export class LocalizedInputComponent {
 
   isLanguageVisible(language: string) {
     return !this.filterLanguage || language === this.filterLanguage;
+  }
+
+  canReorder() {
+    return this.editing && !this.filterLanguage && this.visibleLocalizations.length > 1;
   }
 }

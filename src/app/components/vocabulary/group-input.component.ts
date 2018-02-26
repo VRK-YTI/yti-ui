@@ -7,16 +7,17 @@ import { SearchGroupModalService } from './search-group-modal.component';
 
 @Component({
   selector: 'app-group-input',
+  styleUrls: ['./group-input.component.scss'],
   template: `
 
     <ul *ngIf="!editing">
       <li *ngFor="let group of reference.value">{{group.label | translateValue:true}}</li>
     </ul>
 
-    <div *ngIf="editing">
-      <div *ngFor="let group of reference.value">
+    <div *ngIf="editing" [appDragSortable]="reference" [dragDisabled]="!canReorder()">
+      <div *ngFor="let group of reference.value; let i = index">
         <a><i class="fa fa-times" (click)="removeReference(group)"></i></a>
-        <span>{{group.label | translateValue:true}}</span>
+        <span [appDragSortableItem]="group" [index]="i">{{group.label | translateValue:true}}</span>
       </div>
       <app-error-messages [control]="reference.control"></app-error-messages>
     </div>
@@ -49,5 +50,9 @@ export class GroupInputComponent {
 
     this.searchGroupModal.open(restricts)
       .then(result => this.reference.addReference(result), ignoreModalClose);
+  }
+
+  canReorder() {
+    return this.editing && this.reference.value.length > 1;
   }
 }
