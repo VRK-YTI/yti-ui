@@ -184,27 +184,6 @@ export class DragSortableItemDirective<T> implements OnInit, OnDestroy {
 
       this.subscriptionsToClean.push(
         this.dragSortable.drag$.subscribe(drag => {
-          const dragReady = drag ? drag.cloneCreated : false;
-          this.element.classList.toggle('dragged', dragReady && drag!.fromIndex === this.index);
-          this.element.classList.toggle('droppable', dragReady && drag!.droppable);
-        })
-      );
-    });
-  }
-
-  ngOnDestroy() {
-
-    this.disable();
-    this.subscriptionsToClean.forEach(s => s.unsubscribe());
-    this.subscriptionsToClean = [];
-  }
-
-  private enable() {
-
-    this.zone.runOutsideAngular(() => {
-
-      this.subscriptionsToClean.push(
-        this.dragSortable.drag$.subscribe(drag => {
 
           const dragReady = drag ? drag.cloneCreated : false;
           const dragged = dragReady && drag!.fromIndex === this.index;
@@ -223,6 +202,19 @@ export class DragSortableItemDirective<T> implements OnInit, OnDestroy {
           }
         })
       );
+    });
+  }
+
+  ngOnDestroy() {
+
+    this.disable();
+    this.subscriptionsToClean.forEach(s => s.unsubscribe());
+    this.subscriptionsToClean = [];
+  }
+
+  private enable() {
+
+    this.zone.runOutsideAngular(() => {
 
       this.element.setAttribute('draggable', 'true');
       this.element.addEventListener('dragstart', this.dragStartHandler);
