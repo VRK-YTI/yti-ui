@@ -13,7 +13,7 @@ $page-padding: 20px;
   }
 }
 
-[draggable=true] {
+[draggable="true"] {
   .fa-bars {
     color: $gray-500;
 
@@ -23,7 +23,7 @@ $page-padding: 20px;
   }
 }
 
-[draggable=false] {
+[draggable="false"] {
   .fa-bars {
     display: none !important;
   }
