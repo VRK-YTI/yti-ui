@@ -15,9 +15,12 @@ import { SearchGroupModalService } from './search-group-modal.component';
     </ul>
 
     <div *ngIf="editing" [appDragSortable]="reference" [dragDisabled]="!canReorder()">
-      <div *ngFor="let group of reference.value; let i = index">
+      <div *ngFor="let group of reference.value; let i = index"
+           class="removable-text"
+           [appDragSortableItem]="group"
+           [index]="i">
         <a><i class="fa fa-times" (click)="removeReference(group)"></i></a>
-        <span [appDragSortableItem]="group" [index]="i">{{group.label | translateValue:true}}</span>
+        <span>{{group.label | translateValue:true}}</span>
       </div>
       <app-error-messages [control]="reference.control"></app-error-messages>
     </div>

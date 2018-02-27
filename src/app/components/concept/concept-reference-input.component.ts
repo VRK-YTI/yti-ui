@@ -17,9 +17,12 @@ import { isDefined, requireDefined } from 'yti-common-ui/utils/object';
     </ul>
 
     <div *ngIf="editing" [appDragSortable]="reference" [dragDisabled]="!canReorder()">
-      <div *ngFor="let concept of reference.value; let i = index">
+      <div *ngFor="let concept of reference.value; let i = index"
+           class="removable-text"
+           [appDragSortableItem]="concept" 
+           [index]="i">
         <a><i class="fa fa-times" (click)="removeReference(concept)"></i></a>
-        <span [appDragSortableItem]="concept" [index]="i">{{concept.label | translateValue}}</span>
+        <span>{{concept.label | translateValue}}</span>
       </div>
     </div>
 

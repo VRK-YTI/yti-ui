@@ -29,6 +29,11 @@ $page-padding: 20px;
   }
 }
 
+div.removable-text {
+  display: inline-block;
+  width: calc(100% - 17px);
+}
+
 nav.navbar {
   padding-left: $page-padding;
   padding-right: $page-padding;

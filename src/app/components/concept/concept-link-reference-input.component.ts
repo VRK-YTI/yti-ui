@@ -16,7 +16,7 @@ import { Observable } from 'rxjs/Observable';
     <ul *ngIf="!editing">
       <li *ngFor="let conceptLink of reference.value">
         <a [routerLink]="['/concepts', conceptLink.targetGraph, 'concept', conceptLink.targetId]"
-           [ngbPopover]="popContent" 
+           [ngbPopover]="popContent"
            [triggers]="'mouseenter:mouseleave'"
            [popoverTitle]="conceptLink.label | translateValue">
           {{conceptLink.label | translateValue}}
@@ -27,16 +27,19 @@ import { Observable } from 'rxjs/Observable';
         </ng-template>
       </li>
     </ul>
-    
+
     <div *ngIf="editing" [appDragSortable]="reference" [dragDisabled]="!canReorder()">
-      <div *ngFor="let conceptLink of reference.value; let i = index">
+      <div *ngFor="let conceptLink of reference.value; let i = index"
+           class="removable-text"
+           [appDragSortableItem]="conceptLink"
+           [index]="i">
+
         <a><i class="fa fa-times" (click)="removeReference(conceptLink)"></i></a>
         <span [ngbPopover]="editingPopContent"
               [triggers]="'mouseenter:mouseleave'"
               #p="ngbPopover"
               (mousedown)="p.close()"
-              [popoverTitle]="conceptLink.label | translateValue"
-              [appDragSortableItem]="conceptLink" [index]="i">
+              [popoverTitle]="conceptLink.label | translateValue">
           {{conceptLink.label | translateValue}}
         </span>
 
@@ -45,7 +48,7 @@ import { Observable } from 'rxjs/Observable';
         </ng-template>
       </div>
     </div>
-    
+
     <button type="button"
             class="btn btn-sm btn-action"
             *ngIf="editing"
@@ -105,7 +108,7 @@ export class ConceptLinkReferenceInputComponent implements OnInit {
       <label>{{link.vocabularyMetaLabel | translateValue:true}}</label>
       <p class="form-control-static">{{link.vocabularyLabel | translateValue}}</p>
     </div>
-    
+
     <app-meta-information [hidden]="!link.persistent" [showModified]="false" [node]="link"></app-meta-information>
   `
 })

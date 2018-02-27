@@ -15,9 +15,12 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
     </ul>
 
     <div *ngIf="editing" [appDragSortable]="reference" [dragDisabled]="!canReorder()">
-      <div *ngFor="let organization of reference.value; let i = index">
+      <div *ngFor="let organization of reference.value; let i = index"
+           class="removable-text"
+           [appDragSortableItem]="organization"
+           [index]="i">
         <a><i class="fa fa-times" (click)="removeReference(organization)"></i></a>
-        <span [appDragSortableItem]="organization" [index]="i">{{organization.label | translateValue:true}}</span>
+        <span>{{organization.label | translateValue:true}}</span>
       </div>
       <app-error-messages [control]="reference.control"></app-error-messages>
     </div>
