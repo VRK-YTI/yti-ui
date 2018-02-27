@@ -205,9 +205,22 @@ export class DragSortableItemDirective<T> implements OnInit, OnDestroy {
 
       this.subscriptionsToClean.push(
         this.dragSortable.drag$.subscribe(drag => {
+
           const dragReady = drag ? drag.cloneCreated : false;
-          this.element.classList.toggle('dragged', dragReady && drag!.fromIndex === this.index);
-          this.element.classList.toggle('droppable', dragReady && drag!.droppable);
+          const dragged = dragReady && drag!.fromIndex === this.index;
+          const droppable = dragReady && drag!.droppable;
+
+          if (dragged) {
+            this.element.classList.add('dragged')
+          } else {
+            this.element.classList.remove('dragged');
+          }
+
+          if (droppable) {
+            this.element.classList.add('droppable');
+          } else {
+            this.element.classList.remove('droppable');
+          }
         })
       );
 
