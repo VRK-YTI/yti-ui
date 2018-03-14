@@ -85,7 +85,7 @@ import { contains } from 'yti-common-ui/utils/array';
           <i class="fa fa-trash"></i>
         </button>
 
-        <div class="reorder-handle">
+        <div *ngIf="editing" class="reorder-handle">
           <span class="fa fa-bars"></span>
         </div>
       </div>
