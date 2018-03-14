@@ -158,12 +158,12 @@ class XmlSerializer implements SemanticTextSerializer {
 
   serialize(document: SemanticTextDocument): string {
 
-    function visit(node: SemanticTextNode): string {
+    function visit(node: SemanticTextNode, lastChild: boolean): string {
       switch (node.type) {
         case 'document':
-          return '<ol>' + node.children.map(c => visit(c)).join('').trim() + '</ol>';
+          return node.children.map((c, i, arr) => visit(c, arr.length - 1 === i)).join('');
         case 'paragraph':
-          return '<li>' + node.children.map(c => visit(c)).join('') + '</li>';
+          return node.children.map((c, i, arr) => visit(c, arr.length - 1 === i)).join('') + (lastChild ? '' : '<br />');
         case 'link':
           return `<a href='${node.destination}'>${node.text}</a>`;
         case 'text':
@@ -173,7 +173,7 @@ class XmlSerializer implements SemanticTextSerializer {
       }
     }
 
-    return visit(document);
+    return visit(document, true);
   }
 
   deserialize(serialized: string): SemanticTextDocument {
@@ -197,36 +197,6 @@ class XmlSerializer implements SemanticTextSerializer {
       return child;
     }
 
-    function visit(node: Node): SemanticTextNode|null {
-
-      switch (node.nodeType) {
-        case Node.TEXT_NODE:
-          return new SemanticTextLiteral(node.nodeValue || '');
-        case Node.ELEMENT_NODE:
-          switch (node.nodeName) {
-            case 'ol':
-              return new SemanticTextDocument(getChildren(node)
-                .map(n => visit(n))
-                .filter(n => n != null)
-                .map(n => ensureType<SemanticTextParagraph>(requireDefined(n), 'paragraph')));
-            case 'li':
-              return new SemanticTextParagraph(getChildren(node)
-                .map(n => visit(n))
-                .filter(n => n != null)
-                .map(n => ensureType<SemanticTextLink|SemanticTextLiteral>(requireDefined(n), 'link', 'text')));
-            case 'a':
-              const text = getSingleTextChild(node).nodeValue || '';
-              const destination = node.attributes.getNamedItem('href').value;
-              return new SemanticTextLink(text, destination);
-            default:
-              console.log('Element NOT SUPPORTED: ' + node.nodeName);
-              return null;
-          }
-        default:
-          console.log('Node type NOT SUPPORTED: ' + node.nodeType);
-          return null;
-      }
-    }
 
     const document = new DOMParser().parseFromString(`
           <document>${serialized}</document>
@@ -238,44 +208,68 @@ class XmlSerializer implements SemanticTextSerializer {
 
     const documentNode = document.getElementsByTagName('document')[0];
 
-    function isTextOrLink(node: Node) {
-      return node.nodeType === Node.TEXT_NODE || node.nodeName === 'a';
+    function isSupportedNode(node: Node) {
+      return node.nodeType === Node.TEXT_NODE || node.nodeName === 'a' || node.nodeName === 'br';
     }
 
-    function normalizeOrderedList(): Node {
+    const children = getChildren(documentNode);
 
-      const children = getChildren(documentNode);
-      const normalizedChildren = children.length > 0 ? children : [document.createTextNode('')];
-      const firstChild = normalizedChildren[0];
-
-      if (normalizedChildren.length === 1 && firstChild.nodeName === 'ol') {
-        return firstChild;
-      } else if (allMatching(normalizedChildren, child => isTextOrLink(child))) {
-
-        const orderedList = document.createElement('ol');
-        const listItem = document.createElement('li');
-        orderedList.appendChild(listItem);
-
-        for (const child of normalizedChildren) {
-          listItem.appendChild(child);
-        }
-
-        return orderedList;
-
-      } else {
-        console.log(documentNode);
-        throw new Error('Cannot parse xml');
-      }
-    }
-
-    const result = visit(normalizeOrderedList());
-
-    if (result == null || result.type !== 'document') {
+    if (!allMatching(children, child => isSupportedNode(child))) {
       console.log(documentNode);
       throw new Error('Cannot parse xml');
     }
 
-    return result;
+    if (children.length === 0) {
+      documentNode.appendChild(document.createTextNode(''));
+    }
+
+    const groupedNodes: Node[][] = [];
+    groupedNodes.push([]);
+    let currentIndex = 0;
+
+    for (const node of children) {
+
+      switch (node.nodeType) {
+        case Node.TEXT_NODE:
+          groupedNodes[currentIndex].push(node);
+          break;
+        case Node.ELEMENT_NODE:
+          switch (node.nodeName) {
+            case 'a':
+              groupedNodes[currentIndex].push(node);
+              break;
+            case 'br':
+              groupedNodes.push([]);
+              currentIndex++;
+              break;
+            default:
+              throw new Error('Element NOT SUPPORTED: ' + node.nodeName);
+          }
+          break;
+        default:
+          throw new Error('Node type NOT SUPPORTED: ' + node.nodeType);
+      }
+    }
+
+    return new SemanticTextDocument(groupedNodes.map(group => {
+      return new SemanticTextParagraph(group.map(node => {
+        switch (node.nodeType) {
+          case Node.TEXT_NODE:
+            return new SemanticTextLiteral(node.nodeValue || '');
+          case Node.ELEMENT_NODE:
+            switch (node.nodeName) {
+              case 'a':
+                const text = getSingleTextChild(node).nodeValue || '';
+                const destination = node.attributes.getNamedItem('href').value;
+                return new SemanticTextLink(text, destination);
+              default:
+                throw new Error('Element NOT SUPPORTED: ' + node.nodeName);
+            }
+          default:
+            throw new Error('Node type NOT SUPPORTED: ' + node.nodeType);
+        }
+      }));
+    }));
   }
 }
 
