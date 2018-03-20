@@ -14,7 +14,7 @@ import { TermedService } from 'app/services/termed.service';
                  class="form-control"
                  id="prefix"
                  autocomplete="off"
-                 [ngClass]="{'is-invalid': !valid}"
+                 [ngClass]="{'is-invalid': !valid && !pending}"
                  [formControl]="control" />
           <app-error-messages [control]="parentControl"></app-error-messages>
         </div>
@@ -52,6 +52,10 @@ export class PrefixInputComponent implements ControlValueAccessor {
 
   get valid() {
     return !this.parentControl || this.parentControl.valid;
+  }
+
+  get pending() {
+    return !this.parentControl || this.parentControl.pending;
   }
 
   writeValue(obj: any): void {
