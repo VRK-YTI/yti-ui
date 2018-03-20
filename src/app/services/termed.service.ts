@@ -26,12 +26,19 @@ export class TermedService {
 
   getVocabularyList(): Observable<VocabularyNode[]> {
     return this.getVocabularyNodes()
-      .flatMap(vocabularies =>
-        Observable.forkJoin(vocabularies.map(vocabulary =>
-            this.metaModelService.getMeta(vocabulary.type.graph.id)
-              .map(metaModel => Node.create(vocabulary, metaModel, true) as VocabularyNode)
-          )
-        )
+      .flatMap(vocabularies => {
+
+          // necessary optimization since forkJoin doesn't ever complete with empty observables array
+          if (vocabularies.length === 0) {
+            return Observable.of([]);
+          }
+
+          return Observable.forkJoin(vocabularies.map(vocabulary =>
+              this.metaModelService.getMeta(vocabulary.type.graph.id)
+                .map(metaModel => Node.create(vocabulary, metaModel, true) as VocabularyNode)
+            )
+          );
+        }
       );
   }
 
