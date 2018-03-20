@@ -1,18 +1,5 @@
 import { default as fetch, Response } from 'node-fetch';
 
-const groupGraph = require('../examples/groupGraph.json');
-const groupTypes = require('../examples/groupTypes.json');
-const groupNodes = require('../examples/groupNodes.json');
-
-const orgGraph = require('../examples/orgGraph.json');
-const orgTypes = require('../examples/orgTypes.json');
-const orgNodes = require('../examples/orgNodes.json');
-
-const terminologicalGraph = require('../examples/termDictGraph.json');
-const terminologicalTypes = require('../examples/termDictTypes.json');
-const thesaurusGraph = require('../examples/thesaurusGraph.json');
-const thesaurusTypes = require('../examples/thesaurusTypes.json');
-
 const jhsGraph = require('../examples/jhsGraph.json');
 const jhsTypes = require('../examples/jhsTypes.json');
 const jhsNodes = require('../examples/jhsNodes.json');
@@ -71,13 +58,8 @@ function initData(name: string, graph: any, types: any, nodes?: any): Promise<an
 }
 
 Promise.all([
-  initData('Groups', groupGraph, groupTypes, groupNodes),
-  initData('Organizations', orgGraph, orgTypes, orgNodes)
-]).then(() => Promise.all([
-  initData('Terminological vocabulary template', terminologicalGraph, terminologicalTypes),
-  initData('Vocabulary template', thesaurusGraph, thesaurusTypes),
   initData('JHS', jhsGraph, jhsTypes, jhsNodes),
   initData('SOS', sosGraph, sosTypes, sosNodes),
   initData('OKSA', oksaGraph, oksaTypes, oksaNodes),
   initData('KIRA', kiraGraph, kiraTypes, kiraNodes)
-])).then(() => console.log('========\nOK'));
+]).then(() => console.log('========\nOK'));
