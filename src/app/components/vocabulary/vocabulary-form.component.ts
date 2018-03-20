@@ -31,7 +31,7 @@ import { EditableService } from 'app/services/editable.service';
         <p class="form-control-static">{{vocabulary.meta.label | translateValue:true}}</p>
       </div>
       
-      <div class="col-md-6 form-group">
+      <div class="col-md-6 form-group" *ngIf="namespace">
         <label translate>Namespace</label>
         <p class="form-control-static">{{namespace}}</p>
       </div>
