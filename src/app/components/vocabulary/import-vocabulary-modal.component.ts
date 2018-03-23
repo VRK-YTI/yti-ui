@@ -160,12 +160,16 @@ export class ImportVocabularyModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.uploading = true;
+
     Papa.parse(this.importFile, {
       header: true,
       skipEmptyLines: true,
       newline: '\r\n',
-      complete: results =>
-        this.conceptsFromCsv = results.data.map((datum, index) => CsvConceptDetails.createFromCsvRow(datum, index + 2))
+      complete: results => {
+        this.conceptsFromCsv = results.data.map((datum, index) => CsvConceptDetails.createFromCsvRow(datum, index + 2));
+        this.uploading = false;
+      }
     });
   }
 
