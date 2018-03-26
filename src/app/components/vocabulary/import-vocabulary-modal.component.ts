@@ -8,6 +8,7 @@ import { MetaModel } from 'app/entities/meta';
 import { TermedService } from 'app/services/termed.service';
 import * as Papa from 'papaparse';
 import { ModalService } from 'app/services/modal.service';
+import { Status } from 'yti-common-ui/entities/status';
 
 class CsvConceptDetails {
 
@@ -16,6 +17,7 @@ class CsvConceptDetails {
               public note: Localization[],
               public example: Localization[],
               public synonym: Localization[],
+              public status: Status,
               public lineNumber: number) {
   }
 
@@ -40,12 +42,25 @@ class CsvConceptDetails {
       return flatten(localizations.map(localization => splitValuesAsOwnLocalizations(localization)));
     }
 
+    function parseLiteralForProperty(propertyName: string) {
+
+      const entriesRelatedToProperty = Object.entries(csvJsonObject)
+        .filter(([key, value]) => key === propertyName && value !== '');
+
+      const literalProperty = entriesRelatedToProperty.map(([key, value]) => {
+        return value;
+      });
+
+      return literalProperty[0] as string;
+    }
+
     return new CsvConceptDetails(
       parseLocalizationsForProperty('prefLabel'),
       parseLocalizationsForProperty('definition'),
       parseLocalizationsForProperty('note'),
       parseLocalizationsForProperty('example'),
       parseLocalizationsForProperty('synonym'),
+      parseLiteralForProperty('status') as Status,
       lineNumber
     );
   }
@@ -198,6 +213,7 @@ export class ImportVocabularyModalComponent implements OnInit {
     concept.note = conceptFromCsv.note;
     concept.example = conceptFromCsv.example;
     concept.altLabel = conceptFromCsv.synonym;
+    concept.status = conceptFromCsv.status;
 
     return concept;
   }
