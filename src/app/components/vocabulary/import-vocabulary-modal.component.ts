@@ -51,7 +51,7 @@ class CsvConceptDetails {
         return value;
       });
 
-      return literalProperty[0] as string;
+      return literalProperty[0] ? literalProperty[0] : 'DRAFT' as string;
     }
 
     return new CsvConceptDetails(
@@ -78,6 +78,10 @@ class CsvConceptDetails {
     ];
 
     return allProperties.filter(property => propertyIsNotEmpty(property.localizations));
+  }
+
+  get conceptStatus() {
+    return this.status;
   }
 }
 
@@ -126,19 +130,26 @@ export class ImportVocabularyModalService {
             </div>
             
             <div class="search-results">
-              <div class="search-result" *ngFor="let concept of conceptsFromCsv">
-                <div *ngFor="let property of concept.nonEmptyProperties; let last = last"
-                    class="content"
-                    [class.last]="last"
-                    [ngSwitch]="property.name">
-                  <span class="name">{{property.name | translate}}</span>
-                  <div class="body">
-                    <div class="localized" *ngFor="let localization of property.localizations">
-                      <div class="language">{{localization.lang.toUpperCase()}}</div>
-                      <div class="localization">{{localization.value}}</div>
-                    </div>
+              <div class="search-result" *ngFor="let concept of conceptsFromCsv">                
+                <div class="content">                  
+                  <div *ngFor="let property of concept.nonEmptyProperties; let last = last"
+                      [class.last]="last"
+                      [ngSwitch]="property.name">
+                    <dl>
+                      <dt><label class="name">{{property.name | translate}}</label></dt>
+                      <dd>
+                        <div class="localized" *ngFor="let localization of property.localizations">
+                          <div class="language">{{localization.lang.toUpperCase()}}</div>
+                          <div class="localization">{{localization.value}}</div>
+                        </div>
+                      </dd>
+                    </dl>
                   </div>
-                </div>
+                  <dl>
+                    <dt><label class="name" translate>Concept status</label></dt>
+                    <dd>{{concept.conceptStatus | translate}}</dd>
+                  </dl>                 
+                </div>              
               </div>
             </div>
 

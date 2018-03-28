@@ -193,6 +193,9 @@ msgstr ""
 msgid "Line numbers in the import file"
 msgstr ""
 
+msgid "Concept status"
+msgstr ""
+
 msgid "Import failed"
 msgstr ""
 
