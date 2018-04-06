@@ -70,7 +70,7 @@ export class LocationService {
   
   atInformationAboutService(): void {
     this.changeLocation([{
-      localizationKey: 'Information about the web service',
+      localizationKey: 'Information about the service',
       route: ['information']
     }]);
   }
