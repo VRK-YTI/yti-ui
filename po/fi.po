@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-03-27 13:32+0300\n"
+"PO-Revision-Date: 2018-04-17 16:34+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -263,8 +263,8 @@ msgstr "uusi käsite"
 msgid "New collection"
 msgstr "uusi käsitevalikoima"
 
-msgid "self reference error"
-msgstr "Valinta ei voi viitata itseensä"
+msgid "already added error"
+msgstr "Valinta on jo lisätty"
 
 msgid "Front page"
 msgstr "Etusivu"
@@ -300,11 +300,11 @@ msgstr "Poista linkitys"
 msgid "Concept not in references"
 msgstr "Käsite ei löydy viitteistä"
 
+msgid "self reference error"
+msgstr "Valinta ei voi viitata itseensä"
+
 msgid "All statuses"
 msgstr "Kaikki tilat"
-
-msgid "already added error"
-msgstr "Valinta on jo lisätty"
 
 msgid "prefLabel"
 msgstr "Suositettava termi"
@@ -341,6 +341,15 @@ msgstr "Asiasanasto"
 
 msgid "TerminologicalVocabularyType"
 msgstr "Terminologinen sanasto"
+
+msgid "broader"
+msgstr "Hierarkkinen yläkäsite"
+
+msgid "related"
+msgstr "Liittyvä käsite"
+
+msgid "isPartOf"
+msgstr "Partitiivinen koostumussuhde"
 
 msgid "validateMeta"
 msgstr "Epävalidi syöte"

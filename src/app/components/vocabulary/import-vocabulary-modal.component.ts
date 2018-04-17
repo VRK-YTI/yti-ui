@@ -1,7 +1,7 @@
 import { Component, Injectable, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Localization } from 'yti-common-ui/types/localization';
-import { flatten } from 'yti-common-ui/utils/array';
+import { flatten, anyMatching } from 'yti-common-ui/utils/array';
 import { ConceptNode, VocabularyNode } from 'app/entities/node';
 import { MetaModelService } from 'app/services/meta-model.service';
 import { MetaModel } from 'app/entities/meta';
@@ -17,6 +17,9 @@ class CsvConceptDetails {
               public note: Localization[],
               public example: Localization[],
               public synonym: Localization[],
+              public broader: Localization[],
+              public related: Localization[],
+              public isPartOf: Localization[],
               public status: Status,
               public lineNumber: number) {
   }
@@ -60,6 +63,9 @@ class CsvConceptDetails {
       parseLocalizationsForProperty('note'),
       parseLocalizationsForProperty('example'),
       parseLocalizationsForProperty('synonym'),
+      parseLocalizationsForProperty('broader'),
+      parseLocalizationsForProperty('related'),
+      parseLocalizationsForProperty('isPartOf'),
       parseLiteralForProperty('status') as Status,
       lineNumber
     );
@@ -74,7 +80,10 @@ class CsvConceptDetails {
       { name: 'definition', localizations: this.definition },
       { name: 'note', localizations: this.note },
       { name: 'example', localizations: this.example },
-      { name: 'synonym', localizations: this.synonym }
+      { name: 'synonym', localizations: this.synonym },
+      { name: 'broader', localizations: this.broader },
+      { name: 'related', localizations: this.related },
+      { name: 'isPartOf', localizations: this.isPartOf }
     ];
 
     return allProperties.filter(property => propertyIsNotEmpty(property.localizations));
@@ -83,6 +92,26 @@ class CsvConceptDetails {
   get conceptStatus() {
     return this.status;
   }
+}
+
+interface CreatedConcept {
+  conceptNode: ConceptNode;
+  broader: Localization[];
+  related: Localization[];
+  isPartOf: Localization[];
+}
+
+function localizationsMatch(localization1: Localization[], localization2: Localization[]) {
+  
+  let result = false;
+
+  localization1.map(loc1 => {
+    if (anyMatching(localization2, loc2 => loc1.value === loc2.value && loc1.lang === loc2.lang)) {
+      result = true;
+    }
+  });
+
+  return result;
 }
 
 @Injectable()
@@ -177,6 +206,7 @@ export class ImportVocabularyModalComponent implements OnInit {
   @Input() vocabulary: VocabularyNode;
 
   conceptsFromCsv: CsvConceptDetails[] = [];
+  createdConcepts: CreatedConcept[] = [];
   importError = false;
   uploading = false;
 
@@ -242,16 +272,55 @@ export class ImportVocabularyModalComponent implements OnInit {
     this.uploading = true;
 
     const conceptsToSave = this.conceptsFromCsv;
+    
+    this.metaModelService.getMeta(this.vocabulary.graphId).subscribe(metaModel => {
 
-    this.metaModelService.getMeta(this.vocabulary.graphId).subscribe(metaModel =>
-      this.termedService.saveNodes(conceptsToSave.map(concept => this.convertToConceptNode(concept, metaModel)))
+      this.createdConcepts = conceptsToSave.map(concept => {
+        const newConceptNode = this.convertToConceptNode(concept, metaModel);
+        
+        const createdConcept = {          
+          conceptNode: newConceptNode,
+          broader: concept.broader,
+          related: concept.related,
+          isPartOf: concept.isPartOf
+        };
+        
+        return createdConcept;
+      });
+
+      const conceptNodesToSave = this.createdConcepts.map(createdConcept => {
+
+        const conceptHasReferences = createdConcept.broader.length > 0 || createdConcept.related.length > 0 
+                                                                       || createdConcept.isPartOf.length > 0;
+        if (conceptHasReferences) {
+
+          this.createdConcepts.map(conceptToCompare => {
+            
+            if (localizationsMatch(createdConcept.broader, conceptToCompare.conceptNode.prefLabel)) {
+              createdConcept.conceptNode.addBroaderConcept(conceptToCompare.conceptNode);
+            }
+
+            if (localizationsMatch(createdConcept.related, conceptToCompare.conceptNode.prefLabel)) {
+              createdConcept.conceptNode.addRelatedConcept(conceptToCompare.conceptNode);
+            }
+
+            if (localizationsMatch(createdConcept.isPartOf, conceptToCompare.conceptNode.prefLabel)) {
+              createdConcept.conceptNode.addIsPartOfConcept(conceptToCompare.conceptNode);
+            }
+          });
+        }
+
+        return createdConcept.conceptNode;        
+      });
+
+      this.termedService.saveNodes(conceptNodesToSave)
         .subscribe({
           next: () => this.modal.close(),
           error: () => {
             this.importError = true;
             this.uploading = false;
           }
-        })
-    );
+        });
+    });
   }
 }

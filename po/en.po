@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-03-27 13:33+0300\n"
+"PO-Revision-Date: 2018-04-17 16:47+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -260,8 +260,8 @@ msgstr "new concept"
 msgid "New collection"
 msgstr "new collection"
 
-msgid "self reference error"
-msgstr "Selection references itself"
+msgid "already added error"
+msgstr "Selection is already added"
 
 msgid "Front page"
 msgstr ""
@@ -295,11 +295,11 @@ msgstr ""
 msgid "Concept not in references"
 msgstr ""
 
+msgid "self reference error"
+msgstr "Selection references itself"
+
 msgid "All statuses"
 msgstr ""
-
-msgid "already added error"
-msgstr "Selection is already added"
 
 msgid "prefLabel"
 msgstr "Preferred term"
@@ -336,6 +336,15 @@ msgstr "Vocabulary"
 
 msgid "TerminologicalVocabularyType"
 msgstr "Terminological vocabulary"
+
+msgid "broader"
+msgstr "Broader concept"
+
+msgid "related"
+msgstr "Related concept"
+
+msgid "isPartOf"
+msgstr "Is part of concept"
 
 msgid "validateMeta"
 msgstr "Invalid"

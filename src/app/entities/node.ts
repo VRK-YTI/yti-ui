@@ -571,12 +571,20 @@ export class ConceptNode extends Node<'Concept'> {
     return this.meta.hasReference('related');
   }
 
+  addRelatedConcept(concept: ConceptNode) {
+    this.getReference<ConceptNode>('related').values.push(concept);
+  }
+
   get relatedConcepts(): Reference<ConceptNode> {
     return this.getReference<ConceptNode>('related');
   }
 
   hasBroaderConcepts() {
     return this.meta.hasReference('broader');
+  }
+
+  addBroaderConcept(concept: ConceptNode) {
+    this.getReference<ConceptNode>('broader').values.push(concept);
   }
 
   get broaderConcepts(): Reference<ConceptNode> {
@@ -589,6 +597,10 @@ export class ConceptNode extends Node<'Concept'> {
 
   hasIsPartOfConcepts() {
     return this.meta.hasReference('isPartOf');
+  }
+
+  addIsPartOfConcept(concept: ConceptNode) {
+    this.getReference<ConceptNode>('isPartOf').values.push(concept);
   }
 
   get isPartOfConcepts(): Reference<ConceptNode> {
