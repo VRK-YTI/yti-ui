@@ -101,12 +101,12 @@ interface CreatedConcept {
   isPartOf: Localization[];
 }
 
-function localizationsMatch(localization1: Localization[], localization2: Localization[]) {
+function localizationsHaveAnyMatch(localizations: Localization[], localizationsToCompare: Localization[]) {
   
   let result = false;
 
-  localization1.map(loc1 => {
-    if (anyMatching(localization2, loc2 => loc1.value === loc2.value && loc1.lang === loc2.lang)) {
+  localizations.map(loc => {
+    if (anyMatching(localizationsToCompare, locToComp => loc.value === locToComp.value && loc.lang === locToComp.lang)) {
       result = true;
     }
   });
@@ -206,7 +206,6 @@ export class ImportVocabularyModalComponent implements OnInit {
   @Input() vocabulary: VocabularyNode;
 
   conceptsFromCsv: CsvConceptDetails[] = [];
-  createdConcepts: CreatedConcept[] = [];
   importError = false;
   uploading = false;
 
@@ -245,6 +244,10 @@ export class ImportVocabularyModalComponent implements OnInit {
     return this.conceptsWithEmptyPrefLabels.map(concept => concept.lineNumber).join(', ');
   }
 
+  get invalid() {
+    return this.numberOfConceptsWithEmptyPrefLabels > 0;
+  }
+
   convertToConceptNode(conceptFromCsv: CsvConceptDetails, metaModel: MetaModel): ConceptNode {
 
     const concept: ConceptNode = metaModel.createEmptyConcept(this.vocabulary);
@@ -254,13 +257,56 @@ export class ImportVocabularyModalComponent implements OnInit {
     concept.note = conceptFromCsv.note;
     concept.example = conceptFromCsv.example;
     concept.altLabel = conceptFromCsv.synonym;
-    concept.status = conceptFromCsv.status;
+
+    if (concept.hasStatus()) {
+      concept.status = conceptFromCsv.status;
+    }
 
     return concept;
   }
 
-  get invalid() {
-    return this.numberOfConceptsWithEmptyPrefLabels > 0;
+  getConceptNodesToSave(conceptsToSave: CsvConceptDetails[], metaModel: MetaModel): ConceptNode[] {
+
+    const createdConcepts = conceptsToSave.map(concept => {
+      const newConceptNode = this.convertToConceptNode(concept, metaModel);
+      
+      const createdConcept: CreatedConcept = {          
+        conceptNode: newConceptNode,
+        broader: concept.broader,
+        related: concept.related,
+        isPartOf: concept.isPartOf
+      };
+      
+      return createdConcept;
+    });
+  
+    return createdConcepts.map(createdConcept => {
+      const conceptHasReferences = createdConcept.broader.length > 0 || createdConcept.related.length > 0 
+                                                                     || createdConcept.isPartOf.length > 0;
+      if (conceptHasReferences) {
+        createdConcepts.map(conceptToCompare => this.checkAndAddConceptReferences(createdConcept, conceptToCompare));
+      }
+  
+      return createdConcept.conceptNode;
+    });
+  }
+
+  checkAndAddConceptReferences(createdConcept: CreatedConcept, conceptToCompare: CreatedConcept) {
+
+    if (localizationsHaveAnyMatch(createdConcept.broader, conceptToCompare.conceptNode.prefLabel)
+        && createdConcept.conceptNode.findReference('broader')) {
+      createdConcept.conceptNode.addBroaderConcept(conceptToCompare.conceptNode);
+    }
+  
+    if (localizationsHaveAnyMatch(createdConcept.related, conceptToCompare.conceptNode.prefLabel)
+        && createdConcept.conceptNode.findReference('related')) {
+      createdConcept.conceptNode.addRelatedConcept(conceptToCompare.conceptNode);
+    }
+  
+    if (localizationsHaveAnyMatch(createdConcept.isPartOf, conceptToCompare.conceptNode.prefLabel)
+        && createdConcept.conceptNode.findReference('isPartOf')) {
+      createdConcept.conceptNode.addIsPartOfConcept(conceptToCompare.conceptNode);
+    }
   }
 
   cancel() {
@@ -275,45 +321,7 @@ export class ImportVocabularyModalComponent implements OnInit {
     
     this.metaModelService.getMeta(this.vocabulary.graphId).subscribe(metaModel => {
 
-      this.createdConcepts = conceptsToSave.map(concept => {
-        const newConceptNode = this.convertToConceptNode(concept, metaModel);
-        
-        const createdConcept = {          
-          conceptNode: newConceptNode,
-          broader: concept.broader,
-          related: concept.related,
-          isPartOf: concept.isPartOf
-        };
-        
-        return createdConcept;
-      });
-
-      const conceptNodesToSave = this.createdConcepts.map(createdConcept => {
-
-        const conceptHasReferences = createdConcept.broader.length > 0 || createdConcept.related.length > 0 
-                                                                       || createdConcept.isPartOf.length > 0;
-        if (conceptHasReferences) {
-
-          this.createdConcepts.map(conceptToCompare => {
-            
-            if (localizationsMatch(createdConcept.broader, conceptToCompare.conceptNode.prefLabel)) {
-              createdConcept.conceptNode.addBroaderConcept(conceptToCompare.conceptNode);
-            }
-
-            if (localizationsMatch(createdConcept.related, conceptToCompare.conceptNode.prefLabel)) {
-              createdConcept.conceptNode.addRelatedConcept(conceptToCompare.conceptNode);
-            }
-
-            if (localizationsMatch(createdConcept.isPartOf, conceptToCompare.conceptNode.prefLabel)) {
-              createdConcept.conceptNode.addIsPartOfConcept(conceptToCompare.conceptNode);
-            }
-          });
-        }
-
-        return createdConcept.conceptNode;        
-      });
-
-      this.termedService.saveNodes(conceptNodesToSave)
+      this.termedService.saveNodes(this.getConceptNodesToSave(conceptsToSave, metaModel))
         .subscribe({
           next: () => this.modal.close(),
           error: () => {
