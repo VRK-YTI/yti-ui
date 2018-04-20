@@ -76,14 +76,14 @@ class CsvConceptDetails {
     const propertyIsNotEmpty = (localizations: Localization[]) => localizations.length > 0;
 
     const allProperties = [
-      { name: 'prefLabel', localizations: this.prefLabel, type: "property" },
-      { name: 'definition', localizations: this.definition, type: "property" },
-      { name: 'note', localizations: this.note, type: "property" },
-      { name: 'example', localizations: this.example, type: "property" },
-      { name: 'synonym', localizations: this.synonym, type: "property" },
-      { name: 'broader', localizations: this.broader, type: "reference" },
-      { name: 'related', localizations: this.related, type: "reference" },
-      { name: 'isPartOf', localizations: this.isPartOf, type: "reference" }
+      { name: 'prefLabel', localizations: this.prefLabel, type: 'property' },
+      { name: 'definition', localizations: this.definition, type: 'property' },
+      { name: 'note', localizations: this.note, type: 'property' },
+      { name: 'example', localizations: this.example, type: 'property' },
+      { name: 'synonym', localizations: this.synonym, type: 'property' },
+      { name: 'broader', localizations: this.broader, type: 'reference' },
+      { name: 'related', localizations: this.related, type: 'reference' },
+      { name: 'isPartOf', localizations: this.isPartOf, type: 'reference' }
     ];
     
     return allProperties.filter(property => propertyIsNotEmpty(property.localizations));
@@ -94,7 +94,7 @@ class CsvConceptDetails {
   }
 }
 
-interface CreatedConcept {
+interface CreatedConceptFromCsv {
   conceptNode: ConceptNode;
   broader: Localization[];
   related: Localization[];
@@ -253,15 +253,15 @@ export class ImportVocabularyModalComponent implements OnInit {
   }
 
   hasPropertyOrReference(name: string, type: string) {
-    return type === "property" ? this.hasProperty(name) : this.hasReference(name);
+    return type === 'property' ? this.hasProperty(name) : this.hasReference(name);
   }
 
   hasProperty(name: string) {
-    return this.conceptMetaModel.getNodeMeta(this.vocabulary.graphId, "Concept").hasProperty(name);
+    return this.conceptMetaModel.getNodeMeta(this.vocabulary.graphId, 'Concept').hasProperty(name);
   }
 
   hasReference(name: string) {
-    return this.conceptMetaModel.getNodeMeta(this.vocabulary.graphId, "Concept").hasReference(name);
+    return this.conceptMetaModel.getNodeMeta(this.vocabulary.graphId, 'Concept').hasReference(name);
   }
 
   convertToConceptNode(conceptFromCsv: CsvConceptDetails, metaModel: MetaModel): ConceptNode {
@@ -286,7 +286,7 @@ export class ImportVocabularyModalComponent implements OnInit {
     const createdConcepts = conceptsToSave.map(concept => {
       const newConceptNode = this.convertToConceptNode(concept, metaModel);
       
-      const createdConcept: CreatedConcept = {          
+      const createdConcept: CreatedConceptFromCsv = {          
         conceptNode: newConceptNode,
         broader: concept.broader,
         related: concept.related,
@@ -294,35 +294,37 @@ export class ImportVocabularyModalComponent implements OnInit {
       };
       
       return createdConcept;
-    });
-  
+    });  
+
+    return this.checkAndAddConceptReferences(createdConcepts);
+  }
+
+  checkAndAddConceptReferences(createdConcepts: CreatedConceptFromCsv[]): ConceptNode[] {
+
     return createdConcepts.map(createdConcept => {
-      const conceptHasReferences = createdConcept.broader.length > 0 || createdConcept.related.length > 0 
+      const conceptHasReferenceConcepts = createdConcept.broader.length > 0 || createdConcept.related.length > 0 
                                                                      || createdConcept.isPartOf.length > 0;
-      if (conceptHasReferences) {
-        createdConcepts.map(conceptToCompare => this.checkAndAddConceptReferences(createdConcept, conceptToCompare));
+      if (conceptHasReferenceConcepts) {        
+        createdConcepts.map(conceptToCompare => {
+          if (localizationsHaveAnyMatch(createdConcept.broader, conceptToCompare.conceptNode.prefLabel)
+              && this.hasReference('broader')) {
+            createdConcept.conceptNode.addBroaderConcept(conceptToCompare.conceptNode);
+          }
+        
+          if (localizationsHaveAnyMatch(createdConcept.related, conceptToCompare.conceptNode.prefLabel)
+              && this.hasReference('related')) {
+            createdConcept.conceptNode.addRelatedConcept(conceptToCompare.conceptNode);
+          }
+        
+          if (localizationsHaveAnyMatch(createdConcept.isPartOf, conceptToCompare.conceptNode.prefLabel)
+              && this.hasReference('isPartOf')) {
+            createdConcept.conceptNode.addIsPartOfConcept(conceptToCompare.conceptNode);
+          }
+        });
       }
   
       return createdConcept.conceptNode;
-    });
-  }
-
-  checkAndAddConceptReferences(createdConcept: CreatedConcept, conceptToCompare: CreatedConcept) {
-
-    if (localizationsHaveAnyMatch(createdConcept.broader, conceptToCompare.conceptNode.prefLabel)
-        && createdConcept.conceptNode.findReference('broader')) {
-      createdConcept.conceptNode.addBroaderConcept(conceptToCompare.conceptNode);
-    }
-  
-    if (localizationsHaveAnyMatch(createdConcept.related, conceptToCompare.conceptNode.prefLabel)
-        && createdConcept.conceptNode.findReference('related')) {
-      createdConcept.conceptNode.addRelatedConcept(conceptToCompare.conceptNode);
-    }
-  
-    if (localizationsHaveAnyMatch(createdConcept.isPartOf, conceptToCompare.conceptNode.prefLabel)
-        && createdConcept.conceptNode.findReference('isPartOf')) {
-      createdConcept.conceptNode.addIsPartOfConcept(conceptToCompare.conceptNode);
-    }
+    });    
   }
 
   cancel() {
