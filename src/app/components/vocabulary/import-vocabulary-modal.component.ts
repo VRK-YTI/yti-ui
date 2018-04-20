@@ -71,21 +71,21 @@ class CsvConceptDetails {
     );
   }
 
-  get nonEmptyProperties(): {name: string, localizations: Localization[]}[] {
+  get nonEmptyProperties(): {name: string, localizations: Localization[], type: string}[] {
 
     const propertyIsNotEmpty = (localizations: Localization[]) => localizations.length > 0;
 
     const allProperties = [
-      { name: 'prefLabel', localizations: this.prefLabel },
-      { name: 'definition', localizations: this.definition },
-      { name: 'note', localizations: this.note },
-      { name: 'example', localizations: this.example },
-      { name: 'synonym', localizations: this.synonym },
-      { name: 'broader', localizations: this.broader },
-      { name: 'related', localizations: this.related },
-      { name: 'isPartOf', localizations: this.isPartOf }
+      { name: 'prefLabel', localizations: this.prefLabel, type: "property" },
+      { name: 'definition', localizations: this.definition, type: "property" },
+      { name: 'note', localizations: this.note, type: "property" },
+      { name: 'example', localizations: this.example, type: "property" },
+      { name: 'synonym', localizations: this.synonym, type: "property" },
+      { name: 'broader', localizations: this.broader, type: "reference" },
+      { name: 'related', localizations: this.related, type: "reference" },
+      { name: 'isPartOf', localizations: this.isPartOf, type: "reference" }
     ];
-
+    
     return allProperties.filter(property => propertyIsNotEmpty(property.localizations));
   }
 
@@ -162,19 +162,20 @@ export class ImportVocabularyModalService {
               <div class="search-result" *ngFor="let concept of conceptsFromCsv">                
                 <div class="content">                  
                   <div *ngFor="let property of concept.nonEmptyProperties; let last = last"
-                      [class.last]="last"
-                      [ngSwitch]="property.name">
-                    <dl>
-                      <dt><label class="name">{{property.name | translate}}</label></dt>
-                      <dd>
-                        <div class="localized" *ngFor="let localization of property.localizations">
-                          <div class="language">{{localization.lang.toUpperCase()}}</div>
-                          <div class="localization">{{localization.value}}</div>
-                        </div>
-                      </dd>
-                    </dl>
+                       [class.last]="last">
+                    <div *ngIf="hasPropertyOrReference(property.name, property.type)">
+                      <dl>
+                        <dt><label class="name">{{property.name | translate}}</label></dt>
+                        <dd>
+                          <div class="localized" *ngFor="let localization of property.localizations">
+                            <div class="language">{{localization.lang.toUpperCase()}}</div>
+                            <div class="localization">{{localization.value}}</div>
+                          </div>
+                        </dd>
+                      </dl>
+                    </div>
                   </div>
-                  <dl>
+                  <dl *ngIf="hasProperty('status')">
                     <dt><label class="name" translate>Concept status</label></dt>
                     <dd>{{concept.conceptStatus | translate}}</dd>
                   </dl>                 
@@ -206,8 +207,9 @@ export class ImportVocabularyModalComponent implements OnInit {
   @Input() vocabulary: VocabularyNode;
 
   conceptsFromCsv: CsvConceptDetails[] = [];
+  conceptMetaModel: MetaModel;
   importError = false;
-  uploading = false;
+  uploading = false;  
 
   constructor(private modal: NgbActiveModal,
               private metaModelService: MetaModelService,
@@ -226,6 +228,8 @@ export class ImportVocabularyModalComponent implements OnInit {
         this.uploading = false;
       }
     });
+
+    this.metaModelService.getMeta(this.vocabulary.graphId).subscribe(metaModel => this.conceptMetaModel = metaModel);
   }
 
   get numberOfConcepts() {
@@ -248,6 +252,18 @@ export class ImportVocabularyModalComponent implements OnInit {
     return this.numberOfConceptsWithEmptyPrefLabels > 0;
   }
 
+  hasPropertyOrReference(name: string, type: string) {
+    return type === "property" ? this.hasProperty(name) : this.hasReference(name);
+  }
+
+  hasProperty(name: string) {
+    return this.conceptMetaModel.getNodeMeta(this.vocabulary.graphId, "Concept").hasProperty(name);
+  }
+
+  hasReference(name: string) {
+    return this.conceptMetaModel.getNodeMeta(this.vocabulary.graphId, "Concept").hasReference(name);
+  }
+
   convertToConceptNode(conceptFromCsv: CsvConceptDetails, metaModel: MetaModel): ConceptNode {
 
     const concept: ConceptNode = metaModel.createEmptyConcept(this.vocabulary);
@@ -265,7 +281,7 @@ export class ImportVocabularyModalComponent implements OnInit {
     return concept;
   }
 
-  getConceptNodesToSave(conceptsToSave: CsvConceptDetails[], metaModel: MetaModel): ConceptNode[] {
+  createConceptNodesToSave(conceptsToSave: CsvConceptDetails[], metaModel: MetaModel): ConceptNode[] {
 
     const createdConcepts = conceptsToSave.map(concept => {
       const newConceptNode = this.convertToConceptNode(concept, metaModel);
@@ -319,16 +335,13 @@ export class ImportVocabularyModalComponent implements OnInit {
 
     const conceptsToSave = this.conceptsFromCsv;
     
-    this.metaModelService.getMeta(this.vocabulary.graphId).subscribe(metaModel => {
-
-      this.termedService.saveNodes(this.getConceptNodesToSave(conceptsToSave, metaModel))
-        .subscribe({
-          next: () => this.modal.close(),
-          error: () => {
-            this.importError = true;
-            this.uploading = false;
-          }
-        });
-    });
+    this.termedService.saveNodes(this.createConceptNodesToSave(conceptsToSave, this.conceptMetaModel))
+      .subscribe({
+        next: () => this.modal.close(),
+        error: () => {
+          this.importError = true;
+          this.uploading = false;
+        }
+      });
   }
 }
