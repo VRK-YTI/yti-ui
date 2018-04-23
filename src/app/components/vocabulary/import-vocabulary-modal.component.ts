@@ -76,7 +76,7 @@ class CsvConceptDetails {
     const propertyIsNotEmpty = (localizations: Localization[]) => localizations.length > 0;
 
     const allProperties = [
-      { name: 'prefLabel', localizations: this.prefLabel, type: 'property' },
+      { name: 'prefLabel', localizations: this.prefLabel, type: '' },
       { name: 'definition', localizations: this.definition, type: 'property' },
       { name: 'note', localizations: this.note, type: 'property' },
       { name: 'example', localizations: this.example, type: 'property' },
@@ -252,8 +252,9 @@ export class ImportVocabularyModalComponent implements OnInit {
     return this.numberOfConceptsWithEmptyPrefLabels > 0;
   }
 
-  hasPropertyOrReference(name: string, type: string) {
-    return type === 'property' ? this.hasProperty(name) : this.hasReference(name);
+  hasPropertyOrReference(name: string, type: string) {    
+    return type ? type === 'property' ? this.hasProperty(name) : this.hasReference(name)
+                : true;
   }
 
   hasProperty(name: string) {
