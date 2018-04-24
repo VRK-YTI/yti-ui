@@ -85,7 +85,7 @@ class CsvConceptDetails {
       { name: 'related', localizations: this.related, type: 'reference' },
       { name: 'isPartOf', localizations: this.isPartOf, type: 'reference' }
     ];
-    
+
     return allProperties.filter(property => propertyIsNotEmpty(property.localizations));
   }
 
@@ -163,7 +163,7 @@ export class ImportVocabularyModalService {
                 <div class="content">                  
                   <div *ngFor="let property of concept.nonEmptyProperties; let last = last"
                        [class.last]="last">
-                    <div *ngIf="hasPropertyOrReference(property.name, property.type)">
+                    <div *ngIf="showNonEmptyProperty(property.name, property.type)">
                       <dl>
                         <dt><label class="name">{{property.name | translate}}</label></dt>
                         <dd>
@@ -252,9 +252,8 @@ export class ImportVocabularyModalComponent implements OnInit {
     return this.numberOfConceptsWithEmptyPrefLabels > 0;
   }
 
-  hasPropertyOrReference(name: string, type: string) {    
-    return type ? type === 'property' ? this.hasProperty(name) : this.hasReference(name)
-                : true;
+  showNonEmptyProperty(name: string, type: string) {
+    return type === 'reference' ? this.hasReference(name) : true;
   }
 
   hasProperty(name: string) {
