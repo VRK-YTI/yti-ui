@@ -111,11 +111,11 @@ function localizationsHaveAnyMatch(localizations: Localization[], localizationsT
   
   let result = false;
 
-  localizations.map(loc => {
+  for (const loc of localizations) {
     if (anyMatching(localizationsToCompare, locToComp => loc.value === locToComp.value && loc.lang === locToComp.lang)) {
       result = true;
     }
-  });
+  }
 
   return result;
 }
@@ -321,7 +321,7 @@ export class ImportVocabularyModalComponent implements OnInit {
       const conceptHasReferenceConcepts = createdConcept.broader.length > 0 || createdConcept.related.length > 0 
                                                                      || createdConcept.isPartOf.length > 0;
       if (conceptHasReferenceConcepts) {        
-        createdConcepts.map(conceptToCompare => {
+        for (const conceptToCompare of createdConcepts) {
           if (localizationsHaveAnyMatch(createdConcept.broader, conceptToCompare.conceptNode.prefLabel)
               && this.hasReference('broader')) {
             createdConcept.conceptNode.addBroaderConcept(conceptToCompare.conceptNode);
@@ -335,8 +335,8 @@ export class ImportVocabularyModalComponent implements OnInit {
           if (localizationsHaveAnyMatch(createdConcept.isPartOf, conceptToCompare.conceptNode.prefLabel)
               && this.hasReference('isPartOf')) {
             createdConcept.conceptNode.addIsPartOfConcept(conceptToCompare.conceptNode);
-          }
-        });
+          }          
+        }
       }
   
       return createdConcept.conceptNode;
