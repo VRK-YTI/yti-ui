@@ -213,7 +213,7 @@ export class ImportVocabularyModalComponent implements OnInit {
   @Input() vocabulary: VocabularyNode;
 
   conceptsFromCsv: CsvConceptDetails[] = [];
-  conceptMetaModel: MetaModel;
+  metaModel: MetaModel;
   importError = false;
   uploading = false;
 
@@ -235,7 +235,7 @@ export class ImportVocabularyModalComponent implements OnInit {
       }
     });
 
-    this.metaModelService.getMeta(this.vocabulary.graphId).subscribe(metaModel => this.conceptMetaModel = metaModel);
+    this.metaModelService.getMeta(this.vocabulary.graphId).subscribe(metaModel => this.metaModel = metaModel);
   }
 
   get numberOfConcepts() {
@@ -259,11 +259,11 @@ export class ImportVocabularyModalComponent implements OnInit {
   }
 
   hasProperty(name: string) {
-    return this.conceptMetaModel.getNodeMeta(this.vocabulary.graphId, 'Concept').hasProperty(name);
+    return this.metaModel.getNodeMeta(this.vocabulary.graphId, 'Concept').hasProperty(name);
   }
 
   hasReference(name: string) {
-    return this.conceptMetaModel.getNodeMeta(this.vocabulary.graphId, 'Concept').hasReference(name);
+    return this.metaModel.getNodeMeta(this.vocabulary.graphId, 'Concept').hasReference(name);
   }
 
   showNonEmptyProperty(property: ConceptProperty) {
@@ -353,7 +353,7 @@ export class ImportVocabularyModalComponent implements OnInit {
 
     const conceptsToSave = this.conceptsFromCsv;
 
-    this.termedService.saveNodes(this.createConceptNodesToSave(conceptsToSave, this.conceptMetaModel))
+    this.termedService.saveNodes(this.createConceptNodesToSave(conceptsToSave, this.metaModel))
       .subscribe({
         next: () => this.modal.close(),
         error: () => {
