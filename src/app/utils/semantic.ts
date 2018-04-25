@@ -219,8 +219,9 @@ class XmlSerializer implements SemanticTextSerializer {
       throw new Error('Cannot parse xml');
     }
 
+    // normalize if empty
     if (children.length === 0) {
-      documentNode.appendChild(document.createTextNode(''));
+      children.push(document.createTextNode(''));
     }
 
     const groupedNodes: Node[][] = [];
