@@ -45,18 +45,6 @@ class CsvConceptDetails {
       return flatten(localizations.map(localization => splitValuesAsOwnLocalizations(localization)));
     }
 
-    function parseLiteralForProperty(propertyName: string): string {
-
-      const entriesRelatedToProperty = Object.entries(csvJsonObject)
-        .filter(([key, value]) => key === propertyName && value !== '');
-
-      const literalProperty = entriesRelatedToProperty.map(([key, value]) => {
-        return value;
-      });
-
-      return literalProperty[0] ? literalProperty[0] : 'DRAFT' as string;
-    }
-
     return new CsvConceptDetails(
       parseLocalizationsForProperty('prefLabel'),
       parseLocalizationsForProperty('definition'),
@@ -66,7 +54,7 @@ class CsvConceptDetails {
       parseLocalizationsForProperty('broader'),
       parseLocalizationsForProperty('related'),
       parseLocalizationsForProperty('isPartOf'),
-      parseLiteralForProperty('status') as Status,
+      (csvJsonObject['status'] || 'DRAFT') as Status,
       lineNumber
     );
   }
