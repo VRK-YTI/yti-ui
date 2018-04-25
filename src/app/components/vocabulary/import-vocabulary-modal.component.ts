@@ -305,16 +305,12 @@ export class ImportVocabularyModalComponent implements OnInit {
   createConceptNodesToSave(conceptsToSave: CsvConceptDetails[]): ConceptNode[] {
 
     const createdConcepts = conceptsToSave.map(concept => {
-      const newConceptNode = this.convertToConceptNode(concept);
-
-      const createdConcept: CreatedConceptFromCsv = {
-        conceptNode: newConceptNode,
+      return {
+        conceptNode: this.convertToConceptNode(concept),
         broader: concept.broader,
         related: concept.related,
         isPartOf: concept.isPartOf
       };
-
-      return createdConcept;
     });
 
     return this.checkAndAddConceptReferences(createdConcepts);
