@@ -1,0 +1,83 @@
+{
+  "id": "a8414060-9320-3186-949f-675d2c3fa2d0",
+  "code": "ExampleScheme",
+  "createdBy": "admin",
+  "createdDate": "2017-05-24T10:35:39.420Z",
+  "lastModifiedBy": "admin",
+  "lastModifiedDate": "2017-06-05T07:37:57.984Z",
+  "type": {
+    "id": "TerminologicalVocabulary",
+    "graph": {
+      "id": "9c2782be-5f75-4cd7-80fa-806a8abfd4e2"
+    }
+  },
+  "properties": {
+    "description": [
+      {
+        "lang": "fi",
+        "value": "Oksan kuvaus. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+        "regex": "(?s)^.*$"
+      }
+    ],
+    "language": [
+      {
+        "lang": "",
+        "value": "fi",
+        "regex": "(?s)^.*$"
+      },
+      {
+        "lang": "",
+        "value": "sv",
+        "regex": "(?s)^.*$"
+      },
+      {
+        "lang": "",
+        "value": "en",
+        "regex": "(?s)^.*$"
+      }
+    ],
+    "prefLabel": [
+      {
+        "lang": "fi",
+        "value": "Opetus-, koulutus- ja varhaiskasvatussanasto (OKSA)",
+        "regex": "(?s)^.*$"
+      },
+      {
+        "lang": "en",
+        "value": "Vocabulary of Education",
+        "regex": "(?s)^.*$"
+      },
+      {
+        "lang": "sv",
+        "value": "Undervisnings- och utbildningsordlista",
+        "regex": "(?s)^.*$"
+      }
+    ]
+  },
+  "references": {
+    "inGroup": [
+      {
+        "id": "1145c41d-10ec-4b13-a97a-7d28328070af",
+        "type": {
+          "id": "Group",
+          "graph": {
+            "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+          }
+        }
+      }
+    ],
+    "publisher": [
+      {
+        "id": "7d3a3c00-5a6b-489b-a3ed-63bb58c26a63",
+        "type": {
+          "id": "Organization",
+          "graph": {
+            "id": "228cce1e-8360-4039-a3f7-725df5643354"
+          }
+        }
+      }
+    ]
+  },
+  "referrers": {
+  }
+}

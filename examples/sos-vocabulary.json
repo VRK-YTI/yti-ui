@@ -1,0 +1,56 @@
+{
+  "id": "e51b0ccb-4ac2-3e16-a117-4cdaae902675",
+  "code": "ExampleScheme",
+  "createdBy": "admin",
+  "createdDate": "2017-05-03T11:24:47.293Z",
+  "lastModifiedBy": "admin",
+  "lastModifiedDate": "2017-05-03T11:28:02.667Z",
+  "type": {
+    "id": "TerminologicalVocabulary",
+    "graph": {
+      "id": "ada55715-c565-4477-8227-0b8a51010bc5"
+    }
+  },
+  "properties": {
+    "description": [
+      {
+        "lang": "fi",
+        "value": "Sosiaalialan kuvaus. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+        "regex": "(?s)^.*$"
+      }
+    ],
+    "prefLabel": [
+      {
+        "lang": "fi",
+        "value": "Sosiaalialan tiedonhallinnan sanasto – Palveluihin, palveluprosesseihin ja asiakastietoihin liittyviä käsitteitä",
+        "regex": "(?s)^.*$"
+      }
+    ]
+  },
+  "references": {
+    "publisher": [
+      {
+        "id": "7d3a3c00-5a6b-489b-a3ed-63bb58c26a63",
+        "type": {
+          "id": "Organization",
+          "graph": {
+            "id": "228cce1e-8360-4039-a3f7-725df5643354"
+          }
+        }
+      }
+    ],
+    "inGroup": [
+      {
+        "id": "eef62fe8-c3f4-4ca8-aae5-8bcff3c50508",
+        "type": {
+          "id": "Group",
+          "graph": {
+            "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+          }
+        }
+      }
+    ]
+  },
+  "referrers": {
+  }
+}

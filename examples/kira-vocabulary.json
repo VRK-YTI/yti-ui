@@ -1,0 +1,48 @@
+{
+  "id": "8687eb1a-9d15-4201-80a4-258238146218",
+  "createdBy": "admin",
+  "createdDate": "2017-06-14T08:03:54.087Z",
+  "lastModifiedBy": "admin",
+  "lastModifiedDate": "2017-06-14T08:25:44.029Z",
+  "type": {
+    "id": "TerminologicalVocabulary",
+    "graph": {
+      "id": "128d0546-b4ba-4812-a7e0-3b2313fdc5e5"
+    }
+  },
+  "properties": {
+    "prefLabel": [
+      {
+        "lang": "fi",
+        "value": "KIRA - Kiinteistö- ja rakennusalan keskeinen sanasto",
+        "regex": "(?s)^.*$"
+      }
+    ]
+  },
+  "references": {
+    "inGroup": [
+      {
+        "id": "51b4cac3-e350-4de1-8886-baadd5ed2e83",
+        "type": {
+          "id": "Group",
+          "graph": {
+            "id": "7f4cb68f-31f6-4bf9-b699-9d72dd110c4c"
+          }
+        }
+      }
+    ],
+    "publisher": [
+      {
+        "id": "7d3a3c00-5a6b-489b-a3ed-63bb58c26a63",
+        "type": {
+          "id": "Organization",
+          "graph": {
+            "id": "228cce1e-8360-4039-a3f7-725df5643354"
+          }
+        }
+      }
+    ]
+  },
+  "referrers": {
+  }
+}
