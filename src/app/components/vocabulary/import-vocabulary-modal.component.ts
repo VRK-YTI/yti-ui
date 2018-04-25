@@ -143,7 +143,7 @@ export class ImportVocabularyModalService {
       <app-ajax-loading-indicator></app-ajax-loading-indicator>
     </div>
 
-    <div *ngIf="!uploading">    
+    <div *ngIf="!uploading">
       <div class="modal-header">
         <h4 class="modal-title">
           <a><i class="fa fa-times" id="cancel_import_link" (click)="cancel()"></i></a>
@@ -163,10 +163,10 @@ export class ImportVocabularyModalService {
               <span translate>Import is not allowed because some of the concepts lack preferred term.</span>
               <span translate>Line numbers in the import file</span>: {{lineNumbersOfEmptyPrefLabels}}
             </div>
-            
+
             <div class="search-results">
-              <div class="search-result" *ngFor="let concept of conceptsFromCsv">                
-                <div class="content">                  
+              <div class="search-result" *ngFor="let concept of conceptsFromCsv">
+                <div class="content">
                   <div *ngFor="let property of concept.nonEmptyProperties; let last = last"
                        [class.last]="last">
                     <div *ngIf="showNonEmptyProperty(property)">
@@ -184,8 +184,8 @@ export class ImportVocabularyModalService {
                   <dl *ngIf="hasProperty('status')">
                     <dt><label class="name" translate>Concept status</label></dt>
                     <dd>{{concept.conceptStatus | translate}}</dd>
-                  </dl>                 
-                </div>              
+                  </dl>
+                </div>
               </div>
             </div>
 
@@ -198,7 +198,7 @@ export class ImportVocabularyModalService {
       <div class="modal-footer">
         <button type="button" id="import_yes_button" class="btn btn-action confirm" (click)="confirm()" [disabled]="invalid" translate>Yes</button>
         <button type="button" id="import_cancel_button" class="btn btn-link cancel" (click)="cancel()" translate>Cancel</button>
-        
+
         <div class="alert alert-danger modal-alert" id="import_error_modal" role="alert" *ngIf="importError">
           <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
           <span translate>Import failed</span>
@@ -223,19 +223,24 @@ export class ImportVocabularyModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
     this.uploading = true;
 
-    Papa.parse(this.importFile, {
-      header: true,
-      skipEmptyLines: true,
-      newline: '\r\n',
-      complete: results => {
-        this.conceptsFromCsv = results.data.map((datum, index) => CsvConceptDetails.createFromCsvRow(datum, index + 2));
-        this.uploading = false;
-      }
-    });
+    this.metaModelService.getMeta(this.vocabulary.graphId)
+      .subscribe(metaModel => {
 
-    this.metaModelService.getMeta(this.vocabulary.graphId).subscribe(metaModel => this.metaModel = metaModel);
+        this.metaModel = metaModel;
+
+        Papa.parse(this.importFile, {
+          header: true,
+          skipEmptyLines: true,
+          newline: '\r\n',
+          complete: results => {
+            this.conceptsFromCsv = results.data.map((datum, index) => CsvConceptDetails.createFromCsvRow(datum, index + 2));
+            this.uploading = false;
+          }
+        });
+      });
   }
 
   get numberOfConcepts() {
@@ -319,21 +324,21 @@ export class ImportVocabularyModalComponent implements OnInit {
 
     return createdConcepts.map(createdConcept => {
       const conceptHasReferenceConcepts = createdConcept.broader.length > 0 || createdConcept.related.length > 0
-                                                                     || createdConcept.isPartOf.length > 0;
+                                                                            || createdConcept.isPartOf.length > 0;
       if (conceptHasReferenceConcepts) {
         for (const conceptToCompare of createdConcepts) {
           if (localizationsHaveAnyMatch(createdConcept.broader, conceptToCompare.conceptNode.prefLabel)
-              && this.hasReference('broader')) {
+            && this.hasReference('broader')) {
             createdConcept.conceptNode.addBroaderConcept(conceptToCompare.conceptNode);
           }
 
           if (localizationsHaveAnyMatch(createdConcept.related, conceptToCompare.conceptNode.prefLabel)
-              && this.hasReference('related')) {
+            && this.hasReference('related')) {
             createdConcept.conceptNode.addRelatedConcept(conceptToCompare.conceptNode);
           }
 
           if (localizationsHaveAnyMatch(createdConcept.isPartOf, conceptToCompare.conceptNode.prefLabel)
-              && this.hasReference('isPartOf')) {
+            && this.hasReference('isPartOf')) {
             createdConcept.conceptNode.addIsPartOfConcept(conceptToCompare.conceptNode);
           }
         }
