@@ -71,7 +71,7 @@ class CsvConceptDetails {
     );
   }
 
-  get nonEmptyProperties(): {name: string, localizations: Localization[], type: string}[] {
+  get nonEmptyProperties(): ConceptProperty[] {
 
     const propertyIsNotEmpty = (localizations: Localization[]) => localizations.length > 0;
 
@@ -99,6 +99,12 @@ interface CreatedConceptFromCsv {
   broader: Localization[];
   related: Localization[];
   isPartOf: Localization[];
+}
+
+interface ConceptProperty {
+  name: string;
+  localizations: Localization[];
+  type: string;
 }
 
 function localizationsHaveAnyMatch(localizations: Localization[], localizationsToCompare: Localization[]) {
@@ -163,11 +169,11 @@ export class ImportVocabularyModalService {
                 <div class="content">                  
                   <div *ngFor="let property of concept.nonEmptyProperties; let last = last"
                        [class.last]="last">
-                    <div *ngIf="showNonEmptyProperty(property.name, property.type)">
+                    <div *ngIf="showNonEmptyProperty(property)">
                       <dl>
                         <dt><label class="name">{{property.name | translate}}</label></dt>
                         <dd>
-                          <div class="localized" *ngFor="let localization of property.localizations">
+                          <div class="localized" *ngFor="let localization of getPropertyLocalizations(property)">
                             <div class="language">{{localization.lang.toUpperCase()}}</div>
                             <div class="localization">{{localization.value}}</div>
                           </div>
@@ -251,17 +257,27 @@ export class ImportVocabularyModalComponent implements OnInit {
   get invalid() {
     return this.numberOfConceptsWithEmptyPrefLabels > 0;
   }
-
-  showNonEmptyProperty(name: string, type: string) {
-    return type === 'reference' ? this.hasReference(name) : true;
-  }
-
+  
   hasProperty(name: string) {
     return this.conceptMetaModel.getNodeMeta(this.vocabulary.graphId, 'Concept').hasProperty(name);
   }
 
   hasReference(name: string) {
     return this.conceptMetaModel.getNodeMeta(this.vocabulary.graphId, 'Concept').hasReference(name);
+  }
+
+  showNonEmptyProperty(property: ConceptProperty) {
+    return property.type === 'reference' ? this.hasReference(property.name) && this.getPropertyLocalizations(property).length > 0
+                                         : true;
+  }
+
+  getPropertyLocalizations(property: ConceptProperty) {
+    return property.type === 'reference' ? property.localizations.filter(localization => this.isReferenceConceptFound(localization)) : property.localizations;
+  }
+
+  isReferenceConceptFound(localization: Localization) {    
+    return this.conceptsFromCsv.filter(concept => 
+      concept.prefLabel.filter(loc => loc.lang === localization.lang && loc.value === localization.value).length > 0).length > 0;
   }
 
   convertToConceptNode(conceptFromCsv: CsvConceptDetails, metaModel: MetaModel): ConceptNode {
