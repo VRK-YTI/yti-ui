@@ -1,7 +1,7 @@
 import { Component, Injectable, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Localization } from 'yti-common-ui/types/localization';
-import { flatten, anyMatching } from 'yti-common-ui/utils/array';
+import { flatten, containsAny } from 'yti-common-ui/utils/array';
 import { ConceptNode, VocabularyNode } from 'app/entities/node';
 import { MetaModelService } from 'app/services/meta-model.service';
 import { MetaModel } from 'app/entities/meta';
@@ -107,17 +107,8 @@ interface ConceptProperty {
   type: string;
 }
 
-function localizationsHaveAnyMatch(localizations: Localization[], localizationsToCompare: Localization[]) {
-
-  let result = false;
-
-  for (const loc of localizations) {
-    if (anyMatching(localizationsToCompare, locToComp => loc.value === locToComp.value && loc.lang === locToComp.lang)) {
-      result = true;
-    }
-  }
-
-  return result;
+function localizationsHaveAnyMatch(lhs: Localization[], rhs: Localization[]): boolean {
+  return containsAny(lhs, rhs, (l, r) => l.value === r.value && l.lang === r.lang);
 }
 
 @Injectable()
