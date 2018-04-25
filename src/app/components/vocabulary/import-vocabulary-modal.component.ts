@@ -285,9 +285,9 @@ export class ImportVocabularyModalComponent implements OnInit {
       concept.prefLabel.filter(loc => loc.lang === localization.lang && loc.value === localization.value).length > 0).length > 0;
   }
 
-  convertToConceptNode(conceptFromCsv: CsvConceptDetails, metaModel: MetaModel): ConceptNode {
+  convertToConceptNode(conceptFromCsv: CsvConceptDetails): ConceptNode {
 
-    const concept: ConceptNode = metaModel.createEmptyConcept(this.vocabulary);
+    const concept: ConceptNode = this.metaModel.createEmptyConcept(this.vocabulary);
 
     concept.prefLabel = conceptFromCsv.prefLabel;
     concept.definition = conceptFromCsv.definition;
@@ -302,10 +302,10 @@ export class ImportVocabularyModalComponent implements OnInit {
     return concept;
   }
 
-  createConceptNodesToSave(conceptsToSave: CsvConceptDetails[], metaModel: MetaModel): ConceptNode[] {
+  createConceptNodesToSave(conceptsToSave: CsvConceptDetails[]): ConceptNode[] {
 
     const createdConcepts = conceptsToSave.map(concept => {
-      const newConceptNode = this.convertToConceptNode(concept, metaModel);
+      const newConceptNode = this.convertToConceptNode(concept);
 
       const createdConcept: CreatedConceptFromCsv = {
         conceptNode: newConceptNode,
@@ -358,7 +358,7 @@ export class ImportVocabularyModalComponent implements OnInit {
 
     const conceptsToSave = this.conceptsFromCsv;
 
-    this.termedService.saveNodes(this.createConceptNodesToSave(conceptsToSave, this.metaModel))
+    this.termedService.saveNodes(this.createConceptNodesToSave(conceptsToSave))
       .subscribe({
         next: () => this.modal.close(),
         error: () => {
