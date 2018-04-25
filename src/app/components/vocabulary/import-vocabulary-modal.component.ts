@@ -26,11 +26,11 @@ class CsvConceptDetails {
 
   static createFromCsvRow(csvJsonObject: any, lineNumber: number): CsvConceptDetails {
 
-    function splitValuesAsOwnLocalizations(localization: Localization) {
+    function splitValuesAsOwnLocalizations(localization: Localization): Localization[] {
       return localization.value.split('\r\n').map(v => ({ lang: localization.lang, value: v}));
     }
 
-    function parseLocalizationsForProperty(propertyName: string) {
+    function parseLocalizationsForProperty(propertyName: string): Localization[] {
 
       const entriesRelatedToProperty = Object.entries(csvJsonObject)
         .filter(([key, value]) => key.startsWith(propertyName) && value !== '');
@@ -45,7 +45,7 @@ class CsvConceptDetails {
       return flatten(localizations.map(localization => splitValuesAsOwnLocalizations(localization)));
     }
 
-    function parseLiteralForProperty(propertyName: string) {
+    function parseLiteralForProperty(propertyName: string): string {
 
       const entriesRelatedToProperty = Object.entries(csvJsonObject)
         .filter(([key, value]) => key === propertyName && value !== '');
