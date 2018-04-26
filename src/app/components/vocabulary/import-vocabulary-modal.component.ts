@@ -1,10 +1,10 @@
 import { Component, Injectable, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Localization } from 'yti-common-ui/types/localization';
-import { containsAny, flatten, firstMatching } from 'yti-common-ui/utils/array';
+import { containsAny, flatten, firstMatching, anyMatching, contains } from 'yti-common-ui/utils/array';
 import { ConceptNode, VocabularyNode } from 'app/entities/node';
 import { MetaModelService } from 'app/services/meta-model.service';
-import { MetaModel } from 'app/entities/meta';
+import { MetaModel, NodeMeta } from 'app/entities/meta';
 import { TermedService } from 'app/services/termed.service';
 import * as Papa from 'papaparse';
 import { ModalService } from 'app/services/modal.service';
@@ -92,6 +92,10 @@ interface ConceptProperty {
   type: string;
 }
 
+function localizationsAreEqual(lhs: Localization, rhs: Localization): boolean {
+  return lhs.value === rhs.value && lhs.lang === rhs.lang;
+}
+
 @Injectable()
 export class ImportVocabularyModalService {
 
@@ -153,7 +157,7 @@ export class ImportVocabularyModalService {
                       </dl>
                     </div>
                   </div>
-                  <dl *ngIf="hasProperty('status')">
+                  <dl>
                     <dt><label class="name" translate>Concept status</label></dt>
                     <dd>{{concept.conceptStatus | translate}}</dd>
                   </dl>
@@ -186,6 +190,7 @@ export class ImportVocabularyModalComponent implements OnInit {
 
   conceptsFromCsv: CsvConceptDetails[] = [];
   metaModel: MetaModel;
+  conceptMeta: NodeMeta;
   importError = false;
   uploading = false;
 
@@ -202,6 +207,7 @@ export class ImportVocabularyModalComponent implements OnInit {
       .subscribe(metaModel => {
 
         this.metaModel = metaModel;
+        this.conceptMeta = metaModel.getNodeMeta(this.vocabulary.graphId, 'Concept');
 
         Papa.parse(this.importFile, {
           header: true,
@@ -235,26 +241,25 @@ export class ImportVocabularyModalComponent implements OnInit {
     return this.numberOfConceptsWithEmptyPrefLabels > 0;
   }
 
-  hasProperty(name: string) {
-    return this.metaModel.getNodeMeta(this.vocabulary.graphId, 'Concept').hasProperty(name);
-  }
-
-  hasReference(name: string) {
-    return this.metaModel.getNodeMeta(this.vocabulary.graphId, 'Concept').hasReference(name);
-  }
-
   showNonEmptyProperty(property: ConceptProperty) {
-    return property.type === 'reference' ? this.hasReference(property.name) && this.getPropertyLocalizations(property).length > 0
-                                         : true;
+
+    if (property.type === 'reference') {
+      return this.conceptMeta.hasReference(property.name) && this.getPropertyLocalizations(property).length > 0
+    } else {
+      return true;
+    }
   }
 
   getPropertyLocalizations(property: ConceptProperty) {
-    return property.type === 'reference' ? property.localizations.filter(localization => this.isReferenceConceptFound(localization)) : property.localizations;
+
+    return property.localizations.filter(localization =>
+      property.type !== 'reference' || this.isReferenceConceptFound(localization));
   }
 
   isReferenceConceptFound(localization: Localization) {
-    return this.conceptsFromCsv.filter(concept =>
-      concept.prefLabel.filter(loc => loc.lang === localization.lang && loc.value === localization.value).length > 0).length > 0;
+
+    return anyMatching(this.conceptsFromCsv, conceptFromCsv =>
+      contains(conceptFromCsv.prefLabel, localization, localizationsAreEqual));
   }
 
   convertToConceptNodeWithoutReferences(conceptFromCsv: CsvConceptDetails): ConceptNode {
@@ -283,7 +288,7 @@ export class ImportVocabularyModalComponent implements OnInit {
       const concept = requireDefined(firstMatching(nodes, n => n.id === conceptFromCsv.id));
 
       const isMatchingNode = (label: Localization[]) => (node: ConceptNode) =>
-        containsAny(node.prefLabel, label, (l, r) => l.value === r.value && l.lang === r.lang);
+        containsAny(node.prefLabel, label, localizationsAreEqual);
 
       if (concept.hasBroaderConcepts()) {
         for (const broader of nodes.filter(isMatchingNode(conceptFromCsv.broader))) {
