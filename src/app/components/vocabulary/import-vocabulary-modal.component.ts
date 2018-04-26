@@ -1,7 +1,7 @@
 import { Component, Injectable, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Localization } from 'yti-common-ui/types/localization';
-import { flatten, containsAny } from 'yti-common-ui/utils/array';
+import { containsAny, flatten, firstMatching } from 'yti-common-ui/utils/array';
 import { ConceptNode, VocabularyNode } from 'app/entities/node';
 import { MetaModelService } from 'app/services/meta-model.service';
 import { MetaModel } from 'app/entities/meta';
@@ -9,8 +9,12 @@ import { TermedService } from 'app/services/termed.service';
 import * as Papa from 'papaparse';
 import { ModalService } from 'app/services/modal.service';
 import { Status } from 'yti-common-ui/entities/status';
+import { v4 as uuid } from 'uuid';
+import { requireDefined } from 'yti-common-ui/utils/object';
 
 class CsvConceptDetails {
+
+  id = uuid();
 
   constructor(public prefLabel: Localization[],
               public definition: Localization[],
@@ -82,21 +86,10 @@ class CsvConceptDetails {
   }
 }
 
-interface CreatedConceptFromCsv {
-  conceptNode: ConceptNode;
-  broader: Localization[];
-  related: Localization[];
-  isPartOf: Localization[];
-}
-
 interface ConceptProperty {
   name: string;
   localizations: Localization[];
   type: string;
-}
-
-function localizationsHaveAnyMatch(lhs: Localization[], rhs: Localization[]): boolean {
-  return containsAny(lhs, rhs, (l, r) => l.value === r.value && l.lang === r.lang);
 }
 
 @Injectable()
@@ -223,7 +216,7 @@ export class ImportVocabularyModalComponent implements OnInit {
   }
 
   get numberOfConcepts() {
-    return this.conceptsFromCsv ? this.conceptsFromCsv.length : 0;
+    return this.conceptsFromCsv.length;
   }
 
   get conceptsWithEmptyPrefLabels() {
@@ -264,9 +257,9 @@ export class ImportVocabularyModalComponent implements OnInit {
       concept.prefLabel.filter(loc => loc.lang === localization.lang && loc.value === localization.value).length > 0).length > 0;
   }
 
-  convertToConceptNode(conceptFromCsv: CsvConceptDetails): ConceptNode {
+  convertToConceptNodeWithoutReferences(conceptFromCsv: CsvConceptDetails): ConceptNode {
 
-    const concept: ConceptNode = this.metaModel.createEmptyConcept(this.vocabulary);
+    const concept: ConceptNode = this.metaModel.createEmptyConcept(this.vocabulary, conceptFromCsv.id);
 
     concept.prefLabel = conceptFromCsv.prefLabel;
     concept.definition = conceptFromCsv.definition;
@@ -281,46 +274,37 @@ export class ImportVocabularyModalComponent implements OnInit {
     return concept;
   }
 
-  createConceptNodesToSave(conceptsToSave: CsvConceptDetails[]): ConceptNode[] {
+  createConceptNodesToSave(): ConceptNode[] {
 
-    const createdConcepts = conceptsToSave.map(concept => {
-      return {
-        conceptNode: this.convertToConceptNode(concept),
-        broader: concept.broader,
-        related: concept.related,
-        isPartOf: concept.isPartOf
-      };
-    });
+    const nodes = this.conceptsFromCsv.map(concept => this.convertToConceptNodeWithoutReferences(concept));
 
-    return this.checkAndAddConceptReferences(createdConcepts);
-  }
+    for (const conceptFromCsv of this.conceptsFromCsv) {
 
-  checkAndAddConceptReferences(createdConcepts: CreatedConceptFromCsv[]): ConceptNode[] {
+      const concept = requireDefined(firstMatching(nodes, n => n.id === conceptFromCsv.id));
 
-    return createdConcepts.map(createdConcept => {
-      const conceptHasReferenceConcepts = createdConcept.broader.length > 0 || createdConcept.related.length > 0
-                                                                            || createdConcept.isPartOf.length > 0;
-      if (conceptHasReferenceConcepts) {
-        for (const conceptToCompare of createdConcepts) {
-          if (localizationsHaveAnyMatch(createdConcept.broader, conceptToCompare.conceptNode.prefLabel)
-            && this.hasReference('broader')) {
-            createdConcept.conceptNode.addBroaderConcept(conceptToCompare.conceptNode);
-          }
+      const isMatchingNode = (label: Localization[]) => (node: ConceptNode) =>
+        containsAny(node.prefLabel, label, (l, r) => l.value === r.value && l.lang === r.lang);
 
-          if (localizationsHaveAnyMatch(createdConcept.related, conceptToCompare.conceptNode.prefLabel)
-            && this.hasReference('related')) {
-            createdConcept.conceptNode.addRelatedConcept(conceptToCompare.conceptNode);
-          }
-
-          if (localizationsHaveAnyMatch(createdConcept.isPartOf, conceptToCompare.conceptNode.prefLabel)
-            && this.hasReference('isPartOf')) {
-            createdConcept.conceptNode.addIsPartOfConcept(conceptToCompare.conceptNode);
-          }
+      if (concept.hasBroaderConcepts()) {
+        for (const broader of nodes.filter(isMatchingNode(conceptFromCsv.broader))) {
+          concept.addBroaderConcept(broader);
         }
       }
 
-      return createdConcept.conceptNode;
-    });
+      if (concept.hasRelatedConcepts()) {
+        for (const related of nodes.filter(isMatchingNode(conceptFromCsv.related))) {
+          concept.addRelatedConcept(related);
+        }
+      }
+
+      if (concept.hasIsPartOfConcepts()) {
+        for (const isPartOf of nodes.filter(isMatchingNode(conceptFromCsv.isPartOf))) {
+          concept.addIsPartOfConcept(isPartOf);
+        }
+      }
+    }
+
+    return nodes;
   }
 
   cancel() {
@@ -331,9 +315,7 @@ export class ImportVocabularyModalComponent implements OnInit {
 
     this.uploading = true;
 
-    const conceptsToSave = this.conceptsFromCsv;
-
-    this.termedService.saveNodes(this.createConceptNodesToSave(conceptsToSave))
+    this.termedService.saveNodes(this.createConceptNodesToSave())
       .subscribe({
         next: () => this.modal.close(),
         error: () => {
