@@ -62,7 +62,7 @@ interface UserOrganizationRoles {
         <div class="input-group">
           
           <app-dropdown [options]="organizationOptions"
-                        id="selected_organization_dropdown"
+                        id="organization_dropdown"
                         [showNullOption]="false"
                         [placement]="'top-left'"
                         [(ngModel)]="selectedOrganization"></app-dropdown>
