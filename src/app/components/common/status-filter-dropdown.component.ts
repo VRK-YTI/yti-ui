@@ -8,6 +8,7 @@ import { Status, allStatuses } from 'yti-common-ui/entities/status';
   selector: 'app-status-filter-dropdown',
   template: `
     <app-filter-dropdown [options]="statusOptions"
+                         id="status_filter_dropdown"
                          [filterSubject]="filterSubject"></app-filter-dropdown>
   `
 })

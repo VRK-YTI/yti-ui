@@ -16,6 +16,7 @@ import { Observable } from 'rxjs/Observable';
     <ul *ngIf="!editing">
       <li *ngFor="let conceptLink of reference.value">
         <a [routerLink]="['/concepts', conceptLink.targetGraph, 'concept', conceptLink.targetId]"
+           id="{{conceptLink.id+'_concept_link_reference_link'}}"
            [ngbPopover]="popContent"
            [triggers]="'mouseenter:mouseleave'"
            [popoverTitle]="conceptLink.label | translateValue">
@@ -34,7 +35,7 @@ import { Observable } from 'rxjs/Observable';
            [appDragSortableItem]="conceptLink"
            [index]="i">
 
-        <a><i class="fa fa-times" (click)="removeReference(conceptLink)"></i></a>
+        <a><i class="fa fa-times" id="{{conceptLink.id+'concept_link_remove_reference'}}" (click)="removeReference(conceptLink)"></i></a>
         <span [ngbPopover]="editingPopContent"
               [triggers]="'mouseenter:mouseleave'"
               #p="ngbPopover"
@@ -50,6 +51,7 @@ import { Observable } from 'rxjs/Observable';
     </div>
 
     <button type="button"
+            id="concept_link_add_reference_button"
             class="btn btn-sm btn-action"
             *ngIf="editing"
             (click)="addReference()" translate>Add concept

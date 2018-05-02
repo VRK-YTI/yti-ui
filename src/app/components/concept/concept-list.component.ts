@@ -15,12 +15,13 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
 
         <div class="selectable-actions">
 
-          <button class="btn btn-action mb-3" *ngIf="canAddConcept()" (click)="addConcept()">
+          <button class="btn btn-action mb-3" id="concept_list_add_concept_button" *ngIf="canAddConcept()" (click)="addConcept()">
             <span translate>Add new concept</span>
           </button>
 
           <div class="input-group input-group-lg input-group-search">
             <input #searchInput
+                   id="concept_list_search_concept_input"
                    [(ngModel)]="model.search"
                    type="text"
                    class="form-control"
@@ -29,6 +30,7 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
           </div>
 
           <div class="btn btn-lg btn-filters"
+               id="concept_list_filter_results"
                [ngbPopover]="filters"
                [triggers]="'manual'"
                [placement]="'right'"
@@ -51,13 +53,13 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
             <div class="filters">
               <div class="form-group">
                 <label translate>Status</label>
-                <app-status-filter-dropdown *ngIf="hasStatus()" 
+                <app-status-filter-dropdown *ngIf="hasStatus()" id="concept_list_filter_dropdown"
                                             [filterSubject]="model.onlyStatus$"></app-status-filter-dropdown>
               </div>
                 
               <div class="form-check">
                 <label class="form-check-label">
-                  <input class="form-check-input" type="checkbox" [(ngModel)]="model.sortByTime"/>
+                  <input class="form-check-input" id="concept_list_sort_by_time_checkbox" type="checkbox" [(ngModel)]="model.sortByTime"/>
                   {{'Order by modified date' | translate}}
                 </label>
               </div>
@@ -74,11 +76,13 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
         <div class="selectable-concepts">
           <ul [ngClass]="{'has-button': canAddConcept()}"
               infinite-scroll
+              id="concept_list_selectable_concepts_list"
               [infiniteScrollDistance]="2.5"
               [scrollWindow]="false"
               (scrolled)="onScrollDown()">
             <li *ngFor="let concept of model.searchResults; trackBy: conceptIdentity"
                 (click)="navigate(concept)"
+                id="{{concept.id+'_concept_list_listitem'}}"
                 [class.selection]="isSelected(concept)">
               <span [innerHTML]="concept.label | translateValue"></span>
             </li>

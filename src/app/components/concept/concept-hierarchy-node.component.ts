@@ -8,8 +8,8 @@ import { IndexedConcept } from 'app/services/elasticsearch.service';
   styleUrls: ['./concept-hierarchy-node.component.scss'],
   template: `
     
-    <i [hidden]="!hasChildren() || expanded" class="fa fa-plus-square-o" (click)="expand()"></i>
-    <i [hidden]="!hasChildren() || collapsed" class="fa fa-minus-square-o" (click)="collapse()"></i>
+    <i [hidden]="!hasChildren() || expanded" class="fa fa-plus-square-o" id="expand_concept_hierarchy_node" (click)="expand()"></i>
+    <i [hidden]="!hasChildren() || collapsed" class="fa fa-minus-square-o" id="collapse_concept_hierarchy_node" (click)="collapse()"></i>
       
     <div class="text" [class.selection]="selected" (click)="navigate()">
       <span>{{concept.label | translateValue}}</span>
@@ -17,7 +17,7 @@ import { IndexedConcept } from 'app/services/elasticsearch.service';
     
     <ul *ngIf="expanded && children">
       <li *ngFor="let child of children | async">
-        <app-concept-hierarchy-node [concept]="child"></app-concept-hierarchy-node>
+        <app-concept-hierarchy-node [concept]="child" id="{{child.id+'_concept_hierarchy_node'}}"></app-concept-hierarchy-node>
       </li>
     </ul>
   `

@@ -58,7 +58,7 @@ export class SearchConceptModalService {
   template: `
     <div class="modal-header">
       <h4 class="modal-title">
-        <a><i class="fa fa-times" (click)="cancel()"></i></a>
+        <a><i class="fa fa-times" id="search_concept_cancel_link" (click)="cancel()"></i></a>
         <span translate>Choose concept</span>
       </h4>
     </div>
@@ -69,6 +69,7 @@ export class SearchConceptModalService {
 
           <div class="input-group input-group-lg input-group-search pull-left">
             <input #searchInput
+                   id="search_concept_search_input"
                    type="text"
                    class="form-control"
                    placeholder="{{'Search concept' | translate}}"
@@ -78,6 +79,7 @@ export class SearchConceptModalService {
           <app-filter-language [(ngModel)]="filterLanguage"
                                [ngModelOptions]="{standalone: true}"
                                [languages]="filterLanguages"
+                               id="search_concept_filter_language"
                                class="pull-right"></app-filter-language>
         </div>
       </div>
@@ -86,10 +88,12 @@ export class SearchConceptModalService {
         <div class="col-12">
 
           <app-vocabulary-filter-dropdown [filterSubject]="onlyVocabulary$"
+                                          id="search_concept_vocabulary_filter_dropdown"
                                           [vocabularies]="vocabularies"
                                           class="pull-left"></app-vocabulary-filter-dropdown>
 
-          <app-status-filter-dropdown *ngIf="hasStatus()" 
+          <app-status-filter-dropdown *ngIf="hasStatus()"
+                                      id="search_concept_status_filter_dropdown"
                                       [filterSubject]="onlyStatus$"
                                       class="pull-left ml-2"></app-status-filter-dropdown>
 
@@ -99,7 +103,8 @@ export class SearchConceptModalService {
       <div class="row full-height">
         <div class="col-md-6">
           <div class="content-box">
-            <div class="search-results"
+            <div class="search-results" 
+                 id="search_concept_search_results"
                  infinite-scroll
                  [infiniteScrollDistance]="3"
                  [scrollWindow]="false"
@@ -107,6 +112,7 @@ export class SearchConceptModalService {
 
               <div *ngFor="let concept of searchResults$ | async; trackBy: conceptIdentity; let last = last"
                    class="search-result"
+                   id="{{concept.id+'_search_result_concept'}}"
                    [class.active]="concept === selectedItem"
                    (click)="select(concept)">
                 <div class="content" [class.last]="last">
@@ -138,12 +144,14 @@ export class SearchConceptModalService {
     <div class="modal-footer">
 
       <button type="button"
+              id="search_concept_confirm_button"
               class="btn btn-action confirm"
               (click)="confirm()"
               [disabled]="cannotSelect()" translate>Select concept
       </button>
 
       <button type="button"
+              id="search_concept_cancel_button"
               class="btn btn-link cancel"
               (click)="cancel()" translate>Cancel
       </button>

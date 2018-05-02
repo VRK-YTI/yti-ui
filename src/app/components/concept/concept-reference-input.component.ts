@@ -12,7 +12,7 @@ import { isDefined, requireDefined } from 'yti-common-ui/utils/object';
   template: `
     <ul *ngIf="!editing">
       <li *ngFor="let concept of reference.value">
-        <a [routerLink]="['/concepts', concept.graphId, 'concept', concept.id]">{{concept.label | translateValue}}</a>
+        <a [routerLink]="['/concepts', concept.graphId, 'concept', concept.id]" id="{{concept.id+'concept_reference_concept_link'}}">{{concept.label | translateValue}}</a>
       </li>
     </ul>
 
@@ -21,7 +21,7 @@ import { isDefined, requireDefined } from 'yti-common-ui/utils/object';
            class="removable-text"
            [appDragSortableItem]="concept" 
            [index]="i">
-        <a><i class="fa fa-times" (click)="removeReference(concept)"></i></a>
+        <a><i class="fa fa-times" id="{{concept.id+'concept_reference_remove_reference_link'}}" (click)="removeReference(concept)"></i></a>
         <span>{{concept.label | translateValue}}</span>
       </div>
     </div>
@@ -29,7 +29,7 @@ import { isDefined, requireDefined } from 'yti-common-ui/utils/object';
     <button type="button"
             class="btn btn-sm btn-action"
             *ngIf="editing"
-            (click)="addReference()" translate>Add concept</button>
+            (click)="addReference()" id="{{concept_reference_add_reference_button" translate>Add concept</button>
   `
 })
 export class ConceptReferenceInputComponent {

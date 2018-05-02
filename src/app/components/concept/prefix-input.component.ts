@@ -11,8 +11,8 @@ import { TermedService } from 'app/services/termed.service';
         <div class="form-group">
           <label for="prefix" translate>Prefix</label>
           <input type="text"
+                 id="prefix_input"
                  class="form-control"
-                 id="prefix"
                  autocomplete="off"
                  [ngClass]="{'is-invalid': !valid && !pending}"
                  [formControl]="control" />

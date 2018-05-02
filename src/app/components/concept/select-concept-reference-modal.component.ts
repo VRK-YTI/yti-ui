@@ -26,7 +26,7 @@ export class SelectConceptReferenceModalService {
   template: `
     <div class="modal-header">
       <h4 class="modal-title">
-        <a><i class="fa fa-times" (click)="cancel()"></i></a>
+        <a><i class="fa fa-times" id="select_concept_cancel_link" (click)="cancel()"></i></a>
         <span translate>Choose reference type</span>
       </h4>
     </div>
@@ -38,15 +38,15 @@ export class SelectConceptReferenceModalService {
           
           <div class="form-group">
             <label for="status" translate>Reference type</label>
-            <app-dropdown [(ngModel)]="selection" [options]="referenceOptions"></app-dropdown>
+            <app-dropdown [(ngModel)]="selection" id="select_concept_reference_dropdown" [options]="referenceOptions"></app-dropdown>
           </div>
           
         </div>
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-link cancel" (click)="cancel()" translate>Cancel</button>
-      <button type="button" class="btn btn-action confirm" (click)="confirm()" translate>Select reference</button>
+      <button type="button" id="select_concept_cancel_button" class="btn btn-link cancel" (click)="cancel()" translate>Cancel</button>
+      <button type="button" id="select_concept_confirm_button" class="btn btn-action confirm" (click)="confirm()" translate>Select reference</button>
     </div>
   `
 })

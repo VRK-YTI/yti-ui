@@ -26,7 +26,7 @@ import { VocabularyComponent } from 'app/components/vocabulary/vocabulary.compon
           <div class="panel-left" appFloat>
             <div>
               <ngb-tabset [justify]="'justified'">
-                <ngb-tab>
+                <ngb-tab id="concepts_alphabetic_tab">
                   <ng-template ngbTabTitle>
                     <p>{{'Alphabetic' | translate}}</p>
                   </ng-template>
@@ -34,7 +34,7 @@ import { VocabularyComponent } from 'app/components/vocabulary/vocabulary.compon
                     <app-concept-list></app-concept-list>
                   </ng-template>
                 </ngb-tab>
-                <ngb-tab>
+                <ngb-tab id="concepts_hierarchical_tab">
                   <ng-template ngbTabTitle>
                     <p>{{'Hierarchical' | translate}}</p>
                   </ng-template>
@@ -42,7 +42,7 @@ import { VocabularyComponent } from 'app/components/vocabulary/vocabulary.compon
                     <app-concept-hierarchy></app-concept-hierarchy>
                   </ng-template>
                 </ngb-tab>
-                <ngb-tab>
+                <ngb-tab id="concepts_collection_tab">
                   <ng-template ngbTabTitle>
                     <p>{{'Collection' | translate}}</p>
                   </ng-template>

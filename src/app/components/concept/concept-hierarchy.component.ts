@@ -13,7 +13,7 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
       <div class="col-lg-12">
 
         <div class="selectable-actions">
-          <button class="btn btn-action btn-add-new" (click)="addConcept()" *ngIf="canAddConcept()">
+          <button class="btn btn-action btn-add-new" id="concept_add_concept_button" (click)="addConcept()" *ngIf="canAddConcept()">
             <span translate>Add new concept</span>
           </button>
         </div>
@@ -29,7 +29,7 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
               [scrollWindow]="false"
               (scrolled)="onScrollDown()">
             <li *ngFor="let concept of model.topConcepts; trackBy: conceptIdentity">
-              <app-concept-hierarchy-node [concept]="concept"></app-concept-hierarchy-node>
+              <app-concept-hierarchy-node id="{{concept.id + '_concept_hierarchy_listitem'}}" [concept]="concept"></app-concept-hierarchy-node>
             </li>
           </ul>
         </div>
