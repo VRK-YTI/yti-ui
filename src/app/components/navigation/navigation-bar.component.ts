@@ -15,27 +15,28 @@ import { TermedService } from '../../services/termed.service';
       <ul class="navbar-nav ml-auto">
 
         <li *ngIf="fakeableUsers.length > 0" class="nav-item dropdown" ngbDropdown>
-          <a class="nav-link" ngbDropdownToggle translate>Impersonate user</a>
+          <a class="nav-link" id="fakeable_user_dropdown" ngbDropdownToggle translate>Impersonate user</a>
           <div ngbDropdownMenu>
-            <a class="dropdown-item" *ngFor="let user of fakeableUsers" (click)="fakeUser(user.email)">
+            <a class="dropdown-item" *ngFor="let user of fakeableUsers" (click)="fakeUser(user.email)" id="{{user.email + '_fakeable_user_link'}}">
               {{user.firstName}} {{user.lastName}}
             </a>
           </div>
         </li>
         
         <li class="nav-item" *ngIf="!isLoggedIn()">
-          <a class="nav-link" (click)="logIn()" translate>LOG IN</a>
+          <a class="nav-link" id="login_link" (click)="logIn()" translate>LOG IN</a>
         </li>
         
         <li class="nav-item logged-in" *ngIf="isLoggedIn()">
           <span>{{user.name}}</span>
-          <a class="nav-link" (click)="logOut()" translate>LOG OUT</a>
+          <a class="nav-link" id="logout_link" (click)="logOut()" translate>LOG OUT</a>
         </li>
         
         <li class="nav-item dropdown" placement="bottom-right" ngbDropdown>
-          <a class="dropdown-toggle nav-link btn btn-language" ngbDropdownToggle>{{language.toUpperCase()}}</a>
+          <a class="dropdown-toggle nav-link btn btn-language" id="language_dropdown_link" ngbDropdownToggle>{{language.toUpperCase()}}</a>
           <div ngbDropdownMenu>
             <a *ngFor="let availableLanguage of availableLanguages"
+               id="{{availableLanguage.name + '_language_selection_link'}}"
                class="dropdown-item"
                [class.active]="availableLanguage.code === language"
                (click)="language = availableLanguage.code">
@@ -45,23 +46,25 @@ import { TermedService } from '../../services/termed.service';
         </li>
 
         <li class="nav-item dropdown" placement="bottom-right" ngbDropdown>
-          <a class="nav-link btn-menu" ngbDropdownToggle>
+          <a class="nav-link btn-menu" id="nav_item_dropdown_link" ngbDropdownToggle>
             <app-menu></app-menu>
           </a>
           <div ngbDropdownMenu>
-            <a class="dropdown-item" *ngIf="isLoggedIn()" (click)="logOut()">
+            <a class="dropdown-item" *ngIf="isLoggedIn()" id="logout_dropdown_link" (click)="logOut()">
               <i class="fa fa-sign-out"></i>
               <span translate>LOG OUT</span>
             </a>
-            <a class="dropdown-item" *ngIf="!isLoggedIn()" (click)="logIn()">
+            <a class="dropdown-item" *ngIf="!isLoggedIn()" id="login_dropdown_link" (click)="logIn()">
               <i class="fa fa-sign-in"></i>
               <span translate>LOG IN</span>
             </a>
             <div class="dropdown-divider" [hidden]="noMenuItemsAvailable"></div>
             <a class="dropdown-item"
+               id="user_details_link"
                *ngIf="isLoggedIn()"
                [routerLink]="['/userDetails']" translate>User details</a>
             <a class="dropdown-item"
+               id="groupmanagement_link"
                *ngIf="showGroupManagementUrl()"
                [href]="groupManagementUrl" target="_blank" translate>User right management</a>
           </div>

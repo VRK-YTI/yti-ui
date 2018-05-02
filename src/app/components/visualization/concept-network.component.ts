@@ -184,7 +184,7 @@ interface UpdatableVisEdge extends CustomizedVisEdge {
     <div class="component">
 
       <div class="canvas-container">
-        <div #networkCanvas class="network-canvas" (mouseleave)="hidePopup()"></div>
+        <div #networkCanvas class="network-canvas" id="concept_canvas_container" (mouseleave)="hidePopup()"></div>
         <canvas class="legend" #legendCanvas></canvas>
       </div>
 
