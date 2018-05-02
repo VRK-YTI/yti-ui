@@ -8,6 +8,7 @@ import { ietfLanguageTags } from 'yti-common-ui';
   styleUrls: ['./language-input.component.scss'],
   template: `
     <input class="form-control"
+           id="language_input"
            [ngClass]="{'is-invalid': !valid}"
            [editable]="false"
            [id]="id"

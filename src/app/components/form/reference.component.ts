@@ -22,18 +22,22 @@ export type FormReference = FormReferenceLiteral<any>
 
           <app-concept-reference-input *ngSwitchCase="'Concept'"
                                        [reference]="reference"
+                                       [id]="id"
                                        [self]="concept"
                                        [vocabulary]="vocabulary"
                                        (conceptRemove)="conceptRemove.next($event)"></app-concept-reference-input>
 
           <app-concept-link-reference-input *ngSwitchCase="'ConceptLink'"
+                                            [id]="id"
                                             [reference]="reference"
                                             [vocabulary]="vocabulary"></app-concept-link-reference-input>
           
-          <app-group-input *ngSwitchCase="'Group'" 
+          <app-group-input *ngSwitchCase="'Group'"
+                           [id]="id"
                            [reference]="reference"></app-group-input>
 
-          <app-organization-input *ngSwitchCase="'Organization'" 
+          <app-organization-input *ngSwitchCase="'Organization'"
+                                  [id]="id"
                                   [reference]="reference"
                                   [vocabulary]="vocabulary"></app-organization-input>
 

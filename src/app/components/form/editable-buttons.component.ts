@@ -11,6 +11,7 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
     <div *ngIf="canEdit()">
       
       <button type="button"
+              id="editable_cancel_editing_button"
               class="btn btn-link pull-right cancel" 
               (click)="cancelEditing()"
               [disabled]="operationPending"
@@ -19,6 +20,7 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
       </button>
       
       <button type="button"
+              id="editable_save_edited_button"
               class="btn btn-action pull-right save" 
               (click)="saveEdited()" 
               [hidden]="!editing" 
@@ -27,6 +29,7 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
       </button>
       
       <button type="button"
+              id="editable_start_editing_button"
               class="btn btn-action pull-right edit" 
               (click)="startEditing()"
               [disabled]="operationPending"
@@ -35,6 +38,7 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
       </button>
 
       <button type="button"
+              id="editable_remove_button"
               class="btn btn-link pull-right remove"
               (click)="remove()"
               [disabled]="operationPending"

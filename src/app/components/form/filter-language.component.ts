@@ -12,11 +12,12 @@ import { TranslateService } from 'ng2-translate';
   }],
   template: `
     <div ngbDropdown [placement]="'bottom-right'">
-      <button class="btn btn-language" id="dropdownFilterLanguage" ngbDropdownToggle>{{selectionName}}</button>
-      <div ngbDropdownMenu aria-labelledby="dropdownFilterLanguage">
+      <button class="btn btn-language" id="filter_language_dropdown_button" ngbDropdownToggle>{{selectionName}}</button>
+      <div ngbDropdownMenu aria-labelledby="filter_language_dropdown_button">
         <button class="dropdown-item"
                 [class.active]="option.lang === selection"
                 *ngFor="let option of options"
+                id="{{option.lang + '_lang_selection_button'}}"
                 (click)="writeValue(option.lang)">
           {{option.name}}
         </button>

@@ -32,6 +32,7 @@ import { FormControl } from '@angular/forms';
 
       <div class="clearfix">
         <button type="button"
+                id="add_new_value_button"
                 class="btn btn-link add-button"
                 (click)="addNewValue()">
           <span>{{'Add' | translate}} {{property.label | translateValue:true | lowercase}}</span>
@@ -75,6 +76,7 @@ import { FormControl } from '@angular/forms';
             </div>
 
             <button *ngIf="canRemove()"
+                    id="remove_value_button"
                     class="btn btn-link remove-button"
                     (click)="removeValue(control)"
                     ngbTooltip="{{'Remove' | translate}} {{property.label | translateValue:true | lowercase}}" [placement]="'left'">

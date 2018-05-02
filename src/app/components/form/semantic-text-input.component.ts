@@ -1086,13 +1086,15 @@ function isRemoveRestOfLine(event: KeyboardEvent) {
   }],
   template: `
     <app-semantic-text-input-link-popover *ngIf="hasLinkableSelection()"
+                                          [id]="id"
                                           [selectedText]="linkableSelection.content"
                                           (link)="link()">
     </app-semantic-text-input-link-popover>
 
     <app-semantic-text-input-unlink-popover *ngIf="hasLinkedSelection()"
-                                           [concept]="linkedConcept"
-                                           (unlink)="unlink()">
+                                            [id]="id"
+                                            [concept]="linkedConcept"
+                                            (unlink)="unlink()">
     </app-semantic-text-input-unlink-popover>
 
     <div #editable 
@@ -1102,6 +1104,7 @@ function isRemoveRestOfLine(event: KeyboardEvent) {
 })
 export class SemanticTextInputComponent implements OnInit, ControlValueAccessor {
 
+  @Input() id: string;
   @Input() conceptSelector: (name: string) => Promise<ConceptNode|null>;
   @Input() relatedConcepts: ConceptNode[];
   @Input() format: SemanticTextFormat;

@@ -12,7 +12,7 @@ import { ConceptNode } from 'app/entities/node';
 
       <h3 class="popover-header">
         <span>{{selectedText}}</span>
-        <span class="btn btn-sm btn-action" (click)="link.next()" translate>Link</span>
+        <span class="btn btn-sm btn-action" id="link_button" (click)="link.next()" translate>Link</span>
       </h3>
 
       <div class="popover-body">
