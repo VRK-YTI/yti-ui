@@ -9,10 +9,11 @@ import { Router } from '@angular/router';
     <ng-template ngbModalContainer></ng-template>
     <app-navigation-bar></app-navigation-bar>
     <div class="container-fluid" [class.without-footer]="!showFooter">
-      <app-breadcrumb [location]="location" [hidden]="!showBreadcrumb"></app-breadcrumb>
+      <app-breadcrumb [location]="location" id="app_breadcrump" [hidden]="!showBreadcrumb"></app-breadcrumb>
       <router-outlet></router-outlet>
     </div>
-    <app-footer [title]="'Sanastot'" 
+    <app-footer [title]="'Sanastot'"
+                id="app_navigate_to_info"
                 (informationClick)="navigateToInformation()" *ngIf="showFooter"></app-footer>
   `
 })

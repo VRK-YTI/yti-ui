@@ -62,12 +62,14 @@ interface UserOrganizationRoles {
         <div class="input-group">
           
           <app-dropdown [options]="organizationOptions"
+                        id="selected_organization_dropdown"
                         [showNullOption]="false"
                         [placement]="'top-left'"
                         [(ngModel)]="selectedOrganization"></app-dropdown>
 
           <div class="input-group-btn">
             <button type="button"
+                    id="send_request_button"
                     class="btn btn-action"
                     [disabled]="!selectedOrganization"
                     (click)="sendRequest()" translate>Send</button>
