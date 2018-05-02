@@ -8,7 +8,7 @@ const minVisualizationWidth = 361;
 @Component({
   selector: 'app-divider',
   styleUrls: ['./divider.component.scss'],
-  template: `<div class="divider" (mousedown)="moveDivider($event)"></div>`,
+  template: `<div class="divider" id="divider_div" (mousedown)="moveDivider($event)"></div>`,
 })
 export class DividerComponent {
 

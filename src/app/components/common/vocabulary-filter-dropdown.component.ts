@@ -11,6 +11,7 @@ import { TranslateService } from 'ng2-translate';
   selector: 'app-vocabulary-filter-dropdown',
   template: `
     <app-filter-dropdown class="pull-left"
+                         id="vocabulary_filter_dropdown"
                          [options]="vocabularyOptions"
                          [filterSubject]="filterSubject"></app-filter-dropdown>
   `

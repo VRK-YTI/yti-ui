@@ -14,12 +14,13 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
 
         <div class="selectable-actions">
 
-          <button class="btn btn-action mb-3" (click)="addCollection()" *ngIf="canAddCollection()">
+          <button class="btn btn-action mb-3" id="collection_list_add_collection_button" (click)="addCollection()" *ngIf="canAddCollection()">
             <span translate>Add new collection</span>
           </button>
 
           <div class="input-group input-group-lg input-group-search">
             <input #searchInput
+                   id="collection_list_search_input"
                    [(ngModel)]="search"
                    type="text"
                    class="form-control"
@@ -36,6 +37,7 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
         <div class="selectable-collections">
           <ul [ngClass]="{'has-button': canAddCollection()}">
             <li *ngFor="let collection of searchResults | async; trackBy: collectionIdentity"
+                id="{{collection.id + '_collection_list_listitem'}}"
                 (click)="navigate(collection)"
                 [class.selection]="isSelected(collection)">
               <span [innerHTML]="collection.label | translateSearchValue: debouncedSearch | highlight: debouncedSearch"></span>

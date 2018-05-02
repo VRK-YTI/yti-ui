@@ -12,6 +12,7 @@ import { Subscription } from 'rxjs';
   selector: 'app-organization-filter-dropdown',
   template: `
     <app-filter-dropdown class="pull-left"
+                         id="organization_filter_dropdown"
                          [options]="organizationOptions"
                          [filterSubject]="filterSubject"></app-filter-dropdown>
   `

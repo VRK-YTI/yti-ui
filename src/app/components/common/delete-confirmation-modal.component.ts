@@ -32,7 +32,7 @@ interface Reference {
   template: `
     <div class="modal-header modal-header-warning">
       <h4 class="modal-title">
-        <a><i class="fa fa-times" (click)="cancel()"></i></a>
+        <a><i class="fa fa-times" id="cancel_delete_link" (click)="cancel()"></i></a>
         <span translate>Confirm remove</span>
       </h4>
     </div>
@@ -60,8 +60,8 @@ interface Reference {
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary-action confirm" (click)="confirm()" translate>Yes</button>
-      <button type="button" class="btn btn-link cancel" (click)="cancel()" translate>Cancel</button>
+      <button type="button" id="delete_confirmation_yes_button" class="btn btn-secondary-action confirm" (click)="confirm()" translate>Yes</button>
+      <button type="button" id="delete_confirmation_cancel_button" class="btn btn-link cancel" (click)="cancel()" translate>Cancel</button>
     </div>
   `
 })
