@@ -108,7 +108,7 @@ interface ConceptProperty {
 }
 
 function localizationsHaveAnyMatch(localizations: Localization[], localizationsToCompare: Localization[]) {
-  
+
   let result = false;
 
   for (const loc of localizations) {
@@ -146,7 +146,7 @@ export class ImportVocabularyModalService {
     <div *ngIf="!uploading">    
       <div class="modal-header">
         <h4 class="modal-title">
-          <a><i class="fa fa-times" (click)="cancel()"></i></a>
+          <a><i class="fa fa-times" id="cancel_import_link" (click)="cancel()"></i></a>
           <span translate>Confirm import</span>
         </h4>
       </div>
@@ -196,10 +196,10 @@ export class ImportVocabularyModalService {
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn btn-action confirm" (click)="confirm()" [disabled]="invalid" translate>Yes</button>
-        <button type="button" class="btn btn-link cancel" (click)="cancel()" translate>Cancel</button>
+        <button type="button" id="import_yes_button" class="btn btn-action confirm" (click)="confirm()" [disabled]="invalid" translate>Yes</button>
+        <button type="button" id="import_cancel_button" class="btn btn-link cancel" (click)="cancel()" translate>Cancel</button>
         
-        <div class="alert alert-danger modal-alert" role="alert" *ngIf="importError">
+        <div class="alert alert-danger modal-alert" id="import_error_modal" role="alert" *ngIf="importError">
           <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
           <span translate>Import failed</span>
         </div>
@@ -215,7 +215,7 @@ export class ImportVocabularyModalComponent implements OnInit {
   conceptsFromCsv: CsvConceptDetails[] = [];
   conceptMetaModel: MetaModel;
   importError = false;
-  uploading = false;  
+  uploading = false;
 
   constructor(private modal: NgbActiveModal,
               private metaModelService: MetaModelService,
@@ -257,7 +257,7 @@ export class ImportVocabularyModalComponent implements OnInit {
   get invalid() {
     return this.numberOfConceptsWithEmptyPrefLabels > 0;
   }
-  
+
   hasProperty(name: string) {
     return this.conceptMetaModel.getNodeMeta(this.vocabulary.graphId, 'Concept').hasProperty(name);
   }
@@ -275,8 +275,8 @@ export class ImportVocabularyModalComponent implements OnInit {
     return property.type === 'reference' ? property.localizations.filter(localization => this.isReferenceConceptFound(localization)) : property.localizations;
   }
 
-  isReferenceConceptFound(localization: Localization) {    
-    return this.conceptsFromCsv.filter(concept => 
+  isReferenceConceptFound(localization: Localization) {
+    return this.conceptsFromCsv.filter(concept =>
       concept.prefLabel.filter(loc => loc.lang === localization.lang && loc.value === localization.value).length > 0).length > 0;
   }
 
@@ -301,16 +301,16 @@ export class ImportVocabularyModalComponent implements OnInit {
 
     const createdConcepts = conceptsToSave.map(concept => {
       const newConceptNode = this.convertToConceptNode(concept, metaModel);
-      
-      const createdConcept: CreatedConceptFromCsv = {          
+
+      const createdConcept: CreatedConceptFromCsv = {
         conceptNode: newConceptNode,
         broader: concept.broader,
         related: concept.related,
         isPartOf: concept.isPartOf
       };
-      
+
       return createdConcept;
-    });  
+    });
 
     return this.checkAndAddConceptReferences(createdConcepts);
   }
@@ -318,29 +318,29 @@ export class ImportVocabularyModalComponent implements OnInit {
   checkAndAddConceptReferences(createdConcepts: CreatedConceptFromCsv[]): ConceptNode[] {
 
     return createdConcepts.map(createdConcept => {
-      const conceptHasReferenceConcepts = createdConcept.broader.length > 0 || createdConcept.related.length > 0 
+      const conceptHasReferenceConcepts = createdConcept.broader.length > 0 || createdConcept.related.length > 0
                                                                      || createdConcept.isPartOf.length > 0;
-      if (conceptHasReferenceConcepts) {        
+      if (conceptHasReferenceConcepts) {
         for (const conceptToCompare of createdConcepts) {
           if (localizationsHaveAnyMatch(createdConcept.broader, conceptToCompare.conceptNode.prefLabel)
               && this.hasReference('broader')) {
             createdConcept.conceptNode.addBroaderConcept(conceptToCompare.conceptNode);
           }
-        
+
           if (localizationsHaveAnyMatch(createdConcept.related, conceptToCompare.conceptNode.prefLabel)
               && this.hasReference('related')) {
             createdConcept.conceptNode.addRelatedConcept(conceptToCompare.conceptNode);
           }
-        
+
           if (localizationsHaveAnyMatch(createdConcept.isPartOf, conceptToCompare.conceptNode.prefLabel)
               && this.hasReference('isPartOf')) {
             createdConcept.conceptNode.addIsPartOfConcept(conceptToCompare.conceptNode);
-          }          
+          }
         }
       }
-  
+
       return createdConcept.conceptNode;
-    });    
+    });
   }
 
   cancel() {
@@ -348,11 +348,11 @@ export class ImportVocabularyModalComponent implements OnInit {
   }
 
   confirm() {
-    
+
     this.uploading = true;
 
     const conceptsToSave = this.conceptsFromCsv;
-    
+
     this.termedService.saveNodes(this.createConceptNodesToSave(conceptsToSave, this.conceptMetaModel))
       .subscribe({
         next: () => this.modal.close(),

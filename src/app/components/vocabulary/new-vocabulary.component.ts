@@ -31,7 +31,7 @@ import { Options } from 'yti-common-ui/components/dropdown.component';
             <div class="col-6">
               <div class="form-group">
                 <label for="vocabularyType" translate>Vocabulary type</label>
-                <app-dropdown [formControl]="templateControl" [options]="templateOptions"></app-dropdown>
+                <app-dropdown [formControl]="templateControl" id="vocabulary_type_dropdown" [options]="templateOptions"></app-dropdown>
               </div>
             </div>
 

@@ -24,6 +24,7 @@ import { Subscription } from 'rxjs/Subscription';
         <div class="col-md-4 mb-3">
           <div class="input-group input-group-lg input-group-search">
             <input class="form-control"
+                   id="vocabularies_search_input"
                    type="text"
                    [(ngModel)]="search"
                    placeholder="{{'Search' | translate}}"/>
@@ -40,6 +41,7 @@ import { Subscription } from 'rxjs/Subscription';
             <div class="classification"
                  *ngFor="let classification of classifications"
                  [class.active]="isClassificationSelected(classification.node)"
+                 id="{{'toggle_classification_' + classification.node}}"
                  (click)="toggleClassification(classification.node)">
 
               <span class="name">{{classification.node.label | translateValue:true}}</span>
@@ -53,15 +55,17 @@ import { Subscription } from 'rxjs/Subscription';
           <div class="row mb-4">
             <div class="col-md-12">
 
-              <app-organization-filter-dropdown [filterSubject]="organization$" 
+              <app-organization-filter-dropdown [filterSubject]="organization$"
+                                                id="organization_filter_dropdown"
                                                 [organizations]="organizations$"></app-organization-filter-dropdown>
               
               <app-filter-dropdown class="pull-left ml-2"
+                                   id="vocabulary_filter_dropdown"
                                    [options]="vocabularyTypes"
                                    [filterSubject]="vocabularyType$"></app-filter-dropdown>
 
 
-              <button class="btn btn-action pull-right" *ngIf="canAddVocabulary()" (click)="addVocabulary()">
+              <button class="btn btn-action pull-right" id="add_vocabulary_button" *ngIf="canAddVocabulary()" (click)="addVocabulary()">
                 <span translate>Add vocabulary</span>
               </button>
             </div>
@@ -81,7 +85,7 @@ import { Subscription } from 'rxjs/Subscription';
 
             <div class="row">
               <div class="col-md-12">
-                <div class="vocabulary" *ngFor="let vocabulary of filteredVocabularies" (click)="navigate(vocabulary)">
+                <div class="vocabulary" *ngFor="let vocabulary of filteredVocabularies" id="{{vocabulary.id + '_vocabulary_navigation'}}" (click)="navigate(vocabulary)">
 
                   <span class="name">{{vocabulary.label | translateValue:true}}</span>
 

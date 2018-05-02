@@ -37,7 +37,7 @@ export class SearchOrganizationModalService {
       <div class="row mb-2">
         <div class="col-12">
           <div class="input-group input-group-lg input-group-search">
-            <input #searchInput type="text" class="form-control" placeholder="{{'Search organization' | translate}}"
+            <input #searchInput type="text" id="search_organization_link" class="form-control" placeholder="{{'Search organization' | translate}}"
                    [(ngModel)]="search"/>
           </div>
         </div>
@@ -48,6 +48,7 @@ export class SearchOrganizationModalService {
             <div class="search-results">
               <div class="search-result"
                    *ngFor="let organization of searchResults$ | async; let last = last"
+                   id="{{organization.id + 'organization_select'}}"
                    (click)="select(organization)">
                 <div class="content" [class.last]="last">
                   <span class="title" [innerHTML]="organization.label | translateValue:true"></span>
@@ -62,6 +63,7 @@ export class SearchOrganizationModalService {
     <div class="modal-footer">
 
       <button type="button"
+              id="cancel_button"
               class="btn btn-link cancel"
               (click)="cancel()" translate>Cancel</button>
     </div>

@@ -27,7 +27,7 @@ export class SearchGroupModalService {
   template: `
     <div class="modal-header">
       <h4 class="modal-title">
-        <a><i class="fa fa-times" (click)="cancel()"></i></a>
+        <a><i class="fa fa-times" id="cancel_search_link" (click)="cancel()"></i></a>
         <span translate>Choose classification</span>
       </h4>
     </div>
@@ -37,7 +37,7 @@ export class SearchGroupModalService {
         <div class="col-12">
 
           <div class="input-group input-group-lg input-group-search">
-            <input #searchInput type="text" class="form-control" placeholder="{{'Search classification' | translate}}"
+            <input #searchInput type="text" id="search_classification_link" class="form-control" placeholder="{{'Search classification' | translate}}"
                    [(ngModel)]="search"/>
           </div>
 
@@ -50,6 +50,7 @@ export class SearchGroupModalService {
             <div class="search-results">
               <div class="search-result"
                    *ngFor="let group of searchResults$ | async; let last = last"
+                   id="{{group.id + '_group_select'}}"
                    (click)="select(group)">
                 <div class="content" [class.last]="last">
                   <span class="title" [innerHTML]="group.label | translateValue:true"></span>
@@ -63,6 +64,7 @@ export class SearchGroupModalService {
     <div class="modal-footer">
 
       <button type="button"
+              id="cancel_button"
               class="btn btn-link cancel"
               (click)="cancel()" translate>Cancel</button>
     </div>

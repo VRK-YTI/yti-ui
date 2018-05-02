@@ -22,10 +22,12 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
             <span class="mr-4">{{vocabulary.label | translateValue}}</span>
 
             <button class="btn btn-action"
+                    id="vocabulary_show_details_button"
                     [hidden]="open"
                     (click)="open = true" translate>Show vocabulary details</button>
 
             <button class="btn btn-action"
+                    id="vocabulary_hide_details_button"
                     [hidden]="!open"
                     (click)="open = false" translate>Hide vocabulary details</button>
           </h2>
@@ -45,6 +47,7 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
           <div class="top-actions">
             
             <button type="button"
+                    id="vocabulary_close_button"
                     *ngIf="!isEditing()"
                     class="btn btn-link pull-right"
                     (click)="open = false">
@@ -57,7 +60,7 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
                                   [vocabulary]="vocabulary"></app-editable-buttons>
 
             <div class="pull-right" *ngIf="canImport()">
-              <input #fileInput type="file" id="fileElem" accept=".csv" style="display:none" (change)="selectFile(fileInput.files)">
+              <input #fileInput id="vocabulary_import_input" type="file" id="fileElem" accept=".csv" style="display:none" (change)="selectFile(fileInput.files)">
               <label for="fileElem" class="btn btn-secondary-action" translate>Import vocabulary</label>
             </div>
 

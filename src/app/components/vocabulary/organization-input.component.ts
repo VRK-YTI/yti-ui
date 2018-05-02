@@ -19,13 +19,14 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
            class="removable-text"
            [appDragSortableItem]="organization"
            [index]="i">
-        <a><i class="fa fa-times" (click)="removeReference(organization)"></i></a>
+        <a><i class="fa fa-times" id="{{'remove_reference_link' + organization.id}}" (click)="removeReference(organization)"></i></a>
         <span>{{organization.label | translateValue:true}}</span>
       </div>
-      <app-error-messages [control]="reference.control"></app-error-messages>
+      <app-error-messages [control]="reference.control" id="app_error_messages"></app-error-messages>
     </div>
 
     <button type="button"
+            id="add_reference_button"
             class="btn btn-sm btn-action mt-2"
             *ngIf="editing"
             (click)="addReference()" translate>Add organization</button>
