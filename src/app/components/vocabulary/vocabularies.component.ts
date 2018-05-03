@@ -89,8 +89,8 @@ import { Subscription } from 'rxjs/Subscription';
 
                   <span class="name">{{vocabulary.label | translateValue:true}}</span>
 
-                  <span class="organization" *ngFor="let publisher of vocabulary.publishers">
-                    {{publisher.label | translateValue:true}}
+                  <span class="organization" *ngFor="let contributor of vocabulary.contributors">
+                    {{contributor.label | translateValue:true}}
                   </span>
 
                   <span class="group" *ngFor="let group of vocabulary.groups">
@@ -152,7 +152,7 @@ export class VocabulariesComponent implements OnDestroy {
     }
 
     function organizationMatches(organization: OrganizationNode|null, vocabulary: VocabularyNode) {
-      return !organization || anyMatching(vocabulary.publishers, publisher => publisher.id === organization.id);
+      return !organization || anyMatching(vocabulary.contributors, contributor => contributor.id === organization.id);
     }
 
     function vocabularyTypeMatches(vocabularyType: VocabularyNodeType|null, vocabulary: VocabularyNode) {
