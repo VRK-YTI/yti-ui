@@ -35,7 +35,7 @@ import { contains, last } from 'yti-common-ui/utils/array';
             <div class="language">{{node.language | uppercase}}</div>
             <div class="localization">
               <span>{{node.formNode.prefLabelProperty[0].value}}</span>
-              <app-accordion-chevron class="pull-right" [id]=" id + '_' + i + '_term_accordion_chevron'"></app-accordion-chevron>
+              <app-accordion-chevron class="pull-right" [id]="id + '_' + i + '_term_accordion_chevron'"></app-accordion-chevron>
             </div>
             <div class="property-ordering" [hidden]="!editing">
               <span class="fa fa-bars"></span>
