@@ -16,6 +16,7 @@ export type FormReference = FormReferenceLiteral<any>
         <ng-container [ngSwitch]="reference.referenceType">
 
           <app-terms *ngSwitchCase="'Term'"
+                     [id]="id"
                      [reference]="reference"
                      [unsaved]="unsaved"
                      [filterLanguage]="filterLanguage"></app-terms>
