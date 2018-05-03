@@ -34,6 +34,7 @@
     "fast-levenshtein": "^2.0.6",
     "font-awesome": "^4.7.0",
     "jsoniq": "0.0.8",
+    "material-design-icons": "^3.0.1",
     "moment": "^2.21.0",
     "ng2-translate": "^5.0.0",
     "ngx-infinite-scroll": "^0.5.1",
