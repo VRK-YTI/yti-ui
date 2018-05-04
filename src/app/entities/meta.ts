@@ -131,36 +131,6 @@ function parseTypeAndAttributes(textAttribute: TextAttributeInternal): [TypeName
   }
 }
 
-function createDefaultPropertyType(propertyId: string): PropertyType {
-
-  function resolve(): [TypeName, string[]] {
-    switch (propertyId) {
-      case 'prefLabel':
-        return ['localizable', ['single', 'required']];
-      case 'altLabel':
-      case 'hiddenLabel':
-        return ['localizable', ['multiple']];
-      case 'definition':
-      case 'description':
-      case 'note':
-      case 'scopeNote':
-      case 'historyNote':
-      case 'changeNote':
-        return ['localizable', ['area']];
-      case 'status':
-        return ['status', []];
-      case 'language':
-        return ['language', ['multiple', 'required']];
-      default:
-        return ['string', ['single']];
-    }
-  }
-
-  const [typeName, attributes] = resolve();
-
-  return createPropertyType(typeName, new Set(attributes));
-}
-
 export class PropertyMeta {
 
   id: string;
@@ -180,7 +150,7 @@ export class PropertyMeta {
     if (type) {
       this.type = createPropertyType(type, new Set<string>(attributes));
     } else {
-      this.type = createDefaultPropertyType(this.id);
+      this.type = createPropertyType('string', new Set('single'));
     }
   }
 
