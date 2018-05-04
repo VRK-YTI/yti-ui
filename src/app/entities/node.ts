@@ -421,8 +421,8 @@ export class VocabularyNode extends Node<VocabularyNodeType> {
     return this.getProperty('prefLabel').asLocalizations();
   }
 
-  get publishers(): OrganizationNode[] {
-    return this.getReference<OrganizationNode>('publisher').values;
+  get contributors(): OrganizationNode[] {
+    return this.getReference<OrganizationNode>('contributor').values;
   }
 
   hasLanguage() {

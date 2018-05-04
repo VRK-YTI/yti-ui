@@ -18,7 +18,7 @@ export class AuthorizationManager {
       return true;
     }
 
-    const organizationIds = vocabulary.publishers.map(org => org.id);
+    const organizationIds = vocabulary.contributors.map(org => org.id);
 
     return this.user.isInRole(['ADMIN', 'TERMINOLOGY_EDITOR'], organizationIds);
   }
