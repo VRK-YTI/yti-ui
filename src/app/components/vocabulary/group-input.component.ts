@@ -26,7 +26,7 @@ import { SearchGroupModalService } from './search-group-modal.component';
     </div>
 
     <button type="button"
-            id="add_reference_button"
+            id="add_classification_button"
             class="btn btn-sm btn-action mt-2"
             *ngIf="editing"
             (click)="addReference()" translate>Add classification</button>

@@ -12,7 +12,7 @@ import { contains } from 'yti-common-ui/utils/array';
 
     <div *ngIf="canAdd()" class="clearfix">
       <div ngbDropdown class="add-button" placement="bottom-right">
-        <button class="btn btn-link" id="add_button" ngbDropdownToggle>
+        <button class="btn btn-link" id="{{'add_'+ property.label|translateValue:true + '_button'}}" ngbDropdownToggle>
           <span>{{'Add' | translate}} {{property.label | translateValue:true | lowercase}}</span>
         </button>
         <div ngbDropdownMenu>

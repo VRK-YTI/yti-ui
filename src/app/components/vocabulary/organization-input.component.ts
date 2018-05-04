@@ -26,7 +26,7 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
     </div>
 
     <button type="button"
-            id="add_reference_button"
+            id="add_organization_button"
             class="btn btn-sm btn-action mt-2"
             *ngIf="editing"
             (click)="addReference()" translate>Add organization</button>
