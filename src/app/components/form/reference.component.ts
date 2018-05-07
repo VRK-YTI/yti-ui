@@ -23,13 +23,13 @@ export type FormReference = FormReferenceLiteral<any>
 
           <app-concept-reference-input *ngSwitchCase="'Concept'"
                                        [reference]="reference"
-                                       id="reference_concept_input"
+                                       [id]="id"
                                        [self]="concept"
                                        [vocabulary]="vocabulary"
                                        (conceptRemove)="conceptRemove.next($event)"></app-concept-reference-input>
 
           <app-concept-link-reference-input *ngSwitchCase="'ConceptLink'"
-                                            id="reference_concept_link_input"
+                                            [id]="id"
                                             [reference]="reference"
                                             [vocabulary]="vocabulary"></app-concept-link-reference-input>
           
