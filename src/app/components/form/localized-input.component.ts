@@ -56,18 +56,18 @@ import { contains } from 'yti-common-ui/utils/array';
                      type="text"
                      class="form-control"
                      [ngClass]="{'is-invalid': !child.control.valid}"
-                     [id]="id"
+                     [id]="id + '_' + child.lang + '_' + i + '_input'"
                      autocomplete="off"
                      [formControl]="child.control" />
 
               <textarea *ngSwitchCase="'textarea'"
                         class="form-control"
                         [ngClass]="{'is-invalid': !child.control.valid}"
-                        [id]="id"
+                        [id]="id + '_' + child.lang + '_' + i + '_textarea'"
                         [formControl]="child.control"></textarea>              
 
               <app-semantic-text-input *ngSwitchCase="'semantic'"
-                                       [id]="id"
+                                       [id]="id + '_' + child.lang + '_' + i + '_semantic_text_input'"
                                        [format]="property.editor.format"
                                        [conceptSelector]="conceptSelector"
                                        [relatedConcepts]="relatedConcepts"

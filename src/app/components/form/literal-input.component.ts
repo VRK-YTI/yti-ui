@@ -37,18 +37,18 @@ import { FormPropertyLiteral } from 'app/services/form-state';
                  type="text"
                  class="form-control"
                  [ngClass]="{'is-invalid': valueInError()}"
-                 [id]="id"
+                 [id]="id + '_input'"
                  autocomplete="off"
                  [formControl]="property.control" />
           
           <textarea *ngSwitchCase="'textarea'"
                     class="form-control"
                     [ngClass]="{'is-invalid': valueInError()}"
-                    [id]="id"
+                    [id]="id + '_textarea'"
                     [formControl]="property.control"></textarea>
 
           <app-semantic-text-input *ngSwitchCase="'semantic'"
-                                   [id]="id"
+                                   [id]="id + '_semantic_text_input'"
                                    [format]="property.editor.format"
                                    [formControl]="property.control"></app-semantic-text-input>
           
@@ -57,7 +57,7 @@ import { FormPropertyLiteral } from 'app/services/form-state';
                             [formControl]="property.control"></app-status-input>
 
           <app-language-input *ngSwitchCase="'language'"
-                              [id]="id"
+                              [id]="id + '_input'"
                               [formControl]="property.control"></app-language-input>
 
           <app-error-messages [control]="property.control"></app-error-messages>

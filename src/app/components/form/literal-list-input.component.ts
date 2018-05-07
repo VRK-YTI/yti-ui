@@ -51,23 +51,23 @@ import { FormControl } from '@angular/forms';
                        type="text"
                        class="form-control"
                        [ngClass]="{'is-invalid': !control.valid}"
-                       [id]="id"
+                       [id]="id + '_' + i + '_input'"
                        autocomplete="off"
                        [formControl]="control" />
 
                 <textarea *ngSwitchCase="'textarea'"
                           class="form-control"
                           [ngClass]="{'is-invalid': !control.valid}"
-                          [id]="id"
+                          [id]="id + '_' + i + '_textarea'"
                           [formControl]="control"></textarea>
 
                 <app-semantic-text-input *ngSwitchCase="'semantic'"
-                                         [id]="id"
+                                         [id]="id + '_' + i + '_semantic_text_input'"
                                          [format]="property.editor.format"
                                          [formControl]="control"></app-semantic-text-input>
 
                 <app-language-input *ngSwitchCase="'language'"
-                                    [id]="id"
+                                    [id]="id + '_' + i + '_input'"
                                     [formControl]="control"></app-language-input>
 
               </div>

@@ -1097,7 +1097,8 @@ function isRemoveRestOfLine(event: KeyboardEvent) {
                                             (unlink)="unlink()">
     </app-semantic-text-input-unlink-popover>
 
-    <div #editable 
+    <div #editable
+         [id]="id" 
          contenteditable="true" 
          class="form-control"></div>
   `

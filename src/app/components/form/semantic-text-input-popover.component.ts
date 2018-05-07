@@ -12,7 +12,7 @@ import { ConceptNode } from 'app/entities/node';
 
       <h3 class="popover-header">
         <span>{{selectedText}}</span>
-        <span class="btn btn-sm btn-action" id="link_button" (click)="link.next()" translate>Link</span>
+        <span [id]="id + '_link_popover_button'" class="btn btn-sm btn-action" id="link_button" (click)="link.next()" translate>Link</span>
       </h3>
 
       <div class="popover-body">
@@ -23,6 +23,7 @@ import { ConceptNode } from 'app/entities/node';
 })
 export class SemanticTextInputLinkPopoverComponent implements AfterViewInit, OnDestroy {
 
+  @Input() id: string;
   @Input() selectedText: string;
   @Output() link = new EventEmitter<any>();
 
@@ -50,7 +51,7 @@ export class SemanticTextInputLinkPopoverComponent implements AfterViewInit, OnD
       <h3 class="popover-header">
         <span *ngIf="!concept" translate>Concept not in references</span>
         <span *ngIf="concept">{{concept.label | translateValue}}</span>
-        <span class="btn btn-sm btn-action" (click)="unlink.next()" translate>Unlink</span>
+        <span [id]="id + '_unlink_popover_button'" class="btn btn-sm btn-action" (click)="unlink.next()" translate>Unlink</span>
       </h3>
 
       <div class="popover-body" *ngIf="concept" 
@@ -63,6 +64,7 @@ export class SemanticTextInputLinkPopoverComponent implements AfterViewInit, OnD
 })
 export class SemanticTextInputUnlinkPopoverComponent implements AfterViewInit, OnDestroy {
 
+  @Input() id: string;
   @Input() concept: ConceptNode;
   @Output() unlink = new EventEmitter<any>();
 
