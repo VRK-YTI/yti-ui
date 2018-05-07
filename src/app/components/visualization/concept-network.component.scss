@@ -6,6 +6,7 @@
 
     border: 1px solid $gray;
     position: relative;
+    background-color: $white;
 
     .network-canvas {
       width: 100%;
@@ -13,12 +14,18 @@
     }
 
     .legend {
-      top: 1px;
-      right: 1px;
+      top: 0;
+      left: 0;
       position: absolute;
       border-bottom: solid 1px $gray;
-      border-left: solid 1px $gray;
+      border-right: solid 1px $gray;
       background-color: rgba(255, 255, 255, 0.5);
+    }
+
+    .minimize, .maximize {
+      position: absolute;
+      right: 0;
+      top: 0;
     }
   }
 }

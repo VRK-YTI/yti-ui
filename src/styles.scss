@@ -179,3 +179,7 @@ div.localized {
 textarea, [contenteditable] {
   min-height: 150px;
 }
+
+body.visualization-maximized {
+  overflow: hidden !important;
+}

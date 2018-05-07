@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ElementRef, ViewChild, NgZone } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, ViewChild, NgZone, HostBinding, Renderer2 } from '@angular/core';
 import { Router } from '@angular/router';
 import { CollectionNode, ConceptNode } from 'app/entities/node';
 import { LanguageService } from 'app/services/language.service';
@@ -186,6 +186,18 @@ interface UpdatableVisEdge extends CustomizedVisEdge {
       <div class="canvas-container">
         <div #networkCanvas class="network-canvas" id="concept_canvas_container" (mouseleave)="hidePopup()"></div>
         <canvas class="legend" #legendCanvas></canvas>
+
+        <button *ngIf="!maximized"
+                class="btn btn-link btn-lg maximize"
+                (click)="maximized = true">
+          <i class="fa fa-window-maximize"></i>
+        </button>
+
+        <button *ngIf="maximized"
+                class="btn btn-link btn-lg minimize"
+                (click)="maximized = false">
+          <i class="fa fa-window-minimize"></i>
+        </button>
       </div>
 
     </div>
@@ -195,6 +207,8 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
 
   @ViewChild('networkCanvas') networkCanvasRef: ElementRef;
   @ViewChild('legendCanvas') legendCanvasRef: ElementRef;
+
+  _maximized = false;
 
   rootNode: Node<any>|null = null;
 
@@ -218,6 +232,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
               private termedService: TermedService,
               private metaModelService: MetaModelService,
               private router: Router,
+              private renderer: Renderer2,
               private conceptViewModel: ConceptViewModelService) {
 
     const updateNetworkData = () => {
@@ -280,9 +295,26 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
   }
 
   public ngOnDestroy(): void {
+
+    this.maximized = false; // remove class from the body
     this.network.destroy();
     this.languageSubscription.unsubscribe();
     this.translateLanguageSubscription.unsubscribe();
+  }
+
+  @HostBinding('class.maximized')
+  get maximized() {
+    return this._maximized;
+  }
+
+  set maximized(maximized: boolean) {
+    this._maximized = maximized;
+
+    if (maximized) {
+      this.renderer.addClass(document.body, 'visualization-maximized');
+    } else {
+      this.renderer.removeClass(document.body, 'visualization-maximized');
+    }
   }
 
   isEmpty() {

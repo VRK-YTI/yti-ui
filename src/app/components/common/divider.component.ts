@@ -4,6 +4,7 @@ import { SessionService } from 'app/services/session.service';
 const leftWidth = 400; // should match variable in concepts.component.scss
 const minSelectionWidth = 300;
 const minVisualizationWidth = 361;
+const minMaxIconWidth = 52;
 
 @Component({
   selector: 'app-divider',
@@ -35,7 +36,7 @@ export class DividerComponent {
   }
 
   static get maxWidth() {
-    return document.body.clientWidth - leftWidth;
+    return document.body.clientWidth - leftWidth - minMaxIconWidth;
   }
 
   moveDivider(mouseDown: MouseEvent) {
