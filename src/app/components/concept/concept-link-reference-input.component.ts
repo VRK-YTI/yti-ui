@@ -51,7 +51,6 @@ import { Observable } from 'rxjs/Observable';
     </div>
 
     <button type="button"
-            id="concept_link_add_reference_button"
             id="{{id + '_concept_link_reference_add_reference_button'}}"
             class="btn btn-sm btn-action"
             *ngIf="editing"
