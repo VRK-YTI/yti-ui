@@ -421,6 +421,10 @@ export class VocabularyNode extends Node<VocabularyNodeType> {
     return this.getProperty('prefLabel').asLocalizations();
   }
 
+  get priority(): string {
+    return this.getProperty('priority').literalValue;
+  }
+
   get contributors(): OrganizationNode[] {
     return this.getReference<OrganizationNode>('contributor').values;
   }

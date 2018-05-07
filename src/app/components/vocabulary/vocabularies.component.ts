@@ -7,7 +7,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { TermedService } from 'app/services/termed.service';
 import { anyMatching } from 'yti-common-ui/utils/array';
 import { matches } from 'yti-common-ui/utils/string';
-import { comparingLocalizable } from 'yti-common-ui/utils/comparator';
+import { comparingLocalizable, comparingPrimitive } from 'yti-common-ui/utils/comparator';
 import { LanguageService } from 'app/services/language.service';
 import { VocabularyNodeType } from 'app/entities/node-api';
 import { FilterOptions } from 'yti-common-ui/components/filter-dropdown.component';
@@ -184,7 +184,11 @@ export class VocabulariesComponent implements OnDestroy {
               organizationMatches(organization, vocabulary) &&
               vocabularyTypeMatches(vocabularyType, vocabulary));
 
-          this.filteredVocabularies.sort(comparingLocalizable<VocabularyNode>(languageService, voc => voc.label));
+          this.filteredVocabularies.sort(
+            comparingPrimitive<VocabularyNode>(voc => !voc.priority) // vocabularies having priority set first
+              .andThen(comparingPrimitive<VocabularyNode>(voc => voc.priority))
+              .andThen(comparingLocalizable<VocabularyNode>(languageService, voc => voc.label))
+          );
         })
     );
   }
