@@ -12,13 +12,13 @@ import { contains } from 'yti-common-ui/utils/array';
 
     <div *ngIf="canAdd()" class="clearfix">
       <div ngbDropdown class="add-button" placement="bottom-right">
-        <button class="btn btn-link" id="{{property.label|translateValue}}{{'_add_button'}}" ngbDropdownToggle>
+        <button class="btn btn-link" id="{{id + '_add_button'}}" ngbDropdownToggle>
           <span>{{'Add' | translate}} {{property.label | translateValue:true | lowercase}}</span>
         </button>
         <div ngbDropdownMenu>
           <button class="dropdown-item"
                   *ngFor="let language of addableLanguages"
-                  id="{{'add_new_localization_'+ language + 'button'}}"
+                  id="{{'add_new_' + id + '_' + language + '_button'}}"
                   (click)="addNewLocalization(language)">{{language | uppercase}}</button>
         </div>
       </div>
@@ -80,7 +80,7 @@ import { contains } from 'yti-common-ui/utils/array';
         </div>
 
         <button *ngIf="canRemove()"
-                id="remove_value_button"
+                id="{{'remove_' + id + '_' + child.lang + '_' + i + '_value_button'}}"
                 class="btn btn-link remove-button"
                 (click)="removeValue(child)"
                 ngbTooltip="{{'Remove' | translate}} {{property.label | translateValue:true | lowercase}}" [placement]="'left'">
