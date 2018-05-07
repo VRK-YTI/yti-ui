@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component} from '@angular/core';
 import { MetaModelService } from 'app/services/meta-model.service';
 import { v4 as uuid } from 'uuid';
 import { VocabularyNode } from 'app/entities/node';
@@ -38,14 +38,13 @@ import { Options } from 'yti-common-ui/components/dropdown.component';
             <div class="col-6">
               <div class="top-actions">
                 <app-editable-buttons [form]="form"
-                                      [id]="id"
                                       [canRemove]="false"></app-editable-buttons>
               </div>
             </div>
           </div>
 
-          <app-vocabulary-form [vocabulary]="vocabulary" [id]="id" [form]="formNode"></app-vocabulary-form>
-          <app-prefix-input [id]="id" [formControl]="prefixFormControl"></app-prefix-input>
+          <app-vocabulary-form [vocabulary]="vocabulary" [form]="formNode"></app-vocabulary-form>
+          <app-prefix-input [formControl]="prefixFormControl"></app-prefix-input>
         </form>
 
       </div>
@@ -59,7 +58,6 @@ export class NewVocabularyComponent {
   formNode: FormNode;
   templateControl = new FormControl();
   prefixFormControl: FormControl;
-  @Input() id: string;
 
   constructor(private router: Router,
               private metaModelService: MetaModelService,
