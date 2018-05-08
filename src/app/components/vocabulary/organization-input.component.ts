@@ -19,10 +19,10 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
            class="removable-text"
            [appDragSortableItem]="organization"
            [index]="i">
-        <a><i class="fa fa-times" id="{{'remove_reference_link' + organization.id}}" (click)="removeReference(organization)"></i></a>
+        <a><i class="fa fa-times" id="{{'remove_organization_reference_link_' + organization.id}}" (click)="removeReference(organization)"></i></a>
         <span>{{organization.label | translateValue:true}}</span>
       </div>
-      <app-error-messages [control]="reference.control" id="app_error_messages"></app-error-messages>
+      <app-error-messages [id]="id + '_error_messages'" [control]="reference.control"></app-error-messages>
     </div>
 
     <button type="button"
@@ -34,6 +34,7 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
 })
 export class OrganizationInputComponent {
 
+  @Input() id: string;
   @Input() vocabulary: VocabularyNode;
   @Input() reference: FormReferenceLiteral<OrganizationNode>;
 

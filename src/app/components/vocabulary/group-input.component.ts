@@ -19,10 +19,10 @@ import { SearchGroupModalService } from './search-group-modal.component';
            class="removable-text"
            [appDragSortableItem]="group"
            [index]="i">
-        <a><i class="fa fa-times" id="{{'remove_reference_link_' + i}}" (click)="removeReference(group)"></i></a>
+        <a><i class="fa fa-times" id="{{'remove_group_reference_link_' + group.id}}" (click)="removeReference(group)"></i></a>
         <span>{{group.label | translateValue:true}}</span>
       </div>
-      <app-error-messages [control]="reference.control"></app-error-messages>
+      <app-error-messages [id]="id + '_error_messages'" [control]="reference.control"></app-error-messages>
     </div>
 
     <button type="button"
@@ -34,6 +34,7 @@ import { SearchGroupModalService } from './search-group-modal.component';
 })
 export class GroupInputComponent {
 
+  @Input() id: string;
   @Input() reference: FormReferenceLiteral<GroupNode>;
 
   constructor(private editableService: EditableService,

@@ -34,11 +34,11 @@ export type FormReference = FormReferenceLiteral<any>
                                             [vocabulary]="vocabulary"></app-concept-link-reference-input>
           
           <app-group-input *ngSwitchCase="'Group'"
-                           id="reference_group_input"
+                           [id]="id"
                            [reference]="reference"></app-group-input>
 
           <app-organization-input *ngSwitchCase="'Organization'"
-                                  id="reference_organization_input"
+                                  [id]="id"
                                   [reference]="reference"
                                   [vocabulary]="vocabulary"></app-organization-input>
 

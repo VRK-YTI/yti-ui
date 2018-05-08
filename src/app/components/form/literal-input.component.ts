@@ -60,7 +60,7 @@ import { FormPropertyLiteral } from 'app/services/form-state';
                               [id]="id + '_input'"
                               [formControl]="property.control"></app-language-input>
 
-          <app-error-messages [control]="property.control"></app-error-messages>
+          <app-error-messages [id]="id + '_error_messages'" [control]="property.control"></app-error-messages>
           
         </ng-container>
         

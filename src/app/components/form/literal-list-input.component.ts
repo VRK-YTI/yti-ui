@@ -72,11 +72,11 @@ import { FormControl } from '@angular/forms';
 
               </div>
 
-              <app-error-messages [control]="control"></app-error-messages>
+              <app-error-messages [id]="id + '_' + i + '_error_messages'" [control]="control"></app-error-messages>
             </div>
 
             <button *ngIf="canRemove()"
-                    id="remove_value_button"
+                    id="{{'remove_' + id + '_' + i + '_value_button'}}"
                     class="btn btn-link remove-button"
                     (click)="removeValue(control)"
                     ngbTooltip="{{'Remove' | translate}} {{property.label | translateValue:true | lowercase}}" [placement]="'left'">
@@ -84,7 +84,7 @@ import { FormControl } from '@angular/forms';
             </button>
 
             <div class="reorder-handle">
-              <span class="fa fa-bars"></span>
+              <span id="{{id + '_' + i +  '_reorder_handle'}}" class="fa fa-bars"></span>
             </div>
 
           </div>
@@ -92,7 +92,7 @@ import { FormControl } from '@angular/forms';
       </div>
 
       <div *ngIf="property.value.length === 0" translate>No values yet</div>
-      <app-error-messages [control]="property.control"></app-error-messages>
+      <app-error-messages [id]="id + '_literal_list_input_error_messages'" [control]="property.control"></app-error-messages>
 
     </div>
   `

@@ -75,7 +75,7 @@ import { contains } from 'yti-common-ui/utils/array';
 
             </ng-container>
 
-            <app-error-messages [control]="child.control"></app-error-messages>
+            <app-error-messages [id]="id + '_' + child.lang + '_' + i + '_error_messages'" [control]="child.control"></app-error-messages>
           </div>
         </div>
 
@@ -88,13 +88,13 @@ import { contains } from 'yti-common-ui/utils/array';
         </button>
 
         <div *ngIf="editing" class="reorder-handle">
-          <span class="fa fa-bars"></span>
+          <span id="{{id + '_' + child.lang + '_' + i +  '_reorder_handle'}}" class="fa fa-bars"></span>
         </div>
       </div>
     </div>
 
     <div *ngIf="property.value.length === 0" translate>No values yet</div>
-    <app-error-messages [control]="property.control"></app-error-messages>
+    <app-error-messages [id]="id + '_localized_input_error_messages'" [control]="property.control"></app-error-messages>
   `
 })
 export class LocalizedInputComponent {

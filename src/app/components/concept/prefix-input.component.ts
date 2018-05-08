@@ -16,7 +16,7 @@ import { TermedService } from 'app/services/termed.service';
                  autocomplete="off"
                  [ngClass]="{'is-invalid': !valid && !pending}"
                  [formControl]="control" />
-          <app-error-messages [control]="parentControl"></app-error-messages>
+          <app-error-messages id="prefix_input_error_messages" [control]="parentControl"></app-error-messages>
         </div>
       </div>
 

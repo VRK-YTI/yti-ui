@@ -7,7 +7,7 @@ import { FormControl } from '@angular/forms';
   template: `
     <div *ngIf="isVisible()">
       <ul class="errors">
-        <li *ngFor="let error of control.errors | keys">{{error | translate}}</li>
+        <li [id]="i + '_' + id" *ngFor="let error of control.errors | keys; let i = index">{{error | translate}}</li>
       </ul>
     </div>
   `
@@ -15,6 +15,7 @@ import { FormControl } from '@angular/forms';
 export class ErrorMessagesComponent {
 
   @Input() control: FormControl;
+  @Input() id: string;
 
   isVisible() {
     return !this.control.valid;
