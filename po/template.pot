@@ -187,13 +187,13 @@ msgstr ""
 msgid "concepts"
 msgstr ""
 
-msgid "Import is not allowed because some of the concepts lack preferred term."
+msgid "{{error.translationKey}}"
 msgstr ""
 
-msgid "Line numbers in the import file"
+msgid "prefLabel"
 msgstr ""
 
-msgid "Concept status"
+msgid "synonym"
 msgstr ""
 
 msgid "Import failed"
@@ -250,7 +250,7 @@ msgstr ""
 msgid "New collection"
 msgstr ""
 
-msgid "already added error"
+msgid "Unlink"
 msgstr ""
 
 msgid "Front page"
@@ -279,7 +279,7 @@ msgid ""
 "be lost."
 msgstr ""
 
-msgid "Unlink"
+msgid "All statuses"
 msgstr ""
 
 msgid "Concept not in references"
@@ -288,22 +288,7 @@ msgstr ""
 msgid "self reference error"
 msgstr ""
 
-msgid "All statuses"
-msgstr ""
-
-msgid "prefLabel"
-msgstr ""
-
-msgid "definition"
-msgstr ""
-
-msgid "note"
-msgstr ""
-
-msgid "example"
-msgstr ""
-
-msgid "synonym"
+msgid "already added error"
 msgstr ""
 
 msgid "ADMIN"
@@ -327,19 +312,10 @@ msgstr ""
 msgid "TerminologicalVocabularyType"
 msgstr ""
 
-msgid "broader"
-msgstr ""
-
-msgid "related"
-msgstr ""
-
-msgid "isPartOf"
+msgid "Property must include a language."
 msgstr ""
 
 msgid "validateMeta"
-msgstr ""
-
-msgid "required"
 msgstr ""
 
 msgid "validateLanguage"
@@ -349,4 +325,25 @@ msgid "prefixInUse"
 msgstr ""
 
 msgid "upperCaseInPrefix"
+msgstr ""
+
+msgid "Property is not a literal type."
+msgstr ""
+
+msgid "required"
+msgstr ""
+
+msgid "No property or reference found with a name."
+msgstr ""
+
+msgid "Invalid status."
+msgstr ""
+
+msgid "prefLabel must be set."
+msgstr ""
+
+msgid "Reference must include a language."
+msgstr ""
+
+msgid "Reference does not match any concepts."
 msgstr ""

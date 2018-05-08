@@ -2,14 +2,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-04-17 16:47+0300\n"
+"PO-Revision-Date: 2018-05-09 00:25+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 1.8.5\n"
 "X-Poedit-Basepath: .\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
@@ -197,14 +197,14 @@ msgstr ""
 msgid "concepts"
 msgstr ""
 
-msgid "Import is not allowed because some of the concepts lack preferred term."
+msgid "{{error.translationKey}}"
 msgstr ""
 
-msgid "Line numbers in the import file"
-msgstr ""
+msgid "prefLabel"
+msgstr "Preferred term"
 
-msgid "Concept status"
-msgstr ""
+msgid "synonym"
+msgstr "Synonym"
 
 msgid "Import failed"
 msgstr ""
@@ -260,8 +260,8 @@ msgstr "new concept"
 msgid "New collection"
 msgstr "new collection"
 
-msgid "already added error"
-msgstr "Selection is already added"
+msgid "Unlink"
+msgstr ""
 
 msgid "Front page"
 msgstr ""
@@ -289,7 +289,7 @@ msgid ""
 "be lost."
 msgstr ""
 
-msgid "Unlink"
+msgid "All statuses"
 msgstr ""
 
 msgid "Concept not in references"
@@ -298,23 +298,8 @@ msgstr ""
 msgid "self reference error"
 msgstr "Selection references itself"
 
-msgid "All statuses"
-msgstr ""
-
-msgid "prefLabel"
-msgstr "Preferred term"
-
-msgid "definition"
-msgstr "Definition"
-
-msgid "note"
-msgstr "Note"
-
-msgid "example"
-msgstr "Example"
-
-msgid "synonym"
-msgstr "Synonym"
+msgid "already added error"
+msgstr "Selection is already added"
 
 msgid "ADMIN"
 msgstr "Admin"
@@ -337,20 +322,11 @@ msgstr "Vocabulary"
 msgid "TerminologicalVocabularyType"
 msgstr "Terminological vocabulary"
 
-msgid "broader"
-msgstr "Broader concept"
-
-msgid "related"
-msgstr "Related concept"
-
-msgid "isPartOf"
-msgstr "Is part of concept"
+msgid "Property must include a language."
+msgstr "{{ lineNumber: }}: Property “{{ name }}”” must include a language."
 
 msgid "validateMeta"
 msgstr "Invalid"
-
-msgid "required"
-msgstr "Required"
 
 msgid "validateLanguage"
 msgstr "Invalid language"
@@ -360,3 +336,44 @@ msgstr "Prefix is already in use"
 
 msgid "upperCaseInPrefix"
 msgstr "Prefix must be in lower case"
+
+msgid "Property is not a literal type."
+msgstr "{{ lineNumber: }}: Property “{{ name }}” is not a literal type."
+
+msgid "required"
+msgstr "Required"
+
+msgid "No property or reference found with a name."
+msgstr ""
+"{{ lineNumber: }}:  No property of reference with a name “{{ name }}”"
+
+msgid "Invalid status."
+msgstr "{{ lineNumber: }}:  Invalid status"
+
+msgid "prefLabel must be set."
+msgstr "{{ lineNumber: }}:  prefLabel must be set."
+
+msgid "Reference must include a language."
+msgstr "{{ lineNumber: }}: Reference “{{ name }}” must include a language."
+
+msgid "Reference does not match any concepts."
+msgstr ""
+"{{ lineNumber: }}: Reference “{{ name }}” does not match any concepts."
+
+#~ msgid "definition"
+#~ msgstr "Definition"
+
+#~ msgid "note"
+#~ msgstr "Note"
+
+#~ msgid "example"
+#~ msgstr "Example"
+
+#~ msgid "broader"
+#~ msgstr "Broader concept"
+
+#~ msgid "related"
+#~ msgstr "Related concept"
+
+#~ msgid "isPartOf"
+#~ msgstr "Is part of concept"

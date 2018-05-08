@@ -2,14 +2,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-04-17 16:34+0300\n"
+"PO-Revision-Date: 2018-05-09 00:14+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 1.8.5\n"
 "X-Poedit-Basepath: .\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
@@ -199,15 +199,14 @@ msgstr "Tuodaan"
 msgid "concepts"
 msgstr "käsitettä"
 
-msgid "Import is not allowed because some of the concepts lack preferred term."
+msgid "{{error.translationKey}}"
 msgstr ""
-"Tuontia ei sallita, koska joistakin käsitteistä puuttuu suositettava termi."
 
-msgid "Line numbers in the import file"
-msgstr "Rivinumerot aineistossa"
+msgid "prefLabel"
+msgstr "Suositettava termi"
 
-msgid "Concept status"
-msgstr "Käsitteen tila"
+msgid "synonym"
+msgstr "Synonyymi"
 
 msgid "Import failed"
 msgstr "Tuonti epäonnistui"
@@ -263,8 +262,8 @@ msgstr "uusi käsite"
 msgid "New collection"
 msgstr "uusi käsitevalikoima"
 
-msgid "already added error"
-msgstr "Valinta on jo lisätty"
+msgid "Unlink"
+msgstr "Poista linkitys"
 
 msgid "Front page"
 msgstr "Etusivu"
@@ -294,8 +293,8 @@ msgstr ""
 "Oletko varma, että haluat jatkaa? Jatkaessasi tallentamattomat muutokset "
 "katoavat."
 
-msgid "Unlink"
-msgstr "Poista linkitys"
+msgid "All statuses"
+msgstr "Kaikki tilat"
 
 msgid "Concept not in references"
 msgstr "Käsite ei löydy viitteistä"
@@ -303,23 +302,8 @@ msgstr "Käsite ei löydy viitteistä"
 msgid "self reference error"
 msgstr "Valinta ei voi viitata itseensä"
 
-msgid "All statuses"
-msgstr "Kaikki tilat"
-
-msgid "prefLabel"
-msgstr "Suositettava termi"
-
-msgid "definition"
-msgstr "Määritelmä"
-
-msgid "note"
-msgstr "Huomautus"
-
-msgid "example"
-msgstr "Käyttöesimerkki"
-
-msgid "synonym"
-msgstr "Synonyymi"
+msgid "already added error"
+msgstr "Valinta on jo lisätty"
 
 msgid "ADMIN"
 msgstr "Ylläpitäjä"
@@ -342,20 +326,13 @@ msgstr "Asiasanasto"
 msgid "TerminologicalVocabularyType"
 msgstr "Terminologinen sanasto"
 
-msgid "broader"
-msgstr "Hierarkkinen yläkäsite"
-
-msgid "related"
-msgstr "Liittyvä käsite"
-
-msgid "isPartOf"
-msgstr "Partitiivinen koostumussuhde"
+msgid "Property must include a language."
+msgstr ""
+"{{ lineNumber }}: Ominaisuus “{{ name }}” täytyy olla määritelty kielen "
+"kanssa"
 
 msgid "validateMeta"
 msgstr "Epävalidi syöte"
-
-msgid "required"
-msgstr "Pakollinen syöte"
 
 msgid "validateLanguage"
 msgstr "Epävalidi kieli"
@@ -365,6 +342,59 @@ msgstr "Etuliite on jo käytössä"
 
 msgid "upperCaseInPrefix"
 msgstr "Etuliite oltava pienillä kirjaimilla"
+
+msgid "Property is not a literal type."
+msgstr "{{ lineNumber }}: Ominaisuus “{{ name }}” ei ole literaali"
+
+msgid "required"
+msgstr "Pakollinen syöte"
+
+msgid "No property or reference found with a name."
+msgstr ""
+"{{ lineNumber }}: Ominaisuutta tai viitettä ei löydy nimellä “{{ name }}”"
+
+msgid "Invalid status."
+msgstr "{{ lineNumber }}: Virheellinen tila"
+
+msgid "prefLabel must be set."
+msgstr "{{ lineNumber }}: prefLabel täytyy olla asetettu"
+
+msgid "Reference must include a language."
+msgstr ""
+"{{ lineNumber }}: Viittaus “{{ name }}” täytyy määritellä kielen kanssa"
+
+msgid "Reference does not match any concepts."
+msgstr "{{ lineNumber }}: Viittauksella “{{ name }}” ei löydy käsitettä"
+
+#~ msgid "definition"
+#~ msgstr "Määritelmä"
+
+#~ msgid "note"
+#~ msgstr "Huomautus"
+
+#~ msgid "example"
+#~ msgstr "Käyttöesimerkki"
+
+#~ msgid "broader"
+#~ msgstr "Hierarkkinen yläkäsite"
+
+#~ msgid "related"
+#~ msgstr "Liittyvä käsite"
+
+#~ msgid "isPartOf"
+#~ msgstr "Partitiivinen koostumussuhde"
+
+#~ msgid ""
+#~ "Import is not allowed because some of the concepts lack preferred term."
+#~ msgstr ""
+#~ "Tuontia ei sallita, koska joistakin käsitteistä puuttuu suositettava "
+#~ "termi."
+
+#~ msgid "Line numbers in the import file"
+#~ msgstr "Rivinumerot aineistossa"
+
+#~ msgid "Concept status"
+#~ msgstr "Käsitteen tila"
 
 #~ msgid "Search group"
 #~ msgstr "Hae luokitusta"

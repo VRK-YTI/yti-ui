@@ -1,7 +1,7 @@
 import { asLocalizable } from 'yti-common-ui/utils/localization';
 import { Localizable, Localization } from 'yti-common-ui/types/localization';
 import { isDefined, requireDefined } from 'yti-common-ui/utils/object';
-import { firstMatching, flatten, normalizeAsArray, remove, requireSingle } from 'yti-common-ui/utils/array';
+import { firstMatching, flatten, normalizeAsArray, remove, requireSingle, allMatching } from 'yti-common-ui/utils/array';
 import { Attribute, Identifier, NodeExternal, NodeInternal, NodeType, VocabularyNodeType } from './node-api';
 import { MetaModel, NodeMeta, PropertyMeta, ReferenceMeta } from './meta';
 import * as moment from 'moment';
@@ -68,6 +68,22 @@ export class Property {
 
   setValues(values: string[]) {
     this.attributes = values.map(value => ({ lang: '', value, regex: this.meta.regex }));
+  }
+
+  isEmpty() {
+    return this.attributes.length === 0 || allMatching(this.attributes, attribute => !attribute.value);
+  }
+
+  isLocalizable() {
+    return this.meta.type.type === 'localizable';
+  }
+
+  isStatus() {
+    return this.meta.type.editor.type === 'status';
+  }
+
+  isLabel() {
+    return this.meta.id === 'prefLabel' || this.meta.id === 'altLabel';
   }
 
   asString() {
@@ -575,20 +591,12 @@ export class ConceptNode extends Node<'Concept'> {
     return this.meta.hasReference('related');
   }
 
-  addRelatedConcept(concept: ConceptNode) {
-    this.getReference<ConceptNode>('related').values.push(concept);
-  }
-
   get relatedConcepts(): Reference<ConceptNode> {
     return this.getReference<ConceptNode>('related');
   }
 
   hasBroaderConcepts() {
     return this.meta.hasReference('broader');
-  }
-
-  addBroaderConcept(concept: ConceptNode) {
-    this.getReference<ConceptNode>('broader').values.push(concept);
   }
 
   get broaderConcepts(): Reference<ConceptNode> {
@@ -603,16 +611,16 @@ export class ConceptNode extends Node<'Concept'> {
     return this.meta.hasReference('isPartOf');
   }
 
-  addIsPartOfConcept(concept: ConceptNode) {
-    this.getReference<ConceptNode>('isPartOf').values.push(concept);
-  }
-
   get isPartOfConcepts(): Reference<ConceptNode> {
     return this.getReference<ConceptNode>('isPartOf');
   }
 
   get partOfThisConcepts(): Referrer {
     return this.getNormalizedReferrer<'Concept'>('isPartOf');
+  }
+
+  getConceptReferences() {
+    return this.getAllReferences().filter(ref => ref.concept) as Reference<ConceptNode>[];
   }
 }
 

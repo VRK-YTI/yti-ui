@@ -1,34 +1,37 @@
 import { Component, Injectable, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Localization } from 'yti-common-ui/types/localization';
-import { containsAny, flatten, firstMatching, anyMatching, contains } from 'yti-common-ui/utils/array';
+import { containsAny, firstMatching, flatten, contains, allMatching } from 'yti-common-ui/utils/array';
 import { ConceptNode, VocabularyNode } from 'app/entities/node';
 import { MetaModelService } from 'app/services/meta-model.service';
 import { MetaModel, NodeMeta } from 'app/entities/meta';
 import { TermedService } from 'app/services/termed.service';
 import * as Papa from 'papaparse';
 import { ModalService } from 'app/services/modal.service';
-import { Status } from 'yti-common-ui/entities/status';
 import { v4 as uuid } from 'uuid';
-import { requireDefined } from 'yti-common-ui/utils/object';
+import { assertNever, requireDefined } from 'yti-common-ui/utils/object';
+import { allStatuses } from 'yti-common-ui/entities/status';
+
+type ColumnType = 'localized'
+                | 'literal';
+
+interface ValidationError {
+  translationKey: string;
+  params?: {};
+}
+
+class ColumnDetails {
+
+  columns: { [name: string]: ColumnType } = {};
+  validationErrors: ValidationError[] = [];
+}
 
 class CsvConceptDetails {
 
   id = uuid();
+  columns: { [name: string]: Localization[]|string } = {};
 
-  constructor(public prefLabel: Localization[],
-              public definition: Localization[],
-              public note: Localization[],
-              public example: Localization[],
-              public synonym: Localization[],
-              public broader: Localization[],
-              public related: Localization[],
-              public isPartOf: Localization[],
-              public status: Status,
-              public lineNumber: number) {
-  }
-
-  static createFromCsvRow(csvJsonObject: any, lineNumber: number): CsvConceptDetails {
+  constructor(csvJsonObject: any, columnDetails: ColumnDetails, public lineNumber: number) {
 
     function splitValuesAsOwnLocalizations(localization: Localization): Localization[] {
       return localization.value.split('\r\n').map(v => ({ lang: localization.lang, value: v}));
@@ -49,47 +52,27 @@ class CsvConceptDetails {
       return flatten(localizations.map(localization => splitValuesAsOwnLocalizations(localization)));
     }
 
-    return new CsvConceptDetails(
-      parseLocalizationsForProperty('prefLabel'),
-      parseLocalizationsForProperty('definition'),
-      parseLocalizationsForProperty('note'),
-      parseLocalizationsForProperty('example'),
-      parseLocalizationsForProperty('synonym'),
-      parseLocalizationsForProperty('broader'),
-      parseLocalizationsForProperty('related'),
-      parseLocalizationsForProperty('isPartOf'),
-      (csvJsonObject['status'] || 'DRAFT') as Status,
-      lineNumber
-    );
-  }
+    function parseLiteral(propertyName: string): string {
+      return csvJsonObject[propertyName];
+    }
 
-  get nonEmptyProperties(): ConceptProperty[] {
-
-    const propertyIsNotEmpty = (localizations: Localization[]) => localizations.length > 0;
-
-    const allProperties = [
-      { name: 'prefLabel', localizations: this.prefLabel, type: '' },
-      { name: 'definition', localizations: this.definition, type: 'property' },
-      { name: 'note', localizations: this.note, type: 'property' },
-      { name: 'example', localizations: this.example, type: 'property' },
-      { name: 'synonym', localizations: this.synonym, type: 'property' },
-      { name: 'broader', localizations: this.broader, type: 'reference' },
-      { name: 'related', localizations: this.related, type: 'reference' },
-      { name: 'isPartOf', localizations: this.isPartOf, type: 'reference' }
-    ];
-
-    return allProperties.filter(property => propertyIsNotEmpty(property.localizations));
-  }
-
-  get conceptStatus() {
-    return this.status;
+    for (const [propertyName, columnType] of Object.entries(columnDetails.columns)) {
+      switch (columnType) {
+        case 'localized':
+          this.columns[propertyName] = parseLocalizationsForProperty(propertyName);
+          break;
+        case 'literal':
+          this.columns[propertyName] = parseLiteral(propertyName);
+          break;
+        default:
+          assertNever(columnType);
+      }
+    }
   }
 }
 
-interface ConceptProperty {
-  name: string;
-  localizations: Localization[];
-  type: string;
+function isLiteral(columnValue: Localization[]|string): columnValue is string {
+  return typeof columnValue === 'string';
 }
 
 function localizationsAreEqual(lhs: Localization, rhs: Localization): boolean {
@@ -134,22 +117,67 @@ export class ImportVocabularyModalService {
               <span translate>Importing</span> {{numberOfConcepts}} <span translate>concepts</span>
             </h6>
 
-            <div *ngIf="invalid" class="alert alert-danger">
-              <span class="fa fa-exclamation-circle" aria-hidden="true"></span>
-              <span translate>Import is not allowed because some of the concepts lack preferred term.</span>
-              <span translate>Line numbers in the import file</span>: {{lineNumbersOfEmptyPrefLabels}}
+            <div *ngIf="invalid">
+              <ul class="errors">
+                <li *ngFor="let error of validationErrors">
+                  <span translate [translateParams]="error.params">{{error.translationKey}}</span>      
+                </li>
+              </ul>
             </div>
-
+            
             <div class="search-results">
-              <div class="search-result" *ngFor="let concept of conceptsFromCsv">
+              <div class="search-result" *ngFor="let concept of concepts">
                 <div class="content">
-                  <div *ngFor="let property of concept.nonEmptyProperties; let last = last"
+
+                  <!-- special handling for labels -->
+                  <dl>
+                    <dt><label class="name" translate>prefLabel</label></dt>
+                    <dd>
+                      <div class="localized" *ngFor="let localization of concept.prefLabel">
+                        <div class="language">{{localization.lang.toUpperCase()}}</div>
+                        <div class="localization">{{localization.value}}</div>
+                      </div>
+                    </dd>
+                  </dl>
+                  
+                  <dl *ngIf="concept.altLabel.length > 0">
+                    <dt><label class="name" translate>synonym</label></dt>
+                    <dd>
+                      <div class="localized" *ngFor="let localization of concept.altLabel">
+                        <div class="language">{{localization.lang.toUpperCase()}}</div>
+                        <div class="localization">{{localization.value}}</div>
+                      </div>
+                    </dd>
+                  </dl>
+                  
+                  <div *ngFor="let property of concept.getAllProperties(); let last = last"
                        [class.last]="last">
-                    <div *ngIf="showNonEmptyProperty(property)">
+                    <div *ngIf="!property.isEmpty() && !property.isLabel()">
                       <dl>
-                        <dt><label class="name">{{property.name | translate}}</label></dt>
+                        <dt><label class="name">{{property.meta.label | translateValue}}</label></dt>
+                        
+                        <dd *ngIf="property.isLocalizable()">
+                          <div class="localized" *ngFor="let localization of property.asLocalizations()">
+                            <div class="language">{{localization.lang.toUpperCase()}}</div>
+                            <div class="localization">{{localization.value}}</div>
+                          </div>
+                        </dd>
+                        
+                        <dd *ngIf="!property.isLocalizable()">
+                          <span *ngIf="!property.isStatus()">{{property.literalValue}}</span>
+                          <span *ngIf="property.isStatus()">{{property.literalValue | translate}}</span>
+                        </dd>
+                        
+                      </dl>
+                    </div>
+                  </div>
+
+                  <div *ngFor="let reference of concept.getConceptReferences()">
+                    <div *ngFor="let value of reference.values">
+                      <dl>
+                        <dt><label class="name">{{reference.meta.label | translateValue}}</label></dt>
                         <dd>
-                          <div class="localized" *ngFor="let localization of getPropertyLocalizations(property)">
+                          <div class="localized" *ngFor="let localization of value.prefLabel">
                             <div class="language">{{localization.lang.toUpperCase()}}</div>
                             <div class="localization">{{localization.value}}</div>
                           </div>
@@ -157,10 +185,7 @@ export class ImportVocabularyModalService {
                       </dl>
                     </div>
                   </div>
-                  <dl>
-                    <dt><label class="name" translate>Concept status</label></dt>
-                    <dd>{{concept.conceptStatus | translate}}</dd>
-                  </dl>
+                  
                 </div>
               </div>
             </div>
@@ -188,7 +213,9 @@ export class ImportVocabularyModalComponent implements OnInit {
   @Input() importFile: File;
   @Input() vocabulary: VocabularyNode;
 
-  conceptsFromCsv: CsvConceptDetails[] = [];
+  concepts: ConceptNode[] = [];
+  validationErrors: ValidationError[] = [];
+
   metaModel: MetaModel;
   conceptMeta: NodeMeta;
   importError = false;
@@ -214,97 +241,158 @@ export class ImportVocabularyModalComponent implements OnInit {
           skipEmptyLines: true,
           newline: '\r\n',
           complete: results => {
-            this.conceptsFromCsv = results.data.map((datum, index) => CsvConceptDetails.createFromCsvRow(datum, index + 2));
+
+            const columnDetails = ImportVocabularyModalComponent.parseColumnDetails(results.meta.fields);
+            columnDetails.validationErrors.forEach(error => this.validationErrors.push(error));
+
+            if (this.validationErrors.length === 0) {
+              const conceptsFromCsv = results.data.map((datum, index) => new CsvConceptDetails(datum, columnDetails, index + 2));
+              this.concepts = this.convertToConceptNodes(conceptsFromCsv);
+            }
+
             this.uploading = false;
           }
         });
       });
   }
 
+  private static parseColumnDetails(columnNames: string[]): ColumnDetails {
+
+    const result = new ColumnDetails();
+
+    for (const columnName of columnNames) {
+
+      // TODO validation, for example for multiple underscores
+      const underscorePosition = columnName.indexOf('_');
+      const isLocalized = underscorePosition !== -1;
+      const propertyName = isLocalized ? columnName.substr(0, underscorePosition) : columnName;
+
+      result.columns[propertyName] = isLocalized ? 'localized' : 'literal';
+    }
+
+    return result;
+  }
+
   get numberOfConcepts() {
-    return this.conceptsFromCsv.length;
-  }
-
-  get conceptsWithEmptyPrefLabels() {
-    return this.conceptsFromCsv.filter(concept => concept.prefLabel.length === 0);
-  }
-
-  get numberOfConceptsWithEmptyPrefLabels() {
-    return this.conceptsWithEmptyPrefLabels.length;
-  }
-
-  get lineNumbersOfEmptyPrefLabels() {
-    return this.conceptsWithEmptyPrefLabels.map(concept => concept.lineNumber).join(', ');
+    return this.concepts.length;
   }
 
   get invalid() {
-    return this.numberOfConceptsWithEmptyPrefLabels > 0;
-  }
-
-  showNonEmptyProperty(property: ConceptProperty) {
-
-    if (property.type === 'reference') {
-      return this.conceptMeta.hasReference(property.name) && this.getPropertyLocalizations(property).length > 0
-    } else {
-      return true;
-    }
-  }
-
-  getPropertyLocalizations(property: ConceptProperty) {
-
-    return property.localizations.filter(localization =>
-      property.type !== 'reference' || this.isReferenceConceptFound(localization));
-  }
-
-  isReferenceConceptFound(localization: Localization) {
-
-    return anyMatching(this.conceptsFromCsv, conceptFromCsv =>
-      contains(conceptFromCsv.prefLabel, localization, localizationsAreEqual));
+    return this.validationErrors.length > 0;
   }
 
   convertToConceptNodeWithoutReferences(conceptFromCsv: CsvConceptDetails): ConceptNode {
 
     const concept: ConceptNode = this.metaModel.createEmptyConcept(this.vocabulary, conceptFromCsv.id);
 
-    concept.prefLabel = conceptFromCsv.prefLabel;
-    concept.definition = conceptFromCsv.definition;
-    concept.note = conceptFromCsv.note;
-    concept.example = conceptFromCsv.example;
-    concept.altLabel = conceptFromCsv.synonym;
+    for (const [name, value] of Object.entries(conceptFromCsv.columns)) {
 
-    if (concept.hasStatus()) {
-      concept.status = conceptFromCsv.status;
+      // special handling for labels
+      if (name === 'prefLabel' || name === 'synonym') {
+        if (isLiteral(value)) {
+          this.validationErrors.push({
+            translationKey: 'Property must include a language.' ,
+            params: { lineNumber: conceptFromCsv.lineNumber, name: name }
+          });
+        } else {
+          if (name === 'prefLabel') {
+            concept.prefLabel = value;
+          } else {
+            concept.altLabel = value;
+          }
+        }
+
+        break;
+      }
+
+      if (this.conceptMeta.hasProperty(name)) {
+
+        const property = concept.getProperty(name);
+
+        if (isLiteral(value)) {
+          if (!property.isLocalizable()) {
+
+            property.literalValue = value;
+
+          } else {
+            this.validationErrors.push({
+              translationKey: 'Property is not a literal type.' ,
+              params: { lineNumber: conceptFromCsv.lineNumber, name: name }
+            });
+          }
+        } else {
+          if (property.isLocalizable()) {
+
+            property.setLocalizations(value);
+
+          } else {
+            this.validationErrors.push({
+              translationKey: 'Property must include a language.' ,
+              params: { lineNumber: conceptFromCsv.lineNumber, name: name }
+            });
+          }
+        }
+      } else if (!this.conceptMeta.hasReference(name)) {
+
+        this.validationErrors.push({
+          translationKey: 'No property or reference found with a name.' ,
+          params: { lineNumber: conceptFromCsv.lineNumber, name: name }
+        });
+      }
+    }
+
+    if (concept.hasStatus() && !contains(allStatuses, concept.status)) {
+      this.validationErrors.push({
+        translationKey: 'Invalid status.' ,
+        params: { lineNumber: conceptFromCsv.lineNumber }
+      });
+    }
+
+    if (allMatching(concept.prefLabel, label => !label.value)) {
+      this.validationErrors.push({
+        translationKey: 'prefLabel must be set.' ,
+        params: { lineNumber: conceptFromCsv.lineNumber }
+      });
     }
 
     return concept;
   }
 
-  createConceptNodesToSave(): ConceptNode[] {
+  convertToConceptNodes(conceptsFromCsv: CsvConceptDetails[]): ConceptNode[] {
 
-    const nodes = this.conceptsFromCsv.map(concept => this.convertToConceptNodeWithoutReferences(concept));
+    const nodes = conceptsFromCsv.map(concept => this.convertToConceptNodeWithoutReferences(concept));
 
-    for (const conceptFromCsv of this.conceptsFromCsv) {
+    for (const conceptFromCsv of conceptsFromCsv) {
 
       const concept = requireDefined(firstMatching(nodes, n => n.id === conceptFromCsv.id));
 
       const isMatchingNode = (label: Localization[]) => (node: ConceptNode) =>
         containsAny(node.prefLabel, label, localizationsAreEqual);
 
-      if (concept.hasBroaderConcepts()) {
-        for (const broader of nodes.filter(isMatchingNode(conceptFromCsv.broader))) {
-          concept.addBroaderConcept(broader);
-        }
-      }
+      for (const [name, value] of Object.entries(conceptFromCsv.columns)) {
 
-      if (concept.hasRelatedConcepts()) {
-        for (const related of nodes.filter(isMatchingNode(conceptFromCsv.related))) {
-          concept.addRelatedConcept(related);
-        }
-      }
+        if (this.conceptMeta.hasReference(name)) {
 
-      if (concept.hasIsPartOfConcepts()) {
-        for (const isPartOf of nodes.filter(isMatchingNode(conceptFromCsv.isPartOf))) {
-          concept.addIsPartOfConcept(isPartOf);
+          const reference = concept.getReference(name);
+
+          if (!isLiteral(value)) {
+            const matchingNodes = nodes.filter(isMatchingNode(value));
+
+            if (matchingNodes.length > 0) {
+              matchingNodes.forEach(node => reference.values.push(node));
+            } else {
+              this.validationErrors.push({
+                translationKey: 'Reference does not match any concepts.' ,
+                params: { lineNumber: conceptFromCsv.lineNumber, name: name }
+              });
+            }
+
+          } else {
+            this.validationErrors.push({
+              translationKey: 'Reference must include a language.' ,
+              params: { lineNumber: conceptFromCsv.lineNumber, name: name }
+            });
+          }
         }
       }
     }
@@ -320,7 +408,7 @@ export class ImportVocabularyModalComponent implements OnInit {
 
     this.uploading = true;
 
-    this.termedService.saveNodes(this.createConceptNodesToSave())
+    this.termedService.saveNodes(this.concepts)
       .subscribe({
         next: () => this.modal.close(),
         error: () => {
