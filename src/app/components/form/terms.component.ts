@@ -38,7 +38,7 @@ import { contains, last } from 'yti-common-ui/utils/array';
               <app-accordion-chevron class="pull-right" [id]="id + '_' + i + '_term_accordion_chevron'"></app-accordion-chevron>
             </div>
             <div class="property-ordering" [hidden]="!editing">
-              <span class="fa fa-bars"></span>
+              <span id="{{id + '_' + i +  '_term_reorder_handle'}}" class="fa fa-bars"></span>
             </div>
           </div>
         </ng-template>
