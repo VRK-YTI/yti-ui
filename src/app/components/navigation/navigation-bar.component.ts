@@ -36,7 +36,7 @@ import { TermedService } from '../../services/termed.service';
           <a class="dropdown-toggle nav-link btn btn-language" id="language_dropdown_link" ngbDropdownToggle>{{language.toUpperCase()}}</a>
           <div ngbDropdownMenu>
             <a *ngFor="let availableLanguage of availableLanguages"
-               id="{{availableLanguage.name + '_language_selection_link'}}"
+               id="{{availableLanguage.code + '_language_selection_link'}}"
                class="dropdown-item"
                [class.active]="availableLanguage.code === language"
                (click)="language = availableLanguage.code">
