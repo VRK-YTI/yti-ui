@@ -32,7 +32,7 @@ import { FormControl } from '@angular/forms';
 
       <div class="clearfix">
         <button type="button"
-                id="add_new_value_button"
+                id="{{'add_new_' + id + '_value_button'}}"
                 class="btn btn-link add-button"
                 (click)="addNewValue()">
           <span>{{'Add' | translate}} {{property.label | translateValue:true | lowercase}}</span>
