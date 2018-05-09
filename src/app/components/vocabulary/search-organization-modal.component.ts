@@ -63,7 +63,7 @@ export class SearchOrganizationModalService {
     <div class="modal-footer">
 
       <button type="button"
-              id="cancel_button"
+              id="cancel_search_organization_button"
               class="btn btn-link cancel"
               (click)="cancel()" translate>Cancel</button>
     </div>
