@@ -59,7 +59,7 @@ import { contains, last } from 'yti-common-ui/utils/array';
               </div>
             </div>
           </div>
-          <app-term [term]="node.formNode" [filterLanguage]="filterLanguage"></app-term>
+          <app-term [id]="id + '_' + i" [term]="node.formNode" [filterLanguage]="filterLanguage"></app-term>
         </ng-template>
       </ngb-panel>
     </ngb-accordion>

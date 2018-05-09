@@ -7,7 +7,9 @@ import { EditableService } from 'app/services/editable.service';
   template: `
     <div class="row">
       <div class="col-md-12" [class.col-xl-6]="multiColumn" *ngFor="let property of properties">
-        <app-property id="{{property.name + '_' + filterLanguage}}" [property]="property.value" [filterLanguage]="filterLanguage"></app-property>
+        <app-property [id]="id + '_' + property.name"
+                      [property]="property.value"
+                      [filterLanguage]="filterLanguage"></app-property>
       </div>
     </div>
   `
@@ -17,6 +19,7 @@ export class TermComponent {
   @Input() multiColumn: boolean;
   @Input() term: FormNode;
   @Input() filterLanguage: string;
+  @Input() id: string;
 
   constructor(private editableService: EditableService) {
   }
