@@ -41,7 +41,7 @@ import { Subscription } from 'rxjs/Subscription';
             <div class="classification"
                  *ngFor="let classification of classifications"
                  [class.active]="isClassificationSelected(classification.node)"
-                 id="{{'toggle_classification_' + classification.node}}"
+                 id="{{classification.node.id + '_classification_toggle'}}"
                  (click)="toggleClassification(classification.node)">
 
               <span class="name">{{classification.node.label | translateValue:true}}</span>
