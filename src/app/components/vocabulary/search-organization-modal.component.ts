@@ -29,7 +29,7 @@ export class SearchOrganizationModalService {
   template: `
     <div class="modal-header">
       <h4 class="modal-title">
-        <a><i class="fa fa-times" (click)="cancel()"></i></a>
+        <a><i id="cancel_search_organization_link" class="fa fa-times" (click)="cancel()"></i></a>
         <span translate>Choose organization</span>
       </h4>
     </div>

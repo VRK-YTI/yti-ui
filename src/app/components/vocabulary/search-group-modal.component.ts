@@ -27,7 +27,7 @@ export class SearchGroupModalService {
   template: `
     <div class="modal-header">
       <h4 class="modal-title">
-        <a><i class="fa fa-times" id="cancel_search_link" (click)="cancel()"></i></a>
+        <a><i class="fa fa-times" id="cancel_search_group_link" (click)="cancel()"></i></a>
         <span translate>Choose classification</span>
       </h4>
     </div>
