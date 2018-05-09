@@ -1,7 +1,7 @@
 import { Component, Injectable, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Localization } from 'yti-common-ui/types/localization';
-import { containsAny, firstMatching, flatten, contains, allMatching } from 'yti-common-ui/utils/array';
+import { firstMatching, flatten, contains, allMatching } from 'yti-common-ui/utils/array';
 import { ConceptNode, VocabularyNode } from 'app/entities/node';
 import { MetaModelService } from 'app/services/meta-model.service';
 import { MetaModel, NodeMeta } from 'app/entities/meta';
@@ -377,7 +377,7 @@ export class ImportVocabularyModalComponent implements OnInit {
     if (concept.hasStatus() && !contains(allStatuses, concept.status)) {
       this.validationErrors.push({
         translationKey: 'Invalid status.' ,
-        params: { lineNumber: conceptFromCsv.lineNumber }
+        params: { lineNumber: conceptFromCsv.lineNumber, value: concept.status }
       });
     }
 
@@ -395,8 +395,8 @@ export class ImportVocabularyModalComponent implements OnInit {
 
     const nodes = conceptsFromCsv.map(concept => this.convertToConceptNodeWithoutReferences(concept, metaModel));
 
-    const isMatchingNode = (label: Localization[]) => (node: ConceptNode) =>
-      containsAny(node.prefLabel, label, localizationsAreEqual);
+    const isMatchingNode = (label: Localization) => (node: ConceptNode) =>
+      contains(node.prefLabel, label, localizationsAreEqual);
 
     for (const conceptFromCsv of conceptsFromCsv) {
 
@@ -404,17 +404,20 @@ export class ImportVocabularyModalComponent implements OnInit {
 
       for (const [name, column] of Object.entries(conceptFromCsv.columns)) {
 
-        if (column.type === 'reference' && column.value.length > 0) {
+        if (column.type === 'reference') {
 
           const reference = concept.getReference(name);
-          const matchingNodes = nodes.filter(isMatchingNode(column.value));
-          matchingNodes.forEach(node => reference.values.push(node));
 
-          if (matchingNodes.length === 0) {
-            this.validationErrors.push({
-              translationKey: 'Reference does not match any concepts.',
-              params: { lineNumber: conceptFromCsv.lineNumber, name: name }
-            });
+          for (const localization of column.value) {
+            const matchingNodes = nodes.filter(isMatchingNode(localization));
+            matchingNodes.forEach(node => reference.values.push(node));
+
+            if (matchingNodes.length === 0) {
+              this.validationErrors.push({
+                translationKey: 'Reference does not match any concepts.',
+                params: { lineNumber: conceptFromCsv.lineNumber, name: name, value: localization.value }
+              });
+            }
           }
         }
       }
