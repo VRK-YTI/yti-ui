@@ -188,12 +188,14 @@ interface UpdatableVisEdge extends CustomizedVisEdge {
         <canvas class="legend" #legendCanvas></canvas>
 
         <button *ngIf="!maximized"
+                id="maximize_concept_network_button"
                 class="btn btn-link btn-lg maximize"
                 (click)="maximized = true">
           <i class="fa fa-window-maximize"></i>
         </button>
 
         <button *ngIf="maximized"
+                id="minimize_concept_network_button"
                 class="btn btn-link btn-lg minimize"
                 (click)="maximized = false">
           <i class="fa fa-window-minimize"></i>
