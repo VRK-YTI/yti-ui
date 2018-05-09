@@ -360,10 +360,14 @@ export class ImportVocabularyModalComponent implements OnInit {
       } else {
         switch (column.type) {
           case 'localized':
-            concept.getProperty(name).setLocalizations(column.value);
+            if (column.value.length > 0) {
+              concept.getProperty(name).setLocalizations(column.value);
+            }
             break;
           case 'literal':
-            concept.getProperty(name).literalValue = column.value;
+            if (column.value) {
+              concept.getProperty(name).literalValue = column.value;
+            }
             break;
           case 'reference':
             // references are handled in a second sweep
