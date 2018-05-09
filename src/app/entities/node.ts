@@ -75,15 +75,15 @@ export class Property {
   }
 
   isLocalizable() {
-    return this.meta.type.type === 'localizable';
+    return this.meta.isLocalizable();
   }
 
   isStatus() {
-    return this.meta.type.editor.type === 'status';
+    return this.meta.isStatus();
   }
 
   isLabel() {
-    return this.meta.id === 'prefLabel' || this.meta.id === 'altLabel';
+    return this.meta.isLabel();
   }
 
   asString() {

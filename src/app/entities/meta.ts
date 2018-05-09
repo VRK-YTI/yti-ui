@@ -177,6 +177,18 @@ export class PropertyMeta {
 
     return this.type.editor.format;
   }
+
+  isLocalizable() {
+    return this.type.type === 'localizable';
+  }
+
+  isStatus() {
+    return this.type.editor.type === 'status';
+  }
+
+  isLabel() {
+    return this.id === 'prefLabel' || this.id === 'altLabel';
+  }
 }
 
 export class ReferenceMeta {
@@ -421,5 +433,9 @@ export class NodeMeta {
 
   getReference(referenceId: string) {
     return requireDefined(firstMatching(this.references, ref => ref.id === referenceId));
+  }
+
+  getProperty(propertyId: string) {
+    return requireDefined(firstMatching(this.properties, p => p.id === propertyId));
   }
 }
