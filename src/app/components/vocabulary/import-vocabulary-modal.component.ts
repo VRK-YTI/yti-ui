@@ -235,8 +235,6 @@ export class ImportVocabularyModalComponent implements OnInit {
   concepts: ConceptNode[] = [];
   validationErrors: ValidationError[] = [];
 
-  metaModel: MetaModel;
-  conceptMeta: NodeMeta;
   importError = false;
   uploading = false;
 
@@ -252,20 +250,18 @@ export class ImportVocabularyModalComponent implements OnInit {
     this.metaModelService.getMeta(this.vocabulary.graphId)
       .subscribe(metaModel => {
 
-        this.metaModel = metaModel;
-        this.conceptMeta = metaModel.getNodeMeta(this.vocabulary.graphId, 'Concept');
-
         Papa.parse(this.importFile, {
           header: true,
           skipEmptyLines: true,
           newline: '\r\n',
           complete: results => {
 
-            const columnDetails = this.parseColumnDetails(results.meta.fields);
+            const conceptMeta = metaModel.getNodeMeta(this.vocabulary.graphId, 'Concept');
+            const columnDetails = this.parseColumnDetails(results.meta.fields, conceptMeta);
 
             if (!this.invalid) {
               const conceptsFromCsv = results.data.map((datum, index) => new CsvConceptDetails(datum, columnDetails, index + 2));
-              this.concepts = this.convertToConceptNodes(conceptsFromCsv);
+              this.concepts = this.convertToConceptNodes(conceptsFromCsv, metaModel);
             }
 
             this.uploading = false;
@@ -274,7 +270,7 @@ export class ImportVocabularyModalComponent implements OnInit {
       });
   }
 
-  private parseColumnDetails(columnNames: string[]): ColumnDetails {
+  private parseColumnDetails(columnNames: string[], conceptMeta: NodeMeta): ColumnDetails {
 
     const result: ColumnDetails = {};
 
@@ -296,9 +292,9 @@ export class ImportVocabularyModalComponent implements OnInit {
 
         result[name] = 'localized';
 
-      } else if (this.conceptMeta.hasProperty(name)) {
+      } else if (conceptMeta.hasProperty(name)) {
 
-        const property = this.conceptMeta.getProperty(name);
+        const property = conceptMeta.getProperty(name);
 
         if (property.isLocalizable()) {
           if (!isLocalized) {
@@ -321,7 +317,7 @@ export class ImportVocabularyModalComponent implements OnInit {
           result[name] = 'literal';
         }
 
-      } else if (this.conceptMeta.hasReference(name)) {
+      } else if (conceptMeta.hasReference(name)) {
         if (!isLocalized) {
           this.validationErrors.push({
             translationKey: 'Reference must include a language.' ,
@@ -350,9 +346,9 @@ export class ImportVocabularyModalComponent implements OnInit {
     return this.validationErrors.length > 0;
   }
 
-  convertToConceptNodeWithoutReferences(conceptFromCsv: CsvConceptDetails): ConceptNode {
+  convertToConceptNodeWithoutReferences(conceptFromCsv: CsvConceptDetails, metaModel: MetaModel): ConceptNode {
 
-    const concept: ConceptNode = this.metaModel.createEmptyConcept(this.vocabulary, conceptFromCsv.id);
+    const concept: ConceptNode = metaModel.createEmptyConcept(this.vocabulary, conceptFromCsv.id);
 
     for (const [name, column] of Object.entries(conceptFromCsv.columns)) {
 
@@ -395,9 +391,9 @@ export class ImportVocabularyModalComponent implements OnInit {
     return concept;
   }
 
-  convertToConceptNodes(conceptsFromCsv: CsvConceptDetails[]): ConceptNode[] {
+  convertToConceptNodes(conceptsFromCsv: CsvConceptDetails[], metaModel: MetaModel): ConceptNode[] {
 
-    const nodes = conceptsFromCsv.map(concept => this.convertToConceptNodeWithoutReferences(concept));
+    const nodes = conceptsFromCsv.map(concept => this.convertToConceptNodeWithoutReferences(concept, metaModel));
 
     const isMatchingNode = (label: Localization[]) => (node: ConceptNode) =>
       containsAny(node.prefLabel, label, localizationsAreEqual);
