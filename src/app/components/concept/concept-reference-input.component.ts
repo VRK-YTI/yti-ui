@@ -12,7 +12,8 @@ import { isDefined, requireDefined } from 'yti-common-ui/utils/object';
   template: `
     <ul *ngIf="!editing">
       <li *ngFor="let concept of reference.value">
-        <a [routerLink]="['/concepts', concept.graphId, 'concept', concept.id]" id="{{concept.id + '_' + id + '_concept_reference_concept_link'}}">{{concept.label | translateValue}}</a>
+        <a [routerLink]="['/concepts', concept.graphId, 'concept', concept.id]"
+           id="{{concept.id + '_' + id + '_concept_reference_concept_link'}}">{{concept.label | translateValue}}</a>
       </li>
     </ul>
 
