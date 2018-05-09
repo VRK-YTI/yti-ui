@@ -10,7 +10,7 @@ import * as Papa from 'papaparse';
 import { ModalService } from 'app/services/modal.service';
 import { v4 as uuid } from 'uuid';
 import { assertNever, requireDefined } from 'yti-common-ui/utils/object';
-import { allStatuses } from 'yti-common-ui/entities/status';
+import { allStatuses, Status } from 'yti-common-ui/entities/status';
 
 type ColumnType = 'localized'
                 | 'literal'
@@ -96,6 +96,15 @@ class CsvConceptDetails {
 
 function localizationsAreEqual(lhs: Localization, rhs: Localization): boolean {
   return lhs.value === rhs.value && lhs.lang === rhs.lang;
+}
+
+function isValidStatus(value: Localization[]|string): value is Status {
+
+  if (typeof value !== 'string') {
+    return false;
+  }
+
+  return contains(allStatuses, value);
 }
 
 @Injectable()
@@ -357,6 +366,17 @@ export class ImportVocabularyModalComponent implements OnInit {
         concept.prefLabel = column.value as Localization[];
       } else if (name === 'synonym') {
         concept.altLabel = column.value as Localization[];
+      } else if (name === 'status') {
+        if (column.value) {
+          if (isValidStatus(column.value)) {
+            concept.status = column.value;
+          } else {
+            this.validationErrors.push({
+              translationKey: 'Invalid status.' ,
+              params: { lineNumber: conceptFromCsv.lineNumber, value: column.value }
+            });
+          }
+        }
       } else {
         switch (column.type) {
           case 'localized':
@@ -376,13 +396,6 @@ export class ImportVocabularyModalComponent implements OnInit {
             assertNever(column);
         }
       }
-    }
-
-    if (concept.hasStatus() && !contains(allStatuses, concept.status)) {
-      this.validationErrors.push({
-        translationKey: 'Invalid status.' ,
-        params: { lineNumber: conceptFromCsv.lineNumber, value: concept.status }
-      });
     }
 
     if (allMatching(concept.prefLabel, label => !label.value)) {
