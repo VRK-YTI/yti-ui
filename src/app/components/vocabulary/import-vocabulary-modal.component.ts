@@ -54,13 +54,13 @@ class CsvConceptDetails {
               public lineNumber: number) {
 
     function splitValuesAsOwnLocalizations(localization: Localization): Localization[] {
-      return localization.value.split('\r\n').map(v => ({ lang: localization.lang, value: v}));
+      return localization.value.split('\r\n').map(v => ({ lang: localization.lang, value: v }));
     }
 
     function parseLocalizationsForProperty(propertyName: string): Localization[] {
 
       const entriesRelatedToProperty = Object.entries(csvJsonObject)
-        .filter(([key, value]) => key.startsWith(propertyName) && value !== '');
+        .filter(([key]) => key.startsWith(propertyName));
 
       const localizations = entriesRelatedToProperty.map(([key, value]) => {
         return {
@@ -69,7 +69,7 @@ class CsvConceptDetails {
         };
       });
 
-      return flatten(localizations.map(localization => splitValuesAsOwnLocalizations(localization)));
+      return flatten(localizations.map(localization => splitValuesAsOwnLocalizations(localization))).filter(l => !!l.value);
     }
 
     function parseLiteral(propertyName: string): string {
