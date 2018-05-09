@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-05-09 00:25+0300\n"
+"PO-Revision-Date: 2018-05-09 11:35+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -323,7 +323,7 @@ msgid "TerminologicalVocabularyType"
 msgstr "Terminological vocabulary"
 
 msgid "Property must include a language."
-msgstr "{{ lineNumber: }}: Property “{{ name }}”” must include a language."
+msgstr "Property “{{ name }}”” must include a language."
 
 msgid "validateMeta"
 msgstr "Invalid"
@@ -338,14 +338,13 @@ msgid "upperCaseInPrefix"
 msgstr "Prefix must be in lower case"
 
 msgid "Property is not a literal type."
-msgstr "{{ lineNumber: }}: Property “{{ name }}” is not a literal type."
+msgstr "Property “{{ name }}” is not a literal type."
 
 msgid "required"
 msgstr "Required"
 
 msgid "No property or reference found with a name."
-msgstr ""
-"{{ lineNumber: }}:  No property of reference with a name “{{ name }}”"
+msgstr "No property of reference with a name “{{ name }}”"
 
 msgid "Invalid status."
 msgstr "{{ lineNumber: }}:  Invalid status"
@@ -354,11 +353,10 @@ msgid "prefLabel must be set."
 msgstr "{{ lineNumber: }}:  prefLabel must be set."
 
 msgid "Reference must include a language."
-msgstr "{{ lineNumber: }}: Reference “{{ name }}” must include a language."
+msgstr "Reference “{{ name }}” must include a language."
 
 msgid "Reference does not match any concepts."
-msgstr ""
-"{{ lineNumber: }}: Reference “{{ name }}” does not match any concepts."
+msgstr "{{ lineNumber: }}: Reference “{{ name }}” does not match any concepts."
 
 #~ msgid "definition"
 #~ msgstr "Definition"

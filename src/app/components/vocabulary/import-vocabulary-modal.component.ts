@@ -13,25 +13,45 @@ import { assertNever, requireDefined } from 'yti-common-ui/utils/object';
 import { allStatuses } from 'yti-common-ui/entities/status';
 
 type ColumnType = 'localized'
-                | 'literal';
+                | 'literal'
+                | 'reference';
 
 interface ValidationError {
   translationKey: string;
   params?: {};
 }
 
-class ColumnDetails {
-
-  columns: { [name: string]: ColumnType } = {};
-  validationErrors: ValidationError[] = [];
+interface ColumnDetails {
+  [name: string]: ColumnType;
 }
+
+interface LocalizedColumn {
+  type: 'localized';
+  value: Localization[];
+}
+
+interface LiteralColumn {
+  type: 'literal';
+  value: string;
+}
+
+interface ReferenceColumn {
+  type: 'reference';
+  value: Localization[];
+}
+
+type Column = LocalizedColumn
+            | LiteralColumn
+            | ReferenceColumn;
 
 class CsvConceptDetails {
 
   id = uuid();
-  columns: { [name: string]: Localization[]|string } = {};
+  columns: { [name: string]: Column } = {};
 
-  constructor(csvJsonObject: any, columnDetails: ColumnDetails, public lineNumber: number) {
+  constructor(csvJsonObject: any,
+              columnDetails: ColumnDetails,
+              public lineNumber: number) {
 
     function splitValuesAsOwnLocalizations(localization: Localization): Localization[] {
       return localization.value.split('\r\n').map(v => ({ lang: localization.lang, value: v}));
@@ -56,23 +76,22 @@ class CsvConceptDetails {
       return csvJsonObject[propertyName];
     }
 
-    for (const [propertyName, columnType] of Object.entries(columnDetails.columns)) {
+    for (const [propertyName, columnType] of Object.entries(columnDetails)) {
       switch (columnType) {
         case 'localized':
-          this.columns[propertyName] = parseLocalizationsForProperty(propertyName);
+          this.columns[propertyName] = { type: columnType, value: parseLocalizationsForProperty(propertyName) };
+          break;
+        case 'reference':
+          this.columns[propertyName] = { type: columnType, value: parseLocalizationsForProperty(propertyName) };
           break;
         case 'literal':
-          this.columns[propertyName] = parseLiteral(propertyName);
+          this.columns[propertyName] = { type: columnType, value: parseLiteral(propertyName) };
           break;
         default:
           assertNever(columnType);
       }
     }
   }
-}
-
-function isLiteral(columnValue: Localization[]|string): columnValue is string {
-  return typeof columnValue === 'string';
 }
 
 function localizationsAreEqual(lhs: Localization, rhs: Localization): boolean {
@@ -242,10 +261,9 @@ export class ImportVocabularyModalComponent implements OnInit {
           newline: '\r\n',
           complete: results => {
 
-            const columnDetails = ImportVocabularyModalComponent.parseColumnDetails(results.meta.fields);
-            columnDetails.validationErrors.forEach(error => this.validationErrors.push(error));
+            const columnDetails = this.parseColumnDetails(results.meta.fields);
 
-            if (this.validationErrors.length === 0) {
+            if (!this.invalid) {
               const conceptsFromCsv = results.data.map((datum, index) => new CsvConceptDetails(datum, columnDetails, index + 2));
               this.concepts = this.convertToConceptNodes(conceptsFromCsv);
             }
@@ -256,18 +274,69 @@ export class ImportVocabularyModalComponent implements OnInit {
       });
   }
 
-  private static parseColumnDetails(columnNames: string[]): ColumnDetails {
+  private parseColumnDetails(columnNames: string[]): ColumnDetails {
 
-    const result = new ColumnDetails();
+    const result: ColumnDetails = {};
 
     for (const columnName of columnNames) {
 
       // TODO validation, for example for multiple underscores
       const underscorePosition = columnName.indexOf('_');
       const isLocalized = underscorePosition !== -1;
-      const propertyName = isLocalized ? columnName.substr(0, underscorePosition) : columnName;
+      const name = isLocalized ? columnName.substr(0, underscorePosition) : columnName;
 
-      result.columns[propertyName] = isLocalized ? 'localized' : 'literal';
+      // special handling for labels
+      if (name === 'prefLabel' || name === 'synonym') {
+        if (!isLocalized) {
+          this.validationErrors.push({
+            translationKey: 'Property must include a language.',
+            params: { name: name }
+          });
+        }
+
+        result[name] = 'localized';
+
+      } else if (this.conceptMeta.hasProperty(name)) {
+
+        const property = this.conceptMeta.getProperty(name);
+
+        if (property.isLocalizable()) {
+          if (!isLocalized) {
+            this.validationErrors.push({
+              translationKey: 'Property must include a language.',
+              params: { name: name }
+            });
+          }
+
+          result[name] = 'localized';
+
+        } else {
+          if (isLocalized) {
+            this.validationErrors.push({
+              translationKey: 'Property is not a literal type.',
+              params: { name: name }
+            });
+          }
+
+          result[name] = 'literal';
+        }
+
+      } else if (this.conceptMeta.hasReference(name)) {
+        if (!isLocalized) {
+          this.validationErrors.push({
+            translationKey: 'Reference must include a language.' ,
+            params: { name: name }
+          });
+        }
+
+        result[name] = 'reference';
+
+      } else {
+        this.validationErrors.push({
+          translationKey: 'No property or reference found with a name.' ,
+          params: { name: name }
+        });
+      }
     }
 
     return result;
@@ -285,59 +354,27 @@ export class ImportVocabularyModalComponent implements OnInit {
 
     const concept: ConceptNode = this.metaModel.createEmptyConcept(this.vocabulary, conceptFromCsv.id);
 
-    for (const [name, value] of Object.entries(conceptFromCsv.columns)) {
+    for (const [name, column] of Object.entries(conceptFromCsv.columns)) {
 
       // special handling for labels
-      if (name === 'prefLabel' || name === 'synonym') {
-        if (isLiteral(value)) {
-          this.validationErrors.push({
-            translationKey: 'Property must include a language.' ,
-            params: { lineNumber: conceptFromCsv.lineNumber, name: name }
-          });
-        } else {
-          if (name === 'prefLabel') {
-            concept.prefLabel = value;
-          } else {
-            concept.altLabel = value;
-          }
+      if (name === 'prefLabel') {
+        concept.prefLabel = column.value as Localization[];
+      } else if (name === 'synonym') {
+        concept.altLabel = column.value as Localization[];
+      } else {
+        switch (column.type) {
+          case 'localized':
+            concept.getProperty(name).setLocalizations(column.value);
+            break;
+          case 'literal':
+            concept.getProperty(name).literalValue = column.value;
+            break;
+          case 'reference':
+            // references are handled in a second sweep
+            break;
+          default:
+            assertNever(column);
         }
-
-        break;
-      }
-
-      if (this.conceptMeta.hasProperty(name)) {
-
-        const property = concept.getProperty(name);
-
-        if (isLiteral(value)) {
-          if (!property.isLocalizable()) {
-
-            property.literalValue = value;
-
-          } else {
-            this.validationErrors.push({
-              translationKey: 'Property is not a literal type.' ,
-              params: { lineNumber: conceptFromCsv.lineNumber, name: name }
-            });
-          }
-        } else {
-          if (property.isLocalizable()) {
-
-            property.setLocalizations(value);
-
-          } else {
-            this.validationErrors.push({
-              translationKey: 'Property must include a language.' ,
-              params: { lineNumber: conceptFromCsv.lineNumber, name: name }
-            });
-          }
-        }
-      } else if (!this.conceptMeta.hasReference(name)) {
-
-        this.validationErrors.push({
-          translationKey: 'No property or reference found with a name.' ,
-          params: { lineNumber: conceptFromCsv.lineNumber, name: name }
-        });
       }
     }
 
@@ -362,37 +399,24 @@ export class ImportVocabularyModalComponent implements OnInit {
 
     const nodes = conceptsFromCsv.map(concept => this.convertToConceptNodeWithoutReferences(concept));
 
+    const isMatchingNode = (label: Localization[]) => (node: ConceptNode) =>
+      containsAny(node.prefLabel, label, localizationsAreEqual);
+
     for (const conceptFromCsv of conceptsFromCsv) {
 
       const concept = requireDefined(firstMatching(nodes, n => n.id === conceptFromCsv.id));
 
-      const isMatchingNode = (label: Localization[]) => (node: ConceptNode) =>
-        containsAny(node.prefLabel, label, localizationsAreEqual);
+      for (const [name, column] of Object.entries(conceptFromCsv.columns)) {
 
-      for (const [name, value] of Object.entries(conceptFromCsv.columns)) {
-
-        if (this.conceptMeta.hasReference(name)) {
+        if (column.type === 'reference' && column.value.length > 0) {
 
           const reference = concept.getReference(name);
+          const matchingNodes = nodes.filter(isMatchingNode(column.value));
+          matchingNodes.forEach(node => reference.values.push(node));
 
-          if (!isLiteral(value)) {
-
-            if (value.length > 0) {
-              const matchingNodes = nodes.filter(isMatchingNode(value));
-
-              if (matchingNodes.length > 0) {
-                matchingNodes.forEach(node => reference.values.push(node));
-              } else {
-                this.validationErrors.push({
-                  translationKey: 'Reference does not match any concepts.',
-                  params: {lineNumber: conceptFromCsv.lineNumber, name: name}
-                });
-              }
-            }
-
-          } else {
+          if (matchingNodes.length === 0) {
             this.validationErrors.push({
-              translationKey: 'Reference must include a language.' ,
+              translationKey: 'Reference does not match any concepts.',
               params: { lineNumber: conceptFromCsv.lineNumber, name: name }
             });
           }
