@@ -17,7 +17,7 @@ import { TranslateService } from 'ng2-translate';
         <button class="dropdown-item"
                 [class.active]="option.lang === selection"
                 *ngFor="let option of options"
-                id="{{option.lang + '_lang_selection_button'}}"
+                [id]="getLangSelectionId(option.lang)"
                 (click)="writeValue(option.lang)">
           {{option.name}}
         </button>
@@ -52,6 +52,10 @@ export class FilterLanguageComponent implements ControlValueAccessor, OnChanges 
 
   get selectionName() {
     return this.languageToSelectionName(this.selection);
+  }
+  
+  getLangSelectionId(lang: string) {
+    return lang ? lang + '_lang_selection_button' : 'all_lang_selection_button';
   }
 
   writeValue(obj: any): void {
