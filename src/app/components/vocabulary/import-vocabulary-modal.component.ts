@@ -376,15 +376,18 @@ export class ImportVocabularyModalComponent implements OnInit {
           const reference = concept.getReference(name);
 
           if (!isLiteral(value)) {
-            const matchingNodes = nodes.filter(isMatchingNode(value));
 
-            if (matchingNodes.length > 0) {
-              matchingNodes.forEach(node => reference.values.push(node));
-            } else {
-              this.validationErrors.push({
-                translationKey: 'Reference does not match any concepts.' ,
-                params: { lineNumber: conceptFromCsv.lineNumber, name: name }
-              });
+            if (value.length > 0) {
+              const matchingNodes = nodes.filter(isMatchingNode(value));
+
+              if (matchingNodes.length > 0) {
+                matchingNodes.forEach(node => reference.values.push(node));
+              } else {
+                this.validationErrors.push({
+                  translationKey: 'Reference does not match any concepts.',
+                  params: {lineNumber: conceptFromCsv.lineNumber, name: name}
+                });
+              }
             }
 
           } else {
