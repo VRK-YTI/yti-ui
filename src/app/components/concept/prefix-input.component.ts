@@ -1,4 +1,4 @@
-import { Component, Optional, Self } from '@angular/core';
+import { Component, Optional, Self, Input } from '@angular/core';
 import { ControlValueAccessor, FormControl, NgControl } from '@angular/forms';
 import { TermedService } from 'app/services/termed.service';
 
@@ -9,14 +9,14 @@ import { TermedService } from 'app/services/termed.service';
     <div class="row">
       <div class="col-md-6">
         <div class="form-group">
-          <label for="prefix" translate>Prefix</label>
+          <label [for]="idPrefix + '_prefix_input'" translate>Prefix</label>
           <input type="text"
-                 id="prefix_input"
+                 [id]="idPrefix + '_prefix_input'"
                  class="form-control"
                  autocomplete="off"
                  [ngClass]="{'is-invalid': !valid && !pending}"
                  [formControl]="control" />
-          <app-error-messages id="prefix_input_error_messages" [control]="parentControl"></app-error-messages>
+          <app-error-messages [id]="idPrefix + '_prefix_input_error_messages'" [control]="parentControl"></app-error-messages>
         </div>
       </div>
 
@@ -32,6 +32,7 @@ import { TermedService } from 'app/services/termed.service';
 })
 export class PrefixInputComponent implements ControlValueAccessor {
 
+  @Input() idPrefix: string;  
   control = new FormControl();
   namespace: string;
 

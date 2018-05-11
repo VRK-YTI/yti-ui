@@ -19,14 +19,14 @@ import { SearchGroupModalService } from './search-group-modal.component';
            class="removable-text"
            [appDragSortableItem]="group"
            [index]="i">
-        <a><i class="fa fa-times" id="{{'remove_group_reference_link_' + group.id}}" (click)="removeReference(group)"></i></a>
+        <a><i class="fa fa-times" [id]="id + '_' + group.id + '_remove_group_reference_link'" (click)="removeReference(group)"></i></a>
         <span>{{group.label | translateValue:true}}</span>
       </div>
       <app-error-messages [id]="id + '_error_messages'" [control]="reference.control"></app-error-messages>
     </div>
 
     <button type="button"
-            id="add_classification_button"
+            [id]="id + '_add_classification_button'"
             class="btn btn-sm btn-action mt-2"
             *ngIf="editing"
             (click)="addReference()" translate>Add classification</button>

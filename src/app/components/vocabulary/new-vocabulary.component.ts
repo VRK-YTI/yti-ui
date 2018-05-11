@@ -14,6 +14,7 @@ import { FormControl, Validators, AbstractControl, AsyncValidatorFn } from '@ang
 import { firstMatching } from 'yti-common-ui/utils/array';
 import { LocationService } from 'app/services/location.service';
 import { Options } from 'yti-common-ui/components/dropdown.component';
+import { vocabularyIdPrefix } from 'app/utils/id-prefix';
 
 @Component({
   selector: 'app-new-vocabulary',
@@ -38,13 +39,14 @@ import { Options } from 'yti-common-ui/components/dropdown.component';
             <div class="col-6">
               <div class="top-actions">
                 <app-editable-buttons [form]="form"
-                                      [canRemove]="false"></app-editable-buttons>
+                                      [canRemove]="false"
+                                      [idPrefix]="idPrefix"></app-editable-buttons>
               </div>
             </div>
           </div>
 
           <app-vocabulary-form [vocabulary]="vocabulary" [form]="formNode"></app-vocabulary-form>
-          <app-prefix-input [formControl]="prefixFormControl"></app-prefix-input>
+          <app-prefix-input [formControl]="prefixFormControl" [idPrefix]="idPrefix"></app-prefix-input>
         </form>
 
       </div>
@@ -58,6 +60,7 @@ export class NewVocabularyComponent {
   formNode: FormNode;
   templateControl = new FormControl();
   prefixFormControl: FormControl;
+  idPrefix: string = vocabularyIdPrefix;
 
   constructor(private router: Router,
               private metaModelService: MetaModelService,

@@ -7,6 +7,7 @@ import { anyMatching } from 'yti-common-ui/utils/array';
 import { FormNode, FormField } from 'app/services/form-state';
 import { EditableService } from 'app/services/editable.service';
 import { requireDefined } from 'yti-common-ui/utils/object';
+import { conceptIdPrefix } from 'app/utils/id-prefix';
 
 @Component({
   selector: 'app-concept-form',
@@ -19,7 +20,7 @@ import { requireDefined } from 'yti-common-ui/utils/object';
                       class="col-md-12"
                       [class.col-xl-6]="multiColumn && field.value.multiColumn"
                       [property]="field.value"
-                      [id]="field.name"
+                      [id]="idPrefix + '_' + field.name"
                       [conceptSelector]="conceptSelector"
                       [relatedConcepts]="form.referencedConcepts"
                       [filterLanguage]="filterLanguage"></app-property>
@@ -31,7 +32,7 @@ import { requireDefined } from 'yti-common-ui/utils/object';
                        (conceptRemove)="onConceptRemove($event)"
                        [reference]="field.value"
                        [concept]="concept"
-                       [id]="field.name"
+                       [id]="idPrefix + '_' + field.name"
                        [filterLanguage]="filterLanguage"
                        [vocabulary]="vocabulary"></app-reference>
 
@@ -49,6 +50,7 @@ export class ConceptFormComponent {
   @Input() form: FormNode;
   @Input() multiColumn = false;
   @Input() filterLanguage: string;
+  idPrefix: string = conceptIdPrefix
 
   conceptSelector = (name: string) => this.selectConcept(name);
 

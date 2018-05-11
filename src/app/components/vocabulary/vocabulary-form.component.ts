@@ -2,6 +2,7 @@ import { Component, Input } from '@angular/core';
 import { VocabularyNode } from 'app/entities/node';
 import { FormNode, FormField } from 'app/services/form-state';
 import { EditableService } from 'app/services/editable.service';
+import { vocabularyIdPrefix } from 'app/utils/id-prefix';
 
 @Component({
   selector: 'app-vocabulary-form',
@@ -13,13 +14,13 @@ import { EditableService } from 'app/services/editable.service';
         <app-property *ngSwitchCase="'property'"
                       class="col-md-6"
                       [property]="field.value"
-                      [id]="field.name"
+                      [id]="idPrefix + '_' + field.name"
                       [filterLanguage]="filterLanguage"></app-property>
 
         <app-reference *ngSwitchCase="'reference'"
                        class="col-md-6"
                        [reference]="field.value"
-                       [id]="field.name"
+                       [id]="idPrefix + '_' + field.name"
                        [unsaved]="!vocabulary.persistent"
                        [filterLanguage]="filterLanguage"
                        [vocabulary]="vocabulary"></app-reference>
@@ -45,6 +46,7 @@ export class VocabularyFormComponent {
   @Input() form: FormNode;
   @Input() filterLanguage: string;
   @Input() namespace: string;
+  idPrefix: string = vocabularyIdPrefix;
 
   constructor(private editableService: EditableService) {
   }

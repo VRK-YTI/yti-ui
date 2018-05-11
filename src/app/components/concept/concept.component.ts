@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { DeleteConfirmationModalService } from 'app/components/common/delete-confirmation-modal.component';
 import { requireDefined } from 'yti-common-ui/utils/object';
 import { LanguageService } from 'app/services/language.service';
+import { conceptIdPrefix } from 'app/utils/id-prefix';
 
 @Component({
   selector: 'app-concept',
@@ -27,7 +28,8 @@ import { LanguageService } from 'app/services/language.service';
           
           <app-editable-buttons [form]="form" 
                                 [canRemove]="true" 
-                                [vocabulary]="vocabulary"></app-editable-buttons>
+                                [vocabulary]="vocabulary"
+                                [idPrefix]="idPrefix"></app-editable-buttons>
 
         </div>
 
@@ -42,6 +44,7 @@ import { LanguageService } from 'app/services/language.service';
 export class ConceptComponent implements EditingComponent, OnDestroy {
 
   private subscriptionToClean: Subscription[] = [];
+  idPrefix: string = conceptIdPrefix
 
   constructor(private route: ActivatedRoute,
               private conceptViewModel: ConceptViewModelService,

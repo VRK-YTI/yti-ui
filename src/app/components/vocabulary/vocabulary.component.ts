@@ -7,6 +7,7 @@ import { LanguageService } from 'app/services/language.service';
 import { ImportVocabularyModalService } from 'app/components/vocabulary/import-vocabulary-modal.component';
 import { ignoreModalClose } from 'yti-common-ui/utils/modal';
 import { AuthorizationManager } from 'app/services/authorization-manager.sevice';
+import { vocabularyIdPrefix } from 'app/utils/id-prefix';
 
 @Component({
   selector: 'app-vocabulary',
@@ -57,11 +58,12 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
             
             <app-editable-buttons [form]="form"
                                   [canRemove]="true"
-                                  [vocabulary]="vocabulary"></app-editable-buttons>
+                                  [vocabulary]="vocabulary"
+                                  [idPrefix]="idPrefix"></app-editable-buttons>
 
             <div class="pull-right" *ngIf="canImport()">
-              <input #fileInput id="vocabulary_import_input" type="file" id="fileElem" accept=".csv" style="display:none" (change)="selectFile(fileInput.files)">
-              <label for="fileElem" class="btn btn-secondary-action" translate>Import vocabulary</label>
+              <input #fileInput id="vocabulary_import_input" type="file" accept=".csv" style="display:none" (change)="selectFile(fileInput.files)">
+              <label id="vocabulary_import_label" for="vocabulary_import_input" class="btn btn-secondary-action" translate>Import vocabulary</label>
             </div>
 
           </div>
@@ -81,6 +83,7 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
 export class VocabularyComponent implements EditingComponent {
 
   @ViewChild('fileInput') fileInput: ElementRef;
+  idPrefix: string = vocabularyIdPrefix;
 
   open = false;
 

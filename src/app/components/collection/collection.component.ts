@@ -7,6 +7,7 @@ import { DeleteConfirmationModalService } from 'app/components/common/delete-con
 import { requireDefined } from 'yti-common-ui/utils/object';
 import { LanguageService } from 'app/services/language.service';
 import { FormField } from 'app/services/form-state';
+import { collectionIdPrefix } from 'app/utils/id-prefix';
 
 @Component({
   selector: 'app-collection',
@@ -29,7 +30,8 @@ import { FormField } from 'app/services/form-state';
           
             <app-editable-buttons [vocabulary]="vocabulary" 
                                   [form]="form"
-                                  [canRemove]="true"></app-editable-buttons>
+                                  [canRemove]="true"
+                                  [idPrefix]="idPrefix"></app-editable-buttons>
           
         </div>
 
@@ -40,13 +42,13 @@ import { FormField } from 'app/services/form-state';
             <app-property *ngSwitchCase="'property'"
                           class="col-md-12"
                           [property]="field.value"
-                          [id]="field.name"
+                          [id]="idPrefix + '_' + field.name"
                           [filterLanguage]="filterLanguage"></app-property>
 
             <app-reference *ngSwitchCase="'reference'"
                            class="col-md-12"
                            [reference]="field.value"
-                           [id]="field.name"
+                           [id]="idPrefix + '_' + field.name"
                            [unsaved]="unsaved"
                            [filterLanguage]="filterLanguage"
                            [vocabulary]="vocabulary"></app-reference>
@@ -67,6 +69,7 @@ import { FormField } from 'app/services/form-state';
 export class CollectionComponent implements EditingComponent, OnDestroy {
 
   private subscriptionToClean: Subscription[] = [];
+  idPrefix: string = collectionIdPrefix
 
   constructor(private route: ActivatedRoute,
               private conceptViewModel: ConceptViewModelService,
