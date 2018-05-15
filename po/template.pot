@@ -217,7 +217,7 @@ msgstr ""
 msgid "Search organization"
 msgstr ""
 
-msgid "Search"
+msgid "Search vocabularies"
 msgstr ""
 
 msgid "Classification"

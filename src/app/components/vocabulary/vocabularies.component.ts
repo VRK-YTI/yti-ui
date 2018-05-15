@@ -27,7 +27,7 @@ import { Subscription } from 'rxjs/Subscription';
                    id="vocabularies_search_input"
                    type="text"
                    [(ngModel)]="search"
-                   placeholder="{{'Search' | translate}}"/>
+                   placeholder="{{'Search vocabularies' | translate}}"/>
           </div>
         </div>
       </div>
