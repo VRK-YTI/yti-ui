@@ -88,7 +88,7 @@ import { contains } from 'yti-common-ui/utils/array';
         </button>
 
         <div *ngIf="editing" class="reorder-handle">
-          <span id="{{id + '_' + child.lang + '_' + i +  '_reorder_handle'}}" class="fa fa-bars"></span>
+          <i id="{{id + '_' + child.lang + '_' + i +  '_reorder_handle'}}" class="material-icons drag-icon">import_export</i>
         </div>
       </div>
     </div>

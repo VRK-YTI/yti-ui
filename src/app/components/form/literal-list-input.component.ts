@@ -84,7 +84,7 @@ import { FormControl } from '@angular/forms';
             </button>
 
             <div class="reorder-handle">
-              <span id="{{id + '_' + i +  '_reorder_handle'}}" class="fa fa-bars"></span>
+              <i id="{{id + '_' + i +  '_reorder_handle'}}" class="material-icons drag-icon">import_export</i>
             </div>
 
           </div>

@@ -29,6 +29,26 @@ $page-padding: 20px;
   }
 }
 
+[draggable="true"] {
+  .material-icons {
+    color: $gray-500;
+
+    &:hover {
+      cursor: move;
+    }
+  }
+}
+
+[draggable="false"] {
+  .material-icons {
+    display: none !important;
+  }
+}
+
+.material-icons.drag-icon { 
+  color: #2A6EBB;
+}
+
 div.removable-text {
   display: inline-block;
   width: calc(100% - 17px);
