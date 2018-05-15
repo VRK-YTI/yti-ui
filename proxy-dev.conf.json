@@ -3,5 +3,10 @@
     "target": "https://sanastot-dev.suomi.fi",
     "changeOrigin": true,
     "secure": false
+  },
+  "/api/*": {
+    "target": "https://sanastot-dev.suomi.fi",
+    "changeOrigin": true,
+    "secure": false
   }
 }
