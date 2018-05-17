@@ -50,6 +50,16 @@
     font-size: x-large;
     padding-right: 10px;
   }
+
+  ngb-accordion {
+    width: calc(100% - 30px);
+    float: left;
+  }
+
+  .reorder-handle {
+    padding: 0 3px;
+    float: right;
+  }
 }
 
 .add-button {

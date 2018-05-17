@@ -14,22 +14,6 @@ $page-padding: 20px;
 }
 
 [draggable="true"] {
-  .fa-bars {
-    color: $gray-500;
-
-    &:hover {
-      cursor: move;
-    }
-  }
-}
-
-[draggable="false"] {
-  .fa-bars {
-    display: none !important;
-  }
-}
-
-[draggable="true"] {
   .material-icons {
     color: $gray-500;
 
@@ -45,7 +29,7 @@ $page-padding: 20px;
   }
 }
 
-.material-icons.drag-icon { 
+.material-icons.drag-icon {
   color: #2A6EBB;
 }
 

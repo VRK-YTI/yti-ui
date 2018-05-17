@@ -25,44 +25,50 @@ import { contains, last } from 'yti-common-ui/utils/array';
       </div>
     </div>
 
-    <ngb-accordion *ngIf="children.length > 0"
-                   [activeIds]="openTerms"
-                   [appDragSortable]="reference"
-                   [dragDisabled]="!canReorder()">
-      <ngb-panel [id]="node.id" *ngFor="let node of visibleChildren; let i = index">
-        <ng-template ngbPanelTitle>
-          <div class="localized" [appDragSortableItem]="node" [index]="i">
-            <div class="language">{{node.language | uppercase}}</div>
-            <div class="localization">
-              <span>{{node.formNode.prefLabelProperty[0].value}}</span>
-              <app-accordion-chevron class="pull-right" [id]="id + '_' + i + '_term_accordion_chevron'"></app-accordion-chevron>
-            </div>
-            <div class="property-ordering" [hidden]="!editing">
-              <span id="{{id + '_' + i +  '_term_reorder_handle'}}" class="fa fa-bars"></span>
-            </div>
-          </div>
-        </ng-template>
-        <ng-template ngbPanelContent>
-          <div class="row">
-            <div class="col-md-12">
-
-              <app-status *ngIf="node.formNode.hasStatus()"
-                          [status]="node.formNode.status"></app-status>
-
-              <div *ngIf="canRemove()" class="remove-button">
-                <button class="btn btn-link"
-                        id="{{node.id + '_remove_term_button'}}"
-                        (click)="removeTerm(node)">
-                  <i class="fa fa-trash"></i>
-                  <span translate>Remove term</span>
-                </button>
+    <div [appDragSortable]="reference" [dragDisabled]="!canReorder()">
+      <div *ngFor="let node of visibleChildren; let i = index"
+           [appDragSortableItem]="node" [index]="i"
+           class="d-inline-block" 
+           style="width: 100%">
+        <ngb-accordion *ngIf="children.length > 0"
+                       [activeIds]="openTerms">                     
+          <ngb-panel [id]="node.id">
+            <ng-template ngbPanelTitle>
+              <div class="localized">
+                <div class="language">{{node.language | uppercase}}</div>
+                <div class="localization">
+                  <span>{{node.formNode.prefLabelProperty[0].value}}</span>
+                  <app-accordion-chevron class="pull-right" [id]="id + '_' + i + '_term_accordion_chevron'"></app-accordion-chevron>
+                </div>
               </div>
-            </div>
-          </div>
-          <app-term [id]="id + '_' + i" [term]="node.formNode" [filterLanguage]="filterLanguage"></app-term>
-        </ng-template>
-      </ngb-panel>
-    </ngb-accordion>
+            </ng-template>
+            <ng-template ngbPanelContent>
+              <div class="row">
+                <div class="col-md-12">
+
+                  <app-status *ngIf="node.formNode.hasStatus()"
+                              [status]="node.formNode.status"></app-status>
+
+                  <div *ngIf="canRemove()" class="remove-button">
+                    <button class="btn btn-link"
+                            id="{{node.id + '_remove_term_button'}}"
+                            (click)="removeTerm(node)">
+                      <i class="fa fa-trash"></i>
+                      <span translate>Remove term</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <app-term [id]="id + '_' + i" [term]="node.formNode" [filterLanguage]="filterLanguage"></app-term>
+            </ng-template>
+          </ngb-panel>
+        </ngb-accordion>
+
+        <div class="reorder-handle" [hidden]="!editing">
+          <i id="{{id + '_' + i +  '_term_reorder_handle'}}" class="material-icons drag-icon">import_export</i>
+        </div>
+      </div>
+    </div>
 
     <div *ngIf="children.length === 0" translate>No terms yet</div>
   `
