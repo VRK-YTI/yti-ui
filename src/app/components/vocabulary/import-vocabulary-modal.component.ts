@@ -44,6 +44,17 @@ type Column = LocalizedColumn
             | LiteralColumn
             | ReferenceColumn;
 
+const newLineUnix = '\n';
+const newLineWindows = '\r\n';
+
+function normalizeNewLine(s: string): string {
+  return s.replace(newLineWindows, newLineUnix);
+}
+
+function splitNewLine(s: string): string[] {
+  return normalizeNewLine(s).split(newLineUnix);
+}
+
 class CsvConceptDetails {
 
   id = uuid();
@@ -54,7 +65,7 @@ class CsvConceptDetails {
               public lineNumber: number) {
 
     function splitValuesAsOwnLocalizations(localization: Localization): Localization[] {
-      return localization.value.split('\r\n').map(v => ({ lang: localization.lang, value: v }));
+      return splitNewLine(localization.value).map(v => ({ lang: localization.lang, value: v }));
     }
 
     function parseLocalizationsForProperty(propertyName: string): Localization[] {
@@ -262,7 +273,6 @@ export class ImportVocabularyModalComponent implements OnInit {
         Papa.parse(this.importFile, {
           header: true,
           skipEmptyLines: true,
-          newline: '\r\n',
           complete: results => {
 
             const conceptMeta = metaModel.getNodeMeta(this.vocabulary.graphId, 'Concept');
