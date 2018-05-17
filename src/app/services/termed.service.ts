@@ -7,10 +7,10 @@ import { MetaModelService } from './meta-model.service';
 import { Identifier, NodeExternal, NodeInternal, NodeType, VocabularyNodeType } from 'app/entities/node-api';
 import { CollectionNode, ConceptNode, GroupNode, Node, OrganizationNode, VocabularyNode } from 'app/entities/node';
 import * as moment from 'moment';
-import { environment } from 'environments/environment';
 import { Graph } from 'app/entities/graph';
 import { PrefixAndNamespace } from 'app/entities/prefix-and-namespace';
 import { UserRequest } from 'app/entities/user-request';
+import { apiUrl } from 'app/config';
 
 @Injectable()
 export class TermedService {
@@ -93,7 +93,7 @@ export class TermedService {
     params.append('templateGraphId', templateGraphId);
     params.append('prefix', prefix);
 
-    return this.http.post(`${environment.api_url}/vocabulary`, vocabulary.toInternalNode(), { params })
+    return this.http.post(`${apiUrl}/vocabulary`, vocabulary.toInternalNode(), { params })
       .map(response => response.json());
   }
 
@@ -102,7 +102,7 @@ export class TermedService {
     const params = new URLSearchParams();
     params.append('graphId', graphId);
 
-    return this.http.delete(`${environment.api_url}/vocabulary`, { params });
+    return this.http.delete(`${apiUrl}/vocabulary`, { params });
   }
 
   saveNodes<T extends NodeType>(nodes: Node<T>[]): Observable<Response> {
@@ -164,17 +164,17 @@ export class TermedService {
     const params = new URLSearchParams();
     params.append('prefix', prefix);
 
-    return this.http.get(`${environment.api_url}/namespaceInUse`, { params } )
+    return this.http.get(`${apiUrl}/namespaceInUse`, { params } )
       .map(response => response.json() as boolean);
   }
 
   getNamespaceRoot(): Observable<string> {
-    return this.http.get(`${environment.api_url}/namespaceRoot`)
+    return this.http.get(`${apiUrl}/namespaceRoot`)
       .map(response => response.text());
   }
 
   getGraphNamespace(graphId: string): Observable<PrefixAndNamespace> {
-    return this.http.get(`${environment.api_url}/graphs/${graphId}`)
+    return this.http.get(`${apiUrl}/graphs/${graphId}`)
       .map(response => {
         const graph = response.json() as Graph;
         return {
@@ -185,7 +185,7 @@ export class TermedService {
   }
 
   getUserRequests(): Observable<UserRequest[]> {
-    return this.http.get(`${environment.api_url}/requests`)
+    return this.http.get(`${apiUrl}/requests`)
       .map(response => response.json() as UserRequest[]);
   }
 
@@ -194,16 +194,16 @@ export class TermedService {
     const params = new URLSearchParams();
     params.append('organizationId', organizationId);
 
-    return this.http.post(`${environment.api_url}/request`, null, { params } );
+    return this.http.post(`${apiUrl}/request`, null, { params } );
   }
 
   getFakeableUsers(): Observable<{ email: string, firstName: string, lastName: string }[]> {
-    return this.http.get(`${environment.api_url}/fakeableUsers`)
+    return this.http.get(`${apiUrl}/fakeableUsers`)
       .map(response => response.json());
   }
 
   getGroupManagementUrl(): Observable<string> {
-    return this.http.get(`${environment.api_url}/groupManagementUrl`)
+    return this.http.get(`${apiUrl}/groupManagementUrl`)
       .map(response => response.text() as string);
   }
 
@@ -213,7 +213,7 @@ export class TermedService {
     params.append('sync', sync.toString());
     params.append('disconnect', disconnect.toString());
 
-    return this.http.delete(`${environment.api_url}/remove`, { params, body: nodeIds });
+    return this.http.delete(`${apiUrl}/remove`, { params, body: nodeIds });
   }
 
   private updateAndDeleteInternalNodes(toUpdate: NodeInternal<any>[], toDelete: Identifier<any>[]): Observable<Response> {
@@ -223,7 +223,7 @@ export class TermedService {
       'save': toUpdate
     };
 
-    return this.http.post(`${environment.api_url}/modify`, body);
+    return this.http.post(`${apiUrl}/modify`, body);
   }
 
   private getVocabularyNode<T extends VocabularyNodeType>(graphId: string): Observable<NodeExternal<VocabularyNodeType>> {
@@ -231,12 +231,12 @@ export class TermedService {
     const params = new URLSearchParams();
     params.append('graphId', graphId);
 
-    return this.http.get(`${environment.api_url}/vocabulary`, { params } )
+    return this.http.get(`${apiUrl}/vocabulary`, { params } )
       .map(response => requireSingle(response.json() as NodeExternal<VocabularyNodeType>));
   }
 
   private getVocabularyNodes<T extends VocabularyNodeType>(): Observable<NodeExternal<T>[]> {
-    return this.http.get(`${environment.api_url}/vocabularies`)
+    return this.http.get(`${apiUrl}/vocabularies`)
       .map(response => normalizeAsArray(response.json() as NodeExternal<VocabularyNodeType>));
   }
 
@@ -257,7 +257,7 @@ export class TermedService {
     params.append('graphId', graphId);
     params.append('conceptId', conceptId);
 
-    return this.http.get(`${environment.api_url}/concept`, { params } );
+    return this.http.get(`${apiUrl}/concept`, { params } );
   }
 
   private getCollectionListNodes(graphId: string): Observable<NodeExternal<'Collection'>[]> {
@@ -265,7 +265,7 @@ export class TermedService {
     const params = new URLSearchParams();
     params.append('graphId', graphId);
 
-    return this.http.get(`${environment.api_url}/collections`, { params } )
+    return this.http.get(`${apiUrl}/collections`, { params } )
       .map(response => normalizeAsArray(response.json() as NodeExternal<'Collection'>[])).catch(notFoundAsDefault([]));
   }
 
@@ -285,16 +285,16 @@ export class TermedService {
     params.append('graphId', graphId);
     params.append('collectionId', collectionId);
 
-    return this.http.get(`${environment.api_url}/collection`, { params } );
+    return this.http.get(`${apiUrl}/collection`, { params } );
   }
 
   private getGroupListNodes(): Observable<NodeExternal<'Group'>[]> {
-    return this.http.get(`${environment.api_url}/groups`)
+    return this.http.get(`${apiUrl}/groups`)
       .map(response => normalizeAsArray(response.json() as NodeExternal<'Group'>)).catch(notFoundAsDefault([]));
   }
 
   private getOrganizationListNodes(): Observable<NodeExternal<'Organization'>[]> {
-    return this.http.get(`${environment.api_url}/organizations`)
+    return this.http.get(`${apiUrl}/organizations`)
       .map(response => normalizeAsArray(response.json() as NodeExternal<'Organization'>)).catch(notFoundAsDefault([]));
   }
 }

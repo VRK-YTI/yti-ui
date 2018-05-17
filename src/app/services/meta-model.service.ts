@@ -7,9 +7,9 @@ import { Graph } from 'app/entities/graph';
 import { GraphMeta, MetaModel, ReferenceMeta } from 'app/entities/meta';
 import { NodeMetaInternal } from 'app/entities/meta-api';
 import { asLocalizable } from 'yti-common-ui/utils/localization';
-import { environment } from 'environments/environment';
 import { KnownNode, Node, Referrer } from 'app/entities/node';
 import { getOrCreate } from 'yti-common-ui/utils/map';
+import { apiUrl } from 'app/config';
 
 @Injectable()
 export class MetaModelService {
@@ -106,12 +106,12 @@ export class MetaModelService {
   }
 
   private getGraph(graphId: string): Observable<Graph> {
-    return this.http.get(`${environment.api_url}/graphs/${graphId}`)
+    return this.http.get(`${apiUrl}/graphs/${graphId}`)
       .map(response => response.json() as Graph);
   }
 
   private getGraphs(): Observable<Graph[]> {
-    return this.http.get(`${environment.api_url}/graphs`)
+    return this.http.get(`${apiUrl}/graphs`)
       .map(response => normalizeAsArray(response.json()) as Graph[]);
   }
 
@@ -120,12 +120,12 @@ export class MetaModelService {
     const params = new URLSearchParams();
     params.append('graphId', graphId);
 
-    return this.http.get(`${environment.api_url}/types`, { params })
+    return this.http.get(`${apiUrl}/types`, { params })
       .map(response => normalizeAsArray(response.json()) as NodeMetaInternal[]);
   }
 
   private getAllMetaNodesByGraph(): Observable<Map<string, NodeMetaInternal[]>> {
-    return this.http.get(`${environment.api_url}/types`)
+    return this.http.get(`${apiUrl}/types`)
       .map(response => normalizeAsArray(response.json()) as NodeMetaInternal[])
       .map(allNodes => groupBy(allNodes, node => node.graph.id));
   }

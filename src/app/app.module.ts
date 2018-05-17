@@ -71,10 +71,10 @@ import { OrganizationFilterDropdownComponent } from 'app/components/common/organ
 import { VocabularyFilterDropdownComponent } from 'app/components/common/vocabulary-filter-dropdown.component';
 import { StatusFilterDropdownComponent } from 'app/components/common/status-filter-dropdown.component';
 import { YtiCommonModule, AUTHENTICATED_USER_ENDPOINT, LOCALIZER } from 'yti-common-ui';
-import { environment } from 'environments/environment';
 import { InformationAboutServiceComponent } from 'app/components/information/information-about-service.component';
 import { ModalService } from './services/modal.service';
 import { DragSortableDirective, DragSortableItemDirective } from './directives/drag-sortable.directive';
+import { apiUrl } from './config';
 
 const localizations: { [lang: string]: string} = {
   fi: Object.assign({},
@@ -89,7 +89,7 @@ const localizations: { [lang: string]: string} = {
 };
 
 export function resolveAuthenticatedUserEndpoint() {
-  return `${environment.api_url}/authenticated-user`;
+  return `${apiUrl}/authenticated-user`;
 }
 
 export function createTranslateLoader(): TranslateLoader {
