@@ -10,7 +10,7 @@
 
     .property-ordering {
       position: absolute;
-      left: 50%;
+      right: -25px;
 
       span {
         font-size: xx-small;
@@ -52,13 +52,8 @@
   }
 
   ngb-accordion {
-    width: calc(100% - 30px);
+    width: calc(100% - 25px);
     float: left;
-  }
-
-  .reorder-handle {
-    padding: 0 3px;
-    float: right;
   }
 }
 
