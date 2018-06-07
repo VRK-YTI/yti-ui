@@ -11,7 +11,14 @@ export type FormReference = FormReferenceLiteral<any>
   styleUrls: ['./reference.component.scss'],
   template: `
     <dl *ngIf="show">
-      <dt><label [for]="id">{{reference.label | translateValue:true}}</label></dt>
+      <dt>
+        <label [for]="id">
+          {{reference.label | translateValue:true}}
+          <span *ngIf="hasDescription()"
+                class="fa fa-info-circle info"
+                ngbTooltip="{{description | translateValue:true}}"></span>
+        </label>
+      </dt>
       <dd>
         <ng-container [ngSwitch]="reference.referenceType">
 
@@ -68,5 +75,17 @@ export class ReferenceComponent {
 
   get show() {
     return this.editableService.editing || this.reference.value.length > 0;
+  }
+
+  get label() {
+    return this.reference.label;
+  }
+
+  hasDescription() {
+    return Object.values(this.reference.description).length > 0;
+  }
+
+  get description() {
+    return this.reference.description;
   }
 }

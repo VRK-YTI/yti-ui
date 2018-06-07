@@ -33,6 +33,11 @@ $page-padding: 20px;
   color: #2A6EBB;
 }
 
+.fa.info {
+  color: $primary;
+  font-size: small;
+}
+
 div.removable-text {
   display: inline-block;
   width: calc(100% - 17px);

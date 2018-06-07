@@ -135,6 +135,7 @@ export class PropertyMeta {
 
   id: string;
   label: Localizable;
+  description: Localizable;
   regex: string;
   index: number;
   type: PropertyType;
@@ -142,6 +143,7 @@ export class PropertyMeta {
   constructor(private textAttribute: TextAttributeInternal) {
     this.id = textAttribute.id;
     this.label = asLocalizable(textAttribute.properties.prefLabel);
+    this.description = asLocalizable(textAttribute.properties.description);
     this.regex = textAttribute.regex;
     this.index = textAttribute.index;
 
@@ -195,6 +197,7 @@ export class ReferenceMeta {
 
   id: string;
   label: Localizable;
+  description: Localizable;
   targetType: NodeType;
   index: number;
   graphId: string;
@@ -203,6 +206,7 @@ export class ReferenceMeta {
 
     this.id = referenceAttribute.id;
     this.label = asLocalizable(referenceAttribute.properties.prefLabel);
+    this.description = asLocalizable(referenceAttribute.properties.description);
     this.targetType = referenceAttribute.range.id;
     this.graphId = referenceAttribute.range.graph.id;
     this.index = referenceAttribute.index;

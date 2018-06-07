@@ -207,6 +207,10 @@ export class FormReferenceLiteral<N extends KnownNode | Node<any>> implements So
     return this.meta.label;
   }
 
+  get description(): Localizable {
+    return this.meta.description;
+  }
+
   get required(): boolean {
     return this.meta.required;
   }
@@ -311,6 +315,10 @@ export class FormReferenceTerm implements Sortable<TermChild> {
     return this.meta.label;
   }
 
+  get description(): Localizable {
+    return this.meta.description;
+  }
+
   get referenceType(): ReferenceType {
     return this.meta.referenceType;
   }
@@ -409,6 +417,10 @@ export class FormPropertyLiteral {
     return this.meta.label;
   }
 
+  get description(): Localizable {
+    return this.meta.description;
+  }
+
   get editor(): Editor {
     return this.meta.type.editor;
   }
@@ -494,6 +506,10 @@ export class FormPropertyLiteralList implements Sortable<AbstractControl> {
 
   get label(): Localizable {
     return this.meta.label;
+  }
+
+  get description(): Localizable {
+    return this.meta.description;
   }
 
   get required(): boolean {
@@ -612,6 +628,10 @@ export class FormPropertyLocalizable implements Sortable<LocalizedControl> {
 
   get label(): Localizable {
     return this.meta.label;
+  }
+
+  get description(): Localizable {
+    return this.meta.description;
   }
 
   get required(): boolean {

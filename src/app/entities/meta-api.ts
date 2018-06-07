@@ -25,6 +25,7 @@ export interface TextAttributeInternal {
   permissions: {};
   properties: {
     prefLabel: Localization[],
+    description: Localization[],
     type: Attribute[]
   };
 }
@@ -38,6 +39,7 @@ export interface ReferenceAttributeInternal {
   domain: { id: NodeType, graph: { id: string } };
   permissions: {};
   properties: {
-    prefLabel: Localization[]
+    prefLabel: Localization[],
+    description: Localization[]
   };
 }
