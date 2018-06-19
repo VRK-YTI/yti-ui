@@ -37,7 +37,7 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
         <div class="selectable-collections">
           <ul [ngClass]="{'has-button': canAddCollection()}">
             <li *ngFor="let collection of searchResults | async; trackBy: collectionIdentity"
-                id="{{collection.id + '_collection_list_listitem'}}"
+                [id]="collection.idIdentifier + '_collection_list_listitem'"
                 (click)="navigate(collection)"
                 [class.selection]="isSelected(collection)">
               <span [innerHTML]="collection.label | translateSearchValue: debouncedSearch | highlight: debouncedSearch"></span>

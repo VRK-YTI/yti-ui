@@ -23,7 +23,8 @@ export interface IndexedConceptData {
   narrower: string[],
   modified: string,
   status: string,
-  hasNarrower: boolean
+  hasNarrower: boolean,
+  uri: string
 }
 
 export interface SearchResponse<T> {
@@ -77,6 +78,7 @@ export class IndexedConcept {
   status: string;
   modified: Moment;
   hasNarrower: boolean;
+  uri: string;
 
   constructor(hit: SearchResponseHit<IndexedConceptData>) {
     this.id = hit._source.id;
@@ -90,6 +92,7 @@ export class IndexedConcept {
     this.status = hit._source.status;
     this.modified = moment(hit._source.modified);
     this.hasNarrower = hit._source.hasNarrower;
+    this.uri = hit._source.uri;
 
     function setPropertyPath(obj: any, path: string, value: any) {
 
@@ -108,6 +111,10 @@ export class IndexedConcept {
     for (const [propertyPath, highlighted] of Object.entries(hit.highlight || {})) {
       setPropertyPath(this, propertyPath, normalizeAsArray(highlighted)[0]);
     }
+  }
+
+  get idIdentifier() {
+    return this.uri;
   }
 }
 

@@ -312,6 +312,10 @@ export class Node<T extends NodeType> {
     return { id: this.id, type: this.node.type };
   }
 
+  get idIdentifier() {
+    return this.uri ? this.uri : this.id;
+  }
+
   get id() {
     return this.node.id;
   }

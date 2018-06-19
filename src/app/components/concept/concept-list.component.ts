@@ -83,7 +83,7 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
               (scrolled)="onScrollDown()">
             <li *ngFor="let concept of model.searchResults; trackBy: conceptIdentity"
                 (click)="navigate(concept)"
-                id="{{concept.id + '_concept_list_listitem'}}"
+                [id]="concept.idIdentifier + '_concept_list_listitem'"
                 [class.selection]="isSelected(concept)">
               <span [innerHTML]="concept.label | translateValue"></span>
             </li>
@@ -131,6 +131,9 @@ export class ConceptListComponent implements AfterViewInit {
   }
 
   navigate(concept: IndexedConcept) {
+
+    console.log(concept);
+
     this.router.navigate(['/concepts', concept.vocabulary.id, 'concept', concept.id]);
   }
 
