@@ -12,7 +12,7 @@ import { TermedService } from '../../services/termed.service';
       
       <a id="main_page_link" class="navbar-brand" [routerLink]="['/']">
         <app-logo></app-logo>
-        <span>Sanastot</span>
+        <span translate>Controlled Vocabularies</span>
       </a>
 
       <ul class="navbar-nav ml-auto">

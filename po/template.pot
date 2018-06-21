@@ -130,6 +130,9 @@ msgstr ""
 msgid "Remove term"
 msgstr ""
 
+msgid "Controlled Vocabularies"
+msgstr ""
+
 msgid "Impersonate user"
 msgstr ""
 
