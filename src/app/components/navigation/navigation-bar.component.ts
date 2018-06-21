@@ -10,7 +10,7 @@ import { TermedService } from '../../services/termed.service';
   template: `
     <nav class="navbar navbar-expand-md navbar-light">
       
-      <a class="navbar-brand" [routerLink]="['/']">
+      <a id="frontpage_link" class="navbar-brand" [routerLink]="['/']">
         <app-logo></app-logo>
         <span>Sanastot</span>
       </a>
