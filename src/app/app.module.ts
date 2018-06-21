@@ -75,6 +75,7 @@ import { InformationAboutServiceComponent } from 'app/components/information/inf
 import { ModalService } from './services/modal.service';
 import { DragSortableDirective, DragSortableItemDirective } from './directives/drag-sortable.directive';
 import { apiUrl } from './config';
+import { LogoComponent } from './components/navigation/logo.component';
 
 const localizations: { [lang: string]: string} = {
   fi: Object.assign({},
@@ -181,6 +182,7 @@ const appRoutes: Routes = [
     VocabularyFilterDropdownComponent,
     StatusFilterDropdownComponent,
     InformationAboutServiceComponent,
+    LogoComponent,
     DragSortableDirective,
     DragSortableItemDirective
   ],
