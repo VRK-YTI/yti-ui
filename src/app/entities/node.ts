@@ -313,7 +313,7 @@ export class Node<T extends NodeType> {
   }
 
   get idIdentifier() {
-    return this.uri ? this.uri : this.id;
+    return this.uri ? this.uri : 'new_node';
   }
 
   get id() {
