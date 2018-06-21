@@ -35,7 +35,7 @@ import { Observable } from 'rxjs/Observable';
            [appDragSortableItem]="conceptLink"
            [index]="i">
 
-        <a><i class="fa fa-times" [id]="conceptLink.idIdentifier + '_' + id + '_concept_link_remove_reference'" (click)="removeReference(conceptLink)"></i></a>
+        <a><i class="fa fa-times" [id]="conceptLink.idIdentifier + '_' + i + '_' + id + '_concept_link_remove_reference'" (click)="removeReference(conceptLink)"></i></a>
         <span [ngbPopover]="editingPopContent"
               [triggers]="'mouseenter:mouseleave'"
               #p="ngbPopover"
