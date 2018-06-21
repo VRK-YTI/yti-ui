@@ -131,9 +131,6 @@ export class ConceptListComponent implements AfterViewInit {
   }
 
   navigate(concept: IndexedConcept) {
-
-    console.log(concept);
-
     this.router.navigate(['/concepts', concept.vocabulary.id, 'concept', concept.id]);
   }
 
