@@ -112,7 +112,7 @@ export class SearchConceptModalService {
 
               <div *ngFor="let concept of searchResults$ | async; trackBy: conceptIdentity; let last = last"
                    class="search-result"
-                   id="{{concept.id+'_search_result_concept'}}"
+                   [id]="concept.idIdentifier +'_search_result_concept'"
                    [class.active]="concept === selectedItem"
                    (click)="select(concept)">
                 <div class="content" [class.last]="last">
