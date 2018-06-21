@@ -15,3 +15,31 @@
     padding-right: 10px;
   }
 }
+
+.navbar-brand {
+  max-height: 80px;
+
+  .logocontainer {
+    padding-top: 15px;
+    height: 80px;
+    vertical-align: middle;
+    display: inline-block;
+    float: none;
+  }
+
+  .applogo {
+    max-width: 80px;
+    max-height: 80px;
+    vertical-align: middle;
+    display: inline-block;
+    float: none;
+  }
+
+  .apptitle {
+    height: 55px;
+    text-align: left;
+    vertical-align: middle;
+    display: inline-block;
+    float: none;
+  }
+}
