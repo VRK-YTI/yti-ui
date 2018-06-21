@@ -12,14 +12,14 @@ import { contains, last } from 'yti-common-ui/utils/array';
     <div class="clearfix" *ngIf="canAdd()">
       <div ngbDropdown class="add-button" placement="bottom-right">
         <button class="btn btn-link"
-                id="add_term_button"
+                [id]="id + '_add_term_button'"
                 ngbDropdownToggle>
           <span>{{'Add' | translate}} {{reference.label | translateValue:true | lowercase}}</span>
         </button>
         <div ngbDropdownMenu>
           <button class="dropdown-item"
                   *ngFor="let language of addableLanguages"
-                  id="{{language + '_add_term_button'}}"
+                  [id]="id + '_' + language + '_add_term_button'"
                   (click)="addTerm(language)">{{language | uppercase}}</button>
         </div>
       </div>
@@ -38,7 +38,7 @@ import { contains, last } from 'yti-common-ui/utils/array';
               <app-accordion-chevron class="pull-right" [id]="id + '_' + i + '_term_accordion_chevron'"></app-accordion-chevron>
             </div>
             <div class="property-ordering" [hidden]="!editing">
-              <i id="{{id + '_' + i +  '_term_reorder_handle'}}" class="material-icons drag-icon">import_export</i>
+              <i [id]="id + '_' + i + '_term_reorder_handle'" class="material-icons drag-icon">import_export</i>
             </div>
           </div>
         </ng-template>
@@ -49,7 +49,7 @@ import { contains, last } from 'yti-common-ui/utils/array';
                           [status]="node.formNode.status"></app-status>
               <div *ngIf="canRemove()" class="remove-button">
                 <button class="btn btn-link"
-                        id="{{node.id + '_remove_term_button'}}"
+                        [id]="id + '_' + i + '_' + node.idIdentifier + '_remove_term_button'"
                         (click)="removeTerm(node)">
                   <i class="fa fa-trash"></i>
                   <span translate>Remove term</span>

@@ -264,6 +264,7 @@ export interface TermChild {
   formNode: FormNode;
   language: string;
   id: string;
+  idIdentifier: string;
 }
 
 export class FormReferenceTerm implements Sortable<TermChild> {
@@ -285,7 +286,8 @@ export class FormReferenceTerm implements Sortable<TermChild> {
       .map(term => ({
         formNode: new FormNode(term, languagesProvider, metaModel),
         language: term.language!,
-        id: term.id
+        id: term.id,
+        idIdentifier: term.idIdentifier
       }));
 
     const childControls = this.children.map(c => c.formNode.control);
@@ -350,7 +352,8 @@ export class FormReferenceTerm implements Sortable<TermChild> {
     const newChild = {
       formNode: new FormNode(newTerm, this.languagesProvider, this.metaModel),
       language: language,
-      id: newTerm.id
+      id: newTerm.id,
+      idIdentifier: newTerm.idIdentifier
     };
 
     this.children.push(newChild);
