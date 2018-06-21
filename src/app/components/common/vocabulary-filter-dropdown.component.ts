@@ -32,9 +32,16 @@ export class VocabularyFilterDropdownComponent implements OnInit {
 
       vocabs.sort(comparingLocalizable<VocabularyNode>(this.languageService, org => org.label));
 
-      this.vocabularyOptions = [
-        { value: null, name: () => this.translateService.instant('All vocabularies') },
-        ...vocabs.map(org => ({ value: org, name: () => this.languageService.translate(org.label, true)}))
+      this.vocabularyOptions = [{
+          value: null,
+          name: () => this.translateService.instant('All vocabularies'),
+          idIdentifier: () => 'all_selected'
+        },
+        ...vocabs.map(voc => ({ 
+          value: voc,
+          name: () => this.languageService.translate(voc.label, true),
+          idIdentifier: () => voc.idIdentifier
+        }))
       ];
     });
   }

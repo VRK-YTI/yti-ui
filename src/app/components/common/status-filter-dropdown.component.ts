@@ -25,7 +25,8 @@ export class StatusFilterDropdownComponent implements OnInit {
     this.statusOptions = [null, ...allStatuses].map(status => {
       return {
         value: status,
-        name: () => this.translateService.instant(status ? status : 'All statuses')
+        name: () => this.translateService.instant(status ? status : 'All statuses'),
+        idIdentifier: () => status ? status : 'all_selected'
       }
     });
   }
