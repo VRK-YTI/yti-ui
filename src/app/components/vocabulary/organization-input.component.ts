@@ -5,6 +5,7 @@ import { FormReferenceLiteral } from 'app/services/form-state';
 import { SearchOrganizationModalService } from './search-organization-modal.component';
 import { ignoreModalClose } from 'yti-common-ui/utils/modal';
 import { AuthorizationManager } from 'app/services/authorization-manager.sevice';
+import { LanguageService } from 'app/services/language.service';
 
 @Component({
   selector: 'app-organization-input',
@@ -19,7 +20,8 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
            class="removable-text"
            [appDragSortableItem]="organization"
            [index]="i">
-        <a><i class="fa fa-times" [id]="id + '_' + organization.id + '_remove_organization_reference_link'" (click)="removeReference(organization)"></i></a>
+        <a><i class="fa fa-times"
+              [id]="id + '_' + organization.getIdIdentifier(languageService) + '_remove_organization_reference_link'" (click)="removeReference(organization)"></i></a>
         <span>{{organization.label | translateValue:true}}</span>
       </div>
       <app-error-messages [id]="id + '_error_messages'" [control]="reference.control"></app-error-messages>
@@ -40,7 +42,8 @@ export class OrganizationInputComponent {
 
   constructor(private editableService: EditableService,
               private searchOrganizationModal: SearchOrganizationModalService,
-              private authorizationManager: AuthorizationManager) {
+              private authorizationManager: AuthorizationManager,
+              public languageService: LanguageService) {
   }
 
   get editing() {

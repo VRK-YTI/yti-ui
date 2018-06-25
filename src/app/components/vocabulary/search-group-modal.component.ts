@@ -50,7 +50,7 @@ export class SearchGroupModalService {
             <div class="search-results">
               <div class="search-result"
                    *ngFor="let group of searchResults$ | async; let last = last"
-                   id="{{group.id + '_group_select'}}"
+                   [id]="group.idIdentifier + '_group_select'"
                    (click)="select(group)">
                 <div class="content" [class.last]="last">
                   <span class="title" [innerHTML]="group.label | translateValue:true"></span>

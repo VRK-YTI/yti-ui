@@ -15,6 +15,7 @@ import { firstMatching } from 'yti-common-ui/utils/array';
 import { LocationService } from 'app/services/location.service';
 import { Options } from 'yti-common-ui/components/dropdown.component';
 import { vocabularyIdPrefix } from 'app/utils/id-prefix';
+import { labelNameToResourceIdIdentifier } from 'yti-common-ui/utils/resource';
 
 @Component({
   selector: 'app-new-vocabulary',
@@ -79,7 +80,8 @@ export class NewVocabularyComponent {
     metaModelService.getMetaTemplates().subscribe(templates => {
       this.templateOptions = templates.map(template => ({
         value: template,
-        name: () => this.languageService.translate(template.label, true)
+        name: () => this.languageService.translate(template.label, true),
+        idIdentifier: () => labelNameToResourceIdIdentifier(this.languageService.translate(template.label, true))
       }));
       this.selectedTemplate = templates[0];
     });

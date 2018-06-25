@@ -12,6 +12,7 @@ import { Options } from 'yti-common-ui/components/dropdown.component';
 import { TranslateService } from 'ng2-translate';
 import { combineSets, hasAny } from 'yti-common-ui/utils/set';
 import { Observable } from 'rxjs/Observable';
+import { labelNameToResourceIdIdentifier } from 'yti-common-ui/utils/resource';
 
 interface UserOrganizationRoles {
   organization?: OrganizationNode;
@@ -168,7 +169,8 @@ export class UserDetailsComponent implements OnDestroy  {
       return {
         value: org,
         name: () => org ? this.languageService.translate(org.label, true)
-                        : this.translateService.instant('Choose organization')
+                        : this.translateService.instant('Choose organization'),
+        idIdentifier: () => org ? labelNameToResourceIdIdentifier(this.languageService.translate(org.label, true)) : 'all_selected'
       };
     })
   }

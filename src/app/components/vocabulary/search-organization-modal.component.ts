@@ -48,7 +48,7 @@ export class SearchOrganizationModalService {
             <div class="search-results">
               <div class="search-result"
                    *ngFor="let organization of searchResults$ | async; let last = last"
-                   id="{{organization.id + 'organization_select'}}"
+                   [id]="organization.getIdIdentifier(languageService) + '_organization_select'"
                    (click)="select(organization)">
                 <div class="content" [class.last]="last">
                   <span class="title" [innerHTML]="organization.label | translateValue:true"></span>
@@ -83,7 +83,7 @@ export class SearchOrganizationModalComponent implements AfterViewInit {
 
   constructor(public modal: NgbActiveModal,
               termedService: TermedService,
-              languageService: LanguageService,
+              public languageService: LanguageService,
               private renderer: Renderer) {
 
     const initialSearch = this.search$.take(1);

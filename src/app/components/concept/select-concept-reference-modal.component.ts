@@ -5,6 +5,7 @@ import { FormNode, FormReferenceLiteral } from 'app/services/form-state';
 import { Options } from 'yti-common-ui/components/dropdown.component';
 import { LanguageService } from 'app/services/language.service';
 import { ModalService } from 'app/services/modal.service';
+import { labelNameToResourceIdIdentifier } from 'yti-common-ui/utils/resource';
 
 @Injectable()
 export class SelectConceptReferenceModalService {
@@ -71,7 +72,8 @@ export class SelectConceptReferenceModalComponent implements OnInit {
 
         return {
           value: value,
-          name: () => this.languageService.translate(value.label, true)
+          name: () => this.languageService.translate(value.label, true),
+          idIdentifier: () => labelNameToResourceIdIdentifier(this.languageService.translate(value.label, true))
         }
       });
 

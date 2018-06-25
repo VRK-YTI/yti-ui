@@ -41,7 +41,7 @@ import { Subscription } from 'rxjs/Subscription';
             <div class="classification"
                  *ngFor="let classification of classifications"
                  [class.active]="isClassificationSelected(classification.node)"
-                 id="{{classification.node.id + '_classification_toggle'}}"
+                 [id]="classification.node.idIdentifier + '_classification_toggle'"
                  (click)="toggleClassification(classification.node)">
 
               <span class="name">{{classification.node.label | translateValue:true}}</span>
@@ -60,7 +60,7 @@ import { Subscription } from 'rxjs/Subscription';
                                                 [organizations]="organizations$"></app-organization-filter-dropdown>
               
               <app-filter-dropdown class="pull-left ml-2"
-                                   id="vocabulary_filter_dropdown"
+                                   id="vocabulary_type_filter_dropdown"
                                    [options]="vocabularyTypes"
                                    [filterSubject]="vocabularyType$"></app-filter-dropdown>
 
@@ -85,7 +85,7 @@ import { Subscription } from 'rxjs/Subscription';
 
             <div class="row">
               <div class="col-md-12">
-                <div class="vocabulary" *ngFor="let vocabulary of filteredVocabularies" id="{{vocabulary.id + '_vocabulary_navigation'}}" (click)="navigate(vocabulary)">
+                <div class="vocabulary" *ngFor="let vocabulary of filteredVocabularies" [id]="vocabulary.idIdentifier + '_vocabulary_navigation'" (click)="navigate(vocabulary)">
 
                   <span class="name">{{vocabulary.label | translateValue:true}}</span>
 
@@ -137,7 +137,8 @@ export class VocabulariesComponent implements OnDestroy {
     this.vocabularyTypes = [null, 'Vocabulary', 'TerminologicalVocabulary'].map(type => {
       return {
         value: type as VocabularyNodeType,
-        name: () => translateService.instant(type ? type + 'Type' : 'All vocabulary types')
+        name: () => translateService.instant(type ? type + 'Type' : 'All vocabulary types'),
+        idIdentifier: () => type ? type : 'all_selected'
       }
     });
 

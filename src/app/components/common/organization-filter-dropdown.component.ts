@@ -37,8 +37,16 @@ export class OrganizationFilterDropdownComponent implements OnInit, OnDestroy {
         orgs.sort(comparingLocalizable<OrganizationNode>(this.languageService, org => org.label));
 
         this.organizationOptions = [
-          { value: null, name: () => this.translateService.instant('All organizations') },
-          ...orgs.map(org => ({ value: org, name: () => this.languageService.translate(org.label, true)}))
+          {
+            value: null,
+            name: () => this.translateService.instant('All organizations'),
+            idIdentifier: () => 'all_selected'
+          },
+          ...orgs.map(org => ({
+            value: org,
+            name: () => this.languageService.translate(org.label, true),
+            idIdentifier: () => org.getIdIdentifier(this.languageService, true)
+          }))
         ];
       }));
   }

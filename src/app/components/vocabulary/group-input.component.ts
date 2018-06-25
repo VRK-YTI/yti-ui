@@ -19,7 +19,7 @@ import { SearchGroupModalService } from './search-group-modal.component';
            class="removable-text"
            [appDragSortableItem]="group"
            [index]="i">
-        <a><i class="fa fa-times" [id]="id + '_' + group.id + '_remove_group_reference_link'" (click)="removeReference(group)"></i></a>
+        <a><i class="fa fa-times" [id]="id + '_' + group.idIdentifier + '_remove_group_reference_link'" (click)="removeReference(group)"></i></a>
         <span>{{group.label | translateValue:true}}</span>
       </div>
       <app-error-messages [id]="id + '_error_messages'" [control]="reference.control"></app-error-messages>
