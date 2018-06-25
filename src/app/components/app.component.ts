@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
       <app-breadcrumb [location]="location" [hidden]="!showBreadcrumb"></app-breadcrumb>
       <router-outlet></router-outlet>
     </div>
-    <app-footer [title]="'Sanastot'"
+    <app-footer [title]="'Controlled Vocabularies' | translate"
                 id="app_navigate_to_info"
                 (informationClick)="navigateToInformation()" *ngIf="showFooter"></app-footer>
   `
