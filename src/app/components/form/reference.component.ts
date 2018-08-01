@@ -18,6 +18,7 @@ export type FormReference = FormReferenceLiteral<any>
                 class="fa fa-info-circle info"
                 ngbTooltip="{{description | translateValue:true}}"></span>
         </label>
+        <app-required-symbol *ngIf="editing && reference.required"></app-required-symbol>
       </dt>
       <dd>
         <ng-container [ngSwitch]="reference.referenceType">
@@ -87,5 +88,9 @@ export class ReferenceComponent {
 
   get description() {
     return this.reference.description;
+  }
+
+  get editing() {
+    return this.editableService.editing;
   }
 }

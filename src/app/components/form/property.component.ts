@@ -19,6 +19,7 @@ type FormProperty = FormPropertyLiteral
                 class="fa fa-info-circle info" 
                 ngbTooltip="{{description | translateValue:true}}"></span>
         </label>
+        <app-required-symbol *ngIf="editing && property.required"></app-required-symbol>
       </dt>
       <dd [ngSwitch]="property.type">
         
@@ -69,5 +70,9 @@ export class PropertyComponent {
 
   get description() {
     return this.property.description;
+  }
+
+  get editing() {
+    return this.editableService.editing;
   }
 }

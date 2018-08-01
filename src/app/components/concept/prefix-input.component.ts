@@ -10,6 +10,7 @@ import { TermedService } from 'app/services/termed.service';
       <div class="col-md-6">
         <div class="form-group">
           <label [for]="idPrefix + '_prefix_input'" translate>Prefix</label>
+          <app-required-symbol></app-required-symbol>
           <input type="text"
                  [id]="idPrefix + '_prefix_input'"
                  class="form-control"
