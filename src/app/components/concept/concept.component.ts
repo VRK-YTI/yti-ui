@@ -44,7 +44,7 @@ import { conceptIdPrefix } from 'app/utils/id-prefix';
 export class ConceptComponent implements EditingComponent, OnDestroy {
 
   private subscriptionToClean: Subscription[] = [];
-  idPrefix: string = conceptIdPrefix
+  idPrefix: string = conceptIdPrefix;
 
   constructor(private route: ActivatedRoute,
               private conceptViewModel: ConceptViewModelService,
