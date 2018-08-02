@@ -62,7 +62,7 @@ export class ConceptComponent implements EditingComponent, OnDestroy {
       deleteConfirmationModal.open(requireDefined(this.concept))
         .then(() => this.conceptViewModel.removeConcept());
 
-    this.subscriptionToClean.push(this.conceptViewModel.conceptSelect$.subscribe(concept => {
+    this.subscriptionToClean.push(this.conceptViewModel.resourceSelect$.subscribe(concept => {
       if (!concept.persistent && !editableService.editing) {
         editableService.edit();
       } else if (concept.persistent && editableService.editing) {
@@ -78,7 +78,7 @@ export class ConceptComponent implements EditingComponent, OnDestroy {
   }
 
   get formNode() {
-    return this.conceptViewModel.conceptForm!;
+    return this.conceptViewModel.resourceForm!;
   }
 
   get concept() {

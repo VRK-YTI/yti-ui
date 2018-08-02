@@ -18,7 +18,7 @@ import {
   ContentExtractor, filterAndSortSearchResults, labelComparator, scoreComparator,
   TextAnalysis
 } from 'app/utils/text-analyzer';
-import { isDefined } from 'yti-common-ui/utils/object';
+import { isDefined, assertNever } from 'yti-common-ui/utils/object';
 import { Subject } from 'rxjs/Subject';
 import { removeMatching, replaceMatching, contains } from 'yti-common-ui/utils/array';
 import { FormNode } from './form-state';
@@ -373,19 +373,11 @@ export class ConceptViewModelService implements OnDestroy {
   vocabularyEdit$ = onlyEdit(this.vocabularyAction$);
   vocabularyRemove$ = onlyRemove(this.vocabularyAction$);
 
-  conceptForm: FormNode|null;
-  conceptAction$ = new BehaviorSubject<Action<ConceptNode>>(createNoSelection());
-  conceptSelect$ = onlySelect(this.conceptAction$);
-  conceptEdit$ = onlyEdit(this.conceptAction$);
-  conceptRemove$ = onlyRemove(this.conceptAction$);
-
-  collectionForm: FormNode|null;
-  collectionAction$ = new BehaviorSubject<Action<CollectionNode>>(createNoSelection());
-  collectionSelect$ = onlySelect(this.collectionAction$);
-  collectionEdit$ = onlyEdit(this.collectionAction$);
-  collectionRemove$ = onlyRemove(this.collectionAction$);
-
-  action$ = Observable.merge(this.conceptAction$, this.collectionAction$);
+  resourceForm: FormNode|null;
+  resourceAction$ = new BehaviorSubject<Action<ConceptNode|CollectionNode>>(createNoSelection());
+  resourceSelect$ = onlySelect(this.resourceAction$);
+  resourceEdit$ = onlyEdit(this.resourceAction$);
+  ressourceRemove$ = onlyRemove(this.resourceAction$);
 
   graphId: string;
   conceptId: string|null;
@@ -397,8 +389,7 @@ export class ConceptViewModelService implements OnDestroy {
   collectionList = new CollectionListModel(this.termedService, this.languageService);
 
   loadingVocabulary = true;
-  loadingConcept = true;
-  loadingCollection = true;
+  loadingResource = true;
 
   metaModel: Observable<MetaModel>;
 
@@ -410,22 +401,28 @@ export class ConceptViewModelService implements OnDestroy {
               private languageService: LanguageService,
               private translateService: TranslateService) {
 
-    Observable.combineLatest([this.vocabularyAction$, this.conceptAction$, this.collectionAction$],
-      (vocabulary: Action<VocabularyNode>, concept: Action<ConceptNode>, collection: Action<CollectionNode>) => [vocabulary, concept, collection])
-      .subscribe(([vocabularyAction, conceptAction, collectionAction]: [Action<VocabularyNode>, Action<ConceptNode>, Action<CollectionNode>]) => {
+    Observable.combineLatest([this.vocabularyAction$, this.resourceAction$],
+      (vocabulary: Action<VocabularyNode>, resource: Action<ConceptNode|CollectionNode>) => [vocabulary, resource])
+      .subscribe(([vocabularyAction, resourceAction]: [Action<VocabularyNode>, Action<ConceptNode|CollectionNode>]) => {
 
         if (isSelect(vocabularyAction) || isEdit(vocabularyAction)) {
-          if (isSelect(conceptAction) || isEdit(conceptAction)) {
-            locationService.atConcept(vocabularyAction.item, conceptAction.item);
-          } else if (isSelect(collectionAction) || isEdit(collectionAction)) {
-            locationService.atCollection(vocabularyAction.item, collectionAction.item);
+          if (isSelect(resourceAction) || isEdit(resourceAction)) {
+            switch (resourceAction.item.type) {
+              case 'Concept':
+                locationService.atConcept(vocabularyAction.item, resourceAction.item);
+                break;
+              case 'Collection':
+                break;
+              default:
+                assertNever(resourceAction.item);
+            }
           } else {
             locationService.atVocabulary(vocabularyAction.item);
           }
         }
       });
 
-    this.action$.subscribe(action => {
+    this.resourceAction$.subscribe(action => {
       switch (action.type) {
         case 'edit':
         case 'remove':
@@ -464,9 +461,9 @@ export class ConceptViewModelService implements OnDestroy {
 
   get concept(): ConceptNode|null {
 
-    const action = this.conceptAction$.getValue();
+    const action = this.resourceAction$.getValue();
 
-    if (action.type === 'noselect' || action.type === 'remove') {
+    if (action.type === 'noselect' || action.type === 'remove' || action.item.type !== 'Concept') {
       return null;
     }
 
@@ -475,9 +472,9 @@ export class ConceptViewModelService implements OnDestroy {
 
   get collection(): CollectionNode|null {
 
-    const action = this.collectionAction$.getValue();
+    const action = this.resourceAction$.getValue();
 
-    if (action.type === 'noselect' || action.type === 'remove') {
+    if (action.type === 'noselect' || action.type === 'remove' || action.item.type !== 'Collection') {
       return null;
     }
 
@@ -512,15 +509,13 @@ export class ConceptViewModelService implements OnDestroy {
 
     const init = (concept: ConceptNode) => {
       this.metaModel.subscribe(metaModel => {
-        this.collectionAction$.next(createNoSelection());
-        this.collectionForm = null;
-        this.conceptAction$.next(createSelectAction(concept));
-        this.conceptForm = new FormNode(concept, () => this.languages, metaModel);
-        this.loadingConcept = false;
+        this.resourceAction$.next(createSelectAction(concept));
+        this.resourceForm = new FormNode(concept, () => this.languages, metaModel);
+        this.loadingResource = false;
       });
     };
 
-    this.loadingConcept = true;
+    this.loadingResource = true;
     this.conceptId = conceptId;
 
     this.termedService.findConcept(this.graphId, conceptId).subscribe(concept => {
@@ -540,15 +535,13 @@ export class ConceptViewModelService implements OnDestroy {
 
     const init = (collection: CollectionNode) => {
       this.metaModel.subscribe(metaModel => {
-        this.conceptAction$.next(createNoSelection());
-        this.conceptForm = null;
-        this.collectionAction$.next(createSelectAction(collection));
-        this.collectionForm = new FormNode(collection, () => this.languages, metaModel);
-        this.loadingCollection = false;
+        this.resourceAction$.next(createSelectAction(collection));
+        this.resourceForm = new FormNode(collection, () => this.languages, metaModel);
+        this.loadingResource = false;
       });
     };
 
-    this.loadingCollection = true;
+    this.loadingResource = true;
     this.collectionId = collectionId;
 
     this.termedService.findCollection(this.graphId, collectionId).subscribe(collection => {
@@ -566,10 +559,8 @@ export class ConceptViewModelService implements OnDestroy {
 
   initializeNoSelection(selectFirstConcept: boolean) {
 
-    this.conceptAction$.next(createNoSelection());
-    this.conceptForm = null;
-    this.collectionAction$.next(createNoSelection());
-    this.collectionForm = null;
+    this.resourceAction$.next(createNoSelection());
+    this.resourceForm = null;
 
     if (selectFirstConcept) {
       // first search result is empty array initialization
@@ -582,13 +573,13 @@ export class ConceptViewModelService implements OnDestroy {
 
   saveConcept(): Promise<any> {
 
-    if (!this.concept || !this.conceptForm) {
+    if (!this.concept || !this.resourceForm) {
       throw new Error('Cannot save when there is no concept');
     }
 
     const that = this;
     const concept = this.concept.clone();
-    this.conceptForm.assignChanges(concept);
+    this.resourceForm.assignChanges(concept);
 
     return new Promise((resolve, reject) => {
 
@@ -597,8 +588,8 @@ export class ConceptViewModelService implements OnDestroy {
           .flatMap(() => this.termedService.getConcept(this.graphId, concept.id))
           .subscribe({
             next(persistentConcept: ConceptNode) {
-              that.conceptAction$.next(createEditAction(persistentConcept.clone()));
-              that.conceptForm = new FormNode(persistentConcept, () => that.languages, metaModel);
+              that.resourceAction$.next(createEditAction(persistentConcept.clone()));
+              that.resourceForm = new FormNode(persistentConcept, () => that.languages, metaModel);
               resolve();
             },
             error(err: any) {
@@ -620,7 +611,7 @@ export class ConceptViewModelService implements OnDestroy {
     return new Promise((resolve, reject) => {
       this.termedService.removeNode(concept).subscribe({
         next() {
-          that.conceptAction$.next(createRemoveAction(concept));
+          that.resourceAction$.next(createRemoveAction(concept));
           that.router.navigate(['/concepts', that.graphId]);
           resolve();
         },
@@ -641,20 +632,20 @@ export class ConceptViewModelService implements OnDestroy {
     } else {
       const concept = this.concept;
       this.metaModel.subscribe(metaModel => {
-        this.conceptForm = new FormNode(concept, () => this.languages, metaModel);
+        this.resourceForm = new FormNode(concept, () => this.languages, metaModel);
       });
     }
   }
 
   saveCollection(): Promise<any> {
 
-    if (!this.collection || !this.collectionForm) {
+    if (!this.collection || !this.resourceForm) {
       throw new Error('Cannot save when there is no collection');
     }
 
     const that = this;
     const collection = this.collection.clone();
-    this.collectionForm.assignChanges(collection);
+    this.resourceForm.assignChanges(collection);
 
     return new Promise((resolve, reject) => {
 
@@ -663,8 +654,8 @@ export class ConceptViewModelService implements OnDestroy {
           .flatMap(() => this.termedService.getCollection(this.graphId, collection.id))
           .subscribe({
             next(persistentCollection: CollectionNode) {
-              that.collectionAction$.next(createEditAction(persistentCollection.clone()));
-              that.collectionForm = new FormNode(persistentCollection, () => that.languages, metaModel);
+              that.resourceAction$.next(createEditAction(persistentCollection.clone()));
+              that.resourceForm = new FormNode(persistentCollection, () => that.languages, metaModel);
               resolve();
             },
             error(err: any) {
@@ -686,7 +677,7 @@ export class ConceptViewModelService implements OnDestroy {
     return new Promise((resolve, reject) => {
       this.termedService.removeNode(collection).subscribe({
         next() {
-          that.collectionAction$.next(createRemoveAction(collection));
+          that.resourceAction$.next(createRemoveAction(collection));
           that.router.navigate(['/concepts', that.graphId]);
           resolve();
         },
@@ -707,7 +698,7 @@ export class ConceptViewModelService implements OnDestroy {
     } else {
       const collection = this.collection;
       this.metaModel.subscribe(metaModel => {
-        this.collectionForm = new FormNode(collection, () => this.languages, metaModel);
+        this.resourceForm = new FormNode(collection, () => this.languages, metaModel);
       });
     }
   }

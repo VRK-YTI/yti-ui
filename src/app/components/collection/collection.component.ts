@@ -84,7 +84,7 @@ export class CollectionComponent implements EditingComponent, OnDestroy {
       deleteConfirmationModal.open(requireDefined(this.collection))
         .then(() => this.conceptViewModel.removeCollection());
 
-    this.subscriptionToClean.push(this.conceptViewModel.collectionSelect$.subscribe(collection => {
+    this.subscriptionToClean.push(this.conceptViewModel.resourceSelect$.subscribe(collection => {
       if (!collection.persistent && !editableService.editing) {
         editableService.edit();
       } else if (collection.persistent && editableService.editing) {
@@ -107,7 +107,7 @@ export class CollectionComponent implements EditingComponent, OnDestroy {
   }
 
   get formNode() {
-    return this.conceptViewModel.collectionForm!;
+    return this.conceptViewModel.resourceForm!;
   }
 
   get unsaved() {

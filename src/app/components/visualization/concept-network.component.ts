@@ -263,7 +263,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
       this.network.on('click', this.onClick.bind(this));
     });
 
-    this.conceptViewModel.action$.subscribe(action => {
+    this.conceptViewModel.resourceAction$.subscribe(action => {
       switch (action.type) {
         case 'select':
           if (!this.skipNextSelection) {
