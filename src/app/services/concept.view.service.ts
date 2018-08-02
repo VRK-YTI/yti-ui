@@ -445,14 +445,6 @@ export class ConceptViewModelService implements OnDestroy {
         languageService.filterLanguage = '';
       }
     });
-
-    // first search result is empty array initialization
-    this.conceptList.searchResults$.skip(1).take(1).subscribe(searchResults => {
-      if (searchResults.length > 0 && this.conceptAction$.getValue().type === 'noselect') {
-        const firstConcept = searchResults[0];
-        this.router.navigate(['/concepts', firstConcept.vocabulary.id, 'concept', firstConcept.id]);
-      }
-    });
   }
 
   get languages(): string[] {
@@ -502,8 +494,6 @@ export class ConceptViewModelService implements OnDestroy {
     this.metaModel = this.metaModelService.getMeta(graphId);
     this.loadingVocabulary = true;
 
-    this.initializeConcept(null);
-    this.initializeCollection(null);
     this.conceptList.initializeGraph(graphId);
     this.conceptHierarchy.initializeGraph(graphId);
     this.collectionList.initializeGraph(graphId);
@@ -518,72 +508,74 @@ export class ConceptViewModelService implements OnDestroy {
     this.termedService.getGraphNamespace(graphId).subscribe(graphNamespace => this.prefixAndNamespace = graphNamespace);
   }
 
-  initializeConcept(conceptId: string|null) {
+  initializeConcept(conceptId: string) {
 
-    if (!conceptId && !this.concept) {
-      return;
-    }
-
-    const init = (concept: ConceptNode|null) => {
+    const init = (concept: ConceptNode) => {
       this.metaModel.subscribe(metaModel => {
-        this.conceptAction$.next(concept ? createSelectAction(concept) : createNoSelection());
-        this.conceptForm = concept ? new FormNode(concept, () => this.languages, metaModel) : null;
+        this.collectionAction$.next(createNoSelection());
+        this.collectionForm = null;
+        this.conceptAction$.next(createSelectAction(concept));
+        this.conceptForm = new FormNode(concept, () => this.languages, metaModel);
         this.loadingConcept = false;
       });
     };
 
-    this.initializeCollection(null);
     this.loadingConcept = true;
     this.conceptId = conceptId;
 
-    if (!conceptId) {
-      init(null);
-    } else {
-      this.termedService.findConcept(this.graphId, conceptId).subscribe(concept => {
-        if (concept) {
-          init(concept);
-        } else {
-          // XXX: Vocabulary might not be initialized yet
-          // more robust waiting mechanism instead of duplicate fetch would be preferred
-          this.termedService.getVocabulary(this.graphId).subscribe(vocabulary => {
-            this.createEmptyConcept(vocabulary, conceptId).subscribe(init);
-          });
-        }
-      });
-    }
+    this.termedService.findConcept(this.graphId, conceptId).subscribe(concept => {
+      if (concept) {
+        init(concept);
+      } else {
+        // XXX: Vocabulary might not be initialized yet
+        // more robust waiting mechanism instead of duplicate fetch would be preferred
+        this.termedService.getVocabulary(this.graphId).subscribe(vocabulary => {
+          this.createEmptyConcept(vocabulary, conceptId).subscribe(init);
+        });
+      }
+    });
   }
 
-  initializeCollection(collectionId: string|null) {
+  initializeCollection(collectionId: string) {
 
-    if (!collectionId && !this.collection) {
-      return;
-    }
-
-    const init = (collection: CollectionNode|null) => {
+    const init = (collection: CollectionNode) => {
       this.metaModel.subscribe(metaModel => {
-        this.collectionAction$.next(collection ? createSelectAction(collection) : createNoSelection());
-        this.collectionForm = collection ? new FormNode(collection, () => this.languages, metaModel) : null;
+        this.conceptAction$.next(createNoSelection());
+        this.conceptForm = null;
+        this.collectionAction$.next(createSelectAction(collection));
+        this.collectionForm = new FormNode(collection, () => this.languages, metaModel);
         this.loadingCollection = false;
       });
     };
 
-    this.initializeConcept(null);
     this.loadingCollection = true;
     this.collectionId = collectionId;
 
-    if (!collectionId) {
-      init(null);
-    } else {
-      this.termedService.findCollection(this.graphId, collectionId).subscribe(collection => {
-        if (collection) {
-          init(collection);
-        } else {
-          // XXX: Vocabulary might not be initialized yet
-          // more robust waiting mechanism instead of duplicate fetch would be preferred
-          this.termedService.getVocabulary(this.graphId).subscribe(vocabulary => {
-            this.createEmptyCollection(vocabulary, collectionId).subscribe(init);
-          });
-        }
+    this.termedService.findCollection(this.graphId, collectionId).subscribe(collection => {
+      if (collection) {
+        init(collection);
+      } else {
+        // XXX: Vocabulary might not be initialized yet
+        // more robust waiting mechanism instead of duplicate fetch would be preferred
+        this.termedService.getVocabulary(this.graphId).subscribe(vocabulary => {
+          this.createEmptyCollection(vocabulary, collectionId).subscribe(init);
+        });
+      }
+    });
+  }
+
+  initializeNoSelection(selectFirstConcept: boolean) {
+
+    this.conceptAction$.next(createNoSelection());
+    this.conceptForm = null;
+    this.collectionAction$.next(createNoSelection());
+    this.collectionForm = null;
+
+    if (selectFirstConcept) {
+      // first search result is empty array initialization
+      this.conceptList.searchResults$.skip(1).take(1).subscribe(searchResults => {
+        const firstConcept = searchResults[0];
+        this.router.navigate(['/concepts', firstConcept.vocabulary.id, 'concept', firstConcept.id]);
       });
     }
   }

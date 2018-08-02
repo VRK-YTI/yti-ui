@@ -7,6 +7,6 @@ import { ConceptViewModelService } from 'app/services/concept.view.service';
 })
 export class NoSelectionComponent {
   constructor(conceptViewModel: ConceptViewModelService) {
-    conceptViewModel.initializeConcept(null);
+    conceptViewModel.initializeNoSelection(true);
   }
 }
