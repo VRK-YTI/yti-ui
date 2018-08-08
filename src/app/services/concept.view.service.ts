@@ -558,15 +558,23 @@ export class ConceptViewModelService implements OnDestroy {
 
   initializeNoSelection(selectFirstConcept: boolean) {
 
+    this.resourceId = null;
     this.resourceAction$.next(createNoSelection());
     this.resourceForm = null;
 
     if (selectFirstConcept) {
-      // first search result is empty array initialization
-      this.conceptList.searchResults$.skip(1).take(1).subscribe(searchResults => {
+
+      let searchResults$ = this.conceptList.searchResults$.asObservable();
+
+      // XXX: when loading first search result is empty array initialization
+      if (this.conceptList.loading) {
+        searchResults$ = searchResults$.skip(1);
+      }
+
+      searchResults$.take(1).subscribe(searchResults => {
         if (searchResults.length > 0) {
           const firstConcept = searchResults[0];
-          this.router.navigate(['/concepts', firstConcept.vocabulary.id, 'concept', firstConcept.id]);
+          this.router.navigate(['/concepts', firstConcept.vocabulary.id, 'concept', firstConcept.id], { skipLocationChange: true });
         }
       });
     }
