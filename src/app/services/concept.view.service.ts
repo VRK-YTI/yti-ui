@@ -380,8 +380,7 @@ export class ConceptViewModelService implements OnDestroy {
   ressourceRemove$ = onlyRemove(this.resourceAction$);
 
   graphId: string;
-  conceptId: string|null;
-  collectionId: string|null;
+  resourceId: string|null = null; // separate id besides selection item id is needed because selection is async loaded
   prefixAndNamespace: PrefixAndNamespace|null;
 
   conceptList = new ConceptListModel(this.elasticSearchService, this.languageService);
@@ -516,7 +515,7 @@ export class ConceptViewModelService implements OnDestroy {
     };
 
     this.loadingResource = true;
-    this.conceptId = conceptId;
+    this.resourceId = conceptId;
 
     this.termedService.findConcept(this.graphId, conceptId).subscribe(concept => {
       if (concept) {
@@ -542,7 +541,7 @@ export class ConceptViewModelService implements OnDestroy {
     };
 
     this.loadingResource = true;
-    this.collectionId = collectionId;
+    this.resourceId = collectionId;
 
     this.termedService.findCollection(this.graphId, collectionId).subscribe(collection => {
       if (collection) {

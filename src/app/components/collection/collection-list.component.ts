@@ -104,6 +104,6 @@ export class CollectionListComponent implements AfterViewInit {
   }
 
   isSelected(collection: CollectionNode) {
-    return this.conceptViewModel.collectionId === collection.id;
+    return this.conceptViewModel.resourceId === collection.id;
   }
 }

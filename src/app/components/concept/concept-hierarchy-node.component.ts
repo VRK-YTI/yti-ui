@@ -38,7 +38,7 @@ export class ConceptHierarchyNodeComponent {
   }
 
   get selected() {
-    return this.conceptViewModel.conceptId === this.concept.id;
+    return this.conceptViewModel.resourceId === this.concept.id;
   }
 
   get expanded() {

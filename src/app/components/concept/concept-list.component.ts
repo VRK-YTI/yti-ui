@@ -139,7 +139,7 @@ export class ConceptListComponent implements AfterViewInit {
   }
 
   isSelected(concept: IndexedConcept) {
-    return this.conceptViewModel.conceptId === concept.id;
+    return this.conceptViewModel.resourceId === concept.id;
   }
 
   hasStatus(): boolean {
