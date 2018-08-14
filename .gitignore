@@ -9,6 +9,7 @@
 
 # IDEs and editors
 /.idea
+/yti-terminology-ui.iml
 .project
 .classpath
 .c9/
