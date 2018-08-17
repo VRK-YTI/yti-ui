@@ -411,6 +411,7 @@ export class ConceptViewModelService implements OnDestroy {
                 locationService.atConcept(vocabularyAction.item, resourceAction.item);
                 break;
               case 'Collection':
+                locationService.atCollection(vocabularyAction.item, resourceAction.item);
                 break;
               default:
                 assertNever(resourceAction.item);

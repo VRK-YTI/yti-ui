@@ -45,7 +45,7 @@ export class LocationService {
       },
       {
         label: collection.label,
-        route: ['concepts', vocabulary.graphId, 'concept', collection.id]
+        route: ['concepts', vocabulary.graphId, 'collection', collection.id]
       }
     ], false);
   }
