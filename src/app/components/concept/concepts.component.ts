@@ -6,6 +6,7 @@ import { SessionService } from 'app/services/session.service';
 import { ConceptNetworkComponent } from 'app/components/visualization/concept-network.component';
 import { EditingComponent } from 'app/services/editable.service';
 import { VocabularyComponent } from 'app/components/vocabulary/vocabulary.component';
+import { CollectionComponent } from "app/components/collection/collection.component";
 
 @Component({
   selector: 'app-concepts',
@@ -25,7 +26,7 @@ import { VocabularyComponent } from 'app/components/vocabulary/vocabulary.compon
 
           <div class="panel-left" appFloat>
             <div>
-              <ngb-tabset [justify]="'justified'">
+              <ngb-tabset [justify]="'justified'" [activeId]="initialTabId">
                 <ngb-tab id="concepts_alphabetic_tab">
                   <ng-template ngbTabTitle>
                     <p>{{'Alphabetic' | translate}}</p>
@@ -78,6 +79,7 @@ export class ConceptsComponent implements EditingComponent {
 
   @ViewChild('network') conceptNetwork: ConceptNetworkComponent;
   @ViewChild('vocabularyComponent') vocabularyComponent: VocabularyComponent;
+  initialTabId? : String;
 
   constructor(private route: ActivatedRoute,
               public viewModel: ConceptViewModelService,
@@ -87,6 +89,12 @@ export class ConceptsComponent implements EditingComponent {
     this.route.params.subscribe(params => {
       this.viewModel.initializeVocabulary(params['graphId']);
     });
+    if (route.children.length > 0) {
+      let childComponent:any = this.route.children[0].component;
+      if (childComponent && childComponent.name === CollectionComponent.name) {
+        this.initialTabId = 'concepts_collection_tab';
+      }
+    }
   }
 
   get showDivider() {

@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
     <ng-template ngbModalContainer></ng-template>
     <app-navigation-bar></app-navigation-bar>
     <div class="container-fluid" [class.without-footer]="!showFooter">
-      <app-breadcrumb [location]="location" [hidden]="!showBreadcrumb"></app-breadcrumb>
+      <app-breadcrumb [linkActive]="true" [refreshPath]="['re']" [location]="location" [hidden]="!showBreadcrumb"></app-breadcrumb>
       <router-outlet></router-outlet>
     </div>
     <app-footer [title]="'Controlled Vocabularies' | translate"
@@ -25,9 +25,10 @@ export class AppComponent {
   constructor(private locationService: LocationService,
               private router: Router) {
 
-    locationService.location.subscribe(location => {
-      this.showBreadcrumb = location.length > 1;
-    });
+    // locationService.location.subscribe(location => {
+    //   this.showBreadcrumb = location.length > 1;
+    // });
+    this.showBreadcrumb = true;
 
     locationService.showFooter.subscribe(showFooter => {
       this.showFooter = showFooter;
