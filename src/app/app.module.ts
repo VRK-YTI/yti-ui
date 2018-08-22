@@ -2,7 +2,15 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-import { ResolveEnd, Router, RouterModule, Routes } from '@angular/router';
+import {
+  ResolveEnd,
+  Route,
+  Router,
+  RouterModule,
+  Routes,
+  UrlSegment,
+  UrlSegmentGroup
+} from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppComponent } from 'app/components/app.component';
 import { TermedService } from 'app/services/termed.service';
@@ -55,7 +63,7 @@ import { SemanticTextInputComponent } from 'app/components/form/semantic-text-in
 import { SemanticTextInputLinkPopoverComponent, SemanticTextInputUnlinkPopoverComponent } from 'app/components/form/semantic-text-input-popover.component';
 import { SelectConceptReferenceModalComponent, SelectConceptReferenceModalService } from 'app/components/concept/select-concept-reference-modal.component';
 import { FrontpageComponent } from 'app/components/frontpage.component';
-import { RefreshComponent, createRefreshRouteMatcher } from 'app/components/refresh.component';
+import { RefreshComponent } from 'app/components/refresh.component';
 import { LiteralListInputComponent } from 'app/components/form/literal-list-input.component';
 import { TermsComponent } from 'app/components/form/terms.component';
 import { TermComponent } from 'app/components/form/term.component';
@@ -110,6 +118,17 @@ export function createMissingTranslationHandler(): MissingTranslationHandler {
   };
 }
 
+export function refreshRouteMatcher(segments: UrlSegment[], group: UrlSegmentGroup, route: Route) {
+  if (segments.length >= 1 && segments[0].path === 're') {
+    return {
+      consumed: segments
+    };
+  }
+  return {
+    consumed: []
+  };
+}
+
 const appRoutes: Routes = [
   { path: '', component: FrontpageComponent },
   { path: 'newVocabulary', component: NewVocabularyComponent },
@@ -120,7 +139,8 @@ const appRoutes: Routes = [
     ]},
   { path: 'userDetails', component: UserDetailsComponent },
   { path: 'information', component: InformationAboutServiceComponent },
-  { matcher: createRefreshRouteMatcher(['re']), component: RefreshComponent },
+  // NOTE: If createRefreshRouteMatcher(['re']) starts to work after angular upgrade, then switch to that.
+  { matcher: refreshRouteMatcher, component: RefreshComponent }
 ];
 
 @NgModule({

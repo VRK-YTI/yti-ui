@@ -41,7 +41,7 @@ export class RefreshComponent implements OnInit, OnDestroy {
   }
 }
 
-export function createRefreshRouteMatcher(path: string[]) {
+export function createRefreshRouteMatcher(path: string[]) : UrlMatcher {
   return (segments: UrlSegment[], group: UrlSegmentGroup, route: Route) => {
     if (segments.length >= path.length) {
       if (path.reduce((matching: boolean, current: string, index: number, arr: string[]) => {
