@@ -91,7 +91,7 @@ export class ConceptsComponent implements EditingComponent {
     });
     if (route.children.length > 0) {
       let childComponent:any = this.route.children[0].component;
-      if (childComponent && childComponent.name === CollectionComponent.name) {
+      if (childComponent && childComponent === CollectionComponent) {
         this.initialTabId = 'concepts_collection_tab';
       }
     }
