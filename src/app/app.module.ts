@@ -55,7 +55,7 @@ import { SemanticTextInputComponent } from 'app/components/form/semantic-text-in
 import { SemanticTextInputLinkPopoverComponent, SemanticTextInputUnlinkPopoverComponent } from 'app/components/form/semantic-text-input-popover.component';
 import { SelectConceptReferenceModalComponent, SelectConceptReferenceModalService } from 'app/components/concept/select-concept-reference-modal.component';
 import { FrontpageComponent } from 'app/components/frontpage.component';
-import { RefreshComponent } from 'app/components/refresh.component';
+import { RefreshComponent, createRefreshRouteMatcher } from 'app/components/refresh.component';
 import { LiteralListInputComponent } from 'app/components/form/literal-list-input.component';
 import { TermsComponent } from 'app/components/form/terms.component';
 import { TermComponent } from 'app/components/form/term.component';
@@ -77,8 +77,6 @@ import { ModalService } from './services/modal.service';
 import { DragSortableDirective, DragSortableItemDirective } from './directives/drag-sortable.directive';
 import { apiUrl } from './config';
 import { LogoComponent } from './components/navigation/logo.component';
-import {UrlSegment, UrlSegmentGroup} from "../../node_modules/@angular/router/src/url_tree";
-import {Route} from "../../node_modules/@angular/router/src/config";
 
 const localizations: { [lang: string]: string} = {
   fi: Object.assign({},
@@ -114,17 +112,6 @@ export function createMissingTranslationHandler(): MissingTranslationHandler {
 
 const appRoutes: Routes = [
   { path: '', component: FrontpageComponent },
-  { component: RefreshComponent, matcher: (segments: UrlSegment[], group: UrlSegmentGroup, route: Route) => {
-      if (segments.length > 0 && segments[0].path === 're') {
-        return {
-          consumed: segments
-        };
-      }
-      return {
-        consumed: []
-      };
-    }
-  },
   { path: 'newVocabulary', component: NewVocabularyComponent },
   { path: 'concepts/:graphId', component: ConceptsComponent, canDeactivate: [ConfirmCancelEditGuard], children: [
       { path: '', component: NoSelectionComponent },
@@ -133,6 +120,7 @@ const appRoutes: Routes = [
     ]},
   { path: 'userDetails', component: UserDetailsComponent },
   { path: 'information', component: InformationAboutServiceComponent },
+  { matcher: createRefreshRouteMatcher(['re']), component: RefreshComponent },
 ];
 
 @NgModule({
