@@ -79,7 +79,7 @@ export class ConceptsComponent implements EditingComponent {
 
   @ViewChild('network') conceptNetwork: ConceptNetworkComponent;
   @ViewChild('vocabularyComponent') vocabularyComponent: VocabularyComponent;
-  initialTabId? : String;
+  initialTabId?: string;
 
   constructor(private route: ActivatedRoute,
               public viewModel: ConceptViewModelService,
@@ -90,8 +90,8 @@ export class ConceptsComponent implements EditingComponent {
       this.viewModel.initializeVocabulary(params['graphId']);
     });
     if (route.children.length > 0) {
-      let childComponent:any = this.route.children[0].component;
-      if (childComponent && childComponent === CollectionComponent) {
+      const childComponent:any = this.route.children[0].component;
+      if (childComponent === CollectionComponent) {
         this.initialTabId = 'concepts_collection_tab';
       }
     }

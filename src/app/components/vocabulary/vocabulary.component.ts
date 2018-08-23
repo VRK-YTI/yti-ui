@@ -20,7 +20,7 @@ import { vocabularyIdPrefix } from 'app/utils/id-prefix';
         <div class="col-12">
           <h2>
 
-            <span class="mr-4">{{vocabulary.label | translateValue}}</span>
+            <span class="mr-4">{{vocabulary!.label | translateValue}}</span>
 
             <button class="btn btn-action"
                     id="vocabulary_show_details_button"
