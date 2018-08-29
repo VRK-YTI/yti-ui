@@ -96,15 +96,15 @@ import { Subscription } from 'rxjs/Subscription';
   
                     <app-status class="status" [status]="vocabulary.status"></app-status>
 
-                    <span class="organizations">
-                      <span class="organization" *ngFor="let contributor of vocabulary.contributors">
+                    <ul class="organizations dot-separated-list">
+                      <li class="organization" *ngFor="let contributor of vocabulary.contributors">
                         {{contributor.label | translateValue:true}}
-                      </span>
-                    </span>
+                      </li>
+                    </ul>
                     
                     <span class="name">{{vocabulary.label | translateValue:true}}</span>
 
-                    <ul class="groups">
+                    <ul class="groups dot-separated-list">
                       <li class="group" *ngFor="let group of vocabulary.groups">
                         {{group.label | translateValue:true}}
                       </li>
