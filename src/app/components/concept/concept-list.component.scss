@@ -8,7 +8,7 @@ $buttonless-height: 127px;
   @include selectable-actions();
 
   .input-group-search {
-    width: calc(100% - 28px);
+    width: calc(100% - 31px);
     float: left;
   }
 

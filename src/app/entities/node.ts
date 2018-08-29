@@ -289,7 +289,7 @@ export class Node<T extends NodeType> {
     });
   }
 
-  clone<N extends Node<T>>(): N {
+  clone(): this {
 
     const setPersistent = (original: Node<any>, clone: Node<any>) => {
 
@@ -304,9 +304,9 @@ export class Node<T extends NodeType> {
       }
     };
 
-    const cloned = Node.create(JSON.parse(JSON.stringify(this.toExternalNode())), this.metaModel, this.persistent) as N;
+    const cloned = Node.create(JSON.parse(JSON.stringify(this.toExternalNode())), this.metaModel, this.persistent);
     setPersistent(this, cloned);
-    return cloned;
+    return cloned as this;
   }
 
   get identifier(): Identifier<T> {
@@ -421,10 +421,6 @@ export class VocabularyNode extends Node<VocabularyNodeType> {
     super(node, metaModel, persistent);
   }
 
-  clone(): VocabularyNode {
-    return super.clone<VocabularyNode>();
-  }
-
   get label(): Localizable {
     return asLocalizable(this.prefLabel);
   }
@@ -451,7 +447,7 @@ export class VocabularyNode extends Node<VocabularyNodeType> {
   }
 
   hasLanguage() {
-    return this.meta.hasProperty('language')
+    return this.meta.hasProperty('language');
   }
 
   get languages(): string[] {
@@ -480,10 +476,6 @@ export class ConceptNode extends Node<'Concept'> {
 
   constructor(node: NodeExternal<'Concept'>, metaModel: MetaModel, persistent: boolean) {
     super(node, metaModel, persistent);
-  }
-
-  clone(): ConceptNode {
-    return super.clone<ConceptNode>();
   }
 
   get label(): Localizable {
@@ -713,10 +705,6 @@ export class CollectionNode extends Node<'Collection'> {
     super(node, metaModel, persistent);
   }
 
-  clone(): CollectionNode {
-    return super.clone<CollectionNode>();
-  }
-
   get label(): Localizable {
     return asLocalizable(this.prefLabel);
   }
@@ -750,7 +738,7 @@ export class CollectionNode extends Node<'Collection'> {
   }
 
   get broaderConcepts(): Reference<ConceptNode> {
-    return this.getReference<ConceptNode>('broader')
+    return this.getReference<ConceptNode>('broader');
   }
 }
 

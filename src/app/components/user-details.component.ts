@@ -1,7 +1,7 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Role, UserService } from 'yti-common-ui/services/user.service';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { combineLatest, Subscription } from 'rxjs';
 import { TermedService } from 'app/services/termed.service';
 import { OrganizationNode } from 'app/entities/node';
 import { index } from 'yti-common-ui/utils/array';
@@ -9,9 +9,8 @@ import { LocationService } from 'app/services/location.service';
 import { comparingLocalizable } from 'yti-common-ui/utils/comparator';
 import { LanguageService } from 'app/services/language.service';
 import { Options } from 'yti-common-ui/components/dropdown.component';
-import { TranslateService } from 'ng2-translate';
+import { TranslateService } from '@ngx-translate/core';
 import { combineSets, hasAny } from 'yti-common-ui/utils/set';
-import { Observable } from 'rxjs/Observable';
 import { labelNameToResourceIdIdentifier } from 'yti-common-ui/utils/resource';
 
 interface UserOrganizationRoles {
@@ -107,7 +106,7 @@ export class UserDetailsComponent implements OnDestroy  {
     locationService.atUserDetails();
 
     this.subscriptionToClean.push(
-      Observable.combineLatest(termedService.getOrganizationList(), languageService.language$)
+      combineLatest(termedService.getOrganizationList(), languageService.language$)
         .subscribe(([organizationNodes]) => {
 
         organizationNodes.sort(comparingLocalizable<OrganizationNode>(languageService, org => org.label));

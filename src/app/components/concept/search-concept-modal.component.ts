@@ -1,7 +1,8 @@
 import { AfterViewInit, Component, ElementRef, Injectable, Input, OnInit, Renderer, ViewChild } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConceptNode, VocabularyNode } from 'app/entities/node';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, concat, Observable } from 'rxjs';
+import { debounceTime, map, skip, take } from 'rxjs/operators';
 import { TermedService } from 'app/services/termed.service';
 import { EditableService } from 'app/services/editable.service';
 import { ElasticSearchService, IndexedConcept } from 'app/services/elasticsearch.service';
@@ -67,7 +68,7 @@ export class SearchConceptModalService {
       <div class="row mb-2">
         <div class="col-12">
 
-          <div class="input-group input-group-lg input-group-search pull-left">
+          <div class="input-group input-group-lg input-group-search float-left">
             <input #searchInput
                    id="search_concept_search_input"
                    type="text"
@@ -80,7 +81,7 @@ export class SearchConceptModalService {
                                [ngModelOptions]="{standalone: true}"
                                [languages]="filterLanguages"
                                id="search_concept_filter_language"
-                               class="pull-right"></app-filter-language>
+                               class="float-right"></app-filter-language>
         </div>
       </div>
 
@@ -90,12 +91,12 @@ export class SearchConceptModalService {
           <app-vocabulary-filter-dropdown [filterSubject]="onlyVocabulary$"
                                           id="search_concept_vocabulary_filter_dropdown"
                                           [vocabularies]="vocabularies"
-                                          class="pull-left"></app-vocabulary-filter-dropdown>
+                                          class="float-left"></app-vocabulary-filter-dropdown>
 
           <app-status-filter-dropdown *ngIf="hasStatus()"
                                       id="search_concept_status_filter_dropdown"
                                       [filterSubject]="onlyStatus$"
-                                      class="pull-left ml-2"></app-status-filter-dropdown>
+                                      class="float-left ml-2"></app-status-filter-dropdown>
 
         </div>
       </div>
@@ -119,7 +120,7 @@ export class SearchConceptModalService {
                   <span class="title" [innerHTML]="concept.label | translateValue"></span>
                   <span class="body" [innerHTML]="concept.definitionWithoutSemantics | translateValue"></span>
                   <div class="origin">
-                    <span class="pull-left">{{concept.vocabulary.label | translateValue}}</span>
+                    <span class="float-left">{{concept.vocabulary.label | translateValue}}</span>
                   </div>
                 </div>
               </div>
@@ -147,13 +148,13 @@ export class SearchConceptModalService {
               id="search_concept_confirm_button"
               class="btn btn-action confirm"
               (click)="confirm()"
-              [disabled]="cannotSelect()" translate>Select concept
+              [disabled]="cannotSelect()">{{'Select concept' | translate}}
       </button>
 
       <button type="button"
               id="search_concept_cancel_button"
               class="btn btn-link cancel"
-              (click)="cancel()" translate>Cancel
+              (click)="cancel()">{{'Cancel' | translate}}
       </button>
 
       <div class="alert alert-danger modal-alert" role="alert" *ngIf="restrictionReasonForSelection">
@@ -204,14 +205,14 @@ export class SearchConceptModalComponent implements OnInit, AfterViewInit {
 
     this.search = this.initialSearch;
 
-    const initialSearch = this.search$.take(1);
-    const debouncedSearch = this.search$.skip(1).debounceTime(500);
-    const search = initialSearch.concat(debouncedSearch);
+    const initialSearch = this.search$.pipe(take(1));
+    const debouncedSearch = this.search$.pipe(skip(1), debounceTime(500));
+    const search = concat(initialSearch, debouncedSearch);
 
     this.vocabularies = this.termedService.getVocabularyList()
-      .map(vocabularies => vocabularies.filter(vocabulary => vocabulary.graphId !== this.graphId));
+      .pipe(map(vocabularies => vocabularies.filter(vocabulary => vocabulary.graphId !== this.graphId)));
 
-    Observable.combineLatest(search, this.onlyStatus$, this.onlyVocabulary$)
+    combineLatest(search, this.onlyStatus$, this.onlyVocabulary$)
       .subscribe(() => this.loadConcepts(true));
   }
 
@@ -285,7 +286,7 @@ export class SearchConceptModalComponent implements OnInit, AfterViewInit {
     this.selectedItem = indexedConcept;
     const graphId = indexedConcept.vocabulary.id;
 
-    Observable.combineLatest(this.termedService.getConcept(graphId, indexedConcept.id), this.metaModelService.getMeta(graphId))
+    combineLatest(this.termedService.getConcept(graphId, indexedConcept.id), this.metaModelService.getMeta(graphId))
       .subscribe(([concept, metaModel]) => {
         this.selection = concept;
         this.formNode = this.selection ? new FormNode(this.selection, () => defaultLanguages, metaModel) : null;

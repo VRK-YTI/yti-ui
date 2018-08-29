@@ -1,7 +1,6 @@
 import { Directive, ElementRef, EventEmitter, Input, NgZone, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { requireDefined } from 'yti-common-ui/utils/object';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Subscription } from 'rxjs/Subscription';
+import { BehaviorSubject, Subscription } from 'rxjs';
 
 export interface Sortable<T> {
   sortableValues: T[];
@@ -85,7 +84,7 @@ export class DragSortableDirective<T> implements OnChanges {
           const fromIndex = this.drag.fromIndex;
 
           this.zone.run(() => {
-            this.drag = {...this.drag, fromIndex: toIndex, droppable: true};
+            this.drag = {...this.drag!, fromIndex: toIndex, droppable: true};
             this.sortable.moveItem(fromIndex, toIndex);
             this.positionChange.emit({fromIndex, toIndex});
           });
@@ -190,7 +189,7 @@ export class DragSortableItemDirective<T> implements OnInit, OnDestroy {
           const droppable = dragReady && drag!.droppable;
 
           if (dragged) {
-            this.element.classList.add('dragged')
+            this.element.classList.add('dragged');
           } else {
             this.element.classList.remove('dragged');
           }

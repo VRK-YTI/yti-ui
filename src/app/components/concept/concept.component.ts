@@ -24,7 +24,7 @@ import { conceptIdPrefix } from 'app/utils/id-prefix';
           
           <app-status *ngIf="concept.hasStatus()" 
                       [status]="concept.status" 
-                      class="pull-left"></app-status>
+                      class="float-left"></app-status>
           
           <app-editable-buttons [form]="form" 
                                 [canRemove]="true" 

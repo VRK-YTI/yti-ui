@@ -54,11 +54,11 @@ import { TermedService } from '../../services/termed.service';
           </a>
           <div ngbDropdownMenu>
             <a class="dropdown-item" *ngIf="isLoggedIn()" id="logout_dropdown_link" (click)="logOut()">
-              <i class="fa fa-sign-out"></i>
+              <i class="fas fa-sign-out-alt"></i>
               <span translate>LOG OUT</span>
             </a>
             <a class="dropdown-item" *ngIf="!isLoggedIn()" id="login_dropdown_link" (click)="logIn()">
-              <i class="fa fa-sign-in"></i>
+              <i class="fas fa-sign-in-alt"></i>
               <span translate>LOG IN</span>
             </a>
             <div class="dropdown-divider" [hidden]="noMenuItemsAvailable"></div>

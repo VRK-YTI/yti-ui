@@ -76,7 +76,7 @@ class CsvConceptDetails {
       const localizations = entriesRelatedToProperty.map(([key, value]) => {
         return {
           lang: key.replace(propertyName + '_', ''),
-          value: value
+          value: value as string
         };
       });
 

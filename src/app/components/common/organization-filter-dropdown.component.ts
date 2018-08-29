@@ -1,17 +1,16 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { OrganizationNode } from 'app/entities/node';
 import { FilterOptions } from 'yti-common-ui/components/filter-dropdown.component';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
+import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { comparingLocalizable } from 'yti-common-ui/utils/comparator';
 import { LanguageService } from 'app/services/language.service';
-import { TranslateService } from 'ng2-translate';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-organization-filter-dropdown',
   template: `
-    <app-filter-dropdown class="pull-left"
+    <app-filter-dropdown class="float-left"
                          id="organization_filter_dropdown"
                          [options]="organizationOptions"
                          [filterSubject]="filterSubject"></app-filter-dropdown>
@@ -31,7 +30,7 @@ export class OrganizationFilterDropdownComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.subscriptionToClean.push(Observable.combineLatest(this.organizations, this.languageService.language$)
+    this.subscriptionToClean.push(combineLatest(this.organizations, this.languageService.language$)
       .subscribe(([orgs]) => {
 
         orgs.sort(comparingLocalizable<OrganizationNode>(this.languageService, org => org.label));

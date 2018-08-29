@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { ConceptNode, VocabularyNode } from 'app/entities/node';
 import { SearchConceptModalService } from './search-concept-modal.component';
 import { SelectConceptReferenceModalService } from './select-concept-reference-modal.component';
-import { ignoreModalClose, isModalClose } from 'yti-common-ui/utils/modal';
+import { ignoreModalClose } from 'yti-common-ui/utils/modal';
 import { anyMatching } from 'yti-common-ui/utils/array';
 import { FormNode, FormField } from 'app/services/form-state';
 import { EditableService } from 'app/services/editable.service';
@@ -50,7 +50,7 @@ export class ConceptFormComponent {
   @Input() form: FormNode;
   @Input() multiColumn = false;
   @Input() filterLanguage: string;
-  idPrefix: string = conceptIdPrefix
+  idPrefix: string = conceptIdPrefix;
 
   conceptSelector = (name: string) => this.selectConcept(name);
 
@@ -96,12 +96,6 @@ export class ConceptFormComponent {
         } else {
           return concept;
         }
-      }, err => {
-        if (isModalClose(err)) {
-          return null;
-        } else {
-          throw new Error(err);
-        }
-      });
+      }, ignoreModalClose);
   }
 }

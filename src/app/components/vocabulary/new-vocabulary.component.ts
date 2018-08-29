@@ -6,7 +6,7 @@ import { EditableService } from 'app/services/editable.service';
 import { Router } from '@angular/router';
 import { TermedService } from 'app/services/termed.service';
 import { GraphMeta } from 'app/entities/meta';
-import { TranslateService } from 'ng2-translate';
+import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'app/services/language.service';
 import { FormNode } from 'app/services/form-state';
 import { defaultLanguages } from 'app/utils/language';
@@ -16,6 +16,7 @@ import { LocationService } from 'app/services/location.service';
 import { Options } from 'yti-common-ui/components/dropdown.component';
 import { vocabularyIdPrefix } from 'app/utils/id-prefix';
 import { labelNameToResourceIdIdentifier } from 'yti-common-ui/utils/resource';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-new-vocabulary',
@@ -148,7 +149,7 @@ export class NewVocabularyComponent {
         }
       };
       return this.termedService.isNamespaceInUse(control.value)
-        .map(inUse => inUse ? validationError : null);
+        .pipe(map(inUse => inUse ? validationError : null));
     }
   }
 

@@ -1,7 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpModule } from '@angular/http';
 import {
   ResolveEnd,
   Route,
@@ -15,10 +14,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppComponent } from 'app/components/app.component';
 import { TermedService } from 'app/services/termed.service';
 import { NavigationBarComponent } from 'app/components/navigation/navigation-bar.component';
-import { TermedHttp } from 'app/services/termed-http.service';
 import { VocabulariesComponent } from 'app/components/vocabulary/vocabularies.component';
-import { MissingTranslationHandler, MissingTranslationHandlerParams, TranslateLoader, TranslateModule } from 'ng2-translate';
-import { Observable } from 'rxjs';
+import { MissingTranslationHandler, MissingTranslationHandlerParams, TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { of } from 'rxjs';
 import { LanguageService } from 'app/services/language.service';
 import { ConceptsComponent } from 'app/components/concept/concepts.component';
 import { LocationService } from 'app/services/location.service';
@@ -75,7 +73,6 @@ import { PrefixInputComponent } from 'app/components/concept/prefix-input.compon
 import { SearchGroupModalComponent, SearchGroupModalService } from 'app/components/vocabulary/search-group-modal.component';
 import { AuthorizationManager } from 'app/services/authorization-manager.sevice';
 import { UserDetailsComponent } from 'app/components/user-details.component';
-import { StatusComponent } from 'yti-common-ui/components/status.component';
 import { OrganizationFilterDropdownComponent } from 'app/components/common/organization-filter-dropdown.component';
 import { VocabularyFilterDropdownComponent } from 'app/components/common/vocabulary-filter-dropdown.component';
 import { StatusFilterDropdownComponent } from 'app/components/common/status-filter-dropdown.component';
@@ -85,17 +82,17 @@ import { ModalService } from './services/modal.service';
 import { DragSortableDirective, DragSortableItemDirective } from './directives/drag-sortable.directive';
 import { apiUrl } from './config';
 import { LogoComponent } from './components/navigation/logo.component';
+import { HttpClientModule } from '@angular/common/http';
 
 const localizations: { [lang: string]: string} = {
-  fi: Object.assign({},
-    require('json-loader!po-loader?format=mf!../../po/fi.po'),
-    require('json-loader!po-loader?format=mf!yti-common-ui/po/fi.po')
-  )
-  ,
-  en: Object.assign({},
-    require('json-loader!po-loader?format=mf!../../po/en.po'),
-    require('json-loader!po-loader?format=mf!yti-common-ui/po/en.po')
-  )
+  fi: {
+    ...JSON.parse(require('raw-loader!po-loader?format=mf!../../po/fi.po')),
+    ...JSON.parse(require('raw-loader!po-loader?format=mf!yti-common-ui/po/fi.po'))
+  },
+  en: {
+    ...JSON.parse(require('raw-loader!po-loader?format=mf!../../po/en.po')),
+    ...JSON.parse(require('raw-loader!po-loader?format=mf!yti-common-ui/po/en.po'))
+  }
 };
 
 export function resolveAuthenticatedUserEndpoint() {
@@ -103,7 +100,7 @@ export function resolveAuthenticatedUserEndpoint() {
 }
 
 export function createTranslateLoader(): TranslateLoader {
-  return { getTranslation: (lang: string) => Observable.of(localizations[lang]) };
+  return { getTranslation: (lang: string) => of(localizations[lang]) };
 }
 
 export function createMissingTranslationHandler(): MissingTranslationHandler {
@@ -200,7 +197,6 @@ const appRoutes: Routes = [
     ImportVocabularyModalComponent,
     PrefixInputComponent,
     UserDetailsComponent,
-    StatusComponent,
     OrganizationFilterDropdownComponent,
     VocabularyFilterDropdownComponent,
     StatusFilterDropdownComponent,
@@ -221,17 +217,21 @@ const appRoutes: Routes = [
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpModule,
+    HttpClientModule,
     InfiniteScrollModule,
     NgbModule.forRoot(),
     RouterModule.forRoot(appRoutes),
-    TranslateModule.forRoot({ provide: TranslateLoader, useFactory: createTranslateLoader }),
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: createTranslateLoader
+      }
+    }),
     YtiCommonModule
   ],
   providers: [
     { provide: AUTHENTICATED_USER_ENDPOINT, useFactory: resolveAuthenticatedUserEndpoint },
     { provide: LOCALIZER, useExisting: LanguageService },
-    TermedHttp,
     TermedService,
     MetaModelService,
     { provide: MissingTranslationHandler, useFactory: createMissingTranslationHandler },

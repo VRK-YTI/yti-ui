@@ -12,7 +12,7 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
           
       <button type="button"
               [id]="idPrefix + '_editable_cancel_editing_button'"
-              class="btn btn-link pull-right cancel" 
+              class="btn btn-link float-right cancel" 
               (click)="cancelEditing()"
               [disabled]="operationPending"
               [hidden]="!editing">
@@ -21,7 +21,7 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
       
       <button type="button"
               [id]="idPrefix + '_editable_save_edited_button'"
-              class="btn btn-action pull-right save" 
+              class="btn btn-action float-right save" 
               (click)="saveEdited()" 
               [hidden]="!editing" 
               [disabled]="!canSave() || operationPending">
@@ -30,7 +30,7 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
       
       <button type="button"
               [id]="idPrefix + '_editable_start_editing_button'"
-              class="btn btn-action pull-right edit" 
+              class="btn btn-action float-right edit" 
               (click)="startEditing()"
               [disabled]="operationPending"
               [hidden]="editing">
@@ -39,7 +39,7 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
 
       <button type="button"
               [id]="idPrefix + '_editable_remove_button'"
-              class="btn btn-link pull-right remove"
+              class="btn btn-link float-right remove"
               (click)="remove()"
               [disabled]="operationPending"
               [hidden]="editing || !canRemove">
@@ -47,7 +47,7 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
         <span translate>Remove</span>
       </button>
 
-      <app-ajax-loading-indicator-small class="pull-right" *ngIf="operationPending"></app-ajax-loading-indicator-small>
+      <app-ajax-loading-indicator-small class="float-right" *ngIf="operationPending"></app-ajax-loading-indicator-small>
     </div>
   `
 })

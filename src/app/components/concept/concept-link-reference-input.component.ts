@@ -7,7 +7,8 @@ import { TermedService } from 'app/services/termed.service';
 import { ignoreModalClose } from 'yti-common-ui/utils/modal';
 import { FormReferenceLiteral } from 'app/services/form-state';
 import { MetaModel } from 'app/entities/meta';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
+import { flatMap, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-concept-link-reference-input',
@@ -54,7 +55,7 @@ import { Observable } from 'rxjs/Observable';
             [id]="id + '_concept_link_reference_add_reference_button'"
             class="btn btn-sm btn-action"
             *ngIf="editing"
-            (click)="addReference()" translate>Add concept
+            (click)="addReference()">{{'Add concept' | translate}}
     </button>
   `
 })
@@ -90,13 +91,13 @@ export class ConceptLinkReferenceInputComponent implements OnInit {
 
     this.searchConceptModal.openOtherThanVocabulary(this.vocabulary, '', restricts).then(concept => {
       this.termedService.getVocabulary(concept.graphId)
-        .flatMap(vocabulary => this.createConceptLink(graphId, vocabulary, concept))
+        .pipe(flatMap(vocabulary => this.createConceptLink(graphId, vocabulary, concept)))
         .subscribe(conceptLink => this.reference.addReference(conceptLink));
     }, ignoreModalClose);
   }
 
   createConceptLink(toGraphId: string, fromVocabulary: VocabularyNode, concept: ConceptNode) {
-    return this.metaModel.map(meta => meta.createConceptLink(toGraphId, fromVocabulary, concept));
+    return this.metaModel.pipe(map(meta => meta.createConceptLink(toGraphId, fromVocabulary, concept)));
   }
 
   canReorder() {

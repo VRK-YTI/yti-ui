@@ -1,7 +1,8 @@
 import { AfterViewInit, Component, ElementRef, Injectable, Input, Renderer, ViewChild } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { GroupNode } from 'app/entities/node';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, concat, Observable } from 'rxjs';
+import { debounceTime, map, skip, take, tap } from 'rxjs/operators';
 import { TermedService } from 'app/services/termed.service';
 import { LanguageService } from 'app/services/language.service';
 import { contains } from 'yti-common-ui/utils/array';
@@ -86,19 +87,20 @@ export class SearchGroupModalComponent implements AfterViewInit {
               languageService: LanguageService,
               private renderer: Renderer) {
 
-    const initialSearch = this.search$.take(1);
-    const debouncedSearch = this.search$.skip(1).debounceTime(500);
+    const initialSearch = this.search$.pipe(take(1));
+    const debouncedSearch = this.search$.pipe(skip(1), debounceTime(500));
 
-    this.searchResults$ = Observable.combineLatest(termedService.getGroupList(), initialSearch.concat(debouncedSearch))
-      .do(() => this.loading = false)
-      .map(([groups, search]) => {
-        return groups.filter(group => {
-          const label = languageService.translate(group.label, true);
-          const searchMatches = !search || label.toLowerCase().indexOf(search.toLowerCase()) !== -1;
-          const isNotRestricted = !contains(this.restricts, group.id);
-          return searchMatches && isNotRestricted;
-        });
-      });
+    this.searchResults$ = combineLatest(termedService.getGroupList(), concat(initialSearch, debouncedSearch))
+      .pipe(
+        tap(() => this.loading = false),
+        map(([groups, search]) => {
+          return groups.filter(group => {
+            const label = languageService.translate(group.label, true);
+            const searchMatches = !search || label.toLowerCase().indexOf(search.toLowerCase()) !== -1;
+            const isNotRestricted = !contains(this.restricts, group.id);
+            return searchMatches && isNotRestricted;
+          });
+        }));
   }
 
   select(group: GroupNode) {

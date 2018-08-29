@@ -26,7 +26,7 @@ import { collectionIdPrefix } from 'app/utils/id-prefix';
 
           <app-status *ngIf="collection.hasStatus()"
                       [status]="collection.status"
-                      class="pull-left"></app-status>
+                      class="float-left"></app-status>
           
             <app-editable-buttons [vocabulary]="vocabulary" 
                                   [form]="form"

@@ -1,30 +1,31 @@
 import { Injectable } from '@angular/core';
 import { withFirstLocalizations } from 'yti-common-ui/utils/localization';
 import { LanguageService } from './language.service';
-import { Http, Headers } from '@angular/http';
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { normalizeAsArray } from 'yti-common-ui/utils/array';
 import { Moment } from 'moment';
 import * as moment from 'moment';
 import { Localizable, LocalizableArray } from 'yti-common-ui/types/localization';
 import { apiUrl } from 'app/config';
+import { HttpClient } from '@angular/common/http';
 
 export interface IndexedConceptData {
-  id: string,
+  id: string;
   vocabulary: {
     id: string, // actually graphId
     label: Localizable|LocalizableArray
-  }
-  label: Localizable|LocalizableArray,
-  sortByLabel: Localizable,
-  altLabel: Localizable|LocalizableArray,
-  definition: Localizable|LocalizableArray,
-  broader: string[],
-  narrower: string[],
-  modified: string,
-  status: string,
-  hasNarrower: boolean,
-  uri: string
+  };
+  label: Localizable|LocalizableArray;
+  sortByLabel: Localizable;
+  altLabel: Localizable|LocalizableArray;
+  definition: Localizable|LocalizableArray;
+  broader: string[];
+  narrower: string[];
+  modified: string;
+  status: string;
+  hasNarrower: boolean;
+  uri: string;
 }
 
 export interface SearchResponse<T> {
@@ -54,9 +55,9 @@ export interface SearchResponseHit<T> {
 }
 
 export interface Explanation {
-  value: number,
-  description: string,
-  details: Explanation[]
+  value: number;
+  description: string;
+  details: Explanation[];
 }
 
 export interface ShardsResponse {
@@ -125,18 +126,21 @@ function field(name: string, language: string, boost?: number) {
 @Injectable()
 export class ElasticSearchService {
 
-  constructor(private http: Http, private languageService: LanguageService) {
+  constructor(private http: HttpClient, private languageService: LanguageService) {
   }
 
   private search(body: any): Observable<SearchResponse<IndexedConceptData>> {
 
-    const headers = new Headers({ 'Content-Type': 'application/json' });
+    const headers = { 'Content-Type': 'application/json' };
 
-    return this.http.post(`${apiUrl}/searchConcept`, JSON.stringify(body), { headers } )
-      .map(response => response.json() as SearchResponse<IndexedConceptData>);
+    return this.http.post<SearchResponse<IndexedConceptData>>(`${apiUrl}/searchConcept`, JSON.stringify(body), { headers } );
   }
 
-  frontpageSearch(filter: string, onlyGraph: string|null, onlyStatus: string|null, from: number, size: number): Observable<IndexedConcept[]> {
+  frontpageSearch(filter: string,
+                  onlyGraph: string|null,
+                  onlyStatus: string|null,
+                  from: number,
+                  size: number): Observable<IndexedConcept[]> {
 
     const mustConditions: any[] = [{
       multi_match: {
@@ -185,7 +189,7 @@ export class ElasticSearchService {
       },
       from,
       size,
-    }).map(result => result.hits.hits.map(hit => new IndexedConcept(hit)));
+    }).pipe(map(result => result.hits.hits.map(hit => new IndexedConcept(hit))));
   }
 
   findSingleConceptForVocabulary(graphId: string,
@@ -195,13 +199,13 @@ export class ElasticSearchService {
                                  onlyStatus: string|null): Observable<IndexedConcept|null> {
 
     return this.getConceptsForVocabularies(graphId, 'include', conceptId, filter, sortByModified, onlyStatus, 0, 1)
-      .map(concepts => {
+      .pipe(map(concepts => {
         if (concepts.length === 0) {
           return null;
         } else {
           return concepts[0];
         }
-      });
+      }));
   }
 
   getAllConceptsForVocabulary(graphId: string,
@@ -301,7 +305,7 @@ export class ElasticSearchService {
       from,
       size,
       sort
-    }).map(result => result.hits.hits.map(hit => new IndexedConcept(hit)));
+    }).pipe(map(result => result.hits.hits.map(hit => new IndexedConcept(hit))));
   }
 
   getTopConceptsForVocabulary(graphId: string, from: number, size: number): Observable<IndexedConcept[]> {
@@ -324,7 +328,7 @@ export class ElasticSearchService {
       from,
       size,
       sort: [`sortByLabel.${this.language}`]
-    }).map(result => result.hits.hits.map(hit => new IndexedConcept(hit)));
+    }).pipe(map(result => result.hits.hits.map(hit => new IndexedConcept(hit))));
   }
 
   getNarrowerConcepts(graphId: string, broaderConceptId: string) {
@@ -349,7 +353,7 @@ export class ElasticSearchService {
       from: 0,
       size: 10000,
       sort: [`sortByLabel.${this.language}`]
-    }).map(result => result.hits.hits.map(hit => new IndexedConcept(hit)));
+    }).pipe(map(result => result.hits.hits.map(hit => new IndexedConcept(hit))));
   }
 
   private get language() {

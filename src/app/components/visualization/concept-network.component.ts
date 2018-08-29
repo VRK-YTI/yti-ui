@@ -15,7 +15,7 @@ import { ReferenceMeta } from 'app/entities/meta';
 import { Node } from 'app/entities/node';
 import { collectProperties } from 'yti-common-ui/utils/array';
 import { assertNever, requireDefined } from 'yti-common-ui/utils/object';
-import { TranslateService } from 'ng2-translate';
+import { TranslateService } from '@ngx-translate/core';
 import { MetaModelService } from 'app/services/meta-model.service';
 import { asLocalizable } from 'yti-common-ui/utils/localization';
 import { Subscription } from 'rxjs';
@@ -451,13 +451,13 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
   }
 
   private addNodeIfDoesNotExist(node: UpdatableVisNode) {
-    if (!this.networkData.nodes.get(node.id)) {
+    if (!this.networkData.nodes.get(node.id!)) {
       this.networkData.nodes.add(node);
     }
   }
 
   private addEdgeIfDoesNotExist(edge: UpdatableVisEdge) {
-    if (!this.networkData.edges.get(edge.id)) {
+    if (!this.networkData.edges.get(edge.id!)) {
       this.networkData.edges.add(edge);
 
       const edgeInstance = (this.network as any).edgesHandler.body.edges[requireDefined(edge.id)];
@@ -750,7 +750,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
     // leading to changing the concept
 
     const nodeId = eventData.nodes[0];
-    const visNode: VisNode = this.networkData.nodes.get(nodeId);
+    const visNode: VisNode = this.networkData.nodes.get(nodeId) as VisNode;
     const isConcept = visNode.group !== 'rootCollectionGroup';
 
     const onSingleClick = () => {

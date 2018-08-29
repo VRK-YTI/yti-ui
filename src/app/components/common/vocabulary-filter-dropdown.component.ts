@@ -1,16 +1,15 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { VocabularyNode } from 'app/entities/node';
 import { FilterOptions } from 'yti-common-ui/components/filter-dropdown.component';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { comparingLocalizable } from 'yti-common-ui/utils/comparator';
 import { LanguageService } from 'app/services/language.service';
-import { TranslateService } from 'ng2-translate';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-vocabulary-filter-dropdown',
   template: `
-    <app-filter-dropdown class="pull-left"
+    <app-filter-dropdown class="float-left"
                          id="vocabulary_filter_dropdown"
                          [options]="vocabularyOptions"
                          [filterSubject]="filterSubject"></app-filter-dropdown>

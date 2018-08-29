@@ -35,7 +35,7 @@ import { vocabularyIdPrefix } from 'app/utils/id-prefix';
 
           <app-filter-language [(ngModel)]="filterLanguage"
                                [languages]="filterLanguages"
-                               class="pull-right mt-2"></app-filter-language>
+                               class="float-right mt-2"></app-filter-language>
         </div>
       </div>
 
@@ -50,7 +50,7 @@ import { vocabularyIdPrefix } from 'app/utils/id-prefix';
             <button type="button"
                     id="vocabulary_close_button"
                     *ngIf="!isEditing()"
-                    class="btn btn-link pull-right"
+                    class="btn btn-link float-right"
                     (click)="open = false">
               <i class="fa fa-times"></i>
               <span translate>Close</span>
@@ -61,7 +61,7 @@ import { vocabularyIdPrefix } from 'app/utils/id-prefix';
                                   [vocabulary]="vocabulary"
                                   [idPrefix]="idPrefix"></app-editable-buttons>
 
-            <div class="pull-right" *ngIf="canImport()">
+            <div class="float-right" *ngIf="canImport()">
               <input #fileInput id="vocabulary_import_input" type="file" accept=".csv" style="display:none" (change)="selectFile(fileInput.files)">
               <label id="vocabulary_import_label" for="vocabulary_import_input" class="btn btn-secondary-action" translate>Import vocabulary</label>
             </div>

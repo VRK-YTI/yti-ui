@@ -2,8 +2,8 @@ import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { GroupNode, OrganizationNode, VocabularyNode } from 'app/entities/node';
 import { AuthorizationManager } from 'app/services/authorization-manager.sevice';
-import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Observable, BehaviorSubject, Subscription, combineLatest } from 'rxjs';
+import { publishReplay, refCount, tap } from 'rxjs/operators';
 import { TermedService } from 'app/services/termed.service';
 import { anyMatching } from 'yti-common-ui/utils/array';
 import { matches } from 'yti-common-ui/utils/string';
@@ -11,8 +11,7 @@ import { comparingLocalizable, comparingPrimitive } from 'yti-common-ui/utils/co
 import { LanguageService } from 'app/services/language.service';
 import { VocabularyNodeType } from 'app/entities/node-api';
 import { FilterOptions } from 'yti-common-ui/components/filter-dropdown.component';
-import { TranslateService } from 'ng2-translate';
-import { Subscription } from 'rxjs/Subscription';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-vocabularies',
@@ -63,13 +62,13 @@ import { Subscription } from 'rxjs/Subscription';
             <div class="row mb-4">
               <div class="col-md-12">
   
-                <div class="inline-label pull-left"><span class="search-label" translate>Filter results</span></div>
+                <div class="inline-label float-left"><span class="search-label" translate>Filter results</span></div>
   
                 <app-organization-filter-dropdown [filterSubject]="organization$"
                                                   id="organization_filter_dropdown"
                                                   [organizations]="organizations$"></app-organization-filter-dropdown>
                 
-                <app-filter-dropdown class="pull-left ml-2"
+                <app-filter-dropdown class="float-left ml-2"
                                      id="vocabulary_type_filter_dropdown"
                                      [options]="vocabularyTypes"
                                      [filterSubject]="vocabularyType$"></app-filter-dropdown>
@@ -145,8 +144,11 @@ export class VocabulariesComponent implements OnDestroy {
               termedService: TermedService,
               private router: Router) {
 
-    const vocabularies$ = termedService.getVocabularyList().publishReplay(1).refCount()
-      .do(() => this.vocabulariesLoaded = true);
+    const vocabularies$ = termedService.getVocabularyList().pipe(
+      publishReplay(1),
+      refCount(),
+      tap(() => this.vocabulariesLoaded = true)
+    );
 
     this.vocabularyTypes = [null, 'Vocabulary', 'TerminologicalVocabulary'].map(type => {
       return {
@@ -174,7 +176,7 @@ export class VocabulariesComponent implements OnDestroy {
       return !vocabularyType || vocabulary.type === vocabularyType;
     }
 
-    Observable.combineLatest(termedService.getGroupList(), vocabularies$, this.search$, this.organization$, this.vocabularyType$)
+    combineLatest(termedService.getGroupList(), vocabularies$, this.search$, this.organization$, this.vocabularyType$)
       .subscribe(([groups, vocabularies, search, organization, vocabularyType]) => {
 
         const matchingVocabularies = vocabularies.filter(vocabulary =>
@@ -189,7 +191,7 @@ export class VocabulariesComponent implements OnDestroy {
       });
 
     this.subscriptionToClean.push(
-      Observable.combineLatest(vocabularies$, this.search$, this.classification$, this.organization$, this.vocabularyType$, languageService.language$)
+      combineLatest(vocabularies$, this.search$, this.classification$, this.organization$, this.vocabularyType$, languageService.language$)
         .subscribe(([vocabularies, search, classification, organization, vocabularyType]) => {
 
           this.filteredVocabularies =

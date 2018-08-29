@@ -1,7 +1,16 @@
-@import '~font-awesome/scss/variables';
+@import '~vis/dist/vis.css';
 @import '~yti-common-ui/theme/init';
+@import '~bootstrap/scss/variables';
 
 $page-padding: 20px;
+
+// XXX: reset .btn.link styles because new ng-bootstrap wanted to add button there
+app-terms ngb-accordion .card-header button {
+  padding: 0;
+  color: $body-color;
+  width: 100%;
+  text-align: initial;
+}
 
 .dragged {
   background-color: $body-bg !important;
@@ -85,8 +94,8 @@ nav.navbar {
 
   &:before {
     color: $gray-600;
-    content: $fa-var-search;
-    font-family: FontAwesome;
+    content: '\f002'; // FIXME: $fa-var-search variable doesn't work
+    font-family: "Font Awesome 5 Free Solid";
     top: 10px;
     right: 15px;
     font-size: $font-size-lg;

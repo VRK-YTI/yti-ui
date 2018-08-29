@@ -2,16 +2,15 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { LocationService } from './location.service';
 import { TermedService } from './termed.service';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Subscription, Subject, BehaviorSubject, concat, NEVER, Observable, combineLatest, merge, zip } from 'rxjs';
+import { debounceTime, filter, flatMap, map, skip, switchMap, take } from 'rxjs/operators';
 import { CollectionNode, ConceptNode, VocabularyNode } from 'app/entities/node';
 import { comparingLocalizable } from 'yti-common-ui/utils/comparator';
 import { LanguageService } from './language.service';
 import { MetaModelService } from './meta-model.service';
 import {
-  Action, createEditAction, createNoSelection, createRemoveAction, createSelectAction, EditAction, isEdit, isRemove,
-  isSelect,
-  RemoveAction,
-  SelectAction
+  Action, createEditAction, createNoSelection, createRemoveAction, createSelectAction, extractItem, isEdit, isRemove,
+  isSelect
 } from './action';
 import { ElasticSearchService, IndexedConcept } from './elasticsearch.service';
 import {
@@ -19,27 +18,22 @@ import {
   TextAnalysis
 } from 'app/utils/text-analyzer';
 import { isDefined, assertNever } from 'yti-common-ui/utils/object';
-import { Subject } from 'rxjs/Subject';
 import { removeMatching, replaceMatching, contains } from 'yti-common-ui/utils/array';
 import { FormNode } from './form-state';
 import { MetaModel } from 'app/entities/meta';
-import { TranslateService } from 'ng2-translate';
+import { TranslateService } from '@ngx-translate/core';
 import { PrefixAndNamespace } from 'app/entities/prefix-and-namespace';
-import { Subscription } from 'rxjs/Subscription';
 
 function onlySelect<T>(action: Observable<Action<T>>): Observable<T> {
-  const selectAction: Observable<SelectAction<T>> = action.filter(isSelect);
-  return selectAction.map(a => a.item);
+  return action.pipe(filter(isSelect), map(extractItem));
 }
 
 function onlyEdit<T>(action: Observable<Action<T>>): Observable<T> {
-  const editAction: Observable<EditAction<T>> = action.filter(isEdit);
-  return editAction.map(a => a.item);
+  return action.pipe(filter(isEdit), map(extractItem));
 }
 
 function onlyRemove<T>(action: Observable<Action<T>>): Observable<T> {
-  const removeAction: Observable<RemoveAction<T>> = action.filter(isRemove);
-  return removeAction.map(a => a.item);
+  return action.pipe(filter(isRemove), map(extractItem));
 }
 
 function updateOrRemoveItem<T extends { id: string }>(subject: BehaviorSubject<T[]>, id: string, newItem: T|null) {
@@ -94,13 +88,13 @@ export class ConceptListModel {
   constructor(private elasticSearchService: ElasticSearchService,
               languageService: LanguageService) {
 
-    const initialSearch = this.search$.take(1);
-    const debouncedSearch = this.search$.skip(1).debounceTime(500);
-    const search = initialSearch.concat(debouncedSearch);
-    const conditionChange = Observable.combineLatest(search, this.sortByTime$, this.onlyStatus$, languageService.translateLanguage$);
+    const initialSearch = this.search$.pipe(take(1));
+    const debouncedSearch = this.search$.pipe(skip(1), debounceTime(500));
+    const search = concat(initialSearch, debouncedSearch);
+    const conditionChange = combineLatest(search, this.sortByTime$, this.onlyStatus$, languageService.translateLanguage$);
 
     this.subscriptionToClean.push(
-      this.initializing$.switchMap(initializing => initializing ? Observable.never() : conditionChange)
+      this.initializing$.pipe(switchMap(initializing => initializing ? NEVER : conditionChange))
         .subscribe(() => this.loadConcepts(true))
     );
   }
@@ -118,7 +112,9 @@ export class ConceptListModel {
 
       this.loading = true;
 
-      this.elasticSearchService.getAllConceptsForVocabulary(this.graphId, this.search, this.sortByTime, this.onlyStatus, this.loaded, batchSize)
+      this.elasticSearchService.getAllConceptsForVocabulary(
+        this.graphId, this.search, this.sortByTime, this.onlyStatus, this.loaded, batchSize
+      )
         .subscribe(concepts => {
 
           if (concepts.length < batchSize) {
@@ -200,10 +196,10 @@ export class ConceptHierarchyModel {
   constructor(private elasticSearchService: ElasticSearchService,
               languageService: LanguageService) {
 
-    const conditionChange = Observable.combineLatest(languageService.translateLanguage$);
+    const conditionChange = combineLatest(languageService.translateLanguage$);
 
     this.subscriptionToClean.push(
-      this.initializing$.switchMap(initializing => initializing ? Observable.never() : conditionChange)
+      this.initializing$.pipe(switchMap(initializing => initializing ? NEVER : conditionChange))
         .subscribe(() => this.loadConcepts(true))
     );
   }
@@ -319,19 +315,19 @@ export class CollectionListModel {
 
   constructor(private termedService: TermedService, private languageService: LanguageService) {
 
-    const initialSearch$ = this.search$.take(1);
-    const debouncedSearch$ = this.search$.skip(1).debounceTime(500);
-    const search$ = initialSearch$.concat(debouncedSearch$);
+    const initialSearch$ = this.search$.pipe(take(1));
+    const debouncedSearch$ = this.search$.pipe(skip(1), debounceTime(500));
+    const search$ = concat(initialSearch$, debouncedSearch$);
 
-    this.searchResults = Observable.combineLatest([this.allCollections$, search$, languageService.translateLanguage$], (collections: CollectionNode[], search: string) => {
+    this.searchResults = combineLatest(this.allCollections$, search$, languageService.translateLanguage$).pipe(map(([collections, search]) => {
 
       this.debouncedSearch = search;
       const scoreFilter = (item: TextAnalysis<CollectionNode>) => !search || isDefined(item.matchScore) || item.score < 2;
       const labelExtractor: ContentExtractor<CollectionNode> = collection => collection.label;
-      const scoreAndLabelComparator = scoreComparator().andThen(labelComparator(languageService));
+      const scoreAndLabelComparator = scoreComparator<CollectionNode>().andThen(labelComparator(languageService));
 
       return filterAndSortSearchResults(collections, search, [labelExtractor], [scoreFilter], scoreAndLabelComparator);
-    });
+    }));
   }
 
   initializeGraph(graphId: string) {
@@ -340,7 +336,7 @@ export class CollectionListModel {
     this.loading = true;
 
     this.termedService.getCollectionList(graphId).subscribe(collections => {
-      const sortedCollections = collections.sort(comparingLocalizable<CollectionNode>(this.languageService, collection => collection.label));
+      const sortedCollections = collections.sort(comparingLocalizable(this.languageService, collection => collection.label));
       this.allCollections$.next(sortedCollections);
       this.loading = false;
     });
@@ -400,8 +396,7 @@ export class ConceptViewModelService implements OnDestroy {
               private languageService: LanguageService,
               private translateService: TranslateService) {
 
-    Observable.combineLatest([this.vocabularyAction$, this.resourceAction$],
-      (vocabulary: Action<VocabularyNode>, resource: Action<ConceptNode|CollectionNode>) => [vocabulary, resource])
+    combineLatest(this.vocabularyAction$, this.resourceAction$)
       .subscribe(([vocabularyAction, resourceAction]: [Action<VocabularyNode>, Action<ConceptNode|CollectionNode>]) => {
 
         if (isSelect(vocabularyAction) || isEdit(vocabularyAction)) {
@@ -432,12 +427,12 @@ export class ConceptViewModelService implements OnDestroy {
             this.conceptList.refresh(action.item.id, remove);
             this.conceptHierarchy.refresh(action.item.id, remove);
           } else {
-            this.collectionList.refresh(action.item.id, remove)
+            this.collectionList.refresh(action.item.id, remove);
           }
       }
     });
 
-    Observable.merge(this.vocabularySelect$, this.vocabularyEdit$).subscribe(vocabulary => {
+    merge(this.vocabularySelect$, this.vocabularyEdit$).subscribe(vocabulary => {
       if (languageService.filterLanguage && !contains(vocabulary.languages, languageService.filterLanguage)) {
         languageService.filterLanguage = '';
       }
@@ -495,7 +490,7 @@ export class ConceptViewModelService implements OnDestroy {
     this.conceptHierarchy.initializeGraph(graphId);
     this.collectionList.initializeGraph(graphId);
 
-    Observable.combineLatest(this.termedService.getVocabulary(graphId), this.metaModel)
+    combineLatest(this.termedService.getVocabulary(graphId), this.metaModel)
       .subscribe(([vocabulary, metaModel]) => {
         this.vocabularyAction$.next(createSelectAction(vocabulary));
         this.vocabularyForm = new FormNode(vocabulary, () => vocabulary.languages, metaModel);
@@ -569,10 +564,10 @@ export class ConceptViewModelService implements OnDestroy {
 
       // XXX: when loading first search result is empty array initialization
       if (this.conceptList.loading) {
-        searchResults$ = searchResults$.skip(1);
+        searchResults$ = searchResults$.pipe(skip(1));
       }
 
-      searchResults$.take(1).subscribe(searchResults => {
+      searchResults$.pipe(take(1)).subscribe(searchResults => {
         if (searchResults.length > 0) {
           const firstConcept = searchResults[0];
           this.router.navigate(['/concepts', firstConcept.vocabulary.id, 'concept', firstConcept.id], { skipLocationChange: true });
@@ -595,7 +590,7 @@ export class ConceptViewModelService implements OnDestroy {
 
       this.metaModel.subscribe(metaModel => {
         this.termedService.updateNode(concept, this.concept)
-          .flatMap(() => this.termedService.getConcept(this.graphId, concept.id))
+          .pipe(flatMap(() => this.termedService.getConcept(this.graphId, concept.id)))
           .subscribe({
             next(persistentConcept: ConceptNode) {
               that.resourceAction$.next(createEditAction(persistentConcept.clone()));
@@ -661,7 +656,7 @@ export class ConceptViewModelService implements OnDestroy {
 
       this.metaModel.subscribe(metaModel => {
         this.termedService.updateNode(collection, this.collection)
-          .flatMap(() => this.termedService.getCollection(this.graphId, collection.id))
+          .pipe(flatMap(() => this.termedService.getCollection(this.graphId, collection.id)))
           .subscribe({
             next(persistentCollection: CollectionNode) {
               that.resourceAction$.next(createEditAction(persistentCollection.clone()));
@@ -728,7 +723,7 @@ export class ConceptViewModelService implements OnDestroy {
 
       this.metaModel.subscribe(metaModel => {
         this.termedService.updateNode(vocabulary, this.vocabulary)
-          .flatMap(() => this.termedService.getVocabulary(this.graphId))
+          .pipe(flatMap(() => this.termedService.getVocabulary(this.graphId)))
           .subscribe({
             next(persistentVocabulary: VocabularyNode) {
               that.vocabularyAction$.next(createEditAction(persistentVocabulary.clone()));
@@ -782,23 +777,23 @@ export class ConceptViewModelService implements OnDestroy {
 
     const label$ = this.translateService.get('New concept');
 
-    return Observable.zip(label$, this.metaModel).map(([newConceptLabel, meta]) => {
+    return zip(label$, this.metaModel).pipe(map(([newConceptLabel, meta]) => {
 
       const newConcept = meta.createEmptyConcept(vocabulary, nodeId);
       newConcept.prefLabel = [{ lang: this.languageService.language, value: newConceptLabel }];
       return newConcept;
-    });
+    }));
   }
 
   createEmptyCollection(vocabulary: VocabularyNode, nodeId: string): Observable<CollectionNode> {
 
     const label$ = this.translateService.get('New collection');
 
-    return Observable.zip(label$, this.metaModel).map(([newCollectionLabel, meta]) => {
+    return zip(label$, this.metaModel).pipe(map(([newCollectionLabel, meta]) => {
       const newCollection = meta.createEmptyCollection(vocabulary, nodeId);
       newCollection.prefLabel = [ { lang: this.languageService.language, value: newCollectionLabel }];
       return newCollection;
-    });
+    }));
   }
 
   refreshConcepts() {

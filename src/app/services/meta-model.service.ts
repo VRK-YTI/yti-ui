@@ -1,8 +1,7 @@
-import { URLSearchParams } from '@angular/http';
-import { Observable, ReplaySubject } from 'rxjs';
+import { Observable, ReplaySubject, of, forkJoin, zip } from 'rxjs';
+import { map, flatMap, publishReplay, refCount, tap } from 'rxjs/operators';
 import { groupBy, index, normalizeAsArray } from 'yti-common-ui/utils/array';
 import { Injectable } from '@angular/core';
-import { TermedHttp } from './termed-http.service';
 import { Graph } from 'app/entities/graph';
 import { GraphMeta, MetaModel, ReferenceMeta } from 'app/entities/meta';
 import { NodeMetaInternal } from 'app/entities/meta-api';
@@ -10,6 +9,8 @@ import { asLocalizable } from 'yti-common-ui/utils/localization';
 import { KnownNode, Node, Referrer } from 'app/entities/node';
 import { getOrCreate } from 'yti-common-ui/utils/map';
 import { apiUrl } from 'app/config';
+import { HttpClient } from '@angular/common/http';
+import { requireDefined } from 'yti-common-ui/utils/object';
 
 @Injectable()
 export class MetaModelService {
@@ -17,9 +18,9 @@ export class MetaModelService {
   private metaCache = new Cache<string, GraphMeta>(graphMeta => graphMeta.graphId);
   private templates = new ReplaySubject<GraphMeta[]>();
 
-  constructor(private http: TermedHttp) {
+  constructor(private http: HttpClient) {
 
-    const graphMetas$ = this.createAllGraphMetas().publishReplay(1).refCount();
+    const graphMetas$ = this.createAllGraphMetas().pipe(publishReplay(1), refCount());
 
     this.metaCache.init(graphMetas$);
 
@@ -30,23 +31,24 @@ export class MetaModelService {
   }
 
   getMeta(graphId: string): Observable<MetaModel> {
-    return this.getGraphMeta(graphId).flatMap(graphMeta => this.createMetaModel(graphMeta));
+    return this.getGraphMeta(graphId).pipe(flatMap(graphMeta => this.createMetaModel(graphMeta)));
   }
 
   getGraphMeta(graphId: string): Observable<GraphMeta> {
 
     return this.metaCache.getOrCreate(graphId, () =>
-      this.getGraph(graphId).flatMap(graph => this.createGraphMeta(graph)));
+      this.getGraph(graphId).pipe(flatMap(graph => this.createGraphMeta(graph))));
   }
 
   private createAllGraphMetas(): Observable<GraphMeta[]> {
-    return Observable.zip(this.getGraphs(), this.getAllMetaNodesByGraph())
-      .map(([graphs, metaNodesByGraph]) => graphs.map(graph => MetaModelService.createGraphMetaFromNodeMetas(graph, metaNodesByGraph.get(graph.id) || [])));
+    return zip(this.getGraphs(), this.getAllMetaNodesByGraph())
+      .pipe(map(([graphs, metaNodesByGraph]) =>
+        graphs.map(graph => MetaModelService.createGraphMetaFromNodeMetas(graph, metaNodesByGraph.get(graph.id) || []))));
   }
 
   private createGraphMeta(graph: Graph): Observable<GraphMeta> {
-    return this.getMetaNodes(graph.id).map(nodeMetasInGraph =>
-      MetaModelService.createGraphMetaFromNodeMetas(graph, nodeMetasInGraph));
+    return this.getMetaNodes(graph.id).pipe(map(nodeMetasInGraph =>
+      MetaModelService.createGraphMetaFromNodeMetas(graph, nodeMetasInGraph)));
   }
 
   private static createGraphMetaFromNodeMetas(graph: Graph, nodeMetasInGraph: NodeMetaInternal[]) {
@@ -69,11 +71,11 @@ export class MetaModelService {
 
     // necessary optimization since forkJoin doesn't ever complete with empty observables array
     if (externalGraphs.size === 0) {
-      return Observable.of(new MetaModel([graphMeta]));
+      return of(new MetaModel([graphMeta]));
     }
 
-    return Observable.forkJoin(Array.from(externalGraphs).map(graph => this.getGraphMeta(graph)))
-      .map(graphMetas => new MetaModel([graphMeta, ...graphMetas]));
+    return forkJoin(Array.from(externalGraphs).map(graph => this.getGraphMeta(graph)))
+      .pipe(map(graphMetas => new MetaModel([graphMeta, ...graphMetas])));
   }
 
   getReferrersByMeta<N extends KnownNode | Node<any>>(referrer: Referrer): Observable<{ meta: ReferenceMeta, nodes: N[] }[]> {
@@ -92,13 +94,13 @@ export class MetaModelService {
       return Array.from(references.entries()).map((entry => ({meta: entry[0], nodes: entry[1]})));
     }
 
-    const referrerNodes = Observable.forkJoin(
+    const referrerNodes = forkJoin(
       referrer.values.map(nodeExternal =>
-        this.getMeta(nodeExternal.type.graph.id).map(meta =>
-          Node.create(nodeExternal, meta, true) as N))
+        this.getMeta(nodeExternal.type.graph.id).pipe(map(meta =>
+          Node.create(nodeExternal, meta, true) as N)))
     );
 
-    return referrerNodes.map(nodes => groupByMeta(nodes));
+    return referrerNodes.pipe(map(nodes => groupByMeta(nodes)));
   }
 
   getMetaTemplates(): Observable<GraphMeta[]> {
@@ -106,28 +108,30 @@ export class MetaModelService {
   }
 
   private getGraph(graphId: string): Observable<Graph> {
-    return this.http.get(`${apiUrl}/graphs/${graphId}`)
-      .map(response => response.json() as Graph);
+    return this.http.get<Graph>(`${apiUrl}/graphs/${graphId}`);
   }
 
   private getGraphs(): Observable<Graph[]> {
-    return this.http.get(`${apiUrl}/graphs`)
-      .map(response => normalizeAsArray(response.json()) as Graph[]);
+    return this.http.get<Graph[]>(`${apiUrl}/graphs`)
+      .pipe(map(normalizeAsArray));
   }
 
   private getMetaNodes(graphId: string): Observable<NodeMetaInternal[]> {
 
-    const params = new URLSearchParams();
-    params.append('graphId', graphId);
+    const params = {
+      graphId
+    };
 
-    return this.http.get(`${apiUrl}/types`, { params })
-      .map(response => normalizeAsArray(response.json()) as NodeMetaInternal[]);
+    return this.http.get<NodeMetaInternal[]>(`${apiUrl}/types`, { params })
+      .pipe(map(normalizeAsArray));
   }
 
   private getAllMetaNodesByGraph(): Observable<Map<string, NodeMetaInternal[]>> {
-    return this.http.get(`${apiUrl}/types`)
-      .map(response => normalizeAsArray(response.json()) as NodeMetaInternal[])
-      .map(allNodes => groupBy(allNodes, node => node.graph.id));
+    return this.http.get<NodeMetaInternal[]>(`${apiUrl}/types`)
+      .pipe(
+        map(normalizeAsArray),
+        map(allNodes => groupBy(allNodes, node => node.graph.id))
+      );
   }
 }
 
@@ -146,25 +150,29 @@ class Cache<K, V> {
   }
 
   update(value$: Observable<V>): Observable<V> {
-    return Observable.zip(this.cache, value$)
-      .do(([cache, value]) => cache.set(this.keyExtractor(value), value))
-      .map(([cache, value]) => value);
+    return zip(this.cache, value$)
+      .pipe(
+        tap(([cache, value]) => cache.set(this.keyExtractor(value), value)),
+        map(([cache, value]) => value)
+      );
   }
 
   remove(key$: Observable<K>): Observable<K> {
-    return Observable.zip(this.cache, key$)
-      .do(([cache, key]) => cache.delete(key))
-      .map(([cache, key]) => key);
+    return zip(this.cache, key$)
+      .pipe(
+        tap(([cache, key]) => cache.delete(key)),
+        map(([cache, key]) => key)
+      );
   }
 
   getOrCreate(key: K, create: () => Observable<V>): Observable<V> {
-    return this.cache.flatMap(cache => {
+    return this.cache.pipe(flatMap(cache => {
       if (cache.has(key)) {
-        return Observable.of(cache.get(key));
+        return of(requireDefined(cache.get(key)));
       } else {
-        return create().do(value => cache.set(key, value));
+        return create().pipe(tap(value => cache.set(key, value)));
       }
-    });
+    }));
   }
 }
 

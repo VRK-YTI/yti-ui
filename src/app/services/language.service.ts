@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { TranslateService } from 'ng2-translate';
+import { TranslateService } from '@ngx-translate/core';
 import { Localizable, Localizer, Language } from 'yti-common-ui/types/localization';
 import { isDefined } from 'yti-common-ui/utils/object';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject, combineLatest } from 'rxjs';
 
 export { Language, Localizer };
 
@@ -20,7 +19,7 @@ export class LanguageService implements Localizer {
     translateService.setDefaultLang('en');
     this.language$.subscribe(lang => this.translateService.use(lang));
 
-    Observable.combineLatest(this.language$, this.filterLanguage$)
+    combineLatest(this.language$, this.filterLanguage$)
       .subscribe(([lang, filterLang]) => this.translateLanguage$.next(filterLang || lang));
   }
 

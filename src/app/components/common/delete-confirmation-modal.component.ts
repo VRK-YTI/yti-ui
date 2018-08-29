@@ -4,7 +4,7 @@ import { Node } from 'app/entities/node';
 import { ReferenceMeta } from 'app/entities/meta';
 import { flatten } from 'yti-common-ui/utils/array';
 import { MetaModelService } from 'app/services/meta-model.service';
-import { Observable } from 'rxjs/Observable';
+import { forkJoin } from 'rxjs';
 import { ModalService } from 'app/services/modal.service';
 
 @Injectable()
@@ -76,7 +76,7 @@ export class DeleteConfirmationModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    Observable.forkJoin(this.node.getAllReferrers()
+    forkJoin(this.node.getAllReferrers()
       .map(referrer => this.metaModelService.getReferrersByMeta<Node<any>>(referrer))
     ).subscribe(referrers => this.references = flatten(referrers));
   }

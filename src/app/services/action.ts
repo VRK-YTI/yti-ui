@@ -1,14 +1,16 @@
-export interface NoSelectionAction<T> { type: 'noselect' }
+export interface NoSelectionAction { type: 'noselect' }
 export interface SelectAction<T> { item: T, type: 'select' }
 export interface EditAction<T> { item: T, type: 'edit' }
 export interface RemoveAction<T> { item: T, type: 'remove' }
 
-export type Action<T> = NoSelectionAction<T>
-                      | SelectAction<T>
-                      | EditAction<T>
-                      | RemoveAction<T>;
+export type ActionWithItem<T> = SelectAction<T>
+                              | EditAction<T>
+                              | RemoveAction<T>;
 
-export function createNoSelection<T>(): NoSelectionAction<T> {
+export type Action<T> = NoSelectionAction
+                      | ActionWithItem<T>;
+
+export function createNoSelection(): NoSelectionAction {
   return { type: 'noselect' };
 }
 
@@ -34,4 +36,8 @@ export function isEdit<T>(action: Action<T>): action is EditAction<T> {
 
 export function isRemove<T>(action: Action<T>): action is RemoveAction<T> {
   return action.type === 'remove';
+}
+
+export function extractItem<T>(action: ActionWithItem<T>) {
+  return action.item;
 }
