@@ -44,7 +44,7 @@
     "uuid": "3.0.1",
     "vis": "^4.19.1",
     "web-animations-js": "^2.2.5",
-    "yti-common-ui": "https://github.com/VRK-YTI/yti-common-ui.git/#23a14f91222ed3d6bbe0c4739a9ace7eee1e3732",
+    "yti-common-ui": "https://github.com/VRK-YTI/yti-common-ui.git/#79b7b824f8251430025a45ffb7caa268b62a8274",
     "zone.js": "0.8.4"
   },
   "devDependencies": {

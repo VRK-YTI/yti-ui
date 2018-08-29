@@ -4,6 +4,9 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+msgid "Controlled Vocabularies"
+msgstr ""
+
 msgid "Search collection"
 msgstr ""
 
@@ -130,9 +133,6 @@ msgstr ""
 msgid "Remove term"
 msgstr ""
 
-msgid "Controlled Vocabularies"
-msgstr ""
-
 msgid "Impersonate user"
 msgstr ""
 
@@ -220,13 +220,22 @@ msgstr ""
 msgid "Search organization"
 msgstr ""
 
-msgid "Search vocabularies"
-msgstr ""
-
-msgid "Classification"
+msgid "Search term"
 msgstr ""
 
 msgid "Add vocabulary"
+msgstr ""
+
+msgid "ToolInfo"
+msgstr ""
+
+msgid "Search vocabularies"
+msgstr ""
+
+msgid "Filter with classification"
+msgstr ""
+
+msgid "Classification"
 msgstr ""
 
 msgid "vocabulary"

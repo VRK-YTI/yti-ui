@@ -62,7 +62,7 @@ msgid "Search concept"
 msgstr "Hae käsitettä"
 
 msgid "Filter results"
-msgstr "Rajaa hakutuloksia"
+msgstr "Suodata hakutuloksia"
 
 msgid "Order by modified date"
 msgstr "Järjestä muokkausajan mukaan"
@@ -232,11 +232,20 @@ msgstr "Valitse luokitus"
 msgid "Search organization"
 msgstr "Hae organisaatiota"
 
+msgid "ToolInfo"
+msgstr "Sanastot-työkalulla kerätään ja ylläpidetään julkishallinnon yhteisiä terminologisia sanastoja ja käsitteitä. Esimerkiksi sanastotyöntekijät ja tietomallintajat voivat määritellä Sanastoissa käsitteitä ja käsitteiden suhteita toisiinsa, minkä lisäksi käsitteiden väliset suhteet saa myös visualisoitua kuvaksi. Kansalainen puolestaan voi selata ja tarkistaa käsitteitä ja niiden määrityksiä."
+
 msgid "Search vocabularies"
 msgstr "Hae sanastoja"
 
+msgid "Filter with classification"
+msgstr "Rajaa tietoalueella"
+
 msgid "Classification"
 msgstr "Luokitus"
+
+msgid "Search term"
+msgstr "Hakusana"
 
 msgid "Add vocabulary"
 msgstr "Lisää sanasto"

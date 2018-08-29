@@ -18,26 +18,32 @@ import { Subscription } from 'rxjs/Subscription';
   selector: 'app-vocabularies',
   styleUrls: ['./vocabularies.component.scss'],
   template: `
-    <div *ngIf="!loading">
+    <div class="vocabularies-container" *ngIf="!loading">
 
+      <button class="btn btn-action pull-right" id="add_vocabulary_button" *ngIf="canAddVocabulary()" (click)="addVocabulary()">
+        <span translate>Add vocabulary</span>
+      </button>
+      
+      <h4 class="tool-inner-title" translate>Controlled Vocabularies</h4>
+      <div class="tool-info"><p translate>ToolInfo</p></div>
+
+      <div><span class="search-label" translate>Search vocabularies</span></div>
       <div class="row">
-        <div class="col-md-4 mb-3">
+        <div class="col-md-6 mb-3">
           <div class="input-group input-group-lg input-group-search">
             <input class="form-control"
                    id="vocabularies_search_input"
                    type="text"
                    [(ngModel)]="search"
-                   placeholder="{{'Search vocabularies' | translate}}"/>
+                   placeholder="{{'Search term' | translate}}"/>
           </div>
         </div>
       </div>
 
+      <div><span class="search-label" translate>Filter with classification</span></div>
       <div class="row">
-
         <div class="col-md-4">
           <div class="content-box">
-            <h4 class="strong" translate>Classification</h4>
-
             <div class="classification"
                  *ngFor="let classification of classifications"
                  [class.active]="isClassificationSelected(classification.node)"
@@ -52,26 +58,24 @@ import { Subscription } from 'rxjs/Subscription';
 
         <div class="col-md-8">
 
-          <div class="row mb-4">
-            <div class="col-md-12">
+          <div class="content-box result-list-container">
 
-              <app-organization-filter-dropdown [filterSubject]="organization$"
-                                                id="organization_filter_dropdown"
-                                                [organizations]="organizations$"></app-organization-filter-dropdown>
-              
-              <app-filter-dropdown class="pull-left ml-2"
-                                   id="vocabulary_type_filter_dropdown"
-                                   [options]="vocabularyTypes"
-                                   [filterSubject]="vocabularyType$"></app-filter-dropdown>
-
-
-              <button class="btn btn-action pull-right" id="add_vocabulary_button" *ngIf="canAddVocabulary()" (click)="addVocabulary()">
-                <span translate>Add vocabulary</span>
-              </button>
+            <div class="row mb-4">
+              <div class="col-md-12">
+  
+                <div class="inline-label pull-left"><span class="search-label" translate>Filter results</span></div>
+  
+                <app-organization-filter-dropdown [filterSubject]="organization$"
+                                                  id="organization_filter_dropdown"
+                                                  [organizations]="organizations$"></app-organization-filter-dropdown>
+                
+                <app-filter-dropdown class="pull-left ml-2"
+                                     id="vocabulary_type_filter_dropdown"
+                                     [options]="vocabularyTypes"
+                                     [filterSubject]="vocabularyType$"></app-filter-dropdown>
+  
+              </div>
             </div>
-          </div>
-
-          <div class="content-box">
 
             <div class="row mb-4">
               <div class="col-md-12">
@@ -85,20 +89,30 @@ import { Subscription } from 'rxjs/Subscription';
 
             <div class="row">
               <div class="col-md-12">
-                <div class="vocabulary" *ngFor="let vocabulary of filteredVocabularies" [id]="vocabulary.idIdentifier + '_vocabulary_navigation'" (click)="navigate(vocabulary)">
+                <div class="result-list-item" *ngFor="let vocabulary of filteredVocabularies">
+                  <div class="vocabulary" [id]="vocabulary.idIdentifier + '_vocabulary_navigation'" (click)="navigate(vocabulary)">
+  
+                    <span class="type">{{vocabulary.typeLabel | translateValue:true}}</span>
+  
+                    <app-status class="status" [status]="vocabulary.status"></app-status>
 
-                  <span class="name">{{vocabulary.label | translateValue:true}}</span>
+                    <span class="organizations">
+                      <span class="organization" *ngFor="let contributor of vocabulary.contributors">
+                        {{contributor.label | translateValue:true}}
+                      </span>
+                    </span>
+                    
+                    <span class="name">{{vocabulary.label | translateValue:true}}</span>
 
-                  <span class="organization" *ngFor="let contributor of vocabulary.contributors">
-                    {{contributor.label | translateValue:true}}
-                  </span>
+                    <ul class="groups">
+                      <li class="group" *ngFor="let group of vocabulary.groups">
+                        {{group.label | translateValue:true}}
+                      </li>
+                    </ul>
 
-                  <span class="group" *ngFor="let group of vocabulary.groups">
-                    {{group.label | translateValue:true}}
-                  </span>
-
-                  <span class="type">{{vocabulary.typeLabel | translateValue:true}}</span>
-
+                    <span class="description">{{vocabulary.description | translateValue:true}}</span>
+  
+                  </div>
                 </div>
               </div>
             </div>

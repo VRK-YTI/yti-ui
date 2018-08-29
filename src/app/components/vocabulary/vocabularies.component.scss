@@ -1,5 +1,42 @@
 @import '~yti-common-ui/theme/variables';
 
+.vocabularies-container {
+
+  .tool-inner-title {
+    display: none;
+  }
+
+  .tool-info {
+    width: calc(100% - 200px);
+  }
+
+  .search-label {
+    font-weight: bolder;
+    font-size: smaller;
+    padding-bottom: 0.55rem;
+  }
+
+  .inline-label {
+    padding: 0.55rem 0.55rem 0.55rem 0rem;
+  }
+
+  .result-list-container {
+    padding-bottom: 0px;
+  }
+
+  .result-list-item {
+    border-top: 1px solid $gray-500;
+    margin-left: -25px;
+    margin-right: -25px;
+    padding-left: 25px;
+    padding-right: 25px;
+  }
+}
+
+#add_vocabulary_button {
+  margin-bottom: 30px;
+}
+
 .classification {
 
   display: inline-block;
@@ -31,6 +68,8 @@
   display: inline-block;
   width: 100%;
   padding: 5px 10px 5px 5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
   cursor: pointer;
   border-left: $active-indicator-width solid $white;
 
@@ -39,28 +78,60 @@
   }
 
   .name {
-    color: $primary;
+    color: $blue-link;
+    font-family: $font-family-sans-semibold;
     font-size: large;
-    float: left;
-    clear: left;
-    width: calc(100% - 300px);
+    font-weight: 400;
+    width: calc(100% - 200px);
+    display: block;
   }
 
-  @mixin info() {
-    float: right;
-    clear: right;
-    color: $gray-700;
+  .description {
+    display: block;
+    margin-top: 15px;
+    width: calc(100% - 200px);
+  }
+
+  ul.groups {
+    display: block;
+    margin: 0px;
+    padding: 0px;
+
+    li.group {
+      display: inline-block;
+      color: $gray-k40;
+      font-family: $font-family-sans-semibold;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      line-height: 0.9375rem;
+    }
+
+    li:not(:empty)~:not(:empty):before {
+      content: "·";
+      padding-left: .66667em;
+      padding-right: .66667em
+    }
+  }
+
+  .organizations {
+    display : block;
   }
 
   .organization {
-    @include info;
-  }
-
-  .group {
-    @include info;
+    display: inline-block;
+    color: $gray-k40;
+    font-size: 0.75rem;
   }
 
   .type {
-    @include info;
+    float: right;
+    clear: right;
+    color: $gray-k40;
+    margin-bottom: 0.5rem;
+  }
+
+  .status {
+    float: right;
+    clear: right;
   }
 }

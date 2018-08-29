@@ -230,6 +230,10 @@ msgstr ""
 msgid "Search organization"
 msgstr ""
 
+
+msgid "ToolInfo"
+msgstr "Controlled Vocabularies tool is used to collect, maintain and publish common terminologic vocabularies. Terms and relations can be defined by, e.g., data modelers, and the citizens may check the definitions."
+
 msgid "Search vocabularies"
 msgstr ""
 

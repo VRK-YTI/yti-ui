@@ -44,7 +44,7 @@ interface UserOrganizationRoles {
         <label translate>Organizations and roles</label>
         <div class="form-control-static">
           <div *ngFor="let userOrganization of userOrganizations">
-            <div *ngIf="userOrganization.organization">{{userOrganization.organization.label | translateValue:true}}</div>
+            <div *ngIf="userOrganization.organization">{{userOrganization.organization!.label | translateValue:true}}</div>
             <div *ngIf="!userOrganization.organization" translate>Unknown organization</div>
             <ul>
               <li *ngFor="let role of userOrganization.roles">{{role | translate}}</li>
