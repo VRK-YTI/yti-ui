@@ -232,7 +232,7 @@ msgstr ""
 
 
 msgid "ToolInfo"
-msgstr "Controlled Vocabularies tool is used to collect, maintain and publish common terminologic vocabularies. Terms and relations can be defined by, e.g., data modelers, and the citizens may check the definitions."
+msgstr "Controlled Vocabularies tool is used to collect, maintain and publish common terminological vocabularies of public administration. Data modelers may use the tool to define terms and relations. Terms, their definitions and even visualization of relations between the terms are publicly available for everyone interested."
 
 msgid "Search vocabularies"
 msgstr ""
