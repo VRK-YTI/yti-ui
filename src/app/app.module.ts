@@ -84,14 +84,27 @@ import { apiUrl } from './config';
 import { LogoComponent } from './components/navigation/logo.component';
 import { HttpClientModule } from '@angular/common/http';
 
-const localizations: { [lang: string]: string} = {
+function removeEmptyValues(obj: {}) {
+
+  const result: any = {};
+
+  for (const [key, value] of Object.entries(obj)) {
+    if (!!value) {
+      result[key] = value;
+    }
+  }
+
+  return result;
+}
+
+const localizations: { [lang: string]: any } = {
   fi: {
-    ...JSON.parse(require('raw-loader!po-loader?format=mf!../../po/fi.po')),
-    ...JSON.parse(require('raw-loader!po-loader?format=mf!yti-common-ui/po/fi.po'))
+    ...removeEmptyValues(JSON.parse(require(`raw-loader!po-loader?format=mf!../../po/fi.po`))),
+    ...removeEmptyValues(JSON.parse(require(`raw-loader!po-loader?format=mf!yti-common-ui/po/fi.po`)))
   },
   en: {
-    ...JSON.parse(require('raw-loader!po-loader?format=mf!../../po/en.po')),
-    ...JSON.parse(require('raw-loader!po-loader?format=mf!yti-common-ui/po/en.po'))
+    ...removeEmptyValues(JSON.parse(require(`raw-loader!po-loader?format=mf!../../po/en.po`))),
+    ...removeEmptyValues(JSON.parse(require(`raw-loader!po-loader?format=mf!yti-common-ui/po/en.po`)))
   }
 };
 
@@ -224,8 +237,9 @@ const appRoutes: Routes = [
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
-        useFactory: createTranslateLoader
-      }
+        useFactory: createTranslateLoader,
+      },
+      missingTranslationHandler: { provide: MissingTranslationHandler, useFactory: createMissingTranslationHandler },
     }),
     YtiCommonModule
   ],
@@ -234,7 +248,6 @@ const appRoutes: Routes = [
     { provide: LOCALIZER, useExisting: LanguageService },
     TermedService,
     MetaModelService,
-    { provide: MissingTranslationHandler, useFactory: createMissingTranslationHandler },
     LanguageService,
     LocationService,
     SearchConceptModalService,
