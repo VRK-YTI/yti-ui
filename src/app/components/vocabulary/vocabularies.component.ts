@@ -12,6 +12,7 @@ import { LanguageService } from 'app/services/language.service';
 import { VocabularyNodeType } from 'app/entities/node-api';
 import { FilterOptions } from 'yti-common-ui/components/filter-dropdown.component';
 import { TranslateService } from '@ngx-translate/core';
+import { getGroupSvgIcon, getVocabularyTypeMaterialIcon } from 'yti-common-ui/utils/icons';
 
 @Component({
   selector: 'app-vocabularies',
@@ -19,7 +20,7 @@ import { TranslateService } from '@ngx-translate/core';
   template: `
     <div class="vocabularies-container" *ngIf="!loading">
 
-      <button class="btn btn-action pull-right" id="add_vocabulary_button" *ngIf="canAddVocabulary()" (click)="addVocabulary()">
+      <button class="btn btn-action float-right" id="add_vocabulary_button" *ngIf="canAddVocabulary()" (click)="addVocabulary()">
         <span translate>Add vocabulary</span>
       </button>
       
@@ -49,8 +50,9 @@ import { TranslateService } from '@ngx-translate/core';
                  [id]="classification.node.idIdentifier + '_classification_toggle'"
                  (click)="toggleClassification(classification.node)">
 
-              <span class="name">{{classification.node.label | translateValue:true}}</span>
+              <img [src]="groupIconSrc(classification.node.getProperty('notation').literalValue)">
               <span class="count">({{classification.count}})</span>
+              <span class="name">{{classification.node.label | translateValue:true}}</span>
             </div>
           </div>
         </div>
@@ -91,7 +93,7 @@ import { TranslateService } from '@ngx-translate/core';
                 <div class="result-list-item" *ngFor="let vocabulary of filteredVocabularies">
                   <div class="vocabulary" [id]="vocabulary.idIdentifier + '_vocabulary_navigation'" (click)="navigate(vocabulary)">
   
-                    <span class="type">{{vocabulary.typeLabel | translateValue:true}}</span>
+                    <span class="type"><i class="material-icons">{{vocabularyTypeIconName(vocabulary.type)}}</i>{{vocabulary.typeLabel | translateValue:true}}</span>
   
                     <app-status class="status" [status]="vocabulary.status"></app-status>
 
@@ -245,4 +247,7 @@ export class VocabulariesComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.subscriptionToClean.forEach(s => s.unsubscribe());
   }
+
+  vocabularyTypeIconName = getVocabularyTypeMaterialIcon;
+  groupIconSrc = getGroupSvgIcon;
 }

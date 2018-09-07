@@ -58,9 +58,11 @@
 
 .classification {
 
-  display: inline-block;
+  display: block;
   width: 100%;
-  padding: 5px 10px 5px 5px;
+  padding: 0px 10px 0px 5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
   cursor: pointer;
   border-left: $active-indicator-width solid $white;
 
@@ -73,12 +75,22 @@
   }
 
   .name {
-    float: left;
+    line-height: 36px;
+    vertical-align: middle;
   }
 
   .count {
     float: right;
     color: $primary;
+    line-height: 36px;
+    vertical-align: middle;
+  }
+
+  img {
+    float: left;
+    width: 36px;
+    height: 36px;
+    margin: 0px 10px 0px 0px;
   }
 }
 
@@ -127,6 +139,12 @@
     clear: right;
     color: $gray-k40;
     margin-bottom: 0.5rem;
+
+    i.material-icons {
+      color: $orange;
+      margin-right: 5px;
+      vertical-align: middle;
+    }
   }
 
   .status {
