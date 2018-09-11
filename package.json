@@ -4,6 +4,7 @@
   "license": "EUPL-1.1",
   "scripts": {
     "ng": "node -- node_modules/@angular/cli/bin/ng",
+    "ts-node": "node -- node_modules/ts-node/dist/bin.js -P scripts/tsconfig.script.json --skip-ignore",
     "start": "ng serve --proxy-config proxy.conf.json",
     "start-dev": "ng serve --proxy-config proxy-dev.conf.json --ssl true",
     "build": "ng build",
@@ -11,7 +12,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "create-translations": "node -- node_modules/@biesbjerg/ngx-translate-extract/bin/cli.js --input ./src/app --output ./po/template.pot --format=pot --clean",
-    "load-examples": "node -- node_modules/ts-node/dist/bin.js scripts/load-examples.ts"
+    "load-examples": "npm run ts-node -- scripts/load-examples.ts"
   },
   "private": true,
   "dependencies": {
@@ -71,6 +72,7 @@
     "po2json": "0.4.5",
     "protractor": "~5.4.0",
     "ts-node": "~5.0.1",
+    "tsconfig-paths": "^3.6.0",
     "tslint": "~5.9.1",
     "typescript": "~2.7.2"
   },

@@ -1,0 +1,13 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "baseUrl": "src",
+    "paths": {
+    }
+  },
+  "include": [
+    "**/*.ts",
+    "node_modules/yti-common-ui/**/*.ts"
+  ]
+}
