@@ -13,6 +13,7 @@
   ],
   "include": [
     "**/*.spec.ts",
-    "**/*.d.ts"
+    "**/*.d.ts",
+    "../node_modules/yti-common-ui/**/*.ts"
   ]
 }
