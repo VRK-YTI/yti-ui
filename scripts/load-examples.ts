@@ -1,4 +1,7 @@
-import { default as fetch, Response } from 'node-fetch';
+// import { default as fetch, Response } from 'node-fetch';
+import { Response }  from 'node-fetch';
+
+const fetch = require('node-fetch');
 
 const jhs = require('../examples/jhs.json');
 const jhsVocabulary = require('../examples/jhs-vocabulary.json');
