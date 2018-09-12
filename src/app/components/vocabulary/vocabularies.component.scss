@@ -1,5 +1,21 @@
 @import '~yti-common-ui/theme/variables';
 
+.badge {
+  font-family: $font-family-sans-semibold;
+  border-radius: 2px;
+  padding: 0.25rem 0.5rem 0.25rem 0.5rem;
+  font-size: 0.85rem;
+
+  & + & {
+    margin-left: 0.5rem;
+  }
+
+  &-info {
+    color: $black;
+    background-color: #edf3f9;
+  }
+}
+
 .vocabularies-container {
 
   .tool-inner-title {
@@ -120,12 +136,16 @@
   .description {
     display: block;
     margin-top: 15px;
+    margin-bottom: 5px;
     width: calc(100% - 200px);
+
+    &:empty {
+      display: none;
+    }
   }
 
   .group {
     font-family: $font-family-sans-semibold;
-    text-transform: uppercase;
   }
 
   .organizations {

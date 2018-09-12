@@ -97,22 +97,22 @@ import { getGroupSvgIcon, getVocabularyTypeMaterialIcon } from 'yti-common-ui/ut
   
                     <app-status class="status" [status]="vocabulary.status"></app-status>
 
+                    <span class="name">{{vocabulary.label | translateValue:true}}</span>
+
+                    <span class="description">{{vocabulary.description | translateValue:true}}</span>
+
+                    <span class="groups">
+                      <span class="group badge badge-info" *ngFor="let group of vocabulary.groups">
+                        {{group.label | translateValue:true}}
+                      </span>
+                    </span>
+
                     <ul class="organizations dot-separated-list">
                       <li class="organization" *ngFor="let contributor of vocabulary.contributors">
                         {{contributor.label | translateValue:true}}
                       </li>
                     </ul>
-                    
-                    <span class="name">{{vocabulary.label | translateValue:true}}</span>
 
-                    <ul class="groups dot-separated-list">
-                      <li class="group" *ngFor="let group of vocabulary.groups">
-                        {{group.label | translateValue:true}}
-                      </li>
-                    </ul>
-
-                    <span class="description">{{vocabulary.description | translateValue:true}}</span>
-  
                   </div>
                 </div>
               </div>
