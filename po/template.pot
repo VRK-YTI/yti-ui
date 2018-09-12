@@ -79,10 +79,10 @@ msgstr ""
 msgid "Namespace"
 msgstr ""
 
-msgid "Choose concept"
+msgid "Select concept"
 msgstr ""
 
-msgid "Select concept"
+msgid "Choose concept"
 msgstr ""
 
 msgid "Choose reference type"
@@ -235,13 +235,10 @@ msgstr ""
 msgid "Filter with classification"
 msgstr ""
 
-msgid "Classification"
+msgid "result"
 msgstr ""
 
-msgid "vocabulary"
-msgstr ""
-
-msgid "vocabularies"
+msgid "results"
 msgstr ""
 
 msgid "Show vocabulary details"

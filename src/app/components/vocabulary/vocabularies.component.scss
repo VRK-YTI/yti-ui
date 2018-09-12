@@ -1,18 +1,20 @@
 @import '~yti-common-ui/theme/variables';
 
+$light-blue-background: #edf3f9 !default;
+
 .badge {
   font-family: $font-family-sans-semibold;
   border-radius: 2px;
   padding: 0.25rem 0.5rem 0.25rem 0.5rem;
   font-size: 0.85rem;
 
-  & + & {
-    margin-left: 0.5rem;
+  & ~ & {
+    margin-left: .66667em;
   }
 
   &-info {
     color: $black;
-    background-color: #edf3f9;
+    background-color: $light-blue-background;
   }
 }
 
@@ -60,7 +62,7 @@
       line-height: 0.9375rem;
     }
 
-    li:not(:empty)~:not(:empty):before {
+    li:not(:empty) ~ li:not(:empty):before {
       content: "·";
       padding-left: .66667em;
       padding-right: .66667em
@@ -80,10 +82,11 @@
   margin-top: 5px;
   margin-bottom: 5px;
   cursor: pointer;
-  border-left: $active-indicator-width solid $white;
+  border: 1px solid $white;
 
   &:hover, &.active {
-    border-left: $active-indicator-width solid $primary;
+    background-color: $light-blue-background;
+    border-color: $gray-500;
   }
 
   &.active {
@@ -117,12 +120,6 @@
   padding: 5px 10px 5px 5px;
   margin-top: 5px;
   margin-bottom: 5px;
-  cursor: pointer;
-  border-left: $active-indicator-width solid $white;
-
-  &:hover {
-    border-left: $active-indicator-width solid $primary;
-  }
 
   .name {
     color: $blue-link;
@@ -144,8 +141,9 @@
     }
   }
 
-  .group {
-    font-family: $font-family-sans-semibold;
+  .groups {
+    display: block;
+    margin: 0.5rem 0 0.5rem 0;
   }
 
   .organizations {

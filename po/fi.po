@@ -241,20 +241,17 @@ msgstr "Hae sanastoja"
 msgid "Filter with classification"
 msgstr "Rajaa tietoalueella"
 
-msgid "Classification"
-msgstr "Luokitus"
-
 msgid "Search term"
 msgstr "Hakusana"
 
 msgid "Add vocabulary"
 msgstr "Lisää sanasto"
 
-msgid "vocabulary"
-msgstr "sanasto"
+msgid "result"
+msgstr "hakutulos"
 
-msgid "vocabularies"
-msgstr "sanastoa"
+msgid "results"
+msgstr "hakutulosta"
 
 msgid "Show vocabulary details"
 msgstr "Näytä sanaston tiedot"

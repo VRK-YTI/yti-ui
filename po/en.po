@@ -237,16 +237,13 @@ msgstr "Controlled Vocabularies tool is used to collect, maintain and publish co
 msgid "Search vocabularies"
 msgstr ""
 
-msgid "Classification"
-msgstr ""
-
 msgid "Add vocabulary"
 msgstr ""
 
-msgid "vocabulary"
+msgid "result"
 msgstr ""
 
-msgid "vocabularies"
+msgid "results"
 msgstr ""
 
 msgid "Show vocabulary details"

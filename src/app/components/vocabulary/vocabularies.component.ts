@@ -81,9 +81,9 @@ import { getGroupSvgIcon, getVocabularyTypeMaterialIcon } from 'yti-common-ui/ut
             <div class="row mb-4">
               <div class="col-md-12">
                 <div>
-                  <strong>{{filteredVocabularies.length}}</strong>
-                  <span *ngIf="filteredVocabularies.length === 1" translate>vocabulary</span>
-                  <span *ngIf="filteredVocabularies.length !== 1" translate>vocabularies</span>
+                  {{filteredVocabularies.length}}
+                  <span *ngIf="filteredVocabularies.length === 1" translate>result</span>
+                  <span *ngIf="filteredVocabularies.length !== 1" translate>results</span>
                 </div>
               </div>
             </div>
@@ -91,13 +91,13 @@ import { getGroupSvgIcon, getVocabularyTypeMaterialIcon } from 'yti-common-ui/ut
             <div class="row">
               <div class="col-md-12">
                 <div class="result-list-item" *ngFor="let vocabulary of filteredVocabularies">
-                  <div class="vocabulary" [id]="vocabulary.idIdentifier + '_vocabulary_navigation'" (click)="navigate(vocabulary)">
+                  <div class="vocabulary" [id]="vocabulary.idIdentifier + '_vocabulary_navigation'">
   
                     <span class="type"><i class="material-icons">{{vocabularyTypeIconName(vocabulary.type)}}</i>{{vocabulary.typeLabel | translateValue:true}}</span>
   
                     <app-status class="status" [status]="vocabulary.status"></app-status>
 
-                    <span class="name">{{vocabulary.label | translateValue:true}}</span>
+                    <a class="name" [routerLink]="['/concepts', vocabulary.graphId]">{{vocabulary.label | translateValue:true}}</a>
 
                     <span class="description">{{vocabulary.description | translateValue:true}}</span>
 
@@ -230,10 +230,6 @@ export class VocabulariesComponent implements OnDestroy {
 
   toggleClassification(classification: GroupNode) {
     this.classification$.next(this.isClassificationSelected(classification) ? null : classification);
-  }
-
-  navigate(vocabulary: VocabularyNode) {
-    this.router.navigate(['/concepts', vocabulary.graphId]);
   }
 
   canAddVocabulary() {
