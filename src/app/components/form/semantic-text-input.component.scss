@@ -17,6 +17,7 @@
   [contenteditable] {
 
     overflow-wrap: break-word;
+    height: auto;
 
     &:focus {
       outline: none;
