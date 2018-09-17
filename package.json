@@ -41,7 +41,7 @@
     "rxjs": "^6.0.0",
     "uuid": "3.0.1",
     "vis": "^4.19.1",
-    "yti-common-ui": "https://github.com/VRK-YTI/yti-common-ui.git/#40a727c81b04901101cca48a5d8311abdf74f99f",
+    "yti-common-ui": "https://github.com/VRK-YTI/yti-common-ui.git/#c52840ff2762da73f5ceebc514fcbc0acafd2578",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {

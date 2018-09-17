@@ -51,8 +51,8 @@ import { getGroupSvgIcon, getVocabularyTypeMaterialIcon } from 'yti-common-ui/ut
                  (click)="toggleClassification(classification.node)">
 
               <img [src]="groupIconSrc(classification.node.getProperty('notation').literalValue)">
-              <span class="count">({{classification.count}})</span>
               <span class="name">{{classification.node.label | translateValue:true}}</span>
+              <span class="count">({{classification.count}})</span>
             </div>
           </div>
         </div>
@@ -99,7 +99,12 @@ import { getGroupSvgIcon, getVocabularyTypeMaterialIcon } from 'yti-common-ui/ut
 
                     <a class="name" [routerLink]="['/concepts', vocabulary.graphId]">{{vocabulary.label | translateValue:true}}</a>
 
-                    <span class="description">{{vocabulary.description | translateValue:true}}</span>
+                    <div class="description-container" [ngClass]="{'expand': fullDescription[vocabulary.graphId]}">
+                        <span class="description">{{vocabulary.description | translateValue:true}}</span>
+                        <div class="limiter-container">
+                          <div class="description-limiter" (click)="toggleFullDescription(vocabulary.graphId)"></div>
+                        </div>
+                    </div>
 
                     <span class="groups">
                       <span class="group badge badge-info" *ngFor="let group of vocabulary.groups">
@@ -139,6 +144,8 @@ export class VocabulariesComponent implements OnDestroy {
 
   vocabulariesLoaded = false;
   subscriptionToClean: Subscription[] = [];
+
+  fullDescription: {[key: string] : boolean} = {};
 
   constructor(private authorizationManager: AuthorizationManager,
               languageService: LanguageService,
@@ -242,6 +249,14 @@ export class VocabulariesComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.subscriptionToClean.forEach(s => s.unsubscribe());
+  }
+
+  toggleFullDescription(graphId: string) {
+    if (this.fullDescription[graphId]) {
+      delete this.fullDescription[graphId];
+    } else {
+      this.fullDescription[graphId] = true;
+    }
   }
 
   vocabularyTypeIconName = getVocabularyTypeMaterialIcon;

@@ -30,7 +30,7 @@ $light-blue-background: #edf3f9 !default;
 
   .search-label {
     font-weight: bolder;
-    font-size: smaller;
+    font-size: 0.86rem;
     padding-bottom: 0.55rem;
   }
 
@@ -76,13 +76,14 @@ $light-blue-background: #edf3f9 !default;
 
 .classification {
 
-  display: block;
+  display: flex;
   width: 100%;
   padding: 0px 10px 0px 5px;
   margin-top: 5px;
   margin-bottom: 5px;
   cursor: pointer;
   border: 1px solid $white;
+  align-items: center;
 
   &:hover, &.active {
     background-color: $light-blue-background;
@@ -93,23 +94,24 @@ $light-blue-background: #edf3f9 !default;
     font-weight: 500;
   }
 
-  .name {
-    line-height: 36px;
-    vertical-align: middle;
-  }
-
-  .count {
-    float: right;
-    color: $primary;
-    line-height: 36px;
-    vertical-align: middle;
-  }
-
   img {
-    float: left;
     width: 36px;
     height: 36px;
     margin: 0px 10px 0px 0px;
+    flex: 0 0 auto;
+  }
+
+  .name {
+    min-width: 0px;
+    flex: 1 1 auto;
+    overflow: hidden;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+
+  .count {
+    color: $primary;
+    flex: 0 0 auto;
   }
 }
 
@@ -130,16 +132,59 @@ $light-blue-background: #edf3f9 !default;
     display: block;
   }
 
-  .description {
-    display: block;
-    margin-top: 15px;
-    margin-bottom: 5px;
+  .description-container {
+    position: relative;
     width: calc(100% - 200px);
+    line-height: 1.5em;
+    max-height: 7em;
+    overflow: hidden;
 
-    &:empty {
-      display: none;
+    .description {
+      display: block;
+      margin-top: 1em;
+      margin-bottom: 0.3em;
+      z-index: 1;
+
+      &:empty {
+        display: none;
+      }
     }
+
+    .limiter-container {
+      position: absolute;
+      top: 0px;
+      bottom: 0px;
+      min-height: 7em;
+      width: 100%;
+    }
+
+    .description-limiter {
+      z-index: 2;
+      background: linear-gradient(0deg, rgba(255, 255, 255, 1), rgba(255, 255, 255, 1) 10%, rgba(255, 255, 255, 0));
+      position: absolute;
+      height: 1.5em;
+      width: 100%;
+      top: 5.5em;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    &.expand {
+      max-height: fit-content;
+
+      .description-limiter {
+        top: auto;
+        width: 2em;
+        height: 3px;
+        bottom: 0px;
+        left: calc(50% - 1em);
+        background: $black;
+        border-radius: 2px;
+      }
+    }
+
   }
+
 
   .groups {
     display: block;
