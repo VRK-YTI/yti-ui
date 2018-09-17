@@ -2,16 +2,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-06-21 17:00+0300\n"
+"PO-Revision-Date: 2018-09-14 17:32+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.8\n"
+"X-Generator: Poedit 2.1.1\n"
 "X-Poedit-Basepath: .\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Controlled Vocabularies"
+msgstr "Sanastot"
 
 msgid "Search collection"
 msgstr "Hae käsitevalikoimaa"
@@ -85,10 +88,10 @@ msgstr "Etuliite"
 msgid "Namespace"
 msgstr "Nimiavaruus"
 
-msgid "Choose concept"
+msgid "Select concept"
 msgstr "Valitse käsite"
 
-msgid "Select concept"
+msgid "Choose concept"
 msgstr "Valitse käsite"
 
 msgid "Choose reference type"
@@ -142,9 +145,6 @@ msgstr "Ei vielä yhtään termiä"
 msgid "Remove term"
 msgstr "Poista termi"
 
-msgid "Controlled Vocabularies"
-msgstr "Sanastot"
-
 msgid "Impersonate user"
 msgstr "Esiinny käyttäjänä"
 
@@ -156,6 +156,12 @@ msgstr "KIRJAUDU ULOS"
 
 msgid "User details"
 msgstr "Käyttäjätiedot"
+
+msgid "Suomi.fi Reference Data"
+msgstr "Suomi.fi-koodistot"
+
+msgid "Suomi.fi Data Vocabularies"
+msgstr "Suomi.fi-tietomallit"
 
 msgid "User right management"
 msgstr "Oikeuksienhallinta"
@@ -232,20 +238,26 @@ msgstr "Valitse luokitus"
 msgid "Search organization"
 msgstr "Hae organisaatiota"
 
+msgid "Search term"
+msgstr "Hakusana"
+
+msgid "Add vocabulary"
+msgstr "Lisää sanasto"
+
 msgid "ToolInfo"
-msgstr "Sanastot-työkalulla kerätään ja ylläpidetään julkishallinnon yhteisiä terminologisia sanastoja ja käsitteitä. Esimerkiksi sanastotyöntekijät ja tietomallintajat voivat määritellä Sanastoissa käsitteitä ja käsitteiden suhteita toisiinsa, minkä lisäksi käsitteiden väliset suhteet saa myös visualisoitua kuvaksi. Kansalainen puolestaan voi selata ja tarkistaa käsitteitä ja niiden määrityksiä."
+msgstr ""
+"Sanastot-työkalulla kerätään ja ylläpidetään julkishallinnon yhteisiä "
+"terminologisia sanastoja ja käsitteitä. Esimerkiksi sanastotyöntekijät ja "
+"tietomallintajat voivat määritellä Sanastoissa käsitteitä ja käsitteiden "
+"suhteita toisiinsa, minkä lisäksi käsitteiden väliset suhteet saa myös "
+"visualisoitua kuvaksi. Kansalainen puolestaan voi selata ja tarkistaa "
+"käsitteitä ja niiden määrityksiä."
 
 msgid "Search vocabularies"
 msgstr "Hae sanastoja"
 
 msgid "Filter with classification"
 msgstr "Rajaa tietoalueella"
-
-msgid "Search term"
-msgstr "Hakusana"
-
-msgid "Add vocabulary"
-msgstr "Lisää sanasto"
 
 msgid "result"
 msgstr "hakutulos"

@@ -11,6 +11,7 @@ import { PrefixAndNamespace } from 'app/entities/prefix-and-namespace';
 import { UserRequest } from 'app/entities/user-request';
 import { apiUrl } from 'app/config';
 import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { ServiceConfiguration } from '../entities/service-configuration';
 
 @Injectable()
 export class TermedService {
@@ -211,6 +212,11 @@ export class TermedService {
       observe: 'body',
       responseType: 'text'
     });
+  }
+
+  getServiceConfiguration(): Observable<ServiceConfiguration> {
+    console.log(`${apiUrl}/configuration`);
+    return this.http.get<ServiceConfiguration>(`${apiUrl}/configuration`);
   }
 
   private removeNodeIdentifiers(nodeIds: Identifier<any>[], sync: boolean, disconnect: boolean) {

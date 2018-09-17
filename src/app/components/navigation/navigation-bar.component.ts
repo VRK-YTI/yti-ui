@@ -66,6 +66,15 @@ import { TermedService } from '../../services/termed.service';
                id="user_details_link"
                *ngIf="isLoggedIn()"
                [routerLink]="['/userDetails']" translate>User details</a>
+            <a id="navigation_interoperability_platform_link"
+               class="dropdown-item"
+               href="https://yhteentoimiva.suomi.fi/" target="_blank">yhteentoimiva.suomi.fi</a>
+            <a id="navigation_reference_data_link"
+               class="dropdown-item"
+               [href]="codeListUrl" target="_blank" translate>Suomi.fi Reference Data</a>
+            <a id="navigation_data_vocabularies_link"
+               class="dropdown-item"
+               [href]="dataModelUrl" target="_blank" translate>Suomi.fi Data Vocabularies</a>
             <a class="dropdown-item"
                id="groupmanagement_link"
                *ngIf="showGroupManagementUrl()"
@@ -87,6 +96,8 @@ export class NavigationBarComponent {
   fakeableUsers: { email: string, firstName: string, lastName: string }[] = [];
 
   groupManagementUrl: string;
+  codeListUrl: string;
+  dataModelUrl: string;
 
   constructor(private languageService: LanguageService,
               private userService: UserService,
@@ -97,8 +108,10 @@ export class NavigationBarComponent {
       this.fakeableUsers = users;
     });
 
-    termedService.getGroupManagementUrl().subscribe(url => {
-      this.groupManagementUrl = url;
+    termedService.getServiceConfiguration().subscribe(configuration => {
+      this.groupManagementUrl = configuration.groupmanagementUrl;
+      this.codeListUrl = configuration.codeListUrl;
+      this.dataModelUrl = configuration.dataModelUrl;
     });
   }
 
