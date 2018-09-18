@@ -18,9 +18,9 @@ import { getGroupSvgIcon, getVocabularyTypeMaterialIcon } from 'yti-common-ui/ut
   selector: 'app-vocabularies',
   styleUrls: ['./vocabularies.component.scss'],
   template: `
-    <div class="vocabularies-container" *ngIf="!loading">
+    <div class="yti-tool-front-page" *ngIf="!loading">
 
-      <button class="btn btn-action float-right" id="add_vocabulary_button" *ngIf="canAddVocabulary()" (click)="addVocabulary()">
+      <button class="btn btn-action float-right add-main-entity" id="add_vocabulary_button" *ngIf="canAddVocabulary()" (click)="addVocabulary()">
         <span translate>Add vocabulary</span>
       </button>
       
@@ -41,10 +41,10 @@ import { getGroupSvgIcon, getVocabularyTypeMaterialIcon } from 'yti-common-ui/ut
       </div>
 
       <div><span class="search-label" translate>Filter with classification</span></div>
-      <div class="row">
+      <div class="row information-domain-container">
         <div class="col-md-4">
           <div class="content-box">
-            <div class="classification"
+            <div class="information-domain"
                  *ngFor="let classification of classifications"
                  [class.active]="isClassificationSelected(classification.node)"
                  [id]="classification.node.idIdentifier + '_classification_toggle'"
@@ -62,15 +62,15 @@ import { getGroupSvgIcon, getVocabularyTypeMaterialIcon } from 'yti-common-ui/ut
           <div class="content-box result-list-container">
 
             <div class="row mb-4">
-              <div class="col-md-12">
+              <div class="col-md-12 result-list-filter-row">
   
-                <div class="inline-label float-left"><span class="search-label" translate>Filter results</span></div>
+                <span class="search-label search-label-inline" translate>Filter results</span>
   
                 <app-organization-filter-dropdown [filterSubject]="organization$"
                                                   id="organization_filter_dropdown"
                                                   [organizations]="organizations$"></app-organization-filter-dropdown>
                 
-                <app-filter-dropdown class="float-left ml-2"
+                <app-filter-dropdown class="ml-2"
                                      id="vocabulary_type_filter_dropdown"
                                      [options]="vocabularyTypes"
                                      [filterSubject]="vocabularyType$"></app-filter-dropdown>
@@ -90,35 +90,32 @@ import { getGroupSvgIcon, getVocabularyTypeMaterialIcon } from 'yti-common-ui/ut
 
             <div class="row">
               <div class="col-md-12">
-                <div class="result-list-item" *ngFor="let vocabulary of filteredVocabularies">
-                  <div class="vocabulary" [id]="vocabulary.idIdentifier + '_vocabulary_navigation'">
-  
-                    <span class="type"><i class="material-icons">{{vocabularyTypeIconName(vocabulary.type)}}</i>{{vocabulary.typeLabel | translateValue:true}}</span>
-  
-                    <app-status class="status" [status]="vocabulary.status"></app-status>
+                <div class="result-list-item" *ngFor="let vocabulary of filteredVocabularies" [id]="vocabulary.idIdentifier + '_vocabulary_navigation'">
+                  <span class="type"><i class="material-icons">{{vocabularyTypeIconName(vocabulary.type)}}</i>{{vocabulary.typeLabel | translateValue:true}}</span>
 
-                    <a class="name" [routerLink]="['/concepts', vocabulary.graphId]">{{vocabulary.label | translateValue:true}}</a>
+                  <app-status class="status" [status]="vocabulary.status"></app-status>
 
-                    <div class="description-container" [ngClass]="{'expand': fullDescription[vocabulary.graphId]}">
-                        <span class="description">{{vocabulary.description | translateValue:true}}</span>
-                        <div class="limiter-container">
-                          <div class="description-limiter" (click)="toggleFullDescription(vocabulary.graphId)"></div>
-                        </div>
-                    </div>
+                  <a class="name" [routerLink]="['/concepts', vocabulary.graphId]">{{vocabulary.label | translateValue:true}}</a>
 
-                    <span class="groups">
-                      <span class="group badge badge-info" *ngFor="let group of vocabulary.groups">
-                        {{group.label | translateValue:true}}
-                      </span>
-                    </span>
-
-                    <ul class="organizations dot-separated-list">
-                      <li class="organization" *ngFor="let contributor of vocabulary.contributors">
-                        {{contributor.label | translateValue:true}}
-                      </li>
-                    </ul>
-
+                  <div class="description-container" [ngClass]="{'expand': fullDescription[vocabulary.graphId]}">
+                      <span class="description">{{vocabulary.description | translateValue:true}}</span>
+                      <div class="limiter-container">
+                        <div class="description-limiter" (click)="toggleFullDescription(vocabulary.graphId)"></div>
+                      </div>
                   </div>
+
+                  <span class="information-domains">
+                    <span class="badge badge-light" *ngFor="let group of vocabulary.groups">
+                      {{group.label | translateValue:true}}
+                    </span>
+                  </span>
+
+                  <ul class="organizations dot-separated-list">
+                    <li class="organization" *ngFor="let contributor of vocabulary.contributors">
+                      {{contributor.label | translateValue:true}}
+                    </li>
+                  </ul>
+
                 </div>
               </div>
             </div>
