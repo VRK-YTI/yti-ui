@@ -12,12 +12,17 @@ import { FormControl } from '@angular/forms';
       <ng-container [ngSwitch]="property.editor.type">
 
         <div *ngSwitchCase="'semantic'">
-
           <div *ngFor="let value of property.value">
             <div app-semantic-text-links
                  [format]="property.editor.format"
                  [value]="value">
             </div>
+          </div>
+        </div>
+
+        <div *ngSwitchCase="'textarea'">
+          <div *ngFor="let value of property.value" class="text-area-list-value">
+            {{value}}
           </div>
         </div>
 
