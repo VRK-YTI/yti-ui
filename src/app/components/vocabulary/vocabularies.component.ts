@@ -2,7 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { GroupNode, OrganizationNode, VocabularyNode } from 'app/entities/node';
 import { AuthorizationManager } from 'app/services/authorization-manager.sevice';
-import { Observable, BehaviorSubject, Subscription, combineLatest } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
 import { publishReplay, refCount, tap } from 'rxjs/operators';
 import { TermedService } from 'app/services/termed.service';
 import { anyMatching } from 'yti-common-ui/utils/array';
@@ -20,10 +20,11 @@ import { getGroupSvgIcon, getVocabularyTypeMaterialIcon } from 'yti-common-ui/ut
   template: `
     <div class="yti-tool-front-page" *ngIf="!loading">
 
-      <button class="btn btn-action float-right add-main-entity" id="add_vocabulary_button" *ngIf="canAddVocabulary()" (click)="addVocabulary()">
+      <button class="btn btn-action float-right add-main-entity" id="add_vocabulary_button" *ngIf="canAddVocabulary()"
+              (click)="addVocabulary()">
         <span translate>Add vocabulary</span>
       </button>
-      
+
       <h4 class="tool-inner-title" translate>Controlled Vocabularies</h4>
       <div class="tool-info"><p translate>ToolInfo</p></div>
 
@@ -65,18 +66,18 @@ import { getGroupSvgIcon, getVocabularyTypeMaterialIcon } from 'yti-common-ui/ut
 
             <div class="row mb-4">
               <div class="col-md-12 result-list-filter-row">
-  
+
                 <span class="search-label search-label-inline" translate>Filter results</span>
-  
+
                 <app-organization-filter-dropdown [filterSubject]="organization$"
                                                   id="organization_filter_dropdown"
                                                   [organizations]="organizations$"></app-organization-filter-dropdown>
-                
+
                 <app-filter-dropdown class="ml-2"
                                      id="vocabulary_type_filter_dropdown"
                                      [options]="vocabularyTypes"
                                      [filterSubject]="vocabularyType$"></app-filter-dropdown>
-  
+
               </div>
             </div>
 
@@ -92,7 +93,8 @@ import { getGroupSvgIcon, getVocabularyTypeMaterialIcon } from 'yti-common-ui/ut
 
             <div class="row">
               <div class="col-md-12">
-                <div class="result-list-item" *ngFor="let vocabulary of filteredVocabularies" [id]="vocabulary.idIdentifier + '_vocabulary_navigation'">
+                <div class="result-list-item" *ngFor="let vocabulary of filteredVocabularies"
+                     [id]="vocabulary.idIdentifier + '_vocabulary_navigation'">
                   <span class="type"><i class="material-icons">{{vocabularyTypeIconName(vocabulary.type)}}</i>{{vocabulary.typeLabel | translateValue:true}}</span>
 
                   <app-status class="status" [status]="vocabulary.status"></app-status>
@@ -100,10 +102,10 @@ import { getGroupSvgIcon, getVocabularyTypeMaterialIcon } from 'yti-common-ui/ut
                   <a class="name" [routerLink]="['/concepts', vocabulary.graphId]">{{vocabulary.label | translateValue:true}}</a>
 
                   <div class="description-container" [ngClass]="{'expand': fullDescription[vocabulary.graphId]}">
-                      <span class="description">{{vocabulary.description | translateValue:true}}</span>
-                      <div class="limiter-container">
-                        <div class="description-limiter" (click)="toggleFullDescription(vocabulary.graphId)"></div>
-                      </div>
+                    <span class="description">{{vocabulary.description | translateValue:true}}</span>
+                    <div class="limiter-container">
+                      <div class="description-limiter" (click)="toggleFullDescription(vocabulary.graphId)"></div>
+                    </div>
                   </div>
 
                   <span class="information-domains">
@@ -130,9 +132,9 @@ import { getGroupSvgIcon, getVocabularyTypeMaterialIcon } from 'yti-common-ui/ut
 export class VocabulariesComponent implements OnDestroy {
 
   search$ = new BehaviorSubject('');
-  classification$ = new BehaviorSubject<GroupNode|null>(null);
-  organization$ = new BehaviorSubject<OrganizationNode|null>(null);
-  vocabularyType$ = new BehaviorSubject<VocabularyNodeType|null>(null);
+  classification$ = new BehaviorSubject<GroupNode | null>(null);
+  organization$ = new BehaviorSubject<OrganizationNode | null>(null);
+  vocabularyType$ = new BehaviorSubject<VocabularyNodeType | null>(null);
 
   classifications: { node: GroupNode, count: number }[];
   organizations$: Observable<OrganizationNode[]>;
@@ -143,7 +145,9 @@ export class VocabulariesComponent implements OnDestroy {
   vocabulariesLoaded = false;
   subscriptionToClean: Subscription[] = [];
 
-  fullDescription: {[key: string] : boolean} = {};
+  fullDescription: { [key: string]: boolean } = {};
+  vocabularyTypeIconName = getVocabularyTypeMaterialIcon;
+  groupIconSrc = getGroupSvgIcon;
 
   constructor(private authorizationManager: AuthorizationManager,
               languageService: LanguageService,
@@ -171,15 +175,15 @@ export class VocabulariesComponent implements OnDestroy {
       return !search || anyMatching(vocabulary.prefLabel, attr => matches(attr.value, search));
     }
 
-    function classificationMatches(classification: GroupNode|null, vocabulary: VocabularyNode) {
+    function classificationMatches(classification: GroupNode | null, vocabulary: VocabularyNode) {
       return !classification || anyMatching(vocabulary.groups, group => group.id === classification.id);
     }
 
-    function organizationMatches(organization: OrganizationNode|null, vocabulary: VocabularyNode) {
+    function organizationMatches(organization: OrganizationNode | null, vocabulary: VocabularyNode) {
       return !organization || anyMatching(vocabulary.contributors, contributor => contributor.id === organization.id);
     }
 
-    function vocabularyTypeMatches(vocabularyType: VocabularyNodeType|null, vocabulary: VocabularyNode) {
+    function vocabularyTypeMatches(vocabularyType: VocabularyNodeType | null, vocabulary: VocabularyNode) {
       return !vocabularyType || vocabulary.type === vocabularyType;
     }
 
@@ -256,7 +260,4 @@ export class VocabulariesComponent implements OnDestroy {
       this.fullDescription[graphId] = true;
     }
   }
-
-  vocabularyTypeIconName = getVocabularyTypeMaterialIcon;
-  groupIconSrc = getGroupSvgIcon;
 }
