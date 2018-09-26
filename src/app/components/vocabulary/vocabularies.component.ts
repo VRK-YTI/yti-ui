@@ -41,18 +41,20 @@ import { getGroupSvgIcon, getVocabularyTypeMaterialIcon } from 'yti-common-ui/ut
       </div>
 
       <div><span class="search-label" translate>Filter with classification</span></div>
-      <div class="row information-domain-container">
+      <div class="row">
         <div class="col-md-4">
-          <div class="content-box">
-            <div class="information-domain"
-                 *ngFor="let classification of classifications"
-                 [class.active]="isClassificationSelected(classification.node)"
-                 [id]="classification.node.idIdentifier + '_classification_toggle'"
-                 (click)="toggleClassification(classification.node)">
+          <div class="information-domain-container">
+            <div class="content-box">
+              <div class="information-domain"
+                   *ngFor="let classification of classifications"
+                   [class.active]="isClassificationSelected(classification.node)"
+                   [id]="classification.node.idIdentifier + '_classification_toggle'"
+                   (click)="toggleClassification(classification.node)">
 
-              <img [src]="groupIconSrc(classification.node.getProperty('notation').literalValue)">
-              <span class="name">{{classification.node.label | translateValue:true}}</span>
-              <span class="count">({{classification.count}})</span>
+                <img [src]="groupIconSrc(classification.node.getProperty('notation').literalValue)">
+                <span class="name">{{classification.node.label | translateValue:true}}</span>
+                <span class="count">({{classification.count}})</span>
+              </div>
             </div>
           </div>
         </div>
@@ -119,7 +121,6 @@ import { getGroupSvgIcon, getVocabularyTypeMaterialIcon } from 'yti-common-ui/ut
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </div>
