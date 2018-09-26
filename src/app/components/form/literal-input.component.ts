@@ -20,7 +20,7 @@ import { FormPropertyLiteral } from 'app/services/form-state';
           {{property.value | translate}}
         </div>
         
-        <div *ngSwitchDefault>
+        <div class="other-type-value" *ngSwitchDefault>
           {{property.value}}
         </div>
 
