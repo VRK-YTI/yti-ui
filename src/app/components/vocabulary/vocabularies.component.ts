@@ -72,12 +72,6 @@ import { getGroupSvgIcon, getVocabularyTypeMaterialIcon } from 'yti-common-ui/ut
                 <app-organization-filter-dropdown [filterSubject]="organization$"
                                                   id="organization_filter_dropdown"
                                                   [organizations]="organizations$"></app-organization-filter-dropdown>
-
-                <app-filter-dropdown class="ml-2"
-                                     id="vocabulary_type_filter_dropdown"
-                                     [options]="vocabularyTypes"
-                                     [filterSubject]="vocabularyType$"></app-filter-dropdown>
-
               </div>
             </div>
 
@@ -95,7 +89,9 @@ import { getGroupSvgIcon, getVocabularyTypeMaterialIcon } from 'yti-common-ui/ut
               <div class="col-md-12">
                 <div class="result-list-item" *ngFor="let vocabulary of filteredVocabularies"
                      [id]="vocabulary.idIdentifier + '_vocabulary_navigation'">
-                  <span class="type"><i class="material-icons">{{vocabularyTypeIconName(vocabulary.type)}}</i>{{vocabulary.typeLabel | translateValue:true}}</span>
+                  <span class="type" [hidden]="vocabulary.type === 'TerminologicalVocabulary'">
+                    <i class="material-icons">{{vocabularyTypeIconName(vocabulary.type)}}</i>{{vocabulary.typeLabel | translateValue:true}}
+                  </span>
 
                   <app-status class="status" [status]="vocabulary.status"></app-status>
 
@@ -134,7 +130,6 @@ export class VocabulariesComponent implements OnDestroy {
   search$ = new BehaviorSubject('');
   classification$ = new BehaviorSubject<GroupNode | null>(null);
   organization$ = new BehaviorSubject<OrganizationNode | null>(null);
-  vocabularyType$ = new BehaviorSubject<VocabularyNodeType | null>(null);
 
   classifications: { node: GroupNode, count: number }[];
   organizations$: Observable<OrganizationNode[]>;
@@ -187,13 +182,12 @@ export class VocabulariesComponent implements OnDestroy {
       return !vocabularyType || vocabulary.type === vocabularyType;
     }
 
-    combineLatest(termedService.getGroupList(), vocabularies$, this.search$, this.organization$, this.vocabularyType$)
-      .subscribe(([groups, vocabularies, search, organization, vocabularyType]) => {
+    combineLatest(termedService.getGroupList(), vocabularies$, this.search$, this.organization$)
+      .subscribe(([groups, vocabularies, search, organization]) => {
 
         const matchingVocabularies = vocabularies.filter(vocabulary =>
           searchMatches(search, vocabulary) &&
-          organizationMatches(organization, vocabulary) &&
-          vocabularyTypeMatches(vocabularyType, vocabulary));
+          organizationMatches(organization, vocabulary));
 
         const vocabularyCount = (classification: GroupNode) =>
           matchingVocabularies.filter(voc => classificationMatches(classification, voc)).length;
@@ -202,15 +196,14 @@ export class VocabulariesComponent implements OnDestroy {
       });
 
     this.subscriptionToClean.push(
-      combineLatest(vocabularies$, this.search$, this.classification$, this.organization$, this.vocabularyType$, languageService.language$)
-        .subscribe(([vocabularies, search, classification, organization, vocabularyType]) => {
+      combineLatest(vocabularies$, this.search$, this.classification$, this.organization$, languageService.language$)
+        .subscribe(([vocabularies, search, classification, organization]) => {
 
           this.filteredVocabularies =
             vocabularies.filter(vocabulary =>
               searchMatches(search, vocabulary) &&
               classificationMatches(classification, vocabulary) &&
-              organizationMatches(organization, vocabulary) &&
-              vocabularyTypeMatches(vocabularyType, vocabulary));
+              organizationMatches(organization, vocabulary));
 
           this.filteredVocabularies.sort(
             comparingPrimitive<VocabularyNode>(voc => !voc.priority) // vocabularies having priority set first

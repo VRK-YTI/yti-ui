@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import { Component } from '@angular/core';
 import { MetaModelService } from 'app/services/meta-model.service';
 import { v4 as uuid } from 'uuid';
 import { VocabularyNode } from 'app/entities/node';
@@ -10,12 +10,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { LanguageService } from 'app/services/language.service';
 import { FormNode } from 'app/services/form-state';
 import { defaultLanguages } from 'app/utils/language';
-import { FormControl, Validators, AbstractControl, AsyncValidatorFn } from '@angular/forms';
+import { AbstractControl, AsyncValidatorFn, FormControl, Validators } from '@angular/forms';
 import { firstMatching } from 'yti-common-ui/utils/array';
 import { LocationService } from 'app/services/location.service';
-import { Options } from 'yti-common-ui/components/dropdown.component';
 import { vocabularyIdPrefix } from 'app/utils/id-prefix';
-import { labelNameToResourceIdIdentifier } from 'yti-common-ui/utils/resource';
 import { map } from 'rxjs/operators';
 
 @Component({
@@ -31,14 +29,7 @@ import { map } from 'rxjs/operators';
         <form #form="ngForm" [formGroup]="formNode.control">
 
           <div class="row">
-            <div class="col-6">
-              <div class="form-group">
-                <label for="vocabularyType" translate>Vocabulary type</label>
-                <app-dropdown [formControl]="templateControl" id="vocabulary_type_dropdown" [options]="templateOptions"></app-dropdown>
-              </div>
-            </div>
-
-            <div class="col-6">
+            <div class="col-12">
               <div class="top-actions">
                 <app-editable-buttons [form]="form"
                                       [canRemove]="false"
@@ -58,9 +49,8 @@ import { map } from 'rxjs/operators';
 export class NewVocabularyComponent {
 
   vocabulary: VocabularyNode;
-  templateOptions: Options<GraphMeta>;
+  selectedTemplate?: GraphMeta;
   formNode: FormNode;
-  templateControl = new FormControl();
   prefixFormControl: FormControl;
   idPrefix: string = vocabularyIdPrefix;
 
@@ -76,30 +66,25 @@ export class NewVocabularyComponent {
     editableService.onSave = () => this.saveVocabulary();
     editableService.onCanceled = () => router.navigate(['/']);
 
-    this.templateControl.valueChanges.subscribe(() => this.createVocabulary());
-
     metaModelService.getMetaTemplates().subscribe(templates => {
-      this.templateOptions = templates.map(template => ({
-        value: template,
-        name: () => this.languageService.translate(template.label, true),
-        idIdentifier: () => labelNameToResourceIdIdentifier(this.languageService.translate(template.label, true))
-      }));
-      this.selectedTemplate = templates[0];
+      const template = templates.find(template => template.has('TerminologicalVocabulary')) || templates[0];
+      this.selectedTemplate = template
+      this.createVocabulary(template);
     });
 
     locationService.atNewVocabulary();
   }
 
-  createVocabulary() {
+  createVocabulary(template: GraphMeta) {
 
     const label = this.translateService.instant('New vocabulary');
-    const templateGraphId = this.selectedTemplate.graphId;
+    const templateGraphId = template.graphId;
     const vocabularyId = uuid();
 
     this.metaModelService.getMeta(templateGraphId).subscribe(templateMetaModel => {
 
       this.vocabulary = templateMetaModel.createEmptyVocabulary(templateGraphId, vocabularyId);
-      this.vocabulary.prefLabel = [ { lang: this.languageService.language, value: label } ];
+      this.vocabulary.prefLabel = [{ lang: this.languageService.language, value: label }];
 
       // TODO all meta models don't define language but they should
       if (this.vocabulary.hasLanguage()) {
@@ -118,22 +103,15 @@ export class NewVocabularyComponent {
     });
   }
 
-  get selectedTemplate(): GraphMeta {
-    return this.templateControl.value;
-  }
-
-  set selectedTemplate(value: GraphMeta) {
-    this.templateControl.setValue(value);
-  }
-
   saveVocabulary(): Promise<any> {
 
     const that = this;
     const vocabulary = this.vocabulary.clone();
+    const templateGraphId = this.selectedTemplate && this.selectedTemplate.graphId || this.vocabulary.meta.graphId;
     this.formNode.assignChanges(vocabulary);
 
     return new Promise((resolve, reject) => {
-      this.termedService.createVocabulary(this.selectedTemplate.graphId, vocabulary, this.prefixFormControl.value)
+      this.termedService.createVocabulary(templateGraphId, vocabulary, this.prefixFormControl.value)
         .subscribe({
           next: (graphId) => that.router.navigate(['/concepts', graphId]),
           error: (err: any) => reject(err)
@@ -153,8 +131,8 @@ export class NewVocabularyComponent {
     }
   }
 
-  isPrefixLowerCaseValidator (control: AbstractControl) {
+  isPrefixLowerCaseValidator(control: AbstractControl) {
     const lowerCase = control.value === control.value.toLowerCase();
-    return !lowerCase ? {'upperCaseInPrefix': {value: control.value}} : null;
+    return !lowerCase ? { 'upperCaseInPrefix': { value: control.value } } : null;
   }
 }
