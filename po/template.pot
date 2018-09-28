@@ -184,7 +184,7 @@ msgstr ""
 msgid "Associative"
 msgstr ""
 
-msgid "Add classification"
+msgid "Add information domain"
 msgstr ""
 
 msgid "Confirm import"
@@ -208,19 +208,16 @@ msgstr ""
 msgid "Import failed"
 msgstr ""
 
-msgid "Vocabulary type"
-msgstr ""
-
 msgid "New vocabulary"
 msgstr ""
 
 msgid "Add organization"
 msgstr ""
 
-msgid "Search classification"
+msgid "Search information domain"
 msgstr ""
 
-msgid "Choose classification"
+msgid "Choose information domain"
 msgstr ""
 
 msgid "Search organization"
@@ -238,13 +235,16 @@ msgstr ""
 msgid "Search vocabularies"
 msgstr ""
 
-msgid "Filter with classification"
+msgid "Filter with information domain"
 msgstr ""
 
 msgid "result"
 msgstr ""
 
 msgid "results"
+msgstr ""
+
+msgid "Vocabulary type"
 msgstr ""
 
 msgid "Show vocabulary details"

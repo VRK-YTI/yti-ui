@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-09-14 17:32+0300\n"
+"PO-Revision-Date: 2018-09-28 12:58+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -196,8 +196,8 @@ msgstr "Koostumus"
 msgid "Associative"
 msgstr "Assosiatiivinen"
 
-msgid "Add classification"
-msgstr "Lisää luokitus"
+msgid "Add information domain"
+msgstr "Lisää tietoalue"
 
 msgid "Confirm import"
 msgstr "Tuonnin hyväksyntä"
@@ -220,20 +220,17 @@ msgstr "Synonyymi"
 msgid "Import failed"
 msgstr "Tuonti epäonnistui"
 
-msgid "Vocabulary type"
-msgstr "Sanastotyyppi"
-
 msgid "New vocabulary"
 msgstr "uusi sanasto"
 
 msgid "Add organization"
 msgstr "Lisää organisaatio"
 
-msgid "Search classification"
-msgstr "Hae luokitusta"
+msgid "Search information domain"
+msgstr "Hae tietoaluetta"
 
-msgid "Choose classification"
-msgstr "Valitse luokitus"
+msgid "Choose information domain"
+msgstr "Valitse tietoalue"
 
 msgid "Search organization"
 msgstr "Hae organisaatiota"
@@ -256,7 +253,7 @@ msgstr ""
 msgid "Search vocabularies"
 msgstr "Hae sanastoja"
 
-msgid "Filter with classification"
+msgid "Filter with information domain"
 msgstr "Rajaa tietoalueella"
 
 msgid "result"
@@ -264,6 +261,9 @@ msgstr "hakutulos"
 
 msgid "results"
 msgstr "hakutulosta"
+
+msgid "Vocabulary type"
+msgstr "Sanastotyyppi"
 
 msgid "Show vocabulary details"
 msgstr "Näytä sanaston tiedot"

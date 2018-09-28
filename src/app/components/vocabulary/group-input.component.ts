@@ -11,25 +11,26 @@ import { SearchGroupModalService } from './search-group-modal.component';
   template: `
 
     <ul *ngIf="!editing">
-      <li *ngFor="let group of reference.value">{{group.label | translateValue:true}}</li>
+      <li *ngFor="let domain of reference.value">{{domain.label | translateValue:true}}</li>
     </ul>
 
     <div *ngIf="editing" [appDragSortable]="reference" [dragDisabled]="!canReorder()">
-      <div *ngFor="let group of reference.value; let i = index"
+      <div *ngFor="let domain of reference.value; let i = index"
            class="removable-text"
-           [appDragSortableItem]="group"
+           [appDragSortableItem]="domain"
            [index]="i">
-        <a><i class="fa fa-times" [id]="id + '_' + group.idIdentifier + '_remove_group_reference_link'" (click)="removeReference(group)"></i></a>
-        <span>{{group.label | translateValue:true}}</span>
+        <a><i class="fa fa-times" [id]="id + '_' + domain.idIdentifier + '_remove_domain_reference_link'"
+              (click)="removeReference(domain)"></i></a>
+        <span>{{domain.label | translateValue:true}}</span>
       </div>
       <app-error-messages [id]="id + '_error_messages'" [control]="reference.control"></app-error-messages>
     </div>
 
     <button type="button"
-            [id]="id + '_add_classification_button'"
+            [id]="id + '_add_domain_button'"
             class="btn btn-sm btn-action mt-2"
             *ngIf="editing"
-            (click)="addReference()" translate>Add classification</button>
+            (click)="addReference()" translate>Add information domain</button>
   `
 })
 export class GroupInputComponent {
@@ -38,22 +39,22 @@ export class GroupInputComponent {
   @Input() reference: FormReferenceLiteral<GroupNode>;
 
   constructor(private editableService: EditableService,
-              private searchGroupModal: SearchGroupModalService) {
+              private searchInformationDomainModal: SearchGroupModalService) {
   }
 
   get editing() {
     return this.editableService.editing;
   }
 
-  removeReference(group: GroupNode) {
-    this.reference.removeReference(group);
+  removeReference(informationDomain: GroupNode) {
+    this.reference.removeReference(informationDomain);
   }
 
   addReference() {
 
     const restricts = this.reference.value.map(({ id }) => id);
 
-    this.searchGroupModal.open(restricts)
+    this.searchInformationDomainModal.open(restricts)
       .then(result => this.reference.addReference(result), ignoreModalClose);
   }
 

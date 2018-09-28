@@ -12,7 +12,7 @@ import { LanguageService } from 'app/services/language.service';
 import { VocabularyNodeType } from 'app/entities/node-api';
 import { FilterOptions } from 'yti-common-ui/components/filter-dropdown.component';
 import { TranslateService } from '@ngx-translate/core';
-import { getGroupSvgIcon, getVocabularyTypeMaterialIcon } from 'yti-common-ui/utils/icons';
+import { getInformationDomainSvgIcon, getVocabularyTypeMaterialIcon } from 'yti-common-ui/utils/icons';
 
 @Component({
   selector: 'app-vocabularies',
@@ -41,20 +41,20 @@ import { getGroupSvgIcon, getVocabularyTypeMaterialIcon } from 'yti-common-ui/ut
         </div>
       </div>
 
-      <div><span class="search-label" translate>Filter with classification</span></div>
+      <div><span class="search-label" translate>Filter with information domain</span></div>
       <div class="row">
         <div class="col-md-4">
           <div class="information-domain-container">
             <div class="content-box">
               <div class="information-domain"
-                   *ngFor="let classification of classifications"
-                   [class.active]="isClassificationSelected(classification.node)"
-                   [id]="classification.node.idIdentifier + '_classification_toggle'"
-                   (click)="toggleClassification(classification.node)">
+                   *ngFor="let domain of informationDomains"
+                   [class.active]="isInformationDomainSelected(domain.node)"
+                   [id]="domain.node.idIdentifier + '_domain_toggle'"
+                   (click)="toggleInformationDomain(domain.node)">
 
-                <img [src]="groupIconSrc(classification.node.getProperty('notation').literalValue)">
-                <span class="name">{{classification.node.label | translateValue:true}}</span>
-                <span class="count">({{classification.count}})</span>
+                <img [src]="informationDomainIconSrc(domain.node.getProperty('notation').literalValue)">
+                <span class="name">{{domain.node.label | translateValue:true}}</span>
+                <span class="count">({{domain.count}})</span>
               </div>
             </div>
           </div>
@@ -105,8 +105,8 @@ import { getGroupSvgIcon, getVocabularyTypeMaterialIcon } from 'yti-common-ui/ut
                   </div>
 
                   <span class="information-domains">
-                    <span class="badge badge-light" *ngFor="let group of vocabulary.groups">
-                      {{group.label | translateValue:true}}
+                    <span class="badge badge-light" *ngFor="let domain of vocabulary.groups">
+                      {{domain.label | translateValue:true}}
                     </span>
                   </span>
 
@@ -128,10 +128,10 @@ import { getGroupSvgIcon, getVocabularyTypeMaterialIcon } from 'yti-common-ui/ut
 export class VocabulariesComponent implements OnDestroy {
 
   search$ = new BehaviorSubject('');
-  classification$ = new BehaviorSubject<GroupNode | null>(null);
+  informationDomain$ = new BehaviorSubject<GroupNode | null>(null);
   organization$ = new BehaviorSubject<OrganizationNode | null>(null);
 
-  classifications: { node: GroupNode, count: number }[];
+  informationDomains: { node: GroupNode, count: number }[];
   organizations$: Observable<OrganizationNode[]>;
   vocabularyTypes: FilterOptions<VocabularyNodeType>;
 
@@ -142,7 +142,7 @@ export class VocabulariesComponent implements OnDestroy {
 
   fullDescription: { [key: string]: boolean } = {};
   vocabularyTypeIconName = getVocabularyTypeMaterialIcon;
-  groupIconSrc = getGroupSvgIcon;
+  informationDomainIconSrc = getInformationDomainSvgIcon;
 
   constructor(private authorizationManager: AuthorizationManager,
               languageService: LanguageService,
@@ -170,39 +170,38 @@ export class VocabulariesComponent implements OnDestroy {
       return !search || anyMatching(vocabulary.prefLabel, attr => matches(attr.value, search));
     }
 
-    function classificationMatches(classification: GroupNode | null, vocabulary: VocabularyNode) {
-      return !classification || anyMatching(vocabulary.groups, group => group.id === classification.id);
+    function informationDomainMatches(informationDomain: GroupNode | null, vocabulary: VocabularyNode) {
+      return !informationDomain || anyMatching(vocabulary.groups, domain => domain.id === informationDomain.id);
     }
 
     function organizationMatches(organization: OrganizationNode | null, vocabulary: VocabularyNode) {
       return !organization || anyMatching(vocabulary.contributors, contributor => contributor.id === organization.id);
     }
 
-    function vocabularyTypeMatches(vocabularyType: VocabularyNodeType | null, vocabulary: VocabularyNode) {
-      return !vocabularyType || vocabulary.type === vocabularyType;
-    }
-
     combineLatest(termedService.getGroupList(), vocabularies$, this.search$, this.organization$)
-      .subscribe(([groups, vocabularies, search, organization]) => {
+      .subscribe(([informationDomains, vocabularies, search, organization]) => {
 
         const matchingVocabularies = vocabularies.filter(vocabulary =>
           searchMatches(search, vocabulary) &&
           organizationMatches(organization, vocabulary));
 
-        const vocabularyCount = (classification: GroupNode) =>
-          matchingVocabularies.filter(voc => classificationMatches(classification, voc)).length;
+        const vocabularyCount = (domain: GroupNode) =>
+          matchingVocabularies.filter(voc => informationDomainMatches(domain, voc)).length;
 
-        this.classifications = groups.map(group => ({ node: group, count: vocabularyCount(group) })).filter(c => c.count > 0);
+        this.informationDomains = informationDomains.map(domain => ({
+          node: domain,
+          count: vocabularyCount(domain)
+        })).filter(c => c.count > 0);
       });
 
     this.subscriptionToClean.push(
-      combineLatest(vocabularies$, this.search$, this.classification$, this.organization$, languageService.language$)
-        .subscribe(([vocabularies, search, classification, organization]) => {
+      combineLatest(vocabularies$, this.search$, this.informationDomain$, this.organization$, languageService.language$)
+        .subscribe(([vocabularies, search, informationDomain, organization]) => {
 
           this.filteredVocabularies =
             vocabularies.filter(vocabulary =>
               searchMatches(search, vocabulary) &&
-              classificationMatches(classification, vocabulary) &&
+              informationDomainMatches(informationDomain, vocabulary) &&
               organizationMatches(organization, vocabulary));
 
           this.filteredVocabularies.sort(
@@ -215,7 +214,7 @@ export class VocabulariesComponent implements OnDestroy {
   }
 
   get loading() {
-    return !this.vocabulariesLoaded || !this.classifications || !this.organizations$;
+    return !this.vocabulariesLoaded || !this.informationDomains || !this.organizations$;
   }
 
   get search() {
@@ -226,12 +225,12 @@ export class VocabulariesComponent implements OnDestroy {
     this.search$.next(value);
   }
 
-  isClassificationSelected(classification: GroupNode) {
-    return this.classification$.getValue() === classification;
+  isInformationDomainSelected(domain: GroupNode) {
+    return this.informationDomain$.getValue() === domain;
   }
 
-  toggleClassification(classification: GroupNode) {
-    this.classification$.next(this.isClassificationSelected(classification) ? null : classification);
+  toggleInformationDomain(domain: GroupNode) {
+    this.informationDomain$.next(this.isInformationDomainSelected(domain) ? null : domain);
   }
 
   canAddVocabulary() {
