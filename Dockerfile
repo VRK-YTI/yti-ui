@@ -18,9 +18,6 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log && \
 # Add nginx config
 ADD nginx.conf /etc/nginx/nginx.conf
 
-# Install yarn
-RUN ["npm", "install", "-g", "yarn"]
-
 # Use changes to package.json to force Docker not to use the cache
 # when we change our application's dependencies:
 ADD package.json /tmp/package.json
