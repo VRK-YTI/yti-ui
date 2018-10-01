@@ -7,6 +7,7 @@ import { TermedService } from 'app/services/termed.service';
 import { LanguageService } from 'app/services/language.service';
 import { contains } from 'yti-common-ui/utils/array';
 import { ModalService } from 'app/services/modal.service';
+import {comparingLocalizable} from 'yti-common-ui/utils/comparator';
 
 @Injectable()
 export class SearchGroupModalService {
@@ -97,9 +98,11 @@ export class SearchGroupModalComponent implements AfterViewInit {
           return groups.filter(group => {
             const label = languageService.translate(group.label, true);
             const searchMatches = !search || label.toLowerCase().indexOf(search.toLowerCase()) !== -1;
+
             const isNotRestricted = !contains(this.restricts, group.id);
             return searchMatches && isNotRestricted;
-          });
+          })
+            .sort(comparingLocalizable<GroupNode>(languageService, node => node.label));
         }));
   }
 
