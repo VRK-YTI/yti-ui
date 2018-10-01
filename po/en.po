@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-09-14 17:30+0300\n"
+"PO-Revision-Date: 2018-09-28 13:00+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -194,7 +194,7 @@ msgstr ""
 msgid "Associative"
 msgstr ""
 
-msgid "Add classification"
+msgid "Add information domain"
 msgstr ""
 
 msgid "Confirm import"
@@ -218,19 +218,16 @@ msgstr "Synonym"
 msgid "Import failed"
 msgstr ""
 
-msgid "Vocabulary type"
-msgstr ""
-
 msgid "New vocabulary"
 msgstr ""
 
 msgid "Add organization"
 msgstr ""
 
-msgid "Search classification"
+msgid "Search information domain"
 msgstr ""
 
-msgid "Choose classification"
+msgid "Choose information domain"
 msgstr ""
 
 msgid "Search organization"
@@ -253,13 +250,16 @@ msgstr ""
 msgid "Search vocabularies"
 msgstr ""
 
-msgid "Filter with classification"
+msgid "Filter with information domain"
 msgstr ""
 
 msgid "result"
 msgstr ""
 
 msgid "results"
+msgstr ""
+
+msgid "Vocabulary type"
 msgstr ""
 
 msgid "Show vocabulary details"

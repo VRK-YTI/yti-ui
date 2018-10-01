@@ -1,1 +1,8 @@
 @import '~yti-common-ui/theme/variables';
+
+.result-list-container .result-list-item .type {
+  color: $danger;
+  i {
+    color: $danger;
+  }
+}

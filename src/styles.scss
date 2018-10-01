@@ -9,7 +9,7 @@ app-terms ngb-accordion .card-header button {
   padding: 0;
   color: $body-color;
   width: 100%;
-  text-align: initial;
+  text-align: left;
 }
 
 .dragged {
@@ -179,6 +179,7 @@ div.localized {
     min-height: $language-height;
     padding-left: 10px;
     padding-right: 10px;
+    white-space: normal;
 
     &.removable {
       float: left;
