@@ -576,7 +576,7 @@ export class ConceptViewModelService implements OnDestroy {
     }
   }
 
-  saveConcept(): Promise<any> {
+  saveConcept(confirmation?: (proposed: ConceptNode, previous: ConceptNode) => Promise<any>): Promise<any> {
 
     if (!this.concept || !this.resourceForm) {
       throw new Error('Cannot save when there is no concept');
@@ -586,8 +586,7 @@ export class ConceptViewModelService implements OnDestroy {
     const concept = this.concept.clone();
     this.resourceForm.assignChanges(concept);
 
-    return new Promise((resolve, reject) => {
-
+    const save = () => new Promise((resolve, reject) => {
       this.metaModel.subscribe(metaModel => {
         this.termedService.updateNode(concept, this.concept)
           .pipe(flatMap(() => this.termedService.getConcept(this.graphId, concept.id)))
@@ -603,6 +602,12 @@ export class ConceptViewModelService implements OnDestroy {
           });
       });
     });
+
+    if (confirmation) {
+      return confirmation(concept, this.concept).then(save);
+    } else {
+      return save();
+    }
   }
 
   removeConcept(): Promise<any> {

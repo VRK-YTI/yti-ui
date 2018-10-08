@@ -7,20 +7,6 @@ import { MetaModelService } from 'app/services/meta-model.service';
 import { forkJoin } from 'rxjs';
 import { ModalService } from 'app/services/modal.service';
 
-@Injectable()
-export class DeleteConfirmationModalService {
-
-  constructor(private modalService: ModalService) {
-  }
-
-  open(node: Node<any>): Promise<any> {
-    const modalRef = this.modalService.open(DeleteConfirmationModalComponent, { size: 'sm' });
-    const instance = modalRef.componentInstance as DeleteConfirmationModalComponent;
-    instance.node = node;
-    return modalRef.result;
-  }
-}
-
 interface Reference {
   meta: ReferenceMeta;
   nodes: Node<any>[];
@@ -87,5 +73,19 @@ export class DeleteConfirmationModalComponent implements OnInit {
 
   confirm() {
     this.modal.close();
+  }
+}
+
+@Injectable()
+export class DeleteConfirmationModalService {
+
+  constructor(private modalService: ModalService) {
+  }
+
+  open(node: Node<any>): Promise<any> {
+    const modalRef = this.modalService.open(DeleteConfirmationModalComponent, { size: 'sm' });
+    const instance = modalRef.componentInstance as DeleteConfirmationModalComponent;
+    instance.node = node;
+    return modalRef.result;
   }
 }

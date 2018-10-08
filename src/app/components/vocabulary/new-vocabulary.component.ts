@@ -67,9 +67,9 @@ export class NewVocabularyComponent {
     editableService.onCanceled = () => router.navigate(['/']);
 
     metaModelService.getMetaTemplates().subscribe(templates => {
-      const template = templates.find(template => template.has('TerminologicalVocabulary')) || templates[0];
-      this.selectedTemplate = template
-      this.createVocabulary(template);
+      const chosen = templates.find(template => template.has('TerminologicalVocabulary')) || templates[0];
+      this.selectedTemplate = chosen;
+      this.createVocabulary(chosen);
     });
 
     locationService.atNewVocabulary();

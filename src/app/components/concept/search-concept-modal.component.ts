@@ -21,37 +21,6 @@ export interface Restrict {
   reason: string;
 }
 
-@Injectable()
-export class SearchConceptModalService {
-
-  constructor(private modalService: ModalService) {
-  }
-
-  openForVocabulary(vocabulary: VocabularyNode, initialSearch: string, restricts: Restrict[]): Promise<ConceptNode> {
-    const modalRef = this.modalService.open(SearchConceptModalComponent, { size: 'lg' });
-    const instance = modalRef.componentInstance as SearchConceptModalComponent;
-    instance.graphId = vocabulary.graphId;
-    instance.vocabulary = vocabulary;
-    instance.filterLanguages = vocabulary.languages;
-    instance.mode = 'include';
-    instance.initialSearch = initialSearch;
-    instance.restricts = restricts;
-    return modalRef.result;
-  }
-
-  openOtherThanVocabulary(vocabulary: VocabularyNode, initialSearch = '', restricts: Restrict[]): Promise<ConceptNode> {
-    const modalRef = this.modalService.open(SearchConceptModalComponent, { size: 'lg' });
-    const instance = modalRef.componentInstance as SearchConceptModalComponent;
-    instance.graphId = vocabulary.graphId;
-    instance.vocabulary = vocabulary;
-    instance.filterLanguages = vocabulary.languages;
-    instance.mode = 'exclude';
-    instance.initialSearch = initialSearch;
-    instance.restricts = restricts;
-    return modalRef.result;
-  }
-}
-
 @Component({
   selector: 'app-search-concept-modal',
   styleUrls: ['./search-concept-modal.component.scss'],
@@ -331,5 +300,36 @@ export class SearchConceptModalComponent implements OnInit, AfterViewInit {
 
   set filterLanguage(lang: string) {
     this.languageService.filterLanguage = lang;
+  }
+}
+
+@Injectable()
+export class SearchConceptModalService {
+
+  constructor(private modalService: ModalService) {
+  }
+
+  openForVocabulary(vocabulary: VocabularyNode, initialSearch: string, restricts: Restrict[]): Promise<ConceptNode> {
+    const modalRef = this.modalService.open(SearchConceptModalComponent, { size: 'lg' });
+    const instance = modalRef.componentInstance as SearchConceptModalComponent;
+    instance.graphId = vocabulary.graphId;
+    instance.vocabulary = vocabulary;
+    instance.filterLanguages = vocabulary.languages;
+    instance.mode = 'include';
+    instance.initialSearch = initialSearch;
+    instance.restricts = restricts;
+    return modalRef.result;
+  }
+
+  openOtherThanVocabulary(vocabulary: VocabularyNode, initialSearch = '', restricts: Restrict[]): Promise<ConceptNode> {
+    const modalRef = this.modalService.open(SearchConceptModalComponent, { size: 'lg' });
+    const instance = modalRef.componentInstance as SearchConceptModalComponent;
+    instance.graphId = vocabulary.graphId;
+    instance.vocabulary = vocabulary;
+    instance.filterLanguages = vocabulary.languages;
+    instance.mode = 'exclude';
+    instance.initialSearch = initialSearch;
+    instance.restricts = restricts;
+    return modalRef.result;
   }
 }

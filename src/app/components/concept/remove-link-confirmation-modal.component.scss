@@ -1,0 +1,24 @@
+@import '~yti-common-ui/theme/variables';
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table, tr, th, td {
+  border: 1px solid $gray-200;
+}
+
+tr:nth-child(even) {
+  background-color: $gray-100;
+}
+
+th, td {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+p.question {
+  margin-top: 2rem;
+  margin-bottom: 0;
+}

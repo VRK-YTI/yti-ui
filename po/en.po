@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-09-28 13:00+0300\n"
+"PO-Revision-Date: 2018-10-04 13:17+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -88,6 +88,24 @@ msgstr ""
 msgid "Namespace"
 msgstr ""
 
+msgid "The following references are about to be completely removed"
+msgstr ""
+
+msgid "The following reference is about to be completely removed"
+msgstr ""
+
+msgid "Reference type"
+msgstr ""
+
+msgid "Target container"
+msgstr ""
+
+msgid "Target"
+msgstr ""
+
+msgid "Are you sure that you want to continue?"
+msgstr ""
+
 msgid "Select concept"
 msgstr ""
 
@@ -99,9 +117,6 @@ msgstr ""
 
 msgid ""
 "Selected concept is not yet formally referenced. Choose the reference type."
-msgstr ""
-
-msgid "Reference type"
 msgstr ""
 
 msgid "Select reference"

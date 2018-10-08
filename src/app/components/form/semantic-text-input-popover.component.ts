@@ -4,6 +4,31 @@ import {
 } from '@angular/core';
 import { ConceptNode } from 'app/entities/node';
 
+class PopoverPositionRefresher {
+
+  private intervalHandle: any;
+
+  constructor(private zone: NgZone, private element: ElementRef) {
+  }
+
+  start() {
+    this.updateTop();
+    this.zone.runOutsideAngular(() => {
+      this.intervalHandle = setInterval(() => this.updateTop(), 100);
+    });
+  }
+
+  stop() {
+    clearInterval(this.intervalHandle);
+    this.intervalHandle = null;
+  }
+
+  updateTop() {
+    const element = this.element.nativeElement as HTMLElement;
+    element.style.top = '-' + (element.getBoundingClientRect().height + 2) + 'px';
+  }
+}
+
 @Component({
   selector: 'app-semantic-text-input-link-popover',
   styleUrls: ['./semantic-text-input-popover.component.scss'],
@@ -80,30 +105,5 @@ export class SemanticTextInputUnlinkPopoverComponent implements AfterViewInit, O
 
   ngOnDestroy(): void {
     this.positionRefresher.stop();
-  }
-}
-
-class PopoverPositionRefresher {
-
-  private intervalHandle: any;
-
-  constructor(private zone: NgZone, private element: ElementRef) {
-  }
-
-  start() {
-    this.updateTop();
-    this.zone.runOutsideAngular(() => {
-      this.intervalHandle = setInterval(() => this.updateTop(), 100);
-    });
-  }
-
-  stop() {
-    clearInterval(this.intervalHandle);
-    this.intervalHandle = null;
-  }
-
-  updateTop() {
-    const element = this.element.nativeElement as HTMLElement;
-    element.style.top = '-' + (element.getBoundingClientRect().height + 2) + 'px';
   }
 }

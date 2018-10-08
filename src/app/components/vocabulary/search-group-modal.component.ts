@@ -8,20 +8,6 @@ import { LanguageService } from 'app/services/language.service';
 import { contains } from 'yti-common-ui/utils/array';
 import { ModalService } from 'app/services/modal.service';
 
-@Injectable()
-export class SearchGroupModalService {
-
-  constructor(private modalService: ModalService) {
-  }
-
-  open(restrictDomainIds: string[]): Promise<GroupNode> {
-    const modalRef = this.modalService.open(SearchGroupModalComponent, { size: 'sm' });
-    const instance = modalRef.componentInstance as SearchGroupModalComponent;
-    instance.restricts = restrictDomainIds;
-    return modalRef.result;
-  }
-}
-
 @Component({
   selector: 'app-search-group-modal',
   styleUrls: ['./search-group-modal.component.scss'],
@@ -122,5 +108,19 @@ export class SearchGroupModalComponent implements AfterViewInit {
 
   cancel() {
     this.modal.dismiss('cancel');
+  }
+}
+
+@Injectable()
+export class SearchGroupModalService {
+
+  constructor(private modalService: ModalService) {
+  }
+
+  open(restrictDomainIds: string[]): Promise<GroupNode> {
+    const modalRef = this.modalService.open(SearchGroupModalComponent, { size: 'sm' });
+    const instance = modalRef.componentInstance as SearchGroupModalComponent;
+    instance.restricts = restrictDomainIds;
+    return modalRef.result;
   }
 }

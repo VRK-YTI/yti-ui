@@ -6,7 +6,7 @@ import { SessionService } from 'app/services/session.service';
 import { ConceptNetworkComponent } from 'app/components/visualization/concept-network.component';
 import { EditingComponent } from 'app/services/editable.service';
 import { VocabularyComponent } from 'app/components/vocabulary/vocabulary.component';
-import { CollectionComponent } from "app/components/collection/collection.component";
+import { CollectionComponent } from 'app/components/collection/collection.component';
 
 @Component({
   selector: 'app-concepts',
@@ -90,7 +90,7 @@ export class ConceptsComponent implements EditingComponent {
       this.viewModel.initializeVocabulary(params['graphId']);
     });
     if (route.children.length > 0) {
-      const childComponent:any = this.route.children[0].component;
+      const childComponent: any = this.route.children[0].component;
       if (childComponent === CollectionComponent) {
         this.initialTabId = 'concepts_collection_tab';
       }
