@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-09-28 12:58+0300\n"
+"PO-Revision-Date: 2018-10-04 13:15+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -88,6 +88,24 @@ msgstr "Etuliite"
 msgid "Namespace"
 msgstr "Nimiavaruus"
 
+msgid "The following references are about to be completely removed"
+msgstr "Seuraavat viitteet poistuvat kokonaan tallennuksen yhteydessä"
+
+msgid "The following reference is about to be completely removed"
+msgstr "Seuraava viite poistuu kokonaan tallennuksen yhteydessä"
+
+msgid "Reference type"
+msgstr "Viitteen tyyppi"
+
+msgid "Target container"
+msgstr "Kohteen sijainti"
+
+msgid "Target"
+msgstr "Kohde"
+
+msgid "Are you sure that you want to continue?"
+msgstr "Oletko varma, että haluat jatkaa?"
+
 msgid "Select concept"
 msgstr "Valitse käsite"
 
@@ -102,9 +120,6 @@ msgid ""
 msgstr ""
 "Valittuun käsitteeseen ei ole vielä formaalia viittausta. Valitse viitteen "
 "tyyppi."
-
-msgid "Reference type"
-msgstr "Viitteen tyyppi"
 
 msgid "Select reference"
 msgstr "Valitse viite"

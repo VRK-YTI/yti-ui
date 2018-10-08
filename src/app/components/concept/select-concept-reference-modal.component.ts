@@ -7,20 +7,6 @@ import { LanguageService } from 'app/services/language.service';
 import { ModalService } from 'app/services/modal.service';
 import { labelNameToResourceIdIdentifier } from 'yti-common-ui/utils/resource';
 
-@Injectable()
-export class SelectConceptReferenceModalService {
-
-  constructor(private modalService: ModalService) {
-  }
-
-  open(formNode: FormNode): Promise<FormReferenceLiteral<ConceptNode>> {
-    const modalRef = this.modalService.open(SelectConceptReferenceModalComponent, { size: 'sm' });
-    const instance = modalRef.componentInstance as SelectConceptReferenceModalComponent;
-    instance.formNode = formNode;
-    return modalRef.result;
-  }
-}
-
 @Component({
   selector: 'app-select-concept-reference-modal',
   styleUrls: ['./select-concept-reference-modal.component.scss'],
@@ -90,5 +76,19 @@ export class SelectConceptReferenceModalComponent implements OnInit {
 
   confirm() {
     this.modal.close(this.selection);
+  }
+}
+
+@Injectable()
+export class SelectConceptReferenceModalService {
+
+  constructor(private modalService: ModalService) {
+  }
+
+  open(formNode: FormNode): Promise<FormReferenceLiteral<ConceptNode>> {
+    const modalRef = this.modalService.open(SelectConceptReferenceModalComponent, { size: 'sm' });
+    const instance = modalRef.componentInstance as SelectConceptReferenceModalComponent;
+    instance.formNode = formNode;
+    return modalRef.result;
   }
 }

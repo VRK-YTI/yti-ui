@@ -4,7 +4,7 @@ import { SearchConceptModalService } from './search-concept-modal.component';
 import { SelectConceptReferenceModalService } from './select-concept-reference-modal.component';
 import { ignoreModalClose } from 'yti-common-ui/utils/modal';
 import { anyMatching } from 'yti-common-ui/utils/array';
-import { FormNode, FormField } from 'app/services/form-state';
+import { FormField, FormNode, FormProperty } from 'app/services/form-state';
 import { EditableService } from 'app/services/editable.service';
 import { requireDefined } from 'yti-common-ui/utils/object';
 import { conceptIdPrefix } from 'app/utils/id-prefix';
@@ -13,12 +13,12 @@ import { conceptIdPrefix } from 'app/utils/id-prefix';
   selector: 'app-concept-form',
   template: `
     <div class="row">
-    
+
       <ng-container *ngFor="let field of fields" [ngSwitch]="field.value.fieldType">
 
         <app-property *ngSwitchCase="'property'"
                       class="col-md-12"
-                      [class.col-xl-6]="multiColumn && field.value.multiColumn"
+                      [class.col-xl-6]="isMultiColumn(field)"
                       [property]="field.value"
                       [id]="idPrefix + '_' + field.name"
                       [conceptSelector]="conceptSelector"
@@ -27,7 +27,7 @@ import { conceptIdPrefix } from 'app/utils/id-prefix';
 
         <app-reference *ngSwitchCase="'reference'"
                        class="col-md-12"
-                       [class.col-xl-6]="multiColumn && !field.value.term"
+                       [class.col-xl-6]="isMultiColumn(field)"
                        [unsaved]="!concept.persistent"
                        (conceptRemove)="onConceptRemove($event)"
                        [reference]="field.value"
@@ -37,7 +37,7 @@ import { conceptIdPrefix } from 'app/utils/id-prefix';
                        [vocabulary]="vocabulary"></app-reference>
 
       </ng-container>
-      
+
     </div>
 
     <app-meta-information [hidden]="!concept.persistent" [node]="concept"></app-meta-information>
@@ -63,11 +63,11 @@ export class ConceptFormComponent {
     return this.editableService.editing;
   }
 
-  get fields() {
+  get fields(): { name: string, value: FormField }[] {
 
     const hasContent = (field: FormField) =>
       this.filterLanguage ? field.hasContentForLanguage(this.filterLanguage)
-                          : !field.valueEmpty;
+        : !field.valueEmpty;
 
     return this.form.fields.filter(f => this.showEmpty || hasContent(f.value));
   }
@@ -81,9 +81,9 @@ export class ConceptFormComponent {
     }
   }
 
-  selectConcept(name: string): Promise<ConceptNode|null> {
+  selectConcept(name: string): Promise<ConceptNode | null> {
 
-    const restricts = [{ graphId: this.concept.graphId, conceptId: this.concept.id, reason: 'self reference error'}];
+    const restricts = [{ graphId: this.concept.graphId, conceptId: this.concept.id, reason: 'self reference error' }];
 
     return this.searchConceptModalService.openForVocabulary(requireDefined(this.vocabulary), name, restricts)
       .then(concept => {
@@ -97,5 +97,17 @@ export class ConceptFormComponent {
           return concept;
         }
       }, ignoreModalClose);
+  }
+
+  isMultiColumn(field: FormField): boolean {
+    if (!this.multiColumn) {
+      return false;
+    }
+    if (field.fieldType === 'property') {
+      return (field as FormProperty).multiColumn;
+    } else if (field.fieldType === 'reference') {
+      return !field.term;
+    }
+    return false;
   }
 }

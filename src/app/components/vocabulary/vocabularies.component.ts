@@ -89,8 +89,8 @@ import { getInformationDomainSvgIcon, getVocabularyTypeMaterialIcon } from 'yti-
               <div class="col-md-12">
                 <div class="result-list-item" *ngFor="let vocabulary of filteredVocabularies"
                      [id]="vocabulary.idIdentifier + '_vocabulary_navigation'">
-                  <span class="type" [hidden]="vocabulary.type === 'TerminologicalVocabulary'">
-                    <i class="material-icons">{{vocabularyTypeIconName(vocabulary.type)}}</i>{{vocabulary.typeLabel | translateValue:true}}
+                  <span class="type">
+                    <i class="material-icons {{vocabularyTypeIconDef(vocabulary.type).colorClass}}">{{vocabularyTypeIconDef(vocabulary.type).name}}</i>{{vocabulary.typeLabel | translateValue:true}}
                   </span>
 
                   <app-status class="status" [status]="vocabulary.status"></app-status>
@@ -141,7 +141,7 @@ export class VocabulariesComponent implements OnDestroy {
   subscriptionToClean: Subscription[] = [];
 
   fullDescription: { [key: string]: boolean } = {};
-  vocabularyTypeIconName = getVocabularyTypeMaterialIcon;
+  vocabularyTypeIconDef = getVocabularyTypeMaterialIcon;
   informationDomainIconSrc = getInformationDomainSvgIcon;
 
   constructor(private authorizationManager: AuthorizationManager,

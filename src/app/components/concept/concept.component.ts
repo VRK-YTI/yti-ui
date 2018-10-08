@@ -7,6 +7,9 @@ import { DeleteConfirmationModalService } from 'app/components/common/delete-con
 import { requireDefined } from 'yti-common-ui/utils/object';
 import { LanguageService } from 'app/services/language.service';
 import { conceptIdPrefix } from 'app/utils/id-prefix';
+import { ReferenceLabels, RemoveLinkConfirmationModalService } from './remove-link-confirmation-modal.component';
+import { ConceptLinkNode, ConceptNode } from '../../entities/node';
+import { Localizable } from 'yti-common-ui/types/localization';
 
 @Component({
   selector: 'app-concept',
@@ -21,19 +24,20 @@ import { conceptIdPrefix } from 'app/utils/id-prefix';
       <form #form="ngForm" [formGroup]="formNode.control" class="component-content">
 
         <div class="top-actions">
-          
-          <app-status *ngIf="concept.hasStatus()" 
-                      [status]="concept.status" 
+
+          <app-status *ngIf="concept.hasStatus()"
+                      [status]="concept.status"
                       class="float-left"></app-status>
-          
-          <app-editable-buttons [form]="form" 
-                                [canRemove]="true" 
+
+          <app-editable-buttons [form]="form"
+                                [canRemove]="true"
                                 [vocabulary]="vocabulary"
                                 [idPrefix]="idPrefix"></app-editable-buttons>
 
         </div>
 
-        <app-concept-form [form]="formNode" [concept]="concept" [multiColumn]="true" [filterLanguage]="filterLanguage" [vocabulary]="vocabulary"></app-concept-form>
+        <app-concept-form [form]="formNode" [concept]="concept" [multiColumn]="true" [filterLanguage]="filterLanguage"
+                          [vocabulary]="vocabulary"></app-concept-form>
       </form>
 
     </div>
@@ -43,12 +47,13 @@ import { conceptIdPrefix } from 'app/utils/id-prefix';
 })
 export class ConceptComponent implements EditingComponent, OnDestroy {
 
-  private subscriptionToClean: Subscription[] = [];
   idPrefix: string = conceptIdPrefix;
+  private subscriptionToClean: Subscription[] = [];
 
   constructor(private route: ActivatedRoute,
               private conceptViewModel: ConceptViewModelService,
-              deleteConfirmationModal: DeleteConfirmationModalService,
+              private deleteConfirmationModal: DeleteConfirmationModalService,
+              private removeLinkConfirmationModal: RemoveLinkConfirmationModalService,
               private editableService: EditableService,
               private languageService: LanguageService) {
 
@@ -56,7 +61,7 @@ export class ConceptComponent implements EditingComponent, OnDestroy {
       this.conceptViewModel.initializeConcept(params['conceptId']);
     });
 
-    editableService.onSave = () => this.conceptViewModel.saveConcept();
+    editableService.onSave = () => this.conceptViewModel.saveConcept(this.confirmLinkRemoval.bind(this));
     editableService.onCanceled = () => this.conceptViewModel.resetConcept();
     editableService.onRemove = () =>
       deleteConfirmationModal.open(requireDefined(this.concept))
@@ -71,18 +76,26 @@ export class ConceptComponent implements EditingComponent, OnDestroy {
     }));
   }
 
-  ngOnDestroy() {
-    for (const subscription of this.subscriptionToClean) {
-      subscription.unsubscribe();
-    }
-  }
-
   get formNode() {
     return this.conceptViewModel.resourceForm!;
   }
 
   get concept() {
     return this.conceptViewModel.concept!;
+  }
+
+  get filterLanguage() {
+    return this.languageService.filterLanguage;
+  }
+
+  get vocabulary() {
+    return this.conceptViewModel.vocabulary;
+  }
+
+  ngOnDestroy() {
+    for (const subscription of this.subscriptionToClean) {
+      subscription.unsubscribe();
+    }
   }
 
   isEditing(): boolean {
@@ -93,11 +106,44 @@ export class ConceptComponent implements EditingComponent, OnDestroy {
     this.editableService.cancel();
   }
 
-  get filterLanguage() {
-    return this.languageService.filterLanguage;
-  }
+  confirmLinkRemoval(proposed: ConceptNode, previous: ConceptNode): Promise<any> {
+    const proposedIds: { [id: string]: boolean } = {};
+    proposed.getAllReferences()
+      .filter(ref => ref.concept || ref.conceptLink)
+      .map(ref => ref.values)
+      .forEach(valArr => valArr.forEach(node => proposedIds[node.id] = true));
 
-  get vocabulary() {
-    return this.conceptViewModel.vocabulary;
+    const missingRefs: ReferenceLabels[] = [];
+    previous.getAllReferences().filter(ref => ref.concept || ref.conceptLink).forEach(ref => {
+      ref.values.forEach(node => {
+        if (node.id && !proposedIds[node.id]) {
+          const referenceLabel = ref.meta.label;
+          let containerLabel: { titleLabel: Localizable, label: Localizable } | undefined;
+          let targetLabel: Localizable;
+          if (node instanceof ConceptNode) {
+            targetLabel = node.label;
+          } else if (node instanceof ConceptLinkNode) {
+            targetLabel = node.label;
+            containerLabel = { titleLabel: node.vocabularyMetaLabel, label: node.vocabularyLabel };
+          } else {
+            if (node.label) {
+              targetLabel = node.label;
+            } else {
+              throw new Error('Invalid node type found under reference type "' + this.languageService.translate(referenceLabel) + '"');
+            }
+          }
+          missingRefs.push({
+            referenceLabel: referenceLabel,
+            containerLabel: containerLabel,
+            targetLabel: targetLabel
+          });
+        }
+      });
+    });
+
+    if (missingRefs.length) {
+      return this.removeLinkConfirmationModal.open(missingRefs).catch(reason => Promise.reject('cancel'));
+    }
+    return Promise.resolve();
   }
 }

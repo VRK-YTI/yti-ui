@@ -72,7 +72,9 @@ export class EditableService implements OnDestroy {
       this.saving$.next(false);
       this.editing$.next(false);
     }, err => {
-      this.errorModalService.openSubmitError(err);
+      if (err !== 'cancel') {
+        this.errorModalService.openSubmitError(err);
+      }
       this.saving$.next(false);
     });
   }

@@ -79,6 +79,24 @@ msgstr ""
 msgid "Namespace"
 msgstr ""
 
+msgid "The following references are about to be completely removed"
+msgstr ""
+
+msgid "The following reference is about to be completely removed"
+msgstr ""
+
+msgid "Reference type"
+msgstr ""
+
+msgid "Target container"
+msgstr ""
+
+msgid "Target"
+msgstr ""
+
+msgid "Are you sure that you want to continue?"
+msgstr ""
+
 msgid "Select concept"
 msgstr ""
 
@@ -89,9 +107,6 @@ msgid "Choose reference type"
 msgstr ""
 
 msgid "Selected concept is not yet formally referenced. Choose the reference type."
-msgstr ""
-
-msgid "Reference type"
 msgstr ""
 
 msgid "Select reference"

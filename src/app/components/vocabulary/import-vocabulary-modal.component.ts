@@ -118,21 +118,6 @@ function isValidStatus(value: Localization[]|string): value is Status {
   return contains(allStatuses, value);
 }
 
-@Injectable()
-export class ImportVocabularyModalService {
-
-  constructor(private modalService: ModalService) {
-  }
-
-  open(importFile: File, vocabulary: VocabularyNode): Promise<any> {
-    const modalRef = this.modalService.open(ImportVocabularyModalComponent, { size: 'lg' });
-    const instance = modalRef.componentInstance as ImportVocabularyModalComponent;
-    instance.importFile = importFile;
-    instance.vocabulary = vocabulary;
-    return modalRef.result;
-  }
-}
-
 @Component({
   selector: 'app-import-vocabulary-modal',
   styleUrls: ['./import-vocabulary-modal.component.scss'],
@@ -469,5 +454,20 @@ export class ImportVocabularyModalComponent implements OnInit {
           this.uploading = false;
         }
       });
+  }
+}
+
+@Injectable()
+export class ImportVocabularyModalService {
+
+  constructor(private modalService: ModalService) {
+  }
+
+  open(importFile: File, vocabulary: VocabularyNode): Promise<any> {
+    const modalRef = this.modalService.open(ImportVocabularyModalComponent, { size: 'lg' });
+    const instance = modalRef.componentInstance as ImportVocabularyModalComponent;
+    instance.importFile = importFile;
+    instance.vocabulary = vocabulary;
+    return modalRef.result;
   }
 }

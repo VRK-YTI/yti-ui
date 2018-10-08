@@ -340,27 +340,6 @@ export class MetaModel {
   }
 }
 
-export class GraphMeta {
-
-  private meta = new Map<NodeType, NodeMeta>();
-
-  constructor(public graphId: string, public label: Localizable, private nodeMetas: NodeMetaInternal[], public template: boolean) {
-    this.meta = index(nodeMetas.map(m => new NodeMeta(m)), m => m.type);
-  }
-
-  has(nodeType: NodeType) {
-    return this.meta.has(nodeType);
-  }
-
-  getNodeMeta(type: NodeType): NodeMeta {
-    return requireDefined(this.meta.get(type), `Meta not found for graph: ${this.graphId} and node type: ${type}`);
-  }
-
-  getNodeMetas() {
-    return Array.from(this.meta.values());
-  }
-}
-
 export class NodeMeta {
 
   label: Localizable;
@@ -441,5 +420,26 @@ export class NodeMeta {
 
   getProperty(propertyId: string) {
     return requireDefined(firstMatching(this.properties, p => p.id === propertyId));
+  }
+}
+
+export class GraphMeta {
+
+  private meta = new Map<NodeType, NodeMeta>();
+
+  constructor(public graphId: string, public label: Localizable, private nodeMetas: NodeMetaInternal[], public template: boolean) {
+    this.meta = index(nodeMetas.map(m => new NodeMeta(m)), m => m.type);
+  }
+
+  has(nodeType: NodeType) {
+    return this.meta.has(nodeType);
+  }
+
+  getNodeMeta(type: NodeType): NodeMeta {
+    return requireDefined(this.meta.get(type), `Meta not found for graph: ${this.graphId} and node type: ${type}`);
+  }
+
+  getNodeMetas() {
+    return Array.from(this.meta.values());
   }
 }

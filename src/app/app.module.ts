@@ -1,15 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {
-  ResolveEnd,
-  Route,
-  Router,
-  RouterModule,
-  Routes,
-  UrlSegment,
-  UrlSegmentGroup
-} from '@angular/router';
+import { ResolveEnd, Route, Router, RouterModule, Routes, UrlSegment, UrlSegmentGroup } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppComponent } from 'app/components/app.component';
 import { TermedService } from 'app/services/termed.service';
@@ -47,7 +39,10 @@ import { SearchConceptModalComponent, SearchConceptModalService } from 'app/comp
 import { ConceptFormComponent } from 'app/components/concept/concept-form.component';
 import { DividerComponent } from 'app/components/common/divider.component';
 import { SessionService } from 'app/services/session.service';
-import { DeleteConfirmationModalComponent, DeleteConfirmationModalService } from 'app/components/common/delete-confirmation-modal.component';
+import {
+  DeleteConfirmationModalComponent,
+  DeleteConfirmationModalService
+} from 'app/components/common/delete-confirmation-modal.component';
 import { CollectionComponent } from 'app/components/collection/collection.component';
 import { CollectionListComponent } from 'app/components/collection/collection-list.component';
 import { ConfirmCancelEditGuard } from 'app/components/common/edit.guard';
@@ -56,10 +51,19 @@ import { VocabularyFormComponent } from 'app/components/vocabulary/vocabulary-fo
 import { GroupInputComponent } from 'app/components/vocabulary/group-input.component';
 import { OrganizationInputComponent } from 'app/components/vocabulary/organization-input.component';
 import { InfiniteScrollModule } from 'ngx-infinite-scroll';
-import { ConceptLinkReferenceInputComponent, ConceptLinkReferencePopoverComponent } from 'app/components/concept/concept-link-reference-input.component';
+import {
+  ConceptLinkReferenceInputComponent,
+  ConceptLinkReferencePopoverComponent
+} from 'app/components/concept/concept-link-reference-input.component';
 import { SemanticTextInputComponent } from 'app/components/form/semantic-text-input.component';
-import { SemanticTextInputLinkPopoverComponent, SemanticTextInputUnlinkPopoverComponent } from 'app/components/form/semantic-text-input-popover.component';
-import { SelectConceptReferenceModalComponent, SelectConceptReferenceModalService } from 'app/components/concept/select-concept-reference-modal.component';
+import {
+  SemanticTextInputLinkPopoverComponent,
+  SemanticTextInputUnlinkPopoverComponent
+} from 'app/components/form/semantic-text-input-popover.component';
+import {
+  SelectConceptReferenceModalComponent,
+  SelectConceptReferenceModalService
+} from 'app/components/concept/select-concept-reference-modal.component';
 import { FrontpageComponent } from 'app/components/frontpage.component';
 import { RefreshComponent } from 'app/components/refresh.component';
 import { LiteralListInputComponent } from 'app/components/form/literal-list-input.component';
@@ -68,7 +72,10 @@ import { TermComponent } from 'app/components/form/term.component';
 import { LanguageInputComponent } from 'app/components/form/language-input.component';
 import { FilterLanguageComponent } from 'app/components/form/filter-language.component';
 import { ImportVocabularyModalComponent, ImportVocabularyModalService } from 'app/components/vocabulary/import-vocabulary-modal.component';
-import { SearchOrganizationModalComponent, SearchOrganizationModalService } from 'app/components/vocabulary/search-organization-modal.component';
+import {
+  SearchOrganizationModalComponent,
+  SearchOrganizationModalService
+} from 'app/components/vocabulary/search-organization-modal.component';
 import { PrefixInputComponent } from 'app/components/concept/prefix-input.component';
 import { SearchGroupModalComponent, SearchGroupModalService } from 'app/components/vocabulary/search-group-modal.component';
 import { AuthorizationManager } from 'app/services/authorization-manager.sevice';
@@ -76,13 +83,17 @@ import { UserDetailsComponent } from 'app/components/user-details.component';
 import { OrganizationFilterDropdownComponent } from 'app/components/common/organization-filter-dropdown.component';
 import { VocabularyFilterDropdownComponent } from 'app/components/common/vocabulary-filter-dropdown.component';
 import { StatusFilterDropdownComponent } from 'app/components/common/status-filter-dropdown.component';
-import { YtiCommonModule, AUTHENTICATED_USER_ENDPOINT, LOCALIZER } from 'yti-common-ui';
+import { AUTHENTICATED_USER_ENDPOINT, LOCALIZER, YtiCommonModule } from 'yti-common-ui';
 import { InformationAboutServiceComponent } from 'app/components/information/information-about-service.component';
 import { ModalService } from './services/modal.service';
 import { DragSortableDirective, DragSortableItemDirective } from './directives/drag-sortable.directive';
 import { apiUrl } from './config';
 import { LogoComponent } from './components/navigation/logo.component';
 import { HttpClientModule } from '@angular/common/http';
+import {
+  RemoveLinkConfirmationModalComponent,
+  RemoveLinkConfirmationModalService
+} from './components/concept/remove-link-confirmation-modal.component';
 
 function removeEmptyValues(obj: {}) {
 
@@ -142,11 +153,13 @@ export function refreshRouteMatcher(segments: UrlSegment[], group: UrlSegmentGro
 const appRoutes: Routes = [
   { path: '', component: FrontpageComponent },
   { path: 'newVocabulary', component: NewVocabularyComponent },
-  { path: 'concepts/:graphId', component: ConceptsComponent, canDeactivate: [ConfirmCancelEditGuard], children: [
+  {
+    path: 'concepts/:graphId', component: ConceptsComponent, canDeactivate: [ConfirmCancelEditGuard], children: [
       { path: '', component: NoSelectionComponent },
       { path: 'concept/:conceptId', component: ConceptComponent, canDeactivate: [ConfirmCancelEditGuard] },
       { path: 'collection/:collectionId', component: CollectionComponent, canDeactivate: [ConfirmCancelEditGuard] }
-    ]},
+    ]
+  },
   { path: 'userDetails', component: UserDetailsComponent },
   { path: 'information', component: InformationAboutServiceComponent },
   // NOTE: If createRefreshRouteMatcher(['re']) starts to work after angular upgrade, then switch to that.
@@ -202,6 +215,7 @@ const appRoutes: Routes = [
     SearchOrganizationModalComponent,
     SearchGroupModalComponent,
     DeleteConfirmationModalComponent,
+    RemoveLinkConfirmationModalComponent,
     SelectConceptReferenceModalComponent,
     FloatDirective,
     TranslateSearchValuePipe,
@@ -223,6 +237,7 @@ const appRoutes: Routes = [
     SearchOrganizationModalComponent,
     SearchGroupModalComponent,
     DeleteConfirmationModalComponent,
+    RemoveLinkConfirmationModalComponent,
     SelectConceptReferenceModalComponent,
     ImportVocabularyModalComponent
   ],
@@ -254,6 +269,7 @@ const appRoutes: Routes = [
     SearchOrganizationModalService,
     SearchGroupModalService,
     DeleteConfirmationModalService,
+    RemoveLinkConfirmationModalService,
     SelectConceptReferenceModalService,
     SessionService,
     ElasticSearchService,

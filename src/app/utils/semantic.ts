@@ -94,15 +94,15 @@ class MarkdownSerializer implements SemanticTextSerializer {
 
     function getChildren(node: MarkdownNode): MarkdownNode[] {
 
-      const result: MarkdownNode[] = [];
+      const children: MarkdownNode[] = [];
 
       if (node.isContainer && node.firstChild) {
         for (let sibling = node.firstChild; isDefined(sibling); sibling = sibling.next) {
-          result.push(sibling);
+          children.push(sibling);
         }
       }
 
-      return result;
+      return children;
     }
 
     function getSingleTextChild(parent: MarkdownNode) {

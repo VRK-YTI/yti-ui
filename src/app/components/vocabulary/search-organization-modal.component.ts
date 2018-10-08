@@ -9,21 +9,6 @@ import { contains } from 'yti-common-ui/utils/array';
 import { isDefined } from 'yti-common-ui/utils/object';
 import { ModalService } from 'app/services/modal.service';
 
-@Injectable()
-export class SearchOrganizationModalService {
-
-  constructor(private modalService: ModalService) {
-  }
-
-  open(restrictOrganizationIds: string[], allowOnlyOrganizationIds: string[]|null): Promise<OrganizationNode> {
-    const modalRef = this.modalService.open(SearchOrganizationModalComponent, { size: 'sm' });
-    const instance = modalRef.componentInstance as SearchOrganizationModalComponent;
-    instance.restrictOrganizationIds = restrictOrganizationIds;
-    instance.allowOnlyOrganizationIds = allowOnlyOrganizationIds;
-    return modalRef.result;
-  }
-}
-
 @Component({
   selector: 'app-search-organization-modal',
   styleUrls: ['./search-organization-modal.component.scss'],
@@ -122,5 +107,20 @@ export class SearchOrganizationModalComponent implements AfterViewInit {
 
   cancel() {
     this.modal.dismiss('cancel');
+  }
+}
+
+@Injectable()
+export class SearchOrganizationModalService {
+
+  constructor(private modalService: ModalService) {
+  }
+
+  open(restrictOrganizationIds: string[], allowOnlyOrganizationIds: string[]|null): Promise<OrganizationNode> {
+    const modalRef = this.modalService.open(SearchOrganizationModalComponent, { size: 'sm' });
+    const instance = modalRef.componentInstance as SearchOrganizationModalComponent;
+    instance.restrictOrganizationIds = restrictOrganizationIds;
+    instance.allowOnlyOrganizationIds = allowOnlyOrganizationIds;
+    return modalRef.result;
   }
 }

@@ -41,7 +41,7 @@
     "rxjs": "^6.0.0",
     "uuid": "3.0.1",
     "vis": "^4.19.1",
-    "yti-common-ui": "https://github.com/VRK-YTI/yti-common-ui.git/#806914816635e9ceab48e8805ba39c479d2b061b",
+    "yti-common-ui": "https://github.com/VRK-YTI/yti-common-ui.git/#600a4c921ce9cc19aa6d72243a47ad1a75f2c326",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {
@@ -73,7 +73,7 @@
     "protractor": "~5.4.0",
     "ts-node": "~5.0.1",
     "tsconfig-paths": "^3.6.0",
-    "tslint": "~5.9.1",
+    "tslint": "~5.11.0",
     "typescript": "~2.7.2"
   },
   "resolutions": {
