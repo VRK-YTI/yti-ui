@@ -13,7 +13,6 @@ import { VocabularyNodeType } from 'app/entities/node-api';
 import { FilterOptions } from 'yti-common-ui/components/filter-dropdown.component';
 import { TranslateService } from '@ngx-translate/core';
 import { getInformationDomainSvgIcon, getVocabularyTypeMaterialIcon } from 'yti-common-ui/utils/icons';
-import { map } from 'rxjs/operators'
 
 @Component({
   selector: 'app-vocabularies',
@@ -36,7 +35,7 @@ import { map } from 'rxjs/operators'
             <input class="form-control"
                    id="vocabularies_search_input"
                    type="text"
-                   [(ngModel)]="search"
+                   [(ngModel)]="searchText"
                    placeholder="{{'Search term' | translate}}"/>
           </div>
         </div>
@@ -51,9 +50,9 @@ import { map } from 'rxjs/operators'
                    *ngFor="let domain of informationDomains"
                    [class.active]="isInformationDomainSelected(domain.node)"
                    [id]="domain.node.idIdentifier + '_domain_toggle'"
-                   (click)="toggleInformationDomain(domain.node)">
+                   (click)="toggleInformationDomainSelection(domain.node)">
 
-                <img [src]="informationDomainIconSrc(domain.node.getProperty('notation').literalValue)">
+                <img [src]="getInformationDomainIconSrc(domain.node.getProperty('notation').literalValue)">
                 <span class="name">{{domain.node.label | translateValue:true}}</span>
                 <span class="count">({{domain.count}})</span>
               </div>
@@ -70,7 +69,7 @@ import { map } from 'rxjs/operators'
 
                 <span class="search-label search-label-inline" translate>Filter results</span>
 
-                <app-organization-filter-dropdown [filterSubject]="organization$"
+                <app-organization-filter-dropdown [filterSubject]="selectedOrganization$"
                                                   id="organization_filter_dropdown"
                                                   [organizations]="organizations$"></app-organization-filter-dropdown>
               </div>
@@ -91,7 +90,7 @@ import { map } from 'rxjs/operators'
                 <div class="result-list-item" *ngFor="let vocabulary of filteredVocabularies"
                      [id]="vocabulary.idIdentifier + '_vocabulary_navigation'">
                   <span class="type">
-                    <i class="material-icons {{vocabularyTypeIconDef(vocabulary.type).colorClass}}">{{vocabularyTypeIconDef(vocabulary.type).name}}</i>{{vocabulary.typeLabel | translateValue:true}}
+                    <i class="material-icons {{getVocabularyTypeIconDef(vocabulary.type).colorClass}}">{{getVocabularyTypeIconDef(vocabulary.type).name}}</i>{{vocabulary.typeLabel | translateValue:true}}
                   </span>
 
                   <app-status class="status" [status]="vocabulary.status"></app-status>
@@ -128,9 +127,9 @@ import { map } from 'rxjs/operators'
 })
 export class VocabulariesComponent implements OnDestroy {
 
-  search$ = new BehaviorSubject('');
-  informationDomain$ = new BehaviorSubject<GroupNode | null>(null);
-  organization$ = new BehaviorSubject<OrganizationNode | null>(null);
+  searchText$ = new BehaviorSubject('');
+  selectedInformationDomain$ = new BehaviorSubject<GroupNode | null>(null);
+  selectedOrganization$ = new BehaviorSubject<OrganizationNode | null>(null);
 
   informationDomains: { node: GroupNode, count: number }[];
   organizations$: Observable<OrganizationNode[]>;
@@ -142,8 +141,8 @@ export class VocabulariesComponent implements OnDestroy {
   subscriptionToClean: Subscription[] = [];
 
   fullDescription: { [key: string]: boolean } = {};
-  vocabularyTypeIconDef = getVocabularyTypeMaterialIcon;
-  informationDomainIconSrc = getInformationDomainSvgIcon;
+  getVocabularyTypeIconDef = getVocabularyTypeMaterialIcon;
+  getInformationDomainIconSrc = getInformationDomainSvgIcon;
 
   constructor(private authorizationManager: AuthorizationManager,
               languageService: LanguageService,
@@ -167,24 +166,12 @@ export class VocabulariesComponent implements OnDestroy {
 
     this.organizations$ = termedService.getOrganizationList();
 
-    function searchMatches(search: string, vocabulary: VocabularyNode) {
-      return !search || anyMatching(vocabulary.prefLabel, attr => matches(attr.value, search));
-    }
-
-    function informationDomainMatches(informationDomain: GroupNode | null, vocabulary: VocabularyNode) {
-      return !informationDomain || anyMatching(vocabulary.groups, domain => domain.id === informationDomain.id);
-    }
-
-    function organizationMatches(organization: OrganizationNode | null, vocabulary: VocabularyNode) {
-      return !organization || anyMatching(vocabulary.contributors, contributor => contributor.id === organization.id);
-    }
-
-    combineLatest(termedService.getGroupList(), vocabularies$, this.search$, this.organization$)
-      .subscribe(([informationDomains, vocabularies, search, organization]) => {
+    combineLatest(termedService.getGroupList(), vocabularies$, this.searchText$, this.selectedOrganization$, languageService.language$)
+      .subscribe(([informationDomains, vocabularies, searchText, selectedOrganization, lang]) => {
 
         const matchingVocabularies = vocabularies.filter(vocabulary =>
-          searchMatches(search, vocabulary) &&
-          organizationMatches(organization, vocabulary));
+          searchMatches(searchText, vocabulary) &&
+          organizationMatches(selectedOrganization, vocabulary));
 
         const vocabularyCount = (domain: GroupNode) =>
           matchingVocabularies.filter(voc => informationDomainMatches(domain, voc)).length;
@@ -192,22 +179,16 @@ export class VocabulariesComponent implements OnDestroy {
         this.informationDomains = informationDomains.map(domain => ({
           node: domain,
           count: vocabularyCount(domain)
-        })).filter(c => c.count > 0);
+        })).filter(c => c.count > 0).sort(comparingLocalizable<{ node: GroupNode, count: number }>(languageService, d => d.node.label));
       });
 
-    const informationDomains$ = combineLatest(termedService.getGroupList(), languageService.language$).pipe(
-      map(([domains]) => {
-        domains.sort(comparingLocalizable<GroupNode>(languageService, d => d.label));
-        return domains;
-      })
-    );
-
     this.subscriptionToClean.push(
-      combineLatest(informationDomains$, vocabularies$, this.search$, this.organization$)
-        .subscribe(([informationDomains, vocabularies, search, organization]) => {
+      combineLatest(vocabularies$, this.searchText$, this.selectedInformationDomain$, this.selectedOrganization$)
+        .subscribe(([vocabularies, searchText, selectedInformationDomain, selectedOrganization]) => {
           const matchingVocabularies = vocabularies.filter(vocabulary =>
-            searchMatches(search, vocabulary) &&
-            organizationMatches(organization, vocabulary));
+            searchMatches(searchText, vocabulary) &&
+            informationDomainMatches(selectedInformationDomain, vocabulary) &&
+            organizationMatches(selectedOrganization, vocabulary));
 
           this.filteredVocabularies = matchingVocabularies.sort(
             comparingPrimitive<VocabularyNode>(voc => !voc.priority) // vocabularies having priority set first
@@ -222,20 +203,20 @@ export class VocabulariesComponent implements OnDestroy {
     return !this.vocabulariesLoaded || !this.informationDomains || !this.organizations$;
   }
 
-  get search() {
-    return this.search$.getValue();
+  get searchText() {
+    return this.searchText$.getValue();
   }
 
-  set search(value: string) {
-    this.search$.next(value);
+  set searchText(value: string) {
+    this.searchText$.next(value);
   }
 
   isInformationDomainSelected(domain: GroupNode) {
-    return this.informationDomain$.getValue() === domain;
+    return this.selectedInformationDomain$.getValue() === domain;
   }
 
-  toggleInformationDomain(domain: GroupNode) {
-    this.informationDomain$.next(this.isInformationDomainSelected(domain) ? null : domain);
+  toggleInformationDomainSelection(domain: GroupNode) {
+    this.selectedInformationDomain$.next(this.isInformationDomainSelected(domain) ? null : domain);
   }
 
   canAddVocabulary() {
@@ -257,4 +238,16 @@ export class VocabulariesComponent implements OnDestroy {
       this.fullDescription[graphId] = true;
     }
   }
+}
+
+function searchMatches(condition: string, vocabulary: VocabularyNode): boolean {
+  return !condition || anyMatching(vocabulary.prefLabel, attr => matches(attr.value, condition));
+}
+
+function informationDomainMatches(informationDomain: GroupNode | null, vocabulary: VocabularyNode): boolean {
+  return !informationDomain || anyMatching(vocabulary.groups, domain => domain.id === informationDomain.id);
+}
+
+function organizationMatches(organization: OrganizationNode | null, vocabulary: VocabularyNode): boolean {
+  return !organization || anyMatching(vocabulary.contributors, contributor => contributor.id === organization.id);
 }
