@@ -13,6 +13,7 @@ import { VocabularyNodeType } from 'app/entities/node-api';
 import { FilterOptions } from 'yti-common-ui/components/filter-dropdown.component';
 import { TranslateService } from '@ngx-translate/core';
 import { getInformationDomainSvgIcon, getVocabularyTypeMaterialIcon } from 'yti-common-ui/utils/icons';
+import { map } from 'rxjs/operators'
 
 @Component({
   selector: 'app-vocabularies',
@@ -194,21 +195,25 @@ export class VocabulariesComponent implements OnDestroy {
         })).filter(c => c.count > 0);
       });
 
+    const informationDomains$ = combineLatest(termedService.getGroupList(), languageService.language$).pipe(
+      map(([domains]) => {
+        domains.sort(comparingLocalizable<GroupNode>(languageService, d => d.label));
+        return domains;
+      })
+    );
+
     this.subscriptionToClean.push(
-      combineLatest(vocabularies$, this.search$, this.informationDomain$, this.organization$, languageService.language$)
-        .subscribe(([vocabularies, search, informationDomain, organization]) => {
+      combineLatest(informationDomains$, vocabularies$, this.search$, this.organization$)
+        .subscribe(([informationDomains, vocabularies, search, organization]) => {
+          const matchingVocabularies = vocabularies.filter(vocabulary =>
+            searchMatches(search, vocabulary) &&
+            organizationMatches(organization, vocabulary));
 
-          this.filteredVocabularies =
-            vocabularies.filter(vocabulary =>
-              searchMatches(search, vocabulary) &&
-              informationDomainMatches(informationDomain, vocabulary) &&
-              organizationMatches(organization, vocabulary));
-
-          this.filteredVocabularies.sort(
+          this.filteredVocabularies = matchingVocabularies.sort(
             comparingPrimitive<VocabularyNode>(voc => !voc.priority) // vocabularies having priority set first
               .andThen(comparingPrimitive<VocabularyNode>(voc => voc.priority))
               .andThen(comparingLocalizable<VocabularyNode>(languageService, voc => voc.label))
-          );
+          ).sort(comparingLocalizable<VocabularyNode>(languageService, voc => voc.label));
         })
     );
   }
