@@ -111,12 +111,13 @@ export class ConceptComponent implements EditingComponent, OnDestroy {
     proposed.getAllReferences()
       .filter(ref => ref.concept || ref.conceptLink)
       .map(ref => ref.values)
-      .forEach(valArr => valArr.forEach(node => proposedIds[node.id] = true));
+      .forEach(valArr => valArr.forEach(node => proposedIds[node.targetId || node.id] = true));
 
     const missingRefs: ReferenceLabels[] = [];
     previous.getAllReferences().filter(ref => ref.concept || ref.conceptLink).forEach(ref => {
       ref.values.forEach(node => {
-        if (node.id && !proposedIds[node.id]) {
+        const id = node.targetId || node.id;
+        if (id && !proposedIds[id]) {
           const referenceLabel = ref.meta.label;
           let containerLabel: { titleLabel: Localizable, label: Localizable } | undefined;
           let targetLabel: Localizable;

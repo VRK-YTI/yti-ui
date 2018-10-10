@@ -23,7 +23,7 @@ import { isDefined, requireDefined } from 'yti-common-ui/utils/object';
            [appDragSortableItem]="concept" 
            [index]="i">
         <a><i class="fa fa-times" [id]="concept.idIdentifier + '_' + id + '_concept_reference_remove_reference_link'" (click)="removeReference(concept)"></i></a>
-        <span>{{concept.label | translateValue}}</span>
+        <span> {{concept.label | translateValue}}</span>
       </div>
     </div>
 
