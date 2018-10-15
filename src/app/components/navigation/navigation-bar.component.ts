@@ -13,6 +13,7 @@ import { TermedService } from '../../services/termed.service';
       <a id="main_page_link" class="navbar-brand" [routerLink]="['/']">
         <app-logo></app-logo>
         <span translate>Controlled Vocabularies</span>
+        <span *ngIf="environmentIdentifier">{{environmentIdentifier}}</span>
       </a>
 
       <ul class="navbar-nav ml-auto">
@@ -98,6 +99,7 @@ export class NavigationBarComponent {
   groupManagementUrl: string;
   codeListUrl: string;
   dataModelUrl: string;
+  env: string;
 
   constructor(private languageService: LanguageService,
               private userService: UserService,
@@ -112,6 +114,7 @@ export class NavigationBarComponent {
       this.groupManagementUrl = configuration.groupmanagementUrl;
       this.codeListUrl = configuration.codeListUrl;
       this.dataModelUrl = configuration.dataModelUrl;
+      this.env = configuration.env;
     });
   }
 
@@ -149,5 +152,9 @@ export class NavigationBarComponent {
 
   showGroupManagementUrl() {
     return this.user.superuser || this.user.isAdminInAnyOrganization();
+  }
+
+  get environmentIdentifier() {
+    return this.env ? this.env !== 'prod' ? ' - ' + this.env.toUpperCase() : '' : '';
   }
 }
