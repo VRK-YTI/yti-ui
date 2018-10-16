@@ -49,7 +49,8 @@ function createNodes(nodes: any): Promise<any> {
 function initData(prefix: string, type: 'Vocabulary'|'TerminologicalVocabulary', vocabularyNode: any, nodes: any): Promise<any> {
   return createVocabulary(prefix, type, vocabularyNode)
     .then(() => createNodes(nodes))
-    .then(() => console.log(prefix));
+    .then(() => console.log('SUCCESS with "' + prefix + '"'))
+    .catch((reason: any) => console.log('ERROR with "' + prefix + '":' + reason));
 }
 
 Promise.all([
@@ -57,4 +58,5 @@ Promise.all([
   initData('sos', 'TerminologicalVocabulary', sosVocabulary, sos),
   initData('oksa', 'TerminologicalVocabulary', oksaVocabulary, oksa),
   initData('kira', 'TerminologicalVocabulary', kiraVocabulary, kira)
-]).then(() => console.log('========\nOK'));
+]).then(() => console.log('========\nOK'))
+  .catch((reason: any) => console.log('========\nERROR: "' + reason + '"'));
