@@ -57,7 +57,8 @@ export interface Restrict {
       <div class="row mb-2">
         <div class="col-12">
 
-          <app-vocabulary-filter-dropdown [filterSubject]="onlyVocabulary$"
+          <app-vocabulary-filter-dropdown *ngIf="allowVocabularyChange"
+                                          [filterSubject]="onlyVocabulary$"
                                           id="search_concept_vocabulary_filter_dropdown"
                                           [vocabularies]="vocabularies"
                                           class="float-left"></app-vocabulary-filter-dropdown>
@@ -65,7 +66,7 @@ export interface Restrict {
           <app-status-filter-dropdown *ngIf="hasStatus()"
                                       id="search_concept_status_filter_dropdown"
                                       [filterSubject]="onlyStatus$"
-                                      class="float-left ml-2"></app-status-filter-dropdown>
+                                      [ngClass]="{'float-left': true, 'ml-2': allowVocabularyChange}"></app-status-filter-dropdown>
 
         </div>
       </div>
@@ -144,6 +145,7 @@ export class SearchConceptModalComponent implements OnInit, AfterViewInit {
   @Input() restricts: Restrict[];
   @Input() vocabulary: VocabularyNode;
   @Input() filterLanguages: string[];
+  @Input() allowVocabularyChange: boolean;
 
   searchResults$ = new BehaviorSubject<IndexedConcept[]>([]);
 
@@ -157,7 +159,7 @@ export class SearchConceptModalComponent implements OnInit, AfterViewInit {
 
   loading = false;
 
-  vocabularies: Observable<VocabularyNode[]>;
+  vocabularies: Observable<VocabularyNode[]> | undefined;
 
   loaded = 0;
   canLoadMore = true;
@@ -178,8 +180,10 @@ export class SearchConceptModalComponent implements OnInit, AfterViewInit {
     const debouncedSearch = this.search$.pipe(skip(1), debounceTime(500));
     const search = concat(initialSearch, debouncedSearch);
 
-    this.vocabularies = this.termedService.getVocabularyList()
-      .pipe(map(vocabularies => vocabularies.filter(vocabulary => vocabulary.graphId !== this.graphId)));
+    if (this.allowVocabularyChange) {
+      this.vocabularies = this.termedService.getVocabularyList()
+        .pipe(map(vocabularies => vocabularies.filter(vocabulary => vocabulary.graphId !== this.graphId)));
+    }
 
     combineLatest(search, this.onlyStatus$, this.onlyVocabulary$)
       .subscribe(() => this.loadConcepts(true));
@@ -309,7 +313,7 @@ export class SearchConceptModalService {
   constructor(private modalService: ModalService) {
   }
 
-  openForVocabulary(vocabulary: VocabularyNode, initialSearch: string, restricts: Restrict[]): Promise<ConceptNode> {
+  openForVocabulary(vocabulary: VocabularyNode, initialSearch: string, restricts: Restrict[], allowVocabularyChange: boolean = false): Promise<ConceptNode> {
     const modalRef = this.modalService.open(SearchConceptModalComponent, { size: 'lg' });
     const instance = modalRef.componentInstance as SearchConceptModalComponent;
     instance.graphId = vocabulary.graphId;
@@ -318,6 +322,7 @@ export class SearchConceptModalService {
     instance.mode = 'include';
     instance.initialSearch = initialSearch;
     instance.restricts = restricts;
+    instance.allowVocabularyChange = allowVocabularyChange;
     return modalRef.result;
   }
 
@@ -330,6 +335,7 @@ export class SearchConceptModalService {
     instance.mode = 'exclude';
     instance.initialSearch = initialSearch;
     instance.restricts = restricts;
+    instance.allowVocabularyChange = true;
     return modalRef.result;
   }
 }
