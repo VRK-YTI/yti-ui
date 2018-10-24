@@ -2,6 +2,24 @@
 
 // TODO more generic mechanism for result lists instead of abusing search-results
 
+.modal-header {
+  flex-direction: column;
+
+  h6 {
+    margin: 20px 0 0 0;
+    span {
+      float: none;
+    }
+  }
+}
+
+.modal-body {
+  border: 1px solid $gray-200;
+  &.full-height {
+    height: calc(100vh - 275px);
+  }
+}
+
 .search-results {
   .search-result {
 
@@ -10,7 +28,7 @@
 
     .content {
       margin-left: 0;
-      padding-top: 20px;
+      padding-top: 0px;
       padding-bottom: 5px;
     }
   }

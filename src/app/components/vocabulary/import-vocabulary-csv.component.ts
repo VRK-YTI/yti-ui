@@ -131,14 +131,14 @@ function isValidStatus(value: Localization[]|string): value is Status {
           <a><i class="fa fa-times" id="cancel_import_link" (click)="cancel()"></i></a>
           <span translate>Confirm import</span>
         </h4>
+        
+        <h6>
+          <span translate>Importing</span> {{numberOfConcepts}} <span translate>concepts</span>
+        </h6>
       </div>
       <div class="modal-body full-height">
         <div class="row mb-2">
           <div class="col-md-12">
-
-            <h6>
-              <span translate>Importing</span> {{numberOfConcepts}} <span translate>concepts</span>
-            </h6>
 
             <div *ngIf="invalid">
               <ul class="errors">
