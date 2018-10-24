@@ -8,5 +8,10 @@
     "target": "https://sanastot-dev.suomi.fi",
     "changeOrigin": true,
     "secure": false
+  },
+  "/importapi/*": {
+    "target": "https://sanastot-dev.suomi.fi",
+    "changeOrigin": true,
+    "secure": false
   }
 }

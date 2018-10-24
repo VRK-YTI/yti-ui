@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-10-04 13:15+0300\n"
+"PO-Revision-Date: 2018-10-24 20:27+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -235,6 +235,27 @@ msgstr "Synonyymi"
 msgid "Import failed"
 msgstr "Tuonti epäonnistui"
 
+msgid "Import vocabulary"
+msgstr "Tuo sanasto"
+
+msgid "File format"
+msgstr "Tiedoston muoto"
+
+msgid "File to be uploaded"
+msgstr "Tuotava tiedosto"
+
+msgid "Import"
+msgstr "Tuo"
+
+msgid "Import results"
+msgstr "Haun tulokset"
+
+msgid "Import finished succesfully"
+msgstr "Tuonti onnistui"
+
+msgid "Close"
+msgstr "Sulje"
+
 msgid "New vocabulary"
 msgstr "uusi sanasto"
 
@@ -285,12 +306,6 @@ msgstr "Näytä sanaston tiedot"
 
 msgid "Hide vocabulary details"
 msgstr "Piilota sanaston tiedot"
-
-msgid "Close"
-msgstr "Sulje"
-
-msgid "Import vocabulary"
-msgstr "Tuo sanasto"
 
 msgid "New concept"
 msgstr "uusi käsite"

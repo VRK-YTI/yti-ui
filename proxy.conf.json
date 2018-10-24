@@ -6,5 +6,9 @@
   "/api/*": {
     "target": "http://localhost:8001",
     "secure": false
+  },
+  "/importapi/*": {
+    "target": "http://localhost:8001",
+    "secure": false
   }
 }

@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { EditableService, EditingComponent } from 'app/services/editable.service';
 import { ConceptViewModelService } from 'app/services/concept.view.service';
 import { requireDefined } from 'yti-common-ui/utils/object';
@@ -41,12 +41,12 @@ import { vocabularyIdPrefix } from 'app/utils/id-prefix';
 
       <div *ngIf="open">
 
-        <hr />
+        <hr/>
 
         <form #form="ngForm" [formGroup]="formNode.control">
 
           <div class="top-actions">
-            
+
             <button type="button"
                     id="vocabulary_close_button"
                     *ngIf="!isEditing()"
@@ -55,15 +55,15 @@ import { vocabularyIdPrefix } from 'app/utils/id-prefix';
               <i class="fa fa-times"></i>
               <span translate>Close</span>
             </button>
-            
+
             <app-editable-buttons [form]="form"
                                   [canRemove]="true"
                                   [vocabulary]="vocabulary"
                                   [idPrefix]="idPrefix"></app-editable-buttons>
 
             <div class="float-right" *ngIf="canImport()">
-              <input #fileInput id="vocabulary_import_input" type="file" accept=".csv" style="display:none" (change)="selectFile(fileInput.files)">
-              <label id="vocabulary_import_label" for="vocabulary_import_input" class="btn btn-secondary-action" translate>Import vocabulary</label>
+              <label id="vocabulary_import_label" class="btn btn-secondary-action"
+                     (click)="selectFile()" translate>Import vocabulary</label>
             </div>
 
           </div>
@@ -101,29 +101,12 @@ export class VocabularyComponent implements EditingComponent {
         .then(() => conceptViewModel.removeVocabulary());
   }
 
-  canImport() {
-
-    if (!this.conceptViewModel.vocabulary) {
-      return false;
-    }
-
-    return !this.isEditing() && this.authorizationManager.canEdit(this.conceptViewModel.vocabulary);
-  }
-
   get formNode() {
     return this.conceptViewModel.vocabularyForm;
   }
 
   get vocabulary() {
     return this.conceptViewModel.vocabulary;
-  }
-
-  isEditing(): boolean {
-    return this.editableService.editing;
-  }
-
-  cancelEditing(): void {
-    this.editableService.cancel();
   }
 
   get filterLanguage() {
@@ -138,18 +121,28 @@ export class VocabularyComponent implements EditingComponent {
     return this.conceptViewModel.languages;
   }
 
-  selectFile(files: FileList) {
-    const selectedFile = files[0] || false;
-
-    if (selectedFile) {
-      this.importVocabularyModal.open(selectedFile, requireDefined(this.vocabulary))
-        .then(() => this.conceptViewModel.refreshConcepts(), ignoreModalClose)
-
-      this.fileInput.nativeElement.value = '';
-    }
-  }
-
   get namespace() {
     return this.conceptViewModel.prefixAndNamespace ? this.conceptViewModel.prefixAndNamespace.namespace : null;
+  }
+
+  canImport() {
+    if (!this.conceptViewModel.vocabulary) {
+      return false;
+    }
+
+    return !this.isEditing() && this.authorizationManager.canEdit(this.conceptViewModel.vocabulary);
+  }
+
+  isEditing(): boolean {
+    return this.editableService.editing;
+  }
+
+  cancelEditing(): void {
+    this.editableService.cancel();
+  }
+
+  selectFile() {
+    this.importVocabularyModal.open(requireDefined(this.vocabulary))
+      .then(() => this.conceptViewModel.refreshConcepts(), ignoreModalClose)
   }
 }

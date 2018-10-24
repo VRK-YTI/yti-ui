@@ -94,6 +94,8 @@ import {
   RemoveLinkConfirmationModalComponent,
   RemoveLinkConfirmationModalService
 } from './components/concept/remove-link-confirmation-modal.component';
+import { ImportVocabularyCSVComponent } from './components/vocabulary/import-vocabulary-csv.component';
+import { ImportVocabularyXMLComponent } from './components/vocabulary/import-vocabulary-xml.component';
 
 function removeEmptyValues(obj: {}) {
 
@@ -222,6 +224,8 @@ const appRoutes: Routes = [
     TimestampPipe,
     FilterLanguageComponent,
     ImportVocabularyModalComponent,
+    ImportVocabularyCSVComponent,
+    ImportVocabularyXMLComponent,
     PrefixInputComponent,
     UserDetailsComponent,
     OrganizationFilterDropdownComponent,

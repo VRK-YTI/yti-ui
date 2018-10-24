@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-10-04 13:17+0300\n"
+"PO-Revision-Date: 2018-10-24 20:29+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -233,6 +233,27 @@ msgstr "Synonym"
 msgid "Import failed"
 msgstr ""
 
+msgid "Import vocabulary"
+msgstr ""
+
+msgid "File format"
+msgstr ""
+
+msgid "File to be uploaded"
+msgstr ""
+
+msgid "Import"
+msgstr ""
+
+msgid "Import results"
+msgstr ""
+
+msgid "Import finished succesfully"
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
 msgid "New vocabulary"
 msgstr ""
 
@@ -281,12 +302,6 @@ msgid "Show vocabulary details"
 msgstr ""
 
 msgid "Hide vocabulary details"
-msgstr ""
-
-msgid "Close"
-msgstr ""
-
-msgid "Import vocabulary"
 msgstr ""
 
 msgid "New concept"

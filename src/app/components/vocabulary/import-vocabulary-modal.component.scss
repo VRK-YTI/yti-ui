@@ -1,31 +1,6 @@
-@import "~yti-common-ui/theme/variables";
-
-// TODO more generic mechanism for result lists instead of abusing search-results
-
-.search-results {
-  .search-result {
-
-    border-left: none;
-    cursor: default;
-
-    .content {
-      margin-left: 0;
-      padding-top: 20px;
-      padding-bottom: 5px;
-    }
-  }
-}
-
-ul.errors {
-  border-left: 5px solid $danger;
-  padding-left: 15px;
-  margin-bottom: 0;
-
-  li {
-    list-style-type: none;
-  }
-
-  li:before {
-    content: '\b7\a0';
+.fileFormatDropdowns {
+  & > div {
+    display: inline-block;
+    margin-right: 1rem;
   }
 }
