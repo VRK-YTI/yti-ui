@@ -31,6 +31,12 @@
       padding-top: 0px;
       padding-bottom: 5px;
     }
+
+    &:last-of-type {
+      .content {
+        border-bottom: none;
+      }
+    }
   }
 }
 
