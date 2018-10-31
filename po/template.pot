@@ -235,10 +235,10 @@ msgstr ""
 msgid "Import"
 msgstr ""
 
-msgid "Import results"
+msgid "XML import"
 msgstr ""
 
-msgid "Import finished succesfully"
+msgid "Import ready"
 msgstr ""
 
 msgid "Close"
@@ -295,7 +295,7 @@ msgstr ""
 msgid "New collection"
 msgstr ""
 
-msgid "Unlink"
+msgid "Concept not in references"
 msgstr ""
 
 msgid "Front page"
@@ -324,10 +324,10 @@ msgid ""
 "be lost."
 msgstr ""
 
-msgid "All statuses"
+msgid "Unlink"
 msgstr ""
 
-msgid "Concept not in references"
+msgid "All statuses"
 msgstr ""
 
 msgid "self reference error"
@@ -355,6 +355,12 @@ msgid "VocabularyType"
 msgstr ""
 
 msgid "TerminologicalVocabularyType"
+msgstr ""
+
+msgid "File upload"
+msgstr ""
+
+msgid "Processing"
 msgstr ""
 
 msgid "Property must include a language."

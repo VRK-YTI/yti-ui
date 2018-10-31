@@ -1,0 +1,48 @@
+@import '~yti-common-ui/theme/variables';
+
+table.bar-container {
+  border: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  font-size: 1em;
+
+  tr.phase {
+    height: 40px;
+    margin: 0;
+    padding: 0;
+
+    &.success {
+      color: $success;
+    }
+
+    &.failure {
+      color: $danger;
+    }
+
+    td.icon {
+      width: 24px;
+      margin: 0;
+      padding: 0;
+      vertical-align: middle;
+
+      i {
+        display: block;
+        height: 24px;
+        width: 24px;
+      }
+    }
+
+    td.title {
+      padding: 0 0.5rem 0 0.5rem;
+      white-space: nowrap;
+      vertical-align: middle;
+    }
+
+    td.bar {
+      width: 100%;
+      vertical-align: middle;
+    }
+  }
+}
+

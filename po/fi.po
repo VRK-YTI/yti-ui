@@ -2,14 +2,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-10-24 20:27+0300\n"
+"PO-Revision-Date: 2018-10-31 15:58+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.1.1\n"
+"X-Generator: Poedit 2.2\n"
 "X-Poedit-Basepath: .\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
@@ -247,11 +247,11 @@ msgstr "Tuotava tiedosto"
 msgid "Import"
 msgstr "Tuo"
 
-msgid "Import results"
-msgstr "Haun tulokset"
+msgid "XML import"
+msgstr "XML-tuonti"
 
-msgid "Import finished succesfully"
-msgstr "Tuonti onnistui"
+msgid "Import ready"
+msgstr "Tuonti valmis"
 
 msgid "Close"
 msgstr "Sulje"
@@ -313,8 +313,8 @@ msgstr "uusi käsite"
 msgid "New collection"
 msgstr "uusi käsitevalikoima"
 
-msgid "Unlink"
-msgstr "Poista linkitys"
+msgid "Concept not in references"
+msgstr "Käsite ei löydy viitteistä"
 
 msgid "Front page"
 msgstr "Etusivu"
@@ -344,11 +344,11 @@ msgstr ""
 "Oletko varma, että haluat jatkaa? Jatkaessasi tallentamattomat muutokset "
 "katoavat."
 
+msgid "Unlink"
+msgstr "Poista linkitys"
+
 msgid "All statuses"
 msgstr "Kaikki tilat"
-
-msgid "Concept not in references"
-msgstr "Käsite ei löydy viitteistä"
 
 msgid "self reference error"
 msgstr "Valinta ei voi viitata itseensä"
@@ -376,6 +376,12 @@ msgstr "Asiasanasto"
 
 msgid "TerminologicalVocabularyType"
 msgstr "Terminologinen sanasto"
+
+msgid "File upload"
+msgstr "Tiedoston lataus"
+
+msgid "Processing"
+msgstr "Käsittely"
 
 msgid "Property must include a language."
 msgstr "Ominaisuus “{{ name }}” täytyy olla määritelty kielen kanssa"
@@ -414,6 +420,12 @@ msgid "Reference does not match any concepts."
 msgstr ""
 "{{ lineNumber }}: Viittauksella “{{ name }}” ei löydy käsitettä arvolle "
 "“{{ value }}”"
+
+#~ msgid "Import results"
+#~ msgstr "Haun tulokset"
+
+#~ msgid "Import finished succesfully"
+#~ msgstr "Tuonti onnistui"
 
 #~ msgid "Search"
 #~ msgstr "Hae"

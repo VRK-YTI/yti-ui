@@ -96,6 +96,7 @@ import {
 } from './components/concept/remove-link-confirmation-modal.component';
 import { ImportVocabularyCSVComponent } from './components/vocabulary/import-vocabulary-csv.component';
 import { ImportVocabularyXMLComponent } from './components/vocabulary/import-vocabulary-xml.component';
+import { ProgressComponent } from './components/progress.component';
 
 function removeEmptyValues(obj: {}) {
 
@@ -234,7 +235,8 @@ const appRoutes: Routes = [
     InformationAboutServiceComponent,
     LogoComponent,
     DragSortableDirective,
-    DragSortableItemDirective
+    DragSortableItemDirective,
+    ProgressComponent
   ],
   entryComponents: [
     SearchConceptModalComponent,
