@@ -19,11 +19,12 @@ import { Phase, Progress, Result } from '../progress.component';
       <div class="modal-body">
         <div class="row mb-2">
           <div class="col-md-12">
-            <app-progress [phases]="progressPhases" (result)="onResult($event)"></app-progress>
+            <app-progress [phases]="progressPhases" (result)="onResult($event)" (pollingError)="onPollingError($event)"></app-progress>
           </div>
         </div>
         <div class="row mb-2">
           <div class="col-md-12">
+            <div *ngIf="monitoringError" class="error-result" translate>Error while monitoring processing. Close the modal and try refreshing page later.</div>
             <span *ngIf="finalResults" class="ok-result" translate>Import ready</span>
             <div *ngIf="finalError" class="error-result">
               <div>{{'Import failed' | translate}}:</div>
@@ -35,7 +36,7 @@ import { Phase, Progress, Result } from '../progress.component';
 
       <div class="modal-footer">
         <button type="button" id="import_yes_button" class="btn btn-action confirm" (click)="confirm()"
-                [disabled]="false" translate>Close</button>
+                [disabled]="!finalResult && !finalError && !monitoringError" translate>Close</button>
       </div>
     </div>
   `
@@ -52,6 +53,7 @@ export class ImportVocabularyXMLComponent {
 
   finalResults?: any;
   finalError?: any;
+  monitoringError: boolean = false;
 
   processingResolve: (value?: any | PromiseLike<any>) => void;
   processingReject: (reason?: any) => void;
@@ -153,5 +155,9 @@ export class ImportVocabularyXMLComponent {
     } else {
       this.finalError = result.result;
     }
+  }
+
+  onPollingError(error: boolean): void {
+    this.monitoringError = error;
   }
 }

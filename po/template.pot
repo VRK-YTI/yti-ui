@@ -238,6 +238,11 @@ msgstr ""
 msgid "XML import"
 msgstr ""
 
+msgid ""
+"Error while monitoring processing. Close the modal and try refreshing page "
+"later."
+msgstr ""
+
 msgid "Import ready"
 msgstr ""
 

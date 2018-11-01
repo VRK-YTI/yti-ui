@@ -66,6 +66,7 @@ export class ProgressComponent implements OnInit {
   @Input() phases: Phase[];
   @Input() state: any;
   @Output() result = new EventEmitter<Result>();
+  @Output() pollingError = new EventEmitter<boolean>();
   private currentPhase = -1;
   private pollTimeout?: number;
 
@@ -111,12 +112,13 @@ export class ProgressComponent implements OnInit {
     poller(phase, this.state).then((value: Progress) => {
       if (phase.state === 'STARTED') {
         phase.progress.updateFrom(value);
-        this.pollTimeout = window.setTimeout(() => this.poll(poller, phase), 1000);
+        this.pollTimeout = window.setTimeout(() => this.poll(poller, phase), 500);
       }
     }).catch((reason: any) => {
       if (phase.state === 'STARTED') {
         phase.progress.current = undefined;
         phase.progress.trackingError = true;
+        this.pollingError.emit(true);
       }
     });
   }
