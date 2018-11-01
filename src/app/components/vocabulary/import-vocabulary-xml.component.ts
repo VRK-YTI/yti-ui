@@ -36,7 +36,7 @@ import { Phase, Progress, Result } from '../progress.component';
 
       <div class="modal-footer">
         <button type="button" id="import_yes_button" class="btn btn-action confirm" (click)="confirm()"
-                [disabled]="!finalResult && !finalError && !monitoringError" translate>Close</button>
+                [disabled]="!finalResults && !finalError && !monitoringError" translate>Close</button>
       </div>
     </div>
   `
