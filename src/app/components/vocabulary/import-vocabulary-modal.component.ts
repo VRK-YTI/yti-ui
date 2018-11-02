@@ -37,12 +37,12 @@ import { VocabularyNode } from '../../entities/node';
                             [class.active]="format === 'CSV'">
                       CSV
                     </button>
-                    <button id="ntrf_xml_format_dropdown_button"
+                    <!--<button id="ntrf_xml_format_dropdown_button"
                             (click)="format = 'NTRF-XML'"
                             class="dropdown-item"
                             [class.active]="format === 'NTRF-XML'">
                       NTRF-XML
-                    </button>
+                    </button>-->
                   </div>
                 </div>
                 <div ngbDropdown [hidden]="format !== 'CSV'">
