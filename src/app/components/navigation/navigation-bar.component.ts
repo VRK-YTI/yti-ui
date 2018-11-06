@@ -1,19 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Language, LanguageService } from 'app/services/language.service';
 import { UserService } from 'yti-common-ui/services/user.service';
 import { LoginModalService } from 'yti-common-ui/components/login-modal.component';
 import { TermedService } from '../../services/termed.service';
+import { ConfigurationService } from '../../services/configuration.service';
 
 @Component({
   selector: 'app-navigation-bar',
   styleUrls: ['./navigation-bar.component.scss'],
   template: `
     <nav class="navbar navbar-expand-md navbar-light">
-      
+
       <a id="main_page_link" class="navbar-brand" [routerLink]="['/']">
         <app-logo></app-logo>
         <span translate>Controlled Vocabularies</span>
-        <span *ngIf="environmentIdentifier">{{environmentIdentifier}}</span>
+        <span>{{envP | async}}</span>
       </a>
 
       <ul class="navbar-nav ml-auto">
@@ -21,21 +22,22 @@ import { TermedService } from '../../services/termed.service';
         <li *ngIf="fakeableUsers.length > 0" class="nav-item dropdown" ngbDropdown>
           <a class="nav-link" id="fakeable_user_dropdown" ngbDropdownToggle translate>Impersonate user</a>
           <div ngbDropdownMenu>
-            <a class="dropdown-item" *ngFor="let user of fakeableUsers" (click)="fakeUser(user.email)" id="{{user.email + '_fakeable_user_link'}}">
+            <a class="dropdown-item" *ngFor="let user of fakeableUsers" (click)="fakeUser(user.email)"
+               id="{{user.email + '_fakeable_user_link'}}">
               {{user.firstName}} {{user.lastName}}
             </a>
           </div>
         </li>
-        
+
         <li class="nav-item" *ngIf="!isLoggedIn()">
           <a class="nav-link" id="login_link" (click)="logIn()" translate>LOG IN</a>
         </li>
-        
+
         <li class="nav-item logged-in" *ngIf="isLoggedIn()">
           <span>{{user.name}}</span>
           <a class="nav-link" id="logout_link" (click)="logOut()" translate>LOG OUT</a>
         </li>
-        
+
         <li class="nav-item dropdown" placement="bottom-right" ngbDropdown>
           <a class="dropdown-toggle nav-link btn btn-language" id="language_dropdown_link" ngbDropdownToggle>{{language.toUpperCase()}}</a>
           <div ngbDropdownMenu>
@@ -72,14 +74,14 @@ import { TermedService } from '../../services/termed.service';
                href="https://yhteentoimiva.suomi.fi/" target="_blank">yhteentoimiva.suomi.fi</a>
             <a id="navigation_reference_data_link"
                class="dropdown-item"
-               [href]="codeListUrl" target="_blank" translate>Suomi.fi Reference Data</a>
+               [href]="codeListUrlP | async" target="_blank" translate>Suomi.fi Reference Data</a>
             <a id="navigation_data_vocabularies_link"
                class="dropdown-item"
-               [href]="dataModelUrl" target="_blank" translate>Suomi.fi Data Vocabularies</a>
+               [href]="dataModelUrlP | async" target="_blank" translate>Suomi.fi Data Vocabularies</a>
             <a class="dropdown-item"
                id="groupmanagement_link"
                *ngIf="showGroupManagementUrl()"
-               [href]="groupManagementUrl" target="_blank" translate>User right management</a>
+               [href]="groupManagementUrlP | async" target="_blank" translate>User right management</a>
           </div>
         </li>
       </ul>
@@ -96,42 +98,45 @@ export class NavigationBarComponent {
 
   fakeableUsers: { email: string, firstName: string, lastName: string }[] = [];
 
-  groupManagementUrl: string;
-  codeListUrl: string;
-  dataModelUrl: string;
-  env: string;
+  groupManagementUrlP: Promise<string>;
+  codeListUrlP: Promise<string>;
+  dataModelUrlP: Promise<string>;
+  envP: Promise<string>;
 
   constructor(private languageService: LanguageService,
               private userService: UserService,
               private loginModal: LoginModalService,
-              termedService: TermedService) {
+              private termedService: TermedService,
+              private configurationService: ConfigurationService) {
 
-    termedService.getFakeableUsers().subscribe(users => {
+    this.termedService.getFakeableUsers().subscribe(users => {
       this.fakeableUsers = users;
     });
 
-    termedService.getServiceConfiguration().subscribe(configuration => {
-      this.groupManagementUrl = configuration.groupmanagementUrl;
-      this.codeListUrl = configuration.codeListUrl;
-      this.dataModelUrl = configuration.dataModelUrl;
-      this.env = configuration.env;
-    });
-  }
-
-  fakeUser(userEmail: string) {
-    this.userService.updateLoggedInUser(userEmail);
+    this.groupManagementUrlP = this.configurationService.configurationPromise.then(c => c.groupmanagementUrl);
+    this.codeListUrlP = this.configurationService.configurationPromise.then(c => c.codeListUrl);
+    this.dataModelUrlP = this.configurationService.configurationPromise.then(c => c.dataModelUrl);
+    this.envP = this.configurationService.configurationPromise.then(c => c.env).then(env => env !== 'prod' ? ' - ' + env.toUpperCase() : '');
   }
 
   get noMenuItemsAvailable() {
     return !this.userService.isLoggedIn();
   }
 
+  get language(): Language {
+    return this.languageService.language;
+  }
+
   set language(language: Language) {
     this.languageService.language = language;
   }
 
-  get language(): Language {
-    return this.languageService.language;
+  get user() {
+    return this.userService.user;
+  }
+
+  fakeUser(userEmail: string) {
+    this.userService.updateLoggedInUser(userEmail);
   }
 
   logIn() {
@@ -142,19 +147,11 @@ export class NavigationBarComponent {
     this.userService.logout();
   }
 
-  get user() {
-    return this.userService.user;
-  }
-
   isLoggedIn() {
     return this.userService.isLoggedIn();
   }
 
   showGroupManagementUrl() {
     return this.user.superuser || this.user.isAdminInAnyOrganization();
-  }
-
-  get environmentIdentifier() {
-    return this.env ? this.env !== 'prod' ? ' - ' + this.env.toUpperCase() : '' : '';
   }
 }

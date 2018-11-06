@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, zip, forkJoin } from 'rxjs';
-import { map, flatMap, catchError } from 'rxjs/operators';
+import { forkJoin, Observable, of, zip } from 'rxjs';
+import { catchError, flatMap, map } from 'rxjs/operators';
 import { contains, flatten, normalizeAsArray } from 'yti-common-ui/utils/array';
 import { MetaModelService } from './meta-model.service';
 import { Identifier, NodeExternal, NodeInternal, NodeType, VocabularyNodeType } from 'app/entities/node-api';
@@ -11,7 +11,6 @@ import { PrefixAndNamespace } from 'app/entities/prefix-and-namespace';
 import { UserRequest } from 'app/entities/user-request';
 import { apiUrl } from 'app/config';
 import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { ServiceConfiguration } from '../entities/service-configuration';
 
 @Injectable()
 export class TermedService {
@@ -48,7 +47,7 @@ export class TermedService {
       .pipe(map(([meta, concept]) => Node.create(concept, meta, true) as ConceptNode));
   }
 
-  findConcept(graphId: string, conceptId: string): Observable<ConceptNode|null> {
+  findConcept(graphId: string, conceptId: string): Observable<ConceptNode | null> {
     return zip(this.metaModelService.getMeta(graphId), this.findConceptDetailsNode(graphId, conceptId))
       .pipe(map(([meta, concept]) => concept ? Node.create(concept, meta, true) as ConceptNode : null));
   }
@@ -58,7 +57,7 @@ export class TermedService {
       .pipe(map(([meta, collection]) => Node.create(collection, meta, true) as CollectionNode));
   }
 
-  findCollection(graphId: string, collectionId: string): Observable<CollectionNode|null> {
+  findCollection(graphId: string, collectionId: string): Observable<CollectionNode | null> {
     return zip(this.metaModelService.getMeta(graphId), this.findCollectionDetailsNode(graphId, collectionId))
       .pipe(map(([meta, collection]) => collection ? Node.create(collection, meta, true) as CollectionNode : null));
   }
@@ -118,7 +117,7 @@ export class TermedService {
     return this.updateAndDeleteInternalNodes([...inlineNodes, ...nodes.map(node => node.toInternalNode())], []);
   }
 
-  updateNode<T extends NodeType>(updatedNode: Node<T>, previousNode: Node<T>|null) {
+  updateNode<T extends NodeType>(updatedNode: Node<T>, previousNode: Node<T> | null) {
 
     updatedNode.lastModifiedDate = moment();
 
@@ -137,7 +136,7 @@ export class TermedService {
     }
 
     const updatedInlineNodes = inlineNodes(updatedNode);
-    const previousInlineNodeIds  = previousNode ? inlineNodeIds(previousNode) : [];
+    const previousInlineNodeIds = previousNode ? inlineNodeIds(previousNode) : [];
 
     function nodeIdsAreEqual(left: Identifier<any>, right: Identifier<any>) {
       return left.id === right.id && left.type.id
@@ -167,7 +166,7 @@ export class TermedService {
       'prefix': prefix
     };
 
-    return this.http.get<boolean>(`${apiUrl}/namespaceInUse`, { params } );
+    return this.http.get<boolean>(`${apiUrl}/namespaceInUse`, { params });
   }
 
   getNamespaceRoot(): Observable<string> {
@@ -178,7 +177,7 @@ export class TermedService {
   }
 
   getGraphNamespace(graphId: string): Observable<PrefixAndNamespace> {
-    return this.http.get<Graph>(`${apiUrl}/graphs/${graphId}`, { observe: 'body'})
+    return this.http.get<Graph>(`${apiUrl}/graphs/${graphId}`, { observe: 'body' })
       .pipe(map(graph => {
         return {
           prefix: graph.code,
@@ -214,11 +213,6 @@ export class TermedService {
     });
   }
 
-  getServiceConfiguration(): Observable<ServiceConfiguration> {
-    console.log(`${apiUrl}/configuration`);
-    return this.http.get<ServiceConfiguration>(`${apiUrl}/configuration`);
-  }
-
   private removeNodeIdentifiers(nodeIds: Identifier<any>[], sync: boolean, disconnect: boolean) {
 
     const params = {
@@ -248,7 +242,7 @@ export class TermedService {
       'graphId': graphId
     };
 
-    return this.http.get<NodeExternal<VocabularyNodeType>[]>(`${apiUrl}/vocabulary`, { params } )
+    return this.http.get<NodeExternal<VocabularyNodeType>[]>(`${apiUrl}/vocabulary`, { params })
       .pipe(map(requireSingle));
   }
 
@@ -263,12 +257,12 @@ export class TermedService {
       'conceptId': conceptId
     };
 
-    return this.http.get<NodeExternal<'Concept'>[]>(`${apiUrl}/concept`, { params } )
+    return this.http.get<NodeExternal<'Concept'>[]>(`${apiUrl}/concept`, { params })
       .pipe(map(requireSingle));
   }
 
 
-  private findConceptDetailsNode(graphId: string, conceptId: string): Observable<NodeExternal<'Concept'>|null> {
+  private findConceptDetailsNode(graphId: string, conceptId: string): Observable<NodeExternal<'Concept'> | null> {
     return this.getConceptDetailsNode(graphId, conceptId)
       .pipe(catchError(notFoundAsDefault(null)));
   }
@@ -279,7 +273,7 @@ export class TermedService {
       'graphId': graphId
     };
 
-    return this.http.get<NodeExternal<'Collection'>[]>(`${apiUrl}/collections`, { params } )
+    return this.http.get<NodeExternal<'Collection'>[]>(`${apiUrl}/collections`, { params })
       .pipe(
         map(normalizeAsArray),
         catchError(notFoundAsDefault([]))
@@ -293,11 +287,11 @@ export class TermedService {
       'collectionId': collectionId
     };
 
-    return this.http.get<NodeExternal<'Collection'>>(`${apiUrl}/collection`, { params } )
+    return this.http.get<NodeExternal<'Collection'>>(`${apiUrl}/collection`, { params })
       .pipe(map(requireSingle));
   }
 
-  private findCollectionDetailsNode(graphId: string, collectionId: string): Observable<NodeExternal<'Collection'>|null> {
+  private findCollectionDetailsNode(graphId: string, collectionId: string): Observable<NodeExternal<'Collection'> | null> {
     return this.getCollectionDetailsNode(graphId, collectionId)
       .pipe(catchError(notFoundAsDefault(null)));
   }
@@ -318,7 +312,7 @@ export class TermedService {
   }
 }
 
-function requireSingle<T>(json: T|T[]): T {
+function requireSingle<T>(json: T | T[]): T {
   if (Array.isArray(json)) {
     if (json.length === 1) {
       return json[0];

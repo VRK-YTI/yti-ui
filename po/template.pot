@@ -7,6 +7,9 @@ msgstr ""
 msgid "Controlled Vocabularies"
 msgstr ""
 
+msgid "Cannot load application configuration"
+msgstr ""
+
 msgid "Search collection"
 msgstr ""
 
