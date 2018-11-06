@@ -14,7 +14,7 @@ import { ConfigurationService } from '../../services/configuration.service';
       <a id="main_page_link" class="navbar-brand" [routerLink]="['/']">
         <app-logo></app-logo>
         <span translate>Controlled Vocabularies</span>
-        <span>{{envP | async}}</span>
+        <span>{{environmentIdentifier}}</span>
       </a>
 
       <ul class="navbar-nav ml-auto">
@@ -74,14 +74,14 @@ import { ConfigurationService } from '../../services/configuration.service';
                href="https://yhteentoimiva.suomi.fi/" target="_blank">yhteentoimiva.suomi.fi</a>
             <a id="navigation_reference_data_link"
                class="dropdown-item"
-               [href]="codeListUrlP | async" target="_blank" translate>Suomi.fi Reference Data</a>
+               [href]="codeListUrl" target="_blank" translate>Suomi.fi Reference Data</a>
             <a id="navigation_data_vocabularies_link"
                class="dropdown-item"
-               [href]="dataModelUrlP | async" target="_blank" translate>Suomi.fi Data Vocabularies</a>
+               [href]="dataModelUrl" target="_blank" translate>Suomi.fi Data Vocabularies</a>
             <a class="dropdown-item"
                id="groupmanagement_link"
                *ngIf="showGroupManagementUrl()"
-               [href]="groupManagementUrlP | async" target="_blank" translate>User right management</a>
+               [href]="groupManagementUrl" target="_blank" translate>User right management</a>
           </div>
         </li>
       </ul>
@@ -98,10 +98,10 @@ export class NavigationBarComponent {
 
   fakeableUsers: { email: string, firstName: string, lastName: string }[] = [];
 
-  groupManagementUrlP: Promise<string>;
-  codeListUrlP: Promise<string>;
-  dataModelUrlP: Promise<string>;
-  envP: Promise<string>;
+  groupManagementUrl: string;
+  codeListUrl: string;
+  dataModelUrl: string;
+  environmentIdentifier: string;
 
   constructor(private languageService: LanguageService,
               private userService: UserService,
@@ -113,10 +113,11 @@ export class NavigationBarComponent {
       this.fakeableUsers = users;
     });
 
-    this.groupManagementUrlP = this.configurationService.configurationPromise.then(c => c.groupmanagementUrl);
-    this.codeListUrlP = this.configurationService.configurationPromise.then(c => c.codeListUrl);
-    this.dataModelUrlP = this.configurationService.configurationPromise.then(c => c.dataModelUrl);
-    this.envP = this.configurationService.configurationPromise.then(c => c.env).then(env => env !== 'prod' ? ' - ' + env.toUpperCase() : '');
+    const env = this.configurationService.environment;
+    this.environmentIdentifier = env !== 'prod' ? ' - ' + env.toUpperCase() : '';
+    this.groupManagementUrl = this.configurationService.groupManagementUrl;
+    this.codeListUrl = this.configurationService.codeListUrl;
+    this.dataModelUrl = this.configurationService.dataModelUrl;
   }
 
   get noMenuItemsAvailable() {

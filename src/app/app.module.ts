@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ResolveEnd, Route, Router, RouterModule, Routes, UrlSegment, UrlSegmentGroup } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -97,6 +97,7 @@ import {
 import { ImportVocabularyCSVComponent } from './components/vocabulary/import-vocabulary-csv.component';
 import { ImportVocabularyXMLComponent } from './components/vocabulary/import-vocabulary-xml.component';
 import { ProgressComponent } from './components/progress.component';
+import { ConfigurationService } from './services/configuration.service';
 
 function removeEmptyValues(obj: {}) {
 
@@ -168,6 +169,10 @@ const appRoutes: Routes = [
   // NOTE: If createRefreshRouteMatcher(['re']) starts to work after angular upgrade, then switch to that.
   { matcher: refreshRouteMatcher, component: RefreshComponent }
 ];
+
+export function initApp(configurationService: ConfigurationService) {
+  return () => configurationService.fetchConfiguration();
+}
 
 @NgModule({
   declarations: [
@@ -265,6 +270,7 @@ const appRoutes: Routes = [
     YtiCommonModule
   ],
   providers: [
+    { provide: APP_INITIALIZER, useFactory: initApp, deps: [ConfigurationService], multi: true },
     { provide: AUTHENTICATED_USER_ENDPOINT, useFactory: resolveAuthenticatedUserEndpoint },
     { provide: LOCALIZER, useExisting: LanguageService },
     TermedService,

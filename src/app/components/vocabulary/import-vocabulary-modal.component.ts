@@ -38,7 +38,7 @@ import { ConfigurationService } from '../../services/configuration.service';
                             [class.active]="format === 'CSV'">
                       CSV
                     </button>
-                    <button *ngIf="enableXml | async" id="ntrf_xml_format_dropdown_button"
+                    <button *ngIf="enableXml" id="ntrf_xml_format_dropdown_button"
                             (click)="format = 'NTRF-XML'"
                             class="dropdown-item"
                             [class.active]="format === 'NTRF-XML'">
@@ -106,7 +106,7 @@ export class ImportVocabularyModalComponent {
   format: string = 'CSV';
   charset: string = 'UTF-8';
   phase: 'FILE_SELECT' | 'CSV' | 'XML' = 'FILE_SELECT';
-  enableXml: Promise<boolean>;
+  enableXml: boolean;
 
   constructor(private configurationService: ConfigurationService,
               private editableService: EditableService,
@@ -115,7 +115,7 @@ export class ImportVocabularyModalComponent {
 
     // TODO: Handle cancel, "save", etc. Or remove altogether.
     this.editableService.edit();
-    this.enableXml = configurationService.showUnfinishedFeature.catch(_error => false );
+    this.enableXml = configurationService.showUnfinishedFeature;
   }
 
   close() {

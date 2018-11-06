@@ -7,32 +7,52 @@ import { apiUrl } from '../config';
   providedIn: 'root',
 })
 export class ConfigurationService {
-  configuration?: ServiceConfiguration;
-  configurationError = false;
-
-  configurationPromise: Promise<ServiceConfiguration>;
+  private configurationPromise?: Promise<ServiceConfiguration>;
+  private configuration_?: ServiceConfiguration;
 
   constructor(private http: HttpClient) {
-    this.configurationPromise = new Promise((resolve, refuse) => {
-      this.http.get<ServiceConfiguration>(`${apiUrl}/configuration`)
-        .subscribe(configuration => {
-          this.configuration = configuration;
-          resolve(configuration);
-        }, error => {
-          this.configurationError = true;
-          refuse(error);
-        });
-    });
   }
 
-  get loading(): boolean {
-    return !this.configuration;
+  get configuration(): ServiceConfiguration {
+    if (this.configuration_) {
+      return this.configuration_;
+    }
+    throw new Error("ConfigurationService used before initialization");
   }
 
-  get showUnfinishedFeature(): Promise<boolean> {
-    return this.configurationPromise.then(cfg => {
-      const env = (cfg.env || '').toLowerCase();
-      return env === 'dev' || env === 'local';
-    });
+  get environment(): string {
+    return this.configuration.env;
+  }
+
+  get codeListUrl(): string {
+    return this.configuration.codeListUrl;
+  }
+
+  get dataModelUrl(): string {
+    return this.configuration.dataModelUrl;
+  }
+
+  get groupManagementUrl(): string {
+    return this.configuration.groupmanagementUrl;
+  }
+
+  get showUnfinishedFeature(): boolean {
+    const env = (this.configuration.env || '').toLowerCase();
+    return env === 'dev' || env === 'local';
+  }
+
+  fetchConfiguration(): Promise<ServiceConfiguration> {
+    if (!this.configurationPromise) {
+      this.configurationPromise = new Promise((resolve, refuse) => {
+        this.http.get<ServiceConfiguration>(`${apiUrl}/configuration`)
+          .subscribe(configuration => {
+            this.configuration_ = configuration;
+            resolve(configuration);
+          }, error => {
+            refuse(error);
+          });
+      });
+    }
+    return this.configurationPromise;
   }
 }
