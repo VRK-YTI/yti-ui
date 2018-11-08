@@ -41,6 +41,20 @@ export class ConfigurationService {
     return env === 'dev' || env === 'local';
   }
 
+  getEnvironmentIdentifier(style?: 'prefix' | 'postfix'): string {
+    if (this.environment !== 'prod') {
+      const identifier = this.environment.toUpperCase();
+      if (!style) {
+        return identifier;
+      } else if (style === 'prefix') {
+        return identifier + ' - ';
+      } else if (style === 'postfix') {
+        return ' - ' + identifier;
+      }
+    }
+    return '';
+  }
+
   fetchConfiguration(): Promise<ServiceConfiguration> {
     if (!this.configurationPromise) {
       this.configurationPromise = new Promise((resolve, refuse) => {

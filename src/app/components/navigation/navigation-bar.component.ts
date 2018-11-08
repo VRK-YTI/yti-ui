@@ -1,11 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Language, LanguageService } from 'app/services/language.service';
 import { UserService } from 'yti-common-ui/services/user.service';
 import { LoginModalService } from 'yti-common-ui/components/login-modal.component';
 import { TermedService } from '../../services/termed.service';
 import { ConfigurationService } from '../../services/configuration.service';
-import { Title } from '@angular/platform-browser';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-navigation-bar',
@@ -109,24 +107,16 @@ export class NavigationBarComponent {
               private userService: UserService,
               private loginModal: LoginModalService,
               private termedService: TermedService,
-              private configurationService: ConfigurationService,
-              private titleService: Title,
-              private translateService: TranslateService) {
+              private configurationService: ConfigurationService) {
 
     this.termedService.getFakeableUsers().subscribe(users => {
       this.fakeableUsers = users;
     });
 
-    const env = this.configurationService.environment;
-    this.environmentIdentifier = env !== 'prod' ? ' - ' + env.toUpperCase() : '';
+    this.environmentIdentifier = this.configurationService.getEnvironmentIdentifier('postfix');
     this.groupManagementUrl = this.configurationService.groupManagementUrl;
     this.codeListUrl = this.configurationService.codeListUrl;
     this.dataModelUrl = this.configurationService.dataModelUrl;
-
-    const pageTitleEnvironmentIdentifier = env !== 'prod' ? env.toUpperCase() + ' - ' : '';
-    this.translateService.stream('Controlled Vocabularies').subscribe(value => {
-      this.titleService.setTitle(pageTitleEnvironmentIdentifier + value);
-    })
   }
 
   get noMenuItemsAvailable() {

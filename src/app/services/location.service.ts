@@ -1,20 +1,28 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Location } from 'yti-common-ui/types/location';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { CollectionNode, ConceptNode, VocabularyNode } from 'app/entities/node';
+import { TranslateService } from '@ngx-translate/core';
+import { ConfigurationService } from './configuration.service';
+import { Title } from '@angular/platform-browser';
 
 const frontPage = { localizationKey: 'Front page', route: [''] };
 
 @Injectable()
-export class LocationService {
+export class LocationService implements OnDestroy {
 
   location = new Subject<Location[]>();
   showFooter = new Subject<boolean>();
+  private titleTranslationSubscription: Subscription;
 
-  private changeLocation(location: Location[], showFooter: boolean = true): void {
-    location.unshift(frontPage);
-    this.location.next(location);
-    this.showFooter.next(showFooter);
+  constructor(private translateService: TranslateService, private configurationService: ConfigurationService, private titleService: Title) {
+    this.titleTranslationSubscription = this.translateService.stream('Controlled Vocabularies').subscribe(value => {
+      this.titleService.setTitle(this.configurationService.getEnvironmentIdentifier('prefix') + value);
+    })
+  }
+
+  ngOnDestroy() {
+    this.titleTranslationSubscription.unsubscribe();
   }
 
   atVocabulary(vocabulary: VocabularyNode): void {
@@ -67,11 +75,17 @@ export class LocationService {
       route: ['newVocabulary']
     }]);
   }
-  
+
   atInformationAboutService(): void {
     this.changeLocation([{
       localizationKey: 'Information about the service',
       route: ['information']
     }]);
+  }
+
+  private changeLocation(location: Location[], showFooter: boolean = true): void {
+    location.unshift(frontPage);
+    this.location.next(location);
+    this.showFooter.next(showFooter);
   }
 }
