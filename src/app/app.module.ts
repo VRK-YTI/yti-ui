@@ -1,4 +1,4 @@
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, Title } from '@angular/platform-browser';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ResolveEnd, Route, Router, RouterModule, Routes, UrlSegment, UrlSegmentGroup } from '@angular/router';
@@ -288,7 +288,8 @@ export function initApp(configurationService: ConfigurationService) {
     ConfirmCancelEditGuard,
     AuthorizationManager,
     ImportVocabularyModalService,
-    ModalService
+    ModalService,
+    Title
   ],
   bootstrap: [AppComponent]
 })
