@@ -3,6 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Localizable, Localizer, Language } from 'yti-common-ui/types/localization';
 import { isDefined } from 'yti-common-ui/utils/object';
 import { BehaviorSubject, combineLatest } from 'rxjs';
+import { getFromLocalStorage, setToLocalStorage } from 'yti-common-ui/utils/storage';
 
 export { Language, Localizer };
 
@@ -11,8 +12,8 @@ export class LanguageService implements Localizer {
   private readonly languageKey: string = 'yti-terminology-ui.language-service.language';
   private readonly filterLanguageKey: string = 'yti-terminology-ui.language-service.filter-language';
 
-  language$ = new BehaviorSubject<Language>(this.getFromLocalStorage(this.languageKey, 'fi'));
-  filterLanguage$ = new BehaviorSubject<Language>(this.getFromLocalStorage(this.filterLanguageKey, ''));
+  language$ = new BehaviorSubject<Language>(getFromLocalStorage(this.languageKey, 'fi'));
+  filterLanguage$ = new BehaviorSubject<Language>(getFromLocalStorage(this.filterLanguageKey, ''));
   translateLanguage$ = new BehaviorSubject<Language>(this.language);
 
   constructor(private translateService: TranslateService) {
@@ -32,7 +33,7 @@ export class LanguageService implements Localizer {
   set language(language: Language) {
     if (this.language !== language) {
       this.language$.next(language);
-      this.setToLocalStorage(this.languageKey, language);
+      setToLocalStorage(this.languageKey, language);
     }
   }
 
@@ -43,7 +44,7 @@ export class LanguageService implements Localizer {
   set filterLanguage(language: Language) {
     if (this.filterLanguage !== language) {
       this.filterLanguage$.next(language);
-      this.setToLocalStorage(this.filterLanguageKey, language);
+      setToLocalStorage(this.filterLanguageKey, language);
     }
   }
 
@@ -70,23 +71,6 @@ export class LanguageService implements Localizer {
       }
 
       return '';
-    }
-  }
-
-  private getFromLocalStorage(key: string, defaultValue: string): string {
-    try {
-      return localStorage.getItem(key) || defaultValue;
-    } catch(error) {
-      console.warn('Could not use local storage: "' + error + '"');
-    }
-    return defaultValue;
-  }
-
-  private setToLocalStorage(key: string, value: string): void {
-    try {
-      localStorage.setItem(key, value);
-    } catch(error) {
-      console.warn('Could not use local storage: "' + error + '"');
     }
   }
 }
