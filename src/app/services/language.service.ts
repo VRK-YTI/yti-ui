@@ -11,8 +11,8 @@ export class LanguageService implements Localizer {
   private readonly languageKey: string = 'yti-terminology-ui.language-service.language';
   private readonly filterLanguageKey: string = 'yti-terminology-ui.language-service.filter-language';
 
-  language$ = new BehaviorSubject<Language>(localStorage.getItem(this.languageKey) || 'fi');
-  filterLanguage$ = new BehaviorSubject<Language>(localStorage.getItem(this.filterLanguageKey ) || '');
+  language$ = new BehaviorSubject<Language>(this.getFromLocalStorage(this.languageKey, 'fi'));
+  filterLanguage$ = new BehaviorSubject<Language>(this.getFromLocalStorage(this.filterLanguageKey, ''));
   translateLanguage$ = new BehaviorSubject<Language>(this.language);
 
   constructor(private translateService: TranslateService) {
@@ -32,7 +32,7 @@ export class LanguageService implements Localizer {
   set language(language: Language) {
     if (this.language !== language) {
       this.language$.next(language);
-      localStorage.setItem(this.languageKey, language)
+      this.setToLocalStorage(this.languageKey, language);
     }
   }
 
@@ -43,7 +43,7 @@ export class LanguageService implements Localizer {
   set filterLanguage(language: Language) {
     if (this.filterLanguage !== language) {
       this.filterLanguage$.next(language);
-      localStorage.setItem(this.filterLanguageKey, language)
+      this.setToLocalStorage(this.filterLanguageKey, language);
     }
   }
 
@@ -70,6 +70,23 @@ export class LanguageService implements Localizer {
       }
 
       return '';
+    }
+  }
+
+  private getFromLocalStorage(key: string, defaultValue: string): string {
+    try {
+      return localStorage.getItem(key) || defaultValue;
+    } catch(error) {
+      console.warn('Could not use local storage: "' + error + '"');
+    }
+    return defaultValue;
+  }
+
+  private setToLocalStorage(key: string, value: string): void {
+    try {
+      localStorage.setItem(key, value);
+    } catch(error) {
+      console.warn('Could not use local storage: "' + error + '"');
     }
   }
 }
