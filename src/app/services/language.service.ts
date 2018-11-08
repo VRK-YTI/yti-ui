@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Localizable, Localizer, Language } from 'yti-common-ui/types/localization';
+import { Language, Localizable, Localizer } from 'yti-common-ui/types/localization';
 import { isDefined } from 'yti-common-ui/utils/object';
 import { BehaviorSubject, combineLatest } from 'rxjs';
 import { getFromLocalStorage, setToLocalStorage } from 'yti-common-ui/utils/storage';
@@ -9,11 +9,11 @@ export { Language, Localizer };
 
 @Injectable()
 export class LanguageService implements Localizer {
-  private readonly languageKey: string = 'yti-terminology-ui.language-service.language';
-  private readonly filterLanguageKey: string = 'yti-terminology-ui.language-service.filter-language';
+  private static readonly LANGUAGE_KEY: string = 'yti-terminology-ui.language-service.language';
+  private static readonly FILTER_LANGUAGE_KEY: string = 'yti-terminology-ui.language-service.filter-language';
 
-  language$ = new BehaviorSubject<Language>(getFromLocalStorage(this.languageKey, 'fi'));
-  filterLanguage$ = new BehaviorSubject<Language>(getFromLocalStorage(this.filterLanguageKey, ''));
+  language$ = new BehaviorSubject<Language>(getFromLocalStorage(LanguageService.LANGUAGE_KEY, 'fi'));
+  filterLanguage$ = new BehaviorSubject<Language>(getFromLocalStorage(LanguageService.FILTER_LANGUAGE_KEY, ''));
   translateLanguage$ = new BehaviorSubject<Language>(this.language);
 
   constructor(private translateService: TranslateService) {
@@ -33,7 +33,7 @@ export class LanguageService implements Localizer {
   set language(language: Language) {
     if (this.language !== language) {
       this.language$.next(language);
-      setToLocalStorage(this.languageKey, language);
+      setToLocalStorage(LanguageService.LANGUAGE_KEY, language);
     }
   }
 
@@ -44,7 +44,7 @@ export class LanguageService implements Localizer {
   set filterLanguage(language: Language) {
     if (this.filterLanguage !== language) {
       this.filterLanguage$.next(language);
-      setToLocalStorage(this.filterLanguageKey, language);
+      setToLocalStorage(LanguageService.FILTER_LANGUAGE_KEY, language);
     }
   }
 
