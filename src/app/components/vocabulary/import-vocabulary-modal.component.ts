@@ -16,7 +16,7 @@ import { ConfigurationService } from '../../services/configuration.service';
         <div class="modal-header">
           <h4 class="modal-title strong">
             <a><i id="close_modal_link" class="fa fa-times" (click)="close()"></i></a>
-            <span translate>Import vocabulary</span>
+            <span translate>Import concepts</span>
           </h4>
         </div>
 

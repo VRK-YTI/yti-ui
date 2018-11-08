@@ -223,7 +223,7 @@ msgstr ""
 msgid "Import failed"
 msgstr ""
 
-msgid "Import vocabulary"
+msgid "Import concepts"
 msgstr ""
 
 msgid "File format"

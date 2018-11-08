@@ -63,7 +63,7 @@ import { vocabularyIdPrefix } from 'app/utils/id-prefix';
 
             <div class="float-right" *ngIf="canImport()">
               <label id="vocabulary_import_label" class="btn btn-secondary-action"
-                     (click)="selectFile()" translate>Import vocabulary</label>
+                     (click)="selectFile()" translate>Import concepts</label>
             </div>
 
           </div>
