@@ -131,11 +131,27 @@ export class ImportVocabularyXMLComponent {
         responseType: 'json'
       }).subscribe(event => {
           const anybody = <any> event;
-          if (anybody.status === 'Processing') {
-            resolve(new Progress());
-          } else if (anybody.status === 'Ready') {
-            resolve(new Progress());
-            this.processingResolve(anybody);
+          if (anybody.status) {
+            switch(anybody.status) {
+              case 'QUEUED':
+              case 'PREPROCESSING':
+              case 'PROCESSING':
+              case 'POSTPROCESSING':
+                resolve(new Progress());
+                break;
+              case 'SUCCESS':
+              case 'SUCCESS_WITH_ERRORS':
+                resolve(new Progress());
+                this.processingResolve(anybody);
+                break;
+              case 'FAILURE':
+                resolve(new Progress());
+                this.processingReject(anybody);
+                break;
+              case 'NOT_FOUND':
+              default:
+                reject();
+            }
           } else {
             reject();
           }
