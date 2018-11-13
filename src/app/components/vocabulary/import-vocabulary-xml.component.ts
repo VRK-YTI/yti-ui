@@ -25,7 +25,10 @@ import { Phase, Progress, Result } from '../progress.component';
         <div class="row mb-2">
           <div class="col-md-12">
             <div *ngIf="monitoringError" class="error-result" translate>Error while monitoring processing. Close the modal and try refreshing page later.</div>
-            <span *ngIf="finalResults" class="ok-result" translate>Import ready</span>
+            <span *ngIf="finalResults && !finalResults.resultsError && !finalResults.resultsWarning" class="ok-result" translate [translateParams]="{created: finalResults.resultsCreated || '?'}">Import success</span>
+            <div *ngIf="finalResults && (finalResults.resultsError || finalResults.resultsWarning)" class="ok-result">
+              <span translate [translateParams]="{created: finalResults.resultsCreated || '?', errors: finalResults.resultsError, warnings: finalResults.resultsWarning}">Import success with errors</span>
+            </div>
             <div *ngIf="finalError" class="error-result">
               <div>{{'Import failed' | translate}}:</div>
               <textarea readonly>{{finalError}}</textarea>
@@ -135,7 +138,17 @@ export class ImportVocabularyXMLComponent {
             switch(anybody.status) {
               case 'QUEUED':
               case 'PREPROCESSING':
+                resolve(new Progress());
+                break;
               case 'PROCESSING':
+                const progress = new Progress();
+                if (anybody.processingProgress >= 0 && anybody.processingTotal > 0 && anybody.processingProgress < anybody.processingTotal) {
+                  // Reserve (quite arbitrary) 15% of total work for each of preprocessing and postprocessing.
+                  progress.total = 1.3 * anybody.processingTotal;
+                  progress.current = 0.15 * anybody.processingTotal + anybody.processingProgress;
+                }
+                resolve(progress);
+                break;
               case 'POSTPROCESSING':
                 resolve(new Progress());
                 break;

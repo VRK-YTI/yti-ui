@@ -243,7 +243,10 @@ msgid ""
 "later."
 msgstr ""
 
-msgid "Import ready"
+msgid "Import success"
+msgstr ""
+
+msgid "Import success with errors"
 msgstr ""
 
 msgid "Close"
