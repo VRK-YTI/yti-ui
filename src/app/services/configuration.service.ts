@@ -41,6 +41,11 @@ export class ConfigurationService {
     return env === 'dev' || env === 'local';
   }
 
+  get showAlmostReadyFeature(): boolean {
+    const env = (this.configuration.env || '').toLowerCase();
+    return env === 'dev' || env === 'local' || env === 'test';
+  }
+
   getEnvironmentIdentifier(style?: 'prefix' | 'postfix'): string {
     if (this.environment !== 'prod') {
       const identifier = this.environment.toUpperCase();
