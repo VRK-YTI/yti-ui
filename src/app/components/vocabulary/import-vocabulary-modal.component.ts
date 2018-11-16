@@ -115,7 +115,7 @@ export class ImportVocabularyModalComponent {
 
     // TODO: Handle cancel, "save", etc. Or remove altogether.
     this.editableService.edit();
-    this.enableXml = configurationService.showUnfinishedFeature;
+    this.enableXml = configurationService.showAlmostReadyFeature;
   }
 
   close() {
