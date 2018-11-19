@@ -1,8 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FilterOptions } from 'yti-common-ui/components/filter-dropdown.component';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
-import { Status, allStatuses } from 'yti-common-ui/entities/status';
+import { allStatuses, Status } from 'yti-common-ui/entities/status';
 
 @Component({
   selector: 'app-status-filter-dropdown',
@@ -12,17 +12,32 @@ import { Status, allStatuses } from 'yti-common-ui/entities/status';
                          [filterSubject]="filterSubject"></app-filter-dropdown>
   `
 })
-export class StatusFilterDropdownComponent implements OnInit {
+export class StatusFilterDropdownComponent implements OnInit, OnDestroy {
 
-  @Input() filterSubject: BehaviorSubject<Status|null>;
+  @Input() filterSubject: BehaviorSubject<Status | null>;
+  @Input() statuses: Observable<Status[]>;
 
   statusOptions: FilterOptions<Status>;
+
+  subscriptionToClean: Subscription[] = [];
 
   constructor(private translateService: TranslateService) {
   }
 
   ngOnInit() {
-    this.statusOptions = [null, ...allStatuses].map(status => {
+    if (this.statuses) {
+      this.subscriptionToClean.push(this.statuses.subscribe(statuses => this.constructOptions(statuses)));
+    } else {
+      this.constructOptions(allStatuses);
+    }
+  }
+
+  ngOnDestroy() {
+    this.subscriptionToClean.forEach(sub => sub.unsubscribe());
+  }
+
+  private constructOptions(statuses: Status[]) {
+    this.statusOptions = [null, ...statuses].map(status => {
       return {
         value: status,
         name: () => this.translateService.instant(status ? status : 'All statuses'),
