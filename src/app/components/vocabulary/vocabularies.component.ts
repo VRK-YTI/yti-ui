@@ -46,7 +46,6 @@ import { ConfigurationService } from '../../services/configuration.service';
         <div class="col-md-4">
           <div class="information-domain-container">
             <div class="content-box">
-              <!-- TODO: .id vs .idIdentifier? -->
               <div class="information-domain"
                    *ngFor="let domainAndCount of applicableInformationDomains"
                    [class.active]="isInformationDomainSelected(domainAndCount.domain)"
@@ -144,7 +143,7 @@ export class VocabulariesComponent implements OnInit, OnDestroy {
   statuses: Status[] = selectableStatuses;
 
   // Relevant filtering criteria
-  applicableInformationDomains: { domain: GroupNode, count: number }[];
+  applicableInformationDomains: { domain: GroupNode, count: number }[] = [];
   applicableOrganizations$ = new BehaviorSubject<OrganizationNode[]>([]);
   applicableStatuses$ = new BehaviorSubject<Status[]>([]);
 
@@ -152,6 +151,7 @@ export class VocabulariesComponent implements OnInit, OnDestroy {
   filteredVocabularies: VocabularyNode[] = [];
 
   // Other generic state
+  loading: boolean = true;
   fullDescription: { [key: string]: boolean } = {};
   subscriptionsToClean: Subscription[] = [];
 
@@ -165,11 +165,6 @@ export class VocabulariesComponent implements OnInit, OnDestroy {
               private translateService: TranslateService,
               private termedService: TermedService,
               private router: Router) {
-  }
-
-  get loading() {
-    // TODO: Consider organizations and statuses?
-    return !this.filteredVocabularies || !this.applicableInformationDomains;
   }
 
   get searchText() {
@@ -235,6 +230,9 @@ export class VocabulariesComponent implements OnInit, OnDestroy {
           ).sort(comparingPrimitive<VocabularyNode>(voc => !voc.priority) // vocabularies having priority set first
             .andThen(comparingPrimitive<VocabularyNode>(voc => voc.priority))
             .andThen(comparingLocalizable<VocabularyNode>(this.languageService, voc => voc.label)));
+          if (this.loading) {
+            this.loading = false;
+          }
         }));
   }
 
