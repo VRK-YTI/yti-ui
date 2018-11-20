@@ -46,6 +46,10 @@ export class ConfigurationService {
     return env === 'dev' || env === 'local' || env === 'test';
   }
 
+  get restrictFilterOptions(): boolean {
+    return this.configuration.restrictFilterOptions;
+  }
+
   getEnvironmentIdentifier(style?: 'prefix' | 'postfix'): string {
     if (this.environment !== 'prod') {
       const identifier = this.environment.toUpperCase();

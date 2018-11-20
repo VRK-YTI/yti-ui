@@ -3,4 +3,5 @@ export interface ServiceConfiguration {
   dataModelUrl: string;
   groupmanagementUrl: string;
   env: string;
+  restrictFilterOptions: boolean;
 }

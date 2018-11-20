@@ -12,6 +12,7 @@ import { LanguageService } from 'app/services/language.service';
 import { TranslateService } from '@ngx-translate/core';
 import { getInformationDomainSvgIcon, getVocabularyTypeMaterialIcon } from 'yti-common-ui/utils/icons';
 import { selectableStatuses, Status } from 'yti-common-ui/entities/status';
+import { ConfigurationService } from '../../services/configuration.service';
 
 @Component({
   selector: 'app-vocabularies',
@@ -129,8 +130,6 @@ import { selectableStatuses, Status } from 'yti-common-ui/entities/status';
   `
 })
 export class VocabulariesComponent implements OnInit, OnDestroy {
-  // Whether to consider other filters in determining drop down filter option availability.
-  private static readonly RESTRICTED_FILTER_OPTIONS: boolean = true;
 
   // Active filtering criteria
   searchText$ = new BehaviorSubject('');
@@ -161,6 +160,7 @@ export class VocabulariesComponent implements OnInit, OnDestroy {
   getInformationDomainIconSrc = getInformationDomainSvgIcon;
 
   constructor(private authorizationManager: AuthorizationManager,
+              private configurationService: ConfigurationService,
               private languageService: LanguageService,
               private translateService: TranslateService,
               private termedService: TermedService,
@@ -266,7 +266,7 @@ export class VocabulariesComponent implements OnInit, OnDestroy {
   }
 
   private subscribeFilters() {
-    if (VocabulariesComponent.RESTRICTED_FILTER_OPTIONS) {
+    if (this.configurationService.restrictFilterOptions) {
       this.subscriptionsToClean.push(
         combineLatest(this.organizations$, this.vocabularies$, this.searchText$, this.selectedInformationDomain$, this.selectedStatus$, this.selectedOrganization$)
           .subscribe(([organizations, vocabularies, text, domain, status, selectedOrg]) => {
