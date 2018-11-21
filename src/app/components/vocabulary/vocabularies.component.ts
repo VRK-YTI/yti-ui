@@ -265,7 +265,7 @@ export class VocabulariesComponent implements OnInit, OnDestroy {
               if (orgMatch && statusMatch) {
                 voc.groups.forEach(domain => state.domainCounts[domain.id] = state.domainCounts[domain.id] ? state.domainCounts[domain.id] + 1 : 1);
               }
-              if (restrict) {
+              if (restrict && domainMatch) {
                 if (statusMatch) {
                   voc.contributors.forEach(org => state.orgCounts[org.id] = state.orgCounts[org.id] ? state.orgCounts[org.id] + 1 : 1);
                 }
