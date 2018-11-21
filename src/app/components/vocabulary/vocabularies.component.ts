@@ -92,8 +92,7 @@ import { ConfigurationService } from '../../services/configuration.service';
                 <div class="result-list-item" *ngFor="let vocabulary of filteredVocabularies"
                      [id]="vocabulary.idIdentifier + '_vocabulary_navigation'">
                   <span class="type">
-                    <i
-                      class="material-icons {{getVocabularyTypeIconDef(vocabulary.type).colorClass}}">{{getVocabularyTypeIconDef(vocabulary.type).name}}</i>{{vocabulary.typeLabel | translateValue:true}}
+                    <i class="material-icons {{getVocabularyTypeIconDef(vocabulary.type).colorClass}}">{{getVocabularyTypeIconDef(vocabulary.type).name}}</i>{{vocabulary.typeLabel | translateValue:true}}
                   </span>
 
                   <app-status class="status" [status]="vocabulary.status"></app-status>
@@ -159,6 +158,14 @@ export class VocabulariesComponent implements OnInit, OnDestroy {
   getVocabularyTypeIconDef = getVocabularyTypeMaterialIcon;
   getInformationDomainIconSrc = getInformationDomainSvgIcon;
 
+  // Comparators
+  private vocabularyComparator =
+    comparingPrimitive<VocabularyNode>(voc => !voc.priority)
+      .andThen(comparingPrimitive<VocabularyNode>(voc => voc.priority))
+      .andThen(comparingLocalizable<VocabularyNode>(this.languageService, voc => voc.label));
+  private informationDomainComparator =
+    comparingLocalizable<{ domain: GroupNode, count: number }>(this.languageService, obj => obj.domain.label);
+
   constructor(private authorizationManager: AuthorizationManager,
               private configurationService: ConfigurationService,
               private languageService: LanguageService,
@@ -181,13 +188,12 @@ export class VocabulariesComponent implements OnInit, OnDestroy {
       refCount()
     );
     this.informationDomains$ = this.termedService.getGroupList();
-    this.organizations$ = this.termedService.getOrganizationList();
+    this.organizations$ = this.termedService.getOrganizationList().pipe(
+      publishReplay(1),
+      refCount()
+    );
 
-    // TODO: It is probably quite possibly to do all these with single looping through of vocabularies.
-    // TODO: Language based sorting done on the final lists, no need to re-construct lists?
-    this.subscribeFilteredVocabularies();
-    this.subscribeInformationDomains();
-    this.subscribeFilters();
+    this.makeSubscriptions();
   }
 
   ngOnDestroy(): void {
@@ -218,81 +224,17 @@ export class VocabulariesComponent implements OnInit, OnDestroy {
     }
   }
 
-  private subscribeFilteredVocabularies() {
+  private makeSubscriptions() {
+    const restrict = false; //this.configurationService.restrictFilterOptions;
     this.subscriptionsToClean.push(
-      combineLatest(this.vocabularies$, this.searchText$, this.selectedInformationDomain$, this.selectedOrganization$, this.selectedStatus$, this.languageService.language$)
-        .subscribe(([vocabularies, text, domain, organization, status, _language]) => {
-          this.filteredVocabularies = vocabularies.filter(voc =>
-            searchMatches(text, voc) &&
-            informationDomainMatches(domain, voc) &&
-            organizationMatches(organization, voc) &&
-            statusMatches(status, voc)
-          ).sort(comparingPrimitive<VocabularyNode>(voc => !voc.priority) // vocabularies having priority set first
-            .andThen(comparingPrimitive<VocabularyNode>(voc => voc.priority))
-            .andThen(comparingLocalizable<VocabularyNode>(this.languageService, voc => voc.label)));
-          if (this.loading) {
-            this.loading = false;
-          }
-        }));
-  }
-
-  private subscribeInformationDomains() {
-    this.subscriptionsToClean.push(
-      combineLatest(this.informationDomains$, this.vocabularies$, this.searchText$, this.selectedOrganization$, this.selectedStatus$, this.languageService.language$)
-        .subscribe(([domains, vocabularies, text, organization, status, _language]) => {
-          const counts: { [id: string]: number } = vocabularies.filter(voc =>
-            searchMatches(text, voc) &&
-            organizationMatches(organization, voc) &&
-            statusMatches(status, voc))
-            .reduce((countMap, voc) => {
-              voc.groups.forEach(domain => countMap[domain.id] = countMap[domain.id] ? countMap[domain.id] + 1 : 1);
-              return countMap;
-            }, <{ [id: string]: number }> {});
-          const currentlySelectedDomainId: string | undefined = (this.selectedInformationDomain$.getValue() || { id: undefined }).id;
-          this.applicableInformationDomains = domains
-            .map(domain => ({ domain: domain, count: counts[domain.id] || 0 }))
-            .filter(obj => obj.count > 0 || obj.domain.id === currentlySelectedDomainId)
-            .sort(comparingLocalizable<{ domain: GroupNode, count: number }>(this.languageService, obj => obj.domain.label));
-        }));
-    // Currently selected domain remains on the list even if count reaches zero. If selection is changed it should be removed, thus:
-    this.subscriptionsToClean.push(this.selectedInformationDomain$.subscribe(domain => {
-      if (this.applicableInformationDomains) {
-        const newId: string | undefined = domain ? domain.id : undefined;
-        this.applicableInformationDomains = this.applicableInformationDomains.filter(obj => obj.count > 0 || obj.domain.id === newId);
-      }
-    }));
-  }
-
-  private subscribeFilters() {
-    if (this.configurationService.restrictFilterOptions) {
-      this.subscriptionsToClean.push(
-        combineLatest(this.organizations$, this.vocabularies$, this.searchText$, this.selectedInformationDomain$, this.selectedStatus$, this.selectedOrganization$)
-          .subscribe(([organizations, vocabularies, text, domain, status, selectedOrg]) => {
-            const counts: { [id: string]: number } = vocabularies.filter(voc =>
-              searchMatches(text, voc) &&
-              informationDomainMatches(domain, voc) &&
-              statusMatches(status, voc)
-            ).reduce((countMap, voc) => {
-              voc.contributors.forEach(org => countMap[org.id] = countMap[org.id] ? countMap[org.id] + 1 : 1);
-              return countMap;
-            }, <{ [id: string]: number }> {});
-            const currentlySelectedOrgId: string | undefined = selectedOrg ? selectedOrg.id : undefined;
-            this.applicableOrganizations$.next(organizations.filter(org => counts[org.id] || org.id === currentlySelectedOrgId));
-          }));
-      this.subscriptionsToClean.push(
-        combineLatest(this.vocabularies$, this.searchText$, this.selectedInformationDomain$, this.selectedOrganization$, this.selectedStatus$)
-          .subscribe(([vocabularies, text, domain, organization, selectedStatus]) => {
-            const counts: { [id: string]: number } = vocabularies.filter(voc =>
-              searchMatches(text, voc) &&
-              informationDomainMatches(domain, voc) &&
-              organizationMatches(organization, voc)
-            ).reduce((countMap, voc) => {
-              countMap[voc.status] = countMap[voc.status] ? countMap[voc.status] + 1 : 1;
-              return countMap;
-            }, <{ [id: string]: number }> {});
-            this.applicableStatuses$.next(this.statuses.filter(status => counts[status] || status === selectedStatus));
-          }));
-    } else {
+      this.languageService.language$.subscribe(_language => {
+        // NOTE: Organization filter contains internal sorting. Statuses are in natural order.
+        this.filteredVocabularies.sort(this.vocabularyComparator);
+        this.applicableInformationDomains.sort(this.informationDomainComparator);
+      })
+    );
+    if (!restrict) {
+      // If drop down filter options are not restricted then do not regenerate sets on selection changes.
       this.subscriptionsToClean.push(
         combineLatest(this.vocabularies$, this.organizations$)
           .subscribe(([vocabularies, organizations]) => {
@@ -303,8 +245,58 @@ export class VocabulariesComponent implements OnInit, OnDestroy {
             }, <{ orgCounts: { [id: string]: number }, statCounts: { [id: string]: number } }> { orgCounts: {}, statCounts: {} });
             this.applicableOrganizations$.next(organizations.filter(org => counts.orgCounts[org.id]));
             this.applicableStatuses$.next(this.statuses.filter(status => counts.statCounts[status]));
-          }));
+          })
+      );
     }
+    this.subscriptionsToClean.push(
+      combineLatest(
+        combineLatest(this.vocabularies$, this.informationDomains$, this.organizations$),
+        combineLatest(this.searchText$, this.selectedInformationDomain$, this.selectedOrganization$, this.selectedStatus$))
+        .subscribe(([[vocabularies, domains, organizations], [selectedText, selectedDomain, selectedOrganization, selectedStatus]]) => {
+          console.log("Org #: " + organizations.length);
+          const accumulated: FilterConstructionState = vocabularies.reduce((state, voc) => {
+            const searchMatch = searchMatches(selectedText, voc);
+            const domainMatch = informationDomainMatches(selectedDomain, voc);
+            const orgMatch = organizationMatches(selectedOrganization, voc);
+            const statusMatch = statusMatches(selectedStatus, voc);
+            if (searchMatch) {
+              if (domainMatch && orgMatch && statusMatch) {
+                state.passedVocabularies.push(voc);
+              }
+              if (orgMatch && statusMatch) {
+                voc.groups.forEach(domain => state.domainCounts[domain.id] = state.domainCounts[domain.id] ? state.domainCounts[domain.id] + 1 : 1);
+              }
+              if (restrict) {
+                if (statusMatch) {
+                  voc.contributors.forEach(org => state.orgCounts[org.id] = state.orgCounts[org.id] ? state.orgCounts[org.id] + 1 : 1);
+                }
+                if (orgMatch) {
+                  state.statusCounts[voc.status] = state.statusCounts[voc.status] ? state.statusCounts[voc.status] + 1 : 1;
+                }
+              }
+            }
+            return state;
+          }, <FilterConstructionState>{ passedVocabularies: [], domainCounts: {}, orgCounts: {}, statusCounts: {} });
+
+          this.filteredVocabularies = accumulated.passedVocabularies.sort(this.vocabularyComparator);
+
+          const currentlySelectedDomainId: string | undefined = selectedDomain ? selectedDomain.id : undefined;
+          this.applicableInformationDomains = domains
+            .map(domain => ({ domain: domain, count: accumulated.domainCounts[domain.id] || 0 }))
+            .filter(obj => obj.count > 0 || obj.domain.id === currentlySelectedDomainId)
+            .sort(this.informationDomainComparator);
+
+          if (restrict) {
+            const currentlySelectedOrgId: string | undefined = selectedOrganization ? selectedOrganization.id : undefined;
+            this.applicableOrganizations$.next(organizations.filter(org => accumulated.orgCounts[org.id] || org.id === currentlySelectedOrgId));
+            this.applicableStatuses$.next(this.statuses.filter(status => accumulated.statusCounts[status] || status === selectedStatus));
+          }
+
+          if (this.loading) {
+            this.loading = false;
+          }
+        })
+    );
   }
 }
 
@@ -323,3 +315,10 @@ function organizationMatches(organization: OrganizationNode | null, vocabulary: 
 function statusMatches(status: Status | null, vocabulary: VocabularyNode): boolean {
   return !status || vocabulary.status === status;
 }
+
+type FilterConstructionState = {
+  passedVocabularies: VocabularyNode[];
+  domainCounts: { [id: string]: number };
+  orgCounts: { [id: string]: number };
+  statusCounts: { [status: string]: number };
+};
