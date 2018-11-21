@@ -225,7 +225,7 @@ export class VocabulariesComponent implements OnInit, OnDestroy {
   }
 
   private makeSubscriptions() {
-    const restrict = false; //this.configurationService.restrictFilterOptions;
+    const restrict = this.configurationService.restrictFilterOptions;
     this.subscriptionsToClean.push(
       this.languageService.language$.subscribe(_language => {
         // NOTE: Organization filter contains internal sorting. Statuses are in natural order.
@@ -253,7 +253,6 @@ export class VocabulariesComponent implements OnInit, OnDestroy {
         combineLatest(this.vocabularies$, this.informationDomains$, this.organizations$),
         combineLatest(this.searchText$, this.selectedInformationDomain$, this.selectedOrganization$, this.selectedStatus$))
         .subscribe(([[vocabularies, domains, organizations], [selectedText, selectedDomain, selectedOrganization, selectedStatus]]) => {
-          console.log("Org #: " + organizations.length);
           const accumulated: FilterConstructionState = vocabularies.reduce((state, voc) => {
             const searchMatch = searchMatches(selectedText, voc);
             const domainMatch = informationDomainMatches(selectedDomain, voc);
