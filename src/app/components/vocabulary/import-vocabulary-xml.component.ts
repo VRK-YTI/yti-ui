@@ -27,7 +27,7 @@ import { Phase, Progress, Result } from '../progress.component';
             <div *ngIf="monitoringError" class="error-result" translate>Error while monitoring processing. Close the modal and try refreshing page later.</div>
             <span *ngIf="finalResults && !finalResults.resultsError && !finalResults.resultsWarning" class="ok-result" translate [translateParams]="{created: finalResults.resultsCreated || '?'}">Import success</span>
             <div *ngIf="finalResults && (finalResults.resultsError || finalResults.resultsWarning)" class="ok-result">
-              <span translate [translateParams]="{created: finalResults.resultsCreated || '?', errors: finalResults.resultsError, warnings: finalResults.resultsWarning}">Import success with errors</span>
+              <span translate [translateParams]="{created: finalResults.resultsCreated || '?', errors: finalResults.resultsError || '0', warnings: finalResults.resultsWarning || '0'}">Import success with errors</span>
             </div>
             <div *ngIf="finalError" class="error-result">
               <div>{{'Import failed' | translate}}:</div>
@@ -54,6 +54,7 @@ export class ImportVocabularyXMLComponent {
   httpStatusText?: string;
   uploadError?: string;
 
+  requestFullStatus = false;
   finalResults?: any;
   finalError?: any;
   monitoringError: boolean = false;
@@ -130,7 +131,7 @@ export class ImportVocabularyXMLComponent {
 
   pollProgress(phase: Phase, state: any): Promise<Progress> {
     return new Promise((resolve, reject) => {
-      this.http.get(importApiUrl + '/status/' + this.jobToken, {
+      this.http.get(importApiUrl + '/status/' + this.jobToken + (this.requestFullStatus ? '?full=true' : ''), {
         responseType: 'json'
       }).subscribe(event => {
           const anybody = <any> event;
@@ -155,7 +156,17 @@ export class ImportVocabularyXMLComponent {
               case 'SUCCESS':
               case 'SUCCESS_WITH_ERRORS':
                 resolve(new Progress());
-                this.processingResolve(anybody);
+                if (this.requestFullStatus) {
+                  // TODO: Remove hack when results are reported correctly.
+                  if (anybody.resultsCreated == null) {
+                    if (anybody.processingProgress && anybody.processingProgress === anybody.processingTotal) {
+                      anybody.resultsCreated = anybody.processingProgress - (anybody.resultsError ? anybody.resultsError : 0);
+                    }
+                  }
+                  this.processingResolve(anybody);
+                } else {
+                  this.requestFullStatus = true;
+                }
                 break;
               case 'FAILURE':
                 resolve(new Progress());

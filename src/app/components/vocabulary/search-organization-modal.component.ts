@@ -1,13 +1,14 @@
 import { AfterViewInit, Component, ElementRef, Injectable, Input, Renderer, ViewChild } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { OrganizationNode } from 'app/entities/node';
-import { BehaviorSubject, combineLatest, Observable, concat } from 'rxjs';
+import { BehaviorSubject, combineLatest, concat, Observable } from 'rxjs';
 import { debounceTime, map, skip, take, tap } from 'rxjs/operators';
 import { TermedService } from 'app/services/termed.service';
 import { LanguageService } from 'app/services/language.service';
 import { contains } from 'yti-common-ui/utils/array';
 import { isDefined } from 'yti-common-ui/utils/object';
 import { ModalService } from 'app/services/modal.service';
+import { comparingLocalizable } from 'yti-common-ui/utils/comparator';
 
 @Component({
   selector: 'app-search-organization-modal',
@@ -23,7 +24,8 @@ import { ModalService } from 'app/services/modal.service';
       <div class="row mb-2">
         <div class="col-12">
           <div class="input-group input-group-lg input-group-search">
-            <input #searchInput type="text" id="search_organization_link" class="form-control" placeholder="{{'Search organization' | translate}}"
+            <input #searchInput type="text" id="search_organization_link" class="form-control"
+                   placeholder="{{'Search organization' | translate}}"
                    [(ngModel)]="search"/>
           </div>
         </div>
@@ -60,7 +62,7 @@ export class SearchOrganizationModalComponent implements AfterViewInit {
   @ViewChild('searchInput') searchInput: ElementRef;
 
   @Input() restrictOrganizationIds: string[];
-  @Input() allowOnlyOrganizationIds: string[]|null;
+  @Input() allowOnlyOrganizationIds: string[] | null;
 
   searchResults$: Observable<OrganizationNode[]>;
 
@@ -85,16 +87,8 @@ export class SearchOrganizationModalComponent implements AfterViewInit {
             const isNotRestricted = !contains(this.restrictOrganizationIds, organization.id);
             const isAllowed = !isDefined(this.allowOnlyOrganizationIds) || contains(this.allowOnlyOrganizationIds, organization.id);
             return searchMatches && isNotRestricted && isAllowed;
-          });
+          }).sort(comparingLocalizable<OrganizationNode>(this.languageService, org => org.label));
         }));
-  }
-
-  select(organization: OrganizationNode) {
-    this.modal.close(organization);
-  }
-
-  ngAfterViewInit() {
-    this.renderer.invokeElementMethod(this.searchInput.nativeElement, 'focus');
   }
 
   get search() {
@@ -103,6 +97,14 @@ export class SearchOrganizationModalComponent implements AfterViewInit {
 
   set search(value: string) {
     this.search$.next(value);
+  }
+
+  select(organization: OrganizationNode) {
+    this.modal.close(organization);
+  }
+
+  ngAfterViewInit() {
+    this.renderer.invokeElementMethod(this.searchInput.nativeElement, 'focus');
   }
 
   cancel() {
@@ -116,7 +118,7 @@ export class SearchOrganizationModalService {
   constructor(private modalService: ModalService) {
   }
 
-  open(restrictOrganizationIds: string[], allowOnlyOrganizationIds: string[]|null): Promise<OrganizationNode> {
+  open(restrictOrganizationIds: string[], allowOnlyOrganizationIds: string[] | null): Promise<OrganizationNode> {
     const modalRef = this.modalService.open(SearchOrganizationModalComponent, { size: 'sm' });
     const instance = modalRef.componentInstance as SearchOrganizationModalComponent;
     instance.restrictOrganizationIds = restrictOrganizationIds;
