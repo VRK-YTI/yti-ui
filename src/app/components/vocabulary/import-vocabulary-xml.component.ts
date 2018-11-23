@@ -9,37 +9,44 @@ import { Phase, Progress, Result } from '../progress.component';
   selector: 'app-import-vocabulary-xml',
   styleUrls: ['./import-vocabulary-xml.component.scss'],
   template: `
-    <div>
+    <div class="xml-modal-container">
       <div class="modal-header">
         <h4 class="modal-title">
-          <a><i class="fa fa-times" id="cancel_import_link" (click)="cancel()"></i></a>
+          <a [ngClass]="{disabled: !canClose}"><i class="fa fa-times" id="cancel_import_link" (click)="canClose && cancel()"></i></a>
           <span translate>XML import</span>
         </h4>
       </div>
       <div class="modal-body">
-        <div class="row mb-2">
-          <div class="col-md-12">
-            <app-progress [phases]="progressPhases" (result)="onResult($event)" (pollingError)="onPollingError($event)"></app-progress>
+        <div class="xml-modal-progress mb-3">
+          <app-progress [phases]="progressPhases" (result)="onResult($event)" (pollingError)="onPollingError($event)"></app-progress>
+        </div>
+        <div class="xml-modal-result-summary">
+          <div *ngIf="monitoringError" class="error-result" translate>Error while monitoring processing. Close the modal and try refreshing page later.</div>
+          <span *ngIf="finalResults && !finalResults.resultsError && !finalResults.resultsWarning" class="ok-result" translate [translateParams]="{created: finalResults.resultsCreated || '?'}">Import success</span>
+          <div *ngIf="finalResults && (finalResults.resultsError || finalResults.resultsWarning)" class="ok-result">
+            <span translate [translateParams]="{created: finalResults.resultsCreated || '?', errors: finalResults.resultsError || '0', warnings: finalResults.resultsWarning || '0'}">Import success with errors</span>
+            <span *ngIf="finalResults.statusMessage && finalResults.statusMessage.length">
+              &nbsp;<a class="showMessagesToggle" (click)="showMessages = !showMessages">{{(showMessages? 'Hide messages' : 'Show messages') | translate}}</a>.
+            </span>
+          </div>
+          <div *ngIf="finalError" class="error-result">
+            <div>{{'Import failed' | translate}}:</div>
+            <textarea readonly>{{finalError}}</textarea>
           </div>
         </div>
-        <div class="row mb-2">
-          <div class="col-md-12">
-            <div *ngIf="monitoringError" class="error-result" translate>Error while monitoring processing. Close the modal and try refreshing page later.</div>
-            <span *ngIf="finalResults && !finalResults.resultsError && !finalResults.resultsWarning" class="ok-result" translate [translateParams]="{created: finalResults.resultsCreated || '?'}">Import success</span>
-            <div *ngIf="finalResults && (finalResults.resultsError || finalResults.resultsWarning)" class="ok-result">
-              <span translate [translateParams]="{created: finalResults.resultsCreated || '?', errors: finalResults.resultsError || '0', warnings: finalResults.resultsWarning || '0'}">Import success with errors</span>
-            </div>
-            <div *ngIf="finalError" class="error-result">
-              <div>{{'Import failed' | translate}}:</div>
-              <textarea readonly>{{finalError}}</textarea>
-            </div>
-          </div>
+        <div class="xml-modal-result-messages mt-3" *ngIf="showMessages">
+          <dl>
+            <ng-container *ngFor="let message of finalResults.statusMessage">
+              <dt>{{message.targetIdentifier}}</dt>
+              <dd>{{message.message}}</dd>
+            </ng-container>
+          </dl>
         </div>
       </div>
 
       <div class="modal-footer">
         <button type="button" id="import_yes_button" class="btn btn-action confirm" (click)="confirm()"
-                [disabled]="!finalResults && !finalError && !monitoringError" translate>Close</button>
+                [disabled]="!canClose" translate>Close</button>
       </div>
     </div>
   `
@@ -58,6 +65,7 @@ export class ImportVocabularyXMLComponent {
   finalResults?: any;
   finalError?: any;
   monitoringError: boolean = false;
+  showMessages: boolean = false;
 
   processingResolve: (value?: any | PromiseLike<any>) => void;
   processingReject: (reason?: any) => void;
@@ -199,5 +207,9 @@ export class ImportVocabularyXMLComponent {
 
   onPollingError(error: boolean): void {
     this.monitoringError = error;
+  }
+
+  get canClose(): boolean {
+    return this.finalResults || this.finalError || this.monitoringError;
   }
 }

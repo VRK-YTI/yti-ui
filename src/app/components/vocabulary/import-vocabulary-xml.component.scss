@@ -1,18 +1,68 @@
 @import '~yti-common-ui/theme/variables';
 
-.modal-body {
-  .ok-result {
+.xml-modal-container {
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 5rem);
+
+  .modal-header {
+    flex: 0 0 auto;
+
+    .modal-title {
+      a.disabled i {
+        color: $gray-k20;
+        cursor: not-allowed;
+      }
+    }
   }
 
-  .error-result {
-    div {
+  .modal-body {
+    flex: 1 1 auto;
+    min-height: 0px; /* For Edge to allow messages to shrink with scroll. */
+    display: flex;
+    flex-direction: column;
+
+    .xml-modal-progress {
+      flex: 0 0 auto;
     }
-    textarea {
-      margin-top: 0.5em;
-      width: 100%;
-      min-height: 50px;
-      max-height: 50px;
-      height: 50px;
+
+    .xml-modal-result-summary {
+      flex: 0 0 auto;
+
+      .ok-result {
+        a.showMessagesToggle {
+          color: $blue-link;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+
+      .error-result {
+        div {
+        }
+        textarea {
+          margin-top: 0.5em;
+          width: 100%;
+          min-height: 50px;
+          max-height: 50px;
+          height: 50px;
+        }
+      }
+    }
+
+    .xml-modal-result-messages {
+      flex: 1 1 auto;
+      overflow-y: auto;
+      min-height: 0px;  /* For Edge and Firefox to allow messages to shrink with scroll. */
+      border: 1px solid $gray-200;
+      padding: 0.3rem;
     }
   }
+
+  .modal-footer {
+    flex: 0 0 auto;
+  }
 }
+

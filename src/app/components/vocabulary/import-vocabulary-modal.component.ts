@@ -161,7 +161,7 @@ export class ImportVocabularyModalService {
   }
 
   public open(vocabulary: VocabularyNode): Promise<any> {
-    const modalRef = this.modalService.open(ImportVocabularyModalComponent, { size: 'sm' });
+    const modalRef = this.modalService.open(ImportVocabularyModalComponent, { size: 'sm', backdrop: 'static', keyboard: false });
     const instance = modalRef.componentInstance as ImportVocabularyModalComponent;
     instance.vocabulary = vocabulary;
     return modalRef.result;

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-11-12 13:29+0200\n"
+"PO-Revision-Date: 2018-11-23 18:09+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -320,8 +320,8 @@ msgstr "new concept"
 msgid "New collection"
 msgstr "new collection"
 
-msgid "Concept not in references"
-msgstr ""
+msgid "self reference error"
+msgstr "Selection references itself"
 
 msgid "Front page"
 msgstr ""
@@ -352,11 +352,11 @@ msgstr ""
 msgid "Unlink"
 msgstr ""
 
-msgid "All statuses"
+msgid "Concept not in references"
 msgstr ""
 
-msgid "self reference error"
-msgstr "Selection references itself"
+msgid "All statuses"
+msgstr ""
 
 msgid "already added error"
 msgstr "Selection is already added"
@@ -386,6 +386,12 @@ msgid "File upload"
 msgstr ""
 
 msgid "Processing"
+msgstr ""
+
+msgid "Show messages"
+msgstr ""
+
+msgid "Hide messages"
 msgstr ""
 
 msgid "Property must include a language."
