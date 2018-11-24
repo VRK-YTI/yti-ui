@@ -21,12 +21,18 @@ import { Phase, Progress, Result } from '../progress.component';
           <app-progress [phases]="progressPhases" (result)="onResult($event)" (pollingError)="onPollingError($event)"></app-progress>
         </div>
         <div class="xml-modal-result-summary">
-          <div *ngIf="monitoringError" class="error-result" translate>Error while monitoring processing. Close the modal and try refreshing page later.</div>
-          <span *ngIf="finalResults && !finalResults.resultsError && !finalResults.resultsWarning" class="ok-result" translate [translateParams]="{created: finalResults.resultsCreated || '?'}">Import success</span>
+          <div *ngIf="monitoringError" class="error-result" translate>
+            Error while monitoring processing. Close the modal and try refreshing page later.
+          </div>
+          <span *ngIf="finalResults && !finalResults.resultsError && !finalResults.resultsWarning" class="ok-result" translate
+                [translateParams]="{created: finalResults.resultsCreated || '?'}">Import success</span>
           <div *ngIf="finalResults && (finalResults.resultsError || finalResults.resultsWarning)" class="ok-result">
-            <span translate [translateParams]="{created: finalResults.resultsCreated || '?', errors: finalResults.resultsError || '0', warnings: finalResults.resultsWarning || '0'}">Import success with errors</span>
+            <span translate
+                  [translateParams]="{created: finalResults.resultsCreated || '?', errors: finalResults.resultsError || '0', warnings: finalResults.resultsWarning || '0'}">Import success with errors</span>
             <span *ngIf="finalResults.statusMessage && finalResults.statusMessage.length">
-              &nbsp;<a class="showMessagesToggle" (click)="showMessages = !showMessages">{{(showMessages? 'Hide messages' : 'Show messages') | translate}}</a>.
+              <a class="showMessagesToggle"
+                 (click)="showMessages = !showMessages">{{(showMessages ? 'Hide messages' : 'Show messages') | translate}}</a>.
+              <app-clipboard [description]="'JSON'" [value]="generateMessageJSON()"></app-clipboard>
             </span>
           </div>
           <div *ngIf="finalError" class="error-result">
@@ -96,7 +102,7 @@ export class ImportVocabularyXMLComponent {
             this.httpStatusText = event.statusText;
             if (event instanceof HttpResponse) {
               if (event.status === 200 && event.body) {
-                const anybody = <any> event.body;
+                const anybody = <any>event.body;
                 if (anybody.jobtoken) {
                   this.jobToken = anybody.jobtoken;
                 }
@@ -139,12 +145,12 @@ export class ImportVocabularyXMLComponent {
 
   pollProgress(phase: Phase, state: any): Promise<Progress> {
     return new Promise((resolve, reject) => {
-      this.http.get(importApiUrl + '/status/' + this.jobToken + (this.requestFullStatus ? '?full=true' : ''), {
-        responseType: 'json'
-      }).subscribe(event => {
-          const anybody = <any> event;
+        this.http.get(importApiUrl + '/status/' + this.jobToken + (this.requestFullStatus ? '?full=true' : ''), {
+          responseType: 'json'
+        }).subscribe(event => {
+          const anybody = <any>event;
           if (anybody.status) {
-            switch(anybody.status) {
+            switch (anybody.status) {
               case 'QUEUED':
               case 'PREPROCESSING':
                 resolve(new Progress());
@@ -211,5 +217,14 @@ export class ImportVocabularyXMLComponent {
 
   get canClose(): boolean {
     return this.finalResults || this.finalError || this.monitoringError;
+  }
+
+  generateMessageJSON(): () => string {
+    return () => {
+      if (this.finalResults && this.finalResults.statusMessage) {
+        return JSON.stringify(this.finalResults.statusMessage, undefined, 2);
+      }
+      return '';
+    }
   }
 }

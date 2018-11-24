@@ -242,7 +242,7 @@ export class VocabulariesComponent implements OnInit, OnDestroy {
               voc.contributors.forEach(org => counts.orgCounts[org.id] = counts.orgCounts[org.id] ? counts.orgCounts[org.id] + 1 : 1);
               counts.statCounts[voc.status] = counts.statCounts[voc.status] ? counts.statCounts[voc.status] + 1 : 1;
               return counts;
-            }, <{ orgCounts: { [id: string]: number }, statCounts: { [id: string]: number } }> { orgCounts: {}, statCounts: {} });
+            }, <{ orgCounts: { [id: string]: number }, statCounts: { [id: string]: number } }>{ orgCounts: {}, statCounts: {} });
             this.applicableOrganizations$.next(organizations.filter(org => counts.orgCounts[org.id]));
             this.applicableStatuses$.next(this.statuses.filter(status => counts.statCounts[status]));
           })
