@@ -178,16 +178,16 @@ export class Node<T extends NodeType> {
     this.meta = metaModel.getNodeMeta(this.graphId, this.type);
 
     for (const propertyMeta of this.meta.properties) {
-      const property = normalizeAsArray(node.properties[propertyMeta.id]);
+      const property = normalizeAsArray((node.properties || {})[propertyMeta.id]);
       this.properties[propertyMeta.id] = new Property(property, propertyMeta);
     }
 
     for (const referenceMeta of this.meta.references) {
-      const reference = normalizeAsArray(node.references[referenceMeta.id]);
+      const reference = normalizeAsArray((node.references || {})[referenceMeta.id]);
       this.references[referenceMeta.id] = new Reference(reference, referenceMeta, metaModel);
     }
 
-    for (const [name, referrerNodes] of Object.entries(node.referrers)) {
+    for (const [name, referrerNodes] of Object.entries(node.referrers || {})) {
       this.referrers[name] = new Referrer(name, normalizeAsArray(referrerNodes));
     }
   }
