@@ -303,7 +303,7 @@ msgstr ""
 msgid "New collection"
 msgstr ""
 
-msgid "self reference error"
+msgid "already added error"
 msgstr ""
 
 msgid "Front page"
@@ -338,10 +338,10 @@ msgstr ""
 msgid "Concept not in references"
 msgstr ""
 
-msgid "All statuses"
+msgid "self reference error"
 msgstr ""
 
-msgid "already added error"
+msgid "All statuses"
 msgstr ""
 
 msgid "ADMIN"
@@ -375,6 +375,9 @@ msgid "Show messages"
 msgstr ""
 
 msgid "Hide messages"
+msgstr ""
+
+msgid "External link"
 msgstr ""
 
 msgid "Property must include a language."

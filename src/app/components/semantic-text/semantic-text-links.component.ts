@@ -55,11 +55,20 @@ export class SemanticTextLinksComponent implements OnInit, AfterViewChecked {
            [format]="format"
            [relatedConcepts]="relatedConcepts"></p>
         
-        <a *ngSwitchCase="'link'" 
-           [routerLink]="link(child)" 
-           [popoverTitle]="conceptLabel(child) | translateValue" 
-           [ngbPopover]="popContent" 
-           triggers="mouseenter:mouseleave">{{child.text}}</a>
+        <ng-container *ngSwitchCase="'link'">
+          <a *ngIf="child.category === 'internal'"
+            [routerLink]="link(child)"
+            [popoverTitle]="conceptLabel(child) | translateValue"
+            [ngbPopover]="popContent"
+            triggers="mouseenter:mouseleave">{{child.text}}</a>
+          <a *ngIf="child.category === 'external'"
+             class="external"
+             target="_blank"
+             [href]="child.destination"
+             [popoverTitle]="'External link' | translate"
+             [ngbPopover]="popContentExt"
+             triggers="mouseenter:mouseleave">{{child.text}}<i class="fas fa-external-link-alt"></i></a>
+        </ng-container>
         
         <span *ngSwitchCase="'text'">{{child.text}}</span>
         
@@ -68,7 +77,10 @@ export class SemanticTextLinksComponent implements OnInit, AfterViewChecked {
                [value]="conceptDefinition(child) | translateValue"
                [format]="format"></div>
         </ng-template>
-      
+
+        <ng-template #popContentExt>
+          <div>{{child.destination}}</div>
+        </ng-template>
       </ng-container>
     </ng-container>
   `

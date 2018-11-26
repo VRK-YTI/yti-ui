@@ -122,7 +122,7 @@ class MarkdownSerializer implements SemanticTextSerializer {
       return child;
     }
 
-    function visit(node: MarkdownNode): SemanticTextNode|null {
+    function visit(node: MarkdownNode): SemanticTextNode | null {
       switch (node.type) {
         case 'document':
           return new SemanticTextDocument(getChildren(node)
@@ -133,7 +133,7 @@ class MarkdownSerializer implements SemanticTextSerializer {
           return new SemanticTextParagraph(getChildren(node)
             .map(n => visit(n))
             .filter(n => n != null)
-            .map(n => ensureType<SemanticTextLiteral|SemanticTextLink>(requireDefined(n), 'text', 'link')));
+            .map(n => ensureType<SemanticTextLiteral | SemanticTextLink>(requireDefined(n), 'text', 'link')));
         case 'link':
           return new SemanticTextLink(getSingleTextChild(node).literal, node.destination);
         case 'text':
@@ -165,7 +165,11 @@ class XmlSerializer implements SemanticTextSerializer {
         case 'paragraph':
           return node.children.map((c, i, arr) => visit(c, arr.length - 1 === i)).join('') + (lastChild ? '' : '<br />');
         case 'link':
-          return `<a href='${node.destination}'>${node.text}</a>`;
+          if (node.category === 'external') {
+            return `<a href='${node.destination}' data-type='external'>${node.text}</a>`;
+          } else {
+            return `<a href='${node.destination}'>${node.text}</a>`;
+          }
         case 'text':
           return node.text;
         default:
@@ -262,7 +266,20 @@ class XmlSerializer implements SemanticTextSerializer {
               case 'a':
                 const text = getSingleTextChild(node).nodeValue || '';
                 const destination = node.attributes.getNamedItem('href').value;
-                return new SemanticTextLink(text, destination);
+                const type_ = node.attributes.getNamedItem('data-type');
+                if (type_ && type_.value) {
+                  const type = type_.value;
+                  switch (type) {
+                    case 'internal':
+                      return new SemanticTextLink(text, destination, 'internal');
+                    case 'external':
+                      return new SemanticTextLink(text, destination, 'external');
+                    default:
+                      throw new Error('Link type NOT SUPPORTED: ' + type);
+                  }
+                } else {
+                  return new SemanticTextLink(text, destination);
+                }
               default:
                 throw new Error('Element NOT SUPPORTED: ' + node.nodeName);
             }

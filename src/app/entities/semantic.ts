@@ -1,10 +1,10 @@
 export type SemanticTextFormat = 'markdown'
-                               | 'xml';
+  | 'xml';
 
 export type SemanticTextNode = SemanticTextDocument
-                             | SemanticTextParagraph
-                             | SemanticTextLink
-                             | SemanticTextLiteral;
+  | SemanticTextParagraph
+  | SemanticTextLink
+  | SemanticTextLiteral;
 
 export class SemanticTextDocument {
 
@@ -26,7 +26,7 @@ export class SemanticTextParagraph {
 
   type = 'paragraph' as 'paragraph';
 
-  constructor(public children: (SemanticTextLiteral|SemanticTextLink)[] = []) {
+  constructor(public children: (SemanticTextLiteral | SemanticTextLink)[] = []) {
   }
 
   get text(): string {
@@ -42,7 +42,7 @@ export class SemanticTextLink {
 
   type = 'link' as 'link';
 
-  constructor(public text: string, public destination: string) {
+  constructor(public text: string, public destination: string, public category: 'internal' | 'external' = 'internal') {
   }
 
   get children(): SemanticTextNode[] {
