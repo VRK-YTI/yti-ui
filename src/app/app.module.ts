@@ -57,8 +57,8 @@ import {
 } from 'app/components/concept/concept-link-reference-input.component';
 import { SemanticTextInputComponent } from 'app/components/form/semantic-text-input.component';
 import {
-  SemanticTextInputLinkPopoverComponent,
-  SemanticTextInputUnlinkPopoverComponent
+  SemanticTextInputLinkPopoverComponent, SemanticTextInputUnlinkConceptPopoverComponent,
+  SemanticTextInputUnlinkExternalPopoverComponent
 } from 'app/components/form/semantic-text-input-popover.component';
 import {
   SelectConceptReferenceModalComponent,
@@ -218,7 +218,8 @@ export function initApp(configurationService: ConfigurationService) {
     OrganizationInputComponent,
     SemanticTextInputComponent,
     SemanticTextInputLinkPopoverComponent,
-    SemanticTextInputUnlinkPopoverComponent,
+    SemanticTextInputUnlinkConceptPopoverComponent,
+    SemanticTextInputUnlinkExternalPopoverComponent,
     SearchConceptModalComponent,
     SearchOrganizationModalComponent,
     SearchGroupModalComponent,

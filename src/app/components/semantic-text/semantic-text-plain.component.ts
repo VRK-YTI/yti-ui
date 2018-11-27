@@ -1,4 +1,4 @@
-import { AfterViewChecked, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import {
   SemanticTextNode as SemanticTextNodeImported,
   SemanticTextFormat as SemanticTextFormatImported, SemanticTextDocument,
@@ -17,7 +17,7 @@ type SemanticTextNode = SemanticTextNodeImported;
     </div>
   `
 })
-export class SemanticTextPlainComponent implements OnInit, AfterViewChecked {
+export class SemanticTextPlainComponent implements AfterViewChecked, OnChanges {
 
   @Input() value: string;
   @Input() format: SemanticTextFormat;
@@ -25,12 +25,15 @@ export class SemanticTextPlainComponent implements OnInit, AfterViewChecked {
 
   @ViewChild('self') self: ElementRef;
 
-  ngOnInit() {
-    this.document = resolveSerializer(this.format).deserialize(this.value);
-  }
-
   ngAfterViewChecked() {
     removeWhiteSpaceNodes(this.self.nativeElement as HTMLElement);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    const simpleChange = changes['value'];
+    if (simpleChange && simpleChange.currentValue !== simpleChange.previousValue) {
+      this.document = resolveSerializer(this.format).deserialize(this.value);
+    }
   }
 }
 

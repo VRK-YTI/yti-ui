@@ -2,7 +2,18 @@ import { Component, ElementRef, forwardRef, Input, OnInit, ViewChild } from '@an
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { DomPath, DomPoint, DomSelection, formatTextContent, isInDocument, moveCursor, removeChildren } from 'app/utils/dom';
-import { allMatching, first, firstMatching, insertBefore, last, nextOf, nextOfMatching, previousOf, previousOfMatching, remove } from 'yti-common-ui/utils/array';
+import {
+  allMatching,
+  first,
+  firstMatching,
+  insertBefore,
+  last,
+  nextOf,
+  nextOfMatching,
+  previousOf,
+  previousOfMatching,
+  remove
+} from 'yti-common-ui/utils/array';
 import { wordAtOffset } from 'yti-common-ui/utils/string';
 import { isDefined, requireDefined } from 'yti-common-ui/utils/object';
 import { ConceptNode } from 'app/entities/node';
@@ -10,6 +21,7 @@ import {
   SemanticTextDocument,
   SemanticTextFormat as SemanticTextFormatImported,
   SemanticTextLink,
+  SemanticTextLinkCategory,
   SemanticTextLiteral,
   SemanticTextParagraph
 } from 'app/entities/semantic';
@@ -21,8 +33,8 @@ class Model {
 
   public content: Paragraph[] = [];
 
-  linkableSelection: LinkableSelection|null = null;
-  linkedSelection: LinkedSelection|null = null;
+  linkableSelection: LinkableSelection | null = null;
+  linkedSelection: LinkedSelection | null = null;
 
   constructor(public node: Element) {
     removeChildren(node); // clear previous nodes
@@ -66,7 +78,7 @@ class Model {
   insertNewParagraph() {
 
     const selection = requireDefined(this.getSelection());
-    const {text, offset} = selection.remove()!;
+    const { text, offset } = selection.remove()!;
 
     const paragraph = text.containingParagraph;
 
@@ -97,7 +109,7 @@ class Model {
     if (selection.isRange()) {
       selection.remove().moveCursor();
     } else {
-      const {text, offset} = selection.start;
+      const { text, offset } = selection.start;
       text.removeNextChar(offset).moveCursor();
     }
   }
@@ -109,7 +121,7 @@ class Model {
     if (selection.isRange()) {
       selection.remove().moveCursor();
     } else {
-      const {text, offset} = selection.start;
+      const { text, offset } = selection.start;
       text.removePreviousChar(offset).moveCursor();
     }
   }
@@ -119,7 +131,7 @@ class Model {
     return this.content[index].findTextForPath(indicesFromRoot);
   }
 
-  getPrecedingText(paragraph: Paragraph): Text|null {
+  getPrecedingText(paragraph: Paragraph): Text | null {
 
     const previous = previousOf(this.content, paragraph);
 
@@ -130,7 +142,7 @@ class Model {
     }
   }
 
-  getFollowingText(paragraph: Paragraph): Text|null {
+  getFollowingText(paragraph: Paragraph): Text | null {
 
     const next = nextOf(this.content, paragraph);
 
@@ -153,12 +165,12 @@ class Model {
     return canRemove;
   }
 
-  getSelection(): Selection|null {
+  getSelection(): Selection | null {
     const domSelection = DomSelection.create(this.node);
     return domSelection ? Selection.ofDomSelection(this, domSelection) : null;
   }
 
-  link(target: string) {
+  link(target: string, category: SemanticTextLinkCategory) {
 
     if (this.linkableSelection === null) {
       throw new Error('Illegal state');
@@ -167,7 +179,7 @@ class Model {
     const { start, end, cursor } = this.linkableSelection;
     const paragraph = this.linkableSelection.paragraph;
     const text = this.linkableSelection.text;
-    const selectionAsLink = new Link(paragraph, this.linkableSelection.content, target);
+    const selectionAsLink = new Link(paragraph, this.linkableSelection.content, target, category);
 
     if (start > 0) {
       paragraph.insertContentBefore(new Text(paragraph, text.contentBeforeOffset(start)), text);
@@ -252,7 +264,7 @@ class Model {
 
     let offsetWalked = 0;
 
-    for (let text: Text|null = this.firstParagraph.firstText; text !== null; text = text.getFollowingText()) {
+    for (let text: Text | null = this.firstParagraph.firstText; text !== null; text = text.getFollowingText()) {
 
       offsetWalked += text.length;
 
@@ -311,7 +323,7 @@ class Model {
 class Paragraph {
 
   node: HTMLElement;
-  content: (Link|Text)[] = [];
+  content: (Link | Text)[] = [];
 
   constructor(private parent: Model) {
     this.node = document.createElement('p');
@@ -323,7 +335,7 @@ class Paragraph {
 
     for (const child of paragraphNode.children) {
       result.appendContent(child.type === 'link' ? Link.ofSemanticTextNode(result, child)
-                                                         : Text.ofSemanticTextNode(result, child));
+        : Text.ofSemanticTextNode(result, child));
     }
 
     return result;
@@ -358,7 +370,7 @@ class Paragraph {
 
   splitTo(prependingParagraph: Paragraph, fromText: Text, fromOffset: number) {
 
-    const contentToRemove: (Link|Text)[] = [];
+    const contentToRemove: (Link | Text)[] = [];
 
     for (const content of this.content) {
 
@@ -369,7 +381,7 @@ class Paragraph {
         const beforeSplitPointContent = content.text.contentBeforeOffset(fromOffset);
 
         if (content instanceof Link) {
-          prependingParagraph.appendContent(new Link(prependingParagraph, beforeSplitPointContent, content.target));
+          prependingParagraph.appendContent(new Link(prependingParagraph, beforeSplitPointContent, content.target, content.category));
         } else {
           prependingParagraph.appendText(beforeSplitPointContent);
         }
@@ -442,12 +454,12 @@ class Paragraph {
     moveCursor(cursorAfterMerging.text.node, cursorAfterMerging.offset);
   }
 
-  appendContent(content: Link|Text) {
+  appendContent(content: Link | Text) {
     this.content.push(content);
     this.node.appendChild(content.node);
   }
 
-  insertContentBefore(content: Link|Text, ref: Link|Text) {
+  insertContentBefore(content: Link | Text, ref: Link | Text) {
     insertBefore(this.content, content, ref);
     this.node.insertBefore(content.node, ref.node);
   }
@@ -460,7 +472,7 @@ class Paragraph {
     return this.parent.removeContent(this);
   }
 
-  removeContent(content: Text|Link): Point {
+  removeContent(content: Text | Link): Point {
 
     const previous = this.getPrecedingText(content.text);
     const next = this.getFollowingText(content.text);
@@ -487,7 +499,7 @@ class Paragraph {
     return this.content[index].findTextForPath(indicesFromRoot);
   }
 
-  getPrecedingText(text: Text): Text|null {
+  getPrecedingText(text: Text): Text | null {
 
     const previous = previousOfMatching(this.content, c => c.text === text);
 
@@ -498,7 +510,7 @@ class Paragraph {
     }
   }
 
-  getFollowingText(text: Text): Text|null {
+  getFollowingText(text: Text): Text | null {
 
     const next = nextOfMatching(this.content, c => c.text === text);
 
@@ -509,7 +521,7 @@ class Paragraph {
     }
   }
 
-  get lastContent(): Text|Link {
+  get lastContent(): Text | Link {
     return last(this.content);
   }
 
@@ -517,7 +529,7 @@ class Paragraph {
     return this.lastContent.text;
   }
 
-  get firstContent(): Text|Link {
+  get firstContent(): Text | Link {
     return first(this.content);
   }
 
@@ -536,19 +548,19 @@ class Link {
   private _target: string;
   node: HTMLElement;
 
-  constructor(private parent: Paragraph, text: string, target: string) {
+  constructor(private parent: Paragraph, text: string, target: string, public readonly category: SemanticTextLinkCategory) {
     this.node = document.createElement('span');
-    this.node.classList.add('link');
+    this.node.classList.add('link', category);
     this.text = new Text(this, text);
     this.target = target;
   }
 
   static ofSemanticTextNode(parent: Paragraph, link: SemanticTextLink): Link {
-    return new Link(parent, link.text, link.destination);
+    return new Link(parent, link.text, link.destination, link.category);
   }
 
   copyToParent(parent: Paragraph): Link {
-    return new Link(parent, this.content, this.target);
+    return new Link(parent, this.content, this.target, this.category);
   }
 
   get content() {
@@ -610,11 +622,11 @@ class Link {
     return this.text;
   }
 
-  getPrecedingText(): Text|null {
+  getPrecedingText(): Text | null {
     return this.parent.getPrecedingText(this.text);
   }
 
-  getFollowingText(): Text|null {
+  getFollowingText(): Text | null {
     return this.parent.getFollowingText(this.text);
   }
 
@@ -623,7 +635,7 @@ class Link {
   }
 
   toSemanticTextNode(): SemanticTextLink {
-    return new SemanticTextLink(this.content, this.target);
+    return new SemanticTextLink(this.content, this.target, this.category);
   }
 }
 
@@ -632,12 +644,12 @@ class Text {
   private _content: string;
   node: Node;
 
-  constructor(public parent: Paragraph|Link, content = '') {
+  constructor(public parent: Paragraph | Link, content = '') {
     this.node = document.createTextNode('');
     this.content = content;
   }
 
-  static ofSemanticTextNode(parent: Paragraph|Link, text: SemanticTextLiteral): Text {
+  static ofSemanticTextNode(parent: Paragraph | Link, text: SemanticTextLiteral): Text {
     return new Text(parent, text.text);
   }
 
@@ -685,7 +697,7 @@ class Text {
   remove(): Point {
     // FIXME: typescript won't type check without this no-op type guard
     return this.parent instanceof Paragraph ? this.parent.removeContent(this)
-                                            : this.parent.removeContent(this);
+      : this.parent.removeContent(this);
   }
 
   removeNextChar(offset: number): Point {
@@ -802,7 +814,7 @@ class Text {
     return this;
   }
 
-  getPrecedingText(): Text|null {
+  getPrecedingText(): Text | null {
     if (this.parent instanceof Paragraph) {
       return this.parent.getPrecedingText(this);
     } else {
@@ -810,7 +822,7 @@ class Text {
     }
   }
 
-  getFollowingText(): Text|null {
+  getFollowingText(): Text | null {
     if (this.parent instanceof Paragraph) {
       return this.parent.getFollowingText(this);
     } else {
@@ -846,7 +858,7 @@ class Selection {
     }
   }
 
-  static ofDomSelection(model: Model, domSelection: DomSelection): Selection|null {
+  static ofDomSelection(model: Model, domSelection: DomSelection): Selection | null {
 
     function createPoint(domPoint: DomPoint) {
 
@@ -878,7 +890,7 @@ class Selection {
     return this.start.text === this.end.text && this.start.text.isInLink();
   }
 
-  get linkedSelection(): LinkedSelection|null {
+  get linkedSelection(): LinkedSelection | null {
     if (this.isLink()) {
       return new LinkedSelection(this.end.text.parent as Link, this.end.offset);
     } else {
@@ -886,7 +898,7 @@ class Selection {
     }
   }
 
-  get linkableSelection(): LinkableSelection|null {
+  get linkableSelection(): LinkableSelection | null {
     if (this.isLinkable()) {
       if (this.isRange()) {
         return new LinkableSelection(this.start.text, this.start.offset, this.end.offset, this.end.offset);
@@ -960,7 +972,7 @@ class Selection {
   toString() {
     const createDomPath = (point: Point) => requireDefined(DomPath.create(this.model.node, point.text.node));
     return `From ${createDomPath(this.start).toString()}(${this.start.offset}) ` +
-           `to ${createDomPath(this.end).toString()}(${this.end.offset})`;
+      `to ${createDomPath(this.end).toString()}(${this.end.offset})`;
   }
 }
 
@@ -1088,25 +1100,32 @@ function isRemoveRestOfLine(event: KeyboardEvent) {
     <app-semantic-text-input-link-popover *ngIf="hasLinkableSelection()"
                                           [id]="id"
                                           [selectedText]="linkableSelection.content"
-                                          (link)="link()">
+                                          (linkConcept)="linkInternal()"
+                                          (linkExternal)="linkExternal()">
     </app-semantic-text-input-link-popover>
 
-    <app-semantic-text-input-unlink-popover *ngIf="hasLinkedSelection()"
-                                            [id]="id"
-                                            [concept]="linkedConcept"
-                                            (unlink)="unlink()">
-    </app-semantic-text-input-unlink-popover>
+    <app-semantic-text-input-unlink-concept-popover *ngIf="hasConceptLinkSelection()"
+                                                    [id]="id"
+                                                    [concept]="linkedConcept"
+                                                    (unlink)="unlink()">
+    </app-semantic-text-input-unlink-concept-popover>
+
+    <app-semantic-text-input-unlink-ext-popover *ngIf="hasExternalLinkSelection()"
+                                                [id]="id"
+                                                [target]="linkedExternalTarget"
+                                                (unlink)="unlink()">
+    </app-semantic-text-input-unlink-ext-popover>
 
     <div #editable
-         [id]="id" 
-         contenteditable="true" 
+         [id]="id"
+         contenteditable="true"
          class="form-control"></div>
   `
 })
 export class SemanticTextInputComponent implements OnInit, ControlValueAccessor {
 
   @Input() id: string;
-  @Input() conceptSelector: (name: string) => Promise<ConceptNode|null>;
+  @Input() conceptSelector: (name: string) => Promise<ConceptNode | null>;
   @Input() relatedConcepts: ConceptNode[];
   @Input() format: SemanticTextFormat;
 
@@ -1237,34 +1256,51 @@ export class SemanticTextInputComponent implements OnInit, ControlValueAccessor 
     return requireDefined(this.model.linkableSelection);
   }
 
-  hasLinkedSelection() {
-    return this.model.linkedSelection !== null;
+  hasConceptLinkSelection() {
+    return this.model.linkedSelection !== null && this.model.linkedSelection.link.category === 'internal';
+  }
+
+  hasExternalLinkSelection() {
+    return this.model.linkedSelection !== null && this.model.linkedSelection.link.category === 'external';
   }
 
   get linkedSelection() {
     return requireDefined(this.model.linkedSelection);
   }
 
-  get linkedConcept(): ConceptNode|null {
+  get linkedConcept(): ConceptNode | null {
     return firstMatching(this.relatedConcepts, concept => concept.isTargetOfLink(this.linkedSelection.target));
+  }
+
+  get linkedExternalTarget(): string | null {
+    if (this.hasExternalLinkSelection()) {
+      return this.model.linkedSelection!.link.target;
+    }
+    return null;
   }
 
   focusEditor() {
     (this.editableElement.nativeElement as HTMLElement).focus();
   }
 
-  link() {
+  linkInternal() {
     this.linkingInProgress = true;
 
     this.conceptSelector(this.linkableSelection.content).then(concept => {
 
-        if (concept) {
-          this.reportChange(() => this.model.link(requireDefined(concept.uri)));
-        }
+      if (concept) {
+        this.reportChange(() => this.model.link(requireDefined(concept.uri), 'internal'));
+      }
 
-        this.linkingInProgress = false;
-        this.focusEditor();
-      });
+      this.linkingInProgress = false;
+      this.focusEditor();
+    });
+  }
+
+  linkExternal() {
+    this.linkingInProgress = true;
+    this.reportChange(() => this.model.link('https://www.google.com', 'external'));
+    this.linkingInProgress = false;
   }
 
   unlink() {
@@ -1277,7 +1313,7 @@ export class SemanticTextInputComponent implements OnInit, ControlValueAccessor 
       this.pushUndoIfChanged(false);
       // current state is at the top the stack
       this.redoStack.push(this.undoStack.pop()!);
-      const {semanticTextNode, cursorOffset} = this.undoStack[this.undoStack.length - 1];
+      const { semanticTextNode, cursorOffset } = this.undoStack[this.undoStack.length - 1];
       this.resetModel(semanticTextNode, cursorOffset);
       this.propagateChange(resolveSerializer(this.format).serialize(semanticTextNode));
     }

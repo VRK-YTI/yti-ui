@@ -6,6 +6,8 @@ export type SemanticTextNode = SemanticTextDocument
   | SemanticTextLink
   | SemanticTextLiteral;
 
+export type SemanticTextLinkCategory = 'internal' | 'external';
+
 export class SemanticTextDocument {
 
   type = 'document' as 'document';
@@ -42,7 +44,7 @@ export class SemanticTextLink {
 
   type = 'link' as 'link';
 
-  constructor(public text: string, public destination: string, public category: 'internal' | 'external' = 'internal') {
+  constructor(public text: string, public destination: string, public category: SemanticTextLinkCategory = 'internal') {
   }
 
   get children(): SemanticTextNode[] {

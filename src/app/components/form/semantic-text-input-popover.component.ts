@@ -37,7 +37,10 @@ class PopoverPositionRefresher {
 
       <h3 class="popover-header">
         <span>{{selectedText}}</span>
-        <span [id]="id + '_link_popover_button'" class="btn btn-sm btn-action" id="link_button" (click)="link.next()" translate>Link</span>
+        <div class="actions">
+          <span [id]="id + '_link_popover_button'" class="btn btn-sm btn-action" (click)="linkConcept.next()" translate>Link concept</span>
+          <span [id]="id + '_extlink_popover_button'" class="btn btn-sm btn-action" (click)="linkExternal.next()" translate>External link</span>
+        </div>
       </h3>
 
       <div class="popover-body">
@@ -50,7 +53,8 @@ export class SemanticTextInputLinkPopoverComponent implements AfterViewInit, OnD
 
   @Input() id: string;
   @Input() selectedText: string;
-  @Output() link = new EventEmitter<any>();
+  @Output() linkConcept = new EventEmitter<any>();
+  @Output() linkExternal = new EventEmitter<any>();
 
   private positionRefresher: PopoverPositionRefresher;
 
@@ -68,7 +72,7 @@ export class SemanticTextInputLinkPopoverComponent implements AfterViewInit, OnD
 }
 
 @Component({
-  selector: 'app-semantic-text-input-unlink-popover',
+  selector: 'app-semantic-text-input-unlink-concept-popover',
   styleUrls: ['./semantic-text-input-popover.component.scss'],
   template: `
     <div #popover role="tooltip" class="popover">
@@ -76,7 +80,9 @@ export class SemanticTextInputLinkPopoverComponent implements AfterViewInit, OnD
       <h3 class="popover-header">
         <span *ngIf="!concept" translate>Concept not in references</span>
         <span *ngIf="concept">{{concept.label | translateValue}}</span>
-        <span [id]="id + '_unlink_popover_button'" class="btn btn-sm btn-action" (click)="unlink.next()" translate>Unlink</span>
+        <div class="actions">
+          <span [id]="id + '_unlink_popover_button'" class="btn btn-sm btn-action" (click)="unlink.next()" translate>Unlink</span>
+        </div>
       </h3>
 
       <div class="popover-body" *ngIf="concept" 
@@ -87,10 +93,48 @@ export class SemanticTextInputLinkPopoverComponent implements AfterViewInit, OnD
     </div>
   `
 })
-export class SemanticTextInputUnlinkPopoverComponent implements AfterViewInit, OnDestroy {
+export class SemanticTextInputUnlinkConceptPopoverComponent implements AfterViewInit, OnDestroy {
 
   @Input() id: string;
   @Input() concept: ConceptNode;
+  @Output() unlink = new EventEmitter<any>();
+
+  private positionRefresher: PopoverPositionRefresher;
+
+  constructor(element: ElementRef, zone: NgZone) {
+    this.positionRefresher = new PopoverPositionRefresher(zone, element);
+  }
+
+  ngAfterViewInit(): void {
+    this.positionRefresher.start();
+  }
+
+  ngOnDestroy(): void {
+    this.positionRefresher.stop();
+  }
+}
+
+@Component({
+  selector: 'app-semantic-text-input-unlink-ext-popover',
+  styleUrls: ['./semantic-text-input-popover.component.scss'],
+  template: `
+    <div #popover role="tooltip" class="popover">
+
+      <h3 class="popover-header">
+        <span translate>External link</span>
+        <div class="actions">
+          <span [id]="id + '_unlink_popover_button'" class="btn btn-sm btn-action" (click)="unlink.next()" translate>Unlink</span>
+        </div>
+      </h3>
+
+      <div class="popover-body">{{target}}</div>
+    </div>
+  `
+})
+export class SemanticTextInputUnlinkExternalPopoverComponent implements AfterViewInit, OnDestroy {
+
+  @Input() id: string;
+  @Input() target: string;
   @Output() unlink = new EventEmitter<any>();
 
   private positionRefresher: PopoverPositionRefresher;

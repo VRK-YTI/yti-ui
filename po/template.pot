@@ -136,7 +136,10 @@ msgstr ""
 msgid "No values yet"
 msgstr ""
 
-msgid "Link"
+msgid "Link concept"
+msgstr ""
+
+msgid "External link"
 msgstr ""
 
 msgid "Unlinked selected text"
@@ -332,6 +335,9 @@ msgid ""
 "be lost."
 msgstr ""
 
+msgid "Link"
+msgstr ""
+
 msgid "Unlink"
 msgstr ""
 
@@ -375,9 +381,6 @@ msgid "Show messages"
 msgstr ""
 
 msgid "Hide messages"
-msgstr ""
-
-msgid "External link"
 msgstr ""
 
 msgid "Property must include a language."

@@ -17,7 +17,7 @@ type SemanticTextFormat = SemanticTextFormatImported;
   selector: '[app-semantic-text-links]',
   template: `
     <div #self>
-      <div app-semantic-text-links-element 
+      <div app-semantic-text-links-element
            [node]="document"
            [format]="format"
            [relatedConcepts]="relatedConcepts"></div>
@@ -48,32 +48,33 @@ export class SemanticTextLinksComponent implements OnInit, AfterViewChecked {
   template: `
     <ng-container>
       <ng-container *ngFor="let child of node.children" [ngSwitch]="child.type">
-              
-        <p *ngSwitchCase="'paragraph'" 
+
+        <p *ngSwitchCase="'paragraph'"
            app-semantic-text-links-element
-           [node]="child" 
+           [node]="child"
            [format]="format"
            [relatedConcepts]="relatedConcepts"></p>
-        
+
         <ng-container *ngSwitchCase="'link'">
           <a *ngIf="child.category === 'internal'"
-            [routerLink]="link(child)"
-            [popoverTitle]="conceptLabel(child) | translateValue"
-            [ngbPopover]="popContent"
-            triggers="mouseenter:mouseleave">{{child.text}}</a>
+             [class]="child.category"
+             [routerLink]="link(child)"
+             [popoverTitle]="conceptLabel(child) | translateValue"
+             [ngbPopover]="popContent"
+             triggers="mouseenter:mouseleave">{{child.text}}</a>
           <a *ngIf="child.category === 'external'"
-             class="external"
              target="_blank"
+             [class]="child.category"
              [href]="child.destination"
              [popoverTitle]="'External link' | translate"
              [ngbPopover]="popContentExt"
              triggers="mouseenter:mouseleave">{{child.text}}<i class="fas fa-external-link-alt"></i></a>
         </ng-container>
-        
+
         <span *ngSwitchCase="'text'">{{child.text}}</span>
-        
+
         <ng-template #popContent>
-          <div app-semantic-text-plain 
+          <div app-semantic-text-plain
                [value]="conceptDefinition(child) | translateValue"
                [format]="format"></div>
         </ng-template>
@@ -91,7 +92,7 @@ export class SemanticTextLinksElementComponent {
   @Input() relatedConcepts: ConceptNode[];
   @Input() format: SemanticTextFormat;
 
-  private getTargetConceptNode(node: SemanticTextLink): ConceptNode|null {
+  private getTargetConceptNode(node: SemanticTextLink): ConceptNode | null {
     return firstMatching(this.relatedConcepts, concept => concept.isTargetOfLink(node.destination));
   }
 
@@ -104,12 +105,12 @@ export class SemanticTextLinksElementComponent {
     }
   }
 
-  conceptLabel(node: SemanticTextLink): Localizable|null {
+  conceptLabel(node: SemanticTextLink): Localizable | null {
     const target = this.getTargetConceptNode(node);
     return target ? target.label : null;
   }
 
-  conceptDefinition(node: SemanticTextLink): Localizable|null {
+  conceptDefinition(node: SemanticTextLink): Localizable | null {
     // FIXME: how to handle multiple definitions?
     const target = this.getTargetConceptNode(node);
     return target ? asLocalizable(target.definition, true) : null;

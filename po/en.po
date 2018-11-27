@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-11-26 16:26+0200\n"
+"PO-Revision-Date: 2018-11-27 13:25+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -146,7 +146,12 @@ msgstr ""
 msgid "No values yet"
 msgstr ""
 
-msgid "Link"
+#, fuzzy
+#| msgid "New concept"
+msgid "Link concept"
+msgstr "new concept"
+
+msgid "External link"
 msgstr ""
 
 msgid "Unlinked selected text"
@@ -349,6 +354,9 @@ msgid ""
 "be lost."
 msgstr ""
 
+msgid "Link"
+msgstr ""
+
 msgid "Unlink"
 msgstr ""
 
@@ -392,9 +400,6 @@ msgid "Show messages"
 msgstr ""
 
 msgid "Hide messages"
-msgstr ""
-
-msgid "External link"
 msgstr ""
 
 msgid "Property must include a language."

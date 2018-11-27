@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-11-26 16:26+0200\n"
+"PO-Revision-Date: 2018-11-27 13:24+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -148,8 +148,11 @@ msgstr "Lisää"
 msgid "No values yet"
 msgstr "Ei vielä yhtään arvoa"
 
-msgid "Link"
-msgstr "Linkitä"
+msgid "Link concept"
+msgstr "Linkitä käsite"
+
+msgid "External link"
+msgstr "Ulkoinen linkki"
 
 msgid "Unlinked selected text"
 msgstr "Linkittämätön teksti"
@@ -356,6 +359,9 @@ msgstr ""
 "Oletko varma, että haluat jatkaa? Jatkaessasi tallentamattomat muutokset "
 "katoavat."
 
+msgid "Link"
+msgstr "Linkitä"
+
 msgid "Unlink"
 msgstr "Poista linkitys"
 
@@ -400,9 +406,6 @@ msgstr "Näytä viestit"
 
 msgid "Hide messages"
 msgstr "Piilota viestit"
-
-msgid "External link"
-msgstr "Ulkoinen linkki"
 
 msgid "Property must include a language."
 msgstr "Ominaisuus “{{ name }}” täytyy olla määritelty kielen kanssa"

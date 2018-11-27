@@ -3,7 +3,6 @@
 $offset: 60;
 
 :host {
-
   padding: 15px 45px 10px 45px;
   display: inline-block;
   position: absolute;
@@ -14,7 +13,6 @@ $offset: 60;
 }
 
 .popover {
-
   position: relative;
   display: inline-block;
   left: 15px;
@@ -23,9 +21,16 @@ $offset: 60;
   bottom: 11px;
   z-index: 1039; // show under modal backdrop
 
-  .btn {
-    float: right;
+  .actions {
     margin-top: -5px;
     margin-right: -10px;
+    float: right;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+
+    .btn {
+      margin-bottom: 2px;
+    }
   }
 }
