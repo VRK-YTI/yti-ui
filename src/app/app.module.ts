@@ -98,6 +98,7 @@ import { ImportVocabularyCSVComponent } from './components/vocabulary/import-voc
 import { ImportVocabularyXMLComponent } from './components/vocabulary/import-vocabulary-xml.component';
 import { ProgressComponent } from './components/progress.component';
 import { ConfigurationService } from './services/configuration.service';
+import { UrlInputModalComponent, UrlInputModalService } from './components/form/url-input-modal.component';
 
 function removeEmptyValues(obj: {}) {
 
@@ -242,7 +243,8 @@ export function initApp(configurationService: ConfigurationService) {
     LogoComponent,
     DragSortableDirective,
     DragSortableItemDirective,
-    ProgressComponent
+    ProgressComponent,
+    UrlInputModalComponent
   ],
   entryComponents: [
     SearchConceptModalComponent,
@@ -251,7 +253,8 @@ export function initApp(configurationService: ConfigurationService) {
     DeleteConfirmationModalComponent,
     RemoveLinkConfirmationModalComponent,
     SelectConceptReferenceModalComponent,
-    ImportVocabularyModalComponent
+    ImportVocabularyModalComponent,
+    UrlInputModalComponent
   ],
   imports: [
     BrowserModule,
@@ -290,7 +293,8 @@ export function initApp(configurationService: ConfigurationService) {
     AuthorizationManager,
     ImportVocabularyModalService,
     ModalService,
-    Title
+    Title,
+    UrlInputModalService
   ],
   bootstrap: [AppComponent]
 })

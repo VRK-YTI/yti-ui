@@ -26,6 +26,7 @@ import {
   SemanticTextParagraph
 } from 'app/entities/semantic';
 import { areNodesEqual, resolveSerializer } from 'app/utils/semantic';
+import { UrlInputModalService } from './url-input-modal.component';
 
 type SemanticTextFormat = SemanticTextFormatImported;
 
@@ -1140,6 +1141,9 @@ export class SemanticTextInputComponent implements OnInit, ControlValueAccessor 
   private propagateChange: (fn: any) => void = () => {};
   private propagateTouched: (fn: any) => void = () => {};
 
+  constructor(private urlInputModalService: UrlInputModalService) {
+  }
+
   ngOnInit(): void {
 
     const element = this.editableElement.nativeElement as HTMLElement;
@@ -1299,8 +1303,16 @@ export class SemanticTextInputComponent implements OnInit, ControlValueAccessor 
 
   linkExternal() {
     this.linkingInProgress = true;
-    this.reportChange(() => this.model.link('https://www.google.com', 'external'));
-    this.linkingInProgress = false;
+    this.urlInputModalService.open(this.linkableSelection.content).then(url => {
+      if (url) {
+        this.reportChange(() => this.model.link(url, 'external'));
+      }
+      this.linkingInProgress = false;
+      this.focusEditor();
+    }).catch(err => {
+      this.linkingInProgress = false;
+      this.focusEditor();
+    });
   }
 
   unlink() {

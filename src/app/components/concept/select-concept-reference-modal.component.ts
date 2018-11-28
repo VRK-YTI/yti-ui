@@ -32,8 +32,8 @@ import { labelNameToResourceIdIdentifier } from 'yti-common-ui/utils/resource';
       </div>
     </div>
     <div class="modal-footer">
-      <button type="button" id="select_concept_cancel_button" class="btn btn-link cancel" (click)="cancel()" translate>Cancel</button>
       <button type="button" id="select_concept_confirm_button" class="btn btn-action confirm" (click)="confirm()" translate>Select reference</button>
+      <button type="button" id="select_concept_cancel_button" class="btn btn-link cancel" (click)="cancel()" translate>Cancel</button>
     </div>
   `
 })

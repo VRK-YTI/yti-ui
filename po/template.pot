@@ -151,6 +151,15 @@ msgstr ""
 msgid "Remove term"
 msgstr ""
 
+msgid "Enter link target"
+msgstr ""
+
+msgid "Enter the full HTTP or HTTPS address (URL) for the link:"
+msgstr ""
+
+msgid "Add link"
+msgstr ""
+
 msgid "Impersonate user"
 msgstr ""
 

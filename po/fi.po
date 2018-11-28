@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-11-27 13:24+0200\n"
+"PO-Revision-Date: 2018-11-28 11:56+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -162,6 +162,15 @@ msgstr "Ei vielä yhtään termiä"
 
 msgid "Remove term"
 msgstr "Poista termi"
+
+msgid "Enter link target"
+msgstr "Syötä linkin kohde"
+
+msgid "Enter the full HTTP or HTTPS address (URL) for the link:"
+msgstr "Syötä kokonainen HTTP- tai HTTPS-osoite (URL) linkille:"
+
+msgid "Add link"
+msgstr "Lisää linkki"
 
 msgid "Impersonate user"
 msgstr "Esiinny käyttäjänä"

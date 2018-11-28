@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-11-27 13:25+0200\n"
+"PO-Revision-Date: 2018-11-28 11:57+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -161,6 +161,15 @@ msgid "No terms yet"
 msgstr ""
 
 msgid "Remove term"
+msgstr ""
+
+msgid "Enter link target"
+msgstr ""
+
+msgid "Enter the full HTTP or HTTPS address (URL) for the link:"
+msgstr ""
+
+msgid "Add link"
 msgstr ""
 
 msgid "Impersonate user"
