@@ -35,8 +35,9 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   `
 })
 export class UrlInputModalComponent {
+  private readonly URL_REGEX = /^https?:\/\/[^\s]+$/;
   urlForm = new FormGroup({
-    url: new FormControl('', [Validators.required, Validators.pattern(/https?:\/\/.+/)])
+    url: new FormControl('', [Validators.required, Validators.pattern(this.URL_REGEX)])
   });
 
   displayValue: string;
