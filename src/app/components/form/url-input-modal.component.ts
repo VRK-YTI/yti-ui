@@ -14,7 +14,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
       </h4>
     </div>
     <div class="modal-body">
-      <form [formGroup]="urlForm">
+      <form>
         <div class="row mb-2">
           <div class="col-md-12">
             <span translate>Enter the full HTTP or HTTPS address (URL) for the link:</span>
@@ -22,25 +22,25 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
         </div>
         <div class="row">
           <div class="col-md-12">
-            <input type="url" formControlName="url" placeholder="https://www.example.com"/>
+            <input class="form-control" [ngClass]="{'is-invalid': url.invalid && (url.dirty || url.touched)}" type="url" [formControl]="url"
+                   placeholder="https://www.example.com"/>
+            <app-error-messages *ngIf="url.dirty || url.touched" [control]="url"></app-error-messages>
           </div>
         </div>
       </form>
     </div>
     <div class="modal-footer">
       <button type="button" id="select_concept_confirm_button" class="btn btn-action confirm"
-              [disabled]="urlForm.invalid || !urlForm.dirty" (click)="confirm()" translate>Add link</button>
+              [disabled]="url.invalid || !url.dirty" (click)="confirm()" translate>Add link</button>
       <button type="button" id="select_concept_cancel_button" class="btn btn-link cancel" (click)="cancel()" translate>Cancel</button>
     </div>
   `
 })
 export class UrlInputModalComponent {
   private readonly URL_REGEX = /^https?:\/\/[^\s]+$/;
-  urlForm = new FormGroup({
-    url: new FormControl('', [Validators.required, Validators.pattern(this.URL_REGEX)])
-  });
 
   displayValue: string;
+  url = new FormControl('', [Validators.required, Validators.pattern(this.URL_REGEX)]);
 
   constructor(public modal: NgbActiveModal) {
   }
@@ -50,7 +50,7 @@ export class UrlInputModalComponent {
   }
 
   confirm() {
-    this.modal.close(this.urlForm.value.url);
+    this.modal.close(this.url.value);
   }
 }
 

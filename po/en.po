@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-11-28 11:57+0200\n"
+"PO-Revision-Date: 2018-11-29 11:28+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -146,12 +146,10 @@ msgstr ""
 msgid "No values yet"
 msgstr ""
 
-#, fuzzy
-#| msgid "New concept"
-msgid "Link concept"
-msgstr "new concept"
+msgid "Add concept reference"
+msgstr ""
 
-msgid "External link"
+msgid "Add link"
 msgstr ""
 
 msgid "Unlinked selected text"
@@ -167,9 +165,6 @@ msgid "Enter link target"
 msgstr ""
 
 msgid "Enter the full HTTP or HTTPS address (URL) for the link:"
-msgstr ""
-
-msgid "Add link"
 msgstr ""
 
 msgid "Impersonate user"
@@ -411,8 +406,11 @@ msgstr ""
 msgid "Hide messages"
 msgstr ""
 
-msgid "Property must include a language."
-msgstr "Property “{{ name }}”” must include a language."
+msgid "External link"
+msgstr ""
+
+msgid "Property is not a literal type."
+msgstr "Property “{{ name }}” is not a literal type."
 
 msgid "validateMeta"
 msgstr "Invalid"
@@ -426,11 +424,14 @@ msgstr "Prefix is already in use"
 msgid "upperCaseInPrefix"
 msgstr "Prefix must be in lower case"
 
-msgid "Property is not a literal type."
-msgstr "Property “{{ name }}” is not a literal type."
+msgid "pattern"
+msgstr "Input is not in required form"
 
 msgid "required"
 msgstr "Required"
+
+msgid "Property must include a language."
+msgstr "Property “{{ name }}”” must include a language."
 
 msgid "No property or reference found with a name."
 msgstr "Vocabulary type does not support column “{{ name }}”"
@@ -448,6 +449,11 @@ msgid "Reference does not match any concepts."
 msgstr ""
 "{{ lineNumber: }}: Reference “{{ name }}” does not match any concepts with "
 "value “{{ value }}”."
+
+#, fuzzy
+#~| msgid "New concept"
+#~ msgid "Link concept"
+#~ msgstr "new concept"
 
 #~ msgid "definition"
 #~ msgstr "Definition"

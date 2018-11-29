@@ -136,10 +136,10 @@ msgstr ""
 msgid "No values yet"
 msgstr ""
 
-msgid "Link concept"
+msgid "Add concept reference"
 msgstr ""
 
-msgid "External link"
+msgid "Add link"
 msgstr ""
 
 msgid "Unlinked selected text"
@@ -155,9 +155,6 @@ msgid "Enter link target"
 msgstr ""
 
 msgid "Enter the full HTTP or HTTPS address (URL) for the link:"
-msgstr ""
-
-msgid "Add link"
 msgstr ""
 
 msgid "Impersonate user"
@@ -392,7 +389,10 @@ msgstr ""
 msgid "Hide messages"
 msgstr ""
 
-msgid "Property must include a language."
+msgid "External link"
+msgstr ""
+
+msgid "Property is not a literal type."
 msgstr ""
 
 msgid "validateMeta"
@@ -407,10 +407,13 @@ msgstr ""
 msgid "upperCaseInPrefix"
 msgstr ""
 
-msgid "Property is not a literal type."
+msgid "pattern"
 msgstr ""
 
 msgid "required"
+msgstr ""
+
+msgid "Property must include a language."
 msgstr ""
 
 msgid "No property or reference found with a name."

@@ -36,11 +36,11 @@ class PopoverPositionRefresher {
     <div #popover role="tooltip" class="popover">
 
       <h3 class="popover-header">
-        <span>{{selectedText}}</span>
         <div class="actions">
-          <span [id]="id + '_link_popover_button'" class="btn btn-sm btn-action" (click)="linkConcept.next()" translate>Link concept</span>
-          <span [id]="id + '_extlink_popover_button'" class="btn btn-sm btn-action" (click)="linkExternal.next()" translate>External link</span>
+          <span [id]="id + '_link_popover_button'" class="btn btn-sm btn-action" (click)="linkConcept.next()" translate>Add concept reference</span>
+          <span [id]="id + '_extlink_popover_button'" class="btn btn-sm btn-action" (click)="linkExternal.next()" translate>Add link</span>
         </div>
+        <span>{{selectedText}}</span>
       </h3>
 
       <div class="popover-body">

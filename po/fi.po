@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-11-28 11:56+0200\n"
+"PO-Revision-Date: 2018-11-29 11:28+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -148,11 +148,11 @@ msgstr "Lisää"
 msgid "No values yet"
 msgstr "Ei vielä yhtään arvoa"
 
-msgid "Link concept"
-msgstr "Linkitä käsite"
+msgid "Add concept reference"
+msgstr "Lisää käsiteviite"
 
-msgid "External link"
-msgstr "Ulkoinen linkki"
+msgid "Add link"
+msgstr "Lisää linkki"
 
 msgid "Unlinked selected text"
 msgstr "Linkittämätön teksti"
@@ -168,9 +168,6 @@ msgstr "Syötä linkin kohde"
 
 msgid "Enter the full HTTP or HTTPS address (URL) for the link:"
 msgstr "Syötä kokonainen HTTP- tai HTTPS-osoite (URL) linkille:"
-
-msgid "Add link"
-msgstr "Lisää linkki"
 
 msgid "Impersonate user"
 msgstr "Esiinny käyttäjänä"
@@ -416,8 +413,11 @@ msgstr "Näytä viestit"
 msgid "Hide messages"
 msgstr "Piilota viestit"
 
-msgid "Property must include a language."
-msgstr "Ominaisuus “{{ name }}” täytyy olla määritelty kielen kanssa"
+msgid "External link"
+msgstr "Ulkoinen linkki"
+
+msgid "Property is not a literal type."
+msgstr "Ominaisuus “{{ name }}” ei ole literaali"
 
 msgid "validateMeta"
 msgstr "Epävalidi syöte"
@@ -431,11 +431,14 @@ msgstr "Etuliite on jo käytössä"
 msgid "upperCaseInPrefix"
 msgstr "Etuliite oltava pienillä kirjaimilla"
 
-msgid "Property is not a literal type."
-msgstr "Ominaisuus “{{ name }}” ei ole literaali"
+msgid "pattern"
+msgstr "Syöte ei ole vaaditussa muodossa"
 
 msgid "required"
 msgstr "Pakollinen syöte"
+
+msgid "Property must include a language."
+msgstr "Ominaisuus “{{ name }}” täytyy olla määritelty kielen kanssa"
 
 msgid "No property or reference found with a name."
 msgstr "Sanaston tyyppi ei tue saraketta “{{ name }}”"
@@ -453,6 +456,9 @@ msgid "Reference does not match any concepts."
 msgstr ""
 "{{ lineNumber }}: Viittauksella “{{ name }}” ei löydy käsitettä arvolle "
 "“{{ value }}”"
+
+#~ msgid "Link concept"
+#~ msgstr "Linkitä käsite"
 
 #~ msgid "Import ready"
 #~ msgstr ""
