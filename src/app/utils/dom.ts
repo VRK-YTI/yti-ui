@@ -1,10 +1,9 @@
-
 export class DomPoint {
 
   private constructor(public node: Node, public offset: number, public path: DomPath) {
   }
 
-  static create(root: Node, node: Node, offset: number): DomPoint|null {
+  static create(root: Node, node: Node, offset: number): DomPoint | null {
 
     const path = DomPath.create(root, node);
 
@@ -62,29 +61,38 @@ export class DomSelection {
     this.end = points[1];
   }
 
-  static create(root: Node): DomSelection|null {
+  static create(root: Node): DomSelection | null {
 
     const s = window.getSelection();
 
-    const anchor = DomPoint.create(root, s.anchorNode, s.anchorOffset);
-    const focus = DomPoint.create(root, s.focusNode, s.focusOffset);
+    if (s.anchorNode) {
+      const anchor = DomPoint.create(root, s.anchorNode, s.anchorOffset);
+      const focus = DomPoint.create(root, s.focusNode, s.focusOffset);
 
-    if (!anchor || !focus) {
-      return null;
+      if (anchor && focus) {
+        return new DomSelection(anchor, focus);
+      }
     }
-
-    return new DomSelection(anchor, focus);
+    return null;
   }
 }
 
 export class DomPath {
 
-  private constructor(private path: { node: Node, index: number}[]) {
+  private constructor(private path: { node: Node, index: number }[]) {
   }
 
-  static create(root: Node, node: Node): DomPath|null {
+  get indicesFromRoot() {
+    return this.path.map(x => x.index);
+  }
 
-    const path: { node: Node, index: number}[] = [];
+  get length() {
+    return this.path.length;
+  }
+
+  static create(root: Node, node: Node): DomPath | null {
+
+    const path: { node: Node, index: number }[] = [];
 
     let walk = node;
 
@@ -96,7 +104,7 @@ export class DomPath {
         return null;
       }
 
-      path.unshift({node: walk, index});
+      path.unshift({ node: walk, index });
 
       if (!walk.parentNode) {
         return null;
@@ -106,14 +114,6 @@ export class DomPath {
     }
 
     return new DomPath(path);
-  }
-
-  get indicesFromRoot() {
-    return this.path.map(x => x.index);
-  }
-
-  get length() {
-    return this.path.length;
   }
 
   get(index: number) {
@@ -144,7 +144,7 @@ export function removeChildren(node: Node) {
   }
 }
 
-function indexInParent(child: Node): number|null {
+function indexInParent(child: Node): number | null {
 
   if (!child.parentNode) {
     // TODO check why detached node can actually exist here
@@ -182,7 +182,7 @@ export const nbsp = '\u00A0';
 export function formatTextContent(text: string): string {
 
   let result = '';
-  let spacesStartingPosition: number|null = null;
+  let spacesStartingPosition: number | null = null;
 
   for (let i = 0; i < text.length; i++) {
 
@@ -231,7 +231,7 @@ function formatSpaces(amount: number, singleAsNbsp: boolean): string {
   }
 }
 
-export function isInDocument(node: Node|null) {
+export function isInDocument(node: Node | null) {
   while (node !== null) {
     if (node === document) {
       return true;

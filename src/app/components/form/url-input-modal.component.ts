@@ -1,7 +1,8 @@
-import { Component, Injectable } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Injectable, ViewChild } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ModalService } from 'app/services/modal.service';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
+import { httpOrHttpsUrlRegex } from 'yti-common-ui/utils/validator';
 
 @Component({
   selector: 'app-url-input-modal',
@@ -22,8 +23,13 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
         </div>
         <div class="row">
           <div class="col-md-12">
-            <input class="form-control" [ngClass]="{'is-invalid': url.invalid && (url.dirty || url.touched)}" type="url" [formControl]="url"
-                   placeholder="https://www.example.com"/>
+            <input #urlInput
+                   type="url"
+                   class="form-control"
+                   placeholder="https://www.example.com"
+                   [ngClass]="{'is-invalid': url.invalid && (url.dirty || url.touched)}"
+                   [formControl]="url"
+                   (keyup.enter)="confirm()"/>
             <app-error-messages *ngIf="url.dirty || url.touched" [control]="url"></app-error-messages>
           </div>
         </div>
@@ -36,13 +42,16 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
     </div>
   `
 })
-export class UrlInputModalComponent {
-  private readonly URL_REGEX = /^https?:\/\/[^\s]+$/;
-
+export class UrlInputModalComponent implements AfterViewInit {
   displayValue: string;
-  url = new FormControl('', [Validators.required, Validators.pattern(this.URL_REGEX)]);
+  @ViewChild('urlInput') urlInput: ElementRef;
+  url = new FormControl('', [Validators.required, Validators.pattern(httpOrHttpsUrlRegex)]);
 
   constructor(public modal: NgbActiveModal) {
+  }
+
+  ngAfterViewInit() {
+    this.urlInput.nativeElement.focus();
   }
 
   cancel() {
@@ -50,7 +59,9 @@ export class UrlInputModalComponent {
   }
 
   confirm() {
-    this.modal.close(this.url.value);
+    if (this.url.valid && this.url.dirty) {
+      this.modal.close(this.url.value);
+    }
   }
 }
 
