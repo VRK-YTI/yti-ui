@@ -59,6 +59,14 @@
       min-height: 0px;  /* For Edge and Firefox to allow messages to shrink with scroll. */
       border: 1px solid $gray-200;
       padding: 0.3rem;
+
+      .message-warning {
+        color: $warning;
+      }
+
+      .message-error {
+        color: $danger;
+      }
     }
   }
 

@@ -44,7 +44,7 @@ import { Phase, Progress, Result } from '../progress.component';
           <dl>
             <ng-container *ngFor="let message of finalResults.statusMessage">
               <dt>{{message.targetIdentifier}}</dt>
-              <dd>{{message.message}}</dd>
+              <dd class="{{messageClass(message.level)}}">{{message.message}}</dd>
             </ng-container>
           </dl>
         </div>
@@ -226,5 +226,14 @@ export class ImportVocabularyXMLComponent {
       }
       return '';
     }
+  }
+
+  messageClass(level: any): string {
+    if (level === 'WARNING') {
+      return 'message-warning';
+    } else if (level === 'ERROR') {
+      return 'message-error';
+    }
+    return 'message';
   }
 }
