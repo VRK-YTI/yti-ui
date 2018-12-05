@@ -10,7 +10,7 @@ import { httpOrHttpsUrlRegex } from 'yti-common-ui/utils/validator';
   template: `
     <div class="modal-header">
       <h4 class="modal-title">
-        <a><i class="fa fa-times" id="select_concept_cancel_link" (click)="cancel()"></i></a>
+        <a><i class="fa fa-times" id="select_link_target_cancel_link" (click)="cancel()"></i></a>
         <span translate>Enter link target</span>
       </h4>
     </div>
@@ -24,6 +24,7 @@ import { httpOrHttpsUrlRegex } from 'yti-common-ui/utils/validator';
         <div class="row">
           <div class="col-md-12">
             <input #urlInput
+                   id="select_link_target_url_input"
                    type="url"
                    class="form-control"
                    placeholder="https://www.example.com"
@@ -36,9 +37,9 @@ import { httpOrHttpsUrlRegex } from 'yti-common-ui/utils/validator';
       </form>
     </div>
     <div class="modal-footer">
-      <button type="button" id="select_concept_confirm_button" class="btn btn-action confirm"
+      <button type="button" id="select_link_target_confirm_button" class="btn btn-action confirm"
               [disabled]="url.invalid || !url.dirty" (click)="confirm()" translate>Add link</button>
-      <button type="button" id="select_concept_cancel_button" class="btn btn-link cancel" (click)="cancel()" translate>Cancel</button>
+      <button type="button" id="select_link_target_cancel_button" class="btn btn-link cancel" (click)="cancel()" translate>Cancel</button>
     </div>
   `
 })
