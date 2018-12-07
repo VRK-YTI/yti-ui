@@ -3,6 +3,8 @@ import {
   Output
 } from '@angular/core';
 import { ConceptNode } from 'app/entities/node';
+import { Localizable } from 'yti-common-ui/types/localization';
+import { asLocalizable } from 'yti-common-ui/utils/localization';
 
 class PopoverPositionRefresher {
 
@@ -87,7 +89,7 @@ export class SemanticTextInputLinkPopoverComponent implements AfterViewInit, OnD
 
       <div class="popover-body" *ngIf="concept" 
            app-semantic-text-plain 
-           [value]="concept.definitionAsLocalizable | translateValue"
+           [value]="conceptDefinition | translateValue"
            [format]="concept.definitionSemanticTextFormat">
       </div>
     </div>
@@ -111,6 +113,11 @@ export class SemanticTextInputUnlinkConceptPopoverComponent implements AfterView
 
   ngOnDestroy(): void {
     this.positionRefresher.stop();
+  }
+
+  get conceptDefinition(): Localizable {
+    // FIXME: how to handle multiple definitions?
+    return asLocalizable(this.concept.definition, true);
   }
 }
 
