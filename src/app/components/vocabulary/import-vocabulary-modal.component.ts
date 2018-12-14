@@ -4,7 +4,6 @@ import { EditableService } from '../../services/editable.service';
 import { Router } from '@angular/router';
 import { ModalService } from '../../services/modal.service';
 import { VocabularyNode } from '../../entities/node';
-import { ConfigurationService } from '../../services/configuration.service';
 
 @Component({
   selector: 'app-import-vocabulary-modal',
@@ -38,7 +37,7 @@ import { ConfigurationService } from '../../services/configuration.service';
                             [class.active]="format === 'CSV'">
                       CSV
                     </button>
-                    <button *ngIf="enableXml" id="ntrf_xml_format_dropdown_button"
+                    <button id="ntrf_xml_format_dropdown_button"
                             (click)="format = 'NTRF-XML'"
                             class="dropdown-item"
                             [class.active]="format === 'NTRF-XML'">
@@ -106,16 +105,13 @@ export class ImportVocabularyModalComponent {
   format: string = 'CSV';
   charset: string = 'UTF-8';
   phase: 'FILE_SELECT' | 'CSV' | 'XML' = 'FILE_SELECT';
-  enableXml: boolean;
 
-  constructor(private configurationService: ConfigurationService,
-              private editableService: EditableService,
+  constructor(private editableService: EditableService,
               private router: Router,
               private modal: NgbActiveModal) {
 
     // TODO: Handle cancel, "save", etc. Or remove altogether.
     this.editableService.edit();
-    this.enableXml = configurationService.showAlmostReadyFeature;
   }
 
   close() {
