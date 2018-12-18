@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-11-29 11:28+0200\n"
+"PO-Revision-Date: 2018-12-17 12:16+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -316,6 +316,12 @@ msgstr ""
 
 msgid "Vocabulary type"
 msgstr ""
+
+msgid "Concepts"
+msgstr ""
+
+msgid "Terminology details"
+msgstr "Terminology"
 
 msgid "Show vocabulary details"
 msgstr "Show terminology details"

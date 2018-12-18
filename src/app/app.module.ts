@@ -99,6 +99,7 @@ import { ImportVocabularyXMLComponent } from './components/vocabulary/import-voc
 import { ProgressComponent } from './components/progress.component';
 import { ConfigurationService } from './services/configuration.service';
 import { UrlInputModalComponent, UrlInputModalService } from './components/form/url-input-modal.component';
+import { VocabularyMainComponent } from './components/vocabulary/vocabulary-main.component';
 
 function removeEmptyValues(obj: {}) {
 
@@ -159,7 +160,7 @@ const appRoutes: Routes = [
   { path: '', component: FrontpageComponent },
   { path: 'newVocabulary', component: NewVocabularyComponent },
   {
-    path: 'concepts/:graphId', component: ConceptsComponent, canDeactivate: [ConfirmCancelEditGuard], children: [
+    path: 'concepts/:graphId', component: VocabularyMainComponent, canDeactivate: [ConfirmCancelEditGuard], children: [
       { path: '', component: NoSelectionComponent },
       { path: 'concept/:conceptId', component: ConceptComponent, canDeactivate: [ConfirmCancelEditGuard] },
       { path: 'collection/:collectionId', component: CollectionComponent, canDeactivate: [ConfirmCancelEditGuard] }
@@ -182,6 +183,7 @@ export function initApp(configurationService: ConfigurationService) {
     FrontpageComponent,
     RefreshComponent,
     VocabulariesComponent,
+    VocabularyMainComponent,
     VocabularyComponent,
     ConceptsComponent,
     ConceptListComponent,

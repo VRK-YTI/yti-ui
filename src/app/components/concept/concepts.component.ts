@@ -11,17 +11,8 @@ import { CollectionComponent } from 'app/components/collection/collection.compon
 @Component({
   selector: 'app-concepts',
   styleUrls: ['./concepts.component.scss'],
-  providers: [ConceptViewModelService],
   template: `
-    <div class="content-box">
-
-      <div class="row top" [hidden]="viewModel.loadingVocabulary">
-        <div class="col-12">
-          <app-vocabulary #vocabularyComponent></app-vocabulary>
-        </div>
-      </div>
-
-      <div class="row bottom">
+      <div class="row">
         <div class="col-12">
 
           <div class="panel-left" appFloat>
@@ -72,13 +63,11 @@ import { CollectionComponent } from 'app/components/collection/collection.compon
 
         </div>
       </div>
-    </div>
   `
 })
-export class ConceptsComponent implements EditingComponent {
+export class ConceptsComponent {
 
   @ViewChild('network') conceptNetwork: ConceptNetworkComponent;
-  @ViewChild('vocabularyComponent') vocabularyComponent: VocabularyComponent;
   initialTabId?: string;
 
   constructor(private route: ActivatedRoute,
@@ -117,14 +106,6 @@ export class ConceptsComponent implements EditingComponent {
     return this.domSanitizer.bypassSecurityTrustStyle(
       this.showSelection ? `calc(100% - ${this.sessionService.selectionWidth}px)` : '100%'
     );
-  }
-
-  isEditing(): boolean {
-    return this.vocabularyComponent.isEditing();
-  }
-
-  cancelEditing() {
-    this.vocabularyComponent.cancelEditing();
   }
 }
 

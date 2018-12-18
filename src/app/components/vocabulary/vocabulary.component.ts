@@ -18,20 +18,7 @@ import { vocabularyIdPrefix } from 'app/utils/id-prefix';
 
       <div class="header row">
         <div class="col-12">
-          <h2>
-
-            <span class="mr-4">{{vocabulary!.label | translateValue}}</span>
-
-            <button class="btn btn-action"
-                    id="vocabulary_show_details_button"
-                    [hidden]="open"
-                    (click)="open = true" translate>Show vocabulary details</button>
-
-            <button class="btn btn-action"
-                    id="vocabulary_hide_details_button"
-                    [hidden]="!open"
-                    (click)="open = false" translate>Hide vocabulary details</button>
-          </h2>
+          <h2><span class="mr-4">{{vocabulary!.label | translateValue}}</span></h2>
 
           <app-filter-language [(ngModel)]="filterLanguage"
                                [languages]="filterLanguages"
@@ -39,10 +26,8 @@ import { vocabularyIdPrefix } from 'app/utils/id-prefix';
         </div>
       </div>
 
-      <div *ngIf="open">
-
-        <hr/>
-
+      <div>
+        
         <form #form="ngForm" [formGroup]="formNode.control">
 
           <div class="top-actions">

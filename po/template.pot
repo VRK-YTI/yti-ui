@@ -300,6 +300,12 @@ msgstr ""
 msgid "Vocabulary type"
 msgstr ""
 
+msgid "Concepts"
+msgstr ""
+
+msgid "Terminology details"
+msgstr ""
+
 msgid "Show vocabulary details"
 msgstr ""
 
