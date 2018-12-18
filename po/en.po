@@ -14,7 +14,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 msgid "Controlled Vocabularies"
-msgstr ""
+msgstr "Terminologies"
 
 msgid "Search collection"
 msgstr ""
@@ -53,7 +53,7 @@ msgid "All organizations"
 msgstr ""
 
 msgid "All vocabularies"
-msgstr ""
+msgstr "All terminologies"
 
 msgid "Add new concept"
 msgstr ""
@@ -274,7 +274,7 @@ msgid "Close"
 msgstr ""
 
 msgid "New vocabulary"
-msgstr ""
+msgstr "New terminology"
 
 msgid "Add organization"
 msgstr ""
@@ -292,18 +292,18 @@ msgid "Search term"
 msgstr ""
 
 msgid "Add vocabulary"
-msgstr ""
+msgstr "Add terminology"
 
 msgid "ToolInfo"
 msgstr ""
-"Controlled Vocabularies tool is used to collect, maintain and publish common "
-"terminological vocabularies of public administration. Data modelers may use "
+"Terminologies tool is used to collect, maintain and publish common "
+"terminologies of public administration. Data modelers may use "
 "the tool to define terms and relations. Terms, their definitions and even "
 "visualization of relations between the terms are publicly available for "
 "everyone interested."
 
 msgid "Search vocabularies"
-msgstr ""
+msgstr "Search terminologies"
 
 msgid "Filter with information domain"
 msgstr ""
@@ -318,10 +318,10 @@ msgid "Vocabulary type"
 msgstr ""
 
 msgid "Show vocabulary details"
-msgstr ""
+msgstr "Show terminology details"
 
 msgid "Hide vocabulary details"
-msgstr ""
+msgstr "Hide terminology details"
 
 msgid "New concept"
 msgstr "new concept"
@@ -336,7 +336,7 @@ msgid "Front page"
 msgstr ""
 
 msgid "Vocabulary"
-msgstr ""
+msgstr "Terminology"
 
 msgid "Group"
 msgstr ""
@@ -392,7 +392,7 @@ msgid "VocabularyType"
 msgstr "Vocabulary"
 
 msgid "TerminologicalVocabularyType"
-msgstr "Terminological vocabulary"
+msgstr "Terminology"
 
 msgid "File upload"
 msgstr ""
