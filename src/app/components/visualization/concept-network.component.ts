@@ -227,6 +227,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
 
   private languageSubscription: Subscription;
   private translateLanguageSubscription: Subscription;
+  private resourceActionSubscription: Subscription;
 
   constructor(private zone: NgZone,
               private translateService: TranslateService,
@@ -263,7 +264,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
       this.network.on('click', this.onClick.bind(this));
     });
 
-    this.conceptViewModel.resourceAction$.subscribe(action => {
+    this.resourceActionSubscription = this.conceptViewModel.resourceAction$.subscribe(action => {
       switch (action.type) {
         case 'select':
           if (!this.skipNextSelection) {
@@ -302,6 +303,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
     this.network.destroy();
     this.languageSubscription.unsubscribe();
     this.translateLanguageSubscription.unsubscribe();
+    this.resourceActionSubscription.unsubscribe();
   }
 
   @HostBinding('class.maximized')

@@ -75,9 +75,6 @@ export class ConceptsComponent {
               private sessionService: SessionService,
               private domSanitizer: DomSanitizer) {
 
-    this.route.params.subscribe(params => {
-      this.viewModel.initializeVocabulary(params['graphId']);
-    });
     if (route.children.length > 0) {
       const childComponent: any = this.route.children[0].component;
       if (childComponent === CollectionComponent) {
