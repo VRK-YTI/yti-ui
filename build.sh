@@ -1,4 +1,4 @@
 #!/bin/bash
 #
 #
-docker build $* -t yti-terminology-ui .
+docker build -f Dockerfile.local -t yti-terminology-ui .
