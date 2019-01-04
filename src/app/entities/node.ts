@@ -560,12 +560,21 @@ export class ConceptNode extends Node<'Concept'> {
     this.getProperty('definition').setLocalizations(value);
   }
 
-  isTargetOfLink(link: string) {
+  isTargetOfLink(link: string): boolean {
 
-    // FIXME: proper mapping
-    const mightBeRelatedToThisFromImportedData = (isDefined(this.code) && (link.indexOf(this.code) !== -1));
+    if (link === this.uri) {
+      return true;
+    }
 
-    return link === this.uri || mightBeRelatedToThisFromImportedData;
+    // FIXME: This was:
+    //  (isDefined(this.code) && (link.indexOf(this.code) !== -1))
+    //  Which obviously fails if this.code === '4' and other.code === '42'. The following fix requires the URI to end with full code.
+    //  But the whole purpose of this "might be related" is unclear. If this should match 'foo/<code>/bar' then the fixed version fails.
+    const mightBeRelatedToThisFromImportedData: boolean = !!link && !!this.code && link.endsWith('/' + this.code);
+    if (mightBeRelatedToThisFromImportedData) {
+      console.warn('Accepting code-based concept match with URIs "' + this.uri + '", "' + link + '"');
+    }
+    return mightBeRelatedToThisFromImportedData;
   }
 
   hasVocabulary() {
