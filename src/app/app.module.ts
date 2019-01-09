@@ -57,7 +57,8 @@ import {
 } from 'app/components/concept/concept-link-reference-input.component';
 import { SemanticTextInputComponent } from 'app/components/form/semantic-text-input.component';
 import {
-  SemanticTextInputLinkPopoverComponent, SemanticTextInputUnlinkConceptPopoverComponent,
+  SemanticTextInputLinkPopoverComponent,
+  SemanticTextInputUnlinkConceptPopoverComponent,
   SemanticTextInputUnlinkExternalPopoverComponent
 } from 'app/components/form/semantic-text-input-popover.component';
 import {
@@ -160,8 +161,8 @@ const appRoutes: Routes = [
   { path: '', component: FrontpageComponent },
   { path: 'newVocabulary', component: NewVocabularyComponent },
   {
-    path: 'concepts/:graphId', component: VocabularyMainComponent, canDeactivate: [ConfirmCancelEditGuard], children: [
-      { path: '', component: NoSelectionComponent },
+    path: 'concepts/:graphId', component: VocabularyMainComponent, children: [
+      { path: '', component: NoSelectionComponent, canDeactivate: [ConfirmCancelEditGuard]  },
       { path: 'concept/:conceptId', component: ConceptComponent, canDeactivate: [ConfirmCancelEditGuard] },
       { path: 'collection/:collectionId', component: CollectionComponent, canDeactivate: [ConfirmCancelEditGuard] }
     ]

@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { EditableService, EditingComponent } from 'app/services/editable.service';
 import { ConceptViewModelService } from 'app/services/concept.view.service';
 import { requireDefined } from 'yti-common-ui/utils/object';
@@ -8,6 +8,7 @@ import { ImportVocabularyModalService } from 'app/components/vocabulary/import-v
 import { ignoreModalClose } from 'yti-common-ui/utils/modal';
 import { AuthorizationManager } from 'app/services/authorization-manager.sevice';
 import { vocabularyIdPrefix } from 'app/utils/id-prefix';
+import { ConfirmCancelEditGuard } from '../common/edit.guard';
 
 @Component({
   selector: 'app-vocabulary',
@@ -65,7 +66,7 @@ import { vocabularyIdPrefix } from 'app/utils/id-prefix';
     </div>
   `
 })
-export class VocabularyComponent implements EditingComponent {
+export class VocabularyComponent implements EditingComponent, OnInit, OnDestroy {
 
   @ViewChild('fileInput') fileInput: ElementRef;
   idPrefix: string = vocabularyIdPrefix;
@@ -77,13 +78,24 @@ export class VocabularyComponent implements EditingComponent {
               deleteConfirmationModal: DeleteConfirmationModalService,
               private languageService: LanguageService,
               private importVocabularyModal: ImportVocabularyModalService,
-              private authorizationManager: AuthorizationManager) {
+              private authorizationManager: AuthorizationManager,
+              private editGuard: ConfirmCancelEditGuard) {
 
     editableService.onSave = () => conceptViewModel.saveVocabulary();
     editableService.onCanceled = () => conceptViewModel.resetVocabulary();
     editableService.onRemove = () =>
       deleteConfirmationModal.open(requireDefined(this.vocabulary))
         .then(() => conceptViewModel.removeVocabulary());
+  }
+
+  ngOnInit(): void {
+    console.log('VocabularyComponent INIT');
+    this.editGuard.activeTabbedComponent = this;
+  }
+
+  ngOnDestroy(): void {
+    console.log('VocabularyComponent DESTRUCT');
+    this.editGuard.activeTabbedComponent = undefined;
   }
 
   get formNode() {
