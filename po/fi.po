@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2018-12-17 12:16+0200\n"
+"PO-Revision-Date: 2019-01-09 13:04+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -328,11 +328,11 @@ msgstr "Käsitteet"
 msgid "Terminology details"
 msgstr "Sanaston tiedot"
 
-msgid "Show vocabulary details"
-msgstr "Näytä sanaston tiedot"
+msgid "Information domain"
+msgstr "Tietoalue"
 
-msgid "Hide vocabulary details"
-msgstr "Piilota sanaston tiedot"
+msgid "Organization"
+msgstr "Organisaatio"
 
 msgid "New concept"
 msgstr "uusi käsite"
@@ -351,9 +351,6 @@ msgstr "Sanasto"
 
 msgid "Group"
 msgstr "Toimiala / Ryhmä"
-
-msgid "Organization"
-msgstr "Organisaatio"
 
 msgid "Submit error"
 msgstr "Toiminnossa tapahtui virhe"
@@ -462,6 +459,12 @@ msgid "Reference does not match any concepts."
 msgstr ""
 "{{ lineNumber }}: Viittauksella “{{ name }}” ei löydy käsitettä arvolle "
 "“{{ value }}”"
+
+#~ msgid "Show vocabulary details"
+#~ msgstr "Näytä sanaston tiedot"
+
+#~ msgid "Hide vocabulary details"
+#~ msgstr "Piilota sanaston tiedot"
 
 #~ msgid "Link concept"
 #~ msgstr "Linkitä käsite"

@@ -1,1 +1,48 @@
 @import '~yti-common-ui/theme/variables';
+
+.content-box {
+  padding-bottom: 0px;
+  border-bottom: none;
+}
+
+.header {
+  margin-bottom: -10px;
+  .nameButtonRow {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    margin-bottom: 0.5rem;
+
+    h2 {
+      flex: 1 1 auto;
+      margin: 0px;
+    }
+
+    .nameButtonRowButton {
+      flex: 0 0 auto;
+
+      label {
+        margin-bottom: 0px;
+      }
+    }
+  }
+
+  .informationRow {
+    span {
+      font-size: small;
+    }
+
+    .inRowTitle {
+      margin-left: 1rem;
+      margin-right: 0.5rem;
+    }
+
+    ul.organizations.dot-separated-list {
+      display: inline;
+
+      li.organization {
+        font-size: small;
+      }
+    }
+  }
+}

@@ -28,8 +28,7 @@ export class ConfirmCancelEditGuard implements CanDeactivate<EditingComponent> {
       } else {
         return this.confirmationModalService.openEditInProgress().then(() => true, () => false);
       }
-    }
-     else {
+    } else {
       console.log('ConfirmCancelEditGuard.canDeactivate(' + target + ')');
       return Promise.resolve(true);
     }

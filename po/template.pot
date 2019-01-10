@@ -306,10 +306,10 @@ msgstr ""
 msgid "Terminology details"
 msgstr ""
 
-msgid "Show vocabulary details"
+msgid "Information domain"
 msgstr ""
 
-msgid "Hide vocabulary details"
+msgid "Organization"
 msgstr ""
 
 msgid "New concept"
@@ -328,9 +328,6 @@ msgid "Vocabulary"
 msgstr ""
 
 msgid "Group"
-msgstr ""
-
-msgid "Organization"
 msgstr ""
 
 msgid "Submit error"
