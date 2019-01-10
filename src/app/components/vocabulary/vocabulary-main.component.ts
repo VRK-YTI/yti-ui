@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { ConceptViewModelService } from '../../services/concept.view.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { NgbTabChangeEvent, NgbTabset } from '@ng-bootstrap/ng-bootstrap';
 import { ConceptsComponent } from '../concept/concepts.component';
 import { VocabularyComponent } from './vocabulary.component';
@@ -67,9 +67,10 @@ export class VocabularyMainComponent implements OnInit, OnDestroy {
   @ViewChild('conceptsComponent') conceptsComponent: ConceptsComponent;
   @ViewChild('terminologyComponent') terminologyComponent: VocabularyComponent;
   private graphId: string;
-  private routeParamSubscription: Subscription;
+  private subscriptions: Subscription[] = [];
 
   constructor(private route: ActivatedRoute,
+              private router: Router,
               private location: Location,
               public viewModel: ConceptViewModelService,
               private confirmationModalService: ConfirmationModalService,
@@ -78,10 +79,18 @@ export class VocabularyMainComponent implements OnInit, OnDestroy {
               private languageService: LanguageService) {
 
     console.log('VocabularyMainComponent CONSTRUCT');
-    this.routeParamSubscription = this.route.params.subscribe(params => {
+
+    this.subscriptions.push(this.router.events.subscribe(event => {
+      if (this.tabs && this.tabs.activeId !== 'conceptsTab' && event instanceof NavigationEnd) {
+        console.log('Navigation end: ' + event);
+        this.tabs.select('conceptsTab');
+      }
+    }));
+
+    this.subscriptions.push(this.route.params.subscribe(params => {
       this.graphId = params['graphId'];
       this.viewModel.initializeVocabulary(this.graphId);
-    });
+    }));
   }
 
   get vocabulary() {
@@ -106,7 +115,7 @@ export class VocabularyMainComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     console.log('VocabularyMainComponent DESTRUCT');
-    this.routeParamSubscription.unsubscribe();
+    this.subscriptions.forEach(s => s.unsubscribe());
   }
 
   canImport() {

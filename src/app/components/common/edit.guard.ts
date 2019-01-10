@@ -14,23 +14,17 @@ export class ConfirmCancelEditGuard implements CanDeactivate<EditingComponent> {
   }
 
   canDeactivate(target: EditingComponent, currentRoute: ActivatedRouteSnapshot) {
-    if (target) {
-      console.log('ConfirmCancelEditGuard.canDeactivate(' + (<any>target).__proto__.constructor.name + ')');
-      if (!target.isEditing()) {
-        return Promise.resolve(true);
-      } else {
-        return this.confirmationModalService.openEditInProgress().then(() => true, () => false);
-      }
-    } else if (this.activeTabbedComponent) {
-      console.log('ConfirmCancelEditGuard.canDeactivate(), with tabbed component');
-      if (!this.activeTabbedComponent.isEditing()) {
-        return Promise.resolve(true);
-      } else {
-        return this.confirmationModalService.openEditInProgress().then(() => true, () => false);
+    const actualTarget = target || this.activeTabbedComponent;
+    if (actualTarget) {
+      if (actualTarget.isEditing()) {
+        return this.confirmationModalService.openEditInProgress().then(() => {
+          actualTarget.cancelEditing();
+          return true;
+        }, () => false);
       }
     } else {
-      console.log('ConfirmCancelEditGuard.canDeactivate(' + target + ')');
-      return Promise.resolve(true);
+      console.warn('ConfirmCancelEditGuard.canDeactivate() called without direct or implicit target');
     }
+    return true;
   }
 }
