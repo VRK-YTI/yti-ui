@@ -20,30 +20,39 @@ import { AuthorizationManager } from '../../services/authorization-manager.sevic
   template: `
     <div class="content-box">
       <div *ngIf="vocabulary">
-        <div class="header row">
-          <div class="nameButtonRow col-12">
-            <h2><span class="mr-4">{{vocabulary!.label | translateValue}}</span></h2>
-            <app-filter-language class="nameButtonRowButton" [(ngModel)]="filterLanguage"
-                                 [languages]="filterLanguages"></app-filter-language>
-            <div class="ml-2 nameButtonRowButton" *ngIf="canImport()">
-              <label id="vocabulary_import_label" class="btn btn-secondary-action"
-                     (click)="selectFile()" translate>Import concepts</label>
+        <div class="header">
+          <div class="row">
+            <div class="nameButtonRow col-12">
+              <h2><span class="mr-4">{{vocabulary!.label | translateValue}}</span></h2>
+              <app-filter-language class="nameButtonRowButton" [(ngModel)]="filterLanguage"
+                                   [languages]="filterLanguages"></app-filter-language>
+              <div class="ml-2 nameButtonRowButton" *ngIf="canImport()">
+                <label id="vocabulary_import_label" class="btn btn-secondary-action"
+                       (click)="selectFile()" translate>Import concepts</label>
+              </div>
             </div>
           </div>
-          <div class="informationRow col-12">
-            <app-status class="status" [status]="vocabulary!.status"></app-status>
-            <span class="inRowTitle"><span translate>Information domain</span>:</span>
-            <span class="information-domains">
-              <span class="badge badge-light" *ngFor="let domain of vocabulary!.groups">
-                {{domain.label | translateValue:true}}
+          <div class="row">
+            <div class="informationRow col-12">
+              <app-status class="status" [status]="vocabulary!.status"></app-status>
+              <span class="inRowTitle"><span translate>Information domain</span>:</span>
+              <span class="information-domains">
+                <span class="badge badge-light" *ngFor="let domain of vocabulary!.groups">
+                  {{domain.label | translateValue:true}}
+                </span>
               </span>
-            </span>
-            <span class="inRowTitle"><span translate>Organization</span>:</span>
-            <ul class="organizations dot-separated-list">
-              <li class="organization" *ngFor="let contributor of vocabulary!.contributors">
-                {{contributor.label | translateValue:true}}
-              </li>
-            </ul>
+              <span class="inRowTitle"><span translate>Organization</span>:</span>
+              <ul class="organizations dot-separated-list">
+                <li class="organization" *ngFor="let contributor of vocabulary!.contributors">
+                  {{contributor.label | translateValue:true}}
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="row">
+            <div class="descriptionRow col-12">
+              <app-expandable-text [text]="vocabulary!.description | translateValue:true" [rows]="3"></app-expandable-text>
+            </div>
           </div>
         </div>
         <ngb-tabset #tabs (tabChange)="onTabChange($event)">
