@@ -99,11 +99,8 @@ import { ConfigurationService } from '../../services/configuration.service';
 
                   <a class="name" [routerLink]="['/concepts', vocabulary.graphId]">{{vocabulary.label | translateValue:true}}</a>
 
-                  <div class="description-container" [ngClass]="{'expand': fullDescription[vocabulary.graphId]}">
-                    <span class="description">{{vocabulary.description | translateValue:true}}</span>
-                    <div class="limiter-container">
-                      <div class="description-limiter" (click)="toggleFullDescription(vocabulary.graphId)"></div>
-                    </div>
+                  <div *ngIf="vocabulary.description | translateValue:true as descriptionText" class="description-component-container">
+                    <app-expandable-text [text]="descriptionText"></app-expandable-text>
                   </div>
 
                   <span class="information-domains">
@@ -151,7 +148,6 @@ export class VocabulariesComponent implements OnInit, OnDestroy {
 
   // Other generic state
   loading: boolean = true;
-  fullDescription: { [key: string]: boolean } = {};
   subscriptionsToClean: Subscription[] = [];
 
   // Template wrappers
@@ -214,14 +210,6 @@ export class VocabulariesComponent implements OnInit, OnDestroy {
 
   addVocabulary() {
     this.router.navigate(['/newVocabulary']);
-  }
-
-  toggleFullDescription(graphId: string) {
-    if (this.fullDescription[graphId]) {
-      delete this.fullDescription[graphId];
-    } else {
-      this.fullDescription[graphId] = true;
-    }
   }
 
   private makeSubscriptions() {
