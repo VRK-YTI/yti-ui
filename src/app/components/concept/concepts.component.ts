@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ConceptViewModelService } from 'app/services/concept.view.service';
@@ -65,7 +65,7 @@ import { ConceptComponent } from './concept.component';
     </div>
   `
 })
-export class ConceptsComponent implements OnInit, OnDestroy {
+export class ConceptsComponent {
 
   @ViewChild('network') conceptNetwork: ConceptNetworkComponent;
   initialTabId?: string;
@@ -75,8 +75,6 @@ export class ConceptsComponent implements OnInit, OnDestroy {
               public viewModel: ConceptViewModelService,
               private sessionService: SessionService,
               private domSanitizer: DomSanitizer) {
-
-    console.log('ConceptsComponent CONSTRUCT');
 
     if (route.children.length > 0) {
       const childComponent: any = this.route.children[0].component;
@@ -106,14 +104,6 @@ export class ConceptsComponent implements OnInit, OnDestroy {
     return this.domSanitizer.bypassSecurityTrustStyle(
       this.showSelection ? `calc(100% - ${this.sessionService.selectionWidth}px)` : '100%'
     );
-  }
-
-  ngOnInit(): void {
-    console.log('ConceptsComponent INIT');
-  }
-
-  ngOnDestroy(): void {
-    console.log('ConceptsComponent DESTRUCT');
   }
 
   onOutletActivate($event: any) {

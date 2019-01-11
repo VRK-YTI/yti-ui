@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EditableService, EditingComponent } from 'app/services/editable.service';
 import { ConceptViewModelService } from 'app/services/concept.view.service';
@@ -45,7 +45,7 @@ import { Localizable } from 'yti-common-ui/types/localization';
     <app-ajax-loading-indicator *ngIf="!concept"></app-ajax-loading-indicator>
   `
 })
-export class ConceptComponent implements EditingComponent, OnInit, OnDestroy {
+export class ConceptComponent implements EditingComponent, OnDestroy {
 
   idPrefix: string = conceptIdPrefix;
   private subscriptionToClean: Subscription[] = [];
@@ -56,11 +56,10 @@ export class ConceptComponent implements EditingComponent, OnInit, OnDestroy {
               private removeLinkConfirmationModal: RemoveLinkConfirmationModalService,
               private editableService: EditableService,
               private languageService: LanguageService) {
-    console.log('ConceptComponent CONSTRUCT');
 
-    this.route.params.subscribe(params => {
+    this.subscriptionToClean.push(this.route.params.subscribe(params => {
       this.conceptViewModel.initializeConcept(params['conceptId']);
-    });
+    }));
 
     editableService.onSave = () => this.conceptViewModel.saveConcept(this.confirmLinkRemoval.bind(this));
     editableService.onCanceled = () => this.conceptViewModel.resetConcept();
@@ -93,13 +92,7 @@ export class ConceptComponent implements EditingComponent, OnInit, OnDestroy {
     return this.conceptViewModel.vocabulary;
   }
 
-  ngOnInit() {
-    console.log('ConceptComponent INIT');
-  }
-
   ngOnDestroy() {
-    console.log('ConceptComponent DESTRUCT');
-
     for (const subscription of this.subscriptionToClean) {
       subscription.unsubscribe();
     }

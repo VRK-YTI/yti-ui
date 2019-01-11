@@ -4,9 +4,6 @@ import { ConceptViewModelService } from 'app/services/concept.view.service';
 import { requireDefined } from 'yti-common-ui/utils/object';
 import { DeleteConfirmationModalService } from 'app/components/common/delete-confirmation-modal.component';
 import { LanguageService } from 'app/services/language.service';
-import { ImportVocabularyModalService } from 'app/components/vocabulary/import-vocabulary-modal.component';
-import { ignoreModalClose } from 'yti-common-ui/utils/modal';
-import { AuthorizationManager } from 'app/services/authorization-manager.sevice';
 import { vocabularyIdPrefix } from 'app/utils/id-prefix';
 import { ConfirmCancelEditGuard } from '../common/edit.guard';
 
@@ -56,16 +53,6 @@ export class VocabularyComponent implements EditingComponent, OnInit, OnDestroy 
         .then(() => conceptViewModel.removeVocabulary());
   }
 
-  ngOnInit(): void {
-    console.log('VocabularyComponent INIT');
-    this.editGuard.activeTabbedComponent = this;
-  }
-
-  ngOnDestroy(): void {
-    console.log('VocabularyComponent DESTRUCT');
-    this.editGuard.activeTabbedComponent = undefined;
-  }
-
   get formNode() {
     return this.conceptViewModel.vocabularyForm;
   }
@@ -80,6 +67,14 @@ export class VocabularyComponent implements EditingComponent, OnInit, OnDestroy 
 
   get namespace() {
     return this.conceptViewModel.prefixAndNamespace ? this.conceptViewModel.prefixAndNamespace.namespace : null;
+  }
+
+  ngOnInit(): void {
+    this.editGuard.activeTabbedComponent = this;
+  }
+
+  ngOnDestroy(): void {
+    this.editGuard.activeTabbedComponent = undefined;
   }
 
   isEditing(): boolean {

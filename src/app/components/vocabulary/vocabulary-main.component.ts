@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
 import { ConceptViewModelService } from '../../services/concept.view.service';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
@@ -71,7 +71,7 @@ import { AuthorizationManager } from '../../services/authorization-manager.sevic
     </div>
   `
 })
-export class VocabularyMainComponent implements OnInit, OnDestroy {
+export class VocabularyMainComponent implements OnDestroy {
   @ViewChild('tabs') tabs: NgbTabset;
   @ViewChild('conceptsComponent') conceptsComponent: ConceptsComponent;
   @ViewChild('terminologyComponent') terminologyComponent: VocabularyComponent;
@@ -87,11 +87,9 @@ export class VocabularyMainComponent implements OnInit, OnDestroy {
               private authorizationManager: AuthorizationManager,
               private languageService: LanguageService) {
 
-    console.log('VocabularyMainComponent CONSTRUCT');
-
     this.subscriptions.push(this.router.events.subscribe(event => {
       if (this.tabs && this.tabs.activeId !== 'conceptsTab' && event instanceof NavigationEnd) {
-        console.log('Navigation end: ' + event);
+        // NOTE: Currently all routes lead to conceptsTab
         this.tabs.select('conceptsTab');
       }
     }));
@@ -118,12 +116,7 @@ export class VocabularyMainComponent implements OnInit, OnDestroy {
     return this.viewModel.languages;
   }
 
-  ngOnInit(): void {
-    console.log('VocabularyMainComponent INIT (' + this.terminologyComponent + ')');
-  }
-
   ngOnDestroy(): void {
-    console.log('VocabularyMainComponent DESTRUCT');
     this.subscriptions.forEach(s => s.unsubscribe());
   }
 
@@ -145,8 +138,6 @@ export class VocabularyMainComponent implements OnInit, OnDestroy {
   }
 
   onTabChange(event: NgbTabChangeEvent) {
-    console.log('Tab Change BEGIN');
-
     if ((this.terminologyComponent && this.terminologyComponent.isEditing()) ||
       (this.conceptsComponent && this.conceptsComponent.isEditing())) {
       event.preventDefault();
@@ -155,7 +146,5 @@ export class VocabularyMainComponent implements OnInit, OnDestroy {
         this.tabs.select(event.nextId);
       }, ignoreModalClose);
     }
-
-    console.log('Tab Change END');
   }
 }
