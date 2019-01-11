@@ -64,6 +64,8 @@ import { AuthorizationManager } from '../../services/authorization-manager.sevic
           <ngb-tab id="terminologyTab" [title]="'Terminology details' | translate">
             <ng-template ngbTabContent>
               <app-vocabulary #terminologyComponent></app-vocabulary>
+              <div class="bottom-hack-border"></div>
+              <div class="bottom-hack-padding"></div>
             </ng-template>
           </ngb-tab>
         </ngb-tabset>

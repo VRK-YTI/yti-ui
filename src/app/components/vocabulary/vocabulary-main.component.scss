@@ -48,3 +48,16 @@
     }
   }
 }
+
+.bottom-hack-border {
+  margin-left: -26px;
+  margin-right: -26px;
+  border-bottom: 1px solid $gray-500;
+}
+
+.bottom-hack-padding {
+  background-color: $gray-100;
+  margin-left: -46px;
+  margin-right: -46px;
+  height: 20px;
+}
