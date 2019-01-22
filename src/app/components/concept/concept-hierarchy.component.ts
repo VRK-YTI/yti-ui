@@ -29,7 +29,7 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
               [scrollWindow]="false"
               (scrolled)="onScrollDown()">
             <li *ngFor="let concept of model.topConcepts; trackBy: conceptIdentity">
-              <app-concept-hierarchy-node [concept]="concept"></app-concept-hierarchy-node>
+              <app-concept-hierarchy-node [concept]="concept" [parentIds]="[]"></app-concept-hierarchy-node>
             </li>
           </ul>
         </div>

@@ -8,16 +8,17 @@ import { IndexedConcept } from 'app/services/elasticsearch.service';
   styleUrls: ['./concept-hierarchy-node.component.scss'],
   template: `
     
-    <i [hidden]="!hasChildren() || expanded" class="far fa-plus-square" [id]="concept.idIdentifier + '_expand_concept_hierarchy_node'" (click)="expand()"></i>
-    <i [hidden]="!hasChildren() || collapsed" class="far fa-minus-square" [id]="concept.idIdentifier + '_collapse_concept_hierarchy_node'" (click)="collapse()"></i>
+    <i [hidden]="!hasChildren() || expanded || loop" class="far fa-plus-square" [id]="concept.idIdentifier + '_expand_concept_hierarchy_node'" (click)="expand()"></i>
+    <i [hidden]="!hasChildren() || collapsed || loop" class="far fa-minus-square" [id]="concept.idIdentifier + '_collapse_concept_hierarchy_node'" (click)="collapse()"></i>
+    <i [hidden]="!loop" class="hierarchy-loop fa fa-retweet" [id]="concept.idIdentifier + '_concept_hierarchy_loop'"></i>
       
-    <div [id]="concept.idIdentifier + '_concept_hierarchy_node'" class="text" [class.selection]="selected" (click)="navigate()">
+    <div [id]="concept.idIdentifier + '_concept_hierarchy_node'" class="text" [ngClass]="{'hierarchy-loop': loop}" [class.selection]="selected" (click)="navigate()">
       <span>{{concept.label | translateValue}}</span>
     </div>
     
     <ul *ngIf="expanded && children">
       <li *ngFor="let child of children | async">
-        <app-concept-hierarchy-node [concept]="child"></app-concept-hierarchy-node>
+        <app-concept-hierarchy-node [concept]="child" [parentIds]="path"></app-concept-hierarchy-node>
       </li>
     </ul>
   `
@@ -25,6 +26,7 @@ import { IndexedConcept } from 'app/services/elasticsearch.service';
 export class ConceptHierarchyNodeComponent {
 
   @Input() concept: IndexedConcept;
+  @Input() parentIds: string[];
   model: ConceptHierarchyModel;
 
   constructor(private conceptViewModel: ConceptViewModelService,
@@ -42,7 +44,7 @@ export class ConceptHierarchyNodeComponent {
   }
 
   get expanded() {
-    return this.model.isExpanded(this.concept);
+    return !this.loop && this.model.isExpanded(this.concept);
   }
 
   get collapsed() {
@@ -63,5 +65,13 @@ export class ConceptHierarchyNodeComponent {
 
   expand() {
     this.model.expand(this.concept);
+  }
+
+  get path(): string[] {
+    return [...this.parentIds, this.concept.id];
+  }
+
+  get loop() {
+    return this.parentIds.indexOf(this.concept.id) >= 0;
   }
 }

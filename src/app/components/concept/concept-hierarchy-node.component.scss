@@ -1,0 +1,16 @@
+@import '~yti-common-ui/theme/variables';
+
+ul li i.hierarchy-loop.fa.fa-retweet {
+  margin-left: -18px;
+  color: $danger;
+}
+
+ul li div.hierarchy-loop.text {
+  &.selection, &:hover {
+    border-color: $danger;
+  }
+
+  span {
+    color: $danger;
+  }
+}
