@@ -66,14 +66,16 @@ import { ConfigurationService } from '../../services/configuration.service';
             <div class="row mb-4">
               <div class="col-md-12 result-list-filter-row">
 
-                <span class="search-label search-label-inline" translate>Filter results</span>
+                <span class="search-label search-label-inline with-info" translate>Filter results</span>
 
-                <app-organization-filter-dropdown [filterSubject]="selectedOrganization$"
-                                                  id="organization_filter_dropdown"
-                                                  [organizations]="applicableOrganizations$"></app-organization-filter-dropdown>
-                <app-status-filter-dropdown class="ml-2" [filterSubject]="selectedStatus$"
-                                            id="status_filter_dropdown"
-                                            [statuses]="applicableStatuses$"></app-status-filter-dropdown>
+                <div class="result-list-filter-dropdowns">
+                  <app-organization-filter-dropdown [filterSubject]="selectedOrganization$"
+                                                    id="organization_filter_dropdown"
+                                                    [organizations]="applicableOrganizations$"></app-organization-filter-dropdown>
+                  <app-status-filter-dropdown [filterSubject]="selectedStatus$"
+                                              id="status_filter_dropdown"
+                                              [statuses]="applicableStatuses$"></app-status-filter-dropdown>
+                </div>
               </div>
             </div>
 
