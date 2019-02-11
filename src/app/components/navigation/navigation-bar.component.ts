@@ -13,7 +13,7 @@ import { ConfigurationService } from '../../services/configuration.service';
 
       <a id="main_page_link" class="navbar-brand" [routerLink]="['/']">
         <app-logo></app-logo>
-        <span translate>Controlled Vocabularies</span>
+        <span translate>Terminologies</span>
         <span>{{environmentIdentifier}}</span>
       </a>
 

@@ -16,7 +16,7 @@ export class LocationService implements OnDestroy {
   private titleTranslationSubscription: Subscription;
 
   constructor(private translateService: TranslateService, private configurationService: ConfigurationService, private titleService: Title) {
-    this.titleTranslationSubscription = this.translateService.stream('Controlled Vocabularies').subscribe(value => {
+    this.titleTranslationSubscription = this.translateService.stream('Terminologies').subscribe(value => {
       this.titleService.setTitle(this.configurationService.getEnvironmentIdentifier('prefix') + value);
     })
   }

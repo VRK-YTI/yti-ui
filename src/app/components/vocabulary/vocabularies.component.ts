@@ -25,7 +25,7 @@ import { ConfigurationService } from '../../services/configuration.service';
         <span translate>Add vocabulary</span>
       </button>
 
-      <h4 class="tool-inner-title" translate>Controlled Vocabularies</h4>
+      <h4 class="tool-inner-title" translate>Terminologies</h4>
       <div class="tool-info"><p translate>ToolInfo</p></div>
 
       <div><span class="search-label" translate>Search vocabularies</span></div>

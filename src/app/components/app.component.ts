@@ -12,7 +12,7 @@ import { LocationService } from 'app/services/location.service';
       <app-breadcrumb [location]="location" [linkActive]="true" [refreshPath]="['re']"></app-breadcrumb>
       <router-outlet></router-outlet>
     </div>
-    <app-footer [title]="'Controlled Vocabularies' | translate"
+    <app-footer [title]="'Terminologies' | translate"
                 id="app_navigate_to_info"
                 (informationClick)="navigateToInformation()" *ngIf="showFooter"></app-footer>
   `
