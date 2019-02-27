@@ -4,6 +4,7 @@ import { UserService } from 'yti-common-ui/services/user.service';
 import { LoginModalService } from 'yti-common-ui/components/login-modal.component';
 import { TermedService } from '../../services/termed.service';
 import { ConfigurationService } from '../../services/configuration.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navigation-bar',
@@ -11,7 +12,7 @@ import { ConfigurationService } from '../../services/configuration.service';
   template: `
     <nav class="navbar navbar-expand-md navbar-light">
 
-      <a id="main_page_link" class="navbar-brand" [routerLink]="['/']">
+      <a id="main_page_link" class="navbar-brand" href="/" (click)="goToFrontPage($event)">
         <app-logo></app-logo>
         <span translate>Terminologies</span>
         <span>{{environmentIdentifier}}</span>
@@ -107,7 +108,8 @@ export class NavigationBarComponent {
               private userService: UserService,
               private loginModal: LoginModalService,
               private termedService: TermedService,
-              private configurationService: ConfigurationService) {
+              private configurationService: ConfigurationService,
+              private router: Router) {
 
     this.termedService.getFakeableUsers().subscribe(users => {
       this.fakeableUsers = users;
@@ -153,5 +155,14 @@ export class NavigationBarComponent {
 
   showGroupManagementUrl() {
     return this.user.superuser || this.user.isAdminInAnyOrganization();
+  }
+
+  goToFrontPage($event: Event) {
+    $event.preventDefault();
+    if (this.router.url === '/') {
+      this.router.navigate(['re'], { skipLocationChange: true }).then(() => this.router.navigate(['/'], { skipLocationChange: false }));
+    } else {
+      this.router.navigate(['/'], { skipLocationChange: false });
+    }
   }
 }
