@@ -1,6 +1,7 @@
-import { Component, forwardRef, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, forwardRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-filter-language',
@@ -25,7 +26,7 @@ import { TranslateService } from '@ngx-translate/core';
     </div>
   `
 })
-export class FilterLanguageComponent implements ControlValueAccessor, OnChanges {
+export class FilterLanguageComponent implements ControlValueAccessor, OnInit, OnDestroy {
 
   @Input() languages: string[];
   options: { lang: string, name: string }[];
@@ -35,11 +36,22 @@ export class FilterLanguageComponent implements ControlValueAccessor, OnChanges 
   private propagateChange: (fn: any) => void = () => {};
   private propagateTouched: (fn: any) => void = () => {};
 
+  private subscriptions: Subscription[] = [];
+
   constructor(private translateService: TranslateService) {
-    this.control.valueChanges.subscribe(x => this.propagateChange(x));
+    this.subscriptions.push(this.control.valueChanges.subscribe(x => this.propagateChange(x)));
+    this.subscriptions.push(translateService.onLangChange.subscribe(() => this.updateOptions()));
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnInit(): void {
+    this.updateOptions();
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(s => s.unsubscribe());
+  }
+
+  private updateOptions(): void {
     this.options = ['', ...this.languages].map(lang => ({
       lang: lang,
       name: this.languageToOptionName(lang)
@@ -72,7 +84,7 @@ export class FilterLanguageComponent implements ControlValueAccessor, OnChanges 
 
   private languageToSelectionName(lang: string) {
     return lang ? lang.toUpperCase()
-                : this.translateService.instant('All');
+                : this.translateService.instant('Content language');
   }
 
   private languageToOptionName(lang: string) {

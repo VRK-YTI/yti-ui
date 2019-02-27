@@ -121,7 +121,7 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-msgid "All"
+msgid "Content language"
 msgstr ""
 
 msgid "Content in"
