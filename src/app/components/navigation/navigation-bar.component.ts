@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
     <nav class="navbar navbar-expand-md navbar-light">
 
       <a id="main_page_link" class="navbar-brand" href="/" (click)="goToFrontPage($event)">
-        <app-logo></app-logo>
+        <!-- <app-logo></app-logo> -->
         <span translate>Terminologies</span>
         <span>{{environmentIdentifier}}</span>
       </a>
