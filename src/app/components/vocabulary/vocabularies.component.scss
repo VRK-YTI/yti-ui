@@ -1,1 +1,68 @@
 @import '~yti-common-ui/theme/variables';
+
+.yti-tool-front-page {
+
+  .extend-search-selections {
+    label {
+      font-size: inherit;
+      margin-bottom: 0;
+    }
+  }
+
+  .result-list-container .result-list-item {
+    .name {
+      font-weight: 600;
+    }
+
+    .information-domains {
+      display: inline;
+      margin-left: 1rem;
+    }
+
+    .organizations {
+      display: inline;
+
+      &.dot-separated-list li {
+        font-size: 0.85rem;
+        color: $gray-900;
+      }
+    }
+
+    .deep-results {
+      margin-top: 1em;
+
+      .deep-results-title {
+        font-weight: bolder;
+        font-size: 0.86rem;
+      }
+
+      .deep-results-section {
+        margin-left: 1rem;
+
+        .deep-results-section-title {
+          display: none;
+          font-weight: bolder;
+          font-size: 0.86rem;
+        }
+
+        .deep-results-section-content {
+          a.deep-results-hit {
+            display: inline-block;
+            margin-right: 1rem;
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            vertical-align: middle;
+          }
+
+          .deep-results-show-all {
+            display: inline-block;
+            font-style: italic;
+            vertical-align: middle;
+          }
+        }
+      }
+    }
+  }
+}

@@ -4,22 +4,23 @@ import { LanguageService } from './language.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { normalizeAsArray } from 'yti-common-ui/utils/array';
-import { Moment } from 'moment';
 import * as moment from 'moment';
+import { Moment } from 'moment';
 import { Localizable, LocalizableArray } from 'yti-common-ui/types/localization';
 import { apiUrl } from 'app/config';
 import { HttpClient } from '@angular/common/http';
+import { TerminologySearchRequest, TerminologySearchResponse } from '../entities/search';
 
 export interface IndexedConceptData {
   id: string;
   vocabulary: {
     id: string, // actually graphId
-    label: Localizable|LocalizableArray
+    label: Localizable | LocalizableArray
   };
-  label: Localizable|LocalizableArray;
+  label: Localizable | LocalizableArray;
   sortByLabel: Localizable;
-  altLabel: Localizable|LocalizableArray;
-  definition: Localizable|LocalizableArray;
+  altLabel: Localizable | LocalizableArray;
+  definition: Localizable | LocalizableArray;
   broader: string[];
   narrower: string[];
   modified: string;
@@ -129,16 +130,13 @@ export class ElasticSearchService {
   constructor(private http: HttpClient, private languageService: LanguageService) {
   }
 
-  private search(body: any): Observable<SearchResponse<IndexedConceptData>> {
-
-    const headers = { 'Content-Type': 'application/json' };
-
-    return this.http.post<SearchResponse<IndexedConceptData>>(`${apiUrl}/searchConcept`, JSON.stringify(body), { headers } );
+  private get language() {
+    return this.languageService.translateLanguage;
   }
 
   frontpageSearch(filter: string,
-                  onlyGraph: string|null,
-                  onlyStatus: string|null,
+                  onlyGraph: string | null,
+                  onlyStatus: string | null,
                   from: number,
                   size: number): Observable<IndexedConcept[]> {
 
@@ -179,10 +177,10 @@ export class ElasticSearchService {
         }
       },
       sort: ['_score'],
-      highlight : {
-        pre_tags : ['<b>'],
-        post_tags : ['</b>'],
-        fields : {
+      highlight: {
+        pre_tags: ['<b>'],
+        post_tags: ['</b>'],
+        fields: {
           'label.*': {},
           'altLabel.*': {}
         }
@@ -196,7 +194,7 @@ export class ElasticSearchService {
                                  conceptId: string,
                                  filter: string,
                                  sortByModified: boolean,
-                                 onlyStatus: string|null): Observable<IndexedConcept|null> {
+                                 onlyStatus: string | null): Observable<IndexedConcept | null> {
 
     return this.getConceptsForVocabularies(graphId, 'include', conceptId, filter, sortByModified, onlyStatus, 0, 1)
       .pipe(map(concepts => {
@@ -211,7 +209,7 @@ export class ElasticSearchService {
   getAllConceptsForVocabulary(graphId: string,
                               filter: string,
                               sortByModified: boolean,
-                              onlyStatus: string|null,
+                              onlyStatus: string | null,
                               from: number,
                               size: number): Observable<IndexedConcept[]> {
 
@@ -221,19 +219,74 @@ export class ElasticSearchService {
   getAllConceptsNotInVocabulary(notInGraphId: string,
                                 filter: string,
                                 sortByModified: boolean,
-                                onlyStatus: string|null,
+                                onlyStatus: string | null,
                                 from: number,
                                 size: number): Observable<IndexedConcept[]> {
 
     return this.getConceptsForVocabularies(notInGraphId, 'exclude', null, filter, sortByModified, onlyStatus, from, size);
   }
 
+  getTopConceptsForVocabulary(graphId: string, from: number, size: number): Observable<IndexedConcept[]> {
+
+    return this.search({
+      query: {
+        bool: {
+          must: {
+            match: {
+              'vocabulary.id': graphId
+            }
+          },
+          must_not: {
+            exists: {
+              field: 'broader'
+            }
+          }
+        }
+      },
+      from,
+      size,
+      sort: [`sortByLabel.${this.language}`]
+    }).pipe(map(result => result.hits.hits.map(hit => new IndexedConcept(hit))));
+  }
+
+  getNarrowerConcepts(graphId: string, broaderConceptId: string) {
+
+    return this.search({
+      query: {
+        bool: {
+          must: [
+            {
+              match: {
+                'vocabulary.id': graphId
+              }
+            },
+            {
+              match: {
+                'broader': broaderConceptId
+              }
+            }
+          ]
+        }
+      },
+      from: 0,
+      size: 10000,
+      sort: [`sortByLabel.${this.language}`]
+    }).pipe(map(result => result.hits.hits.map(hit => new IndexedConcept(hit))));
+  }
+
+  private search(body: any): Observable<SearchResponse<IndexedConceptData>> {
+
+    const headers = { 'Content-Type': 'application/json' };
+
+    return this.http.post<SearchResponse<IndexedConceptData>>(`${apiUrl}/searchConcept`, JSON.stringify(body), { headers });
+  }
+
   private getConceptsForVocabularies(graphId: string,
-                                     graphMode: 'include'|'exclude',
-                                     conceptId: string|null,
+                                     graphMode: 'include' | 'exclude',
+                                     conceptId: string | null,
                                      filter: string,
                                      sortByModified: boolean,
-                                     onlyStatus: string|null,
+                                     onlyStatus: string | null,
                                      from: number,
                                      size: number): Observable<IndexedConcept[]> {
 
@@ -285,7 +338,7 @@ export class ElasticSearchService {
     const sort: any[] = filter ? ['_score'] : [`sortByLabel.${this.language}`];
 
     if (sortByModified) {
-      sort.unshift({ 'modified': { 'order' : 'desc' } });
+      sort.unshift({ 'modified': { 'order': 'desc' } });
     }
 
     return this.search({
@@ -295,10 +348,10 @@ export class ElasticSearchService {
           must_not: mustNotConditions
         }
       },
-      highlight : {
-        pre_tags : ['<b>'],
-        post_tags : ['</b>'],
-        fields : {
+      highlight: {
+        pre_tags: ['<b>'],
+        post_tags: ['</b>'],
+        fields: {
           'label.*': {},
         }
       },
@@ -308,55 +361,8 @@ export class ElasticSearchService {
     }).pipe(map(result => result.hits.hits.map(hit => new IndexedConcept(hit))));
   }
 
-  getTopConceptsForVocabulary(graphId: string, from: number, size: number): Observable<IndexedConcept[]> {
-
-    return this.search({
-      query: {
-        bool: {
-          must: {
-            match: {
-              'vocabulary.id': graphId
-            }
-          },
-          must_not: {
-            exists: {
-              field: 'broader'
-            }
-          }
-        }
-      },
-      from,
-      size,
-      sort: [`sortByLabel.${this.language}`]
-    }).pipe(map(result => result.hits.hits.map(hit => new IndexedConcept(hit))));
-  }
-
-  getNarrowerConcepts(graphId: string, broaderConceptId: string) {
-
-    return this.search({
-      query: {
-        bool: {
-          must: [
-            {
-              match: {
-                'vocabulary.id': graphId
-              }
-            },
-            {
-              match: {
-                'broader': broaderConceptId
-              }
-            }
-          ]
-        }
-      },
-      from: 0,
-      size: 10000,
-      sort: [`sortByLabel.${this.language}`]
-    }).pipe(map(result => result.hits.hits.map(hit => new IndexedConcept(hit))));
-  }
-
-  private get language() {
-    return this.languageService.translateLanguage;
+  terminologySearch(request: TerminologySearchRequest): Observable<TerminologySearchResponse> {
+    const headers = { 'Content-Type': 'application/json' };
+    return this.http.post<TerminologySearchResponse>(`${apiUrl}/searchTerminology`, JSON.stringify(request), { headers });
   }
 }

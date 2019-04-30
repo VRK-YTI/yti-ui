@@ -1,5 +1,5 @@
-import { Component, AfterViewInit, ElementRef, ViewChild, Renderer } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, AfterViewInit, ElementRef, ViewChild, Renderer, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ConceptListModel, ConceptViewModelService } from 'app/services/concept.view.service';
 import { selectableStatuses } from 'yti-common-ui/entities/status';
 import { v4 as uuid } from 'uuid';
@@ -93,7 +93,7 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
     </div>
   `
 })
-export class ConceptListComponent implements AfterViewInit {
+export class ConceptListComponent implements AfterViewInit, OnInit {
 
   @ViewChild('searchInput') searchInput: ElementRef;
 
@@ -103,9 +103,17 @@ export class ConceptListComponent implements AfterViewInit {
   constructor(private conceptViewModel: ConceptViewModelService,
               private authorizationManager: AuthorizationManager,
               private renderer: Renderer,
-              private router: Router) {
+              private router: Router,
+              private route: ActivatedRoute) {
 
     this.model = conceptViewModel.conceptList;
+  }
+
+  ngOnInit(): void {
+    const searchQuery = this.route.snapshot.queryParams['q'];
+    if (searchQuery) {
+      this.model.search = searchQuery;
+    }
   }
 
   conceptIdentity(index: number, item: IndexedConcept) {

@@ -1,18 +1,20 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { GroupNode, OrganizationNode, VocabularyNode } from 'app/entities/node';
+import { GroupNode, OrganizationNode } from 'app/entities/node';
 import { AuthorizationManager } from 'app/services/authorization-manager.sevice';
-import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
-import { publishReplay, refCount } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, concat, Observable, Subscription } from 'rxjs';
+import { debounceTime, publishReplay, refCount, skip, take } from 'rxjs/operators';
 import { TermedService } from 'app/services/termed.service';
 import { anyMatching } from 'yti-common-ui/utils/array';
-import { matches } from 'yti-common-ui/utils/string';
-import { comparingLocalizable, comparingPrimitive } from 'yti-common-ui/utils/comparator';
+import { comparingLocalizable } from 'yti-common-ui/utils/comparator';
 import { LanguageService } from 'app/services/language.service';
 import { TranslateService } from '@ngx-translate/core';
 import { getInformationDomainSvgIcon, getVocabularyTypeMaterialIcon } from 'yti-common-ui/utils/icons';
 import { selectableStatuses, Status } from 'yti-common-ui/entities/status';
 import { ConfigurationService } from '../../services/configuration.service';
+import { ElasticSearchService } from '../../services/elasticsearch.service';
+import { DeepSearchHitList, Terminology, TerminologySearchRequest, TerminologySearchResponse } from '../../entities/search';
+import { Localizable } from 'yti-common-ui/types/localization';
 
 @Component({
   selector: 'app-vocabularies',
@@ -38,6 +40,11 @@ import { ConfigurationService } from '../../services/configuration.service';
                    [(ngModel)]="searchText"
                    placeholder="{{'Search term' | translate}}"/>
           </div>
+        </div>
+        <div class="col-md-6 mb-3 align-self-center d-flex align-items-center extend-search-selections">
+          <span translate>Extend search</span>:
+          <input class="ml-3" id="search_concepts_chekcbox" type="checkbox" [(ngModel)]="searchConcepts"/>
+          <label class="ml-1" for="search_concepts_chekcbox" translate>to concepts</label>
         </div>
       </div>
 
@@ -82,40 +89,52 @@ import { ConfigurationService } from '../../services/configuration.service';
             <div class="row mb-4">
               <div class="col-md-12">
                 <div>
-                  {{filteredVocabularies.length}}
-                  <span *ngIf="filteredVocabularies.length === 1" translate>result</span>
-                  <span *ngIf="filteredVocabularies.length !== 1" translate>results</span>
+                  {{filteredTerminologies.length}}
+                  <span *ngIf="filteredTerminologies.length === 1" translate>result</span>
+                  <span *ngIf="filteredTerminologies.length !== 1" translate>results</span>
                 </div>
               </div>
             </div>
 
             <div class="row">
               <div class="col-md-12">
-                <div class="result-list-item" *ngFor="let vocabulary of filteredVocabularies"
-                     [id]="vocabulary.idIdentifier + '_vocabulary_navigation'">
+                <div class="result-list-item" *ngFor="let terminology of filteredTerminologies"
+                     [id]="terminology.uri + '_terminology_navigation'">
                   <span class="type">
-                    <i class="material-icons {{getVocabularyTypeIconDef(vocabulary.type).colorClass}}">{{getVocabularyTypeIconDef(vocabulary.type).name}}</i>{{vocabulary.typeLabel | translateValue:true}}
+                    <i
+                      class="material-icons {{getTerminologyTypeIconDef('TerminologicalVocabulary').colorClass}}">{{getTerminologyTypeIconDef('TerminologicalVocabulary').name}}</i>{{'TerminologicalVocabularyType' | translate}}
                   </span>
 
-                  <app-status class="status" [status]="vocabulary.status"></app-status>
+                  <app-status class="status" [status]="terminology.status"></app-status>
 
-                  <a class="name" [routerLink]="['/concepts', vocabulary.graphId]">{{vocabulary.label | translateValue:true}}</a>
-
-                  <div *ngIf="vocabulary.description | translateValue:true as descriptionText" class="description-component-container">
-                    <app-expandable-text [text]="descriptionText"></app-expandable-text>
-                  </div>
-
-                  <span class="information-domains">
-                    <span class="badge badge-light" *ngFor="let domain of vocabulary.groups">
-                      {{domain.label | translateValue:true}}
-                    </span>
-                  </span>
+                  <a class="name" [routerLink]="['/concepts', terminology.id]">{{terminology.label | translateValue:true}}</a>
 
                   <ul class="organizations dot-separated-list">
-                    <li class="organization" *ngFor="let contributor of vocabulary.contributors">
+                    <li class="organization" *ngFor="let contributor of terminology.contributors">
                       {{contributor.label | translateValue:true}}
                     </li>
                   </ul>
+
+                  <span class="information-domains">
+                    <span class="badge badge-light" *ngFor="let domain of terminology.informationDomains">
+                      {{domain.label | translateValue:true}}
+                    </span>
+                  </span>
+                  
+                  <div *ngIf="terminology.description | translateValue:true as descriptionText" class="description-component-container">
+                    <app-expandable-text [text]="descriptionText"></app-expandable-text>
+                  </div>
+                  
+                  <div *ngIf="filteredDeepHits[terminology.id] as deepHitLists" class="deep-results">
+                    <div class="deep-results-title" translate>Search results</div>
+                    <div *ngFor="let deepHitList of deepHitLists" class="deep-results-section">
+                      <div class="deep-results-section-title" translate>Deep {{deepHitList.type}} hit</div>
+                      <div class="deep-results-section-content">
+                        <a *ngFor="let deepHit of deepHitList.topHits" class="deep-results-hit" [routerLink]="['/concepts', terminology.id, 'concept', deepHit.id]" title="{{allLanguagesLabel(deepHit.label)}}">{{deepHit.label | translateValue:true}}</a>
+                        <a *ngIf="deepHitList.totalHitCount > deepHitList.topHits.length" class="deep-results-show-all" [routerLink]="['/concepts', terminology.id]" [queryParams]="{'q': searchText}">({{'See all results' | translate : {count: deepHitList.totalHitCount} }})</a>
+                      </div>
+                    </div>
+                  </div>
 
                 </div>
               </div>
@@ -130,15 +149,21 @@ export class VocabulariesComponent implements OnInit, OnDestroy {
 
   // Active filtering criteria
   searchText$ = new BehaviorSubject('');
+  searchConcepts$ = new BehaviorSubject(true);
   selectedInformationDomain$ = new BehaviorSubject<GroupNode | null>(null);
   selectedOrganization$ = new BehaviorSubject<OrganizationNode | null>(null);
   selectedStatus$ = new BehaviorSubject<Status | null>(null);
 
   // Source data
-  vocabularies$: Observable<VocabularyNode[]>;
   informationDomains$: Observable<GroupNode[]>;
   organizations$: Observable<OrganizationNode[]>;
   statuses: Status[] = selectableStatuses;
+
+  // Search text filtered (and deep search augmented) terminology list
+  // TODO: Using results here is not infinite scrolling ready, should use expanding list on service side with "fetch more".
+  terminologyResults$ = new BehaviorSubject<TerminologySearchResponse>({
+    totalHitCount: 0, resultStart: 0, terminologies: [], deepHits: {}
+  });
 
   // Relevant filtering criteria
   applicableInformationDomains: { domain: GroupNode, count: number }[] = [];
@@ -146,21 +171,20 @@ export class VocabulariesComponent implements OnInit, OnDestroy {
   applicableStatuses$ = new BehaviorSubject<Status[]>([]);
 
   // Filtered vocabularies
-  filteredVocabularies: VocabularyNode[] = [];
+  filteredTerminologies: Terminology[] = [];
+  filteredDeepHits: { [terminologyId: string]: DeepSearchHitList[] };
 
   // Other generic state
   loading: boolean = true;
   subscriptionsToClean: Subscription[] = [];
 
   // Template wrappers
-  getVocabularyTypeIconDef = getVocabularyTypeMaterialIcon;
+  getTerminologyTypeIconDef = getVocabularyTypeMaterialIcon;
   getInformationDomainIconSrc = getInformationDomainSvgIcon;
 
   // Comparators
-  private vocabularyComparator =
-    comparingPrimitive<VocabularyNode>(voc => !voc.priority)
-      .andThen(comparingPrimitive<VocabularyNode>(voc => voc.priority))
-      .andThen(comparingLocalizable<VocabularyNode>(this.languageService, voc => voc.label));
+  private terminologyComparator =
+    comparingLocalizable<Terminology>(this.languageService, terminology => terminology.label);
   private informationDomainComparator =
     comparingLocalizable<{ domain: GroupNode, count: number }>(this.languageService, obj => obj.domain.label);
 
@@ -169,10 +193,11 @@ export class VocabulariesComponent implements OnInit, OnDestroy {
               private languageService: LanguageService,
               private translateService: TranslateService,
               private termedService: TermedService,
+              private elasticSearchService: ElasticSearchService,
               private router: Router) {
   }
 
-  get searchText() {
+  get searchText(): string {
     return this.searchText$.getValue();
   }
 
@@ -180,11 +205,29 @@ export class VocabulariesComponent implements OnInit, OnDestroy {
     this.searchText$.next(value);
   }
 
+  get searchConcepts(): boolean {
+    return this.searchConcepts$.getValue();
+  }
+
+  set searchConcepts(value: boolean) {
+    this.searchConcepts$.next(value);
+  }
+
   ngOnInit() {
-    this.vocabularies$ = this.termedService.getVocabularyList().pipe(
-      publishReplay(1),
-      refCount()
-    );
+    const initialSearchText$: Observable<string> = this.searchText$.pipe(take(1));
+    const debouncedSearchText$: Observable<string> = this.searchText$.pipe(skip(1), debounceTime(500));
+    const searchText$: Observable<string> = concat(initialSearchText$, debouncedSearchText$);
+    const searchConditions$: Observable<[string, string, boolean]> = combineLatest(searchText$, this.languageService.language$, this.searchConcepts$);
+    this.subscriptionsToClean.push(searchConditions$.subscribe(([text, language, searchConcepts]) => {
+      this.elasticSearchService.terminologySearch(new TerminologySearchRequest(text, searchConcepts, 1000, 0))
+        .subscribe(resp => {
+          if (resp.totalHitCount != resp.terminologies.length) {
+            console.error(`Terminology search did not return all results. Got ${resp.terminologies.length} (start: ${resp.resultStart}, total hits: ${resp.totalHitCount}`);
+          }
+          this.terminologyResults$.next(resp);
+        });
+    }));
+
     this.informationDomains$ = this.termedService.getGroupList();
     this.organizations$ = this.termedService.getOrganizationList().pipe(
       publishReplay(1),
@@ -219,18 +262,19 @@ export class VocabulariesComponent implements OnInit, OnDestroy {
     this.subscriptionsToClean.push(
       this.languageService.language$.subscribe(_language => {
         // NOTE: Organization filter contains internal sorting. Statuses are in natural order.
-        this.filteredVocabularies.sort(this.vocabularyComparator);
+        this.filteredTerminologies.sort(this.terminologyComparator);
         this.applicableInformationDomains.sort(this.informationDomainComparator);
       })
     );
     if (!restrict) {
       // If drop down filter options are not restricted then do not regenerate sets on selection changes.
       this.subscriptionsToClean.push(
-        combineLatest(this.vocabularies$, this.organizations$)
-          .subscribe(([vocabularies, organizations]) => {
-            const counts: { orgCounts: { [id: string]: number }, statCounts: { [id: string]: number } } = vocabularies.reduce((counts, voc) => {
-              voc.contributors.forEach(org => counts.orgCounts[org.id] = counts.orgCounts[org.id] ? counts.orgCounts[org.id] + 1 : 1);
-              counts.statCounts[voc.status] = counts.statCounts[voc.status] ? counts.statCounts[voc.status] + 1 : 1;
+        combineLatest(this.terminologyResults$, this.organizations$)
+          .subscribe(([terminologyResults, organizations]) => {
+            const terminologies = terminologyResults.terminologies;
+            const counts: { orgCounts: { [id: string]: number }, statCounts: { [id: string]: number } } = terminologies.reduce((counts, tlogy) => {
+              tlogy.contributors.forEach(org => counts.orgCounts[org.id] = counts.orgCounts[org.id] ? counts.orgCounts[org.id] + 1 : 1);
+              counts.statCounts[tlogy.status] = counts.statCounts[tlogy.status] ? counts.statCounts[tlogy.status] + 1 : 1;
               return counts;
             }, <{ orgCounts: { [id: string]: number }, statCounts: { [id: string]: number } }>{ orgCounts: {}, statCounts: {} });
             this.applicableOrganizations$.next(organizations.filter(org => counts.orgCounts[org.id]));
@@ -240,34 +284,43 @@ export class VocabulariesComponent implements OnInit, OnDestroy {
     }
     this.subscriptionsToClean.push(
       combineLatest(
-        combineLatest(this.vocabularies$, this.informationDomains$, this.organizations$),
+        combineLatest(this.terminologyResults$, this.informationDomains$, this.organizations$),
         combineLatest(this.searchText$, this.selectedInformationDomain$, this.selectedOrganization$, this.selectedStatus$))
-        .subscribe(([[vocabularies, domains, organizations], [selectedText, selectedDomain, selectedOrganization, selectedStatus]]) => {
-          const accumulated: FilterConstructionState = vocabularies.reduce((state, voc) => {
-            const searchMatch = searchMatches(selectedText, voc);
-            const domainMatch = informationDomainMatches(selectedDomain, voc);
-            const orgMatch = organizationMatches(selectedOrganization, voc);
-            const statusMatch = statusMatches(selectedStatus, voc);
-            if (searchMatch) {
-              if (domainMatch && orgMatch && statusMatch) {
-                state.passedVocabularies.push(voc);
+        .subscribe(([[terminologyResults, domains, organizations], [selectedText, selectedDomain, selectedOrganization, selectedStatus]]) => {
+          const terminologies = terminologyResults.terminologies;
+          const accumulated: FilterConstructionState = terminologies.reduce((state, tlogy) => {
+            const domainMatch = informationDomainMatches(selectedDomain, tlogy);
+            const orgMatch = organizationMatches(selectedOrganization, tlogy);
+            const statusMatch = statusMatches(selectedStatus, tlogy);
+
+            if (domainMatch && orgMatch && statusMatch) {
+              state.passedTerminologies.push(tlogy);
+            }
+            if (orgMatch && statusMatch) {
+              tlogy.informationDomains.forEach(domain => state.domainCounts[domain.id] = state.domainCounts[domain.id] ? state.domainCounts[domain.id] + 1 : 1);
+            }
+            if (restrict && domainMatch) {
+              if (statusMatch) {
+                tlogy.contributors.forEach(org => state.orgCounts[org.id] = state.orgCounts[org.id] ? state.orgCounts[org.id] + 1 : 1);
               }
-              if (orgMatch && statusMatch) {
-                voc.groups.forEach(domain => state.domainCounts[domain.id] = state.domainCounts[domain.id] ? state.domainCounts[domain.id] + 1 : 1);
-              }
-              if (restrict && domainMatch) {
-                if (statusMatch) {
-                  voc.contributors.forEach(org => state.orgCounts[org.id] = state.orgCounts[org.id] ? state.orgCounts[org.id] + 1 : 1);
-                }
-                if (orgMatch) {
-                  state.statusCounts[voc.status] = state.statusCounts[voc.status] ? state.statusCounts[voc.status] + 1 : 1;
-                }
+              if (orgMatch) {
+                state.statusCounts[tlogy.status] = state.statusCounts[tlogy.status] ? state.statusCounts[tlogy.status] + 1 : 1;
               }
             }
             return state;
-          }, <FilterConstructionState>{ passedVocabularies: [], domainCounts: {}, orgCounts: {}, statusCounts: {} });
+          }, <FilterConstructionState>{ passedTerminologies: [], domainCounts: {}, orgCounts: {}, statusCounts: {} });
 
-          this.filteredVocabularies = accumulated.passedVocabularies.sort(this.vocabularyComparator);
+          this.filteredTerminologies = accumulated.passedTerminologies.sort(this.terminologyComparator);
+          this.filteredDeepHits = {};
+          if (terminologyResults.deepHits && Object.keys(terminologyResults.deepHits).length > 0) {
+            const dhs = terminologyResults.deepHits;
+            this.filteredTerminologies.forEach(tlogy => {
+              const hit: DeepSearchHitList[]|undefined = dhs[tlogy.id];
+              if (hit) {
+                this.filteredDeepHits[tlogy.id] = hit;
+              }
+            });
+          }
 
           const currentlySelectedDomainId: string | undefined = selectedDomain ? selectedDomain.id : undefined;
           this.applicableInformationDomains = domains
@@ -287,26 +340,30 @@ export class VocabulariesComponent implements OnInit, OnDestroy {
         })
     );
   }
+
+  allLanguagesLabel(label: Localizable): string | undefined {
+    const keys = Object.keys(label);
+    if (keys.length) {
+      return keys.map(key => label[key] + ' (' + key + ')').join('\n');
+    }
+    return undefined;
+  }
 }
 
-function searchMatches(condition: string, vocabulary: VocabularyNode): boolean {
-  return !condition || anyMatching(vocabulary.prefLabel, attr => matches(attr.value, condition));
+function informationDomainMatches(informationDomain: GroupNode | null, terminology: Terminology): boolean {
+  return !informationDomain || anyMatching(terminology.informationDomains, domain => domain.id === informationDomain.id);
 }
 
-function informationDomainMatches(informationDomain: GroupNode | null, vocabulary: VocabularyNode): boolean {
-  return !informationDomain || anyMatching(vocabulary.groups, domain => domain.id === informationDomain.id);
+function organizationMatches(organization: OrganizationNode | null, terminology: Terminology): boolean {
+  return !organization || anyMatching(terminology.contributors, contributor => contributor.id === organization.id);
 }
 
-function organizationMatches(organization: OrganizationNode | null, vocabulary: VocabularyNode): boolean {
-  return !organization || anyMatching(vocabulary.contributors, contributor => contributor.id === organization.id);
-}
-
-function statusMatches(status: Status | null, vocabulary: VocabularyNode): boolean {
-  return !status || vocabulary.status === status;
+function statusMatches(status: Status | null, terminology: Terminology): boolean {
+  return !status || terminology.status === status;
 }
 
 type FilterConstructionState = {
-  passedVocabularies: VocabularyNode[];
+  passedTerminologies: Terminology[];
   domainCounts: { [id: string]: number };
   orgCounts: { [id: string]: number };
   statusCounts: { [status: string]: number };

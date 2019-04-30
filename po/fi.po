@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2019-03-01 12:45+0200\n"
+"PO-Revision-Date: 2019-04-29 15:37+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -295,6 +295,12 @@ msgstr "Hae organisaatiota"
 msgid "Search term"
 msgstr "Hakusana"
 
+msgid "TerminologicalVocabularyType"
+msgstr "Terminologinen sanasto"
+
+msgid "See all results"
+msgstr "Katso kaikki {{count}} osumaa"
+
 msgid "Add vocabulary"
 msgstr "Lisää sanasto"
 
@@ -310,6 +316,12 @@ msgstr ""
 msgid "Search vocabularies"
 msgstr "Hae sanastoja"
 
+msgid "Extend search"
+msgstr "Kohdista haku myös"
+
+msgid "to concepts"
+msgstr "käsitteisiin"
+
 msgid "Filter with information domain"
 msgstr "Rajaa tietoalueella"
 
@@ -318,6 +330,12 @@ msgstr "hakutulos"
 
 msgid "results"
 msgstr "hakutulosta"
+
+msgid "Search results"
+msgstr "Hakutulokset"
+
+msgid "Deep {{deepHitList.type}} hit"
+msgstr ""
 
 msgid "Vocabulary type"
 msgstr "Sanastotyyppi"
@@ -401,9 +419,6 @@ msgstr "Kaikki sanastotyypit"
 msgid "VocabularyType"
 msgstr "Asiasanasto"
 
-msgid "TerminologicalVocabularyType"
-msgstr "Terminologinen sanasto"
-
 msgid "File upload"
 msgstr "Tiedoston lataus"
 
@@ -418,6 +433,9 @@ msgstr "Piilota viestit"
 
 msgid "External link"
 msgstr "Ulkoinen linkki"
+
+msgid "Deep CONCEPT hit"
+msgstr "Käsitteet"
 
 msgid "Property is not a literal type."
 msgstr "Ominaisuus “{{ name }}” ei ole literaali"

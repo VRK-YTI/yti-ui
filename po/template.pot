@@ -279,6 +279,12 @@ msgstr ""
 msgid "Search term"
 msgstr ""
 
+msgid "TerminologicalVocabularyType"
+msgstr ""
+
+msgid "See all results"
+msgstr ""
+
 msgid "Add vocabulary"
 msgstr ""
 
@@ -288,6 +294,12 @@ msgstr ""
 msgid "Search vocabularies"
 msgstr ""
 
+msgid "Extend search"
+msgstr ""
+
+msgid "to concepts"
+msgstr ""
+
 msgid "Filter with information domain"
 msgstr ""
 
@@ -295,6 +307,12 @@ msgid "result"
 msgstr ""
 
 msgid "results"
+msgstr ""
+
+msgid "Search results"
+msgstr ""
+
+msgid "Deep {{deepHitList.type}} hit"
 msgstr ""
 
 msgid "Vocabulary type"
@@ -377,9 +395,6 @@ msgstr ""
 msgid "VocabularyType"
 msgstr ""
 
-msgid "TerminologicalVocabularyType"
-msgstr ""
-
 msgid "File upload"
 msgstr ""
 
@@ -393,6 +408,9 @@ msgid "Hide messages"
 msgstr ""
 
 msgid "External link"
+msgstr ""
+
+msgid "Deep CONCEPT hit"
 msgstr ""
 
 msgid "Property is not a literal type."

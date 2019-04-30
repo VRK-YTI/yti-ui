@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2019-02-27 08:19+0200\n"
+"PO-Revision-Date: 2019-04-29 15:39+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -291,6 +291,12 @@ msgstr ""
 msgid "Search term"
 msgstr ""
 
+msgid "TerminologicalVocabularyType"
+msgstr "Terminology"
+
+msgid "See all results"
+msgstr "See all {{count}} results"
+
 msgid "Add vocabulary"
 msgstr "Add terminology"
 
@@ -305,6 +311,12 @@ msgstr ""
 msgid "Search vocabularies"
 msgstr "Search terminologies"
 
+msgid "Extend search"
+msgstr "Extend search to"
+
+msgid "to concepts"
+msgstr "concepts"
+
 msgid "Filter with information domain"
 msgstr ""
 
@@ -312,6 +324,12 @@ msgid "result"
 msgstr ""
 
 msgid "results"
+msgstr ""
+
+msgid "Search results"
+msgstr ""
+
+msgid "Deep {{deepHitList.type}} hit"
 msgstr ""
 
 msgid "Vocabulary type"
@@ -394,9 +412,6 @@ msgstr ""
 msgid "VocabularyType"
 msgstr "Vocabulary"
 
-msgid "TerminologicalVocabularyType"
-msgstr "Terminology"
-
 msgid "File upload"
 msgstr ""
 
@@ -411,6 +426,9 @@ msgstr ""
 
 msgid "External link"
 msgstr ""
+
+msgid "Deep CONCEPT hit"
+msgstr "Concepts"
 
 msgid "Property is not a literal type."
 msgstr "Property “{{ name }}” is not a literal type."
