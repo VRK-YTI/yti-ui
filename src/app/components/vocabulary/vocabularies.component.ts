@@ -107,7 +107,7 @@ import { Localizable } from 'yti-common-ui/types/localization';
 
                   <app-status class="status" [status]="terminology.status"></app-status>
 
-                  <a class="name" [routerLink]="['/concepts', terminology.id]">{{terminology.label | translateValue:true}}</a>
+                  <a class="name" [routerLink]="['/concepts', terminology.id]" [innerHTML]="terminology.label | translateValue:true"></a>
 
                   <ul class="organizations dot-separated-list">
                     <li class="organization" *ngFor="let contributor of terminology.contributors">
@@ -130,7 +130,7 @@ import { Localizable } from 'yti-common-ui/types/localization';
                     <div *ngFor="let deepHitList of deepHitLists" class="deep-results-section">
                       <div class="deep-results-section-title" translate>Deep {{deepHitList.type}} hit</div>
                       <div class="deep-results-section-content">
-                        <a *ngFor="let deepHit of deepHitList.topHits" class="deep-results-hit" [routerLink]="['/concepts', terminology.id, 'concept', deepHit.id]" title="{{allLanguagesLabel(deepHit.label)}}">{{deepHit.label | translateValue:true}}</a>
+                        <a *ngFor="let deepHit of deepHitList.topHits" class="deep-results-hit" [routerLink]="['/concepts', terminology.id, 'concept', deepHit.id]" title="{{allLanguagesLabel(deepHit.label)}}" [innerHTML]="deepHit.label | translateValue:true"></a>
                         <a *ngIf="deepHitList.totalHitCount > deepHitList.topHits.length" class="deep-results-show-all" [routerLink]="['/concepts', terminology.id]" [queryParams]="{'q': searchText}">({{'See all results' | translate : {count: deepHitList.totalHitCount} }})</a>
                       </div>
                     </div>
@@ -222,7 +222,7 @@ export class VocabulariesComponent implements OnInit, OnDestroy {
       this.elasticSearchService.terminologySearch(new TerminologySearchRequest(text, searchConcepts, 1000, 0))
         .subscribe(resp => {
           if (resp.totalHitCount != resp.terminologies.length) {
-            console.error(`Terminology search did not return all results. Got ${resp.terminologies.length} (start: ${resp.resultStart}, total hits: ${resp.totalHitCount}`);
+            console.error(`Terminology search did not return all results. Got ${resp.terminologies.length} (start: ${resp.resultStart}, total hits: ${resp.totalHitCount})`);
           }
           this.terminologyResults$.next(resp);
         });
@@ -342,9 +342,10 @@ export class VocabulariesComponent implements OnInit, OnDestroy {
   }
 
   allLanguagesLabel(label: Localizable): string | undefined {
+    const exp = /<\/?b>/g;
     const keys = Object.keys(label);
     if (keys.length) {
-      return keys.map(key => label[key] + ' (' + key + ')').join('\n');
+      return keys.map(key => label[key].replace(exp, '') + ' (' + key + ')').join('\n');
     }
     return undefined;
   }
