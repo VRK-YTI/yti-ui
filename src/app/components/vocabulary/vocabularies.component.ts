@@ -109,29 +109,35 @@ import { Localizable } from 'yti-common-ui/types/localization';
 
                   <a class="name" [routerLink]="['/concepts', terminology.id]" [innerHTML]="terminology.label | translateValue:true"></a>
 
-                  <ul class="organizations dot-separated-list">
-                    <li class="organization" *ngFor="let contributor of terminology.contributors">
-                      {{contributor.label | translateValue:true}}
-                    </li>
-                  </ul>
+                  <div class="meta-information-row">
+                    <ul class="organizations dot-separated-list">
+                      <li class="organization" *ngFor="let contributor of terminology.contributors">
+                        {{contributor.label | translateValue:true}}
+                      </li>
+                    </ul>
 
-                  <span class="information-domains">
-                    <span class="badge badge-light" *ngFor="let domain of terminology.informationDomains">
-                      {{domain.label | translateValue:true}}
+                    <span class="information-domains">
+                      <span class="badge badge-light" *ngFor="let domain of terminology.informationDomains">
+                        {{domain.label | translateValue:true}}
+                      </span>
                     </span>
-                  </span>
-                  
+                  </div>
+
                   <div *ngIf="terminology.description | translateValue:true as descriptionText" class="description-component-container">
                     <app-expandable-text [text]="descriptionText"></app-expandable-text>
                   </div>
-                  
+
                   <div *ngIf="filteredDeepHits[terminology.id] as deepHitLists" class="deep-results">
                     <div class="deep-results-title" translate>Search results</div>
                     <div *ngFor="let deepHitList of deepHitLists" class="deep-results-section">
                       <div class="deep-results-section-title" translate>Deep {{deepHitList.type}} hit</div>
                       <div class="deep-results-section-content">
-                        <a *ngFor="let deepHit of deepHitList.topHits" class="deep-results-hit" [routerLink]="['/concepts', terminology.id, 'concept', deepHit.id]" title="{{allLanguagesLabel(deepHit.label)}}" [innerHTML]="deepHit.label | translateValue:true"></a>
-                        <a *ngIf="deepHitList.totalHitCount > deepHitList.topHits.length" class="deep-results-show-all" [routerLink]="['/concepts', terminology.id]" [queryParams]="{'q': searchText}">({{'See all results' | translate : {count: deepHitList.totalHitCount} }})</a>
+                        <a *ngFor="let deepHit of deepHitList.topHits" class="deep-results-hit"
+                           [routerLink]="['/concepts', terminology.id, 'concept', deepHit.id]" title="{{allLanguagesLabel(deepHit.label)}}"
+                           [innerHTML]="deepHit.label | translateValue:true"></a>
+                        <a *ngIf="deepHitList.totalHitCount > deepHitList.topHits.length" class="deep-results-show-all"
+                           [routerLink]="['/concepts', terminology.id]"
+                           [queryParams]="{'q': searchText}">({{'See all results' | translate : {count: deepHitList.totalHitCount} }})</a>
                       </div>
                     </div>
                   </div>
@@ -257,6 +263,15 @@ export class VocabulariesComponent implements OnInit, OnDestroy {
     this.router.navigate(['/newVocabulary']);
   }
 
+  allLanguagesLabel(label: Localizable): string | undefined {
+    const exp = /<\/?b>/g;
+    const keys = Object.keys(label);
+    if (keys.length) {
+      return keys.map(key => label[key].replace(exp, '') + ' (' + key + ')').join('\n');
+    }
+    return undefined;
+  }
+
   private makeSubscriptions() {
     const restrict = this.configurationService.restrictFilterOptions;
     this.subscriptionsToClean.push(
@@ -315,7 +330,7 @@ export class VocabulariesComponent implements OnInit, OnDestroy {
           if (terminologyResults.deepHits && Object.keys(terminologyResults.deepHits).length > 0) {
             const dhs = terminologyResults.deepHits;
             this.filteredTerminologies.forEach(tlogy => {
-              const hit: DeepSearchHitList[]|undefined = dhs[tlogy.id];
+              const hit: DeepSearchHitList[] | undefined = dhs[tlogy.id];
               if (hit) {
                 this.filteredDeepHits[tlogy.id] = hit;
               }
@@ -339,15 +354,6 @@ export class VocabulariesComponent implements OnInit, OnDestroy {
           }
         })
     );
-  }
-
-  allLanguagesLabel(label: Localizable): string | undefined {
-    const exp = /<\/?b>/g;
-    const keys = Object.keys(label);
-    if (keys.length) {
-      return keys.map(key => label[key].replace(exp, '') + ' (' + key + ')').join('\n');
-    }
-    return undefined;
   }
 }
 
