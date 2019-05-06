@@ -225,7 +225,7 @@ export class VocabulariesComponent implements OnInit, OnDestroy {
     const searchText$: Observable<string> = concat(initialSearchText$, debouncedSearchText$);
     const searchConditions$: Observable<[string, string, boolean]> = combineLatest(searchText$, this.languageService.language$, this.searchConcepts$);
     this.subscriptionsToClean.push(searchConditions$.subscribe(([text, language, searchConcepts]) => {
-      this.elasticSearchService.terminologySearch(new TerminologySearchRequest(text, searchConcepts, 1000, 0))
+      this.elasticSearchService.terminologySearch(new TerminologySearchRequest(text, searchConcepts, language, 1000, 0))
         .subscribe(resp => {
           if (resp.totalHitCount != resp.terminologies.length) {
             console.error(`Terminology search did not return all results. Got ${resp.terminologies.length} (start: ${resp.resultStart}, total hits: ${resp.totalHitCount})`);

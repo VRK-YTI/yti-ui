@@ -40,12 +40,14 @@ export class DeepSearchHitList {
 export class TerminologySearchRequest {
   query: string;
   searchConcepts: boolean;
+  prefLang: string;
   pageSize: number;
   pageFrom: number;
 
-  constructor(query: string, searchConcepts: boolean, pageSize: number, pageFrom: number) {
+  constructor(query: string, searchConcepts: boolean, prefLang: string, pageSize: number, pageFrom: number) {
     this.query = query;
     this.searchConcepts = searchConcepts;
+    this.prefLang = prefLang;
     this.pageSize = pageSize;
     this.pageFrom = pageFrom;
   }
