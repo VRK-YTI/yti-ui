@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { GroupNode, OrganizationNode } from 'app/entities/node';
 import { AuthorizationManager } from 'app/services/authorization-manager.sevice';
 import { BehaviorSubject, combineLatest, concat, Observable, Subscription } from 'rxjs';
@@ -123,7 +123,7 @@ import { Localizable } from 'yti-common-ui/types/localization';
                     </span>
                   </div>
 
-                  <div *ngIf="terminology.description | translateValue:true as descriptionText" class="description-component-container">
+                  <div *ngIf="terminology.description | translateValue:true as descriptionText" class="description-component-container" [ngClass]="{'nrr': noRightMargin}">
                     <app-expandable-text [text]="descriptionText"></app-expandable-text>
                   </div>
 
@@ -194,13 +194,17 @@ export class VocabulariesComponent implements OnInit, OnDestroy {
   private informationDomainComparator =
     comparingLocalizable<{ domain: GroupNode, count: number }>(this.languageService, obj => obj.domain.label);
 
+  // Testing and debugging
+  noRightMargin: boolean = false;
+
   constructor(private authorizationManager: AuthorizationManager,
               private configurationService: ConfigurationService,
               private languageService: LanguageService,
               private translateService: TranslateService,
               private termedService: TermedService,
               private elasticSearchService: ElasticSearchService,
-              private router: Router) {
+              private router: Router,
+              private route: ActivatedRoute) {
   }
 
   get searchText(): string {
@@ -241,6 +245,8 @@ export class VocabulariesComponent implements OnInit, OnDestroy {
     );
 
     this.makeSubscriptions();
+
+    this.noRightMargin = !!this.route.snapshot.queryParams['nrr'];
   }
 
   ngOnDestroy(): void {
