@@ -134,6 +134,7 @@ import { Localizable } from 'yti-common-ui/types/localization';
                       <div class="deep-results-section-content">
                         <a *ngFor="let deepHit of deepHitList.topHits" class="deep-results-hit"
                            [routerLink]="['/concepts', terminology.id, 'concept', deepHit.id]" title="{{allLanguagesLabel(deepHit.label)}}"
+                           [queryParams]="{'q': searchText}"
                            [innerHTML]="deepHit.label | translateValue:true"></a>
                         <a *ngIf="deepHitList.totalHitCount > deepHitList.topHits.length" class="deep-results-show-all"
                            [routerLink]="['/concepts', terminology.id]"

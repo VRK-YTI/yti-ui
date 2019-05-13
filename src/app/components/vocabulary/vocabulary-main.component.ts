@@ -97,8 +97,9 @@ export class VocabularyMainComponent implements OnDestroy {
     }));
 
     this.subscriptions.push(this.route.params.subscribe(params => {
+      const conceptQuery = this.route.snapshot.queryParams['q'];
       this.graphId = params['graphId'];
-      this.viewModel.initializeVocabulary(this.graphId);
+      this.viewModel.initializeVocabulary(this.graphId, (conceptQuery && typeof conceptQuery === 'string') ? conceptQuery : undefined);
     }));
   }
 

@@ -2,23 +2,27 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { LocationService } from './location.service';
 import { TermedService } from './termed.service';
-import { Subscription, Subject, BehaviorSubject, concat, NEVER, Observable, combineLatest, merge, zip } from 'rxjs';
+import { BehaviorSubject, combineLatest, concat, merge, NEVER, Observable, Subject, Subscription, zip } from 'rxjs';
 import { debounceTime, filter, flatMap, map, skip, switchMap, take } from 'rxjs/operators';
 import { CollectionNode, ConceptNode, VocabularyNode } from 'app/entities/node';
 import { comparingLocalizable } from 'yti-common-ui/utils/comparator';
 import { LanguageService } from './language.service';
 import { MetaModelService } from './meta-model.service';
 import {
-  Action, createEditAction, createNoSelection, createRemoveAction, createSelectAction, extractItem, isEdit, isRemove,
+  Action,
+  createEditAction,
+  createNoSelection,
+  createRemoveAction,
+  createSelectAction,
+  extractItem,
+  isEdit,
+  isRemove,
   isSelect
 } from './action';
 import { ElasticSearchService, IndexedConcept } from './elasticsearch.service';
-import {
-  ContentExtractor, filterAndSortSearchResults, labelComparator, scoreComparator,
-  TextAnalysis
-} from 'app/utils/text-analyzer';
-import { isDefined, assertNever } from 'yti-common-ui/utils/object';
-import { removeMatching, replaceMatching, contains } from 'yti-common-ui/utils/array';
+import { ContentExtractor, filterAndSortSearchResults, labelComparator, scoreComparator, TextAnalysis } from 'app/utils/text-analyzer';
+import { assertNever, isDefined } from 'yti-common-ui/utils/object';
+import { contains, removeMatching, replaceMatching } from 'yti-common-ui/utils/array';
 import { FormNode } from './form-state';
 import { MetaModel } from 'app/entities/meta';
 import { TranslateService } from '@ngx-translate/core';
@@ -36,7 +40,7 @@ function onlyRemove<T>(action: Observable<Action<T>>): Observable<T> {
   return action.pipe(filter(isRemove), map(extractItem));
 }
 
-function updateOrRemoveItem<T extends { id: string }>(subject: BehaviorSubject<T[]>, id: string, newItem: T|null) {
+function updateOrRemoveItem<T extends { id: string }>(subject: BehaviorSubject<T[]>, id: string, newItem: T | null) {
 
   if (newItem) {
     return updateItem(subject, id, newItem);
@@ -73,7 +77,7 @@ export class ConceptListModel {
 
   search$ = new BehaviorSubject('');
   sortByTime$ = new BehaviorSubject<boolean>(false);
-  onlyStatus$ = new BehaviorSubject<string|null>(null);
+  onlyStatus$ = new BehaviorSubject<string | null>(null);
   searchResults$ = new BehaviorSubject<IndexedConcept[]>([]);
   loading = false;
 
@@ -97,6 +101,30 @@ export class ConceptListModel {
       this.initializing$.pipe(switchMap(initializing => initializing ? NEVER : conditionChange))
         .subscribe(() => this.loadConcepts(true))
     );
+  }
+
+  get searchResults() {
+    return this.searchResults$.getValue();
+  }
+
+  get search() {
+    return this.search$.getValue();
+  }
+
+  set search(value: string) {
+    this.search$.next(value);
+  }
+
+  get sortByTime() {
+    return this.sortByTime$.getValue();
+  }
+
+  set sortByTime(value: boolean) {
+    this.sortByTime$.next(value);
+  }
+
+  get onlyStatus() {
+    return this.onlyStatus$.getValue();
   }
 
   loadConcepts(reset = false) {
@@ -142,37 +170,13 @@ export class ConceptListModel {
     }
   }
 
-  initializeGraph(graphId: string) {
+  initializeGraph(graphId: string, initialSearch?: string) {
     this.initializing$.next(true);
     this.graphId = graphId;
-    this.search$.next('');
+    this.search$.next(initialSearch ? initialSearch : '');
     this.sortByTime$.next(false);
     this.onlyStatus$.next(null);
     this.initializing$.next(false);
-  }
-
-  get searchResults() {
-    return this.searchResults$.getValue();
-  }
-
-  get search() {
-    return this.search$.getValue();
-  }
-
-  set search(value: string) {
-    this.search$.next(value);
-  }
-
-  get sortByTime() {
-    return this.sortByTime$.getValue();
-  }
-
-  set sortByTime(value: boolean) {
-    this.sortByTime$.next(value);
-  }
-
-  get onlyStatus() {
-    return this.onlyStatus$.getValue();
   }
 
   clean() {
@@ -183,7 +187,7 @@ export class ConceptListModel {
 export class ConceptHierarchyModel {
 
   topConcepts$ = new BehaviorSubject<IndexedConcept[]>([]);
-  nodes = new Map<string, { expanded: boolean, narrowerConcepts: BehaviorSubject<IndexedConcept[]> } >();
+  nodes = new Map<string, { expanded: boolean, narrowerConcepts: BehaviorSubject<IndexedConcept[]> }>();
   loading = false;
   private initializing$ = new Subject<boolean>();
 
@@ -202,6 +206,10 @@ export class ConceptHierarchyModel {
       this.initializing$.pipe(switchMap(initializing => initializing ? NEVER : conditionChange))
         .subscribe(() => this.loadConcepts(true))
     );
+  }
+
+  get topConcepts() {
+    return this.topConcepts$.getValue();
   }
 
   initializeGraph(graphId: string) {
@@ -246,7 +254,7 @@ export class ConceptHierarchyModel {
 
       removeItem(this.topConcepts$, conceptId);
 
-      for (const {narrowerConcepts} of Array.from(this.nodes.values())) {
+      for (const { narrowerConcepts } of Array.from(this.nodes.values())) {
         removeItem(narrowerConcepts, conceptId);
       }
     } else {
@@ -258,7 +266,7 @@ export class ConceptHierarchyModel {
 
           updated = updated || updateOrRemoveItem(this.topConcepts$, conceptId, indexedConcept);
 
-          for (const {narrowerConcepts} of Array.from(this.nodes.values())) {
+          for (const { narrowerConcepts } of Array.from(this.nodes.values())) {
             updated = updated || updateOrRemoveItem(narrowerConcepts, conceptId, indexedConcept);
           }
 
@@ -267,10 +275,6 @@ export class ConceptHierarchyModel {
           }
         });
     }
-  }
-
-  get topConcepts() {
-    return this.topConcepts$.getValue();
   }
 
   getNarrowerConcepts(concept: IndexedConcept): Observable<IndexedConcept[]> {
@@ -369,15 +373,15 @@ export class ConceptViewModelService implements OnDestroy {
   vocabularyEdit$ = onlyEdit(this.vocabularyAction$);
   vocabularyRemove$ = onlyRemove(this.vocabularyAction$);
 
-  resourceForm: FormNode|null;
-  resourceAction$ = new BehaviorSubject<Action<ConceptNode|CollectionNode>>(createNoSelection());
+  resourceForm: FormNode | null;
+  resourceAction$ = new BehaviorSubject<Action<ConceptNode | CollectionNode>>(createNoSelection());
   resourceSelect$ = onlySelect(this.resourceAction$);
   resourceEdit$ = onlyEdit(this.resourceAction$);
   ressourceRemove$ = onlyRemove(this.resourceAction$);
 
   graphId: string;
-  resourceId: string|null = null; // separate id besides selection item id is needed because selection is async loaded
-  prefixAndNamespace: PrefixAndNamespace|null;
+  resourceId: string | null = null; // separate id besides selection item id is needed because selection is async loaded
+  prefixAndNamespace: PrefixAndNamespace | null;
 
   conceptList = new ConceptListModel(this.elasticSearchService, this.languageService);
   conceptHierarchy = new ConceptHierarchyModel(this.elasticSearchService, this.languageService);
@@ -397,7 +401,7 @@ export class ConceptViewModelService implements OnDestroy {
               private translateService: TranslateService) {
 
     combineLatest(this.vocabularyAction$, this.resourceAction$)
-      .subscribe(([vocabularyAction, resourceAction]: [Action<VocabularyNode>, Action<ConceptNode|CollectionNode>]) => {
+      .subscribe(([vocabularyAction, resourceAction]: [Action<VocabularyNode>, Action<ConceptNode | CollectionNode>]) => {
 
         if (isSelect(vocabularyAction) || isEdit(vocabularyAction)) {
           if (isSelect(resourceAction) || isEdit(resourceAction)) {
@@ -443,7 +447,7 @@ export class ConceptViewModelService implements OnDestroy {
     return this.vocabulary ? this.vocabulary.languages : [];
   }
 
-  get vocabulary(): VocabularyNode|null {
+  get vocabulary(): VocabularyNode | null {
 
     const action = this.vocabularyAction$.getValue();
 
@@ -454,7 +458,7 @@ export class ConceptViewModelService implements OnDestroy {
     return action.item;
   }
 
-  get concept(): ConceptNode|null {
+  get concept(): ConceptNode | null {
 
     const action = this.resourceAction$.getValue();
 
@@ -465,7 +469,7 @@ export class ConceptViewModelService implements OnDestroy {
     return action.item;
   }
 
-  get collection(): CollectionNode|null {
+  get collection(): CollectionNode | null {
 
     const action = this.resourceAction$.getValue();
 
@@ -480,13 +484,13 @@ export class ConceptViewModelService implements OnDestroy {
     return this.concept || this.collection;
   }
 
-  initializeVocabulary(graphId: string) {
+  initializeVocabulary(graphId: string, initialConceptSearch?: string) {
 
     this.graphId = graphId;
     this.metaModel = this.metaModelService.getMeta(graphId);
     this.loadingVocabulary = true;
 
-    this.conceptList.initializeGraph(graphId);
+    this.conceptList.initializeGraph(graphId, initialConceptSearch);
     this.conceptHierarchy.initializeGraph(graphId);
     this.collectionList.initializeGraph(graphId);
 
@@ -796,7 +800,7 @@ export class ConceptViewModelService implements OnDestroy {
 
     return zip(label$, this.metaModel).pipe(map(([newCollectionLabel, meta]) => {
       const newCollection = meta.createEmptyCollection(vocabulary, nodeId);
-      newCollection.prefLabel = [ { lang: this.languageService.language, value: newCollectionLabel }];
+      newCollection.prefLabel = [{ lang: this.languageService.language, value: newCollectionLabel }];
       return newCollection;
     }));
   }

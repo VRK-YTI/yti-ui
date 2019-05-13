@@ -93,7 +93,7 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
     </div>
   `
 })
-export class ConceptListComponent implements AfterViewInit, OnInit {
+export class ConceptListComponent implements AfterViewInit {
 
   @ViewChild('searchInput') searchInput: ElementRef;
 
@@ -103,17 +103,9 @@ export class ConceptListComponent implements AfterViewInit, OnInit {
   constructor(private conceptViewModel: ConceptViewModelService,
               private authorizationManager: AuthorizationManager,
               private renderer: Renderer,
-              private router: Router,
-              private route: ActivatedRoute) {
+              private router: Router) {
 
     this.model = conceptViewModel.conceptList;
-  }
-
-  ngOnInit(): void {
-    const searchQuery = this.route.snapshot.queryParams['q'];
-    if (searchQuery) {
-      this.model.search = searchQuery;
-    }
   }
 
   conceptIdentity(index: number, item: IndexedConcept) {
