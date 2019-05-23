@@ -3,6 +3,9 @@ FROM node:8.11.4-alpine as builder
 
 ARG NPMRC
 
+# Install git
+RUN apk add --update git
+
 # Fetch dependencies
 ADD . /tmp
 WORKDIR /tmp
@@ -10,9 +13,6 @@ RUN echo "$NPMRC" > .npmrc && yarn install && rm -f .npmrc
 
 # Build the dist dir containing the static files
 RUN ["npm", "run", "build", "--", "--prod",  "--output-hashing=all"]
-
-# Install git
-RUN apk add --update git
 
 FROM node:8.11.4-alpine
 
