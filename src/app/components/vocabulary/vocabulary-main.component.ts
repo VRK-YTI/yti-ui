@@ -23,7 +23,7 @@ import { AuthorizationManager } from '../../services/authorization-manager.sevic
         <div class="header">
           <div class="row">
             <div class="nameButtonRow col-12">
-              <h2><span class="mr-4">{{vocabulary!.label | translateValue}}</span></h2>
+              <h2 id="vocabulary_main_label"><span class="mr-4">{{vocabulary!.label | translateValue}}</span></h2>
               <app-filter-language class="nameButtonRowButton" [(ngModel)]="filterLanguage"
                                    [languages]="filterLanguages"></app-filter-language>
               <div class="ml-2 nameButtonRowButton" *ngIf="canImport()">

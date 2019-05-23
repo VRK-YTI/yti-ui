@@ -43,8 +43,8 @@ import { Localizable } from 'yti-common-ui/types/localization';
         </div>
         <div class="col-md-6 mb-3 align-self-center d-flex align-items-center extend-search-selections">
           <span translate>Extend search</span>:
-          <input class="ml-3" id="search_concepts_chekcbox" type="checkbox" [(ngModel)]="searchConcepts"/>
-          <label class="ml-1" for="search_concepts_chekcbox" translate>to concepts</label>
+          <input class="ml-3" id="search_concepts_checkbox" type="checkbox" [(ngModel)]="searchConcepts"/>
+          <label class="ml-1" for="search_concepts_checkbox" translate>to concepts</label>
         </div>
       </div>
 
