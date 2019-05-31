@@ -73,4 +73,19 @@ export class LanguageService implements Localizer {
       return '';
     }
   }
+
+  translateToGivenLanguage(localizable: Localizable, languageToUse: string | null): string {
+    if (!isDefined(localizable)) {
+      return '';
+    }
+
+    if (languageToUse) {
+      const primaryLocalization = localizable[languageToUse];
+      if (primaryLocalization) {
+        return primaryLocalization;
+      }
+    }
+
+    return this.translate(localizable, true);
+  }
 }
