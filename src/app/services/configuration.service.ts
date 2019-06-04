@@ -38,12 +38,12 @@ export class ConfigurationService {
 
   get showUnfinishedFeature(): boolean {
     const env = (this.configuration.env || '').toLowerCase();
-    return env === 'dev' || env === 'local';
+    return env === 'dev' || env === 'awsdev' || env === 'local';
   }
 
   get showAlmostReadyFeature(): boolean {
     const env = (this.configuration.env || '').toLowerCase();
-    return env === 'dev' || env === 'local' || env === 'test';
+    return env === 'dev' || env === 'awsdev' || env === 'local' || env === 'test';
   }
 
   get restrictFilterOptions(): boolean {
