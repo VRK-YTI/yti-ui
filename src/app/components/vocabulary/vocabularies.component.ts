@@ -307,8 +307,8 @@ export class VocabulariesComponent implements OnInit, OnDestroy {
     this.subscriptionsToClean.push(
       combineLatest(
         combineLatest(this.terminologyResults$, this.informationDomains$, this.organizations$),
-        combineLatest(this.searchText$, this.selectedInformationDomain$, this.selectedOrganization$, this.selectedStatus$))
-        .subscribe(([[terminologyResults, domains, organizations], [selectedText, selectedDomain, selectedOrganization, selectedStatus]]) => {
+        combineLatest(this.selectedInformationDomain$, this.selectedOrganization$, this.selectedStatus$))
+        .subscribe(([[terminologyResults, domains, organizations], [selectedDomain, selectedOrganization, selectedStatus]]) => {
           const terminologies = terminologyResults.terminologies;
           const accumulated: FilterConstructionState = terminologies.reduce((state, tlogy) => {
             const domainMatch = informationDomainMatches(selectedDomain, tlogy);
