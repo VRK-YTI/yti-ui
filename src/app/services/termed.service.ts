@@ -264,7 +264,7 @@ export class TermedService {
 
   private findConceptDetailsNode(graphId: string, conceptId: string): Observable<NodeExternal<'Concept'> | null> {
     return this.getConceptDetailsNode(graphId, conceptId)
-      .pipe(catchError(notFoundAsDefault(null)));
+      .pipe(catchError(notFoundAsDefault<NodeExternal<'Concept'> | null>(null)));
   }
 
   private getCollectionListNodes(graphId: string): Observable<NodeExternal<'Collection'>[]> {
@@ -293,7 +293,7 @@ export class TermedService {
 
   private findCollectionDetailsNode(graphId: string, collectionId: string): Observable<NodeExternal<'Collection'> | null> {
     return this.getCollectionDetailsNode(graphId, collectionId)
-      .pipe(catchError(notFoundAsDefault(null)));
+      .pipe(catchError(notFoundAsDefault<NodeExternal<'Collection'> | null>(null)));
   }
 
   private getGroupListNodes(): Observable<NodeExternal<'Group'>[]> {
