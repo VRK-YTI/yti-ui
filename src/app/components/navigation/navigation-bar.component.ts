@@ -31,12 +31,12 @@ import { Router } from '@angular/router';
         </li>
 
         <li class="nav-item" *ngIf="!isLoggedIn()">
-          <a class="nav-link" id="login_link" (click)="logIn()" translate>LOG IN</a>
+          <a class="nav-link" id="log_in_link" (click)="logIn()" translate>LOG IN</a>
         </li>
 
         <li class="nav-item logged-in" *ngIf="isLoggedIn()">
           <span>{{user.name}}</span>
-          <a class="nav-link" id="logout_link" (click)="logOut()" translate>LOG OUT</a>
+          <a class="nav-link" id="log_out_link" (click)="logOut()" translate>LOG OUT</a>
         </li>
 
         <li class="nav-item dropdown" placement="bottom-right" ngbDropdown>
@@ -57,11 +57,11 @@ import { Router } from '@angular/router';
             <app-menu></app-menu>
           </a>
           <div ngbDropdownMenu>
-            <a class="dropdown-item" *ngIf="isLoggedIn()" id="logout_dropdown_link" (click)="logOut()">
+            <a class="dropdown-item" *ngIf="isLoggedIn()" id="navigation_log_out_link" (click)="logOut()">
               <i class="fas fa-sign-out-alt"></i>
               <span translate>LOG OUT</span>
             </a>
-            <a class="dropdown-item" *ngIf="!isLoggedIn()" id="login_dropdown_link" (click)="logIn()">
+            <a class="dropdown-item" *ngIf="!isLoggedIn()" id="navigation_log_in_link" (click)="logIn()">
               <i class="fas fa-sign-in-alt"></i>
               <span translate>LOG IN</span>
             </a>
