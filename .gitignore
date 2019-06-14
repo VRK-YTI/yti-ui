@@ -7,6 +7,9 @@
 # dependencies
 /node_modules
 
+# SonarQube
+.scannerwork
+
 # IDEs and editors
 /.idea
 /yti-terminology-ui.iml
