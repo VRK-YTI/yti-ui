@@ -32,6 +32,10 @@ export class ConfigurationService {
     return this.configuration.dataModelUrl;
   }
 
+  get commentsUrl(): string {
+    return this.configuration.commentsUrl;
+  }
+
   get groupManagementUrl(): string {
     return this.configuration.groupmanagementUrl;
   }

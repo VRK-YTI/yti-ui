@@ -79,6 +79,9 @@ import { Router } from '@angular/router';
             <a id="navigation_data_vocabularies_link"
                class="dropdown-item"
                [href]="dataModelUrl" target="_blank" translate>Suomi.fi Data Vocabularies</a>
+            <a id="navigation_comments_link"
+               class="dropdown-item"
+               [href]="commentsUrl" target="_blank" translate>Suomi.fi Comments</a>
             <a class="dropdown-item"
                id="groupmanagement_link"
                *ngIf="showGroupManagementUrl()"
@@ -102,6 +105,7 @@ export class NavigationBarComponent {
   groupManagementUrl: string;
   codeListUrl: string;
   dataModelUrl: string;
+  commentsUrl: string;
   environmentIdentifier: string;
 
   constructor(private languageService: LanguageService,
@@ -119,6 +123,7 @@ export class NavigationBarComponent {
     this.groupManagementUrl = this.configurationService.groupManagementUrl;
     this.codeListUrl = this.configurationService.codeListUrl;
     this.dataModelUrl = this.configurationService.dataModelUrl;
+    this.commentsUrl = this.configurationService.commentsUrl;
   }
 
   get noMenuItemsAvailable() {
