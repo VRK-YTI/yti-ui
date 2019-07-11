@@ -461,10 +461,10 @@ msgid "No property or reference found with a name."
 msgstr "Vocabulary type does not support column “{{ name }}”"
 
 msgid "Invalid status."
-msgstr "{{ lineNumber: }}:  Invalid status “{{ value }}”"
+msgstr "{{ lineNumber }}:  Invalid status “{{ value }}”"
 
 msgid "prefLabel must be set."
-msgstr "{{ lineNumber: }}:  prefLabel must be set."
+msgstr "{{ lineNumber }}:  prefLabel must be set."
 
 msgid "Reference must include a language."
 msgstr "Reference “{{ name }}” must include a language."
