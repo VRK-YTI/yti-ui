@@ -14,7 +14,9 @@ import { LocationService } from 'app/services/location.service';
     </div>
     <app-footer [title]="'Terminologies' | translate"
                 id="app_navigate_to_info"
-                (informationClick)="navigateToInformation()" *ngIf="showFooter"></app-footer>
+                [showLicenseIcon]="true"
+                (informationClick)="navigateToInformation()"
+                *ngIf="showFooter"></app-footer>
   `
 })
 export class AppComponent {

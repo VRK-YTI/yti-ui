@@ -35,14 +35,14 @@
     "fast-levenshtein": "^2.0.6",
     "material-design-icons": "^3.0.1",
     "moment": "^2.21.0",
-    "ngx-infinite-scroll": "6.0.1",
     "ngx-clipboard": "^11.1.9",
+    "ngx-infinite-scroll": "6.0.1",
     "node-fetch": "^1.6.3",
     "papaparse": "^4.3.6",
     "rxjs": "~6.3.3",
     "uuid": "3.0.1",
     "vis": "^4.19.1",
-    "yti-common-ui": "https://github.com/VRK-YTI/yti-common-ui.git/#3ddebcdae6a6c341e36eed5a800e93774944e2e9",
+    "yti-common-ui": "https://github.com/VRK-YTI/yti-common-ui.git/#6f5f9005c2424ccea2d1364940cc8bf247eac8c4",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {
