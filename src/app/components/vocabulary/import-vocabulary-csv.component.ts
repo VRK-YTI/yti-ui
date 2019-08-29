@@ -236,6 +236,7 @@ export class ImportVocabularyCSVComponent implements OnInit {
   @Input() vocabulary: VocabularyNode;
   @Input() importFile: File;
   @Input() charset: string;
+  @Input() delimiter: string;
 
   concepts: ConceptNode[] = [];
   validationErrors: ValidationError[] = [];
@@ -259,6 +260,7 @@ export class ImportVocabularyCSVComponent implements OnInit {
           header: true,
           skipEmptyLines: true,
           encoding: this.charset,
+          delimiter: this.delimiter,
           complete: results => {
 
             const conceptMeta = metaModel.getNodeMeta(this.vocabulary.graphId, 'Concept');

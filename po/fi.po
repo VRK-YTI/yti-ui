@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2019-06-18 13:38+0300\n"
+"PO-Revision-Date: 2019-08-29 10:47+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -361,9 +361,6 @@ msgstr "uusi käsite"
 msgid "New collection"
 msgstr "uusi käsitevalikoima"
 
-msgid "already added error"
-msgstr "Valinta on jo lisätty"
-
 msgid "Front page"
 msgstr "Etusivu"
 
@@ -400,6 +397,9 @@ msgstr "Käsite ei löydy viitteistä"
 
 msgid "self reference error"
 msgstr "Valinta ei voi viitata itseensä"
+
+msgid "already added error"
+msgstr "Valinta on jo lisätty"
 
 msgid "All statuses"
 msgstr "Kaikki tilat"
@@ -439,6 +439,12 @@ msgstr "Ulkoinen linkki"
 
 msgid "Deep CONCEPT hit"
 msgstr "Käsitteet"
+
+msgid "Comma delimited"
+msgstr "Pilkulla eroteltu"
+
+msgid "Semicolon delimited"
+msgstr "Puolipisteellä eroteltu"
 
 msgid "Property is not a literal type."
 msgstr "Ominaisuus “{{ name }}” ei ole literaali"

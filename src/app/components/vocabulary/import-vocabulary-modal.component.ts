@@ -10,92 +10,111 @@ import { VocabularyNode } from '../../entities/node';
   styleUrls: ['./import-vocabulary-modal.component.scss'],
   providers: [EditableService],
   template: `
-    <ng-container [ngSwitch]="phase">
-      <div *ngSwitchCase="'FILE_SELECT'">
-        <div class="modal-header">
-          <h4 class="modal-title strong">
-            <a><i id="close_modal_link" class="fa fa-times" (click)="close()"></i></a>
-            <span translate>Import concepts</span>
-          </h4>
-        </div>
+      <ng-container [ngSwitch]="phase">
+          <div *ngSwitchCase="'FILE_SELECT'">
+              <div class="modal-header">
+                  <h4 class="modal-title strong">
+                      <a><i id="close_modal_link" class="fa fa-times" (click)="close()"></i></a>
+                      <span translate>Import concepts</span>
+                  </h4>
+              </div>
 
-        <div class="modal-body">
-          <div class="d-inline-block">
-            <dl>
-              <dt>
-                <label translate>File format</label>
-              </dt>
-              <dd class="fileFormatDropdowns">
-                <div ngbDropdown>
-                  <button class="btn btn-dropdown" id="file_format_dropdown_button" ngbDropdownToggle>
-                    <span>{{format}}</span>
-                  </button>
-                  <div ngbDropdownMenu aria-labelledby="file_format_dropdown_button">
-                    <button id="csv_format_dropdown_button"
-                            (click)="format = 'CSV'"
-                            class="dropdown-item"
-                            [class.active]="format === 'CSV'">
-                      CSV
-                    </button>
-                    <button id="ntrf_xml_format_dropdown_button"
-                            (click)="format = 'NTRF-XML'"
-                            class="dropdown-item"
-                            [class.active]="format === 'NTRF-XML'">
-                      NTRF-XML
-                    </button>
+              <div class="modal-body">
+                  <div class="d-inline-block">
+                      <dl>
+                          <dt>
+                              <label translate>File format</label>
+                          </dt>
+                          <dd class="fileFormatDropdowns">
+                              <div ngbDropdown>
+                                  <button class="btn btn-dropdown" id="file_format_dropdown_button" ngbDropdownToggle>
+                                      <span>{{format}}</span>
+                                  </button>
+                                  <div ngbDropdownMenu aria-labelledby="file_format_dropdown_button">
+                                      <button id="csv_format_dropdown_button"
+                                              (click)="format = 'CSV'"
+                                              class="dropdown-item"
+                                              [class.active]="format === 'CSV'">
+                                          CSV
+                                      </button>
+                                      <button id="ntrf_xml_format_dropdown_button"
+                                              (click)="format = 'NTRF-XML'"
+                                              class="dropdown-item"
+                                              [class.active]="format === 'NTRF-XML'">
+                                          NTRF-XML
+                                      </button>
+                                  </div>
+                              </div>
+                              <div ngbDropdown [hidden]="format !== 'CSV'">
+                                  <button class="btn btn-dropdown" id="csv_charset_dropdown_button" ngbDropdownToggle>
+                                      <span>{{charset}}</span>
+                                  </button>
+                                  <div ngbDropdownMenu aria-labelledby="csv_charset_dropdown_button">
+                                      <button id="utf8_charset_dropdown_button"
+                                              (click)="charset = 'UTF-8'"
+                                              class="dropdown-item"
+                                              [class.active]="charset === 'UTF-8'">
+                                          UTF-8
+                                      </button>
+                                      <button id="latin15_charset_dropdown_button"
+                                              (click)="charset = 'ISO-8859-15'"
+                                              class="dropdown-item"
+                                              [class.active]="charset === 'ISO-8859-15'">
+                                          ISO-8859-15
+                                      </button>
+                                  </div>
+                              </div>
+                              <div ngbDropdown [hidden]="format !== 'CSV'">
+                                  <button class="btn btn-dropdown" id="csv_delimiter_dropdown_button" ngbDropdownToggle>
+                                      <span>{{delimiterDisplayString(delimiter) | translate}}</span>
+                                  </button>
+                                  <div ngbDropdownMenu aria-labelledby="csv_delimiter_dropdown_button">
+                                      <button id="comma_delimiter_dropdown_button"
+                                              (click)="delimiter = ','"
+                                              class="dropdown-item"
+                                              [class.active]="delimiter === ','">
+                                          <span>{{delimiterDisplayString(',') | translate}}</span>
+                                      </button>
+                                      <button id="semicolon_delimiter_dropdown_button"
+                                              (click)="delimiter = ';'"
+                                              class="dropdown-item"
+                                              [class.active]="delimiter === ';'">
+                                          <span>{{delimiterDisplayString(';') | translate}}</span>
+                                      </button>
+                                  </div>
+                              </div>
+                          </dd>
+                      </dl>
                   </div>
-                </div>
-                <div ngbDropdown [hidden]="format !== 'CSV'">
-                  <button class="btn btn-dropdown" id="csv_charset_dropdown_button" ngbDropdownToggle>
-                    <span>{{charset}}</span>
-                  </button>
-                  <div ngbDropdownMenu aria-labelledby="csv_charset_dropdown_button">
-                    <button id="utf8_charset_dropdown_button"
-                            (click)="charset = 'UTF-8'"
-                            class="dropdown-item"
-                            [class.active]="charset === 'UTF-8'">
-                      UTF-8
-                    </button>
-                    <button id="latin15_dropdown_button"
-                            (click)="charset = 'ISO-8859-15'"
-                            class="dropdown-item"
-                            [class.active]="charset === 'ISO-8859-15'">
-                      ISO-8859-15
-                    </button>
-                  </div>
-                </div>
-              </dd>
-            </dl>
-          </div>
 
-          <div class="form-group">
-            <dl>
-              <dt>
-                <label for="fileupload_input" translate>File to be uploaded</label>
-                <app-required-symbol></app-required-symbol>
-              </dt>
-              <dd>
-                <input name="file" id="fileupload_input" type="file" (change)="onChange($event)"/>
-              </dd>
-            </dl>
+                  <div class="form-group">
+                      <dl>
+                          <dt>
+                              <label for="fileupload_input" translate>File to be uploaded</label>
+                              <app-required-symbol></app-required-symbol>
+                          </dt>
+                          <dd>
+                              <input name="file" id="fileupload_input" type="file" (change)="onChange($event)"/>
+                          </dd>
+                      </dl>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                  <div>
+                      <button id="upload_file_button"
+                              [disabled]="!canSave()"
+                              type="button"
+                              class="btn btn-action"
+                              (click)="uploadFile()"
+                              translate>Import</button>
+                      <button id="cancel_upload_button" type="button" class="btn btn-link" (click)="close()" translate>Cancel</button>
+                  </div>
+              </div>
           </div>
-        </div>
-        <div class="modal-footer">
-          <div>
-            <button id="upload_file_button"
-                    [disabled]="!canSave()"
-                    type="button"
-                    class="btn btn-action"
-                    (click)="uploadFile()"
-                    translate>Import</button>
-            <button id="cancel_upload_button" type="button" class="btn btn-link" (click)="close()" translate>Cancel</button>
-          </div>
-        </div>
-      </div>
-      <app-import-vocabulary-csv *ngSwitchCase="'CSV'" [vocabulary]="vocabulary" [importFile]="file"
-                                 [charset]="charset"></app-import-vocabulary-csv>
-      <app-import-vocabulary-xml *ngSwitchCase="'XML'" [vocabulary]="vocabulary" [importFile]="file"></app-import-vocabulary-xml>
-    </ng-container>
+          <app-import-vocabulary-csv *ngSwitchCase="'CSV'" [vocabulary]="vocabulary" [importFile]="file"
+                                     [charset]="charset" [delimiter]="delimiter"></app-import-vocabulary-csv>
+          <app-import-vocabulary-xml *ngSwitchCase="'XML'" [vocabulary]="vocabulary" [importFile]="file"></app-import-vocabulary-xml>
+      </ng-container>
   `
 })
 export class ImportVocabularyModalComponent {
@@ -104,6 +123,7 @@ export class ImportVocabularyModalComponent {
   file?: File;
   format: string = 'CSV';
   charset: string = 'UTF-8';
+  delimiter: string = ',';
   phase: 'FILE_SELECT' | 'CSV' | 'XML' = 'FILE_SELECT';
 
   constructor(private editableService: EditableService,
@@ -123,8 +143,8 @@ export class ImportVocabularyModalComponent {
   }
 
   onChange(event: EventTarget) {
-    const eventObj: MSInputMethodContext = <MSInputMethodContext> event;
-    const target: HTMLInputElement = <HTMLInputElement> eventObj.target;
+    const eventObj: MSInputMethodContext = <MSInputMethodContext>event;
+    const target: HTMLInputElement = <HTMLInputElement>eventObj.target;
     if (target.files != null) {
       this.file = target.files[0];
     } else {
@@ -146,6 +166,14 @@ export class ImportVocabularyModalComponent {
           this.phase = 'XML';
           break;
       }
+    }
+  }
+
+  delimiterDisplayString(delimiter: string): string {
+    switch(delimiter) {
+      case ',': return 'Comma delimited';
+      case ';': return 'Semicolon delimited';
+      default: return 'Error';
     }
   }
 }

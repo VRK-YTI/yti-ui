@@ -339,9 +339,6 @@ msgstr ""
 msgid "New collection"
 msgstr ""
 
-msgid "already added error"
-msgstr ""
-
 msgid "Front page"
 msgstr ""
 
@@ -375,6 +372,9 @@ msgid "Concept not in references"
 msgstr ""
 
 msgid "self reference error"
+msgstr ""
+
+msgid "already added error"
 msgstr ""
 
 msgid "All statuses"
@@ -414,6 +414,12 @@ msgid "External link"
 msgstr ""
 
 msgid "Deep CONCEPT hit"
+msgstr ""
+
+msgid "Comma delimited"
+msgstr ""
+
+msgid "Semicolon delimited"
 msgstr ""
 
 msgid "Property is not a literal type."
