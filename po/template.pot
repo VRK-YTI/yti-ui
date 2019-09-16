@@ -392,6 +392,9 @@ msgstr ""
 msgid "CODE_LIST_EDITOR"
 msgstr ""
 
+msgid "MEMBER"
+msgstr ""
+
 msgid "All vocabulary types"
 msgstr ""
 

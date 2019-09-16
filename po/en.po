@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2019-08-29 10:48+0300\n"
+"PO-Revision-Date: 2019-09-16 11:12+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -408,6 +408,9 @@ msgstr "Terminology editor"
 
 msgid "CODE_LIST_EDITOR"
 msgstr "Code list editor"
+
+msgid "MEMBER"
+msgstr "Member"
 
 msgid "All vocabulary types"
 msgstr ""

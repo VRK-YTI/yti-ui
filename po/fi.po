@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2019-08-29 10:47+0300\n"
+"PO-Revision-Date: 2019-09-16 11:12+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -415,6 +415,9 @@ msgstr "Sanastotyöntekijä"
 
 msgid "CODE_LIST_EDITOR"
 msgstr "Koodistotyöntekijä"
+
+msgid "MEMBER"
+msgstr "Jäsen"
 
 msgid "All vocabulary types"
 msgstr "Kaikki sanastotyypit"
