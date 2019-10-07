@@ -15,6 +15,7 @@ import { ConfigurationService } from '../../services/configuration.service';
 import { ElasticSearchService } from '../../services/elasticsearch.service';
 import { DeepSearchHitList, Terminology, TerminologySearchRequest, TerminologySearchResponse } from '../../entities/search';
 import { Localizable } from 'yti-common-ui/types/localization';
+import { User, UserService } from 'yti-common-ui/services/user.service';
 
 @Component({
   selector: 'app-vocabularies',
@@ -204,6 +205,7 @@ export class VocabulariesComponent implements OnInit, OnDestroy {
               private translateService: TranslateService,
               private termedService: TermedService,
               private elasticSearchService: ElasticSearchService,
+              private userService: UserService,
               private router: Router,
               private route: ActivatedRoute) {
   }
@@ -228,8 +230,8 @@ export class VocabulariesComponent implements OnInit, OnDestroy {
     const initialSearchText$: Observable<string> = this.searchText$.pipe(take(1));
     const debouncedSearchText$: Observable<string> = this.searchText$.pipe(skip(1), debounceTime(500));
     const searchText$: Observable<string> = concat(initialSearchText$, debouncedSearchText$);
-    const searchConditions$: Observable<[string, string, boolean]> = combineLatest(searchText$, this.languageService.language$, this.searchConcepts$);
-    this.subscriptionsToClean.push(searchConditions$.subscribe(([text, language, searchConcepts]) => {
+    const searchConditions$: Observable<[string, string, boolean, User]> = combineLatest(searchText$, this.languageService.language$, this.searchConcepts$, this.userService.user$);
+    this.subscriptionsToClean.push(searchConditions$.subscribe(([text, language, searchConcepts, _user]) => {
       this.elasticSearchService.terminologySearch(new TerminologySearchRequest(text, searchConcepts, language, 1000, 0))
         .subscribe(resp => {
           if (resp.totalHitCount != resp.terminologies.length) {
