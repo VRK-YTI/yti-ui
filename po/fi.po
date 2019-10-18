@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2019-09-16 11:12+0300\n"
+"PO-Revision-Date: 2019-10-18 17:54+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
@@ -364,6 +364,9 @@ msgstr "uusi käsitevalikoima"
 msgid "Front page"
 msgstr "Etusivu"
 
+msgid "All statuses"
+msgstr "Kaikki tilat"
+
 msgid "Vocabulary"
 msgstr "Sanasto"
 
@@ -400,9 +403,6 @@ msgstr "Valinta ei voi viitata itseensä"
 
 msgid "already added error"
 msgstr "Valinta on jo lisätty"
-
-msgid "All statuses"
-msgstr "Kaikki tilat"
 
 msgid "ADMIN"
 msgstr "Ylläpitäjä"
@@ -449,11 +449,11 @@ msgstr "Pilkulla eroteltu"
 msgid "Semicolon delimited"
 msgstr "Puolipisteellä eroteltu"
 
-msgid "Property is not a literal type."
-msgstr "Ominaisuus “{{ name }}” ei ole literaali"
-
 msgid "validateMeta"
 msgstr "Epävalidi syöte"
+
+msgid "required"
+msgstr "Pakollinen syöte"
 
 msgid "validateLanguage"
 msgstr "Epävalidi kieli"
@@ -461,14 +461,14 @@ msgstr "Epävalidi kieli"
 msgid "prefixInUse"
 msgstr "Etuliite on jo käytössä"
 
-msgid "upperCaseInPrefix"
-msgstr "Etuliite oltava pienillä kirjaimilla"
+msgid "prefixFormat"
+msgstr "Etuliitteen sallitut merkit ovat a-z, 0-9, alaviiva ja väliviiva"
 
 msgid "pattern"
 msgstr "Syöte ei ole vaaditussa muodossa"
 
-msgid "required"
-msgstr "Pakollinen syöte"
+msgid "Property is not a literal type."
+msgstr "Ominaisuus “{{ name }}” ei ole literaali"
 
 msgid "Property must include a language."
 msgstr "Ominaisuus “{{ name }}” täytyy olla määritelty kielen kanssa"

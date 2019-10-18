@@ -98,7 +98,7 @@ export class NewVocabularyComponent {
 
       this.formNode = new FormNode(this.vocabulary, languageProvider, templateMetaModel);
 
-      this.prefixFormControl = new FormControl('', [Validators.required, this.isPrefixLowerCaseValidator], this.isPrefixInUseValidator());
+      this.prefixFormControl = new FormControl('', [Validators.required, this.isPrefixFormatValid], this.isPrefixInUseValidator());
       this.formNode.control.addControl('prefix', this.prefixFormControl);
     });
   }
@@ -131,8 +131,8 @@ export class NewVocabularyComponent {
     }
   }
 
-  isPrefixLowerCaseValidator(control: AbstractControl) {
-    const lowerCase = control.value === control.value.toLowerCase();
-    return !lowerCase ? { 'upperCaseInPrefix': { value: control.value } } : null;
+  isPrefixFormatValid(control: AbstractControl) {
+    const legit = /^[a-z0-9_-]*$/.test(control.value);
+    return !legit ? { 'prefixFormat': { value: control.value } } : null;
   }
 }

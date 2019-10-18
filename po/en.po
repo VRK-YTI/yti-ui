@@ -454,8 +454,8 @@ msgstr "Invalid language"
 msgid "prefixInUse"
 msgstr "Prefix is already in use"
 
-msgid "upperCaseInPrefix"
-msgstr "Prefix must be in lower case"
+msgid "prefixFormat"
+msgstr "Allowed characters for prefix are a-z, 0-9, underscore and dash"
 
 msgid "pattern"
 msgstr "Input is not in required form"

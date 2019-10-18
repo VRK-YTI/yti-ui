@@ -342,6 +342,9 @@ msgstr ""
 msgid "Front page"
 msgstr ""
 
+msgid "All statuses"
+msgstr ""
+
 msgid "Vocabulary"
 msgstr ""
 
@@ -375,9 +378,6 @@ msgid "self reference error"
 msgstr ""
 
 msgid "already added error"
-msgstr ""
-
-msgid "All statuses"
 msgstr ""
 
 msgid "ADMIN"
@@ -425,10 +425,10 @@ msgstr ""
 msgid "Semicolon delimited"
 msgstr ""
 
-msgid "Property is not a literal type."
+msgid "validateMeta"
 msgstr ""
 
-msgid "validateMeta"
+msgid "required"
 msgstr ""
 
 msgid "validateLanguage"
@@ -437,13 +437,13 @@ msgstr ""
 msgid "prefixInUse"
 msgstr ""
 
-msgid "upperCaseInPrefix"
+msgid "prefixFormat"
 msgstr ""
 
 msgid "pattern"
 msgstr ""
 
-msgid "required"
+msgid "Property is not a literal type."
 msgstr ""
 
 msgid "Property must include a language."
