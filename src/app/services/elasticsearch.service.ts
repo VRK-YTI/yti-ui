@@ -134,62 +134,6 @@ export class ElasticSearchService {
     return this.languageService.translateLanguage;
   }
 
-  frontpageSearch(filter: string,
-                  onlyGraph: string | null,
-                  onlyStatus: string | null,
-                  from: number,
-                  size: number): Observable<IndexedConcept[]> {
-
-    const mustConditions: any[] = [{
-      multi_match: {
-        query: filter,
-        fields: [
-          field('label', this.language, 10),
-          field('label', '*'),
-          field('definition', this.language, 2),
-          field('definition', '*'),
-        ],
-        type: 'best_fields',
-        minimum_should_match: '90%'
-      },
-    }];
-
-    if (onlyGraph) {
-      mustConditions.push({
-        match: {
-          'vocabulary.id': onlyGraph
-        }
-      });
-    }
-
-    if (onlyStatus) {
-      mustConditions.push({
-        match: {
-          'status': onlyStatus
-        }
-      });
-    }
-
-    return this.search({
-      query: {
-        bool: {
-          must: mustConditions
-        }
-      },
-      sort: ['_score'],
-      highlight: {
-        pre_tags: ['<b>'],
-        post_tags: ['</b>'],
-        fields: {
-          'label.*': {},
-          'altLabel.*': {}
-        }
-      },
-      from,
-      size,
-    }).pipe(map(result => result.hits.hits.map(hit => new IndexedConcept(hit))));
-  }
-
   findSingleConceptForVocabulary(graphId: string,
                                  conceptId: string,
                                  filter: string,
@@ -274,6 +218,11 @@ export class ElasticSearchService {
     }).pipe(map(result => result.hits.hits.map(hit => new IndexedConcept(hit))));
   }
 
+  terminologySearch(request: TerminologySearchRequest): Observable<TerminologySearchResponse> {
+    const headers = { 'Content-Type': 'application/json' };
+    return this.http.post<TerminologySearchResponse>(`${apiUrl}/searchTerminology`, JSON.stringify(request), { headers });
+  }
+
   private search(body: any): Observable<SearchResponse<IndexedConceptData>> {
 
     const headers = { 'Content-Type': 'application/json' };
@@ -321,7 +270,7 @@ export class ElasticSearchService {
             field('label', this.language, 10),
             field('label', '*')
           ],
-          type: 'best_fields',
+          type: 'phrase_prefix',
           minimum_should_match: '90%'
         },
       });
@@ -359,10 +308,5 @@ export class ElasticSearchService {
       size,
       sort
     }).pipe(map(result => result.hits.hits.map(hit => new IndexedConcept(hit))));
-  }
-
-  terminologySearch(request: TerminologySearchRequest): Observable<TerminologySearchResponse> {
-    const headers = { 'Content-Type': 'application/json' };
-    return this.http.post<TerminologySearchResponse>(`${apiUrl}/searchTerminology`, JSON.stringify(request), { headers });
   }
 }
