@@ -1,15 +1,19 @@
 import { Injectable } from '@angular/core';
-import { withFirstLocalizations } from 'yti-common-ui/utils/localization';
 import { LanguageService } from './language.service';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { normalizeAsArray } from 'yti-common-ui/utils/array';
 import * as moment from 'moment';
 import { Moment } from 'moment';
 import { Localizable, LocalizableArray } from 'yti-common-ui/types/localization';
 import { apiUrl } from 'app/config';
 import { HttpClient } from '@angular/common/http';
-import { TerminologySearchRequest, TerminologySearchResponse } from '../entities/search';
+import {
+  Concept,
+  ConceptSearchRequest,
+  ConceptSearchResponse,
+  TerminologySearchRequest,
+  TerminologySearchResponse
+} from '../entities/search';
 
 export interface IndexedConceptData {
   id: string;
@@ -68,7 +72,6 @@ export interface ShardsResponse {
 }
 
 export class IndexedConcept {
-
   id: string;
   label: Localizable;
   altLabel: Localizable;
@@ -82,46 +85,25 @@ export class IndexedConcept {
   hasNarrower: boolean;
   uri: string;
 
-  constructor(hit: SearchResponseHit<IndexedConceptData>) {
-    this.id = hit._source.id;
-    this.label = withFirstLocalizations(hit._source.label);
-    this.altLabel = withFirstLocalizations(hit._source.altLabel);
-    this.definition = withFirstLocalizations(hit._source.definition);
+  constructor(hit: Concept) {
+    this.id = hit.id;
+    this.label = hit.label;
+    this.status = hit.status;
+    this.uri = hit.uri;
+    this.hasNarrower = !!hit.narrower && hit.narrower.length > 0;
+    if (hit.altLabel) this.altLabel = hit.altLabel;
+    if (hit.definition) this.definition = hit.definition;
+    if (hit.modified) this.modified = moment(hit.modified);
+
     this.vocabulary = {
-      id: hit._source.vocabulary.id,
-      label: withFirstLocalizations(hit._source.vocabulary.label)
+      id: hit.terminology.id,
+      label: hit.terminology.label
     };
-    this.status = hit._source.status;
-    this.modified = moment(hit._source.modified);
-    this.hasNarrower = hit._source.hasNarrower;
-    this.uri = hit._source.uri;
-
-    function setPropertyPath(obj: any, path: string, value: any) {
-
-      const split = path.split('.');
-      let objectAtPath = obj;
-
-      for (let i = 0; i < split.length - 1; i++) {
-        objectAtPath = objectAtPath[split[i]];
-      }
-
-      const lastProperty = split[split.length - 1];
-      objectAtPath[lastProperty] = value;
-    }
-
-    // replace localizable values with highlights if found
-    for (const [propertyPath, highlighted] of Object.entries(hit.highlight || {})) {
-      setPropertyPath(this, propertyPath, normalizeAsArray(highlighted)[0]);
-    }
   }
 
   get idIdentifier() {
     return this.uri;
   }
-}
-
-function field(name: string, language: string, boost?: number) {
-  return name + '.' + language + (boost ? '^' + boost : '');
 }
 
 @Injectable()
@@ -134,20 +116,27 @@ export class ElasticSearchService {
     return this.languageService.translateLanguage;
   }
 
+  private static convert(response: ConceptSearchResponse): IndexedConcept[] {
+    return response && response.concepts ? response.concepts.map(concept => new IndexedConcept(concept)) : [];
+  }
+
   findSingleConceptForVocabulary(graphId: string,
                                  conceptId: string,
                                  filter: string,
                                  sortByModified: boolean,
                                  onlyStatus: string | null): Observable<IndexedConcept | null> {
-
-    return this.getConceptsForVocabularies(graphId, 'include', conceptId, filter, sortByModified, onlyStatus, 0, 1)
-      .pipe(map(concepts => {
-        if (concepts.length === 0) {
-          return null;
-        } else {
-          return concepts[0];
-        }
-      }));
+    return this.conceptSearch({
+      terminologyId: graphId ? [graphId] : undefined,
+      conceptId: [conceptId],
+      query: filter ? filter : undefined,
+      sortBy: sortByModified ? "MODIFIED" : undefined,
+      status: onlyStatus ? [onlyStatus] : undefined
+    }).pipe(map(response => {
+      if (response.concepts && response.concepts.length > 0) {
+        return new IndexedConcept(response.concepts[0]);
+      }
+      return null;
+    }));
   }
 
   getAllConceptsForVocabulary(graphId: string,
@@ -156,8 +145,7 @@ export class ElasticSearchService {
                               onlyStatus: string | null,
                               from: number,
                               size: number): Observable<IndexedConcept[]> {
-
-    return this.getConceptsForVocabularies(graphId, 'include', null, filter, sortByModified, onlyStatus, from, size);
+    return this.getAllConceptsInOrNotInVocabulary(graphId, undefined, filter, sortByModified, onlyStatus, from, size);
   }
 
   getAllConceptsNotInVocabulary(notInGraphId: string,
@@ -166,56 +154,27 @@ export class ElasticSearchService {
                                 onlyStatus: string | null,
                                 from: number,
                                 size: number): Observable<IndexedConcept[]> {
-
-    return this.getConceptsForVocabularies(notInGraphId, 'exclude', null, filter, sortByModified, onlyStatus, from, size);
+    return this.getAllConceptsInOrNotInVocabulary(undefined, notInGraphId, filter, sortByModified, onlyStatus, from, size);
   }
 
   getTopConceptsForVocabulary(graphId: string, from: number, size: number): Observable<IndexedConcept[]> {
 
-    return this.search({
-      query: {
-        bool: {
-          must: {
-            match: {
-              'vocabulary.id': graphId
-            }
-          },
-          must_not: {
-            exists: {
-              field: 'broader'
-            }
-          }
-        }
-      },
-      from,
-      size,
-      sort: [`sortByLabel.${this.language}`]
-    }).pipe(map(result => result.hits.hits.map(hit => new IndexedConcept(hit))));
+    return this.conceptSearch({
+      terminologyId: graphId ? [graphId] : undefined,
+      pageSize: size,
+      pageFrom: from,
+      sortLanguage: this.language
+    }).pipe(map(ElasticSearchService.convert));
   }
 
   getNarrowerConcepts(graphId: string, broaderConceptId: string) {
-
-    return this.search({
-      query: {
-        bool: {
-          must: [
-            {
-              match: {
-                'vocabulary.id': graphId
-              }
-            },
-            {
-              match: {
-                'broader': broaderConceptId
-              }
-            }
-          ]
-        }
-      },
-      from: 0,
-      size: 10000,
-      sort: [`sortByLabel.${this.language}`]
-    }).pipe(map(result => result.hits.hits.map(hit => new IndexedConcept(hit))));
+    return this.conceptSearch({
+      terminologyId: graphId ? [graphId] : undefined,
+      broaderConceptId: [broaderConceptId],
+      pageSize: 10000,
+      pageFrom: 0,
+      sortLanguage: this.language
+    }).pipe(map(ElasticSearchService.convert));
   }
 
   terminologySearch(request: TerminologySearchRequest): Observable<TerminologySearchResponse> {
@@ -223,90 +182,27 @@ export class ElasticSearchService {
     return this.http.post<TerminologySearchResponse>(`${apiUrl}/searchTerminology`, JSON.stringify(request), { headers });
   }
 
-  private search(body: any): Observable<SearchResponse<IndexedConceptData>> {
-
+  conceptSearch(request: ConceptSearchRequest): Observable<ConceptSearchResponse> {
     const headers = { 'Content-Type': 'application/json' };
-
-    return this.http.post<SearchResponse<IndexedConceptData>>(`${apiUrl}/searchConcept`, JSON.stringify(body), { headers });
+    return this.http.post<ConceptSearchResponse>(`${apiUrl}/searchConcept`, JSON.stringify(request), { headers });
   }
 
-  private getConceptsForVocabularies(graphId: string,
-                                     graphMode: 'include' | 'exclude',
-                                     conceptId: string | null,
-                                     filter: string,
-                                     sortByModified: boolean,
-                                     onlyStatus: string | null,
-                                     from: number,
-                                     size: number): Observable<IndexedConcept[]> {
-
-    const mustConditions: any[] = [];
-    const mustNotConditions: any[] = [];
-
-    const vocabularyMatch = {
-      match: {
-        'vocabulary.id': graphId
-      }
-    };
-
-    if (graphMode === 'include') {
-      mustConditions.push(vocabularyMatch);
-    } else {
-      mustNotConditions.push(vocabularyMatch);
-    }
-
-    if (conceptId) {
-      mustConditions.push({
-        match: {
-          'id': conceptId
-        }
-      });
-    }
-
-    if (filter) {
-      mustConditions.push({
-        multi_match: {
-          query: filter,
-          fields: [
-            field('label', this.language, 10),
-            field('label', '*')
-          ],
-          type: 'phrase_prefix',
-          minimum_should_match: '90%'
-        },
-      });
-    }
-
-    if (onlyStatus) {
-      mustConditions.push({
-        match: {
-          'status': onlyStatus
-        }
-      });
-    }
-
-    const sort: any[] = filter ? ['_score'] : [`sortByLabel.${this.language}`];
-
-    if (sortByModified) {
-      sort.unshift({ 'modified': { 'order': 'desc' } });
-    }
-
-    return this.search({
-      query: {
-        bool: {
-          must: mustConditions,
-          must_not: mustNotConditions
-        }
-      },
-      highlight: {
-        pre_tags: ['<b>'],
-        post_tags: ['</b>'],
-        fields: {
-          'label.*': {},
-        }
-      },
-      from,
-      size,
-      sort
-    }).pipe(map(result => result.hits.hits.map(hit => new IndexedConcept(hit))));
+  private getAllConceptsInOrNotInVocabulary(graphId: string | undefined,
+                                            notInGraphId: string | undefined,
+                                            filter: string,
+                                            sortByModified: boolean,
+                                            onlyStatus: string | null,
+                                            from: number,
+                                            size: number): Observable<IndexedConcept[]> {
+    return this.conceptSearch({
+      terminologyId: graphId ? [graphId] : undefined,
+      notInTerminologyId: notInGraphId ? [notInGraphId] : undefined,
+      query: filter ? filter : undefined,
+      sortBy: sortByModified ? "MODIFIED" : undefined,
+      status: onlyStatus ? [onlyStatus] : undefined,
+      pageSize: size,
+      pageFrom: from,
+      sortLanguage: this.language
+    }).pipe(map(ElasticSearchService.convert));
   }
 }

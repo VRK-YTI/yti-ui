@@ -31,6 +31,15 @@ export class ConceptSimple {
   label: Localizable;
 }
 
+export class Concept extends ConceptSimple {
+  altLabel?: Localizable;
+  definition?: Localizable;
+  modified?: string;
+  narrower?: string[];
+  broader?: string[];
+  terminology: TerminologySimple;
+}
+
 export class DeepSearchHitList {
   type: 'CONCEPT';
   totalHitCount: number;
@@ -58,4 +67,25 @@ export class TerminologySearchResponse {
   resultStart: number;
   terminologies: Terminology[];
   deepHits: { [terminologyId: string]: DeepSearchHitList[] };
+}
+
+export class ConceptSearchRequest {
+  query?: string;
+  conceptId?: string[];
+  terminologyId?: string[];
+  notInTerminologyId?: string[];
+  broaderConceptId?: string[];
+  onlyTopConcepts?: boolean;
+  status?: string[];
+  sortBy?: 'PREF_LABEL' | 'MODIFIED';
+  sortDirection?: 'ASC' | 'DESC';
+  sortLanguage?: string;
+  pageSize?: number;
+  pageFrom?: number;
+}
+
+export class ConceptSearchResponse {
+  totalHitCount: number;
+  resultStart: number;
+  concepts: Concept[];
 }
