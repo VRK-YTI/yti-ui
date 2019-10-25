@@ -82,6 +82,7 @@ export class ConceptSearchRequest {
   sortLanguage?: string;
   pageSize?: number;
   pageFrom?: number;
+  highlight?: boolean;
 }
 
 export class ConceptSearchResponse {

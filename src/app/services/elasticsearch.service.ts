@@ -130,7 +130,8 @@ export class ElasticSearchService {
       conceptId: [conceptId],
       query: filter ? filter : undefined,
       sortBy: sortByModified ? "MODIFIED" : undefined,
-      status: onlyStatus ? [onlyStatus] : undefined
+      status: onlyStatus ? [onlyStatus] : undefined,
+      highlight: true
     }).pipe(map(response => {
       if (response.concepts && response.concepts.length > 0) {
         return new IndexedConcept(response.concepts[0]);
@@ -163,7 +164,8 @@ export class ElasticSearchService {
       terminologyId: graphId ? [graphId] : undefined,
       pageSize: size,
       pageFrom: from,
-      sortLanguage: this.language
+      sortLanguage: this.language,
+      highlight: true
     }).pipe(map(ElasticSearchService.convert));
   }
 
@@ -173,7 +175,8 @@ export class ElasticSearchService {
       broaderConceptId: [broaderConceptId],
       pageSize: 10000,
       pageFrom: 0,
-      sortLanguage: this.language
+      sortLanguage: this.language,
+      highlight: true
     }).pipe(map(ElasticSearchService.convert));
   }
 
@@ -202,7 +205,8 @@ export class ElasticSearchService {
       status: onlyStatus ? [onlyStatus] : undefined,
       pageSize: size,
       pageFrom: from,
-      sortLanguage: this.language
+      sortLanguage: this.language,
+      highlight: true
     }).pipe(map(ElasticSearchService.convert));
   }
 }
