@@ -35,8 +35,8 @@ import { UserService } from 'yti-common-ui/services/user.service';
               <app-filter-language class="nameButtonRowButton" [(ngModel)]="filterLanguage"
                                    [languages]="filterLanguages"></app-filter-language>
               <div *ngIf="showMenu" ngbDropdown class="d-inline-block float-right ml-2" placement="bottom-right">
-                <button class="btn btn-action" id="codeSchemeDropdown" ngbDropdownToggle translate>Choose action</button>
-                <div ngbDropdownMenu aria-labelledby="codeSchemeDropdown">
+                <button class="btn btn-action" id="vocabularyDropdown" ngbDropdownToggle translate>Choose action</button>
+                <div ngbDropdownMenu aria-labelledby="vocabularyDropdown">
                   <button id="add_subscription_button"
                           *ngIf="canAddSubscription"
                           type="button"
