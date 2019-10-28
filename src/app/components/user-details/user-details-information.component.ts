@@ -2,16 +2,16 @@ import { Component, OnDestroy } from '@angular/core';
 import { Role, UserService } from 'yti-common-ui/services/user.service';
 import { Router } from '@angular/router';
 import { combineLatest, Subscription } from 'rxjs';
-import { TermedService } from 'app/services/termed.service';
-import { OrganizationNode } from 'app/entities/node';
 import { index } from 'yti-common-ui/utils/array';
-import { LocationService } from 'app/services/location.service';
-import { comparingLocalizable } from 'yti-common-ui/utils/comparator';
-import { LanguageService } from 'app/services/language.service';
-import { Options } from 'yti-common-ui/components/dropdown.component';
-import { TranslateService } from '@ngx-translate/core';
+import { OrganizationNode } from '../../entities/node';
+import { TermedService } from '../../services/termed.service';
+import { comparingLocalizable } from '../../utils/comparator';
 import { combineSets, hasAny } from 'yti-common-ui/utils/set';
 import { labelNameToResourceIdIdentifier } from 'yti-common-ui/utils/resource';
+import { LocationService } from '../../services/location.service';
+import { LanguageService } from '../../services/language.service';
+import { TranslateService } from '@ngx-translate/core';
+import { Options } from 'yti-common-ui/components/dropdown.component';
 
 interface UserOrganizationRoles {
   organization?: OrganizationNode;
@@ -20,72 +20,17 @@ interface UserOrganizationRoles {
 }
 
 @Component({
-  selector: 'app-user-details',
-  styleUrls: ['./user-details.component.scss'],
-  template: `
-    <div class="content-box" *ngIf="!loading">
-
-      <div class="page-header">
-        <h2 translate>User details</h2>
-      </div>
-
-      <div class="form-group">
-        <label translate>Name</label>
-        <p class="form-control-static">{{user.name}}</p>
-      </div>
-
-      <div class="form-group">
-        <label translate>Email</label>
-        <p class="form-control-static">{{user.email}}</p>
-      </div>
-
-      <div class="form-group">
-        <label translate>Organizations and roles</label>
-        <div class="form-control-static">
-          <div *ngFor="let userOrganization of userOrganizations">
-            <div *ngIf="userOrganization.organization">{{userOrganization.organization!.label | translateValue:true}}</div>
-            <div *ngIf="!userOrganization.organization" translate>Unknown organization</div>
-            <ul>
-              <li *ngFor="let role of userOrganization.roles">{{role | translate}}</li>
-              <li *ngFor="let requestRole of userOrganization.requests">
-                {{requestRole | translate}} (<span translate>Waiting for approval</span>)
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-group">
-
-        <label translate>Send access request</label>
-        
-        <div class="input-group">
-          
-          <app-dropdown [options]="organizationOptions"
-                        id="organization_dropdown"
-                        [showNullOption]="false"
-                        [placement]="'top-left'"
-                        [(ngModel)]="selectedOrganization"></app-dropdown>
-
-          <div class="input-group-btn">
-            <button type="button"
-                    id="send_request_button"
-                    class="btn btn-action"
-                    [disabled]="!selectedOrganization"
-                    (click)="sendRequest()" translate>Send</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  `
+  selector: 'app-user-details-information',
+  templateUrl: './user-details-information.component.html',
 })
-export class UserDetailsComponent implements OnDestroy  {
+export class UserDetailsInformationComponent implements OnDestroy {
+
 
   private subscriptionToClean: Subscription[] = [];
 
   allOrganizations: OrganizationNode[];
   allOrganizationsById: Map<string, OrganizationNode>;
-  selectedOrganization: OrganizationNode|null = null;
+  selectedOrganization: OrganizationNode | null = null;
   requestsInOrganizations = new Map<string, Set<Role>>();
 
   constructor(private router: Router,
@@ -109,10 +54,10 @@ export class UserDetailsComponent implements OnDestroy  {
       combineLatest(termedService.getOrganizationList(), languageService.language$)
         .subscribe(([organizationNodes]) => {
 
-        organizationNodes.sort(comparingLocalizable<OrganizationNode>(languageService, org => org.label));
-        this.allOrganizations = organizationNodes;
-        this.allOrganizationsById = index(organizationNodes, org => org.id);
-      })
+          organizationNodes.sort(comparingLocalizable<OrganizationNode>(languageService, org => org.label));
+          this.allOrganizations = organizationNodes;
+          this.allOrganizationsById = index(organizationNodes, org => org.id);
+        })
     );
 
     this.refreshRequests();

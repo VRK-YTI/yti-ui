@@ -181,27 +181,6 @@ msgstr ""
 msgid "User right management"
 msgstr ""
 
-msgid "Name"
-msgstr ""
-
-msgid "Email"
-msgstr ""
-
-msgid "Organizations and roles"
-msgstr ""
-
-msgid "Unknown organization"
-msgstr ""
-
-msgid "Waiting for approval"
-msgstr ""
-
-msgid "Send access request"
-msgstr ""
-
-msgid "Send"
-msgstr ""
-
 msgid "Choose organization"
 msgstr ""
 
@@ -321,10 +300,22 @@ msgstr ""
 msgid "Vocabulary type"
 msgstr ""
 
+msgid "You will receive an email notification when this resource changes."
+msgstr ""
+
 msgid "Concepts"
 msgstr ""
 
 msgid "Terminology details"
+msgstr ""
+
+msgid "Choose action"
+msgstr ""
+
+msgid "Add email subscription"
+msgstr ""
+
+msgid "Remove email subscription"
 msgstr ""
 
 msgid "Information domain"
@@ -339,10 +330,60 @@ msgstr ""
 msgid "New collection"
 msgstr ""
 
-msgid "Front page"
+msgid "Name"
 msgstr ""
 
-msgid "All statuses"
+msgid "Email"
+msgstr ""
+
+msgid "Organizations and roles"
+msgstr ""
+
+msgid "Unknown organization"
+msgstr ""
+
+msgid "Waiting for approval"
+msgstr ""
+
+msgid "Send access request"
+msgstr ""
+
+msgid "Send"
+msgstr ""
+
+msgid ""
+"You have subscribed to be notified via email when the following resources "
+"change. To remove the subscription, click the icon next to the resource."
+msgstr ""
+
+msgid "Email notifications"
+msgstr ""
+
+msgid "Daily"
+msgstr ""
+
+msgid "Code list resources"
+msgstr ""
+
+msgid "Terminology resources"
+msgstr ""
+
+msgid "Datamodel resources"
+msgstr ""
+
+msgid "Comments resources"
+msgstr ""
+
+msgid "INFORMATION"
+msgstr ""
+
+msgid "SUBSCRIPTIONS"
+msgstr ""
+
+msgid "DATA_MODEL_EDITOR"
+msgstr ""
+
+msgid "Front page"
 msgstr ""
 
 msgid "Vocabulary"
@@ -383,7 +424,7 @@ msgstr ""
 msgid "ADMIN"
 msgstr ""
 
-msgid "DATA_MODEL_EDITOR"
+msgid "All statuses"
 msgstr ""
 
 msgid "TERMINOLOGY_EDITOR"
@@ -425,10 +466,25 @@ msgstr ""
 msgid "Semicolon delimited"
 msgstr ""
 
-msgid "validateMeta"
+msgid "ADD EMAIL SUBSCRIPTION TO RESOURCE REGARDING CHANGES?"
 msgstr ""
 
-msgid "required"
+msgid "REMOVE EMAIL SUBSCRIPTION TO RESOURCE?"
+msgstr ""
+
+msgid "ARE YOU SURE YOU WANT TO ENABLE THE NOTIFICATION EMAIL SUBSCRIPTION?"
+msgstr ""
+
+msgid "ARE YOU SURE YOU WANT TO DISABLE THE NOTIFICATION EMAIL SUBSCRIPTION?"
+msgstr ""
+
+msgid "Adding subscription failed."
+msgstr ""
+
+msgid "Property is not a literal type."
+msgstr ""
+
+msgid "validateMeta"
 msgstr ""
 
 msgid "validateLanguage"
@@ -443,7 +499,7 @@ msgstr ""
 msgid "pattern"
 msgstr ""
 
-msgid "Property is not a literal type."
+msgid "required"
 msgstr ""
 
 msgid "Property must include a language."

@@ -2,14 +2,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2019-10-18 17:54+0300\n"
+"PO-Revision-Date: 2019-10-28 15:25+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2.3\n"
+"X-Generator: Poedit 2.2.4\n"
 "X-Poedit-Basepath: .\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
@@ -193,27 +193,6 @@ msgstr "Suomi.fi-kommentit"
 msgid "User right management"
 msgstr "Oikeuksienhallinta"
 
-msgid "Name"
-msgstr "Nimi"
-
-msgid "Email"
-msgstr "Sähköposti"
-
-msgid "Organizations and roles"
-msgstr "Organisaatiot ja roolit"
-
-msgid "Unknown organization"
-msgstr "Tuntematon organisaatio"
-
-msgid "Waiting for approval"
-msgstr "Odottaa hyväksymistä"
-
-msgid "Send access request"
-msgstr "Lähetä käyttöoikeuspyyntö"
-
-msgid "Send"
-msgstr "Lähetä"
-
 msgid "Choose organization"
 msgstr "Valitse organisaatio"
 
@@ -343,11 +322,24 @@ msgstr ""
 msgid "Vocabulary type"
 msgstr "Sanastotyyppi"
 
+msgid "You will receive an email notification when this resource changes."
+msgstr ""
+"Sinulle lähetetään sähköpostia, kun tähän aineistoon tulee muutoksia."
+
 msgid "Concepts"
 msgstr "Käsitteet"
 
 msgid "Terminology details"
 msgstr "Sanaston tiedot"
+
+msgid "Choose action"
+msgstr "Valitse toiminto"
+
+msgid "Add email subscription"
+msgstr "Tilaa sähköposti-ilmoitukset"
+
+msgid "Remove email subscription"
+msgstr ""
 
 msgid "Information domain"
 msgstr "Tietoalue"
@@ -361,11 +353,64 @@ msgstr "uusi käsite"
 msgid "New collection"
 msgstr "uusi käsitevalikoima"
 
+msgid "Name"
+msgstr "Nimi"
+
+msgid "Email"
+msgstr "Sähköposti"
+
+msgid "Organizations and roles"
+msgstr "Organisaatiot ja roolit"
+
+msgid "Unknown organization"
+msgstr "Tuntematon organisaatio"
+
+msgid "Waiting for approval"
+msgstr "Odottaa hyväksymistä"
+
+msgid "Send access request"
+msgstr "Lähetä käyttöoikeuspyyntö"
+
+msgid "Send"
+msgstr "Lähetä"
+
+msgid ""
+"You have subscribed to be notified via email when the following resources "
+"change. To remove the subscription, click the icon next to the resource."
+msgstr ""
+"Olet tilannut seuraavien aineistojen muutoksista ilmoitukset "
+"sähköpostiisi. Poistaaksesi ilmoituksen, paina aineiston vieressä olevaa "
+"ikonia."
+
+msgid "Email notifications"
+msgstr "Sähköposti-ilmoitukset"
+
+msgid "Daily"
+msgstr "Joka päivä"
+
+msgid "Code list resources"
+msgstr "Koodistoaineistot"
+
+msgid "Terminology resources"
+msgstr "Sanastoaineistot"
+
+msgid "Datamodel resources"
+msgstr "Tietomalliaineistot"
+
+msgid "Comments resources"
+msgstr "Kommenttien aineistot"
+
+msgid "INFORMATION"
+msgstr "TIEDOT"
+
+msgid "SUBSCRIPTIONS"
+msgstr "TILAUKSET"
+
+msgid "DATA_MODEL_EDITOR"
+msgstr "Tietomallintaja"
+
 msgid "Front page"
 msgstr "Etusivu"
-
-msgid "All statuses"
-msgstr "Kaikki tilat"
 
 msgid "Vocabulary"
 msgstr "Sanasto"
@@ -407,8 +452,8 @@ msgstr "Valinta on jo lisätty"
 msgid "ADMIN"
 msgstr "Ylläpitäjä"
 
-msgid "DATA_MODEL_EDITOR"
-msgstr "Tietomallintaja"
+msgid "All statuses"
+msgstr "Kaikki tilat"
 
 msgid "TERMINOLOGY_EDITOR"
 msgstr "Sanastotyöntekijä"
@@ -449,11 +494,30 @@ msgstr "Pilkulla eroteltu"
 msgid "Semicolon delimited"
 msgstr "Puolipisteellä eroteltu"
 
+msgid "ADD EMAIL SUBSCRIPTION TO RESOURCE REGARDING CHANGES?"
+msgstr "TILAA SÄHKÖPOSTI-ILMOITUKSET AINEISTON MUUTOKSISTA?"
+
+msgid "REMOVE EMAIL SUBSCRIPTION TO RESOURCE?"
+msgstr "POISTETAANKO SÄHKÖPOSTI-TILAUS AINEISTOSTA?"
+
+msgid "ARE YOU SURE YOU WANT TO ENABLE THE NOTIFICATION EMAIL SUBSCRIPTION?"
+msgstr ""
+"OLETKO VARMA, ETTÄ HALUAT KYTKEÄ SÄHKÖPOSTIEN VASTAANOTTOON LIITTYVÄN "
+"ASETUKSEN PÄÄLLE?"
+
+msgid "ARE YOU SURE YOU WANT TO DISABLE THE NOTIFICATION EMAIL SUBSCRIPTION?"
+msgstr ""
+"OLETKO VARMA, ETTÄ HALUAT KYTKEÄ SÄHKÖPOSTIEN VASTAANOTTOON LIITTYVÄN "
+"ASETUKSEN POIS PÄÄLTÄ?"
+
+msgid "Adding subscription failed."
+msgstr "Ilmoitusten tilaus epäonnistui."
+
+msgid "Property is not a literal type."
+msgstr "Ominaisuus “{{ name }}” ei ole literaali"
+
 msgid "validateMeta"
 msgstr "Epävalidi syöte"
-
-msgid "required"
-msgstr "Pakollinen syöte"
 
 msgid "validateLanguage"
 msgstr "Epävalidi kieli"
@@ -467,8 +531,8 @@ msgstr "Etuliitteen sallitut merkit ovat a-z, 0-9, alaviiva ja väliviiva"
 msgid "pattern"
 msgstr "Syöte ei ole vaaditussa muodossa"
 
-msgid "Property is not a literal type."
-msgstr "Ominaisuus “{{ name }}” ei ole literaali"
+msgid "required"
+msgstr "Pakollinen syöte"
 
 msgid "Property must include a language."
 msgstr "Ominaisuus “{{ name }}” täytyy olla määritelty kielen kanssa"
@@ -489,6 +553,3 @@ msgid "Reference does not match any concepts."
 msgstr ""
 "{{ lineNumber }}: Viittauksella “{{ name }}” ei löydy käsitettä arvolle "
 "“{{ value }}”"
-
-#~ msgid "All"
-#~ msgstr "Kaikki"

@@ -1,0 +1,32 @@
+<div *ngIf="loading">
+  <app-ajax-loading-indicator></app-ajax-loading-indicator>
+</div>
+
+<div *ngIf="!loading" class="content-box">
+
+  <div class="page-header">
+    <h2 translate>User details</h2>
+  </div>
+
+  <ngb-tabset #tabSet="ngbTabset" (tabChange)="onTabChange($event)">
+    <ngb-tab id="user_details_info_tab">
+      <ng-template ngbTabTitle>
+        <span translate>INFORMATION</span>
+      </ng-template>
+
+      <ng-template ngbTabContent>
+        <app-user-details-information></app-user-details-information>
+      </ng-template>
+    </ngb-tab>
+
+    <ngb-tab *ngIf="messagingResources" id="user_details_subscriptions_tab">
+      <ng-template ngbTabTitle>
+        <span translate>SUBSCRIPTIONS</span>
+      </ng-template>
+
+      <ng-template ngbTabContent>
+        <app-user-details-subscriptions [tabSet]="tabSet"></app-user-details-subscriptions>
+      </ng-template>
+    </ngb-tab>
+  </ngb-tabset>
+</div>

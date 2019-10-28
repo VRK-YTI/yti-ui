@@ -50,6 +50,10 @@ export class ConfigurationService {
     return env === 'dev' || env === 'awsdev' || env === 'local' || env === 'test';
   }
 
+  get isMessagingEnabled(): boolean {
+    return this.configuration.messagingEnabled;
+  }
+
   get restrictFilterOptions(): boolean {
     return this.configuration.restrictFilterOptions;
   }
@@ -81,5 +85,13 @@ export class ConfigurationService {
       });
     }
     return this.configurationPromise;
+  }
+
+  getUriWithEnv(uri: string): string | null {
+
+    if (uri && this.environment !== 'prod') {
+      return uri + '?env=' + this.environment;
+    }
+    return uri ? uri : null;
   }
 }

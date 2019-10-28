@@ -1,0 +1,86 @@
+<div *ngIf="loading">
+  <app-ajax-loading-indicator></app-ajax-loading-indicator>
+</div>
+
+<div *ngIf="!loading">
+
+  <div class="mb-3">
+    <span translate>You have subscribed to be notified via email when the following resources change. To remove the subscription, click the icon next to the resource.</span>
+  </div>
+
+  <dl>
+    <dt>
+      <label translate>Email notifications</label>
+    </dt>
+    <dd>
+      <input id="enable_subscription_checkbox" type="checkbox"
+             (click)="toggleSubscription()"
+             [checked]="isSubscriptionEnabled"/>
+      <label style="vertical-align:2px; padding-left: 10px" translate>Daily</label>
+    </dd>
+  </dl>
+
+  <dl *ngIf="messagingResources != null && messagingResources.get(APPLICATION_CODELIST) != null &&
+        messagingResources.get(APPLICATION_CODELIST).length > 0">
+    <dt>
+      <label translate>Code list resources</label>
+    </dt>
+    <dd>
+      <div *ngFor="let resource of messagingResources.get(APPLICATION_CODELIST)">
+        <a href="{{ getUriWithEnv(resource.uri) }}" target="_blank"><span>{{ resource.getDisplayName(languageService, true) }}</span></a>
+        <button [id]="'remove_' + resource.uri + '_ref_button'"
+                type="button"
+                class="icon icon-trash"
+                (click)="removeSubscription(resource)"></button>
+      </div>
+    </dd>
+  </dl>
+
+  <dl *ngIf="messagingResources != null && messagingResources.get(APPLICATION_TERMINOLOGY) != null &&
+        messagingResources.get(APPLICATION_TERMINOLOGY).length > 0">
+    <dt>
+      <label translate>Terminology resources</label>
+    </dt>
+    <dd>
+      <div *ngFor="let resource of messagingResources.get(APPLICATION_TERMINOLOGY)">
+        <a href="{{ getUriWithEnv(resource.uri) }}" target="_blank"><span>{{ resource.getDisplayName(languageService, true) }}</span></a>
+        <button [id]="'remove_' + resource.uri + '_ref_button'"
+                type="button"
+                class="icon icon-trash"
+                (click)="removeSubscription(resource)"></button>
+      </div>
+    </dd>
+  </dl>
+
+  <dl *ngIf="messagingResources != null && messagingResources.get(APPLICATION_DATAMODEL) != null &&
+        messagingResources.get(APPLICATION_DATAMODEL).length > 0">
+    <dt>
+      <label translate>Datamodel resources</label>
+    </dt>
+    <dd>
+      <div *ngFor="let resource of messagingResources.get(APPLICATION_DATAMODEL)">
+        <a href="{{ getUriWithEnv(resource.uri) }}" target="_blank"><span>{{ resource.getDisplayName(languageService, true) }}</span></a>
+        <button [id]="'remove_' + resource.uri + '_ref_button'"
+                type="button"
+                class="icon icon-trash"
+                (click)="removeSubscription(resource)"></button>
+      </div>
+    </dd>
+  </dl>
+
+  <dl *ngIf="messagingResources != null && messagingResources.get(APPLICATION_COMMENTS) != null &&
+        messagingResources.get(APPLICATION_COMMENTS).length > 0">
+    <dt>
+      <label translate>Comments resources</label>
+    </dt>
+    <dd>
+      <div *ngFor="let resource of messagingResources.get(APPLICATION_COMMENTS)">
+        <a href="{{ getCommentsUriWithEnv(resource.uri) }}" target="_blank"><span>{{ resource.getDisplayName(languageService, true) }}</span></a>
+        <button [id]="'remove_' + resource.uri + '_ref_button'"
+                type="button"
+                class="icon icon-trash"
+                (click)="removeSubscription(resource)"></button>
+      </div>
+    </dd>
+  </dl>
+</div>

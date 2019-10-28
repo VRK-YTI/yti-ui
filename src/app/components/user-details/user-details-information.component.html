@@ -1,0 +1,58 @@
+<div *ngIf="loading">
+  <app-ajax-loading-indicator></app-ajax-loading-indicator>
+</div>
+
+<div *ngIf="!loading">
+
+  <div class="page-header">
+    <h2 translate>User details</h2>
+  </div>
+
+  <div class="form-group">
+    <label translate>Name</label>
+    <p class="form-control-static">{{user.name}}</p>
+  </div>
+
+  <div class="form-group">
+    <label translate>Email</label>
+    <p class="form-control-static">{{user.email}}</p>
+  </div>
+
+  <div class="form-group">
+    <label translate>Organizations and roles</label>
+    <div class="form-control-static">
+      <div *ngFor="let userOrganization of userOrganizations">
+        <div *ngIf="userOrganization.organization">{{userOrganization.organization!.label | translateValue:true}}</div>
+        <div *ngIf="!userOrganization.organization" translate>Unknown organization</div>
+        <ul>
+          <li *ngFor="let role of userOrganization.roles">{{role | translate}}</li>
+          <li *ngFor="let requestRole of userOrganization.requests">
+            {{requestRole | translate}} (<span translate>Waiting for approval</span>)
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+
+    <label translate>Send access request</label>
+
+    <div class="input-group">
+
+      <app-dropdown [options]="organizationOptions"
+                    id="organization_dropdown"
+                    [showNullOption]="false"
+                    [placement]="'top-left'"
+                    [(ngModel)]="selectedOrganization"></app-dropdown>
+
+      <div class="input-group-btn">
+        <button type="button"
+                id="send_request_button"
+                class="btn btn-action"
+                [disabled]="!selectedOrganization"
+                (click)="sendRequest()" translate>Send</button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -80,7 +80,7 @@ import {
 import { PrefixInputComponent } from 'app/components/concept/prefix-input.component';
 import { SearchGroupModalComponent, SearchGroupModalService } from 'app/components/vocabulary/search-group-modal.component';
 import { AuthorizationManager } from 'app/services/authorization-manager.sevice';
-import { UserDetailsComponent } from 'app/components/user-details.component';
+import { UserDetailsComponent } from 'app/components/user-details/user-details.component';
 import { OrganizationFilterDropdownComponent } from 'app/components/common/organization-filter-dropdown.component';
 import { VocabularyFilterDropdownComponent } from 'app/components/common/vocabulary-filter-dropdown.component';
 import { StatusFilterDropdownComponent } from 'app/components/common/status-filter-dropdown.component';
@@ -101,6 +101,9 @@ import { ProgressComponent } from './components/progress.component';
 import { ConfigurationService } from './services/configuration.service';
 import { UrlInputModalComponent, UrlInputModalService } from './components/form/url-input-modal.component';
 import { VocabularyMainComponent } from './components/vocabulary/vocabulary-main.component';
+import { MessagingService } from './services/messaging-service';
+import { UserDetailsInformationComponent } from './components/user-details/user-details-information.component';
+import { UserDetailsSubscriptionsComponent } from './components/user-details/user-details-subscriptions.component';
 
 function removeEmptyValues(obj: {}) {
 
@@ -239,6 +242,8 @@ export function initApp(configurationService: ConfigurationService) {
     ImportVocabularyXMLComponent,
     PrefixInputComponent,
     UserDetailsComponent,
+    UserDetailsInformationComponent,
+    UserDetailsSubscriptionsComponent,
     OrganizationFilterDropdownComponent,
     VocabularyFilterDropdownComponent,
     StatusFilterDropdownComponent,
@@ -297,7 +302,8 @@ export function initApp(configurationService: ConfigurationService) {
     ImportVocabularyModalService,
     ModalService,
     Title,
-    UrlInputModalService
+    UrlInputModalService,
+    MessagingService
   ],
   bootstrap: [AppComponent]
 })

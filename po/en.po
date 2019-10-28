@@ -2,14 +2,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2019-09-16 11:12+0300\n"
+"PO-Revision-Date: 2019-10-28 15:23+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2.3\n"
+"X-Generator: Poedit 2.2.4\n"
 "X-Poedit-Basepath: .\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
@@ -191,27 +191,6 @@ msgstr ""
 msgid "User right management"
 msgstr ""
 
-msgid "Name"
-msgstr ""
-
-msgid "Email"
-msgstr ""
-
-msgid "Organizations and roles"
-msgstr ""
-
-msgid "Unknown organization"
-msgstr ""
-
-msgid "Waiting for approval"
-msgstr ""
-
-msgid "Send access request"
-msgstr ""
-
-msgid "Send"
-msgstr ""
-
 msgid "Choose organization"
 msgstr ""
 
@@ -338,11 +317,23 @@ msgstr ""
 msgid "Vocabulary type"
 msgstr ""
 
+msgid "You will receive an email notification when this resource changes."
+msgstr ""
+
 msgid "Concepts"
 msgstr ""
 
 msgid "Terminology details"
 msgstr "Terminology"
+
+msgid "Choose action"
+msgstr ""
+
+msgid "Add email subscription"
+msgstr ""
+
+msgid "Remove email subscription"
+msgstr ""
 
 msgid "Information domain"
 msgstr ""
@@ -355,6 +346,59 @@ msgstr "new concept"
 
 msgid "New collection"
 msgstr "new collection"
+
+msgid "Name"
+msgstr ""
+
+msgid "Email"
+msgstr ""
+
+msgid "Organizations and roles"
+msgstr ""
+
+msgid "Unknown organization"
+msgstr ""
+
+msgid "Waiting for approval"
+msgstr ""
+
+msgid "Send access request"
+msgstr ""
+
+msgid "Send"
+msgstr ""
+
+msgid ""
+"You have subscribed to be notified via email when the following resources "
+"change. To remove the subscription, click the icon next to the resource."
+msgstr ""
+
+msgid "Email notifications"
+msgstr ""
+
+msgid "Daily"
+msgstr ""
+
+msgid "Code list resources"
+msgstr ""
+
+msgid "Terminology resources"
+msgstr ""
+
+msgid "Datamodel resources"
+msgstr ""
+
+msgid "Comments resources"
+msgstr ""
+
+msgid "INFORMATION"
+msgstr ""
+
+msgid "SUBSCRIPTIONS"
+msgstr ""
+
+msgid "DATA_MODEL_EDITOR"
+msgstr "Data model editor"
 
 msgid "Front page"
 msgstr ""
@@ -394,14 +438,11 @@ msgstr "Selection references itself"
 msgid "already added error"
 msgstr "Selection is already added"
 
-msgid "All statuses"
-msgstr ""
-
 msgid "ADMIN"
 msgstr "Admin"
 
-msgid "DATA_MODEL_EDITOR"
-msgstr "Data model editor"
+msgid "All statuses"
+msgstr ""
 
 msgid "TERMINOLOGY_EDITOR"
 msgstr "Terminology editor"
@@ -440,6 +481,21 @@ msgid "Comma delimited"
 msgstr ""
 
 msgid "Semicolon delimited"
+msgstr ""
+
+msgid "ADD EMAIL SUBSCRIPTION TO RESOURCE REGARDING CHANGES?"
+msgstr ""
+
+msgid "REMOVE EMAIL SUBSCRIPTION TO RESOURCE?"
+msgstr ""
+
+msgid "ARE YOU SURE YOU WANT TO ENABLE THE NOTIFICATION EMAIL SUBSCRIPTION?"
+msgstr ""
+
+msgid "ARE YOU SURE YOU WANT TO DISABLE THE NOTIFICATION EMAIL SUBSCRIPTION?"
+msgstr ""
+
+msgid "Adding subscription failed."
 msgstr ""
 
 msgid "Property is not a literal type."
