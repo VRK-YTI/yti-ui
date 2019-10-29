@@ -380,10 +380,10 @@ msgstr ""
 msgid "SUBSCRIPTIONS"
 msgstr ""
 
-msgid "DATA_MODEL_EDITOR"
+msgid "Front page"
 msgstr ""
 
-msgid "Front page"
+msgid "All statuses"
 msgstr ""
 
 msgid "Vocabulary"
@@ -424,7 +424,7 @@ msgstr ""
 msgid "ADMIN"
 msgstr ""
 
-msgid "All statuses"
+msgid "DATA_MODEL_EDITOR"
 msgstr ""
 
 msgid "TERMINOLOGY_EDITOR"
@@ -481,10 +481,13 @@ msgstr ""
 msgid "Adding subscription failed."
 msgstr ""
 
-msgid "Property is not a literal type."
+msgid "Subscription deletion failed."
 msgstr ""
 
 msgid "validateMeta"
+msgstr ""
+
+msgid "required"
 msgstr ""
 
 msgid "validateLanguage"
@@ -499,7 +502,7 @@ msgstr ""
 msgid "pattern"
 msgstr ""
 
-msgid "required"
+msgid "Property is not a literal type."
 msgstr ""
 
 msgid "Property must include a language."

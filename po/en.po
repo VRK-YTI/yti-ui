@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2019-10-28 15:23+0200\n"
+"PO-Revision-Date: 2019-10-29 12:46+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -397,10 +397,10 @@ msgstr ""
 msgid "SUBSCRIPTIONS"
 msgstr ""
 
-msgid "DATA_MODEL_EDITOR"
-msgstr "Data model editor"
-
 msgid "Front page"
+msgstr ""
+
+msgid "All statuses"
 msgstr ""
 
 msgid "Vocabulary"
@@ -441,8 +441,8 @@ msgstr "Selection is already added"
 msgid "ADMIN"
 msgstr "Admin"
 
-msgid "All statuses"
-msgstr ""
+msgid "DATA_MODEL_EDITOR"
+msgstr "Data model editor"
 
 msgid "TERMINOLOGY_EDITOR"
 msgstr "Terminology editor"
@@ -498,11 +498,14 @@ msgstr ""
 msgid "Adding subscription failed."
 msgstr ""
 
-msgid "Property is not a literal type."
-msgstr "Property “{{ name }}” is not a literal type."
+msgid "Subscription deletion failed."
+msgstr ""
 
 msgid "validateMeta"
 msgstr "Invalid"
+
+msgid "required"
+msgstr "Required"
 
 msgid "validateLanguage"
 msgstr "Invalid language"
@@ -516,8 +519,8 @@ msgstr "Allowed characters for prefix are a-z, 0-9, underscore and dash"
 msgid "pattern"
 msgstr "Input is not in required form"
 
-msgid "required"
-msgstr "Required"
+msgid "Property is not a literal type."
+msgstr "Property “{{ name }}” is not a literal type."
 
 msgid "Property must include a language."
 msgstr "Property “{{ name }}”” must include a language."
