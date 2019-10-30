@@ -43,7 +43,8 @@
     "uuid": "3.0.1",
     "vis": "^4.19.1",
     "yti-common-ui": "https://github.com/VRK-YTI/yti-common-ui.git/#8142db984bd6a6f3fbf8e73d5fdb8a42d2e01a7b",
-    "zone.js": "~0.8.26"
+    "zone.js": "~0.8.26",
+    "simple-line-icons": "^2.4.1"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.7.0",
