@@ -156,13 +156,14 @@ export class VocabularyMainComponent implements OnDestroy {
     this.subscriptions.forEach(s => s.unsubscribe());
   }
 
-  showMenu() {
+  get showMenu(): boolean {
+
     return this.canSubscribe || this.canImport;
   }
 
   get canSubscribe(): boolean {
 
-    return this.configurationService.isMessagingEnabled && !this.userService.user.anonymous;
+    return this.configurationService.isMessagingEnabled && this.userService.isLoggedIn();
   }
 
   get canImport(): boolean {
@@ -176,7 +177,7 @@ export class VocabularyMainComponent implements OnDestroy {
   get canAddSubscription(): boolean {
 
     if (this.vocabulary) {
-      return this.configurationService.isMessagingEnabled && !this.userService.user.anonymous && !this.hasSubscription;
+      return this.canSubscribe && !this.hasSubscription;
     }
     return false;
   }
@@ -184,7 +185,7 @@ export class VocabularyMainComponent implements OnDestroy {
   get canRemoveSubscription(): boolean {
 
     if (this.vocabulary) {
-      return this.configurationService.isMessagingEnabled && !this.userService.user.anonymous && this.hasSubscription;
+      return this.canSubscribe && this.hasSubscription;
     }
     return false;
   }
@@ -250,7 +251,7 @@ export class VocabularyMainComponent implements OnDestroy {
 
     if (this.vocabulary && this.vocabulary.uri) {
       const vocabularyUri = this.vocabulary.uri;
-      if (this.configurationService.isMessagingEnabled && !this.userService.user.anonymous) {
+      if (this.configurationService.isMessagingEnabled && this.userService.isLoggedIn()) {
         this.messagingService.getSubscription(vocabularyUri).subscribe(resource => {
           if (resource) {
             this.hasSubscription = true;
