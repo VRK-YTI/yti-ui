@@ -16,6 +16,7 @@ import { ElasticSearchService } from '../../services/elasticsearch.service';
 import { DeepSearchHitList, Terminology, TerminologySearchRequest, TerminologySearchResponse } from '../../entities/search';
 import { Localizable } from 'yti-common-ui/types/localization';
 import { User, UserService } from 'yti-common-ui/services/user.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-vocabularies',
@@ -36,6 +37,7 @@ import { User, UserService } from 'yti-common-ui/services/user.service';
         <div class="col-md-6 mb-3">
           <div class="input-group input-group-lg input-group-search">
             <input class="form-control"
+                   [ngClass]="{'is-invalid': terminologySearchError}"
                    id="vocabularies_search_input"
                    type="text"
                    [(ngModel)]="searchText"
@@ -172,6 +174,7 @@ export class VocabulariesComponent implements OnInit, OnDestroy {
   terminologyResults$ = new BehaviorSubject<TerminologySearchResponse>({
     totalHitCount: 0, resultStart: 0, terminologies: [], deepHits: {}
   });
+  terminologySearchError: boolean = false;
 
   // Relevant filtering criteria
   applicableInformationDomains: { domain: GroupNode, count: number }[] = [];
@@ -234,10 +237,20 @@ export class VocabulariesComponent implements OnInit, OnDestroy {
     this.subscriptionsToClean.push(searchConditions$.subscribe(([text, language, searchConcepts, _user]) => {
       this.elasticSearchService.terminologySearch(new TerminologySearchRequest(text, searchConcepts, language, 1000, 0))
         .subscribe(resp => {
+          this.terminologySearchError = false;
           if (resp.totalHitCount != resp.terminologies.length) {
             console.error(`Terminology search did not return all results. Got ${resp.terminologies.length} (start: ${resp.resultStart}, total hits: ${resp.totalHitCount})`);
           }
           this.terminologyResults$.next(resp);
+        }, err => {
+          if (err instanceof HttpErrorResponse && err.status >= 400 && err.status < 500) {
+            this.terminologySearchError = true;
+            this.terminologyResults$.next({
+              totalHitCount: 0, resultStart: 0, terminologies: [], deepHits: {}
+            });
+          } else {
+            console.error('Model search failed: ' + JSON.stringify(err));
+          }
         });
     }));
 

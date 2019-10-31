@@ -27,6 +27,7 @@ import { FormNode } from './form-state';
 import { MetaModel } from 'app/entities/meta';
 import { TranslateService } from '@ngx-translate/core';
 import { PrefixAndNamespace } from 'app/entities/prefix-and-namespace';
+import { HttpErrorResponse } from '@angular/common/http';
 
 function onlySelect<T>(action: Observable<Action<T>>): Observable<T> {
   return action.pipe(filter(isSelect), map(extractItem));
@@ -79,6 +80,7 @@ export class ConceptListModel {
   sortByTime$ = new BehaviorSubject<boolean>(false);
   onlyStatus$ = new BehaviorSubject<string | null>(null);
   searchResults$ = new BehaviorSubject<IndexedConcept[]>([]);
+  badSearchRequest$ = new BehaviorSubject<{ error: boolean, message?: string }>({ error: false });
   loading = false;
 
   private graphId: string;
@@ -140,11 +142,9 @@ export class ConceptListModel {
 
       this.loading = true;
 
-      this.elasticSearchService.getAllConceptsForVocabulary(
-        this.graphId, this.search, this.sortByTime, this.onlyStatus, this.loaded, batchSize
-      )
+      this.elasticSearchService.getAllConceptsForVocabulary(this.graphId, this.search, this.sortByTime, this.onlyStatus, this.loaded, batchSize)
         .subscribe(concepts => {
-
+          this.clearBadSearchRequest();
           if (concepts.length < batchSize) {
             this.canLoadMore = false;
           }
@@ -153,7 +153,7 @@ export class ConceptListModel {
 
           this.searchResults$.next(reset ? concepts : [...this.searchResults, ...concepts]);
           this.loading = false;
-        });
+        }, this.setBadSearchRequest.bind(this));
     }
   }
 
@@ -163,10 +163,11 @@ export class ConceptListModel {
     } else {
       this.elasticSearchService.findSingleConceptForVocabulary(this.graphId, conceptId, this.search, this.sortByTime, this.onlyStatus)
         .subscribe(indexedConcept => {
+          this.clearBadSearchRequest();
           if (!updateOrRemoveItem(this.searchResults$, conceptId, indexedConcept)) {
             this.loadConcepts(true);
           }
-        });
+        }, this.setBadSearchRequest.bind(this));
     }
   }
 
@@ -181,6 +182,22 @@ export class ConceptListModel {
 
   clean() {
     this.subscriptionToClean.forEach(s => s.unsubscribe());
+  }
+
+  private setBadSearchRequest(err: any) {
+    this.loading = false;
+    if (err instanceof HttpErrorResponse && err.status >= 400 && err.status < 500) {
+      this.badSearchRequest$.next({ error: true, message: err.message });
+      this.searchResults$.next([]);
+    } else {
+      console.error('Concept search failed: ' + JSON.stringify(err));
+    }
+  }
+
+  private clearBadSearchRequest() {
+    if (this.badSearchRequest$.getValue().error) {
+      this.badSearchRequest$.next({ error: false });
+    }
   }
 }
 
@@ -235,7 +252,6 @@ export class ConceptHierarchyModel {
 
       this.elasticSearchService.getTopConceptsForVocabulary(this.graphId, this.loaded, batchSize)
         .subscribe(concepts => {
-
           if (concepts.length < batchSize) {
             this.canLoadMore = false;
           }
@@ -244,7 +260,7 @@ export class ConceptHierarchyModel {
 
           this.topConcepts$.next(reset ? concepts : [...this.topConcepts, ...concepts]);
           this.loading = false;
-        });
+        }, err => console.error("Loading top concepts failed: " + JSON.stringify(err)));
     }
   }
 
@@ -273,7 +289,7 @@ export class ConceptHierarchyModel {
           if (!updated) {
             this.loadConcepts(true);
           }
-        });
+        }, err => console.error("Refreshing a concept failed: " + JSON.stringify(err)));
     }
   }
 
@@ -292,7 +308,8 @@ export class ConceptHierarchyModel {
       this.nodes.set(concept.id, { expanded: true, narrowerConcepts: subject });
 
       this.elasticSearchService.getNarrowerConcepts(concept.vocabulary.id, concept.id)
-        .subscribe(concepts => subject.next(concepts));
+        .subscribe(concepts => subject.next(concepts),
+          err => console.error("Getting narrower concepts failed: " + JSON.stringify(err)));
     } else {
       this.nodes.get(concept.id)!.expanded = true;
     }

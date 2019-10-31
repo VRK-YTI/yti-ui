@@ -130,6 +130,7 @@ export class ElasticSearchService {
       conceptId: [conceptId],
       query: filter ? filter : undefined,
       sortBy: sortByModified ? "MODIFIED" : undefined,
+      sortDirection: sortByModified ? "DESC" : "ASC",
       status: onlyStatus ? [onlyStatus] : undefined,
       highlight: true
     }).pipe(map(response => {
@@ -202,6 +203,7 @@ export class ElasticSearchService {
       notInTerminologyId: notInGraphId ? [notInGraphId] : undefined,
       query: filter ? filter : undefined,
       sortBy: sortByModified ? "MODIFIED" : undefined,
+      sortDirection: sortByModified ? "DESC" : "ASC",
       status: onlyStatus ? [onlyStatus] : undefined,
       pageSize: size,
       pageFrom: from,

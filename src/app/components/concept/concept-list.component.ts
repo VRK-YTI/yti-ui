@@ -1,5 +1,5 @@
-import { Component, AfterViewInit, ElementRef, ViewChild, Renderer, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { AfterViewInit, Component, ElementRef, Renderer, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { ConceptListModel, ConceptViewModelService } from 'app/services/concept.view.service';
 import { selectableStatuses } from 'yti-common-ui/entities/status';
 import { v4 as uuid } from 'uuid';
@@ -22,6 +22,7 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
           <div class="input-group input-group-lg input-group-search">
             <input #searchInput
                    id="concept_list_search_concept_input"
+                   [ngClass]="{ 'is-invalid': (model.badSearchRequest$ | async).error }"
                    [(ngModel)]="model.search"
                    type="text"
                    class="form-control"
@@ -37,27 +38,27 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
                #p="ngbPopover"
                [popoverTitle]="'Filter results' | translate"
                (click)="p.toggle()">
-            
-            <div class="tooltip-overlay" 
+
+            <div class="tooltip-overlay"
                  id="concept_list_filter_results_tooltip_overlay"
                  ngbTooltip="{{'Filter results' | translate}}"
                  #filterTooltip="ngbTooltip"
                  (click)="filterTooltip.close()"></div>
-            
+
             <i class="fa fa-ellipsis-v"></i>
           </div>
 
           <ng-template #filters>
-            
+
             <app-popover-close [popover]="p"></app-popover-close>
-            
+
             <div class="filters">
               <div class="form-group">
                 <label translate>Status</label>
                 <app-status-filter-dropdown *ngIf="hasStatus()" id="concept_list_filter_dropdown"
                                             [filterSubject]="model.onlyStatus$"></app-status-filter-dropdown>
               </div>
-                
+
               <div class="form-check">
                 <label class="form-check-label">
                   <input class="form-check-input" id="concept_list_sort_by_time_checkbox" type="checkbox" [(ngModel)]="model.sortByTime"/>

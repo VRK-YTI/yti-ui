@@ -12,8 +12,9 @@ import { firstMatching } from 'yti-common-ui/utils/array';
 import { LanguageService } from 'app/services/language.service';
 import { ModalService } from 'app/services/modal.service';
 import { MetaModelService } from 'app/services/meta-model.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
-type Mode = 'include'|'exclude';
+type Mode = 'include' | 'exclude';
 
 export interface Restrict {
   graphId: string;
@@ -42,6 +43,7 @@ export interface Restrict {
                    id="search_concept_search_input"
                    type="text"
                    class="form-control"
+                   [ngClass]="{ 'is-invalid': (badSearchRequest$ | async).error }"
                    placeholder="{{'Search concept' | translate}}"
                    [(ngModel)]="search"/>
           </div>
@@ -74,7 +76,7 @@ export interface Restrict {
       <div class="row full-height">
         <div class="col-md-6">
           <div class="content-box">
-            <div class="search-results" 
+            <div class="search-results"
                  id="search_concept_search_results"
                  infinite-scroll
                  [infiniteScrollDistance]="3"
@@ -148,14 +150,15 @@ export class SearchConceptModalComponent implements OnInit, AfterViewInit {
   @Input() allowVocabularyChange: boolean;
 
   searchResults$ = new BehaviorSubject<IndexedConcept[]>([]);
+  badSearchRequest$ = new BehaviorSubject<{ error: boolean; message?: string }>({ error: false });
 
-  selectedItem: IndexedConcept|null = null;
-  selection: ConceptNode|null = null;
-  formNode: FormNode|null;
+  selectedItem: IndexedConcept | null = null;
+  selection: ConceptNode | null = null;
+  formNode: FormNode | null;
 
   search$ = new BehaviorSubject('');
-  onlyStatus$ = new BehaviorSubject<string|null>(null);
-  onlyVocabulary$ = new BehaviorSubject<VocabularyNode|null>(null);
+  onlyStatus$ = new BehaviorSubject<string | null>(null);
+  onlyVocabulary$ = new BehaviorSubject<VocabularyNode | null>(null);
 
   loading = false;
 
@@ -170,6 +173,50 @@ export class SearchConceptModalComponent implements OnInit, AfterViewInit {
               private renderer: Renderer,
               private languageService: LanguageService,
               private metaModelService: MetaModelService) {
+  }
+
+  get restrictionReasonForSelection(): string | null {
+
+    const selection = this.selection;
+
+    if (!selection) {
+      return null;
+    }
+
+    const restriction = firstMatching(this.restricts, restrict => restrict.graphId === selection.graphId && restrict.conceptId === selection.id);
+    return restriction ? restriction.reason : null;
+  }
+
+  get searchResults() {
+    return this.searchResults$.getValue();
+  }
+
+  get loadingSelection() {
+    return this.selectedItem && (!this.selection || this.selectedItem.id !== this.selection.id);
+  }
+
+  get search() {
+    return this.search$.getValue();
+  }
+
+  set search(value: string) {
+    this.search$.next(value);
+  }
+
+  get onlyStatus() {
+    return this.onlyStatus$.getValue();
+  }
+
+  get onlyVocabulary() {
+    return this.onlyVocabulary$.getValue();
+  }
+
+  get filterLanguage() {
+    return this.languageService.filterLanguage;
+  }
+
+  set filterLanguage(lang: string) {
+    this.languageService.filterLanguage = lang;
   }
 
   ngOnInit() {
@@ -187,18 +234,6 @@ export class SearchConceptModalComponent implements OnInit, AfterViewInit {
 
     combineLatest(search, this.onlyStatus$, this.onlyVocabulary$)
       .subscribe(() => this.loadConcepts(true));
-  }
-
-  get restrictionReasonForSelection(): string|null {
-
-    const selection = this.selection;
-
-    if (!selection) {
-      return null;
-    }
-
-    const restriction = firstMatching(this.restricts, restrict => restrict.graphId === selection.graphId && restrict.conceptId === selection.id);
-    return restriction ? restriction.reason : null;
   }
 
   hasStatus(): boolean {
@@ -224,6 +259,10 @@ export class SearchConceptModalComponent implements OnInit, AfterViewInit {
       this.loading = true;
 
       const appendResults = (concepts: IndexedConcept[]) => {
+        if (this.badSearchRequest$.getValue().error) {
+          this.badSearchRequest$.next({ error: false });
+        }
+
         if (concepts.length < batchSize) {
           this.canLoadMore = false;
         }
@@ -234,20 +273,28 @@ export class SearchConceptModalComponent implements OnInit, AfterViewInit {
         this.loading = false;
       };
 
+      const handleSearchError = (err: any) => {
+        if (err instanceof HttpErrorResponse && err.status >= 400 && err.status < 500) {
+          this.badSearchRequest$.next({ error: true, message: err.message });
+          this.searchResults$.next([]);
+        } else {
+          console.error('Concept search failed: ' + JSON.stringify(err));
+        }
+      };
+
       if (this.onlyVocabulary) {
-        this.elasticSearchService.getAllConceptsForVocabulary(this.onlyVocabulary.graphId, this.search, false, this.onlyStatus, this.loaded, batchSize).subscribe(appendResults);
+        this.elasticSearchService.getAllConceptsForVocabulary(this.onlyVocabulary.graphId, this.search, false, this.onlyStatus, this.loaded, batchSize)
+          .subscribe(appendResults, handleSearchError);
       } else {
         if (this.mode === 'include') {
-          this.elasticSearchService.getAllConceptsForVocabulary(this.graphId, this.search, false, this.onlyStatus, this.loaded, batchSize).subscribe(appendResults);
+          this.elasticSearchService.getAllConceptsForVocabulary(this.graphId, this.search, false, this.onlyStatus, this.loaded, batchSize)
+            .subscribe(appendResults, handleSearchError);
         } else {
-          this.elasticSearchService.getAllConceptsNotInVocabulary(this.graphId, this.search, false, this.onlyStatus, this.loaded, batchSize).subscribe(appendResults);
+          this.elasticSearchService.getAllConceptsNotInVocabulary(this.graphId, this.search, false, this.onlyStatus, this.loaded, batchSize)
+            .subscribe(appendResults, handleSearchError);
         }
       }
     }
-  }
-
-  get searchResults() {
-    return this.searchResults$.getValue();
   }
 
   conceptIdentity(index: number, item: IndexedConcept) {
@@ -266,28 +313,8 @@ export class SearchConceptModalComponent implements OnInit, AfterViewInit {
       });
   }
 
-  get loadingSelection() {
-    return this.selectedItem && (!this.selection || this.selectedItem.id !== this.selection.id);
-  }
-
   ngAfterViewInit() {
     this.renderer.invokeElementMethod(this.searchInput.nativeElement, 'focus');
-  }
-
-  get search() {
-    return this.search$.getValue();
-  }
-
-  set search(value: string) {
-    this.search$.next(value);
-  }
-
-  get onlyStatus() {
-    return this.onlyStatus$.getValue();
-  }
-
-  get onlyVocabulary() {
-    return this.onlyVocabulary$.getValue();
   }
 
   cancel() {
@@ -296,14 +323,6 @@ export class SearchConceptModalComponent implements OnInit, AfterViewInit {
 
   confirm() {
     this.modal.close(this.selection);
-  }
-
-  get filterLanguage() {
-    return this.languageService.filterLanguage;
-  }
-
-  set filterLanguage(lang: string) {
-    this.languageService.filterLanguage = lang;
   }
 }
 
