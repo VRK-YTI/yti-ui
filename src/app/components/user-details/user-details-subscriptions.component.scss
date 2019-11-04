@@ -7,3 +7,19 @@
   padding-left: 10px;
   padding-right: 10px;
 }
+
+.checkbox {
+
+  input {
+    vertical-align: middle;
+    position: relative;
+    display: inline-block;
+    margin-bottom: 5px;
+  }
+
+  label {
+    vertical-align: middle;
+    padding-left: 10px;
+    display: inline-block;
+  }
+}

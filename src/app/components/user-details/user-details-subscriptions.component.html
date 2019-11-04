@@ -13,10 +13,13 @@
       <label translate>Email notifications</label>
     </dt>
     <dd>
-      <input id="enable_subscription_checkbox" type="checkbox"
-             (click)="toggleSubscription($event)"
-             [checked]="isSubscriptionEnabled"/>
-      <label style="vertical-align:2px; padding-left: 10px" translate>Daily</label>
+      <div class="checkbox">
+        <input id="enable_subscription_checkbox"
+               type="checkbox"
+               (click)="toggleSubscription($event)"
+               [checked]="isSubscriptionEnabled"/>
+        <label translate>Daily</label>
+      </div>
     </dd>
   </dl>
 
@@ -75,7 +78,8 @@
     </dt>
     <dd>
       <div *ngFor="let resource of messagingResources.get(APPLICATION_COMMENTS)">
-        <a href="{{ getCommentsUriWithEnv(resource.uri) }}" target="_blank"><span>{{ resource.getDisplayName(languageService, true) }}</span></a>
+        <a href="{{ getCommentsUriWithEnv(resource.uri) }}"
+           target="_blank"><span>{{ resource.getDisplayName(languageService, true) }}</span></a>
         <button [id]="'remove_' + resource.uri + '_ref_button'"
                 type="button"
                 class="icon icon-trash"
