@@ -14,7 +14,7 @@
     </dt>
     <dd>
       <input id="enable_subscription_checkbox" type="checkbox"
-             (click)="toggleSubscription()"
+             (click)="toggleSubscription($event)"
              [checked]="isSubscriptionEnabled"/>
       <label style="vertical-align:2px; padding-left: 10px" translate>Daily</label>
     </dd>
