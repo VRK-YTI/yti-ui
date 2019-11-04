@@ -216,7 +216,7 @@ export class VocabularyMainComponent implements OnDestroy {
       const vocabularyUri = this.vocabulary.uri;
       this.confirmationModalService.open('ADD EMAIL SUBSCRIPTION TO RESOURCE REGARDING CHANGES?', undefined, '')
         .then(() => {
-          this.messagingService.addSubscription(vocabularyUri, 'codelist').subscribe(success => {
+          this.messagingService.addSubscription(vocabularyUri, 'vocabulary').subscribe(success => {
             if (success) {
               this.hasSubscription = true;
             } else {
