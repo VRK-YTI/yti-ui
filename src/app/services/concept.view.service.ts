@@ -20,14 +20,14 @@ import {
   isSelect
 } from './action';
 import { ElasticSearchService, IndexedConcept } from './elasticsearch.service';
-import { ContentExtractor, filterAndSortSearchResults, labelComparator, scoreComparator, TextAnalysis } from 'app/utils/text-analyzer';
-import { assertNever, isDefined } from 'yti-common-ui/utils/object';
+import { assertNever } from 'yti-common-ui/utils/object';
 import { contains, removeMatching, replaceMatching } from 'yti-common-ui/utils/array';
 import { FormNode } from './form-state';
 import { MetaModel } from 'app/entities/meta';
 import { TranslateService } from '@ngx-translate/core';
 import { PrefixAndNamespace } from 'app/entities/prefix-and-namespace';
 import { HttpErrorResponse } from '@angular/common/http';
+import { filterByPrefixPostfixSearch, splitSearchString } from 'yti-common-ui/utils/search';
 
 function onlySelect<T>(action: Observable<Action<T>>): Observable<T> {
   return action.pipe(filter(isSelect), map(extractItem));
@@ -328,7 +328,7 @@ export class ConceptHierarchyModel {
 export class CollectionListModel {
 
   search$ = new BehaviorSubject('');
-  debouncedSearch = this.search$.getValue();
+  debouncedSearch$: Observable<string>;
   searchResults: Observable<CollectionNode[]>;
   allCollections$ = new BehaviorSubject<CollectionNode[]>([]);
   loading = false;
@@ -338,16 +338,14 @@ export class CollectionListModel {
 
     const initialSearch$ = this.search$.pipe(take(1));
     const debouncedSearch$ = this.search$.pipe(skip(1), debounceTime(500));
-    const search$ = concat(initialSearch$, debouncedSearch$);
+    this.debouncedSearch$ = concat(initialSearch$, debouncedSearch$);
 
-    this.searchResults = combineLatest(this.allCollections$, search$, languageService.translateLanguage$).pipe(map(([collections, search]) => {
-
-      this.debouncedSearch = search;
-      const scoreFilter = (item: TextAnalysis<CollectionNode>) => !search || isDefined(item.matchScore) || item.score < 2;
-      const labelExtractor: ContentExtractor<CollectionNode> = collection => collection.label;
-      const scoreAndLabelComparator = scoreComparator<CollectionNode>().andThen(labelComparator(languageService));
-
-      return filterAndSortSearchResults(collections, search, [labelExtractor], [scoreFilter], scoreAndLabelComparator);
+    this.searchResults = combineLatest(this.allCollections$, this.debouncedSearch$, languageService.translateLanguage$).pipe(map(([collections, search]) => {
+      const searchParts = splitSearchString(search);
+      if (searchParts) {
+        return filterByPrefixPostfixSearch(collections, searchParts, c => c.label);
+      }
+      return collections;
     }));
   }
 
