@@ -1,9 +1,11 @@
-import { Component, AfterViewInit, ElementRef, ViewChild, Renderer } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, Renderer, ViewChild } from '@angular/core';
 import { CollectionNode } from 'app/entities/node';
 import { CollectionListModel, ConceptViewModelService } from 'app/services/concept.view.service';
 import { Router } from '@angular/router';
 import { v4 as uuid } from 'uuid';
 import { AuthorizationManager } from 'app/services/authorization-manager.sevice';
+import { Subscription } from 'rxjs';
+import { makePrefixPostfixHighlightRegexp, makePrefixPostfixSearchRegexp, splitSearchString } from 'yti-common-ui/utils/search';
 
 @Component({
   selector: 'app-collection-list',
@@ -14,7 +16,8 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
 
         <div class="selectable-actions">
 
-          <button class="btn btn-action mb-3" id="collection_list_add_collection_button" (click)="addCollection()" *ngIf="canAddCollection()">
+          <button class="btn btn-action mb-3" id="collection_list_add_collection_button" (click)="addCollection()"
+                  *ngIf="canAddCollection()">
             <span translate>Add new collection</span>
           </button>
 
@@ -24,7 +27,7 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
                    [(ngModel)]="search"
                    type="text"
                    class="form-control"
-                   [placeholder]="'Search collection' | translate" />
+                   [placeholder]="'Search collection' | translate"/>
           </div>
 
         </div>
@@ -40,7 +43,7 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
                 [id]="collection.idIdentifier + '_collection_list_listitem'"
                 (click)="navigate(collection)"
                 [class.selection]="isSelected(collection)">
-              <span [innerHTML]="collection.label | translateSearchValue: debouncedSearch | highlight: debouncedSearch"></span>
+              <span [innerHTML]="collection.label | translateSearchValue: searchRegexp | highlight: highlightRegexp"></span>
             </li>
           </ul>
         </div>
@@ -48,11 +51,15 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
     </div>
   `
 })
-export class CollectionListComponent implements AfterViewInit {
+export class CollectionListComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild('searchInput') searchInput: ElementRef;
 
   model: CollectionListModel;
+  searchRegexp: RegExp | undefined;
+  highlightRegexp: RegExp | undefined;
+
+  private subscriptionsToClean: Subscription[] = [];
 
   constructor(private conceptViewModel: ConceptViewModelService,
               private authorizationManager: AuthorizationManager,
@@ -60,23 +67,16 @@ export class CollectionListComponent implements AfterViewInit {
               private router: Router) {
 
     this.model = conceptViewModel.collectionList;
-  }
-
-  ngAfterViewInit() {
-    this.renderer.invokeElementMethod(this.searchInput.nativeElement, 'focus');
-  }
-
-  collectionIdentity(index: number, item: CollectionNode) {
-    return item.id + item.lastModifiedDate.toISOString();
-  }
-
-  canAddCollection() {
-
-    if (!this.conceptViewModel.vocabulary) {
-      return false;
-    }
-
-    return this.authorizationManager.canAddCollection(this.conceptViewModel.vocabulary);
+    this.subscriptionsToClean.push(this.model.debouncedSearch$.subscribe(search => {
+      const searchParts = splitSearchString(search);
+      if (searchParts) {
+        this.searchRegexp = makePrefixPostfixSearchRegexp(searchParts);
+        this.highlightRegexp = makePrefixPostfixHighlightRegexp(searchParts);
+      } else {
+        this.searchRegexp = undefined;
+        this.highlightRegexp = undefined;
+      }
+    }))
   }
 
   get search() {
@@ -91,8 +91,25 @@ export class CollectionListComponent implements AfterViewInit {
     return this.model.searchResults;
   }
 
-  get debouncedSearch() {
-    return this.model.debouncedSearch;
+  ngAfterViewInit() {
+    this.renderer.invokeElementMethod(this.searchInput.nativeElement, 'focus');
+  }
+
+  ngOnDestroy() {
+    this.subscriptionsToClean.forEach(s => s.unsubscribe());
+  }
+
+  collectionIdentity(index: number, item: CollectionNode) {
+    return item.id + item.lastModifiedDate.toISOString();
+  }
+
+  canAddCollection() {
+
+    if (!this.conceptViewModel.vocabulary) {
+      return false;
+    }
+
+    return this.authorizationManager.canAddCollection(this.conceptViewModel.vocabulary);
   }
 
   navigate(collection: CollectionNode) {

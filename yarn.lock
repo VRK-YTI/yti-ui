@@ -5761,6 +5761,11 @@ signal-exit@^3.0.0, signal-exit@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
 
+simple-line-icons@^2.4.1:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/simple-line-icons/-/simple-line-icons-2.4.1.tgz#b75bc5a0d87e530928c2ccda5735274bb256f234"
+  integrity sha1-t1vFoNh+UwkowszaVzUnS7JW8jQ=
+
 slash@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/slash/-/slash-1.0.0.tgz#c41f2f6c39fc16d1cd17ad4b5d896114ae470d55"
@@ -6986,9 +6991,9 @@ yn@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/yn/-/yn-2.0.0.tgz#e5adabc8acf408f6385fc76495684c88e6af689a"
 
-"yti-common-ui@https://github.com/VRK-YTI/yti-common-ui.git/#8142db984bd6a6f3fbf8e73d5fdb8a42d2e01a7b":
+"yti-common-ui@https://github.com/VRK-YTI/yti-common-ui.git/#73ff2caf640d954c060937d4cc1745d14645b2c4":
   version "0.0.0"
-  resolved "https://github.com/VRK-YTI/yti-common-ui.git/#8142db984bd6a6f3fbf8e73d5fdb8a42d2e01a7b"
+  resolved "https://github.com/VRK-YTI/yti-common-ui.git/#73ff2caf640d954c060937d4cc1745d14645b2c4"
 
 zone.js@~0.8.26:
   version "0.8.29"

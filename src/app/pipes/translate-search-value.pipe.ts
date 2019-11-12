@@ -1,9 +1,8 @@
-import { Pipe, PipeTransform, OnDestroy } from '@angular/core';
+import { OnDestroy, Pipe, PipeTransform } from '@angular/core';
 import { Localizable } from 'yti-common-ui/types/localization';
-import { LanguageService, Language } from 'app/services/language.service';
+import { Language, LanguageService } from 'app/services/language.service';
 import { Subscription } from 'rxjs';
 import { isDefined } from 'yti-common-ui/utils/object';
-import { createSearchRegex } from 'yti-common-ui/utils/regex';
 
 @Pipe({
   name: 'translateSearchValue',
@@ -11,48 +10,47 @@ import { createSearchRegex } from 'yti-common-ui/utils/regex';
 })
 export class TranslateSearchValuePipe implements PipeTransform, OnDestroy {
 
-  previousSearch: string;
+  previousSearch: RegExp | undefined;
   localization?: string;
   languageSubscription?: Subscription;
 
   constructor(private languageService: LanguageService) {
   }
 
-  transform(value: Localizable, search: string): string {
+  transform(value: Localizable, searchRegexp: RegExp | undefined): string {
 
     this.cleanSubscription();
 
-    if (!isDefined(this.localization) || this.previousSearch !== search) {
-      this.localization = this.formatText(value, search);
+    if (!isDefined(this.localization) || this.previousSearch !== searchRegexp) {
+      this.localization = this.formatText(value, searchRegexp);
     }
 
     this.languageSubscription = this.languageService.translateLanguage$.subscribe(() => {
-      this.localization = this.formatText(value, search);
+      this.localization = this.formatText(value, searchRegexp);
     });
 
-    this.previousSearch = search;
+    this.previousSearch = searchRegexp;
 
     return this.localization;
   }
 
-  formatText(value: Localizable, search: string) {
+  formatText(value: Localizable, searchRegexp: RegExp | undefined) {
 
     if (!value) {
       return '';
     }
 
-    if (!search) {
-      this.languageService.translate(value, false);
+    if (!searchRegexp) {
+      return this.languageService.translate(value, false);
     }
 
-    const regex = createSearchRegex(search);
     const primaryTranslation = this.languageService.translate(value, false);
 
-    if (regex.test(primaryTranslation)) {
+    if (searchRegexp.test(primaryTranslation)) {
       return primaryTranslation;
     } else {
 
-      const secondaryMatch = findSecondaryLanguageMatch(value, regex);
+      const secondaryMatch = findSecondaryLanguageMatch(value, searchRegexp);
 
       if (secondaryMatch) {
         return `${primaryTranslation} [${formatSecondaryLanguageMatch(value, secondaryMatch)}]`;
@@ -73,7 +71,7 @@ export class TranslateSearchValuePipe implements PipeTransform, OnDestroy {
   }
 }
 
-function findSecondaryLanguageMatch(value: Localizable, regex: RegExp): { language: Language, startIndex: number, endIndex: number }|null {
+function findSecondaryLanguageMatch(value: Localizable, regex: RegExp): { language: Language, startIndex: number, endIndex: number } | null {
 
   for (const [language, text] of Object.entries(value)) {
 
