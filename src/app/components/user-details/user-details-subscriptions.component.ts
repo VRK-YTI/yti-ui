@@ -171,20 +171,4 @@ export class UserDetailsSubscriptionsComponent implements OnInit {
 
     return this.configurationService.getUriWithEnv(uri);
   }
-
-  getCommentsUriWithEnv(uri: string): string | null {
-
-    switch (this.configurationService.environment) {
-      case 'awsprod':
-        return 'https://kommentit.suomi.fi/commentround;commentRoundId=' + uri;
-      case 'awstest':
-        return 'https://kommentit.dev.yti.cloud.vrk.fi/commentround;commentRoundId=' + uri;
-      case 'awsdev':
-        return 'https://kommentit.dev.yti.cloud.vrk.fi/commentround;commentRoundId=' + uri;
-      case 'local':
-        return 'http://localhost:9700/commentround;commentRoundId=' + uri;
-      default:
-        return this.getUriWithEnv(uri);
-    }
-  }
 }

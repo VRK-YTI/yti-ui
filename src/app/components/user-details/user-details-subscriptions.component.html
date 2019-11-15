@@ -78,7 +78,7 @@
     </dt>
     <dd>
       <div *ngFor="let resource of messagingResources.get(APPLICATION_COMMENTS)">
-        <a href="{{ getCommentsUriWithEnv(resource.uri) }}"
+        <a href="{{ getUriWithEnv(resource.uri) }}"
            target="_blank"><span>{{ resource.getDisplayName(languageService, true) }}</span></a>
         <button [id]="'remove_' + resource.uri + '_ref_button'"
                 type="button"
