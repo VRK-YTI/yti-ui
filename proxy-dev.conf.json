@@ -1,15 +1,5 @@
 {
-  "/frontend/*": {
-    "target": "https://sanastot.dev.yti.cloud.vrk.fi",
-    "changeOrigin": true,
-    "secure": false
-  },
-  "/api/*": {
-    "target": "https://sanastot.dev.yti.cloud.vrk.fi",
-    "changeOrigin": true,
-    "secure": false
-  },
-  "/importapi/*": {
+  "/terminology/api/*": {
     "target": "https://sanastot.dev.yti.cloud.vrk.fi",
     "changeOrigin": true,
     "secure": false
