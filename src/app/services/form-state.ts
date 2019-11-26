@@ -145,9 +145,9 @@ export class FormNode {
       .filter(p => p.editor.type === 'semantic');
   }
 
-  removeSemanticReferencesTo(concept: ConceptNode) {
+  removeSemanticReferencesTo(concept: ConceptNode, namespaceRoot: string) {
     for (const property of this.semanticProperties) {
-      property.removeSemanticReferencesTo(concept);
+      property.removeSemanticReferencesTo(concept, namespaceRoot);
     }
   }
 
@@ -392,7 +392,6 @@ export class FormPropertyLiteral {
   private meta: PropertyMeta;
 
   constructor(property: Property) {
-
     this.meta = property.meta;
     this.control = this.createControl(property.literalValue);
   }
@@ -440,11 +439,10 @@ export class FormPropertyLiteral {
     return this.value.trim() === '';
   }
 
-  removeSemanticReferencesTo(concept: ConceptNode) {
-
+  removeSemanticReferencesTo(concept: ConceptNode, namespaceRoot: string) {
     if (this.editor.type === 'semantic') {
       const shouldRemoveDestination = (dest: string) => concept.isTargetOfLink(dest);
-      this.control.setValue(removeMatchingLinks(this.value, this.editor.format, shouldRemoveDestination));
+      this.control.setValue(removeMatchingLinks(this.value, this.editor.format, shouldRemoveDestination, namespaceRoot));
     }
   }
 
@@ -540,14 +538,14 @@ export class FormPropertyLiteralList implements Sortable<AbstractControl> {
     this.control.removeAt(this.children.indexOf(child));
   }
 
-  removeSemanticReferencesTo(concept: ConceptNode) {
+  removeSemanticReferencesTo(concept: ConceptNode, namespaceRoot: string) {
 
     if (this.editor.type === 'semantic') {
 
       const shouldRemoveDestination = (dest: string) => concept.isTargetOfLink(dest);
 
       for (const child of this.children) {
-        child.setValue(removeMatchingLinks(child.value, this.editor.format, shouldRemoveDestination));
+        child.setValue(removeMatchingLinks(child.value, this.editor.format, shouldRemoveDestination, namespaceRoot));
       }
     }
   }
@@ -665,13 +663,11 @@ export class FormPropertyLocalizable implements Sortable<LocalizedControl> {
     this.control.removeAt(index);
   }
 
-  removeSemanticReferencesTo(concept: ConceptNode) {
+  removeSemanticReferencesTo(concept: ConceptNode, namespaceRoot: string) {
     if (this.editor.type === 'semantic') {
-
       const shouldRemoveDestination = (destination: string) => concept.isTargetOfLink(destination);
-
       for (const child of this.children) {
-        child.control.setValue(removeMatchingLinks(child.control.value, this.editor.format, shouldRemoveDestination));
+        child.control.setValue(removeMatchingLinks(child.control.value, this.editor.format, shouldRemoveDestination, namespaceRoot));
       }
     }
   }

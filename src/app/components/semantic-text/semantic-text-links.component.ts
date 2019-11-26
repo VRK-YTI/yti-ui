@@ -9,6 +9,7 @@ import { firstMatching } from 'yti-common-ui/utils/array';
 import { Localizable } from 'yti-common-ui/types/localization';
 import { asLocalizable } from 'yti-common-ui/utils/localization';
 import { resolveSerializer } from 'app/utils/semantic';
+import { ConfigurationService } from '../../services/configuration.service';
 
 type SemanticTextNode = SemanticTextNodeImported;
 type SemanticTextFormat = SemanticTextFormatImported;
@@ -35,14 +36,13 @@ export class SemanticTextLinksComponent implements OnInit, AfterViewChecked {
 
   @ViewChild('self') self: ElementRef;
 
+  constructor(private configurationService : ConfigurationService) {
+  }
+
   ngOnInit() {
-    try {
-      this.document = resolveSerializer(this.format).deserialize(this.value);
-      this.invalidData = false;
-    } catch(error) {
-      this.invalidData = true;
-      this.document = new SemanticTextDocument([new SemanticTextParagraph([new SemanticTextLiteral(this.value)])]);
-    }
+    const {document, valid} = resolveSerializer(this.format).deserialize(this.value, this.configurationService.namespaceRoot);
+    this.document = document;
+    this.invalidData = !valid;
   }
 
   ngAfterViewChecked() {

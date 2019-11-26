@@ -42,10 +42,10 @@ export class Property {
     return this.attributes as Localization[];
   }
 
-  asLocalizationsWithoutSemantics() {
+  asLocalizationsWithoutSemantics(namespaceRoot: string) {
     if (this.meta.type.editor.type === 'semantic') {
       return this.asLocalizations().map(({lang, value}) =>
-        ({lang, value: stripSemanticMarkup(value, this.meta.semanticTextFormat)}));
+        ({lang, value: stripSemanticMarkup(value, this.meta.semanticTextFormat, namespaceRoot)}));
     } else {
       return this.asLocalizations();
     }
@@ -55,8 +55,8 @@ export class Property {
     return asLocalizable(this.asLocalizations(), ignoreConflicts);
   }
 
-  asLocalizableWithoutSemantics(ignoreConflicts = false) {
-    return asLocalizable(this.asLocalizationsWithoutSemantics(), ignoreConflicts);
+  asLocalizableWithoutSemantics(namespaceRoot: string, ignoreConflicts = false) {
+    return asLocalizable(this.asLocalizationsWithoutSemantics(namespaceRoot), ignoreConflicts);
   }
 
   setLocalizable(localizable: Localizable) {
@@ -552,8 +552,8 @@ export class ConceptNode extends Node<'Concept'> {
     return this.getProperty('definition').meta.semanticTextFormat;
   }
 
-  get definitionWithoutSemantics(): Localization[] {
-    return this.getProperty('definition').asLocalizationsWithoutSemantics();
+  getDefinitionWithoutSemantics(namespaceRoot: string): Localization[] {
+    return this.getProperty('definition').asLocalizationsWithoutSemantics(namespaceRoot);
   }
 
   set definition(value: Localization[]) {
@@ -726,8 +726,8 @@ export class CollectionNode extends Node<'Collection'> {
     return this.getProperty('definition').asLocalizations();
   }
 
-  get definitionWithoutSemantics(): Localization[] {
-    return this.getProperty('definition').asLocalizationsWithoutSemantics();
+  getDefinitionWithoutSemantics(namespaceRoot: string): Localization[] {
+    return this.getProperty('definition').asLocalizationsWithoutSemantics(namespaceRoot);
   }
 
   set definition(value: Localization[]) {
