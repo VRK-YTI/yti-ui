@@ -25,3 +25,10 @@
     }
   }
 }
+
+div.invalid-data {
+  color: $danger;
+  border-color: $danger;
+  font-weight: bolder;
+}
+
