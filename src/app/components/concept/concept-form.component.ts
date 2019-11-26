@@ -8,6 +8,7 @@ import { FormField, FormNode, FormProperty } from 'app/services/form-state';
 import { EditableService } from 'app/services/editable.service';
 import { requireDefined } from 'yti-common-ui/utils/object';
 import { conceptIdPrefix } from 'app/utils/id-prefix';
+import { ConfigurationService } from '../../services/configuration.service';
 
 @Component({
   selector: 'app-concept-form',
@@ -56,7 +57,8 @@ export class ConceptFormComponent {
 
   constructor(private editableService: EditableService,
               private searchConceptModalService: SearchConceptModalService,
-              private selectConceptReferenceModalService: SelectConceptReferenceModalService) {
+              private selectConceptReferenceModalService: SelectConceptReferenceModalService,
+              private configurationService: ConfigurationService) {
   }
 
   get showEmpty() {
@@ -77,7 +79,7 @@ export class ConceptFormComponent {
     const lastReferenceRemoved = !anyMatching(this.form.referencedConcepts, ref => ref.id === concept.id);
 
     if (lastReferenceRemoved) {
-      this.form.removeSemanticReferencesTo(concept);
+      this.form.removeSemanticReferencesTo(concept, this.configurationService.namespaceRoot);
     }
   }
 

@@ -9,7 +9,6 @@ export type SemanticTextNode = SemanticTextDocument
 export type SemanticTextLinkCategory = 'internal' | 'external';
 
 export class SemanticTextDocument {
-
   type = 'document' as 'document';
 
   constructor(public children: SemanticTextParagraph[] = []) {
@@ -25,7 +24,6 @@ export class SemanticTextDocument {
 }
 
 export class SemanticTextParagraph {
-
   type = 'paragraph' as 'paragraph';
 
   constructor(public children: (SemanticTextLiteral | SemanticTextLink)[] = []) {
@@ -41,7 +39,6 @@ export class SemanticTextParagraph {
 }
 
 export class SemanticTextLink {
-
   type = 'link' as 'link';
 
   constructor(public text: string, public destination: string, public category: SemanticTextLinkCategory = 'internal') {
@@ -61,7 +58,6 @@ export class SemanticTextLink {
 }
 
 export class SemanticTextLiteral {
-
   type = 'text' as 'text';
 
   constructor(public text: string) {
@@ -78,5 +74,5 @@ export class SemanticTextLiteral {
 
 export interface SemanticTextSerializer {
   serialize(semanticTextDocument: SemanticTextDocument): string;
-  deserialize(serialized: string): SemanticTextDocument;
+  deserialize(serialized: string, namespaceRoot: string): { document: SemanticTextDocument, valid: boolean };
 }

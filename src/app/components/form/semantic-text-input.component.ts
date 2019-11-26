@@ -27,6 +27,7 @@ import {
 } from 'app/entities/semantic';
 import { areNodesEqual, resolveSerializer } from 'app/utils/semantic';
 import { UrlInputModalService } from './url-input-modal.component';
+import { ConfigurationService } from '../../services/configuration.service';
 
 type SemanticTextFormat = SemanticTextFormatImported;
 
@@ -39,6 +40,25 @@ class Model {
 
   constructor(public node: Element) {
     removeChildren(node); // clear previous nodes
+  }
+
+  get selectionOffset(): number {
+
+    const selection = this.getSelection();
+
+    if (selection) {
+      return Model.pointToOffset(selection.start);
+    } else {
+      return 0;
+    }
+  }
+
+  get firstParagraph(): Paragraph {
+    return first(this.content);
+  }
+
+  get lastParagraph(): Paragraph {
+    return last(this.content);
   }
 
   static ofSemanticTextNode(container: HTMLElement, document: SemanticTextDocument): Model {
@@ -54,22 +74,23 @@ class Model {
     return result;
   }
 
+  private static pointToOffset(point: Point): number {
+
+    let offset = point.offset;
+
+    for (let text = point.text.getPrecedingText(); text !== null; text = text.getPrecedingText()) {
+      offset += text.length;
+    }
+
+    return offset;
+  }
+
   ensureNonEmptyContent() {
     if (this.content.length === 0) {
       const newParagraph = new Paragraph(this);
       this.appendParagraph(newParagraph);
       newParagraph.ensureNonEmptyContent();
     }
-  }
-
-  private appendParagraph(paragraph: Paragraph) {
-    this.content.push(paragraph);
-    this.node.appendChild(paragraph.node);
-  }
-
-  private insertParagraphBefore(newParagraph: Paragraph, ref: Paragraph) {
-    insertBefore(this.content, newParagraph, ref);
-    this.node.insertBefore(newParagraph.node, ref.node);
   }
 
   hasParagraph(paragraph: Paragraph) {
@@ -239,52 +260,6 @@ class Model {
     return new SemanticTextDocument(this.content.map(c => c.toSemanticTextNode()));
   }
 
-  get selectionOffset(): number {
-
-    const selection = this.getSelection();
-
-    if (selection) {
-      return Model.pointToOffset(selection.start);
-    } else {
-      return 0;
-    }
-  }
-
-  private static pointToOffset(point: Point): number {
-
-    let offset = point.offset;
-
-    for (let text = point.text.getPrecedingText(); text !== null; text = text.getPrecedingText()) {
-      offset += text.length;
-    }
-
-    return offset;
-  }
-
-  private offsetToPoint(offset: number): Point {
-
-    let offsetWalked = 0;
-
-    for (let text: Text | null = this.firstParagraph.firstText; text !== null; text = text.getFollowingText()) {
-
-      offsetWalked += text.length;
-
-      if (offset <= offsetWalked) {
-        return new Point(text, text.length - (offsetWalked - offset));
-      }
-    }
-
-    return this.lastParagraph.lastText.lastPoint;
-  }
-
-  get firstParagraph(): Paragraph {
-    return first(this.content);
-  }
-
-  get lastParagraph(): Paragraph {
-    return last(this.content);
-  }
-
   moveCursorToOffset(offset: number) {
     this.offsetToPoint(offset).moveCursor();
   }
@@ -319,6 +294,32 @@ class Model {
     requireDefined(this.getSelection()).remove().moveCursor();
     return text;
   }
+
+  private appendParagraph(paragraph: Paragraph) {
+    this.content.push(paragraph);
+    this.node.appendChild(paragraph.node);
+  }
+
+  private insertParagraphBefore(newParagraph: Paragraph, ref: Paragraph) {
+    insertBefore(this.content, newParagraph, ref);
+    this.node.insertBefore(newParagraph.node, ref.node);
+  }
+
+  private offsetToPoint(offset: number): Point {
+
+    let offsetWalked = 0;
+
+    for (let text: Text | null = this.firstParagraph.firstText; text !== null; text = text.getFollowingText()) {
+
+      offsetWalked += text.length;
+
+      if (offset <= offsetWalked) {
+        return new Point(text, text.length - (offsetWalked - offset));
+      }
+    }
+
+    return this.lastParagraph.lastText.lastPoint;
+  }
 }
 
 class Paragraph {
@@ -328,6 +329,30 @@ class Paragraph {
 
   constructor(private parent: Model) {
     this.node = document.createElement('p');
+  }
+
+  get firstPoint(): Point {
+    return new Point(this.firstText, 0);
+  }
+
+  get paragraph(): Paragraph {
+    return this;
+  }
+
+  get lastContent(): Text | Link {
+    return last(this.content);
+  }
+
+  get lastText(): Text {
+    return this.lastContent.text;
+  }
+
+  get firstContent(): Text | Link {
+    return first(this.content);
+  }
+
+  get firstText(): Text {
+    return this.firstContent.text;
   }
 
   static ofSemanticTextNode(parent: Model, paragraphNode: SemanticTextParagraph): Paragraph {
@@ -409,10 +434,6 @@ class Paragraph {
     return allMatching(this.content, c => c.hasEmptyContent());
   }
 
-  get firstPoint(): Point {
-    return new Point(this.firstText, 0);
-  }
-
   appendText(text: string) {
     if (this.content.length > 0 && this.lastContent instanceof Text) {
       this.lastContent.append(text);
@@ -463,10 +484,6 @@ class Paragraph {
   insertContentBefore(content: Link | Text, ref: Link | Text) {
     insertBefore(this.content, content, ref);
     this.node.insertBefore(content.node, ref.node);
-  }
-
-  get paragraph(): Paragraph {
-    return this;
   }
 
   remove(): boolean {
@@ -522,22 +539,6 @@ class Paragraph {
     }
   }
 
-  get lastContent(): Text | Link {
-    return last(this.content);
-  }
-
-  get lastText(): Text {
-    return this.lastContent.text;
-  }
-
-  get firstContent(): Text | Link {
-    return first(this.content);
-  }
-
-  get firstText(): Text {
-    return this.firstContent.text;
-  }
-
   toSemanticTextNode(): SemanticTextParagraph {
     return new SemanticTextParagraph(this.content.map(c => c.toSemanticTextNode()));
   }
@@ -545,8 +546,6 @@ class Paragraph {
 
 class Link {
 
-  private _text: Text;
-  private _target: string;
   node: HTMLElement;
 
   constructor(private parent: Paragraph, text: string, target: string, public readonly category: SemanticTextLinkCategory) {
@@ -556,12 +555,31 @@ class Link {
     this.target = target;
   }
 
-  static ofSemanticTextNode(parent: Paragraph, link: SemanticTextLink): Link {
-    return new Link(parent, link.text, link.destination, link.category);
+  private _text: Text;
+
+  get text() {
+    return this._text;
   }
 
-  copyToParent(parent: Paragraph): Link {
-    return new Link(parent, this.content, this.target, this.category);
+  set text(value: Text) {
+    this._text = value;
+
+    for (const child of Array.from(this.node.childNodes.values())) {
+      this.node.removeChild(child);
+    }
+
+    this.node.appendChild(value.node);
+  }
+
+  private _target: string;
+
+  get target() {
+    return this._target;
+  }
+
+  set target(value: string) {
+    this._target = value;
+    this.node.dataset['target'] = value;
   }
 
   get content() {
@@ -572,28 +590,16 @@ class Link {
     this.text.content = value;
   }
 
-  get text() {
-    return this._text;
+  get paragraph(): Paragraph {
+    return this.parent;
   }
 
-  set text(value: Text) {
-
-    this._text = value;
-
-    for (const child of Array.from(this.node.childNodes.values())) {
-      this.node.removeChild(child);
-    }
-
-    this.node.appendChild(value.node);
+  static ofSemanticTextNode(parent: Paragraph, link: SemanticTextLink): Link {
+    return new Link(parent, link.text, link.destination, link.category);
   }
 
-  get target() {
-    return this._target;
-  }
-
-  set target(value: string) {
-    this._target = value;
-    this.node.dataset['target'] = value;
+  copyToParent(parent: Paragraph): Link {
+    return new Link(parent, this.content, this.target, this.category);
   }
 
   hasEmptyContent(): boolean {
@@ -631,10 +637,6 @@ class Link {
     return this.parent.getFollowingText(this.text);
   }
 
-  get paragraph(): Paragraph {
-    return this.parent;
-  }
-
   toSemanticTextNode(): SemanticTextLink {
     return new SemanticTextLink(this.content, this.target, this.category);
   }
@@ -642,7 +644,6 @@ class Link {
 
 class Text {
 
-  private _content: string;
   node: Node;
 
   constructor(public parent: Paragraph | Link, content = '') {
@@ -650,13 +651,7 @@ class Text {
     this.content = content;
   }
 
-  static ofSemanticTextNode(parent: Paragraph | Link, text: SemanticTextLiteral): Text {
-    return new Text(parent, text.text);
-  }
-
-  copyToParent(parent: Paragraph): Text {
-    return new Text(parent, this.content);
-  }
+  private _content: string;
 
   get content(): string {
     return this._content;
@@ -677,6 +672,22 @@ class Text {
 
   get length() {
     return this.content.length;
+  }
+
+  get firstPoint(): Point {
+    return new Point(this, 0);
+  }
+
+  get lastPoint(): Point {
+    return new Point(this, this.content.length);
+  }
+
+  static ofSemanticTextNode(parent: Paragraph | Link, text: SemanticTextLiteral): Text {
+    return new Text(parent, text.text);
+  }
+
+  copyToParent(parent: Paragraph): Text {
+    return new Text(parent, this.content);
   }
 
   hasEmptyContent() {
@@ -798,14 +809,6 @@ class Text {
     return this.lastPoint;
   }
 
-  get firstPoint(): Point {
-    return new Point(this, 0);
-  }
-
-  get lastPoint(): Point {
-    return new Point(this, this.content.length);
-  }
-
   findTextForPath(indicesFromRoot: number[]): Text {
 
     if (indicesFromRoot.length !== 0) {
@@ -859,38 +862,6 @@ class Selection {
     }
   }
 
-  static ofDomSelection(model: Model, domSelection: DomSelection): Selection | null {
-
-    function createPoint(domPoint: DomPoint) {
-
-      if (domPoint.node === model.node) {
-        return null;
-      }
-
-      const indicesFromRoot = domPoint.path.indicesFromRoot;
-      const text = model.findTextForPath(indicesFromRoot);
-
-      return text ? new Point(text, domPoint.offset) : null;
-    }
-
-    const startPoint = createPoint(domSelection.start);
-    const endPoint = createPoint(domSelection.end);
-
-    if (startPoint && endPoint) {
-      return new Selection(model, startPoint, endPoint);
-    } else {
-      return null;
-    }
-  }
-
-  private isLinkable() {
-    return this.start.text === this.end.text && !this.start.text.isInLink();
-  }
-
-  private isLink() {
-    return this.start.text === this.end.text && this.start.text.isInLink();
-  }
-
   get linkedSelection(): LinkedSelection | null {
     if (this.isLink()) {
       return new LinkedSelection(this.end.text.parent as Link, this.end.offset);
@@ -913,6 +884,30 @@ class Selection {
           return null;
         }
       }
+    } else {
+      return null;
+    }
+  }
+
+  static ofDomSelection(model: Model, domSelection: DomSelection): Selection | null {
+
+    function createPoint(domPoint: DomPoint) {
+
+      if (domPoint.node === model.node) {
+        return null;
+      }
+
+      const indicesFromRoot = domPoint.path.indicesFromRoot;
+      const text = model.findTextForPath(indicesFromRoot);
+
+      return text ? new Point(text, domPoint.offset) : null;
+    }
+
+    const startPoint = createPoint(domSelection.start);
+    const endPoint = createPoint(domSelection.end);
+
+    if (startPoint && endPoint) {
+      return new Selection(model, startPoint, endPoint);
     } else {
       return null;
     }
@@ -974,6 +969,14 @@ class Selection {
     const createDomPath = (point: Point) => requireDefined(DomPath.create(this.model.node, point.text.node));
     return `From ${createDomPath(this.start).toString()}(${this.start.offset}) ` +
       `to ${createDomPath(this.end).toString()}(${this.end.offset})`;
+  }
+
+  private isLinkable() {
+    return this.start.text === this.end.text && !this.start.text.isInLink();
+  }
+
+  private isLink() {
+    return this.start.text === this.end.text && this.start.text.isInLink();
   }
 }
 
@@ -1121,7 +1124,7 @@ function isRemoveRestOfLine(event: KeyboardEvent) {
          [id]="id"
          contenteditable="true"
          class="form-control"
-         [ngClass] = '{"invalid-data": invalidData}'
+         [ngClass]='{"invalid-data": invalidData}'
     ></div>
   `
 })
@@ -1133,19 +1136,34 @@ export class SemanticTextInputComponent implements OnInit, ControlValueAccessor 
   @Input() format: SemanticTextFormat;
 
   @ViewChild('editable') editableElement: ElementRef;
-
+  linkingInProgress = false;
+  invalidData: boolean = false;
   private model: Model;
   private undoStack: { semanticTextNode: SemanticTextDocument, cursorOffset: number }[] = [];
   private redoStack: { semanticTextNode: SemanticTextDocument, cursorOffset: number }[] = [];
-
-  linkingInProgress = false;
   private undoDebounceTimeoutHandle: any = null;
-  private propagateChange: (fn: any) => void = () => {};
-  private propagateTouched: (fn: any) => void = () => {};
 
-  invalidData: boolean = false;
+  constructor(private urlInputModalService: UrlInputModalService,
+              private configurationService: ConfigurationService) {
+  }
 
-  constructor(private urlInputModalService: UrlInputModalService) {
+  get linkableSelection() {
+    return requireDefined(this.model.linkableSelection);
+  }
+
+  get linkedSelection() {
+    return requireDefined(this.model.linkedSelection);
+  }
+
+  get linkedConcept(): ConceptNode | null {
+    return firstMatching(this.relatedConcepts, concept => concept.isTargetOfLink(this.linkedSelection.target));
+  }
+
+  get linkedExternalTarget(): string | null {
+    if (this.hasExternalLinkSelection()) {
+      return this.model.linkedSelection!.link.target;
+    }
+    return null;
   }
 
   ngOnInit(): void {
@@ -1260,31 +1278,12 @@ export class SemanticTextInputComponent implements OnInit, ControlValueAccessor 
     return this.model.linkableSelection !== null;
   }
 
-  get linkableSelection() {
-    return requireDefined(this.model.linkableSelection);
-  }
-
   hasConceptLinkSelection() {
     return this.model.linkedSelection !== null && this.model.linkedSelection.link.category === 'internal';
   }
 
   hasExternalLinkSelection() {
     return this.model.linkedSelection !== null && this.model.linkedSelection.link.category === 'external';
-  }
-
-  get linkedSelection() {
-    return requireDefined(this.model.linkedSelection);
-  }
-
-  get linkedConcept(): ConceptNode | null {
-    return firstMatching(this.relatedConcepts, concept => concept.isTargetOfLink(this.linkedSelection.target));
-  }
-
-  get linkedExternalTarget(): string | null {
-    if (this.hasExternalLinkSelection()) {
-      return this.model.linkedSelection!.link.target;
-    }
-    return null;
   }
 
   focusEditor() {
@@ -1349,6 +1348,33 @@ export class SemanticTextInputComponent implements OnInit, ControlValueAccessor 
     }
   }
 
+  writeValue(obj: any): void {
+    const value = obj || '';
+
+    if (typeof value !== 'string') {
+      throw new Error('Value must be a string');
+    }
+
+    this.undoStack = [];
+    this.redoStack = [];
+
+    const { document, valid } = resolveSerializer(this.format).deserialize(value, this.configurationService.namespaceRoot);
+    this.resetModel(document);
+    this.invalidData = !valid;
+  }
+
+  registerOnChange(fn: any): void {
+    this.propagateChange = fn;
+  }
+
+  registerOnTouched(fn: any): void {
+    this.propagateTouched = fn;
+  }
+
+  private propagateChange: (fn: any) => void = () => {};
+
+  private propagateTouched: (fn: any) => void = () => {};
+
   private pushUndoIfChanged(resetRedo: boolean) {
 
     if (this.undoDebounceTimeoutHandle) {
@@ -1400,33 +1426,5 @@ export class SemanticTextInputComponent implements OnInit, ControlValueAccessor 
     if (cursorOffset) {
       this.model.moveCursorToOffset(cursorOffset);
     }
-  }
-
-  writeValue(obj: any): void {
-
-    const value = obj || '';
-
-    if (typeof value !== 'string') {
-      throw new Error('Value must be a string');
-    }
-
-    this.undoStack = [];
-    this.redoStack = [];
-
-    try {
-      this.resetModel(resolveSerializer(this.format).deserialize(value));
-      this.invalidData = false;
-    } catch(error) {
-      this.invalidData = true;
-      this.resetModel(new SemanticTextDocument([new SemanticTextParagraph([new SemanticTextLiteral(value)])]));
-    }
-  }
-
-  registerOnChange(fn: any): void {
-    this.propagateChange = fn;
-  }
-
-  registerOnTouched(fn: any): void {
-    this.propagateTouched = fn;
   }
 }

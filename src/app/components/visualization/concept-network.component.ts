@@ -1,24 +1,18 @@
-import { Component, OnInit, OnDestroy, ElementRef, ViewChild, NgZone, HostBinding, Renderer2 } from '@angular/core';
+import { Component, ElementRef, HostBinding, NgZone, OnDestroy, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { CollectionNode, ConceptNode } from 'app/entities/node';
+import { CollectionNode, ConceptNode, Node } from 'app/entities/node';
 import { LanguageService } from 'app/services/language.service';
 import { TermedService } from 'app/services/termed.service';
 import { ConceptViewModelService } from 'app/services/concept.view.service';
-import {
-  Node as VisNode,
-  Edge as VisEdge,
-  DataSet,
-  Network as VisNetwork,
-  Options as VisNetworkOptions, IdType, EdgeOptions
-} from 'vis';
+import { DataSet, Edge as VisEdge, EdgeOptions, IdType, Network as VisNetwork, Node as VisNode, Options as VisNetworkOptions } from 'vis';
 import { ReferenceMeta } from 'app/entities/meta';
-import { Node } from 'app/entities/node';
 import { collectProperties } from 'yti-common-ui/utils/array';
 import { assertNever, requireDefined } from 'yti-common-ui/utils/object';
 import { TranslateService } from '@ngx-translate/core';
 import { MetaModelService } from 'app/services/meta-model.service';
 import { asLocalizable } from 'yti-common-ui/utils/localization';
 import { Subscription } from 'rxjs';
+import { ConfigurationService } from '../../services/configuration.service';
 
 interface ConceptNetworkData {
   nodes: DataSet<UpdatableVisNode>;
@@ -53,18 +47,29 @@ interface ArrowData {
 
 interface VisCanvasRenderingContext2D extends CanvasRenderingContext2D {
 
-  circle(x: string|number, y: string|number, radius: string|number): void;
-  square(x: string|number, y: string|number, radius: string|number): void;
-  triangle(x: string|number, y: string|number, radius: string|number): void;
-  triangleDown(x: string|number, y: string|number, radius: string|number): void;
-  star(x: string|number, y: string|number, radius: string|number): void;
-  diamond(x: string|number, y: string|number, radius: string|number): void;
-  roundRect(x: string|number, y: string|number, width: string|number, height: string|number, radius: string|number): void;
-  ellipse(x: string|number, y: string|number, width: string|number, height: string|number): void;
-  database(x: string|number, y: string|number, width: string|number, height: string|number): void;
-  arrowEndpoint(x: string|number, y: string|number, angle: string|number, length: string|number): void;
-  circleEndpoint(x: string|number, y: string|number, angle: string|number, length: string|number): void;
-  dashedLine(x: string|number, y: string|number, x2: string|number, y2: string|number, pattern: string): void;
+  circle(x: string | number, y: string | number, radius: string | number): void;
+
+  square(x: string | number, y: string | number, radius: string | number): void;
+
+  triangle(x: string | number, y: string | number, radius: string | number): void;
+
+  triangleDown(x: string | number, y: string | number, radius: string | number): void;
+
+  star(x: string | number, y: string | number, radius: string | number): void;
+
+  diamond(x: string | number, y: string | number, radius: string | number): void;
+
+  roundRect(x: string | number, y: string | number, width: string | number, height: string | number, radius: string | number): void;
+
+  ellipse(x: string | number, y: string | number, width: string | number, height: string | number): void;
+
+  database(x: string | number, y: string | number, width: string | number, height: string | number): void;
+
+  arrowEndpoint(x: string | number, y: string | number, angle: string | number, length: string | number): void;
+
+  circleEndpoint(x: string | number, y: string | number, angle: string | number, length: string | number): void;
+
+  dashedLine(x: string | number, y: string | number, x2: string | number, y2: string | number, pattern: string): void;
 }
 
 // Distinguish between single click and double click
@@ -92,20 +97,15 @@ const options: VisNetworkOptions = {
     }
   },
   groups: {
-    rootConceptGroup: {
-    },
+    rootConceptGroup: {},
     rootCollectionGroup: {
       margin: 20,
       borderWidth: 0,
     },
-    relatedGroup: {
-    },
-    broaderGroup: {
-    },
-    isPartOfGroup: {
-    },
-    memberGroup: {
-    }
+    relatedGroup: {},
+    broaderGroup: {},
+    isPartOfGroup: {},
+    memberGroup: {}
   },
   layout: {
     hierarchical: {
@@ -165,8 +165,8 @@ interface UpdatableVisNode extends VisNode {
 }
 
 type EdgeType = 'relation'
-              | 'inheritance'
-              | 'composition'
+  | 'inheritance'
+  | 'composition'
 
 interface CustomizedVisEdge extends VisEdge {
   type: EdgeType;
@@ -209,22 +209,15 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
 
   @ViewChild('networkCanvas') networkCanvasRef: ElementRef;
   @ViewChild('legendCanvas') legendCanvasRef: ElementRef;
-
-  _maximized = false;
-
-  rootNode: Node<any>|null = null;
-
+  rootNode: Node<any> | null = null;
   private skipNextSelection = false;
-
   private clicks = 0;
   private timer: any;
-
   private network: VisNetwork;
   private networkData: ConceptNetworkData = {
     nodes: new DataSet<UpdatableVisNode>(),
     edges: new DataSet<UpdatableVisEdge>()
   };
-
   private languageSubscription: Subscription;
   private translateLanguageSubscription: Subscription;
   private resourceActionSubscription: Subscription;
@@ -236,7 +229,8 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
               private metaModelService: MetaModelService,
               private router: Router,
               private renderer: Renderer2,
-              private conceptViewModel: ConceptViewModelService) {
+              private conceptViewModel: ConceptViewModelService,
+              private configurationService: ConfigurationService) {
 
     const updateNetworkData = () => {
 
@@ -250,61 +244,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
     this.translateLanguageSubscription = this.languageService.translateLanguage$.subscribe(updateNetworkData);
   }
 
-  public ngOnInit(): void {
-
-    this.drawLegend();
-
-    this.languageSubscription = this.languageService.language$.subscribe(() => {
-      this.drawLegend();
-    });
-
-    this.zone.runOutsideAngular(() => {
-      this.network = new VisNetwork(this.networkCanvasRef.nativeElement, this.networkData, options);
-      this.network.on('dragStart', this.onDragStart.bind(this));
-      this.network.on('click', this.onClick.bind(this));
-    });
-
-    this.resourceActionSubscription = this.conceptViewModel.resourceAction$.subscribe(action => {
-      switch (action.type) {
-        case 'select':
-          if (!this.skipNextSelection) {
-            this.resetRootNode(action.item);
-            this.network.once('afterDrawing', () => this.network.fit());
-          }
-          this.skipNextSelection = false;
-          break;
-        case 'edit':
-          this.updateNode(action.item);
-          if (this.rootNode && this.rootNode.id === action.item.id) {
-            this.rootNode = action.item;
-          }
-          break;
-        case 'remove':
-          if (this.rootNode && this.rootNode.id === action.item.id) {
-            this.resetRootNode(null);
-          } else {
-            this.removeNode(action.item.id);
-          }
-          break;
-        case 'noselect':
-          if (this.rootNode && !this.rootNode.persistent) {
-            this.resetRootNode(null);
-          }
-          break;
-        default:
-          assertNever(action, 'Unsupported action: ' + action);
-      }
-    });
-  }
-
-  public ngOnDestroy(): void {
-
-    this.maximized = false; // remove class from the body
-    this.network.destroy();
-    this.languageSubscription.unsubscribe();
-    this.translateLanguageSubscription.unsubscribe();
-    this.resourceActionSubscription.unsubscribe();
-  }
+  _maximized = false;
 
   @HostBinding('class.maximized')
   get maximized() {
@@ -321,211 +261,12 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
     }
   }
 
-  isEmpty() {
-    return this.networkData.nodes.length === 0;
-  }
-
-  private resetRootNode(node: ConceptNode|CollectionNode|null) {
-
-    this.rootNode = node;
-    this.networkData.nodes.clear();
-    this.networkData.edges.clear();
-
-    if (node) {
-      this.createRootNode(node);
-      this.updateEdgeNodes(node);
-    }
-  }
-
-  private createConceptNodeData(concept: ConceptNode): UpdatableVisNode {
-
-    const createNode = () => {
-      const node = {
-        id: concept.id,
-        label: this.languageService.translate(concept.label),
-        // FIXME: how to handle multiple definitions?
-        title: this.languageService.translate(asLocalizable(concept.definitionWithoutSemantics, true))
-      };
-
-      return Object.assign(node, { update: createNode })
-    };
-
-    return createNode();
-  }
-
-  private createRootNode(node: ConceptNode|CollectionNode) {
-    if (node.type === 'Concept') {
-      this.networkData.nodes.add(this.createRootConceptNode(node));
-    } else {
-      this.networkData.nodes.add(this.createCollectionNode(node));
-    }
-  }
-
-  private createRootConceptNode(concept: ConceptNode) {
-    return Object.assign(this.createConceptNodeData(concept), {
-      group: 'rootConceptGroup',
-      physics: false,
-      fixed: false
-    });
-  }
-
-  private createCollectionNode(collection: CollectionNode) {
-
-    const createNode = () => {
-      const node = {
-        id: collection.id,
-        label: this.languageService.translate(collection.label),
-        // FIXME: how to handle multiple definitions?
-        title: this.languageService.translate(asLocalizable(collection.definitionWithoutSemantics, true)),
-        group: 'rootCollectionGroup',
-        physics: false,
-        fixed: false
-      };
-
-      return Object.assign(node, { update: createNode })
-    };
-
-    return createNode();
-  }
-
-  private createRelatedConceptNode(relatedConcept: ConceptNode) {
-    return Object.assign(this.createConceptNodeData(relatedConcept), { group: 'relatedGroup' });
-  }
-
-  private createBroaderConceptNode(broaderConcept: ConceptNode) {
-    return Object.assign(this.createConceptNodeData(broaderConcept), { group: 'broaderGroup' });
-  }
-
-  private createIsPartOfConceptNode(isPartOfConcept: ConceptNode) {
-    return Object.assign(this.createConceptNodeData(isPartOfConcept), { group: 'isPartOfGroup' });
-  }
-
-  private createMemberConceptNode(memberConcept: ConceptNode) {
-    return Object.assign(this.createConceptNodeData(memberConcept), { group: 'memberGroup' });
-  }
-
-  private createEdgeData(from: ConceptNode|CollectionNode, to: ConceptNode, meta: ReferenceMeta, type: EdgeType): UpdatableVisEdge {
-
-    const createTitle = () => this.languageService.translate(meta.label, false) + ': ' +
-      this.languageService.translate(from.label) +
-      ' &rarr; ' +
-      this.languageService.translate(to.label);
-
-    const createEdge = () => {
-      const edge = {
-        from: from.id,
-        to: to.id,
-        id: from.id + to.id,
-        title: createTitle(),
-        type: type
-      };
-
-      return Object.assign(edge, { update: createEdge })
-    };
-
-    return createEdge();
-  }
-
-  private createRelatedConceptEdge(from: ConceptNode, to: ConceptNode, meta: ReferenceMeta) {
-    return Object.assign(this.createEdgeData(from, to, meta, 'relation'), {
-    });
-  }
-
-  private createBroaderConceptEdge(from: ConceptNode|CollectionNode, to: ConceptNode, meta: ReferenceMeta) {
-    return Object.assign(this.createEdgeData(from, to, meta, 'inheritance'), {
-      arrows: {
-        to: true
-      }
-    });
-  }
-
-  private createIsPartOfConceptEdge(from: ConceptNode, to: ConceptNode, meta: ReferenceMeta) {
-    return Object.assign(this.createEdgeData(from, to, meta, 'composition'), {
-      arrows: {
-        to: true
-      }
-    });
-  }
-
-  private createMemberConceptEdge(from: CollectionNode, to: ConceptNode, meta: ReferenceMeta) {
-    return Object.assign(this.createEdgeData(from, to, meta, 'relation'), {
-    });
-  }
-
-  private addNodeIfDoesNotExist(node: UpdatableVisNode) {
-    if (!this.networkData.nodes.get(node.id!)) {
-      this.networkData.nodes.add(node);
-    }
-  }
-
-  private addEdgeIfDoesNotExist(edge: UpdatableVisEdge) {
-    if (!this.networkData.edges.get(edge.id!)) {
-      this.networkData.edges.add(edge);
-
-      const edgeInstance = (this.network as any).edgesHandler.body.edges[requireDefined(edge.id)];
-
-      edgeInstance.drawArrows = (ctx: VisCanvasRenderingContext2D, arrowData: ArrowData, o: EdgeOptions) =>
-        ConceptNetworkComponent.drawEdgeArrows(ctx, edge.type, arrowData);
-    }
-  }
-
-  private drawLegend() {
-
-    const legendCanvas = this.legendCanvasRef.nativeElement;
-    const ctx = legendCanvas.getContext('2d');
-
-    const dpp = 4;
-    const width = 247;
-    const height = 55;
-
-    legendCanvas.width = width * dpp;
-    legendCanvas.height = height * dpp;
-
-    legendCanvas.style.width = width + 'px';
-    legendCanvas.style.height = height + 'px';
-
-    ctx.clearRect(0, 0, legendCanvas.width, legendCanvas.height);
-    ctx.scale(0.825 * dpp, 0.825 * dpp);
-
-    this.translateService.get('Hierarchical').subscribe(text => {
-      ConceptNetworkComponent.drawText(ctx, { x: 47.5, y: 50 }, text.toUpperCase());
-    });
-
-    this.translateService.get('Compositive').subscribe(text => {
-      ConceptNetworkComponent.drawText(ctx, { x: 142.5, y: 50 }, text.toUpperCase());
-    });
-
-    this.translateService.get('Associative').subscribe(text => {
-      ConceptNetworkComponent.drawText(ctx, { x: 247.5, y: 50 }, text.toUpperCase());
-    });
-
-    ConceptNetworkComponent.drawLine(ctx, { x: 20, y: 20 }, { x: 75, y: 20 });
-    ConceptNetworkComponent.drawLine(ctx, { x: 115, y: 20 }, { x: 170, y: 20 });
-    ConceptNetworkComponent.drawLine(ctx, { x: 220, y: 20 }, { x: 275, y: 20 });
-
-    ConceptNetworkComponent.drawInheritanceArrow(ctx, {
-      angle: 0,
-      point: {
-        x: 75,
-        y: 20
-      }
-    });
-
-    ConceptNetworkComponent.drawCompositionArrow(ctx, {
-      angle: 0,
-      point: {
-        x: 170,
-        y: 20
-      }
-    });
-  }
-
   private static drawText(ctx: CanvasRenderingContext2D, to: { x: number, y: number }, text: string) {
 
     ctx.font = '600 12px Open Sans, Helvetica Neue, Helvetica, Arial';
     ctx.textAlign = 'center';
     ctx.fillStyle = '#000000';
-    ctx.fillText(text , to.x, to.y);
+    ctx.fillText(text, to.x, to.y);
   }
 
   private static drawLine(ctx: CanvasRenderingContext2D, from: { x: number, y: number }, to: { x: number, y: number }, lineWidth = 2) {
@@ -604,7 +345,268 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
     }
   }
 
-  private updateNode(node: ConceptNode|CollectionNode) {
+  public ngOnInit(): void {
+
+    this.drawLegend();
+
+    this.languageSubscription = this.languageService.language$.subscribe(() => {
+      this.drawLegend();
+    });
+
+    this.zone.runOutsideAngular(() => {
+      this.network = new VisNetwork(this.networkCanvasRef.nativeElement, this.networkData, options);
+      this.network.on('dragStart', this.onDragStart.bind(this));
+      this.network.on('click', this.onClick.bind(this));
+    });
+
+    this.resourceActionSubscription = this.conceptViewModel.resourceAction$.subscribe(action => {
+      switch (action.type) {
+        case 'select':
+          if (!this.skipNextSelection) {
+            this.resetRootNode(action.item);
+            this.network.once('afterDrawing', () => this.network.fit());
+          }
+          this.skipNextSelection = false;
+          break;
+        case 'edit':
+          this.updateNode(action.item);
+          if (this.rootNode && this.rootNode.id === action.item.id) {
+            this.rootNode = action.item;
+          }
+          break;
+        case 'remove':
+          if (this.rootNode && this.rootNode.id === action.item.id) {
+            this.resetRootNode(null);
+          } else {
+            this.removeNode(action.item.id);
+          }
+          break;
+        case 'noselect':
+          if (this.rootNode && !this.rootNode.persistent) {
+            this.resetRootNode(null);
+          }
+          break;
+        default:
+          assertNever(action, 'Unsupported action: ' + action);
+      }
+    });
+  }
+
+  public ngOnDestroy(): void {
+
+    this.maximized = false; // remove class from the body
+    this.network.destroy();
+    this.languageSubscription.unsubscribe();
+    this.translateLanguageSubscription.unsubscribe();
+    this.resourceActionSubscription.unsubscribe();
+  }
+
+  isEmpty() {
+    return this.networkData.nodes.length === 0;
+  }
+
+  hidePopup(): void {
+    const tooltip = this.networkCanvasRef.nativeElement.querySelector('.vis-tooltip');
+
+    if (tooltip !== null) {
+      tooltip.style.visibility = 'hidden';
+    }
+  }
+
+  private resetRootNode(node: ConceptNode | CollectionNode | null) {
+
+    this.rootNode = node;
+    this.networkData.nodes.clear();
+    this.networkData.edges.clear();
+
+    if (node) {
+      this.createRootNode(node);
+      this.updateEdgeNodes(node);
+    }
+  }
+
+  private createConceptNodeData(concept: ConceptNode): UpdatableVisNode {
+
+    const createNode = () => {
+      const node = {
+        id: concept.id,
+        label: this.languageService.translate(concept.label),
+        // FIXME: how to handle multiple definitions?
+        title: this.languageService.translate(asLocalizable(concept.getDefinitionWithoutSemantics(this.configurationService.namespaceRoot), true))
+      };
+
+      return Object.assign(node, { update: createNode })
+    };
+
+    return createNode();
+  }
+
+  private createRootNode(node: ConceptNode | CollectionNode) {
+    if (node.type === 'Concept') {
+      this.networkData.nodes.add(this.createRootConceptNode(node));
+    } else {
+      this.networkData.nodes.add(this.createCollectionNode(node));
+    }
+  }
+
+  private createRootConceptNode(concept: ConceptNode) {
+    return Object.assign(this.createConceptNodeData(concept), {
+      group: 'rootConceptGroup',
+      physics: false,
+      fixed: false
+    });
+  }
+
+  private createCollectionNode(collection: CollectionNode) {
+
+    const createNode = () => {
+      const node = {
+        id: collection.id,
+        label: this.languageService.translate(collection.label),
+        // FIXME: how to handle multiple definitions?
+        title: this.languageService.translate(asLocalizable(collection.getDefinitionWithoutSemantics(this.configurationService.namespaceRoot), true)),
+        group: 'rootCollectionGroup',
+        physics: false,
+        fixed: false
+      };
+
+      return Object.assign(node, { update: createNode })
+    };
+
+    return createNode();
+  }
+
+  private createRelatedConceptNode(relatedConcept: ConceptNode) {
+    return Object.assign(this.createConceptNodeData(relatedConcept), { group: 'relatedGroup' });
+  }
+
+  private createBroaderConceptNode(broaderConcept: ConceptNode) {
+    return Object.assign(this.createConceptNodeData(broaderConcept), { group: 'broaderGroup' });
+  }
+
+  private createIsPartOfConceptNode(isPartOfConcept: ConceptNode) {
+    return Object.assign(this.createConceptNodeData(isPartOfConcept), { group: 'isPartOfGroup' });
+  }
+
+  private createMemberConceptNode(memberConcept: ConceptNode) {
+    return Object.assign(this.createConceptNodeData(memberConcept), { group: 'memberGroup' });
+  }
+
+  private createEdgeData(from: ConceptNode | CollectionNode, to: ConceptNode, meta: ReferenceMeta, type: EdgeType): UpdatableVisEdge {
+
+    const createTitle = () => this.languageService.translate(meta.label, false) + ': ' +
+      this.languageService.translate(from.label) +
+      ' &rarr; ' +
+      this.languageService.translate(to.label);
+
+    const createEdge = () => {
+      const edge = {
+        from: from.id,
+        to: to.id,
+        id: from.id + to.id,
+        title: createTitle(),
+        type: type
+      };
+
+      return Object.assign(edge, { update: createEdge })
+    };
+
+    return createEdge();
+  }
+
+  private createRelatedConceptEdge(from: ConceptNode, to: ConceptNode, meta: ReferenceMeta) {
+    return Object.assign(this.createEdgeData(from, to, meta, 'relation'), {});
+  }
+
+  private createBroaderConceptEdge(from: ConceptNode | CollectionNode, to: ConceptNode, meta: ReferenceMeta) {
+    return Object.assign(this.createEdgeData(from, to, meta, 'inheritance'), {
+      arrows: {
+        to: true
+      }
+    });
+  }
+
+  private createIsPartOfConceptEdge(from: ConceptNode, to: ConceptNode, meta: ReferenceMeta) {
+    return Object.assign(this.createEdgeData(from, to, meta, 'composition'), {
+      arrows: {
+        to: true
+      }
+    });
+  }
+
+  private createMemberConceptEdge(from: CollectionNode, to: ConceptNode, meta: ReferenceMeta) {
+    return Object.assign(this.createEdgeData(from, to, meta, 'relation'), {});
+  }
+
+  private addNodeIfDoesNotExist(node: UpdatableVisNode) {
+    if (!this.networkData.nodes.get(node.id!)) {
+      this.networkData.nodes.add(node);
+    }
+  }
+
+  private addEdgeIfDoesNotExist(edge: UpdatableVisEdge) {
+    if (!this.networkData.edges.get(edge.id!)) {
+      this.networkData.edges.add(edge);
+
+      const edgeInstance = (this.network as any).edgesHandler.body.edges[requireDefined(edge.id)];
+
+      edgeInstance.drawArrows = (ctx: VisCanvasRenderingContext2D, arrowData: ArrowData, o: EdgeOptions) =>
+        ConceptNetworkComponent.drawEdgeArrows(ctx, edge.type, arrowData);
+    }
+  }
+
+  private drawLegend() {
+
+    const legendCanvas = this.legendCanvasRef.nativeElement;
+    const ctx = legendCanvas.getContext('2d');
+
+    const dpp = 4;
+    const width = 247;
+    const height = 55;
+
+    legendCanvas.width = width * dpp;
+    legendCanvas.height = height * dpp;
+
+    legendCanvas.style.width = width + 'px';
+    legendCanvas.style.height = height + 'px';
+
+    ctx.clearRect(0, 0, legendCanvas.width, legendCanvas.height);
+    ctx.scale(0.825 * dpp, 0.825 * dpp);
+
+    this.translateService.get('Hierarchical').subscribe(text => {
+      ConceptNetworkComponent.drawText(ctx, { x: 47.5, y: 50 }, text.toUpperCase());
+    });
+
+    this.translateService.get('Compositive').subscribe(text => {
+      ConceptNetworkComponent.drawText(ctx, { x: 142.5, y: 50 }, text.toUpperCase());
+    });
+
+    this.translateService.get('Associative').subscribe(text => {
+      ConceptNetworkComponent.drawText(ctx, { x: 247.5, y: 50 }, text.toUpperCase());
+    });
+
+    ConceptNetworkComponent.drawLine(ctx, { x: 20, y: 20 }, { x: 75, y: 20 });
+    ConceptNetworkComponent.drawLine(ctx, { x: 115, y: 20 }, { x: 170, y: 20 });
+    ConceptNetworkComponent.drawLine(ctx, { x: 220, y: 20 }, { x: 275, y: 20 });
+
+    ConceptNetworkComponent.drawInheritanceArrow(ctx, {
+      angle: 0,
+      point: {
+        x: 75,
+        y: 20
+      }
+    });
+
+    ConceptNetworkComponent.drawCompositionArrow(ctx, {
+      angle: 0,
+      point: {
+        x: 170,
+        y: 20
+      }
+    });
+  }
+
+  private updateNode(node: ConceptNode | CollectionNode) {
 
     if (node.type === 'Concept') {
       this.networkData.nodes.update(this.createConceptNodeData(node));
@@ -615,7 +617,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
     this.updateEdgeNodes(node);
   }
 
-  private updateEdgeNodes(node: ConceptNode|CollectionNode) {
+  private updateEdgeNodes(node: ConceptNode | CollectionNode) {
     if (node.type === 'Concept') {
       this.updateEdgeNodesForConcept(node);
     } else {
@@ -628,7 +630,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
     this.removeEdgeNodesFromConcept(concept);
   }
 
-  private addEdgeNodesForConcept(concept: ConceptNode) {
+  private addEdgeNodesForConcept(concept: ConceptNode) {
 
     if (concept.hasRelatedConcepts()) {
       for (const relatedConcept of concept.relatedConcepts.values) {
@@ -645,7 +647,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
     }
 
     this.metaModelService.getReferrersByMeta<ConceptNode>(concept.narrowerConcepts).subscribe(referrers => {
-      for (const {meta, nodes} of referrers) {
+      for (const { meta, nodes } of referrers) {
         for (const narrowerConcept of nodes) {
           this.addNodeIfDoesNotExist(this.createBroaderConceptNode(narrowerConcept));
           this.addEdgeIfDoesNotExist(this.createBroaderConceptEdge(narrowerConcept, concept, meta));
@@ -661,7 +663,7 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
     }
 
     this.metaModelService.getReferrersByMeta<ConceptNode>(concept.partOfThisConcepts).subscribe(referrers => {
-      for (const {meta, nodes} of referrers) {
+      for (const { meta, nodes } of referrers) {
         for (const partOfThisConcept of nodes) {
           this.addNodeIfDoesNotExist(this.createIsPartOfConceptNode(partOfThisConcept));
           this.addEdgeIfDoesNotExist(this.createIsPartOfConceptEdge(partOfThisConcept, concept, meta));
@@ -798,14 +800,6 @@ export class ConceptNetworkComponent implements OnInit, OnDestroy {
     clearTimeout(this.timer);
     this.clicks = 0;
   };
-
-  hidePopup(): void {
-    const tooltip = this.networkCanvasRef.nativeElement.querySelector('.vis-tooltip');
-
-    if (tooltip !== null) {
-      tooltip.style.visibility = 'hidden';
-    }
-  }
 }
 
 function createConnectedEdgeFilter(id: IdType) {

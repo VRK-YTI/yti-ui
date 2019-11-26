@@ -1,10 +1,16 @@
 import {
-  SemanticTextDocument, SemanticTextFormat, SemanticTextLink, SemanticTextLiteral, SemanticTextNode, SemanticTextParagraph,
+  SemanticTextDocument,
+  SemanticTextFormat,
+  SemanticTextLink,
+  SemanticTextLiteral,
+  SemanticTextNode,
+  SemanticTextParagraph,
   SemanticTextSerializer
 } from 'app/entities/semantic';
 import { assertNever, isDefined, requireDefined } from 'yti-common-ui/utils/object';
 import { Node as MarkdownNode, Parser as MarkdownParser } from 'commonmark';
-import { contains, allMatching } from 'yti-common-ui/utils/array';
+import { allMatching, contains } from 'yti-common-ui/utils/array';
+import { escapeHtml } from 'yti-common-ui/utils/string';
 
 export function areNodesEqual(lhs: SemanticTextNode, rhs: SemanticTextNode) {
 
@@ -29,34 +35,31 @@ export function areNodesEqual(lhs: SemanticTextNode, rhs: SemanticTextNode) {
   return true;
 }
 
-export function stripSemanticMarkup(text: string, format: SemanticTextFormat): string {
-
+export function stripSemanticMarkup(text: string, format: SemanticTextFormat, namespaceRoot: string): string {
   let result = '';
 
   const visit = (n: SemanticTextNode) => {
-
     if (n.type === 'paragraph') {
       result += '\n\n';
     }
-
     result += n.text;
-
     for (const child of n.children) {
       visit(child);
     }
   };
 
-  visit(resolveSerializer(format).deserialize(text));
+  visit(resolveSerializer(format).deserialize(text, namespaceRoot).document);
 
   return result.trim();
 }
 
 export function removeMatchingLinks(value: string,
                                     format: SemanticTextFormat,
-                                    predicate: (destination: string) => boolean): string {
+                                    predicate: (destination: string) => boolean,
+                                    namespaceRoot: string): string {
 
   const serializer = resolveSerializer(format);
-  return serializer.serialize(serializer.deserialize(value).removeMatchingLinks(predicate));
+  return serializer.serialize(serializer.deserialize(value, namespaceRoot).document.removeMatchingLinks(predicate));
 }
 
 
@@ -71,6 +74,7 @@ function ensureType<T extends SemanticTextNode>(node: SemanticTextNode, ...type:
 class MarkdownSerializer implements SemanticTextSerializer {
 
   serialize(document: SemanticTextDocument) {
+    console.error("Deprecated MarkdownSerializer used!");
 
     function visit(node: SemanticTextNode): string {
       switch (node.type) {
@@ -90,7 +94,8 @@ class MarkdownSerializer implements SemanticTextSerializer {
     return visit(document);
   }
 
-  deserialize(serialized: string): SemanticTextDocument {
+  deserialize(serialized: string, namespaceRoot: string): { document: SemanticTextDocument, valid: boolean } {
+    console.error("Deprecated MarkdownSerializer used!");
 
     function getChildren(node: MarkdownNode): MarkdownNode[] {
 
@@ -150,7 +155,7 @@ class MarkdownSerializer implements SemanticTextSerializer {
       throw new Error('Cannot parse markdown: ' + serialized);
     }
 
-    return result;
+    return { document: result, valid: true };
   }
 }
 
@@ -165,13 +170,9 @@ class XmlSerializer implements SemanticTextSerializer {
         case 'paragraph':
           return node.children.map((c, i, arr) => visit(c, arr.length - 1 === i)).join('') + (lastChild ? '' : '<br />');
         case 'link':
-          if (node.category === 'external') {
-            return `<a href='${node.destination}' data-type='external'>${node.text}</a>`;
-          } else {
-            return `<a href='${node.destination}'>${node.text}</a>`;
-          }
+          return `<a href='${node.destination}' data-type='${node.category}'>${node.text}</a>`;
         case 'text':
-          return node.text;
+          return escapeHtml(node.text);
         default:
           return assertNever(node);
       }
@@ -180,14 +181,18 @@ class XmlSerializer implements SemanticTextSerializer {
     return visit(document, true);
   }
 
-  deserialize(serialized: string): SemanticTextDocument {
+  deserialize(serialized: string, namespaceRoot: string): { document: SemanticTextDocument, valid: boolean } {
+
+    function getFallbackDocument(error?: string) {
+      console.error('Invalid searialized Semantic Text' + (error ? ' [' + error + ']' : '') + ': ' + serialized);
+      return { document: new SemanticTextDocument([new SemanticTextParagraph([new SemanticTextLiteral(serialized)])]), valid: false };
+    }
 
     function getChildren(node: Node): Node[] {
       return Array.prototype.slice.call(node.childNodes);
     }
 
     function getSingleTextChild(parent: Node) {
-
       if (parent.childNodes.length !== 1) {
         throw new Error('Exactly one child required, was: ' + parent.childNodes.length);
       }
@@ -205,7 +210,7 @@ class XmlSerializer implements SemanticTextSerializer {
     const document = new DOMParser().parseFromString(documentString, 'application/xml');
 
     if (document.getElementsByTagName('parsererror').length > 0) {
-      throw new Error('Cannot parse XML: ' + serialized);
+      return getFallbackDocument('Parse Error');
     }
 
     const documentNode = document.getElementsByTagName('document')[0];
@@ -217,8 +222,7 @@ class XmlSerializer implements SemanticTextSerializer {
     const children = getChildren(documentNode);
 
     if (!allMatching(children, child => isSupportedNode(child))) {
-      console.log(documentNode);
-      throw new Error('Cannot parse xml');
+      return getFallbackDocument('Unsupported Child');
     }
 
     // normalize if empty
@@ -231,7 +235,6 @@ class XmlSerializer implements SemanticTextSerializer {
     let currentIndex = 0;
 
     for (const node of children) {
-
       switch (node.nodeType) {
         case Node.TEXT_NODE:
           groupedNodes[currentIndex].push(node);
@@ -246,52 +249,59 @@ class XmlSerializer implements SemanticTextSerializer {
               currentIndex++;
               break;
             default:
-              throw new Error('Element NOT SUPPORTED: ' + node.nodeName);
+              return getFallbackDocument('Unsupported Element: ' + node.nodeName);
           }
           break;
         default:
-          throw new Error('Node type NOT SUPPORTED: ' + node.nodeType);
+          return getFallbackDocument('Unsupported Node: ' + node.nodeType);
       }
     }
 
-    return new SemanticTextDocument(groupedNodes.map(group => {
-      return new SemanticTextParagraph(group.map(node => {
-        switch (node.nodeType) {
-          case Node.TEXT_NODE:
-            return new SemanticTextLiteral(node.nodeValue || '');
-          case Node.ELEMENT_NODE:
-            switch (node.nodeName) {
-              case 'a':
-                const text = getSingleTextChild(node).nodeValue || '';
-                const destination = node.attributes.getNamedItem('href').value;
-                const type_ = node.attributes.getNamedItem('data-type');
-                if (type_ && type_.value) {
-                  const type = type_.value;
-                  switch (type) {
-                    case 'internal':
-                      return new SemanticTextLink(text, destination, 'internal');
-                    case 'external':
-                      return new SemanticTextLink(text, destination, 'external');
-                    default:
-                      throw new Error('Link type NOT SUPPORTED: ' + type);
-                  }
-                } else {
-                  return new SemanticTextLink(text, destination);
+    try {
+      return {
+        valid: true, document: new SemanticTextDocument(groupedNodes.map(group => {
+          return new SemanticTextParagraph(group.map(node => {
+            switch (node.nodeType) {
+              case Node.TEXT_NODE:
+                return new SemanticTextLiteral(node.nodeValue || '');
+              case Node.ELEMENT_NODE:
+                switch (node.nodeName) {
+                  case 'a':
+                    const text = getSingleTextChild(node).nodeValue || '';
+                    const destination = node.attributes.getNamedItem('href').value;
+                    const type_ = node.attributes.getNamedItem('data-type');
+                    if (type_ && type_.value) {
+                      const type = type_.value;
+                      switch (type) {
+                        case 'internal':
+                          return new SemanticTextLink(text, destination, 'internal');
+                        case 'external':
+                          return new SemanticTextLink(text, destination, 'external');
+                        default:
+                          throw new Error('Unsupported Link: ' + type);
+                      }
+                    } else {
+                      return new SemanticTextLink(text, destination, (destination && destination.startsWith(namespaceRoot)) ? 'internal' : 'external');
+                    }
+                  default:
+                    throw new Error('Unsupported Element: ' + node.nodeName);
                 }
               default:
-                throw new Error('Element NOT SUPPORTED: ' + node.nodeName);
+                throw new Error('Unsupported Node: ' + node.nodeType);
             }
-          default:
-            throw new Error('Node type NOT SUPPORTED: ' + node.nodeType);
-        }
-      }));
-    }));
+          }));
+        }))
+      };
+    } catch(error) {
+      return getFallbackDocument(error);
+    }
   }
 }
 
 export function resolveSerializer(type: SemanticTextFormat): SemanticTextSerializer {
   switch (type) {
     case 'markdown':
+      console.error("Deprecated MarkdownSerializer resolved!");
       return new MarkdownSerializer();
     case 'xml':
       return new XmlSerializer();

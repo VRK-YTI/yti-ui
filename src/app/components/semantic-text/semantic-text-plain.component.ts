@@ -5,6 +5,7 @@ import {
 } from 'app/entities/semantic';
 import { removeWhiteSpaceNodes } from 'app/utils/dom';
 import { resolveSerializer } from 'app/utils/semantic';
+import { ConfigurationService } from '../../services/configuration.service';
 
 type SemanticTextFormat = SemanticTextFormatImported;
 type SemanticTextNode = SemanticTextNodeImported;
@@ -26,6 +27,9 @@ export class SemanticTextPlainComponent implements AfterViewChecked, OnChanges {
 
   @ViewChild('self') self: ElementRef;
 
+  constructor(private configurationService : ConfigurationService) {
+  }
+
   ngAfterViewChecked() {
     removeWhiteSpaceNodes(this.self.nativeElement as HTMLElement);
   }
@@ -33,13 +37,9 @@ export class SemanticTextPlainComponent implements AfterViewChecked, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     const simpleChange = changes['value'];
     if (simpleChange && simpleChange.currentValue !== simpleChange.previousValue) {
-      try {
-        this.document = resolveSerializer(this.format).deserialize(this.value);
-        this.invalidData = false;
-      } catch(Error) {
-        this.invalidData = true;
-        this.document = new SemanticTextDocument([new SemanticTextParagraph([new SemanticTextLiteral(this.value)])]);
-      }
+      const {document, valid} = resolveSerializer(this.format).deserialize(this.value, this.configurationService.namespaceRoot);
+      this.document = document;
+      this.invalidData = !valid;
     }
   }
 }
