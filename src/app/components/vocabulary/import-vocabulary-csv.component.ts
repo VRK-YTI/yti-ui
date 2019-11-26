@@ -1,8 +1,8 @@
-import { Component, Injectable, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Localization } from 'yti-common-ui/types/localization';
-import { firstMatching, flatten, contains, allMatching } from 'yti-common-ui/utils/array';
-import { ConceptNode, VocabularyNode } from 'app/entities/node';
+import { allMatching, contains, firstMatching, flatten } from 'yti-common-ui/utils/array';
+import { ConceptNode, Property, VocabularyNode } from 'app/entities/node';
 import { MetaModelService } from 'app/services/meta-model.service';
 import { MetaModel, NodeMeta } from 'app/entities/meta';
 import { TermedService } from 'app/services/termed.service';
@@ -10,10 +10,11 @@ import * as Papa from 'papaparse';
 import { v4 as uuid } from 'uuid';
 import { assertNever, requireDefined } from 'yti-common-ui/utils/object';
 import { allStatuses, Status } from 'yti-common-ui/entities/status';
+import { escapeHtml } from 'yti-common-ui/utils/string';
 
 type ColumnType = 'localized'
-                | 'literal'
-                | 'reference';
+  | 'literal'
+  | 'reference';
 
 interface ValidationError {
   translationKey: string;
@@ -40,8 +41,8 @@ interface ReferenceColumn {
 }
 
 type Column = LocalizedColumn
-            | LiteralColumn
-            | ReferenceColumn;
+  | LiteralColumn
+  | ReferenceColumn;
 
 const newLineUnix = '\n';
 const newLineWindows = '\r\n';
@@ -108,7 +109,7 @@ function localizationsAreEqual(lhs: Localization, rhs: Localization): boolean {
   return lhs.value === rhs.value && lhs.lang === rhs.lang;
 }
 
-function isValidStatus(value: Localization[]|string): value is Status {
+function isValidStatus(value: Localization[] | string): value is Status {
 
   if (typeof value !== 'string') {
     return false;
@@ -131,7 +132,7 @@ function isValidStatus(value: Localization[]|string): value is Status {
           <a><i class="fa fa-times" id="cancel_import_link" (click)="cancel()"></i></a>
           <span translate>Confirm import</span>
         </h4>
-        
+
         <h6>
           <span translate>Importing</span> {{numberOfConcepts}} <span translate>concepts</span>
         </h6>
@@ -143,11 +144,11 @@ function isValidStatus(value: Localization[]|string): value is Status {
             <div *ngIf="invalid">
               <ul class="errors">
                 <li *ngFor="let error of validationErrors">
-                  <span translate [translateParams]="error.params">{{error.translationKey}}</span>      
+                  <span translate [translateParams]="error.params">{{error.translationKey}}</span>
                 </li>
               </ul>
             </div>
-            
+
             <div class="search-results">
               <div class="search-result" *ngFor="let concept of concepts">
                 <div class="content">
@@ -162,7 +163,7 @@ function isValidStatus(value: Localization[]|string): value is Status {
                       </div>
                     </dd>
                   </dl>
-                  
+
                   <dl *ngIf="concept.altLabel.length > 0">
                     <dt><label class="name" translate>synonym</label></dt>
                     <dd>
@@ -172,25 +173,26 @@ function isValidStatus(value: Localization[]|string): value is Status {
                       </div>
                     </dd>
                   </dl>
-                  
+
                   <div *ngFor="let property of concept.getAllProperties(); let last = last"
                        [class.last]="last">
                     <div *ngIf="!property.isEmpty() && !property.isLabel()">
                       <dl>
                         <dt><label class="name">{{property.meta.label | translateValue}}</label></dt>
-                        
+
                         <dd *ngIf="property.isLocalizable()">
                           <div class="localized" *ngFor="let localization of property.asLocalizations()">
                             <div class="language">{{localization.lang.toUpperCase()}}</div>
-                            <div class="localization">{{localization.value}}</div>
+                            <div class="localization" *ngIf="!isSemanticProperty(property); else semanticLocalizable">{{localization.value}}</div>
+                            <ng-template #semanticLocalizable><div class="localization" [innerHTML]="localization.value"></div></ng-template>
                           </div>
                         </dd>
-                        
+
                         <dd *ngIf="!property.isLocalizable()">
                           <span *ngIf="!property.isStatus()">{{property.literalValue}}</span>
                           <span *ngIf="property.isStatus()">{{property.literalValue | translate}}</span>
                         </dd>
-                        
+
                       </dl>
                     </div>
                   </div>
@@ -208,7 +210,7 @@ function isValidStatus(value: Localization[]|string): value is Status {
                       </dl>
                     </div>
                   </div>
-                  
+
                 </div>
               </div>
             </div>
@@ -220,7 +222,8 @@ function isValidStatus(value: Localization[]|string): value is Status {
       </div>
 
       <div class="modal-footer">
-        <button type="button" id="import_yes_button" class="btn btn-action confirm" (click)="confirm()" [disabled]="invalid" translate>Yes</button>
+        <button type="button" id="import_yes_button" class="btn btn-action confirm"
+                (click)="confirm()" [disabled]="invalid" translate>Yes</button>
         <button type="button" id="import_cancel_button" class="btn btn-link cancel" (click)="cancel()" translate>Cancel</button>
 
         <div class="alert alert-danger modal-alert" id="import_error_modal" role="alert" *ngIf="importError">
@@ -247,6 +250,14 @@ export class ImportVocabularyCSVComponent implements OnInit {
   constructor(private modal: NgbActiveModal,
               private metaModelService: MetaModelService,
               private termedService: TermedService) {
+  }
+
+  get numberOfConcepts() {
+    return this.concepts.length;
+  }
+
+  get invalid() {
+    return this.validationErrors.length > 0;
   }
 
   ngOnInit(): void {
@@ -277,80 +288,12 @@ export class ImportVocabularyCSVComponent implements OnInit {
       });
   }
 
-  private parseColumnDetails(columnNames: string[], conceptMeta: NodeMeta): ColumnDetails {
-
-    const result: ColumnDetails = {};
-
-    for (const columnName of columnNames) {
-
-      // TODO validation, for example for multiple underscores
-      const underscorePosition = columnName.indexOf('_');
-      const isLocalized = underscorePosition !== -1;
-      const name = isLocalized ? columnName.substr(0, underscorePosition) : columnName;
-
-      // special handling for labels
-      if (name === 'prefLabel' || name === 'synonym') {
-        if (!isLocalized) {
-          this.validationErrors.push({
-            translationKey: 'Property must include a language.',
-            params: { name: name }
-          });
-        }
-
-        result[name] = 'localized';
-
-      } else if (conceptMeta.hasProperty(name)) {
-
-        const property = conceptMeta.getProperty(name);
-
-        if (property.isLocalizable()) {
-          if (!isLocalized) {
-            this.validationErrors.push({
-              translationKey: 'Property must include a language.',
-              params: { name: name }
-            });
-          }
-
-          result[name] = 'localized';
-
-        } else {
-          if (isLocalized) {
-            this.validationErrors.push({
-              translationKey: 'Property is not a literal type.',
-              params: { name: name }
-            });
-          }
-
-          result[name] = 'literal';
-        }
-
-      } else if (conceptMeta.hasReference(name)) {
-        if (!isLocalized) {
-          this.validationErrors.push({
-            translationKey: 'Reference must include a language.' ,
-            params: { name: name }
-          });
-        }
-
-        result[name] = 'reference';
-
-      } else {
-        this.validationErrors.push({
-          translationKey: 'No property or reference found with a name.' ,
-          params: { name: name }
-        });
-      }
+  isSemanticProperty(property: Property): boolean {
+    try {
+      return property.meta.type.editor.type === 'semantic';
+    } catch(error) {
+      return false;
     }
-
-    return result;
-  }
-
-  get numberOfConcepts() {
-    return this.concepts.length;
-  }
-
-  get invalid() {
-    return this.validationErrors.length > 0;
   }
 
   convertToConceptNodeWithoutReferences(conceptFromCsv: CsvConceptDetails, metaModel: MetaModel): ConceptNode {
@@ -370,7 +313,7 @@ export class ImportVocabularyCSVComponent implements OnInit {
             concept.status = column.value;
           } else {
             this.validationErrors.push({
-              translationKey: 'Invalid status.' ,
+              translationKey: 'Invalid status.',
               params: { lineNumber: conceptFromCsv.lineNumber, value: column.value }
             });
           }
@@ -379,7 +322,15 @@ export class ImportVocabularyCSVComponent implements OnInit {
         switch (column.type) {
           case 'localized':
             if (column.value.length > 0) {
-              concept.getProperty(name).setLocalizations(column.value);
+              if (this.isSemanticProperty(concept.getProperty(name))) {
+                column.value
+                concept.getProperty(name).setLocalizations(column.value.map(l => {
+                  l.value = escapeHtml(l.value);
+                  return l;
+                }));
+              } else {
+                concept.getProperty(name).setLocalizations(column.value);
+              }
             }
             break;
           case 'literal':
@@ -398,7 +349,7 @@ export class ImportVocabularyCSVComponent implements OnInit {
 
     if (allMatching(concept.prefLabel, label => !label.value)) {
       this.validationErrors.push({
-        translationKey: 'prefLabel must be set.' ,
+        translationKey: 'prefLabel must be set.',
         params: { lineNumber: conceptFromCsv.lineNumber }
       });
     }
@@ -457,5 +408,73 @@ export class ImportVocabularyCSVComponent implements OnInit {
           this.uploading = false;
         }
       });
+  }
+
+  private parseColumnDetails(columnNames: string[], conceptMeta: NodeMeta): ColumnDetails {
+
+    const result: ColumnDetails = {};
+
+    for (const columnName of columnNames) {
+
+      // TODO validation, for example for multiple underscores
+      const underscorePosition = columnName.indexOf('_');
+      const isLocalized = underscorePosition !== -1;
+      const name = isLocalized ? columnName.substr(0, underscorePosition) : columnName;
+
+      // special handling for labels
+      if (name === 'prefLabel' || name === 'synonym') {
+        if (!isLocalized) {
+          this.validationErrors.push({
+            translationKey: 'Property must include a language.',
+            params: { name: name }
+          });
+        }
+
+        result[name] = 'localized';
+
+      } else if (conceptMeta.hasProperty(name)) {
+
+        const property = conceptMeta.getProperty(name);
+
+        if (property.isLocalizable()) {
+          if (!isLocalized) {
+            this.validationErrors.push({
+              translationKey: 'Property must include a language.',
+              params: { name: name }
+            });
+          }
+
+          result[name] = 'localized';
+
+        } else {
+          if (isLocalized) {
+            this.validationErrors.push({
+              translationKey: 'Property is not a literal type.',
+              params: { name: name }
+            });
+          }
+
+          result[name] = 'literal';
+        }
+
+      } else if (conceptMeta.hasReference(name)) {
+        if (!isLocalized) {
+          this.validationErrors.push({
+            translationKey: 'Reference must include a language.',
+            params: { name: name }
+          });
+        }
+
+        result[name] = 'reference';
+
+      } else {
+        this.validationErrors.push({
+          translationKey: 'No property or reference found with a name.',
+          params: { name: name }
+        });
+      }
+    }
+
+    return result;
   }
 }
