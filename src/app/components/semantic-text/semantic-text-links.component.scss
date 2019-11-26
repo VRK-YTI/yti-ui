@@ -1,3 +1,5 @@
+@import '~yti-common-ui/theme/variables';
+
 :host > p:last-child {
   margin-bottom: 0;
 }
@@ -15,4 +17,13 @@ a.external i.fas {
   font-size: smaller;
   padding-left: 0.4em;
   text-decoration: none;
+}
+
+p.invalid-data {
+  color: $danger;
+  font-weight: bolder;
+
+  &:before {
+    content: "ERROR: ";
+  }
 }

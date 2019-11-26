@@ -1120,7 +1120,9 @@ function isRemoveRestOfLine(event: KeyboardEvent) {
     <div #editable
          [id]="id"
          contenteditable="true"
-         class="form-control"></div>
+         class="form-control"
+         [ngClass] = '{"invalid-data": invalidData}'
+    ></div>
   `
 })
 export class SemanticTextInputComponent implements OnInit, ControlValueAccessor {
@@ -1140,6 +1142,8 @@ export class SemanticTextInputComponent implements OnInit, ControlValueAccessor 
   private undoDebounceTimeoutHandle: any = null;
   private propagateChange: (fn: any) => void = () => {};
   private propagateTouched: (fn: any) => void = () => {};
+
+  invalidData: boolean = false;
 
   constructor(private urlInputModalService: UrlInputModalService) {
   }
@@ -1409,7 +1413,13 @@ export class SemanticTextInputComponent implements OnInit, ControlValueAccessor 
     this.undoStack = [];
     this.redoStack = [];
 
-    this.resetModel(resolveSerializer(this.format).deserialize(value));
+    try {
+      this.resetModel(resolveSerializer(this.format).deserialize(value));
+      this.invalidData = false;
+    } catch(error) {
+      this.invalidData = true;
+      this.resetModel(new SemanticTextDocument([new SemanticTextParagraph([new SemanticTextLiteral(value)])]));
+    }
   }
 
   registerOnChange(fn: any): void {

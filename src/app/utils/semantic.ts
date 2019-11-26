@@ -201,10 +201,8 @@ class XmlSerializer implements SemanticTextSerializer {
       return child;
     }
 
-
-    const document = new DOMParser().parseFromString(`
-          <document>${serialized}</document>
-      `, 'application/xml');
+    const documentString = `<document>${serialized}</document>`;
+    const document = new DOMParser().parseFromString(documentString, 'application/xml');
 
     if (document.getElementsByTagName('parsererror').length > 0) {
       throw new Error('Cannot parse XML: ' + serialized);

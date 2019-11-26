@@ -2,7 +2,7 @@ import { AfterViewChecked, Component, ElementRef, Input, OnInit, ViewChild } fro
 import { ConceptNode } from 'app/entities/node';
 import {
   SemanticTextNode as SemanticTextNodeImported, SemanticTextFormat as SemanticTextFormatImported, SemanticTextLink,
-  SemanticTextDocument
+  SemanticTextDocument, SemanticTextParagraph, SemanticTextLiteral
 } from 'app/entities/semantic';
 import { removeWhiteSpaceNodes } from 'app/utils/dom';
 import { firstMatching } from 'yti-common-ui/utils/array';
@@ -19,6 +19,7 @@ type SemanticTextFormat = SemanticTextFormatImported;
     <div #self>
       <div app-semantic-text-links-element
            [node]="document"
+           [invalidData]="invalidData"
            [format]="format"
            [relatedConcepts]="relatedConcepts"></div>
     </div>
@@ -30,11 +31,18 @@ export class SemanticTextLinksComponent implements OnInit, AfterViewChecked {
   @Input() format: SemanticTextFormat;
   @Input() relatedConcepts: ConceptNode[];
   document: SemanticTextDocument;
+  invalidData: boolean = false;
 
   @ViewChild('self') self: ElementRef;
 
   ngOnInit() {
-    this.document = resolveSerializer(this.format).deserialize(this.value);
+    try {
+      this.document = resolveSerializer(this.format).deserialize(this.value);
+      this.invalidData = false;
+    } catch(error) {
+      this.invalidData = true;
+      this.document = new SemanticTextDocument([new SemanticTextParagraph([new SemanticTextLiteral(this.value)])]);
+    }
   }
 
   ngAfterViewChecked() {
@@ -51,6 +59,7 @@ export class SemanticTextLinksComponent implements OnInit, AfterViewChecked {
 
         <p *ngSwitchCase="'paragraph'"
            app-semantic-text-links-element
+           [ngClass] = '{"invalid-data": invalidData}'
            [node]="child"
            [format]="format"
            [relatedConcepts]="relatedConcepts"></p>
@@ -91,6 +100,7 @@ export class SemanticTextLinksElementComponent {
   @Input() node: SemanticTextNode;
   @Input() relatedConcepts: ConceptNode[];
   @Input() format: SemanticTextFormat;
+  @Input() invalidData: boolean = false;
 
   private getTargetConceptNode(node: SemanticTextLink): ConceptNode | null {
     return firstMatching(this.relatedConcepts, concept => concept.isTargetOfLink(node.destination));
