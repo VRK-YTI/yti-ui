@@ -170,7 +170,7 @@ class XmlSerializer implements SemanticTextSerializer {
         case 'paragraph':
           return node.children.map((c, i, arr) => visit(c, arr.length - 1 === i)).join('') + (lastChild ? '' : '<br />');
         case 'link':
-          return `<a href='${node.destination}' data-type='${node.category}'>${node.text}</a>`;
+          return `<a href='${node.destination}' data-type='${node.category}'>${escapeHtml(node.text)}</a>`;
         case 'text':
           return escapeHtml(node.text);
         default:
