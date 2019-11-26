@@ -1,13 +1,5 @@
 {
-  "/frontend/*": {
-    "target": "http://localhost:8001",
-    "secure": false
-  },
-  "/api/*": {
-    "target": "http://localhost:8001",
-    "secure": false
-  },
-  "/importapi/*": {
+  "/terminology-api/api/*": {
     "target": "http://localhost:8001",
     "secure": false
   },

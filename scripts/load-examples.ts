@@ -13,7 +13,7 @@ const kira = require('../examples/kira.json');
 const kiraVocabulary = require('../examples/kira-vocabulary.json');
 
 const mail = 'ytitestaaja@gmail.com';
-const endpoint = process.argv.length > 2 ? process.argv[2] : 'http://localhost:8001/frontend';
+const endpoint = process.argv.length > 2 ? process.argv[2] : 'http://localhost:8001/terminology-api/api/v1/frontend';
 
 const headers = {
   'Accept': 'application/json',

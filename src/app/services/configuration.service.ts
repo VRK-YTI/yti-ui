@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ServiceConfiguration } from '../entities/service-configuration';
 import { HttpClient } from '@angular/common/http';
-import { apiUrl } from '../config';
+import { configApiUrl } from '../config';
 
 @Injectable({
   providedIn: 'root',
@@ -75,7 +75,7 @@ export class ConfigurationService {
   fetchConfiguration(): Promise<ServiceConfiguration> {
     if (!this.configurationPromise) {
       this.configurationPromise = new Promise((resolve, refuse) => {
-        this.http.get<ServiceConfiguration>(`${apiUrl}/configuration`)
+        this.http.get<ServiceConfiguration>(configApiUrl)
           .subscribe(configuration => {
             this.configuration_ = configuration;
             resolve(configuration);

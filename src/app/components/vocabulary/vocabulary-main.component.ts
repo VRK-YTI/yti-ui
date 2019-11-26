@@ -108,6 +108,8 @@ export class VocabularyMainComponent implements OnDestroy {
   private subscriptions: Subscription[] = [];
   private hasSubscription: boolean;
 
+  private terminologyUriRegexp = /^(https?:\/\/[^\/]+\/terminology\/[^\/]+\/)(?:[^\/]+\/?)?$/;
+
   constructor(private route: ActivatedRoute,
               private router: Router,
               private location: Location,
@@ -213,7 +215,7 @@ export class VocabularyMainComponent implements OnDestroy {
   addSubscription() {
 
     if (this.vocabulary && this.vocabulary.uri) {
-      const vocabularyUri = this.vocabulary.uri;
+      const vocabularyUri = this.getShortUri(this.vocabulary.uri);
       this.confirmationModalService.open('ADD EMAIL SUBSCRIPTION TO RESOURCE REGARDING CHANGES?', undefined, '')
         .then(() => {
           this.messagingService.addSubscription(vocabularyUri, 'terminology').subscribe(success => {
@@ -231,7 +233,7 @@ export class VocabularyMainComponent implements OnDestroy {
   removeSubscription() {
 
     if (this.vocabulary && this.vocabulary.uri) {
-      const vocabularyUri = this.vocabulary.uri;
+      const vocabularyUri = this.getShortUri(this.vocabulary.uri);
       this.confirmationModalService.open('REMOVE EMAIL SUBSCRIPTION TO RESOURCE?', undefined, '')
         .then(() => {
           this.messagingService.deleteSubscription(vocabularyUri).subscribe(success => {
@@ -246,11 +248,10 @@ export class VocabularyMainComponent implements OnDestroy {
     }
   }
 
-
   checkSubscription() {
 
     if (this.vocabulary && this.vocabulary.uri) {
-      const vocabularyUri = this.vocabulary.uri;
+      const vocabularyUri = this.getShortUri(this.vocabulary.uri);
       if (this.configurationService.isMessagingEnabled && this.userService.isLoggedIn()) {
         this.messagingService.getSubscription(vocabularyUri).subscribe(resource => {
           if (resource) {
@@ -261,5 +262,14 @@ export class VocabularyMainComponent implements OnDestroy {
         });
       }
     }
+  }
+
+  private getShortUri(uri: string): string {
+    const match = this.terminologyUriRegexp.exec(uri);
+    if (match) {
+      return match[1];
+    }
+    console.error('Invalid terminology uri: ' + uri);
+    return uri;
   }
 }
