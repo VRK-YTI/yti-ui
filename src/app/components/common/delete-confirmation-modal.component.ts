@@ -5,7 +5,7 @@ import { ReferenceMeta } from 'app/entities/meta';
 import { flatten } from 'yti-common-ui/utils/array';
 import { MetaModelService } from 'app/services/meta-model.service';
 import { forkJoin } from 'rxjs';
-import { ModalService } from 'app/services/modal.service';
+import { ModalService } from 'yti-common-ui/services/modal.service';
 
 interface Reference {
   meta: ReferenceMeta;
@@ -28,7 +28,7 @@ interface Reference {
 
           <div *ngIf="references.length > 0">
             <p translate>Following items are referring to the deleted item</p>
-  
+
             <ul>
               <li *ngFor="let reference of references">
                 {{reference.meta.label | translateValue:true}}
@@ -40,7 +40,7 @@ interface Reference {
               </li>
             </ul>
           </div>
-          
+
           <span translate>Are you sure that you want to remove?</span>
         </div>
       </div>

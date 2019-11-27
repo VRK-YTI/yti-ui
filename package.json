@@ -40,11 +40,11 @@
     "node-fetch": "^1.6.3",
     "papaparse": "^4.3.6",
     "rxjs": "~6.3.3",
+    "simple-line-icons": "^2.4.1",
     "uuid": "3.0.1",
     "vis": "^4.19.1",
-    "yti-common-ui": "https://github.com/VRK-YTI/yti-common-ui.git/#1a20fade37caf4b775ce5dd450f0746cafbb5b2f",
-    "zone.js": "~0.8.26",
-    "simple-line-icons": "^2.4.1"
+    "yti-common-ui": "https://github.com/VRK-YTI/yti-common-ui.git/#bcaf950aa980dc9e065cf81720fc54a09529865d",
+    "zone.js": "~0.8.26"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.7.0",

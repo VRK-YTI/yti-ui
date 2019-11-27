@@ -86,7 +86,7 @@ import { VocabularyFilterDropdownComponent } from 'app/components/common/vocabul
 import { StatusFilterDropdownComponent } from 'app/components/common/status-filter-dropdown.component';
 import { AUTHENTICATED_USER_ENDPOINT, LOCALIZER, YtiCommonModule } from 'yti-common-ui';
 import { InformationAboutServiceComponent } from 'app/components/information/information-about-service.component';
-import { ModalService } from './services/modal.service';
+import { ModalService } from 'yti-common-ui/services/modal.service';
 import { DragSortableDirective, DragSortableItemDirective } from './directives/drag-sortable.directive';
 import { apiUrl } from './config';
 import { LogoComponent } from './components/navigation/logo.component';

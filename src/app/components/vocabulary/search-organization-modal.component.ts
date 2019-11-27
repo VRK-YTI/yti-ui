@@ -7,7 +7,7 @@ import { TermedService } from 'app/services/termed.service';
 import { LanguageService } from 'app/services/language.service';
 import { contains } from 'yti-common-ui/utils/array';
 import { isDefined } from 'yti-common-ui/utils/object';
-import { ModalService } from 'app/services/modal.service';
+import { ModalService } from 'yti-common-ui/services/modal.service';
 import { comparingLocalizable } from 'yti-common-ui/utils/comparator';
 
 @Component({

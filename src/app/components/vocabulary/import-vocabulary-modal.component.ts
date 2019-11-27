@@ -2,7 +2,7 @@ import { Component, Injectable, Input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { EditableService } from '../../services/editable.service';
 import { Router } from '@angular/router';
-import { ModalService } from '../../services/modal.service';
+import { ModalService } from 'yti-common-ui/services/modal.service';
 import { VocabularyNode } from '../../entities/node';
 
 @Component({

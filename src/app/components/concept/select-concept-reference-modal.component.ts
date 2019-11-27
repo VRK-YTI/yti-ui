@@ -4,7 +4,7 @@ import { ConceptNode } from 'app/entities/node';
 import { FormNode, FormReferenceLiteral } from 'app/services/form-state';
 import { Options } from 'yti-common-ui/components/dropdown.component';
 import { LanguageService } from 'app/services/language.service';
-import { ModalService } from 'app/services/modal.service';
+import { ModalService } from 'yti-common-ui/services/modal.service';
 import { labelNameToResourceIdIdentifier } from 'yti-common-ui/utils/resource';
 
 @Component({
@@ -20,14 +20,14 @@ import { labelNameToResourceIdIdentifier } from 'yti-common-ui/utils/resource';
     <div class="modal-body">
       <div class="row">
         <div class="col-md-12">
-          
+
           <p translate>Selected concept is not yet formally referenced. Choose the reference type.</p>
-          
+
           <div class="form-group">
             <label for="status" translate>Reference type</label>
             <app-dropdown [(ngModel)]="selection" id="select_concept_reference_dropdown" [options]="referenceOptions"></app-dropdown>
           </div>
-          
+
         </div>
       </div>
     </div>
