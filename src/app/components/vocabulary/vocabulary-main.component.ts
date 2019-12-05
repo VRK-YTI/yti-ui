@@ -28,7 +28,7 @@ import { UserService } from 'yti-common-ui/services/user.service';
           <div class="row">
             <div class="nameButtonRow col-12">
               <h2 id="vocabulary_main_label"><span class="mr-4">{{vocabulary!.label | translateValue}}</span></h2>
-              <div *ngIf="hasSubscription" class="subscription">
+              <div *ngIf="checkSubscription" class="subscription">
                 <span class="subscription-icon icon-bell"
                       ngbTooltip="{{ 'You will receive an email notification when this resource changes.' | translate }}"></span>
               </div>
@@ -106,7 +106,8 @@ export class VocabularyMainComponent implements OnDestroy {
   @ViewChild('terminologyComponent') terminologyComponent: VocabularyComponent;
   private graphId: string;
   private subscriptions: Subscription[] = [];
-  private hasSubscription: boolean;
+  private hasSubscription: boolean | undefined = undefined;
+  private refreshingSubscription: boolean;
 
   private terminologyUriRegexp = /^(https?:\/\/[^\/]+\/terminology\/[^\/]+\/)(?:[^\/]+\/?)?$/;
 
@@ -134,7 +135,6 @@ export class VocabularyMainComponent implements OnDestroy {
       const conceptQuery = this.route.snapshot.queryParams['q'];
       this.graphId = params['graphId'];
       this.viewModel.initializeVocabulary(this.graphId, (conceptQuery && typeof conceptQuery === 'string') ? conceptQuery : undefined);
-      this.checkSubscription();
     }));
   }
 
@@ -159,12 +159,10 @@ export class VocabularyMainComponent implements OnDestroy {
   }
 
   get showMenu(): boolean {
-
     return this.canSubscribe || this.canImport;
   }
 
   get canSubscribe(): boolean {
-
     return this.configurationService.isMessagingEnabled && this.userService.isLoggedIn();
   }
 
@@ -177,16 +175,14 @@ export class VocabularyMainComponent implements OnDestroy {
   }
 
   get canAddSubscription(): boolean {
-
-    if (this.vocabulary) {
+    if (this.vocabulary && this.hasSubscription !== undefined) {
       return this.canSubscribe && !this.hasSubscription;
     }
     return false;
   }
 
   get canRemoveSubscription(): boolean {
-
-    if (this.vocabulary) {
+    if (this.vocabulary && this.hasSubscription !== undefined) {
       return this.canSubscribe && this.hasSubscription;
     }
     return false;
@@ -213,7 +209,6 @@ export class VocabularyMainComponent implements OnDestroy {
   }
 
   addSubscription() {
-
     if (this.vocabulary && this.vocabulary.uri) {
       const vocabularyUri = this.getShortUri(this.vocabulary.uri);
       this.confirmationModalService.open('ADD EMAIL SUBSCRIPTION TO RESOURCE REGARDING CHANGES?', undefined, '')
@@ -231,7 +226,6 @@ export class VocabularyMainComponent implements OnDestroy {
   }
 
   removeSubscription() {
-
     if (this.vocabulary && this.vocabulary.uri) {
       const vocabularyUri = this.getShortUri(this.vocabulary.uri);
       this.confirmationModalService.open('REMOVE EMAIL SUBSCRIPTION TO RESOURCE?', undefined, '')
@@ -248,8 +242,20 @@ export class VocabularyMainComponent implements OnDestroy {
     }
   }
 
-  checkSubscription() {
+  get checkSubscription(): boolean {
+    if (this.hasSubscription === undefined) {
+      if (!this.refreshingSubscription) {
+        this.refreshSubscription();
+      }
+      return false;
+    } else {
+      return this.hasSubscription;
+    }
+  }
 
+  refreshSubscription() {
+    console.log('refreshSubscription');
+    this.refreshingSubscription = true;
     if (this.vocabulary && this.vocabulary.uri) {
       const vocabularyUri = this.getShortUri(this.vocabulary.uri);
       if (this.configurationService.isMessagingEnabled && this.userService.isLoggedIn()) {
@@ -259,6 +265,7 @@ export class VocabularyMainComponent implements OnDestroy {
           } else {
             this.hasSubscription = false;
           }
+          this.refreshingSubscription = false;
         });
       }
     }
