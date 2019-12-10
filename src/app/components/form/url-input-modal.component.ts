@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, Injectable, ViewChild } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { ModalService } from 'app/services/modal.service';
+import { ModalService } from 'yti-common-ui/services/modal.service';
 import { FormControl, Validators } from '@angular/forms';
 import { httpOrHttpsUrlRegex } from 'yti-common-ui/utils/validator';
 

@@ -10,7 +10,7 @@ import { FormNode } from 'app/services/form-state';
 import { defaultLanguages } from 'app/utils/language';
 import { firstMatching } from 'yti-common-ui/utils/array';
 import { LanguageService } from 'app/services/language.service';
-import { ModalService } from 'app/services/modal.service';
+import { ModalService } from 'yti-common-ui/services/modal.service';
 import { MetaModelService } from 'app/services/meta-model.service';
 import { HttpErrorResponse } from '@angular/common/http';
 
