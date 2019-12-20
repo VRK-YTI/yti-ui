@@ -1,5 +1,5 @@
 {
-  "/terminology-api/api/*": {
+  "/terminology-api/*": {
     "target": "http://localhost:8001",
     "secure": false
   },
