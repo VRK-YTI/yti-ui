@@ -1,5 +1,5 @@
 {
-  "/terminology-api/api/*": {
+  "/terminology-api/*": {
     "target": "https://sanastot.dev.yti.cloud.vrk.fi",
     "changeOrigin": true,
     "secure": false

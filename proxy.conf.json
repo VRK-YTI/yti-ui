@@ -1,6 +1,6 @@
 {
-  "/terminology-api/api/*": {
-    "target": "http://localhost:8001",
+  "/terminology-api/*": {
+    "target": "http://localhost:9101",
     "secure": false
   },
   "/messaging-api/*": {
