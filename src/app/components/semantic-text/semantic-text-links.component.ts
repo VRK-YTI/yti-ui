@@ -73,6 +73,7 @@ export class SemanticTextLinksComponent implements OnInit, AfterViewChecked {
              triggers="mouseenter:mouseleave">{{child.text}}</a>
           <a *ngIf="child.category === 'external'"
              target="_blank"
+             rel="noopener noreferrer"
              [class]="child.category"
              [href]="child.destination"
              [popoverTitle]="'External link' | translate"

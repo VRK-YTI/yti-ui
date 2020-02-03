@@ -72,20 +72,20 @@ import { Router } from '@angular/router';
                [routerLink]="['/userDetails']" translate>User details</a>
             <a id="navigation_interoperability_platform_link"
                class="dropdown-item"
-               href="https://yhteentoimiva.suomi.fi/" target="_blank">yhteentoimiva.suomi.fi</a>
+               href="https://yhteentoimiva.suomi.fi/" target="_blank" rel="noopener noreferrer">yhteentoimiva.suomi.fi</a>
             <a id="navigation_reference_data_link"
                class="dropdown-item"
-               [href]="codeListUrl" target="_blank" translate>Suomi.fi Reference Data</a>
+               [href]="codeListUrl" target="_blank" rel="noopener noreferrer" translate>Suomi.fi Reference Data</a>
             <a id="navigation_data_vocabularies_link"
                class="dropdown-item"
-               [href]="dataModelUrl" target="_blank" translate>Suomi.fi Data Vocabularies</a>
+               [href]="dataModelUrl" target="_blank" rel="noopener noreferrer" translate>Suomi.fi Data Vocabularies</a>
             <a id="navigation_comments_link"
                class="dropdown-item"
-               [href]="commentsUrl" target="_blank" translate>Suomi.fi Comments</a>
+               [href]="commentsUrl" target="_blank" rel="noopener noreferrer" translate>Suomi.fi Comments</a>
             <a class="dropdown-item"
                id="groupmanagement_link"
                *ngIf="showGroupManagementUrl()"
-               [href]="groupManagementUrl" target="_blank" translate>User right management</a>
+               [href]="groupManagementUrl" target="_blank" rel="noopener noreferrer" translate>User right management</a>
           </div>
         </li>
       </ul>
