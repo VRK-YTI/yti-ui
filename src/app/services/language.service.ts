@@ -88,4 +88,19 @@ export class LanguageService implements Localizer {
 
     return this.translate(localizable, true);
   }
+
+  isLocalizableEmpty(localizable: Localizable): boolean {
+
+    if (!localizable) {
+      return true;
+    }
+
+    for (const prop in localizable) {
+      if (localizable.hasOwnProperty(prop)) {
+        return false;
+      }
+    }
+
+    return JSON.stringify(localizable) === JSON.stringify({});
+  }
 }
