@@ -1,5 +1,5 @@
 # alpine version should match the version in .nvmrc as closely as possible
-FROM node:12.14.1-alpine
+FROM node:12.15.0-alpine
 
 ARG env
 
