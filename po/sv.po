@@ -1,0 +1,557 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2020-02-13 16:04+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: sv\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.3\n"
+"X-Poedit-Basepath: .\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Terminologies"
+msgstr "Ordlistor"
+
+msgid "Search collection"
+msgstr "Hämta begreppsurval"
+
+msgid "Add new collection"
+msgstr "Lägg till nytt begreppsurval"
+
+msgid "Confirm remove"
+msgstr "Godkännande av borttagning"
+
+msgid "Following items are referring to the deleted item"
+msgstr "Följande hänvisar till det som tas bort"
+
+msgid "Are you sure that you want to remove?"
+msgstr "Är du säker att du vill ta bort?"
+
+msgid "Yes"
+msgstr "Ja"
+
+msgid "Cancel"
+msgstr "Ångra"
+
+msgid "Created at"
+msgstr "Skapad"
+
+msgid "Created by"
+msgstr "Skapad av"
+
+msgid "Modified at"
+msgstr "Redigerad"
+
+msgid "Modified by"
+msgstr "Redigerad av"
+
+msgid "All organizations"
+msgstr "Alla organisationer"
+
+msgid "All vocabularies"
+msgstr "Alla ordlistor"
+
+msgid "Add new concept"
+msgstr "Lägg till nytt begrepp"
+
+msgid "Add concept"
+msgstr "Lägg till begrepp"
+
+msgid "Search concept"
+msgstr "Hämta begrepp"
+
+msgid "Filter results"
+msgstr "Avgränsa sökresultaten"
+
+msgid "Order by modified date"
+msgstr "Ordna efter redigeringstidpunkt"
+
+msgid "Status"
+msgstr ""
+
+msgid "Alphabetic"
+msgstr "Alfabetisk"
+
+msgid "Hierarchical"
+msgstr "Hierarkisk"
+
+msgid "Collection"
+msgstr "Begreppsurval"
+
+msgid "Prefix"
+msgstr ""
+
+msgid "Namespace"
+msgstr "Namnrymd"
+
+msgid "The following references are about to be completely removed"
+msgstr "Följande referenser försvinner helt när du sparar"
+
+msgid "The following reference is about to be completely removed"
+msgstr "Följande referens försvinner helt när du sparar"
+
+msgid "Reference type"
+msgstr "Referenstyp"
+
+msgid "Target container"
+msgstr "Objektets läge"
+
+msgid "Target"
+msgstr "Objekt"
+
+msgid "Are you sure that you want to continue?"
+msgstr "Är du säker på att du vill fortsätta?"
+
+msgid "Select concept"
+msgstr "Välj begrepp"
+
+msgid "Choose concept"
+msgstr "Välj begrepp"
+
+msgid "Choose reference type"
+msgstr "Välj referenstyp"
+
+msgid ""
+"Selected concept is not yet formally referenced. Choose the reference type."
+msgstr "Det valda begreppet saknar en formell referens. Välj referenstyp."
+
+msgid "Select reference"
+msgstr "Välj referens"
+
+msgid "Save"
+msgstr "Spara"
+
+msgid "Edit"
+msgstr "Redigera"
+
+msgid "Remove"
+msgstr "Ta bort"
+
+msgid "Content language"
+msgstr "Innehållets språk"
+
+msgid "Content in"
+msgstr "Innehåll på"
+
+msgid "Content in all languages"
+msgstr "Innehåll på alla språk"
+
+msgid "Add"
+msgstr "Lägg till"
+
+msgid "No values yet"
+msgstr "Ingen värde ännu"
+
+msgid "Add concept reference"
+msgstr "Lägg till begreppsreferens"
+
+msgid "Add link"
+msgstr "Lägg till länk"
+
+msgid "Unlinked selected text"
+msgstr "Text utan länkning"
+
+msgid "No terms yet"
+msgstr "Ingen term ännu"
+
+msgid "Remove term"
+msgstr "Ta bort term"
+
+msgid "Enter link target"
+msgstr "Ange länkens objekt"
+
+msgid "Enter the full HTTP or HTTPS address (URL) for the link:"
+msgstr "Ange hel HTTP- eller HTTPS-adress (URL) för länken:"
+
+msgid "Impersonate user"
+msgstr "Agera som användare"
+
+msgid "LOG IN"
+msgstr "LOGGA IN"
+
+msgid "LOG OUT"
+msgstr "LOGGA UT"
+
+msgid "User details"
+msgstr "Användaruppgifter"
+
+msgid "Suomi.fi Reference Data"
+msgstr "Suomi.fi-kodlistor"
+
+msgid "Suomi.fi Data Vocabularies"
+msgstr "Suomi.fi-informationsmodeller"
+
+msgid "Suomi.fi Comments"
+msgstr "Suomi.fi-kommentarer"
+
+msgid "User right management"
+msgstr "Administrering av behörigheter"
+
+msgid "Choose organization"
+msgstr "Välj organisation"
+
+msgid "Compositive"
+msgstr "Komposition"
+
+msgid "Associative"
+msgstr "Associativ"
+
+msgid "Add information domain"
+msgstr "Lägg till informationsområde"
+
+msgid "Confirm import"
+msgstr "Godkännande av import"
+
+msgid "Importing"
+msgstr "Importeras"
+
+msgid "concepts"
+msgstr "begrepp"
+
+msgid "{{error.translationKey}}"
+msgstr ""
+
+msgid "prefLabel"
+msgstr "Rekommenderad term"
+
+msgid "synonym"
+msgstr "Synonym"
+
+msgid "Import failed"
+msgstr "Det gick inte att importera"
+
+msgid "Import concepts"
+msgstr "Importera begrepp"
+
+msgid "File format"
+msgstr "Filformat"
+
+msgid "File to be uploaded"
+msgstr "Fil som importeras"
+
+msgid "Import"
+msgstr "Importera"
+
+msgid "XML import"
+msgstr "XML-import"
+
+msgid ""
+"Error while monitoring processing. Close the modal and try refreshing page "
+"later."
+msgstr ""
+"Det fick inte att följa upp behandlingen. Stäng dialogrutan och försök "
+"uppdatera sidan senare."
+
+msgid "Import success"
+msgstr "{{ created }} objekt skapades."
+
+msgid "Import success with errors"
+msgstr ""
+"{{ created }} objekt skapades. Fel: {{ errors }}. Varningar: {{ warnings }}."
+
+msgid "Close"
+msgstr "Stäng"
+
+msgid "New vocabulary"
+msgstr "ny ordlista"
+
+msgid "Add organization"
+msgstr "Lägg till organisation"
+
+msgid "Search information domain"
+msgstr "Hämta informationsområde"
+
+msgid "Choose information domain"
+msgstr "Välj informationsområde"
+
+msgid "Search organization"
+msgstr "Hämta organisation"
+
+msgid "Search term"
+msgstr "Sökord"
+
+msgid "TerminologicalVocabularyType"
+msgstr "Terminologisk ordlista"
+
+msgid "See all results"
+msgstr "Se alla {{count}} träffar"
+
+msgid "Add vocabulary"
+msgstr "Lägg till ordlista"
+
+msgid "ToolInfo"
+msgstr ""
+"Med verktyget Terminologiska ordlistor kompilerar och uppdaterar man "
+"gemensamma terminologiska ordlistor och begrepp inom den offentliga "
+"förvaltningen. Till exempel personer som arbetar med ordlistor och "
+"datamodellerare kan definiera begrepp och begreppens förhållande till "
+"varandra med Terminologiska ordlistor. Därtill kan dessa förhållanden "
+"visualiseras med verktyget. Medborgare kan däremot bläddra bland och "
+"kontrollera begrepp och deras definitioner."
+
+msgid "Search vocabularies"
+msgstr "Hämta ordlistor"
+
+msgid "Extend search"
+msgstr "Sök även i"
+
+msgid "to concepts"
+msgstr "begrepp"
+
+msgid "Filter with information domain"
+msgstr "Avgränsa enligt informationsområde"
+
+msgid "result"
+msgstr "sökresultat"
+
+msgid "results"
+msgstr "sökresultat"
+
+msgid "Search results"
+msgstr "Sökresultat"
+
+msgid "Deep {{deepHitList.type}} hit"
+msgstr ""
+
+msgid "Vocabulary type"
+msgstr "Typ av ordlista"
+
+msgid "You will receive an email notification when this resource changes."
+msgstr "Du meddelas per e-post när det görs ändringar i detta material."
+
+msgid "Concepts"
+msgstr "Begrepp"
+
+msgid "Terminology details"
+msgstr "Ordlistans uppgifter"
+
+msgid "Choose action"
+msgstr "Välj funktion"
+
+msgid "Add email subscription"
+msgstr "Beställ e-postaviseringar"
+
+msgid "Remove email subscription"
+msgstr "Ta bort e-postaviseringar"
+
+msgid "Information domain"
+msgstr "Informationsområde"
+
+msgid "Organization"
+msgstr "Organisation"
+
+msgid "New concept"
+msgstr "nytt begrepp"
+
+msgid "New collection"
+msgstr "nytt begreppsurval"
+
+msgid "Name"
+msgstr "Namn"
+
+msgid "Email"
+msgstr "E-post"
+
+msgid "Organizations and roles"
+msgstr "Organisationer och roller"
+
+msgid "Unknown organization"
+msgstr "Okänd organisation"
+
+msgid "Waiting for approval"
+msgstr "Väntar på godkännande"
+
+msgid "Send access request"
+msgstr "Skicka begäran om behörighet"
+
+msgid "Send"
+msgstr "Sänd"
+
+msgid ""
+"You have subscribed to be notified via email when the following resources "
+"change. To remove the subscription, click the icon next to the resource."
+msgstr ""
+"Du har beställt e-postaviseringar om ändringar i följande material. För att "
+"ta bort aviseringen klicka på ikonen bredvid materialet."
+
+msgid "Email notifications"
+msgstr "E-postaviseringar"
+
+msgid "Daily"
+msgstr "Dagligen"
+
+msgid "Code list resources"
+msgstr "Material som hänför sig kodlistor"
+
+msgid "Terminology resources"
+msgstr "Material som hänför sig till ordlistor"
+
+msgid "Datamodel resources"
+msgstr "Material som hänför sig till informationsmodeller"
+
+msgid "Comments resources"
+msgstr "Material som hänför sig till kommentarer"
+
+msgid "INFORMATION"
+msgstr "UPPGIFTER"
+
+msgid "SUBSCRIPTIONS"
+msgstr "BESTÄLLNINGAR"
+
+msgid "Front page"
+msgstr "Startsida"
+
+msgid "All statuses"
+msgstr "Alla statusar"
+
+msgid "Vocabulary"
+msgstr "Ordlista"
+
+msgid "Group"
+msgstr "Domän/Grupp"
+
+msgid "Submit error"
+msgstr "Det skedde ett fel i funktionen"
+
+msgid "Unexpected error"
+msgstr "Det skedde ett oväntat fel"
+
+msgid "Edit in progress"
+msgstr "Redigeringen är halvfärdig"
+
+msgid ""
+"Are you sure that you want to continue? By continuing unsaved changes will "
+"be lost."
+msgstr ""
+"Är du säker på att du vill fortsätta? Om du fortsätter förlorar du de "
+"ändringar som inte sparats."
+
+msgid "Link"
+msgstr "Länka"
+
+msgid "Unlink"
+msgstr "Ta bort länkning"
+
+msgid "Concept not in references"
+msgstr "Begreppet finns inte i referenserna"
+
+msgid "self reference error"
+msgstr "Valet kan inte hänvisa till sig själv"
+
+msgid "already added error"
+msgstr "Valet har redan lagts till"
+
+msgid "ADMIN"
+msgstr "Administratör"
+
+msgid "DATA_MODEL_EDITOR"
+msgstr "Datamodellerare"
+
+msgid "TERMINOLOGY_EDITOR"
+msgstr "Terminologiredigerare"
+
+msgid "CODE_LIST_EDITOR"
+msgstr "Kodlistredigerare"
+
+msgid "MEMBER"
+msgstr "Medlem"
+
+msgid "All vocabulary types"
+msgstr "Alla typer av ordlistor"
+
+msgid "VocabularyType"
+msgstr "Ämnesordsregister"
+
+msgid "File upload"
+msgstr "Exportera fil"
+
+msgid "Processing"
+msgstr "Behandling"
+
+msgid "Show messages"
+msgstr "Visa meddelanden"
+
+msgid "Hide messages"
+msgstr "Dölj meddelanden"
+
+msgid "External link"
+msgstr "Extern länk"
+
+msgid "Deep CONCEPT hit"
+msgstr "Begrepp"
+
+msgid "Comma delimited"
+msgstr "Separerad med punkt"
+
+msgid "Semicolon delimited"
+msgstr "Separerad med semikolon"
+
+msgid "ADD EMAIL SUBSCRIPTION TO RESOURCE REGARDING CHANGES?"
+msgstr "BESTÄLL E-POSTAVISERINGAR OM ÄNDRINGAR I MATERIALET?"
+
+msgid "REMOVE EMAIL SUBSCRIPTION TO RESOURCE?"
+msgstr "TA BORT E-POSTBESTÄLLNINGEN OM MATERIALET?"
+
+msgid "ARE YOU SURE YOU WANT TO ENABLE THE NOTIFICATION EMAIL SUBSCRIPTION?"
+msgstr "ÄR DU SÄKER ATT DU VILL AKTIVERA INSTÄLLNINGEN FÖR ATT TA EMOT E-POST?"
+
+msgid "ARE YOU SURE YOU WANT TO DISABLE THE NOTIFICATION EMAIL SUBSCRIPTION?"
+msgstr ""
+"ÄR DU SÄKER ATT DU VILL INAKTIVERA INSTÄLLNINGEN FÖR ATT TA EMOT E-POST?"
+
+msgid "Adding subscription failed."
+msgstr "Det gick inte att beställa aviseringar."
+
+msgid "Subscription deletion failed."
+msgstr "Borttagning av aviseringar misslyckades."
+
+msgid "INFO_TEXT_EMAIL_SUBSCRIPTIONS"
+msgstr ""
+"Med denna funktion väljer du att aktivera/inaktivera aviseringsfunktionen. "
+"Genom att ta bort krysset för “Dagligen” kan du inaktivera alla aviseringar "
+"på en gång. Genom att kryssa för på nytt aktiveras aviseringar."
+
+msgid "validateMeta"
+msgstr "Ogiltig inmatning"
+
+msgid "required"
+msgstr "Obligatorisk inmatning"
+
+msgid "validateLanguage"
+msgstr "Ogiltigt språk"
+
+msgid "prefixInUse"
+msgstr "Prefixet är redan i bruk"
+
+msgid "prefixFormat"
+msgstr "Tillåtna tecken i prefixet är a–z, 0–9, understreck och bindestreck"
+
+msgid "pattern"
+msgstr "Inmatningen har fel form"
+
+msgid "Property is not a literal type."
+msgstr "Attributet “{{ name }}” är inte litteral"
+
+msgid "Property must include a language."
+msgstr "Attributet “{{ name }}” ska vara definierat för språket"
+
+msgid "No property or reference found with a name."
+msgstr "Denna typ av ordlista stöder inte kolumnen “{{ name }}”"
+
+msgid "Invalid status."
+msgstr "{{ lineNumber }}: Fel status “{{ value }}”"
+
+msgid "prefLabel must be set."
+msgstr "{{ lineNumber }}: prefLabel ska vara fastställt"
+
+msgid "Reference must include a language."
+msgstr "Referensen “{{ name }}” ska vara definierat för språket"
+
+msgid "Reference does not match any concepts."
+msgstr ""
+"{{ lineNumber }}: Referensen “{{ name }}” saknar begrepp för värdet "
+"“{{ value }}”"
