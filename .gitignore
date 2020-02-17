@@ -3,6 +3,7 @@
 # compiled output
 /dist
 /tmp
+/po/*.mo
 
 # dependencies
 /node_modules

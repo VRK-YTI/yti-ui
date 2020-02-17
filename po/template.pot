@@ -380,10 +380,10 @@ msgstr ""
 msgid "SUBSCRIPTIONS"
 msgstr ""
 
-msgid "TERMINOLOGY_EDITOR"
+msgid "Front page"
 msgstr ""
 
-msgid "Front page"
+msgid "All statuses"
 msgstr ""
 
 msgid "Vocabulary"
@@ -427,7 +427,7 @@ msgstr ""
 msgid "DATA_MODEL_EDITOR"
 msgstr ""
 
-msgid "All statuses"
+msgid "TERMINOLOGY_EDITOR"
 msgstr ""
 
 msgid "CODE_LIST_EDITOR"
@@ -487,10 +487,10 @@ msgstr ""
 msgid "INFO_TEXT_EMAIL_SUBSCRIPTIONS"
 msgstr ""
 
-msgid "Property is not a literal type."
+msgid "validateMeta"
 msgstr ""
 
-msgid "validateMeta"
+msgid "required"
 msgstr ""
 
 msgid "validateLanguage"
@@ -505,7 +505,7 @@ msgstr ""
 msgid "pattern"
 msgstr ""
 
-msgid "required"
+msgid "Property is not a literal type."
 msgstr ""
 
 msgid "Property must include a language."

@@ -126,6 +126,10 @@ const localizations: { [lang: string]: any } = {
   en: {
     ...removeEmptyValues(JSON.parse(require(`raw-loader!po-loader?format=mf!../../po/en.po`))),
     ...removeEmptyValues(JSON.parse(require(`raw-loader!po-loader?format=mf!yti-common-ui/po/en.po`)))
+  },
+  sv: {
+    ...removeEmptyValues(JSON.parse(require(`raw-loader!po-loader?format=mf!../../po/sv.po`))),
+    ...removeEmptyValues(JSON.parse(require(`raw-loader!po-loader?format=mf!yti-common-ui/po/sv.po`)))
   }
 };
 

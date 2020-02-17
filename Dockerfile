@@ -1,5 +1,5 @@
 # alpine version should match the version in .nvmrc as closely as possible
-FROM node:8.11.4-alpine as builder
+FROM node:12.15.0-alpine as builder
 
 ARG NPMRC
 
@@ -14,7 +14,7 @@ RUN echo "$NPMRC" > .npmrc && yarn install && rm -f .npmrc
 # Build the dist dir containing the static files
 RUN ["npm", "run", "build", "--", "--prod",  "--output-hashing=all"]
 
-FROM node:8.11.4-alpine
+FROM node:12.15.0-alpine
 
 # Install nginx
 RUN apk add --update nginx && \

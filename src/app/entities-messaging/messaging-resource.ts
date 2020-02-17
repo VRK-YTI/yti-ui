@@ -27,6 +27,9 @@ export class MessagingResource {
 
   getDisplayName(localizer: Localizer, useUILanguage: boolean = false): string {
     const displayName = localizer.translate(this.prefLabel, useUILanguage);
+    if (displayName && displayName.endsWith(' (und)')) {
+      return displayName.substring(0, displayName.length - 6);
+    }
     return displayName ? displayName : this.uri;
   }
 
