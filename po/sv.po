@@ -71,7 +71,7 @@ msgid "Order by modified date"
 msgstr "Ordna efter redigeringstidpunkt"
 
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 msgid "Alphabetic"
 msgstr "Alfabetisk"
@@ -83,7 +83,7 @@ msgid "Collection"
 msgstr "Begreppsurval"
 
 msgid "Prefix"
-msgstr ""
+msgstr "Prefix"
 
 msgid "Namespace"
 msgstr "Namnrymd"
