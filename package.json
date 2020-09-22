@@ -43,7 +43,7 @@
     "simple-line-icons": "^2.4.1",
     "uuid": "3.0.1",
     "vis": "^4.19.1",
-    "yti-common-ui": "https://github.com/VRK-YTI/yti-common-ui.git/#316b1a179c62cc445f1abe3ce2ad2aade5f0abd2",
+    "yti-common-ui": "https://github.com/VRK-YTI/yti-common-ui.git/#22f82191de35575bd571b94ce0447cbe54faae43",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {
