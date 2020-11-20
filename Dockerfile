@@ -1,5 +1,5 @@
 # alpine version should match the version in .nvmrc as closely as possible
-FROM node:12.15.0-alpine as builder
+FROM node:12.19.0-alpine as builder
 
 ARG NPMRC
 
@@ -15,6 +15,21 @@ RUN echo "$NPMRC" > .npmrc && yarn install && rm -f .npmrc
 RUN ["npm", "run", "build", "--", "--prod",  "--output-hashing=all"]
 
 FROM node:12.15.0-alpine
+
+# Install tooling
+RUN apk add openssl curl ca-certificates
+
+# Install nginx repo
+RUN printf "%s%s%s\n" "http://nginx.org/packages/alpine/v" `egrep -o '^[0-9]+\.[0-9]+' /etc/alpine-release` "/main" | tee -a /etc/apk/repositories
+
+# Install nginx key
+RUN curl -o /tmp/nginx_signing.rsa.pub https://nginx.org/keys/nginx_signing.rsa.pub
+
+# Check key
+RUN openssl rsa -pubin -in /tmp/nginx_signing.rsa.pub -text -noout
+
+# Move key to storage
+RUN mv /tmp/nginx_signing.rsa.pub /etc/apk/keys/
 
 # Install nginx
 RUN apk add --update nginx && \
