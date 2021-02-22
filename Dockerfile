@@ -1,5 +1,5 @@
 # alpine version should match the version in .nvmrc as closely as possible
-FROM node:12.19.0-alpine as builder
+FROM node:12.19.0-alpine@sha256:c8b5faa496b3eaaaee30e278abee431ec7dfec03e07ca0fc6ee39e31f36e5021 as builder
 
 ARG NPMRC
 
@@ -14,7 +14,7 @@ RUN echo "$NPMRC" > .npmrc && yarn install && rm -f .npmrc
 # Build the dist dir containing the static files
 RUN ["npm", "run", "build", "--", "--prod",  "--output-hashing=all"]
 
-FROM node:12.15.0-alpine
+FROM node:12.15.0-alpine@sha256:c8b5faa496b3eaaaee30e278abee431ec7dfec03e07ca0fc6ee39e31f36e5021
 
 # Install tooling
 RUN apk add openssl curl ca-certificates
