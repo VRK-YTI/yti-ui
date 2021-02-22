@@ -80,6 +80,7 @@ export class ConceptListModel {
   sortByTime$ = new BehaviorSubject<boolean>(false);
   onlyStatus$ = new BehaviorSubject<string | null>(null);
   searchResults$ = new BehaviorSubject<IndexedConcept[]>([]);
+  searchTotalCount$ = new BehaviorSubject<number|undefined>(undefined);
   badSearchRequest$ = new BehaviorSubject<{ error: boolean, message?: string }>({ error: false });
   loading = false;
 
@@ -142,9 +143,11 @@ export class ConceptListModel {
 
       this.loading = true;
 
-      this.elasticSearchService.getAllConceptsForVocabulary(this.graphId, this.search, this.sortByTime, this.onlyStatus, this.loaded, batchSize)
-        .subscribe(concepts => {
+      this.elasticSearchService.getAllConceptsForVocabularyWithMeta(this.graphId, this.search, this.sortByTime, this.onlyStatus, this.loaded, batchSize)
+        .subscribe(meta => {
           this.clearBadSearchRequest();
+
+          const concepts : IndexedConcept[] = meta.concepts;
           if (concepts.length < batchSize) {
             this.canLoadMore = false;
           }
@@ -152,6 +155,7 @@ export class ConceptListModel {
           this.loaded += concepts.length;
 
           this.searchResults$.next(reset ? concepts : [...this.searchResults, ...concepts]);
+          this.searchTotalCount$.next(meta.totalHitCount);
           this.loading = false;
         }, this.setBadSearchRequest.bind(this));
     }
@@ -192,6 +196,7 @@ export class ConceptListModel {
     } else {
       console.error('Concept search failed: ' + JSON.stringify(err));
     }
+    this.searchTotalCount$.next(undefined);
   }
 
   private clearBadSearchRequest() {

@@ -74,6 +74,11 @@ import { AuthorizationManager } from 'app/services/authorization-manager.sevice'
     </div>
 
     <div class="row">
+      <b></b>
+      Tulloksii: {{model.searchTotalCount$ | async}}
+    </div>
+
+    <div class="row">
       <div class="col-lg-12">
         <div class="selectable-concepts">
           <ul [ngClass]="{'has-button': canAddConcept()}"

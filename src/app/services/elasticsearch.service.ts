@@ -106,6 +106,23 @@ export class IndexedConcept {
   }
 }
 
+export class ConvertedConceptSearchResponse {
+  totalHitCount: number = 0;
+  resultStart: number = 0;
+  concepts: IndexedConcept[] = [];
+
+  constructor(searchResponse: ConceptSearchResponse) {
+    if (searchResponse) {
+      this.totalHitCount = searchResponse.totalHitCount;
+      this.resultStart = searchResponse.resultStart;
+      if (searchResponse.concepts) {
+        this.concepts = searchResponse.concepts.map(c => new IndexedConcept(c));
+      }
+    }
+  }
+}
+
+
 @Injectable()
 export class ElasticSearchService {
 
@@ -141,13 +158,22 @@ export class ElasticSearchService {
     }));
   }
 
+  getAllConceptsForVocabularyWithMeta(graphId: string,
+                              filter: string,
+                              sortByModified: boolean,
+                              onlyStatus: string | null,
+                              from: number,
+                              size: number): Observable<ConvertedConceptSearchResponse> {
+    return this.getAllConceptsInOrNotInVocabulary(graphId, undefined, filter, sortByModified, onlyStatus, from, size);
+  }
+
   getAllConceptsForVocabulary(graphId: string,
                               filter: string,
                               sortByModified: boolean,
                               onlyStatus: string | null,
                               from: number,
                               size: number): Observable<IndexedConcept[]> {
-    return this.getAllConceptsInOrNotInVocabulary(graphId, undefined, filter, sortByModified, onlyStatus, from, size);
+    return this.getAllConceptsInOrNotInVocabulary(graphId, undefined, filter, sortByModified, onlyStatus, from, size).pipe(map(r => r.concepts));
   }
 
   getAllConceptsNotInVocabulary(notInGraphId: string,
@@ -156,7 +182,7 @@ export class ElasticSearchService {
                                 onlyStatus: string | null,
                                 from: number,
                                 size: number): Observable<IndexedConcept[]> {
-    return this.getAllConceptsInOrNotInVocabulary(undefined, notInGraphId, filter, sortByModified, onlyStatus, from, size);
+    return this.getAllConceptsInOrNotInVocabulary(undefined, notInGraphId, filter, sortByModified, onlyStatus, from, size).pipe(map(r => r.concepts));
   }
 
   getTopConceptsForVocabulary(graphId: string, from: number, size: number): Observable<IndexedConcept[]> {
@@ -197,7 +223,7 @@ export class ElasticSearchService {
                                             sortByModified: boolean,
                                             onlyStatus: string | null,
                                             from: number,
-                                            size: number): Observable<IndexedConcept[]> {
+                                            size: number): Observable<ConvertedConceptSearchResponse> {
     return this.conceptSearch({
       terminologyId: graphId ? [graphId] : undefined,
       notInTerminologyId: notInGraphId ? [notInGraphId] : undefined,
@@ -209,6 +235,6 @@ export class ElasticSearchService {
       pageFrom: from,
       sortLanguage: this.language,
       highlight: true
-    }).pipe(map(ElasticSearchService.convert));
+    }).pipe(map(r => new ConvertedConceptSearchResponse(r)));
   }
 }
