@@ -12,7 +12,7 @@ function match(regexpString: string, value: string) {
   const singleLineMode = regexpString.startsWith('(?s)');
   const regexp = new RegExp(singleLineMode ? regexpString.substring(4) : regexpString);
 
-  return allMatching(singleLineMode ? (value || '').split(/\n+/) : [value], line => regexp.test(line));
+  return allMatching(singleLineMode ? (value || '').split(/[\r?\n]+/) : [value], line => regexp.test(line));
 }
 
 export function validateMeta(control: FormControl, meta: PropertyMeta) {
