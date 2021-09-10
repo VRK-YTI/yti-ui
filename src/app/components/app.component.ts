@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { LocationService } from 'app/services/location.service';
 
+const versionInfo = require('!raw-loader!../../version.txt');
+
 @Component({
   selector: 'app-root',
   styleUrls: ['./app.component.scss'],
@@ -15,6 +17,7 @@ import { LocationService } from 'app/services/location.service';
     <app-footer [title]="'Terminologies' | translate"
                 id="app_navigate_to_info"
                 [showLicenseIcon]="true"
+                [version]="version"
                 (informationClick)="navigateToInformation()"
                 *ngIf="showFooter"></app-footer>
   `
@@ -22,6 +25,7 @@ import { LocationService } from 'app/services/location.service';
 export class AppComponent {
 
   showFooter: boolean;
+  version: string;
 
   constructor(private locationService: LocationService,
               private router: Router) {
@@ -29,6 +33,8 @@ export class AppComponent {
     locationService.showFooter.subscribe(showFooter => {
       this.showFooter = showFooter;
     });
+
+    this.version = versionInfo;
   }
 
   get location() {
