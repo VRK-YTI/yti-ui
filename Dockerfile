@@ -42,8 +42,8 @@ ENV NODE_ENV production
 RUN addgroup -g 1001 -S nodejs && adduser -S nextjs -u 1001
 
 # Allow process to run on port 80 for compatibility with earlier versions of
-# the application. May actually not be needed!
-# RUN apk add libcap && setcap 'cap_net_bind_service=+ep' /usr/local/bin/node
+# the application.
+RUN apk add libcap && setcap 'cap_net_bind_service=+ep' /usr/local/bin/node
 
 # You only need to copy next.config.js if you are NOT using the default configuration
 # COPY --from=builder /app/next.config.js ./
