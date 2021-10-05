@@ -26,8 +26,7 @@ async function getFakeUser(
   req: NextIronRequest,
   res: NextApiResponse
 ): Promise<void> {
-  let fetchUrl: string =
-    process.env.host + '/terminology-api/api/v1/frontend/authenticated-user';
+  let fetchUrl: string = process.env.TERMINOLOGY_API_URL + '/api/v1/frontend/authenticated-user';
   fetchUrl += '?fake.login.mail=admin@localhost';
   await fetchFakeUser(fetchUrl, req, res);
 }

@@ -1,7 +1,7 @@
 import User, { anonymousUser } from '../interfaces/user-interface';
 
 export async function authFakeUser() {
-  const fetchUrl: string = process.env.host + '/api/auth/fake-login';
+  const fetchUrl: string = '/api/auth/fake-login';
   const user: User = await fetch(fetchUrl, {
     headers: {
       'Content-Type': 'application/json',

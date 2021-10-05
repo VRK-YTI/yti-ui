@@ -72,11 +72,7 @@ export default function AuthenticationPanel() {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function ssoLogout() {
-    if (process.env.host == undefined) {
-      console.error('Error, host variable is undefined');
-      return;
-    }
-    const currentUrl: string = process.env.host + '/logout.html';
+    const currentUrl: string = '/logout.html';
     window.location.href = `/Shibboleth.sso/Logout?return=${encodeURIComponent(
       currentUrl
     )}`;

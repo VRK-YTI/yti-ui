@@ -74,14 +74,7 @@ export default function LoginModalView({
   );
 
   function login() {
-    if (process.env.host == undefined) {
-      console.error('Error, host variable is undefined');
-      return;
-    }
-    const currentUrl: string = process.env.host;
-    window.location.href = `/Shibboleth.sso/Login?target=${encodeURIComponent(
-      currentUrl
-    )}`;
+    window.location.href = '/Shibboleth.sso/Login?target=/';
   }
 
   function register() {

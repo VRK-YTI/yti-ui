@@ -3,9 +3,9 @@
   "version": "2.0.0",
   "private": true,
   "scripts": {
-    "dev": "REWRITE_PROFILE=\"${REWRITE_PROFILE:=local}\" next dev",
-    "dev:debug": "REWRITE_PROFILE=\"${REWRITE_PROFILE:=local}\" NODE_OPTIONS='--inspect' next dev",
-    "build": "REWRITE_PROFILE=\"${REWRITE_PROFILE:=local}\" next build",
+    "dev": "next dev",
+    "dev:debug": "NODE_OPTIONS='--inspect' next dev",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint --dir src"
   },
