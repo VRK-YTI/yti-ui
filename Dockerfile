@@ -52,6 +52,9 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
 
+# might make sense to handle all environment variables in docker-compose or k8s instead
+COPY --from=builder /app/.env ./.env
+
 USER nextjs
 
 # listen on privileged port for compatibilty with older versions of the
