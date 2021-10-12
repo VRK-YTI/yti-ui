@@ -1,4 +1,6 @@
 {
   "terminology-search": "Search",
-  "terminology-title": "Terminology"
+  "terminology-title": "Terminology",
+  "terminology-login-description-1": "Log in with your eDuuni ID. Logging in is needed for editing the content in this web site.",
+  "terminology-login-description-2": "The buttons below will lead you to the eDuuni ID service. You will be forwarded back to this web site automatically after logging in."
 }

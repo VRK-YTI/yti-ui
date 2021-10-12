@@ -11,13 +11,15 @@ import {
 } from './login-modal.styles';
 import { Button as SuomiButton } from 'suomifi-ui-components';
 import { LoginModalFunctions } from '../../interfaces/callback-interfaces';
+import { useTranslation } from 'next-i18next';
 
 export default function LoginModalView({
   modalFunctions,
 }: {
   modalFunctions: LoginModalFunctions;
 }) {
-  //TODO: Use bootstrap and/or flexbox styles for modal instead of login-modal.styles.tsx
+  const { t } = useTranslation('common');
+
   return (
     <>
       <ModalBackdrop></ModalBackdrop>
@@ -35,12 +37,10 @@ export default function LoginModalView({
               <Row>
                 <ColMd12>
                   <p>
-                    Palveluun kirjaudutaan eDuuni-tunnuksilla. Kirjautumista
-                    vaaditaan jos haluat muokata palvelun sisältöä.
+                    { t('terminology-login-description-1') }
                   </p>
                   <p>
-                    Alla olevalla painikkeella ohjaudut eDuuni-palvelun
-                    kirjautumiseen. Palaa sen jälkeen takaisin palveluun.
+                    { t('terminology-login-description-2') }
                   </p>
                 </ColMd12>
               </Row>
