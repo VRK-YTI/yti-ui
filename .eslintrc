@@ -4,7 +4,8 @@
   "rules": {
     "semi": [2, "always"],
     "indent": ["error", 2],
-    "quotes": ["error", "single"]
+    "quotes": ["error", "single"],
+    "no-warning-comments": ["warn", { "terms": ["todo", "fixme", "xxx"] }]
   },
   "overrides": [
     {

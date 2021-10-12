@@ -7,7 +7,6 @@ import { userCookieOptions } from '../../../common/utils/user-cookie-options';
 
 const fakeLogin = async (req: NextIronRequest, res: NextApiResponse) => {
   if (process.env.ENV_TYPE === 'production') {
-    //TODO: confirm env_type setup at first production usage
     res.status(403).json({ msg: 'Access denied' });
     return;
   }
