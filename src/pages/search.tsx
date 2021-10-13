@@ -16,35 +16,7 @@ export default function Search(props: {
 }) {
   const { t } = useTranslation('common');
 
-  const [input, setInput] = useState('');
   const [results, setResults] = useState<TerminologySearchResult | null>(null);
-
-  const apiUrl = '/terminology-api/api/v1/frontend/searchTerminology';
-
-  const fetchData = async (keyword: string) => {
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        query: keyword,
-        searchConcepts: true,
-        prefLang: 'fi',
-        pageSize: 10,
-        pageFrom: 0,
-      }),
-    };
-
-    return await fetch(apiUrl, requestOptions)
-      .then((response) => response.json())
-      .then((data) => {
-        setResults(data);
-      });
-  };
-
-  const updateInput = async (input: string) => {
-    setInput(input);
-    fetchData(input);
-  };
 
   return (
     <Layout>
@@ -54,9 +26,8 @@ export default function Search(props: {
       <Heading variant="h1">{t('terminology-title')}</Heading>
 
       <TerminologySearchInput
-        keyword={input}
-        setKeyword={(value: string): void => {
-          updateInput(value);
+        setResults={(value: TerminologySearchResult | null): void => {
+          setResults(value)
         }}
       />
 

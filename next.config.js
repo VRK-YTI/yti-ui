@@ -7,6 +7,11 @@ module.exports = (phase, { defaultConfig }) => {
     i18n,
     eslint: {
       dirs: ['src']
+    },
+    env: {
+      hostname: 'localhost',
+      $port: 3000,
+      host: 'http://localhost:3000'
     }
   };
 
