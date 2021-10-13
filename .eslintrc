@@ -1,0 +1,37 @@
+{
+  "root": true,
+  "extends": ["next", "next/core-web-vitals"],
+  "rules": {
+    "semi": [2, "always"],
+    "indent": ["error", 2],
+    "quotes": ["error", "single"],
+    "no-warning-comments": ["warn", { "terms": ["todo", "fixme", "xxx"] }]
+  },
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "plugins": ["@typescript-eslint"],
+      "rules": {
+        "@typescript-eslint/no-unused-vars": ["warn", {"args": "none"}],
+        "@typescript-eslint/no-var-requires": 2,
+        "@typescript-eslint/ban-types": 0,
+        "@typescript-eslint/no-non-null-assertion": "error",
+        "@typescript-eslint/explicit-module-boundary-types": 0,
+        "@typescript-eslint/explicit-function-return-type": 0,
+        "@typescript-eslint/member-delimiter-style": [
+          "error",
+          {
+            "multiline": {
+              "delimiter": "semi",
+              "requireLast": true
+            },
+            "singleline": {
+              "delimiter": "comma",
+              "requireLast": false
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
