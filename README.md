@@ -6,7 +6,23 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
-First, run the development server:
+Install dependencies
+
+```bash
+yarn
+```
+
+Create file .env.local to the project root directory and add following lines
+
+```
+TERMINOLOGY_API_URL=http://localhost:9103/terminology-api
+REWRITE_PROFILE=local
+SECRET_COOKIE_PASSWORD=<random string>
+```
+
+Run terminology-api backend application (and all its dependencies) for example by using [yti-compose](https://github.com/VRK-YTI/yti-compose)
+
+Run the development server:
 
 ```bash
 yarn dev
