@@ -27,7 +27,7 @@ export default function Search(props: {
 
       <TerminologySearchInput
         setResults={(value: TerminologySearchResult | null): void => {
-          setResults(value)
+          setResults(value);
         }}
       />
 
