@@ -1,18 +1,18 @@
 import styled from 'styled-components';
+import { LayoutProps } from '../layout/layout-props';
 
-export const ButtonsDiv = styled.div`
-  display: inline-block;
+export const ButtonsDiv = styled.div<LayoutProps>`
+  display: flex;
+  justify-content: end;
+  padding-top: 10px;
+  flex-direction: ${props => props.isSmall ? 'column' : 'row'};
+  gap: 5px;
 `;
 
-export const AuthenticationButton = styled.button`
-  background-color: #04aa6d;
-  color: white;
-  padding: 14px 20px;
-  margin: 8px 8px;
-  border: none;
-  cursor: pointer;
-  width: 10rem;
-  &:hover {
-    opacity: 0.8;
+export const UserInfo = styled.div`
+  display: flex;
+  flex-direction: column;
+  span {
+    font-size: 14px;
   }
 `;

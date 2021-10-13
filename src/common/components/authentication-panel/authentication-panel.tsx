@@ -1,68 +1,54 @@
-import { SyntheticEvent, useState } from 'react';
-import { LoginModalFunctions } from '../../interfaces/callback-interfaces';
+import { useState } from 'react';
 import {
   ButtonsDiv,
-  AuthenticationButton,
+  UserInfo,
 } from './authentication-panel.styles';
-import LoginModal from '../login-modal/login-modal';
-import User from '../../interfaces/user-interface';
+import { Button, Link, Text } from 'suomifi-ui-components';
+import { useTranslation } from 'react-i18next';
+import { LayoutProps } from '../layout/layout-props';
+import LoginModalView from '../login-modal/login-modal';
 
-export default function AuthenticationPanel(props: { user?: User }) {
-  const [apState, setState] = useState({
-    ModalOpen: false,
-  });
-  const modalFunctions: LoginModalFunctions = {
-    closeModal: modalClose,
-  };
+export default function AuthenticationPanel({ props }: { props: LayoutProps }) {
+
+  const [visible, setVisible] = useState(false);
+  const { t } = useTranslation('common');
 
   return (
     <>
       {props.user && !props.user.anonymous ? (
-        <ButtonsDiv>
-          <AuthenticationButton onClick={ async(e) => logout(e) }>
-            SSO - Logout {props.user.firstName + ' ' + props.user.lastName}
-          </AuthenticationButton>
+        <ButtonsDiv isSmall={props.isSmall}>
+          <UserInfo>
+            <Text>
+              {`${props.user?.firstName} ${props.user?.lastName}`}
+            </Text>
+            <Text>
+              <Link href="" onClick={(e: any) => logout(e)}>{t('site-logout').toUpperCase()}</Link>
+            </Text>
+          </UserInfo>
         </ButtonsDiv>
       ) : (
-        <ButtonsDiv>
-          <AuthenticationButton
-            onClick={ async(e) => fakeLogin(e) }
-          >
-            Fake Admin - login
-          </AuthenticationButton>
-          <AuthenticationButton onClick={openSsoLoginAndRegister}>
-            SSO - login/Register
-          </AuthenticationButton>
+        <ButtonsDiv isSmall={props.isSmall}>
+          <Button icon="login" onClick={() => setVisible(true)}>
+            {t('site-login')}
+          </Button>
+          <Button icon="login" onClick={async(e) => fakeLogin(e)}>
+            {t('site-fake-login')}
+          </Button>
         </ButtonsDiv>
       )}
-      {apState.ModalOpen ? (
-        <LoginModal modalFunctions={modalFunctions} />
-      ) : null}
+
+      {visible &&
+        <LoginModalView props={props} setVisible={setVisible} />
+      }
     </>
   );
 
-  function openSsoLoginAndRegister() {
-    setState({ ...apState, ModalOpen: true });
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  function ssoLogout() {
-    const currentUrl: string = '/logout.html';
-    window.location.href = `/Shibboleth.sso/Logout?return=${encodeURIComponent(
-      currentUrl
-    )}`;
-  }
-
-  function modalClose() {
-    setState({ ...apState, ModalOpen: false });
-  }
-
-  async function logout(e: SyntheticEvent) {
+  async function logout(e: MouseEvent | KeyboardEvent) {
     e.preventDefault();
     window.location.href = '/api/auth/logout?target=/';
   }
 
-  function fakeLogin(e: SyntheticEvent) {
+  function fakeLogin(e: MouseEvent | KeyboardEvent) {
     e.preventDefault();
     window.location.href = '/api/auth/fake-login';
   }
