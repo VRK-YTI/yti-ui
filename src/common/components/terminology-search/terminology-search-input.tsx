@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { SearchInput } from 'suomifi-ui-components';
-import { SearchContainer } from './terminology-search-input.styles';
 
-import useTerminologySearch from '../../../../modules/terminology-search/terminology-search-api'
+import useTerminologySearch from '../../../../modules/terminology-search/terminology-search-api';
 import { TerminologySearchResult } from '../../interfaces/terminology.interface';
 
 interface SearchInputProps {
@@ -16,31 +15,27 @@ export function TerminologySearchInput({ setResults }: SearchInputProps) {
 
   useEffect(() => {
     if (loading === false) {
-      setResults(results)
-      console.log("here", results)
+      setResults(results);
     }
-  }, [loading, filter])
+  }, [loading, filter]);
 
   return (
-    <SearchContainer>
-      
-      <SearchInput
-        data-testid='search_input'
-        clearButtonLabel="Tyhjennä haku"
-        labelText="Hakukenttä"
-        searchButtonLabel="Hae"
-        onSearch={
-          (value) => {
-            setFilter(value as string);
-          }
+    <SearchInput
+      data-testid='search_input'
+      clearButtonLabel="Tyhjennä haku"
+      labelText="Hakukenttä"
+      searchButtonLabel="Hae"
+      onSearch={
+        (value) => {
+          setFilter(value as string);
         }
-        onChange={(value) => {
-          if (value === '' || value === null) {
-            setFilter(value as string);
-          }
+      }
+      onChange={(value) => {
+        if (value === '' || value === null) {
+          setFilter(value as string);
         }
-        }
-      />
-    </SearchContainer>
+      }
+      }
+    />
   );
 }
