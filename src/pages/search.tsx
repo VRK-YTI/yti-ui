@@ -5,6 +5,7 @@ import { SSRConfig, useTranslation } from 'next-i18next';
 import { Heading } from 'suomifi-ui-components';
 import Layout from '../common/components/layout/layout';
 import { TerminologySearchInput } from '../common/components/terminology-search/terminology-search-input';
+import useTerminologySearch from '../../modules/terminology-search/terminology-search-api'
 import { TerminologySearchResults } from '../common/components/terminology-search/terminology-search-results';
 import { TerminologySearchResult } from '../common/interfaces/terminology.interface';
 import { UserProps } from '../common/interfaces/user-interface';
@@ -12,12 +13,19 @@ import { SearchContainer } from '../common/components/terminology-search/termino
 import withSession, { NextIronRequest } from '../common/utils/session';
 import { GetServerSideProps, NextApiResponse } from 'next';
 
+interface TerminologySearchProps {
+  results: TerminologySearchResult | null;
+  error: string | null;
+  loading: boolean;
+}
+
 export default function Search(props: {
   _netI18Next: SSRConfig;
 }) {
   const { t } = useTranslation('common');
 
-  const [results, setResults] = useState<TerminologySearchResult | null>(null);
+  const [filter, setFilter] = useState<string | null>(null);
+  const { results, error, loading }: TerminologySearchProps = useTerminologySearch(filter);  
 
   return (
     <Layout>
@@ -28,13 +36,11 @@ export default function Search(props: {
 
       <SearchContainer>
         <TerminologySearchInput
-          setResults={(value: TerminologySearchResult | null): void => {
-            setResults(value);
-          }}
+          setFilter={setFilter}
         />
       </SearchContainer>
 
-      <TerminologySearchResults results={results} />
+      <TerminologySearchResults results={results} error={error} loading={loading}/>
     </Layout>
   );
 }

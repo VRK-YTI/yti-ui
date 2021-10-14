@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-export default function useTerminologySearch(filter: string) {
+export default function useTerminologySearch(filter: string | null) {
   const apiUrl = '/terminology-api/api/v1/frontend/searchTerminology';
 
   const [results, setResults] = useState(null)

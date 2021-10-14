@@ -10,19 +10,21 @@ interface SearchResultProps {
 
 interface SearchResultsProps {
   results: TerminologySearchResult | null;
+  error: string | null;
+  loading: boolean;
 }
 
 function SearchResult({ data }: SearchResultProps) {
   const label = data.label.fi ?? data.label.en ?? data.uri;
   const contributor = data.contributors.length ?
     data.contributors[0].label.fi ??
-      data.contributors[0].label.en ??
-      data.contributors[0].label.sv :
+    data.contributors[0].label.en ??
+    data.contributors[0].label.sv :
     'Unknown contributor';
 
   return <SearchResultContainer>
-    { contributor }
-    <Link passHref href={ '/terminology/' + data.id }>
+    {contributor}
+    <Link passHref href={'/terminology/' + data.id}>
       <DsLink href="">
         <div
           /* API highlights the keyword in search results with plain html */
@@ -32,7 +34,8 @@ function SearchResult({ data }: SearchResultProps) {
   </SearchResultContainer>;
 }
 
-export function TerminologySearchResults({ results = null }: SearchResultsProps) {
+export function TerminologySearchResults({ results = null, error, loading }: SearchResultsProps) {
+
   return (
     <>
       {

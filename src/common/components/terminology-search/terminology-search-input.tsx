@@ -1,24 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { SearchInput } from 'suomifi-ui-components';
 
-import useTerminologySearch from '../../../../modules/terminology-search/terminology-search-api';
-import { TerminologySearchResult } from '../../interfaces/terminology.interface';
-
 interface SearchInputProps {
-  setResults: (value: TerminologySearchResult | null) => void;
+  setFilter: (value: string | null) => void;
 }
 
-export function TerminologySearchInput({ setResults }: SearchInputProps) {
-  const [filter, setFilter] = useState('');
-
-  const { results, error, loading } = useTerminologySearch(filter);
-
-  useEffect(() => {
-    if (loading === false) {
-      setResults(results);
-    }
-  }, [loading, filter]);
-
+export function TerminologySearchInput({ setFilter }: SearchInputProps) {
   return (
     <SearchInput
       data-testid='search_input'
