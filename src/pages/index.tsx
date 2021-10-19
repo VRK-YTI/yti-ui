@@ -51,9 +51,7 @@ export const getServerSideProps: GetServerSideProps = withSession<{ props: UserP
     }
 
     // let's try fetching from api to see if we are properly authenticated
-    // const fetchUrl: string = process.env.TERMINOLOGY_API_URL + '/api/v1/frontend/authenticated-user';
-    // TODO: Switch back to current version
-    const fetchUrl: string = process.env.host + '/terminology-api/api/v1/frontend/authenticated-user';
+    const fetchUrl: string = process.env.TERMINOLOGY_API_URL + '/api/v1/frontend/authenticated-user';
     const response = await axios.get(fetchUrl, axiosConfig);
     const user = response.data;
 
