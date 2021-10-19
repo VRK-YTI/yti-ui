@@ -4,12 +4,7 @@ import { useAppDispatch } from '../hooks';
 import { SearchContainer } from './terminology-search-input.styles';
 import { setFilter } from './terminology-search-slice'
 
-interface SearchInputProps {
-  keyword: string;
-  setKeyword: (value: string) => void;
-}
-
-export function TerminologySearchInput({ keyword, setKeyword }: SearchInputProps) {
+export function TerminologySearchInput() {
   const dispatch = useAppDispatch();
 
   return (

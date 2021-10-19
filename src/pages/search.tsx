@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { SSRConfig, useTranslation } from 'next-i18next';
 import { Heading } from 'suomifi-ui-components';
@@ -11,13 +11,20 @@ import { UserProps } from '../common/interfaces/user-interface';
 import withSession, { NextIronRequest } from '../common/utils/session';
 import { GetServerSideProps, NextApiResponse } from 'next';
 
+import { selectFilter } from '../common/components/terminology-search/terminology-search-slice';
+import { useAppSelector } from '../common/components/hooks';
+
 export default function Search(props: {
   _netI18Next: SSRConfig;
 }) {
   const { t } = useTranslation('common');
 
-  const [input, setInput] = useState('');
+  const input = useAppSelector(selectFilter);
   const [results, setResults] = useState<TerminologySearchResult | null>(null);
+
+  useEffect(() => {
+    fetchData(input);
+  }, [input])
 
   const apiUrl = '/terminology-api/api/v1/frontend/searchTerminology';
 
@@ -41,11 +48,6 @@ export default function Search(props: {
       });
   };
 
-  const updateInput = async (input: string) => {
-    setInput(input);
-    fetchData(input);
-  };
-
   return (
     <Layout>
       <Head>
@@ -53,12 +55,7 @@ export default function Search(props: {
       </Head>
       <Heading variant="h1">{t('terminology-title')}</Heading>
 
-      <TerminologySearchInput
-        keyword={input}
-        setKeyword={(value: string): void => {
-          updateInput(value);
-        }}
-      />
+      <TerminologySearchInput />
 
       <TerminologySearchResults results={results} />
     </Layout>
