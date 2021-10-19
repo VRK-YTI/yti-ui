@@ -1,8 +1,10 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 
+import terminologySearchReducer from './common/components/terminology-search/terminology-search-slice'
+
 export function makeStore() {
   return configureStore({
-    reducer: { }
+    reducer: { terminologySearch: terminologySearchReducer },
   });
 };
 
