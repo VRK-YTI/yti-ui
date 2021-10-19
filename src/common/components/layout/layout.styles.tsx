@@ -4,59 +4,56 @@ import styled from 'styled-components';
 import { Heading } from 'suomifi-ui-components';
 import { DebugProps } from '../../interfaces/debug-props';
 
-export const WidthContainer = styled.div<DebugProps>`
-  width: 1200px;
+export const MarginContainer = styled.div<DebugProps>`
+  margin: 00px 50px 10px 50px;
 `;
 
 // main layout
 
 export const SiteContainer = styled.div<DebugProps>`
+  width: 80%;
+  margin: auto;
   height: 100%;
+  border-top: ${(props) => `2px solid ${props.theme.suomifi.colors.highlightBase}`};
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100vh;
+  border-left:  ${(props) => `2px solid ${props.theme.suomifi.colors.depthLight2}`}
 `;
 
 export const SiteWrapper = styled.div<DebugProps>`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
   ${(props) => (props.debug === true ? 'border 4px solid green' : '')}
 `;
 
 // header layout
 
-export const HeaderContainer = styled.div<DebugProps>``;
-
-export const HeaderWrapper = styled.div<DebugProps>`
-  display: flex;
-  height: 76px;
-  justify-content: space-between;
-  align-items: center;
+export const HeaderContainer = styled.div<DebugProps>`
   background-color: white;
-  ${(props) => (props.debug === true ? 'border 2px dashed red' : '')}
+  height: 76px;
+  border-bottom: ${(props) => `1px solid ${props.theme.suomifi.colors.depthLight3}`};
 `;
 
-export const SiteLogo = styled.div<DebugProps>`
-  font-weight: bold;
-  ${(props) => (props.debug === true ? 'border: 4px solid red' : '')};
+export const HamburgerMenu = styled.div<DebugProps>`
+
 `;
 
-export const HeaderTitle = styled(({ children }) => (
-  <Heading variant="h1hero">{ children }</Heading>)
-)`
-  color: ${(props) => props.theme.suomifi.colors.highlightBase};
-  &:hover {
-    color: red;
-  }
+export const NavigationContainer = styled.div`
+  background-color: white;
+  border-bottom: ${(props) => `1px solid ${props.theme.suomifi.colors.depthLight3}`};
 `;
 
-export const HamburgerMenu = styled.div<DebugProps>``;
 
 // content layout
 
 export const ContentContainer = styled.div<DebugProps>`
+  background-color: ${(props) => props.theme.suomifi.colors.highlightLight4};
   flex-grow: 1;
 `;
+
+export const FooterContainer = styled.div`
+  background-color: white;
+`
 
 /*
 const SiteHeader = styled.header<DebugProps>`

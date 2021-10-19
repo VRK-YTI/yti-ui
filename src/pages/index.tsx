@@ -26,7 +26,8 @@ export default function Home(props: {
   return (
     <Layout user={user}>
       <Head>
-        <title>{ t('terminology') }</title>
+        <title>{ t('terminology-site-title') }</title>
+        <link rel="shortcut icon" href="/favicon.ico" />
       </Head>
       <section className={utilStyles.headingMd}>
         <Link href="/search">

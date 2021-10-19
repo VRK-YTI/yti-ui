@@ -1,18 +1,14 @@
 import styled from 'styled-components';
 
 export const ButtonsDiv = styled.div`
-  display: inline-block;
+  display: flex;
+  justify-content: space-between;
+  padding-top: 10px;
 `;
 
-export const AuthenticationButton = styled.button`
-  background-color: #04aa6d;
-  color: white;
-  padding: 14px 20px;
-  margin: 8px 8px;
-  border: none;
-  cursor: pointer;
-  width: 10rem;
-  &:hover {
-    opacity: 0.8;
+export const UserInfo = styled.div`
+  span {
+    font-size: 14px;
+    display: block;
   }
-`;
+`

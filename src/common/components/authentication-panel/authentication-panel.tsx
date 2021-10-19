@@ -3,9 +3,17 @@ import { LoginModalFunctions } from '../../interfaces/callback-interfaces';
 import {
   ButtonsDiv,
   AuthenticationButton,
+  UserInfo,
 } from './authentication-panel.styles';
 import LoginModal from '../login-modal/login-modal';
 import User from '../../interfaces/user-interface';
+import useUser from '../../hooks/useUser';
+import User, { anonymousUser } from '../../interfaces/user-interface';
+import { authFakeUser } from '../../utils/user';
+import { useRouter } from 'next/router';
+import axios from 'axios';
+import { Button, Text } from 'suomifi-ui-components';
+import { useTranslation } from 'react-i18next';
 
 export default function AuthenticationPanel(props: { user?: User }) {
   const [apState, setState] = useState({
@@ -15,24 +23,35 @@ export default function AuthenticationPanel(props: { user?: User }) {
     closeModal: modalClose,
   };
 
+  const { user, mutateUser } = useUser();
+  // const { user } = { user: { anonymous: true, firstName: "", lastName: "" } }
+  const router = useRouter();
+  const { t } = useTranslation('common');
+
   return (
     <>
       {props.user && !props.user.anonymous ? (
         <ButtonsDiv>
-          <AuthenticationButton onClick={ async(e) => logout(e) }>
-            SSO - Logout {props.user.firstName + ' ' + props.user.lastName}
-          </AuthenticationButton>
+          <UserInfo>
+            <Text>
+              {`${user?.firstName} ${user?.lastName}`}<br />
+            </Text>
+            <Text>TODO: Organization</Text>
+          </UserInfo>
+          <Button icon="logout" onClick={async (e) => logout(e)}>{t('site-logout')}</Button>
         </ButtonsDiv>
       ) : (
         <ButtonsDiv>
-          <AuthenticationButton
-            onClick={ async(e) => fakeLogin(e) }
+          <Button icon="login"
+            onClick={() => fakeUserLogin(mutateUser)}
           >
-            Fake Admin - login
-          </AuthenticationButton>
-          <AuthenticationButton onClick={openSsoLoginAndRegister}>
+            {t('site-login')}
+          </Button>
+          {/*
+          <Button onClick={openSsoLoginAndRegister}>
             SSO - login/Register
-          </AuthenticationButton>
+          </Button>
+          */}
         </ButtonsDiv>
       )}
       {apState.ModalOpen ? (

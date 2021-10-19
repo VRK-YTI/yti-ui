@@ -17,7 +17,7 @@ Create file .env.local to the project root directory and add following lines
 ```
 TERMINOLOGY_API_URL=http://localhost:9103/terminology-api
 REWRITE_PROFILE=local
-SECRET_COOKIE_PASSWORD=<random string>
+SECRET_COOKIE_PASSWORD=<random string min 32 characters>
 ```
 
 Run terminology-api backend application (and all its dependencies) for example by using [yti-compose](https://github.com/VRK-YTI/yti-compose)

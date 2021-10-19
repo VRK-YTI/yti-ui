@@ -1,36 +1,27 @@
 import Head from 'next/head';
 import React from 'react';
 
-// import { Link } from 'suomifi-ui-components'
-import Link from 'next/link';
-import { LanguageMenu, LanguageMenuItem } from 'suomifi-ui-components';
+import { Block } from 'suomifi-ui-components';
 import { ThemeProvider } from 'styled-components';
 import { lightTheme } from '../theme';
 import {
   ContentContainer,
+  FooterContainer,
   HamburgerMenu,
   HeaderContainer,
-  HeaderTitle,
-  HeaderWrapper,
+  NavigationContainer,
   SiteContainer,
-  SiteLogo,
-  SiteWrapper,
-  WidthContainer,
+  MarginContainer,
 } from './layout.styles';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/dist/client/router';
 import AuthenticationPanel from '../authentication-panel/authentication-panel';
 import User from '../../interfaces/user-interface';
+import Footer from '../footer/footer';
+import Header from '../header/header';
+import Navigation from '../navigation/navigation';
 
 const debug = false;
-
-function Title() {
-  return (
-    <Link passHref href="/">
-      <HeaderTitle>Sanastot</HeaderTitle>
-    </Link>
-  );
-}
 
 export default function Layout({
   children,
@@ -40,9 +31,8 @@ export default function Layout({
   user?: User;
 }) {
   const { t } = useTranslation('common');
-  const router = useRouter();
-
   const siteTitle = t('terminology');
+
   return (
     <>
       <ThemeProvider theme={lightTheme}>
@@ -53,48 +43,33 @@ export default function Layout({
           <meta name="twitter:card" content="summary_large_image" />
         </Head>
         <SiteContainer debug={debug}>
-          <SiteWrapper debug={debug}>
+          <Block variant="header">
             <HeaderContainer debug={debug}>
-              <WidthContainer debug={debug}>
-                <HeaderWrapper debug={debug}>
-                  <SiteLogo>
-                    <Title />
-                  </SiteLogo>
-                  <LanguageMenu name={router.locale?.toUpperCase() ?? '??'}>
-                    <LanguageMenuItem
-                      onSelect={() => {
-                        router.push(router.asPath, router.asPath, {
-                          locale: 'fi',
-                        });
-                      }}
-                      selected={router.locale === 'fi'}
-                    >
-                      Suomeksi
-                    </LanguageMenuItem>
-                    <LanguageMenuItem
-                      onSelect={() => {
-                        router.push(router.asPath, router.asPath, {
-                          locale: 'en',
-                        });
-                      }}
-                      selected={router.locale === 'en'}
-                    >
-                      Englanniksi
-                    </LanguageMenuItem>
-                  </LanguageMenu>
-                  <AuthenticationPanel user={user} />
-                  <HamburgerMenu debug={debug}>
-                    <Link href="/">&#x2630;</Link>
-                  </HamburgerMenu>
-                </HeaderWrapper>
-              </WidthContainer>
+              <MarginContainer>
+                <Header />
+              </MarginContainer>
             </HeaderContainer>
-            <ContentContainer debug={debug}>
-              <WidthContainer debug={debug}>
-                <main>{children}</main>
-              </WidthContainer>
-            </ContentContainer>
-          </SiteWrapper>
+          </Block>
+
+          <Block variant="nav">
+            <NavigationContainer>
+              <MarginContainer>
+                <Navigation />
+              </MarginContainer>
+            </NavigationContainer>
+          </Block>
+          <ContentContainer debug={debug}>
+            <MarginContainer debug={debug}>
+              <Block variant="main">{children}</Block>
+            </MarginContainer>
+          </ContentContainer>
+
+          <FooterContainer>
+            <MarginContainer>
+              <Footer />
+            </MarginContainer>
+          </FooterContainer>
+
         </SiteContainer>
       </ThemeProvider>
     </>

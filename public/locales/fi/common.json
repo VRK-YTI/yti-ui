@@ -1,6 +1,21 @@
 {
   "terminology-search": "Haku",
   "terminology-title": "Sanastot",
+  "terminology-site-title": "Sanastot",
+  "site-title": "Yhteentoimivuusalusta",
+  "site-logout": "Kirjaudu ulos",
+  "site-login": "Kirjaudu sisään",
+  "site-open-link-new-window": "Avaa linkki uuteen ikkunaan",
+  "site-frontpage": "Etusivu",
+  "site-services": "Palvelut",
+  "site-information": "Tietoa palvelusta",
+  "site-for-developers": "Kehittäjille",
+  "site-for-administrators": "Ylläpitäjille",
+  "terminology-search-placeholder": "Hae palvelusta",
   "terminology-login-description-1": "Palveluun kirjaudutaan eDuuni-tunnuksilla. Kirjautumista vaaditaan jos haluat muokata palvelun sisältöä.",
-  "terminology-login-description-2": "Alla olevalla painikkeella ohjaudut eDuuni-palvelun kirjautumiseen. Palaa sen jälkeen takaisin palveluun."
+  "terminology-login-description-2": "Alla olevalla painikkeella ohjaudut eDuuni-palvelun kirjautumiseen. Palaa sen jälkeen takaisin palveluun.",
+  "terminology-footer-text": "Suomi.fi -julkishallinnon palvelut verkossa. Palvelun tuottaa Digi- ja väestötietovirasto",
+  "terminology-footer-feedback": "Anna palautetta",
+  "terminology-footer-information-security": "Tietosuoja",
+  "terminology-footer-accessibility": "Saavutettavuus"
 }
