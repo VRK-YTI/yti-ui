@@ -17,11 +17,12 @@ export function TerminologySearchInput({ setFilter }: SearchInputProps) {
           setFilter(value as string);
         }
       }
-      onChange={(value) => {
-        if (value === '' || value === null) {
-          setFilter(value as string);
+      onChange={
+        (value) => {
+          if (value === '' || value === null) {
+            setFilter(value as string);
+          }
         }
-      }
       }
     />
   );

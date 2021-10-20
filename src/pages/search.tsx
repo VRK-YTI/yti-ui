@@ -5,7 +5,7 @@ import { SSRConfig, useTranslation } from 'next-i18next';
 import { Heading } from 'suomifi-ui-components';
 import Layout from '../common/components/layout/layout';
 import { TerminologySearchInput } from '../common/components/terminology-search/terminology-search-input';
-import useTerminologySearch from '../../modules/terminology-search/terminology-search-api'
+import useTerminologySearch from '../modules/terminology-search/hooks/terminology-search-api'
 import { TerminologySearchResults } from '../common/components/terminology-search/terminology-search-results';
 import { TerminologySearchResult } from '../common/interfaces/terminology.interface';
 import { UserProps } from '../common/interfaces/user-interface';
@@ -25,7 +25,7 @@ export default function Search(props: {
   const { t } = useTranslation('common');
 
   const [filter, setFilter] = useState<string | null>(null);
-  const { results, error, loading }: TerminologySearchProps = useTerminologySearch(filter);  
+  const { results, error, loading }: TerminologySearchProps = useTerminologySearch(filter);
 
   return (
     <Layout>
