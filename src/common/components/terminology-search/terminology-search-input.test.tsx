@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event'
+import userEvent from '@testing-library/user-event';
 
 import { TerminologySearchInput } from './terminology-search-input';
 
@@ -28,10 +28,10 @@ describe('TerminologySearchInput', () => {
     userEvent.keyboard('test');
 
     expect(screen.getByTestId('search_input')).toBeInTheDocument;
-    expect(screen.getByTestId('search_input')).toHaveProperty('value', 'test')
+    expect(screen.getByTestId('search_input')).toHaveProperty('value', 'test');
 
     userEvent.keyboard('{enter}');
 
-  })
+  });
 
 });

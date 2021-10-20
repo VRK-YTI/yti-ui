@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
 export default function useTerminologySearch(filter: string | null) {
   const apiUrl = '/terminology-api/api/v1/frontend/searchTerminology';
 
-  const [results, setResults] = useState(null)
-  const [error, setError] = useState(null)
+  const [results, setResults] = useState(null);
+  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -22,19 +22,19 @@ export default function useTerminologySearch(filter: string | null) {
           }),
         };
 
-        setLoading(true)
+        setLoading(true);
         await fetch(apiUrl, requestOptions)
           .then((response) => response.json())
           .then(data => setResults(data))
           .catch(error => {
-            setError(error)
+            setError(error);
           })
           .finally(() => {
-            setLoading(false)
-          })
+            setLoading(false);
+          });
       }
     )();
   }, [filter]);
 
-  return { results, error, loading }
+  return { results, error, loading };
 };
