@@ -2,16 +2,13 @@ import React from 'react';
 import '../../styles/globals.scss';
 import type { AppProps } from 'next/app';
 import { appWithTranslation } from 'next-i18next';
-import store from '../store';
-import { Provider } from 'react-redux'
+import { wrapper } from '../store';
 
 // https://nextjs.org/docs/advanced-features/custom-app
 function App({ Component, pageProps }: AppProps) {
 
   return (
-    <Provider store={store}>
-      <Component {...pageProps} />
-    </Provider>
+    <Component {...pageProps} />
   );
 }
-export default appWithTranslation(App);
+export default wrapper.withRedux(appWithTranslation(App));

@@ -12,19 +12,20 @@ import withSession, { NextIronRequest } from '../common/utils/session';
 import { GetServerSideProps, NextApiResponse } from 'next';
 
 import { selectFilter } from '../common/components/terminology-search/terminology-search-slice';
-import { useAppSelector } from '../common/components/hooks';
+// import { useAppSelector } from '../common/components/hooks';
+import { useSelector } from 'react-redux';
 
 export default function Search(props: {
   _netI18Next: SSRConfig;
 }) {
   const { t } = useTranslation('common');
 
-  const input = useAppSelector(selectFilter);
+  const input = useSelector(selectFilter());
   const [results, setResults] = useState<TerminologySearchResult | null>(null);
 
   useEffect(() => {
     fetchData(input);
-  }, [input])
+  }, [input]);
 
   const apiUrl = '/terminology-api/api/v1/frontend/searchTerminology';
 

@@ -1,12 +1,14 @@
 import React from 'react';
 import { SearchInput } from 'suomifi-ui-components';
-import { useAppDispatch, useAppSelector } from '../hooks';
+// import { updateFilter, useAppDispatch, useAppSelector } from '../hooks';
 import { SearchContainer } from './terminology-search-input.styles';
-import { setFilter, selectFilter } from './terminology-search-slice'
+import { setFilter, selectFilter } from './terminology-search-slice';
+import { useSelector } from 'react-redux';
+import { useStoreDispatch } from '../../../store';
 
 export function TerminologySearchInput() {
-  const dispatch = useAppDispatch();
-  const filter = useAppSelector(selectFilter);
+  const dispatch = useStoreDispatch();
+  const filter = selectFilter();
 
   return (
     <SearchContainer>
@@ -16,11 +18,11 @@ export function TerminologySearchInput() {
         searchButtonLabel="Hae"
         onSearch={ value => {
           if (typeof value === 'string') {
-            dispatch(setFilter(value))
+            dispatch(setFilter(value));
           }
         }}
-        defaultValue={filter}
+        defaultValue={useSelector(filter)}
       />
     </SearchContainer>
   );
-}
+};
