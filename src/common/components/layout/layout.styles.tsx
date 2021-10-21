@@ -3,6 +3,7 @@
 import styled from 'styled-components';
 import { Heading } from 'suomifi-ui-components';
 import { DebugProps } from '../../interfaces/debug-props';
+import { LayoutProps } from './layout-props';
 
 export const MarginContainer = styled.div<DebugProps>`
   margin: 00px 50px 10px 50px;
@@ -38,9 +39,10 @@ export const HamburgerMenu = styled.div<DebugProps>`
 
 `;
 
-export const NavigationContainer = styled.div`
+export const NavigationContainer = styled.div<LayoutProps>`
   background-color: white;
   border-bottom: ${(props) => `1px solid ${props.theme.suomifi.colors.depthLight3}`};
+  display: ${props => props.isLarge ? 'block' : 'none'}
 `;
 
 

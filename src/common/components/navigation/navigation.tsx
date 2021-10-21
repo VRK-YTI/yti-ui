@@ -1,3 +1,4 @@
+import { useMediaQuery } from "@material-ui/core";
 import { useTranslation } from "react-i18next";
 import { Link } from "suomifi-ui-components";
 import { NavigationWrapper } from "./navigation.styles";
@@ -5,10 +6,11 @@ import { NavigationWrapper } from "./navigation.styles";
 export default function Navigation() {
 
   const { t } = useTranslation("common")
+  const isLarge = useMediaQuery('(min-width:945px)');
 
   return (
-    
-      <NavigationWrapper>
+
+      <NavigationWrapper hidden={!isLarge}>
         <li>
           <Link href="/">{t("site-frontpage")}</Link>
         </li>

@@ -14,8 +14,20 @@ import { useRouter } from 'next/router';
 import axios from 'axios';
 import { Button, Text } from 'suomifi-ui-components';
 import { useTranslation } from 'react-i18next';
+import { LayoutProps } from '../layout/layout-props';
 
-export default function AuthenticationPanel(props: { user?: User }) {
+async function fakeUserLogin(mutateUser: (user: User) => void) {
+  const user: User = await authFakeUser();
+  if (user != anonymousUser) {
+    mutateUser(user);
+  } else {
+    console.error('fake admin sign in failed');
+    //TODO: handle sign in errors?
+  }
+  return user;
+}
+
+export default function AuthenticationPanel({ props }: { props: LayoutProps }) {
   const [apState, setState] = useState({
     ModalOpen: false,
   });
@@ -24,14 +36,13 @@ export default function AuthenticationPanel(props: { user?: User }) {
   };
 
   const { user, mutateUser } = useUser();
-  // const { user } = { user: { anonymous: true, firstName: "", lastName: "" } }
   const router = useRouter();
   const { t } = useTranslation('common');
 
   return (
     <>
-      {props.user && !props.user.anonymous ? (
-        <ButtonsDiv>
+      {user && !user.anonymous ? (
+        <ButtonsDiv isLarge={props.isLarge}>
           <UserInfo>
             <Text>
               {`${user?.firstName} ${user?.lastName}`}<br />
@@ -41,17 +52,17 @@ export default function AuthenticationPanel(props: { user?: User }) {
           <Button icon="logout" onClick={async (e) => logout(e)}>{t('site-logout')}</Button>
         </ButtonsDiv>
       ) : (
-        <ButtonsDiv>
+        <ButtonsDiv isLarge={props.isLarge}>
           <Button icon="login"
             onClick={() => fakeUserLogin(mutateUser)}
           >
             {t('site-login')}
           </Button>
-          {/*
+
           <Button onClick={openSsoLoginAndRegister}>
-            SSO - login/Register
+            {t('site-register')}
           </Button>
-          */}
+
         </ButtonsDiv>
       )}
       {apState.ModalOpen ? (

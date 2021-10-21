@@ -6,9 +6,8 @@ export default function Footer() {
   const { t } = useTranslation('common');
   return (
     <>
-        <Heading variant="h3">Suomi.fi</Heading>
-
         <FooterContentWrapper>
+            <img src="logo-suomi.fi.png" />
             <Text>{t("terminology-footer-text")}</Text>
         </FooterContentWrapper>
 

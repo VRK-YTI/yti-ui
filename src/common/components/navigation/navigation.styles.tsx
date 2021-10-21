@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { LayoutProps } from "../layout/layout-props";
 
 export const NavigationWrapper = styled.ul`
   display: flex;
@@ -23,5 +24,4 @@ export const NavigationWrapper = styled.ul`
       border-bottom: 3px solid ${(props) => props.theme.suomifi.colors.highlightBase}
     }
   }
-   
 `;

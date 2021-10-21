@@ -1,13 +1,12 @@
 import Head from 'next/head';
 import React from 'react';
 
-import { Block } from 'suomifi-ui-components';
+import { Block, Breadcrumb } from 'suomifi-ui-components';
 import { ThemeProvider } from 'styled-components';
 import { lightTheme } from '../theme';
 import {
   ContentContainer,
   FooterContainer,
-  HamburgerMenu,
   HeaderContainer,
   NavigationContainer,
   SiteContainer,
@@ -20,6 +19,10 @@ import User from '../../interfaces/user-interface';
 import Footer from '../footer/footer';
 import Header from '../header/header';
 import Navigation from '../navigation/navigation';
+import { useMediaQuery } from '@material-ui/core';
+import { LayoutProps } from './layout-props';
+import YtiBreadcrumb from '../breadcrumb/breadcrumb';
+import BreadcrumbWrapper from '../breadcrumb/breadcrumb';
 
 const debug = false;
 
@@ -31,7 +34,13 @@ export default function Layout({
   user?: User;
 }) {
   const { t } = useTranslation('common');
+
   const siteTitle = t('terminology');
+  const isLarge = useMediaQuery('(min-width:945px)');
+
+  const layoutProps: LayoutProps = {
+    isLarge
+  }
 
   return (
     <>
@@ -46,21 +55,28 @@ export default function Layout({
           <Block variant="header">
             <HeaderContainer debug={debug}>
               <MarginContainer>
-                <Header />
+                <Header props={layoutProps} />
               </MarginContainer>
             </HeaderContainer>
           </Block>
 
-          <Block variant="nav">
-            <NavigationContainer>
-              <MarginContainer>
+          <NavigationContainer isLarge={isLarge}>
+            <MarginContainer>
+              <Block variant="nav">
                 <Navigation />
-              </MarginContainer>
-            </NavigationContainer>
-          </Block>
+              </Block>
+            </MarginContainer>
+          </NavigationContainer>
+
           <ContentContainer debug={debug}>
+
             <MarginContainer debug={debug}>
-              <Block variant="main">{children}</Block>
+              <Block variant="main">
+                <>
+                <BreadcrumbWrapper />
+                {children}
+                </>
+              </Block>
             </MarginContainer>
           </ContentContainer>
 
