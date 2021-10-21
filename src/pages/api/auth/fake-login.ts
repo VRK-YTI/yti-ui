@@ -11,51 +11,43 @@ const fakeLogin = async (req: NextIronRequest, res: NextApiResponse) => {
     return;
   }
 
-  try {
-    await getFakeUser(req, res);
-  } catch (error) {
-    console.error('error in api/auth/user.ts');
-    res.status(400).json({ error });
-  }
-};
-
-export default fakeLogin;
-
-async function getFakeUser(
-  req: NextIronRequest,
-  res: NextApiResponse
-): Promise<void> {
-  let fetchUrl: string = process.env.TERMINOLOGY_API_URL + '/api/v1/frontend/authenticated-user';
-  fetchUrl += '?fake.login.mail=admin@localhost';
-  await fetchFakeUser(fetchUrl, req, res);
-}
-
-async function fetchFakeUser(
-  url: string,
-  req: NextIronRequest,
-  res: NextApiResponse
-): Promise<void> {
-
+  // user will be stored here after we verify it from authenticated-user
   let user: User | null = null;
+
+  // collect cookies from request here, so we can re-use the shibboleth cookie
   let cookies: { [key: string]: string } = {};
+
+  // after we're done, redirect here
+  const target = (req.query['target'] as string) ?? '/';
+
   try {
-    const response = await axios.get(url,
+    let fetchUrl: string = process.env.TERMINOLOGY_API_URL + '/api/v1/frontend/authenticated-user';
+    fetchUrl += '?fake.login.mail=admin@localhost';
+
+    const response = await axios.get(
+      fetchUrl,
       {
         headers: { 'Content-Type': 'application/json', }
       });
+
+    // should receive a fake user on success
     user = response.data;
+    if (user && user.anonymous) {
+      console.warn('User from response appears to be anonymous, login may have failed');
+    }
 
     // Pass the cookie from the api to the client.
     // This works since the API is already in the same domain,
     // just has a more specifi Path set
-    const jsessionid = (<string[]> response.headers['set-cookie'])
+    const jsessionid = (response.headers['set-cookie'] as string[])
       .filter(x => x.startsWith('JSESSIONID='));
     if (jsessionid.length > 0) {
       res.setHeader('Set-Cookie', jsessionid);
     }
 
-    // collect cookies from Set-Cookie into an object
-    (<string[]> response.headers['set-cookie'])
+    // Collect cookies from Set-Cookie into an object.
+    // These will be saved in the session for later use.
+    (response.headers['set-cookie'] as string[])
       .map(x => x.split(';')[0])
       .forEach(x => {
         const [key, value] = x.split('=');
@@ -69,21 +61,26 @@ async function fetchFakeUser(
       // handleUnexpectedError(error);
     }
 
+    console.error('Caught error from axios');
     console.error(error);
-    // throw error;
-    // return anonymousUser;
-    res.status(500).json(anonymousUser);
+
+    // TODO: redirect instead with some error status
+    res.status(500).json(error);
   }
 
   if (user !== null && cookies !== null) {
     await applySession(req, res, userCookieOptions);
     req.session.set('user', user);
+
     // cookies are stored in session for use with API calls in getServerSideProps
     req.session.set('cookies', cookies);
+
     await req.session.save();
-    res.status(200).json(user);
   } else {
     console.error('API error: Cookie not available');
-    res.status(400).json(anonymousUser);
   }
-}
+
+  res.redirect(target);
+};
+
+export default fakeLogin;

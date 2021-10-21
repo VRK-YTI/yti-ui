@@ -5,24 +5,9 @@ import {
   AuthenticationButton,
 } from './authentication-panel.styles';
 import LoginModal from '../login-modal/login-modal';
-import useUser from '../../hooks/useUser';
-import User, { anonymousUser } from '../../interfaces/user-interface';
-import { authFakeUser } from '../../utils/user';
-import { useRouter } from 'next/router';
-import axios from 'axios';
+import User from '../../interfaces/user-interface';
 
-async function fakeUserLogin(mutateUser: (user: User) => void) {
-  const user: User = await authFakeUser();
-  if (user != anonymousUser) {
-    mutateUser(user);
-  } else {
-    console.error('fake admin sign in failed');
-    //TODO: handle sign in errors?
-  }
-  return user;
-}
-
-export default function AuthenticationPanel() {
+export default function AuthenticationPanel(props: { user?: User }) {
   const [apState, setState] = useState({
     ModalOpen: false,
   });
@@ -30,21 +15,18 @@ export default function AuthenticationPanel() {
     closeModal: modalClose,
   };
 
-  const { user, mutateUser } = useUser();
-  const router = useRouter();
-
   return (
     <>
-      {user && !user.anonymous ? (
+      {props.user && !props.user.anonymous ? (
         <ButtonsDiv>
           <AuthenticationButton onClick={ async(e) => logout(e) }>
-            SSO - Logout {user?.firstName + ' ' + user?.lastName}
+            SSO - Logout {props.user.firstName + ' ' + props.user.lastName}
           </AuthenticationButton>
         </ButtonsDiv>
       ) : (
         <ButtonsDiv>
           <AuthenticationButton
-            onClick={ () => fakeUserLogin(mutateUser) }
+            onClick={ async(e) => fakeLogin(e) }
           >
             Fake Admin - login
           </AuthenticationButton>
@@ -63,13 +45,6 @@ export default function AuthenticationPanel() {
     setState({ ...apState, ModalOpen: true });
   }
 
-  async function logout(e: SyntheticEvent) {
-    e.preventDefault();
-    const user: User = await axios.get('/api/auth/logout').then(x => x.data);
-    mutateUser(user, false);
-    router.push('/');
-  }
-
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   function ssoLogout() {
     const currentUrl: string = '/logout.html';
@@ -80,5 +55,15 @@ export default function AuthenticationPanel() {
 
   function modalClose() {
     setState({ ...apState, ModalOpen: false });
+  }
+
+  async function logout(e: SyntheticEvent) {
+    e.preventDefault();
+    window.location.href = '/api/auth/logout?target=/';
+  }
+
+  function fakeLogin(e: SyntheticEvent) {
+    e.preventDefault();
+    window.location.href = '/api/auth/fake-login';
   }
 }

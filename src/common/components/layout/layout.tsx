@@ -20,6 +20,7 @@ import {
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/dist/client/router';
 import AuthenticationPanel from '../authentication-panel/authentication-panel';
+import User from '../../interfaces/user-interface';
 
 const debug = false;
 
@@ -33,10 +34,10 @@ function Title() {
 
 export default function Layout({
   children,
-  home,
+  user,
 }: {
   children: any;
-  home?: boolean;
+  user?: User;
 }) {
   const { t } = useTranslation('common');
   const router = useRouter();
@@ -81,7 +82,7 @@ export default function Layout({
                       Englanniksi
                     </LanguageMenuItem>
                   </LanguageMenu>
-                  <AuthenticationPanel />
+                  <AuthenticationPanel user={user} />
                   <HamburgerMenu debug={debug}>
                     <Link href="/">&#x2630;</Link>
                   </HamburgerMenu>
