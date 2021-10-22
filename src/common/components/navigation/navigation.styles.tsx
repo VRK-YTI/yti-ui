@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { LayoutProps } from "../layout/layout-props";
 
 export const NavigationWrapper = styled.ul`
   display: flex;

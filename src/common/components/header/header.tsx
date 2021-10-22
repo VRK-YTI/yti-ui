@@ -5,9 +5,9 @@ import { Icon, LanguageMenu, LanguageMenuItem, Link, SearchInput } from "suomifi
 import AuthenticationPanel from "../authentication-panel/authentication-panel";
 import { LayoutProps } from "../layout/layout-props";
 import HamburgerMenu from "../menu/hamburger-menu";
-import { HeaderWrapper, SiteLogo } from "./header.styles";
+import { HeaderWrapper, LanguageMenuWrapper, SearchWrapper, SiteLogo } from "./header.styles";
 
-export default function Header( { props }: { props: LayoutProps } ) {
+export default function Header({ props }: { props: LayoutProps }) {
   const { t } = useTranslation('common');
   const isLarge = props.isLarge;
   const router = useRouter();
@@ -36,54 +36,59 @@ export default function Header( { props }: { props: LayoutProps } ) {
             </SiteLogo>
           </Grid>
           <Grid item xs={3} sm={3} md={3} lg={3}>
-            {isLarge ? (
-              <SearchInput
-                fullWidth
-                clearButtonLabel=""
-                labelText=""
-                searchButtonLabel={t("terminology-search")}
-                visualPlaceholder={t("terminology-search-placeholder")}
-              />
-            ) : (
-              <span><Icon icon="search" /></span>
-            )}
+            <SearchWrapper>
+              {isLarge ? (
+                <SearchInput
+                  fullWidth
+                  clearButtonLabel=""
+                  labelText=""
+                  searchButtonLabel={t("terminology-search")}
+                  visualPlaceholder={t("terminology-search-placeholder")}
+                />
+              ) : (
+                <div><Icon icon="search" /></div>
+              )}
+            </SearchWrapper>
+          </Grid>
+
+          <Grid item md={3} lg={2} hidden={!isLarge}>
+            <LanguageMenuWrapper>
+              <LanguageMenu name={languageMenuItems[currentLocale]}>
+                <LanguageMenuItem
+                  onSelect={() => {
+                    router.push(router.asPath, router.asPath, {
+                      locale: 'fi',
+                    });
+                  }}
+                  selected={currentLocale === 'fi'}
+                >
+                  {languageMenuItems["fi"]}
+                </LanguageMenuItem>
+                <LanguageMenuItem
+                  onSelect={() => {
+                    router.push(router.asPath, router.asPath, {
+                      locale: 'sv',
+                    });
+                  }}
+                  selected={currentLocale === 'sv'}
+                >
+                  {languageMenuItems["sv"]}
+                </LanguageMenuItem>
+                <LanguageMenuItem
+                  onSelect={() => {
+                    router.push(router.asPath, router.asPath, {
+                      locale: 'en',
+                    });
+                  }}
+                  selected={currentLocale === 'en'}
+                >
+                  {languageMenuItems["en"]}
+                </LanguageMenuItem>
+              </LanguageMenu>
+            </LanguageMenuWrapper>
           </Grid>
           <Grid item md={3} lg={4} hidden={!isLarge}>
             <AuthenticationPanel props={props} />
-          </Grid>
-          <Grid item md={3} lg={2} hidden={!isLarge}>
-            <LanguageMenu name={languageMenuItems[currentLocale]}>
-              <LanguageMenuItem
-                onSelect={() => {
-                  router.push(router.asPath, router.asPath, {
-                    locale: 'fi',
-                  });
-                }}
-                selected={currentLocale === 'fi'}
-              >
-                {languageMenuItems["fi"]}
-              </LanguageMenuItem>
-              <LanguageMenuItem
-                onSelect={() => {
-                  router.push(router.asPath, router.asPath, {
-                    locale: 'sv',
-                  });
-                }}
-                selected={currentLocale === 'sv'}
-              >
-                {languageMenuItems["sv"]}
-              </LanguageMenuItem>
-              <LanguageMenuItem
-                onSelect={() => {
-                  router.push(router.asPath, router.asPath, {
-                    locale: 'en',
-                  });
-                }}
-                selected={currentLocale === 'en'}
-              >
-                {languageMenuItems["en"]}
-              </LanguageMenuItem>
-            </LanguageMenu>
           </Grid>
           <Grid item xs={3} sm={3} hidden={isLarge}>
             <HamburgerMenu props={props} />

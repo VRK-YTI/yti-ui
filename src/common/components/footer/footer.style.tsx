@@ -14,4 +14,5 @@ export const FooterLinkWrapper = styled.div`
   padding-top: 10px;
   column-gap: 40px;
   justify-content: flex-start;
+  flex-wrap: wrap;
 `

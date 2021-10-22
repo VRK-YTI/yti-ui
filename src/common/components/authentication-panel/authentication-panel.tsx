@@ -2,7 +2,6 @@ import { SyntheticEvent, useState } from 'react';
 import { LoginModalFunctions } from '../../interfaces/callback-interfaces';
 import {
   ButtonsDiv,
-  AuthenticationButton,
   UserInfo,
 } from './authentication-panel.styles';
 import LoginModal from '../login-modal/login-modal';
@@ -45,11 +44,11 @@ export default function AuthenticationPanel({ props }: { props: LayoutProps }) {
         <ButtonsDiv isLarge={props.isLarge}>
           <UserInfo>
             <Text>
-              {`${user?.firstName} ${user?.lastName}`}<br />
+              {`${user?.firstName} ${user?.lastName}`}
             </Text>
-            <Text>TODO: Organization</Text>
           </UserInfo>
-          <Button icon="logout" onClick={async (e) => logout(e)}>{t('site-logout')}</Button>
+          <Button icon="logout" variant="secondaryNoBorder" onClick={async (e) => logout(e)}>{t('site-logout')}</Button>
+
         </ButtonsDiv>
       ) : (
         <ButtonsDiv isLarge={props.isLarge}>
@@ -58,11 +57,6 @@ export default function AuthenticationPanel({ props }: { props: LayoutProps }) {
           >
             {t('site-login')}
           </Button>
-
-          <Button onClick={openSsoLoginAndRegister}>
-            {t('site-register')}
-          </Button>
-
         </ButtonsDiv>
       )}
       {apState.ModalOpen ? (

@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import React from 'react';
 
-import { Block, Breadcrumb } from 'suomifi-ui-components';
+import { Block } from 'suomifi-ui-components';
 import { ThemeProvider } from 'styled-components';
 import { lightTheme } from '../theme';
 import {
@@ -21,10 +21,7 @@ import Header from '../header/header';
 import Navigation from '../navigation/navigation';
 import { useMediaQuery } from '@material-ui/core';
 import { LayoutProps } from './layout-props';
-import YtiBreadcrumb from '../breadcrumb/breadcrumb';
 import BreadcrumbWrapper from '../breadcrumb/breadcrumb';
-
-const debug = false;
 
 export default function Layout({
   children,
@@ -51,37 +48,37 @@ export default function Layout({
           <meta name="og:title" content={siteTitle} />
           <meta name="twitter:card" content="summary_large_image" />
         </Head>
-        <SiteContainer debug={debug}>
+        <SiteContainer isLarge={isLarge}>
           <Block variant="header">
-            <HeaderContainer debug={debug}>
-              <MarginContainer>
+            <HeaderContainer>
+              <MarginContainer isLarge={isLarge}>
                 <Header props={layoutProps} />
               </MarginContainer>
             </HeaderContainer>
           </Block>
 
           <NavigationContainer isLarge={isLarge}>
-            <MarginContainer>
+            <MarginContainer isLarge={isLarge}>
               <Block variant="nav">
-                <Navigation />
+                <Navigation props={layoutProps}/>
               </Block>
             </MarginContainer>
           </NavigationContainer>
 
-          <ContentContainer debug={debug}>
+          <ContentContainer >
 
-            <MarginContainer debug={debug}>
+            <MarginContainer isLarge={isLarge}>
               <Block variant="main">
                 <>
-                <BreadcrumbWrapper />
-                {children}
+                  <BreadcrumbWrapper />
+                  {children}
                 </>
               </Block>
             </MarginContainer>
           </ContentContainer>
 
           <FooterContainer>
-            <MarginContainer>
+            <MarginContainer isLarge={isLarge}>
               <Footer />
             </MarginContainer>
           </FooterContainer>
