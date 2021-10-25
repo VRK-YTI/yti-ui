@@ -1,25 +1,29 @@
 import React from 'react';
 import { SearchInput } from 'suomifi-ui-components';
-import { SearchContainer } from './terminology-search-input.styles';
 
 interface SearchInputProps {
-  keyword: string;
-  setKeyword: (value: string) => void;
+  setFilter: (value: string | null) => void;
 }
 
-export function TerminologySearchInput({ keyword, setKeyword }: SearchInputProps) {
+export function TerminologySearchInput({ setFilter }: SearchInputProps) {
   return (
-    <SearchContainer>
-      <SearchInput
-        clearButtonLabel="Tyhjennä haku"
-        labelText="Hakukenttä"
-        searchButtonLabel="Hae"
-        onSearch={
-          (value) => {
-            setKeyword(value as string);
+    <SearchInput
+      data-testid='search_input'
+      clearButtonLabel="Tyhjennä haku"
+      labelText="Hakukenttä"
+      searchButtonLabel="Hae"
+      onSearch={
+        (value) => {
+          setFilter(value as string);
+        }
+      }
+      onChange={
+        (value) => {
+          if (value === '' || value === null) {
+            setFilter(value as string);
           }
         }
-      />
-    </SearchContainer>
+      }
+    />
   );
 }
