@@ -6,13 +6,11 @@ import { Heading } from 'suomifi-ui-components';
 import Layout from '../common/components/layout/layout';
 import { TerminologySearchInput } from '../common/components/terminology-search/terminology-search-input';
 import { TerminologySearchResults } from '../common/components/terminology-search/terminology-search-results';
-import { TerminologySearchResult } from '../common/interfaces/terminology.interface';
 import { UserProps } from '../common/interfaces/user-interface';
 import withSession, { NextIronRequest } from '../common/utils/session';
 import { GetServerSideProps, NextApiResponse } from 'next';
 
-import { selectFilter } from '../common/components/terminology-search/terminology-search-slice';
-// import { useAppSelector } from '../common/components/hooks';
+import { selectFilter, useGetSearchResultQuery } from '../common/components/terminology-search/terminology-search-slice';
 import { useSelector } from 'react-redux';
 
 export default function Search(props: {
@@ -20,33 +18,8 @@ export default function Search(props: {
 }) {
   const { t } = useTranslation('common');
   const input = useSelector(selectFilter());
-  const [results, setResults] = useState<TerminologySearchResult | null>(null);
 
-  useEffect(() => {
-    fetchData(input);
-  }, [input]);
-
-  const apiUrl = '/terminology-api/api/v1/frontend/searchTerminology';
-
-  const fetchData = async (keyword: string) => {
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        query: keyword,
-        searchConcepts: true,
-        prefLang: 'fi',
-        pageSize: 10,
-        pageFrom: 0,
-      }),
-    };
-
-    return await fetch(apiUrl, requestOptions)
-      .then((response) => response.json())
-      .then((data) => {
-        setResults(data);
-      });
-  };
+  const {data, error, isLoading} = useGetSearchResultQuery(input);
 
   return (
     <Layout>
@@ -57,7 +30,7 @@ export default function Search(props: {
 
       <TerminologySearchInput />
 
-      <TerminologySearchResults results={results} />
+      <TerminologySearchResults results={data} />
     </Layout>
   );
 }

@@ -16,7 +16,7 @@ const initialState: SearchState = {
     code: null,
     uri: null,
     status: null,
-    label: {key: ''},
+    label: { key: '' },
     description: {},
     informationDomainDTO: null,
     contributors: null,
@@ -33,12 +33,6 @@ export const terminologySearchSlice = createSlice({
         ...action.payload
       };
     },
-    setResults(state, action) {
-      return {
-        ...state,
-        ...action.payload
-      };
-    }
   },
   extraReducers: {
     [HYDRATE]: (state, action) => {
@@ -55,29 +49,43 @@ export const terminologySearchApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: '/terminology-api/api/v1/frontend' }),
   tagTypes: ['TerminologySearch'],
   endpoints: builder => ({
+    getSearchResult: builder.query<TerminologyDTO, string>({
+      query: (value) => ({
+        url: '/searchTerminology',
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: {
+          query: value,
+          searchConcepts: true,
+          prefLang: 'fi',
+          pageSize: 10,
+          pageFrom: 0,
+        },
+      }),
+    }),
     fetchSearchResult: builder.mutation<TerminologyDTO, string>({
-      query(value) {
-        return {
-          url: '/searchTerminology',
-          method: 'POST',
-          headers: {
-            'content-type': 'application/json',
-          },
-          body: {
-            query: value,
-            searchConcepts: true,
-            prefLang: 'fi',
-            pageSize: 10,
-            pageFrom: 0,
-          },
-        };
-      },
+      query: (value) => ({
+        url: '/searchTerminology',
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: {
+          query: value,
+          searchConcepts: true,
+          prefLang: 'fi',
+          pageSize: 10,
+          pageFrom: 0,
+        },
+      }),
       invalidatesTags: ['TerminologySearch'],
     }),
   }),
 });
 
-export const { useFetchSearchResultMutation } = terminologySearchApi;
+export const { useGetSearchResultQuery, useFetchSearchResultMutation } = terminologySearchApi;
 
 export const setFilter = (filter: string): AppThunk => dispatch => {
   dispatch(
@@ -88,12 +96,4 @@ export const setFilter = (filter: string): AppThunk => dispatch => {
 };
 
 export const selectFilter = () => (state: AppState): string => state.terminologySearch.value;
-
-export const setResults = (results: any): AppThunk => async dispatch => {
-  dispatch(
-    terminologySearchSlice.actions.setResults({
-      results: results
-    })
-  );
-};
 
