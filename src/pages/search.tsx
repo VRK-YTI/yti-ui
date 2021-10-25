@@ -19,7 +19,6 @@ export default function Search(props: {
   _netI18Next: SSRConfig;
 }) {
   const { t } = useTranslation('common');
-
   const input = useSelector(selectFilter());
   const [results, setResults] = useState<TerminologySearchResult | null>(null);
 

@@ -1,13 +1,16 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import { createWrapper } from 'next-redux-wrapper';
-import { terminologySearchSlice } from './common/components/terminology-search/terminology-search-slice';
+import { terminologySearchSlice, terminologySearchApi } from './common/components/terminology-search/terminology-search-slice';
 import { useDispatch } from 'react-redux';
 
 export function makeStore() {
   return configureStore({
     reducer: {
       [terminologySearchSlice.name]: terminologySearchSlice.reducer,
+      [terminologySearchApi.reducerPath]: terminologySearchApi.reducer,
     },
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().concat(terminologySearchApi.middleware),
     devTools: true,
   });
 };
