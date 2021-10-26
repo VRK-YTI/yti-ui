@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { NextApiResponse } from 'next';
 import { applySession } from 'next-iron-session';
-import User, { anonymousUser } from '../../..//common/interfaces/user-interface';
+import User from '../../..//common/interfaces/user-interface';
 import { NextIronRequest } from '../../../common/utils/session';
 import { userCookieOptions } from '../../../common/utils/user-cookie-options';
 
@@ -64,8 +64,9 @@ const fakeLogin = async (req: NextIronRequest, res: NextApiResponse) => {
     console.error('Caught error from axios');
     console.error(error);
 
-    // TODO: redirect instead with some error status
-    res.status(500).json(error);
+    // TODO: add some error status to redirect
+    res.redirect(target);
+    return;
   }
 
   if (user !== null && cookies !== null) {

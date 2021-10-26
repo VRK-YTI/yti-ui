@@ -26,6 +26,7 @@ export default withSession(async (req, res) => {
   } else {
     console.warn('No shibsression found, login failed');
     res.redirect(target);
+    return;
   }
 
   try {
@@ -43,6 +44,7 @@ export default withSession(async (req, res) => {
     if (!forwardedFor) {
       console.error('Header "X-Forwarded-For" not found!');
       res.redirect(target);
+      return;
     }
 
     // Host header is required to access the correct site in the shibboleth
@@ -51,6 +53,7 @@ export default withSession(async (req, res) => {
     if (!host) {
       console.error('Header "Host" not found!');
       res.redirect(target);
+      return;
     }
 
     const response = await axios.get(
