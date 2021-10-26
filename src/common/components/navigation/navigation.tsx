@@ -1,25 +1,21 @@
-import { Menu, MenuItem } from '@material-ui/core';
+
+import { ClickAwayListener } from '@material-ui/core';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Icon, Link } from 'suomifi-ui-components';
+import { Icon, Link, Text } from 'suomifi-ui-components';
 import { LayoutProps } from '../layout/layout-props';
-import { NavigationWrapper } from './navigation.styles';
+import { NavigationDropdownItem, NavigationDropdownList, NavigationDropdownWrapper, NavigationWrapper } from './navigation.styles';
 
 export default function Navigation({ props }: { props: LayoutProps }) {
 
   const { t } = useTranslation('common');
+  const [open, setOpen] = useState(false);
+
   const isLarge = props.isLarge;
 
-  const [anchorEl, setAnchorEl] = useState(null);
-  const open = Boolean(anchorEl);
-
-  const handleDropdown = (event: any) => {
-    event.preventDefault();
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
+  const handleDropdown = (e: any) => {
+    e.preventDefault();
+    setOpen(!open);
   };
 
   return (
@@ -27,37 +23,36 @@ export default function Navigation({ props }: { props: LayoutProps }) {
     <NavigationWrapper hidden={!isLarge}>
 
       <li>
-        <Link href="/">{t('site-frontpage')}</Link>
+        <Link className="main" href="/">{t('site-frontpage')}</Link>
       </li>
       <li>
-        <Link href="" onClick={handleDropdown}>{t('site-services')} <Icon icon={open ? 'arrowUp' : 'arrowDown'} /></Link>
-        <Menu
-          open={open}
-          anchorEl={anchorEl}
-          onClose={handleClose}
-          PaperProps={{
-            style: {
-              width: '200px',
-              transform: 'translateX(0%) translateY(50%)',
-            }
-          }}
-        >
-          <MenuItem>
-            Foo
-          </MenuItem>
-          <MenuItem>
-            Bar
-          </MenuItem>
-        </Menu>
+        <Link className="main dropdown" href="" onClick={(e) => handleDropdown(e)}>{t('site-services')} <Icon icon={open ? 'arrowUp' : 'arrowDown'} /></Link>
+        {open &&
+          <ClickAwayListener onClickAway={() => setOpen(false)}>
+            <NavigationDropdownWrapper>
+              <NavigationDropdownList>
+                <NavigationDropdownItem>
+                  <Link href="/">{t('terminology-title')}</Link>
+                </NavigationDropdownItem>
+                <NavigationDropdownItem>
+                  <Link href="/">{t('codelist-title')}</Link>
+                </NavigationDropdownItem>
+                <NavigationDropdownItem>
+                  <Link href="/">{t('datamodel-title')}</Link>
+                </NavigationDropdownItem>
+              </NavigationDropdownList>
+            </NavigationDropdownWrapper>
+          </ClickAwayListener>
+        }
       </li>
       <li>
-        <Link href="/">{t('site-information')}</Link>
+        <Link className="main" href="/">{t('site-information')}</Link>
       </li>
       <li>
-        <Link href="/">{t('site-for-developers')}</Link>
+        <Link className="main" href="/">{t('site-for-developers')}</Link>
       </li>
       <li>
-        <Link href="/">{t('site-for-administrators')}</Link>
+        <Link className="main" href="/">{t('site-for-administrators')}</Link>
       </li>
     </NavigationWrapper>
 
