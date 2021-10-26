@@ -22,13 +22,16 @@ import Navigation from '../navigation/navigation';
 import { useMediaQuery } from '@material-ui/core';
 import { LayoutProps } from './layout-props';
 import BreadcrumbWrapper from '../breadcrumb/breadcrumb';
+import ErrorHeader from '../header/error-header';
 
 export default function Layout({
   children,
   user,
+  error
 }: {
   children: any;
   user?: User;
+  error?: boolean;
 }) {
   const { t } = useTranslation('common');
 
@@ -52,37 +55,45 @@ export default function Layout({
           <Block variant="header">
             <HeaderContainer>
               <MarginContainer isLarge={isLarge}>
-                <Header props={layoutProps} />
+                {!error ? (
+                  <Header props={layoutProps} />
+                ) : (
+                  <ErrorHeader props={layoutProps}/>
+                )}
               </MarginContainer>
             </HeaderContainer>
           </Block>
 
-          <NavigationContainer isLarge={isLarge}>
-            <MarginContainer isLarge={isLarge}>
-              <Block variant="nav">
-                <Navigation props={layoutProps}/>
-              </Block>
-            </MarginContainer>
-          </NavigationContainer>
-
+          {!error &&
+            <NavigationContainer isLarge={isLarge}>
+              <MarginContainer isLarge={isLarge}>
+                <Block variant="nav">
+                  <Navigation props={layoutProps}/>
+                </Block>
+              </MarginContainer>
+            </NavigationContainer>
+          }
           <ContentContainer >
 
             <MarginContainer isLarge={isLarge}>
               <Block variant="main">
                 <>
-                  <BreadcrumbWrapper />
+                  {!error &&
+                    <BreadcrumbWrapper />
+                  }
                   {children}
                 </>
               </Block>
             </MarginContainer>
           </ContentContainer>
 
-          <FooterContainer>
-            <MarginContainer isLarge={isLarge}>
-              <Footer props={layoutProps} />
-            </MarginContainer>
-          </FooterContainer>
-
+          {!error &&
+            <FooterContainer>
+              <MarginContainer isLarge={isLarge}>
+                <Footer props={layoutProps} />
+              </MarginContainer>
+            </FooterContainer>
+          }
         </SiteContainer>
       </ThemeProvider>
     </>
