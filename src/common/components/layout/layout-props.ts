@@ -1,3 +1,3 @@
 export interface LayoutProps {
-    isLarge: boolean
+    isLarge: boolean;
 }

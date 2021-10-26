@@ -1,5 +1,5 @@
-import { Breadcrumb } from "suomifi-ui-components";
-import { BreadcrumbWrappwer } from "./breadcrumb-styles";
+import { Breadcrumb, BreadcrumbLink } from 'suomifi-ui-components';
+import { BreadcrumbWrappwer } from './breadcrumb-styles';
 
 export default function BreadcrumbWrapper() {
 
@@ -8,13 +8,13 @@ export default function BreadcrumbWrapper() {
   return (
     <>
       <BreadcrumbWrappwer>
-        <Breadcrumb href="/">
-          <Breadcrumb.link href="/">
+        <Breadcrumb aria-label="Murupolku" href="/">
+          <BreadcrumbLink aria-label="Etusivu"  href="/">
             Etusivu
-          </Breadcrumb.link>
-          <Breadcrumb.link href="/" current>
+          </BreadcrumbLink>
+          <BreadcrumbLink aria-label="Alasivu" href="/" current>
             Alasivu
-          </Breadcrumb.link>
+          </BreadcrumbLink>
         </Breadcrumb>
       </BreadcrumbWrappwer>
     </>

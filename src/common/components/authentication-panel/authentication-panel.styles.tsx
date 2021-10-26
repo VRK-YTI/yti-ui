@@ -16,4 +16,4 @@ export const UserInfo = styled.div`
     margin-top: 10px;
     padding-right: 10px;
   }
-`
+`;

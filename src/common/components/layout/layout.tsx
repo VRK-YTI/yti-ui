@@ -37,7 +37,7 @@ export default function Layout({
 
   const layoutProps: LayoutProps = {
     isLarge
-  }
+  };
 
   return (
     <>
@@ -79,7 +79,7 @@ export default function Layout({
 
           <FooterContainer>
             <MarginContainer isLarge={isLarge}>
-              <Footer />
+              <Footer props={layoutProps} />
             </MarginContainer>
           </FooterContainer>
 

@@ -1,23 +1,31 @@
-import { useTranslation } from "react-i18next";
-import { Heading, Link, Text } from "suomifi-ui-components";
-import { FooterContentWrapper, FooterLinkWrapper } from "./footer.style";
+import { useTranslation } from 'react-i18next';
+import { ExternalLink, Paragraph, Text } from 'suomifi-ui-components';
+import Image from 'next/image';
+import { LayoutProps } from '../layout/layout-props';
+import { FooterContentWrapper, FooterLinkWrapper } from './footer.style';
 
-export default function Footer() {
+export default function Footer({ props }: { props: LayoutProps }) {
   const { t } = useTranslation('common');
   return (
     <>
-        <FooterContentWrapper>
-            <img src="logo-suomi.fi.png" />
-            <Text>{t("terminology-footer-text")}</Text>
-        </FooterContentWrapper>
+      <FooterContentWrapper>
+        <Image src="/logo-suomi.fi.png" width="254" height="70" alt="Logo" />
+        <Paragraph>
+          <Text>{t('terminology-footer-text')}</Text>
+        </Paragraph>
+      </FooterContentWrapper>
 
-        <FooterLinkWrapper>
-            <Link.external href="/" labelNewWindow={t("site-open-link-new-window")}>{t("terminology-footer-feedback")}</Link.external>
-            <Link.external href="/" labelNewWindow={t("site-open-link-new-window")}>{t("terminology-footer-information-security")}</Link.external>
-            <Link.external href="/" labelNewWindow={t("site-open-link-new-window")}>{t("terminology-footer-accessibility")}</Link.external>
-        </FooterLinkWrapper>
-        
+      <FooterLinkWrapper isLarge={props.isLarge}>
+        <ExternalLink href="/" labelNewWindow={t('site-open-link-new-window')}>
+          {t('terminology-footer-feedback')}
+        </ExternalLink>
+        <ExternalLink href="/" labelNewWindow={t('site-open-link-new-window')}>
+          {t('terminology-footer-information-security')}
+        </ExternalLink>
+        <ExternalLink href="/" labelNewWindow={t('site-open-link-new-window')}>
+          {t('terminology-footer-accessibility')}
+        </ExternalLink>
+      </FooterLinkWrapper>
     </>
-
   );
 }

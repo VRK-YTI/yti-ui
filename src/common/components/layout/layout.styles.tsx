@@ -5,13 +5,13 @@ import { DebugProps } from '../../interfaces/debug-props';
 import { LayoutProps } from './layout-props';
 
 export const MarginContainer = styled.div<LayoutProps>`
-  margin: ${props => props.isLarge ? "0px 50px 10px 50px" : "0px 15px 0px 15px"};
+  margin: ${props => props.isLarge ? '0px 50px 10px 50px' : '0px 15px 0px 15px'};
 `;
 
 // main layout
 
 export const SiteContainer = styled.div<LayoutProps>`
-  width: ${props => props.isLarge ? "80%" : "100%"};
+  width: ${props => props.isLarge ? '80%' : '100%'};
   margin: auto;
   height: 100%;
   border-top: ${(props) => `2px solid ${props.theme.suomifi.colors.highlightBase}`};
@@ -25,13 +25,13 @@ export const SiteContainer = styled.div<LayoutProps>`
 // header layout
 
 export const HeaderContainer = styled.div<DebugProps>`
-  background-color: white;
+  background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
   height: 76px;
   border-bottom: ${(props) => `1px solid ${props.theme.suomifi.colors.depthLight3}`};
 `;
 
 export const NavigationContainer = styled.div<LayoutProps>`
-  background-color: white;
+  background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
   border-bottom: ${(props) => `1px solid ${props.theme.suomifi.colors.depthLight3}`};
   display: ${props => props.isLarge ? 'block' : 'none'}
 `;
@@ -44,5 +44,5 @@ export const ContentContainer = styled.div<DebugProps>`
 `;
 
 export const FooterContainer = styled.div`
-  background-color: white;
-`
+  background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
+`;

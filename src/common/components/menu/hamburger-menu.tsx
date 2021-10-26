@@ -1,11 +1,11 @@
-import { Divider, IconButton, Menu, MenuItem } from "@material-ui/core";
-import { useRouter } from "next/router";
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import { Icon, Link } from "suomifi-ui-components";
-import AuthenticationPanel from "../authentication-panel/authentication-panel";
-import { LayoutProps } from "../layout/layout-props";
-import { ButtonWrapper, MenuWrapper } from "./hamburger-menu-styles";
+import { Divider, IconButton, Menu, MenuItem } from '@material-ui/core';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Icon, Link, Text } from 'suomifi-ui-components';
+import AuthenticationPanel from '../authentication-panel/authentication-panel';
+import { LayoutProps } from '../layout/layout-props';
+import { ButtonWrapper, MenuItemWrapper, MenuWrapper } from './hamburger-menu-styles';
 
 export default function HamburgerMenu({ props }: { props: LayoutProps }) {
   const { t } = useTranslation('common');
@@ -31,56 +31,76 @@ export default function HamburgerMenu({ props }: { props: LayoutProps }) {
     <>
       <MenuWrapper>
         <IconButton onClick={handleClick}>
-          <Icon icon={open ? "close" : "menu"} />
+          <Icon icon={open ? 'close' : 'menu'} />
         </IconButton>
-        <Menu id="long-menu" 
-          anchorEl={anchorEl} 
-          open={open} 
+        <Menu id="long-menu"
+          anchorEl={anchorEl}
+          open={open}
           onClose={handleClose}
           marginThreshold={0}
           PaperProps={{
             style: {
-              width: "100%",
-              maxWidth: "none",
+              width: '100%',
+              maxWidth: 'none',
               transform: 'translateX(0%) translateY(12%)',
             }
           }}
-          MenuListProps={{
-            style: {
-              padding: 0,
-            },
-          }}
         >
-          <MenuItem onClick={handleClose}>
+          <MenuItem>
             <ButtonWrapper>
-              <AuthenticationPanel props={props} />
+              <AuthenticationPanel props={props} onMenuClose={handleClose} />
             </ButtonWrapper>
           </MenuItem>
           <Divider />
 
-          <MenuItem onClick={handleClose}>
-            <Link href="/">{t("site-frontpage")}</Link>
-          </MenuItem>
-          <MenuItem onClick={handleClose}>
-            <Link href="/">{t("site-services")}</Link>
-          </MenuItem>
-          <MenuItem onClick={handleClose}>
-            < Link href="/">{t("site-information")}</Link>
-          </MenuItem>
-          <MenuItem onClick={handleClose}>
-            <Link href="/">{t("site-for-developers")}</Link>
-          </MenuItem>
-          <MenuItem onClick={handleClose}>
-            <Link href="/">{t("site-for-administrators")}</Link>
-          </MenuItem>
+          <MenuItemWrapper active={router.pathname === '/'}>
+            <MenuItem onClick={handleClose}>
+              <Link href="/">{t('site-frontpage')}</Link>
+            </MenuItem>
+          </MenuItemWrapper>
+          <MenuItemWrapper>
+            <MenuItem>
+              <Text>{t('site-services')}</Text>
+            </MenuItem>
+          </MenuItemWrapper>
+          <MenuItemWrapper subPage>
+            <MenuItem onClick={handleClose}>
+              <Link href="/">{t('terminology-title')}</Link>
+            </MenuItem>
+          </MenuItemWrapper>
+          <MenuItemWrapper subPage>
+            <MenuItem onClick={handleClose}>
+              <Link href="/">{t('codelist-title')}</Link>
+            </MenuItem>
+          </MenuItemWrapper >
+          <MenuItemWrapper subPage>
+            <MenuItem onClick={handleClose}>
+              <Link href="/">{t('datamodel-title')}</Link>
+            </MenuItem>
+          </MenuItemWrapper>
+          <MenuItemWrapper>
+            <MenuItem onClick={handleClose}>
+              <Link href="/">{t('site-information')}</Link>
+            </MenuItem>
+          </MenuItemWrapper>
+          <MenuItemWrapper>
+            <MenuItem onClick={handleClose}>
+              <Link href="/">{t('site-for-developers')}</Link>
+            </MenuItem>
+          </MenuItemWrapper>
+          <MenuItemWrapper>
+            <MenuItem onClick={handleClose}>
+              <Link href="/">{t('site-for-administrators')}</Link>
+            </MenuItem>
+          </MenuItemWrapper>
           <Divider />
-          <MenuItem onClick={() => handleLocaleChance("fi")}>
+          <MenuItem onClick={() => handleLocaleChance('fi')}>
             Suomeksi (FI)
           </MenuItem>
-          <MenuItem onClick={() => handleLocaleChance("sv")}>
+          <MenuItem onClick={() => handleLocaleChance('sv')}>
             På svenska (SV)
           </MenuItem>
-          <MenuItem onClick={() => handleLocaleChance("en")}>
+          <MenuItem onClick={() => handleLocaleChance('en')}>
             In English (EN)
           </MenuItem>
         </Menu>

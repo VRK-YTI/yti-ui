@@ -1,4 +1,5 @@
-import styled from "styled-components";
+import styled from 'styled-components';
+import { LayoutProps } from '../layout/layout-props';
 
 export const HeaderWrapper = styled.div`
   display: flex;
@@ -12,8 +13,8 @@ export const LanguageMenuWrapper = styled.div`
   padding-top: 8px;
 `;
 
-export const SearchWrapper = styled.div`
+export const SearchWrapper = styled.div<LayoutProps>`
   display: flex;
   justify-content: end;
-  padding-top: 15px;
+  padding-top: ${props => props.isLarge ? '2px' : '15px'};
 `;
