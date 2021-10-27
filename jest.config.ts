@@ -1,4 +1,7 @@
-module.exports = {
+import type { Config } from '@jest/types';
+
+// Sync object
+const config: Config.InitialOptions = {
   collectCoverageFrom: [
     '**/*.{js,jsx,ts,tsx}',
     '!**/*.d.ts',
@@ -20,4 +23,7 @@ module.exports = {
     '/node_modules/',
     '^.+\\.module\\.(css|sass|scss)$',
   ],
-}
+  setupFilesAfterEnv: ['./jest.setup.ts']
+};
+
+export default config;

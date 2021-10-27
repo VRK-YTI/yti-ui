@@ -12,6 +12,7 @@ import User, {
 import axios, { AxiosRequestConfig } from 'axios';
 import withSession, { NextIronRequest } from '../common/utils/session';
 import { GetServerSideProps, NextApiResponse } from 'next';
+import useUser from '../common/hooks/useUser';
 
 export default function Home(props: {
   _netI18Next: SSRConfig;
@@ -20,8 +21,10 @@ export default function Home(props: {
 }) {
   const { t } = useTranslation('common');
 
+  const { user, } = useUser({ initialData: props.user });
+
   return (
-    <Layout>
+    <Layout user={user}>
       <Head>
         <title>{ t('terminology') }</title>
       </Head>
