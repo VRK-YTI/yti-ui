@@ -10,7 +10,9 @@ export function makeStore() {
       [terminologySearchApi.reducerPath]: terminologySearchApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
-      getDefaultMiddleware().concat(terminologySearchApi.middleware),
+      getDefaultMiddleware().concat(
+        terminologySearchApi.middleware
+      ),
     devTools: true,
   });
 };

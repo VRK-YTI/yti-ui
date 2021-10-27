@@ -11,7 +11,6 @@ export function TerminologySearchInput() {
 
   return (
     <SearchContainer>
-      {console.log(filter)}
       <SearchInput
         clearButtonLabel="Tyhjennä haku"
         labelText="Hakukenttä"

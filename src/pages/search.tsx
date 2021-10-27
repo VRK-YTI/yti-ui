@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { SSRConfig, useTranslation } from 'next-i18next';
 import { Heading } from 'suomifi-ui-components';
@@ -39,6 +39,7 @@ export const getServerSideProps: GetServerSideProps = withSession<{ props: UserP
   async ({ req, res, locale }: { req: NextIronRequest, res: NextApiResponse, locale: string }) => {
     const props: any = {
       ...(await serverSideTranslations(locale, ['common'])),
+      number: 1,
     };
 
     return { props: props };

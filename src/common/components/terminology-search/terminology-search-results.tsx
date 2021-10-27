@@ -9,7 +9,7 @@ interface SearchResultProps {
 }
 
 interface SearchResultsProps {
-  results: TerminologySearchResult | null;
+  results: TerminologySearchResult | undefined;
 }
 
 function SearchResult({ data }: SearchResultProps) {
@@ -32,7 +32,7 @@ function SearchResult({ data }: SearchResultProps) {
   </SearchResultContainer>;
 }
 
-export function TerminologySearchResults({ results = null }: SearchResultsProps) {
+export function TerminologySearchResults({ results = undefined }: SearchResultsProps) {
   return (
     <>
       {
