@@ -6,8 +6,6 @@ export const HeaderWrapper = styled.div`
   justify-content: space-between;
   padding-top: 10px;
 `;
-export const SiteLogo = styled.div`
-`;
 
 export const LanguageMenuWrapper = styled.div`
   padding-top: 8px;

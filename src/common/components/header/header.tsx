@@ -6,7 +6,7 @@ import { Icon, LanguageMenu, LanguageMenuItem, Link, SearchInput } from 'suomifi
 import AuthenticationPanel from '../authentication-panel/authentication-panel';
 import { LayoutProps } from '../layout/layout-props';
 import HamburgerMenu from '../menu/hamburger-menu';
-import { HeaderWrapper, LanguageMenuWrapper, SearchWrapper, SiteLogo } from './header.styles';
+import { HeaderWrapper, LanguageMenuWrapper, SearchWrapper } from './header.styles';
 
 export default function Header({ props }: { props: LayoutProps }) {
   const { t } = useTranslation('common');
@@ -25,16 +25,14 @@ export default function Header({ props }: { props: LayoutProps }) {
       <HeaderWrapper>
         <Grid container spacing={3}>
           <Grid item xs={6} sm={6} md={3} lg={3}>
-            <SiteLogo>
-              <Link href="/">
-                {isLarge ? (
-                  <Image src="/logo-suomi.fi.png" width="254" height="70" alt="Logo" />
-                ) : (
-                  <Image height="40" width="40" src="/logo.png"  alt="Logo" />
-                )
-                }
-              </Link>
-            </SiteLogo>
+            <Link href="/">
+              {isLarge ? (
+                <Image src="/logo-suomi.fi.png" width="254" height="70" alt="Logo" />
+              ) : (
+                <Image height="40" width="40" src="/logo.png"  alt="Logo" />
+              )
+              }
+            </Link>
           </Grid>
           <Grid item xs={3} sm={3} md={3} lg={3}>
             <SearchWrapper isLarge={isLarge}>
