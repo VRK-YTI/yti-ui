@@ -1,26 +1,12 @@
-import { SyntheticEvent, useState } from 'react';
+import { useState } from 'react';
 import {
   ButtonsDiv,
   UserInfo,
 } from './authentication-panel.styles';
-import User, { anonymousUser } from '../../interfaces/user-interface';
-import { authFakeUser } from '../../utils/user';
 import { Button, Text } from 'suomifi-ui-components';
 import { useTranslation } from 'react-i18next';
 import { LayoutProps } from '../layout/layout-props';
 import LoginModalView from '../login-modal/login-modal';
-
-async function fakeUserLogin(mutateUser: (user: User) => void) {
-
-  const user: User = await authFakeUser();
-  if (user != anonymousUser) {
-    mutateUser(user);
-  } else {
-    console.error('fake admin sign in failed');
-    //TODO: handle sign in errors?
-  }
-  return user;
-}
 
 export default function AuthenticationPanel({ props, onMenuClose }: { props: LayoutProps, onMenuClose?: Function }) {
 

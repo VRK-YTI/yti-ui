@@ -13,8 +13,6 @@ import {
   MarginContainer,
 } from './layout.styles';
 import { useTranslation } from 'next-i18next';
-import { useRouter } from 'next/dist/client/router';
-import AuthenticationPanel from '../authentication-panel/authentication-panel';
 import User from '../../interfaces/user-interface';
 import Footer from '../footer/footer';
 import Header from '../header/header';
