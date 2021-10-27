@@ -39,7 +39,8 @@ export default function Layout({
   const isLarge = useMediaQuery('(min-width:945px)');
 
   const layoutProps: LayoutProps = {
-    isLarge
+    isLarge,
+    user
   };
 
   return (
