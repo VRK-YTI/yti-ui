@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { NavigationProps } from './navigation-props';
 
 export const NavigationWrapper = styled.ul`
   display: flex;
@@ -6,12 +7,13 @@ export const NavigationWrapper = styled.ul`
   margin-top: 0px;
   margin-bottom: 0px;
   padding-inline-start: 0px;
+`;
 
-  li {
-    padding: 15px 40px 5px 0px;
-  }
+export const NavigationItem = styled.li<NavigationProps>`
 
-  li a.main {
+  padding: 15px 40px 5px 0px;
+
+  a.main {
     color: ${(props) => props.theme.suomifi.colors.blackBase};
     padding-bottom: 10px;
     &:visited {
@@ -23,6 +25,8 @@ export const NavigationWrapper = styled.ul`
       border-bottom: 3px solid ${(props) => props.theme.suomifi.colors.highlightBase}
     }
   }
+
+  ${props => props.active ? `a { border-bottom: 3px solid ${props.theme.suomifi.colors.highlightBase} }` : ''}
 `;
 
 export const NavigationDropdownWrapper = styled.div`
@@ -43,7 +47,7 @@ export const NavigationDropdownList = styled.ul`
 `;
 
 export const NavigationDropdownItem = styled.li`
-
+  padding: 0px;
   a, a:visited {
     padding-left: 10px;
     text-decoration: none;

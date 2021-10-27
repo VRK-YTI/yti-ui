@@ -2,9 +2,9 @@
 import { ClickAwayListener } from '@material-ui/core';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Icon, Link, Text } from 'suomifi-ui-components';
+import { Icon, Link } from 'suomifi-ui-components';
 import { LayoutProps } from '../layout/layout-props';
-import { NavigationDropdownItem, NavigationDropdownList, NavigationDropdownWrapper, NavigationWrapper } from './navigation.styles';
+import { NavigationDropdownItem, NavigationDropdownList, NavigationDropdownWrapper, NavigationItem, NavigationWrapper } from './navigation.styles';
 
 export default function Navigation({ props }: { props: LayoutProps }) {
 
@@ -19,14 +19,12 @@ export default function Navigation({ props }: { props: LayoutProps }) {
   };
 
   return (
-
     <NavigationWrapper hidden={!isLarge}>
-
-      <li>
+      <NavigationItem active>
         <Link className="main" href="/">{t('site-frontpage')}</Link>
-      </li>
-      <li>
-        <Link className="main dropdown" href="" onClick={(e) => handleDropdown(e)}>{t('site-services')} <Icon icon={open ? 'arrowUp' : 'arrowDown'} /></Link>
+      </NavigationItem>
+      <NavigationItem>
+        <Link className="main" href="" onClick={(e) => handleDropdown(e)}>{t('site-services')} <Icon icon={open ? 'arrowUp' : 'arrowDown'} /></Link>
         {open &&
           <ClickAwayListener onClickAway={() => setOpen(false)}>
             <NavigationDropdownWrapper>
@@ -44,16 +42,16 @@ export default function Navigation({ props }: { props: LayoutProps }) {
             </NavigationDropdownWrapper>
           </ClickAwayListener>
         }
-      </li>
-      <li>
+      </NavigationItem>
+      <NavigationItem>
         <Link className="main" href="/">{t('site-information')}</Link>
-      </li>
-      <li>
+      </NavigationItem>
+      <NavigationItem>
         <Link className="main" href="/">{t('site-for-developers')}</Link>
-      </li>
-      <li>
+      </NavigationItem>
+      <NavigationItem>
         <Link className="main" href="/">{t('site-for-administrators')}</Link>
-      </li>
+      </NavigationItem>
     </NavigationWrapper>
 
   );
