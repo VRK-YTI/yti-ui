@@ -74,7 +74,8 @@ export default function LoginModalView({
   );
 
   function login() {
-    window.location.href = '/Shibboleth.sso/Login?target=/';
+    // window.location.href = '/Shibboleth.sso/Login?target=/';
+    window.location.href = '/api/auth/login?target=/';
   }
 
   function register() {

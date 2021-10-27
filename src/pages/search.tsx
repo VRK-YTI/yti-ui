@@ -7,6 +7,7 @@ import Layout from '../common/components/layout/layout';
 import { TerminologySearchInput } from '../common/components/terminology-search/terminology-search-input';
 import { TerminologySearchResults } from '../common/components/terminology-search/terminology-search-results';
 import { UserProps } from '../common/interfaces/user-interface';
+import { SearchContainer } from '../common/components/terminology-search/terminology-search-input.styles';
 import withSession, { NextIronRequest } from '../common/utils/session';
 import { GetServerSideProps, NextApiResponse } from 'next';
 
@@ -28,7 +29,9 @@ export default function Search(props: {
       </Head>
       <Heading variant="h1">{t('terminology-title')}</Heading>
 
-      <TerminologySearchInput />
+      <SearchContainer>
+        <TerminologySearchInput />
+      </SearchContainer>
 
       <TerminologySearchResults results={data} />
     </Layout>
