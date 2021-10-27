@@ -45,7 +45,6 @@ export default function Layout({
     <>
       <ThemeProvider theme={lightTheme}>
         <Head>
-          <link rel="icon" href="/favicon.ico" />
           <meta name="description" content="Terminology/React POC" />
           <meta name="og:title" content={siteTitle} />
           <meta name="twitter:card" content="summary_large_image" />
