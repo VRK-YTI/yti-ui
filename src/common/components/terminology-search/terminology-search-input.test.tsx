@@ -3,7 +3,7 @@ import { render as rtlRender, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { TerminologySearchInput } from './terminology-search-input';
-import reducer, { setFilter } from './terminology-search-slice';
+import reducer, { setFilter } from './states/terminology-search-slice';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit'
 import { makeStore } from '../../../store';

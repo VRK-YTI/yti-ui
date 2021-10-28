@@ -11,16 +11,16 @@ import { SearchContainer } from '../common/components/terminology-search/termino
 import withSession, { NextIronRequest } from '../common/utils/session';
 import { GetServerSideProps, NextApiResponse } from 'next';
 
-import { selectFilter, useGetSearchResultQuery } from '../common/components/terminology-search/terminology-search-slice';
+import { selectFilter, useGetSearchResultQuery } from '../common/components/terminology-search/states/terminology-search-slice';
 import { useSelector } from 'react-redux';
 
 export default function Search(props: {
   _netI18Next: SSRConfig;
 }) {
   const { t } = useTranslation('common');
-  const input = useSelector(selectFilter());
+  const filter = useSelector(selectFilter());
 
-  const {data, error, isLoading} = useGetSearchResultQuery(input);
+  const {data, error, isLoading} = useGetSearchResultQuery(filter);
 
   return (
     <Layout>

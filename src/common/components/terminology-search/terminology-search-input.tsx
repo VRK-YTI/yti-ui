@@ -1,6 +1,6 @@
 import React from 'react';
 import { SearchInput } from 'suomifi-ui-components';
-import { setFilter, selectFilter } from './terminology-search-slice';
+import { setFilter, selectFilter } from './states/terminology-search-slice';
 import { useSelector } from 'react-redux';
 import { useStoreDispatch } from '../../../store';
 

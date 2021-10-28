@@ -94,5 +94,5 @@ export const setFilter = (filter: string): AppThunk => dispatch => {
   );
 };
 
-export const selectFilter = () => (state: AppState): string => state.terminologySearch.value;
+export const selectFilter = () => (state: AppState): string => state.terminologySearch.filter;
 export default terminologySearchSlice.reducer;
