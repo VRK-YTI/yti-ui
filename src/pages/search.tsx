@@ -25,6 +25,7 @@ export default function Search(props: {
   return (
     <Layout>
       <Head>
+        {console.log(data?.terminologies)}
         <title>{t('search-title')}</title>
       </Head>
       <Heading variant="h1">{t('terminology-title')}</Heading>
@@ -38,6 +39,7 @@ export default function Search(props: {
   );
 }
 
+// TODO: Add wrapper which supports next-redux-wrapper
 export const getServerSideProps: GetServerSideProps = withSession<{ props: UserProps | {} }>(
   async ({ req, res, locale }: { req: NextIronRequest, res: NextApiResponse, locale: string }) => {
     const props: any = {

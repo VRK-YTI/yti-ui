@@ -25,6 +25,7 @@ export const terminologySearchSlice = createSlice({
   },
   extraReducers: {
     [HYDRATE]: (state, action) => {
+      // console.log('hydrating', state, action.payload);
       console.log('hydrating');
       return {
         ...state,
@@ -55,22 +56,35 @@ export const terminologySearchApi = createApi({
         },
       }),
     }),
+    // this request does not work yet but can be used as boilerplate for later post requests
+    getResult: builder.query<any, string>({
+      query: (value) => ({
+        url: '/request',
+        method: 'POST',
+        headers: {
+          'content-type': 'application/json',
+        },
+        body: {
+          organizationId: value,
+        },
+      })
+    })
   }),
 });
 
 
 // TODO: This can be deleted. Used only for testing
-export const updateValue = (filter: string): AppThunk => async dispatch => {
+export const updateValue = (filter: any): AppThunk => async dispatch => {
   const timeoutPromise = (timeout: number) => new Promise(resolve => setTimeout(resolve, timeout));
 
-  await timeoutPromise(1000);
+  await timeoutPromise(500);
 
   dispatch(
     terminologySearchSlice.actions.setFilter({filter}),
   );
 };
 
-export const { useGetSearchResultQuery } = terminologySearchApi;
+export const { useGetSearchResultQuery, useGetResultQuery } = terminologySearchApi;
 
 export const setFilter = (filter: string): AppThunk => dispatch => {
   dispatch(
@@ -81,4 +95,4 @@ export const setFilter = (filter: string): AppThunk => dispatch => {
 };
 
 export const selectFilter = () => (state: AppState): string => state.terminologySearch.value;
-
+export default terminologySearchSlice.reducer;

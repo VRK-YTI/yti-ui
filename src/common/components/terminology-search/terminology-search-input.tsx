@@ -10,6 +10,7 @@ export function TerminologySearchInput() {
 
   return (
     <SearchInput
+      data-testid="search_input"
       clearButtonLabel="Tyhjennä haku"
       labelText="Hakukenttä"
       searchButtonLabel="Hae"
