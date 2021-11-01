@@ -1,66 +1,48 @@
 // shared layout helper
 
 import styled from 'styled-components';
-import { Heading } from 'suomifi-ui-components';
 import { DebugProps } from '../../interfaces/debug-props';
+import { LayoutProps } from './layout-props';
 
-export const WidthContainer = styled.div<DebugProps>`
-  width: 1200px;
+export const MarginContainer = styled.div<LayoutProps>`
+  margin: ${props => props.isSmall ? '0px 15px 0px 15px' : '0px 50px 10px 50px'};
 `;
 
 // main layout
 
-export const SiteContainer = styled.div<DebugProps>`
+export const SiteContainer = styled.div<LayoutProps>`
+  width: ${props => props.isSmall ? '100%' : '80%'};
+  margin: auto;
   height: 100%;
-`;
-
-export const SiteWrapper = styled.div<DebugProps>`
+  border-top: ${(props) => `2px solid ${props.theme.suomifi.colors.highlightBase}`};
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   min-height: 100vh;
-  ${(props) => (props.debug === true ? 'border 4px solid green' : '')}
+  border-left:  ${(props) => `2px solid ${props.theme.suomifi.colors.depthLight2}`}
 `;
 
 // header layout
 
-export const HeaderContainer = styled.div<DebugProps>``;
-
-export const HeaderWrapper = styled.div<DebugProps>`
-  display: flex;
+export const HeaderContainer = styled.div<DebugProps>`
+  background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
   height: 76px;
-  justify-content: space-between;
-  align-items: center;
-  background-color: white;
-  ${(props) => (props.debug === true ? 'border 2px dashed red' : '')}
+  border-bottom: ${(props) => `1px solid ${props.theme.suomifi.colors.depthLight3}`};
 `;
 
-export const SiteLogo = styled.div<DebugProps>`
-  font-weight: bold;
-  ${(props) => (props.debug === true ? 'border: 4px solid red' : '')};
+export const NavigationContainer = styled.div<LayoutProps>`
+  background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
+  border-bottom: ${(props) => `1px solid ${props.theme.suomifi.colors.depthLight3}`};
+  display: ${props => props.isSmall ? 'none' : 'block'}
 `;
-
-export const HeaderTitle = styled(({ children }) => (
-  <Heading variant="h1hero">{ children }</Heading>)
-)`
-  color: ${(props) => props.theme.suomifi.colors.highlightBase};
-  &:hover {
-    color: red;
-  }
-`;
-
-export const HamburgerMenu = styled.div<DebugProps>``;
 
 // content layout
 
 export const ContentContainer = styled.div<DebugProps>`
+  background-color: ${(props) => props.theme.suomifi.colors.highlightLight4};
   flex-grow: 1;
 `;
 
-/*
-const SiteHeader = styled.header<DebugProps>`
-  width: auto;
-  ${ props => props.debug === true ? 'border: 4px solid yellow' : ''};
+export const FooterContainer = styled.div`
+  background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
 `;
- */

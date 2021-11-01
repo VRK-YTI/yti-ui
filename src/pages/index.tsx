@@ -2,7 +2,6 @@ import Head from 'next/head';
 import Link from 'next/link';
 import React from 'react';
 import Layout from '../common/components/layout/layout';
-import utilStyles from '../../styles/utils.module.scss';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { SSRConfig, useTranslation } from 'next-i18next';
 import User, {
@@ -26,9 +25,10 @@ export default function Home(props: {
   return (
     <Layout user={user}>
       <Head>
-        <title>{ t('terminology') }</title>
+        <title>{ t('terminology-site-title') }</title>
+        <link rel="shortcut icon" href="/favicon.ico" />
       </Head>
-      <section className={utilStyles.headingMd}>
+      <section>
         <Link href="/search">
           <a>{ t('terminology-search') }</a>
         </Link>
