@@ -1,100 +1,97 @@
 import Head from 'next/head';
 import React from 'react';
 
-// import { Link } from 'suomifi-ui-components'
-import Link from 'next/link';
-import { LanguageMenu, LanguageMenuItem } from 'suomifi-ui-components';
+import { Block } from 'suomifi-ui-components';
 import { ThemeProvider } from 'styled-components';
 import { lightTheme } from '../theme';
 import {
   ContentContainer,
-  HamburgerMenu,
+  FooterContainer,
   HeaderContainer,
-  HeaderTitle,
-  HeaderWrapper,
+  NavigationContainer,
   SiteContainer,
-  SiteLogo,
-  SiteWrapper,
-  WidthContainer,
+  MarginContainer,
 } from './layout.styles';
 import { useTranslation } from 'next-i18next';
-import { useRouter } from 'next/dist/client/router';
-import AuthenticationPanel from '../authentication-panel/authentication-panel';
 import User from '../../interfaces/user-interface';
-
-const debug = false;
-
-function Title() {
-  return (
-    <Link passHref href="/">
-      <HeaderTitle>Sanastot</HeaderTitle>
-    </Link>
-  );
-}
+import Footer from '../footer/footer';
+import Header from '../header/header';
+import Navigation from '../navigation/navigation';
+import { useMediaQuery } from '@material-ui/core';
+import { LayoutProps } from './layout-props';
+import BreadcrumbWrapper from '../breadcrumb/breadcrumb';
+import ErrorHeader from '../header/error-header';
 
 export default function Layout({
   children,
   user,
+  error
 }: {
   children: any;
   user?: User;
+  error?: boolean;
 }) {
   const { t } = useTranslation('common');
-  const router = useRouter();
 
   const siteTitle = t('terminology');
+  const isSmall = useMediaQuery('(max-width:945px)');
+
+  const layoutProps: LayoutProps = {
+    isSmall: isSmall,
+    user
+  };
+
   return (
     <>
       <ThemeProvider theme={lightTheme}>
         <Head>
-          <link rel="icon" href="/favicon.ico" />
           <meta name="description" content="Terminology/React POC" />
           <meta name="og:title" content={siteTitle} />
           <meta name="twitter:card" content="summary_large_image" />
         </Head>
-        <SiteContainer debug={debug}>
-          <SiteWrapper debug={debug}>
-            <HeaderContainer debug={debug}>
-              <WidthContainer debug={debug}>
-                <HeaderWrapper debug={debug}>
-                  <SiteLogo>
-                    <Title />
-                  </SiteLogo>
-                  <LanguageMenu name={router.locale?.toUpperCase() ?? '??'}>
-                    <LanguageMenuItem
-                      onSelect={() => {
-                        router.push(router.asPath, router.asPath, {
-                          locale: 'fi',
-                        });
-                      }}
-                      selected={router.locale === 'fi'}
-                    >
-                      Suomeksi
-                    </LanguageMenuItem>
-                    <LanguageMenuItem
-                      onSelect={() => {
-                        router.push(router.asPath, router.asPath, {
-                          locale: 'en',
-                        });
-                      }}
-                      selected={router.locale === 'en'}
-                    >
-                      Englanniksi
-                    </LanguageMenuItem>
-                  </LanguageMenu>
-                  <AuthenticationPanel user={user} />
-                  <HamburgerMenu debug={debug}>
-                    <Link href="/">&#x2630;</Link>
-                  </HamburgerMenu>
-                </HeaderWrapper>
-              </WidthContainer>
+        <SiteContainer isSmall={isSmall}>
+          <Block variant="header">
+            <HeaderContainer>
+              <MarginContainer isSmall={isSmall}>
+                {!error ? (
+                  <Header props={layoutProps} />
+                ) : (
+                  <ErrorHeader props={layoutProps}/>
+                )}
+              </MarginContainer>
             </HeaderContainer>
-            <ContentContainer debug={debug}>
-              <WidthContainer debug={debug}>
-                <main>{children}</main>
-              </WidthContainer>
-            </ContentContainer>
-          </SiteWrapper>
+          </Block>
+
+          {!error &&
+            <NavigationContainer isSmall={isSmall}>
+              <MarginContainer isSmall={isSmall}>
+                <Block variant="nav">
+                  <Navigation props={layoutProps}/>
+                </Block>
+              </MarginContainer>
+            </NavigationContainer>
+          }
+          <ContentContainer >
+
+            <MarginContainer isSmall={isSmall}>
+              <Block variant="main">
+                <>
+                  {!error &&
+                    <BreadcrumbWrapper />
+                  }
+                  {children}
+                </>
+              </Block>
+            </MarginContainer>
+          </ContentContainer>
+
+          {!error &&
+            <FooterContainer>
+              <MarginContainer isSmall={isSmall}>
+                <Footer props={layoutProps} />
+              </MarginContainer>
+            </FooterContainer>
+          }
         </SiteContainer>
       </ThemeProvider>
     </>
