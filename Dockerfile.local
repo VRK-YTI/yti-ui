@@ -2,6 +2,7 @@
 FROM node:12.15.0-alpine@sha256:c8b5faa496b3eaaaee30e278abee431ec7dfec03e07ca0fc6ee39e31f36e5021
 
 ARG env
+ARG VERSION
 
 # Install git
 RUN apk add --update git
@@ -48,6 +49,10 @@ RUN ["cp", "-a", "/tmp/node_modules", "/app/"]
 
 # Build the dist dir containing the static files
 WORKDIR /app
+
+# Create version.txt
+RUN echo "$VERSION" > src/version.txt
+
 RUN ["npm", "run", "build", "--", "--prod",  "--output-hashing=all"]
 
 # Start web server and expose http
