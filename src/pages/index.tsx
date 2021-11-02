@@ -2,24 +2,18 @@ import Head from 'next/head';
 import Link from 'next/link';
 import React from 'react';
 import Layout from '../common/components/layout/layout';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { SSRConfig, useTranslation } from 'next-i18next';
-import User, {
-  anonymousUser,
-  UserProps,
-} from '../common/interfaces/user-interface';
-import axios, { AxiosRequestConfig } from 'axios';
-import withSession, { NextIronRequest } from '../common/utils/session';
-import { GetServerSideProps, NextApiResponse } from 'next';
+import { NextIronRequest } from '../common/utils/session';
 import useUser from '../common/hooks/useUser';
+import { NextApiResponse } from 'next';
+import { createCommonGetServerSideProps } from '../common/utils/create-getserversideprops';
+import User from '../common/interfaces/user-interface';
 
-export default function Home(props: {
+export default function IndexPage(props: {
   _netI18Next: SSRConfig;
-  sessionUser: User;
   user: User;
 }) {
   const { t } = useTranslation('common');
-
   const { user, } = useUser({ initialData: props.user });
 
   return (
@@ -37,33 +31,7 @@ export default function Home(props: {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = withSession<{ props: UserProps | {} }>(
+export const getServerSideProps = createCommonGetServerSideProps(
   async ({ req, res, locale }: { req: NextIronRequest, res: NextApiResponse, locale: string }) => {
-    let sessionUser = req.session.get<User>('user') || anonymousUser;
-    const cookies = req.session.get<{ [key: string]: string }>('cookies') || {};
-
-    const axiosConfig: AxiosRequestConfig = {
-      withCredentials: true
-    };
-
-    // TODO: cookies should be handled by a cookie jar
-    if (cookies['JSESSIONID']) {
-      axiosConfig.headers = {
-        Cookie: 'JSESSIONID=' + cookies['JSESSIONID']
-      };
-    }
-
-    // let's try fetching from api to see if we are properly authenticated
-    const fetchUrl: string = process.env.TERMINOLOGY_API_URL + '/api/v1/frontend/authenticated-user';
-    const response = await axios.get(fetchUrl, axiosConfig);
-    const user = response.data;
-
-    const props: any = {
-      ...(await serverSideTranslations(locale, ['common'])),
-      sessionUser: sessionUser,
-      user: user
-    };
-
-    return { props: props };
-  },
-);
+    return { props: { } };
+  });
