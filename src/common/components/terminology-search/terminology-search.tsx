@@ -19,7 +19,7 @@ export default function TerminologySearch() {
       <Grid item md={8} xs={12}>
         <TerminologySearchResults results={data} />
       </Grid>
-      <Grid item md={3}>
+      <Grid item md={4}>
         <TerminologySearchFilter />
       </Grid>
     </Grid>
