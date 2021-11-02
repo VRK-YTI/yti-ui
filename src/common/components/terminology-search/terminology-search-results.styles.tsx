@@ -12,11 +12,4 @@ export const SearchResultContainer = styled.div`
   Button {
     border-radius: 20px 20px;
   }
-  Heading {
-    background-color: red;
-  }
-`;
-
-export const Count = styled.div`
-  margin-bottom: 15px;
 `;

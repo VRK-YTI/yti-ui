@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import React from 'react';
 import { TerminologyDTO, TerminologySearchResult } from '../../interfaces/terminology.interface';
-import { SearchResultContainer, Count } from './terminology-search-results.styles';
-import { Button, Heading, Icon, Link as DsLink, Text } from 'suomifi-ui-components';
+import { SearchResultContainer } from './terminology-search-results.styles';
+import { Button, Icon, Link as DsLink, Text } from 'suomifi-ui-components';
 
 interface SearchResultProps {
   data: TerminologyDTO;
@@ -67,9 +67,6 @@ function SearchResult({ data }: SearchResultProps) {
 export function TerminologySearchResults({ results }: SearchResultsProps) {
   return (
     <>
-      {/* <Count>
-        <Text>Tuloksia {results?.totalHitCount} kpl</Text>
-      </Count> */}
       {
         results?.terminologies ?
           results.terminologies
