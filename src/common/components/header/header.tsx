@@ -7,6 +7,7 @@ import AuthenticationPanel from '../authentication-panel/authentication-panel';
 import { LayoutProps } from '../layout/layout-props';
 import HamburgerMenu from '../menu/hamburger-menu';
 import { HeaderWrapper, LanguageMenuWrapper, SearchWrapper, SiteLogo } from './header.styles';
+import HeaderSearch from './header-search';
 
 export default function Header({ props }: { props: LayoutProps }) {
   const { t } = useTranslation('common');
@@ -32,7 +33,7 @@ export default function Header({ props }: { props: LayoutProps }) {
             </SiteLogo>
           </Grid>
           <Grid item xs={2} sm={2} md={3} lg={3}>
-            <SearchWrapper isSmall={isSmall}>
+            {/* <SearchWrapper isSmall={isSmall}>
               {!isSmall ? (
                 <SearchInput
                   clearButtonLabel=""
@@ -43,7 +44,8 @@ export default function Header({ props }: { props: LayoutProps }) {
               ) : (
                 <div><Icon icon="search" /></div>
               )}
-            </SearchWrapper>
+            </SearchWrapper> */}
+            <HeaderSearch isSmall={isSmall} />
           </Grid>
 
           <Grid item md={3} lg={3} hidden={isSmall}>

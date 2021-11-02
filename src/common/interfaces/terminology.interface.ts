@@ -10,6 +10,7 @@ export interface TerminologyDTO extends TerminologySimpleDTO {
   description: { [key: string]: string };
   informationDomainDTO: any; // TODO: add typing
   contributors: any; // TODO: add typing
+  informationDomains: any; // TODO: add typing
 }
 
 export interface TerminologySearchResult {

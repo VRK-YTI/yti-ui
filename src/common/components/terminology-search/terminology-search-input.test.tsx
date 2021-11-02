@@ -16,7 +16,7 @@ describe('terminology-search-input', () => {
     );
 
     expect(screen.findByTestId('search_input')).toBeInTheDocument;
-  })
+  });
 
   test('should set filter', () => {
 

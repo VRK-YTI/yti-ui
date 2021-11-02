@@ -9,4 +9,14 @@ export const SearchResultContainer = styled.div`
   &:last-child {
     border-bottom: 1px solid ${(props) => props.theme.suomifi.colors.depthDark3};
   }
+  Button {
+    border-radius: 20px 20px;
+  }
+  Heading {
+    background-color: red;
+  }
+`;
+
+export const Count = styled.div`
+  margin-bottom: 15px;
 `;
