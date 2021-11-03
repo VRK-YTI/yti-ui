@@ -32,22 +32,26 @@ function SearchResult({ data }: SearchResultProps) {
   return (
     <SearchResultContainer>
       <div className='contributor'>
-        <Text smallScreen color='blackLight1'>{contributor}</Text>
+        {/* <Text smallScreen color='blackLight1'>{contributor}</Text> */}
+        {contributor}
       </div>
       <div>
         <Link passHref href={'/terminology/' + data.id}>
           <DsLink href="">
             <Icon icon="registers" color='hsl(212, 63%, 45%)' />
-            &nbsp;
             <span dangerouslySetInnerHTML={{ __html: label }} className='label' />
           </DsLink>
         </Link>
       </div>
-      <div className='status'>
-        <Text smallScreen color='blackLight1' variant='bold'>
+      <span className='category'>
+        {/* <Text smallScreen color='blackLight1' variant='bold'>
           TERMINOLOGINEN SANASTO &middot; {data.status}
-        </Text>
-      </div>
+        </Text> */}
+        TERMINOLOGINEN SANASTO &middot;
+      </span>
+      <span className='status'>
+        {data.status}
+      </span>
       <div className='description'>
         <Text>{data.description.fi}</Text>
       </div>

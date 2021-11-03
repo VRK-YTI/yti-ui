@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 
 export const SearchFilterContainer = styled.div`
+  @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap');
+  margin-left: 15px;
   padding: 15px;
   background-color: white;
   border-left: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
@@ -21,16 +23,13 @@ export const SearchFilterContainer = styled.div`
 `;
 
 export const SearchFilterHeader = styled.div`
+  margin-left: 15px;
   padding: 15px;
   background-color: hsl(212, 63%, 45%);
   color: white;
-  min-height: 55px;
+  min-height: 50px;
   display: flex;
   align-items: center;
   width: 297px;
 
-  .Text {
-    margin: 50px;
-    padding: 40px;
-  }
 `;

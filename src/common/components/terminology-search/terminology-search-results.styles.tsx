@@ -12,18 +12,37 @@ export const SearchResultContainer = styled.div`
 
 
   .contributor {
+    color: hsl(202, 7%, 40%);
+    font-size: 16px;
     padding-bottom: 5px;
   }
 
   .label {
-    padding-left: 5px;
+    padding-left: 8px;
     font-size: 22px;
     font-weight: bold;
   }
 
+  .category {
+    color: hsl(202, 7%, 40%);
+    font-size: 13px;
+    font-weight: bold;
+  }
+
+  .status {
+    color: hsl(202, 7%, 40%);
+    font-size: 13px;
+    font-weight: bold;
+    margin-left: 4px;
+    padding-left: 8px;
+    padding-right: 8px;
+    border-radius: 25px;
+    background-color: hsl(212, 63%, 95%);
+  }
+
   .description {
     padding-top: 5px;
-    padding-bottom: 15px;
+    padding-bottom: 12px;
   }
 
 `;
