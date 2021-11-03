@@ -9,7 +9,21 @@ export const SearchResultContainer = styled.div`
   &:last-child {
     border-bottom: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
   }
-  Button {
-    border-radius: 20px 20px;
+
+
+  .contributor {
+    padding-bottom: 5px;
   }
+
+  .label {
+    padding-left: 5px;
+    font-size: 22px;
+    font-weight: bold;
+  }
+
+  .description {
+    padding-top: 5px;
+    padding-bottom: 15px;
+  }
+
 `;

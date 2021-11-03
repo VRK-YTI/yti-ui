@@ -34,6 +34,10 @@ export default function TerminologySearchFilter() {
             </Grid>
 
             <Grid item xs={12}>
+              <hr />
+            </Grid>
+
+            <Grid item xs={12}>
               <Text variant='bold'>Näytä vain</Text>
               <Checkbox>
                 Sanastot (n kpl)
