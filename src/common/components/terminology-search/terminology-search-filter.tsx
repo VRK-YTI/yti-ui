@@ -1,7 +1,14 @@
 import { Grid } from '@material-ui/core';
 import React from 'react';
-import { Block, Checkbox, Dropdown, DropdownItem, Text } from 'suomifi-ui-components';
-import { SearchFilterContainer, SearchFilterHeader } from './terminology-search-filter.styles';
+import { Dropdown, DropdownItem, Text } from 'suomifi-ui-components';
+import {
+  SearchFilterCheckbox,
+  SearchFilterContainer,
+  SearchFilterHeader,
+  SearchFilterHr,
+  SearchFilterRemove,
+  SearchFilterRemoveWrapper
+} from './terminology-search-filter.styles';
 
 export default function TerminologySearchFilter() {
 
@@ -17,9 +24,26 @@ export default function TerminologySearchFilter() {
         <Grid container>
 
           <Grid item xs={12}>
+            <SearchFilterRemoveWrapper>
+              <SearchFilterRemove icon='remove' />
+              <Text
+                smallScreen
+                color='highlightBase'
+                variant='bold'
+              >
+                Poista kaikki rajaukset
+              </Text>
+            </SearchFilterRemoveWrapper>
+          </Grid>
+
+          <Grid item xs={12}>
+            <SearchFilterHr />
+          </Grid>
+
+          <Grid item xs={12}>
             <Dropdown
               labelText='Rajaa organisaation mukaan'
-              visualPlaceholder='Valitse organisaatio'
+              visualPlaceholder={<i>Valitse organisaatio</i>}
             >
               <DropdownItem value='1'>
                 Valinta 1
@@ -34,54 +58,54 @@ export default function TerminologySearchFilter() {
           </Grid>
 
           <Grid item xs={12}>
-            <hr />
+            <SearchFilterHr />
           </Grid>
 
           <Grid item xs={12}>
-            <Text variant='bold'>Näytä vain</Text>
-            <Checkbox>
-              Sanastot (n kpl)
-            </Checkbox>
-            <Checkbox>
+            <Text smallScreen variant='bold'>Näytä vain</Text>
+            <SearchFilterCheckbox>
+              Terminologiset sanastot (n kpl)
+            </SearchFilterCheckbox>
+            <SearchFilterCheckbox>
               Käsitevalikoima (n kpl)
-            </Checkbox>
-            <Checkbox>
+            </SearchFilterCheckbox>
+            <SearchFilterCheckbox>
               Käsitteet (n kpl)
-            </Checkbox>
+            </SearchFilterCheckbox>
           </Grid>
 
           <Grid item xs={12}>
-            <hr />
+            <SearchFilterHr />
           </Grid>
 
           <Grid item xs={12}>
-            <Text variant='bold'>Näytä tilat</Text>
-            <Checkbox>
+            <Text smallScreen variant='bold'>Näytä tilat</Text>
+            <SearchFilterCheckbox>
               Voimassa oleva (n kpl)
-            </Checkbox>
-            <Checkbox>
+            </SearchFilterCheckbox>
+            <SearchFilterCheckbox>
               Luonnos (n kpl)
-            </Checkbox>
-            <Checkbox>
+            </SearchFilterCheckbox>
+            <SearchFilterCheckbox>
               Korvattu (n kpl)
-            </Checkbox>
+            </SearchFilterCheckbox>
           </Grid>
 
           <Grid item xs={12}>
-            <hr />
+            <SearchFilterHr />
           </Grid>
 
           <Grid item xs={12}>
-            <Text variant='bold'>Näytä tietoalueittain</Text>
-            <Checkbox>
+            <Text smallScreen variant='bold'>Näytä tietoalueittain</Text>
+            <SearchFilterCheckbox>
               Asuminen (n kpl)
-            </Checkbox>
-            <Checkbox>
+            </SearchFilterCheckbox>
+            <SearchFilterCheckbox>
               Eläkkeet (n kpl)
-            </Checkbox>
-            <Checkbox>
+            </SearchFilterCheckbox>
+            <SearchFilterCheckbox>
               Koulutus (n kpl)
-            </Checkbox>
+            </SearchFilterCheckbox>
           </Grid>
         </Grid>
 
