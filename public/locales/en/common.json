@@ -23,5 +23,12 @@
   "terminology-footer-text": "(en) Suomi.fi -julkishallinnon palvelut verkossa. Palvelun tuottaa Digi- ja väestötietovirasto",
   "terminology-footer-feedback": "(en) Anna palautetta",
   "terminology-footer-information-security": "(en) Tietosuoja",
-  "terminology-footer-accessibility": "(en) Saavutettavuus"
+  "terminology-footer-accessibility": "(en) Saavutettavuus",
+  "terminology-search-filter-list": "(en) RAJAA LISTAA",
+  "terminology-search-filter-remove-all": "(en) Poista kaikki rajaukset",
+  "terminology-search-filter-by-organization": "(en) Rajaa organisaation mukaan",
+  "terminology-search-filter-pick-organization": "(en) Valitse organisaatio",
+  "terminology-search-filter-show-only": "(en) Näytä vain",
+  "terminology-search-filter-show-states": "(en) Näytä tilat",
+  "terminology-search-filter-show-by-information-domain": "(en) Näytä tietoalueittain"
 }

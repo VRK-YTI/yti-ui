@@ -32,7 +32,6 @@ function SearchResult({ data }: SearchResultProps) {
   return (
     <SearchResultContainer>
       <div className='contributor'>
-        {/* <Text smallScreen color='blackLight1'>{contributor}</Text> */}
         {contributor}
       </div>
       <div>
@@ -44,9 +43,6 @@ function SearchResult({ data }: SearchResultProps) {
         </Link>
       </div>
       <span className='category'>
-        {/* <Text smallScreen color='blackLight1' variant='bold'>
-          TERMINOLOGINEN SANASTO &middot; {data.status}
-        </Text> */}
         TERMINOLOGINEN SANASTO &middot;
       </span>
       <span className='status'>

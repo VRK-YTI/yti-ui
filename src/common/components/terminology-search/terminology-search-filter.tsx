@@ -1,5 +1,6 @@
 import { Grid } from '@material-ui/core';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Dropdown, DropdownItem, Text } from 'suomifi-ui-components';
 import {
   SearchFilterCheckbox,
@@ -11,12 +12,13 @@ import {
 } from './terminology-search-filter.styles';
 
 export default function TerminologySearchFilter() {
+  const { t } = useTranslation('common');
 
   return (
     <>
       <SearchFilterHeader>
         <Text style={{ color: 'white' }}>
-          RAJAA LISTAA
+          {t('terminology-search-filter-list')}
         </Text>
       </SearchFilterHeader>
 
@@ -31,7 +33,7 @@ export default function TerminologySearchFilter() {
                 color='highlightBase'
                 variant='bold'
               >
-                Poista kaikki rajaukset
+                {t('terminology-search-filter-remove-all')}
               </Text>
             </SearchFilterRemoveWrapper>
           </Grid>
@@ -42,8 +44,8 @@ export default function TerminologySearchFilter() {
 
           <Grid item xs={12}>
             <Dropdown
-              labelText='Rajaa organisaation mukaan'
-              visualPlaceholder={<i>Valitse organisaatio</i>}
+              labelText={t('terminology-search-filter-by-organization')}
+              visualPlaceholder={<i>{t('terminology-search-filter-pick-organization')}</i>}
             >
               <DropdownItem value='1'>
                 Valinta 1
@@ -62,7 +64,9 @@ export default function TerminologySearchFilter() {
           </Grid>
 
           <Grid item xs={12}>
-            <Text smallScreen variant='bold'>Näytä vain</Text>
+            <Text smallScreen variant='bold'>
+              {t('terminology-search-filter-show-only')}
+            </Text>
             <SearchFilterCheckbox>
               Terminologiset sanastot (n kpl)
             </SearchFilterCheckbox>
@@ -79,7 +83,9 @@ export default function TerminologySearchFilter() {
           </Grid>
 
           <Grid item xs={12}>
-            <Text smallScreen variant='bold'>Näytä tilat</Text>
+            <Text smallScreen variant='bold'>
+              {t('terminology-search-filter-show-states')}
+            </Text>
             <SearchFilterCheckbox>
               Voimassa oleva (n kpl)
             </SearchFilterCheckbox>
@@ -96,7 +102,9 @@ export default function TerminologySearchFilter() {
           </Grid>
 
           <Grid item xs={12}>
-            <Text smallScreen variant='bold'>Näytä tietoalueittain</Text>
+            <Text smallScreen variant='bold'>
+              {t('terminology-search-filter-show-by-information-domain')}
+            </Text>
             <SearchFilterCheckbox>
               Asuminen (n kpl)
             </SearchFilterCheckbox>
