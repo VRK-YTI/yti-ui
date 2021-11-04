@@ -3,6 +3,7 @@ import React from 'react';
 import { TerminologyDTO, TerminologySearchResult } from '../../interfaces/terminology.interface';
 import { SearchResultContainer } from './terminology-search-results.styles';
 import { Icon, Link as DsLink, Text } from 'suomifi-ui-components';
+import { useTranslation } from 'react-i18next';
 
 interface SearchResultProps {
   data: TerminologyDTO;
@@ -22,6 +23,7 @@ interface InfoDomain {
 }
 
 function SearchResult({ data }: SearchResultProps) {
+  const { t } = useTranslation('common');
   const label = data.label.fi ?? data.label.en ?? data.uri;
   const contributor = data.contributors.length ?
     data.contributors[0].label.fi ??
@@ -46,7 +48,7 @@ function SearchResult({ data }: SearchResultProps) {
         TERMINOLOGINEN SANASTO &middot;
       </span>
       <span className='status'>
-        {data.status}
+        {t(`terminology-search-results-${data.status}`)}
       </span>
       <div className='description'>
         <Text>{data.description.fi}</Text>

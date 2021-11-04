@@ -30,5 +30,11 @@
   "terminology-search-filter-pick-organization": "(en) Valitse organisaatio",
   "terminology-search-filter-show-only": "(en) Näytä vain",
   "terminology-search-filter-show-states": "(en) Näytä tilat",
-  "terminology-search-filter-show-by-information-domain": "(en) Näytä tietoalueittain"
+  "terminology-search-filter-show-by-information-domain": "(en) Näytä tietoalueittain",
+  "terminology-search-results-VALID": "(en) Voimassa oleva",
+  "terminology-search-results-INCOMPLETE": "(en) Keskeneräinen",
+  "terminology-search-results-DRAFT": "(en) Luonnos",
+  "terminology-search-results-RETIRED": "(en) Korvattu",
+  "terminology-search-results-SUPERSEDED": "(en) Poistettu käytöstä",
+  "terminology-search-results-INVALID": "(en) Virheellinen"
 }

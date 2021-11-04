@@ -4,7 +4,7 @@ import { TerminologySearchResults } from './terminology-search-results';
 import { useSelector } from 'react-redux';
 import { selectFilter, useGetSearchResultQuery } from './states/terminology-search-slice';
 import TerminologySearchFilter from './terminology-search-filter';
-import { Text } from 'suomifi-ui-components';
+import { Heading, Text } from 'suomifi-ui-components';
 
 export default function TerminologySearch() {
 
@@ -13,6 +13,15 @@ export default function TerminologySearch() {
 
   return (
     <Grid container spacing={1} justifyContent='space-between'>
+      <Grid item xs={12}>
+        {filter != '' && <Heading variant='h1'>Hakusana &quot;{filter}&quot;</Heading>}
+      </Grid>
+      <Grid item xs={12}>
+        <Text smallScreen>
+          Hakutulokset näytetään palveluittain ja voit täsmentää hakutuloksia rajaamalla listaa.
+          Huomaa, että listan rajaukset eroavat palveluittain.
+        </Text>
+      </Grid>
       <Grid item xs={12}>
         <Text>Tuloksia {data?.totalHitCount} kpl</Text>
       </Grid>
