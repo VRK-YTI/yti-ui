@@ -38,7 +38,7 @@ export function TerminologySearchResults({ results }: SearchResultsProps) {
       {
         results?.terminologies ?
           results.terminologies
-            .map(x => { console.log(x); return x; })
+            // .map(x => { console.log(x); return x; })
             // .map((data) => data.label.fi ?? data.label.en ?? data.uri)
             .map((data, idx) =>
               <SearchResult key={idx} data={data} />

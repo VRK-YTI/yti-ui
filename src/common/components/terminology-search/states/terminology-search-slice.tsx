@@ -89,7 +89,7 @@ export const { useGetSearchResultQuery, useGetResultQuery } = terminologySearchA
 export const setFilter = (filter: string): AppThunk => dispatch => {
   dispatch(
     terminologySearchSlice.actions.setFilter({
-      value: filter
+      filter: filter
     }),
   );
 };

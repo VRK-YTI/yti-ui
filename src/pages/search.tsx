@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import React, { useState } from 'react';
+import React from 'react';
 import { SSRConfig, useTranslation } from 'next-i18next';
 import { Heading } from 'suomifi-ui-components';
 import Layout from '../common/components/layout/layout';
@@ -13,7 +13,6 @@ import { NextApiResponse } from 'next';
 import { createCommonGetServerSideProps } from '../common/utils/create-getserversideprops';
 import User from '../common/interfaces/user-interface';
 import useUser from '../common/hooks/useUser';
-
 import { selectFilter, useGetSearchResultQuery } from '../common/components/terminology-search/states/terminology-search-slice';
 import { useSelector } from 'react-redux';
 
@@ -30,7 +29,6 @@ export default function SearchPage(props: {
   return (
     <Layout user={user}>
       <Head>
-        {console.log(data?.terminologies)}
         <title>{t('search-title')}</title>
       </Head>
       <Heading variant="h1">{t('terminology-title')}</Heading>
