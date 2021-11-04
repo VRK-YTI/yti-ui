@@ -1,29 +1,34 @@
 import Head from 'next/head';
-import React from 'react';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import React, { useState } from 'react';
 import { SSRConfig, useTranslation } from 'next-i18next';
 import { Heading } from 'suomifi-ui-components';
 import Layout from '../common/components/layout/layout';
 import { TerminologySearchInput } from '../common/components/terminology-search/terminology-search-input';
 import { TerminologySearchResults } from '../common/components/terminology-search/terminology-search-results';
 import { UserProps } from '../common/interfaces/user-interface';
+import { TerminologySearchResult } from '../common/interfaces/terminology.interface';
 import { SearchContainer } from '../common/components/terminology-search/terminology-search-input.styles';
-import withSession, { NextIronRequest } from '../common/utils/session';
-import { GetServerSideProps, NextApiResponse } from 'next';
+import { NextIronRequest } from '../common/utils/session';
+import { NextApiResponse } from 'next';
+import { createCommonGetServerSideProps } from '../common/utils/create-getserversideprops';
+import User from '../common/interfaces/user-interface';
+import useUser from '../common/hooks/useUser';
 
 import { selectFilter, useGetSearchResultQuery } from '../common/components/terminology-search/states/terminology-search-slice';
 import { useSelector } from 'react-redux';
 
-export default function Search(props: {
+export default function SearchPage(props: {
   _netI18Next: SSRConfig;
+  user: User;
 }) {
   const { t } = useTranslation('common');
   const filter = useSelector(selectFilter());
+  const { user, } = useUser({ initialData: props.user });
 
   const {data, error, isLoading} = useGetSearchResultQuery(filter);
 
   return (
-    <Layout>
+    <Layout user={user}>
       <Head>
         {console.log(data?.terminologies)}
         <title>{t('search-title')}</title>
@@ -39,14 +44,7 @@ export default function Search(props: {
   );
 }
 
-// TODO: Add wrapper which supports next-redux-wrapper
-export const getServerSideProps: GetServerSideProps = withSession<{ props: UserProps | {} }>(
+export const getServerSideProps = createCommonGetServerSideProps(
   async ({ req, res, locale }: { req: NextIronRequest, res: NextApiResponse, locale: string }) => {
-    const props: any = {
-      ...(await serverSideTranslations(locale, ['common'])),
-      number: 1,
-    };
-
-    return { props: props };
-  },
-);
+    return { props: { } };
+  });

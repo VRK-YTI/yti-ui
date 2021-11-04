@@ -15,7 +15,7 @@ describe('Authentication panel', () => {
       <AuthenticationPanel props={props} />
     );
 
-    expect(screen.queryByText('Kirjaudu')).toBeTruthy();
+    expect(screen.queryByText('tr-site-login')).toBeTruthy();
   });
 
   test('should render logout button and user info for logged in user', () => {
@@ -34,7 +34,8 @@ describe('Authentication panel', () => {
     );
 
     expect(screen.queryByText('Admin User')).toBeTruthy();
-    expect(screen.queryByText('KIRJAUDU ULOS')).toBeTruthy();
+    expect(screen.queryByText('tr-site-login')).toBeFalsy();
+    expect(screen.queryByText('tr-site-logout'.toUpperCase())).toBeTruthy();
   });
 
 });
