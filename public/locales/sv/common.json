@@ -38,6 +38,8 @@
     "terminology-search-results-RETIRED": "(sv) Korvattu",
     "terminology-search-results-SUPERSEDED": "(sv) Poistettu käytöstä",
     "terminology-search-results-INVALID": "(sv) Virheellinen",
+    "terminology-search-results-terminology": "(sv) Terminologinen sanasto",
+    "terminology-search-results-information-domains": "(sv) Tietoalueet",
     "terminology-search-keyword": "(sv) Hakusana",
     "terminology-search-info": "(sv) Hakutulokset näytetään palveluittain ja voit täsmentää hakutuloksia rajaamalla listaa. Huomaa, että listan rajaukset eroavat palveluittain.",
     "terminology-search-result": "(sv) hakutulos sanastoista",

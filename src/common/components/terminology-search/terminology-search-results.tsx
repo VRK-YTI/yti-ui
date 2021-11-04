@@ -23,13 +23,13 @@ interface InfoDomain {
 }
 
 function SearchResult({ data }: SearchResultProps) {
-  const { t } = useTranslation('common');
-  const label = data.label.fi ?? data.label.en ?? data.uri;
+  const { t, i18n } = useTranslation('common');
+  const label = data.label[i18n.language] ?? data.label.fi ?? data.uri;
   const contributor = data.contributors.length ?
-    data.contributors[0].label.fi ??
-    data.contributors[0].label.en ??
-    data.contributors[0].label.sv :
+    data.contributors[0].label[i18n.language] ??
+    data.contributors[0].label.en :
     'Unknown contributor';
+  const description = data.description[i18n.language] ?? data.description.fi ?? '';
 
   return (
     <SearchResultContainer>
@@ -45,32 +45,35 @@ function SearchResult({ data }: SearchResultProps) {
         </Link>
       </div>
       <span className='category'>
-        TERMINOLOGINEN SANASTO &middot;
+        {t('terminology-search-results-terminology').toUpperCase()} &middot;
       </span>
       <span className='status'>
-        {t(`terminology-search-results-${data.status}`)}
+        {t(`terminology-search-results-${data.status}`).toUpperCase()}
       </span>
       <div className='description'>
-        <Text>{data.description.fi}</Text>
+        <Text>{description}</Text>
       </div>
       <div>
-        <Text><b>Tietoalueet:</b>
+        <Text>
+          <b>
+            {t('terminology-search-results-information-domains').toUpperCase()}:
+          </b>
           {data.informationDomains?.map((infoDomain: InfoDomain, idx: number) => {
             if (data.informationDomains.length > 1) {
               return (
                 idx > 0 ?
                   <span key={`${label}-infoDomain-${idx}`}>
-                    {`${', '}${infoDomain.label.fi}`}
+                    {`${', '}${infoDomain.label[i18n.language]}`}
                   </span>
                   :
                   <span key={`${label}-infoDomain-${idx}`}>
-                    {`${' '}${infoDomain.label.fi}`}
+                    {`${' '}${infoDomain.label[i18n.language]}`}
                   </span>
               );
             } else {
               return (
                 <span key={`${label}-infoDomain-${idx}`}>
-                  {`${' '}${infoDomain.label.fi}`}
+                  {`${' '}${infoDomain.label[i18n.language]}`}
                 </span>
               );
             }
