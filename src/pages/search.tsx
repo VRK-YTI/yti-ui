@@ -15,6 +15,7 @@ import User from '../common/interfaces/user-interface';
 import useUser from '../common/hooks/useUser';
 import { selectFilter, useGetSearchResultQuery } from '../common/components/terminology-search/states/terminology-search-slice';
 import { useSelector } from 'react-redux';
+import { wrapper } from '../store';
 
 export default function SearchPage(props: {
   _netI18Next: SSRConfig;
@@ -24,7 +25,7 @@ export default function SearchPage(props: {
   const filter = useSelector(selectFilter());
   const { user, } = useUser({ initialData: props.user });
 
-  const {data, error, isLoading} = useGetSearchResultQuery(filter);
+  const { data, error, isLoading } = useGetSearchResultQuery(filter);
 
   return (
     <Layout user={user}>
@@ -43,6 +44,10 @@ export default function SearchPage(props: {
 }
 
 export const getServerSideProps = createCommonGetServerSideProps(
-  async ({ req, res, locale }: { req: NextIronRequest, res: NextApiResponse, locale: string }) => {
-    return { props: { } };
-  });
+  wrapper.getServerSideProps(store => {
+    store.dispatch({type:'setFilter', payload: {filter: 'filter'}})
+    async ({ req, res, locale }: { req: NextIronRequest, res: NextApiResponse, locale: string }) => {
+      return { props: {} };
+    };
+  })
+);

@@ -17,6 +17,7 @@ export const terminologySearchSlice = createSlice({
   initialState,
   reducers: {
     setFilter(state, action) {
+      console.log('called');
       return {
         ...state,
         ...action.payload
@@ -30,6 +31,13 @@ export const terminologySearchSlice = createSlice({
       return {
         ...state,
         ...action.payload.terminologySearch,
+      };
+    },
+    'setFilter': (state, action) => {
+      console.log(action.payload);
+      return {
+        ...state,
+        ...action.payload
       };
     }
   }
