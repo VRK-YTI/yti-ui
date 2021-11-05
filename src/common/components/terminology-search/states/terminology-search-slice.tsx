@@ -17,7 +17,6 @@ export const terminologySearchSlice = createSlice({
   initialState,
   reducers: {
     setFilter(state, action) {
-      console.log('called');
       return {
         ...state,
         ...action.payload
@@ -64,7 +63,7 @@ export const terminologySearchApi = createApi({
         },
       }),
     }),
-    // this isn't used but can be used as a boilerplate for later post requests
+    // this is not in use but can be used as a boilerplate for later post requests
     getResult: builder.query<any, string>({
       query: (value) => ({
         url: '/request',

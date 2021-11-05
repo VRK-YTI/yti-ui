@@ -23,7 +23,7 @@ export default function SearchPage(props: {
   const filter = useSelector(selectFilter());
   const { user, } = useUser({ initialData: props.user });
 
-  const { data, error, isLoading } = useGetSearchResultQuery(filter);
+  const { data } = useGetSearchResultQuery(filter);
 
   return (
     <Layout user={user}>
