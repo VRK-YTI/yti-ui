@@ -14,7 +14,7 @@ export default function TerminologySearch() {
   const { data, error, isLoading } = useGetSearchResultQuery(filter);
 
   return (
-    <Grid container spacing={1} justifyContent='space-between'>
+    <Grid container spacing={1} justifyContent='space-between' style={{maxWidth: '100%'}}>
       <Grid item xs={12}>
         {filter != '' && <Heading variant='h1'>{t('terminology-search-keyword')} &quot;{filter}&quot;</Heading>}
       </Grid>

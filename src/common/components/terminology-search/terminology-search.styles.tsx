@@ -6,5 +6,5 @@ export const SearchCountWrapper = styled.div`
   margin-top: ${(props) => props.theme.suomifi.spacing.s};
   margin-bottom: ${(props) => props.theme.suomifi.spacing.s};
   background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
-  width: 100%;
+  max-width: 100%;
 `;
