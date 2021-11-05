@@ -5,8 +5,6 @@ import { Heading } from 'suomifi-ui-components';
 import Layout from '../common/components/layout/layout';
 import { TerminologySearchInput } from '../common/components/terminology-search/terminology-search-input';
 import { TerminologySearchResults } from '../common/components/terminology-search/terminology-search-results';
-import { UserProps } from '../common/interfaces/user-interface';
-import { TerminologySearchResult } from '../common/interfaces/terminology.interface';
 import { SearchContainer } from '../common/components/terminology-search/terminology-search-input.styles';
 import { NextIronRequest } from '../common/utils/session';
 import { NextApiResponse } from 'next';
@@ -15,7 +13,7 @@ import User from '../common/interfaces/user-interface';
 import useUser from '../common/hooks/useUser';
 import { selectFilter, useGetSearchResultQuery } from '../common/components/terminology-search/states/terminology-search-slice';
 import { useSelector } from 'react-redux';
-import { wrapper } from '../store';
+import { AppStore } from '../store';
 
 export default function SearchPage(props: {
   _netI18Next: SSRConfig;
@@ -44,10 +42,7 @@ export default function SearchPage(props: {
 }
 
 export const getServerSideProps = createCommonGetServerSideProps(
-  wrapper.getServerSideProps(store => {
-    store.dispatch({type:'setFilter', payload: {filter: 'filter'}})
-    async ({ req, res, locale }: { req: NextIronRequest, res: NextApiResponse, locale: string }) => {
-      return { props: {} };
-    };
-  })
+  async ({ req, res, locale, store }: { req: NextIronRequest, res: NextApiResponse, locale: string, store: AppStore }) => {
+    return { props: {} };
+  }
 );

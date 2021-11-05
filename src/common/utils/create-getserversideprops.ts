@@ -2,13 +2,14 @@ import { GetServerSideProps, NextApiResponse } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import User, { anonymousUser, UserProps } from '../interfaces/user-interface';
 import withSession, { NextIronRequest } from './session';
-import { wrapper } from '../../store';
+import { AppStore, wrapper } from '../../store';
 
 export type localHandler<T> =
   ((context: {
     req: NextIronRequest;
     res: NextApiResponse;
     locale: string;
+    store: AppStore;
   }) => Promise<T>);
 
 export const createCommonGetServerSideProps =
@@ -18,7 +19,7 @@ export const createCommonGetServerSideProps =
         async ({ req, res, locale }: { req: NextIronRequest, res: NextApiResponse, locale: string }) => {
           console.log('SSR state:');
           console.log(store.getState());
-          const results = await handler({ req, res, locale });
+          const results = await handler({ req, res, locale, store });
           let sessionUser = req.session.get<User>('user') || anonymousUser;
           return {
             ...results,
