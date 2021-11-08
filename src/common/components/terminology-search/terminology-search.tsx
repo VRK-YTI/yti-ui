@@ -14,7 +14,7 @@ export default function TerminologySearch() {
   const { data, error, isLoading } = useGetSearchResultQuery(filter);
 
   return (
-    <Grid container spacing={1} justifyContent='space-between' style={{maxWidth: '100%'}}>
+    <Grid container spacing={1} justifyContent='space-between' style={{ maxWidth: '100%' }}>
       <Grid item xs={12}>
         {filter != '' && <Heading variant='h1'>{t('terminology-search-keyword')} &quot;{filter}&quot;</Heading>}
       </Grid>
@@ -34,12 +34,14 @@ export default function TerminologySearch() {
           </Text>
         </SearchCountWrapper>
       </Grid>
+
       <Grid item xl={9} lg={8} md={7} sm={12} xs={12}>
         <TerminologySearchResults results={data} />
       </Grid>
       <Grid item xl={3} lg={4} md={5}>
         <TerminologySearchFilter />
       </Grid>
+
     </Grid>
   );
 }

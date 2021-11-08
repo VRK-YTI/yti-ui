@@ -63,17 +63,17 @@ function SearchResult({ data }: SearchResultProps) {
               return (
                 idx > 0 ?
                   <span key={`${label}-infoDomain-${idx}`}>
-                    {`${', '}${infoDomain.label[i18n.language]}`}
+                    {`${', '}${infoDomain.label[i18n.language as keyof typeof infoDomain.label]}`}
                   </span>
                   :
                   <span key={`${label}-infoDomain-${idx}`}>
-                    {`${' '}${infoDomain.label[i18n.language]}`}
+                    {`${' '}${infoDomain.label[i18n.language as keyof typeof infoDomain.label]}`}
                   </span>
               );
             } else {
               return (
                 <span key={`${label}-infoDomain-${idx}`}>
-                  {`${' '}${infoDomain.label[i18n.language]}`}
+                  {`${' '}${infoDomain.label[i18n.language as keyof typeof infoDomain.label]}`}
                 </span>
               );
             }
@@ -88,6 +88,7 @@ function SearchResult({ data }: SearchResultProps) {
 export function TerminologySearchResults({ results }: SearchResultsProps) {
   return (
     <>
+      {console.log(results)}
       {
         results?.terminologies ?
           results.terminologies

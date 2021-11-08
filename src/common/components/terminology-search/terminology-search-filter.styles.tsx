@@ -3,7 +3,6 @@ import { Checkbox, Icon } from 'suomifi-ui-components';
 
 export const SearchFilterContainer = styled.div`
   @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap');
-  margin-left: 15px;
   padding: 15px;
   background-color: white;
   border-left: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
@@ -42,7 +41,6 @@ export const SearchFilterHr = styled.hr`
 `;
 
 export const SearchFilterHeader = styled.div`
-  margin-left: 15px;
   padding: 15px;
   background-color: hsl(212, 63%, 45%);
   color: white;
