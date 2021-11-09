@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { LayoutProps } from '../layout/layout-props';
+import { Text } from 'suomifi-ui-components';
 
 export const HeaderWrapper = styled.div`
   display: flex;
@@ -19,4 +20,14 @@ export const SearchWrapper = styled.div<LayoutProps>`
 
 export const SiteLogo = styled.div`
   margin-top: 5px;
+`;
+
+export const SmallSearchWrapper = styled.div`
+  display: flex;
+  flex-row: row;}
+`;
+
+export const SmallSearchText = styled(Text)`
+  padding-top: 15px;
+  padding-left: 20px;
 `;
