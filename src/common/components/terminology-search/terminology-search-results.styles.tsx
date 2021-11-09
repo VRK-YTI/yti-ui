@@ -46,3 +46,8 @@ export const SearchResultContainer = styled.div`
   }
 
 `;
+
+export const SearchResultsContainer = styled.div`
+  max-width: 100%;
+  width: 100%;
+`;

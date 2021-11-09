@@ -4,25 +4,26 @@ import { useTranslation } from 'react-i18next';
 import { Dropdown, DropdownItem, Text } from 'suomifi-ui-components';
 import {
   SearchFilterCheckbox,
-  SearchFilterContainer,
+  SearchFilterSelections,
   SearchFilterHeader,
   SearchFilterHr,
   SearchFilterRemove,
-  SearchFilterRemoveWrapper
+  SearchFilterRemoveWrapper,
+  SearchFilterWrapper
 } from './terminology-search-filter.styles';
 
 export default function TerminologySearchFilter() {
   const { t } = useTranslation('common');
 
   return (
-    <>
+    <SearchFilterWrapper>
       <SearchFilterHeader>
         <Text style={{ color: 'white' }}>
           {t('terminology-search-filter-list')}
         </Text>
       </SearchFilterHeader>
 
-      <SearchFilterContainer>
+      <SearchFilterSelections>
         <Grid container>
 
           <Grid item xs={12}>
@@ -117,7 +118,7 @@ export default function TerminologySearchFilter() {
           </Grid>
         </Grid>
 
-      </SearchFilterContainer>
-    </>
+      </SearchFilterSelections>
+    </SearchFilterWrapper>
   );
 };

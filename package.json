@@ -11,8 +11,8 @@
     "test": "jest --watch"
   },
   "dependencies": {
-    "@reduxjs/toolkit": "^1.6.2",
     "@material-ui/core": "^4.12.3",
+    "@reduxjs/toolkit": "^1.6.2",
     "axios": "^0.21.4",
     "next": "11.1.2",
     "next-i18next": "^8.8.0",

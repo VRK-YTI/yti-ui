@@ -6,6 +6,7 @@ const mockTranslations = {
 
 const useMock = [k => k, {}];
 useMock.t = k => mockTranslations[k] ?? k;
+useMock.i18n = language => 'fi';
 
 module.exports = {
   useTranslation: () => useMock,

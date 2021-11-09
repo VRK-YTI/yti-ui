@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import React from 'react';
-import { TerminologyDTO, TerminologySearchResult } from '../../interfaces/terminology.interface';
-import { SearchResultContainer } from './terminology-search-results.styles';
+import { InformationDomainDTO, TerminologyDTO, TerminologySearchResult } from '../../interfaces/terminology.interface';
+import { SearchResultContainer, SearchResultsContainer } from './terminology-search-results.styles';
 import { Icon, Link as DsLink, Text } from 'suomifi-ui-components';
 import { useTranslation } from 'react-i18next';
 
@@ -13,21 +13,12 @@ interface SearchResultsProps {
   results?: TerminologySearchResult;
 }
 
-interface InfoDomain {
-  id: string;
-  label: {
-    fi: 'string';
-    en: 'string';
-    sv: 'string';
-  };
-}
-
 function SearchResult({ data }: SearchResultProps) {
   const { t, i18n } = useTranslation('common');
   const label = data.label[i18n.language] ?? data.label.fi ?? data.uri;
   const contributor = data.contributors.length ?
     data.contributors[0].label[i18n.language] ??
-    data.contributors[0].label.en :
+    data.contributors[0].label.fi :
     'Unknown contributor';
   const description = data.description[i18n.language] ?? data.description.fi ?? '';
 
@@ -35,6 +26,7 @@ function SearchResult({ data }: SearchResultProps) {
     <SearchResultContainer>
       <div className='contributor'>
         {contributor}
+        {data.contributors?.map(contributor => console.log(contributor))}
       </div>
       <div>
         <Link passHref href={'/terminology/' + data.id}>
@@ -58,7 +50,7 @@ function SearchResult({ data }: SearchResultProps) {
           <b>
             {t('terminology-search-results-information-domains').toUpperCase()}:
           </b>
-          {data.informationDomains?.map((infoDomain: InfoDomain, idx: number) => {
+          {data.informationDomains?.map((infoDomain: InformationDomainDTO, idx: number) => {
             if (data.informationDomains.length > 1) {
               return (
                 idx > 0 ?
@@ -87,7 +79,7 @@ function SearchResult({ data }: SearchResultProps) {
 
 export function TerminologySearchResults({ results }: SearchResultsProps) {
   return (
-    <>
+    <SearchResultsContainer>
       {console.log(results)}
       {
         results?.terminologies ?
@@ -97,6 +89,6 @@ export function TerminologySearchResults({ results }: SearchResultsProps) {
             ) :
           []
       }
-    </>
+    </SearchResultsContainer>
   );
 }

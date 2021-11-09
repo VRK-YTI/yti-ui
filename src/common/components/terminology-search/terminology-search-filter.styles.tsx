@@ -1,14 +1,18 @@
 import styled from 'styled-components';
 import { Checkbox, Icon } from 'suomifi-ui-components';
 
-export const SearchFilterContainer = styled.div`
-  @import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap');
+export const SearchFilterWrapper = styled.div`
+
+`;
+
+export const SearchFilterSelections = styled.div`
   padding: 15px;
   background-color: white;
   border-left: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
-  border-right: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};;
-  border-bottom: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};;
+  border-right: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
+  border-bottom: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
   width: 295px;
+  max-width: 295px;
 `;
 
 export const SearchFilterRemoveWrapper = styled.div`
