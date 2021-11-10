@@ -102,7 +102,7 @@ export default function Header({ props }: { props: LayoutProps }) {
               searchButtonLabel={t('terminology-search')}
               visualPlaceholder={t('terminology-search-placeholder')}
               wrapperProps={{
-                style: { minWidth: '10px', maxWidth: '400px', width: '50vw' }
+                style: { minWidth: '10px', maxWidth: '400px', width: '65vw' }
               }}
             />
             <SmallSearchText
