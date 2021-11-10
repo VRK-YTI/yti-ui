@@ -6,12 +6,13 @@ const config: Config.InitialOptions = {
     '**/*.{js,jsx,ts,tsx}',
     '!**/*.d.ts',
     '!**/node_modules/**',
+    '!**/.next/**',
   ],
   moduleNameMapper: {
     '^.+\\.module\\.(css|sass|scss)$': 'identity-obj-proxy',
     '^.+\\.(css|sass|scss)$': '<rootDir>/__mocks__/styleMock.js',
     '^.+\\.(jpg|jpeg|png|gif|webp|svg)$': '<rootDir>/__mocks__/fileMock.js',
-    'react-i18next': '<rootDir>/__mocks__/next-i18nextMock.js',
+    'react-i18next': '<rootDir>/__mocks__/next-i18nextMock.ts',
     'next/dist/client/router': '<rootDir>/__mocks__/next/dist/client/router.js'
   },
   testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/.next/'],
@@ -23,7 +24,8 @@ const config: Config.InitialOptions = {
     '/node_modules/',
     '^.+\\.module\\.(css|sass|scss)$',
   ],
-  setupFilesAfterEnv: ['./jest.setup.ts']
+  setupFilesAfterEnv: ['./jest.setup.ts'],
+  testResultsProcessor: 'jest-junit'
 };
 
 export default config;

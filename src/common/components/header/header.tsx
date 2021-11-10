@@ -1,16 +1,14 @@
 import { Grid } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
-import { useTranslation } from 'react-i18next';
-import { Icon, LanguageMenu, LanguageMenuItem, Link, SearchInput } from 'suomifi-ui-components';
+import { LanguageMenu, LanguageMenuItem, Link } from 'suomifi-ui-components';
 import AuthenticationPanel from '../authentication-panel/authentication-panel';
 import { LayoutProps } from '../layout/layout-props';
 import HamburgerMenu from '../menu/hamburger-menu';
-import { HeaderWrapper, LanguageMenuWrapper, SearchWrapper, SiteLogo } from './header.styles';
+import { HeaderWrapper, LanguageMenuWrapper, SiteLogo } from './header.styles';
 import HeaderSearch from './header-search';
 
 export default function Header({ props }: { props: LayoutProps }) {
-  const { t } = useTranslation('common');
   const isSmall = props.isSmall;
   const router = useRouter();
 
@@ -33,18 +31,6 @@ export default function Header({ props }: { props: LayoutProps }) {
             </SiteLogo>
           </Grid>
           <Grid item xs={2} sm={2} md={3} lg={3}>
-            {/* <SearchWrapper isSmall={isSmall}>
-              {!isSmall ? (
-                <SearchInput
-                  clearButtonLabel=""
-                  labelText=""
-                  searchButtonLabel={t('terminology-search')}
-                  visualPlaceholder={t('terminology-search-placeholder')}
-                />
-              ) : (
-                <div><Icon icon="search" /></div>
-              )}
-            </SearchWrapper> */}
             <HeaderSearch isSmall={isSmall} />
           </Grid>
 

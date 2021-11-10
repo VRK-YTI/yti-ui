@@ -1,5 +1,4 @@
-import { useTranslation } from 'next-i18next';
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { SSRConfig, useTranslation } from 'next-i18next';
 import { useRouter } from 'next/dist/client/router';
 import React from 'react';
 import Link from 'next/link';
@@ -7,16 +6,24 @@ import { Heading, Link as DsLink } from 'suomifi-ui-components';
 import Layout from '../../common/components/layout/layout';
 import Head from 'next/head';
 import { TerminologyInfoContainer } from '../../common/components/terminology/terminology-info.styles';
-import { wrapper } from '../../store';
+import { createCommonGetServerSideProps } from '../../common/utils/create-getserversideprops';
+import { NextIronRequest } from '../../common/utils/session';
+import { NextApiResponse } from 'next';
+import User from '../../common/interfaces/user-interface';
+import useUser from '../../common/hooks/useUser';
 
 // TODO: perhaps move the component itself to components/
-export default function Terminology( props: { id: any }) {
+export default function TerminologyPage(props: {
+  _netI18Next: SSRConfig;
+  user: User;
+}) {
   const { t } = useTranslation('common');
+  const { user, } = useUser({ initialData: props.user });
   const { query } = useRouter();
   const id = query?.id ?? null;
 
   return (
-    <Layout>
+    <Layout user={user}>
       <Head>
         <title>{ t('terminology-title') }</title>
       </Head>
@@ -41,34 +48,7 @@ export default function Terminology( props: { id: any }) {
   );
 }
 
-// TODO: Can be deleted or used if needed
-// export const getServerSideProps = wrapper.getServerSideProps(store => async ({params}) => {
-//   console.log("params:", params)
-//   const id = params;
-
-//   await store.dispatch(updateValue(id));
-
-//   return {
-//     props: {
-//       id,
-//     }
-//   }
-// })
-
-export async function getStaticProps({ locale, params }: { locale: string, params: any }) {
-  return {
-    props: {
-      ...(await serverSideTranslations(locale, ['common'])),
-      // Will be passed to the page component as props
-    },
-  };
-}
-
-// terminology/[id].tsx
-export async function getStaticPaths() {
-  return {
-    paths: [
-    ],
-    fallback: true,
-  };
-}
+export const getServerSideProps = createCommonGetServerSideProps(
+  async ({ req, res, locale }: { req: NextIronRequest, res: NextApiResponse, locale: string }) => {
+    return { props: { } };
+  });

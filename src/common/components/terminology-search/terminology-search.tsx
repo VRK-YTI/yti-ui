@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 export default function TerminologySearch() {
   const { t } = useTranslation();
   const filter = useSelector(selectFilter());
-  const { data, error, isLoading } = useGetSearchResultQuery(filter);
+  const { data } = useGetSearchResultQuery(filter);
 
   return (
     <>
