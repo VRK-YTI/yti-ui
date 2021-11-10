@@ -4,6 +4,7 @@ import type { AppProps } from 'next/app';
 import { appWithTranslation } from 'next-i18next';
 import axios from 'axios';
 import React from 'react';
+import { wrapper } from '../store';
 
 // https://nextjs.org/docs/advanced-features/custom-app
 function App({ Component, pageProps }: AppProps) {
@@ -23,4 +24,4 @@ function App({ Component, pageProps }: AppProps) {
     </SWRConfig>
   );
 }
-export default appWithTranslation(App);
+export default wrapper.withRedux(appWithTranslation(App));
