@@ -8,12 +8,18 @@ import AuthenticationPanel from '../authentication-panel/authentication-panel';
 import { LayoutProps } from '../layout/layout-props';
 import HamburgerMenu from '../menu/hamburger-menu';
 import { HeaderWrapper, LanguageMenuWrapper, SearchWrapper, SiteLogo, SmallSearchText, SmallSearchWrapper } from './header.styles';
+import { useStoreDispatch } from '../../../store';
+import { useSelector } from 'react-redux';
+import { selectFilter, setFilter } from '../terminology-search/states/terminology-search-slice';
 
 export default function Header({ props }: { props: LayoutProps }) {
   const { t } = useTranslation('common');
   const isSmall = props.isSmall;
   const router = useRouter();
   const [smallSearch, setSmallSearch] = useState<boolean>(false);
+
+  const dispatch = useStoreDispatch();
+  const filter = useSelector(selectFilter());
 
   const languageMenuItems = {
     fi: 'Suomeksi (FI)',
@@ -40,8 +46,16 @@ export default function Header({ props }: { props: LayoutProps }) {
                   <SearchInput
                     clearButtonLabel=""
                     labelText=""
+                    defaultValue={filter}
                     searchButtonLabel={t('terminology-search')}
                     visualPlaceholder={t('terminology-search-placeholder')}
+                    wrapperProps={{ style: { minWidth: '10px', maxWidth: '400px', width: '65vw' } }}
+                    onSearch={value => {
+                      if (typeof value === 'string') dispatch(setFilter(value));
+                    }}
+                    onChange={value => {
+                      if (value === '') dispatch(setFilter(value));
+                    }}
                   />
                 ) : (
                   <div onClick={() => setSmallSearch(true)}><Icon icon="search" /></div>
@@ -99,10 +113,15 @@ export default function Header({ props }: { props: LayoutProps }) {
             <SearchInput
               clearButtonLabel=""
               labelText=""
+              defaultValue={filter}
               searchButtonLabel={t('terminology-search')}
               visualPlaceholder={t('terminology-search-placeholder')}
-              wrapperProps={{
-                style: { minWidth: '10px', maxWidth: '400px', width: '65vw' }
+              wrapperProps={{ style: { minWidth: '10px', maxWidth: '400px', width: '65vw' } }}
+              onSearch={value => {
+                if (typeof value === 'string') dispatch(setFilter(value));
+              }}
+              onChange={value => {
+                if (value === '') dispatch(setFilter(value));
               }}
             />
             <SmallSearchText
