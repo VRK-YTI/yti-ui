@@ -1,4 +1,3 @@
-
 import { useTranslation } from 'next-i18next';
 import { Button, Modal, ModalContent, ModalFooter, ModalTitle, Paragraph, Text } from 'suomifi-ui-components';
 import { LayoutProps } from '../layout/layout-props';

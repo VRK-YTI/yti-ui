@@ -6,6 +6,7 @@ import { FooterContentWrapper, FooterLinkWrapper } from './footer.style';
 
 export default function Footer({ props }: { props: LayoutProps }) {
   const { t } = useTranslation('common');
+
   return (
     <>
       <FooterContentWrapper>
