@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { LayoutProps } from '../layout/layout-props';
-import { Text } from 'suomifi-ui-components';
+import { SearchInput, Text } from 'suomifi-ui-components';
 
 export const HeaderWrapper = styled.div`
   display: flex;
@@ -24,10 +24,14 @@ export const SiteLogo = styled.div`
 
 export const SmallSearchWrapper = styled.div`
   display: flex;
-  flex-row: row;}
+  flex-row: row;
+  flex-shrink: 0;
 `;
 
 export const SmallSearchText = styled(Text)`
   padding-top: 15px;
   padding-left: 20px;
+  color: ${(props) => props.theme.suomifi.colors.highlightLight1};
+  font-size: 16px;
+  font-weight: bold;
 `;

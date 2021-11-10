@@ -101,8 +101,15 @@ export default function Header({ props }: { props: LayoutProps }) {
               labelText=""
               searchButtonLabel={t('terminology-search')}
               visualPlaceholder={t('terminology-search-placeholder')}
+              wrapperProps={{
+                style: { minWidth: '10px', maxWidth: '400px', width: '50vw' }
+              }}
             />
-            <SmallSearchText onClick={() => setSmallSearch(false)}>Sulje</SmallSearchText>
+            <SmallSearchText
+              onClick={() => setSmallSearch(false)}
+            >
+              Sulje
+            </SmallSearchText>
           </SmallSearchWrapper>
         </HeaderWrapper>
       }
