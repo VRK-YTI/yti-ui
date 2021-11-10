@@ -25,21 +25,24 @@ export default function TerminologySearch() {
           </Text>
         </Grid>
         <Grid item xs={12}>
-          <SearchCountWrapper>
-            <Text variant='bold'>
-              {data?.totalHitCount === 1 ?
-                `${data?.totalHitCount} ${t('terminology-search-result')}`
-                :
-                `${data?.totalHitCount} ${t('terminology-search-results')}`
-              }
-            </Text>
-          </SearchCountWrapper>
+          {data?.totalHitCount ?
+            <SearchCountWrapper>
+              <Text variant='bold'>
+                {data?.totalHitCount === 1 ?
+                  `${data?.totalHitCount} ${t('terminology-search-result')}`
+                  :
+                  `${data?.totalHitCount} ${t('terminology-search-results')}`
+                }
+              </Text>
+            </SearchCountWrapper>
+            :
+            <></>}
         </Grid>
       </Grid>
 
-      <div style={{display: 'flex'}}>
+      <div style={{ display: 'flex' }}>
         <TerminologySearchResults results={data} />
-        <div style={{margin: 10}} />
+        <div style={{ margin: 10 }} />
         <TerminologySearchFilter />
       </div>
     </>
