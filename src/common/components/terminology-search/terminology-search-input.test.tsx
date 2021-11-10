@@ -3,14 +3,16 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { TerminologySearchInput } from './terminology-search-input';
+import { Provider } from 'react-redux';
+import { makeStore } from '../../../store';
 
-jest.mock('../../../modules/terminology-search/hooks/terminology-search-api');
-
-describe('TerminologySearchInput', () => {
+describe('terminology-search-input', () => {
   test('should render component', () => {
 
     render(
-      <TerminologySearchInput setFilter={jest.fn()} />
+      <Provider store={makeStore()}>
+        <TerminologySearchInput />
+      </Provider>
     );
 
     expect(screen.findByTestId('search_input')).toBeInTheDocument;
@@ -18,20 +20,22 @@ describe('TerminologySearchInput', () => {
 
   test('should set filter', () => {
 
-    const setFilter = jest.fn();
-
     render(
-      <TerminologySearchInput setFilter={setFilter} />
+      <Provider store={makeStore()}>
+        <TerminologySearchInput />
+      </Provider>
     );
+
+    expect(screen.getByTestId('search_input')).toBeInTheDocument;
 
     userEvent.click(screen.getByTestId('search_input'));
     userEvent.keyboard('test');
-
-    expect(screen.getByTestId('search_input')).toBeInTheDocument;
-    expect(screen.getByTestId('search_input')).toHaveProperty('value', 'test');
-
     userEvent.keyboard('{enter}');
+
+    expect(screen.getByTestId('search_input')).toHaveProperty('value', 'test');
 
   });
 
 });
+
+

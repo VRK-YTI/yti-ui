@@ -9,9 +9,7 @@ interface SearchResultProps {
 }
 
 interface SearchResultsProps {
-  results: TerminologySearchResult | null;
-  error: string | null;
-  loading: boolean;
+  results?: TerminologySearchResult;
 }
 
 function SearchResult({ data }: SearchResultProps) {
@@ -34,14 +32,13 @@ function SearchResult({ data }: SearchResultProps) {
   </SearchResultContainer>;
 }
 
-export function TerminologySearchResults({ results = null, error, loading }: SearchResultsProps) {
-
+export function TerminologySearchResults({ results }: SearchResultsProps) {
   return (
     <>
       {
         results?.terminologies ?
           results.terminologies
-            .map(x => { console.log(x); return x; })
+            // .map(x => { console.log(x); return x; })
             // .map((data) => data.label.fi ?? data.label.en ?? data.uri)
             .map((data, idx) =>
               <SearchResult key={idx} data={data} />
