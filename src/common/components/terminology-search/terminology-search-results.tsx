@@ -26,7 +26,6 @@ function SearchResult({ data }: SearchResultProps) {
     <SearchResultContainer>
       <div className='contributor'>
         {contributor}
-        {data.contributors?.map(contributor => console.log(contributor))}
       </div>
       <div>
         <Link passHref href={'/terminology/' + data.id}>
@@ -80,7 +79,6 @@ function SearchResult({ data }: SearchResultProps) {
 export function TerminologySearchResults({ results }: SearchResultsProps) {
   return (
     <SearchResultsContainer>
-      {console.log(results)}
       {
         results?.terminologies ?
           results.terminologies
