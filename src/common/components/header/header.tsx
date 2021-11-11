@@ -127,7 +127,7 @@ export default function Header({ props }: { props: LayoutProps }) {
             <SmallSearchText
               onClick={() => setSmallSearch(false)}
             >
-              Sulje
+              {t('close')}
             </SmallSearchText>
           </SmallSearchWrapper>
         </HeaderWrapper>
