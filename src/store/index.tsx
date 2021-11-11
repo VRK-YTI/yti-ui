@@ -1,6 +1,6 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import { createWrapper } from 'next-redux-wrapper';
-import { terminologySearchSlice, terminologySearchApi } from './common/components/terminology-search/terminology-search-slice';
+import { terminologySearchSlice, terminologySearchApi } from '../common/components/terminology-search/terminology-search-slice';
 import { useDispatch } from 'react-redux';
 
 export function makeStore() {
