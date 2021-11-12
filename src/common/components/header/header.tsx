@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Grid } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
+import { useTranslation } from 'react-i18next';
 import { Icon, LanguageMenu, LanguageMenuItem, Link, SearchInput } from 'suomifi-ui-components';
 import AuthenticationPanel from '../authentication-panel/authentication-panel';
 import { LayoutProps } from '../layout/layout-props';
@@ -10,10 +11,9 @@ import { HeaderWrapper, LanguageMenuWrapper, SearchWrapper, SiteLogo, SmallSearc
 import { useStoreDispatch } from '../../../store';
 import { useSelector } from 'react-redux';
 import { selectFilter, setFilter } from '../terminology-search/states/terminology-search-slice';
-import { useTranslation } from 'react-i18next';
 
 export default function Header({ props }: { props: LayoutProps }) {
-  const { t } = useTranslation();
+  const { t } = useTranslation('common');
   const isSmall = props.isSmall;
   const router = useRouter();
   const [smallSearch, setSmallSearch] = useState<boolean>(false);
