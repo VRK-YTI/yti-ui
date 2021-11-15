@@ -6,22 +6,18 @@ import { ModalTitleWrapper } from './login-modal.styles';
 export default function LoginModalView({ props, setVisible }: { props: LayoutProps, setVisible: Function }) {
   const { t } = useTranslation('common');
 
-  const handleClose = () => {
-    setVisible(false);
-  };
-
   return (
     <>
       <Modal
         appElementId="__next"
         visible={true}
         variant={props.isSmall ? 'smallScreen' : 'default'}
-        onEscKeyDown={handleClose}
+        onEscKeyDown={() => setVisible(false)}
       >
         <ModalContent>
           <ModalTitleWrapper>
             <ModalTitle>{t('site-login-title')}</ModalTitle>
-            <Button variant="secondary" icon="close" onClick={handleClose} />
+            <Button variant="secondary" icon="close" onClick={() => setVisible(false)} />
           </ModalTitleWrapper>
           <Paragraph>
             <Text>{t('site-login-info-1')}</Text>

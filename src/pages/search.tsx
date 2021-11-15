@@ -8,7 +8,7 @@ import { NextIronRequest } from '../common/utils/session';
 import { NextApiResponse } from 'next';
 import { createCommonGetServerSideProps } from '../common/utils/create-getserversideprops';
 import User from '../common/interfaces/user-interface';
-import useUser from '../common/hooks/useUser';
+import useUser from '../common/utils/hooks/useUser';
 import { selectFilter, useGetSearchResultQuery } from '../common/components/terminology-search/terminology-search-slice';
 import { useSelector } from 'react-redux';
 import { AppStore } from '../store';

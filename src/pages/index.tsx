@@ -4,7 +4,7 @@ import React from 'react';
 import Layout from '../layouts/layout';
 import { SSRConfig, useTranslation } from 'next-i18next';
 import { NextIronRequest } from '../common/utils/session';
-import useUser from '../common/hooks/useUser';
+import useUser from '../common/utils/hooks/useUser';
 import { NextApiResponse } from 'next';
 import { createCommonGetServerSideProps } from '../common/utils/create-getserversideprops';
 import User from '../common/interfaces/user-interface';
