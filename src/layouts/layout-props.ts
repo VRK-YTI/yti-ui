@@ -1,4 +1,4 @@
-import User from '../../interfaces/user-interface';
+import User from '../common/interfaces/user-interface';
 
 export interface LayoutProps {
     isSmall: boolean;

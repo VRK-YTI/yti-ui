@@ -1,6 +1,6 @@
 import { useTranslation } from 'next-i18next';
 import { Button, Modal, ModalContent, ModalFooter, ModalTitle, Paragraph, Text } from 'suomifi-ui-components';
-import { LayoutProps } from '../layout/layout-props';
+import { LayoutProps } from '../../../layouts/layout-props';
 import { ModalTitleWrapper } from './login-modal.styles';
 
 export default function LoginModalView({ props, setVisible }: { props: LayoutProps, setVisible: Function }) {

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { LayoutProps } from '../../../layouts/layout-props';
+import { LayoutProps } from '../../common/components/layout/layout-props';
 
 export const FooterContentWrapper = styled.div`
   padding: 15px 0px 15px 0px;

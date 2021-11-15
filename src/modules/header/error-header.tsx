@@ -1,7 +1,7 @@
 import { Grid } from '@material-ui/core';
 import Image from 'next/image';
 import { Link } from 'suomifi-ui-components';
-import { LayoutProps } from '../layout/layout-props';
+import { LayoutProps } from '../../layouts/layout-props';
 import { HeaderWrapper, SiteLogo } from './header.styles';
 
 export default function ErrorHeader({ props }: { props: LayoutProps }) {

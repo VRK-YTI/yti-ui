@@ -2,10 +2,8 @@ import Head from 'next/head';
 import React from 'react';
 import { SSRConfig, useTranslation } from 'next-i18next';
 import { Heading } from 'suomifi-ui-components';
-import Layout from '../common/components/layout/layout';
-import { TerminologySearchInput } from '../common/components/terminology-search/terminology-search-input';
+import Layout from '../layouts/layout';
 import { TerminologySearchResults } from '../common/components/terminology-search/terminology-search-results';
-import { SearchContainer } from '../common/components/terminology-search/terminology-search-input.styles';
 import { NextIronRequest } from '../common/utils/session';
 import { NextApiResponse } from 'next';
 import { createCommonGetServerSideProps } from '../common/utils/create-getserversideprops';
@@ -31,10 +29,6 @@ export default function SearchPage(props: {
         <title>{t('search-title')}</title>
       </Head>
       <Heading variant="h1">{t('terminology-title')}</Heading>
-
-      <SearchContainer>
-        <TerminologySearchInput />
-      </SearchContainer>
 
       <TerminologySearchResults results={data} />
     </Layout>

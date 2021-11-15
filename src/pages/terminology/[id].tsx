@@ -3,7 +3,7 @@ import { useRouter } from 'next/dist/client/router';
 import React from 'react';
 import Link from 'next/link';
 import { Heading, Link as DsLink } from 'suomifi-ui-components';
-import Layout from '../../common/components/layout/layout';
+import Layout from '../../layouts/layout';
 import Head from 'next/head';
 import { TerminologyInfoContainer } from '../../common/components/terminology/terminology-info.styles';
 import { createCommonGetServerSideProps } from '../../common/utils/create-getserversideprops';
