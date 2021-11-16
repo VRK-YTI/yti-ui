@@ -2,7 +2,7 @@ import React from 'react';
 import { Grid } from '@material-ui/core';
 import { TerminologySearchResults } from './terminology-search-results';
 import { useSelector } from 'react-redux';
-import { selectFilter, useGetSearchResultQuery } from './states/terminology-search-slice';
+import { selectFilter, useGetSearchResultQuery } from './terminology-search-slice';
 import TerminologySearchFilter from './terminology-search-filter';
 import { Heading, Text } from 'suomifi-ui-components';
 import { SearchCountWrapper } from './terminology-search.styles';
