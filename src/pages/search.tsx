@@ -3,7 +3,7 @@ import React from 'react';
 import { SSRConfig, useTranslation } from 'next-i18next';
 import { Heading } from 'suomifi-ui-components';
 import Layout from '../layouts/layout';
-import TerminologySearch from '../common/components/terminology-search/terminology-search';
+import TerminologySearch from '../modules/terminology-search';
 import { NextIronRequest } from '../common/utils/session';
 import { NextApiResponse } from 'next';
 import { createCommonGetServerSideProps } from '../common/utils/create-getserversideprops';
