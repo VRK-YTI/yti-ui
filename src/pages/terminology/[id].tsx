@@ -11,6 +11,7 @@ import { NextIronRequest } from '../../common/utils/session';
 import { NextApiResponse } from 'next';
 import User from '../../common/interfaces/user-interface';
 import useUser from '../../common/hooks/useUser';
+import Vocabulary from '../../common/components/vocabulary/vocabulary';
 
 // TODO: perhaps move the component itself to components/
 export default function TerminologyPage(props: {
@@ -44,6 +45,7 @@ export default function TerminologyPage(props: {
           </DsLink>
         </Link>
       </div>
+      <Vocabulary id={id}/>
     </Layout>
   );
 }

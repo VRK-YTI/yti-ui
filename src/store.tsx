@@ -1,6 +1,7 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import { createWrapper } from 'next-redux-wrapper';
 import { terminologySearchSlice, terminologySearchApi } from './common/components/terminology-search/states/terminology-search-slice';
+import { vocabularyApi, vocabularySlice } from './common/components/vocabulary/vocabulary-slice';
 import { useDispatch } from 'react-redux';
 
 export function makeStore() {
@@ -9,12 +10,15 @@ export function makeStore() {
     reducer: {
       [terminologySearchSlice.name]: terminologySearchSlice.reducer,
       [terminologySearchApi.reducerPath]: terminologySearchApi.reducer,
+      [vocabularySlice.name]: vocabularySlice.reducer,
+      [vocabularyApi.reducerPath]: vocabularyApi.reducer
     },
 
     // All new api's should be added here to access them
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(
-        terminologySearchApi.middleware
+        terminologySearchApi.middleware,
+        vocabularyApi.middleware
       ),
     devTools: true,
   });
