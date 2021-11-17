@@ -338,8 +338,8 @@ msgstr "Beställ e-postaviseringar"
 msgid "Remove email subscription"
 msgstr "Ta bort e-postaviseringar"
 
-msgid "Export Excel"
-msgstr "(SV) Export Excel"
+msgid "Export terminology Excel"
+msgstr "Exportera ordlista Excel"
 
 msgid "Information domain"
 msgstr "Informationsområde"

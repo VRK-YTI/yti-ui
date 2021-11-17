@@ -59,7 +59,7 @@ import { UserService } from 'yti-common-ui/services/user.service';
                      *ngIf="canExport"
                      class="dropdown-item"
                      href='/terminology-api/api/v1/export/{{graphId}}?format=xlsx'
-                     translate>Export Excel</a>
+                     translate>Export terminology Excel</a>
                 </div>
               </div>
             </div>

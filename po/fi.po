@@ -340,8 +340,8 @@ msgstr "Tilaa sähköposti-ilmoitukset"
 msgid "Remove email subscription"
 msgstr "Poista sähköposti-ilmoitukset"
 
-msgid "Export Excel"
-msgstr "(FI) Export Excel"
+msgid "Export terminology Excel"
+msgstr "Lataa sanasto Excel"
 
 msgid "Information domain"
 msgstr "Tietoalue"
