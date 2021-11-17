@@ -17,6 +17,9 @@ export function TerminologySearchInput() {
       onSearch={value => {
         if (typeof value === 'string') dispatch(setFilter(value));
       }}
+      onChange={value => {
+        if (value === '') dispatch(setFilter(value));
+      }}
       defaultValue={useSelector(filter)}
     />
   );

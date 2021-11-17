@@ -6,15 +6,35 @@ export interface TerminologySimpleDTO {
   label: { [key: string]: string };
 }
 
+export interface ContributorsDTO {
+  id: string;
+  label: any; // TODO: Add typing
+}
+
+export interface InformationDomainDTO {
+  id: string;
+  label: any; // TODO: Add typing
+}
+
 export interface TerminologyDTO extends TerminologySimpleDTO {
   description: { [key: string]: string };
-  informationDomainDTO: any; // TODO: add typing
-  contributors: any; // TODO: add typing
+  contributors: ContributorsDTO[];
+  informationDomains: InformationDomainDTO[];
 }
+
+// export interface DeepHitsObjDTO {
+//   topHits: TerminologyDTO[];
+//   totalHitCount: number;
+//   type: string;
+// }
+
+// export interface DeepHitsDTO {
+//   [id: string]: DeepHitsObjDTO[];
+// }
 
 export interface TerminologySearchResult {
   totalHitCount: number;
   resultStart: number;
-  terminologies: TerminologyDTO[];
-  deepHits: any; // TODO: add typing
+  terminologies: TerminologyDTO[] | null;
+  deepHits: any | null; // TODO: Add typing
 }
