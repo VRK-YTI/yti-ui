@@ -10,24 +10,28 @@ import {
 } from './vocabulary-info.styles';
 
 export default function VocabularyInfo({ data }: any) {
-  const { t } = useTranslation('common');
+  const { t, i18n } = useTranslation('common');
   const prefLabels = data.properties.prefLabel;
   const description = data.properties.description[0];
-  const informationDomain = data.references.inGroup[0].properties.prefLabel[2].value;
+  const informationDomains = data.references.inGroup;
   const vocabularyLanguages = data.properties.language;
-  const contributor = data.references.contributor[0].properties.prefLabel[1].value;
   const createdDate = FormatISODate(data.createdDate);
   const lastModifiedDate = FormatISODate(data.lastModifiedDate);
   const uri = data.uri;
+  const contributor = data.references.contributor[0].properties.prefLabel.map((pLabel: any) => {
+    if (pLabel.lang === i18n.language) {
+      return (pLabel.value);
+    }
+  });
 
   return (
     <Expander>
       <ExpanderTitleButton>
-        Sanaston tiedot
+        {t('vocabulary-info-terminology')}
       </ExpanderTitleButton>
       <ExpanderContent>
         <NameWrapper>
-          <Heading variant='h4'>Nimi</Heading>
+          <Heading variant='h4'>{t('vocabulary-info-name')}</Heading>
           <ul>
             {prefLabels.map((prefLabel: any) => {
               return (
@@ -41,31 +45,44 @@ export default function VocabularyInfo({ data }: any) {
         </NameWrapper>
 
         <DescriptionWrapper>
-          <Heading variant='h4'>Kuvaus</Heading>
+          <Heading variant='h4'>{t('vocabulary-info-description')}</Heading>
           <div>
             <b>{description.lang.toUpperCase()}</b>
             {description.value}
           </div>
         </DescriptionWrapper>
 
+
         <InformationDomainWrapper>
-          <Heading variant='h4'>Kuuluu tietoalueisiin</Heading>
-          <div>{informationDomain}</div>
+          <Heading variant='h4' style={{ paddingBottom: '6px' }}>
+            {t('vocabulary-info-information-domain')}
+          </Heading>
+          {informationDomains.map((infoDomain: any) => {
+            return (
+              <div key={`info-domain-${infoDomain.properties.notation[0].value}`}>
+                {infoDomain.properties.prefLabel.map((pLabel: any) => {
+                  if (pLabel.lang === i18n.language) {
+                    return (pLabel.value);
+                  }
+                })}
+              </div>
+            );
+          })}
         </InformationDomainWrapper>
 
         <SimpleInformationWrapper>
-          <Heading variant='h4'>Sanaston kielet</Heading>
+          <Heading variant='h4'>{t('vocabulary-info-languages')}</Heading>
           <div>{vocabularyLanguages.map((lang: any, idx: number) => {
             if (idx === 0) {
               return (
                 <span key={`lang-${lang.value}`}>
-                  {t(`vocabulary-${lang.value}`)} {lang.value.toUpperCase()}
+                  {t(`vocabulary-info-${lang.value}`)} {lang.value.toUpperCase()}
                 </span>
               );
             } else {
               return (
                 <span key={`lang-${lang.value}`}>
-                  , {t(`vocabulary-${lang.value}`)} {lang.value.toUpperCase()}
+                  , {t(`vocabulary-info-${lang.value}`)} {lang.value.toUpperCase()}
                 </span>
               );
             }
@@ -74,31 +91,32 @@ export default function VocabularyInfo({ data }: any) {
         </SimpleInformationWrapper>
 
         <SimpleInformationWrapper>
-          <Heading variant='h4'>Sanastotyyppi</Heading>
-          <div>Terminologinen sanasto</div>
+          <Heading variant='h4'>{t('vocabulary-info-vocabulary-type')}</Heading>
+          <div>{t('vocabulary-info-terminological-dictionary')}</div>
         </SimpleInformationWrapper>
 
         <HR />
 
         <SimpleInformationWrapper>
-          <Heading variant='h4'>Sisällöstä vastaa</Heading>
+          <Heading variant='h4'>{t('vocabulary-info-organization')}</Heading>
           <div>{contributor}</div>
         </SimpleInformationWrapper>
 
-        {data.references.contributor.length > 1 &&
+        {/* TODO: Need to check what other organizations are */}
+        {/* {data.references.contributor.length > 1 &&
           <SimpleInformationWrapper>
             <Heading variant='h4'>Muut vastuuorganisaatiot</Heading>
             <div></div>
           </SimpleInformationWrapper>
-        }
+        } */}
 
         <SimpleInformationWrapper>
-          <Heading variant='h4'>Luotu</Heading>
+          <Heading variant='h4'>{t('vocabulary-info-created-at')}</Heading>
           <div>{createdDate}</div>
         </SimpleInformationWrapper>
 
         <SimpleInformationWrapper>
-          <Heading variant='h4'>Muokattu viimeksi</Heading>
+          <Heading variant='h4'>{t('vocabulary-info-modified-at')}</Heading>
           <div>{lastModifiedDate}</div>
         </SimpleInformationWrapper>
 

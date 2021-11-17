@@ -63,6 +63,7 @@ export const InformationDomainWrapper = styled.div`
 
   div {
     margin-top: 12px;
+    margin-right: 2px;
     padding-left: 10px;
     padding-right: 10px;
     border-radius: 25px;
@@ -70,6 +71,7 @@ export const InformationDomainWrapper = styled.div`
     color: ${(props) => props.theme.suomifi.colors.depthLight2};
     font-weight: bold;
     width: max-content;
+    display: inline;
   }
 `;
 

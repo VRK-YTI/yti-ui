@@ -44,7 +44,17 @@
   "terminology-search-result": "result from Terminologies",
   "terminology-search-results": "results from Terminologies",
   "close": "Close",
-  "vocabulary-fi": "Finnish",
-  "vocabulary-en": "English",
-  "vocabulary-sv": "Swedish"
+  "vocabulary-info-fi": "Finnish",
+  "vocabulary-info-en": "English",
+  "vocabulary-info-sv": "Swedish",
+  "vocabulary-info-terminology": "Terminology",
+  "vocabulary-info-name": "Name",
+  "vocabulary-info-description": "Description",
+  "vocabulary-info-information-domain": "Information domain",
+  "vocabulary-info-languages": "Language",
+  "vocabulary-info-vocabulary-type": "Vocabulary type",
+  "vocabulary-info-organization": "Organization",
+  "vocabulary-info-created-at": "Created at",
+  "vocabulary-info-modified-at": "Modified at",
+  "vocabulary-info-terminological-dictionary": "Terminological Dictionary"
 }

@@ -45,7 +45,17 @@
     "terminology-search-result": "(sv) hakutulos sanastoista",
     "terminology-search-results": "(sv) hakutulosta sanastoista",
     "close": "(sv) Sulje",
-    "vocabulary-fi": "Finska",
-    "vocabulary-en": "Engelska",
-    "vocabulary-sv": "Svenska"
+    "vocabulary-info-fi": "Finska",
+    "vocabulary-info-en": "Engelska",
+    "vocabulary-info-sv": "Svenska",
+    "vocabulary-info-terminology": "Ordlistans uppgifter",
+    "vocabulary-info-name": "Namn",
+    "vocabulary-info-description": "Beskrivning",
+    "vocabulary-info-information-domain": "Informationsområde",
+    "vocabulary-info-languages": "Språk",
+    "vocabulary-info-vocabulary-type": "Type av ordlista",
+    "vocabulary-info-organization": "Organisation",
+    "vocabulary-info-created-at": "Skapad",
+    "vocabulary-info-modified-at": "Redigerad",
+    "vocabulary-info-terminological-dictionary": "Terminologisk ordlista"
   }

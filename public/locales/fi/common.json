@@ -45,7 +45,17 @@
   "terminology-search-result": "hakutulos sanastoista",
   "terminology-search-results": "hakutulosta sanastoista",
   "close": "Sulje",
-  "vocabulary-fi": "suomi",
-  "vocabulary-en": "englanti",
-  "vocabulary-sv": "ruotsi"
+  "vocabulary-info-fi": "suomi",
+  "vocabulary-info-en": "englanti",
+  "vocabulary-info-sv": "ruotsi",
+  "vocabulary-info-terminology": "Sanaston tiedot",
+  "vocabulary-info-name": "Nimi",
+  "vocabulary-info-description": "Kuvaus",
+  "vocabulary-info-information-domain": "Kuuluu tietoalueisiin",
+  "vocabulary-info-languages": "Sanaston kielet",
+  "vocabulary-info-vocabulary-type": "Sanastotyyppi",
+  "vocabulary-info-organization": "Sisällöstä vastaa",
+  "vocabulary-info-created-at": "Luotu",
+  "vocabulary-info-modified-at": "Muokattu viimeksi",
+  "vocabulary-info-terminological-dictionary": "Terminologinen sanasto"
 }
