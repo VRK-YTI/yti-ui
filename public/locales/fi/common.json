@@ -44,5 +44,8 @@
   "terminology-search-info": "Hakutulokset näytetään palveluittain ja voit täsmentää hakutuloksia rajaamalla listaa. Huomaa, että listan rajaukset eroavat palveluittain.",
   "terminology-search-result": "hakutulos sanastoista",
   "terminology-search-results": "hakutulosta sanastoista",
-  "close": "Sulje"
+  "close": "Sulje",
+  "vocabulary-fi": "suomi",
+  "vocabulary-en": "englanti",
+  "vocabulary-sv": "ruotsi"
 }

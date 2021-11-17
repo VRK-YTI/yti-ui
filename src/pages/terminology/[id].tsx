@@ -31,12 +31,12 @@ export default function TerminologyPage(props: {
       <Heading variant="h1">
         { t('terminology-title') }
       </Heading>
-      <TerminologyInfoContainer>
+      {/* <TerminologyInfoContainer>
         <label>
           { t('terminology-id') }
           <div id="terminologyState">{ id }</div>
         </label>
-      </TerminologyInfoContainer>
+      </TerminologyInfoContainer> */}
 
       <div>
         <Link passHref href={ '/search/' }>
@@ -45,6 +45,7 @@ export default function TerminologyPage(props: {
           </DsLink>
         </Link>
       </div>
+
       <Vocabulary id={id}/>
     </Layout>
   );

@@ -43,5 +43,8 @@
   "terminology-search-info": "(en) Hakutulokset näytetään palveluittain ja voit täsmentää hakutuloksia rajaamalla listaa. Huomaa, että listan rajaukset eroavat palveluittain.",
   "terminology-search-result": "result from Terminologies",
   "terminology-search-results": "results from Terminologies",
-  "close": "Close"
+  "close": "Close",
+  "vocabulary-fi": "Finnish",
+  "vocabulary-en": "English",
+  "vocabulary-sv": "Swedish"
 }

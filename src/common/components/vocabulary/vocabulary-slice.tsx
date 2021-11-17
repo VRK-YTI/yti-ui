@@ -30,10 +30,19 @@ export const vocabularyApi = createApi({
           ]
         },
       }),
+    }),
+    getVocabulary: builder.query<any, string>({
+      query: (value) => ({
+        url: `/vocabulary?graphId=${value}`,
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+        },
+      })
     })
   }),
 });
 
-export const { useGetConceptResultQuery } = vocabularyApi;
+export const { useGetConceptResultQuery, useGetVocabularyQuery } = vocabularyApi;
 
 export default vocabularySlice.reducer;
