@@ -17,7 +17,6 @@ import User from '../../interfaces/user-interface';
 import Footer from '../footer/footer';
 import Header from '../header/header';
 import Navigation from '../navigation/navigation';
-import { useMediaQuery } from '@material-ui/core';
 import { LayoutProps } from './layout-props';
 import BreadcrumbWrapper from '../breadcrumb/breadcrumb';
 import ErrorHeader from '../header/error-header';
@@ -25,19 +24,20 @@ import ErrorHeader from '../header/error-header';
 export default function Layout({
   children,
   user,
-  error
+  error,
+  isSmall = false,
 }: {
   children: any;
   user?: User;
   error?: boolean;
+  isSmall?: boolean;
 }) {
   const { t } = useTranslation('common');
 
   const siteTitle = t('terminology');
-  const isSmall = useMediaQuery('(max-width:945px)');
 
   const layoutProps: LayoutProps = {
-    isSmall: isSmall,
+    isSmall,
     user
   };
 
