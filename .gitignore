@@ -20,6 +20,9 @@ package-lock.json
 .DS_Store
 *.pem
 
+# unit-test results
+junit.xml
+
 # debug
 npm-debug.log*
 yarn-debug.log*

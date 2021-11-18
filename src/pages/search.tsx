@@ -2,13 +2,13 @@ import Head from 'next/head';
 import React from 'react';
 import { SSRConfig, useTranslation } from 'next-i18next';
 import { Heading } from 'suomifi-ui-components';
-import Layout from '../common/components/layout/layout';
-import TerminologySearch from '../common/components/terminology-search/terminology-search';
+import Layout from '../layouts/layout';
+import TerminologySearch from '../modules/terminology-search';
 import { NextIronRequest } from '../common/utils/session';
 import { NextApiResponse } from 'next';
 import { createCommonGetServerSideProps } from '../common/utils/create-getserversideprops';
 import User from '../common/interfaces/user-interface';
-import useUser from '../common/hooks/useUser';
+import useUser from '../common/utils/hooks/useUser';
 import { AppStore } from '../store';
 
 export default function SearchPage(props: {

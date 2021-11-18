@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { ExternalLink, Paragraph, Text } from 'suomifi-ui-components';
 import Image from 'next/image';
-import { LayoutProps } from '../../../layouts/layout-props';
+import { LayoutProps } from '../../common/components/layout/layout-props';
 import { FooterContentWrapper, FooterLinkWrapper } from './footer.style';
 
 export default function Footer({ props }: { props: LayoutProps }) {

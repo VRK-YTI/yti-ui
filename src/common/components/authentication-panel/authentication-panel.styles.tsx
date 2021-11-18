@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { LayoutProps } from '../layout/layout-props';
+import { LayoutProps } from '../../../layouts/layout-props';
 
 export const ButtonsDiv = styled.div<LayoutProps>`
   display: flex;

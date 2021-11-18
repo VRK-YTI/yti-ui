@@ -1,8 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { HYDRATE } from 'next-redux-wrapper';
-import type { AppState, AppThunk } from '../../../../store';
-import { TerminologySearchResult } from '../../../interfaces/terminology.interface';
+import type { AppState, AppThunk } from '../../../store';
+import { TerminologySearchResult } from '../../interfaces/terminology.interface';
 
 export interface SearchState {
   filter: string;
@@ -31,14 +31,6 @@ export const terminologySearchSlice = createSlice({
         ...action.payload.terminologySearch,
       };
     },
-
-    // TODO: This can be deleted, currently as an example
-    'setFilter': (state, action) => {
-      return {
-        ...state,
-        ...action.payload
-      };
-    }
   }
 });
 
@@ -63,23 +55,10 @@ export const terminologySearchApi = createApi({
         },
       }),
     }),
-    // this is not in use but can be used as a boilerplate for later post requests
-    getResult: builder.query<any, string>({
-      query: (value) => ({
-        url: '/request',
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-        },
-        body: {
-          organizationId: value,
-        },
-      })
-    })
   }),
 });
 
-export const { useGetSearchResultQuery, useGetResultQuery } = terminologySearchApi;
+export const { useGetSearchResultQuery } = terminologySearchApi;
 
 export const setFilter = (filter: string): AppThunk => dispatch => {
   dispatch(

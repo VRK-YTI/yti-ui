@@ -5,7 +5,7 @@ import {
 } from './authentication-panel.styles';
 import { Button, Link, Text } from 'suomifi-ui-components';
 import { useTranslation } from 'react-i18next';
-import { LayoutProps } from '../layout/layout-props';
+import { LayoutProps } from '../../../layouts/layout-props';
 import LoginModalView from '../login-modal/login-modal';
 
 export default function AuthenticationPanel({ props }: { props: LayoutProps }) {
