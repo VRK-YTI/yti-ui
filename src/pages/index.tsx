@@ -1,9 +1,9 @@
 import Head from 'next/head';
 import Link from 'next/link';
 import React from 'react';
-import Layout from '../common/components/layout/layout';
+import Layout from '../layouts/layout';
 import { SSRConfig, useTranslation } from 'next-i18next';
-import useUser from '../common/hooks/useUser';
+import useUser from '../common/utils/hooks/useUser';
 import { createCommonGetServerSideProps } from '../common/utils/create-getserversideprops';
 import User from '../common/interfaces/user-interface';
 

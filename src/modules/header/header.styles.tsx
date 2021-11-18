@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { LayoutProps } from '../layout/layout-props';
-import { SearchInput, Text } from 'suomifi-ui-components';
+import { LayoutProps } from '../../layouts/layout-props';
+import { Text } from 'suomifi-ui-components';
 
 export const HeaderWrapper = styled.div`
   display: flex;
