@@ -28,23 +28,6 @@ export default function TerminologyPage(props: {
       <Head>
         <title>{ t('terminology-title') }</title>
       </Head>
-      <Heading variant="h1">
-        { t('terminology-title') }
-      </Heading>
-      {/* <TerminologyInfoContainer>
-        <label>
-          { t('terminology-id') }
-          <div id="terminologyState">{ id }</div>
-        </label>
-      </TerminologyInfoContainer> */}
-
-      <div>
-        <Link passHref href={ '/search/' }>
-          <DsLink href="">
-            Takaisin hakuun
-          </DsLink>
-        </Link>
-      </div>
 
       <Vocabulary id={id}/>
     </Layout>
