@@ -335,6 +335,9 @@ msgstr ""
 msgid "Remove email subscription"
 msgstr ""
 
+msgid "Export terminology Excel"
+msgstr "Export terminology Excel"
+
 msgid "Information domain"
 msgstr ""
 
