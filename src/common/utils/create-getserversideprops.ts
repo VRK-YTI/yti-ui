@@ -16,7 +16,9 @@ export interface LocalHandlerParams {
 
 export type localHandler<T> = (context: LocalHandlerParams) => Promise<T>;
 
-export type CommonServerSideProps = UserProps & SSRConfig;
+export type CommonServerSideProps = UserProps & SSRConfig & {
+  isSSRMobile: boolean;
+};
 
 export type CreateCommonGetServerSidePropsResult<T> = (
   context: GetServerSidePropsContext<ParsedUrlQuery>
