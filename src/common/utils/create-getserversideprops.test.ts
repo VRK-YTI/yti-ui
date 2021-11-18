@@ -30,16 +30,16 @@ describe('createCommonGetServersideProps', () => {
     expect(results.props).toBeDefined();
 
     // serverSideTranslations() should have added this
-    expect(results.props?._nextI18Next).toBeDefined();
-    expect(results.props?._nextI18Next).toBeTruthy();
+    expect(results.props._nextI18Next).toBeDefined();
+    expect(results.props._nextI18Next).toBeTruthy();
 
     // withSession combined with common code should add user info from session
-    expect(results.props?.user).toBeDefined();
-    expect(results.props?.user.anonymous).toBeTruthy();
+    expect(results.props.user).toBeDefined();
+    expect(results.props.user.anonymous).toBeTruthy();
 
     // locally provided function should be able to add props
-    expect(results.props?.local_test_prop).toBeDefined();
-    expect(results.props?.local_test_prop).toBe('local_test_value');
+    expect(results.props.local_test_prop).toBeDefined();
+    expect(results.props.local_test_prop).toBe('local_test_value');
   });
 
   test('should wrap authenticated user', async () => {
