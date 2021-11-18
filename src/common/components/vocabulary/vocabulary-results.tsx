@@ -1,32 +1,52 @@
+import { useTranslation } from 'react-i18next';
+import { Text } from 'suomifi-ui-components';
+import {
+  DefinitionDiv,
+  ResultContainer,
+  ResultHeading,
+  ResultWrapper,
+  TypeStatusWrapper
+} from './vocabulary-results.styles';
 
-function VocabularyResult({concept}: any) {
+export function VocabularyResult({ concept, t }: any) {
 
   return (
     <>
-      <div>{concept.label.fi}</div>
-      <div>käsite {concept.terminology.status}</div>
-      <div>{concept.definition.fi}</div>
+      <ResultHeading variant='h3'>{concept.label.fi}</ResultHeading>
+      <TypeStatusWrapper>
+        <span>KÄSITE</span>
+        <span>&middot;</span>
+        <span>{t(`${concept.terminology.status}`).toUpperCase()}</span>
+      </TypeStatusWrapper>
+      <DefinitionDiv>{concept.definition.fi}</DefinitionDiv>
     </>
   );
 }
 
-
 export default function VocabularyResults({ concepts }: any) {
+  const { t } = useTranslation('common');
 
   return (
-    <>
-      {
-        concepts ?
-          concepts.map((concept: any) => {
-            return (
-              <div key={concept.id} style={{marginTop: '50px'}}>
-                <VocabularyResult concept={concept} />
-              </div>
-            );
-          })
-          :
-          <></>
-      }
-    </>
+    <ResultContainer>
+      <Text variant='bold'>
+        Käsitteitä {concepts.length} kpl seuraavilla rajauksilla
+      </Text>
+      <ResultWrapper>
+        <ul>
+          {
+            concepts ?
+              concepts.map((concept: any) => {
+                return (
+                  <li key={concept.id}>
+                    <VocabularyResult concept={concept} t={t} />
+                  </li>
+                );
+              })
+              :
+              <></>
+          }
+        </ul>
+      </ResultWrapper>
+    </ResultContainer>
   );
 }

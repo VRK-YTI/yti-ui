@@ -2,6 +2,8 @@ import { useGetConceptResultQuery, useGetVocabularyQuery } from './vocabulary-sl
 import VocabularyResults from './vocabulary-results';
 import VocabularyInfo from './vocabulary-info';
 import VocabularyTitle from './vocabulary-title';
+import VocabularyFilter from './vocabulary-filter';
+import { ResultFilterWrapper } from './vocabulary.styles';
 
 export default function Vocabulary({ id }: any) {
 
@@ -11,15 +13,14 @@ export default function Vocabulary({ id }: any) {
 
   return (
     <>
-      {/* {console.log(data?.concepts)} */}
-      {console.log(info)}
-
-      {info && <VocabularyTitle data={info}/>}
+      {info && <VocabularyTitle data={info} />}
 
       {info && <VocabularyInfo data={info} />}
 
-      <VocabularyResults concepts={concepts?.concepts} />
-
+      <ResultFilterWrapper>
+        {concepts && <VocabularyResults concepts={concepts?.concepts} />}
+        <VocabularyFilter />
+      </ResultFilterWrapper>
     </>
   );
 };
