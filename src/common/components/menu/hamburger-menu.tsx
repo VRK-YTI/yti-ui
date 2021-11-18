@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon, Link, Text } from 'suomifi-ui-components';
 import AuthenticationPanel from '../authentication-panel/authentication-panel';
-import { LayoutProps } from '../layout/layout-props';
+import { LayoutProps } from '../../../layouts/layout-props';
 import { ButtonWrapper, MenuItemWrapper, MenuWrapper } from './hamburger-menu-styles';
 
 export default function HamburgerMenu({ props }: { props: LayoutProps }) {

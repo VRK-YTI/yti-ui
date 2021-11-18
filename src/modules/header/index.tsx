@@ -4,13 +4,13 @@ import { useRouter } from 'next/router';
 import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
 import { Icon, LanguageMenu, LanguageMenuItem, Link, SearchInput } from 'suomifi-ui-components';
-import AuthenticationPanel from '../authentication-panel/authentication-panel';
-import { LayoutProps } from '../layout/layout-props';
-import HamburgerMenu from '../menu/hamburger-menu';
+import AuthenticationPanel from '../../common/components/authentication-panel/authentication-panel';
+import { LayoutProps } from '../../layouts/layout-props';
+import HamburgerMenu from '../../common/components/menu/hamburger-menu';
 import { HeaderWrapper, LanguageMenuWrapper, SearchWrapper, SiteLogo, SmallSearchText, SmallSearchWrapper } from './header.styles';
-import { useStoreDispatch } from '../../../store';
+import { useStoreDispatch } from '../../store';
 import { useSelector } from 'react-redux';
-import { selectFilter, setFilter } from '../terminology-search/states/terminology-search-slice';
+import { selectFilter, setFilter } from '../../common/components/terminology-search/terminology-search-slice';
 
 export default function Header({ props }: { props: LayoutProps }) {
   const { t } = useTranslation('common');

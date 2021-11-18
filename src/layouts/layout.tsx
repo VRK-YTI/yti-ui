@@ -1,9 +1,8 @@
 import Head from 'next/head';
 import React from 'react';
-
 import { Block } from 'suomifi-ui-components';
 import { ThemeProvider } from 'styled-components';
-import { lightTheme } from '../theme';
+import { lightTheme } from './theme';
 import {
   ContentContainer,
   FooterContainer,
@@ -13,14 +12,14 @@ import {
   MarginContainer,
 } from './layout.styles';
 import { useTranslation } from 'next-i18next';
-import User from '../../interfaces/user-interface';
-import Footer from '../footer/footer';
-import Header from '../header/header';
-import Navigation from '../navigation/navigation';
+import User from '../common/interfaces/user-interface';
+import Footer from '../common/components/footer/footer';
+import Header from '../modules/header';
+import Navigation from '../common/components/navigation/navigation';
 import { useMediaQuery } from '@material-ui/core';
 import { LayoutProps } from './layout-props';
-import BreadcrumbWrapper from '../breadcrumb/breadcrumb';
-import ErrorHeader from '../header/error-header';
+import BreadcrumbWrapper from '../common/components/breadcrumb/breadcrumb';
+import ErrorHeader from '../modules/header/error-header';
 
 export default function Layout({
   children,

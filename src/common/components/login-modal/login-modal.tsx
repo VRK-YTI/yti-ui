@@ -1,15 +1,10 @@
-
 import { useTranslation } from 'next-i18next';
 import { Button, Modal, ModalContent, ModalFooter, ModalTitle, Paragraph, Text } from 'suomifi-ui-components';
-import { LayoutProps } from '../layout/layout-props';
+import { LayoutProps } from '../../../layouts/layout-props';
 import { ModalTitleWrapper } from './login-modal.styles';
 
 export default function LoginModalView({ props, setVisible }: { props: LayoutProps, setVisible: Function }) {
   const { t } = useTranslation('common');
-
-  const handleClose = () => {
-    setVisible(false);
-  };
 
   return (
     <>
@@ -17,12 +12,12 @@ export default function LoginModalView({ props, setVisible }: { props: LayoutPro
         appElementId="__next"
         visible={true}
         variant={props.isSmall ? 'smallScreen' : 'default'}
-        onEscKeyDown={handleClose}
+        onEscKeyDown={() => setVisible(false)}
       >
         <ModalContent>
           <ModalTitleWrapper>
             <ModalTitle>{t('site-login-title')}</ModalTitle>
-            <Button variant="secondary" icon="close" onClick={handleClose} />
+            <Button variant="secondary" icon="close" onClick={() => setVisible(false)} />
           </ModalTitleWrapper>
           <Paragraph>
             <Text>{t('site-login-info-1')}</Text>

@@ -1,12 +1,12 @@
 import React from 'react';
-import { Grid } from '@material-ui/core';
-import { TerminologySearchResults } from './terminology-search-results';
 import { useSelector } from 'react-redux';
-import { selectFilter, useGetSearchResultQuery } from './states/terminology-search-slice';
-import TerminologySearchFilter from './terminology-search-filter';
-import { Heading, Text } from 'suomifi-ui-components';
-import { SearchCountWrapper } from './terminology-search.styles';
+import { Grid } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
+import { Heading, Text } from 'suomifi-ui-components';
+import { TerminologySearchResults } from '../../common/components/terminology-search/terminology-search-results';
+import { selectFilter, useGetSearchResultQuery } from '../../common/components/terminology-search/terminology-search-slice';
+import TerminologySearchFilter from '../../common/components/terminology-search/terminology-search-filter';
+import { SearchCountWrapper } from '../../common/components/terminology-search/terminology-search.styles';
 
 export default function TerminologySearch() {
   const { t } = useTranslation();
@@ -47,4 +47,4 @@ export default function TerminologySearch() {
       </div>
     </>
   );
-}
+};

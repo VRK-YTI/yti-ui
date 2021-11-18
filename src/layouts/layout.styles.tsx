@@ -1,7 +1,7 @@
 // shared layout helper
 
 import styled from 'styled-components';
-import { DebugProps } from '../../interfaces/debug-props';
+import { DebugProps } from '../common/interfaces/debug-props';
 import { LayoutProps } from './layout-props';
 
 export const MarginContainer = styled.div<LayoutProps>`

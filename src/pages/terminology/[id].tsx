@@ -3,14 +3,14 @@ import { useRouter } from 'next/dist/client/router';
 import React from 'react';
 import Link from 'next/link';
 import { Heading, Link as DsLink } from 'suomifi-ui-components';
-import Layout from '../../common/components/layout/layout';
+import Layout from '../../layouts/layout';
 import Head from 'next/head';
 import { TerminologyInfoContainer } from '../../common/components/terminology/terminology-info.styles';
 import { createCommonGetServerSideProps } from '../../common/utils/create-getserversideprops';
 import { NextIronRequest } from '../../common/utils/session';
 import { NextApiResponse } from 'next';
 import User from '../../common/interfaces/user-interface';
-import useUser from '../../common/hooks/useUser';
+import useUser from '../../common/utils/hooks/useUser';
 import Vocabulary from '../../common/components/vocabulary/vocabulary';
 
 // TODO: perhaps move the component itself to components/
