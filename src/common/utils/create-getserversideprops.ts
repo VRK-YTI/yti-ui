@@ -21,12 +21,18 @@ export const createCommonGetServerSideProps =
           console.log(store.getState());
           const results = await handler({ req, res, locale, store });
           let sessionUser = req.session.get<User>('user') || anonymousUser;
+
+          const userAgent = req.headers['user-agent'] ?? '';
+
           return {
             ...results,
             props: {
               ...results.props,
               ...(await serverSideTranslations(locale, ['common'])),
-              user: sessionUser
+              user: sessionUser,
+              isSSRMobile: Boolean(userAgent.match(
+                /Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i
+              )),
             },
           };
         }));
