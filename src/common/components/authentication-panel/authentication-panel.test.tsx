@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import AuthenticationPanel from './authentication-panel';
-import { LayoutProps } from '../layout/layout-props';
+import { LayoutProps } from '../../../layouts/layout-props';
 
 describe('Authentication panel', () => {
 
