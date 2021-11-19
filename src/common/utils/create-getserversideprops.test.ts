@@ -79,4 +79,50 @@ describe('createCommonGetServersideProps', () => {
     expect(results.props.user.anonymous).toBeFalsy();
     expect(results.props.user.email).toBe('unittest@invalid');
   });
+
+  test('should set isSSRMobile = true when used on a mobile device', async () => {
+    const ctx: GetServerSidePropsContext = {
+      req: httpMocks.createRequest({
+        headers: {
+          'user-agent': 'Mozilla/5.0 (Linux; Android 6.0.1; Moto G (4)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Mobile Safari/537.36'
+        }
+      }),
+      res: httpMocks.createResponse(),
+      query: {},
+      resolvedUrl: '',
+      locale: 'en',
+    };
+
+    const getServerSideProps = createCommonGetServerSideProps();
+
+    const results = await getServerSideProps(ctx);
+
+    expect(results.props).toBeDefined();
+
+    expect(results.props?.isSSRMobile).toBeDefined();
+    expect(results.props?.isSSRMobile).toBeTruthy();
+  });
+
+  test('should set isSSRMobile = false when used on a desktop device', async () => {
+    const ctx: GetServerSidePropsContext = {
+      req: httpMocks.createRequest({
+        headers: {
+          'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36'
+        }
+      }),
+      res: httpMocks.createResponse(),
+      query: {},
+      resolvedUrl: '',
+      locale: 'en',
+    };
+
+    const getServerSideProps = createCommonGetServerSideProps();
+
+    const results = await getServerSideProps(ctx);
+
+    expect(results.props).toBeDefined();
+
+    expect(results.props?.isSSRMobile).toBeDefined();
+    expect(results.props?.isSSRMobile).toBeFalsy();
+  });
 });

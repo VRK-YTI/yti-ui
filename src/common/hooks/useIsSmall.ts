@@ -11,5 +11,5 @@ export default function useIsSmall(
   mediaQuery: string = '(max-width:945px)'
 ): boolean {
   const isSmall = useMediaQuery(mediaQuery);
-  return typeof window !== 'undefined' ? isSmall : isSSRMobile;
+  return !! global.matchMedia ? isSmall : isSSRMobile;
 }
