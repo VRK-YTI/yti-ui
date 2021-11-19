@@ -21,6 +21,7 @@ export default function Vocabulary({ id }: any) {
         {concepts && <VocabularyResults concepts={concepts?.concepts} />}
         <VocabularyFilter />
       </ResultFilterWrapper>
+
     </>
   );
 };

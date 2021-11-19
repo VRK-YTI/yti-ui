@@ -33,7 +33,7 @@ export default function VocabularyTitle({ data }: any) {
         {vocabulary}
       </Heading>
 
-      <StatusTag>
+      <StatusTag isValid={data.properties.status[0].value === 'VALID' ? true : false}>
         {status}
       </StatusTag>
 

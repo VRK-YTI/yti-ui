@@ -1,10 +1,39 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import type { AppState, AppThunk } from '../../../store';
+
+export interface VocabularyState {
+  filter: {
+    status: { [status: string]: boolean };
+    keyword: string;
+    showBy: string;
+  };
+}
+
+const vocabularyInitialState: VocabularyState = {
+  filter: {
+    status: {
+      'VALID': false,
+      'DRAFT': false,
+      'RETIRED': false,
+      'SUPERSEDED': false
+    },
+    keyword: '',
+    showBy: 'concept'
+  }
+};
 
 export const vocabularySlice = createSlice({
   name: 'vocabularySearch',
-  initialState: [],
-  reducers: {},
+  initialState: vocabularyInitialState,
+  reducers: {
+    setVocabularyFilter(state, action) {
+      return {
+        ...state,
+        ...action.payload
+      };
+    },
+  },
 });
 
 export const vocabularyApi = createApi({
@@ -44,5 +73,23 @@ export const vocabularyApi = createApi({
 });
 
 export const { useGetConceptResultQuery, useGetVocabularyQuery } = vocabularyApi;
+
+export const setVocabularyFilter = (filter: VocabularyState): AppThunk => dispatch => {
+  dispatch(
+    vocabularySlice.actions.setVocabularyFilter({
+      filter: filter
+    }),
+  );
+};
+
+export const resetVocabularyFilter = (showBy: string): AppThunk => dispatch => {
+  dispatch(
+    vocabularySlice.actions.setVocabularyFilter(
+      vocabularyInitialState
+    )
+  );
+};
+
+export const selectVocabularyFilter = () => (state: AppState): any => state.vocabularySearch.filter;
 
 export default vocabularySlice.reducer;

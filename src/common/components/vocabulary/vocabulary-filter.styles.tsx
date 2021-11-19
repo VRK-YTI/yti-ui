@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { Checkbox, Icon } from 'suomifi-ui-components';
 
 export const VocabularyFilterContainer = styled.div`
-  width: 350px;
+  width: 280px;
   border: solid 1px ${(props) => props.theme.suomifi.colors.depthLight1};
   background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
   padding: 20px;

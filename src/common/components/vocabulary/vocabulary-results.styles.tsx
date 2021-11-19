@@ -47,3 +47,16 @@ export const DefinitionDiv = styled.div`
   margin-top: 6px;
   margin-bottom: 6px;
 `;
+
+export const FilterTag = styled.div`
+  margin-top: 4px;
+  margin-right: 2px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 25px;
+  color: ${(props) => props.theme.suomifi.colors.whiteBase};
+  width: max-content;
+  font-size: 14px;
+  font-weight: bold;
+  background-color: ${(props) => props.theme.suomifi.colors.highlightBase};
+`;

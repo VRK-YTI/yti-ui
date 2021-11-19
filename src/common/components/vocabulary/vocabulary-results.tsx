@@ -1,12 +1,15 @@
 import { useTranslation } from 'react-i18next';
-import { Text } from 'suomifi-ui-components';
+import { useSelector } from 'react-redux';
+import { Icon, Text } from 'suomifi-ui-components';
 import {
   DefinitionDiv,
+  FilterTag,
   ResultContainer,
   ResultHeading,
   ResultWrapper,
   TypeStatusWrapper
 } from './vocabulary-results.styles';
+import { selectVocabularyFilter } from './vocabulary-slice';
 
 export function VocabularyResult({ concept, t }: any) {
 
@@ -23,11 +26,40 @@ export function VocabularyResult({ concept, t }: any) {
   );
 }
 
+export function VocabularyFilters() {
+  const filter = useSelector(selectVocabularyFilter());
+  let activeStatuses: string[] = [];
+
+  Object.keys(filter.status).map(key => {
+    if (filter.status[key] === true) {
+      activeStatuses.push(key);
+    }
+  });
+
+  return (
+    <>
+      {activeStatuses.map(activeStatus => {
+        return (
+          <FilterTag key={activeStatus}>
+            {activeStatus}
+            <Icon icon='close' />
+          </FilterTag>
+        );
+      })}
+      <FilterTag>
+        {filter.keyword}
+        <Icon icon='close' />
+      </FilterTag>
+    </>
+  );
+}
+
 export default function VocabularyResults({ concepts }: any) {
   const { t } = useTranslation('common');
 
   return (
     <ResultContainer>
+      <VocabularyFilters />
       <Text variant='bold'>
         Käsitteitä {concepts.length} kpl seuraavilla rajauksilla
       </Text>
