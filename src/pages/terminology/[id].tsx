@@ -23,7 +23,8 @@ export default function TerminologyPage(props: {
   const id = query?.id ?? null;
 
   return (
-    <Layout user={user}>
+    // todo: use better feedbackSubject once more data is available
+    <Layout user={user} feedbackSubject={`${t('terminology-id')} ${id}`}>
       <Head>
         <title>{ t('terminology-title') }</title>
       </Head>

@@ -25,11 +25,13 @@ export default function Layout({
   user,
   error,
   isSmall = false,
+  feedbackSubject,
 }: {
   children: any;
   user?: User;
   error?: boolean;
   isSmall?: boolean;
+  feedbackSubject?: string;
 }) {
   const { t } = useTranslation('common');
 
@@ -87,7 +89,7 @@ export default function Layout({
           {!error &&
             <FooterContainer>
               <MarginContainer isSmall={isSmall}>
-                <Footer props={layoutProps} />
+                <Footer props={layoutProps} feedbackSubject={feedbackSubject} />
               </MarginContainer>
             </FooterContainer>
           }
