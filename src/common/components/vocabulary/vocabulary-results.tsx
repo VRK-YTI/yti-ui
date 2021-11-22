@@ -1,18 +1,20 @@
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
-import { Icon, Text } from 'suomifi-ui-components';
+import { Text } from 'suomifi-ui-components';
+import { useStoreDispatch } from '../../../store';
 import {
   DefinitionDiv,
   FilterTag,
+  FilterTagClose,
+  FilterTagWrapper,
   ResultContainer,
   ResultHeading,
   ResultWrapper,
   TypeStatusWrapper
 } from './vocabulary-results.styles';
-import { selectVocabularyFilter } from './vocabulary-slice';
+import { selectVocabularyFilter, setVocabularyFilter } from './vocabulary-slice';
 
 export function VocabularyResult({ concept, t }: any) {
-
   return (
     <>
       <ResultHeading variant='h3'>{concept.label.fi}</ResultHeading>
@@ -26,8 +28,9 @@ export function VocabularyResult({ concept, t }: any) {
   );
 }
 
-export function VocabularyFilters() {
+export function VocabularyFilters({ t }: any) {
   const filter = useSelector(selectVocabularyFilter());
+  const dispatch = useStoreDispatch();
   let activeStatuses: string[] = [];
 
   Object.keys(filter.status).map(key => {
@@ -36,21 +39,43 @@ export function VocabularyFilters() {
     }
   });
 
+  const handleTagClose = (s: any) => {
+    let temp = filter;
+    temp = { ...temp, status: { ...temp.status, [s]: false } };
+    dispatch(setVocabularyFilter(temp));
+  };
+
+  const handleKeywordClose = () => {
+    dispatch(setVocabularyFilter({ ...filter, keyword: '', tKeyword: '' }));
+  };
+
   return (
-    <>
-      {activeStatuses.map(activeStatus => {
-        return (
-          <FilterTag key={activeStatus}>
-            {activeStatus}
-            <Icon icon='close' />
-          </FilterTag>
-        );
-      })}
-      <FilterTag>
-        {filter.keyword}
-        <Icon icon='close' />
-      </FilterTag>
-    </>
+    <FilterTagWrapper>
+      {
+        activeStatuses.length > 0 &&
+        activeStatuses.map(activeStatus => {
+          return (
+            <FilterTag key={activeStatus}>
+              {t(`${activeStatus}`)}
+              <FilterTagClose
+                icon='close'
+                onClick={() => handleTagClose(activeStatus)}
+              />
+            </FilterTag>
+          );
+        })
+      }
+      {
+        filter.keyword != '' &&
+        <FilterTag>
+          {filter.keyword}
+          <FilterTagClose
+            icon='close'
+            onClick={() => handleKeywordClose()}
+          />
+        </FilterTag>
+      }
+    </FilterTagWrapper>
   );
 }
 
@@ -59,10 +84,10 @@ export default function VocabularyResults({ concepts }: any) {
 
   return (
     <ResultContainer>
-      <VocabularyFilters />
       <Text variant='bold'>
         Käsitteitä {concepts.length} kpl seuraavilla rajauksilla
       </Text>
+      <VocabularyFilters t={t} />
       <ResultWrapper>
         <ul>
           {

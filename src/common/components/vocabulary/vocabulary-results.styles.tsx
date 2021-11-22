@@ -1,8 +1,9 @@
 import styled from 'styled-components';
-import { Heading } from 'suomifi-ui-components';
+import { Heading, Icon } from 'suomifi-ui-components';
 
 export const ResultContainer = styled.div`
   margin-top: 20px;
+  max-width: 100%;
   width: 100%;
 `;
 
@@ -48,15 +49,35 @@ export const DefinitionDiv = styled.div`
   margin-bottom: 6px;
 `;
 
+export const FilterTagWrapper = styled.div`
+  max-width: 100%;
+  margin-top: 10px;
+  margin-bottom: 18px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 8px;
+`;
+
 export const FilterTag = styled.div`
   margin-top: 4px;
-  margin-right: 2px;
   padding-left: 10px;
   padding-right: 10px;
+  padding-bottom: 2px;
   border-radius: 25px;
   color: ${(props) => props.theme.suomifi.colors.whiteBase};
   width: max-content;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: bold;
   background-color: ${(props) => props.theme.suomifi.colors.highlightBase};
+  white-space: nowrap;
+`;
+
+export const FilterTagClose = styled(Icon)`
+  margin-left: 8px;
+  vertical-align: sub;
+
+  :hover {
+    cursor: pointer;
+  }
 `;

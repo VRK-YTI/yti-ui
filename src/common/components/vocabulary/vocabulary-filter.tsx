@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useStoreDispatch } from '../../../store';
 import {
   resetVocabularyFilter,
@@ -24,7 +23,6 @@ import { useSelector } from 'react-redux';
 export default function VocabularyFilter() {
   const dispatch = useStoreDispatch();
   const filter = useSelector(selectVocabularyFilter());
-  const [keyword, setKeyword] = useState<string>('');
 
   const handleCheckbox = (s: string) => {
     let temp = filter;
@@ -39,14 +37,22 @@ export default function VocabularyFilter() {
   };
 
   const handleShowBy = (s: string) => {
-    dispatch(setVocabularyFilter({...filter, showBy: s}));
+    let temp = filter;
+
+    if (s === 'concept-group') {
+      Object.keys(temp.status).forEach(k => {
+        temp = {...temp, status: {...temp.status, [k]: false}};
+      });
+    }
+
+    dispatch(setVocabularyFilter({...temp, showBy: s}));
   };
 
   const handleKeywordChange = (s: string) => {
-    setKeyword(s);
-
     if (s === '') {
-      handleKeyword(s);
+      dispatch(setVocabularyFilter({...filter, keyword: s, tKeyword: s}));
+    } else {
+      dispatch(setVocabularyFilter({...filter, tKeyword: s}));
     }
   };
 
@@ -55,7 +61,6 @@ export default function VocabularyFilter() {
   };
 
   const clearFilters = () => {
-    setKeyword('');
     dispatch(resetVocabularyFilter(filter.showBy));
   };
 
@@ -130,6 +135,7 @@ export default function VocabularyFilter() {
             </VocabularyFilterCheckbox>
           </>
         }
+
         <VocabularyFilterHr />
 
         <SearchInput
@@ -137,9 +143,9 @@ export default function VocabularyFilter() {
           searchButtonLabel='Hae'
           labelText='Rajaa sanalla'
           visualPlaceholder='Esim päivähoito, opiskelu...'
-          value={keyword}
+          value={filter.tKeyword}
           onChange={(value) => handleKeywordChange(value as string)}
-          onSearch={() => handleKeyword(keyword as string)}
+          onSearch={(value) => handleKeyword(value as string)}
         />
       </VocabularyFilterContainer>
     </div>
