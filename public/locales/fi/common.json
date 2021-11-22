@@ -57,5 +57,6 @@
   "vocabulary-info-organization": "Sisällöstä vastaa",
   "vocabulary-info-created-at": "Luotu",
   "vocabulary-info-modified-at": "Muokattu viimeksi",
-  "vocabulary-info-terminological-dictionary": "Terminologinen sanasto"
+  "vocabulary-info-terminological-dictionary": "Terminologinen sanasto",
+  "vocabulary-info-concept": "Käsite"
 }

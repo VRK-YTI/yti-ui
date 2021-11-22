@@ -57,5 +57,6 @@
     "vocabulary-info-organization": "Organisation",
     "vocabulary-info-created-at": "Skapad",
     "vocabulary-info-modified-at": "Redigerad",
-    "vocabulary-info-terminological-dictionary": "Terminologisk ordlista"
+    "vocabulary-info-terminological-dictionary": "Terminologisk ordlista",
+    "vocabulary-info-concept": "Begreppets"
   }

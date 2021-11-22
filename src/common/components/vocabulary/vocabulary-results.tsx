@@ -19,7 +19,7 @@ export function VocabularyResult({ concept, t }: any) {
     <>
       <ResultHeading variant='h3'>{concept.label.fi}</ResultHeading>
       <TypeStatusWrapper>
-        <span>KÄSITE</span>
+        <span>{t('vocabulary-info-concept').toUpperCase()}</span>
         <span>&middot;</span>
         <span>{t(`${concept.terminology.status}`).toUpperCase()}</span>
       </TypeStatusWrapper>

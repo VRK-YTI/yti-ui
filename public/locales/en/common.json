@@ -56,5 +56,6 @@
   "vocabulary-info-organization": "Organization",
   "vocabulary-info-created-at": "Created at",
   "vocabulary-info-modified-at": "Modified at",
-  "vocabulary-info-terminological-dictionary": "Terminological Dictionary"
+  "vocabulary-info-terminological-dictionary": "Terminological Dictionary",
+  "vocabulary-info-concept": "Concept"
 }
