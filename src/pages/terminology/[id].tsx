@@ -4,8 +4,6 @@ import React from 'react';
 import Layout from '../../layouts/layout';
 import Head from 'next/head';
 import { createCommonGetServerSideProps } from '../../common/utils/create-getserversideprops';
-import { NextIronRequest } from '../../common/utils/session';
-import { NextApiResponse } from 'next';
 import User from '../../common/interfaces/user-interface';
 import useUser from '../../common/utils/hooks/useUser';
 import Vocabulary from '../../common/components/vocabulary/vocabulary';
@@ -21,7 +19,8 @@ export default function TerminologyPage(props: {
   const id = (query?.id ?? '') as string;
 
   return (
-    <Layout user={user}>
+    // todo: use better feedbackSubject once more data is available
+    <Layout user={user} feedbackSubject={`${t('terminology-id')} ${id}`}>
       <Head>
         <title>{ t('terminology-title') }</title>
       </Head>
@@ -31,7 +30,4 @@ export default function TerminologyPage(props: {
   );
 }
 
-export const getServerSideProps = createCommonGetServerSideProps(
-  async ({ req, res, locale }: { req: NextIronRequest, res: NextApiResponse, locale: string }) => {
-    return { props: { } };
-  });
+export const getServerSideProps = createCommonGetServerSideProps();
