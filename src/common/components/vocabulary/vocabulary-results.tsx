@@ -87,8 +87,6 @@ export function VocabularyFilters({ t }: any) {
 export default function VocabularyResults({ concepts }: VocabularyResultsProps) {
   const { t } = useTranslation('common');
 
-  console.log(concepts);
-
   return (
     <ResultContainer>
       <Text variant='bold'>
