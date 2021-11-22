@@ -57,5 +57,15 @@
   "vocabulary-info-created-at": "Created at",
   "vocabulary-info-modified-at": "Modified at",
   "vocabulary-info-terminological-dictionary": "Terminological Dictionary",
-  "vocabulary-info-concept": "Concept"
+  "vocabulary-info-concept": "Concept",
+  "vocabulary-filter-filter-list": "(en) RAJAA LISTAA",
+  "vocabulary-filter-remove-all": "(en) Poista kaikki rajaukset",
+  "vocabulary-filter-show-only": "(en) Näytä vain",
+  "vocabulary-filter-show-concept-states": "(en) Näytä käsitteiden tilat",
+  "vocabulary-filter-filter-by-keyword": "(en) Rajaa sanalla",
+  "vocabulary-filter-concepts": "Concepts",
+  "vocabulary-filter-collections": "Collections",
+  "vocabulary-filter-visual-placeholder": "(en) Esim päivähoito, opiskelu...",
+  "vocabulary-results-concepts": "(en) Käsitteitä",
+  "vocabulary-results-with-following-filters": "(en) kpl seuraavilla rajauksilla"
 }

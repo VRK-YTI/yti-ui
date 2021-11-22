@@ -1,8 +1,13 @@
 import { useTranslation } from 'react-i18next';
 import { Heading } from 'suomifi-ui-components';
 import { StatusTag, TitleWrapper } from './vocabulary-title.styles';
+import { VocabularyInfoDTO } from '../../interfaces/vocabulary.interface';
 
-export default function VocabularyTitle({ data }: any) {
+interface VocabularyTitleProps {
+  data: VocabularyInfoDTO;
+}
+
+export default function VocabularyTitle({ data }: VocabularyTitleProps) {
   const { t, i18n } = useTranslation('common');
 
   const status = t(`${data.properties.status[0].value}`).toUpperCase();

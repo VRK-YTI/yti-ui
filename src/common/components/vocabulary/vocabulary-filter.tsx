@@ -19,8 +19,10 @@ import {
   VocabularyRemoveWrapper
 } from './vocabulary-filter.styles';
 import { useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 
 export default function VocabularyFilter() {
+  const { t } = useTranslation('common');
   const dispatch = useStoreDispatch();
   const filter = useSelector(selectVocabularyFilter());
 
@@ -28,9 +30,9 @@ export default function VocabularyFilter() {
     let temp = filter;
 
     if (temp.status[s] === false || temp.status[s] === undefined) {
-      temp = {...temp, status: {...temp.status, [s]: true}};
+      temp = { ...temp, status: { ...temp.status, [s]: true } };
     } else {
-      temp = {...temp, status: {...temp.status, [s]: false}};
+      temp = { ...temp, status: { ...temp.status, [s]: false } };
     }
 
     dispatch(setVocabularyFilter(temp));
@@ -41,23 +43,23 @@ export default function VocabularyFilter() {
 
     if (s === 'concept-group') {
       Object.keys(temp.status).forEach(k => {
-        temp = {...temp, status: {...temp.status, [k]: false}};
+        temp = { ...temp, status: { ...temp.status, [k]: false } };
       });
     }
 
-    dispatch(setVocabularyFilter({...temp, showBy: s}));
+    dispatch(setVocabularyFilter({ ...temp, showBy: s }));
   };
 
   const handleKeywordChange = (s: string) => {
     if (s === '') {
-      dispatch(setVocabularyFilter({...filter, keyword: s, tKeyword: s}));
+      dispatch(setVocabularyFilter({ ...filter, keyword: s, tKeyword: s }));
     } else {
-      dispatch(setVocabularyFilter({...filter, tKeyword: s}));
+      dispatch(setVocabularyFilter({ ...filter, tKeyword: s }));
     }
   };
 
   const handleKeyword = (s: string) => {
-    dispatch(setVocabularyFilter({...filter, keyword: s}));
+    dispatch(setVocabularyFilter({ ...filter, keyword: s }));
   };
 
   const clearFilters = () => {
@@ -67,7 +69,7 @@ export default function VocabularyFilter() {
   return (
     <div>
       <VocabularyFilterHeader>
-        RAJAA LISTAA
+        {t('vocabulary-filter-filter-list')}
       </VocabularyFilterHeader>
       <VocabularyFilterContainer>
         {(Object.values(filter.status).includes(true) || filter.keyword != '') &&
@@ -80,7 +82,7 @@ export default function VocabularyFilter() {
                 variant='bold'
                 onClick={() => clearFilters()}
               >
-                Poista kaikki rajaukset
+                {t('vocabulary-filter-remove-all')}
               </Text>
             </VocabularyRemoveWrapper>
 
@@ -96,10 +98,10 @@ export default function VocabularyFilter() {
           onChange={(value) => handleShowBy(value)}
         >
           <RadioButton value='concept'>
-            Käsitteet (n kpl)
+            {t('vocabulary-filter-concepts')} (n kpl)
           </RadioButton>
           <RadioButton value='concept-group'>
-            Käsitevalikoimat (n kpl)
+            {t('vocabulary-filter-collections')} (n kpl)
           </RadioButton>
         </RadioButtonGroup>
 
@@ -107,31 +109,31 @@ export default function VocabularyFilter() {
           <>
             <VocabularyFilterHr />
 
-            <Text smallScreen variant='bold'>Näytä käsitteiden tilat</Text>
+            <Text smallScreen variant='bold'>{t('vocabulary-filter-show-concept-states')}</Text>
 
             <VocabularyFilterCheckbox
               onClick={() => handleCheckbox('VALID')}
               checked={filter.status['VALID'] as boolean}
             >
-              Voimassa oleva (n kpl)
+              {t('VALID')} (n kpl)
             </VocabularyFilterCheckbox>
             <VocabularyFilterCheckbox
               onClick={() => handleCheckbox('DRAFT')}
               checked={filter.status['DRAFT'] as boolean}
             >
-              Luonnos (n kpl)
+              {t('DRAFT')} (n kpl)
             </VocabularyFilterCheckbox>
             <VocabularyFilterCheckbox
               onClick={() => handleCheckbox('RETIRED')}
               checked={filter.status['RETIRED'] as boolean}
             >
-              Korvattu (n kpl)
+              {t('RETIRED')} (n kpl)
             </VocabularyFilterCheckbox>
             <VocabularyFilterCheckbox
               onClick={() => handleCheckbox('SUPERSEDED')}
               checked={filter.status['SUPERSEDED'] as boolean}
             >
-              Poistettu käytöstä (n kpl)
+              {t('SUPERSEDED')} (n kpl)
             </VocabularyFilterCheckbox>
           </>
         }
@@ -141,8 +143,8 @@ export default function VocabularyFilter() {
         <SearchInput
           clearButtonLabel='Tyhjennä haku'
           searchButtonLabel='Hae'
-          labelText='Rajaa sanalla'
-          visualPlaceholder='Esim päivähoito, opiskelu...'
+          labelText={t('vocabulary-filter-filter-by-keyword')}
+          visualPlaceholder={t('vocabulary-filter-visual-placeholder')}
           value={filter.tKeyword}
           onChange={(value) => handleKeywordChange(value as string)}
           onSearch={(value) => handleKeyword(value as string)}

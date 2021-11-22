@@ -58,5 +58,15 @@
     "vocabulary-info-created-at": "Skapad",
     "vocabulary-info-modified-at": "Redigerad",
     "vocabulary-info-terminological-dictionary": "Terminologisk ordlista",
-    "vocabulary-info-concept": "Begreppets"
+    "vocabulary-info-concept": "Begreppets",
+    "vocabulary-filter-filter-list": "(sv) RAJAA LISTAA",
+    "vocabulary-filter-remove-all": "(sv) Poista kaikki rajaukset",
+    "vocabulary-filter-show-only": "(sv) Näytä vain",
+    "vocabulary-filter-show-concept-states": "(sv) Näytä käsitteiden tilat",
+    "vocabulary-filter-filter-by-keyword": "(sv) Rajaa sanalla",
+    "vocabulary-filter-concepts": "(sv) Käsitteet",
+    "vocabulary-filter-collections": "(sv) Käsitevalikoimat",
+    "vocabulary-filter-visual-placeholder": "(sv) Esim päivähoito, opiskelu...",
+    "vocabulary-results-concepts": "(sv) Käsitteitä",
+    "vocabulary-results-with-following-filters": "(sv) kpl seuraavilla rajauksilla"
   }

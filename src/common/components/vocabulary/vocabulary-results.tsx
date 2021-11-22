@@ -13,6 +13,11 @@ import {
   TypeStatusWrapper
 } from './vocabulary-results.styles';
 import { selectVocabularyFilter, setVocabularyFilter } from './vocabulary-slice';
+import { VocabularyConceptsDTO } from '../../interfaces/vocabulary.interface';
+
+interface VocabularyResultsProps {
+  concepts: [VocabularyConceptsDTO];
+}
 
 export function VocabularyResult({ concept, t }: any) {
   return (
@@ -79,13 +84,15 @@ export function VocabularyFilters({ t }: any) {
   );
 }
 
-export default function VocabularyResults({ concepts }: any) {
+export default function VocabularyResults({ concepts }: VocabularyResultsProps) {
   const { t } = useTranslation('common');
+
+  console.log(concepts);
 
   return (
     <ResultContainer>
       <Text variant='bold'>
-        Käsitteitä {concepts.length} kpl seuraavilla rajauksilla
+        {t('vocabulary-results-concepts')} {concepts.length} {t('vocabulary-results-with-following-filters')}
       </Text>
       <VocabularyFilters t={t} />
       <ResultWrapper>

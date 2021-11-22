@@ -58,5 +58,15 @@
   "vocabulary-info-created-at": "Luotu",
   "vocabulary-info-modified-at": "Muokattu viimeksi",
   "vocabulary-info-terminological-dictionary": "Terminologinen sanasto",
-  "vocabulary-info-concept": "Käsite"
+  "vocabulary-info-concept": "Käsite",
+  "vocabulary-filter-filter-list": "RAJAA LISTAA",
+  "vocabulary-filter-remove-all": "Poista kaikki rajaukset",
+  "vocabulary-filter-show-only": "Näytä vain",
+  "vocabulary-filter-show-concept-states": "Näytä käsitteiden tilat",
+  "vocabulary-filter-filter-by-keyword": "Rajaa sanalla",
+  "vocabulary-filter-concepts": "Käsitteet",
+  "vocabulary-filter-collections": "Käsitevalikoimat",
+  "vocabulary-filter-visual-placeholder": "Esim päivähoito, opiskelu...",
+  "vocabulary-results-concepts": "Käsitteitä",
+  "vocabulary-results-with-following-filters": "kpl seuraavilla rajauksilla"
 }

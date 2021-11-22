@@ -8,8 +8,13 @@ import {
   NameWrapper,
   SimpleInformationWrapper
 } from './vocabulary-info.styles';
+import { VocabularyInfoDTO } from '../../interfaces/vocabulary.interface';
 
-export default function VocabularyInfo({ data }: any) {
+interface VocabularyInfoProps {
+  data: VocabularyInfoDTO;
+}
+
+export default function VocabularyInfo({ data }: VocabularyInfoProps) {
   const { t, i18n } = useTranslation('common');
   const prefLabels = data.properties.prefLabel;
   const description = data.properties.description[0];
