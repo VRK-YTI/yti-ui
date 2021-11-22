@@ -4,8 +4,14 @@ import Image from 'next/image';
 import { LayoutProps } from '../../../layouts/layout-props';
 import { FooterContentWrapper, FooterLinkWrapper } from './footer.style';
 
-export default function Footer({ props }: { props: LayoutProps }) {
+export interface FooterProps {
+  props: LayoutProps;
+  feedbackSubject?: string;
+}
+
+export default function Footer({ props, feedbackSubject }: FooterProps) {
   const { t } = useTranslation('common');
+  const subject = encodeURIComponent(feedbackSubject ?? String(t('feedback-terminologies')));
 
   return (
     <>
@@ -17,13 +23,22 @@ export default function Footer({ props }: { props: LayoutProps }) {
       </FooterContentWrapper>
 
       <FooterLinkWrapper isSmall={props.isSmall}>
-        <ExternalLink href="/" labelNewWindow={t('site-open-link-new-window')}>
+        <ExternalLink
+          href={`mailto:yhteentoimivuus@dvv.fi?subject=${subject}`}
+          labelNewWindow={t('site-open-link-new-window')}
+        >
           {t('terminology-footer-feedback')}
         </ExternalLink>
-        <ExternalLink href="/" labelNewWindow={t('site-open-link-new-window')}>
+        <ExternalLink
+          href="https://wiki.dvv.fi/display/YTIJD/Tietosuojaseloste"
+          labelNewWindow={t('site-open-link-new-window')}
+        >
           {t('terminology-footer-information-security')}
         </ExternalLink>
-        <ExternalLink href="/" labelNewWindow={t('site-open-link-new-window')}>
+        <ExternalLink
+          href="https://wiki.dvv.fi/display/YTIJD/Saavutettavuusseloste"
+          labelNewWindow={t('site-open-link-new-window')}
+        >
           {t('terminology-footer-accessibility')}
         </ExternalLink>
       </FooterLinkWrapper>
