@@ -3,9 +3,7 @@ import Link from 'next/link';
 import React from 'react';
 import Layout from '../layouts/layout';
 import { SSRConfig, useTranslation } from 'next-i18next';
-import { NextIronRequest } from '../common/utils/session';
 import useUser from '../common/utils/hooks/useUser';
-import { NextApiResponse } from 'next';
 import { createCommonGetServerSideProps } from '../common/utils/create-getserversideprops';
 import User from '../common/interfaces/user-interface';
 import useIsSmall from '../common/hooks/useIsSmall';
@@ -34,7 +32,4 @@ export default function IndexPage(props: {
   );
 }
 
-export const getServerSideProps = createCommonGetServerSideProps(
-  async ({ req, res, locale }: { req: NextIronRequest, res: NextApiResponse, locale: string }) => {
-    return { props: { } };
-  });
+export const getServerSideProps = createCommonGetServerSideProps();
