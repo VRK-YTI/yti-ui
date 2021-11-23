@@ -30,8 +30,6 @@ export function createCommonGetServerSideProps<T extends { [key: string]: any }>
   return wrapper.getServerSideProps((store) => {
     return withSession<{ props: UserProps }>(
       async ({ req, res, locale }: { req: NextIronRequest, res: NextApiResponse, locale: string }) => {
-        console.log('SSR state:');
-        console.log(store.getState());
         const results = await handler?.({ req, res, locale, store });
         let sessionUser = req.session.get<User>('user') || anonymousUser;
         const userAgent = req.headers['user-agent'] ?? '';
