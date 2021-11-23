@@ -49,13 +49,15 @@ export default function VocabularyInfo({ data }: VocabularyInfoProps) {
           </ul>
         </NameWrapper>
 
-        <DescriptionWrapper>
-          <Heading variant='h4'>{t('vocabulary-info-description')}</Heading>
-          <div>
-            <b>{description.lang.toUpperCase()}</b>
-            {description.value}
-          </div>
-        </DescriptionWrapper>
+        {description &&
+          <DescriptionWrapper>
+            <Heading variant='h4'>{t('vocabulary-info-description')}</Heading>
+            <div>
+              <b>{description.lang?.toUpperCase()}</b>
+              {description.value}
+            </div>
+          </DescriptionWrapper>
+        }
 
 
         <InformationDomainWrapper>

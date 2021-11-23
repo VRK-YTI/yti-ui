@@ -28,7 +28,7 @@ export function VocabularyResult({ concept, t }: any) {
         <span>&middot;</span>
         <span>{t(`${concept.terminology.status}`).toUpperCase()}</span>
       </TypeStatusWrapper>
-      <DefinitionDiv>{concept.definition.fi}</DefinitionDiv>
+      <DefinitionDiv>{concept.definition?.fi}</DefinitionDiv>
     </>
   );
 }
