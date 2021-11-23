@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { TerminologySearchResults } from './terminology-search-results';
 import { ThemeProvider } from 'styled-components';
-import { lightTheme } from '../theme';
+import { lightTheme } from '../../../layouts/theme';
 
 describe('terminology-search-input', () => {
   test('should render component', () => {
