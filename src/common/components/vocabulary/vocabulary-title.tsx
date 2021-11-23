@@ -10,23 +10,23 @@ interface VocabularyTitleProps {
 export default function VocabularyTitle({ data }: VocabularyTitleProps) {
   const { t, i18n } = useTranslation('common');
 
-  const status = t(`${data.properties.status[0].value}`).toUpperCase();
+  const status = t(`${data.properties.status[0]?.value}`).toUpperCase() ?? '';
 
-  const vocabulary = data.properties.prefLabel.map((pLabel: any) => {
+  const vocabulary = data.properties.prefLabel?.map((pLabel: any) => {
     if (pLabel.lang === i18n.language) {
       return (
         pLabel.value
       );
     }
-  });
+  }) ?? '';
 
-  const contributor = data.references.contributor[0].properties?.prefLabel.map((d: any) => {
+  const contributor = data.references.contributor[0]?.properties.prefLabel.map((d: any) => {
     if (d.lang === i18n.language) {
       return (
         d.value
       );
     }
-  });
+  }) ?? '';
 
   return (
     <TitleWrapper>

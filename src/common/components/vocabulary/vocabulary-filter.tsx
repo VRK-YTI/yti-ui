@@ -100,7 +100,7 @@ export default function VocabularyFilter() {
           <RadioButton value='concept'>
             {t('vocabulary-filter-concepts')} (n kpl)
           </RadioButton>
-          <RadioButton value='concept-group'>
+          <RadioButton value='concept-group' >
             {t('vocabulary-filter-collections')} (n kpl)
           </RadioButton>
         </RadioButtonGroup>

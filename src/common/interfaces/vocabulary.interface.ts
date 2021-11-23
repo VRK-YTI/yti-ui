@@ -10,11 +10,11 @@ export interface VocabularyInfoDTO {
   lastModifiedDate: string;
   number: number;
   properties: {
-    description: [ VocabularyProperties ];
-    language: [ VocabularyProperties ];
-    prefLabel: [ VocabularyProperties ];
-    priority: [ VocabularyProperties ];
-    status: [ VocabularyProperties ];
+    description: VocabularyProperties[];
+    language: VocabularyProperties[];
+    prefLabel: VocabularyProperties[];
+    priority: VocabularyProperties[];
+    status: VocabularyProperties[];
   };
   references: {
     contributor: [
@@ -28,9 +28,7 @@ export interface VocabularyInfoDTO {
         lastModifiedDate: string;
         number: number;
         properties: {
-          prefLabel: [
-            VocabularyProperties
-          ];
+          prefLabel: VocabularyProperties[];
         };
         references: {};
         referrers: {};
@@ -49,17 +47,14 @@ export interface VocabularyInfoDTO {
         lastModifiedDate: string;
         number: number;
         properties: {
-          definition: [ VocabularyProperties ];
-          notation: [ VocabularyProperties ];
-          order: [ VocabularyProperties ];
-          prefLabel: [ VocabularyProperties ];
+          definition: VocabularyProperties[];
+          notation: VocabularyProperties[];
+          order: VocabularyProperties[];
+          prefLabel: VocabularyProperties[];
         };
         references: {};
         referrers: {};
-        type: {
-          id: string;
-          type: VocabularyType;
-        };
+        type: VocabularyType;
         uri: string;
       }
     ];

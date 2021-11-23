@@ -16,7 +16,7 @@ import { selectVocabularyFilter, setVocabularyFilter } from './vocabulary-slice'
 import { VocabularyConceptsDTO } from '../../interfaces/vocabulary.interface';
 
 interface VocabularyResultsProps {
-  concepts: [VocabularyConceptsDTO];
+  concepts: VocabularyConceptsDTO[];
 }
 
 export function VocabularyResult({ concept, t }: any) {

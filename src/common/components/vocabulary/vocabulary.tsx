@@ -20,10 +20,12 @@ export default function Vocabulary({ id }: VocabularyProps) {
 
       {info && <VocabularyInfo data={info as VocabularyInfoDTO} />}
 
-      <ResultFilterWrapper>
-        {concepts && <VocabularyResults concepts={concepts?.concepts as [VocabularyConceptsDTO]} />}
-        <VocabularyFilter />
-      </ResultFilterWrapper>
+      {concepts &&
+        <ResultFilterWrapper>
+          <VocabularyResults concepts={concepts?.concepts as [VocabularyConceptsDTO]} />
+          <VocabularyFilter />
+        </ResultFilterWrapper>
+      }
     </>
   );
 };
