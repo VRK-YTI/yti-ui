@@ -98,10 +98,10 @@ export default function VocabularyFilter() {
           onChange={(value) => handleShowBy(value)}
         >
           <RadioButton value='concept'>
-            {t('vocabulary-filter-concepts')} (n kpl)
+            {t('vocabulary-filter-concepts')} (n {t('vocabulary-filter-items')})
           </RadioButton>
           <RadioButton value='concept-group' >
-            {t('vocabulary-filter-collections')} (n kpl)
+            {t('vocabulary-filter-collections')} (n {t('vocabulary-filter-items')})
           </RadioButton>
         </RadioButtonGroup>
 
@@ -115,25 +115,25 @@ export default function VocabularyFilter() {
               onClick={() => handleCheckbox('VALID')}
               checked={filter.status['VALID'] as boolean}
             >
-              {t('VALID')} (n kpl)
+              {t('VALID')} (n {t('vocabulary-filter-items')})
             </VocabularyFilterCheckbox>
             <VocabularyFilterCheckbox
               onClick={() => handleCheckbox('DRAFT')}
               checked={filter.status['DRAFT'] as boolean}
             >
-              {t('DRAFT')} (n kpl)
+              {t('DRAFT')} (n {t('vocabulary-filter-items')})
             </VocabularyFilterCheckbox>
             <VocabularyFilterCheckbox
               onClick={() => handleCheckbox('RETIRED')}
               checked={filter.status['RETIRED'] as boolean}
             >
-              {t('RETIRED')} (n kpl)
+              {t('RETIRED')} (n {t('vocabulary-filter-items')})
             </VocabularyFilterCheckbox>
             <VocabularyFilterCheckbox
               onClick={() => handleCheckbox('SUPERSEDED')}
               checked={filter.status['SUPERSEDED'] as boolean}
             >
-              {t('SUPERSEDED')} (n kpl)
+              {t('SUPERSEDED')} (n {t('vocabulary-filter-items')})
             </VocabularyFilterCheckbox>
           </>
         }

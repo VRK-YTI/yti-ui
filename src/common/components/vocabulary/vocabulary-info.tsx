@@ -17,13 +17,13 @@ interface VocabularyInfoProps {
 export default function VocabularyInfo({ data }: VocabularyInfoProps) {
   const { t, i18n } = useTranslation('common');
   const prefLabels = data.properties.prefLabel ?? '';
-  const description = data.properties.description[0] ?? '';
+  const description = data.properties.description?.[0] ?? '';
   const informationDomains = data.references.inGroup ?? '';
   const vocabularyLanguages = data.properties.language ?? '';
   const createdDate = FormatISODate(data.createdDate) ?? '01.01.1970, 00.00';
   const lastModifiedDate = FormatISODate(data.lastModifiedDate) ?? '01.01.1970, 00.00';
   const uri = data.uri ?? '';
-  const contributor = data.references.contributor[0].properties.prefLabel.map((pLabel: any) => {
+  const contributor = data.references.contributor?.[0].properties.prefLabel?.map((pLabel: any) => {
     if (pLabel.lang === i18n.language) {
       return (pLabel.value);
     }
