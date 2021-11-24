@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { TerminologySearchResults } from './terminology-search-results';
 import { ThemeProvider } from 'styled-components';
-import { lightTheme } from '../theme';
+import { lightTheme } from '../../../layouts/theme';
 
 describe('terminology-search-input', () => {
   test('should render component', () => {
@@ -14,8 +14,27 @@ describe('terminology-search-input', () => {
     );
 
     expect(screen.getByText('Demo')).toBeInTheDocument;
+    expect(screen.getByText('Demon kuvaus')).toBeInTheDocument;
     expect(screen.queryByText('Not found')).toEqual(null);
 
+  });
+
+  // make sure the check for missing description is working properly
+  test('should render component with no description', () => {
+    const modResults = {
+      ...results,
+      terminologies: results.terminologies.map(({ description, ...rest }) => rest)
+    };
+
+    render(
+      <ThemeProvider theme={lightTheme}>
+        <TerminologySearchResults results={modResults} />
+      </ThemeProvider>
+    );
+
+    expect(screen.getByText('Demo')).toBeInTheDocument;
+    expect(() => screen.getByText('Demon kuvaus')).toThrow('Unable to find an element');
+    expect(screen.queryByText('Not found')).toEqual(null);
   });
 
 });

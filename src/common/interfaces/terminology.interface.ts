@@ -17,7 +17,7 @@ export interface InformationDomainDTO {
 }
 
 export interface TerminologyDTO extends TerminologySimpleDTO {
-  description: { [key: string]: string };
+  description?: { [key: string]: string };
   contributors: ContributorsDTO[];
   informationDomains: InformationDomainDTO[];
 }
