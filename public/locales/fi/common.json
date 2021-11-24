@@ -45,5 +45,6 @@
   "terminology-search-result": "hakutulos sanastoista",
   "terminology-search-results": "hakutulosta sanastoista",
   "close": "Sulje",
-  "feedback-terminologies": "Yhteydenottopyyntö: Sanastot"
+  "feedback-terminologies": "Yhteydenottopyyntö: Sanastot",
+  "impersonate-user": "Esiinny käyttäjänä"
 }

@@ -7,8 +7,14 @@ import { Button, Link, Text } from 'suomifi-ui-components';
 import { useTranslation } from 'react-i18next';
 import { LayoutProps } from '../../../layouts/layout-props';
 import LoginModalView from '../login-modal/login-modal';
+import ImpersonateWrapper from '../impersonate/impersonate-wrapper';
 
-export default function AuthenticationPanel({ props }: { props: LayoutProps }) {
+export interface AuthenticationPanelProps {
+  props: LayoutProps;
+  disableImpersonateWrapper?: boolean;
+}
+
+export default function AuthenticationPanel({ props, disableImpersonateWrapper }: AuthenticationPanelProps) {
 
   const [visible, setVisible] = useState(false);
   const { t } = useTranslation('common');
@@ -17,23 +23,24 @@ export default function AuthenticationPanel({ props }: { props: LayoutProps }) {
     <>
       {props.user && !props.user.anonymous ? (
         <ButtonsDiv isSmall={props.isSmall}>
-          <UserInfo>
-            <Text>
-              {`${props.user?.firstName} ${props.user?.lastName}`}
-            </Text>
-            <Text>
-              <Link href="" onClick={(e: any) => logout(e)}>{t('site-logout').toUpperCase()}</Link>
-            </Text>
-          </UserInfo>
+          <ImpersonateWrapper onChange={email => fakeLogin(email)} disable={disableImpersonateWrapper}>
+            <UserInfo>
+              <Text>
+                {`${props.user?.firstName} ${props.user?.lastName}`}
+              </Text>
+              <Text>
+                <Link href="" onClick={(e: any) => logout(e)}>{t('site-logout').toUpperCase()}</Link>
+              </Text>
+            </UserInfo>
+          </ImpersonateWrapper>
         </ButtonsDiv>
       ) : (
         <ButtonsDiv isSmall={props.isSmall}>
-          <Button icon="login" onClick={() => setVisible(true)}>
-            {t('site-login')}
-          </Button>
-          <Button icon="login" onClick={async(e) => fakeLogin(e)}>
-            {t('site-fake-login')}
-          </Button>
+          <ImpersonateWrapper onChange={email => fakeLogin(email)}  disable={disableImpersonateWrapper}>
+            <Button icon="login" onClick={() => setVisible(true)}>
+              {t('site-login')}
+            </Button>
+          </ImpersonateWrapper>
         </ButtonsDiv>
       )}
 
@@ -48,8 +55,7 @@ export default function AuthenticationPanel({ props }: { props: LayoutProps }) {
     window.location.href = '/api/auth/logout?target=/';
   }
 
-  function fakeLogin(e: MouseEvent | KeyboardEvent) {
-    e.preventDefault();
-    window.location.href = '/api/auth/fake-login';
+  function fakeLogin(email: string) {
+    window.location.href = `/api/auth/fake-login?fake.login.mail?${encodeURIComponent(email)}`;
   }
 }
