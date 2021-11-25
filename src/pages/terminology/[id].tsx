@@ -6,7 +6,7 @@ import Head from 'next/head';
 import { createCommonGetServerSideProps } from '../../common/utils/create-getserversideprops';
 import User from '../../common/interfaces/user-interface';
 import useUser from '../../common/utils/hooks/useUser';
-import Vocabulary from '../../common/components/vocabulary/vocabulary';
+import Vocabulary from '../../modules/vocabulary';
 
 // TODO: perhaps move the component itself to components/
 export default function TerminologyPage(props: {
