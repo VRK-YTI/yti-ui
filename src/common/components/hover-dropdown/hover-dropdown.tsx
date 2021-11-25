@@ -11,10 +11,9 @@ export interface HoverDropdownProps {
   onChange?: (value: string) => void;
   items?: { key: string, label: string, value?: string }[];
   children?: React.ReactNode;
-  isSmall?: boolean;
 }
 
-export default function HoverDropdown({ onChange, children, items, isSmall = false }: HoverDropdownProps) {
+export default function HoverDropdown({ onChange, children, items }: HoverDropdownProps) {
   return (
     <HoverDropdownWrapper>
       <div>{children}</div>

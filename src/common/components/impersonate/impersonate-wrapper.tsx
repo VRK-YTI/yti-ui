@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import HoverDropdown from '../hover-dropdown/hover-dropdown';
-import useFakeableUsers from './user-fakeable-users';
+import useFakeableUsers from './use-fakeable-users';
 
 export interface ImpersonateWrapperProps {
   onChange: (email: string) => void;

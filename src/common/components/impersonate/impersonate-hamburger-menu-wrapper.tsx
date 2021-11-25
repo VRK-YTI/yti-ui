@@ -1,7 +1,7 @@
 import { Divider, MenuItem } from '@material-ui/core';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import useFakeableUsers from './user-fakeable-users';
+import useFakeableUsers from './use-fakeable-users';
 
 export interface ImpersonateHamburgerMenuWrapperProps {
   onChange: (email: string) => void;

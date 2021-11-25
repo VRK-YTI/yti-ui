@@ -49,7 +49,7 @@ describe('api endpoint - fake login', () => {
     });
 
     mock
-      .onGet('http://terminology-api.invalid/terminology-api/api/v1/frontend/authenticated-user?fake.login.mail=admin@localhost')
+      .onGet('http://terminology-api.invalid/terminology-api/api/v1/frontend/authenticated-user?fake.login.mail=admin%40localhost')
       .reply(200, fakeUser, { 'set-cookie': ['JSESSIONID=foo'] });
     /*
     mock
@@ -93,7 +93,7 @@ describe('api endpoint - fake login', () => {
     });
 
     mock
-      .onGet('http://terminology-api.invalid/terminology-api/api/v1/frontend/authenticated-user?fake.login.mail=admin@localhost')
+      .onGet('http://terminology-api.invalid/terminology-api/api/v1/frontend/authenticated-user?fake.login.mail=admin%40localhost')
       .reply(500, { 'error': 'An error occurred' });
 
     await fakeLogin(req, res);
