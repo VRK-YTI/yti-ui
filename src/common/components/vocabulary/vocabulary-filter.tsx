@@ -142,7 +142,7 @@ export default function VocabularyFilter() {
 
         <SearchInput
           clearButtonLabel={t('vocabulary-filter-clear-filter')}
-          searchButtonLabel='Hae'
+          searchButtonLabel={t('vocabulary-filter-search')}
           labelText={t('vocabulary-filter-filter-by-keyword')}
           visualPlaceholder={t('vocabulary-filter-visual-placeholder')}
           value={filter.tKeyword}
