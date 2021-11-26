@@ -1,13 +1,31 @@
 import styled from 'styled-components';
-import { Button } from 'suomifi-ui-components';
+import { PaginationButtonProps } from './pagination-props';
 
-export const PaginationButton = styled(Button)`
-  height: 30px;
-  width: 30px;
-  margin: 0px;
-  padding 0px;
-  border-left: solid 2px ${props => props.theme.suomifi.colors.depthLight1};
-  background: ${props => props.variant === 'default'} ? ${props => props.theme.suomifi.colors.highlightDark1} : ${props => props.theme.suomifi.colors.whiteBase};
-  color: ${props => props.variant === 'default'} ? ${props => props.theme.suomifi.colors.whiteBase} : ${props => props.theme.suomifi.colors.highlightDark1};
-  
+export const PaginationWrapper = styled.div`
+  display: flex;
+  flex-basis: 0;
+  width: fit-content;
+  border-top: solid 1px ${props => props.theme.suomifi.colors.depthLight1};
+  border-bottom: solid 1px ${props => props.theme.suomifi.colors.depthLight1};
+  border-right: solid 1px ${props => props.theme.suomifi.colors.depthLight1};
+  background: ${props => props.theme.suomifi.colors.whiteBase};
+
+`;
+
+export const PaginationButton = styled.div<PaginationButtonProps>`
+  height: 35px;
+  width: 35px;
+  border-style: none;
+  border-left: solid 1px ${props => props.theme.suomifi.colors.depthLight1};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: ${props => props.active ? props.theme.suomifi.colors.whiteBase : props.theme.suomifi.colors.highlightBase};
+  background: ${props => props.active ? props.theme.suomifi.colors.highlightBase : props.theme.suomifi.colors.whiteBase};
+
+  :hover {
+    background: ${props => props.theme.suomifi.colors.depthLight2};
+    color: ${props => props.active ? props.theme.suomifi.colors.highlightBase : props.theme.suomifi.colors.highlightBase};
+  }
 `;

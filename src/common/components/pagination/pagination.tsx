@@ -1,6 +1,6 @@
 import { Icon } from 'suomifi-ui-components';
 import { TerminologySearchResult } from '../../interfaces/terminology.interface';
-import { PaginationButton } from './pagination.styles';
+import { PaginationButton, PaginationWrapper } from './pagination.styles';
 
 interface PaginationProps {
   data: TerminologySearchResult;
@@ -28,8 +28,8 @@ export default function Pagination({ data }: PaginationProps) {
   };
 
   return (
-    <div>
-      <PaginationButton variant='secondary'>
+    <PaginationWrapper>
+      <PaginationButton>
         <Icon icon='chevronLeft' />
       </PaginationButton>
 
@@ -38,16 +38,16 @@ export default function Pagination({ data }: PaginationProps) {
           <PaginationButton
             key={`pagination-item-${item}`}
             onClick={() => handleClick(item)}
-            variant={item === activeItem ? 'default' : 'secondary'}
+            active={item === activeItem}
           >
             {item}
           </PaginationButton>
         );
       })}
 
-      <PaginationButton variant='secondary'>
+      <PaginationButton>
         <Icon icon='chevronRight' />
       </PaginationButton>
-    </div>
+    </PaginationWrapper>
   );
 }
