@@ -9,7 +9,7 @@ export interface SearchState {
 };
 
 const initialState: SearchState = {
-  filter: '',
+  filter: ''
 };
 
 export const terminologySearchSlice = createSlice({
@@ -25,7 +25,6 @@ export const terminologySearchSlice = createSlice({
   },
   extraReducers: {
     [HYDRATE]: (state, action) => {
-      console.log('hydrating', action.payload);
       return {
         ...state,
         ...action.payload.terminologySearch,
@@ -50,7 +49,7 @@ export const terminologySearchApi = createApi({
           query: value,
           searchConcepts: true,
           prefLang: 'fi',
-          pageSize: 10,
+          pageSize: 2,
           pageFrom: 0,
         },
       }),

@@ -7,6 +7,7 @@ import { TerminologySearchResults } from '../../common/components/terminology-se
 import { selectFilter, useGetSearchResultQuery } from '../../common/components/terminology-search/terminology-search-slice';
 import TerminologySearchFilter from '../../common/components/terminology-search/terminology-search-filter';
 import { SearchCountWrapper } from '../../common/components/terminology-search/terminology-search.styles';
+import Pagination from '../../common/components/pagination/pagination';
 
 export default function TerminologySearch() {
   const { t } = useTranslation();
@@ -15,6 +16,7 @@ export default function TerminologySearch() {
 
   return (
     <>
+      {data && console.log(data)}
       <Grid container spacing={1} justifyContent='space-between' style={{ maxWidth: '100%' }}>
         <Grid item xs={12}>
           {filter != '' && <Heading variant='h1'>{t('terminology-search-keyword')} &quot;{filter}&quot;</Heading>}
@@ -45,6 +47,8 @@ export default function TerminologySearch() {
         <div style={{ margin: 10 }} />
         <TerminologySearchFilter />
       </div>
+
+      {data && <Pagination data={data} />}
     </>
   );
 };
