@@ -5,6 +5,8 @@ import { lightTheme } from '../../../layouts/theme';
 import VocabularyInfo from './vocabulary-info';
 import { VocabularyInfoDTO } from '../../interfaces/vocabulary.interface';
 
+// TODO: Replace Provider and ThemeProvider in render() with wrapper from test-utils after it has been merged to v2
+
 describe('vocabulary-info', () => {
   test('should render component', () => {
     render(

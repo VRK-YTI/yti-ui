@@ -7,6 +7,8 @@ import { VocabularyConceptsDTO } from '../../interfaces/vocabulary.interface';
 import { Provider } from 'react-redux';
 import { makeStore } from '../../../store';
 
+// TODO: Replace Provider and ThemeProvider in render() with wrapper from test-utils after it has been merged to v2
+
 describe('vocabulary-results', () => {
   test('should render component', () => {
     const store = makeStore();

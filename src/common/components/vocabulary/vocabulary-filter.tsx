@@ -91,7 +91,7 @@ export default function VocabularyFilter() {
         }
 
         <RadioButtonGroup
-          labelText='Näytä vain'
+          labelText={t('vocabulary-filter-show-only')}
           name='vocabulary-filter-show-only'
           defaultValue='concept'
           value={filter.showBy}
@@ -141,7 +141,7 @@ export default function VocabularyFilter() {
         <VocabularyFilterHr />
 
         <SearchInput
-          clearButtonLabel='Tyhjennä haku'
+          clearButtonLabel={t('vocabulary-filter-clear-filter')}
           searchButtonLabel='Hae'
           labelText={t('vocabulary-filter-filter-by-keyword')}
           visualPlaceholder={t('vocabulary-filter-visual-placeholder')}

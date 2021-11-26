@@ -7,6 +7,8 @@ import VocabularyFilter from './vocabulary-filter';
 import { Provider } from 'react-redux';
 import { makeStore } from '../../../store';
 
+// TODO: Replace Provider and ThemeProvider in render() with wrapper from test-utils after it has been merged to v2
+
 describe('vocabulary-filter', () => {
   test('should render component', () => {
     const store = makeStore();
