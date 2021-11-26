@@ -1,13 +1,18 @@
 import { useState } from 'react';
-import { Grid } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
-import { Icon, LanguageMenu, LanguageMenuItem, Link, SearchInput } from 'suomifi-ui-components';
+import { Button, Icon, LanguageMenu, LanguageMenuItem, Link, SearchInput } from 'suomifi-ui-components';
 import AuthenticationPanel from '../../common/components/authentication-panel/authentication-panel';
 import { LayoutProps } from '../../layouts/layout-props';
 import HamburgerMenu from '../../common/components/menu/hamburger-menu';
-import { HeaderWrapper, LanguageMenuWrapper, SearchWrapper, SiteLogo, SmallSearchText, SmallSearchWrapper } from './header.styles';
+import {
+  AuthenticationPanelWrapper,
+  HeaderWrapper,
+  SearchAndLanguageWrapper,
+  SearchWrapper,
+  SiteLogo
+} from './header.styles';
 import { useStoreDispatch } from '../../store';
 import { useSelector } from 'react-redux';
 import { selectFilter, setFilter } from '../../common/components/terminology-search/terminology-search-slice';
@@ -31,105 +36,96 @@ export default function Header({ props }: { props: LayoutProps }) {
   return (
     <>
       {!smallSearch ?
-        <HeaderWrapper>
-          <Grid container spacing={3}>
-            <Grid item xs={8} sm={8} md={3} lg={3}>
-              <SiteLogo>
-                <Link href="/">
-                  <Image src={isSmall ? '/logo-small.svg' : '/logo.svg'} width="300" height="43" alt="Logo" />
-                </Link>
-              </SiteLogo>
-            </Grid>
-            <Grid item xs={2} sm={2} md={3} lg={3}>
-              <SearchWrapper isSmall={isSmall}>
-                {!isSmall ? (
-                  <SearchInput
-                    clearButtonLabel=""
-                    labelText=""
-                    defaultValue={filter}
-                    searchButtonLabel={t('terminology-search')}
-                    visualPlaceholder={t('terminology-search-placeholder')}
-                    wrapperProps={{ style: { minWidth: '10px', maxWidth: '400px', width: '65vw' } }}
-                    onSearch={value => {
-                      if (typeof value === 'string') dispatch(setFilter(value));
-                    }}
-                    onChange={value => {
-                      if (value === '') dispatch(setFilter(value));
-                    }}
-                  />
-                ) : (
-                  <div onClick={() => setSmallSearch(true)}><Icon icon="search" /></div>
-                )}
-              </SearchWrapper>
-            </Grid>
-
-            <Grid item md={3} lg={3} hidden={isSmall}>
-              <LanguageMenuWrapper>
-                <LanguageMenu name={languageMenuItems[currentLocale]}>
-                  <LanguageMenuItem
-                    onSelect={() => {
-                      router.push(router.asPath, router.asPath, {
-                        locale: 'fi',
-                      });
-                    }}
-                    selected={currentLocale === 'fi'}
-                  >
-                    {languageMenuItems['fi']}
-                  </LanguageMenuItem>
-                  <LanguageMenuItem
-                    onSelect={() => {
-                      router.push(router.asPath, router.asPath, {
-                        locale: 'sv',
-                      });
-                    }}
-                    selected={currentLocale === 'sv'}
-                  >
-                    {languageMenuItems['sv']}
-                  </LanguageMenuItem>
-                  <LanguageMenuItem
-                    onSelect={() => {
-                      router.push(router.asPath, router.asPath, {
-                        locale: 'en',
-                      });
-                    }}
-                    selected={currentLocale === 'en'}
-                  >
-                    {languageMenuItems['en']}
-                  </LanguageMenuItem>
-                </LanguageMenu>
-              </LanguageMenuWrapper>
-            </Grid>
-            <Grid item md={3} lg={3} hidden={isSmall}>
+        <HeaderWrapper isSmall={isSmall}>
+          <SiteLogo isSmall={isSmall}>
+            <Link href="/">
+              <Image src={isSmall ? '/logo-small.svg' : '/logo.svg'} width="300" height="43" alt="Logo" />
+            </Link>
+          </SiteLogo>
+          <SearchAndLanguageWrapper>
+            <SearchWrapper isSmall={isSmall}>
+              {!isSmall ? (
+                <SearchInput
+                  clearButtonLabel=""
+                  labelText=""
+                  defaultValue={filter}
+                  labelMode="hidden"
+                  searchButtonLabel={t('terminology-search')}
+                  visualPlaceholder={t('terminology-search-placeholder')}
+                  // wrapperProps={{ style: { minWidth: '10px', maxWidth: '400px', width: '65vw' } }}
+                  onSearch={value => {
+                    if (typeof value === 'string') dispatch(setFilter(value));
+                  }}
+                  onChange={value => {
+                    if (value === '') dispatch(setFilter(value));
+                  }}
+                />
+              ) : (
+                <div onClick={() => setSmallSearch(true)}><Icon icon="search" /></div>
+              )}
+            </SearchWrapper>
+            {!isSmall ? (
+              <LanguageMenu name={languageMenuItems[currentLocale]}>
+                <LanguageMenuItem
+                  onSelect={() => {
+                    router.push(router.asPath, router.asPath, {
+                      locale: 'fi',
+                    });
+                  }}
+                  selected={currentLocale === 'fi'}
+                >
+                  {languageMenuItems['fi']}
+                </LanguageMenuItem>
+                <LanguageMenuItem
+                  onSelect={() => {
+                    router.push(router.asPath, router.asPath, {
+                      locale: 'sv',
+                    });
+                  }}
+                  selected={currentLocale === 'sv'}
+                >
+                  {languageMenuItems['sv']}
+                </LanguageMenuItem>
+                <LanguageMenuItem
+                  onSelect={() => {
+                    router.push(router.asPath, router.asPath, {
+                      locale: 'en',
+                    });
+                  }}
+                  selected={currentLocale === 'en'}
+                >
+                  {languageMenuItems['en']}
+                </LanguageMenuItem>
+              </LanguageMenu>
+            ) : null}
+          </SearchAndLanguageWrapper>
+          {!isSmall ? (
+            <AuthenticationPanelWrapper>
               <AuthenticationPanel props={props} />
-            </Grid>
-            <Grid item xs={2} sm={2} hidden={!isSmall}>
-              <HamburgerMenu props={props} />
-            </Grid>
-          </Grid>
+            </AuthenticationPanelWrapper>
+          ) : null}
+          {isSmall ? <HamburgerMenu props={props} /> : null}
         </HeaderWrapper>
         :
-        <HeaderWrapper>
-          <SmallSearchWrapper>
-            <SearchInput
-              clearButtonLabel=""
-              labelText=""
-              defaultValue={filter}
-              searchButtonLabel={t('terminology-search')}
-              visualPlaceholder={t('terminology-search-placeholder')}
-              wrapperProps={{ style: { minWidth: '10px', maxWidth: '400px', width: '65vw' } }}
-              onSearch={value => {
-                if (typeof value === 'string') dispatch(setFilter(value));
-              }}
-              onChange={value => {
-                if (value === '') dispatch(setFilter(value));
-              }}
-            />
-            <SmallSearchText
-              onClick={() => setSmallSearch(false)}
-            >
-              {t('close')}
-            </SmallSearchText>
-          </SmallSearchWrapper>
+        <HeaderWrapper isSmall={isSmall}>
+          <SearchInput
+            clearButtonLabel=""
+            labelText=""
+            labelMode="hidden"
+            defaultValue={filter}
+            searchButtonLabel={t('terminology-search')}
+            visualPlaceholder={t('terminology-search-placeholder')}
+            wrapperProps={{ style: { 'flexGrow': 1 } }}
+            onSearch={value => {
+              if (typeof value === 'string') dispatch(setFilter(value));
+            }}
+            onChange={value => {
+              if (value === '') dispatch(setFilter(value));
+            }}
+          />
+          <Button onClick={() => setSmallSearch(false)} variant="secondaryNoBorder">
+            {t('close')}
+          </Button>
         </HeaderWrapper>
       }
     </>

@@ -52,7 +52,7 @@ export default function Layout({
         </Head>
         <SiteContainer isSmall={isSmall}>
           <Block variant="header">
-            <HeaderContainer>
+            <HeaderContainer isSmall={isSmall}>
               <MarginContainer isSmall={isSmall}>
                 {!error ? (
                   <Header props={layoutProps} />
@@ -73,7 +73,6 @@ export default function Layout({
             </NavigationContainer>
           }
           <ContentContainer >
-
             <MarginContainer isSmall={isSmall}>
               <Block variant="main">
                 <>

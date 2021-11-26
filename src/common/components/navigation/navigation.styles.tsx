@@ -8,15 +8,18 @@ export const NavigationWrapper = styled.ul`
   margin-top: 0px;
   margin-bottom: 0px;
   padding-inline-start: 0px;
+  gap: 30px;
 `;
 
 export const NavigationItem = styled.li<NavigationProps>`
-
-  padding: 15px 40px 5px 0px;
+  display: block;
 
   a.main {
+    display: block;
     color: ${(props) => props.theme.suomifi.colors.blackBase};
-    padding-bottom: 10px;
+    padding: 12px 5px 9px 5px;
+    border-bottom: 3px solid transparent;
+
     &:visited {
       color: ${(props) => props.theme.suomifi.colors.blackBase};
     }
@@ -36,27 +39,28 @@ export const NavigationItem = styled.li<NavigationProps>`
   ${props => props.active ? `a { border-bottom: 3px solid ${props.theme.suomifi.colors.highlightBase} }` : ''}
 `;
 
-export const NavigationDropdownWrapper = styled.div`
+export const NavigationDropdownWrapper = styled.div<NavigationProps>`
   position: absolute;
   width: 10rem;
   line-height: 2em;
   background: #fff;
-  border: 1px solid #a5acb0;
+  border: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
   z-index: 1;
 `;
 
 export const NavigationDropdownList = styled.ul`
   position: static;
   list-style-type: none;
-  padding: 0;
+  padding: 8px 0px;
   background-color: transparent;
   margin-top: 0;
 `;
 
-export const NavigationDropdownItem = styled.li`
+export const NavigationDropdownItem = styled.li<NavigationProps>`
   padding: 0px;
   a, a:visited {
-    padding-left: 10px;
+    display: block;
+    padding: 8px 11px;
     text-decoration: none;
     width: 100%;
     color: #000;

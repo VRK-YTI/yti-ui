@@ -5,13 +5,12 @@ import { LayoutProps } from '../../layouts/layout-props';
 import { HeaderWrapper, SiteLogo } from './header.styles';
 
 export default function ErrorHeader({ props }: { props: LayoutProps }) {
-
   return (
     <>
-      <HeaderWrapper>
+      <HeaderWrapper isSmall={props.isSmall}>
         <Grid container>
           <Grid item xs={12} sm={12} md={12} lg={12}>
-            <SiteLogo>
+            <SiteLogo isSmall={props.isSmall}>
               <Link href="/">
                 <Image src={props.isSmall ? '/logo-small.svg' : '/logo.svg'} width="300" height="43" alt="Logo" />
               </Link>
