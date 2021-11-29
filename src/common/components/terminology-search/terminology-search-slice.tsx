@@ -5,11 +5,17 @@ import type { AppState, AppThunk } from '../../../store';
 import { TerminologySearchResult } from '../../interfaces/terminology.interface';
 
 export interface SearchState {
-  filter: string;
+  searchFilter: {
+    filter: string;
+    resultStart: number;
+  };
 };
 
 const initialState: SearchState = {
-  filter: ''
+  searchFilter: {
+    filter: '',
+    resultStart: 0
+  }
 };
 
 export const terminologySearchSlice = createSlice({
@@ -17,11 +23,11 @@ export const terminologySearchSlice = createSlice({
   initialState,
   reducers: {
     setFilter(state, action) {
-      return {
-        ...state,
-        ...action.payload
-      };
+      state.searchFilter.filter = action.payload;
     },
+    setResultStart(state, action) {
+      state.searchFilter.resultStart = action.payload;
+    }
   },
   extraReducers: {
     [HYDRATE]: (state, action) => {
@@ -38,7 +44,7 @@ export const terminologySearchApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: '/terminology-api/api/v1/frontend' }),
   tagTypes: ['TerminologySearch'],
   endpoints: builder => ({
-    getSearchResult: builder.query<TerminologySearchResult, string>({
+    getSearchResult: builder.query<TerminologySearchResult, {filter: string, resultStart: number}>({
       query: (value) => ({
         url: '/searchTerminology',
         method: 'POST',
@@ -46,11 +52,11 @@ export const terminologySearchApi = createApi({
           'content-type': 'application/json',
         },
         body: {
-          query: value,
+          query: value.filter,
           searchConcepts: true,
           prefLang: 'fi',
-          pageSize: 2,
-          pageFrom: 0,
+          pageSize: 10,
+          pageFrom: value.resultStart,
         },
       }),
     }),
@@ -61,11 +67,17 @@ export const { useGetSearchResultQuery } = terminologySearchApi;
 
 export const setFilter = (filter: string): AppThunk => dispatch => {
   dispatch(
-    terminologySearchSlice.actions.setFilter({
-      filter: filter
-    }),
+    terminologySearchSlice.actions.setFilter(filter),
   );
 };
 
-export const selectFilter = () => (state: AppState): string => state.terminologySearch.filter;
+export const setResultStart = (resultStart: number): AppThunk => dispatch => {
+  dispatch(
+    terminologySearchSlice.actions.setResultStart(resultStart),
+  );
+};
+
+export const selectFilter = () => (state: AppState): string => state.terminologySearch.searchFilter.filter;
+export const selectSearchFilter = () => (state: AppState): {filter: string, resultStart: number} => state.terminologySearch.searchFilter;
+
 export default terminologySearchSlice.reducer;

@@ -4,19 +4,28 @@ import { Grid } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 import { Heading, Text } from 'suomifi-ui-components';
 import { TerminologySearchResults } from '../../common/components/terminology-search/terminology-search-results';
-import { selectFilter, useGetSearchResultQuery } from '../../common/components/terminology-search/terminology-search-slice';
+import { selectFilter, setResultStart, selectSearchFilter, useGetSearchResultQuery } from '../../common/components/terminology-search/terminology-search-slice';
 import TerminologySearchFilter from '../../common/components/terminology-search/terminology-search-filter';
 import { SearchCountWrapper } from '../../common/components/terminology-search/terminology-search.styles';
 import Pagination from '../../common/components/pagination/pagination';
 
+import { useRouter } from 'next/router';
+import { useStoreDispatch } from '../../store';
+
 export default function TerminologySearch() {
   const { t } = useTranslation();
   const filter = useSelector(selectFilter());
-  const { data } = useGetSearchResultQuery(filter);
+  const searchFilter = useSelector(selectSearchFilter());
+  const { data } = useGetSearchResultQuery(searchFilter);
+  const query = useRouter();
+  const dispatch = useStoreDispatch();
+
+  if (query.query.page && typeof query.query.page === 'number') {
+    dispatch(setResultStart((query.query.page - 1) * 10));
+  }
 
   return (
     <>
-      {data && console.log(data)}
       <Grid container spacing={1} justifyContent='space-between' style={{ maxWidth: '100%' }}>
         <Grid item xs={12}>
           {filter != '' && <Heading variant='h1'>{t('terminology-search-keyword')} &quot;{filter}&quot;</Heading>}
@@ -48,7 +57,7 @@ export default function TerminologySearch() {
         <TerminologySearchFilter />
       </div>
 
-      {data && <Pagination data={data} />}
+      {data && <Pagination data={data} resultStart={setResultStart} />}
     </>
   );
 };
