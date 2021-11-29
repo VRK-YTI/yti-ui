@@ -22,10 +22,11 @@ export const PaginationButton = styled.div<PaginationButtonProps>`
   justify-content: center;
   font-size: 16px;
   color: ${props => props.active ? props.theme.suomifi.colors.whiteBase : props.theme.suomifi.colors.highlightBase};
-  background: ${props => props.active ? props.theme.suomifi.colors.highlightBase : props.theme.suomifi.colors.whiteBase};
+  background: ${props => props.active ? props.theme.suomifi.colors.highlightDark1 : props.theme.suomifi.colors.whiteBase};
 
   :hover {
-    background: ${props => props.theme.suomifi.colors.depthLight2};
-    color: ${props => props.active ? props.theme.suomifi.colors.highlightBase : props.theme.suomifi.colors.highlightBase};
+    background: ${props => props.active ? props.theme.suomifi.colors.highlightBase : !props.disabled ? props.theme.suomifi.colors.depthLight2 : ''};
+    cursor: ${props => props.disabled ? '' : 'pointer'};
   }
+
 `;
