@@ -1,14 +1,12 @@
 import { SSRConfig, useTranslation } from 'next-i18next';
 import { useRouter } from 'next/dist/client/router';
 import React from 'react';
-import Link from 'next/link';
-import { Heading, Link as DsLink } from 'suomifi-ui-components';
 import Layout from '../../layouts/layout';
 import Head from 'next/head';
-import { TerminologyInfoContainer } from '../../common/components/terminology/terminology-info.styles';
 import { createCommonGetServerSideProps } from '../../common/utils/create-getserversideprops';
 import User from '../../common/interfaces/user-interface';
 import useUser from '../../common/utils/hooks/useUser';
+import Vocabulary from '../../modules/vocabulary';
 
 // TODO: perhaps move the component itself to components/
 export default function TerminologyPage(props: {
@@ -18,7 +16,7 @@ export default function TerminologyPage(props: {
   const { t } = useTranslation('common');
   const { user, } = useUser({ initialData: props.user });
   const { query } = useRouter();
-  const id = query?.id ?? null;
+  const id = (query?.id ?? '') as string;
 
   return (
     // todo: use better feedbackSubject once more data is available
@@ -26,23 +24,8 @@ export default function TerminologyPage(props: {
       <Head>
         <title>{ t('terminology-title') }</title>
       </Head>
-      <Heading variant="h1">
-        { t('terminology-title') }
-      </Heading>
-      <TerminologyInfoContainer>
-        <label>
-          { t('terminology-id') }
-          <div id="terminologyState">{ id }</div>
-        </label>
-      </TerminologyInfoContainer>
 
-      <div>
-        <Link passHref href={ '/search/' }>
-          <DsLink href="">
-            Takaisin hakuun
-          </DsLink>
-        </Link>
-      </div>
+      <Vocabulary id={id}/>
     </Layout>
   );
 }

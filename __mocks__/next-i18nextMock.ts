@@ -3,6 +3,7 @@ const useTranslation = () => ({
   t: (str: string) => 'tr-' + str,
   i18n: {
     changeLanguage: () => new Promise(() => {}),
+    language: 'fi'
   },
 });
 

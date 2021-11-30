@@ -25,7 +25,6 @@ export const terminologySearchSlice = createSlice({
   },
   extraReducers: {
     [HYDRATE]: (state, action) => {
-      console.log('hydrating', action.payload);
       return {
         ...state,
         ...action.payload.terminologySearch,
