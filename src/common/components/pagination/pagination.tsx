@@ -33,6 +33,7 @@ export default function Pagination({ data, resultStart }: PaginationProps) {
       <PaginationButton
         disabled={activeItem === 1}
         onClick={() => activeItem !== 1 && handleClick(activeItem - 1)}
+        data-testid='pagination-left'
       >
         <Icon
           icon='chevronLeft'
@@ -57,6 +58,7 @@ export default function Pagination({ data, resultStart }: PaginationProps) {
       <PaginationButton
         disabled={activeItem === items[items.length - 1]}
         onClick={() => activeItem !== items[items.length - 1] && handleClick(activeItem + 1)}
+        data-testid='pagination-right'
       >
         <Icon
           icon='chevronRight'
