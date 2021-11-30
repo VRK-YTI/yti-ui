@@ -57,6 +57,7 @@ export default function TerminologySearch() {
         <TerminologySearchFilter />
       </div>
 
+      {/* Todo: Layout does not take this into consideration */}
       {data && <Pagination data={data} resultStart={setResultStart} />}
     </>
   );
