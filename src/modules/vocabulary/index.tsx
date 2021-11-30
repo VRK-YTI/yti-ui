@@ -5,6 +5,7 @@ import VocabularyTitle from '../../common/components/vocabulary/vocabulary-title
 import VocabularyFilter from '../../common/components/vocabulary/vocabulary-filter';
 import { ResultFilterWrapper } from '../../common/components/vocabulary/vocabulary.styles';
 import { VocabularyInfoDTO, VocabularyConceptsDTO } from '../../common/interfaces/vocabulary.interface';
+import Filter from '../../common/components/filter/filter';
 
 interface VocabularyProps {
   id: string;
@@ -16,6 +17,8 @@ export default function Vocabulary({ id }: VocabularyProps) {
 
   return (
     <>
+      <Filter />
+
       {info && <VocabularyTitle data={info as VocabularyInfoDTO} />}
 
       {info && <VocabularyInfo data={info as VocabularyInfoDTO} />}
