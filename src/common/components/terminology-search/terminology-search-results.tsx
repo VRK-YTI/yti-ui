@@ -39,7 +39,7 @@ function SearchResult({ data }: SearchResultProps) {
         {t('terminology-search-results-terminology').toUpperCase()} &middot;
       </span>
       <span className='status'>
-        {t(`terminology-search-results-${data.status}`).toUpperCase()}
+        {t(`${data.status}`).toUpperCase()}
       </span>
       <div className='description'>
         <Text>{description}</Text>
