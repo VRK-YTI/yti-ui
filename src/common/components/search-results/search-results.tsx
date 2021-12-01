@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import SearchCountTags from './search-count-tags';
 import {
   Card,
   CardContributor,
@@ -17,28 +18,31 @@ export default function SearchResults({ data }: any) {
   console.log(data);
 
   return (
-    <CardWrapper>
-      {data?.concepts.map((concept: any, idx: number) => {
-        return (
-          <Card key={`search-result-${idx}`}>
-            <CardContributor>
-              Patentti- ja rekisterihallitus
-            </CardContributor>
-            <CardTitle variant='h2'>
-              {concept.label[i18n.language]}
-            </CardTitle>
-            <CardSubtitle>
-              {t('vocabulary-info-concept').toUpperCase()} &middot; {t(`${concept.status}`).toUpperCase()} &middot; <CardPill>LUONNOS</CardPill>
-            </CardSubtitle>
-            <CardDescription>
-              {concept.definition[i18n.language]}
-            </CardDescription>
-            <CardInfoDomain>
-              <b>Tietoalueet:</b> Yleiset tieto- ja hallintopalvelut
-            </CardInfoDomain>
-          </Card>
-        );
-      })}
-    </CardWrapper>
+    <>
+      <SearchCountTags count={data?.totalHitCount}/>
+      <CardWrapper>
+        {data?.concepts.map((concept: any, idx: number) => {
+          return (
+            <Card key={`search-result-${idx}`}>
+              <CardContributor>
+                Patentti- ja rekisterihallitus
+              </CardContributor>
+              <CardTitle variant='h2'>
+                {concept.label[i18n.language]}
+              </CardTitle>
+              <CardSubtitle>
+                {t('vocabulary-info-concept').toUpperCase()} &middot; {t(`${concept.status}`).toUpperCase()} &middot; <CardPill>LUONNOS</CardPill>
+              </CardSubtitle>
+              <CardDescription>
+                {concept.definition[i18n.language]}
+              </CardDescription>
+              <CardInfoDomain>
+                <b>Tietoalueet:</b> Yleiset tieto- ja hallintopalvelut
+              </CardInfoDomain>
+            </Card>
+          );
+        })}
+      </CardWrapper>
+    </>
   );
 }
