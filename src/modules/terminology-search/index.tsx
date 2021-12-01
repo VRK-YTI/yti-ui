@@ -13,6 +13,8 @@ export default function TerminologySearch() {
   const filter = useSelector(selectFilter());
   const { data } = useGetSearchResultQuery(filter);
 
+  console.log(data);
+
   return (
     <>
       <Grid container spacing={1} justifyContent='space-between' style={{ maxWidth: '100%' }}>

@@ -6,6 +6,7 @@ import VocabularyFilter from '../../common/components/vocabulary/vocabulary-filt
 import { ResultFilterWrapper } from '../../common/components/vocabulary/vocabulary.styles';
 import { VocabularyInfoDTO, VocabularyConceptsDTO } from '../../common/interfaces/vocabulary.interface';
 import Filter from '../../common/components/filter/filter';
+import SearchResults from '../../common/components/search-results/search-results';
 
 interface VocabularyProps {
   id: string;
@@ -17,9 +18,10 @@ export default function Vocabulary({ id }: VocabularyProps) {
 
   return (
     <>
+      <SearchResults data={concepts}/>
       <Filter />
 
-      {info && <VocabularyTitle data={info as VocabularyInfoDTO} />}
+      {/* {info && <VocabularyTitle data={info as VocabularyInfoDTO} />}
 
       {info && <VocabularyInfo data={info as VocabularyInfoDTO} />}
 
@@ -28,7 +30,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
           <VocabularyResults concepts={concepts?.concepts as [VocabularyConceptsDTO]} />
           <VocabularyFilter />
         </ResultFilterWrapper>
-      }
+      } */}
     </>
   );
 };
