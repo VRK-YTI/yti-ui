@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useStoreDispatch } from '../../../store';
 import {
   CountPill,
   CountPillIcon,
@@ -7,21 +9,51 @@ import {
   CountWrapper
 } from './search-count-tags.styles';
 
-export default function SearchCountTags({ count }: any) {
+interface SearchCountTagsProps {
+  count: any;
+  filter: any;
+  setFilter: any;
+}
+
+export default function SearchCountTags({ count, filter, setFilter }: SearchCountTagsProps) {
   const { t } = useTranslation('common');
 
-  const temp = ['Voimassa oleva', 'Luonnos'];
+  const dispatch = useStoreDispatch();
+  let activeStatuses: string[] = [];;
+
+  Object.keys(filter.status).map(key => {
+    if (filter.status[key] === true) {
+      activeStatuses.push(key);
+    }
+  });
+
+  if (filter.keyword !== '') {
+    activeStatuses.push(filter.keyword);
+  }
+
+  const handleTagClose = (s: any) => {
+    console.log(s);
+    let temp = filter;
+
+    if (Object.keys(filter.status).includes(s)) {
+      temp = { ...temp, status: { ...temp.status, [s]: false } };
+    } else {
+      temp = { ...temp, keyword: '', tKeyword: ''};
+    }
+
+    dispatch(setFilter(temp));
+  };
 
   return (
     <CountWrapper>
       <CountText>
-        Käsitteitä {count} kpl seuraavilla rajauksilla
+        {t('vocabulary-results-concepts')} {count} {t('vocabulary-results-with-following-filters')}
       </CountText>
       <CountPillWrapper>
-        {temp.map((t: any, idx: number) => {
+        {activeStatuses.map((status: string, idx: number) => {
           return (
             <CountPill key={idx}>
-              {t} <CountPillIcon icon='close' />
+              {t(status)} <CountPillIcon icon='close' onClick={() => handleTagClose(status)}/>
             </CountPill>
           );
         })}

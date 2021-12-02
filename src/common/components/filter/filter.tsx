@@ -3,38 +3,66 @@ import CheckboxArea from './checkbox-area';
 import RadioButtonArea from './radio-button-area';
 import Remove from './remove';
 import SearchInputArea from './search-input-area';
-
+import DropdownArea from './dropdown-area';
 import {
   FilterWrapper,
   Header,
   Hr
 } from './filter.styles';
-import DropdownArea from './dropdown-area';
+import { vocabularyEmptyState } from '../vocabulary/vocabulary-slice';
 
+interface FilterProps {
+  filter: any;
+  resetSomeFilter?: any;
+  setSomeFilter: any;
+  type: string;
+}
 
-export default function Filter() {
+export default function Filter({ filter, resetSomeFilter, setSomeFilter, type }: FilterProps) {
   const { t } = useTranslation('common');
 
-  return (
-    <FilterWrapper>
-      <Header>
-        {t('vocabulary-filter-filter-list')}
-      </Header>
-      <Remove />
-      <Hr />
-      <CheckboxArea title={'Näytä tilat'} />
-      <Hr />
-      <CheckboxArea title={'Näytä tietoalueittain'} data={['Asuminen', 'Demokratia', 'Elinkeinot']}/>
-      <Hr />
-      <RadioButtonArea title={'Näytä vain'}/>
-      <Hr />
-      <RadioButtonArea title={'Näytä vain'} data={['concepts', 'collections']}/>
-      <Hr />
-      <DropdownArea title={'Rajaa organisaatio mukaan'} />
-      <Hr />
-      <DropdownArea title={'Rajaa organisaatio mukaan'} data={['Value1', 'Value2']} />
-      <Hr />
-      <SearchInputArea />
-    </FilterWrapper>
-  );
+  if (type === 'vocabulary') {
+    return (
+      <FilterWrapper>
+        <Header>
+          {t('vocabulary-filter-filter-list')}
+        </Header>
+        {filter !== vocabularyEmptyState.filter &&
+          <>
+            <Remove
+              title={t('vocabulary-filter-remove-all')}
+              filter={filter}
+              resetFilter={resetSomeFilter}
+            />
+            <Hr />
+          </>
+        }
+        <RadioButtonArea
+          title={t('vocabulary-filter-show-only')}
+          data={['concepts', 'collections']}
+          filter={filter}
+          setFilter={setSomeFilter}
+        />
+        {filter.showBy === 'concepts' &&
+          <>
+            <Hr />
+            <CheckboxArea
+              title={t('vocabulary-filter-show-concept-states')}
+              filter={filter}
+              setFilter={setSomeFilter}
+            />
+          </>
+        }
+        <Hr />
+        <SearchInputArea
+          title={t('vocabulary-filter-filter-by-keyword')}
+          filter={filter}
+          setFilter={setSomeFilter}
+          visualPlaceholder={t('vocabulary-filter-visual-placeholder')}
+        />
+      </FilterWrapper>
+    );
+  }
+
+  return <></>;
 }

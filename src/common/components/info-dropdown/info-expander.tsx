@@ -21,10 +21,6 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
   const contributor = data?.references.contributor?.[0].properties.prefLabel ?? '';
   const informationDomains = data?.references.inGroup[0].properties.prefLabel ?? '';
 
-  console.log('vocabLanguages', vocabularyLanguages);
-  console.log('contributor', contributor);
-  console.log('informationDomains', informationDomains);
-
   return (
     <InfoExpanderWrapper>
       <ExpanderTitleButton>

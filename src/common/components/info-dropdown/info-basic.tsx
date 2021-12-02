@@ -3,7 +3,7 @@ import { InfoBasicLanguageWrapper, InfoBasicWrapper } from './info-basic.styles'
 import { Text } from 'suomifi-ui-components';
 
 interface InfoBasicProps {
-  data?: any;
+  data: any;
   title: string;
 }
 

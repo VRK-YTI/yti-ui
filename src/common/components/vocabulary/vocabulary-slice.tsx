@@ -14,13 +14,27 @@ export interface VocabularyState {
 const vocabularyInitialState: VocabularyState = {
   filter: {
     status: {
+      'VALID': true,
+      'DRAFT': true,
+      'RETIRED': false,
+      'SUPERSEDED': false
+    },
+    keyword: '',
+    showBy: 'concepts',
+    tKeyword: ''
+  }
+};
+
+export const vocabularyEmptyState: VocabularyState = {
+  filter: {
+    status: {
       'VALID': false,
       'DRAFT': false,
       'RETIRED': false,
       'SUPERSEDED': false
     },
     keyword: '',
-    showBy: 'concept',
+    showBy: 'concepts',
     tKeyword: ''
   }
 };
@@ -84,10 +98,10 @@ export const setVocabularyFilter = (filter: VocabularyState): AppThunk => dispat
   );
 };
 
-export const resetVocabularyFilter = (showBy: string): AppThunk => dispatch => {
+export const resetVocabularyFilter = (): AppThunk => dispatch => {
   dispatch(
     vocabularySlice.actions.setVocabularyFilter(
-      vocabularyInitialState
+      vocabularyEmptyState
     )
   );
 };

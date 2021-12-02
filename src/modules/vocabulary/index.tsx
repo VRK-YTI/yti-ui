@@ -1,14 +1,10 @@
-import { useGetConceptResultQuery, useGetVocabularyQuery } from '../../common/components/vocabulary/vocabulary-slice';
-import VocabularyResults from '../../common/components/vocabulary/vocabulary-results';
-import VocabularyInfo from '../../common/components/vocabulary/vocabulary-info';
-import VocabularyTitle from '../../common/components/vocabulary/vocabulary-title';
-import VocabularyFilter from '../../common/components/vocabulary/vocabulary-filter';
-import { ResultFilterWrapper } from '../../common/components/vocabulary/vocabulary.styles';
-import { VocabularyInfoDTO, VocabularyConceptsDTO } from '../../common/interfaces/vocabulary.interface';
+import { resetVocabularyFilter, setVocabularyFilter, useGetConceptResultQuery, useGetVocabularyQuery } from '../../common/components/vocabulary/vocabulary-slice';
 import Filter from '../../common/components/filter/filter';
 import SearchResults from '../../common/components/search-results/search-results';
 import Title from '../../common/components/title/title';
 import { ResultAndFilterContainer, ResultAndStatsWrapper } from './vocabulary.styles';
+import { selectVocabularyFilter } from '../../common/components/vocabulary/vocabulary-slice';
+import { useSelector } from 'react-redux';
 
 interface VocabularyProps {
   id: string;
@@ -17,27 +13,26 @@ interface VocabularyProps {
 export default function Vocabulary({ id }: VocabularyProps) {
   const { data: concepts } = useGetConceptResultQuery(id);
   const { data: info } = useGetVocabularyQuery(id);
+  const filter: any = useSelector(selectVocabularyFilter());
 
   return (
     <>
-      <Title info={info}/>
+      <Title info={info} />
       <ResultAndFilterContainer>
         <ResultAndStatsWrapper>
-          <SearchResults data={concepts} />
+          <SearchResults
+            data={concepts}
+            filter={filter}
+            setSomeFilter={setVocabularyFilter}
+          />
         </ResultAndStatsWrapper>
-        <Filter />
+        <Filter
+          filter={filter}
+          type={'vocabulary'}
+          setSomeFilter={setVocabularyFilter}
+          resetSomeFilter={resetVocabularyFilter}
+        />
       </ResultAndFilterContainer>
-
-      {/* {info && <VocabularyTitle data={info as VocabularyInfoDTO} />}
-
-      {info && <VocabularyInfo data={info as VocabularyInfoDTO} />}
-
-      {concepts &&
-        <ResultFilterWrapper>
-          <VocabularyResults concepts={concepts?.concepts as [VocabularyConceptsDTO]} />
-          <VocabularyFilter />
-        </ResultFilterWrapper>
-      } */}
     </>
   );
 };

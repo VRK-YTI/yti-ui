@@ -1,19 +1,27 @@
-import { useTranslation } from 'react-i18next';
 import { Text } from 'suomifi-ui-components';
+import { useStoreDispatch } from '../../../store';
 import { RemoveIcon, RemoveWrapper } from './filter.styles';
 
-export default function Remove() {
-  const { t } = useTranslation('common');
+interface RemoveProps {
+  filter: any;
+  resetFilter: any;
+  title: string;
+}
+
+export default function Remove({ resetFilter, title }: RemoveProps) {
+  const dispatch = useStoreDispatch();
 
   return (
-    <RemoveWrapper>
-      <RemoveIcon icon='remove'/>
+    <RemoveWrapper
+      onClick={() => dispatch(resetFilter())}
+    >
+      <RemoveIcon icon='remove' />
       <Text
-        style={{fontSize: '14px'}}
+        style={{ fontSize: '14px' }}
         color='highlightBase'
         variant='bold'
       >
-        {t('vocabulary-filter-remove-all')}
+        {title}
       </Text>
     </RemoveWrapper>
   );
