@@ -16,8 +16,6 @@ export const SiteContainer = styled.div<LayoutProps>`
   width: 100%;
   margin: auto;
   height: 100%;
-  box-sizing: border-box;
-  border-top: ${(props) => `3px solid ${props.theme.suomifi.colors.highlightBase}`};
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -29,12 +27,12 @@ export const SiteContainer = styled.div<LayoutProps>`
 export const HeaderContainer = styled.div<LayoutProps>`
   background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
   border-bottom: ${(props) => `1px solid ${props.theme.suomifi.colors.depthLight1}`};
+  border-top: ${(props) => `3px solid ${props.theme.suomifi.colors.brandBase}`};
 `;
 
 export const NavigationContainer = styled.div<LayoutProps>`
   background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
-  border-bottom: ${(props) => `1px solid ${props.theme.suomifi.colors.depthLight1}`};
-  display: ${props => props.isSmall ? 'none' : 'block'}
+  border-bottom: ${props => props.isSmall ? '0px' : '1px'} solid ${(props) => props.theme.suomifi.colors.depthLight1};
 `;
 
 // content layout

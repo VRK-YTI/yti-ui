@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
-import { Button, Icon, LanguageMenu, LanguageMenuItem, Link, SearchInput } from 'suomifi-ui-components';
+import { Icon, LanguageMenu, LanguageMenuItem, Link, SearchInput } from 'suomifi-ui-components';
 import AuthenticationPanel from '../../common/components/authentication-panel/authentication-panel';
 import { LayoutProps } from '../../layouts/layout-props';
 import HamburgerMenu from '../../common/components/menu/hamburger-menu';
@@ -11,7 +11,9 @@ import {
   HeaderWrapper,
   SearchAndLanguageWrapper,
   SearchWrapper,
-  SiteLogo
+  SiteLogo,
+  SmallSearchButton,
+  SearchIconButton,
 } from './header.styles';
 import { useStoreDispatch } from '../../store';
 import { useSelector } from 'react-redux';
@@ -61,7 +63,7 @@ export default function Header({ props }: { props: LayoutProps }) {
                   }}
                 />
               ) : (
-                <div onClick={() => setSmallSearch(true)}><Icon icon="search" /></div>
+                <SearchIconButton onClick={() => setSmallSearch(true)}><Icon icon="search" /></SearchIconButton>
               )}
             </SearchWrapper>
             {!isSmall ? (
@@ -123,9 +125,9 @@ export default function Header({ props }: { props: LayoutProps }) {
               if (value === '') dispatch(setFilter(value));
             }}
           />
-          <Button onClick={() => setSmallSearch(false)} variant="secondaryNoBorder">
+          <SmallSearchButton onClick={() => setSmallSearch(false)} variant="secondaryNoBorder">
             {t('close')}
-          </Button>
+          </SmallSearchButton>
         </HeaderWrapper>
       }
     </>

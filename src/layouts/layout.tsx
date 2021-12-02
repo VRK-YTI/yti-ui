@@ -19,6 +19,7 @@ import Navigation from '../common/components/navigation/navigation';
 import { LayoutProps } from './layout-props';
 import BreadcrumbWrapper from '../common/components/breadcrumb/breadcrumb';
 import ErrorHeader from '../modules/header/error-header';
+import SmartHeader from '../modules/smart-header';
 
 export default function Layout({
   children,
@@ -51,7 +52,8 @@ export default function Layout({
           <meta name="twitter:card" content="summary_large_image" />
         </Head>
         <SiteContainer isSmall={isSmall}>
-          <Block variant="header">
+          <SmartHeader isSmall={isSmall} user={user} error={error} />
+          {/* <Block variant="header">
             <HeaderContainer isSmall={isSmall}>
               <MarginContainer isSmall={isSmall}>
                 {!error ? (
@@ -71,7 +73,7 @@ export default function Layout({
                 </Block>
               </MarginContainer>
             </NavigationContainer>
-          }
+          } */}
           <ContentContainer >
             <MarginContainer isSmall={isSmall}>
               <Block variant="main">

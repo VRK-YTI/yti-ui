@@ -11,7 +11,17 @@ export const ButtonsDiv = styled.div<LayoutProps>`
 export const UserInfo = styled.div`
   display: flex;
   flex-direction: column;
+  row-gap: 2px;
+
   span {
-    font-size: 14px;
+    font-size: 16px;
+    line-height: 21px;
+    font-weight: 600;
+    text-align: right;
+  }
+
+  span:not(:first-child), a {
+    font-size: 12px;
+    line-height: 15px;
   }
 `;
