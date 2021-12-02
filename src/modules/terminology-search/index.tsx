@@ -1,12 +1,11 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Grid } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
-import { Heading, Text } from 'suomifi-ui-components';
-import { TerminologySearchResults } from '../../common/components/terminology-search/terminology-search-results';
-import { selectFilter, useGetSearchResultQuery } from '../../common/components/terminology-search/terminology-search-slice';
-import TerminologySearchFilter from '../../common/components/terminology-search/terminology-search-filter';
-import { SearchCountWrapper } from '../../common/components/terminology-search/terminology-search.styles';
+import { selectFilter, useGetSearchResultQuery, setFilter } from '../../common/components/terminology-search/terminology-search-slice';
+import Title from '../../common/components/title/title';
+import { ResultAndFilterContainer, ResultAndStatsWrapper } from './terminology-search.styles';
+import SearchResults from '../../common/components/search-results/search-results';
+import Filter from '../../common/components/filter/filter';
 
 export default function TerminologySearch() {
   const { t } = useTranslation();
@@ -17,7 +16,28 @@ export default function TerminologySearch() {
 
   return (
     <>
-      <Grid container spacing={1} justifyContent='space-between' style={{ maxWidth: '100%' }}>
+      <Title info={'test'} />
+      <ResultAndFilterContainer>
+        <ResultAndStatsWrapper>
+          <SearchResults
+            data={data}
+            filter={filter}
+            setSomeFilter={setFilter}
+            type={'terminology-search'}
+          />
+        </ResultAndStatsWrapper>
+        {/* <Filter
+          filter={filter}
+          type={'vocabulary'}
+          setSomeFilter={setFilter}
+          // resetSomeFilter={resetVocabularyFilter}
+        /> */}
+      </ResultAndFilterContainer>
+
+
+
+
+      {/* <Grid container spacing={1} justifyContent='space-between' style={{ maxWidth: '100%' }}>
         <Grid item xs={12}>
           {filter != '' && <Heading variant='h1'>{t('terminology-search-keyword')} &quot;{filter}&quot;</Heading>}
         </Grid>
@@ -46,7 +66,7 @@ export default function TerminologySearch() {
         <TerminologySearchResults results={data} />
         <div style={{ margin: 10 }} />
         <TerminologySearchFilter />
-      </div>
+      </div> */}
     </>
   );
 };

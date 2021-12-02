@@ -14,43 +14,82 @@ import {
 interface SearchResultsProps {
   data: any;
   filter: any;
-  info?: any;
+  type?: any;
   setSomeFilter: any;
 }
 
-export default function SearchResults({ data, filter, info, setSomeFilter }: SearchResultsProps) {
+export default function SearchResults({ data, filter, type, setSomeFilter }: SearchResultsProps) {
   const { t, i18n } = useTranslation('common');
 
-  return (
-    <>
-      <SearchCountTags count={data?.totalHitCount} filter={filter} setFilter={setSomeFilter} />
-      <CardWrapper>
-        {data?.concepts.map((concept: any, idx: number) => {
-          return (
-            <Card key={`search-result-${idx}`}>
-              {info !== undefined &&
+  console.log(data);
+  console.log(filter);
+
+  if (type === 'terminology-search') {
+    return (
+      <>
+        {/* <SearchCountTags count={data?.totalHitCount} filter={filter} setFilter={setSomeFilter} /> */}
+        <CardWrapper>
+          {data?.terminologies.map((terminology: any, idx: number) => {
+            return (
+              <Card key={`search-result-${idx}`}>
                 <CardContributor>
-                  Patentti- ja rekisterihallitus
+                  {terminology.contributors[0].label[i18n.language]}
                 </CardContributor>
-              }
-              <CardTitle variant='h2'>
-                {concept.label[i18n.language] !== undefined ? concept.label[i18n.language] : concept?.label?.[Object.keys(concept.label)[0]]}
-              </CardTitle>
-              <CardSubtitle>
-                {t('vocabulary-info-concept').toUpperCase()} &middot; {t(`${concept.status}`).toUpperCase()} {info !== undefined && <>&middot; <CardPill>LUONNOS</CardPill></>}
-              </CardSubtitle>
-              <CardDescription>
-                {concept?.definition?.[i18n.language] !== undefined ? concept?.definition?.[i18n.language] : concept?.definition?.[Object.keys(concept?.definition)[0]]}
-              </CardDescription>
-              {info !== undefined &&
+
+                <CardTitle variant='h2'>
+                  {terminology.label[i18n.language] !== undefined ? terminology.label[i18n.language] : terminology?.label?.[Object.keys(terminology.label)[0]]}
+                </CardTitle>
+
+                <CardSubtitle>
+                  {t('terminology-search-results-terminology').toUpperCase()} &middot; <CardPill>{t(terminology.status)}</CardPill>
+                </CardSubtitle>
+
+                <CardDescription>
+                  {terminology?.description?.[i18n.language] !== undefined ? terminology?.description?.[i18n.language] : terminology?.description?.[Object.keys(terminology?.description)[0]]}
+                </CardDescription>
+
                 <CardInfoDomain>
-                  <b>Tietoalueet:</b> Yleiset tieto- ja hallintopalvelut
+                  <b>
+                    {t('terminology-search-results-information-domains')}:
+                  </b>
+                  {terminology.informationDomains.map((term: any, i: number) => {
+                    if (i !== terminology.informationDomains.length - 1) {
+                      return <span key={`term-label-${term}-${i}`}> {term.label[i18n.language]},</span>;
+                    } else {
+                      return <span key={`term-label-${term}-${i}`}> {term.label[i18n.language]}</span>;
+                    }
+                  })}
                 </CardInfoDomain>
-              }
-            </Card>
-          );
-        })}
-      </CardWrapper>
-    </>
-  );
+              </Card>
+            );
+          })}
+        </CardWrapper>
+      </>
+    );
+  } else {
+    return (
+      <>
+        <SearchCountTags count={data?.totalHitCount} filter={filter} setFilter={setSomeFilter} />
+        <CardWrapper>
+          {data?.concepts.map((concept: any, idx: number) => {
+            return (
+              <Card key={`search-result-${idx}`}>
+                <CardTitle variant='h2'>
+                  {concept.label[i18n.language] !== undefined ? concept.label[i18n.language] : concept?.label?.[Object.keys(concept.label)[0]]}
+                </CardTitle>
+
+                <CardSubtitle>
+                  {t('vocabulary-info-concept').toUpperCase()} &middot; {t(`${concept.status}`).toUpperCase()} {type !== undefined && <>&middot; <CardPill>LUONNOS</CardPill></>}
+                </CardSubtitle>
+
+                <CardDescription>
+                  {concept?.definition?.[i18n.language] !== undefined ? concept?.definition?.[i18n.language] : concept?.definition?.[Object.keys(concept?.definition)[0]]}
+                </CardDescription>
+              </Card>
+            );
+          })}
+        </CardWrapper>
+      </>
+    );
+  }
 }

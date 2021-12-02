@@ -11,13 +11,13 @@ export default function Title({ info }: TitleProps) {
   const { t, i18n } = useTranslation('common');
 
   const vocabularyTitle = info?.code != undefined;
-  const status = info?.properties.status[0].value;
-  const title = info?.properties.prefLabel.find((pLabel: any) => {
+  const status = info?.properties?.status[0].value ?? '';
+  const title = info?.properties?.prefLabel.find((pLabel: any) => {
     if (pLabel.lang === i18n.language) {
       return pLabel;
     }
   }).value ?? '';
-  const contributor = info?.references.contributor?.[0].properties.prefLabel?.find((pLabel: any) => {
+  const contributor = info?.references?.contributor?.[0].properties.prefLabel?.find((pLabel: any) => {
     if (pLabel.lang === i18n.language) {
       return pLabel;
     }
@@ -25,17 +25,20 @@ export default function Title({ info }: TitleProps) {
 
   return (
     <TitleWrapper>
-      <Contributor>{contributor}</Contributor>
+      {vocabularyTitle &&
+        <>
+          <Contributor>{contributor}</Contributor>
 
-      <Heading variant='h1'>{title}</Heading>
+          <Heading variant='h1'>{title}</Heading>
 
-      <StatusPill valid={status === 'VALID' ? 'true' : undefined}>
-        {t(`${status}`)}
-      </StatusPill>
+          <StatusPill valid={status === 'VALID' ? 'true' : undefined}>
+            {t(`${status}`)}
+          </StatusPill>
 
-      <InfoExpander data={info} />
-
-      {!vocabularyTitle && <Description>Selite</Description>}
+          <InfoExpander data={info} />
+        </>
+      }
+      {!vocabularyTitle && <Description>{t('terminology-search-info')}</Description>}
     </TitleWrapper>
   );
 }

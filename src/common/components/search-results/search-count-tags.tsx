@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useStoreDispatch } from '../../../store';
 import {
@@ -32,7 +31,6 @@ export default function SearchCountTags({ count, filter, setFilter }: SearchCoun
   }
 
   const handleTagClose = (s: any) => {
-    console.log(s);
     let temp = filter;
 
     if (Object.keys(filter.status).includes(s)) {
