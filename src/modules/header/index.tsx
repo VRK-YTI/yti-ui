@@ -46,7 +46,7 @@ export default function Header({ props }: { props: LayoutProps }) {
                   <SearchInput
                     clearButtonLabel=""
                     labelText=""
-                    defaultValue={filter}
+                    defaultValue={filter.keyword}
                     searchButtonLabel={t('terminology-search')}
                     visualPlaceholder={t('terminology-search-placeholder')}
                     wrapperProps={{ style: { minWidth: '10px', maxWidth: '400px', width: '65vw' } }}

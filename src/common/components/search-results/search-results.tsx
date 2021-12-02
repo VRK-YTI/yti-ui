@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import SearchCountTags from './search-count-tags';
 import {
@@ -8,6 +9,8 @@ import {
   CardPill,
   CardSubtitle,
   CardTitle,
+  CardTitleIcon,
+  CardTitleLink,
   CardWrapper
 } from './search-results.styles';
 
@@ -22,12 +25,11 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
   const { t, i18n } = useTranslation('common');
 
   console.log(data);
-  console.log(filter);
 
   if (type === 'terminology-search') {
     return (
       <>
-        {/* <SearchCountTags count={data?.totalHitCount} filter={filter} setFilter={setSomeFilter} /> */}
+        <SearchCountTags count={data?.totalHitCount} filter={filter} setFilter={setSomeFilter} />
         <CardWrapper>
           {data?.terminologies.map((terminology: any, idx: number) => {
             return (
@@ -37,11 +39,24 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
                 </CardContributor>
 
                 <CardTitle variant='h2'>
-                  {terminology.label[i18n.language] !== undefined ? terminology.label[i18n.language] : terminology?.label?.[Object.keys(terminology.label)[0]]}
+                  <Link passHref href={'/terminology/' + terminology.id}>
+                    <CardTitleLink href=''>
+                      <CardTitleIcon icon='registers' />
+                      <span dangerouslySetInnerHTML={{
+                        __html: terminology.label[i18n.language] !== undefined
+                          ?
+                          terminology.label[i18n.language]
+                          :
+                          terminology?.label?.[Object.keys(terminology.label)[0]]
+                      }}
+                      className='label'
+                      />
+                    </CardTitleLink>
+                  </Link>
                 </CardTitle>
 
                 <CardSubtitle>
-                  {t('terminology-search-results-terminology').toUpperCase()} &middot; <CardPill>{t(terminology.status)}</CardPill>
+                  {t('terminology-search-results-terminology').toUpperCase()} &middot; <CardPill valid={terminology.status === 'VALID' ? 'true' : undefined}>{t(terminology.status)}</CardPill>
                 </CardSubtitle>
 
                 <CardDescription>

@@ -20,11 +20,14 @@ export default function SearchCountTags({ count, filter, setFilter }: SearchCoun
   const dispatch = useStoreDispatch();
   let activeStatuses: string[] = [];;
 
-  Object.keys(filter.status).map(key => {
-    if (filter.status[key] === true) {
-      activeStatuses.push(key);
-    }
-  });
+  // TODO: poista kun päivitetty slice
+  if (filter && filter.status !== undefined) {
+    Object.keys(filter.status).map(key => {
+      if (filter.status[key] === true) {
+        activeStatuses.push(key);
+      }
+    });
+  }
 
   if (filter.keyword !== '') {
     activeStatuses.push(filter.keyword);

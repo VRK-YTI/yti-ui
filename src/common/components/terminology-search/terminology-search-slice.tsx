@@ -5,11 +5,15 @@ import type { AppState, AppThunk } from '../../../store';
 import { TerminologySearchResult } from '../../interfaces/terminology.interface';
 
 export interface SearchState {
-  filter: string;
+  filter: {
+    keyword: string;
+  };
 };
 
 const initialState: SearchState = {
-  filter: '',
+  filter: {
+    keyword: ''
+  }
 };
 
 export const terminologySearchSlice = createSlice({
@@ -67,5 +71,5 @@ export const setFilter = (filter: string): AppThunk => dispatch => {
   );
 };
 
-export const selectFilter = () => (state: AppState): string => state.terminologySearch.filter;
+export const selectFilter = () => (state: AppState): any => state.terminologySearch.filter;
 export default terminologySearchSlice.reducer;

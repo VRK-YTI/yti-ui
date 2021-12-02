@@ -10,9 +10,7 @@ import Filter from '../../common/components/filter/filter';
 export default function TerminologySearch() {
   const { t } = useTranslation();
   const filter = useSelector(selectFilter());
-  const { data } = useGetSearchResultQuery(filter);
-
-  console.log(data);
+  const { data } = useGetSearchResultQuery(filter.keyword);
 
   return (
     <>
@@ -26,12 +24,12 @@ export default function TerminologySearch() {
             type={'terminology-search'}
           />
         </ResultAndStatsWrapper>
-        {/* <Filter
+        <Filter
           filter={filter}
           type={'vocabulary'}
           setSomeFilter={setFilter}
           // resetSomeFilter={resetVocabularyFilter}
-        /> */}
+        />
       </ResultAndFilterContainer>
 
 
