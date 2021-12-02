@@ -72,5 +72,6 @@
   "vocabulary-filter-search": "Hae",
   "vocabulary-results-concepts": "Käsitteitä",
   "vocabulary-results-with-following-filters": "kpl seuraavilla rajauksilla",
-  "feedback-terminologies": "Yhteydenottopyyntö: Sanastot"
+  "feedback-terminologies": "Yhteydenottopyyntö: Sanastot",
+  "impersonate-user": "Esiinny käyttäjänä"
 }

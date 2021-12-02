@@ -6,6 +6,7 @@ import { Icon, Link, Text } from 'suomifi-ui-components';
 import AuthenticationPanel from '../authentication-panel/authentication-panel';
 import { LayoutProps } from '../../../layouts/layout-props';
 import { ButtonWrapper, MenuItemWrapper, MenuWrapper } from './hamburger-menu-styles';
+import ImpersonateHamburgerMenuWrapper from '../impersonate/impersonate-hamburger-menu-wrapper';
 
 export default function HamburgerMenu({ props }: { props: LayoutProps }) {
   const { t } = useTranslation('common');
@@ -48,7 +49,7 @@ export default function HamburgerMenu({ props }: { props: LayoutProps }) {
         >
           <MenuItem>
             <ButtonWrapper>
-              <AuthenticationPanel props={props} />
+              <AuthenticationPanel props={props} disableImpersonateWrapper />
             </ButtonWrapper>
           </MenuItem>
           <Divider />
@@ -103,6 +104,12 @@ export default function HamburgerMenu({ props }: { props: LayoutProps }) {
           <MenuItem onClick={() => handleLocaleChance('en')}>
             In English (EN)
           </MenuItem>
+
+          <ImpersonateHamburgerMenuWrapper
+            onChange={(email: string) => {
+              window.location.href = `/api/auth/fake-login?fake.login.mail?${encodeURIComponent(email)}`;
+            }}
+          />
         </Menu>
       </MenuWrapper>
     </>
