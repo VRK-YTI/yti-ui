@@ -20,7 +20,7 @@ function SearchResult({ data }: SearchResultProps) {
     data.contributors[0].label[i18n.language] ??
     data.contributors[0].label.fi :
     'Unknown contributor';
-  const description = data.description[i18n.language] ?? data.description.fi ?? '';
+  const description = data.description?.[i18n.language] ?? data.description?.fi ?? '';
 
   return (
     <SearchResultContainer>
@@ -39,7 +39,7 @@ function SearchResult({ data }: SearchResultProps) {
         {t('terminology-search-results-terminology').toUpperCase()} &middot;
       </span>
       <span className='status'>
-        {t(`terminology-search-results-${data.status}`).toUpperCase()}
+        {t(`${data.status}`).toUpperCase()}
       </span>
       <div className='description'>
         <Text>{description}</Text>
