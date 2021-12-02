@@ -8,7 +8,7 @@ interface InfoBasicProps {
 }
 
 export default function InfoBasic({ data, title }: InfoBasicProps) {
-  const { t } = useTranslation('common');
+  const { t, i18n } = useTranslation('common');
 
   return (
     <InfoBasicWrapper>
@@ -19,19 +19,27 @@ export default function InfoBasic({ data, title }: InfoBasicProps) {
           <Text>{typeof data === 'string' && data}</Text>
           :
           <InfoBasicLanguageWrapper>
-            {data.map((d: any, idx: number) => {
-              return (
-                <Text key={`basic-info-${title}-${idx}`}>
-                  {
-                    idx === data.length - 1
-                      ?
-                      <>{d.fi}</>
-                      :
-                      <>{d.fi},</>
-                  }
+            {
+              data?.[0].lang !== ''
+                ?
+                <Text key={`basic-info-${title}`}>
+                  {data?.find((d: any) => d.lang === i18n.language).value}
                 </Text>
-              );
-            })}
+                :
+                data.map((d: any, idx: number) => {
+                  return (
+                    <Text key={`basic-info-${title}-${idx}`}>
+                      {
+                        idx !== 0
+                          ?
+                          <>, {t(`vocabulary-info-${d.value}`)} {d.value.toUpperCase()}</>
+                          :
+                          <>{t(`vocabulary-info-${d.value}`)} {d.value.toUpperCase()}</>
+                      }
+                    </Text>
+                  );
+                })
+            }
           </InfoBasicLanguageWrapper>
       }
 

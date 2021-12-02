@@ -15,8 +15,6 @@ import {
 export default function SearchResults({ data }: any) {
   const { t, i18n } = useTranslation('common');
 
-  console.log(data);
-
   return (
     <>
       <SearchCountTags count={data?.totalHitCount}/>

@@ -1,29 +1,46 @@
 import { useTranslation } from 'react-i18next';
-import { ExpanderContent, ExpanderTitleButton } from 'suomifi-ui-components';
-import { InfoExpanderWrapper } from './info-expander.styles';
+import { ExpanderTitleButton } from 'suomifi-ui-components';
+import FormatISODate from '../../utils/format-iso-date';
+import { InfoExpanderWrapper, InfoExpanderContentWrapper } from './info-expander.styles';
 import InfoBlock from './info-block';
 import InfoBasic from './info-basic';
 
 interface InfoExpanderProps {
   data?: any;
-  title: string;
 }
 
-export default function InfoExpander({data, title}: InfoExpanderProps) {
+export default function InfoExpander({ data }: InfoExpanderProps) {
   const { t } = useTranslation('common');
+
+  const title = data?.properties.prefLabel ?? [];
+  const description = data?.properties.description?.[0] ?? '';
+  const vocabularyLanguages = data?.properties.language ?? '';
+  const createdDate = FormatISODate(data?.createdDate) ?? '01.01.1970, 00.00';
+  const lastModifiedDate = FormatISODate(data?.lastModifiedDate) ?? '01.01.1970, 00.00';
+  const uri = data?.uri ?? '';
+  const contributor = data?.references.contributor?.[0].properties.prefLabel ?? '';
+  const informationDomains = data?.references.inGroup[0].properties.prefLabel ?? '';
+
+  console.log('vocabLanguages', vocabularyLanguages);
+  console.log('contributor', contributor);
+  console.log('informationDomains', informationDomains);
 
   return (
     <InfoExpanderWrapper>
       <ExpanderTitleButton>
         {t('vocabulary-info-terminology')}
       </ExpanderTitleButton>
-      <ExpanderContent>
-        <InfoBlock />
-        <InfoBasic title={'Sanaston kielet'} data={[{fi: 'Suomi'}, {fi: 'Englanti'}, {fi: 'Ruotsi'}]}/>
-        <InfoBasic title={'Sanastotyyppi'} data={'Terminologinen sanasto'} />
-        <InfoBasic title={'Sisällöstä vastaa'} data={'Patentti- ja rekisterihallitus'} />
-        <InfoBasic title={'Luotu'} data={'8.11.2019, 16.27'} />
-      </ExpanderContent>
+      <InfoExpanderContentWrapper>
+        <InfoBlock title={t('vocabulary-info-name')} data={title} />
+        <InfoBlock title={t('vocabulary-info-description')} data={description} />
+        <InfoBasic title={t('vocabulary-info-information-domain')} data={informationDomains} />
+        <InfoBasic title={t('vocabulary-info-languages')} data={vocabularyLanguages} />
+        <InfoBasic title={t('vocabulary-info-vocabulary-type')} data={t('vocabulary-info-terminological-dictionary')} />
+        <InfoBasic title={t('vocabulary-info-organization')} data={contributor} />
+        <InfoBasic title={t('vocabulary-info-created-at')} data={createdDate} />
+        <InfoBasic title={t('vocabulary-info-modified-at')} data={lastModifiedDate} />
+        <InfoBasic title={'URI'} data={uri} />
+      </InfoExpanderContentWrapper>
     </InfoExpanderWrapper>
   );
 }

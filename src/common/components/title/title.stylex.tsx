@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Text } from 'suomifi-ui-components';
+import { TitleProps } from './title.props';
 
 export const Contributor = styled(Text)`
   font-size: 22px;
@@ -11,10 +12,10 @@ export const Description = styled(Text)`
   margin-top: 20px;
 `;
 
-export const StatusPill = styled(Text)`
+export const StatusPill = styled(Text)<TitleProps>`
   align-items: center;
   border-radius: 25px;
-  background-color: hsl(166, 90%, 30%);
+  background-color: ${props => props.valid ? 'hsl(166, 90%, 30%)' : props.theme.suomifi.colors.depthBase};
   color: ${(props) => props.theme.suomifi.colors.whiteBase};
   display: flex;
   font-size: 12px;

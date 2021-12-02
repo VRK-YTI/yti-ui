@@ -8,6 +8,7 @@ import { VocabularyInfoDTO, VocabularyConceptsDTO } from '../../common/interface
 import Filter from '../../common/components/filter/filter';
 import SearchResults from '../../common/components/search-results/search-results';
 import Title from '../../common/components/title/title';
+import { ResultAndFilterContainer, ResultAndStatsWrapper } from './vocabulary.styles';
 
 interface VocabularyProps {
   id: string;
@@ -19,9 +20,13 @@ export default function Vocabulary({ id }: VocabularyProps) {
 
   return (
     <>
-      <Title />
-      <SearchResults data={concepts}/>
-      <Filter />
+      <Title info={info}/>
+      <ResultAndFilterContainer>
+        <ResultAndStatsWrapper>
+          <SearchResults data={concepts} />
+        </ResultAndStatsWrapper>
+        <Filter />
+      </ResultAndFilterContainer>
 
       {/* {info && <VocabularyTitle data={info as VocabularyInfoDTO} />}
 

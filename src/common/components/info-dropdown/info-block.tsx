@@ -1,29 +1,48 @@
-import { useTranslation } from 'react-i18next';
-import { InfoBlockData, InfoBlockDescription, InfoBlockLanguage, InfoBlockTitle, InfoBlockWrapper } from './info-block.styles';
+import {
+  InfoBlockData,
+  InfoBlockDescription,
+  InfoBlockLanguage,
+  InfoBlockTitle,
+  InfoBlockWrapper
+} from './info-block.styles';
 
-export default function InfoBlock() {
-  const { t } = useTranslation('common');
+interface InfoBlockProps {
+  data: any;
+  title: string;
+}
 
-  const data = [{ lang: 'fi', desc: 'desc1' }, { lang: 'sv', desc: 'desc2' }, { lang: 'fi', desc: 'desc3' }, { lang: 'sv', desc: 'desc4' }];
-
+export default function InfoBlock({ data, title }: InfoBlockProps) {
   return (
     <InfoBlockWrapper>
       <InfoBlockTitle>
-        Otsikko
+        {title}
       </InfoBlockTitle>
       <InfoBlockData>
-        {data.map((d: any, idx: number) => {
-          return (
-            <div key={`info-block-${idx}`}>
+        {
+          data.length > 1
+            ?
+            data?.map((d: any, idx: number) => {
+              return (
+                <div key={`info-block-${title}-${idx}`}>
+                  <InfoBlockLanguage>
+                    {d.lang.toUpperCase()}
+                  </InfoBlockLanguage>
+                  <InfoBlockDescription>
+                    {d.value}
+                  </InfoBlockDescription>
+                </div>
+              );
+            })
+            :
+            <div>
               <InfoBlockLanguage>
-                {d.lang.toUpperCase()}
+                {data?.lang?.toUpperCase()}
               </InfoBlockLanguage>
               <InfoBlockDescription>
-                {d.desc}
+                {data?.value}
               </InfoBlockDescription>
             </div>
-          );
-        })}
+        }
       </InfoBlockData>
     </InfoBlockWrapper>
   );

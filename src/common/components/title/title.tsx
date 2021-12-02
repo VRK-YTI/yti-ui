@@ -3,16 +3,39 @@ import { Heading } from 'suomifi-ui-components';
 import { Contributor, Description, StatusPill, TitleWrapper } from './title.stylex';
 import InfoExpander from '../info-dropdown/info-expander';
 
-export default function Title() {
-  const { t } = useTranslation('common');
+interface TitleProps {
+  info: any;
+}
+
+export default function Title({ info }: TitleProps) {
+  const { t, i18n } = useTranslation('common');
+
+  const vocabularyTitle = info?.code != undefined;
+  const status = info?.properties.status[0].value;
+  const title = info?.properties.prefLabel.find((pLabel: any) => {
+    if (pLabel.lang === i18n.language) {
+      return pLabel;
+    }
+  }).value ?? '';
+  const contributor = info?.references.contributor?.[0].properties.prefLabel?.find((pLabel: any) => {
+    if (pLabel.lang === i18n.language) {
+      return pLabel;
+    }
+  }).value ?? '';
 
   return (
     <TitleWrapper>
-      <Contributor>Patentti- ja rekisterihallitus</Contributor>
-      <Heading variant='h1'>Testi</Heading>
-      <StatusPill>{'Voimassa oleva'.toUpperCase()}</StatusPill>
-      <InfoExpander title={t('vocabulary-info-terminology')} />
-      <Description>Selite</Description>
+      <Contributor>{contributor}</Contributor>
+
+      <Heading variant='h1'>{title}</Heading>
+
+      <StatusPill valid={status === 'VALID' ? 'true' : undefined}>
+        {t(`${status}`)}
+      </StatusPill>
+
+      <InfoExpander data={info} />
+
+      {!vocabularyTitle && <Description>Selite</Description>}
     </TitleWrapper>
   );
 }
