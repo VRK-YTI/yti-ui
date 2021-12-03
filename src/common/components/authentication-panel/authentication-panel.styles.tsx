@@ -38,4 +38,5 @@ export const LoginButtonsWrapper = styled.div<{ isSmall: boolean }>`
   gap: 5px;
 
   padding: ${props => props.isSmall ? '15px' : '0'};
+  border-bottom: ${props => props.isSmall ? '1px' : '0'} solid ${props => props.theme.suomifi.colors.depthSecondary};
 `;

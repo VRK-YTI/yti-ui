@@ -3,8 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, Text } from 'suomifi-ui-components';
 import LoginButtons from '../../common/components/authentication-panel/login-buttons';
 import MobileImpersonateWrapper from '../../common/components/impersonate/mobile-impersonate-wrapper';
-import ImpersonateHamburgerMenuWrapper from '../../common/components/impersonate/mobile-impersonate-wrapper';
-import MobileLanguageChooser from '../../common/components/language-chooser/mobile-language-chooser';
+import MobileLocaleChooser from '../../common/components/locale-chooser/mobile-locale-chooser';
 import User from '../../common/interfaces/user-interface';
 import { MobileMenuItem, MobileMenuSection } from './smart-header.styles';
 
@@ -49,7 +48,7 @@ export default function MobileMenu({ user }: MobileMenuProps) {
         </MobileMenuItem>
       </MobileMenuSection>
 
-      <MobileLanguageChooser />
+      <MobileLocaleChooser />
       <MobileImpersonateWrapper />
     </>
   );

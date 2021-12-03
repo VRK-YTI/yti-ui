@@ -2,7 +2,7 @@ import React from 'react';
 import { LanguageMenu, LanguageMenuItem } from 'suomifi-ui-components';
 import useLocales from './use-locales';
 
-export default function DesktopLanguageChooser() {
+export default function DesktopLocaleChooser() {
   const { locales, currentLocale } = useLocales();
 
   return (

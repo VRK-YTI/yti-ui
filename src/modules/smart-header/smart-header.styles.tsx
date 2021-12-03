@@ -34,7 +34,6 @@ export const MobileMenuSection = styled.ul`
 
 export const MobileMenuItem = styled.li<{ active?: boolean, inset?: boolean }>`
   height: 44px;
-  border-top: 1px solid ${props => props.theme.suomifi.colors.depthSecondary};
 
   * {
     display: block;
@@ -47,6 +46,10 @@ export const MobileMenuItem = styled.li<{ active?: boolean, inset?: boolean }>`
 
   &:hover a {
     border-left: 5px solid ${props => props.theme.suomifi.colors.highlightBase};
+  }
+
+  &:not(:last-child) {
+    border-bottom: 1px solid ${props => props.theme.suomifi.colors.depthSecondary};
   }
 `;
 
