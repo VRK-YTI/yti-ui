@@ -21,16 +21,16 @@ export default function Pagination({
   setResultStart
 }: PaginationProps) {
   const query = useRouter();
-  const items = Array.from({ length: Math.ceil(data.totalHitCount / 2) },
+  const items = Array.from({ length: Math.ceil(data.totalHitCount / 10) },
     (_, item) => item + 1);
   const [activeItem, setActiveItem] = useState<number>(
-    query.query.page !== '1' ? (parseInt(query.query.page as string, 10) - 1) * 2 : 1
+    query.query.page !== '1' ? (parseInt(query.query.page as string, 10) - 1) * 10 : 1
   );
 
   const handleClick = (i: number) => {
     setActiveItem(i);
     if (dispatch) {
-      dispatch(setResultStart((i - 1) * 2));
+      dispatch(setResultStart((i - 1) * 10));
     }
     query.replace(query.route + `?page=${i}`);
   };

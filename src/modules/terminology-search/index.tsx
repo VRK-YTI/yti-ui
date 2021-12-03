@@ -20,7 +20,7 @@ export default function TerminologySearch() {
   const dispatch = useStoreDispatch();
 
   if (query.query.page && typeof query.query.page === 'number') {
-    dispatch(setResultStart((parseInt(query.query.page as string, 10) - 1) * 2));
+    dispatch(setResultStart((parseInt(query.query.page as string, 10) - 1) * 10));
   }
 
   return (
