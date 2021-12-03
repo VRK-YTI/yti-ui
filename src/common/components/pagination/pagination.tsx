@@ -1,30 +1,41 @@
 import { useState } from 'react';
-import { useStoreDispatch, AppThunk } from '../../../store';
+import { AppDispatch, AppThunk } from '../../../store';
 import { Icon } from 'suomifi-ui-components';
 import { TerminologySearchResult } from '../../interfaces/terminology.interface';
-import { PaginationButton, PaginationWrapper } from './pagination.styles';
+import { PaginationButton, PaginationMobile, PaginationWrapper } from './pagination.styles';
 import { useRouter } from 'next/router';
 
-interface PaginationProps {
+export interface PaginationProps {
   data: TerminologySearchResult;
-  resultStart: (resultStart: number) => AppThunk;
+  dispatch?: AppDispatch;
+  isSmall?: boolean;
+  pageString: string;
+  setResultStart: (resultStart: number) => AppThunk;
 }
 
-export default function Pagination({ data, resultStart }: PaginationProps) {
-  const dispatch = useStoreDispatch();
-  const items = Array.from({ length: Math.ceil(data.totalHitCount / 10) },
-    (_, item) => item + 1);
-  const [activeItem, setActiveItem] = useState<number>(1);
-
+export default function Pagination({
+  data,
+  dispatch,
+  isSmall,
+  pageString,
+  setResultStart
+}: PaginationProps) {
   const query = useRouter();
+  const items = Array.from({ length: Math.ceil(data.totalHitCount / 2) },
+    (_, item) => item + 1);
+  const [activeItem, setActiveItem] = useState<number>(
+    query.query.page !== '1' ? (parseInt(query.query.page as string, 10) - 1) * 2 : 1
+  );
 
   const handleClick = (i: number) => {
     setActiveItem(i);
-    dispatch(resultStart((i - 1) * 10));
+    if (dispatch) {
+      dispatch(setResultStart((i - 1) * 2));
+    }
     query.replace(query.route + `?page=${i}`);
   };
 
-  if (items.length <= 1) {
+  if (items.length < 2) {
     return <></>;
   }
 
@@ -41,19 +52,24 @@ export default function Pagination({ data, resultStart }: PaginationProps) {
         />
       </PaginationButton>
 
-      {FormatItemsList(items, activeItem)
-        .map((item, idx) => {
-          return (
-            <PaginationButton
-              key={item !== '...' ? `pagination-item-${item}` : `pagination-item-${item}-${idx}`}
-              onClick={() => (activeItem !== item && typeof item === 'number') && handleClick(item)}
-              active={item === activeItem}
-              disabled={item === '...'}
-            >
-              {item}
-            </PaginationButton>
-          );
-        })}
+      {!isSmall
+        ?
+        FormatItemsList(items, activeItem)
+          .map((item, idx) => {
+            return (
+              <PaginationButton
+                key={item !== '...' ? `pagination-item-${item}` : `pagination-item-${item}-${idx}`}
+                onClick={() => (activeItem !== item && typeof item === 'number') && handleClick(item)}
+                active={item === activeItem}
+                disabled={item === '...'}
+              >
+                {item}
+              </PaginationButton>
+            );
+          })
+        :
+        <PaginationMobile>{pageString} {activeItem}/{items.length}</PaginationMobile>
+      }
 
       <PaginationButton
         disabled={activeItem === items[items.length - 1]}
@@ -98,6 +114,5 @@ function FormatItemsList(list: number[], activeItem: number) {
       formattedList.push(list[list.length - 1]);
     }
   }
-
   return formattedList;
 }

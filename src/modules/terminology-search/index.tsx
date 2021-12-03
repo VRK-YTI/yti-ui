@@ -8,7 +8,6 @@ import { selectFilter, setResultStart, selectSearchFilter, useGetSearchResultQue
 import TerminologySearchFilter from '../../common/components/terminology-search/terminology-search-filter';
 import { SearchCountWrapper } from '../../common/components/terminology-search/terminology-search.styles';
 import Pagination from '../../common/components/pagination/pagination';
-
 import { useRouter } from 'next/router';
 import { useStoreDispatch } from '../../store';
 
@@ -21,7 +20,7 @@ export default function TerminologySearch() {
   const dispatch = useStoreDispatch();
 
   if (query.query.page && typeof query.query.page === 'number') {
-    dispatch(setResultStart((query.query.page - 1) * 10));
+    dispatch(setResultStart((parseInt(query.query.page as string, 10) - 1) * 2));
   }
 
   return (
@@ -57,8 +56,14 @@ export default function TerminologySearch() {
         <TerminologySearchFilter />
       </div>
 
-      {/* Todo: Layout does not take this into consideration */}
-      {data && <Pagination data={data} resultStart={setResultStart} />}
+      {data &&
+        <Pagination
+          data={data}
+          dispatch={dispatch}
+          setResultStart={setResultStart}
+          pageString={t('pagination-page')}
+        />
+      }
     </>
   );
 };
