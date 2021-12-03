@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { selectFilter, setFilter } from '../../common/components/terminology-search/terminology-search-slice';
 import { useTranslation } from 'react-i18next';
 import { useStoreDispatch } from '../../store';
+import IconButton from '../../common/components/icon-button/icon-button';
 
 export interface SearchProps {
   isSmall: boolean;
@@ -18,10 +19,10 @@ export default function Search({ isSmall, isSearchOpen, setIsSearchOpen }: Searc
 
   if (isSmall && !isSearchOpen) {
     return (
-      <Button
+      <IconButton
         icon="search"
+        aria-label="Avaa haku"
         onClick={() => setIsSearchOpen(true)}
-        variant="secondaryNoBorder"
       />
     );
   }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from 'suomifi-ui-components';
+import IconButton from '../../common/components/icon-button/icon-button';
 
 export interface MobileNavigationToggleButtonProps {
   isOpen: boolean;
@@ -11,10 +11,10 @@ export default function MobileNavigationToggleButton({
   setIsOpen
 }: MobileNavigationToggleButtonProps) {
   return (
-    <Button
+    <IconButton
       icon={isOpen ? 'close' : 'menu'}
+      aria-label={isOpen ? 'Sulje navigaaio' : 'Avaa navigaatio'}
       onClick={() => setIsOpen(isOpen => !isOpen)}
-      variant="secondaryNoBorder"
     />
   );
 }
