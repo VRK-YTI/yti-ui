@@ -2,8 +2,9 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, Text } from 'suomifi-ui-components';
 import AuthenticationPanel from '../../common/components/authentication-panel/authentication-panel';
+import MobileLanguageChooser from '../../common/components/language-chooser/mobile-language-chooser';
 import User from '../../common/interfaces/user-interface';
-import { MobileMenuButtonWrapper, MobileMenuItem, MobileMenuLanguageItem, MobileMenuLanguageSection, MobileMenuSection } from './smart-header.styles';
+import { MobileMenuButtonWrapper, MobileMenuItem, MobileMenuSection } from './smart-header.styles';
 
 export interface MobileMenuProps {
   user?: User;
@@ -48,17 +49,7 @@ export default function MobileMenu({ user }: MobileMenuProps) {
           <Link href="/asdf">{t('site-for-administrators')}</Link>
         </MobileMenuItem>
       </MobileMenuSection>
-      <MobileMenuLanguageSection>
-        <MobileMenuLanguageItem active>
-          <Text>Suomeksi (FI)</Text>
-        </MobileMenuLanguageItem>
-        <MobileMenuLanguageItem>
-          <Link href="/asdf">På svenska (SV)</Link>
-        </MobileMenuLanguageItem>
-        <MobileMenuLanguageItem>
-          <Link href="/asdf">In English (EN)</Link>
-        </MobileMenuLanguageItem>
-      </MobileMenuLanguageSection>
+      <MobileLanguageChooser />
     </>
   );
 }

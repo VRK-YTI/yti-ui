@@ -8,10 +8,10 @@ import Search from './search';
 import MobileNavigationToggleButton from './mobile-navigation-toggle-button';
 import UserMenu from './user-menu';
 import { HeaderWrapper, ModalOverlay, ModalContent } from './smart-header.styles';
-import LanguageChooser from './language-chooser';
 import DesktopAuthenticationPanel from './desktop-authentication-panel';
 import Navigation from '../../common/components/navigation/navigation';
 import MobileMenu from './mobile-menu';
+import DesktopLanguageChooser from '../../common/components/language-chooser/desktop-language-chooser';
 
 Modal.setAppElement('#__next');
 
@@ -29,7 +29,7 @@ export default function SmartHeader({ isSmall, user, error }: { isSmall: boolean
             ) : null}
             <Search isSmall={isSmall} isSearchOpen={isSearchOpen} setIsSearchOpen={setIsSearchOpen} />
             {!isSmall ? (
-              <LanguageChooser />
+              <DesktopLanguageChooser />
             ) : null}
             {isSmall && !isSearchOpen ? (
               <MobileNavigationToggleButton isOpen={isExpanded} setIsOpen={setIsExpanded} />
