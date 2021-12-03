@@ -20,10 +20,7 @@ export default function LoginButtons({ user, isSmall = false }: LoginButtonProps
         <Button icon="login" onClick={() => setVisible(true)}>
           {t('site-login')}
         </Button>
-        <Button icon="login" onClick={() => window.location.href = '/api/auth/fake-login'}>
-          {t('site-fake-login')}
-        </Button>
-
+        
         {visible ? (
           <LoginModalView props={{ user, isSmall }} setVisible={setVisible} />
         ) : null}

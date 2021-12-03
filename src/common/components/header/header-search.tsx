@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { SearchWrapper } from '../../../modules/header/header.styles';
+import { SearchWrapper } from './header-search.styles';
 import { Icon, SearchInput } from 'suomifi-ui-components';
 import { useStoreDispatch } from '../../../store';
 import { setFilter, selectFilter } from '../terminology-search/terminology-search-slice';

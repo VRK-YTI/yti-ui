@@ -1,34 +1,24 @@
-import { render, screen } from '@testing-library/react';
+import { renderHook } from '@testing-library/react-hooks';
 import useIsSmall from './useIsSmall';
 
-function TestComponent({ params }: { params: { isSSRMobile: boolean, mediaQuery?: string } }) {
-  const isSmall = useIsSmall(params.isSSRMobile, params.mediaQuery);
-
-  return <>{isSmall ? 'Small: true' : 'Small: false'}</>;
-}
-
 describe('useIsSmall', () => {
-  test('should return true when rendered in server and isSSRMobile = true', async () => {
+  it('should return true when rendered in server and isSSRMobile = true', async () => {
     // assert global.matchMedia === undefined;
 
-    render(
-      <TestComponent params={{ isSSRMobile: true }} />
-    );
+    const { result } = renderHook(() => useIsSmall(true));
 
-    expect(screen.getByText('Small: true')).toBeTruthy();
+    expect(result.current).toEqual(true);
   });
 
-  test('should return false when rendered in server and isSSRMobile = false', async () => {
+  it('should return false when rendered in server and isSSRMobile = false', async () => {
     // assert global.matchMedia === undefined;
 
-    render(
-      <TestComponent params={{ isSSRMobile: false }} />
-    );
+    const { result } = renderHook(() => useIsSmall(false));
 
-    expect(screen.getByText('Small: false')).toBeTruthy();
+    expect(result.current).toEqual(false);
   });
 
-  test('should return true when rendered in mobile', async () => {
+  it('should return true when rendered in mobile', async () => {
     global.matchMedia = () => ({
       matches: true,
       addListener: () => {},
@@ -40,14 +30,12 @@ describe('useIsSmall', () => {
       dispatchEvent: () => false,
     });
 
-    render(
-      <TestComponent params={{ isSSRMobile: false }} />
-    );
+    const { result } = renderHook(() => useIsSmall(false));
 
-    expect(screen.getByText('Small: true')).toBeTruthy();
+    expect(result.current).toEqual(true);
   });
 
-  test('should return false when rendered in desktop', async () => {
+  it('should return false when rendered in desktop', async () => {
     global.matchMedia = () => ({
       matches: false,
       addListener: () => {},
@@ -59,10 +47,8 @@ describe('useIsSmall', () => {
       dispatchEvent: () => false,
     });
 
-    render(
-      <TestComponent params={{ isSSRMobile: true }} />
-    );
+    const { result } = renderHook(() => useIsSmall(true));
 
-    expect(screen.getByText('Small: false')).toBeTruthy();
+    expect(result.current).toEqual(false);
   });
 });
