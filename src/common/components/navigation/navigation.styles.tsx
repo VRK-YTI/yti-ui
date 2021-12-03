@@ -73,3 +73,32 @@ export const NavigationDropdownItem = styled.li<NavigationProps>`
     border-left: 4px solid ${props => props.theme.suomifi.colors.highlightBase};
   }
 `;
+
+export const MobileMenuSection = styled.ul`
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background-color: ${props => props.theme.suomifi.colors.whiteBase};
+`;
+
+export const MobileMenuItem = styled.li<{ active?: boolean, inset?: boolean }>`
+  height: 44px;
+
+  * {
+    display: block;
+    padding-top: 9px;
+    padding-bottom: 8px;
+    font-weight: ${props => props.active ? 600 : 400};
+    padding-left: ${props => props.inset ? '25px' : '10px'};
+    border-left: 5px solid ${props => props.active ? props.theme.suomifi.colors.highlightBase : 'transparent'};
+  }
+
+  &:hover a {
+    border-left: 5px solid ${props => props.theme.suomifi.colors.highlightBase};
+  }
+
+  &:not(:last-child) {
+    border-bottom: 1px solid ${props => props.theme.suomifi.colors.depthSecondary};
+  }
+`;
+

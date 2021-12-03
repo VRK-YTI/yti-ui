@@ -1,18 +1,18 @@
 import React from 'react';
 import { Button, SearchInput } from 'suomifi-ui-components';
 import { useSelector } from 'react-redux';
-import { selectFilter, setFilter } from '../../common/components/terminology-search/terminology-search-slice';
 import { useTranslation } from 'react-i18next';
-import { useStoreDispatch } from '../../store';
-import IconButton from '../../common/components/icon-button/icon-button';
+import { selectFilter, setFilter } from '../terminology-search/terminology-search-slice';
+import { useStoreDispatch } from '../../../store';
+import IconButton from '../icon-button/icon-button';
 
-export interface SearchProps {
+export interface HeaderSearchProps {
   isSmall: boolean;
   isSearchOpen: boolean;
   setIsSearchOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function Search({ isSmall, isSearchOpen, setIsSearchOpen }: SearchProps) {
+export default function HeaderSearch({ isSmall, isSearchOpen, setIsSearchOpen }: HeaderSearchProps) {
   const { t } = useTranslation('common');
   const filter = useSelector(selectFilter());
   const dispatch = useStoreDispatch();

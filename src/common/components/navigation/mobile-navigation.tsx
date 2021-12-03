@@ -1,17 +1,17 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, Text } from 'suomifi-ui-components';
-import LoginButtons from '../../common/components/authentication-panel/login-buttons';
-import MobileImpersonateWrapper from '../../common/components/impersonate/mobile-impersonate-wrapper';
-import MobileLocaleChooser from '../../common/components/locale-chooser/mobile-locale-chooser';
-import User from '../../common/interfaces/user-interface';
-import { MobileMenuItem, MobileMenuSection } from './smart-header.styles';
+import User from '../../interfaces/user-interface';
+import LoginButtons from '../authentication-panel/login-buttons';
+import MobileImpersonateWrapper from '../impersonate/mobile-impersonate-wrapper';
+import MobileLocaleChooser from '../locale-chooser/mobile-locale-chooser';
+import { MobileMenuItem, MobileMenuSection } from './navigation.styles';
 
-export interface MobileMenuProps {
+export interface MobileNavigationProps {
   user?: User;
 }
 
-export default function MobileMenu({ user }: MobileMenuProps) {
+export default function MobileNavigation({ user }: MobileNavigationProps) {
   const { t } = useTranslation('common');
 
   return (

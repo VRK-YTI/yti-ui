@@ -4,14 +4,14 @@ import Modal from 'react-modal';
 import User from '../../common/interfaces/user-interface';
 import { HeaderContainer, MarginContainer, NavigationContainer } from '../../layouts/layout.styles';
 import Logo from './logo';
-import Search from './search';
 import MobileNavigationToggleButton from './mobile-navigation-toggle-button';
 import { HeaderWrapper, ModalOverlay, ModalContent } from './smart-header.styles';
 import DesktopAuthenticationPanel from '../../common/components/authentication-panel/desktop-authentication-panel';
-import Navigation from '../../common/components/navigation/navigation';
-import MobileMenu from './mobile-menu';
+import Navigation from '../../common/components/navigation/desktop-navigation';
+import MobileNavigation from '../../common/components/navigation/mobile-navigation';
 import DesktopLocaleChooser from '../../common/components/locale-chooser/desktop-locale-chooser';
 import UserInfo from '../../common/components/authentication-panel/user-info';
+import HeaderSearch from '../../common/components/header-search/header-search';
 
 Modal.setAppElement('#__next');
 
@@ -27,7 +27,11 @@ export default function SmartHeader({ isSmall, user, error }: { isSmall: boolean
             {!isSearchOpen || !isSmall ? (
               <Logo isSmall={isSmall} />
             ) : null}
-            <Search isSmall={isSmall} isSearchOpen={isSearchOpen} setIsSearchOpen={setIsSearchOpen} />
+            <HeaderSearch
+              isSmall={isSmall}
+              isSearchOpen={isSearchOpen}
+              setIsSearchOpen={setIsSearchOpen}
+            />
             {!isSmall ? (
               <DesktopLocaleChooser />
             ) : null}
@@ -72,7 +76,7 @@ export default function SmartHeader({ isSmall, user, error }: { isSmall: boolean
 
         <Block variant="nav">
           <NavigationContainer isSmall>
-            <MobileMenu user={user} />
+            <MobileNavigation user={user} />
           </NavigationContainer>
         </Block>
       </Modal>
