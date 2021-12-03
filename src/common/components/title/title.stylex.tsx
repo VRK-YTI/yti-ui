@@ -15,7 +15,7 @@ export const Description = styled(Text)`
 export const StatusPill = styled(Text)<TitleProps>`
   align-items: center;
   border-radius: 25px;
-  background-color: ${props => props.valid ? 'hsl(166, 90%, 30%)' : props.theme.suomifi.colors.depthBase};
+  background-color: ${props => props.valid ? 'hsl(166, 90%, 30%)' : props.theme.suomifi.colors.depthDark1};
   color: ${(props) => props.theme.suomifi.colors.whiteBase};
   display: flex;
   font-size: 12px;

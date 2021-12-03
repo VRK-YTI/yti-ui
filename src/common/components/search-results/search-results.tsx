@@ -24,8 +24,6 @@ interface SearchResultsProps {
 export default function SearchResults({ data, filter, type, setSomeFilter }: SearchResultsProps) {
   const { t, i18n } = useTranslation('common');
 
-  console.log(data);
-
   if (type === 'terminology-search') {
     return (
       <>

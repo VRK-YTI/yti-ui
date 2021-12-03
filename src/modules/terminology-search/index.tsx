@@ -1,6 +1,5 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
 import { selectFilter, useGetSearchResultQuery, setFilter } from '../../common/components/terminology-search/terminology-search-slice';
 import Title from '../../common/components/title/title';
 import { ResultAndFilterContainer, ResultAndStatsWrapper } from './terminology-search.styles';
@@ -8,7 +7,6 @@ import SearchResults from '../../common/components/search-results/search-results
 import Filter from '../../common/components/filter/filter';
 
 export default function TerminologySearch() {
-  const { t } = useTranslation();
   const filter = useSelector(selectFilter());
   const { data } = useGetSearchResultQuery(filter.keyword);
 
@@ -26,7 +24,7 @@ export default function TerminologySearch() {
         </ResultAndStatsWrapper>
         <Filter
           filter={filter}
-          type={'vocabulary'}
+          type={'terminology-search'}
           setSomeFilter={setFilter}
           // resetSomeFilter={resetVocabularyFilter}
         />

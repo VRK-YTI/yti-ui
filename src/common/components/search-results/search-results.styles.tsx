@@ -25,7 +25,7 @@ export const CardInfoDomain = styled(Text)`
 
 export const CardPill = styled(Text)<SeachCountTagsProps>`
   border-radius: 25px;
-  background-color: ${props => props.valid ? 'hsl(166, 90%, 30%)' : props.theme.suomifi.colors.depthBase};
+  background-color: ${props => props.valid ? 'hsl(166, 90%, 30%)' : props.theme.suomifi.colors.depthDark1};
   color: ${(props) => props.theme.suomifi.colors.whiteBase};
   font-size: 12px;
   font-weight: 600;
@@ -48,6 +48,8 @@ export const CardTitle = styled(Heading)`
 `;
 
 export const CardTitleIcon = styled(Icon)`
+  height: 20px;
+  length: 20px;
   margin-right: 10px;
 `;
 

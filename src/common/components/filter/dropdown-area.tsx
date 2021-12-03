@@ -1,40 +1,36 @@
-import { useTranslation } from 'react-i18next';
 import { Dropdown, DropdownItem } from 'suomifi-ui-components';
+import { useStoreDispatch } from '../../../store';
+import { DropdownPlaceholder } from './filter.styles';
 
 interface DropdownProps {
   data?: any;
+  filter: any;
+  setFilter: any;
   title: string;
+  visualPlaceholder?: string;
 }
 
-export default function DropdownArea({ data, title }: DropdownProps) {
-  const { t } = useTranslation('common');
+export default function DropdownArea({ data, filter, setFilter, title, visualPlaceholder }: DropdownProps) {
+  const dispatch = useStoreDispatch();
 
-  if (data === undefined) {
-    return (
-      <div>
-        <Dropdown
-          labelText={t('terminology-search-filter-by-organization')}
-          visualPlaceholder={<i>{t('terminology-search-filter-pick-organization')}</i>}
-        >
-          <DropdownItem value={'Placeholder1'}>
-            Placeholder1
-          </DropdownItem>
-          <DropdownItem value={'Placeholder2'}>
-            Placeholder2
-          </DropdownItem>
+  data = ['Org1', 'Org2', 'Org3', 'Org4'];
 
-        </Dropdown>
-      </div>
-    );
-  }
+  const handleChange = (value: string) => {
+    dispatch(setFilter({...filter, showByOrg: value}));
+  };
 
   return (
     <div>
       <Dropdown
-        labelText={t('terminology-search-filter-by-organization')}
-        visualPlaceholder={<i>{t('terminology-search-filter-pick-organization')}</i>}
+        labelText={title}
+        visualPlaceholder={
+          <DropdownPlaceholder>
+            {visualPlaceholder}
+          </DropdownPlaceholder>
+        }
+        onChange={(value) => handleChange(value)}
       >
-        {data.map((value:any, idx:number) => {
+        {data.map((value: any, idx: number) => {
           return (
             <DropdownItem
               value={value}

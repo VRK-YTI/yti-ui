@@ -7,12 +7,30 @@ import { TerminologySearchResult } from '../../interfaces/terminology.interface'
 export interface SearchState {
   filter: {
     keyword: string;
+    showByOrg: string;
+    showByInfoDomain: string[];
+    status: {
+      'VALID': boolean;
+      'DRAFT': boolean;
+      'RETIRED': boolean;
+      'SUPERSEDED': boolean;
+    };
+    tKeyword: string;
   };
 };
 
 const initialState: SearchState = {
   filter: {
-    keyword: ''
+    keyword: '',
+    showByOrg: '',
+    showByInfoDomain: [],
+    status: {
+      'VALID': true,
+      'DRAFT': true,
+      'RETIRED': false,
+      'SUPERSEDED': false
+    },
+    tKeyword: '',
   }
 };
 

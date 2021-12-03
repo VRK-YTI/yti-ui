@@ -1,6 +1,10 @@
 import styled from 'styled-components';
 import { Checkbox, Icon, RadioButton } from 'suomifi-ui-components';
 
+export const DropdownPlaceholder = styled.i`
+  color: ${(props) => props.theme.suomifi.colors.depthDark1};
+`;
+
 export const FilterCheckbox = styled(Checkbox)`
   font-size: 16px;
   padding-top: 10px;
@@ -13,6 +17,7 @@ export const FilterRadioButton = styled(RadioButton)`
 export const FilterWrapper = styled.div`
   background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
   border: solid 1px ${(props) => props.theme.suomifi.colors.depthLight1};
+  height: max-content;
   width: 350px;
 
   > div, hr {

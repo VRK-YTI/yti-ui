@@ -62,6 +62,42 @@ export default function Filter({ filter, resetSomeFilter, setSomeFilter, type }:
         />
       </FilterWrapper>
     );
+  } else if (type === 'terminology-search') {
+    return (
+      <FilterWrapper>
+        <Header>
+          {t('vocabulary-filter-filter-list')}
+        </Header>
+
+        {/* Add organisations from api as data here*/}
+        <DropdownArea
+          title={t('terminology-search-filter-by-organization')}
+          filter={filter}
+          setFilter={setSomeFilter}
+          visualPlaceholder={t('terminology-search-filter-pick-organization')}
+        />
+        <Hr />
+        <SearchInputArea
+          title={t('vocabulary-filter-filter-by-keyword')}
+          filter={filter}
+          setFilter={setSomeFilter}
+          visualPlaceholder={t('vocabulary-filter-visual-placeholder')}
+        />
+        <Hr />
+        <CheckboxArea
+          title={t('terminology-search-filter-show-states')}
+          filter={filter}
+          setFilter={setSomeFilter}
+        />
+        <Hr />
+        <CheckboxArea
+          title={t('terminology-search-filter-show-by-information-domain')}
+          filter={filter}
+          setFilter={setSomeFilter}
+          data={['Test1', 'Test2']}
+        />
+      </FilterWrapper>
+    );
   }
 
   return <></>;
