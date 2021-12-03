@@ -13,6 +13,8 @@ interface DropdownProps {
 export default function DropdownArea({ data, filter, setFilter, title, visualPlaceholder }: DropdownProps) {
   const dispatch = useStoreDispatch();
 
+  console.log(data);
+
   data = ['Org1', 'Org2', 'Org3', 'Org4'];
 
   const handleChange = (value: string) => {

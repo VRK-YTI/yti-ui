@@ -76,10 +76,19 @@ export const terminologySearchApi = createApi({
         },
       }),
     }),
+    getGroups: builder.query({
+      query: () => ({
+        url: '/groups',
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+        },
+      }),
+    })
   }),
 });
 
-export const { useGetSearchResultQuery } = terminologySearchApi;
+export const { useGetSearchResultQuery, useGetGroupsQuery } = terminologySearchApi;
 
 export const setFilter = (filter: string): AppThunk => dispatch => {
   dispatch(

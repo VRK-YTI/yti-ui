@@ -13,12 +13,13 @@ import { vocabularyEmptyState } from '../vocabulary/vocabulary-slice';
 
 interface FilterProps {
   filter: any;
+  groups?: any;
   resetSomeFilter?: any;
   setSomeFilter: any;
   type: string;
 }
 
-export default function Filter({ filter, resetSomeFilter, setSomeFilter, type }: FilterProps) {
+export default function Filter({ filter, groups, resetSomeFilter, setSomeFilter, type }: FilterProps) {
   const { t } = useTranslation('common');
 
   if (type === 'vocabulary') {
@@ -71,9 +72,10 @@ export default function Filter({ filter, resetSomeFilter, setSomeFilter, type }:
 
         {/* Add organisations from api as data here*/}
         <DropdownArea
-          title={t('terminology-search-filter-by-organization')}
+          data={groups}
           filter={filter}
           setFilter={setSomeFilter}
+          title={t('terminology-search-filter-by-organization')}
           visualPlaceholder={t('terminology-search-filter-pick-organization')}
         />
         <Hr />
