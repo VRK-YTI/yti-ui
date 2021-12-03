@@ -14,7 +14,6 @@ import {
 import { useTranslation } from 'next-i18next';
 import User from '../common/interfaces/user-interface';
 import Footer from '../common/components/footer/footer';
-import Header from '../modules/header';
 import Navigation from '../common/components/navigation/navigation';
 import { LayoutProps } from './layout-props';
 import BreadcrumbWrapper from '../common/components/breadcrumb/breadcrumb';
