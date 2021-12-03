@@ -6,12 +6,12 @@ import { HeaderContainer, MarginContainer, NavigationContainer } from '../../lay
 import Logo from './logo';
 import Search from './search';
 import MobileNavigationToggleButton from './mobile-navigation-toggle-button';
-import UserMenu from './user-menu';
 import { HeaderWrapper, ModalOverlay, ModalContent } from './smart-header.styles';
-import DesktopAuthenticationPanel from './desktop-authentication-panel';
+import DesktopAuthenticationPanel from '../../common/components/authentication-panel/desktop-authentication-panel';
 import Navigation from '../../common/components/navigation/navigation';
 import MobileMenu from './mobile-menu';
 import DesktopLanguageChooser from '../../common/components/language-chooser/desktop-language-chooser';
+import UserInfo from '../../common/components/authentication-panel/user-info';
 
 Modal.setAppElement('#__next');
 
@@ -35,11 +35,11 @@ export default function SmartHeader({ isSmall, user, error }: { isSmall: boolean
               <MobileNavigationToggleButton isOpen={isExpanded} setIsOpen={setIsExpanded} />
             ) : null}
             {!isSmall ? (
-              <DesktopAuthenticationPanel props={{ user, isSmall }} />
+              <DesktopAuthenticationPanel user={user} />
             ) : null}
           </HeaderWrapper>
           {isSmall && isExpanded ? (
-            <UserMenu user={user} />
+            <UserInfo user={user} isSmall />
           ) : null}
         </MarginContainer>
       </HeaderContainer>

@@ -1,41 +1,30 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import AuthenticationPanel from './authentication-panel';
-import { LayoutProps } from '../../../layouts/layout-props';
+import DesktopAuthenticationPanel from './desktop-authentication-panel';
+import User from '../../interfaces/user-interface';
 
 describe('Authentication panel', () => {
-
   test('should render login button for unauthenticated user', () => {
-
-    const props = {
-      isSmall: false
-    } as LayoutProps;
-
     render(
-      <AuthenticationPanel props={props} />
+      <DesktopAuthenticationPanel />
     );
 
     expect(screen.queryByText('tr-site-login')).toBeTruthy();
   });
 
   test('should render logout button and user info for logged in user', () => {
-    const props = {
-      isSmall: false,
-      user: {
+    render(
+      <DesktopAuthenticationPanel user={{
         anonymous: false,
         email: 'admin@localhost',
         firstName: 'Admin',
         lastName: 'User'
-      }
-    } as LayoutProps;
-
-    render(
-      <AuthenticationPanel props={props} />
+      } as User} />
     );
 
     expect(screen.queryByText('Admin User')).toBeTruthy();
     expect(screen.queryByText('tr-site-login')).toBeFalsy();
-    expect(screen.queryByText('tr-site-logout'.toUpperCase())).toBeTruthy();
+    expect(screen.queryByText('tr-site-logout')).toBeTruthy();
   });
 
 });

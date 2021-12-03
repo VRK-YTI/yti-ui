@@ -1,17 +1,20 @@
 import styled from 'styled-components';
-import { LayoutProps } from '../../../layouts/layout-props';
 
-export const ButtonsDiv = styled.div<LayoutProps>`
+export const ButtonsDiv = styled.div`
   display: flex;
+  flex-grow: 1;
   justify-content: end;
-  flex-direction: ${props => props.isSmall ? 'column' : 'row'};
+  flex-direction: row;
   gap: 5px;
 `;
 
-export const UserInfo = styled.div`
+export const UserInfoWrapper = styled.div<{ isSmall: boolean }>`
   display: flex;
-  flex-direction: column;
+  flex-direction: ${props => props.isSmall ? 'row' : 'column'};
+  justify-content: space-between;
   row-gap: 2px;
+  height: ${props => props.isSmall ? '44px': 'auto'};
+  align-items: ${props => props.isSmall ? 'baseline' : 'normal'};
 
   span {
     font-size: 16px;
@@ -20,8 +23,19 @@ export const UserInfo = styled.div`
     text-align: right;
   }
 
-  span:not(:first-child), a {
+  a {
     font-size: 12px;
     line-height: 15px;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding-block: ${props => props.isSmall ? '14px' : '0'};
   }
+`;
+
+export const LoginButtonsWrapper = styled.div<{ isSmall: boolean }>`
+  display: flex;
+  flex-direction: ${props => props.isSmall ? 'column' : 'row'};
+  gap: 5px;
+
+  padding: ${props => props.isSmall ? '15px' : '0'};
 `;

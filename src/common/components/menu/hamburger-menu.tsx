@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Icon, Link, Text } from 'suomifi-ui-components';
-import AuthenticationPanel from '../authentication-panel/authentication-panel';
+// import AuthenticationPanel from '../authentication-panel/desktop-authentication-panel';
 import { LayoutProps } from '../../../layouts/layout-props';
 import { ButtonWrapper, MenuItemWrapper, MenuWrapper } from './hamburger-menu-styles';
 
@@ -48,7 +48,7 @@ export default function HamburgerMenu({ props }: { props: LayoutProps }) {
         >
           <MenuItem>
             <ButtonWrapper>
-              <AuthenticationPanel props={props} />
+              {/* <AuthenticationPanel props={props} /> */}
             </ButtonWrapper>
           </MenuItem>
           <Divider />

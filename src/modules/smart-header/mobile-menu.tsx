@@ -1,10 +1,10 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, Text } from 'suomifi-ui-components';
-import AuthenticationPanel from '../../common/components/authentication-panel/authentication-panel';
+import LoginButtons from '../../common/components/authentication-panel/login-buttons';
 import MobileLanguageChooser from '../../common/components/language-chooser/mobile-language-chooser';
 import User from '../../common/interfaces/user-interface';
-import { MobileMenuButtonWrapper, MobileMenuItem, MobileMenuSection } from './smart-header.styles';
+import { MobileMenuItem, MobileMenuSection } from './smart-header.styles';
 
 export interface MobileMenuProps {
   user?: User;
@@ -15,11 +15,8 @@ export default function MobileMenu({ user }: MobileMenuProps) {
 
   return (
     <>
-      {user?.anonymous ? (
-        <MobileMenuButtonWrapper>
-          <AuthenticationPanel props={{ isSmall: true, user }} />
-        </MobileMenuButtonWrapper>
-      ) : null}
+      <LoginButtons user={user} isSmall />
+
       <MobileMenuSection>
         <MobileMenuItem>
           <Link href="/">{t('site-frontpage')}</Link>
@@ -49,6 +46,7 @@ export default function MobileMenu({ user }: MobileMenuProps) {
           <Link href="/asdf">{t('site-for-administrators')}</Link>
         </MobileMenuItem>
       </MobileMenuSection>
+
       <MobileLanguageChooser />
     </>
   );

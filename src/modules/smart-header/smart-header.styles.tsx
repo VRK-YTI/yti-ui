@@ -17,34 +17,12 @@ export const LogoWrapper = styled.div`
   }
 `;
 
-export const AuthenticationPanelWrapper = styled.div`
-  flex-grow: 1;
-`;
-
-export const UserMenuWrapper = styled.div`
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  height: 44px;
-
-  * {
-    font-weight: 600;
-    line-height: 16px;
-  }
-
-  span {
-    font-size: 16px;
-  }
-
-  a {
-    font-size: 12px;
-    padding-block: 14px;
-    text-transform: uppercase;
-  }
-`;
-
 export const MobileMenuButtonWrapper = styled.div`
   padding: 15px;
+  display: flex;
+
+  button {
+  }
 `;
 
 export const MobileMenuSection = styled.ul`
@@ -56,6 +34,7 @@ export const MobileMenuSection = styled.ul`
 
 export const MobileMenuItem = styled.li<{ active?: boolean, inset?: boolean }>`
   height: 44px;
+  border-top: 1px solid ${props => props.theme.suomifi.colors.depthSecondary};
 
   * {
     display: block;
@@ -68,10 +47,6 @@ export const MobileMenuItem = styled.li<{ active?: boolean, inset?: boolean }>`
 
   &:hover a {
     border-left: 5px solid ${props => props.theme.suomifi.colors.highlightBase};
-  }
-
-  &:not(:last-child) {
-    border-bottom: 1px solid ${props => props.theme.suomifi.colors.depthSecondary};
   }
 `;
 

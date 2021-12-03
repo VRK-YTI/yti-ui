@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import Image from 'next/image';
 import { useTranslation } from 'react-i18next';
 import { Icon, LanguageMenu, LanguageMenuItem, Link, SearchInput } from 'suomifi-ui-components';
-import AuthenticationPanel from '../../common/components/authentication-panel/authentication-panel';
+import AuthenticationPanel from '../../common/components/authentication-panel/desktop-authentication-panel';
 import { LayoutProps } from '../../layouts/layout-props';
 import HamburgerMenu from '../../common/components/menu/hamburger-menu';
 import {
