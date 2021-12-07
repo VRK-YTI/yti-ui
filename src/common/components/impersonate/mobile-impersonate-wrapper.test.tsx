@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import ImpersonateHamburgerMenuWrapper from './mobile-impersonate-wrapper';
+import MobileImpersonateWrapper from './mobile-impersonate-wrapper';
 import useFakeableUsers from './use-fakeable-users';
 import { themeProvider } from '../../../tests/test-utils';
 
@@ -12,7 +12,7 @@ describe('ImpersonateHamburgerMenuWrapper', () => {
     mockedUseFakeableUsers.mockReturnValue([{ id: '1', email: 'admin@localhost', displayName: 'Admin User', impersonate: () => {} }]);
 
     render(
-      <ImpersonateHamburgerMenuWrapper />,
+      <MobileImpersonateWrapper />,
       { wrapper: themeProvider }
     );
 
@@ -23,7 +23,7 @@ describe('ImpersonateHamburgerMenuWrapper', () => {
     mockedUseFakeableUsers.mockReturnValue([{ id: '1', email: 'admin@localhost', displayName: 'Admin User', impersonate: () => {} }]);
 
     render(
-      <ImpersonateHamburgerMenuWrapper />,
+      <MobileImpersonateWrapper />,
       { wrapper: themeProvider }
     );
 
@@ -34,7 +34,7 @@ describe('ImpersonateHamburgerMenuWrapper', () => {
     mockedUseFakeableUsers.mockReturnValue([]);
 
     const { container } = render(
-      <ImpersonateHamburgerMenuWrapper />,
+      <MobileImpersonateWrapper />,
       { wrapper: themeProvider }
     );
 

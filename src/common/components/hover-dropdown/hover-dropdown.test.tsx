@@ -6,7 +6,7 @@ import { themeProvider } from '../../../tests/test-utils';
 describe('HoverDropdown', () => {
   it('should render children', async () => {
     render(
-      <HoverDropdown onChange={() => {}} items={[]}>
+      <HoverDropdown items={[]}>
         Children
       </HoverDropdown>,
       { wrapper: themeProvider }
@@ -17,7 +17,7 @@ describe('HoverDropdown', () => {
 
   it('should render items', async () => {
     render(
-      <HoverDropdown onChange={() => {}} items={[{ key: 'Item key', label: 'Item label', value: 'Item value' }]}>
+      <HoverDropdown items={[{ key: 'Item key', label: 'Item label', value: 'Item value' }]}>
         Children
       </HoverDropdown>,
       { wrapper: themeProvider }
