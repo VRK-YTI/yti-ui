@@ -22,7 +22,7 @@ export default function HeaderSearch({ isSearchOpen, setIsSearchOpen }: HeaderSe
     return (
       <IconButton
         icon="search"
-        aria-label="Avaa haku"
+        aria-label={t('terminology-search-open')}
         onClick={() => setIsSearchOpen(true)}
       />
     );
@@ -50,7 +50,7 @@ export default function HeaderSearch({ isSearchOpen, setIsSearchOpen }: HeaderSe
           onClick={() => setIsSearchOpen(false)}
           variant="secondaryNoBorder"
         >
-          Sulje
+          {t('close')}
         </Button>
       ) : null}
     </>

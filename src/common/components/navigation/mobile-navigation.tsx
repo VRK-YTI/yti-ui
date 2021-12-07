@@ -37,7 +37,7 @@ export default function MobileNavigation({ user }: MobileNavigationProps) {
           <Link href="/">{t('datamodel-title')}</Link>
         </MobileMenuItem>
         <MobileMenuItem inset>
-          <Link href="/">Kommentointi</Link>
+          <Link href="/">{t('comments-title')}</Link>
         </MobileMenuItem>
         <MobileMenuItem>
           <Link href="/">{t('site-information')}</Link>
