@@ -1,4 +1,5 @@
 import { ClickAwayListener } from '@material-ui/core';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from 'styled-components';
@@ -14,6 +15,7 @@ import {
 export default function DesktopNavigation() {
   const { t } = useTranslation('common');
   const [open, setOpen] = useState(false);
+  const router = useRouter();
 
   const handleDropdown = (e: any) => {
     e.preventDefault();
@@ -24,7 +26,7 @@ export default function DesktopNavigation() {
 
   return (
     <NavigationWrapper>
-      <NavigationItem active>
+      <NavigationItem active={router.pathname === '/'}>
         <Link className="main" href="/">{t('site-frontpage')}</Link>
       </NavigationItem>
       <NavigationItem>

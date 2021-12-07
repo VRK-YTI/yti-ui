@@ -18,7 +18,7 @@ export const NavigationItem = styled.li<NavigationProps>`
     display: block;
     color: ${(props) => props.theme.suomifi.colors.blackBase};
     padding: 12px 5px 9px 5px;
-    border-bottom: 3px solid transparent;
+    border-bottom: 3px solid ${props => props.active ? props.theme.suomifi.colors.highlightBase : 'transparent'};
 
     &:visited {
       color: ${(props) => props.theme.suomifi.colors.blackBase};
@@ -35,8 +35,6 @@ export const NavigationItem = styled.li<NavigationProps>`
     top: 3px;
     left: 5px;
   }
-
-  ${props => props.active ? `a { border-bottom: 3px solid ${props.theme.suomifi.colors.highlightBase} }` : ''}
 `;
 
 export const NavigationDropdownWrapper = styled.div<NavigationProps>`

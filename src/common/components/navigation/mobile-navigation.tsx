@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, Text } from 'suomifi-ui-components';
@@ -13,13 +14,14 @@ export interface MobileNavigationProps {
 
 export default function MobileNavigation({ user }: MobileNavigationProps) {
   const { t } = useTranslation('common');
+  const router = useRouter();
 
   return (
     <>
       <LoginButtons user={user} />
 
       <MobileMenuSection>
-        <MobileMenuItem>
+        <MobileMenuItem active={router.pathname === '/'}>
           <Link href="/">{t('site-frontpage')}</Link>
         </MobileMenuItem>
         <MobileMenuItem>
@@ -44,7 +46,7 @@ export default function MobileNavigation({ user }: MobileNavigationProps) {
           <Link href="/">{t('site-for-developers')}</Link>
         </MobileMenuItem>
         <MobileMenuItem>
-          <Link href="/asdf">{t('site-for-administrators')}</Link>
+          <Link href="/">{t('site-for-administrators')}</Link>
         </MobileMenuItem>
       </MobileMenuSection>
 
