@@ -1,5 +1,9 @@
 import styled from 'styled-components';
 
+export const DesktopLocaleChooserWrapper = styled.div`
+  flex-grow: 1;
+`;
+
 export const MobileMenuLanguageSection = styled.ul`
   list-style: none;
   margin: 0;

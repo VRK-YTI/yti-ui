@@ -12,23 +12,24 @@ import MobileNavigation from '../../common/components/navigation/mobile-navigati
 import DesktopLocaleChooser from '../../common/components/locale-chooser/desktop-locale-chooser';
 import UserInfo from '../../common/components/authentication-panel/user-info';
 import HeaderSearch from '../../common/components/header-search/header-search';
+import { useBreakpoints } from '../../common/components/media-query/media-query-context';
 
 Modal.setAppElement('#__next');
 
-export default function SmartHeader({ isSmall, user, error }: { isSmall: boolean, user?: User, error?: boolean }) {
+export default function SmartHeader({ user, error }: { user?: User, error?: boolean }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const { breakpoint, isSmall } = useBreakpoints();
 
   const header = (
     <Block variant="header">
-      <HeaderContainer isSmall={isSmall}>
-        <MarginContainer isSmall={isSmall}>
-          <HeaderWrapper isSmall={isSmall}>
+      <HeaderContainer>
+        <MarginContainer breakpoint={breakpoint}>
+          <HeaderWrapper breakpoint={breakpoint}>
             {!isSearchOpen || !isSmall ? (
-              <Logo isSmall={isSmall} />
+              <Logo />
             ) : null}
             <HeaderSearch
-              isSmall={isSmall}
               isSearchOpen={isSearchOpen}
               setIsSearchOpen={setIsSearchOpen}
             />
@@ -43,7 +44,7 @@ export default function SmartHeader({ isSmall, user, error }: { isSmall: boolean
             ) : null}
           </HeaderWrapper>
           {isSmall && isExpanded ? (
-            <UserInfo user={user} isSmall />
+            <UserInfo user={user} breakpoint="small" />
           ) : null}
         </MarginContainer>
       </HeaderContainer>
@@ -56,8 +57,8 @@ export default function SmartHeader({ isSmall, user, error }: { isSmall: boolean
 
       {!isSmall ? (
         <Block variant="nav">
-          <NavigationContainer isSmall={isSmall}>
-            <MarginContainer isSmall={isSmall}>
+          <NavigationContainer breakpoint={breakpoint}>
+            <MarginContainer breakpoint={breakpoint}>
               <DesktopNavigation />
             </MarginContainer>
           </NavigationContainer>
@@ -75,7 +76,7 @@ export default function SmartHeader({ isSmall, user, error }: { isSmall: boolean
         {header}
 
         <Block variant="nav">
-          <NavigationContainer isSmall>
+          <NavigationContainer breakpoint="small">
             <MobileNavigation user={user} />
           </NavigationContainer>
         </Block>

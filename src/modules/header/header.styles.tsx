@@ -1,8 +1,8 @@
 import styled from 'styled-components';
 import { Button } from 'suomifi-ui-components';
-import { LayoutProps } from '../../layouts/layout-props';
+import { Breakpoint } from '../../common/components/media-query/media-query-context';
 
-export const HeaderWrapper = styled.div<LayoutProps>`
+export const HeaderWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -16,7 +16,7 @@ export const SearchAndLanguageWrapper = styled.div`
   gap: 20px;
 `;
 
-export const SearchWrapper = styled.div<LayoutProps>`
+export const SearchWrapper = styled.div`
   max-width: 320px;
 `;
 
@@ -33,8 +33,8 @@ export const SmallSearchButton = styled(Button)`
   flex-shrink: 0;
 `;
 
-export const SiteLogo = styled.div<LayoutProps>`
-  flex-grow: ${props => props.isSmall ? '1' : '0'};
+export const SiteLogo = styled.div<{ breakpoint: Breakpoint }>`
+  flex-grow: ${props => props.breakpoint === 'small' ? '1' : '0'};
   line-height: 0;
 
   a {

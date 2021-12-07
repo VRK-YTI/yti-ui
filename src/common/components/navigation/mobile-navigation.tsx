@@ -16,7 +16,7 @@ export default function MobileNavigation({ user }: MobileNavigationProps) {
 
   return (
     <>
-      <LoginButtons user={user} isSmall />
+      <LoginButtons user={user} />
 
       <MobileMenuSection>
         <MobileMenuItem>

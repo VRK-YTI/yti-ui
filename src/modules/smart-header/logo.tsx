@@ -2,12 +2,11 @@ import React from 'react';
 import { Link } from 'suomifi-ui-components';
 import Image from 'next/image';
 import { LogoWrapper } from './smart-header.styles';
+import { useBreakpoints } from '../../common/components/media-query/media-query-context';
 
-export interface LogoProps {
-  isSmall: boolean;
-}
+export default function Logo() {
+  const { isSmall } = useBreakpoints();
 
-export default function Logo({ isSmall }: LogoProps) {
   return (
     <LogoWrapper>
       <Link href="/">

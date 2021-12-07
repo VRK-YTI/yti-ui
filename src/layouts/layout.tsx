@@ -19,28 +19,28 @@ import { LayoutProps } from './layout-props';
 import BreadcrumbWrapper from '../common/components/breadcrumb/breadcrumb';
 import ErrorHeader from '../modules/header/error-header';
 import SmartHeader from '../modules/smart-header';
+import { useBreakpoints } from '../common/components/media-query/media-query-context';
 
 export default function Layout({
   children,
   user,
   error,
-  isSmall = false,
   feedbackSubject,
 }: {
   children: any;
   user?: User;
   error?: boolean;
-  isSmall?: boolean;
   feedbackSubject?: string;
 }) {
   const { t } = useTranslation('common');
+  const { breakpoint } = useBreakpoints();
 
   const siteTitle = t('terminology');
 
   const layoutProps: LayoutProps = {
-    isSmall,
     user
   };
+
 
   return (
     <>
@@ -50,11 +50,11 @@ export default function Layout({
           <meta name="og:title" content={siteTitle} />
           <meta name="twitter:card" content="summary_large_image" />
         </Head>
-        <SiteContainer isSmall={isSmall}>
-          <SmartHeader isSmall={isSmall} user={user} error={error} />
+        <SiteContainer>
+          <SmartHeader user={user} error={error} />
           {/* <Block variant="header">
-            <HeaderContainer isSmall={isSmall}>
-              <MarginContainer isSmall={isSmall}>
+            <HeaderContainer>
+              <MarginContainer>
                 {!error ? (
                   <Header props={layoutProps} />
                 ) : (
@@ -65,8 +65,8 @@ export default function Layout({
           </Block>
 
           {!error &&
-            <NavigationContainer isSmall={isSmall}>
-              <MarginContainer isSmall={isSmall}>
+            <NavigationContainer>
+              <MarginContainer>
                 <Block variant="nav">
                   <Navigation props={layoutProps}/>
                 </Block>
@@ -74,7 +74,7 @@ export default function Layout({
             </NavigationContainer>
           } */}
           <ContentContainer >
-            <MarginContainer isSmall={isSmall}>
+            <MarginContainer breakpoint={breakpoint}>
               <Block variant="main">
                 <>
                   {!error &&
@@ -88,7 +88,7 @@ export default function Layout({
 
           {!error &&
             <FooterContainer>
-              <MarginContainer isSmall={isSmall}>
+              <MarginContainer breakpoint={breakpoint}>
                 <Footer props={layoutProps} feedbackSubject={feedbackSubject} />
               </MarginContainer>
             </FooterContainer>

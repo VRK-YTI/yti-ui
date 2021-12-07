@@ -1,18 +1,20 @@
 import { Grid } from '@material-ui/core';
 import Image from 'next/image';
 import { Link } from 'suomifi-ui-components';
-import { LayoutProps } from '../../layouts/layout-props';
+import { useBreakpoints } from '../../common/components/media-query/media-query-context';
 import { HeaderWrapper, SiteLogo } from './header.styles';
 
-export default function ErrorHeader({ props }: { props: LayoutProps }) {
+export default function ErrorHeader() {
+  const { breakpoint, isSmall } = useBreakpoints();
+
   return (
     <>
-      <HeaderWrapper isSmall={props.isSmall}>
+      <HeaderWrapper>
         <Grid container>
           <Grid item xs={12} sm={12} md={12} lg={12}>
-            <SiteLogo isSmall={props.isSmall}>
+            <SiteLogo breakpoint={breakpoint}>
               <Link href="/">
-                <Image src={props.isSmall ? '/logo-small.svg' : '/logo.svg'} width="300" height="43" alt="Logo" />
+                <Image src={isSmall ? '/logo-small.svg' : '/logo.svg'} width="300" height="43" alt="Logo" />
               </Link>
             </SiteLogo>
           </Grid>

@@ -5,7 +5,7 @@ import { ErrorPageWrapper } from './error-styles';
 export default function Error() {
   return (
     <ErrorPageWrapper>
-      <MarginContainer isSmall>
+      <MarginContainer breakpoint="small">
         <Heading variant="h1">Error - 404</Heading>
         <Paragraph>
           <Text>Sivua ei löydy</Text>

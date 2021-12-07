@@ -5,17 +5,18 @@ import { useTranslation } from 'react-i18next';
 import { selectFilter, setFilter } from '../terminology-search/terminology-search-slice';
 import { useStoreDispatch } from '../../../store';
 import IconButton from '../icon-button/icon-button';
+import { useBreakpoints } from '../media-query/media-query-context';
 
 export interface HeaderSearchProps {
-  isSmall: boolean;
   isSearchOpen: boolean;
   setIsSearchOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function HeaderSearch({ isSmall, isSearchOpen, setIsSearchOpen }: HeaderSearchProps) {
+export default function HeaderSearch({ isSearchOpen, setIsSearchOpen }: HeaderSearchProps) {
   const { t } = useTranslation('common');
   const filter = useSelector(selectFilter());
   const dispatch = useStoreDispatch();
+  const { isSmall } = useBreakpoints();
 
   if (isSmall && !isSearchOpen) {
     return (

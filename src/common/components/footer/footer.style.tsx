@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { LayoutProps } from '../../../layouts/layout-props';
+import { Breakpoint } from '../media-query/media-query-context';
 
 export const FooterContentWrapper = styled.div`
   padding: 20px 0px;
@@ -10,12 +10,12 @@ export const FooterContentWrapper = styled.div`
   }
 `;
 
-export const FooterLinkWrapper = styled.div<LayoutProps>`
+export const FooterLinkWrapper = styled.div<{ breakpoint: Breakpoint }>`
   display: flex;
   padding: 20px 0;
   column-gap: 40px;
   row-gap: 18px;
   justify-content: flex-start;
   flex-wrap: wrap;
-  flex-direction: ${props => props.isSmall ? 'column' : 'row'};
+  flex-direction: ${props => props.breakpoint === 'small' ? 'column' : 'row'};
 `;

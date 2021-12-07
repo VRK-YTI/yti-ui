@@ -11,7 +11,7 @@ export interface DesktopAuthenticationPanelProps {
 export default function DesktopAuthenticationPanel({ user }: DesktopAuthenticationPanelProps) {
   return (
     <DesktopImpersonateWrapper>
-      <UserInfo user={user} />
+      <UserInfo user={user} breakpoint="large" />
       <LoginButtons user={user} />
     </DesktopImpersonateWrapper>
   );

@@ -2,18 +2,19 @@ import { Link, Text } from 'suomifi-ui-components';
 import { useTranslation } from 'react-i18next';
 import { UserInfoWrapper } from './authentication-panel.styles';
 import User from '../../interfaces/user-interface';
+import { Breakpoint } from '../media-query/media-query-context';
 
 export interface UserInfoProps {
   user?: User;
-  isSmall?: boolean;
+  breakpoint: Breakpoint;
 }
 
-export default function UserInfo({ user, isSmall = false }: UserInfoProps) {
+export default function UserInfo({ user, breakpoint }: UserInfoProps) {
   const { t } = useTranslation('common');
 
   if (!(user?.anonymous ?? true)) {
     return (
-      <UserInfoWrapper isSmall={isSmall}>
+      <UserInfoWrapper breakpoint={breakpoint}>
         <Text>
           {`${user?.firstName} ${user?.lastName}`}
         </Text>

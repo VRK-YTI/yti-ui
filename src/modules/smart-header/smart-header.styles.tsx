@@ -1,10 +1,11 @@
 import styled from 'styled-components';
+import { Breakpoint } from '../../common/components/media-query/media-query-context';
 
-export const HeaderWrapper = styled.div<{ isSmall: boolean }>`
+export const HeaderWrapper = styled.div<{ breakpoint: Breakpoint }>`
   display: flex;
   align-items: center;
-  height: ${props => props.isSmall ? '57px' : '72px'};
-  column-gap: ${props => props.isSmall ? '0' : '20px'};
+  height: ${props => props.breakpoint === 'small' ? '57px' : '72px'};
+  column-gap: ${props => props.breakpoint === 'small' ? '0' : '20px'};
 `;
 
 export const LogoWrapper = styled.div`

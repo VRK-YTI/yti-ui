@@ -3,6 +3,7 @@ import { ExternalLink, Paragraph, Text } from 'suomifi-ui-components';
 import Image from 'next/image';
 import { LayoutProps } from '../../../layouts/layout-props';
 import { FooterContentWrapper, FooterLinkWrapper } from './footer.style';
+import { useBreakpoints } from '../media-query/media-query-context';
 
 export interface FooterProps {
   props: LayoutProps;
@@ -12,6 +13,7 @@ export interface FooterProps {
 export default function Footer({ props, feedbackSubject }: FooterProps) {
   const { t } = useTranslation('common');
   const subject = encodeURIComponent(feedbackSubject ?? String(t('feedback-terminologies')));
+  const { breakpoint } = useBreakpoints();
 
   return (
     <>
@@ -22,7 +24,7 @@ export default function Footer({ props, feedbackSubject }: FooterProps) {
         </Paragraph>
       </FooterContentWrapper>
 
-      <FooterLinkWrapper isSmall={props.isSmall}>
+      <FooterLinkWrapper breakpoint={breakpoint}>
         <ExternalLink
           href={`mailto:yhteentoimivuus@dvv.fi?subject=${subject}`}
           labelNewWindow={t('site-open-link-new-window')}

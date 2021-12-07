@@ -7,24 +7,28 @@ import TerminologySearch from '../modules/terminology-search';
 import { createCommonGetServerSideProps } from '../common/utils/create-getserversideprops';
 import User from '../common/interfaces/user-interface';
 import useUser from '../common/utils/hooks/useUser';
+import { MediaQueryContextProvider } from '../common/components/media-query/media-query-context';
 
 
 export default function SearchPage(props: {
   _netI18Next: SSRConfig;
   user: User;
+  isSSRMobile: boolean;
 }) {
   const { t } = useTranslation('common');
   const { user } = useUser({ initialData: props.user });
 
   return (
-    <Layout user={user}>
-      <Head>
-        <title>{t('search-title')}</title>
-      </Head>
-      <Heading variant="h1">{t('terminology-title')}</Heading>
+    <MediaQueryContextProvider value={{ isSSRMobile: props.isSSRMobile }}>
+      <Layout user={user}>
+        <Head>
+          <title>{t('search-title')}</title>
+        </Head>
+        <Heading variant="h1">{t('terminology-title')}</Heading>
 
-      <TerminologySearch />
-    </Layout>
+        <TerminologySearch />
+      </Layout>
+    </MediaQueryContextProvider>
   );
 }
 
