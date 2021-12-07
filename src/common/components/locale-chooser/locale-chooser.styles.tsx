@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 export const DesktopLocaleChooserWrapper = styled.div`
   flex-grow: 1;
+  flex-shrink: 0;
 `;
 
 export const MobileMenuLanguageSection = styled.ul`

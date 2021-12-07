@@ -2,11 +2,12 @@
 
 import styled from 'styled-components';
 import { Breakpoint } from '../common/components/media-query/media-query-context';
+import { resolve, small } from '../common/components/media-query/styled-helpers';
 
 export const MarginContainer = styled.div<{ breakpoint: Breakpoint }>`
   max-width: 1100px;
   margin: auto;
-  padding: ${props => props.breakpoint === 'small' ? '0 15px' : 'auto'};
+  padding: ${props => resolve(props.breakpoint, '0 15px', '0 30px', 'auto')};
 `;
 
 // main layout
@@ -31,7 +32,7 @@ export const HeaderContainer = styled.div`
 
 export const NavigationContainer = styled.div<{ breakpoint: Breakpoint }>`
   background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
-  border-bottom: ${props => props.breakpoint === 'small' ? '0px' : '1px'} solid ${(props) => props.theme.suomifi.colors.depthLight1};
+  border-bottom: ${props => small(props.breakpoint, '0px', '1px')} solid ${(props) => props.theme.suomifi.colors.depthLight1};
 `;
 
 // content layout

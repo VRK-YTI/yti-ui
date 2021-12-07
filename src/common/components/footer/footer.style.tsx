@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Breakpoint } from '../media-query/media-query-context';
+import { small } from '../media-query/styled-helpers';
 
 export const FooterContentWrapper = styled.div`
   padding: 20px 0px;
@@ -17,5 +18,5 @@ export const FooterLinkWrapper = styled.div<{ breakpoint: Breakpoint }>`
   row-gap: 18px;
   justify-content: flex-start;
   flex-wrap: wrap;
-  flex-direction: ${props => props.breakpoint === 'small' ? 'column' : 'row'};
+  flex-direction: ${props => small(props.breakpoint, 'column', 'row')};
 `;

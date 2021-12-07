@@ -1,5 +1,10 @@
 import styled from 'styled-components';
 import { Breakpoint } from '../media-query/media-query-context';
+import { small } from '../media-query/styled-helpers';
+
+export const DesktopAuthenticationPanelWrapper = styled.div`
+  flex-shrink: 0;
+`;
 
 export const ButtonsDiv = styled.div`
   display: flex;
@@ -11,11 +16,11 @@ export const ButtonsDiv = styled.div`
 
 export const UserInfoWrapper = styled.div<{ breakpoint: Breakpoint }>`
   display: flex;
-  flex-direction: ${props => props.breakpoint === 'small' ? 'row' : 'column'};
+  flex-direction: ${props => small(props.breakpoint, 'row', 'column')};
   justify-content: space-between;
   row-gap: 2px;
-  height: ${props => props.breakpoint === 'small' ? '44px': 'auto'};
-  align-items: ${props => props.breakpoint === 'small' ? 'baseline' : 'normal'};
+  height: ${props => small(props.breakpoint, '44px', 'auto')};
+  align-items: ${props => small(props.breakpoint, 'baseline', 'normal')};
 
   span {
     font-size: 16px;
@@ -29,15 +34,15 @@ export const UserInfoWrapper = styled.div<{ breakpoint: Breakpoint }>`
     line-height: 15px;
     font-weight: 600;
     text-transform: uppercase;
-    padding-block: ${props => props.breakpoint === 'small' ? '14px' : '0'};
+    padding-block: ${props => small(props.breakpoint, '14px', '0')};
   }
 `;
 
 export const LoginButtonsWrapper = styled.div<{ breakpoint: Breakpoint }>`
   display: flex;
-  flex-direction: ${props => props.breakpoint === 'small' ? 'column' : 'row'};
+  flex-direction: ${props => small(props.breakpoint, 'column', 'row')};
   gap: 5px;
 
-  padding: ${props => props.breakpoint === 'small' ? '15px' : '0'};
-  border-bottom: ${props => props.breakpoint === 'small' ? '1px' : '0'} solid ${props => props.theme.suomifi.colors.depthSecondary};
+  padding: ${props => small(props.breakpoint, '15px', '0')};
+  border-bottom: ${props => small(props.breakpoint, '1px', '0')} solid ${props => props.theme.suomifi.colors.depthSecondary};
 `;
