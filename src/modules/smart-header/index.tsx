@@ -16,7 +16,7 @@ import { useBreakpoints } from '../../common/components/media-query/media-query-
 
 Modal.setAppElement('#__next');
 
-export default function SmartHeader({ user, error }: { user?: User, error?: boolean }) {
+export default function SmartHeader({ user }: { user?: User }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { breakpoint, isSmall } = useBreakpoints();
