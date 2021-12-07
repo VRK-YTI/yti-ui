@@ -51,10 +51,10 @@ export default function Header({ props }: { props: LayoutProps }) {
                     visualPlaceholder={t('terminology-search-placeholder')}
                     wrapperProps={{ style: { minWidth: '10px', maxWidth: '400px', width: '65vw' } }}
                     onSearch={value => {
-                      if (typeof value === 'string') dispatch(setFilter(value));
+                      if (typeof value === 'string') dispatch(setFilter({...filter, keyword: value}));
                     }}
                     onChange={value => {
-                      if (value === '') dispatch(setFilter(value));
+                      if (value === '') dispatch(setFilter({...filter, keyword: value}));
                     }}
                   />
                 ) : (

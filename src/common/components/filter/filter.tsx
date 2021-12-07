@@ -14,13 +14,14 @@ import { vocabularyEmptyState } from '../vocabulary/vocabulary-slice';
 interface FilterProps {
   filter: any;
   groups?: any;
+  organizations?: any;
   resetSomeFilter?: any;
   setSomeFilter: any;
   type: string;
 }
 
-export default function Filter({ filter, groups, resetSomeFilter, setSomeFilter, type }: FilterProps) {
-  const { t } = useTranslation('common');
+export default function Filter({ filter, groups, organizations, resetSomeFilter, setSomeFilter, type }: FilterProps) {
+  const { t, i18n } = useTranslation('common');
 
   if (type === 'vocabulary') {
     return (
@@ -70,9 +71,16 @@ export default function Filter({ filter, groups, resetSomeFilter, setSomeFilter,
           {t('vocabulary-filter-filter-list')}
         </Header>
 
-        {/* Add organisations from api as data here*/}
         <DropdownArea
-          data={groups}
+          data={organizations?.map((organization: any) => {
+            let val = null;
+            organization.properties.prefLabel?.map((pLabel: any) => {
+              if (pLabel.lang === i18n.language) {
+                val = pLabel.value;
+              }
+            }).sort();
+            return val;
+          })}
           filter={filter}
           setFilter={setSomeFilter}
           title={t('terminology-search-filter-by-organization')}
@@ -96,7 +104,14 @@ export default function Filter({ filter, groups, resetSomeFilter, setSomeFilter,
           title={t('terminology-search-filter-show-by-information-domain')}
           filter={filter}
           setFilter={setSomeFilter}
-          data={['Test1', 'Test2']}
+          data={groups?.map((group: any) => {
+            let val = null;
+            group.properties.prefLabel?.map((pLabel: any) => {
+              if (pLabel.lang === i18n.language) val = pLabel.value;
+            });
+            return val;
+          }).sort()}
+          type='infoDomains'
         />
       </FilterWrapper>
     );

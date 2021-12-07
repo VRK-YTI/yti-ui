@@ -8,19 +8,28 @@ interface CheckboxProps {
   filter: any;
   setFilter: any;
   title: string;
+  type?: string;
 }
 
-export default function CheckboxArea({ data, filter, setFilter, title }: CheckboxProps) {
+export default function CheckboxArea({ data, filter, setFilter, title, type }: CheckboxProps) {
   const { t } = useTranslation('common');
   const dispatch = useStoreDispatch();
 
   const handleCheckbox = (s: string) => {
     let temp = filter;
 
-    if (temp.status[s] === false || temp.status[s] === undefined) {
-      temp = { ...temp, status: { ...temp.status, [s]: true } };
-    } else {
-      temp = { ...temp, status: { ...temp.status, [s]: false } };
+    if (type === undefined) {
+      if (temp.status[s] === false || temp.status[s] === undefined) {
+        temp = { ...temp, status: { ...temp.status, [s]: true } };
+      } else {
+        temp = { ...temp, status: { ...temp.status, [s]: false } };
+      }
+    } else if (type === 'infoDomains') {
+      if (temp.infoDomains[s] === false || temp.infoDomains[s] === undefined) {
+        temp = { ...temp, infoDomains: { ...temp.infoDomains, [s]: true } };
+      } else {
+        temp = { ...temp, infoDomains: { ...temp.infoDomains, [s]: false } };
+      }
     }
 
     dispatch(setFilter(temp));
@@ -34,28 +43,46 @@ export default function CheckboxArea({ data, filter, setFilter, title }: Checkbo
         </Text>
         <FilterCheckbox
           onClick={() => handleCheckbox('VALID')}
-          checked={filter.status['VALID'] as boolean}
+          checked={filter.status?.['VALID'] as boolean}
         >
           {t('VALID')} (n {t('vocabulary-filter-items')})
         </FilterCheckbox>
         <FilterCheckbox
           onClick={() => handleCheckbox('DRAFT')}
-          checked={filter.status['DRAFT'] as boolean}
+          checked={filter.status?.['DRAFT'] as boolean}
         >
           {t('DRAFT')} (n {t('vocabulary-filter-items')})
         </FilterCheckbox>
         <FilterCheckbox
           onClick={() => handleCheckbox('RETIRED')}
-          checked={filter.status['RETIRED'] as boolean}
+          checked={filter.status?.['RETIRED'] as boolean}
         >
           {t('RETIRED')} (n {t('vocabulary-filter-items')})
         </FilterCheckbox>
         <FilterCheckbox
           onClick={() => handleCheckbox('SUPERSEDED')}
-          checked={filter.status['SUPERSEDED'] as boolean}
+          checked={filter.status?.['SUPERSEDED'] as boolean}
         >
           {t('SUPERSEDED')} (n {t('vocabulary-filter-items')})
         </FilterCheckbox>
+      </div>
+    );
+  } else if (type === 'infoDomains') {
+    return (
+      <div>
+        <Text variant='bold' smallScreen>
+          {title}
+        </Text>
+        {data.map((value: any, idx: number) => {
+          return (
+            <FilterCheckbox key={`checkbox-${value}-${idx}`}
+              onClick={() => handleCheckbox(value)}
+              checked={filter.infoDomains?.[value] as boolean}
+            >
+              {value} (n {t('vocabulary-filter-items')})
+            </FilterCheckbox>
+          );
+        })}
       </div>
     );
   }

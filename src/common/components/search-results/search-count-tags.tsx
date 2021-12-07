@@ -20,11 +20,16 @@ export default function SearchCountTags({ count, filter, setFilter }: SearchCoun
   const dispatch = useStoreDispatch();
   let activeStatuses: string[] = [];;
 
-  // TODO: poista kun päivitetty slice
-  if (filter && filter.status !== undefined) {
-    Object.keys(filter.status).map(key => {
-      if (filter.status[key] === true) {
-        activeStatuses.push(key);
+  Object.keys(filter.status).map(key => {
+    if (filter.status[key] === true) {
+      activeStatuses.push(key);
+    }
+  });
+
+  if (filter.infoDomains) {
+    Object.keys(filter.infoDomains).map(organization => {
+      if (filter.infoDomains[organization] === true) {
+        activeStatuses.push(organization);
       }
     });
   }
@@ -33,13 +38,21 @@ export default function SearchCountTags({ count, filter, setFilter }: SearchCoun
     activeStatuses.push(filter.keyword);
   }
 
+  if (filter.showByOrg !== '') {
+    activeStatuses.push(filter.showByOrg);
+  }
+
   const handleTagClose = (s: any) => {
     let temp = filter;
 
     if (Object.keys(filter.status).includes(s)) {
       temp = { ...temp, status: { ...temp.status, [s]: false } };
+    } else if (filter.infoDomains && Object.keys(filter.infoDomains).includes(s)) {
+      temp = { ...temp, infoDomains: { ...temp.infoDomains, [s]: false } };
+    } else if (filter.showByOrg && filter.showByOrg !== '') {
+      temp = { ...temp, showByOrg: '' };
     } else {
-      temp = { ...temp, keyword: '', tKeyword: ''};
+      temp = { ...temp, keyword: '', tKeyword: '' };
     }
 
     dispatch(setFilter(temp));
@@ -54,7 +67,7 @@ export default function SearchCountTags({ count, filter, setFilter }: SearchCoun
         {activeStatuses.map((status: string, idx: number) => {
           return (
             <CountPill key={idx}>
-              {t(status)} <CountPillIcon icon='close' onClick={() => handleTagClose(status)}/>
+              {t(status)} <CountPillIcon icon='close' onClick={() => handleTagClose(status)} />
             </CountPill>
           );
         })}

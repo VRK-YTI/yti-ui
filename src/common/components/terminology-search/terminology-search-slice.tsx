@@ -6,9 +6,9 @@ import { TerminologySearchResult } from '../../interfaces/terminology.interface'
 
 export interface SearchState {
   filter: {
+    infoDomains: string[];
     keyword: string;
     showByOrg: string;
-    showByInfoDomain: string[];
     status: {
       'VALID': boolean;
       'DRAFT': boolean;
@@ -21,9 +21,9 @@ export interface SearchState {
 
 const initialState: SearchState = {
   filter: {
+    infoDomains: [],
     keyword: '',
     showByOrg: '',
-    showByInfoDomain: [],
     status: {
       'VALID': true,
       'DRAFT': true,
@@ -84,11 +84,24 @@ export const terminologySearchApi = createApi({
           'content-type': 'application/json',
         },
       }),
+    }),
+    getOrganizations: builder.query({
+      query: () => ({
+        url: '/organizations',
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+        },
+      }),
     })
   }),
 });
 
-export const { useGetSearchResultQuery, useGetGroupsQuery } = terminologySearchApi;
+export const {
+  useGetGroupsQuery,
+  useGetSearchResultQuery,
+  useGetOrganizationsQuery
+} = terminologySearchApi;
 
 export const setFilter = (filter: string): AppThunk => dispatch => {
   dispatch(
