@@ -3,15 +3,17 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from 'styled-components';
 import { Icon, Link } from 'suomifi-ui-components';
-import { LayoutProps } from '../../../layouts/layout-props';
-import { NavigationDropdownItem, NavigationDropdownList, NavigationDropdownWrapper, NavigationItem, NavigationWrapper } from './navigation.styles';
+import {
+  NavigationDropdownItem,
+  NavigationDropdownList,
+  NavigationDropdownWrapper,
+  NavigationItem,
+  NavigationWrapper
+} from './navigation.styles';
 
-export default function Navigation({ props }: { props: LayoutProps }) {
-
+export default function DesktopNavigation() {
   const { t } = useTranslation('common');
   const [open, setOpen] = useState(false);
-
-  const isSmall = props.isSmall;
 
   const handleDropdown = (e: any) => {
     e.preventDefault();
@@ -21,7 +23,7 @@ export default function Navigation({ props }: { props: LayoutProps }) {
   const theme = useTheme();
 
   return (
-    <NavigationWrapper hidden={isSmall}>
+    <NavigationWrapper>
       <NavigationItem active>
         <Link className="main" href="/">{t('site-frontpage')}</Link>
       </NavigationItem>

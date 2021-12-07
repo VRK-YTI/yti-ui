@@ -7,7 +7,7 @@ import Logo from './logo';
 import MobileNavigationToggleButton from './mobile-navigation-toggle-button';
 import { HeaderWrapper, ModalOverlay, ModalContent } from './smart-header.styles';
 import DesktopAuthenticationPanel from '../../common/components/authentication-panel/desktop-authentication-panel';
-import Navigation from '../../common/components/navigation/desktop-navigation';
+import DesktopNavigation from '../../common/components/navigation/desktop-navigation';
 import MobileNavigation from '../../common/components/navigation/mobile-navigation';
 import DesktopLocaleChooser from '../../common/components/locale-chooser/desktop-locale-chooser';
 import UserInfo from '../../common/components/authentication-panel/user-info';
@@ -58,7 +58,7 @@ export default function SmartHeader({ isSmall, user, error }: { isSmall: boolean
         <Block variant="nav">
           <NavigationContainer isSmall={isSmall}>
             <MarginContainer isSmall={isSmall}>
-              <Navigation props={{ user, isSmall }} />
+              <DesktopNavigation />
             </MarginContainer>
           </NavigationContainer>
         </Block>
