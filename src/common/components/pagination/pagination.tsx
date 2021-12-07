@@ -1,26 +1,16 @@
 import { useState } from 'react';
-import { AppDispatch, AppThunk } from '../../../store';
 import { Icon } from 'suomifi-ui-components';
-import { TerminologySearchResult } from '../../interfaces/terminology.interface';
 import { PaginationButton, PaginationMobile, PaginationWrapper } from './pagination.styles';
-import { useRouter } from 'next/router';
-
-export interface PaginationProps {
-  data: TerminologySearchResult;
-  dispatch?: AppDispatch;
-  isSmall?: boolean;
-  pageString: string;
-  setResultStart: (resultStart: number) => AppThunk;
-}
+import { PaginationProps } from './pagination-props';
 
 export default function Pagination({
   data,
   dispatch,
   isSmall,
   pageString,
-  setResultStart
+  setResultStart,
+  query
 }: PaginationProps) {
-  const query = useRouter();
   const items = Array.from({ length: Math.ceil(data.totalHitCount / 10) },
     (_, item) => item + 1);
   const [activeItem, setActiveItem] = useState<number>(

@@ -7,7 +7,6 @@ import { TerminologySearchResults } from '../../common/components/terminology-se
 import { selectFilter, setResultStart, selectSearchFilter, useGetSearchResultQuery } from '../../common/components/terminology-search/terminology-search-slice';
 import TerminologySearchFilter from '../../common/components/terminology-search/terminology-search-filter';
 import { SearchCountWrapper } from '../../common/components/terminology-search/terminology-search.styles';
-import Pagination from '../../common/components/pagination/pagination';
 import { useRouter } from 'next/router';
 import { useStoreDispatch } from '../../store';
 
@@ -19,8 +18,12 @@ export default function TerminologySearch() {
   const query = useRouter();
   const dispatch = useStoreDispatch();
 
-  if (query.query.page && typeof query.query.page === 'number') {
-    dispatch(setResultStart((parseInt(query.query.page as string, 10) - 1) * 10));
+  if (query.query.page) {
+    if (query.query.page !== '1') {
+      dispatch(setResultStart((parseInt(query.query.page as string, 10) - 1) * 10));
+    } else {
+      dispatch(setResultStart(0));
+    }
   }
 
   return (
@@ -55,15 +58,6 @@ export default function TerminologySearch() {
         <div style={{ margin: 10 }} />
         <TerminologySearchFilter />
       </div>
-
-      {data &&
-        <Pagination
-          data={data}
-          dispatch={dispatch}
-          setResultStart={setResultStart}
-          pageString={t('pagination-page')}
-        />
-      }
     </>
   );
 };

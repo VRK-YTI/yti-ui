@@ -55,7 +55,7 @@ export const terminologySearchApi = createApi({
           query: value.filter,
           searchConcepts: true,
           prefLang: 'fi',
-          pageSize: 2,
+          pageSize: 10,
           pageFrom: value.resultStart,
         },
       }),

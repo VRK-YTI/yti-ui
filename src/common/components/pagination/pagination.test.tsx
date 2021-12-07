@@ -7,11 +7,14 @@ import { lightTheme } from '../../../layouts/theme';
 import { makeStore } from '../../../store';
 import { Provider } from 'react-redux';
 import { setResultStart } from '../terminology-search/terminology-search-slice';
+import { useRouter } from 'next/router';
 
 describe('pagination', () => {
   test('should render component', () => {
     const store = makeStore();
-
+    store.dispatch = jest.fn();
+    const query = useRouter();
+    query.query = { page: '0' };
     const data = {
       'deepHits': undefined,
       'totalHitCount': 80,
@@ -22,12 +25,18 @@ describe('pagination', () => {
     render(
       <Provider store={store}>
         <ThemeProvider theme={lightTheme}>
-          <Pagination data={data} resultStart={setResultStart} />
+          <Pagination
+            data={data}
+            dispatch={store.dispatch}
+            setResultStart={setResultStart}
+            pageString={'Page'}
+            query={query}
+          />
         </ThemeProvider>
       </Provider>
     );
 
-    for (let i = 1; i <= data.totalHitCount / 10; i++) {
+    for (let i = 1; i <= 7; i++) {
       expect(screen.getByText(i)).toBeInTheDocument;
     }
 
@@ -35,7 +44,9 @@ describe('pagination', () => {
 
   test('should render empty when list is smaller than 10', () => {
     const store = makeStore();
-
+    store.dispatch = jest.fn();
+    const query = useRouter();
+    query.query = { page: '0' };
     const data = {
       'deepHits': undefined,
       'totalHitCount': 7,
@@ -46,7 +57,13 @@ describe('pagination', () => {
     render(
       <Provider store={store}>
         <ThemeProvider theme={lightTheme}>
-          <Pagination data={data} resultStart={setResultStart} />
+          <Pagination
+            data={data}
+            dispatch={store.dispatch}
+            setResultStart={setResultStart}
+            pageString={'Page'}
+            query={query}
+          />
         </ThemeProvider>
       </Provider>
     );
@@ -59,7 +76,8 @@ describe('pagination', () => {
 
   test('should change active item', () => {
     const store = makeStore();
-
+    const query = useRouter();
+    query.query = { page: '0' };
     const data = {
       'deepHits': undefined,
       'totalHitCount': 50,
@@ -70,7 +88,13 @@ describe('pagination', () => {
     render(
       <Provider store={store}>
         <ThemeProvider theme={lightTheme}>
-          <Pagination data={data} resultStart={setResultStart} />
+          <Pagination
+            data={data}
+            dispatch={store.dispatch}
+            setResultStart={setResultStart}
+            pageString={'Page'}
+            query={query}
+          />
         </ThemeProvider>
       </Provider>
     );
@@ -83,7 +107,6 @@ describe('pagination', () => {
     userEvent.click(screen.getByTestId('pagination-right'));
     userEvent.click(screen.getByTestId('pagination-right'));
     expect(store.getState().terminologySearch.searchFilter.resultStart).toEqual(30);
-
   });
 
 });
