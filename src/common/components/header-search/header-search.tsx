@@ -1,11 +1,12 @@
 import React from 'react';
-import { Button, SearchInput } from 'suomifi-ui-components';
+import { SearchInput } from 'suomifi-ui-components';
 import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { selectFilter, setFilter } from '../terminology-search/terminology-search-slice';
 import { useStoreDispatch } from '../../../store';
 import IconButton from '../icon-button/icon-button';
 import { useBreakpoints } from '../media-query/media-query-context';
+import { CloseButton } from './header-search.styles';
 
 export interface HeaderSearchProps {
   isSearchOpen: boolean;
@@ -46,12 +47,12 @@ export default function HeaderSearch({ isSearchOpen, setIsSearchOpen }: HeaderSe
         }}
       />
       {isSmall ? (
-        <Button
+        <CloseButton
           onClick={() => setIsSearchOpen(false)}
           variant="secondaryNoBorder"
         >
           {t('close')}
-        </Button>
+        </CloseButton>
       ) : null}
     </>
   );
