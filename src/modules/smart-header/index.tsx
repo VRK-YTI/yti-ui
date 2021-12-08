@@ -21,50 +21,16 @@ export default function SmartHeader({ user }: { user?: User }) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { breakpoint, isSmall } = useBreakpoints();
 
-  const header = (
-    <Block variant="header">
-      <HeaderContainer>
-        <MarginContainer breakpoint={breakpoint}>
-          <HeaderWrapper breakpoint={breakpoint}>
-            {!isSearchOpen || !isSmall ? (
-              <Logo />
-            ) : null}
-            <HeaderSearch
-              isSearchOpen={isSearchOpen}
-              setIsSearchOpen={setIsSearchOpen}
-            />
-            {!isSmall ? (
-              <DesktopLocaleChooser />
-            ) : null}
-            {isSmall && !isSearchOpen ? (
-              <MobileNavigationToggleButton isOpen={isExpanded} setIsOpen={setIsExpanded} />
-            ) : null}
-            {!isSmall ? (
-              <DesktopAuthenticationPanel user={user} />
-            ) : null}
-          </HeaderWrapper>
-          {isSmall && isExpanded ? (
-            <UserInfo user={user} breakpoint="small" />
-          ) : null}
-        </MarginContainer>
-      </HeaderContainer>
-    </Block>
-  );
-
   return (
     <>
-      {header}
+      {renderHeader()}
+      {renderDesktopNavigation()}
+      {renderMobileNavigationModal()}
+    </>
+  );
 
-      {!isSmall ? (
-        <Block variant="nav">
-          <NavigationContainer breakpoint={breakpoint}>
-            <MarginContainer breakpoint={breakpoint}>
-              <DesktopNavigation />
-            </MarginContainer>
-          </NavigationContainer>
-        </Block>
-      ) : null}
-
+  function renderMobileNavigationModal() {
+    return (
       <Modal
         isOpen={isSmall && isExpanded}
         onRequestClose={() => setIsExpanded(false)}
@@ -73,14 +39,104 @@ export default function SmartHeader({ user }: { user?: User }) {
         overlayClassName={String(ModalOverlay)}
         className={String(ModalContent)}
       >
-        {header}
+        {renderHeader()}
+        {renderMobileNavigation()}
+      </Modal>
+    );
+  }
 
+  function renderMobileNavigation() {
+    return (
+      <Block variant="nav">
+        <NavigationContainer breakpoint="small">
+          <MobileNavigation user={user} />
+        </NavigationContainer>
+      </Block>
+    );
+  }
+
+  function renderDesktopNavigation() {
+    if (!isSmall) {
+      return (
         <Block variant="nav">
-          <NavigationContainer breakpoint="small">
-            <MobileNavigation user={user} />
+          <NavigationContainer breakpoint={breakpoint}>
+            <MarginContainer breakpoint={breakpoint}>
+              <DesktopNavigation />
+            </MarginContainer>
           </NavigationContainer>
         </Block>
-      </Modal>
-    </>
-  );
+      );
+    }
+  }
+
+  function renderHeader() {
+    return (
+      <Block variant="header">
+        <HeaderContainer>
+          <MarginContainer breakpoint={breakpoint}>
+            <HeaderWrapper breakpoint={breakpoint}>
+              {renderLogo()}
+              {renderHeaderSearch()}
+              {renderDesktopLocaleChooser()}
+              {renderMobileNavigationToggleButton()}
+              {renderDesktopAuthenticationPanel()}
+            </HeaderWrapper>
+            {renderUserInfo()}
+          </MarginContainer>
+        </HeaderContainer>
+      </Block>
+    );
+  }
+
+  function renderLogo() {
+    if (!isSearchOpen || !isSmall) {
+      return (
+        <Logo />
+      );
+    }
+  }
+
+  function renderHeaderSearch() {
+    return (
+      <HeaderSearch
+        isSearchOpen={isSearchOpen}
+        setIsSearchOpen={setIsSearchOpen}
+      />
+    );
+  }
+
+  function renderDesktopLocaleChooser() {
+    if (!isSmall) {
+      return (
+        <DesktopLocaleChooser />
+      );
+    }
+  }
+
+  function renderMobileNavigationToggleButton() {
+    if (isSmall && !isSearchOpen) {
+      return (
+        <MobileNavigationToggleButton
+          isOpen={isExpanded}
+          setIsOpen={setIsExpanded}
+        />
+      );
+    }
+  }
+
+  function renderDesktopAuthenticationPanel() {
+    if (!isSmall) {
+      return (
+        <DesktopAuthenticationPanel user={user} />
+      );
+    }
+  }
+
+  function renderUserInfo() {
+    if (isSmall && isExpanded) {
+      return (
+        <UserInfo user={user} breakpoint="small" />
+      );
+    }
+  }
 }
