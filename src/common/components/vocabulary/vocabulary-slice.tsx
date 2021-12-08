@@ -98,6 +98,14 @@ export const setVocabularyFilter = (filter: VocabularyState): AppThunk => dispat
   );
 };
 
+export const initializeVocabularyFilter = (): AppThunk => dispatch => {
+  dispatch(
+    vocabularySlice.actions.setVocabularyFilter(
+      vocabularyInitialState
+    )
+  );
+};
+
 export const resetVocabularyFilter = (): AppThunk => dispatch => {
   dispatch(
     vocabularySlice.actions.setVocabularyFilter(

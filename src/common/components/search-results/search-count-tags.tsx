@@ -34,11 +34,11 @@ export default function SearchCountTags({ count, filter, setFilter }: SearchCoun
     });
   }
 
-  if (filter.keyword !== '') {
+  if (filter.keyword) {
     activeStatuses.push(filter.keyword);
   }
 
-  if (filter.showByOrg !== '') {
+  if (filter.showByOrg) {
     activeStatuses.push(filter.showByOrg);
   }
 

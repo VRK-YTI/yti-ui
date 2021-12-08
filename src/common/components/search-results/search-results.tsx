@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
+import filterData from '../../utils/filter-data';
 import SearchCountTags from './search-count-tags';
 import {
   Card,
@@ -25,11 +26,13 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
   const { t, i18n } = useTranslation('common');
 
   if (type === 'terminology-search') {
+    let filteredData = filterData(data, filter, i18n.language);
+
     return (
       <>
-        <SearchCountTags count={data?.totalHitCount} filter={filter} setFilter={setSomeFilter} />
+        <SearchCountTags count={filteredData?.totalHitCount} filter={filter} setFilter={setSomeFilter} />
         <CardWrapper>
-          {data?.terminologies.map((terminology: any, idx: number) => {
+          {filteredData?.terminologies?.map((terminology: any, idx: number) => {
             return (
               <Card key={`search-result-${idx}`}>
                 <CardContributor>

@@ -19,7 +19,7 @@ export interface SearchState {
   };
 };
 
-const initialState: SearchState = {
+export const initialState: SearchState = {
   filter: {
     infoDomains: [],
     keyword: '',
