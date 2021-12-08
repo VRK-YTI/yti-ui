@@ -83,11 +83,13 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
       </>
     );
   } else {
+    let filteredData = filterData(data, filter, i18n.language);
+
     return (
       <>
-        <SearchCountTags count={data?.totalHitCount} filter={filter} setFilter={setSomeFilter} />
+        <SearchCountTags count={filteredData?.totalHitCount} filter={filter} setFilter={setSomeFilter} />
         <CardWrapper>
-          {data?.concepts.map((concept: any, idx: number) => {
+          {filteredData?.concepts.map((concept: any, idx: number) => {
             return (
               <Card key={`search-result-${idx}`}>
                 <CardTitle variant='h2'>

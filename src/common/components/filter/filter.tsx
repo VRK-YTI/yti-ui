@@ -21,7 +21,14 @@ interface FilterProps {
   type: string;
 }
 
-export default function Filter({ filter, groups, organizations, resetSomeFilter, setSomeFilter, type }: FilterProps) {
+export default function Filter({
+  filter,
+  groups,
+  organizations,
+  resetSomeFilter,
+  setSomeFilter,
+  type
+}: FilterProps) {
   const { t, i18n } = useTranslation('common');
 
   if (type === 'vocabulary') {
