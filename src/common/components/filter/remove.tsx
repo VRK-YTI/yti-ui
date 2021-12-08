@@ -3,8 +3,7 @@ import { useStoreDispatch } from '../../../store';
 import { RemoveIcon, RemoveWrapper } from './filter.styles';
 
 interface RemoveProps {
-  filter: any;
-  resetFilter: any;
+  resetFilter?: any;
   title: string;
 }
 

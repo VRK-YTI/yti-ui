@@ -10,6 +10,7 @@ import {
   Hr
 } from './filter.styles';
 import { vocabularyEmptyState } from '../vocabulary/vocabulary-slice';
+import { initialState } from '../terminology-search/terminology-search-slice';
 
 interface FilterProps {
   filter: any;
@@ -29,11 +30,10 @@ export default function Filter({ filter, groups, organizations, resetSomeFilter,
         <Header>
           {t('vocabulary-filter-filter-list')}
         </Header>
-        {filter !== vocabularyEmptyState.filter &&
+        {JSON.stringify(filter) !== JSON.stringify(vocabularyEmptyState.filter) &&
           <>
             <Remove
               title={t('vocabulary-filter-remove-all')}
-              filter={filter}
               resetFilter={resetSomeFilter}
             />
             <Hr />
@@ -70,6 +70,24 @@ export default function Filter({ filter, groups, organizations, resetSomeFilter,
         <Header>
           {t('vocabulary-filter-filter-list')}
         </Header>
+
+        {
+          (JSON.stringify(filter) !== JSON.stringify(initialState.filter)
+            &&
+            Object.keys(filter.infoDomains).some((id: any) => {
+              if (filter.infoDomains[id]) {
+                return true;
+              }
+            }))
+          &&
+          <>
+            <Remove
+              title={t('vocabulary-filter-remove-all')}
+              resetFilter={resetSomeFilter}
+            />
+            <Hr />
+          </>
+        }
 
         <DropdownArea
           data={organizations?.map((organization: any) => {

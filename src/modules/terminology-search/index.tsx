@@ -3,6 +3,7 @@ import {
   selectFilter,
   useGetGroupsQuery,
   useGetSearchResultQuery,
+  resetFilter,
   setFilter,
   useGetOrganizationsQuery
 } from '../../common/components/terminology-search/terminology-search-slice';
@@ -35,7 +36,7 @@ export default function TerminologySearch() {
           organizations={organizations}
           type={'terminology-search'}
           setSomeFilter={setFilter}
-        // resetSomeFilter={resetVocabularyFilter}
+          resetSomeFilter={resetFilter}
         />
       </ResultAndFilterContainer>
     </>

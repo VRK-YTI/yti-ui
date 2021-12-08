@@ -77,7 +77,10 @@ export default function CheckboxArea({ data, filter, setFilter, title, type }: C
           return (
             <FilterCheckbox key={`checkbox-${value}-${idx}`}
               onClick={() => handleCheckbox(value)}
-              checked={filter.infoDomains?.[value] as boolean}
+              checked={
+                filter.infoDomains?.[value] !== undefined &&
+                filter.infoDomains?.[value] as boolean
+              }
             >
               {value} (n {t('vocabulary-filter-items')})
             </FilterCheckbox>

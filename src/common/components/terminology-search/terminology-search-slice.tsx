@@ -111,5 +111,13 @@ export const setFilter = (filter: string): AppThunk => dispatch => {
   );
 };
 
+export const resetFilter = (): AppThunk => dispatch => {
+  dispatch(
+    terminologySearchSlice.actions.setFilter(
+      initialState
+    )
+  );
+};
+
 export const selectFilter = () => (state: AppState): any => state.terminologySearch.filter;
 export default terminologySearchSlice.reducer;
