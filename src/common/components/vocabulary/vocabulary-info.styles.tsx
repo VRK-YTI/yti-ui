@@ -76,15 +76,28 @@ export const InformationDomainWrapper = styled.div`
 `;
 
 export const SimpleInformationWrapper = styled.div`
-  margin-bottom: 16px;
+  max-width: 70%;
+
+  :not(:last-child) {
+    margin-bottom: 16px;
+  }
 
   div {
     margin-top: 6px;
   }
+
+  button {
+    margin-top: 20px;
+
+    :not(:first-of-type) {
+      margin-left: 20px;
+    }
+  }
 `;
 
 export const HR = styled.hr`
-  color: ${(props) => props.theme.suomifi.colors.depthLight3};
+  border: none;
+  border-top: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
   margin-top: 30px;
   margin-bottom: 30px;
 `;
