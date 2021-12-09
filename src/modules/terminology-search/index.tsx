@@ -4,6 +4,7 @@ import {
   useGetGroupsQuery,
   useGetSearchResultQuery,
   resetFilter,
+  SearchState,
   setFilter,
   useGetOrganizationsQuery
 } from '../../common/components/terminology-search/terminology-search-slice';
@@ -31,7 +32,7 @@ export default function TerminologySearch() {
           />
         </ResultAndStatsWrapper>
         <Filter
-          filter={filter}
+          filter={filter as SearchState['filter']}
           groups={groups}
           organizations={organizations}
           type={'terminology-search'}

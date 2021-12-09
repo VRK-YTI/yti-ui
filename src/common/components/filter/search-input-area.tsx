@@ -1,10 +1,12 @@
 import { useTranslation } from 'react-i18next';
 import { SearchInput } from 'suomifi-ui-components';
-import { useStoreDispatch } from '../../../store';
+import { AppThunk, useStoreDispatch } from '../../../store';
+import { SearchState } from '../terminology-search/terminology-search-slice';
+import { VocabularyState } from '../vocabulary/vocabulary-slice';
 
 interface SearchInputAreaProps {
-  filter: any;
-  setFilter: any;
+  filter: VocabularyState['filter'] | SearchState['filter'];
+  setFilter: (x: any) => AppThunk;
   title: string;
   visualPlaceholder: string;
 }

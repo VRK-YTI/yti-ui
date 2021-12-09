@@ -1,6 +1,10 @@
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
+import { AppThunk } from '../../../store';
+import { TerminologySearchResult } from '../../interfaces/terminology.interface';
 import filterData from '../../utils/filter-data';
+import { SearchState } from '../terminology-search/terminology-search-slice';
+import { VocabularyState } from '../vocabulary/vocabulary-slice';
 import SearchCountTags from './search-count-tags';
 import {
   Card,
@@ -16,10 +20,10 @@ import {
 } from './search-results.styles';
 
 interface SearchResultsProps {
-  data: any;
-  filter: any;
-  type?: any;
-  setSomeFilter: any;
+  data: TerminologySearchResult | any;
+  filter: SearchState['filter'] | VocabularyState['filter'];
+  type?: string;
+  setSomeFilter: (x: any) => AppThunk;
 }
 
 export default function SearchResults({ data, filter, type, setSomeFilter }: SearchResultsProps) {

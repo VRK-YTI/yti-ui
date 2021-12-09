@@ -1,12 +1,14 @@
 import { useTranslation } from 'next-i18next';
 import { FilterCheckbox } from './filter.styles';
 import { Text } from 'suomifi-ui-components';
-import { useStoreDispatch } from '../../../store';
+import { AppThunk, useStoreDispatch } from '../../../store';
+import { VocabularyState } from '../vocabulary/vocabulary-slice';
+import { SearchState } from '../terminology-search/terminology-search-slice';
 
 interface CheckboxProps {
-  data?: any;
-  filter: any;
-  setFilter: any;
+  data?: string[] | null[];
+  filter: VocabularyState['filter'] | SearchState['filter'];
+  setFilter: (x: any) => AppThunk;
   title: string;
   type?: string;
 }
@@ -24,7 +26,7 @@ export default function CheckboxArea({ data, filter, setFilter, title, type }: C
       } else {
         temp = { ...temp, status: { ...temp.status, [s]: false } };
       }
-    } else if (type === 'infoDomains') {
+    } else if (type === 'infoDomains' && 'infoDomains' in temp) {
       if (temp.infoDomains[s] === false || temp.infoDomains[s] === undefined) {
         temp = { ...temp, infoDomains: { ...temp.infoDomains, [s]: true } };
       } else {
@@ -67,7 +69,7 @@ export default function CheckboxArea({ data, filter, setFilter, title, type }: C
         </FilterCheckbox>
       </div>
     );
-  } else if (type === 'infoDomains') {
+  } else if (type === 'infoDomains' && 'infoDomains' in filter) {
     return (
       <div>
         <Text variant='bold' smallScreen>

@@ -9,15 +9,17 @@ import {
   Header,
   Hr
 } from './filter.styles';
-import { vocabularyEmptyState } from '../vocabulary/vocabulary-slice';
-import { initialState } from '../terminology-search/terminology-search-slice';
+import { vocabularyEmptyState, VocabularyState } from '../vocabulary/vocabulary-slice';
+import { initialState, SearchState } from '../terminology-search/terminology-search-slice';
+import { AppThunk } from '../../../store';
+import { GroupSearchResult, OrganizationSearchResult } from '../../interfaces/terminology.interface';
 
-interface FilterProps {
-  filter: any;
-  groups?: any;
-  organizations?: any;
-  resetSomeFilter?: any;
-  setSomeFilter: any;
+export interface FilterProps {
+  filter: VocabularyState['filter'] | SearchState['filter'];
+  groups?: GroupSearchResult[];
+  organizations?: OrganizationSearchResult[];
+  resetSomeFilter: () => AppThunk;
+  setSomeFilter: (x: any) => AppThunk;
   type: string;
 }
 
@@ -31,7 +33,7 @@ export default function Filter({
 }: FilterProps) {
   const { t, i18n } = useTranslation('common');
 
-  if (type === 'vocabulary') {
+  if (type === 'vocabulary' && 'showBy' in filter) {
     return (
       <FilterWrapper>
         <Header>
@@ -71,7 +73,7 @@ export default function Filter({
         />
       </FilterWrapper>
     );
-  } else if (type === 'terminology-search') {
+  } else if (type === 'terminology-search' && 'showByOrg' in filter && groups) {
     return (
       <FilterWrapper>
         <Header>
@@ -80,12 +82,13 @@ export default function Filter({
 
         {
           (JSON.stringify(filter) !== JSON.stringify(initialState.filter)
-            &&
+            ||
             Object.keys(filter.infoDomains).some((id: any) => {
               if (filter.infoDomains[id]) {
                 return true;
               }
-            }))
+            })
+          )
           &&
           <>
             <Remove
@@ -129,7 +132,7 @@ export default function Filter({
           title={t('terminology-search-filter-show-by-information-domain')}
           filter={filter}
           setFilter={setSomeFilter}
-          data={groups?.map((group: any) => {
+          data={groups.map((group: any) => {
             let val = null;
             group.properties.prefLabel?.map((pLabel: any) => {
               if (pLabel.lang === i18n.language) val = pLabel.value;

@@ -2,26 +2,21 @@ import { createSlice } from '@reduxjs/toolkit';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { HYDRATE } from 'next-redux-wrapper';
 import type { AppState, AppThunk } from '../../../store';
-import { TerminologySearchResult } from '../../interfaces/terminology.interface';
+import { GroupSearchResult, OrganizationSearchResult, TerminologySearchResult } from '../../interfaces/terminology.interface';
 
 export interface SearchState {
   filter: {
-    infoDomains: string[];
+    infoDomains: { [status: string]: boolean };
     keyword: string;
     showByOrg: string;
-    status: {
-      'VALID': boolean;
-      'DRAFT': boolean;
-      'RETIRED': boolean;
-      'SUPERSEDED': boolean;
-    };
+    status: { [status: string]: boolean };
     tKeyword: string;
   };
 };
 
 export const initialState: SearchState = {
   filter: {
-    infoDomains: [],
+    infoDomains: {},
     keyword: '',
     showByOrg: '',
     status: {
@@ -76,7 +71,7 @@ export const terminologySearchApi = createApi({
         },
       }),
     }),
-    getGroups: builder.query({
+    getGroups: builder.query<GroupSearchResult[], null>({
       query: () => ({
         url: '/groups',
         method: 'GET',
@@ -85,7 +80,7 @@ export const terminologySearchApi = createApi({
         },
       }),
     }),
-    getOrganizations: builder.query({
+    getOrganizations: builder.query<OrganizationSearchResult[], null>({
       query: () => ({
         url: '/organizations',
         method: 'GET',

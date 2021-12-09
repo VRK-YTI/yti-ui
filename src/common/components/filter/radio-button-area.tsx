@@ -1,12 +1,13 @@
 import { useTranslation } from 'react-i18next';
 import { RadioButtonGroup } from 'suomifi-ui-components';
-import { useStoreDispatch } from '../../../store';
+import { AppThunk, useStoreDispatch } from '../../../store';
+import { VocabularyState } from '../vocabulary/vocabulary-slice';
 import { FilterRadioButton } from './filter.styles';
 
 interface RadioButtonProps {
-  data: any;
-  filter: any;
-  setFilter: any;
+  data: string[];
+  filter: VocabularyState['filter'];
+  setFilter: (x: any) => AppThunk;
   title: string;
 }
 

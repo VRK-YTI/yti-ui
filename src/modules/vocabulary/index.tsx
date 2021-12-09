@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { initializeVocabularyFilter, resetVocabularyFilter, setVocabularyFilter, useGetConceptResultQuery, useGetVocabularyQuery } from '../../common/components/vocabulary/vocabulary-slice';
+import { initializeVocabularyFilter, resetVocabularyFilter, setVocabularyFilter, useGetConceptResultQuery, useGetVocabularyQuery, VocabularyState } from '../../common/components/vocabulary/vocabulary-slice';
 import Filter from '../../common/components/filter/filter';
 import SearchResults from '../../common/components/search-results/search-results';
 import Title from '../../common/components/title/title';
@@ -34,7 +34,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
           />
         </ResultAndStatsWrapper>
         <Filter
-          filter={filter}
+          filter={filter as VocabularyState['filter']}
           type={'vocabulary'}
           setSomeFilter={setVocabularyFilter}
           resetSomeFilter={resetVocabularyFilter}

@@ -1,9 +1,9 @@
 import { Text } from 'suomifi-ui-components';
-import { useStoreDispatch } from '../../../store';
+import { AppThunk, useStoreDispatch } from '../../../store';
 import { RemoveIcon, RemoveWrapper } from './filter.styles';
 
 interface RemoveProps {
-  resetFilter?: any;
+  resetFilter: () => AppThunk;
   title: string;
 }
 

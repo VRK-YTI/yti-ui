@@ -1,11 +1,12 @@
 import { Dropdown, DropdownItem } from 'suomifi-ui-components';
-import { useStoreDispatch } from '../../../store';
+import { AppThunk, useStoreDispatch } from '../../../store';
+import { SearchState } from '../terminology-search/terminology-search-slice';
 import { DropdownPlaceholder } from './filter.styles';
 
 interface DropdownProps {
-  data?: any;
-  filter: any;
-  setFilter: any;
+  data?: string[] | null[];
+  filter: SearchState['filter'];
+  setFilter: (x: any) => AppThunk;
   title: string;
   visualPlaceholder?: string;
 }

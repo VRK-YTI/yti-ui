@@ -1,5 +1,7 @@
 import { useTranslation } from 'react-i18next';
-import { useStoreDispatch } from '../../../store';
+import { AppThunk, useStoreDispatch } from '../../../store';
+import { SearchState } from '../terminology-search/terminology-search-slice';
+import { VocabularyState } from '../vocabulary/vocabulary-slice';
 import {
   CountPill,
   CountPillIcon,
@@ -9,9 +11,9 @@ import {
 } from './search-count-tags.styles';
 
 interface SearchCountTagsProps {
-  count: any;
-  filter: any;
-  setFilter: any;
+  count: number;
+  filter: VocabularyState['filter'] | SearchState['filter'];
+  setFilter: (x: any) => AppThunk;
 }
 
 export default function SearchCountTags({ count, filter, setFilter }: SearchCountTagsProps) {
@@ -26,7 +28,7 @@ export default function SearchCountTags({ count, filter, setFilter }: SearchCoun
     }
   });
 
-  if (filter.infoDomains) {
+  if ('infoDomains' in filter && filter.infoDomains) {
     Object.keys(filter.infoDomains).map(organization => {
       if (filter.infoDomains[organization] === true) {
         activeStatuses.push(organization);
@@ -38,7 +40,7 @@ export default function SearchCountTags({ count, filter, setFilter }: SearchCoun
     activeStatuses.push(filter.keyword);
   }
 
-  if (filter.showByOrg) {
+  if ('showByOrg' in filter && filter.showByOrg) {
     activeStatuses.push(filter.showByOrg);
   }
 
@@ -47,9 +49,9 @@ export default function SearchCountTags({ count, filter, setFilter }: SearchCoun
 
     if (Object.keys(filter.status).includes(s)) {
       temp = { ...temp, status: { ...temp.status, [s]: false } };
-    } else if (filter.infoDomains && Object.keys(filter.infoDomains).includes(s)) {
+    } else if ('infoDomains' in temp && temp.infoDomains && Object.keys(temp.infoDomains).includes(s)) {
       temp = { ...temp, infoDomains: { ...temp.infoDomains, [s]: false } };
-    } else if (filter.showByOrg && filter.showByOrg !== '') {
+    } else if ('showByOrg' in filter && filter.showByOrg && filter.showByOrg !== '') {
       temp = { ...temp, showByOrg: '' };
     } else {
       temp = { ...temp, keyword: '', tKeyword: '' };
