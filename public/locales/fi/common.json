@@ -3,6 +3,7 @@
   "terminology-title": "Sanastot",
   "datamodel-title": "Tietomallit",
   "codelist-title": "Koodistot",
+  "comments-title": "Kommentointi",
   "terminology-site-title": "Sanastot",
   "site-title": "Yhteentoimivuusalusta",
   "site-logout": "Kirjaudu ulos",
@@ -44,6 +45,7 @@
   "terminology-search-info": "Hakutulokset näytetään palveluittain ja voit täsmentää hakutuloksia rajaamalla listaa. Huomaa, että listan rajaukset eroavat palveluittain.",
   "terminology-search-result": "hakutulos sanastoista",
   "terminology-search-results": "hakutulosta sanastoista",
+  "terminology-search-open": "Avaa haku",
   "close": "Sulje",
   "vocabulary-info-fi": "suomi",
   "vocabulary-info-en": "englanti",
@@ -73,5 +75,7 @@
   "vocabulary-results-concepts": "Käsitteitä",
   "vocabulary-results-with-following-filters": "kpl seuraavilla rajauksilla",
   "feedback-terminologies": "Yhteydenottopyyntö: Sanastot",
-  "impersonate-user": "Esiinny käyttäjänä"
+  "impersonate-user": "Esiinny käyttäjänä",
+  "navigation-open": "Avaa navigaatio",
+  "navigation-close": "Sulje navigaatio"
 }

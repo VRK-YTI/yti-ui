@@ -3,17 +3,15 @@ import { useTranslation } from 'react-i18next';
 import HoverDropdown from '../hover-dropdown/hover-dropdown';
 import useFakeableUsers from './use-fakeable-users';
 
-export interface ImpersonateWrapperProps {
-  onChange: (email: string) => void;
+export interface DesktopImpersonateWrapperProps {
   children: React.ReactNode;
-  disable?: boolean;
 }
 
-export default function ImpersonateWrapper({ children, onChange, disable = false }: ImpersonateWrapperProps) {
+export default function DesktopImpersonateWrapper({ children }: DesktopImpersonateWrapperProps) {
   const users = useFakeableUsers();
   const { t } = useTranslation();
 
-  if (disable || ! users?.length) {
+  if (! users?.length) {
     return <>{children}</>;
   }
 
@@ -21,9 +19,13 @@ export default function ImpersonateWrapper({ children, onChange, disable = false
     <HoverDropdown
       items={[
         { key: 'impersonate-user', label: t('impersonate-user') },
-        ...(users?.map(({ id, email, displayName }) => ({ key: id, value: email, label: displayName })) ?? []),
+        ...(users?.map(({ id, email, displayName, impersonate }) => ({
+          key: id,
+          value: email,
+          label: displayName,
+          onClick: impersonate
+        })) ?? []),
       ]}
-      onChange={onChange}
     >
       {children}
     </HoverDropdown>

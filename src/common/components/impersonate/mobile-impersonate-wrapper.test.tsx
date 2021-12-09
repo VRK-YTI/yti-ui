@@ -1,27 +1,30 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import ImpersonateHamburgerMenuWrapper from './impersonate-hamburger-menu-wrapper';
+import MobileImpersonateWrapper from './mobile-impersonate-wrapper';
 import useFakeableUsers from './use-fakeable-users';
+import { themeProvider } from '../../../tests/test-utils';
 
 jest.mock('./use-fakeable-users');
 const mockedUseFakeableUsers = useFakeableUsers as jest.MockedFunction<typeof useFakeableUsers>;
 
 describe('ImpersonateHamburgerMenuWrapper', () => {
   it('should show "Impersonate user" text', async () => {
-    mockedUseFakeableUsers.mockReturnValue([{ id: '1', email: 'admin@localhost', displayName: 'Admin User' }]);
+    mockedUseFakeableUsers.mockReturnValue([{ id: '1', email: 'admin@localhost', displayName: 'Admin User', impersonate: () => {} }]);
 
     render(
-      <ImpersonateHamburgerMenuWrapper onChange={() => {}} />
+      <MobileImpersonateWrapper />,
+      { wrapper: themeProvider }
     );
 
     expect(screen.queryByText('tr-impersonate-user')).toBeTruthy();
   });
 
   it('should show "Admin User" text', async () => {
-    mockedUseFakeableUsers.mockReturnValue([{ id: '1', email: 'admin@localhost', displayName: 'Admin User' }]);
+    mockedUseFakeableUsers.mockReturnValue([{ id: '1', email: 'admin@localhost', displayName: 'Admin User', impersonate: () => {} }]);
 
     render(
-      <ImpersonateHamburgerMenuWrapper onChange={() => {}} />
+      <MobileImpersonateWrapper />,
+      { wrapper: themeProvider }
     );
 
     expect(screen.queryByText('Admin User')).toBeTruthy();
@@ -31,7 +34,8 @@ describe('ImpersonateHamburgerMenuWrapper', () => {
     mockedUseFakeableUsers.mockReturnValue([]);
 
     const { container } = render(
-      <ImpersonateHamburgerMenuWrapper onChange={() => {}} />
+      <MobileImpersonateWrapper />,
+      { wrapper: themeProvider }
     );
 
     expect(container).toBeEmptyDOMElement();

@@ -18,28 +18,28 @@ export const HoverDropdownListWrapper = styled.div`
   width: 10rem;
   line-height: 2em;
   background: #fff;
-  border: 1px solid #a5acb0;
+  border: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
   z-index: 1;
 `;
 
 export const HoverDropdownList = styled.ul`
   position: static;
   list-style-type: none;
-  padding: 0;
   background-color: transparent;
   margin: 0;
+  padding: 8px 0px;
 `;
 
 export const HoverDropdownItem = styled.li`
   padding: 0px;
   span, a, a:visited {
-    padding-left: 10px;
     text-decoration: none;
     width: 100%;
     color: #000;
     background: transparent;
     border-left: 4px solid transparent;
-    display: inline-block;
+    display: block;
+    padding: 8px 11px;
   }
 
   a:hover, a:focus {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import ImpersonateWrapper from './impersonate-wrapper';
+import ImpersonateWrapper from './desktop-impersonate-wrapper';
 import useFakeableUsers from './use-fakeable-users';
 import { themeProvider } from '../../../tests/test-utils';
 
@@ -9,10 +9,10 @@ const mockedUseFakeableUsers = useFakeableUsers as jest.MockedFunction<typeof us
 
 describe('ImpersonateWrapper', () => {
   it('should show "Impersonate user" text', async () => {
-    mockedUseFakeableUsers.mockReturnValue([{ id: '1', email: 'admin@localhost', displayName: 'Admin User' }]);
+    mockedUseFakeableUsers.mockReturnValue([{ id: '1', email: 'admin@localhost', displayName: 'Admin User', impersonate: () => {} }]);
 
     render(
-      <ImpersonateWrapper onChange={() => {}}>
+      <ImpersonateWrapper>
         Children
       </ImpersonateWrapper>,
       { wrapper: themeProvider }
@@ -22,10 +22,10 @@ describe('ImpersonateWrapper', () => {
   });
 
   it('should show "Admin User" text', async () => {
-    mockedUseFakeableUsers.mockReturnValue([{ id: '1', email: 'admin@localhost', displayName: 'Admin User' }]);
+    mockedUseFakeableUsers.mockReturnValue([{ id: '1', email: 'admin@localhost', displayName: 'Admin User', impersonate: () => {} }]);
 
     render(
-      <ImpersonateWrapper onChange={() => {}}>
+      <ImpersonateWrapper>
         Children
       </ImpersonateWrapper>,
       { wrapper: themeProvider }
@@ -35,38 +35,23 @@ describe('ImpersonateWrapper', () => {
   });
 
   it('should render children', async () => {
-    mockedUseFakeableUsers.mockReturnValue([{ id: '1', email: 'admin@localhost', displayName: 'Admin User' }]);
+    mockedUseFakeableUsers.mockReturnValue([{ id: '1', email: 'admin@localhost', displayName: 'Admin User', impersonate: () => {} }]);
 
     render(
-      <ImpersonateWrapper onChange={() => {}}>
+      <ImpersonateWrapper>
         Children
       </ImpersonateWrapper>,
       { wrapper: themeProvider }
     );
 
     expect(screen.queryByText('Children')).toBeTruthy();
-  });
-
-  it('should render only children when disabled', async () => {
-    mockedUseFakeableUsers.mockReturnValue([{ id: '1', email: 'admin@localhost', displayName: 'Admin User' }]);
-
-    render(
-      <ImpersonateWrapper onChange={() => {}} disable>
-        Children
-      </ImpersonateWrapper>,
-      { wrapper: themeProvider }
-    );
-
-    expect(screen.queryByText('Children')).toBeTruthy();
-    expect(screen.queryByText('tr-impersonate-user')).toBeFalsy();
-    expect(screen.queryByText('Admin User')).toBeFalsy();
   });
 
   it('should render only children when users were not found', async () => {
     mockedUseFakeableUsers.mockReturnValue([]);
 
     render(
-      <ImpersonateWrapper onChange={() => {}}>
+      <ImpersonateWrapper>
         Children
       </ImpersonateWrapper>,
       { wrapper: themeProvider }
