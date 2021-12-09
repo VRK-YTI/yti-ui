@@ -77,7 +77,8 @@ export default function CheckboxArea({ data, filter, setFilter, title, type }: C
         </Text>
         {data.map((value: any, idx: number) => {
           return (
-            <FilterCheckbox key={`checkbox-${value}-${idx}`}
+            <FilterCheckbox
+              key={`checkbox-${value}-${idx}`}
               onClick={() => handleCheckbox(value)}
               checked={
                 filter.infoDomains?.[value] !== undefined &&
