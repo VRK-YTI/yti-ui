@@ -19,8 +19,7 @@ describe('dropdown-area', () => {
         'DRAFT': true,
         'RETIRED': false,
         'SUPERSEDED': false
-      },
-      tKeyword: ''
+      }
     };
 
     const data = [

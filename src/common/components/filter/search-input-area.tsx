@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SearchInput } from 'suomifi-ui-components';
 import { AppThunk, useStoreDispatch } from '../../../store';
@@ -15,13 +16,17 @@ export default function SearchInputArea({ filter, setFilter, title, visualPlaceh
   const { t } = useTranslation('common');
   const dispatch = useStoreDispatch();
 
+  const [inputValue, setInputValue] = useState(filter.keyword);
+
+  useEffect(() => {
+    setInputValue(filter.keyword);
+  }, [filter.keyword]);
+
   const handleKeywordChange = (s: string) => {
-    if (s !== '') {
-      dispatch(setFilter({ ...filter, tKeyword: s }));
-      return;
-    } else {
-      dispatch(setFilter({ ...filter, keyword: s, tKeyword: s }));
-      return;
+    setInputValue(s);
+
+    if (s === '') {
+      dispatch(setFilter({...filter, keyword: s}));
     }
   };
 
@@ -35,7 +40,7 @@ export default function SearchInputArea({ filter, setFilter, title, visualPlaceh
         clearButtonLabel={t('vocabulary-filter-clear-filter')}
         searchButtonLabel={t('vocabulary-filter-search')}
         labelText={title}
-        value={filter.tKeyword}
+        value={inputValue}
         visualPlaceholder={visualPlaceholder}
         onChange={(value) => handleKeywordChange(value as string)}
         onSearch={(value) => handleKeyword(value as string)}

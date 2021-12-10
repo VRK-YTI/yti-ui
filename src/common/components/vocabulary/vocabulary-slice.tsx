@@ -7,7 +7,6 @@ export interface VocabularyState {
     status: { [status: string]: boolean };
     keyword: string;
     showBy: string;
-    tKeyword: string;
   };
 }
 
@@ -20,8 +19,7 @@ const vocabularyInitialState: VocabularyState = {
       'SUPERSEDED': false
     },
     keyword: '',
-    showBy: 'concepts',
-    tKeyword: ''
+    showBy: 'concepts'
   }
 };
 
@@ -34,8 +32,7 @@ export const vocabularyEmptyState: VocabularyState = {
       'SUPERSEDED': false
     },
     keyword: '',
-    showBy: 'concepts',
-    tKeyword: ''
+    showBy: 'concepts'
   }
 };
 

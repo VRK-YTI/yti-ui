@@ -10,7 +10,6 @@ export interface SearchState {
     keyword: string;
     showByOrg: string;
     status: { [status: string]: boolean };
-    tKeyword: string;
   };
 };
 
@@ -24,8 +23,7 @@ export const initialState: SearchState = {
       'DRAFT': true,
       'RETIRED': false,
       'SUPERSEDED': false
-    },
-    tKeyword: '',
+    }
   }
 };
 

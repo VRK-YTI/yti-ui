@@ -19,8 +19,7 @@ describe('search-input-area', () => {
         'DRAFT': true,
         'RETIRED': false,
         'SUPERSEDED': false
-      },
-      tKeyword: ''
+      }
     };
 
     render(

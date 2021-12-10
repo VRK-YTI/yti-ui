@@ -81,11 +81,14 @@ export default function Filter({
         </Header>
 
         {
-          (JSON.stringify(filter) !== JSON.stringify(initialState.filter)
+          (
+            JSON.stringify({ ...filter, infoDomains: {} }) !== JSON.stringify(initialState.filter)
             ||
             Object.keys(filter.infoDomains).some((id: any) => {
-              if (filter.infoDomains[id]) {
+              if (filter.infoDomains[id] === true) {
                 return true;
+              } else {
+                return false;
               }
             })
           )

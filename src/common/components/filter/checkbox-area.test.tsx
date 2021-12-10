@@ -19,8 +19,7 @@ describe('checkbox-area', () => {
         'DRAFT': true,
         'RETIRED': false,
         'SUPERSEDED': false
-      },
-      tKeyword: ''
+      }
     };
 
     render(
@@ -62,8 +61,7 @@ describe('checkbox-area', () => {
         'DRAFT': true,
         'RETIRED': false,
         'SUPERSEDED': false
-      },
-      tKeyword: ''
+      }
     };
 
     render(

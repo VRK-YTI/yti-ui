@@ -54,7 +54,7 @@ export default function SearchCountTags({ count, filter, setFilter }: SearchCoun
     } else if ('showByOrg' in filter && filter.showByOrg && filter.showByOrg !== '') {
       temp = { ...temp, showByOrg: '' };
     } else {
-      temp = { ...temp, keyword: '', tKeyword: '' };
+      temp = { ...temp, keyword: '' };
     }
 
     dispatch(setFilter(temp));

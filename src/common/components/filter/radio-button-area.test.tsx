@@ -18,8 +18,7 @@ describe('radio-button-area', () => {
         'DRAFT': true,
         'RETIRED': false,
         'SUPERSEDED': false
-      },
-      tKeyword: ''
+      }
     };
 
     render(

@@ -19,8 +19,7 @@ describe('search-results', () => {
         'DRAFT': true,
         'RETIRED': false,
         'SUPERSEDED': false
-      },
-      tKeyword: ''
+      }
     };
 
     render(
@@ -51,8 +50,7 @@ describe('search-results', () => {
         'DRAFT': true,
         'RETIRED': false,
         'SUPERSEDED': false
-      },
-      tKeyword: ''
+      }
     };
 
     const data = {

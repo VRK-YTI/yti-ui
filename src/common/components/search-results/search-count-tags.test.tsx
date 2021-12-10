@@ -19,8 +19,7 @@ describe('search-count-tags', () => {
         'DRAFT': true,
         'RETIRED': false,
         'SUPERSEDED': false
-      },
-      tKeyword: ''
+      }
     };
 
 
