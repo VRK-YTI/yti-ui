@@ -72,5 +72,7 @@
     "vocabulary-filter-search": "Hae",
     "vocabulary-results-concepts": "(sv) Käsitteitä",
     "vocabulary-results-with-following-filters": "(sv) kpl seuraavilla rajauksilla",
-    "feedback-terminologies": "Begäran om kontakt: Ordlistor"
+    "feedback-terminologies": "Begäran om kontakt: Ordlistor",
+    "pagination-page": "Sida",
+    "impersonate-user": "Agera som användare"
   }

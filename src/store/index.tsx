@@ -24,13 +24,13 @@ export function makeStore() {
 
 export type AppStore = ReturnType<typeof makeStore>;
 export type AppState = ReturnType<AppStore['getState']>;
-export const useStoreDispatch = () => useDispatch();
-
 export type AppThunk<ReturnType = void> = ThunkAction<
   ReturnType,
   AppState,
   unknown,
   Action<string>
 >;
+export type AppDispatch = (x: AppThunk) => void;
+export const useStoreDispatch = () => useDispatch();
 
 export const wrapper = createWrapper<AppStore>(makeStore);

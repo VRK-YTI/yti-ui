@@ -1,17 +1,21 @@
 import { ClickAwayListener } from '@material-ui/core';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from 'styled-components';
 import { Icon, Link } from 'suomifi-ui-components';
-import { LayoutProps } from '../../../layouts/layout-props';
-import { NavigationDropdownItem, NavigationDropdownList, NavigationDropdownWrapper, NavigationItem, NavigationWrapper } from './navigation.styles';
+import {
+  NavigationDropdownItem,
+  NavigationDropdownList,
+  NavigationDropdownWrapper,
+  NavigationItem,
+  NavigationWrapper
+} from './navigation.styles';
 
-export default function Navigation({ props }: { props: LayoutProps }) {
-
+export default function DesktopNavigation() {
   const { t } = useTranslation('common');
   const [open, setOpen] = useState(false);
-
-  const isSmall = props.isSmall;
+  const router = useRouter();
 
   const handleDropdown = (e: any) => {
     e.preventDefault();
@@ -21,8 +25,8 @@ export default function Navigation({ props }: { props: LayoutProps }) {
   const theme = useTheme();
 
   return (
-    <NavigationWrapper hidden={isSmall}>
-      <NavigationItem active>
+    <NavigationWrapper>
+      <NavigationItem active={router.pathname === '/'}>
         <Link className="main" href="/">{t('site-frontpage')}</Link>
       </NavigationItem>
       <NavigationItem>

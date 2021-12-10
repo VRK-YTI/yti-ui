@@ -3,6 +3,7 @@
   "terminology-title": "Terminologies",
   "datamodel-title": "Data Vocabularies",
   "codelist-title": "Reference Data",
+  "comments-title": "Comments",
   "terminology-site-title": "Terminologies",
   "site-title": "Interoperability platform",
   "site-logout": "Logout",
@@ -43,6 +44,7 @@
   "terminology-search-info": "(en) Sanastot-työkalulla kerätään ja ylläpidetään julkishallinnon yhteisiä terminologia sanostoja ja käsitteitä.",
   "terminology-search-result": "result from Terminologies",
   "terminology-search-results": "results from Terminologies",
+  "terminology-search-open": "Open search",
   "close": "Close",
   "vocabulary-info-fi": "Finnish",
   "vocabulary-info-en": "English",
@@ -71,5 +73,9 @@
   "vocabulary-filter-search": "Hae",
   "vocabulary-results-concepts": "(en) Käsitteitä",
   "vocabulary-results-with-following-filters": "(en) kpl seuraavilla rajauksilla",
-  "feedback-terminologies": "Concact: Terminologies"
+  "feedback-terminologies": "Concact: Terminologies",
+  "pagination-page": "Page",
+  "impersonate-user": "Impersonate user",
+  "navigation-open": "Open navigation",
+  "navigation-close": "Close navigation"
 }

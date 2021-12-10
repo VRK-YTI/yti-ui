@@ -6,7 +6,8 @@ import {
   resetFilter,
   SearchState,
   setFilter,
-  useGetOrganizationsQuery
+  useGetOrganizationsQuery,
+  selectResultStart
 } from '../../common/components/terminology-search/terminology-search-slice';
 import Title from '../../common/components/title/title';
 import { ResultAndFilterContainer, ResultAndStatsWrapper } from './terminology-search.styles';
@@ -15,7 +16,8 @@ import Filter from '../../common/components/filter/filter';
 
 export default function TerminologySearch() {
   const filter = useSelector(selectFilter());
-  const { data } = useGetSearchResultQuery(filter.keyword);
+  const resultStart = useSelector(selectResultStart());
+  const { data } = useGetSearchResultQuery({keyword: filter.keyword, resultStart: resultStart});
   const { data: groups } = useGetGroupsQuery(null);
   const { data: organizations } = useGetOrganizationsQuery(null);
 

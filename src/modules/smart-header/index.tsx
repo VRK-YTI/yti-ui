@@ -1,0 +1,142 @@
+import React, { useState } from 'react';
+import { Block } from 'suomifi-ui-components';
+import Modal from 'react-modal';
+import User from '../../common/interfaces/user-interface';
+import { HeaderContainer, MarginContainer, NavigationContainer } from '../../layouts/layout.styles';
+import Logo from './logo';
+import MobileNavigationToggleButton from './mobile-navigation-toggle-button';
+import { HeaderWrapper, ModalOverlay, ModalContent } from './smart-header.styles';
+import DesktopAuthenticationPanel from '../../common/components/authentication-panel/desktop-authentication-panel';
+import DesktopNavigation from '../../common/components/navigation/desktop-navigation';
+import MobileNavigation from '../../common/components/navigation/mobile-navigation';
+import DesktopLocaleChooser from '../../common/components/locale-chooser/desktop-locale-chooser';
+import UserInfo from '../../common/components/authentication-panel/user-info';
+import HeaderSearch from '../../common/components/header-search/header-search';
+import { useBreakpoints } from '../../common/components/media-query/media-query-context';
+
+Modal.setAppElement('#__next');
+
+export default function SmartHeader({ user }: { user?: User }) {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const { breakpoint, isSmall } = useBreakpoints();
+
+  return (
+    <>
+      {renderHeader()}
+      {renderDesktopNavigation()}
+      {renderMobileNavigationModal()}
+    </>
+  );
+
+  function renderMobileNavigationModal() {
+    return (
+      <Modal
+        isOpen={isSmall && isExpanded}
+        onRequestClose={() => setIsExpanded(false)}
+        overlayElement={(props, children) => <ModalOverlay {...props}>{children}</ModalOverlay>}
+        contentElement={(props, children) => <ModalContent {...props}>{children}</ModalContent>}
+        overlayClassName={String(ModalOverlay)}
+        className={String(ModalContent)}
+      >
+        {renderHeader()}
+        {renderMobileNavigation()}
+      </Modal>
+    );
+  }
+
+  function renderMobileNavigation() {
+    return (
+      <Block variant="nav">
+        <NavigationContainer breakpoint="small">
+          <MobileNavigation user={user} />
+        </NavigationContainer>
+      </Block>
+    );
+  }
+
+  function renderDesktopNavigation() {
+    if (!isSmall) {
+      return (
+        <Block variant="nav">
+          <NavigationContainer breakpoint={breakpoint}>
+            <MarginContainer breakpoint={breakpoint}>
+              <DesktopNavigation />
+            </MarginContainer>
+          </NavigationContainer>
+        </Block>
+      );
+    }
+  }
+
+  function renderHeader() {
+    return (
+      <Block variant="header">
+        <HeaderContainer>
+          <MarginContainer breakpoint={breakpoint}>
+            <HeaderWrapper breakpoint={breakpoint}>
+              {renderLogo()}
+              {renderHeaderSearch()}
+              {renderDesktopLocaleChooser()}
+              {renderMobileNavigationToggleButton()}
+              {renderDesktopAuthenticationPanel()}
+            </HeaderWrapper>
+            {renderUserInfo()}
+          </MarginContainer>
+        </HeaderContainer>
+      </Block>
+    );
+  }
+
+  function renderLogo() {
+    if (!isSearchOpen || !isSmall) {
+      return (
+        <Logo />
+      );
+    }
+  }
+
+  function renderHeaderSearch() {
+    return (
+      <HeaderSearch
+        isSearchOpen={isSearchOpen}
+        setIsSearchOpen={setIsSearchOpen}
+      />
+    );
+  }
+
+  function renderDesktopLocaleChooser() {
+    if (!isSmall) {
+      return (
+        <DesktopLocaleChooser />
+      );
+    }
+  }
+
+  function renderMobileNavigationToggleButton() {
+    if (isSmall && !isSearchOpen) {
+      return (
+        <MobileNavigationToggleButton
+          isOpen={isExpanded}
+          setIsOpen={setIsExpanded}
+        />
+      );
+    }
+  }
+
+  function renderDesktopAuthenticationPanel() {
+    if (!isSmall) {
+      return (
+        <DesktopAuthenticationPanel user={user} />
+      );
+    }
+  }
+
+  function renderUserInfo() {
+    if (isSmall && isExpanded) {
+      return (
+        <UserInfo user={user} breakpoint="small" />
+      );
+    }
+  }
+}

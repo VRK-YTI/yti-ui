@@ -19,10 +19,11 @@ const fakeLogin = async (req: NextIronRequest, res: NextApiResponse) => {
 
   // after we're done, redirect here
   const target = (req.query['target'] as string) ?? '/';
+  const email = (req.query['fake.login.mail'] as string) ?? 'admin@localhost';
 
   try {
     let fetchUrl: string = process.env.TERMINOLOGY_API_URL + '/api/v1/frontend/authenticated-user';
-    fetchUrl += '?fake.login.mail=admin@localhost';
+    fetchUrl += '?fake.login.mail=' + encodeURIComponent(email);
 
     const response = await axios.get(
       fetchUrl,

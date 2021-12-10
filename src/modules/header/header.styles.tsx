@@ -1,37 +1,49 @@
 import styled from 'styled-components';
-import { LayoutProps } from '../../layouts/layout-props';
-import { Text } from 'suomifi-ui-components';
+import { Button } from 'suomifi-ui-components';
+import { Breakpoint } from '../../common/components/media-query/media-query-context';
+import { small } from '../../common/components/media-query/styled-helpers';
 
 export const HeaderWrapper = styled.div`
   display: flex;
   justify-content: space-between;
-  padding-top: 10px;
+  align-items: center;
+  height: 57px;
+  gap: 0px;
 `;
 
-export const LanguageMenuWrapper = styled.div`
-  padding-top: 8px;
-`;
-
-export const SearchWrapper = styled.div<LayoutProps>`
+export const SearchAndLanguageWrapper = styled.div`
   display: flex;
-  justify-content: end;
-  padding-top: ${props => props.isSmall ? '15px' : '2px'};
+  align-items: center;
+  gap: 20px;
 `;
 
-export const SiteLogo = styled.div`
-  margin-top: 5px;
+export const SearchWrapper = styled.div`
+  max-width: 320px;
 `;
 
-export const SmallSearchWrapper = styled.div`
+export const SearchIconButton = styled.div`
+  height: 51px;
+  width: 51px;
+
   display: flex;
-  flex-row: row;
+  align-items: center;
+  justify-content: center;
+`;
+
+export const SmallSearchButton = styled(Button)`
   flex-shrink: 0;
 `;
 
-export const SmallSearchText = styled(Text)`
-  padding-top: 15px;
-  padding-left: 20px;
-  color: ${(props) => props.theme.suomifi.colors.highlightLight1};
-  font-size: 16px;
-  font-weight: bold;
+export const SiteLogo = styled.div<{ breakpoint: Breakpoint }>`
+  flex-grow: ${props => small(props.breakpoint, '1', '0')};
+  line-height: 0;
+
+  a {
+    display: block;
+    line-height: 0;
+  }
+`;
+
+export const AuthenticationPanelWrapper = styled.div`
+  align-self: center;
 `;

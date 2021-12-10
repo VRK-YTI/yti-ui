@@ -11,6 +11,7 @@ export interface SearchState {
     showByOrg: string;
     status: { [status: string]: boolean };
   };
+  resultStart: number;
 };
 
 export const initialState: SearchState = {
@@ -24,7 +25,8 @@ export const initialState: SearchState = {
       'RETIRED': false,
       'SUPERSEDED': false
     }
-  }
+  },
+  resultStart: 0
 };
 
 export const terminologySearchSlice = createSlice({
@@ -32,11 +34,11 @@ export const terminologySearchSlice = createSlice({
   initialState,
   reducers: {
     setFilter(state, action) {
-      return {
-        ...state,
-        ...action.payload
-      };
+      state.filter = action.payload;
     },
+    setResultStart(state, action) {
+      state.resultStart = action.payload;
+    }
   },
   extraReducers: {
     [HYDRATE]: (state, action) => {
@@ -53,7 +55,7 @@ export const terminologySearchApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: '/terminology-api/api/v1/frontend' }),
   tagTypes: ['TerminologySearch'],
   endpoints: builder => ({
-    getSearchResult: builder.query<TerminologySearchResult, string>({
+    getSearchResult: builder.query<TerminologySearchResult, {keyword: string, resultStart: number}>({
       query: (value) => ({
         url: '/searchTerminology',
         method: 'POST',
@@ -61,11 +63,11 @@ export const terminologySearchApi = createApi({
           'content-type': 'application/json',
         },
         body: {
-          query: value,
+          query: value.keyword,
           searchConcepts: true,
           prefLang: 'fi',
           pageSize: 10,
-          pageFrom: 0,
+          pageFrom: value.resultStart,
         },
       }),
     }),
@@ -98,19 +100,26 @@ export const {
 
 export const setFilter = (filter: string): AppThunk => dispatch => {
   dispatch(
-    terminologySearchSlice.actions.setFilter({
-      filter: filter
-    }),
+    terminologySearchSlice.actions.setFilter(filter),
   );
 };
 
 export const resetFilter = (): AppThunk => dispatch => {
   dispatch(
     terminologySearchSlice.actions.setFilter(
-      initialState
+      initialState.filter
     )
   );
 };
 
+export const setResultStart = (resultStart: number): AppThunk => dispatch => {
+  dispatch(
+    terminologySearchSlice.actions.setResultStart(resultStart),
+  );
+};
+
 export const selectFilter = () => (state: AppState): any => state.terminologySearch.filter;
+
+export const selectResultStart = () => (state: AppState): any => state.terminologySearch.resultStart;
+
 export default terminologySearchSlice.reducer;
