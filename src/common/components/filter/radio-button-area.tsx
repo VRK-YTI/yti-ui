@@ -31,6 +31,8 @@ export default function RadioButtonArea({ filter, data, setFilter, title }: Radi
     dispatch(setFilter({ ...temp, showBy: s }));
   };
 
+  // *Currently* returns two radio buttons that change values between concepts and collections.
+
   return (
     <div>
       <RadioButtonGroup

@@ -18,6 +18,8 @@ export default function DropdownArea({ data, filter, setFilter, title, visualPla
     dispatch(setFilter({...filter, showByOrg: value}));
   };
 
+  // Returns dropdown with given data values.
+
   if (data !== undefined) {
     return (
       <div>

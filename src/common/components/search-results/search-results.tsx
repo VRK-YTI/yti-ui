@@ -101,7 +101,7 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
                 </CardTitle>
 
                 <CardSubtitle>
-                  {t('vocabulary-info-concept').toUpperCase()} &middot; {t(`${concept.status}`).toUpperCase()} {type !== undefined && <>&middot; <CardPill>LUONNOS</CardPill></>}
+                  {t('vocabulary-info-concept').toUpperCase()} &middot; {t(`${concept.status}`).toUpperCase()}
                 </CardSubtitle>
 
                 <CardDescription>

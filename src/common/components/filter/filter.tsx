@@ -33,12 +33,16 @@ export default function Filter({
 }: FilterProps) {
   const { t, i18n } = useTranslation('common');
 
+  // Returns filter according to templates found below.
+
   if (type === 'vocabulary' && 'showBy' in filter) {
     return (
       <FilterWrapper>
         <Header>
           {t('vocabulary-filter-filter-list')}
         </Header>
+
+        {/* If filter has any value 'checked' Remove-component is displayed. */}
         {JSON.stringify(filter) !== JSON.stringify(vocabularyEmptyState.filter) &&
           <>
             <Remove
@@ -80,6 +84,7 @@ export default function Filter({
           {t('vocabulary-filter-filter-list')}
         </Header>
 
+        {/* If filter has any value 'checked' Remove-component is displayed. */}
         {
           (
             JSON.stringify({ ...filter, infoDomains: {} }) !== JSON.stringify(initialState.filter)

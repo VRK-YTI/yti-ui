@@ -18,6 +18,10 @@ export const CountPill = styled(Text)`
 export const CountPillIcon = styled(Icon)`
   padding: 0px;
   margin: 0px;
+
+  :hover {
+    cursor: pointer;
+  }
 `;
 
 export const CountPillWrapper = styled.div`

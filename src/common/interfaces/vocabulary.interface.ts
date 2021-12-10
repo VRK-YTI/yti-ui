@@ -1,5 +1,3 @@
-// TODO: Typing could be done better without this much retyping
-
 export interface VocabularyInfoDTO {
   code: string;
   createdBy: string;

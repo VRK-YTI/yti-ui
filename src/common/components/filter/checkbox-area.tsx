@@ -37,6 +37,13 @@ export default function CheckboxArea({ data, filter, setFilter, title, type }: C
     dispatch(setFilter(temp));
   };
 
+  /* If any data isn't provided returns basic template
+
+    [X] Valid
+    [X] Draft
+    [ ] Retired
+    [ ] Superseded
+  */
   if (data === undefined) {
     return (
       <div>
@@ -70,6 +77,15 @@ export default function CheckboxArea({ data, filter, setFilter, title, type }: C
       </div>
     );
   } else if (type === 'infoDomains' && 'infoDomains' in filter) {
+    /* Return checkboxes according to given data.
+
+      [ ] Data-1
+      [ ] Data-2
+      [ ] Data-3
+      [ ] Data-4
+      ...
+    */
+
     return (
       <div>
         <Text variant='bold' smallScreen>
