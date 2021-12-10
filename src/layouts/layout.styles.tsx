@@ -1,45 +1,45 @@
 // shared layout helper
 
 import styled from 'styled-components';
-import { DebugProps } from '../common/interfaces/debug-props';
-import { LayoutProps } from './layout-props';
+import { Breakpoint } from '../common/components/media-query/media-query-context';
+import { resolve, small } from '../common/components/media-query/styled-helpers';
 
-export const MarginContainer = styled.div<LayoutProps>`
-  margin: ${props => props.isSmall ? '0px 15px 0px 15px' : '0px 50px 10px 50px'};
+export const MarginContainer = styled.div<{ breakpoint: Breakpoint }>`
+  max-width: 1100px;
+  margin: auto;
+  padding: ${props => resolve(props.breakpoint, '0 15px', '0 30px', 'auto')};
 `;
 
 // main layout
 
-export const SiteContainer = styled.div<LayoutProps>`
-  width: ${props => props.isSmall ? '100%' : '80%'};
+export const SiteContainer = styled.div`
+  width: 100%;
   margin: auto;
   height: 100%;
-  border-top: ${(props) => `2px solid ${props.theme.suomifi.colors.highlightBase}`};
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   min-height: 100vh;
-  border-left:  ${(props) => `2px solid ${props.theme.suomifi.colors.depthLight2}`}
 `;
 
 // header layout
 
-export const HeaderContainer = styled.div<DebugProps>`
+export const HeaderContainer = styled.div`
   background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
-  height: 76px;
-  border-bottom: ${(props) => `1px solid ${props.theme.suomifi.colors.depthLight3}`};
+  border-bottom: ${(props) => `1px solid ${props.theme.suomifi.colors.depthLight1}`};
+  border-top: ${(props) => `3px solid ${props.theme.suomifi.colors.brandBase}`};
 `;
 
-export const NavigationContainer = styled.div<LayoutProps>`
+export const NavigationContainer = styled.div<{ breakpoint: Breakpoint }>`
   background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
-  border-bottom: ${(props) => `1px solid ${props.theme.suomifi.colors.depthLight3}`};
-  display: ${props => props.isSmall ? 'none' : 'block'}
+  border-bottom: ${props => small(props.breakpoint, '0px', '1px')} solid ${(props) => props.theme.suomifi.colors.depthLight1};
 `;
 
 // content layout
 
-export const ContentContainer = styled.div<DebugProps>`
-  background-color: ${(props) => props.theme.suomifi.colors.highlightLight4};
+export const ContentContainer = styled.div`
+  background-color: ${(props) => props.theme.suomifi.colors.depthLight3};
+  border-bottom: ${(props) => `1px solid ${props.theme.suomifi.colors.depthLight1}`};
   flex-grow: 1;
 `;
 

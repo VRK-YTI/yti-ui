@@ -3,6 +3,7 @@
   "terminology-title": "Terminologies",
   "datamodel-title": "Data Vocabularies",
   "codelist-title": "Reference Data",
+  "comments-title": "Comments",
   "terminology-site-title": "Terminologies",
   "site-title": "Interoperability platform",
   "site-logout": "Logout",
@@ -43,6 +44,7 @@
   "terminology-search-info": "(en) Hakutulokset näytetään palveluittain ja voit täsmentää hakutuloksia rajaamalla listaa. Huomaa, että listan rajaukset eroavat palveluittain.",
   "terminology-search-result": "result from Terminologies",
   "terminology-search-results": "results from Terminologies",
+  "terminology-search-open": "Open search",
   "close": "Close",
   "vocabulary-info-fi": "Finnish",
   "vocabulary-info-en": "English",
@@ -72,5 +74,8 @@
   "vocabulary-results-concepts": "(en) Käsitteitä",
   "vocabulary-results-with-following-filters": "(en) kpl seuraavilla rajauksilla",
   "feedback-terminologies": "Concact: Terminologies",
-  "pagination-page": "Page"
+  "pagination-page": "Page",
+  "impersonate-user": "Impersonate user",
+  "navigation-open": "Open navigation",
+  "navigation-close": "Close navigation"
 }
