@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { AppThunk } from '../../../store';
 import { TerminologySearchResult } from '../../interfaces/terminology.interface';
 import filterData from '../../utils/filter-data';
-import { SearchState } from '../terminology-search/terminology-search-slice';
+import { initialState, SearchState } from '../terminology-search/terminology-search-slice';
 import { VocabularyState } from '../vocabulary/vocabulary-slice';
 import SearchCountTags from './search-count-tags';
 import {
@@ -30,13 +30,15 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
   const { t, i18n } = useTranslation('common');
 
   if (type === 'terminology-search') {
-    let filteredData = filterData(data, filter, i18n.language);
-
     return (
       <>
-        <SearchCountTags count={filteredData?.totalHitCount} filter={filter} setFilter={setSomeFilter} />
+        <SearchCountTags
+          count={JSON.stringify(filter) === JSON.stringify(initialState.filter) ? data?.totalHitCount : data?.terminologies.length}
+          filter={filter}
+          setFilter={setSomeFilter}
+        />
         <CardWrapper>
-          {filteredData?.terminologies?.map((terminology: any, idx: number) => {
+          {data?.terminologies?.map((terminology: any, idx: number) => {
             return (
               <Card key={`search-result-${idx}`}>
                 <CardContributor>

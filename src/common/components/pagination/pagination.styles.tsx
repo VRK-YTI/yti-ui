@@ -9,7 +9,7 @@ export const PaginationWrapper = styled.div`
   border-bottom: solid 1px ${props => props.theme.suomifi.colors.depthLight1};
   border-right: solid 1px ${props => props.theme.suomifi.colors.depthLight1};
   background: ${props => props.theme.suomifi.colors.whiteBase};
-
+  margin-top: 20px;
 `;
 
 export const PaginationButton = styled.div<PaginationButtonProps>`

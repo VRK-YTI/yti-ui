@@ -9,6 +9,17 @@ export default function filterData(data: any, filter: any, language: any) {
         valid = true;
       }
 
+      if (valid
+        && (
+          terminology.label[language].toLowerCase().includes(filter.keyword.toLowerCase())
+          ||
+          terminology.description[language].toLowerCase().includes(filter.keyword.toLowerCase())
+        )) {
+        valid = true;
+      } else {
+        valid = false;
+      }
+
       if (valid && filter.status[terminology.status] === true) {
         valid = true;
       } else {
