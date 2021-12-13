@@ -32,6 +32,7 @@ export const PaginationButton = styled.div<PaginationButtonProps>`
 
 export const PaginationMobile = styled.div`
   height: 35px;
+  width: auto;
   padding-left: 20px;
   padding-right: 20px;
   border-style: none;
@@ -39,6 +40,7 @@ export const PaginationMobile = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  white-space: nowrap;
   font-size: 16px;
   color: ${props => props.theme.suomifi.colors.highlightBase};
   background: ${props => props.theme.suomifi.colors.whiteBase};
