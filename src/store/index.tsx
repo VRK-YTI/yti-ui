@@ -2,7 +2,9 @@ import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import { createWrapper } from 'next-redux-wrapper';
 import { terminologySearchSlice, terminologySearchApi } from '../common/components/terminology-search/terminology-search-slice';
 import { vocabularyApi, vocabularySlice } from '../common/components/vocabulary/vocabulary-slice';
+import { conceptApi } from '../common/components/concept/concept-slice';
 import { useDispatch } from 'react-redux';
+import { collectionApi } from '../common/components/collection/collection-slice';
 
 export function makeStore() {
   return configureStore({
@@ -10,13 +12,17 @@ export function makeStore() {
       [terminologySearchSlice.name]: terminologySearchSlice.reducer,
       [terminologySearchApi.reducerPath]: terminologySearchApi.reducer,
       [vocabularySlice.name]: vocabularySlice.reducer,
-      [vocabularyApi.reducerPath]: vocabularyApi.reducer
+      [vocabularyApi.reducerPath]: vocabularyApi.reducer,
+      [conceptApi.reducerPath]: conceptApi.reducer,
+      [collectionApi.reducerPath]: collectionApi.reducer,
     },
 
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(
         terminologySearchApi.middleware,
-        vocabularyApi.middleware
+        vocabularyApi.middleware,
+        conceptApi.middleware,
+        collectionApi.middleware,
       ),
     devTools: true,
   });

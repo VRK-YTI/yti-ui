@@ -99,7 +99,11 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
             return (
               <Card key={`search-result-${idx}`}>
                 <CardTitle variant='h2'>
-                  {concept.label[i18n.language] !== undefined ? concept.label[i18n.language] : concept?.label?.[Object.keys(concept.label)[0]]}
+                  <Link passHref href={`/terminology/${concept.terminology.id}/concept/${concept.id}`}>
+                    <CardTitleLink href=''>
+                      {concept.label[i18n.language] !== undefined ? concept.label[i18n.language] : concept?.label?.[Object.keys(concept.label)[0]]}
+                    </CardTitleLink>
+                  </Link>
                 </CardTitle>
 
                 <CardSubtitle>

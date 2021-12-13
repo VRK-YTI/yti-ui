@@ -1,65 +1,21 @@
-export interface VocabularyInfoDTO {
-  code: string;
-  createdBy: string;
-  createdDate: string;
-  id: string;
-  identifier: VocabularyIdentifier;
-  lastModifiedBy: string;
-  lastModifiedDate: string;
-  number: number;
+import { Group } from './group.interface';
+import { Organization } from './organization.interface';
+import { BaseEntity, Property } from './termed-data-types.interface';
+
+export interface VocabularyInfoDTO extends BaseEntity<'TerminologicalVocabulary'> {
   properties: {
-    description: VocabularyProperties[];
-    language: VocabularyProperties[];
-    prefLabel: VocabularyProperties[];
-    priority: VocabularyProperties[];
-    status: VocabularyProperties[];
+    contact?: Property[];
+    description?: Property[];
+    language?: Property[];
+    prefLabel?: Property[];
+    priority?: Property[];
+    status?: Property[];
   };
+
   references: {
-    contributor: [
-      {
-        code: string;
-        createdBy: string;
-        createdDate: string;
-        id: string;
-        identifier: VocabularyIdentifier;
-        lastModifiedBy: string;
-        lastModifiedDate: string;
-        number: number;
-        properties: {
-          prefLabel: VocabularyProperties[];
-        };
-        references: {};
-        referrers: {};
-        type: VocabularyType;
-        uri: string;
-      }
-    ];
-    inGroup: [
-      {
-        code: string;
-        createdBy: string;
-        createdDate: string;
-        id: string;
-        identifier: VocabularyIdentifier;
-        lastModifiedBy: string;
-        lastModifiedDate: string;
-        number: number;
-        properties: {
-          definition: VocabularyProperties[];
-          notation: VocabularyProperties[];
-          order: VocabularyProperties[];
-          prefLabel: VocabularyProperties[];
-        };
-        references: {};
-        referrers: {};
-        type: VocabularyType;
-        uri: string;
-      }
-    ];
+    contributor?: Organization[];
+    inGroup?: Group[];
   };
-  referrers: {};
-  type: VocabularyType;
-  uri: string;
 };
 
 export interface VocabularyConceptsDTO {
@@ -80,24 +36,5 @@ export interface VocabularyConceptsDTO {
     status: string;
     uri: string;
   };
-  uri: string;
-}
-
-export interface VocabularyProperties {
-  lang: string;
-  regex: string;
-  value: string;
-}
-
-export interface VocabularyIdentifier {
-  id: string;
-  type: VocabularyType;
-}
-
-export interface VocabularyType {
-  graph: {
-    id: string;
-  };
-  id: string;
   uri: string;
 }
