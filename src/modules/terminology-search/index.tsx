@@ -39,8 +39,6 @@ export default function TerminologySearch() {
   }
 
   let filteredData = filterData(data, filter, i18n.language);
-  console.log(filteredData);
-
 
   return (
     <>

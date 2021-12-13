@@ -14,14 +14,14 @@ export default function Pagination({
   const items = Array.from({ length: Math.ceil(data.totalHitCount / 10) },
     (_, item) => item + 1);
   const [activeItem, setActiveItem] = useState<number>(
-    query.query.page !== '1' ? (parseInt(query.query.page as string, 10) - 1) * 10 : 1
+    query.query.page !== undefined && query.query.page !== '1'
+      ? parseInt(query.query.page as string, 10)
+      : 1
   );
 
   const handleClick = (i: number) => {
     setActiveItem(i);
-    if (dispatch) {
-      dispatch(setResultStart((i - 1) * 10));
-    }
+    dispatch(setResultStart((i - 1) * 10));
     query.replace(query.route + `?page=${i}`);
   };
 

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { AppThunk } from '../../../store';
 import { TerminologySearchResult } from '../../interfaces/terminology.interface';
 import filterData from '../../utils/filter-data';
-import { initialState, SearchState } from '../terminology-search/terminology-search-slice';
+import { SearchState } from '../terminology-search/terminology-search-slice';
 import { VocabularyState } from '../vocabulary/vocabulary-slice';
 import SearchCountTags from './search-count-tags';
 import {
@@ -33,7 +33,7 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
     return (
       <>
         <SearchCountTags
-          count={JSON.stringify(filter) === JSON.stringify(initialState.filter) ? data?.totalHitCount : data?.terminologies.length}
+          count={data?.totalHitCount}
           filter={filter}
           setFilter={setSomeFilter}
         />
