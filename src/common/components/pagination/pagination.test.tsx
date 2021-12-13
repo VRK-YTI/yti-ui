@@ -99,14 +99,14 @@ describe('pagination', () => {
       </Provider>
     );
 
-    expect(store.getState().terminologySearch.searchFilter.resultStart).toEqual(0);
+    expect(store.getState().terminologySearch.resultStart).toEqual(0);
     userEvent.click(screen.getByText(3));
-    expect(store.getState().terminologySearch.searchFilter.resultStart).toEqual(20);
+    expect(store.getState().terminologySearch.resultStart).toEqual(20);
     userEvent.click(screen.getByTestId('pagination-left'));
-    expect(store.getState().terminologySearch.searchFilter.resultStart).toEqual(10);
+    expect(store.getState().terminologySearch.resultStart).toEqual(10);
     userEvent.click(screen.getByTestId('pagination-right'));
     userEvent.click(screen.getByTestId('pagination-right'));
-    expect(store.getState().terminologySearch.searchFilter.resultStart).toEqual(30);
+    expect(store.getState().terminologySearch.resultStart).toEqual(30);
   });
 
 });

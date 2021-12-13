@@ -78,7 +78,6 @@ export default function Filter({
       </FilterWrapper>
     );
   } else if (type === 'terminology-search' && 'showByOrg' in filter && groups) {
-    let tGroups = groups;
     return (
       <FilterWrapper>
         <Header>

@@ -11,7 +11,7 @@ describe('checkbox-area', () => {
     const store = makeStore();
 
     const filter = {
-      infoDomains: {},
+      infoDomains: [],
       keyword: '',
       showByOrg: '',
       status: {
@@ -46,14 +46,14 @@ describe('checkbox-area', () => {
     const store = makeStore();
 
     const data = [
-      'Value1',
-      'Value2',
-      'Value3',
-      'Value4'
+      {id: '1', value: 'Value1'},
+      {id: '2', value: 'Value2'},
+      {id: '3', value: 'Value3'},
+      {id: '4', value: 'Value4'},
     ];
 
     const filter = {
-      infoDomains: {},
+      infoDomains: [],
       keyword: '',
       showByOrg: '',
       status: {
