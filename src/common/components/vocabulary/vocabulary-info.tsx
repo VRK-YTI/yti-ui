@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { Expander, ExpanderContent, ExpanderTitleButton, Heading } from 'suomifi-ui-components';
+import { Button, Expander, ExpanderContent, ExpanderTitleButton, Heading, Icon } from 'suomifi-ui-components';
 import FormatISODate from '../../utils/format-iso-date';
 import {
   DescriptionWrapper,
@@ -100,6 +100,22 @@ export default function VocabularyInfo({ data }: VocabularyInfoProps) {
         <SimpleInformationWrapper>
           <Heading variant='h4'>{t('vocabulary-info-vocabulary-type')}</Heading>
           <div>{t('vocabulary-info-terminological-dictionary')}</div>
+        </SimpleInformationWrapper>
+
+        <HR />
+
+        <SimpleInformationWrapper>
+          <Heading variant='h4'>{t('vocabulary-info-vocabulary-export')}</Heading>
+          <div>{t('vocabulary-info-vocabulary-export-description')}</div>
+          <Button
+            icon="download"
+            variant="secondary"
+            onClick={() => {
+              window.open(`/terminology-api/api/v1/export/${data.type.graph.id}?format=xlsx`, '_blank');
+            }}
+          >
+            {t('vocabulary-info-vocabulary-export')}
+          </Button>
         </SimpleInformationWrapper>
 
         <HR />

@@ -59,6 +59,8 @@
   "vocabulary-info-created-at": "Created at",
   "vocabulary-info-modified-at": "Modified at",
   "vocabulary-info-terminological-dictionary": "Terminological Dictionary",
+  "vocabulary-info-vocabulary-export": "(en) Lataa sanasto",
+  "vocabulary-info-vocabulary-export-description": "(en) Voit tarkastella sanaston, käsitevalikoiman ja käsitteen, sekä termien tietoja Excel-tiedostomuodoissa.",
   "vocabulary-info-concept": "Concept",
   "vocabulary-filter-filter-list": "(en) RAJAA LISTAA",
   "vocabulary-filter-remove-all": "(en) Poista kaikki rajaukset",
