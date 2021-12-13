@@ -13,6 +13,7 @@ import { vocabularyEmptyState, VocabularyState } from '../vocabulary/vocabulary-
 import { initialState, SearchState } from '../terminology-search/terminology-search-slice';
 import { AppThunk } from '../../../store';
 import { GroupSearchResult, OrganizationSearchResult } from '../../interfaces/terminology.interface';
+import { isEqual } from 'lodash';
 
 export interface FilterProps {
   filter: VocabularyState['filter'] | SearchState['filter'];
@@ -34,7 +35,6 @@ export default function Filter({
   const { t, i18n } = useTranslation('common');
 
   // Returns filter according to templates found below.
-
   if (type === 'vocabulary' && 'showBy' in filter) {
     return (
       <FilterWrapper>
@@ -43,7 +43,7 @@ export default function Filter({
         </Header>
 
         {/* If filter has any value 'checked' Remove-component is displayed. */}
-        {JSON.stringify(filter) !== JSON.stringify(vocabularyEmptyState.filter) &&
+        {!isEqual(filter, vocabularyEmptyState.filter) &&
           <>
             <Remove
               title={t('vocabulary-filter-remove-all')}
@@ -78,6 +78,7 @@ export default function Filter({
       </FilterWrapper>
     );
   } else if (type === 'terminology-search' && 'showByOrg' in filter && groups) {
+    let tGroups = groups;
     return (
       <FilterWrapper>
         <Header>
@@ -87,15 +88,9 @@ export default function Filter({
         {/* If filter has any value 'checked' Remove-component is displayed. */}
         {
           (
-            JSON.stringify({ ...filter, infoDomains: {} }) !== JSON.stringify(initialState.filter)
+            !isEqual({ ...filter, infoDomains: [] }, initialState.filter)
             ||
-            Object.keys(filter.infoDomains).some((id: any) => {
-              if (filter.infoDomains[id] === true) {
-                return true;
-              } else {
-                return false;
-              }
-            })
+            filter.infoDomains.length > 0
           )
           &&
           <>
@@ -136,17 +131,35 @@ export default function Filter({
           setFilter={setSomeFilter}
         />
         <Hr />
+
         <CheckboxArea
           title={t('terminology-search-filter-show-by-information-domain')}
           filter={filter}
           setFilter={setSomeFilter}
-          data={groups.map((group: any) => {
-            let val = null;
-            group.properties.prefLabel?.map((pLabel: any) => {
-              if (pLabel.lang === i18n.language) val = pLabel.value;
-            });
-            return val;
-          }).sort()}
+          data={
+            groups.slice().sort((a, b) => {
+              let valA = '';
+              let valB = '';
+
+              a.properties.prefLabel?.map((pLabel: any) => {
+                if (pLabel.lang === i18n.language) valA = pLabel.value;
+              });
+
+              b.properties.prefLabel?.map((pLabel: any) => {
+                if (pLabel.lang === i18n.language) valB = pLabel.value;
+              });
+
+              return valA === valB ? 0 : valA < valB ? -1 : 1;
+            }).map((group: any) => {
+              let val = '';
+
+              group.properties.prefLabel?.map((pLabel: any) => {
+                if (pLabel.lang === i18n.language) val = pLabel.value;
+              });
+
+              return { id: group.id as string, value: val };
+            })
+          }
           type='infoDomains'
         />
       </FilterWrapper>

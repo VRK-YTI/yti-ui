@@ -49,15 +49,14 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
                   <Link passHref href={'/terminology/' + terminology.id}>
                     <CardTitleLink href=''>
                       <CardTitleIcon icon='registers' />
-                      <span dangerouslySetInnerHTML={{
-                        __html: terminology.label[i18n.language] !== undefined
+                      <span>
+                        {terminology.label[i18n.language] !== undefined
                           ?
                           terminology.label[i18n.language]
                           :
                           terminology?.label?.[Object.keys(terminology.label)[0]]
-                      }}
-                      className='label'
-                      />
+                        }
+                      </span>
                     </CardTitleLink>
                   </Link>
                 </CardTitle>
