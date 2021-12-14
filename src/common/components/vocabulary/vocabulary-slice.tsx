@@ -43,6 +43,12 @@ export const vocabularySlice = createSlice({
         ...action.payload
       };
     },
+    setCurrentTerminology(state, action) {
+      return {
+        ...state,
+        ...action.payload
+      };
+    }
   },
 });
 
@@ -100,6 +106,15 @@ export const resetVocabularyFilter = (showBy: string): AppThunk => dispatch => {
   );
 };
 
+export const setCurrentTerminology = (currVal: {id: string, value: string}): AppThunk => dispatch => {
+  dispatch(
+    vocabularySlice.actions.setCurrentTerminology({
+      currTerminology: currVal
+    })
+  );
+};
+
 export const selectVocabularyFilter = () => (state: AppState): any => state.vocabularySearch.filter;
+export const selectCurrentTerminology = () => (state: AppState): any => state.vocabularySearch.currTerminology;
 
 export default vocabularySlice.reducer;

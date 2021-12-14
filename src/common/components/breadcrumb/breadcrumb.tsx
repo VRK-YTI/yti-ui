@@ -3,11 +3,14 @@ import { BreadcrumbWrapper } from './breadcrumb-styles';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
+import { useSelector } from 'react-redux';
+import { selectCurrentTerminology } from '../vocabulary/vocabulary-slice';
 
 export default function BreadcrumbNav() {
   const { t } = useTranslation('common');
   const router = useRouter();
   const paths = router.asPath.split('/').filter((q: string) => q !== '');
+  const terminologyValue = useSelector(selectCurrentTerminology());
 
   return (
     <>
@@ -28,26 +31,53 @@ export default function BreadcrumbNav() {
           {paths.map((path: string) => {
             if (path === 'terminology' || path === 'search') {
               return (
-                <Link
-                  key={`breadcrumb-${path}`}
-                  href={'/search'}
-                  passHref
-                >
-                  <div>
-                    <BreadcrumbLink
-                      aria-label={path}
-                      current={path === paths.slice(-1)[0]}
-                    >
-                      {t('terminology-title')}
-                    </BreadcrumbLink>
-                  </div>
-                </Link>
+                BreadcrumbLinkPart(path, t('terminology-title'))
+              );
+            } else {
+              return (
+                BreadcrumbLinkPart(path, terminologyValue.value)
               );
             }
-
           })}
         </Breadcrumb>
       </BreadcrumbWrapper>
     </>
   );
+
+  function BreadcrumbLinkPart(path: string, displayValue: string) {
+    /*
+      If handled breadcrump is equal to active page,
+      disable link functionalities.
+    */
+    const current = path === paths.slice(-1)[0];
+
+    if (current) {
+      return (
+        <BreadcrumbLink
+          aria-label={path}
+          current={current}
+          key={`breadcrumb-${path}`}
+        >
+          {displayValue}
+        </BreadcrumbLink>
+      );
+    } else {
+      return (
+        <Link
+          key={`breadcrumb-${path}`}
+          href={'/search'}
+          passHref
+        >
+          <div>
+            <BreadcrumbLink
+              aria-label={path}
+              current={current}
+            >
+              {displayValue}
+            </BreadcrumbLink>
+          </div>
+        </Link>
+      );
+    }
+  }
 }
