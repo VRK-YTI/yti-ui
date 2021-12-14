@@ -9,6 +9,10 @@ export interface VocabularyState {
     showBy: string;
     tKeyword: string;
   };
+  currTerminology: {
+    id: string;
+    value: string;
+  };
 }
 
 const vocabularyInitialState: VocabularyState = {
@@ -22,6 +26,10 @@ const vocabularyInitialState: VocabularyState = {
     keyword: '',
     showBy: 'concept',
     tKeyword: ''
+  },
+  currTerminology: {
+    id: '',
+    value: ''
   }
 };
 

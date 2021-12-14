@@ -12,7 +12,7 @@ import {
 import { useTranslation } from 'next-i18next';
 import User from '../common/interfaces/user-interface';
 import Footer from '../common/components/footer/footer';
-import BreadcrumbWrapper from '../common/components/breadcrumb/breadcrumb';
+import BreadcrumbNav from '../common/components/breadcrumb/breadcrumb';
 import SmartHeader from '../modules/smart-header';
 import { useBreakpoints } from '../common/components/media-query/media-query-context';
 
@@ -41,7 +41,7 @@ export default function Layout({
         <ContentContainer>
           <MarginContainer breakpoint={breakpoint}>
             <Block variant="main">
-              <BreadcrumbWrapper />
+              <BreadcrumbNav />
               {children}
             </Block>
           </MarginContainer>
