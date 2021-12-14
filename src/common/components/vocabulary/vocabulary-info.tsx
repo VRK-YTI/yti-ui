@@ -9,6 +9,7 @@ import {
   SimpleInformationWrapper
 } from './vocabulary-info.styles';
 import { VocabularyInfoDTO } from '../../interfaces/vocabulary.interface';
+import MultilingualDefinitionList from '../multilingual-definition-list/multilingual-definition-list';
 
 interface VocabularyInfoProps {
   data: VocabularyInfoDTO;
@@ -37,25 +38,20 @@ export default function VocabularyInfo({ data }: VocabularyInfoProps) {
       <ExpanderContent>
         <NameWrapper>
           <Heading variant='h4'>{t('vocabulary-info-name')}</Heading>
-          <ul>
-            {prefLabels.map((prefLabel: any) => {
-              return (
-                <li key={`prefLabel-${prefLabel.lang}`}>
-                  <b>{prefLabel.lang.toUpperCase()}</b>
-                  {prefLabel.value}
-                </li>
-              );
-            })}
-          </ul>
+          <MultilingualDefinitionList
+            items={prefLabels.map(prefLabel => ({
+              language: prefLabel.lang,
+              content: prefLabel.value,
+            }))}
+          />
         </NameWrapper>
 
         {description &&
           <DescriptionWrapper>
             <Heading variant='h4'>{t('vocabulary-info-description')}</Heading>
-            <div>
-              <b>{description.lang?.toUpperCase()}</b>
-              {description.value}
-            </div>
+            <MultilingualDefinitionList
+              items={[{ language: description.lang, content: description.value }]}
+            />
           </DescriptionWrapper>
         }
 
