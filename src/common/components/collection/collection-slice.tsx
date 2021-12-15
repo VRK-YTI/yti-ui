@@ -14,8 +14,17 @@ export const collectionApi = createApi({
           'content-type': 'application/json',
         },
       })
-    })
+    }),
+    getCollections: builder.query<Collection[], string>({
+      query: (terminologyId) => ({
+        url: `/collections?graphId=${terminologyId}`,
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+        },
+      })
+    }),
   }),
 });
 
-export const { useGetCollectionQuery } = collectionApi;
+export const { useGetCollectionQuery, useGetCollectionsQuery } = collectionApi;
