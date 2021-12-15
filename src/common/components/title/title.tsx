@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Heading } from 'suomifi-ui-components';
-import { Contributor, Description, StatusPill, TitleWrapper } from './title.stylex';
+import { Contributor, Description, StatusPill, TitleWrapper } from './title.styles';
 import InfoExpander from '../info-dropdown/info-expander';
 import { VocabularyInfoDTO, VocabularyProperties } from '../../interfaces/vocabulary.interface';
 

@@ -37,6 +37,7 @@ export default function Pagination({
         onClick={() => activeItem !== 1 && handleClick(activeItem - 1)}
         data-testid='pagination-left'
       >
+        {/* TODO: Update color*/}
         <Icon
           icon='chevronLeft'
           color={activeItem === 1 ? 'hsl(202, 7%, 67%)' : 'hsl(212, 63%, 45%)'}
@@ -67,6 +68,7 @@ export default function Pagination({
         onClick={() => activeItem !== items[items.length - 1] && handleClick(activeItem + 1)}
         data-testid='pagination-right'
       >
+        {/* TODO: Update color*/}
         <Icon
           icon='chevronRight'
           color={activeItem === items[items.length - 1] ? 'hsl(202, 7%, 67%)' : 'hsl(212, 63%, 45%)'}

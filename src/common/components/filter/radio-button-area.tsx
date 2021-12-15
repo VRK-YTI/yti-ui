@@ -16,7 +16,7 @@ export default function RadioButtonArea({ filter, data, setFilter, title }: Radi
   const dispatch = useStoreDispatch();
 
   const handleShowBy = (s: string) => {
-    let retVal = filter;
+    let retVal: VocabularyState['filter'] | undefined;
 
     if (s === 'collections') {
       Object.keys(filter.status).forEach(k => {
@@ -28,7 +28,9 @@ export default function RadioButtonArea({ filter, data, setFilter, title }: Radi
       });
     }
 
-    dispatch(setFilter({ ...retVal, showBy: s }));
+    if (retVal) {
+      dispatch(setFilter({ ...retVal, showBy: s }));
+    }
   };
 
   // *Currently* returns two radio buttons that change values between concepts and collections.

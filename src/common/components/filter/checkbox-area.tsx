@@ -23,7 +23,7 @@ export default function CheckboxArea({ data, filter, setFilter, title, type }: C
   const dispatch = useStoreDispatch();
 
   const handleCheckbox = (s: string | InfoDProp) => {
-    let retVal;
+    let retVal: CheckboxProps['filter'] | undefined;
 
     if (typeof s === 'string') {
       if (filter.status[s] === false || filter.status[s] === undefined) {
@@ -39,7 +39,9 @@ export default function CheckboxArea({ data, filter, setFilter, title, type }: C
       }
     }
 
-    dispatch(setFilter(retVal));
+    if (retVal) {
+      dispatch(setFilter(retVal));
+    }
   };
 
   /* If any data isn't provided returns basic template

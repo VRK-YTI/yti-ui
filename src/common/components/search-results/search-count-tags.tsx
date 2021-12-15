@@ -43,19 +43,19 @@ export default function SearchCountTags({ count, filter, setFilter }: SearchCoun
   }
 
   const handleTagClose = (s: string) => {
-    let temp = filter;
+    let retVal: SearchCountTagsProps['filter'];
 
     if (Object.keys(filter.status).includes(s)) {
-      temp = { ...temp, status: { ...temp.status, [s]: false } };
-    } else if ('infoDomains' in temp && temp.infoDomains) {
-      temp = { ...temp, infoDomains: temp.infoDomains.filter(id => id.value !== s) };
-    } else if ('showByOrg' in filter && filter.showByOrg && filter.showByOrg !== '') {
-      temp = { ...temp, showByOrg: '' };
+      retVal = { ...filter, status: { ...filter.status, [s]: false } };
+    } else if ('infoDomains' in filter && filter.infoDomains.find(id => id.value === s)) {
+      retVal = { ...filter, infoDomains: filter.infoDomains.filter(id => id.value !== s) };
+    } else if ('showByOrg' in filter && filter.showByOrg !== '') {
+      retVal = { ...filter, showByOrg: '' };
     } else {
-      temp = { ...temp, keyword: '' };
+      retVal = { ...filter, keyword: '' };
     }
 
-    dispatch(setFilter(temp));
+    dispatch(setFilter(retVal));
   };
 
   return (
