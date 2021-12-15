@@ -92,12 +92,8 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
                       {t('terminology-search-results-information-domains')}:
                     </b>
                     {terminology.informationDomains.map((term, i: number) => {
-                      {/* Tsekkaa pilkku kuntoon */ }
-                      if (i !== terminology.informationDomains.length - 1) {
-                        return <span key={`term-label-${term}-${i}`}> {term.label[i18n.language]},</span>;
-                      } else {
-                        return <span key={`term-label-${term}-${i}`}> {term.label[i18n.language]}</span>;
-                      }
+                      let comma = i !== terminology.informationDomains.length - 1 ? ',' : '';
+                      return <span key={`term-label-${term}-${i}`}> {term.label[i18n.language]}{comma}</span>;
                     })}
                   </CardInfoDomain>
                 </Card>
