@@ -47,8 +47,8 @@ export default function SearchCountTags({ count, filter, setFilter }: SearchCoun
 
     if (Object.keys(filter.status).includes(s)) {
       temp = { ...temp, status: { ...temp.status, [s]: false } };
-    } else if ('infoDomains' in temp && temp.infoDomains && Object.keys(temp.infoDomains).includes(s)) {
-      temp = { ...temp, infoDomains: { ...temp.infoDomains, [s]: false } };
+    } else if ('infoDomains' in temp && temp.infoDomains) {
+      temp = { ...temp, infoDomains: temp.infoDomains.filter(id => id.value !== s) };
     } else if ('showByOrg' in filter && filter.showByOrg && filter.showByOrg !== '') {
       temp = { ...temp, showByOrg: '' };
     } else {
