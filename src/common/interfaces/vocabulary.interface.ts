@@ -62,7 +62,13 @@ export interface VocabularyInfoDTO {
   uri: string;
 };
 
-export interface VocabularyConceptsDTO {
+export interface VocabularyConcepts {
+  concepts: VocabularyConceptDTO[];
+  resultStart: number;
+  totalHitCount: number;
+}
+
+export interface VocabularyConceptDTO {
   definition: {
     [key: string]: string;
   };

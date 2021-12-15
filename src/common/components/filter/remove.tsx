@@ -11,9 +11,7 @@ export default function Remove({ resetFilter, title }: RemoveProps) {
   const dispatch = useStoreDispatch();
 
   return (
-    <RemoveWrapper
-      onClick={() => dispatch(resetFilter())}
-    >
+    <RemoveWrapper onClick={() => dispatch(resetFilter())}>
       <RemoveIcon icon='remove' />
       <Text
         style={{ fontSize: '14px' }}

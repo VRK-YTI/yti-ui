@@ -4,7 +4,7 @@ import { SearchState } from '../terminology-search/terminology-search-slice';
 import { DropdownPlaceholder } from './filter.styles';
 
 interface DropdownProps {
-  data?: string[] | null[];
+  data?: string[];
   filter: SearchState['filter'];
   setFilter: (x: any) => AppThunk;
   title: string;
@@ -15,38 +15,38 @@ export default function DropdownArea({ data, filter, setFilter, title, visualPla
   const dispatch = useStoreDispatch();
 
   const handleChange = (value: string) => {
-    dispatch(setFilter({...filter, showByOrg: value}));
+    dispatch(setFilter({ ...filter, showByOrg: value }));
   };
 
-  // Returns dropdown with given data values.
-
-  if (data !== undefined) {
-    return (
-      <div>
-        <Dropdown
-          labelText={title}
-          visualPlaceholder={
-            <DropdownPlaceholder>
-              {visualPlaceholder}
-            </DropdownPlaceholder>
-          }
-          value={filter.showByOrg || ''}
-          onChange={(value) => handleChange(value)}
-        >
-          {data.map((value: any, idx: number) => {
-            return (
-              <DropdownItem
-                value={value}
-                key={`dropdown-${value}-${idx}`}
-              >
-                {value}
-              </DropdownItem>
-            );
-          })}
-        </Dropdown>
-      </div>
-    );
+  if (!data) {
+    return <></>;
   }
 
-  return <></>;
+  // Returns dropdown with given data values.
+  return (
+    <div>
+      <Dropdown
+        labelText={title}
+        visualPlaceholder={
+          <DropdownPlaceholder>
+            {visualPlaceholder}
+          </DropdownPlaceholder>
+        }
+        value={filter.showByOrg || ''}
+        onChange={(value) => handleChange(value)}
+      >
+        {data.map((value: string, idx: number) => {
+          return (
+            <DropdownItem
+              value={value}
+              key={`dropdown-${value}-${idx}`}
+            >
+              {value}
+            </DropdownItem>
+          );
+        })}
+      </Dropdown>
+    </div>
+  );
+
 }

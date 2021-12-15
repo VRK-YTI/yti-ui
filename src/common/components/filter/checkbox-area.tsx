@@ -11,7 +11,7 @@ interface InfoDProp {
 }
 
 interface CheckboxProps {
-  data?: InfoDProp[] | null[];
+  data?: InfoDProp[];
   filter: VocabularyState['filter'] | SearchState['filter'];
   setFilter: (x: any) => AppThunk;
   title: string;
@@ -23,23 +23,23 @@ export default function CheckboxArea({ data, filter, setFilter, title, type }: C
   const dispatch = useStoreDispatch();
 
   const handleCheckbox = (s: string | InfoDProp) => {
-    let temp = filter;
+    let retVal;
 
-    if (type === undefined && typeof s === 'string') {
-      if (temp.status[s] === false || temp.status[s] === undefined) {
-        temp = { ...temp, status: { ...temp.status, [s]: true } };
+    if (typeof s === 'string') {
+      if (filter.status[s] === false || filter.status[s] === undefined) {
+        retVal = { ...filter, status: { ...filter.status, [s]: true } };
       } else {
-        temp = { ...temp, status: { ...temp.status, [s]: false } };
+        retVal = { ...filter, status: { ...filter.status, [s]: false } };
       }
-    } else if (type === 'infoDomains' && 'infoDomains' in temp && typeof s !== 'string') {
-      if (temp.infoDomains.filter((infoD: InfoDProp) => infoD.id === s.id).length > 0) {
-        temp = { ...temp, infoDomains: temp.infoDomains.filter((infoD: InfoDProp) => infoD.id !== s.id) };
+    } else if ('infoDomains' in filter && typeof s !== 'string') {
+      if (filter.infoDomains.filter((infoD: InfoDProp) => infoD.id === s.id).length > 0) {
+        retVal = { ...filter, infoDomains: filter.infoDomains.filter((infoD: InfoDProp) => infoD.id !== s.id) };
       } else {
-        temp = { ...temp, infoDomains: [...temp.infoDomains, s] };
+        retVal = { ...filter, infoDomains: [...filter.infoDomains, s] };
       }
     }
 
-    dispatch(setFilter(temp));
+    dispatch(setFilter(retVal));
   };
 
   /* If any data isn't provided returns basic template
@@ -96,7 +96,7 @@ export default function CheckboxArea({ data, filter, setFilter, title, type }: C
         <Text variant='bold' smallScreen>
           {title}
         </Text>
-        {data.map((d: any) => {
+        {data.map((d: InfoDProp) => {
           return (
             <FilterCheckbox
               key={`checkbox-${d.value}-${d.id}`}

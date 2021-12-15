@@ -2,43 +2,49 @@ import { useTranslation } from 'react-i18next';
 import { Heading } from 'suomifi-ui-components';
 import { Contributor, Description, StatusPill, TitleWrapper } from './title.stylex';
 import InfoExpander from '../info-dropdown/info-expander';
+import { VocabularyInfoDTO, VocabularyProperties } from '../../interfaces/vocabulary.interface';
 
 interface TitleProps {
-  info: any;
+  info: string | VocabularyInfoDTO;
 }
 
 export default function Title({ info }: TitleProps) {
   const { t, i18n } = useTranslation('common');
 
-  const vocabularyTitle = info?.code != undefined;
-  const status = info?.properties?.status[0].value ?? '';
-  const title = info?.properties?.prefLabel.find((pLabel: any) => {
-    if (pLabel.lang === i18n.language) {
-      return pLabel;
-    }
-  }).value ?? '';
-  const contributor = info?.references?.contributor?.[0].properties.prefLabel?.find((pLabel: any) => {
-    if (pLabel.lang === i18n.language) {
-      return pLabel;
-    }
-  }).value ?? '';
+  if (typeof info === 'undefined') {
+    return <></>;
+  }
 
-  return (
-    <TitleWrapper>
-      {vocabularyTitle &&
-        <>
-          <Contributor>{contributor}</Contributor>
-
-          <Heading variant='h1'>{title}</Heading>
-
-          <StatusPill valid={status === 'VALID' ? 'true' : undefined}>
-            {t(`${status}`)}
-          </StatusPill>
-
-          <InfoExpander data={info} />
-        </>
+  if (typeof info === 'string') {
+    return (
+      <Description>{t('terminology-search-info')}</Description>
+    );
+  } else {
+    const status = info.properties.status[0].value ?? '';
+    const title = info.properties.prefLabel.find((pLabel: VocabularyProperties) => {
+      if (pLabel.lang === i18n.language) {
+        return pLabel;
       }
-      {!vocabularyTitle && <Description>{t('terminology-search-info')}</Description>}
-    </TitleWrapper>
-  );
+    })?.value ?? '';
+
+    const contributor = info.references.contributor?.[0].properties.prefLabel.find((pLabel: VocabularyProperties) => {
+      if (pLabel.lang === i18n.language) {
+        return pLabel;
+      }
+    })?.value ?? '';
+
+    return (
+      <TitleWrapper>
+        <Contributor>{contributor}</Contributor>
+
+        <Heading variant='h1'>{title}</Heading>
+
+        <StatusPill valid={status === 'VALID' ? 'true' : undefined}>
+          {t(`${status}`)}
+        </StatusPill>
+
+        <InfoExpander data={info} />
+      </TitleWrapper>
+    );
+  }
 }

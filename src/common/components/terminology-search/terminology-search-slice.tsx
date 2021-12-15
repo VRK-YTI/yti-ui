@@ -61,7 +61,7 @@ export const terminologySearchApi = createApi({
         body: {
           query: value.filter.keyword,
           statuses: Array.from(Object.keys(value.filter.status).filter(s => value.filter.status[s])),
-          groups: value.filter.infoDomains.map((infoD: any) => infoD.id),
+          groups: value.filter.infoDomains.map(infoD => infoD.id),
           searchConcepts: true,
           prefLang: 'fi',
           pageSize: 10,

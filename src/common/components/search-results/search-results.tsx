@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import { AppThunk } from '../../../store';
 import { TerminologySearchResult } from '../../interfaces/terminology.interface';
+import { VocabularyConcepts } from '../../interfaces/vocabulary.interface';
 import filterData from '../../utils/filter-data';
 import { SearchState } from '../terminology-search/terminology-search-slice';
 import { VocabularyState } from '../vocabulary/vocabulary-slice';
@@ -20,7 +21,7 @@ import {
 } from './search-results.styles';
 
 interface SearchResultsProps {
-  data: TerminologySearchResult | any;
+  data: TerminologySearchResult | VocabularyConcepts;
   filter: SearchState['filter'] | VocabularyState['filter'];
   type?: string;
   setSomeFilter: (x: any) => AppThunk;
@@ -29,7 +30,11 @@ interface SearchResultsProps {
 export default function SearchResults({ data, filter, type, setSomeFilter }: SearchResultsProps) {
   const { t, i18n } = useTranslation('common');
 
-  if (type === 'terminology-search') {
+  if (!data) {
+    return <></>;
+  }
+
+  if (type === 'terminology-search' && 'terminologies' in data) {
     return (
       <>
         <SearchCountTags
@@ -38,7 +43,7 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
           setFilter={setSomeFilter}
         />
         <CardWrapper>
-          {data?.terminologies?.map((terminology: any, idx: number) => {
+          {data?.terminologies?.map((terminology, idx: number) => {
             return (
               <Card key={`search-result-${idx}`}>
                 <CardContributor>
@@ -73,7 +78,7 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
                   <b>
                     {t('terminology-search-results-information-domains')}:
                   </b>
-                  {terminology.informationDomains.map((term: any, i: number) => {
+                  {terminology.informationDomains.map((term, i: number) => {
                     if (i !== terminology.informationDomains.length - 1) {
                       return <span key={`term-label-${term}-${i}`}> {term.label[i18n.language]},</span>;
                     } else {
@@ -87,14 +92,15 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
         </CardWrapper>
       </>
     );
-  } else {
+  } else if ('concepts' in data) {
+    // Note: This should be replaced when backend request for terminology has been updated
     let filteredData = filterData(data, filter, i18n.language);
 
     return (
       <>
-        <SearchCountTags count={filteredData?.totalHitCount} filter={filter} setFilter={setSomeFilter} />
+        <SearchCountTags count={filteredData.totalHitCount} filter={filter} setFilter={setSomeFilter} />
         <CardWrapper>
-          {filteredData?.concepts.map((concept: any, idx: number) => {
+          {filteredData?.concepts.map((concept, idx: number) => {
             return (
               <Card key={`search-result-${idx}`}>
                 <CardTitle variant='h2'>
@@ -106,7 +112,7 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
                 </CardSubtitle>
 
                 <CardDescription>
-                  {concept?.definition?.[i18n.language] !== undefined ? concept?.definition?.[i18n.language] : concept?.definition?.[Object.keys(concept?.definition)[0]]}
+                  {concept.definition?.[i18n.language] !== undefined ? concept.definition[i18n.language] : concept.definition[Object.keys(concept.definition)[0]]}
                 </CardDescription>
               </Card>
             );
@@ -115,4 +121,6 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
       </>
     );
   }
+
+  return <></>;
 }

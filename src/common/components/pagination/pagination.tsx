@@ -2,15 +2,16 @@ import { useState } from 'react';
 import { Icon } from 'suomifi-ui-components';
 import { PaginationButton, PaginationMobile, PaginationWrapper } from './pagination.styles';
 import { PaginationProps } from './pagination-props';
+import { useBreakpoints } from '../media-query/media-query-context';
 
 export default function Pagination({
   data,
   dispatch,
-  isSmall,
   pageString,
   setResultStart,
   query
 }: PaginationProps) {
+  const breakPoints = useBreakpoints();
   const items = Array.from({ length: Math.ceil(data.totalHitCount / 10) },
     (_, item) => item + 1);
   const [activeItem, setActiveItem] = useState<number>(
@@ -42,7 +43,7 @@ export default function Pagination({
         />
       </PaginationButton>
 
-      {!isSmall
+      {!breakPoints.isSmall
         ?
         FormatItemsList(items, activeItem)
           .map((item, idx) => {

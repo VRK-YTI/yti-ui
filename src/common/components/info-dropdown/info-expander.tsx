@@ -4,22 +4,27 @@ import FormatISODate from '../../utils/format-iso-date';
 import { InfoExpanderWrapper, InfoExpanderContentWrapper } from './info-expander.styles';
 import InfoBlock from './info-block';
 import InfoBasic from './info-basic';
+import { VocabularyInfoDTO } from '../../interfaces/vocabulary.interface';
 
 interface InfoExpanderProps {
-  data?: any;
+  data?: VocabularyInfoDTO;
 }
 
 export default function InfoExpander({ data }: InfoExpanderProps) {
   const { t } = useTranslation('common');
 
-  const title = data?.properties.prefLabel ?? [];
-  const description = data?.properties.description?.[0] ?? '';
-  const vocabularyLanguages = data?.properties.language ?? '';
-  const createdDate = FormatISODate(data?.createdDate) ?? '01.01.1970, 00.00';
-  const lastModifiedDate = FormatISODate(data?.lastModifiedDate) ?? '01.01.1970, 00.00';
-  const uri = data?.uri ?? '';
-  const contributor = data?.references.contributor?.[0].properties.prefLabel ?? '';
-  const informationDomains = data?.references.inGroup[0].properties.prefLabel ?? '';
+  if (!data) {
+    return <></>;
+  }
+
+  const title = data.properties.prefLabel ?? [];
+  const description = data.properties.description?.[0] ?? '';
+  const vocabularyLanguages = data.properties.language ?? '';
+  const createdDate = FormatISODate(data.createdDate) ?? '01.01.1970, 00.00';
+  const lastModifiedDate = FormatISODate(data.lastModifiedDate) ?? '01.01.1970, 00.00';
+  const uri = data.uri ?? '';
+  const contributor = data.references.contributor[0].properties.prefLabel ?? '';
+  const informationDomains = data.references.inGroup[0].properties.prefLabel ?? '';
 
   return (
     <InfoExpanderWrapper>

@@ -12,7 +12,7 @@ import {
 import { vocabularyEmptyState, VocabularyState } from '../vocabulary/vocabulary-slice';
 import { initialState, SearchState } from '../terminology-search/terminology-search-slice';
 import { AppThunk } from '../../../store';
-import { GroupSearchResult, OrganizationSearchResult } from '../../interfaces/terminology.interface';
+import { CommonInfoDTO, GroupSearchResult, OrganizationSearchResult } from '../../interfaces/terminology.interface';
 import { isEqual } from 'lodash';
 
 export interface FilterProps {
@@ -41,40 +41,13 @@ export default function Filter({
         <Header>
           {t('vocabulary-filter-filter-list')}
         </Header>
-
         {/* If filter has any value 'checked' Remove-component is displayed. */}
-        {!isEqual(filter, vocabularyEmptyState.filter) &&
-          <>
-            <Remove
-              title={t('vocabulary-filter-remove-all')}
-              resetFilter={resetSomeFilter}
-            />
-            <Hr />
-          </>
-        }
-        <RadioButtonArea
-          title={t('vocabulary-filter-show-only')}
-          data={['concepts', 'collections']}
-          filter={filter}
-          setFilter={setSomeFilter}
-        />
-        {filter.showBy === 'concepts' &&
-          <>
-            <Hr />
-            <CheckboxArea
-              title={t('vocabulary-filter-show-concept-states')}
-              filter={filter}
-              setFilter={setSomeFilter}
-            />
-          </>
-        }
+        {renderRemove()}
+        {renderRadioButtonArea()}
         <Hr />
-        <SearchInputArea
-          title={t('vocabulary-filter-filter-by-keyword')}
-          filter={filter}
-          setFilter={setSomeFilter}
-          visualPlaceholder={t('vocabulary-filter-visual-placeholder')}
-        />
+        {renderCheckboxArea(true)}
+        <Hr />
+        {renderSearchInputArea()}
       </FilterWrapper>
     );
   } else if (type === 'terminology-search' && 'showByOrg' in filter && groups) {
@@ -83,28 +56,56 @@ export default function Filter({
         <Header>
           {t('vocabulary-filter-filter-list')}
         </Header>
-
         {/* If filter has any value 'checked' Remove-component is displayed. */}
-        {
-          (
-            !isEqual({ ...filter, infoDomains: [] }, initialState.filter)
-            ||
-            filter.infoDomains.length > 0
-          )
-          &&
-          <>
-            <Remove
-              title={t('vocabulary-filter-remove-all')}
-              resetFilter={resetSomeFilter}
-            />
-            <Hr />
-          </>
-        }
+        {renderRemove()}
+        {renderDropdownArea()}
+        <Hr />
+        {renderSearchInputArea()}
+        <Hr />
+        {renderCheckboxArea(true)}
+        <Hr />
+        {renderCheckboxArea()}
+      </FilterWrapper>
+    );
+  }
 
+  function renderCheckboxArea(common?: boolean) {
+    if (common) {
+      return (
+        <CheckboxArea
+          title={t('vocabulary-filter-show-concept-states')}
+          filter={filter}
+          setFilter={setSomeFilter}
+        />
+      );
+    } else if (groups) {
+      return (
+        <CheckboxArea
+          title={t('terminology-search-filter-show-by-information-domain')}
+          filter={filter}
+          setFilter={setSomeFilter}
+          data={
+            groups.map(group => {
+              let val = '';
+              group.properties.prefLabel?.find(pLabel => {
+                if (pLabel.lang === i18n.language) val = pLabel.value;
+              });
+              return { id: group.id as string, value: val };
+            })
+          }
+          type='infoDomains'
+        />
+      );
+    }
+  }
+
+  function renderDropdownArea() {
+    if ('showByOrg' in filter) {
+      return (
         <DropdownArea
-          data={organizations?.map((organization: any) => {
-            let val = null;
-            organization.properties.prefLabel?.map((pLabel: any) => {
+          data={organizations?.map((organization: OrganizationSearchResult) => {
+            let val = '';
+            organization.properties.prefLabel?.map((pLabel: CommonInfoDTO) => {
               if (pLabel.lang === i18n.language) {
                 val = pLabel.value;
               }
@@ -116,52 +117,63 @@ export default function Filter({
           title={t('terminology-search-filter-by-organization')}
           visualPlaceholder={t('terminology-search-filter-pick-organization')}
         />
-        <Hr />
-        <SearchInputArea
-          title={t('vocabulary-filter-filter-by-keyword')}
+      );
+    }
+  }
+
+  function renderRadioButtonArea() {
+    if ('showBy' in filter) {
+      return (
+        <RadioButtonArea
+          title={t('vocabulary-filter-show-only')}
+          data={['concepts', 'collections']}
           filter={filter}
           setFilter={setSomeFilter}
-          visualPlaceholder={t('vocabulary-filter-visual-placeholder')}
         />
-        <Hr />
-        <CheckboxArea
-          title={t('terminology-search-filter-show-states')}
-          filter={filter}
-          setFilter={setSomeFilter}
-        />
-        <Hr />
+      );
+    }
+  }
 
-        <CheckboxArea
-          title={t('terminology-search-filter-show-by-information-domain')}
-          filter={filter}
-          setFilter={setSomeFilter}
-          data={
-            groups.slice().sort((a, b) => {
-              let valA = '';
-              let valB = '';
+  function renderRemove() {
+    if (type === 'vocabulary') {
+      return (
+        !isEqual(filter, vocabularyEmptyState.filter) &&
+        <>
+          <Remove
+            title={t('vocabulary-filter-remove-all')}
+            resetFilter={resetSomeFilter}
+          />
+          <Hr />
+        </>
 
-              a.properties.prefLabel?.map((pLabel: any) => {
-                if (pLabel.lang === i18n.language) valA = pLabel.value;
-              });
+      );
+    } else if (type === 'terminology-search' && 'infoDomains' in filter) {
+      return (
+        (
+          !isEqual({ ...filter, infoDomains: [] }, initialState.filter)
+          ||
+          filter.infoDomains.length > 0
+        )
+        &&
+        <>
+          <Remove
+            title={t('vocabulary-filter-remove-all')}
+            resetFilter={resetSomeFilter}
+          />
+          <Hr />
+        </>
+      );
+    }
+  }
 
-              b.properties.prefLabel?.map((pLabel: any) => {
-                if (pLabel.lang === i18n.language) valB = pLabel.value;
-              });
-
-              return valA === valB ? 0 : valA < valB ? -1 : 1;
-            }).map((group: any) => {
-              let val = '';
-
-              group.properties.prefLabel?.map((pLabel: any) => {
-                if (pLabel.lang === i18n.language) val = pLabel.value;
-              });
-
-              return { id: group.id as string, value: val };
-            })
-          }
-          type='infoDomains'
-        />
-      </FilterWrapper>
+  function renderSearchInputArea() {
+    return (
+      <SearchInputArea
+        title={t('vocabulary-filter-filter-by-keyword')}
+        filter={filter}
+        setFilter={setSomeFilter}
+        visualPlaceholder={t('vocabulary-filter-visual-placeholder')}
+      />
     );
   }
 

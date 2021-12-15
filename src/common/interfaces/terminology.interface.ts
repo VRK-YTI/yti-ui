@@ -1,19 +1,19 @@
 export interface TerminologySimpleDTO {
   id: string;
-  code: string | null;
-  uri: string | null;
-  status: string | null;
+  code: string;
+  uri: string;
+  status: string;
   label: { [key: string]: string };
 }
 
 export interface ContributorsDTO {
   id: string;
-  label: any; // TODO: Add typing
+  label: { [key: string]: string };
 }
 
 export interface InformationDomainDTO {
   id: string;
-  label: any; // TODO: Add typing
+  label: { [key: string]: string };
 }
 
 export interface TerminologyDTO extends TerminologySimpleDTO {
@@ -22,21 +22,11 @@ export interface TerminologyDTO extends TerminologySimpleDTO {
   informationDomains: InformationDomainDTO[];
 }
 
-// export interface DeepHitsObjDTO {
-//   topHits: TerminologyDTO[];
-//   totalHitCount: number;
-//   type: string;
-// }
-
-// export interface DeepHitsDTO {
-//   [id: string]: DeepHitsObjDTO[];
-// }
-
 export interface TerminologySearchResult {
   totalHitCount: number;
   resultStart: number;
   terminologies: TerminologyDTO[] | null;
-  deepHits: any | null; // TODO: Add typing
+  deepHits: null;
 }
 
 export interface CommonInfoDTO {
@@ -49,18 +39,10 @@ export interface GroupSearchResult {
   code: string;
   id: string;
   properties: {
-    definition: [
-      CommonInfoDTO
-    ];
-    notation: [
-      CommonInfoDTO
-    ];
-    order: [
-      CommonInfoDTO
-    ];
-    prefLabel: [
-      CommonInfoDTO
-    ];
+    definition: CommonInfoDTO[];
+    notation: CommonInfoDTO[];
+    order: CommonInfoDTO[];
+    prefLabel: CommonInfoDTO[];
   };
   type: {
     graph: {
@@ -74,13 +56,9 @@ export interface GroupSearchResult {
 export interface OrganizationSearchResult {
   code: string;
   id: string;
-  properties: [
-    {
-      prefLabel: [
-        CommonInfoDTO
-      ];
-    }
-  ];
+  properties: {
+    prefLabel: CommonInfoDTO[];
+  };
   type: {
     graph: {
       id: string;

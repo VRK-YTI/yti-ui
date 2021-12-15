@@ -16,7 +16,7 @@ describe('pagination', () => {
     const query = useRouter();
     query.query = { page: '0' };
     const data = {
-      'deepHits': undefined,
+      'deepHits': null,
       'totalHitCount': 80,
       'resultStart': 0,
       'terminologies': []
@@ -48,7 +48,7 @@ describe('pagination', () => {
     const query = useRouter();
     query.query = { page: '0' };
     const data = {
-      'deepHits': undefined,
+      'deepHits': null,
       'totalHitCount': 7,
       'resultStart': 0,
       'terminologies': []
@@ -79,7 +79,7 @@ describe('pagination', () => {
     const query = useRouter();
     query.query = { page: '0' };
     const data = {
-      'deepHits': undefined,
+      'deepHits': null,
       'totalHitCount': 50,
       'resultStart': 0,
       'terminologies': []

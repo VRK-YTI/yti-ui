@@ -28,11 +28,9 @@ export default function SearchCountTags({ count, filter, setFilter }: SearchCoun
     }
   });
 
-  if ('infoDomains' in filter && filter.infoDomains) {
-    Object.keys(filter.infoDomains).map(organization => {
-      if (filter.infoDomains[organization] === true) {
-        activeStatuses.push(organization);
-      }
+  if ('infoDomains' in filter && 'infoDomains' in filter) {
+    filter.infoDomains.map(infoDomain => {
+      activeStatuses.push(infoDomain.value);
     });
   }
 
@@ -44,7 +42,7 @@ export default function SearchCountTags({ count, filter, setFilter }: SearchCoun
     activeStatuses.push(filter.showByOrg);
   }
 
-  const handleTagClose = (s: any) => {
+  const handleTagClose = (s: string) => {
     let temp = filter;
 
     if (Object.keys(filter.status).includes(s)) {
