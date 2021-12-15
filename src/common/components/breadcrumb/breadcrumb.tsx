@@ -10,6 +10,7 @@ export default function BreadcrumbNav() {
   const { t } = useTranslation('common');
   const router = useRouter();
   const paths = router.asPath.split('/').filter((q: string) => q !== '');
+  const current = paths.slice(-1)[0];
   const terminologyValue = useSelector(selectCurrentTerminology());
 
   return (
@@ -28,34 +29,31 @@ export default function BreadcrumbNav() {
             </div>
           </Link>
 
-          {paths.map((path: string) => {
-            if (path === 'terminology' || path === 'search') {
-              return (
-                BreadcrumbLinkPart(path, t('terminology-title'))
-              );
-            } else {
-              return (
-                BreadcrumbLinkPart(path, terminologyValue.value)
-              );
-            }
+          {paths && paths.map((path: string) => {
+            return (
+              renderBreadcrumbLink(path)
+            );
           })}
         </Breadcrumb>
       </BreadcrumbWrapper>
     </>
   );
 
-  function BreadcrumbLinkPart(path: string, displayValue: string) {
+  function renderBreadcrumbLink(path: string) {
     /*
       If handled breadcrump is equal to active page,
       disable link functionalities.
     */
-    const current = path === paths.slice(-1)[0];
+
+    const displayValue = ['terminology, search'].some(w => w.includes(path))
+      ? t('terminology-title')
+      : terminologyValue.value;
 
     if (current) {
       return (
         <BreadcrumbLink
           aria-label={path}
-          current={current}
+          current={current === path}
           key={`breadcrumb-${path}`}
         >
           {displayValue}
@@ -69,10 +67,7 @@ export default function BreadcrumbNav() {
           passHref
         >
           <div>
-            <BreadcrumbLink
-              aria-label={path}
-              current={current}
-            >
+            <BreadcrumbLink aria-label={path} current={current === path}>
               {displayValue}
             </BreadcrumbLink>
           </div>
