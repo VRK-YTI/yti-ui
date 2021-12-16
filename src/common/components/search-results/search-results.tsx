@@ -80,7 +80,7 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
                   </CardTitle>
 
                   <CardSubtitle>
-                    {t('terminology-search-results-terminology').toUpperCase()} &middot; <CardPill valid={terminology.status === 'VALID' ? 'true' : undefined}>{t('terminology.status')}</CardPill>
+                    {t('terminology-search-results-terminology').toUpperCase()} &middot; <CardPill valid={terminology.status === 'VALID' ? 'true' : undefined}>{t(terminology.status ?? '')}</CardPill>
                   </CardSubtitle>
 
                   <CardDescription>
