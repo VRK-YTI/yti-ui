@@ -15,7 +15,9 @@
   "dependencies": {
     "@material-ui/core": "^4.12.3",
     "@reduxjs/toolkit": "^1.6.2",
+    "@types/lodash": "^4.14.178",
     "axios": "^0.21.4",
+    "lodash": "^4.17.21",
     "next": "12",
     "next-i18next": "^8.8.0",
     "next-iron-session": "^4.2.0",

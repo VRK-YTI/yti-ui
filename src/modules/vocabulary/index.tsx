@@ -18,21 +18,23 @@ export default function Vocabulary({ id }: VocabularyProps) {
     dispatch(initializeVocabularyFilter());
   }, []);
 
-  const filter: any = useSelector(selectVocabularyFilter());
+  const filter: VocabularyState['filter'] = useSelector(selectVocabularyFilter());
   const { data: concepts } = useGetConceptResultQuery(id);
   const { data: info } = useGetVocabularyQuery(id);
 
   return (
     <>
-      <Title info={info} />
+      {info && <Title info={info} />}
       <ResultAndFilterContainer>
-        <ResultAndStatsWrapper>
-          <SearchResults
-            data={concepts}
-            filter={filter}
-            setSomeFilter={setVocabularyFilter}
-          />
-        </ResultAndStatsWrapper>
+        {concepts &&
+          <ResultAndStatsWrapper>
+            <SearchResults
+              data={concepts}
+              filter={filter}
+              setSomeFilter={setVocabularyFilter}
+            />
+          </ResultAndStatsWrapper>
+        }
         <Filter
           filter={filter as VocabularyState['filter']}
           type={'vocabulary'}

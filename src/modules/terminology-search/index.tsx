@@ -9,7 +9,6 @@ import {
   useGetOrganizationsQuery,
   selectResultStart,
   setResultStart,
-  selectSearchTerm
 } from '../../common/components/terminology-search/terminology-search-slice';
 import Title from '../../common/components/title/title';
 import { ResultAndFilterContainer, ResultAndStatsWrapper, PaginationWrapper } from './terminology-search.styles';
@@ -19,16 +18,14 @@ import Pagination from '../../common/components/pagination/pagination';
 import { useStoreDispatch } from '../../store';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import filterData from '../../common/utils/filter-data';
 
 export default function TerminologySearch() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const dispatch = useStoreDispatch();
   const query = useRouter();
   const filter = useSelector(selectFilter());
-  const searchTerm = useSelector(selectSearchTerm());
   const resultStart = useSelector(selectResultStart());
-  const { data } = useGetSearchResultQuery({ searchTerm: searchTerm, resultStart: resultStart });
+  const { data } = useGetSearchResultQuery({ filter: filter, resultStart: resultStart });
   const { data: groups } = useGetGroupsQuery(null);
   const { data: organizations } = useGetOrganizationsQuery(null);
 
@@ -38,36 +35,32 @@ export default function TerminologySearch() {
     dispatch(setResultStart(0));
   }
 
-  let filteredData = filterData(data, filter, i18n.language);
-
   return (
     <>
       <Title info={'test'} />
       <ResultAndFilterContainer>
-        <ResultAndStatsWrapper>
-          <SearchResults
-            data={filteredData}
-            filter={filter}
-            setSomeFilter={setFilter}
-            type={'terminology-search'}
-          />
-          {
-            (filteredData && filteredData !== null)
-              ?
+        {data &&
+          <ResultAndStatsWrapper>
+            <SearchResults
+              data={data}
+              filter={filter}
+              setSomeFilter={setFilter}
+              type={'terminology-search'}
+            />
+            {data
+              &&
               <PaginationWrapper>
                 <Pagination
-                  data={filteredData}
+                  data={data}
                   dispatch={dispatch}
-                  isSmall={false}
                   pageString={t('pagination-page')}
                   setResultStart={setResultStart}
                   query={query}
                 />
               </PaginationWrapper>
-              :
-              <></>
-          }
-        </ResultAndStatsWrapper>
+            }
+          </ResultAndStatsWrapper>
+        }
         <Filter
           filter={filter as SearchState['filter']}
           groups={groups}

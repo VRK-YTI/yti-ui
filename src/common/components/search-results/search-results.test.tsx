@@ -11,7 +11,7 @@ describe('search-results', () => {
     const store = makeStore();
 
     const filter = {
-      infoDomains: {},
+      infoDomains: [],
       keyword: '',
       showByOrg: '',
       status: {
@@ -22,11 +22,18 @@ describe('search-results', () => {
       }
     };
 
+    const data = {
+      totalHitCount: 0,
+      resultStart: 0,
+      terminologies: null,
+      deepHits: null
+    };
+
     render(
       <Provider store={store}>
         <ThemeProvider theme={lightTheme}>
           <SearchResults
-            data={[]}
+            data={data}
             filter={filter}
             setSomeFilter={setVocabularyFilter}
           />
@@ -34,15 +41,15 @@ describe('search-results', () => {
       </Provider>
     );
 
-    expect(screen.getByText(/tr-VALID/)).toBeInTheDocument;
-    expect(screen.getByText(/tr-DRAFT/)).toBeInTheDocument;
+    expect(screen.findAllByRole('div')).toBeInTheDocument;
+    expect(screen.queryAllByRole('div')).toEqual([]);
   });
 
   test('should render data', () => {
     const store = makeStore();
 
     const filter = {
-      infoDomains: {},
+      infoDomains: [],
       keyword: '',
       showByOrg: '',
       status: {
@@ -56,6 +63,7 @@ describe('search-results', () => {
     const data = {
       totalHitCount: 2,
       resultStart: 0,
+      deepHits: null,
       terminologies: [
         {
           code: 'code-01',

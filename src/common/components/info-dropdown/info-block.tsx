@@ -1,3 +1,4 @@
+import { VocabularyProperties } from '../../interfaces/vocabulary.interface';
 import {
   InfoBlockData,
   InfoBlockDescription,
@@ -7,47 +8,48 @@ import {
 } from './info-block.styles';
 
 interface InfoBlockProps {
-  data: any;
+  data: VocabularyProperties | VocabularyProperties[];
   title: string;
 }
 
 export default function InfoBlock({ data, title }: InfoBlockProps) {
-  if (data !== '') {
-    return (
-      <InfoBlockWrapper>
-        <InfoBlockTitle>
-          {title}
-        </InfoBlockTitle>
-        <InfoBlockData>
-          {
-            data.length > 0
-              ?
-              data?.map((d: any, idx: number) => {
-                return (
-                  <div key={`info-block-${title}-${idx}`}>
-                    <InfoBlockLanguage>
-                      {d.lang.toUpperCase()}
-                    </InfoBlockLanguage>
-                    <InfoBlockDescription>
-                      {d.value}
-                    </InfoBlockDescription>
-                  </div>
-                );
-              })
-              :
-              <div>
-                <InfoBlockLanguage>
-                  {data?.lang?.toUpperCase()}
-                </InfoBlockLanguage>
-                <InfoBlockDescription>
-                  {data?.value}
-                </InfoBlockDescription>
-              </div>
-          }
-        </InfoBlockData>
-      </InfoBlockWrapper>
-    );
+
+  if (!data) {
+    return <></>;
   }
 
-  return <></>;
+  return (
+    <InfoBlockWrapper>
+      <InfoBlockTitle>
+        {title}
+      </InfoBlockTitle>
+      <InfoBlockData>
+        {
+          Array.isArray(data)
+            ?
+            data.map((d, idx: number) => {
+              return (
+                <div key={`info-block-${title}-${idx}`}>
+                  <InfoBlockLanguage>
+                    {d.lang.toUpperCase()}
+                  </InfoBlockLanguage>
+                  <InfoBlockDescription>
+                    {d.value}
+                  </InfoBlockDescription>
+                </div>
+              );
+            })
+            :
+            <div>
+              <InfoBlockLanguage>
+                {data.lang.toUpperCase()}
+              </InfoBlockLanguage>
+              <InfoBlockDescription>
+                {data.value}
+              </InfoBlockDescription>
+            </div>
+        }
+      </InfoBlockData>
+    </InfoBlockWrapper>
+  );
 }

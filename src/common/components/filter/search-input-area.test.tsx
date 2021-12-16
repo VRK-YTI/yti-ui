@@ -11,7 +11,7 @@ describe('search-input-area', () => {
     const store = makeStore();
 
     const filter = {
-      infoDomains: {},
+      infoDomains: [],
       keyword: '',
       showByOrg: '',
       status: {

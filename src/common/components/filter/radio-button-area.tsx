@@ -16,19 +16,21 @@ export default function RadioButtonArea({ filter, data, setFilter, title }: Radi
   const dispatch = useStoreDispatch();
 
   const handleShowBy = (s: string) => {
-    let temp = filter;
+    let retVal: VocabularyState['filter'] | undefined;
 
     if (s === 'collections') {
-      Object.keys(temp.status).forEach(k => {
-        temp = { ...temp, status: { ...temp.status, [k]: false } };
+      Object.keys(filter.status).forEach(k => {
+        retVal = { ...filter, status: { ...filter.status, [k]: false } };
       });
     } else {
-      Object.keys(temp.status).forEach(k => {
-        temp = { ...temp, status: { ...temp.status, 'VALID': true, 'DRAFT': true } };
+      Object.keys(filter.status).forEach(_ => {
+        retVal = { ...filter, status: { ...filter.status, 'VALID': true, 'DRAFT': true } };
       });
     }
 
-    dispatch(setFilter({ ...temp, showBy: s }));
+    if (retVal) {
+      dispatch(setFilter({ ...retVal, showBy: s }));
+    }
   };
 
   // *Currently* returns two radio buttons that change values between concepts and collections.
@@ -42,7 +44,7 @@ export default function RadioButtonArea({ filter, data, setFilter, title }: Radi
         value={filter.showBy}
         onChange={(value) => handleShowBy(value)}
       >
-        {data.map((value: any, idx: number) => {
+        {data.map((value: string, idx: number) => {
           return (
             <FilterRadioButton
               value={value}

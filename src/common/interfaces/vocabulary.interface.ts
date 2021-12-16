@@ -18,7 +18,13 @@ export interface VocabularyInfoDTO extends BaseEntity<'TerminologicalVocabulary'
   };
 };
 
-export interface VocabularyConceptsDTO {
+export interface VocabularyConcepts {
+  concepts: VocabularyConceptDTO[];
+  resultStart: number;
+  totalHitCount: number;
+}
+
+export interface VocabularyConceptDTO {
   definition: {
     [key: string]: string;
   };

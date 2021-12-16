@@ -60,6 +60,8 @@
   "vocabulary-info-created-at": "Luotu",
   "vocabulary-info-modified-at": "Muokattu viimeksi",
   "vocabulary-info-terminological-dictionary": "Terminologinen sanasto",
+  "vocabulary-info-vocabulary-export": "Lataa sanasto",
+  "vocabulary-info-vocabulary-export-description": "Voit tarkastella sanaston, käsitevalikoiman ja käsitteen, sekä termien tietoja Excel-tiedostomuodoissa.",
   "vocabulary-info-concept": "Käsite",
   "vocabulary-filter-filter-list": "RAJAA LISTAA",
   "vocabulary-filter-remove-all": "Poista kaikki rajaukset",

@@ -5,7 +5,7 @@ import { GroupSearchResult, OrganizationSearchResult, TerminologySearchResult } 
 
 export interface SearchState {
   filter: {
-    infoDomains: { [status: string]: boolean };
+    infoDomains: {id: string, value: string}[] | [];
     keyword: string;
     showByOrg: string;
     status: { [status: string]: boolean };
@@ -16,7 +16,7 @@ export interface SearchState {
 
 export const initialState: SearchState = {
   filter: {
-    infoDomains: {},
+    infoDomains: [],
     keyword: '',
     showByOrg: '',
     status: {
@@ -51,7 +51,7 @@ export const terminologySearchApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: '/terminology-api/api/v1/frontend' }),
   tagTypes: ['TerminologySearch'],
   endpoints: builder => ({
-    getSearchResult: builder.query<TerminologySearchResult, {searchTerm: string, resultStart: number}>({
+    getSearchResult: builder.query<TerminologySearchResult, {filter: SearchState['filter'], resultStart: number}>({
       query: (value) => ({
         url: '/searchTerminology',
         method: 'POST',
@@ -59,7 +59,9 @@ export const terminologySearchApi = createApi({
           'content-type': 'application/json',
         },
         body: {
-          query: value.searchTerm,
+          query: value.filter.keyword,
+          statuses: Array.from(Object.keys(value.filter.status).filter(s => value.filter.status[s])),
+          groups: value.filter.infoDomains.map(infoD => infoD.id),
           searchConcepts: true,
           prefLang: 'fi',
           pageSize: 10,
@@ -108,12 +110,6 @@ export const resetFilter = (): AppThunk => dispatch => {
   );
 };
 
-export const setSearchTerm = (searchTerm: string): AppThunk => dispatch => {
-  dispatch(
-    terminologySearchSlice.actions.setSearchTerm(searchTerm)
-  );
-};
-
 export const setResultStart = (resultStart: number): AppThunk => dispatch => {
   dispatch(
     terminologySearchSlice.actions.setResultStart(resultStart),
@@ -122,6 +118,5 @@ export const setResultStart = (resultStart: number): AppThunk => dispatch => {
 
 export const selectFilter = () => (state: AppState): any => state.terminologySearch.filter;
 export const selectResultStart = () => (state: AppState): any => state.terminologySearch.resultStart;
-export const selectSearchTerm = () => (state: AppState): any => state.terminologySearch.searchTerm;
 
 export default terminologySearchSlice.reducer;

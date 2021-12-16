@@ -5,8 +5,13 @@ import { AppThunk, useStoreDispatch } from '../../../store';
 import { VocabularyState } from '../vocabulary/vocabulary-slice';
 import { SearchState } from '../terminology-search/terminology-search-slice';
 
+interface InfoDProp {
+  id: string;
+  value: string;
+}
+
 interface CheckboxProps {
-  data?: string[] | null[];
+  data?: InfoDProp[];
   filter: VocabularyState['filter'] | SearchState['filter'];
   setFilter: (x: any) => AppThunk;
   title: string;
@@ -17,24 +22,26 @@ export default function CheckboxArea({ data, filter, setFilter, title, type }: C
   const { t } = useTranslation('common');
   const dispatch = useStoreDispatch();
 
-  const handleCheckbox = (s: string) => {
-    let temp = filter;
+  const handleCheckbox = (s: string | InfoDProp) => {
+    let retVal: CheckboxProps['filter'] | undefined;
 
-    if (type === undefined) {
-      if (temp.status[s] === false || temp.status[s] === undefined) {
-        temp = { ...temp, status: { ...temp.status, [s]: true } };
+    if (typeof s === 'string') {
+      if (filter.status[s] === false || filter.status[s] === undefined) {
+        retVal = { ...filter, status: { ...filter.status, [s]: true } };
       } else {
-        temp = { ...temp, status: { ...temp.status, [s]: false } };
+        retVal = { ...filter, status: { ...filter.status, [s]: false } };
       }
-    } else if (type === 'infoDomains' && 'infoDomains' in temp) {
-      if (temp.infoDomains[s] === false || temp.infoDomains[s] === undefined) {
-        temp = { ...temp, infoDomains: { ...temp.infoDomains, [s]: true } };
+    } else if ('infoDomains' in filter && typeof s !== 'string') {
+      if (filter.infoDomains.filter((infoD: InfoDProp) => infoD.id === s.id).length > 0) {
+        retVal = { ...filter, infoDomains: filter.infoDomains.filter((infoD: InfoDProp) => infoD.id !== s.id) };
       } else {
-        temp = { ...temp, infoDomains: { ...temp.infoDomains, [s]: false } };
+        retVal = { ...filter, infoDomains: [...filter.infoDomains, s] };
       }
     }
 
-    dispatch(setFilter(temp));
+    if (retVal) {
+      dispatch(setFilter(retVal));
+    }
   };
 
   /* If any data isn't provided returns basic template
@@ -91,17 +98,16 @@ export default function CheckboxArea({ data, filter, setFilter, title, type }: C
         <Text variant='bold' smallScreen>
           {title}
         </Text>
-        {data.map((value: any, idx: number) => {
+        {data.map((d: InfoDProp) => {
           return (
             <FilterCheckbox
-              key={`checkbox-${value}-${idx}`}
-              onClick={() => handleCheckbox(value)}
+              key={`checkbox-${d.value}-${d.id}`}
+              onClick={() => handleCheckbox(d)}
               checked={
-                filter.infoDomains?.[value] !== undefined &&
-                filter.infoDomains?.[value] as boolean
+                filter.infoDomains?.filter((infoD: InfoDProp) => infoD.id === d.id).length > 0
               }
             >
-              {value} (n {t('vocabulary-filter-items')})
+              {d.value} (n {t('vocabulary-filter-items')})
             </FilterCheckbox>
           );
         })}
@@ -109,18 +115,5 @@ export default function CheckboxArea({ data, filter, setFilter, title, type }: C
     );
   }
 
-  return (
-    <div>
-      <Text variant='bold' smallScreen>
-        {title}
-      </Text>
-      {data.map((value: any, idx: number) => {
-        return (
-          <FilterCheckbox key={`checkbox-${value}-${idx}`}>
-            {value} (n {t('vocabulary-filter-items')})
-          </FilterCheckbox>
-        );
-      })}
-    </div>
-  );
+  return <></>;
 }

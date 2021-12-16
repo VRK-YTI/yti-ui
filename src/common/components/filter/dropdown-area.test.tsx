@@ -11,7 +11,7 @@ describe('dropdown-area', () => {
     const store = makeStore();
 
     const filter = {
-      infoDomains: {},
+      infoDomains: [],
       keyword: '',
       showByOrg: '',
       status: {
