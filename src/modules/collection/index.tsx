@@ -19,7 +19,10 @@ export default function Collection({ terminologyId, collectionId }: CollectionPr
   return (
     <PageContent breakpoint={breakpoint}>
       <MainContent>
-        <PropertyValue property={collection?.properties.prefLabel} />
+        <PropertyValue
+          property={collection?.properties.prefLabel}
+          fallbackLanguage="fi"
+        />
       </MainContent>
       {collection && <CollectionSidebar collection={collection} />}
     </PageContent>

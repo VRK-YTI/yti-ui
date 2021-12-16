@@ -18,7 +18,10 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
     <>
       <PageContent breakpoint={breakpoint}>
         <MainContent>
-          <PropertyValue property={concept?.references.prefLabelXl?.[0].properties.prefLabel} />
+          <PropertyValue
+            property={concept?.references.prefLabelXl?.[0].properties.prefLabel}
+            fallbackLanguage="fi"
+          />
         </MainContent>
         <ConceptSidebar concept={concept} />
       </PageContent>

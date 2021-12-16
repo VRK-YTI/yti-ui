@@ -28,7 +28,10 @@ export default function SidebarSection<T extends BaseEntity<string>>({
         {items.map(item => (
           <SidebarLinkListItem key={item.id}>
             <Link href={href(item)}>
-              <PropertyValue property={propertyAccessor(item)} />
+              <PropertyValue
+                property={propertyAccessor(item)}
+                fallbackLanguage="fi"
+              />
             </Link>
           </SidebarLinkListItem>
         ))}

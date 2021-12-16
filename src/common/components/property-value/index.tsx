@@ -4,14 +4,17 @@ import { Property } from '../../interfaces/termed-data-types.interface';
 
 export interface PropertyValueProps {
   property?: Property[];
+  fallbackLanguage?: string;
 }
 
 export function getPropertyValue(
   property: Property[] | undefined,
-  locale: string = ''
+  locale: string = '',
+  fallbackLanguage: string = ''
 ): string | undefined {
   return [
     ...property?.filter(({ lang }) => lang === locale) ?? [],
+    ...property?.filter(({ lang }) => lang === fallbackLanguage) ?? [],
     ...property?.filter(({ lang }) => !lang) ?? [],
   ][0]?.value;
 }
@@ -28,11 +31,16 @@ export function getPropertyValue(
  *
  * If current language is English, this renders as 'This is a test.'.
  * If current locale is not English, this renders as null.
+ *
+ * <PropertyValue property={[{ lang: 'en', value: 'This is a test.' }]} fallbackLocale="en" />
+ *
+ * If current language is English, this renders as 'This is a test.'.
+ * If current locale is not English, fallback language is used, and this renders as 'This is a test'.
  */
-export default function PropertyValue({ property }: PropertyValueProps) {
+export default function PropertyValue({ property, fallbackLanguage }: PropertyValueProps) {
   const { i18n } = useTranslation('common');
 
-  const value = getPropertyValue(property, i18n.language);
+  const value = getPropertyValue(property, i18n.language, fallbackLanguage);
 
   if (! value) {
     return null;
