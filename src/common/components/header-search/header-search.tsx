@@ -34,16 +34,16 @@ export default function HeaderSearch({ isSearchOpen, setIsSearchOpen }: HeaderSe
       <SearchInput
         clearButtonLabel=""
         labelText=""
-        defaultValue={filter}
+        defaultValue={filter.keyword}
         labelMode="hidden"
         searchButtonLabel={t('terminology-search')}
         visualPlaceholder={t('terminology-search-placeholder')}
         wrapperProps={{ style: { 'flexGrow': isSmall ? 1 : 0 } }}
         onSearch={value => {
-          if (typeof value === 'string') dispatch(setFilter(value));
+          if (typeof value === 'string') dispatch(setFilter({...filter, keyword: value}));
         }}
         onChange={value => {
-          if (value === '') dispatch(setFilter(value));
+          if (value === '') dispatch(setFilter({...filter, keyword: value}));
         }}
       />
       {isSmall ? (

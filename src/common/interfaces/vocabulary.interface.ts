@@ -1,5 +1,3 @@
-// TODO: Typing could be done better without this much retyping
-
 export interface VocabularyInfoDTO {
   code: string;
   createdBy: string;
@@ -64,7 +62,13 @@ export interface VocabularyInfoDTO {
   uri: string;
 };
 
-export interface VocabularyConceptsDTO {
+export interface VocabularyConcepts {
+  concepts: VocabularyConceptDTO[];
+  resultStart: number;
+  totalHitCount: number;
+}
+
+export interface VocabularyConceptDTO {
   definition: {
     [key: string]: string;
   };

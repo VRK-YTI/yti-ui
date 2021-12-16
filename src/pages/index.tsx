@@ -24,7 +24,7 @@ export default function IndexPage(props: {
           <link rel="shortcut icon" href="/favicon.ico" />
         </Head>
         <section>
-          <Link href="/search">
+          <Link href="/search?page=1">
             <a>{ t('terminology-search') }</a>
           </Link>
         </section>
