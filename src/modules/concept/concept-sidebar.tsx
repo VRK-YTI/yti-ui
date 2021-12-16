@@ -1,3 +1,4 @@
+import { useTranslation } from 'next-i18next';
 import React from 'react';
 import { getPropertyValue } from '../../common/components/property-value';
 import {
@@ -15,6 +16,8 @@ export interface ConceptSidebarProps {
 }
 
 export default function ConceptSidebar({ concept }: ConceptSidebarProps) {
+  const { t } = useTranslation('concept');
+
   const terminologyId = concept?.type.graph.id;
 
   const shouldRenderDivider1 = [
@@ -38,47 +41,47 @@ export default function ConceptSidebar({ concept }: ConceptSidebarProps) {
 
   return (
     <Sidebar>
-      <SidebarHeader>Suhdetiedot</SidebarHeader>
+      <SidebarHeader>{t('sidebar-header')}</SidebarHeader>
 
       {shouldRenderDivider1 && <SidebarDivider />}
 
       <SidebarSection<Concept>
-        header="Hierarkkinen yläkäsite"
+        heading={t('sidebar-section-heading-broader')}
         items={concept?.references.broader}
         href={({ id }) => `/terminology/${terminologyId}/concept/${id}`}
         propertyAccessor={({ references }) => references?.prefLabelXl?.[0]?.properties?.prefLabel}
       />
 
       <SidebarSection<Concept>
-        header="Hierarkkinen alakäsite"
+        heading={t('sidebar-section-heading-narrower')}
         items={concept?.references.narrower}
         href={({ id }) => `/terminology/${terminologyId}/concept/${id}`}
         propertyAccessor={({ references }) => references?.prefLabelXl?.[0]?.properties?.prefLabel}
       />
 
       <SidebarSection<Concept>
-        header="Liittyvä käsite"
+        heading={t('sidebar-section-heading-related')}
         items={concept?.references.related}
         href={({ id }) => `/terminology/${terminologyId}/concept/${id}`}
         propertyAccessor={({ references }) => references?.prefLabelXl?.[0]?.properties?.prefLabel}
       />
 
       <SidebarSection<Concept>
-        header="Koostumussuhteinen yläkäsite"
+        heading={t('sidebar-section-heading-is-part-of')}
         items={concept?.references.isPartOf}
         href={({ id }) => `/terminology/${terminologyId}/concept/${id}`}
         propertyAccessor={({ references }) => references?.prefLabelXl?.[0]?.properties?.prefLabel}
       />
 
       <SidebarSection<Concept>
-        header="Koostumussuhteinen alakäsite"
+        heading={t('sidebar-section-heading-has-part')}
         items={concept?.references.hasPart}
         href={({ id }) => `/terminology/${terminologyId}/concept/${id}`}
         propertyAccessor={({ references }) => references?.prefLabelXl?.[0]?.properties?.prefLabel}
       />
 
       <SidebarSection<ConceptLink>
-        header="Liittyvä käsite toisessa sanastossa"
+        heading={t('sidebar-section-heading-related-match')}
         items={concept?.references.relatedMatch}
         href={({ properties }) => {
           const terminologyId = getPropertyValue(properties.targetGraph);
@@ -89,7 +92,7 @@ export default function ConceptSidebar({ concept }: ConceptSidebarProps) {
       />
 
       <SidebarSection<ConceptLink>
-        header="Vastaava käsite toisessa sanastossa"
+        heading={t('sidebar-section-heading-exact-match')}
         items={concept?.references.exactMatch}
         href={({ properties }) => {
           const terminologyId = getPropertyValue(properties.targetGraph);
@@ -100,7 +103,7 @@ export default function ConceptSidebar({ concept }: ConceptSidebarProps) {
       />
 
       <SidebarSection<ConceptLink>
-        header="Lähes vastaava käsite toisessa sanastossa"
+        heading={t('sidebar-section-heading-close-match')}
         items={concept?.references.closeMatch}
         href={({ properties }) => {
           const terminologyId = getPropertyValue(properties.targetGraph);
@@ -113,7 +116,7 @@ export default function ConceptSidebar({ concept }: ConceptSidebarProps) {
       {shouldRenderDivider2 && <SidebarDivider />}
 
       {/* <SidebarSection<ConceptLink>
-        header="Käsite muissa sanastoissa"
+        header={t('sidebar-section-heading-in-other-terminologies')}
         items={concept?.references.closeMatch}
         linkPrefix={`/terminology/${terminologyId}/concept/`}
         propertyAccessor={conceptLink => conceptLink?.properties?.prefLabel}
@@ -122,7 +125,7 @@ export default function ConceptSidebar({ concept }: ConceptSidebarProps) {
       {shouldRenderDivider3 && <SidebarDivider />}
 
       <SidebarSection<Collection>
-        header="Kuuluu käsitekokoelmaan"
+        heading={t('sidebar-section-heading-member')}
         items={concept?.referrers.member}
         href={({ id }) => `/terminology/${terminologyId}/collection/${id}`}
         propertyAccessor={({ properties }) => properties?.prefLabel}

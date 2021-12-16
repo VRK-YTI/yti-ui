@@ -32,7 +32,6 @@ export default function ConceptPage(props: {
         <Concept terminologyId={terminologyId} conceptId={conceptId} />
       </Layout>
     </MediaQueryContextProvider>
-
   );
 }
 

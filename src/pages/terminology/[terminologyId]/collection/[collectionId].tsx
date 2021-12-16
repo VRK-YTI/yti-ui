@@ -32,7 +32,6 @@ export default function CollectionPage(props: {
         <Collection terminologyId={terminologyId} collectionId={collectionId} />
       </Layout>
     </MediaQueryContextProvider>
-
   );
 }
 
