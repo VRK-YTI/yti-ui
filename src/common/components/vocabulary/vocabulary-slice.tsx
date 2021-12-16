@@ -1,17 +1,30 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import type { AppState, AppThunk } from '../../../store';
+import { VocabularyConcepts, VocabularyInfoDTO } from '../../interfaces/vocabulary.interface';
 
 export interface VocabularyState {
   filter: {
     status: { [status: string]: boolean };
     keyword: string;
     showBy: string;
-    tKeyword: string;
   };
 }
 
 const vocabularyInitialState: VocabularyState = {
+  filter: {
+    status: {
+      'VALID': true,
+      'DRAFT': true,
+      'RETIRED': false,
+      'SUPERSEDED': false
+    },
+    keyword: '',
+    showBy: 'concepts'
+  }
+};
+
+export const vocabularyEmptyState: VocabularyState = {
   filter: {
     status: {
       'VALID': false,
@@ -20,8 +33,7 @@ const vocabularyInitialState: VocabularyState = {
       'SUPERSEDED': false
     },
     keyword: '',
-    showBy: 'concept',
-    tKeyword: ''
+    showBy: 'concepts'
   }
 };
 
@@ -43,7 +55,7 @@ export const vocabularyApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: '/terminology-api/api/v1/frontend' }),
   tagTypes: ['Vocabulary'],
   endpoints: builder => ({
-    getConceptResult: builder.query<any, string>({
+    getConceptResult: builder.query<VocabularyConcepts, string>({
       query: (value) => ({
         url: '/searchConcept',
         method: 'POST',
@@ -62,7 +74,7 @@ export const vocabularyApi = createApi({
         },
       }),
     }),
-    getVocabulary: builder.query<any, string>({
+    getVocabulary: builder.query<VocabularyInfoDTO, string>({
       query: (value) => ({
         url: `/vocabulary?graphId=${value}`,
         method: 'GET',
@@ -84,10 +96,18 @@ export const setVocabularyFilter = (filter: VocabularyState): AppThunk => dispat
   );
 };
 
-export const resetVocabularyFilter = (showBy: string): AppThunk => dispatch => {
+export const initializeVocabularyFilter = (): AppThunk => dispatch => {
   dispatch(
     vocabularySlice.actions.setVocabularyFilter(
       vocabularyInitialState
+    )
+  );
+};
+
+export const resetVocabularyFilter = (): AppThunk => dispatch => {
+  dispatch(
+    vocabularySlice.actions.setVocabularyFilter(
+      vocabularyEmptyState
     )
   );
 };

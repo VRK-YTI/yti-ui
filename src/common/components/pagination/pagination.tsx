@@ -2,26 +2,27 @@ import { useState } from 'react';
 import { Icon } from 'suomifi-ui-components';
 import { PaginationButton, PaginationMobile, PaginationWrapper } from './pagination.styles';
 import { PaginationProps } from './pagination-props';
+import { useBreakpoints } from '../media-query/media-query-context';
 
 export default function Pagination({
   data,
   dispatch,
-  isSmall,
   pageString,
   setResultStart,
   query
 }: PaginationProps) {
+  const breakPoints = useBreakpoints();
   const items = Array.from({ length: Math.ceil(data.totalHitCount / 10) },
     (_, item) => item + 1);
   const [activeItem, setActiveItem] = useState<number>(
-    query.query.page !== '1' ? (parseInt(query.query.page as string, 10) - 1) * 10 : 1
+    query.query.page !== undefined && query.query.page !== '1'
+      ? parseInt(query.query.page as string, 10)
+      : 1
   );
 
   const handleClick = (i: number) => {
     setActiveItem(i);
-    if (dispatch) {
-      dispatch(setResultStart((i - 1) * 10));
-    }
+    dispatch(setResultStart((i - 1) * 10));
     query.replace(query.route + `?page=${i}`);
   };
 
@@ -36,13 +37,14 @@ export default function Pagination({
         onClick={() => activeItem !== 1 && handleClick(activeItem - 1)}
         data-testid='pagination-left'
       >
+        {/* TODO: Update color*/}
         <Icon
           icon='chevronLeft'
           color={activeItem === 1 ? 'hsl(202, 7%, 67%)' : 'hsl(212, 63%, 45%)'}
         />
       </PaginationButton>
 
-      {!isSmall
+      {!breakPoints.isSmall
         ?
         FormatItemsList(items, activeItem)
           .map((item, idx) => {
@@ -66,6 +68,7 @@ export default function Pagination({
         onClick={() => activeItem !== items[items.length - 1] && handleClick(activeItem + 1)}
         data-testid='pagination-right'
       >
+        {/* TODO: Update color*/}
         <Icon
           icon='chevronRight'
           color={activeItem === items[items.length - 1] ? 'hsl(202, 7%, 67%)' : 'hsl(212, 63%, 45%)'}

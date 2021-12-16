@@ -1,21 +1,33 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { HYDRATE } from 'next-redux-wrapper';
 import type { AppState, AppThunk } from '../../../store';
-import { TerminologySearchResult } from '../../interfaces/terminology.interface';
+import { GroupSearchResult, OrganizationSearchResult, TerminologySearchResult } from '../../interfaces/terminology.interface';
 
 export interface SearchState {
-  searchFilter: {
-    filter: string;
-    resultStart: number;
+  filter: {
+    infoDomains: {id: string, value: string}[] | [];
+    keyword: string;
+    showByOrg: string;
+    status: { [status: string]: boolean };
   };
+  resultStart: number;
+  searchTerm: string;
 };
 
-const initialState: SearchState = {
-  searchFilter: {
-    filter: '',
-    resultStart: 0
-  }
+export const initialState: SearchState = {
+  filter: {
+    infoDomains: [],
+    keyword: '',
+    showByOrg: '',
+    status: {
+      'VALID': true,
+      'DRAFT': true,
+      'RETIRED': false,
+      'SUPERSEDED': false
+    }
+  },
+  resultStart: 0,
+  searchTerm: ''
 };
 
 export const terminologySearchSlice = createSlice({
@@ -23,19 +35,14 @@ export const terminologySearchSlice = createSlice({
   initialState,
   reducers: {
     setFilter(state, action) {
-      state.searchFilter.filter = action.payload;
+      state.filter = action.payload;
     },
     setResultStart(state, action) {
-      state.searchFilter.resultStart = action.payload;
-    }
-  },
-  extraReducers: {
-    [HYDRATE]: (state, action) => {
-      return {
-        ...state,
-        ...action.payload.terminologySearch,
-      };
+      state.resultStart = action.payload;
     },
+    setSearchTerm(state, action) {
+      state.searchTerm = action.payload;
+    }
   }
 });
 
@@ -44,7 +51,7 @@ export const terminologySearchApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: '/terminology-api/api/v1/frontend' }),
   tagTypes: ['TerminologySearch'],
   endpoints: builder => ({
-    getSearchResult: builder.query<TerminologySearchResult, {filter: string, resultStart: number}>({
+    getSearchResult: builder.query<TerminologySearchResult, {filter: SearchState['filter'], resultStart: number}>({
       query: (value) => ({
         url: '/searchTerminology',
         method: 'POST',
@@ -52,7 +59,9 @@ export const terminologySearchApi = createApi({
           'content-type': 'application/json',
         },
         body: {
-          query: value.filter,
+          query: value.filter.keyword,
+          statuses: Array.from(Object.keys(value.filter.status).filter(s => value.filter.status[s])),
+          groups: value.filter.infoDomains.map(infoD => infoD.id),
           searchConcepts: true,
           prefLang: 'fi',
           pageSize: 10,
@@ -60,14 +69,44 @@ export const terminologySearchApi = createApi({
         },
       }),
     }),
+    getGroups: builder.query<GroupSearchResult[], null>({
+      query: () => ({
+        url: '/groups',
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+        },
+      }),
+    }),
+    getOrganizations: builder.query<OrganizationSearchResult[], null>({
+      query: () => ({
+        url: '/organizations',
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+        },
+      }),
+    })
   }),
 });
 
-export const { useGetSearchResultQuery } = terminologySearchApi;
+export const {
+  useGetGroupsQuery,
+  useGetSearchResultQuery,
+  useGetOrganizationsQuery
+} = terminologySearchApi;
 
 export const setFilter = (filter: string): AppThunk => dispatch => {
   dispatch(
-    terminologySearchSlice.actions.setFilter(filter),
+    terminologySearchSlice.actions.setFilter(filter)
+  );
+};
+
+export const resetFilter = (): AppThunk => dispatch => {
+  dispatch(
+    terminologySearchSlice.actions.setFilter(
+      initialState.filter
+    )
   );
 };
 
@@ -77,7 +116,7 @@ export const setResultStart = (resultStart: number): AppThunk => dispatch => {
   );
 };
 
-export const selectFilter = () => (state: AppState): string => state.terminologySearch.searchFilter.filter;
-export const selectSearchFilter = () => (state: AppState): {filter: string, resultStart: number} => state.terminologySearch.searchFilter;
+export const selectFilter = () => (state: AppState): any => state.terminologySearch.filter;
+export const selectResultStart = () => (state: AppState): any => state.terminologySearch.resultStart;
 
 export default terminologySearchSlice.reducer;
