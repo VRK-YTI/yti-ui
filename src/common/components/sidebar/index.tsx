@@ -1,5 +1,6 @@
 import Sidebar from './sidebar';
 import SidebarLinkListItem from './sidebar-link-list-item';
+import SidebarSection from './sidebar-section';
 import {
   SidebarHeader,
   SidebarSubHeader,
@@ -14,4 +15,5 @@ export {
   SidebarDivider,
   SidebarLinkList,
   SidebarLinkListItem,
+  SidebarSection,
 };
