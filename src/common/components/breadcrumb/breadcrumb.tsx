@@ -40,7 +40,7 @@ export default function BreadcrumbNav() {
   );
 
   function renderBreadcrumbLink(path: string) {
-    const displayValue = ['terminology, search'].some(w => w.includes(path))
+    const displayValue = ['terminology, search'].some(w => w.includes(path.split('?')[0]))
       ? t('terminology-title')
       : terminologyValue.value;
 

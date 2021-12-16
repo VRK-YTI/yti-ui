@@ -30,10 +30,6 @@ interface SearchResultsProps {
 export default function SearchResults({ data, filter, type, setSomeFilter }: SearchResultsProps) {
   const { t, i18n } = useTranslation('common');
 
-  if (!data) {
-    return <></>;
-  }
-
   if (type === 'terminology-search' && 'terminologies' in data) {
     return (
       renderTerminologiesSearchResults()
@@ -102,6 +98,8 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
           </CardWrapper>
         </>
       );
+    } else {
+      return <></>;
     }
   }
 
@@ -126,7 +124,7 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
                   </CardSubtitle>
 
                   <CardDescription>
-                    {concept.definition?.[i18n.language] !== undefined ? concept.definition[i18n.language] : concept.definition[Object.keys(concept.definition)[0]]}
+                    {concept.definition?.[i18n.language] !== undefined ? concept.definition[i18n.language] : concept.definition?.[Object.keys(concept.definition)[0]]}
                   </CardDescription>
                 </Card>
               );
@@ -134,6 +132,8 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
           </CardWrapper>
         </>
       );
+    } else {
+      return <></>;
     }
   }
 }
