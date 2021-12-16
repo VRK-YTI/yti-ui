@@ -40,16 +40,11 @@ export default function BreadcrumbNav() {
   );
 
   function renderBreadcrumbLink(path: string) {
-    /*
-      If handled breadcrump is equal to active page,
-      disable link functionalities.
-    */
-
     const displayValue = ['terminology, search'].some(w => w.includes(path))
       ? t('terminology-title')
       : terminologyValue.value;
 
-    if (current) {
+    if (current === path) {
       return (
         <BreadcrumbLink
           aria-label={path}
@@ -67,7 +62,7 @@ export default function BreadcrumbNav() {
           passHref
         >
           <div>
-            <BreadcrumbLink aria-label={path} current={current === path}>
+            <BreadcrumbLink aria-label={path}>
               {displayValue}
             </BreadcrumbLink>
           </div>
