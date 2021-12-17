@@ -103,6 +103,8 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
         </>
       );
     }
+
+    return null;
   }
 
   function renderConceptSearchResults() {
@@ -142,5 +144,7 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
         </>
       );
     }
+
+    return null;
   }
 }

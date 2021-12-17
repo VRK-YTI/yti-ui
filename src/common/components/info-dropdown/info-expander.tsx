@@ -18,13 +18,13 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
   }
 
   const title = data.properties.prefLabel ?? [];
-  const description = data.properties.description?.[0] ?? '';
+  const description = data.properties.description?.[0] ?? [];
   const vocabularyLanguages = data.properties.language ?? '';
   const createdDate = FormatISODate(data.createdDate) ?? '01.01.1970, 00.00';
   const lastModifiedDate = FormatISODate(data.lastModifiedDate) ?? '01.01.1970, 00.00';
   const uri = data.uri ?? '';
-  const contributor = data.references.contributor[0].properties.prefLabel ?? '';
-  const informationDomains = data.references.inGroup[0].properties.prefLabel ?? '';
+  const contributor = data.references.contributor?.[0].properties.prefLabel ?? '';
+  const informationDomains = data.references.inGroup?.[0].properties.prefLabel ?? '';
 
   return (
     <InfoExpanderWrapper>
