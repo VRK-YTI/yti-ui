@@ -23,7 +23,7 @@ export default function Pagination({
   const handleClick = (i: number) => {
     setActiveItem(i);
     dispatch(setResultStart((i - 1) * 10));
-    query.replace(query.route + `?page=${i}`);
+    query.push(query.route + `?page=${i}`);
   };
 
   if (items.length < 2) {
@@ -37,7 +37,7 @@ export default function Pagination({
         onClick={() => activeItem !== 1 && handleClick(activeItem - 1)}
         data-testid='pagination-left'
       >
-        {/* TODO: Update color*/}
+        {/* TODO: Update color after release in design system*/}
         <Icon
           icon='chevronLeft'
           color={activeItem === 1 ? 'hsl(202, 7%, 67%)' : 'hsl(212, 63%, 45%)'}

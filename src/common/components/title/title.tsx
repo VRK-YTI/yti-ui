@@ -11,13 +11,16 @@ interface TitleProps {
 export default function Title({ info }: TitleProps) {
   const { t, i18n } = useTranslation('common');
 
-  if (typeof info === 'undefined') {
+  if (!info) {
     return <></>;
   }
 
   if (typeof info === 'string') {
     return (
-      <Description>{t('terminology-search-info')}</Description>
+      <TitleWrapper>
+        <Heading variant='h1'>{info}</Heading>
+        <Description>{t('terminology-search-info')}</Description>
+      </TitleWrapper>
     );
   } else {
     const status = info.properties.status[0].value ?? '';

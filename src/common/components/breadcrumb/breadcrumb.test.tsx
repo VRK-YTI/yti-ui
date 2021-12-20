@@ -13,7 +13,7 @@ describe('breadcrumb', () => {
     render(
       <Provider store={store}>
         <ThemeProvider theme={lightTheme}>
-          <BreadcrumbNav />
+          <BreadcrumbNav title={{ value: 'tr-terminology-title', url: 'search' }} />
         </ThemeProvider>
       </Provider>
     );
@@ -22,7 +22,7 @@ describe('breadcrumb', () => {
     expect(screen.getByText('tr-terminology-title')).toBeInTheDocument;
   });
 
-  test('should only render "front-page" when path is empty', () => {
+  test('should render entire path', () => {
     const store = makeStore();
 
     useRouter().push('/');
@@ -30,12 +30,20 @@ describe('breadcrumb', () => {
     render(
       <Provider store={store}>
         <ThemeProvider theme={lightTheme}>
-          <BreadcrumbNav />
+          <BreadcrumbNav
+            title={{ value: 'tr-terminology-title', url: 'search' }}
+            breadcrumbs={[
+              { value: 'terminology', url: 'search' },
+              { value: 'test', url: 'tset' }
+            ]}
+          />
         </ThemeProvider>
       </Provider>
     );
 
     expect(screen.getByText('tr-front-page')).toBeInTheDocument;
-    expect(screen.queryByText('tr-terminology-title')).toEqual(null);
+    expect(screen.getByText('terminology')).toBeInTheDocument;
+    expect(screen.getByText('test')).toBeInTheDocument;
+    expect(screen.getByText('tr-terminology-title')).toBeInTheDocument;
   });
 });

@@ -18,6 +18,7 @@ import Pagination from '../../common/components/pagination/pagination';
 import { useStoreDispatch } from '../../store';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
+import BreadcrumbNav from '../../common/components/breadcrumb/breadcrumb';
 
 export default function TerminologySearch() {
   const { t } = useTranslation();
@@ -37,7 +38,10 @@ export default function TerminologySearch() {
 
   return (
     <>
-      <Title info={'test'} />
+      <BreadcrumbNav
+        title={{url: 'search', value: t('terminology-title')}}
+      />
+      <Title info={t('terminology-title')} />
       <ResultAndFilterContainer>
         {data &&
           <ResultAndStatsWrapper>

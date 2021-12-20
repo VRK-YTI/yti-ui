@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import type { AppState, AppThunk } from '../../../store';
+import { AppState, AppThunk } from '../../../store';
 import { VocabularyConcepts, VocabularyInfoDTO } from '../../interfaces/vocabulary.interface';
 
 export interface VocabularyState {
@@ -15,7 +15,7 @@ export interface VocabularyState {
   };
 }
 
-const vocabularyInitialState: VocabularyState = {
+export const vocabularyInitialState: VocabularyState = {
   filter: {
     status: {
       'VALID': true,
@@ -30,24 +30,6 @@ const vocabularyInitialState: VocabularyState = {
     id: '',
     value: ''
   }
-};
-
-export const vocabularyEmptyState: VocabularyState = {
-  filter: {
-    status: {
-      'VALID': false,
-      'DRAFT': false,
-      'RETIRED': false,
-      'SUPERSEDED': false
-    },
-    keyword: '',
-    showBy: 'concepts'
-  },
-  currTerminology: {
-    id: '',
-    value: ''
-  }
-
 };
 
 export const vocabularySlice = createSlice({
@@ -123,7 +105,7 @@ export const initializeVocabularyFilter = (): AppThunk => dispatch => {
   );
 };
 
-export const setCurrentTerminology = (currVal: {id: string, value: string}): AppThunk => dispatch => {
+export const setCurrentTerminology = (currVal: VocabularyState['currTerminology']): AppThunk => dispatch => {
   dispatch(
     vocabularySlice.actions.setCurrentTerminology({
       currTerminology: currVal
@@ -133,9 +115,9 @@ export const setCurrentTerminology = (currVal: {id: string, value: string}): App
 
 export const resetVocabularyFilter = (): AppThunk => dispatch => {
   dispatch(
-    vocabularySlice.actions.setVocabularyFilter(
-      vocabularyEmptyState
-    )
+    vocabularySlice.actions.setVocabularyFilter({
+      filter: vocabularyInitialState.filter
+    })
   );
 };
 

@@ -16,17 +16,19 @@ import { selectVocabularyFilter } from '../../common/components/vocabulary/vocab
 import { useSelector } from 'react-redux';
 import { useStoreDispatch } from '../../store';
 import { useTranslation } from 'next-i18next';
+import BreadcrumbNav from '../../common/components/breadcrumb/breadcrumb';
 
 interface VocabularyProps {
   id: string;
 }
 
 export default function Vocabulary({ id }: VocabularyProps) {
-  const { i18n } = useTranslation('common');
+  const { t, i18n } = useTranslation('common');
   const dispatch = useStoreDispatch();
   const filter: VocabularyState['filter'] = useSelector(selectVocabularyFilter());
   const { data: concepts } = useGetConceptResultQuery(id);
   const { data: info } = useGetVocabularyQuery(id);
+  const title = info?.properties.prefLabel.filter(pl => pl.lang === i18n.language)[0].value ?? '';
 
   useEffect(() => {
     dispatch(initializeVocabularyFilter());
@@ -42,9 +44,12 @@ export default function Vocabulary({ id }: VocabularyProps) {
     }
   }, [info]);
 
-
   return (
     <>
+      <BreadcrumbNav
+        title={{ value: title, url: id }}
+        breadcrumbs={[{ value: t('terminology-title'), url: 'search' }]}
+      />
       {info && <Title info={info} />}
       <ResultAndFilterContainer>
         {concepts &&

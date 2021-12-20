@@ -41,7 +41,6 @@ export default function Layout({
         <ContentContainer>
           <MarginContainer breakpoint={breakpoint}>
             <Block variant="main">
-              <BreadcrumbNav />
               {children}
             </Block>
           </MarginContainer>
