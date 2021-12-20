@@ -39,4 +39,5 @@ export const InfoBlockWrapper = styled.div`
   flex-direction: column;
   gap: 10px;
   margin-bottom: 20px;
+  max-width: 695px;
 `;
