@@ -126,7 +126,7 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
                   </CardSubtitle>
 
                   <CardDescription>
-                    {concept.definition?.[i18n.language] !== undefined ? concept.definition[i18n.language] : concept.definition[Object.keys(concept.definition)[0]]}
+                    {concept.definition?.[i18n.language] !== undefined ? concept.definition[i18n.language] : concept.definition?.[Object.keys(concept.definition)[0]]}
                   </CardDescription>
                 </Card>
               );
