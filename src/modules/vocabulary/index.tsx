@@ -16,7 +16,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
   const dispatch = useStoreDispatch();
   useEffect(() => {
     dispatch(initializeVocabularyFilter());
-  }, []);
+  }, [dispatch]);
 
   const filter: VocabularyState['filter'] = useSelector(selectVocabularyFilter());
   const { data: concepts } = useGetConceptResultQuery(id);

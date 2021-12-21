@@ -54,7 +54,6 @@ describe('PropertyValue', () => {
 
     expect(screen.queryByText('Value (fi)')).toBeTruthy();
     expect(screen.queryByText('Value (sv)')).toBeFalsy();
-
   });
 
   test('should not render value in wrong language', () => {
@@ -70,5 +69,37 @@ describe('PropertyValue', () => {
     );
 
     expect(screen.queryByText('Value (sv)')).toBeFalsy();
+  });
+
+  test('should join found values when delimiter is given', () => {
+    mockedUseTranslation.mockReturnValue({ i18n: { language: 'en' }});
+
+    render(
+      <PropertyValue
+        property={[
+          { lang: 'en', value: 'Value 1', regex: '' },
+          { lang: 'en', value: 'Value 2', regex: '' },
+        ]}
+        delimiter=", "
+      />
+    );
+
+    expect(screen.queryByText('Value 1, Value 2')).toBeTruthy();
+  });
+
+  test('should join found values when delimiter is empty string', () => {
+    mockedUseTranslation.mockReturnValue({ i18n: { language: 'en' }});
+
+    render(
+      <PropertyValue
+        property={[
+          { lang: 'en', value: 'Value 1', regex: '' },
+          { lang: 'en', value: 'Value 2', regex: '' },
+        ]}
+        delimiter=""
+      />
+    );
+
+    expect(screen.queryByText('Value 1Value 2')).toBeTruthy();
   });
 });

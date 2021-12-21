@@ -6,6 +6,7 @@ import InfoBlock from './info-block';
 import InfoBasic from './info-basic';
 import { VocabularyInfoDTO } from '../../interfaces/vocabulary.interface';
 import { InfoBasicExtraWrapper } from './info-basic.styles';
+import { getPropertyValue } from '../property-value/get-property-value';
 
 interface InfoExpanderProps {
   data?: VocabularyInfoDTO;
@@ -15,17 +16,8 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
   const { t } = useTranslation('common');
 
   if (!data) {
-    return <></>;
+    return null;
   }
-
-  const title = data.properties.prefLabel ?? [];
-  const description = data.properties.description?.[0] ?? [];
-  const vocabularyLanguages = data.properties.language ?? '';
-  const createdDate = FormatISODate(data.createdDate) ?? '01.01.1970, 00.00';
-  const lastModifiedDate = FormatISODate(data.lastModifiedDate) ?? '01.01.1970, 00.00';
-  const uri = data.uri ?? '';
-  const contributor = data.references.contributor?.[0].properties.prefLabel ?? '';
-  const informationDomains = data.references.inGroup?.[0].properties.prefLabel ?? '';
 
   return (
     <InfoExpanderWrapper>
@@ -33,11 +25,32 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
         {t('vocabulary-info-terminology')}
       </ExpanderTitleButton>
       <ExpanderContent>
-        <InfoBlock title={t('vocabulary-info-name')} data={title} />
-        <InfoBlock title={t('vocabulary-info-description')} data={description} />
-        <InfoBasic title={t('vocabulary-info-information-domain')} data={informationDomains} />
-        <InfoBasic title={t('vocabulary-info-languages')} data={vocabularyLanguages} />
-        <InfoBasic title={t('vocabulary-info-vocabulary-type')} data={t('vocabulary-info-terminological-dictionary')} />
+        <InfoBlock
+          title={t('vocabulary-info-name')}
+          data={data.properties.prefLabel}
+        />
+        <InfoBlock
+          title={t('vocabulary-info-description')}
+          data={data.properties.description}
+        />
+        <InfoBasic
+          title={t('vocabulary-info-information-domain')}
+          data={getPropertyValue({
+            property: data.references.inGroup?.[0]?.properties.prefLabel,
+          })}
+        />
+        <InfoBasic
+          title={t('vocabulary-info-languages')}
+          data={getPropertyValue({
+            property: data.properties.language,
+            delimiter: ', ',
+            valueAccessor: ({ value }) => `${t(`vocabulary-info-${value}`)} ${value.toUpperCase()}`,
+          })}
+        />
+        <InfoBasic
+          title={t('vocabulary-info-vocabulary-type')}
+          data={t('vocabulary-info-terminological-dictionary')}
+        />
 
         <InfoExpanderDivider />
 
@@ -61,10 +74,24 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
 
         <InfoExpanderDivider />
 
-        <InfoBasic title={t('vocabulary-info-organization')} data={contributor} />
-        <InfoBasic title={t('vocabulary-info-created-at')} data={createdDate} />
-        <InfoBasic title={t('vocabulary-info-modified-at')} data={lastModifiedDate} />
-        <InfoBasic title={'URI'} data={uri} />
+        <InfoBasic
+          title={t('vocabulary-info-organization')}
+          data={getPropertyValue({
+            property: data.references.contributor?.[1]?.properties.prefLabel,
+          })}
+        />
+        <InfoBasic
+          title={t('vocabulary-info-created-at')}
+          data={FormatISODate(data.createdDate)}
+        />
+        <InfoBasic
+          title={t('vocabulary-info-modified-at')}
+          data={FormatISODate(data.lastModifiedDate)}
+        />
+        <InfoBasic
+          title={'URI'}
+          data={data.uri}
+        />
       </ExpanderContent>
     </InfoExpanderWrapper>
   );
