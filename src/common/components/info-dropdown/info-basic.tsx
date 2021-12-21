@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next';
 import { InfoBasicLanguageWrapper, InfoBasicWrapper } from './info-basic.styles';
 import { Text } from 'suomifi-ui-components';
-import { VocabularyProperties } from '../../interfaces/vocabulary.interface';
+import { Property } from '../../interfaces/termed-data-types.interface';
 
 interface InfoBasicProps {
-  data: VocabularyProperties[] | string;
+  data: Property[] | string;
   title: string;
   extra?: React.ReactNode;
 }
