@@ -28,7 +28,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
   const filter: VocabularyState['filter'] = useSelector(selectVocabularyFilter());
   const { data: concepts } = useGetConceptResultQuery(id);
   const { data: info } = useGetVocabularyQuery(id);
-  const title = info?.properties.prefLabel.filter(pl => pl.lang === i18n.language)[0].value ?? '';
+  const title = info?.properties.prefLabel?.filter(pl => pl.lang === i18n.language)[0].value ?? '';
 
   useEffect(() => {
     dispatch(initializeVocabularyFilter());
@@ -38,7 +38,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
     if (info) {
       dispatch(setCurrentTerminology({
         id: info?.id,
-        value: info?.properties.prefLabel.filter((pl: any) => pl.lang === i18n.language)[0].value
+        value: info?.properties.prefLabel?.filter((pl: any) => pl.lang === i18n.language)[0].value ?? ''
       }
       ));
     }

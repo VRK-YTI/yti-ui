@@ -12,7 +12,6 @@ import {
 import { useTranslation } from 'next-i18next';
 import User from '../common/interfaces/user-interface';
 import Footer from '../common/components/footer/footer';
-import BreadcrumbNav from '../common/components/breadcrumb/breadcrumb';
 import SmartHeader from '../modules/smart-header';
 import { useBreakpoints } from '../common/components/media-query/media-query-context';
 
