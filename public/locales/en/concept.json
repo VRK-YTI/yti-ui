@@ -1,0 +1,13 @@
+{
+  "sidebar-header": "(en) Suhdetiedot",
+  "sidebar-section-heading-broader": "(en) Hierarkkinen yläkäsite",
+  "sidebar-section-heading-narrower": "(en) Hierarkkinen alakäsite",
+  "sidebar-section-heading-related": "(en) Liittyvä käsite",
+  "sidebar-section-heading-is-part-of": "(en) Koostumussuhteinen yläkäsite",
+  "sidebar-section-heading-has-part": "(en) Koostumussuhteinen alakäsite",
+  "sidebar-section-heading-related-match": "(en) Liittyvä käsite toisessa sanastossa",
+  "sidebar-section-heading-exact-match": "(en) Vastaava käsite toisessa sanastossa",
+  "sidebar-section-heading-close-match": "(en) Lähes vastaava käsite toisessa sanastossa",
+  "sidebar-section-heading-member": "(en) Kuuluu käsitekokoelmaan",
+  "sidebar-section-heading-in-other-terminologies": "(en) Käsite muissa sanastoissa"
+}

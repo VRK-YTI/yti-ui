@@ -1,4 +1,4 @@
-import { VocabularyProperties } from '../../interfaces/vocabulary.interface';
+import { Property } from '../../interfaces/termed-data-types.interface';
 import {
   InfoBlockData,
   InfoBlockDescription,
@@ -8,7 +8,7 @@ import {
 } from './info-block.styles';
 
 interface InfoBlockProps {
-  data: VocabularyProperties | VocabularyProperties[];
+  data: Property | Property[];
   title: string;
 }
 

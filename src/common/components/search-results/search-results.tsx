@@ -76,7 +76,7 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
                   </CardTitle>
 
                   <CardSubtitle>
-                    {t('terminology-search-results-terminology').toUpperCase()} &middot; <CardPill valid={terminology.status === 'VALID' ? 'true' : undefined}>{t(terminology.status)}</CardPill>
+                    {t('terminology-search-results-terminology').toUpperCase()} &middot; <CardPill valid={terminology.status === 'VALID' ? 'true' : undefined}>{t(terminology.status ?? '')}</CardPill>
                   </CardSubtitle>
 
                   <CardDescription>
@@ -101,6 +101,8 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
     } else {
       return <></>;
     }
+
+    return null;
   }
 
   function renderConceptSearchResults() {
@@ -116,7 +118,14 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
               return (
                 <Card key={`search-result-${idx}`}>
                   <CardTitle variant='h2'>
-                    {concept.label[i18n.language] !== undefined ? concept.label[i18n.language] : concept?.label?.[Object.keys(concept.label)[0]]}
+                    <Link passHref href={`/terminology/${concept.terminology.id}/concept/${concept.id}`}>
+                      <CardTitleLink href=''>
+                        <CardTitleIcon icon='registers' />
+                        <span>
+                          {concept.label[i18n.language] !== undefined ? concept.label[i18n.language] : concept?.label?.[Object.keys(concept.label)[0]]}
+                        </span>
+                      </CardTitleLink>
+                    </Link>
                   </CardTitle>
 
                   <CardSubtitle>
@@ -135,5 +144,7 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
     } else {
       return <></>;
     }
+
+    return null;
   }
 }
