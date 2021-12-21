@@ -1,7 +1,6 @@
 import Head from 'next/head';
 import React from 'react';
 import { SSRConfig, useTranslation } from 'next-i18next';
-import { Heading } from 'suomifi-ui-components';
 import Layout from '../layouts/layout';
 import TerminologySearch from '../modules/terminology-search';
 import { createCommonGetServerSideProps } from '../common/utils/create-getserversideprops';
@@ -24,7 +23,6 @@ export default function SearchPage(props: {
         <Head>
           <title>{t('search-title')}</title>
         </Head>
-        <Heading variant="h1">{t('terminology-title')}</Heading>
 
         <TerminologySearch />
       </Layout>
