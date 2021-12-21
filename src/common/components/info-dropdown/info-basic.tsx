@@ -6,9 +6,10 @@ import { Property } from '../../interfaces/termed-data-types.interface';
 interface InfoBasicProps {
   data: Property[] | string;
   title: string;
+  extra?: React.ReactNode;
 }
 
-export default function InfoBasic({ data, title }: InfoBasicProps) {
+export default function InfoBasic({ data, title, extra }: InfoBasicProps) {
   const { t, i18n } = useTranslation('common');
 
   if (typeof data === 'string') {
@@ -16,6 +17,7 @@ export default function InfoBasic({ data, title }: InfoBasicProps) {
       <InfoBasicWrapper>
         <Text variant='bold'>{title}</Text>
         <Text>{data}</Text>
+        {extra}
       </InfoBasicWrapper>
     );
   } else if (data.length > 0 && 'lang' in data[0]) {
@@ -28,6 +30,7 @@ export default function InfoBasic({ data, title }: InfoBasicProps) {
               {data.find(d => d.lang === i18n.language)?.value}
             </Text>
           </InfoBasicLanguageWrapper>
+          {extra}
         </InfoBasicWrapper>
       );
     } else {
@@ -49,6 +52,7 @@ export default function InfoBasic({ data, title }: InfoBasicProps) {
               );
             })}
           </InfoBasicLanguageWrapper>
+          {extra}
         </InfoBasicWrapper>
       );
     }
