@@ -80,5 +80,6 @@
   "pagination-page": "Sivu",
   "impersonate-user": "Esiinny käyttäjänä",
   "navigation-open": "Avaa navigaatio",
-  "navigation-close": "Sulje navigaatio"
+  "navigation-close": "Sulje navigaatio",
+  "filter-with-current": "kpl seuraavilla rajauksilla"
 }

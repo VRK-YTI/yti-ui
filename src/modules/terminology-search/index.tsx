@@ -105,6 +105,7 @@ export default function TerminologySearch() {
                 resetSomeFilter={resetFilter}
                 isModal={true}
                 setShowModal={setShowModal}
+                resultCount={data?.totalHitCount}
               />
             </ModalContent>
           </Modal>

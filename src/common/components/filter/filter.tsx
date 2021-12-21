@@ -26,6 +26,7 @@ export interface FilterProps {
   type: string;
   isModal?: boolean;
   setShowModal?: Dispatch<SetStateAction<boolean>>;
+  resultCount?: number;
 }
 
 export default function Filter({
@@ -35,15 +36,16 @@ export default function Filter({
   resetSomeFilter,
   setSomeFilter,
   type,
-  isModal,
-  setShowModal
+  isModal = false,
+  setShowModal,
+  resultCount
 }: FilterProps) {
   const { t, i18n } = useTranslation('common');
 
   // Returns filter according to templates found below.
   if (type === 'vocabulary' && 'showBy' in filter) {
     return (
-      <FilterWrapper isModal={isModal}>SULJE
+      <FilterWrapper isModal={isModal}>
         {renderTitle()}
         {/* If filter has any value 'checked' Remove-component is displayed. */}
         {renderRemove()}
@@ -117,6 +119,9 @@ export default function Filter({
       return (
         <>
           <Hr />
+          <div>
+            {resultCount} {t('filter-with-current')}
+          </div>
           <div>
             <Button
               fullWidth

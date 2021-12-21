@@ -1,3 +1,3 @@
 export interface FilterWrapperProps {
-  isModal?: boolean;
+  isModal: boolean;
 }
