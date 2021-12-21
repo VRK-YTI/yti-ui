@@ -46,4 +46,36 @@ describe('breadcrumb', () => {
     expect(screen.getByText('test')).toBeInTheDocument;
     expect(screen.getByText('tr-terminology-title')).toBeInTheDocument;
   });
+
+  test('should have one crumb to have status of "current"', () => {
+    const store = makeStore();
+
+    useRouter().push('/');
+
+    render(
+      <Provider store={store}>
+        <ThemeProvider theme={lightTheme}>
+          <BreadcrumbNav
+            title={{ value: 'tr-terminology-title', url: 'search' }}
+            breadcrumbs={[
+              { value: 'terminology', url: 'search' },
+              { value: 'test', url: 'tset' }
+            ]}
+          />
+        </ThemeProvider>
+      </Provider>
+    );
+
+    expect(screen.getByText('tr-front-page')).toBeInTheDocument;
+    expect(screen.getByText('tr-front-page').getAttribute('class')).not.toMatch(/current/);
+
+    expect(screen.getByText('terminology')).toBeInTheDocument;
+    expect(screen.getByText('terminology').getAttribute('class')).not.toMatch(/current/);
+
+    expect(screen.getByText('test')).toBeInTheDocument;
+    expect(screen.getByText('test').getAttribute('class')).not.toMatch(/current/);
+
+    expect(screen.getByText('tr-terminology-title')).toBeInTheDocument;
+    expect(screen.getByText('tr-terminology-title').getAttribute('class')).toMatch(/current/);
+  });
 });
