@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from 'react';
 import { useTranslation } from 'react-i18next';
 import CheckboxArea from './checkbox-area';
 import RadioButtonArea from './radio-button-area';
@@ -14,6 +15,7 @@ import { initialState, SearchState } from '../terminology-search/terminology-sea
 import { AppThunk } from '../../../store';
 import { CommonInfoDTO, GroupSearchResult, OrganizationSearchResult } from '../../interfaces/terminology.interface';
 import { isEqual } from 'lodash';
+import { Button, Icon } from 'suomifi-ui-components';
 
 export interface FilterProps {
   filter: VocabularyState['filter'] | SearchState['filter'];
@@ -22,6 +24,8 @@ export interface FilterProps {
   resetSomeFilter: () => AppThunk;
   setSomeFilter: (x: any) => AppThunk;
   type: string;
+  isModal?: boolean;
+  setShowModal?: Dispatch<SetStateAction<boolean>>;
 }
 
 export default function Filter({
@@ -30,17 +34,17 @@ export default function Filter({
   organizations,
   resetSomeFilter,
   setSomeFilter,
-  type
+  type,
+  isModal,
+  setShowModal
 }: FilterProps) {
   const { t, i18n } = useTranslation('common');
 
   // Returns filter according to templates found below.
   if (type === 'vocabulary' && 'showBy' in filter) {
     return (
-      <FilterWrapper>
-        <Header>
-          {t('vocabulary-filter-filter-list')}
-        </Header>
+      <FilterWrapper isModal={isModal}>SULJE
+        {renderTitle()}
         {/* If filter has any value 'checked' Remove-component is displayed. */}
         {renderRemove()}
         {renderRadioButtonArea()}
@@ -48,14 +52,22 @@ export default function Filter({
         {renderCheckboxArea(true)}
         <Hr />
         {renderSearchInputArea()}
+        {isModal
+          ?
+          <>
+            <Hr />
+            <div>
+              <Button fullWidth>{t('close')}</Button>
+            </div>
+          </>
+          : null
+        }
       </FilterWrapper>
     );
   } else if (type === 'terminology-search' && 'showByOrg' in filter && groups) {
     return (
-      <FilterWrapper>
-        <Header>
-          {t('vocabulary-filter-filter-list')}
-        </Header>
+      <FilterWrapper isModal={isModal}>
+        {renderTitle()}
         {/* If filter has any value 'checked' Remove-component is displayed. */}
         {renderRemove()}
         {renderDropdownArea()}
@@ -65,6 +77,7 @@ export default function Filter({
         {renderCheckboxArea(true)}
         <Hr />
         {renderCheckboxArea()}
+        {renderCloseButton()}
       </FilterWrapper>
     );
   }
@@ -96,6 +109,26 @@ export default function Filter({
           type='infoDomains'
         />
       );
+    }
+  }
+
+  function renderCloseButton() {
+    if (isModal) {
+      return (
+        <>
+          <Hr />
+          <div>
+            <Button
+              fullWidth
+              onClick={() => setShowModal && setShowModal(false)}
+            >
+              {t('close')}
+            </Button>
+          </div>
+        </>
+      );
+    } else {
+      return null;
     }
   }
 
@@ -175,6 +208,25 @@ export default function Filter({
         visualPlaceholder={t('vocabulary-filter-visual-placeholder')}
       />
     );
+  }
+
+  function renderTitle() {
+    if (isModal) {
+      return (
+        <Header>
+          {t('vocabulary-filter-filter-list').toUpperCase()}
+          <span onClick={() => setShowModal && setShowModal(false)}>
+            {t('close').toUpperCase()} <Icon icon='close' />
+          </span>
+        </Header>
+      );
+    } else {
+      return (
+        <Header>
+          {t('vocabulary-filter-filter-list').toUpperCase()}
+        </Header>
+      );
+    }
   }
 
   return <></>;
