@@ -77,7 +77,7 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
         <InfoBasic
           title={t('vocabulary-info-organization')}
           data={getPropertyValue({
-            property: data.references.contributor?.[1]?.properties.prefLabel,
+            property: data.references.contributor?.[0]?.properties.prefLabel,
           })}
         />
         <InfoBasic
