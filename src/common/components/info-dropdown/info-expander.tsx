@@ -13,7 +13,7 @@ interface InfoExpanderProps {
 }
 
 export default function InfoExpander({ data }: InfoExpanderProps) {
-  const { t } = useTranslation('common');
+  const { t, i18n } = useTranslation('common');
 
   if (!data) {
     return null;
@@ -37,6 +37,8 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
           title={t('vocabulary-info-information-domain')}
           data={getPropertyValue({
             property: data.references.inGroup?.[0]?.properties.prefLabel,
+            language: i18n.language,
+            fallbackLanguage: 'fi',
           })}
         />
         <InfoBasic
@@ -78,6 +80,8 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
           title={t('vocabulary-info-organization')}
           data={getPropertyValue({
             property: data.references.contributor?.[0]?.properties.prefLabel,
+            language: i18n.language,
+            fallbackLanguage: 'fi',
           })}
         />
         <InfoBasic

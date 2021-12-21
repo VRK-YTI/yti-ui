@@ -96,7 +96,7 @@ export default function ConceptSidebar({ concept }: ConceptSidebarProps) {
         items={concept?.references.exactMatch}
         href={({ properties }) => {
           const terminologyId = getPropertyValue({ property: properties.targetGraph });
-          const conceptId = getPropertyValue({ property: properties.targetId });
+          const conceptId = getPropertyValue({ property: properties.targetId });
           return `/terminology/${terminologyId}/concept/${conceptId}`;
         }}
         propertyAccessor={({ properties }) => properties?.prefLabel}
