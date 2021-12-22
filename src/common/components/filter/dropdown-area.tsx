@@ -32,7 +32,7 @@ export default function DropdownArea({ data, filter, setFilter, title, visualPla
             {visualPlaceholder}
           </DropdownPlaceholder>
         }
-        value={filter.showByOrg || ''}
+        value={filter.showByOrg}
         onChange={(value) => handleChange(value)}
       >
         {data.map((value: string, idx: number) => {

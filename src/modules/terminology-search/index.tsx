@@ -19,7 +19,7 @@ import { useStoreDispatch } from '../../store';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useBreakpoints } from '../../common/components/media-query/media-query-context';
-import { Button, Modal, ModalContent } from 'suomifi-ui-components';
+import { Modal, ModalContent } from 'suomifi-ui-components';
 import { useState } from 'react';
 
 export default function TerminologySearch() {
@@ -91,10 +91,10 @@ export default function TerminologySearch() {
             visible={showModal}
             onEscKeyDown={() => setShowModal(false)}
             variant='smallScreen'
-            style={{border: 'none'}}
+            style={{ border: 'none' }}
           >
             <ModalContent
-              style={{padding: '0px', overflowX: 'hidden'}}
+              style={{ padding: '0' }}
             >
               <Filter
                 filter={filter as SearchState['filter']}

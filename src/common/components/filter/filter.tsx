@@ -54,16 +54,7 @@ export default function Filter({
         {renderCheckboxArea(true)}
         <Hr />
         {renderSearchInputArea()}
-        {isModal
-          ?
-          <>
-            <Hr />
-            <div>
-              <Button fullWidth>{t('close')}</Button>
-            </div>
-          </>
-          : null
-        }
+        {renderCloseButton()}
       </FilterWrapper>
     );
   } else if (type === 'terminology-search' && 'showByOrg' in filter && groups) {
