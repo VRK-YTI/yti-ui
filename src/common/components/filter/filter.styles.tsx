@@ -20,12 +20,6 @@ export const FilterWrapper = styled.div`
   height: max-content;
   width: 350px;
   margin-bottom: 80px;
-
-  > div, hr {
-    padding-left: 20px;
-    padding-right: 20px;
-    margin-bottom: 20px;
-  }
 `;
 
 export const Header = styled.div`
@@ -38,10 +32,8 @@ export const Header = styled.div`
   padding: 25px 20px 30px;
 `;
 
-export const Hr = styled.hr`
-  color: ${(props) => props.theme.suomifi.colors.depthLight3};
-  margin-left: 20px;
-  margin-right: 20px;
+export const FilterContent = styled.div`
+  margin: 20px;
 `;
 
 export const RemoveIcon = styled(Icon)`

@@ -1,12 +1,13 @@
 import { useTranslation } from 'react-i18next';
 import { Button, ExpanderContent, ExpanderTitleButton } from 'suomifi-ui-components';
 import FormatISODate from '../../utils/format-iso-date';
-import { InfoExpanderWrapper, InfoExpanderDivider } from './info-expander.styles';
+import { InfoExpanderWrapper } from './info-expander.styles';
 import InfoBlock from './info-block';
 import InfoBasic from './info-basic';
 import { VocabularyInfoDTO } from '../../interfaces/vocabulary.interface';
 import { InfoBasicExtraWrapper } from './info-basic.styles';
 import { getPropertyValue } from '../property-value/get-property-value';
+import Separator from '../separator';
 
 interface InfoExpanderProps {
   data?: VocabularyInfoDTO;
@@ -54,7 +55,7 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
           data={t('vocabulary-info-terminological-dictionary')}
         />
 
-        <InfoExpanderDivider />
+        <Separator large />
 
         <InfoBasic
           title={t('vocabulary-info-vocabulary-export')}
@@ -74,7 +75,7 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
           }
         />
 
-        <InfoExpanderDivider />
+        <Separator large />
 
         <InfoBasic
           title={t('vocabulary-info-organization')}
