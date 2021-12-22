@@ -8,6 +8,7 @@ import DropdownArea from './dropdown-area';
 import {
   FilterWrapper,
   Header,
+  HeaderButton,
   Hr
 } from './filter.styles';
 import { vocabularyEmptyState, VocabularyState } from '../vocabulary/vocabulary-slice';
@@ -15,7 +16,7 @@ import { initialState, SearchState } from '../terminology-search/terminology-sea
 import { AppThunk } from '../../../store';
 import { CommonInfoDTO, GroupSearchResult, OrganizationSearchResult } from '../../interfaces/terminology.interface';
 import { isEqual } from 'lodash';
-import { Button, Icon } from 'suomifi-ui-components';
+import { Button } from 'suomifi-ui-components';
 
 export interface FilterProps {
   filter: VocabularyState['filter'] | SearchState['filter'];
@@ -211,9 +212,12 @@ export default function Filter({
       return (
         <Header>
           {t('vocabulary-filter-filter-list').toUpperCase()}
-          <span onClick={() => setShowModal && setShowModal(false)}>
-            {t('close').toUpperCase()} <Icon icon='close' />
-          </span>
+          <HeaderButton
+            iconRight='close'
+            onClick={() => setShowModal && setShowModal(false)}
+          >
+            {t('close').toUpperCase()}
+          </HeaderButton>
         </Header>
       );
     } else {

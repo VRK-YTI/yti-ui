@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Checkbox, Icon, RadioButton } from 'suomifi-ui-components';
+import { Button, Checkbox, Icon, RadioButton } from 'suomifi-ui-components';
 import { FilterWrapperProps } from './filter-props';
 
 export const DropdownPlaceholder = styled.i`
@@ -36,13 +36,16 @@ export const Header = styled.div`
   font-size: 18px;
   font-weight: 600;
   justify-content: space-between;
-  padding: 25px 20px 30px;
+  padding: 25px 20px 25px;
+`;
 
-  span {
-    font-weight: 400;
-    display: flex;
-    align-items: center;
-    gap: 6px;
+export const HeaderButton = styled(Button)`
+  background: none;
+  font-size: 16px;
+  font-weight: 400;
+  padding: 0px 5px 0px;
+  :hover {
+    background: none;
   }
 `;
 
