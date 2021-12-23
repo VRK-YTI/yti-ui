@@ -20,12 +20,12 @@ export default function IndexPage(props: {
     <MediaQueryContextProvider value={{ isSSRMobile: props.isSSRMobile }}>
       <Layout user={user}>
         <Head>
-          <title>{ t('terminology-site-title') }</title>
+          <title>{t('terminology-site-title')} | {t('interoperability-platform')}</title>
           <link rel="shortcut icon" href="/favicon.ico" />
         </Head>
         <section>
           <Link href="/search?page=1">
-            <a>{ t('terminology-search') }</a>
+            <a>{t('terminology-search')}</a>
           </Link>
         </section>
       </Layout>

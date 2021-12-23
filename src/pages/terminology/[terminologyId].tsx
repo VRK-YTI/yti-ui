@@ -25,10 +25,11 @@ export default function TerminologyPage(props: {
       {/* todo: use better feedbackSubject once more data is available */}
       <Layout user={user} feedbackSubject={`${t('terminology-id')} ${terminologyId}`}>
         <Head>
-          <title>{ t('terminology-title') }</title>
+          {/* TODO: What would be smartest way to get title here?*/}
+          <title>testi | {t('terminology-site-title')} | {t('interoperability-platform')}</title>
         </Head>
 
-        <Vocabulary id={terminologyId}/>
+        <Vocabulary id={terminologyId} />
       </Layout>
     </MediaQueryContextProvider>
   );

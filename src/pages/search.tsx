@@ -21,7 +21,7 @@ export default function SearchPage(props: {
     <MediaQueryContextProvider value={{ isSSRMobile: props.isSSRMobile }}>
       <Layout user={user}>
         <Head>
-          <title>{t('search-title')}</title>
+          <title>{t('terminology-search')} | {t('terminology-site-title')} | {t('interoperability-platform')}</title>
         </Head>
 
         <TerminologySearch />
