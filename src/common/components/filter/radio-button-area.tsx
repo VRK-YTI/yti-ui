@@ -9,9 +9,10 @@ interface RadioButtonProps {
   filter: VocabularyState['filter'];
   setFilter: (x: any) => AppThunk;
   title: string;
+  isModal?: boolean;
 }
 
-export default function RadioButtonArea({ filter, data, setFilter, title }: RadioButtonProps) {
+export default function RadioButtonArea({ filter, data, setFilter, title, isModal }: RadioButtonProps) {
   const { t } = useTranslation('common');
   const dispatch = useStoreDispatch();
 
@@ -50,6 +51,7 @@ export default function RadioButtonArea({ filter, data, setFilter, title }: Radi
               value={value}
               key={`radio-button-${value}-${idx}`}
               checked={value === filter.showBy}
+              variant={isModal ? 'large' : 'small'}
             >
               {t(`vocabulary-filter-${value}`)} (n {t('vocabulary-filter-items')})
             </FilterRadioButton>

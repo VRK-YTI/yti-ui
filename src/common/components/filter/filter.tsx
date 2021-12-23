@@ -83,6 +83,7 @@ export default function Filter({
           title={t('vocabulary-filter-show-concept-states')}
           filter={filter}
           setFilter={setSomeFilter}
+          isModal={isModal}
         />
       );
     } else if (groups) {
@@ -101,6 +102,7 @@ export default function Filter({
             })
           }
           type='infoDomains'
+          isModal={isModal}
         />
       );
     }
@@ -159,6 +161,7 @@ export default function Filter({
           data={['concepts', 'collections']}
           filter={filter}
           setFilter={setSomeFilter}
+          isModal={isModal}
         />
       );
     }
