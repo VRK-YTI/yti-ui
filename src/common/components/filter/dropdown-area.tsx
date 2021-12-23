@@ -1,7 +1,7 @@
-import { Dropdown, DropdownItem } from 'suomifi-ui-components';
+import { DropdownItem } from 'suomifi-ui-components';
 import { AppThunk, useStoreDispatch } from '../../../store';
 import { SearchState } from '../terminology-search/terminology-search-slice';
-import { DropdownPlaceholder } from './filter.styles';
+import { DropdownPlaceholder, DropdownWrapper } from './filter.styles';
 
 interface DropdownProps {
   data?: string[];
@@ -9,9 +9,17 @@ interface DropdownProps {
   setFilter: (x: any) => AppThunk;
   title: string;
   visualPlaceholder?: string;
+  isModal?: boolean;
 }
 
-export default function DropdownArea({ data, filter, setFilter, title, visualPlaceholder }: DropdownProps) {
+export default function DropdownArea({
+  data,
+  filter,
+  isModal = false,
+  setFilter,
+  title,
+  visualPlaceholder
+}: DropdownProps) {
   const dispatch = useStoreDispatch();
 
   const handleChange = (value: string) => {
@@ -25,7 +33,7 @@ export default function DropdownArea({ data, filter, setFilter, title, visualPla
   // Returns dropdown with given data values.
   return (
     <div>
-      <Dropdown
+      <DropdownWrapper
         labelText={title}
         visualPlaceholder={
           <DropdownPlaceholder>
@@ -34,6 +42,7 @@ export default function DropdownArea({ data, filter, setFilter, title, visualPla
         }
         value={filter.showByOrg}
         onChange={(value) => handleChange(value)}
+        isModal={isModal}
       >
         {data.map((value: string, idx: number) => {
           return (
@@ -45,7 +54,7 @@ export default function DropdownArea({ data, filter, setFilter, title, visualPla
             </DropdownItem>
           );
         })}
-      </Dropdown>
+      </DropdownWrapper>
     </div>
   );
 

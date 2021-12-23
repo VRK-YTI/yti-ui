@@ -148,6 +148,7 @@ export default function Filter({
           setFilter={setSomeFilter}
           title={t('terminology-search-filter-by-organization')}
           visualPlaceholder={t('terminology-search-filter-pick-organization')}
+          isModal={isModal}
         />
       );
     }
@@ -206,6 +207,7 @@ export default function Filter({
         filter={filter}
         setFilter={setSomeFilter}
         visualPlaceholder={t('vocabulary-filter-visual-placeholder')}
+        isModal={isModal}
       />
     );
   }

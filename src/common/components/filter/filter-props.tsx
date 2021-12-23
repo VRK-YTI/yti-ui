@@ -1,3 +1,3 @@
-export interface FilterWrapperProps {
+export interface FilterStyledProps {
   isModal: boolean;
 }

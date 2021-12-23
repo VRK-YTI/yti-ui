@@ -1,9 +1,13 @@
 import styled from 'styled-components';
-import { Button, Checkbox, Icon, RadioButton } from 'suomifi-ui-components';
-import { FilterWrapperProps } from './filter-props';
+import { Button, Checkbox, Dropdown, Icon, RadioButton, SearchInput } from 'suomifi-ui-components';
+import { FilterStyledProps } from './filter-props';
 
 export const DropdownPlaceholder = styled.i`
   color: ${(props) => props.theme.suomifi.colors.depthDark1};
+`;
+
+export const DropdownWrapper = styled(Dropdown)<FilterStyledProps>`
+  min-width: ${(props) => props.isModal ? '100%' : 'inherit'}
 `;
 
 export const FilterCheckbox = styled(Checkbox)`
@@ -15,7 +19,7 @@ export const FilterRadioButton = styled(RadioButton)`
   font-size: 16px;
 `;
 
-export const FilterWrapper = styled.div<FilterWrapperProps>`
+export const FilterWrapper = styled.div<FilterStyledProps>`
   background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
   border: solid 1px ${(props) => props.theme.suomifi.colors.depthLight1};
   height: max-content;
@@ -71,4 +75,8 @@ export const RemoveWrapper = styled.div`
     text-decoration: underline;
     text-decoration-color: ${(props) => props.theme.suomifi.colors.highlightBase};
   }
+`;
+
+export const SearchInputWrapper = styled(SearchInput)<FilterStyledProps>`
+  min-width: ${(props) => props.isModal ? '100%' : 'inherit' }
 `;
