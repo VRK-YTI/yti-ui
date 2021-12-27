@@ -1,4 +1,4 @@
-import { DropdownItem } from 'suomifi-ui-components';
+import { Dropdown, DropdownItem } from 'suomifi-ui-components';
 import { AppThunk, useStoreDispatch } from '../../../store';
 import { SearchState } from '../terminology-search/terminology-search-slice';
 import { DropdownPlaceholder, DropdownWrapper } from './filter.styles';
@@ -32,8 +32,8 @@ export default function DropdownArea({
 
   // Returns dropdown with given data values.
   return (
-    <div>
-      <DropdownWrapper
+    <DropdownWrapper>
+      <Dropdown
         labelText={title}
         visualPlaceholder={
           <DropdownPlaceholder>
@@ -42,7 +42,6 @@ export default function DropdownArea({
         }
         value={filter.showByOrg}
         onChange={(value) => handleChange(value)}
-        isModal={isModal}
       >
         {data.map((value: string, idx: number) => {
           return (
@@ -54,8 +53,8 @@ export default function DropdownArea({
             </DropdownItem>
           );
         })}
-      </DropdownWrapper>
-    </div>
+      </Dropdown>
+    </DropdownWrapper>
   );
 
 }
