@@ -1,7 +1,7 @@
 import React from 'react';
 
 // This type isn't correctly recognized.
-import { TerminologySearchResult } from '../common/interfaces/terminology.interface';
+// import { TerminologySearchResult } from '../common/interfaces/terminology.interface';
 
 /*
   Currently static pages and terminologies are added to sitemap.
@@ -12,7 +12,7 @@ import { TerminologySearchResult } from '../common/interfaces/terminology.interf
 
 const Sitemap = () => { };
 
-export const getServerSideProps = async ({ res }) => {
+export const getServerSideProps = async ({ res }: any) => {
 
   const terminologies = await fetch('http://localhost:3000/terminology-api/api/v1/frontend/searchTerminology', {
     method: 'POST',
@@ -39,7 +39,7 @@ export const getServerSideProps = async ({ res }) => {
       <url>
         <loc>https://localhost:3000/404</loc>
       </url>
-      ${terminologies.terminologies.map((t: TerminologySearchResult['terminologies']) => (
+      ${terminologies.terminologies.map((t: any) => (
     `<url>
           <loc>http://localhost:3000/terminology/${t.id}</loc>
         </url>`

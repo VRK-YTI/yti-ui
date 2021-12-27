@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { Dispatch, SetStateAction, useEffect } from 'react';
 import {
   initializeVocabularyFilter,
   resetVocabularyFilter,
@@ -20,9 +20,10 @@ import BreadcrumbNav from '../../common/components/breadcrumb/breadcrumb';
 
 interface VocabularyProps {
   id: string;
+  setTerminologyTitle: Dispatch<SetStateAction<string>>;
 }
 
-export default function Vocabulary({ id }: VocabularyProps) {
+export default function Vocabulary({ id, setTerminologyTitle }: VocabularyProps) {
   const { t, i18n } = useTranslation('common');
   const dispatch = useStoreDispatch();
   const filter: VocabularyState['filter'] = useSelector(selectVocabularyFilter());
@@ -41,6 +42,8 @@ export default function Vocabulary({ id }: VocabularyProps) {
         value: info?.properties.prefLabel?.filter((pl: any) => pl.lang === i18n.language)[0].value ?? ''
       }
       ));
+
+      setTerminologyTitle(title);
     }
   }, [info]);
 

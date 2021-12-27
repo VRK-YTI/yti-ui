@@ -1,6 +1,6 @@
 import { SSRConfig, useTranslation } from 'next-i18next';
 import { useRouter } from 'next/dist/client/router';
-import React from 'react';
+import React, { useState } from 'react';
 import Layout from '../../layouts/layout';
 import Head from 'next/head';
 import { createCommonGetServerSideProps } from '../../common/utils/create-getserversideprops';
@@ -19,6 +19,7 @@ export default function TerminologyPage(props: {
   const { user, } = useUser({ initialData: props.user });
   const { query } = useRouter();
   const terminologyId = (query?.terminologyId ?? '') as string;
+  const [terminologyTitle, setTerminologyTitle] = useState('');
 
   return (
     <MediaQueryContextProvider value={{ isSSRMobile: props.isSSRMobile }}>
@@ -26,10 +27,10 @@ export default function TerminologyPage(props: {
       <Layout user={user} feedbackSubject={`${t('terminology-id')} ${terminologyId}`}>
         <Head>
           {/* TODO: What would be smartest way to get title here?*/}
-          <title>testi | {t('terminology-site-title')} | {t('interoperability-platform')}</title>
+          <title>{terminologyTitle} | {t('terminology-site-title')} | {t('interoperability-platform')}</title>
         </Head>
 
-        <Vocabulary id={terminologyId} />
+        <Vocabulary id={terminologyId} setTerminologyTitle={setTerminologyTitle} />
       </Layout>
     </MediaQueryContextProvider>
   );

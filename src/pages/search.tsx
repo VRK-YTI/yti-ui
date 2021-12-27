@@ -22,6 +22,7 @@ export default function SearchPage(props: {
       <Layout user={user}>
         <Head>
           <title>{t('terminology-search')} | {t('terminology-site-title')} | {t('interoperability-platform')}</title>
+          <meta name='description' content={t('terminology-search-info')} />
         </Head>
 
         <TerminologySearch />
