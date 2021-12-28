@@ -17,24 +17,20 @@ export default function ConceptListBlock({
   extra,
 }: ConceptListBlockProps) {
   return (
-    <BasicBlock
-      title={title}
-      data={
-        <List>
-          {data?.map((concept) => (
-            <li key={concept.id}>
-              <Link
-                href={`/terminology/${concept.identifier.type.graph.id}/concept/${concept.id}`}
-              >
-                <PropertyValue
-                  property={concept.references.prefLabelXl?.[0].properties.prefLabel}
-                />
-              </Link>
-            </li>
-          ))}
-        </List>
-      }
-      extra={extra}
-    />
+    <BasicBlock title={title} extra={extra}>
+      <List>
+        {data?.map((concept) => (
+          <li key={concept.id}>
+            <Link
+              href={`/terminology/${concept.identifier.type.graph.id}/concept/${concept.id}`}
+            >
+              <PropertyValue
+                property={concept.references.prefLabelXl?.[0].properties.prefLabel}
+              />
+            </Link>
+          </li>
+        ))}
+      </List>
+    </BasicBlock>
   );
 }

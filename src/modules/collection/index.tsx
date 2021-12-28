@@ -1,12 +1,11 @@
 import { useTranslation } from 'next-i18next';
 import React from 'react';
 import { Heading, Text } from 'suomifi-ui-components';
-import { BasicBlock, PropertyBlock } from '../../common/components/block';
-import ConceptListBlock from '../../common/components/block/concept-list-block';
+import { BasicBlock, MultilingualPropertyBlock, PropertyBlock } from '../../common/components/block';
+import { ConceptListBlock } from '../../common/components/block';
 import { useGetCollectionQuery } from '../../common/components/collection/collection-slice';
 import { useBreakpoints } from '../../common/components/media-query/media-query-context';
 import PropertyValue from '../../common/components/property-value';
-import { getPropertyValue } from '../../common/components/property-value/get-property-value';
 import Separator from '../../common/components/separator';
 import { useGetVocabularyQuery } from '../../common/components/vocabulary/vocabulary-slice';
 import FormatISODate from '../../common/utils/format-iso-date';
@@ -22,7 +21,7 @@ export default function Collection({ terminologyId, collectionId }: CollectionPr
   const { breakpoint } = useBreakpoints();
   const { data: terminology } = useGetVocabularyQuery(terminologyId);
   const { data: collection } = useGetCollectionQuery({ terminologyId, collectionId });
-  const { t, i18n } = useTranslation('collection');
+  const { t } = useTranslation('collection');
 
   return (
     <PageContent breakpoint={breakpoint}>
@@ -44,11 +43,11 @@ export default function Collection({ terminologyId, collectionId }: CollectionPr
           <Text>{t('description')}</Text>
         </HeadingBlock>
 
-        <PropertyBlock
+        <MultilingualPropertyBlock
           title={t('field-name')}
           data={collection?.properties.prefLabel}
         />
-        <PropertyBlock
+        <MultilingualPropertyBlock
           title={t('field-definition')}
           data={collection?.properties.definition}
         />
@@ -63,26 +62,20 @@ export default function Collection({ terminologyId, collectionId }: CollectionPr
 
         <Separator />
 
-        <BasicBlock
+        <PropertyBlock
           title={t('vocabulary-info-organization', { ns: 'common' })}
-          data={getPropertyValue({
-            property: terminology?.references.contributor?.[0]?.properties.prefLabel,
-            language: i18n.language,
-            fallbackLanguage: 'fi',
-          })}
+          property={terminology?.references.contributor?.[0]?.properties.prefLabel}
+          fallbackLanguage="fi"
         />
-        <BasicBlock
-          title={t('vocabulary-info-created-at', { ns: 'common' })}
-          data={`${FormatISODate(collection?.createdDate)}, ${collection?.createdBy}`}
-        />
-        <BasicBlock
-          title={t('vocabulary-info-modified-at', { ns: 'common' })}
-          data={`${FormatISODate(collection?.lastModifiedDate)}, ${collection?.lastModifiedBy}`}
-        />
-        <BasicBlock
-          title={'URI'}
-          data={collection?.uri}
-        />
+        <BasicBlock title={t('vocabulary-info-created-at', { ns: 'common' })}>
+          {FormatISODate(collection?.createdDate)}, {collection?.createdBy}`
+        </BasicBlock>
+        <BasicBlock title={t('vocabulary-info-modified-at', { ns: 'common' })}>
+          {FormatISODate(collection?.lastModifiedDate)}, {collection?.lastModifiedBy}
+        </BasicBlock>
+        <BasicBlock title="URI">
+          {collection?.uri}
+        </BasicBlock>
       </MainContent>
       {collection && <CollectionSidebar collection={collection} />}
     </PageContent>

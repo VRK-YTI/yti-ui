@@ -1,30 +1,43 @@
+import { useTranslation } from 'next-i18next';
+import React from 'react';
+import { BasicBlock } from '.';
 import { Property } from '../../interfaces/termed-data-types.interface';
-import MultilingualBlock, { MultilingualBlockItemMapper } from './multilingual-block';
+import { getPropertyValue } from '../property-value/get-property-value';
 
-export interface MultilingualPropertyBlockProps {
-  title: React.ReactNode;
-  data?: Property[];
-  mapper?: MultilingualBlockItemMapper<Property>;
+export interface PropertyBlockProps {
+  title?: React.ReactNode;
+  property?: Property[];
+  valueAccessor?: (property: Property) => string;
+  fallbackLanguage?: string;
+  delimiter?: string | false;
   extra?: React.ReactNode;
 }
 
-const defaultMapper: MultilingualBlockItemMapper<Property> = ({ lang, value }) => ({
-  language: lang,
-  content: value,
-});
-
 export default function PropertyBlock({
   title,
-  data,
-  mapper = defaultMapper,
-  extra,
-}: MultilingualPropertyBlockProps) {
+  property,
+  valueAccessor,
+  fallbackLanguage,
+  delimiter = false,
+  extra
+}: PropertyBlockProps) {
+  const { i18n } = useTranslation('common');
+
+  const children = getPropertyValue({
+    property,
+    valueAccessor,
+    language: i18n.language,
+    fallbackLanguage,
+    delimiter
+  });
+
+  if (!children) {
+    return null;
+  }
+
   return (
-    <MultilingualBlock<Property>
-      data={data}
-      title={title}
-      mapper={mapper}
-      extra={extra}
-    />
+    <BasicBlock title={title} extra={extra}>
+      {children}
+    </BasicBlock>
   );
 }

@@ -24,11 +24,8 @@ export default function MultilingualBlock<T>({
   }
 
   return (
-    <BasicBlock
-      title={title}
-      data={<MultilingualDefinitionList items={data.map(mapper)} />}
-      extra={extra}
-      largeGap
-    />
+    <BasicBlock title={title} extra={extra} largeGap>
+      <MultilingualDefinitionList items={data.map(mapper)} />
+    </BasicBlock>
   );
 }
