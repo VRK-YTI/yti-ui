@@ -31,6 +31,7 @@ export const CardPill = styled(Text)<SeachCountTagsProps>`
   font-weight: 600;
   padding-left: 5px;
   padding-right: 5px;
+  text-transform: uppercase;
   width: max-content;
 `;
 

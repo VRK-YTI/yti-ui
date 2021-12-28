@@ -34,7 +34,7 @@ export const Header = styled.div`
   display: flex;
   font-size: 18px;
   font-weight: 600;
-  padding: 25px 20px 30px;
+  padding: 25px 20px 25px;
 `;
 
 export const Hr = styled.hr`
