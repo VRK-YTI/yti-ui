@@ -30,10 +30,6 @@ interface SearchResultsProps {
 export default function SearchResults({ data, filter, type, setSomeFilter }: SearchResultsProps) {
   const { t, i18n } = useTranslation('common');
 
-  if (!data) {
-    return <></>;
-  }
-
   if (type === 'terminology-search' && 'terminologies' in data) {
     return (
       renderTerminologiesSearchResults()
@@ -102,6 +98,8 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
           </CardWrapper>
         </>
       );
+    } else {
+      return <></>;
     }
 
     return null;
@@ -143,6 +141,8 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
           </CardWrapper>
         </>
       );
+    } else {
+      return <></>;
     }
 
     return null;

@@ -1,5 +1,13 @@
 import { useEffect, useState } from 'react';
-import { initializeVocabularyFilter, resetVocabularyFilter, setVocabularyFilter, useGetConceptResultQuery, useGetVocabularyQuery, VocabularyState } from '../../common/components/vocabulary/vocabulary-slice';
+import {
+  initializeVocabularyFilter,
+  resetVocabularyFilter,
+  setVocabularyFilter,
+  useGetConceptResultQuery,
+  useGetVocabularyQuery,
+  VocabularyState,
+  setCurrentTerminology
+} from '../../common/components/vocabulary/vocabulary-slice';
 import Filter from '../../common/components/filter/filter';
 import SearchResults from '../../common/components/search-results/search-results';
 import Title from '../../common/components/title/title';
@@ -11,26 +19,42 @@ import { useBreakpoints } from '../../common/components/media-query/media-query-
 import { FilterMobileButton } from '../terminology-search/terminology-search.styles';
 import { useTranslation } from 'next-i18next';
 import { Modal, ModalContent } from 'suomifi-ui-components';
+import BreadcrumbNav from '../../common/components/breadcrumb/breadcrumb';
 
 interface VocabularyProps {
   id: string;
 }
 
 export default function Vocabulary({ id }: VocabularyProps) {
-  const { t } = useTranslation('common');
+  const { t, i18n } = useTranslation('common');
   const { isSmall } = useBreakpoints();
   const dispatch = useStoreDispatch();
+  const filter: VocabularyState['filter'] = useSelector(selectVocabularyFilter());
+  const { data: concepts } = useGetConceptResultQuery(id);
+  const { data: info } = useGetVocabularyQuery(id);
+  const title = info?.properties.prefLabel?.filter(pl => pl.lang === i18n.language)[0].value ?? '';
+  const [showModal, setShowModal] = useState(false);
+
   useEffect(() => {
     dispatch(initializeVocabularyFilter());
   }, []);
 
-  const filter: VocabularyState['filter'] = useSelector(selectVocabularyFilter());
-  const { data: concepts } = useGetConceptResultQuery(id);
-  const { data: info } = useGetVocabularyQuery(id);
-  const [showModal, setShowModal] = useState(false);
+  useEffect(() => {
+    if (info) {
+      dispatch(setCurrentTerminology({
+        id: info?.id,
+        value: info?.properties.prefLabel?.filter((pl: any) => pl.lang === i18n.language)[0].value ?? ''
+      }
+      ));
+    }
+  }, [info]);
 
   return (
     <>
+      <BreadcrumbNav
+        title={{ value: title, url: id }}
+        breadcrumbs={[{ value: t('terminology-title'), url: 'search' }]}
+      />
       {info && <Title info={info} />}
       {isSmall &&
         <FilterMobileButton

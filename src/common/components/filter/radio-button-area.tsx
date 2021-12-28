@@ -20,9 +20,11 @@ export default function RadioButtonArea({ filter, data, setFilter, title, isModa
     let retVal: VocabularyState['filter'] | undefined;
 
     if (s === 'collections') {
+      let status = {};
       Object.keys(filter.status).forEach(k => {
-        retVal = { ...filter, status: { ...filter.status, [k]: false } };
+        status = {...status, [k]: false};
       });
+      retVal = {...filter, status: status};
     } else {
       Object.keys(filter.status).forEach(_ => {
         retVal = { ...filter, status: { ...filter.status, 'VALID': true, 'DRAFT': true } };
@@ -35,7 +37,6 @@ export default function RadioButtonArea({ filter, data, setFilter, title, isModa
   };
 
   // *Currently* returns two radio buttons that change values between concepts and collections.
-
   return (
     <div>
       <RadioButtonGroup

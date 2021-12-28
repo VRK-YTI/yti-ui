@@ -11,7 +11,7 @@ import {
   HeaderButton,
   Hr
 } from './filter.styles';
-import { vocabularyEmptyState, VocabularyState } from '../vocabulary/vocabulary-slice';
+import { vocabularyInitialState, VocabularyState } from '../vocabulary/vocabulary-slice';
 import { initialState, SearchState } from '../terminology-search/terminology-search-slice';
 import { AppThunk } from '../../../store';
 import { CommonInfoDTO, GroupSearchResult, OrganizationSearchResult } from '../../interfaces/terminology.interface';
@@ -53,7 +53,7 @@ export default function Filter({
         {renderRadioButtonArea()}
         <Hr />
         {renderCheckboxArea(true)}
-        <Hr />
+        {('showBy' in filter && filter.showBy === 'concepts') && <Hr />}
         {renderSearchInputArea()}
         {renderCloseButton()}
       </FilterWrapper>
@@ -171,7 +171,7 @@ export default function Filter({
   function renderRemove() {
     if (type === 'vocabulary') {
       return (
-        !isEqual(filter, vocabularyEmptyState.filter) &&
+        !isEqual(filter, vocabularyInitialState.filter) &&
         <>
           <Remove
             title={t('vocabulary-filter-remove-all')}
