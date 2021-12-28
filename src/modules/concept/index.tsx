@@ -1,11 +1,20 @@
 import { useTranslation } from 'next-i18next';
 import React from 'react';
 import {
+  Expander,
+  ExpanderContent,
+  ExpanderGroup,
+  ExpanderTitleButton,
   ExternalLink,
   Heading,
   Text
 } from 'suomifi-ui-components';
-import { BasicBlock, MultilingualPropertyBlock, PropertyBlock, TermBlock } from '../../common/components/block';
+import {
+  BasicBlock,
+  MultilingualPropertyBlock,
+  PropertyBlock,
+  TermBlock
+} from '../../common/components/block';
 import { useGetConceptQuery } from '../../common/components/concept/concept-slice';
 import { useBreakpoints } from '../../common/components/media-query/media-query-context';
 import PropertyValue from '../../common/components/property-value';
@@ -54,9 +63,9 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
               <span><PropertyValue property={terminology?.properties.prefLabel} /></span>
               {' '}&middot;{' '}
               <Badge
-                isValid={getPropertyValue({ property: terminology?.properties.status }) === 'VALID'}
+                isValid={getPropertyValue({ property: concept?.properties.status }) === 'VALID'}
               >
-                {t(getPropertyValue({ property: terminology?.properties.status }) ?? '', { ns: 'common' })}
+                {t(getPropertyValue({ property: concept?.properties.status }) ?? '', { ns: 'common' })}
               </Badge>
             </BadgeBar>
           </HeadingBlock>
@@ -83,6 +92,68 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
             title={t('field-note')}
             data={concept?.properties.note}
           />
+
+          <BasicBlock>
+            <ExpanderGroup openAllText="" closeAllText="" toggleAllButtonProps={{ style: { display: 'none' } }}>
+              <Expander>
+                <ExpanderTitleButton>{t('section-concept-diagrams-and-sources')}</ExpanderTitleButton>
+                <ExpanderContent>
+                  <PropertyBlock
+                    title={t('field-concept-diagrams')}
+                    property={undefined}
+                    fallbackLanguage="fi"
+                  />
+                  <PropertyBlock
+                    title={t('field-sources')}
+                    property={concept?.properties.source}
+                    fallbackLanguage="fi"
+                  />
+                </ExpanderContent>
+              </Expander>
+              <Expander>
+                <ExpanderTitleButton>{t('section-administrative-details')}</ExpanderTitleButton>
+                <ExpanderContent>
+                  <PropertyBlock
+                    title={t('field-change-note')}
+                    property={concept?.properties.changeNote}
+                    fallbackLanguage="fi"
+                  />
+                  <PropertyBlock
+                    title={t('field-history-note')}
+                    property={concept?.properties.historyNote}
+                    fallbackLanguage="fi"
+                  />
+                  <PropertyBlock
+                    title={t('field-editorial-note')}
+                    property={concept?.properties.editorialNote}
+                    fallbackLanguage="fi"
+                  />
+                  <PropertyBlock
+                    title={t('field-notation')}
+                    property={concept?.properties.notation}
+                    fallbackLanguage="fi"
+                  />
+                </ExpanderContent>
+              </Expander>
+              <Expander>
+                <ExpanderTitleButton>{t('section-other-details')}</ExpanderTitleButton>
+                <ExpanderContent>
+                  {/* <MultilingualPropertyBlock
+                    title="Aihealue"
+                    data={concept?.properties.something}
+                  /> */}
+                  <PropertyBlock
+                    title={t('field-concept-class')}
+                    property={concept?.properties.conceptClass}
+                  />
+                  <PropertyBlock
+                    title={t('field-word-class')}
+                    property={concept?.properties.wordClass}
+                  />
+                </ExpanderContent>
+              </Expander>
+            </ExpanderGroup>
+          </BasicBlock>
 
           <Separator large />
 

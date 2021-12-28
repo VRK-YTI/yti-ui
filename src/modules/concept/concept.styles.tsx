@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { ExpanderGroup } from 'suomifi-ui-components';
 import { Breakpoint } from '../../common/components/media-query/media-query-context';
 import { small } from '../../common/components/media-query/styled-helpers';
 
@@ -14,6 +13,7 @@ export const PageContent = styled.div<{ breakpoint: Breakpoint }>`
 export const MainContent = styled.main`
   flex-grow: 1;
   padding: 20px;
+  padding-bottom: 40px;
 `;
 
 export const HeadingBlock = styled.div`
