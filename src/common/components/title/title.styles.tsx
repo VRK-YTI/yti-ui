@@ -5,11 +5,11 @@ import { TitleProps } from './title.props';
 export const Contributor = styled(Text)`
   font-size: 22px;
   font-weight: 600;
-  margin-bottom: 10px;
+  margin-bottom: ${props => props.theme.suomifi.spacing.xs};
 `;
 
 export const Description = styled(Text)`
-  margin-top: 20px;
+  margin-top: ${props => props.theme.suomifi.spacing.m};
 `;
 
 export const StatusPill = styled(Text)<TitleProps>`
@@ -20,9 +20,9 @@ export const StatusPill = styled(Text)<TitleProps>`
   display: flex;
   font-size: 12px;
   font-weight: 600;
-  margin-top: 5px;
-  padding-left: 10px;
-  padding-right: 10px;
+  margin-top: ${props => props.theme.suomifi.spacing.xxs};
+  padding-left: ${props => props.theme.suomifi.spacing.xs};
+  padding-right: ${props => props.theme.suomifi.spacing.xs};
   width: max-content;
 `;
 

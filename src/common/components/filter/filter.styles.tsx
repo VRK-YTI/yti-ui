@@ -6,12 +6,12 @@ export const DropdownPlaceholder = styled.i`
 `;
 
 export const FilterCheckbox = styled(Checkbox)`
-  font-size: ${props => props.theme.suomifi.values.typography.bodyTextSmall.fontSize.value}px;
-  padding-top: 10px;
+  font-size: ${props => props.theme.suomifi.typography.bodyTextSmall};
+  padding-top: ${props => props.theme.suomifi.spacing.xs};
 `;
 
 export const FilterRadioButton = styled(RadioButton)`
-  font-size: ${props => props.theme.suomifi.values.typography.bodyTextSmall.fontSize.value}px;
+  font-size: ${props => props.theme.suomifi.typography.bodyTextSmall};
 `;
 
 export const FilterWrapper = styled.div`
@@ -21,9 +21,9 @@ export const FilterWrapper = styled.div`
   width: 350px;
 
   > div, hr {
-    padding-left: 20px;
-    padding-right: 20px;
-    margin-bottom: 20px;
+    padding-left: ${props => props.theme.suomifi.spacing.m};
+    padding-right: ${props => props.theme.suomifi.spacing.m};
+    margin-bottom: ${props => props.theme.suomifi.spacing.m};
   }
 `;
 
@@ -32,13 +32,13 @@ export const Header = styled.div`
   background-color: ${(props) => props.theme.suomifi.colors.highlightBase};
   color: ${(props) => props.theme.suomifi.colors.whiteBase};
   display: flex;
-  font-size: ${props => props.theme.suomifi.values.typography.bodyText.fontSize.value}px;
+  font-size: ${props => props.theme.suomifi.typography.bodyText};
   font-weight: 600;
   padding: 25px 20px 25px;
 `;
 
 export const Hr = styled.hr`
   color: ${(props) => props.theme.suomifi.colors.depthLight3};
-  margin-left: 20px;
-  margin-right: 20px;
+  margin-left: ${props => props.theme.suomifi.spacing.m};
+  margin-right: ${props => props.theme.suomifi.spacing.m};
 `;

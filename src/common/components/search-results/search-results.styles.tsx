@@ -7,13 +7,13 @@ export const Card = styled.div`
   border-bottom: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: ${props => props.theme.suomifi.spacing.m};
 `;
 
 export const CardContributor = styled(Text)`
   color: ${(props) => props.theme.suomifi.colors.depthDark1};
   font-size: 14px;
-  margin-bottom: 5px;
+  margin-bottom: ${props => props.theme.suomifi.spacing.xxs};
 `;
 
 export const CardDescription = styled(Text)`
@@ -21,7 +21,7 @@ export const CardDescription = styled(Text)`
 `;
 
 export const CardInfoDomain = styled(Text)`
-  margin-top: 15px;
+  margin-top: ${props => props.theme.suomifi.spacing.s};
 `;
 
 export const CardPill = styled(Text)<SeachCountTagsProps>`
@@ -30,8 +30,8 @@ export const CardPill = styled(Text)<SeachCountTagsProps>`
   color: ${(props) => props.theme.suomifi.colors.whiteBase};
   font-size: 12px;
   font-weight: 600;
-  padding-left: 5px;
-  padding-right: 5px;
+  padding-left: ${props => props.theme.suomifi.spacing.xxs};
+  padding-right: ${props => props.theme.suomifi.spacing.xxs};
   text-transform: uppercase;
   width: max-content;
 `;
@@ -40,7 +40,7 @@ export const CardSubtitle = styled(Text)`
   color: ${(props) => props.theme.suomifi.colors.depthDark1};
   font-size: 12px;
   font-weight: 600;
-  margin-bottom: 10px;
+  margin-bottom: ${props => props.theme.suomifi.spacing.xs};
   word-spacing: 1px;
 `;
 
@@ -50,7 +50,7 @@ export const CardTitle = styled(Heading)`
 
 export const CardTitleWrapper = styled.div`
   color: ${(props) => props.theme.suomifi.colors.highlightBase};
-  margin-bottom: 5px;
+  margin-bottom: ${props => props.theme.suomifi.spacing.xxs};
 `;
 
 export const CardTitleIcon = styled(Icon)`
@@ -64,7 +64,7 @@ export const CardTitleLink = styled(Link)`
   display: flex;
   font-size: 22px;
   font-weight: 600;
-  gap: 10px;
+  gap: ${props => props.theme.suomifi.spacing.xs};
 `;
 
 export const CardWrapper = styled.div`

@@ -14,7 +14,7 @@ export const HeaderWrapper = styled.div`
 export const SearchAndLanguageWrapper = styled.div`
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: ${props => props.theme.suomifi.spacing.m};
 `;
 
 export const SearchWrapper = styled.div`

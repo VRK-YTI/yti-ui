@@ -20,7 +20,7 @@ export const LogoWrapper = styled.div`
 `;
 
 export const MobileMenuButtonWrapper = styled.div`
-  padding: 15px;
+  padding: ${props => props.theme.suomifi.spacing.s};
   display: flex;
 
   button {

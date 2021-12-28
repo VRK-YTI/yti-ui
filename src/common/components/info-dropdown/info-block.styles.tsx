@@ -9,7 +9,7 @@ export const InfoBlockData = styled.div`
   > * {
     border-bottom: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
     padding-bottom: 8px;
-    padding-left: 15px;
+    padding-left: ${props => props.theme.suomifi.spacing.s};
     padding-top: 6px;
   }
 
@@ -19,25 +19,25 @@ export const InfoBlockData = styled.div`
 `;
 
 export const InfoBlockDescription = styled(Text)`
-  font-size: ${props => props.theme.suomifi.values.typography.bodyTextSmall.fontSize.value}px;
+  font-size: ${props => props.theme.suomifi.typography.bodyTextSmall};
 `;
 
 export const InfoBlockLanguage = styled(Text)`
   display: inline-block;
-  font-size: ${props => props.theme.suomifi.values.typography.bodyTextSmall.fontSize.value}px;
+  font-size: ${props => props.theme.suomifi.typography.bodyTextSmall};
   font-weight: 600;
   width: 47px;
 `;
 
 export const InfoBlockTitle = styled(Text)`
-  font-size: ${props => props.theme.suomifi.values.typography.bodyText.fontSize.value}px;
+  font-size: ${props => props.theme.suomifi.typography.bodyText};
   font-weight: 600;
 `;
 
 export const InfoBlockWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-bottom: 20px;
+  gap: ${props => props.theme.suomifi.spacing.xs};
+  margin-bottom: ${props => props.theme.suomifi.spacing.m};
   max-width: 695px;
 `;

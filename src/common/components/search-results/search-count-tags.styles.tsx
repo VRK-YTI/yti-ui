@@ -7,11 +7,11 @@ export const CountPill = styled(Text)`
   background-color: ${(props) => props.theme.suomifi.colors.highlightBase};
   color: ${(props) => props.theme.suomifi.colors.whiteBase};
   display: flex;
-  font-size: ${props => props.theme.suomifi.values.typography.bodyTextSmall.fontSize.value}px;
+  font-size: ${props => props.theme.suomifi.typography.bodyTextSmall};
   font-weight: 600;
-  gap: 8px;
-  padding-left: 10px;
-  padding-right: 10px;
+  gap: ${props => props.theme.suomifi.spacing.insetM};
+  padding-left: ${props => props.theme.suomifi.spacing.xs};
+  padding-right: ${props => props.theme.suomifi.spacing.xs};
   width: max-content;
 `;
 
@@ -27,7 +27,7 @@ export const CountPillIcon = styled(Icon)`
 export const CountPillWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: ${props => props.theme.suomifi.spacing.insetM};
 `;
 
 export const CountText = styled(Text)`
@@ -38,5 +38,5 @@ export const CountWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 14px;
-  margin-bottom: 20px;
+  margin-bottom: ${props => props.theme.suomifi.spacing.m};
 `;

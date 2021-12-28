@@ -6,7 +6,7 @@ export const SidebarWrapper = styled.aside<{ breakpoint: Breakpoint }>`
   flex-grow: 1;
   background-color: ${props => props.theme.suomifi.colors.depthSecondary};
   max-width: ${props => small(props.breakpoint, '100%', '374px')};
-  padding: 20px;
+  padding: ${props => props.theme.suomifi.spacing.m};
 `;
 
 export const SidebarHeader = styled.h1`
@@ -20,22 +20,22 @@ export const SidebarHeader = styled.h1`
 
 export const SidebarSubHeader = styled.h2`
   color: ${props => props.theme.suomifi.colors.blackBase};
-  font-size: ${props => props.theme.suomifi.values.typography.bodyText.fontSize.value}px;
+  font-size: ${props => props.theme.suomifi.typography.bodyText};
   font-weight: 600;
   line-height: 24px;
   margin: 0;
-  margin-top: 20px;
+  margin-top: ${props => props.theme.suomifi.spacing.m};
 `;
 
 export const SidebarDivider = styled.hr`
-  margin: 20px 0;
+  margin: ${props => props.theme.suomifi.spacing.m} 0;
   border: 0;
   border-top: 1px solid ${props => props.theme.suomifi.colors.depthLight1};
 `;
 
 export const SidebarLinkList = styled.ul`
   list-style: none;
-  margin: 10px 0;
+  margin: ${props => props.theme.suomifi.spacing.xs} 0;
   padding: 0;
 `;
 
@@ -49,13 +49,13 @@ export const SidebarLinkListItemWrapper = styled.li`
 
   svg {
     color: ${props => props.theme.suomifi.colors.accentBase};
-    padding: 4px;
+    padding: ${props => props.theme.suomifi.spacing.insetXs};
     padding-left: 0;
     flex-shrink: 0;
   }
 
   * {
-    font-size: ${props => props.theme.suomifi.values.typography.bodyTextSmall.fontSize.value}px;
+    font-size: ${props => props.theme.suomifi.typography.bodyTextSmall};
     font-weight: 400;
     line-height: 24px;
   }

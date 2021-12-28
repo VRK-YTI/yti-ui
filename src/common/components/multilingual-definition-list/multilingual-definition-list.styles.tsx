@@ -6,7 +6,7 @@ export const MultilingualDefinitionListWrapper = styled.ul`
   margin: 0;
   margin-top: 12px;
   border: solid 1px ${(props) => props.theme.suomifi.colors.depthLight1};
-  font-size: ${props => props.theme.suomifi.values.typography.bodyTextSmall.fontSize.value}px;
+  font-size: ${props => props.theme.suomifi.typography.bodyTextSmall};
 `;
 
 export const MultilingualDefinitionListItem = styled.li`
@@ -15,10 +15,10 @@ export const MultilingualDefinitionListItem = styled.li`
   }
 
   background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
-  padding-top: 6px;
-  padding-bottom: 8px;
-  padding-left: 60px;
-  padding-right: 20px;
+  padding-top: ${props => props.theme.suomifi.spacing.insetS};
+  padding-bottom: ${props => props.theme.suomifi.spacing.insetM};
+  padding-left: ${props => props.theme.suomifi.spacing.xxxl};
+  padding-right: ${props => props.theme.suomifi.spacing.m};
   position: relative;
 
   &:nth-child(even) {
@@ -29,7 +29,7 @@ export const MultilingualDefinitionListItem = styled.li`
     content: attr(lang);
     text-transform: uppercase;
     position: absolute;
-    left: 15px;
+    left: ${props => props.theme.suomifi.spacing.s};
     font-weight: 600;
   }
 `;

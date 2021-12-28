@@ -11,19 +11,19 @@ export const ButtonsDiv = styled.div`
   flex-grow: 1;
   justify-content: end;
   flex-direction: row;
-  gap: 5px;
+  gap: ${props => props.theme.suomifi.spacing.xxs};
 `;
 
 export const UserInfoWrapper = styled.div<{ breakpoint: Breakpoint }>`
   display: flex;
   flex-direction: ${props => small(props.breakpoint, 'row', 'column')};
   justify-content: space-between;
-  row-gap: 2px;
+  row-gap: ${props => props.theme.suomifi.spacing.insetXxs};
   height: ${props => small(props.breakpoint, '44px', 'auto')};
   align-items: ${props => small(props.breakpoint, 'baseline', 'normal')};
 
   span {
-    font-size: 16px;
+    font-size: ${props => props.theme.suomifi.typography.bodyTextSmall};
     line-height: 21px;
     font-weight: 600;
     text-align: right;
@@ -41,7 +41,7 @@ export const UserInfoWrapper = styled.div<{ breakpoint: Breakpoint }>`
 export const LoginButtonsWrapper = styled.div<{ breakpoint: Breakpoint }>`
   display: flex;
   flex-direction: ${props => small(props.breakpoint, 'column', 'row')};
-  gap: 5px;
+  gap: ${props => props.theme.suomifi.spacing.xxs};
 
   padding: ${props => small(props.breakpoint, '15px', '0')};
   border-bottom: ${props => small(props.breakpoint, '1px', '0')} solid ${props => props.theme.suomifi.colors.depthSecondary};
