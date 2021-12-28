@@ -9,7 +9,7 @@ import {
   FilterWrapper,
   Header,
 } from './filter.styles';
-import { vocabularyEmptyState, VocabularyState } from '../vocabulary/vocabulary-slice';
+import { vocabularyInitialState, VocabularyState } from '../vocabulary/vocabulary-slice';
 import { initialState, SearchState } from '../terminology-search/terminology-search-slice';
 import { AppThunk } from '../../../store';
 import { CommonInfoDTO, GroupSearchResult, OrganizationSearchResult } from '../../interfaces/terminology.interface';
@@ -48,7 +48,7 @@ export default function Filter({
           {renderRadioButtonArea()}
           <Separator />
           {renderCheckboxArea(true)}
-          <Separator />
+          {('showBy' in filter && filter.showBy === 'concepts') && <Separator />}
           {renderSearchInputArea()}
         </FilterContent>
       </FilterWrapper>
@@ -76,13 +76,15 @@ export default function Filter({
 
   function renderCheckboxArea(common?: boolean) {
     if (common) {
-      return (
-        <CheckboxArea
-          title={t('vocabulary-filter-show-concept-states')}
-          filter={filter}
-          setFilter={setSomeFilter}
-        />
-      );
+      if (('showBy' in filter && filter.showBy === 'concepts') || 'showBy' in filter === false) {
+        return (
+          <CheckboxArea
+            title={t('vocabulary-filter-show-concept-states')}
+            filter={filter}
+            setFilter={setSomeFilter}
+          />
+        );
+      }
     } else if (groups) {
       return (
         <CheckboxArea
@@ -142,7 +144,7 @@ export default function Filter({
   function renderRemove() {
     if (type === 'vocabulary') {
       return (
-        !isEqual(filter, vocabularyEmptyState.filter) &&
+        !isEqual(filter, vocabularyInitialState.filter) &&
         <>
           <Remove
             title={t('vocabulary-filter-remove-all')}
