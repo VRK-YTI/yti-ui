@@ -2,7 +2,6 @@ import { useTranslation } from 'react-i18next';
 import CheckboxArea from './checkbox-area';
 import RadioButtonArea from './radio-button-area';
 import Remove from './remove';
-import SearchInputArea from './search-input-area';
 import DropdownArea from './dropdown-area';
 import {
   FilterWrapper,
@@ -14,6 +13,7 @@ import { initialState, SearchState } from '../terminology-search/terminology-sea
 import { AppThunk } from '../../../store';
 import { CommonInfoDTO, GroupSearchResult, OrganizationSearchResult } from '../../interfaces/terminology.interface';
 import { isEqual } from 'lodash';
+import { TextInputArea } from './text-input-area';
 
 export interface FilterProps {
   filter: VocabularyState['filter'] | SearchState['filter'];
@@ -47,7 +47,7 @@ export default function Filter({
         <Hr />
         {renderCheckboxArea(true)}
         {('showBy' in filter && filter.showBy === 'concepts') && <Hr />}
-        {renderSearchInputArea()}
+        {renderTextInputArea()}
       </FilterWrapper>
     );
   } else if (type === 'terminology-search' && 'showByOrg' in filter && groups) {
@@ -60,7 +60,7 @@ export default function Filter({
         {renderRemove()}
         {renderDropdownArea()}
         <Hr />
-        {renderSearchInputArea()}
+        {renderTextInputArea()}
         <Hr />
         {renderCheckboxArea(true)}
         <Hr />
@@ -168,14 +168,16 @@ export default function Filter({
     }
   }
 
-  function renderSearchInputArea() {
+  function renderTextInputArea() {
     return (
-      <SearchInputArea
-        title={t('vocabulary-filter-filter-by-keyword')}
-        filter={filter}
-        setFilter={setSomeFilter}
-        visualPlaceholder={t('vocabulary-filter-visual-placeholder')}
-      />
+      <>
+        <TextInputArea
+          title={t('vocabulary-filter-filter-by-keyword')}
+          filter={filter}
+          setFilter={setSomeFilter}
+          visualPlaceholder={t('vocabulary-filter-visual-placeholder')}
+        />
+      </>
     );
   }
 

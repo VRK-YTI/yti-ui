@@ -1,3 +1,4 @@
+// OBSOLETE
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SearchInput } from 'suomifi-ui-components';

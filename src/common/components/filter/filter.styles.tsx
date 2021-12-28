@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Checkbox, Icon, RadioButton } from 'suomifi-ui-components';
+import { Checkbox, RadioButton } from 'suomifi-ui-components';
 
 export const DropdownPlaceholder = styled.i`
   color: ${(props) => props.theme.suomifi.colors.depthDark1};
