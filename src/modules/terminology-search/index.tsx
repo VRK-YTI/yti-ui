@@ -43,6 +43,10 @@ export default function TerminologySearch() {
 
   return (
     <>
+      <BreadcrumbNav
+        title={{url: 'search', value: t('terminology-title')}}
+      />
+      <Title info={t('terminology-title')} />
       {isSmall &&
         <FilterMobileButton
           variant='secondary'
@@ -52,10 +56,6 @@ export default function TerminologySearch() {
           {t('vocabulary-filter-filter-list')}
         </FilterMobileButton>
       }
-      <BreadcrumbNav
-        title={{url: 'search', value: t('terminology-title')}}
-      />
-      <Title info={t('terminology-title')} />
       <ResultAndFilterContainer>
         {data &&
           <ResultAndStatsWrapper>
