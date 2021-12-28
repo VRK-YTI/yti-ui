@@ -20,7 +20,7 @@ export const SidebarHeader = styled.h1`
 
 export const SidebarSubHeader = styled.h2`
   color: ${props => props.theme.suomifi.colors.blackBase};
-  font-size: 18px;
+  font-size: ${props => props.theme.suomifi.values.typography.bodyText.fontSize.value}px;
   font-weight: 600;
   line-height: 24px;
   margin: 0;
@@ -55,7 +55,7 @@ export const SidebarLinkListItemWrapper = styled.li`
   }
 
   * {
-    font-size: 16px;
+    font-size: ${props => props.theme.suomifi.values.typography.bodyTextSmall.fontSize.value}px;
     font-weight: 400;
     line-height: 24px;
   }

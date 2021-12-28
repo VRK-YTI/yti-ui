@@ -6,7 +6,7 @@ export const MultilingualDefinitionListWrapper = styled.ul`
   margin: 0;
   margin-top: 12px;
   border: solid 1px ${(props) => props.theme.suomifi.colors.depthLight1};
-  font-size: 16px;
+  font-size: ${props => props.theme.suomifi.values.typography.bodyTextSmall.fontSize.value}px;
 `;
 
 export const MultilingualDefinitionListItem = styled.li`

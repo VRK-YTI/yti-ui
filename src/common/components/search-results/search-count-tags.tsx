@@ -22,8 +22,6 @@ export default function SearchCountTags({ count, filter, setFilter }: SearchCoun
   const dispatch = useStoreDispatch();
   let activeStatuses: string[] = [];;
 
-  console.log(filter);
-
   if ('showByOrg' in filter && filter.showByOrg) {
     activeStatuses.push(filter.showByOrg);
 

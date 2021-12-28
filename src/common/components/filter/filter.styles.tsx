@@ -6,12 +6,12 @@ export const DropdownPlaceholder = styled.i`
 `;
 
 export const FilterCheckbox = styled(Checkbox)`
-  font-size: 16px;
+  font-size: ${props => props.theme.suomifi.values.typography.bodyTextSmall.fontSize.value}px;
   padding-top: 10px;
 `;
 
 export const FilterRadioButton = styled(RadioButton)`
-  font-size: 16px;
+  font-size: ${props => props.theme.suomifi.values.typography.bodyTextSmall.fontSize.value}px;
 `;
 
 export const FilterWrapper = styled.div`
@@ -32,7 +32,7 @@ export const Header = styled.div`
   background-color: ${(props) => props.theme.suomifi.colors.highlightBase};
   color: ${(props) => props.theme.suomifi.colors.whiteBase};
   display: flex;
-  font-size: 18px;
+  font-size: ${props => props.theme.suomifi.values.typography.bodyText.fontSize.value}px;
   font-weight: 600;
   padding: 25px 20px 25px;
 `;

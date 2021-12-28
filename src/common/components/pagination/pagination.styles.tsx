@@ -20,7 +20,7 @@ export const PaginationButton = styled.div<PaginationButtonProps>`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
+  font-size: ${props => props.theme.suomifi.values.typography.bodyTextSmall.fontSize.value}px;
   color: ${props => props.active ? props.theme.suomifi.colors.whiteBase : props.theme.suomifi.colors.highlightBase};
   background: ${props => props.active ? props.theme.suomifi.colors.highlightDark1 : props.theme.suomifi.colors.whiteBase};
 
@@ -41,7 +41,7 @@ export const PaginationMobile = styled.div`
   align-items: center;
   justify-content: center;
   white-space: nowrap;
-  font-size: 16px;
+  font-size: ${props => props.theme.suomifi.values.typography.bodyTextSmall.fontSize.value}px;
   color: ${props => props.theme.suomifi.colors.highlightBase};
   background: ${props => props.theme.suomifi.colors.whiteBase};
 `;

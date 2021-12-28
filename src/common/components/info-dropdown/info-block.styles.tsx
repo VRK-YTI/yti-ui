@@ -19,18 +19,18 @@ export const InfoBlockData = styled.div`
 `;
 
 export const InfoBlockDescription = styled(Text)`
-  font-size: 16px;
+  font-size: ${props => props.theme.suomifi.values.typography.bodyTextSmall.fontSize.value}px;
 `;
 
 export const InfoBlockLanguage = styled(Text)`
   display: inline-block;
-  font-size: 16px;
+  font-size: ${props => props.theme.suomifi.values.typography.bodyTextSmall.fontSize.value}px;
   font-weight: 600;
   width: 47px;
 `;
 
 export const InfoBlockTitle = styled(Text)`
-  font-size: 18px;
+  font-size: ${props => props.theme.suomifi.values.typography.bodyText.fontSize.value}px;
   font-weight: 600;
 `;
 

@@ -7,7 +7,7 @@ export const CountPill = styled(Text)`
   background-color: ${(props) => props.theme.suomifi.colors.highlightBase};
   color: ${(props) => props.theme.suomifi.colors.whiteBase};
   display: flex;
-  font-size: 16px;
+  font-size: ${props => props.theme.suomifi.values.typography.bodyTextSmall.fontSize.value}px;
   font-weight: 600;
   gap: 8px;
   padding-left: 10px;
