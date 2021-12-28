@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
+import { Heading } from 'suomifi-ui-components';
 import { AppThunk } from '../../../store';
 import { TerminologySearchResult } from '../../interfaces/terminology.interface';
 import { VocabularyConcepts } from '../../interfaces/vocabulary.interface';
@@ -17,6 +18,7 @@ import {
   CardTitle,
   CardTitleIcon,
   CardTitleLink,
+  CardTitleWrapper,
   CardWrapper
 } from './search-results.styles';
 
@@ -59,21 +61,21 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
                     {terminology.contributors[0].label[i18n.language]}
                   </CardContributor>
 
-                  <CardTitle variant='h2'>
+                  <CardTitleWrapper>
                     <Link passHref href={'/terminology/' + terminology.id}>
                       <CardTitleLink href=''>
                         <CardTitleIcon icon='registers' />
-                        <span>
+                        <CardTitle variant='h3'>
                           {terminology.label[i18n.language] !== undefined
                             ?
                             terminology.label[i18n.language]
                             :
                             terminology?.label?.[Object.keys(terminology.label)[0]]
                           }
-                        </span>
+                        </CardTitle>
                       </CardTitleLink>
                     </Link>
-                  </CardTitle>
+                  </CardTitleWrapper>
 
                   <CardSubtitle>
                     {t('terminology-search-results-terminology').toUpperCase()} &middot; <CardPill valid={terminology.status === 'VALID' ? 'true' : undefined}>{t(terminology.status ?? '')}</CardPill>

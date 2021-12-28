@@ -13,6 +13,7 @@ export const Card = styled.div`
 export const CardContributor = styled(Text)`
   color: ${(props) => props.theme.suomifi.colors.depthDark1};
   font-size: 14px;
+  margin-bottom: 5px;
 `;
 
 export const CardDescription = styled(Text)`
@@ -44,6 +45,10 @@ export const CardSubtitle = styled(Text)`
 `;
 
 export const CardTitle = styled(Heading)`
+  color: inherit;
+`;
+
+export const CardTitleWrapper = styled.div`
   color: ${(props) => props.theme.suomifi.colors.highlightBase};
   margin-bottom: 5px;
 `;
@@ -51,14 +56,15 @@ export const CardTitle = styled(Heading)`
 export const CardTitleIcon = styled(Icon)`
   height: 20px;
   length: 20px;
-  margin-right: 10px;
 `;
 
 export const CardTitleLink = styled(Link)`
+  align-items: center;
   color: ${(props) => props.theme.suomifi.colors.highlightBase};
+  display: flex;
   font-size: 22px;
   font-weight: 600;
-  margin-bottom: 5px;
+  gap: 10px;
 `;
 
 export const CardWrapper = styled.div`
