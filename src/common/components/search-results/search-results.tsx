@@ -80,7 +80,15 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
                   </CardSubtitle>
 
                   <CardDescription>
-                    {terminology?.description?.[i18n.language] !== undefined ? terminology?.description?.[i18n.language] : terminology?.description?.[Object.keys(terminology?.description)[0]]}
+                    {terminology?.description?.[i18n.language] !== undefined
+                      ?
+                      terminology?.description?.[i18n.language]
+                      :
+                      terminology?.description?.[Object.keys(terminology?.description)[0]]
+                        ?
+                        terminology?.description?.[Object.keys(terminology?.description)[0]]
+                        :
+                        t('terminology-search-no-description')}
                   </CardDescription>
 
                   <CardInfoDomain>
@@ -98,8 +106,6 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
           </CardWrapper>
         </>
       );
-    } else {
-      return <></>;
     }
 
     return null;
@@ -120,7 +126,6 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
                   <CardTitle variant='h2'>
                     <Link passHref href={`/terminology/${concept.terminology.id}/concept/${concept.id}`}>
                       <CardTitleLink href=''>
-                        <CardTitleIcon icon='registers' />
                         <span>
                           {concept.label[i18n.language] !== undefined ? concept.label[i18n.language] : concept?.label?.[Object.keys(concept.label)[0]]}
                         </span>
@@ -141,8 +146,6 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
           </CardWrapper>
         </>
       );
-    } else {
-      return <></>;
     }
 
     return null;
