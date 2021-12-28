@@ -22,24 +22,36 @@ export default function SearchCountTags({ count, filter, setFilter }: SearchCoun
   const dispatch = useStoreDispatch();
   let activeStatuses: string[] = [];;
 
-  Object.keys(filter.status).map(key => {
-    if (filter.status[key] === true) {
-      activeStatuses.push(key);
+  console.log(filter);
+
+  if ('showByOrg' in filter && filter.showByOrg) {
+    activeStatuses.push(filter.showByOrg);
+
+    if (filter.keyword) {
+      activeStatuses.push(filter.keyword);
     }
-  });
+
+    Object.keys(filter.status).map(key => {
+      if (filter.status[key] === true) {
+        activeStatuses.push(key);
+      }
+    });
+  } else {
+    Object.keys(filter.status).map(key => {
+      if (filter.status[key] === true) {
+        activeStatuses.push(key);
+      }
+    });
+
+    if (filter.keyword) {
+      activeStatuses.push(filter.keyword);
+    }
+  }
 
   if ('infoDomains' in filter && 'infoDomains' in filter) {
     filter.infoDomains.map(infoDomain => {
       activeStatuses.push(infoDomain.value);
     });
-  }
-
-  if (filter.keyword) {
-    activeStatuses.push(filter.keyword);
-  }
-
-  if ('showByOrg' in filter && filter.showByOrg) {
-    activeStatuses.push(filter.showByOrg);
   }
 
   const handleTagClose = (s: string) => {
