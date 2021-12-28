@@ -42,21 +42,3 @@ export const Hr = styled.hr`
   margin-left: 20px;
   margin-right: 20px;
 `;
-
-export const RemoveIcon = styled(Icon)`
-  color: ${(props) => props.theme.suomifi.colors.highlightBase};
-  padding-right: 5px;
-`;
-
-export const RemoveWrapper = styled.div`
-  align-items: center;
-  display: flex;
-  font-weight: 600;
-  margin-left: 14px;
-
-  &:hover {
-    cursor: pointer;
-    text-decoration: underline;
-    text-decoration-color: ${(props) => props.theme.suomifi.colors.highlightBase};
-  }
-`;
