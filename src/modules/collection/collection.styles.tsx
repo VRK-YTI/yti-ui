@@ -14,3 +14,25 @@ export const MainContent = styled.main`
   flex-grow: 1;
   padding: 20px;
 `;
+
+export const HeadingBlock = styled.div`
+  h1 {
+    line-height: 52px;
+  }
+
+  & > :first-child {
+    color: ${props => props.theme.suomifi.colors.depthDark1};
+    font-size: 16px;
+    line-height: 24px;
+  }
+`;
+
+export const BadgeBar = styled.div`
+  font-size: 12px;
+  text-transform: uppercase;
+  font-weight: 600;
+  line-height: 15px;
+  margin-top: 2px;
+  margin-bottom: 20px;
+  color: ${props => props.theme.suomifi.colors.depthDark1};
+`;

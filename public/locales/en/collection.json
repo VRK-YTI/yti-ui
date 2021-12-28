@@ -1,4 +1,10 @@
 {
-  "sidebar-header": "(en) Lisää käsitevalikoimista",
+  "description": "(en) Käsitekokoelma on tapa ryhmitellä tietyn aihepiirin käsitteitä.",
+  "field-broader": "(en) Valikoimaan kuuluvien käsitteiden yläkäsitteet",
+  "field-definition": "(en) Kuvaus",
+  "field-member": "(en) Valikoimaan kuuluvat käsitteet",
+  "field-name": "(en) Nimi",
+  "heading": "(en) Käsitekokoelma",
+  "sidebar-header": "(en) Lisää käsitekokoelmista",
   "sidebar-section-heading-other-collections": "(en) Muut käsitekokoelmat tässä sanastossa"
 }
