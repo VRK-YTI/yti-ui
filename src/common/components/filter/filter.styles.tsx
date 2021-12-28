@@ -56,6 +56,7 @@ export const HeaderButton = styled(Button)`
   font-size: 16px;
   font-weight: 400;
   padding: 0px 5px 0px;
+
   :hover {
     background: none;
   }

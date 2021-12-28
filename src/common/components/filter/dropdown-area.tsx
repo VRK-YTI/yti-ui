@@ -9,13 +9,11 @@ interface DropdownProps {
   setFilter: (x: any) => AppThunk;
   title: string;
   visualPlaceholder?: string;
-  isModal?: boolean;
 }
 
 export default function DropdownArea({
   data,
   filter,
-  isModal = false,
   setFilter,
   title,
   visualPlaceholder
