@@ -19,6 +19,7 @@ export const FilterWrapper = styled.div`
   border: solid 1px ${(props) => props.theme.suomifi.colors.depthLight1};
   height: max-content;
   width: 350px;
+  margin-bottom: 80px;
 
   > div, hr {
     padding-left: 20px;

@@ -32,7 +32,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
 
   useEffect(() => {
     dispatch(initializeVocabularyFilter());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     if (info) {
