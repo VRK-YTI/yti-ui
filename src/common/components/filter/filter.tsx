@@ -109,26 +109,26 @@ export default function Filter({
   }
 
   function renderCloseButton() {
-    if (isModal) {
-      return (
-        <>
-          <Hr />
-          <div>
-            {resultCount} {t('filter-with-current')}
-          </div>
-          <div>
-            <Button
-              fullWidth
-              onClick={() => setShowModal && setShowModal(false)}
-            >
-              {t('close')}
-            </Button>
-          </div>
-        </>
-      );
-    } else {
+    if (!isModal) {
       return null;
     }
+
+    return (
+      <>
+        <Hr />
+        <div>
+          {resultCount} {t('filter-with-current')}
+        </div>
+        <div>
+          <Button
+            fullWidth
+            onClick={() => setShowModal && setShowModal(false)}
+          >
+            {t('close')}
+          </Button>
+        </div>
+      </>
+    );
   }
 
   function renderDropdownArea() {
@@ -148,7 +148,6 @@ export default function Filter({
           setFilter={setSomeFilter}
           title={t('terminology-search-filter-by-organization')}
           visualPlaceholder={t('terminology-search-filter-pick-organization')}
-          isModal={isModal}
         />
       );
     }
