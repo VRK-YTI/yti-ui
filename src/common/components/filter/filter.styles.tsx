@@ -32,6 +32,7 @@ export const FilterWrapper = styled.div<FilterStyledProps>`
   border: solid 1px ${(props) => props.theme.suomifi.colors.depthLight1};
   height: max-content;
   width: ${(props) => props.isModal ? '100%' : '350px'};
+  margin-bottom: ${(props) => props.isModal ? '0px' : '80px'};
 
   > div, hr {
     padding-left: 20px;
