@@ -98,8 +98,6 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
           </CardWrapper>
         </>
       );
-    } else {
-      return <></>;
     }
 
     return null;
@@ -141,8 +139,6 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
           </CardWrapper>
         </>
       );
-    } else {
-      return <></>;
     }
 
     return null;
