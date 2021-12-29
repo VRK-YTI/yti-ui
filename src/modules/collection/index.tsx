@@ -3,6 +3,7 @@ import React from 'react';
 import { Heading, Text } from 'suomifi-ui-components';
 import { BasicBlock, MultilingualPropertyBlock, PropertyBlock } from '../../common/components/block';
 import { ConceptListBlock } from '../../common/components/block';
+import { Breadcrumb, BreadcrumbLink } from '../../common/components/breadcrumb';
 import { useGetCollectionQuery } from '../../common/components/collection/collection-slice';
 import { useBreakpoints } from '../../common/components/media-query/media-query-context';
 import PropertyValue from '../../common/components/property-value';
@@ -24,60 +25,74 @@ export default function Collection({ terminologyId, collectionId }: CollectionPr
   const { t } = useTranslation('collection');
 
   return (
-    <PageContent breakpoint={breakpoint}>
-      <MainContent>
-        <HeadingBlock>
-          <Text>
-            <PropertyValue
-              property={terminology?.references.contributor?.[0].properties.prefLabel}
-            />
-          </Text>
-          <Heading variant="h1">
-            <PropertyValue
-              property={collection?.properties.prefLabel}
-            />
-          </Heading>
-          <BadgeBar>
-            {t('heading')} &middot; <PropertyValue property={terminology?.properties.prefLabel} />
-          </BadgeBar>
-          <Text>{t('description')}</Text>
-        </HeadingBlock>
+    <>
+      <Breadcrumb>
+        <BreadcrumbLink url="/search?page=1">
+          {t('terminology-title', { ns: 'common' })}
+        </BreadcrumbLink>
+        <BreadcrumbLink url={`/terminology/${terminologyId}`}>
+          <PropertyValue property={terminology?.properties.prefLabel} />
+        </BreadcrumbLink>
+        <BreadcrumbLink url={`/terminology/${terminologyId}/collections/${collectionId}`} current>
+          <PropertyValue property={collection?.properties.prefLabel} />
+        </BreadcrumbLink>
+      </Breadcrumb>
 
-        <MultilingualPropertyBlock
-          title={t('field-name')}
-          data={collection?.properties.prefLabel}
-        />
-        <MultilingualPropertyBlock
-          title={t('field-definition')}
-          data={collection?.properties.definition}
-        />
-        <ConceptListBlock
-          title={t('field-broader')}
-          data={collection?.references.broader}
-        />
-        <ConceptListBlock
-          title={t('field-member')}
-          data={collection?.references.member}
-        />
+      <PageContent breakpoint={breakpoint}>
+        <MainContent>
+          <HeadingBlock>
+            <Text>
+              <PropertyValue
+                property={terminology?.references.contributor?.[0].properties.prefLabel}
+              />
+            </Text>
+            <Heading variant="h1">
+              <PropertyValue
+                property={collection?.properties.prefLabel}
+              />
+            </Heading>
+            <BadgeBar>
+              {t('heading')} &middot; <PropertyValue property={terminology?.properties.prefLabel} />
+            </BadgeBar>
+            <Text>{t('description')}</Text>
+          </HeadingBlock>
 
-        <Separator />
+          <MultilingualPropertyBlock
+            title={t('field-name')}
+            data={collection?.properties.prefLabel}
+          />
+          <MultilingualPropertyBlock
+            title={t('field-definition')}
+            data={collection?.properties.definition}
+          />
+          <ConceptListBlock
+            title={t('field-broader')}
+            data={collection?.references.broader}
+          />
+          <ConceptListBlock
+            title={t('field-member')}
+            data={collection?.references.member}
+          />
 
-        <PropertyBlock
-          title={t('vocabulary-info-organization', { ns: 'common' })}
-          property={terminology?.references.contributor?.[0]?.properties.prefLabel}
-          fallbackLanguage="fi"
-        />
-        <BasicBlock title={t('vocabulary-info-created-at', { ns: 'common' })}>
-          {FormatISODate(collection?.createdDate)}, {collection?.createdBy}`
-        </BasicBlock>
-        <BasicBlock title={t('vocabulary-info-modified-at', { ns: 'common' })}>
-          {FormatISODate(collection?.lastModifiedDate)}, {collection?.lastModifiedBy}
-        </BasicBlock>
-        <BasicBlock title="URI">
-          {collection?.uri}
-        </BasicBlock>
-      </MainContent>
-      {collection && <CollectionSidebar collection={collection} />}
-    </PageContent>
+          <Separator />
+
+          <PropertyBlock
+            title={t('vocabulary-info-organization', { ns: 'common' })}
+            property={terminology?.references.contributor?.[0]?.properties.prefLabel}
+            fallbackLanguage="fi"
+          />
+          <BasicBlock title={t('vocabulary-info-created-at', { ns: 'common' })}>
+            {FormatISODate(collection?.createdDate)}, {collection?.createdBy}
+          </BasicBlock>
+          <BasicBlock title={t('vocabulary-info-modified-at', { ns: 'common' })}>
+            {FormatISODate(collection?.lastModifiedDate)}, {collection?.lastModifiedBy}
+          </BasicBlock>
+          <BasicBlock title="URI">
+            {collection?.uri}
+          </BasicBlock>
+        </MainContent>
+        {collection && <CollectionSidebar collection={collection} />}
+      </PageContent>
+    </>
   );
 };

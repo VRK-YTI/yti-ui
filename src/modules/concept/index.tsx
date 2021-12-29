@@ -15,6 +15,7 @@ import {
   PropertyBlock,
   TermBlock
 } from '../../common/components/block';
+import { Breadcrumb, BreadcrumbLink } from '../../common/components/breadcrumb';
 import { useGetConceptQuery } from '../../common/components/concept/concept-slice';
 import { useBreakpoints } from '../../common/components/media-query/media-query-context';
 import PropertyValue from '../../common/components/property-value';
@@ -44,6 +45,18 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
 
   return (
     <>
+      <Breadcrumb>
+        <BreadcrumbLink url="/search?page=1">
+          {t('terminology-title', { ns: 'common' })}
+        </BreadcrumbLink>
+        <BreadcrumbLink url={`/terminology/${terminologyId}`}>
+          <PropertyValue property={terminology?.properties.prefLabel} />
+        </BreadcrumbLink>
+        <BreadcrumbLink url={`/terminology/${terminologyId}/concepts/${conceptId}`} current>
+          <PropertyValue property={concept?.references.prefLabelXl?.[0].properties.prefLabel} />
+        </BreadcrumbLink>
+      </Breadcrumb>
+
       <PageContent breakpoint={breakpoint}>
         <MainContent>
           <HeadingBlock>
