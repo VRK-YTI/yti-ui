@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
-import { Heading } from 'suomifi-ui-components';
 import { AppThunk } from '../../../store';
 import { TerminologySearchResult } from '../../interfaces/terminology.interface';
 import { VocabularyConcepts } from '../../interfaces/vocabulary.interface';
@@ -14,7 +13,6 @@ import {
   CardContributor,
   CardDescription,
   CardInfoDomain,
-  CardPill,
   CardSubtitle,
   CardTitle,
   CardTitleIcon,

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Heading, Icon, Link, StaticChip, Text } from 'suomifi-ui-components';
-import { CardChipProps, SeachCountTagsProps } from './search-count-tags.props';
+import { CardChipProps } from './search-count-tags.props';
 
 export const Card = styled.div`
   background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
@@ -32,18 +32,6 @@ export const CardDescription = styled(Text)`
 
 export const CardInfoDomain = styled(Text)`
   margin-top: ${props => props.theme.suomifi.spacing.s};
-`;
-
-export const CardPill = styled(Text)<SeachCountTagsProps>`
-  border-radius: 25px;
-  background-color: ${props => props.valid ? 'hsl(166, 90%, 30%)' : props.theme.suomifi.colors.depthDark1};
-  color: ${(props) => props.theme.suomifi.colors.whiteBase};
-  font-size: 12px;
-  font-weight: 600;
-  padding-left: ${props => props.theme.suomifi.spacing.xxs};
-  padding-right: ${props => props.theme.suomifi.spacing.xxs};
-  text-transform: uppercase;
-  width: max-content;
 `;
 
 export const CardSubtitle = styled(Text)`
