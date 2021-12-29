@@ -1,6 +1,6 @@
 import { useTranslation } from 'next-i18next';
 import React from 'react';
-import { getPropertyValue } from '../../common/components/property-value';
+import { getPropertyValue } from '../../common/components/property-value/get-property-value';
 import {
   Sidebar,
   SidebarDivider,
@@ -84,8 +84,8 @@ export default function ConceptSidebar({ concept }: ConceptSidebarProps) {
         heading={t('sidebar-section-heading-related-match')}
         items={concept?.references.relatedMatch}
         href={({ properties }) => {
-          const terminologyId = getPropertyValue(properties.targetGraph);
-          const conceptId = getPropertyValue(properties.targetId);
+          const terminologyId = getPropertyValue({ property: properties.targetGraph });
+          const conceptId = getPropertyValue({ property: properties.targetId });
           return `/terminology/${terminologyId}/concept/${conceptId}`;
         }}
         propertyAccessor={({ properties }) => properties?.prefLabel}
@@ -95,8 +95,8 @@ export default function ConceptSidebar({ concept }: ConceptSidebarProps) {
         heading={t('sidebar-section-heading-exact-match')}
         items={concept?.references.exactMatch}
         href={({ properties }) => {
-          const terminologyId = getPropertyValue(properties.targetGraph);
-          const conceptId = getPropertyValue(properties.targetId);
+          const terminologyId = getPropertyValue({ property: properties.targetGraph });
+          const conceptId = getPropertyValue({ property: properties.targetId });
           return `/terminology/${terminologyId}/concept/${conceptId}`;
         }}
         propertyAccessor={({ properties }) => properties?.prefLabel}
@@ -106,8 +106,8 @@ export default function ConceptSidebar({ concept }: ConceptSidebarProps) {
         heading={t('sidebar-section-heading-close-match')}
         items={concept?.references.closeMatch}
         href={({ properties }) => {
-          const terminologyId = getPropertyValue(properties.targetGraph);
-          const conceptId = getPropertyValue(properties.targetId);
+          const terminologyId = getPropertyValue({ property: properties.targetGraph });
+          const conceptId = getPropertyValue({ property: properties.targetId });
           return `/terminology/${terminologyId}/concept/${conceptId}`;
         }}
         propertyAccessor={({ properties }) => properties?.prefLabel}

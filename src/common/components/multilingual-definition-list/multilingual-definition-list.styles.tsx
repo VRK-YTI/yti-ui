@@ -4,7 +4,6 @@ export const MultilingualDefinitionListWrapper = styled.ul`
   list-style: none;
   padding: 0;
   margin: 0;
-  margin-top: 12px;
   border: solid 1px ${(props) => props.theme.suomifi.colors.depthLight1};
   font-size: ${props => props.theme.suomifi.typography.bodyTextSmall};
 `;

@@ -1,4 +1,4 @@
-export default function FormatISODate(ISODate: any, locale: string = 'fi') {
+export default function FormatISODate(ISODate: string | undefined, locale: string = 'fi') {
   if (ISODate) {
     let date = '';
     let hour = '';
@@ -11,7 +11,7 @@ export default function FormatISODate(ISODate: any, locale: string = 'fi') {
       return date + ', ' + hour;
     case 'en':
       let dateArr = ISODate.split('T')[0].split('-').reverse();
-      dateArr = [date[1], date[0], date[2]];
+      dateArr = [dateArr[1], dateArr[0], dateArr[2]];
       date = dateArr.join('/');
 
       hour = ISODate.split('T')[1].split('.')[0].split(':').slice(0, 2).join('.');
@@ -26,6 +26,4 @@ export default function FormatISODate(ISODate: any, locale: string = 'fi') {
       return '';
     }
   }
-
-  return '';
 }
