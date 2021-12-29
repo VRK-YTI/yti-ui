@@ -1,30 +1,7 @@
 import styled from 'styled-components';
-import { Icon, Text } from 'suomifi-ui-components';
+import { Text } from 'suomifi-ui-components';
 
-export const CountPill = styled(Text)`
-  align-items: center;
-  border-radius: 25px;
-  background-color: ${(props) => props.theme.suomifi.colors.highlightBase};
-  color: ${(props) => props.theme.suomifi.colors.whiteBase};
-  display: flex;
-  font-size: ${props => props.theme.suomifi.typography.bodyTextSmall};
-  font-weight: 600;
-  gap: ${props => props.theme.suomifi.spacing.insetM};
-  padding-left: ${props => props.theme.suomifi.spacing.xs};
-  padding-right: ${props => props.theme.suomifi.spacing.xs};
-  width: max-content;
-`;
-
-export const CountPillIcon = styled(Icon)`
-  padding: 0px;
-  margin: 0px;
-
-  :hover {
-    cursor: pointer;
-  }
-`;
-
-export const CountPillWrapper = styled.div`
+export const ChipWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: ${props => props.theme.suomifi.spacing.insetM};

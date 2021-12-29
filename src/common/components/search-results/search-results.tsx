@@ -10,6 +10,7 @@ import { VocabularyState } from '../vocabulary/vocabulary-slice';
 import SearchCountTags from './search-count-tags';
 import {
   Card,
+  CardChip,
   CardContributor,
   CardDescription,
   CardInfoDomain,
@@ -78,7 +79,11 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
                   </CardTitleWrapper>
 
                   <CardSubtitle>
-                    {t('terminology-search-results-terminology').toUpperCase()} &middot; <CardPill valid={terminology.status === 'VALID' ? 'true' : undefined}>{t(terminology.status ?? '')}</CardPill>
+                    <span>{t('terminology-search-results-terminology').toUpperCase()}</span>
+                    <span>&middot;</span>
+                    <CardChip valid={terminology.status === 'VALID' ? 'true' : undefined}>
+                      {t(terminology.status ?? '')}
+                    </CardChip>
                   </CardSubtitle>
 
                   <CardDescription>

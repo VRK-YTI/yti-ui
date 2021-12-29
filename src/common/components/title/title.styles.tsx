@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Text } from 'suomifi-ui-components';
+import { StaticChip, Text } from 'suomifi-ui-components';
 import { TitleProps } from './title.props';
 
 export const Contributor = styled(Text)`
@@ -12,18 +12,14 @@ export const Description = styled(Text)`
   margin-top: ${props => props.theme.suomifi.spacing.m};
 `;
 
-export const StatusPill = styled(Text)<TitleProps>`
-  align-items: center;
-  border-radius: 25px;
-  background-color: ${props => props.valid ? 'hsl(166, 90%, 30%)' : props.theme.suomifi.colors.depthDark1};
-  color: ${(props) => props.theme.suomifi.colors.whiteBase};
-  display: flex;
+export const StatusChip = styled(StaticChip)<TitleProps>`
+  background-color: ${props => props.valid ? 'hsl(166, 90%, 30%)' : props.theme.suomifi.colors.depthDark1} !important;
   font-size: 12px;
-  font-weight: 600;
+  line-height: 0;
   margin-top: ${props => props.theme.suomifi.spacing.xxs};
-  padding-left: ${props => props.theme.suomifi.spacing.xs};
-  padding-right: ${props => props.theme.suomifi.spacing.xs};
-  width: max-content;
+  padding: 0px 10px !important;
+  text-transform: uppercase;
+  width: min-content;
 `;
 
 export const TitleWrapper = styled.div`

@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Heading } from 'suomifi-ui-components';
-import { Contributor, Description, StatusPill, TitleWrapper } from './title.styles';
+import { Contributor, Description, StatusChip, TitleWrapper } from './title.styles';
 import InfoExpander from '../info-dropdown/info-expander';
 import { VocabularyInfoDTO } from '../../interfaces/vocabulary.interface';
 import { Property } from '../../interfaces/termed-data-types.interface';
@@ -43,9 +43,9 @@ export default function Title({ info }: TitleProps) {
 
         <Heading variant='h1'>{title}</Heading>
 
-        <StatusPill valid={status === 'VALID' ? 'true' : undefined}>
+        <StatusChip valid={status === 'VALID' ? 'true' : undefined}>
           {t(`${status}`)}
-        </StatusPill>
+        </StatusChip>
 
         <InfoExpander data={info} />
       </TitleWrapper>

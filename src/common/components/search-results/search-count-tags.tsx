@@ -1,11 +1,10 @@
 import { useTranslation } from 'react-i18next';
+import { Chip } from 'suomifi-ui-components';
 import { AppThunk, useStoreDispatch } from '../../../store';
 import { SearchState } from '../terminology-search/terminology-search-slice';
 import { VocabularyState } from '../vocabulary/vocabulary-slice';
 import {
-  CountPill,
-  CountPillIcon,
-  CountPillWrapper,
+  ChipWrapper,
   CountText,
   CountWrapper
 } from './search-count-tags.styles';
@@ -73,15 +72,20 @@ export default function SearchCountTags({ count, filter, setFilter }: SearchCoun
       <CountText>
         {t('vocabulary-results-concepts')} {count} {t('vocabulary-results-with-following-filters')}
       </CountText>
-      <CountPillWrapper>
+      <ChipWrapper>
         {activeStatuses.map((status: string, idx: number) => {
           return (
-            <CountPill key={idx}>
-              {t(status)} <CountPillIcon icon='close' onClick={() => handleTagClose(status)} />
-            </CountPill>
+            <Chip
+              actionLabel={`Remove filter ${status}`}
+              key={idx}
+              onClick={() => handleTagClose(status)}
+              removable
+            >
+              {t(status)}
+            </Chip>
           );
         })}
-      </CountPillWrapper>
-    </CountWrapper>
+      </ChipWrapper >
+    </CountWrapper >
   );
 }
