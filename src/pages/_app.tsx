@@ -4,10 +4,17 @@ import type { AppProps } from 'next/app';
 import { appWithTranslation } from 'next-i18next';
 import axios from 'axios';
 import React from 'react';
-import { wrapper } from '../store';
+import { useStoreDispatch, wrapper } from '../store';
+import { selectLogin, setLogin } from '../common/components/login/login-slice';
 
 // https://nextjs.org/docs/advanced-features/custom-app
 function App({ Component, pageProps }: AppProps) {
+  const dispatch = useStoreDispatch();
+  const login = dispatch(selectLogin());
+
+  if(!login || login !== pageProps.user) {
+    dispatch(setLogin(pageProps.user));
+  }
 
   return (
     <SWRConfig
