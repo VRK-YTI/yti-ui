@@ -1,4 +1,9 @@
 import styled from 'styled-components';
+import { Button } from 'suomifi-ui-components';
+
+export const FilterMobileButton = styled(Button)`
+  margin-top: 20px;
+`;
 
 export const ResultAndFilterContainer = styled.div`
   display: flex;

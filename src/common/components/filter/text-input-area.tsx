@@ -9,9 +9,10 @@ interface TextInputAreaProps {
   setFilter: (x: any) => AppThunk;
   title: string;
   visualPlaceholder: string;
+  isModal: boolean;
 }
 
-export function TextInputArea({ filter, setFilter, title, visualPlaceholder }: TextInputAreaProps) {
+export function TextInputArea({ filter, setFilter, title, visualPlaceholder, isModal }: TextInputAreaProps) {
   const dispatch = useStoreDispatch();
   const [inputValue, setInputValue] = useState(filter.keyword);
 
@@ -43,6 +44,7 @@ export function TextInputArea({ filter, setFilter, title, visualPlaceholder }: T
         onKeyDown={e => e.key === 'Enter' && handleInput(inputValue)}
         value={inputValue}
         visualPlaceholder={visualPlaceholder}
+        fullWidth={isModal}
       />
     </div>
   );

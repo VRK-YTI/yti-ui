@@ -139,7 +139,7 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
                   </CardTitle>
 
                   <CardSubtitle>
-                    {t('vocabulary-info-concept').toUpperCase()} &middot; {t(`${concept.status}`).toUpperCase()}
+                    {t('vocabulary-info-concept')} &middot; {t(`${concept.status}`)}
                   </CardSubtitle>
 
                   <CardDescription>

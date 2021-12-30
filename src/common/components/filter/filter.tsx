@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from 'react';
 import { useTranslation } from 'react-i18next';
 import CheckboxArea from './checkbox-area';
 import RadioButtonArea from './radio-button-area';
@@ -6,6 +7,7 @@ import DropdownArea from './dropdown-area';
 import {
   FilterWrapper,
   Header,
+  HeaderButton,
   Hr
 } from './filter.styles';
 import { vocabularyInitialState, VocabularyState } from '../vocabulary/vocabulary-slice';
@@ -14,6 +16,7 @@ import { AppThunk } from '../../../store';
 import { CommonInfoDTO, GroupSearchResult, OrganizationSearchResult } from '../../interfaces/terminology.interface';
 import { isEqual } from 'lodash';
 import { TextInputArea } from './text-input-area';
+import { Button } from 'suomifi-ui-components';
 
 export interface FilterProps {
   filter: VocabularyState['filter'] | SearchState['filter'];
@@ -22,6 +25,9 @@ export interface FilterProps {
   resetSomeFilter: () => AppThunk;
   setSomeFilter: (x: any) => AppThunk;
   type: string;
+  isModal?: boolean;
+  setShowModal?: Dispatch<SetStateAction<boolean>>;
+  resultCount?: number;
 }
 
 export default function Filter({
@@ -30,17 +36,18 @@ export default function Filter({
   organizations,
   resetSomeFilter,
   setSomeFilter,
-  type
+  type,
+  isModal = false,
+  setShowModal,
+  resultCount
 }: FilterProps) {
   const { t, i18n } = useTranslation('common');
 
   // Returns filter according to templates found below.
   if (type === 'vocabulary' && 'showBy' in filter) {
     return (
-      <FilterWrapper>
-        <Header>
-          {t('vocabulary-filter-filter-list')}
-        </Header>
+      <FilterWrapper isModal={isModal}>
+        {renderTitle()}
         {/* If filter has any value 'checked' Remove-component is displayed. */}
         {renderRemove()}
         {renderRadioButtonArea()}
@@ -48,14 +55,13 @@ export default function Filter({
         {renderCheckboxArea(true)}
         {('showBy' in filter && filter.showBy === 'concepts') && <Hr />}
         {renderTextInputArea()}
+        {renderCloseButton()}
       </FilterWrapper>
     );
   } else if (type === 'terminology-search' && 'showByOrg' in filter && groups) {
     return (
-      <FilterWrapper>
-        <Header>
-          {t('vocabulary-filter-filter-list')}
-        </Header>
+      <FilterWrapper isModal={isModal}>
+        {renderTitle()}
         {/* If filter has any value 'checked' Remove-component is displayed. */}
         {renderRemove()}
         {renderDropdownArea()}
@@ -65,21 +71,21 @@ export default function Filter({
         {renderCheckboxArea(true)}
         <Hr />
         {renderCheckboxArea()}
+        {renderCloseButton()}
       </FilterWrapper>
     );
   }
 
   function renderCheckboxArea(common?: boolean) {
     if (common) {
-      if (('showBy' in filter && filter.showBy === 'concepts') || 'showBy' in filter === false) {
-        return (
-          <CheckboxArea
-            title={t('vocabulary-filter-show-concept-states')}
-            filter={filter}
-            setFilter={setSomeFilter}
-          />
-        );
-      }
+      return (
+        <CheckboxArea
+          title={t('vocabulary-filter-show-concept-states')}
+          filter={filter}
+          setFilter={setSomeFilter}
+          isModal={isModal}
+        />
+      );
     } else if (groups) {
       return (
         <CheckboxArea
@@ -96,9 +102,33 @@ export default function Filter({
             })
           }
           type='infoDomains'
+          isModal={isModal}
         />
       );
     }
+  }
+
+  function renderCloseButton() {
+    if (!isModal) {
+      return null;
+    }
+
+    return (
+      <>
+        <Hr />
+        <div>
+          {resultCount} {t('filter-with-current')}
+        </div>
+        <div>
+          <Button
+            fullWidth
+            onClick={() => setShowModal?.(false)}
+          >
+            {t('close')}
+          </Button>
+        </div>
+      </>
+    );
   }
 
   function renderDropdownArea() {
@@ -131,6 +161,7 @@ export default function Filter({
           data={['concepts', 'collections']}
           filter={filter}
           setFilter={setSomeFilter}
+          isModal={isModal}
         />
       );
     }
@@ -176,9 +207,32 @@ export default function Filter({
           filter={filter}
           setFilter={setSomeFilter}
           visualPlaceholder={t('vocabulary-filter-visual-placeholder')}
+          isModal={isModal}
         />
       </>
     );
+  }
+
+  function renderTitle() {
+    if (isModal) {
+      return (
+        <Header>
+          {t('vocabulary-filter-filter-list')}
+          <HeaderButton
+            iconRight='close'
+            onClick={() => setShowModal?.(false)}
+          >
+            {t('close')}
+          </HeaderButton>
+        </Header>
+      );
+    } else {
+      return (
+        <Header>
+          {t('vocabulary-filter-filter-list')}
+        </Header>
+      );
+    }
   }
 
   return <></>;
