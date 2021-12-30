@@ -122,7 +122,7 @@ export default function Filter({
         <div>
           <Button
             fullWidth
-            onClick={() => setShowModal && setShowModal(false)}
+            onClick={() => setShowModal?.(false)}
           >
             {t('close')}
           </Button>
@@ -215,19 +215,19 @@ export default function Filter({
     if (isModal) {
       return (
         <Header>
-          {t('vocabulary-filter-filter-list').toUpperCase()}
+          {t('vocabulary-filter-filter-list')}
           <HeaderButton
             iconRight='close'
-            onClick={() => setShowModal && setShowModal(false)}
+            onClick={() => setShowModal?.(false)}
           >
-            {t('close').toUpperCase()}
+            {t('close')}
           </HeaderButton>
         </Header>
       );
     } else {
       return (
         <Header>
-          {t('vocabulary-filter-filter-list').toUpperCase()}
+          {t('vocabulary-filter-filter-list')}
         </Header>
       );
     }

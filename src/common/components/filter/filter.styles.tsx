@@ -50,6 +50,11 @@ export const Header = styled.div`
   font-weight: 600;
   justify-content: space-between;
   padding: 25px 20px 25px;
+  text-transform: uppercase;
+
+  > * {
+    text-transform: uppercase;
+  }
 `;
 
 export const HeaderButton = styled(Button)`
