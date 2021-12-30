@@ -76,7 +76,7 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
                   </CardTitle>
 
                   <CardSubtitle>
-                    {t('terminology-search-results-terminology').toUpperCase()} &middot; <CardPill valid={terminology.status === 'VALID' ? 'true' : undefined}>{t(terminology.status ?? '')}</CardPill>
+                    {t('terminology-search-results-terminology')} &middot; <CardPill valid={terminology.status === 'VALID' ? 'true' : undefined}>{t(terminology.status ?? '')}</CardPill>
                   </CardSubtitle>
 
                   <CardDescription>
@@ -98,8 +98,6 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
           </CardWrapper>
         </>
       );
-    } else {
-      return <></>;
     }
 
     return null;
@@ -129,7 +127,7 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
                   </CardTitle>
 
                   <CardSubtitle>
-                    {t('vocabulary-info-concept').toUpperCase()} &middot; {t(`${concept.status}`).toUpperCase()}
+                    {t('vocabulary-info-concept')} &middot; {t(`${concept.status}`)}
                   </CardSubtitle>
 
                   <CardDescription>
@@ -141,8 +139,6 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
           </CardWrapper>
         </>
       );
-    } else {
-      return <></>;
     }
 
     return null;
