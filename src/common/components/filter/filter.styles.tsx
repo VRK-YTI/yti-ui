@@ -1,8 +1,21 @@
 import styled from 'styled-components';
-import { Checkbox, Icon, RadioButton } from 'suomifi-ui-components';
+import { Button, Checkbox, Icon, RadioButton, SearchInput } from 'suomifi-ui-components';
+import { FilterStyledProps } from './filter-props';
 
 export const DropdownPlaceholder = styled.i`
   color: ${(props) => props.theme.suomifi.colors.depthDark1};
+`;
+
+export const DropdownWrapper = styled.div`
+  min-width: inherit;
+
+  > span {
+    min-width: 100%;
+
+    > div > div > * {
+      width: calc(100% - 47px);
+    }
+  }
 `;
 
 export const FilterCheckbox = styled(Checkbox)`
@@ -14,12 +27,12 @@ export const FilterRadioButton = styled(RadioButton)`
   font-size: 16px;
 `;
 
-export const FilterWrapper = styled.div`
+export const FilterWrapper = styled.div<FilterStyledProps>`
   background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
   border: solid 1px ${(props) => props.theme.suomifi.colors.depthLight1};
   height: max-content;
-  width: 350px;
-  margin-bottom: 80px;
+  width: ${(props) => props.isModal ? '100%' : '350px'};
+  margin-bottom: ${(props) => props.isModal ? '0px' : '80px'};
 
   > div, hr {
     padding-left: 20px;
@@ -35,7 +48,24 @@ export const Header = styled.div`
   display: flex;
   font-size: 18px;
   font-weight: 600;
-  padding: 25px 20px 30px;
+  justify-content: space-between;
+  padding: 25px 20px 25px;
+  text-transform: uppercase;
+
+  > * {
+    text-transform: uppercase;
+  }
+`;
+
+export const HeaderButton = styled(Button)`
+  background: none;
+  font-size: 16px;
+  font-weight: 400;
+  padding: 0px 5px 0px;
+
+  :hover {
+    background: none;
+  }
 `;
 
 export const Hr = styled.hr`
@@ -60,4 +90,8 @@ export const RemoveWrapper = styled.div`
     text-decoration: underline;
     text-decoration-color: ${(props) => props.theme.suomifi.colors.highlightBase};
   }
+`;
+
+export const SearchInputWrapper = styled(SearchInput)<FilterStyledProps>`
+  min-width: ${(props) => props.isModal ? '100%' : 'inherit' }
 `;

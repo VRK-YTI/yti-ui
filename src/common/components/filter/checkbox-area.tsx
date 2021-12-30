@@ -16,11 +16,13 @@ interface CheckboxProps {
   setFilter: (x: any) => AppThunk;
   title: string;
   type?: string;
+  isModal?: boolean;
 }
 
-export default function CheckboxArea({ data, filter, setFilter, title, type }: CheckboxProps) {
+export default function CheckboxArea({ data, filter, setFilter, title, type, isModal }: CheckboxProps) {
   const { t } = useTranslation('common');
   const dispatch = useStoreDispatch();
+  const variant = isModal ? 'large' : 'small';
 
   const handleCheckbox = (s: string | InfoDProp) => {
     let retVal: CheckboxProps['filter'] | null = null;
@@ -60,24 +62,28 @@ export default function CheckboxArea({ data, filter, setFilter, title, type }: C
         <FilterCheckbox
           onClick={() => handleCheckbox('VALID')}
           checked={filter.status?.['VALID'] as boolean}
+          variant={variant}
         >
           {t('VALID')} (n {t('vocabulary-filter-items')})
         </FilterCheckbox>
         <FilterCheckbox
           onClick={() => handleCheckbox('DRAFT')}
           checked={filter.status?.['DRAFT'] as boolean}
+          variant={variant}
         >
           {t('DRAFT')} (n {t('vocabulary-filter-items')})
         </FilterCheckbox>
         <FilterCheckbox
           onClick={() => handleCheckbox('RETIRED')}
           checked={filter.status?.['RETIRED'] as boolean}
+          variant={variant}
         >
           {t('RETIRED')} (n {t('vocabulary-filter-items')})
         </FilterCheckbox>
         <FilterCheckbox
           onClick={() => handleCheckbox('SUPERSEDED')}
           checked={filter.status?.['SUPERSEDED'] as boolean}
+          variant={variant}
         >
           {t('SUPERSEDED')} (n {t('vocabulary-filter-items')})
         </FilterCheckbox>
@@ -106,6 +112,7 @@ export default function CheckboxArea({ data, filter, setFilter, title, type }: C
               checked={
                 filter.infoDomains?.filter((infoD: InfoDProp) => infoD.id === d.id).length > 0
               }
+              variant={variant}
             >
               {d.value} (n {t('vocabulary-filter-items')})
             </FilterCheckbox>

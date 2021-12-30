@@ -62,7 +62,7 @@
   "vocabulary-info-vocabulary-export": "(en) Lataa sanasto",
   "vocabulary-info-vocabulary-export-description": "(en) Voit tarkastella sanaston, käsitevalikoiman ja käsitteen, sekä termien tietoja Excel-tiedostomuodoissa.",
   "vocabulary-info-concept": "Concept",
-  "vocabulary-filter-filter-list": "(en) RAJAA LISTAA",
+  "vocabulary-filter-filter-list": "(en) Rajaa listaa",
   "vocabulary-filter-remove-all": "(en) Poista kaikki rajaukset",
   "vocabulary-filter-show-only": "(en) Näytä vain",
   "vocabulary-filter-show-concept-states": "(en) Näytä käsitteiden tilat",
@@ -80,5 +80,6 @@
   "impersonate-user": "Impersonate user",
   "navigation-open": "Open navigation",
   "navigation-close": "Close navigation",
+  "filter-with-current": "(en) kpl seuraavilla rajauksilla",
   "front-page": "Front page"
 }

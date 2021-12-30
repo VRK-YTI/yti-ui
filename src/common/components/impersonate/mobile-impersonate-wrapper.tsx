@@ -8,7 +8,7 @@ export default function MobileImpersonateWrapper() {
   const users = useFakeableUsers();
   const { t } = useTranslation();
 
-  if (! users?.length) {
+  if (!users?.length) {
     return null;
   }
 
