@@ -10,9 +10,16 @@ interface SearchInputAreaProps {
   setFilter: (x: any) => AppThunk;
   title: string;
   visualPlaceholder: string;
+  isModal?: boolean;
 }
 
-export default function SearchInputArea({ filter, setFilter, title, visualPlaceholder }: SearchInputAreaProps) {
+export default function SearchInputArea({
+  filter,
+  isModal = false,
+  setFilter,
+  title,
+  visualPlaceholder
+}: SearchInputAreaProps) {
   const { t } = useTranslation('common');
   const dispatch = useStoreDispatch();
 
@@ -44,6 +51,7 @@ export default function SearchInputArea({ filter, setFilter, title, visualPlaceh
         visualPlaceholder={visualPlaceholder}
         onChange={(value) => handleKeywordChange(value as string)}
         onSearch={(value) => handleKeyword(value as string)}
+        fullWidth={isModal}
       />
     </div>
   );
