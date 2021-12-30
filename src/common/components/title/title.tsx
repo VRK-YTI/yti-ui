@@ -1,9 +1,11 @@
 import { useTranslation } from 'react-i18next';
-import { Heading } from 'suomifi-ui-components';
+import { Button, Heading } from 'suomifi-ui-components';
 import { Contributor, Description, StatusPill, TitleWrapper } from './title.styles';
 import InfoExpander from '../info-dropdown/info-expander';
 import { VocabularyInfoDTO } from '../../interfaces/vocabulary.interface';
 import { Property } from '../../interfaces/termed-data-types.interface';
+import { useSelector } from 'react-redux';
+import { selectLogin } from '../login/login-slice';
 
 interface TitleProps {
   info: string | VocabularyInfoDTO;
@@ -11,6 +13,7 @@ interface TitleProps {
 
 export default function Title({ info }: TitleProps) {
   const { t, i18n } = useTranslation('common');
+  const loginInfo = useSelector(selectLogin());
 
   if (!info) {
     return <></>;
@@ -21,6 +24,8 @@ export default function Title({ info }: TitleProps) {
       <TitleWrapper>
         <Heading variant='h1'>{info}</Heading>
         <Description>{t('terminology-search-info')}</Description>
+        {/* Added for demo purposes. Can and should be deleted */}
+        {loginInfo.superuser && <Button variant='secondary' icon='plus'>Lisää uusi sanasto</Button>}
       </TitleWrapper>
     );
   } else {
