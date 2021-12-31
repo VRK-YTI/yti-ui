@@ -20,8 +20,6 @@ import { FilterMobileButton } from '../terminology-search/terminology-search.sty
 import { useTranslation } from 'next-i18next';
 import { Modal, ModalContent } from 'suomifi-ui-components';
 import BreadcrumbNav from '../../common/components/breadcrumb/breadcrumb';
-import { selectLogin } from '../../common/components/login/login-slice';
-import hasRights from '../../common/utils/check-rights';
 
 interface VocabularyProps {
   id: string;
@@ -36,9 +34,6 @@ export default function Vocabulary({ id }: VocabularyProps) {
   const { data: info } = useGetVocabularyQuery(id);
   const title = info?.properties.prefLabel?.filter(pl => pl.lang === i18n.language)[0].value ?? '';
   const [showModal, setShowModal] = useState(false);
-
-  const loginInfo = useSelector(selectLogin());
-  console.log(hasRights(loginInfo, info));
 
   useEffect(() => {
     dispatch(initializeVocabularyFilter());
