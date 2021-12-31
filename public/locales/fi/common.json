@@ -82,5 +82,6 @@
   "navigation-open": "Avaa navigaatio",
   "navigation-close": "Sulje navigaatio",
   "filter-with-current": "kpl seuraavilla rajauksilla",
-  "front-page": "Etusivu"
+  "front-page": "Etusivu",
+  "breadcrumb": "Murupolku"
 }

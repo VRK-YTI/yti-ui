@@ -1,9 +1,9 @@
 import { useTranslation } from 'next-i18next';
 import React from 'react';
 import { getPropertyValue } from '../../common/components/property-value/get-property-value';
+import Separator from '../../common/components/separator';
 import {
   Sidebar,
-  SidebarDivider,
   SidebarHeader,
   SidebarSection,
 } from '../../common/components/sidebar';
@@ -43,7 +43,7 @@ export default function ConceptSidebar({ concept }: ConceptSidebarProps) {
     <Sidebar>
       <SidebarHeader>{t('sidebar-header')}</SidebarHeader>
 
-      {shouldRenderDivider1 && <SidebarDivider />}
+      {shouldRenderDivider1 && <Separator />}
 
       <SidebarSection<Concept>
         heading={t('sidebar-section-heading-broader')}
@@ -113,7 +113,7 @@ export default function ConceptSidebar({ concept }: ConceptSidebarProps) {
         propertyAccessor={({ properties }) => properties?.prefLabel}
       />
 
-      {shouldRenderDivider2 && <SidebarDivider />}
+      {shouldRenderDivider2 && <Separator />}
 
       {/* <SidebarSection<ConceptLink>
         header={t('sidebar-section-heading-in-other-terminologies')}
@@ -122,7 +122,7 @@ export default function ConceptSidebar({ concept }: ConceptSidebarProps) {
         propertyAccessor={conceptLink => conceptLink?.properties?.prefLabel}
       /> */}
 
-      {shouldRenderDivider3 && <SidebarDivider />}
+      {shouldRenderDivider3 && <Separator />}
 
       <SidebarSection<Collection>
         heading={t('sidebar-section-heading-member')}
@@ -133,7 +133,7 @@ export default function ConceptSidebar({ concept }: ConceptSidebarProps) {
 
       {shouldRenderEmptyState && (
         <>
-          <SidebarDivider />
+          <Separator />
 
           TODO: Empty state
         </>
