@@ -25,7 +25,7 @@ export default function Title({ info }: TitleProps) {
         <Heading variant='h1'>{info}</Heading>
         <Description>{t('terminology-search-info')}</Description>
         {/* Added for demo purposes. Can and should be deleted */}
-        {loginInfo.superuser && <Button variant='secondary' icon='plus'>Lisää uusi sanasto</Button>}
+        {loginInfo.superuser ? <Button variant='secondary' icon='plus'>Lisää uusi sanasto</Button> : null}
       </TitleWrapper>
     );
   } else {
