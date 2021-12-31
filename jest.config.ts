@@ -3,7 +3,7 @@ import type { Config } from '@jest/types';
 // Sync object
 const config: Config.InitialOptions = {
   collectCoverageFrom: [
-    '**/*.{js,jsx,ts,tsx}',
+    'src/**/*.{js,jsx,ts,tsx}',
     '!**/*.d.ts',
     '!**/node_modules/**',
     '!**/.next/**',
@@ -26,7 +26,8 @@ const config: Config.InitialOptions = {
     '^.+\\.module\\.(css|sass|scss)$',
   ],
   setupFilesAfterEnv: ['./jest.setup.ts'],
-  testResultsProcessor: 'jest-junit'
+  testResultsProcessor: 'jest-junit',
+  coverageReporters: ['html']
 };
 
 export default config;
