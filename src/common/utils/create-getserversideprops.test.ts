@@ -1,9 +1,6 @@
 import { GetServerSidePropsContext } from 'next';
-import { applySession } from 'next-iron-session';
 import httpMocks from 'node-mocks-http';
-import { anonymousUser } from '../interfaces/user-interface';
 import { createCommonGetServerSideProps, LocalHandlerParams } from './create-getserversideprops';
-import { userCookieOptions } from './user-cookie-options';
 
 describe('createCommonGetServersideProps', () => {
   test('should wrap defaults', async () => {

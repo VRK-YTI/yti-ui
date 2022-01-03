@@ -1,7 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import DesktopAuthenticationPanel from './desktop-authentication-panel';
-import User from '../../interfaces/user-interface';
 import { themeProvider } from '../../../tests/test-utils';
 import { makeStore } from '../../../store';
 import { Provider } from 'react-redux';

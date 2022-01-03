@@ -2,10 +2,9 @@ import { setLogin } from './login-slice';
 import { makeStore } from '../../../store';
 
 describe('login-slice', () => {
-
   test('setLogin sets login with a given value', () => {
     const store = makeStore();
-    const originalState = store.getState();
+    const originalState = store.getState().login;
 
     const login = {
       anonymous: false,
@@ -30,7 +29,7 @@ describe('login-slice', () => {
 
     store.dispatch(setLogin(login));
 
-    expect(store.getState()).not.toEqual(originalState);
+    expect(store.getState().login).not.toEqual(originalState);
     expect(store.getState().login).toEqual(login);
 
   });
