@@ -1,7 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import InfoExpander from './info-expander';
-import { VocabularyInfoDTO } from '../../interfaces/vocabulary.interface';
 import { themeProvider } from '../../../tests/test-utils';
 
 describe('InfoExpander', () => {
@@ -10,10 +9,10 @@ describe('InfoExpander', () => {
       <InfoExpander data={{
         properties: {},
         references: {
-          contributor: [{ properties: { prefLabel: {} } }],
-          inGroup: [{ properties: { prefLabel: {} } }],
-        }
-      } as VocabularyInfoDTO}
+          contributor: [{ properties: { prefLabel: [] } }],
+          inGroup: [{ properties: { prefLabel: [] } }],
+        },
+      } as any}
       />,
       { wrapper: themeProvider }
     );

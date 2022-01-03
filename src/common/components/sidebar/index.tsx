@@ -4,7 +4,6 @@ import SidebarSection from './sidebar-section';
 import {
   SidebarHeader,
   SidebarSubHeader,
-  SidebarDivider,
   SidebarLinkList,
 } from './sidebar.styles';
 
@@ -12,7 +11,6 @@ export {
   Sidebar,
   SidebarHeader,
   SidebarSubHeader,
-  SidebarDivider,
   SidebarLinkList,
   SidebarLinkListItem,
   SidebarSection,

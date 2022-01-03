@@ -2,6 +2,12 @@ import styled from 'styled-components';
 import { Button, Checkbox, RadioButton } from 'suomifi-ui-components';
 import { FilterStyledProps } from './filter-props';
 
+export const CloseWrapper = styled.div`
+  * {
+    margin-bottom: ${props => props.theme.suomifi.spacing.m}
+  }
+`;
+
 export const DropdownPlaceholder = styled.i`
   color: ${(props) => props.theme.suomifi.colors.depthDark1};
 `;
@@ -33,12 +39,6 @@ export const FilterWrapper = styled.div<FilterStyledProps>`
   height: max-content;
   width: ${(props) => props.isModal ? '100%' : '350px'};
   margin-bottom: ${(props) => props.isModal ? '0px' : '80px'};
-
-  > div, hr {
-    padding-left: ${props => props.theme.suomifi.spacing.m};
-    padding-right: ${props => props.theme.suomifi.spacing.m};
-    margin-bottom: ${props => props.theme.suomifi.spacing.m};
-  }
 `;
 
 export const Header = styled.div`
@@ -48,6 +48,7 @@ export const Header = styled.div`
   display: flex;
   font-size: ${props => props.theme.suomifi.typography.bodyText};
   font-weight: 600;
+  justify-content: space-between;
   padding: 25px 20px 25px;
 `;
 
@@ -62,8 +63,6 @@ export const HeaderButton = styled(Button)`
   }
 `;
 
-export const Hr = styled.hr`
-  color: ${(props) => props.theme.suomifi.colors.depthLight3};
-  margin-left: ${props => props.theme.suomifi.spacing.m};
-  margin-right: ${props => props.theme.suomifi.spacing.m};
+export const FilterContent = styled.div`
+  margin: 20px;
 `;

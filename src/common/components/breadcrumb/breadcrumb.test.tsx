@@ -1,10 +1,10 @@
 import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
+import { Breadcrumb, BreadcrumbLink } from '.';
 import { useRouter } from '../../../../__mocks__/next-routerMock';
 import { lightTheme } from '../../../layouts/theme';
 import { makeStore } from '../../../store';
-import BreadcrumbNav from './breadcrumb';
 
 describe('breadcrumb', () => {
   test('should render component', () => {
@@ -13,7 +13,9 @@ describe('breadcrumb', () => {
     render(
       <Provider store={store}>
         <ThemeProvider theme={lightTheme}>
-          <BreadcrumbNav title={{ value: 'tr-terminology-title', url: 'search' }} />
+          <Breadcrumb>
+            <BreadcrumbLink url="" current>tr-terminology-title</BreadcrumbLink>
+          </Breadcrumb>
         </ThemeProvider>
       </Provider>
     );
@@ -30,13 +32,11 @@ describe('breadcrumb', () => {
     render(
       <Provider store={store}>
         <ThemeProvider theme={lightTheme}>
-          <BreadcrumbNav
-            title={{ value: 'tr-terminology-title', url: 'search' }}
-            breadcrumbs={[
-              { value: 'terminology', url: 'search' },
-              { value: 'test', url: 'tset' }
-            ]}
-          />
+          <Breadcrumb>
+            <BreadcrumbLink url="/search?page=1">terminology</BreadcrumbLink>
+            <BreadcrumbLink url="/test">test</BreadcrumbLink>
+            <BreadcrumbLink url="" current>tr-terminology-title</BreadcrumbLink>
+          </Breadcrumb>
         </ThemeProvider>
       </Provider>
     );
@@ -55,13 +55,11 @@ describe('breadcrumb', () => {
     render(
       <Provider store={store}>
         <ThemeProvider theme={lightTheme}>
-          <BreadcrumbNav
-            title={{ value: 'tr-terminology-title', url: 'search' }}
-            breadcrumbs={[
-              { value: 'terminology', url: 'search' },
-              { value: 'test', url: 'tset' }
-            ]}
-          />
+          <Breadcrumb>
+            <BreadcrumbLink url="/search?page=1">terminology</BreadcrumbLink>
+            <BreadcrumbLink url="/test">test</BreadcrumbLink>
+            <BreadcrumbLink url="" current>tr-terminology-title</BreadcrumbLink>
+          </Breadcrumb>
         </ThemeProvider>
       </Provider>
     );

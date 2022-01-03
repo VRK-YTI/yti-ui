@@ -27,12 +27,6 @@ export const SidebarSubHeader = styled.h2`
   margin-top: ${props => props.theme.suomifi.spacing.m};
 `;
 
-export const SidebarDivider = styled.hr`
-  margin: ${props => props.theme.suomifi.spacing.m} 0;
-  border: 0;
-  border-top: 1px solid ${props => props.theme.suomifi.colors.depthLight1};
-`;
-
 export const SidebarLinkList = styled.ul`
   list-style: none;
   margin: ${props => props.theme.suomifi.spacing.xs} 0;

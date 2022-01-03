@@ -82,5 +82,6 @@
   "navigation-open": "Open navigation",
   "navigation-close": "Close navigation",
   "filter-with-current": "(en) kpl seuraavilla rajauksilla",
-  "front-page": "Front page"
+  "front-page": "Front page",
+  "breadcrumb": "Breadcrumb"
 }
