@@ -1,9 +1,9 @@
 import { useTranslation } from 'next-i18next';
 import React from 'react';
 import { useGetCollectionsQuery } from '../../common/components/collection/collection-slice';
+import Separator from '../../common/components/separator';
 import {
   Sidebar,
-  SidebarDivider,
   SidebarHeader,
   SidebarSection,
 } from '../../common/components/sidebar';
@@ -23,7 +23,7 @@ export default function CollectionSidebar({ collection }: CollectionSidebarProps
     <Sidebar>
       <SidebarHeader>{t('sidebar-header')}</SidebarHeader>
 
-      <SidebarDivider />
+      <Separator />
 
       <SidebarSection<Collection>
         heading={t('sidebar-section-heading-other-collections')}

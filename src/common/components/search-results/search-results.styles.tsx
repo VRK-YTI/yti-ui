@@ -39,6 +39,7 @@ export const CardSubtitle = styled(Text)`
   font-size: 12px;
   font-weight: 600;
   margin-bottom: 10px;
+  text-transform: uppercase;
   word-spacing: 1px;
 `;
 

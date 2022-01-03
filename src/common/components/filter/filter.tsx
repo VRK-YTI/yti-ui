@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from 'react';
 import { useTranslation } from 'react-i18next';
 import CheckboxArea from './checkbox-area';
 import RadioButtonArea from './radio-button-area';
@@ -5,15 +6,18 @@ import Remove from './remove';
 import SearchInputArea from './search-input-area';
 import DropdownArea from './dropdown-area';
 import {
+  FilterContent,
   FilterWrapper,
   Header,
-  Hr
+  HeaderButton
 } from './filter.styles';
 import { vocabularyInitialState, VocabularyState } from '../vocabulary/vocabulary-slice';
 import { initialState, SearchState } from '../terminology-search/terminology-search-slice';
 import { AppThunk } from '../../../store';
 import { CommonInfoDTO, GroupSearchResult, OrganizationSearchResult } from '../../interfaces/terminology.interface';
 import { isEqual } from 'lodash';
+import Separator from '../separator';
+import { Button } from 'suomifi-ui-components';
 
 export interface FilterProps {
   filter: VocabularyState['filter'] | SearchState['filter'];
@@ -22,6 +26,9 @@ export interface FilterProps {
   resetSomeFilter: () => AppThunk;
   setSomeFilter: (x: any) => AppThunk;
   type: string;
+  isModal?: boolean;
+  setShowModal?: Dispatch<SetStateAction<boolean>>;
+  resultCount?: number;
 }
 
 export default function Filter({
@@ -30,56 +37,60 @@ export default function Filter({
   organizations,
   resetSomeFilter,
   setSomeFilter,
-  type
+  type,
+  isModal = false,
+  setShowModal,
+  resultCount
 }: FilterProps) {
   const { t, i18n } = useTranslation('common');
 
   // Returns filter according to templates found below.
   if (type === 'vocabulary' && 'showBy' in filter) {
     return (
-      <FilterWrapper>
-        <Header>
-          {t('vocabulary-filter-filter-list')}
-        </Header>
-        {/* If filter has any value 'checked' Remove-component is displayed. */}
-        {renderRemove()}
-        {renderRadioButtonArea()}
-        <Hr />
-        {renderCheckboxArea(true)}
-        {('showBy' in filter && filter.showBy === 'concepts') && <Hr />}
-        {renderSearchInputArea()}
+      <FilterWrapper isModal={isModal}>
+        {renderTitle()}
+        <FilterContent>
+          {/* If filter has any value 'checked' Remove-component is displayed. */}
+          {renderRemove()}
+          {renderRadioButtonArea()}
+          <Separator />
+          {renderCheckboxArea(true)}
+          {('showBy' in filter && filter.showBy === 'concepts') && <Separator />}
+          {renderSearchInputArea()}
+          {renderCloseButton()}
+        </FilterContent>
       </FilterWrapper>
     );
   } else if (type === 'terminology-search' && 'showByOrg' in filter && groups) {
     return (
-      <FilterWrapper>
-        <Header>
-          {t('vocabulary-filter-filter-list')}
-        </Header>
-        {/* If filter has any value 'checked' Remove-component is displayed. */}
-        {renderRemove()}
-        {renderDropdownArea()}
-        <Hr />
-        {renderSearchInputArea()}
-        <Hr />
-        {renderCheckboxArea(true)}
-        <Hr />
-        {renderCheckboxArea()}
+      <FilterWrapper isModal={isModal}>
+        {renderTitle()}
+        <FilterContent>
+          {/* If filter has any value 'checked' Remove-component is displayed. */}
+          {renderRemove()}
+          {renderDropdownArea()}
+          <Separator />
+          {renderSearchInputArea()}
+          <Separator />
+          {renderCheckboxArea(true)}
+          <Separator />
+          {renderCheckboxArea()}
+          {renderCloseButton()}
+        </FilterContent>
       </FilterWrapper>
     );
   }
 
   function renderCheckboxArea(common?: boolean) {
     if (common) {
-      if (('showBy' in filter && filter.showBy === 'concepts') || 'showBy' in filter === false) {
-        return (
-          <CheckboxArea
-            title={t('vocabulary-filter-show-concept-states')}
-            filter={filter}
-            setFilter={setSomeFilter}
-          />
-        );
-      }
+      return (
+        <CheckboxArea
+          title={t('vocabulary-filter-show-concept-states')}
+          filter={filter}
+          setFilter={setSomeFilter}
+          isModal={isModal}
+        />
+      );
     } else if (groups) {
       return (
         <CheckboxArea
@@ -96,9 +107,33 @@ export default function Filter({
             })
           }
           type='infoDomains'
+          isModal={isModal}
         />
       );
     }
+  }
+
+  function renderCloseButton() {
+    if (!isModal) {
+      return null;
+    }
+
+    return (
+      <>
+        <Separator />
+        <div>
+          {resultCount} {t('filter-with-current')}
+        </div>
+        <div>
+          <Button
+            fullWidth
+            onClick={() => setShowModal?.(false)}
+          >
+            {t('close')}
+          </Button>
+        </div>
+      </>
+    );
   }
 
   function renderDropdownArea() {
@@ -131,6 +166,7 @@ export default function Filter({
           data={['concepts', 'collections']}
           filter={filter}
           setFilter={setSomeFilter}
+          isModal={isModal}
         />
       );
     }
@@ -145,7 +181,7 @@ export default function Filter({
             title={t('vocabulary-filter-remove-all')}
             resetFilter={resetSomeFilter}
           />
-          <Hr />
+          <Separator />
         </>
 
       );
@@ -162,7 +198,7 @@ export default function Filter({
             title={t('vocabulary-filter-remove-all')}
             resetFilter={resetSomeFilter}
           />
-          <Hr />
+          <Separator />
         </>
       );
     }
@@ -175,8 +211,31 @@ export default function Filter({
         filter={filter}
         setFilter={setSomeFilter}
         visualPlaceholder={t('vocabulary-filter-visual-placeholder')}
+        isModal={isModal}
       />
     );
+  }
+
+  function renderTitle() {
+    if (isModal) {
+      return (
+        <Header>
+          {t('vocabulary-filter-filter-list')}
+          <HeaderButton
+            iconRight='close'
+            onClick={() => setShowModal?.(false)}
+          >
+            {t('close')}
+          </HeaderButton>
+        </Header>
+      );
+    } else {
+      return (
+        <Header>
+          {t('vocabulary-filter-filter-list')}
+        </Header>
+      );
+    }
   }
 
   return <></>;

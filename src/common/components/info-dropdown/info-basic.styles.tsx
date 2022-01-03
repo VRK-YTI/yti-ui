@@ -7,11 +7,6 @@ export const InfoBasicWrapper = styled.div`
   max-width: 695px;
 `;
 
-export const InfoBasicLanguageWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-`;
-
 export const InfoBasicExtraWrapper = styled.div`
   margin-top: 20px;
 `;

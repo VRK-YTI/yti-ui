@@ -63,7 +63,7 @@
   "vocabulary-info-vocabulary-export": "Lataa sanasto",
   "vocabulary-info-vocabulary-export-description": "Voit tarkastella sanaston, käsitevalikoiman ja käsitteen, sekä termien tietoja Excel-tiedostomuodoissa.",
   "vocabulary-info-concept": "Käsite",
-  "vocabulary-filter-filter-list": "RAJAA LISTAA",
+  "vocabulary-filter-filter-list": "Rajaa listaa",
   "vocabulary-filter-remove-all": "Poista kaikki rajaukset",
   "vocabulary-filter-show-only": "Näytä vain",
   "vocabulary-filter-show-concept-states": "Näytä käsitteiden tilat",
@@ -82,5 +82,7 @@
   "navigation-open": "Avaa navigaatio",
   "navigation-close": "Sulje navigaatio",
   "front-page": "Etusivu",
-  "interoperability-platform": "Yhteentoimivuusalusta"
+  "interoperability-platform": "Yhteentoimivuusalusta",
+  "filter-with-current": "kpl seuraavilla rajauksilla",
+  "breadcrumb": "Murupolku"
 }

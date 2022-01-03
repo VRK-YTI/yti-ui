@@ -1,22 +1,13 @@
 import React from 'react';
 import { useTranslation } from 'next-i18next';
 import { Property } from '../../interfaces/termed-data-types.interface';
+import { getPropertyValue } from './get-property-value';
 
 export interface PropertyValueProps {
   property?: Property[];
+  valueAccessor?: (property: Property) => string;
   fallbackLanguage?: string;
-}
-
-export function getPropertyValue(
-  property: Property[] | undefined,
-  locale: string = '',
-  fallbackLanguage: string = ''
-): string | undefined {
-  return [
-    ...property?.filter(({ lang }) => lang === locale) ?? [],
-    ...property?.filter(({ lang }) => lang === fallbackLanguage) ?? [],
-    ...property?.filter(({ lang }) => !lang) ?? [],
-  ][0]?.value;
+  delimiter?: string | false;
 }
 
 /**
@@ -36,15 +27,26 @@ export function getPropertyValue(
  *
  * If current language is English, this renders as 'This is a test.'.
  * If current locale is not English, fallback language is used, and this renders as 'This is a test'.
+ *
+ * <PropertyValue property={[{ lang: '', value: 'Value 1' }, { lang: '', value: 'Value 2' }]} delimiter=", " />
+ *
+ * This renders always as 'Value 1, Value 2'.
  */
-export default function PropertyValue({ property, fallbackLanguage }: PropertyValueProps) {
+export default function PropertyValue({
+  property,
+  valueAccessor,
+  fallbackLanguage,
+  delimiter = false
+}: PropertyValueProps) {
   const { i18n } = useTranslation('common');
 
-  const value = getPropertyValue(property, i18n.language, fallbackLanguage);
-
-  if (! value) {
-    return null;
-  }
+  const value = getPropertyValue({
+    property,
+    valueAccessor,
+    language: i18n.language,
+    fallbackLanguage,
+    delimiter
+  });
 
   return (
     <>{value}</>
