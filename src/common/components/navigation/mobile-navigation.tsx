@@ -2,23 +2,18 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, Text } from 'suomifi-ui-components';
-import User from '../../interfaces/user-interface';
 import LoginButtons from '../authentication-panel/login-buttons';
 import MobileImpersonateWrapper from '../impersonate/mobile-impersonate-wrapper';
 import MobileLocaleChooser from '../locale-chooser/mobile-locale-chooser';
 import { MobileMenuItem, MobileMenuSection } from './navigation.styles';
 
-export interface MobileNavigationProps {
-  user?: User;
-}
-
-export default function MobileNavigation({ user }: MobileNavigationProps) {
+export default function MobileNavigation() {
   const { t } = useTranslation('common');
   const router = useRouter();
 
   return (
     <>
-      <LoginButtons user={user} />
+      <LoginButtons />
 
       <MobileMenuSection>
         <MobileMenuItem active={router.pathname === '/'}>

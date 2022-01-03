@@ -32,16 +32,14 @@ export function createCommonGetServerSideProps<T extends { [key: string]: any }>
     return withSession<{ props: UserProps }>(
       async ({ req, res, locale }: { req: NextIronRequest, res: NextApiResponse, locale: string }) => {
         const results = await handler?.({ req, res, locale, store });
-        let sessionUser = req.session.get<User>('user') || anonymousUser;
+        store.dispatch(setLogin(req.session.get<User>('user') || anonymousUser));
         const userAgent = req.headers['user-agent'] ?? '';
-        store.dispatch(setLogin(sessionUser));
 
         return {
           ...results,
           props: {
             ...results?.props,
             ...(await serverSideTranslations(locale, ['collection', 'common', 'concept'])),
-            user: sessionUser,
             isSSRMobile: Boolean(userAgent.match(
               /Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i
             )),
