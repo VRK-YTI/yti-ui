@@ -6,16 +6,17 @@ import Remove from './remove';
 import SearchInputArea from './search-input-area';
 import DropdownArea from './dropdown-area';
 import {
+  FilterContent,
   FilterWrapper,
   Header,
-  HeaderButton,
-  Hr
+  HeaderButton
 } from './filter.styles';
 import { vocabularyInitialState, VocabularyState } from '../vocabulary/vocabulary-slice';
 import { initialState, SearchState } from '../terminology-search/terminology-search-slice';
 import { AppThunk } from '../../../store';
 import { CommonInfoDTO, GroupSearchResult, OrganizationSearchResult } from '../../interfaces/terminology.interface';
 import { isEqual } from 'lodash';
+import Separator from '../separator';
 import { Button } from 'suomifi-ui-components';
 
 export interface FilterProps {
@@ -48,30 +49,34 @@ export default function Filter({
     return (
       <FilterWrapper isModal={isModal}>
         {renderTitle()}
-        {/* If filter has any value 'checked' Remove-component is displayed. */}
-        {renderRemove()}
-        {renderRadioButtonArea()}
-        <Hr />
-        {renderCheckboxArea(true)}
-        {('showBy' in filter && filter.showBy === 'concepts') && <Hr />}
-        {renderSearchInputArea()}
-        {renderCloseButton()}
+        <FilterContent>
+          {/* If filter has any value 'checked' Remove-component is displayed. */}
+          {renderRemove()}
+          {renderRadioButtonArea()}
+          <Separator />
+          {renderCheckboxArea(true)}
+          {('showBy' in filter && filter.showBy === 'concepts') && <Separator />}
+          {renderSearchInputArea()}
+          {renderCloseButton()}
+        </FilterContent>
       </FilterWrapper>
     );
   } else if (type === 'terminology-search' && 'showByOrg' in filter && groups) {
     return (
       <FilterWrapper isModal={isModal}>
         {renderTitle()}
-        {/* If filter has any value 'checked' Remove-component is displayed. */}
-        {renderRemove()}
-        {renderDropdownArea()}
-        <Hr />
-        {renderSearchInputArea()}
-        <Hr />
-        {renderCheckboxArea(true)}
-        <Hr />
-        {renderCheckboxArea()}
-        {renderCloseButton()}
+        <FilterContent>
+          {/* If filter has any value 'checked' Remove-component is displayed. */}
+          {renderRemove()}
+          {renderDropdownArea()}
+          <Separator />
+          {renderSearchInputArea()}
+          <Separator />
+          {renderCheckboxArea(true)}
+          <Separator />
+          {renderCheckboxArea()}
+          {renderCloseButton()}
+        </FilterContent>
       </FilterWrapper>
     );
   }
@@ -115,7 +120,7 @@ export default function Filter({
 
     return (
       <>
-        <Hr />
+        <Separator />
         <div>
           {resultCount} {t('filter-with-current')}
         </div>
@@ -176,7 +181,7 @@ export default function Filter({
             title={t('vocabulary-filter-remove-all')}
             resetFilter={resetSomeFilter}
           />
-          <Hr />
+          <Separator />
         </>
 
       );
@@ -193,7 +198,7 @@ export default function Filter({
             title={t('vocabulary-filter-remove-all')}
             resetFilter={resetSomeFilter}
           />
-          <Hr />
+          <Separator />
         </>
       );
     }

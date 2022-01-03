@@ -33,12 +33,6 @@ export const FilterWrapper = styled.div<FilterStyledProps>`
   height: max-content;
   width: ${(props) => props.isModal ? '100%' : '350px'};
   margin-bottom: ${(props) => props.isModal ? '0px' : '80px'};
-
-  > div, hr {
-    padding-left: 20px;
-    padding-right: 20px;
-    margin-bottom: 20px;
-  }
 `;
 
 export const Header = styled.div`
@@ -68,10 +62,8 @@ export const HeaderButton = styled(Button)`
   }
 `;
 
-export const Hr = styled.hr`
-  color: ${(props) => props.theme.suomifi.colors.depthLight3};
-  margin-left: 20px;
-  margin-right: 20px;
+export const FilterContent = styled.div`
+  margin: 20px;
 `;
 
 export const RemoveIcon = styled(Icon)`

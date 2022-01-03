@@ -19,7 +19,8 @@ import { useBreakpoints } from '../../common/components/media-query/media-query-
 import { FilterMobileButton } from '../terminology-search/terminology-search.styles';
 import { useTranslation } from 'next-i18next';
 import { Modal, ModalContent } from 'suomifi-ui-components';
-import BreadcrumbNav from '../../common/components/breadcrumb/breadcrumb';
+import { Breadcrumb, BreadcrumbLink } from '../../common/components/breadcrumb';
+import PropertyValue from '../../common/components/property-value';
 
 interface VocabularyProps {
   id: string;
@@ -32,7 +33,6 @@ export default function Vocabulary({ id }: VocabularyProps) {
   const filter: VocabularyState['filter'] = useSelector(selectVocabularyFilter());
   const { data: concepts } = useGetConceptResultQuery(id);
   const { data: info } = useGetVocabularyQuery(id);
-  const title = info?.properties.prefLabel?.filter(pl => pl.lang === i18n.language)[0].value ?? '';
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
@@ -44,17 +44,21 @@ export default function Vocabulary({ id }: VocabularyProps) {
       dispatch(setCurrentTerminology({
         id: info?.id,
         value: info?.properties.prefLabel?.filter((pl: any) => pl.lang === i18n.language)[0].value ?? ''
-      }
-      ));
+      }));
     }
-  }, [info]);
+  }, [info, i18n, dispatch]);
 
   return (
     <>
-      <BreadcrumbNav
-        title={{ value: title, url: id }}
-        breadcrumbs={[{ value: t('terminology-title'), url: 'search' }]}
-      />
+      <Breadcrumb>
+        <BreadcrumbLink url="/search?page=1">
+          {t('terminology-title')}
+        </BreadcrumbLink>
+        <BreadcrumbLink url={`/terminology/${id}`} current>
+          <PropertyValue property={info?.properties.prefLabel} />
+        </BreadcrumbLink>
+      </Breadcrumb>
+
       {info && <Title info={info} />}
       {isSmall &&
         <FilterMobileButton

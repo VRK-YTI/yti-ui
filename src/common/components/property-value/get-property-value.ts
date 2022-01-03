@@ -29,7 +29,7 @@ export function getPropertyValue({
 }
 
 function getMatchingProperties(properties: Property[], language: string) {
-  const matchingProperties = properties?.filter(({ lang }) => lang === language);
+  const matchingProperties = properties.filter(({ lang }) => lang === language);
 
   if (matchingProperties.length) {
     return matchingProperties;
