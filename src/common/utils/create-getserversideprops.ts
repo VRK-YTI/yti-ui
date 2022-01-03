@@ -34,7 +34,6 @@ export function createCommonGetServerSideProps<T extends { [key: string]: any }>
         const results = await handler?.({ req, res, locale, store });
         let sessionUser = req.session.get<User>('user') || anonymousUser;
         const userAgent = req.headers['user-agent'] ?? '';
-
         store.dispatch(setLogin(sessionUser));
 
         return {

@@ -7,6 +7,8 @@ import { createCommonGetServerSideProps } from '../common/utils/create-getserver
 import User from '../common/interfaces/user-interface';
 import useUser from '../common/utils/hooks/useUser';
 import { MediaQueryContextProvider } from '../common/components/media-query/media-query-context';
+import { useSelector } from 'react-redux';
+import { selectLogin } from '../common/components/login/login-slice';
 
 
 export default function SearchPage(props: {
@@ -16,14 +18,14 @@ export default function SearchPage(props: {
 }) {
   const { t } = useTranslation('common');
   const { user } = useUser({ initialData: props.user });
+  const userT = useSelector(selectLogin());
 
   return (
     <MediaQueryContextProvider value={{ isSSRMobile: props.isSSRMobile }}>
-      <Layout user={user}>
+      <Layout user={userT}>
         <Head>
           <title>{t('search-title')}</title>
         </Head>
-
         <TerminologySearch />
       </Layout>
     </MediaQueryContextProvider>

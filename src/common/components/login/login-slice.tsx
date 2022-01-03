@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { HYDRATE } from 'next-redux-wrapper';
 import { AppState, AppThunk } from '../../../store';
 import { User } from '../../interfaces/user-interface';
 
@@ -31,6 +32,14 @@ export const loginSlice = createSlice({
       return {
         ...state,
         ...action.payload
+      };
+    }
+  },
+  extraReducers: {
+    [HYDRATE]: (state, action) => {
+      return {
+        ...state,
+        ...action.payload.login
       };
     }
   }
