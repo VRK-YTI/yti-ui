@@ -1,6 +1,12 @@
 import styled from 'styled-components';
-import { Button, Checkbox, Icon, RadioButton, SearchInput } from 'suomifi-ui-components';
+import { Button, Checkbox, RadioButton } from 'suomifi-ui-components';
 import { FilterStyledProps } from './filter-props';
+
+export const CloseWrapper = styled.div`
+  * {
+    margin-bottom: ${props => props.theme.suomifi.spacing.m}
+  }
+`;
 
 export const DropdownPlaceholder = styled.i`
   color: ${(props) => props.theme.suomifi.colors.depthDark1};
@@ -19,8 +25,8 @@ export const DropdownWrapper = styled.div`
 `;
 
 export const FilterCheckbox = styled(Checkbox)`
-  font-size: 16px;
-  padding-top: 10px;
+  font-size: ${props => props.theme.suomifi.typography.bodyTextSmall};
+  padding-top: ${props => props.theme.suomifi.spacing.xs};
 `;
 
 export const FilterCloseWrapper = styled.div`
@@ -30,7 +36,7 @@ export const FilterCloseWrapper = styled.div`
 `;
 
 export const FilterRadioButton = styled(RadioButton)`
-  font-size: 16px;
+  font-size: ${props => props.theme.suomifi.typography.bodyTextSmall};
 `;
 
 export const FilterWrapper = styled.div<FilterStyledProps>`
@@ -46,15 +52,10 @@ export const Header = styled.div`
   background-color: ${(props) => props.theme.suomifi.colors.highlightBase};
   color: ${(props) => props.theme.suomifi.colors.whiteBase};
   display: flex;
-  font-size: 18px;
+  font-size: ${props => props.theme.suomifi.typography.bodyText};
   font-weight: 600;
   justify-content: space-between;
   padding: 25px 20px 25px;
-  text-transform: uppercase;
-
-  > * {
-    text-transform: uppercase;
-  }
 `;
 
 export const HeaderButton = styled(Button)`
@@ -70,26 +71,4 @@ export const HeaderButton = styled(Button)`
 
 export const FilterContent = styled.div`
   margin: 20px;
-`;
-
-export const RemoveIcon = styled(Icon)`
-  color: ${(props) => props.theme.suomifi.colors.highlightBase};
-  padding-right: 5px;
-`;
-
-export const RemoveWrapper = styled.div`
-  align-items: center;
-  display: flex;
-  font-weight: 600;
-  margin-left: 14px;
-
-  &:hover {
-    cursor: pointer;
-    text-decoration: underline;
-    text-decoration-color: ${(props) => props.theme.suomifi.colors.highlightBase};
-  }
-`;
-
-export const SearchInputWrapper = styled(SearchInput)<FilterStyledProps>`
-  min-width: ${(props) => props.isModal ? '100%' : 'inherit' }
 `;

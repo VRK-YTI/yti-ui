@@ -7,12 +7,12 @@ export const PageContent = styled.div<{ breakpoint: Breakpoint }>`
   background-color: white;
   display: flex;
   flex-direction: ${props => small(props.breakpoint, 'column', 'row')};
-  margin-bottom: 80px;
+  margin-bottom: ${props => props.theme.suomifi.spacing.xxxxl};
 `;
 
 export const MainContent = styled.main`
   flex-grow: 1;
-  padding: 20px;
+  padding: ${props => props.theme.suomifi.spacing.m};
 `;
 
 export const HeadingBlock = styled.div`

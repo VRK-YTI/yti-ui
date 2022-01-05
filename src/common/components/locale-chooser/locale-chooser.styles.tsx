@@ -17,7 +17,7 @@ export const MobileMenuLanguageItem = styled.li<{ active?: boolean }>`
 
   * {
     display: block;
-    font-size: 16px;
+    font-size: ${props => props.theme.suomifi.values.typography.bodyTextSmall.fontSize.value}px;
     line-height: 24px;
     font-weight: ${props => props.active ? '600' : '400'};
   }

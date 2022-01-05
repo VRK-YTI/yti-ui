@@ -3,18 +3,18 @@ import { Breakpoint } from '../media-query/media-query-context';
 import { small } from '../media-query/styled-helpers';
 
 export const FooterContentWrapper = styled.div`
-  padding: 20px 0px;
+  padding: ${props => props.theme.suomifi.spacing.m} 0px;
   border-bottom: ${(props) => `1px solid ${props.theme.suomifi.colors.depthLight1}`};
   span {
     display: inline-block;
-    padding-top: 10px;
+    padding-top: ${props => props.theme.suomifi.spacing.xs};
   }
 `;
 
 export const FooterLinkWrapper = styled.div<{ breakpoint: Breakpoint }>`
   display: flex;
-  padding: 20px 0;
-  column-gap: 40px;
+  padding: ${props => props.theme.suomifi.spacing.m} 0;
+  column-gap: ${props => props.theme.suomifi.spacing.xxl};
   row-gap: 18px;
   justify-content: flex-start;
   flex-wrap: wrap;
