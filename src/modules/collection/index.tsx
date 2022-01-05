@@ -22,7 +22,7 @@ export default function Collection({ terminologyId, collectionId }: CollectionPr
   const { breakpoint } = useBreakpoints();
   const { data: terminology } = useGetVocabularyQuery(terminologyId);
   const { data: collection } = useGetCollectionQuery({ terminologyId, collectionId });
-  const { t } = useTranslation('collection');
+  const { t, i18n } = useTranslation('collection');
 
   return (
     <>
@@ -82,10 +82,10 @@ export default function Collection({ terminologyId, collectionId }: CollectionPr
             fallbackLanguage="fi"
           />
           <BasicBlock title={t('vocabulary-info-created-at', { ns: 'common' })}>
-            {FormatISODate(collection?.createdDate)}, {collection?.createdBy}
+            {FormatISODate(collection?.createdDate, i18n.language)}, {collection?.createdBy}
           </BasicBlock>
           <BasicBlock title={t('vocabulary-info-modified-at', { ns: 'common' })}>
-            {FormatISODate(collection?.lastModifiedDate)}, {collection?.lastModifiedBy}
+            {FormatISODate(collection?.lastModifiedDate, i18n.language)}, {collection?.lastModifiedBy}
           </BasicBlock>
           <BasicBlock title="URI">
             {collection?.uri}

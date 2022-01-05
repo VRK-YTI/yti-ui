@@ -12,7 +12,7 @@ interface InfoExpanderProps {
 }
 
 export default function InfoExpander({ data }: InfoExpanderProps) {
-  const { t } = useTranslation('common');
+  const { t, i18n } = useTranslation('common');
 
   if (!data) {
     return null;
@@ -76,10 +76,10 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
           fallbackLanguage="fi"
         />
         <BasicBlock title={t('vocabulary-info-created-at')}>
-          {FormatISODate(data.createdDate)}
+          {FormatISODate(data.createdDate, i18n.language)}
         </BasicBlock>
         <BasicBlock title={t('vocabulary-info-modified-at')}>
-          {FormatISODate(data.lastModifiedDate)}
+          {FormatISODate(data.lastModifiedDate, i18n.language)}
         </BasicBlock>
         <BasicBlock title="URI">
           {data.uri}

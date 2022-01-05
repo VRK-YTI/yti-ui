@@ -41,7 +41,7 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
   const { breakpoint } = useBreakpoints();
   const { data: terminology } = useGetVocabularyQuery(terminologyId);
   const { data: concept } = useGetConceptQuery({ terminologyId, conceptId });
-  const { t } = useTranslation('concept');
+  const { t, i18n } = useTranslation('concept');
 
   return (
     <>
@@ -176,10 +176,10 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
             fallbackLanguage="fi"
           />
           <BasicBlock title={t('vocabulary-info-created-at', { ns: 'common' })}>
-            {FormatISODate(concept?.createdDate)}, {concept?.createdBy}
+            {FormatISODate(concept?.createdDate, i18n.language)}, {concept?.createdBy}
           </BasicBlock>
           <BasicBlock title={t('vocabulary-info-modified-at', { ns: 'common' })}>
-            {FormatISODate(concept?.lastModifiedDate)}, {concept?.lastModifiedBy}
+            {FormatISODate(concept?.lastModifiedDate, i18n.language)}, {concept?.lastModifiedBy}
           </BasicBlock>
           <BasicBlock title="URI">
             {concept?.uri}

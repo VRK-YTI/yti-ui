@@ -4,7 +4,7 @@ import { FilterStyledProps } from './filter-props';
 
 export const CloseWrapper = styled.div`
   * {
-    margin-bottom: ${props => props.theme.suomifi.spacing.m}
+    margin-bottom: ${props => props.theme.suomifi.spacing.s}
   }
 `;
 
@@ -27,12 +27,6 @@ export const DropdownWrapper = styled.div`
 export const FilterCheckbox = styled(Checkbox)`
   font-size: ${props => props.theme.suomifi.typography.bodyTextSmall};
   padding-top: ${props => props.theme.suomifi.spacing.xs};
-`;
-
-export const FilterCloseWrapper = styled.div`
-  > * {
-    margin-bottom: ${(props) => props.theme.suomifi.spacing.s};
-  }
 `;
 
 export const FilterRadioButton = styled(RadioButton)`
