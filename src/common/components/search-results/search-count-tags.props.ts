@@ -1,3 +1,3 @@
-export interface SeachCountTagsProps {
+export interface CardChipProps {
   valid?: string;
 }

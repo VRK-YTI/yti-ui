@@ -8,7 +8,7 @@ export const NavigationWrapper = styled.ul`
   margin-top: 0px;
   margin-bottom: 0px;
   padding-inline-start: 0px;
-  gap: 30px;
+  gap: ${props => props.theme.suomifi.spacing.xl};
 `;
 
 export const NavigationItem = styled.li<NavigationProps>`

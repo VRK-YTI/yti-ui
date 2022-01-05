@@ -3,9 +3,9 @@ import { useTranslation } from 'react-i18next';
 import CheckboxArea from './checkbox-area';
 import RadioButtonArea from './radio-button-area';
 import Remove from './remove';
-import SearchInputArea from './search-input-area';
 import DropdownArea from './dropdown-area';
 import {
+  CloseWrapper,
   FilterContent,
   FilterWrapper,
   Header,
@@ -16,6 +16,7 @@ import { initialState, SearchState } from '../terminology-search/terminology-sea
 import { AppThunk } from '../../../store';
 import { CommonInfoDTO, GroupSearchResult, OrganizationSearchResult } from '../../interfaces/terminology.interface';
 import { isEqual } from 'lodash';
+import { TextInputArea } from './text-input-area';
 import Separator from '../separator';
 import { Button } from 'suomifi-ui-components';
 
@@ -56,7 +57,7 @@ export default function Filter({
           <Separator />
           {renderCheckboxArea(true)}
           {('showBy' in filter && filter.showBy === 'concepts') && <Separator />}
-          {renderSearchInputArea()}
+          {renderTextInputArea()}
           {renderCloseButton()}
         </FilterContent>
       </FilterWrapper>
@@ -70,7 +71,7 @@ export default function Filter({
           {renderRemove()}
           {renderDropdownArea()}
           <Separator />
-          {renderSearchInputArea()}
+          {renderTextInputArea()}
           <Separator />
           {renderCheckboxArea(true)}
           <Separator />
@@ -119,7 +120,7 @@ export default function Filter({
     }
 
     return (
-      <>
+      <CloseWrapper>
         <Separator />
         <div>
           {resultCount} {t('filter-with-current')}
@@ -132,7 +133,7 @@ export default function Filter({
             {t('close')}
           </Button>
         </div>
-      </>
+      </CloseWrapper>
     );
   }
 
@@ -204,15 +205,17 @@ export default function Filter({
     }
   }
 
-  function renderSearchInputArea() {
+  function renderTextInputArea() {
     return (
-      <SearchInputArea
-        title={t('vocabulary-filter-filter-by-keyword')}
-        filter={filter}
-        setFilter={setSomeFilter}
-        visualPlaceholder={t('vocabulary-filter-visual-placeholder')}
-        isModal={isModal}
-      />
+      <>
+        <TextInputArea
+          title={t('vocabulary-filter-filter-by-keyword')}
+          filter={filter}
+          setFilter={setSomeFilter}
+          visualPlaceholder={t('vocabulary-filter-visual-placeholder')}
+          isModal={isModal}
+        />
+      </>
     );
   }
 

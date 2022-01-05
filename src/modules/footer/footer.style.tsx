@@ -7,14 +7,14 @@ export const FooterContentWrapper = styled.div`
   border-bottom: ${(props) => `2px solid ${props.theme.suomifi.colors.depthLight2}`};
   span {
     display: inline-block;
-    padding-top: 10px;
+    padding-top: ${props => props.theme.suomifi.spacing.xs};
   }
 `;
 
 export const FooterLinkWrapper = styled.div<{ breakpoint: Breakpoint }>`
   display: flex;
-  padding-top: 10px;
-  column-gap: 40px;
+  padding-top: ${props => props.theme.suomifi.spacing.xs};
+  column-gap: ${props => props.theme.suomifi.spacing.xxl};
   justify-content: flex-start;
   flex-wrap: wrap;
   flex-direction: ${props => small(props.breakpoint, 'column', 'row')};

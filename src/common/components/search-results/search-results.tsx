@@ -9,14 +9,15 @@ import { VocabularyState } from '../vocabulary/vocabulary-slice';
 import SearchCountTags from './search-count-tags';
 import {
   Card,
+  CardChip,
   CardContributor,
   CardDescription,
   CardInfoDomain,
-  CardPill,
   CardSubtitle,
   CardTitle,
   CardTitleIcon,
   CardTitleLink,
+  CardTitleWrapper,
   CardWrapper
 } from './search-results.styles';
 
@@ -59,28 +60,40 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
                     {terminology.contributors[0].label[i18n.language]}
                   </CardContributor>
 
-                  <CardTitle variant='h2'>
+                  <CardTitleWrapper>
                     <Link passHref href={'/terminology/' + terminology.id}>
                       <CardTitleLink href=''>
                         <CardTitleIcon icon='registers' />
-                        <span>
+                        <CardTitle variant='h3'>
                           {terminology.label[i18n.language] !== undefined
                             ?
                             terminology.label[i18n.language]
                             :
                             terminology?.label?.[Object.keys(terminology.label)[0]]
                           }
-                        </span>
+                        </CardTitle>
                       </CardTitleLink>
                     </Link>
-                  </CardTitle>
+                  </CardTitleWrapper>
 
                   <CardSubtitle>
-                    {t('terminology-search-results-terminology')} &middot; <CardPill valid={terminology.status === 'VALID' ? 'true' : undefined}>{t(terminology.status ?? '')}</CardPill>
+                    <span>{t('terminology-search-results-terminology').toUpperCase()}</span>
+                    <span>&middot;</span>
+                    <CardChip valid={terminology.status === 'VALID' ? 'true' : undefined}>
+                      {t(terminology.status ?? '')}
+                    </CardChip>
                   </CardSubtitle>
 
                   <CardDescription>
-                    {terminology?.description?.[i18n.language] !== undefined ? terminology?.description?.[i18n.language] : terminology?.description?.[Object.keys(terminology?.description)[0]]}
+                    {terminology?.description?.[i18n.language] !== undefined
+                      ?
+                      terminology?.description?.[i18n.language]
+                      :
+                      terminology?.description?.[Object.keys(terminology?.description)[0]]
+                        ?
+                        terminology?.description?.[Object.keys(terminology?.description)[0]]
+                        :
+                        t('terminology-search-no-description')}
                   </CardDescription>
 
                   <CardInfoDomain>
@@ -118,7 +131,6 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
                   <CardTitle variant='h2'>
                     <Link passHref href={`/terminology/${concept.terminology.id}/concept/${concept.id}`}>
                       <CardTitleLink href=''>
-                        <CardTitleIcon icon='registers' />
                         <span>
                           {concept.label[i18n.language] !== undefined ? concept.label[i18n.language] : concept?.label?.[Object.keys(concept.label)[0]]}
                         </span>
