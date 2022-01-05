@@ -6,6 +6,7 @@ import Remove from './remove';
 import SearchInputArea from './search-input-area';
 import DropdownArea from './dropdown-area';
 import {
+  FilterCloseWrapper,
   FilterContent,
   FilterWrapper,
   Header,
@@ -119,7 +120,7 @@ export default function Filter({
     }
 
     return (
-      <>
+      <FilterCloseWrapper>
         <Separator />
         <div>
           {resultCount} {t('filter-with-current')}
@@ -132,7 +133,7 @@ export default function Filter({
             {t('close')}
           </Button>
         </div>
-      </>
+      </FilterCloseWrapper>
     );
   }
 
