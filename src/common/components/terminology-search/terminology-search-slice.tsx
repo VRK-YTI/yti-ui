@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi } from '@reduxjs/toolkit/query/react';
 import type { AppState, AppThunk } from '../../../store';
 import { GroupSearchResult, OrganizationSearchResult, TerminologySearchResult } from '../../interfaces/terminology.interface';
+import axiosBaseQuery from '../axios-base-query';
 
 export interface SearchState {
   filter: {
@@ -48,17 +49,14 @@ export const terminologySearchSlice = createSlice({
 
 export const terminologySearchApi = createApi({
   reducerPath: 'terminologySearchApi',
-  baseQuery: fetchBaseQuery({ baseUrl: '/terminology-api/api/v1/frontend' }),
+  baseQuery: axiosBaseQuery({ baseUrl: '/terminology-api/api/v1/frontend' }),
   tagTypes: ['TerminologySearch'],
   endpoints: builder => ({
     getSearchResult: builder.query<TerminologySearchResult, {filter: SearchState['filter'], resultStart: number}>({
       query: (value) => ({
         url: '/searchTerminology',
         method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-        },
-        body: {
+        data: {
           query: value.filter.keyword,
           statuses: Array.from(Object.keys(value.filter.status).filter(s => value.filter.status[s])),
           groups: value.filter.infoDomains.map(infoD => infoD.id),
@@ -73,18 +71,12 @@ export const terminologySearchApi = createApi({
       query: () => ({
         url: '/groups',
         method: 'GET',
-        headers: {
-          'content-type': 'application/json',
-        },
       }),
     }),
     getOrganizations: builder.query<OrganizationSearchResult[], null>({
       query: () => ({
         url: '/organizations',
         method: 'GET',
-        headers: {
-          'content-type': 'application/json',
-        },
       }),
     })
   }),

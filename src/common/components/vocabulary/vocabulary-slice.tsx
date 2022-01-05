@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi } from '@reduxjs/toolkit/query/react';
 import { AppState, AppThunk } from '../../../store';
 import { VocabularyConcepts, VocabularyInfoDTO } from '../../interfaces/vocabulary.interface';
+import axiosBaseQuery from '../axios-base-query';
 
 export interface VocabularyState {
   filter: {
@@ -53,17 +54,14 @@ export const vocabularySlice = createSlice({
 
 export const vocabularyApi = createApi({
   reducerPath: 'vocabularyAPI',
-  baseQuery: fetchBaseQuery({ baseUrl: '/terminology-api/api/v1/frontend' }),
+  baseQuery: axiosBaseQuery({ baseUrl: '/terminology-api/api/v1/frontend' }),
   tagTypes: ['Vocabulary'],
   endpoints: builder => ({
     getConceptResult: builder.query<VocabularyConcepts, string>({
       query: (value) => ({
         url: '/searchConcept',
         method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-        },
-        body: {
+        data: {
           highlight: true,
           pageFrom: 0,
           pageSize: 100,
