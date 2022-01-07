@@ -10,7 +10,7 @@ export const Card = styled.div`
   padding: ${props => props.theme.suomifi.spacing.m};
 `;
 
-export const CardChip = styled(StaticChip) <CardChipProps>`
+export const CardChip = styled(StaticChip)<CardChipProps>`
   background-color: ${props => props.valid ? 'hsl(166, 90%, 30%)' : props.theme.suomifi.colors.depthDark1} !important;
   font-size: 12px;
   line-height: 0;
