@@ -32,7 +32,7 @@ interface SearchResultsProps {
 export default function SearchResults({ data, filter, type, setSomeFilter }: SearchResultsProps) {
   const { t, i18n } = useTranslation('common');
   const { isSmall } = useBreakpoints();
-  console.log(isSmall);
+
   if (type === 'terminology-search' && 'terminologies' in data) {
     return (
       renderTerminologiesSearchResults()
