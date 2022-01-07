@@ -1,18 +1,18 @@
 import { useTranslation } from 'react-i18next';
 import { Button, ExpanderContent, ExpanderTitleButton } from 'suomifi-ui-components';
-import FormatISODate from '../../utils/format-iso-date';
 import { InfoExpanderWrapper } from './info-expander.styles';
 import { VocabularyInfoDTO } from '../../interfaces/vocabulary.interface';
 import Separator from '../separator';
 import { BasicBlock, MultilingualPropertyBlock, PropertyBlock } from '../block';
 import { BasicBlockExtraWrapper } from '../block/block.styles';
+import FormattedDate from '../formatted-date';
 
 interface InfoExpanderProps {
   data?: VocabularyInfoDTO;
 }
 
 export default function InfoExpander({ data }: InfoExpanderProps) {
-  const { t, i18n } = useTranslation('common');
+  const { t } = useTranslation('common');
 
   if (!data) {
     return null;
@@ -76,10 +76,10 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
           fallbackLanguage="fi"
         />
         <BasicBlock title={t('vocabulary-info-created-at')}>
-          {FormatISODate(data.createdDate, i18n.language)}
+          <FormattedDate date={data.createdDate} />
         </BasicBlock>
         <BasicBlock title={t('vocabulary-info-modified-at')}>
-          {FormatISODate(data.lastModifiedDate, i18n.language)}
+          <FormattedDate date={data.lastModifiedDate} />
         </BasicBlock>
         <BasicBlock title="URI">
           {data.uri}
