@@ -1,11 +1,14 @@
 # alpine version should match the version in .nvmrc as closely as possible
-FROM node:12.15.0-alpine@sha256:c8b5faa496b3eaaaee30e278abee431ec7dfec03e07ca0fc6ee39e31f36e5021
+FROM node:14.18.2-alpine3.12@sha256:60ebf5d469a72fe510cb197c4a251a92de87f01361d2d8589268b1c641a061ac
 
 ARG env
 ARG VERSION
 
 # Install git
 RUN apk add --update git
+
+# Install python make and g++. They are needed when building node-sass.
+RUN apk add python2 make g++
 
 # Install tooling
 RUN apk add openssl curl ca-certificates
