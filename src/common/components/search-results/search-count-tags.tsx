@@ -70,7 +70,7 @@ export default function SearchCountTags({ count, filter, setFilter }: SearchCoun
   };
 
   return (
-    <CountWrapper isSmall={isSmall}>
+    <CountWrapper isSmall={isSmall} border={'showByOrg' in filter}>
       <CountText>
         {t('vocabulary-results-concepts')} {count} {t('vocabulary-results-with-following-filters')}
       </CountText>
