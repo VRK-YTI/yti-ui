@@ -7,7 +7,7 @@ export default function Logo() {
   return (
     <LogoWrapper>
       <Link href="/">
-        <Image src='/logo-interoperability.svg' width="186" height="32" alt="Logo" />
+        <Image src='/logo.svg' width="186" height="32" alt="Logo" />
       </Link>
     </LogoWrapper>
   );
