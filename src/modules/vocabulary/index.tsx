@@ -21,6 +21,7 @@ import { useTranslation } from 'next-i18next';
 import { Modal, ModalContent } from 'suomifi-ui-components';
 import { Breadcrumb, BreadcrumbLink } from '../../common/components/breadcrumb';
 import PropertyValue from '../../common/components/property-value';
+import { getPropertyValue } from '../../common/components/property-value/get-property-value';
 
 interface VocabularyProps {
   id: string;
@@ -43,7 +44,11 @@ export default function Vocabulary({ id }: VocabularyProps) {
     if (info) {
       dispatch(setCurrentTerminology({
         id: info?.id,
-        value: info?.properties.prefLabel?.filter((pl: any) => pl.lang === i18n.language)[0].value ?? ''
+        value: getPropertyValue({
+          property: info?.properties.prefLabel,
+          language: i18n.language,
+          fallbackLanguage: 'fi'
+        }) ?? '',
       }));
     }
   }, [info, i18n, dispatch]);
