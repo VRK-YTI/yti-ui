@@ -16,7 +16,7 @@ export default function FormattedDate({ date }: FormattedDateProps) {
   );
 }
 
-export function formatISODate(ISODate: string | undefined, locale: string = 'fi') {
+export function formatISODate(ISODate?: string, locale: string = 'fi') {
   if (ISODate) {
     let date = '';
     let hour = '';
