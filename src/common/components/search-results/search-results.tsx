@@ -67,9 +67,9 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
                         <CardTitle variant='h3'>
                           {terminology.label[i18n.language] !== undefined
                             ?
-                            terminology.label[i18n.language]
+                            terminology.label[i18n.language].replaceAll(/<\/*[^>]>/g, '')
                             :
-                            terminology?.label?.[Object.keys(terminology.label)[0]]
+                            terminology?.label?.[Object.keys(terminology.label)[0]].replaceAll(/<\/*[^>]>/g, '')
                           }
                         </CardTitle>
                       </CardTitleLink>
