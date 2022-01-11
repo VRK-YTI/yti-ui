@@ -80,5 +80,8 @@
   },
   "resolutions": {
     "**/@types/node": "~8.9.4"
+  },
+  "engines": {
+    "node": ">=14.18.1 <15.0.0"
   }
 }
