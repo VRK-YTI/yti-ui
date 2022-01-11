@@ -77,7 +77,7 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
                   </CardTitleWrapper>
 
                   <CardSubtitle>
-                    <span>{t('terminology-search-results-terminology').toUpperCase()}</span>
+                    <span>{t('terminology-search-results-terminology')}</span>
                     <span>&middot;</span>
                     <CardChip valid={terminology.status === 'VALID' ? 'true' : undefined}>
                       {t(terminology.status ?? '')}
