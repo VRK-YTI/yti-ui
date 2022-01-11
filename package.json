@@ -18,7 +18,7 @@
     "@types/lodash": "^4.14.178",
     "axios": "^0.21.4",
     "lodash": "^4.17.21",
-    "next": "12",
+    "next": "12.0.7",
     "next-i18next": "^8.8.0",
     "next-iron-session": "^4.2.0",
     "next-redux-wrapper": "^7.0.5",
@@ -30,7 +30,7 @@
     "sass": "^1.42.1",
     "styled-components": "^5.3.1",
     "styled-jsx": "^4.0.1",
-    "suomifi-ui-components": "^6.0.0",
+    "suomifi-ui-components": "^6.1.0-beta.3",
     "swr": "^1.0.1"
   },
   "devDependencies": {
@@ -56,5 +56,8 @@
     "react-test-renderer": "^17.0.2",
     "ts-node": "^10.4.0",
     "typescript": "4.4.3"
+  },
+  "engines": {
+    "node": ">=16.13.1 <17.0.0"
   }
 }

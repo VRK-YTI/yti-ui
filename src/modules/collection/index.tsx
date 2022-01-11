@@ -5,11 +5,11 @@ import { BasicBlock, MultilingualPropertyBlock, PropertyBlock } from '../../comm
 import { ConceptListBlock } from '../../common/components/block';
 import { Breadcrumb, BreadcrumbLink } from '../../common/components/breadcrumb';
 import { useGetCollectionQuery } from '../../common/components/collection/collection-slice';
+import FormattedDate from '../../common/components/formatted-date';
 import { useBreakpoints } from '../../common/components/media-query/media-query-context';
 import PropertyValue from '../../common/components/property-value';
 import Separator from '../../common/components/separator';
 import { useGetVocabularyQuery } from '../../common/components/vocabulary/vocabulary-slice';
-import FormatISODate from '../../common/utils/format-iso-date';
 import CollectionSidebar from './collection-sidebar';
 import { BadgeBar, HeadingBlock, MainContent, PageContent } from './collection.styles';
 
@@ -82,10 +82,10 @@ export default function Collection({ terminologyId, collectionId }: CollectionPr
             fallbackLanguage="fi"
           />
           <BasicBlock title={t('vocabulary-info-created-at', { ns: 'common' })}>
-            {FormatISODate(collection?.createdDate)}, {collection?.createdBy}
+            <FormattedDate date={collection?.createdDate} />, {collection?.createdBy}
           </BasicBlock>
           <BasicBlock title={t('vocabulary-info-modified-at', { ns: 'common' })}>
-            {FormatISODate(collection?.lastModifiedDate)}, {collection?.lastModifiedBy}
+            <FormattedDate date={collection?.lastModifiedDate} />, {collection?.lastModifiedBy}
           </BasicBlock>
           <BasicBlock title="URI">
             {collection?.uri}

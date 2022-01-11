@@ -17,12 +17,12 @@ import {
 } from '../../common/components/block';
 import { Breadcrumb, BreadcrumbLink } from '../../common/components/breadcrumb';
 import { useGetConceptQuery } from '../../common/components/concept/concept-slice';
+import FormattedDate from '../../common/components/formatted-date';
 import { useBreakpoints } from '../../common/components/media-query/media-query-context';
 import PropertyValue from '../../common/components/property-value';
 import { getPropertyValue } from '../../common/components/property-value/get-property-value';
 import Separator from '../../common/components/separator';
 import { useGetVocabularyQuery } from '../../common/components/vocabulary/vocabulary-slice';
-import FormatISODate from '../../common/utils/format-iso-date';
 import ConceptSidebar from './concept-sidebar';
 import {
   Badge,
@@ -176,10 +176,10 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
             fallbackLanguage="fi"
           />
           <BasicBlock title={t('vocabulary-info-created-at', { ns: 'common' })}>
-            {FormatISODate(concept?.createdDate)}, {concept?.createdBy}
+            <FormattedDate date={concept?.createdDate} />, {concept?.createdBy}
           </BasicBlock>
           <BasicBlock title={t('vocabulary-info-modified-at', { ns: 'common' })}>
-            {FormatISODate(concept?.lastModifiedDate)}, {concept?.lastModifiedBy}
+            <FormattedDate date={concept?.lastModifiedDate} />, {concept?.lastModifiedBy}
           </BasicBlock>
           <BasicBlock title="URI">
             {concept?.uri}
