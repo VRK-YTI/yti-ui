@@ -11,7 +11,7 @@ export interface BreadcrumbLinkProps {
 export default function BreadcrumbLink({ url, current = false, children }: BreadcrumbLinkProps) {
   if (current) {
     return (
-      <SuomiFiBreadcrumbLink current={current} href=''>
+      <SuomiFiBreadcrumbLink current={current}>
         {children}
       </SuomiFiBreadcrumbLink>
     );
