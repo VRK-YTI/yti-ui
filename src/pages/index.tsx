@@ -7,6 +7,7 @@ import useUser from '../common/utils/hooks/useUser';
 import { createCommonGetServerSideProps } from '../common/utils/create-getserversideprops';
 import User from '../common/interfaces/user-interface';
 import { MediaQueryContextProvider } from '../common/components/media-query/media-query-context';
+import Index from '../modules/index';
 
 export default function IndexPage(props: {
   _netI18Next: SSRConfig;
@@ -23,11 +24,14 @@ export default function IndexPage(props: {
           <title>{ t('terminology-site-title') }</title>
           <link rel="shortcut icon" href="/favicon.ico" />
         </Head>
-        <section>
+
+        <Index />
+
+        {/* <section>
           <Link href="/search?page=1">
             <a>{ t('terminology-search') }</a>
           </Link>
-        </section>
+        </section> */}
       </Layout>
     </MediaQueryContextProvider>
   );
