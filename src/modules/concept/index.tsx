@@ -46,7 +46,7 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
   return (
     <>
       <Breadcrumb>
-        <BreadcrumbLink url="/search?page=1">
+        <BreadcrumbLink url="/?page=1">
           {t('terminology-title', { ns: 'common' })}
         </BreadcrumbLink>
         <BreadcrumbLink url={`/terminology/${terminologyId}`}>

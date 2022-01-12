@@ -51,7 +51,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
   return (
     <>
       <Breadcrumb>
-        <BreadcrumbLink url="/search?page=1">
+        <BreadcrumbLink url="/">
           {t('terminology-title')}
         </BreadcrumbLink>
         <BreadcrumbLink url={`/terminology/${id}`} current>

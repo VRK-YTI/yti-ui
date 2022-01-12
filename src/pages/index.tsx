@@ -8,6 +8,7 @@ import { createCommonGetServerSideProps } from '../common/utils/create-getserver
 import User from '../common/interfaces/user-interface';
 import { MediaQueryContextProvider } from '../common/components/media-query/media-query-context';
 import Index from '../modules/index';
+import TerminologySearch from '../modules/terminology-search';
 
 export default function IndexPage(props: {
   _netI18Next: SSRConfig;
@@ -25,7 +26,7 @@ export default function IndexPage(props: {
           <link rel="shortcut icon" href="/favicon.ico" />
         </Head>
 
-        <Index />
+        <TerminologySearch />
 
         {/* <section>
           <Link href="/search?page=1">

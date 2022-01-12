@@ -8,15 +8,16 @@ module.exports = (phase, { defaultConfig }) => {
     eslint: {
       dirs: ['src']
     },
-    async redirects() {
-      return [
-        {
-          source: '/',
-          destination: '/search?page=1',
-          permanent: true
-        }
-      ];
-    }
+    // This can be uncommented if needed in the future
+    // async redirects() {
+    //   return [
+    //     {
+    //       source: '/',
+    //       destination: '/search?page=1',
+    //       permanent: true
+    //     }
+    //   ];
+    // }
   };
 
   if (process.env.REWRITE_PROFILE === 'local') {
