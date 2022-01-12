@@ -3,6 +3,7 @@ import {
   initializeVocabularyFilter,
   resetVocabularyFilter,
   setVocabularyFilter,
+  useGetCollectionsQuery,
   useGetConceptResultQuery,
   useGetVocabularyQuery,
   VocabularyState,
@@ -31,6 +32,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
   const { isSmall } = useBreakpoints();
   const dispatch = useStoreDispatch();
   const filter: VocabularyState['filter'] = useSelector(selectVocabularyFilter());
+  const { data: collections } = useGetCollectionsQuery(id);
   const { data: concepts } = useGetConceptResultQuery(id);
   const { data: info } = useGetVocabularyQuery(id);
   const [showModal, setShowModal] = useState(false);
@@ -70,12 +72,22 @@ export default function Vocabulary({ id }: VocabularyProps) {
         </FilterMobileButton>
       }
       <ResultAndFilterContainer>
-        {concepts &&
+        {(concepts && filter.showBy === 'concepts') &&
           <ResultAndStatsWrapper>
             <SearchResults
               data={concepts}
               filter={filter}
               setSomeFilter={setVocabularyFilter}
+            />
+          </ResultAndStatsWrapper>
+        }
+        {(collections && filter.showBy === 'collections') &&
+          <ResultAndStatsWrapper>
+            <SearchResults
+              data={collections}
+              filter={filter}
+              setSomeFilter={setVocabularyFilter}
+              type='collections'
             />
           </ResultAndStatsWrapper>
         }

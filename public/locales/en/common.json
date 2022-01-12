@@ -63,6 +63,7 @@
   "vocabulary-info-vocabulary-export": "(en) Lataa sanasto",
   "vocabulary-info-vocabulary-export-description": "(en) Voit tarkastella sanaston, käsitevalikoiman ja käsitteen, sekä termien tietoja Excel-tiedostomuodoissa.",
   "vocabulary-info-concept": "Concept",
+  "vocabulary-info-collection": "Collection",
   "vocabulary-filter-filter-list": "(en) Rajaa listaa",
   "vocabulary-filter-remove-all": "(en) Poista kaikki rajaukset",
   "vocabulary-filter-show-only": "(en) Näytä vain",

@@ -1,6 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { AppState, AppThunk } from '../../../store';
+import { Collection } from '../../interfaces/collection.interface';
 import { VocabularyConcepts, VocabularyInfoDTO } from '../../interfaces/vocabulary.interface';
 import axiosBaseQuery from '../axios-base-query';
 
@@ -57,6 +58,12 @@ export const vocabularyApi = createApi({
   baseQuery: axiosBaseQuery({ baseUrl: '/terminology-api/api/v1/frontend' }),
   tagTypes: ['Vocabulary'],
   endpoints: builder => ({
+    getCollections: builder.query<Collection[], string>({
+      query: (terminologyId) => ({
+        url: `/collections?graphId=${terminologyId}`,
+        method: 'GET'
+      })
+    }),
     getConceptResult: builder.query<VocabularyConcepts, string>({
       query: (value) => ({
         url: '/searchConcept',
@@ -85,7 +92,11 @@ export const vocabularyApi = createApi({
   }),
 });
 
-export const { useGetConceptResultQuery, useGetVocabularyQuery } = vocabularyApi;
+export const {
+  useGetCollectionsQuery,
+  useGetConceptResultQuery,
+  useGetVocabularyQuery
+} = vocabularyApi;
 
 export const setVocabularyFilter = (filter: VocabularyState): AppThunk => dispatch => {
   dispatch(

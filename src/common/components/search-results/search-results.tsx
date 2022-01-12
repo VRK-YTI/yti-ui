@@ -1,9 +1,11 @@
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
 import { AppThunk } from '../../../store';
+import { Collection } from '../../interfaces/collection.interface';
 import { TerminologySearchResult } from '../../interfaces/terminology.interface';
 import { VocabularyConcepts } from '../../interfaces/vocabulary.interface';
 import filterData from '../../utils/filter-data';
+import PropertyValue from '../property-value';
 import { SearchState } from '../terminology-search/terminology-search-slice';
 import { VocabularyState } from '../vocabulary/vocabulary-slice';
 import SearchCountTags from './search-count-tags';
@@ -22,13 +24,17 @@ import {
 } from './search-results.styles';
 
 interface SearchResultsProps {
-  data: TerminologySearchResult | VocabularyConcepts;
+  data: TerminologySearchResult | VocabularyConcepts | Collection[];
   filter: SearchState['filter'] | VocabularyState['filter'];
   type?: string;
   setSomeFilter: (x: any) => AppThunk;
 }
 
 export default function SearchResults({ data, filter, type, setSomeFilter }: SearchResultsProps) {
+  /*
+  TODO: Fix typing errors in terminology related functions
+  */
+
   const { t, i18n } = useTranslation('common');
 
   if (type === 'terminology-search' && 'terminologies' in data) {
@@ -38,6 +44,10 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
   } else if ('concepts' in data) {
     return (
       renderConceptSearchResults()
+    );
+  } else if (type === 'collections') {
+    return (
+      renderConceptCollections()
     );
   }
 
@@ -131,9 +141,7 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
                   <CardTitle variant='h2'>
                     <Link passHref href={`/terminology/${concept.terminology.id}/concept/${concept.id}`}>
                       <CardTitleLink href=''>
-                        <span>
-                          {concept.label[i18n.language] !== undefined ? concept.label[i18n.language] : concept?.label?.[Object.keys(concept.label)[0]]}
-                        </span>
+                        {concept.label[i18n.language] !== undefined ? concept.label[i18n.language] : concept?.label?.[Object.keys(concept.label)[0]]}
                       </CardTitleLink>
                     </Link>
                   </CardTitle>
@@ -144,6 +152,42 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
 
                   <CardDescription>
                     {concept.definition?.[i18n.language] !== undefined ? concept.definition[i18n.language] : concept.definition?.[Object.keys(concept.definition)[0]]}
+                  </CardDescription>
+                </Card>
+              );
+            })}
+          </CardWrapper>
+        </>
+      );
+    }
+
+    return null;
+  }
+
+  function renderConceptCollections() {
+    if (Array.isArray(data) && data.length > 0) {
+      // Note: This should be replaced when backend request for terminology has been updated
+      const filteredData = filterData(data, filter, i18n.language);
+
+      return (
+        <>
+          <SearchCountTags count={data.length} filter={filter} setFilter={setSomeFilter} />
+          <CardWrapper>
+            {filteredData.map((collection, idx: number) => {
+              return (
+                <Card key={`search-result-${idx}`}>
+                  <CardTitle variant='h2'>
+                    <Link passHref href={`/terminology/${collection.type.graph.id}/collection/${collection.id}`}>
+                      <CardTitleLink href=''>
+                        <PropertyValue property={collection.properties.prefLabel} />
+                      </CardTitleLink>
+                    </Link>
+                  </CardTitle>
+                  <CardSubtitle>
+                    {t('vocabulary-info-collection')}
+                  </CardSubtitle>
+                  <CardDescription>
+                    {/* {t('terminology-search-no-description')} */}
                   </CardDescription>
                 </Card>
               );

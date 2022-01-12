@@ -84,14 +84,18 @@ export default function Filter({
 
   function renderCheckboxArea(common?: boolean) {
     if (common) {
-      return (
-        <CheckboxArea
-          title={t('vocabulary-filter-show-concept-states')}
-          filter={filter}
-          setFilter={setSomeFilter}
-          isModal={isModal}
-        />
-      );
+      if ('showBy' in filter && filter.showBy === 'collections') {
+        return <></>;
+      } else {
+        return (
+          <CheckboxArea
+            title={t('vocabulary-filter-show-concept-states')}
+            filter={filter}
+            setFilter={setSomeFilter}
+            isModal={isModal}
+          />
+        );
+      }
     } else if (groups) {
       return (
         <CheckboxArea
