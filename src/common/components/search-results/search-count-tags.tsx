@@ -70,7 +70,16 @@ export default function SearchCountTags({ count, filter, setFilter }: SearchCoun
   return (
     <CountWrapper>
       <CountText>
-        {t('vocabulary-results-concepts')} {count} {t('vocabulary-results-with-following-filters')}
+        {'showByOrg' in filter
+          ?
+          <>{t('terminology-search-terminologies')} {count} {t('vocabulary-results-with-following-filters')}</>
+          :
+          ('showBy' in filter && filter.showBy === 'collections')
+            ?
+            <>{t('vocabulary-results-collections')} {count} {t('vocabulary-filter-items')}</>
+            :
+            <>{t('vocabulary-results-concepts')} {count} {t('vocabulary-results-with-following-filters')}</>
+        }
       </CountText>
       <ChipWrapper>
         {activeStatuses.map((status: string, idx: number) => {

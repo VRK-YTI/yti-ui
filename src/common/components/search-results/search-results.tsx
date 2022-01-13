@@ -31,10 +31,6 @@ interface SearchResultsProps {
 }
 
 export default function SearchResults({ data, filter, type, setSomeFilter }: SearchResultsProps) {
-  /*
-  TODO: Fix typing errors in terminology related functions
-  */
-
   const { t, i18n } = useTranslation('common');
 
   if (type === 'terminology-search' && 'terminologies' in data) {
@@ -129,36 +125,38 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
   function renderConceptSearchResults() {
     if ('concepts' in data) {
       // Note: This should be replaced when backend request for terminology has been updated
-      let filteredData = filterData(data, filter, i18n.language);
+      const filteredData = filterData(data, filter, i18n.language);
 
-      return (
-        <>
-          <SearchCountTags count={filteredData.totalHitCount} filter={filter} setFilter={setSomeFilter} />
-          <CardWrapper>
-            {filteredData?.concepts.map((concept, idx: number) => {
-              return (
-                <Card key={`search-result-${idx}`}>
-                  <CardTitle variant='h2'>
-                    <Link passHref href={`/terminology/${concept.terminology.id}/concept/${concept.id}`}>
-                      <CardTitleLink href=''>
-                        {concept.label[i18n.language] !== undefined ? concept.label[i18n.language] : concept?.label?.[Object.keys(concept.label)[0]]}
-                      </CardTitleLink>
-                    </Link>
-                  </CardTitle>
+      if (filteredData && !Array.isArray(filteredData)) {
+        return (
+          <>
+            <SearchCountTags count={filteredData.totalHitCount} filter={filter} setFilter={setSomeFilter} />
+            <CardWrapper>
+              {filteredData?.concepts.map((concept, idx: number) => {
+                return (
+                  <Card key={`search-result-${idx}`}>
+                    <CardTitle variant='h2'>
+                      <Link passHref href={`/terminology/${concept.terminology.id}/concept/${concept.id}`}>
+                        <CardTitleLink href=''>
+                          {concept.label[i18n.language] !== undefined ? concept.label[i18n.language] : concept?.label?.[Object.keys(concept.label)[0]]}
+                        </CardTitleLink>
+                      </Link>
+                    </CardTitle>
 
-                  <CardSubtitle>
-                    {t('vocabulary-info-concept')} &middot; {t(`${concept.status}`)}
-                  </CardSubtitle>
+                    <CardSubtitle>
+                      {t('vocabulary-info-concept')} &middot; {t(`${concept.status}`)}
+                    </CardSubtitle>
 
-                  <CardDescription>
-                    {concept.definition?.[i18n.language] !== undefined ? concept.definition[i18n.language] : concept.definition?.[Object.keys(concept.definition)[0]]}
-                  </CardDescription>
-                </Card>
-              );
-            })}
-          </CardWrapper>
-        </>
-      );
+                    <CardDescription>
+                      {concept.definition?.[i18n.language] !== undefined ? concept.definition[i18n.language] : concept.definition?.[Object.keys(concept.definition)[0]]}
+                    </CardDescription>
+                  </Card>
+                );
+              })}
+            </CardWrapper>
+          </>
+        );
+      }
     }
 
     return null;
@@ -169,32 +167,36 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
       // Note: This should be replaced when backend request for terminology has been updated
       const filteredData = filterData(data, filter, i18n.language);
 
-      return (
-        <>
-          <SearchCountTags count={data.length} filter={filter} setFilter={setSomeFilter} />
-          <CardWrapper>
-            {filteredData.map((collection, idx: number) => {
-              return (
-                <Card key={`search-result-${idx}`}>
-                  <CardTitle variant='h2'>
-                    <Link passHref href={`/terminology/${collection.type.graph.id}/collection/${collection.id}`}>
-                      <CardTitleLink href=''>
-                        <PropertyValue property={collection.properties.prefLabel} />
-                      </CardTitleLink>
-                    </Link>
-                  </CardTitle>
-                  <CardSubtitle>
-                    {t('vocabulary-info-collection')}
-                  </CardSubtitle>
-                  <CardDescription>
-                    {/* {t('terminology-search-no-description')} */}
-                  </CardDescription>
-                </Card>
-              );
-            })}
-          </CardWrapper>
-        </>
-      );
+      if (filteredData && Array.isArray(filteredData)) {
+        return (
+          <>
+            <SearchCountTags count={data.length} filter={filter} setFilter={setSomeFilter} />
+            <CardWrapper>
+              {filteredData.map((collection, idx: number) => {
+                return (
+                  <Card key={`search-result-${idx}`}>
+                    <CardTitle variant='h2'>
+                      <Link passHref href={`/terminology/${collection.type.graph.id}/collection/${collection.id}`}>
+                        <CardTitleLink href=''>
+                          <PropertyValue property={collection.properties.prefLabel} />
+                        </CardTitleLink>
+                      </Link>
+                    </CardTitle>
+                    <CardSubtitle>
+                      {t('vocabulary-info-collection')}
+                    </CardSubtitle>
+                    <CardDescription>
+                      {/* After backend changes have been made add description here */}
+                      {/* {t('terminology-search-no-description')} */}
+                    </CardDescription>
+                    {/* After backend changes have been made add related concept here*/}
+                  </Card>
+                );
+              })}
+            </CardWrapper>
+          </>
+        );
+      }
     }
 
     return null;
