@@ -6,7 +6,7 @@ import axiosBaseQuery from '../axios-base-query';
 
 export interface SearchState {
   filter: {
-    infoDomains: {id: string, value: string}[] | [];
+    infoDomains: { id: string, value: string }[] | [];
     keyword: string;
     showByOrg: string;
     status: { [status: string]: boolean };
@@ -52,7 +52,7 @@ export const terminologySearchApi = createApi({
   baseQuery: axiosBaseQuery({ baseUrl: '/terminology-api/api/v1/frontend' }),
   tagTypes: ['TerminologySearch'],
   endpoints: builder => ({
-    getSearchResult: builder.query<TerminologySearchResult, {filter: SearchState['filter'], resultStart: number}>({
+    getSearchResult: builder.query<TerminologySearchResult, { filter: SearchState['filter'], resultStart: number }>({
       query: (value) => ({
         url: '/searchTerminology',
         method: 'POST',
@@ -67,15 +67,15 @@ export const terminologySearchApi = createApi({
         },
       }),
     }),
-    getGroups: builder.query<GroupSearchResult[], null>({
-      query: () => ({
-        url: '/groups',
+    getGroups: builder.query<GroupSearchResult[], string>({
+      query: (value) => ({
+        url: `/groups?language=${value}`,
         method: 'GET',
       }),
     }),
-    getOrganizations: builder.query<OrganizationSearchResult[], null>({
-      query: () => ({
-        url: '/organizations',
+    getOrganizations: builder.query<OrganizationSearchResult[], string>({
+      query: (value) => ({
+        url: `/organizations?language=${value}`,
         method: 'GET',
       }),
     })

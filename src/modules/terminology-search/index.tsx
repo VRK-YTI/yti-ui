@@ -24,15 +24,15 @@ import { useState } from 'react';
 import { Breadcrumb, BreadcrumbLink } from '../../common/components/breadcrumb';
 
 export default function TerminologySearch() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { isSmall } = useBreakpoints();
   const dispatch = useStoreDispatch();
   const query = useRouter();
   const filter = useSelector(selectFilter());
   const resultStart = useSelector(selectResultStart());
   const { data } = useGetSearchResultQuery({ filter: filter, resultStart: resultStart });
-  const { data: groups } = useGetGroupsQuery(null);
-  const { data: organizations } = useGetOrganizationsQuery(null);
+  const { data: groups } = useGetGroupsQuery(i18n.language);
+  const { data: organizations } = useGetOrganizationsQuery(i18n.language);
   const [showModal, setShowModal] = useState(false);
 
   if (query.query.page && query.query.page !== '1') {
