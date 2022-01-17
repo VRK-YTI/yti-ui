@@ -1,10 +1,9 @@
 import { useTranslation } from 'next-i18next';
 import { Button, Modal, ModalContent, ModalFooter, ModalTitle, Paragraph, Text } from 'suomifi-ui-components';
-import { LayoutProps } from '../../../layouts/layout-props';
 import { useBreakpoints } from '../media-query/media-query-context';
 import { ModalTitleWrapper } from './login-modal.styles';
 
-export default function LoginModalView({ props, setVisible }: { props: LayoutProps, setVisible: Function }) {
+export default function LoginModalView({ setVisible }: { setVisible: Function }) {
   const { t } = useTranslation('common');
   const { isSmall } = useBreakpoints();
 

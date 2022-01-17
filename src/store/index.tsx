@@ -5,6 +5,7 @@ import { vocabularyApi, vocabularySlice } from '../common/components/vocabulary/
 import { conceptApi } from '../common/components/concept/concept-slice';
 import { useDispatch } from 'react-redux';
 import { collectionApi } from '../common/components/collection/collection-slice';
+import { loginSlice } from '../common/components/login/login-slice';
 
 export function makeStore() {
   return configureStore({
@@ -15,6 +16,7 @@ export function makeStore() {
       [vocabularyApi.reducerPath]: vocabularyApi.reducer,
       [conceptApi.reducerPath]: conceptApi.reducer,
       [collectionApi.reducerPath]: collectionApi.reducer,
+      [loginSlice.name]: loginSlice.reducer,
     },
 
     middleware: (getDefaultMiddleware) =>

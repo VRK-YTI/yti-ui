@@ -6,7 +6,7 @@ export interface User {
   id: string;
   superuser: boolean;
   newlyCreated: boolean;
-  rolesInOrganizations: object;
+  rolesInOrganizations: { [key: string]: string[] };
   organizationsInRole: object;
   enabled: boolean;
   accountNonExpired: boolean;
