@@ -22,6 +22,7 @@ import { useBreakpoints } from '../../common/components/media-query/media-query-
 import { Modal, ModalContent } from 'suomifi-ui-components';
 import { useState } from 'react';
 import { Breadcrumb, BreadcrumbLink } from '../../common/components/breadcrumb';
+import useQueryParam from '../../common/utils/hooks/useQueryParam';
 
 export default function TerminologySearch() {
   const { t } = useTranslation();
@@ -30,7 +31,8 @@ export default function TerminologySearch() {
   const query = useRouter();
   const filter = useSelector(selectFilter());
   const resultStart = useSelector(selectResultStart());
-  const { data } = useGetSearchResultQuery({ filter: filter, resultStart: resultStart });
+  const [keyword] = useQueryParam('q');
+  const { data } = useGetSearchResultQuery({ filter: filter, resultStart: resultStart, keyword: keyword ?? '' });
   const { data: groups } = useGetGroupsQuery(null);
   const { data: organizations } = useGetOrganizationsQuery(null);
   const [showModal, setShowModal] = useState(false);
@@ -44,7 +46,7 @@ export default function TerminologySearch() {
   return (
     <>
       <Breadcrumb>
-        <BreadcrumbLink url="/search?page=1" current>
+        <BreadcrumbLink url="/search" current>
           {t('terminology-title')}
         </BreadcrumbLink>
       </Breadcrumb>

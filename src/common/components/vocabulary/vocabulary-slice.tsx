@@ -7,7 +7,6 @@ import axiosBaseQuery from '../axios-base-query';
 export interface VocabularyState {
   filter: {
     status: { [status: string]: boolean };
-    keyword: string;
     showBy: string;
   };
   currTerminology: {
@@ -24,7 +23,6 @@ export const vocabularyInitialState: VocabularyState = {
       'RETIRED': false,
       'SUPERSEDED': false
     },
-    keyword: '',
     showBy: 'concepts'
   },
   currTerminology: {

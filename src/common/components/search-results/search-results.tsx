@@ -4,6 +4,7 @@ import { AppThunk } from '../../../store';
 import { TerminologySearchResult } from '../../interfaces/terminology.interface';
 import { VocabularyConcepts } from '../../interfaces/vocabulary.interface';
 import filterData from '../../utils/filter-data';
+import useQueryParam from '../../utils/hooks/useQueryParam';
 import { SearchState } from '../terminology-search/terminology-search-slice';
 import { VocabularyState } from '../vocabulary/vocabulary-slice';
 import SearchCountTags from './search-count-tags';
@@ -30,6 +31,7 @@ interface SearchResultsProps {
 
 export default function SearchResults({ data, filter, type, setSomeFilter }: SearchResultsProps) {
   const { t, i18n } = useTranslation('common');
+  const [keyword] = useQueryParam('q');
 
   if (type === 'terminology-search' && 'terminologies' in data) {
     return (
@@ -119,7 +121,7 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
   function renderConceptSearchResults() {
     if ('concepts' in data) {
       // Note: This should be replaced when backend request for terminology has been updated
-      let filteredData = filterData(data, filter, i18n.language);
+      let filteredData = filterData(data, filter, keyword ?? '', i18n.language);
 
       return (
         <>

@@ -1,28 +1,20 @@
 import { useEffect, useState } from 'react';
 import { TextInput } from 'suomifi-ui-components';
-import { AppThunk, useStoreDispatch } from '../../../store';
-import { SearchState } from '../terminology-search/terminology-search-slice';
-import { VocabularyState } from '../vocabulary/vocabulary-slice';
+import useQueryParam from '../../utils/hooks/useQueryParam';
 
 interface TextInputAreaProps {
-  filter: VocabularyState['filter'] | SearchState['filter'];
-  setFilter: (x: any) => AppThunk;
   title: string;
   visualPlaceholder: string;
   isModal: boolean;
 }
 
-export function TextInputArea({ filter, setFilter, title, visualPlaceholder, isModal }: TextInputAreaProps) {
-  const dispatch = useStoreDispatch();
-  const [inputValue, setInputValue] = useState(filter.keyword);
+export function TextInputArea({ title, visualPlaceholder, isModal }: TextInputAreaProps) {
+  const [keyword, updateKeyword] = useQueryParam('q');
+  const [inputValue, setInputValue] = useState<string>(keyword ?? '');
 
   useEffect(() => {
-    setInputValue(filter.keyword);
-  }, [filter.keyword]);
-
-  const handleInput = (str: string) => {
-    dispatch(setFilter({ ...filter, keyword: str }));
-  };
+    setInputValue(keyword ?? '');
+  }, [keyword, setInputValue]);
 
   return (
     <div>
@@ -35,13 +27,13 @@ export function TextInputArea({ filter, setFilter, title, visualPlaceholder, isM
             :
             {
               fill: 'hsl(212, 63%, 45%)',
-              onClick: () => { setInputValue(''), handleInput(''); }
+              onClick: () => { setInputValue(''), updateKeyword(); }
             }
         }
         labelText={title}
-        onBlur={() => handleInput(inputValue)}
+        onBlur={() => updateKeyword(inputValue)}
         onChange={val => val ? setInputValue(val.toString()) : setInputValue('')}
-        onKeyDown={e => e.key === 'Enter' && handleInput(inputValue)}
+        onKeyDown={e => e.key === 'Enter' && updateKeyword(inputValue)}
         value={inputValue}
         visualPlaceholder={visualPlaceholder}
         fullWidth={isModal}

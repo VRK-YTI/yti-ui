@@ -1,14 +1,14 @@
 import { VocabularyConcepts } from '../interfaces/vocabulary.interface';
 
-export default function filterData(data: VocabularyConcepts, filter: any, language: any) {
+export default function filterData(data: VocabularyConcepts, filter: any, keyword: string, language: any) {
   let filteredData;
 
   filteredData = data.concepts.filter((concept: any) => {
     let valid = false;
 
-    if (filter.keyword === '' ||
-      concept.definition[language].toLowerCase().includes(filter.keyword.toLowerCase()) ||
-      concept.label[language].toLowerCase().includes(filter.keyword.toLowerCase()))
+    if (!keyword ||
+      concept.definition?.[language].toLowerCase().includes(keyword.toLowerCase()) ||
+      concept.label?.[language].toLowerCase().includes(keyword.toLowerCase()))
     {
       valid = true;
     }
