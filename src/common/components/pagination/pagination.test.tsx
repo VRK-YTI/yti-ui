@@ -9,12 +9,19 @@ import { Provider } from 'react-redux';
 import { setResultStart } from '../terminology-search/terminology-search-slice';
 import { useRouter } from 'next/router';
 
+jest.mock('next/router');
+const mockedUseRouter = useRouter as jest.MockedFunction<typeof useRouter>;
+
 describe('pagination', () => {
   test('should render component', () => {
+    mockedUseRouter.mockReturnValue({
+      query: { page: '0' },
+      push: jest.fn(),
+    } as any);
+
     const store = makeStore();
     store.dispatch = jest.fn();
     const query = useRouter();
-    query.query = { page: '0' };
     const data = {
       'deepHits': null,
       'totalHitCount': 80,
@@ -43,10 +50,14 @@ describe('pagination', () => {
   });
 
   test('should render empty when list is smaller than 10', () => {
+    mockedUseRouter.mockReturnValue({
+      query: { page: '0' },
+      push: jest.fn(),
+    } as any);
+
     const store = makeStore();
     store.dispatch = jest.fn();
     const query = useRouter();
-    query.query = { page: '0' };
     const data = {
       'deepHits': null,
       'totalHitCount': 7,
@@ -75,9 +86,13 @@ describe('pagination', () => {
   });
 
   test('should change active item', () => {
+    mockedUseRouter.mockReturnValue({
+      query: { page: '0' },
+      push: jest.fn(),
+    } as any);
+
     const store = makeStore();
     const query = useRouter();
-    query.query = { page: '0' };
     const data = {
       'deepHits': null,
       'totalHitCount': 50,
