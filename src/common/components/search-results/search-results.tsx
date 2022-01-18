@@ -10,7 +10,6 @@ import { getPropertyValue } from '../property-value/get-property-value';
 import { SearchState } from '../terminology-search/terminology-search-slice';
 import { VocabularyState } from '../vocabulary/vocabulary-slice';
 import SearchCountTags from './search-count-tags';
-import { Text } from 'suomifi-ui-components';
 import {
   Card,
   CardChip,
@@ -182,7 +181,12 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
                     <CardTitle variant='h2'>
                       <Link passHref href={`/terminology/${collection.type.graph.id}/collection/${collection.id}`}>
                         <CardTitleLink href=''>
-                          <PropertyValue property={collection.properties.prefLabel} />
+                          {getPropertyValue({ property: collection.properties.prefLabel, language: i18n.language })
+                            ?
+                            <PropertyValue property={collection.properties.prefLabel} />
+                            :
+                            <>{getPropertyValue({ property: collection.properties.prefLabel, language: 'fi' })}</>
+                          }
                         </CardTitleLink>
                       </Link>
                     </CardTitle>
@@ -192,11 +196,15 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
                     </CardSubtitle>
 
                     <CardDescription>
-                      {collection.properties.definition
+                      {getPropertyValue({ property: collection.properties.definition })
                         ?
                         <PropertyValue property={collection.properties.definition} />
                         :
-                        t('terminology-search-no-description')
+                        collection.properties.definition
+                          ?
+                          collection.properties.definition[0].value
+                          :
+                          t('vocabulary-results-no-description')
                       }
                     </CardDescription>
 
@@ -216,10 +224,19 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
   }
 
   function renderCollectionMembers(members?: Concept[]) {
+    // Getting only the members that have labels in language in use
+    const currMembers = members?.filter(m => {
+      if (m.references.prefLabelXl) {
+        return m.references?.prefLabelXl.filter(plxl => {
+          return plxl.properties.prefLabel?.[0].lang === i18n.language;
+        }).length > 0;
+      }
+    });
+
     return (
-      members
+      currMembers && currMembers?.length > 0
         ?
-        members.map((m, idx) => {
+        currMembers.map((m, idx) => {
           if (idx < 5) {
             const comma = (idx !== 0 && idx < 5) ? ',' : '';
             const pLabelXl = m.references.prefLabelXl?.filter(plxl => {
@@ -227,17 +244,17 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
             }) ?? '';
 
             return (
-              <>{comma} {pLabelXl ? pLabelXl[0].properties.prefLabel?.[0].value : ''}</>
+              <>{comma} {pLabelXl ? pLabelXl?.[0].properties.prefLabel?.[0].value : ''}</>
             );
           } else if (idx === 5) {
-            const surplus = members.length - idx;
+            const surplus = currMembers.length - idx;
             return (
               <> + {surplus} muuta</>
             );
           }
         })
         :
-        <>Ei käsitteitä</>
+        <>{t('vocabulary-results-no-concepts')}</>
     );
   }
 }

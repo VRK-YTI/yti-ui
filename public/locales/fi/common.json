@@ -80,6 +80,8 @@
   "vocabulary-results-concepts": "Käsitteitä",
   "vocabulary-results-collections": "Käsitekokoelmia",
   "vocabulary-results-with-following-filters": "kpl seuraavilla rajauksilla",
+  "vocabulary-results-no-description": "Kuvausta ei ole annettu.",
+  "vocabulary-results-no-concepts": "Ei käsitteitä",
   "feedback-terminologies": "Yhteydenottopyyntö: Sanastot",
   "pagination-page": "Sivu",
   "impersonate-user": "Esiinny käyttäjänä",

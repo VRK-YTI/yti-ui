@@ -9,8 +9,9 @@ export default function filterData(data: VocabularyConcepts | Collection[], filt
       let valid = false;
 
       if (filter.keyword === '' ||
-        concept.definition?.[language].toLowerCase().includes(filter.keyword.toLowerCase()) ||
-        concept.label[language].toLowerCase().includes(filter.keyword.toLowerCase()))
+        concept.definition?.[language]?.toLowerCase().includes(filter.keyword.toLowerCase()) ||
+        concept.label[language]?.toLowerCase().includes(filter.keyword.toLowerCase()) ||
+        concept.label[Object.keys(concept.label)[0]].toLowerCase().includes(filter.keyword.toLowerCase()))
       {
         valid = true;
       }
@@ -30,7 +31,10 @@ export default function filterData(data: VocabularyConcepts | Collection[], filt
     let filteredData: Collection[] = [];
 
     data.forEach(collection => {
+      console.log(collection);
       if (getPropertyValue({ property: collection.properties.prefLabel, language: language })?.includes(filter.keyword.toLowerCase())) {
+        filteredData.push(collection);
+      } else if (collection.properties.prefLabel?.[0].value.includes(filter.keyword.toLowerCase())) {
         filteredData.push(collection);
       }
     });
