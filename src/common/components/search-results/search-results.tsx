@@ -6,12 +6,15 @@ import { TerminologySearchResult } from '../../interfaces/terminology.interface'
 import { VocabularyConcepts } from '../../interfaces/vocabulary.interface';
 import filterData from '../../utils/filter-data';
 import PropertyValue from '../property-value';
+import { getPropertyValue } from '../property-value/get-property-value';
 import { SearchState } from '../terminology-search/terminology-search-slice';
 import { VocabularyState } from '../vocabulary/vocabulary-slice';
 import SearchCountTags from './search-count-tags';
+import { Text } from 'suomifi-ui-components';
 import {
   Card,
   CardChip,
+  CardConcepts,
   CardContributor,
   CardDescription,
   CardInfoDomain,
@@ -22,6 +25,7 @@ import {
   CardTitleWrapper,
   CardWrapper
 } from './search-results.styles';
+import { Concept } from '../../interfaces/concept.interface';
 
 interface SearchResultsProps {
   data: TerminologySearchResult | VocabularyConcepts | Collection[];
@@ -182,14 +186,23 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
                         </CardTitleLink>
                       </Link>
                     </CardTitle>
+
                     <CardSubtitle>
                       {t('vocabulary-info-collection')}
                     </CardSubtitle>
+
                     <CardDescription>
-                      {/* After backend changes have been made add description here */}
-                      {/* {t('terminology-search-no-description')} */}
+                      {collection.properties.definition
+                        ?
+                        <PropertyValue property={collection.properties.definition} />
+                        :
+                        t('terminology-search-no-description')
+                      }
                     </CardDescription>
-                    {/* After backend changes have been made add related concept here*/}
+
+                    <CardConcepts value='Käsitteet'>
+                      {renderCollectionMembers(collection.references.member)}
+                    </CardConcepts>
                   </Card>
                 );
               })}
@@ -200,5 +213,31 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
     }
 
     return null;
+  }
+
+  function renderCollectionMembers(members?: Concept[]) {
+    return (
+      members
+        ?
+        members.map((m, idx) => {
+          if (idx < 5) {
+            const comma = (idx !== 0 && idx < 5) ? ',' : '';
+            const pLabelXl = m.references.prefLabelXl?.filter(plxl => {
+              return plxl.properties.prefLabel?.[0].lang === i18n.language;
+            }) ?? '';
+
+            return (
+              <>{comma} {pLabelXl ? pLabelXl[0].properties.prefLabel?.[0].value : ''}</>
+            );
+          } else if (idx === 5) {
+            const surplus = members.length - idx;
+            return (
+              <> + {surplus} muuta</>
+            );
+          }
+        })
+        :
+        <>Ei käsitteitä</>
+    );
   }
 }
