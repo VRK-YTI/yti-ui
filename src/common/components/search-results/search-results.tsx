@@ -133,7 +133,7 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
       if (filteredData && !Array.isArray(filteredData)) {
         return (
           <>
-            <SearchCountTags count={filteredData.totalHitCount} filter={filter} setFilter={setSomeFilter} />
+            <SearchCountTags count={filteredData.concepts?.length} filter={filter} setFilter={setSomeFilter} />
             <CardWrapper>
               {filteredData?.concepts.map((concept, idx: number) => {
                 return (
@@ -173,7 +173,7 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
       if (filteredData && Array.isArray(filteredData)) {
         return (
           <>
-            <SearchCountTags count={data.length} filter={filter} setFilter={setSomeFilter} />
+            <SearchCountTags count={filteredData.length} filter={filter} setFilter={setSomeFilter} />
             <CardWrapper>
               {filteredData.map((collection, idx: number) => {
                 return (
@@ -249,7 +249,7 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
           } else if (idx === 5) {
             const surplus = currMembers.length - idx;
             return (
-              <> + {surplus} muuta</>
+              <> + {surplus} {t('vocabulary-results-more')}</>
             );
           }
         })
