@@ -4,7 +4,7 @@ import { FilterStyledProps } from './filter-props';
 
 export const CloseWrapper = styled.div`
   * {
-    margin-bottom: ${props => props.theme.suomifi.spacing.m}
+    margin-bottom: ${props => props.theme.suomifi.spacing.s}
   }
 `;
 
@@ -35,7 +35,7 @@ export const FilterRadioButton = styled(RadioButton)`
 
 export const FilterWrapper = styled.div<FilterStyledProps>`
   background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
-  border: solid 1px ${(props) => props.theme.suomifi.colors.depthLight1};
+  border: ${(props) => props.isModal ? 'none' : `solid 1px ${props.theme.suomifi.colors.depthLight1}`};
   height: max-content;
   width: ${(props) => props.isModal ? '100%' : '350px'};
   margin-bottom: ${(props) => props.isModal ? '0px' : '80px'};

@@ -1,16 +1,17 @@
 import { Link, Text } from 'suomifi-ui-components';
 import { useTranslation } from 'react-i18next';
 import { UserInfoWrapper } from './authentication-panel.styles';
-import User from '../../interfaces/user-interface';
 import { Breakpoint } from '../media-query/media-query-context';
+import { useSelector } from 'react-redux';
+import { selectLogin } from '../login/login-slice';
 
 export interface UserInfoProps {
-  user?: User;
   breakpoint: Breakpoint;
 }
 
-export default function UserInfo({ user, breakpoint }: UserInfoProps) {
+export default function UserInfo({ breakpoint }: UserInfoProps) {
   const { t } = useTranslation('common');
+  const user = useSelector(selectLogin());
 
   if (!(user?.anonymous ?? true)) {
     return (

@@ -1,20 +1,20 @@
 #
 # PRE-BUILD STAGE
 #
-FROM node:14.18.1-alpine3.14 AS deps
+FROM node:16.13.1-alpine3.14@sha256:a9b9cb880fa429b0bea899cd3b1bc081ab7277cc97e6d2dcd84bd9753b2027e1 AS deps
 
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
-COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
+COPY package.json package-lock.json ./
+RUN npm ci
 
 #
 # BUILD STAGE
 #
 
 # Rebuild the source code only when needed
-FROM node:14.18.1-alpine3.14 AS builder
+FROM node:16.13.1-alpine3.14@sha256:a9b9cb880fa429b0bea899cd3b1bc081ab7277cc97e6d2dcd84bd9753b2027e1 AS builder
 
 ENV NEXT_TELEMETRY_DISABLED 1
 
@@ -30,17 +30,17 @@ WORKDIR /app
 COPY . .
 COPY --from=deps /app/node_modules ./node_modules
 RUN if [ -z "$SKIP_TESTS" ] ; then \
-    yarn run test:ci; \
+    npm run test:ci; \
   else \
     echo "Skipping tests"; \
   fi
-RUN yarn build && yarn install --production --ignore-scripts --prefer-offline
+RUN npm run build && npm install --production --ignore-scripts --prefer-offline
 
 #
 # INSTALL STAGE
 #
 
-FROM node:14.18.1-alpine3.14 AS runner
+FROM node:16.13.1-alpine3.14@sha256:a9b9cb880fa429b0bea899cd3b1bc081ab7277cc97e6d2dcd84bd9753b2027e1 AS runner
 WORKDIR /app
 
 ENV NODE_ENV production
@@ -71,4 +71,4 @@ EXPOSE 80
 # https://nextjs.org/telemetry
 ENV NEXT_TELEMETRY_DISABLED 1
 
-CMD ["yarn", "start", "-p", "80"]
+CMD ["npm", "start", "--port", "80"]

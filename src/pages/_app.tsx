@@ -8,7 +8,6 @@ import { wrapper } from '../store';
 
 // https://nextjs.org/docs/advanced-features/custom-app
 function App({ Component, pageProps }: AppProps) {
-
   return (
     <SWRConfig
       value={{

@@ -1,4 +1,22 @@
-export default function FormatISODate(ISODate: string | undefined, locale: string = 'fi') {
+import { useTranslation } from 'next-i18next';
+
+export interface FormattedDateProps {
+  date?: string;
+}
+
+export default function FormattedDate({ date }: FormattedDateProps) {
+  const { i18n } = useTranslation('common');
+
+  if (!date) {
+    return <></>;
+  }
+
+  return (
+    <>{formatISODate(date, i18n.language)}</>
+  );
+}
+
+export function formatISODate(ISODate?: string, locale: string = 'fi') {
   if (ISODate) {
     let date = '';
     let hour = '';
