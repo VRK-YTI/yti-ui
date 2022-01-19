@@ -26,6 +26,7 @@ import {
   CardWrapper
 } from './search-results.styles';
 import { Concept } from '../../interfaces/concept.interface';
+import { Text } from 'suomifi-ui-components';
 
 interface SearchResultsProps {
   data: TerminologySearchResult | VocabularyConcepts | Collection[];
@@ -76,7 +77,7 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
                       <CardTitleLink href=''>
                         <CardTitleIcon icon='registers' />
                         <CardTitle variant='h3'>
-                          {terminology.label[i18n.language] !== undefined
+                          {terminology.label[i18n.language]
                             ?
                             terminology.label[i18n.language].replaceAll(/<\/*[^>]>/g, '')
                             :
@@ -171,9 +172,9 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
           </>
         );
       }
-
-      return null;
     }
+
+    return null;
   }
 
   function renderConceptCollections() {
@@ -249,23 +250,25 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
         ?
         currMembers.map((m, idx) => {
           if (idx < 5) {
-            const comma = (idx !== 0 && idx < 5) ? ',' : '';
+            const comma = (idx < 4 && currMembers?.length > 1) ? ',' : '';
             const pLabelXl = m.references.prefLabelXl?.filter(plxl => {
               return plxl.properties.prefLabel?.[0].lang === i18n.language;
             }) ?? '';
 
             return (
-              <>{comma} {pLabelXl ? pLabelXl?.[0].properties.prefLabel?.[0].value : ''}</>
+              <div key={`${pLabelXl}-${idx}`}>
+                {pLabelXl ? pLabelXl?.[0].properties.prefLabel?.[0].value : ''}{comma}&nbsp;
+              </div>
             );
           } else if (idx === 5) {
             const surplus = currMembers.length - idx;
             return (
-              <> + {surplus} {t('vocabulary-results-more')}</>
+              <div key={`surplus-${idx}`}>+ {surplus} {t('vocabulary-results-more')}</div>
             );
           }
         })
         :
-        <>{t('vocabulary-results-no-concepts')}</>
+        <div key={'no-concepts'}>{t('vocabulary-results-no-concepts')}</div>
     );
   }
 }

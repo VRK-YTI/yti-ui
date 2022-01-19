@@ -22,13 +22,15 @@ export const CardChip = styled(StaticChip)<CardChipProps>`
 
 export const CardConcepts = styled(Text)`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
   margin-top: ${props => props.theme.suomifi.spacing.m};
 
   &:before {
     content: attr(value);
     font-weight: 600;
     margin-bottom: 5px;
+    width: 100%;
   }
 `;
 
