@@ -4,6 +4,7 @@ import { AppThunk } from '../../../store';
 import { TerminologySearchResult } from '../../interfaces/terminology.interface';
 import { VocabularyConcepts } from '../../interfaces/vocabulary.interface';
 import filterData from '../../utils/filter-data';
+import { useBreakpoints } from '../media-query/media-query-context';
 import { SearchState } from '../terminology-search/terminology-search-slice';
 import { VocabularyState } from '../vocabulary/vocabulary-slice';
 import SearchCountTags from './search-count-tags';
@@ -30,6 +31,7 @@ interface SearchResultsProps {
 
 export default function SearchResults({ data, filter, type, setSomeFilter }: SearchResultsProps) {
   const { t, i18n } = useTranslation('common');
+  const { isSmall } = useBreakpoints();
 
   if (type === 'terminology-search' && 'terminologies' in data) {
     return (
@@ -52,7 +54,7 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
             filter={filter}
             setFilter={setSomeFilter}
           />
-          <CardWrapper>
+          <CardWrapper isSmall={isSmall}>
             {data?.terminologies?.map((terminology, idx: number) => {
               return (
                 <Card key={`search-result-${idx}`}>
@@ -124,7 +126,7 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
       return (
         <>
           <SearchCountTags count={filteredData.totalHitCount} filter={filter} setFilter={setSomeFilter} />
-          <CardWrapper>
+          <CardWrapper isSmall={isSmall}>
             {filteredData?.concepts.map((concept, idx: number) => {
               return (
                 <Card key={`search-result-${idx}`}>

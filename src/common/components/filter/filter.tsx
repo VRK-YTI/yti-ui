@@ -19,6 +19,7 @@ import { isEqual } from 'lodash';
 import { TextInputArea } from './text-input-area';
 import Separator from '../separator';
 import { Button } from 'suomifi-ui-components';
+import { getPropertyValue } from '../property-value/get-property-value';
 
 export interface FilterProps {
   filter: VocabularyState['filter'] | SearchState['filter'];
@@ -100,10 +101,7 @@ export default function Filter({
           setFilter={setSomeFilter}
           data={
             groups.map(group => {
-              let val = '';
-              group.properties.prefLabel?.find(pLabel => {
-                if (pLabel.lang === i18n.language) val = pLabel.value;
-              });
+              let val = getPropertyValue({ property: group.properties.prefLabel, language: i18n.language}) ?? '';
               return { id: group.id as string, value: val };
             })
           }

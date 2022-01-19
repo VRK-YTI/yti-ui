@@ -66,8 +66,10 @@ export const CardTitleLink = styled(Link)`
   gap: ${props => props.theme.suomifi.spacing.xs};
 `;
 
-export const CardWrapper = styled.div`
+export const CardWrapper = styled.div<{ isSmall: boolean }>`
   border-top: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
-  border-right: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
-  border-left: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
+  border-right:  ${props => props.isSmall ? 'none' : `1px solid ${props.theme.suomifi.colors.depthLight1}`};
+  border-left: ${props => props.isSmall ? 'none' : `1px solid ${props.theme.suomifi.colors.depthLight1}`};
+  margin-left: -${props => props.isSmall ? props.theme.suomifi.spacing.s : '0'};
+  margin-right: -${props => props.isSmall ? props.theme.suomifi.spacing.s : '0'};
 `;

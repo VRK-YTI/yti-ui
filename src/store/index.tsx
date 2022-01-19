@@ -5,6 +5,7 @@ import { vocabularyApi, vocabularySlice } from '../common/components/vocabulary/
 import { conceptApi } from '../common/components/concept/concept-slice';
 import { useDispatch } from 'react-redux';
 import { collectionApi } from '../common/components/collection/collection-slice';
+import { countsApi } from '../common/components/counts/counts-slice';
 import { loginSlice } from '../common/components/login/login-slice';
 
 export function makeStore() {
@@ -16,6 +17,7 @@ export function makeStore() {
       [vocabularyApi.reducerPath]: vocabularyApi.reducer,
       [conceptApi.reducerPath]: conceptApi.reducer,
       [collectionApi.reducerPath]: collectionApi.reducer,
+      [countsApi.reducerPath]: countsApi.reducer,
       [loginSlice.name]: loginSlice.reducer,
     },
 
@@ -25,6 +27,7 @@ export function makeStore() {
         vocabularyApi.middleware,
         conceptApi.middleware,
         collectionApi.middleware,
+        countsApi.middleware
       ),
     devTools: true,
   });
