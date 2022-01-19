@@ -78,9 +78,9 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
                         <CardTitle variant='h3'>
                           {terminology.label[i18n.language] !== undefined
                             ?
-                            terminology.label[i18n.language]
+                            terminology.label[i18n.language].replaceAll(/<\/*[^>]>/g, '')
                             :
-                            terminology?.label?.[Object.keys(terminology.label)[0]]
+                            terminology?.label?.[Object.keys(terminology.label)[0]].replaceAll(/<\/*[^>]>/g, '')
                           }
                         </CardTitle>
                       </CardTitleLink>
@@ -88,7 +88,7 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
                   </CardTitleWrapper>
 
                   <CardSubtitle>
-                    <span>{t('terminology-search-results-terminology').toUpperCase()}</span>
+                    <span>{t('terminology-search-results-terminology')}</span>
                     <span>&middot;</span>
                     <CardChip valid={terminology.status === 'VALID' ? 'true' : undefined}>
                       {t(terminology.status ?? '')}
@@ -153,7 +153,16 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
                     </CardSubtitle>
 
                     <CardDescription>
-                      {concept.definition?.[i18n.language] !== undefined ? concept.definition[i18n.language] : concept.definition?.[Object.keys(concept.definition)[0]]}
+                      {concept.definition?.[i18n.language] !== undefined
+                        ?
+                        concept.definition[i18n.language]
+                        :
+                        concept.definition?.[Object.keys(concept.definition)[0]]
+                          ?
+                          concept?.definition?.[Object.keys(concept?.definition)[0]]
+                          :
+                          t('terminology-search-no-description')
+                      }
                     </CardDescription>
                   </Card>
                 );
@@ -162,9 +171,9 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
           </>
         );
       }
-    }
 
-    return null;
+      return null;
+    }
   }
 
   function renderConceptCollections() {
@@ -176,7 +185,7 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
         return (
           <>
             <SearchCountTags count={filteredData.length} filter={filter} setFilter={setSomeFilter} />
-            <CardWrapper>
+            <CardWrapper isSmall={isSmall}>
               {filteredData.map((collection, idx: number) => {
                 return (
                   <Card key={`search-result-${idx}`}>
@@ -260,3 +269,4 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
     );
   }
 }
+
