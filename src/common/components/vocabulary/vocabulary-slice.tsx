@@ -98,7 +98,7 @@ export const {
   useGetVocabularyQuery
 } = vocabularyApi;
 
-export const setVocabularyFilter = (filter: VocabularyState): AppThunk => dispatch => {
+export const setVocabularyFilter = (filter: VocabularyState['filter']): AppThunk => dispatch => {
   dispatch(
     vocabularySlice.actions.setVocabularyFilter({
       filter: filter

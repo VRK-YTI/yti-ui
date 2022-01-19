@@ -5,11 +5,11 @@ describe('Terminology-search-slice', () => {
 
   test('setFilter sets filter with a given value', () => {
     const store = makeStore();
-    const originalState = store.getState();
+    const originalState = store.getState().terminologySearch.filter;
 
     store.dispatch(setFilter('test'));
 
-    expect(store.getState()).not.toEqual(originalState);
+    expect(store.getState().terminologySearch.filter).not.toEqual(originalState);
     expect(store.getState().terminologySearch.filter).toEqual('test');
 
   });

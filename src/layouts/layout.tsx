@@ -10,18 +10,15 @@ import {
   MarginContainer,
 } from './layout.styles';
 import { useTranslation } from 'next-i18next';
-import User from '../common/interfaces/user-interface';
 import Footer from '../common/components/footer/footer';
 import SmartHeader from '../modules/smart-header';
 import { useBreakpoints } from '../common/components/media-query/media-query-context';
 
 export default function Layout({
   children,
-  user,
   feedbackSubject,
 }: {
   children: any;
-  user?: User;
   feedbackSubject?: string;
 }) {
   const { t } = useTranslation('common');
@@ -35,7 +32,7 @@ export default function Layout({
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
       <SiteContainer>
-        <SmartHeader user={user} />
+        <SmartHeader />
 
         <ContentContainer>
           <MarginContainer breakpoint={breakpoint}>
@@ -47,7 +44,7 @@ export default function Layout({
 
         <FooterContainer>
           <MarginContainer breakpoint={breakpoint}>
-            <Footer props={{ user }} feedbackSubject={feedbackSubject} />
+            <Footer feedbackSubject={feedbackSubject} />
           </MarginContainer>
         </FooterContainer>
       </SiteContainer>

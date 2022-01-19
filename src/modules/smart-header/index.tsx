@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Block } from 'suomifi-ui-components';
 import Modal from 'react-modal';
-import User from '../../common/interfaces/user-interface';
 import { HeaderContainer, MarginContainer, NavigationContainer } from '../../layouts/layout.styles';
 import Logo from './logo';
 import MobileNavigationToggleButton from './mobile-navigation-toggle-button';
@@ -16,7 +15,7 @@ import { useBreakpoints } from '../../common/components/media-query/media-query-
 
 Modal.setAppElement('#__next');
 
-export default function SmartHeader({ user }: { user?: User }) {
+export default function SmartHeader() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { breakpoint, isSmall } = useBreakpoints();
@@ -49,7 +48,7 @@ export default function SmartHeader({ user }: { user?: User }) {
     return (
       <Block variant="nav">
         <NavigationContainer breakpoint="small">
-          <MobileNavigation user={user} />
+          <MobileNavigation />
         </NavigationContainer>
       </Block>
     );
@@ -127,7 +126,7 @@ export default function SmartHeader({ user }: { user?: User }) {
   function renderDesktopAuthenticationPanel() {
     if (!isSmall) {
       return (
-        <DesktopAuthenticationPanel user={user} />
+        <DesktopAuthenticationPanel />
       );
     }
   }
@@ -135,7 +134,7 @@ export default function SmartHeader({ user }: { user?: User }) {
   function renderUserInfo() {
     if (isSmall && isExpanded) {
       return (
-        <UserInfo user={user} breakpoint="small" />
+        <UserInfo breakpoint="small" />
       );
     }
   }
