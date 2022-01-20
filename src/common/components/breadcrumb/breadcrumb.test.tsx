@@ -20,7 +20,6 @@ describe('breadcrumb', () => {
       </Provider>
     );
 
-    expect(screen.getByText('tr-front-page')).toBeInTheDocument;
     expect(screen.getByText('tr-terminology-title')).toBeInTheDocument;
   });
 
@@ -41,7 +40,6 @@ describe('breadcrumb', () => {
       </Provider>
     );
 
-    expect(screen.getByText('tr-front-page')).toBeInTheDocument;
     expect(screen.getByText('terminology')).toBeInTheDocument;
     expect(screen.getByText('test')).toBeInTheDocument;
     expect(screen.getByText('tr-terminology-title')).toBeInTheDocument;
@@ -63,9 +61,6 @@ describe('breadcrumb', () => {
         </ThemeProvider>
       </Provider>
     );
-
-    expect(screen.getByText('tr-front-page')).toBeInTheDocument;
-    expect(screen.getByText('tr-front-page').getAttribute('class')).not.toMatch(/current/);
 
     expect(screen.getByText('terminology')).toBeInTheDocument;
     expect(screen.getByText('terminology').getAttribute('class')).not.toMatch(/current/);

@@ -21,7 +21,7 @@ export default function Breadcrumb({ children }: BreadcrumbProps) {
   return (
     <BreadcrumbWrapper>
       <SuomiFiBreadcrumb aria-label={t('breadcrumb')} href="/">
-        <BreadcrumbLink url="/">{t('front-page')}</BreadcrumbLink>
+        {/* <BreadcrumbLink url="/">{t('front-page')}</BreadcrumbLink> */}
 
         {children}
       </SuomiFiBreadcrumb>

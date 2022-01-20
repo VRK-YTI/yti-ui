@@ -41,13 +41,20 @@ export default function TerminologySearch() {
     dispatch(setResultStart(0));
   }
 
+  const handleFilterChange = (value: any) => {
+    if (query.query.page && query.query.page !== '1') {
+      query.push(query.pathname + '?page=1');
+    }
+    return setFilter(value);
+  };
+
   return (
     <>
-      <Breadcrumb>
-        <BreadcrumbLink url="/search?page=1" current>
+      {/* <Breadcrumb>
+        <BreadcrumbLink url="/" current>
           {t('terminology-title')}
         </BreadcrumbLink>
-      </Breadcrumb>
+      </Breadcrumb> */}
 
       <Title info={t('terminology-title')} />
       {isSmall &&
@@ -65,7 +72,7 @@ export default function TerminologySearch() {
             <SearchResults
               data={data}
               filter={filter}
-              setSomeFilter={setFilter}
+              setSomeFilter={handleFilterChange}
               type={'terminology-search'}
             />
             {data
@@ -89,7 +96,7 @@ export default function TerminologySearch() {
             groups={groups}
             organizations={organizations}
             type={'terminology-search'}
-            setSomeFilter={setFilter}
+            setSomeFilter={handleFilterChange}
             resetSomeFilter={resetFilter}
           />
           :
@@ -108,7 +115,7 @@ export default function TerminologySearch() {
                 groups={groups}
                 organizations={organizations}
                 type={'terminology-search'}
-                setSomeFilter={setFilter}
+                setSomeFilter={handleFilterChange}
                 resetSomeFilter={resetFilter}
                 isModal={true}
                 setShowModal={setShowModal}

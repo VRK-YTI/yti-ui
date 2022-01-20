@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Icon } from 'suomifi-ui-components';
 import { PaginationButton, PaginationMobile, PaginationWrapper } from './pagination.styles';
 import { PaginationProps } from './pagination-props';
@@ -19,6 +19,10 @@ export default function Pagination({
       ? parseInt(query.query.page as string, 10)
       : 1
   );
+
+  useEffect(() => {
+    setActiveItem(parseInt(query.query.page as string, 10));
+  }, [query]);
 
   const handleClick = (i: number) => {
     setActiveItem(i);
