@@ -33,8 +33,6 @@ export default function filterData(data: VocabularyConcepts | Collection[], filt
     data.forEach(collection => {
       if (getPropertyValue({ property: collection.properties.prefLabel, language: language })?.includes(filter.keyword.toLowerCase())) {
         filteredData.push(collection);
-      } else if (collection.properties.prefLabel?.[0].value.includes(filter.keyword.toLowerCase())) {
-        filteredData.push(collection);
       }
     });
 

@@ -26,7 +26,6 @@ import {
   CardWrapper
 } from './search-results.styles';
 import { Concept } from '../../interfaces/concept.interface';
-import { Text } from 'suomifi-ui-components';
 
 interface SearchResultsProps {
   data: TerminologySearchResult | VocabularyConcepts | Collection[];
@@ -236,40 +235,69 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
   }
 
   function renderCollectionMembers(members?: Concept[]) {
-    // Getting only the members that have labels in language in use
-    const currMembers = members?.filter(m => {
-      if (m.references.prefLabelXl) {
-        return m.references?.prefLabelXl.filter(plxl => {
-          return plxl.properties.prefLabel?.[0].lang === i18n.language;
-        }).length > 0;
-      }
-    });
-
     return (
-      currMembers && currMembers?.length > 0
+      members
         ?
-        currMembers.map((m, idx) => {
-          if (idx < 5) {
-            const comma = (idx < 4 && currMembers?.length > 1) ? ',' : '';
-            const pLabelXl = m.references.prefLabelXl?.filter(plxl => {
-              return plxl.properties.prefLabel?.[0].lang === i18n.language;
-            }) ?? '';
+        members.map((m, idx) => {
+          const comma = (idx < 4 && members.length > 1) ? ',' : '';
 
-            return (
-              <div key={`${pLabelXl}-${idx}`}>
-                {pLabelXl ? pLabelXl?.[0].properties.prefLabel?.[0].value : ''}{comma}&nbsp;
-              </div>
-            );
+          if (idx < 5 && m.references.prefLabelXl) {
+            if (m.references.prefLabelXl.length === 1) {
+              if (m.references.prefLabelXl[0].properties.prefLabel?.[0].lang === i18n.language) {
+                const value = m.references.prefLabelXl[0].properties.prefLabel?.[0].value;
+
+                return (
+                  <div key={`${value}-${idx}`}>
+                    {value}{comma}&nbsp;
+                  </div>
+                );
+              } else {
+                const value = m.references.prefLabelXl[0].properties.prefLabel?.[0].value;
+                const lang = m.references.prefLabelXl[0].properties.prefLabel?.[0].lang;
+
+                return (
+                  <div key={`${value}-${idx}`}>
+                    {value} ({lang}){comma}&nbsp;
+                  </div>
+                );
+              }
+
+            } else if (m.references.prefLabelXl.length > 1) {
+              let value;
+
+              m.references.prefLabelXl?.forEach(pLabelXl => {
+                if (pLabelXl.properties.prefLabel?.[0].lang === i18n.language) {
+                  value = pLabelXl.properties.prefLabel?.[0].value;
+                }
+              });
+
+              if (value !== '') {
+                return (
+                  <div key={`${value}-${idx}`}>
+                    {value}{comma}&nbsp;
+                  </div>
+                );
+              } else {
+                value = m.references.prefLabelXl?.[0].properties.prefLabel?.[0].value;
+                const lang = m.references.prefLabelXl?.[0].properties.prefLabel?.[0].lang;
+
+                return (
+                  <div key={`${value}-${idx}`}>
+                    {value} ({lang}){comma}&nbsp;
+                  </div>
+                );
+              }
+
+            }
           } else if (idx === 5) {
-            const surplus = currMembers.length - idx;
+            const surplus = members.length - idx;
             return (
               <div key={`surplus-${idx}`}>+ {surplus} {t('vocabulary-results-more')}</div>
             );
           }
         })
         :
-        <div key={'no-concepts'}>{t('vocabulary-results-no-concepts')}</div>
+        <></>
     );
   }
 }
-
