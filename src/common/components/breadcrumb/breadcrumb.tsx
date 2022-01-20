@@ -3,6 +3,7 @@ import { BreadcrumbWrapper } from './breadcrumb-styles';
 import { useTranslation } from 'next-i18next';
 import React from 'react';
 import BreadcrumbLink from './breadcrumb-link';
+import { useBreakpoints } from '../media-query/media-query-context';
 
 export interface BreadcrumbProps {
   children: React.ReactNode;
@@ -10,6 +11,12 @@ export interface BreadcrumbProps {
 
 export default function Breadcrumb({ children }: BreadcrumbProps) {
   const { t } = useTranslation('common');
+  const { isSmall } = useBreakpoints();
+
+  // Returning just the wrapper to have correct space between Title and Header
+  if (isSmall) {
+    return <BreadcrumbWrapper />;
+  }
 
   return (
     <BreadcrumbWrapper>

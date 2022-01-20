@@ -12,6 +12,7 @@ export const HeaderWrapper = styled.div<{ breakpoint: Breakpoint }>`
 export const LogoWrapper = styled.div`
   flex-grow: 1;
   line-height: 0;
+  min-width: 186px;
 
   a {
     display: block;
