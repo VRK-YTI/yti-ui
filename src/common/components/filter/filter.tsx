@@ -20,6 +20,7 @@ import { TextInputArea } from './text-input-area';
 import Separator from '../separator';
 import { Button } from 'suomifi-ui-components';
 import { getPropertyValue } from '../property-value/get-property-value';
+import { Counts } from '../../interfaces/counts.interface';
 
 export interface FilterProps {
   filter: VocabularyState['filter'] | SearchState['filter'];
@@ -31,6 +32,7 @@ export interface FilterProps {
   isModal?: boolean;
   setShowModal?: Dispatch<SetStateAction<boolean>>;
   resultCount?: number;
+  counts?: Counts;
 }
 
 export default function Filter({
@@ -42,7 +44,8 @@ export default function Filter({
   type,
   isModal = false,
   setShowModal,
-  resultCount
+  resultCount,
+  counts
 }: FilterProps) {
   const { t, i18n } = useTranslation('common');
 
@@ -87,10 +90,17 @@ export default function Filter({
     if (common) {
       return (
         <CheckboxArea
-          title={t('vocabulary-filter-show-concept-states')}
+          title={
+            type === 'terminology-search'
+              ?
+              t('terminology-search-filter-show-states')
+              :
+              t('vocabulary-filter-show-concept-states')
+          }
           filter={filter}
           setFilter={setSomeFilter}
           isModal={isModal}
+          counts={counts}
         />
       );
     } else if (groups) {
@@ -101,12 +111,13 @@ export default function Filter({
           setFilter={setSomeFilter}
           data={
             groups.map(group => {
-              let val = getPropertyValue({ property: group.properties.prefLabel, language: i18n.language}) ?? '';
+              let val = getPropertyValue({ property: group.properties.prefLabel, language: i18n.language }) ?? '';
               return { id: group.id as string, value: val };
             })
           }
           type='infoDomains'
           isModal={isModal}
+          counts={counts}
         />
       );
     }
@@ -166,6 +177,7 @@ export default function Filter({
           filter={filter}
           setFilter={setSomeFilter}
           isModal={isModal}
+          counts={counts}
         />
       );
     }

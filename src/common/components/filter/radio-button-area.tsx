@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { RadioButtonGroup } from 'suomifi-ui-components';
 import { AppThunk, useStoreDispatch } from '../../../store';
+import { Counts } from '../../interfaces/counts.interface';
 import { VocabularyState } from '../vocabulary/vocabulary-slice';
 import { FilterRadioButton } from './filter.styles';
 
@@ -10,9 +11,10 @@ interface RadioButtonProps {
   setFilter: (x: any) => AppThunk;
   title: string;
   isModal?: boolean;
+  counts?: Counts;
 }
 
-export default function RadioButtonArea({ filter, data, setFilter, title, isModal }: RadioButtonProps) {
+export default function RadioButtonArea({ filter, data, setFilter, title, isModal, counts }: RadioButtonProps) {
   const { t } = useTranslation('common');
   const dispatch = useStoreDispatch();
 
@@ -47,6 +49,8 @@ export default function RadioButtonArea({ filter, data, setFilter, title, isModa
         onChange={(value) => handleShowBy(value)}
       >
         {data.map((value: string, idx: number) => {
+          const key = value.charAt(0).toUpperCase() + value.slice(1, -1);
+
           return (
             <FilterRadioButton
               value={value}
@@ -54,7 +58,7 @@ export default function RadioButtonArea({ filter, data, setFilter, title, isModa
               checked={value === filter.showBy}
               variant={isModal ? 'large' : 'small'}
             >
-              {t(`vocabulary-filter-${value}`)} (n {t('vocabulary-filter-items')})
+              {t(`vocabulary-filter-${value}`)} ({counts?.counts?.categories?.[key]} {t('vocabulary-filter-items')})
             </FilterRadioButton>
           );
         })}
