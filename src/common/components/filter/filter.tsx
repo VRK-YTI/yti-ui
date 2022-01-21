@@ -14,7 +14,7 @@ import {
 import { vocabularyInitialState, VocabularyState } from '../vocabulary/vocabulary-slice';
 import { initialState, SearchState } from '../terminology-search/terminology-search-slice';
 import { AppThunk } from '../../../store';
-import { CommonInfoDTO, GroupSearchResult, OrganizationSearchResult } from '../../interfaces/terminology.interface';
+import { GroupSearchResult, OrganizationSearchResult } from '../../interfaces/terminology.interface';
 import { isEqual } from 'lodash';
 import { TextInputArea } from './text-input-area';
 import Separator from '../separator';
