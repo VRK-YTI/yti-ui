@@ -1,10 +1,12 @@
+import { useTranslation } from 'next-i18next';
 import { Dropdown, DropdownItem } from 'suomifi-ui-components';
 import { AppThunk, useStoreDispatch } from '../../../store';
+import { getPropertyValue } from '../property-value/get-property-value';
 import { SearchState } from '../terminology-search/terminology-search-slice';
 import { DropdownPlaceholder, DropdownWrapper } from './filter.styles';
 
 interface DropdownProps {
-  data?: string[];
+  data?: any;
   filter: SearchState['filter'];
   setFilter: (x: any) => AppThunk;
   title: string;
@@ -18,10 +20,17 @@ export default function DropdownArea({
   title,
   visualPlaceholder
 }: DropdownProps) {
+  const { i18n } = useTranslation('common');
   const dispatch = useStoreDispatch();
 
   const handleChange = (value: string) => {
-    dispatch(setFilter({ ...filter, showByOrg: value }));
+    let id = '';
+    data.forEach((d: any) => {
+      if (getPropertyValue({ property: d.properties.prefLabel, language: i18n.language }) === value) {
+        id = d.id;
+      }
+    });
+    dispatch(setFilter({ ...filter, showByOrg: { id: id, value: value } }));
   };
 
   if (!data) {
@@ -38,16 +47,17 @@ export default function DropdownArea({
             {visualPlaceholder}
           </DropdownPlaceholder>
         }
-        value={filter.showByOrg}
+        value={filter.showByOrg.value}
         onChange={(value) => handleChange(value)}
       >
-        {data.map((value: string, idx: number) => {
+        {data.map((value: any, idx: number) => {
+          const name = getPropertyValue({ property: value.properties?.prefLabel, language: i18n?.language }) ?? '';
           return (
             <DropdownItem
-              value={value}
+              value={name}
               key={`dropdown-${value}-${idx}`}
             >
-              {value}
+              {name}
             </DropdownItem>
           );
         })}

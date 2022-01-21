@@ -8,7 +8,10 @@ export interface SearchState {
   filter: {
     infoDomains: {id: string, value: string}[] | [];
     keyword: string;
-    showByOrg: string;
+    showByOrg: {
+      id: string;
+      value: string;
+    };
     status: { [status: string]: boolean };
   };
   resultStart: number;
@@ -19,7 +22,10 @@ export const initialState: SearchState = {
   filter: {
     infoDomains: [],
     keyword: '',
-    showByOrg: '',
+    showByOrg: {
+      id: '',
+      value: ''
+    },
     status: {
       'VALID': true,
       'DRAFT': true,
@@ -60,6 +66,7 @@ export const terminologySearchApi = createApi({
           query: value.filter.keyword,
           statuses: Array.from(Object.keys(value.filter.status).filter(s => value.filter.status[s])),
           groups: value.filter.infoDomains.map(infoD => infoD.id),
+          organizations: value.filter.showByOrg.id ? [value.filter.showByOrg.id] : [],
           searchConcepts: true,
           prefLang: 'fi',
           pageSize: 10,

@@ -23,8 +23,8 @@ export default function SearchCountTags({ count, filter, setFilter }: SearchCoun
   const dispatch = useStoreDispatch();
   let activeStatuses: string[] = [];;
 
-  if ('showByOrg' in filter && filter.showByOrg) {
-    activeStatuses.push(filter.showByOrg);
+  if ('showByOrg' in filter && filter.showByOrg.value) {
+    activeStatuses.push(filter.showByOrg.value);
 
     if (filter.keyword) {
       activeStatuses.push(filter.keyword);
@@ -60,8 +60,8 @@ export default function SearchCountTags({ count, filter, setFilter }: SearchCoun
       retVal = { ...filter, status: { ...filter.status, [s]: false } };
     } else if ('infoDomains' in filter && filter.infoDomains.find(id => id.value === s)) {
       retVal = { ...filter, infoDomains: filter.infoDomains.filter(id => id.value !== s) };
-    } else if ('showByOrg' in filter && filter.showByOrg !== '') {
-      retVal = { ...filter, showByOrg: '' };
+    } else if ('showByOrg' in filter && filter.showByOrg.value !== '') {
+      retVal = { ...filter, showByOrg: {id: '', value: ''} };
     } else {
       retVal = { ...filter, keyword: '' };
     }

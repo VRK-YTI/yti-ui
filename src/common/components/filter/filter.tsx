@@ -150,15 +150,7 @@ export default function Filter({
     if ('showByOrg' in filter) {
       return (
         <DropdownArea
-          data={organizations?.map((organization: OrganizationSearchResult) => {
-            let val = '';
-            organization.properties.prefLabel?.map((pLabel: CommonInfoDTO) => {
-              if (pLabel.lang === i18n.language) {
-                val = pLabel.value;
-              }
-            }).sort();
-            return val;
-          })}
+          data={organizations}
           filter={filter}
           setFilter={setSomeFilter}
           title={t('terminology-search-filter-by-organization')}
