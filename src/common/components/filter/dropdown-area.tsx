@@ -27,7 +27,7 @@ export default function DropdownArea({
   if (!data) {
     return <></>;
   }
-  console.log(data);
+
   const handleChange = (value: string) => {
     let id = '';
     data.forEach((d) => {
