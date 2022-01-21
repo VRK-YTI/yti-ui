@@ -21,7 +21,6 @@ import { useRouter } from 'next/router';
 import { useBreakpoints } from '../../common/components/media-query/media-query-context';
 import { Modal, ModalContent } from 'suomifi-ui-components';
 import { useState } from 'react';
-import { Breadcrumb, BreadcrumbLink } from '../../common/components/breadcrumb';
 
 export default function TerminologySearch() {
   const { t } = useTranslation();
@@ -50,12 +49,6 @@ export default function TerminologySearch() {
 
   return (
     <>
-      {/* <Breadcrumb>
-        <BreadcrumbLink url="/" current>
-          {t('terminology-title')}
-        </BreadcrumbLink>
-      </Breadcrumb> */}
-
       <Title info={t('terminology-title')} />
       {isSmall &&
         <FilterMobileButton

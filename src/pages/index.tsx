@@ -1,11 +1,9 @@
 import Head from 'next/head';
-import Link from 'next/link';
 import React from 'react';
 import Layout from '../layouts/layout';
 import { SSRConfig, useTranslation } from 'next-i18next';
 import { createCommonGetServerSideProps } from '../common/utils/create-getserversideprops';
 import { MediaQueryContextProvider } from '../common/components/media-query/media-query-context';
-import Index from '../modules/index';
 import TerminologySearch from '../modules/terminology-search';
 
 export default function IndexPage(props: {
@@ -23,12 +21,6 @@ export default function IndexPage(props: {
         </Head>
 
         <TerminologySearch />
-
-        {/* <section>
-          <Link href="/search?page=1">
-            <a>{ t('terminology-search') }</a>
-          </Link>
-        </section> */}
       </Layout>
     </MediaQueryContextProvider>
   );

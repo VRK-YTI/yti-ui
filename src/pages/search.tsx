@@ -6,11 +6,16 @@ import TerminologySearch from '../modules/terminology-search';
 import { createCommonGetServerSideProps } from '../common/utils/create-getserversideprops';
 import { MediaQueryContextProvider } from '../common/components/media-query/media-query-context';
 
+/*
+ * @deprecated Search-page has been replaced by Index-page.
+ */
 
 export default function SearchPage(props: {
   _netI18Next: SSRConfig;
   isSSRMobile: boolean;
 }) {
+  console.warn('Search-page has been replaced by Index-page.');
+
   const { t } = useTranslation('common');
 
   return (
