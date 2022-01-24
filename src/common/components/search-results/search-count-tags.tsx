@@ -1,8 +1,8 @@
-import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 import { Chip } from 'suomifi-ui-components';
 import { AppThunk, useStoreDispatch } from '../../../store';
 import useQueryParam from '../../utils/hooks/useQueryParam';
+import { useBreakpoints } from '../media-query/media-query-context';
 import { SearchState } from '../terminology-search/terminology-search-slice';
 import { VocabularyState } from '../vocabulary/vocabulary-slice';
 import {
@@ -20,8 +20,8 @@ interface SearchCountTagsProps {
 export default function SearchCountTags({ count, filter, setFilter }: SearchCountTagsProps) {
   const { t } = useTranslation('common');
   const [keyword, updateKeyword] = useQueryParam('q');
-  const router = useRouter();
 
+  const { isSmall } = useBreakpoints();
 
   const dispatch = useStoreDispatch();
   let activeStatuses: string[] = [];;
@@ -73,7 +73,7 @@ export default function SearchCountTags({ count, filter, setFilter }: SearchCoun
   };
 
   return (
-    <CountWrapper>
+    <CountWrapper isSmall={isSmall} border={'showByOrg' in filter}>
       <CountText>
         {t('vocabulary-results-concepts')} {count} {t('vocabulary-results-with-following-filters')}
       </CountText>

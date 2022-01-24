@@ -1,3 +1,4 @@
+// OBSOLETE
 import useSWR from 'swr';
 import User from '../../interfaces/user-interface';
 
