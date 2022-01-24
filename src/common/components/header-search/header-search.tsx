@@ -16,12 +16,15 @@ export default function HeaderSearch({ isSearchOpen, setIsSearchOpen }: HeaderSe
   const { t } = useTranslation('common');
   const { isSmall } = useBreakpoints();
   const router = useRouter();
+  const isSearchPage = router.route === '/search';
 
   const [keyword] = useQueryParam('q');
-  const [searchInputValue, setSearchInputValue] = useState<string>(keyword ?? '');
+  const [searchInputValue, setSearchInputValue] = useState<string>(isSearchPage ? (keyword ?? '') : '');
   useEffect(() => {
-    setSearchInputValue(keyword ?? '');
-  }, [keyword, setSearchInputValue]);
+    if (isSearchPage) {
+      setSearchInputValue(keyword ?? '');
+    }
+  }, [keyword, setSearchInputValue, isSearchPage]);
 
   if (isSmall && !isSearchOpen) {
     return (
@@ -62,7 +65,7 @@ export default function HeaderSearch({ isSearchOpen, setIsSearchOpen }: HeaderSe
   );
 
   function search(q?: string) {
-    const previousSearchParameters = router.route === '/search' ? router.query : {};
+    const previousSearchParameters = isSearchPage ? router.query : {};
 
     const queryParameters = { ...previousSearchParameters };
     if (q) {
