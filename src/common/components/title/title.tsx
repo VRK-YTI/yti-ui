@@ -1,9 +1,11 @@
 import { useTranslation } from 'react-i18next';
 import { Heading } from 'suomifi-ui-components';
-import { Contributor, Description, StatusChip, TitleWrapper } from './title.styles';
+import { Contributor, Description, StatusChip, TitleDescriptionWrapper, TitleWrapper } from './title.styles';
 import InfoExpander from '../info-dropdown/info-expander';
 import { VocabularyInfoDTO } from '../../interfaces/vocabulary.interface';
 import { Property } from '../../interfaces/termed-data-types.interface';
+import { useBreakpoints } from '../media-query/media-query-context';
+import NewTerminology from '../new-terminology';
 
 interface TitleProps {
   info: string | VocabularyInfoDTO;
@@ -11,6 +13,7 @@ interface TitleProps {
 
 export default function Title({ info }: TitleProps) {
   const { t, i18n } = useTranslation('common');
+  const { isSmall } = useBreakpoints();
 
   if (!info) {
     return <></>;
@@ -20,7 +23,10 @@ export default function Title({ info }: TitleProps) {
     return (
       <TitleWrapper>
         <Heading variant='h1'>{info}</Heading>
-        <Description>{t('terminology-search-info')}</Description>
+        <TitleDescriptionWrapper isSmall={isSmall}>
+          <Description>{t('terminology-search-info')}</Description>
+          <NewTerminology />
+        </TitleDescriptionWrapper>
       </TitleWrapper>
     );
   } else {

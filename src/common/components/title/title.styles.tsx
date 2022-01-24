@@ -22,6 +22,14 @@ export const StatusChip = styled(StaticChip)<TitleProps>`
   width: min-content;
 `;
 
+export const TitleDescriptionWrapper = styled.div<{isSmall: boolean}>`
+  display: flex;
+  flex-direction: ${props => props.isSmall ? 'column' : 'row'};
+  gap: 20px;
+  justify-content: space-between;
+  align-items: baseline;
+`;
+
 export const TitleWrapper = styled.div`
   display: flex;
   flex-direction: column;

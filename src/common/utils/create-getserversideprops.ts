@@ -39,7 +39,7 @@ export function createCommonGetServerSideProps<T extends { [key: string]: any }>
           ...results,
           props: {
             ...results?.props,
-            ...(await serverSideTranslations(locale, ['collection', 'common', 'concept'])),
+            ...(await serverSideTranslations(locale, ['admin', 'collection', 'common', 'concept'])),
             isSSRMobile: Boolean(userAgent.match(
               /Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i
             )),
