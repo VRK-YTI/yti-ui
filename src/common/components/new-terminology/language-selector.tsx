@@ -1,0 +1,76 @@
+import { useState } from 'react';
+import { MultiSelectData, Paragraph, Text } from 'suomifi-ui-components';
+import { useBreakpoints } from '../media-query/media-query-context';
+import LanguageBlock from './language-block';
+import { MultiselectSmBot } from './new-terminology.styles';
+
+export interface TerminologyName {
+  lang: string;
+  name: string;
+  description: string;
+}
+
+export default function LanguageSelector() {
+  const { isSmall } = useBreakpoints();
+  const [selectedLanguages, setSelectedLanguages] = useState<MultiSelectData[]>([]);
+  const [terminologyNames, setTerminologyNames] = useState<TerminologyName[]>([]);
+
+  console.log(terminologyNames);
+
+  const languages = [
+    {
+      name: 'Suomi',
+      labelText: 'suomi FI',
+      uniqueItemId: 'fi'
+    },
+    {
+      name: 'Englanti',
+      labelText: 'englanti EN',
+      uniqueItemId: 'en'
+    },
+    {
+      name: 'Ruotsi',
+      labelText: 'ruotsi SV',
+      uniqueItemId: 'sv'
+    }
+  ];
+
+  return (
+    <>
+      <Paragraph marginBottomSpacing='m'>
+        <Text variant='bold'>Sanaston kielet</Text>
+      </Paragraph>
+
+      <Paragraph marginBottomSpacing='m'>
+        <Text>
+          Valitse sanastolle kielet, joilla sanaston sisältö on kuvattu.
+          Anna myös sanaston nimi ja kuvaus valituilla kielillä.
+        </Text>
+      </Paragraph>
+
+      <MultiselectSmBot
+        labelText='Sanaston kielet'
+        items={languages}
+        chipListVisible={true}
+        ariaChipActionLabel="Remove"
+        ariaSelectedAmountText="languages selected"
+        ariaOptionsAvailableText="options available"
+        ariaOptionChipRemovedText="removed"
+        noItemsText='no items'
+        visualPlaceholder='Valitse sanaston kielet'
+        onItemSelectionsChange={(e) => setSelectedLanguages(e)}
+        isSmall={isSmall}
+      />
+
+      {selectedLanguages.map((language, idx) => (
+        <LanguageBlock
+          lang={language}
+          isSmall={isSmall}
+          terminologyNames={terminologyNames}
+          setTerminologyNames={setTerminologyNames}
+          key={`${language}-${idx}`}
+        />
+      ))}
+    </>
+  );
+}

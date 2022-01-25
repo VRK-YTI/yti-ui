@@ -12,12 +12,18 @@ export default function NewTerminology() {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const [showModal, setShowModal] = useState(false);
-  const [isComplete, setIsComplete] = useState(false);
+  const [isValid, setIsValid] = useState(false);
   const [inputType, setInputType] = useState('');
 
   if (!user.superuser) {
     return null;
   }
+
+  const handleClose = () => {
+    setIsValid(false);
+    setInputType('');
+    setShowModal(false);
+  };
 
   return (
     <>
@@ -33,7 +39,7 @@ export default function NewTerminology() {
         appElementId='__next'
         visible={showModal}
         variant={isSmall ? 'smallScreen' : 'default'}
-        onEscKeyDown={() => setShowModal(false)}
+        onEscKeyDown={() => handleClose()}
       >
         <ModalContent>
           <ModalTitle>
@@ -57,20 +63,20 @@ export default function NewTerminology() {
             </RadioButton>
           </RadioButtonGroup>
 
-          {inputType === 'self' && <InfoManual />}
+          {inputType === 'self' && <InfoManual setIsValid={setIsValid} />}
           {inputType === 'file' && <InfoFile />}
 
         </ModalContent>
 
         <ModalFooter>
           <Button
-            disabled={!isComplete}
+            disabled={!isValid}
           >
             Lisää sanasto
           </Button>
           <Button
             variant='secondary'
-            onClick={() => setShowModal(false)}
+            onClick={() => handleClose()}
           >
             Keskeytä
           </Button>
