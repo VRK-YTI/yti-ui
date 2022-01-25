@@ -71,4 +71,4 @@ EXPOSE 80
 # https://nextjs.org/telemetry
 ENV NEXT_TELEMETRY_DISABLED 1
 
-CMD ["npm", "start", "--port", "80"]
+CMD ["npm", "start", "--", "--port", "80"]
