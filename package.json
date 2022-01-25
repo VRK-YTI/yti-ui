@@ -8,9 +8,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint --dir src",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:ci": "jest --ci --runInBand --coverage"
+    "test": "TZ=UTZ jest",
+    "test:watch": "TZ=UTZ jest --watch",
+    "test:ci": "TZ=UTZ jest --ci --runInBand --coverage"
   },
   "dependencies": {
     "@material-ui/core": "^4.12.3",
