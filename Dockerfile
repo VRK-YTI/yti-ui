@@ -31,7 +31,6 @@ WORKDIR /app
 COPY . .
 COPY --from=deps /app/node_modules ./node_modules
 RUN if [ -z $SKIP_TESTS ] ; then \
-    echo "Running test" \
     npm run test:ci; \
   else \
     echo "Skipping tests"; \
