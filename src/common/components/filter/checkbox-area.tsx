@@ -66,7 +66,7 @@ export default function CheckboxArea({ counts, data, filter, setFilter, title, t
           checked={filter.status?.['VALID'] as boolean}
           variant={variant}
         >
-          {t('VALID')} ({counts?.counts.statuses['VALID']} {t('vocabulary-filter-items')})
+          {t('VALID')} ({counts?.counts.statuses['VALID'] ?? '0'} {t('vocabulary-filter-items')})
         </FilterCheckbox>
         <FilterCheckbox
           onClick={() => handleCheckbox('DRAFT')}

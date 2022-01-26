@@ -58,7 +58,7 @@ export default function RadioButtonArea({ filter, data, setFilter, title, isModa
               checked={value === filter.showBy}
               variant={isModal ? 'large' : 'small'}
             >
-              {t(`vocabulary-filter-${value}`)} ({counts?.counts?.categories?.[key]} {t('vocabulary-filter-items')})
+              {t(`vocabulary-filter-${value}`)} ({counts?.counts?.categories?.[key] ?? '0'} {t('vocabulary-filter-items')})
             </FilterRadioButton>
           );
         })}

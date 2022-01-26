@@ -88,21 +88,25 @@ export default function Filter({
 
   function renderCheckboxArea(common?: boolean) {
     if (common) {
-      return (
-        <CheckboxArea
-          title={
-            type === 'terminology-search'
-              ?
-              t('terminology-search-filter-show-states')
-              :
-              t('vocabulary-filter-show-concept-states')
-          }
-          filter={filter}
-          setFilter={setSomeFilter}
-          isModal={isModal}
-          counts={counts}
-        />
-      );
+      if ('showBy' in filter && filter.showBy === 'collections') {
+        return <></>;
+      } else {
+        return (
+          <CheckboxArea
+            title={
+              type === 'terminology-search'
+                ?
+                t('terminology-search-filter-show-states')
+                :
+                t('vocabulary-filter-show-concept-states')
+            }
+            filter={filter}
+            setFilter={setSomeFilter}
+            isModal={isModal}
+            counts={counts}
+          />
+        );
+      }
     } else if (groups) {
       return (
         <CheckboxArea
