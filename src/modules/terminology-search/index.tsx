@@ -21,7 +21,6 @@ import { useRouter } from 'next/router';
 import { useBreakpoints } from '../../common/components/media-query/media-query-context';
 import { Modal, ModalContent } from 'suomifi-ui-components';
 import { useState } from 'react';
-import { Breadcrumb, BreadcrumbLink } from '../../common/components/breadcrumb';
 import { useGetCountsQuery } from '../../common/components/counts/counts-slice';
 
 export default function TerminologySearch() {
@@ -43,14 +42,15 @@ export default function TerminologySearch() {
     dispatch(setResultStart(0));
   }
 
+  const handleFilterChange = (value: any) => {
+    if (query.query.page && query.query.page !== '1') {
+      query.push(query.pathname + '?page=1');
+    }
+    return setFilter(value);
+  };
+
   return (
     <>
-      <Breadcrumb>
-        <BreadcrumbLink url="/search?page=1" current>
-          {t('terminology-title')}
-        </BreadcrumbLink>
-      </Breadcrumb>
-
       <Title info={t('terminology-title')} />
       {isSmall &&
         <FilterMobileButton
@@ -67,7 +67,7 @@ export default function TerminologySearch() {
             <SearchResults
               data={data}
               filter={filter}
-              setSomeFilter={setFilter}
+              setSomeFilter={handleFilterChange}
               type={'terminology-search'}
             />
             {data
@@ -91,7 +91,7 @@ export default function TerminologySearch() {
             groups={groups}
             organizations={organizations}
             type={'terminology-search'}
-            setSomeFilter={setFilter}
+            setSomeFilter={handleFilterChange}
             resetSomeFilter={resetFilter}
             counts={counts}
           />
@@ -111,7 +111,7 @@ export default function TerminologySearch() {
                 groups={groups}
                 organizations={organizations}
                 type={'terminology-search'}
-                setSomeFilter={setFilter}
+                setSomeFilter={handleFilterChange}
                 resetSomeFilter={resetFilter}
                 isModal={true}
                 setShowModal={setShowModal}
