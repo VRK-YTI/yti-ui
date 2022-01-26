@@ -219,8 +219,8 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
                       }
                     </CardDescription>
 
-                    <CardConcepts value='Käsitteet'>
-                      {renderCollectionMembers(collection.references.member)}
+                    <CardConcepts value={t('vocabulary-filter-concepts') as string}>
+                      {renderCollectionMembers(collection.references?.member)}
                     </CardConcepts>
                   </Card>
                 );

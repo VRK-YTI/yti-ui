@@ -22,6 +22,7 @@ import { useTranslation } from 'next-i18next';
 import { Modal, ModalContent } from 'suomifi-ui-components';
 import { Breadcrumb, BreadcrumbLink } from '../../common/components/breadcrumb';
 import PropertyValue from '../../common/components/property-value';
+import { useGetVocabularyCountQuery } from '../../common/components/counts/counts-slice';
 import { getPropertyValue } from '../../common/components/property-value/get-property-value';
 
 interface VocabularyProps {
@@ -36,6 +37,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
   const { data: collections } = useGetCollectionsQuery(id);
   const { data: concepts } = useGetConceptResultQuery(id);
   const { data: info } = useGetVocabularyQuery(id);
+  const { data: counts } = useGetVocabularyCountQuery(id);
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
@@ -103,6 +105,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
             type={'vocabulary'}
             setSomeFilter={setVocabularyFilter}
             resetSomeFilter={resetVocabularyFilter}
+            counts={counts}
           />
           :
           <Modal
@@ -123,6 +126,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
                 isModal={true}
                 setShowModal={setShowModal}
                 resultCount={concepts?.totalHitCount}
+                counts={counts}
               />
             </ModalContent>
           </Modal>

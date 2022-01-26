@@ -12,8 +12,17 @@ export const countsApi = createApi({
         url: '/counts',
         method: 'GET'
       })
+    }),
+    getVocabularyCount: builder.query<Counts, string>({
+      query: (value) => ({
+        url: `/conceptCounts?graphId=${value}`,
+        method: 'GET',
+        headers: {
+          'content-type': 'application/json',
+        },
+      })
     })
   }),
 });
 
-export const { useGetCountsQuery } = countsApi;
+export const { useGetCountsQuery, useGetVocabularyCountQuery } = countsApi;
