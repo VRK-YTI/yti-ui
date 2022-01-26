@@ -6,9 +6,11 @@ import axiosBaseQuery from '../axios-base-query';
 
 export interface SearchState {
   filter: {
-    infoDomains: { id: string, value: string }[] | [];
-    keyword: string;
-    showByOrg: string;
+    infoDomains: {id: string, value: string}[] | [];
+    showByOrg: {
+      id: string;
+      value: string;
+    };
     status: { [status: string]: boolean };
   };
   resultStart: number;
@@ -18,8 +20,10 @@ export interface SearchState {
 export const initialState: SearchState = {
   filter: {
     infoDomains: [],
-    keyword: '',
-    showByOrg: '',
+    showByOrg: {
+      id: '',
+      value: ''
+    },
     status: {
       'VALID': true,
       'DRAFT': true,
@@ -52,14 +56,15 @@ export const terminologySearchApi = createApi({
   baseQuery: axiosBaseQuery({ baseUrl: '/terminology-api/api/v1/frontend' }),
   tagTypes: ['TerminologySearch'],
   endpoints: builder => ({
-    getSearchResult: builder.query<TerminologySearchResult, { filter: SearchState['filter'], resultStart: number }>({
+    getSearchResult: builder.query<TerminologySearchResult, { filter: SearchState['filter'], resultStart: number, keyword: string }>({
       query: (value) => ({
         url: '/searchTerminology',
         method: 'POST',
         data: {
-          query: value.filter.keyword,
+          query: value.keyword,
           statuses: Array.from(Object.keys(value.filter.status).filter(s => value.filter.status[s])),
           groups: value.filter.infoDomains.map(infoD => infoD.id),
+          organizations: value.filter.showByOrg.id ? [value.filter.showByOrg.id] : [],
           searchConcepts: true,
           prefLang: 'fi',
           pageSize: 10,

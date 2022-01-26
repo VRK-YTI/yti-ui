@@ -4,6 +4,7 @@ import { Text } from 'suomifi-ui-components';
 import { AppThunk, useStoreDispatch } from '../../../store';
 import { VocabularyState } from '../vocabulary/vocabulary-slice';
 import { SearchState } from '../terminology-search/terminology-search-slice';
+import { Counts } from '../../interfaces/counts.interface';
 
 interface InfoDProp {
   id: string;
@@ -17,9 +18,10 @@ interface CheckboxProps {
   title: string;
   type?: string;
   isModal?: boolean;
+  counts?: Counts;
 }
 
-export default function CheckboxArea({ data, filter, setFilter, title, type, isModal }: CheckboxProps) {
+export default function CheckboxArea({ counts, data, filter, setFilter, title, type, isModal }: CheckboxProps) {
   const { t } = useTranslation('common');
   const dispatch = useStoreDispatch();
   const variant = isModal ? 'large' : 'small';
@@ -64,28 +66,28 @@ export default function CheckboxArea({ data, filter, setFilter, title, type, isM
           checked={filter.status?.['VALID'] as boolean}
           variant={variant}
         >
-          {t('VALID')} (n {t('vocabulary-filter-items')})
+          {t('VALID')} ({counts?.counts.statuses['VALID'] ?? '0'} {t('vocabulary-filter-items')})
         </FilterCheckbox>
         <FilterCheckbox
           onClick={() => handleCheckbox('DRAFT')}
           checked={filter.status?.['DRAFT'] as boolean}
           variant={variant}
         >
-          {t('DRAFT')} (n {t('vocabulary-filter-items')})
+          {t('DRAFT')} ({counts?.counts.statuses['DRAFT'] ?? '0'} {t('vocabulary-filter-items')})
         </FilterCheckbox>
         <FilterCheckbox
           onClick={() => handleCheckbox('RETIRED')}
           checked={filter.status?.['RETIRED'] as boolean}
           variant={variant}
         >
-          {t('RETIRED')} (n {t('vocabulary-filter-items')})
+          {t('RETIRED')} ({counts?.counts.statuses['RETIRED'] ?? '0'} {t('vocabulary-filter-items')})
         </FilterCheckbox>
         <FilterCheckbox
           onClick={() => handleCheckbox('SUPERSEDED')}
           checked={filter.status?.['SUPERSEDED'] as boolean}
           variant={variant}
         >
-          {t('SUPERSEDED')} (n {t('vocabulary-filter-items')})
+          {t('SUPERSEDED')} ({counts?.counts.statuses['SUPERSEDED'] ?? '0'} {t('vocabulary-filter-items')})
         </FilterCheckbox>
       </div>
     );
@@ -105,6 +107,8 @@ export default function CheckboxArea({ data, filter, setFilter, title, type, isM
           {title}
         </Text>
         {data.map((d: InfoDProp) => {
+          const count = counts?.counts.groups[d.id] ?? '0';
+
           return (
             <FilterCheckbox
               key={`checkbox-${d.value}-${d.id}`}
@@ -114,7 +118,7 @@ export default function CheckboxArea({ data, filter, setFilter, title, type, isM
               }
               variant={variant}
             >
-              {d.value} (n {t('vocabulary-filter-items')})
+              {d.value} ({count} {t('vocabulary-filter-items')})
             </FilterCheckbox>
           );
         })}

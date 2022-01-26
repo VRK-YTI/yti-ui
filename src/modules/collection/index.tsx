@@ -27,9 +27,6 @@ export default function Collection({ terminologyId, collectionId }: CollectionPr
   return (
     <>
       <Breadcrumb>
-        <BreadcrumbLink url="/search?page=1">
-          {t('terminology-title', { ns: 'common' })}
-        </BreadcrumbLink>
         <BreadcrumbLink url={`/terminology/${terminologyId}`}>
           <PropertyValue property={terminology?.properties.prefLabel} />
         </BreadcrumbLink>

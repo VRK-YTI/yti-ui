@@ -21,7 +21,8 @@ import { useRouter } from 'next/router';
 import { useBreakpoints } from '../../common/components/media-query/media-query-context';
 import { Modal, ModalContent } from 'suomifi-ui-components';
 import { useState } from 'react';
-import { Breadcrumb, BreadcrumbLink } from '../../common/components/breadcrumb';
+import useQueryParam from '../../common/utils/hooks/useQueryParam';
+import { useGetCountsQuery } from '../../common/components/counts/counts-slice';
 
 export default function TerminologySearch() {
   const { t, i18n } = useTranslation();
@@ -30,9 +31,11 @@ export default function TerminologySearch() {
   const query = useRouter();
   const filter = useSelector(selectFilter());
   const resultStart = useSelector(selectResultStart());
-  const { data } = useGetSearchResultQuery({ filter: filter, resultStart: resultStart });
+  const [keyword] = useQueryParam('q');
+  const { data } = useGetSearchResultQuery({ filter: filter, resultStart: resultStart, keyword: keyword ?? '' });
   const { data: groups } = useGetGroupsQuery(i18n.language);
   const { data: organizations } = useGetOrganizationsQuery(i18n.language);
+  const { data: counts} = useGetCountsQuery(null);
   const [showModal, setShowModal] = useState(false);
 
   if (query.query.page && query.query.page !== '1') {
@@ -41,14 +44,15 @@ export default function TerminologySearch() {
     dispatch(setResultStart(0));
   }
 
+  const handleFilterChange = (value: any) => {
+    if (query.query.page && query.query.page !== '1') {
+      query.push(query.pathname + '?page=1');
+    }
+    return setFilter(value);
+  };
+
   return (
     <>
-      <Breadcrumb>
-        <BreadcrumbLink url="/search?page=1" current>
-          {t('terminology-title')}
-        </BreadcrumbLink>
-      </Breadcrumb>
-
       <Title info={t('terminology-title')} />
       {isSmall &&
         <FilterMobileButton
@@ -65,7 +69,7 @@ export default function TerminologySearch() {
             <SearchResults
               data={data}
               filter={filter}
-              setSomeFilter={setFilter}
+              setSomeFilter={handleFilterChange}
               type={'terminology-search'}
             />
             {data
@@ -89,8 +93,9 @@ export default function TerminologySearch() {
             groups={groups}
             organizations={organizations}
             type={'terminology-search'}
-            setSomeFilter={setFilter}
+            setSomeFilter={handleFilterChange}
             resetSomeFilter={resetFilter}
+            counts={counts}
           />
           :
           <Modal
@@ -108,11 +113,12 @@ export default function TerminologySearch() {
                 groups={groups}
                 organizations={organizations}
                 type={'terminology-search'}
-                setSomeFilter={setFilter}
+                setSomeFilter={handleFilterChange}
                 resetSomeFilter={resetFilter}
                 isModal={true}
                 setShowModal={setShowModal}
                 resultCount={data?.totalHitCount}
+                counts={counts}
               />
             </ModalContent>
           </Modal>

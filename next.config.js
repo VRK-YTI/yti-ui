@@ -7,6 +7,15 @@ module.exports = (phase, { defaultConfig }) => {
     i18n,
     eslint: {
       dirs: ['src']
+    },
+    async redirects() {
+      return [
+        {
+          source: '/concepts/:path*',
+          destination: '/terminology/:path*',
+          permanent: true,
+        }
+      ];
     }
   };
 

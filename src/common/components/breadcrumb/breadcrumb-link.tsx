@@ -19,9 +19,11 @@ export default function BreadcrumbLink({ url, current = false, children }: Bread
 
   return (
     <Link href={url} passHref>
-      <SuomiFiBreadcrumbLink current={current}>
-        {children}
-      </SuomiFiBreadcrumbLink>
+      <div>
+        <SuomiFiBreadcrumbLink current={current}>
+          {children}
+        </SuomiFiBreadcrumbLink>
+      </div>
     </Link>
   );
 }

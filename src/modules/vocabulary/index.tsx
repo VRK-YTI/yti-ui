@@ -3,6 +3,7 @@ import {
   initializeVocabularyFilter,
   resetVocabularyFilter,
   setVocabularyFilter,
+  useGetCollectionsQuery,
   useGetConceptResultQuery,
   useGetVocabularyQuery,
   VocabularyState,
@@ -21,6 +22,8 @@ import { useTranslation } from 'next-i18next';
 import { Modal, ModalContent } from 'suomifi-ui-components';
 import { Breadcrumb, BreadcrumbLink } from '../../common/components/breadcrumb';
 import PropertyValue from '../../common/components/property-value';
+import { useGetVocabularyCountQuery } from '../../common/components/counts/counts-slice';
+import { getPropertyValue } from '../../common/components/property-value/get-property-value';
 
 interface VocabularyProps {
   id: string;
@@ -31,8 +34,10 @@ export default function Vocabulary({ id }: VocabularyProps) {
   const { isSmall } = useBreakpoints();
   const dispatch = useStoreDispatch();
   const filter: VocabularyState['filter'] = useSelector(selectVocabularyFilter());
+  const { data: collections } = useGetCollectionsQuery(id);
   const { data: concepts } = useGetConceptResultQuery(id);
   const { data: info } = useGetVocabularyQuery(id);
+  const { data: counts } = useGetVocabularyCountQuery(id);
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
@@ -43,7 +48,11 @@ export default function Vocabulary({ id }: VocabularyProps) {
     if (info) {
       dispatch(setCurrentTerminology({
         id: info?.id,
-        value: info?.properties.prefLabel?.filter((pl: any) => pl.lang === i18n.language)[0].value ?? ''
+        value: getPropertyValue({
+          property: info?.properties.prefLabel,
+          language: i18n.language,
+          fallbackLanguage: 'fi'
+        }) ?? '',
       }));
     }
   }, [info, i18n, dispatch]);
@@ -51,9 +60,6 @@ export default function Vocabulary({ id }: VocabularyProps) {
   return (
     <>
       <Breadcrumb>
-        <BreadcrumbLink url="/search?page=1">
-          {t('terminology-title')}
-        </BreadcrumbLink>
         <BreadcrumbLink url={`/terminology/${id}`} current>
           <PropertyValue property={info?.properties.prefLabel} />
         </BreadcrumbLink>
@@ -70,12 +76,22 @@ export default function Vocabulary({ id }: VocabularyProps) {
         </FilterMobileButton>
       }
       <ResultAndFilterContainer>
-        {concepts &&
+        {(concepts && filter.showBy === 'concepts') &&
           <ResultAndStatsWrapper>
             <SearchResults
               data={concepts}
               filter={filter}
               setSomeFilter={setVocabularyFilter}
+            />
+          </ResultAndStatsWrapper>
+        }
+        {(collections && filter.showBy === 'collections') &&
+          <ResultAndStatsWrapper>
+            <SearchResults
+              data={collections}
+              filter={filter}
+              setSomeFilter={setVocabularyFilter}
+              type='collections'
             />
           </ResultAndStatsWrapper>
         }
@@ -86,6 +102,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
             type={'vocabulary'}
             setSomeFilter={setVocabularyFilter}
             resetSomeFilter={resetVocabularyFilter}
+            counts={counts}
           />
           :
           <Modal
@@ -106,6 +123,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
                 isModal={true}
                 setShowModal={setShowModal}
                 resultCount={concepts?.totalHitCount}
+                counts={counts}
               />
             </ModalContent>
           </Modal>

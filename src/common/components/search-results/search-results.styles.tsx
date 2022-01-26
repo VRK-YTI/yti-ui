@@ -20,6 +20,20 @@ export const CardChip = styled(StaticChip)<CardChipProps>`
   width: min-content;
 `;
 
+export const CardConcepts = styled(Text)`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-top: ${props => props.theme.suomifi.spacing.m};
+
+  &:before {
+    content: attr(value);
+    font-weight: 600;
+    margin-bottom: 5px;
+    width: 100%;
+  }
+`;
+
 export const CardContributor = styled(Text)`
   color: ${(props) => props.theme.suomifi.colors.depthDark1};
   font-size: 14px;
@@ -41,6 +55,7 @@ export const CardSubtitle = styled(Text)`
   font-weight: 600;
   gap: ${props => props.theme.suomifi.spacing.xxs};
   margin-bottom: ${props => props.theme.suomifi.spacing.xs};
+  text-transform: uppercase;
 `;
 
 export const CardTitle = styled(Heading)`
@@ -66,8 +81,10 @@ export const CardTitleLink = styled(Link)`
   gap: ${props => props.theme.suomifi.spacing.xs};
 `;
 
-export const CardWrapper = styled.div`
+export const CardWrapper = styled.div<{ isSmall: boolean }>`
   border-top: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
-  border-right: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
-  border-left: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
+  border-right:  ${props => props.isSmall ? 'none' : `1px solid ${props.theme.suomifi.colors.depthLight1}`};
+  border-left: ${props => props.isSmall ? 'none' : `1px solid ${props.theme.suomifi.colors.depthLight1}`};
+  margin-left: -${props => props.isSmall ? props.theme.suomifi.spacing.s : '0'};
+  margin-right: -${props => props.isSmall ? props.theme.suomifi.spacing.s : '0'};
 `;
