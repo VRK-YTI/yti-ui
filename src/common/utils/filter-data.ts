@@ -31,7 +31,7 @@ export default function filterData(data: VocabularyConcepts | Collection[], filt
     let filteredData: Collection[] = [];
 
     data.forEach(collection => {
-      if (getPropertyValue({ property: collection.properties.prefLabel, language: language })?.includes(filter.keyword.toLowerCase())) {
+      if (getPropertyValue({ property: collection.properties.prefLabel, language: language })?.includes(keyword.toLowerCase())) {
         filteredData.push(collection);
       }
     });
