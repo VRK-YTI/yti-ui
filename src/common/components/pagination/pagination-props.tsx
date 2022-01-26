@@ -1,9 +1,10 @@
 import { TerminologySearchResult } from '../../interfaces/terminology.interface';
 import { AppDispatch, AppThunk } from '../../../store';
 import { NextRouter } from 'next/router';
+import { VocabularyConcepts } from '../../interfaces/vocabulary.interface';
 
 export interface PaginationProps {
-  data: TerminologySearchResult;
+  data: TerminologySearchResult | VocabularyConcepts;
   dispatch: AppDispatch;
   isSmall?: boolean;
   pageString: string;

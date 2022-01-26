@@ -31,7 +31,12 @@ export default function Pagination({
   const handleClick = (i: number) => {
     setActiveItem(i);
     dispatch(setResultStart((i - 1) * 10));
-    query.push(query.route + `?page=${i}`);
+    if (query.route.includes('[terminologyId]')) {
+      const parsedRoute = query.route.replace('[terminologyId]', query.query.terminologyId as string);
+      query.push(parsedRoute + `?page=${i}`);
+    } else {
+      query.push(query.route + `?page=${i}`);
+    }
   };
 
   if (items.length < 2) {

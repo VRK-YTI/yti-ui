@@ -7,12 +7,14 @@ import {
   useGetConceptResultQuery,
   useGetVocabularyQuery,
   VocabularyState,
-  setCurrentTerminology
+  setCurrentTerminology,
+  setResultStart,
+  selectResultStart
 } from '../../common/components/vocabulary/vocabulary-slice';
 import Filter from '../../common/components/filter/filter';
 import SearchResults from '../../common/components/search-results/search-results';
 import Title from '../../common/components/title/title';
-import { ResultAndFilterContainer, ResultAndStatsWrapper } from './vocabulary.styles';
+import { ResultAndFilterContainer, ResultAndStatsWrapper, PaginationWrapper } from './vocabulary.styles';
 import { selectVocabularyFilter } from '../../common/components/vocabulary/vocabulary-slice';
 import { useSelector } from 'react-redux';
 import { useStoreDispatch } from '../../store';
@@ -24,6 +26,8 @@ import { Breadcrumb, BreadcrumbLink } from '../../common/components/breadcrumb';
 import PropertyValue from '../../common/components/property-value';
 import { useGetVocabularyCountQuery } from '../../common/components/counts/counts-slice';
 import { getPropertyValue } from '../../common/components/property-value/get-property-value';
+import Pagination from '../../common/components/pagination/pagination';
+import { useRouter } from 'next/router';
 
 interface VocabularyProps {
   id: string;
@@ -32,13 +36,21 @@ interface VocabularyProps {
 export default function Vocabulary({ id }: VocabularyProps) {
   const { t, i18n } = useTranslation('common');
   const { isSmall } = useBreakpoints();
+  const query = useRouter();
   const dispatch = useStoreDispatch();
   const filter: VocabularyState['filter'] = useSelector(selectVocabularyFilter());
+  const resultStart: number = useSelector(selectResultStart());
   const { data: collections } = useGetCollectionsQuery(id);
-  const { data: concepts } = useGetConceptResultQuery(id);
+  const { data: concepts } = useGetConceptResultQuery({id: id, resultStart: resultStart});
   const { data: info } = useGetVocabularyQuery(id);
   const { data: counts } = useGetVocabularyCountQuery(id);
   const [showModal, setShowModal] = useState(false);
+
+  if (query.query.page && query.query.page !== '1') {
+    dispatch(setResultStart((parseInt(query.query.page as string, 10) - 1) * 10));
+  } else {
+    dispatch(setResultStart(0));
+  }
 
   useEffect(() => {
     dispatch(initializeVocabularyFilter());
@@ -83,6 +95,15 @@ export default function Vocabulary({ id }: VocabularyProps) {
               filter={filter}
               setSomeFilter={setVocabularyFilter}
             />
+            <PaginationWrapper>
+              <Pagination
+                data={concepts}
+                dispatch={dispatch}
+                pageString={t('pagination-page')}
+                setResultStart={setResultStart}
+                query={query}
+              />
+            </PaginationWrapper>
           </ResultAndStatsWrapper>
         }
         {(collections && filter.showBy === 'collections') &&
@@ -93,6 +114,12 @@ export default function Vocabulary({ id }: VocabularyProps) {
               setSomeFilter={setVocabularyFilter}
               type='collections'
             />
+            <PaginationWrapper>
+              <Pagination
+                data={collections}
+                query={query}
+              />
+            </PaginationWrapper>
           </ResultAndStatsWrapper>
         }
         {!isSmall

@@ -14,6 +14,7 @@ export interface VocabularyState {
     id: string;
     value: string;
   };
+  resultStart: number;
 }
 
 export const vocabularyInitialState: VocabularyState = {
@@ -29,7 +30,8 @@ export const vocabularyInitialState: VocabularyState = {
   currTerminology: {
     id: '',
     value: ''
-  }
+  },
+  resultStart: 0
 };
 
 export const vocabularySlice = createSlice({
@@ -47,6 +49,9 @@ export const vocabularySlice = createSlice({
         ...state,
         ...action.payload
       };
+    },
+    setResultStart(state, action) {
+      state.resultStart = action.payload;
     }
   },
 });
@@ -62,18 +67,18 @@ export const vocabularyApi = createApi({
         method: 'GET'
       })
     }),
-    getConceptResult: builder.query<VocabularyConcepts, string>({
+    getConceptResult: builder.query<VocabularyConcepts, {id: string, resultStart: number}>({
       query: (value) => ({
         url: '/searchConcept',
         method: 'POST',
         data: {
           highlight: true,
-          pageFrom: 0,
-          pageSize: 100,
+          pageFrom: value.resultStart,
+          pageSize: 10,
           sortDirection: 'ASC',
           sortLanguage: 'fi',
           terminologyId: [
-            value
+            value.id
           ]
         },
       }),
@@ -128,7 +133,14 @@ export const resetVocabularyFilter = (): AppThunk => dispatch => {
   );
 };
 
+export const setResultStart = (resultStart: number): AppThunk => dispatch => {
+  dispatch(
+    vocabularySlice.actions.setResultStart(resultStart),
+  );
+};
+
 export const selectVocabularyFilter = () => (state: AppState): any => state.vocabularySearch.filter;
 export const selectCurrentTerminology = () => (state: AppState): any => state.vocabularySearch.currTerminology;
+export const selectResultStart = () => (state: AppState): any => state.vocabularySearch.resultStart;
 
 export default vocabularySlice.reducer;
