@@ -21,7 +21,11 @@ export default function Pagination({
   );
 
   useEffect(() => {
-    setActiveItem(parseInt(query.query.page as string, 10));
+    if (isNaN(parseInt(query.query.page as string))) {
+      setActiveItem(1);
+    } else {
+      setActiveItem(parseInt(query.query.page as string, 10));
+    }
   }, [query]);
 
   const handleClick = (i: number) => {
