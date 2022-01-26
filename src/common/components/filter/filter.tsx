@@ -19,6 +19,7 @@ import { isEqual } from 'lodash';
 import { TextInputArea } from './text-input-area';
 import Separator from '../separator';
 import { Button } from 'suomifi-ui-components';
+import useQueryParam from '../../utils/hooks/useQueryParam';
 import { getPropertyValue } from '../property-value/get-property-value';
 import { Counts } from '../../interfaces/counts.interface';
 
@@ -48,6 +49,7 @@ export default function Filter({
   counts
 }: FilterProps) {
   const { t, i18n } = useTranslation('common');
+  const [keyword, updateKeyword] = useQueryParam('q');
 
   // Returns filter according to templates found below.
   if (type === 'vocabulary' && 'showBy' in filter) {
@@ -182,11 +184,11 @@ export default function Filter({
   function renderRemove() {
     if (type === 'vocabulary') {
       return (
-        !isEqual(filter, vocabularyInitialState.filter) &&
+        (!isEqual(filter, vocabularyInitialState.filter) || keyword) &&
         <>
           <Remove
             title={t('vocabulary-filter-remove-all')}
-            resetFilter={resetSomeFilter}
+            resetFilter={resetFilter}
           />
           <Separator />
         </>
@@ -198,12 +200,14 @@ export default function Filter({
           !isEqual({ ...filter, infoDomains: [] }, initialState.filter)
           ||
           filter.infoDomains.length > 0
+          ||
+          keyword
         )
         &&
         <>
           <Remove
             title={t('vocabulary-filter-remove-all')}
-            resetFilter={resetSomeFilter}
+            resetFilter={resetFilter}
           />
           <Separator />
         </>
@@ -211,13 +215,16 @@ export default function Filter({
     }
   }
 
+  function resetFilter() {
+    updateKeyword();
+    return resetSomeFilter();
+  }
+
   function renderTextInputArea() {
     return (
       <>
         <TextInputArea
           title={t('vocabulary-filter-filter-by-keyword')}
-          filter={filter}
-          setFilter={setSomeFilter}
           visualPlaceholder={t('vocabulary-filter-visual-placeholder')}
           isModal={isModal}
         />

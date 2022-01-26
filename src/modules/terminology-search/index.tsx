@@ -21,6 +21,8 @@ import { useRouter } from 'next/router';
 import { useBreakpoints } from '../../common/components/media-query/media-query-context';
 import { Modal, ModalContent } from 'suomifi-ui-components';
 import { useState } from 'react';
+import { Breadcrumb, BreadcrumbLink } from '../../common/components/breadcrumb';
+import useQueryParam from '../../common/utils/hooks/useQueryParam';
 import { useGetCountsQuery } from '../../common/components/counts/counts-slice';
 
 export default function TerminologySearch() {
@@ -30,7 +32,8 @@ export default function TerminologySearch() {
   const query = useRouter();
   const filter = useSelector(selectFilter());
   const resultStart = useSelector(selectResultStart());
-  const { data } = useGetSearchResultQuery({ filter: filter, resultStart: resultStart });
+  const [keyword] = useQueryParam('q');
+  const { data } = useGetSearchResultQuery({ filter: filter, resultStart: resultStart, keyword: keyword ?? '' });
   const { data: groups } = useGetGroupsQuery(null);
   const { data: organizations } = useGetOrganizationsQuery(null);
   const { data: counts} = useGetCountsQuery(null);

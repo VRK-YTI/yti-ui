@@ -5,6 +5,7 @@ import { Collection } from '../../interfaces/collection.interface';
 import { TerminologySearchResult } from '../../interfaces/terminology.interface';
 import { VocabularyConcepts } from '../../interfaces/vocabulary.interface';
 import filterData from '../../utils/filter-data';
+import useQueryParam from '../../utils/hooks/useQueryParam';
 import PropertyValue from '../property-value';
 import { getPropertyValue } from '../property-value/get-property-value';
 import { useBreakpoints } from '../media-query/media-query-context';
@@ -36,6 +37,7 @@ interface SearchResultsProps {
 
 export default function SearchResults({ data, filter, type, setSomeFilter }: SearchResultsProps) {
   const { t, i18n } = useTranslation('common');
+  const [keyword] = useQueryParam('q');
   const { isSmall } = useBreakpoints();
 
   if (type === 'terminology-search' && 'terminologies' in data) {
@@ -130,7 +132,7 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
   function renderConceptSearchResults() {
     if ('concepts' in data) {
       // Note: This should be replaced when backend request for terminology has been updated
-      const filteredData = filterData(data, filter, i18n.language);
+      const filteredData = filterData(data, filter, keyword ?? '', i18n.language);
 
       if (filteredData && !Array.isArray(filteredData)) {
         return (
