@@ -30,7 +30,7 @@ ARG VERSION
 WORKDIR /app
 COPY . .
 COPY --from=deps /app/node_modules ./node_modules
-RUN if [ -z $SKIP_TESTS ] ; then \
+RUN if [ -z "$SKIP_TESTS" ] ; then \
     npm run test:ci; \
   else \
     echo "Skipping tests"; \
@@ -65,7 +65,7 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package.json ./package.json
-# COPY --from=builder /app/junit.xml ./
+COPY --from=builder /app/junit.xml ./
 
 USER nextjs
 
