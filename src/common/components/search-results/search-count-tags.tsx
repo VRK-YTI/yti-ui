@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Chip } from 'suomifi-ui-components';
 import { AppThunk, useStoreDispatch } from '../../../store';
+import useQueryParam from '../../utils/hooks/useQueryParam';
 import { useBreakpoints } from '../media-query/media-query-context';
 import { SearchState } from '../terminology-search/terminology-search-slice';
 import { VocabularyState } from '../vocabulary/vocabulary-slice';
@@ -18,6 +19,8 @@ interface SearchCountTagsProps {
 
 export default function SearchCountTags({ count, filter, setFilter }: SearchCountTagsProps) {
   const { t } = useTranslation('common');
+  const [keyword, updateKeyword] = useQueryParam('q');
+
   const { isSmall } = useBreakpoints();
 
   const dispatch = useStoreDispatch();
@@ -26,8 +29,8 @@ export default function SearchCountTags({ count, filter, setFilter }: SearchCoun
   if ('showByOrg' in filter && filter.showByOrg.value) {
     activeStatuses.push(filter.showByOrg.value);
 
-    if (filter.keyword) {
-      activeStatuses.push(filter.keyword);
+    if (keyword) {
+      activeStatuses.push(keyword);
     }
 
     Object.keys(filter.status).map(key => {
@@ -42,8 +45,8 @@ export default function SearchCountTags({ count, filter, setFilter }: SearchCoun
       }
     });
 
-    if (filter.keyword) {
-      activeStatuses.push(filter.keyword);
+    if (keyword) {
+      activeStatuses.push(keyword);
     }
   }
 
@@ -54,7 +57,7 @@ export default function SearchCountTags({ count, filter, setFilter }: SearchCoun
   }
 
   const handleTagClose = (s: string) => {
-    let retVal: SearchCountTagsProps['filter'];
+    let retVal: SearchCountTagsProps['filter'] = filter;
 
     if (Object.keys(filter.status).includes(s)) {
       retVal = { ...filter, status: { ...filter.status, [s]: false } };
@@ -63,7 +66,7 @@ export default function SearchCountTags({ count, filter, setFilter }: SearchCoun
     } else if ('showByOrg' in filter && filter.showByOrg.value !== '') {
       retVal = { ...filter, showByOrg: {id: '', value: ''} };
     } else {
-      retVal = { ...filter, keyword: '' };
+      updateKeyword();
     }
 
     dispatch(setFilter(retVal));

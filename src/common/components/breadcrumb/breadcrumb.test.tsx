@@ -2,7 +2,6 @@ import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
 import { Breadcrumb, BreadcrumbLink } from '.';
-import { useRouter } from '../../../../__mocks__/next-routerMock';
 import { lightTheme } from '../../../layouts/theme';
 import { makeStore } from '../../../store';
 
@@ -29,8 +28,6 @@ describe('breadcrumb', () => {
   test('should render entire path', () => {
     const store = makeStore();
 
-    useRouter().push('/');
-
     render(
       <Provider store={store}>
         <ThemeProvider theme={lightTheme}>
@@ -49,8 +46,6 @@ describe('breadcrumb', () => {
 
   test('should have one crumb to have status of "current"', () => {
     const store = makeStore();
-
-    useRouter().push('/');
 
     render(
       <Provider store={store}>

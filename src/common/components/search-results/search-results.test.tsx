@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import { NextRouter, useRouter } from 'next/router';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
 import { lightTheme } from '../../../layouts/theme';
@@ -6,8 +7,13 @@ import { makeStore } from '../../../store';
 import { setVocabularyFilter } from '../vocabulary/vocabulary-slice';
 import SearchResults from './search-results';
 
+jest.mock('next/router');
+const mockedUseRouter = useRouter as jest.MockedFunction<typeof useRouter>;
+
 describe('search-results', () => {
   test('should render component', () => {
+    mockedUseRouter.mockReturnValue({ query: {} } as NextRouter);
+
     const store = makeStore();
 
     const filter = {
@@ -46,6 +52,8 @@ describe('search-results', () => {
   });
 
   test('should render data', () => {
+    mockedUseRouter.mockReturnValue({ query: {} } as NextRouter);
+
     const store = makeStore();
 
     const filter = {
