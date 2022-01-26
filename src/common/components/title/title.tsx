@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Heading } from 'suomifi-ui-components';
-import { Contributor, Description, StatusChip, TitleWrapper } from './title.styles';
+import { Contributor, Description, StatusChip, TitleWrapper, TitleWrapperNoBreadcrumb } from './title.styles';
 import InfoExpander from '../info-dropdown/info-expander';
 import { VocabularyInfoDTO } from '../../interfaces/vocabulary.interface';
 import { Property } from '../../interfaces/termed-data-types.interface';
@@ -18,10 +18,10 @@ export default function Title({ info }: TitleProps) {
 
   if (typeof info === 'string') {
     return (
-      <TitleWrapper>
+      <TitleWrapperNoBreadcrumb>
         <Heading variant='h1'>{info}</Heading>
         <Description>{t('terminology-search-info')}</Description>
-      </TitleWrapper>
+      </TitleWrapperNoBreadcrumb>
     );
   } else {
     const status = info.properties.status?.[0].value ?? '';

@@ -13,7 +13,10 @@ describe('dropdown-area', () => {
     const filter = {
       infoDomains: [],
       keyword: '',
-      showByOrg: '',
+      showByOrg: {
+        id: '',
+        value: ''
+      },
       status: {
         'VALID': true,
         'DRAFT': true,
@@ -23,10 +26,81 @@ describe('dropdown-area', () => {
     };
 
     const data = [
-      'Organization1',
-      'Organization2',
-      'Organization3',
-      'Organization4',
+      {
+        code: '',
+        id: '123',
+        properties: {
+          prefLabel: [
+            {
+              lang: 'en',
+              regex: '(?s)^.*$',
+              value: 'Organization1'
+            },
+            {
+              lang: 'fi',
+              regex: '(?s)^.*$',
+              value: 'Organisaatio1'
+            }
+          ]
+        },
+        type: {
+          graph: {
+            id: '321'
+          },
+          id: 'Organization'
+        },
+        uri: ''
+      },
+      {
+        code: '',
+        id: '456',
+        properties: {
+          prefLabel: [
+            {
+              lang: 'en',
+              regex: '(?s)^.*$',
+              value: 'Organization2'
+            },
+            {
+              lang: 'fi',
+              regex: '(?s)^.*$',
+              value: 'Organisaatio2'
+            }
+          ]
+        },
+        type: {
+          graph: {
+            id: '654'
+          },
+          id: 'Organization'
+        },
+        uri: ''
+      },
+      {
+        code: '',
+        id: '789',
+        properties: {
+          prefLabel: [
+            {
+              lang: 'en',
+              regex: '(?s)^.*$',
+              value: 'Organization3'
+            },
+            {
+              lang: 'fi',
+              regex: '(?s)^.*$',
+              value: 'Organisaatio3'
+            }
+          ]
+        },
+        type: {
+          graph: {
+            id: '987'
+          },
+          id: 'Organization'
+        },
+        uri: ''
+      }
     ];
 
     render(
@@ -42,9 +116,8 @@ describe('dropdown-area', () => {
       </Provider>
     );
 
-    expect(screen.getByText('Organization1')).toBeInTheDocument;
-    expect(screen.getByText('Organization2')).toBeInTheDocument;
-    expect(screen.getByText('Organization3')).toBeInTheDocument;
-    expect(screen.getByText('Organization4')).toBeInTheDocument;
+    expect(screen.getByText('Organisaatio1')).toBeInTheDocument;
+    expect(screen.getByText('Organisaatio2')).toBeInTheDocument;
+    expect(screen.getByText('Organisaatio3')).toBeInTheDocument;
   });
 });

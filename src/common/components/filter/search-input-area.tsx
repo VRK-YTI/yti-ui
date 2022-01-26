@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { SearchInput } from 'suomifi-ui-components';
 import { AppThunk, useStoreDispatch } from '../../../store';
+import useQueryParam from '../../utils/hooks/useQueryParam';
 import { SearchState } from '../terminology-search/terminology-search-slice';
 import { VocabularyState } from '../vocabulary/vocabulary-slice';
 
@@ -24,11 +25,12 @@ export default function SearchInputArea({
   const { t } = useTranslation('common');
   const dispatch = useStoreDispatch();
 
-  const [inputValue, setInputValue] = useState(filter.keyword);
+  const [keyword] = useQueryParam('q');
+  const [inputValue, setInputValue] = useState(keyword);
 
   useEffect(() => {
-    setInputValue(filter.keyword);
-  }, [filter.keyword]);
+    setInputValue(keyword);
+  }, [keyword]);
 
   const handleKeywordChange = (s: string) => {
     setInputValue(s);

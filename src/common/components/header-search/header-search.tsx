@@ -16,7 +16,7 @@ export default function HeaderSearch({ isSearchOpen, setIsSearchOpen }: HeaderSe
   const { t } = useTranslation('common');
   const { isSmall } = useBreakpoints();
   const router = useRouter();
-  const isSearchPage = router.route === '/search';
+  const isSearchPage = router.route === '/';
 
   const [keyword] = useQueryParam('q');
   const [searchInputValue, setSearchInputValue] = useState<string>(isSearchPage ? (keyword ?? '') : '');
@@ -75,7 +75,7 @@ export default function HeaderSearch({ isSearchOpen, setIsSearchOpen }: HeaderSe
     }
 
     return router.push({
-      pathname: '/search',
+      pathname: '/',
       query: queryParameters,
     }, undefined, { shallow: true });
   }
