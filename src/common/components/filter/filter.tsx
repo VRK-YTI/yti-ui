@@ -14,12 +14,13 @@ import {
 import { vocabularyInitialState, VocabularyState } from '../vocabulary/vocabulary-slice';
 import { initialState, SearchState } from '../terminology-search/terminology-search-slice';
 import { AppThunk } from '../../../store';
-import { CommonInfoDTO, GroupSearchResult, OrganizationSearchResult } from '../../interfaces/terminology.interface';
+import { GroupSearchResult, OrganizationSearchResult } from '../../interfaces/terminology.interface';
 import { isEqual } from 'lodash';
 import { TextInputArea } from './text-input-area';
 import Separator from '../separator';
 import { Button } from 'suomifi-ui-components';
 import { getPropertyValue } from '../property-value/get-property-value';
+import { Counts } from '../../interfaces/counts.interface';
 
 export interface FilterProps {
   filter: VocabularyState['filter'] | SearchState['filter'];
@@ -31,6 +32,7 @@ export interface FilterProps {
   isModal?: boolean;
   setShowModal?: Dispatch<SetStateAction<boolean>>;
   resultCount?: number;
+  counts?: Counts;
 }
 
 export default function Filter({
@@ -42,7 +44,8 @@ export default function Filter({
   type,
   isModal = false,
   setShowModal,
-  resultCount
+  resultCount,
+  counts
 }: FilterProps) {
   const { t, i18n } = useTranslation('common');
 
@@ -85,14 +88,25 @@ export default function Filter({
 
   function renderCheckboxArea(common?: boolean) {
     if (common) {
-      return (
-        <CheckboxArea
-          title={t('vocabulary-filter-show-concept-states')}
-          filter={filter}
-          setFilter={setSomeFilter}
-          isModal={isModal}
-        />
-      );
+      if ('showBy' in filter && filter.showBy === 'collections') {
+        return <></>;
+      } else {
+        return (
+          <CheckboxArea
+            title={
+              type === 'terminology-search'
+                ?
+                t('terminology-search-filter-show-states')
+                :
+                t('vocabulary-filter-show-concept-states')
+            }
+            filter={filter}
+            setFilter={setSomeFilter}
+            isModal={isModal}
+            counts={counts}
+          />
+        );
+      }
     } else if (groups) {
       return (
         <CheckboxArea
@@ -101,12 +115,13 @@ export default function Filter({
           setFilter={setSomeFilter}
           data={
             groups.map(group => {
-              let val = getPropertyValue({ property: group.properties.prefLabel, language: i18n.language}) ?? '';
+              let val = getPropertyValue({ property: group.properties.prefLabel, language: i18n.language }) ?? '';
               return { id: group.id as string, value: val };
             })
           }
           type='infoDomains'
           isModal={isModal}
+          counts={counts}
         />
       );
     }
@@ -139,15 +154,7 @@ export default function Filter({
     if ('showByOrg' in filter) {
       return (
         <DropdownArea
-          data={organizations?.map((organization: OrganizationSearchResult) => {
-            let val = '';
-            organization.properties.prefLabel?.map((pLabel: CommonInfoDTO) => {
-              if (pLabel.lang === i18n.language) {
-                val = pLabel.value;
-              }
-            }).sort();
-            return val;
-          })}
+          data={organizations}
           filter={filter}
           setFilter={setSomeFilter}
           title={t('terminology-search-filter-by-organization')}
@@ -166,6 +173,7 @@ export default function Filter({
           filter={filter}
           setFilter={setSomeFilter}
           isModal={isModal}
+          counts={counts}
         />
       );
     }

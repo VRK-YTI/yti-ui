@@ -21,6 +21,7 @@ import { useRouter } from 'next/router';
 import { useBreakpoints } from '../../common/components/media-query/media-query-context';
 import { Modal, ModalContent } from 'suomifi-ui-components';
 import { useState } from 'react';
+import { useGetCountsQuery } from '../../common/components/counts/counts-slice';
 
 export default function TerminologySearch() {
   const { t } = useTranslation();
@@ -32,6 +33,7 @@ export default function TerminologySearch() {
   const { data } = useGetSearchResultQuery({ filter: filter, resultStart: resultStart });
   const { data: groups } = useGetGroupsQuery(null);
   const { data: organizations } = useGetOrganizationsQuery(null);
+  const { data: counts} = useGetCountsQuery(null);
   const [showModal, setShowModal] = useState(false);
 
   if (query.query.page && query.query.page !== '1') {
@@ -91,6 +93,7 @@ export default function TerminologySearch() {
             type={'terminology-search'}
             setSomeFilter={handleFilterChange}
             resetSomeFilter={resetFilter}
+            counts={counts}
           />
           :
           <Modal
@@ -113,6 +116,7 @@ export default function TerminologySearch() {
                 isModal={true}
                 setShowModal={setShowModal}
                 resultCount={data?.totalHitCount}
+                counts={counts}
               />
             </ModalContent>
           </Modal>

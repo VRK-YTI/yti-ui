@@ -4,7 +4,7 @@ import { Text } from 'suomifi-ui-components';
 import { AppThunk, useStoreDispatch } from '../../../store';
 import { VocabularyState } from '../vocabulary/vocabulary-slice';
 import { SearchState } from '../terminology-search/terminology-search-slice';
-import { useGetCountsQuery } from '../counts/counts-slice';
+import { Counts } from '../../interfaces/counts.interface';
 
 interface InfoDProp {
   id: string;
@@ -18,13 +18,13 @@ interface CheckboxProps {
   title: string;
   type?: string;
   isModal?: boolean;
+  counts?: Counts;
 }
 
-export default function CheckboxArea({ data, filter, setFilter, title, type, isModal }: CheckboxProps) {
+export default function CheckboxArea({ counts, data, filter, setFilter, title, type, isModal }: CheckboxProps) {
   const { t } = useTranslation('common');
   const dispatch = useStoreDispatch();
   const variant = isModal ? 'large' : 'small';
-  const { data: counts} = useGetCountsQuery(null);
 
   const handleCheckbox = (s: string | InfoDProp) => {
     let retVal: CheckboxProps['filter'] | null = null;
@@ -66,7 +66,7 @@ export default function CheckboxArea({ data, filter, setFilter, title, type, isM
           checked={filter.status?.['VALID'] as boolean}
           variant={variant}
         >
-          {t('VALID')} ({counts?.counts.statuses['VALID']} {t('vocabulary-filter-items')})
+          {t('VALID')} ({counts?.counts.statuses['VALID'] ?? '0'} {t('vocabulary-filter-items')})
         </FilterCheckbox>
         <FilterCheckbox
           onClick={() => handleCheckbox('DRAFT')}

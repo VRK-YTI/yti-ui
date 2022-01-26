@@ -23,8 +23,8 @@ export default function SearchCountTags({ count, filter, setFilter }: SearchCoun
   const dispatch = useStoreDispatch();
   let activeStatuses: string[] = [];;
 
-  if ('showByOrg' in filter && filter.showByOrg) {
-    activeStatuses.push(filter.showByOrg);
+  if ('showByOrg' in filter && filter.showByOrg.value) {
+    activeStatuses.push(filter.showByOrg.value);
 
     if (filter.keyword) {
       activeStatuses.push(filter.keyword);
@@ -60,8 +60,8 @@ export default function SearchCountTags({ count, filter, setFilter }: SearchCoun
       retVal = { ...filter, status: { ...filter.status, [s]: false } };
     } else if ('infoDomains' in filter && filter.infoDomains.find(id => id.value === s)) {
       retVal = { ...filter, infoDomains: filter.infoDomains.filter(id => id.value !== s) };
-    } else if ('showByOrg' in filter && filter.showByOrg !== '') {
-      retVal = { ...filter, showByOrg: '' };
+    } else if ('showByOrg' in filter && filter.showByOrg.value !== '') {
+      retVal = { ...filter, showByOrg: {id: '', value: ''} };
     } else {
       retVal = { ...filter, keyword: '' };
     }
@@ -72,7 +72,16 @@ export default function SearchCountTags({ count, filter, setFilter }: SearchCoun
   return (
     <CountWrapper isSmall={isSmall} border={'showByOrg' in filter}>
       <CountText>
-        {t('vocabulary-results-concepts')} {count} {t('vocabulary-results-with-following-filters')}
+        {'showByOrg' in filter
+          ?
+          <>{t('terminology-search-terminologies')} {count} {t('vocabulary-results-with-following-filters')}</>
+          :
+          ('showBy' in filter && filter.showBy === 'collections')
+            ?
+            <>{t('vocabulary-results-collections')} {count} {t('vocabulary-filter-items')}</>
+            :
+            <>{t('vocabulary-results-concepts')} {count} {t('vocabulary-results-with-following-filters')}</>
+        }
       </CountText>
       <ChipWrapper>
         {activeStatuses.map((status: string, idx: number) => {
