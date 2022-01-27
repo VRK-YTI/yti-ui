@@ -67,7 +67,7 @@ export const vocabularyApi = createApi({
         method: 'GET'
       })
     }),
-    getConceptResult: builder.query<VocabularyConcepts, {id: string, resultStart: number}>({
+    getConceptResult: builder.query<VocabularyConcepts, {id: string, resultStart: number, query: string, status: string[]}>({
       query: (value) => ({
         url: '/searchConcept',
         method: 'POST',
@@ -75,8 +75,10 @@ export const vocabularyApi = createApi({
           highlight: true,
           pageFrom: value.resultStart,
           pageSize: 10,
+          query: value.query,
           sortDirection: 'ASC',
           sortLanguage: 'fi',
+          status: value.status,
           terminologyId: [
             value.id
           ]

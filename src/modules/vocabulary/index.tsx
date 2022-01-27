@@ -28,6 +28,7 @@ import { useGetVocabularyCountQuery } from '../../common/components/counts/count
 import { getPropertyValue } from '../../common/components/property-value/get-property-value';
 import Pagination from '../../common/components/pagination/pagination';
 import { useRouter } from 'next/router';
+import useQueryParam from '../../common/utils/hooks/useQueryParam';
 
 interface VocabularyProps {
   id: string;
@@ -40,8 +41,14 @@ export default function Vocabulary({ id }: VocabularyProps) {
   const dispatch = useStoreDispatch();
   const filter: VocabularyState['filter'] = useSelector(selectVocabularyFilter());
   const resultStart: number = useSelector(selectResultStart());
+  const [keyword] = useQueryParam('q');
   const { data: collections } = useGetCollectionsQuery(id);
-  const { data: concepts } = useGetConceptResultQuery({id: id, resultStart: resultStart});
+  const { data: concepts } = useGetConceptResultQuery({
+    id: id,
+    resultStart: resultStart,
+    query: keyword ?? '',
+    status: Object.keys(filter.status).filter(k => filter.status[k])
+  });
   const { data: info } = useGetVocabularyQuery(id);
   const { data: counts } = useGetVocabularyCountQuery(id);
   const [showModal, setShowModal] = useState(false);

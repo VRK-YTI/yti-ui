@@ -137,7 +137,7 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
       if (filteredData && !Array.isArray(filteredData)) {
         return (
           <>
-            <SearchCountTags count={filteredData.concepts?.length} filter={filter} setFilter={setSomeFilter} />
+            <SearchCountTags count={filteredData.totalHitCount} filter={filter} setFilter={setSomeFilter} />
             <CardWrapper isSmall={isSmall}>
               {filteredData?.concepts.map((concept, idx) => {
                 return (
