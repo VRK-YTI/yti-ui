@@ -181,7 +181,7 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
   function renderConceptCollections() {
     if (Array.isArray(data) && data.length > 0) {
       // Note: This should be replaced when backend request for terminology has been updated
-      const filteredData = filterData(data, filter, i18n.language);
+      const filteredData = filterData(data, filter, keyword ?? '', i18n.language);
 
       if (filteredData && Array.isArray(filteredData)) {
         return (

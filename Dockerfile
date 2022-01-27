@@ -25,6 +25,7 @@ ENV NEXT_TELEMETRY_DISABLED 1
 ARG REWRITE_PROFILE=none
 ENV REWRITE_PROFILE $REWRITE_PROFILE
 ARG SKIP_TESTS
+ARG VERSION
 
 WORKDIR /app
 COPY . .
@@ -34,6 +35,10 @@ RUN if [ -z "$SKIP_TESTS" ] ; then \
   else \
     echo "Skipping tests"; \
   fi
+
+# Create version.txt
+RUN echo "$VERSION" > public/version.txt
+
 RUN npm run build && npm install --production --ignore-scripts --prefer-offline
 
 #
