@@ -2,7 +2,7 @@ import { NextRouter, useRouter } from 'next/router';
 
 export default function useQueryParam(name: string, delimiter: string = ''): [string | undefined, (value?: string) => Promise<boolean>] {
   const router = useRouter();
-  const value = router.query[name];
+  const value = router?.query[name];
   const result = value && Array.isArray(value) ? value.join(delimiter) : value;
 
   return [
