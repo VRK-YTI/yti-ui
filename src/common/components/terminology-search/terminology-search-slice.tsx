@@ -72,15 +72,15 @@ export const terminologySearchApi = createApi({
         },
       }),
     }),
-    getGroups: builder.query<GroupSearchResult[], null>({
-      query: () => ({
-        url: '/groups',
+    getGroups: builder.query<GroupSearchResult[], string>({
+      query: (value) => ({
+        url: `/groups?language=${value}`,
         method: 'GET',
       }),
     }),
-    getOrganizations: builder.query<OrganizationSearchResult[], null>({
-      query: () => ({
-        url: '/organizations',
+    getOrganizations: builder.query<OrganizationSearchResult[], string>({
+      query: (value) => ({
+        url: `/organizations?language=${value}`,
         method: 'GET',
       }),
     })
