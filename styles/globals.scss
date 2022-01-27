@@ -1,11 +1,10 @@
-@use '~suomifi-design-tokens/dist/tokens';
+@import '~suomifi-design-tokens/dist/tokens';
 @import 'suomifi-ui-components/dist/main.css';
-@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600&display=swap');
 
 html,
 body {
   padding: 0;
   margin: 0;
-  @include tokens.fi-text-body-text;
-  background-color: tokens.$fi-color-depth-light3;
+  @include fi-text-body-text;
+  background-color: $fi-color-depth-light3;
 }
