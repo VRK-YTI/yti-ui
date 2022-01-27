@@ -2,7 +2,14 @@ import { getPropertyValue } from '../components/property-value/get-property-valu
 import { Collection } from '../interfaces/collection.interface';
 import { VocabularyConcepts } from '../interfaces/vocabulary.interface';
 
-export default function filterData(data: VocabularyConcepts | Collection[], filter: any, keyword: string, language: any) {
+export default function filterData(
+  data: VocabularyConcepts | Collection[],
+  filter: any,
+  keyword: string,
+  language: string,
+  page?: any,
+  pagination: boolean = false
+) {
   if ('concepts' in data) {
     const filteredData = data.concepts.filter((concept: any) => {
       let valid = false;
@@ -30,11 +37,25 @@ export default function filterData(data: VocabularyConcepts | Collection[], filt
   } else if (Array.isArray(data)) {
     let filteredData: Collection[] = [];
 
+    if (!page && !pagination) {
+      page = 1;
+    }
+
     data.forEach(collection => {
-      if (getPropertyValue({ property: collection.properties.prefLabel, language: language })?.includes(keyword.toLowerCase())) {
+      if (getPropertyValue({ property: collection.properties.prefLabel, language: language })
+        ?.includes(keyword.toLowerCase()))
+      {
         filteredData.push(collection);
       }
     });
+
+    if (pagination) {
+      filteredData.filter((collection, idx) => {
+        if ((idx < parseInt(page) * 10) && (idx >= (parseInt(page) * 10) - 10)) {
+          return collection;
+        }
+      });
+    }
 
     return filteredData;
   }

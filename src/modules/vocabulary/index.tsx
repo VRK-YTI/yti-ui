@@ -29,6 +29,7 @@ import { getPropertyValue } from '../../common/components/property-value/get-pro
 import Pagination from '../../common/components/pagination/pagination';
 import { useRouter } from 'next/router';
 import useQueryParam from '../../common/utils/hooks/useQueryParam';
+import filterData from '../../common/utils/filter-data';
 
 interface VocabularyProps {
   id: string;
@@ -42,6 +43,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
   const filter: VocabularyState['filter'] = useSelector(selectVocabularyFilter());
   const resultStart: number = useSelector(selectResultStart());
   const [keyword] = useQueryParam('q');
+  const [page] = useQueryParam('page');
   const { data: collections } = useGetCollectionsQuery(id);
   const { data: concepts } = useGetConceptResultQuery({
     id: id,
@@ -116,15 +118,24 @@ export default function Vocabulary({ id }: VocabularyProps) {
         {(collections && filter.showBy === 'collections') &&
           <ResultAndStatsWrapper>
             <SearchResults
-              data={collections}
+              data={filterData(collections, filter, keyword ?? '', i18n.language, page)}
               filter={filter}
               setSomeFilter={setVocabularyFilter}
               type='collections'
             />
             <PaginationWrapper>
               <Pagination
-                data={collections}
+                data={(!page || page == '1')
+                  ?
+                  collections
+                  :
+                  filterData(collections, filter, keyword ?? '', i18n.language, '', true)
+                }
+                dispatch={dispatch}
+                pageString={t('pagination-page')}
+                setResultStart={setResultStart}
                 query={query}
+
               />
             </PaginationWrapper>
           </ResultAndStatsWrapper>

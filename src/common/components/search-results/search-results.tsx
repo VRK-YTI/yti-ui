@@ -131,21 +131,23 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
 
   function renderConceptSearchResults() {
     if ('concepts' in data) {
-      // Note: This should be replaced when backend request for terminology has been updated
-      const filteredData = filterData(data, filter, keyword ?? '', i18n.language);
-
-      if (filteredData && !Array.isArray(filteredData)) {
+      if (data && !Array.isArray(data)) {
         return (
           <>
-            <SearchCountTags count={filteredData.totalHitCount} filter={filter} setFilter={setSomeFilter} />
+            <SearchCountTags count={data.totalHitCount} filter={filter} setFilter={setSomeFilter} />
             <CardWrapper isSmall={isSmall}>
-              {filteredData?.concepts.map((concept, idx) => {
+              {data?.concepts.map((concept, idx) => {
                 return (
                   <Card key={`search-result-${idx}`}>
                     <CardTitle variant='h2'>
                       <Link passHref href={`/terminology/${concept.terminology.id}/concept/${concept.id}`}>
                         <CardTitleLink href=''>
-                          {concept.label[i18n.language] !== undefined ? concept.label[i18n.language] : concept?.label?.[Object.keys(concept.label)[0]]}
+                          {concept.label[i18n.language]
+                            ?
+                            concept.label[i18n.language].replaceAll(/<\/*[^>]>/g, '')
+                            :
+                            concept?.label?.[Object.keys(concept.label)[0]].replaceAll(/<\/*[^>]>/g, '')
+                          }
                         </CardTitleLink>
                       </Link>
                     </CardTitle>
@@ -155,7 +157,7 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
                     </CardSubtitle>
 
                     <CardDescription>
-                      {concept.definition?.[i18n.language] !== undefined
+                      {concept.definition?.[i18n.language]
                         ?
                         concept.definition[i18n.language]
                         :
@@ -181,14 +183,14 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
   function renderConceptCollections() {
     if (Array.isArray(data) && data.length > 0) {
       // Note: This should be replaced when backend request for terminology has been updated
-      const filteredData = filterData(data, filter, keyword ?? '', i18n.language);
+      // const filteredData = filterData(data, filter, keyword ?? '', i18n.language);
 
-      if (filteredData && Array.isArray(filteredData)) {
+      if (data && Array.isArray(data)) {
         return (
           <>
-            <SearchCountTags count={filteredData.length} filter={filter} setFilter={setSomeFilter} />
+            <SearchCountTags count={data.length} filter={filter} setFilter={setSomeFilter} />
             <CardWrapper isSmall={isSmall}>
-              {filteredData.map((collection, idx: number) => {
+              {data.map((collection, idx: number) => {
                 return (
                   <Card key={`search-result-${idx}`}>
                     <CardTitle variant='h2'>
@@ -299,7 +301,7 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
           }
         })
         :
-        <></>
+        <>{t('vocabulary-results-no-concepts')}</>
     );
   }
 }
