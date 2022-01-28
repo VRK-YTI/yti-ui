@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { RadioButtonGroup } from 'suomifi-ui-components';
 import { AppThunk, useStoreDispatch } from '../../../store';
 import { Counts } from '../../interfaces/counts.interface';
+import useQueryParam from '../../utils/hooks/useQueryParam';
 import { VocabularyState } from '../vocabulary/vocabulary-slice';
 import { FilterRadioButton } from './filter.styles';
 
@@ -17,7 +18,7 @@ interface RadioButtonProps {
 export default function RadioButtonArea({ filter, data, setFilter, title, isModal, counts }: RadioButtonProps) {
   const { t } = useTranslation('common');
   const dispatch = useStoreDispatch();
-
+  const [q, updateKeyword] = useQueryParam('q');
   const handleShowBy = (s: string) => {
     let retVal: VocabularyState['filter'] | undefined;
 
@@ -35,6 +36,7 @@ export default function RadioButtonArea({ filter, data, setFilter, title, isModa
 
     if (retVal) {
       dispatch(setFilter({ ...retVal, showBy: s }));
+      updateKeyword(q);
     }
   };
 
