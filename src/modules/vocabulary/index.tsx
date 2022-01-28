@@ -125,12 +125,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
             />
             <PaginationWrapper>
               <Pagination
-                data={(!page || page == '1')
-                  ?
-                  collections
-                  :
-                  filterData(collections, filter, keyword ?? '', i18n.language, '', true)
-                }
+                data={filterData(collections, filter, keyword ?? '', i18n.language, page)}
                 dispatch={dispatch}
                 pageString={t('pagination-page')}
                 setResultStart={setResultStart}

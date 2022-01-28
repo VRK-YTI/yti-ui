@@ -7,8 +7,7 @@ export default function filterData(
   filter: any,
   keyword: string,
   language: string,
-  page?: any,
-  pagination: boolean = false
+  page?: any
 ) {
   if ('concepts' in data) {
     const filteredData = data.concepts.filter((concept: any) => {
@@ -37,7 +36,7 @@ export default function filterData(
   } else if (Array.isArray(data)) {
     let filteredData: Collection[] = [];
 
-    if (!page && !pagination) {
+    if (!page) {
       page = 1;
     }
 
@@ -48,14 +47,6 @@ export default function filterData(
         filteredData.push(collection);
       }
     });
-
-    if (pagination) {
-      filteredData.filter((collection, idx) => {
-        if ((idx < parseInt(page) * 10) && (idx >= (parseInt(page) * 10) - 10)) {
-          return collection;
-        }
-      });
-    }
 
     return filteredData;
   }

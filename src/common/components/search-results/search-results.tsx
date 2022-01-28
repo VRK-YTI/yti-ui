@@ -4,7 +4,6 @@ import { AppThunk } from '../../../store';
 import { Collection } from '../../interfaces/collection.interface';
 import { TerminologySearchResult } from '../../interfaces/terminology.interface';
 import { VocabularyConcepts } from '../../interfaces/vocabulary.interface';
-import filterData from '../../utils/filter-data';
 import useQueryParam from '../../utils/hooks/useQueryParam';
 import PropertyValue from '../property-value';
 import { getPropertyValue } from '../property-value/get-property-value';
@@ -37,7 +36,7 @@ interface SearchResultsProps {
 
 export default function SearchResults({ data, filter, type, setSomeFilter }: SearchResultsProps) {
   const { t, i18n } = useTranslation('common');
-  const [keyword] = useQueryParam('q');
+  const [page] = useQueryParam('page');
   const { isSmall } = useBreakpoints();
 
   if (type === 'terminology-search' && 'terminologies' in data) {
@@ -191,6 +190,12 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
             <SearchCountTags count={data.length} filter={filter} setFilter={setSomeFilter} />
             <CardWrapper isSmall={isSmall}>
               {data.map((collection, idx: number) => {
+                const maxId = page ? parseInt(page) * 10 : 10;
+                const minId = page ? parseInt(page) * 10 - 10 : 0;
+                if (idx >= maxId || idx < minId) {
+                  return null;
+                }
+
                 return (
                   <Card key={`search-result-${idx}`}>
                     <CardTitle variant='h2'>
