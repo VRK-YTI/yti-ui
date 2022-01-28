@@ -118,14 +118,14 @@ export default function Vocabulary({ id }: VocabularyProps) {
         {(collections && filter.showBy === 'collections') &&
           <ResultAndStatsWrapper>
             <SearchResults
-              data={filterData(collections, filter, keyword ?? '', i18n.language, page)}
+              data={filterData(collections, filter, keyword ?? '', i18n.language, page) ?? collections}
               filter={filter}
               setSomeFilter={setVocabularyFilter}
               type='collections'
             />
             <PaginationWrapper>
               <Pagination
-                data={filterData(collections, filter, keyword ?? '', i18n.language, page)}
+                data={filterData(collections, filter, keyword ?? '', i18n.language, page) ?? collections}
                 dispatch={dispatch}
                 pageString={t('pagination-page')}
                 setResultStart={setResultStart}

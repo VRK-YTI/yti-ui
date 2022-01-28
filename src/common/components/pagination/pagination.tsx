@@ -14,17 +14,18 @@ export default function Pagination({
 }: PaginationProps) {
   const breakPoints = useBreakpoints();
   const [q] = useQueryParam('q');
-  const items = data.totalHitCount
-    ?
-    Array.from({ length: Math.ceil(data.totalHitCount / 10) }, (_, item) => item + 1)
-    :
-    Array.from({ length: Math.ceil(data.length / 10) }, (_, item) => item + 1)
-    ;
   const [activeItem, setActiveItem] = useState<number>(
     query.query.page !== undefined && query.query.page !== '1'
       ? parseInt(query.query.page as string, 10)
       : 1
   );
+
+  let items: number[];
+  if ('totalHitCount' in data) {
+    items = Array.from({ length: Math.ceil(data.totalHitCount / 10) }, (_, item) => item + 1);
+  } else {
+    items = Array.from({ length: Math.ceil(data.length / 10) }, (_, item) => item + 1);
+  }
 
   useEffect(() => {
     if (isNaN(parseInt(query.query.page as string))) {

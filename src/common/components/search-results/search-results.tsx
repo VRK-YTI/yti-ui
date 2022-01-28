@@ -39,6 +39,10 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
   const [page] = useQueryParam('page');
   const { isSmall } = useBreakpoints();
 
+  if (!data) {
+    return null;
+  }
+
   if (type === 'terminology-search' && 'terminologies' in data) {
     return (
       renderTerminologiesSearchResults()
