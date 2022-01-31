@@ -78,6 +78,14 @@ export default function Vocabulary({ id }: VocabularyProps) {
     }
   }, [info, i18n, dispatch]);
 
+  const handleFilterChange = (value: any) => {
+    if (query.query.page && query.query.page !== '1') {
+      const pathname = query.pathname.replace('[terminologyId]', id);
+      query.push(pathname + '?page=1');
+    }
+    return setVocabularyFilter(value);
+  };
+
   return (
     <>
       <Breadcrumb>
@@ -102,7 +110,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
             <SearchResults
               data={concepts}
               filter={filter}
-              setSomeFilter={setVocabularyFilter}
+              setSomeFilter={handleFilterChange}
             />
             <PaginationWrapper>
               <Pagination
@@ -120,7 +128,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
             <SearchResults
               data={filterData(collections, filter, keyword ?? '', i18n.language, page) ?? collections}
               filter={filter}
-              setSomeFilter={setVocabularyFilter}
+              setSomeFilter={handleFilterChange}
               type='collections'
             />
             <PaginationWrapper>
@@ -140,7 +148,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
           <Filter
             filter={filter as VocabularyState['filter']}
             type={'vocabulary'}
-            setSomeFilter={setVocabularyFilter}
+            setSomeFilter={handleFilterChange}
             resetSomeFilter={resetVocabularyFilter}
             counts={counts}
           />
@@ -158,7 +166,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
               <Filter
                 filter={filter as VocabularyState['filter']}
                 type={'vocabulary'}
-                setSomeFilter={setVocabularyFilter}
+                setSomeFilter={handleFilterChange}
                 resetSomeFilter={resetVocabularyFilter}
                 isModal={true}
                 setShowModal={setShowModal}

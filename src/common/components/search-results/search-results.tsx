@@ -184,67 +184,62 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
   }
 
   function renderConceptCollections() {
-    if (Array.isArray(data) && data.length > 0) {
-      // Note: This should be replaced when backend request for terminology has been updated
-      // const filteredData = filterData(data, filter, keyword ?? '', i18n.language);
-
-      if (data && Array.isArray(data)) {
-        return (
-          <>
-            <SearchCountTags count={data.length} filter={filter} setFilter={setSomeFilter} />
-            <CardWrapper isSmall={isSmall}>
-              {data.map((collection, idx: number) => {
-                const maxId = page ? parseInt(page) * 10 : 10;
-                const minId = page ? parseInt(page) * 10 - 10 : 0;
-                if (idx >= maxId || idx < minId) {
-                  return null;
-                }
-
-                return (
-                  <Card key={`search-result-${idx}`}>
-                    <CardTitle variant='h2'>
-                      <Link passHref href={`/terminology/${collection.type.graph.id}/collection/${collection.id}`}>
-                        <CardTitleLink href=''>
-                          {getPropertyValue({ property: collection.properties.prefLabel, language: i18n.language })
-                            ?
-                            <PropertyValue property={collection.properties.prefLabel} />
-                            :
-                            <>{getPropertyValue({ property: collection.properties.prefLabel, language: 'fi' })}</>
-                          }
-                        </CardTitleLink>
-                      </Link>
-                    </CardTitle>
-
-                    <CardSubtitle>
-                      {t('vocabulary-info-collection')}
-                    </CardSubtitle>
-
-                    <CardDescription>
-                      {getPropertyValue({ property: collection.properties.definition })
-                        ?
-                        <PropertyValue property={collection.properties.definition} />
-                        :
-                        collection.properties.definition
-                          ?
-                          collection.properties.definition[0].value
-                          :
-                          t('vocabulary-results-no-description')
-                      }
-                    </CardDescription>
-
-                    <CardConcepts value={t('vocabulary-filter-concepts') as string}>
-                      {renderCollectionMembers(collection.references?.member)}
-                    </CardConcepts>
-                  </Card>
-                );
-              })}
-            </CardWrapper>
-          </>
-        );
-      }
+    if (!Array.isArray(data) || data.length < 1) {
+      return null;
     }
 
-    return null;
+    return (
+      <>
+        <SearchCountTags count={data.length} filter={filter} setFilter={setSomeFilter} />
+        <CardWrapper isSmall={isSmall}>
+          {data.map((collection, idx: number) => {
+            const maxId = page ? parseInt(page) * 10 : 10;
+            const minId = page ? parseInt(page) * 10 - 10 : 0;
+            if (idx >= maxId || idx < minId) {
+              return null;
+            }
+
+            return (
+              <Card key={`search-result-${idx}`}>
+                <CardTitle variant='h2'>
+                  <Link passHref href={`/terminology/${collection.type.graph.id}/collection/${collection.id}`}>
+                    <CardTitleLink href=''>
+                      {getPropertyValue({ property: collection.properties.prefLabel, language: i18n.language })
+                        ?
+                        <PropertyValue property={collection.properties.prefLabel} />
+                        :
+                        <>{getPropertyValue({ property: collection.properties.prefLabel, language: 'fi' })}</>
+                      }
+                    </CardTitleLink>
+                  </Link>
+                </CardTitle>
+
+                <CardSubtitle>
+                  {t('vocabulary-info-collection')}
+                </CardSubtitle>
+
+                <CardDescription>
+                  {getPropertyValue({ property: collection.properties.definition })
+                    ?
+                    <PropertyValue property={collection.properties.definition} />
+                    :
+                    collection.properties.definition
+                      ?
+                      collection.properties.definition[0].value
+                      :
+                      t('vocabulary-results-no-description')
+                  }
+                </CardDescription>
+
+                <CardConcepts value={t('vocabulary-filter-concepts') as string}>
+                  {renderCollectionMembers(collection.references?.member)}
+                </CardConcepts>
+              </Card>
+            );
+          })}
+        </CardWrapper>
+      </>
+    );
   }
 
   function renderCollectionMembers(members?: Concept[]) {
