@@ -13,6 +13,7 @@ const mockedUseRouter = useRouter as jest.MockedFunction<typeof useRouter>;
 describe('search-input-area', () => {
   test('should render component', () => {
     mockedUseRouter.mockReturnValue({ query: {} } as NextRouter);
+
     const store = makeStore();
 
     const filter = {
