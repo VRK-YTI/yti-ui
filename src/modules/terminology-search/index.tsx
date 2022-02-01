@@ -23,6 +23,7 @@ import { Modal, ModalContent } from 'suomifi-ui-components';
 import { useState } from 'react';
 import useQueryParam from '../../common/utils/hooks/useQueryParam';
 import { useGetCountsQuery } from '../../common/components/counts/counts-slice';
+import { Alert, Alerts } from '../../common/components/alert/';
 
 export default function TerminologySearch() {
   const { t, i18n } = useTranslation();
@@ -32,10 +33,10 @@ export default function TerminologySearch() {
   const filter = useSelector(selectFilter());
   const resultStart = useSelector(selectResultStart());
   const [keyword] = useQueryParam('q');
-  const { data } = useGetSearchResultQuery({ filter: filter, resultStart: resultStart, keyword: keyword ?? '' });
-  const { data: groups } = useGetGroupsQuery(i18n.language);
-  const { data: organizations } = useGetOrganizationsQuery(i18n.language);
-  const { data: counts} = useGetCountsQuery(null);
+  const { data, error } = useGetSearchResultQuery({ filter: filter, resultStart: resultStart, keyword: keyword ?? '' });
+  const { data: groups, error: groupsError } = useGetGroupsQuery(i18n.language);
+  const { data: organizations, error: organizationsError } = useGetOrganizationsQuery(i18n.language);
+  const { data: counts, error: countsError } = useGetCountsQuery(null);
   const [showModal, setShowModal] = useState(false);
 
   if (query.query.page && query.query.page !== '1') {
@@ -64,16 +65,15 @@ export default function TerminologySearch() {
         </FilterMobileButton>
       }
       <ResultAndFilterContainer>
-        {data &&
-          <ResultAndStatsWrapper>
-            <SearchResults
-              data={data}
-              filter={filter}
-              setSomeFilter={handleFilterChange}
-              type={'terminology-search'}
-            />
-            {data
-              &&
+        <ResultAndStatsWrapper>
+          {data &&
+            <>
+              <SearchResults
+                data={data}
+                filter={filter}
+                setSomeFilter={handleFilterChange}
+                type={'terminology-search'}
+              />
               <PaginationWrapper>
                 <Pagination
                   data={data}
@@ -83,9 +83,9 @@ export default function TerminologySearch() {
                   query={query}
                 />
               </PaginationWrapper>
-            }
-          </ResultAndStatsWrapper>
-        }
+            </>
+          }
+        </ResultAndStatsWrapper>
         {!isSmall
           ?
           <Filter
@@ -124,6 +124,12 @@ export default function TerminologySearch() {
           </Modal>
         }
       </ResultAndFilterContainer>
+      <Alerts>
+        {error && <Alert msg={'error-with-terminologies'} type='error' />}
+        {groupsError && <Alert msg={'error-with-groups'} type='error' />}
+        {organizationsError && <Alert msg={'error-with-organizations'} type='error' />}
+        {countsError && <Alert msg={'error-with-counts'} type='error' />}
+      </Alerts>
     </>
   );
 };
