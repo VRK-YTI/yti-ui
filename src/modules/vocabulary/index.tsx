@@ -55,7 +55,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
   const { data: counts } = useGetVocabularyCountQuery(id);
   const [showModal, setShowModal] = useState(false);
 
-  if (query.query.page && query.query.page !== '1') {
+  if (page && page !== '1') {
     dispatch(setResultStart((parseInt(query.query.page as string, 10) - 1) * 10));
   } else {
     dispatch(setResultStart(0));
@@ -79,7 +79,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
   }, [info, i18n, dispatch]);
 
   const handleFilterChange = (value: any) => {
-    if (query.query.page && query.query.page !== '1') {
+    if (page && page !== '1') {
       const pathname = query.pathname.replace('[terminologyId]', id);
       query.push(pathname + '?page=1');
     }

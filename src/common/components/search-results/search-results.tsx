@@ -204,12 +204,7 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
                 <CardTitle variant='h2'>
                   <Link passHref href={`/terminology/${collection.type.graph.id}/collection/${collection.id}`}>
                     <CardTitleLink href=''>
-                      {getPropertyValue({ property: collection.properties.prefLabel, language: i18n.language })
-                        ?
-                        <PropertyValue property={collection.properties.prefLabel} />
-                        :
-                        <>{getPropertyValue({ property: collection.properties.prefLabel, language: 'fi' })}</>
-                      }
+                      <PropertyValue property={collection.properties.prefLabel} fallbackLanguage='fi' />
                     </CardTitleLink>
                   </Link>
                 </CardTitle>
@@ -219,16 +214,11 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
                 </CardSubtitle>
 
                 <CardDescription>
-                  {getPropertyValue({ property: collection.properties.definition })
-                    ?
-                    <PropertyValue property={collection.properties.definition} />
-                    :
-                    collection.properties.definition
-                      ?
-                      collection.properties.definition[0].value
-                      :
-                      t('vocabulary-results-no-description')
-                  }
+                  <PropertyValue
+                    property={collection.properties.definition}
+                    fallbackLanguage='fi'
+                    fallback={t('vocabulary-results-no-description')}
+                  />
                 </CardDescription>
 
                 <CardConcepts value={t('vocabulary-filter-concepts') as string}>
