@@ -55,7 +55,7 @@ export default function TerminologySearch() {
   return (
     <>
       <Title info={t('terminology-title')} />
-      {isSmall &&
+      {(isSmall && groups && organizations) &&
         <FilterMobileButton
           variant='secondary'
           fullWidth
