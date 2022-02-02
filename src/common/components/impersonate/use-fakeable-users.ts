@@ -19,6 +19,6 @@ export default function useFakeableUsers(): UseFakeableUsersResult[] {
     id,
     email,
     displayName,
-    impersonate: () => window.location.href = `/api/auth/fake-login?fake.login.mail?${encodeURIComponent(email)}`,
+    impersonate: () => window.location.href = `/api/auth/fake-login?fake.login.mail=${encodeURIComponent(email)}`,
   })) ?? [];
 }
