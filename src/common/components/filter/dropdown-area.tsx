@@ -6,6 +6,12 @@ import { getPropertyValue } from '../property-value/get-property-value';
 import { SearchState } from '../terminology-search/terminology-search-slice';
 import { DropdownPlaceholder, DropdownWrapper } from './filter.styles';
 
+/**
+ * Error handling:
+ * - if visualPlaceholder is missing
+ *   should other value be used?
+ */
+
 interface DropdownProps {
   data?: OrganizationSearchResult[];
   filter: SearchState['filter'];

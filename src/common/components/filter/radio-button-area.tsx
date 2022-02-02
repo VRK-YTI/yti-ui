@@ -5,6 +5,12 @@ import { Counts } from '../../interfaces/counts.interface';
 import { VocabularyState } from '../vocabulary/vocabulary-slice';
 import { FilterRadioButton } from './filter.styles';
 
+/**
+ * Error handling:
+ * - if length of data is < 1 should
+ *   return value be something else?
+ */
+
 interface RadioButtonProps {
   data: string[];
   filter: VocabularyState['filter'];

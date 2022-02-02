@@ -5,6 +5,16 @@ import InfoExpander from '../info-dropdown/info-expander';
 import { VocabularyInfoDTO } from '../../interfaces/vocabulary.interface';
 import { Property } from '../../interfaces/termed-data-types.interface';
 
+/**
+ * Error handling:
+ * - if info is of VocabularyInfoDTO and information
+ *   for status title and contributor are missing
+ *   should their value have more explanation other
+ *   than an empty string?
+ * -
+ *
+ */
+
 interface TitleProps {
   info: string | VocabularyInfoDTO;
 }

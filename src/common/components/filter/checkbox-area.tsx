@@ -6,6 +6,16 @@ import { VocabularyState } from '../vocabulary/vocabulary-slice';
 import { SearchState } from '../terminology-search/terminology-search-slice';
 import { Counts } from '../../interfaces/counts.interface';
 
+/**
+ * Error handling:
+ * - should "type" be used with getting the
+ *   basic template instead of data being
+ *   empty? Undefined data could be handled
+ *   better
+ * - if title is missing should there
+ *   an alternative text?
+ */
+
 interface InfoDProp {
   id: string;
   value: string;

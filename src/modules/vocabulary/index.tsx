@@ -25,6 +25,18 @@ import PropertyValue from '../../common/components/property-value';
 import { useGetVocabularyCountQuery } from '../../common/components/counts/counts-slice';
 import { getPropertyValue } from '../../common/components/property-value/get-property-value';
 
+/**
+ * Error handling:
+ * - if an error occurs in data fetching there should be
+ *   an alert indicating that a problem occured
+ * - if vocabulary with an id does not exist user should
+ *   be redirected to 404 page
+ * - if (any) data fails to be fetched the styling
+ *   of the page shouldn't change
+ * -
+ *
+ */
+
 interface VocabularyProps {
   id: string;
 }

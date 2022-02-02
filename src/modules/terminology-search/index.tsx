@@ -24,6 +24,15 @@ import { useState } from 'react';
 import useQueryParam from '../../common/utils/hooks/useQueryParam';
 import { useGetCountsQuery } from '../../common/components/counts/counts-slice';
 
+/**
+ * Error handling:
+ * - if search results or any data needed for filter is still loading
+ *   there should be a indicator that the component is in state
+ *   waiting for updated data
+ * -
+ *
+ */
+
 export default function TerminologySearch() {
   const { t, i18n } = useTranslation();
   const { isSmall } = useBreakpoints();

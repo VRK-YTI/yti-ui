@@ -28,6 +28,13 @@ import {
 } from './search-results.styles';
 import { Concept } from '../../interfaces/concept.interface';
 
+/**
+ * Error handling:
+ * - instead of returning null should return be something
+ *   more descriptive?
+ * -
+ */
+
 interface SearchResultsProps {
   data: TerminologySearchResult | VocabularyConcepts | Collection[];
   filter: SearchState['filter'] | VocabularyState['filter'];

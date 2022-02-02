@@ -7,6 +7,15 @@ import { createCommonGetServerSideProps } from '../../../../common/utils/create-
 import Concept from '../../../../modules/concept';
 import { MediaQueryContextProvider } from '../../../../common/components/media-query/media-query-context';
 
+/**
+ * Error handling:
+ * - should page be redirected to parent terminology
+ *   page if conceptId is unknown?
+ * - if both terminologyId and conceptId are unknown
+ *   should user be redirected to 404 page?
+ * -
+ */
+
 // TODO: perhaps move the component itself to components/
 export default function ConceptPage(props: {
   _netI18Next: SSRConfig;

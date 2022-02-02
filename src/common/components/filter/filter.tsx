@@ -23,6 +23,15 @@ import useQueryParam from '../../utils/hooks/useQueryParam';
 import { getPropertyValue } from '../property-value/get-property-value';
 import { Counts } from '../../interfaces/counts.interface';
 
+/**
+ * Error handling:
+ * - if groups or organizations are missing
+ *   should the components that use either
+ *   of the values return an indicator that
+ *   needed data is missing?
+ * -
+ */
+
 export interface FilterProps {
   filter: VocabularyState['filter'] | SearchState['filter'];
   groups?: GroupSearchResult[];

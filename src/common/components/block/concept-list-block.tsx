@@ -5,6 +5,12 @@ import { Concept } from '../../interfaces/concept.interface';
 import PropertyValue from '../property-value';
 import { List } from './block.styles';
 
+/**
+ * Error handling:
+ * - if props have missing/incorrect values
+ *   should something else be returned?
+ */
+
 export interface ConceptListBlockProps {
   title: React.ReactNode;
   data?: Concept[];

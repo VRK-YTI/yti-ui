@@ -2,6 +2,13 @@ import { useEffect, useState } from 'react';
 import { TextInput } from 'suomifi-ui-components';
 import useQueryParam from '../../utils/hooks/useQueryParam';
 
+/**
+ * Error handling:
+ * - if title or visualPlaceholder values
+ *   are empty strings should the value
+ *   be different?
+ */
+
 interface TextInputAreaProps {
   title: string;
   visualPlaceholder: string;

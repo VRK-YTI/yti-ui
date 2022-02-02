@@ -1,6 +1,13 @@
 import { Property } from '../../interfaces/termed-data-types.interface';
 import MultilingualBlock, { MultilingualBlockItemMapper } from './multilingual-block';
 
+/**
+ * Error handling:
+ * - if some prop has incorrect values
+ *   should something else be returned
+ *   or does child component handle this?
+ */
+
 export interface MultilingualPropertyBlockProps {
   title: React.ReactNode;
   data?: Property[];

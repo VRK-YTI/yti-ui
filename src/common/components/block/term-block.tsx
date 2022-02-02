@@ -3,6 +3,13 @@ import React from 'react';
 import { Term } from '../../interfaces/term.interface';
 import MultilingualBlock, { MultilingualBlockItemMapper } from './multilingual-block';
 
+/**
+ * Error handling:
+ * - should erroneous values return
+ *   something else than empty string
+ *   by default?
+ */
+
 export interface TermBlockProps {
   title: React.ReactNode;
   data?: { term: Term, type: string }[];
