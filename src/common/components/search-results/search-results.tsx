@@ -6,7 +6,6 @@ import { TerminologySearchResult } from '../../interfaces/terminology.interface'
 import { VocabularyConcepts } from '../../interfaces/vocabulary.interface';
 import useQueryParam from '../../utils/hooks/useQueryParam';
 import PropertyValue from '../property-value';
-import { getPropertyValue } from '../property-value/get-property-value';
 import { useBreakpoints } from '../media-query/media-query-context';
 import { SearchState } from '../terminology-search/terminology-search-slice';
 import { VocabularyState } from '../vocabulary/vocabulary-slice';
@@ -193,8 +192,8 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
         <SearchCountTags count={data.length} filter={filter} setFilter={setSomeFilter} />
         <CardWrapper isSmall={isSmall}>
           {data.map((collection, idx: number) => {
-            const maxId = page ? parseInt(page) * 10 : 10;
-            const minId = page ? parseInt(page) * 10 - 10 : 0;
+            const maxId = page ? parseInt(page, 10) * 10 : 10;
+            const minId = page ? parseInt(page, 10) * 10 - 10 : 0;
             if (idx >= maxId || idx < minId) {
               return null;
             }
