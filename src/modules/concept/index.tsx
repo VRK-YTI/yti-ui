@@ -25,6 +25,17 @@ import {
   PageContent
 } from './concept.styles';
 
+/**
+ * Error handling:
+ * - if an error occurs in data fetching an alert
+ *   should be displayed for user about the error
+ * - if terminology is missing the breacrumb has
+ *   an empty value. Could there be something to
+ *   put there instead if the value is missing?
+ * - if concept is missing the page renders horizontal
+ *   lines. These could be hidden.
+ */
+
 export interface ConceptProps {
   terminologyId: string;
   conceptId: string;

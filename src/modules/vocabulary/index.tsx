@@ -32,8 +32,14 @@ import { getPropertyValue } from '../../common/components/property-value/get-pro
  * - if vocabulary with an id does not exist user should
  *   be redirected to 404 page
  * - if (any) data fails to be fetched the styling
- *   of the page shouldn't change
- * -
+ *   of the page shouldn't change.
+ *   Currently filter
+ *   is shown because it isn't dependent on any
+ *   fetched value to be shown. This could be changed
+ *   so that it doesn't confuse users.
+ * - if concept, collections or terminology info is still loading
+ *   there should be a indicator that the component is waiting
+ *   for updated data
  *
  */
 

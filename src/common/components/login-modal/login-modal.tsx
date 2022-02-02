@@ -3,6 +3,14 @@ import { Button, Modal, ModalContent, ModalFooter, ModalTitle, Paragraph, Text }
 import { useBreakpoints } from '../media-query/media-query-context';
 import { ModalTitleWrapper } from './login-modal.styles';
 
+/**
+ * Not sure if this is the correct component, but...
+ * Error handling:
+ * - if login is erronous should there be an alert
+ *   informing the user that and error happened
+ *   during login?
+ */
+
 export default function LoginModalView({ setVisible }: { setVisible: Function }) {
   const { t } = useTranslation('common');
   const { isSmall } = useBreakpoints();

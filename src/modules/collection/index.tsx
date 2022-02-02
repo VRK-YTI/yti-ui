@@ -13,6 +13,23 @@ import { useGetVocabularyQuery } from '../../common/components/vocabulary/vocabu
 import CollectionSidebar from './collection-sidebar';
 import { BadgeBar, HeadingBlock, MainContent, PageContent } from './collection.styles';
 
+/**
+ * Error handling:
+ * - if an error occurs in data fetching an alert
+ *   should be displayed for user about the error
+ * - if collection is missing the page's format
+ *   shouldn't change. Breadcrumb value is also
+ *   missing. Should there be something else there
+ *   when collection value is undefined?
+ * - if terminology is missing the breacrumb has
+ *   an empty value. Could there be something to
+ *   put there instead if the value is missing?
+ * - if some data is undefined in a collection
+ *   should some titles be hidden from the page?
+ *   e.g. "Valikoimaan kuuluvien käsitteiden yläkäsitteet"
+ *   and "Valikoimaan kuuluvat käsitteet"
+ */
+
 interface CollectionProps {
   terminologyId: string;
   collectionId: string;

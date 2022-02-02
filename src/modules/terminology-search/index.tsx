@@ -27,8 +27,8 @@ import { useGetCountsQuery } from '../../common/components/counts/counts-slice';
 /**
  * Error handling:
  * - if search results or any data needed for filter is still loading
- *   there should be a indicator that the component is in state
- *   waiting for updated data
+ *   there should be a indicator that the component is waiting
+ *   for updated data
  * -
  *
  */
