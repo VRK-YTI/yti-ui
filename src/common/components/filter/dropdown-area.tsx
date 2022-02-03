@@ -1,8 +1,6 @@
-import { useTranslation } from 'next-i18next';
 import { Dropdown, DropdownItem } from 'suomifi-ui-components';
 import { AppThunk, useStoreDispatch } from '../../../store';
 import { OrganizationSearchResult } from '../../interfaces/terminology.interface';
-import { getPropertyValue } from '../property-value/get-property-value';
 import { SearchState } from '../terminology-search/terminology-search-slice';
 import { DropdownPlaceholder, DropdownWrapper } from './filter.styles';
 
@@ -21,7 +19,6 @@ export default function DropdownArea({
   title,
   visualPlaceholder
 }: DropdownProps) {
-  const { i18n } = useTranslation('common');
   const dispatch = useStoreDispatch();
 
   if (!data) {
@@ -31,7 +28,8 @@ export default function DropdownArea({
   const handleChange = (value: string) => {
     let id = '';
     data.forEach((d) => {
-      if (getPropertyValue({ property: d.properties.prefLabel, language: i18n.language }) === value) {
+      console.log(d);
+      if (d.properties.prefLabel.value === value) {
         id = d.id;
       }
     });
@@ -52,7 +50,7 @@ export default function DropdownArea({
         onChange={(value) => handleChange(value)}
       >
         {data.map((value: any, idx: number) => {
-          const name = getPropertyValue({ property: value.properties?.prefLabel, language: i18n?.language }) ?? '';
+          const name = value.properties.prefLabel.value ?? '';
           return (
             <DropdownItem
               value={name}

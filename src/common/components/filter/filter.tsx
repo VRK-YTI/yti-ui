@@ -20,7 +20,6 @@ import { TextInputArea } from './text-input-area';
 import Separator from '../separator';
 import { Button } from 'suomifi-ui-components';
 import useQueryParam from '../../utils/hooks/useQueryParam';
-import { getPropertyValue } from '../property-value/get-property-value';
 import { Counts } from '../../interfaces/counts.interface';
 
 export interface FilterProps {
@@ -48,7 +47,7 @@ export default function Filter({
   resultCount,
   counts
 }: FilterProps) {
-  const { t, i18n } = useTranslation('common');
+  const { t } = useTranslation('common');
   const [keyword, updateKeyword] = useQueryParam('q');
 
   // Returns filter according to templates found below.
@@ -117,7 +116,7 @@ export default function Filter({
           setFilter={setSomeFilter}
           data={
             groups.map(group => {
-              let val = getPropertyValue({ property: group.properties.prefLabel, language: i18n.language }) ?? '';
+              let val = group.properties.prefLabel.value ?? '';
               return { id: group.id as string, value: val };
             })
           }
