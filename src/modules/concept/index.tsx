@@ -34,6 +34,9 @@ import {
  *   put there instead if the value is missing?
  * - if concept is missing the page renders horizontal
  *   lines. These could be hidden.
+ * - errors could be logged in console
+ * - could some things be also wrapped in <ErrorBoundary> to display
+ *   a message for user
  */
 
 export interface ConceptProps {

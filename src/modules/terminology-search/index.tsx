@@ -29,8 +29,9 @@ import { useGetCountsQuery } from '../../common/components/counts/counts-slice';
  * - if search results or any data needed for filter is still loading
  *   there should be a indicator that the component is waiting
  *   for updated data
- * -
- *
+ * - errors could be logged in console
+ * - could some things be also wrapped in <ErrorBoundary> to display
+ *   a message for user
  */
 
 export default function TerminologySearch() {

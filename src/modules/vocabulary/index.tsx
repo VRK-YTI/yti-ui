@@ -40,7 +40,9 @@ import { getPropertyValue } from '../../common/components/property-value/get-pro
  * - if concept, collections or terminology info is still loading
  *   there should be a indicator that the component is waiting
  *   for updated data
- *
+ * - errors could be logged in console
+ * - could some things be also wrapped in <ErrorBoundary> to display
+ *   a message for user
  */
 
 interface VocabularyProps {

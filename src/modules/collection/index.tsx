@@ -28,6 +28,9 @@ import { BadgeBar, HeadingBlock, MainContent, PageContent } from './collection.s
  *   should some titles be hidden from the page?
  *   e.g. "Valikoimaan kuuluvien käsitteiden yläkäsitteet"
  *   and "Valikoimaan kuuluvat käsitteet"
+ * - errors could be logged in console
+ * - could some things be also wrapped in <ErrorBoundary> to display
+ *   a message for user
  */
 
 interface CollectionProps {
