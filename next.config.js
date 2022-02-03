@@ -11,6 +11,9 @@ module.exports = (phase, { defaultConfig }) => {
     versionInfo = 'dev-local';
   }
 
+  // base path is set for running both old and new ui applications
+  const basePath = process.env.BASEPATH;
+
   let config = {
     reactStrictMode: true,
     i18n,
@@ -30,6 +33,19 @@ module.exports = (phase, { defaultConfig }) => {
       versionInfo
     }
   };
+
+  if (basePath) {
+    config = {
+      ...config,
+      basePath,
+
+      // TODO: this doesn't work, causes 400 Bad request error
+      // https://giters.com/vercel/next.js/issues/28553
+      // images: {
+      //   path: `${basePath}/_next/image`
+      // }
+    };
+  }
 
   if (process.env.REWRITE_PROFILE === 'local') {
     // if run locally in a development environment, the API may run either as a

@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { FooterContentWrapper, FooterLinkWrapper, VersionInfo } from './footer.style';
 import { useBreakpoints } from '../media-query/media-query-context';
 import getConfig from 'next/config';
+import { useRouter } from 'next/router';
 
 export interface FooterProps {
   feedbackSubject?: string;
@@ -18,7 +19,7 @@ export default function Footer({ feedbackSubject }: FooterProps) {
   return (
     <>
       <FooterContentWrapper>
-        <Image src="/logo-suomi.fi.png" width="254" height="70" alt="Logo" />
+        <Image src={useRouter().basePath + '/logo-suomi.fi.png'} width="254" height="70" alt="Logo" />
         <Paragraph>
           <Text>{t('terminology-footer-text')}</Text>
         </Paragraph>

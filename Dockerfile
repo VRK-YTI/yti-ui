@@ -50,6 +50,9 @@ WORKDIR /app
 
 ENV NODE_ENV production
 
+# TODO pass this variable from Jenkins
+ENV BASEPATH "/v2"
+
 RUN addgroup -g 1001 -S nodejs && adduser -S nextjs -u 1001
 
 # for testing during dev:
