@@ -30,18 +30,12 @@ describe('dropdown-area', () => {
         code: '',
         id: '123',
         properties: {
-          prefLabel: [
-            {
-              lang: 'en',
-              regex: '(?s)^.*$',
-              value: 'Organization1'
-            },
-            {
-              lang: 'fi',
-              regex: '(?s)^.*$',
-              value: 'Organisaatio1'
-            }
-          ]
+          prefLabel:
+          {
+            lang: 'fi',
+            regex: '(?s)^.*$',
+            value: 'Organisaatio1'
+          }
         },
         type: {
           graph: {
@@ -55,18 +49,12 @@ describe('dropdown-area', () => {
         code: '',
         id: '456',
         properties: {
-          prefLabel: [
-            {
-              lang: 'en',
-              regex: '(?s)^.*$',
-              value: 'Organization2'
-            },
-            {
-              lang: 'fi',
-              regex: '(?s)^.*$',
-              value: 'Organisaatio2'
-            }
-          ]
+          prefLabel:
+          {
+            lang: 'fi',
+            regex: '(?s)^.*$',
+            value: 'Organisaatio2'
+          }
         },
         type: {
           graph: {
@@ -80,18 +68,12 @@ describe('dropdown-area', () => {
         code: '',
         id: '789',
         properties: {
-          prefLabel: [
-            {
-              lang: 'en',
-              regex: '(?s)^.*$',
-              value: 'Organization3'
-            },
-            {
-              lang: 'fi',
-              regex: '(?s)^.*$',
-              value: 'Organisaatio3'
-            }
-          ]
+          prefLabel:
+          {
+            lang: 'fi',
+            regex: '(?s)^.*$',
+            value: 'Organisaatio3'
+          }
         },
         type: {
           graph: {
