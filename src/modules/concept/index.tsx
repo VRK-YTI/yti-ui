@@ -43,7 +43,10 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
           <PropertyValue property={terminology?.properties.prefLabel} />
         </BreadcrumbLink>
         <BreadcrumbLink url={`/terminology/${terminologyId}/concepts/${conceptId}`} current>
-          <PropertyValue property={concept?.references.prefLabelXl?.[0].properties.prefLabel} />
+          <PropertyValue
+            property={concept?.references.prefLabelXl?.[0].properties.prefLabel}
+            fallbackLanguage='fi'
+          />
         </BreadcrumbLink>
       </Breadcrumb>
 
@@ -53,11 +56,13 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
             <Text>
               <PropertyValue
                 property={terminology?.references.contributor?.[0].properties.prefLabel}
+                fallbackLanguage='fi'
               />
             </Text>
             <Heading variant="h1">
               <PropertyValue
                 property={concept?.references.prefLabelXl?.[0].properties.prefLabel}
+                fallbackLanguage='fi'
               />
             </Heading>
             <BadgeBar>
