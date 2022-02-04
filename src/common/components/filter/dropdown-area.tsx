@@ -28,7 +28,6 @@ export default function DropdownArea({
   const handleChange = (value: string) => {
     let id = '';
     data.forEach((d) => {
-      console.log(d);
       if (d.properties.prefLabel.value === value) {
         id = d.id;
       }
