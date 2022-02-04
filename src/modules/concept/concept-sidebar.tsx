@@ -49,7 +49,7 @@ export default function ConceptSidebar({ concept }: ConceptSidebarProps) {
         heading={t('sidebar-section-heading-broader')}
         items={concept?.references.broader}
         href={({ id }) => `/terminology/${terminologyId}/concept/${id}`}
-        propertyAccessor={({ references }) => references?.prefLabelXl?.[0]?.properties?.prefLabel}
+        propertyAccessor={({ references }) => references?.prefLabelXl}
       />
 
       <SidebarSection<Concept>
