@@ -10,7 +10,6 @@ import SearchInputArea from './search-input-area';
 jest.mock('next/router');
 const mockedUseRouter = useRouter as jest.MockedFunction<typeof useRouter>;
 
-
 describe('search-input-area', () => {
   test('should render component', () => {
     mockedUseRouter.mockReturnValue({ query: {} } as NextRouter);
