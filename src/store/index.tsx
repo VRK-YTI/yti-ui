@@ -31,7 +31,7 @@ export function makeStore() {
       ),
 
     // Development tools should be available only in development environments
-    devTools: process.env.REWRITE_PROFILE === 'local',
+    devTools: process.env.NODE_ENV !== 'production',
   });
 };
 
