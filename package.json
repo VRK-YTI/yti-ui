@@ -31,7 +31,7 @@
     "sass": "^1.42.1",
     "styled-components": "^5.3.1",
     "styled-jsx": "^4.0.1",
-    "suomifi-ui-components": "^6.1.0-beta.3",
+    "suomifi-ui-components": "^6.1.1",
     "swr": "^1.0.1"
   },
   "devDependencies": {
