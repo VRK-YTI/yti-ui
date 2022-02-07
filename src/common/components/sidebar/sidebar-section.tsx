@@ -42,19 +42,31 @@ export default function SidebarSection<T extends BaseEntity<string>>({
   );
 
   function propertyValue(currItem: T) {
-    if (!isEmpty(currItem.references) && currItem !== undefined) {
-      const prefLabels = Array.from(propertyAccessor(currItem) as Term[], x => {
-        if (x.properties?.prefLabel && x.properties.prefLabel[0]) {
-          return x.properties.prefLabel[0];
-        }
-      });
+    if (!isEmpty(currItem.references)) {
+      if ('member' in currItem.references) {
+        const prefLabels = Array.from(propertyAccessor(currItem) as Property[]);
 
-      return (
-        <PropertyValue
-          property={prefLabels as Property[]}
-          fallbackLanguage='fi'
-        />
-      );
+        return (
+          <PropertyValue
+            property={prefLabels as Property[]}
+            fallbackLanguage='fi'
+          />
+        );
+
+      } else {
+        const prefLabels = Array.from(propertyAccessor(currItem) as Term[], x => {
+          if (x.properties?.prefLabel && x.properties.prefLabel[0]) {
+            return x.properties.prefLabel[0];
+          }
+        });
+
+        return (
+          <PropertyValue
+            property={prefLabels as Property[]}
+            fallbackLanguage='fi'
+          />
+        );
+      }
     } else {
       return (
         <PropertyValue
