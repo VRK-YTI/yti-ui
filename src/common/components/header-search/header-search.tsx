@@ -18,11 +18,11 @@ export default function HeaderSearch({ isSearchOpen, setIsSearchOpen }: HeaderSe
   const router = useRouter();
   const isSearchPage = router.route === '/';
 
-  const [keyword] = useQueryParam('q');
-  const [searchInputValue, setSearchInputValue] = useState<string>(isSearchPage ? (keyword ?? '') : '');
+  const [keyword] = useQueryParam('q', '');
+  const [searchInputValue, setSearchInputValue] = useState<string>(isSearchPage ? keyword : '');
   useEffect(() => {
     if (isSearchPage) {
-      setSearchInputValue(keyword ?? '');
+      setSearchInputValue(keyword);
     }
   }, [keyword, setSearchInputValue, isSearchPage]);
 

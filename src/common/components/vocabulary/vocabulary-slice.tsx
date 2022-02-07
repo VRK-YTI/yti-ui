@@ -1,54 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { AppState, AppThunk } from '../../../store';
 import { Collection } from '../../interfaces/collection.interface';
 import { VocabularyConcepts, VocabularyInfoDTO } from '../../interfaces/vocabulary.interface';
 import axiosBaseQuery from '../axios-base-query';
 
-export interface VocabularyState {
-  filter: {
-    status: { [status: string]: boolean };
-    showBy: string;
-  };
-  currTerminology: {
-    id: string;
-    value: string;
-  };
-}
+export interface VocabularyState {}
 
-export const vocabularyInitialState: VocabularyState = {
-  filter: {
-    status: {
-      'VALID': true,
-      'DRAFT': true,
-      'RETIRED': false,
-      'SUPERSEDED': false
-    },
-    showBy: 'concepts'
-  },
-  currTerminology: {
-    id: '',
-    value: ''
-  }
-};
+export const vocabularyInitialState: VocabularyState = {};
 
 export const vocabularySlice = createSlice({
   name: 'vocabularySearch',
   initialState: vocabularyInitialState,
-  reducers: {
-    setVocabularyFilter(state, action) {
-      return {
-        ...state,
-        ...action.payload
-      };
-    },
-    setCurrentTerminology(state, action) {
-      return {
-        ...state,
-        ...action.payload
-      };
-    }
-  },
+  reducers: {},
 });
 
 export const vocabularyApi = createApi({
@@ -95,40 +58,5 @@ export const {
   useGetConceptResultQuery,
   useGetVocabularyQuery
 } = vocabularyApi;
-
-export const setVocabularyFilter = (filter: VocabularyState['filter']): AppThunk => dispatch => {
-  dispatch(
-    vocabularySlice.actions.setVocabularyFilter({
-      filter: filter
-    }),
-  );
-};
-
-export const initializeVocabularyFilter = (): AppThunk => dispatch => {
-  dispatch(
-    vocabularySlice.actions.setVocabularyFilter(
-      vocabularyInitialState
-    )
-  );
-};
-
-export const setCurrentTerminology = (currVal: VocabularyState['currTerminology']): AppThunk => dispatch => {
-  dispatch(
-    vocabularySlice.actions.setCurrentTerminology({
-      currTerminology: currVal
-    })
-  );
-};
-
-export const resetVocabularyFilter = (): AppThunk => dispatch => {
-  dispatch(
-    vocabularySlice.actions.setVocabularyFilter({
-      filter: vocabularyInitialState.filter
-    })
-  );
-};
-
-export const selectVocabularyFilter = () => (state: AppState): any => state.vocabularySearch.filter;
-export const selectCurrentTerminology = () => (state: AppState): any => state.vocabularySearch.currTerminology;
 
 export default vocabularySlice.reducer;

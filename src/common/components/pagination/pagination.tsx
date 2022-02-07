@@ -1,38 +1,17 @@
-import { useEffect, useState } from 'react';
 import { Icon } from 'suomifi-ui-components';
 import { PaginationButton, PaginationMobile, PaginationWrapper } from './pagination.styles';
 import { PaginationProps } from './pagination-props';
 import { useBreakpoints } from '../media-query/media-query-context';
+import useUrlState from '../../utils/hooks/useUrlState';
 
 export default function Pagination({
   data,
-  dispatch,
   pageString,
-  setResultStart,
-  query
 }: PaginationProps) {
   const breakPoints = useBreakpoints();
   const items = Array.from({ length: Math.ceil(data.totalHitCount / 10) },
     (_, item) => item + 1);
-  const [activeItem, setActiveItem] = useState<number>(
-    query.query.page !== undefined && query.query.page !== '1'
-      ? parseInt(query.query.page as string, 10)
-      : 1
-  );
-
-  useEffect(() => {
-    if (isNaN(parseInt(query.query.page as string))) {
-      setActiveItem(1);
-    } else {
-      setActiveItem(parseInt(query.query.page as string, 10));
-    }
-  }, [query]);
-
-  const handleClick = (i: number) => {
-    setActiveItem(i);
-    dispatch(setResultStart((i - 1) * 10));
-    query.push(query.route + `?page=${i}`);
-  };
+  const { urlState, patchUrlState } = useUrlState();
 
   if (items.length < 2) {
     return <></>;
@@ -41,26 +20,26 @@ export default function Pagination({
   return (
     <PaginationWrapper>
       <PaginationButton
-        disabled={activeItem === 1}
-        onClick={() => activeItem !== 1 && handleClick(activeItem - 1)}
+        disabled={urlState.page === 1}
+        onClick={() => urlState.page !== 1 && patchUrlState({ page: urlState.page - 1 })}
         data-testid='pagination-left'
       >
         {/* TODO: Update color after release in design system*/}
         <Icon
           icon='chevronLeft'
-          color={activeItem === 1 ? 'hsl(202, 7%, 67%)' : 'hsl(212, 63%, 45%)'}
+          color={urlState.page === 1 ? 'hsl(202, 7%, 67%)' : 'hsl(212, 63%, 45%)'}
         />
       </PaginationButton>
 
       {!breakPoints.isSmall
         ?
-        FormatItemsList(items, activeItem)
+        FormatItemsList(items, urlState.page)
           .map((item, idx) => {
             return (
               <PaginationButton
                 key={item !== '...' ? `pagination-item-${item}` : `pagination-item-${item}-${idx}`}
-                onClick={() => (activeItem !== item && typeof item === 'number') && handleClick(item)}
-                active={item === activeItem}
+                onClick={() => (urlState.page !== item && typeof item === 'number') && patchUrlState({ page: item })}
+                active={item === urlState.page}
                 disabled={item === '...'}
               >
                 {item}
@@ -68,18 +47,18 @@ export default function Pagination({
             );
           })
         :
-        <PaginationMobile>{pageString} {activeItem}/{items.length}</PaginationMobile>
+        <PaginationMobile>{pageString} {urlState.page}/{items.length}</PaginationMobile>
       }
 
       <PaginationButton
-        disabled={activeItem === items[items.length - 1]}
-        onClick={() => activeItem !== items[items.length - 1] && handleClick(activeItem + 1)}
+        disabled={urlState.page === items[items.length - 1]}
+        onClick={() => urlState.page !== items[items.length - 1] && patchUrlState({ page: urlState.page + 1 })}
         data-testid='pagination-right'
       >
         {/* TODO: Update color*/}
         <Icon
           icon='chevronRight'
-          color={activeItem === items[items.length - 1] ? 'hsl(202, 7%, 67%)' : 'hsl(212, 63%, 45%)'}
+          color={urlState.page === items[items.length - 1] ? 'hsl(202, 7%, 67%)' : 'hsl(212, 63%, 45%)'}
         />
       </PaginationButton>
     </PaginationWrapper>

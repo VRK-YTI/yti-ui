@@ -4,7 +4,7 @@ import { ThemeProvider } from 'styled-components';
 import { lightTheme } from '../../../layouts/theme';
 import { makeStore } from '../../../store';
 import { resetVocabularyFilter } from '../vocabulary/vocabulary-slice';
-import Remove from './remove';
+import ResetAllFiltersButton from './reset-all-filters-button';
 
 describe('remove', () => {
   test('should render component', () => {
@@ -13,7 +13,7 @@ describe('remove', () => {
     render(
       <Provider store={store}>
         <ThemeProvider theme={lightTheme}>
-          <Remove
+          <ResetAllFiltersButton
             resetFilter={resetVocabularyFilter}
             title='Title'
           />

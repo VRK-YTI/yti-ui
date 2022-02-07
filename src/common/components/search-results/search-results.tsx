@@ -1,16 +1,12 @@
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
-import { AppThunk } from '../../../store';
 import { Collection } from '../../interfaces/collection.interface';
-import { TerminologySearchResult } from '../../interfaces/terminology.interface';
+import { GroupSearchResult, OrganizationSearchResult, TerminologySearchResult } from '../../interfaces/terminology.interface';
 import { VocabularyConcepts } from '../../interfaces/vocabulary.interface';
 import filterData from '../../utils/filter-data';
-import useQueryParam from '../../utils/hooks/useQueryParam';
 import PropertyValue from '../property-value';
 import { getPropertyValue } from '../property-value/get-property-value';
 import { useBreakpoints } from '../media-query/media-query-context';
-import { SearchState } from '../terminology-search/terminology-search-slice';
-import { VocabularyState } from '../vocabulary/vocabulary-slice';
 import SearchCountTags from './search-count-tags';
 import {
   Card,
@@ -27,17 +23,18 @@ import {
   CardWrapper
 } from './search-results.styles';
 import { Concept } from '../../interfaces/concept.interface';
+import useUrlState from '../../utils/hooks/useUrlState';
 
 interface SearchResultsProps {
   data: TerminologySearchResult | VocabularyConcepts | Collection[];
-  filter: SearchState['filter'] | VocabularyState['filter'];
   type?: string;
-  setSomeFilter: (x: any) => AppThunk;
+  organizations?: OrganizationSearchResult[];
+  domains?: GroupSearchResult[];
 }
 
-export default function SearchResults({ data, filter, type, setSomeFilter }: SearchResultsProps) {
+export default function SearchResults({ data, type, organizations, domains }: SearchResultsProps) {
   const { t, i18n } = useTranslation('common');
-  const [keyword] = useQueryParam('q');
+  const { urlState } = useUrlState();
   const { isSmall } = useBreakpoints();
 
   if (type === 'terminology-search' && 'terminologies' in data) {
@@ -61,9 +58,11 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
       return (
         <>
           <SearchCountTags
-            count={data?.totalHitCount}
-            filter={filter}
-            setFilter={setSomeFilter}
+            title={t('terminology-search-terminologies', {
+              count: data?.totalHitCount ?? 0,
+            })}
+            organizations={organizations}
+            domains={domains}
           />
           <CardWrapper isSmall={isSmall}>
             {data?.terminologies?.map((terminology, idx: number) => {
@@ -132,12 +131,18 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
   function renderConceptSearchResults() {
     if ('concepts' in data) {
       // Note: This should be replaced when backend request for terminology has been updated
-      const filteredData = filterData(data, filter, keyword ?? '', i18n.language);
+      const filteredData = filterData(data, urlState, i18n.language);
 
       if (filteredData && !Array.isArray(filteredData)) {
         return (
           <>
-            <SearchCountTags count={filteredData.concepts?.length} filter={filter} setFilter={setSomeFilter} />
+            <SearchCountTags
+              title={t('vocabulary-results-concepts', {
+                count: data?.totalHitCount ?? 0,
+              })}
+              organizations={organizations}
+              domains={domains}
+            />
             <CardWrapper isSmall={isSmall}>
               {filteredData?.concepts.map((concept, idx) => {
                 return (
@@ -181,12 +186,16 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
   function renderConceptCollections() {
     if (Array.isArray(data) && data.length > 0) {
       // Note: This should be replaced when backend request for terminology has been updated
-      const filteredData = filterData(data, filter, keyword ?? '', i18n.language);
+      const filteredData = filterData(data, urlState, i18n.language);
 
       if (filteredData && Array.isArray(filteredData)) {
         return (
           <>
-            <SearchCountTags count={filteredData.length} filter={filter} setFilter={setSomeFilter} />
+            <SearchCountTags
+              title={t('vocabulary-results-collections', {
+                count: filteredData.length,
+              })}
+            />
             <CardWrapper isSmall={isSmall}>
               {filteredData.map((collection, idx: number) => {
                 return (

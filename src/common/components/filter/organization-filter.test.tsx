@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { lightTheme } from '../../../layouts/theme';
 import { makeStore } from '../../../store';
 import { setVocabularyFilter } from '../vocabulary/vocabulary-slice';
-import DropdownArea from './dropdown-area';
+import OrganizationFilter from './organization-filter';
 
 describe('dropdown-area', () => {
   test('renders component', () => {
@@ -106,8 +106,8 @@ describe('dropdown-area', () => {
     render(
       <Provider store={store}>
         <ThemeProvider theme={lightTheme}>
-          <DropdownArea
-            data={data}
+          <OrganizationFilter
+            organizations={data}
             filter={filter}
             setFilter={setVocabularyFilter}
             title='Title'
