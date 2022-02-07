@@ -70,7 +70,10 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
               return (
                 <Card key={`search-result-${idx}`}>
                   <CardContributor>
-                    {terminology.contributors[0].label[i18n.language] ?? terminology.contributors[0].label['fi']}
+                    {terminology.contributors[0].label[i18n.language]
+                      ?? terminology.contributors[0].label['fi']
+                      ?? ''
+                    }
                   </CardContributor>
 
                   <CardTitleWrapper>
