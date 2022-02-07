@@ -3,6 +3,7 @@ import { Icon } from 'suomifi-ui-components';
 import { PaginationButton, PaginationMobile, PaginationWrapper } from './pagination.styles';
 import { PaginationProps } from './pagination-props';
 import { useBreakpoints } from '../media-query/media-query-context';
+import useQueryParam from '../../utils/hooks/useQueryParam';
 
 export default function Pagination({
   data,
@@ -12,13 +13,19 @@ export default function Pagination({
   query
 }: PaginationProps) {
   const breakPoints = useBreakpoints();
-  const items = Array.from({ length: Math.ceil(data.totalHitCount / 10) },
-    (_, item) => item + 1);
+  const [q] = useQueryParam('q');
   const [activeItem, setActiveItem] = useState<number>(
     query.query.page !== undefined && query.query.page !== '1'
       ? parseInt(query.query.page as string, 10)
       : 1
   );
+
+  let items: number[];
+  if ('totalHitCount' in data) {
+    items = Array.from({ length: Math.ceil(data.totalHitCount / 10) }, (_, item) => item + 1);
+  } else {
+    items = Array.from({ length: Math.ceil(data.length / 10) }, (_, item) => item + 1);
+  }
 
   useEffect(() => {
     if (isNaN(parseInt(query.query.page as string))) {
@@ -31,7 +38,12 @@ export default function Pagination({
   const handleClick = (i: number) => {
     setActiveItem(i);
     dispatch(setResultStart((i - 1) * 10));
-    query.push(query.route + `?page=${i}`);
+    if (query.route.includes('[terminologyId]')) {
+      const parsedRoute = query.route.replace('[terminologyId]', query.query.terminologyId as string);
+      query.push(parsedRoute + `?page=${i}${q ? `&q=${q}` : ''}`);
+    } else {
+      query.push(query.route + `?page=${i}${q ? `&q=${q}` : ''}`);
+    }
   };
 
   if (items.length < 2) {

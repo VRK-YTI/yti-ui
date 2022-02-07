@@ -17,7 +17,6 @@ interface RadioButtonProps {
 export default function RadioButtonArea({ filter, data, setFilter, title, isModal, counts }: RadioButtonProps) {
   const { t } = useTranslation('common');
   const dispatch = useStoreDispatch();
-
   const handleShowBy = (s: string) => {
     let retVal: VocabularyState['filter'] | undefined;
 

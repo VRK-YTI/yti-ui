@@ -20,6 +20,9 @@ export function updateQueryParam({ name, value, router }: { name: string, value?
     delete queryParams[name];
   }
 
+  // Redirects back to front of the results
+  queryParams['page'] = '1';
+
   return router.push({
     pathname: router.pathname,
     query: queryParams,

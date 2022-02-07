@@ -16,6 +16,7 @@ describe('pagination', () => {
   test('should render component', () => {
     mockedUseRouter.mockReturnValue({
       query: { page: '0' },
+      route: '',
       push: jest.fn(),
     } as any);
 
@@ -52,7 +53,8 @@ describe('pagination', () => {
   test('should render empty when list is smaller than 10', () => {
     mockedUseRouter.mockReturnValue({
       query: { page: '0' },
-      push: jest.fn(),
+      route: '',
+      push: jest.fn()
     } as any);
 
     const store = makeStore();
@@ -88,7 +90,8 @@ describe('pagination', () => {
   test('should change active item', () => {
     mockedUseRouter.mockReturnValue({
       query: { page: '0' },
-      push: jest.fn(),
+      route: '',
+      push: jest.fn()
     } as any);
 
     const store = makeStore();

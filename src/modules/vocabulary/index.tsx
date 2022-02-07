@@ -7,12 +7,14 @@ import {
   useGetConceptResultQuery,
   useGetVocabularyQuery,
   VocabularyState,
-  setCurrentTerminology
+  setCurrentTerminology,
+  setResultStart,
+  selectResultStart
 } from '../../common/components/vocabulary/vocabulary-slice';
 import Filter from '../../common/components/filter/filter';
 import SearchResults from '../../common/components/search-results/search-results';
 import Title from '../../common/components/title/title';
-import { ResultAndFilterContainer, ResultAndStatsWrapper } from './vocabulary.styles';
+import { ResultAndFilterContainer, ResultAndStatsWrapper, PaginationWrapper } from './vocabulary.styles';
 import { selectVocabularyFilter } from '../../common/components/vocabulary/vocabulary-slice';
 import { useSelector } from 'react-redux';
 import { useStoreDispatch } from '../../store';
@@ -24,6 +26,10 @@ import { Breadcrumb, BreadcrumbLink } from '../../common/components/breadcrumb';
 import PropertyValue from '../../common/components/property-value';
 import { useGetVocabularyCountQuery } from '../../common/components/counts/counts-slice';
 import { getPropertyValue } from '../../common/components/property-value/get-property-value';
+import Pagination from '../../common/components/pagination/pagination';
+import { useRouter } from 'next/router';
+import useQueryParam from '../../common/utils/hooks/useQueryParam';
+import filterData from '../../common/utils/filter-data';
 
 interface VocabularyProps {
   id: string;
@@ -32,13 +38,28 @@ interface VocabularyProps {
 export default function Vocabulary({ id }: VocabularyProps) {
   const { t, i18n } = useTranslation('common');
   const { isSmall } = useBreakpoints();
+  const query = useRouter();
   const dispatch = useStoreDispatch();
   const filter: VocabularyState['filter'] = useSelector(selectVocabularyFilter());
+  const resultStart: number = useSelector(selectResultStart());
+  const [keyword] = useQueryParam('q');
+  const [page] = useQueryParam('page');
   const { data: collections } = useGetCollectionsQuery(id);
-  const { data: concepts } = useGetConceptResultQuery(id);
+  const { data: concepts } = useGetConceptResultQuery({
+    id: id,
+    resultStart: resultStart,
+    query: keyword ?? '',
+    status: Object.keys(filter.status).filter(k => filter.status[k])
+  });
   const { data: info } = useGetVocabularyQuery(id);
   const { data: counts } = useGetVocabularyCountQuery(id);
   const [showModal, setShowModal] = useState(false);
+
+  if (page && page !== '1') {
+    dispatch(setResultStart((parseInt(query.query.page as string, 10) - 1) * 10));
+  } else {
+    dispatch(setResultStart(0));
+  }
 
   useEffect(() => {
     dispatch(initializeVocabularyFilter());
@@ -56,6 +77,14 @@ export default function Vocabulary({ id }: VocabularyProps) {
       }));
     }
   }, [info, i18n, dispatch]);
+
+  const handleFilterChange = (value: any) => {
+    if (page && page !== '1') {
+      const pathname = query.pathname.replace('[terminologyId]', id);
+      query.push(pathname + '?page=1');
+    }
+    return setVocabularyFilter(value);
+  };
 
   return (
     <>
@@ -81,18 +110,37 @@ export default function Vocabulary({ id }: VocabularyProps) {
             <SearchResults
               data={concepts}
               filter={filter}
-              setSomeFilter={setVocabularyFilter}
+              setSomeFilter={handleFilterChange}
             />
+            <PaginationWrapper>
+              <Pagination
+                data={concepts}
+                dispatch={dispatch}
+                pageString={t('pagination-page')}
+                setResultStart={setResultStart}
+                query={query}
+              />
+            </PaginationWrapper>
           </ResultAndStatsWrapper>
         }
         {(collections && filter.showBy === 'collections') &&
           <ResultAndStatsWrapper>
             <SearchResults
-              data={collections}
+              data={filterData(collections, filter, keyword ?? '', i18n.language, page) ?? collections}
               filter={filter}
-              setSomeFilter={setVocabularyFilter}
+              setSomeFilter={handleFilterChange}
               type='collections'
             />
+            <PaginationWrapper>
+              <Pagination
+                data={filterData(collections, filter, keyword ?? '', i18n.language, page) ?? collections}
+                dispatch={dispatch}
+                pageString={t('pagination-page')}
+                setResultStart={setResultStart}
+                query={query}
+
+              />
+            </PaginationWrapper>
           </ResultAndStatsWrapper>
         }
         {!isSmall
@@ -100,7 +148,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
           <Filter
             filter={filter as VocabularyState['filter']}
             type={'vocabulary'}
-            setSomeFilter={setVocabularyFilter}
+            setSomeFilter={handleFilterChange}
             resetSomeFilter={resetVocabularyFilter}
             counts={counts}
           />
@@ -118,7 +166,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
               <Filter
                 filter={filter as VocabularyState['filter']}
                 type={'vocabulary'}
-                setSomeFilter={setVocabularyFilter}
+                setSomeFilter={handleFilterChange}
                 resetSomeFilter={resetVocabularyFilter}
                 isModal={true}
                 setShowModal={setShowModal}
