@@ -25,6 +25,7 @@ import {
   CardWrapper
 } from './search-results.styles';
 import { Concept } from '../../interfaces/concept.interface';
+import TextLinks from '../text-links';
 
 interface SearchResultsProps {
   data: TerminologySearchResult | VocabularyConcepts | Collection[];
@@ -161,7 +162,8 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
                     <CardDescription>
                       {concept.definition?.[i18n.language]
                         ?
-                        concept.definition[i18n.language]
+                        // concept.definition[i18n.language]
+                        TextLinks({text: concept.definition.fi ?? '', obj: concept})
                         :
                         concept.definition?.[Object.keys(concept.definition)[0]]
                           ?
