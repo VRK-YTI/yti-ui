@@ -32,7 +32,12 @@ export default function filterData(data: VocabularyConcepts | Collection[], urlS
     let filteredData: Collection[] = [];
 
     data.forEach(collection => {
-      if (getPropertyValue({ property: collection.properties.prefLabel, language })?.includes(urlState.q.toLowerCase())) {
+      const prefLabel = getPropertyValue({
+        property: collection.properties.prefLabel,
+        language,
+      });
+
+      if (prefLabel?.includes(urlState.q.toLowerCase())) {
         filteredData.push(collection);
       }
     });

@@ -9,9 +9,14 @@ export default function Pagination({
   pageString,
 }: PaginationProps) {
   const breakPoints = useBreakpoints();
-  const items = Array.from({ length: Math.ceil(data.totalHitCount / 10) },
-    (_, item) => item + 1);
   const { urlState, patchUrlState } = useUrlState();
+
+  let items: number[];
+  if ('totalHitCount' in data) {
+    items = Array.from({ length: Math.ceil(data.totalHitCount / 10) }, (_, item) => item + 1);
+  } else {
+    items = Array.from({ length: Math.ceil(data.length / 10) }, (_, item) => item + 1);
+  }
 
   if (items.length < 2) {
     return <></>;

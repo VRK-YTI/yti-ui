@@ -5,6 +5,9 @@ import { appWithTranslation } from 'next-i18next';
 import axios from 'axios';
 import React from 'react';
 import { wrapper } from '../store';
+import '@fontsource/source-sans-pro/300.css';
+import '@fontsource/source-sans-pro/400.css';
+import '@fontsource/source-sans-pro/600.css';
 
 // https://nextjs.org/docs/advanced-features/custom-app
 function App({ Component, pageProps }: AppProps) {

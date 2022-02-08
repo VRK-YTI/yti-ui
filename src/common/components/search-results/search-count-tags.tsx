@@ -42,7 +42,7 @@ export default function SearchCountTags({
             <PropertyValue
               property={organizations.filter(o => o.id === urlState.org)[0]?.properties.prefLabel}
               fallbackLanguage="fi"
-              // fallback={urlState.org}
+              fallback={urlState.org}
             />
           </Tag>
         )}
@@ -75,7 +75,7 @@ export default function SearchCountTags({
             <PropertyValue
               property={domains.filter(d => d.id === domain)[0]?.properties.prefLabel}
               fallbackLanguage="fi"
-              // fallback={urlState.org}
+              fallback={urlState.org}
             />
           </Tag>
         ))}

@@ -1,0 +1,7 @@
+{
+  "toast-close": "Close",
+  "error-with-terminologies": "Error retrieving terminologies.",
+  "error-with-groups": "Error retrieving information domains.",
+  "error-with-organizations": "Error retrieving organizations.",
+  "error-with-counts": "Error retrieving counts."
+}

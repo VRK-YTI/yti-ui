@@ -29,7 +29,9 @@ export function makeStore() {
         collectionApi.middleware,
         countsApi.middleware
       ),
-    devTools: true,
+
+    // Development tools should be available only in development environments
+    devTools: process.env.REWRITE_PROFILE === 'local',
   });
 };
 

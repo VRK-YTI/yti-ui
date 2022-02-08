@@ -19,21 +19,22 @@ import { useState } from 'react';
 import { useGetCountsQuery } from '../../common/components/counts/counts-slice';
 import { SearchPageFilter } from './search-page-filter';
 import useUrlState from '../../common/utils/hooks/useUrlState';
+import { Alert, Alerts } from '../../common/components/alert/';
 
 export default function TerminologySearch() {
   const { t, i18n } = useTranslation();
   const { isSmall } = useBreakpoints();
   const { urlState } = useUrlState();
-  const { data } = useGetSearchResultQuery({ urlState });
-  const { data: groups } = useGetGroupsQuery(i18n.language);
-  const { data: organizations } = useGetOrganizationsQuery(i18n.language);
-  const { data: counts} = useGetCountsQuery(null);
+  const { data, error } = useGetSearchResultQuery({ urlState });
+  const { data: groups, error: groupsError } = useGetGroupsQuery(i18n.language);
+  const { data: organizations, error: organizationsError } = useGetOrganizationsQuery(i18n.language);
+  const { data: counts, error: countsError } = useGetCountsQuery(null);
   const [showModal, setShowModal] = useState(false);
 
   return (
     <>
       <Title info={t('terminology-title')} />
-      {isSmall &&
+      {(isSmall && groups && organizations) &&
         <FilterMobileButton
           variant='secondary'
           fullWidth
@@ -43,25 +44,24 @@ export default function TerminologySearch() {
         </FilterMobileButton>
       }
       <ResultAndFilterContainer>
-        {data &&
-          <ResultAndStatsWrapper>
-            <SearchResults
-              data={data}
-              type="terminology-search"
-              organizations={organizations}
-              domains={groups}
-            />
-            {data
-              &&
+        <ResultAndStatsWrapper>
+          {data &&
+            <>
+              <SearchResults
+                data={data}
+                type="terminology-search"
+                organizations={organizations}
+                domains={groups}
+              />
               <PaginationWrapper>
                 <Pagination
                   data={data}
                   pageString={t('pagination-page')}
                 />
               </PaginationWrapper>
-            }
-          </ResultAndStatsWrapper>
-        }
+            </>
+          }
+        </ResultAndStatsWrapper>
         {!isSmall
           ?
           <SearchPageFilter
@@ -90,6 +90,12 @@ export default function TerminologySearch() {
           </Modal>
         }
       </ResultAndFilterContainer>
+      <Alerts>
+        {error && <Alert msg={'error-with-terminologies'} type='error' />}
+        {groupsError && <Alert msg={'error-with-groups'} type='error' />}
+        {organizationsError && <Alert msg={'error-with-organizations'} type='error' />}
+        {countsError && <Alert msg={'error-with-counts'} type='error' />}
+      </Alerts>
     </>
   );
 };

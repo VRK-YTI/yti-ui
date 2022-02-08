@@ -32,7 +32,7 @@ describe('useQueryParam', () => {
     const { result } = renderHook(() => useQueryParam('q'));
     await result.current[1]('new value');
     expect(push).toHaveBeenCalledWith(
-      expect.objectContaining({ query: { q: 'new value', a: 'a' } }),
+      expect.objectContaining({ pathname: undefined, query: { q: 'new value', a: 'a', page: '1' } }),
       undefined,
       expect.anything(),
     );

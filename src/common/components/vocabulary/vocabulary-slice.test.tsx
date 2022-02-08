@@ -20,7 +20,8 @@ describe('Vocabulary-slice', () => {
       currTerminology: {
         id: '',
         value: ''
-      }
+      },
+      resultStart: 0,
     };
 
     store.dispatch(setVocabularyFilter(newState.filter));
@@ -64,7 +65,8 @@ describe('Vocabulary-slice', () => {
       currTerminology: {
         id: '123123-123123-123',
         value: 'Demo'
-      }
+      },
+      resultStart: 0,
     };
 
     store.dispatch(setVocabularyFilter(newState.filter));
@@ -99,7 +101,8 @@ describe('Vocabulary-slice', () => {
       currTerminology: {
         id: '',
         value: ''
-      }
+      },
+      resultStart: 0,
     };
 
     store.dispatch(setVocabularyFilter(newState.filter));
