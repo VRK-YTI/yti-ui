@@ -1,27 +1,23 @@
 import { render, screen } from '@testing-library/react';
-import { Provider } from 'react-redux';
-import { ThemeProvider } from 'styled-components';
-import { lightTheme } from '../../../layouts/theme';
-import { makeStore } from '../../../store';
-import { resetVocabularyFilter } from '../vocabulary/vocabulary-slice';
+import { useRouter } from 'next/router';
+import { themeProvider } from '../../../tests/test-utils';
 import ResetAllFiltersButton from './reset-all-filters-button';
 
-describe('remove', () => {
+
+jest.mock('next/router');
+const mockedUseRouter = useRouter as jest.MockedFunction<typeof useRouter>;
+
+describe('reset-all-filters-button', () => {
   test('should render component', () => {
-    const store = makeStore();
+    mockedUseRouter.mockReturnValue({
+      query: { q: 'lorem ipsum' }
+    } as any);
 
     render(
-      <Provider store={store}>
-        <ThemeProvider theme={lightTheme}>
-          <ResetAllFiltersButton
-            resetFilter={resetVocabularyFilter}
-            title='Title'
-          />
-        </ThemeProvider>
-      </Provider>
+      <ResetAllFiltersButton />,
+      { wrapper: themeProvider }
     );
 
-    expect(screen.getByText('Title')).toBeInTheDocument;
-
+    expect(screen.getByText('tr-vocabulary-filter-remove-all')).toBeInTheDocument;
   });
 });

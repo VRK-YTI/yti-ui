@@ -26,7 +26,7 @@ export default function Pagination({
     <PaginationWrapper>
       <PaginationButton
         disabled={urlState.page === 1}
-        onClick={() => urlState.page !== 1 && patchUrlState({ page: urlState.page - 1 })}
+        onClick={() =>urlState.page !== 1 && patchUrlState({ page: urlState.page - 1 })}
         data-testid='pagination-left'
       >
         {/* TODO: Update color after release in design system*/}

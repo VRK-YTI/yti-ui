@@ -4,7 +4,6 @@ import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
 import { lightTheme } from '../../../layouts/theme';
 import { makeStore } from '../../../store';
-import { setVocabularyFilter } from '../vocabulary/vocabulary-slice';
 import SearchResults from './search-results';
 
 jest.mock('next/router');
@@ -40,8 +39,6 @@ describe('search-results', () => {
         <ThemeProvider theme={lightTheme}>
           <SearchResults
             data={data}
-            filter={filter}
-            setSomeFilter={setVocabularyFilter}
           />
         </ThemeProvider>
       </Provider>
@@ -153,8 +150,6 @@ describe('search-results', () => {
         <ThemeProvider theme={lightTheme}>
           <SearchResults
             data={data}
-            filter={filter}
-            setSomeFilter={setVocabularyFilter}
             type={'terminology-search'}
           />
         </ThemeProvider>
