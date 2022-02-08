@@ -3,7 +3,6 @@ import { useRouter } from 'next/router';
 import { themeProvider } from '../../../tests/test-utils';
 import ResetAllFiltersButton from './reset-all-filters-button';
 
-
 jest.mock('next/router');
 const mockedUseRouter = useRouter as jest.MockedFunction<typeof useRouter>;
 
