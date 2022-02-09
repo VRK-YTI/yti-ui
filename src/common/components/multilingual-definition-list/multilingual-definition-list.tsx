@@ -1,5 +1,6 @@
 import { maxBy } from 'lodash';
 import React from 'react';
+import TextLinks from '../text-links';
 import { MultilingualDefinitionListItem, MultilingualDefinitionListWrapper } from './multilingual-definition-list.styles';
 
 export interface MultilingualTextBoxProps {
@@ -16,7 +17,7 @@ export default function MultilingualDefinitionList({ items }: MultilingualTextBo
     <MultilingualDefinitionListWrapper maxSize={maxSize}>
       {items.map(({ language, content }, index) => (
         <MultilingualDefinitionListItem key={index} lang={language}>
-          {content}
+          {typeof content === 'string' ? TextLinks({text: content}) : content}
         </MultilingualDefinitionListItem>
       ))}
     </MultilingualDefinitionListWrapper>

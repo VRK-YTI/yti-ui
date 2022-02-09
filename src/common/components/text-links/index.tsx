@@ -1,46 +1,50 @@
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { Link as SuomiLink } from 'suomifi-ui-components';
-import { VocabularyConceptDTO } from '../../interfaces/vocabulary.interface';
+import { useGetResolveQuery } from '../resolve/resolve.slice';
 
 interface TextLinksProps {
   text: string;
-  obj: VocabularyConceptDTO;
 }
 
-export function getTextLinks({text, obj}: TextLinksProps) {
-
+export function GetLinks(text: string) {
+  const { data } = useGetResolveQuery(text);
+  return data;
 }
 
-export default function TextLinks({ text, obj }: TextLinksProps) {
-  if (!text.includes('<')) {
+export default function TextLinks({ text }: TextLinksProps) {
+  const router = useRouter();
+  const textFormatted = text.match(/'.+?'/g)?.[0].replaceAll('\/', '%2F').replaceAll(':', '%3A').replaceAll('\'', '');
+
+  if (!text.includes('<a') || !textFormatted) {
     return <>{text}</>;
   }
 
+  const data = GetLinks(textFormatted);
+
   if (text.includes('internal')) {
-    const baseUri = 'http://localhost:3000/';
-
-    const uri = `/terminology/${obj.terminology.id}/concept/${obj.broader}`;
-
-    const newText = text.split(/<\/?a[^>]*>/g);
+    const textSplit = text.split(/<\/?a>? ?/g);
 
     return (
-      <>
-        {newText.map((t, idx) => {
-          if (t.includes(' ')) {
-            return (
-              <span key={`${t}-${idx}`}>{t}</span>
-            );
-          } else {
-            return (
-              <Link href={uri} passHref key={`${t}-${idx}`}>
-                <SuomiLink href=''>
-                  {t}
-                </SuomiLink>
-              </Link>
-            );
-          }
-        })}
-      </>
+      textSplit.map((t, idx) => {
+        if (t.includes('href')) {
+          return (
+            <Link
+              passHref
+              href={`/terminology/${router.query.terminologyId}/concept/${data?.[0].id}`}
+              key={`${t}-${idx}`}
+            >
+              <SuomiLink href={''}>
+                {t.replace(/.*>/g, '')}
+              </SuomiLink>
+            </Link>
+          );
+        } else {
+          return (
+            <span key={`${t}-${idx}`}>{t}</span>
+          );
+        }
+      })
     );
   } else {
     return (

@@ -133,8 +133,6 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
   }
 
   function renderConceptSearchResults() {
-    console.log(data.concepts);
-
     if ('concepts' in data) {
       if (data && !Array.isArray(data)) {
         return (
@@ -165,7 +163,7 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
                       {concept.definition?.[i18n.language]
                         ?
                         // concept.definition[i18n.language]
-                        TextLinks({text: concept.definition.fi ?? '', obj: concept})
+                        TextLinks({text: concept.definition.fi ?? ''})
                         :
                         concept.definition?.[Object.keys(concept.definition)[0]]
                           ?
