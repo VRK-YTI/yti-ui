@@ -73,6 +73,7 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
             </BadgeBar>
           </HeadingBlock>
 
+          {console.log(concept?.properties, concept)}
           <MultilingualPropertyBlock
             title={t('field-definition')}
             data={concept?.properties.definition}

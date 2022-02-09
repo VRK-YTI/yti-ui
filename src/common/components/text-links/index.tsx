@@ -7,15 +7,19 @@ interface TextLinksProps {
   obj: VocabularyConceptDTO;
 }
 
+export function getTextLinks({text, obj}: TextLinksProps) {
+
+}
+
 export default function TextLinks({ text, obj }: TextLinksProps) {
   if (!text.includes('<')) {
     return <>{text}</>;
   }
 
   if (text.includes('internal')) {
-    let uri = 'http://localhost:3000/';
+    const baseUri = 'http://localhost:3000/';
 
-    uri = `/terminology/${obj.terminology.id}/concept/${obj.broader}`;
+    const uri = `/terminology/${obj.terminology.id}/concept/${obj.broader}`;
 
     const newText = text.split(/<\/?a[^>]*>/g);
 
@@ -43,6 +47,4 @@ export default function TextLinks({ text, obj }: TextLinksProps) {
       <div dangerouslySetInnerHTML={{ __html: text }}></div>
     );
   }
-
-
 }

@@ -133,6 +133,8 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
   }
 
   function renderConceptSearchResults() {
+    console.log(data.concepts);
+
     if ('concepts' in data) {
       if (data && !Array.isArray(data)) {
         return (
