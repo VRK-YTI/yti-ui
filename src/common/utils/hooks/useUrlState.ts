@@ -50,7 +50,7 @@ export default function useUrlState(): UseURLStateResult {
   };
 }
 
-export function updateURLState(
+function updateURLState(
   router: NextRouter,
   state?: UrlState
 ): void {
