@@ -4,7 +4,7 @@ import { NextRouter, useRouter } from 'next/router';
 export interface UrlState {
   q: string;
   domain: string[];
-  org: string;
+  organization: string;
   status: string[];
   type: string;
   page: number;
@@ -13,7 +13,7 @@ export interface UrlState {
 export const initialUrlState: UrlState = {
   q: '',
   domain: [],
-  org: '',
+  organization: '',
   status: ['valid', 'draft'],
   type: 'concept',
   page: 1,
@@ -36,7 +36,7 @@ export default function useUrlState(): UseURLStateResult {
   const urlState: Required<UrlState> = {
     q: asString(router.query.q, initialUrlState.q),
     domain: asStringArray(router.query.domain, initialUrlState.domain),
-    org: asString(router.query.org, initialUrlState.org),
+    organization: asString(router.query.organization, initialUrlState.organization),
     status: asStringArray(router.query.status, initialUrlState.status),
     type: asString(router.query.type, initialUrlState.type),
     page: asNumber(router.query.page, initialUrlState.page),
@@ -56,7 +56,7 @@ export function updateURLState(
 ): void {
   const {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    q, domain, org, status, type, page,
+    q, domain, organization, status, type, page,
     ...otherQueryParameters
   } = router.query;
 
@@ -74,7 +74,7 @@ function buildUrlStatePatch(state: UrlState): Partial<UrlState> {
 
   if (!isInitial(state, 'q')) patch.q = state.q;
   if (!isInitial(state, 'domain')) patch.domain = state.domain;
-  if (!isInitial(state, 'org')) patch.org = state.org;
+  if (!isInitial(state, 'organization')) patch.organization = state.organization;
   if (!isInitial(state, 'status')) patch.status = state.status;
   if (!isInitial(state, 'type')) patch.type = state.type;
   if (!isInitial(state, 'page')) patch.page = state.page;

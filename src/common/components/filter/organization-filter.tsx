@@ -28,9 +28,9 @@ export default function OrganizationFilter({
         visualPlaceholder={
           <DropdownPlaceholder>{visualPlaceholder}</DropdownPlaceholder>
         }
-        value={urlState.org}
-        onChange={org => patchUrlState({
-          org,
+        value={urlState.organization}
+        onChange={organization => patchUrlState({
+          organization,
           page: initialUrlState.page,
         })}
       >

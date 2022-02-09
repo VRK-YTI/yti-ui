@@ -31,7 +31,7 @@ export const terminologySearchApi = createApi({
           query: value.urlState.q,
           statuses: value.urlState.status.map(s => s.toUpperCase()),
           groups: value.urlState.domain,
-          organizations: value.urlState.org ? [value.urlState.org] : [],
+          organizations: value.urlState.organization ? [value.urlState.organization] : [],
           searchConcepts: true,
           prefLang: 'fi',
           pageSize: 10,

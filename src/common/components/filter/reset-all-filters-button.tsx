@@ -29,7 +29,7 @@ export default function ResetAllFiltersButton() {
   function isInitialUrlState(): boolean {
     return isInitial(urlState, 'q')
         && isInitial(urlState, 'domain')
-        && isInitial(urlState, 'org')
+        && isInitial(urlState, 'organization')
         && isInitial(urlState, 'status')
         && isInitial(urlState, 'type');
   }

@@ -33,16 +33,16 @@ export default function SearchCountTags({
     <CountWrapper isSmall={isSmall}>
       <CountText>{title}</CountText>
       <ChipWrapper>
-        {urlState.org && (
+        {urlState.organization && (
           <Tag
             onRemove={() => patchUrlState({
-              org: initialUrlState.org,
+              organization: initialUrlState.organization,
             })}
           >
             <PropertyValue
-              property={organizations.filter(o => o.id === urlState.org)[0]?.properties.prefLabel}
+              property={organizations.filter(o => o.id === urlState.organization)[0]?.properties.prefLabel}
               fallbackLanguage="fi"
-              fallback={urlState.org}
+              fallback={urlState.organization}
             />
           </Tag>
         )}
@@ -75,7 +75,7 @@ export default function SearchCountTags({
             <PropertyValue
               property={domains.filter(d => d.id === domain)[0]?.properties.prefLabel}
               fallbackLanguage="fi"
-              fallback={urlState.org}
+              fallback={urlState.organization}
             />
           </Tag>
         ))}
