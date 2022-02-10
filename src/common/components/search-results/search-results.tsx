@@ -163,7 +163,7 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
                       {concept.definition?.[i18n.language]
                         ?
                         // concept.definition[i18n.language]
-                        TextLinks({text: concept.definition.fi ?? ''})
+                        <TextLinks text={concept.definition[i18n.language]} />
                         :
                         concept.definition?.[Object.keys(concept.definition)[0]]
                           ?

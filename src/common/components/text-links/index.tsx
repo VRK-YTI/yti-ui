@@ -7,48 +7,50 @@ interface TextLinksProps {
   text: string;
 }
 
-export function GetLinks(text: string) {
+export function GetLink(text: string): string {
+  const router = useRouter();
   const { data } = useGetResolveQuery(text);
-  return data;
+
+  return `/terminology/${router.query.terminologyId}/concept/${data?.[0].id}`;
 }
 
 export default function TextLinks({ text }: TextLinksProps) {
-  const router = useRouter();
   const textFormatted = text.match(/'.+?'/g)?.[0].replaceAll('\/', '%2F').replaceAll(':', '%3A').replaceAll('\'', '');
-
-  if (!text.includes('<a') || !textFormatted) {
-    return <>{text}</>;
-  }
-
-  const data = GetLinks(textFormatted);
 
   if (text.includes('internal')) {
     const textSplit = text.split(/<\/?a>? ?/g);
 
+    if (textSplit.length < 1) {
+      return null;
+    }
+
     return (
-      textSplit.map((t, idx) => {
-        if (t.includes('href')) {
-          return (
-            <Link
-              passHref
-              href={`/terminology/${router.query.terminologyId}/concept/${data?.[0].id}`}
-              key={`${t}-${idx}`}
-            >
-              <SuomiLink href={''}>
-                {t.replace(/.*>/g, '')}
-              </SuomiLink>
-            </Link>
-          );
-        } else {
-          return (
-            <span key={`${t}-${idx}`}>{t}</span>
-          );
-        }
-      })
+      <>
+        {textSplit.map((t, idx) => {
+          if (t.includes('href')) {
+            return (
+              <Link
+                passHref
+                href={GetLink(textFormatted ?? '')}
+                key={`${t}-${idx}`}
+              >
+                <SuomiLink href={''}>
+                  {t.replace(/.*>/g, '')}
+                </SuomiLink>
+              </Link>
+            );
+          } else {
+            return (
+              <span key={`${t}-${idx}`}>{t}</span>
+            );
+          }
+        })}
+      </>
     );
+
   } else {
     return (
-      <div dangerouslySetInnerHTML={{ __html: text }}></div>
+      <div dangerouslySetInnerHTML={{ __html: text }} />
     );
   }
 }
