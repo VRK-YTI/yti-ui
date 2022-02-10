@@ -6,7 +6,7 @@ export const resolveApi = createApi({
   baseQuery: axiosBaseQuery({ baseUrl: '/terminology-api/api/v1/resolve' }),
   tagTypes: ['Resolve'],
   endpoints: builder => ({
-    getResolve: builder.query<any, string>({
+    getResolve: builder.query<any, string | undefined>({
       query: (value) => ({
         url: `?uri=${value}`,
         method: 'GET'

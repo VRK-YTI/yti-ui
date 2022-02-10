@@ -89,5 +89,6 @@
   "navigation-close": "Close navigation",
   "filter-with-current": " items with following filters",
   "front-page": "Front page",
-  "breadcrumb": "Breadcrumb"
+  "breadcrumb": "Breadcrumb",
+  "link-opens-new-window-external": "Link opens a new window to"
 }
