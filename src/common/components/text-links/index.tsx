@@ -19,11 +19,9 @@ interface ChildType extends ChildNode {
 }
 
 function ParseText({ text, t }: ParseTextProps) {
-  const parser = new DOMParser();
-  const html = parser.parseFromString(text, 'text/html');
-  const htmlChildNodes = html.children[0].children[1].childNodes;
+  const htmlChildNodes = new DOMParser().parseFromString(text, 'text/html').children[0].children[1].childNodes;
 
-  let children = Array.from(htmlChildNodes).map((child: ChildType, idx: number) => {
+  const children = Array.from(htmlChildNodes).map((child: ChildType, idx: number) => {
     if (child.nodeName.toLowerCase().includes('a')) {
       const childHref = child.href ?? '';
       const childTextValue = child.firstChild?.textContent;
@@ -32,7 +30,7 @@ function ParseText({ text, t }: ParseTextProps) {
         return (
           <Link
             passHref
-            href={`http://localhost:3000/terminology-api/api/v1/resolve?uri=${childHref}`}
+            href={`/terminology-api/api/v1/resolve?uri=${childHref}`}
             key={`${childTextValue}-${idx}`}
           >
             <SuomiInternalLink href=''>
