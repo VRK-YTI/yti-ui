@@ -6,21 +6,33 @@ interface TextLinksProps {
   text: string;
 }
 
-function ParseText({ text, t }) {
+interface ParseTextProps {
+  text: string;
+  t: Function;
+}
+
+interface ChildType extends ChildNode {
+  href?: string;
+  dataset?: {
+    type: string;
+  };
+}
+
+function ParseText({ text, t }: ParseTextProps) {
   const parser = new DOMParser();
   const html = parser.parseFromString(text, 'text/html');
   const htmlChildNodes = html.children[0].children[1].childNodes;
 
-  let variable = Array.from(htmlChildNodes).map((child, idx) => {
+  let children = Array.from(htmlChildNodes).map((child: ChildType, idx: number) => {
     if (child.nodeName.toLowerCase().includes('a')) {
-      const childHref = child.href;
+      const childHref = child.href ?? '';
       const childTextValue = child.firstChild?.textContent;
 
-      if (child.dataset.type === 'internal') {
+      if (child.dataset?.type === 'internal') {
         return (
           <Link
             passHref
-            href={'http://localhost:3000/terminology-api/api/v1/resolve?uri=' + childHref}
+            href={`http://localhost:3000/terminology-api/api/v1/resolve?uri=${childHref}`}
             key={`${childTextValue}-${idx}`}
           >
             <SuomiLink href=''>
@@ -28,6 +40,7 @@ function ParseText({ text, t }) {
             </SuomiLink>
           </Link>
         );
+
       } else {
         return (
           <Link passHref href={childHref} key={`${childTextValue}-${idx}`}>
@@ -37,16 +50,18 @@ function ParseText({ text, t }) {
           </Link>
         );
       }
+
     } else if (child.nodeName.toLowerCase().includes('text')) {
       if (child.textContent) {
         return <span key={`${child.textContent}-${idx}`}>{child.textContent}</span>;
       }
+
     } else if (child.nodeName.toLowerCase() === 'br') {
       return <br key={`br-${idx}`}/>;
     }
   });
 
-  return <>{variable}</>;
+  return <>{children}</>;
 }
 
 export default function TextLinks({ text }: TextLinksProps) {
