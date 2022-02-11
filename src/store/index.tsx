@@ -7,7 +7,6 @@ import { useDispatch } from 'react-redux';
 import { collectionApi } from '../common/components/collection/collection-slice';
 import { countsApi } from '../common/components/counts/counts-slice';
 import { loginSlice } from '../common/components/login/login-slice';
-import { resolveApi } from '../common/components/resolve/resolve.slice';
 
 export function makeStore() {
   return configureStore({
@@ -19,8 +18,7 @@ export function makeStore() {
       [conceptApi.reducerPath]: conceptApi.reducer,
       [collectionApi.reducerPath]: collectionApi.reducer,
       [countsApi.reducerPath]: countsApi.reducer,
-      [loginSlice.name]: loginSlice.reducer,
-      [resolveApi.reducerPath]: resolveApi.reducer,
+      [loginSlice.name]: loginSlice.reducer
     },
 
     middleware: (getDefaultMiddleware) =>
@@ -29,8 +27,7 @@ export function makeStore() {
         vocabularyApi.middleware,
         conceptApi.middleware,
         collectionApi.middleware,
-        countsApi.middleware,
-        resolveApi.middleware
+        countsApi.middleware
       ),
 
     // Development tools should be available only in development environments

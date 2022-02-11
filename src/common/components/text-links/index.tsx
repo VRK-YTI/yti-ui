@@ -1,112 +1,60 @@
 import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useState } from 'react';
 import { Link as SuomiLink, ExternalLink } from 'suomifi-ui-components';
-import { useGetResolveQuery } from '../resolve/resolve.slice';
 
 interface TextLinksProps {
   text: string;
 }
 
-export function parseToURI(text: string) {
-  const uriAndType = text.match(/'.+?'/g);
+function ParseText({ text, t }) {
+  const parser = new DOMParser();
+  const html = parser.parseFromString(text, 'text/html');
+  const htmlChildNodes = html.children[0].children[1].childNodes;
 
-  if (!uriAndType) {
-    return null;
-  } else if (uriAndType.length === 2) {
-    return [uriAndType[0]];
-  } else {
-    let uriList: string[] = uriAndType.filter((_, index) => {
-      if (index + 1 < uriAndType.length) {
-        return uriAndType[index + 1].includes('internal');
+  let variable = Array.from(htmlChildNodes).map((child, idx) => {
+    if (child.nodeName.toLowerCase().includes('a')) {
+      const childHref = child.href;
+      const childTextValue = child.firstChild?.textContent;
+
+      if (child.dataset.type === 'internal') {
+        return (
+          <Link
+            passHref
+            href={'http://localhost:3000/terminology-api/api/v1/resolve?uri=' + childHref}
+            key={`${childTextValue}-${idx}`}
+          >
+            <SuomiLink href=''>
+              {childTextValue}
+            </SuomiLink>
+          </Link>
+        );
+      } else {
+        return (
+          <Link passHref href={childHref} key={`${childTextValue}-${idx}`}>
+            <ExternalLink href='' labelNewWindow={`${t('link-opens-new-window-external')} ${childTextValue}`} >
+              {childTextValue}
+            </ExternalLink>
+          </Link>
+        );
       }
-    });
-
-    if (!uriList) {
-      return null;
+    } else if (child.nodeName.toLowerCase().includes('text')) {
+      if (child.textContent) {
+        return <span key={`${child.textContent}-${idx}`}>{child.textContent}</span>;
+      }
+    } else if (child.nodeName.toLowerCase() === 'br') {
+      return <br key={`br-${idx}`}/>;
     }
-    return uriList;
-  }
-}
+  });
 
-function GetLink(uri: string, terminologyId: string) {
-  const { data, isLoading } = useGetResolveQuery(uri.replaceAll('\/', '%2F').replaceAll(':', '%3A').replaceAll('\'', '') ?? null, {skip: !uri});
-  if (!isLoading) {
-    return `/terminology/${terminologyId}/concept/${data?.[0].id}`;
-  }
+  return <>{variable}</>;
 }
 
 export default function TextLinks({ text }: TextLinksProps) {
   const { t } = useTranslation('common');
-  const router = useRouter();
-  const textFormatted = parseToURI(text);
 
-  let internalLinks = textFormatted?.map(txt => {
-    return GetLink(txt, router.query.terminologyId as string);
-  }) ?? [];
-
-  if (text.includes('<a')) {
-    const textSplit = text.split(/<\/?a>? ?/g);
-
-    if (textSplit.length < 1 || internalLinks.includes(undefined)) {
-      return null;
-    }
-
-    return (
-      <>
-        {textSplit.map((txt, idx) => {
-          if (txt.includes('href')) {
-            if (txt.includes('internal')) {
-              return renderLink(txt, idx, 'internal');
-            } else if (txt.includes('external')) {
-              return renderLink(txt, idx, 'external');
-            }
-          } else {
-            return (
-              <span key={`${txt}-${idx}`} dangerouslySetInnerHTML={{__html: txt}} />
-            );
-          }
-        })}
-      </>
-    );
-
-  } else {
-    return (
-      <>{text}</>
-    );
-  }
-
-  function renderLink(txt: string, idx: number, type: 'internal' | 'external') {
-    if (type === 'internal') {
-      const link = internalLinks[0];
-      internalLinks.shift();
-
-      return (
-        <Link
-          passHref
-          href={link ?? ''}
-          key={`${txt}-${idx}`}
-        >
-          <SuomiLink href={''}>
-            {txt.replace(/.*>/g, '')}
-          </SuomiLink>
-        </Link>
-      );
-    } else {
-      const externalLink = txt.match(/href='.+?'/g)?.[0].match(/'.*/g)?.[0].replaceAll('\'', '') ?? '';
-      return (
-        <Link
-          passHref
-          href={externalLink}
-          key={`${txt}-${idx}`}
-        >
-          <ExternalLink href={''} labelNewWindow={`${t('link-opens-new-window-external')} ${txt.replace(/.*>/g, '')}`}>
-            {txt.replace(/.*>/g, '')}
-          </ExternalLink>
-        </Link>
-      );
-    }
-  }
+  return (
+    <>
+      <ParseText text={text} t={t} />
+    </>
+  );
 }
-
