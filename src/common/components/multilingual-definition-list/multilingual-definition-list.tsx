@@ -17,7 +17,7 @@ export default function MultilingualDefinitionList({ items }: MultilingualTextBo
     <MultilingualDefinitionListWrapper maxSize={maxSize}>
       {items.map(({ language, content }, index) => (
         <MultilingualDefinitionListItem key={index} lang={language}>
-          {typeof content === 'string' && content.includes('<a') ? <TextLinks text={content} /> : content}
+          {typeof content === 'string' ? <TextLinks text={content} /> : content}
         </MultilingualDefinitionListItem>
       ))}
     </MultilingualDefinitionListWrapper>

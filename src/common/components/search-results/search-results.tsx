@@ -162,12 +162,10 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
                     <CardDescription>
                       {concept.definition?.[i18n.language]
                         ?
-                        // concept.definition[i18n.language]
                         <TextLinks text={concept.definition?.[i18n.language]} />
                         :
                         concept.definition?.[Object.keys(concept.definition)[0]]
                           ?
-                          // concept?.definition?.[Object.keys(concept?.definition)[0]]
                           <TextLinks text={concept?.definition?.[Object.keys(concept?.definition)[0]]} />
                           :
                           t('terminology-search-no-description')

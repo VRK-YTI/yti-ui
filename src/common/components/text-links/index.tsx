@@ -1,6 +1,6 @@
 import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
-import { Link as SuomiLink, ExternalLink } from 'suomifi-ui-components';
+import { SuomiInternalLink, SuomiExternalLink } from './text-links.style';
 
 interface TextLinksProps {
   text: string;
@@ -35,18 +35,18 @@ function ParseText({ text, t }: ParseTextProps) {
             href={`http://localhost:3000/terminology-api/api/v1/resolve?uri=${childHref}`}
             key={`${childTextValue}-${idx}`}
           >
-            <SuomiLink href=''>
+            <SuomiInternalLink href=''>
               {childTextValue}
-            </SuomiLink>
+            </SuomiInternalLink>
           </Link>
         );
 
       } else {
         return (
           <Link passHref href={childHref} key={`${childTextValue}-${idx}`}>
-            <ExternalLink href='' labelNewWindow={`${t('link-opens-new-window-external')} ${childTextValue}`} >
+            <SuomiExternalLink href='' labelNewWindow={`${t('link-opens-new-window-external')} ${childTextValue}`} >
               {childTextValue}
-            </ExternalLink>
+            </SuomiExternalLink>
           </Link>
         );
       }
