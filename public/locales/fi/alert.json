@@ -3,5 +3,6 @@
   "error-with-terminologies": "Virhe sanastojen haussa.",
   "error-with-groups": "Virhe tietoalueiden haussa.",
   "error-with-organizations": "Virhe organisaatioiden haussa.",
-  "error-with-counts": "Virhe lukumäärien haussa."
+  "error-with-counts": "Virhe lukumäärien haussa.",
+  "error-occured": "ERROR {{id}}: Tapahtui virhe"
 }

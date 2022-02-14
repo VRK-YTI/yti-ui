@@ -20,10 +20,11 @@ import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useBreakpoints } from '../../common/components/media-query/media-query-context';
 import { Modal, ModalContent } from 'suomifi-ui-components';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import useQueryParam from '../../common/utils/hooks/useQueryParam';
 import { useGetCountsQuery } from '../../common/components/counts/counts-slice';
-import { Alert, Alerts } from '../../common/components/alert/';
+import { setAlert } from '../../common/components/alert/alert.slice';
+import { Error } from '../../common/interfaces/error.interface';
 
 /**
  * Error handling:
@@ -48,6 +49,16 @@ export default function TerminologySearch() {
   const { data: organizations, error: organizationsError } = useGetOrganizationsQuery(i18n.language);
   const { data: counts, error: countsError } = useGetCountsQuery(null);
   const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    dispatch(setAlert([
+      error as Error,
+      groupsError as Error,
+      organizationsError as Error,
+      countsError as Error
+    ]));
+  }, [dispatch, error, groupsError, organizationsError, countsError]);
+
 
   if (query.query.page && query.query.page !== '1') {
     dispatch(setResultStart((parseInt(query.query.page as string, 10) - 1) * 10));
@@ -134,12 +145,6 @@ export default function TerminologySearch() {
           </Modal>
         }
       </ResultAndFilterContainer>
-      <Alerts>
-        {error && <Alert msg={'error-with-terminologies'} type='error' />}
-        {groupsError && <Alert msg={'error-with-groups'} type='error' />}
-        {organizationsError && <Alert msg={'error-with-organizations'} type='error' />}
-        {countsError && <Alert msg={'error-with-counts'} type='error' />}
-      </Alerts>
     </>
   );
 };

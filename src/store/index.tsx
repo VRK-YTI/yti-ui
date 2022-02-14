@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux';
 import { collectionApi } from '../common/components/collection/collection-slice';
 import { countsApi } from '../common/components/counts/counts-slice';
 import { loginSlice } from '../common/components/login/login-slice';
+import { alertSlice } from '../common/components/alert/alert.slice';
 
 export function makeStore() {
   return configureStore({
@@ -19,6 +20,7 @@ export function makeStore() {
       [collectionApi.reducerPath]: collectionApi.reducer,
       [countsApi.reducerPath]: countsApi.reducer,
       [loginSlice.name]: loginSlice.reducer,
+      [alertSlice.name]: alertSlice.reducer,
     },
 
     middleware: (getDefaultMiddleware) =>
@@ -31,7 +33,7 @@ export function makeStore() {
       ),
 
     // Development tools should be available only in development environments
-    devTools: process.env.REWRITE_PROFILE === 'local',
+    devTools: process.env.NODE_ENV !== 'production',
   });
 };
 
