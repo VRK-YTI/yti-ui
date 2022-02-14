@@ -49,13 +49,12 @@ function ParseText({ text, t }: ParseTextProps) {
         );
       }
 
-    } else if (child.nodeName.toLowerCase().includes('text')) {
+    } else if (child.nodeName.toLowerCase() === 'br') {
+      return <br key={`br-${idx}`}/>;
+    } else {
       if (child.textContent) {
         return <span key={`${child.textContent}-${idx}`}>{child.textContent}</span>;
       }
-
-    } else if (child.nodeName.toLowerCase() === 'br') {
-      return <br key={`br-${idx}`}/>;
     }
   });
 
