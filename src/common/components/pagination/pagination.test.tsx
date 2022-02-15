@@ -2,12 +2,8 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Pagination from './pagination';
-import { ThemeProvider } from 'styled-components';
-import { lightTheme } from '../../../layouts/theme';
-import { makeStore } from '../../../store';
-import { Provider } from 'react-redux';
-import { setResultStart } from '../terminology-search/terminology-search-slice';
 import { useRouter } from 'next/router';
+import { themeProvider } from '../../../tests/test-utils';
 
 jest.mock('next/router');
 const mockedUseRouter = useRouter as jest.MockedFunction<typeof useRouter>;
@@ -16,12 +12,10 @@ describe('pagination', () => {
   test('should render component', () => {
     mockedUseRouter.mockReturnValue({
       query: { page: '0' },
+      route: '',
       push: jest.fn(),
     } as any);
 
-    const store = makeStore();
-    store.dispatch = jest.fn();
-    const query = useRouter();
     const data = {
       'deepHits': null,
       'totalHitCount': 80,
@@ -30,34 +24,26 @@ describe('pagination', () => {
     };
 
     render(
-      <Provider store={store}>
-        <ThemeProvider theme={lightTheme}>
-          <Pagination
-            data={data}
-            dispatch={store.dispatch}
-            setResultStart={setResultStart}
-            pageString={'Page'}
-            query={query}
-          />
-        </ThemeProvider>
-      </Provider>
+      <Pagination data={data} pageString="Page" />,
+      { wrapper: themeProvider }
     );
 
-    for (let i = 1; i <= 7; i++) {
-      expect(screen.getByText(i)).toBeInTheDocument;
-    }
-
+    expect(screen.getByText(1)).toBeInTheDocument;
+    expect(screen.getByText(2)).toBeInTheDocument;
+    expect(screen.getByText(3)).toBeInTheDocument;
+    expect(screen.getByText(4)).toBeInTheDocument;
+    expect(screen.getByText(5)).toBeInTheDocument;
+    expect(screen.getByText(6)).toBeInTheDocument;
+    expect(screen.getByText(7)).toBeInTheDocument;
   });
 
   test('should render empty when list is smaller than 10', () => {
     mockedUseRouter.mockReturnValue({
-      query: { page: '0' },
-      push: jest.fn(),
+      query: {},
+      route: '',
+      push: jest.fn()
     } as any);
 
-    const store = makeStore();
-    store.dispatch = jest.fn();
-    const query = useRouter();
     const data = {
       'deepHits': null,
       'totalHitCount': 7,
@@ -66,33 +52,22 @@ describe('pagination', () => {
     };
 
     render(
-      <Provider store={store}>
-        <ThemeProvider theme={lightTheme}>
-          <Pagination
-            data={data}
-            dispatch={store.dispatch}
-            setResultStart={setResultStart}
-            pageString={'Page'}
-            query={query}
-          />
-        </ThemeProvider>
-      </Provider>
+      <Pagination data={data} pageString="Page" />
     );
 
     expect(screen.queryByText(1)).toEqual(null);
     expect(screen.queryByText(7)).toEqual(null);
     expect(screen.queryByText(10)).toEqual(null);
-
   });
 
-  test('should change active item', () => {
+  test('should change active item', async () => {
+    const push = jest.fn();
     mockedUseRouter.mockReturnValue({
-      query: { page: '0' },
-      push: jest.fn(),
+      query: { page: 3 },
+      route: '',
+      push
     } as any);
 
-    const store = makeStore();
-    const query = useRouter();
     const data = {
       'deepHits': null,
       'totalHitCount': 50,
@@ -101,27 +76,20 @@ describe('pagination', () => {
     };
 
     render(
-      <Provider store={store}>
-        <ThemeProvider theme={lightTheme}>
-          <Pagination
-            data={data}
-            dispatch={store.dispatch}
-            setResultStart={setResultStart}
-            pageString={'Page'}
-            query={query}
-          />
-        </ThemeProvider>
-      </Provider>
+      <Pagination data={data} pageString="Page" />,
+      { wrapper: themeProvider }
     );
 
-    expect(store.getState().terminologySearch.resultStart).toEqual(0);
-    userEvent.click(screen.getByText(3));
-    expect(store.getState().terminologySearch.resultStart).toEqual(20);
+    expect(push).not.toBeCalled();
+
+    userEvent.click(screen.getByText(5));
+    expect(push.mock.calls[0][0]).toEqual({ query: { page: 5 } });
+
     userEvent.click(screen.getByTestId('pagination-left'));
-    expect(store.getState().terminologySearch.resultStart).toEqual(10);
+    expect(push.mock.calls[1][0]).toEqual({ query: { page: 2 } });
+
     userEvent.click(screen.getByTestId('pagination-right'));
-    userEvent.click(screen.getByTestId('pagination-right'));
-    expect(store.getState().terminologySearch.resultStart).toEqual(30);
+    expect(push.mock.calls[2][0]).toEqual({ query: { page: 4 } });
   });
 
 });

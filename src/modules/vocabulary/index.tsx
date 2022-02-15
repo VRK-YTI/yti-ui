@@ -1,21 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
-  initializeVocabularyFilter,
-  resetVocabularyFilter,
-  setVocabularyFilter,
   useGetCollectionsQuery,
   useGetConceptResultQuery,
   useGetVocabularyQuery,
-  VocabularyState,
-  setCurrentTerminology
 } from '../../common/components/vocabulary/vocabulary-slice';
-import Filter from '../../common/components/filter/filter';
 import SearchResults from '../../common/components/search-results/search-results';
 import Title from '../../common/components/title/title';
-import { ResultAndFilterContainer, ResultAndStatsWrapper } from './vocabulary.styles';
-import { selectVocabularyFilter } from '../../common/components/vocabulary/vocabulary-slice';
-import { useSelector } from 'react-redux';
-import { useStoreDispatch } from '../../store';
+import { ResultAndFilterContainer, ResultAndStatsWrapper, PaginationWrapper } from './vocabulary.styles';
 import { useBreakpoints } from '../../common/components/media-query/media-query-context';
 import { FilterMobileButton } from '../terminology-search/terminology-search.styles';
 import { useTranslation } from 'next-i18next';
@@ -23,7 +14,10 @@ import { Modal, ModalContent } from 'suomifi-ui-components';
 import { Breadcrumb, BreadcrumbLink } from '../../common/components/breadcrumb';
 import PropertyValue from '../../common/components/property-value';
 import { useGetVocabularyCountQuery } from '../../common/components/counts/counts-slice';
-import { getPropertyValue } from '../../common/components/property-value/get-property-value';
+import { TerminologyListFilter } from './terminology-list-filter';
+import useUrlState from '../../common/utils/hooks/useUrlState';
+import Pagination from '../../common/components/pagination/pagination';
+import filterData from '../../common/utils/filter-data';
 
 interface VocabularyProps {
   id: string;
@@ -32,30 +26,12 @@ interface VocabularyProps {
 export default function Vocabulary({ id }: VocabularyProps) {
   const { t, i18n } = useTranslation('common');
   const { isSmall } = useBreakpoints();
-  const dispatch = useStoreDispatch();
-  const filter: VocabularyState['filter'] = useSelector(selectVocabularyFilter());
+  const { urlState } = useUrlState();
   const { data: collections } = useGetCollectionsQuery(id);
-  const { data: concepts } = useGetConceptResultQuery(id);
+  const { data: concepts } = useGetConceptResultQuery({ id, urlState });
   const { data: info } = useGetVocabularyQuery(id);
   const { data: counts } = useGetVocabularyCountQuery(id);
   const [showModal, setShowModal] = useState(false);
-
-  useEffect(() => {
-    dispatch(initializeVocabularyFilter());
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (info) {
-      dispatch(setCurrentTerminology({
-        id: info?.id,
-        value: getPropertyValue({
-          property: info?.properties.prefLabel,
-          language: i18n.language,
-          fallbackLanguage: 'fi'
-        }) ?? '',
-      }));
-    }
-  }, [info, i18n, dispatch]);
 
   return (
     <>
@@ -76,34 +52,34 @@ export default function Vocabulary({ id }: VocabularyProps) {
         </FilterMobileButton>
       }
       <ResultAndFilterContainer>
-        {(concepts && filter.showBy === 'concepts') &&
+        {(concepts && urlState.type === 'concept') &&
           <ResultAndStatsWrapper>
-            <SearchResults
-              data={concepts}
-              filter={filter}
-              setSomeFilter={setVocabularyFilter}
-            />
+            <SearchResults data={concepts} />
+            <PaginationWrapper>
+              <Pagination
+                data={concepts}
+                pageString={t('pagination-page')}
+              />
+            </PaginationWrapper>
           </ResultAndStatsWrapper>
         }
-        {(collections && filter.showBy === 'collections') &&
+        {(collections && urlState.type === 'collection') &&
           <ResultAndStatsWrapper>
             <SearchResults
-              data={collections}
-              filter={filter}
-              setSomeFilter={setVocabularyFilter}
-              type='collections'
+              data={filterData(collections, urlState, i18n.language) ?? collections}
+              type="collections"
             />
+            <PaginationWrapper>
+              <Pagination
+                data={filterData(collections, urlState, i18n.language) ?? collections}
+                pageString={t('pagination-page')}
+              />
+            </PaginationWrapper>
           </ResultAndStatsWrapper>
         }
         {!isSmall
           ?
-          <Filter
-            filter={filter as VocabularyState['filter']}
-            type={'vocabulary'}
-            setSomeFilter={setVocabularyFilter}
-            resetSomeFilter={resetVocabularyFilter}
-            counts={counts}
-          />
+          <TerminologyListFilter counts={counts} />
           :
           <Modal
             appElementId='__next'
@@ -112,16 +88,10 @@ export default function Vocabulary({ id }: VocabularyProps) {
             variant='smallScreen'
             style={{ border: 'none' }}
           >
-            <ModalContent
-              style={{ padding: '0' }}
-            >
-              <Filter
-                filter={filter as VocabularyState['filter']}
-                type={'vocabulary'}
-                setSomeFilter={setVocabularyFilter}
-                resetSomeFilter={resetVocabularyFilter}
-                isModal={true}
-                setShowModal={setShowModal}
+            <ModalContent style={{ padding: '0' }}>
+              <TerminologyListFilter
+                isModal
+                onModalClose={() => setShowModal(false)}
                 resultCount={concepts?.totalHitCount}
                 counts={counts}
               />

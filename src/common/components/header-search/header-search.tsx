@@ -5,7 +5,7 @@ import IconButton from '../icon-button/icon-button';
 import { useBreakpoints } from '../media-query/media-query-context';
 import { CloseButton } from './header-search.styles';
 import { useRouter } from 'next/router';
-import useQueryParam from '../../utils/hooks/useQueryParam';
+import useUrlState, { initialUrlState } from '../../utils/hooks/useUrlState';
 
 export interface HeaderSearchProps {
   isSearchOpen: boolean;
@@ -18,13 +18,14 @@ export default function HeaderSearch({ isSearchOpen, setIsSearchOpen }: HeaderSe
   const router = useRouter();
   const isSearchPage = router.route === '/';
 
-  const [keyword] = useQueryParam('q');
-  const [searchInputValue, setSearchInputValue] = useState<string>(isSearchPage ? (keyword ?? '') : '');
+  const { urlState, patchUrlState } = useUrlState();
+  const q = urlState.q;
+  const [searchInputValue, setSearchInputValue] = useState<string>(isSearchPage ? q : '');
   useEffect(() => {
     if (isSearchPage) {
-      setSearchInputValue(keyword ?? '');
+      setSearchInputValue(q);
     }
-  }, [keyword, setSearchInputValue, isSearchPage]);
+  }, [q, setSearchInputValue, isSearchPage]);
 
   if (isSmall && !isSearchOpen) {
     return (
@@ -65,18 +66,16 @@ export default function HeaderSearch({ isSearchOpen, setIsSearchOpen }: HeaderSe
   );
 
   function search(q?: string) {
-    const previousSearchParameters = isSearchPage ? router.query : {};
-
-    const queryParameters = { ...previousSearchParameters };
-    if (q) {
-      queryParameters.q = q;
+    if (isSearchPage) {
+      patchUrlState({
+        q: q ?? '',
+        page: initialUrlState.page
+      });
     } else {
-      delete queryParameters.q;
+      return router.push({
+        pathname: '/',
+        query: q ? { q } : {},
+      }, undefined, { shallow: true });
     }
-
-    return router.push({
-      pathname: '/',
-      query: queryParameters,
-    }, undefined, { shallow: true });
   }
 }
