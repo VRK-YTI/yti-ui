@@ -1,14 +1,10 @@
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
-import { AppThunk } from '../../../store';
 import { Collection } from '../../interfaces/collection.interface';
-import { TerminologySearchResult } from '../../interfaces/terminology.interface';
+import { GroupSearchResult, OrganizationSearchResult, TerminologySearchResult } from '../../interfaces/terminology.interface';
 import { VocabularyConcepts } from '../../interfaces/vocabulary.interface';
-import useQueryParam from '../../utils/hooks/useQueryParam';
 import PropertyValue from '../property-value';
 import { useBreakpoints } from '../media-query/media-query-context';
-import { SearchState } from '../terminology-search/terminology-search-slice';
-import { VocabularyState } from '../vocabulary/vocabulary-slice';
 import SearchCountTags from './search-count-tags';
 import {
   Card,
@@ -25,17 +21,18 @@ import {
   CardWrapper
 } from './search-results.styles';
 import { Concept } from '../../interfaces/concept.interface';
+import useUrlState from '../../utils/hooks/useUrlState';
 
 interface SearchResultsProps {
   data: TerminologySearchResult | VocabularyConcepts | Collection[];
-  filter: SearchState['filter'] | VocabularyState['filter'];
   type?: string;
-  setSomeFilter: (x: any) => AppThunk;
+  organizations?: OrganizationSearchResult[];
+  domains?: GroupSearchResult[];
 }
 
-export default function SearchResults({ data, filter, type, setSomeFilter }: SearchResultsProps) {
+export default function SearchResults({ data, type, organizations, domains }: SearchResultsProps) {
   const { t, i18n } = useTranslation('common');
-  const [page] = useQueryParam('page');
+  const { urlState } = useUrlState();
   const { isSmall } = useBreakpoints();
 
   if (!data) {
@@ -63,9 +60,11 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
       return (
         <>
           <SearchCountTags
-            count={data?.totalHitCount}
-            filter={filter}
-            setFilter={setSomeFilter}
+            title={t('terminology-search-terminologies', {
+              count: data?.totalHitCount ?? 0,
+            })}
+            organizations={organizations}
+            domains={domains}
           />
           <CardWrapper isSmall={isSmall}>
             {data?.terminologies?.map((terminology, idx: number) => {
@@ -136,7 +135,13 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
       if (data && !Array.isArray(data)) {
         return (
           <>
-            <SearchCountTags count={data.totalHitCount} filter={filter} setFilter={setSomeFilter} />
+            <SearchCountTags
+              title={t('vocabulary-results-concepts', {
+                count: data?.totalHitCount ?? 0,
+              })}
+              organizations={organizations}
+              domains={domains}
+            />
             <CardWrapper isSmall={isSmall}>
               {data?.concepts.map((concept, idx) => {
                 return (
@@ -189,11 +194,15 @@ export default function SearchResults({ data, filter, type, setSomeFilter }: Sea
 
     return (
       <>
-        <SearchCountTags count={data.length} filter={filter} setFilter={setSomeFilter} />
+        <SearchCountTags
+          title={t('vocabulary-results-collections', {
+            count: data.length,
+          })}
+        />
         <CardWrapper isSmall={isSmall}>
           {data.map((collection, idx: number) => {
-            const maxId = page ? parseInt(page, 10) * 10 : 10;
-            const minId = page ? parseInt(page, 10) * 10 - 10 : 0;
+            const minId = Math.max(0, (urlState.page - 1) * 10);
+            const maxId = minId + 10;
             if (idx >= maxId || idx < minId) {
               return null;
             }

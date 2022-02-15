@@ -1,54 +1,21 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { createApi } from '@reduxjs/toolkit/query/react';
-import type { AppState, AppThunk } from '../../../store';
-import { GroupSearchResult, OrganizationSearchResult, TerminologySearchResult } from '../../interfaces/terminology.interface';
+import {
+  GroupSearchResult,
+  OrganizationSearchResult,
+  TerminologySearchResult
+} from '../../interfaces/terminology.interface';
+import { UrlState } from '../../utils/hooks/useUrlState';
 import axiosBaseQuery from '../axios-base-query';
 
-export interface SearchState {
-  filter: {
-    infoDomains: {id: string, value: string}[] | [];
-    showByOrg: {
-      id: string;
-      value: string;
-    };
-    status: { [status: string]: boolean };
-  };
-  resultStart: number;
-  searchTerm: string;
-};
+export interface SearchState {};
 
-export const initialState: SearchState = {
-  filter: {
-    infoDomains: [],
-    showByOrg: {
-      id: '',
-      value: ''
-    },
-    status: {
-      'VALID': true,
-      'DRAFT': true,
-      'RETIRED': false,
-      'SUPERSEDED': false
-    }
-  },
-  resultStart: 0,
-  searchTerm: ''
-};
+export const initialState: SearchState = {};
 
 export const terminologySearchSlice = createSlice({
   name: 'terminologySearch',
   initialState,
-  reducers: {
-    setFilter(state, action) {
-      state.filter = action.payload;
-    },
-    setResultStart(state, action) {
-      state.resultStart = action.payload;
-    },
-    setSearchTerm(state, action) {
-      state.searchTerm = action.payload;
-    }
-  }
+  reducers: {},
 });
 
 export const terminologySearchApi = createApi({
@@ -56,19 +23,19 @@ export const terminologySearchApi = createApi({
   baseQuery: axiosBaseQuery({ baseUrl: '/terminology-api/api/v1/frontend' }),
   tagTypes: ['TerminologySearch'],
   endpoints: builder => ({
-    getSearchResult: builder.query<TerminologySearchResult, { filter: SearchState['filter'], resultStart: number, keyword: string }>({
+    getSearchResult: builder.query<TerminologySearchResult, { urlState: UrlState }>({
       query: (value) => ({
         url: '/searchTerminology',
         method: 'POST',
         data: {
-          query: value.keyword,
-          statuses: Array.from(Object.keys(value.filter.status).filter(s => value.filter.status[s])),
-          groups: value.filter.infoDomains.map(infoD => infoD.id),
-          organizations: value.filter.showByOrg.id ? [value.filter.showByOrg.id] : [],
+          query: value.urlState.q,
+          statuses: value.urlState.status.map(s => s.toUpperCase()),
+          groups: value.urlState.domain,
+          organizations: value.urlState.organization ? [value.urlState.organization] : [],
           searchConcepts: true,
           prefLang: 'fi',
           pageSize: 10,
-          pageFrom: value.resultStart,
+          pageFrom: Math.max(0, (value.urlState.page - 1) * 10),
         },
       }),
     }),
@@ -92,28 +59,5 @@ export const {
   useGetSearchResultQuery,
   useGetOrganizationsQuery
 } = terminologySearchApi;
-
-export const setFilter = (filter: string): AppThunk => dispatch => {
-  dispatch(
-    terminologySearchSlice.actions.setFilter(filter)
-  );
-};
-
-export const resetFilter = (): AppThunk => dispatch => {
-  dispatch(
-    terminologySearchSlice.actions.setFilter(
-      initialState.filter
-    )
-  );
-};
-
-export const setResultStart = (resultStart: number): AppThunk => dispatch => {
-  dispatch(
-    terminologySearchSlice.actions.setResultStart(resultStart),
-  );
-};
-
-export const selectFilter = () => (state: AppState): any => state.terminologySearch.filter;
-export const selectResultStart = () => (state: AppState): any => state.terminologySearch.resultStart;
 
 export default terminologySearchSlice.reducer;
