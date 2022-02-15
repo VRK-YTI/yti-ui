@@ -7,14 +7,6 @@ import { BasicBlock, MultilingualPropertyBlock, PropertyBlock } from '../block';
 import { BasicBlockExtraWrapper } from '../block/block.styles';
 import FormattedDate from '../formatted-date';
 
-/**
- * Error handling:
- * - if some values in data are missing should
- *   there be something else that is handed
- *   to other component? Or should components
- *   handle missing values?
- */
-
 interface InfoExpanderProps {
   data?: VocabularyInfoDTO;
 }

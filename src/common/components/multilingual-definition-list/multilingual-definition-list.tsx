@@ -2,13 +2,6 @@ import { maxBy } from 'lodash';
 import React from 'react';
 import { MultilingualDefinitionListItem, MultilingualDefinitionListWrapper } from './multilingual-definition-list.styles';
 
-/**
- * Error handling:
- * - if content is undefined should it be indicated
- *   somehow for the user other than empty string
- * -
- */
-
 export interface MultilingualTextBoxProps {
   items: {
     language: string;

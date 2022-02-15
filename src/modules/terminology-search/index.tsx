@@ -19,21 +19,20 @@ import { useStoreDispatch } from '../../store';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useBreakpoints } from '../../common/components/media-query/media-query-context';
-import { Modal, ModalContent } from 'suomifi-ui-components';
+import { Icon, Modal, ModalContent } from 'suomifi-ui-components';
 import { useEffect, useState } from 'react';
 import useQueryParam from '../../common/utils/hooks/useQueryParam';
 import { useGetCountsQuery } from '../../common/components/counts/counts-slice';
 import { setAlert } from '../../common/components/alert/alert.slice';
 import { Error } from '../../common/interfaces/error.interface';
+import zIndex from '@material-ui/core/styles/zIndex';
+import LoadIndicator from '../../common/components/load-indicator';
 
 /**
  * Error handling:
  * - if search results or any data needed for filter is still loading
  *   there should be a indicator that the component is waiting
  *   for updated data
- * - errors could be logged in console
- * - could some things be also wrapped in <ErrorBoundary> to display
- *   a message for user
  */
 
 export default function TerminologySearch() {
@@ -44,7 +43,7 @@ export default function TerminologySearch() {
   const filter = useSelector(selectFilter());
   const resultStart = useSelector(selectResultStart());
   const [keyword] = useQueryParam('q');
-  const { data, error } = useGetSearchResultQuery({ filter: filter, resultStart: resultStart, keyword: keyword ?? '' });
+  const { data, error, isFetching } = useGetSearchResultQuery({ filter: filter, resultStart: resultStart, keyword: keyword ?? '' });
   const { data: groups, error: groupsError } = useGetGroupsQuery(i18n.language);
   const { data: organizations, error: organizationsError } = useGetOrganizationsQuery(i18n.language);
   const { data: counts, error: countsError } = useGetCountsQuery(null);
@@ -87,6 +86,7 @@ export default function TerminologySearch() {
       }
       <ResultAndFilterContainer>
         <ResultAndStatsWrapper>
+          {isFetching && <LoadIndicator />}
           {data &&
             <>
               <SearchResults

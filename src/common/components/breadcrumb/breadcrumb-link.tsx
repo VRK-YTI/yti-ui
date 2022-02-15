@@ -2,11 +2,6 @@ import React from 'react';
 import Link from 'next/link';
 import { BreadcrumbLink as SuomiFiBreadcrumbLink } from 'suomifi-ui-components';
 
-/**
- * Error handling:
- * - should url format have some checking?
- */
-
 export interface BreadcrumbLinkProps {
   url: string;
   current?: boolean;

@@ -5,12 +5,6 @@ import {
   InfoBlockWrapper
 } from './info-block.styles';
 
-/**
- * Error handling:
- * - if title is missing should an indicator
- *   about missing value be shown to user
- */
-
 interface InfoBlockProps {
   data?: Property[];
   title: string;

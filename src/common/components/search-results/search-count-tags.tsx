@@ -11,14 +11,6 @@ import {
   CountWrapper
 } from './search-count-tags.styles';
 
-/**
- * Error handling:
- * - if activeStatuses is empty (no active filters)
- *   should return value have description that there
- *   are no active filter values
- * -
- */
-
 interface SearchCountTagsProps {
   count: number;
   filter: VocabularyState['filter'] | SearchState['filter'];

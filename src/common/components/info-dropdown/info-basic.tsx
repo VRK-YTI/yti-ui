@@ -1,13 +1,6 @@
 import { InfoBasicWrapper } from './info-basic.styles';
 import { Text } from 'suomifi-ui-components';
 
-/**
- * Error handling:
- * - if title is missing should there
- *   be an indication that it's missing?
- * -
- */
-
 interface InfoBasicProps {
   data?: string;
   title: string;

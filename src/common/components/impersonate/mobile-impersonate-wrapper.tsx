@@ -4,14 +4,6 @@ import { Link, Text } from 'suomifi-ui-components';
 import { MobileMenuImpersonateItem, MobileMenuImpersonateSection } from './impersonate.styles';
 import useFakeableUsers from './use-fakeable-users';
 
-/**
- * Error handling:
- * - should impersonating let the user stay
- *   in the same page instead of redirecting
- *   to index?
- *
- */
-
 export default function MobileImpersonateWrapper() {
   const users = useFakeableUsers();
   const { t } = useTranslation();
@@ -27,7 +19,7 @@ export default function MobileImpersonateWrapper() {
       </MobileMenuImpersonateItem>
       {users.map(({ id, displayName, impersonate }) => (
         <MobileMenuImpersonateItem key={id} inset>
-          <Link href="#" onClick={impersonate}>{displayName}</Link>
+          <Link href='#' onClick={impersonate}>{displayName}</Link>
         </MobileMenuImpersonateItem>
       ))}
     </MobileMenuImpersonateSection>

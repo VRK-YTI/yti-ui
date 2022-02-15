@@ -24,25 +24,16 @@ import { Breadcrumb, BreadcrumbLink } from '../../common/components/breadcrumb';
 import PropertyValue from '../../common/components/property-value';
 import { useGetVocabularyCountQuery } from '../../common/components/counts/counts-slice';
 import { getPropertyValue } from '../../common/components/property-value/get-property-value';
+import { setAlert } from '../../common/components/alert/alert.slice';
+import { Error } from '../../common/interfaces/error.interface';
+import { useRouter } from 'next/router';
+import LoadIndicator from '../../common/components/load-indicator';
 
 /**
  * Error handling:
- * - if an error occurs in data fetching there should be
- *   an alert indicating that a problem occured
- * - if vocabulary with an id does not exist user should
- *   be redirected to 404 page
- * - if (any) data fails to be fetched the styling
- *   of the page shouldn't change.
- *   Currently filter
- *   is shown because it isn't dependent on any
- *   fetched value to be shown. This could be changed
- *   so that it doesn't confuse users.
  * - if concept, collections or terminology info is still loading
  *   there should be a indicator that the component is waiting
  *   for updated data
- * - errors could be logged in console
- * - could some things be also wrapped in <ErrorBoundary> to display
- *   a message for user
  */
 
 interface VocabularyProps {
@@ -52,13 +43,26 @@ interface VocabularyProps {
 export default function Vocabulary({ id }: VocabularyProps) {
   const { t, i18n } = useTranslation('common');
   const { isSmall } = useBreakpoints();
+  const router = useRouter();
   const dispatch = useStoreDispatch();
   const filter: VocabularyState['filter'] = useSelector(selectVocabularyFilter());
-  const { data: collections } = useGetCollectionsQuery(id);
-  const { data: concepts } = useGetConceptResultQuery(id);
-  const { data: info } = useGetVocabularyQuery(id);
-  const { data: counts } = useGetVocabularyCountQuery(id);
+  const {
+    data: collections,
+    error: collectionsError,
+    isFetching: isFetchingCollections
+  } = useGetCollectionsQuery(id);
+  const {
+    data: concepts,
+    error: conceptsError,
+    isFetching: isFetchingConcepts
+  } = useGetConceptResultQuery(id);
+  const { data: info, error: infoError } = useGetVocabularyQuery(id);
+  const { data: counts, error: countsError } = useGetVocabularyCountQuery(id);
   const [showModal, setShowModal] = useState(false);
+
+  if (infoError && 'status' in infoError && infoError?.status === 404) {
+    router.push('/404');
+  }
 
   useEffect(() => {
     dispatch(initializeVocabularyFilter());
@@ -77,12 +81,24 @@ export default function Vocabulary({ id }: VocabularyProps) {
     }
   }, [info, i18n, dispatch]);
 
+
+  useEffect(() => {
+    dispatch(setAlert([
+      collectionsError as Error,
+      conceptsError as Error,
+      infoError as Error,
+      countsError as Error
+    ]));
+  }, [dispatch, collectionsError, conceptsError, infoError, countsError]);
+
   return (
     <>
       <Breadcrumb>
-        <BreadcrumbLink url={`/terminology/${id}`} current>
-          <PropertyValue property={info?.properties.prefLabel} />
-        </BreadcrumbLink>
+        {!infoError &&
+          <BreadcrumbLink url={`/terminology/${id}`} current>
+            <PropertyValue property={info?.properties.prefLabel} />
+          </BreadcrumbLink>
+        }
       </Breadcrumb>
 
       {info && <Title info={info} />}
@@ -96,57 +112,66 @@ export default function Vocabulary({ id }: VocabularyProps) {
         </FilterMobileButton>
       }
       <ResultAndFilterContainer>
-        {(concepts && filter.showBy === 'concepts') &&
-          <ResultAndStatsWrapper>
+        <ResultAndStatsWrapper>
+          {
+            (filter.showBy === 'concepts' && isFetchingCollections)
+            ||
+            (filter.showBy === 'collections' && isFetchingConcepts)
+            &&
+            <LoadIndicator />
+          }
+
+          {(concepts && filter.showBy === 'concepts') &&
             <SearchResults
               data={concepts}
               filter={filter}
               setSomeFilter={setVocabularyFilter}
             />
-          </ResultAndStatsWrapper>
-        }
-        {(collections && filter.showBy === 'collections') &&
-          <ResultAndStatsWrapper>
+          }
+          {(collections && filter.showBy === 'collections') &&
             <SearchResults
               data={collections}
               filter={filter}
               setSomeFilter={setVocabularyFilter}
               type='collections'
             />
-          </ResultAndStatsWrapper>
-        }
-        {!isSmall
-          ?
-          <Filter
-            filter={filter as VocabularyState['filter']}
-            type={'vocabulary'}
-            setSomeFilter={setVocabularyFilter}
-            resetSomeFilter={resetVocabularyFilter}
-            counts={counts}
-          />
-          :
-          <Modal
-            appElementId='__next'
-            visible={showModal}
-            onEscKeyDown={() => setShowModal(false)}
-            variant='smallScreen'
-            style={{ border: 'none' }}
-          >
-            <ModalContent
-              style={{ padding: '0' }}
+          }
+        </ResultAndStatsWrapper>
+        {
+          (!collectionsError && !conceptsError)
+            &&
+            !isSmall
+            ?
+            <Filter
+              filter={filter as VocabularyState['filter']}
+              type={'vocabulary'}
+              setSomeFilter={setVocabularyFilter}
+              resetSomeFilter={resetVocabularyFilter}
+              counts={counts}
+            />
+            :
+            <Modal
+              appElementId='__next'
+              visible={showModal}
+              onEscKeyDown={() => setShowModal(false)}
+              variant='smallScreen'
+              style={{ border: 'none' }}
             >
-              <Filter
-                filter={filter as VocabularyState['filter']}
-                type={'vocabulary'}
-                setSomeFilter={setVocabularyFilter}
-                resetSomeFilter={resetVocabularyFilter}
-                isModal={true}
-                setShowModal={setShowModal}
-                resultCount={concepts?.totalHitCount}
-                counts={counts}
-              />
-            </ModalContent>
-          </Modal>
+              <ModalContent
+                style={{ padding: '0' }}
+              >
+                <Filter
+                  filter={filter as VocabularyState['filter']}
+                  type={'vocabulary'}
+                  setSomeFilter={setVocabularyFilter}
+                  resetSomeFilter={resetVocabularyFilter}
+                  isModal={true}
+                  setShowModal={setShowModal}
+                  resultCount={concepts?.totalHitCount}
+                  counts={counts}
+                />
+              </ModalContent>
+            </Modal>
         }
       </ResultAndFilterContainer>
     </>

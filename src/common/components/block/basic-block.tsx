@@ -1,14 +1,6 @@
 import React from 'react';
 import { BasicBlockHeader, BasicBlockWrapper } from './block.styles';
 
-/**
- * Error handling:
- * - should possibly missing title have
- *   some default value instead of it
- *   being empty?
- * -
- */
-
 export interface BasicBlockProps {
   title?: React.ReactNode;
   children: React.ReactNode;

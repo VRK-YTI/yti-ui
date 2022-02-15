@@ -29,7 +29,6 @@ import { Counts } from '../../interfaces/counts.interface';
  *   should the components that use either
  *   of the values return an indicator that
  *   needed data is missing?
- * -
  */
 
 export interface FilterProps {

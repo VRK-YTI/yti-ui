@@ -4,13 +4,6 @@ import { BasicBlock } from '.';
 import { Property } from '../../interfaces/termed-data-types.interface';
 import { getPropertyValue } from '../property-value/get-property-value';
 
-/**
- * Error handling:
- * - if children is undefined should
- *   this return something else than
- *   null?
- */
-
 export interface PropertyBlockProps {
   title?: React.ReactNode;
   property?: Property[];

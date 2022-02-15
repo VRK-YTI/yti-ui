@@ -4,13 +4,6 @@ import { MediaQueryContextProvider } from '../common/components/media-query/medi
 import Error from '../common/components/error/error';
 import ErrorLayout from '../layouts/error-layout';
 
-/**
- * Error handling:
- * - should "Sanastot" be displayed
- *   in all languages since <Error/>
- *   displayes info in all languages?
- */
-
 export default function Custom404() {
   return (
     <MediaQueryContextProvider value={{ isSSRMobile: false }}>
