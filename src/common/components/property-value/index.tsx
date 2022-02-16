@@ -8,6 +8,7 @@ export interface PropertyValueProps {
   valueAccessor?: (property: Property) => string;
   fallbackLanguage?: string;
   delimiter?: string | false;
+  fallback?: string;
 }
 
 /**
@@ -36,7 +37,8 @@ export default function PropertyValue({
   property,
   valueAccessor,
   fallbackLanguage,
-  delimiter = false
+  delimiter = false,
+  fallback
 }: PropertyValueProps) {
   const { i18n } = useTranslation('common');
 
@@ -47,6 +49,10 @@ export default function PropertyValue({
     fallbackLanguage,
     delimiter
   });
+
+  if (!value) {
+    return <>{fallback}</>;
+  }
 
   return (
     <>{value}</>
