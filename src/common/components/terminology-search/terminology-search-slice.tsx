@@ -41,13 +41,13 @@ export const terminologySearchApi = createApi({
     }),
     getGroups: builder.query<GroupSearchResult[], string>({
       query: (value) => ({
-        url: `/groups?language=${value}`,
+        url: `/v2/groups?language=${value}`,
         method: 'GET',
       }),
     }),
     getOrganizations: builder.query<OrganizationSearchResult[], string>({
       query: (value) => ({
-        url: `/organizations?language=${value}`,
+        url: `/v2/organizations?language=${value}`,
         method: 'GET',
       }),
     })
