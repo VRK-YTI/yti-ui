@@ -26,6 +26,7 @@ export default function ConceptListBlock({
             >
               <PropertyValue
                 property={concept.references.prefLabelXl?.[0].properties.prefLabel}
+                fallbackLanguage='fi'
               />
             </Link>
           </li>

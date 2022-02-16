@@ -49,35 +49,35 @@ export default function ConceptSidebar({ concept }: ConceptSidebarProps) {
         heading={t('sidebar-section-heading-broader')}
         items={concept?.references.broader}
         href={({ id }) => `/terminology/${terminologyId}/concept/${id}`}
-        propertyAccessor={({ references }) => references?.prefLabelXl?.[0]?.properties?.prefLabel}
+        propertyAccessor={({ references }) => references?.prefLabelXl}
       />
 
       <SidebarSection<Concept>
         heading={t('sidebar-section-heading-narrower')}
         items={concept?.references.narrower}
         href={({ id }) => `/terminology/${terminologyId}/concept/${id}`}
-        propertyAccessor={({ references }) => references?.prefLabelXl?.[0]?.properties?.prefLabel}
+        propertyAccessor={({ references }) => references?.prefLabelXl}
       />
 
       <SidebarSection<Concept>
         heading={t('sidebar-section-heading-related')}
         items={concept?.references.related}
         href={({ id }) => `/terminology/${terminologyId}/concept/${id}`}
-        propertyAccessor={({ references }) => references?.prefLabelXl?.[0]?.properties?.prefLabel}
+        propertyAccessor={({ references }) => references?.prefLabelXl}
       />
 
       <SidebarSection<Concept>
         heading={t('sidebar-section-heading-is-part-of')}
         items={concept?.references.isPartOf}
         href={({ id }) => `/terminology/${terminologyId}/concept/${id}`}
-        propertyAccessor={({ references }) => references?.prefLabelXl?.[0]?.properties?.prefLabel}
+        propertyAccessor={({ references }) => references?.prefLabelXl}
       />
 
       <SidebarSection<Concept>
         heading={t('sidebar-section-heading-has-part')}
         items={concept?.references.hasPart}
         href={({ id }) => `/terminology/${terminologyId}/concept/${id}`}
-        propertyAccessor={({ references }) => references?.prefLabelXl?.[0]?.properties?.prefLabel}
+        propertyAccessor={({ references }) => references?.prefLabelXl}
       />
 
       <SidebarSection<ConceptLink>
