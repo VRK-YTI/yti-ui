@@ -19,13 +19,12 @@ import { useStoreDispatch } from '../../store';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useBreakpoints } from '../../common/components/media-query/media-query-context';
-import { Icon, Modal, ModalContent } from 'suomifi-ui-components';
-import { useEffect, useState } from 'react';
+import { Modal, ModalContent } from 'suomifi-ui-components';
+import { useEffect, useRef, useState } from 'react';
 import useQueryParam from '../../common/utils/hooks/useQueryParam';
 import { useGetCountsQuery } from '../../common/components/counts/counts-slice';
 import { setAlert } from '../../common/components/alert/alert.slice';
 import { Error } from '../../common/interfaces/error.interface';
-import zIndex from '@material-ui/core/styles/zIndex';
 import LoadIndicator from '../../common/components/load-indicator';
 
 /**
@@ -43,11 +42,12 @@ export default function TerminologySearch() {
   const filter = useSelector(selectFilter());
   const resultStart = useSelector(selectResultStart());
   const [keyword] = useQueryParam('q');
-  const { data, error, isFetching } = useGetSearchResultQuery({ filter: filter, resultStart: resultStart, keyword: keyword ?? '' });
+  const { data, error, isFetching, refetch } = useGetSearchResultQuery({ filter: filter, resultStart: resultStart, keyword: keyword ?? '' });
   const { data: groups, error: groupsError } = useGetGroupsQuery(i18n.language);
   const { data: organizations, error: organizationsError } = useGetOrganizationsQuery(i18n.language);
   const { data: counts, error: countsError } = useGetCountsQuery(null);
   const [showModal, setShowModal] = useState(false);
+  const [showLoading, setShowLoading] = useState(false);
 
   useEffect(() => {
     dispatch(setAlert([
@@ -58,6 +58,12 @@ export default function TerminologySearch() {
     ]));
   }, [dispatch, error, groupsError, organizationsError, countsError]);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowLoading(isFetching);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [isFetching, setShowLoading]);
 
   if (query.query.page && query.query.page !== '1') {
     dispatch(setResultStart((parseInt(query.query.page as string, 10) - 1) * 10));
@@ -86,8 +92,11 @@ export default function TerminologySearch() {
       }
       <ResultAndFilterContainer>
         <ResultAndStatsWrapper>
-          {isFetching && <LoadIndicator />}
-          {data &&
+          {(showLoading && isFetching) || error
+            ?
+            <LoadIndicator isFetching={isFetching} error={error} refetch={refetch} />
+            :
+            data &&
             <>
               <SearchResults
                 data={data}
@@ -105,6 +114,7 @@ export default function TerminologySearch() {
                 />
               </PaginationWrapper>
             </>
+
           }
         </ResultAndStatsWrapper>
         {!isSmall

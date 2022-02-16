@@ -89,5 +89,7 @@
   "navigation-close": "Close navigation",
   "filter-with-current": " items with following filters",
   "front-page": "Front page",
-  "breadcrumb": "Breadcrumb"
+  "breadcrumb": "Breadcrumb",
+  "error-occured": "An error occured",
+  "try-again": "Try again"
 }

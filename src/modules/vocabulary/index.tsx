@@ -113,14 +113,6 @@ export default function Vocabulary({ id }: VocabularyProps) {
       }
       <ResultAndFilterContainer>
         <ResultAndStatsWrapper>
-          {
-            (filter.showBy === 'concepts' && isFetchingCollections)
-            ||
-            (filter.showBy === 'collections' && isFetchingConcepts)
-            &&
-            <LoadIndicator />
-          }
-
           {(concepts && filter.showBy === 'concepts') &&
             <SearchResults
               data={concepts}
