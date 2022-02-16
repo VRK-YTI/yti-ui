@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { Button, Checkbox, RadioButton } from 'suomifi-ui-components';
-import { FilterStyledProps } from './filter-props';
 
 export const CloseWrapper = styled.div`
   * {
@@ -33,7 +32,7 @@ export const FilterRadioButton = styled(RadioButton)`
   font-size: ${props => props.theme.suomifi.typography.bodyTextSmall};
 `;
 
-export const FilterWrapper = styled.div<FilterStyledProps>`
+export const FilterWrapper = styled.div<{ isModal: boolean }>`
   background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
   border: ${(props) => props.isModal ? 'none' : `solid 1px ${props.theme.suomifi.colors.depthLight1}`};
   height: max-content;
