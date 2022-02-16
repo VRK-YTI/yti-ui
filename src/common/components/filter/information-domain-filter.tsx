@@ -1,12 +1,11 @@
 import { useTranslation } from 'next-i18next';
 import { Property } from '../../../common/interfaces/termed-data-types.interface';
-import PropertyValue from '../property-value';
 import CheckboxFilter from './checkbox-filter';
 import useUrlState, { initialUrlState } from '../../utils/hooks/useUrlState';
 
 export interface InformationDomain {
   id: string;
-  name: Property[];
+  name: Property;
 }
 
 export interface InformationDomainFilterProps {
@@ -32,7 +31,7 @@ export default function InformationDomainFilter({
         value: id,
         label: (
           <>
-            <PropertyValue property={name} /> ({counts[id] ?? 0} {t('vocabulary-filter-items')})
+            {name.value} ({counts[id] ?? 0} {t('vocabulary-filter-items')})
           </>
         )
       }))}
