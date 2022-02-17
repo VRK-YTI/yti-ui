@@ -47,7 +47,7 @@ const createMockData = (
   } as VocabularyInfoDTO
 );
 
-describe.only('check-rights', () => {
+describe('check-rights', () => {
 
   test('should have rights', () => {
 
