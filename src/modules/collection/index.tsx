@@ -54,12 +54,18 @@ export default function Collection({ terminologyId, collectionId }: CollectionPr
       <Breadcrumb>
         {!terminologyError &&
           <BreadcrumbLink url={`/terminology/${terminologyId}`}>
-            <PropertyValue property={terminology?.properties.prefLabel} />
+            <PropertyValue
+              property={terminology?.properties.prefLabel}
+              fallbackLanguage='fi'
+            />
           </BreadcrumbLink>
         }
         {!collectionError &&
           <BreadcrumbLink url={`/terminology/${terminologyId}/collections/${collectionId}`} current>
-            <PropertyValue property={collection?.properties.prefLabel} />
+            <PropertyValue
+              property={collection?.properties.prefLabel}
+              fallbackLanguage='fi'
+            />
           </BreadcrumbLink>
         }
       </Breadcrumb>
@@ -70,11 +76,13 @@ export default function Collection({ terminologyId, collectionId }: CollectionPr
             <Text>
               <PropertyValue
                 property={terminology?.references.contributor?.[0].properties.prefLabel}
+                fallbackLanguage='fi'
               />
             </Text>
             <Heading variant="h1">
               <PropertyValue
                 property={collection?.properties.prefLabel}
+                fallbackLanguage='fi'
               />
             </Heading>
             <BadgeBar>

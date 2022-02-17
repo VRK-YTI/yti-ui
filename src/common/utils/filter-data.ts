@@ -1,22 +1,23 @@
 import { getPropertyValue } from '../components/property-value/get-property-value';
 import { Collection } from '../interfaces/collection.interface';
-import { VocabularyConcepts } from '../interfaces/vocabulary.interface';
+import { VocabularyConceptDTO, VocabularyConcepts } from '../interfaces/vocabulary.interface';
+import { UrlState } from './hooks/useUrlState';
 
-export default function filterData(data: VocabularyConcepts | Collection[], filter: any, keyword: string, language: any) {
+export default function filterData(data: VocabularyConcepts | Collection[], urlState: UrlState, language: any) {
   if ('concepts' in data) {
-    const filteredData = data.concepts.filter((concept: any) => {
+    const filteredData = data.concepts.filter((concept: VocabularyConceptDTO) => {
       let valid = false;
 
-      if (!keyword ||
-        concept.definition?.[language]?.toLowerCase().includes(keyword.toLowerCase()) ||
-        concept.label?.[language]?.toLowerCase().includes(keyword.toLowerCase()) ||
-        concept.label?.[Object.keys(concept.label)[0]].toLowerCase().includes(keyword.toLowerCase()))
+      if (!urlState.q ||
+        concept.definition?.[language]?.toLowerCase().includes(urlState.q.toLowerCase()) ||
+        concept.label?.[language]?.toLowerCase().includes(urlState.q.toLowerCase()) ||
+        concept.label?.[Object.keys(concept.label)[0]].toLowerCase().includes(urlState.q.toLowerCase()))
       {
         valid = true;
       }
 
 
-      if (valid && filter.status[concept.status] === true) {
+      if (valid && urlState.status.includes(concept.status?.toLowerCase())) {
         valid = true;
       } else {
         valid = false;
@@ -31,7 +32,12 @@ export default function filterData(data: VocabularyConcepts | Collection[], filt
     let filteredData: Collection[] = [];
 
     data.forEach(collection => {
-      if (getPropertyValue({ property: collection.properties.prefLabel, language: language })?.includes(keyword.toLowerCase())) {
+      const prefLabel = getPropertyValue({
+        property: collection.properties.prefLabel,
+        language,
+      });
+
+      if (prefLabel?.includes(urlState.q.toLowerCase())) {
         filteredData.push(collection);
       }
     });
