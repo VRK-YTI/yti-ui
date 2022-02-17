@@ -10,14 +10,6 @@ import {
 } from './filter.styles';
 import ResetAllFiltersButton from './reset-all-filters-button';
 
-/**
- * Error handling:
- * - if groups or organizations are missing
- *   should the components that use either
- *   of the values return an indicator that
- *   needed data is missing?
- */
-
 export interface FilterProps {
   isModal?: boolean;
   onModalClose?: () => void;

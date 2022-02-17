@@ -4,12 +4,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { LogoWrapper } from './smart-header.styles';
 
-/**
- * Error handling:
- * - if logo.svg cannot be loaded
- *   should image return something else?
- */
-
 export default function Logo() {
   return (
     <LogoWrapper>

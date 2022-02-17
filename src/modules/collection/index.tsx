@@ -17,14 +17,6 @@ import { useStoreDispatch } from '../../store';
 import CollectionSidebar from './collection-sidebar';
 import { BadgeBar, HeadingBlock, MainContent, PageContent } from './collection.styles';
 
-/**
- * Error handling:
- * - if some data is undefined in a collection
- *   should some titles be hidden from the page?
- *   e.g. "Valikoimaan kuuluvien käsitteiden yläkäsitteet"
- *   and "Valikoimaan kuuluvat käsitteet"
- */
-
 interface CollectionProps {
   terminologyId: string;
   collectionId: string;

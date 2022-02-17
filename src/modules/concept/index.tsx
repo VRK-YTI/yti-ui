@@ -29,18 +29,6 @@ import { setAlert } from '../../common/components/alert/alert.slice';
 import { Error } from '../../common/interfaces/error.interface';
 import { useRouter } from 'next/router';
 
-/**
- * Error handling:
- * - if terminology is missing the breacrumb has
- *   an empty value. Could there be something to
- *   put there instead if the value is missing?
- * - if concept is missing the page renders horizontal
- *   lines. These could be hidden.
- * - errors could be logged in console
- * - could some things be also wrapped in <ErrorBoundary> to display
- *   a message for user
- */
-
 export interface ConceptProps {
   terminologyId: string;
   conceptId: string;

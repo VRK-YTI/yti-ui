@@ -7,15 +7,6 @@ import { createCommonGetServerSideProps } from '../../../../common/utils/create-
 import { MediaQueryContextProvider } from '../../../../common/components/media-query/media-query-context';
 import Collection from '../../../../modules/collection';
 
-/**
- * Error handling:
- * - should page be redirected to parent terminology
- *   page if collectionId is unknown?
- * - if both terminologyId and collectionId are unknown
- *   should user be redirected to 404 page?
- * -
- */
-
 // TODO: perhaps move the component itself to components/
 export default function CollectionPage(props: {
   _netI18Next: SSRConfig;
