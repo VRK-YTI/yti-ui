@@ -3,7 +3,7 @@ import { Heading } from 'suomifi-ui-components';
 import { Contributor, Description, StatusChip, TitleWrapper, TitleWrapperNoBreadcrumb } from './title.styles';
 import InfoExpander from '../info-dropdown/info-expander';
 import { VocabularyInfoDTO } from '../../interfaces/vocabulary.interface';
-import { Property } from '../../interfaces/termed-data-types.interface';
+import { getPropertyValue } from '../property-value/get-property-value';
 
 interface TitleProps {
   info: string | VocabularyInfoDTO;
@@ -25,17 +25,16 @@ export default function Title({ info }: TitleProps) {
     );
   } else {
     const status = info.properties.status?.[0].value ?? '';
-    const title = info.properties.prefLabel?.find((pLabel: Property) => {
-      if (pLabel.lang === i18n.language) {
-        return pLabel;
-      }
-    })?.value ?? '';
-
-    const contributor = info.references.contributor?.[0].properties.prefLabel?.find((pLabel: Property) => {
-      if (pLabel.lang === i18n.language) {
-        return pLabel;
-      }
-    })?.value ?? '';
+    const title = getPropertyValue({
+      property: info.properties.prefLabel,
+      language: i18n.language,
+      fallbackLanguage: 'fi'
+    }) ?? '';
+    const contributor = getPropertyValue({
+      property: info.references.contributor?.[0].properties.prefLabel,
+      language: i18n.language,
+      fallbackLanguage: 'fi'
+    }) ?? '';
 
     return (
       <TitleWrapper>

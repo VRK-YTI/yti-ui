@@ -42,7 +42,7 @@ export interface GroupSearchResult {
     definition: CommonInfoDTO[];
     notation: CommonInfoDTO[];
     order: CommonInfoDTO[];
-    prefLabel: CommonInfoDTO[];
+    prefLabel: CommonInfoDTO;
   };
   type: {
     graph: {
@@ -57,7 +57,7 @@ export interface OrganizationSearchResult {
   code: string;
   id: string;
   properties: {
-    prefLabel: CommonInfoDTO[];
+    prefLabel: CommonInfoDTO;
   };
   type: {
     graph: {

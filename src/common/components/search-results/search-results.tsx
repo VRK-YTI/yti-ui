@@ -72,7 +72,10 @@ export default function SearchResults({ data, type, organizations, domains }: Se
               return (
                 <Card key={`search-result-${idx}`}>
                   <CardContributor>
-                    {terminology.contributors[0].label[i18n.language]}
+                    {terminology.contributors[0].label[i18n.language]
+                      ?? terminology.contributors[0].label['fi']
+                      ?? ''
+                    }
                   </CardContributor>
 
                   <CardTitleWrapper>

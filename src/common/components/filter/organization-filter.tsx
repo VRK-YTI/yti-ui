@@ -1,7 +1,6 @@
 import { Dropdown, DropdownItem } from 'suomifi-ui-components';
 import { OrganizationSearchResult } from '../../interfaces/terminology.interface';
 import useUrlState, { initialUrlState } from '../../utils/hooks/useUrlState';
-import PropertyValue from '../property-value';
 import { DropdownPlaceholder, DropdownWrapper } from './filter.styles';
 
 interface OrganizationFilterProps {
@@ -36,7 +35,7 @@ export default function OrganizationFilter({
       >
         {organizations.map(organization => (
           <DropdownItem value={organization.id} key={organization.id}>
-            <PropertyValue property={organization.properties.prefLabel} />
+            {organization.properties.prefLabel.value}
           </DropdownItem>
         ))}
       </Dropdown>

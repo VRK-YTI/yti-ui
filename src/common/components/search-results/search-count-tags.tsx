@@ -50,11 +50,7 @@ export default function SearchCountTags({
         <Tag
           onRemove={() => patchUrlState({ organization: initialUrlState.organization })}
         >
-          <PropertyValue
-            property={organizations.filter(o => o.id === urlState.organization)[0]?.properties.prefLabel}
-            fallbackLanguage="fi"
-            fallback={urlState.organization}
-          />
+          {organizations.filter(o => o.id === urlState.organization)[0]?.properties.prefLabel.value}
         </Tag>
       );
     }
@@ -95,10 +91,7 @@ export default function SearchCountTags({
             onRemove={() => patchUrlState({ domain: urlState.domain.filter(d => d !== domain.id) })}
             key={domain.id}
           >
-            <PropertyValue
-              property={domain.properties.prefLabel}
-              fallbackLanguage="fi"
-            />
+            {domain.properties.prefLabel.value}
           </Tag>
         );
       }
