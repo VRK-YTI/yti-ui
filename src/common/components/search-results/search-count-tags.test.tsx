@@ -1,38 +1,18 @@
 import { render, screen } from '@testing-library/react';
-import { Provider } from 'react-redux';
-import { ThemeProvider } from 'styled-components';
-import { lightTheme } from '../../../layouts/theme';
-import { makeStore } from '../../../store';
-import { setVocabularyFilter } from '../vocabulary/vocabulary-slice';
+import { NextRouter, useRouter } from 'next/router';
+import { themeProvider } from '../../../tests/test-utils';
 import SearchCountTags from './search-count-tags';
+
+jest.mock('next/router');
+const mockedUseRouter = useRouter as jest.MockedFunction<typeof useRouter>;
 
 describe('search-count-tags', () => {
   test('should render component', () => {
-    const store = makeStore();
-
-    const filter = {
-      infoDomains: [],
-      keyword: '',
-      showByOrg: '',
-      status: {
-        'VALID': true,
-        'DRAFT': true,
-        'RETIRED': false,
-        'SUPERSEDED': false
-      }
-    };
-
+    mockedUseRouter.mockReturnValue({ query: {} } as NextRouter);
 
     render(
-      <Provider store={store}>
-        <ThemeProvider theme={lightTheme}>
-          <SearchCountTags
-            count={4}
-            filter={filter}
-            setFilter={setVocabularyFilter}
-          />
-        </ThemeProvider>
-      </Provider>
+      <SearchCountTags title="4 items found" />,
+      { wrapper: themeProvider }
     );
 
     expect(screen.getByText(/4/)).toBeInTheDocument;

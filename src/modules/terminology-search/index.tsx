@@ -1,56 +1,40 @@
-import { useSelector } from 'react-redux';
 import {
-  selectFilter,
   useGetGroupsQuery,
   useGetSearchResultQuery,
-  resetFilter,
-  SearchState,
-  setFilter,
   useGetOrganizationsQuery,
-  selectResultStart,
-  setResultStart,
 } from '../../common/components/terminology-search/terminology-search-slice';
 import Title from '../../common/components/title/title';
-import { ResultAndFilterContainer, ResultAndStatsWrapper, PaginationWrapper, FilterMobileButton } from './terminology-search.styles';
+import {
+  ResultAndFilterContainer,
+  ResultAndStatsWrapper,
+  PaginationWrapper,
+  FilterMobileButton
+} from './terminology-search.styles';
 import SearchResults from '../../common/components/search-results/search-results';
-import Filter from '../../common/components/filter/filter';
 import Pagination from '../../common/components/pagination/pagination';
-import { useStoreDispatch } from '../../store';
 import { useTranslation } from 'next-i18next';
-import { useRouter } from 'next/router';
 import { useBreakpoints } from '../../common/components/media-query/media-query-context';
 import { Modal, ModalContent } from 'suomifi-ui-components';
 import { useState } from 'react';
-import { Breadcrumb, BreadcrumbLink } from '../../common/components/breadcrumb';
+import { useGetCountsQuery } from '../../common/components/counts/counts-slice';
+import { SearchPageFilter } from './search-page-filter';
+import useUrlState from '../../common/utils/hooks/useUrlState';
+import { Alert, Alerts } from '../../common/components/alert/';
 
 export default function TerminologySearch() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { isSmall } = useBreakpoints();
-  const dispatch = useStoreDispatch();
-  const query = useRouter();
-  const filter = useSelector(selectFilter());
-  const resultStart = useSelector(selectResultStart());
-  const { data } = useGetSearchResultQuery({ filter: filter, resultStart: resultStart });
-  const { data: groups } = useGetGroupsQuery(null);
-  const { data: organizations } = useGetOrganizationsQuery(null);
+  const { urlState } = useUrlState();
+  const { data, error } = useGetSearchResultQuery({ urlState });
+  const { data: groups, error: groupsError } = useGetGroupsQuery(i18n.language);
+  const { data: organizations, error: organizationsError } = useGetOrganizationsQuery(i18n.language);
+  const { data: counts, error: countsError } = useGetCountsQuery(null);
   const [showModal, setShowModal] = useState(false);
-
-  if (query.query.page && query.query.page !== '1') {
-    dispatch(setResultStart((parseInt(query.query.page as string, 10) - 1) * 10));
-  } else {
-    dispatch(setResultStart(0));
-  }
 
   return (
     <>
-      <Breadcrumb>
-        <BreadcrumbLink url="/search?page=1" current>
-          {t('terminology-title')}
-        </BreadcrumbLink>
-      </Breadcrumb>
-
       <Title info={t('terminology-title')} />
-      {isSmall &&
+      {(isSmall && groups && organizations) &&
         <FilterMobileButton
           variant='secondary'
           fullWidth
@@ -60,37 +44,30 @@ export default function TerminologySearch() {
         </FilterMobileButton>
       }
       <ResultAndFilterContainer>
-        {data &&
-          <ResultAndStatsWrapper>
-            <SearchResults
-              data={data}
-              filter={filter}
-              setSomeFilter={setFilter}
-              type={'terminology-search'}
-            />
-            {data
-              &&
+        <ResultAndStatsWrapper>
+          {data &&
+            <>
+              <SearchResults
+                data={data}
+                type="terminology-search"
+                organizations={organizations}
+                domains={groups}
+              />
               <PaginationWrapper>
                 <Pagination
                   data={data}
-                  dispatch={dispatch}
                   pageString={t('pagination-page')}
-                  setResultStart={setResultStart}
-                  query={query}
                 />
               </PaginationWrapper>
-            }
-          </ResultAndStatsWrapper>
-        }
+            </>
+          }
+        </ResultAndStatsWrapper>
         {!isSmall
           ?
-          <Filter
-            filter={filter as SearchState['filter']}
-            groups={groups}
+          <SearchPageFilter
             organizations={organizations}
-            type={'terminology-search'}
-            setSomeFilter={setFilter}
-            resetSomeFilter={resetFilter}
+            groups={groups}
+            counts={counts}
           />
           :
           <Modal
@@ -100,24 +77,25 @@ export default function TerminologySearch() {
             variant='smallScreen'
             style={{ border: 'none' }}
           >
-            <ModalContent
-              style={{ padding: '0' }}
-            >
-              <Filter
-                filter={filter as SearchState['filter']}
-                groups={groups}
-                organizations={organizations}
-                type={'terminology-search'}
-                setSomeFilter={setFilter}
-                resetSomeFilter={resetFilter}
-                isModal={true}
-                setShowModal={setShowModal}
+            <ModalContent style={{ padding: '0' }}>
+              <SearchPageFilter
+                isModal
+                onModalClose={() => setShowModal(false)}
                 resultCount={data?.totalHitCount}
+                organizations={organizations}
+                groups={groups}
+                counts={counts}
               />
             </ModalContent>
           </Modal>
         }
       </ResultAndFilterContainer>
+      <Alerts>
+        {error && <Alert msg={'error-with-terminologies'} type='error' />}
+        {groupsError && <Alert msg={'error-with-groups'} type='error' />}
+        {organizationsError && <Alert msg={'error-with-organizations'} type='error' />}
+        {countsError && <Alert msg={'error-with-counts'} type='error' />}
+      </Alerts>
     </>
   );
 };

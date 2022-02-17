@@ -34,3 +34,9 @@ export const TitleWrapper = styled.div`
   display: flex;
   flex-direction: column;
 `;
+
+export const TitleWrapperNoBreadcrumb = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 18px;
+`;

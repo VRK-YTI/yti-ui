@@ -1,8 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import { ExternalLink, Paragraph, Text } from 'suomifi-ui-components';
 import Image from 'next/image';
-import { FooterContentWrapper, FooterLinkWrapper } from './footer.style';
+import { FooterContentWrapper, FooterLinkWrapper, VersionInfo } from './footer.style';
 import { useBreakpoints } from '../media-query/media-query-context';
+import getConfig from 'next/config';
 
 export interface FooterProps {
   feedbackSubject?: string;
@@ -12,6 +13,7 @@ export default function Footer({ feedbackSubject }: FooterProps) {
   const { t } = useTranslation('common');
   const subject = encodeURIComponent(feedbackSubject ?? String(t('feedback-terminologies')));
   const { breakpoint } = useBreakpoints();
+  const { publicRuntimeConfig } = getConfig();
 
   return (
     <>
@@ -42,6 +44,9 @@ export default function Footer({ feedbackSubject }: FooterProps) {
           {t('terminology-footer-accessibility')}
         </ExternalLink>
       </FooterLinkWrapper>
+      <VersionInfo>
+        {publicRuntimeConfig?.versionInfo}
+      </VersionInfo>
     </>
   );
 }

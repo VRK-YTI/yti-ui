@@ -20,3 +20,10 @@ export const FooterLinkWrapper = styled.div<{ breakpoint: Breakpoint }>`
   flex-wrap: wrap;
   flex-direction: ${props => small(props.breakpoint, 'column', 'row')};
 `;
+
+export const VersionInfo = styled.div`
+  color: ${(props) => props.theme.suomifi.colors.whiteBase};
+  font-size: ${props => props.theme.suomifi.typography.bodyTextSmall};
+  justify-content: center;
+  display: flex;
+`;

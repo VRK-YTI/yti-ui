@@ -1,12 +1,33 @@
 const { i18n } = require('./next-i18next.config');
 const { PHASE_DEVELOPMENT_SERVER } = require('next/constants');
+const fs = require('fs');
 
 module.exports = (phase, { defaultConfig }) => {
+  let versionInfo;
+
+  if (fs.existsSync('public/version.txt')) {
+    versionInfo = fs.readFileSync('public/version.txt', 'utf8');
+  } else {
+    versionInfo = 'dev-local';
+  }
+
   let config = {
     reactStrictMode: true,
     i18n,
     eslint: {
       dirs: ['src']
+    },
+    async redirects() {
+      return [
+        {
+          source: '/concepts/:path*',
+          destination: '/terminology/:path*',
+          permanent: true,
+        }
+      ];
+    },
+    publicRuntimeConfig: {
+      versionInfo
     }
   };
 

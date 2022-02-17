@@ -20,6 +20,20 @@ export const CardChip = styled(StaticChip)<CardChipProps>`
   width: min-content;
 `;
 
+export const CardConcepts = styled(Text)`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-top: ${props => props.theme.suomifi.spacing.m};
+
+  &:before {
+    content: attr(value);
+    font-weight: 600;
+    margin-bottom: 5px;
+    width: 100%;
+  }
+`;
+
 export const CardContributor = styled(Text)`
   color: ${(props) => props.theme.suomifi.colors.depthDark1};
   font-size: 14px;
