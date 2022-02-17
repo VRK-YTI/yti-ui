@@ -23,13 +23,6 @@ import {
 import { Concept } from '../../interfaces/concept.interface';
 import useUrlState from '../../utils/hooks/useUrlState';
 
-/**
- * Error handling:
- * - instead of returning null should return be something
- *   more descriptive?
- * -
- */
-
 interface SearchResultsProps {
   data: TerminologySearchResult | VocabularyConcepts | Collection[];
   type?: string;
