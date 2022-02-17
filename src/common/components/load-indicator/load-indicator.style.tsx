@@ -25,7 +25,7 @@ export const LoadIcon = styled(Icon)<{isSmall: boolean}>`
   height: ${props => props.isSmall ? '50px' : '100px'};
   animation: ${rotate} 2s linear infinite;
   color: ${props => props.theme.suomifi.colors.highlightLight1};
-  margin-top: 20px;
+  margin-top: ${props => props.theme.suomifi.spacing.xl};
 `;
 
 export const RefetchButton = styled(Button)`
