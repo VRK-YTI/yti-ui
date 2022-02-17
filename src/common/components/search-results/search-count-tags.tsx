@@ -6,7 +6,6 @@ import {
 } from '../../interfaces/terminology.interface';
 import useUrlState, { initialUrlState } from '../../utils/hooks/useUrlState';
 import { useBreakpoints } from '../media-query/media-query-context';
-import PropertyValue from '../property-value';
 import {
   ChipWrapper,
   CountText,
@@ -39,11 +38,7 @@ export default function SearchCountTags({
               organization: initialUrlState.organization,
             })}
           >
-            <PropertyValue
-              property={organizations.filter(o => o.id === urlState.organization)[0]?.properties.prefLabel}
-              fallbackLanguage="fi"
-              fallback={urlState.organization}
-            />
+            {organizations.filter(o => o.id === urlState.organization)[0]?.properties.prefLabel.value}
           </Tag>
         )}
         {urlState.q && (
@@ -72,11 +67,7 @@ export default function SearchCountTags({
             })}
             key={domain}
           >
-            <PropertyValue
-              property={domains.filter(d => d.id === domain)[0]?.properties.prefLabel}
-              fallbackLanguage="fi"
-              fallback={urlState.organization}
-            />
+            {domains.filter(d => d.id === domain)[0]?.properties.prefLabel.value}
           </Tag>
         ))}
       </ChipWrapper >
