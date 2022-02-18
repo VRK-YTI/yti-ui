@@ -8,7 +8,6 @@ interface TextLinksProps {
 
 interface ParseTextProps {
   text: string;
-  t: Function;
 }
 
 interface ChildType extends ChildNode {
@@ -18,7 +17,8 @@ interface ChildType extends ChildNode {
   };
 }
 
-function ParseText({ text, t }: ParseTextProps) {
+function ParseText({ text }: ParseTextProps) {
+  const { t } = useTranslation('common');
   const htmlChildNodes = new DOMParser().parseFromString(text, 'text/html').children[0].children[1].childNodes;
 
   const children = Array.from(htmlChildNodes).map((child: ChildType, idx: number) => {
@@ -60,11 +60,9 @@ function ParseText({ text, t }: ParseTextProps) {
 }
 
 export default function TextLinks({ text }: TextLinksProps) {
-  const { t } = useTranslation('common');
-
   return (
     <>
-      <ParseText text={text} t={t} />
+      <ParseText text={text} />
     </>
   );
 }
