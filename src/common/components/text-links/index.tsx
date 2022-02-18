@@ -22,7 +22,7 @@ function ParseText({ text, t }: ParseTextProps) {
   const htmlChildNodes = new DOMParser().parseFromString(text, 'text/html').children[0].children[1].childNodes;
 
   const children = Array.from(htmlChildNodes).map((child: ChildType, idx: number) => {
-    if (child.nodeName.toLowerCase().includes('a')) {
+    if (child.nodeName.toLowerCase() === 'a') {
       const childHref = child.href ?? '';
       const childTextValue = child.firstChild?.textContent;
 
