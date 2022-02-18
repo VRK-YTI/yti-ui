@@ -65,6 +65,7 @@ export default function SearchResults({ data, type, organizations, domains }: Se
             })}
             organizations={organizations}
             domains={domains}
+            renderQBeforeStatus
           />
           <CardWrapper isSmall={isSmall}>
             {data?.terminologies?.map((terminology, idx: number) => {
