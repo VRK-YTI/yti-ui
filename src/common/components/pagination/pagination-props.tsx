@@ -7,8 +7,3 @@ export interface PaginationProps {
   isSmall?: boolean;
   pageString: string;
 }
-
-export interface PaginationButtonProps {
-  active?: boolean;
-  disabled?: boolean;
-}

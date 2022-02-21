@@ -1,5 +1,4 @@
-import { Icon } from 'suomifi-ui-components';
-import { PaginationButton, PaginationMobile, PaginationWrapper } from './pagination.styles';
+import { ChevronButton, PaginationButton, PaginationMobile, PaginationWrapper } from './pagination.styles';
 import { PaginationProps } from './pagination-props';
 import { useBreakpoints } from '../media-query/media-query-context';
 import useUrlState from '../../utils/hooks/useUrlState';
@@ -24,17 +23,14 @@ export default function Pagination({
 
   return (
     <PaginationWrapper>
-      <PaginationButton
+      <ChevronButton
         disabled={urlState.page === 1}
-        onClick={() =>urlState.page !== 1 && patchUrlState({ page: urlState.page - 1 })}
+        onClick={() => urlState.page !== 1 && patchUrlState({ page: urlState.page - 1 })}
         data-testid='pagination-left'
-      >
-        {/* TODO: Update color after release in design system*/}
-        <Icon
-          icon='chevronLeft'
-          color={urlState.page === 1 ? 'hsl(202, 7%, 67%)' : 'hsl(212, 63%, 45%)'}
-        />
-      </PaginationButton>
+        icon='chevronLeft'
+        iconProps={{ icon: 'chevronLeft'}}
+        variant='secondaryNoBorder'
+      />
 
       {!breakPoints.isSmall
         ?
@@ -44,7 +40,7 @@ export default function Pagination({
               <PaginationButton
                 key={item !== '...' ? `pagination-item-${item}` : `pagination-item-${item}-${idx}`}
                 onClick={() => (urlState.page !== item && typeof item === 'number') && patchUrlState({ page: item })}
-                active={item === urlState.page}
+                variant={item === urlState.page ? 'default' : 'secondaryNoBorder'}
                 disabled={item === '...'}
               >
                 {item}
@@ -55,17 +51,14 @@ export default function Pagination({
         <PaginationMobile>{pageString} {urlState.page}/{items.length}</PaginationMobile>
       }
 
-      <PaginationButton
+      <ChevronButton
         disabled={urlState.page === items[items.length - 1]}
         onClick={() => urlState.page !== items[items.length - 1] && patchUrlState({ page: urlState.page + 1 })}
         data-testid='pagination-right'
-      >
-        {/* TODO: Update color*/}
-        <Icon
-          icon='chevronRight'
-          color={urlState.page === items[items.length - 1] ? 'hsl(202, 7%, 67%)' : 'hsl(212, 63%, 45%)'}
-        />
-      </PaginationButton>
+        icon='chevronRight'
+        iconProps={{ icon: 'chevronRight' }}
+        variant='secondaryNoBorder'
+      />
     </PaginationWrapper>
   );
 }
