@@ -54,7 +54,7 @@ export default function TerminologySearch() {
 
   return (
     <>
-      <Title info={t('terminology-title')} />
+      <Title info={`${t('terminology-title')} - ${t('site-title')}`} />
       {(isSmall && groups && organizations) &&
         <FilterMobileButton
           variant='secondary'

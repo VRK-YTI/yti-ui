@@ -40,7 +40,7 @@ export default function Title({ info }: TitleProps) {
       <TitleWrapper>
         <Contributor>{contributor}</Contributor>
 
-        <Heading variant='h1'>{title}</Heading>
+        <Heading variant='h1'>{title} - {t('site-title')}</Heading>
 
         <StatusChip valid={status === 'VALID' ? 'true' : undefined}>
           {t(`${status}`)}
