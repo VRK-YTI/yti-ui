@@ -40,7 +40,7 @@ export const PaginationButton = styled(Button)`
 `;
 
 export const PaginationMobile = styled.div`
-  height: 35px;
+  height: auto;
   width: auto;
   padding-left: ${props => props.theme.suomifi.spacing.m};
   padding-right: ${props => props.theme.suomifi.spacing.m};
