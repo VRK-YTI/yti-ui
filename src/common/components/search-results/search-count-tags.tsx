@@ -6,7 +6,6 @@ import {
 } from '../../interfaces/terminology.interface';
 import useUrlState, { initialUrlState } from '../../utils/hooks/useUrlState';
 import { useBreakpoints } from '../media-query/media-query-context';
-import PropertyValue from '../property-value';
 import {
   ChipWrapper,
   CountText,

@@ -96,5 +96,7 @@
   "navigation-close": "Sulje navigaatio",
   "filter-with-current": "{{count}} kpl seuraavilla rajauksilla",
   "front-page": "Etusivu",
-  "breadcrumb": "Murupolku"
+  "breadcrumb": "Murupolku",
+  "error-occured": "Tapahtui virhe",
+  "try-again": "Yritä uudestaan"
 }

@@ -13,6 +13,7 @@ import { useTranslation } from 'next-i18next';
 import Footer from '../common/components/footer/footer';
 import SmartHeader from '../modules/smart-header';
 import { useBreakpoints } from '../common/components/media-query/media-query-context';
+import { Alerts } from '../common/components/alert';
 
 export default function Layout({
   children,
@@ -35,6 +36,7 @@ export default function Layout({
         <SmartHeader />
 
         <ContentContainer>
+          <Alerts />
           <MarginContainer breakpoint={breakpoint}>
             <Block variant="main">
               {children}

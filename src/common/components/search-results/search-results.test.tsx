@@ -15,18 +15,6 @@ describe('search-results', () => {
 
     const store = makeStore();
 
-    const filter = {
-      infoDomains: [],
-      keyword: '',
-      showByOrg: '',
-      status: {
-        'VALID': true,
-        'DRAFT': true,
-        'RETIRED': false,
-        'SUPERSEDED': false
-      }
-    };
-
     const data = {
       totalHitCount: 0,
       resultStart: 0,
@@ -52,18 +40,6 @@ describe('search-results', () => {
     mockedUseRouter.mockReturnValue({ query: {} } as NextRouter);
 
     const store = makeStore();
-
-    const filter = {
-      infoDomains: [],
-      keyword: '',
-      showByOrg: '',
-      status: {
-        'VALID': true,
-        'DRAFT': true,
-        'RETIRED': false,
-        'SUPERSEDED': false
-      }
-    };
 
     const data = {
       totalHitCount: 2,
