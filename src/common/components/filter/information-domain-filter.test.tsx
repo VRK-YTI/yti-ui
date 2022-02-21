@@ -20,8 +20,8 @@ describe('InformationDomainFilter', () => {
           d2: 12,
         }}
         domains={[
-          { id: 'd1', name: [{ value: 'Domain 1', lang: '', regex: '' }] },
-          { id: 'd2', name: [{ value: 'Domain 2', lang: '', regex: '' }] },
+          { id: 'd1', name: { value: 'Domain 1', lang: '', regex: '' } },
+          { id: 'd2', name: { value: 'Domain 2', lang: '', regex: '' } },
         ]}
       />,
       { wrapper: themeProvider }

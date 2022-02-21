@@ -18,12 +18,14 @@ interface SearchCountTagsProps {
   title: ReactNode;
   organizations?: OrganizationSearchResult[];
   domains?: GroupSearchResult[];
+  renderQBeforeStatus?: boolean;
 }
 
 export default function SearchCountTags({
   title,
   organizations = [],
-  domains = []
+  domains = [],
+  renderQBeforeStatus = false,
 }: SearchCountTagsProps) {
   const { t } = useTranslation('common');
   const { urlState, patchUrlState } = useUrlState();
@@ -33,53 +35,66 @@ export default function SearchCountTags({
     <CountWrapper isSmall={isSmall}>
       <CountText>{title}</CountText>
       <ChipWrapper>
-        {urlState.organization && (
+        {renderOrganizationTag()}
+        {renderQBeforeStatus && renderQTag()}
+        {renderStatusTags()}
+        {!renderQBeforeStatus && renderQTag()}
+        {renderDomainTags()}
+      </ChipWrapper>
+    </CountWrapper>
+  );
+
+  function renderOrganizationTag() {
+    if (urlState.organization) {
+      return (
+        <Tag
+          onRemove={() => patchUrlState({ organization: initialUrlState.organization })}
+        >
+          {organizations.filter(o => o.id === urlState.organization)[0]?.properties.prefLabel.value}
+        </Tag>
+      );
+    }
+  }
+
+  function renderQTag() {
+    if (urlState.q) {
+      return (
+        <Tag
+          onRemove={() => patchUrlState({ q: initialUrlState.q })}
+        >
+          {urlState.q}
+        </Tag>
+      );
+    }
+  }
+
+  function renderStatusTags() {
+    return ['valid', 'draft', 'retired', 'superseded'].map(status => {
+      if (urlState.status.includes(status)) {
+        return (
           <Tag
-            onRemove={() => patchUrlState({
-              organization: initialUrlState.organization,
-            })}
-          >
-            <PropertyValue
-              property={organizations.filter(o => o.id === urlState.organization)[0]?.properties.prefLabel}
-              fallbackLanguage="fi"
-              fallback={urlState.organization}
-            />
-          </Tag>
-        )}
-        {urlState.q && (
-          <Tag
-            onRemove={() => patchUrlState({
-              q: initialUrlState.q,
-            })}
-          >
-            {urlState.q}
-          </Tag>
-        )}
-        {urlState.status.map(status => (
-          <Tag
-            onRemove={() => patchUrlState({
-              status: urlState.status.filter(s => s !== status),
-            })}
+            onRemove={() => patchUrlState({ status: urlState.status.filter(s => s !== status) })}
             key={status}
           >
             {t(status.toUpperCase())}
           </Tag>
-        ))}
-        {urlState.domain.map(domain => (
+        );
+      }
+    }).filter(Boolean);
+  }
+
+  function renderDomainTags() {
+    return domains.map(domain => {
+      if (urlState.domain.includes(domain.id)) {
+        return (
           <Tag
-            onRemove={() => patchUrlState({
-              domain: urlState.domain.filter(d => d !== domain),
-            })}
-            key={domain}
+            onRemove={() => patchUrlState({ domain: urlState.domain.filter(d => d !== domain.id) })}
+            key={domain.id}
           >
-            <PropertyValue
-              property={domains.filter(d => d.id === domain)[0]?.properties.prefLabel}
-              fallbackLanguage="fi"
-              fallback={urlState.organization}
-            />
+            {domain.properties.prefLabel.value}
           </Tag>
-        ))}
-      </ChipWrapper >
-    </CountWrapper >
-  );
+        );
+      }
+    }).filter(Boolean);
+  }
 }
