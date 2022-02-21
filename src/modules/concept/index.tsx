@@ -86,7 +86,7 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
                 fallbackLanguage='fi'
               />
               <VisuallyHidden>
-                {t('site-title')}
+                {' '}- {t('site-title')}
               </VisuallyHidden>
             </Heading>
             <BadgeBar>

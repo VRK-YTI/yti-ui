@@ -77,7 +77,7 @@ export default function Collection({ terminologyId, collectionId }: CollectionPr
                 fallbackLanguage='fi'
               />
               <VisuallyHidden>
-                {t('site-title')}
+                {' '}- {t('site-title')}
               </VisuallyHidden>
             </Heading>
             <BadgeBar>
