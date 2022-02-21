@@ -13,6 +13,7 @@ import { useTranslation } from 'next-i18next';
 import Footer from '../common/components/footer/footer';
 import SmartHeader from '../modules/smart-header';
 import { useBreakpoints } from '../common/components/media-query/media-query-context';
+import SkipLink from '../common/components/skip-link/skip-link';
 
 export default function Layout({
   children,
@@ -31,12 +32,17 @@ export default function Layout({
         <meta name="og:title" content={t('terminology')} />
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
+
+      <SkipLink href="#main">
+        {t('skip-link-main')}
+      </SkipLink>
+
       <SiteContainer>
         <SmartHeader />
 
         <ContentContainer>
           <MarginContainer breakpoint={breakpoint}>
-            <Block variant="main">
+            <Block variant="main" id="main">
               {children}
             </Block>
           </MarginContainer>

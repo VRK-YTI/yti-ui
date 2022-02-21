@@ -53,7 +53,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
       }
       <ResultAndFilterContainer>
         {(concepts && urlState.type === 'concept') &&
-          <ResultAndStatsWrapper>
+          <ResultAndStatsWrapper id="search-results">
             <SearchResults data={concepts} />
             <PaginationWrapper>
               <Pagination
@@ -64,7 +64,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
           </ResultAndStatsWrapper>
         }
         {(collections && urlState.type === 'collection') &&
-          <ResultAndStatsWrapper>
+          <ResultAndStatsWrapper id="search-results">
             <SearchResults
               data={filterData(collections, urlState, i18n.language) ?? collections}
               type="collections"

@@ -44,7 +44,7 @@ export default function TerminologySearch() {
         </FilterMobileButton>
       }
       <ResultAndFilterContainer>
-        <ResultAndStatsWrapper>
+        <ResultAndStatsWrapper id="search-results">
           {data &&
             <>
               <SearchResults

@@ -103,5 +103,7 @@
   "filter-with-current": "{{count}} item with following filters",
   "filter-with-current_plural": "{{count}} items with following filters",
   "front-page": "Front page",
-  "breadcrumb": "Breadcrumb"
+  "breadcrumb": "Breadcrumb",
+  "skip-link-main": "Go directly to contents.",
+  "skip-link-search-results": "Go directly to search results."
 }
