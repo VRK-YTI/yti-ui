@@ -28,7 +28,10 @@ export default function Collection({ terminologyId, collectionId }: CollectionPr
     <>
       <Breadcrumb>
         <BreadcrumbLink url={`/terminology/${terminologyId}`}>
-          <PropertyValue property={terminology?.properties.prefLabel} />
+          <PropertyValue
+            property={terminology?.properties.prefLabel}
+            fallbackLanguage='fi'
+          />
         </BreadcrumbLink>
         <BreadcrumbLink url={`/terminology/${terminologyId}/collections/${collectionId}`} current>
           <PropertyValue
@@ -54,7 +57,7 @@ export default function Collection({ terminologyId, collectionId }: CollectionPr
               />
             </Heading>
             <BadgeBar>
-              {t('heading')} &middot; <PropertyValue property={terminology?.properties.prefLabel} />
+              {t('heading')} &middot; <PropertyValue property={terminology?.properties.prefLabel} fallbackLanguage='fi' />
             </BadgeBar>
             <Text>{t('description')}</Text>
           </HeadingBlock>

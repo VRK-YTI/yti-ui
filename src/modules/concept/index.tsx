@@ -24,6 +24,7 @@ import {
   MainContent,
   PageContent
 } from './concept.styles';
+import { Property } from '../../common/interfaces/termed-data-types.interface';
 
 export interface ConceptProps {
   terminologyId: string;
@@ -35,18 +36,25 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
   const { data: terminology } = useGetVocabularyQuery(terminologyId);
   const { data: concept } = useGetConceptQuery({ terminologyId, conceptId });
   const { t } = useTranslation('concept');
+  const conceptTitles = concept?.references.prefLabelXl?.map(plxl => plxl.properties.prefLabel).map(item => item?.[0]) as Property[];
 
   return (
     <>
       <Breadcrumb>
         <BreadcrumbLink url={`/terminology/${terminologyId}`}>
-          <PropertyValue property={terminology?.properties.prefLabel} />
-        </BreadcrumbLink>
-        <BreadcrumbLink url={`/terminology/${terminologyId}/concepts/${conceptId}`} current>
           <PropertyValue
-            property={concept?.references.prefLabelXl?.[0].properties.prefLabel}
+            property={terminology?.properties.prefLabel}
             fallbackLanguage='fi'
           />
+        </BreadcrumbLink>
+        <BreadcrumbLink url={`/terminology/${terminologyId}/concepts/${conceptId}`} current>
+          {conceptTitles
+            &&
+            <PropertyValue
+              property={conceptTitles}
+              fallbackLanguage='fi'
+            />
+          }
         </BreadcrumbLink>
       </Breadcrumb>
 
@@ -60,15 +68,23 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
               />
             </Text>
             <Heading variant="h1">
-              <PropertyValue
-                property={concept?.references.prefLabelXl?.[0].properties.prefLabel}
-                fallbackLanguage='fi'
-              />
+              {conceptTitles
+                &&
+                <PropertyValue
+                  property={conceptTitles}
+                  fallbackLanguage='fi'
+                />
+              }
             </Heading>
             <BadgeBar>
               <span>{t('heading')}</span>
               {' '}&middot;{' '}
-              <span><PropertyValue property={terminology?.properties.prefLabel} /></span>
+              <span>
+                <PropertyValue
+                  property={terminology?.properties.prefLabel}
+                  fallbackLanguage='fi'
+                />
+              </span>
               {' '}&middot;{' '}
               <Badge
                 isValid={getPropertyValue({ property: concept?.properties.status }) === 'VALID'}
