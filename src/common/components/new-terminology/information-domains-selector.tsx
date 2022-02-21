@@ -2,18 +2,17 @@ import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { MultiSelectData } from 'suomifi-ui-components';
 import { useBreakpoints } from '../media-query/media-query-context';
-import { getPropertyValue } from '../property-value/get-property-value';
 import { useGetGroupsQuery } from '../terminology-search/terminology-search-slice';
 import { MultiselectSmBot } from './new-terminology.styles';
 
 export default function InformationDomainsSelector() {
   const { i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
-  const { data: informationDomains } = useGetGroupsQuery(null);
+  const { data: informationDomains } = useGetGroupsQuery(i18n.language);
   const [selectedInfoDomains, setSelectedInfoDomains] = useState<MultiSelectData[]>([]);
 
   const infoDomains: MultiSelectData[] = informationDomains?.map(infoDomain => {
-    const domainName = getPropertyValue({ property: infoDomain.properties.prefLabel, language: i18n.language }) ?? '';
+    const domainName = infoDomain.properties.prefLabel.value;
 
     if (domainName) {
       return {

@@ -1,6 +1,43 @@
 import styled from 'styled-components';
-import { Block, Checkbox, MultiSelect, RadioButtonGroup, SingleSelect, Textarea, TextInput } from 'suomifi-ui-components';
+import { Block, Button, Checkbox, MultiSelect, RadioButtonGroup, SingleSelect, StaticIcon, Textarea, TextInput } from 'suomifi-ui-components';
 import Separator from '../separator';
+
+export const FileBlock = styled(Block)`
+  background-color: ${props => props.theme.suomifi.colors.highlightLight4};
+  border: 1px dashed ${props => props.theme.suomifi.colors.highlightLight1};
+`;
+
+export const FileInfoBlock = styled(Block)`
+  background-color: ${props => props.theme.suomifi.colors.depthLight3};
+  border: 1px solid ${props => props.theme.suomifi.colors.depthLight1};
+  padding: ${props => props.theme.suomifi.spacing.s};
+  display: flex;
+  justify-content: space-between;
+`;
+
+export const FileInfo = styled.div`
+  display: flex;
+  gap: ${props => props.theme.suomifi.spacing.s}
+`;
+
+export const FileInfoStaticIcon = styled(StaticIcon)`
+  height: 24px;
+  width: 20px;
+`;
+
+export const FileRemoveButton = styled(Button)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  > :first-child {
+    margin-left: ${props => props.theme.suomifi.spacing.xxs};
+  }
+`;
+
+export const FileWrapper = styled.div`
+  margin-top: ${props => props.theme.suomifi.spacing.l};
+`;
 
 export const LangBlock = styled(Block)`
   min-width: 100%;

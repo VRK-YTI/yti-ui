@@ -15,8 +15,6 @@ export default function LanguageSelector() {
   const [selectedLanguages, setSelectedLanguages] = useState<MultiSelectData[]>([]);
   const [terminologyNames, setTerminologyNames] = useState<TerminologyName[]>([]);
 
-  console.log(terminologyNames);
-
   const languages = [
     {
       name: 'Suomi',
@@ -34,6 +32,17 @@ export default function LanguageSelector() {
       uniqueItemId: 'sv'
     }
   ];
+
+  const handleSelectedLanguagesChange = (e: MultiSelectData[]) => {
+    setSelectedLanguages(e);
+    setTerminologyNames(terminologyNames.filter(tn => {
+      const languages: string[] = e.map(sl => sl.uniqueItemId);
+
+      if (languages.includes(tn.lang)) {
+        return true;
+      }
+    }));
+  };
 
   return (
     <>
@@ -58,7 +67,7 @@ export default function LanguageSelector() {
         ariaOptionChipRemovedText="removed"
         noItemsText='no items'
         visualPlaceholder='Valitse sanaston kielet'
-        onItemSelectionsChange={(e) => setSelectedLanguages(e)}
+        onItemSelectionsChange={(e) => handleSelectedLanguagesChange(e)}
         isSmall={isSmall}
       />
 

@@ -6,13 +6,13 @@ import { RadioButtonGroupSmBot, TextInputSmBot } from './new-terminology.styles'
 export default function Prefix() {
   const URI = 'http://uri.suomi.fi/';
   // TODO: Implement actual randomization
+  // TODO: Add translation
   const randomURL = 'abcde56789';
 
   const { isSmall } = useBreakpoints();
   const [prefix, setPrefix] = useState(randomURL);
   const [prefixType, setPrefixType] = useState('');
-
-
+  const [status, setStatus] = useState<'default' | 'error'>('default');
 
   const handlePrefixTypeChange = (value: string) => {
     setPrefixType(value);
@@ -20,6 +20,17 @@ export default function Prefix() {
       setPrefix(randomURL);
     } else {
       setPrefix('');
+    }
+  };
+
+  const handleCustomChange = (e: string) => {
+    setPrefix(e);
+    const inputOnlyValid = e.match(/[a-z0-9\-\_]*/g)?.join('');
+
+    if (inputOnlyValid?.length !== e.length) {
+      setStatus('error');
+    } else if (status !== 'default') {
+      setStatus('default');
     }
   };
 
@@ -44,8 +55,10 @@ export default function Prefix() {
       {prefixType === 'manual' &&
         <TextInputSmBot
           labelText='Tunnus'
-          onChange={e => setPrefix(e as string)}
+          onChange={e => handleCustomChange(e as string)}
           isSmall={isSmall}
+          status={status}
+          statusText={status === 'error' ? 'Etuliitteen sallitut merkit ovat a-z, 0-9, alaviiva ja väliviiva' : ''}
         />
       }
       <Paragraph>
@@ -55,7 +68,7 @@ export default function Prefix() {
       </Paragraph>
       <Paragraph>
         <Text smallScreen>
-          {URI}{prefix}
+          {URI}{prefix}{prefix && '/'}
         </Text>
       </Paragraph>
     </>

@@ -13,17 +13,25 @@ interface LanguageBlockProps {
 export default function LanguageBlock({ lang, isSmall, terminologyNames, setTerminologyNames }: LanguageBlockProps) {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [status, setStatus] = useState<'default' | 'error'>('default');
 
   const handleBlur = () => {
     if (terminologyNames?.some(tn => tn.lang === lang.uniqueItemId)) {
       const newTerminologyNames = terminologyNames.map(tn => {
         if (tn.lang === lang.uniqueItemId) {
-          return {
-            lang: lang.uniqueItemId,
-            name: name,
-            description: description
-          };
+          if (name === '') {
+            setStatus('error');
+            return tn;
+          } else {
+            setStatus('default');
+            return {
+              lang: lang.uniqueItemId,
+              name: name,
+              description: description
+            };
+          }
         } else {
+          setStatus('default');
           return tn;
         }
       });
@@ -51,6 +59,8 @@ export default function LanguageBlock({ lang, isSmall, terminologyNames, setTerm
         visualPlaceholder='Kirjoita otsikko'
         isSmall={isSmall}
         onChange={e => setName(e as string)}
+        status={status}
+        statusText={status === 'error' ? 'Sanaston nimi ei voi olla määrittämätön' : ''}
       />
       <TextareaSmBot
         labelText='Kuvaus (valinnainen)'

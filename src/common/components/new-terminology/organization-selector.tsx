@@ -13,14 +13,14 @@ export default function OrganizationSelector() {
   const user = useSelector(selectLogin());
   const { i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
-  const { data: organizations } = useGetOrganizationsQuery(null);
+  const { data: organizations } = useGetOrganizationsQuery(i18n.language);
   const [selectedOrganization, setSelectedOrganization] = useState<SingleSelectData | null>();
   const [selectedOtherOrganizations, setSelectedOtherOrganizations] = useState<MultiSelectData[]>([]);
   const [showOtherOrgSelector, setShowOtherOrgSelector] = useState<boolean>(false);
 
   const adminOrgs: SingleSelectData[] = organizations?.map(org => {
     if (user.organizationsInRole.ADMIN.includes(org.id.toString())) {
-      const orgName = getPropertyValue({ property: org.properties.prefLabel, language: i18n.language }) ?? '';
+      const orgName = org.properties.prefLabel.value;
 
       if (orgName) {
         return {
@@ -59,6 +59,7 @@ export default function OrganizationSelector() {
           <OrgCheckbox
             checked={showOtherOrgSelector}
             onClick={(value) => setShowOtherOrgSelector(value.checkboxState)}
+            disabled={!selectedOrganization}
           >
             Lisää muut vastuuorganisaatiot
           </OrgCheckbox>
