@@ -1,6 +1,6 @@
 import { useTranslation } from 'next-i18next';
 import React, { useEffect } from 'react';
-import { ExternalLink, Heading, Text } from 'suomifi-ui-components';
+import { ExternalLink, Heading, Text, VisuallyHidden } from 'suomifi-ui-components';
 import {
   BasicBlock,
   MultilingualPropertyBlock,
@@ -85,6 +85,9 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
                 property={concept?.references.prefLabelXl?.[0].properties.prefLabel}
                 fallbackLanguage='fi'
               />
+              <VisuallyHidden>
+                {t('site-title')}
+              </VisuallyHidden>
             </Heading>
             <BadgeBar>
               <span>{t('heading')}</span>
