@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   useGetCollectionsQuery,
   useGetConceptResultQuery,
@@ -18,6 +18,11 @@ import { TerminologyListFilter } from './terminology-list-filter';
 import useUrlState from '../../common/utils/hooks/useUrlState';
 import Pagination from '../../common/components/pagination/pagination';
 import filterData from '../../common/utils/filter-data';
+import { setAlert } from '../../common/components/alert/alert.slice';
+import { Error } from '../../common/interfaces/error.interface';
+import { useRouter } from 'next/router';
+import LoadIndicator from '../../common/components/load-indicator';
+import { useStoreDispatch } from '../../store';
 
 interface VocabularyProps {
   id: string;
@@ -27,18 +32,55 @@ export default function Vocabulary({ id }: VocabularyProps) {
   const { t, i18n } = useTranslation('common');
   const { isSmall } = useBreakpoints();
   const { urlState } = useUrlState();
-  const { data: collections } = useGetCollectionsQuery(id);
-  const { data: concepts } = useGetConceptResultQuery({ id, urlState });
-  const { data: info } = useGetVocabularyQuery(id);
-  const { data: counts } = useGetVocabularyCountQuery(id);
+  const router = useRouter();
+  const dispatch = useStoreDispatch();
+  const {
+    data: collections,
+    error: collectionsError,
+    isFetching: isFetchingCollections,
+    refetch: refetchCollections
+  } = useGetCollectionsQuery(id);
+  const {
+    data: concepts,
+    error: conceptsError,
+    isFetching: isFetchingConcepts,
+    refetch: refetchConcepts
+  } = useGetConceptResultQuery({ id, urlState });
+  const { data: info, error: infoError } = useGetVocabularyQuery(id);
+  const { data: counts, error: countsError } = useGetVocabularyCountQuery(id);
   const [showModal, setShowModal] = useState(false);
+  const [showLoadingConcepts, setShowLoadingConcepts] = useState(false);
+  const [showLoadingCollections, setShowLoadingCollections] = useState(false);
+
+  if (infoError && 'status' in infoError && infoError?.status === 404) {
+    router.push('/404');
+  }
+
+  useEffect(() => {
+    dispatch(setAlert([
+      collectionsError as Error,
+      conceptsError as Error,
+      infoError as Error,
+      countsError as Error
+    ]));
+  }, [dispatch, collectionsError, conceptsError, infoError, countsError]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowLoadingCollections(isFetchingCollections);
+      setShowLoadingConcepts(isFetchingConcepts);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [isFetchingConcepts, isFetchingCollections, setShowLoadingConcepts, setShowLoadingCollections]);
 
   return (
     <>
       <Breadcrumb>
-        <BreadcrumbLink url={`/terminology/${id}`} current>
-          <PropertyValue property={info?.properties.prefLabel} fallbackLanguage='fi' />
-        </BreadcrumbLink>
+        {!infoError &&
+          <BreadcrumbLink url={`/terminology/${id}`} current>
+            <PropertyValue property={info?.properties.prefLabel} />
+          </BreadcrumbLink>
+        }
       </Breadcrumb>
 
       {info && <Title info={info} />}
@@ -52,31 +94,55 @@ export default function Vocabulary({ id }: VocabularyProps) {
         </FilterMobileButton>
       }
       <ResultAndFilterContainer>
-        {(concepts && urlState.type === 'concept') &&
-          <ResultAndStatsWrapper id="search-results">
-            <SearchResults data={concepts} />
-            <PaginationWrapper>
-              <Pagination
-                data={concepts}
-                pageString={t('pagination-page')}
-              />
-            </PaginationWrapper>
-          </ResultAndStatsWrapper>
-        }
-        {(collections && urlState.type === 'collection') &&
-          <ResultAndStatsWrapper id="search-results">
-            <SearchResults
-              data={filterData(collections, urlState, i18n.language) ?? collections}
-              type="collections"
-            />
-            <PaginationWrapper>
-              <Pagination
-                data={filterData(collections, urlState, i18n.language) ?? collections}
-                pageString={t('pagination-page')}
-              />
-            </PaginationWrapper>
-          </ResultAndStatsWrapper>
-        }
+        <ResultAndStatsWrapper id="search-results">
+          {urlState.type === 'concept' &&
+            (
+              ((showLoadingConcepts && isFetchingConcepts) || conceptsError)
+                ?
+                <LoadIndicator
+                  isFetching={isFetchingConcepts}
+                  error={conceptsError}
+                  refetch={refetchConcepts}
+                />
+                :
+                concepts &&
+                <>
+                  <SearchResults data={concepts} />
+                  <PaginationWrapper>
+                    <Pagination
+                      data={concepts}
+                      pageString={t('pagination-page')}
+                    />
+                  </PaginationWrapper>
+                </>
+            )
+          }
+          {urlState.type === 'collection' &&
+            (
+              ((showLoadingCollections && isFetchingCollections) || collectionsError)
+                ?
+                <LoadIndicator
+                  isFetching={isFetchingCollections}
+                  error={collectionsError}
+                  refetch={refetchCollections}
+                />
+                :
+                collections &&
+                <>
+                  <SearchResults
+                    data={filterData(collections, urlState, i18n.language) ?? collections}
+                    type="collections"
+                  />
+                  <PaginationWrapper>
+                    <Pagination
+                      data={filterData(collections, urlState, i18n.language) ?? collections}
+                      pageString={t('pagination-page')}
+                    />
+                  </PaginationWrapper>
+                </>
+            )
+          }
+        </ResultAndStatsWrapper>
         {!isSmall
           ?
           <TerminologyListFilter counts={counts} />

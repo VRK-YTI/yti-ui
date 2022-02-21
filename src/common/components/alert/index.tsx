@@ -1,44 +1,59 @@
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useStoreDispatch } from '../../../store';
+import { Error } from '../../interfaces/error.interface';
 import { useBreakpoints } from '../media-query/media-query-context';
 import { AlertsWrapper, AlertToast } from './alert-toast.styles';
+import { selectAlert, setAlert } from './alert.slice';
 
 interface AlertToastProps {
-  msg: string;
+  alert: Error;
+  alerts: Error[];
   type: 'neutral' | 'warning' | 'error';
 }
 
-interface AlertsProps {
-  children: React.ReactNode;
-}
+export function Alerts() {
+  const alerts = useSelector(selectAlert());
 
-export function Alerts({ children }: AlertsProps) {
-  const { isSmall } = useBreakpoints();
+  if (!alerts) {
+    return null;
+  }
 
   return (
-    <AlertsWrapper isSmall={isSmall}>
-      {children}
+    <AlertsWrapper>
+      {alerts.map((alert, idx) => {
+        return <Alert key={`alert-${idx}`} alert={alert} alerts={alerts} type='error' />;
+      })}
     </AlertsWrapper>
   );
 }
 
-export function Alert({ msg, type }: AlertToastProps) {
-  const { t } = useTranslation('alert');
+export function Alert({ alert, alerts, type }: AlertToastProps) {
   const { isSmall } = useBreakpoints();
+  const { t } = useTranslation('alert');
   const [show, setShow] = useState(true);
+  const dispatch = useStoreDispatch();
 
   if (!show) {
     return null;
   }
 
+  const handleClick = () => {
+    setShow(false);
+    const newAlerts = alerts.slice(0, alerts.length - 1);
+    dispatch(setAlert(newAlerts));
+  };
+
   return (
     <AlertToast
       status={type}
       closeText={t('toast-close')}
-      onCloseButtonClick={() => { setShow(false); }}
+      onCloseButtonClick={() => handleClick()}
       smallScreen={isSmall}
+      isSmall={isSmall}
     >
-      {t(msg)}
+      {alerts.length > 1 && `(${alerts.length})`} {t('error-occured', { id: alert.status ?? ''})}
     </AlertToast>
   );
 }

@@ -14,6 +14,7 @@ import Footer from '../common/components/footer/footer';
 import SmartHeader from '../modules/smart-header';
 import { useBreakpoints } from '../common/components/media-query/media-query-context';
 import SkipLink from '../common/components/skip-link/skip-link';
+import { Alerts } from '../common/components/alert';
 
 export default function Layout({
   children,
@@ -41,6 +42,7 @@ export default function Layout({
         <SmartHeader />
 
         <ContentContainer>
+          <Alerts />
           <MarginContainer breakpoint={breakpoint}>
             <Block variant="main" id="main">
               {children}

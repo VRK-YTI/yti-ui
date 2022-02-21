@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig, AxiosError } from 'axios';
 import { BaseQueryFn } from '@reduxjs/toolkit/query';
+import { Error } from '../../interfaces/error.interface';
 
 const axiosBaseQuery = ({ baseUrl }: { baseUrl: string } = { baseUrl: '' }):
   BaseQueryFn<
@@ -9,7 +10,7 @@ const axiosBaseQuery = ({ baseUrl }: { baseUrl: string } = { baseUrl: '' }):
       data?: AxiosRequestConfig['data'];
     },
     unknown,
-    unknown
+    Error
   > =>
   async ({ url, method, data }) => {
     try {
