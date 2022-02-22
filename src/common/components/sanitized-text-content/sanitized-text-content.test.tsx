@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import TextLinks from './index';
+import SanitizedTextContent from './index';
 import { ThemeProvider } from 'styled-components';
 import { lightTheme } from '../../../layouts/theme';
 
@@ -9,7 +9,7 @@ describe('text-links', () => {
 
     render(
       <ThemeProvider theme={lightTheme}>
-        <TextLinks text={'This is a test'} />
+        <SanitizedTextContent text={'This is a test'} />
       </ThemeProvider>
     );
 
@@ -21,8 +21,8 @@ describe('text-links', () => {
 
     render(
       <ThemeProvider theme={lightTheme}>
-        <TextLinks text={
-          'This is a <a href=\'uri.suomi.fi/terminology/demo/concept-001\' data-type=\'internal\'>test</a> with a link'
+        <SanitizedTextContent text={
+          'This is a <a href=\'https://uri.suomi.fi/terminology/demo/concept-001\' data-type=\'internal\'>test</a> with a link'
         } />
       </ThemeProvider>
     );
@@ -38,8 +38,8 @@ describe('text-links', () => {
 
     render(
       <ThemeProvider theme={lightTheme}>
-        <TextLinks text={
-          'This is a <a href=\'google.com\' data-type=\'external\'>test</a> with a link'
+        <SanitizedTextContent text={
+          'This is a <a href=\'https://google.com\' data-type=\'external\'>test</a> with a link'
         } />
       </ThemeProvider>
     );
@@ -55,11 +55,11 @@ describe('text-links', () => {
 
     render(
       <ThemeProvider theme={lightTheme}>
-        <TextLinks text={
-          `This is an <a href=\'google.com\' data-type=\'external\'>external</a> link.
+        <SanitizedTextContent text={
+          `This is an <a href=\'https://google.com\' data-type=\'external\'>external</a> link.
            <br />
-           This is an <a href=\'uri.suomi.fi/terminology/demo/concept-001\' data-type=\'internal\'>internal</a> link.
-           This is another <a href=\'google.com\' data-type=\'external\'>link</a>.
+           This is an <a href=\'https://uri.suomi.fi/terminology/demo/concept-001\' data-type=\'internal\'>internal</a> link.
+           This is another <a href=\'https://google.com\' data-type=\'external\'>link</a>.
           `
         } />
       </ThemeProvider>
@@ -79,6 +79,23 @@ describe('text-links', () => {
     expect(screen.queryByText('link')).toBeTruthy();
     expect(screen.queryByText('link')).toHaveAttribute('href');
     expect(screen.queryByText('link')).toHaveClass('fi-link--external');
+  });
+
+  test('should sanitize uri', () => {
+
+    render(
+      <ThemeProvider theme={lightTheme}>
+        <SanitizedTextContent text={
+          'This is a <a href=\'javascript:alert(\'Not a valid uri\')\' data-type=\'external\'>test</a> with javascript'
+        } />
+      </ThemeProvider>
+    );
+
+    expect(screen.queryByText('This is a')).toBeTruthy();
+    expect(screen.queryByText('test')).toBeTruthy();
+    expect(screen.queryByText('test')).not.toHaveAttribute('href');
+    expect(screen.queryByText('test')).not.toHaveClass('fi-link--external');
+    expect(screen.queryByText('with javascript')).toBeTruthy();
   });
 
 });

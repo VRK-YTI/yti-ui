@@ -1,12 +1,8 @@
 import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
-import { SuomiInternalLink, SuomiExternalLink } from './text-links.style';
+import { SuomiInternalLink, SuomiExternalLink } from './sanitized-text-content.style';
 
 interface TextLinksProps {
-  text: string;
-}
-
-interface ParseTextProps {
   text: string;
 }
 
@@ -17,7 +13,7 @@ interface ChildType extends ChildNode {
   };
 }
 
-function ParseText({ text }: ParseTextProps) {
+export default function SanitizedTextContent({ text }: TextLinksProps) {
   const { t } = useTranslation('common');
   const htmlChildNodes = new DOMParser().parseFromString(text, 'text/html').children[0].children[1].childNodes;
 
@@ -25,6 +21,11 @@ function ParseText({ text }: ParseTextProps) {
     if (child.nodeName.toLowerCase() === 'a') {
       const childHref = child.href ?? '';
       const childTextValue = child.firstChild?.textContent;
+
+      const url = new URL(childHref);
+      if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+        return <span key={`${child.textContent}-${idx}`}>{child.textContent}</span>;
+      }
 
       if (child.dataset?.type === 'internal') {
         return (
@@ -53,16 +54,11 @@ function ParseText({ text }: ParseTextProps) {
       return <br key={`br-${idx}`} />;
     } else if (child.textContent) {
       return <span key={`${child.textContent}-${idx}`}>{child.textContent}</span>;
+    } else {
+      console.log('ignored child');
+      console.log(child);
     }
   });
 
   return <>{children}</>;
-}
-
-export default function TextLinks({ text }: TextLinksProps) {
-  return (
-    <>
-      <ParseText text={text} />
-    </>
-  );
 }
