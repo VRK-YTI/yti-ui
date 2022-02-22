@@ -23,12 +23,14 @@ import { Error } from '../../common/interfaces/error.interface';
 import { useRouter } from 'next/router';
 import LoadIndicator from '../../common/components/load-indicator';
 import { useStoreDispatch } from '../../store';
+import { getPropertyValue } from '../../common/components/property-value/get-property-value';
 
 interface VocabularyProps {
   id: string;
+  setTerminologyTitle: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-export default function Vocabulary({ id }: VocabularyProps) {
+export default function Vocabulary({ id, setTerminologyTitle }: VocabularyProps) {
   const { t, i18n } = useTranslation('common');
   const { isSmall } = useBreakpoints();
   const { urlState } = useUrlState();
@@ -57,6 +59,14 @@ export default function Vocabulary({ id }: VocabularyProps) {
   }
 
   useEffect(() => {
+    setTerminologyTitle(getPropertyValue({
+      property: info?.properties.prefLabel,
+      language: i18n.language,
+      fallbackLanguage: 'fi'
+    }) ?? null);
+  }, [info]);
+
+  useEffect(() => {
     dispatch(setAlert([
       collectionsError as Error,
       conceptsError as Error,
@@ -78,7 +88,10 @@ export default function Vocabulary({ id }: VocabularyProps) {
       <Breadcrumb>
         {!infoError &&
           <BreadcrumbLink url={`/terminology/${id}`} current>
-            <PropertyValue property={info?.properties.prefLabel} />
+            <PropertyValue
+              property={info?.properties.prefLabel}
+              fallbackLanguage='fi'
+            />
           </BreadcrumbLink>
         }
       </Breadcrumb>

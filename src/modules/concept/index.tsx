@@ -1,6 +1,6 @@
 import { useTranslation } from 'next-i18next';
 import React, { useEffect } from 'react';
-import { ExternalLink, Heading, Text, VisuallyHidden } from 'suomifi-ui-components';
+import { ExternalLink, Heading, Text } from 'suomifi-ui-components';
 import {
   BasicBlock,
   MultilingualPropertyBlock,
@@ -32,19 +32,28 @@ import { useRouter } from 'next/router';
 export interface ConceptProps {
   terminologyId: string;
   conceptId: string;
+  setConceptTitle: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-export default function Concept({ terminologyId, conceptId }: ConceptProps) {
+export default function Concept({ terminologyId, conceptId, setConceptTitle }: ConceptProps) {
   const { breakpoint } = useBreakpoints();
   const { data: terminology, error: terminologyError } = useGetVocabularyQuery(terminologyId);
   const { data: concept, error: conceptError } = useGetConceptQuery({ terminologyId, conceptId });
-  const { t } = useTranslation('concept');
+  const { t, i18n } = useTranslation('concept');
   const dispatch = useStoreDispatch();
   const router = useRouter();
 
   if (conceptError && 'status' in conceptError && conceptError.status === 404) {
     router.push('/404');
   }
+
+  useEffect(() => {
+    setConceptTitle(getPropertyValue({
+      property: concept?.references.prefLabelXl?.[0].properties.prefLabel,
+      language: i18n.language,
+      fallbackLanguage: 'fi'
+    }) ?? null);
+  }, [concept]);
 
   useEffect(() => {
     dispatch(setAlert([
@@ -85,9 +94,6 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
                 property={concept?.references.prefLabelXl?.[0].properties.prefLabel}
                 fallbackLanguage='fi'
               />
-              <VisuallyHidden>
-                {' '}- {t('site-title')}
-              </VisuallyHidden>
             </Heading>
             <BadgeBar>
               <span>{t('heading')}</span>
