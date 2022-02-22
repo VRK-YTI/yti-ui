@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux';
 import { collectionApi } from '../common/components/collection/collection-slice';
 import { countsApi } from '../common/components/counts/counts-slice';
 import { loginSlice } from '../common/components/login/login-slice';
+import { alertSlice } from '../common/components/alert/alert.slice';
 
 export function makeStore() {
   return configureStore({
@@ -18,7 +19,8 @@ export function makeStore() {
       [conceptApi.reducerPath]: conceptApi.reducer,
       [collectionApi.reducerPath]: collectionApi.reducer,
       [countsApi.reducerPath]: countsApi.reducer,
-      [loginSlice.name]: loginSlice.reducer
+      [loginSlice.name]: loginSlice.reducer,
+      [alertSlice.name]: alertSlice.reducer,
     },
 
     middleware: (getDefaultMiddleware) =>

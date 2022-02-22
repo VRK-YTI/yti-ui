@@ -15,21 +15,42 @@ import Pagination from '../../common/components/pagination/pagination';
 import { useTranslation } from 'next-i18next';
 import { useBreakpoints } from '../../common/components/media-query/media-query-context';
 import { Modal, ModalContent } from 'suomifi-ui-components';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useGetCountsQuery } from '../../common/components/counts/counts-slice';
 import { SearchPageFilter } from './search-page-filter';
 import useUrlState from '../../common/utils/hooks/useUrlState';
-import { Alert, Alerts } from '../../common/components/alert/';
+import { setAlert } from '../../common/components/alert/alert.slice';
+import { Error } from '../../common/interfaces/error.interface';
+import LoadIndicator from '../../common/components/load-indicator';
+import { useStoreDispatch } from '../../store';
 
 export default function TerminologySearch() {
   const { t, i18n } = useTranslation();
   const { isSmall } = useBreakpoints();
   const { urlState } = useUrlState();
-  const { data, error } = useGetSearchResultQuery({ urlState });
+  const { data, error, isFetching, refetch } = useGetSearchResultQuery({ urlState });
   const { data: groups, error: groupsError } = useGetGroupsQuery(i18n.language);
   const { data: organizations, error: organizationsError } = useGetOrganizationsQuery(i18n.language);
   const { data: counts, error: countsError } = useGetCountsQuery(null);
+  const dispatch = useStoreDispatch();
   const [showModal, setShowModal] = useState(false);
+  const [showLoading, setShowLoading] = useState(false);
+
+  useEffect(() => {
+    dispatch(setAlert([
+      error as Error,
+      groupsError as Error,
+      organizationsError as Error,
+      countsError as Error
+    ]));
+  }, [dispatch, error, groupsError, organizationsError, countsError]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowLoading(isFetching);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, [isFetching, setShowLoading]);
 
   return (
     <>
@@ -45,7 +66,11 @@ export default function TerminologySearch() {
       }
       <ResultAndFilterContainer>
         <ResultAndStatsWrapper>
-          {data &&
+          {(showLoading && isFetching) || error
+            ?
+            <LoadIndicator isFetching={isFetching} error={error} refetch={refetch} />
+            :
+            data &&
             <>
               <SearchResults
                 data={data}
@@ -60,6 +85,7 @@ export default function TerminologySearch() {
                 />
               </PaginationWrapper>
             </>
+
           }
         </ResultAndStatsWrapper>
         {!isSmall
@@ -90,12 +116,6 @@ export default function TerminologySearch() {
           </Modal>
         }
       </ResultAndFilterContainer>
-      <Alerts>
-        {error && <Alert msg={'error-with-terminologies'} type='error' />}
-        {groupsError && <Alert msg={'error-with-groups'} type='error' />}
-        {organizationsError && <Alert msg={'error-with-organizations'} type='error' />}
-        {countsError && <Alert msg={'error-with-counts'} type='error' />}
-      </Alerts>
     </>
   );
 };

@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ExternalLink, Heading, Text } from 'suomifi-ui-components';
 import {
   BasicBlock,
@@ -24,6 +24,10 @@ import {
   MainContent,
   PageContent
 } from './concept.styles';
+import { useStoreDispatch } from '../../store';
+import { setAlert } from '../../common/components/alert/alert.slice';
+import { Error } from '../../common/interfaces/error.interface';
+import { useRouter } from 'next/router';
 
 export interface ConceptProps {
   terminologyId: string;
@@ -32,22 +36,39 @@ export interface ConceptProps {
 
 export default function Concept({ terminologyId, conceptId }: ConceptProps) {
   const { breakpoint } = useBreakpoints();
-  const { data: terminology } = useGetVocabularyQuery(terminologyId);
-  const { data: concept } = useGetConceptQuery({ terminologyId, conceptId });
+  const { data: terminology, error: terminologyError } = useGetVocabularyQuery(terminologyId);
+  const { data: concept, error: conceptError } = useGetConceptQuery({ terminologyId, conceptId });
   const { t } = useTranslation('concept');
+  const dispatch = useStoreDispatch();
+  const router = useRouter();
+
+  if (conceptError && 'status' in conceptError && conceptError.status === 404) {
+    router.push('/404');
+  }
+
+  useEffect(() => {
+    dispatch(setAlert([
+      terminologyError as Error,
+      conceptError as Error
+    ]));
+  }, [dispatch, terminologyError, conceptError]);
 
   return (
     <>
       <Breadcrumb>
-        <BreadcrumbLink url={`/terminology/${terminologyId}`}>
-          <PropertyValue property={terminology?.properties.prefLabel} />
-        </BreadcrumbLink>
-        <BreadcrumbLink url={`/terminology/${terminologyId}/concepts/${conceptId}`} current>
-          <PropertyValue
-            property={concept?.references.prefLabelXl?.[0].properties.prefLabel}
-            fallbackLanguage='fi'
-          />
-        </BreadcrumbLink>
+        {!terminologyError &&
+          <BreadcrumbLink url={`/terminology/${terminologyId}`}>
+            <PropertyValue property={terminology?.properties.prefLabel} fallbackLanguage='fi' />
+          </BreadcrumbLink>
+        }
+        {!conceptError &&
+          <BreadcrumbLink url={`/terminology/${terminologyId}/concepts/${conceptId}`} current>
+            <PropertyValue
+              property={concept?.references.prefLabelXl?.[0].properties.prefLabel}
+              fallbackLanguage='fi'
+            />
+          </BreadcrumbLink>
+        }
       </Breadcrumb>
 
       <PageContent breakpoint={breakpoint}>

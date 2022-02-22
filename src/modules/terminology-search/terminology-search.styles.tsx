@@ -16,6 +16,7 @@ export const ResultAndFilterContainer = styled.div`
 `;
 
 export const ResultAndStatsWrapper = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   width: 100%;
