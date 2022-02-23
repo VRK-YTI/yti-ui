@@ -28,6 +28,7 @@ import { useStoreDispatch } from '../../store';
 import { setAlert } from '../../common/components/alert/alert.slice';
 import { Error } from '../../common/interfaces/error.interface';
 import { useRouter } from 'next/router';
+import { setTitle } from '../../common/components/title/title.slice';
 
 export interface ConceptProps {
   terminologyId: string;
@@ -38,7 +39,7 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
   const { breakpoint } = useBreakpoints();
   const { data: terminology, error: terminologyError } = useGetVocabularyQuery(terminologyId);
   const { data: concept, error: conceptError } = useGetConceptQuery({ terminologyId, conceptId });
-  const { t } = useTranslation('concept');
+  const { t, i18n } = useTranslation('concept');
   const dispatch = useStoreDispatch();
   const router = useRouter();
 
@@ -52,6 +53,19 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
       conceptError as Error
     ]));
   }, [dispatch, terminologyError, conceptError]);
+
+  useEffect(() => {
+    if (concept) {
+      const title = getPropertyValue({
+        property: concept.references.prefLabelXl?.[0].properties.prefLabel,
+        language: i18n.language,
+        fallbackLanguage: 'fi'
+      }) ?? '';
+
+      dispatch(setTitle(title));
+    }
+  }, [concept, dispatch, i18n.language]);
+
 
   return (
     <>

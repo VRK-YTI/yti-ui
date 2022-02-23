@@ -98,5 +98,6 @@
   "front-page": "Etusivu",
   "breadcrumb": "Murupolku",
   "error-occured": "Tapahtui virhe",
-  "try-again": "Yritä uudestaan"
+  "try-again": "Yritä uudestaan",
+  "navigated-to": "Siirrytty sivulle"
 }

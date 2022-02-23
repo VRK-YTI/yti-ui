@@ -105,5 +105,6 @@
   "front-page": "Front page",
   "breadcrumb": "Breadcrumb",
   "error-occured": "An error occured",
-  "try-again": "Try again"
+  "try-again": "Try again",
+  "navigated-to": "Navigated to"
 }
