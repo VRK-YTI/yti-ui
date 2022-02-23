@@ -1,6 +1,8 @@
 import { useTranslation } from 'next-i18next';
-import React from 'react';
+import { useRouter } from 'next/router';
+import React, { useEffect } from 'react';
 import { Heading, Text } from 'suomifi-ui-components';
+import { setAlert } from '../../common/components/alert/alert.slice';
 import { BasicBlock, MultilingualPropertyBlock, PropertyBlock } from '../../common/components/block';
 import { ConceptListBlock } from '../../common/components/block';
 import { Breadcrumb, BreadcrumbLink } from '../../common/components/breadcrumb';
@@ -10,6 +12,8 @@ import { useBreakpoints } from '../../common/components/media-query/media-query-
 import PropertyValue from '../../common/components/property-value';
 import Separator from '../../common/components/separator';
 import { useGetVocabularyQuery } from '../../common/components/vocabulary/vocabulary-slice';
+import { Error } from '../../common/interfaces/error.interface';
+import { useStoreDispatch } from '../../store';
 import CollectionSidebar from './collection-sidebar';
 import { BadgeBar, HeadingBlock, MainContent, PageContent } from './collection.styles';
 
@@ -20,25 +24,42 @@ interface CollectionProps {
 
 export default function Collection({ terminologyId, collectionId }: CollectionProps) {
   const { breakpoint } = useBreakpoints();
-  const { data: terminology } = useGetVocabularyQuery(terminologyId);
-  const { data: collection } = useGetCollectionQuery({ terminologyId, collectionId });
+  const { data: terminology, error: terminologyError } = useGetVocabularyQuery(terminologyId);
+  const { data: collection, error: collectionError } = useGetCollectionQuery({ terminologyId, collectionId });
   const { t } = useTranslation('collection');
+  const dispatch = useStoreDispatch();
+  const router = useRouter();
+
+  if (collectionError && 'status' in collectionError && collectionError.status === 404) {
+    router.push('/404');
+  }
+
+  useEffect(() => {
+    dispatch(setAlert([
+      terminologyError as Error,
+      collectionError as Error
+    ]));
+  }, [dispatch, terminologyError, collectionError]);
 
   return (
     <>
       <Breadcrumb>
-        <BreadcrumbLink url={`/terminology/${terminologyId}`}>
-          <PropertyValue
-            property={terminology?.properties.prefLabel}
-            fallbackLanguage='fi'
-          />
-        </BreadcrumbLink>
-        <BreadcrumbLink url={`/terminology/${terminologyId}/collections/${collectionId}`} current>
-          <PropertyValue
-            property={collection?.properties.prefLabel}
-            fallbackLanguage='fi'
-          />
-        </BreadcrumbLink>
+        {!terminologyError &&
+          <BreadcrumbLink url={`/terminology/${terminologyId}`}>
+            <PropertyValue
+              property={terminology?.properties.prefLabel}
+              fallbackLanguage='fi'
+            />
+          </BreadcrumbLink>
+        }
+        {!collectionError &&
+          <BreadcrumbLink url={`/terminology/${terminologyId}/collections/${collectionId}`} current>
+            <PropertyValue
+              property={collection?.properties.prefLabel}
+              fallbackLanguage='fi'
+            />
+          </BreadcrumbLink>
+        }
       </Breadcrumb>
 
       <PageContent breakpoint={breakpoint}>

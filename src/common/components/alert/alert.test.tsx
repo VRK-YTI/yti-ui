@@ -1,51 +1,87 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
-import { Alerts, Alert } from '.';
+import { Alerts } from '.';
 import { lightTheme } from '../../../layouts/theme';
+import { makeStore } from '../../../store';
+import { setAlert } from './alert.slice';
 
 describe('alert', () => {
   test('should render alert', () => {
+    const store = makeStore();
+
+    store.dispatch(setAlert([
+      {
+        status: 500,
+        data: '500 error'
+      }
+    ]));
+
     render(
-      <ThemeProvider theme={lightTheme}>
-        <Alerts>
-          <Alert msg={'alert-msg'} type='error' />
-        </Alerts>
-      </ThemeProvider>
+      <Provider store={store}>
+        <ThemeProvider theme={lightTheme}>
+          <Alerts />
+        </ThemeProvider>
+      </Provider>
     );
 
-    expect(screen.getByText('tr-alert-msg')).toBeInTheDocument;
+    expect(screen.getByText('tr-error-occured')).toBeInTheDocument;
   });
 
   test('should render multiple alerts', () => {
+    const store = makeStore();
+
+    store.dispatch(setAlert([
+      {
+        status: 500,
+        data: '500 error'
+      },
+      {
+        status: 500,
+        data: '500 error'
+      },
+      {
+        status: 500,
+        data: '500 error'
+      },
+      {
+        status: 500,
+        data: '500 error'
+      }
+    ]));
+
     render(
-      <ThemeProvider theme={lightTheme}>
-        <Alerts>
-          <Alert msg={'alert-msg-1'} type='error' />
-          <Alert msg={'alert-msg-2'} type='error' />
-          <Alert msg={'alert-msg-3'} type='error' />
-          <Alert msg={'alert-msg-4'} type='error' />
-        </Alerts>
-      </ThemeProvider>
+      <Provider store={store}>
+        <ThemeProvider theme={lightTheme}>
+          <Alerts />
+        </ThemeProvider>
+      </Provider>
     );
 
-    expect(screen.getByText('tr-alert-msg-1')).toBeInTheDocument;
-    expect(screen.getByText('tr-alert-msg-2')).toBeInTheDocument;
-    expect(screen.getByText('tr-alert-msg-3')).toBeInTheDocument;
-    expect(screen.getByText('tr-alert-msg-4')).toBeInTheDocument;
+    expect(screen.queryAllByText(/tr-error-occured/)).toHaveLength(4);
   });
 
   test('should hide alert when clicking close', () => {
+    const store = makeStore();
+
+    store.dispatch(setAlert([
+      {
+        status: 500,
+        data: '500 error'
+      }
+    ]));
+
     render(
-      <ThemeProvider theme={lightTheme}>
-        <Alerts>
-          <Alert msg={'alert-msg'} type='error' />
-        </Alerts>
-      </ThemeProvider>
+      <Provider store={store}>
+        <ThemeProvider theme={lightTheme}>
+          <Alerts />
+        </ThemeProvider>
+      </Provider>
     );
 
-    expect(screen.getByText('tr-alert-msg')).toBeInTheDocument;
+    expect(screen.getByText('tr-error-occured')).toBeInTheDocument;
     userEvent.click(screen.getByText('TR-TOAST-CLOSE'));
-    expect(screen.findByText('tr-alert-msg')).toBeNull;
+    expect(screen.findByText('tr-error-occured')).toBeNull;
   });
 });

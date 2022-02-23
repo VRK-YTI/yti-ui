@@ -19,7 +19,7 @@ export default function MobileImpersonateWrapper() {
       </MobileMenuImpersonateItem>
       {users.map(({ id, displayName, impersonate }) => (
         <MobileMenuImpersonateItem key={id} inset>
-          <Link href="#" onClick={impersonate}>{displayName}</Link>
+          <Link href='#' onClick={impersonate}>{displayName}</Link>
         </MobileMenuImpersonateItem>
       ))}
     </MobileMenuImpersonateSection>
