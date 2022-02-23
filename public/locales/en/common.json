@@ -104,6 +104,7 @@
   "filter-with-current_plural": "{{count}} items with following filters",
   "front-page": "Front page",
   "breadcrumb": "Breadcrumb",
+  "link-opens-new-window-external": "Link opens a new window to",
   "error-occured": "An error occured",
   "try-again": "Try again"
 }

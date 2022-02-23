@@ -22,6 +22,7 @@ import {
 } from './search-results.styles';
 import { Concept } from '../../interfaces/concept.interface';
 import useUrlState from '../../utils/hooks/useUrlState';
+import SanitizedTextContent from '../sanitized-text-content';
 
 interface SearchResultsProps {
   data: TerminologySearchResult | VocabularyConcepts | Collection[];
@@ -170,11 +171,11 @@ export default function SearchResults({ data, type, organizations, domains }: Se
                     <CardDescription>
                       {concept.definition?.[i18n.language]
                         ?
-                        concept.definition[i18n.language]
+                        <SanitizedTextContent text={concept.definition?.[i18n.language]} />
                         :
                         concept.definition?.[Object.keys(concept.definition)[0]]
                           ?
-                          concept?.definition?.[Object.keys(concept?.definition)[0]]
+                          <SanitizedTextContent text={concept?.definition?.[Object.keys(concept?.definition)[0]]} />
                           :
                           t('terminology-search-no-description')
                       }

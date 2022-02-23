@@ -97,6 +97,7 @@
   "filter-with-current": "{{count}} kpl seuraavilla rajauksilla",
   "front-page": "Etusivu",
   "breadcrumb": "Murupolku",
+  "link-opens-new-window-external": "Avaa uuden ikkunan sivulle",
   "error-occured": "Tapahtui virhe",
   "try-again": "Yritä uudestaan"
 }
