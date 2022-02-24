@@ -17,6 +17,6 @@ describe('InfoExpander', () => {
       { wrapper: themeProvider }
     );
 
-    expect(screen.queryAllByText('tr-vocabulary-info-vocabulary-export')).toHaveLength(2);
+    expect(screen.queryAllByText('tr-vocabulary-info-vocabulary-export')).toHaveLength(1);
   });
 });
