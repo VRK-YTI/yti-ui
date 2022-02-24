@@ -1,6 +1,6 @@
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Heading, Text } from 'suomifi-ui-components';
 import { setAlert } from '../../common/components/alert/alert.slice';
 import { BasicBlock, MultilingualPropertyBlock, PropertyBlock } from '../../common/components/block';
@@ -31,6 +31,7 @@ export default function Collection({ terminologyId, collectionId }: CollectionPr
   const { t, i18n } = useTranslation('collection');
   const dispatch = useStoreDispatch();
   const router = useRouter();
+  const titleRef = useRef<HTMLHeadingElement>(null);
 
   if (collectionError && 'status' in collectionError && collectionError.status === 404) {
     router.push('/404');
@@ -54,6 +55,12 @@ export default function Collection({ terminologyId, collectionId }: CollectionPr
       dispatch(setTitle(title));
     }
   }, [collection, dispatch, i18n.language]);
+
+  useEffect(() => {
+    if (titleRef.current) {
+      titleRef.current.focus();
+    }
+  }, [titleRef]);
 
   return (
     <>
@@ -85,7 +92,7 @@ export default function Collection({ terminologyId, collectionId }: CollectionPr
                 fallbackLanguage='fi'
               />
             </Text>
-            <Heading variant="h1">
+            <Heading variant="h1" tabIndex={-1} ref={titleRef}>
               <PropertyValue
                 property={collection?.properties.prefLabel}
                 fallbackLanguage='fi'

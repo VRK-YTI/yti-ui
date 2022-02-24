@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ExternalLink, Heading, Text } from 'suomifi-ui-components';
 import {
   BasicBlock,
@@ -42,6 +42,7 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
   const { t, i18n } = useTranslation('concept');
   const dispatch = useStoreDispatch();
   const router = useRouter();
+  const titleRef = useRef<HTMLHeadingElement>(null);
 
   if (conceptError && 'status' in conceptError && conceptError.status === 404) {
     router.push('/404');
@@ -66,6 +67,11 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
     }
   }, [concept, dispatch, i18n.language]);
 
+  useEffect(() => {
+    if (titleRef.current) {
+      titleRef.current.focus();
+    }
+  }, [titleRef]);
 
   return (
     <>
@@ -94,7 +100,7 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
                 fallbackLanguage='fi'
               />
             </Text>
-            <Heading variant="h1">
+            <Heading variant="h1" tabIndex={-1} ref={titleRef}>
               <PropertyValue
                 property={concept?.references.prefLabelXl?.[0].properties.prefLabel}
                 fallbackLanguage='fi'
