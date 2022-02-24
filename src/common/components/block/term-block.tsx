@@ -35,12 +35,14 @@ export default function TermBlock({
   });
 
   return (
-    <TermModal data={data}/>
-    // <MultilingualBlock<{ term: Term, type: string }>
-    //   data={data}
-    //   title={title}
-    //   mapper={mapper ?? defaultMapper}
-    //   extra={extra}
-    // />
+    <>
+      <TermModal data={data[0]} />
+      <MultilingualBlock<{ term: Term, type: string }>
+        data={data}
+        title={title}
+        mapper={mapper ?? defaultMapper}
+        extra={extra}
+      />
+    </>
   );
 }

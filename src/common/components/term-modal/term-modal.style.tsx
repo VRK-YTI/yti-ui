@@ -10,6 +10,8 @@ export const TermModalChip = styled(Chip)`
   background: ${props => props.theme.suomifi.colors.successBase} !important;
   font-size: 12px;
   height: 18px;
+  margin-top: 5px;
   max-width: min-content;
   padding: 0px 5px !important;
+  text-transform: uppercase;
 `;
