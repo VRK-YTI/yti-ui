@@ -1,6 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import React from 'react';
 import { Term } from '../../interfaces/term.interface';
+import TermModal from '../term-modal';
 import MultilingualBlock, { MultilingualBlockItemMapper } from './multilingual-block';
 
 export interface TermBlockProps {
@@ -34,11 +35,12 @@ export default function TermBlock({
   });
 
   return (
-    <MultilingualBlock<{ term: Term, type: string }>
-      data={data}
-      title={title}
-      mapper={mapper ?? defaultMapper}
-      extra={extra}
-    />
+    <TermModal data={data}/>
+    // <MultilingualBlock<{ term: Term, type: string }>
+    //   data={data}
+    //   title={title}
+    //   mapper={mapper ?? defaultMapper}
+    //   extra={extra}
+    // />
   );
 }
