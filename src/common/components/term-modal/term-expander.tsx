@@ -1,5 +1,5 @@
-import { Expander, ExpanderContent, ExpanderTitleButton, Text } from 'suomifi-ui-components';
-import { TermModalParagraph } from './term-modal.style';
+import { Expander, ExpanderContent, ExpanderTitleButton } from 'suomifi-ui-components';
+import { TermHeading, TermText } from './term-modal.style';
 
 interface TermExpanderProps {
   title: string;
@@ -13,7 +13,7 @@ export default function TermExpander({ title, data }: TermExpanderProps) {
 
   return (
     <Expander>
-      <ExpanderTitleButton asHeading='h3'>
+      <ExpanderTitleButton asHeading='h4'>
         {title}
       </ExpanderTitleButton>
       <ExpanderContent>
@@ -24,14 +24,14 @@ export default function TermExpander({ title, data }: TermExpanderProps) {
             }
 
             return (
-              <TermModalParagraph marginBottomSpacing='m' key={`${title}-${idx}`}>
-                <Text variant='bold'>
+              <div key={`${title}-${idx}`}>
+                <TermHeading variant='h4'>
                   {d.subtitle}
-                </Text>
-                <Text>
+                </TermHeading>
+                <TermText>
                   {d.value}
-                </Text>
-              </TermModalParagraph>
+                </TermText>
+              </div>
             );
           }
         })}

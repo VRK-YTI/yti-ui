@@ -1,14 +1,14 @@
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Button, Modal, ModalContent, ModalFooter, ModalTitle, Text } from 'suomifi-ui-components';
+import { Button, Modal, ModalContent, ModalFooter, ModalTitle } from 'suomifi-ui-components';
 import { Term } from '../../interfaces/term.interface';
 import { Property } from '../../interfaces/termed-data-types.interface';
 import { selectLogin } from '../login/login-slice';
 import PropertyValue from '../property-value';
 import { getPropertyValue } from '../property-value/get-property-value';
 import TermExpander from './term-expander';
-import { TermModalButton, TermModalChip, TermModalParagraph } from './term-modal.style';
+import { TermHeading, TermModalButton, TermModalChip, TermText } from './term-modal.style';
 import { useBreakpoints } from '../media-query/media-query-context';
 
 interface TermModalProps {
@@ -109,14 +109,14 @@ export default function TermModal({ data }: TermModalProps) {
     }
 
     return (
-      <TermModalParagraph marginBottomSpacing='m'>
-        <Text variant='bold'>
+      <>
+        <TermHeading variant='h3'>
           {subtitle}
-        </Text>
-        <Text>
+        </TermHeading>
+        <TermText>
           {value}
-        </Text>
-      </TermModalParagraph>
+        </TermText>
+      </>
     );
   }
 
@@ -126,14 +126,21 @@ export default function TermModal({ data }: TermModalProps) {
     }
 
     return (
-      <TermModalParagraph marginBottomSpacing='m'>
-        <Text variant='bold'>
+      <>
+        <TermHeading variant='h3'>
           {subtitle}
-        </Text>
-        <TermModalChip disabled={true} isValid={value[0].value === 'VALID'}>
+        </TermHeading>
+        {/* Note: Using "condition ? X : undefined" form here because nextjs can't handle
+            passed booleans properly with suomifi-ui-components.
+        */}
+        <TermModalChip
+          aria-disabled={true}
+          disabled={true}
+          isvalid={value[0].value === 'VALID' ? 'true' : undefined}
+        >
           {t(getPropertyValue({ property: value }) ?? '', { ns: 'common' })}
         </TermModalChip>
-      </TermModalParagraph>
+      </>
     );
   }
 
