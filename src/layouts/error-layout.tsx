@@ -31,7 +31,7 @@ export default function ErrorLayout({ children }: { children: React.ReactNode })
 
         <ContentContainer >
           <MarginContainer breakpoint={breakpoint}>
-            <Block variant="main">
+            <Block variant="main" id="main">
               {children}
             </Block>
           </MarginContainer>
