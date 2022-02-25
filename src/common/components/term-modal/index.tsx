@@ -16,7 +16,7 @@ interface TermModalProps {
 }
 
 export default function TermModal({ data }: TermModalProps) {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('concept');
   const { isSmall } = useBreakpoints();
   const [visible, setVisible] = useState<boolean>(false);
   const user = useSelector(selectLogin());
@@ -61,42 +61,39 @@ export default function TermModal({ data }: TermModalProps) {
             }
           </ModalTitle>
 
-          {renderInfo('Tyyppi', data.type)}
-          {renderInfoChip('Tila', data.term.properties.status)}
-          {renderInfo('Homonyymin järjestysnumero', data.term.properties.termHomographNumber?.[0].value)}
-          {renderInfo('Termin lisätieto', data.term.properties.termInfo?.[0].value)}
-          {renderInfo('Käyttöala', data.term.properties.scope?.[0].value)}
-          {renderInfo('Termin vastaavuus', data.term.properties.termEquivalency?.[0].value)}
+          {renderInfo(t('term-modal-type'), data.type)}
+          {renderInfoChip(t('term-modal-status'), data.term.properties.status)}
+          {renderInfo(t('term-modal-homograph-number'), data.term.properties.termHomographNumber?.[0].value)}
+          {renderInfo(t('term-modal-info'), data.term.properties.termInfo?.[0].value)}
+          {renderInfo(t('term-modal-scope'), data.term.properties.scope?.[0].value)}
+          {renderInfo(t('term-modal-equivalency'), data.term.properties.termEquivalency?.[0].value)}
           {/* TODO: Termi, john vastaavuus liittyy isn't probably implemented yet*/}
           {/* {renderInfo('Termi, johon vastaavuus liittyy', data.term.referrers.prefLabel?.[0].properties.wordClas?.[0].value)} */}
-          {renderInfo('Lähde', data.term.properties.source?.[0].value)}
+          {renderInfo(t('term-modal-source'), data.term.properties.source?.[0].value)}
 
           <TermExpander
-            title='Hallinnolliset tiedot'
+            title={t('term-modal-organizational-information')}
             data={[
-              { subtitle: 'Muutoshistoria', value: data.term.properties.changeNote?.[0].value },
-              { subtitle: 'Käytön historiatieto (etymologia)', value: data.term.properties.historyNote?.[0].value },
-              { subtitle: 'Ylläpitäjän muistiinpano (ei näy kirjautumattomalle)', value: data.term.properties.editorialNote?.[0].value, checkCondition: !user.anonymous },
-              { subtitle: 'Luonnosvaiheen kommentti (näkyy vain luonnostilassa)', value: data.term.properties.draftComment?.[0].value, checkCondition: data.term.properties.status?.[0].value === 'DRAFT' }
+              { subtitle: t('term-modal-change-note'), value: data.term.properties.changeNote?.[0].value },
+              { subtitle: t('term-modal-history-note'), value: data.term.properties.historyNote?.[0].value },
+              { subtitle: t('term-modal-editorial-note'), value: data.term.properties.editorialNote?.[0].value, checkCondition: !user.anonymous },
+              { subtitle: t('term-modal-draft-note'), value: data.term.properties.draftComment?.[0].value, checkCondition: data.term.properties.status?.[0].value === 'DRAFT' }
             ]}
           />
           <TermExpander
-            title='Kieliopilliset lisätiedot'
+            title={t('term-modal-grammatic-information')}
             data={[
-              { subtitle: 'Termin tyyli', value: data.term.properties.termStyle?.[0].value },
-              { subtitle: 'Termin suku', value: data.term.properties.termFamily?.[0].value },
-              { subtitle: 'Termin luku', value: data.term.properties.termConjugation?.[0].value },
-              { subtitle: 'Termin sanaluokka', value: data.term.properties.wordClass?.[0].value }
+              { subtitle: t('term-modal-style'), value: data.term.properties.termStyle?.[0].value },
+              { subtitle: t('term-modal-family'), value: data.term.properties.termFamily?.[0].value },
+              { subtitle: t('term-modal-conjugation'), value: data.term.properties.termConjugation?.[0].value },
+              { subtitle: t('term-modal-word-class'), value: data.term.properties.wordClass?.[0].value }
             ]}
           />
         </ModalContent>
 
         <ModalFooter>
-          <Button
-            onClick={() => setVisible(false)}
-            aria-label='Sulje termin tiedot'
-          >
-            Sulje
+          <Button onClick={() => setVisible(false)} aria-label={t('term-modal-arial-close')}>
+            {t('term-modal-close')}
           </Button>
         </ModalFooter>
       </Modal>
