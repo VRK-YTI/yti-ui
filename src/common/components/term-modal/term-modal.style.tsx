@@ -1,13 +1,18 @@
 import styled from 'styled-components';
-import { Chip, Paragraph } from 'suomifi-ui-components';
+import { Button, Chip, Paragraph } from 'suomifi-ui-components';
+
+export const TermModalButton = styled(Button)`
+  padding: 0;
+  min-height: auto;
+`;
 
 export const TermModalParagraph = styled(Paragraph)`
   display: flex;
   flex-direction: column;
 `;
 
-export const TermModalChip = styled(Chip)`
-  background: ${props => props.theme.suomifi.colors.successBase} !important;
+export const TermModalChip = styled(Chip)<{isValid: boolean}>`
+  background: ${props => props.isValid ? props.theme.suomifi.colors.successBase : props.theme.suomifi.colors.depthDark2} !important;
   font-size: 12px;
   height: 18px;
   margin-top: 5px;

@@ -27,7 +27,7 @@ export default function TermBlock({
           style={{ display: 'inline-block', minWidth: '40%' }}
           lang={term.properties.prefLabel?.[0].value}
         >
-          {term.properties.prefLabel?.[0].value}
+          <TermModal data={{term: term, type: type}} />
         </span>
         <span>{type}, {t(term.properties.status?.[0].value ?? '')}</span>
       </span>
@@ -36,7 +36,6 @@ export default function TermBlock({
 
   return (
     <>
-      <TermModal data={data[0]} />
       <MultilingualBlock<{ term: Term, type: string }>
         data={data}
         title={title}

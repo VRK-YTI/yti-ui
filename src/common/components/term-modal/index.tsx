@@ -3,12 +3,13 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Button, Modal, ModalContent, ModalFooter, ModalTitle, Text } from 'suomifi-ui-components';
 import { Term } from '../../interfaces/term.interface';
+import { Property } from '../../interfaces/termed-data-types.interface';
 import { selectLogin } from '../login/login-slice';
 import PropertyValue from '../property-value';
 import { getPropertyValue } from '../property-value/get-property-value';
-
 import TermExpander from './term-expander';
-import { TermModalChip, TermModalParagraph } from './term-modal.style';
+import { TermModalButton, TermModalChip, TermModalParagraph } from './term-modal.style';
+import { useBreakpoints } from '../media-query/media-query-context';
 
 interface TermModalProps {
   data?: { term: Term, type: string };
@@ -16,6 +17,7 @@ interface TermModalProps {
 
 export default function TermModal({ data }: TermModalProps) {
   const { t } = useTranslation('common');
+  const { isSmall } = useBreakpoints();
   const [visible, setVisible] = useState<boolean>(false);
   const user = useSelector(selectLogin());
 
@@ -23,47 +25,50 @@ export default function TermModal({ data }: TermModalProps) {
     return null;
   }
 
-  console.log(data, data.term.properties.status);
-
-
   return (
     <>
-      <Button variant='secondaryNoBorder' onClick={() => setVisible(true)}>
-        <PropertyValue
-          property={data.term.properties.prefLabel}
-          fallbackLanguage='fi'
-        />
-      </Button>
+      <TermModalButton variant='secondaryNoBorder' onClick={() => setVisible(true)}>
+        {/*
+          Note: Preferencing upper solution instead of <PropertyValue />
+          because term should only have one prefLabel. If prefLabel is
+          in English and the language used is Finnish the button won't
+          be rendered. Same solution in <ModalTitle /> below.
+        */}
+        {
+          data.term.properties.prefLabel?.[0].value
+          ??
+          <PropertyValue
+            property={data.term.properties.prefLabel}
+            fallbackLanguage='fi'
+          />
+        }
+      </TermModalButton>
       <Modal
         appElementId='__next'
         visible={visible}
         onEscKeyDown={() => setVisible(false)}
+        variant={isSmall ? 'smallScreen' : 'default'}
       >
         <ModalContent>
           <ModalTitle>
-            <PropertyValue
-              property={data.term.properties.prefLabel}
-              fallbackLanguage='fi'
-            />
+            {
+              data.term.properties.prefLabel?.[0].value
+              ??
+              <PropertyValue
+                property={data.term.properties.prefLabel}
+                fallbackLanguage='fi'
+              />
+            }
           </ModalTitle>
 
           {renderInfo('Tyyppi', data.type)}
-          {renderInfo('Tila', t(getPropertyValue({ property: data.term.properties.status }) ?? '', { ns: 'common' }), true)}
+          {renderInfoChip('Tila', data.term.properties.status)}
           {renderInfo('Homonyymin järjestysnumero', data.term.properties.termHomographNumber?.[0].value)}
           {renderInfo('Termin lisätieto', data.term.properties.termInfo?.[0].value)}
           {renderInfo('Käyttöala', data.term.properties.scope?.[0].value)}
           {renderInfo('Termin vastaavuus', data.term.properties.termEquivalency?.[0].value)}
-
-          {/* TODO: Source for this info is still unknown */}
-          {/* <TermModalParagraph marginBottomSpacing='m'>
-            <Text variant='bold'>
-              Termi, johon vastaavuus liittyy
-            </Text>
-            <Text>
-              hakemus
-            </Text>
-          </TermModalParagraph> */}
-
+          {/* TODO: Termi, john vastaavuus liittyy isn't probably implemented yet*/}
+          {/* {renderInfo('Termi, johon vastaavuus liittyy', data.term.referrers.prefLabel?.[0].properties.wordClas?.[0].value)} */}
           {renderInfo('Lähde', data.term.properties.source?.[0].value)}
 
           <TermExpander
@@ -81,14 +86,16 @@ export default function TermModal({ data }: TermModalProps) {
               { subtitle: 'Termin tyyli', value: data.term.properties.termStyle?.[0].value },
               { subtitle: 'Termin suku', value: data.term.properties.termFamily?.[0].value },
               { subtitle: 'Termin luku', value: data.term.properties.termConjugation?.[0].value },
-              { subtitle: 'Termin sanaluokka', value: '' }
+              { subtitle: 'Termin sanaluokka', value: data.term.properties.wordClass?.[0].value }
             ]}
           />
-
         </ModalContent>
 
         <ModalFooter>
-          <Button onClick={() => setVisible(false)}>
+          <Button
+            onClick={() => setVisible(false)}
+            aria-label='Sulje termin tiedot'
+          >
             Sulje
           </Button>
         </ModalFooter>
@@ -96,7 +103,7 @@ export default function TermModal({ data }: TermModalProps) {
     </>
   );
 
-  function renderInfo(subtitle: string, value?: string, chip?: boolean) {
+  function renderInfo(subtitle: string, value?: string) {
     if (!value) {
       return null;
     }
@@ -106,16 +113,26 @@ export default function TermModal({ data }: TermModalProps) {
         <Text variant='bold'>
           {subtitle}
         </Text>
-        {!chip
-          ?
-          <Text>
-            {value}
-          </Text>
-          :
-          <TermModalChip disabled={true}>
-            {value}
-          </TermModalChip>
-        }
+        <Text>
+          {value}
+        </Text>
+      </TermModalParagraph>
+    );
+  }
+
+  function renderInfoChip(subtitle: string, value?: Property[]) {
+    if (!value) {
+      return null;
+    }
+
+    return (
+      <TermModalParagraph marginBottomSpacing='m'>
+        <Text variant='bold'>
+          {subtitle}
+        </Text>
+        <TermModalChip disabled={true} isValid={value[0].value === 'VALID'}>
+          {t(getPropertyValue({ property: value }) ?? '', { ns: 'common' })}
+        </TermModalChip>
       </TermModalParagraph>
     );
   }

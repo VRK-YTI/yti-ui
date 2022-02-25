@@ -7,6 +7,9 @@ interface TermExpanderProps {
 }
 
 export default function TermExpander({ title, data }: TermExpanderProps) {
+  if (data.filter(d => d.value).length < 1) {
+    return null;
+  }
 
   return (
     <Expander>
