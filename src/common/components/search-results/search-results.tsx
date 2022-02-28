@@ -174,7 +174,9 @@ export default function SearchResults({ data, type, organizations, domains }: Se
                     </CardTitle>
 
                     <CardSubtitle>
-                      {t('vocabulary-info-concept')} &middot; {t(`${concept.status}`)}
+                      <div>{t('vocabulary-info-concept')}</div>
+                      <span aria-hidden="true">&middot;</span>
+                      <div>{t(`${concept.status}`)}</div>
                     </CardSubtitle>
 
                     <CardDescription>
