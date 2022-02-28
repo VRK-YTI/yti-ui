@@ -73,7 +73,7 @@ export default function Collection({ terminologyId, collectionId, setCollectionT
       </Breadcrumb>
 
       <PageContent breakpoint={breakpoint}>
-        <MainContent>
+        <MainContent id="main">
           <HeadingBlock>
             <Text>
               <PropertyValue
