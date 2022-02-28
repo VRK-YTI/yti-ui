@@ -20,7 +20,7 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
 
   return (
     <InfoExpanderWrapper>
-      <ExpanderTitleButton>
+      <ExpanderTitleButton asHeading='h2'>
         {t('vocabulary-info-terminology')}
       </ExpanderTitleButton>
       <ExpanderContent>
@@ -60,7 +60,7 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
                   window.open(`/terminology-api/api/v1/export/${data.type.graph.id}?format=xlsx`, '_blank');
                 }}
               >
-                {t('vocabulary-info-vocabulary-export')}
+                {t('vocabulary-info-vocabulary-export')} (.xlsx)
               </Button>
             </BasicBlockExtraWrapper>
           }
