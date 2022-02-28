@@ -42,7 +42,7 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
   const { t } = useTranslation('concept');
   const dispatch = useStoreDispatch();
   const router = useRouter();
-  const conceptTitles = concept?.references.prefLabelXl?.map(plxl => plxl.properties.prefLabel).map(item => item?.[0]) as Property[];
+  const conceptTitles = (concept?.references.prefLabelXl?.map(plxl => plxl.properties.prefLabel).map(item => item?.[0]) ?? []) as Property[];
 
   if (conceptError && 'status' in conceptError && conceptError.status === 404) {
     router.push('/404');
@@ -65,13 +65,10 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
         }
         {!conceptError &&
           <BreadcrumbLink url={`/terminology/${terminologyId}/concepts/${conceptId}`} current>
-            {conceptTitles
-              &&
-              <PropertyValue
-                property={conceptTitles}
-                fallbackLanguage='fi'
-              />
-            }
+            <PropertyValue
+              property={conceptTitles}
+              fallbackLanguage='fi'
+            />
           </BreadcrumbLink>
         }
       </Breadcrumb>
@@ -86,13 +83,10 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
               />
             </Text>
             <Heading variant="h1">
-              {conceptTitles
-                &&
-                <PropertyValue
-                  property={conceptTitles}
-                  fallbackLanguage='fi'
-                />
-              }
+              <PropertyValue
+                property={conceptTitles}
+                fallbackLanguage='fi'
+              />
             </Heading>
             <BadgeBar>
               <span>{t('heading')}</span>
