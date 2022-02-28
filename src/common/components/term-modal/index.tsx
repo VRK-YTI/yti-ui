@@ -130,7 +130,7 @@ export default function TermModal({ data }: TermModalProps) {
           {subtitle}
         </TermHeading>
         {/* Note: Using "condition ? X : undefined" form here because nextjs can't handle
-            passed booleans properly with suomifi-ui-components.
+            passed booleans properly with suomifi-ui-components/styled-components.
         */}
         <TermModalChip
           aria-disabled={true}
