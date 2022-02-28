@@ -63,7 +63,7 @@ export default function Collection({ terminologyId, collectionId }: CollectionPr
       </Breadcrumb>
 
       <PageContent breakpoint={breakpoint}>
-        <MainContent>
+        <MainContent id="main">
           <HeadingBlock>
             <Text>
               <PropertyValue

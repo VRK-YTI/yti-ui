@@ -72,7 +72,7 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
       </Breadcrumb>
 
       <PageContent breakpoint={breakpoint}>
-        <MainContent>
+        <MainContent id="main">
           <HeadingBlock>
             <Text>
               <PropertyValue

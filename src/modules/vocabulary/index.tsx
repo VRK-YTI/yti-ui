@@ -94,7 +94,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
         </FilterMobileButton>
       }
       <ResultAndFilterContainer>
-        <ResultAndStatsWrapper>
+        <ResultAndStatsWrapper id="search-results">
           {urlState.type === 'concept' &&
             (
               ((showLoadingConcepts && isFetchingConcepts) || conceptsError)

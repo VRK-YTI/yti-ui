@@ -1,6 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import { Button } from 'suomifi-ui-components';
 import Separator from '../separator';
+import SkipLink from '../skip-link/skip-link';
 import {
   CloseWrapper,
   FilterContent,
@@ -26,14 +27,20 @@ export function Filter({
   const { t } = useTranslation('common');
 
   return (
-    <FilterWrapper isModal={isModal}>
-      {renderTitle()}
-      <FilterContent>
-        <ResetAllFiltersButton />
-        {children}
-        {renderModalFooter()}
-      </FilterContent>
-    </FilterWrapper>
+    <div>
+      <SkipLink href="#search-results">
+        {t('skip-link-search-results')}
+      </SkipLink>
+
+      <FilterWrapper isModal={isModal}>
+        {renderTitle()}
+        <FilterContent>
+          <ResetAllFiltersButton />
+          {children}
+          {renderModalFooter()}
+        </FilterContent>
+      </FilterWrapper>
+    </div>
   );
 
   function renderTitle() {
