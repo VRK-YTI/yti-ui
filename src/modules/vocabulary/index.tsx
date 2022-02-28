@@ -94,6 +94,27 @@ export default function Vocabulary({ id }: VocabularyProps) {
         </FilterMobileButton>
       }
       <ResultAndFilterContainer>
+        {!isSmall
+          ?
+          <TerminologyListFilter counts={counts} />
+          :
+          <Modal
+            appElementId='__next'
+            visible={showModal}
+            onEscKeyDown={() => setShowModal(false)}
+            variant='smallScreen'
+            style={{ border: 'none' }}
+          >
+            <ModalContent style={{ padding: '0' }}>
+              <TerminologyListFilter
+                isModal
+                onModalClose={() => setShowModal(false)}
+                resultCount={concepts?.totalHitCount}
+                counts={counts}
+              />
+            </ModalContent>
+          </Modal>
+        }
         <ResultAndStatsWrapper id="search-results">
           {urlState.type === 'concept' &&
             (
@@ -143,27 +164,6 @@ export default function Vocabulary({ id }: VocabularyProps) {
             )
           }
         </ResultAndStatsWrapper>
-        {!isSmall
-          ?
-          <TerminologyListFilter counts={counts} />
-          :
-          <Modal
-            appElementId='__next'
-            visible={showModal}
-            onEscKeyDown={() => setShowModal(false)}
-            variant='smallScreen'
-            style={{ border: 'none' }}
-          >
-            <ModalContent style={{ padding: '0' }}>
-              <TerminologyListFilter
-                isModal
-                onModalClose={() => setShowModal(false)}
-                resultCount={concepts?.totalHitCount}
-                counts={counts}
-              />
-            </ModalContent>
-          </Modal>
-        }
       </ResultAndFilterContainer>
     </>
   );

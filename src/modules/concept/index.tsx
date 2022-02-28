@@ -124,7 +124,7 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
 
           <DetailsExpander concept={concept} />
 
-          <Separator large />
+          <Separator isLarge />
 
           <PropertyBlock
             title={t('vocabulary-info-organization', { ns: 'common' })}
@@ -141,7 +141,7 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
             {concept?.uri}
           </BasicBlock>
 
-          <Separator large />
+          <Separator isLarge />
 
           <BasicBlock
             extra={
