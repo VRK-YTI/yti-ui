@@ -25,7 +25,10 @@ export default function Title({ info }: TitleProps) {
       language: i18n.language,
       fallbackLanguage: 'fi'
     }) ?? '';
-  dispatch(setTitle(title));
+
+  useEffect(() => {
+    dispatch(setTitle(title));
+  }, [dispatch, title]);
 
   useEffect(() => {
     if (titleRef.current) {
