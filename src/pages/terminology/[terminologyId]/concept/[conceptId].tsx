@@ -16,14 +16,14 @@ export default function ConceptPage(props: {
   const { query } = useRouter();
   const terminologyId = (query?.terminologyId ?? '') as string;
   const conceptId = (query?.conceptId ?? '') as string;
-  const [conceptTitle, setConceptTitle] = useState<string | null>('');
+  const [conceptTitle, setConceptTitle] = useState<string>('');
 
   return (
     <MediaQueryContextProvider value={{ isSSRMobile: props.isSSRMobile }}>
       {/* todo: use better feedbackSubject once more data is available */}
       <Layout feedbackSubject={`${t('concept-id')} ${conceptId}`}>
         <Head>
-          <title>{conceptTitle} | {t('site-title')}</title>
+          <title>{conceptTitle ?? t('concept-page')} | {t('site-title')}</title>
         </Head>
 
         <Concept terminologyId={terminologyId} conceptId={conceptId} setConceptTitle={setConceptTitle} />

@@ -32,7 +32,7 @@ import { useRouter } from 'next/router';
 export interface ConceptProps {
   terminologyId: string;
   conceptId: string;
-  setConceptTitle: React.Dispatch<React.SetStateAction<string | null>>;
+  setConceptTitle: (title: string) => void;
 }
 
 export default function Concept({ terminologyId, conceptId, setConceptTitle }: ConceptProps) {
@@ -52,7 +52,7 @@ export default function Concept({ terminologyId, conceptId, setConceptTitle }: C
       property: concept?.references.prefLabelXl?.[0].properties.prefLabel,
       language: i18n.language,
       fallbackLanguage: 'fi'
-    }) ?? null);
+    }) ?? '');
   }, [concept]);
 
   useEffect(() => {

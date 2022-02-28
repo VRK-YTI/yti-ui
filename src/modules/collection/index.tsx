@@ -21,7 +21,7 @@ import { BadgeBar, HeadingBlock, MainContent, PageContent } from './collection.s
 interface CollectionProps {
   terminologyId: string;
   collectionId: string;
-  setCollectionTitle: React.Dispatch<React.SetStateAction<string | null>>;
+  setCollectionTitle: (title: string) => void;
 }
 
 export default function Collection({ terminologyId, collectionId, setCollectionTitle }: CollectionProps) {
@@ -41,7 +41,7 @@ export default function Collection({ terminologyId, collectionId, setCollectionT
       property: collection?.properties.prefLabel,
       language: i18n.language,
       fallbackLanguage: 'fi'
-    }) ?? null);
+    }) ?? '');
   }, [collection]);
 
   useEffect(() => {

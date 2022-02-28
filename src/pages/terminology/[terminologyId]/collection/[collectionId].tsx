@@ -16,14 +16,14 @@ export default function CollectionPage(props: {
   const { query } = useRouter();
   const terminologyId = (query?.terminologyId ?? '') as string;
   const collectionId = (query?.collectionId ?? '') as string;
-  const [collectionTitle, setCollectionTitle] = useState<string | null>('');
+  const [collectionTitle, setCollectionTitle] = useState<string>('');
 
   return (
     <MediaQueryContextProvider value={{ isSSRMobile: props.isSSRMobile }}>
       {/* todo: use better feedbackSubject once more data is available */}
       <Layout feedbackSubject={`${t('collection-id')} ${collectionId}`}>
         <Head>
-          <title>{collectionTitle} | {t('site-title')}</title>
+          <title>{collectionTitle ?? t('collection-page')} | {t('site-title')}</title>
         </Head>
 
         <Collection terminologyId={terminologyId} collectionId={collectionId} setCollectionTitle={setCollectionTitle} />
