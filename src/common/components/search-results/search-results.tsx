@@ -23,6 +23,7 @@ import {
 import { Concept } from '../../interfaces/concept.interface';
 import useUrlState from '../../utils/hooks/useUrlState';
 import SanitizedTextContent from '../sanitized-text-content';
+import { VisuallyHidden } from 'suomifi-ui-components';
 
 interface SearchResultsProps {
   data: TerminologySearchResult | VocabularyConcepts | Collection[];
@@ -69,9 +70,9 @@ export default function SearchResults({ data, type, organizations, domains }: Se
             renderQBeforeStatus
           />
           <CardWrapper isSmall={isSmall}>
-            {data?.terminologies?.map((terminology, idx: number) => {
+            {data?.terminologies?.map(terminology => {
               return (
-                <Card key={`search-result-${idx}`}>
+                <Card key={terminology.id}>
                   <CardContributor>
                     {terminology.contributors[0].label[i18n.language]
                       ?? terminology.contributors[0].label['fi']
@@ -83,24 +84,32 @@ export default function SearchResults({ data, type, organizations, domains }: Se
                     <Link passHref href={'/terminology/' + terminology.id}>
                       <CardTitleLink href=''>
                         <CardTitleIcon icon='registers' />
-                        <CardTitle variant='h3'>
+                        <CardTitle>
                           {terminology.label[i18n.language]
                             ?
                             terminology.label[i18n.language].replaceAll(/<\/*[^>]>/g, '')
                             :
                             terminology?.label?.[Object.keys(terminology.label)[0]].replaceAll(/<\/*[^>]>/g, '')
                           }
+                          <VisuallyHidden>
+                            {terminology.contributors[0].label[i18n.language]
+                              ?? terminology.contributors[0].label['fi']
+                              ?? ''
+                            }
+                          </VisuallyHidden>
                         </CardTitle>
                       </CardTitleLink>
                     </Link>
                   </CardTitleWrapper>
 
                   <CardSubtitle>
-                    <span>{t('terminology-search-results-terminology')}</span>
-                    <span>&middot;</span>
-                    <CardChip valid={terminology.status === 'VALID' ? 'true' : undefined}>
-                      {t(terminology.status ?? '')}
-                    </CardChip>
+                    <div>{t('terminology-search-results-terminology')}</div>
+                    <span aria-hidden="true">&middot;</span>
+                    <div>
+                      <CardChip valid={terminology.status === 'VALID' ? 'true' : undefined}>
+                        {t(terminology.status ?? '')}
+                      </CardChip>
+                    </div>
                   </CardSubtitle>
 
                   <CardDescription>
@@ -121,7 +130,7 @@ export default function SearchResults({ data, type, organizations, domains }: Se
                     </b>
                     {terminology.informationDomains.map((term, i: number) => {
                       let comma = i !== terminology.informationDomains.length - 1 ? ',' : '';
-                      return <span key={`term-label-${term}-${i}`}> {term.label[i18n.language]}{comma}</span>;
+                      return <span key={term.id}> {term.label[i18n.language]}{comma}</span>;
                     })}
                   </CardInfoDomain>
                 </Card>
@@ -148,10 +157,10 @@ export default function SearchResults({ data, type, organizations, domains }: Se
               domains={domains}
             />
             <CardWrapper isSmall={isSmall}>
-              {data?.concepts.map((concept, idx) => {
+              {data?.concepts.map(concept => {
                 return (
-                  <Card key={`search-result-${idx}`}>
-                    <CardTitle variant='h2'>
+                  <Card key={concept.id}>
+                    <CardTitle>
                       <Link passHref href={`/terminology/${concept.terminology.id}/concept/${concept.id}`}>
                         <CardTitleLink href=''>
                           {concept.label[i18n.language]
@@ -213,8 +222,8 @@ export default function SearchResults({ data, type, organizations, domains }: Se
             }
 
             return (
-              <Card key={`search-result-${idx}`}>
-                <CardTitle variant='h2'>
+              <Card key={collection.id}>
+                <CardTitle>
                   <Link passHref href={`/terminology/${collection.type.graph.id}/collection/${collection.id}`}>
                     <CardTitleLink href=''>
                       <PropertyValue property={collection.properties.prefLabel} fallbackLanguage='fi' />
