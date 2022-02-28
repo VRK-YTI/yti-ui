@@ -1,7 +1,5 @@
-import { useTranslation } from 'next-i18next';
 import { BasicBlock } from '.';
 import MultilingualDefinitionList from '../multilingual-definition-list/multilingual-definition-list';
-import TermModal from '../term-modal';
 
 export type MultilingualBlockItemMapper<T> = (item: T) => {
   language: string;
@@ -21,7 +19,6 @@ export default function MultilingualBlock<T>({
   mapper,
   extra,
 }: MultilingualBlockProps<T>) {
-  const { t } = useTranslation('concept');
   if (!data) {
     return null;
   }

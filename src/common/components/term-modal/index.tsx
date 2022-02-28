@@ -25,6 +25,8 @@ export default function TermModal({ data }: TermModalProps) {
     return null;
   }
 
+  console.log(data);
+
   return (
     <>
       <TermModalButton variant='secondaryNoBorder' onClick={() => setVisible(true)}>
