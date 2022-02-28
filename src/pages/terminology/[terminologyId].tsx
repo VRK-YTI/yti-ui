@@ -7,12 +7,6 @@ import { createCommonGetServerSideProps } from '../../common/utils/create-getser
 import Vocabulary from '../../modules/vocabulary';
 import { MediaQueryContextProvider } from '../../common/components/media-query/media-query-context';
 
-/**
- * Error handling:
- * - should page redirect somewhere if terminologyId is unknown?
- * -
- */
-
 // TODO: perhaps move the component itself to components/
 export default function TerminologyPage(props: {
   _netI18Next: SSRConfig;
