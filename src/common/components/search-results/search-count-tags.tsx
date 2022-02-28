@@ -32,7 +32,7 @@ export default function SearchCountTags({
 
   return (
     <CountWrapper isSmall={isSmall}>
-      <CountText>{title}</CountText>
+      <CountText aria-live='polite'>{title}</CountText>
       <ChipWrapper>
         {renderOrganizationTag()}
         {renderQBeforeStatus && renderQTag()}

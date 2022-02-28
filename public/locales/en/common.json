@@ -108,5 +108,6 @@
   "error-occured": "An error occured",
   "try-again": "Try again",
   "skip-link-main": "Go directly to contents.",
-  "skip-link-search-results": "Go directly to search results."
+  "skip-link-search-results": "Go directly to search results.",
+  "navigated-to": "Navigated to"
 }

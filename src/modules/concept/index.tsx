@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ExternalLink, Heading, Text } from 'suomifi-ui-components';
 import {
   BasicBlock,
@@ -28,6 +28,7 @@ import { useStoreDispatch } from '../../store';
 import { setAlert } from '../../common/components/alert/alert.slice';
 import { Error } from '../../common/interfaces/error.interface';
 import { useRouter } from 'next/router';
+import { setTitle } from '../../common/components/title/title.slice';
 
 export interface ConceptProps {
   terminologyId: string;
@@ -38,9 +39,10 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
   const { breakpoint } = useBreakpoints();
   const { data: terminology, error: terminologyError } = useGetVocabularyQuery(terminologyId);
   const { data: concept, error: conceptError } = useGetConceptQuery({ terminologyId, conceptId });
-  const { t } = useTranslation('concept');
+  const { t, i18n } = useTranslation('concept');
   const dispatch = useStoreDispatch();
   const router = useRouter();
+  const titleRef = useRef<HTMLHeadingElement>(null);
 
   if (conceptError && 'status' in conceptError && conceptError.status === 404) {
     router.push('/404');
@@ -52,6 +54,24 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
       conceptError as Error
     ]));
   }, [dispatch, terminologyError, conceptError]);
+
+  useEffect(() => {
+    if (concept) {
+      const title = getPropertyValue({
+        property: concept.references.prefLabelXl?.[0].properties.prefLabel,
+        language: i18n.language,
+        fallbackLanguage: 'fi'
+      }) ?? '';
+
+      dispatch(setTitle(title));
+    }
+  }, [concept, dispatch, i18n.language]);
+
+  useEffect(() => {
+    if (titleRef.current) {
+      titleRef.current.focus();
+    }
+  }, [titleRef]);
 
   return (
     <>
@@ -80,7 +100,7 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
                 fallbackLanguage='fi'
               />
             </Text>
-            <Heading variant="h1">
+            <Heading variant="h1" tabIndex={-1} ref={titleRef}>
               <PropertyValue
                 property={concept?.references.prefLabelXl?.[0].properties.prefLabel}
                 fallbackLanguage='fi'

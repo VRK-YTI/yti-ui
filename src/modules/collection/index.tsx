@@ -1,6 +1,6 @@
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Heading, Text } from 'suomifi-ui-components';
 import { setAlert } from '../../common/components/alert/alert.slice';
 import { BasicBlock, MultilingualPropertyBlock, PropertyBlock } from '../../common/components/block';
@@ -10,12 +10,14 @@ import { useGetCollectionQuery } from '../../common/components/collection/collec
 import FormattedDate from '../../common/components/formatted-date';
 import { useBreakpoints } from '../../common/components/media-query/media-query-context';
 import PropertyValue from '../../common/components/property-value';
+import { getPropertyValue } from '../../common/components/property-value/get-property-value';
 import Separator from '../../common/components/separator';
 import { useGetVocabularyQuery } from '../../common/components/vocabulary/vocabulary-slice';
 import { Error } from '../../common/interfaces/error.interface';
 import { useStoreDispatch } from '../../store';
 import CollectionSidebar from './collection-sidebar';
 import { BadgeBar, HeadingBlock, MainContent, PageContent } from './collection.styles';
+import { setTitle } from '../../common/components/title/title.slice';
 
 interface CollectionProps {
   terminologyId: string;
@@ -26,9 +28,10 @@ export default function Collection({ terminologyId, collectionId }: CollectionPr
   const { breakpoint } = useBreakpoints();
   const { data: terminology, error: terminologyError } = useGetVocabularyQuery(terminologyId);
   const { data: collection, error: collectionError } = useGetCollectionQuery({ terminologyId, collectionId });
-  const { t } = useTranslation('collection');
+  const { t, i18n } = useTranslation('collection');
   const dispatch = useStoreDispatch();
   const router = useRouter();
+  const titleRef = useRef<HTMLHeadingElement>(null);
 
   if (collectionError && 'status' in collectionError && collectionError.status === 404) {
     router.push('/404');
@@ -40,6 +43,24 @@ export default function Collection({ terminologyId, collectionId }: CollectionPr
       collectionError as Error
     ]));
   }, [dispatch, terminologyError, collectionError]);
+
+  useEffect(() => {
+    if (collection) {
+      const title = getPropertyValue({
+        property: collection?.properties.prefLabel,
+        language: i18n.language,
+        fallbackLanguage: 'fi'
+      }) ?? '';
+
+      dispatch(setTitle(title));
+    }
+  }, [collection, dispatch, i18n.language]);
+
+  useEffect(() => {
+    if (titleRef.current) {
+      titleRef.current.focus();
+    }
+  }, [titleRef]);
 
   return (
     <>
@@ -71,7 +92,7 @@ export default function Collection({ terminologyId, collectionId }: CollectionPr
                 fallbackLanguage='fi'
               />
             </Text>
-            <Heading variant="h1">
+            <Heading variant="h1" tabIndex={-1} ref={titleRef}>
               <PropertyValue
                 property={collection?.properties.prefLabel}
                 fallbackLanguage='fi'

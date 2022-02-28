@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { PaginationButtonProps } from './pagination-props';
+import { Button } from 'suomifi-ui-components';
 
 export const PaginationWrapper = styled.div`
   display: flex;
@@ -10,28 +10,37 @@ export const PaginationWrapper = styled.div`
   border-right: solid 1px ${props => props.theme.suomifi.colors.depthLight1};
   background: ${props => props.theme.suomifi.colors.whiteBase};
   margin-top: ${props => props.theme.suomifi.spacing.m};
+
+  > * {
+    border-left: solid 1px ${props => props.theme.suomifi.colors.depthLight1} !important;
+  }
 `;
 
-export const PaginationButton = styled.div<PaginationButtonProps>`
+export const ChevronButton = styled(Button)`
   height: 35px;
   width: 35px;
-  border-style: none;
-  border-left: solid 1px ${props => props.theme.suomifi.colors.depthLight1};
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+
+  > svg {
+    line-height: 16px;
+    margin-right: 0px !important;
+  }
+`;
+
+export const PaginationButton = styled(Button)`
+  height: 35px;
+  width: 35px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: ${props => props.theme.suomifi.typography.bodyTextSmall};
-  color: ${props => props.active ? props.theme.suomifi.colors.whiteBase : props.theme.suomifi.colors.highlightBase};
-  background: ${props => props.active ? props.theme.suomifi.colors.highlightDark1 : props.theme.suomifi.colors.whiteBase};
-
-  :hover {
-    background: ${props => props.active ? props.theme.suomifi.colors.highlightBase : !props.disabled ? props.theme.suomifi.colors.depthLight2 : ''};
-    cursor: ${props => props.disabled ? '' : 'pointer'};
-  }
 `;
 
 export const PaginationMobile = styled.div`
-  height: 35px;
+  height: auto;
   width: auto;
   padding-left: ${props => props.theme.suomifi.spacing.m};
   padding-right: ${props => props.theme.suomifi.spacing.m};
