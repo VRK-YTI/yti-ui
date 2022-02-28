@@ -25,6 +25,7 @@ export interface VocabularyConcepts {
 }
 
 export interface VocabularyConceptDTO {
+  broader?: string[];
   definition: {
     [key: string]: string;
   };

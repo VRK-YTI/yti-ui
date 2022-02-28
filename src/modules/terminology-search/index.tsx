@@ -65,7 +65,7 @@ export default function TerminologySearch() {
         </FilterMobileButton>
       }
       <ResultAndFilterContainer>
-        <ResultAndStatsWrapper>
+        <ResultAndStatsWrapper id="search-results">
           {(showLoading && isFetching) || error
             ?
             <LoadIndicator isFetching={isFetching} error={error} refetch={refetch} />
