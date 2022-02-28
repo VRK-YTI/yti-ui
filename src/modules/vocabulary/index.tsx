@@ -27,7 +27,7 @@ import { getPropertyValue } from '../../common/components/property-value/get-pro
 
 interface VocabularyProps {
   id: string;
-  setTerminologyTitle: React.Dispatch<React.SetStateAction<string | null>>;
+  setTerminologyTitle: (title: string) =>  void;
 }
 
 export default function Vocabulary({ id, setTerminologyTitle }: VocabularyProps) {
@@ -63,7 +63,7 @@ export default function Vocabulary({ id, setTerminologyTitle }: VocabularyProps)
       property: info?.properties.prefLabel,
       language: i18n.language,
       fallbackLanguage: 'fi'
-    }) ?? null);
+    }) ?? '');
   }, [info]);
 
   useEffect(() => {
