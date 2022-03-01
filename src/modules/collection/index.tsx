@@ -99,7 +99,7 @@ export default function Collection({ terminologyId, collectionId }: CollectionPr
               />
             </Heading>
             <BadgeBar>
-              {t('heading')} &middot; <PropertyValue property={terminology?.properties.prefLabel} />
+              {t('heading')} &middot; <PropertyValue property={terminology?.properties.prefLabel} fallbackLanguage='fi' />
             </BadgeBar>
             <Text>{t('description')}</Text>
           </HeadingBlock>
