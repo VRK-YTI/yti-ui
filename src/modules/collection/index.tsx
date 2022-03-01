@@ -1,6 +1,6 @@
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Heading, Text } from 'suomifi-ui-components';
 import { setAlert } from '../../common/components/alert/alert.slice';
 import { BasicBlock, MultilingualPropertyBlock, PropertyBlock } from '../../common/components/block';
@@ -17,6 +17,7 @@ import { Error } from '../../common/interfaces/error.interface';
 import { useStoreDispatch } from '../../store';
 import CollectionSidebar from './collection-sidebar';
 import { BadgeBar, HeadingBlock, MainContent, PageContent } from './collection.styles';
+import { setTitle } from '../../common/components/title/title.slice';
 
 interface CollectionProps {
   terminologyId: string;
@@ -31,6 +32,7 @@ export default function Collection({ terminologyId, collectionId, setCollectionT
   const { t, i18n } = useTranslation('collection');
   const dispatch = useStoreDispatch();
   const router = useRouter();
+  const titleRef = useRef<HTMLHeadingElement>(null);
 
   if (collectionError && 'status' in collectionError && collectionError.status === 404) {
     router.push('/404');
@@ -50,6 +52,24 @@ export default function Collection({ terminologyId, collectionId, setCollectionT
       collectionError as Error
     ]));
   }, [dispatch, terminologyError, collectionError]);
+
+  useEffect(() => {
+    if (collection) {
+      const title = getPropertyValue({
+        property: collection?.properties.prefLabel,
+        language: i18n.language,
+        fallbackLanguage: 'fi'
+      }) ?? '';
+
+      dispatch(setTitle(title));
+    }
+  }, [collection, dispatch, i18n.language]);
+
+  useEffect(() => {
+    if (titleRef.current) {
+      titleRef.current.focus();
+    }
+  }, [titleRef]);
 
   return (
     <>
@@ -81,14 +101,14 @@ export default function Collection({ terminologyId, collectionId, setCollectionT
                 fallbackLanguage='fi'
               />
             </Text>
-            <Heading variant="h1">
+            <Heading variant="h1" tabIndex={-1} ref={titleRef}>
               <PropertyValue
                 property={collection?.properties.prefLabel}
                 fallbackLanguage='fi'
               />
             </Heading>
             <BadgeBar>
-              {t('heading')} &middot; <PropertyValue property={terminology?.properties.prefLabel} />
+              {t('heading')} &middot; <PropertyValue property={terminology?.properties.prefLabel} fallbackLanguage='fi' />
             </BadgeBar>
             <Text>{t('description')}</Text>
           </HeadingBlock>

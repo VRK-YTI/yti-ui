@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { ExternalLink, Heading, Text } from 'suomifi-ui-components';
 import {
   BasicBlock,
@@ -28,6 +28,8 @@ import { useStoreDispatch } from '../../store';
 import { setAlert } from '../../common/components/alert/alert.slice';
 import { Error } from '../../common/interfaces/error.interface';
 import { useRouter } from 'next/router';
+import { Property } from '../../common/interfaces/termed-data-types.interface';
+import { setTitle } from '../../common/components/title/title.slice';
 
 export interface ConceptProps {
   terminologyId: string;
@@ -42,6 +44,8 @@ export default function Concept({ terminologyId, conceptId, setConceptTitle }: C
   const { t, i18n } = useTranslation('concept');
   const dispatch = useStoreDispatch();
   const router = useRouter();
+  const conceptTitles = (concept?.references.prefLabelXl?.map(plxl => plxl.properties.prefLabel).map(item => item?.[0]) ?? []) as Property[];
+  const titleRef = useRef<HTMLHeadingElement>(null);
 
   if (conceptError && 'status' in conceptError && conceptError.status === 404) {
     router.push('/404');
@@ -62,6 +66,24 @@ export default function Concept({ terminologyId, conceptId, setConceptTitle }: C
     ]));
   }, [dispatch, terminologyError, conceptError]);
 
+  useEffect(() => {
+    if (concept) {
+      const title = getPropertyValue({
+        property: concept.references.prefLabelXl?.[0].properties.prefLabel,
+        language: i18n.language,
+        fallbackLanguage: 'fi'
+      }) ?? '';
+
+      dispatch(setTitle(title));
+    }
+  }, [concept, dispatch, i18n.language]);
+
+  useEffect(() => {
+    if (titleRef.current) {
+      titleRef.current.focus();
+    }
+  }, [titleRef]);
+
   return (
     <>
       <Breadcrumb>
@@ -73,7 +95,7 @@ export default function Concept({ terminologyId, conceptId, setConceptTitle }: C
         {!conceptError &&
           <BreadcrumbLink url={`/terminology/${terminologyId}/concepts/${conceptId}`} current>
             <PropertyValue
-              property={concept?.references.prefLabelXl?.[0].properties.prefLabel}
+              property={conceptTitles}
               fallbackLanguage='fi'
             />
           </BreadcrumbLink>
@@ -89,16 +111,21 @@ export default function Concept({ terminologyId, conceptId, setConceptTitle }: C
                 fallbackLanguage='fi'
               />
             </Text>
-            <Heading variant="h1">
+            <Heading variant="h1" tabIndex={-1} ref={titleRef}>
               <PropertyValue
-                property={concept?.references.prefLabelXl?.[0].properties.prefLabel}
+                property={conceptTitles}
                 fallbackLanguage='fi'
               />
             </Heading>
             <BadgeBar>
               <span>{t('heading')}</span>
               {' '}&middot;{' '}
-              <span><PropertyValue property={terminology?.properties.prefLabel} /></span>
+              <span>
+                <PropertyValue
+                  property={terminology?.properties.prefLabel}
+                  fallbackLanguage='fi'
+                />
+              </span>
               {' '}&middot;{' '}
               <Badge
                 isValid={getPropertyValue({ property: concept?.properties.status }) === 'VALID'}

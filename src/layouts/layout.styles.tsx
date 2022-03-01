@@ -43,6 +43,6 @@ export const ContentContainer = styled.div`
   flex-grow: 1;
 `;
 
-export const FooterContainer = styled.div`
+export const FooterContainer = styled.footer`
   background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
 `;

@@ -4,6 +4,9 @@ import { Contributor, Description, StatusChip, TitleWrapper, TitleWrapperNoBread
 import InfoExpander from '../info-dropdown/info-expander';
 import { VocabularyInfoDTO } from '../../interfaces/vocabulary.interface';
 import { getPropertyValue } from '../property-value/get-property-value';
+import { useStoreDispatch } from '../../../store';
+import { setTitle } from './title.slice';
+import { useEffect, useRef } from 'react';
 
 interface TitleProps {
   info: string | VocabularyInfoDTO;
@@ -11,6 +14,27 @@ interface TitleProps {
 
 export default function Title({ info }: TitleProps) {
   const { t, i18n } = useTranslation('common');
+  const titleRef = useRef<HTMLHeadingElement>(null);
+  const dispatch = useStoreDispatch();
+  const title = typeof info === 'string'
+    ?
+    info
+    :
+    getPropertyValue({
+      property: info.properties.prefLabel,
+      language: i18n.language,
+      fallbackLanguage: 'fi'
+    }) ?? '';
+
+  useEffect(() => {
+    dispatch(setTitle(title));
+  }, [dispatch, title]);
+
+  useEffect(() => {
+    if (titleRef.current) {
+      titleRef.current.focus();
+    }
+  }, [titleRef]);
 
   if (!info) {
     return <></>;
@@ -19,17 +43,15 @@ export default function Title({ info }: TitleProps) {
   if (typeof info === 'string') {
     return (
       <TitleWrapperNoBreadcrumb>
-        <Heading variant='h1'>{info}</Heading>
+        <Heading variant='h1'>
+          {info}
+        </Heading>
         <Description>{t('terminology-search-info')}</Description>
       </TitleWrapperNoBreadcrumb>
     );
   } else {
     const status = info.properties.status?.[0].value ?? '';
-    const title = getPropertyValue({
-      property: info.properties.prefLabel,
-      language: i18n.language,
-      fallbackLanguage: 'fi'
-    }) ?? '';
+
     const contributor = getPropertyValue({
       property: info.references.contributor?.[0].properties.prefLabel,
       language: i18n.language,
@@ -40,7 +62,9 @@ export default function Title({ info }: TitleProps) {
       <TitleWrapper>
         <Contributor>{contributor}</Contributor>
 
-        <Heading variant='h1'>{title}</Heading>
+        <Heading variant='h1' tabIndex={-1} ref={titleRef}>
+          {title}
+        </Heading>
 
         <StatusChip valid={status === 'VALID' ? 'true' : undefined}>
           {t(`${status}`)}
