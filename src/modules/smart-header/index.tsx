@@ -70,7 +70,7 @@ export default function SmartHeader() {
 
   function renderHeader() {
     return (
-      <Block variant="header">
+      <Block variant="header" role='banner'>
         <HeaderContainer>
           <MarginContainer breakpoint={breakpoint}>
             <HeaderWrapper breakpoint={breakpoint}>
