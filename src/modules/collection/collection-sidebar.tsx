@@ -19,11 +19,16 @@ export default function CollectionSidebar({ collection }: CollectionSidebarProps
   const { data: collections } = useGetCollectionsQuery(terminologyId);
   const otherCollections = collections?.filter(other => other.id !== collection.id);
 
-  return (
-    <Sidebar>
-      <SidebarHeader>{t('sidebar-header')}</SidebarHeader>
+  const isEmpty = otherCollections?.length === 0;
 
-      <Separator />
+  return (
+    <Sidebar isEmpty={isEmpty}>
+      {!isEmpty && (
+        <>
+          <SidebarHeader>{t('sidebar-header')}</SidebarHeader>
+          <Separator />
+        </>
+      )}
 
       <SidebarSection<Collection>
         heading={t('sidebar-section-heading-other-collections')}
@@ -31,12 +36,6 @@ export default function CollectionSidebar({ collection }: CollectionSidebarProps
         href={({ id }) => `/terminology/${terminologyId}/collection/${id}`}
         propertyAccessor={collection => collection.properties?.prefLabel}
       />
-
-      {otherCollections?.length === 0 && (
-        <>
-          TODO: Empty state
-        </>
-      )}
     </Sidebar>
   );
 };

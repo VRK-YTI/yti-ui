@@ -37,11 +37,13 @@ export default function ConceptSidebar({ concept }: ConceptSidebarProps) {
     concept?.referrers.member
   ].flat().filter(Boolean).length > 0;
 
-  const shouldRenderEmptyState = !shouldRenderDivider1 && !shouldRenderDivider2 && !shouldRenderDivider3;
+  const isEmpty = !shouldRenderDivider1 && !shouldRenderDivider2 && !shouldRenderDivider3;
 
   return (
-    <Sidebar>
-      <SidebarHeader>{t('sidebar-header')}</SidebarHeader>
+    <Sidebar isEmpty={isEmpty}>
+      {!isEmpty && (
+        <SidebarHeader>{t('sidebar-header')}</SidebarHeader>
+      )}
 
       {shouldRenderDivider1 && <Separator />}
 
@@ -130,14 +132,6 @@ export default function ConceptSidebar({ concept }: ConceptSidebarProps) {
         href={({ id }) => `/terminology/${terminologyId}/collection/${id}`}
         propertyAccessor={({ properties }) => properties?.prefLabel}
       />
-
-      {shouldRenderEmptyState && (
-        <>
-          <Separator />
-
-          TODO: Empty state
-        </>
-      )}
     </Sidebar>
   );
 };

@@ -7,6 +7,10 @@ export const SidebarWrapper = styled.aside<{ breakpoint: Breakpoint }>`
   background-color: ${props => props.theme.suomifi.colors.depthSecondary};
   max-width: ${props => small(props.breakpoint, '100%', '374px')};
   padding: ${props => props.theme.suomifi.spacing.m};
+
+  &[aria-hidden=true] {
+    padding: 0;
+  }
 `;
 
 export const SidebarHeader = styled.h1`
