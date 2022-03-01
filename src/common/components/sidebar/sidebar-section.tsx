@@ -6,6 +6,7 @@ import { BaseEntity, Property } from '../../interfaces/termed-data-types.interfa
 import PropertyValue from '../property-value';
 import { Term } from '../../interfaces/term.interface';
 import { isEmpty } from 'lodash';
+import { useGeneratedId } from '../../utils/hooks/useGeneratedId';
 
 interface SidebarSectionProps<T> {
   heading: React.ReactNode;
@@ -20,14 +21,16 @@ export default function SidebarSection<T extends BaseEntity<string>>({
   href,
   propertyAccessor
 }: SidebarSectionProps<T>) {
+  const id = useGeneratedId();
+
   if (!items?.length) {
     return null;
   }
 
   return (
     <>
-      <SidebarSubHeader>{heading}</SidebarSubHeader>
-      <SidebarLinkList>
+      <SidebarSubHeader id={`${id}-header`}>{heading}</SidebarSubHeader>
+      <SidebarLinkList aria-labelledby={`${id}-header`}>
         {items.map(item => (
           <SidebarLinkListItem key={item.id}>
             <Link href={href(item)} passHref>
