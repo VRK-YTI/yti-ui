@@ -22,9 +22,10 @@ import { setTitle } from '../../common/components/title/title.slice';
 interface CollectionProps {
   terminologyId: string;
   collectionId: string;
+  setCollectionTitle: (title: string) => void;
 }
 
-export default function Collection({ terminologyId, collectionId }: CollectionProps) {
+export default function Collection({ terminologyId, collectionId, setCollectionTitle }: CollectionProps) {
   const { breakpoint } = useBreakpoints();
   const { data: terminology, error: terminologyError } = useGetVocabularyQuery(terminologyId);
   const { data: collection, error: collectionError } = useGetCollectionQuery({ terminologyId, collectionId });
@@ -36,6 +37,14 @@ export default function Collection({ terminologyId, collectionId }: CollectionPr
   if (collectionError && 'status' in collectionError && collectionError.status === 404) {
     router.push('/404');
   }
+
+  useEffect(() => {
+    setCollectionTitle(getPropertyValue({
+      property: collection?.properties.prefLabel,
+      language: i18n.language,
+      fallbackLanguage: 'fi'
+    }) ?? '');
+  }, [collection]);
 
   useEffect(() => {
     dispatch(setAlert([

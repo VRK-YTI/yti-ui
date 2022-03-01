@@ -32,5 +32,6 @@
   "sidebar-section-heading-exact-match": "Vastaava käsite toisessa sanastossa",
   "sidebar-section-heading-close-match": "Lähes vastaava käsite toisessa sanastossa",
   "sidebar-section-heading-member": "Kuuluu käsitekokoelmaan",
-  "sidebar-section-heading-in-other-terminologies": "Käsite muissa sanastoissa"
+  "sidebar-section-heading-in-other-terminologies": "Käsite muissa sanastoissa",
+  "site-title": "Yhteentoimivuusalusta"
 }

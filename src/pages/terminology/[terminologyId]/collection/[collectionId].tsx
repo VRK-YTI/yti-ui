@@ -1,6 +1,6 @@
 import { SSRConfig, useTranslation } from 'next-i18next';
 import { useRouter } from 'next/dist/client/router';
-import React from 'react';
+import React, { useState } from 'react';
 import Layout from '../../../../layouts/layout';
 import Head from 'next/head';
 import { createCommonGetServerSideProps } from '../../../../common/utils/create-getserversideprops';
@@ -16,16 +16,17 @@ export default function CollectionPage(props: {
   const { query } = useRouter();
   const terminologyId = (query?.terminologyId ?? '') as string;
   const collectionId = (query?.collectionId ?? '') as string;
+  const [collectionTitle, setCollectionTitle] = useState<string>('');
 
   return (
     <MediaQueryContextProvider value={{ isSSRMobile: props.isSSRMobile }}>
       {/* todo: use better feedbackSubject once more data is available */}
       <Layout feedbackSubject={`${t('collection-id')} ${collectionId}`}>
         <Head>
-          <title>{ t('collection-title') }</title>
+          <title>{collectionTitle ?? t('collection-page')} | {t('site-title')}</title>
         </Head>
 
-        <Collection terminologyId={terminologyId} collectionId={collectionId} />
+        <Collection terminologyId={terminologyId} collectionId={collectionId} setCollectionTitle={setCollectionTitle} />
       </Layout>
     </MediaQueryContextProvider>
   );

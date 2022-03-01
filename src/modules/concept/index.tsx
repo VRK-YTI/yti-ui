@@ -34,9 +34,10 @@ import { setTitle } from '../../common/components/title/title.slice';
 export interface ConceptProps {
   terminologyId: string;
   conceptId: string;
+  setConceptTitle: (title: string) => void;
 }
 
-export default function Concept({ terminologyId, conceptId }: ConceptProps) {
+export default function Concept({ terminologyId, conceptId, setConceptTitle }: ConceptProps) {
   const { breakpoint } = useBreakpoints();
   const { data: terminology, error: terminologyError } = useGetVocabularyQuery(terminologyId);
   const { data: concept, error: conceptError } = useGetConceptQuery({ terminologyId, conceptId });
@@ -49,6 +50,14 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
   if (conceptError && 'status' in conceptError && conceptError.status === 404) {
     router.push('/404');
   }
+
+  useEffect(() => {
+    setConceptTitle(getPropertyValue({
+      property: concept?.references.prefLabelXl?.[0].properties.prefLabel,
+      language: i18n.language,
+      fallbackLanguage: 'fi'
+    }) ?? '');
+  }, [concept]);
 
   useEffect(() => {
     dispatch(setAlert([
