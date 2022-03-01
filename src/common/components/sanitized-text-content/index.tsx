@@ -14,11 +14,10 @@ interface ChildType extends ChildNode {
 }
 
 export default function SanitizedTextContent({ text }: TextLinksProps) {
-  return text;
-
   const { t } = useTranslation('common');
-  const htmlChildNodes = new DOMParser().parseFromString(text, 'text/html').children[0].children[1].childNodes;
 
+  return text;
+  const htmlChildNodes = new DOMParser().parseFromString(text, 'text/html').children[0].children[1].childNodes;
   const children = Array.from(htmlChildNodes).map((child: ChildType, idx: number) => {
     if (child.nodeName.toLowerCase() === 'a') {
       const childHref = child.href ?? '';

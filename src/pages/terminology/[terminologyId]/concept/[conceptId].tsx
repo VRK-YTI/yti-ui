@@ -9,13 +9,14 @@ import { MediaQueryContextProvider } from '../../../../common/components/media-q
 import { Concept as ConceptType } from '../../../../common/interfaces/concept.interface';
 import axios from 'axios';
 import { LocalHandlerParams } from '../../../../common/utils/create-getserversideprops';
+import { VocabularyInfoDTO } from '../../../../common/interfaces/vocabulary.interface';
 
 // TODO: perhaps move the component itself to components/
 export default function ConceptPage(props: {
   _netI18Next: SSRConfig;
   isSSRMobile: boolean;
-  concept: any;
-  terminology: any;
+  concept: ConceptType;
+  terminology: VocabularyInfoDTO;
 }) {
   const { t } = useTranslation('common');
   const { query } = useRouter();
@@ -37,10 +38,11 @@ export default function ConceptPage(props: {
   );
 }
 
-export const getServerSideProps = createCommonGetServerSideProps<{ props: { data?: ConceptType } }>(
+export const getServerSideProps = createCommonGetServerSideProps<{ props: { data?: any } }>(
   async ({ req, res, locale }: LocalHandlerParams) => {
-    const terminologyId = req?.url?.split('/')[2] ?? '';
-    const conceptId = req?.url?.split('/')[4] ?? '';
+    const ids = req.url?.split('/').filter(part => part.includes('-'));
+    const terminologyId = ids?.[0] ?? '';
+    const conceptId = ids?.[1].split('.')[0] ?? '';
     let value = { props: {} };
 
     await axios.get(`http://localhost:3000/terminology-api/api/v1/frontend/concept?graphId=${terminologyId}&conceptId=${conceptId}`)
@@ -55,8 +57,6 @@ export const getServerSideProps = createCommonGetServerSideProps<{ props: { data
         console.error(e);
       });
 
-    console.log(value);
-
     await axios.get(`http://localhost:3000/terminology-api/api/v1/frontend/vocabulary?graphId=${terminologyId}`)
       .then(result => {
         value = {
@@ -69,8 +69,6 @@ export const getServerSideProps = createCommonGetServerSideProps<{ props: { data
       .catch(e => {
         console.error(e);
       });
-
-    console.log('value', value);
 
     return value;
   }
