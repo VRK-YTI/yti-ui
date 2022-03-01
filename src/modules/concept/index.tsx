@@ -33,27 +33,36 @@ import { setTitle } from '../../common/components/title/title.slice';
 export interface ConceptProps {
   terminologyId: string;
   conceptId: string;
+  terminologyData: any;
+  conceptData: any;
 }
 
-export default function Concept({ terminologyId, conceptId }: ConceptProps) {
+export default function Concept({ terminologyId, conceptId, terminologyData, conceptData }: ConceptProps) {
   const { breakpoint } = useBreakpoints();
-  const { data: terminology, error: terminologyError } = useGetVocabularyQuery(terminologyId);
-  const { data: concept, error: conceptError } = useGetConceptQuery({ terminologyId, conceptId });
+  // const { data: terminology, error: terminologyError } = useGetVocabularyQuery(terminologyId);
+  // const { data: concept, error: conceptError } = useGetConceptQuery({ terminologyId, conceptId });
   const { t, i18n } = useTranslation('concept');
   const dispatch = useStoreDispatch();
   const router = useRouter();
   const titleRef = useRef<HTMLHeadingElement>(null);
 
-  if (conceptError && 'status' in conceptError && conceptError.status === 404) {
-    router.push('/404');
+  if (!terminologyData || !conceptData) {
+    return null;
   }
 
-  useEffect(() => {
-    dispatch(setAlert([
-      terminologyError as Error,
-      conceptError as Error
-    ]));
-  }, [dispatch, terminologyError, conceptError]);
+  const terminology = terminologyData;
+  const concept = conceptData;
+
+  // if (conceptError && 'status' in conceptError && conceptError.status === 404) {
+  //   router.push('/404');
+  // }
+
+  // useEffect(() => {
+  //   dispatch(setAlert([
+  //     terminologyError as Error,
+  //     conceptError as Error
+  //   ]));
+  // }, [dispatch, terminologyError, conceptError]);
 
   useEffect(() => {
     if (concept) {
@@ -76,19 +85,28 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
   return (
     <>
       <Breadcrumb>
-        {!terminologyError &&
+        {/* {!terminologyError &&
           <BreadcrumbLink url={`/terminology/${terminologyId}`}>
             <PropertyValue property={terminology?.properties.prefLabel} fallbackLanguage='fi' />
           </BreadcrumbLink>
-        }
-        {!conceptError &&
+        } */}
+        <BreadcrumbLink url={`/terminology/${terminologyId}`}>
+          <PropertyValue property={terminology?.properties.prefLabel} fallbackLanguage='fi' />
+        </BreadcrumbLink>
+        {/* {!conceptError &&
           <BreadcrumbLink url={`/terminology/${terminologyId}/concepts/${conceptId}`} current>
             <PropertyValue
               property={concept?.references.prefLabelXl?.[0].properties.prefLabel}
               fallbackLanguage='fi'
             />
           </BreadcrumbLink>
-        }
+        } */}
+        <BreadcrumbLink url={`/terminology/${terminologyId}/concepts/${conceptId}`} current>
+          <PropertyValue
+            property={concept?.references.prefLabelXl?.[0].properties.prefLabel}
+            fallbackLanguage='fi'
+          />
+        </BreadcrumbLink>
       </Breadcrumb>
 
       <PageContent breakpoint={breakpoint}>
@@ -137,6 +155,7 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
               ...(concept?.references.hiddenTerm ?? []).map(term => ({ term, type: t('field-terms-hidden') })),
             ]}
           />
+
           <MultilingualPropertyBlock
             title={t('field-note')}
             data={concept?.properties.note}
