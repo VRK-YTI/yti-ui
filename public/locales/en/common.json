@@ -106,5 +106,9 @@
   "breadcrumb": "Breadcrumb",
   "link-opens-new-window-external": "Link opens a new window to",
   "error-occured": "An error occured",
-  "try-again": "Try again"
+  "try-again": "Try again",
+  "skip-link-main": "Go directly to contents.",
+  "skip-link-search-results": "Go directly to search results.",
+  "navigated-to": "Navigated to",
+  "site-open-new-email": "Open a new email to"
 }

@@ -4,6 +4,10 @@ import Image from 'next/image';
 import { FooterContentWrapper, FooterLinkWrapper } from './footer.style';
 import { useBreakpoints } from '../../common/components/media-query/media-query-context';
 
+/**
+ * @deprecated | use footer from ~/common/components
+ */
+
 export default function Footer() {
   const { t } = useTranslation('common');
   const { breakpoint } = useBreakpoints();

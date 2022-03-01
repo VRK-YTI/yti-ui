@@ -18,7 +18,7 @@ export default function Footer({ feedbackSubject }: FooterProps) {
   return (
     <>
       <FooterContentWrapper>
-        <Image src="/logo-suomi.fi.png" width="254" height="70" alt="Logo" />
+        <Image src="/logo-suomi.fi.png" width="254" height="70" alt="" aria-hidden />
         <Paragraph>
           <Text>{t('terminology-footer-text')}</Text>
         </Paragraph>
@@ -27,24 +27,24 @@ export default function Footer({ feedbackSubject }: FooterProps) {
       <FooterLinkWrapper breakpoint={breakpoint}>
         <ExternalLink
           href={`mailto:yhteentoimivuus@dvv.fi?subject=${subject}`}
-          labelNewWindow={t('site-open-link-new-window')}
+          labelNewWindow={`${t('site-open-new-email')} yhteentoimivuus@dvv.fi`}
         >
           {t('terminology-footer-feedback')}
         </ExternalLink>
         <ExternalLink
           href="https://wiki.dvv.fi/display/YTIJD/Tietosuojaseloste"
-          labelNewWindow={t('site-open-link-new-window')}
+          labelNewWindow={`${t('site-open-link-new-window')} wiki.dvv.fi/Tietosuojaseloste`}
         >
           {t('terminology-footer-information-security')}
         </ExternalLink>
         <ExternalLink
           href="https://wiki.dvv.fi/display/YTIJD/Saavutettavuusseloste"
-          labelNewWindow={t('site-open-link-new-window')}
+          labelNewWindow={`${t('site-open-link-new-window')} wiki.dvv.fi/Saavutettavuusseloste`}
         >
           {t('terminology-footer-accessibility')}
         </ExternalLink>
       </FooterLinkWrapper>
-      <VersionInfo>
+      <VersionInfo aria-hidden>
         {publicRuntimeConfig?.versionInfo}
       </VersionInfo>
     </>
