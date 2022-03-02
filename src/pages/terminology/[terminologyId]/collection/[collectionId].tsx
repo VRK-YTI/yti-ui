@@ -40,14 +40,14 @@ export default function CollectionPage(props: {
   );
 }
 export const getServerSideProps = createCommonGetServerSideProps(
-  async ({ req, res, locale, store }: LocalHandlerParams) => {
+  async ({ req, store }: LocalHandlerParams) => {
     const ids = req.url?.split('/').filter(part => part.includes('-'));
     const terminologyId = ids?.[0] ?? '';
     const collectionId = ids?.[1].split('.')[0] ?? '';
 
-    await store.dispatch(getVocabulary.initiate(terminologyId));
-    await store.dispatch(getCollection.initiate({ terminologyId, collectionId }));
-    await store.dispatch(getCollections.initiate(terminologyId));
+    store.dispatch(getVocabulary.initiate(terminologyId));
+    store.dispatch(getCollection.initiate({ terminologyId, collectionId }));
+    store.dispatch(getCollections.initiate(terminologyId));
 
     await Promise.all(getVocabularyRunningOperationPromises());
     await Promise.all(getCollectionRunningOperationPromises());

@@ -41,7 +41,7 @@ export default function ConceptPage(props: {
 }
 
 export const getServerSideProps = createCommonGetServerSideProps<{ props: { data?: any } }>(
-  async ({ req, res, locale, store }: LocalHandlerParams) => {
+  async ({ req, store }: LocalHandlerParams) => {
     const ids = req.url?.split('/').filter(part => part.includes('-'));
     const terminologyId = ids?.[0] ?? '';
     const conceptId = ids?.[1].split('.')[0] ?? '';
