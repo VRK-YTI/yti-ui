@@ -1,8 +1,8 @@
 import styled from 'styled-components';
-import { Heading, Icon, Link, StaticChip, Text } from 'suomifi-ui-components';
+import { Icon, Link, Paragraph, StaticChip, Text } from 'suomifi-ui-components';
 import { CardChipProps } from './search-count-tags.props';
 
-export const Card = styled.div`
+export const Card = styled.li`
   background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
   border-bottom: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
   display: flex;
@@ -34,21 +34,21 @@ export const CardConcepts = styled(Text)`
   }
 `;
 
-export const CardContributor = styled(Text)`
+export const CardContributor = styled(Paragraph)`
   color: ${(props) => props.theme.suomifi.colors.depthDark1};
   font-size: 14px;
   margin-bottom: ${props => props.theme.suomifi.spacing.xxs};
 `;
 
-export const CardDescription = styled(Text)`
+export const CardDescription = styled(Paragraph)`
 
 `;
 
-export const CardInfoDomain = styled(Text)`
+export const CardInfoDomain = styled(Paragraph)`
   margin-top: ${props => props.theme.suomifi.spacing.s};
 `;
 
-export const CardSubtitle = styled(Text)`
+export const CardSubtitle = styled(Paragraph)`
   color: ${(props) => props.theme.suomifi.colors.depthDark1};
   display: flex;
   font-size: 12px;
@@ -58,8 +58,11 @@ export const CardSubtitle = styled(Text)`
   text-transform: uppercase;
 `;
 
-export const CardTitle = styled(Heading)`
+export const CardTitle = styled.h2`
   color: inherit;
+  font-size: 22px;
+  line-height: 28px;
+  margin: 0;
 `;
 
 export const CardTitleWrapper = styled.div`
@@ -81,10 +84,12 @@ export const CardTitleLink = styled(Link)`
   gap: ${props => props.theme.suomifi.spacing.xs};
 `;
 
-export const CardWrapper = styled.div<{ isSmall: boolean }>`
+export const CardWrapper = styled.ul<{ isSmall: boolean }>`
   border-top: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
   border-right:  ${props => props.isSmall ? 'none' : `1px solid ${props.theme.suomifi.colors.depthLight1}`};
   border-left: ${props => props.isSmall ? 'none' : `1px solid ${props.theme.suomifi.colors.depthLight1}`};
   margin-left: -${props => props.isSmall ? props.theme.suomifi.spacing.s : '0'};
   margin-right: -${props => props.isSmall ? props.theme.suomifi.spacing.s : '0'};
+  padding: 0;
+  margin-top: 0;
 `;

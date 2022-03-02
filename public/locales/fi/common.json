@@ -101,5 +101,9 @@
   "error-occured": "Tapahtui virhe",
   "try-again": "Yritä uudestaan",
   "skip-link-main": "Siirry suoraan sisältöön.",
-  "skip-link-search-results": "Siirry suoraan hakutuloksiin."
+  "skip-link-search-results": "Siirry suoraan hakutuloksiin.",
+  "concept-page": "Käsitteen sivu",
+  "collection-page": "Käsitekokoelman sivu",
+  "navigated-to": "Siirrytty sivulle",
+  "site-open-new-email": "Aloita uuden sähköpostin kirjoitus osoitteeseen"
 }

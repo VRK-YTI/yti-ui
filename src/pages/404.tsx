@@ -9,7 +9,7 @@ export default function Custom404() {
     <MediaQueryContextProvider value={{ isSSRMobile: false }}>
       <ErrorLayout>
         <Head>
-          <title>Sanastot</title>
+          <title>Sanastot | Error</title>
           <link rel="shortcut icon" href="/favicon.ico" />
         </Head>
         <Error />

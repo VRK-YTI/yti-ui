@@ -44,9 +44,7 @@ export default function Layout({
         <ContentContainer>
           <Alerts />
           <MarginContainer breakpoint={breakpoint}>
-            <Block variant="main" id="main">
-              {children}
-            </Block>
+            {children}
           </MarginContainer>
         </ContentContainer>
 

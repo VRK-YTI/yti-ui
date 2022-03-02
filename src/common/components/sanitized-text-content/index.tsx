@@ -15,6 +15,7 @@ interface ChildType extends ChildNode {
 
 export default function SanitizedTextContent({ text }: TextLinksProps) {
   const { t } = useTranslation('common');
+  const internalTypes = ['broader', 'internal', 'related'];
   const htmlChildNodes = new DOMParser().parseFromString(text, 'text/html').children[0].children[1].childNodes;
 
   const children = Array.from(htmlChildNodes).map((child: ChildType, idx: number) => {
@@ -27,7 +28,7 @@ export default function SanitizedTextContent({ text }: TextLinksProps) {
         return <span key={`${child.textContent}-${idx}`}>{child.textContent}</span>;
       }
 
-      if (child.dataset?.type === 'internal') {
+      if (child.dataset?.type && internalTypes.includes(child.dataset.type)) {
         return (
           <Link
             passHref
