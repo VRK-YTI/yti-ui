@@ -16,36 +16,38 @@ import { useStoreDispatch } from '../../store';
 import CollectionSidebar from './collection-sidebar';
 import { BadgeBar, HeadingBlock, MainContent, PageContent } from './collection.styles';
 import { setTitle } from '../../common/components/title/title.slice';
-import { VocabularyInfoDTO } from '../../common/interfaces/vocabulary.interface';
-import { Collection as CollectionType } from '../../common/interfaces/collection.interface';
+import { useGetCollectionQuery } from '../../common/components/collection/collection-slice';
+import { useGetVocabularyQuery } from '../../common/components/vocabulary/vocabulary-slice';
 
 interface CollectionProps {
   terminologyId: string;
   collectionId: string;
-  terminologyData: VocabularyInfoDTO;
-  collectionData: CollectionType;
 }
 
-export default function Collection({ terminologyId, collectionId, terminologyData, collectionData }: CollectionProps) {
+export default function Collection({ terminologyId, collectionId }: CollectionProps) {
   const { breakpoint } = useBreakpoints();
   const { t, i18n } = useTranslation('collection');
   const dispatch = useStoreDispatch();
   const router = useRouter();
   const titleRef = useRef<HTMLHeadingElement>(null);
 
-  const terminology = terminologyData;
-  const collection = collectionData;
+  const { data: terminology, error: terminologyError } = useGetVocabularyQuery(terminologyId, {
+    skip: router.isFallback
+  });
+  const { data: collection, error: collectionError } = useGetCollectionQuery({ terminologyId, collectionId }, {
+    skip: router.isFallback
+  });
 
-  // if (collectionError && 'status' in collectionError && collectionError.status === 404) {
-  //   router.push('/404');
-  // }
+  if (collectionError && 'status' in collectionError && collectionError.status === 404) {
+    router.push('/404');
+  }
 
-  // useEffect(() => {
-  //   dispatch(setAlert([
-  //     terminologyError as Error,
-  //     collectionError as Error
-  //   ]));
-  // }, [dispatch, terminologyError, collectionError]);
+  useEffect(() => {
+    dispatch(setAlert([
+      terminologyError as Error,
+      collectionError as Error
+    ]));
+  }, [dispatch, terminologyError, collectionError]);
 
   useEffect(() => {
     if (collection) {
@@ -68,34 +70,22 @@ export default function Collection({ terminologyId, collectionId, terminologyDat
   return (
     <>
       <Breadcrumb>
-        {/* {!terminologyError &&
+        {!terminologyError &&
           <BreadcrumbLink url={`/terminology/${terminologyId}`}>
             <PropertyValue
               property={terminology?.properties.prefLabel}
               fallbackLanguage='fi'
             />
           </BreadcrumbLink>
-        } */}
-        <BreadcrumbLink url={`/terminology/${terminologyId}`}>
-          <PropertyValue
-            property={terminology?.properties.prefLabel}
-            fallbackLanguage='fi'
-          />
-        </BreadcrumbLink>
-        {/* {!collectionError &&
+        }
+        {!collectionError &&
           <BreadcrumbLink url={`/terminology/${terminologyId}/collections/${collectionId}`} current>
             <PropertyValue
               property={collection?.properties.prefLabel}
               fallbackLanguage='fi'
             />
           </BreadcrumbLink>
-        } */}
-        <BreadcrumbLink url={`/terminology/${terminologyId}/collections/${collectionId}`} current>
-          <PropertyValue
-            property={collection?.properties.prefLabel}
-            fallbackLanguage='fi'
-          />
-        </BreadcrumbLink>
+        }
       </Breadcrumb>
 
       <PageContent breakpoint={breakpoint}>

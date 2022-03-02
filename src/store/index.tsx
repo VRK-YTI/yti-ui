@@ -50,4 +50,7 @@ export type AppThunk<ReturnType = void> = ThunkAction<
 export type AppDispatch = (x: AppThunk) => void;
 export const useStoreDispatch = () => useDispatch();
 
-export const wrapper = createWrapper<AppStore>(makeStore);
+export const wrapper = createWrapper<AppStore>(makeStore, {
+  serializeState: state => JSON.stringify(state),
+  deserializeState: state => JSON.parse(state),
+});

@@ -7,16 +7,19 @@ import { createCommonGetServerSideProps } from '../../../../common/utils/create-
 import { MediaQueryContextProvider } from '../../../../common/components/media-query/media-query-context';
 import Collection from '../../../../modules/collection';
 import { LocalHandlerParams } from '../../../../common/utils/create-getserversideprops';
-import axios from 'axios';
-import { VocabularyInfoDTO } from '../../../../common/interfaces/vocabulary.interface';
-import { Collection as CollectionType } from '../../../../common/interfaces/collection.interface';
+import {
+  getCollection,
+  getCollections,
+  getRunningOperationPromises as getCollectionRunningOperationPromises
+} from '../../../../common/components/collection/collection-slice';
+import {
+  getVocabulary,
+  getRunningOperationPromises as getVocabularyRunningOperationPromises
+} from '../../../../common/components/vocabulary/vocabulary-slice';
 
-// TODO: perhaps move the component itself to components/
 export default function CollectionPage(props: {
   _netI18Next: SSRConfig;
   isSSRMobile: boolean;
-  collection: CollectionType;
-  terminology: VocabularyInfoDTO;
 }) {
   const { t } = useTranslation('common');
   const { query } = useRouter();
@@ -31,43 +34,24 @@ export default function CollectionPage(props: {
           <title>{t('collection-title')}</title>
         </Head>
 
-        <Collection terminologyId={terminologyId} collectionId={collectionId} terminologyData={props.terminology} collectionData={props.collection} />
+        <Collection terminologyId={terminologyId} collectionId={collectionId} />
       </Layout>
     </MediaQueryContextProvider>
   );
 }
-export const getServerSideProps = createCommonGetServerSideProps<{ props: { data?: any } }>(
-  async ({ req, res, locale }: LocalHandlerParams) => {
+export const getServerSideProps = createCommonGetServerSideProps(
+  async ({ req, res, locale, store }: LocalHandlerParams) => {
     const ids = req.url?.split('/').filter(part => part.includes('-'));
     const terminologyId = ids?.[0] ?? '';
     const collectionId = ids?.[1].split('.')[0] ?? '';
-    let value = { props: {} };
 
-    await axios.get(`http://localhost:3000/terminology-api/api/v1/frontend/collection?graphId=${terminologyId}&collectionId=${collectionId}`)
-      .then(result => {
-        value = {
-          props: {
-            'collection': result.data
-          }
-        };
-      })
-      .catch(e => {
-        console.error('error');
-      });
+    await store.dispatch(getVocabulary.initiate(terminologyId));
+    await store.dispatch(getCollection.initiate({ terminologyId, collectionId }));
+    await store.dispatch(getCollections.initiate(terminologyId));
 
-    await axios.get(`http://localhost:3000/terminology-api/api/v1/frontend/vocabulary?graphId=${terminologyId}`)
-      .then(result => {
-        value = {
-          props: {
-            ...value.props,
-            'terminology': result.data
-          }
-        };
-      })
-      .catch(e => {
-        console.error('error');
-      });
+    await Promise.all(getVocabularyRunningOperationPromises());
+    await Promise.all(getCollectionRunningOperationPromises());
 
-    return value;
+    return { props: {}};
   }
 );

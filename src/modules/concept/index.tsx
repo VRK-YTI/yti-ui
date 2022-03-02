@@ -27,36 +27,33 @@ import { setAlert } from '../../common/components/alert/alert.slice';
 import { Error } from '../../common/interfaces/error.interface';
 import { useRouter } from 'next/router';
 import { setTitle } from '../../common/components/title/title.slice';
-import { Concept as ConceptType } from '../../common/interfaces/concept.interface';
-import { VocabularyInfoDTO } from '../../common/interfaces/vocabulary.interface';
+import { useGetVocabularyQuery } from '../../common/components/vocabulary/vocabulary-slice';
+import { useGetConceptQuery } from '../../common/components/concept/concept-slice';
 
 export interface ConceptProps {
   terminologyId: string;
   conceptId: string;
-  terminologyData: VocabularyInfoDTO;
-  conceptData: ConceptType;
 }
 
-export default function Concept({ terminologyId, conceptId, terminologyData, conceptData }: ConceptProps) {
+export default function Concept({ terminologyId, conceptId }: ConceptProps) {
   const { breakpoint } = useBreakpoints();
+  const { data: terminology, error: terminologyError } = useGetVocabularyQuery(terminologyId);
+  const { data: concept, error: conceptError } = useGetConceptQuery({ terminologyId, conceptId });
   const { t, i18n } = useTranslation('concept');
   const dispatch = useStoreDispatch();
   const router = useRouter();
   const titleRef = useRef<HTMLHeadingElement>(null);
 
-  const terminology = terminologyData;
-  const concept = conceptData;
+  if (conceptError && 'status' in conceptError && conceptError.status === 404) {
+    router.push('/404');
+  }
 
-  // if (conceptError && 'status' in conceptError && conceptError.status === 404) {
-  //   router.push('/404');
-  // }
-
-  // useEffect(() => {
-  //   dispatch(setAlert([
-  //     terminologyError as Error,
-  //     conceptError as Error
-  //   ]));
-  // }, [dispatch, terminologyError, conceptError]);
+  useEffect(() => {
+    dispatch(setAlert([
+      terminologyError as Error,
+      conceptError as Error
+    ]));
+  }, [dispatch, terminologyError, conceptError]);
 
   useEffect(() => {
     if (concept) {
@@ -79,28 +76,20 @@ export default function Concept({ terminologyId, conceptId, terminologyData, con
   return (
     <>
       <Breadcrumb>
-        {/* {!terminologyError &&
+        {!terminologyError &&
           <BreadcrumbLink url={`/terminology/${terminologyId}`}>
             <PropertyValue property={terminology?.properties.prefLabel} fallbackLanguage='fi' />
           </BreadcrumbLink>
-        } */}
-        <BreadcrumbLink url={`/terminology/${terminologyId}`}>
-          <PropertyValue property={terminology?.properties.prefLabel} fallbackLanguage='fi' />
-        </BreadcrumbLink>
-        {/* {!conceptError &&
+        }
+        {!conceptError &&
           <BreadcrumbLink url={`/terminology/${terminologyId}/concepts/${conceptId}`} current>
             <PropertyValue
               property={concept?.references.prefLabelXl?.[0].properties.prefLabel}
               fallbackLanguage='fi'
             />
           </BreadcrumbLink>
-        } */}
-        <BreadcrumbLink url={`/terminology/${terminologyId}/concepts/${conceptId}`} current>
-          <PropertyValue
-            property={concept?.references.prefLabelXl?.[0].properties.prefLabel}
-            fallbackLanguage='fi'
-          />
-        </BreadcrumbLink>
+        }
+
       </Breadcrumb>
 
       <PageContent breakpoint={breakpoint}>

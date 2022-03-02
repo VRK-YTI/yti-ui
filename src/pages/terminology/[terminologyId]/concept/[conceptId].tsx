@@ -6,17 +6,20 @@ import Head from 'next/head';
 import { createCommonGetServerSideProps } from '../../../../common/utils/create-getserversideprops';
 import Concept from '../../../../modules/concept';
 import { MediaQueryContextProvider } from '../../../../common/components/media-query/media-query-context';
-import { Concept as ConceptType } from '../../../../common/interfaces/concept.interface';
-import axios from 'axios';
 import { LocalHandlerParams } from '../../../../common/utils/create-getserversideprops';
-import { VocabularyInfoDTO } from '../../../../common/interfaces/vocabulary.interface';
+import {
+  getConcept,
+  getRunningOperationPromises as getConceptRunningOperationPromises
+} from '../../../../common/components/concept/concept-slice';
+import {
+  getVocabulary,
+  getRunningOperationPromises as getVocabularyRunningOperationPromises
+} from '../../../../common/components/vocabulary/vocabulary-slice';
 
 // TODO: perhaps move the component itself to components/
 export default function ConceptPage(props: {
   _netI18Next: SSRConfig;
   isSSRMobile: boolean;
-  concept: ConceptType;
-  terminology: VocabularyInfoDTO;
 }) {
   const { t } = useTranslation('common');
   const { query } = useRouter();
@@ -30,46 +33,25 @@ export default function ConceptPage(props: {
         <Head>
           <title>{t('concept-title')}</title>
         </Head>
-        {props.concept && props.terminology &&
-          <Concept terminologyId={terminologyId} conceptId={conceptId} terminologyData={props.terminology} conceptData={props.concept} />
-        }
+
+        <Concept terminologyId={terminologyId} conceptId={conceptId} />
       </Layout>
     </MediaQueryContextProvider>
   );
 }
 
 export const getServerSideProps = createCommonGetServerSideProps<{ props: { data?: any } }>(
-  async ({ req, res, locale }: LocalHandlerParams) => {
+  async ({ req, res, locale, store }: LocalHandlerParams) => {
     const ids = req.url?.split('/').filter(part => part.includes('-'));
     const terminologyId = ids?.[0] ?? '';
     const conceptId = ids?.[1].split('.')[0] ?? '';
-    let value = { props: {} };
 
-    await axios.get(`http://localhost:3000/terminology-api/api/v1/frontend/concept?graphId=${terminologyId}&conceptId=${conceptId}`)
-      .then(result => {
-        value = {
-          props: {
-            'concept': result.data
-          }
-        };
-      })
-      .catch(e => {
-        console.error(e);
-      });
+    await store.dispatch(getVocabulary.initiate(terminologyId));
+    await store.dispatch(getConcept.initiate({terminologyId, conceptId}));
 
-    await axios.get(`http://localhost:3000/terminology-api/api/v1/frontend/vocabulary?graphId=${terminologyId}`)
-      .then(result => {
-        value = {
-          props: {
-            ...value.props,
-            'terminology': result.data
-          }
-        };
-      })
-      .catch(e => {
-        console.error(e);
-      });
+    await Promise.all(getVocabularyRunningOperationPromises());
+    await Promise.all(getConceptRunningOperationPromises());
 
-    return value;
+    return { props: {}};
   }
 );
