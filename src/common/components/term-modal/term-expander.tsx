@@ -17,12 +17,9 @@ export default function TermExpander({ title, data }: TermExpanderProps) {
         {title}
       </ExpanderTitleButton>
       <ExpanderContent>
-        {data.map((d, idx) => {
-          if (d.value) {
-            if (d.checkCondition === false) {
-              return null;
-            }
-
+        {data
+          .filter(d => d.value && d.checkCondition !== false)
+          .map((d, idx) => {
             return (
               <div key={`${title}-${idx}`}>
                 <TermHeading variant='h4'>
@@ -33,8 +30,7 @@ export default function TermExpander({ title, data }: TermExpanderProps) {
                 </TermText>
               </div>
             );
-          }
-        })}
+          })}
       </ExpanderContent>
     </Expander>
   );
