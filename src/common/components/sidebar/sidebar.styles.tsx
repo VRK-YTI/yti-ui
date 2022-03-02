@@ -9,7 +9,7 @@ export const SidebarWrapper = styled.aside<{ breakpoint: Breakpoint }>`
   padding: ${props => props.theme.suomifi.spacing.m};
 `;
 
-export const SidebarHeader = styled.h1`
+export const SidebarHeader = styled.h2`
   color: ${props => props.theme.suomifi.colors.blackBase};
   font-size: 22px;
   font-weight: 600;
@@ -18,7 +18,7 @@ export const SidebarHeader = styled.h1`
   margin-top: 9px;
 `;
 
-export const SidebarSubHeader = styled.h2`
+export const SidebarSubHeader = styled.h3`
   color: ${props => props.theme.suomifi.colors.blackBase};
   font-size: ${props => props.theme.suomifi.typography.bodyText};
   font-weight: 600;
