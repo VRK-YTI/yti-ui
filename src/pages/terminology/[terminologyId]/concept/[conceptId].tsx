@@ -16,7 +16,6 @@ import {
   getRunningOperationPromises as getVocabularyRunningOperationPromises
 } from '../../../../common/components/vocabulary/vocabulary-slice';
 
-// TODO: perhaps move the component itself to components/
 export default function ConceptPage(props: {
   _netI18Next: SSRConfig;
   isSSRMobile: boolean;

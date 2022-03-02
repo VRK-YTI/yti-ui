@@ -29,7 +29,6 @@ import { useRouter } from 'next/router';
 import { setTitle } from '../../common/components/title/title.slice';
 import { useGetVocabularyQuery } from '../../common/components/vocabulary/vocabulary-slice';
 import { useGetConceptQuery } from '../../common/components/concept/concept-slice';
-import { useStore } from 'react-redux';
 
 export interface ConceptProps {
   terminologyId: string;
