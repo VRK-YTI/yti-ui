@@ -23,12 +23,14 @@ import { Error } from '../../common/interfaces/error.interface';
 import { useRouter } from 'next/router';
 import LoadIndicator from '../../common/components/load-indicator';
 import { useStoreDispatch } from '../../store';
+import { getPropertyValue } from '../../common/components/property-value/get-property-value';
 
 interface VocabularyProps {
   id: string;
+  setTerminologyTitle: (title: string) =>  void;
 }
 
-export default function Vocabulary({ id }: VocabularyProps) {
+export default function Vocabulary({ id, setTerminologyTitle }: VocabularyProps) {
   const { t, i18n } = useTranslation('common');
   const { isSmall } = useBreakpoints();
   const { urlState } = useUrlState();
@@ -57,6 +59,14 @@ export default function Vocabulary({ id }: VocabularyProps) {
   }
 
   useEffect(() => {
+    setTerminologyTitle(getPropertyValue({
+      property: info?.properties.prefLabel,
+      language: i18n.language,
+      fallbackLanguage: 'fi'
+    }) ?? '');
+  }, [info]);
+
+  useEffect(() => {
     dispatch(setAlert([
       collectionsError as Error,
       conceptsError as Error,
@@ -78,93 +88,98 @@ export default function Vocabulary({ id }: VocabularyProps) {
       <Breadcrumb>
         {!infoError &&
           <BreadcrumbLink url={`/terminology/${id}`} current>
-            <PropertyValue property={info?.properties.prefLabel} />
+            <PropertyValue
+              property={info?.properties.prefLabel}
+              fallbackLanguage='fi'
+            />
           </BreadcrumbLink>
         }
       </Breadcrumb>
 
-      {info && <Title info={info} />}
-      {isSmall &&
-        <FilterMobileButton
-          variant='secondary'
-          fullWidth
-          onClick={() => setShowModal(!showModal)}
-        >
-          {t('vocabulary-filter-filter-list')}
-        </FilterMobileButton>
-      }
-      <ResultAndFilterContainer>
-        {!isSmall
-          ?
-          <TerminologyListFilter counts={counts} />
-          :
-          <Modal
-            appElementId='__next'
-            visible={showModal}
-            onEscKeyDown={() => setShowModal(false)}
-            variant='smallScreen'
-            style={{ border: 'none' }}
+      <main>
+        {info && <Title info={info} />}
+        {isSmall &&
+          <FilterMobileButton
+            variant='secondary'
+            fullWidth
+            onClick={() => setShowModal(!showModal)}
           >
-            <ModalContent style={{ padding: '0' }}>
-              <TerminologyListFilter
-                isModal
-                onModalClose={() => setShowModal(false)}
-                resultCount={concepts?.totalHitCount}
-                counts={counts}
-              />
-            </ModalContent>
-          </Modal>
+            {t('vocabulary-filter-filter-list')}
+          </FilterMobileButton>
         }
-        <ResultAndStatsWrapper id="search-results">
-          {urlState.type === 'concept' &&
-            (
-              ((showLoadingConcepts && isFetchingConcepts) || conceptsError)
-                ?
-                <LoadIndicator
-                  isFetching={isFetchingConcepts}
-                  error={conceptsError}
-                  refetch={refetchConcepts}
+        <ResultAndFilterContainer>
+          {!isSmall
+            ?
+            <TerminologyListFilter counts={counts} />
+            :
+            <Modal
+              appElementId='__next'
+              visible={showModal}
+              onEscKeyDown={() => setShowModal(false)}
+              variant='smallScreen'
+              style={{ border: 'none' }}
+            >
+              <ModalContent style={{ padding: '0' }}>
+                <TerminologyListFilter
+                  isModal
+                  onModalClose={() => setShowModal(false)}
+                  resultCount={concepts?.totalHitCount}
+                  counts={counts}
                 />
-                :
-                concepts &&
-                <>
-                  <SearchResults data={concepts} />
-                  <PaginationWrapper>
-                    <Pagination
-                      data={concepts}
-                      pageString={t('pagination-page')}
-                    />
-                  </PaginationWrapper>
-                </>
-            )
+              </ModalContent>
+            </Modal>
           }
-          {urlState.type === 'collection' &&
-            (
-              ((showLoadingCollections && isFetchingCollections) || collectionsError)
-                ?
-                <LoadIndicator
-                  isFetching={isFetchingCollections}
-                  error={collectionsError}
-                  refetch={refetchCollections}
-                />
-                :
-                collections &&
-                <>
-                  <SearchResults
-                    data={filterData(collections, urlState, i18n.language) ?? collections}
-                    type="collections"
+          <ResultAndStatsWrapper id="search-results">
+            {urlState.type === 'concept' &&
+              (
+                ((showLoadingConcepts && isFetchingConcepts) || conceptsError)
+                  ?
+                  <LoadIndicator
+                    isFetching={isFetchingConcepts}
+                    error={conceptsError}
+                    refetch={refetchConcepts}
                   />
-                  <PaginationWrapper>
-                    <Pagination
+                  :
+                  concepts &&
+                  <>
+                    <SearchResults data={concepts} />
+                    <PaginationWrapper>
+                      <Pagination
+                        data={concepts}
+                        pageString={t('pagination-page')}
+                      />
+                    </PaginationWrapper>
+                  </>
+              )
+            }
+            {urlState.type === 'collection' &&
+              (
+                ((showLoadingCollections && isFetchingCollections) || collectionsError)
+                  ?
+                  <LoadIndicator
+                    isFetching={isFetchingCollections}
+                    error={collectionsError}
+                    refetch={refetchCollections}
+                  />
+                  :
+                  collections &&
+                  <>
+                    <SearchResults
                       data={filterData(collections, urlState, i18n.language) ?? collections}
-                      pageString={t('pagination-page')}
+                      type="collections"
                     />
-                  </PaginationWrapper>
-                </>
-            )
-          }
-        </ResultAndStatsWrapper>
-      </ResultAndFilterContainer>
+                    <PaginationWrapper>
+                      <Pagination
+                        data={filterData(collections, urlState, i18n.language) ?? collections}
+                        pageString={t('pagination-page')}
+                      />
+                    </PaginationWrapper>
+                  </>
+              )
+            }
+          </ResultAndStatsWrapper>
+        </ResultAndFilterContainer>
+      </main>
     </>
   );
 };

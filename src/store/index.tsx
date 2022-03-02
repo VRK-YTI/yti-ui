@@ -8,6 +8,7 @@ import { collectionApi } from '../common/components/collection/collection-slice'
 import { countsApi } from '../common/components/counts/counts-slice';
 import { loginSlice } from '../common/components/login/login-slice';
 import { alertSlice } from '../common/components/alert/alert.slice';
+import { titleSlice } from '../common/components/title/title.slice';
 
 export function makeStore() {
   return configureStore({
@@ -21,6 +22,7 @@ export function makeStore() {
       [countsApi.reducerPath]: countsApi.reducer,
       [loginSlice.name]: loginSlice.reducer,
       [alertSlice.name]: alertSlice.reducer,
+      [titleSlice.name]: titleSlice.reducer
     },
 
     middleware: (getDefaultMiddleware) =>

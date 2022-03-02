@@ -16,7 +16,7 @@ export default function IndexPage(props: {
     <MediaQueryContextProvider value={{ isSSRMobile: props.isSSRMobile }}>
       <Layout>
         <Head>
-          <title>{ t('terminology-site-title') }</title>
+          <title>{t('terminology-site-title')} | {t('site-title')}</title>
           <link rel="shortcut icon" href="/favicon.ico" />
         </Head>
 

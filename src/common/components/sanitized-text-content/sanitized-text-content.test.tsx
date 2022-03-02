@@ -17,21 +17,31 @@ describe('text-links', () => {
     expect(screen.queryByText('This is a test')).not.toHaveAttribute('href');
   });
 
-  test('should render component with internal link', () => {
+  test('should render component with different internal link', () => {
 
     render(
       <ThemeProvider theme={lightTheme}>
         <SanitizedTextContent text={
-          'This is a <a href=\'https://uri.suomi.fi/terminology/demo/concept-001\' data-type=\'internal\'>test</a> with a link'
+          `This is a <a href=\'https://uri.suomi.fi/terminology/demo/concept-001\' data-type=\'internal\'>internal test</a> with link.
+           This is a <a href=\'https://uri.suomi.fi/terminology/demo/concept-002\' data-type=\'broader\'>broader test</a> with link.
+           This is a <a href=\'https://uri.suomi.fi/terminology/demo/concept-003\' data-type=\'related\'>related test</a> with link.
+          `
         } />
       </ThemeProvider>
     );
 
-    expect(screen.queryByText('This is a')).toBeTruthy();
-    expect(screen.queryByText('test')).toBeTruthy();
-    expect(screen.queryByText('test')).toHaveAttribute('href');
-    expect(screen.queryByText('test')).not.toHaveClass('fi-link--external');
-    expect(screen.queryByText('with a link')).toBeTruthy();
+    expect(screen.queryByText('internal test')).toBeTruthy();
+    expect(screen.queryByText('internal test')).toHaveAttribute('href');
+    expect(screen.queryByText('internal test')).not.toHaveClass('fi-link--external');
+
+    expect(screen.queryByText('broader test')).toBeTruthy();
+    expect(screen.queryByText('broader test')).toHaveAttribute('href');
+    expect(screen.queryByText('broader test')).not.toHaveClass('fi-link--external');
+
+    expect(screen.queryByText('related test')).toBeTruthy();
+    expect(screen.queryByText('related test')).toHaveAttribute('href');
+    expect(screen.queryByText('related test')).not.toHaveClass('fi-link--external');
+
   });
 
   test('should render component with external link', () => {
