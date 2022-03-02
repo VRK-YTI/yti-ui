@@ -1,6 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import React from 'react';
 import { Term } from '../../interfaces/term.interface';
+import TermModal from '../term-modal';
 import MultilingualBlock, { MultilingualBlockItemMapper } from './multilingual-block';
 
 export interface TermBlockProps {
@@ -26,7 +27,7 @@ export default function TermBlock({
           style={{ display: 'inline-block', minWidth: '40%' }}
           lang={term.properties.prefLabel?.[0].value}
         >
-          {term.properties.prefLabel?.[0].value}
+          <TermModal data={{ term: term, type: type }} />
         </span>
         <span>{type}, {t(term.properties.status?.[0].value ?? '')}</span>
       </span>
