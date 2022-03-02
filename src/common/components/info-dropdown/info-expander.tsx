@@ -47,7 +47,7 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
           {t('vocabulary-info-terminological-dictionary')}
         </BasicBlock>
 
-        <Separator large aria-hidden={true} />
+        <Separator isLarge />
 
         <BasicBlock
           title={t('vocabulary-info-vocabulary-export')}
@@ -68,7 +68,7 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
           {t('vocabulary-info-vocabulary-export-description')}
         </BasicBlock>
 
-        <Separator large aria-hidden={true} />
+        <Separator isLarge />
 
         <PropertyBlock
           title={t('vocabulary-info-organization')}

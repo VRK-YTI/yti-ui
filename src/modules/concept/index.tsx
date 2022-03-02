@@ -160,7 +160,7 @@ export default function Concept({ terminologyId, conceptId, setConceptTitle }: C
 
           <DetailsExpander concept={concept} />
 
-          <Separator large />
+          <Separator isLarge />
 
           <PropertyBlock
             title={t('vocabulary-info-organization', { ns: 'common' })}
@@ -177,7 +177,7 @@ export default function Concept({ terminologyId, conceptId, setConceptTitle }: C
             {concept?.uri}
           </BasicBlock>
 
-          <Separator large />
+          <Separator isLarge />
 
           <BasicBlock
             extra={

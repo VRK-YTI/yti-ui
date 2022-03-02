@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 export const ResultAndFilterContainer = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: row-reverse;
   flex-wrap: nowrap;
   gap: ${props => props.theme.suomifi.spacing.xl};
   justify-content: space-between;

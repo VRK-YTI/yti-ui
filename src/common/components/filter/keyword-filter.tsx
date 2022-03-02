@@ -37,7 +37,7 @@ export function KeywordFilter({
         onKeyDown={e => e.key === 'Enter' && update(inputValue)}
         value={inputValue}
         visualPlaceholder={visualPlaceholder}
-        fullWidth={isModal}
+        fullWidth
       />
     </div>
   );

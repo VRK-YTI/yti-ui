@@ -65,29 +65,6 @@ export default function TerminologySearch() {
         </FilterMobileButton>
       }
       <ResultAndFilterContainer>
-        <ResultAndStatsWrapper id="search-results">
-          {(showLoading && isFetching) || error
-            ?
-            <LoadIndicator isFetching={isFetching} error={error} refetch={refetch} />
-            :
-            data &&
-            <>
-              <SearchResults
-                data={data}
-                type="terminology-search"
-                organizations={organizations}
-                domains={groups}
-              />
-              <PaginationWrapper>
-                <Pagination
-                  data={data}
-                  pageString={t('pagination-page')}
-                />
-              </PaginationWrapper>
-            </>
-
-          }
-        </ResultAndStatsWrapper>
         {!isSmall
           ?
           <SearchPageFilter
@@ -115,6 +92,29 @@ export default function TerminologySearch() {
             </ModalContent>
           </Modal>
         }
+        <ResultAndStatsWrapper id="search-results">
+          {(showLoading && isFetching) || error
+            ?
+            <LoadIndicator isFetching={isFetching} error={error} refetch={refetch} />
+            :
+            data &&
+            <>
+              <SearchResults
+                data={data}
+                type="terminology-search"
+                organizations={organizations}
+                domains={groups}
+              />
+              <PaginationWrapper>
+                <Pagination
+                  data={data}
+                  pageString={t('pagination-page')}
+                />
+              </PaginationWrapper>
+            </>
+
+          }
+        </ResultAndStatsWrapper>
       </ResultAndFilterContainer>
     </>
   );
