@@ -22,8 +22,8 @@ import {
 } from './search-results.styles';
 import { Concept } from '../../interfaces/concept.interface';
 import useUrlState from '../../utils/hooks/useUrlState';
-import SanitizedTextContent from '../sanitized-text-content';
 import { VisuallyHidden } from 'suomifi-ui-components';
+import dynamic from 'next/dynamic';
 
 interface SearchResultsProps {
   data: TerminologySearchResult | VocabularyConcepts | Collection[];
@@ -102,6 +102,10 @@ export default function SearchResults({ data, type, organizations, domains }: Se
                     </Link>
                   </CardTitleWrapper>
 
+                  {/*
+                    *  TODO: This produces an error about <div> not being a
+                    *  valid child of <p>
+                    */}
                   <CardSubtitle>
                     <div>{t('terminology-search-results-terminology')}</div>
                     <span aria-hidden="true">&middot;</span>
@@ -118,7 +122,8 @@ export default function SearchResults({ data, type, organizations, domains }: Se
                       terminology?.description?.[i18n.language]
                       :
                       terminology?.description?.[Object.keys(terminology?.description)[0]]
-                        ?
+                        ?// import SanitizedTextContent from '../sanitized-text-content';
+
                         terminology?.description?.[Object.keys(terminology?.description)[0]]
                         :
                         t('terminology-search-no-description')}
@@ -145,6 +150,8 @@ export default function SearchResults({ data, type, organizations, domains }: Se
   }
 
   function renderConceptSearchResults() {
+    const SanitizedTextContent = dynamic(() => import('../sanitized-text-content'));
+
     if ('concepts' in data) {
       if (data && !Array.isArray(data)) {
         return (

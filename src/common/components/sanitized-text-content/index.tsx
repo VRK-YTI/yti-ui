@@ -16,7 +16,6 @@ interface ChildType extends ChildNode {
 export default function SanitizedTextContent({ text }: TextLinksProps) {
   const { t } = useTranslation('common');
 
-  return <>{text}</>;
   const internalTypes = ['broader', 'internal', 'related'];
   const htmlChildNodes = new DOMParser().parseFromString(text, 'text/html').children[0].children[1].childNodes;
   const children = Array.from(htmlChildNodes).map((child: ChildType, idx: number) => {
