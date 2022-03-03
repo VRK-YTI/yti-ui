@@ -5,7 +5,7 @@ import SkipLink from '../skip-link/skip-link';
 import {
   CloseWrapper,
   FilterContent,
-  FilterWrapper,
+  FilterSection,
   Header,
   HeaderButton
 } from './filter.styles';
@@ -28,18 +28,20 @@ export function Filter({
 
   return (
     <div>
-      <SkipLink href="#search-results">
-        {t('skip-link-search-results')}
-      </SkipLink>
+      {!isModal && (
+        <SkipLink href="#search-results">
+          {t('skip-link-search-results')}
+        </SkipLink>
+      )}
 
-      <FilterWrapper isModal={isModal}>
+      <FilterSection isModal={isModal} aria-labelledby="filter-title">
         {renderTitle()}
         <FilterContent>
           <ResetAllFiltersButton />
           {children}
           {renderModalFooter()}
         </FilterContent>
-      </FilterWrapper>
+      </FilterSection>
     </div>
   );
 
@@ -47,14 +49,18 @@ export function Filter({
     if (!isModal) {
       return (
         <Header>
-          {t('vocabulary-filter-filter-list')}
+          <h2 id="filter-title">
+            {t('vocabulary-filter-filter-list')}
+          </h2>
         </Header>
       );
     }
 
     return (
       <Header>
-        {t('vocabulary-filter-filter-list')}
+        <h2 id="filter-title">
+          {t('vocabulary-filter-filter-list')}
+        </h2>
         <HeaderButton
           iconRight='close'
           onClick={onModalClose}

@@ -26,6 +26,7 @@ import { useStoreDispatch } from '../../store';
 import { setAlert } from '../../common/components/alert/alert.slice';
 import { Error } from '../../common/interfaces/error.interface';
 import { useRouter } from 'next/router';
+import { Property } from '../../common/interfaces/termed-data-types.interface';
 import { setTitle } from '../../common/components/title/title.slice';
 import { useGetVocabularyQuery } from '../../common/components/vocabulary/vocabulary-slice';
 import { useGetConceptQuery } from '../../common/components/concept/concept-slice';
@@ -33,20 +34,30 @@ import { useGetConceptQuery } from '../../common/components/concept/concept-slic
 export interface ConceptProps {
   terminologyId: string;
   conceptId: string;
+  setConceptTitle: (title: string) => void;
 }
 
-export default function Concept({ terminologyId, conceptId }: ConceptProps) {
+export default function Concept({ terminologyId, conceptId, setConceptTitle }: ConceptProps) {
   const { breakpoint } = useBreakpoints();
   const { data: terminology, error: terminologyError } = useGetVocabularyQuery(terminologyId);
   const { data: concept, error: conceptError } = useGetConceptQuery({ terminologyId, conceptId });
   const { t, i18n } = useTranslation('concept');
   const dispatch = useStoreDispatch();
   const router = useRouter();
+  const conceptTitles = (concept?.references.prefLabelXl?.map(plxl => plxl.properties.prefLabel).map(item => item?.[0]) ?? []) as Property[];
   const titleRef = useRef<HTMLHeadingElement>(null);
 
   if (conceptError && 'status' in conceptError && conceptError.status === 404) {
     router.push('/404');
   }
+
+  useEffect(() => {
+    setConceptTitle(getPropertyValue({
+      property: concept?.references.prefLabelXl?.[0].properties.prefLabel,
+      language: i18n.language,
+      fallbackLanguage: 'fi'
+    }) ?? '');
+  }, [concept]);
 
   useEffect(() => {
     dispatch(setAlert([
@@ -84,7 +95,7 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
         {!conceptError &&
           <BreadcrumbLink url={`/terminology/${terminologyId}/concepts/${conceptId}`} current>
             <PropertyValue
-              property={concept?.references.prefLabelXl?.[0].properties.prefLabel}
+              property={conceptTitles}
               fallbackLanguage='fi'
             />
           </BreadcrumbLink>
@@ -103,14 +114,19 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
             </Text>
             <Heading variant="h1" tabIndex={-1} ref={titleRef}>
               <PropertyValue
-                property={concept?.references.prefLabelXl?.[0].properties.prefLabel}
+                property={conceptTitles}
                 fallbackLanguage='fi'
               />
             </Heading>
             <BadgeBar>
               <span>{t('heading')}</span>
               {' '}&middot;{' '}
-              <span><PropertyValue property={terminology?.properties.prefLabel} /></span>
+              <span>
+                <PropertyValue
+                  property={terminology?.properties.prefLabel}
+                  fallbackLanguage='fi'
+                />
+              </span>
               {' '}&middot;{' '}
               <Badge
                 isValid={getPropertyValue({ property: concept?.properties.status }) === 'VALID'}
@@ -146,7 +162,7 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
 
           <DetailsExpander concept={concept} />
 
-          <Separator large />
+          <Separator isLarge />
 
           <PropertyBlock
             title={t('vocabulary-info-organization', { ns: 'common' })}
@@ -163,7 +179,7 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
             {concept?.uri}
           </BasicBlock>
 
-          <Separator large />
+          <Separator isLarge />
 
           <BasicBlock
             extra={

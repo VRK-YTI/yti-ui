@@ -109,5 +109,8 @@
   "try-again": "Try again",
   "skip-link-main": "Go directly to contents.",
   "skip-link-search-results": "Go directly to search results.",
-  "navigated-to": "Navigated to"
+  "concept-page": "Concept page",
+  "collection-page": "Collection page",
+  "navigated-to": "Navigated to",
+  "site-open-new-email": "Open a new email to"
 }

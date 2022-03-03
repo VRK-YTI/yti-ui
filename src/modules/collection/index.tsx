@@ -22,9 +22,10 @@ import { useGetVocabularyQuery } from '../../common/components/vocabulary/vocabu
 interface CollectionProps {
   terminologyId: string;
   collectionId: string;
+  setCollectionTitle: (title: string) => void;
 }
 
-export default function Collection({ terminologyId, collectionId }: CollectionProps) {
+export default function Collection({ terminologyId, collectionId, setCollectionTitle }: CollectionProps) {
   const { breakpoint } = useBreakpoints();
   const { t, i18n } = useTranslation('collection');
   const dispatch = useStoreDispatch();
@@ -41,6 +42,14 @@ export default function Collection({ terminologyId, collectionId }: CollectionPr
   if (collectionError && 'status' in collectionError && collectionError.status === 404) {
     router.push('/404');
   }
+
+  useEffect(() => {
+    setCollectionTitle(getPropertyValue({
+      property: collection?.properties.prefLabel,
+      language: i18n.language,
+      fallbackLanguage: 'fi'
+    }) ?? '');
+  }, [collection]);
 
   useEffect(() => {
     dispatch(setAlert([
@@ -104,7 +113,7 @@ export default function Collection({ terminologyId, collectionId }: CollectionPr
               />
             </Heading>
             <BadgeBar>
-              {t('heading')} &middot; <PropertyValue property={terminology?.properties.prefLabel} />
+              {t('heading')} &middot; <PropertyValue property={terminology?.properties.prefLabel} fallbackLanguage='fi' />
             </BadgeBar>
             <Text>{t('description')}</Text>
           </HeadingBlock>
