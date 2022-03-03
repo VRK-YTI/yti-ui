@@ -57,7 +57,7 @@ export default function Concept({ terminologyId, conceptId, setConceptTitle }: C
       language: i18n.language,
       fallbackLanguage: 'fi'
     }) ?? '');
-  }, [concept]);
+  }, [concept, i18n.language, setConceptTitle]);
 
   useEffect(() => {
     dispatch(setAlert([

@@ -64,7 +64,7 @@ export default function Vocabulary({ id, setTerminologyTitle }: VocabularyProps)
       language: i18n.language,
       fallbackLanguage: 'fi'
     }) ?? '');
-  }, [info]);
+  }, [info, i18n.language, setTerminologyTitle]);
 
   useEffect(() => {
     dispatch(setAlert([

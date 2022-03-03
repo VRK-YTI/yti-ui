@@ -49,7 +49,7 @@ export default function Collection({ terminologyId, collectionId, setCollectionT
       language: i18n.language,
       fallbackLanguage: 'fi'
     }) ?? '');
-  }, [collection]);
+  }, [collection, i18n.language, setCollectionTitle]);
 
   useEffect(() => {
     dispatch(setAlert([

@@ -122,8 +122,7 @@ export default function SearchResults({ data, type, organizations, domains }: Se
                       terminology?.description?.[i18n.language]
                       :
                       terminology?.description?.[Object.keys(terminology?.description)[0]]
-                        ?// import SanitizedTextContent from '../sanitized-text-content';
-
+                        ?
                         terminology?.description?.[Object.keys(terminology?.description)[0]]
                         :
                         t('terminology-search-no-description')}
