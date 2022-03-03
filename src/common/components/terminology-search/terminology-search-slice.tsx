@@ -8,7 +8,7 @@ import {
 import { UrlState } from '../../utils/hooks/useUrlState';
 import axiosBaseQuery from '../axios-base-query';
 
-export interface SearchState { };
+export interface SearchState {};
 
 export const initialState: SearchState = {};
 

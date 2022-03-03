@@ -6,7 +6,7 @@ import { UrlState } from '../../utils/hooks/useUrlState';
 import axiosBaseQuery from '../axios-base-query';
 import { HYDRATE } from 'next-redux-wrapper';
 
-export interface VocabularyState { }
+export interface VocabularyState {}
 
 export const vocabularyInitialState: VocabularyState = {};
 

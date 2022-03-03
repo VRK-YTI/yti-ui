@@ -102,10 +102,6 @@ export default function SearchResults({ data, type, organizations, domains }: Se
                     </Link>
                   </CardTitleWrapper>
 
-                  {/*
-                    *  TODO: This produces an error about <div> not being a
-                    *  valid child of <p>
-                    */}
                   <CardSubtitle>
                     <div>{t('terminology-search-results-terminology')}</div>
                     <span aria-hidden="true">&middot;</span>

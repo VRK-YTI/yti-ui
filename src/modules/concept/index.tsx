@@ -100,7 +100,6 @@ export default function Concept({ terminologyId, conceptId, setConceptTitle }: C
             />
           </BreadcrumbLink>
         }
-
       </Breadcrumb>
 
       <PageContent breakpoint={breakpoint}>
@@ -154,7 +153,6 @@ export default function Concept({ terminologyId, conceptId, setConceptTitle }: C
               ...(concept?.references.hiddenTerm ?? []).map(term => ({ term, type: t('field-terms-hidden') })),
             ]}
           />
-
           <MultilingualPropertyBlock
             title={t('field-note')}
             data={concept?.properties.note}
