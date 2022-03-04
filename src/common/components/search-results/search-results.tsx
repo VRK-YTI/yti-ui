@@ -22,8 +22,8 @@ import {
 } from './search-results.styles';
 import { Concept } from '../../interfaces/concept.interface';
 import useUrlState from '../../utils/hooks/useUrlState';
+import SanitizedTextContent from '../sanitized-text-content';
 import { VisuallyHidden } from 'suomifi-ui-components';
-import dynamic from 'next/dynamic';
 
 interface SearchResultsProps {
   data: TerminologySearchResult | VocabularyConcepts | Collection[];
@@ -145,8 +145,6 @@ export default function SearchResults({ data, type, organizations, domains }: Se
   }
 
   function renderConceptSearchResults() {
-    const SanitizedTextContent = dynamic(() => import('../sanitized-text-content'));
-
     if ('concepts' in data) {
       if (data && !Array.isArray(data)) {
         return (
