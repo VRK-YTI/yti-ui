@@ -4,7 +4,7 @@ import SanitizedTextContent from './index';
 import { ThemeProvider } from 'styled-components';
 import { lightTheme } from '../../../layouts/theme';
 
-describe('text-links', () => {
+describe('sanitized-text-content', () => {
   test('should render component without links', () => {
 
     render(
@@ -54,11 +54,11 @@ describe('text-links', () => {
       </ThemeProvider>
     );
 
-    expect(screen.queryByText('This is a')).toBeTruthy();
+    expect(screen.queryByText(/This is a/)).toBeTruthy();
     expect(screen.queryByText('test')).toBeTruthy();
     expect(screen.queryByText('test')).toHaveAttribute('href');
     expect(screen.queryByText('test')).toHaveClass('fi-link--external');
-    expect(screen.queryByText('with a link')).toBeTruthy();
+    expect(screen.queryByText(/with a link/)).toBeTruthy();
   });
 
   test('should render component with multiple internal and external links', () => {
@@ -92,7 +92,6 @@ describe('text-links', () => {
   });
 
   test('should sanitize uri', () => {
-
     render(
       <ThemeProvider theme={lightTheme}>
         <SanitizedTextContent text={
@@ -101,11 +100,11 @@ describe('text-links', () => {
       </ThemeProvider>
     );
 
-    expect(screen.queryByText('This is a')).toBeTruthy();
+    expect(screen.queryByText(/This is a/)).toBeTruthy();
     expect(screen.queryByText('test')).toBeTruthy();
     expect(screen.queryByText('test')).not.toHaveAttribute('href');
     expect(screen.queryByText('test')).not.toHaveClass('fi-link--external');
-    expect(screen.queryByText('with javascript')).toBeTruthy();
+    expect(screen.queryByText(/with javascript/)).toBeTruthy();
   });
 
 });
