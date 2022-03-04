@@ -1,6 +1,6 @@
 import { useTranslation } from 'next-i18next';
 import React, { useEffect, useRef } from 'react';
-import { ExternalLink, Heading, Text } from 'suomifi-ui-components';
+import { ExternalLink, Heading, Text, VisuallyHidden } from 'suomifi-ui-components';
 import {
   BasicBlock,
   MultilingualPropertyBlock,
@@ -136,7 +136,7 @@ export default function Concept({ terminologyId, conceptId, setConceptTitle }: C
           </HeadingBlock>
 
           <MultilingualPropertyBlock
-            title={t('field-definition')}
+            title={<h2>{t('field-definition')}</h2>}
             data={concept?.properties.definition}
           />
           <MultilingualPropertyBlock
@@ -144,7 +144,7 @@ export default function Concept({ terminologyId, conceptId, setConceptTitle }: C
             data={concept?.properties.example}
           />
           <TermBlock
-            title={t('field-terms-label')}
+            title={<h2>{t('field-terms-label')}</h2>}
             data={[
               ...(concept?.references.prefLabelXl ?? []).map(term => ({ term, type: t('field-terms-preferred') })),
               ...(concept?.references.altLabelXl ?? []).map(term => ({ term, type: t('field-terms-alternative') })),
@@ -153,6 +153,7 @@ export default function Concept({ terminologyId, conceptId, setConceptTitle }: C
               ...(concept?.references.hiddenTerm ?? []).map(term => ({ term, type: t('field-terms-hidden') })),
             ]}
           />
+
           <MultilingualPropertyBlock
             title={t('field-note')}
             data={concept?.properties.note}
@@ -161,6 +162,10 @@ export default function Concept({ terminologyId, conceptId, setConceptTitle }: C
           <DetailsExpander concept={concept} />
 
           <Separator isLarge />
+
+          <VisuallyHidden as="h2">
+            {t('additional-technical-information', { ns: 'common' })}
+          </VisuallyHidden>
 
           <PropertyBlock
             title={t('vocabulary-info-organization', { ns: 'common' })}

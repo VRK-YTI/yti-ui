@@ -16,6 +16,10 @@ export default function ConceptListBlock({
   data,
   extra,
 }: ConceptListBlockProps) {
+  if (!data?.length) {
+    return null;
+  }
+  
   return (
     <BasicBlock title={title} extra={extra}>
       <List>
