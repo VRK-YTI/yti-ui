@@ -7,11 +7,12 @@ import { useTranslation } from 'next-i18next';
 
 export default function Logo() {
   const { t } = useTranslation('common');
+
   return (
     <LogoWrapper>
       <Link href="/" passHref>
         <SuomiLink href='' aria-label={t('navigate-to-homepage')}>
-          <Image src='/logo.svg' width="186" height="32" alt="" title='Siirry etusivulle' />
+          <Image src='/logo.svg' width="186" height="32" alt={`${t('terminology-title')}-logo` } />
         </SuomiLink>
       </Link>
     </LogoWrapper >
