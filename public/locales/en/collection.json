@@ -1,6 +1,5 @@
 {
   "description": "Collection is a way to group concepts related to the same topic.",
-  "field-broader": "Broader concepts of concepts in the collection",
   "field-definition": "Definition",
   "field-member": "Concepts in the collection",
   "field-name": "Name",

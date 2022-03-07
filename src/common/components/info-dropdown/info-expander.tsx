@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { Button, ExpanderContent, ExpanderTitleButton } from 'suomifi-ui-components';
+import { Button, ExpanderContent, ExpanderTitleButton, VisuallyHidden } from 'suomifi-ui-components';
 import { InfoExpanderWrapper } from './info-expander.styles';
 import { VocabularyInfoDTO } from '../../interfaces/vocabulary.interface';
 import Separator from '../separator';
@@ -69,6 +69,11 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
         </BasicBlock>
 
         <Separator isLarge />
+
+
+        <VisuallyHidden as="h3">
+          {t('additional-technical-information', { ns: 'common' })}
+        </VisuallyHidden>
 
         <PropertyBlock
           title={t('vocabulary-info-organization')}
