@@ -7,6 +7,7 @@ import { getPropertyValue } from '../property-value/get-property-value';
 import { useStoreDispatch } from '../../../store';
 import { setTitle } from './title.slice';
 import { useEffect, useRef } from 'react';
+import { getProperty } from '../../utils/get-property';
 
 interface TitleProps {
   info: string | VocabularyInfoDTO;
@@ -53,7 +54,7 @@ export default function Title({ info }: TitleProps) {
     const status = info.properties.status?.[0].value ?? '';
 
     const contributor = getPropertyValue({
-      property: info.references.contributor?.[0].properties.prefLabel,
+      property: getProperty('prefLabel', info.references.contributor),
       language: i18n.language,
       fallbackLanguage: 'fi'
     }) ?? '';
