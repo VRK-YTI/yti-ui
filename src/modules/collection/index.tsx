@@ -1,7 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import React, { useEffect, useRef } from 'react';
-import { Heading, Text } from 'suomifi-ui-components';
+import { Heading, Text, VisuallyHidden } from 'suomifi-ui-components';
 import { setAlert } from '../../common/components/alert/alert.slice';
 import { BasicBlock, MultilingualPropertyBlock, PropertyBlock } from '../../common/components/block';
 import { ConceptListBlock } from '../../common/components/block';
@@ -118,15 +118,15 @@ export default function Collection({ terminologyId, collectionId, setCollectionT
             data={collection?.properties.definition}
           />
           <ConceptListBlock
-            title={t('field-broader')}
-            data={collection?.references.broader}
-          />
-          <ConceptListBlock
-            title={t('field-member')}
+            title={<h2>{t('field-member')}</h2>}
             data={collection?.references.member}
           />
 
           <Separator />
+
+          <VisuallyHidden as="h2">
+            {t('additional-technical-information', { ns: 'common' })}
+          </VisuallyHidden>
 
           <PropertyBlock
             title={t('vocabulary-info-organization', { ns: 'common' })}

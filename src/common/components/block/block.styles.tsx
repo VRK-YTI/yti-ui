@@ -15,6 +15,12 @@ export const BasicBlockWrapper = styled.div<{ largeGap?: boolean }>`
 
 export const BasicBlockHeader = styled.div`
   font-weight: 600;
+
+  h2 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+  }
 `;
 
 export const BasicBlockExtraWrapper = styled.div`
