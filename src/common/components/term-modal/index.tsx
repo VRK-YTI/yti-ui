@@ -132,7 +132,6 @@ export default function TermModal({ data }: TermModalProps) {
         */}
         <TermModalChip
           aria-disabled={true}
-          disabled={true}
           isvalid={value[0].value === 'VALID' ? 'true' : undefined}
         >
           {t(getPropertyValue({ property: value }) ?? '', { ns: 'common' })}
