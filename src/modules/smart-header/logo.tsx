@@ -12,7 +12,7 @@ export default function Logo() {
     <LogoWrapper>
       <Link href="/" passHref>
         <SuomiLink href='' aria-label={t('navigate-to-homepage')}>
-          <Image src='/logo.svg' width="186" height="32" alt={`${t('terminology-title')}-logo` } />
+          <Image src='/logo.svg' width="186" height="32" alt={t('interoperability-logo-title')} />
         </SuomiLink>
       </Link>
     </LogoWrapper >
