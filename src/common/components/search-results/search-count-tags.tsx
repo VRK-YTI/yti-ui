@@ -36,7 +36,7 @@ export default function SearchCountTags({
   return (
     <CountWrapper isSmall={isSmall}>
       <CountText aria-live='polite'>
-        <div aria-hidden={true}>{title}</div>
+        <span aria-hidden={true}>{title}</span>
         <VisuallyHidden>
           {t('search-results-count', { count: count })}
         </VisuallyHidden>
