@@ -1,6 +1,5 @@
 import Head from 'next/head';
 import React from 'react';
-import { Block } from 'suomifi-ui-components';
 import { ThemeProvider } from 'styled-components';
 import { lightTheme } from './theme';
 import {

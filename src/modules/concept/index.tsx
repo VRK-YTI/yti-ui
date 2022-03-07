@@ -28,13 +28,13 @@ import { useStoreDispatch } from '../../store';
 import { setAlert } from '../../common/components/alert/alert.slice';
 import { Error } from '../../common/interfaces/error.interface';
 import { useRouter } from 'next/router';
-import { Property } from '../../common/interfaces/termed-data-types.interface';
 import { setTitle } from '../../common/components/title/title.slice';
+import { getProperty } from '../../common/utils/get-property';
 
 export interface ConceptProps {
   terminologyId: string;
   conceptId: string;
-  setConceptTitle: (title: string) => void;
+  setConceptTitle: (title?: string) => void;
 }
 
 export default function Concept({ terminologyId, conceptId, setConceptTitle }: ConceptProps) {
@@ -44,20 +44,21 @@ export default function Concept({ terminologyId, conceptId, setConceptTitle }: C
   const { t, i18n } = useTranslation('concept');
   const dispatch = useStoreDispatch();
   const router = useRouter();
-  const conceptTitles = (concept?.references.prefLabelXl?.map(plxl => plxl.properties.prefLabel).map(item => item?.[0]) ?? []) as Property[];
   const titleRef = useRef<HTMLHeadingElement>(null);
 
   if (conceptError && 'status' in conceptError && conceptError.status === 404) {
     router.push('/404');
   }
 
+  const prefLabel = getPropertyValue({
+    property: getProperty('prefLabel', concept?.references.prefLabelXl),
+    language: i18n.language,
+    fallbackLanguage: 'fi'
+  });
+
   useEffect(() => {
-    setConceptTitle(getPropertyValue({
-      property: concept?.references.prefLabelXl?.[0].properties.prefLabel,
-      language: i18n.language,
-      fallbackLanguage: 'fi'
-    }) ?? '');
-  }, [concept]);
+    setConceptTitle(prefLabel);
+  }, [setConceptTitle, prefLabel]);
 
   useEffect(() => {
     dispatch(setAlert([
@@ -68,15 +69,9 @@ export default function Concept({ terminologyId, conceptId, setConceptTitle }: C
 
   useEffect(() => {
     if (concept) {
-      const title = getPropertyValue({
-        property: concept.references.prefLabelXl?.[0].properties.prefLabel,
-        language: i18n.language,
-        fallbackLanguage: 'fi'
-      }) ?? '';
-
-      dispatch(setTitle(title));
+      dispatch(setTitle(prefLabel ?? ''));
     }
-  }, [concept, dispatch, i18n.language]);
+  }, [concept, dispatch, prefLabel]);
 
   useEffect(() => {
     if (titleRef.current) {
@@ -94,10 +89,7 @@ export default function Concept({ terminologyId, conceptId, setConceptTitle }: C
         }
         {!conceptError &&
           <BreadcrumbLink url={`/terminology/${terminologyId}/concepts/${conceptId}`} current>
-            <PropertyValue
-              property={conceptTitles}
-              fallbackLanguage='fi'
-            />
+            {prefLabel}
           </BreadcrumbLink>
         }
       </Breadcrumb>
@@ -107,15 +99,12 @@ export default function Concept({ terminologyId, conceptId, setConceptTitle }: C
           <HeadingBlock>
             <Text>
               <PropertyValue
-                property={terminology?.references.contributor?.[0].properties.prefLabel}
+                property={getProperty('prefLabel', terminology?.references.contributor)}
                 fallbackLanguage='fi'
               />
             </Text>
             <Heading variant="h1" tabIndex={-1} ref={titleRef}>
-              <PropertyValue
-                property={conceptTitles}
-                fallbackLanguage='fi'
-              />
+              {prefLabel}
             </Heading>
             <BadgeBar>
               <span>{t('heading')}</span>
