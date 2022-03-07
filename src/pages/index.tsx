@@ -5,6 +5,7 @@ import { SSRConfig, useTranslation } from "next-i18next";
 import { createCommonGetServerSideProps } from "../common/utils/create-getserversideprops";
 import { MediaQueryContextProvider } from "../common/components/media-query/media-query-context";
 import TerminologySearch from "../modules/terminology-search";
+import PageTitle from "../common/components/page-title";
 
 export default function IndexPage(props: {
   _netI18Next: SSRConfig;
@@ -15,10 +16,8 @@ export default function IndexPage(props: {
   return (
     <MediaQueryContextProvider value={{ isSSRMobile: props.isSSRMobile }}>
       <Layout>
+        <PageTitle title={t("terminology-site-title")} />
         <Head>
-          <title>
-            {t("terminology-site-title")} | {t("site-title")}
-          </title>
           <link rel="shortcut icon" href="/favicon.ico" />
         </Head>
 

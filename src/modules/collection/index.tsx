@@ -27,11 +27,12 @@ import {
   PageContent,
 } from "./collection.styles";
 import { setTitle } from "../../common/components/title/title.slice";
+import { getProperty } from "../../common/utils/get-property";
 
 interface CollectionProps {
   terminologyId: string;
   collectionId: string;
-  setCollectionTitle: (title: string) => void;
+  setCollectionTitle: (title?: string) => void;
 }
 
 export default function Collection({
@@ -59,15 +60,14 @@ export default function Collection({
     router.push("/404");
   }
 
+  const prefLabel = getPropertyValue({
+    property: collection?.properties.prefLabel,
+    language: i18n.language,
+    fallbackLanguage: "fi",
+  });
   useEffect(() => {
-    setCollectionTitle(
-      getPropertyValue({
-        property: collection?.properties.prefLabel,
-        language: i18n.language,
-        fallbackLanguage: "fi",
-      }) ?? ""
-    );
-  }, [collection, i18n.language, setCollectionTitle]);
+    setCollectionTitle(prefLabel);
+  }, [setCollectionTitle, prefLabel]);
 
   useEffect(() => {
     dispatch(setAlert([terminologyError as Error, collectionError as Error]));
@@ -75,16 +75,9 @@ export default function Collection({
 
   useEffect(() => {
     if (collection) {
-      const title =
-        getPropertyValue({
-          property: collection?.properties.prefLabel,
-          language: i18n.language,
-          fallbackLanguage: "fi",
-        }) ?? "";
-
-      dispatch(setTitle(title));
+      dispatch(setTitle(prefLabel ?? ""));
     }
-  }, [collection, dispatch, i18n.language]);
+  }, [collection, dispatch, prefLabel]);
 
   useEffect(() => {
     if (titleRef.current) {
@@ -121,9 +114,10 @@ export default function Collection({
           <HeadingBlock>
             <Text>
               <PropertyValue
-                property={
-                  terminology?.references.contributor?.[0].properties.prefLabel
-                }
+                property={getProperty(
+                  "prefLabel",
+                  terminology?.references.contributor
+                )}
                 fallbackLanguage="fi"
               />
             </Text>

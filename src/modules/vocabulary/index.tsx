@@ -31,7 +31,7 @@ import { getPropertyValue } from "../../common/components/property-value/get-pro
 
 interface VocabularyProps {
   id: string;
-  setTerminologyTitle: (title: string) => void;
+  setTerminologyTitle: (title?: string) => void;
 }
 
 export default function Vocabulary({
@@ -65,15 +65,14 @@ export default function Vocabulary({
     router.push("/404");
   }
 
+  const prefLabel = getPropertyValue({
+    property: info?.properties.prefLabel,
+    language: i18n.language,
+    fallbackLanguage: "fi",
+  });
   useEffect(() => {
-    setTerminologyTitle(
-      getPropertyValue({
-        property: info?.properties.prefLabel,
-        language: i18n.language,
-        fallbackLanguage: "fi",
-      }) ?? ""
-    );
-  }, [info, i18n.language, setTerminologyTitle]);
+    setTerminologyTitle(prefLabel);
+  }, [setTerminologyTitle, prefLabel]);
 
   useEffect(() => {
     dispatch(
