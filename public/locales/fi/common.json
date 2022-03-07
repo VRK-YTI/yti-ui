@@ -105,5 +105,6 @@
   "concept-page": "Käsitteen sivu",
   "collection-page": "Käsitekokoelman sivu",
   "navigated-to": "Siirrytty sivulle",
-  "site-open-new-email": "Aloita uuden sähköpostin kirjoitus osoitteeseen"
+  "site-open-new-email": "Aloita uuden sähköpostin kirjoitus osoitteeseen",
+  "search-results-count": "Rajauksella {{count}} hakutulosta"
 }

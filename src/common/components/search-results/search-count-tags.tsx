@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
+import { VisuallyHidden } from 'suomifi-ui-components';
 import {
   GroupSearchResult,
   OrganizationSearchResult
@@ -18,6 +19,7 @@ interface SearchCountTagsProps {
   organizations?: OrganizationSearchResult[];
   domains?: GroupSearchResult[];
   renderQBeforeStatus?: boolean;
+  count: number;
 }
 
 export default function SearchCountTags({
@@ -25,6 +27,7 @@ export default function SearchCountTags({
   organizations = [],
   domains = [],
   renderQBeforeStatus = false,
+  count = 0
 }: SearchCountTagsProps) {
   const { t } = useTranslation('common');
   const { urlState, patchUrlState } = useUrlState();
@@ -32,7 +35,12 @@ export default function SearchCountTags({
 
   return (
     <CountWrapper isSmall={isSmall}>
-      <CountText aria-live='polite'>{title}</CountText>
+      <CountText aria-live='polite'>
+        <div aria-hidden={true}>{title}</div>
+        <VisuallyHidden>
+          {t('search-results-count', { count: count })}
+        </VisuallyHidden>
+      </CountText>
       <ChipWrapper>
         {renderOrganizationTag()}
         {renderQBeforeStatus && renderQTag()}

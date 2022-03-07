@@ -112,5 +112,6 @@
   "concept-page": "Concept page",
   "collection-page": "Collection page",
   "navigated-to": "Navigated to",
-  "site-open-new-email": "Open a new email to"
+  "site-open-new-email": "Open a new email to",
+  "search-results-count": "With filter {{count}} search results"
 }
