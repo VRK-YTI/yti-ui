@@ -1,11 +1,11 @@
-import { useTranslation } from 'next-i18next';
-import { Counts } from '../../common/interfaces/counts.interface';
-import Separator from '../../common/components/separator';
-import { Filter } from '../../common/components/filter/filter';
-import StatusFilter from '../../common/components/filter/status-filter';
-import { KeywordFilter } from '../../common/components/filter/keyword-filter';
-import TypeFilter from '../../common/components/filter/type-filter';
-import useUrlState from '../../common/utils/hooks/useUrlState';
+import { useTranslation } from "next-i18next";
+import { Counts } from "../../common/interfaces/counts.interface";
+import Separator from "../../common/components/separator";
+import { Filter } from "../../common/components/filter/filter";
+import StatusFilter from "../../common/components/filter/status-filter";
+import { KeywordFilter } from "../../common/components/filter/keyword-filter";
+import TypeFilter from "../../common/components/filter/type-filter";
+import useUrlState from "../../common/utils/hooks/useUrlState";
 
 export interface TerminologyListFilterProps {
   isModal?: boolean;
@@ -18,11 +18,11 @@ export function TerminologyListFilter({
   isModal,
   onModalClose,
   resultCount,
-  counts
+  counts,
 }: TerminologyListFilterProps) {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation("common");
   const { urlState } = useUrlState();
-  const shouldRenderStatusFilter = urlState.type === 'concept';
+  const shouldRenderStatusFilter = urlState.type === "concept";
 
   return (
     <Filter
@@ -31,7 +31,7 @@ export function TerminologyListFilter({
       resultCount={resultCount}
     >
       <TypeFilter
-        title={t('vocabulary-filter-show-only')}
+        title={t("vocabulary-filter-show-only")}
         isModal={isModal}
         counts={{
           concepts: counts?.counts.categories.Concept,
@@ -41,7 +41,7 @@ export function TerminologyListFilter({
       <Separator />
       {shouldRenderStatusFilter && (
         <StatusFilter
-          title={t('terminology-search-filter-show-states')}
+          title={t("terminology-search-filter-show-states")}
           isModal={isModal}
           counts={{
             valid: counts?.counts.statuses.VALID,
@@ -53,8 +53,8 @@ export function TerminologyListFilter({
       )}
       {shouldRenderStatusFilter && <Separator />}
       <KeywordFilter
-        title={t('vocabulary-filter-filter-by-keyword')}
-        visualPlaceholder={t('vocabulary-filter-visual-placeholder')}
+        title={t("vocabulary-filter-filter-by-keyword")}
+        visualPlaceholder={t("vocabulary-filter-visual-placeholder")}
         isModal={isModal}
       />
     </Filter>

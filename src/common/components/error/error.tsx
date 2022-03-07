@@ -1,5 +1,5 @@
-import { Heading, Link, Paragraph, Text } from 'suomifi-ui-components';
-import { ErrorPageWrapper } from './error-styles';
+import { Heading, Link, Paragraph, Text } from "suomifi-ui-components";
+import { ErrorPageWrapper } from "./error-styles";
 
 export interface ErrorProps {
   errorCode?: number;

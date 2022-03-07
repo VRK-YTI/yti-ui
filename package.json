@@ -8,7 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "prettier --check . && next lint --dir src",
-    "prettier": "prettier --write .",
+    "format": "prettier --write .",
     "test": "TZ=UTC jest",
     "test:watch": "TZ=UTC jest --watch",
     "test:ci": "TZ=UTC jest --ci --runInBand --coverage"

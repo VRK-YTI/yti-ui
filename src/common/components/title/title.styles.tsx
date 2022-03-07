@@ -1,22 +1,25 @@
-import styled from 'styled-components';
-import { StaticChip, Text } from 'suomifi-ui-components';
-import { TitleProps } from './title.props';
+import styled from "styled-components";
+import { StaticChip, Text } from "suomifi-ui-components";
+import { TitleProps } from "./title.props";
 
 export const Contributor = styled(Text)`
   font-size: 22px;
   font-weight: 600;
-  margin-bottom: ${props => props.theme.suomifi.spacing.xs};
+  margin-bottom: ${(props) => props.theme.suomifi.spacing.xs};
 `;
 
 export const Description = styled(Text)`
-  margin-top: ${props => props.theme.suomifi.spacing.m};
+  margin-top: ${(props) => props.theme.suomifi.spacing.m};
 `;
 
 export const StatusChip = styled(StaticChip)<TitleProps>`
-  background-color: ${props => props.valid ? 'hsl(166, 90%, 30%)' : props.theme.suomifi.colors.depthDark1} !important;
+  background-color: ${(props) =>
+    props.valid
+      ? "hsl(166, 90%, 30%)"
+      : props.theme.suomifi.colors.depthDark1} !important;
   font-size: 12px;
   line-height: 0;
-  margin-top: ${props => props.theme.suomifi.spacing.xxs};
+  margin-top: ${(props) => props.theme.suomifi.spacing.xxs};
   padding: 0px 10px !important;
   text-transform: uppercase;
   width: min-content;

@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import { ExternalLink, Link } from 'suomifi-ui-components';
+import styled from "styled-components";
+import { ExternalLink, Link } from "suomifi-ui-components";
 
 export const SuomiInternalLink = styled(Link)`
   font-size: inherit;

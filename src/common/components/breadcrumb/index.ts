@@ -1,7 +1,4 @@
-import Breadcrumb from './breadcrumb';
-import BreadcrumbLink from './breadcrumb-link';
+import Breadcrumb from "./breadcrumb";
+import BreadcrumbLink from "./breadcrumb-link";
 
-export {
-  Breadcrumb,
-  BreadcrumbLink,
-};
+export { Breadcrumb, BreadcrumbLink };

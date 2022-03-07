@@ -1,5 +1,5 @@
-import _ from 'lodash';
-import { NextRouter, useRouter } from 'next/router';
+import _ from "lodash";
+import { NextRouter, useRouter } from "next/router";
 
 export interface UrlState {
   q: string;
@@ -11,11 +11,11 @@ export interface UrlState {
 }
 
 export const initialUrlState: UrlState = {
-  q: '',
+  q: "",
   domain: [],
-  organization: '',
-  status: ['valid', 'draft'],
-  type: 'concept',
+  organization: "",
+  status: ["valid", "draft"],
+  type: "concept",
   page: 1,
 };
 
@@ -28,7 +28,7 @@ interface UseURLStateResult {
   updateUrlState: (state: UrlState) => void;
   patchUrlState: (patch: Partial<UrlState>) => void;
   resetUrlState: () => void;
-};
+}
 
 export default function useUrlState(): UseURLStateResult {
   const router = useRouter();
@@ -36,7 +36,10 @@ export default function useUrlState(): UseURLStateResult {
   const urlState: Required<UrlState> = {
     q: asString(router.query.q, initialUrlState.q),
     domain: asStringArray(router.query.domain, initialUrlState.domain),
-    organization: asString(router.query.organization, initialUrlState.organization),
+    organization: asString(
+      router.query.organization,
+      initialUrlState.organization
+    ),
     status: asStringArray(router.query.status, initialUrlState.status),
     type: asString(router.query.type, initialUrlState.type),
     page: asNumber(router.query.page, initialUrlState.page),
@@ -44,40 +47,52 @@ export default function useUrlState(): UseURLStateResult {
 
   return {
     urlState,
-    updateUrlState: state => updateURLState(router, state),
-    patchUrlState: patch => updateURLState(router, { ...urlState, ...patch }),
+    updateUrlState: (state) => updateURLState(router, state),
+    patchUrlState: (patch) => updateURLState(router, { ...urlState, ...patch }),
     resetUrlState: () => updateURLState(router),
   };
 }
 
-function updateURLState(
-  router: NextRouter,
-  state?: UrlState
-): void {
+function updateURLState(router: NextRouter, state?: UrlState): void {
   const {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    q, domain, organization, status, type, page,
+    q,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    domain,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    organization,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    status,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    type,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    page,
     ...otherQueryParameters
   } = router.query;
 
-  router.push({
-    pathname: router.pathname,
-    query: {
-      ...otherQueryParameters,
-      ...buildUrlStatePatch({ ...initialUrlState, ...state }),
+  router.push(
+    {
+      pathname: router.pathname,
+      query: {
+        ...otherQueryParameters,
+        ...buildUrlStatePatch({ ...initialUrlState, ...state }),
+      },
     },
-  }, undefined, { shallow: true });
+    undefined,
+    { shallow: true }
+  );
 }
 
 function buildUrlStatePatch(state: UrlState): Partial<UrlState> {
   const patch: Partial<UrlState> = {};
 
-  if (!isInitial(state, 'q')) patch.q = state.q;
-  if (!isInitial(state, 'domain')) patch.domain = state.domain;
-  if (!isInitial(state, 'organization')) patch.organization = state.organization;
-  if (!isInitial(state, 'status')) patch.status = state.status;
-  if (!isInitial(state, 'type')) patch.type = state.type;
-  if (!isInitial(state, 'page')) patch.page = state.page;
+  if (!isInitial(state, "q")) patch.q = state.q;
+  if (!isInitial(state, "domain")) patch.domain = state.domain;
+  if (!isInitial(state, "organization"))
+    patch.organization = state.organization;
+  if (!isInitial(state, "status")) patch.status = state.status;
+  if (!isInitial(state, "type")) patch.type = state.type;
+  if (!isInitial(state, "page")) patch.page = state.page;
 
   return patch;
 }
@@ -86,8 +101,8 @@ type QueryParamValue = string | string[] | undefined;
 
 function asString(
   value: QueryParamValue,
-  defaultValue: string = '',
-  delimiter: string = ''
+  defaultValue = "",
+  delimiter = ""
 ): string {
   if (Array.isArray(value)) {
     value = value.join(delimiter);
@@ -100,18 +115,15 @@ function asStringArray(
   value: QueryParamValue,
   defaultValue: string[] = []
 ): string[] {
-  if (! Array.isArray(value)) {
-    value = [value ?? ''];
+  if (!Array.isArray(value)) {
+    value = [value ?? ""];
   }
 
   value = value.filter(Boolean);
   return value.length > 0 ? value : defaultValue;
 }
 
-function asNumber(
-  value: QueryParamValue,
-  defaultValue: number = 0
-): number {
+function asNumber(value: QueryParamValue, defaultValue = 0): number {
   if (Array.isArray(value)) {
     value = value.filter(Boolean)[0];
   }

@@ -1,8 +1,9 @@
-import { Group } from './group.interface';
-import { Organization } from './organization.interface';
-import { BaseEntity, Property } from './termed-data-types.interface';
+import { Group } from "./group.interface";
+import { Organization } from "./organization.interface";
+import { BaseEntity, Property } from "./termed-data-types.interface";
 
-export interface VocabularyInfoDTO extends BaseEntity<'TerminologicalVocabulary'> {
+export interface VocabularyInfoDTO
+  extends BaseEntity<"TerminologicalVocabulary"> {
   properties: {
     contact?: Property[];
     description?: Property[];
@@ -16,7 +17,7 @@ export interface VocabularyInfoDTO extends BaseEntity<'TerminologicalVocabulary'
     contributor?: Organization[];
     inGroup?: Group[];
   };
-};
+}
 
 export interface VocabularyConcepts {
   concepts: VocabularyConceptDTO[];

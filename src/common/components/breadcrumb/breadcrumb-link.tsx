@@ -1,6 +1,6 @@
-import React from 'react';
-import Link from 'next/link';
-import { BreadcrumbLink as SuomiFiBreadcrumbLink } from 'suomifi-ui-components';
+import React from "react";
+import Link from "next/link";
+import { BreadcrumbLink as SuomiFiBreadcrumbLink } from "suomifi-ui-components";
 
 export interface BreadcrumbLinkProps {
   url: string;
@@ -8,7 +8,11 @@ export interface BreadcrumbLinkProps {
   children: React.ReactNode;
 }
 
-export default function BreadcrumbLink({ url, current = false, children }: BreadcrumbLinkProps) {
+export default function BreadcrumbLink({
+  url,
+  current = false,
+  children,
+}: BreadcrumbLinkProps) {
   if (current) {
     return (
       <SuomiFiBreadcrumbLink current={current}>

@@ -1,14 +1,23 @@
-import Head from 'next/head';
-import React from 'react';
-import { Block } from 'suomifi-ui-components';
-import { ThemeProvider } from 'styled-components';
-import { lightTheme } from './theme';
-import { ContentContainer, SiteContainer, MarginContainer, HeaderContainer } from './layout.styles';
-import { useBreakpoints } from '../common/components/media-query/media-query-context';
-import { HeaderWrapper } from '../modules/smart-header/smart-header.styles';
-import Logo from '../modules/smart-header/logo';
+import Head from "next/head";
+import React from "react";
+import { Block } from "suomifi-ui-components";
+import { ThemeProvider } from "styled-components";
+import { lightTheme } from "./theme";
+import {
+  ContentContainer,
+  SiteContainer,
+  MarginContainer,
+  HeaderContainer,
+} from "./layout.styles";
+import { useBreakpoints } from "../common/components/media-query/media-query-context";
+import { HeaderWrapper } from "../modules/smart-header/smart-header.styles";
+import Logo from "../modules/smart-header/logo";
 
-export default function ErrorLayout({ children }: { children: React.ReactNode }) {
+export default function ErrorLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const { breakpoint } = useBreakpoints();
 
   return (
@@ -29,7 +38,7 @@ export default function ErrorLayout({ children }: { children: React.ReactNode })
           </HeaderContainer>
         </Block>
 
-        <ContentContainer >
+        <ContentContainer>
           <MarginContainer breakpoint={breakpoint}>
             <Block variant="main" id="main">
               {children}

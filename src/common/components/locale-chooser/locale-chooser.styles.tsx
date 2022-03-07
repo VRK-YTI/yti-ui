@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 export const DesktopLocaleChooserWrapper = styled.div`
   flex-grow: 1;
@@ -9,7 +9,7 @@ export const MobileMenuLanguageSection = styled.ul`
   list-style: none;
   margin: 0;
   padding: 12.5px 0;
-  background-color: ${props => props.theme.suomifi.colors.depthSecondary};
+  background-color: ${(props) => props.theme.suomifi.colors.depthSecondary};
 `;
 
 export const MobileMenuLanguageItem = styled.li<{ active?: boolean }>`
@@ -17,8 +17,9 @@ export const MobileMenuLanguageItem = styled.li<{ active?: boolean }>`
 
   * {
     display: block;
-    font-size: ${props => props.theme.suomifi.values.typography.bodyTextSmall.fontSize.value}px;
+    font-size: ${(props) =>
+      props.theme.suomifi.values.typography.bodyTextSmall.fontSize.value}px;
     line-height: 24px;
-    font-weight: ${props => props.active ? '600' : '400'};
+    font-weight: ${(props) => (props.active ? "600" : "400")};
   }
 `;

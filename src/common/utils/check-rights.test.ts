@@ -1,16 +1,16 @@
-import User from '../interfaces/user-interface';
-import { VocabularyInfoDTO } from '../interfaces/vocabulary.interface';
-import { Organization } from '../interfaces/organization.interface';
-import hasRights from './check-rights';
+import User from "../interfaces/user-interface";
+import { VocabularyInfoDTO } from "../interfaces/vocabulary.interface";
+import { Organization } from "../interfaces/organization.interface";
+import hasRights from "./check-rights";
 
-const createMockUser = (
-  rolesInOrganizations: { [key: string]: string[] }
-): User => ({
+const createMockUser = (rolesInOrganizations: {
+  [key: string]: string[];
+}): User => ({
   anonymous: false,
-  email: 'admin@admin.fi',
-  firstName: 'Admin',
-  lastName: 'Admin',
-  id: '',
+  email: "admin@admin.fi",
+  firstName: "Admin",
+  lastName: "Admin",
+  id: "",
   superuser: true,
   newlyCreated: false,
   rolesInOrganizations: rolesInOrganizations,
@@ -19,57 +19,55 @@ const createMockUser = (
   accountNonExpired: true,
   accountNonLocked: true,
   credentialsNonExpired: true,
-  username: 'Adming',
+  username: "Adming",
   authorities: [],
   hasToken: false,
-  tokenRole: '',
-  containerUri: '',
+  tokenRole: "",
+  containerUri: "",
 });
 
 const createMockData = (
-  contributors: { id: string, label: string }[]
-): VocabularyInfoDTO => (
-  {
+  contributors: { id: string; label: string }[]
+): VocabularyInfoDTO =>
+  ({
     references: {
-      contributor: contributors.map(x => ({
-        id: x.id,
-        properties: {
-          prefLabel: [
-            {
-              lang: 'fi',
-              value: x.label,
-              regex: x.label
-            }
-          ]
-        }
-      } as Organization)),
-    }
-  } as VocabularyInfoDTO
-);
+      contributor: contributors.map(
+        (x) =>
+          ({
+            id: x.id,
+            properties: {
+              prefLabel: [
+                {
+                  lang: "fi",
+                  value: x.label,
+                  regex: x.label,
+                },
+              ],
+            },
+          } as Organization)
+      ),
+    },
+  } as VocabularyInfoDTO);
 
-describe.only('check-rights', () => {
-
-  test('should have rights', () => {
-
-    const user = createMockUser({ foo: ['SOME_OTHER_ROLES', 'ADMIN'] });
-    const data = createMockData([{ id: 'foo', label: 'bar' }]);
+describe.only("check-rights", () => {
+  test("should have rights", () => {
+    const user = createMockUser({ foo: ["SOME_OTHER_ROLES", "ADMIN"] });
+    const data = createMockData([{ id: "foo", label: "bar" }]);
 
     const rights = hasRights(user, data);
     expect(rights).toBe(true);
   });
 
-  test('should not have rights', () => {
-
-    const user = createMockUser({ foo: ['SOME_OTHER_ROLE'] });
-    const data = createMockData([{ id: 'foo', label: 'bar' }]);
+  test("should not have rights", () => {
+    const user = createMockUser({ foo: ["SOME_OTHER_ROLE"] });
+    const data = createMockData([{ id: "foo", label: "bar" }]);
 
     const rights = hasRights(user, data);
     expect(rights).toBe(false);
   });
 
-  test('should work with no data', () => {
-
-    const user = createMockUser({ foo: ['ADMIN'] });
+  test("should work with no data", () => {
+    const user = createMockUser({ foo: ["ADMIN"] });
 
     const rights = hasRights(user);
     expect(rights).toBe(false);

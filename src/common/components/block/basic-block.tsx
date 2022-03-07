@@ -1,5 +1,5 @@
-import React from 'react';
-import { BasicBlockHeader, BasicBlockWrapper } from './block.styles';
+import React from "react";
+import { BasicBlockHeader, BasicBlockWrapper } from "./block.styles";
 
 export interface BasicBlockProps {
   title?: React.ReactNode;
@@ -8,7 +8,12 @@ export interface BasicBlockProps {
   largeGap?: boolean;
 }
 
-export default function BasicBlock({ title, children, extra, largeGap }: BasicBlockProps) {
+export default function BasicBlock({
+  title,
+  children,
+  extra,
+  largeGap,
+}: BasicBlockProps) {
   return (
     <BasicBlockWrapper largeGap={largeGap}>
       {title && <BasicBlockHeader>{title}</BasicBlockHeader>}

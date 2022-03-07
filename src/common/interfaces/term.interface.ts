@@ -1,6 +1,6 @@
-import { BaseEntity, Property } from './termed-data-types.interface';
+import { BaseEntity, Property } from "./termed-data-types.interface";
 
-export interface Term extends BaseEntity<'Term'> {
+export interface Term extends BaseEntity<"Term"> {
   properties: {
     changeNote?: Property[];
     draftComment?: Property[];
@@ -18,4 +18,4 @@ export interface Term extends BaseEntity<'Term'> {
     termStyle?: Property[];
     wordClass?: Property[];
   };
-};
+}

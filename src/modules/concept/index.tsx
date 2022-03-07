@@ -1,35 +1,40 @@
-import { useTranslation } from 'next-i18next';
-import React, { useEffect, useRef } from 'react';
-import { ExternalLink, Heading, Text, VisuallyHidden } from 'suomifi-ui-components';
+import { useTranslation } from "next-i18next";
+import React, { useEffect, useRef } from "react";
+import {
+  ExternalLink,
+  Heading,
+  Text,
+  VisuallyHidden,
+} from "suomifi-ui-components";
 import {
   BasicBlock,
   MultilingualPropertyBlock,
   PropertyBlock,
-  TermBlock
-} from '../../common/components/block';
-import { Breadcrumb, BreadcrumbLink } from '../../common/components/breadcrumb';
-import { useGetConceptQuery } from '../../common/components/concept/concept-slice';
-import FormattedDate from '../../common/components/formatted-date';
-import { useBreakpoints } from '../../common/components/media-query/media-query-context';
-import PropertyValue from '../../common/components/property-value';
-import { getPropertyValue } from '../../common/components/property-value/get-property-value';
-import Separator from '../../common/components/separator';
-import { useGetVocabularyQuery } from '../../common/components/vocabulary/vocabulary-slice';
-import DetailsExpander from './details-expander';
-import ConceptSidebar from './concept-sidebar';
+  TermBlock,
+} from "../../common/components/block";
+import { Breadcrumb, BreadcrumbLink } from "../../common/components/breadcrumb";
+import { useGetConceptQuery } from "../../common/components/concept/concept-slice";
+import FormattedDate from "../../common/components/formatted-date";
+import { useBreakpoints } from "../../common/components/media-query/media-query-context";
+import PropertyValue from "../../common/components/property-value";
+import { getPropertyValue } from "../../common/components/property-value/get-property-value";
+import Separator from "../../common/components/separator";
+import { useGetVocabularyQuery } from "../../common/components/vocabulary/vocabulary-slice";
+import DetailsExpander from "./details-expander";
+import ConceptSidebar from "./concept-sidebar";
 import {
   Badge,
   BadgeBar,
   HeadingBlock,
   MainContent,
-  PageContent
-} from './concept.styles';
-import { useStoreDispatch } from '../../store';
-import { setAlert } from '../../common/components/alert/alert.slice';
-import { Error } from '../../common/interfaces/error.interface';
-import { useRouter } from 'next/router';
-import { Property } from '../../common/interfaces/termed-data-types.interface';
-import { setTitle } from '../../common/components/title/title.slice';
+  PageContent,
+} from "./concept.styles";
+import { useStoreDispatch } from "../../store";
+import { setAlert } from "../../common/components/alert/alert.slice";
+import { Error } from "../../common/interfaces/error.interface";
+import { useRouter } from "next/router";
+import { Property } from "../../common/interfaces/termed-data-types.interface";
+import { setTitle } from "../../common/components/title/title.slice";
 
 export interface ConceptProps {
   terminologyId: string;
@@ -37,42 +42,52 @@ export interface ConceptProps {
   setConceptTitle: (title: string) => void;
 }
 
-export default function Concept({ terminologyId, conceptId, setConceptTitle }: ConceptProps) {
+export default function Concept({
+  terminologyId,
+  conceptId,
+  setConceptTitle,
+}: ConceptProps) {
   const { breakpoint } = useBreakpoints();
-  const { data: terminology, error: terminologyError } = useGetVocabularyQuery(terminologyId);
-  const { data: concept, error: conceptError } = useGetConceptQuery({ terminologyId, conceptId });
-  const { t, i18n } = useTranslation('concept');
+  const { data: terminology, error: terminologyError } =
+    useGetVocabularyQuery(terminologyId);
+  const { data: concept, error: conceptError } = useGetConceptQuery({
+    terminologyId,
+    conceptId,
+  });
+  const { t, i18n } = useTranslation("concept");
   const dispatch = useStoreDispatch();
   const router = useRouter();
-  const conceptTitles = (concept?.references.prefLabelXl?.map(plxl => plxl.properties.prefLabel).map(item => item?.[0]) ?? []) as Property[];
+  const conceptTitles = (concept?.references.prefLabelXl
+    ?.map((plxl) => plxl.properties.prefLabel)
+    .map((item) => item?.[0]) ?? []) as Property[];
   const titleRef = useRef<HTMLHeadingElement>(null);
 
-  if (conceptError && 'status' in conceptError && conceptError.status === 404) {
-    router.push('/404');
+  if (conceptError && "status" in conceptError && conceptError.status === 404) {
+    router.push("/404");
   }
 
   useEffect(() => {
-    setConceptTitle(getPropertyValue({
-      property: concept?.references.prefLabelXl?.[0].properties.prefLabel,
-      language: i18n.language,
-      fallbackLanguage: 'fi'
-    }) ?? '');
-  }, [concept]);
+    setConceptTitle(
+      getPropertyValue({
+        property: concept?.references.prefLabelXl?.[0].properties.prefLabel,
+        language: i18n.language,
+        fallbackLanguage: "fi",
+      }) ?? ""
+    );
+  }, [concept, i18n.language, setConceptTitle]);
 
   useEffect(() => {
-    dispatch(setAlert([
-      terminologyError as Error,
-      conceptError as Error
-    ]));
+    dispatch(setAlert([terminologyError as Error, conceptError as Error]));
   }, [dispatch, terminologyError, conceptError]);
 
   useEffect(() => {
     if (concept) {
-      const title = getPropertyValue({
-        property: concept.references.prefLabelXl?.[0].properties.prefLabel,
-        language: i18n.language,
-        fallbackLanguage: 'fi'
-      }) ?? '';
+      const title =
+        getPropertyValue({
+          property: concept.references.prefLabelXl?.[0].properties.prefLabel,
+          language: i18n.language,
+          fallbackLanguage: "fi",
+        }) ?? "";
 
       dispatch(setTitle(title));
     }
@@ -87,19 +102,22 @@ export default function Concept({ terminologyId, conceptId, setConceptTitle }: C
   return (
     <>
       <Breadcrumb>
-        {!terminologyError &&
+        {!terminologyError && (
           <BreadcrumbLink url={`/terminology/${terminologyId}`}>
-            <PropertyValue property={terminology?.properties.prefLabel} fallbackLanguage='fi' />
-          </BreadcrumbLink>
-        }
-        {!conceptError &&
-          <BreadcrumbLink url={`/terminology/${terminologyId}/concepts/${conceptId}`} current>
             <PropertyValue
-              property={conceptTitles}
-              fallbackLanguage='fi'
+              property={terminology?.properties.prefLabel}
+              fallbackLanguage="fi"
             />
           </BreadcrumbLink>
-        }
+        )}
+        {!conceptError && (
+          <BreadcrumbLink
+            url={`/terminology/${terminologyId}/concepts/${conceptId}`}
+            current
+          >
+            <PropertyValue property={conceptTitles} fallbackLanguage="fi" />
+          </BreadcrumbLink>
+        )}
       </Breadcrumb>
 
       <PageContent breakpoint={breakpoint}>
@@ -107,55 +125,74 @@ export default function Concept({ terminologyId, conceptId, setConceptTitle }: C
           <HeadingBlock>
             <Text>
               <PropertyValue
-                property={terminology?.references.contributor?.[0].properties.prefLabel}
-                fallbackLanguage='fi'
+                property={
+                  terminology?.references.contributor?.[0].properties.prefLabel
+                }
+                fallbackLanguage="fi"
               />
             </Text>
             <Heading variant="h1" tabIndex={-1} ref={titleRef}>
-              <PropertyValue
-                property={conceptTitles}
-                fallbackLanguage='fi'
-              />
+              <PropertyValue property={conceptTitles} fallbackLanguage="fi" />
             </Heading>
             <BadgeBar>
-              <span>{t('heading')}</span>
-              {' '}&middot;{' '}
+              <span>{t("heading")}</span> &middot;{" "}
               <span>
                 <PropertyValue
                   property={terminology?.properties.prefLabel}
-                  fallbackLanguage='fi'
+                  fallbackLanguage="fi"
                 />
-              </span>
-              {' '}&middot;{' '}
+              </span>{" "}
+              &middot;{" "}
               <Badge
-                isValid={getPropertyValue({ property: concept?.properties.status }) === 'VALID'}
+                isValid={
+                  getPropertyValue({ property: concept?.properties.status }) ===
+                  "VALID"
+                }
               >
-                {t(getPropertyValue({ property: concept?.properties.status }) ?? '', { ns: 'common' })}
+                {t(
+                  getPropertyValue({ property: concept?.properties.status }) ??
+                    "",
+                  { ns: "common" }
+                )}
               </Badge>
             </BadgeBar>
           </HeadingBlock>
 
           <MultilingualPropertyBlock
-            title={<h2>{t('field-definition')}</h2>}
+            title={<h2>{t("field-definition")}</h2>}
             data={concept?.properties.definition}
           />
           <MultilingualPropertyBlock
-            title={t('field-example')}
+            title={t("field-example")}
             data={concept?.properties.example}
           />
           <TermBlock
-            title={<h2>{t('field-terms-label')}</h2>}
+            title={<h2>{t("field-terms-label")}</h2>}
             data={[
-              ...(concept?.references.prefLabelXl ?? []).map(term => ({ term, type: t('field-terms-preferred') })),
-              ...(concept?.references.altLabelXl ?? []).map(term => ({ term, type: t('field-terms-alternative') })),
-              ...(concept?.references.notRecommendedSynonym ?? []).map(term => ({ term, type: t('field-terms-non-recommended') })),
-              ...(concept?.references.searchTerm ?? []).map(term => ({ term, type: t('field-terms-search-term') })),
-              ...(concept?.references.hiddenTerm ?? []).map(term => ({ term, type: t('field-terms-hidden') })),
+              ...(concept?.references.prefLabelXl ?? []).map((term) => ({
+                term,
+                type: t("field-terms-preferred"),
+              })),
+              ...(concept?.references.altLabelXl ?? []).map((term) => ({
+                term,
+                type: t("field-terms-alternative"),
+              })),
+              ...(concept?.references.notRecommendedSynonym ?? []).map(
+                (term) => ({ term, type: t("field-terms-non-recommended") })
+              ),
+              ...(concept?.references.searchTerm ?? []).map((term) => ({
+                term,
+                type: t("field-terms-search-term"),
+              })),
+              ...(concept?.references.hiddenTerm ?? []).map((term) => ({
+                term,
+                type: t("field-terms-hidden"),
+              })),
             ]}
           />
 
           <MultilingualPropertyBlock
-            title={t('field-note')}
+            title={t("field-note")}
             data={concept?.properties.note}
           />
 
@@ -164,41 +201,48 @@ export default function Concept({ terminologyId, conceptId, setConceptTitle }: C
           <Separator isLarge />
 
           <VisuallyHidden as="h2">
-            {t('additional-technical-information', { ns: 'common' })}
+            {t("additional-technical-information", { ns: "common" })}
           </VisuallyHidden>
 
           <PropertyBlock
-            title={t('vocabulary-info-organization', { ns: 'common' })}
-            property={terminology?.references.contributor?.[0]?.properties.prefLabel}
+            title={t("vocabulary-info-organization", { ns: "common" })}
+            property={
+              terminology?.references.contributor?.[0]?.properties.prefLabel
+            }
             fallbackLanguage="fi"
           />
-          <BasicBlock title={t('vocabulary-info-created-at', { ns: 'common' })}>
+          <BasicBlock title={t("vocabulary-info-created-at", { ns: "common" })}>
             <FormattedDate date={concept?.createdDate} />, {concept?.createdBy}
           </BasicBlock>
-          <BasicBlock title={t('vocabulary-info-modified-at', { ns: 'common' })}>
-            <FormattedDate date={concept?.lastModifiedDate} />, {concept?.lastModifiedBy}
+          <BasicBlock
+            title={t("vocabulary-info-modified-at", { ns: "common" })}
+          >
+            <FormattedDate date={concept?.lastModifiedDate} />,{" "}
+            {concept?.lastModifiedBy}
           </BasicBlock>
-          <BasicBlock title="URI">
-            {concept?.uri}
-          </BasicBlock>
+          <BasicBlock title="URI">{concept?.uri}</BasicBlock>
 
           <Separator isLarge />
 
           <BasicBlock
             extra={
               <ExternalLink
-                href={`mailto:${getPropertyValue({ property: terminology?.properties.contact })}?subject=${conceptId}`}
-                labelNewWindow={t('site-open-link-new-window', { ns: 'common' })}
+                href={`mailto:${getPropertyValue({
+                  property: terminology?.properties.contact,
+                })}?subject=${conceptId}`}
+                labelNewWindow={t("site-open-link-new-window", {
+                  ns: "common",
+                })}
               >
-                {t('feedback-action')}
+                {t("feedback-action")}
               </ExternalLink>
             }
           >
-            {t('feedback-label')}
+            {t("feedback-label")}
           </BasicBlock>
         </MainContent>
         <ConceptSidebar concept={concept} />
       </PageContent>
     </>
   );
-};
+}

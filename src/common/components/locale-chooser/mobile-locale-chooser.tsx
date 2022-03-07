@@ -1,7 +1,10 @@
-import React from 'react';
-import { Link, Text } from 'suomifi-ui-components';
-import { MobileMenuLanguageItem, MobileMenuLanguageSection } from './locale-chooser.styles';
-import useLocales from './use-locales';
+import React from "react";
+import { Link, Text } from "suomifi-ui-components";
+import {
+  MobileMenuLanguageItem,
+  MobileMenuLanguageSection,
+} from "./locale-chooser.styles";
+import useLocales from "./use-locales";
 
 export default function MobileLocaleChooser() {
   const { locales } = useLocales();
@@ -13,7 +16,9 @@ export default function MobileLocaleChooser() {
           {isCurrent ? (
             <Text>{label}</Text>
           ) : (
-            <Link href="#" onClick={use}>{label}</Link>
+            <Link href="#" onClick={use}>
+              {label}
+            </Link>
           )}
         </MobileMenuLanguageItem>
       ))}

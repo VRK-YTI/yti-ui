@@ -1,5 +1,5 @@
-import { BasicBlock } from '.';
-import MultilingualDefinitionList from '../multilingual-definition-list/multilingual-definition-list';
+import { BasicBlock } from ".";
+import MultilingualDefinitionList from "../multilingual-definition-list/multilingual-definition-list";
 
 export type MultilingualBlockItemMapper<T> = (item: T) => {
   language: string;

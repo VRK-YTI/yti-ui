@@ -1,5 +1,5 @@
-import { InfoBasicWrapper } from './info-basic.styles';
-import { Text } from 'suomifi-ui-components';
+import { InfoBasicWrapper } from "./info-basic.styles";
+import { Text } from "suomifi-ui-components";
 
 interface InfoBasicProps {
   data?: string;

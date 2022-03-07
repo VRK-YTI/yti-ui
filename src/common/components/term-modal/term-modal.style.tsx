@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import { Button, Chip, Heading, Text } from 'suomifi-ui-components';
+import styled from "styled-components";
+import { Button, Chip, Heading, Text } from "suomifi-ui-components";
 
 export const TermHeading = styled(Heading)`
   font-size: 16px !important;
@@ -11,7 +11,10 @@ export const TermModalButton = styled(Button)`
 `;
 
 export const TermModalChip = styled(Chip)<{ isvalid?: string }>`
-  background: ${props => props.isvalid === 'true' ? props.theme.suomifi.colors.successBase : props.theme.suomifi.colors.depthDark2} !important;
+  background: ${(props) =>
+    props.isvalid === "true"
+      ? props.theme.suomifi.colors.successBase
+      : props.theme.suomifi.colors.depthDark2} !important;
   display: grid;
   font-size: 12px;
   height: 18px;
@@ -25,5 +28,5 @@ export const TermModalChip = styled(Chip)<{ isvalid?: string }>`
 export const TermText = styled(Text)`
   display: grid;
   font-size: 16px;
-  margin-bottom: ${props => props.theme.suomifi.spacing.m};
+  margin-bottom: ${(props) => props.theme.suomifi.spacing.m};
 `;

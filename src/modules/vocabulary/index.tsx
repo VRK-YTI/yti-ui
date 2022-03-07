@@ -1,37 +1,44 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import {
   useGetCollectionsQuery,
   useGetConceptResultQuery,
   useGetVocabularyQuery,
-} from '../../common/components/vocabulary/vocabulary-slice';
-import SearchResults from '../../common/components/search-results/search-results';
-import Title from '../../common/components/title/title';
-import { ResultAndFilterContainer, ResultAndStatsWrapper, PaginationWrapper } from './vocabulary.styles';
-import { useBreakpoints } from '../../common/components/media-query/media-query-context';
-import { FilterMobileButton } from '../terminology-search/terminology-search.styles';
-import { useTranslation } from 'next-i18next';
-import { Modal, ModalContent } from 'suomifi-ui-components';
-import { Breadcrumb, BreadcrumbLink } from '../../common/components/breadcrumb';
-import PropertyValue from '../../common/components/property-value';
-import { useGetVocabularyCountQuery } from '../../common/components/counts/counts-slice';
-import { TerminologyListFilter } from './terminology-list-filter';
-import useUrlState from '../../common/utils/hooks/useUrlState';
-import Pagination from '../../common/components/pagination/pagination';
-import filterData from '../../common/utils/filter-data';
-import { setAlert } from '../../common/components/alert/alert.slice';
-import { Error } from '../../common/interfaces/error.interface';
-import { useRouter } from 'next/router';
-import LoadIndicator from '../../common/components/load-indicator';
-import { useStoreDispatch } from '../../store';
-import { getPropertyValue } from '../../common/components/property-value/get-property-value';
+} from "../../common/components/vocabulary/vocabulary-slice";
+import SearchResults from "../../common/components/search-results/search-results";
+import Title from "../../common/components/title/title";
+import {
+  ResultAndFilterContainer,
+  ResultAndStatsWrapper,
+  PaginationWrapper,
+} from "./vocabulary.styles";
+import { useBreakpoints } from "../../common/components/media-query/media-query-context";
+import { FilterMobileButton } from "../terminology-search/terminology-search.styles";
+import { useTranslation } from "next-i18next";
+import { Modal, ModalContent } from "suomifi-ui-components";
+import { Breadcrumb, BreadcrumbLink } from "../../common/components/breadcrumb";
+import PropertyValue from "../../common/components/property-value";
+import { useGetVocabularyCountQuery } from "../../common/components/counts/counts-slice";
+import { TerminologyListFilter } from "./terminology-list-filter";
+import useUrlState from "../../common/utils/hooks/useUrlState";
+import Pagination from "../../common/components/pagination/pagination";
+import filterData from "../../common/utils/filter-data";
+import { setAlert } from "../../common/components/alert/alert.slice";
+import { Error } from "../../common/interfaces/error.interface";
+import { useRouter } from "next/router";
+import LoadIndicator from "../../common/components/load-indicator";
+import { useStoreDispatch } from "../../store";
+import { getPropertyValue } from "../../common/components/property-value/get-property-value";
 
 interface VocabularyProps {
   id: string;
-  setTerminologyTitle: (title: string) =>  void;
+  setTerminologyTitle: (title: string) => void;
 }
 
-export default function Vocabulary({ id, setTerminologyTitle }: VocabularyProps) {
-  const { t, i18n } = useTranslation('common');
+export default function Vocabulary({
+  id,
+  setTerminologyTitle,
+}: VocabularyProps) {
+  const { t, i18n } = useTranslation("common");
   const { isSmall } = useBreakpoints();
   const { urlState } = useUrlState();
   const router = useRouter();
@@ -40,13 +47,13 @@ export default function Vocabulary({ id, setTerminologyTitle }: VocabularyProps)
     data: collections,
     error: collectionsError,
     isFetching: isFetchingCollections,
-    refetch: refetchCollections
+    refetch: refetchCollections,
   } = useGetCollectionsQuery(id);
   const {
     data: concepts,
     error: conceptsError,
     isFetching: isFetchingConcepts,
-    refetch: refetchConcepts
+    refetch: refetchConcepts,
   } = useGetConceptResultQuery({ id, urlState });
   const { data: info, error: infoError } = useGetVocabularyQuery(id);
   const { data: counts, error: countsError } = useGetVocabularyCountQuery(id);
@@ -54,25 +61,29 @@ export default function Vocabulary({ id, setTerminologyTitle }: VocabularyProps)
   const [showLoadingConcepts, setShowLoadingConcepts] = useState(false);
   const [showLoadingCollections, setShowLoadingCollections] = useState(false);
 
-  if (infoError && 'status' in infoError && infoError?.status === 404) {
-    router.push('/404');
+  if (infoError && "status" in infoError && infoError?.status === 404) {
+    router.push("/404");
   }
 
   useEffect(() => {
-    setTerminologyTitle(getPropertyValue({
-      property: info?.properties.prefLabel,
-      language: i18n.language,
-      fallbackLanguage: 'fi'
-    }) ?? '');
-  }, [info]);
+    setTerminologyTitle(
+      getPropertyValue({
+        property: info?.properties.prefLabel,
+        language: i18n.language,
+        fallbackLanguage: "fi",
+      }) ?? ""
+    );
+  }, [info, i18n.language, setTerminologyTitle]);
 
   useEffect(() => {
-    dispatch(setAlert([
-      collectionsError as Error,
-      conceptsError as Error,
-      infoError as Error,
-      countsError as Error
-    ]));
+    dispatch(
+      setAlert([
+        collectionsError as Error,
+        conceptsError as Error,
+        infoError as Error,
+        countsError as Error,
+      ])
+    );
   }, [dispatch, collectionsError, conceptsError, infoError, countsError]);
 
   useEffect(() => {
@@ -81,45 +92,49 @@ export default function Vocabulary({ id, setTerminologyTitle }: VocabularyProps)
       setShowLoadingConcepts(isFetchingConcepts);
     }, 1000);
     return () => clearTimeout(timer);
-  }, [isFetchingConcepts, isFetchingCollections, setShowLoadingConcepts, setShowLoadingCollections]);
+  }, [
+    isFetchingConcepts,
+    isFetchingCollections,
+    setShowLoadingConcepts,
+    setShowLoadingCollections,
+  ]);
 
   return (
     <>
       <Breadcrumb>
-        {!infoError &&
+        {!infoError && (
           <BreadcrumbLink url={`/terminology/${id}`} current>
             <PropertyValue
               property={info?.properties.prefLabel}
-              fallbackLanguage='fi'
+              fallbackLanguage="fi"
             />
           </BreadcrumbLink>
-        }
+        )}
       </Breadcrumb>
 
       <main>
         {info && <Title info={info} />}
-        {isSmall &&
+        {isSmall && (
           <FilterMobileButton
-            variant='secondary'
+            variant="secondary"
             fullWidth
             onClick={() => setShowModal(!showModal)}
           >
-            {t('vocabulary-filter-filter-list')}
+            {t("vocabulary-filter-filter-list")}
           </FilterMobileButton>
-        }
+        )}
         <ResultAndFilterContainer>
-          {!isSmall
-            ?
+          {!isSmall ? (
             <TerminologyListFilter counts={counts} />
-            :
+          ) : (
             <Modal
-              appElementId='__next'
+              appElementId="__next"
               visible={showModal}
               onEscKeyDown={() => setShowModal(false)}
-              variant='smallScreen'
-              style={{ border: 'none' }}
+              variant="smallScreen"
+              style={{ border: "none" }}
             >
-              <ModalContent style={{ padding: '0' }}>
+              <ModalContent style={{ padding: "0" }}>
                 <TerminologyListFilter
                   isModal
                   onModalClose={() => setShowModal(false)}
@@ -128,58 +143,61 @@ export default function Vocabulary({ id, setTerminologyTitle }: VocabularyProps)
                 />
               </ModalContent>
             </Modal>
-          }
+          )}
           <ResultAndStatsWrapper id="search-results">
-            {urlState.type === 'concept' &&
-              (
-                ((showLoadingConcepts && isFetchingConcepts) || conceptsError)
-                  ?
-                  <LoadIndicator
-                    isFetching={isFetchingConcepts}
-                    error={conceptsError}
-                    refetch={refetchConcepts}
-                  />
-                  :
-                  concepts &&
+            {urlState.type === "concept" &&
+              ((showLoadingConcepts && isFetchingConcepts) || conceptsError ? (
+                <LoadIndicator
+                  isFetching={isFetchingConcepts}
+                  error={conceptsError}
+                  refetch={refetchConcepts}
+                />
+              ) : (
+                concepts && (
                   <>
                     <SearchResults data={concepts} />
                     <PaginationWrapper>
                       <Pagination
                         data={concepts}
-                        pageString={t('pagination-page')}
+                        pageString={t("pagination-page")}
                       />
                     </PaginationWrapper>
                   </>
-              )
-            }
-            {urlState.type === 'collection' &&
-              (
-                ((showLoadingCollections && isFetchingCollections) || collectionsError)
-                  ?
-                  <LoadIndicator
-                    isFetching={isFetchingCollections}
-                    error={collectionsError}
-                    refetch={refetchCollections}
-                  />
-                  :
-                  collections &&
+                )
+              ))}
+            {urlState.type === "collection" &&
+              ((showLoadingCollections && isFetchingCollections) ||
+              collectionsError ? (
+                <LoadIndicator
+                  isFetching={isFetchingCollections}
+                  error={collectionsError}
+                  refetch={refetchCollections}
+                />
+              ) : (
+                collections && (
                   <>
                     <SearchResults
-                      data={filterData(collections, urlState, i18n.language) ?? collections}
+                      data={
+                        filterData(collections, urlState, i18n.language) ??
+                        collections
+                      }
                       type="collections"
                     />
                     <PaginationWrapper>
                       <Pagination
-                        data={filterData(collections, urlState, i18n.language) ?? collections}
-                        pageString={t('pagination-page')}
+                        data={
+                          filterData(collections, urlState, i18n.language) ??
+                          collections
+                        }
+                        pageString={t("pagination-page")}
                       />
                     </PaginationWrapper>
                   </>
-              )
-            }
+                )
+              ))}
           </ResultAndStatsWrapper>
         </ResultAndFilterContainer>
       </main>
     </>
   );
-};
+}

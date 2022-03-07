@@ -1,5 +1,5 @@
-import { RadioButtonGroup } from 'suomifi-ui-components';
-import { FilterRadioButton } from './filter.styles';
+import { RadioButtonGroup } from "suomifi-ui-components";
+import { FilterRadioButton } from "./filter.styles";
 
 export interface Item {
   value: string;
@@ -11,7 +11,7 @@ export interface RadioButtonFilterProps {
   items: Item[];
   selectedItem: string;
   onChange: (selectedItem: string) => void;
-  radioButtonVariant: 'large' | 'small';
+  radioButtonVariant: "large" | "small";
 }
 
 export default function RadioButtonFilter({
@@ -19,13 +19,13 @@ export default function RadioButtonFilter({
   items,
   selectedItem,
   onChange,
-  radioButtonVariant
+  radioButtonVariant,
 }: RadioButtonFilterProps) {
   return (
     <div>
       <RadioButtonGroup
         labelText={title}
-        name='vocabulary-filter-show-only'
+        name="vocabulary-filter-show-only"
         value={selectedItem}
         onChange={onChange}
       >
