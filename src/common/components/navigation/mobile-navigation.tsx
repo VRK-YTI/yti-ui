@@ -7,13 +7,17 @@ import MobileImpersonateWrapper from '../impersonate/mobile-impersonate-wrapper'
 import MobileLocaleChooser from '../locale-chooser/mobile-locale-chooser';
 import { MobileMenuItem, MobileMenuSection } from './navigation.styles';
 
-export default function MobileNavigation() {
+interface MobileNavigationProps {
+  setModalVisible?: (isModalVisible: boolean) => void;
+}
+
+export default function MobileNavigation({setModalVisible}: MobileNavigationProps) {
   const { t } = useTranslation('common');
   const router = useRouter();
 
   return (
     <>
-      <LoginButtons />
+      <LoginButtons setModalVisible={setModalVisible} />
 
       <MobileMenuSection>
         <MobileMenuItem active={router.pathname === '/'}>
