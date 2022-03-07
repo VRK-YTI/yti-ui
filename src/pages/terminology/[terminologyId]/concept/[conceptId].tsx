@@ -41,10 +41,16 @@ export default function ConceptPage(props: {
 }
 
 export const getServerSideProps = createCommonGetServerSideProps<{ props: { data?: any } }>(
-  async ({ req, store }: LocalHandlerParams) => {
-    const ids = req.url?.split('/').filter(part => part.includes('-'));
-    const terminologyId = ids?.[0] ?? '';
-    const conceptId = ids?.[1].split('.')[0] ?? '';
+  async ({ req, store, params }: LocalHandlerParams) => {
+
+    const terminologyId = Array.isArray(params.terminologyId) ?
+      params.terminologyId[0] : params.terminologyId;
+    const conceptId = Array.isArray(params.conceptId) ?
+      params.conceptId[0] : params.conceptId;
+
+    if (terminologyId === undefined || conceptId === undefined) {
+      throw new Error('Invalid parameters for page');
+    }
 
     await store.dispatch(getVocabulary.initiate(terminologyId));
     await store.dispatch(getConcept.initiate({terminologyId, conceptId}));

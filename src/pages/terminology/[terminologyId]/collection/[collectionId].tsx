@@ -41,10 +41,16 @@ export default function CollectionPage(props: {
   );
 }
 export const getServerSideProps = createCommonGetServerSideProps(
-  async ({ req, store }: LocalHandlerParams) => {
-    const ids = req.url?.split('/').filter(part => part.includes('-'));
-    const terminologyId = ids?.[0] ?? '';
-    const collectionId = ids?.[1].split('.')[0] ?? '';
+  async ({ req, store, params }: LocalHandlerParams) => {
+
+    const terminologyId = Array.isArray(params.terminologyId) ?
+      params.terminologyId[0] : params.terminologyId;
+    const collectionId = Array.isArray(params.collectionId) ?
+      params.collectionId[0] : params.collectionId;
+
+    if (terminologyId === undefined || collectionId === undefined) {
+      throw new Error('Invalid parameters for page');
+    }
 
     store.dispatch(getVocabulary.initiate(terminologyId));
     store.dispatch(getCollection.initiate({ terminologyId, collectionId }));
