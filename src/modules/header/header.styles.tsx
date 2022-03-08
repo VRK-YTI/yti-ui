@@ -1,7 +1,7 @@
-import styled from "styled-components";
-import { Button } from "suomifi-ui-components";
-import { Breakpoint } from "../../common/components/media-query/media-query-context";
-import { small } from "../../common/components/media-query/styled-helpers";
+import styled from 'styled-components';
+import { Button } from 'suomifi-ui-components';
+import { Breakpoint } from '../../common/components/media-query/media-query-context';
+import { small } from '../../common/components/media-query/styled-helpers';
 
 export const HeaderWrapper = styled.div`
   display: flex;
@@ -35,7 +35,7 @@ export const SmallSearchButton = styled(Button)`
 `;
 
 export const SiteLogo = styled.div<{ breakpoint: Breakpoint }>`
-  flex-grow: ${(props) => small(props.breakpoint, "1", "0")};
+  flex-grow: ${(props) => small(props.breakpoint, '1', '0')};
   line-height: 0;
 
   a {

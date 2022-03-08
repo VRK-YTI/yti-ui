@@ -1,7 +1,7 @@
 // this file is a wrapper with defaults to be used in both API routes and `getServerSideProps` functions
-import { NextApiRequest, NextApiResponse } from "next";
-import { Session, withIronSession } from "next-iron-session";
-import { userCookieOptions } from "./user-cookie-options";
+import { NextApiRequest, NextApiResponse } from 'next';
+import { Session, withIronSession } from 'next-iron-session';
+import { userCookieOptions } from './user-cookie-options';
 
 export type NextIronRequest = NextApiRequest & {
   session: Session;

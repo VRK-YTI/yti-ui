@@ -1,15 +1,15 @@
-import React from "react";
-import Link from "next/link";
-import { Link as SuomiLink } from "suomifi-ui-components";
-import { SidebarLinkList, SidebarLinkListItem, SidebarSubHeader } from ".";
+import React from 'react';
+import Link from 'next/link';
+import { Link as SuomiLink } from 'suomifi-ui-components';
+import { SidebarLinkList, SidebarLinkListItem, SidebarSubHeader } from '.';
 import {
   BaseEntity,
   Property,
-} from "../../interfaces/termed-data-types.interface";
-import PropertyValue from "../property-value";
-import { Term } from "../../interfaces/term.interface";
-import { isEmpty } from "lodash";
-import { useGeneratedId } from "../../utils/hooks/useGeneratedId";
+} from '../../interfaces/termed-data-types.interface';
+import PropertyValue from '../property-value';
+import { Term } from '../../interfaces/term.interface';
+import { isEmpty } from 'lodash';
+import { useGeneratedId } from '../../utils/hooks/useGeneratedId';
 
 interface SidebarSectionProps<T> {
   heading: React.ReactNode;
@@ -47,7 +47,7 @@ export default function SidebarSection<T extends BaseEntity<string>>({
 
   function propertyValue(currItem: T) {
     if (!isEmpty(currItem.references)) {
-      if ("member" in currItem.references) {
+      if ('member' in currItem.references) {
         const prefLabels = Array.from(propertyAccessor(currItem) as Property[]);
 
         return (

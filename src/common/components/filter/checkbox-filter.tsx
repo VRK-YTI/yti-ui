@@ -1,9 +1,9 @@
-import { Text } from "suomifi-ui-components";
+import { Text } from 'suomifi-ui-components';
 import {
   FilterFieldset,
   FilterCheckbox,
   FilterFieldsetLegend,
-} from "./filter.styles";
+} from './filter.styles';
 
 export interface Item {
   value: string;
@@ -15,7 +15,7 @@ export interface CheckboxFilterProps {
   items: Item[];
   selectedItems: string[];
   onChange: (selectedItems: string[]) => void;
-  checkboxVariant: "large" | "small";
+  checkboxVariant: 'large' | 'small';
 }
 
 export default function CheckboxFilter({

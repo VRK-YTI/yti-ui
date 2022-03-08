@@ -1,12 +1,12 @@
-import { render, screen } from "@testing-library/react";
-import { PropertyBlock } from ".";
+import { render, screen } from '@testing-library/react';
+import { PropertyBlock } from '.';
 
-describe("PropertyBlock", () => {
-  test("should render property", () => {
+describe('PropertyBlock', () => {
+  test('should render property', () => {
     render(
       <PropertyBlock
         title="Title"
-        property={[{ lang: "", value: "Property value", regex: "" }]}
+        property={[{ lang: '', value: 'Property value', regex: '' }]}
       />
     );
 

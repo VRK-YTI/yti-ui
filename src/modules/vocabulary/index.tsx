@@ -1,33 +1,33 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 import {
   useGetCollectionsQuery,
   useGetConceptResultQuery,
   useGetVocabularyQuery,
-} from "../../common/components/vocabulary/vocabulary-slice";
-import SearchResults from "../../common/components/search-results/search-results";
-import Title from "../../common/components/title/title";
+} from '../../common/components/vocabulary/vocabulary-slice';
+import SearchResults from '../../common/components/search-results/search-results';
+import Title from '../../common/components/title/title';
 import {
   ResultAndFilterContainer,
   ResultAndStatsWrapper,
   PaginationWrapper,
-} from "./vocabulary.styles";
-import { useBreakpoints } from "../../common/components/media-query/media-query-context";
-import { FilterMobileButton } from "../terminology-search/terminology-search.styles";
-import { useTranslation } from "next-i18next";
-import { Modal, ModalContent } from "suomifi-ui-components";
-import { Breadcrumb, BreadcrumbLink } from "../../common/components/breadcrumb";
-import PropertyValue from "../../common/components/property-value";
-import { useGetVocabularyCountQuery } from "../../common/components/counts/counts-slice";
-import { TerminologyListFilter } from "./terminology-list-filter";
-import useUrlState from "../../common/utils/hooks/useUrlState";
-import Pagination from "../../common/components/pagination/pagination";
-import filterData from "../../common/utils/filter-data";
-import { setAlert } from "../../common/components/alert/alert.slice";
-import { Error } from "../../common/interfaces/error.interface";
-import { useRouter } from "next/router";
-import LoadIndicator from "../../common/components/load-indicator";
-import { useStoreDispatch } from "../../store";
-import { getPropertyValue } from "../../common/components/property-value/get-property-value";
+} from './vocabulary.styles';
+import { useBreakpoints } from '../../common/components/media-query/media-query-context';
+import { FilterMobileButton } from '../terminology-search/terminology-search.styles';
+import { useTranslation } from 'next-i18next';
+import { Modal, ModalContent } from 'suomifi-ui-components';
+import { Breadcrumb, BreadcrumbLink } from '../../common/components/breadcrumb';
+import PropertyValue from '../../common/components/property-value';
+import { useGetVocabularyCountQuery } from '../../common/components/counts/counts-slice';
+import { TerminologyListFilter } from './terminology-list-filter';
+import useUrlState from '../../common/utils/hooks/useUrlState';
+import Pagination from '../../common/components/pagination/pagination';
+import filterData from '../../common/utils/filter-data';
+import { setAlert } from '../../common/components/alert/alert.slice';
+import { Error } from '../../common/interfaces/error.interface';
+import { useRouter } from 'next/router';
+import LoadIndicator from '../../common/components/load-indicator';
+import { useStoreDispatch } from '../../store';
+import { getPropertyValue } from '../../common/components/property-value/get-property-value';
 
 interface VocabularyProps {
   id: string;
@@ -38,7 +38,7 @@ export default function Vocabulary({
   id,
   setTerminologyTitle,
 }: VocabularyProps) {
-  const { t, i18n } = useTranslation("common");
+  const { t, i18n } = useTranslation('common');
   const { isSmall } = useBreakpoints();
   const { urlState } = useUrlState();
   const router = useRouter();
@@ -61,14 +61,14 @@ export default function Vocabulary({
   const [showLoadingConcepts, setShowLoadingConcepts] = useState(false);
   const [showLoadingCollections, setShowLoadingCollections] = useState(false);
 
-  if (infoError && "status" in infoError && infoError?.status === 404) {
-    router.push("/404");
+  if (infoError && 'status' in infoError && infoError?.status === 404) {
+    router.push('/404');
   }
 
   const prefLabel = getPropertyValue({
     property: info?.properties.prefLabel,
     language: i18n.language,
-    fallbackLanguage: "fi",
+    fallbackLanguage: 'fi',
   });
   useEffect(() => {
     setTerminologyTitle(prefLabel);
@@ -119,7 +119,7 @@ export default function Vocabulary({
             fullWidth
             onClick={() => setShowModal(!showModal)}
           >
-            {t("vocabulary-filter-filter-list")}
+            {t('vocabulary-filter-filter-list')}
           </FilterMobileButton>
         )}
         <ResultAndFilterContainer>
@@ -131,9 +131,9 @@ export default function Vocabulary({
               visible={showModal}
               onEscKeyDown={() => setShowModal(false)}
               variant="smallScreen"
-              style={{ border: "none" }}
+              style={{ border: 'none' }}
             >
-              <ModalContent style={{ padding: "0" }}>
+              <ModalContent style={{ padding: '0' }}>
                 <TerminologyListFilter
                   isModal
                   onModalClose={() => setShowModal(false)}
@@ -144,7 +144,7 @@ export default function Vocabulary({
             </Modal>
           )}
           <ResultAndStatsWrapper id="search-results">
-            {urlState.type === "concept" &&
+            {urlState.type === 'concept' &&
               ((showLoadingConcepts && isFetchingConcepts) || conceptsError ? (
                 <LoadIndicator
                   isFetching={isFetchingConcepts}
@@ -158,13 +158,13 @@ export default function Vocabulary({
                     <PaginationWrapper>
                       <Pagination
                         data={concepts}
-                        pageString={t("pagination-page")}
+                        pageString={t('pagination-page')}
                       />
                     </PaginationWrapper>
                   </>
                 )
               ))}
-            {urlState.type === "collection" &&
+            {urlState.type === 'collection' &&
               ((showLoadingCollections && isFetchingCollections) ||
               collectionsError ? (
                 <LoadIndicator
@@ -188,7 +188,7 @@ export default function Vocabulary({
                           filterData(collections, urlState, i18n.language) ??
                           collections
                         }
-                        pageString={t("pagination-page")}
+                        pageString={t('pagination-page')}
                       />
                     </PaginationWrapper>
                   </>

@@ -1,5 +1,5 @@
-import _ from "lodash";
-import { NextRouter, useRouter } from "next/router";
+import _ from 'lodash';
+import { NextRouter, useRouter } from 'next/router';
 
 export interface UrlState {
   q: string;
@@ -11,11 +11,11 @@ export interface UrlState {
 }
 
 export const initialUrlState: UrlState = {
-  q: "",
+  q: '',
   domain: [],
-  organization: "",
-  status: ["valid", "draft"],
-  type: "concept",
+  organization: '',
+  status: ['valid', 'draft'],
+  type: 'concept',
   page: 1,
 };
 
@@ -86,13 +86,13 @@ function updateURLState(router: NextRouter, state?: UrlState): void {
 function buildUrlStatePatch(state: UrlState): Partial<UrlState> {
   const patch: Partial<UrlState> = {};
 
-  if (!isInitial(state, "q")) patch.q = state.q;
-  if (!isInitial(state, "domain")) patch.domain = state.domain;
-  if (!isInitial(state, "organization"))
+  if (!isInitial(state, 'q')) patch.q = state.q;
+  if (!isInitial(state, 'domain')) patch.domain = state.domain;
+  if (!isInitial(state, 'organization'))
     patch.organization = state.organization;
-  if (!isInitial(state, "status")) patch.status = state.status;
-  if (!isInitial(state, "type")) patch.type = state.type;
-  if (!isInitial(state, "page")) patch.page = state.page;
+  if (!isInitial(state, 'status')) patch.status = state.status;
+  if (!isInitial(state, 'type')) patch.type = state.type;
+  if (!isInitial(state, 'page')) patch.page = state.page;
 
   return patch;
 }
@@ -101,8 +101,8 @@ type QueryParamValue = string | string[] | undefined;
 
 function asString(
   value: QueryParamValue,
-  defaultValue = "",
-  delimiter = ""
+  defaultValue = '',
+  delimiter = ''
 ): string {
   if (Array.isArray(value)) {
     value = value.join(delimiter);
@@ -116,7 +116,7 @@ function asStringArray(
   defaultValue: string[] = []
 ): string[] {
   if (!Array.isArray(value)) {
-    value = [value ?? ""];
+    value = [value ?? ''];
   }
 
   value = value.filter(Boolean);

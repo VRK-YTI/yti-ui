@@ -1,10 +1,10 @@
-import React from "react";
-import { Link } from "suomifi-ui-components";
-import { BasicBlock } from ".";
-import { Concept } from "../../interfaces/concept.interface";
-import { getProperty } from "../../utils/get-property";
-import PropertyValue from "../property-value";
-import { List } from "./block.styles";
+import React from 'react';
+import { Link } from 'suomifi-ui-components';
+import { BasicBlock } from '.';
+import { Concept } from '../../interfaces/concept.interface';
+import { getProperty } from '../../utils/get-property';
+import PropertyValue from '../property-value';
+import { List } from './block.styles';
 
 export interface ConceptListBlockProps {
   title: React.ReactNode;
@@ -31,7 +31,7 @@ export default function ConceptListBlock({
             >
               <PropertyValue
                 property={getProperty(
-                  "prefLabel",
+                  'prefLabel',
                   concept.references.prefLabelXl
                 )}
                 fallbackLanguage="fi"

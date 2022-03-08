@@ -1,10 +1,10 @@
-import { maxBy } from "lodash";
-import React from "react";
-import SanitizedTextContent from "../sanitized-text-content";
+import { maxBy } from 'lodash';
+import React from 'react';
+import SanitizedTextContent from '../sanitized-text-content';
 import {
   MultilingualDefinitionListItem,
   MultilingualDefinitionListWrapper,
-} from "./multilingual-definition-list.styles";
+} from './multilingual-definition-list.styles';
 
 export interface MultilingualTextBoxProps {
   items: {
@@ -23,7 +23,7 @@ export default function MultilingualDefinitionList({
     <MultilingualDefinitionListWrapper maxSize={maxSize}>
       {items.map(({ language, content }, index) => (
         <MultilingualDefinitionListItem key={index} lang={language}>
-          {typeof content === "string" ? (
+          {typeof content === 'string' ? (
             <SanitizedTextContent text={content} />
           ) : (
             content

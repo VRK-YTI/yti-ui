@@ -1,15 +1,15 @@
-import axios, { AxiosRequestConfig, AxiosError } from "axios";
-import { BaseQueryFn } from "@reduxjs/toolkit/query";
-import { Error } from "../../interfaces/error.interface";
+import axios, { AxiosRequestConfig, AxiosError } from 'axios';
+import { BaseQueryFn } from '@reduxjs/toolkit/query';
+import { Error } from '../../interfaces/error.interface';
 
 const axiosBaseQuery =
   (
-    { baseUrl }: { baseUrl: string } = { baseUrl: "" }
+    { baseUrl }: { baseUrl: string } = { baseUrl: '' }
   ): BaseQueryFn<
     {
       url: string;
-      method: AxiosRequestConfig["method"];
-      data?: AxiosRequestConfig["data"];
+      method: AxiosRequestConfig['method'];
+      data?: AxiosRequestConfig['data'];
     },
     unknown,
     Error
@@ -18,7 +18,7 @@ const axiosBaseQuery =
     try {
       const result = await axios({
         url: baseUrl + url,
-        headers: { "content-type": "application/json" },
+        headers: { 'content-type': 'application/json' },
         method,
         data,
       });

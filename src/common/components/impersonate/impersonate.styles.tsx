@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const MobileMenuImpersonateSection = styled.ul`
   list-style: none;
@@ -19,12 +19,12 @@ export const MobileMenuImpersonateItem = styled.li<{
     padding-top: 9px;
     padding-bottom: 8px;
     font-weight: ${(props) => (props.active ? 600 : 400)};
-    padding-left: ${(props) => (props.inset ? "25px" : "10px")};
+    padding-left: ${(props) => (props.inset ? '25px' : '10px')};
     border-left: 5px solid
       ${(props) =>
         props.active
           ? props.theme.suomifi.colors.highlightBase
-          : "transparent"};
+          : 'transparent'};
   }
 
   &:hover a {

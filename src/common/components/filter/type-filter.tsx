@@ -1,6 +1,6 @@
-import { useTranslation } from "next-i18next";
-import useUrlState, { initialUrlState } from "../../utils/hooks/useUrlState";
-import RadioButtonFilter from "./radio-button-filter";
+import { useTranslation } from 'next-i18next';
+import useUrlState, { initialUrlState } from '../../utils/hooks/useUrlState';
+import RadioButtonFilter from './radio-button-filter';
 
 export interface TypeFilterProps {
   title: string;
@@ -16,7 +16,7 @@ export default function TypeFilter({
   isModal,
   counts,
 }: TypeFilterProps) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
   const { urlState, patchUrlState } = useUrlState();
 
   return (
@@ -24,12 +24,12 @@ export default function TypeFilter({
       title={title}
       items={[
         {
-          value: "concept",
-          label: t("filter-type-concepts", { count: counts.concepts ?? 0 }),
+          value: 'concept',
+          label: t('filter-type-concepts', { count: counts.concepts ?? 0 }),
         },
         {
-          value: "collection",
-          label: t("filter-type-collections", {
+          value: 'collection',
+          label: t('filter-type-collections', {
             count: counts.collections ?? 0,
           }),
         },
@@ -42,7 +42,7 @@ export default function TypeFilter({
           status: initialUrlState.status,
         })
       }
-      radioButtonVariant={isModal ? "large" : "small"}
+      radioButtonVariant={isModal ? 'large' : 'small'}
     />
   );
 }

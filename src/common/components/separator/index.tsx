@@ -1,4 +1,4 @@
-import { StyledHr } from "./separator.styles";
+import { StyledHr } from './separator.styles';
 
 export interface SeparatorProps {
   isLarge?: boolean;

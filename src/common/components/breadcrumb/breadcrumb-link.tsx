@@ -1,6 +1,6 @@
-import React from "react";
-import Link from "next/link";
-import { BreadcrumbLink as SuomiFiBreadcrumbLink } from "suomifi-ui-components";
+import React from 'react';
+import Link from 'next/link';
+import { BreadcrumbLink as SuomiFiBreadcrumbLink } from 'suomifi-ui-components';
 
 export interface BreadcrumbLinkProps {
   url: string;

@@ -1,11 +1,11 @@
-import React from "react";
-import { Link } from "suomifi-ui-components";
+import React from 'react';
+import { Link } from 'suomifi-ui-components';
 import {
   HoverDropdownItem,
   HoverDropdownList,
   HoverDropdownListWrapper,
   HoverDropdownWrapper,
-} from "./hover-dropdown.styles";
+} from './hover-dropdown.styles';
 
 export interface HoverDropdownProps {
   items?: {

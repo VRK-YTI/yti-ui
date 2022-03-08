@@ -1,17 +1,17 @@
-import Head from "next/head";
-import React from "react";
-import { Block } from "suomifi-ui-components";
-import { ThemeProvider } from "styled-components";
-import { lightTheme } from "./theme";
+import Head from 'next/head';
+import React from 'react';
+import { Block } from 'suomifi-ui-components';
+import { ThemeProvider } from 'styled-components';
+import { lightTheme } from './theme';
 import {
   ContentContainer,
   SiteContainer,
   MarginContainer,
   HeaderContainer,
-} from "./layout.styles";
-import { useBreakpoints } from "../common/components/media-query/media-query-context";
-import { HeaderWrapper } from "../modules/smart-header/smart-header.styles";
-import Logo from "../modules/smart-header/logo";
+} from './layout.styles';
+import { useBreakpoints } from '../common/components/media-query/media-query-context';
+import { HeaderWrapper } from '../modules/smart-header/smart-header.styles';
+import Logo from '../modules/smart-header/logo';
 
 export default function ErrorLayout({
   children,

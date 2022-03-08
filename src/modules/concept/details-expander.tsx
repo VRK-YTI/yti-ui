@@ -1,23 +1,23 @@
-import { useTranslation } from "next-i18next";
-import { ExpanderGroup } from "suomifi-ui-components";
-import { BasicBlock } from "../../common/components/block";
-import { Concept } from "../../common/interfaces/concept.interface";
+import { useTranslation } from 'next-i18next';
+import { ExpanderGroup } from 'suomifi-ui-components';
+import { BasicBlock } from '../../common/components/block';
+import { Concept } from '../../common/interfaces/concept.interface';
 import AdministrativeDetailsExpander, {
   hasAdministrativeDetails,
-} from "./administrative-details-expander";
+} from './administrative-details-expander';
 import DiagramsAndSourcesExpander, {
   hasDiagramsAndSources,
-} from "./diagrams-and-sources-expander";
+} from './diagrams-and-sources-expander';
 import OtherDetailsExpander, {
   hasOtherDetails,
-} from "./other-details-expander";
+} from './other-details-expander';
 
 export interface DetailsExpanderProps {
   concept?: Concept;
 }
 
 export default function DetailsExpander({ concept }: DetailsExpanderProps) {
-  const { i18n } = useTranslation("concept");
+  const { i18n } = useTranslation('concept');
 
   const noDiagramsAndSources = !hasDiagramsAndSources(concept, i18n.language);
   const noAdministrativeDetails = !hasAdministrativeDetails(
@@ -34,7 +34,7 @@ export default function DetailsExpander({ concept }: DetailsExpanderProps) {
       <ExpanderGroup
         openAllText=""
         closeAllText=""
-        toggleAllButtonProps={{ style: { display: "none" } }}
+        toggleAllButtonProps={{ style: { display: 'none' } }}
       >
         <DiagramsAndSourcesExpander concept={concept} />
         <AdministrativeDetailsExpander concept={concept} />

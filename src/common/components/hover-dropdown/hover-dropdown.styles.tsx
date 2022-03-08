@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const HoverDropdownWrapper = styled.div`
   position: relative;

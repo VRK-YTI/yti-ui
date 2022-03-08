@@ -1,6 +1,6 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { AppState, AppThunk } from "../../../store";
-import { Error } from "../../interfaces/error.interface";
+import { createSlice } from '@reduxjs/toolkit';
+import { AppState, AppThunk } from '../../../store';
+import { Error } from '../../interfaces/error.interface';
 
 export interface AlertState {
   alerts: Error[];
@@ -11,7 +11,7 @@ export const alertInitialState: AlertState = {
 };
 
 export const alertSlice = createSlice({
-  name: "alert",
+  name: 'alert',
   initialState: alertInitialState,
   reducers: {
     setAlert(state, action) {
@@ -24,7 +24,7 @@ export const alertSlice = createSlice({
 });
 
 export const setAlert =
-  (alerts: AlertState["alerts"]): AppThunk =>
+  (alerts: AlertState['alerts']): AppThunk =>
   (dispatch) => {
     dispatch(
       alertSlice.actions.setAlert({
@@ -35,7 +35,7 @@ export const setAlert =
 
 export const selectAlert =
   () =>
-  (state: AppState): AlertState["alerts"] =>
+  (state: AppState): AlertState['alerts'] =>
     state.alert.alerts;
 
 export default alertSlice.reducer;

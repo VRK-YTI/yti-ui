@@ -1,14 +1,14 @@
-import styled from "styled-components";
-import { Breakpoint } from "../media-query/media-query-context";
-import { small } from "../media-query/styled-helpers";
+import styled from 'styled-components';
+import { Breakpoint } from '../media-query/media-query-context';
+import { small } from '../media-query/styled-helpers';
 
 export const SidebarWrapper = styled.aside<{ breakpoint: Breakpoint }>`
   flex-grow: 1;
   background-color: ${(props) => props.theme.suomifi.colors.depthSecondary};
-  max-width: ${(props) => small(props.breakpoint, "100%", "374px")};
+  max-width: ${(props) => small(props.breakpoint, '100%', '374px')};
   padding: ${(props) => props.theme.suomifi.spacing.m};
 
-  &[aria-hidden="true"] {
+  &[aria-hidden='true'] {
     padding: 0;
   }
 `;

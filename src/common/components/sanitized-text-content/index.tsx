@@ -1,9 +1,9 @@
-import { useTranslation } from "next-i18next";
-import Link from "next/link";
+import { useTranslation } from 'next-i18next';
+import Link from 'next/link';
 import {
   SuomiInternalLink,
   SuomiExternalLink,
-} from "./sanitized-text-content.style";
+} from './sanitized-text-content.style';
 
 interface TextLinksProps {
   text: string;
@@ -17,19 +17,19 @@ interface ChildType extends ChildNode {
 }
 
 export default function SanitizedTextContent({ text }: TextLinksProps) {
-  const { t } = useTranslation("common");
-  const internalTypes = ["broader", "internal", "related"];
-  const htmlChildNodes = new DOMParser().parseFromString(text, "text/html")
+  const { t } = useTranslation('common');
+  const internalTypes = ['broader', 'internal', 'related'];
+  const htmlChildNodes = new DOMParser().parseFromString(text, 'text/html')
     .children[0].children[1].childNodes;
 
   const children = Array.from(htmlChildNodes).map(
     (child: ChildType, idx: number) => {
-      if (child.nodeName.toLowerCase() === "a") {
-        const childHref = child.href ?? "";
+      if (child.nodeName.toLowerCase() === 'a') {
+        const childHref = child.href ?? '';
         const childTextValue = child.firstChild?.textContent;
 
         const url = new URL(childHref);
-        if (url.protocol !== "http:" && url.protocol !== "https:") {
+        if (url.protocol !== 'http:' && url.protocol !== 'https:') {
           return (
             <span key={`${child.textContent}-${idx}`}>{child.textContent}</span>
           );
@@ -51,7 +51,7 @@ export default function SanitizedTextContent({ text }: TextLinksProps) {
               <SuomiExternalLink
                 href=""
                 labelNewWindow={`${t(
-                  "link-opens-new-window-external"
+                  'link-opens-new-window-external'
                 )} ${childTextValue}`}
               >
                 {childTextValue}
@@ -59,14 +59,14 @@ export default function SanitizedTextContent({ text }: TextLinksProps) {
             </Link>
           );
         }
-      } else if (child.nodeName.toLowerCase() === "br") {
+      } else if (child.nodeName.toLowerCase() === 'br') {
         return <br key={`br-${idx}`} />;
       } else if (child.textContent) {
         return (
           <span key={`${child.textContent}-${idx}`}>{child.textContent}</span>
         );
       } else {
-        console.log("ignored child");
+        console.log('ignored child');
         console.log(child);
       }
     }

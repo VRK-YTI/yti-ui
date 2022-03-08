@@ -1,50 +1,50 @@
-import { Organization } from "../interfaces/organization.interface";
-import { Term } from "../interfaces/term.interface";
-import { getProperty } from "./get-property";
+import { Organization } from '../interfaces/organization.interface';
+import { Term } from '../interfaces/term.interface';
+import { getProperty } from './get-property';
 
-describe("getProperty", () => {
-  test("should work with Term", () => {
+describe('getProperty', () => {
+  test('should work with Term', () => {
     const items: Term[] = [{ properties: {} }] as Term[];
 
-    expect(getProperty("prefLabel", items)).toEqual([]);
+    expect(getProperty('prefLabel', items)).toEqual([]);
   });
 
-  test("should work with Organization", () => {
+  test('should work with Organization', () => {
     const items: Organization[] = [{ properties: {} }] as Organization[];
 
-    expect(getProperty("prefLabel", items)).toEqual([]);
+    expect(getProperty('prefLabel', items)).toEqual([]);
   });
 
-  test("should return correct property", () => {
+  test('should return correct property', () => {
     const items: Term[] = [
       {
         properties: {
-          prefLabel: [{ value: "A" }],
-          changeNote: [{ value: "B" }],
+          prefLabel: [{ value: 'A' }],
+          changeNote: [{ value: 'B' }],
         },
       },
     ] as Term[];
 
-    expect(getProperty("prefLabel", items)).toEqual([{ value: "A" }]);
+    expect(getProperty('prefLabel', items)).toEqual([{ value: 'A' }]);
   });
 
-  test("should merge properties of multiple items", () => {
+  test('should merge properties of multiple items', () => {
     const items: Term[] = [
       {
         properties: {
-          prefLabel: [{ value: "A" }],
+          prefLabel: [{ value: 'A' }],
         },
       },
       {
         properties: {
-          prefLabel: [{ value: "B" }],
+          prefLabel: [{ value: 'B' }],
         },
       },
     ] as Term[];
 
-    expect(getProperty("prefLabel", items)).toEqual([
-      { value: "A" },
-      { value: "B" },
+    expect(getProperty('prefLabel', items)).toEqual([
+      { value: 'A' },
+      { value: 'B' },
     ]);
   });
 });

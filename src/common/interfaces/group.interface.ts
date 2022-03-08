@@ -1,6 +1,6 @@
-import { BaseEntity, Property } from "./termed-data-types.interface";
+import { BaseEntity, Property } from './termed-data-types.interface';
 
-export interface Group extends BaseEntity<"Group"> {
+export interface Group extends BaseEntity<'Group'> {
   properties: {
     definition?: Property[];
     notation?: Property[];

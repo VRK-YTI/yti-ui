@@ -1,17 +1,17 @@
-import { ReactNode } from "react";
-import { useTranslation } from "react-i18next";
+import { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   GroupSearchResult,
   OrganizationSearchResult,
-} from "../../interfaces/terminology.interface";
-import useUrlState, { initialUrlState } from "../../utils/hooks/useUrlState";
-import { useBreakpoints } from "../media-query/media-query-context";
+} from '../../interfaces/terminology.interface';
+import useUrlState, { initialUrlState } from '../../utils/hooks/useUrlState';
+import { useBreakpoints } from '../media-query/media-query-context';
 import {
   ChipWrapper,
   CountText,
   CountWrapper,
-} from "./search-count-tags.styles";
-import Tag from "./tag";
+} from './search-count-tags.styles';
+import Tag from './tag';
 
 interface SearchCountTagsProps {
   title: ReactNode;
@@ -26,7 +26,7 @@ export default function SearchCountTags({
   domains = [],
   renderQBeforeStatus = false,
 }: SearchCountTagsProps) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
   const { urlState, patchUrlState } = useUrlState();
   const { isSmall } = useBreakpoints();
 
@@ -71,7 +71,7 @@ export default function SearchCountTags({
   }
 
   function renderStatusTags() {
-    return ["valid", "draft", "retired", "superseded"]
+    return ['valid', 'draft', 'retired', 'superseded']
       .map((status) => {
         if (urlState.status.includes(status)) {
           return (

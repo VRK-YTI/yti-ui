@@ -1,19 +1,19 @@
-import { ClickAwayListener } from "@material-ui/core";
-import { useRouter } from "next/router";
-import { MouseEventHandler, useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useTheme } from "styled-components";
-import { Icon, Link } from "suomifi-ui-components";
+import { ClickAwayListener } from '@material-ui/core';
+import { useRouter } from 'next/router';
+import { MouseEventHandler, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useTheme } from 'styled-components';
+import { Icon, Link } from 'suomifi-ui-components';
 import {
   NavigationDropdownItem,
   NavigationDropdownList,
   NavigationDropdownWrapper,
   NavigationItem,
   NavigationWrapper,
-} from "./navigation.styles";
+} from './navigation.styles';
 
 export default function DesktopNavigation() {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
   const [open, setOpen] = useState(false);
   const router = useRouter();
 
@@ -26,17 +26,17 @@ export default function DesktopNavigation() {
 
   return (
     <NavigationWrapper>
-      <NavigationItem active={router.pathname === "/"}>
+      <NavigationItem active={router.pathname === '/'}>
         <Link className="main" href="/">
-          {t("site-frontpage")}
+          {t('site-frontpage')}
         </Link>
       </NavigationItem>
       <NavigationItem>
         <Link className="main" href="" onClick={handleDropdown}>
-          {t("site-services")}
+          {t('site-services')}
           <Icon
             color={theme.suomifi.colors.highlightBase}
-            icon={open ? "chevronUp" : "chevronDown"}
+            icon={open ? 'chevronUp' : 'chevronDown'}
           />
         </Link>
         {open && (
@@ -44,13 +44,13 @@ export default function DesktopNavigation() {
             <NavigationDropdownWrapper>
               <NavigationDropdownList>
                 <NavigationDropdownItem>
-                  <Link href="/">{t("terminology-title")}</Link>
+                  <Link href="/">{t('terminology-title')}</Link>
                 </NavigationDropdownItem>
                 <NavigationDropdownItem>
-                  <Link href="/">{t("codelist-title")}</Link>
+                  <Link href="/">{t('codelist-title')}</Link>
                 </NavigationDropdownItem>
                 <NavigationDropdownItem>
-                  <Link href="/">{t("datamodel-title")}</Link>
+                  <Link href="/">{t('datamodel-title')}</Link>
                 </NavigationDropdownItem>
               </NavigationDropdownList>
             </NavigationDropdownWrapper>
@@ -59,17 +59,17 @@ export default function DesktopNavigation() {
       </NavigationItem>
       <NavigationItem>
         <Link className="main" href="/">
-          {t("site-information")}
+          {t('site-information')}
         </Link>
       </NavigationItem>
       <NavigationItem>
         <Link className="main" href="/">
-          {t("site-for-developers")}
+          {t('site-for-developers')}
         </Link>
       </NavigationItem>
       <NavigationItem>
         <Link className="main" href="/">
-          {t("site-for-administrators")}
+          {t('site-for-administrators')}
         </Link>
       </NavigationItem>
     </NavigationWrapper>

@@ -1,15 +1,15 @@
-import React from "react";
-import { render, screen } from "@testing-library/react";
-import { themeProvider } from "../../../tests/test-utils";
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import { themeProvider } from '../../../tests/test-utils';
 import {
   Sidebar,
   SidebarHeader,
   SidebarLinkList,
   SidebarLinkListItem,
-} from ".";
+} from '.';
 
-describe("Sidebar", () => {
-  test("should render", () => {
+describe('Sidebar', () => {
+  test('should render', () => {
     render(
       <Sidebar>
         <SidebarHeader>This is sidebar</SidebarHeader>
@@ -17,10 +17,10 @@ describe("Sidebar", () => {
       { wrapper: themeProvider }
     );
 
-    expect(screen.getByText("This is sidebar")).toBeTruthy();
+    expect(screen.getByText('This is sidebar')).toBeTruthy();
   });
 
-  test("should render links", () => {
+  test('should render links', () => {
     render(
       <Sidebar>
         <SidebarLinkList>
@@ -35,7 +35,7 @@ describe("Sidebar", () => {
       { wrapper: themeProvider }
     );
 
-    expect(screen.getByText("Link 1")).toBeTruthy();
-    expect(screen.getByText("Link 2")).toBeTruthy();
+    expect(screen.getByText('Link 1')).toBeTruthy();
+    expect(screen.getByText('Link 2')).toBeTruthy();
   });
 });

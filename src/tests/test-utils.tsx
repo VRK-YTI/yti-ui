@@ -1,7 +1,7 @@
-import React from "react";
-import { ThemeProvider } from "styled-components";
-import { SWRConfig } from "swr";
-import { lightTheme } from "../layouts/theme";
+import React from 'react';
+import { ThemeProvider } from 'styled-components';
+import { SWRConfig } from 'swr';
+import { lightTheme } from '../layouts/theme';
 
 // Return SWRConfig with clear cache.
 export const clearSWRCache: React.FC = ({ children }) => (

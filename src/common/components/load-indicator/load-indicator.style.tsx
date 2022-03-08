@@ -1,5 +1,5 @@
-import styled, { keyframes } from "styled-components";
-import { Button, Icon } from "suomifi-ui-components";
+import styled, { keyframes } from 'styled-components';
+import { Button, Icon } from 'suomifi-ui-components';
 
 export const LoadWrapper = styled.div`
   position: absolute;
@@ -21,8 +21,8 @@ const rotate = keyframes`
 `;
 
 export const LoadIcon = styled(Icon)<{ isSmall: boolean }>`
-  width: ${(props) => (props.isSmall ? "50px" : "100px")};
-  height: ${(props) => (props.isSmall ? "50px" : "100px")};
+  width: ${(props) => (props.isSmall ? '50px' : '100px')};
+  height: ${(props) => (props.isSmall ? '50px' : '100px')};
   animation: ${rotate} 2s linear infinite;
   color: ${(props) => props.theme.suomifi.colors.highlightLight1};
   margin-top: ${(props) => props.theme.suomifi.spacing.xl};

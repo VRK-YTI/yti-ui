@@ -1,14 +1,14 @@
-import React, { useContext } from "react";
-import { useMediaQuery } from "@material-ui/core";
+import React, { useContext } from 'react';
+import { useMediaQuery } from '@material-ui/core';
 
 const MediaQueryContext = React.createContext({ isSSRMobile: false });
 
 export const MediaQueryContextProvider = MediaQueryContext.Provider;
 
 export const mediaQueries = {
-  s: "(max-width:767px)",
-  m: "(min-width:768px) and (max-width:1199px)",
-  l: "(min-width:1200px)",
+  s: '(max-width:767px)',
+  m: '(min-width:768px) and (max-width:1199px)',
+  l: '(min-width:1200px)',
 };
 
 /*
@@ -21,7 +21,7 @@ export const mediaQueries = {
   xl: '(min-width:1200px)'
 */
 
-export type Breakpoint = "small" | "medium" | "large";
+export type Breakpoint = 'small' | 'medium' | 'large';
 
 export interface UseBreakpointsResult {
   isSmall: boolean;
@@ -40,7 +40,7 @@ export function useBreakpoints(): UseBreakpointsResult {
   const isMedium = !!global.matchMedia ? matchMedium : false;
   const isLarge = !!global.matchMedia ? matchLarge : !isSSRMobile;
 
-  const breakpoint = isSmall ? "small" : isMedium ? "medium" : "large";
+  const breakpoint = isSmall ? 'small' : isMedium ? 'medium' : 'large';
 
   return {
     isSmall,

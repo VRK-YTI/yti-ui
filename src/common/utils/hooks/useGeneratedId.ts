@@ -1,9 +1,9 @@
 // Code copied from suomifi-ui-components@6.1.1
-import { useState, useEffect, useLayoutEffect } from "react";
+import { useState, useEffect, useLayoutEffect } from 'react';
 
 function windowAvailable() {
   return !!(
-    typeof window !== "undefined" &&
+    typeof window !== 'undefined' &&
     window.document &&
     window.document.createElement
   );

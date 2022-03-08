@@ -1,4 +1,4 @@
-import { useTranslation } from "next-i18next";
+import { useTranslation } from 'next-i18next';
 import {
   Button,
   Modal,
@@ -7,16 +7,16 @@ import {
   ModalTitle,
   Paragraph,
   Text,
-} from "suomifi-ui-components";
-import { useBreakpoints } from "../media-query/media-query-context";
-import { ModalTitleWrapper } from "./login-modal.styles";
+} from 'suomifi-ui-components';
+import { useBreakpoints } from '../media-query/media-query-context';
+import { ModalTitleWrapper } from './login-modal.styles';
 
 export default function LoginModalView({
   setVisible,
 }: {
   setVisible: Function;
 }) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
   const { isSmall } = useBreakpoints();
 
   return (
@@ -24,12 +24,12 @@ export default function LoginModalView({
       <Modal
         appElementId="__next"
         visible={true}
-        variant={isSmall ? "smallScreen" : "default"}
+        variant={isSmall ? 'smallScreen' : 'default'}
         onEscKeyDown={() => setVisible(false)}
       >
         <ModalContent>
           <ModalTitleWrapper>
-            <ModalTitle>{t("site-login-title")}</ModalTitle>
+            <ModalTitle>{t('site-login-title')}</ModalTitle>
             <Button
               variant="secondary"
               icon="close"
@@ -37,28 +37,28 @@ export default function LoginModalView({
             />
           </ModalTitleWrapper>
           <Paragraph>
-            <Text>{t("site-login-info-1")}</Text>
+            <Text>{t('site-login-info-1')}</Text>
           </Paragraph>
           <br />
           <Paragraph>
-            <Text>{t("site-login-info-2")}</Text>
+            <Text>{t('site-login-info-2')}</Text>
           </Paragraph>
         </ModalContent>
         <ModalFooter>
           <Button icon="login" onClick={() => login()}>
-            {t("site-login")}
+            {t('site-login')}
           </Button>
-          <Button onClick={() => register()}>{t("site-register")}</Button>
+          <Button onClick={() => register()}>{t('site-register')}</Button>
         </ModalFooter>
       </Modal>
     </>
   );
 
   function login() {
-    window.location.href = "/api/auth/login?target=/";
+    window.location.href = '/api/auth/login?target=/';
   }
 
   function register() {
-    window.open("http://id.eduuni.fi/signup", "_blank");
+    window.open('http://id.eduuni.fi/signup', '_blank');
   }
 }

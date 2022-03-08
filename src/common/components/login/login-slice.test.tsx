@@ -1,17 +1,17 @@
-import { setLogin } from "./login-slice";
-import { makeStore } from "../../../store";
+import { setLogin } from './login-slice';
+import { makeStore } from '../../../store';
 
-describe("login-slice", () => {
-  test("setLogin sets login with a given value", () => {
+describe('login-slice', () => {
+  test('setLogin sets login with a given value', () => {
     const store = makeStore();
     const originalState = store.getState().login;
 
     const login = {
       anonymous: false,
-      email: "admin@admin.fi",
-      firstName: "Admin",
-      lastName: "Admin",
-      id: "",
+      email: 'admin@admin.fi',
+      firstName: 'Admin',
+      lastName: 'Admin',
+      id: '',
       superuser: true,
       newlyCreated: false,
       rolesInOrganizations: {},
@@ -20,11 +20,11 @@ describe("login-slice", () => {
       accountNonExpired: true,
       accountNonLocked: true,
       credentialsNonExpired: true,
-      username: "Adming",
+      username: 'Adming',
       authorities: [],
       hasToken: false,
-      tokenRole: "",
-      containerUri: "",
+      tokenRole: '',
+      containerUri: '',
     };
 
     store.dispatch(setLogin(login));

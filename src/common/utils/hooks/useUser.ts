@@ -1,9 +1,9 @@
 // OBSOLETE
-import useSWR from "swr";
-import User from "../../interfaces/user-interface";
+import useSWR from 'swr';
+import User from '../../interfaces/user-interface';
 
 export default function useUser({
-  redirectTo = "",
+  redirectTo = '',
   redirectIfFound = false,
   initialData = undefined,
 }: {
@@ -12,7 +12,7 @@ export default function useUser({
   initialData?: User;
 } = {}) {
   const { data: user, mutate: mutateUser } = useSWR<User>(
-    "/api/auth/user",
+    '/api/auth/user',
     (url) => fetch(url).then((r) => r.json()),
     initialData === null ? {} : { fallbackData: initialData }
   );

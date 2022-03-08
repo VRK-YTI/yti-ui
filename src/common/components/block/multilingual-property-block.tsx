@@ -1,7 +1,7 @@
-import { Property } from "../../interfaces/termed-data-types.interface";
+import { Property } from '../../interfaces/termed-data-types.interface';
 import MultilingualBlock, {
   MultilingualBlockItemMapper,
-} from "./multilingual-block";
+} from './multilingual-block';
 
 export interface MultilingualPropertyBlockProps {
   title: React.ReactNode;

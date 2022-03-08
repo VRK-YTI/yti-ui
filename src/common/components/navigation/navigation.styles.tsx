@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { NavigationProps } from "./navigation-props";
+import styled from 'styled-components';
+import { NavigationProps } from './navigation-props';
 
 export const NavigationWrapper = styled.ul`
   display: flex;
@@ -22,7 +22,7 @@ export const NavigationItem = styled.li<NavigationProps>`
       ${(props) =>
         props.active
           ? props.theme.suomifi.colors.highlightBase
-          : "transparent"};
+          : 'transparent'};
 
     &:visited {
       color: ${(props) => props.theme.suomifi.colors.blackBase};
@@ -94,12 +94,12 @@ export const MobileMenuItem = styled.li<{ active?: boolean; inset?: boolean }>`
     padding-top: 9px;
     padding-bottom: 8px;
     font-weight: ${(props) => (props.active ? 600 : 400)};
-    padding-left: ${(props) => (props.inset ? "25px" : "10px")};
+    padding-left: ${(props) => (props.inset ? '25px' : '10px')};
     border-left: 5px solid
       ${(props) =>
         props.active
           ? props.theme.suomifi.colors.highlightBase
-          : "transparent"};
+          : 'transparent'};
   }
 
   &:hover a {

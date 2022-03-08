@@ -1,12 +1,12 @@
-import { GetServerSidePropsContext, NextApiResponse } from "next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
-import User, { anonymousUser, UserProps } from "../interfaces/user-interface";
-import withSession, { NextIronRequest } from "./session";
-import { AppStore, wrapper } from "../../store";
-import { ParsedUrlQuery } from "querystring";
-import { Redirect } from "next/dist/lib/load-custom-routes";
-import { SSRConfig } from "next-i18next";
-import { setLogin } from "../components/login/login-slice";
+import { GetServerSidePropsContext, NextApiResponse } from 'next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import User, { anonymousUser, UserProps } from '../interfaces/user-interface';
+import withSession, { NextIronRequest } from './session';
+import { AppStore, wrapper } from '../../store';
+import { ParsedUrlQuery } from 'querystring';
+import { Redirect } from 'next/dist/lib/load-custom-routes';
+import { SSRConfig } from 'next-i18next';
+import { setLogin } from '../components/login/login-slice';
 
 export interface LocalHandlerParams {
   req: NextIronRequest;
@@ -45,19 +45,19 @@ export function createCommonGetServerSideProps<
       }) => {
         const results = await handler?.({ req, res, locale, store });
         store.dispatch(
-          setLogin(req.session.get<User>("user") || anonymousUser)
+          setLogin(req.session.get<User>('user') || anonymousUser)
         );
-        const userAgent = req.headers["user-agent"] ?? "";
+        const userAgent = req.headers['user-agent'] ?? '';
 
         return {
           ...results,
           props: {
             ...results?.props,
             ...(await serverSideTranslations(locale, [
-              "alert",
-              "collection",
-              "common",
-              "concept",
+              'alert',
+              'collection',
+              'common',
+              'concept',
             ])),
             isSSRMobile: Boolean(
               userAgent.match(

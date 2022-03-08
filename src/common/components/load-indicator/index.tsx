@@ -1,9 +1,9 @@
-import { SerializedError } from "@reduxjs/toolkit";
-import { useTranslation } from "next-i18next";
-import { Text } from "suomifi-ui-components";
-import { Error } from "../../interfaces/error.interface";
-import { useBreakpoints } from "../media-query/media-query-context";
-import { LoadIcon, LoadWrapper, RefetchButton } from "./load-indicator.style";
+import { SerializedError } from '@reduxjs/toolkit';
+import { useTranslation } from 'next-i18next';
+import { Text } from 'suomifi-ui-components';
+import { Error } from '../../interfaces/error.interface';
+import { useBreakpoints } from '../media-query/media-query-context';
+import { LoadIcon, LoadWrapper, RefetchButton } from './load-indicator.style';
 
 interface LoadIndicatorProps {
   isFetching: boolean;
@@ -16,7 +16,7 @@ export default function LoadIndicator({
   error,
   refetch,
 }: LoadIndicatorProps) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
   const { isSmall } = useBreakpoints();
 
   if (isFetching) {
@@ -28,9 +28,9 @@ export default function LoadIndicator({
   } else if (error) {
     return (
       <LoadWrapper>
-        <Text>{t("error-occured")}</Text>
+        <Text>{t('error-occured')}</Text>
         <RefetchButton onClick={() => refetch()}>
-          {t("try-again")}
+          {t('try-again')}
         </RefetchButton>
       </LoadWrapper>
     );

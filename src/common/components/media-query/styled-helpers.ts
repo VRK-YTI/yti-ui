@@ -1,4 +1,4 @@
-import { Breakpoint } from "./media-query-context";
+import { Breakpoint } from './media-query-context';
 
 export function resolve(
   breakpoint: Breakpoint,

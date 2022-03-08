@@ -1,27 +1,27 @@
-import React, { useState } from "react";
-import { Block } from "suomifi-ui-components";
-import Modal from "react-modal";
+import React, { useState } from 'react';
+import { Block } from 'suomifi-ui-components';
+import Modal from 'react-modal';
 import {
   HeaderContainer,
   MarginContainer,
   NavigationContainer,
-} from "../../layouts/layout.styles";
-import Logo from "./logo";
-import MobileNavigationToggleButton from "./mobile-navigation-toggle-button";
+} from '../../layouts/layout.styles';
+import Logo from './logo';
+import MobileNavigationToggleButton from './mobile-navigation-toggle-button';
 import {
   HeaderWrapper,
   ModalOverlay,
   ModalContent,
-} from "./smart-header.styles";
-import DesktopAuthenticationPanel from "../../common/components/authentication-panel/desktop-authentication-panel";
-import DesktopNavigation from "../../common/components/navigation/desktop-navigation";
-import MobileNavigation from "../../common/components/navigation/mobile-navigation";
-import DesktopLocaleChooser from "../../common/components/locale-chooser/desktop-locale-chooser";
-import UserInfo from "../../common/components/authentication-panel/user-info";
-import HeaderSearch from "../../common/components/header-search/header-search";
-import { useBreakpoints } from "../../common/components/media-query/media-query-context";
+} from './smart-header.styles';
+import DesktopAuthenticationPanel from '../../common/components/authentication-panel/desktop-authentication-panel';
+import DesktopNavigation from '../../common/components/navigation/desktop-navigation';
+import MobileNavigation from '../../common/components/navigation/mobile-navigation';
+import DesktopLocaleChooser from '../../common/components/locale-chooser/desktop-locale-chooser';
+import UserInfo from '../../common/components/authentication-panel/user-info';
+import HeaderSearch from '../../common/components/header-search/header-search';
+import { useBreakpoints } from '../../common/components/media-query/media-query-context';
 
-Modal.setAppElement("#__next");
+Modal.setAppElement('#__next');
 
 export default function SmartHeader() {
   const [isExpanded, setIsExpanded] = useState(false);

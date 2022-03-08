@@ -1,14 +1,14 @@
-import { render, screen } from "@testing-library/react";
-import { MultilingualBlock } from ".";
-import { themeProvider } from "../../../tests/test-utils";
+import { render, screen } from '@testing-library/react';
+import { MultilingualBlock } from '.';
+import { themeProvider } from '../../../tests/test-utils';
 
-describe("MultilingualBlock", () => {
-  test("should render items", () => {
+describe('MultilingualBlock', () => {
+  test('should render items', () => {
     render(
       <MultilingualBlock<string>
         title="Title"
-        data={["Item 1", "Item 2"]}
-        mapper={(item) => ({ language: "", content: item })}
+        data={['Item 1', 'Item 2']}
+        mapper={(item) => ({ language: '', content: item })}
       />,
       { wrapper: themeProvider }
     );

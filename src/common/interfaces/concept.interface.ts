@@ -1,9 +1,9 @@
-import { Collection } from "./collection.interface";
-import { ConceptLink } from "./concept-link.interface";
-import { Term } from "./term.interface";
-import { BaseEntity, Property } from "./termed-data-types.interface";
+import { Collection } from './collection.interface';
+import { ConceptLink } from './concept-link.interface';
+import { Term } from './term.interface';
+import { BaseEntity, Property } from './termed-data-types.interface';
 
-export interface Concept extends BaseEntity<"Concept"> {
+export interface Concept extends BaseEntity<'Concept'> {
   properties: {
     changeNote?: Property[];
     conceptClass?: Property[];

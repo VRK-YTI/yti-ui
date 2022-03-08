@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { Button, Checkbox, RadioButton } from "suomifi-ui-components";
+import styled from 'styled-components';
+import { Button, Checkbox, RadioButton } from 'suomifi-ui-components';
 
 export const CloseWrapper = styled.div`
   * {
@@ -47,11 +47,11 @@ export const FilterSection = styled.section<{ isModal: boolean }>`
   background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
   border: ${(props) =>
     props.isModal
-      ? "none"
+      ? 'none'
       : `solid 1px ${props.theme.suomifi.colors.depthLight1}`};
   height: max-content;
-  width: ${(props) => (props.isModal ? "100%" : "350px")};
-  margin-bottom: ${(props) => (props.isModal ? "0px" : "80px")};
+  width: ${(props) => (props.isModal ? '100%' : '350px')};
+  margin-bottom: ${(props) => (props.isModal ? '0px' : '80px')};
 `;
 
 export const Header = styled.div`

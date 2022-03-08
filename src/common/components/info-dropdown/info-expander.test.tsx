@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import React from "react";
-import { render, screen } from "@testing-library/react";
-import InfoExpander from "./info-expander";
-import { themeProvider } from "../../../tests/test-utils";
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import InfoExpander from './info-expander';
+import { themeProvider } from '../../../tests/test-utils';
 
-describe("InfoExpander", () => {
-  test("should render export button", () => {
+describe('InfoExpander', () => {
+  test('should render export button', () => {
     render(
       <InfoExpander
         data={
@@ -23,7 +23,7 @@ describe("InfoExpander", () => {
     );
 
     expect(
-      screen.queryAllByText("tr-vocabulary-info-vocabulary-export")
+      screen.queryAllByText('tr-vocabulary-info-vocabulary-export')
     ).toHaveLength(1);
   });
 });

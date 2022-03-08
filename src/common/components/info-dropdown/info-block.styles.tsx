@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { Text } from "suomifi-ui-components";
+import styled from 'styled-components';
+import { Text } from 'suomifi-ui-components';
 
 export const InfoBlockTitle = styled(Text)`
   font-size: ${(props) => props.theme.suomifi.typography.bodyText};

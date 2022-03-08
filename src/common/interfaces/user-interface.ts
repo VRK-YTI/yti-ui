@@ -23,10 +23,10 @@ export default User;
 
 export const anonymousUser: User = {
   anonymous: true,
-  email: "",
-  firstName: "",
-  lastName: "",
-  id: "",
+  email: '',
+  firstName: '',
+  lastName: '',
+  id: '',
   superuser: false,
   newlyCreated: false,
   rolesInOrganizations: {},
@@ -35,11 +35,11 @@ export const anonymousUser: User = {
   accountNonExpired: true,
   accountNonLocked: true,
   credentialsNonExpired: true,
-  username: "",
+  username: '',
   authorities: [],
   hasToken: false,
-  tokenRole: "",
-  containerUri: "",
+  tokenRole: '',
+  containerUri: '',
 };
 
 export type UserProps = {

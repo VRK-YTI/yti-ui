@@ -1,10 +1,10 @@
-import { useTranslation } from "next-i18next";
-import React from "react";
-import { Term } from "../../interfaces/term.interface";
-import TermModal from "../term-modal";
+import { useTranslation } from 'next-i18next';
+import React from 'react';
+import { Term } from '../../interfaces/term.interface';
+import TermModal from '../term-modal';
 import MultilingualBlock, {
   MultilingualBlockItemMapper,
-} from "./multilingual-block";
+} from './multilingual-block';
 
 export interface TermBlockProps {
   title: React.ReactNode;
@@ -19,23 +19,23 @@ export default function TermBlock({
   mapper,
   extra,
 }: TermBlockProps) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
 
   const defaultMapper: MultilingualBlockItemMapper<{
     term: Term;
     type: string;
   }> = ({ term, type }) => ({
-    language: term.properties.prefLabel?.[0].lang ?? "",
+    language: term.properties.prefLabel?.[0].lang ?? '',
     content: (
       <span>
         <span
-          style={{ display: "inline-block", minWidth: "40%" }}
+          style={{ display: 'inline-block', minWidth: '40%' }}
           lang={term.properties.prefLabel?.[0].value}
         >
           <TermModal data={{ term: term, type: type }} />
         </span>
         <span>
-          {type}, {t(term.properties.status?.[0].value ?? "")}
+          {type}, {t(term.properties.status?.[0].value ?? '')}
         </span>
       </span>
     ),

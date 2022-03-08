@@ -1,14 +1,14 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { HYDRATE } from "next-redux-wrapper";
-import { AppState, AppThunk } from "../../../store";
-import { User } from "../../interfaces/user-interface";
+import { createSlice } from '@reduxjs/toolkit';
+import { HYDRATE } from 'next-redux-wrapper';
+import { AppState, AppThunk } from '../../../store';
+import { User } from '../../interfaces/user-interface';
 
 export const initialState: User = {
   anonymous: true,
-  email: "",
-  firstName: "",
-  lastName: "",
-  id: "",
+  email: '',
+  firstName: '',
+  lastName: '',
+  id: '',
   superuser: false,
   newlyCreated: false,
   rolesInOrganizations: {},
@@ -17,15 +17,15 @@ export const initialState: User = {
   accountNonExpired: true,
   accountNonLocked: true,
   credentialsNonExpired: true,
-  username: "",
+  username: '',
   authorities: [],
   hasToken: false,
-  tokenRole: "",
-  containerUri: "",
+  tokenRole: '',
+  containerUri: '',
 };
 
 export const loginSlice = createSlice({
-  name: "login",
+  name: 'login',
   initialState,
   reducers: {
     setLogin(state, action) {

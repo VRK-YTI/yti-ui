@@ -1,17 +1,17 @@
-import { getPropertyValue } from "../components/property-value/get-property-value";
-import { Collection } from "../interfaces/collection.interface";
+import { getPropertyValue } from '../components/property-value/get-property-value';
+import { Collection } from '../interfaces/collection.interface';
 import {
   VocabularyConceptDTO,
   VocabularyConcepts,
-} from "../interfaces/vocabulary.interface";
-import { UrlState } from "./hooks/useUrlState";
+} from '../interfaces/vocabulary.interface';
+import { UrlState } from './hooks/useUrlState';
 
 export default function filterData(
   data: VocabularyConcepts | Collection[],
   urlState: UrlState,
   language: string
 ) {
-  if ("concepts" in data) {
+  if ('concepts' in data) {
     const filteredData = data.concepts.filter(
       (concept: VocabularyConceptDTO) => {
         let valid = false;

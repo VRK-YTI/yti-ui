@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const DesktopLocaleChooserWrapper = styled.div`
   flex-grow: 1;
@@ -20,6 +20,6 @@ export const MobileMenuLanguageItem = styled.li<{ active?: boolean }>`
     font-size: ${(props) =>
       props.theme.suomifi.values.typography.bodyTextSmall.fontSize.value}px;
     line-height: 24px;
-    font-weight: ${(props) => (props.active ? "600" : "400")};
+    font-weight: ${(props) => (props.active ? '600' : '400')};
   }
 `;

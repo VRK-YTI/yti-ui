@@ -2,8 +2,8 @@ import {
   Expander,
   ExpanderContent,
   ExpanderTitleButton,
-} from "suomifi-ui-components";
-import { TermHeading, TermText } from "./term-modal.style";
+} from 'suomifi-ui-components';
+import { TermHeading, TermText } from './term-modal.style';
 
 interface TermExpanderProps {
   title: string;

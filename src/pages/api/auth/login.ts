@@ -1,11 +1,11 @@
-import withSession from "../../../common/utils/session";
+import withSession from '../../../common/utils/session';
 
 export default withSession(async (req, res) => {
   // eventually we want to return to this path
-  let target = req.query["target"] ?? "/";
+  let target = req.query['target'] ?? '/';
 
   // but SSO should first return to auth callback
-  target = "/api/auth/callback?target=" + target;
+  target = '/api/auth/callback?target=' + target;
 
   const path = `/Shibboleth.sso/Login?target=${encodeURIComponent(target)}`;
   res.redirect(path);

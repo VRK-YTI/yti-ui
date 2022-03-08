@@ -1,7 +1,7 @@
-import React from "react";
-import { useTranslation } from "next-i18next";
-import { Property } from "../../interfaces/termed-data-types.interface";
-import { getPropertyValue } from "./get-property-value";
+import React from 'react';
+import { useTranslation } from 'next-i18next';
+import { Property } from '../../interfaces/termed-data-types.interface';
+import { getPropertyValue } from './get-property-value';
 
 export interface PropertyValueProps {
   property?: Property[];
@@ -40,7 +40,7 @@ export default function PropertyValue({
   delimiter = false,
   fallback,
 }: PropertyValueProps) {
-  const { i18n } = useTranslation("common");
+  const { i18n } = useTranslation('common');
 
   const value = getPropertyValue({
     property,

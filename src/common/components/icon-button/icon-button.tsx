@@ -1,7 +1,7 @@
-import React from "react";
-import { ButtonProps, Icon } from "suomifi-ui-components";
-import { StyledButton } from "./icon-button.styles";
-import { BaseIconKeys } from "suomifi-icons";
+import React from 'react';
+import { ButtonProps, Icon } from 'suomifi-ui-components';
+import { StyledButton } from './icon-button.styles';
+import { BaseIconKeys } from 'suomifi-icons';
 
 export interface IconButtonProps extends ButtonProps {
   icon: BaseIconKeys;
@@ -11,7 +11,7 @@ export interface IconButtonProps extends ButtonProps {
 export default function IconButton({
   icon,
   color,
-  variant = "secondaryNoBorder",
+  variant = 'secondaryNoBorder',
   ...props
 }: IconButtonProps) {
   return (

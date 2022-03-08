@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { Button } from "suomifi-ui-components";
+import styled from 'styled-components';
+import { Button } from 'suomifi-ui-components';
 
 export const StyledButton = styled(Button)<{ color?: string }>`
   width: 44px;

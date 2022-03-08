@@ -1,7 +1,7 @@
-import { useTranslation } from "next-i18next";
-import { Button } from "suomifi-ui-components";
-import useUrlState, { isInitial } from "../../utils/hooks/useUrlState";
-import Separator from "../separator";
+import { useTranslation } from 'next-i18next';
+import { Button } from 'suomifi-ui-components';
+import useUrlState, { isInitial } from '../../utils/hooks/useUrlState';
+import Separator from '../separator';
 
 export default function ResetAllFiltersButton() {
   const { t } = useTranslation();
@@ -19,7 +19,7 @@ export default function ResetAllFiltersButton() {
           onClick={() => resetUrlState()}
           variant="secondaryNoBorder"
         >
-          {t("vocabulary-filter-remove-all")}
+          {t('vocabulary-filter-remove-all')}
         </Button>
       </div>
       <Separator />
@@ -28,11 +28,11 @@ export default function ResetAllFiltersButton() {
 
   function isInitialUrlState(): boolean {
     return (
-      isInitial(urlState, "q") &&
-      isInitial(urlState, "domain") &&
-      isInitial(urlState, "organization") &&
-      isInitial(urlState, "status") &&
-      isInitial(urlState, "type")
+      isInitial(urlState, 'q') &&
+      isInitial(urlState, 'domain') &&
+      isInitial(urlState, 'organization') &&
+      isInitial(urlState, 'status') &&
+      isInitial(urlState, 'type')
     );
   }
 }

@@ -1,5 +1,5 @@
-import React from "react";
-import { BasicBlockHeader, BasicBlockWrapper } from "./block.styles";
+import React from 'react';
+import { BasicBlockHeader, BasicBlockWrapper } from './block.styles';
 
 export interface BasicBlockProps {
   title?: React.ReactNode;

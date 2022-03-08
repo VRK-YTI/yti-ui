@@ -1,33 +1,33 @@
-import { useTranslation } from "next-i18next";
-import { useRouter } from "next/router";
-import React, { useEffect, useRef } from "react";
-import { Heading, Text, VisuallyHidden } from "suomifi-ui-components";
-import { setAlert } from "../../common/components/alert/alert.slice";
+import { useTranslation } from 'next-i18next';
+import { useRouter } from 'next/router';
+import React, { useEffect, useRef } from 'react';
+import { Heading, Text, VisuallyHidden } from 'suomifi-ui-components';
+import { setAlert } from '../../common/components/alert/alert.slice';
 import {
   BasicBlock,
   MultilingualPropertyBlock,
   PropertyBlock,
-} from "../../common/components/block";
-import { ConceptListBlock } from "../../common/components/block";
-import { Breadcrumb, BreadcrumbLink } from "../../common/components/breadcrumb";
-import { useGetCollectionQuery } from "../../common/components/collection/collection-slice";
-import FormattedDate from "../../common/components/formatted-date";
-import { useBreakpoints } from "../../common/components/media-query/media-query-context";
-import PropertyValue from "../../common/components/property-value";
-import { getPropertyValue } from "../../common/components/property-value/get-property-value";
-import Separator from "../../common/components/separator";
-import { useGetVocabularyQuery } from "../../common/components/vocabulary/vocabulary-slice";
-import { Error } from "../../common/interfaces/error.interface";
-import { useStoreDispatch } from "../../store";
-import CollectionSidebar from "./collection-sidebar";
+} from '../../common/components/block';
+import { ConceptListBlock } from '../../common/components/block';
+import { Breadcrumb, BreadcrumbLink } from '../../common/components/breadcrumb';
+import { useGetCollectionQuery } from '../../common/components/collection/collection-slice';
+import FormattedDate from '../../common/components/formatted-date';
+import { useBreakpoints } from '../../common/components/media-query/media-query-context';
+import PropertyValue from '../../common/components/property-value';
+import { getPropertyValue } from '../../common/components/property-value/get-property-value';
+import Separator from '../../common/components/separator';
+import { useGetVocabularyQuery } from '../../common/components/vocabulary/vocabulary-slice';
+import { Error } from '../../common/interfaces/error.interface';
+import { useStoreDispatch } from '../../store';
+import CollectionSidebar from './collection-sidebar';
 import {
   BadgeBar,
   HeadingBlock,
   MainContent,
   PageContent,
-} from "./collection.styles";
-import { setTitle } from "../../common/components/title/title.slice";
-import { getProperty } from "../../common/utils/get-property";
+} from './collection.styles';
+import { setTitle } from '../../common/components/title/title.slice';
+import { getProperty } from '../../common/utils/get-property';
 
 interface CollectionProps {
   terminologyId: string;
@@ -47,23 +47,23 @@ export default function Collection({
     terminologyId,
     collectionId,
   });
-  const { t, i18n } = useTranslation("collection");
+  const { t, i18n } = useTranslation('collection');
   const dispatch = useStoreDispatch();
   const router = useRouter();
   const titleRef = useRef<HTMLHeadingElement>(null);
 
   if (
     collectionError &&
-    "status" in collectionError &&
+    'status' in collectionError &&
     collectionError.status === 404
   ) {
-    router.push("/404");
+    router.push('/404');
   }
 
   const prefLabel = getPropertyValue({
     property: collection?.properties.prefLabel,
     language: i18n.language,
-    fallbackLanguage: "fi",
+    fallbackLanguage: 'fi',
   });
   useEffect(() => {
     setCollectionTitle(prefLabel);
@@ -75,7 +75,7 @@ export default function Collection({
 
   useEffect(() => {
     if (collection) {
-      dispatch(setTitle(prefLabel ?? ""));
+      dispatch(setTitle(prefLabel ?? ''));
     }
   }, [collection, dispatch, prefLabel]);
 
@@ -115,7 +115,7 @@ export default function Collection({
             <Text>
               <PropertyValue
                 property={getProperty(
-                  "prefLabel",
+                  'prefLabel',
                   terminology?.references.contributor
                 )}
                 fallbackLanguage="fi"
@@ -128,49 +128,49 @@ export default function Collection({
               />
             </Heading>
             <BadgeBar>
-              {t("heading")} &middot;{" "}
+              {t('heading')} &middot;{' '}
               <PropertyValue
                 property={terminology?.properties.prefLabel}
                 fallbackLanguage="fi"
               />
             </BadgeBar>
-            <Text>{t("description")}</Text>
+            <Text>{t('description')}</Text>
           </HeadingBlock>
 
           <MultilingualPropertyBlock
-            title={t("field-name")}
+            title={t('field-name')}
             data={collection?.properties.prefLabel}
           />
           <MultilingualPropertyBlock
-            title={t("field-definition")}
+            title={t('field-definition')}
             data={collection?.properties.definition}
           />
           <ConceptListBlock
-            title={<h2>{t("field-member")}</h2>}
+            title={<h2>{t('field-member')}</h2>}
             data={collection?.references.member}
           />
 
           <Separator />
 
           <VisuallyHidden as="h2">
-            {t("additional-technical-information", { ns: "common" })}
+            {t('additional-technical-information', { ns: 'common' })}
           </VisuallyHidden>
 
           <PropertyBlock
-            title={t("vocabulary-info-organization", { ns: "common" })}
+            title={t('vocabulary-info-organization', { ns: 'common' })}
             property={
               terminology?.references.contributor?.[0]?.properties.prefLabel
             }
             fallbackLanguage="fi"
           />
-          <BasicBlock title={t("vocabulary-info-created-at", { ns: "common" })}>
-            <FormattedDate date={collection?.createdDate} />,{" "}
+          <BasicBlock title={t('vocabulary-info-created-at', { ns: 'common' })}>
+            <FormattedDate date={collection?.createdDate} />,{' '}
             {collection?.createdBy}
           </BasicBlock>
           <BasicBlock
-            title={t("vocabulary-info-modified-at", { ns: "common" })}
+            title={t('vocabulary-info-modified-at', { ns: 'common' })}
           >
-            <FormattedDate date={collection?.lastModifiedDate} />,{" "}
+            <FormattedDate date={collection?.lastModifiedDate} />,{' '}
             {collection?.lastModifiedBy}
           </BasicBlock>
           <BasicBlock title="URI">{collection?.uri}</BasicBlock>

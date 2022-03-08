@@ -1,6 +1,6 @@
-import styled from "styled-components";
-import { Breakpoint } from "../../common/components/media-query/media-query-context";
-import { small } from "../../common/components/media-query/styled-helpers";
+import styled from 'styled-components';
+import { Breakpoint } from '../../common/components/media-query/media-query-context';
+import { small } from '../../common/components/media-query/styled-helpers';
 
 export const FooterContentWrapper = styled.div`
   padding: 15px 0px 15px 0px;
@@ -18,5 +18,5 @@ export const FooterLinkWrapper = styled.div<{ breakpoint: Breakpoint }>`
   column-gap: ${(props) => props.theme.suomifi.spacing.xxl};
   justify-content: flex-start;
   flex-wrap: wrap;
-  flex-direction: ${(props) => small(props.breakpoint, "column", "row")};
+  flex-direction: ${(props) => small(props.breakpoint, 'column', 'row')};
 `;

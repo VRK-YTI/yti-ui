@@ -1,20 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import React from "react";
-import { render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import Pagination from "./pagination";
-import { useRouter } from "next/router";
-import { themeProvider } from "../../../tests/test-utils";
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import Pagination from './pagination';
+import { useRouter } from 'next/router';
+import { themeProvider } from '../../../tests/test-utils';
 
-jest.mock("next/router");
+jest.mock('next/router');
 const mockedUseRouter = useRouter as jest.MockedFunction<typeof useRouter>;
 
-describe("pagination", () => {
-  test("should render component", () => {
+describe('pagination', () => {
+  test('should render component', () => {
     mockedUseRouter.mockReturnValue({
-      query: { page: "0" },
-      route: "",
+      query: { page: '0' },
+      route: '',
       push: jest.fn(),
     } as any);
 
@@ -38,10 +38,10 @@ describe("pagination", () => {
     expect(screen.getByText(7)).toBeInTheDocument;
   });
 
-  test("should render empty when list is smaller than 10", () => {
+  test('should render empty when list is smaller than 10', () => {
     mockedUseRouter.mockReturnValue({
       query: {},
-      route: "",
+      route: '',
       push: jest.fn(),
     } as any);
 
@@ -59,11 +59,11 @@ describe("pagination", () => {
     expect(screen.queryByText(10)).toEqual(null);
   });
 
-  test("should change active item", async () => {
+  test('should change active item', async () => {
     const push = jest.fn();
     mockedUseRouter.mockReturnValue({
       query: { page: 3 },
-      route: "",
+      route: '',
       push,
     } as any);
 
@@ -83,10 +83,10 @@ describe("pagination", () => {
     userEvent.click(screen.getByText(5));
     expect(push.mock.calls[0][0]).toEqual({ query: { page: 5 } });
 
-    userEvent.click(screen.getByTestId("pagination-left"));
+    userEvent.click(screen.getByTestId('pagination-left'));
     expect(push.mock.calls[1][0]).toEqual({ query: { page: 2 } });
 
-    userEvent.click(screen.getByTestId("pagination-right"));
+    userEvent.click(screen.getByTestId('pagination-right'));
     expect(push.mock.calls[2][0]).toEqual({ query: { page: 4 } });
   });
 });

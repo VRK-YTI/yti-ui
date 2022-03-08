@@ -1,6 +1,6 @@
-import styled from "styled-components";
-import { Icon, Link, Paragraph, StaticChip, Text } from "suomifi-ui-components";
-import { CardChipProps } from "./search-count-tags.props";
+import styled from 'styled-components';
+import { Icon, Link, Paragraph, StaticChip, Text } from 'suomifi-ui-components';
+import { CardChipProps } from './search-count-tags.props';
 
 export const Card = styled.li`
   background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
@@ -13,7 +13,7 @@ export const Card = styled.li`
 export const CardChip = styled(StaticChip)<CardChipProps>`
   background-color: ${(props) =>
     props.valid
-      ? "hsl(166, 90%, 30%)"
+      ? 'hsl(166, 90%, 30%)'
       : props.theme.suomifi.colors.depthDark1} !important;
   font-size: 12px;
   line-height: 0;
@@ -89,14 +89,14 @@ export const CardWrapper = styled.ul<{ isSmall: boolean }>`
   border-top: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
   border-right: ${(props) =>
     props.isSmall
-      ? "none"
+      ? 'none'
       : `1px solid ${props.theme.suomifi.colors.depthLight1}`};
   border-left: ${(props) =>
     props.isSmall
-      ? "none"
+      ? 'none'
       : `1px solid ${props.theme.suomifi.colors.depthLight1}`};
-  margin-left: -${(props) => (props.isSmall ? props.theme.suomifi.spacing.s : "0")};
-  margin-right: -${(props) => (props.isSmall ? props.theme.suomifi.spacing.s : "0")};
+  margin-left: -${(props) => (props.isSmall ? props.theme.suomifi.spacing.s : '0')};
+  margin-right: -${(props) => (props.isSmall ? props.theme.suomifi.spacing.s : '0')};
   padding: 0;
   margin-top: 0;
 `;

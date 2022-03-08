@@ -1,15 +1,15 @@
-import { useTranslation } from "next-i18next";
-import { Button } from "suomifi-ui-components";
-import Separator from "../separator";
-import SkipLink from "../skip-link/skip-link";
+import { useTranslation } from 'next-i18next';
+import { Button } from 'suomifi-ui-components';
+import Separator from '../separator';
+import SkipLink from '../skip-link/skip-link';
 import {
   CloseWrapper,
   FilterContent,
   FilterSection,
   Header,
   HeaderButton,
-} from "./filter.styles";
-import ResetAllFiltersButton from "./reset-all-filters-button";
+} from './filter.styles';
+import ResetAllFiltersButton from './reset-all-filters-button';
 
 export interface FilterProps {
   isModal?: boolean;
@@ -24,13 +24,13 @@ export function Filter({
   resultCount = 0,
   children,
 }: FilterProps) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
 
   return (
     <div>
       {!isModal && (
         <SkipLink href="#search-results">
-          {t("skip-link-search-results")}
+          {t('skip-link-search-results')}
         </SkipLink>
       )}
 
@@ -49,16 +49,16 @@ export function Filter({
     if (!isModal) {
       return (
         <Header>
-          <h2 id="filter-title">{t("vocabulary-filter-filter-list")}</h2>
+          <h2 id="filter-title">{t('vocabulary-filter-filter-list')}</h2>
         </Header>
       );
     }
 
     return (
       <Header>
-        <h2 id="filter-title">{t("vocabulary-filter-filter-list")}</h2>
+        <h2 id="filter-title">{t('vocabulary-filter-filter-list')}</h2>
         <HeaderButton iconRight="close" onClick={onModalClose}>
-          {t("close")}
+          {t('close')}
         </HeaderButton>
       </Header>
     );
@@ -72,10 +72,10 @@ export function Filter({
     return (
       <CloseWrapper>
         <Separator />
-        <div>{t("filter-with-current", { count: resultCount })}</div>
+        <div>{t('filter-with-current', { count: resultCount })}</div>
         <div>
           <Button fullWidth onClick={onModalClose}>
-            {t("close")}
+            {t('close')}
           </Button>
         </div>
       </CloseWrapper>

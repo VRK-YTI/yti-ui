@@ -1,4 +1,4 @@
-import Head from "next/head";
+import Head from 'next/head';
 
 export interface TitleProps {
   parts?: (string | undefined)[];
@@ -7,7 +7,7 @@ export interface TitleProps {
 export default function Title({ parts }: TitleProps) {
   return (
     <Head>
-      <title>{parts?.filter(Boolean).join(" | ")}</title>
+      <title>{parts?.filter(Boolean).join(' | ')}</title>
     </Head>
   );
 }

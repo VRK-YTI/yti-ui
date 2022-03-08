@@ -1,30 +1,30 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { createApi } from "@reduxjs/toolkit/query/react";
-import { Collection } from "../../interfaces/collection.interface";
+import { createSlice } from '@reduxjs/toolkit';
+import { createApi } from '@reduxjs/toolkit/query/react';
+import { Collection } from '../../interfaces/collection.interface';
 import {
   VocabularyConcepts,
   VocabularyInfoDTO,
-} from "../../interfaces/vocabulary.interface";
-import { UrlState } from "../../utils/hooks/useUrlState";
-import axiosBaseQuery from "../axios-base-query";
+} from '../../interfaces/vocabulary.interface';
+import { UrlState } from '../../utils/hooks/useUrlState';
+import axiosBaseQuery from '../axios-base-query';
 
 export const vocabularyInitialState = {};
 
 export const vocabularySlice = createSlice({
-  name: "vocabularySearch",
+  name: 'vocabularySearch',
   initialState: vocabularyInitialState,
   reducers: {},
 });
 
 export const vocabularyApi = createApi({
-  reducerPath: "vocabularyAPI",
-  baseQuery: axiosBaseQuery({ baseUrl: "/terminology-api/api/v1/frontend" }),
-  tagTypes: ["Vocabulary"],
+  reducerPath: 'vocabularyAPI',
+  baseQuery: axiosBaseQuery({ baseUrl: '/terminology-api/api/v1/frontend' }),
+  tagTypes: ['Vocabulary'],
   endpoints: (builder) => ({
     getCollections: builder.query<Collection[], string>({
       query: (terminologyId) => ({
         url: `/collections?graphId=${terminologyId}`,
-        method: "GET",
+        method: 'GET',
       }),
     }),
     getConceptResult: builder.query<
@@ -32,15 +32,15 @@ export const vocabularyApi = createApi({
       { urlState: UrlState; id: string }
     >({
       query: (value) => ({
-        url: "/searchConcept",
-        method: "POST",
+        url: '/searchConcept',
+        method: 'POST',
         data: {
           highlight: true,
           pageFrom: Math.max(0, (value.urlState.page - 1) * 10),
           pageSize: 10,
           query: value.urlState.q,
-          sortDirection: "ASC",
-          sortLanguage: "fi",
+          sortDirection: 'ASC',
+          sortLanguage: 'fi',
           status: value.urlState.status.map((s) => s.toUpperCase()),
           terminologyId: [value.id],
         },
@@ -49,9 +49,9 @@ export const vocabularyApi = createApi({
     getVocabulary: builder.query<VocabularyInfoDTO, string>({
       query: (value) => ({
         url: `/vocabulary?graphId=${value}`,
-        method: "GET",
+        method: 'GET',
         headers: {
-          "content-type": "application/json",
+          'content-type': 'application/json',
         },
       }),
     }),

@@ -1,7 +1,7 @@
-import Document, { DocumentContext } from "next/document";
-import { ServerStyleSheet } from "styled-components";
-import { ServerStyleSheets as MaterialUiServerStyleSheets } from "@material-ui/core/styles";
-import flush from "styled-jsx/server";
+import Document, { DocumentContext } from 'next/document';
+import { ServerStyleSheet } from 'styled-components';
+import { ServerStyleSheets as MaterialUiServerStyleSheets } from '@material-ui/core/styles';
+import flush from 'styled-jsx/server';
 
 // https://github.com/msreekm/nextjs-material-ui-styled-components-boilerplate/blob/master/pages/_document.js
 export default class MyDocument extends Document {

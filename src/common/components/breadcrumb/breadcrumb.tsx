@@ -1,16 +1,16 @@
-import { Breadcrumb as SuomiFiBreadcrumb } from "suomifi-ui-components";
-import { BreadcrumbWrapper } from "./breadcrumb-styles";
-import { useTranslation } from "next-i18next";
-import React from "react";
-import BreadcrumbLink from "./breadcrumb-link";
-import { useBreakpoints } from "../media-query/media-query-context";
+import { Breadcrumb as SuomiFiBreadcrumb } from 'suomifi-ui-components';
+import { BreadcrumbWrapper } from './breadcrumb-styles';
+import { useTranslation } from 'next-i18next';
+import React from 'react';
+import BreadcrumbLink from './breadcrumb-link';
+import { useBreakpoints } from '../media-query/media-query-context';
 
 export interface BreadcrumbProps {
   children: React.ReactNode;
 }
 
 export default function Breadcrumb({ children }: BreadcrumbProps) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
   const { isSmall } = useBreakpoints();
 
   // Returning just the wrapper to have correct space between Title and Header
@@ -20,8 +20,8 @@ export default function Breadcrumb({ children }: BreadcrumbProps) {
 
   return (
     <BreadcrumbWrapper>
-      <SuomiFiBreadcrumb aria-label={t("breadcrumb")} href="/">
-        <BreadcrumbLink url="/">{t("terminology-title")}</BreadcrumbLink>
+      <SuomiFiBreadcrumb aria-label={t('breadcrumb')} href="/">
+        <BreadcrumbLink url="/">{t('terminology-title')}</BreadcrumbLink>
 
         {children}
       </SuomiFiBreadcrumb>

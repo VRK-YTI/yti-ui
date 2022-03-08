@@ -1,9 +1,9 @@
-import { SessionOptions } from "next-iron-session";
+import { SessionOptions } from 'next-iron-session';
 
 export const userCookieOptions: SessionOptions = {
-  cookieName: "user-session-cookie",
+  cookieName: 'user-session-cookie',
   cookieOptions: {
-    secure: process.env.NODE_ENV === "production",
+    secure: process.env.NODE_ENV === 'production',
   },
-  password: process.env.SECRET_COOKIE_PASSWORD ?? "",
+  password: process.env.SECRET_COOKIE_PASSWORD ?? '',
 };
