@@ -56,7 +56,7 @@ export default function SmartHeader() {
     return (
       <Block variant="nav">
         <NavigationContainer breakpoint="small">
-          <MobileNavigation setModalVisible={handleLoginModalClick} />
+          <MobileNavigation handleLoginModalClick={handleLoginModalClick} />
         </NavigationContainer>
       </Block>
     );

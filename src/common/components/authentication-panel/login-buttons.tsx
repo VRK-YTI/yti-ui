@@ -8,10 +8,10 @@ import { useBreakpoints } from '../media-query/media-query-context';
 import { LoginButtonsWrapper } from './authentication-panel.styles';
 
 interface LoginButtonsProps {
-  setModalVisible?: (isModalVisible: boolean) => void;
+  handleLoginModalClick?: () => void;
 }
 
-export default function LoginButtons({ setModalVisible }: LoginButtonsProps) {
+export default function LoginButtons({ handleLoginModalClick }: LoginButtonsProps) {
   const { t } = useTranslation('common');
   const [visible, setVisible] = useState(false);
   const { breakpoint } = useBreakpoints();
@@ -22,7 +22,7 @@ export default function LoginButtons({ setModalVisible }: LoginButtonsProps) {
       <LoginButtonsWrapper breakpoint={breakpoint}>
         <Button
           icon="login"
-          onClick={() => setModalVisible ? setModalVisible(true) : setVisible(true)}
+          onClick={() => handleLoginModalClick ? handleLoginModalClick() : setVisible(true)}
         >
           {t('site-login')}
         </Button>

@@ -8,16 +8,16 @@ import MobileLocaleChooser from '../locale-chooser/mobile-locale-chooser';
 import { MobileMenuItem, MobileMenuSection } from './navigation.styles';
 
 interface MobileNavigationProps {
-  setModalVisible?: (isModalVisible: boolean) => void;
+  handleLoginModalClick?: () => void;
 }
 
-export default function MobileNavigation({setModalVisible}: MobileNavigationProps) {
+export default function MobileNavigation({handleLoginModalClick}: MobileNavigationProps) {
   const { t } = useTranslation('common');
   const router = useRouter();
 
   return (
     <>
-      <LoginButtons setModalVisible={setModalVisible} />
+      <LoginButtons handleLoginModalClick={handleLoginModalClick} />
 
       <MobileMenuSection>
         <MobileMenuItem active={router.pathname === '/'}>

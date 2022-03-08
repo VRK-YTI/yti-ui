@@ -29,10 +29,10 @@ export default function LoginModalView({ setVisible }: { setVisible: Function })
           <Paragraph>
             <Text>
               {t('site-login-info-2')}{' '}
-              <ExternalLink href='' labelNewWindow=''>
-                {t('site-register')}
-              </ExternalLink>
             </Text>
+            <ExternalLink href='http://id.eduuni.fi/signup' labelNewWindow=''>
+              {t('site-register')}
+            </ExternalLink>
           </Paragraph>
         </ModalContentSmPadding>
 
