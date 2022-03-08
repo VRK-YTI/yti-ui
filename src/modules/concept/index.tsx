@@ -129,7 +129,7 @@ export default function Concept({ terminologyId, conceptId, setConceptTitle }: C
             data={concept?.properties.definition}
           />
           <MultilingualPropertyBlock
-            title={t('field-example')}
+            title={<h2>{t('field-example')}</h2>}
             data={concept?.properties.example}
           />
           <TermBlock
@@ -144,7 +144,7 @@ export default function Concept({ terminologyId, conceptId, setConceptTitle }: C
           />
 
           <MultilingualPropertyBlock
-            title={t('field-note')}
+            title={<h2>{t('field-note')}</h2>}
             data={concept?.properties.note}
           />
 
