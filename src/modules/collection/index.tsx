@@ -1,7 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import React, { useEffect, useRef } from 'react';
-import { Heading, Text } from 'suomifi-ui-components';
+import { Heading, Text, VisuallyHidden } from 'suomifi-ui-components';
 import { setAlert } from '../../common/components/alert/alert.slice';
 import { BasicBlock, MultilingualPropertyBlock, PropertyBlock } from '../../common/components/block';
 import { ConceptListBlock } from '../../common/components/block';
@@ -18,11 +18,12 @@ import { BadgeBar, HeadingBlock, MainContent, PageContent } from './collection.s
 import { setTitle } from '../../common/components/title/title.slice';
 import { useGetCollectionQuery } from '../../common/components/collection/collection-slice';
 import { useGetVocabularyQuery } from '../../common/components/vocabulary/vocabulary-slice';
+import { getProperty } from '../../common/utils/get-property';
 
 interface CollectionProps {
   terminologyId: string;
   collectionId: string;
-  setCollectionTitle: (title: string) => void;
+  setCollectionTitle: (title?: string) => void;
 }
 
 export default function Collection({ terminologyId, collectionId, setCollectionTitle }: CollectionProps) {
@@ -43,13 +44,15 @@ export default function Collection({ terminologyId, collectionId, setCollectionT
     router.push('/404');
   }
 
+  const prefLabel = getPropertyValue({
+    property: collection?.properties.prefLabel,
+    language: i18n.language,
+    fallbackLanguage: 'fi'
+  });
+
   useEffect(() => {
-    setCollectionTitle(getPropertyValue({
-      property: collection?.properties.prefLabel,
-      language: i18n.language,
-      fallbackLanguage: 'fi'
-    }) ?? '');
-  }, [collection, i18n.language, setCollectionTitle]);
+    setCollectionTitle(prefLabel);
+  }, [setCollectionTitle, prefLabel]);
 
   useEffect(() => {
     dispatch(setAlert([
@@ -60,15 +63,9 @@ export default function Collection({ terminologyId, collectionId, setCollectionT
 
   useEffect(() => {
     if (collection) {
-      const title = getPropertyValue({
-        property: collection?.properties.prefLabel,
-        language: i18n.language,
-        fallbackLanguage: 'fi'
-      }) ?? '';
-
-      dispatch(setTitle(title));
+      dispatch(setTitle(prefLabel ?? ''));
     }
-  }, [collection, dispatch, i18n.language]);
+  }, [collection, dispatch, prefLabel]);
 
   useEffect(() => {
     if (titleRef.current) {
@@ -102,7 +99,7 @@ export default function Collection({ terminologyId, collectionId, setCollectionT
           <HeadingBlock>
             <Text>
               <PropertyValue
-                property={terminology?.references.contributor?.[0].properties.prefLabel}
+                property={getProperty('prefLabel', terminology?.references.contributor)}
                 fallbackLanguage='fi'
               />
             </Text>
@@ -127,15 +124,15 @@ export default function Collection({ terminologyId, collectionId, setCollectionT
             data={collection?.properties.definition}
           />
           <ConceptListBlock
-            title={t('field-broader')}
-            data={collection?.references.broader}
-          />
-          <ConceptListBlock
-            title={t('field-member')}
+            title={<h2>{t('field-member')}</h2>}
             data={collection?.references.member}
           />
 
           <Separator />
+
+          <VisuallyHidden as="h2">
+            {t('additional-technical-information', { ns: 'common' })}
+          </VisuallyHidden>
 
           <PropertyBlock
             title={t('vocabulary-info-organization', { ns: 'common' })}
