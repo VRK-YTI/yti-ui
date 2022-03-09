@@ -1,4 +1,5 @@
 {
+  "additional-technical-information": "Additional technical information",
   "terminology-search": "Search",
   "terminology-title": "Terminologies",
   "datamodel-title": "Data Vocabularies",
@@ -113,5 +114,7 @@
   "collection-page": "Collection page",
   "navigated-to": "Navigated to",
   "site-open-new-email": "Open a new email to",
+  "navigate-to-homepage": "Navigate to homepage",
+  "interoperability-logo-title": "Interoperability platform logo",
   "search-results-count": "With filter {{count}} search results"
 }
