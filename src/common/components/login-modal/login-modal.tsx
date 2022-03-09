@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import { Button, ExternalLink, Modal, ModalFooter, Paragraph, Text } from 'suomifi-ui-components';
+import { Button, ExternalLink, ModalFooter, Paragraph, Text } from 'suomifi-ui-components';
 import { useBreakpoints } from '../media-query/media-query-context';
 import { ModalContentSmPadding, ModalStyled, ModalTitleH1 } from './login-modal.styles';
 
@@ -37,7 +37,7 @@ export default function LoginModalView({ setVisible }: { setVisible: Function })
         </ModalContentSmPadding>
 
         <ModalFooter>
-          <Button onClick={() => login()}>
+          <Button onClick={(e) => login(e)}>
             {t('site-to-login')}
           </Button>
           <Button variant='secondaryNoBorder' onClick={() => setVisible(false)}>
@@ -48,7 +48,8 @@ export default function LoginModalView({ setVisible }: { setVisible: Function })
     </>
   );
 
-  function login() {
+  function login(e: MouseEvent | KeyboardEvent) {
+    e.preventDefault();
     window.location.href = '/api/auth/login?target=/';
   }
 }

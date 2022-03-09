@@ -23,7 +23,7 @@ export function Alerts() {
   return (
     <AlertsWrapper>
       {alerts.map((alert, idx) => {
-        return <Alert key={`alert-${idx}`} alert={alert} alerts={alerts} type='error' />;
+        return <Alert key={`alert-${idx}`} alert={alert} alerts={alerts} type={alert.status === 200 ? 'neutral' : 'error'} />;
       })}
     </AlertsWrapper>
   );
@@ -53,7 +53,14 @@ export function Alert({ alert, alerts, type }: AlertToastProps) {
       smallScreen={isSmall}
       isSmall={isSmall}
     >
-      {alerts.length > 1 && `(${alerts.length})`} {t('error-occured', { id: alert.status ?? ''})}
+      {
+        type === 'neutral'
+          ?
+          <>{alert.data}</>
+          :
+          <>{alerts.length > 1 && `(${alerts.length})`} {t('error-occured', { id: alert.status ?? '' })}</>
+      }
+
     </AlertToast>
   );
 }

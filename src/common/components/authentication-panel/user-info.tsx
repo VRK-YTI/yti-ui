@@ -4,6 +4,8 @@ import { UserInfoWrapper } from './authentication-panel.styles';
 import { Breakpoint } from '../media-query/media-query-context';
 import { useSelector } from 'react-redux';
 import { selectLogin } from '../login/login-slice';
+import { useStoreDispatch } from '../../../store';
+import { setAlert } from '../alert/alert.slice';
 
 export interface UserInfoProps {
   breakpoint: Breakpoint;
@@ -12,6 +14,7 @@ export interface UserInfoProps {
 export default function UserInfo({ breakpoint }: UserInfoProps) {
   const { t } = useTranslation('common');
   const user = useSelector(selectLogin());
+  const dispatch = useStoreDispatch();
 
   if (!(user?.anonymous ?? true)) {
     return (
@@ -19,7 +22,15 @@ export default function UserInfo({ breakpoint }: UserInfoProps) {
         <Text>
           {`${user?.firstName} ${user?.lastName}`}
         </Text>
-        <Link href="/api/auth/logout?target=/">
+        <Link href='/api/auth/logout?target=/' onClick={(e) => {
+          e.preventDefault();
+          dispatch(setAlert([{
+            status: 200,
+            data: 'Olet kirjautunut ulos palvelusta.'
+          }]));
+
+          window.location.href='/api/auth/logout?target=/';
+        }}>
           {t('site-logout')}
         </Link>
       </UserInfoWrapper>
