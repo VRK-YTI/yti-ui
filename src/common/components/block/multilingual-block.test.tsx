@@ -3,7 +3,7 @@ import { MultilingualBlock } from '.';
 import { themeProvider } from '../../../tests/test-utils';
 
 describe('MultilingualBlock', () => {
-  test('should render items', () => {
+  test('should render items', async () => {
     render(
       <MultilingualBlock<string>
         title="Title"
@@ -14,7 +14,11 @@ describe('MultilingualBlock', () => {
     );
 
     expect(screen.getByText(/Title/)).toBeInTheDocument;
-    expect(screen.getByText(/Item 1/)).toBeInTheDocument;
-    expect(screen.getByText(/Item 2/)).toBeInTheDocument;
+
+    const test1 = await screen.findByText(/Item 1/);
+    const test2 = await screen.findByText(/Item 2/);
+
+    expect(test1).toBeInTheDocument;
+    expect(test2).toBeInTheDocument;
   });
 });

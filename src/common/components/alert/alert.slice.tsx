@@ -27,7 +27,7 @@ export const alertSlice = createSlice({
 export const setAlert = (alerts: AlertState['alerts']): AppThunk => dispatch => {
   dispatch(
     alertSlice.actions.setAlert({
-      alerts: alerts.filter(alert => alert)
+      alerts: alerts.filter(alert => alert && alert.data)
     }),
   );
 };

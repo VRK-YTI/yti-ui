@@ -11,6 +11,7 @@ import { setLogin } from '../components/login/login-slice';
 export interface LocalHandlerParams {
   req: NextIronRequest;
   res: NextApiResponse;
+  params: ParsedUrlQuery;
   locale: string;
   store: AppStore;
 }
@@ -30,8 +31,8 @@ export function createCommonGetServerSideProps<T extends { [key: string]: any }>
 ): CreateCommonGetServerSidePropsResult<T> {
   return wrapper.getServerSideProps((store) => {
     return withSession<{ props: UserProps }>(
-      async ({ req, res, locale }: { req: NextIronRequest, res: NextApiResponse, locale: string }) => {
-        const results = await handler?.({ req, res, locale, store });
+      async ({ req, res, params, locale }: { req: NextIronRequest, res: NextApiResponse, params: ParsedUrlQuery, locale: string }) => {
+        const results = await handler?.({ req, res, params, locale, store });
         store.dispatch(setLogin(req.session.get<User>('user') || anonymousUser));
         const userAgent = req.headers['user-agent'] ?? '';
 

@@ -7,7 +7,6 @@ import Vocabulary from '../../modules/vocabulary';
 import { MediaQueryContextProvider } from '../../common/components/media-query/media-query-context';
 import PageTitle from '../../common/components/page-title';
 
-// TODO: perhaps move the component itself to components/
 export default function TerminologyPage(props: {
   _netI18Next: SSRConfig;
   isSSRMobile: boolean;
