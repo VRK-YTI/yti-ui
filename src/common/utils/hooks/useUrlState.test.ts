@@ -8,17 +8,17 @@ jest.mock('next/router');
 const mockedUseRouter = useRouter as jest.MockedFunction<typeof useRouter>;
 
 describe('useUrlState', () => {
-  test('no query parameters is same as initial state', () => {
+  it('no query parameters is same as initial state', () => {
     mockedUseRouter.mockReturnValue({
       query: {},
     } as any);
 
     const { result } = renderHook(() => useUrlState());
 
-    expect(result.current.urlState).toEqual(initialUrlState);
+    expect(result.current.urlState).toStrictEqual(initialUrlState);
   });
 
-  test('isInitial return true for initialState', () => {
+  it('isInitial return true for initialState', () => {
     mockedUseRouter.mockReturnValue({
       query: initialUrlState,
     } as any);
@@ -33,7 +33,7 @@ describe('useUrlState', () => {
     expect(isInitial(result.current.urlState, 'page')).toBeTruthy();
   });
 
-  test('query parameters are mapped to url state', () => {
+  it('query parameters are mapped to url state', () => {
     mockedUseRouter.mockReturnValue({
       query: {
         q: 'q-query-param',
@@ -47,7 +47,7 @@ describe('useUrlState', () => {
 
     const { result } = renderHook(() => useUrlState());
 
-    expect(result.current.urlState).toEqual({
+    expect(result.current.urlState).toStrictEqual({
       q: 'q-query-param',
       domain: ['domain-query-param'],
       organization: 'organization-query-param',
@@ -57,7 +57,7 @@ describe('useUrlState', () => {
     });
   });
 
-  test('in case of non-numerical page, default page number is is used instead', () => {
+  it('in case of non-numerical page, default page number is is used instead', () => {
     mockedUseRouter.mockReturnValue({
       query: {
         page: 'invalid-number',
@@ -69,7 +69,7 @@ describe('useUrlState', () => {
     expect(isInitial(result.current.urlState, 'page')).toBeTruthy();
   });
 
-  test('resetUrlState clears query parameters', () => {
+  it('resetUrlState clears query parameters', () => {
     const push = jest.fn();
     mockedUseRouter.mockReturnValue({
       query: {
@@ -86,14 +86,14 @@ describe('useUrlState', () => {
     const { result } = renderHook(() => useUrlState());
     result.current.resetUrlState();
 
-    expect(push.mock.calls[0][0]).toEqual(
+    expect(push.mock.calls[0][0]).toStrictEqual(
       expect.objectContaining({
         query: {},
       })
     );
   });
 
-  test('updateUrlState updates given query parameters', () => {
+  it('updateUrlState updates given query parameters', () => {
     const push = jest.fn();
     mockedUseRouter.mockReturnValue({
       query: {
@@ -117,7 +117,7 @@ describe('useUrlState', () => {
       page: 11,
     });
 
-    expect(push.mock.calls[0][0]).toEqual(
+    expect(push.mock.calls[0][0]).toStrictEqual(
       expect.objectContaining({
         query: {
           q: 'new-q-query-param',
@@ -131,7 +131,7 @@ describe('useUrlState', () => {
     );
   });
 
-  test('patchUrlState updates given query parameters', () => {
+  it('patchUrlState updates given query parameters', () => {
     const push = jest.fn();
     mockedUseRouter.mockReturnValue({
       query: {
@@ -150,7 +150,7 @@ describe('useUrlState', () => {
       q: 'new-q-query-param',
     });
 
-    expect(push.mock.calls[0][0]).toEqual(
+    expect(push.mock.calls[0][0]).toStrictEqual(
       expect.objectContaining({
         query: expect.objectContaining({
           q: 'new-q-query-param',
@@ -159,7 +159,7 @@ describe('useUrlState', () => {
     );
   });
 
-  test('patchUrlState does not update other query parameters', () => {
+  it('patchUrlState does not update other query parameters', () => {
     const push = jest.fn();
     mockedUseRouter.mockReturnValue({
       query: {
@@ -178,7 +178,7 @@ describe('useUrlState', () => {
       q: 'new-q-query-param',
     });
 
-    expect(push.mock.calls[0][0]).toEqual(
+    expect(push.mock.calls[0][0]).toStrictEqual(
       expect.objectContaining({
         query: expect.objectContaining({
           domain: ['domain-query-param'],

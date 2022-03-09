@@ -22,21 +22,18 @@ const fakeUser = {
 };
 
 describe('api endpoint - fake login', () => {
-  let mock: MockAdapter;
+  const mock = new MockAdapter(axios, { onNoMatch: 'throwException' });
 
-  beforeAll(() => {
-    mock = new MockAdapter(axios, { onNoMatch: 'throwException' });
-  });
-
-  afterEach(() => {
+  function setupMock() {
     mock.reset();
-  });
+  }
 
   /*
    * Simulate successful call to fake-login, returning the proper cookies to
    * the browser
    */
-  test('successful login', async () => {
+  it('successful login', async () => {
+    setupMock();
     const targetPath = '/testable-target-path';
 
     const { req, res } = createMocks({
@@ -62,7 +59,7 @@ describe('api endpoint - fake login', () => {
     // if successful, the api route will set some cookies for the browser
     expect(res.hasHeader('Set-Cookie')).toBeTruthy();
     const setCookies = res.getHeader('Set-Cookie');
-    expect(setCookies.length).toBe(2);
+    expect(setCookies).toHaveLength(2);
 
     // JSESSIONID from spring API
     const jsessionid = setCookies.find((x: string) =>
@@ -85,7 +82,8 @@ describe('api endpoint - fake login', () => {
   /*
    * Simulate server failing - should still return back to the browser
    */
-  test('server failure', async () => {
+  it('server failure', async () => {
+    setupMock();
     const targetPath = '/testable-target-path';
 
     const { req, res } = createMocks({
@@ -114,5 +112,5 @@ describe('api endpoint - fake login', () => {
   /*
    * Simulate login failure due to insufficient access
    */
-  test.todo('no access');
+  it.todo('no access');
 });

@@ -9,14 +9,15 @@ import { initialState, setLogin } from '../login/login-slice';
 
 let appRoot: HTMLDivElement | null = null;
 
-beforeEach(() => {
+function setUpAppRoot() {
   appRoot = document.createElement('div');
   appRoot.setAttribute('id', '__next');
   document.body.appendChild(appRoot);
-});
+}
 
 describe('term-modal', () => {
-  test('should render everything in component', () => {
+  it('should render everything in component', () => {
+    setUpAppRoot();
     const store = makeStore();
     store.dispatch(setLogin({ ...initialState, anonymous: false }));
 
@@ -29,32 +30,33 @@ describe('term-modal', () => {
 
     userEvent.click(screen.getByText('pref label'));
 
-    expect(screen.getByText('Preferred term')).toBeInTheDocument;
-    expect(screen.getByText('tr-DRAFT')).toBeInTheDocument;
-    expect(screen.getByText('1')).toBeInTheDocument;
-    expect(screen.getByText('term info')).toBeInTheDocument;
-    expect(screen.getByText('scope')).toBeInTheDocument;
-    expect(screen.getByText('term equivalency')).toBeInTheDocument;
-    expect(screen.getByText('source')).toBeInTheDocument;
+    expect(screen.getByText('Preferred term')).toBeInTheDocument();
+    expect(screen.getByText('tr-DRAFT')).toBeInTheDocument();
+    expect(screen.getByText('1')).toBeInTheDocument();
+    expect(screen.getByText('term info')).toBeInTheDocument();
+    expect(screen.getByText('scope')).toBeInTheDocument();
+    expect(screen.getByText('term equivalency')).toBeInTheDocument();
+    expect(screen.getByText('source')).toBeInTheDocument();
 
     userEvent.click(
       screen.getByText('tr-term-modal-organizational-information')
     );
 
-    expect(screen.getByText('change note')).toBeInTheDocument;
-    expect(screen.getByText('history note')).toBeInTheDocument;
-    expect(screen.getByText('editorial note')).toBeInTheDocument;
-    expect(screen.getByText('draft comment')).toBeInTheDocument;
+    expect(screen.getByText('change note')).toBeInTheDocument();
+    expect(screen.getByText('history note')).toBeInTheDocument();
+    expect(screen.getByText('editorial note')).toBeInTheDocument();
+    expect(screen.getByText('draft comment')).toBeInTheDocument();
 
     userEvent.click(screen.getByText('tr-term-modal-grammatic-information'));
 
-    expect(screen.getByText('term style')).toBeInTheDocument;
-    expect(screen.getByText('term family')).toBeInTheDocument;
-    expect(screen.getByText('term conjugation')).toBeInTheDocument;
-    expect(screen.getByText('word class')).toBeInTheDocument;
+    expect(screen.getByText('term style')).toBeInTheDocument();
+    expect(screen.getByText('term family')).toBeInTheDocument();
+    expect(screen.getByText('term conjugation')).toBeInTheDocument();
+    expect(screen.getByText('word class')).toBeInTheDocument();
   });
 
-  test('should render parts of component', () => {
+  it('should render parts of component', () => {
+    setUpAppRoot();
     const store = makeStore();
 
     delete data.term.properties.changeNote;
@@ -72,27 +74,28 @@ describe('term-modal', () => {
 
     userEvent.click(screen.getByText('pref label'));
 
-    expect(screen.getByText('Preferred term')).toBeInTheDocument;
-    expect(screen.getByText('tr-DRAFT')).toBeInTheDocument;
-    expect(screen.getByText('1')).toBeInTheDocument;
-    expect(screen.getByText('term info')).toBeInTheDocument;
-    expect(screen.getByText('scope')).toBeInTheDocument;
-    expect(screen.getByText('term equivalency')).toBeInTheDocument;
-    expect(screen.getByText('source')).toBeInTheDocument;
+    expect(screen.getByText('Preferred term')).toBeInTheDocument();
+    expect(screen.getByText('tr-DRAFT')).toBeInTheDocument();
+    expect(screen.getByText('1')).toBeInTheDocument();
+    expect(screen.getByText('term info')).toBeInTheDocument();
+    expect(screen.getByText('scope')).toBeInTheDocument();
+    expect(screen.getByText('term equivalency')).toBeInTheDocument();
+    expect(screen.getByText('source')).toBeInTheDocument();
 
-    expect(screen.queryByText('tr-term-modal-organizational-information'))
-      .toBeNull;
-    expect(screen.queryByText('change note')).toBeNull;
-    expect(screen.queryByText('history note')).toBeNull;
-    expect(screen.queryByText('editorial note')).toBeNull;
-    expect(screen.queryByText('draft comment')).toBeNull;
+    expect(
+      screen.queryByText('tr-term-modal-organizational-information')
+    ).not.toBeInTheDocument();
+    expect(screen.queryByText('change note')).not.toBeInTheDocument();
+    expect(screen.queryByText('history note')).not.toBeInTheDocument();
+    expect(screen.queryByText('editorial note')).not.toBeInTheDocument();
+    expect(screen.queryByText('draft comment')).not.toBeInTheDocument();
 
     userEvent.click(screen.getByText('tr-term-modal-grammatic-information'));
 
-    expect(screen.getByText('term style')).toBeInTheDocument;
-    expect(screen.getByText('term family')).toBeInTheDocument;
-    expect(screen.getByText('term conjugation')).toBeInTheDocument;
-    expect(screen.queryByText('word class')).toBeNull;
+    expect(screen.getByText('term style')).toBeInTheDocument();
+    expect(screen.getByText('term family')).toBeInTheDocument();
+    expect(screen.getByText('term conjugation')).toBeInTheDocument();
+    expect(screen.queryByText('word class')).not.toBeInTheDocument();
   });
 });
 

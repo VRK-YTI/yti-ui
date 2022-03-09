@@ -3,19 +3,19 @@ import { Term } from '../interfaces/term.interface';
 import { getProperty } from './get-property';
 
 describe('getProperty', () => {
-  test('should work with Term', () => {
+  it('should work with Term', () => {
     const items: Term[] = [{ properties: {} }] as Term[];
 
-    expect(getProperty('prefLabel', items)).toEqual([]);
+    expect(getProperty('prefLabel', items)).toStrictEqual([]);
   });
 
-  test('should work with Organization', () => {
+  it('should work with Organization', () => {
     const items: Organization[] = [{ properties: {} }] as Organization[];
 
-    expect(getProperty('prefLabel', items)).toEqual([]);
+    expect(getProperty('prefLabel', items)).toStrictEqual([]);
   });
 
-  test('should return correct property', () => {
+  it('should return correct property', () => {
     const items: Term[] = [
       {
         properties: {
@@ -25,10 +25,10 @@ describe('getProperty', () => {
       },
     ] as Term[];
 
-    expect(getProperty('prefLabel', items)).toEqual([{ value: 'A' }]);
+    expect(getProperty('prefLabel', items)).toStrictEqual([{ value: 'A' }]);
   });
 
-  test('should merge properties of multiple items', () => {
+  it('should merge properties of multiple items', () => {
     const items: Term[] = [
       {
         properties: {
@@ -42,7 +42,7 @@ describe('getProperty', () => {
       },
     ] as Term[];
 
-    expect(getProperty('prefLabel', items)).toEqual([
+    expect(getProperty('prefLabel', items)).toStrictEqual([
       { value: 'A' },
       { value: 'B' },
     ]);

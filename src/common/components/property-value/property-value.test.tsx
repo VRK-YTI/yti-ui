@@ -7,8 +7,8 @@ jest.mock('next-i18next');
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const mockedUseTranslation = useTranslation as jest.MockedFunction<any>;
 
-describe('PropertyValue', () => {
-  test('should render unlocalized value even if primary language is set', () => {
+describe('propertyValue', () => {
+  it('should render unlocalized value even if primary language is set', () => {
     mockedUseTranslation.mockReturnValue({ i18n: { language: 'en' } });
 
     render(
@@ -18,10 +18,10 @@ describe('PropertyValue', () => {
       />
     );
 
-    expect(screen.queryByText('Value (no-lang)')).toBeTruthy();
+    expect(screen.getByText('Value (no-lang)')).toBeInTheDocument();
   });
 
-  test('should render localized value in primary language when found', () => {
+  it('should render localized value in primary language when found', () => {
     mockedUseTranslation.mockReturnValue({ i18n: { language: 'en' } });
 
     render(
@@ -34,11 +34,11 @@ describe('PropertyValue', () => {
       />
     );
 
-    expect(screen.queryByText('Value (en)')).toBeTruthy();
-    expect(screen.queryByText('Value (fi)')).toBeFalsy();
+    expect(screen.getByText('Value (en)')).toBeInTheDocument();
+    expect(screen.queryByText('Value (fi)')).not.toBeInTheDocument();
   });
 
-  test('should render localized value in fallback language when found', () => {
+  it('should render localized value in fallback language when found', () => {
     mockedUseTranslation.mockReturnValue({ i18n: { language: 'en' } });
 
     render(
@@ -51,11 +51,11 @@ describe('PropertyValue', () => {
       />
     );
 
-    expect(screen.queryByText('Value (fi)')).toBeTruthy();
-    expect(screen.queryByText('Value (sv)')).toBeFalsy();
+    expect(screen.getByText('Value (fi)')).toBeInTheDocument();
+    expect(screen.queryByText('Value (sv)')).not.toBeInTheDocument();
   });
 
-  test('should not render value in wrong language', () => {
+  it('should not render value in wrong language', () => {
     mockedUseTranslation.mockReturnValue({ i18n: { language: 'en' } });
 
     render(
@@ -65,10 +65,10 @@ describe('PropertyValue', () => {
       />
     );
 
-    expect(screen.queryByText('Value (sv)')).toBeFalsy();
+    expect(screen.queryByText('Value (sv)')).not.toBeInTheDocument();
   });
 
-  test('should join found values when delimiter is given', () => {
+  it('should join found values when delimiter is given', () => {
     mockedUseTranslation.mockReturnValue({ i18n: { language: 'en' } });
 
     render(
@@ -81,10 +81,10 @@ describe('PropertyValue', () => {
       />
     );
 
-    expect(screen.queryByText('Value 1, Value 2')).toBeTruthy();
+    expect(screen.getByText('Value 1, Value 2')).toBeInTheDocument();
   });
 
-  test('should join found values when delimiter is empty string', () => {
+  it('should join found values when delimiter is empty string', () => {
     mockedUseTranslation.mockReturnValue({ i18n: { language: 'en' } });
 
     render(
@@ -97,6 +97,6 @@ describe('PropertyValue', () => {
       />
     );
 
-    expect(screen.queryByText('Value 1Value 2')).toBeTruthy();
+    expect(screen.getByText('Value 1Value 2')).toBeInTheDocument();
   });
 });

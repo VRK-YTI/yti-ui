@@ -14,7 +14,7 @@ export interface CheckboxFilterProps {
   title: string;
   items: Item[];
   selectedItems: string[];
-  onChange: (selectedItems: string[]) => void;
+  onChange?: (selectedItems: string[]) => void;
   checkboxVariant: 'large' | 'small';
 }
 
@@ -52,6 +52,6 @@ export default function CheckboxFilter({
       others.push(item);
     }
 
-    onChange(others.sort());
+    onChange?.(others.sort());
   }
 }

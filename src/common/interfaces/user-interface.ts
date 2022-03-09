@@ -19,8 +19,6 @@ export interface User {
   containerUri: string;
 }
 
-export default User;
-
 export const anonymousUser: User = {
   anonymous: true,
   email: '',

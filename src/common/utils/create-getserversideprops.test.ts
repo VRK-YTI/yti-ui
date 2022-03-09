@@ -6,7 +6,7 @@ import {
 } from './create-getserversideprops';
 
 describe('createCommonGetServersideProps', () => {
-  test('should wrap defaults', async () => {
+  it('should wrap defaults', async () => {
     const ctx: GetServerSidePropsContext = {
       req: httpMocks.createRequest({ headers: { foo: 'bar' } }),
       res: httpMocks.createResponse(),
@@ -38,7 +38,7 @@ describe('createCommonGetServersideProps', () => {
     expect(results.props.local_test_prop).toBe('local_test_value');
   });
 
-  test('should set isSSRMobile = true when used on a mobile device', async () => {
+  it('should set isSSRMobile = true when used on a mobile device', async () => {
     const ctx: GetServerSidePropsContext = {
       req: httpMocks.createRequest({
         headers: {
@@ -62,7 +62,7 @@ describe('createCommonGetServersideProps', () => {
     expect(results.props?.isSSRMobile).toBeTruthy();
   });
 
-  test('should set isSSRMobile = false when used on a desktop device', async () => {
+  it('should set isSSRMobile = false when used on a desktop device', async () => {
     const ctx: GetServerSidePropsContext = {
       req: httpMocks.createRequest({
         headers: {

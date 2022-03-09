@@ -6,7 +6,7 @@ import { lightTheme } from '../../../layouts/theme';
 import { makeStore } from '../../../store';
 
 describe('breadcrumb', () => {
-  test('should render component', () => {
+  it('should render component', () => {
     const store = makeStore();
 
     render(
@@ -21,11 +21,11 @@ describe('breadcrumb', () => {
       </Provider>
     );
 
-    expect(screen.getByText('tr-terminology-title')).toBeInTheDocument;
-    expect(screen.getByText('terminology')).toBeInTheDocument;
+    expect(screen.getByText('tr-terminology-title')).toBeInTheDocument();
+    expect(screen.getByText('terminology')).toBeInTheDocument();
   });
 
-  test('should render entire path', () => {
+  it('should render entire path', () => {
     const store = makeStore();
 
     render(
@@ -41,12 +41,12 @@ describe('breadcrumb', () => {
       </Provider>
     );
 
-    expect(screen.getByText('concept-title')).toBeInTheDocument;
-    expect(screen.getByText('test')).toBeInTheDocument;
-    expect(screen.getByText('tr-terminology-title')).toBeInTheDocument;
+    expect(screen.getByText('concept-title')).toBeInTheDocument();
+    expect(screen.getByText('test')).toBeInTheDocument();
+    expect(screen.getByText('tr-terminology-title')).toBeInTheDocument();
   });
 
-  test('should have one crumb to have status of "current"', () => {
+  it('should have one crumb to have status of "current"', () => {
     const store = makeStore();
 
     render(
@@ -62,17 +62,18 @@ describe('breadcrumb', () => {
       </Provider>
     );
 
-    expect(screen.getByText('concept-title')).toBeInTheDocument;
-    expect(screen.getByText('concept-title').getAttribute('class')).toMatch(
-      /current/
+    expect(screen.getByText('concept-title')).toBeInTheDocument();
+    expect(screen.getByText('concept-title')).toHaveAttribute(
+      'class',
+      expect.stringMatching(/current/)
     );
 
-    expect(screen.getByText('test')).toBeInTheDocument;
+    expect(screen.getByText('test')).toBeInTheDocument();
     expect(screen.getByText('test').getAttribute('class')).not.toMatch(
       /current/
     );
 
-    expect(screen.getByText('tr-terminology-title')).toBeInTheDocument;
+    expect(screen.getByText('tr-terminology-title')).toBeInTheDocument();
     expect(
       screen.getByText('tr-terminology-title').getAttribute('class')
     ).not.toMatch(/current/);

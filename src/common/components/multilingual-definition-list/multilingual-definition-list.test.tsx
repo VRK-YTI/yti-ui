@@ -4,7 +4,7 @@ import MultilingualDefinitionList from './multilingual-definition-list';
 import { themeProvider } from '../../../tests/test-utils';
 
 describe('multilingual-definition-list', () => {
-  test('should render component', () => {
+  it('should render component', () => {
     render(
       <MultilingualDefinitionList
         items={[
@@ -15,10 +15,10 @@ describe('multilingual-definition-list', () => {
       { wrapper: themeProvider }
     );
 
-    expect(screen.queryByText('This is a test.')).toBeTruthy();
+    expect(screen.getByText('This is a test.')).toBeInTheDocument();
     //expect(screen.queryByText('This is a test.')).toHaveAttribute('lang', 'en');
 
-    expect(screen.queryByText('Tämä on testi.')).toBeTruthy();
+    expect(screen.getByText('Tämä on testi.')).toBeInTheDocument();
     //expect(screen.queryByText('Tämä on testi.')).toHaveAttribute('lang', 'fi');
   });
 });

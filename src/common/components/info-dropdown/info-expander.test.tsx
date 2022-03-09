@@ -5,8 +5,8 @@ import { render, screen } from '@testing-library/react';
 import InfoExpander from './info-expander';
 import { themeProvider } from '../../../tests/test-utils';
 
-describe('InfoExpander', () => {
-  test('should render export button', () => {
+describe('infoExpander', () => {
+  it('should render export button', () => {
     render(
       <InfoExpander
         data={
@@ -23,7 +23,7 @@ describe('InfoExpander', () => {
     );
 
     expect(
-      screen.queryAllByText('tr-vocabulary-info-vocabulary-export')
-    ).toHaveLength(1);
+      screen.getByText('tr-vocabulary-info-vocabulary-export')
+    ).toBeInTheDocument();
   });
 });

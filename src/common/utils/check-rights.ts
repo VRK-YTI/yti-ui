@@ -1,4 +1,4 @@
-import User from '../interfaces/user-interface';
+import { User } from '../interfaces/user-interface';
 import { VocabularyInfoDTO } from '../interfaces/vocabulary.interface';
 
 const editRoles = ['ADMIN'];

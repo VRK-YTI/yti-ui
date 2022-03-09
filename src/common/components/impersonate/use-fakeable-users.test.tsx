@@ -73,6 +73,6 @@ describe('useFakeableUsers', () => {
     });
     await waitForNextUpdate();
 
-    expect(result.current).toEqual([]);
+    expect(result.current).toStrictEqual([]);
   });
 });

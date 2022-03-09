@@ -1,6 +1,6 @@
 // OBSOLETE
 import useSWR from 'swr';
-import User from '../../interfaces/user-interface';
+import { User } from '../../interfaces/user-interface';
 
 export default function useUser({
   redirectTo = '',

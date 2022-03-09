@@ -1,6 +1,6 @@
 import { GetServerSidePropsContext, NextApiResponse } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import User, { anonymousUser, UserProps } from '../interfaces/user-interface';
+import { User, anonymousUser, UserProps } from '../interfaces/user-interface';
 import withSession, { NextIronRequest } from './session';
 import { AppStore, wrapper } from '../../store';
 import { ParsedUrlQuery } from 'querystring';

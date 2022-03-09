@@ -23,20 +23,17 @@ const fakeUser = {
 };
 
 describe('api endpoint - login', () => {
-  let mock: MockAdapter;
+  const mock = new MockAdapter(axios, { onNoMatch: 'throwException' });
 
-  beforeAll(() => {
-    mock = new MockAdapter(axios, { onNoMatch: 'throwException' });
-  });
-
-  afterEach(() => {
+  function setupMock() {
     mock.reset();
-  });
+  }
 
   /*
    * login endpoint should simply redirect to SSO
    */
-  test('redirect to SSO', async () => {
+  it('redirect to SSO', async () => {
+    setupMock();
     const targetPath = '/testable-target-path';
 
     const { req, res } = createMocks({
@@ -58,7 +55,8 @@ describe('api endpoint - login', () => {
     expect(res._getRedirectUrl()).toBe(redirectPath);
   });
 
-  test('callback on success', async () => {
+  it('callback on success', async () => {
+    setupMock();
     const targetPath = '/testable-target-path';
 
     const { req, res } = createMocks({
@@ -86,7 +84,7 @@ describe('api endpoint - login', () => {
     // if successful, the api route will set some cookies for the browser
     expect(res.hasHeader('Set-Cookie')).toBeTruthy();
     const setCookies = res.getHeader('Set-Cookie');
-    expect(setCookies.length).toBe(2);
+    expect(setCookies).toHaveLength(2);
 
     // JSESSIONID from spring API
     const jsessionid = setCookies.find((x: string) =>

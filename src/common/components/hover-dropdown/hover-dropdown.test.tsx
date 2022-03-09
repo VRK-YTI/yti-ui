@@ -3,13 +3,13 @@ import { render, screen } from '@testing-library/react';
 import HoverDropdown from './hover-dropdown';
 import { themeProvider } from '../../../tests/test-utils';
 
-describe('HoverDropdown', () => {
+describe('hoverDropdown', () => {
   it('should render children', async () => {
     render(<HoverDropdown items={[]}>Children</HoverDropdown>, {
       wrapper: themeProvider,
     });
 
-    expect(screen.queryByText('Children')).toBeTruthy();
+    expect(screen.getByText('Children')).toBeInTheDocument();
   });
 
   it('should render items', async () => {
@@ -22,6 +22,6 @@ describe('HoverDropdown', () => {
       { wrapper: themeProvider }
     );
 
-    expect(screen.queryByText('Item label')).toBeTruthy();
+    expect(screen.getByText('Item label')).toBeInTheDocument();
   });
 });

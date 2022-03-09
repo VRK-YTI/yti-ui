@@ -2,7 +2,7 @@ import axios from 'axios';
 import withSession from '../../../common/utils/session';
 import { applySession } from 'next-iron-session';
 import { userCookieOptions } from '../../../common/utils/user-cookie-options';
-import User from '../../../common/interfaces/user-interface';
+import { User } from '../../../common/interfaces/user-interface';
 
 export default withSession(async (req, res) => {
   // returned from Shibboleth, let's go back to target

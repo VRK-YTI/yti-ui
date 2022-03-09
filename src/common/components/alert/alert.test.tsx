@@ -8,7 +8,7 @@ import { makeStore } from '../../../store';
 import { setAlert } from './alert.slice';
 
 describe('alert', () => {
-  test('should render alert', () => {
+  it('should render alert', () => {
     const store = makeStore();
 
     store.dispatch(
@@ -28,10 +28,10 @@ describe('alert', () => {
       </Provider>
     );
 
-    expect(screen.getByText('tr-error-occured')).toBeInTheDocument;
+    expect(screen.getByText('tr-error-occured')).toBeInTheDocument();
   });
 
-  test('should render multiple alerts', () => {
+  it('should render multiple alerts', () => {
     const store = makeStore();
 
     store.dispatch(
@@ -66,7 +66,7 @@ describe('alert', () => {
     expect(screen.queryAllByText(/tr-error-occured/)).toHaveLength(4);
   });
 
-  test('should hide alert when clicking close', () => {
+  it('should hide alert when clicking close', async () => {
     const store = makeStore();
 
     store.dispatch(
@@ -86,8 +86,8 @@ describe('alert', () => {
       </Provider>
     );
 
-    expect(screen.getByText('tr-error-occured')).toBeInTheDocument;
+    expect(screen.getByText('tr-error-occured')).toBeInTheDocument();
     userEvent.click(screen.getByText('TR-TOAST-CLOSE'));
-    expect(screen.findByText('tr-error-occured')).toBeNull;
+    expect(screen.queryByText('tr-error-occured')).not.toBeInTheDocument();
   });
 });

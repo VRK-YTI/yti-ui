@@ -10,7 +10,7 @@ jest.mock('next/router');
 const mockedUseRouter = useRouter as jest.MockedFunction<typeof useRouter>;
 
 describe('search-results', () => {
-  test('should render component', () => {
+  it('should render component', async () => {
     mockedUseRouter.mockReturnValue({ query: {} } as NextRouter);
 
     const store = makeStore();
@@ -30,11 +30,10 @@ describe('search-results', () => {
       </Provider>
     );
 
-    expect(screen.findAllByRole('div')).toBeInTheDocument;
-    expect(screen.queryAllByRole('div')).toEqual([]);
+    expect(screen.queryAllByRole('div')).toStrictEqual([]);
   });
 
-  test('should render data', () => {
+  it('should render data', () => {
     mockedUseRouter.mockReturnValue({ query: {} } as NextRouter);
 
     const store = makeStore();
@@ -127,7 +126,7 @@ describe('search-results', () => {
       </Provider>
     );
 
-    expect(screen.getByText(/fi-label-01/)).toBeInTheDocument;
-    expect(screen.getByText(/fi-label-02/)).toBeInTheDocument;
+    expect(screen.getByText(/fi-label-01/)).toBeInTheDocument();
+    expect(screen.getByText(/fi-label-02/)).toBeInTheDocument();
   });
 });

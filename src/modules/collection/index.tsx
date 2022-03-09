@@ -7,8 +7,8 @@ import {
   BasicBlock,
   MultilingualPropertyBlock,
   PropertyBlock,
+  ConceptListBlock,
 } from '../../common/components/block';
-import { ConceptListBlock } from '../../common/components/block';
 import { Breadcrumb, BreadcrumbLink } from '../../common/components/breadcrumb';
 import { useGetCollectionQuery } from '../../common/components/collection/collection-slice';
 import FormattedDate from '../../common/components/formatted-date';
