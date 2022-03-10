@@ -1,11 +1,12 @@
 import { useTranslation } from 'next-i18next';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useStoreDispatch } from '../../../store';
 import { Error } from '../../interfaces/error.interface';
 import { useBreakpoints } from '../media-query/media-query-context';
-import { AlertsWrapper, AlertToast, Toast, ToastIcon } from './alert-toast.styles';
+import { AlertsWrapper, AlertToast } from './alert-toast.styles';
 import { selectAlert, setAlert } from './alert.slice';
+import LogoutToast from './logoutToast';
 
 interface AlertToastProps {
   alert: Error;
@@ -24,7 +25,7 @@ export function Alerts() {
     <AlertsWrapper>
       {alerts.map((alert, idx) => {
         if (alert.status === 0) {
-          return <LogoutToast key={`alert-${idx}`}/>;
+          return <LogoutToast key={`alert-${idx}`} alert={alert} />;
         } else {
           return <Alert key={`alert-${idx}`} alert={alert} alerts={alerts} type={'error'} />;
         }
@@ -61,35 +62,5 @@ export function Alert({ alert, alerts, type }: AlertToastProps) {
         {alerts.length > 1 && `(${alerts.length})`} {t('error-occured', { id: alert.status ?? '' })}
       </AlertToast>
     </>
-  );
-}
-
-export function LogoutToast() {
-  const { isSmall } = useBreakpoints();
-  const { t } = useTranslation('alert');
-  const [show, setShow] = useState(true);
-  const dispatch = useStoreDispatch();
-  const previousAlerts = useSelector(selectAlert());
-
-  useEffect(() => {
-    const wait = setTimeout(() => {
-      setShow(false);
-      dispatch(setAlert(
-        previousAlerts.filter(a => a.status !== 0)
-      ));
-    }, 5000);
-
-    return () => clearTimeout(wait);
-  }, []);
-
-  if (!show) {
-    return null;
-  }
-
-  return (
-    <Toast aria-live='assertive' isSmall={isSmall}>
-      <ToastIcon icon='checkCircle' />
-      {t('logged-out')}
-    </Toast>
   );
 }

@@ -3,7 +3,7 @@ import '../../styles/globals.scss';
 import type { AppProps } from 'next/app';
 import { appWithTranslation, useTranslation } from 'next-i18next';
 import axios from 'axios';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useStoreDispatch, wrapper } from '../store';
 import '@fontsource/source-sans-pro/300.css';
 import '@fontsource/source-sans-pro/400.css';
@@ -21,17 +21,17 @@ function App({ Component, pageProps }: AppProps) {
   const login = useSelector(selectLogin());
   const dispatch = useStoreDispatch();
 
-  if (typeof window !== 'undefined') {
+  useEffect(() => {
     if (!login.anonymous) {
       window.localStorage.setItem('user-signed', 'true');
     } else if (login.anonymous && window.localStorage.getItem('user-signed')) {
       dispatch(setAlert([{
         status: 0,
-        data: 'Olet kirjautunut ulos sovelluksesta'
+        data: 'logged-out'
       }]));
       window.localStorage.removeItem('user-signed');
     }
-  }
+  });
 
   return (
     <SWRConfig
