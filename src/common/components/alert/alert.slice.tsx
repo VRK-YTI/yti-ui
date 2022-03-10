@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { HYDRATE } from 'next-redux-wrapper';
 import { AppState, AppThunk } from '../../../store';
 import { Error } from '../../interfaces/error.interface';
 
@@ -21,20 +20,8 @@ export const alertSlice = createSlice({
         ...action.payload
       };
     },
-  },
-  extraReducers: {
-    [HYDRATE]: (state, action) => {
-      // console.log('HYDRATE');
-      // console.log('state', state);
-      // console.log('action.payload', action.payload);
-      return {
-        ...state,
-        ...action.payload.alert
-      };
-    }
   }
 });
-
 
 export const setAlert = (alerts: AlertState['alerts']): AppThunk => dispatch => {
   dispatch(

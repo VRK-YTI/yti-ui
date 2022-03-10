@@ -26,7 +26,7 @@ function App({ Component, pageProps }: AppProps) {
       window.localStorage.setItem('user-signed', 'true');
     } else if (login.anonymous && window.localStorage.getItem('user-signed')) {
       dispatch(setAlert([{
-        status: 200,
+        status: 0,
         data: 'Olet kirjautunut ulos sovelluksesta'
       }]));
       window.localStorage.removeItem('user-signed');
