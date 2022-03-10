@@ -20,7 +20,7 @@ export const alertSlice = createSlice({
         ...action.payload
       };
     },
-  }
+  },
 });
 
 export const setAlert = (alerts: AlertState['alerts']): AppThunk => dispatch => {

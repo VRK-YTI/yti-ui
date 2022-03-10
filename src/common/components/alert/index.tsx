@@ -51,16 +51,14 @@ export function Alert({ alert, alerts, type }: AlertToastProps) {
   };
 
   return (
-    <>
-      <AlertToast
-        status={type}
-        closeText={t('toast-close')}
-        onCloseButtonClick={() => handleClick()}
-        smallScreen={isSmall}
-        isSmall={isSmall}
-      >
-        {alerts.length > 1 && `(${alerts.length})`} {t('error-occured', { id: alert.status ?? '' })}
-      </AlertToast>
-    </>
+    <AlertToast
+      status={type}
+      closeText={t('toast-close')}
+      onCloseButtonClick={() => handleClick()}
+      smallScreen={isSmall}
+      isSmall={isSmall}
+    >
+      {alerts.length > 1 && `(${alerts.length})`} {t('error-occured', { id: alert.status ?? '' })}
+    </AlertToast>
   );
 }
