@@ -30,7 +30,7 @@ export default function LoginModalView({ setVisible }: { setVisible: Function })
             <Text>
               {t('site-login-info-2')}{' '}
             </Text>
-            <ExternalLink href='http://id.eduuni.fi/signup' labelNewWindow=''>
+            <ExternalLink href='http://id.eduuni.fi/signup' labelNewWindow={`${t('site-open-link-new-window')} id.eduuni.if/signup`}>
               {t('site-register')}
             </ExternalLink>
           </Paragraph>
