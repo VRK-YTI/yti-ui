@@ -13,13 +13,11 @@ import {
   TermBlock,
 } from '../../common/components/block';
 import { Breadcrumb, BreadcrumbLink } from '../../common/components/breadcrumb';
-import { useGetConceptQuery } from '../../common/components/concept/concept-slice';
 import FormattedDate from '../../common/components/formatted-date';
 import { useBreakpoints } from '../../common/components/media-query/media-query-context';
 import PropertyValue from '../../common/components/property-value';
 import { getPropertyValue } from '../../common/components/property-value/get-property-value';
 import Separator from '../../common/components/separator';
-import { useGetVocabularyQuery } from '../../common/components/vocabulary/vocabulary-slice';
 import DetailsExpander from './details-expander';
 import ConceptSidebar from './concept-sidebar';
 import {
@@ -34,6 +32,8 @@ import { setAlert } from '../../common/components/alert/alert.slice';
 import { Error } from '../../common/interfaces/error.interface';
 import { useRouter } from 'next/router';
 import { setTitle } from '../../common/components/title/title.slice';
+import { useGetVocabularyQuery } from '../../common/components/vocabulary/vocabulary-slice';
+import { useGetConceptQuery } from '../../common/components/concept/concept-slice';
 import { getProperty } from '../../common/utils/get-property';
 
 export interface ConceptProps {
@@ -154,7 +154,7 @@ export default function Concept({
             data={concept?.properties.definition}
           />
           <MultilingualPropertyBlock
-            title={t('field-example')}
+            title={<h2>{t('field-example')}</h2>}
             data={concept?.properties.example}
           />
           <TermBlock
@@ -183,7 +183,7 @@ export default function Concept({
           />
 
           <MultilingualPropertyBlock
-            title={t('field-note')}
+            title={<h2>{t('field-note')}</h2>}
             data={concept?.properties.note}
           />
 

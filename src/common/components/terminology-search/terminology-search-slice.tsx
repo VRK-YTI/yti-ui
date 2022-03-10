@@ -18,7 +18,11 @@ export const terminologySearchSlice = createSlice({
 
 export const terminologySearchApi = createApi({
   reducerPath: 'terminologySearchApi',
-  baseQuery: axiosBaseQuery({ baseUrl: '/terminology-api/api/v1/frontend' }),
+  baseQuery: axiosBaseQuery({
+    baseUrl: process.env.TERMINOLOGY_API_URL
+      ? `${process.env.TERMINOLOGY_API_URL}/api/v1/frontend`
+      : '/terminology-api/api/v1/frontend',
+  }),
   tagTypes: ['TerminologySearch'],
   endpoints: (builder) => ({
     getSearchResult: builder.query<

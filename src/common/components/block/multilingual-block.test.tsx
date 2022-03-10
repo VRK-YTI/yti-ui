@@ -2,8 +2,8 @@ import { render, screen } from '@testing-library/react';
 import { MultilingualBlock } from '.';
 import { themeProvider } from '../../../tests/test-utils';
 
-describe('multilingualBlock', () => {
-  it('should render items', () => {
+describe('multilingual-block', () => {
+  it('should render items', async () => {
     render(
       <MultilingualBlock<string>
         title="Title"

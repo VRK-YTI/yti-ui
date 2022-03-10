@@ -71,6 +71,7 @@ export default function SearchResults({
             organizations={organizations}
             domains={domains}
             renderQBeforeStatus
+            count={data?.totalHitCount}
           />
           <CardWrapper isSmall={isSmall}>
             {data?.terminologies?.map((terminology) => {
@@ -171,6 +172,7 @@ export default function SearchResults({
               })}
               organizations={organizations}
               domains={domains}
+              count={data?.totalHitCount}
             />
             <CardWrapper isSmall={isSmall}>
               {data?.concepts.map((concept) => {
@@ -242,6 +244,7 @@ export default function SearchResults({
           title={t('vocabulary-results-collections', {
             count: data.length,
           })}
+          count={data.length}
         />
         <CardWrapper isSmall={isSmall}>
           {data.map((collection, idx: number) => {

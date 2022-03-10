@@ -11,6 +11,7 @@ import { setLogin } from '../components/login/login-slice';
 export interface LocalHandlerParams {
   req: NextIronRequest;
   res: NextApiResponse;
+  params: ParsedUrlQuery;
   locale: string;
   store: AppStore;
 }
@@ -37,13 +38,15 @@ export function createCommonGetServerSideProps<
       async ({
         req,
         res,
+        params,
         locale,
       }: {
         req: NextIronRequest;
         res: NextApiResponse;
+        params: ParsedUrlQuery;
         locale: string;
       }) => {
-        const results = await handler?.({ req, res, locale, store });
+        const results = await handler?.({ req, res, params, locale, store });
         store.dispatch(
           setLogin(req.session.get<User>('user') || anonymousUser)
         );

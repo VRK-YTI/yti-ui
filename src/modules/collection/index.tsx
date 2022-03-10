@@ -10,13 +10,11 @@ import {
   ConceptListBlock,
 } from '../../common/components/block';
 import { Breadcrumb, BreadcrumbLink } from '../../common/components/breadcrumb';
-import { useGetCollectionQuery } from '../../common/components/collection/collection-slice';
 import FormattedDate from '../../common/components/formatted-date';
 import { useBreakpoints } from '../../common/components/media-query/media-query-context';
 import PropertyValue from '../../common/components/property-value';
 import { getPropertyValue } from '../../common/components/property-value/get-property-value';
 import Separator from '../../common/components/separator';
-import { useGetVocabularyQuery } from '../../common/components/vocabulary/vocabulary-slice';
 import { Error } from '../../common/interfaces/error.interface';
 import { useStoreDispatch } from '../../store';
 import CollectionSidebar from './collection-sidebar';
@@ -27,6 +25,8 @@ import {
   PageContent,
 } from './collection.styles';
 import { setTitle } from '../../common/components/title/title.slice';
+import { useGetCollectionQuery } from '../../common/components/collection/collection-slice';
+import { useGetVocabularyQuery } from '../../common/components/vocabulary/vocabulary-slice';
 import { getProperty } from '../../common/utils/get-property';
 
 interface CollectionProps {
@@ -41,16 +41,23 @@ export default function Collection({
   setCollectionTitle,
 }: CollectionProps) {
   const { breakpoint } = useBreakpoints();
-  const { data: terminology, error: terminologyError } =
-    useGetVocabularyQuery(terminologyId);
-  const { data: collection, error: collectionError } = useGetCollectionQuery({
-    terminologyId,
-    collectionId,
-  });
   const { t, i18n } = useTranslation('collection');
   const dispatch = useStoreDispatch();
   const router = useRouter();
   const titleRef = useRef<HTMLHeadingElement>(null);
+
+  const { data: terminology, error: terminologyError } = useGetVocabularyQuery(
+    terminologyId,
+    {
+      skip: router.isFallback,
+    }
+  );
+  const { data: collection, error: collectionError } = useGetCollectionQuery(
+    { terminologyId, collectionId },
+    {
+      skip: router.isFallback,
+    }
+  );
 
   if (
     collectionError &&
@@ -65,6 +72,7 @@ export default function Collection({
     language: i18n.language,
     fallbackLanguage: 'fi',
   });
+
   useEffect(() => {
     setCollectionTitle(prefLabel);
   }, [setCollectionTitle, prefLabel]);

@@ -4,7 +4,7 @@ import SanitizedTextContent from './index';
 import { ThemeProvider } from 'styled-components';
 import { lightTheme } from '../../../layouts/theme';
 
-describe('text-links', () => {
+describe('sanitized-text-content', () => {
   it('should render component without links', () => {
     render(
       <ThemeProvider theme={lightTheme}>
@@ -54,11 +54,11 @@ describe('text-links', () => {
       </ThemeProvider>
     );
 
-    expect(screen.getByText('This is a')).toBeInTheDocument();
+    expect(screen.getByText(/This is a/)).toBeInTheDocument();
     expect(screen.getByText('test')).toBeInTheDocument();
     expect(screen.queryByText('test')).toHaveAttribute('href');
     expect(screen.queryByText('test')).toHaveClass('fi-link--external');
-    expect(screen.getByText('with a link')).toBeInTheDocument();
+    expect(screen.getByText(/with a link/)).toBeInTheDocument();
   });
 
   it('should render component with multiple internal and external links', () => {
@@ -74,7 +74,7 @@ describe('text-links', () => {
       </ThemeProvider>
     );
 
-    expect(screen.getAllByText(/This is an/)).toHaveLength(3);
+    expect(screen.getByText(/This is an/)).toBeInTheDocument();
     expect(screen.getByText(/This is another/)).toBeInTheDocument();
 
     expect(screen.getByText('external')).toBeInTheDocument();
@@ -97,10 +97,10 @@ describe('text-links', () => {
       </ThemeProvider>
     );
 
-    expect(screen.getByText('This is a')).toBeInTheDocument();
+    expect(screen.getByText(/This is a/)).toBeInTheDocument();
     expect(screen.getByText('test')).toBeInTheDocument();
     expect(screen.queryByText('test')).not.toHaveAttribute('href');
     expect(screen.queryByText('test')).not.toHaveClass('fi-link--external');
-    expect(screen.getByText('with javascript')).toBeInTheDocument();
+    expect(screen.getByText(/with javascript/)).toBeInTheDocument();
   });
 });

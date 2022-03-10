@@ -28,7 +28,7 @@ export const setAlert =
   (dispatch) => {
     dispatch(
       alertSlice.actions.setAlert({
-        alerts: alerts.filter((alert) => alert),
+        alerts: alerts.filter((alert) => alert && alert.data),
       })
     );
   };

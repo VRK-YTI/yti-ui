@@ -7,6 +7,7 @@ import {
 } from '../../interfaces/vocabulary.interface';
 import { UrlState } from '../../utils/hooks/useUrlState';
 import axiosBaseQuery from '../axios-base-query';
+import { HYDRATE } from 'next-redux-wrapper';
 
 export const vocabularyInitialState = {};
 
@@ -18,7 +19,16 @@ export const vocabularySlice = createSlice({
 
 export const vocabularyApi = createApi({
   reducerPath: 'vocabularyAPI',
-  baseQuery: axiosBaseQuery({ baseUrl: '/terminology-api/api/v1/frontend' }),
+  baseQuery: axiosBaseQuery({
+    baseUrl: process.env.TERMINOLOGY_API_URL
+      ? `${process.env.TERMINOLOGY_API_URL}/api/v1/frontend`
+      : '/terminology-api/api/v1/frontend',
+  }),
+  extractRehydrationInfo(action, { reducerPath }) {
+    if (action.type === HYDRATE) {
+      return action.payload[reducerPath];
+    }
+  },
   tagTypes: ['Vocabulary'],
   endpoints: (builder) => ({
     getCollections: builder.query<Collection[], string>({
@@ -62,6 +72,9 @@ export const {
   useGetCollectionsQuery,
   useGetConceptResultQuery,
   useGetVocabularyQuery,
+  util: { getRunningOperationPromises },
 } = vocabularyApi;
 
 export default vocabularySlice.reducer;
+
+export const { getVocabulary } = vocabularyApi.endpoints;

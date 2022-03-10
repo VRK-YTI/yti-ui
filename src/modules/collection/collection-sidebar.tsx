@@ -23,7 +23,7 @@ export default function CollectionSidebar({
     (other) => other.id !== collection.id
   );
 
-  const isEmpty = otherCollections?.length === 0;
+  const isEmpty = !otherCollections?.length;
 
   return (
     <Sidebar isEmpty={isEmpty}>
