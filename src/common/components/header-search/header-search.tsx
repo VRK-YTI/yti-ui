@@ -44,7 +44,7 @@ export default function HeaderSearch({
   return (
     <>
       <SearchInput
-        clearButtonLabel=""
+        clearButtonLabel={t('terminology-search-clear')}
         labelText=""
         value={searchInputValue ?? ''}
         labelMode="hidden"

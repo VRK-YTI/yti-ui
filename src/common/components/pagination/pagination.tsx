@@ -7,10 +7,12 @@ import {
 import { PaginationProps } from './pagination-props';
 import { useBreakpoints } from '../media-query/media-query-context';
 import useUrlState from '../../utils/hooks/useUrlState';
+import { useTranslation } from 'next-i18next';
 
 export default function Pagination({ data, pageString }: PaginationProps) {
   const breakPoints = useBreakpoints();
   const { urlState, patchUrlState } = useUrlState();
+  const { t } = useTranslation();
 
   let items: number[];
   if ('totalHitCount' in data) {
@@ -40,6 +42,7 @@ export default function Pagination({ data, pageString }: PaginationProps) {
         icon="chevronLeft"
         iconProps={{ icon: 'chevronLeft' }}
         variant="secondaryNoBorder"
+        aria-label={t('pagination-previous-page')}
       />
 
       {!breakPoints.isSmall ? (
@@ -79,6 +82,7 @@ export default function Pagination({ data, pageString }: PaginationProps) {
         icon="chevronRight"
         iconProps={{ icon: 'chevronRight' }}
         variant="secondaryNoBorder"
+        aria-label={t('pagination-next-page')}
       />
     </PaginationWrapper>
   );

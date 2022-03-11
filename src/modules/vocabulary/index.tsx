@@ -111,7 +111,7 @@ export default function Vocabulary({
         )}
       </Breadcrumb>
 
-      <main>
+      <main id="main">
         {info && <Title info={info} />}
         {isSmall && (
           <FilterMobileButton

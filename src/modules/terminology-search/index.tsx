@@ -58,7 +58,7 @@ export default function TerminologySearch() {
   }, [isFetching, setShowLoading]);
 
   return (
-    <>
+    <main id="main">
       <Title info={t('terminology-title')} />
       {isSmall && groups && organizations && (
         <FilterMobileButton
@@ -120,6 +120,6 @@ export default function TerminologySearch() {
           )}
         </ResultAndStatsWrapper>
       </ResultAndFilterContainer>
-    </>
+    </main>
   );
 }
