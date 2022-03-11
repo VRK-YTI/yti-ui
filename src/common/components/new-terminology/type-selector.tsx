@@ -1,9 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { RadioButton } from 'suomifi-ui-components';
 import { RadioButtonGroupSmBot } from './new-terminology.styles';
 
-export default function TypeSelector() {
+export default function TypeSelector({ update }: any) {
   const [selectedType, setSelectedType] = useState('terminology');
+
+  useEffect(() => {
+    update('type', selectedType);
+  }, [selectedType]);
 
   return (
     <RadioButtonGroupSmBot

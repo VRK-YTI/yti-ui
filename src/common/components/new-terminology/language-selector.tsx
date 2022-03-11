@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MultiSelectData, Paragraph, Text } from 'suomifi-ui-components';
 import { useBreakpoints } from '../media-query/media-query-context';
 import LanguageBlock from './language-block';
@@ -10,7 +10,7 @@ export interface TerminologyName {
   description: string;
 }
 
-export default function LanguageSelector() {
+export default function LanguageSelector({ update }: any) {
   const { isSmall } = useBreakpoints();
   const [selectedLanguages, setSelectedLanguages] = useState<MultiSelectData[]>([]);
   const [terminologyNames, setTerminologyNames] = useState<TerminologyName[]>([]);
@@ -32,6 +32,10 @@ export default function LanguageSelector() {
       uniqueItemId: 'sv'
     }
   ];
+
+  useEffect(() => {
+    update('description', terminologyNames);
+  }, [terminologyNames]);
 
   const handleSelectedLanguagesChange = (e: MultiSelectData[]) => {
     setSelectedLanguages(e);

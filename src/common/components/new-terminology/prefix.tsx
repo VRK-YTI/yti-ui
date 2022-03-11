@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Paragraph, RadioButton, Text } from 'suomifi-ui-components';
 import { useBreakpoints } from '../media-query/media-query-context';
 import { RadioButtonGroupSmBot, TextInputSmBot } from './new-terminology.styles';
 
-export default function Prefix() {
+export default function Prefix({ update }: any) {
   const URI = 'http://uri.suomi.fi/';
   // TODO: Implement actual randomization
   // TODO: Add translation
@@ -13,6 +13,10 @@ export default function Prefix() {
   const [prefix, setPrefix] = useState(randomURL);
   const [prefixType, setPrefixType] = useState('');
   const [status, setStatus] = useState<'default' | 'error'>('default');
+
+  useEffect(() => {
+    update('prefix', prefix);
+  }, [prefix]);
 
   const handlePrefixTypeChange = (value: string) => {
     setPrefixType(value);

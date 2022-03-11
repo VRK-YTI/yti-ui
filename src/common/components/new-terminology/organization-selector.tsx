@@ -1,15 +1,14 @@
 import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { MultiSelectData, Paragraph, SingleSelectData, Text } from 'suomifi-ui-components';
 import { selectLogin } from '../login/login-slice';
 import { useBreakpoints } from '../media-query/media-query-context';
-import { getPropertyValue } from '../property-value/get-property-value';
 import { useGetOrganizationsQuery } from '../terminology-search/terminology-search-slice';
 import { MultiselectSmBot, OrgCheckbox, OrgSingleSelect } from './new-terminology.styles';
 
 
-export default function OrganizationSelector() {
+export default function OrganizationSelector({ update }: any) {
   const user = useSelector(selectLogin());
   const { i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -17,6 +16,11 @@ export default function OrganizationSelector() {
   const [selectedOrganization, setSelectedOrganization] = useState<SingleSelectData | null>();
   const [selectedOtherOrganizations, setSelectedOtherOrganizations] = useState<MultiSelectData[]>([]);
   const [showOtherOrgSelector, setShowOtherOrgSelector] = useState<boolean>(false);
+
+  useEffect(() => {
+    update('mainOrg', selectedOrganization);
+    update('otherOrgs', selectedOtherOrganizations);
+  }, [selectedOrganization, selectedOtherOrganizations]);
 
   const adminOrgs: SingleSelectData[] = organizations?.map(org => {
     if (user.organizationsInRole.ADMIN.includes(org.id.toString())) {
