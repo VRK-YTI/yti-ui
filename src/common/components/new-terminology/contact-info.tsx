@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Paragraph, Text } from 'suomifi-ui-components';
 import { useBreakpoints } from '../media-query/media-query-context';
 import { TextInputSmBot } from './new-terminology.styles';
@@ -9,15 +9,13 @@ export default function ContactInfo({ update }: any) {
   const [contact, setContact] = useState('');
   const [status, setStatus] = useState<'default' | 'error'>('default');
 
-  useEffect(() => {
-    update('contact', contact);
-  }, [contact]);
-
   const validateContact = () => {
     if (contact !== '' && !isEmail(contact)) {
       setStatus('error');
+      update('contact', [contact, false]);
     } else {
       setStatus('default');
+      update('contact', [contact, contact !== '']);
     }
   };
 

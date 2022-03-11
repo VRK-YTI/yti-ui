@@ -21,15 +21,14 @@ export default function LanguageBlock({ lang, isSmall, terminologyNames, setTerm
         if (tn.lang === lang.uniqueItemId) {
           if (name === '') {
             setStatus('error');
-            return tn;
           } else {
             setStatus('default');
-            return {
-              lang: lang.uniqueItemId,
-              name: name,
-              description: description
-            };
           }
+          return {
+            lang: lang.uniqueItemId,
+            name: name,
+            description: description
+          };
         } else {
           setStatus('default');
           return tn;

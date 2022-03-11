@@ -24,16 +24,26 @@ export default function InfoManual({ setIsValid }: InfoManualProps) {
 
   useEffect(() => {
     let valid = true;
-    Object.keys(terminologyData).forEach(k => {
-      if (!terminologyData[k]) {
-        valid = false;
-      }
-    });
+
+    if (Object.keys(terminologyData).length < 7) {
+      valid = false;
+    } else {
+      Object.keys(terminologyData).forEach(k => {
+        if (k === 'otherOrgs') {
+          return;
+        }
+
+        if (!terminologyData[k] || terminologyData[k].length < 1 || terminologyData[k][1] === false) {
+          valid = false;
+        }
+      });
+    }
+
     setIsValid(valid);
   }, [terminologyData]);
 
   const handleUpdate = (key: string, data: any) => {
-    setTerminologyData(values => ({...values, [key]: data}));
+    setTerminologyData(values => ({ ...values, [key]: data }));
   };
 
   return (

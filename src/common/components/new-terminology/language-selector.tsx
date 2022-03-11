@@ -34,7 +34,7 @@ export default function LanguageSelector({ update }: any) {
   ];
 
   useEffect(() => {
-    update('description', terminologyNames);
+    update('description', [terminologyNames, !terminologyNames.find(t => !t.name)]);
   }, [terminologyNames]);
 
   const handleSelectedLanguagesChange = (e: MultiSelectData[]) => {

@@ -15,15 +15,17 @@ export default function Prefix({ update }: any) {
   const [status, setStatus] = useState<'default' | 'error'>('default');
 
   useEffect(() => {
-    update('prefix', prefix);
-  }, [prefix]);
+    update('prefix', [prefix, true]);
+  }, []);
 
   const handlePrefixTypeChange = (value: string) => {
     setPrefixType(value);
     if (value !== 'manual') {
       setPrefix(randomURL);
+      update('prefix', [randomURL, true]);
     } else {
       setPrefix('');
+      update('prefix', ['', false]);
     }
   };
 
@@ -33,9 +35,13 @@ export default function Prefix({ update }: any) {
 
     if (inputOnlyValid?.length !== e.length) {
       setStatus('error');
+      update('prefix', [e, false]);
+      return;
     } else if (status !== 'default') {
       setStatus('default');
     }
+
+    update('prefix', [e, e !== '']);
   };
 
   return (
