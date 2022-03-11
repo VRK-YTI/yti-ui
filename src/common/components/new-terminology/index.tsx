@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import { Button, Modal, ModalContent, ModalFooter, ModalTitle, Paragraph, RadioButton, RadioButtonGroup, Text } from 'suomifi-ui-components';
 import { selectLogin } from '../login/login-slice';
 import { useBreakpoints } from '../media-query/media-query-context';
+import FileUpload from './file-upload';
 import InfoFile from './info-file';
 import InfoManual from './info-manual';
 
@@ -64,7 +65,7 @@ export default function NewTerminology() {
           </RadioButtonGroup>
 
           {inputType === 'self' && <InfoManual setIsValid={setIsValid} />}
-          {inputType === 'file' && <InfoFile />}
+          {inputType === 'file' && <><InfoFile /><FileUpload /></>}
 
         </ModalContent>
 

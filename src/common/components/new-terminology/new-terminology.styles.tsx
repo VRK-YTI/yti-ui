@@ -1,6 +1,12 @@
-import styled from 'styled-components';
-import { Block, Button, Checkbox, MultiSelect, RadioButtonGroup, SingleSelect, StaticIcon, Textarea, TextInput } from 'suomifi-ui-components';
+import styled, { keyframes } from 'styled-components';
+import { Block, Button, Checkbox, Icon, MultiSelect, RadioButtonGroup, SingleSelect, StaticIcon, Textarea, TextInput } from 'suomifi-ui-components';
 import Separator from '../separator';
+
+export const ErrorIndicator = styled(Icon)`
+  height: 24px;
+  width: 24px;
+  color: ${props => props.theme.suomifi.colors.alertBase};
+`;
 
 export const FileBlock = styled(Block)`
   background-color: ${props => props.theme.suomifi.colors.highlightLight4};
@@ -39,6 +45,51 @@ export const FileWrapper = styled.div`
   margin-top: ${props => props.theme.suomifi.spacing.l};
 `;
 
+const enlarge = keyframes`
+  0% {
+    scale: 0;
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 1;
+    scale: 1;
+  }
+
+  80% {
+    opacity: 1;
+  }
+
+  90% {
+    scale: 0.8;
+  }
+
+  100% {
+    opacity: 0;
+  }
+`;
+
+export const DownloadIndicator = styled.div<{startFrame: number}>`
+  animation: ${enlarge} 1s linear infinite;
+  animation-delay: ${props => props.startFrame}ms;
+  background: ${props => props.theme.suomifi.colors.highlightBase};
+  border-radius: 50%;
+  height: 21px;
+  width: 21px;
+`;
+
+export const DownloadIndicatorWrapper = styled(Block)`
+  align-items: center;
+  background: ${props => props.theme.suomifi.colors.depthLight3};
+  display: flex;
+  height: 100px;
+  gap: 6px;
+  justify-content: center;
+`;
+
 export const LangBlock = styled(Block)`
   min-width: 100%;
   border: 1px solid ${props => props.theme.suomifi.colors.depthLight1};
@@ -66,6 +117,12 @@ export const OrgCheckbox = styled(Checkbox)`
 
 export const OrgSingleSelect = styled(SingleSelect)<{isSmall: boolean}>`
   min-width: ${props => props.isSmall ? '100%' : '480px'};
+`;
+
+export const SuccessIndicator = styled(Icon)`
+  height: 16px;
+  width: 20px;
+  color: ${props => props.theme.suomifi.colors.successBase}
 `;
 
 export const TallerSeparator = styled(Separator)`
