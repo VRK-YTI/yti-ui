@@ -6,6 +6,8 @@ import Separator from '../separator';
 import { BasicBlock, MultilingualPropertyBlock, PropertyBlock } from '../block';
 import { BasicBlockExtraWrapper } from '../block/block.styles';
 import FormattedDate from '../formatted-date';
+import { useSelector } from 'react-redux';
+import { selectLogin } from '../login/login-slice';
 
 interface InfoExpanderProps {
   data?: VocabularyInfoDTO;
@@ -13,7 +15,8 @@ interface InfoExpanderProps {
 
 export default function InfoExpander({ data }: InfoExpanderProps) {
   const { t } = useTranslation('common');
-
+  const user = useSelector(selectLogin());
+  console.log(user);
   if (!data) {
     return null;
   }
@@ -70,6 +73,23 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
 
         <Separator isLarge />
 
+        <BasicBlock
+          title='Ilmoitukset'
+          extra={
+            <BasicBlockExtraWrapper>
+              <Button
+                variant="secondary"
+                onClick={() => {}}
+              >
+                Tilaa ilmoitukset
+              </Button>
+            </BasicBlockExtraWrapper>
+          }
+        >
+          Kun tilaat ilmoitukset, saat tietoja aineiston muutoksista sähköpostilla.
+        </BasicBlock>
+
+        <Separator isLarge />
 
         <VisuallyHidden as="h3">
           {t('additional-technical-information', { ns: 'common' })}
