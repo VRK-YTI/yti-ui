@@ -50,30 +50,25 @@ const enlarge = keyframes`
     scale: 0;
   }
 
-  10% {
-    opacity: 1;
+  25% {
+    scale: 1
   }
 
-  50% {
-    opacity: 1;
-    scale: 1;
+  35% {
+    scale: 1
   }
 
-  80% {
-    opacity: 1;
-  }
-
-  90% {
-    scale: 0.8;
+  70% {
+    scale: 0;
   }
 
   100% {
-    opacity: 0;
+    scale: 0;
   }
 `;
 
 export const DownloadIndicator = styled.div<{startFrame: number}>`
-  animation: ${enlarge} 1s linear infinite;
+  animation: ${enlarge} 2s linear infinite;
   animation-delay: ${props => props.startFrame}ms;
   background: ${props => props.theme.suomifi.colors.highlightBase};
   border-radius: 50%;
