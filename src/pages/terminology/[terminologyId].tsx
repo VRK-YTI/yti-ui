@@ -6,6 +6,8 @@ import { createCommonGetServerSideProps } from '../../common/utils/create-getser
 import Vocabulary from '../../modules/vocabulary';
 import { MediaQueryContextProvider } from '../../common/components/media-query/media-query-context';
 import PageTitle from '../../common/components/page-title';
+import { LocalHandlerParams } from '../../common/utils/create-getserversideprops';
+import { getCollections, getRunningOperationPromises, getVocabulary } from '../../common/components/vocabulary/vocabulary-slice';
 
 export default function TerminologyPage(props: {
   _netI18Next: SSRConfig;
@@ -31,4 +33,20 @@ export default function TerminologyPage(props: {
   );
 }
 
-export const getServerSideProps = createCommonGetServerSideProps();
+export const getServerSideProps = createCommonGetServerSideProps(
+  async ({ req, store, params }: LocalHandlerParams) => {
+    const id = Array.isArray(params.terminologyId) ?
+      params.terminologyId[0] : params.terminologyId;
+
+    if (id === undefined) {
+      throw new Error('Invalid parameter for page');
+    }
+
+    await store.dispatch(getVocabulary.initiate(id));
+    await store.dispatch(getCollections.initiate(id));
+
+    await Promise.all(getRunningOperationPromises());
+
+    return {};
+  }
+);

@@ -42,7 +42,7 @@ export default function ConceptPage(props: {
   );
 }
 
-export const getServerSideProps = createCommonGetServerSideProps<{ props: { data?: any } }>(
+export const getServerSideProps = createCommonGetServerSideProps(
   async ({ req, store, params }: LocalHandlerParams) => {
 
     const terminologyId = Array.isArray(params.terminologyId) ?
@@ -60,6 +60,6 @@ export const getServerSideProps = createCommonGetServerSideProps<{ props: { data
     await Promise.all(getVocabularyRunningOperationPromises());
     await Promise.all(getConceptRunningOperationPromises());
 
-    return { props: {}};
+    return {};
   }
 );

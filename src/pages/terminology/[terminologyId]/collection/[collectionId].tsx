@@ -61,6 +61,6 @@ export const getServerSideProps = createCommonGetServerSideProps(
     await Promise.all(getVocabularyRunningOperationPromises());
     await Promise.all(getCollectionRunningOperationPromises());
 
-    return { props: {}};
+    return {};
   }
 );
