@@ -109,5 +109,9 @@
   "site-open-new-email": "Aloita uuden sähköpostin kirjoitus osoitteeseen",
   "navigate-to-homepage": "Siirry etusivulle",
   "interoperability-logo-title": "Yhteentoimivuusalustan logo",
-  "search-results-count": "Rajauksella {{count}} hakutulosta"
+  "search-results-count": "Rajauksella {{count}} hakutulosta",
+  "email-subscription": "Ilmoitukset",
+  "email-subscription-description": "Kun tilaat ilmoitukset, saat tietoja aineiston muutoksista sähköpostilla.",
+  "email-subscription-add": "Tilaa ilmoitukset",
+  "email-subscription-delete": "Poista ilmoitukset"
 }

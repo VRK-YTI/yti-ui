@@ -8,6 +8,9 @@ import { BasicBlockExtraWrapper } from '../block/block.styles';
 import FormattedDate from '../formatted-date';
 import { useSelector } from 'react-redux';
 import { selectLogin } from '../login/login-slice';
+import { subsriptionApi, useGetSubscriptionQuery } from '../subscription/subscription-slice';
+import { addSubscription, deleteSubscription } from '../subscription/subscription';
+import { useStoreDispatch } from '../../../store';
 
 interface InfoExpanderProps {
   data?: VocabularyInfoDTO;
@@ -16,10 +19,24 @@ interface InfoExpanderProps {
 export default function InfoExpander({ data }: InfoExpanderProps) {
   const { t } = useTranslation('common');
   const user = useSelector(selectLogin());
-  console.log(user);
+  const { data: subscription, error } = useGetSubscriptionQuery(data?.uri ?? '');
+  const dispatch = useStoreDispatch();
+
   if (!data) {
     return null;
   }
+
+  const handleSubscription = () => {
+    if (!error) {
+      if (!subscription) {
+        addSubscription(data.uri);
+      } else {
+        deleteSubscription(data.uri);
+      }
+    }
+
+    dispatch(subsriptionApi.internalActions.resetApiState());
+  };
 
   return (
     <InfoExpanderWrapper>
@@ -71,23 +88,33 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
           {t('vocabulary-info-vocabulary-export-description')}
         </BasicBlock>
 
-        <Separator isLarge />
+        {!user.anonymous
+          &&
+          <>
+            <Separator isLarge />
 
-        <BasicBlock
-          title='Ilmoitukset'
-          extra={
-            <BasicBlockExtraWrapper>
-              <Button
-                variant="secondary"
-                onClick={() => {}}
-              >
-                Tilaa ilmoitukset
-              </Button>
-            </BasicBlockExtraWrapper>
-          }
-        >
-          Kun tilaat ilmoitukset, saat tietoja aineiston muutoksista sähköpostilla.
-        </BasicBlock>
+            <BasicBlock
+              title={t('email-subscription')}
+              extra={
+                <BasicBlockExtraWrapper>
+                  <Button
+                    variant="secondary"
+                    onClick={() => handleSubscription()}
+                  >
+                    {subscription
+                      ?
+                      t('email-subscription-delete')
+                      :
+                      t('email-subscription-add')
+                    }
+                  </Button>
+                </BasicBlockExtraWrapper>
+              }
+            >
+              {t('email-subscription-description')}
+            </BasicBlock>
+          </>
+        }
 
         <Separator isLarge />
 

@@ -116,5 +116,9 @@
   "site-open-new-email": "Open a new email to",
   "navigate-to-homepage": "Navigate to homepage",
   "interoperability-logo-title": "Interoperability platform logo",
-  "search-results-count": "With filter {{count}} search results"
+  "search-results-count": "With filter {{count}} search results",
+  "email-subscription": "Email subscription",
+  "email-subscription-description": "Receive email notifications of changes made to this terminology.",
+  "email-subscription-add": "Add email subscription",
+  "email-subscription-delete": "Delete email subscription"
 }
