@@ -7,7 +7,8 @@ import Vocabulary from '../../modules/vocabulary';
 import { MediaQueryContextProvider } from '../../common/components/media-query/media-query-context';
 import PageTitle from '../../common/components/page-title';
 import { LocalHandlerParams } from '../../common/utils/create-getserversideprops';
-import { getCollections, getRunningOperationPromises, getVocabulary } from '../../common/components/vocabulary/vocabulary-slice';
+import { getCollections, getConceptResult, getRunningOperationPromises, getVocabulary } from '../../common/components/vocabulary/vocabulary-slice';
+import { initialUrlState } from '../../common/utils/hooks/useUrlState';
 
 export default function TerminologyPage(props: {
   _netI18Next: SSRConfig;
@@ -44,6 +45,10 @@ export const getServerSideProps = createCommonGetServerSideProps(
 
     await store.dispatch(getVocabulary.initiate(id));
     await store.dispatch(getCollections.initiate(id));
+
+
+    // await store.dispatch(getConceptResult.initiate({ urlState: initialUrlState, id}));
+
 
     await Promise.all(getRunningOperationPromises());
 
