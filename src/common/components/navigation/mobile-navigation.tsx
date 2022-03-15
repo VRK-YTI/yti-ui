@@ -43,6 +43,9 @@ export default function MobileNavigation() {
         <MobileMenuItem>
           <Link href="/">{t('site-for-administrators')}</Link>
         </MobileMenuItem>
+        <MobileMenuItem active={router.pathname === '/own-information'}>
+          <Link className="main" href="/own-information">{t('own-information')}</Link>
+        </MobileMenuItem>
       </MobileMenuSection>
 
       <MobileLocaleChooser />

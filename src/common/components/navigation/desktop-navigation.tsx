@@ -61,6 +61,9 @@ export default function DesktopNavigation() {
       <NavigationItem>
         <Link className="main" href="/">{t('site-for-administrators')}</Link>
       </NavigationItem>
+      <NavigationItem active={router.pathname === '/own-information'}>
+        <Link className="main" href="/own-information">{t('own-information')}</Link>
+      </NavigationItem>
     </NavigationWrapper>
 
   );
