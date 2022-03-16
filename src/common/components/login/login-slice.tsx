@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { HYDRATE } from 'next-redux-wrapper';
 import { AppState, AppThunk } from '../../../store';
-import { User } from '../../interfaces/user-interface';
+import { User } from '../../interfaces/user.interface';
 
 export const initialState: User = {
   anonymous: true,

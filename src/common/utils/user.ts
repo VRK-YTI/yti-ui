@@ -1,4 +1,4 @@
-import { User, anonymousUser } from '../interfaces/user-interface';
+import { User, anonymousUser } from '../interfaces/user.interface';
 
 export async function authFakeUser() {
   const fetchUrl = '/api/auth/fake-login';
