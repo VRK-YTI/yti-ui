@@ -43,12 +43,30 @@ export const getServerSideProps = createCommonGetServerSideProps(
       throw new Error('Invalid parameter for page');
     }
 
+    const urlParams = req.url && req.url.split('?')?.[1]?.split('&');
+    let urlState = Object.assign({}, initialUrlState);
+
+    if (urlParams) {
+      urlState.status = [];
+
+      urlParams.map(param => {
+        const paramSplit = param.split('=');
+
+        if (paramSplit[0] === 'q') {
+          urlState.q = paramSplit[1];
+
+        } else if (paramSplit[0] === 'status') {
+          urlState.status = [...urlState.status, paramSplit[1]];
+
+        } else if (paramSplit[0] === 'type') {
+          urlState.type = paramSplit[1];
+        }
+      });
+    }
+
     await store.dispatch(getVocabulary.initiate(id));
     await store.dispatch(getCollections.initiate(id));
-
-
-    // await store.dispatch(getConceptResult.initiate({ urlState: initialUrlState, id}));
-
+    await store.dispatch(getConceptResult.initiate({ urlState: urlState, id}));
 
     await Promise.all(getRunningOperationPromises());
 
