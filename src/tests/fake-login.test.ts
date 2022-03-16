@@ -24,16 +24,15 @@ const fakeUser = {
 describe('api endpoint - fake login', () => {
   const mock = new MockAdapter(axios, { onNoMatch: 'throwException' });
 
-  function setupMock() {
+  afterEach(() => {
     mock.reset();
-  }
+  });
 
   /*
    * Simulate successful call to fake-login, returning the proper cookies to
    * the browser
    */
   it('successful login', async () => {
-    setupMock();
     const targetPath = '/testable-target-path';
 
     const { req, res } = createMocks({
@@ -83,7 +82,6 @@ describe('api endpoint - fake login', () => {
    * Simulate server failing - should still return back to the browser
    */
   it('server failure', async () => {
-    setupMock();
     const targetPath = '/testable-target-path';
 
     const { req, res } = createMocks({
