@@ -3,6 +3,7 @@ import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import { Button } from 'suomifi-ui-components';
 import { useStoreDispatch } from '../../../store';
+import { setAlert } from '../alert/alert.slice';
 import { subscriptionApi, useGetSubscriptionQuery } from './subscription-slice';
 
 interface SubscriptionProps {
@@ -36,7 +37,7 @@ export default function Subscription({ uri }: SubscriptionProps) {
       }).then(() => {
         dispatch(subscriptionApi.internalActions.resetApiState());
       }).catch(err => {
-        console.error(err);
+        dispatch(setAlert([err]));
       });
     }
   };
