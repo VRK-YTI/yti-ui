@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { render, screen } from '@testing-library/react';
 import { useRouter } from 'next/router';
 import { themeProvider } from '../../../tests/test-utils';
@@ -12,7 +10,7 @@ describe('reset-all-filters-button', () => {
   it('should render component', () => {
     mockedUseRouter.mockReturnValue({
       query: { q: 'lorem ipsum' },
-    } as any);
+    } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
 
     render(<ResetAllFiltersButton />, { wrapper: themeProvider });
 

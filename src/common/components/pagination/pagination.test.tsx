@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -16,7 +14,7 @@ describe('pagination', () => {
       query: { page: '0' },
       route: '',
       push: jest.fn(),
-    } as any);
+    } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
 
     const data = {
       deepHits: null,
@@ -43,7 +41,7 @@ describe('pagination', () => {
       query: {},
       route: '',
       push: jest.fn(),
-    } as any);
+    } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
 
     const data = {
       deepHits: null,
@@ -65,7 +63,7 @@ describe('pagination', () => {
       query: { page: 3 },
       route: '',
       push,
-    } as any);
+    } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
 
     const data = {
       deepHits: null,

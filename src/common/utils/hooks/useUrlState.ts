@@ -55,18 +55,14 @@ export default function useUrlState(): UseURLStateResult {
 
 function updateURLState(router: NextRouter, state?: UrlState): void {
   const {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    /* eslint-disable @typescript-eslint/no-unused-vars */
     q,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     domain,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     organization,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     status,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     type,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     page,
+    /* eslint-enable @typescript-eslint/no-unused-vars */
     ...otherQueryParameters
   } = router.query;
 

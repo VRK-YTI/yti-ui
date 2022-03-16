@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import InfoExpander from './info-expander';
@@ -16,7 +14,7 @@ describe('infoExpander', () => {
               contributor: [{ properties: { prefLabel: [] } }],
               inGroup: [{ properties: { prefLabel: [] } }],
             },
-          } as any
+          } as any // eslint-disable-line @typescript-eslint/no-explicit-any
         }
       />,
       { wrapper: themeProvider }
