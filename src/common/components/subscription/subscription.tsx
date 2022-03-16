@@ -9,20 +9,26 @@ export function deleteSubscription(url: string) {
 }
 
 async function subscriptionAction(url: string, action: string) {
-  console.log(getURL());
+  const uri = process.env.NODE_ENV !== 'development'
+    ?
+    url
+    :
+    // This terminology can be found in dev, so change if dev data is changed
+    'http://uri.suomi.fi/terminology/demo/terminological-vocabulary-0';
+
   await axios.post(getURL(), {
     action: action,
     type: 'terminology',
-    uri: url
+    uri: uri
   }).catch(err => {
     console.error(err);
   });
 }
 
 function getURL() {
-  return process.env.MESSAGING_API_URL
-    ?
-    `${process.env.MESSAGING_API_URL}/api/v1/subscriptions/`
-    :
-    '/messaging-api/api/v1/subscriptions/';
+  if (process.env.NODE_ENV === 'development') {
+    return '/messaging-api/api/v1/subscriptions?fake.login.mail=admin@localhost';
+  }
+
+  return '/messaging-api/api/v1/subscriptions';
 }

@@ -8,7 +8,7 @@ import { BasicBlockExtraWrapper } from '../block/block.styles';
 import FormattedDate from '../formatted-date';
 import { useSelector } from 'react-redux';
 import { selectLogin } from '../login/login-slice';
-import { subsriptionApi, useGetSubscriptionQuery } from '../subscription/subscription-slice';
+import { subscriptionApi, useGetSubscriptionQuery } from '../subscription/subscription-slice';
 import { addSubscription, deleteSubscription } from '../subscription/subscription';
 import { useStoreDispatch } from '../../../store';
 
@@ -33,9 +33,9 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
       } else {
         deleteSubscription(data.uri);
       }
-    }
 
-    dispatch(subsriptionApi.internalActions.resetApiState());
+      dispatch(subscriptionApi.internalActions.resetApiState());
+    }
   };
 
   return (

@@ -43,6 +43,10 @@ module.exports = (phase, { defaultConfig }) => {
           {
             source: '/terminology-api/:path*',
             destination: 'http://localhost:9103/terminology-api/:path*'
+          },
+          {
+            source: '/messaging-api/:path*',
+            destination: 'http://sanastot.dev.yti.cloud.vrk.fi/messaging-api/:path*'
           }
         ];
       },

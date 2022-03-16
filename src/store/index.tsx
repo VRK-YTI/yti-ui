@@ -9,7 +9,7 @@ import { countsApi } from '../common/components/counts/counts-slice';
 import { loginSlice } from '../common/components/login/login-slice';
 import { alertSlice } from '../common/components/alert/alert.slice';
 import { titleSlice } from '../common/components/title/title.slice';
-import { subsriptionApi } from '../common/components/subscription/subscription-slice';
+import { subscriptionApi } from '../common/components/subscription/subscription-slice';
 
 export function makeStore() {
   return configureStore({
@@ -24,7 +24,7 @@ export function makeStore() {
       [loginSlice.name]: loginSlice.reducer,
       [alertSlice.name]: alertSlice.reducer,
       [titleSlice.name]: titleSlice.reducer,
-      [subsriptionApi.reducerPath]: subsriptionApi.reducer
+      [subscriptionApi.reducerPath]: subscriptionApi.reducer
     },
 
     middleware: (getDefaultMiddleware) =>
@@ -34,7 +34,7 @@ export function makeStore() {
         conceptApi.middleware,
         collectionApi.middleware,
         countsApi.middleware,
-        subsriptionApi.middleware
+        subscriptionApi.middleware
       ),
 
     // Development tools should be available only in development environments
