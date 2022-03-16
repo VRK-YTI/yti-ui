@@ -1,28 +1,56 @@
 import axios from 'axios';
+import { useTranslation } from 'next-i18next';
+import { useEffect, useState } from 'react';
+import { Button } from 'suomifi-ui-components';
+import { useStoreDispatch } from '../../../store';
+import { subscriptionApi, useGetSubscriptionQuery } from './subscription-slice';
 
-export function addSubscription(url: string) {
-  subscriptionAction(url, 'ADD');
+interface SubscriptionProps {
+  uri: string;
 }
 
-export function deleteSubscription(url: string) {
-  subscriptionAction(url, 'DELETE');
-}
+export default function Subscription({ uri }: SubscriptionProps) {
+  const { t } = useTranslation('common');
+  const { data, error } = useGetSubscriptionQuery(uri);
+  const [subscribed, setSubscribed] = useState(false);
+  const dispatch = useStoreDispatch();
 
-async function subscriptionAction(url: string, action: string) {
-  const uri = process.env.NODE_ENV !== 'development'
-    ?
-    url
-    :
-    // This terminology can be found in dev, so change if dev data is changed
-    'http://uri.suomi.fi/terminology/demo/terminological-vocabulary-0';
+  useEffect(() => {
+    setSubscribed((data !== '' && data) ? true : false);
+  }, [data]);
 
-  await axios.post(getURL(), {
-    action: action,
-    type: 'terminology',
-    uri: uri
-  }).catch(err => {
-    console.error(err);
-  });
+  const handleSubscription = (subscribed: boolean) => {
+    if (!error) {
+      const url = process.env.NODE_ENV !== 'development'
+        ?
+        uri
+        :
+        // This terminology can be found in dev, so change if dev data is changed
+        'http://uri.suomi.fi/terminology/demo/terminological-vocabulary-0';
+
+
+      axios.post(getURL(), {
+        action: subscribed ? 'DELETE' : 'ADD',
+        type: 'terminology',
+        uri: url
+      }).then(() => {
+        dispatch(subscriptionApi.internalActions.resetApiState());
+      }).catch(err => {
+        console.error(err);
+      });
+    }
+  };
+
+  return (
+    <Button variant="secondary" onClick={() => handleSubscription(subscribed)}>
+      {subscribed
+        ?
+        t('email-subscription-delete')
+        :
+        t('email-subscription-add')
+      }
+    </Button>
+  );
 }
 
 function getURL() {

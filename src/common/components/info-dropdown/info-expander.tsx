@@ -8,9 +8,7 @@ import { BasicBlockExtraWrapper } from '../block/block.styles';
 import FormattedDate from '../formatted-date';
 import { useSelector } from 'react-redux';
 import { selectLogin } from '../login/login-slice';
-import { subscriptionApi, useGetSubscriptionQuery } from '../subscription/subscription-slice';
-import { addSubscription, deleteSubscription } from '../subscription/subscription';
-import { useStoreDispatch } from '../../../store';
+import Subscription from '../subscription/subscription';
 
 interface InfoExpanderProps {
   data?: VocabularyInfoDTO;
@@ -19,24 +17,10 @@ interface InfoExpanderProps {
 export default function InfoExpander({ data }: InfoExpanderProps) {
   const { t } = useTranslation('common');
   const user = useSelector(selectLogin());
-  const { data: subscription, error } = useGetSubscriptionQuery(data?.uri ?? '');
-  const dispatch = useStoreDispatch();
 
   if (!data) {
     return null;
   }
-
-  const handleSubscription = () => {
-    if (!error) {
-      if (!subscription) {
-        addSubscription(data.uri);
-      } else {
-        deleteSubscription(data.uri);
-      }
-
-      dispatch(subscriptionApi.internalActions.resetApiState());
-    }
-  };
 
   return (
     <InfoExpanderWrapper>
@@ -97,17 +81,7 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
               title={t('email-subscription')}
               extra={
                 <BasicBlockExtraWrapper>
-                  <Button
-                    variant="secondary"
-                    onClick={() => handleSubscription()}
-                  >
-                    {subscription
-                      ?
-                      t('email-subscription-delete')
-                      :
-                      t('email-subscription-add')
-                    }
-                  </Button>
+                  <Subscription uri={data.uri} />
                 </BasicBlockExtraWrapper>
               }
             >
