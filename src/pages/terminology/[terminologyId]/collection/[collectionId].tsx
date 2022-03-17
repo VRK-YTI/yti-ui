@@ -2,18 +2,20 @@ import { SSRConfig, useTranslation } from 'next-i18next';
 import { useRouter } from 'next/dist/client/router';
 import React, { useState } from 'react';
 import Layout from '../../../../layouts/layout';
-import { createCommonGetServerSideProps } from '../../../../common/utils/create-getserversideprops';
+import {
+  createCommonGetServerSideProps,
+  LocalHandlerParams,
+} from '../../../../common/utils/create-getserversideprops';
 import { MediaQueryContextProvider } from '../../../../common/components/media-query/media-query-context';
 import Collection from '../../../../modules/collection';
-import { LocalHandlerParams } from '../../../../common/utils/create-getserversideprops';
 import {
   getCollection,
   getCollections,
-  getRunningOperationPromises as getCollectionRunningOperationPromises
+  getRunningOperationPromises as getCollectionRunningOperationPromises,
 } from '../../../../common/components/collection/collection-slice';
 import {
   getVocabulary,
-  getRunningOperationPromises as getVocabularyRunningOperationPromises
+  getRunningOperationPromises as getVocabularyRunningOperationPromises,
 } from '../../../../common/components/vocabulary/vocabulary-slice';
 import PageTitle from '../../../../common/components/page-title';
 
@@ -44,11 +46,12 @@ export default function CollectionPage(props: {
 }
 export const getServerSideProps = createCommonGetServerSideProps(
   async ({ req, store, params }: LocalHandlerParams) => {
-
-    const terminologyId = Array.isArray(params.terminologyId) ?
-      params.terminologyId[0] : params.terminologyId;
-    const collectionId = Array.isArray(params.collectionId) ?
-      params.collectionId[0] : params.collectionId;
+    const terminologyId = Array.isArray(params.terminologyId)
+      ? params.terminologyId[0]
+      : params.terminologyId;
+    const collectionId = Array.isArray(params.collectionId)
+      ? params.collectionId[0]
+      : params.collectionId;
 
     if (terminologyId === undefined || collectionId === undefined) {
       throw new Error('Invalid parameters for page');
@@ -61,6 +64,6 @@ export const getServerSideProps = createCommonGetServerSideProps(
     await Promise.all(getVocabularyRunningOperationPromises());
     await Promise.all(getCollectionRunningOperationPromises());
 
-    return { props: {}};
+    return { props: {} };
   }
 );

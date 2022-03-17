@@ -1,5 +1,7 @@
 import { Property } from '../../interfaces/termed-data-types.interface';
-import MultilingualBlock, { MultilingualBlockItemMapper } from './multilingual-block';
+import MultilingualBlock, {
+  MultilingualBlockItemMapper,
+} from './multilingual-block';
 
 export interface MultilingualPropertyBlockProps {
   title: React.ReactNode;
@@ -8,7 +10,10 @@ export interface MultilingualPropertyBlockProps {
   extra?: React.ReactNode;
 }
 
-const defaultMapper: MultilingualBlockItemMapper<Property> = ({ lang, value }) => ({
+const defaultMapper: MultilingualBlockItemMapper<Property> = ({
+  lang,
+  value,
+}) => ({
   language: lang,
   content: value,
 });

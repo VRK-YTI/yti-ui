@@ -14,7 +14,9 @@ export default function TerminologyPage(props: {
   const { t } = useTranslation('common');
   const { query } = useRouter();
   const terminologyId = (query?.terminologyId ?? '') as string;
-  const [terminologyTitle, setTerminologyTitle] = useState<string | undefined>();
+  const [terminologyTitle, setTerminologyTitle] = useState<
+    string | undefined
+  >();
 
   return (
     <MediaQueryContextProvider value={{ isSSRMobile: props.isSSRMobile }}>

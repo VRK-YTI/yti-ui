@@ -42,4 +42,4 @@ export interface Concept extends BaseEntity<'Concept'> {
     prefLabelXl?: Concept[];
     related?: BaseEntity<string>[]; // Concept[]?
   };
-};
+}

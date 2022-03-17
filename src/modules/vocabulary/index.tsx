@@ -6,7 +6,11 @@ import {
 } from '../../common/components/vocabulary/vocabulary-slice';
 import SearchResults from '../../common/components/search-results/search-results';
 import Title from '../../common/components/title/title';
-import { ResultAndFilterContainer, ResultAndStatsWrapper, PaginationWrapper } from './vocabulary.styles';
+import {
+  ResultAndFilterContainer,
+  ResultAndStatsWrapper,
+  PaginationWrapper,
+} from './vocabulary.styles';
 import { useBreakpoints } from '../../common/components/media-query/media-query-context';
 import { FilterMobileButton } from '../terminology-search/terminology-search.styles';
 import { useTranslation } from 'next-i18next';
@@ -27,10 +31,13 @@ import { getPropertyValue } from '../../common/components/property-value/get-pro
 
 interface VocabularyProps {
   id: string;
-  setTerminologyTitle: (title?: string) =>  void;
+  setTerminologyTitle: (title?: string) => void;
 }
 
-export default function Vocabulary({ id, setTerminologyTitle }: VocabularyProps) {
+export default function Vocabulary({
+  id,
+  setTerminologyTitle,
+}: VocabularyProps) {
   const { t, i18n } = useTranslation('common');
   const { isSmall } = useBreakpoints();
   const { urlState } = useUrlState();
@@ -40,13 +47,13 @@ export default function Vocabulary({ id, setTerminologyTitle }: VocabularyProps)
     data: collections,
     error: collectionsError,
     isFetching: isFetchingCollections,
-    refetch: refetchCollections
+    refetch: refetchCollections,
   } = useGetCollectionsQuery(id);
   const {
     data: concepts,
     error: conceptsError,
     isFetching: isFetchingConcepts,
-    refetch: refetchConcepts
+    refetch: refetchConcepts,
   } = useGetConceptResultQuery({ id, urlState });
   const { data: info, error: infoError } = useGetVocabularyQuery(id);
   const { data: counts, error: countsError } = useGetVocabularyCountQuery(id);
@@ -61,19 +68,21 @@ export default function Vocabulary({ id, setTerminologyTitle }: VocabularyProps)
   const prefLabel = getPropertyValue({
     property: info?.properties.prefLabel,
     language: i18n.language,
-    fallbackLanguage: 'fi'
+    fallbackLanguage: 'fi',
   });
   useEffect(() => {
     setTerminologyTitle(prefLabel);
   }, [setTerminologyTitle, prefLabel]);
 
   useEffect(() => {
-    dispatch(setAlert([
-      collectionsError as Error,
-      conceptsError as Error,
-      infoError as Error,
-      countsError as Error
-    ]));
+    dispatch(
+      setAlert([
+        collectionsError as Error,
+        conceptsError as Error,
+        infoError as Error,
+        countsError as Error,
+      ])
+    );
   }, [dispatch, collectionsError, conceptsError, infoError, countsError]);
 
   useEffect(() => {
@@ -82,42 +91,46 @@ export default function Vocabulary({ id, setTerminologyTitle }: VocabularyProps)
       setShowLoadingConcepts(isFetchingConcepts);
     }, 1000);
     return () => clearTimeout(timer);
-  }, [isFetchingConcepts, isFetchingCollections, setShowLoadingConcepts, setShowLoadingCollections]);
+  }, [
+    isFetchingConcepts,
+    isFetchingCollections,
+    setShowLoadingConcepts,
+    setShowLoadingCollections,
+  ]);
 
   return (
     <>
       <Breadcrumb>
-        {!infoError &&
+        {!infoError && (
           <BreadcrumbLink url={`/terminology/${id}`} current>
             <PropertyValue
               property={info?.properties.prefLabel}
-              fallbackLanguage='fi'
+              fallbackLanguage="fi"
             />
           </BreadcrumbLink>
-        }
+        )}
       </Breadcrumb>
 
       <main>
         {info && <Title info={info} />}
-        {isSmall &&
+        {isSmall && (
           <FilterMobileButton
-            variant='secondary'
+            variant="secondary"
             fullWidth
             onClick={() => setShowModal(!showModal)}
           >
             {t('vocabulary-filter-filter-list')}
           </FilterMobileButton>
-        }
+        )}
         <ResultAndFilterContainer>
-          {!isSmall
-            ?
+          {!isSmall ? (
             <TerminologyListFilter counts={counts} />
-            :
+          ) : (
             <Modal
-              appElementId='__next'
+              appElementId="__next"
               visible={showModal}
               onEscKeyDown={() => setShowModal(false)}
-              variant='smallScreen'
+              variant="smallScreen"
               style={{ border: 'none' }}
             >
               <ModalContent style={{ padding: '0' }}>
@@ -129,19 +142,17 @@ export default function Vocabulary({ id, setTerminologyTitle }: VocabularyProps)
                 />
               </ModalContent>
             </Modal>
-          }
+          )}
           <ResultAndStatsWrapper id="search-results">
             {urlState.type === 'concept' &&
-              (
-                ((showLoadingConcepts && isFetchingConcepts) || conceptsError)
-                  ?
-                  <LoadIndicator
-                    isFetching={isFetchingConcepts}
-                    error={conceptsError}
-                    refetch={refetchConcepts}
-                  />
-                  :
-                  concepts &&
+              ((showLoadingConcepts && isFetchingConcepts) || conceptsError ? (
+                <LoadIndicator
+                  isFetching={isFetchingConcepts}
+                  error={conceptsError}
+                  refetch={refetchConcepts}
+                />
+              ) : (
+                concepts && (
                   <>
                     <SearchResults data={concepts} />
                     <PaginationWrapper>
@@ -151,36 +162,45 @@ export default function Vocabulary({ id, setTerminologyTitle }: VocabularyProps)
                       />
                     </PaginationWrapper>
                   </>
-              )
-            }
-            {urlState.type === 'collection' &&
-              (
-                ((showLoadingCollections && isFetchingCollections) || collectionsError)
-                  ?
-                  <LoadIndicator
-                    isFetching={isFetchingCollections}
-                    error={collectionsError}
-                    refetch={refetchCollections}
-                  />
-                  :
-                  collections &&
-                  <>
-                    <SearchResults
-                      data={filterData(collections, urlState, i18n.language) ?? collections}
-                      type="collections"
-                    />
-                    <PaginationWrapper>
-                      <Pagination
-                        data={filterData(collections, urlState, i18n.language) ?? collections}
-                        pageString={t('pagination-page')}
-                      />
-                    </PaginationWrapper>
-                  </>
-              )
-            }
+                )
+              ))}
+            {urlState.type === 'collection' && renderCollection()}
           </ResultAndStatsWrapper>
         </ResultAndFilterContainer>
       </main>
     </>
   );
-};
+
+  function renderCollection() {
+    if ((showLoadingCollections && isFetchingCollections) || collectionsError) {
+      return (
+        <LoadIndicator
+          isFetching={isFetchingCollections}
+          error={collectionsError}
+          refetch={refetchCollections}
+        />
+      );
+    }
+
+    if (collections) {
+      return (
+        <>
+          <SearchResults
+            data={
+              filterData(collections, urlState, i18n.language) ?? collections
+            }
+            type="collections"
+          />
+          <PaginationWrapper>
+            <Pagination
+              data={
+                filterData(collections, urlState, i18n.language) ?? collections
+              }
+              pageString={t('pagination-page')}
+            />
+          </PaginationWrapper>
+        </>
+      );
+    }
+  }
+}

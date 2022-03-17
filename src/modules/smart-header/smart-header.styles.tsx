@@ -5,8 +5,8 @@ import { small } from '../../common/components/media-query/styled-helpers';
 export const HeaderWrapper = styled.div<{ breakpoint: Breakpoint }>`
   display: flex;
   align-items: center;
-  height: ${props => small(props.breakpoint, '57px', '72px')};
-  column-gap: ${props => small(props.breakpoint, '0', '20px')};
+  height: ${(props) => small(props.breakpoint, '57px', '72px')};
+  column-gap: ${(props) => small(props.breakpoint, '0', '20px')};
 `;
 
 export const LogoWrapper = styled.div`
@@ -21,7 +21,7 @@ export const LogoWrapper = styled.div`
 `;
 
 export const MobileMenuButtonWrapper = styled.div`
-  padding: ${props => props.theme.suomifi.spacing.s};
+  padding: ${(props) => props.theme.suomifi.spacing.s};
   display: flex;
 
   button {
@@ -36,10 +36,10 @@ export const ModalOverlay = styled.div`
   bottom: 0;
   z-index: 1000;
   background-color: transparent;
-  transition: background-color .3s ease;
+  transition: background-color 0.3s ease;
 
   &.ReactModal__Overlay--after-open {
-    background-color: rgba(0,0,0,.6);
+    background-color: rgba(0, 0, 0, 0.6);
   }
 
   &.ReactModal__Overlay--before-close {

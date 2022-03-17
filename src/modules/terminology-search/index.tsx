@@ -8,7 +8,7 @@ import {
   ResultAndFilterContainer,
   ResultAndStatsWrapper,
   PaginationWrapper,
-  FilterMobileButton
+  FilterMobileButton,
 } from './terminology-search.styles';
 import SearchResults from '../../common/components/search-results/search-results';
 import Pagination from '../../common/components/pagination/pagination';
@@ -19,7 +19,10 @@ import { useEffect, useState } from 'react';
 import { useGetCountsQuery } from '../../common/components/counts/counts-slice';
 import { SearchPageFilter } from './search-page-filter';
 import useUrlState from '../../common/utils/hooks/useUrlState';
-import { selectAlert, setAlert } from '../../common/components/alert/alert.slice';
+import {
+  selectAlert,
+  setAlert,
+} from '../../common/components/alert/alert.slice';
 import { Error } from '../../common/interfaces/error.interface';
 import LoadIndicator from '../../common/components/load-indicator';
 import { useStoreDispatch } from '../../store';
@@ -29,9 +32,12 @@ export default function TerminologySearch() {
   const { t, i18n } = useTranslation();
   const { isSmall } = useBreakpoints();
   const { urlState } = useUrlState();
-  const { data, error, isFetching, refetch } = useGetSearchResultQuery({ urlState });
+  const { data, error, isFetching, refetch } = useGetSearchResultQuery({
+    urlState,
+  });
   const { data: groups, error: groupsError } = useGetGroupsQuery(i18n.language);
-  const { data: organizations, error: organizationsError } = useGetOrganizationsQuery(i18n.language);
+  const { data: organizations, error: organizationsError } =
+    useGetOrganizationsQuery(i18n.language);
   const { data: counts, error: countsError } = useGetCountsQuery(null);
   const dispatch = useStoreDispatch();
   const [showModal, setShowModal] = useState(false);
@@ -39,14 +45,23 @@ export default function TerminologySearch() {
   const previousAlerts = useSelector(selectAlert());
 
   useEffect(() => {
-    dispatch(setAlert([
-      ...previousAlerts,
-      error as Error,
-      groupsError as Error,
-      organizationsError as Error,
-      countsError as Error
-    ]));
-  }, [dispatch, error, groupsError, organizationsError, countsError]);
+    dispatch(
+      setAlert([
+        ...previousAlerts,
+        error as Error,
+        groupsError as Error,
+        organizationsError as Error,
+        countsError as Error,
+      ])
+    );
+  }, [
+    dispatch,
+    error,
+    groupsError,
+    organizationsError,
+    countsError,
+    previousAlerts,
+  ]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -58,29 +73,28 @@ export default function TerminologySearch() {
   return (
     <>
       <Title info={t('terminology-title')} />
-      {(isSmall && groups && organizations) &&
+      {isSmall && groups && organizations && (
         <FilterMobileButton
-          variant='secondary'
+          variant="secondary"
           fullWidth
           onClick={() => setShowModal(!showModal)}
         >
           {t('vocabulary-filter-filter-list')}
         </FilterMobileButton>
-      }
+      )}
       <ResultAndFilterContainer>
-        {!isSmall
-          ?
+        {!isSmall ? (
           <SearchPageFilter
             organizations={organizations}
             groups={groups}
             counts={counts}
           />
-          :
+        ) : (
           <Modal
-            appElementId='__next'
+            appElementId="__next"
             visible={showModal}
             onEscKeyDown={() => setShowModal(false)}
-            variant='smallScreen'
+            variant="smallScreen"
             style={{ border: 'none' }}
           >
             <ModalContent style={{ padding: '0' }}>
@@ -94,31 +108,31 @@ export default function TerminologySearch() {
               />
             </ModalContent>
           </Modal>
-        }
+        )}
         <ResultAndStatsWrapper id="search-results">
-          {(showLoading && isFetching) || error
-            ?
-            <LoadIndicator isFetching={isFetching} error={error} refetch={refetch} />
-            :
-            data &&
-            <>
-              <SearchResults
-                data={data}
-                type="terminology-search"
-                organizations={organizations}
-                domains={groups}
-              />
-              <PaginationWrapper>
-                <Pagination
+          {(showLoading && isFetching) || error ? (
+            <LoadIndicator
+              isFetching={isFetching}
+              error={error}
+              refetch={refetch}
+            />
+          ) : (
+            data && (
+              <>
+                <SearchResults
                   data={data}
-                  pageString={t('pagination-page')}
+                  type="terminology-search"
+                  organizations={organizations}
+                  domains={groups}
                 />
-              </PaginationWrapper>
-            </>
-
-          }
+                <PaginationWrapper>
+                  <Pagination data={data} pageString={t('pagination-page')} />
+                </PaginationWrapper>
+              </>
+            )
+          )}
         </ResultAndStatsWrapper>
       </ResultAndFilterContainer>
     </>
   );
-};
+}

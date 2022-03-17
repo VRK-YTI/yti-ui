@@ -5,7 +5,7 @@ import { SidebarWrapper } from './sidebar.styles';
 export interface SidebarProps {
   children: React.ReactNode;
   isEmpty?: boolean;
-};
+}
 
 export default function Sidebar({ children, isEmpty }: SidebarProps) {
   const { breakpoint } = useBreakpoints();

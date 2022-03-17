@@ -19,7 +19,7 @@ export default function InformationDomainFilter({
   title,
   isModal,
   domains,
-  counts
+  counts,
 }: InformationDomainFilterProps) {
   const { t } = useTranslation('common');
   const { urlState, patchUrlState } = useUrlState();
@@ -33,13 +33,15 @@ export default function InformationDomainFilter({
           <>
             {name.value} ({counts[id] ?? 0} {t('vocabulary-filter-items')})
           </>
-        )
+        ),
       }))}
       selectedItems={urlState.domain}
-      onChange={domain => patchUrlState({
-        domain,
-        page: initialUrlState.page,
-      })}
+      onChange={(domain) =>
+        patchUrlState({
+          domain,
+          page: initialUrlState.page,
+        })
+      }
       checkboxVariant={isModal ? 'large' : 'small'}
     />
   );

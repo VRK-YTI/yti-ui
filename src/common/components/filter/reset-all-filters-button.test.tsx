@@ -7,16 +7,15 @@ jest.mock('next/router');
 const mockedUseRouter = useRouter as jest.MockedFunction<typeof useRouter>;
 
 describe('reset-all-filters-button', () => {
-  test('should render component', () => {
+  it('should render component', () => {
     mockedUseRouter.mockReturnValue({
-      query: { q: 'lorem ipsum' }
-    } as any);
+      query: { q: 'lorem ipsum' },
+    } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
 
-    render(
-      <ResetAllFiltersButton />,
-      { wrapper: themeProvider }
-    );
+    render(<ResetAllFiltersButton />, { wrapper: themeProvider });
 
-    expect(screen.getByText('tr-vocabulary-filter-remove-all')).toBeInTheDocument;
+    expect(
+      screen.getByText('tr-vocabulary-filter-remove-all')
+    ).toBeInTheDocument();
   });
 });

@@ -7,7 +7,7 @@ import {
   FilterContent,
   FilterSection,
   Header,
-  HeaderButton
+  HeaderButton,
 } from './filter.styles';
 import ResetAllFiltersButton from './reset-all-filters-button';
 
@@ -22,7 +22,7 @@ export function Filter({
   isModal = false,
   onModalClose,
   resultCount = 0,
-  children
+  children,
 }: FilterProps) {
   const { t } = useTranslation('common');
 
@@ -49,22 +49,15 @@ export function Filter({
     if (!isModal) {
       return (
         <Header>
-          <h2 id="filter-title">
-            {t('vocabulary-filter-filter-list')}
-          </h2>
+          <h2 id="filter-title">{t('vocabulary-filter-filter-list')}</h2>
         </Header>
       );
     }
 
     return (
       <Header>
-        <h2 id="filter-title">
-          {t('vocabulary-filter-filter-list')}
-        </h2>
-        <HeaderButton
-          iconRight='close'
-          onClick={onModalClose}
-        >
+        <h2 id="filter-title">{t('vocabulary-filter-filter-list')}</h2>
+        <HeaderButton iconRight="close" onClick={onModalClose}>
           {t('close')}
         </HeaderButton>
       </Header>

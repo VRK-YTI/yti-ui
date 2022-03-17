@@ -11,7 +11,9 @@ interface MobileNavigationProps {
   handleLoginModalClick?: () => void;
 }
 
-export default function MobileNavigation({handleLoginModalClick}: MobileNavigationProps) {
+export default function MobileNavigation({
+  handleLoginModalClick,
+}: MobileNavigationProps) {
   const { t } = useTranslation('common');
   const router = useRouter();
 
