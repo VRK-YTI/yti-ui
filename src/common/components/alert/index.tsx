@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useStoreDispatch } from '../../../store';
 import { Error } from '../../interfaces/error.interface';
@@ -15,6 +15,7 @@ interface AlertToastProps {
 }
 
 export function Alerts() {
+  const { isSmall } = useBreakpoints();
   const alerts = useSelector(selectAlert());
 
   if (!alerts) {
@@ -22,7 +23,7 @@ export function Alerts() {
   }
 
   return (
-    <AlertsWrapper>
+    <AlertsWrapper scrollY={window.scrollY} isSmall={isSmall}>
       {alerts.map((alert, idx) => {
         if (alert.status === 0) {
           return <NotificationToast key={`alert-${idx}`} alert={alert} />;
