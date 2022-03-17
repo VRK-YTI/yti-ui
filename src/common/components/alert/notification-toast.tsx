@@ -7,11 +7,11 @@ import { selectAlert, setAlert } from './alert.slice';
 import { Toast, ToastIcon } from './alert-toast.styles';
 import { Error } from '../../interfaces/error.interface';
 
-interface LogoutToastProps {
+interface NotificationToastProps {
   alert: Error;
 }
 
-export default function LogoutToast({ alert }: LogoutToastProps) {
+export default function NotificationToast({ alert }: NotificationToastProps) {
   const { isSmall } = useBreakpoints();
   const { t } = useTranslation('alert');
   const dispatch = useStoreDispatch();

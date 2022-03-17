@@ -25,11 +25,11 @@ function App({ Component, pageProps }: AppProps) {
     if (!login.anonymous) {
       window.localStorage.setItem('user-signed', 'true');
     } else if (login.anonymous && window.localStorage.getItem('user-signed')) {
+      window.localStorage.removeItem('user-signed');
       dispatch(setAlert([{
         status: 0,
         data: 'logged-out'
       }]));
-      window.localStorage.removeItem('user-signed');
     }
   });
 

@@ -6,7 +6,7 @@ import { Error } from '../../interfaces/error.interface';
 import { useBreakpoints } from '../media-query/media-query-context';
 import { AlertsWrapper, AlertToast } from './alert-toast.styles';
 import { selectAlert, setAlert } from './alert.slice';
-import LogoutToast from './logoutToast';
+import NotificationToast from './notification-toast';
 
 interface AlertToastProps {
   alert: Error;
@@ -25,7 +25,7 @@ export function Alerts() {
     <AlertsWrapper>
       {alerts.map((alert, idx) => {
         if (alert.status === 0) {
-          return <LogoutToast key={`alert-${idx}`} alert={alert} />;
+          return <NotificationToast key={`alert-${idx}`} alert={alert} />;
         } else {
           return <Alert key={`alert-${idx}`} alert={alert} alerts={alerts} type={'error'} />;
         }
