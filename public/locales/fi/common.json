@@ -113,5 +113,6 @@
   "email-subscription": "Ilmoitukset",
   "email-subscription-description": "Kun tilaat ilmoitukset, saat tietoja aineiston muutoksista sähköpostilla.",
   "email-subscription-add": "Tilaa ilmoitukset",
-  "email-subscription-delete": "Poista ilmoitukset"
+  "email-subscription-delete": "Poista ilmoitukset",
+  "email-subscription-subscribed": "Ilmoitukset tilattu onnistuneesti"
 }

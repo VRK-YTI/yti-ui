@@ -1,11 +1,12 @@
 import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useStoreDispatch } from '../../../store';
 import { Error } from '../../interfaces/error.interface';
 import { useBreakpoints } from '../media-query/media-query-context';
 import { AlertsWrapper, AlertToast } from './alert-toast.styles';
 import { selectAlert, setAlert } from './alert.slice';
+import NotificationToast from './notification-toast';
 
 interface AlertToastProps {
   alert: Error;
@@ -23,7 +24,11 @@ export function Alerts() {
   return (
     <AlertsWrapper>
       {alerts.map((alert, idx) => {
-        return <Alert key={`alert-${idx}`} alert={alert} alerts={alerts} type='error' />;
+        if (alert.status === 0) {
+          return <NotificationToast key={`alert-${idx}`} alert={alert} />;
+        } else {
+          return <Alert key={`alert-${idx}`} alert={alert} alerts={alerts} type={'error'} />;
+        }
       })}
     </AlertsWrapper>
   );

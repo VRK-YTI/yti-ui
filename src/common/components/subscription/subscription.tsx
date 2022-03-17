@@ -36,6 +36,14 @@ export default function Subscription({ uri }: SubscriptionProps) {
         uri: url
       }).then(() => {
         dispatch(subscriptionApi.internalActions.resetApiState());
+
+        if (!subscribed) {
+          dispatch(setAlert([{
+            status: 0,
+            data: t('email-subscription-subscribed')
+          }]));
+        }
+
       }).catch(err => {
         dispatch(setAlert([err]));
       });
