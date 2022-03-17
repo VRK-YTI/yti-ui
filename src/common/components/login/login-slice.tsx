@@ -45,15 +45,12 @@ export const loginSlice = createSlice({
   },
 });
 
-export const setLogin =
-  (userData: User): AppThunk =>
-  (dispatch) => {
-    dispatch(loginSlice.actions.setLogin(userData));
-  };
+export function setLogin(userData: User): AppThunk {
+  return (dispatch) => dispatch(loginSlice.actions.setLogin(userData));
+}
 
-export const selectLogin =
-  () =>
-  (state: AppState): User =>
-    state.login;
+export function selectLogin() {
+  return (state: AppState): User => state.login;
+}
 
 export default loginSlice.reducer;

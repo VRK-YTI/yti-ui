@@ -164,39 +164,43 @@ export default function Vocabulary({
                   </>
                 )
               ))}
-            {urlState.type === 'collection' &&
-              ((showLoadingCollections && isFetchingCollections) ||
-              collectionsError ? (
-                <LoadIndicator
-                  isFetching={isFetchingCollections}
-                  error={collectionsError}
-                  refetch={refetchCollections}
-                />
-              ) : (
-                collections && (
-                  <>
-                    <SearchResults
-                      data={
-                        filterData(collections, urlState, i18n.language) ??
-                        collections
-                      }
-                      type="collections"
-                    />
-                    <PaginationWrapper>
-                      <Pagination
-                        data={
-                          filterData(collections, urlState, i18n.language) ??
-                          collections
-                        }
-                        pageString={t('pagination-page')}
-                      />
-                    </PaginationWrapper>
-                  </>
-                )
-              ))}
+            {urlState.type === 'collection' && renderCollection()}
           </ResultAndStatsWrapper>
         </ResultAndFilterContainer>
       </main>
     </>
   );
+
+  function renderCollection() {
+    if ((showLoadingCollections && isFetchingCollections) || collectionsError) {
+      return (
+        <LoadIndicator
+          isFetching={isFetchingCollections}
+          error={collectionsError}
+          refetch={refetchCollections}
+        />
+      );
+    }
+
+    if (collections) {
+      return (
+        <>
+          <SearchResults
+            data={
+              filterData(collections, urlState, i18n.language) ?? collections
+            }
+            type="collections"
+          />
+          <PaginationWrapper>
+            <Pagination
+              data={
+                filterData(collections, urlState, i18n.language) ?? collections
+              }
+              pageString={t('pagination-page')}
+            />
+          </PaginationWrapper>
+        </>
+      );
+    }
+  }
 }
