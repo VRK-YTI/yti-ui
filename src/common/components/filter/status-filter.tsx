@@ -23,8 +23,8 @@ export default function StatusFilter({ title, isModal, counts }: StatusFilterPro
       items={[
         { value: 'valid', label: t('filter-status-valid', { count: counts.valid ?? 0 }) },
         { value: 'draft', label: t('filter-status-draft', { count: counts.draft ?? 0 }) },
-        { value: 'retired', label: t('filter-status-retired', { count: counts.retired ?? 0 }) },
         { value: 'superseded', label: t('filter-status-superseded', { count: counts.superseded ?? 0 }) },
+        { value: 'retired', label: t('filter-status-retired', { count: counts.retired ?? 0 }) },
       ]}
       selectedItems={urlState.status}
       onChange={status => patchUrlState({
