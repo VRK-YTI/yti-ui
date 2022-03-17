@@ -15,6 +15,7 @@ export default function NewTerminology() {
   const [showModal, setShowModal] = useState(false);
   const [isValid, setIsValid] = useState(false);
   const [inputType, setInputType] = useState('');
+  const [startFileUpload, setStartFileUpload] = useState(false);
 
   if (!user.superuser) {
     return null;
@@ -24,6 +25,7 @@ export default function NewTerminology() {
     setIsValid(false);
     setInputType('');
     setShowModal(false);
+    setStartFileUpload(false);
   };
 
   return (
@@ -44,34 +46,21 @@ export default function NewTerminology() {
       >
         <ModalContent>
           <ModalTitle>
-            {t('add-new-terminology')}
+            {!startFileUpload ? t('add-new-terminology') : 'Tiedostoa ladataan'}
           </ModalTitle>
 
-          <Paragraph marginBottomSpacing='m'>
-            <Text>Tiedot ovat pakollisia, jos niitä ei ole merkitty valinnaisiksi.</Text>
-          </Paragraph>
-
-          <RadioButtonGroup
-            labelText='Miten lisäät tietoja?'
-            name='input-type'
-            onChange={(e) => setInputType(e)}
-          >
-            <RadioButton value='self'>
-              Täytän tiedot itse
-            </RadioButton>
-            <RadioButton value='file'>
-              Tuon tiedostolla
-            </RadioButton>
-          </RadioButtonGroup>
-
-          {inputType === 'self' && <InfoManual setIsValid={setIsValid} />}
-          {inputType === 'file' && <><InfoFile /><FileUpload /></>}
-
+          {!startFileUpload
+            ?
+            renderInfoInput()
+            :
+            <FileUpload />
+          }
         </ModalContent>
 
         <ModalFooter>
           <Button
             disabled={!isValid}
+            onClick={() => setStartFileUpload(true)}
           >
             Lisää sanasto
           </Button>
@@ -85,4 +74,30 @@ export default function NewTerminology() {
       </Modal>
     </>
   );
+
+  function renderInfoInput() {
+    return (
+      <>
+        <Paragraph marginBottomSpacing='m'>
+          <Text>Tiedot ovat pakollisia, jos niitä ei ole merkitty valinnaisiksi.</Text>
+        </Paragraph>
+
+        <RadioButtonGroup
+          labelText='Miten lisäät tietoja?'
+          name='input-type'
+          onChange={(e) => setInputType(e)}
+        >
+          <RadioButton value='self'>
+            Täytän tiedot itse
+          </RadioButton>
+          <RadioButton value='file'>
+            Tuon tiedostolla
+          </RadioButton>
+        </RadioButtonGroup>
+
+        {inputType === 'self' && <InfoManual setIsValid={setIsValid} />}
+        {inputType === 'file' && <InfoFile setIsValid={setIsValid} />}
+      </>
+    );
+  }
 }

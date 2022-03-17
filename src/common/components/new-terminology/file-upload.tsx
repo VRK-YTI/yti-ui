@@ -7,8 +7,8 @@ export default function FileUpload() {
       <DownloadIndicator startFrame={0}/>
       <DownloadIndicator startFrame={200}/>
       <DownloadIndicator startFrame={400}/>
-      <ErrorIndicator icon='error' />
-      <SuccessIndicator icon='check' />
+      {/* <ErrorIndicator icon='error' />
+      <SuccessIndicator icon='check' /> */}
     </DownloadIndicatorWrapper>
   );
 }

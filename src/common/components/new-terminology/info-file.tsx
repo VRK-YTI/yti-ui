@@ -1,10 +1,20 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button, Paragraph, Text } from 'suomifi-ui-components';
 import { FileBlock, FileInfo, FileInfoBlock, FileInfoStaticIcon, FileRemoveButton, FileWrapper } from './new-terminology.styles';
 
-export default function InfoFile() {
+interface infoFileProps {
+  setIsValid: (valid: boolean) => void;
+}
+
+export default function InfoFile({ setIsValid }: infoFileProps) {
   const input = useRef(null);
   const [files, setFiles] = useState<DataTransferItemList>([]);
+
+  useEffect(() => {
+    if (files.length > 0) {
+      setIsValid(true);
+    }
+  }, [files]);
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
