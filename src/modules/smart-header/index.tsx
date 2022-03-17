@@ -20,19 +20,27 @@ import DesktopLocaleChooser from '../../common/components/locale-chooser/desktop
 import UserInfo from '../../common/components/authentication-panel/user-info';
 import HeaderSearch from '../../common/components/header-search/header-search';
 import { useBreakpoints } from '../../common/components/media-query/media-query-context';
+import LoginModalView from '../../common/components/login-modal/login-modal';
 
 Modal.setAppElement('#__next');
 
 export default function SmartHeader() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isLoginExpanded, setIsLoginExpanded] = useState(false);
   const { breakpoint, isSmall } = useBreakpoints();
+
+  const handleLoginModalClick = () => {
+    setIsLoginExpanded(true);
+    setIsExpanded(false);
+  };
 
   return (
     <>
       {renderHeader()}
       {renderDesktopNavigation()}
       {renderMobileNavigationModal()}
+      {renderLoginModal()}
     </>
   );
 
@@ -60,7 +68,7 @@ export default function SmartHeader() {
     return (
       <Block variant="nav">
         <NavigationContainer breakpoint="small">
-          <MobileNavigation />
+          <MobileNavigation handleLoginModalClick={handleLoginModalClick} />
         </NavigationContainer>
       </Block>
     );
@@ -141,5 +149,13 @@ export default function SmartHeader() {
     if (isSmall && isExpanded) {
       return <UserInfo breakpoint="small" />;
     }
+  }
+
+  function renderLoginModal() {
+    return isLoginExpanded ? (
+      <LoginModalView setVisible={setIsLoginExpanded} />
+    ) : (
+      <></>
+    );
   }
 }
