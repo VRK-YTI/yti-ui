@@ -58,7 +58,7 @@ export function Alert({ alert, alerts, type }: AlertToastProps) {
       smallScreen={isSmall}
       isSmall={isSmall}
     >
-      {alerts.length > 1 && `(${alerts.length})`} {t('error-occured', { id: alert.status ?? ''})}
+      {alerts.length > 1 && `(${alerts.length})`} {t('error-occured', { id: alert.status ?? '' })}
     </AlertToast>
   );
 }
