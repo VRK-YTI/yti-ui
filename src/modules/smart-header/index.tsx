@@ -13,12 +13,12 @@ import UserInfo from '../../common/components/authentication-panel/user-info';
 import HeaderSearch from '../../common/components/header-search/header-search';
 import { useBreakpoints } from '../../common/components/media-query/media-query-context';
 
-Modal.setAppElement('#__next');
-
 export default function SmartHeader() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { breakpoint, isSmall } = useBreakpoints();
+
+  Modal.setAppElement('#__next');
 
   return (
     <>

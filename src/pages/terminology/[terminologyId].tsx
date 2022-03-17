@@ -35,7 +35,7 @@ export default function TerminologyPage(props: {
 }
 
 export const getServerSideProps = createCommonGetServerSideProps(
-  async ({ req, store, params }: LocalHandlerParams) => {
+  async ({ req, store, query, params }: LocalHandlerParams) => {
     const id = Array.isArray(params.terminologyId) ?
       params.terminologyId[0] : params.terminologyId;
 
@@ -43,25 +43,20 @@ export const getServerSideProps = createCommonGetServerSideProps(
       throw new Error('Invalid parameter for page');
     }
 
-    const urlParams = req.url && req.url.split('?')?.[1]?.split('&');
     let urlState = Object.assign({}, initialUrlState);
 
-    if (urlParams) {
-      urlState.status = [];
+    urlState.status = [];
 
-      urlParams.map(param => {
-        const paramSplit = param.split('=');
+    if (query && query.q !== undefined) {
+      urlState.q = Array.isArray(query.q) ? query.q[0] : query.q;
+    }
 
-        if (paramSplit[0] === 'q') {
-          urlState.q = paramSplit[1];
+    if (query && query.status !== undefined) {
+      urlState.status = Array.isArray(query.status) ? query.status : [query.status];
+    }
 
-        } else if (paramSplit[0] === 'status') {
-          urlState.status = [...urlState.status, paramSplit[1]];
-
-        } else if (paramSplit[0] === 'type') {
-          urlState.type = paramSplit[1];
-        }
-      });
+    if (query && query.type !== undefined) {
+      urlState.type = Array.isArray(query.type) ? query.type[0] : query.type;
     }
 
     await store.dispatch(getVocabulary.initiate(id));
