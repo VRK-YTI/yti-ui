@@ -17,9 +17,7 @@ export interface User {
   hasToken: boolean;
   tokenRole: string;
   containerUri: string;
-};
-
-export default User;
+}
 
 export const anonymousUser: User = {
   anonymous: true,

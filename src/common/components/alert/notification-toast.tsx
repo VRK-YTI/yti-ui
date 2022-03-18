@@ -19,17 +19,15 @@ export default function NotificationToast({ alert }: NotificationToastProps) {
 
   useEffect(() => {
     const wait = setTimeout(() => {
-      dispatch(setAlert(
-        previousAlerts.filter(a => a.status !== 0)
-      ));
+      dispatch(setAlert(previousAlerts.filter((a) => a.status !== 0)));
     }, 5000);
 
     return () => clearTimeout(wait);
-  }, [dispatch]);
+  }, [dispatch, previousAlerts]);
 
   return (
-    <Toast role='alert' isSmall={isSmall}>
-      <ToastIcon icon='checkCircle' />
+    <Toast role="alert" isSmall={isSmall}>
+      <ToastIcon icon="checkCircle" />
       {t(alert.data)}
     </Toast>
   );

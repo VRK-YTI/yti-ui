@@ -1,5 +1,10 @@
 import { useTranslation } from 'react-i18next';
-import { Button, ExpanderContent, ExpanderTitleButton, VisuallyHidden } from 'suomifi-ui-components';
+import {
+  Button,
+  ExpanderContent,
+  ExpanderTitleButton,
+  VisuallyHidden,
+} from 'suomifi-ui-components';
 import { InfoExpanderWrapper } from './info-expander.styles';
 import { VocabularyInfoDTO } from '../../interfaces/vocabulary.interface';
 import Separator from '../separator';
@@ -20,7 +25,7 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
 
   return (
     <InfoExpanderWrapper>
-      <ExpanderTitleButton asHeading='h2'>
+      <ExpanderTitleButton asHeading="h2">
         {t('vocabulary-info-terminology')}
       </ExpanderTitleButton>
       <ExpanderContent>
@@ -41,7 +46,9 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
           title={t('vocabulary-info-languages')}
           property={data.properties.language}
           delimiter=", "
-          valueAccessor={({ value }) => `${t(`vocabulary-info-${value}`)} ${value.toUpperCase()}`}
+          valueAccessor={({ value }) =>
+            `${t(`vocabulary-info-${value}`)} ${value.toUpperCase()}`
+          }
         />
         <BasicBlock title={t('vocabulary-info-vocabulary-type')}>
           {t('vocabulary-info-terminological-dictionary')}
@@ -57,7 +64,10 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
                 icon="download"
                 variant="secondary"
                 onClick={() => {
-                  window.open(`/terminology-api/api/v1/export/${data.type.graph.id}?format=xlsx`, '_blank');
+                  window.open(
+                    `/terminology-api/api/v1/export/${data.type.graph.id}?format=xlsx`,
+                    '_blank'
+                  );
                 }}
               >
                 {t('vocabulary-info-vocabulary-export')} (.xlsx)
@@ -69,7 +79,6 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
         </BasicBlock>
 
         <Separator isLarge />
-
 
         <VisuallyHidden as="h3">
           {t('additional-technical-information', { ns: 'common' })}
@@ -86,9 +95,7 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
         <BasicBlock title={t('vocabulary-info-modified-at')}>
           <FormattedDate date={data.lastModifiedDate} />
         </BasicBlock>
-        <BasicBlock title="URI">
-          {data.uri}
-        </BasicBlock>
+        <BasicBlock title="URI">{data.uri}</BasicBlock>
       </ExpanderContent>
     </InfoExpanderWrapper>
   );

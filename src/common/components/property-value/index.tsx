@@ -38,7 +38,7 @@ export default function PropertyValue({
   valueAccessor,
   fallbackLanguage,
   delimiter = false,
-  fallback
+  fallback,
 }: PropertyValueProps) {
   const { i18n } = useTranslation('common');
 
@@ -47,14 +47,12 @@ export default function PropertyValue({
     valueAccessor,
     language: i18n.language,
     fallbackLanguage,
-    delimiter
+    delimiter,
   });
 
   if (!value) {
     return <>{fallback}</>;
   }
 
-  return (
-    <>{value}</>
-  );
+  return <>{value}</>;
 }

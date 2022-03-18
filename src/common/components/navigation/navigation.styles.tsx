@@ -8,7 +8,7 @@ export const NavigationWrapper = styled.ul`
   margin-top: 0px;
   margin-bottom: 0px;
   padding-inline-start: 0px;
-  gap: ${props => props.theme.suomifi.spacing.xl};
+  gap: ${(props) => props.theme.suomifi.spacing.xl};
 `;
 
 export const NavigationItem = styled.li<NavigationProps>`
@@ -18,7 +18,11 @@ export const NavigationItem = styled.li<NavigationProps>`
     display: block;
     color: ${(props) => props.theme.suomifi.colors.blackBase};
     padding: 12px 5px 9px 5px;
-    border-bottom: 3px solid ${props => props.active ? props.theme.suomifi.colors.highlightBase : 'transparent'};
+    border-bottom: 3px solid
+      ${(props) =>
+        props.active
+          ? props.theme.suomifi.colors.highlightBase
+          : 'transparent'};
 
     &:visited {
       color: ${(props) => props.theme.suomifi.colors.blackBase};
@@ -26,7 +30,8 @@ export const NavigationItem = styled.li<NavigationProps>`
     &:hover {
       text-decoration: none;
       color: ${(props) => props.theme.suomifi.colors.blackBase};
-      border-bottom: 3px solid ${(props) => props.theme.suomifi.colors.highlightBase}
+      border-bottom: 3px solid
+        ${(props) => props.theme.suomifi.colors.highlightBase};
     }
   }
 
@@ -56,7 +61,8 @@ export const NavigationDropdownList = styled.ul`
 
 export const NavigationDropdownItem = styled.li<NavigationProps>`
   padding: 0px;
-  a, a:visited {
+  a,
+  a:visited {
     display: block;
     padding: 8px 11px;
     text-decoration: none;
@@ -68,7 +74,8 @@ export const NavigationDropdownItem = styled.li<NavigationProps>`
 
   a:hover {
     text-decoration: none;
-    border-left: 4px solid ${props => props.theme.suomifi.colors.highlightBase};
+    border-left: 4px solid
+      ${(props) => props.theme.suomifi.colors.highlightBase};
   }
 `;
 
@@ -76,27 +83,32 @@ export const MobileMenuSection = styled.ul`
   list-style: none;
   margin: 0;
   padding: 0;
-  background-color: ${props => props.theme.suomifi.colors.whiteBase};
+  background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
 `;
 
-export const MobileMenuItem = styled.li<{ active?: boolean, inset?: boolean }>`
+export const MobileMenuItem = styled.li<{ active?: boolean; inset?: boolean }>`
   height: 44px;
 
   * {
     display: block;
     padding-top: 9px;
     padding-bottom: 8px;
-    font-weight: ${props => props.active ? 600 : 400};
-    padding-left: ${props => props.inset ? '25px' : '10px'};
-    border-left: 5px solid ${props => props.active ? props.theme.suomifi.colors.highlightBase : 'transparent'};
+    font-weight: ${(props) => (props.active ? 600 : 400)};
+    padding-left: ${(props) => (props.inset ? '25px' : '10px')};
+    border-left: 5px solid
+      ${(props) =>
+        props.active
+          ? props.theme.suomifi.colors.highlightBase
+          : 'transparent'};
   }
 
   &:hover a {
-    border-left: 5px solid ${props => props.theme.suomifi.colors.highlightBase};
+    border-left: 5px solid
+      ${(props) => props.theme.suomifi.colors.highlightBase};
   }
 
   &:not(:last-child) {
-    border-bottom: 1px solid ${props => props.theme.suomifi.colors.depthSecondary};
+    border-bottom: 1px solid
+      ${(props) => props.theme.suomifi.colors.depthSecondary};
   }
 `;
-

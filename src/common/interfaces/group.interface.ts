@@ -7,4 +7,4 @@ export interface Group extends BaseEntity<'Group'> {
     order?: Property[];
     prefLabel?: Property[];
   };
-};
+}

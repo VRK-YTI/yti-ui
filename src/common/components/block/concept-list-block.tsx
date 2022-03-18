@@ -30,8 +30,11 @@ export default function ConceptListBlock({
               href={`/terminology/${concept.identifier.type.graph.id}/concept/${concept.id}`}
             >
               <PropertyValue
-                property={getProperty('prefLabel', concept.references.prefLabelXl)}
-                fallbackLanguage='fi'
+                property={getProperty(
+                  'prefLabel',
+                  concept.references.prefLabelXl
+                )}
+                fallbackLanguage="fi"
               />
             </Link>
           </li>

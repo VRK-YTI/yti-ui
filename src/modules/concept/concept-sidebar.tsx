@@ -20,30 +20,31 @@ export default function ConceptSidebar({ concept }: ConceptSidebarProps) {
 
   const terminologyId = concept?.type.graph.id;
 
-  const shouldRenderDivider1 = [
-    concept?.references.broader,
-    concept?.references.narrower,
-    concept?.references.related,
-    concept?.references.isPartOf,
-    concept?.references.hasPart,
-    concept?.references.relatedMatch,
-    concept?.references.exactMatch,
-    concept?.references.closeMatch,
-  ].flat().filter(Boolean).length > 0;
+  const shouldRenderDivider1 =
+    [
+      concept?.references.broader,
+      concept?.references.narrower,
+      concept?.references.related,
+      concept?.references.isPartOf,
+      concept?.references.hasPart,
+      concept?.references.relatedMatch,
+      concept?.references.exactMatch,
+      concept?.references.closeMatch,
+    ]
+      .flat()
+      .filter(Boolean).length > 0;
 
   const shouldRenderDivider2 = false;
 
-  const shouldRenderDivider3 = [
-    concept?.referrers.member
-  ].flat().filter(Boolean).length > 0;
+  const shouldRenderDivider3 =
+    [concept?.referrers.member].flat().filter(Boolean).length > 0;
 
-  const isEmpty = !shouldRenderDivider1 && !shouldRenderDivider2 && !shouldRenderDivider3;
+  const isEmpty =
+    !shouldRenderDivider1 && !shouldRenderDivider2 && !shouldRenderDivider3;
 
   return (
     <Sidebar isEmpty={isEmpty}>
-      {!isEmpty && (
-        <SidebarHeader>{t('sidebar-header')}</SidebarHeader>
-      )}
+      {!isEmpty && <SidebarHeader>{t('sidebar-header')}</SidebarHeader>}
 
       {shouldRenderDivider1 && <Separator />}
 
@@ -86,7 +87,9 @@ export default function ConceptSidebar({ concept }: ConceptSidebarProps) {
         heading={t('sidebar-section-heading-related-match')}
         items={concept?.references.relatedMatch}
         href={({ properties }) => {
-          const terminologyId = getPropertyValue({ property: properties.targetGraph });
+          const terminologyId = getPropertyValue({
+            property: properties.targetGraph,
+          });
           const conceptId = getPropertyValue({ property: properties.targetId });
           return `/terminology/${terminologyId}/concept/${conceptId}`;
         }}
@@ -97,7 +100,9 @@ export default function ConceptSidebar({ concept }: ConceptSidebarProps) {
         heading={t('sidebar-section-heading-exact-match')}
         items={concept?.references.exactMatch}
         href={({ properties }) => {
-          const terminologyId = getPropertyValue({ property: properties.targetGraph });
+          const terminologyId = getPropertyValue({
+            property: properties.targetGraph,
+          });
           const conceptId = getPropertyValue({ property: properties.targetId });
           return `/terminology/${terminologyId}/concept/${conceptId}`;
         }}
@@ -108,7 +113,9 @@ export default function ConceptSidebar({ concept }: ConceptSidebarProps) {
         heading={t('sidebar-section-heading-close-match')}
         items={concept?.references.closeMatch}
         href={({ properties }) => {
-          const terminologyId = getPropertyValue({ property: properties.targetGraph });
+          const terminologyId = getPropertyValue({
+            property: properties.targetGraph,
+          });
           const conceptId = getPropertyValue({ property: properties.targetId });
           return `/terminology/${terminologyId}/concept/${conceptId}`;
         }}
@@ -134,4 +141,4 @@ export default function ConceptSidebar({ concept }: ConceptSidebarProps) {
       />
     </Sidebar>
   );
-};
+}

@@ -1,6 +1,9 @@
 import { useTranslation } from 'next-i18next';
 import { Counts } from '../../common/interfaces/counts.interface';
-import { GroupSearchResult, OrganizationSearchResult } from '../../common/interfaces/terminology.interface';
+import {
+  GroupSearchResult,
+  OrganizationSearchResult,
+} from '../../common/interfaces/terminology.interface';
 import Separator from '../../common/components/separator';
 import { Filter } from '../../common/components/filter/filter';
 import InformationDomainFilter from '../../common/components/filter/information-domain-filter';
@@ -23,7 +26,7 @@ export function SearchPageFilter({
   resultCount,
   organizations,
   groups,
-  counts
+  counts,
 }: SearchPageFilterProps) {
   const { t } = useTranslation('common');
 
@@ -58,10 +61,12 @@ export function SearchPageFilter({
       <Separator />
       <InformationDomainFilter
         title={t('terminology-search-filter-show-by-information-domain')}
-        domains={groups?.map(group => ({
-          id: group.id,
-          name: group.properties.prefLabel
-        })) ?? []}
+        domains={
+          groups?.map((group) => ({
+            id: group.id,
+            name: group.properties.prefLabel,
+          })) ?? []
+        }
         isModal={isModal}
         counts={counts?.counts.groups ?? {}}
       />

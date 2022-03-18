@@ -26,26 +26,29 @@ function App({ Component, pageProps }: AppProps) {
       window.localStorage.setItem('user-signed', 'true');
     } else if (login.anonymous && window.localStorage.getItem('user-signed')) {
       window.localStorage.removeItem('user-signed');
-      dispatch(setAlert([{
-        status: 0,
-        data: 'logged-out'
-      }]));
+      dispatch(
+        setAlert([
+          {
+            status: 0,
+            data: 'logged-out',
+          },
+        ])
+      );
     }
   });
 
   return (
     <SWRConfig
       value={{
-        fetcher: async (url: string, init?: RequestInit) => axios
-          .get(url)
-          .then(res => res.data),
+        fetcher: async (url: string, init?: RequestInit) =>
+          axios.get(url).then((res) => res.data),
         onError: (err) => {
           console.error(err);
         },
       }}
     >
       <VisuallyHidden>
-        <div role='region' aria-live='assertive'>
+        <div role="region" aria-live="assertive">
           {t('navigated-to')} {title}
         </div>
       </VisuallyHidden>

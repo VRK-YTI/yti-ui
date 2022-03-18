@@ -1,18 +1,29 @@
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Button, Modal, ModalContent, ModalFooter, ModalTitle } from 'suomifi-ui-components';
+import {
+  Button,
+  Modal,
+  ModalContent,
+  ModalFooter,
+  ModalTitle,
+} from 'suomifi-ui-components';
 import { Term } from '../../interfaces/term.interface';
 import { Property } from '../../interfaces/termed-data-types.interface';
 import { selectLogin } from '../login/login-slice';
 import PropertyValue from '../property-value';
 import { getPropertyValue } from '../property-value/get-property-value';
 import TermExpander from './term-expander';
-import { TermHeading, TermModalButton, TermModalChip, TermText } from './term-modal.style';
+import {
+  TermHeading,
+  TermModalButton,
+  TermModalChip,
+  TermText,
+} from './term-modal.style';
 import { useBreakpoints } from '../media-query/media-query-context';
 
 interface TermModalProps {
-  data?: { term: Term, type: string };
+  data?: { term: Term; type: string };
 }
 
 export default function TermModal({ data }: TermModalProps) {
@@ -27,72 +38,116 @@ export default function TermModal({ data }: TermModalProps) {
 
   return (
     <>
-      <TermModalButton variant='secondaryNoBorder' onClick={() => setVisible(true)}>
+      <TermModalButton
+        variant="secondaryNoBorder"
+        onClick={() => setVisible(true)}
+      >
         {/*
           Note: Preferencing upper solution instead of <PropertyValue />
           because term should only have one prefLabel. If prefLabel is
           in English and the language used is Finnish the button won't
           be rendered. Same solution in <ModalTitle /> below.
         */}
-        {
-          data.term.properties.prefLabel?.[0].value
-          ??
+        {data.term.properties.prefLabel?.[0].value ?? (
           <PropertyValue
             property={data.term.properties.prefLabel}
-            fallbackLanguage='fi'
+            fallbackLanguage="fi"
           />
-        }
+        )}
       </TermModalButton>
       <Modal
-        appElementId='__next'
+        appElementId="__next"
         visible={visible}
         onEscKeyDown={() => setVisible(false)}
         variant={isSmall ? 'smallScreen' : 'default'}
       >
         <ModalContent>
           <ModalTitle>
-            {
-              data.term.properties.prefLabel?.[0].value
-              ??
+            {data.term.properties.prefLabel?.[0].value ?? (
               <PropertyValue
                 property={data.term.properties.prefLabel}
-                fallbackLanguage='fi'
+                fallbackLanguage="fi"
               />
-            }
+            )}
           </ModalTitle>
 
           {renderInfo(t('term-modal-type'), data.type)}
           {renderInfoChip(t('term-modal-status'), data.term.properties.status)}
-          {renderInfo(t('term-modal-homograph-number'), data.term.properties.termHomographNumber?.[0].value)}
-          {renderInfo(t('term-modal-info'), data.term.properties.termInfo?.[0].value)}
-          {renderInfo(t('term-modal-scope'), data.term.properties.scope?.[0].value)}
-          {renderInfo(t('term-modal-equivalency'), data.term.properties.termEquivalency?.[0].value)}
+          {renderInfo(
+            t('term-modal-homograph-number'),
+            data.term.properties.termHomographNumber?.[0].value
+          )}
+          {renderInfo(
+            t('term-modal-info'),
+            data.term.properties.termInfo?.[0].value
+          )}
+          {renderInfo(
+            t('term-modal-scope'),
+            data.term.properties.scope?.[0].value
+          )}
+          {renderInfo(
+            t('term-modal-equivalency'),
+            data.term.properties.termEquivalency?.[0].value
+          )}
           {/* TODO: Termi, john vastaavuus liittyy isn't probably implemented yet*/}
           {/* {renderInfo('Termi, johon vastaavuus liittyy', data.term.referrers.prefLabel?.[0].properties.wordClas?.[0].value)} */}
-          {renderInfo(t('term-modal-source'), data.term.properties.source?.[0].value)}
+          {renderInfo(
+            t('term-modal-source'),
+            data.term.properties.source?.[0].value
+          )}
 
           <TermExpander
             title={t('term-modal-organizational-information')}
             data={[
-              { subtitle: t('term-modal-change-note'), value: data.term.properties.changeNote?.[0].value },
-              { subtitle: t('term-modal-history-note'), value: data.term.properties.historyNote?.[0].value },
-              { subtitle: t('term-modal-editorial-note'), value: data.term.properties.editorialNote?.[0].value, checkCondition: !user.anonymous },
-              { subtitle: t('term-modal-draft-note'), value: data.term.properties.draftComment?.[0].value, checkCondition: data.term.properties.status?.[0].value === 'DRAFT' }
+              {
+                subtitle: t('term-modal-change-note'),
+                value: data.term.properties.changeNote?.[0].value,
+              },
+              {
+                subtitle: t('term-modal-history-note'),
+                value: data.term.properties.historyNote?.[0].value,
+              },
+              {
+                subtitle: t('term-modal-editorial-note'),
+                value: data.term.properties.editorialNote?.[0].value,
+                checkCondition: !user.anonymous,
+              },
+              {
+                subtitle: t('term-modal-draft-note'),
+                value: data.term.properties.draftComment?.[0].value,
+                checkCondition:
+                  data.term.properties.status?.[0].value === 'DRAFT',
+              },
             ]}
           />
           <TermExpander
             title={t('term-modal-grammatic-information')}
             data={[
-              { subtitle: t('term-modal-style'), value: data.term.properties.termStyle?.[0].value },
-              { subtitle: t('term-modal-family'), value: data.term.properties.termFamily?.[0].value },
-              { subtitle: t('term-modal-conjugation'), value: data.term.properties.termConjugation?.[0].value },
-              { subtitle: t('term-modal-word-class'), value: data.term.properties.wordClass?.[0].value }
+              {
+                subtitle: t('term-modal-style'),
+                value: data.term.properties.termStyle?.[0].value,
+              },
+              {
+                subtitle: t('term-modal-family'),
+                value: data.term.properties.termFamily?.[0].value,
+              },
+              {
+                subtitle: t('term-modal-conjugation'),
+                value: data.term.properties.termConjugation?.[0].value,
+              },
+              {
+                subtitle: t('term-modal-word-class'),
+                value: data.term.properties.wordClass?.[0].value,
+              },
             ]}
           />
         </ModalContent>
 
         <ModalFooter>
-          <Button onClick={() => setVisible(false)} aria-label={t('term-modal-arial-close')}>
+          <Button
+            onClick={() => setVisible(false)}
+            aria-label={t('term-modal-arial-close')}
+          >
             {t('term-modal-close')}
           </Button>
         </ModalFooter>
@@ -107,12 +162,8 @@ export default function TermModal({ data }: TermModalProps) {
 
     return (
       <>
-        <TermHeading variant='h3'>
-          {subtitle}
-        </TermHeading>
-        <TermText>
-          {value}
-        </TermText>
+        <TermHeading variant="h3">{subtitle}</TermHeading>
+        <TermText>{value}</TermText>
       </>
     );
   }
@@ -124,9 +175,7 @@ export default function TermModal({ data }: TermModalProps) {
 
     return (
       <>
-        <TermHeading variant='h3'>
-          {subtitle}
-        </TermHeading>
+        <TermHeading variant="h3">{subtitle}</TermHeading>
         {/* Note: Using "condition ? X : undefined" form here because nextjs can't handle
             passed booleans properly with suomifi-ui-components/styled-components.
         */}
@@ -139,5 +188,4 @@ export default function TermModal({ data }: TermModalProps) {
       </>
     );
   }
-
-};
+}

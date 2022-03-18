@@ -13,7 +13,7 @@ export function getPropertyValue({
   valueAccessor = ({ value }) => value,
   language = '',
   fallbackLanguage = '',
-  delimiter = false
+  delimiter = false,
 }: GetPropertyValueParams): string | undefined {
   const matchingProperties =
     getMatchingProperties(property ?? [], language) ??

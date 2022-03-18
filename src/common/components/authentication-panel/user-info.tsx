@@ -16,12 +16,8 @@ export default function UserInfo({ breakpoint }: UserInfoProps) {
   if (!(user?.anonymous ?? true)) {
     return (
       <UserInfoWrapper breakpoint={breakpoint}>
-        <Text>
-          {`${user?.firstName} ${user?.lastName}`}
-        </Text>
-        <Link href='/api/auth/logout?target=/'>
-          {t('site-logout')}
-        </Link>
+        <Text>{`${user?.firstName} ${user?.lastName}`}</Text>
+        <Link href="/api/auth/logout?target=/">{t('site-logout')}</Link>
       </UserInfoWrapper>
     );
   }

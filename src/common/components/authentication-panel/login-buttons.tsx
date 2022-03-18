@@ -11,7 +11,9 @@ interface LoginButtonsProps {
   handleLoginModalClick?: () => void;
 }
 
-export default function LoginButtons({ handleLoginModalClick }: LoginButtonsProps) {
+export default function LoginButtons({
+  handleLoginModalClick,
+}: LoginButtonsProps) {
   const { t } = useTranslation('common');
   const [visible, setVisible] = useState(false);
   const { breakpoint } = useBreakpoints();
@@ -22,14 +24,14 @@ export default function LoginButtons({ handleLoginModalClick }: LoginButtonsProp
       <LoginButtonsWrapper breakpoint={breakpoint}>
         <Button
           icon="login"
-          onClick={() => handleLoginModalClick ? handleLoginModalClick() : setVisible(true)}
+          onClick={() =>
+            handleLoginModalClick ? handleLoginModalClick() : setVisible(true)
+          }
         >
           {t('site-login')}
         </Button>
 
-        {visible ? (
-          <LoginModalView setVisible={setVisible} />
-        ) : null}
+        {visible ? <LoginModalView setVisible={setVisible} /> : null}
       </LoginButtonsWrapper>
     );
   }

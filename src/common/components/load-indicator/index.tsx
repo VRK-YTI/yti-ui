@@ -11,18 +11,18 @@ interface LoadIndicatorProps {
   refetch: () => void;
 }
 
-export default function LoadIndicator({ isFetching, error, refetch }: LoadIndicatorProps) {
+export default function LoadIndicator({
+  isFetching,
+  error,
+  refetch,
+}: LoadIndicatorProps) {
   const { t } = useTranslation('common');
   const { isSmall } = useBreakpoints();
 
   if (isFetching) {
     return (
       <LoadWrapper>
-        <LoadIcon
-          icon='swapRounded'
-          ariaLabel='Loading'
-          isSmall={isSmall}
-        />
+        <LoadIcon icon="swapRounded" ariaLabel="Loading" isSmall={isSmall} />
       </LoadWrapper>
     );
   } else if (error) {

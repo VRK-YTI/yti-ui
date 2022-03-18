@@ -13,7 +13,5 @@ export default function FormattedDate({ date }: FormattedDateProps) {
     return null;
   }
 
-  return (
-    <>{format(date, i18n.language as Locale)}</>
-  );
+  return <>{format(date, i18n.language as Locale)}</>;
 }

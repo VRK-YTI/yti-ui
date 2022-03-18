@@ -12,7 +12,7 @@ interface OrganizationFilterProps {
 export default function OrganizationFilter({
   organizations,
   title,
-  visualPlaceholder
+  visualPlaceholder,
 }: OrganizationFilterProps) {
   const { urlState, patchUrlState } = useUrlState();
 
@@ -28,12 +28,14 @@ export default function OrganizationFilter({
           <DropdownPlaceholder>{visualPlaceholder}</DropdownPlaceholder>
         }
         value={urlState.organization}
-        onChange={organization => patchUrlState({
-          organization,
-          page: initialUrlState.page,
-        })}
+        onChange={(organization) =>
+          patchUrlState({
+            organization,
+            page: initialUrlState.page,
+          })
+        }
       >
-        {organizations.map(organization => (
+        {organizations.map((organization) => (
           <DropdownItem value={organization.id} key={organization.id}>
             {organization.properties.prefLabel.value}
           </DropdownItem>

@@ -17,20 +17,24 @@ export const alertSlice = createSlice({
     setAlert(state, action) {
       return {
         ...state,
-        ...action.payload
+        ...action.payload,
       };
     },
   },
 });
 
-export const setAlert = (alerts: AlertState['alerts']): AppThunk => dispatch => {
-  dispatch(
-    alertSlice.actions.setAlert({
-      alerts: alerts.filter(alert => alert && alert.data)
-    }),
-  );
-};
+export function setAlert(alerts: AlertState['alerts']): AppThunk {
+  return (dispatch) => {
+    dispatch(
+      alertSlice.actions.setAlert({
+        alerts: alerts.filter((alert) => alert && alert.data),
+      })
+    );
+  };
+}
 
-export const selectAlert = () => (state: AppState): AlertState['alerts'] => state.alert.alerts;
+export function selectAlert() {
+  return (state: AppState): AlertState['alerts'] => state.alert.alerts;
+}
 
 export default alertSlice.reducer;
