@@ -45,8 +45,6 @@ export const getServerSideProps = createCommonGetServerSideProps(
 
     let urlState = Object.assign({}, initialUrlState);
 
-    urlState.status = [];
-
     if (query && query.q !== undefined) {
       urlState.q = Array.isArray(query.q) ? query.q[0] : query.q;
     }
