@@ -2,8 +2,10 @@ import { ClickAwayListener } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import { MouseEventHandler, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { useTheme } from 'styled-components';
 import { Icon, Link } from 'suomifi-ui-components';
+import { selectLogin } from '../login/login-slice';
 import {
   NavigationDropdownItem,
   NavigationDropdownList,
@@ -13,6 +15,7 @@ import {
 } from './navigation.styles';
 
 export default function DesktopNavigation() {
+  const isLoggedIn = !useSelector(selectLogin()).anonymous;
   const { t } = useTranslation('common');
   const [open, setOpen] = useState(false);
   const router = useRouter();
@@ -72,6 +75,13 @@ export default function DesktopNavigation() {
           {t('site-for-administrators')}
         </Link>
       </NavigationItem>
+      {isLoggedIn && (
+        <NavigationItem active={router.pathname === '/own-information'}>
+          <Link className="main" href="/own-information">
+            {t('own-information')}
+          </Link>
+        </NavigationItem>
+      )}
     </NavigationWrapper>
   );
 }

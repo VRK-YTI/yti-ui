@@ -54,13 +54,7 @@ export default function TerminologySearch() {
         countsError as Error,
       ])
     );
-  }, [
-    dispatch,
-    error,
-    groupsError,
-    organizationsError,
-    countsError,
-  ]);
+  }, [dispatch, error, groupsError, organizationsError, countsError]);
 
   useEffect(() => {
     const timer = setTimeout(() => {

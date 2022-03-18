@@ -77,8 +77,5 @@ export const {
 
 export default vocabularySlice.reducer;
 
-export const {
-  getVocabulary,
-  getCollections,
-  getConceptResult
-} = vocabularyApi.endpoints;
+export const { getVocabulary, getCollections, getConceptResult } =
+  vocabularyApi.endpoints;

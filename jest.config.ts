@@ -12,7 +12,7 @@ const config: Config.InitialOptions = {
     '^.+\\.module\\.(css|sass|scss)$': 'identity-obj-proxy',
     '^.+\\.(css|sass|scss)$': '<rootDir>/__mocks__/styleMock.js',
     '^.+\\.(jpg|jpeg|png|gif|webp|svg)$': '<rootDir>/__mocks__/fileMock.js',
-    'react-i18next': '<rootDir>/__mocks__/next-i18nextMock.ts'
+    'react-i18next': '<rootDir>/__mocks__/next-i18nextMock.ts',
   },
   testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/.next/'],
   testEnvironment: 'jsdom',

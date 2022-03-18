@@ -41,7 +41,7 @@ export function createCommonGetServerSideProps<
         res,
         params,
         query,
-        locale
+        locale,
       }: {
         req: NextIronRequest;
         res: NextApiResponse;
@@ -49,8 +49,17 @@ export function createCommonGetServerSideProps<
         query: ParsedUrlQuery;
         locale: string;
       }) => {
-        const results = await handler?.({ req, res, params, query, locale, store });
-        store.dispatch(setLogin(req.session.get<User>('user') || anonymousUser));
+        const results = await handler?.({
+          req,
+          res,
+          params,
+          query,
+          locale,
+          store,
+        });
+        store.dispatch(
+          setLogin(req.session.get<User>('user') || anonymousUser)
+        );
         const userAgent = req.headers['user-agent'] ?? '';
 
         return {
@@ -62,6 +71,7 @@ export function createCommonGetServerSideProps<
               'collection',
               'common',
               'concept',
+              'own-information',
             ])),
             isSSRMobile: Boolean(
               userAgent.match(
