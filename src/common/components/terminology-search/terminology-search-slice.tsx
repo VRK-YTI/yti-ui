@@ -65,6 +65,10 @@ export const {
   useGetGroupsQuery,
   useGetSearchResultQuery,
   useGetOrganizationsQuery,
+  util: { getRunningOperationPromises },
 } = terminologySearchApi;
+
+export const { getSearchResult, getGroups, getOrganizations } =
+  terminologySearchApi.endpoints;
 
 export default terminologySearchSlice.reducer;

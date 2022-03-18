@@ -15,6 +15,7 @@ export type NextIronHandler<T> =
       req: NextIronRequest;
       res: NextApiResponse;
       params: ParsedUrlQuery;
+      query: ParsedUrlQuery;
       locale: string;
     }) => T | Promise<T>);
 

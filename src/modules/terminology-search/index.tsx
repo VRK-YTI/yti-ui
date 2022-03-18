@@ -54,17 +54,7 @@ export default function TerminologySearch() {
         countsError as Error,
       ])
     );
-  }, [
-    dispatch,
-    error,
-    groupsError,
-    organizationsError,
-    countsError,
-    // todo: previousAlerts is required here but adding it will trigger infinite loop.
-    // fix this by replacing setAlert with something like addAlert that doesn't depend
-    // on current state.
-    // previousAlerts,
-  ]);
+  }, [dispatch, error, groupsError, organizationsError, countsError]);
 
   useEffect(() => {
     const timer = setTimeout(() => {

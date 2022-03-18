@@ -44,26 +44,25 @@ export default function ConceptPage(props: {
   );
 }
 
-export const getServerSideProps = createCommonGetServerSideProps<{
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  props: { data?: any };
-}>(async ({ req, store, params }: LocalHandlerParams) => {
-  const terminologyId = Array.isArray(params.terminologyId)
-    ? params.terminologyId[0]
-    : params.terminologyId;
-  const conceptId = Array.isArray(params.conceptId)
-    ? params.conceptId[0]
-    : params.conceptId;
+export const getServerSideProps = createCommonGetServerSideProps(
+  async ({ req, store, params }: LocalHandlerParams) => {
+    const terminologyId = Array.isArray(params.terminologyId)
+      ? params.terminologyId[0]
+      : params.terminologyId;
+    const conceptId = Array.isArray(params.conceptId)
+      ? params.conceptId[0]
+      : params.conceptId;
 
-  if (terminologyId === undefined || conceptId === undefined) {
-    throw new Error('Invalid parameters for page');
+    if (terminologyId === undefined || conceptId === undefined) {
+      throw new Error('Invalid parameters for page');
+    }
+
+    await store.dispatch(getVocabulary.initiate(terminologyId));
+    await store.dispatch(getConcept.initiate({ terminologyId, conceptId }));
+
+    await Promise.all(getVocabularyRunningOperationPromises());
+    await Promise.all(getConceptRunningOperationPromises());
+
+    return {};
   }
-
-  await store.dispatch(getVocabulary.initiate(terminologyId));
-  await store.dispatch(getConcept.initiate({ terminologyId, conceptId }));
-
-  await Promise.all(getVocabularyRunningOperationPromises());
-  await Promise.all(getConceptRunningOperationPromises());
-
-  return { props: {} };
-});
+);

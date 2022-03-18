@@ -22,13 +22,13 @@ import HeaderSearch from '../../common/components/header-search/header-search';
 import { useBreakpoints } from '../../common/components/media-query/media-query-context';
 import LoginModalView from '../../common/components/login-modal/login-modal';
 
-Modal.setAppElement('#__next');
-
 export default function SmartHeader() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isLoginExpanded, setIsLoginExpanded] = useState(false);
   const { breakpoint, isSmall } = useBreakpoints();
+
+  Modal.setAppElement('#__next');
 
   const handleLoginModalClick = () => {
     setIsLoginExpanded(true);
