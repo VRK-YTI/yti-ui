@@ -10,10 +10,10 @@ describe('format', () => {
   });
 
   it('should format date correctly in English', async () => {
-    expect(format('2022-01-02T03:04:00.000Z', 'en')).toBe('01/02/2022, 3.04');
+    expect(format('2022-01-02T03:04:00.000Z', 'en')).toBe('02/01/2022, 3.04');
   });
 
   it('should use 24 hour clock in English', async () => {
-    expect(format('2022-01-02T12:04:00.000Z', 'en')).toBe('01/02/2022, 12.04');
+    expect(format('2022-01-02T12:04:00.000Z', 'en')).toBe('02/01/2022, 12.04');
   });
 });
