@@ -1,10 +1,12 @@
 import { useRouter } from 'next/router';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { Link, Text } from 'suomifi-ui-components';
 import LoginButtons from '../authentication-panel/login-buttons';
 import MobileImpersonateWrapper from '../impersonate/mobile-impersonate-wrapper';
 import MobileLocaleChooser from '../locale-chooser/mobile-locale-chooser';
+import { selectLogin } from '../login/login-slice';
 import { MobileMenuItem, MobileMenuSection } from './navigation.styles';
 
 interface MobileNavigationProps {
@@ -16,6 +18,7 @@ export default function MobileNavigation({
 }: MobileNavigationProps) {
   const { t } = useTranslation('common');
   const router = useRouter();
+  const isLoggedIn = !useSelector(selectLogin()).anonymous;
 
   return (
     <>
@@ -49,11 +52,13 @@ export default function MobileNavigation({
         <MobileMenuItem>
           <Link href="/">{t('site-for-administrators')}</Link>
         </MobileMenuItem>
-        <MobileMenuItem active={router.pathname === '/own-information'}>
-          <Link className="main" href="/own-information">
-            {t('own-information')}
-          </Link>
-        </MobileMenuItem>
+        {isLoggedIn && (
+          <MobileMenuItem active={router.pathname === '/own-information'}>
+            <Link className="main" href="/own-information">
+              {t('own-information')}
+            </Link>
+          </MobileMenuItem>
+        )}
       </MobileMenuSection>
 
       <MobileLocaleChooser />
