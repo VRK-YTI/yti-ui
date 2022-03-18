@@ -60,7 +60,6 @@ export default function TerminologySearch() {
     groupsError,
     organizationsError,
     countsError,
-    previousAlerts,
   ]);
 
   useEffect(() => {
