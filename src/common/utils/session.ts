@@ -10,13 +10,14 @@ export type NextIronRequest = NextApiRequest & {
 };
 
 export type NextIronHandler<T> =
-  | ((req: NextIronRequest, res: NextApiResponse) => void | Promise<void>)
-  | ((context: {
-      req: NextIronRequest;
-      res: NextApiResponse;
-      params: ParsedUrlQuery;
-      locale: string;
-    }) => T | Promise<T>);
+  ((req: NextIronRequest, res: NextApiResponse) => void | Promise<void>) |
+  ((context: {
+    req: NextIronRequest;
+    res: NextApiResponse;
+    params: ParsedUrlQuery;
+    query: ParsedUrlQuery;
+    locale: string;
+  }) => T | Promise<T>);
 
 const withSession = <T>(handler: NextIronHandler<T>) =>
   withIronSession(handler, {

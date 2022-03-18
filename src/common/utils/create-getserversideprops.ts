@@ -12,6 +12,7 @@ export interface LocalHandlerParams {
   req: NextIronRequest;
   res: NextApiResponse;
   params: ParsedUrlQuery;
+  query: ParsedUrlQuery;
   locale: string;
   store: AppStore;
 }
@@ -39,17 +40,17 @@ export function createCommonGetServerSideProps<
         req,
         res,
         params,
-        locale,
+        query,
+        locale
       }: {
         req: NextIronRequest;
         res: NextApiResponse;
         params: ParsedUrlQuery;
+        query: ParsedUrlQuery;
         locale: string;
       }) => {
-        const results = await handler?.({ req, res, params, locale, store });
-        store.dispatch(
-          setLogin(req.session.get<User>('user') || anonymousUser)
-        );
+        const results = await handler?.({ req, res, params, query, locale, store });
+        store.dispatch(setLogin(req.session.get<User>('user') || anonymousUser));
         const userAgent = req.headers['user-agent'] ?? '';
 
         return {
