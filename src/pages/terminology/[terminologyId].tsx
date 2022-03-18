@@ -45,7 +45,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
       throw new Error('Invalid parameter for page');
     }
 
-    let urlState = Object.assign({}, initialUrlState);
+    const urlState = Object.assign({}, initialUrlState);
 
     if (query && query.q !== undefined) {
       urlState.q = Array.isArray(query.q) ? query.q[0] : query.q;
