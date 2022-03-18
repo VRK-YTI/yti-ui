@@ -7,17 +7,16 @@ import { themeProvider } from '../../../tests/test-utils';
 import { Term } from '../../interfaces/term.interface';
 import { initialState, setLogin } from '../login/login-slice';
 
-let appRoot: HTMLDivElement | null = null;
-
-function setUpAppRoot() {
-  appRoot = document.createElement('div');
-  appRoot.setAttribute('id', '__next');
-  document.body.appendChild(appRoot);
-}
-
 describe('term-modal', () => {
+  let appRoot: HTMLDivElement | null = null;
+
+  beforeEach(() => {
+    appRoot = document.createElement('div');
+    appRoot.setAttribute('id', '__next');
+    document.body.appendChild(appRoot);
+  });
+
   it('should render everything in component', () => {
-    setUpAppRoot();
     const store = makeStore();
     store.dispatch(setLogin({ ...initialState, anonymous: false }));
 
@@ -56,7 +55,6 @@ describe('term-modal', () => {
   });
 
   it('should render parts of component', () => {
-    setUpAppRoot();
     const store = makeStore();
 
     delete data.term.properties.changeNote;

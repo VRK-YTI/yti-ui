@@ -25,15 +25,14 @@ const fakeUser = {
 describe('api endpoint - login', () => {
   const mock = new MockAdapter(axios, { onNoMatch: 'throwException' });
 
-  function setupMock() {
+  afterEach(() => {
     mock.reset();
-  }
+  });
 
   /*
    * login endpoint should simply redirect to SSO
    */
   it('redirect to SSO', async () => {
-    setupMock();
     const targetPath = '/testable-target-path';
 
     const { req, res } = createMocks({
@@ -56,7 +55,6 @@ describe('api endpoint - login', () => {
   });
 
   it('callback on success', async () => {
-    setupMock();
     const targetPath = '/testable-target-path';
 
     const { req, res } = createMocks({

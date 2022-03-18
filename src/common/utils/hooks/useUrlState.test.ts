@@ -11,7 +11,7 @@ describe('useUrlState', () => {
   it('no query parameters is same as initial state', () => {
     mockedUseRouter.mockReturnValue({
       query: {},
-    } as any);
+    } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
 
     const { result } = renderHook(() => useUrlState());
 
@@ -21,7 +21,7 @@ describe('useUrlState', () => {
   it('isInitial return true for initialState', () => {
     mockedUseRouter.mockReturnValue({
       query: initialUrlState,
-    } as any);
+    } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
 
     const { result } = renderHook(() => useUrlState());
 
@@ -43,7 +43,7 @@ describe('useUrlState', () => {
         type: 'type-query-param',
         page: '10',
       },
-    } as any);
+    } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
 
     const { result } = renderHook(() => useUrlState());
 
@@ -62,7 +62,7 @@ describe('useUrlState', () => {
       query: {
         page: 'invalid-number',
       },
-    } as any);
+    } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
 
     const { result } = renderHook(() => useUrlState());
 
@@ -81,7 +81,7 @@ describe('useUrlState', () => {
         page: '10',
       },
       push,
-    } as any);
+    } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
 
     const { result } = renderHook(() => useUrlState());
     result.current.resetUrlState();
@@ -105,7 +105,7 @@ describe('useUrlState', () => {
         page: '10',
       },
       push,
-    } as any);
+    } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
 
     const { result } = renderHook(() => useUrlState());
     result.current.updateUrlState({
@@ -143,7 +143,7 @@ describe('useUrlState', () => {
         page: '10',
       },
       push,
-    } as any);
+    } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
 
     const { result } = renderHook(() => useUrlState());
     result.current.patchUrlState({
@@ -171,7 +171,7 @@ describe('useUrlState', () => {
         page: '10',
       },
       push,
-    } as any);
+    } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
 
     const { result } = renderHook(() => useUrlState());
     result.current.patchUrlState({

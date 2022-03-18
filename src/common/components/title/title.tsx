@@ -23,14 +23,7 @@ export default function Title({ info }: TitleProps) {
   const { t, i18n } = useTranslation('common');
   const titleRef = useRef<HTMLHeadingElement>(null);
   const dispatch = useStoreDispatch();
-  const title =
-    typeof info === 'string'
-      ? info
-      : getPropertyValue({
-          property: info.properties.prefLabel,
-          language: i18n.language,
-          fallbackLanguage: 'fi',
-        }) ?? '';
+  const title = getTitle(info);
 
   useEffect(() => {
     dispatch(setTitle(title));
@@ -77,6 +70,20 @@ export default function Title({ info }: TitleProps) {
 
         <InfoExpander data={info} />
       </TitleWrapper>
+    );
+  }
+
+  function getTitle(info: string | VocabularyInfoDTO) {
+    if (typeof info === 'string') {
+      return info;
+    }
+
+    return (
+      getPropertyValue({
+        property: info.properties.prefLabel,
+        language: i18n.language,
+        fallbackLanguage: 'fi',
+      }) ?? ''
     );
   }
 }

@@ -4,9 +4,13 @@ import { Collection } from '../../interfaces/collection.interface';
 import {
   GroupSearchResult,
   OrganizationSearchResult,
+  TerminologyDTO,
   TerminologySearchResult,
 } from '../../interfaces/terminology.interface';
-import { VocabularyConcepts } from '../../interfaces/vocabulary.interface';
+import {
+  VocabularyConceptDTO,
+  VocabularyConcepts,
+} from '../../interfaces/vocabulary.interface';
 import PropertyValue from '../property-value';
 import { useBreakpoints } from '../media-query/media-query-context';
 import SearchCountTags from './search-count-tags';
@@ -88,14 +92,7 @@ export default function SearchResults({
                       <CardTitleLink href="">
                         <CardTitleIcon icon="registers" />
                         <CardTitle>
-                          {terminology.label[i18n.language]
-                            ? terminology.label[i18n.language].replaceAll(
-                                /<\/*[^>]>/g,
-                                ''
-                              )
-                            : terminology?.label?.[
-                                Object.keys(terminology.label)[0]
-                              ].replaceAll(/<\/*[^>]>/g, '')}
+                          {getLabel(terminology)}
                           <VisuallyHidden>
                             {terminology.contributors[0].label[i18n.language] ??
                               terminology.contributors[0].label['fi'] ??
@@ -121,15 +118,7 @@ export default function SearchResults({
                   </CardSubtitle>
 
                   <CardDescription>
-                    {terminology?.description?.[i18n.language] !== undefined
-                      ? terminology?.description?.[i18n.language]
-                      : terminology?.description?.[
-                          Object.keys(terminology?.description)[0]
-                        ]
-                      ? terminology?.description?.[
-                          Object.keys(terminology?.description)[0]
-                        ]
-                      : t('terminology-search-no-description')}
+                    {getDescription(terminology)}
                   </CardDescription>
 
                   <CardInfoDomain>
@@ -184,14 +173,7 @@ export default function SearchResults({
                         href={`/terminology/${concept.terminology.id}/concept/${concept.id}`}
                       >
                         <CardTitleLink href="">
-                          {concept.label[i18n.language]
-                            ? concept.label[i18n.language].replaceAll(
-                                /<\/*[^>]>/g,
-                                ''
-                              )
-                            : concept?.label?.[
-                                Object.keys(concept.label)[0]
-                              ].replaceAll(/<\/*[^>]>/g, '')}
+                          {getLabel(concept)}
                         </CardTitleLink>
                       </Link>
                     </CardTitle>
@@ -202,25 +184,7 @@ export default function SearchResults({
                       <div>{t(`${concept.status}`)}</div>
                     </CardSubtitle>
 
-                    <CardDescription>
-                      {concept.definition?.[i18n.language] ? (
-                        <SanitizedTextContent
-                          text={concept.definition?.[i18n.language]}
-                        />
-                      ) : concept.definition?.[
-                          Object.keys(concept.definition)[0]
-                        ] ? (
-                        <SanitizedTextContent
-                          text={
-                            concept?.definition?.[
-                              Object.keys(concept?.definition)[0]
-                            ]
-                          }
-                        />
-                      ) : (
-                        t('terminology-search-no-description')
-                      )}
-                    </CardDescription>
+                    <CardDescription>{getDefinition(concept)}</CardDescription>
                   </Card>
                 );
               })}
@@ -231,6 +195,46 @@ export default function SearchResults({
     }
 
     return null;
+  }
+
+  function getLabel(dto: VocabularyConceptDTO | TerminologyDTO) {
+    if (dto.label[i18n.language]) {
+      return dto.label[i18n.language].replaceAll(/<\/*[^>]>/g, '');
+    }
+
+    return dto?.label?.[Object.keys(dto.label)[0]].replaceAll(/<\/*[^>]>/g, '');
+  }
+
+  function getDescription(terminology: TerminologyDTO) {
+    if (terminology?.description?.[i18n.language] !== undefined) {
+      return terminology?.description?.[i18n.language];
+    }
+
+    if (terminology?.description?.[Object.keys(terminology?.description)[0]]) {
+      return terminology?.description?.[
+        Object.keys(terminology?.description)[0]
+      ];
+    }
+
+    return t('terminology-search-no-description');
+  }
+
+  function getDefinition(concept: VocabularyConceptDTO) {
+    if (concept.definition?.[i18n.language]) {
+      return (
+        <SanitizedTextContent text={concept.definition?.[i18n.language]} />
+      );
+    }
+
+    if (concept.definition?.[Object.keys(concept.definition)[0]]) {
+      return (
+        <SanitizedTextContent
+          text={concept?.definition?.[Object.keys(concept?.definition)[0]]}
+        />
+      );
+    }
+
+    return t('terminology-search-no-description');
   }
 
   function renderConceptCollections() {

@@ -16,7 +16,7 @@ describe('infoExpander', () => {
               contributor: [{ properties: { prefLabel: [] } }],
               inGroup: [{ properties: { prefLabel: [] } }],
             },
-          } as any
+          } as any // eslint-disable-line @typescript-eslint/no-explicit-any
         }
       />,
       { wrapper: themeProvider }

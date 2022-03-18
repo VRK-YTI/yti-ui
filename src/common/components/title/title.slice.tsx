@@ -22,19 +22,17 @@ export const titleSlice = createSlice({
   },
 });
 
-export const setTitle =
-  (title: TitleState['title']): AppThunk =>
-  (dispatch) => {
+export function setTitle(title: TitleState['title']): AppThunk {
+  return (dispatch) =>
     dispatch(
       titleSlice.actions.setTitle({
         title: title,
       })
     );
-  };
+}
 
-export const selectTitle =
-  () =>
-  (state: AppState): TitleState['title'] =>
-    state.title.title;
+export function selectTitle() {
+  return (state: AppState): TitleState['title'] => state.title.title;
+}
 
 export default titleSlice.reducer;

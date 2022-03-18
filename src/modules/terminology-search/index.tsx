@@ -19,10 +19,14 @@ import { useEffect, useState } from 'react';
 import { useGetCountsQuery } from '../../common/components/counts/counts-slice';
 import { SearchPageFilter } from './search-page-filter';
 import useUrlState from '../../common/utils/hooks/useUrlState';
-import { setAlert } from '../../common/components/alert/alert.slice';
+import {
+  selectAlert,
+  setAlert,
+} from '../../common/components/alert/alert.slice';
 import { Error } from '../../common/interfaces/error.interface';
 import LoadIndicator from '../../common/components/load-indicator';
 import { useStoreDispatch } from '../../store';
+import { useSelector } from 'react-redux';
 
 export default function TerminologySearch() {
   const { t, i18n } = useTranslation();
@@ -38,17 +42,29 @@ export default function TerminologySearch() {
   const dispatch = useStoreDispatch();
   const [showModal, setShowModal] = useState(false);
   const [showLoading, setShowLoading] = useState(false);
+  const previousAlerts = useSelector(selectAlert());
 
   useEffect(() => {
     dispatch(
       setAlert([
+        ...previousAlerts,
         error as Error,
         groupsError as Error,
         organizationsError as Error,
         countsError as Error,
       ])
     );
-  }, [dispatch, error, groupsError, organizationsError, countsError]);
+  }, [
+    dispatch,
+    error,
+    groupsError,
+    organizationsError,
+    countsError,
+    // todo: previousAlerts is required here but adding it will trigger infinite loop.
+    // fix this by replacing setAlert with something like addAlert that doesn't depend
+    // on current state.
+    // previousAlerts,
+  ]);
 
   useEffect(() => {
     const timer = setTimeout(() => {

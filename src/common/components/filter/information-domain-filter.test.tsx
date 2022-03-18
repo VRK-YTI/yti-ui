@@ -12,7 +12,7 @@ describe('informationDomainFilter', () => {
   it('should render component', () => {
     mockedUseRouter.mockReturnValue({
       query: { domain: 'd1' },
-    } as any);
+    } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
 
     render(
       <InformationDomainFilter

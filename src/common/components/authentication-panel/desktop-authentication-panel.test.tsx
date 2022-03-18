@@ -5,7 +5,7 @@ import { themeProvider } from '../../../tests/test-utils';
 import { makeStore } from '../../../store';
 import { Provider } from 'react-redux';
 import { setLogin } from '../login/login-slice';
-import { User } from '../../interfaces/user-interface';
+import { User } from '../../interfaces/user.interface';
 
 describe('authentication panel', () => {
   it('should render login button for unauthenticated user', () => {
