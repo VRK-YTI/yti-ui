@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { renderHook } from '@testing-library/react-hooks';
 import { useRouter } from 'next/router';
 import useUrlState, { initialUrlState, isInitial } from './useUrlState';

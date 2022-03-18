@@ -32,7 +32,7 @@ export const MultilingualDefinitionListItem = styled.li`
   position: relative;
 
   &:nth-child(even) {
-    background-color: ${(props) => props.theme.suomifi.colors.depthLight2};
+    background-color: ${(props) => props.theme.suomifi.colors.depthLight3};
   }
 
   &:before {

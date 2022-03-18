@@ -2,8 +2,10 @@ import { createSlice } from '@reduxjs/toolkit';
 import { AppState, AppThunk } from '../../../store';
 import { Error } from '../../interfaces/error.interface';
 
+export type Alert = Error;
+
 export interface AlertState {
-  alerts: Error[];
+  alerts: Alert[];
 }
 
 export const alertInitialState: AlertState = {
@@ -23,7 +25,7 @@ export const alertSlice = createSlice({
   },
 });
 
-export function setAlert(alerts: AlertState['alerts']): AppThunk {
+export function setAlert(alerts: Alert[]): AppThunk {
   return (dispatch) => {
     dispatch(
       alertSlice.actions.setAlert({
@@ -34,7 +36,7 @@ export function setAlert(alerts: AlertState['alerts']): AppThunk {
 }
 
 export function selectAlert() {
-  return (state: AppState): AlertState['alerts'] => state.alert.alerts;
+  return (state: AppState): Alert[] => state.alert.alerts;
 }
 
 export default alertSlice.reducer;

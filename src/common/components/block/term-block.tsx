@@ -30,7 +30,7 @@ export default function TermBlock({
       <span>
         <span
           style={{ display: 'inline-block', minWidth: '40%' }}
-          lang={term.properties.prefLabel?.[0].value}
+          lang={term.properties.prefLabel?.[0].lang}
         >
           <TermModal data={{ term: term, type: type }} />
         </span>

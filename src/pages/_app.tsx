@@ -1,3 +1,4 @@
+import ReactDOM from 'react-dom';
 import { SWRConfig } from 'swr';
 import '../../styles/globals.scss';
 import type { AppProps } from 'next/app';
@@ -57,3 +58,10 @@ function App({ Component, pageProps }: AppProps) {
   );
 }
 export default wrapper.withRedux(appWithTranslation(App));
+
+// setup a11y checker for development
+if (process.env.NODE_ENV !== 'production' && typeof window !== 'undefined') {
+  import('@axe-core/react').then(({ default: axe }) =>
+    axe(React, ReactDOM, 1000)
+  );
+}

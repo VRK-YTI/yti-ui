@@ -49,7 +49,7 @@ export const CardInfoDomain = styled(Paragraph)`
   margin-top: ${(props) => props.theme.suomifi.spacing.s};
 `;
 
-export const CardSubtitle = styled(Paragraph)`
+export const CardSubtitle = styled.div`
   color: ${(props) => props.theme.suomifi.colors.depthDark1};
   display: flex;
   font-size: 12px;

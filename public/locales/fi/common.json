@@ -24,6 +24,7 @@
   "site-login-info-2": "Jos sinulla ei ole eDuuni-tunnuksia, voit luoda ne eDuuni palvelussa.",
   "own-information": "Omat tiedot",
   "terminology-search-placeholder": "Hae palvelusta",
+  "terminology-search-clear": "Tyhjennä haku",
   "terminology-login-description-1": "Palveluun kirjaudutaan eDuuni-tunnuksilla. Kirjautumista vaaditaan jos haluat muokata palvelun sisältöä.",
   "terminology-login-description-2": "Alla olevalla painikkeella ohjaudut eDuuni-palvelun kirjautumiseen. Palaa sen jälkeen takaisin palveluun.",
   "terminology-footer-text": "Suomi.fi -julkishallinnon palvelut verkossa. Palvelun tuottaa Digi- ja väestötietovirasto",
@@ -112,5 +113,7 @@
   "site-open-new-email": "Aloita uuden sähköpostin kirjoitus osoitteeseen",
   "navigate-to-homepage": "Siirry etusivulle",
   "interoperability-logo-title": "Yhteentoimivuusalustan logo",
-  "search-results-count": "Rajauksella {{count}} hakutulosta"
+  "search-results-count": "Rajauksella {{count}} hakutulosta",
+  "pagination-previous-page": "Edellinen sivu",
+  "pagination-next-page": "Seuraava sivu"
 }
