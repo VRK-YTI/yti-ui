@@ -1,18 +1,30 @@
 import { Heading } from 'suomifi-ui-components';
 import { Breadcrumb, BreadcrumbLink } from '../../common/components/breadcrumb';
 import { useTranslation } from 'next-i18next';
-import { HeadingBlock, MainContent, OrganizationAndRoles, OrganizationAndRolesHeading, OrganizationAndRolesItem, OrganizationAndRolesWrapper, PageContent } from './own-information.styles';
+import {
+  HeadingBlock,
+  MainContent,
+  OrganizationAndRoles,
+  OrganizationAndRolesHeading,
+  OrganizationAndRolesItem,
+  OrganizationAndRolesWrapper,
+  PageContent,
+} from './own-information.styles';
 import { useBreakpoints } from '../../common/components/media-query/media-query-context';
 import { useEffect, useRef } from 'react';
 import { BasicBlock } from '../../common/components/block';
 import { useSelector } from 'react-redux';
 import { selectLogin } from '../../common/components/login/login-slice';
 import Separator from '../../common/components/separator';
+import { useGetOrganizationsQuery } from '../../common/components/terminology-search/terminology-search-slice';
+import { getPropertyValue } from '../../common/components/property-value/get-property-value';
+import _ from 'lodash';
 
 export default function OwnInformation() {
   const user = useSelector(selectLogin());
   const { breakpoint } = useBreakpoints();
-  const { t } = useTranslation('own-information');
+  const { t, i18n } = useTranslation('own-information');
+  const { data: organizations } = useGetOrganizationsQuery(i18n.language);
 
   const titleRef = useRef<HTMLHeadingElement>(null);
   useEffect(() => {
@@ -20,6 +32,10 @@ export default function OwnInformation() {
       titleRef.current.focus();
     }
   }, [titleRef]);
+
+  if (user.anonymous) {
+    return null;
+  }
 
   return (
     <>
@@ -46,100 +62,74 @@ export default function OwnInformation() {
 
           <Separator isLarge />
 
-          <BasicBlock title={<h2>{t('field-organizations-and-roles')}</h2>} largeGap>
-            <OrganizationAndRolesWrapper>
-              <OrganizationAndRoles>
-                <OrganizationAndRolesItem>
-                  <OrganizationAndRolesHeading>Organisaatio</OrganizationAndRolesHeading>
-                  <div>Digi- ja Väestötietovirasto</div>
-                </OrganizationAndRolesItem>
-
-                <OrganizationAndRolesItem>
-                  <OrganizationAndRolesHeading>Roolit</OrganizationAndRolesHeading>
-                  <ul>
-                    <li>Sanastotyöntekijä</li>
-                    <li>Koodistotyöntekijä</li>
-                    <li>Tietomallintaja</li>
-                  </ul>
-                </OrganizationAndRolesItem>
-              </OrganizationAndRoles>
-              <OrganizationAndRoles>
-                <OrganizationAndRolesItem>
-                  <OrganizationAndRolesHeading>Organisaatio</OrganizationAndRolesHeading>
-                  <div>Digi- ja Väestötietovirasto</div>
-                </OrganizationAndRolesItem>
-
-                <OrganizationAndRolesItem>
-                  <OrganizationAndRolesHeading>Roolit</OrganizationAndRolesHeading>
-                  <ul>
-                    <li>Sanastotyöntekijä</li>
-                    <li>Koodistotyöntekijä</li>
-                    <li>Tietomallintaja</li>
-                  </ul>
-                </OrganizationAndRolesItem>
-              </OrganizationAndRoles>
-            </OrganizationAndRolesWrapper>
-          </BasicBlock>
-
-          {/* <MultilingualPropertyBlock
-            title={<h2>{t('field-example')}</h2>}
-            data={concept?.properties.example}
-          /> */}
-          {/* <TermBlock
-            title={<h2>{t('field-terms-label')}</h2>}
-            data={[
-              ...(concept?.references.prefLabelXl ?? []).map(term => ({ term, type: t('field-terms-preferred') })),
-              ...(concept?.references.altLabelXl ?? []).map(term => ({ term, type: t('field-terms-alternative') })),
-              ...(concept?.references.notRecommendedSynonym ?? []).map(term => ({ term, type: t('field-terms-non-recommended') })),
-              ...(concept?.references.searchTerm ?? []).map(term => ({ term, type: t('field-terms-search-term') })),
-              ...(concept?.references.hiddenTerm ?? []).map(term => ({ term, type: t('field-terms-hidden') })),
-            ]}
-          /> */}
-
-          {/* <MultilingualPropertyBlock
-            title={<h2>{t('field-note')}</h2>}
-            data={concept?.properties.note}
-          /> */}
-
-          {/* <DetailsExpander concept={concept} /> */}
-
-          {/* <Separator isLarge /> */}
-
-          {/* <VisuallyHidden as="h2">
-            {t('additional-technical-information', { ns: 'common' })}
-          </VisuallyHidden> */}
-
-          {/* <PropertyBlock
-            title={t('vocabulary-info-organization', { ns: 'common' })}
-            property={terminology?.references.contributor?.[0]?.properties.prefLabel}
-            fallbackLanguage="fi"
-          /> */}
-          {/* <BasicBlock title={t('vocabulary-info-created-at', { ns: 'common' })}>
-            <FormattedDate date={concept?.createdDate} />, {concept?.createdBy}
-          </BasicBlock> */}
-          {/* <BasicBlock title={t('vocabulary-info-modified-at', { ns: 'common' })}>
-            <FormattedDate date={concept?.lastModifiedDate} />, {concept?.lastModifiedBy}
-          </BasicBlock> */}
-          {/* <BasicBlock title="URI">
-            {concept?.uri}
-          </BasicBlock> */}
-
-          {/* <Separator isLarge /> */}
-
-          {/* <BasicBlock
-            extra={
-              <ExternalLink
-                href={`mailto:${getPropertyValue({ property: terminology?.properties.contact })}?subject=${conceptId}`}
-                labelNewWindow={t('site-open-link-new-window', { ns: 'common' })}
-              >
-                {t('feedback-action')}
-              </ExternalLink>
-            }
+          <BasicBlock
+            title={<h2>{t('field-organizations-and-roles')}</h2>}
+            largeGap
           >
-            {t('feedback-label')}
-          </BasicBlock> */}
+            {renderOrganizationsAndRoles()}
+          </BasicBlock>
         </MainContent>
       </PageContent>
     </>
   );
-};
+
+  function renderOrganizationsAndRoles() {
+    const organizationsAndRoles = getOrganizationsAndRoles();
+
+    if (!organizationsAndRoles.length) return null;
+
+    return (
+      <OrganizationAndRolesWrapper>
+        {organizationsAndRoles.map(({ organization, roles }) => {
+          return (
+            <OrganizationAndRoles key={organization.id}>
+              <OrganizationAndRolesItem>
+                <OrganizationAndRolesHeading>
+                  {t('organization')}
+                </OrganizationAndRolesHeading>
+                <div>{organization.name}</div>
+              </OrganizationAndRolesItem>
+
+              <OrganizationAndRolesItem>
+                <OrganizationAndRolesHeading>
+                  {t('roles')}
+                </OrganizationAndRolesHeading>
+                <ul>
+                  {roles.map((role) => (
+                    <li key={role}>{role}</li>
+                  ))}
+                </ul>
+              </OrganizationAndRolesItem>
+            </OrganizationAndRoles>
+          );
+        })}
+      </OrganizationAndRolesWrapper>
+    );
+  }
+
+  function getOrganizationsAndRoles() {
+    const result = Object.entries(user.rolesInOrganizations).map(
+      ([organizationId, roles]) => {
+        return {
+          organization: {
+            id: organizationId,
+            name: getOrganizationName(organizationId),
+          },
+          roles,
+        };
+      }
+    );
+
+    return _.sortBy(result, 'organization.name');
+  }
+
+  function getOrganizationName(id: string): string {
+    return getPropertyValue({
+      property: organizations
+        ?.filter((organization) => organization.id === id)
+        .map((organization) => organization.properties.prefLabel),
+      language: i18n.language,
+      fallbackLanguage: 'fi',
+    }) ?? '';
+  }
+}
