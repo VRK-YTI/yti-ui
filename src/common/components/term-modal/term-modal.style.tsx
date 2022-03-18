@@ -14,10 +14,13 @@ export const TermModalButton = styled(Button)`
 
 export const TermModalChip = styled.span<{ isvalid?: string }>`
   align-items: center;
-  background: ${props => props.isvalid === 'true' ? props.theme.suomifi.colors.successBase : props.theme.suomifi.colors.depthDark2};
+  background: ${(props) =>
+    props.isvalid === 'true'
+      ? props.theme.suomifi.colors.successBase
+      : props.theme.suomifi.colors.depthDark2};
   border-radius: 10px;
   display: flex;
-  color: ${props => props.theme.suomifi.colors.whiteBase};
+  color: ${(props) => props.theme.suomifi.colors.whiteBase};
   font-size: 12px;
   height: 18px;
   margin-top: 5px;
@@ -31,5 +34,5 @@ export const TermModalChip = styled.span<{ isvalid?: string }>`
 export const TermText = styled(Text)`
   display: grid;
   font-size: 16px;
-  margin-bottom: ${props => props.theme.suomifi.spacing.m};
+  margin-bottom: ${(props) => props.theme.suomifi.spacing.m};
 `;

@@ -7,13 +7,19 @@ import MobileImpersonateWrapper from '../impersonate/mobile-impersonate-wrapper'
 import MobileLocaleChooser from '../locale-chooser/mobile-locale-chooser';
 import { MobileMenuItem, MobileMenuSection } from './navigation.styles';
 
-export default function MobileNavigation() {
+interface MobileNavigationProps {
+  handleLoginModalClick?: () => void;
+}
+
+export default function MobileNavigation({
+  handleLoginModalClick,
+}: MobileNavigationProps) {
   const { t } = useTranslation('common');
   const router = useRouter();
 
   return (
     <>
-      <LoginButtons />
+      <LoginButtons handleLoginModalClick={handleLoginModalClick} />
 
       <MobileMenuSection>
         <MobileMenuItem active={router.pathname === '/'}>
@@ -44,7 +50,9 @@ export default function MobileNavigation() {
           <Link href="/">{t('site-for-administrators')}</Link>
         </MobileMenuItem>
         <MobileMenuItem active={router.pathname === '/own-information'}>
-          <Link className="main" href="/own-information">{t('own-information')}</Link>
+          <Link className="main" href="/own-information">
+            {t('own-information')}
+          </Link>
         </MobileMenuItem>
       </MobileMenuSection>
 

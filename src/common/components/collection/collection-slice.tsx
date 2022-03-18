@@ -5,33 +5,38 @@ import { HYDRATE } from 'next-redux-wrapper';
 
 export const collectionApi = createApi({
   reducerPath: 'collectionAPI',
-  baseQuery: axiosBaseQuery({ baseUrl: `${process.env.TERMINOLOGY_API_URL}/api/v1/frontend` }),
+  baseQuery: axiosBaseQuery({
+    baseUrl: `${process.env.TERMINOLOGY_API_URL}/api/v1/frontend`,
+  }),
   extractRehydrationInfo(action, { reducerPath }) {
     if (action.type === HYDRATE) {
       return action.payload[reducerPath];
     }
   },
   tagTypes: ['Collection'],
-  endpoints: builder => ({
-    getCollection: builder.query<Collection, { terminologyId: string, collectionId: string }>({
+  endpoints: (builder) => ({
+    getCollection: builder.query<
+      Collection,
+      { terminologyId: string; collectionId: string }
+    >({
       query: ({ terminologyId, collectionId }) => ({
         url: `/collection?graphId=${terminologyId}&collectionId=${collectionId}`,
-        method: 'GET'
-      })
+        method: 'GET',
+      }),
     }),
     getCollections: builder.query<Collection[], string>({
       query: (terminologyId) => ({
         url: `/collections?graphId=${terminologyId}`,
-        method: 'GET'
-      })
+        method: 'GET',
+      }),
     }),
-  })
+  }),
 });
 
 export const {
   useGetCollectionQuery,
   useGetCollectionsQuery,
-  util: { getRunningOperationPromises }
+  util: { getRunningOperationPromises },
 } = collectionApi;
 
 export const { getCollection, getCollections } = collectionApi.endpoints;

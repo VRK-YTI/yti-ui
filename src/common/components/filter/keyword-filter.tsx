@@ -11,17 +11,18 @@ interface KeywordFilterProps {
 export function KeywordFilter({
   title,
   visualPlaceholder,
-  isModal
+  isModal,
 }: KeywordFilterProps) {
   const { urlState, patchUrlState } = useUrlState();
   const q = urlState.q;
   const [inputValue, setInputValue] = useState(q);
   useEffect(() => setInputValue(q), [q, setInputValue]);
 
-  const update = (q: string) => patchUrlState({
-    q,
-    page: initialUrlState.page,
-  });
+  const update = (q: string) =>
+    patchUrlState({
+      q,
+      page: initialUrlState.page,
+    });
 
   return (
     <div>
@@ -29,12 +30,12 @@ export function KeywordFilter({
         icon={inputValue ? 'close' : undefined}
         iconProps={{
           fill: 'hsl(212, 63%, 45%)',
-          onClick: () => update('')
+          onClick: () => update(''),
         }}
         labelText={title}
         onBlur={() => update(inputValue)}
-        onChange={val => setInputValue(val?.toString() ?? '')}
-        onKeyDown={e => e.key === 'Enter' && update(inputValue)}
+        onChange={(val) => setInputValue(val?.toString() ?? '')}
+        onKeyDown={(e) => e.key === 'Enter' && update(inputValue)}
         value={inputValue}
         visualPlaceholder={visualPlaceholder}
         fullWidth

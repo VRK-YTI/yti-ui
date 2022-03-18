@@ -6,12 +6,12 @@ export const countsApi = createApi({
   reducerPath: 'countsApi',
   baseQuery: axiosBaseQuery({ baseUrl: '/terminology-api/api/v1/frontend' }),
   tagTypes: ['Counts'],
-  endpoints: builder => ({
+  endpoints: (builder) => ({
     getCounts: builder.query<Counts, null>({
       query: () => ({
         url: '/counts',
-        method: 'GET'
-      })
+        method: 'GET',
+      }),
     }),
     getVocabularyCount: builder.query<Counts, string>({
       query: (value) => ({
@@ -20,8 +20,8 @@ export const countsApi = createApi({
         headers: {
           'content-type': 'application/json',
         },
-      })
-    })
+      }),
+    }),
   }),
 });
 

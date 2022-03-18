@@ -124,12 +124,14 @@ export default function OwnInformation() {
   }
 
   function getOrganizationName(id: string): string {
-    return getPropertyValue({
-      property: organizations
-        ?.filter((organization) => organization.id === id)
-        .map((organization) => organization.properties.prefLabel),
-      language: i18n.language,
-      fallbackLanguage: 'fi',
-    }) ?? '';
+    return (
+      getPropertyValue({
+        property: organizations
+          ?.filter((organization) => organization.id === id)
+          .map((organization) => organization.properties.prefLabel),
+        language: i18n.language,
+        fallbackLanguage: 'fi',
+      }) ?? ''
+    );
   }
 }

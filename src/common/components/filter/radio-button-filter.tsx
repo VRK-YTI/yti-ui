@@ -19,13 +19,13 @@ export default function RadioButtonFilter({
   items,
   selectedItem,
   onChange,
-  radioButtonVariant
+  radioButtonVariant,
 }: RadioButtonFilterProps) {
   return (
     <div>
       <RadioButtonGroup
         labelText={title}
-        name='vocabulary-filter-show-only'
+        name="vocabulary-filter-show-only"
         value={selectedItem}
         onChange={onChange}
       >

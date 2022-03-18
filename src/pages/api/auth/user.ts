@@ -1,4 +1,4 @@
-import { anonymousUser } from '../../../common/interfaces/user-interface';
+import { anonymousUser } from '../../../common/interfaces/user.interface';
 import withSession from '../../../common/utils/session';
 
 export default withSession(async (req, res) => {

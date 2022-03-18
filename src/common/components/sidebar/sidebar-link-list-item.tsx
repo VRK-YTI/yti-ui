@@ -6,7 +6,9 @@ export interface SidebarLinkListItemProps {
   children: React.ReactNode;
 }
 
-export default function SidebarLinkListItem({ children }: SidebarLinkListItemProps) {
+export default function SidebarLinkListItem({
+  children,
+}: SidebarLinkListItemProps) {
   return (
     <SidebarLinkListItemWrapper>
       <Icon icon="linkList" />

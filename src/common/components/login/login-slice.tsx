@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { HYDRATE } from 'next-redux-wrapper';
 import { AppState, AppThunk } from '../../../store';
-import { User } from '../../interfaces/user-interface';
+import { User } from '../../interfaces/user.interface';
 
 export const initialState: User = {
   anonymous: true,
@@ -31,28 +31,26 @@ export const loginSlice = createSlice({
     setLogin(state, action) {
       return {
         ...state,
-        ...action.payload
+        ...action.payload,
       };
-    }
+    },
   },
   extraReducers: {
     [HYDRATE]: (state, action) => {
       return {
         ...state,
-        ...action.payload.login
+        ...action.payload.login,
       };
-    }
-  }
+    },
+  },
 });
 
-export const setLogin = (userData: any): AppThunk => dispatch => {
-  dispatch(
-    loginSlice.actions.setLogin(
-      userData
-    )
-  );
-};
+export function setLogin(userData: User): AppThunk {
+  return (dispatch) => dispatch(loginSlice.actions.setLogin(userData));
+}
 
-export const selectLogin = () => (state: AppState): User => state.login;
+export function selectLogin() {
+  return (state: AppState): User => state.login;
+}
 
 export default loginSlice.reducer;
