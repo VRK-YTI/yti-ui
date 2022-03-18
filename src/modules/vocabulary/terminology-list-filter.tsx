@@ -18,7 +18,7 @@ export function TerminologyListFilter({
   isModal,
   onModalClose,
   resultCount,
-  counts
+  counts,
 }: TerminologyListFilterProps) {
   const { t } = useTranslation('common');
   const { urlState } = useUrlState();

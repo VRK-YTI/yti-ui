@@ -19,7 +19,7 @@ export default function Layout({
   children,
   feedbackSubject,
 }: {
-  children: any;
+  children: React.ReactNode;
   feedbackSubject?: string;
 }) {
   const { t } = useTranslation('common');
@@ -33,18 +33,14 @@ export default function Layout({
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
 
-      <SkipLink href="#main">
-        {t('skip-link-main')}
-      </SkipLink>
+      <SkipLink href="#main">{t('skip-link-main')}</SkipLink>
 
       <SiteContainer>
         <SmartHeader />
 
         <ContentContainer>
           <Alerts />
-          <MarginContainer breakpoint={breakpoint}>
-            {children}
-          </MarginContainer>
+          <MarginContainer breakpoint={breakpoint}>{children}</MarginContainer>
         </ContentContainer>
 
         <FooterContainer>

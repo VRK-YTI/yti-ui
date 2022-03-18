@@ -1,5 +1,9 @@
 import { Text } from 'suomifi-ui-components';
-import { FilterFieldset, FilterCheckbox, FilterFieldsetLegend } from './filter.styles';
+import {
+  FilterFieldset,
+  FilterCheckbox,
+  FilterFieldsetLegend,
+} from './filter.styles';
 
 export interface Item {
   value: string;
@@ -10,7 +14,7 @@ export interface CheckboxFilterProps {
   title: string;
   items: Item[];
   selectedItems: string[];
-  onChange: (selectedItems: string[]) => void;
+  onChange?: (selectedItems: string[]) => void;
   checkboxVariant: 'large' | 'small';
 }
 
@@ -19,12 +23,12 @@ export default function CheckboxFilter({
   items,
   selectedItems,
   onChange,
-  checkboxVariant
+  checkboxVariant,
 }: CheckboxFilterProps) {
   return (
     <FilterFieldset>
       <FilterFieldsetLegend>
-        <Text variant='bold' smallScreen>
+        <Text variant="bold" smallScreen>
           {title}
         </Text>
       </FilterFieldsetLegend>
@@ -42,12 +46,12 @@ export default function CheckboxFilter({
   );
 
   function update(item: string, isSelected: boolean) {
-    const others = selectedItems.filter(other => other && other !== item);
+    const others = selectedItems.filter((other) => other && other !== item);
 
     if (isSelected) {
       others.push(item);
     }
 
-    onChange(others.sort());
+    onChange?.(others.sort());
   }
 }

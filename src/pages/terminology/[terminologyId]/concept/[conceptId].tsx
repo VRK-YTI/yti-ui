@@ -2,17 +2,19 @@ import { SSRConfig, useTranslation } from 'next-i18next';
 import { useRouter } from 'next/dist/client/router';
 import React, { useState } from 'react';
 import Layout from '../../../../layouts/layout';
-import { createCommonGetServerSideProps } from '../../../../common/utils/create-getserversideprops';
+import {
+  createCommonGetServerSideProps,
+  LocalHandlerParams,
+} from '../../../../common/utils/create-getserversideprops';
 import Concept from '../../../../modules/concept';
 import { MediaQueryContextProvider } from '../../../../common/components/media-query/media-query-context';
-import { LocalHandlerParams } from '../../../../common/utils/create-getserversideprops';
 import {
   getConcept,
-  getRunningOperationPromises as getConceptRunningOperationPromises
+  getRunningOperationPromises as getConceptRunningOperationPromises,
 } from '../../../../common/components/concept/concept-slice';
 import {
   getVocabulary,
-  getRunningOperationPromises as getVocabularyRunningOperationPromises
+  getRunningOperationPromises as getVocabularyRunningOperationPromises,
 } from '../../../../common/components/vocabulary/vocabulary-slice';
 import PageTitle from '../../../../common/components/page-title';
 
@@ -44,18 +46,19 @@ export default function ConceptPage(props: {
 
 export const getServerSideProps = createCommonGetServerSideProps(
   async ({ req, store, params }: LocalHandlerParams) => {
-
-    const terminologyId = Array.isArray(params.terminologyId) ?
-      params.terminologyId[0] : params.terminologyId;
-    const conceptId = Array.isArray(params.conceptId) ?
-      params.conceptId[0] : params.conceptId;
+    const terminologyId = Array.isArray(params.terminologyId)
+      ? params.terminologyId[0]
+      : params.terminologyId;
+    const conceptId = Array.isArray(params.conceptId)
+      ? params.conceptId[0]
+      : params.conceptId;
 
     if (terminologyId === undefined || conceptId === undefined) {
       throw new Error('Invalid parameters for page');
     }
 
     await store.dispatch(getVocabulary.initiate(terminologyId));
-    await store.dispatch(getConcept.initiate({terminologyId, conceptId}));
+    await store.dispatch(getConcept.initiate({ terminologyId, conceptId }));
 
     await Promise.all(getVocabularyRunningOperationPromises());
     await Promise.all(getConceptRunningOperationPromises());

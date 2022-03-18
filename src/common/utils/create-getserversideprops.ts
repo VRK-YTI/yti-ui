@@ -1,6 +1,6 @@
 import { GetServerSidePropsContext, NextApiResponse } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import User, { anonymousUser, UserProps } from '../interfaces/user-interface';
+import { User, anonymousUser, UserProps } from '../interfaces/user.interface';
 import withSession, { NextIronRequest } from './session';
 import { AppStore, wrapper } from '../../store';
 import { ParsedUrlQuery } from 'querystring';
@@ -19,17 +19,21 @@ export interface LocalHandlerParams {
 
 export type localHandler<T> = (context: LocalHandlerParams) => Promise<T>;
 
-export type CommonServerSideProps = UserProps & SSRConfig & {
-  isSSRMobile: boolean;
-};
+export type CommonServerSideProps = UserProps &
+  SSRConfig & {
+    isSSRMobile: boolean;
+  };
 
 export type CreateCommonGetServerSidePropsResult<T> = (
   context: GetServerSidePropsContext<ParsedUrlQuery>
-) => Promise<T & { props?: CommonServerSideProps, redirect?: Redirect, notFound?: true }>;
+) => Promise<
+  T & { props?: CommonServerSideProps; redirect?: Redirect; notFound?: true }
+>;
 
-export function createCommonGetServerSideProps<T extends { [key: string]: any }>(
-  handler?: localHandler<T>
-): CreateCommonGetServerSidePropsResult<T> {
+export function createCommonGetServerSideProps<
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  T extends { [key: string]: any }
+>(handler?: localHandler<T>): CreateCommonGetServerSidePropsResult<T> {
   return wrapper.getServerSideProps((store) => {
     return withSession<{ props: UserProps }>(
       async ({
@@ -53,12 +57,20 @@ export function createCommonGetServerSideProps<T extends { [key: string]: any }>
           ...results,
           props: {
             ...results?.props,
-            ...(await serverSideTranslations(locale, ['alert', 'collection', 'common', 'concept'])),
-            isSSRMobile: Boolean(userAgent.match(
-              /Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i
-            )),
+            ...(await serverSideTranslations(locale, [
+              'alert',
+              'collection',
+              'common',
+              'concept',
+            ])),
+            isSSRMobile: Boolean(
+              userAgent.match(
+                /Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i
+              )
+            ),
           },
         };
-      });
+      }
+    );
   }) as CreateCommonGetServerSidePropsResult<T>;
 }

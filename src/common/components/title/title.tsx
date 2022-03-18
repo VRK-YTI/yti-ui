@@ -1,6 +1,12 @@
 import { useTranslation } from 'react-i18next';
 import { Heading } from 'suomifi-ui-components';
-import { Contributor, Description, StatusChip, TitleWrapper, TitleWrapperNoBreadcrumb } from './title.styles';
+import {
+  Contributor,
+  Description,
+  StatusChip,
+  TitleWrapper,
+  TitleWrapperNoBreadcrumb,
+} from './title.styles';
 import InfoExpander from '../info-dropdown/info-expander';
 import { VocabularyInfoDTO } from '../../interfaces/vocabulary.interface';
 import { getPropertyValue } from '../property-value/get-property-value';
@@ -17,15 +23,7 @@ export default function Title({ info }: TitleProps) {
   const { t, i18n } = useTranslation('common');
   const titleRef = useRef<HTMLHeadingElement>(null);
   const dispatch = useStoreDispatch();
-  const title = typeof info === 'string'
-    ?
-    info
-    :
-    getPropertyValue({
-      property: info.properties.prefLabel,
-      language: i18n.language,
-      fallbackLanguage: 'fi'
-    }) ?? '';
+  const title = getTitle(info);
 
   useEffect(() => {
     dispatch(setTitle(title));
@@ -44,26 +42,25 @@ export default function Title({ info }: TitleProps) {
   if (typeof info === 'string') {
     return (
       <TitleWrapperNoBreadcrumb>
-        <Heading variant='h1'>
-          {info}
-        </Heading>
+        <Heading variant="h1">{info}</Heading>
         <Description>{t('terminology-search-info')}</Description>
       </TitleWrapperNoBreadcrumb>
     );
   } else {
     const status = info.properties.status?.[0].value ?? '';
 
-    const contributor = getPropertyValue({
-      property: getProperty('prefLabel', info.references.contributor),
-      language: i18n.language,
-      fallbackLanguage: 'fi'
-    }) ?? '';
+    const contributor =
+      getPropertyValue({
+        property: getProperty('prefLabel', info.references.contributor),
+        language: i18n.language,
+        fallbackLanguage: 'fi',
+      }) ?? '';
 
     return (
       <TitleWrapper>
         <Contributor>{contributor}</Contributor>
 
-        <Heading variant='h1' tabIndex={-1} ref={titleRef}>
+        <Heading variant="h1" tabIndex={-1} ref={titleRef}>
           {title}
         </Heading>
 
@@ -73,6 +70,20 @@ export default function Title({ info }: TitleProps) {
 
         <InfoExpander data={info} />
       </TitleWrapper>
+    );
+  }
+
+  function getTitle(info: string | VocabularyInfoDTO) {
+    if (typeof info === 'string') {
+      return info;
+    }
+
+    return (
+      getPropertyValue({
+        property: info.properties.prefLabel,
+        language: i18n.language,
+        fallbackLanguage: 'fi',
+      }) ?? ''
     );
   }
 }

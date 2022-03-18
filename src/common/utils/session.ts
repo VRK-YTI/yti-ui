@@ -4,7 +4,10 @@ import { Session, withIronSession } from 'next-iron-session';
 import { ParsedUrlQuery } from 'querystring';
 import { userCookieOptions } from './user-cookie-options';
 
-export type NextIronRequest = NextApiRequest & { session: Session, locale: string };
+export type NextIronRequest = NextApiRequest & {
+  session: Session;
+  locale: string;
+};
 
 export type NextIronHandler<T> =
   ((req: NextIronRequest, res: NextApiResponse) => void | Promise<void>) |
@@ -18,8 +21,7 @@ export type NextIronHandler<T> =
 
 const withSession = <T>(handler: NextIronHandler<T>) =>
   withIronSession(handler, {
-    ...userCookieOptions
+    ...userCookieOptions,
   });
 
 export default withSession;
-

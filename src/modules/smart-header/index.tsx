@@ -1,10 +1,18 @@
 import React, { useState } from 'react';
 import { Block } from 'suomifi-ui-components';
 import Modal from 'react-modal';
-import { HeaderContainer, MarginContainer, NavigationContainer } from '../../layouts/layout.styles';
+import {
+  HeaderContainer,
+  MarginContainer,
+  NavigationContainer,
+} from '../../layouts/layout.styles';
 import Logo from './logo';
 import MobileNavigationToggleButton from './mobile-navigation-toggle-button';
-import { HeaderWrapper, ModalOverlay, ModalContent } from './smart-header.styles';
+import {
+  HeaderWrapper,
+  ModalOverlay,
+  ModalContent,
+} from './smart-header.styles';
 import DesktopAuthenticationPanel from '../../common/components/authentication-panel/desktop-authentication-panel';
 import DesktopNavigation from '../../common/components/navigation/desktop-navigation';
 import MobileNavigation from '../../common/components/navigation/mobile-navigation';
@@ -12,19 +20,27 @@ import DesktopLocaleChooser from '../../common/components/locale-chooser/desktop
 import UserInfo from '../../common/components/authentication-panel/user-info';
 import HeaderSearch from '../../common/components/header-search/header-search';
 import { useBreakpoints } from '../../common/components/media-query/media-query-context';
+import LoginModalView from '../../common/components/login-modal/login-modal';
 
 export default function SmartHeader() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isLoginExpanded, setIsLoginExpanded] = useState(false);
   const { breakpoint, isSmall } = useBreakpoints();
 
   Modal.setAppElement('#__next');
+
+  const handleLoginModalClick = () => {
+    setIsLoginExpanded(true);
+    setIsExpanded(false);
+  };
 
   return (
     <>
       {renderHeader()}
       {renderDesktopNavigation()}
       {renderMobileNavigationModal()}
+      {renderLoginModal()}
     </>
   );
 
@@ -33,8 +49,12 @@ export default function SmartHeader() {
       <Modal
         isOpen={isSmall && isExpanded}
         onRequestClose={() => setIsExpanded(false)}
-        overlayElement={(props, children) => <ModalOverlay {...props}>{children}</ModalOverlay>}
-        contentElement={(props, children) => <ModalContent {...props}>{children}</ModalContent>}
+        overlayElement={(props, children) => (
+          <ModalOverlay {...props}>{children}</ModalOverlay>
+        )}
+        contentElement={(props, children) => (
+          <ModalContent {...props}>{children}</ModalContent>
+        )}
         overlayClassName={String(ModalOverlay)}
         className={String(ModalContent)}
       >
@@ -48,7 +68,7 @@ export default function SmartHeader() {
     return (
       <Block variant="nav">
         <NavigationContainer breakpoint="small">
-          <MobileNavigation />
+          <MobileNavigation handleLoginModalClick={handleLoginModalClick} />
         </NavigationContainer>
       </Block>
     );
@@ -70,7 +90,7 @@ export default function SmartHeader() {
 
   function renderHeader() {
     return (
-      <Block variant="header" role='banner'>
+      <Block variant="header" role="banner">
         <HeaderContainer>
           <MarginContainer breakpoint={breakpoint}>
             <HeaderWrapper breakpoint={breakpoint}>
@@ -89,9 +109,7 @@ export default function SmartHeader() {
 
   function renderLogo() {
     if (!isSearchOpen || !isSmall) {
-      return (
-        <Logo />
-      );
+      return <Logo />;
     }
   }
 
@@ -106,9 +124,7 @@ export default function SmartHeader() {
 
   function renderDesktopLocaleChooser() {
     if (!isSmall) {
-      return (
-        <DesktopLocaleChooser />
-      );
+      return <DesktopLocaleChooser />;
     }
   }
 
@@ -125,17 +141,21 @@ export default function SmartHeader() {
 
   function renderDesktopAuthenticationPanel() {
     if (!isSmall) {
-      return (
-        <DesktopAuthenticationPanel />
-      );
+      return <DesktopAuthenticationPanel />;
     }
   }
 
   function renderUserInfo() {
     if (isSmall && isExpanded) {
-      return (
-        <UserInfo breakpoint="small" />
-      );
+      return <UserInfo breakpoint="small" />;
     }
+  }
+
+  function renderLoginModal() {
+    return isLoginExpanded ? (
+      <LoginModalView setVisible={setIsLoginExpanded} />
+    ) : (
+      <></>
+    );
   }
 }

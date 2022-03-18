@@ -24,7 +24,7 @@ const config: Config.InitialOptions = {
     '^.+\\.module\\.(css|sass|scss)$',
   ],
   setupFilesAfterEnv: ['./jest.setup.ts'],
-  testResultsProcessor: 'jest-junit'
+  testResultsProcessor: 'jest-junit',
 };
 
 export default config;

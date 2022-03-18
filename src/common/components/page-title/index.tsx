@@ -10,15 +10,9 @@ export default function PageTitle({ title, siteTitle }: PageTitleProps) {
   const { t } = useTranslation();
   const defaultSiteTitle = t('site-title');
 
-  if (! Array.isArray(title)) {
+  if (!Array.isArray(title)) {
     title = [title];
   }
 
-  return (
-    <Title parts={[
-      ...title,
-      siteTitle ?? defaultSiteTitle
-    ]} />
-  );
+  return <Title parts={[...title, siteTitle ?? defaultSiteTitle]} />;
 }
-

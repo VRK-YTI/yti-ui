@@ -13,7 +13,11 @@ export interface StatusFilterProps {
   };
 }
 
-export default function StatusFilter({ title, isModal, counts }: StatusFilterProps) {
+export default function StatusFilter({
+  title,
+  isModal,
+  counts,
+}: StatusFilterProps) {
   const { t } = useTranslation('common');
   const { urlState, patchUrlState } = useUrlState();
 
@@ -21,16 +25,32 @@ export default function StatusFilter({ title, isModal, counts }: StatusFilterPro
     <CheckboxFilter
       title={title}
       items={[
-        { value: 'valid', label: t('filter-status-valid', { count: counts.valid ?? 0 }) },
-        { value: 'draft', label: t('filter-status-draft', { count: counts.draft ?? 0 }) },
-        { value: 'retired', label: t('filter-status-retired', { count: counts.retired ?? 0 }) },
-        { value: 'superseded', label: t('filter-status-superseded', { count: counts.superseded ?? 0 }) },
+        {
+          value: 'valid',
+          label: t('filter-status-valid', { count: counts.valid ?? 0 }),
+        },
+        {
+          value: 'draft',
+          label: t('filter-status-draft', { count: counts.draft ?? 0 }),
+        },
+        {
+          value: 'superseded',
+          label: t('filter-status-superseded', {
+            count: counts.superseded ?? 0,
+          }),
+        },
+        {
+          value: 'retired',
+          label: t('filter-status-retired', { count: counts.retired ?? 0 }),
+        },
       ]}
       selectedItems={urlState.status}
-      onChange={status => patchUrlState({
-        status,
-        page: initialUrlState.page,
-      })}
+      onChange={(status) =>
+        patchUrlState({
+          status,
+          page: initialUrlState.page,
+        })
+      }
       checkboxVariant={isModal ? 'large' : 'small'}
     />
   );

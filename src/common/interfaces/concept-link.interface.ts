@@ -7,4 +7,4 @@ export interface ConceptLink extends BaseEntity<'ConceptLink'> {
     targetId?: Property[];
     vocabularyLabel?: Property[];
   };
-};
+}

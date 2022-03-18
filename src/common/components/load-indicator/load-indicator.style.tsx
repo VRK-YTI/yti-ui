@@ -12,7 +12,7 @@ export const LoadWrapper = styled.div`
   margin-top: -10px;
   margin-left: -10px;
   border-radius: 10px;
-  gap: ${props => props.theme.suomifi.spacing.xs};
+  gap: ${(props) => props.theme.suomifi.spacing.xs};
 `;
 
 const rotate = keyframes`
@@ -20,12 +20,12 @@ const rotate = keyframes`
   to { transform: rotate(0deg); };
 `;
 
-export const LoadIcon = styled(Icon)<{isSmall: boolean}>`
-  width: ${props => props.isSmall ? '50px' : '100px'};
-  height: ${props => props.isSmall ? '50px' : '100px'};
+export const LoadIcon = styled(Icon)<{ isSmall: boolean }>`
+  width: ${(props) => (props.isSmall ? '50px' : '100px')};
+  height: ${(props) => (props.isSmall ? '50px' : '100px')};
   animation: ${rotate} 2s linear infinite;
-  color: ${props => props.theme.suomifi.colors.highlightLight1};
-  margin-top: ${props => props.theme.suomifi.spacing.xl};
+  color: ${(props) => props.theme.suomifi.colors.highlightLight1};
+  margin-top: ${(props) => props.theme.suomifi.spacing.xl};
 `;
 
 export const RefetchButton = styled(Button)`
