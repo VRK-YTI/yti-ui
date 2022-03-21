@@ -12,13 +12,14 @@ import {
 } from './own-information.styles';
 import { useBreakpoints } from '../../common/components/media-query/media-query-context';
 import { useEffect, useRef } from 'react';
-import { BasicBlock } from '../../common/components/block';
+import { BasicBlock, TermBlock } from '../../common/components/block';
 import { useSelector } from 'react-redux';
 import { selectLogin } from '../../common/components/login/login-slice';
 import Separator from '../../common/components/separator';
 import { useGetOrganizationsQuery } from '../../common/components/terminology-search/terminology-search-slice';
 import { getPropertyValue } from '../../common/components/property-value/get-property-value';
 import _ from 'lodash';
+import AccessRequest from '../../common/components/access-request';
 
 export default function OwnInformation() {
   const user = useSelector(selectLogin());
@@ -68,6 +69,11 @@ export default function OwnInformation() {
           >
             {renderOrganizationsAndRoles()}
           </BasicBlock>
+
+          <BasicBlock>
+            <AccessRequest />
+          </BasicBlock>
+
         </MainContent>
       </PageContent>
     </>
