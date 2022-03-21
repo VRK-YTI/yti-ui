@@ -4,5 +4,17 @@
   "field-organizations-and-roles": "Organizations and roles",
   "organization": "Organization",
   "own-information": "Own information",
-  "roles": "Roles"
+  "roles": "Roles",
+  "access-request": "Access request",
+  "access-description": "Send an access request to apply for content editor rights. Request is processed by organization admin.",
+  "access-request-access": "Send access request",
+  "access-org-description": "Pick an organization to send access request. You will receive an email notification after the request has been processed.",
+  "access-organization": "Organization",
+  "access-pick-org": "Choose organization",
+  "access-services": "Services",
+  "access-terminology": "Terminology",
+  "access-reference-data": "Reference data",
+  "access-data-vocabularies": "Data vocabularies",
+  "access-send-request": "Send request",
+  "access-cancel": "Cancel"
 }

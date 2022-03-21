@@ -1,19 +1,60 @@
+import axios from 'axios';
+import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
-import { Block, Button, Checkbox, Dropdown, DropdownItem, Modal, ModalContent, ModalFooter, ModalTitle, Paragraph, Text } from 'suomifi-ui-components';
-import { AccessRequestDescription, AccessRequestModal, AccessRequestModalFooter, ModalButton, ModalContentBlock, Title } from './access-request.styles';
+import { Button, Checkbox, Dropdown, DropdownItem, ModalFooter, ModalTitle, Paragraph, Text } from 'suomifi-ui-components';
+import { OrganizationSearchResult } from '../../interfaces/terminology.interface';
+import { useBreakpoints } from '../media-query/media-query-context';
+import { useGetRequestsQuery } from './access-request.slice';
+import { AccessRequestDescription, AccessRequestModal, AccessRequestModalContent, CheckboxTitle, CheckboxWrapper, ModalButton, ModalContentBlock, Title } from './access-request.styles';
 
-export default function AccessRequest() {
+interface AccessRequestProps {
+  organizations?: OrganizationSearchResult[];
+}
+
+export default function AccessRequest({ organizations }: AccessRequestProps) {
+  const { t } = useTranslation('own-information');
+  const { isSmall } = useBreakpoints();
   const [visible, setVisible] = useState(false);
+  const [chosenOrganization, setChosenOrganization] = useState<string>();
+  const [services, setServices] = useState<{ [key: string]: boolean }>({
+    'TERMINOLOGY_DATA': false,
+    'CODE_LIST_EDITOR': false,
+    'DATA_MODEL_EDITOR': false
+  });
 
+  const { data } = useGetRequestsQuery(null);
+
+  const handleClose = () => {
+    setChosenOrganization('');
+    setVisible(false);
+  };
+
+  const handleCheckbox = (key: string, bool: boolean) => {
+    const temp = Object.assign({}, services);
+    temp[key] = bool;
+    setServices(temp);
+  };
+
+  console.log('data', data);
+
+  const handleClick = () => {
+    const uri = '/terminology-api/api/v1/frontend/request';
+    axios.post(`${uri}?organizationId=${chosenOrganization}&fake.login.mail=admin@localhost`)
+      .then(response => {
+        console.log('response', response);
+      }).catch(err => {
+        console.error('error', err);
+      });
+  };
 
   return (
     <>
       <Title>
-        Käyttöoikeuspyyntö
+        {t('access-request')}
       </Title>
 
       <AccessRequestDescription>
-        Jos haluat muokkausoikeudet sisältöihin, tee käyttöoikeuspyyntö. Pyynnön käsittelee organisaation pääkäyttäjä.
+        {t('access-description')}
       </AccessRequestDescription>
 
       <ModalButton
@@ -21,65 +62,88 @@ export default function AccessRequest() {
         icon='message'
         onClick={() => setVisible(true)}
       >
-        Tee käyttöoikeuspyyntö
+        {t('access-request-access')}
       </ModalButton>
 
       <AccessRequestModal
         appElementId='__next'
         visible={visible}
-        onEscKeyDown={() => setVisible(false)}
+        variant={isSmall ? 'smallScreen' : 'default'}
+        onEscKeyDown={() => handleClose()}
       >
-        <ModalContent>
+        <AccessRequestModalContent>
           <ModalTitle>
-            Tee käyttöoikeuspyyntö
+            {t('access-request-access')}
           </ModalTitle>
           <Paragraph>
             <Text>
-              Valitse organisaatio, jonka aineistoihin haluat tehdä käyttöoikeuspyynnön. Saat ilmoituksen sähköpostilla kun käyttöoikeuspyyntö on käsitelty.
+              {t('access-org-description')}
             </Text>
           </Paragraph>
 
           <ModalContentBlock>
             <Dropdown
-              labelText='Organisaatio'
-              visualPlaceholder='Valitse organisaatio'
+              labelText={t('access-organization')}
+              visualPlaceholder={t('access-pick-org')}
+              value={chosenOrganization}
+              onChange={e => setChosenOrganization(e)}
             >
-              <DropdownItem
-                value='1'
-              >
-                Organisaatio 1
-              </DropdownItem>
-              <DropdownItem
-                value='2'
-              >
-                Organisaatio 2
-              </DropdownItem>
+              {organizations?.filter(organization => {
+                return !data.map(d => d.organizationId).includes(organization.id);
+              })
+                .map((organization, idx) => {
+                  return (
+                    <DropdownItem
+                      value={organization.id}
+                      key={`dropdown-item-${idx}`}
+                    >
+                      {organization.properties.prefLabel.value}
+                    </DropdownItem>
+                  );
+                })}
             </Dropdown>
           </ModalContentBlock>
 
           <ModalContentBlock>
-            <Checkbox>
-              Sanastot
-            </Checkbox>
-            <Checkbox>
-              Koodistot
-            </Checkbox>
-            <Checkbox>
-              Tietomallit
-            </Checkbox>
+            <CheckboxWrapper>
+              <CheckboxTitle>{t('access-services')}</CheckboxTitle>
+              <Checkbox
+                checked={services['TERMINOLOGY_DATA']}
+                onClick={e => handleCheckbox('TERMINOLOGY_DATA', e.checkboxState)}
+              >
+                {t('access-terminology')}
+              </Checkbox>
+              <Checkbox
+                checked={services['CODE_LIST_EDITOR']}
+                onClick={e => handleCheckbox('CODE_LIST_EDITOR', e.checkboxState)}
+              >
+                {t('access-reference-data')}
+              </Checkbox>
+              <Checkbox
+                checked={services['DATA_MODEL_EDITOR']}
+                onClick={e => handleCheckbox('DATA_MODEL_EDITOR', e.checkboxState)}
+              >
+                {t('access-data-vocabularies')}
+              </Checkbox>
+            </CheckboxWrapper>
           </ModalContentBlock>
 
-        </ModalContent>
+        </AccessRequestModalContent>
 
-        <AccessRequestModalFooter>
-          <Button>Lähetä pyyntö</Button>
+        <ModalFooter>
+          <Button
+            disabled={!chosenOrganization}
+            onClick={() => handleClick()}
+          >
+            {t('access-send-request')}
+          </Button>
           <Button
             variant='secondary'
-            onClick={() => setVisible(false)}
+            onClick={() => handleClose()}
           >
-            Peruuta
+            {t('access-cancel')}
           </Button>
-        </AccessRequestModalFooter>
+        </ModalFooter>
       </AccessRequestModal>
     </>
   );

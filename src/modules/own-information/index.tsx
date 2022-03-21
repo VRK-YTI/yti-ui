@@ -12,7 +12,7 @@ import {
 } from './own-information.styles';
 import { useBreakpoints } from '../../common/components/media-query/media-query-context';
 import { useEffect, useRef } from 'react';
-import { BasicBlock, TermBlock } from '../../common/components/block';
+import { BasicBlock } from '../../common/components/block';
 import { useSelector } from 'react-redux';
 import { selectLogin } from '../../common/components/login/login-slice';
 import Separator from '../../common/components/separator';
@@ -71,7 +71,7 @@ export default function OwnInformation() {
           </BasicBlock>
 
           <BasicBlock>
-            <AccessRequest />
+            <AccessRequest organizations={organizations} />
           </BasicBlock>
 
         </MainContent>
