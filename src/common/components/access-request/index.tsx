@@ -2,14 +2,24 @@ import axios from 'axios';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Button, Checkbox, Dropdown, DropdownItem, ModalFooter, ModalTitle, Paragraph, Text } from 'suomifi-ui-components';
+import { Button, Checkbox, DropdownItem, ModalFooter, ModalTitle, Paragraph, Text } from 'suomifi-ui-components';
 import { useStoreDispatch } from '../../../store';
 import { OrganizationSearchResult } from '../../interfaces/terminology.interface';
 import { setAlert } from '../alert/alert.slice';
 import { selectLogin } from '../login/login-slice';
 import { useBreakpoints } from '../media-query/media-query-context';
 import { useGetRequestsQuery } from './access-request.slice';
-import { AccessRequestDescription, AccessRequestModal, AccessRequestModalContent, CheckboxTitle, CheckboxWrapper, ModalButton, ModalContentBlock, Title } from './access-request.styles';
+import {
+  AccessRequestDescription,
+  AccessRequestModal,
+  AccessRequestModalContent,
+  AccessRequstDropdown,
+  CheckboxTitle,
+  CheckboxWrapper,
+  ModalButton,
+  ModalContentBlock,
+  Title
+} from './access-request.styles';
 
 interface AccessRequestProps {
   organizations?: OrganizationSearchResult[];
@@ -30,7 +40,7 @@ export default function AccessRequest({ organizations }: AccessRequestProps) {
   const user = useSelector(selectLogin());
   const { data: requests, refetch } = useGetRequestsQuery(null);
   const [visible, setVisible] = useState(false);
-  const [error, setError] = useState<any>({});
+  const [error, setError] = useState<{ [key: string]: boolean }>({});
   const [chosenOrganization, setChosenOrganization] = useState<string>();
   const [services, setServices] = useState<{ [key: string]: boolean }>(SERVICES_INITIAL_STATE);
   const dispatch = useStoreDispatch();
@@ -62,12 +72,12 @@ export default function AccessRequest({ organizations }: AccessRequestProps) {
       return;
     }
 
-    const pendingRequestsForOrg = requests.filter(request => request.organizationId === chosenOrganization)?.[0]?.role ?? [];
+    const pendingRequestsForOrg = requests?.filter(request => request.organizationId === chosenOrganization)?.[0]?.role ?? [];
     const currentRightsForOrg = user.rolesInOrganizations[Object.keys(user.rolesInOrganizations)
       .filter(org => org === chosenOrganization)?.[0]];
-    const relatedRights = [...new Set([...pendingRequestsForOrg, ...currentRightsForOrg])];
+    const relatedRights: string[] = Array.from(new Set([...pendingRequestsForOrg, ...currentRightsForOrg]));
 
-    let currentRights = {};
+    const currentRights: { [key: string]: boolean } = {};
     Object.keys(services).filter(key => services[key]).map(service => {
       if (relatedRights.includes(service)) {
         currentRights[service] = true;
@@ -92,8 +102,7 @@ export default function AccessRequest({ organizations }: AccessRequestProps) {
 
     axios.post(uri)
       .then(() => {
-        // TODO: change data text to use translation
-        dispatch(setAlert([{ status: 0, data: 'Käyttöoikeuspyyntö lähetetty' }]));
+        dispatch(setAlert([{ status: 0, data: t('access-request-sent') }]));
         refetch();
         handleClose();
       }).catch(err => {
@@ -138,11 +147,12 @@ export default function AccessRequest({ organizations }: AccessRequestProps) {
           </Paragraph>
 
           <ModalContentBlock>
-            <Dropdown
+            <AccessRequstDropdown
+              error={error?.['dropdown']}
               labelText={t('access-organization')}
               visualPlaceholder={t('access-pick-org')}
               value={chosenOrganization}
-              onChange={e => setChosenOrganization(e)}
+              onChange={e => { setChosenOrganization(e), setError({}); }}
             >
               {organizations?.map((organization, idx) => {
                 return (
@@ -154,7 +164,7 @@ export default function AccessRequest({ organizations }: AccessRequestProps) {
                   </DropdownItem>
                 );
               })}
-            </Dropdown>
+            </AccessRequstDropdown>
           </ModalContentBlock>
 
           <ModalContentBlock>
@@ -164,7 +174,7 @@ export default function AccessRequest({ organizations }: AccessRequestProps) {
                 checked={services[TERMINOLOGY]}
                 onClick={e => handleCheckbox(TERMINOLOGY, e.checkboxState)}
                 status={(error?.['checkbox'] || error?.[TERMINOLOGY]) ? 'error' : 'default'}
-                statusText={error?.[TERMINOLOGY] && 'Olet pyytänyt jo oikeutta tähän palveluun'}
+                statusText={error?.[TERMINOLOGY] ? t('access-request-already-sent') : ''}
                 variant={isSmall ? 'large' : 'small'}
               >
                 {t('access-terminology')}
@@ -173,7 +183,7 @@ export default function AccessRequest({ organizations }: AccessRequestProps) {
                 checked={services[CODE_LIST]}
                 onClick={e => handleCheckbox(CODE_LIST, e.checkboxState)}
                 status={(error?.['checkbox'] || error?.[CODE_LIST]) ? 'error' : 'default'}
-                statusText={error?.[CODE_LIST] && 'Olet pyytänyt jo oikeutta tähän palveluun'}
+                statusText={error?.[CODE_LIST] ? t('access-request-already-sent') : ''}
                 variant={isSmall ? 'large' : 'small'}
               >
                 {t('access-reference-data')}
@@ -182,9 +192,11 @@ export default function AccessRequest({ organizations }: AccessRequestProps) {
                 checked={services[DATA_MODEL]}
                 onClick={e => handleCheckbox(DATA_MODEL, e.checkboxState)}
                 status={error?.['checkbox'] ? 'error' : 'default'}
-                statusText={(error?.['checkbox'] && 'Valitse vähintään yksi palvelu')
+                statusText={
+                  (error?.['checkbox'] && t('access-pick-at-least-one'))
                   ||
-                  (error[DATA_MODEL] && 'Olet pyytänyt jo oikeutta tähän palveluun')
+                  (error[DATA_MODEL] && t('access-request-already-sent'))
+                  || ''
                 }
                 variant={isSmall ? 'large' : 'small'}
               >

@@ -16,5 +16,8 @@
   "access-reference-data": "Reference data",
   "access-data-vocabularies": "Data vocabularies",
   "access-send-request": "Send request",
-  "access-cancel": "Cancel"
+  "access-cancel": "Cancel",
+  "access-request-sent": "Access request sent",
+  "access-request-already-sent": "Access request already sent to this service",
+  "access-pick-at-least-one": "Pick at least one service"
 }

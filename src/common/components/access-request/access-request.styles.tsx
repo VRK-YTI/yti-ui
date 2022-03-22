@@ -1,9 +1,15 @@
 import styled from 'styled-components';
-import { Block, Button, Modal, ModalContent } from 'suomifi-ui-components';
+import { Block, Button, Dropdown, Modal, ModalContent } from 'suomifi-ui-components';
 
 export const AccessRequestDescription = styled.div`
   font-size: 18px;
   margin: ${props => props.theme.suomifi.spacing.xs} 0;
+`;
+
+export const AccessRequstDropdown = styled(Dropdown)<{error: boolean}>`
+  .fi-dropdown_button {
+    border: 2px solid ${props => props.theme.suomifi.colors.alertBase} ${props => props.error ? '!important' : ''};
+  }
 `;
 
 export const AccessRequestModal = styled(Modal)`

@@ -16,5 +16,8 @@
   "access-reference-data": "Koodistot",
   "access-data-vocabularies": "Tietomalli",
   "access-send-request": "Lähetä pyyntö",
-  "access-cancel": "Peruuta"
+  "access-cancel": "Peruuta",
+  "access-request-sent": "Käyttöoikeuspyyntö lähetetty",
+  "access-request-already-sent": "Olet pyytänyt jo oikeutta tähän palveluun",
+  "access-pick-at-least-one": "Valitse vähintään yksi palvelu"
 }

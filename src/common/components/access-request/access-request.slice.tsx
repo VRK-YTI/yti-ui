@@ -1,5 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import axiosBaseQuery from '../axios-base-query';
+import { AccessRequest } from './access-request.interface';
 
 export const accessRequestApi = createApi({
   reducerPath: 'accessRequestApi',
@@ -10,7 +11,7 @@ export const accessRequestApi = createApi({
   }),
   tagTypes: ['AccessRequest'],
   endpoints: (builder) => ({
-    getRequests: builder.query<any, null>({
+    getRequests: builder.query<AccessRequest[], null>({
       query: () => ({
         url: '/requests',
         method: 'GET',
