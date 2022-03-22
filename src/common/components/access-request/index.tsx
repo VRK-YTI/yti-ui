@@ -72,6 +72,7 @@ export default function AccessRequest({ organizations }: AccessRequestProps) {
       return;
     }
 
+    // Creating list of current and pending rights for the user
     const pendingRequestsForOrg = requests?.filter(request => request.organizationId === chosenOrganization)?.[0]?.role ?? [];
     const currentRightsForOrg = user.rolesInOrganizations[Object.keys(user.rolesInOrganizations)
       .filter(org => org === chosenOrganization)?.[0]];
@@ -89,27 +90,7 @@ export default function AccessRequest({ organizations }: AccessRequestProps) {
       return;
     }
 
-    let uri = `/terminology-api/api/v1/frontend/request?organizationId=${chosenOrganization}`;
-    Object.keys(services).map(key => {
-      if (services[key]) {
-        uri += `&roles=${key}`;
-      }
-    });
-
-    if (process.env.NODE_ENV === 'development') {
-      uri += '&fake.login.mail=admin@localhost';
-    }
-
-    axios.post(uri)
-      .then(() => {
-        dispatch(setAlert([{ status: 0, data: t('access-request-sent') }]));
-        refetch();
-        handleClose();
-      }).catch(err => {
-        dispatch(setAlert([{ status: err.response.status, data: err.response.statusText }]));
-        refetch();
-        handleClose();
-      });
+    sendPost();
   };
 
   return (
@@ -220,4 +201,28 @@ export default function AccessRequest({ organizations }: AccessRequestProps) {
       </AccessRequestModal>
     </>
   );
+
+  function sendPost() {
+    let uri = `/terminology-api/api/v1/frontend/request?organizationId=${chosenOrganization}`;
+    Object.keys(services).map(key => {
+      if (services[key]) {
+        uri += `&roles=${key}`;
+      }
+    });
+
+    if (process.env.NODE_ENV === 'development') {
+      uri += '&fake.login.mail=admin@localhost';
+    }
+
+    axios.post(uri)
+    .then(() => {
+      dispatch(setAlert([{ status: 0, data: t('access-request-sent') }]));
+      refetch();
+      handleClose();
+    }).catch(err => {
+      dispatch(setAlert([{ status: err.response.status, data: err.response.statusText }]));
+      refetch();
+      handleClose();
+    });
+  };
 };
