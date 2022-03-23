@@ -5,6 +5,7 @@ import {
   Dropdown,
   Modal,
   ModalContent,
+  ModalTitle,
 } from 'suomifi-ui-components';
 
 export const AccessRequestDescription = styled.div`
@@ -37,15 +38,23 @@ export const AccessRequestModalContent = styled(ModalContent)`
 `;
 
 export const CheckboxTitle = styled.h2`
-  margin: 0;
+  font-size: 16px;
+  margin-bottom: ${(props) => props.theme.suomifi.spacing.xs};
 `;
 
-export const CheckboxWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: ${(props) => props.theme.suomifi.spacing.xs};
-  > * {
+export const CheckboxWrapper = styled.ul`
+  list-style-type: none;
+  padding: 0;
+  margin-bottom: 0;
+  margin-top: 0;
+
+  li > div {
     font-size: 16px;
+    margin-bottom: ${(props) => props.theme.suomifi.spacing.xs};
+  }
+
+  li:last-child > div {
+    margin-bottom: 0;
   }
 `;
 
@@ -61,4 +70,8 @@ export const ModalButton = styled(Button)`
 
 export const ModalContentBlock = styled(Block)`
   margin-top: ${(props) => props.theme.suomifi.spacing.m};
+`;
+
+export const ModalTitleH1 = styled(ModalTitle)`
+  font-size: 22px;
 `;
