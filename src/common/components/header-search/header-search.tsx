@@ -35,6 +35,7 @@ export default function HeaderSearch({
   if (isSmall && !isSearchOpen) {
     return (
       <IconButton
+        isLarge
         icon="search"
         aria-label={t('terminology-search-open')}
         onClick={() => setIsSearchOpen(true)}

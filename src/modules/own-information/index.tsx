@@ -19,6 +19,8 @@ import Separator from '../../common/components/separator';
 import { useGetOrganizationsQuery } from '../../common/components/terminology-search/terminology-search-slice';
 import { getPropertyValue } from '../../common/components/property-value/get-property-value';
 import _ from 'lodash';
+import SubscriptionBlock from './subscription-block';
+import EmailNotificationsBlock from './email-notifications-block';
 
 export default function OwnInformation() {
   const user = useSelector(selectLogin());
@@ -68,6 +70,12 @@ export default function OwnInformation() {
           >
             {renderOrganizationsAndRoles()}
           </BasicBlock>
+
+          <Separator isLarge />
+
+          <EmailNotificationsBlock />
+
+          <SubscriptionBlock />
         </MainContent>
       </PageContent>
     </>
@@ -96,7 +104,7 @@ export default function OwnInformation() {
                 </OrganizationAndRolesHeading>
                 <ul>
                   {roles.map((role) => (
-                    <li key={role}>{role}</li>
+                    <li key={role}>{t(role, { ns: 'common' })}</li>
                   ))}
                 </ul>
               </OrganizationAndRolesItem>

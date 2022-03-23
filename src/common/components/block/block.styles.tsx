@@ -23,8 +23,11 @@ export const BasicBlockHeader = styled.div`
   }
 `;
 
-export const BasicBlockExtraWrapper = styled.div`
+export const BasicBlockExtraWrapper = styled.div<{
+  position?: 'left' | 'right';
+}>`
   margin-top: 10px;
+  text-align: ${(props) => props.position ?? 'left'};
 `;
 
 export const List = styled.ul`

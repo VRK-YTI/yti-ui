@@ -6,6 +6,7 @@ import { BaseIconKeys } from 'suomifi-icons';
 export interface IconButtonProps extends ButtonProps {
   icon: BaseIconKeys;
   color?: string;
+  isLarge?: boolean;
 }
 
 export default function IconButton({

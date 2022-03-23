@@ -1,7 +1,10 @@
 {
   "field-email": "Sähköpostiosoite",
+  "field-email-notifications": "Sähköposti-ilmoitukset",
+  "field-email-notifications-description": "Kun ilmoitustoiminto on päällä, saat ilmoitukset muutoksista kerran päivässä. Voit halutessasi laittaa ilmoitustoiminnon pois päältä, jolloin et saa ilmoituksia sähköpostiisi.",
   "field-name": "Nimi",
   "field-organizations-and-roles": "Organisaatiot ja roolit",
+  "field-subscriptions": "Sanastoaineistot, joista on tilattu ilmoitukset",
   "organization": "Organisaatio",
   "own-information": "Omat tiedot",
   "roles": "Roolit"

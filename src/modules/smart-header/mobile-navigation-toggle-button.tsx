@@ -15,6 +15,7 @@ export default function MobileNavigationToggleButton({
 
   return (
     <IconButton
+      isLarge
       icon={isOpen ? 'close' : 'menu'}
       aria-label={isOpen ? t('navigation-close') : t('navigation-open')}
       onClick={() => setIsOpen((isOpen) => !isOpen)}

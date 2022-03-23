@@ -56,3 +56,33 @@ export const OrganizationAndRolesItem = styled.div`
 export const OrganizationAndRolesHeading = styled.div`
   font-weight: 600;
 `;
+
+export const SubscriptionsList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border: solid 1px ${(props) => props.theme.suomifi.colors.depthLight1};
+`;
+
+export const SubscriptionsListItem = styled.li`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-block: ${(props) => props.theme.suomifi.spacing.xxs};
+  padding-inline: ${(props) => props.theme.suomifi.spacing.s};
+
+  background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
+  &:nth-child(even) {
+    background-color: ${(props) => props.theme.suomifi.colors.depthLight3};
+  }
+
+  a {
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  &:not(:last-child) {
+    border-bottom: solid 1px
+      ${(props) => props.theme.suomifi.colors.depthLight1};
+  }
+`;
