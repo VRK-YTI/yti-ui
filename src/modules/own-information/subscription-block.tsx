@@ -9,8 +9,15 @@ import { Button, Link as SuomiLink } from 'suomifi-ui-components';
 import IconButton from '../../common/components/icon-button/icon-button';
 import { BasicBlockExtraWrapper } from '../../common/components/block/block.styles';
 
-export default function SubscriptionBlock() {
+interface SubscriptionBlockProps {
+  subscriptions: any;
+  refetchSubscriptions?: () => void;
+}
+
+export default function SubscriptionBlock({ subscriptions }: SubscriptionBlockProps) {
   const { t } = useTranslation('own-information');
+
+  console.log('subscriptions', subscriptions);
 
   return (
     <BasicBlock

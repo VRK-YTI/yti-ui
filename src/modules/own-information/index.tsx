@@ -21,12 +21,14 @@ import { getPropertyValue } from '../../common/components/property-value/get-pro
 import _ from 'lodash';
 import SubscriptionBlock from './subscription-block';
 import EmailNotificationsBlock from './email-notifications-block';
+import { useGetSubscriptionsQuery } from '../../common/components/subscription/subscription-slice';
 
 export default function OwnInformation() {
   const user = useSelector(selectLogin());
   const { breakpoint } = useBreakpoints();
   const { t, i18n } = useTranslation('own-information');
   const { data: organizations } = useGetOrganizationsQuery(i18n.language);
+  const { data: subscriptions, refetch: refetchSubscriptions } = useGetSubscriptionsQuery(null);
 
   const titleRef = useRef<HTMLHeadingElement>(null);
   useEffect(() => {
@@ -73,9 +75,9 @@ export default function OwnInformation() {
 
           <Separator isLarge />
 
-          <EmailNotificationsBlock />
+          <EmailNotificationsBlock subscriptions={subscriptions} refetchSubscriptions={refetchSubscriptions} />
 
-          <SubscriptionBlock />
+          <SubscriptionBlock subscriptions={subscriptions} />
         </MainContent>
       </PageContent>
     </>
