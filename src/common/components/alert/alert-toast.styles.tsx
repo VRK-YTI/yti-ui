@@ -24,20 +24,12 @@ export const ToastIcon = styled(Icon)`
   width: 24px;
 `;
 
-export const AlertsWrapper = styled.div<{scrollY: number; isSmall?: boolean}>`
-  position: ${props => props.scrollY > 150 ? 'fixed' : 'absolute'};;
-  z-index: ${props => props.scrollY > 150 ? '2' : '1'};
+export const AlertsWrapper = styled.div<{ scrollY: number; isSmall?: boolean }>`
+  position: ${(props) => (props.scrollY > 150 ? 'fixed' : 'absolute')};
+  z-index: ${(props) => (props.scrollY > 150 ? '2' : '1')};
   width: 100%;
-  margin-top: ${props => props.scrollY > 150
-    ?
-    props.isSmall
-      ?
-      '-50px'
-      :
-      '-115px'
-    :
-    '10px'
-};
+  margin-top: ${(props) =>
+    props.scrollY > 150 ? (props.isSmall ? '-50px' : '-115px') : '10px'};
   display: grid;
   justify-content: center;
   > * {

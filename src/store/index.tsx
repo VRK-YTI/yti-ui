@@ -30,7 +30,7 @@ export function makeStore() {
       [loginSlice.name]: loginSlice.reducer,
       [alertSlice.name]: alertSlice.reducer,
       [titleSlice.name]: titleSlice.reducer,
-      [subscriptionApi.reducerPath]: subscriptionApi.reducer
+      [subscriptionApi.reducerPath]: subscriptionApi.reducer,
     },
 
     middleware: (getDefaultMiddleware) =>

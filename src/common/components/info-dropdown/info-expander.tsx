@@ -82,8 +82,7 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
           {t('vocabulary-info-vocabulary-export-description')}
         </BasicBlock>
 
-        {!user.anonymous
-          &&
+        {!user.anonymous && (
           <>
             <Separator isLarge />
 
@@ -98,7 +97,7 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
               {t('email-subscription-description')}
             </BasicBlock>
           </>
-        }
+        )}
 
         <VisuallyHidden as="h3">
           {t('additional-technical-information', { ns: 'common' })}

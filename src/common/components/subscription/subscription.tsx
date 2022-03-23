@@ -17,47 +17,48 @@ export default function Subscription({ uri }: SubscriptionProps) {
   const dispatch = useStoreDispatch();
 
   useEffect(() => {
-    setSubscribed((data !== '' && data) ? true : false);
+    setSubscribed(data !== '' && data ? true : false);
   }, [data]);
 
   const handleSubscription = (subscribed: boolean) => {
     if (!error) {
-      const url = process.env.NODE_ENV !== 'development'
-        ?
-        uri
-        :
-        // This terminology can be found in dev, so change if dev data is changed
-        'http://uri.suomi.fi/terminology/demo/terminological-vocabulary-0';
+      const url =
+        process.env.NODE_ENV !== 'development'
+          ? uri
+          : // This terminology can be found in dev, so change if dev data is changed
+            'http://uri.suomi.fi/terminology/demo/terminological-vocabulary-0';
 
+      axios
+        .post(getURL(), {
+          action: subscribed ? 'DELETE' : 'ADD',
+          type: 'terminology',
+          uri: url,
+        })
+        .then(() => {
+          dispatch(subscriptionApi.internalActions.resetApiState());
 
-      axios.post(getURL(), {
-        action: subscribed ? 'DELETE' : 'ADD',
-        type: 'terminology',
-        uri: url
-      }).then(() => {
-        dispatch(subscriptionApi.internalActions.resetApiState());
-
-        if (!subscribed) {
-          dispatch(setAlert([{
-            status: 0,
-            data: t('email-subscription-subscribed')
-          }]));
-        }
-
-      }).catch(err => {
-        dispatch(setAlert([err]));
-      });
+          if (!subscribed) {
+            dispatch(
+              setAlert([
+                {
+                  status: 0,
+                  data: t('email-subscription-subscribed'),
+                },
+              ])
+            );
+          }
+        })
+        .catch((err) => {
+          dispatch(setAlert([err]));
+        });
     }
   };
 
   return (
     <Button variant="secondary" onClick={() => handleSubscription(subscribed)}>
       {subscribed
-        ?
-        t('email-subscription-delete')
-        :
-        t('email-subscription-add')
-      }
+        ? t('email-subscription-delete')
+        : t('email-subscription-add')}
     </Button>
   );
 }

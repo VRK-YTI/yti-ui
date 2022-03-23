@@ -23,7 +23,10 @@ export function Alerts() {
   }
 
   return (
-    <AlertsWrapper scrollY={window.scrollY} isSmall={isSmall}>
+    <AlertsWrapper
+      scrollY={typeof window !== 'undefined' ? window.scrollY : 0}
+      isSmall={isSmall}
+    >
       {alerts.map((alert, idx) => {
         if (alert.status === 0) {
           return <NotificationToast key={`alert-${idx}`} alert={alert} />;

@@ -7,10 +7,8 @@ export const subscriptionApi = createApi({
   reducerPath: 'subsriptionApi',
   baseQuery: axiosBaseQuery({
     baseUrl: process.env.MESSAGING_API_URL
-      ?
-      `${process.env.MESSAGING_API_URL}/api/v1`
-      :
-      '/messaging-api/api/v1'
+      ? `${process.env.MESSAGING_API_URL}/api/v1`
+      : '/messaging-api/api/v1',
   }),
   extractRehydrationInfo(action, { reducerPath }) {
     if (action.type === HYDRATE) {
@@ -18,27 +16,26 @@ export const subscriptionApi = createApi({
     }
   },
   tagTypes: ['Subscription'],
-  endpoints: builder => ({
+  endpoints: (builder) => ({
     getSubscription: builder.query<Subscription | '', string>({
       query: (url) => ({
-        url: process.env.NODE_ENV === 'development'
-          ?
-          '/subscriptions?fake.login.mail=admin@localhost'
-          :
-          '/subscriptions',
+        url:
+          process.env.NODE_ENV === 'development'
+            ? '/subscriptions?fake.login.mail=admin@localhost'
+            : '/subscriptions',
         method: 'POST',
         data: {
           action: 'GET',
-          uri: url
+          uri: url,
         },
-      })
-    })
+      }),
+    }),
   }),
 });
 
 export const {
   useGetSubscriptionQuery,
-  util: { getRunningOperationPromises }
+  util: { getRunningOperationPromises },
 } = subscriptionApi;
 
 export const { getSubscription } = subscriptionApi.endpoints;

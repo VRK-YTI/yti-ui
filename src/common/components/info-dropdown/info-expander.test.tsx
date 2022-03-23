@@ -14,13 +14,16 @@ describe('infoExpander', () => {
 
     render(
       <Provider store={store}>
-        <InfoExpander data={{
-          properties: {},
-          references: {
-            contributor: [{ properties: { prefLabel: [] } }],
-            inGroup: [{ properties: { prefLabel: [] } }],
-          },
-        } as any}
+        <InfoExpander
+          data={
+            {
+              properties: {},
+              references: {
+                contributor: [{ properties: { prefLabel: [] } }],
+                inGroup: [{ properties: { prefLabel: [] } }],
+              },
+            } as any
+          }
         />
       </Provider>,
       { wrapper: themeProvider }
@@ -42,13 +45,16 @@ describe('infoExpander', () => {
 
     render(
       <Provider store={store}>
-        <InfoExpander data={{
-          properties: {},
-          references: {
-            contributor: [{ properties: { prefLabel: [] } }],
-            inGroup: [{ properties: { prefLabel: [] } }],
-          },
-        } as any}
+        <InfoExpander
+          data={
+            {
+              properties: {},
+              references: {
+                contributor: [{ properties: { prefLabel: [] } }],
+                inGroup: [{ properties: { prefLabel: [] } }],
+              },
+            } as any
+          }
         />
       </Provider>,
       { wrapper: themeProvider }
