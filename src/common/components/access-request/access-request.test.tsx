@@ -23,17 +23,17 @@ describe('access-request', () => {
         prefLabel: {
           lang: 'fi',
           value: 'Test-org',
-          regex: ''
-        }
+          regex: '',
+        },
       },
       type: {
         graph: {
-          id: '321321-321321'
+          id: '321321-321321',
         },
-        id: 'Organization'
+        id: 'Organization',
       },
-      uri: ''
-    }
+      uri: '',
+    },
   ];
 
   it('should render component', () => {
@@ -41,7 +41,7 @@ describe('access-request', () => {
 
     render(
       <Provider store={store}>
-        <AccessRequest organizations={organizations}/>
+        <AccessRequest organizations={organizations} />
       </Provider>,
       { wrapper: themeProvider }
     );
@@ -57,13 +57,13 @@ describe('access-request', () => {
     const store = makeStore();
     const loginInitialState = Object.assign({}, initialState);
     loginInitialState['rolesInOrganizations'] = {
-      '123123-321321': ['TERMINOLOGY_EDITOR']
+      '123123-321321': ['TERMINOLOGY_EDITOR'],
     };
     store.dispatch(setLogin(loginInitialState));
 
     render(
       <Provider store={store}>
-        <AccessRequest organizations={organizations}/>
+        <AccessRequest organizations={organizations} />
       </Provider>,
       { wrapper: themeProvider }
     );
@@ -73,7 +73,8 @@ describe('access-request', () => {
     userEvent.click(screen.getByText('Test-org'));
     userEvent.click(screen.getByText('tr-access-terminology'));
     userEvent.click(screen.getByText('tr-access-send-request'));
-    expect(screen.getByText(/tr-access-request-already-sent/)).toBeInTheDocument();
+    expect(
+      screen.getByText(/tr-access-request-already-sent/)
+    ).toBeInTheDocument();
   });
-
 });

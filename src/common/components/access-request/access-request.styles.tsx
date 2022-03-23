@@ -1,14 +1,21 @@
 import styled from 'styled-components';
-import { Block, Button, Dropdown, Modal, ModalContent } from 'suomifi-ui-components';
+import {
+  Block,
+  Button,
+  Dropdown,
+  Modal,
+  ModalContent,
+} from 'suomifi-ui-components';
 
 export const AccessRequestDescription = styled.div`
   font-size: 18px;
-  margin: ${props => props.theme.suomifi.spacing.xs} 0;
+  margin: ${(props) => props.theme.suomifi.spacing.xs} 0;
 `;
 
-export const AccessRequstDropdown = styled(Dropdown)<{error: boolean}>`
+export const AccessRequstDropdown = styled(Dropdown)<{ error: boolean }>`
   .fi-dropdown_button {
-    border: 2px solid ${props => props.theme.suomifi.colors.alertBase} ${props => props.error ? '!important' : ''};
+    border: 2px solid ${(props) => props.theme.suomifi.colors.alertBase}
+      ${(props) => (props.error ? '!important' : '')};
   }
 `;
 
@@ -18,7 +25,6 @@ export const AccessRequestModal = styled(Modal)`
   .fi-modal_footer_content-gradient-overlay {
     visibility: hidden;
     height: 0 !important;
-
 
     > * {
       height: 0 !important;
@@ -37,7 +43,7 @@ export const CheckboxTitle = styled.h2`
 export const CheckboxWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: ${props => props.theme.suomifi.spacing.xs};
+  gap: ${(props) => props.theme.suomifi.spacing.xs};
   > * {
     font-size: 16px;
   }
@@ -54,5 +60,5 @@ export const ModalButton = styled(Button)`
 `;
 
 export const ModalContentBlock = styled(Block)`
-  margin-top: ${props => props.theme.suomifi.spacing.m};
+  margin-top: ${(props) => props.theme.suomifi.spacing.m};
 `;

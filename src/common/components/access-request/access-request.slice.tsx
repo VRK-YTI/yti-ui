@@ -16,7 +16,7 @@ export const accessRequestApi = createApi({
         url: '/requests',
         method: 'GET',
       }),
-    })
+    }),
   }),
 });
 

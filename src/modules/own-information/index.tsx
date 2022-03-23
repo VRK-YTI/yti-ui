@@ -73,7 +73,6 @@ export default function OwnInformation() {
           <BasicBlock>
             <AccessRequest organizations={organizations} />
           </BasicBlock>
-
         </MainContent>
       </PageContent>
     </>
