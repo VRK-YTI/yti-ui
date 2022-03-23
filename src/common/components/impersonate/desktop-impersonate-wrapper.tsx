@@ -7,11 +7,13 @@ export interface DesktopImpersonateWrapperProps {
   children: React.ReactNode;
 }
 
-export default function DesktopImpersonateWrapper({ children }: DesktopImpersonateWrapperProps) {
+export default function DesktopImpersonateWrapper({
+  children,
+}: DesktopImpersonateWrapperProps) {
   const users = useFakeableUsers();
   const { t } = useTranslation();
 
-  if (! users?.length) {
+  if (!users?.length) {
     return <>{children}</>;
   }
 
@@ -23,7 +25,7 @@ export default function DesktopImpersonateWrapper({ children }: DesktopImpersona
           key: id,
           value: email,
           label: displayName,
-          onClick: impersonate
+          onClick: impersonate,
         })) ?? []),
       ]}
     >

@@ -1,3 +1,4 @@
+import ReactDOM from 'react-dom';
 import { SWRConfig } from 'swr';
 import '../../styles/globals.scss';
 import type { AppProps } from 'next/app';
@@ -26,26 +27,29 @@ function App({ Component, pageProps }: AppProps) {
       window.localStorage.setItem('user-signed', 'true');
     } else if (login.anonymous && window.localStorage.getItem('user-signed')) {
       window.localStorage.removeItem('user-signed');
-      dispatch(setAlert([{
-        status: 0,
-        data: 'logged-out'
-      }]));
+      dispatch(
+        setAlert([
+          {
+            status: 0,
+            data: 'logged-out',
+          },
+        ])
+      );
     }
   });
 
   return (
     <SWRConfig
       value={{
-        fetcher: async (url: string, init?: RequestInit) => axios
-          .get(url)
-          .then(res => res.data),
+        fetcher: async (url: string, init?: RequestInit) =>
+          axios.get(url).then((res) => res.data),
         onError: (err) => {
           console.error(err);
         },
       }}
     >
       <VisuallyHidden>
-        <div role='region' aria-live='assertive'>
+        <div role="region" aria-live="assertive">
           {t('navigated-to')} {title}
         </div>
       </VisuallyHidden>
@@ -54,3 +58,10 @@ function App({ Component, pageProps }: AppProps) {
   );
 }
 export default wrapper.withRedux(appWithTranslation(App));
+
+// setup a11y checker for development
+if (process.env.NODE_ENV !== 'production' && typeof window !== 'undefined') {
+  import('@axe-core/react').then(({ default: axe }) =>
+    axe(React, ReactDOM, 1000)
+  );
+}

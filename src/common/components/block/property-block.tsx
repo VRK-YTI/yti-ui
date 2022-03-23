@@ -19,7 +19,7 @@ export default function PropertyBlock({
   valueAccessor,
   fallbackLanguage,
   delimiter = false,
-  extra
+  extra,
 }: PropertyBlockProps) {
   const { i18n } = useTranslation('common');
 
@@ -28,7 +28,7 @@ export default function PropertyBlock({
     valueAccessor,
     language: i18n.language,
     fallbackLanguage,
-    delimiter
+    delimiter,
   });
 
   if (!children) {

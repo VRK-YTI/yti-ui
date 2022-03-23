@@ -1,13 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import InfoExpander from './info-expander';
 import { themeProvider } from '../../../tests/test-utils';
 import { Provider } from 'react-redux';
 import { makeStore } from '../../../store';
-import { setLogin } from '../login/login-slice';
+import { setLogin, initialState } from '../login/login-slice';
 
-describe('InfoExpander', () => {
-  test('should render export button', () => {
+describe('infoExpander', () => {
+  it('should render export button', () => {
     const store = makeStore();
 
     render(
@@ -24,18 +26,19 @@ describe('InfoExpander', () => {
       { wrapper: themeProvider }
     );
 
-    expect(screen.queryAllByText('tr-vocabulary-info-vocabulary-export')).toHaveLength(1);
+    expect(
+      screen.getByText('tr-vocabulary-info-vocabulary-export')
+    ).toBeInTheDocument();
   });
 
-  test('should render subscribe button', () => {
+  it('should render subscribe button', () => {
     const store = makeStore();
-
-    store.dispatch(setLogin({
-      anonymous: false,
-      email: 'admin@localhost',
-      firstName: 'Admin',
-      lastName: 'User'
-    }));
+    const loginInitialState = Object.assign({}, initialState);
+    loginInitialState['anonymous'] = false;
+    loginInitialState['email'] = 'admin@localhost';
+    loginInitialState['firstName'] = 'Admin';
+    loginInitialState['lastName'] = 'User';
+    store.dispatch(setLogin(loginInitialState));
 
     render(
       <Provider store={store}>
@@ -51,6 +54,6 @@ describe('InfoExpander', () => {
       { wrapper: themeProvider }
     );
 
-    expect(screen.queryAllByText('tr-email-subscription-add')).toHaveLength(1);
+    expect(screen.getByText('tr-email-subscription-add')).toBeInTheDocument();
   });
 });

@@ -14,7 +14,7 @@ export const HeaderWrapper = styled.div`
 export const SearchAndLanguageWrapper = styled.div`
   display: flex;
   align-items: center;
-  gap: ${props => props.theme.suomifi.spacing.m};
+  gap: ${(props) => props.theme.suomifi.spacing.m};
 `;
 
 export const SearchWrapper = styled.div`
@@ -35,7 +35,7 @@ export const SmallSearchButton = styled(Button)`
 `;
 
 export const SiteLogo = styled.div<{ breakpoint: Breakpoint }>`
-  flex-grow: ${props => small(props.breakpoint, '1', '0')};
+  flex-grow: ${(props) => small(props.breakpoint, '1', '0')};
   line-height: 0;
 
   a {

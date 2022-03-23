@@ -18,4 +18,4 @@ export interface Term extends BaseEntity<'Term'> {
     termStyle?: Property[];
     wordClass?: Property[];
   };
-};
+}

@@ -1,46 +1,57 @@
 import { useTranslation } from 'next-i18next';
-import { Button, ExternalLink, ModalFooter, Paragraph, Text } from 'suomifi-ui-components';
+import {
+  Button,
+  ExternalLink,
+  ModalFooter,
+  Paragraph,
+  Text,
+} from 'suomifi-ui-components';
 import { useBreakpoints } from '../media-query/media-query-context';
-import { ModalContentSmPadding, ModalStyled, ModalTitleH1 } from './login-modal.styles';
+import {
+  ModalContentSmPadding,
+  ModalStyled,
+  ModalTitleH1,
+} from './login-modal.styles';
 
-export default function LoginModalView({ setVisible }: { setVisible: Function }) {
+export default function LoginModalView({
+  setVisible,
+}: {
+  setVisible: Function;
+}) {
   const { t } = useTranslation('common');
   const { isSmall } = useBreakpoints();
 
   return (
     <>
       <ModalStyled
-        appElementId='__next'
+        appElementId="__next"
         visible={true}
         variant={isSmall ? 'smallScreen' : 'default'}
         onEscKeyDown={() => setVisible(false)}
         scrollable={false}
       >
         <ModalContentSmPadding>
-          <ModalTitleH1 as={'h1'}>
-            {t('site-login-title')}
-          </ModalTitleH1>
+          <ModalTitleH1 as={'h1'}>{t('site-login-title')}</ModalTitleH1>
           <Paragraph>
-            <Text>
-              {t('site-login-info-1')}
-            </Text>
+            <Text>{t('site-login-info-1')}</Text>
           </Paragraph>
           <br />
           <Paragraph>
-            <Text>
-              {t('site-login-info-2')}{' '}
-            </Text>
-            <ExternalLink href='http://id.eduuni.fi/signup' labelNewWindow={`${t('site-open-link-new-window')} id.eduuni.if/signup`}>
+            <Text>{t('site-login-info-2')} </Text>
+            <ExternalLink
+              href="http://id.eduuni.fi/signup"
+              labelNewWindow={`${t(
+                'site-open-link-new-window'
+              )} id.eduuni.if/signup`}
+            >
               {t('site-register')}
             </ExternalLink>
           </Paragraph>
         </ModalContentSmPadding>
 
         <ModalFooter>
-          <Button onClick={(e) => login(e)}>
-            {t('site-to-login')}
-          </Button>
-          <Button variant='secondaryNoBorder' onClick={() => setVisible(false)}>
+          <Button onClick={(e) => login(e)}>{t('site-to-login')}</Button>
+          <Button variant="secondaryNoBorder" onClick={() => setVisible(false)}>
             {t('site-cancel')}
           </Button>
         </ModalFooter>

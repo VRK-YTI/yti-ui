@@ -12,10 +12,10 @@ declare module 'styled-components' {
 
 export const lightTheme: DefaultTheme = {
   primaryColor: '#ccc',
-  suomifi: suomifiDesignTokens
+  suomifi: suomifiDesignTokens,
 };
 
 export const darkTheme: DefaultTheme = {
   primaryColor: suomifiDesignTokens.colors.whiteBase,
-  suomifi: suomifiDesignTokens
+  suomifi: suomifiDesignTokens,
 };

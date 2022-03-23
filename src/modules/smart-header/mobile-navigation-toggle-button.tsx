@@ -9,7 +9,7 @@ export interface MobileNavigationToggleButtonProps {
 
 export default function MobileNavigationToggleButton({
   isOpen,
-  setIsOpen
+  setIsOpen,
 }: MobileNavigationToggleButtonProps) {
   const { t } = useTranslation();
 
@@ -17,7 +17,7 @@ export default function MobileNavigationToggleButton({
     <IconButton
       icon={isOpen ? 'close' : 'menu'}
       aria-label={isOpen ? t('navigation-close') : t('navigation-open')}
-      onClick={() => setIsOpen(isOpen => !isOpen)}
+      onClick={() => setIsOpen((isOpen) => !isOpen)}
     />
   );
 }

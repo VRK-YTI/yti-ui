@@ -9,9 +9,7 @@ function windowAvailable() {
   );
 }
 
-const useEnhancedEffect = windowAvailable()
-  ? useLayoutEffect
-  : useEffect;
+const useEnhancedEffect = windowAvailable() ? useLayoutEffect : useEffect;
 
 let autoId = 0;
 let clientRender = false;

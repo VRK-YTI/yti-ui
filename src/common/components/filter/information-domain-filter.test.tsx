@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { render, screen } from '@testing-library/react';
 import { useRouter } from 'next/router';
 import { themeProvider } from '../../../tests/test-utils';
@@ -6,11 +8,11 @@ import InformationDomainFilter from './information-domain-filter';
 jest.mock('next/router');
 const mockedUseRouter = useRouter as jest.MockedFunction<typeof useRouter>;
 
-describe('InformationDomainFilter', () => {
-  test('should render component', () => {
+describe('informationDomainFilter', () => {
+  it('should render component', () => {
     mockedUseRouter.mockReturnValue({
       query: { domain: 'd1' },
-    } as any);
+    } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
 
     render(
       <InformationDomainFilter
@@ -27,12 +29,14 @@ describe('InformationDomainFilter', () => {
       { wrapper: themeProvider }
     );
 
-    expect(screen.getByText('InformationDomainFilter title')).toBeInTheDocument;
+    expect(
+      screen.getByText('InformationDomainFilter title')
+    ).toBeInTheDocument();
 
-    expect(screen.getByLabelText(/Domain 1/)).toBeInTheDocument;
+    expect(screen.getByLabelText(/Domain 1/)).toBeInTheDocument();
     expect(screen.getByLabelText(/Domain 1/)).toBeChecked();
 
-    expect(screen.getByLabelText(/Domain 2/)).toBeInTheDocument;
+    expect(screen.getByLabelText(/Domain 2/)).toBeInTheDocument();
     expect(screen.getByLabelText(/Domain 2/)).not.toBeChecked();
   });
 });

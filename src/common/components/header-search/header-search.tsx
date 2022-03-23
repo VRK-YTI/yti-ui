@@ -12,7 +12,10 @@ export interface HeaderSearchProps {
   setIsSearchOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function HeaderSearch({ isSearchOpen, setIsSearchOpen }: HeaderSearchProps) {
+export default function HeaderSearch({
+  isSearchOpen,
+  setIsSearchOpen,
+}: HeaderSearchProps) {
   const { t } = useTranslation('common');
   const { isSmall } = useBreakpoints();
   const router = useRouter();
@@ -20,7 +23,9 @@ export default function HeaderSearch({ isSearchOpen, setIsSearchOpen }: HeaderSe
 
   const { urlState, patchUrlState } = useUrlState();
   const q = urlState.q;
-  const [searchInputValue, setSearchInputValue] = useState<string>(isSearchPage ? q : '');
+  const [searchInputValue, setSearchInputValue] = useState<string>(
+    isSearchPage ? q : ''
+  );
   useEffect(() => {
     if (isSearchPage) {
       setSearchInputValue(q);
@@ -39,17 +44,17 @@ export default function HeaderSearch({ isSearchOpen, setIsSearchOpen }: HeaderSe
   return (
     <>
       <SearchInput
-        clearButtonLabel=""
+        clearButtonLabel={t('terminology-search-clear')}
         labelText=""
         value={searchInputValue ?? ''}
         labelMode="hidden"
         searchButtonLabel={t('terminology-search')}
         visualPlaceholder={t('terminology-search-placeholder')}
-        wrapperProps={{ style: { 'flexGrow': isSmall ? 1 : 0 } }}
-        onSearch={value => {
+        wrapperProps={{ style: { flexGrow: isSmall ? 1 : 0 } }}
+        onSearch={(value) => {
           if (typeof value === 'string') search(value);
         }}
-        onChange={value => {
+        onChange={(value) => {
           setSearchInputValue(String(value ?? ''));
           if (value === '') search();
         }}
@@ -69,13 +74,17 @@ export default function HeaderSearch({ isSearchOpen, setIsSearchOpen }: HeaderSe
     if (isSearchPage) {
       patchUrlState({
         q: q ?? '',
-        page: initialUrlState.page
+        page: initialUrlState.page,
       });
     } else {
-      return router.push({
-        pathname: '/',
-        query: q ? { q } : {},
-      }, undefined, { shallow: true });
+      return router.push(
+        {
+          pathname: '/',
+          query: q ? { q } : {},
+        },
+        undefined,
+        { shallow: true }
+      );
     }
   }
 }

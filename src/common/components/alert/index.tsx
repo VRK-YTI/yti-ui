@@ -28,7 +28,14 @@ export function Alerts() {
         if (alert.status === 0) {
           return <NotificationToast key={`alert-${idx}`} alert={alert} />;
         } else {
-          return <Alert key={`alert-${idx}`} alert={alert} alerts={alerts} type={'error'} />;
+          return (
+            <Alert
+              key={`alert-${idx}`}
+              alert={alert}
+              alerts={alerts}
+              type={'error'}
+            />
+          );
         }
       })}
     </AlertsWrapper>
@@ -59,7 +66,8 @@ export function Alert({ alert, alerts, type }: AlertToastProps) {
       smallScreen={isSmall}
       isSmall={isSmall}
     >
-      {alerts.length > 1 && `(${alerts.length})`} {t('error-occured', { id: alert.status ?? '' })}
+      {alerts.length > 1 && `(${alerts.length})`}{' '}
+      {t('error-occured', { id: alert.status ?? '' })}
     </AlertToast>
   );
 }

@@ -1,38 +1,35 @@
-import { Expander, ExpanderContent, ExpanderTitleButton } from 'suomifi-ui-components';
+import {
+  Expander,
+  ExpanderContent,
+  ExpanderTitleButton,
+} from 'suomifi-ui-components';
 import { TermHeading, TermText } from './term-modal.style';
 
 interface TermExpanderProps {
   title: string;
-  data: { subtitle: string, value?: string, checkCondition?: boolean }[];
+  data: { subtitle: string; value?: string; checkCondition?: boolean }[];
 }
 
 export default function TermExpander({ title, data }: TermExpanderProps) {
-  if (data.filter(d => d.value).length < 1) {
+  if (data.filter((d) => d.value).length < 1) {
     return null;
   }
 
   return (
     <Expander>
-      <ExpanderTitleButton asHeading='h4'>
-        {title}
-      </ExpanderTitleButton>
+      <ExpanderTitleButton asHeading="h4">{title}</ExpanderTitleButton>
       <ExpanderContent>
         {data
-          .filter(d => d.value && d.checkCondition !== false)
+          .filter((d) => d.value && d.checkCondition !== false)
           .map((d, idx) => {
             return (
               <div key={`${title}-${idx}`}>
-                <TermHeading variant='h4'>
-                  {d.subtitle}
-                </TermHeading>
-                <TermText>
-                  {d.value}
-                </TermText>
+                <TermHeading variant="h4">{d.subtitle}</TermHeading>
+                <TermText>{d.value}</TermText>
               </div>
             );
           })}
       </ExpanderContent>
     </Expander>
   );
-
-};
+}

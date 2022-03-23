@@ -15,9 +15,9 @@ export default function ResetAllFiltersButton() {
     <>
       <div>
         <Button
-          icon='remove'
+          icon="remove"
           onClick={() => resetUrlState()}
-          variant='secondaryNoBorder'
+          variant="secondaryNoBorder"
         >
           {t('vocabulary-filter-remove-all')}
         </Button>
@@ -27,10 +27,12 @@ export default function ResetAllFiltersButton() {
   );
 
   function isInitialUrlState(): boolean {
-    return isInitial(urlState, 'q')
-        && isInitial(urlState, 'domain')
-        && isInitial(urlState, 'organization')
-        && isInitial(urlState, 'status')
-        && isInitial(urlState, 'type');
+    return (
+      isInitial(urlState, 'q') &&
+      isInitial(urlState, 'domain') &&
+      isInitial(urlState, 'organization') &&
+      isInitial(urlState, 'status') &&
+      isInitial(urlState, 'type')
+    );
   }
 }

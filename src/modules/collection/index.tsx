@@ -3,8 +3,12 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useRef } from 'react';
 import { Heading, Text, VisuallyHidden } from 'suomifi-ui-components';
 import { setAlert } from '../../common/components/alert/alert.slice';
-import { BasicBlock, MultilingualPropertyBlock, PropertyBlock } from '../../common/components/block';
-import { ConceptListBlock } from '../../common/components/block';
+import {
+  BasicBlock,
+  MultilingualPropertyBlock,
+  PropertyBlock,
+  ConceptListBlock,
+} from '../../common/components/block';
 import { Breadcrumb, BreadcrumbLink } from '../../common/components/breadcrumb';
 import FormattedDate from '../../common/components/formatted-date';
 import { useBreakpoints } from '../../common/components/media-query/media-query-context';
@@ -14,7 +18,12 @@ import Separator from '../../common/components/separator';
 import { Error } from '../../common/interfaces/error.interface';
 import { useStoreDispatch } from '../../store';
 import CollectionSidebar from './collection-sidebar';
-import { BadgeBar, HeadingBlock, MainContent, PageContent } from './collection.styles';
+import {
+  BadgeBar,
+  HeadingBlock,
+  MainContent,
+  PageContent,
+} from './collection.styles';
 import { setTitle } from '../../common/components/title/title.slice';
 import { useGetCollectionQuery } from '../../common/components/collection/collection-slice';
 import { useGetVocabularyQuery } from '../../common/components/vocabulary/vocabulary-slice';
@@ -26,28 +35,42 @@ interface CollectionProps {
   setCollectionTitle: (title?: string) => void;
 }
 
-export default function Collection({ terminologyId, collectionId, setCollectionTitle }: CollectionProps) {
+export default function Collection({
+  terminologyId,
+  collectionId,
+  setCollectionTitle,
+}: CollectionProps) {
   const { breakpoint } = useBreakpoints();
   const { t, i18n } = useTranslation('collection');
   const dispatch = useStoreDispatch();
   const router = useRouter();
   const titleRef = useRef<HTMLHeadingElement>(null);
 
-  const { data: terminology, error: terminologyError } = useGetVocabularyQuery(terminologyId, {
-    skip: router.isFallback
-  });
-  const { data: collection, error: collectionError } = useGetCollectionQuery({ terminologyId, collectionId }, {
-    skip: router.isFallback
-  });
+  const { data: terminology, error: terminologyError } = useGetVocabularyQuery(
+    terminologyId,
+    {
+      skip: router.isFallback,
+    }
+  );
+  const { data: collection, error: collectionError } = useGetCollectionQuery(
+    { terminologyId, collectionId },
+    {
+      skip: router.isFallback,
+    }
+  );
 
-  if (collectionError && 'status' in collectionError && collectionError.status === 404) {
+  if (
+    collectionError &&
+    'status' in collectionError &&
+    collectionError.status === 404
+  ) {
     router.push('/404');
   }
 
   const prefLabel = getPropertyValue({
     property: collection?.properties.prefLabel,
     language: i18n.language,
-    fallbackLanguage: 'fi'
+    fallbackLanguage: 'fi',
   });
 
   useEffect(() => {
@@ -55,10 +78,7 @@ export default function Collection({ terminologyId, collectionId, setCollectionT
   }, [setCollectionTitle, prefLabel]);
 
   useEffect(() => {
-    dispatch(setAlert([
-      terminologyError as Error,
-      collectionError as Error
-    ]));
+    dispatch(setAlert([terminologyError as Error, collectionError as Error]));
   }, [dispatch, terminologyError, collectionError]);
 
   useEffect(() => {
@@ -76,22 +96,25 @@ export default function Collection({ terminologyId, collectionId, setCollectionT
   return (
     <>
       <Breadcrumb>
-        {!terminologyError &&
+        {!terminologyError && (
           <BreadcrumbLink url={`/terminology/${terminologyId}`}>
             <PropertyValue
               property={terminology?.properties.prefLabel}
-              fallbackLanguage='fi'
+              fallbackLanguage="fi"
             />
           </BreadcrumbLink>
-        }
-        {!collectionError &&
-          <BreadcrumbLink url={`/terminology/${terminologyId}/collections/${collectionId}`} current>
+        )}
+        {!collectionError && (
+          <BreadcrumbLink
+            url={`/terminology/${terminologyId}/collections/${collectionId}`}
+            current
+          >
             <PropertyValue
               property={collection?.properties.prefLabel}
-              fallbackLanguage='fi'
+              fallbackLanguage="fi"
             />
           </BreadcrumbLink>
-        }
+        )}
       </Breadcrumb>
 
       <PageContent breakpoint={breakpoint}>
@@ -99,18 +122,25 @@ export default function Collection({ terminologyId, collectionId, setCollectionT
           <HeadingBlock>
             <Text>
               <PropertyValue
-                property={getProperty('prefLabel', terminology?.references.contributor)}
-                fallbackLanguage='fi'
+                property={getProperty(
+                  'prefLabel',
+                  terminology?.references.contributor
+                )}
+                fallbackLanguage="fi"
               />
             </Text>
             <Heading variant="h1" tabIndex={-1} ref={titleRef}>
               <PropertyValue
                 property={collection?.properties.prefLabel}
-                fallbackLanguage='fi'
+                fallbackLanguage="fi"
               />
             </Heading>
             <BadgeBar>
-              {t('heading')} &middot; <PropertyValue property={terminology?.properties.prefLabel} fallbackLanguage='fi' />
+              {t('heading')} &middot;{' '}
+              <PropertyValue
+                property={terminology?.properties.prefLabel}
+                fallbackLanguage="fi"
+              />
             </BadgeBar>
             <Text>{t('description')}</Text>
           </HeadingBlock>
@@ -136,21 +166,25 @@ export default function Collection({ terminologyId, collectionId, setCollectionT
 
           <PropertyBlock
             title={t('vocabulary-info-organization', { ns: 'common' })}
-            property={terminology?.references.contributor?.[0]?.properties.prefLabel}
+            property={
+              terminology?.references.contributor?.[0]?.properties.prefLabel
+            }
             fallbackLanguage="fi"
           />
           <BasicBlock title={t('vocabulary-info-created-at', { ns: 'common' })}>
-            <FormattedDate date={collection?.createdDate} />, {collection?.createdBy}
+            <FormattedDate date={collection?.createdDate} />,{' '}
+            {collection?.createdBy}
           </BasicBlock>
-          <BasicBlock title={t('vocabulary-info-modified-at', { ns: 'common' })}>
-            <FormattedDate date={collection?.lastModifiedDate} />, {collection?.lastModifiedBy}
+          <BasicBlock
+            title={t('vocabulary-info-modified-at', { ns: 'common' })}
+          >
+            <FormattedDate date={collection?.lastModifiedDate} />,{' '}
+            {collection?.lastModifiedBy}
           </BasicBlock>
-          <BasicBlock title="URI">
-            {collection?.uri}
-          </BasicBlock>
+          <BasicBlock title="URI">{collection?.uri}</BasicBlock>
         </MainContent>
         {collection && <CollectionSidebar collection={collection} />}
       </PageContent>
     </>
   );
-};
+}

@@ -10,7 +10,7 @@ jest.mock('next/router');
 const mockedUseRouter = useRouter as jest.MockedFunction<typeof useRouter>;
 
 describe('search-results', () => {
-  test('should render component', () => {
+  it('should render component', async () => {
     mockedUseRouter.mockReturnValue({ query: {} } as NextRouter);
 
     const store = makeStore();
@@ -19,24 +19,21 @@ describe('search-results', () => {
       totalHitCount: 0,
       resultStart: 0,
       terminologies: null,
-      deepHits: null
+      deepHits: null,
     };
 
     render(
       <Provider store={store}>
         <ThemeProvider theme={lightTheme}>
-          <SearchResults
-            data={data}
-          />
+          <SearchResults data={data} />
         </ThemeProvider>
       </Provider>
     );
 
-    expect(screen.findAllByRole('div')).toBeInTheDocument;
-    expect(screen.queryAllByRole('div')).toEqual([]);
+    expect(screen.queryAllByRole('div')).toStrictEqual([]);
   });
 
-  test('should render data', () => {
+  it('should render data', () => {
     mockedUseRouter.mockReturnValue({ query: {} } as NextRouter);
 
     const store = makeStore();
@@ -54,14 +51,14 @@ describe('search-results', () => {
               label: {
                 en: 'en-contributor',
                 fi: 'fi-contributor',
-                sv: 'sv-contributor'
-              }
-            }
+                sv: 'sv-contributor',
+              },
+            },
           ],
           description: {
             en: 'en-description',
             fi: 'fi-description',
-            sv: 'en-description'
+            sv: 'en-description',
           },
           id: '01',
           informationDomains: [
@@ -70,17 +67,17 @@ describe('search-results', () => {
               label: {
                 en: 'en-label',
                 fi: 'fi-label',
-                sv: 'sv-label'
-              }
-            }
+                sv: 'sv-label',
+              },
+            },
           ],
           label: {
             en: 'en-label-01',
             fi: 'fi-label-01',
-            sv: 'sv-label-01'
+            sv: 'sv-label-01',
           },
           status: 'VALID',
-          uri: 'https://suomi.fi'
+          uri: 'https://suomi.fi',
         },
         {
           code: 'code-02',
@@ -90,14 +87,14 @@ describe('search-results', () => {
               label: {
                 en: 'en-contributor',
                 fi: 'fi-contributor',
-                sv: 'sv-contributor'
-              }
-            }
+                sv: 'sv-contributor',
+              },
+            },
           ],
           description: {
             en: 'en-description',
             fi: 'fi-description',
-            sv: 'en-description'
+            sv: 'en-description',
           },
           id: '02',
           informationDomains: [
@@ -106,34 +103,30 @@ describe('search-results', () => {
               label: {
                 en: 'en-label',
                 fi: 'fi-label',
-                sv: 'sv-label'
-              }
-            }
+                sv: 'sv-label',
+              },
+            },
           ],
           label: {
             en: 'en-label-02',
             fi: 'fi-label-02',
-            sv: 'sv-label-02'
+            sv: 'sv-label-02',
           },
           status: 'VALID',
-          uri: 'https://suomi.fi'
-        }
-      ]
+          uri: 'https://suomi.fi',
+        },
+      ],
     };
 
     render(
       <Provider store={store}>
         <ThemeProvider theme={lightTheme}>
-          <SearchResults
-            data={data}
-            type={'terminology-search'}
-          />
+          <SearchResults data={data} type={'terminology-search'} />
         </ThemeProvider>
       </Provider>
     );
 
-    expect(screen.getByText(/fi-label-01/)).toBeInTheDocument;
-    expect(screen.getByText(/fi-label-02/)).toBeInTheDocument;
+    expect(screen.getByText(/fi-label-01/)).toBeInTheDocument();
+    expect(screen.getByText(/fi-label-02/)).toBeInTheDocument();
   });
-
 });

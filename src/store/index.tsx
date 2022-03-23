@@ -1,7 +1,13 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import { createWrapper } from 'next-redux-wrapper';
-import { terminologySearchSlice, terminologySearchApi } from '../common/components/terminology-search/terminology-search-slice';
-import { vocabularyApi, vocabularySlice } from '../common/components/vocabulary/vocabulary-slice';
+import {
+  terminologySearchSlice,
+  terminologySearchApi,
+} from '../common/components/terminology-search/terminology-search-slice';
+import {
+  vocabularyApi,
+  vocabularySlice,
+} from '../common/components/vocabulary/vocabulary-slice';
 import { conceptApi } from '../common/components/concept/concept-slice';
 import { useDispatch } from 'react-redux';
 import { collectionApi } from '../common/components/collection/collection-slice';
@@ -40,7 +46,7 @@ export function makeStore() {
     // Development tools should be available only in development environments
     devTools: process.env.NODE_ENV !== 'production',
   });
-};
+}
 
 export type AppStore = ReturnType<typeof makeStore>;
 export type AppState = ReturnType<AppStore['getState']>;
@@ -54,6 +60,6 @@ export type AppDispatch = (x: AppThunk) => void;
 export const useStoreDispatch = () => useDispatch();
 
 export const wrapper = createWrapper<AppStore>(makeStore, {
-  serializeState: state => JSON.stringify(state),
-  deserializeState: state => JSON.parse(state),
+  serializeState: (state) => JSON.stringify(state),
+  deserializeState: (state) => JSON.parse(state),
 });
