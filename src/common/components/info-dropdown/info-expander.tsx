@@ -11,6 +11,9 @@ import Separator from '../separator';
 import { BasicBlock, MultilingualPropertyBlock, PropertyBlock } from '../block';
 import { BasicBlockExtraWrapper } from '../block/block.styles';
 import FormattedDate from '../formatted-date';
+import { useSelector } from 'react-redux';
+import { selectLogin } from '../login/login-slice';
+import Subscription from '../subscription/subscription';
 
 interface InfoExpanderProps {
   data?: VocabularyInfoDTO;
@@ -18,6 +21,7 @@ interface InfoExpanderProps {
 
 export default function InfoExpander({ data }: InfoExpanderProps) {
   const { t } = useTranslation('common');
+  const user = useSelector(selectLogin());
 
   if (!data) {
     return null;
@@ -78,7 +82,22 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
           {t('vocabulary-info-vocabulary-export-description')}
         </BasicBlock>
 
-        <Separator isLarge />
+        {!user.anonymous && (
+          <>
+            <Separator isLarge />
+
+            <BasicBlock
+              title={t('email-subscription')}
+              extra={
+                <BasicBlockExtraWrapper>
+                  <Subscription uri={data.uri} />
+                </BasicBlockExtraWrapper>
+              }
+            >
+              {t('email-subscription-description')}
+            </BasicBlock>
+          </>
+        )}
 
         <VisuallyHidden as="h3">
           {t('additional-technical-information', { ns: 'common' })}

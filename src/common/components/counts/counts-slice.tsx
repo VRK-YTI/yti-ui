@@ -9,7 +9,7 @@ export const countsApi = createApi({
   endpoints: (builder) => ({
     getCounts: builder.query<Counts, null>({
       query: () => ({
-        url: '/counts',
+        url: '/counts?vocabularies=true',
         method: 'GET',
       }),
     }),
