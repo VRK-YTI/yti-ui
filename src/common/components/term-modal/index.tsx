@@ -8,19 +8,19 @@ import {
   ModalFooter,
   ModalTitle,
 } from 'suomifi-ui-components';
-import { Term } from '../../interfaces/term.interface';
-import { Property } from '../../interfaces/termed-data-types.interface';
-import { selectLogin } from '../login/login-slice';
-import PropertyValue from '../property-value';
-import { getPropertyValue } from '../property-value/get-property-value';
+import { Term } from '@app/common/interfaces/term.interface';
+import { Property } from '@app/common/interfaces/termed-data-types.interface';
+import { selectLogin } from '@app/common/components/login/login.slice';
+import PropertyValue from '@app/common/components/property-value';
+import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import TermExpander from './term-expander';
 import {
   TermHeading,
   TermModalButton,
   TermModalChip,
   TermText,
-} from './term-modal.style';
-import { useBreakpoints } from '../media-query/media-query-context';
+} from './term-modal.styles';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 
 interface TermModalProps {
   data?: { term: Term; type: string };

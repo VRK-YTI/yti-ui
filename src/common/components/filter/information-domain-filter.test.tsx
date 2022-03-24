@@ -2,7 +2,7 @@
 
 import { render, screen } from '@testing-library/react';
 import { useRouter } from 'next/router';
-import { themeProvider } from '../../../tests/test-utils';
+import { themeProvider } from '@app/tests/test-utils';
 import InformationDomainFilter from './information-domain-filter';
 
 jest.mock('next/router');

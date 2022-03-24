@@ -5,8 +5,8 @@ import {
   FooterContentWrapper,
   FooterLinkWrapper,
   VersionInfo,
-} from './footer.style';
-import { useBreakpoints } from '../media-query/media-query-context';
+} from './footer.styles';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import getConfig from 'next/config';
 
 export interface FooterProps {

@@ -1,4 +1,4 @@
-import { Property } from '../../interfaces/termed-data-types.interface';
+import { Property } from '@app/common/interfaces/termed-data-types.interface';
 import MultilingualBlock, {
   MultilingualBlockItemMapper,
 } from './multilingual-block';

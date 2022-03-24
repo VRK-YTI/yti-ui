@@ -1,6 +1,6 @@
 import { Dropdown, DropdownItem } from 'suomifi-ui-components';
-import { OrganizationSearchResult } from '../../interfaces/terminology.interface';
-import useUrlState, { initialUrlState } from '../../utils/hooks/useUrlState';
+import { OrganizationSearchResult } from '@app/common/interfaces/terminology.interface';
+import useUrlState, { initialUrlState } from '@app/common/utils/hooks/useUrlState';
 import { DropdownPlaceholder, DropdownWrapper } from './filter.styles';
 
 interface OrganizationFilterProps {

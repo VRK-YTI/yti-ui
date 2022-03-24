@@ -1,13 +1,13 @@
 import { useTranslation } from 'next-i18next';
 import React from 'react';
-import { useGetCollectionsQuery } from '../../common/components/collection/collection-slice';
-import Separator from '../../common/components/separator';
+import { useGetCollectionsQuery } from '@app/common/components/collection/collection.slice';
+import Separator from '@app/common/components/separator';
 import {
   Sidebar,
   SidebarHeader,
   SidebarSection,
-} from '../../common/components/sidebar';
-import { Collection } from '../../common/interfaces/collection.interface';
+} from '@app/common/components/sidebar';
+import { Collection } from '@app/common/interfaces/collection.interface';
 
 export interface CollectionSidebarProps {
   collection: Collection;

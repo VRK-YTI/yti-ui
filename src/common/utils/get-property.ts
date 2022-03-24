@@ -1,6 +1,6 @@
-import { Organization } from '../interfaces/organization.interface';
-import { Term } from '../interfaces/term.interface';
-import { Property } from '../interfaces/termed-data-types.interface';
+import { Organization } from '@app/common/interfaces/organization.interface';
+import { Term } from '@app/common/interfaces/term.interface';
+import { Property } from '@app/common/interfaces/termed-data-types.interface';
 
 export function getProperty(
   propertyName: keyof Term['properties'],

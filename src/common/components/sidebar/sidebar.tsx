@@ -1,5 +1,5 @@
 import React from 'react';
-import { useBreakpoints } from '../media-query/media-query-context';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import { SidebarWrapper } from './sidebar.styles';
 
 export interface SidebarProps {

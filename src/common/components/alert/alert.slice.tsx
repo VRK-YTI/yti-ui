@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { AppState, AppThunk } from '../../../store';
-import { Error } from '../../interfaces/error.interface';
+import { AppState, AppThunk } from '@app/store';
+import { Error } from '@app/common/interfaces/error.interface';
 
 export type Alert = Error;
 

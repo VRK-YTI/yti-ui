@@ -2,9 +2,9 @@ import axios from 'axios';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import { Button } from 'suomifi-ui-components';
-import { useStoreDispatch } from '../../../store';
-import { setAlert } from '../alert/alert.slice';
-import { subscriptionApi, useGetSubscriptionQuery } from './subscription-slice';
+import { useStoreDispatch } from '@app/store';
+import { setAlert } from '@app/common/components/alert/alert.slice';
+import { subscriptionApi, useGetSubscriptionQuery } from './subscription.slice';
 
 interface SubscriptionProps {
   uri: string;

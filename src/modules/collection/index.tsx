@@ -2,21 +2,21 @@ import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import React, { useEffect, useRef } from 'react';
 import { Heading, Text, VisuallyHidden } from 'suomifi-ui-components';
-import { setAlert } from '../../common/components/alert/alert.slice';
+import { setAlert } from '@app/common/components/alert/alert.slice';
 import {
   BasicBlock,
   MultilingualPropertyBlock,
   PropertyBlock,
   ConceptListBlock,
-} from '../../common/components/block';
-import { Breadcrumb, BreadcrumbLink } from '../../common/components/breadcrumb';
-import FormattedDate from '../../common/components/formatted-date';
-import { useBreakpoints } from '../../common/components/media-query/media-query-context';
-import PropertyValue from '../../common/components/property-value';
-import { getPropertyValue } from '../../common/components/property-value/get-property-value';
-import Separator from '../../common/components/separator';
-import { Error } from '../../common/interfaces/error.interface';
-import { useStoreDispatch } from '../../store';
+} from '@app/common/components/block';
+import { Breadcrumb, BreadcrumbLink } from '@app/common/components/breadcrumb';
+import FormattedDate from '@app/common/components/formatted-date';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import PropertyValue from '@app/common/components/property-value';
+import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
+import Separator from '@app/common/components/separator';
+import { Error } from '@app/common/interfaces/error.interface';
+import { useStoreDispatch } from '@app/store';
 import CollectionSidebar from './collection-sidebar';
 import {
   BadgeBar,
@@ -24,10 +24,10 @@ import {
   MainContent,
   PageContent,
 } from './collection.styles';
-import { setTitle } from '../../common/components/title/title.slice';
-import { useGetCollectionQuery } from '../../common/components/collection/collection-slice';
-import { useGetVocabularyQuery } from '../../common/components/vocabulary/vocabulary-slice';
-import { getProperty } from '../../common/utils/get-property';
+import { setTitle } from '@app/common/components/title/title.slice';
+import { useGetCollectionQuery } from '@app/common/components/collection/collection.slice';
+import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
+import { getProperty } from '@app/common/utils/get-property';
 
 interface CollectionProps {
   terminologyId: string;

@@ -1,7 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import React from 'react';
-import { Term } from '../../interfaces/term.interface';
-import TermModal from '../term-modal';
+import { Term } from '@app/common/interfaces/term.interface';
+import TermModal from '@app/common/components/term-modal';
 import MultilingualBlock, {
   MultilingualBlockItemMapper,
 } from './multilingual-block';

@@ -1,15 +1,15 @@
 import { useTranslation } from 'next-i18next';
 import React from 'react';
-import { getPropertyValue } from '../../common/components/property-value/get-property-value';
-import Separator from '../../common/components/separator';
+import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
+import Separator from '@app/common/components/separator';
 import {
   Sidebar,
   SidebarHeader,
   SidebarSection,
-} from '../../common/components/sidebar';
-import { Collection } from '../../common/interfaces/collection.interface';
-import { ConceptLink } from '../../common/interfaces/concept-link.interface';
-import { Concept } from '../../common/interfaces/concept.interface';
+} from '@app/common/components/sidebar';
+import { Collection } from '@app/common/interfaces/collection.interface';
+import { ConceptLink } from '@app/common/interfaces/concept-link.interface';
+import { Concept } from '@app/common/interfaces/concept.interface';
 
 export interface ConceptSidebarProps {
   concept?: Concept;

@@ -9,9 +9,9 @@ import {
   MarginContainer,
   HeaderContainer,
 } from './layout.styles';
-import { useBreakpoints } from '../common/components/media-query/media-query-context';
-import { HeaderWrapper } from '../modules/smart-header/smart-header.styles';
-import Logo from '../modules/smart-header/logo';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import { HeaderWrapper } from '@app/modules/smart-header/smart-header.styles';
+import Logo from '@app/modules/smart-header/logo';
 
 export default function ErrorLayout({
   children,

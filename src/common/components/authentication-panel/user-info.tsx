@@ -1,9 +1,9 @@
 import { Link, Text } from 'suomifi-ui-components';
 import { useTranslation } from 'react-i18next';
 import { UserInfoWrapper } from './authentication-panel.styles';
-import { Breakpoint } from '../media-query/media-query-context';
+import { Breakpoint } from '@app/common/components/media-query/media-query-context';
 import { useSelector } from 'react-redux';
-import { selectLogin } from '../login/login-slice';
+import { selectLogin } from '@app/common/components/login/login.slice';
 
 export interface UserInfoProps {
   breakpoint: Breakpoint;

@@ -3,31 +3,31 @@ import {
   useGetCollectionsQuery,
   useGetConceptResultQuery,
   useGetVocabularyQuery,
-} from '../../common/components/vocabulary/vocabulary-slice';
-import SearchResults from '../../common/components/search-results/search-results';
-import Title from '../../common/components/title/title';
+} from '@app/common/components/vocabulary/vocabulary.slice';
+import SearchResults from '@app/common/components/search-results/search-results';
+import Title from '@app/common/components/title/title';
 import {
   ResultAndFilterContainer,
   ResultAndStatsWrapper,
   PaginationWrapper,
 } from './vocabulary.styles';
-import { useBreakpoints } from '../../common/components/media-query/media-query-context';
-import { FilterMobileButton } from '../terminology-search/terminology-search.styles';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import { FilterMobileButton } from '@app/modules/terminology-search/terminology-search.styles';
 import { useTranslation } from 'next-i18next';
 import { Modal, ModalContent } from 'suomifi-ui-components';
-import { Breadcrumb, BreadcrumbLink } from '../../common/components/breadcrumb';
-import PropertyValue from '../../common/components/property-value';
-import { useGetVocabularyCountQuery } from '../../common/components/counts/counts-slice';
+import { Breadcrumb, BreadcrumbLink } from '@app/common/components/breadcrumb';
+import PropertyValue from '@app/common/components/property-value';
+import { useGetVocabularyCountQuery } from '@app/common/components/counts/counts.slice';
 import { TerminologyListFilter } from './terminology-list-filter';
-import useUrlState from '../../common/utils/hooks/useUrlState';
-import Pagination from '../../common/components/pagination/pagination';
-import filterData from '../../common/utils/filter-data';
-import { setAlert } from '../../common/components/alert/alert.slice';
-import { Error } from '../../common/interfaces/error.interface';
+import useUrlState from '@app/common/utils/hooks/useUrlState';
+import Pagination from '@app/common/components/pagination/pagination';
+import filterData from '@app/common/utils/filter-data';
+import { setAlert } from '@app/common/components/alert/alert.slice';
+import { Error } from '@app/common/interfaces/error.interface';
 import { useRouter } from 'next/router';
-import LoadIndicator from '../../common/components/load-indicator';
-import { useStoreDispatch } from '../../store';
-import { getPropertyValue } from '../../common/components/property-value/get-property-value';
+import LoadIndicator from '@app/common/components/load-indicator';
+import { useStoreDispatch } from '@app/store';
+import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 
 interface VocabularyProps {
   id: string;

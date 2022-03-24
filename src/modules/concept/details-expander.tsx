@@ -1,7 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import { ExpanderGroup } from 'suomifi-ui-components';
-import { BasicBlock } from '../../common/components/block';
-import { Concept } from '../../common/interfaces/concept.interface';
+import { BasicBlock } from '@app/common/components/block';
+import { Concept } from '@app/common/interfaces/concept.interface';
 import AdministrativeDetailsExpander, {
   hasAdministrativeDetails,
 } from './administrative-details-expander';

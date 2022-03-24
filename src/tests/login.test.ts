@@ -1,8 +1,8 @@
 import { createMocks } from 'node-mocks-http';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
-import login from '../pages/api/auth/login';
-import callback from '../pages/api/auth/callback';
+import login from '@app/pages/api/auth/login';
+import callback from '@app/pages/api/auth/callback';
 
 const fakeUser = {
   anonymous: false,

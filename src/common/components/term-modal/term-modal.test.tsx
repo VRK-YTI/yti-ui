@@ -2,10 +2,10 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import TermModal from '.';
-import { makeStore } from '../../../store';
-import { themeProvider } from '../../../tests/test-utils';
-import { Term } from '../../interfaces/term.interface';
-import { initialState, setLogin } from '../login/login-slice';
+import { makeStore } from '@app/store';
+import { themeProvider } from '@app/tests/test-utils';
+import { Term } from '@app/common/interfaces/term.interface';
+import { initialState, setLogin } from '@app/common/components/login/login.slice';
 
 describe('term-modal', () => {
   let appRoot: HTMLDivElement | null = null;

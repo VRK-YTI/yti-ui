@@ -3,8 +3,8 @@ import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
 import { Alerts } from '.';
-import { lightTheme } from '../../../layouts/theme';
-import { makeStore } from '../../../store';
+import { lightTheme } from '@app/layouts/theme';
+import { makeStore } from '@app/store';
 import { setAlert } from './alert.slice';
 
 describe('alert', () => {

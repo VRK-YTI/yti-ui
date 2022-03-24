@@ -2,30 +2,30 @@ import {
   useGetGroupsQuery,
   useGetSearchResultQuery,
   useGetOrganizationsQuery,
-} from '../../common/components/terminology-search/terminology-search-slice';
-import Title from '../../common/components/title/title';
+} from '@app/common/components/terminology-search/terminology-search.slice';
+import Title from '@app/common/components/title/title';
 import {
   ResultAndFilterContainer,
   ResultAndStatsWrapper,
   PaginationWrapper,
   FilterMobileButton,
 } from './terminology-search.styles';
-import SearchResults from '../../common/components/search-results/search-results';
-import Pagination from '../../common/components/pagination/pagination';
+import SearchResults from '@app/common/components/search-results/search-results';
+import Pagination from '@app/common/components/pagination/pagination';
 import { useTranslation } from 'next-i18next';
-import { useBreakpoints } from '../../common/components/media-query/media-query-context';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import { Modal, ModalContent } from 'suomifi-ui-components';
 import { useEffect, useState } from 'react';
-import { useGetCountsQuery } from '../../common/components/counts/counts-slice';
+import { useGetCountsQuery } from '@app/common/components/counts/counts.slice';
 import { SearchPageFilter } from './search-page-filter';
-import useUrlState from '../../common/utils/hooks/useUrlState';
+import useUrlState from '@app/common/utils/hooks/useUrlState';
 import {
   selectAlert,
   setAlert,
-} from '../../common/components/alert/alert.slice';
-import { Error } from '../../common/interfaces/error.interface';
-import LoadIndicator from '../../common/components/load-indicator';
-import { useStoreDispatch } from '../../store';
+} from '@app/common/components/alert/alert.slice';
+import { Error } from '@app/common/interfaces/error.interface';
+import LoadIndicator from '@app/common/components/load-indicator';
+import { useStoreDispatch } from '@app/store';
 import { useSelector } from 'react-redux';
 
 export default function TerminologySearch() {
