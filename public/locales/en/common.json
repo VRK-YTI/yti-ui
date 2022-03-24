@@ -122,5 +122,10 @@
   "interoperability-logo-title": "Interoperability platform logo",
   "search-results-count": "With filter {{count}} search results",
   "pagination-previous-page": "Previous page",
-  "pagination-next-page": "Next page"
+  "pagination-next-page": "Next page",
+  "email-subscription": "Email subscription",
+  "email-subscription-description": "Receive email notifications of changes made to this terminology.",
+  "email-subscription-add": "Add email subscription",
+  "email-subscription-delete": "Delete email subscription",
+  "email-subscription-subscribed": "Subscription added"
 }
