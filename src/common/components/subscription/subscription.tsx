@@ -25,7 +25,8 @@ export default function Subscription({ uri }: SubscriptionProps) {
       const url =
         process.env.NODE_ENV !== 'development'
           ? uri
-          : // This terminology can be found in dev, so change if dev data is changed
+          : // This is just some terminology. Can be removed after
+            // messaging-api calls work locally.
             'http://uri.suomi.fi/terminology/demo/terminological-vocabulary-0';
 
       axios
