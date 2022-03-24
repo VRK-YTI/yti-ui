@@ -3,19 +3,23 @@ import { BasicBlock } from '../../common/components/block';
 import InlineAlert from '../../common/components/inline-alert';
 import { ToggleButton } from 'suomifi-ui-components';
 import { BasicBlockExtraWrapper } from '../../common/components/block/block.styles';
-import { useToggleSubscriptionMutation } from '../../common/components/subscription/subscription-slice';
+import { useToggleSubscriptionsMutation } from '../../common/components/subscription/subscription-slice';
 import { useEffect, useState } from 'react';
+import { Subscriptions } from '../../common/interfaces/subscription.interface';
 
 interface EmailNotificationsBlockProps {
-  subscriptions: any;
+  subscriptions: Subscriptions;
   refetchSubscriptions: () => void;
 }
 
 export default function EmailNotificationsBlock({ subscriptions, refetchSubscriptions }: EmailNotificationsBlockProps) {
   const { t } = useTranslation('own-information');
-  const [toggleSubscription, subscription] = useToggleSubscriptionMutation();
+  const [toggleSubscriptions, subscription] = useToggleSubscriptionsMutation();
   const [checked, setChecked] = useState(subscriptions?.subscriptionType === 'DAILY' ? true : false);
-  console.log('checked', checked, subscriptions?.subscriptionType === 'DAILY');
+
+  useEffect(() => {
+    setChecked(subscriptions?.subscriptionType === 'DAILY' ? true : false);
+  }, [subscriptions]);
 
   useEffect(() => {
     if (subscription.isSuccess) {
@@ -24,7 +28,7 @@ export default function EmailNotificationsBlock({ subscriptions, refetchSubscrip
   }, [subscription, refetchSubscriptions]);
 
   const handleClick = () => {
-    toggleSubscription(subscriptions?.subscriptionType === 'DAILY' ? 'DISABLED' : 'DAILY');
+    toggleSubscriptions(subscriptions?.subscriptionType === 'DAILY' ? 'DISABLED' : 'DAILY');
     setChecked(!checked);
   };
 
@@ -42,7 +46,13 @@ export default function EmailNotificationsBlock({ subscriptions, refetchSubscrip
             </ToggleButton>
           </BasicBlockExtraWrapper>
           <BasicBlockExtraWrapper>
-            <InlineAlert noIcon>Sähköposti-ilmoitukset päällä</InlineAlert>
+            {
+              checked
+                ?
+                <InlineAlert noIcon>Sähköposti-ilmoitukset päällä</InlineAlert>
+                :
+                <InlineAlert status='warning'>Sähköposti-ilmoitukset pois päältä</InlineAlert>
+            }
           </BasicBlockExtraWrapper>
         </>
       }

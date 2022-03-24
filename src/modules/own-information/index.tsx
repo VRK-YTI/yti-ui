@@ -75,9 +75,14 @@ export default function OwnInformation() {
 
           <Separator isLarge />
 
-          <EmailNotificationsBlock subscriptions={subscriptions} refetchSubscriptions={refetchSubscriptions} />
-
-          <SubscriptionBlock subscriptions={subscriptions} />
+          {
+            subscriptions
+            &&
+            <>
+              <EmailNotificationsBlock subscriptions={subscriptions} refetchSubscriptions={refetchSubscriptions} />
+              <SubscriptionBlock subscriptions={subscriptions} />
+            </>
+          }
         </MainContent>
       </PageContent>
     </>
