@@ -10,7 +10,10 @@ import IconButton from '../../common/components/icon-button/icon-button';
 import { BasicBlockExtraWrapper } from '../../common/components/block/block.styles';
 import { Subscriptions } from '../../common/interfaces/subscription.interface';
 import { useStoreDispatch } from '../../store';
-import { subscriptionApi, useToggleSubscriptionMutation } from '../../common/components/subscription/subscription-slice';
+import {
+  subscriptionApi,
+  useToggleSubscriptionMutation,
+} from '../../common/components/subscription/subscription-slice';
 import { setAlert } from '../../common/components/alert/alert.slice';
 import { useEffect, useState } from 'react';
 import { Error } from '../../common/interfaces/error.interface';
@@ -20,7 +23,9 @@ interface SubscriptionBlockProps {
   refetchSubscriptions?: () => void;
 }
 
-export default function SubscriptionBlock({ subscriptions }: SubscriptionBlockProps) {
+export default function SubscriptionBlock({
+  subscriptions,
+}: SubscriptionBlockProps) {
   const { t } = useTranslation('own-information');
   const [toggleSubscription, subscription] = useToggleSubscriptionMutation();
   const [unsubscribedItem, setUnsubscribedItem] = useState('');
@@ -29,42 +34,57 @@ export default function SubscriptionBlock({ subscriptions }: SubscriptionBlockPr
   useEffect(() => {
     if (subscription.isSuccess) {
       dispatch(subscriptionApi.internalActions.resetApiState());
-      dispatch(setAlert([{status: 0, data: `Ilmoitukset poistettu sanastolta ${unsubscribedItem}`}]));
+      dispatch(
+        setAlert([
+          {
+            status: 0,
+            data: t('subscription-notifications-removed', {
+              item: unsubscribedItem ?? '',
+            }),
+          },
+        ])
+      );
     } else if (subscription.isError) {
       dispatch(setAlert([subscription.error as Error]));
       console.error('subscription error', subscription.error);
     }
-  }, [subscription, dispatch, unsubscribedItem]);
+  }, [subscription, dispatch, unsubscribedItem, t]);
 
   const handleUnsubscribe = (uri: string, label: string) => {
     setUnsubscribedItem(label);
-    toggleSubscription({action: 'DELETE', uri: uri});
+    toggleSubscription({ action: 'DELETE', uri: uri });
   };
 
   return (
     <BasicBlock
       title={<h2>{t('field-subscriptions')}</h2>}
       extra={
-        subscriptions.resources.length > 0 &&
-        <BasicBlockExtraWrapper position="right">
-          <Button variant="secondary" icon="message">
-            Poista kaikki ilmoitukset
-          </Button>
-        </BasicBlockExtraWrapper>
+        subscriptions.resources.length > 0 && (
+          <BasicBlockExtraWrapper position="right">
+            <Button variant="secondary" icon="message">
+              {t('subscription-remove-all-notifications')}
+            </Button>
+          </BasicBlockExtraWrapper>
+        )
       }
     >
       <SubscriptionsList>
         {subscriptions.resources.map((resource, idx) => {
           return (
             <SubscriptionsListItem key={`subscription-list-item-${idx}`}>
-              <Link passHref href={`/terminology-api/api/v1/resolve?uri=${resource.uri}`}>
+              <Link
+                passHref
+                href={`/terminology-api/api/v1/resolve?uri=${resource.uri}`}
+              >
                 <SuomiLink href="">{resource.prefLabel.fi}</SuomiLink>
               </Link>
               <IconButton
                 variant="secondary"
                 icon="message"
                 color="currentColor"
-                onClick={() => handleUnsubscribe(resource.uri, resource.prefLabel.fi)}
+                onClick={() =>
+                  handleUnsubscribe(resource.uri, resource.prefLabel.fi)
+                }
               />
             </SubscriptionsListItem>
           );

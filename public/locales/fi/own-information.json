@@ -7,5 +7,9 @@
   "field-subscriptions": "Sanastoaineistot, joista on tilattu ilmoitukset",
   "organization": "Organisaatio",
   "own-information": "Omat tiedot",
-  "roles": "Roolit"
+  "roles": "Roolit",
+  "subscription-notifications-on": "Sähköposti-ilmoitukset päällä",
+  "subscription-notifications-off": "Sähköposti-ilmoitukset pois päältä",
+  "subscription-remove-all-notifications": "Poista kaikki ilmoitukset",
+  "subscription-notifications-removed": "Ilmoitukset poistettu sanastolta {{ item }}"
 }

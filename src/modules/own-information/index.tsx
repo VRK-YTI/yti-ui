@@ -28,7 +28,8 @@ export default function OwnInformation() {
   const { breakpoint } = useBreakpoints();
   const { t, i18n } = useTranslation('own-information');
   const { data: organizations } = useGetOrganizationsQuery(i18n.language);
-  const { data: subscriptions, refetch: refetchSubscriptions } = useGetSubscriptionsQuery(null);
+  const { data: subscriptions, refetch: refetchSubscriptions } =
+    useGetSubscriptionsQuery(null);
 
   const titleRef = useRef<HTMLHeadingElement>(null);
   useEffect(() => {
@@ -75,14 +76,15 @@ export default function OwnInformation() {
 
           <Separator isLarge />
 
-          {
-            subscriptions
-            &&
+          {subscriptions && (
             <>
-              <EmailNotificationsBlock subscriptions={subscriptions} refetchSubscriptions={refetchSubscriptions} />
+              <EmailNotificationsBlock
+                subscriptions={subscriptions}
+                refetchSubscriptions={refetchSubscriptions}
+              />
               <SubscriptionBlock subscriptions={subscriptions} />
             </>
-          }
+          )}
         </MainContent>
       </PageContent>
     </>

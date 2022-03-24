@@ -12,10 +12,15 @@ interface EmailNotificationsBlockProps {
   refetchSubscriptions: () => void;
 }
 
-export default function EmailNotificationsBlock({ subscriptions, refetchSubscriptions }: EmailNotificationsBlockProps) {
+export default function EmailNotificationsBlock({
+  subscriptions,
+  refetchSubscriptions,
+}: EmailNotificationsBlockProps) {
   const { t } = useTranslation('own-information');
   const [toggleSubscriptions, subscription] = useToggleSubscriptionsMutation();
-  const [checked, setChecked] = useState(subscriptions?.subscriptionType === 'DAILY' ? true : false);
+  const [checked, setChecked] = useState(
+    subscriptions?.subscriptionType === 'DAILY' ? true : false
+  );
 
   useEffect(() => {
     setChecked(subscriptions?.subscriptionType === 'DAILY' ? true : false);
@@ -24,11 +29,13 @@ export default function EmailNotificationsBlock({ subscriptions, refetchSubscrip
   useEffect(() => {
     if (subscription.isSuccess) {
       refetchSubscriptions();
-    };
+    }
   }, [subscription, refetchSubscriptions]);
 
   const handleClick = () => {
-    toggleSubscriptions(subscriptions?.subscriptionType === 'DAILY' ? 'DISABLED' : 'DAILY');
+    toggleSubscriptions(
+      subscriptions?.subscriptionType === 'DAILY' ? 'DISABLED' : 'DAILY'
+    );
     setChecked(!checked);
   };
 
@@ -38,21 +45,20 @@ export default function EmailNotificationsBlock({ subscriptions, refetchSubscrip
       extra={
         <>
           <BasicBlockExtraWrapper>
-            <ToggleButton
-              checked={checked}
-              onClick={() => handleClick()}
-            >
+            <ToggleButton checked={checked} onClick={() => handleClick()}>
               {t('field-email-notifications')}
             </ToggleButton>
           </BasicBlockExtraWrapper>
           <BasicBlockExtraWrapper>
-            {
-              checked
-                ?
-                <InlineAlert noIcon>Sähköposti-ilmoitukset päällä</InlineAlert>
-                :
-                <InlineAlert status='warning'>Sähköposti-ilmoitukset pois päältä</InlineAlert>
-            }
+            {checked ? (
+              <InlineAlert noIcon>
+                {t('subscription-notifications-on')}
+              </InlineAlert>
+            ) : (
+              <InlineAlert status="warning">
+                {t('subscription-notifications-off')}
+              </InlineAlert>
+            )}
           </BasicBlockExtraWrapper>
         </>
       }

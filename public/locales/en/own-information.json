@@ -1,8 +1,14 @@
 {
   "field-email": "Email address",
+  "field-email-notifications": "Email notifications",
+  "field-email-notifications-description": "Receive email notifications once per day about made changes when notifications are enabled. Email notifications can be disabled.",
   "field-name": "Name",
   "field-organizations-and-roles": "Organizations and roles",
   "organization": "Organization",
   "own-information": "Own information",
-  "roles": "Roles"
+  "roles": "Roles",
+  "subscription-notifications-on": "Email notifications enabled",
+  "subscription-notifications-off": "Email notifications disabled",
+  "subscription-remove-all-notifications": "Remove all email notifications",
+  "subscription-notifications-removed": "Notifications removed from terminology {{ item }}"
 }

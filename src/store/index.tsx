@@ -40,7 +40,7 @@ export function makeStore() {
         conceptApi.middleware,
         collectionApi.middleware,
         countsApi.middleware,
-        subscriptionApi.middleware,
+        subscriptionApi.middleware
       ),
 
     // Development tools should be available only in development environments

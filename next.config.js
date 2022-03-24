@@ -12,7 +12,7 @@ module.exports = (phase, { defaultConfig }) => {
   }
 
   let config = {
-    reactStrictMode: false,
+    reactStrictMode: true,
     i18n,
     eslint: {
       dirs: ['src'],
