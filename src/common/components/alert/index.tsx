@@ -15,6 +15,7 @@ interface AlertToastProps {
 }
 
 export function Alerts() {
+  const { isSmall } = useBreakpoints();
   const alerts = useSelector(selectAlert());
 
   if (!alerts) {
@@ -22,7 +23,10 @@ export function Alerts() {
   }
 
   return (
-    <AlertsWrapper>
+    <AlertsWrapper
+      scrollY={typeof window !== 'undefined' ? window.scrollY : 0}
+      isSmall={isSmall}
+    >
       {alerts.map((alert, idx) => {
         if (alert.status === 0) {
           return <NotificationToast key={`alert-${idx}`} alert={alert} />;
