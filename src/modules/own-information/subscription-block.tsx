@@ -5,7 +5,7 @@ import {
   SubscriptionsList,
   SubscriptionsListItem,
 } from './own-information.styles';
-import { Button, Link as SuomiLink, ValueUnit } from 'suomifi-ui-components';
+import { Button, Link as SuomiLink } from 'suomifi-ui-components';
 import IconButton from '../../common/components/icon-button/icon-button';
 import { BasicBlockExtraWrapper } from '../../common/components/block/block.styles';
 import { Subscriptions } from '../../common/interfaces/subscription.interface';
@@ -17,7 +17,6 @@ import {
 import { setAlert } from '../../common/components/alert/alert.slice';
 import { useEffect, useState } from 'react';
 import { Error } from '../../common/interfaces/error.interface';
-import PropertyValue from '../../common/components/property-value';
 
 interface SubscriptionBlockProps {
   subscriptions: Subscriptions;
@@ -41,12 +40,10 @@ export default function SubscriptionBlock({
           {
             status: 0,
             data: unsubscribedAll
-              ?
-              t('subscription-all-notifications-removed')
-              :
-              t('subscription-notifications-removed', {
-                item: unsubscribedItem ?? '',
-              }),
+              ? t('subscription-all-notifications-removed')
+              : t('subscription-notifications-removed', {
+                  item: unsubscribedItem ?? '',
+                }),
           },
         ])
       );
@@ -62,7 +59,9 @@ export default function SubscriptionBlock({
   };
 
   const handleUnsubscribeAll = () => {
-    const uris = subscriptions.resources.map(resource => resource.uri).join(',');
+    const uris = subscriptions.resources
+      .map((resource) => resource.uri)
+      .join(',');
     setUnsubscribedItem(getPrefLabel(subscriptions.resources[0].prefLabel));
     toggleSubscription({ action: 'DELETE', uri: uris });
   };
@@ -73,15 +72,18 @@ export default function SubscriptionBlock({
       extra={
         subscriptions.resources.length > 0 && (
           <BasicBlockExtraWrapper position="right">
-            <Button variant="secondary" icon="message" onClick={() => handleUnsubscribeAll()}>
+            <Button
+              variant="secondary"
+              icon="message"
+              onClick={() => handleUnsubscribeAll()}
+            >
               {t('subscription-remove-all-notifications')}
             </Button>
           </BasicBlockExtraWrapper>
         )
       }
     >
-      {subscriptions.resources.length > 0
-        ?
+      {subscriptions.resources.length > 0 ? (
         <SubscriptionsList>
           {subscriptions.resources.map((resource, idx) => {
             return (
@@ -106,17 +108,18 @@ export default function SubscriptionBlock({
             );
           })}
         </SubscriptionsList>
-        :
+      ) : (
         t('subscription-no-subscribed-items')
-      }
+      )}
     </BasicBlock>
   );
 
   function getPrefLabel(prefLabels: { [value: string]: string }): string {
-    return prefLabels[i18n.language]
-      ??
-      prefLabels['fi'] + ' (fi)'
-      ??
-      prefLabels[Object.keys(prefLabels)[0]] + ` (${(Object.keys(prefLabels)[0])})`;
-  };
+    return (
+      prefLabels[i18n.language] ??
+      prefLabels['fi'] + ' (fi)' ??
+      prefLabels[Object.keys(prefLabels)[0]] +
+        ` (${Object.keys(prefLabels)[0]})`
+    );
+  }
 }

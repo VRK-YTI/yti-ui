@@ -4,7 +4,11 @@ import { Button } from 'suomifi-ui-components';
 import { useStoreDispatch } from '../../../store';
 import { Error } from '../../interfaces/error.interface';
 import { setAlert } from '../alert/alert.slice';
-import { subscriptionApi, useGetSubscriptionQuery, useToggleSubscriptionMutation } from './subscription-slice';
+import {
+  subscriptionApi,
+  useGetSubscriptionQuery,
+  useToggleSubscriptionMutation,
+} from './subscription-slice';
 
 interface SubscriptionProps {
   uri: string;
@@ -24,12 +28,14 @@ export default function Subscription({ uri }: SubscriptionProps) {
   useEffect(() => {
     if (subscription.isSuccess) {
       dispatch(subscriptionApi.internalActions.resetApiState());
-      dispatch(setAlert([
-        {
-          status: 0,
-          data: t('email-subscription-subscribed'),
-        }
-      ]));
+      dispatch(
+        setAlert([
+          {
+            status: 0,
+            data: t('email-subscription-subscribed'),
+          },
+        ])
+      );
     } else if (subscription.isError) {
       dispatch(setAlert([subscription.error as Error]));
       console.error('subscription error', subscription.error);

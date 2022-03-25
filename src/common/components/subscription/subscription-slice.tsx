@@ -47,8 +47,8 @@ export const subscriptionApi = createApi({
           response.resources.length > 0
         ) {
           const temp = Object.assign({}, response);
-          temp.resources.forEach(resource => {
-            resource['prefLabel'] = { fi: 'prefLabel in dev'};
+          temp.resources.forEach((resource) => {
+            resource['prefLabel'] = { fi: 'prefLabel in dev' };
           });
           return temp;
         }

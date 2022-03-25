@@ -1,10 +1,11 @@
 import { ClickAwayListener } from '@material-ui/core';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { MouseEventHandler, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useTheme } from 'styled-components';
-import { Icon, Link } from 'suomifi-ui-components';
+import { Icon, Link as SuomiFiLink } from 'suomifi-ui-components';
 import { selectLogin } from '../login/login-slice';
 import {
   NavigationDropdownItem,
@@ -30,30 +31,32 @@ export default function DesktopNavigation() {
   return (
     <NavigationWrapper>
       <NavigationItem active={router.pathname === '/'}>
-        <Link className="main" href="/">
-          {t('site-frontpage')}
+        <Link href="/" passHref>
+          <SuomiFiLink className="main" href="">
+            {t('site-frontpage')}
+          </SuomiFiLink>
         </Link>
       </NavigationItem>
       <NavigationItem>
-        <Link className="main" href="" onClick={handleDropdown}>
+        <SuomiFiLink className="main" href="" onClick={handleDropdown}>
           {t('site-services')}
           <Icon
             color={theme.suomifi.colors.highlightBase}
             icon={open ? 'chevronUp' : 'chevronDown'}
           />
-        </Link>
+        </SuomiFiLink>
         {open && (
           <ClickAwayListener onClickAway={() => setOpen(false)}>
             <NavigationDropdownWrapper>
               <NavigationDropdownList>
                 <NavigationDropdownItem>
-                  <Link href="/">{t('terminology-title')}</Link>
+                  <SuomiFiLink href="/">{t('terminology-title')}</SuomiFiLink>
                 </NavigationDropdownItem>
                 <NavigationDropdownItem>
-                  <Link href="/">{t('codelist-title')}</Link>
+                  <SuomiFiLink href="/">{t('codelist-title')}</SuomiFiLink>
                 </NavigationDropdownItem>
                 <NavigationDropdownItem>
-                  <Link href="/">{t('datamodel-title')}</Link>
+                  <SuomiFiLink href="/">{t('datamodel-title')}</SuomiFiLink>
                 </NavigationDropdownItem>
               </NavigationDropdownList>
             </NavigationDropdownWrapper>
@@ -61,24 +64,26 @@ export default function DesktopNavigation() {
         )}
       </NavigationItem>
       <NavigationItem>
-        <Link className="main" href="/">
+        <SuomiFiLink className="main" href="/">
           {t('site-information')}
-        </Link>
+        </SuomiFiLink>
       </NavigationItem>
       <NavigationItem>
-        <Link className="main" href="/">
+        <SuomiFiLink className="main" href="/">
           {t('site-for-developers')}
-        </Link>
+        </SuomiFiLink>
       </NavigationItem>
       <NavigationItem>
-        <Link className="main" href="/">
+        <SuomiFiLink className="main" href="/">
           {t('site-for-administrators')}
-        </Link>
+        </SuomiFiLink>
       </NavigationItem>
       {isLoggedIn && (
         <NavigationItem active={router.pathname === '/own-information'}>
-          <Link className="main" href="/own-information">
-            {t('own-information')}
+          <Link href="/own-information" passHref>
+            <SuomiFiLink className="main" href="">
+              {t('own-information')}
+            </SuomiFiLink>
           </Link>
         </NavigationItem>
       )}
