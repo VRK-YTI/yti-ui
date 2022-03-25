@@ -11,5 +11,7 @@
   "subscription-notifications-on": "Sähköposti-ilmoitukset päällä",
   "subscription-notifications-off": "Sähköposti-ilmoitukset pois päältä",
   "subscription-remove-all-notifications": "Poista kaikki ilmoitukset",
-  "subscription-notifications-removed": "Ilmoitukset poistettu sanastolta {{ item }}"
+  "subscription-notifications-removed": "Ilmoitukset poistettu sanastolta {{ item }}",
+  "subscription-all-notifications-removed": "Ilmoitukset poistettu kaikilta sanastoilta",
+  "subscription-no-subscribed-items": "Ei tilattuja ilmoituksia"
 }

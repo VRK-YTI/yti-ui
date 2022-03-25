@@ -1,10 +1,10 @@
-import axios from 'axios';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import { Button } from 'suomifi-ui-components';
 import { useStoreDispatch } from '../../../store';
+import { Error } from '../../interfaces/error.interface';
 import { setAlert } from '../alert/alert.slice';
-import { subscriptionApi, useGetSubscriptionQuery } from './subscription-slice';
+import { subscriptionApi, useGetSubscriptionQuery, useToggleSubscriptionMutation } from './subscription-slice';
 
 interface SubscriptionProps {
   uri: string;
@@ -13,6 +13,7 @@ interface SubscriptionProps {
 export default function Subscription({ uri }: SubscriptionProps) {
   const { t } = useTranslation('common');
   const { data, error } = useGetSubscriptionQuery(uri);
+  const [toggleSubscription, subscription] = useToggleSubscriptionMutation();
   const [subscribed, setSubscribed] = useState(false);
   const dispatch = useStoreDispatch();
 
@@ -20,38 +21,24 @@ export default function Subscription({ uri }: SubscriptionProps) {
     setSubscribed(data !== '' && data ? true : false);
   }, [data]);
 
+  useEffect(() => {
+    if (subscription.isSuccess) {
+      dispatch(subscriptionApi.internalActions.resetApiState());
+      dispatch(setAlert([
+        {
+          status: 0,
+          data: t('email-subscription-subscribed'),
+        }
+      ]));
+    } else if (subscription.isError) {
+      dispatch(setAlert([subscription.error as Error]));
+      console.error('subscription error', subscription.error);
+    }
+  });
+
   const handleSubscription = (subscribed: boolean) => {
     if (!error) {
-      const url =
-        process.env.NODE_ENV !== 'development'
-          ? uri
-          : // This is just some terminology. Can be removed after
-            // messaging-api calls work locally.
-            'http://uri.suomi.fi/terminology/demo/terminological-vocabulary-0';
-
-      axios
-        .post(getURL(), {
-          action: subscribed ? 'DELETE' : 'ADD',
-          type: 'terminology',
-          uri: url,
-        })
-        .then(() => {
-          dispatch(subscriptionApi.internalActions.resetApiState());
-
-          if (!subscribed) {
-            dispatch(
-              setAlert([
-                {
-                  status: 0,
-                  data: t('email-subscription-subscribed'),
-                },
-              ])
-            );
-          }
-        })
-        .catch((err) => {
-          dispatch(setAlert([err]));
-        });
+      toggleSubscription({ action: subscribed ? 'DELETE' : 'ADD', uri: uri });
     }
   };
 
@@ -62,12 +49,4 @@ export default function Subscription({ uri }: SubscriptionProps) {
         : t('email-subscription-add')}
     </Button>
   );
-}
-
-function getURL() {
-  if (process.env.NODE_ENV === 'development') {
-    return '/messaging-api/api/v1/subscriptions?fake.login.mail=admin@localhost';
-  }
-
-  return '/messaging-api/api/v1/subscriptions';
 }
