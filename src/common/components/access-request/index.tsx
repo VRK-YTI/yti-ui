@@ -1,6 +1,5 @@
-import axios from 'axios';
 import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import {
   Button,
@@ -11,11 +10,15 @@ import {
   Text,
 } from 'suomifi-ui-components';
 import { useStoreDispatch } from '../../../store';
+import { Error } from '../../interfaces/error.interface';
 import { OrganizationSearchResult } from '../../interfaces/terminology.interface';
 import { setAlert } from '../alert/alert.slice';
 import { selectLogin } from '../login/login-slice';
 import { useBreakpoints } from '../media-query/media-query-context';
-import { useGetRequestsQuery } from './access-request.slice';
+import {
+  useGetRequestsQuery,
+  usePostRequestMutation,
+} from './access-request.slice';
 import {
   AccessRequestDescription,
   AccessRequestModal,
@@ -47,6 +50,7 @@ export default function AccessRequest({ organizations }: AccessRequestProps) {
   const { isSmall } = useBreakpoints();
   const user = useSelector(selectLogin());
   const { data: requests, refetch } = useGetRequestsQuery(null);
+  const [postRequest, request] = usePostRequestMutation();
   const [visible, setVisible] = useState(false);
   const [error, setError] = useState<{ [key: string]: boolean }>({});
   const [chosenOrganization, setChosenOrganization] = useState<string>();
@@ -54,6 +58,18 @@ export default function AccessRequest({ organizations }: AccessRequestProps) {
     SERVICES_INITIAL_STATE
   );
   const dispatch = useStoreDispatch();
+
+  useEffect(() => {
+    if (request.isSuccess) {
+      dispatch(setAlert([{ status: 0, data: t('access-request-sent') }]));
+      refetch();
+      handleClose();
+    } else if (request.isError) {
+      dispatch(setAlert([request.error as Error]));
+      refetch();
+      handleClose();
+    }
+  }, [request, dispatch, refetch, t]);
 
   const handleClose = () => {
     setChosenOrganization('');
@@ -211,7 +227,7 @@ export default function AccessRequest({ organizations }: AccessRequestProps) {
   );
 
   function sendPost() {
-    let uri = `/terminology-api/api/v1/frontend/request?organizationId=${chosenOrganization}`;
+    let uri = `/request?organizationId=${chosenOrganization}`;
     Object.keys(services).map((key) => {
       if (services[key]) {
         uri += `&roles=${key}`;
@@ -222,22 +238,7 @@ export default function AccessRequest({ organizations }: AccessRequestProps) {
       uri += '&fake.login.mail=admin@localhost';
     }
 
-    axios
-      .post(uri)
-      .then(() => {
-        dispatch(setAlert([{ status: 0, data: t('access-request-sent') }]));
-        refetch();
-        handleClose();
-      })
-      .catch((err) => {
-        dispatch(
-          setAlert([
-            { status: err.response.status, data: err.response.statusText },
-          ])
-        );
-        refetch();
-        handleClose();
-      });
+    postRequest(uri);
   }
 
   function getCurrentRights() {

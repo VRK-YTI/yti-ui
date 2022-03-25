@@ -17,9 +17,15 @@ export const accessRequestApi = createApi({
         method: 'GET',
       }),
     }),
+    postRequest: builder.mutation<null, string>({
+      query: (uri) => ({
+        url: uri,
+        method: 'POST',
+      }),
+    }),
   }),
 });
 
-export const { useGetRequestsQuery } = accessRequestApi;
+export const { useGetRequestsQuery, usePostRequestMutation } = accessRequestApi;
 
 export default accessRequestApi.reducer;
