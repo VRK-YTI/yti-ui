@@ -15,7 +15,7 @@ import { countsApi } from '../common/components/counts/counts-slice';
 import { loginSlice } from '../common/components/login/login-slice';
 import { alertSlice } from '../common/components/alert/alert.slice';
 import { titleSlice } from '../common/components/title/title.slice';
-import { subscriptionApi } from '../common/components/subscription/subscription-slice';
+import { subscriptionApi } from '../common/components/subscription/subscription.slice';
 
 export function makeStore() {
   return configureStore({

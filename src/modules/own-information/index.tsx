@@ -21,7 +21,7 @@ import { getPropertyValue } from '../../common/components/property-value/get-pro
 import _ from 'lodash';
 import SubscriptionBlock from './subscription-block';
 import EmailNotificationsBlock from './email-notifications-block';
-import { useGetSubscriptionsQuery } from '../../common/components/subscription/subscription-slice';
+import { useGetSubscriptionsQuery } from '../../common/components/subscription/subscription.slice';
 
 export default function OwnInformation() {
   const user = useSelector(selectLogin());
@@ -76,14 +76,16 @@ export default function OwnInformation() {
 
           <Separator isLarge />
 
+          <EmailNotificationsBlock
+            subscriptions={subscriptions}
+            refetchSubscriptions={refetchSubscriptions}
+          />
+
           {subscriptions && (
-            <>
-              <EmailNotificationsBlock
-                subscriptions={subscriptions}
-                refetchSubscriptions={refetchSubscriptions}
-              />
-              <SubscriptionBlock subscriptions={subscriptions} />
-            </>
+            <SubscriptionBlock
+              subscriptions={subscriptions}
+              refetchSubscriptions={refetchSubscriptions}
+            />
           )}
         </MainContent>
       </PageContent>

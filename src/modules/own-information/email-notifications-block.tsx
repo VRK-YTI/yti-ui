@@ -3,12 +3,12 @@ import { BasicBlock } from '../../common/components/block';
 import InlineAlert from '../../common/components/inline-alert';
 import { ToggleButton } from 'suomifi-ui-components';
 import { BasicBlockExtraWrapper } from '../../common/components/block/block.styles';
-import { useToggleSubscriptionsMutation } from '../../common/components/subscription/subscription-slice';
+import { useToggleSubscriptionsMutation } from '../../common/components/subscription/subscription.slice';
 import { useEffect, useState } from 'react';
 import { Subscriptions } from '../../common/interfaces/subscription.interface';
 
 interface EmailNotificationsBlockProps {
-  subscriptions: Subscriptions;
+  subscriptions?: Subscriptions;
   refetchSubscriptions: () => void;
 }
 
@@ -23,7 +23,9 @@ export default function EmailNotificationsBlock({
   );
 
   useEffect(() => {
-    setChecked(subscriptions?.subscriptionType === 'DAILY' ? true : false);
+    if (subscriptions) {
+      setChecked(subscriptions.subscriptionType === 'DAILY' ? true : false);
+    }
   }, [subscriptions]);
 
   useEffect(() => {

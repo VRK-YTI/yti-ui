@@ -42,6 +42,11 @@ export const subscriptionApi = createApi({
         method: 'GET',
       }),
       transformResponse: (response: Subscriptions) => {
+        // Messaging-api receives data from cloud
+        // and resources don't have prefLabels
+        // because (presumably) subscribed uri's
+        // don't have corresponding terminology available.
+
         if (
           process.env.NODE_ENV === 'development' &&
           response.resources.length > 0

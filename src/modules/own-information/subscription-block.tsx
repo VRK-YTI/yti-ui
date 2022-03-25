@@ -5,26 +5,25 @@ import {
   SubscriptionsList,
   SubscriptionsListItem,
 } from './own-information.styles';
-import { Button, Link as SuomiLink } from 'suomifi-ui-components';
-import IconButton from '../../common/components/icon-button/icon-button';
+import { Link as SuomiLink } from 'suomifi-ui-components';
 import { BasicBlockExtraWrapper } from '../../common/components/block/block.styles';
 import { Subscriptions } from '../../common/interfaces/subscription.interface';
 import { useStoreDispatch } from '../../store';
-import {
-  subscriptionApi,
-  useToggleSubscriptionMutation,
-} from '../../common/components/subscription/subscription-slice';
+import { useToggleSubscriptionMutation } from '../../common/components/subscription/subscription.slice';
 import { setAlert } from '../../common/components/alert/alert.slice';
 import { useEffect, useState } from 'react';
 import { Error } from '../../common/interfaces/error.interface';
+import RemoveSubscription from '../../common/components/subscription/remove-subscription';
+import getPrefLabel from '../../common/utils/get-preflabel';
 
 interface SubscriptionBlockProps {
   subscriptions: Subscriptions;
-  refetchSubscriptions?: () => void;
+  refetchSubscriptions: () => void;
 }
 
 export default function SubscriptionBlock({
   subscriptions,
+  refetchSubscriptions,
 }: SubscriptionBlockProps) {
   const { t, i18n } = useTranslation('own-information');
   const [toggleSubscription, subscription] = useToggleSubscriptionMutation();
@@ -32,9 +31,8 @@ export default function SubscriptionBlock({
   const dispatch = useStoreDispatch();
 
   useEffect(() => {
-    if (subscription.isSuccess) {
+    if (subscription && subscription.isSuccess) {
       const unsubscribedAll = subscription.data.uri.split(',').length > 1;
-      dispatch(subscriptionApi.internalActions.resetApiState());
       dispatch(
         setAlert([
           {
@@ -47,24 +45,13 @@ export default function SubscriptionBlock({
           },
         ])
       );
+
+      refetchSubscriptions();
     } else if (subscription.isError) {
       dispatch(setAlert([subscription.error as Error]));
       console.error('subscription error', subscription.error);
     }
-  }, [subscription, dispatch, unsubscribedItem, t]);
-
-  const handleUnsubscribe = (uri: string, label: string) => {
-    setUnsubscribedItem(label);
-    toggleSubscription({ action: 'DELETE', uri: uri });
-  };
-
-  const handleUnsubscribeAll = () => {
-    const uris = subscriptions.resources
-      .map((resource) => resource.uri)
-      .join(',');
-    setUnsubscribedItem(getPrefLabel(subscriptions.resources[0].prefLabel));
-    toggleSubscription({ action: 'DELETE', uri: uris });
-  };
+  }, [subscription, dispatch, unsubscribedItem, t, refetchSubscriptions]);
 
   return (
     <BasicBlock
@@ -72,20 +59,18 @@ export default function SubscriptionBlock({
       extra={
         subscriptions.resources.length > 0 && (
           <BasicBlockExtraWrapper position="right">
-            <Button
-              variant="secondary"
-              icon="message"
-              onClick={() => handleUnsubscribeAll()}
-            >
-              {t('subscription-remove-all-notifications')}
-            </Button>
+            <RemoveSubscription
+              resources={subscriptions?.resources}
+              toggleSubscription={toggleSubscription}
+              setUnsubscribedItem={setUnsubscribedItem}
+            />
           </BasicBlockExtraWrapper>
         )
       }
     >
-      {subscriptions.resources.length > 0 ? (
+      {subscriptions.resources?.length > 0 ? (
         <SubscriptionsList>
-          {subscriptions.resources.map((resource, idx) => {
+          {subscriptions?.resources.map((resource, idx) => {
             return (
               <SubscriptionsListItem key={`subscription-list-item-${idx}`}>
                 <Link
@@ -93,16 +78,16 @@ export default function SubscriptionBlock({
                   href={`/terminology-api/api/v1/resolve?uri=${resource.uri}`}
                 >
                   <SuomiLink href="">
-                    {getPrefLabel(resource.prefLabel)}
+                    {getPrefLabel({
+                      prefLabels: resource.prefLabel,
+                      lang: i18n.language,
+                    })}
                   </SuomiLink>
                 </Link>
-                <IconButton
-                  variant="secondary"
-                  icon="message"
-                  color="currentColor"
-                  onClick={() =>
-                    handleUnsubscribe(resource.uri, resource.prefLabel.fi)
-                  }
+                <RemoveSubscription
+                  resource={resource}
+                  toggleSubscription={toggleSubscription}
+                  setUnsubscribedItem={setUnsubscribedItem}
                 />
               </SubscriptionsListItem>
             );
@@ -113,13 +98,4 @@ export default function SubscriptionBlock({
       )}
     </BasicBlock>
   );
-
-  function getPrefLabel(prefLabels: { [value: string]: string }): string {
-    return (
-      prefLabels[i18n.language] ??
-      prefLabels['fi'] + ' (fi)' ??
-      prefLabels[Object.keys(prefLabels)[0]] +
-        ` (${Object.keys(prefLabels)[0]})`
-    );
-  }
 }

@@ -7,13 +7,15 @@ export interface Subscription {
 
 export interface Subscriptions {
   id: string;
-  resources: {
-    application: 'string';
-    prefLabel: {
-      [value: string]: string;
-    };
-    type: 'string';
-    uri: 'string';
-  }[];
+  resources: Resource[];
   subscriptionType: 'DAILY' | 'DISABLED';
+}
+
+export interface Resource {
+  application: 'string';
+  prefLabel: {
+    [value: string]: string;
+  };
+  type: 'string';
+  uri: 'string';
 }

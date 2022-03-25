@@ -8,7 +8,7 @@ import {
   subscriptionApi,
   useGetSubscriptionQuery,
   useToggleSubscriptionMutation,
-} from './subscription-slice';
+} from './subscription.slice';
 
 interface SubscriptionProps {
   uri: string;

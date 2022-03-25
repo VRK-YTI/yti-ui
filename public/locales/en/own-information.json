@@ -13,5 +13,11 @@
   "subscription-remove-all-notifications": "Remove all email notifications",
   "subscription-notifications-removed": "Notifications removed from terminology {{ item }}",
   "subscription-all-notifications-removed": "Notifications removed from every terminology",
-  "subscription-no-subscribed-items": "No subscribed items"
+  "subscription-no-subscribed-items": "No subscribed items",
+  "subscription-remove-email-notifications": "Remove email notifications",
+  "subscription-remove-email-description": "Resource will be hidden from list after email notifications have been removed. Notifications can be added from resource's own page.",
+  "subscription-resource-to-be-removed": "Email notifications to be removed from following resource",
+  "subscription-resources-to-be-removed": "Email notifications to be removed from following resources",
+  "subscription-remove": "Remove",
+  "subscription-cancel": "Cancel"
 }

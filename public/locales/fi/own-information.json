@@ -13,5 +13,11 @@
   "subscription-remove-all-notifications": "Poista kaikki ilmoitukset",
   "subscription-notifications-removed": "Ilmoitukset poistettu sanastolta {{ item }}",
   "subscription-all-notifications-removed": "Ilmoitukset poistettu kaikilta sanastoilta",
-  "subscription-no-subscribed-items": "Ei tilattuja ilmoituksia"
+  "subscription-no-subscribed-items": "Ei tilattuja ilmoituksia",
+  "subscription-remove-email-notifications": "Poista sähköposti-ilmoitukset",
+  "subscription-remove-email-description": "Kun poistat sähköposti-ilmoitukset, aineistoa ei enää näytetä listalla. Voit lisätä aineistoon ilmoitukset aineiston omalta sivulta.",
+  "subscription-resource-to-be-removed": "Aineisto, josta poistetaan ilmoitukset",
+  "subscription-resources-to-be-removed": "Aineistot, joista poistetaan ilmoitukset",
+  "subscription-remove": "Poista",
+  "subscription-cancel": "Peruuta"
 }
