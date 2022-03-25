@@ -1,6 +1,6 @@
 import { maxBy } from 'lodash';
 import React from 'react';
-import SanitizedTextContent from '../sanitized-text-content';
+import SanitizedTextContent from '@app/common/components/sanitized-text-content';
 import {
   MultilingualDefinitionListItem,
   MultilingualDefinitionListWrapper,

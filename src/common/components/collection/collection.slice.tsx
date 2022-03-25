@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { Collection } from '../../interfaces/collection.interface';
-import axiosBaseQuery from '../axios-base-query';
+import { Collection } from '@app/common/interfaces/collection.interface';
+import axiosBaseQuery from '@app/common/components/axios-base-query';
 import { HYDRATE } from 'next-redux-wrapper';
 
 export const collectionApi = createApi({

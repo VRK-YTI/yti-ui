@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'suomifi-ui-components';
 import { BasicBlock } from '.';
-import { Concept } from '../../interfaces/concept.interface';
-import { getProperty } from '../../utils/get-property';
-import PropertyValue from '../property-value';
+import { Concept } from '@app/common/interfaces/concept.interface';
+import { getProperty } from '@app/common/utils/get-property';
+import PropertyValue from '@app/common/components/property-value';
 import { List } from './block.styles';
 
 export interface ConceptListBlockProps {

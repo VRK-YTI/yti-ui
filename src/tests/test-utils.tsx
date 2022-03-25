@@ -1,7 +1,7 @@
 import React from 'react';
 import { ThemeProvider } from 'styled-components';
 import { SWRConfig } from 'swr';
-import { lightTheme } from '../layouts/theme';
+import { lightTheme } from '@app/layouts/theme';
 
 interface TestUtilsProps {
   children: React.ReactNode;

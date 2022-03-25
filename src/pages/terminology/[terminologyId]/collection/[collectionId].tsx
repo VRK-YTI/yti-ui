@@ -1,23 +1,23 @@
 import { SSRConfig, useTranslation } from 'next-i18next';
 import { useRouter } from 'next/dist/client/router';
 import React, { useState } from 'react';
-import Layout from '../../../../layouts/layout';
+import Layout from '@app/layouts/layout';
 import {
   createCommonGetServerSideProps,
   LocalHandlerParams,
-} from '../../../../common/utils/create-getserversideprops';
-import { MediaQueryContextProvider } from '../../../../common/components/media-query/media-query-context';
-import Collection from '../../../../modules/collection';
+} from '@app/common/utils/create-getserversideprops';
+import { MediaQueryContextProvider } from '@app/common/components/media-query/media-query-context';
+import Collection from '@app/modules/collection';
 import {
   getCollection,
   getCollections,
   getRunningOperationPromises as getCollectionRunningOperationPromises,
-} from '../../../../common/components/collection/collection-slice';
+} from '@app/common/components/collection/collection.slice';
 import {
   getVocabulary,
   getRunningOperationPromises as getVocabularyRunningOperationPromises,
-} from '../../../../common/components/vocabulary/vocabulary-slice';
-import PageTitle from '../../../../common/components/page-title';
+} from '@app/common/components/vocabulary/vocabulary.slice';
+import PageTitle from '@app/common/components/page-title';
 
 export default function CollectionPage(props: {
   _netI18Next: SSRConfig;

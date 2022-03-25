@@ -2,7 +2,7 @@ import { GetServerSidePropsContext } from 'next';
 import httpMocks from 'node-mocks-http';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
-import { getServerSideProps as terminologyIdGetServerSideProps } from '../../pages/terminology/[terminologyId]';
+import { getServerSideProps as terminologyIdGetServerSideProps } from '@app/pages/terminology/[terminologyId]';
 
 describe('terminologyId page', () => {
   let mock: MockAdapter;

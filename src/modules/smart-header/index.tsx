@@ -5,7 +5,7 @@ import {
   HeaderContainer,
   MarginContainer,
   NavigationContainer,
-} from '../../layouts/layout.styles';
+} from '@app/layouts/layout.styles';
 import Logo from './logo';
 import MobileNavigationToggleButton from './mobile-navigation-toggle-button';
 import {
@@ -13,14 +13,14 @@ import {
   ModalOverlay,
   ModalContent,
 } from './smart-header.styles';
-import DesktopAuthenticationPanel from '../../common/components/authentication-panel/desktop-authentication-panel';
-import DesktopNavigation from '../../common/components/navigation/desktop-navigation';
-import MobileNavigation from '../../common/components/navigation/mobile-navigation';
-import DesktopLocaleChooser from '../../common/components/locale-chooser/desktop-locale-chooser';
-import UserInfo from '../../common/components/authentication-panel/user-info';
-import HeaderSearch from '../../common/components/header-search/header-search';
-import { useBreakpoints } from '../../common/components/media-query/media-query-context';
-import LoginModalView from '../../common/components/login-modal/login-modal';
+import DesktopAuthenticationPanel from '@app/common/components/authentication-panel/desktop-authentication-panel';
+import DesktopNavigation from '@app/common/components/navigation/desktop-navigation';
+import MobileNavigation from '@app/common/components/navigation/mobile-navigation';
+import DesktopLocaleChooser from '@app/common/components/locale-chooser/desktop-locale-chooser';
+import UserInfo from '@app/common/components/authentication-panel/user-info';
+import HeaderSearch from '@app/common/components/header-search/header-search';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import LoginModalView from '@app/common/components/login-modal/login-modal';
 
 export default function SmartHeader() {
   const [isExpanded, setIsExpanded] = useState(false);

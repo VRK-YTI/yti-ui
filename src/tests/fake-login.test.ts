@@ -1,5 +1,5 @@
 import { createMocks } from 'node-mocks-http';
-import fakeLogin from '../pages/api/auth/fake-login';
+import fakeLogin from '@app/pages/api/auth/fake-login';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 

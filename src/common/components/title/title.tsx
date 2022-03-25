@@ -7,13 +7,13 @@ import {
   TitleWrapper,
   TitleWrapperNoBreadcrumb,
 } from './title.styles';
-import InfoExpander from '../info-dropdown/info-expander';
-import { VocabularyInfoDTO } from '../../interfaces/vocabulary.interface';
-import { getPropertyValue } from '../property-value/get-property-value';
-import { useStoreDispatch } from '../../../store';
+import InfoExpander from '@app/common/components/info-dropdown/info-expander';
+import { VocabularyInfoDTO } from '@app/common/interfaces/vocabulary.interface';
+import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
+import { useStoreDispatch } from '@app/store';
 import { setTitle } from './title.slice';
 import { useEffect, useRef } from 'react';
-import { getProperty } from '../../utils/get-property';
+import { getProperty } from '@app/common/utils/get-property';
 
 interface TitleProps {
   info: string | VocabularyInfoDTO;

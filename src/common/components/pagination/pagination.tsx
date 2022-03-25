@@ -5,8 +5,8 @@ import {
   PaginationWrapper,
 } from './pagination.styles';
 import { PaginationProps } from './pagination-props';
-import { useBreakpoints } from '../media-query/media-query-context';
-import useUrlState from '../../utils/hooks/useUrlState';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import useUrlState from '@app/common/utils/hooks/useUrlState';
 import { useTranslation } from 'next-i18next';
 
 export default function Pagination({ data, pageString }: PaginationProps) {

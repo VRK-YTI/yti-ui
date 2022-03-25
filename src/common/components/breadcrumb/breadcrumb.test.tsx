@@ -2,8 +2,8 @@ import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
 import { Breadcrumb, BreadcrumbLink } from '.';
-import { lightTheme } from '../../../layouts/theme';
-import { makeStore } from '../../../store';
+import { lightTheme } from '@app/layouts/theme';
+import { makeStore } from '@app/store';
 
 describe('breadcrumb', () => {
   it('should render component', () => {

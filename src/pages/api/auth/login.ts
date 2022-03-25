@@ -1,4 +1,4 @@
-import withSession from '../../../common/utils/session';
+import withSession from '@app/common/utils/session';
 
 export default withSession(async (req, res) => {
   // eventually we want to return to this path

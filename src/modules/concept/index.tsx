@@ -11,13 +11,13 @@ import {
   MultilingualPropertyBlock,
   PropertyBlock,
   TermBlock,
-} from '../../common/components/block';
-import { Breadcrumb, BreadcrumbLink } from '../../common/components/breadcrumb';
-import FormattedDate from '../../common/components/formatted-date';
-import { useBreakpoints } from '../../common/components/media-query/media-query-context';
-import PropertyValue from '../../common/components/property-value';
-import { getPropertyValue } from '../../common/components/property-value/get-property-value';
-import Separator from '../../common/components/separator';
+} from '@app/common/components/block';
+import { Breadcrumb, BreadcrumbLink } from '@app/common/components/breadcrumb';
+import FormattedDate from '@app/common/components/formatted-date';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import PropertyValue from '@app/common/components/property-value';
+import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
+import Separator from '@app/common/components/separator';
 import DetailsExpander from './details-expander';
 import ConceptSidebar from './concept-sidebar';
 import {
@@ -27,14 +27,14 @@ import {
   MainContent,
   PageContent,
 } from './concept.styles';
-import { useStoreDispatch } from '../../store';
-import { setAlert } from '../../common/components/alert/alert.slice';
-import { Error } from '../../common/interfaces/error.interface';
+import { useStoreDispatch } from '@app/store';
+import { setAlert } from '@app/common/components/alert/alert.slice';
+import { Error } from '@app/common/interfaces/error.interface';
 import { useRouter } from 'next/router';
-import { setTitle } from '../../common/components/title/title.slice';
-import { useGetVocabularyQuery } from '../../common/components/vocabulary/vocabulary-slice';
-import { useGetConceptQuery } from '../../common/components/concept/concept-slice';
-import { getProperty } from '../../common/utils/get-property';
+import { setTitle } from '@app/common/components/title/title.slice';
+import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
+import { useGetConceptQuery } from '@app/common/components/concept/concept.slice';
+import { getProperty } from '@app/common/utils/get-property';
 
 export interface ConceptProps {
   terminologyId: string;
