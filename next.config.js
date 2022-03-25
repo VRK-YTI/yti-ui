@@ -12,6 +12,9 @@ module.exports = (phase, { defaultConfig }) => {
   }
 
   let config = {
+    compiler: {
+      styledComponents: true,
+    },
     reactStrictMode: true,
     i18n,
     eslint: {
