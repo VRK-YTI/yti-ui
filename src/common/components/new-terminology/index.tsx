@@ -1,8 +1,18 @@
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Button, Modal, ModalContent, ModalFooter, ModalTitle, Paragraph, RadioButton, RadioButtonGroup, Text } from 'suomifi-ui-components';
-import { selectLogin } from '../login/login-slice';
+import {
+  Button,
+  Modal,
+  ModalContent,
+  ModalFooter,
+  ModalTitle,
+  Paragraph,
+  RadioButton,
+  RadioButtonGroup,
+  Text,
+} from 'suomifi-ui-components';
+import { selectLogin } from '@app/common/components/login/login.slice';
 import { useBreakpoints } from '../media-query/media-query-context';
 import FileUpload from './file-upload';
 import InfoFile from './info-file';
@@ -31,15 +41,15 @@ export default function NewTerminology() {
   return (
     <>
       <Button
-        icon='plus'
-        variant='secondary'
+        icon="plus"
+        variant="secondary"
         fullWidth={isSmall}
         onClick={() => setShowModal(true)}
       >
         {t('add-new-terminology')}
       </Button>
       <Modal
-        appElementId='__next'
+        appElementId="__next"
         visible={showModal}
         variant={isSmall ? 'smallScreen' : 'default'}
         onEscKeyDown={() => handleClose()}
@@ -49,25 +59,14 @@ export default function NewTerminology() {
             {!startFileUpload ? t('add-new-terminology') : 'Tiedostoa ladataan'}
           </ModalTitle>
 
-          {!startFileUpload
-            ?
-            renderInfoInput()
-            :
-            <FileUpload />
-          }
+          {!startFileUpload ? renderInfoInput() : <FileUpload />}
         </ModalContent>
 
         <ModalFooter>
-          <Button
-            disabled={!isValid}
-            onClick={() => setStartFileUpload(true)}
-          >
+          <Button disabled={!isValid} onClick={() => setStartFileUpload(true)}>
             Lisää sanasto
           </Button>
-          <Button
-            variant='secondary'
-            onClick={() => handleClose()}
-          >
+          <Button variant="secondary" onClick={() => handleClose()}>
             Keskeytä
           </Button>
         </ModalFooter>
@@ -78,21 +77,19 @@ export default function NewTerminology() {
   function renderInfoInput() {
     return (
       <>
-        <Paragraph marginBottomSpacing='m'>
-          <Text>Tiedot ovat pakollisia, jos niitä ei ole merkitty valinnaisiksi.</Text>
+        <Paragraph marginBottomSpacing="m">
+          <Text>
+            Tiedot ovat pakollisia, jos niitä ei ole merkitty valinnaisiksi.
+          </Text>
         </Paragraph>
 
         <RadioButtonGroup
-          labelText='Miten lisäät tietoja?'
-          name='input-type'
+          labelText="Miten lisäät tietoja?"
+          name="input-type"
           onChange={(e) => setInputType(e)}
         >
-          <RadioButton value='self'>
-            Täytän tiedot itse
-          </RadioButton>
-          <RadioButton value='file'>
-            Tuon tiedostolla
-          </RadioButton>
+          <RadioButton value="self">Täytän tiedot itse</RadioButton>
+          <RadioButton value="file">Tuon tiedostolla</RadioButton>
         </RadioButtonGroup>
 
         {inputType === 'self' && <InfoManual setIsValid={setIsValid} />}

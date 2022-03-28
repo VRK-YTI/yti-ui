@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Paragraph, RadioButton, Text } from 'suomifi-ui-components';
 import { useBreakpoints } from '../media-query/media-query-context';
-import { RadioButtonGroupSmBot, TextInputSmBot } from './new-terminology.styles';
+import {
+  RadioButtonGroupSmBot,
+  TextInputSmBot,
+} from './new-terminology.styles';
 
 export default function Prefix({ update }: any) {
   const URI = 'http://uri.suomi.fi/';
@@ -47,38 +50,40 @@ export default function Prefix({ update }: any) {
   return (
     <>
       <RadioButtonGroupSmBot
-        labelText='Tunnus'
-        hintText='Sanaston yksilöivä tunnus, jota ei voi muuttaa sanaston luonnin jälkeen.'
-        name='prefix'
-        defaultValue='automatic'
+        labelText="Tunnus"
+        hintText="Sanaston yksilöivä tunnus, jota ei voi muuttaa sanaston luonnin jälkeen."
+        name="prefix"
+        defaultValue="automatic"
         onChange={(e) => {
           handlePrefixTypeChange(e);
         }}
       >
-        <RadioButton value='automatic'>
-          Luo tunnus automaattisesti
-        </RadioButton>
-        <RadioButton value='manual'>
-          Valitse oma tunnus
-        </RadioButton>
+        <RadioButton value="automatic">Luo tunnus automaattisesti</RadioButton>
+        <RadioButton value="manual">Valitse oma tunnus</RadioButton>
       </RadioButtonGroupSmBot>
-      {prefixType === 'manual' &&
+      {prefixType === 'manual' && (
         <TextInputSmBot
-          labelText='Tunnus'
-          onChange={e => handleCustomChange(e as string)}
+          labelText="Tunnus"
+          onChange={(e) => handleCustomChange(e as string)}
           isSmall={isSmall}
           status={status}
-          statusText={status === 'error' ? 'Etuliitteen sallitut merkit ovat a-z, 0-9, alaviiva ja väliviiva' : ''}
+          statusText={
+            status === 'error'
+              ? 'Etuliitteen sallitut merkit ovat a-z, 0-9, alaviiva ja väliviiva'
+              : ''
+          }
         />
-      }
+      )}
       <Paragraph>
-        <Text variant='bold' smallScreen>
+        <Text variant="bold" smallScreen>
           Url:n esikatselu
         </Text>
       </Paragraph>
       <Paragraph>
         <Text smallScreen>
-          {URI}{prefix}{prefix && '/'}
+          {URI}
+          {prefix}
+          {prefix && '/'}
         </Text>
       </Paragraph>
     </>

@@ -12,65 +12,74 @@ export interface TerminologyName {
 
 export default function LanguageSelector({ update }: any) {
   const { isSmall } = useBreakpoints();
-  const [selectedLanguages, setSelectedLanguages] = useState<MultiSelectData[]>([]);
-  const [terminologyNames, setTerminologyNames] = useState<TerminologyName[]>([]);
+  const [selectedLanguages, setSelectedLanguages] = useState<MultiSelectData[]>(
+    []
+  );
+  const [terminologyNames, setTerminologyNames] = useState<TerminologyName[]>(
+    []
+  );
 
   const languages = [
     {
       name: 'Suomi',
       labelText: 'suomi FI',
-      uniqueItemId: 'fi'
+      uniqueItemId: 'fi',
     },
     {
       name: 'Englanti',
       labelText: 'englanti EN',
-      uniqueItemId: 'en'
+      uniqueItemId: 'en',
     },
     {
       name: 'Ruotsi',
       labelText: 'ruotsi SV',
-      uniqueItemId: 'sv'
-    }
+      uniqueItemId: 'sv',
+    },
   ];
 
   useEffect(() => {
-    update('description', [terminologyNames, !terminologyNames.find(t => !t.name)]);
+    update('description', [
+      terminologyNames,
+      !terminologyNames.find((t) => !t.name),
+    ]);
   }, [terminologyNames]);
 
   const handleSelectedLanguagesChange = (e: MultiSelectData[]) => {
     setSelectedLanguages(e);
-    setTerminologyNames(terminologyNames.filter(tn => {
-      const languages: string[] = e.map(sl => sl.uniqueItemId);
+    setTerminologyNames(
+      terminologyNames.filter((tn) => {
+        const languages: string[] = e.map((sl) => sl.uniqueItemId);
 
-      if (languages.includes(tn.lang)) {
-        return true;
-      }
-    }));
+        if (languages.includes(tn.lang)) {
+          return true;
+        }
+      })
+    );
   };
 
   return (
     <>
-      <Paragraph marginBottomSpacing='m'>
-        <Text variant='bold'>Sanaston kielet</Text>
+      <Paragraph marginBottomSpacing="m">
+        <Text variant="bold">Sanaston kielet</Text>
       </Paragraph>
 
-      <Paragraph marginBottomSpacing='m'>
+      <Paragraph marginBottomSpacing="m">
         <Text>
-          Valitse sanastolle kielet, joilla sanaston sisältö on kuvattu.
-          Anna myös sanaston nimi ja kuvaus valituilla kielillä.
+          Valitse sanastolle kielet, joilla sanaston sisältö on kuvattu. Anna
+          myös sanaston nimi ja kuvaus valituilla kielillä.
         </Text>
       </Paragraph>
 
       <MultiselectSmBot
-        labelText='Sanaston kielet'
+        labelText="Sanaston kielet"
         items={languages}
         chipListVisible={true}
         ariaChipActionLabel="Remove"
         ariaSelectedAmountText="languages selected"
         ariaOptionsAvailableText="options available"
         ariaOptionChipRemovedText="removed"
-        noItemsText='no items'
-        visualPlaceholder='Valitse sanaston kielet'
+        noItemsText="no items"
+        visualPlaceholder="Valitse sanaston kielet"
         onItemSelectionsChange={(e) => handleSelectedLanguagesChange(e)}
         isSmall={isSmall}
       />

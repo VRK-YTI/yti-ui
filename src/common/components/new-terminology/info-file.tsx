@@ -1,6 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { Button, Paragraph, Text } from 'suomifi-ui-components';
-import { FileBlock, FileInfo, FileInfoBlock, FileInfoStaticIcon, FileRemoveButton, FileWrapper } from './new-terminology.styles';
+import {
+  FileBlock,
+  FileInfo,
+  FileInfoBlock,
+  FileInfoStaticIcon,
+  FileRemoveButton,
+  FileWrapper,
+} from './new-terminology.styles';
 
 interface infoFileProps {
   setIsValid: (valid: boolean) => void;
@@ -13,6 +20,8 @@ export default function InfoFile({ setIsValid }: infoFileProps) {
   useEffect(() => {
     if (files.length > 0) {
       setIsValid(true);
+    } else {
+      setIsValid(false);
     }
   }, [files]);
 
@@ -37,61 +46,80 @@ export default function InfoFile({ setIsValid }: infoFileProps) {
     setFiles(retItems);
   };
 
+  const handleUpload = (e: any) => {
+    e.preventDefault();
+
+    const retItems = [...files];
+    const selectedItems = e.target.files;
+    console.log(selectedItems);
+    for (let i = 0; i < selectedItems.length; i++) {
+      if (selectedItems[i].name.includes(/.xlsx$/g)) {
+        continue;
+      }
+
+      retItems.push(selectedItems[i].getAsFile());
+    }
+
+    setFiles(retItems);
+  };
+
   return (
-    <FileWrapper onDrop={e => handleDrop(e)} onDragOver={e => e.preventDefault()}>
-      <FileBlock padding='m'>
-        <Paragraph marginBottomSpacing='xxs'>
-          <Text variant='bold' smallScreen>
+    <FileWrapper
+      onDrop={(e) => handleDrop(e)}
+      onDragOver={(e) => e.preventDefault()}
+    >
+      <FileBlock padding="m">
+        <Paragraph marginBottomSpacing="xxs">
+          <Text variant="bold" smallScreen>
             Liitä tai raahaa tiedostot tähän
           </Text>
         </Paragraph>
-        <Paragraph marginBottomSpacing='l'>
-          <Text smallScreen>
-            Sallitut tiedostomuodot on: xlsx
-          </Text>
+        <Paragraph marginBottomSpacing="l">
+          <Text smallScreen>Sallitut tiedostomuodot on: xlsx</Text>
         </Paragraph>
-        {files.length < 1
-          ?
+        {files.length < 1 ? (
           <>
-            <input type='file' ref={input} style={{ display: 'none' }} />
+            <input type="file" ref={input} style={{ display: 'none' }} onChange={(e) => {
+              handleUpload(e);
+            }} />
             <Button
-              icon='plus'
-              variant='secondary'
-              onClick={() => { input.current.click() }}
+              icon="plus"
+              variant="secondary"
+              onClick={() => {
+                input.current.click();
+              }}
             >
               Lisää tiedosto
             </Button>
           </>
-          :
+        ) : (
           files.map((file, idx) => {
             return (
               <FileInfoBlock key={`uploaded-item-${idx}`}>
                 <FileInfo>
-                  <FileInfoStaticIcon icon='genericFile' />
+                  <FileInfoStaticIcon icon="genericFile" />
                   <div>
                     <Paragraph>
-                      <Text color={'highlightBase'}>
-                        {file.name}
-                      </Text>
+                      <Text color={'highlightBase'}>{file.name}</Text>
                     </Paragraph>
                     <Paragraph>
-                      <Text color={'depthDark1'}>
-                        {file.size} KB
-                      </Text>
+                      <Text color={'depthDark1'}>{file.size} KB</Text>
                     </Paragraph>
                   </div>
                 </FileInfo>
                 <FileRemoveButton
-                  variant='secondaryNoBorder'
-                  icon='remove'
-                  onClick={() => setFiles(files.filter(f => f.name !== file.name))}
+                  variant="secondaryNoBorder"
+                  icon="remove"
+                  onClick={() =>
+                    setFiles(files.filter((f) => f.name !== file.name))
+                  }
                 >
                   Poista
                 </FileRemoveButton>
               </FileInfoBlock>
             );
           })
-        }
+        )}
       </FileBlock>
     </FileWrapper>
   );

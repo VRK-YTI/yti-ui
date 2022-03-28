@@ -11,17 +11,13 @@ export default function TypeSelector({ update }: any) {
 
   return (
     <RadioButtonGroupSmBot
-      labelText='Sanastotyyppi'
-      name='terminology-type'
-      defaultValue='terminology'
+      labelText="Sanastotyyppi"
+      name="terminology-type"
+      defaultValue="terminology"
       onChange={(e) => setSelectedType(e)}
     >
-      <RadioButton value='terminology'>
-        Terminologinen sanasto
-      </RadioButton>
-      <RadioButton value='other'>
-        Muu sanasto
-      </RadioButton>
+      <RadioButton value="terminology">Terminologinen sanasto</RadioButton>
+      <RadioButton value="other">Muu sanasto</RadioButton>
     </RadioButtonGroupSmBot>
   );
 }

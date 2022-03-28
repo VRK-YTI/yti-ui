@@ -6,7 +6,10 @@ import InfoExpander from '@app/common/components/info-dropdown/info-expander';
 import { themeProvider } from '@app/tests/test-utils';
 import { Provider } from 'react-redux';
 import { makeStore } from '@app/store';
-import { setLogin, initialState } from '@app/common/components/login/login.slice';
+import {
+  setLogin,
+  initialState,
+} from '@app/common/components/login/login.slice';
 
 describe('infoExpander', () => {
   it('should render export button', () => {

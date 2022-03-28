@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { TextInput } from 'suomifi-ui-components';
-import useUrlState, { initialUrlState } from '@app/common/utils/hooks/useUrlState';
+import useUrlState, {
+  initialUrlState,
+} from '@app/common/utils/hooks/useUrlState';
 
 interface KeywordFilterProps {
   title: string;

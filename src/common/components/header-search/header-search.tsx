@@ -5,7 +5,9 @@ import IconButton from '@app/common/components/icon-button/icon-button';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import { CloseButton } from './header-search.styles';
 import { useRouter } from 'next/router';
-import useUrlState, { initialUrlState } from '@app/common/utils/hooks/useUrlState';
+import useUrlState, {
+  initialUrlState,
+} from '@app/common/utils/hooks/useUrlState';
 
 export interface HeaderSearchProps {
   isSearchOpen: boolean;

@@ -2,8 +2,8 @@ import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Paragraph, Text } from 'suomifi-ui-components';
-import { selectLogin } from '../login/login-slice';
-import { useBreakpoints } from '../media-query/media-query-context';
+import { selectLogin } from '@app/common/components/login/login.slice';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import ContactInfo from './contact-info';
 import InformationDomainsSelector from './information-domains-selector';
 import LanguageSelector from './language-selector';
@@ -28,12 +28,16 @@ export default function InfoManual({ setIsValid }: InfoManualProps) {
     if (Object.keys(terminologyData).length < 7) {
       valid = false;
     } else {
-      Object.keys(terminologyData).forEach(k => {
+      Object.keys(terminologyData).forEach((k) => {
         if (k === 'otherOrgs') {
           return;
         }
 
-        if (!terminologyData[k] || terminologyData[k].length < 1 || terminologyData[k][1] === false) {
+        if (
+          !terminologyData[k] ||
+          terminologyData[k].length < 1 ||
+          terminologyData[k][1] === false
+        ) {
           valid = false;
         }
       });
@@ -43,7 +47,7 @@ export default function InfoManual({ setIsValid }: InfoManualProps) {
   }, [terminologyData]);
 
   const handleUpdate = (key: string, data: any) => {
-    setTerminologyData(values => ({ ...values, [key]: data }));
+    setTerminologyData((values) => ({ ...values, [key]: data }));
   };
 
   return (
@@ -51,8 +55,8 @@ export default function InfoManual({ setIsValid }: InfoManualProps) {
       <TallerSeparator />
       <LanguageSelector update={handleUpdate} />
       <TallerSeparator />
-      <Paragraph marginBottomSpacing='m'>
-        <Text variant='bold'>Sanaston muut tiedot</Text>
+      <Paragraph marginBottomSpacing="m">
+        <Text variant="bold">Sanaston muut tiedot</Text>
       </Paragraph>
       <OrganizationSelector update={handleUpdate} />
       <TypeSelector update={handleUpdate} />

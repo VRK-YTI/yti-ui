@@ -46,7 +46,7 @@ export default function Title({ info }: TitleProps) {
   if (typeof info === 'string') {
     return (
       <TitleWrapperNoBreadcrumb>
-        <Heading variant='h1'>{info}</Heading>
+        <Heading variant="h1">{info}</Heading>
         <TitleDescriptionWrapper isSmall={isSmall}>
           <Description>{t('terminology-search-info')}</Description>
           <NewTerminology />

@@ -22,25 +22,27 @@ export default function ContactInfo({ update }: any) {
   return (
     <>
       <Paragraph>
-        <Text variant='bold'>
-          Yhteydenottotiedot
-        </Text>
+        <Text variant="bold">Yhteydenottotiedot</Text>
       </Paragraph>
-      <Paragraph marginBottomSpacing='m'>
+      <Paragraph marginBottomSpacing="m">
         <Text>
-          Organisaation yleinen sähköpostiosoite, johon käyttäjä voi antaa palautetta sanaston sisältöön liittyen. Älä käytä henkilökohtaista sähköpostiosoitetta.
+          Organisaation yleinen sähköpostiosoite, johon käyttäjä voi antaa
+          palautetta sanaston sisältöön liittyen. Älä käytä henkilökohtaista
+          sähköpostiosoitetta.
         </Text>
       </Paragraph>
       <TextInputSmBot
-        labelText='Yhteydenotto-osoite'
-        hintText='Sanaston tiedoissa julkisesti näkyvä sähköpostiosoite.'
-        visualPlaceholder='Esim. yllapito@example.org'
+        labelText="Yhteydenotto-osoite"
+        hintText="Sanaston tiedoissa julkisesti näkyvä sähköpostiosoite."
+        visualPlaceholder="Esim. yllapito@example.org"
         isSmall={isSmall}
-        onChange={e => setContact(e as string)}
+        onChange={(e) => setContact(e as string)}
         onBlur={() => validateContact()}
-        type='email'
+        type="email"
         status={status}
-        statusText={status === 'error' ? 'Sähköposti ei ole oikeassa muodossa' : ''}
+        statusText={
+          status === 'error' ? 'Sähköposti ei ole oikeassa muodossa' : ''
+        }
       />
     </>
   );

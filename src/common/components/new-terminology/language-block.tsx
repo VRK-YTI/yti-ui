@@ -1,7 +1,11 @@
 import { Dispatch, SetStateAction, useState } from 'react';
 import { MultiSelectData, Paragraph, Text } from 'suomifi-ui-components';
 import { TerminologyName } from './language-selector';
-import { LangBlock, TextareaSmBot, LangTextInput } from './new-terminology.styles';
+import {
+  LangBlock,
+  TextareaSmBot,
+  LangTextInput,
+} from './new-terminology.styles';
 
 interface LanguageBlockProps {
   lang: MultiSelectData;
@@ -10,14 +14,19 @@ interface LanguageBlockProps {
   setTerminologyNames: Dispatch<SetStateAction<TerminologyName[]>>;
 }
 
-export default function LanguageBlock({ lang, isSmall, terminologyNames, setTerminologyNames }: LanguageBlockProps) {
+export default function LanguageBlock({
+  lang,
+  isSmall,
+  terminologyNames,
+  setTerminologyNames,
+}: LanguageBlockProps) {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [status, setStatus] = useState<'default' | 'error'>('default');
 
   const handleBlur = () => {
-    if (terminologyNames?.some(tn => tn.lang === lang.uniqueItemId)) {
-      const newTerminologyNames = terminologyNames.map(tn => {
+    if (terminologyNames?.some((tn) => tn.lang === lang.uniqueItemId)) {
+      const newTerminologyNames = terminologyNames.map((tn) => {
         if (tn.lang === lang.uniqueItemId) {
           if (name === '') {
             setStatus('error');
@@ -27,7 +36,7 @@ export default function LanguageBlock({ lang, isSmall, terminologyNames, setTerm
           return {
             lang: lang.uniqueItemId,
             name: name,
-            description: description
+            description: description,
           };
         } else {
           setStatus('default');
@@ -42,30 +51,32 @@ export default function LanguageBlock({ lang, isSmall, terminologyNames, setTerm
         {
           lang: lang.uniqueItemId,
           name: name,
-          description: description
-        }
+          description: description,
+        },
       ]);
     }
   };
 
   return (
-    <LangBlock padding='m' onBlur={() => handleBlur()}>
-      <Paragraph marginBottomSpacing='m'>
-        <Text variant='bold'>{lang.labelText}</Text>
+    <LangBlock padding="m" onBlur={() => handleBlur()}>
+      <Paragraph marginBottomSpacing="m">
+        <Text variant="bold">{lang.labelText}</Text>
       </Paragraph>
       <LangTextInput
-        labelText='Sanaston nimi'
-        visualPlaceholder='Kirjoita otsikko'
+        labelText="Sanaston nimi"
+        visualPlaceholder="Kirjoita otsikko"
         isSmall={isSmall}
-        onChange={e => setName(e as string)}
+        onChange={(e) => setName(e as string)}
         status={status}
-        statusText={status === 'error' ? 'Sanaston nimi ei voi olla määrittämätön' : ''}
+        statusText={
+          status === 'error' ? 'Sanaston nimi ei voi olla määrittämätön' : ''
+        }
       />
       <TextareaSmBot
-        labelText='Kuvaus (valinnainen)'
-        hintText='Laaja kuvaus sanaston sisällöstä, kohderyhmästä, tms.'
-        visualPlaceholder='Kirjoita kuvaus'
-        onChange={e => setDescription(e.target.value)}
+        labelText="Kuvaus (valinnainen)"
+        hintText="Laaja kuvaus sanaston sisällöstä, kohderyhmästä, tms."
+        visualPlaceholder="Kirjoita kuvaus"
+        onChange={(e) => setDescription(e.target.value)}
       />
     </LangBlock>
   );
