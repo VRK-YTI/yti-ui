@@ -2,8 +2,8 @@ import { render, screen } from '@testing-library/react';
 import { NextRouter, useRouter } from 'next/router';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
-import { lightTheme } from '../../../layouts/theme';
-import { makeStore } from '../../../store';
+import { lightTheme } from '@app/layouts/theme';
+import { makeStore } from '@app/store';
 import SearchResults from './search-results';
 
 jest.mock('next/router');

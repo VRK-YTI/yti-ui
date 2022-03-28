@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig, AxiosError } from 'axios';
 import { BaseQueryFn } from '@reduxjs/toolkit/query';
-import { Error } from '../../interfaces/error.interface';
+import { Error } from '@app/common/interfaces/error.interface';
 
 const axiosBaseQuery = (
   { baseUrl }: { baseUrl: string } = { baseUrl: '' }

@@ -1,9 +1,9 @@
-import { getPropertyValue } from '../components/property-value/get-property-value';
-import { Collection } from '../interfaces/collection.interface';
+import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
+import { Collection } from '@app/common/interfaces/collection.interface';
 import {
   VocabularyConceptDTO,
   VocabularyConcepts,
-} from '../interfaces/vocabulary.interface';
+} from '@app/common/interfaces/vocabulary.interface';
 import { UrlState } from './hooks/useUrlState';
 
 export default function filterData(

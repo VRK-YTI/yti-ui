@@ -6,14 +6,18 @@ import {
   VisuallyHidden,
 } from 'suomifi-ui-components';
 import { InfoExpanderWrapper } from './info-expander.styles';
-import { VocabularyInfoDTO } from '../../interfaces/vocabulary.interface';
-import Separator from '../separator';
-import { BasicBlock, MultilingualPropertyBlock, PropertyBlock } from '../block';
-import { BasicBlockExtraWrapper } from '../block/block.styles';
-import FormattedDate from '../formatted-date';
+import { VocabularyInfoDTO } from '@app/common/interfaces/vocabulary.interface';
+import Separator from '@app/common/components/separator';
+import {
+  BasicBlock,
+  MultilingualPropertyBlock,
+  PropertyBlock,
+} from '@app/common/components/block';
+import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
+import FormattedDate from '@app/common/components/formatted-date';
 import { useSelector } from 'react-redux';
-import { selectLogin } from '../login/login-slice';
-import Subscription from '../subscription/subscription';
+import { selectLogin } from '@app/common/components/login/login.slice';
+import Subscription from '@app/common/components/subscription/subscription';
 
 interface InfoExpanderProps {
   data?: VocabularyInfoDTO;

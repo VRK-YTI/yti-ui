@@ -1,11 +1,11 @@
 import { useTranslation } from 'next-i18next';
-import { Counts } from '../../common/interfaces/counts.interface';
-import Separator from '../../common/components/separator';
-import { Filter } from '../../common/components/filter/filter';
-import StatusFilter from '../../common/components/filter/status-filter';
-import { KeywordFilter } from '../../common/components/filter/keyword-filter';
-import TypeFilter from '../../common/components/filter/type-filter';
-import useUrlState from '../../common/utils/hooks/useUrlState';
+import { Counts } from '@app/common/interfaces/counts.interface';
+import Separator from '@app/common/components/separator';
+import { Filter } from '@app/common/components/filter/filter';
+import StatusFilter from '@app/common/components/filter/status-filter';
+import { KeywordFilter } from '@app/common/components/filter/keyword-filter';
+import TypeFilter from '@app/common/components/filter/type-filter';
+import useUrlState from '@app/common/utils/hooks/useUrlState';
 
 export interface TerminologyListFilterProps {
   isModal?: boolean;

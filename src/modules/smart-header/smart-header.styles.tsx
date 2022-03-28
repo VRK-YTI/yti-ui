@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { Breakpoint } from '../../common/components/media-query/media-query-context';
-import { small } from '../../common/components/media-query/styled-helpers';
+import { Breakpoint } from '@app/common/components/media-query/media-query-context';
+import { small } from '@app/common/components/media-query/styled-helpers';
 
 export const HeaderWrapper = styled.div<{ breakpoint: Breakpoint }>`
   display: flex;

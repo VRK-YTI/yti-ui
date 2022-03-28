@@ -1,5 +1,5 @@
-import { Organization } from '../interfaces/organization.interface';
-import { Term } from '../interfaces/term.interface';
+import { Organization } from '@app/common/interfaces/organization.interface';
+import { Term } from '@app/common/interfaces/term.interface';
 import { getProperty } from './get-property';
 
 describe('getProperty', () => {

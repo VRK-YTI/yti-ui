@@ -1,7 +1,7 @@
-import { setLogin } from './login-slice';
-import { makeStore } from '../../../store';
+import { setLogin } from './login.slice';
+import { makeStore } from '@app/store';
 
-describe('login-slice', () => {
+describe('login.slice', () => {
   it('setLogin sets login with a given value', () => {
     const store = makeStore();
     const originalState = store.getState().login;

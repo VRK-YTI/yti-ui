@@ -1,7 +1,7 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import axiosBaseQuery from '../axios-base-query';
+import axiosBaseQuery from '@app/common/components/axios-base-query';
 import { HYDRATE } from 'next-redux-wrapper';
-import { Subscription } from '../../interfaces/subscription.interface';
+import { Subscription } from '@app/common/interfaces/subscription.interface';
 
 export const subscriptionApi = createApi({
   reducerPath: 'subsriptionApi',

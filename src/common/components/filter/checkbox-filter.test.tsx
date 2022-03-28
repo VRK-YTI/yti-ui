@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { themeProvider } from '../../../tests/test-utils';
+import { themeProvider } from '@app/tests/test-utils';
 import CheckboxFilter from './checkbox-filter';
 
 describe('checkboxFilter', () => {

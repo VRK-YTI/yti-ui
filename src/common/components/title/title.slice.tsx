@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { AppState, AppThunk } from '../../../store';
+import { AppState, AppThunk } from '@app/store';
 
 export interface TitleState {
   title: string;

@@ -1,5 +1,5 @@
-import { anonymousUser } from '../../../common/interfaces/user.interface';
-import withSession from '../../../common/utils/session';
+import { anonymousUser } from '@app/common/interfaces/user.interface';
+import withSession from '@app/common/utils/session';
 
 export default withSession(async (req, res) => {
   const user = req.session.get('user');

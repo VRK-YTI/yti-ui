@@ -1,9 +1,9 @@
 import { SerializedError } from '@reduxjs/toolkit';
 import { useTranslation } from 'next-i18next';
 import { Text } from 'suomifi-ui-components';
-import { Error } from '../../interfaces/error.interface';
-import { useBreakpoints } from '../media-query/media-query-context';
-import { LoadIcon, LoadWrapper, RefetchButton } from './load-indicator.style';
+import { Error } from '@app/common/interfaces/error.interface';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import { LoadIcon, LoadWrapper, RefetchButton } from './load-indicator.styles';
 
 interface LoadIndicatorProps {
   isFetching: boolean;

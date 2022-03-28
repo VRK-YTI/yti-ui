@@ -1,7 +1,9 @@
 import { useTranslation } from 'next-i18next';
-import { Property } from '../../../common/interfaces/termed-data-types.interface';
+import { Property } from '@app/common/interfaces/termed-data-types.interface';
 import CheckboxFilter from './checkbox-filter';
-import useUrlState, { initialUrlState } from '../../utils/hooks/useUrlState';
+import useUrlState, {
+  initialUrlState,
+} from '@app/common/utils/hooks/useUrlState';
 
 export interface InformationDomain {
   id: string;

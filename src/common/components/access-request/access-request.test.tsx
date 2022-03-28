@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import AccessRequest from '.';
 import { makeStore } from '../../../store';
 import { themeProvider } from '../../../tests/test-utils';
-import { setLogin, initialState } from '../login/login-slice';
+import { setLogin, initialState } from '../login/login.slice';
 
 describe('access-request', () => {
   let appRoot: HTMLDivElement | null = null;

@@ -1,11 +1,11 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import DesktopAuthenticationPanel from './desktop-authentication-panel';
-import { themeProvider } from '../../../tests/test-utils';
-import { makeStore } from '../../../store';
+import { themeProvider } from '@app/tests/test-utils';
+import { makeStore } from '@app/store';
 import { Provider } from 'react-redux';
-import { setLogin } from '../login/login-slice';
-import { User } from '../../interfaces/user.interface';
+import { setLogin } from '@app/common/components/login/login.slice';
+import { User } from '@app/common/interfaces/user.interface';
 
 describe('authentication panel', () => {
   it('should render login button for unauthenticated user', () => {

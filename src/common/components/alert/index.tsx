@@ -1,9 +1,9 @@
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { useStoreDispatch } from '../../../store';
-import { Error } from '../../interfaces/error.interface';
-import { useBreakpoints } from '../media-query/media-query-context';
+import { useStoreDispatch } from '@app/store';
+import { Error } from '@app/common/interfaces/error.interface';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import { AlertsWrapper, AlertToast } from './alert-toast.styles';
 import { selectAlert, setAlert } from './alert.slice';
 import NotificationToast from './notification-toast';

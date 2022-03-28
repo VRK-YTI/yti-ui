@@ -1,6 +1,6 @@
-import { User } from '../interfaces/user.interface';
-import { VocabularyInfoDTO } from '../interfaces/vocabulary.interface';
-import { Organization } from '../interfaces/organization.interface';
+import { User } from '@app/common/interfaces/user.interface';
+import { VocabularyInfoDTO } from '@app/common/interfaces/vocabulary.interface';
+import { Organization } from '@app/common/interfaces/organization.interface';
 import hasRights from './check-rights';
 
 const createMockUser = (rolesInOrganizations: {

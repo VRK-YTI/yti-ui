@@ -4,9 +4,9 @@ import {
   GroupSearchResult,
   OrganizationSearchResult,
   TerminologySearchResult,
-} from '../../interfaces/terminology.interface';
-import { UrlState } from '../../utils/hooks/useUrlState';
-import axiosBaseQuery from '../axios-base-query';
+} from '@app/common/interfaces/terminology.interface';
+import { UrlState } from '@app/common/utils/hooks/useUrlState';
+import axiosBaseQuery from '@app/common/components/axios-base-query';
 
 export const initialState = {};
 

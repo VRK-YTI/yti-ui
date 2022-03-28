@@ -4,9 +4,11 @@ import { VisuallyHidden } from 'suomifi-ui-components';
 import {
   GroupSearchResult,
   OrganizationSearchResult,
-} from '../../interfaces/terminology.interface';
-import useUrlState, { initialUrlState } from '../../utils/hooks/useUrlState';
-import { useBreakpoints } from '../media-query/media-query-context';
+} from '@app/common/interfaces/terminology.interface';
+import useUrlState, {
+  initialUrlState,
+} from '@app/common/utils/hooks/useUrlState';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import {
   ChipWrapper,
   CountText,

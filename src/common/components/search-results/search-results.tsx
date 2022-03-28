@@ -1,18 +1,18 @@
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
-import { Collection } from '../../interfaces/collection.interface';
+import { Collection } from '@app/common/interfaces/collection.interface';
 import {
   GroupSearchResult,
   OrganizationSearchResult,
   TerminologyDTO,
   TerminologySearchResult,
-} from '../../interfaces/terminology.interface';
+} from '@app/common/interfaces/terminology.interface';
 import {
   VocabularyConceptDTO,
   VocabularyConcepts,
-} from '../../interfaces/vocabulary.interface';
-import PropertyValue from '../property-value';
-import { useBreakpoints } from '../media-query/media-query-context';
+} from '@app/common/interfaces/vocabulary.interface';
+import PropertyValue from '@app/common/components/property-value';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import SearchCountTags from './search-count-tags';
 import {
   Card,
@@ -28,9 +28,9 @@ import {
   CardTitleWrapper,
   CardWrapper,
 } from './search-results.styles';
-import { Concept } from '../../interfaces/concept.interface';
-import useUrlState from '../../utils/hooks/useUrlState';
-import SanitizedTextContent from '../sanitized-text-content';
+import { Concept } from '@app/common/interfaces/concept.interface';
+import useUrlState from '@app/common/utils/hooks/useUrlState';
+import SanitizedTextContent from '@app/common/components/sanitized-text-content';
 import { VisuallyHidden } from 'suomifi-ui-components';
 
 interface SearchResultsProps {

@@ -13,7 +13,7 @@ import { useStoreDispatch } from '../../../store';
 import { Error } from '../../interfaces/error.interface';
 import { OrganizationSearchResult } from '../../interfaces/terminology.interface';
 import { setAlert } from '../alert/alert.slice';
-import { selectLogin } from '../login/login-slice';
+import { selectLogin } from '../login/login.slice';
 import { useBreakpoints } from '../media-query/media-query-context';
 import {
   useGetRequestsQuery,

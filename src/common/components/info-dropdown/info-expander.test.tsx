@@ -2,11 +2,14 @@
 
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import InfoExpander from './info-expander';
-import { themeProvider } from '../../../tests/test-utils';
+import InfoExpander from '@app/common/components/info-dropdown/info-expander';
+import { themeProvider } from '@app/tests/test-utils';
 import { Provider } from 'react-redux';
-import { makeStore } from '../../../store';
-import { setLogin, initialState } from '../login/login-slice';
+import { makeStore } from '@app/store';
+import {
+  setLogin,
+  initialState,
+} from '@app/common/components/login/login.slice';
 
 describe('infoExpander', () => {
   it('should render export button', () => {

@@ -1,8 +1,8 @@
 import Head from 'next/head';
-import Error from '../common/components/error/error';
-import { MediaQueryContextProvider } from '../common/components/media-query/media-query-context';
-import PageTitle from '../common/components/page-title';
-import ErrorLayout from '../layouts/error-layout';
+import Error from '@app/common/components/error/error';
+import { MediaQueryContextProvider } from '@app/common/components/media-query/media-query-context';
+import PageTitle from '@app/common/components/page-title';
+import ErrorLayout from '@app/layouts/error-layout';
 
 export default function Custom500() {
   return (
