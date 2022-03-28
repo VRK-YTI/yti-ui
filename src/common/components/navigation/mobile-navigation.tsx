@@ -3,10 +3,10 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { Link, Text } from 'suomifi-ui-components';
-import LoginButtons from '../authentication-panel/login-buttons';
-import MobileImpersonateWrapper from '../impersonate/mobile-impersonate-wrapper';
-import MobileLocaleChooser from '../locale-chooser/mobile-locale-chooser';
-import { selectLogin } from '../login/login-slice';
+import LoginButtons from '@app/common/components/authentication-panel/login-buttons';
+import MobileImpersonateWrapper from '@app/common/components/impersonate/mobile-impersonate-wrapper';
+import MobileLocaleChooser from '@app/common/components/locale-chooser/mobile-locale-chooser';
+import { selectLogin } from '@app/common/components/login/login.slice';
 import { MobileMenuItem, MobileMenuSection } from './navigation.styles';
 
 interface MobileNavigationProps {

@@ -4,9 +4,9 @@ import {
   ExpanderContent,
   ExpanderTitleButton,
 } from 'suomifi-ui-components';
-import { PropertyBlock } from '../../common/components/block';
-import { getPropertyValue } from '../../common/components/property-value/get-property-value';
-import { Concept } from '../../common/interfaces/concept.interface';
+import { PropertyBlock } from '@app/common/components/block';
+import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
+import { Concept } from '@app/common/interfaces/concept.interface';
 
 export function hasAdministrativeDetails(concept?: Concept, language?: string) {
   const rest = { language, fallbackLanguage: 'fi' };

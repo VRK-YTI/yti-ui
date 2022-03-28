@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { Concept } from '../../interfaces/concept.interface';
-import axiosBaseQuery from '../axios-base-query';
+import { Concept } from '@app/common/interfaces/concept.interface';
+import axiosBaseQuery from '@app/common/components/axios-base-query';
 import { HYDRATE } from 'next-redux-wrapper';
 
 export const conceptApi = createApi({

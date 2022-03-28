@@ -1,5 +1,5 @@
-import { Property } from '../../interfaces/termed-data-types.interface';
-import MultilingualDefinitionList from '../multilingual-definition-list/multilingual-definition-list';
+import { Property } from '@app/common/interfaces/termed-data-types.interface';
+import MultilingualDefinitionList from '@app/common/components/multilingual-definition-list/multilingual-definition-list';
 import { InfoBlockTitle, InfoBlockWrapper } from './info-block.styles';
 
 interface InfoBlockProps {

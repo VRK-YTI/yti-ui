@@ -1,5 +1,5 @@
 import { Heading } from 'suomifi-ui-components';
-import { Breadcrumb, BreadcrumbLink } from '../../common/components/breadcrumb';
+import { Breadcrumb, BreadcrumbLink } from '@app/common/components/breadcrumb';
 import { useTranslation } from 'next-i18next';
 import {
   HeadingBlock,
@@ -10,14 +10,14 @@ import {
   OrganizationAndRolesWrapper,
   PageContent,
 } from './own-information.styles';
-import { useBreakpoints } from '../../common/components/media-query/media-query-context';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import { useEffect, useRef } from 'react';
-import { BasicBlock } from '../../common/components/block';
+import { BasicBlock } from '@app/common/components/block';
 import { useSelector } from 'react-redux';
-import { selectLogin } from '../../common/components/login/login-slice';
-import Separator from '../../common/components/separator';
-import { useGetOrganizationsQuery } from '../../common/components/terminology-search/terminology-search-slice';
-import { getPropertyValue } from '../../common/components/property-value/get-property-value';
+import { selectLogin } from '@app/common/components/login/login.slice';
+import Separator from '@app/common/components/separator';
+import { useGetOrganizationsQuery } from '@app/common/components/terminology-search/terminology-search.slice';
+import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import _ from 'lodash';
 import SubscriptionBlock from './subscription-block';
 import EmailNotificationsBlock from './email-notifications-block';

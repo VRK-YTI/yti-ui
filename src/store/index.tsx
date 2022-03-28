@@ -3,19 +3,19 @@ import { createWrapper } from 'next-redux-wrapper';
 import {
   terminologySearchSlice,
   terminologySearchApi,
-} from '../common/components/terminology-search/terminology-search-slice';
+} from '@app/common/components/terminology-search/terminology-search.slice';
 import {
   vocabularyApi,
   vocabularySlice,
-} from '../common/components/vocabulary/vocabulary-slice';
-import { conceptApi } from '../common/components/concept/concept-slice';
+} from '@app/common/components/vocabulary/vocabulary.slice';
+import { conceptApi } from '@app/common/components/concept/concept.slice';
 import { useDispatch } from 'react-redux';
-import { collectionApi } from '../common/components/collection/collection-slice';
-import { countsApi } from '../common/components/counts/counts-slice';
-import { loginSlice } from '../common/components/login/login-slice';
-import { alertSlice } from '../common/components/alert/alert.slice';
-import { titleSlice } from '../common/components/title/title.slice';
-import { subscriptionApi } from '../common/components/subscription/subscription.slice';
+import { collectionApi } from '@app/common/components/collection/collection.slice';
+import { countsApi } from '@app/common/components/counts/counts.slice';
+import { loginSlice } from '@app/common/components/login/login.slice';
+import { alertSlice } from '@app/common/components/alert/alert.slice';
+import { titleSlice } from '@app/common/components/title/title.slice';
+import { subscriptionApi } from '@app/common/components/subscription/subscription.slice';
 
 export function makeStore() {
   return configureStore({

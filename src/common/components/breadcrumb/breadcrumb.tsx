@@ -1,9 +1,9 @@
 import { Breadcrumb as SuomiFiBreadcrumb } from 'suomifi-ui-components';
-import { BreadcrumbWrapper } from './breadcrumb-styles';
+import { BreadcrumbWrapper } from './breadcrumb.styles';
 import { useTranslation } from 'next-i18next';
 import React from 'react';
 import BreadcrumbLink from './breadcrumb-link';
-import { useBreakpoints } from '../media-query/media-query-context';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 
 export interface BreadcrumbProps {
   children: React.ReactNode;

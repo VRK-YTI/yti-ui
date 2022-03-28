@@ -1,7 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import { Button } from 'suomifi-ui-components';
-import { useStoreDispatch } from '../../../store';
+import { useStoreDispatch } from '@app/store';
 import { Error } from '../../interfaces/error.interface';
 import { setAlert } from '../alert/alert.slice';
 import {

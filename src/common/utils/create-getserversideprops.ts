@@ -1,12 +1,12 @@
 import { GetServerSidePropsContext, NextApiResponse } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { User, anonymousUser, UserProps } from '../interfaces/user.interface';
+import { User, anonymousUser, UserProps } from '@app/common/interfaces/user.interface';
 import withSession, { NextIronRequest } from './session';
-import { AppStore, wrapper } from '../../store';
+import { AppStore, wrapper } from '@app/store';
 import { ParsedUrlQuery } from 'querystring';
 import { Redirect } from 'next/dist/lib/load-custom-routes';
 import { SSRConfig } from 'next-i18next';
-import { setLogin } from '../components/login/login-slice';
+import { setLogin } from '@app/common/components/login/login.slice';
 
 export interface LocalHandlerParams {
   req: NextIronRequest;

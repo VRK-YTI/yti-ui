@@ -9,11 +9,11 @@ import {
   MarginContainer,
 } from './layout.styles';
 import { useTranslation } from 'next-i18next';
-import Footer from '../common/components/footer/footer';
-import SmartHeader from '../modules/smart-header';
-import { useBreakpoints } from '../common/components/media-query/media-query-context';
-import SkipLink from '../common/components/skip-link/skip-link';
-import { Alerts } from '../common/components/alert';
+import Footer from '@app/common/components/footer/footer';
+import SmartHeader from '@app/modules/smart-header';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import SkipLink from '@app/common/components/skip-link/skip-link';
+import { Alerts } from '@app/common/components/alert';
 
 export default function Layout({
   children,

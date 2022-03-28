@@ -3,7 +3,7 @@ import Link from 'next/link';
 import {
   SuomiInternalLink,
   SuomiExternalLink,
-} from './sanitized-text-content.style';
+} from './sanitized-text-content.styles';
 import { polyfill } from 'interweave-ssr';
 import Interweave, { Node } from 'interweave';
 

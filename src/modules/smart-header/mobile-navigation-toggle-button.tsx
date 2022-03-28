@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import IconButton from '../../common/components/icon-button/icon-button';
+import IconButton from '@app/common/components/icon-button/icon-button';
 
 export interface MobileNavigationToggleButtonProps {
   isOpen: boolean;

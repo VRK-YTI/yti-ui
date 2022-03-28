@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useSelector } from 'react-redux';
 import { useTheme } from 'styled-components';
 import { Icon, Link as SuomiFiLink } from 'suomifi-ui-components';
-import { selectLogin } from '../login/login-slice';
+import { selectLogin } from '@app/common/components/login/login.slice';
 import {
   NavigationDropdownItem,
   NavigationDropdownList,

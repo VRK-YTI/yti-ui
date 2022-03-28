@@ -1,15 +1,15 @@
 import { useTranslation } from 'next-i18next';
-import { Counts } from '../../common/interfaces/counts.interface';
+import { Counts } from '@app/common/interfaces/counts.interface';
 import {
   GroupSearchResult,
   OrganizationSearchResult,
-} from '../../common/interfaces/terminology.interface';
-import Separator from '../../common/components/separator';
-import { Filter } from '../../common/components/filter/filter';
-import InformationDomainFilter from '../../common/components/filter/information-domain-filter';
-import OrganizationFilter from '../../common/components/filter/organization-filter';
-import StatusFilter from '../../common/components/filter/status-filter';
-import { KeywordFilter } from '../../common/components/filter/keyword-filter';
+} from '@app/common/interfaces/terminology.interface';
+import Separator from '@app/common/components/separator';
+import { Filter } from '@app/common/components/filter/filter';
+import InformationDomainFilter from '@app/common/components/filter/information-domain-filter';
+import OrganizationFilter from '@app/common/components/filter/organization-filter';
+import StatusFilter from '@app/common/components/filter/status-filter';
+import { KeywordFilter } from '@app/common/components/filter/keyword-filter';
 
 export interface SearchPageFilterProps {
   isModal?: boolean;

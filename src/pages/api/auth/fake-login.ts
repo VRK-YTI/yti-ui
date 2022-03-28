@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { NextApiResponse } from 'next';
 import { applySession } from 'next-iron-session';
-import { User } from '../../../common/interfaces/user.interface';
-import { NextIronRequest } from '../../../common/utils/session';
-import { userCookieOptions } from '../../../common/utils/user-cookie-options';
+import { User } from '@app/common/interfaces/user.interface';
+import { NextIronRequest } from '@app/common/utils/session';
+import { userCookieOptions } from '@app/common/utils/user-cookie-options';
 
 const fakeLogin = async (req: NextIronRequest, res: NextApiResponse) => {
   if (process.env.ENV_TYPE === 'production') {

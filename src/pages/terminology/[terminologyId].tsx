@@ -1,21 +1,21 @@
 import { SSRConfig, useTranslation } from 'next-i18next';
 import { useRouter } from 'next/dist/client/router';
 import React, { useState } from 'react';
-import Layout from '../../layouts/layout';
+import Layout from '@app/layouts/layout';
 import {
   createCommonGetServerSideProps,
   LocalHandlerParams,
-} from '../../common/utils/create-getserversideprops';
-import Vocabulary from '../../modules/vocabulary';
-import { MediaQueryContextProvider } from '../../common/components/media-query/media-query-context';
-import PageTitle from '../../common/components/page-title';
+} from '@app/common/utils/create-getserversideprops';
+import Vocabulary from '@app/modules/vocabulary';
+import { MediaQueryContextProvider } from '@app/common/components/media-query/media-query-context';
+import PageTitle from '@app/common/components/page-title';
 import {
   getCollections,
   getConceptResult,
   getRunningOperationPromises,
   getVocabulary,
-} from '../../common/components/vocabulary/vocabulary-slice';
-import { initialUrlState } from '../../common/utils/hooks/useUrlState';
+} from '@app/common/components/vocabulary/vocabulary.slice';
+import { initialUrlState } from '@app/common/utils/hooks/useUrlState';
 
 export default function TerminologyPage(props: {
   _netI18Next: SSRConfig;

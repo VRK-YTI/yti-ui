@@ -5,11 +5,11 @@ import { SidebarLinkList, SidebarLinkListItem, SidebarSubHeader } from '.';
 import {
   BaseEntity,
   Property,
-} from '../../interfaces/termed-data-types.interface';
-import PropertyValue from '../property-value';
-import { Term } from '../../interfaces/term.interface';
+} from '@app/common/interfaces/termed-data-types.interface';
+import PropertyValue from '@app/common/components/property-value';
+import { Term } from '@app/common/interfaces/term.interface';
 import { isEmpty } from 'lodash';
-import { useGeneratedId } from '../../utils/hooks/useGeneratedId';
+import { useGeneratedId } from '@app/common/utils/hooks/useGeneratedId';
 
 interface SidebarSectionProps<T> {
   heading: React.ReactNode;

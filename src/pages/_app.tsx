@@ -5,15 +5,15 @@ import type { AppProps } from 'next/app';
 import { appWithTranslation, useTranslation } from 'next-i18next';
 import axios from 'axios';
 import React, { useEffect } from 'react';
-import { useStoreDispatch, wrapper } from '../store';
+import { useStoreDispatch, wrapper } from '@app/store';
 import '@fontsource/source-sans-pro/300.css';
 import '@fontsource/source-sans-pro/400.css';
 import '@fontsource/source-sans-pro/600.css';
 import { VisuallyHidden } from 'suomifi-ui-components';
 import { useSelector } from 'react-redux';
-import { selectTitle } from '../common/components/title/title.slice';
-import { selectLogin } from '../common/components/login/login-slice';
-import { setAlert } from '../common/components/alert/alert.slice';
+import { selectTitle } from '@app/common/components/title/title.slice';
+import { selectLogin } from '@app/common/components/login/login.slice';
+import { setAlert } from '@app/common/components/alert/alert.slice';
 
 // https://nextjs.org/docs/advanced-features/custom-app
 function App({ Component, pageProps }: AppProps) {

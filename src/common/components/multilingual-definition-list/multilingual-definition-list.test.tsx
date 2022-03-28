@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import MultilingualDefinitionList from './multilingual-definition-list';
-import { themeProvider } from '../../../tests/test-utils';
+import { themeProvider } from '@app/tests/test-utils';
 
 describe('multilingual-definition-list', () => {
   it('should render component', async () => {
