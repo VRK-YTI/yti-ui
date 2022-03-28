@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Button } from 'suomifi-ui-components';
 
-export const StyledButton= styled(Button)<{ color?: string }>`
+export const StyledButton = styled(Button)<{ color?: string }>`
   width: 44px;
   height: 44px;
   padding: 0;
@@ -10,7 +10,7 @@ export const StyledButton= styled(Button)<{ color?: string }>`
   justify-content: center;
 
   svg {
-    color: ${props => props.color ?? props.theme.suomifi.colors.blackBase};
+    color: ${(props) => props.color ?? props.theme.suomifi.colors.blackBase};
     height: 24px;
     width: 24px;
   }

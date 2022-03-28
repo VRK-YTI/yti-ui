@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import { Locale } from '../locale-chooser/use-locales';
+import { Locale } from '@app/common/components/locale-chooser/use-locales';
 import format from './format';
 
 export interface FormattedDateProps {
@@ -13,7 +13,5 @@ export default function FormattedDate({ date }: FormattedDateProps) {
     return null;
   }
 
-  return (
-    <>{format(date, i18n.language as Locale)}</>
-  );
+  return <>{format(date, i18n.language as Locale)}</>;
 }

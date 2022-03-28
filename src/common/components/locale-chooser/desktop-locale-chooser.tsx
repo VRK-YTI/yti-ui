@@ -10,11 +10,7 @@ export default function DesktopLocaleChooser() {
     <DesktopLocaleChooserWrapper>
       <LanguageMenu name={currentLocale.label}>
         {locales.map(({ locale, label, isCurrent, use }) => (
-          <LanguageMenuItem
-            key={locale}
-            selected={isCurrent}
-            onSelect={use}
-          >
+          <LanguageMenuItem key={locale} selected={isCurrent} onSelect={use}>
             {label}
           </LanguageMenuItem>
         ))}

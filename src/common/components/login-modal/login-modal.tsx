@@ -1,50 +1,66 @@
 import { useTranslation } from 'next-i18next';
-import { Button, Modal, ModalContent, ModalFooter, ModalTitle, Paragraph, Text } from 'suomifi-ui-components';
-import { useBreakpoints } from '../media-query/media-query-context';
-import { ModalTitleWrapper } from './login-modal.styles';
+import {
+  Button,
+  ExternalLink,
+  ModalFooter,
+  Paragraph,
+  Text,
+} from 'suomifi-ui-components';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import {
+  ModalContentSmPadding,
+  ModalStyled,
+  ModalTitleH1,
+} from './login-modal.styles';
 
-export default function LoginModalView({ setVisible }: { setVisible: Function }) {
+export default function LoginModalView({
+  setVisible,
+}: {
+  setVisible: Function;
+}) {
   const { t } = useTranslation('common');
   const { isSmall } = useBreakpoints();
 
   return (
     <>
-      <Modal
+      <ModalStyled
         appElementId="__next"
         visible={true}
         variant={isSmall ? 'smallScreen' : 'default'}
         onEscKeyDown={() => setVisible(false)}
+        scrollable={false}
       >
-        <ModalContent>
-          <ModalTitleWrapper>
-            <ModalTitle>{t('site-login-title')}</ModalTitle>
-            <Button variant="secondary" icon="close" onClick={() => setVisible(false)} />
-          </ModalTitleWrapper>
+        <ModalContentSmPadding>
+          <ModalTitleH1 as={'h1'}>{t('site-login-title')}</ModalTitleH1>
           <Paragraph>
             <Text>{t('site-login-info-1')}</Text>
           </Paragraph>
           <br />
           <Paragraph>
-            <Text>{t('site-login-info-2')}</Text>
+            <Text>{t('site-login-info-2')} </Text>
+            <ExternalLink
+              href="http://id.eduuni.fi/signup"
+              labelNewWindow={`${t(
+                'site-open-link-new-window'
+              )} id.eduuni.if/signup`}
+            >
+              {t('site-register')}
+            </ExternalLink>
           </Paragraph>
-        </ModalContent>
+        </ModalContentSmPadding>
+
         <ModalFooter>
-          <Button icon="login" onClick={() => login()}>
-            {t('site-login')}
-          </Button>
-          <Button onClick={() => register()}>
-            {t('site-register')}
+          <Button onClick={(e) => login(e)}>{t('site-to-login')}</Button>
+          <Button variant="secondaryNoBorder" onClick={() => setVisible(false)}>
+            {t('site-cancel')}
           </Button>
         </ModalFooter>
-      </Modal>
+      </ModalStyled>
     </>
   );
 
-  function login() {
+  function login(e: MouseEvent | KeyboardEvent) {
+    e.preventDefault();
     window.location.href = '/api/auth/login?target=/';
-  }
-
-  function register() {
-    window.open('http://id.eduuni.fi/signup', '_blank');
   }
 }

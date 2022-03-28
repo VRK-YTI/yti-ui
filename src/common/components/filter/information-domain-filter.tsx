@@ -1,7 +1,7 @@
 import { useTranslation } from 'next-i18next';
-import { Property } from '../../../common/interfaces/termed-data-types.interface';
+import { Property } from '@app/common/interfaces/termed-data-types.interface';
 import CheckboxFilter from './checkbox-filter';
-import useUrlState, { initialUrlState } from '../../utils/hooks/useUrlState';
+import useUrlState, { initialUrlState } from '@app/common/utils/hooks/useUrlState';
 
 export interface InformationDomain {
   id: string;
@@ -19,7 +19,7 @@ export default function InformationDomainFilter({
   title,
   isModal,
   domains,
-  counts
+  counts,
 }: InformationDomainFilterProps) {
   const { t } = useTranslation('common');
   const { urlState, patchUrlState } = useUrlState();
@@ -33,13 +33,15 @@ export default function InformationDomainFilter({
           <>
             {name.value} ({counts[id] ?? 0} {t('vocabulary-filter-items')})
           </>
-        )
+        ),
       }))}
       selectedItems={urlState.domain}
-      onChange={domain => patchUrlState({
-        domain,
-        page: initialUrlState.page,
-      })}
+      onChange={(domain) =>
+        patchUrlState({
+          domain,
+          page: initialUrlState.page,
+        })
+      }
       checkboxVariant={isModal ? 'large' : 'small'}
     />
   );

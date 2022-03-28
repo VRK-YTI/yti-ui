@@ -1,19 +1,28 @@
 import { useRouter } from 'next/router';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { Link, Text } from 'suomifi-ui-components';
-import LoginButtons from '../authentication-panel/login-buttons';
-import MobileImpersonateWrapper from '../impersonate/mobile-impersonate-wrapper';
-import MobileLocaleChooser from '../locale-chooser/mobile-locale-chooser';
+import LoginButtons from '@app/common/components/authentication-panel/login-buttons';
+import MobileImpersonateWrapper from '@app/common/components/impersonate/mobile-impersonate-wrapper';
+import MobileLocaleChooser from '@app/common/components/locale-chooser/mobile-locale-chooser';
+import { selectLogin } from '@app/common/components/login/login.slice';
 import { MobileMenuItem, MobileMenuSection } from './navigation.styles';
 
-export default function MobileNavigation() {
+interface MobileNavigationProps {
+  handleLoginModalClick?: () => void;
+}
+
+export default function MobileNavigation({
+  handleLoginModalClick,
+}: MobileNavigationProps) {
   const { t } = useTranslation('common');
   const router = useRouter();
+  const isLoggedIn = !useSelector(selectLogin()).anonymous;
 
   return (
     <>
-      <LoginButtons />
+      <LoginButtons handleLoginModalClick={handleLoginModalClick} />
 
       <MobileMenuSection>
         <MobileMenuItem active={router.pathname === '/'}>
@@ -43,6 +52,13 @@ export default function MobileNavigation() {
         <MobileMenuItem>
           <Link href="/">{t('site-for-administrators')}</Link>
         </MobileMenuItem>
+        {isLoggedIn && (
+          <MobileMenuItem active={router.pathname === '/own-information'}>
+            <Link className="main" href="/own-information">
+              {t('own-information')}
+            </Link>
+          </MobileMenuItem>
+        )}
       </MobileMenuSection>
 
       <MobileLocaleChooser />

@@ -2,10 +2,14 @@ import React from 'react';
 import Link from 'next/link';
 import { Link as SuomiLink } from 'suomifi-ui-components';
 import { SidebarLinkList, SidebarLinkListItem, SidebarSubHeader } from '.';
-import { BaseEntity, Property } from '../../interfaces/termed-data-types.interface';
-import PropertyValue from '../property-value';
-import { Term } from '../../interfaces/term.interface';
+import {
+  BaseEntity,
+  Property,
+} from '@app/common/interfaces/termed-data-types.interface';
+import PropertyValue from '@app/common/components/property-value';
+import { Term } from '@app/common/interfaces/term.interface';
 import { isEmpty } from 'lodash';
+import { useGeneratedId } from '@app/common/utils/hooks/useGeneratedId';
 
 interface SidebarSectionProps<T> {
   heading: React.ReactNode;
@@ -18,22 +22,22 @@ export default function SidebarSection<T extends BaseEntity<string>>({
   heading,
   items,
   href,
-  propertyAccessor
+  propertyAccessor,
 }: SidebarSectionProps<T>) {
+  const id = useGeneratedId();
+
   if (!items?.length) {
     return null;
   }
 
   return (
     <>
-      <SidebarSubHeader>{heading}</SidebarSubHeader>
-      <SidebarLinkList>
-        {items.map(item => (
+      <SidebarSubHeader id={`${id}-header`}>{heading}</SidebarSubHeader>
+      <SidebarLinkList aria-labelledby={`${id}-header`}>
+        {items.map((item) => (
           <SidebarLinkListItem key={item.id}>
             <Link href={href(item)} passHref>
-              <SuomiLink href=''>
-                {propertyValue(item)}
-              </SuomiLink>
+              <SuomiLink href="">{propertyValue(item)}</SuomiLink>
             </Link>
           </SidebarLinkListItem>
         ))}
@@ -49,21 +53,23 @@ export default function SidebarSection<T extends BaseEntity<string>>({
         return (
           <PropertyValue
             property={prefLabels as Property[]}
-            fallbackLanguage='fi'
+            fallbackLanguage="fi"
           />
         );
-
       } else {
-        const prefLabels = Array.from(propertyAccessor(currItem) as Term[], x => {
-          if (x.properties?.prefLabel && x.properties.prefLabel[0]) {
-            return x.properties.prefLabel[0];
+        const prefLabels = Array.from(
+          propertyAccessor(currItem) as Term[],
+          (x) => {
+            if (x.properties?.prefLabel && x.properties.prefLabel[0]) {
+              return x.properties.prefLabel[0];
+            }
           }
-        });
+        );
 
         return (
           <PropertyValue
             property={prefLabels as Property[]}
-            fallbackLanguage='fi'
+            fallbackLanguage="fi"
           />
         );
       }
@@ -71,7 +77,7 @@ export default function SidebarSection<T extends BaseEntity<string>>({
       return (
         <PropertyValue
           property={propertyAccessor(currItem) as Property[]}
-          fallbackLanguage='fi'
+          fallbackLanguage="fi"
         />
       );
     }

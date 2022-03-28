@@ -1,8 +1,12 @@
 import { useTranslation } from 'next-i18next';
-import { Expander, ExpanderContent, ExpanderTitleButton } from 'suomifi-ui-components';
-import { PropertyBlock } from '../../common/components/block';
-import { getPropertyValue } from '../../common/components/property-value/get-property-value';
-import { Concept } from '../../common/interfaces/concept.interface';
+import {
+  Expander,
+  ExpanderContent,
+  ExpanderTitleButton,
+} from 'suomifi-ui-components';
+import { PropertyBlock } from '@app/common/components/block';
+import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
+import { Concept } from '@app/common/interfaces/concept.interface';
 
 export function hasAdministrativeDetails(concept?: Concept, language?: string) {
   const rest = { language, fallbackLanguage: 'fi' };
@@ -11,11 +15,15 @@ export function hasAdministrativeDetails(concept?: Concept, language?: string) {
     return true;
   }
 
-  if (getPropertyValue({ property: concept?.properties.historyNote, ...rest })) {
+  if (
+    getPropertyValue({ property: concept?.properties.historyNote, ...rest })
+  ) {
     return true;
   }
 
-  if (getPropertyValue({ property: concept?.properties.editorialNote, ...rest })) {
+  if (
+    getPropertyValue({ property: concept?.properties.editorialNote, ...rest })
+  ) {
     return true;
   }
 
@@ -30,16 +38,20 @@ export interface AdministrativeDetailsExpanderProps {
   concept?: Concept;
 }
 
-export default function AdministrativeDetailsExpander({ concept }: AdministrativeDetailsExpanderProps) {
+export default function AdministrativeDetailsExpander({
+  concept,
+}: AdministrativeDetailsExpanderProps) {
   const { t, i18n } = useTranslation('concept');
 
-  if (! hasAdministrativeDetails(concept, i18n.language)) {
+  if (!hasAdministrativeDetails(concept, i18n.language)) {
     return null;
   }
 
   return (
     <Expander>
-      <ExpanderTitleButton>{t('section-administrative-details')}</ExpanderTitleButton>
+      <ExpanderTitleButton>
+        {t('section-administrative-details')}
+      </ExpanderTitleButton>
       <ExpanderContent>
         <PropertyBlock
           title={t('field-change-note')}

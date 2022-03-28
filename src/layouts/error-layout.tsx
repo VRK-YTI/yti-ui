@@ -3,12 +3,21 @@ import React from 'react';
 import { Block } from 'suomifi-ui-components';
 import { ThemeProvider } from 'styled-components';
 import { lightTheme } from './theme';
-import { ContentContainer, SiteContainer, MarginContainer, HeaderContainer } from './layout.styles';
-import { useBreakpoints } from '../common/components/media-query/media-query-context';
-import { HeaderWrapper } from '../modules/smart-header/smart-header.styles';
-import Logo from '../modules/smart-header/logo';
+import {
+  ContentContainer,
+  SiteContainer,
+  MarginContainer,
+  HeaderContainer,
+} from './layout.styles';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import { HeaderWrapper } from '@app/modules/smart-header/smart-header.styles';
+import Logo from '@app/modules/smart-header/logo';
 
-export default function ErrorLayout({ children }: { children: React.ReactNode }) {
+export default function ErrorLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const { breakpoint } = useBreakpoints();
 
   return (
@@ -29,9 +38,9 @@ export default function ErrorLayout({ children }: { children: React.ReactNode })
           </HeaderContainer>
         </Block>
 
-        <ContentContainer >
+        <ContentContainer>
           <MarginContainer breakpoint={breakpoint}>
-            <Block variant="main">
+            <Block variant="main" id="main">
               {children}
             </Block>
           </MarginContainer>

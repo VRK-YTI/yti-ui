@@ -1,21 +1,30 @@
-import { Icon } from 'suomifi-ui-components';
-import { PaginationButton, PaginationMobile, PaginationWrapper } from './pagination.styles';
+import {
+  ChevronButton,
+  PaginationButton,
+  PaginationMobile,
+  PaginationWrapper,
+} from './pagination.styles';
 import { PaginationProps } from './pagination-props';
-import { useBreakpoints } from '../media-query/media-query-context';
-import useUrlState from '../../utils/hooks/useUrlState';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import useUrlState from '@app/common/utils/hooks/useUrlState';
+import { useTranslation } from 'next-i18next';
 
-export default function Pagination({
-  data,
-  pageString,
-}: PaginationProps) {
+export default function Pagination({ data, pageString }: PaginationProps) {
   const breakPoints = useBreakpoints();
   const { urlState, patchUrlState } = useUrlState();
+  const { t } = useTranslation();
 
   let items: number[];
   if ('totalHitCount' in data) {
-    items = Array.from({ length: Math.ceil(data.totalHitCount / 10) }, (_, item) => item + 1);
+    items = Array.from(
+      { length: Math.ceil(data.totalHitCount / 10) },
+      (_, item) => item + 1
+    );
   } else {
-    items = Array.from({ length: Math.ceil(data.length / 10) }, (_, item) => item + 1);
+    items = Array.from(
+      { length: Math.ceil(data.length / 10) },
+      (_, item) => item + 1
+    );
   }
 
   if (items.length < 2) {
@@ -24,54 +33,63 @@ export default function Pagination({
 
   return (
     <PaginationWrapper>
-      <PaginationButton
+      <ChevronButton
         disabled={urlState.page === 1}
-        onClick={() =>urlState.page !== 1 && patchUrlState({ page: urlState.page - 1 })}
-        data-testid='pagination-left'
-      >
-        {/* TODO: Update color after release in design system*/}
-        <Icon
-          icon='chevronLeft'
-          color={urlState.page === 1 ? 'hsl(202, 7%, 67%)' : 'hsl(212, 63%, 45%)'}
-        />
-      </PaginationButton>
+        onClick={() =>
+          urlState.page !== 1 && patchUrlState({ page: urlState.page - 1 })
+        }
+        data-testid="pagination-left"
+        icon="chevronLeft"
+        iconProps={{ icon: 'chevronLeft' }}
+        variant="secondaryNoBorder"
+        aria-label={t('pagination-previous-page')}
+      />
 
-      {!breakPoints.isSmall
-        ?
-        FormatItemsList(items, urlState.page)
-          .map((item, idx) => {
-            return (
-              <PaginationButton
-                key={item !== '...' ? `pagination-item-${item}` : `pagination-item-${item}-${idx}`}
-                onClick={() => (urlState.page !== item && typeof item === 'number') && patchUrlState({ page: item })}
-                active={item === urlState.page}
-                disabled={item === '...'}
-              >
-                {item}
-              </PaginationButton>
-            );
-          })
-        :
-        <PaginationMobile>{pageString} {urlState.page}/{items.length}</PaginationMobile>
-      }
+      {!breakPoints.isSmall ? (
+        FormatItemsList(items, urlState.page).map((item, idx) => {
+          return (
+            <PaginationButton
+              key={
+                item !== '...'
+                  ? `pagination-item-${item}`
+                  : `pagination-item-${item}-${idx}`
+              }
+              onClick={() =>
+                urlState.page !== item &&
+                typeof item === 'number' &&
+                patchUrlState({ page: item })
+              }
+              variant={item === urlState.page ? 'default' : 'secondaryNoBorder'}
+              disabled={item === '...'}
+            >
+              {item}
+            </PaginationButton>
+          );
+        })
+      ) : (
+        <PaginationMobile>
+          {pageString} {urlState.page}/{items.length}
+        </PaginationMobile>
+      )}
 
-      <PaginationButton
+      <ChevronButton
         disabled={urlState.page === items[items.length - 1]}
-        onClick={() => urlState.page !== items[items.length - 1] && patchUrlState({ page: urlState.page + 1 })}
-        data-testid='pagination-right'
-      >
-        {/* TODO: Update color*/}
-        <Icon
-          icon='chevronRight'
-          color={urlState.page === items[items.length - 1] ? 'hsl(202, 7%, 67%)' : 'hsl(212, 63%, 45%)'}
-        />
-      </PaginationButton>
+        onClick={() =>
+          urlState.page !== items[items.length - 1] &&
+          patchUrlState({ page: urlState.page + 1 })
+        }
+        data-testid="pagination-right"
+        icon="chevronRight"
+        iconProps={{ icon: 'chevronRight' }}
+        variant="secondaryNoBorder"
+        aria-label={t('pagination-next-page')}
+      />
     </PaginationWrapper>
   );
 }
 
 function FormatItemsList(list: number[], activeItem: number) {
-  let formattedList = [];
+  const formattedList = [];
   const displayMax = 7;
 
   if (list.length < 10) {

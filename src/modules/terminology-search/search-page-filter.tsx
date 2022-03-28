@@ -1,12 +1,15 @@
 import { useTranslation } from 'next-i18next';
-import { Counts } from '../../common/interfaces/counts.interface';
-import { GroupSearchResult, OrganizationSearchResult } from '../../common/interfaces/terminology.interface';
-import Separator from '../../common/components/separator';
-import { Filter } from '../../common/components/filter/filter';
-import InformationDomainFilter from '../../common/components/filter/information-domain-filter';
-import OrganizationFilter from '../../common/components/filter/organization-filter';
-import StatusFilter from '../../common/components/filter/status-filter';
-import { KeywordFilter } from '../../common/components/filter/keyword-filter';
+import { Counts } from '@app/common/interfaces/counts.interface';
+import {
+  GroupSearchResult,
+  OrganizationSearchResult,
+} from '@app/common/interfaces/terminology.interface';
+import Separator from '@app/common/components/separator';
+import { Filter } from '@app/common/components/filter/filter';
+import InformationDomainFilter from '@app/common/components/filter/information-domain-filter';
+import OrganizationFilter from '@app/common/components/filter/organization-filter';
+import StatusFilter from '@app/common/components/filter/status-filter';
+import { KeywordFilter } from '@app/common/components/filter/keyword-filter';
 
 export interface SearchPageFilterProps {
   isModal?: boolean;
@@ -23,7 +26,7 @@ export function SearchPageFilter({
   resultCount,
   organizations,
   groups,
-  counts
+  counts,
 }: SearchPageFilterProps) {
   const { t } = useTranslation('common');
 
@@ -58,10 +61,12 @@ export function SearchPageFilter({
       <Separator />
       <InformationDomainFilter
         title={t('terminology-search-filter-show-by-information-domain')}
-        domains={groups?.map(group => ({
-          id: group.id,
-          name: group.properties.prefLabel
-        })) ?? []}
+        domains={
+          groups?.map((group) => ({
+            id: group.id,
+            name: group.properties.prefLabel,
+          })) ?? []
+        }
         isModal={isModal}
         counts={counts?.counts.groups ?? {}}
       />

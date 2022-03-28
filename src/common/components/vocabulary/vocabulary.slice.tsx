@@ -1,13 +1,15 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { Collection } from '../../interfaces/collection.interface';
-import { VocabularyConcepts, VocabularyInfoDTO } from '../../interfaces/vocabulary.interface';
-import { UrlState } from '../../utils/hooks/useUrlState';
-import axiosBaseQuery from '../axios-base-query';
+import { Collection } from '@app/common/interfaces/collection.interface';
+import {
+  VocabularyConcepts,
+  VocabularyInfoDTO,
+} from '@app/common/interfaces/vocabulary.interface';
+import { UrlState } from '@app/common/utils/hooks/useUrlState';
+import axiosBaseQuery from '@app/common/components/axios-base-query';
+import { HYDRATE } from 'next-redux-wrapper';
 
-export interface VocabularyState {}
-
-export const vocabularyInitialState: VocabularyState = {};
+export const vocabularyInitialState = {};
 
 export const vocabularySlice = createSlice({
   name: 'vocabularySearch',
@@ -17,16 +19,28 @@ export const vocabularySlice = createSlice({
 
 export const vocabularyApi = createApi({
   reducerPath: 'vocabularyAPI',
-  baseQuery: axiosBaseQuery({ baseUrl: '/terminology-api/api/v1/frontend' }),
+  baseQuery: axiosBaseQuery({
+    baseUrl: process.env.TERMINOLOGY_API_URL
+      ? `${process.env.TERMINOLOGY_API_URL}/api/v1/frontend`
+      : '/terminology-api/api/v1/frontend',
+  }),
+  extractRehydrationInfo(action, { reducerPath }) {
+    if (action.type === HYDRATE) {
+      return action.payload[reducerPath];
+    }
+  },
   tagTypes: ['Vocabulary'],
-  endpoints: builder => ({
+  endpoints: (builder) => ({
     getCollections: builder.query<Collection[], string>({
       query: (terminologyId) => ({
         url: `/collections?graphId=${terminologyId}`,
-        method: 'GET'
-      })
+        method: 'GET',
+      }),
     }),
-    getConceptResult: builder.query<VocabularyConcepts, { urlState: UrlState, id: string }>({
+    getConceptResult: builder.query<
+      VocabularyConcepts,
+      { urlState: UrlState; id: string }
+    >({
       query: (value) => ({
         url: '/searchConcept',
         method: 'POST',
@@ -37,10 +51,8 @@ export const vocabularyApi = createApi({
           query: value.urlState.q,
           sortDirection: 'ASC',
           sortLanguage: 'fi',
-          status: value.urlState.status.map(s => s.toUpperCase()),
-          terminologyId: [
-            value.id
-          ]
+          status: value.urlState.status.map((s) => s.toUpperCase()),
+          terminologyId: [value.id],
         },
       }),
     }),
@@ -51,15 +63,19 @@ export const vocabularyApi = createApi({
         headers: {
           'content-type': 'application/json',
         },
-      })
-    })
+      }),
+    }),
   }),
 });
 
 export const {
   useGetCollectionsQuery,
   useGetConceptResultQuery,
-  useGetVocabularyQuery
+  useGetVocabularyQuery,
+  util: { getRunningOperationPromises },
 } = vocabularyApi;
 
 export default vocabularySlice.reducer;
+
+export const { getVocabulary, getCollections, getConceptResult } =
+  vocabularyApi.endpoints;

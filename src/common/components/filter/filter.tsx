@@ -1,12 +1,13 @@
 import { useTranslation } from 'next-i18next';
 import { Button } from 'suomifi-ui-components';
-import Separator from '../separator';
+import Separator from '@app/common/components/separator';
+import SkipLink from '@app/common/components/skip-link/skip-link';
 import {
   CloseWrapper,
   FilterContent,
-  FilterWrapper,
+  FilterSection,
   Header,
-  HeaderButton
+  HeaderButton,
 } from './filter.styles';
 import ResetAllFiltersButton from './reset-all-filters-button';
 
@@ -21,37 +22,42 @@ export function Filter({
   isModal = false,
   onModalClose,
   resultCount = 0,
-  children
+  children,
 }: FilterProps) {
   const { t } = useTranslation('common');
 
   return (
-    <FilterWrapper isModal={isModal}>
-      {renderTitle()}
-      <FilterContent>
-        <ResetAllFiltersButton />
-        {children}
-        {renderModalFooter()}
-      </FilterContent>
-    </FilterWrapper>
+    <div>
+      {!isModal && (
+        <SkipLink href="#search-results">
+          {t('skip-link-search-results')}
+        </SkipLink>
+      )}
+
+      <FilterSection isModal={isModal} aria-labelledby="filter-title">
+        {renderTitle()}
+        <FilterContent>
+          <ResetAllFiltersButton />
+          {children}
+          {renderModalFooter()}
+        </FilterContent>
+      </FilterSection>
+    </div>
   );
 
   function renderTitle() {
     if (!isModal) {
       return (
         <Header>
-          {t('vocabulary-filter-filter-list')}
+          <h2 id="filter-title">{t('vocabulary-filter-filter-list')}</h2>
         </Header>
       );
     }
 
     return (
       <Header>
-        {t('vocabulary-filter-filter-list')}
-        <HeaderButton
-          iconRight='close'
-          onClick={onModalClose}
-        >
+        <h2 id="filter-title">{t('vocabulary-filter-filter-list')}</h2>
+        <HeaderButton iconRight="close" onClick={onModalClose}>
           {t('close')}
         </HeaderButton>
       </Header>

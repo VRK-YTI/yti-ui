@@ -1,10 +1,18 @@
 import Link from 'next/link';
 import { useTranslation } from 'react-i18next';
-import { Collection } from '../../interfaces/collection.interface';
-import { GroupSearchResult, OrganizationSearchResult, TerminologySearchResult } from '../../interfaces/terminology.interface';
-import { VocabularyConcepts } from '../../interfaces/vocabulary.interface';
-import PropertyValue from '../property-value';
-import { useBreakpoints } from '../media-query/media-query-context';
+import { Collection } from '@app/common/interfaces/collection.interface';
+import {
+  GroupSearchResult,
+  OrganizationSearchResult,
+  TerminologyDTO,
+  TerminologySearchResult,
+} from '@app/common/interfaces/terminology.interface';
+import {
+  VocabularyConceptDTO,
+  VocabularyConcepts,
+} from '@app/common/interfaces/vocabulary.interface';
+import PropertyValue from '@app/common/components/property-value';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import SearchCountTags from './search-count-tags';
 import {
   Card,
@@ -18,10 +26,12 @@ import {
   CardTitleIcon,
   CardTitleLink,
   CardTitleWrapper,
-  CardWrapper
+  CardWrapper,
 } from './search-results.styles';
-import { Concept } from '../../interfaces/concept.interface';
-import useUrlState from '../../utils/hooks/useUrlState';
+import { Concept } from '@app/common/interfaces/concept.interface';
+import useUrlState from '@app/common/utils/hooks/useUrlState';
+import SanitizedTextContent from '@app/common/components/sanitized-text-content';
+import { VisuallyHidden } from 'suomifi-ui-components';
 
 interface SearchResultsProps {
   data: TerminologySearchResult | VocabularyConcepts | Collection[];
@@ -30,7 +40,12 @@ interface SearchResultsProps {
   domains?: GroupSearchResult[];
 }
 
-export default function SearchResults({ data, type, organizations, domains }: SearchResultsProps) {
+export default function SearchResults({
+  data,
+  type,
+  organizations,
+  domains,
+}: SearchResultsProps) {
   const { t, i18n } = useTranslation('common');
   const { urlState } = useUrlState();
   const { isSmall } = useBreakpoints();
@@ -40,17 +55,11 @@ export default function SearchResults({ data, type, organizations, domains }: Se
   }
 
   if (type === 'terminology-search' && 'terminologies' in data) {
-    return (
-      renderTerminologiesSearchResults()
-    );
+    return renderTerminologiesSearchResults();
   } else if ('concepts' in data) {
-    return (
-      renderConceptSearchResults()
-    );
+    return renderConceptSearchResults();
   } else if (type === 'collections') {
-    return (
-      renderConceptCollections()
-    );
+    return renderConceptCollections();
   }
 
   return <></>;
@@ -65,52 +74,51 @@ export default function SearchResults({ data, type, organizations, domains }: Se
             })}
             organizations={organizations}
             domains={domains}
+            renderQBeforeStatus
+            count={data?.totalHitCount}
           />
           <CardWrapper isSmall={isSmall}>
-            {data?.terminologies?.map((terminology, idx: number) => {
+            {data?.terminologies?.map((terminology) => {
               return (
-                <Card key={`search-result-${idx}`}>
+                <Card key={terminology.id}>
                   <CardContributor>
-                    {terminology.contributors[0].label[i18n.language]
-                      ?? terminology.contributors[0].label['fi']
-                      ?? ''
-                    }
+                    {terminology.contributors[0].label[i18n.language] ??
+                      terminology.contributors[0].label['fi'] ??
+                      ''}
                   </CardContributor>
 
                   <CardTitleWrapper>
                     <Link passHref href={'/terminology/' + terminology.id}>
-                      <CardTitleLink href=''>
-                        <CardTitleIcon icon='registers' />
-                        <CardTitle variant='h3'>
-                          {terminology.label[i18n.language]
-                            ?
-                            terminology.label[i18n.language].replaceAll(/<\/*[^>]>/g, '')
-                            :
-                            terminology?.label?.[Object.keys(terminology.label)[0]].replaceAll(/<\/*[^>]>/g, '')
-                          }
+                      <CardTitleLink href="">
+                        <CardTitleIcon icon="registers" />
+                        <CardTitle>
+                          {getLabel(terminology)}
+                          <VisuallyHidden>
+                            {terminology.contributors[0].label[i18n.language] ??
+                              terminology.contributors[0].label['fi'] ??
+                              ''}
+                          </VisuallyHidden>
                         </CardTitle>
                       </CardTitleLink>
                     </Link>
                   </CardTitleWrapper>
 
                   <CardSubtitle>
-                    <span>{t('terminology-search-results-terminology')}</span>
-                    <span>&middot;</span>
-                    <CardChip valid={terminology.status === 'VALID' ? 'true' : undefined}>
-                      {t(terminology.status ?? '')}
-                    </CardChip>
+                    <div>{t('terminology-search-results-terminology')}</div>
+                    <span aria-hidden="true">&middot;</span>
+                    <div>
+                      <CardChip
+                        valid={
+                          terminology.status === 'VALID' ? 'true' : undefined
+                        }
+                      >
+                        {t(terminology.status ?? '')}
+                      </CardChip>
+                    </div>
                   </CardSubtitle>
 
                   <CardDescription>
-                    {terminology?.description?.[i18n.language] !== undefined
-                      ?
-                      terminology?.description?.[i18n.language]
-                      :
-                      terminology?.description?.[Object.keys(terminology?.description)[0]]
-                        ?
-                        terminology?.description?.[Object.keys(terminology?.description)[0]]
-                        :
-                        t('terminology-search-no-description')}
+                    {getDescription(terminology)}
                   </CardDescription>
 
                   <CardInfoDomain>
@@ -118,8 +126,17 @@ export default function SearchResults({ data, type, organizations, domains }: Se
                       {t('terminology-search-results-information-domains')}:
                     </b>
                     {terminology.informationDomains.map((term, i: number) => {
-                      let comma = i !== terminology.informationDomains.length - 1 ? ',' : '';
-                      return <span key={`term-label-${term}-${i}`}> {term.label[i18n.language]}{comma}</span>;
+                      const comma =
+                        i !== terminology.informationDomains.length - 1
+                          ? ','
+                          : '';
+                      return (
+                        <span key={term.id}>
+                          {' '}
+                          {term.label[i18n.language]}
+                          {comma}
+                        </span>
+                      );
                     })}
                   </CardInfoDomain>
                 </Card>
@@ -144,40 +161,30 @@ export default function SearchResults({ data, type, organizations, domains }: Se
               })}
               organizations={organizations}
               domains={domains}
+              count={data?.totalHitCount}
             />
             <CardWrapper isSmall={isSmall}>
-              {data?.concepts.map((concept, idx) => {
+              {data?.concepts.map((concept) => {
                 return (
-                  <Card key={`search-result-${idx}`}>
-                    <CardTitle variant='h2'>
-                      <Link passHref href={`/terminology/${concept.terminology.id}/concept/${concept.id}`}>
-                        <CardTitleLink href=''>
-                          {concept.label[i18n.language]
-                            ?
-                            concept.label[i18n.language].replaceAll(/<\/*[^>]>/g, '')
-                            :
-                            concept?.label?.[Object.keys(concept.label)[0]].replaceAll(/<\/*[^>]>/g, '')
-                          }
+                  <Card key={concept.id}>
+                    <CardTitle>
+                      <Link
+                        passHref
+                        href={`/terminology/${concept.terminology.id}/concept/${concept.id}`}
+                      >
+                        <CardTitleLink href="">
+                          {getLabel(concept)}
                         </CardTitleLink>
                       </Link>
                     </CardTitle>
 
                     <CardSubtitle>
-                      {t('vocabulary-info-concept')} &middot; {t(`${concept.status}`)}
+                      <div>{t('vocabulary-info-concept')}</div>
+                      <span aria-hidden="true">&middot;</span>
+                      <div>{t(`${concept.status}`)}</div>
                     </CardSubtitle>
 
-                    <CardDescription>
-                      {concept.definition?.[i18n.language]
-                        ?
-                        concept.definition[i18n.language]
-                        :
-                        concept.definition?.[Object.keys(concept.definition)[0]]
-                          ?
-                          concept?.definition?.[Object.keys(concept?.definition)[0]]
-                          :
-                          t('terminology-search-no-description')
-                      }
-                    </CardDescription>
+                    <CardDescription>{getDefinition(concept)}</CardDescription>
                   </Card>
                 );
               })}
@@ -188,6 +195,46 @@ export default function SearchResults({ data, type, organizations, domains }: Se
     }
 
     return null;
+  }
+
+  function getLabel(dto: VocabularyConceptDTO | TerminologyDTO) {
+    if (dto.label[i18n.language]) {
+      return dto.label[i18n.language].replaceAll(/<\/*[^>]>/g, '');
+    }
+
+    return dto?.label?.[Object.keys(dto.label)[0]].replaceAll(/<\/*[^>]>/g, '');
+  }
+
+  function getDescription(terminology: TerminologyDTO) {
+    if (terminology?.description?.[i18n.language] !== undefined) {
+      return terminology?.description?.[i18n.language];
+    }
+
+    if (terminology?.description?.[Object.keys(terminology?.description)[0]]) {
+      return terminology?.description?.[
+        Object.keys(terminology?.description)[0]
+      ];
+    }
+
+    return t('terminology-search-no-description');
+  }
+
+  function getDefinition(concept: VocabularyConceptDTO) {
+    if (concept.definition?.[i18n.language]) {
+      return (
+        <SanitizedTextContent text={concept.definition?.[i18n.language]} />
+      );
+    }
+
+    if (concept.definition?.[Object.keys(concept.definition)[0]]) {
+      return (
+        <SanitizedTextContent
+          text={concept?.definition?.[Object.keys(concept?.definition)[0]]}
+        />
+      );
+    }
+
+    return t('terminology-search-no-description');
   }
 
   function renderConceptCollections() {
@@ -201,6 +248,7 @@ export default function SearchResults({ data, type, organizations, domains }: Se
           title={t('vocabulary-results-collections', {
             count: data.length,
           })}
+          count={data.length}
         />
         <CardWrapper isSmall={isSmall}>
           {data.map((collection, idx: number) => {
@@ -211,23 +259,27 @@ export default function SearchResults({ data, type, organizations, domains }: Se
             }
 
             return (
-              <Card key={`search-result-${idx}`}>
-                <CardTitle variant='h2'>
-                  <Link passHref href={`/terminology/${collection.type.graph.id}/collection/${collection.id}`}>
-                    <CardTitleLink href=''>
-                      <PropertyValue property={collection.properties.prefLabel} fallbackLanguage='fi' />
+              <Card key={collection.id}>
+                <CardTitle>
+                  <Link
+                    passHref
+                    href={`/terminology/${collection.type.graph.id}/collection/${collection.id}`}
+                  >
+                    <CardTitleLink href="">
+                      <PropertyValue
+                        property={collection.properties.prefLabel}
+                        fallbackLanguage="fi"
+                      />
                     </CardTitleLink>
                   </Link>
                 </CardTitle>
 
-                <CardSubtitle>
-                  {t('vocabulary-info-collection')}
-                </CardSubtitle>
+                <CardSubtitle>{t('vocabulary-info-collection')}</CardSubtitle>
 
                 <CardDescription>
                   <PropertyValue
                     property={collection.properties.definition}
-                    fallbackLanguage='fi'
+                    fallbackLanguage="fi"
                     fallback={t('vocabulary-results-no-description')}
                   />
                 </CardDescription>
@@ -244,69 +296,77 @@ export default function SearchResults({ data, type, organizations, domains }: Se
   }
 
   function renderCollectionMembers(members?: Concept[]) {
-    return (
-      members
-        ?
-        members.map((m, idx) => {
-          const comma = (idx < 4 && members.length > 1) ? ',' : '';
+    return members ? (
+      members.map((m, idx) => {
+        const comma = idx < 4 && members.length > 1 ? ',' : '';
 
-          if (idx < 5 && m.references.prefLabelXl) {
-            if (m.references.prefLabelXl.length === 1) {
-              if (m.references.prefLabelXl[0].properties.prefLabel?.[0].lang === i18n.language) {
-                const value = m.references.prefLabelXl[0].properties.prefLabel?.[0].value;
+        if (idx < 5 && m.references.prefLabelXl) {
+          if (m.references.prefLabelXl.length === 1) {
+            if (
+              m.references.prefLabelXl[0].properties.prefLabel?.[0].lang ===
+              i18n.language
+            ) {
+              const value =
+                m.references.prefLabelXl[0].properties.prefLabel?.[0].value;
 
-                return (
-                  <div key={`${value}-${idx}`}>
-                    {value}{comma}&nbsp;
-                  </div>
-                );
-              } else {
-                const value = m.references.prefLabelXl[0].properties.prefLabel?.[0].value;
-                const lang = m.references.prefLabelXl[0].properties.prefLabel?.[0].lang;
+              return (
+                <div key={`${value}-${idx}`}>
+                  {value}
+                  {comma}&nbsp;
+                </div>
+              );
+            } else {
+              const value =
+                m.references.prefLabelXl[0].properties.prefLabel?.[0].value;
+              const lang =
+                m.references.prefLabelXl[0].properties.prefLabel?.[0].lang;
 
-                return (
-                  <div key={`${value}-${idx}`}>
-                    {value} ({lang}){comma}&nbsp;
-                  </div>
-                );
-              }
-
-            } else if (m.references.prefLabelXl.length > 1) {
-              let value;
-
-              m.references.prefLabelXl?.forEach(pLabelXl => {
-                if (pLabelXl.properties.prefLabel?.[0].lang === i18n.language) {
-                  value = pLabelXl.properties.prefLabel?.[0].value;
-                }
-              });
-
-              if (value !== '') {
-                return (
-                  <div key={`${value}-${idx}`}>
-                    {value}{comma}&nbsp;
-                  </div>
-                );
-              } else {
-                value = m.references.prefLabelXl?.[0].properties.prefLabel?.[0].value;
-                const lang = m.references.prefLabelXl?.[0].properties.prefLabel?.[0].lang;
-
-                return (
-                  <div key={`${value}-${idx}`}>
-                    {value} ({lang}){comma}&nbsp;
-                  </div>
-                );
-              }
-
+              return (
+                <div key={`${value}-${idx}`}>
+                  {value} ({lang}){comma}&nbsp;
+                </div>
+              );
             }
-          } else if (idx === 5) {
-            const surplus = members.length - idx;
-            return (
-              <div key={`surplus-${idx}`}>+ {surplus} {t('vocabulary-results-more')}</div>
-            );
+          } else if (m.references.prefLabelXl.length > 1) {
+            let value;
+
+            m.references.prefLabelXl?.forEach((pLabelXl) => {
+              if (pLabelXl.properties.prefLabel?.[0].lang === i18n.language) {
+                value = pLabelXl.properties.prefLabel?.[0].value;
+              }
+            });
+
+            if (value !== '') {
+              return (
+                <div key={`${value}-${idx}`}>
+                  {value}
+                  {comma}&nbsp;
+                </div>
+              );
+            } else {
+              value =
+                m.references.prefLabelXl?.[0].properties.prefLabel?.[0].value;
+              const lang =
+                m.references.prefLabelXl?.[0].properties.prefLabel?.[0].lang;
+
+              return (
+                <div key={`${value}-${idx}`}>
+                  {value} ({lang}){comma}&nbsp;
+                </div>
+              );
+            }
           }
-        })
-        :
-        <>{t('vocabulary-results-no-concepts')}</>
+        } else if (idx === 5) {
+          const surplus = members.length - idx;
+          return (
+            <div key={`surplus-${idx}`}>
+              + {surplus} {t('vocabulary-results-more')}
+            </div>
+          );
+        }
+      })
+    ) : (
+      <>{t('vocabulary-results-no-concepts')}</>
     );
   }
 }

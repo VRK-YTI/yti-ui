@@ -1,15 +1,15 @@
 import { useTranslation } from 'next-i18next';
 import React from 'react';
-import { getPropertyValue } from '../../common/components/property-value/get-property-value';
-import Separator from '../../common/components/separator';
+import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
+import Separator from '@app/common/components/separator';
 import {
   Sidebar,
   SidebarHeader,
   SidebarSection,
-} from '../../common/components/sidebar';
-import { Collection } from '../../common/interfaces/collection.interface';
-import { ConceptLink } from '../../common/interfaces/concept-link.interface';
-import { Concept } from '../../common/interfaces/concept.interface';
+} from '@app/common/components/sidebar';
+import { Collection } from '@app/common/interfaces/collection.interface';
+import { ConceptLink } from '@app/common/interfaces/concept-link.interface';
+import { Concept } from '@app/common/interfaces/concept.interface';
 
 export interface ConceptSidebarProps {
   concept?: Concept;
@@ -20,28 +20,31 @@ export default function ConceptSidebar({ concept }: ConceptSidebarProps) {
 
   const terminologyId = concept?.type.graph.id;
 
-  const shouldRenderDivider1 = [
-    concept?.references.broader,
-    concept?.references.narrower,
-    concept?.references.related,
-    concept?.references.isPartOf,
-    concept?.references.hasPart,
-    concept?.references.relatedMatch,
-    concept?.references.exactMatch,
-    concept?.references.closeMatch,
-  ].flat().filter(Boolean).length > 0;
+  const shouldRenderDivider1 =
+    [
+      concept?.references.broader,
+      concept?.references.narrower,
+      concept?.references.related,
+      concept?.references.isPartOf,
+      concept?.references.hasPart,
+      concept?.references.relatedMatch,
+      concept?.references.exactMatch,
+      concept?.references.closeMatch,
+    ]
+      .flat()
+      .filter(Boolean).length > 0;
 
   const shouldRenderDivider2 = false;
 
-  const shouldRenderDivider3 = [
-    concept?.referrers.member
-  ].flat().filter(Boolean).length > 0;
+  const shouldRenderDivider3 =
+    [concept?.referrers.member].flat().filter(Boolean).length > 0;
 
-  const shouldRenderEmptyState = !shouldRenderDivider1 && !shouldRenderDivider2 && !shouldRenderDivider3;
+  const isEmpty =
+    !shouldRenderDivider1 && !shouldRenderDivider2 && !shouldRenderDivider3;
 
   return (
-    <Sidebar>
-      <SidebarHeader>{t('sidebar-header')}</SidebarHeader>
+    <Sidebar isEmpty={isEmpty}>
+      {!isEmpty && <SidebarHeader>{t('sidebar-header')}</SidebarHeader>}
 
       {shouldRenderDivider1 && <Separator />}
 
@@ -84,7 +87,9 @@ export default function ConceptSidebar({ concept }: ConceptSidebarProps) {
         heading={t('sidebar-section-heading-related-match')}
         items={concept?.references.relatedMatch}
         href={({ properties }) => {
-          const terminologyId = getPropertyValue({ property: properties.targetGraph });
+          const terminologyId = getPropertyValue({
+            property: properties.targetGraph,
+          });
           const conceptId = getPropertyValue({ property: properties.targetId });
           return `/terminology/${terminologyId}/concept/${conceptId}`;
         }}
@@ -95,7 +100,9 @@ export default function ConceptSidebar({ concept }: ConceptSidebarProps) {
         heading={t('sidebar-section-heading-exact-match')}
         items={concept?.references.exactMatch}
         href={({ properties }) => {
-          const terminologyId = getPropertyValue({ property: properties.targetGraph });
+          const terminologyId = getPropertyValue({
+            property: properties.targetGraph,
+          });
           const conceptId = getPropertyValue({ property: properties.targetId });
           return `/terminology/${terminologyId}/concept/${conceptId}`;
         }}
@@ -106,7 +113,9 @@ export default function ConceptSidebar({ concept }: ConceptSidebarProps) {
         heading={t('sidebar-section-heading-close-match')}
         items={concept?.references.closeMatch}
         href={({ properties }) => {
-          const terminologyId = getPropertyValue({ property: properties.targetGraph });
+          const terminologyId = getPropertyValue({
+            property: properties.targetGraph,
+          });
           const conceptId = getPropertyValue({ property: properties.targetId });
           return `/terminology/${terminologyId}/concept/${conceptId}`;
         }}
@@ -130,14 +139,6 @@ export default function ConceptSidebar({ concept }: ConceptSidebarProps) {
         href={({ id }) => `/terminology/${terminologyId}/collection/${id}`}
         propertyAccessor={({ properties }) => properties?.prefLabel}
       />
-
-      {shouldRenderEmptyState && (
-        <>
-          <Separator />
-
-          TODO: Empty state
-        </>
-      )}
     </Sidebar>
   );
-};
+}

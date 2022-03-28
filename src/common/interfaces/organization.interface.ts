@@ -4,4 +4,4 @@ export interface Organization extends BaseEntity<'Organization'> {
   properties: {
     prefLabel?: Property[];
   };
-};
+}

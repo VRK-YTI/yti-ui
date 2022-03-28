@@ -15,7 +15,7 @@ module.exports = (phase, { defaultConfig }) => {
     reactStrictMode: true,
     i18n,
     eslint: {
-      dirs: ['src']
+      dirs: ['src'],
     },
     async redirects() {
       return [
@@ -23,12 +23,12 @@ module.exports = (phase, { defaultConfig }) => {
           source: '/concepts/:path*',
           destination: '/terminology/:path*',
           permanent: true,
-        }
+        },
       ];
     },
     publicRuntimeConfig: {
-      versionInfo
-    }
+      versionInfo,
+    },
   };
 
   if (process.env.REWRITE_PROFILE === 'local') {
@@ -42,8 +42,13 @@ module.exports = (phase, { defaultConfig }) => {
         return [
           {
             source: '/terminology-api/:path*',
-            destination: 'http://localhost:9103/terminology-api/:path*'
-          }
+            destination: 'http://localhost:9103/terminology-api/:path*',
+          },
+          {
+            source: '/messaging-api/:path*',
+            destination:
+              'http://sanastot.dev.yti.cloud.vrk.fi/messaging-api/:path*',
+          },
         ];
       },
     };
@@ -58,8 +63,13 @@ module.exports = (phase, { defaultConfig }) => {
         return [
           {
             source: '/terminology-api/:path*',
-            destination: 'http://yti-terminology-api:9103/terminology-api/:path*'
-          }
+            destination:
+              'http://yti-terminology-api:9103/terminology-api/:path*',
+          },
+          {
+            source: '/messaging-api/:path*',
+            destination: 'http://yti-messaging-api:9801/messaging-api/:path*',
+          },
         ];
       },
     };
