@@ -10,6 +10,7 @@ import {
 import { Resource } from '../../interfaces/subscription.interface';
 import getPrefLabel from '../../utils/get-preflabel';
 import IconButton from '../icon-button/icon-button';
+import { Icon } from '../suomifi-7-tweaks/icon';
 import { useBreakpoints } from '../media-query/media-query-context';
 import {
   RemoveModal,
@@ -67,16 +68,22 @@ export default function RemoveSubscription({
       {resources && (
         <Button
           variant="secondary"
-          icon="message"
+          // message="alertOff"
           onClick={() => setVisible(true)}
         >
+          <Icon
+            icon="alertOff"
+            mousePointer
+            color="currentColor"
+            className="fi-button_icon"
+          />
           {t('subscription-remove-all-notifications')}
         </Button>
       )}
       {resource && (
         <IconButton
           variant="secondary"
-          icon="message"
+          icon="alertOff"
           color="currentColor"
           onClick={() => setVisible(true)}
         />
