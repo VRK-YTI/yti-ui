@@ -1,9 +1,11 @@
 import React from 'react';
-import { ButtonProps, Icon } from 'suomifi-ui-components';
-import { StyledButton } from './icon-button.styles';
+import { ButtonProps } from 'suomifi-ui-components';
+import { StyledButton } from '../icon-button/icon-button.styles';
+import { BaseIconKeys } from 'suomifi-icons';
+import { Icon } from './icon';
 
-export interface IconButtonProps extends ButtonProps {
-  icon: ButtonProps['icon'];
+export interface IconButtonProps extends Omit<ButtonProps, 'icon'> {
+  icon: BaseIconKeys;
   color?: string;
   isLarge?: boolean;
 }
