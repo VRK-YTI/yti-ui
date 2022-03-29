@@ -5,7 +5,9 @@ import {
   GroupSearchResult,
   OrganizationSearchResult,
 } from '@app/common/interfaces/terminology.interface';
-import useUrlState, { initialUrlState } from '@app/common/utils/hooks/useUrlState';
+import useUrlState, {
+  initialUrlState,
+} from '@app/common/utils/hooks/useUrlState';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import {
   ChipWrapper,
