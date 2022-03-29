@@ -16,7 +16,7 @@ export default function IconButton({
 }: IconButtonProps) {
   return (
     <StyledButton color={color} variant={variant} {...props}>
-      <Icon icon={icon} />
+      {icon && <Icon icon={icon} />}
     </StyledButton>
   );
 }
