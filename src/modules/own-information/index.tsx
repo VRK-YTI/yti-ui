@@ -19,6 +19,7 @@ import Separator from '@app/common/components/separator';
 import { useGetOrganizationsQuery } from '@app/common/components/terminology-search/terminology-search.slice';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import _ from 'lodash';
+import AccessRequest from '../../common/components/access-request';
 
 export default function OwnInformation() {
   const user = useSelector(selectLogin());
@@ -67,6 +68,10 @@ export default function OwnInformation() {
             largeGap
           >
             {renderOrganizationsAndRoles()}
+          </BasicBlock>
+
+          <BasicBlock>
+            <AccessRequest organizations={organizations} />
           </BasicBlock>
         </MainContent>
       </PageContent>
