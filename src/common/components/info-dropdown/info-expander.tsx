@@ -8,7 +8,11 @@ import {
 import { InfoExpanderWrapper } from './info-expander.styles';
 import { VocabularyInfoDTO } from '@app/common/interfaces/vocabulary.interface';
 import Separator from '@app/common/components/separator';
-import { BasicBlock, MultilingualPropertyBlock, PropertyBlock } from '@app/common/components/block';
+import {
+  BasicBlock,
+  MultilingualPropertyBlock,
+  PropertyBlock,
+} from '@app/common/components/block';
 import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
 import FormattedDate from '@app/common/components/formatted-date';
 import { useSelector } from 'react-redux';

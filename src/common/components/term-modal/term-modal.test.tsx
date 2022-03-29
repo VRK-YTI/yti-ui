@@ -5,7 +5,10 @@ import TermModal from '.';
 import { makeStore } from '@app/store';
 import { themeProvider } from '@app/tests/test-utils';
 import { Term } from '@app/common/interfaces/term.interface';
-import { initialState, setLogin } from '@app/common/components/login/login.slice';
+import {
+  initialState,
+  setLogin,
+} from '@app/common/components/login/login.slice';
 
 describe('term-modal', () => {
   let appRoot: HTMLDivElement | null = null;
