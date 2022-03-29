@@ -1,7 +1,10 @@
 {
   "field-email": "Email address",
+  "field-email-notifications": "Email notifications",
+  "field-email-notifications-description": "Receive email notifications once per day about made changes when notifications are enabled. Email notifications can be disabled.",
   "field-name": "Name",
   "field-organizations-and-roles": "Organizations and roles",
+  "field-subscriptions": "Terminology resources with subscription to email notifications",
   "organization": "Organization",
   "own-information": "Own information",
   "roles": "Roles",
@@ -19,5 +22,17 @@
   "access-cancel": "Cancel",
   "access-request-sent": "Access request sent",
   "access-request-already-sent": "Access request already sent to this service",
-  "access-pick-at-least-one": "Pick at least one service"
+  "access-pick-at-least-one": "Pick at least one service",
+  "subscription-notifications-on": "Email notifications enabled",
+  "subscription-notifications-off": "Email notifications disabled",
+  "subscription-remove-all-notifications": "Remove all email notifications",
+  "subscription-notifications-removed": "Notifications removed from terminology {{ item }}",
+  "subscription-all-notifications-removed": "Notifications removed from every terminology",
+  "subscription-no-subscribed-items": "No subscribed items",
+  "subscription-remove-email-notifications": "Remove email notifications",
+  "subscription-remove-email-description": "Resource will be hidden from list after email notifications have been removed. Notifications can be added from resource's own page.",
+  "subscription-resource-to-be-removed": "Email notifications to be removed from following resource",
+  "subscription-resources-to-be-removed": "Email notifications to be removed from following resources",
+  "subscription-remove": "Remove",
+  "subscription-cancel": "Cancel"
 }

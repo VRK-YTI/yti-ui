@@ -46,8 +46,7 @@ module.exports = (phase, { defaultConfig }) => {
           },
           {
             source: '/messaging-api/:path*',
-            destination:
-              'http://sanastot.dev.yti.cloud.vrk.fi/messaging-api/:path*',
+            destination: 'http://localhost:9801/messaging-api/:path*',
           },
         ];
       },
