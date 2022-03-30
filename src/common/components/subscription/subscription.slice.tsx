@@ -58,7 +58,7 @@ export const subscriptionApi = createApi({
           uri: params.uri,
         },
       }),
-      invalidatesTags: ['Subscription']
+      invalidatesTags: ['Subscription'],
     }),
     toggleSubscriptions: builder.mutation<Subscriptions, 'DAILY' | 'DISABLED'>({
       query: (subscriptionType) => ({

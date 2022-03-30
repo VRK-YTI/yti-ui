@@ -105,7 +105,9 @@ export default function AccessRequest({ organizations }: AccessRequestProps) {
     console.log('Getting currentRights');
     const currentRights = getCurrentRights();
     console.log('Received currentRights:', currentRights);
-    console.log('Checking that user doesn\'t already have rights to requested right');
+    console.log(
+      'Checking that user doesnt already have rights to requested right'
+    );
     if (Object.keys(currentRights).length > 0) {
       setError(currentRights);
       return;
