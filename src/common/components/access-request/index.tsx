@@ -49,7 +49,7 @@ export default function AccessRequest({ organizations }: AccessRequestProps) {
   const { t } = useTranslation('own-information');
   const { isSmall } = useBreakpoints();
   const user = useSelector(selectLogin());
-  const { data: requests, refetch } = useGetRequestsQuery(null);
+  const { data: requests, error: requestsError, refetch } = useGetRequestsQuery(null);
   const [postRequest, request] = usePostRequestMutation();
   const [visible, setVisible] = useState(false);
   const [error, setError] = useState<{ [key: string]: boolean }>({});
@@ -88,32 +88,22 @@ export default function AccessRequest({ organizations }: AccessRequestProps) {
   };
 
   const handleClick = () => {
-    console.log('In handleClick()');
-
-    console.log('Checking that some organiation is chosen');
     if (!chosenOrganization) {
       setError({ dropdown: true });
       return;
     }
 
-    console.log('Checking that some service is checked');
     if (!Object.keys(services).find((key) => services[key])) {
       setError({ checkbox: true });
       return;
     }
 
-    console.log('Getting currentRights');
     const currentRights = getCurrentRights();
-    console.log('Received currentRights:', currentRights);
-    console.log(
-      'Checking that user doesnt already have rights to requested right'
-    );
     if (Object.keys(currentRights).length > 0) {
       setError(currentRights);
       return;
     }
 
-    console.log('Sending POST-request');
     sendPost();
   };
 
@@ -129,6 +119,7 @@ export default function AccessRequest({ organizations }: AccessRequestProps) {
         variant="secondary"
         icon="message"
         onClick={() => setVisible(true)}
+        disabled={requestsError ? true : false}
       >
         {t('access-request-access')}
       </ModalButton>
@@ -144,8 +135,6 @@ export default function AccessRequest({ organizations }: AccessRequestProps) {
           <Paragraph>
             <Text>{t('access-org-description')}</Text>
           </Paragraph>
-
-          {console.log('!!!!CHOSEN ORGANIZATION:', chosenOrganization, '!!!!!')}
 
           <ModalContentBlock>
             <AccessRequstDropdown
@@ -239,19 +228,13 @@ export default function AccessRequest({ organizations }: AccessRequestProps) {
   );
 
   function sendPost() {
-    console.log('In sendPost()');
-
     let uri = `/request?organizationId=${chosenOrganization}`;
-    console.log('uri:', uri);
 
-    console.log('services', services);
     Object.keys(services).map((key) => {
       if (services[key]) {
         uri += `&roles=${key}`;
       }
     });
-
-    console.log('uri after services:', uri);
 
     if (process.env.NODE_ENV === 'development') {
       uri += '&fake.login.mail=admin@localhost';
@@ -261,34 +244,22 @@ export default function AccessRequest({ organizations }: AccessRequestProps) {
   }
 
   function getCurrentRights() {
-    console.log('In getCurrentRights()');
-
-    console.log('Getting pendingRequestsForOrg');
     const pendingRequestsForOrg =
       requests?.filter(
         (request) => request.organizationId === chosenOrganization
       )?.[0]?.role ?? [];
 
-    console.log('pendingRequestsForOrg:', pendingRequestsForOrg);
-
-    console.log('Getting currentRightsForOrg');
     const currentRightsForOrg =
       user?.rolesInOrganizations[
-        Object.keys(user.rolesInOrganizations).filter(
-          (org) => org === chosenOrganization
-        )?.[0] ?? ''
+      Object.keys(user.rolesInOrganizations).filter(
+        (org) => org === chosenOrganization
+      )?.[0] ?? ''
       ] ?? [];
 
-    console.log('currentRightsForOrg:', currentRightsForOrg);
-
-    console.log('Setting relatedRights array');
     const relatedRights: string[] = Array.from(
       new Set([...pendingRequestsForOrg, ...currentRightsForOrg])
     );
 
-    console.log('relatedRights:', relatedRights);
-
-    console.log('Getting currentRights');
     const currentRights: { [key: string]: boolean } = {};
     Object.keys(services)
       .filter((key) => services[key])
@@ -298,7 +269,6 @@ export default function AccessRequest({ organizations }: AccessRequestProps) {
         }
       });
 
-    console.log('currentRights', currentRights);
     return currentRights;
   }
 }

@@ -32,7 +32,7 @@ export default function SubscriptionBlock({
 
   useEffect(() => {
     if (subscription && subscription.isSuccess) {
-      const unsubscribedAll = subscription.data.uri.split(',').length > 1;
+      const unsubscribedAll = subscription.data?.uri?.includes(',') ?? false;
       dispatch(
         setAlert([
           {

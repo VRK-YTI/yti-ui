@@ -23,6 +23,8 @@ import AccessRequest from '../../common/components/access-request';
 import SubscriptionBlock from './subscription-block';
 import EmailNotificationsBlock from './email-notifications-block';
 import { useGetSubscriptionsQuery } from '../../common/components/subscription/subscription.slice';
+import InlineAlert from '@app/common/components/inline-alert';
+import { useGetRequestsQuery } from '@app/common/components/access-request/access-request.slice';
 
 export default function OwnInformation() {
   const user = useSelector(selectLogin());
@@ -31,6 +33,7 @@ export default function OwnInformation() {
   const { data: organizations } = useGetOrganizationsQuery(i18n.language);
   const { data: subscriptions, refetch: refetchSubscriptions } =
     useGetSubscriptionsQuery(null);
+  const { data: requests } = useGetRequestsQuery(null);
 
   const titleRef = useRef<HTMLHeadingElement>(null);
   useEffect(() => {
@@ -124,6 +127,19 @@ export default function OwnInformation() {
                   ))}
                 </ul>
               </OrganizationAndRolesItem>
+
+              {requests?.map(request => request.organizationId).includes(organization.id)
+                ?
+                <InlineAlert
+                  noIcon
+                  style={{marginBottom: '20px'}}
+                >
+                  {t('access-request-sent')}
+                </InlineAlert>
+                :
+                <></>
+              }
+
             </OrganizationAndRoles>
           );
         })}
@@ -134,6 +150,16 @@ export default function OwnInformation() {
   function getOrganizationsAndRoles() {
     const result = Object.entries(user.rolesInOrganizations).map(
       ([organizationId, roles]) => {
+        const requestedRoles = requests?.filter(request => {
+          if (request.organizationId === organizationId) {
+            return request.role;
+          }
+        })?.[0]?.role ?? [];
+
+        if (requestedRoles) {
+          roles = roles.concat(requestedRoles);
+        }
+
         return {
           organization: {
             id: organizationId,
