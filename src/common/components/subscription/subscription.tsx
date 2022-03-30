@@ -33,7 +33,9 @@ export default function Subscription({ uri }: SubscriptionProps) {
         setAlert([
           {
             status: 0,
-            data: subscribed ? t('email-subscription-unsubscribed') : t('email-subscription-subscribed'),
+            data: subscribed
+              ? t('email-subscription-unsubscribed')
+              : t('email-subscription-subscribed'),
           },
         ])
       );
