@@ -248,11 +248,11 @@ export default function AccessRequest({ organizations }: AccessRequestProps) {
       )?.[0]?.role ?? [];
 
     const currentRightsForOrg =
-      user.rolesInOrganizations[
+      user?.rolesInOrganizations[
         Object.keys(user.rolesInOrganizations).filter(
           (org) => org === chosenOrganization
-        )?.[0]
-      ];
+        )?.[0] ?? ''
+      ] ?? [];
 
     const relatedRights: string[] = Array.from(
       new Set([...pendingRequestsForOrg, ...currentRightsForOrg])

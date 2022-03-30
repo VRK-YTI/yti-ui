@@ -47,7 +47,7 @@ export default function RemoveSubscription({
       getPrefLabel({ prefLabels: resource.prefLabel, lang: i18n.language })
     );
     setVisible(false);
-    toggleSubscription({ action: 'DELETE', uri: resource.uri });
+    toggleSubscription({ action: 'DELETE', uri: resource.uri.replace(/\/terminological[\w-]+/g, '/') });
   };
 
   const handleUnsubscribeAll = () => {
@@ -55,7 +55,7 @@ export default function RemoveSubscription({
       return;
     }
 
-    const uris = resources.map((resource) => resource.uri).join(',');
+    const uris = resources.map((resource) => resource.uri.replace(/\/terminological[\w-]+/g, '/')).join(',');
     setUnsubscribedItem(
       getPrefLabel({ prefLabels: resources[0].prefLabel, lang: i18n.language })
     );
