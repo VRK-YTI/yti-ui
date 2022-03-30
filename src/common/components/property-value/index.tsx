@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'next-i18next';
-import { Property } from '../../interfaces/termed-data-types.interface';
+import { Property } from '@app/common/interfaces/termed-data-types.interface';
 import { getPropertyValue } from './get-property-value';
 
 export interface PropertyValueProps {
@@ -8,6 +8,7 @@ export interface PropertyValueProps {
   valueAccessor?: (property: Property) => string;
   fallbackLanguage?: string;
   delimiter?: string | false;
+  fallback?: string;
 }
 
 /**
@@ -36,7 +37,8 @@ export default function PropertyValue({
   property,
   valueAccessor,
   fallbackLanguage,
-  delimiter = false
+  delimiter = false,
+  fallback,
 }: PropertyValueProps) {
   const { i18n } = useTranslation('common');
 
@@ -45,10 +47,12 @@ export default function PropertyValue({
     valueAccessor,
     language: i18n.language,
     fallbackLanguage,
-    delimiter
+    delimiter,
   });
 
-  return (
-    <>{value}</>
-  );
+  if (!value) {
+    return <>{fallback}</>;
+  }
+
+  return <>{value}</>;
 }

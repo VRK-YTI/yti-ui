@@ -1,13 +1,34 @@
 const { i18n } = require('./next-i18next.config');
 const { PHASE_DEVELOPMENT_SERVER } = require('next/constants');
+const fs = require('fs');
 
 module.exports = (phase, { defaultConfig }) => {
+  let versionInfo;
+
+  if (fs.existsSync('public/version.txt')) {
+    versionInfo = fs.readFileSync('public/version.txt', 'utf8');
+  } else {
+    versionInfo = 'dev-local';
+  }
+
   let config = {
     reactStrictMode: true,
     i18n,
     eslint: {
-      dirs: ['src']
-    }
+      dirs: ['src'],
+    },
+    async redirects() {
+      return [
+        {
+          source: '/concepts/:path*',
+          destination: '/terminology/:path*',
+          permanent: true,
+        },
+      ];
+    },
+    publicRuntimeConfig: {
+      versionInfo,
+    },
   };
 
   if (process.env.REWRITE_PROFILE === 'local') {
@@ -21,8 +42,12 @@ module.exports = (phase, { defaultConfig }) => {
         return [
           {
             source: '/terminology-api/:path*',
-            destination: 'http://localhost:9103/terminology-api/:path*'
-          }
+            destination: 'http://localhost:9103/terminology-api/:path*',
+          },
+          {
+            source: '/messaging-api/:path*',
+            destination: 'http://localhost:9801/messaging-api/:path*',
+          },
         ];
       },
     };
@@ -37,8 +62,13 @@ module.exports = (phase, { defaultConfig }) => {
         return [
           {
             source: '/terminology-api/:path*',
-            destination: 'http://yti-terminology-api:9103/terminology-api/:path*'
-          }
+            destination:
+              'http://yti-terminology-api:9103/terminology-api/:path*',
+          },
+          {
+            source: '/messaging-api/:path*',
+            destination: 'http://yti-messaging-api:9801/messaging-api/:path*',
+          },
         ];
       },
     };

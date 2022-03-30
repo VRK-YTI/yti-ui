@@ -9,16 +9,21 @@ export interface UseFakeableUsersResult {
 }
 
 export default function useFakeableUsers(): UseFakeableUsersResult[] {
-  const { data } = useSWR<{id: string, email: string, displayName: string}[]>(
+  const { data } = useSWR<{ id: string; email: string; displayName: string }[]>(
     '/terminology-api/api/v1/frontend/fakeableUsers',
-    (url) => axios.get(url).then(r => r.data),
+    (url) => axios.get(url).then((r) => r.data),
     {}
   );
 
-  return data?.map(({ id, email, displayName }) => ({
-    id,
-    email,
-    displayName,
-    impersonate: () => window.location.href = `/api/auth/fake-login?fake.login.mail?${encodeURIComponent(email)}`,
-  })) ?? [];
+  return (
+    data?.map(({ id, email, displayName }) => ({
+      id,
+      email,
+      displayName,
+      impersonate: () =>
+        (window.location.href = `/api/auth/fake-login?fake.login.mail=${encodeURIComponent(
+          email
+        )}`),
+    })) ?? []
+  );
 }

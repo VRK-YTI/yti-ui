@@ -1,64 +1,42 @@
 import { render, screen } from '@testing-library/react';
+import { NextRouter, useRouter } from 'next/router';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
-import { lightTheme } from '../../../layouts/theme';
-import { makeStore } from '../../../store';
-import { setVocabularyFilter } from '../vocabulary/vocabulary-slice';
+import { lightTheme } from '@app/layouts/theme';
+import { makeStore } from '@app/store';
 import SearchResults from './search-results';
 
-describe('search-results', () => {
-  test('should render component', () => {
-    const store = makeStore();
+jest.mock('next/router');
+const mockedUseRouter = useRouter as jest.MockedFunction<typeof useRouter>;
 
-    const filter = {
-      infoDomains: [],
-      keyword: '',
-      showByOrg: '',
-      status: {
-        'VALID': true,
-        'DRAFT': true,
-        'RETIRED': false,
-        'SUPERSEDED': false
-      }
-    };
+describe('search-results', () => {
+  it('should render component', async () => {
+    mockedUseRouter.mockReturnValue({ query: {} } as NextRouter);
+
+    const store = makeStore();
 
     const data = {
       totalHitCount: 0,
       resultStart: 0,
       terminologies: null,
-      deepHits: null
+      deepHits: null,
     };
 
     render(
       <Provider store={store}>
         <ThemeProvider theme={lightTheme}>
-          <SearchResults
-            data={data}
-            filter={filter}
-            setSomeFilter={setVocabularyFilter}
-          />
+          <SearchResults data={data} />
         </ThemeProvider>
       </Provider>
     );
 
-    expect(screen.findAllByRole('div')).toBeInTheDocument;
-    expect(screen.queryAllByRole('div')).toEqual([]);
+    expect(screen.queryAllByRole('div')).toStrictEqual([]);
   });
 
-  test('should render data', () => {
-    const store = makeStore();
+  it('should render data', () => {
+    mockedUseRouter.mockReturnValue({ query: {} } as NextRouter);
 
-    const filter = {
-      infoDomains: [],
-      keyword: '',
-      showByOrg: '',
-      status: {
-        'VALID': true,
-        'DRAFT': true,
-        'RETIRED': false,
-        'SUPERSEDED': false
-      }
-    };
+    const store = makeStore();
 
     const data = {
       totalHitCount: 2,
@@ -73,14 +51,14 @@ describe('search-results', () => {
               label: {
                 en: 'en-contributor',
                 fi: 'fi-contributor',
-                sv: 'sv-contributor'
-              }
-            }
+                sv: 'sv-contributor',
+              },
+            },
           ],
           description: {
             en: 'en-description',
             fi: 'fi-description',
-            sv: 'en-description'
+            sv: 'en-description',
           },
           id: '01',
           informationDomains: [
@@ -89,17 +67,17 @@ describe('search-results', () => {
               label: {
                 en: 'en-label',
                 fi: 'fi-label',
-                sv: 'sv-label'
-              }
-            }
+                sv: 'sv-label',
+              },
+            },
           ],
           label: {
             en: 'en-label-01',
             fi: 'fi-label-01',
-            sv: 'sv-label-01'
+            sv: 'sv-label-01',
           },
           status: 'VALID',
-          uri: 'https://suomi.fi'
+          uri: 'https://suomi.fi',
         },
         {
           code: 'code-02',
@@ -109,14 +87,14 @@ describe('search-results', () => {
               label: {
                 en: 'en-contributor',
                 fi: 'fi-contributor',
-                sv: 'sv-contributor'
-              }
-            }
+                sv: 'sv-contributor',
+              },
+            },
           ],
           description: {
             en: 'en-description',
             fi: 'fi-description',
-            sv: 'en-description'
+            sv: 'en-description',
           },
           id: '02',
           informationDomains: [
@@ -125,36 +103,30 @@ describe('search-results', () => {
               label: {
                 en: 'en-label',
                 fi: 'fi-label',
-                sv: 'sv-label'
-              }
-            }
+                sv: 'sv-label',
+              },
+            },
           ],
           label: {
             en: 'en-label-02',
             fi: 'fi-label-02',
-            sv: 'sv-label-02'
+            sv: 'sv-label-02',
           },
           status: 'VALID',
-          uri: 'https://suomi.fi'
-        }
-      ]
+          uri: 'https://suomi.fi',
+        },
+      ],
     };
 
     render(
       <Provider store={store}>
         <ThemeProvider theme={lightTheme}>
-          <SearchResults
-            data={data}
-            filter={filter}
-            setSomeFilter={setVocabularyFilter}
-            type={'terminology-search'}
-          />
+          <SearchResults data={data} type={'terminology-search'} />
         </ThemeProvider>
       </Provider>
     );
 
-    expect(screen.getByText(/fi-label-01/)).toBeInTheDocument;
-    expect(screen.getByText(/fi-label-02/)).toBeInTheDocument;
+    expect(screen.getByText(/fi-label-01/)).toBeInTheDocument();
+    expect(screen.getByText(/fi-label-02/)).toBeInTheDocument();
   });
-
 });

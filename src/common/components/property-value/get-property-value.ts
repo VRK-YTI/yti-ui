@@ -1,4 +1,4 @@
-import { Property } from '../../interfaces/termed-data-types.interface';
+import { Property } from '@app/common/interfaces/termed-data-types.interface';
 
 export interface GetPropertyValueParams {
   property?: Property[];
@@ -13,7 +13,7 @@ export function getPropertyValue({
   valueAccessor = ({ value }) => value,
   language = '',
   fallbackLanguage = '',
-  delimiter = false
+  delimiter = false,
 }: GetPropertyValueParams): string | undefined {
   const matchingProperties =
     getMatchingProperties(property ?? [], language) ??
@@ -29,7 +29,7 @@ export function getPropertyValue({
 }
 
 function getMatchingProperties(properties: Property[], language: string) {
-  const matchingProperties = properties?.filter(({ lang }) => lang === language);
+  const matchingProperties = properties.filter(({ lang }) => lang === language);
 
   if (matchingProperties.length) {
     return matchingProperties;

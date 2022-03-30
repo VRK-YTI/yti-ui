@@ -1,23 +1,68 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import InfoExpander from './info-expander';
-import { VocabularyInfoDTO } from '../../interfaces/vocabulary.interface';
-import { themeProvider } from '../../../tests/test-utils';
+import InfoExpander from '@app/common/components/info-dropdown/info-expander';
+import { themeProvider } from '@app/tests/test-utils';
+import { Provider } from 'react-redux';
+import { makeStore } from '@app/store';
+import {
+  setLogin,
+  initialState,
+} from '@app/common/components/login/login.slice';
 
-describe('InfoExpander', () => {
-  test('should render export button', () => {
+describe('infoExpander', () => {
+  it('should render export button', () => {
+    const store = makeStore();
+
     render(
-      <InfoExpander data={{
-        properties: {},
-        references: {
-          contributor: [{ properties: { prefLabel: {} } }],
-          inGroup: [{ properties: { prefLabel: {} } }],
-        }
-      } as VocabularyInfoDTO}
-      />,
+      <Provider store={store}>
+        <InfoExpander
+          data={
+            {
+              properties: {},
+              references: {
+                contributor: [{ properties: { prefLabel: [] } }],
+                inGroup: [{ properties: { prefLabel: [] } }],
+              },
+            } as any
+          }
+        />
+      </Provider>,
       { wrapper: themeProvider }
     );
 
-    expect(screen.queryAllByText('tr-vocabulary-info-vocabulary-export')).toHaveLength(2);
+    expect(
+      screen.getByText('tr-vocabulary-info-vocabulary-export')
+    ).toBeInTheDocument();
+  });
+
+  it('should render subscribe button', () => {
+    const store = makeStore();
+    const loginInitialState = Object.assign({}, initialState);
+    loginInitialState['anonymous'] = false;
+    loginInitialState['email'] = 'admin@localhost';
+    loginInitialState['firstName'] = 'Admin';
+    loginInitialState['lastName'] = 'User';
+    store.dispatch(setLogin(loginInitialState));
+
+    render(
+      <Provider store={store}>
+        <InfoExpander
+          data={
+            {
+              properties: {},
+              references: {
+                contributor: [{ properties: { prefLabel: [] } }],
+                inGroup: [{ properties: { prefLabel: [] } }],
+              },
+            } as any
+          }
+        />
+      </Provider>,
+      { wrapper: themeProvider }
+    );
+
+    expect(screen.getByText('tr-email-subscription-add')).toBeInTheDocument();
   });
 });

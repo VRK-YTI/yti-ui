@@ -1,0 +1,5 @@
+{
+  "toast-close": "Close",
+  "error-occured": "ERROR {{id}}: An error occured",
+  "logged-out": "You have logged out."
+}

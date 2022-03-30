@@ -1,49 +1,65 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { SearchInput } from 'suomifi-ui-components';
-import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { selectFilter, setFilter } from '../terminology-search/terminology-search-slice';
-import { useStoreDispatch } from '../../../store';
-import IconButton from '../icon-button/icon-button';
-import { useBreakpoints } from '../media-query/media-query-context';
+import IconButton from '@app/common/components/icon-button/icon-button';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import { CloseButton } from './header-search.styles';
+import { useRouter } from 'next/router';
+import useUrlState, {
+  initialUrlState,
+} from '@app/common/utils/hooks/useUrlState';
 
 export interface HeaderSearchProps {
   isSearchOpen: boolean;
   setIsSearchOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function HeaderSearch({ isSearchOpen, setIsSearchOpen }: HeaderSearchProps) {
+export default function HeaderSearch({
+  isSearchOpen,
+  setIsSearchOpen,
+}: HeaderSearchProps) {
   const { t } = useTranslation('common');
-  const filter = useSelector(selectFilter());
-  const dispatch = useStoreDispatch();
   const { isSmall } = useBreakpoints();
+  const router = useRouter();
+  const isSearchPage = router.route === '/';
+
+  const { urlState, patchUrlState } = useUrlState();
+  const q = urlState.q;
+  const [searchInputValue, setSearchInputValue] = useState<string>(
+    isSearchPage ? q : ''
+  );
+  useEffect(() => {
+    if (isSearchPage) {
+      setSearchInputValue(q);
+    }
+  }, [q, setSearchInputValue, isSearchPage]);
 
   if (isSmall && !isSearchOpen) {
     return (
       <IconButton
+        isLarge
         icon="search"
         aria-label={t('terminology-search-open')}
         onClick={() => setIsSearchOpen(true)}
       />
     );
   }
-
   return (
     <>
       <SearchInput
-        clearButtonLabel=""
+        clearButtonLabel={t('terminology-search-clear')}
         labelText=""
-        defaultValue={filter.keyword}
+        value={searchInputValue ?? ''}
         labelMode="hidden"
         searchButtonLabel={t('terminology-search')}
         visualPlaceholder={t('terminology-search-placeholder')}
-        wrapperProps={{ style: { 'flexGrow': isSmall ? 1 : 0 } }}
-        onSearch={value => {
-          if (typeof value === 'string') dispatch(setFilter({...filter, keyword: value}));
+        wrapperProps={{ style: { flexGrow: isSmall ? 1 : 0 } }}
+        onSearch={(value) => {
+          if (typeof value === 'string') search(value);
         }}
-        onChange={value => {
-          if (value === '') dispatch(setFilter({...filter, keyword: value}));
+        onChange={(value) => {
+          setSearchInputValue(String(value ?? ''));
+          if (value === '') search();
         }}
       />
       {isSmall ? (
@@ -56,4 +72,22 @@ export default function HeaderSearch({ isSearchOpen, setIsSearchOpen }: HeaderSe
       ) : null}
     </>
   );
+
+  function search(q?: string) {
+    if (isSearchPage) {
+      patchUrlState({
+        q: q ?? '',
+        page: initialUrlState.page,
+      });
+    } else {
+      return router.push(
+        {
+          pathname: '/',
+          query: q ? { q } : {},
+        },
+        undefined,
+        { shallow: true }
+      );
+    }
+  }
 }

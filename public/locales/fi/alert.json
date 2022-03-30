@@ -1,0 +1,5 @@
+{
+  "toast-close": "Sulje",
+  "error-occured": "ERROR {{id}}: Tapahtui virhe",
+  "logged-out": "Olet kirjautunut ulos palvelusta."
+}

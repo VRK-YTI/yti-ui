@@ -4,11 +4,16 @@ import {
   HoverDropdownItem,
   HoverDropdownList,
   HoverDropdownListWrapper,
-  HoverDropdownWrapper
+  HoverDropdownWrapper,
 } from './hover-dropdown.styles';
 
 export interface HoverDropdownProps {
-  items?: { key: string, label: string, value?: string, onClick?: () => void }[];
+  items?: {
+    key: string;
+    label: string;
+    value?: string;
+    onClick?: () => void;
+  }[];
   children?: React.ReactNode;
 }
 
@@ -21,7 +26,9 @@ export default function HoverDropdown({ children, items }: HoverDropdownProps) {
           {items?.map(({ key, value, label, onClick }) => (
             <HoverDropdownItem key={key}>
               {value ? (
-                <Link href="#" onClick={onClick}>{label}</Link>
+                <Link href="#" onClick={onClick}>
+                  {label}
+                </Link>
               ) : (
                 <span>{label}</span>
               )}

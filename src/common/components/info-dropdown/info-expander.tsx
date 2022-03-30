@@ -1,19 +1,31 @@
 import { useTranslation } from 'react-i18next';
-import { Button, ExpanderContent, ExpanderTitleButton } from 'suomifi-ui-components';
-import FormatISODate from '../../utils/format-iso-date';
-import { InfoExpanderWrapper, InfoExpanderDivider } from './info-expander.styles';
-import InfoBlock from './info-block';
-import InfoBasic from './info-basic';
-import { VocabularyInfoDTO } from '../../interfaces/vocabulary.interface';
-import { InfoBasicExtraWrapper } from './info-basic.styles';
-import { getPropertyValue } from '../property-value/get-property-value';
+import {
+  Button,
+  ExpanderContent,
+  ExpanderTitleButton,
+  VisuallyHidden,
+} from 'suomifi-ui-components';
+import { InfoExpanderWrapper } from './info-expander.styles';
+import { VocabularyInfoDTO } from '@app/common/interfaces/vocabulary.interface';
+import Separator from '@app/common/components/separator';
+import {
+  BasicBlock,
+  MultilingualPropertyBlock,
+  PropertyBlock,
+} from '@app/common/components/block';
+import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
+import FormattedDate from '@app/common/components/formatted-date';
+import { useSelector } from 'react-redux';
+import { selectLogin } from '@app/common/components/login/login.slice';
+import Subscription from '@app/common/components/subscription/subscription';
 
 interface InfoExpanderProps {
   data?: VocabularyInfoDTO;
 }
 
 export default function InfoExpander({ data }: InfoExpanderProps) {
-  const { t, i18n } = useTranslation('common');
+  const { t } = useTranslation('common');
+  const user = useSelector(selectLogin());
 
   if (!data) {
     return null;
@@ -21,81 +33,94 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
 
   return (
     <InfoExpanderWrapper>
-      <ExpanderTitleButton>
+      <ExpanderTitleButton asHeading="h2">
         {t('vocabulary-info-terminology')}
       </ExpanderTitleButton>
       <ExpanderContent>
-        <InfoBlock
+        <MultilingualPropertyBlock
           title={t('vocabulary-info-name')}
           data={data.properties.prefLabel}
         />
-        <InfoBlock
+        <MultilingualPropertyBlock
           title={t('vocabulary-info-description')}
           data={data.properties.description}
         />
-        <InfoBasic
+        <PropertyBlock
           title={t('vocabulary-info-information-domain')}
-          data={getPropertyValue({
-            property: data.references.inGroup?.[0]?.properties.prefLabel,
-            language: i18n.language,
-            fallbackLanguage: 'fi',
-          })}
+          property={data.references.inGroup?.[0]?.properties.prefLabel}
+          fallbackLanguage="fi"
         />
-        <InfoBasic
+        <PropertyBlock
           title={t('vocabulary-info-languages')}
-          data={getPropertyValue({
-            property: data.properties.language,
-            delimiter: ', ',
-            valueAccessor: ({ value }) => `${t(`vocabulary-info-${value}`)} ${value.toUpperCase()}`,
-          })}
+          property={data.properties.language}
+          delimiter=", "
+          valueAccessor={({ value }) =>
+            `${t(`vocabulary-info-${value}`)} ${value.toUpperCase()}`
+          }
         />
-        <InfoBasic
-          title={t('vocabulary-info-vocabulary-type')}
-          data={t('vocabulary-info-terminological-dictionary')}
-        />
+        <BasicBlock title={t('vocabulary-info-vocabulary-type')}>
+          {t('vocabulary-info-terminological-dictionary')}
+        </BasicBlock>
 
-        <InfoExpanderDivider />
+        <Separator isLarge />
 
-        <InfoBasic
+        <BasicBlock
           title={t('vocabulary-info-vocabulary-export')}
-          data={t('vocabulary-info-vocabulary-export-description')}
           extra={
-            <InfoBasicExtraWrapper>
+            <BasicBlockExtraWrapper>
               <Button
                 icon="download"
                 variant="secondary"
                 onClick={() => {
-                  window.open(`/terminology-api/api/v1/export/${data.type.graph.id}?format=xlsx`, '_blank');
+                  window.open(
+                    `/terminology-api/api/v1/export/${data.type.graph.id}?format=xlsx`,
+                    '_blank'
+                  );
                 }}
               >
-                {t('vocabulary-info-vocabulary-export')}
+                {t('vocabulary-info-vocabulary-export')} (.xlsx)
               </Button>
-            </InfoBasicExtraWrapper>
+            </BasicBlockExtraWrapper>
           }
-        />
+        >
+          {t('vocabulary-info-vocabulary-export-description')}
+        </BasicBlock>
 
-        <InfoExpanderDivider />
+        {!user.anonymous && (
+          <>
+            <Separator isLarge />
 
-        <InfoBasic
+            <BasicBlock
+              title={t('email-subscription')}
+              extra={
+                <BasicBlockExtraWrapper>
+                  <Subscription
+                    uri={data.uri?.replace(/\/terminological[\w-]+/g, '/')}
+                  />
+                </BasicBlockExtraWrapper>
+              }
+            >
+              {t('email-subscription-description')}
+            </BasicBlock>
+          </>
+        )}
+
+        <VisuallyHidden as="h3">
+          {t('additional-technical-information', { ns: 'common' })}
+        </VisuallyHidden>
+
+        <PropertyBlock
           title={t('vocabulary-info-organization')}
-          data={getPropertyValue({
-            property: data.references.contributor?.[0]?.properties.prefLabel,
-            language: i18n.language,
-            fallbackLanguage: 'fi',
-          })}
+          property={data.references.contributor?.[0]?.properties.prefLabel}
+          fallbackLanguage="fi"
         />
-        <InfoBasic
-          title={t('vocabulary-info-created-at')}
-          data={FormatISODate(data.createdDate)}
-        />
-        <InfoBasic
-          title={t('vocabulary-info-modified-at')}
-          data={FormatISODate(data.lastModifiedDate)}
-        />
-        <InfoBasic
-          title={'URI'}
-          data={data.uri}
-        />
+        <BasicBlock title={t('vocabulary-info-created-at')}>
+          <FormattedDate date={data.createdDate} />
+        </BasicBlock>
+        <BasicBlock title={t('vocabulary-info-modified-at')}>
+          <FormattedDate date={data.lastModifiedDate} />
+        </BasicBlock>
+        <BasicBlock title="URI">{data.uri}</BasicBlock>
       </ExpanderContent>
     </InfoExpanderWrapper>
   );

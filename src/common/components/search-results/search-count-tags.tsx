@@ -1,77 +1,124 @@
+import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AppThunk, useStoreDispatch } from '../../../store';
-import { SearchState } from '../terminology-search/terminology-search-slice';
-import { VocabularyState } from '../vocabulary/vocabulary-slice';
+import { VisuallyHidden } from 'suomifi-ui-components';
 import {
-  CountPill,
-  CountPillIcon,
-  CountPillWrapper,
+  GroupSearchResult,
+  OrganizationSearchResult,
+} from '@app/common/interfaces/terminology.interface';
+import useUrlState, {
+  initialUrlState,
+} from '@app/common/utils/hooks/useUrlState';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import {
+  ChipWrapper,
   CountText,
-  CountWrapper
+  CountWrapper,
 } from './search-count-tags.styles';
+import Tag from './tag';
 
 interface SearchCountTagsProps {
+  title: ReactNode;
+  organizations?: OrganizationSearchResult[];
+  domains?: GroupSearchResult[];
+  renderQBeforeStatus?: boolean;
   count: number;
-  filter: VocabularyState['filter'] | SearchState['filter'];
-  setFilter: (x: any) => AppThunk;
 }
 
-export default function SearchCountTags({ count, filter, setFilter }: SearchCountTagsProps) {
+export default function SearchCountTags({
+  title,
+  organizations = [],
+  domains = [],
+  renderQBeforeStatus = false,
+  count = 0,
+}: SearchCountTagsProps) {
   const { t } = useTranslation('common');
-
-  const dispatch = useStoreDispatch();
-  let activeStatuses: string[] = [];;
-
-  Object.keys(filter.status).map(key => {
-    if (filter.status[key] === true) {
-      activeStatuses.push(key);
-    }
-  });
-
-  if ('infoDomains' in filter && 'infoDomains' in filter) {
-    filter.infoDomains.map(infoDomain => {
-      activeStatuses.push(infoDomain.value);
-    });
-  }
-
-  if (filter.keyword) {
-    activeStatuses.push(filter.keyword);
-  }
-
-  if ('showByOrg' in filter && filter.showByOrg) {
-    activeStatuses.push(filter.showByOrg);
-  }
-
-  const handleTagClose = (s: string) => {
-    let retVal: SearchCountTagsProps['filter'];
-
-    if (Object.keys(filter.status).includes(s)) {
-      retVal = { ...filter, status: { ...filter.status, [s]: false } };
-    } else if ('infoDomains' in filter && filter.infoDomains.find(id => id.value === s)) {
-      retVal = { ...filter, infoDomains: filter.infoDomains.filter(id => id.value !== s) };
-    } else if ('showByOrg' in filter && filter.showByOrg !== '') {
-      retVal = { ...filter, showByOrg: '' };
-    } else {
-      retVal = { ...filter, keyword: '' };
-    }
-
-    dispatch(setFilter(retVal));
-  };
+  const { urlState, patchUrlState } = useUrlState();
+  const { isSmall } = useBreakpoints();
 
   return (
-    <CountWrapper>
-      <CountText>
-        {t('vocabulary-results-concepts')} {count} {t('vocabulary-results-with-following-filters')}
+    <CountWrapper isSmall={isSmall}>
+      <CountText aria-live="polite">
+        <span aria-hidden={true}>{title}</span>
+        <VisuallyHidden>
+          {t('search-results-count', { count: count })}
+        </VisuallyHidden>
       </CountText>
-      <CountPillWrapper>
-        {activeStatuses.map((status: string, idx: number) => {
-          return (
-            <CountPill key={idx}>
-              {t(status)} <CountPillIcon icon='close' onClick={() => handleTagClose(status)} />
-            </CountPill>
-          );
-        })}
-      </CountPillWrapper>
+      <ChipWrapper>
+        {renderOrganizationTag()}
+        {renderQBeforeStatus && renderQTag()}
+        {renderStatusTags()}
+        {!renderQBeforeStatus && renderQTag()}
+        {renderDomainTags()}
+      </ChipWrapper>
     </CountWrapper>
   );
+
+  function renderOrganizationTag() {
+    if (urlState.organization) {
+      return (
+        <Tag
+          onRemove={() =>
+            patchUrlState({ organization: initialUrlState.organization })
+          }
+        >
+          {
+            organizations.filter((o) => o.id === urlState.organization)[0]
+              ?.properties.prefLabel.value
+          }
+        </Tag>
+      );
+    }
+  }
+
+  function renderQTag() {
+    if (urlState.q) {
+      return (
+        <Tag onRemove={() => patchUrlState({ q: initialUrlState.q })}>
+          {urlState.q}
+        </Tag>
+      );
+    }
+  }
+
+  function renderStatusTags() {
+    return ['valid', 'draft', 'retired', 'superseded']
+      .map((status) => {
+        if (urlState.status.includes(status)) {
+          return (
+            <Tag
+              onRemove={() =>
+                patchUrlState({
+                  status: urlState.status.filter((s) => s !== status),
+                })
+              }
+              key={status}
+            >
+              {t(status.toUpperCase())}
+            </Tag>
+          );
+        }
+      })
+      .filter(Boolean);
+  }
+
+  function renderDomainTags() {
+    return domains
+      .map((domain) => {
+        if (urlState.domain.includes(domain.id)) {
+          return (
+            <Tag
+              onRemove={() =>
+                patchUrlState({
+                  domain: urlState.domain.filter((d) => d !== domain.id),
+                })
+              }
+              key={domain.id}
+            >
+              {domain.properties.prefLabel.value}
+            </Tag>
+          );
+        }
+      })
+      .filter(Boolean);
+  }
 }

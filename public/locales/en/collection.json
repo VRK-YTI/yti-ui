@@ -1,4 +1,10 @@
 {
-  "sidebar-header": "(en) Lisää käsitevalikoimista",
-  "sidebar-section-heading-other-collections": "(en) Muut käsitekokoelmat tässä sanastossa"
+  "description": "Collection is a way to group concepts related to the same topic.",
+  "field-definition": "Definition",
+  "field-member": "Concepts in the collection",
+  "field-name": "Name",
+  "heading": "Collection",
+  "sidebar-header": "More about collections",
+  "sidebar-section-heading-other-collections": "Other collection in the terminology",
+  "site-title": "Yhteentoimivuusalusta"
 }

@@ -1,47 +1,56 @@
 import styled from 'styled-components';
-import { PaginationButtonProps } from './pagination-props';
+import { Button } from 'suomifi-ui-components';
 
 export const PaginationWrapper = styled.div`
   display: flex;
   flex-basis: 0;
   width: fit-content;
-  border-top: solid 1px ${props => props.theme.suomifi.colors.depthLight1};
-  border-bottom: solid 1px ${props => props.theme.suomifi.colors.depthLight1};
-  border-right: solid 1px ${props => props.theme.suomifi.colors.depthLight1};
-  background: ${props => props.theme.suomifi.colors.whiteBase};
-  margin-top: 20px;
-`;
+  border-top: solid 1px ${(props) => props.theme.suomifi.colors.depthLight1};
+  border-bottom: solid 1px ${(props) => props.theme.suomifi.colors.depthLight1};
+  border-right: solid 1px ${(props) => props.theme.suomifi.colors.depthLight1};
+  background: ${(props) => props.theme.suomifi.colors.whiteBase};
+  margin-top: ${(props) => props.theme.suomifi.spacing.m};
 
-export const PaginationButton = styled.div<PaginationButtonProps>`
-  height: 35px;
-  width: 35px;
-  border-style: none;
-  border-left: solid 1px ${props => props.theme.suomifi.colors.depthLight1};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  color: ${props => props.active ? props.theme.suomifi.colors.whiteBase : props.theme.suomifi.colors.highlightBase};
-  background: ${props => props.active ? props.theme.suomifi.colors.highlightDark1 : props.theme.suomifi.colors.whiteBase};
-
-  :hover {
-    background: ${props => props.active ? props.theme.suomifi.colors.highlightBase : !props.disabled ? props.theme.suomifi.colors.depthLight2 : ''};
-    cursor: ${props => props.disabled ? '' : 'pointer'};
+  > * {
+    border-left: solid 1px ${(props) => props.theme.suomifi.colors.depthLight1} !important;
   }
 `;
 
-export const PaginationMobile = styled.div`
+export const ChevronButton = styled(Button)`
   height: 35px;
+  width: 35px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+
+  > svg {
+    line-height: 16px;
+    margin-right: 0px !important;
+  }
+`;
+
+export const PaginationButton = styled(Button)`
+  height: 35px;
+  width: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: ${(props) => props.theme.suomifi.typography.bodyTextSmall};
+`;
+
+export const PaginationMobile = styled.div`
+  height: auto;
   width: auto;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding-left: ${(props) => props.theme.suomifi.spacing.m};
+  padding-right: ${(props) => props.theme.suomifi.spacing.m};
   border-style: none;
-  border-left: solid 1px ${props => props.theme.suomifi.colors.depthLight1};
+  border-left: solid 1px ${(props) => props.theme.suomifi.colors.depthLight1};
   display: flex;
   align-items: center;
   justify-content: center;
   white-space: nowrap;
-  font-size: 16px;
-  color: ${props => props.theme.suomifi.colors.highlightBase};
-  background: ${props => props.theme.suomifi.colors.whiteBase};
+  font-size: ${(props) => props.theme.suomifi.typography.bodyTextSmall};
+  color: ${(props) => props.theme.suomifi.colors.highlightBase};
+  background: ${(props) => props.theme.suomifi.colors.whiteBase};
 `;

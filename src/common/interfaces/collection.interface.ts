@@ -11,4 +11,4 @@ export interface Collection extends BaseEntity<'Collection'> {
     member?: Concept[];
     broader?: Concept[];
   };
-};
+}

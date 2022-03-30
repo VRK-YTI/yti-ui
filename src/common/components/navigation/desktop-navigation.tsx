@@ -1,23 +1,27 @@
 import { ClickAwayListener } from '@material-ui/core';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { MouseEventHandler, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
 import { useTheme } from 'styled-components';
-import { Icon, Link } from 'suomifi-ui-components';
+import { Icon, Link as SuomiFiLink } from 'suomifi-ui-components';
+import { selectLogin } from '@app/common/components/login/login.slice';
 import {
   NavigationDropdownItem,
   NavigationDropdownList,
   NavigationDropdownWrapper,
   NavigationItem,
-  NavigationWrapper
+  NavigationWrapper,
 } from './navigation.styles';
 
 export default function DesktopNavigation() {
+  const isLoggedIn = !useSelector(selectLogin()).anonymous;
   const { t } = useTranslation('common');
   const [open, setOpen] = useState(false);
   const router = useRouter();
 
-  const handleDropdown = (e: any) => {
+  const handleDropdown: MouseEventHandler = (e) => {
     e.preventDefault();
     setOpen(!open);
   };
@@ -27,41 +31,62 @@ export default function DesktopNavigation() {
   return (
     <NavigationWrapper>
       <NavigationItem active={router.pathname === '/'}>
-        <Link className="main" href="/">{t('site-frontpage')}</Link>
+        <Link href="/" passHref>
+          <SuomiFiLink className="main" href="">
+            {t('site-frontpage')}
+          </SuomiFiLink>
+        </Link>
       </NavigationItem>
       <NavigationItem>
-        <Link className="main" href="" onClick={(e) => handleDropdown(e)}>
+        <SuomiFiLink className="main" href="" onClick={handleDropdown}>
           {t('site-services')}
-          <Icon color={theme.suomifi.colors.highlightBase} icon={open ? 'chevronUp' : 'chevronDown'} />
-        </Link>
-        {open &&
+          <Icon
+            color={theme.suomifi.colors.highlightBase}
+            icon={open ? 'chevronUp' : 'chevronDown'}
+          />
+        </SuomiFiLink>
+        {open && (
           <ClickAwayListener onClickAway={() => setOpen(false)}>
             <NavigationDropdownWrapper>
               <NavigationDropdownList>
                 <NavigationDropdownItem>
-                  <Link href="/">{t('terminology-title')}</Link>
+                  <SuomiFiLink href="/">{t('terminology-title')}</SuomiFiLink>
                 </NavigationDropdownItem>
                 <NavigationDropdownItem>
-                  <Link href="/">{t('codelist-title')}</Link>
+                  <SuomiFiLink href="/">{t('codelist-title')}</SuomiFiLink>
                 </NavigationDropdownItem>
                 <NavigationDropdownItem>
-                  <Link href="/">{t('datamodel-title')}</Link>
+                  <SuomiFiLink href="/">{t('datamodel-title')}</SuomiFiLink>
                 </NavigationDropdownItem>
               </NavigationDropdownList>
             </NavigationDropdownWrapper>
           </ClickAwayListener>
-        }
+        )}
       </NavigationItem>
       <NavigationItem>
-        <Link className="main" href="/">{t('site-information')}</Link>
+        <SuomiFiLink className="main" href="/">
+          {t('site-information')}
+        </SuomiFiLink>
       </NavigationItem>
       <NavigationItem>
-        <Link className="main" href="/">{t('site-for-developers')}</Link>
+        <SuomiFiLink className="main" href="/">
+          {t('site-for-developers')}
+        </SuomiFiLink>
       </NavigationItem>
       <NavigationItem>
-        <Link className="main" href="/">{t('site-for-administrators')}</Link>
+        <SuomiFiLink className="main" href="/">
+          {t('site-for-administrators')}
+        </SuomiFiLink>
       </NavigationItem>
+      {isLoggedIn && (
+        <NavigationItem active={router.pathname === '/own-information'}>
+          <Link href="/own-information" passHref>
+            <SuomiFiLink className="main" href="">
+              {t('own-information')}
+            </SuomiFiLink>
+          </Link>
+        </NavigationItem>
+      )}
     </NavigationWrapper>
-
   );
 }
