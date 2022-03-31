@@ -148,7 +148,7 @@ export default function OwnInformation() {
   }
 
   function getOrganizationsAndRoles() {
-    const result = Object.entries(user.rolesInOrganizations).map(
+    let result = Object.entries(user.rolesInOrganizations).map(
       ([organizationId, roles]) => {
         const requestedRoles =
           requests?.filter((request) => {
@@ -170,6 +170,21 @@ export default function OwnInformation() {
         };
       }
     );
+
+    requests?.forEach((request) => {
+      if (
+        !result ||
+        !result?.map((r) => r.organization.id).includes(request.organizationId)
+      ) {
+        result = result.concat({
+          organization: {
+            id: request.organizationId,
+            name: getOrganizationName(request.organizationId),
+          },
+          roles: request.role,
+        });
+      }
+    });
 
     return _.sortBy(result, 'organization.name');
   }
