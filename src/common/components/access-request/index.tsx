@@ -49,7 +49,11 @@ export default function AccessRequest({ organizations }: AccessRequestProps) {
   const { t } = useTranslation('own-information');
   const { isSmall } = useBreakpoints();
   const user = useSelector(selectLogin());
-  const { data: requests, error: requestsError, refetch } = useGetRequestsQuery(null);
+  const {
+    data: requests,
+    error: requestsError,
+    refetch,
+  } = useGetRequestsQuery(null);
   const [postRequest, request] = usePostRequestMutation();
   const [visible, setVisible] = useState(false);
   const [error, setError] = useState<{ [key: string]: boolean }>({});
@@ -251,9 +255,9 @@ export default function AccessRequest({ organizations }: AccessRequestProps) {
 
     const currentRightsForOrg =
       user?.rolesInOrganizations[
-      Object.keys(user.rolesInOrganizations).filter(
-        (org) => org === chosenOrganization
-      )?.[0] ?? ''
+        Object.keys(user.rolesInOrganizations).filter(
+          (org) => org === chosenOrganization
+        )?.[0] ?? ''
       ] ?? [];
 
     const relatedRights: string[] = Array.from(

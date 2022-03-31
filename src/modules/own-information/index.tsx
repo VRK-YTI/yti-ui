@@ -128,18 +128,18 @@ export default function OwnInformation() {
                 </ul>
               </OrganizationAndRolesItem>
 
-              {requests?.map(request => request.organizationId).includes(organization.id)
-                ?
+              {requests
+                ?.map((request) => request.organizationId)
+                .includes(organization.id) ? (
                 <InlineAlert
                   noIcon
-                  style={{marginBottom: '5px', marginTop: '20px'}}
+                  style={{ marginBottom: '5px', marginTop: '20px' }}
                 >
                   {t('access-request-sent')}
                 </InlineAlert>
-                :
+              ) : (
                 <></>
-              }
-
+              )}
             </OrganizationAndRoles>
           );
         })}
@@ -150,11 +150,12 @@ export default function OwnInformation() {
   function getOrganizationsAndRoles() {
     const result = Object.entries(user.rolesInOrganizations).map(
       ([organizationId, roles]) => {
-        const requestedRoles = requests?.filter(request => {
-          if (request.organizationId === organizationId) {
-            return request.role;
-          }
-        })?.[0]?.role ?? [];
+        const requestedRoles =
+          requests?.filter((request) => {
+            if (request.organizationId === organizationId) {
+              return request.role;
+            }
+          })?.[0]?.role ?? [];
 
         if (requestedRoles) {
           roles = roles.concat(requestedRoles);

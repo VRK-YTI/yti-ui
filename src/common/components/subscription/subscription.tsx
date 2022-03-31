@@ -57,13 +57,10 @@ export default function Subscription({ uri }: SubscriptionProps) {
 
   return (
     <>
-      {(subscribed && userSubscribed)
-        ?
+      {subscribed && userSubscribed ? (
         <InlineAlert noIcon style={{ marginBottom: '20px' }}>
           <Paragraph>
-            <Text variant='bold'>
-              {t('email-subscription-subscribed')}
-            </Text>
+            <Text variant="bold">{t('email-subscription-subscribed')}</Text>
           </Paragraph>
           <Paragraph>
             <Text smallScreen>
@@ -71,9 +68,9 @@ export default function Subscription({ uri }: SubscriptionProps) {
             </Text>
           </Paragraph>
         </InlineAlert>
-        :
+      ) : (
         <></>
-      }
+      )}
 
       <Button
         variant="secondary"

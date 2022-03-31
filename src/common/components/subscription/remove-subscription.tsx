@@ -130,7 +130,6 @@ export default function RemoveSubscription({
             <Text>{t('subscription-remove-email-description')}</Text>
           </Paragraph>
 
-
           <Text smallScreen variant="bold">
             {resources
               ? t('subscription-resources-to-be-removed')
