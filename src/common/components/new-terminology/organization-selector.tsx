@@ -43,6 +43,7 @@ export default function OrganizationSelector({ update }: any) {
           name: orgName,
           labelText: orgName,
           uniqueItemId: org.id,
+          organizationId: org.type.graph.id,
         } as SingleSelectData;
       }
     }

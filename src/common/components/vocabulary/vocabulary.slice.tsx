@@ -65,6 +65,19 @@ export const vocabularyApi = createApi({
         },
       }),
     }),
+    postNewVocabulary: builder.mutation<any, any>({
+      query: ({ templateGraphID, prefix, newTerminology }) => ({
+        url: `/vocabulary?templateGraphId=${templateGraphID}&prefix=${prefix}`,
+        method: 'POST',
+        data: newTerminology
+      })
+    }),
+    deleteVocabulary: builder.mutation<any, any>({
+      query: (uuid) => ({
+        url: `/vocabulary?graphId=${uuid}`,
+        method: 'DELETE'
+      })
+    })
   }),
 });
 
@@ -72,6 +85,8 @@ export const {
   useGetCollectionsQuery,
   useGetConceptResultQuery,
   useGetVocabularyQuery,
+  usePostNewVocabularyMutation,
+  useDeleteVocabularyMutation,
   util: { getRunningOperationPromises },
 } = vocabularyApi;
 

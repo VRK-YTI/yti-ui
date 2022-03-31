@@ -17,6 +17,8 @@ import { useBreakpoints } from '../media-query/media-query-context';
 import FileUpload from './file-upload';
 import InfoFile from './info-file';
 import InfoManual from './info-manual';
+import generateNewTerminology from './generate-new-terminology';
+import { useDeleteVocabularyMutation, usePostNewVocabularyMutation } from '../vocabulary/vocabulary.slice';
 
 export default function NewTerminology() {
   const user = useSelector(selectLogin());
@@ -26,6 +28,8 @@ export default function NewTerminology() {
   const [isValid, setIsValid] = useState(false);
   const [inputType, setInputType] = useState('');
   const [startFileUpload, setStartFileUpload] = useState(false);
+  const [manualData, setManualData] = useState({});
+  const [postNewVocabulary, newVocabulary] = usePostNewVocabularyMutation();
 
   if (!user.superuser) {
     return null;
@@ -36,6 +40,14 @@ export default function NewTerminology() {
     setInputType('');
     setShowModal(false);
     setStartFileUpload(false);
+  };
+
+  const handlePost = (manualData) => {
+    const newTerminology = generateNewTerminology({ data: manualData });
+    const templateGraphID = newTerminology.type.graph.id;
+    const prefix = manualData.prefix[0];
+    console.log(newTerminology);
+    postNewVocabulary({ templateGraphID, prefix, newTerminology });
   };
 
   return (
@@ -63,7 +75,8 @@ export default function NewTerminology() {
         </ModalContent>
 
         <ModalFooter>
-          <Button disabled={!isValid} onClick={() => setStartFileUpload(true)}>
+          {/* <Button disabled={!isValid} onClick={() => setStartFileUpload(true)}> */}
+          <Button disabled={!isValid} onClick={() => handlePost(manualData)}>
             Lisää sanasto
           </Button>
           <Button variant="secondary" onClick={() => handleClose()}>
@@ -92,7 +105,7 @@ export default function NewTerminology() {
           <RadioButton value="file">Tuon tiedostolla</RadioButton>
         </RadioButtonGroup>
 
-        {inputType === 'self' && <InfoManual setIsValid={setIsValid} />}
+        {inputType === 'self' && <InfoManual setIsValid={setIsValid} setManualData={setManualData} />}
         {inputType === 'file' && <InfoFile setIsValid={setIsValid} />}
       </>
     );

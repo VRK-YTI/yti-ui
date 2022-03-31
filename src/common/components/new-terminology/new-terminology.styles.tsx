@@ -35,6 +35,16 @@ export const FileInfoBlock = styled(Block)`
 export const FileInfo = styled.div`
   display: flex;
   gap: ${(props) => props.theme.suomifi.spacing.s};
+
+  div {
+    .fi-paragraph:nth-child(2) .fi-text {
+      font-size: 16px;
+    }
+
+    .fi-paragraph:nth-child(3) .fi-text {
+      font-size: 14px;
+    }
+  }
 `;
 
 export const FileInfoStaticIcon = styled(StaticIcon)`
@@ -46,6 +56,7 @@ export const FileRemoveButton = styled(Button)`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 
   > :first-child {
     margin-left: ${(props) => props.theme.suomifi.spacing.xxs};

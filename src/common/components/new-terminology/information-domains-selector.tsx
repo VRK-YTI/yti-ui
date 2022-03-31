@@ -26,6 +26,7 @@ export default function InformationDomainsSelector({ update }: any) {
           name: domainName,
           labelText: domainName,
           uniqueItemId: infoDomain.id,
+          groupId: infoDomain.type.graph.id,
         } as MultiSelectData;
       }
     }

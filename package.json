@@ -37,6 +37,7 @@
     "styled-jsx": "^4.0.1",
     "suomifi-ui-components": "^6.1.1",
     "swr": "^1.0.1",
+    "uuid": "^8.3.2",
     "validator": "^13.7.0"
   },
   "devDependencies": {
@@ -51,6 +52,7 @@
     "@types/node": "^16.11.6",
     "@types/react": "17.0.25",
     "@types/styled-components": "^5.1.14",
+    "@types/uuid": "^8.3.4",
     "@types/validator": "^13.7.1",
     "@types/warning": "^3.0.0",
     "@typescript-eslint/eslint-plugin": "^4.32.0",

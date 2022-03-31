@@ -14,9 +14,10 @@ import TypeSelector from './type-selector';
 
 interface InfoManualProps {
   setIsValid: (valid: boolean) => void;
+  setManualData: (object: Object) => void;
 }
 
-export default function InfoManual({ setIsValid }: InfoManualProps) {
+export default function InfoManual({ setIsValid, setManualData }: InfoManualProps) {
   const user = useSelector(selectLogin());
   const { isSmall } = useBreakpoints();
   const { i18n } = useTranslation('admin');
@@ -44,6 +45,7 @@ export default function InfoManual({ setIsValid }: InfoManualProps) {
     }
 
     setIsValid(valid);
+    setManualData(terminologyData);
   }, [terminologyData]);
 
   const handleUpdate = (key: string, data: any) => {

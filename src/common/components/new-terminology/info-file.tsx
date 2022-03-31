@@ -15,15 +15,15 @@ interface infoFileProps {
 
 export default function InfoFile({ setIsValid }: infoFileProps) {
   const input = useRef(null);
-  const [files, setFiles] = useState<DataTransferItemList>([]);
+  const [file, setFile] = useState<DataTransferItem | null>(null);
 
   useEffect(() => {
-    if (files.length > 0) {
+    if (file) {
       setIsValid(true);
     } else {
       setIsValid(false);
     }
-  }, [files]);
+  }, [file, setIsValid]);
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -32,35 +32,27 @@ export default function InfoFile({ setIsValid }: infoFileProps) {
       return;
     }
 
-    const retItems = [...files];
     const droppedItems = e.dataTransfer.items;
 
     for (let i = 0; i < droppedItems.length; i++) {
-      if (droppedItems[i].kind !== 'file') {
-        continue;
+      if (droppedItems[i].getAsFile().name.endsWith('xlsx')) {
+        setFile(droppedItems[i].getAsFile());
+        break;
       }
-
-      retItems.push(droppedItems[i].getAsFile());
     }
-
-    setFiles(retItems);
   };
 
   const handleUpload = (e: any) => {
     e.preventDefault();
 
-    const retItems = [...files];
     const selectedItems = e.target.files;
-    console.log(selectedItems);
+
     for (let i = 0; i < selectedItems.length; i++) {
-      if (selectedItems[i].name.includes(/.xlsx$/g)) {
-        continue;
+      if (selectedItems[i].name.endsWith('xlsx')) {
+        setFile(selectedItems[i]);
+        break;
       }
-
-      retItems.push(selectedItems[i].getAsFile());
     }
-
-    setFiles(retItems);
   };
 
   return (
@@ -77,7 +69,7 @@ export default function InfoFile({ setIsValid }: infoFileProps) {
         <Paragraph marginBottomSpacing="l">
           <Text smallScreen>Sallitut tiedostomuodot on: xlsx</Text>
         </Paragraph>
-        {files.length < 1 ? (
+        {file === null ? (
           <>
             <input type="file" ref={input} style={{ display: 'none' }} onChange={(e) => {
               handleUpload(e);
@@ -93,32 +85,31 @@ export default function InfoFile({ setIsValid }: infoFileProps) {
             </Button>
           </>
         ) : (
-          files.map((file, idx) => {
-            return (
-              <FileInfoBlock key={`uploaded-item-${idx}`}>
-                <FileInfo>
-                  <FileInfoStaticIcon icon="genericFile" />
-                  <div>
-                    <Paragraph>
-                      <Text color={'highlightBase'}>{file.name}</Text>
-                    </Paragraph>
-                    <Paragraph>
-                      <Text color={'depthDark1'}>{file.size} KB</Text>
-                    </Paragraph>
-                  </div>
-                </FileInfo>
-                <FileRemoveButton
-                  variant="secondaryNoBorder"
-                  icon="remove"
-                  onClick={() =>
-                    setFiles(files.filter((f) => f.name !== file.name))
-                  }
-                >
-                  Poista
-                </FileRemoveButton>
-              </FileInfoBlock>
-            );
-          })
+          <FileInfoBlock>
+            <FileInfo>
+              <FileInfoStaticIcon icon="genericFile" />
+              <div>
+                <Paragraph>
+                  <Text color={'highlightBase'} variant={'bold'}>{file.name}</Text>
+                </Paragraph>
+                <Paragraph>
+                  <Text color={'depthDark1'}>{file.size} KB</Text>
+                </Paragraph>
+                <Paragraph>
+                  <Text variant={'bold'}>Tiedosto lisätty</Text>
+                </Paragraph>
+              </div>
+            </FileInfo>
+            <FileRemoveButton
+              variant="secondaryNoBorder"
+              icon="remove"
+              onClick={() =>
+                setFile(null)
+              }
+            >
+              Poista
+            </FileRemoveButton>
+          </FileInfoBlock>
         )}
       </FileBlock>
     </FileWrapper>
