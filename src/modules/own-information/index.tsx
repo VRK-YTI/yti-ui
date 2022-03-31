@@ -132,7 +132,7 @@ export default function OwnInformation() {
                 ?
                 <InlineAlert
                   noIcon
-                  style={{marginBottom: '20px'}}
+                  style={{marginBottom: '5px', marginTop: '20px'}}
                 >
                   {t('access-request-sent')}
                 </InlineAlert>

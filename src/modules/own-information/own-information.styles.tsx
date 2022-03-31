@@ -28,7 +28,7 @@ export const OrganizationAndRolesWrapper = styled.div`
 
 export const OrganizationAndRoles = styled.div`
   padding: ${(props) => props.theme.suomifi.spacing.s};
-  padding-bottom: 0;
+
   :not(:first-child) {
     border-top: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
   }
@@ -50,10 +50,6 @@ export const OrganizationAndRolesItem = styled.div`
   ul {
     margin: 0;
     padding-left: ${(props) => props.theme.suomifi.spacing.m};
-
-    :last-child {
-      margin-bottom: ${(props) => props.theme.suomifi.spacing.m};
-    }
   }
 `;
 
