@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import {
   Button,
@@ -19,9 +19,12 @@ import InfoFile from './info-file';
 import InfoManual from './info-manual';
 import generateNewTerminology from './generate-new-terminology';
 import { useDeleteVocabularyMutation, usePostNewVocabularyMutation } from '../vocabulary/vocabulary.slice';
+import { useStoreDispatch } from '@app/store';
+import { terminologySearchApi } from '../terminology-search/terminology-search.slice';
 
 export default function NewTerminology() {
   const user = useSelector(selectLogin());
+  const dispatch = useStoreDispatch();
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const [showModal, setShowModal] = useState(false);
@@ -30,6 +33,13 @@ export default function NewTerminology() {
   const [startFileUpload, setStartFileUpload] = useState(false);
   const [manualData, setManualData] = useState({});
   const [postNewVocabulary, newVocabulary] = usePostNewVocabularyMutation();
+
+  useEffect(() => {
+    if (newVocabulary.isSuccess) {
+      setShowModal(false);
+      dispatch(terminologySearchApi.util.invalidateTags(['TerminologySearch']));
+    }
+  }, [newVocabulary]);
 
   if (!user.superuser) {
     return null;

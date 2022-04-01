@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Paragraph, RadioButton, Text } from 'suomifi-ui-components';
 import { useBreakpoints } from '../media-query/media-query-context';
+import { useGetIfNamespaceInUseQuery } from '../vocabulary/vocabulary.slice';
 import {
   RadioButtonGroupSmBot,
   TextInputSmBot,
@@ -16,10 +17,17 @@ export default function Prefix({ update }: any) {
   const [prefix, setPrefix] = useState(randomURL);
   const [prefixType, setPrefixType] = useState('');
   const [status, setStatus] = useState<'default' | 'error'>('default');
+  const { data: isInUse } = useGetIfNamespaceInUseQuery(prefix !== '' && prefix);
 
   useEffect(() => {
     update('prefix', [prefix, true]);
   }, []);
+
+  useEffect(() => {
+    if (isInUse) {
+      setStatus('error');
+    }
+  }, [isInUse]);
 
   const handlePrefixTypeChange = (value: string) => {
     setPrefixType(value);
@@ -34,7 +42,7 @@ export default function Prefix({ update }: any) {
 
   const handleCustomChange = (e: string) => {
     setPrefix(e);
-    const inputOnlyValid = e.match(/[a-z0-9\-\_]*/g)?.join('');
+    const inputOnlyValid = e.match(/[a-z0-9\-_]*/g)?.join('');
 
     if (inputOnlyValid?.length !== e.length) {
       setStatus('error');
@@ -69,7 +77,10 @@ export default function Prefix({ update }: any) {
           status={status}
           statusText={
             status === 'error'
-              ? 'Etuliitteen sallitut merkit ovat a-z, 0-9, alaviiva ja väliviiva'
+              ?
+              isInUse
+              ? 'Tunnus on käytössä'
+              : 'Etuliitteen sallitut merkit ovat a-z, 0-9, alaviiva ja väliviiva'
               : ''
           }
         />

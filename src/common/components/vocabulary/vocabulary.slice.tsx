@@ -77,6 +77,12 @@ export const vocabularyApi = createApi({
         url: `/vocabulary?graphId=${uuid}`,
         method: 'DELETE'
       })
+    }),
+    getIfNamespaceInUse: builder.query<any, any>({
+      query: (prefix) => ({
+        url: `/namespaceInUse?prefix=${prefix}`,
+        method: 'GET'
+      })
     })
   }),
 });
@@ -87,6 +93,7 @@ export const {
   useGetVocabularyQuery,
   usePostNewVocabularyMutation,
   useDeleteVocabularyMutation,
+  useGetIfNamespaceInUseQuery,
   util: { getRunningOperationPromises },
 } = vocabularyApi;
 
