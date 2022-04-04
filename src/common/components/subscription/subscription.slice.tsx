@@ -41,24 +41,6 @@ export const subscriptionApi = createApi({
             : '/user',
         method: 'GET',
       }),
-      transformResponse: (response: Subscriptions) => {
-        // Messaging-api receives data from cloud
-        // and resources don't have prefLabels
-        // because (presumably) subscribed uri's
-        // don't have corresponding terminology available.
-
-        if (
-          process.env.NODE_ENV === 'development' &&
-          response.resources.length > 0
-        ) {
-          const temp = Object.assign({}, response);
-          temp.resources.forEach((resource) => {
-            resource['prefLabel'] = { fi: 'prefLabel in dev' };
-          });
-          return temp;
-        }
-        return response;
-      },
     }),
     toggleSubscription: builder.mutation<
       Subscription,
@@ -76,6 +58,7 @@ export const subscriptionApi = createApi({
           uri: params.uri,
         },
       }),
+      invalidatesTags: ['Subscription'],
     }),
     toggleSubscriptions: builder.mutation<Subscriptions, 'DAILY' | 'DISABLED'>({
       query: (subscriptionType) => ({
@@ -88,6 +71,7 @@ export const subscriptionApi = createApi({
           subscriptionType: subscriptionType,
         },
       }),
+      invalidatesTags: ['Subscription'],
     }),
   }),
 });

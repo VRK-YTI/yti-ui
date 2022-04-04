@@ -9,6 +9,7 @@ import {
   useGetSubscriptionQuery,
   useToggleSubscriptionMutation,
 } from './subscription.slice';
+import { Icon } from '../suomifi-7-tweaks/icon';
 
 interface SubscriptionProps {
   uri: string;
@@ -32,7 +33,9 @@ export default function Subscription({ uri }: SubscriptionProps) {
         setAlert([
           {
             status: 0,
-            data: t('email-subscription-subscribed'),
+            data: subscribed
+              ? t('email-subscription-unsubscribed')
+              : t('email-subscription-subscribed'),
           },
         ])
       );
@@ -49,10 +52,25 @@ export default function Subscription({ uri }: SubscriptionProps) {
   };
 
   return (
-    <Button variant="secondary" onClick={() => handleSubscription(subscribed)}>
+    <Button
+      variant="secondary"
+      // message="alertOff"
+      onClick={() => handleSubscription(subscribed)}
+    >
+      <Icon
+        icon={subscribed ? 'alertOff' : 'alert'}
+        mousePointer
+        color="currentColor"
+        className="fi-button_icon"
+      />
       {subscribed
         ? t('email-subscription-delete')
         : t('email-subscription-add')}
     </Button>
+    // <Button variant="secondary" onClick={() => handleSubscription(subscribed)}>
+    //   {subscribed
+    //     ? t('email-subscription-delete')
+    //     : t('email-subscription-add')}
+    // </Button>
   );
 }
