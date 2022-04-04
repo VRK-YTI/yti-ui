@@ -1,6 +1,12 @@
+import { NewTerminology } from '@app/common/interfaces/new-terminology';
+import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info';
 import { v4 } from 'uuid';
 
-export default function generateNewTerminology({ data }: any) {
+interface GenerateNewTerminologyProps {
+  data: NewTerminologyInfo;
+}
+
+export default function generateNewTerminology({ data }: GenerateNewTerminologyProps) {
   const postData = Object.assign({}, template);
   const regex = '(?s)^.*$';
   console.log(data);
@@ -79,7 +85,7 @@ export default function generateNewTerminology({ data }: any) {
   return postData;
 }
 
-const template = {
+const template: NewTerminology = {
   createdBy: '',
   createdDate: '',
   id: '',

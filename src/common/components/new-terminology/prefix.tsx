@@ -3,6 +3,7 @@ import { Paragraph, RadioButton, Text } from 'suomifi-ui-components';
 import { useBreakpoints } from '../media-query/media-query-context';
 import { useGetIfNamespaceInUseQuery } from '../vocabulary/vocabulary.slice';
 import {
+  BlankFieldset,
   RadioButtonGroupSmBot,
   TextInputSmBot,
 } from './new-terminology.styles';
@@ -10,7 +11,6 @@ import {
 export default function Prefix({ update }: any) {
   const URI = 'http://uri.suomi.fi/';
   // TODO: Implement actual randomization
-  // TODO: Add translation
   const randomURL = 'abcde56789';
 
   const { isSmall } = useBreakpoints();
@@ -56,7 +56,7 @@ export default function Prefix({ update }: any) {
   };
 
   return (
-    <>
+    <BlankFieldset>
       <RadioButtonGroupSmBot
         labelText="Tunnus"
         hintText="Sanaston yksilöivä tunnus, jota ei voi muuttaa sanaston luonnin jälkeen."
@@ -73,6 +73,7 @@ export default function Prefix({ update }: any) {
         <TextInputSmBot
           labelText="Tunnus"
           onChange={(e) => handleCustomChange(e as string)}
+          debounce={300}
           isSmall={isSmall}
           status={status}
           statusText={
@@ -97,6 +98,6 @@ export default function Prefix({ update }: any) {
           {prefix && '/'}
         </Text>
       </Paragraph>
-    </>
+    </BlankFieldset>
   );
 }

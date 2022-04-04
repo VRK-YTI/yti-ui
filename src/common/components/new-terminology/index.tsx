@@ -21,6 +21,7 @@ import generateNewTerminology from './generate-new-terminology';
 import { useDeleteVocabularyMutation, usePostNewVocabularyMutation } from '../vocabulary/vocabulary.slice';
 import { useStoreDispatch } from '@app/store';
 import { terminologySearchApi } from '../terminology-search/terminology-search.slice';
+import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info';
 
 export default function NewTerminology() {
   const user = useSelector(selectLogin());
@@ -31,7 +32,7 @@ export default function NewTerminology() {
   const [isValid, setIsValid] = useState(false);
   const [inputType, setInputType] = useState('');
   const [startFileUpload, setStartFileUpload] = useState(false);
-  const [manualData, setManualData] = useState({});
+  const [manualData, setManualData] = useState<NewTerminologyInfo>();
   const [postNewVocabulary, newVocabulary] = usePostNewVocabularyMutation();
 
   useEffect(() => {
@@ -52,7 +53,7 @@ export default function NewTerminology() {
     setStartFileUpload(false);
   };
 
-  const handlePost = (manualData) => {
+  const handlePost = (manualData: NewTerminologyInfo) => {
     const newTerminology = generateNewTerminology({ data: manualData });
     const templateGraphID = newTerminology.type.graph.id;
     const prefix = manualData.prefix[0];

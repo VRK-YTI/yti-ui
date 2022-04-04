@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { MultiSelectData } from 'suomifi-ui-components';
 import { useBreakpoints } from '../media-query/media-query-context';
 import { useGetGroupsQuery } from '../terminology-search/terminology-search.slice';
-import { MultiselectSmBot } from './new-terminology.styles';
+import { BlankFieldset, MultiselectSmBot } from './new-terminology.styles';
 
 export default function InformationDomainsSelector({ update }: any) {
   const { i18n } = useTranslation('admin');
@@ -33,7 +33,7 @@ export default function InformationDomainsSelector({ update }: any) {
   ) as MultiSelectData[];
 
   return (
-    <>
+    <BlankFieldset>
       <MultiselectSmBot
         labelText="Tietoalueet"
         hintText="Valitse sanastolle sen sisältöä kuvaavat tietoalueet. Tietoalue auttaa sanaston löydettävyydessä."
@@ -48,6 +48,6 @@ export default function InformationDomainsSelector({ update }: any) {
         onItemSelectionsChange={(e) => setSelectedInfoDomains(e)}
         isSmall={isSmall}
       />
-    </>
+    </BlankFieldset>
   );
 }

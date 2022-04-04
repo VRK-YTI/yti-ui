@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { RadioButton } from 'suomifi-ui-components';
-import { RadioButtonGroupSmBot } from './new-terminology.styles';
+import { BlankFieldset, RadioButtonGroupSmBot } from './new-terminology.styles';
 
 export default function TypeSelector({ update }: any) {
   const [selectedType, setSelectedType] = useState('terminology');
@@ -10,14 +10,16 @@ export default function TypeSelector({ update }: any) {
   }, [selectedType]);
 
   return (
-    <RadioButtonGroupSmBot
-      labelText="Sanastotyyppi"
-      name="terminology-type"
-      defaultValue="terminology"
-      onChange={(e) => setSelectedType(e)}
-    >
-      <RadioButton value="terminology">Terminologinen sanasto</RadioButton>
-      <RadioButton value="other">Muu sanasto</RadioButton>
-    </RadioButtonGroupSmBot>
+    <BlankFieldset>
+      <RadioButtonGroupSmBot
+        labelText="Sanastotyyppi"
+        name="terminology-type"
+        defaultValue="terminology"
+        onChange={(e) => setSelectedType(e)}
+      >
+        <RadioButton value="terminology">Terminologinen sanasto</RadioButton>
+        <RadioButton value="other">Muu sanasto</RadioButton>
+      </RadioButtonGroupSmBot>
+    </BlankFieldset>
   );
 }

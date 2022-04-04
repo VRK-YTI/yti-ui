@@ -1,9 +1,5 @@
-import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { Paragraph, Text } from 'suomifi-ui-components';
-import { selectLogin } from '@app/common/components/login/login.slice';
-import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import ContactInfo from './contact-info';
 import InformationDomainsSelector from './information-domains-selector';
 import LanguageSelector from './language-selector';
@@ -11,6 +7,7 @@ import { TallerSeparator } from './new-terminology.styles';
 import OrganizationSelector from './organization-selector';
 import Prefix from './prefix';
 import TypeSelector from './type-selector';
+import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info';
 
 interface InfoManualProps {
   setIsValid: (valid: boolean) => void;
@@ -18,12 +15,13 @@ interface InfoManualProps {
 }
 
 export default function InfoManual({ setIsValid, setManualData }: InfoManualProps) {
-  const user = useSelector(selectLogin());
-  const { isSmall } = useBreakpoints();
-  const { i18n } = useTranslation('admin');
-  const [terminologyData, setTerminologyData] = useState({});
+  const [terminologyData, setTerminologyData] = useState<NewTerminologyInfo>();
 
   useEffect(() => {
+    if (!terminologyData) {
+      return;
+    }
+
     let valid = true;
 
     if (Object.keys(terminologyData).length < 7) {
@@ -46,14 +44,14 @@ export default function InfoManual({ setIsValid, setManualData }: InfoManualProp
 
     setIsValid(valid);
     setManualData(terminologyData);
-  }, [terminologyData]);
+  }, [terminologyData, setIsValid, setManualData]);
 
   const handleUpdate = (key: string, data: any) => {
     setTerminologyData((values) => ({ ...values, [key]: data }));
   };
 
   return (
-    <>
+    <form>
       <TallerSeparator />
       <LanguageSelector update={handleUpdate} />
       <TallerSeparator />
@@ -66,6 +64,6 @@ export default function InfoManual({ setIsValid, setManualData }: InfoManualProp
       <Prefix update={handleUpdate} />
       <TallerSeparator />
       <ContactInfo update={handleUpdate} />
-    </>
+    </form>
   );
 }

@@ -11,6 +11,7 @@ import { selectLogin } from '@app/common/components/login/login.slice';
 import { useBreakpoints } from '../media-query/media-query-context';
 import { useGetOrganizationsQuery } from '@app/common/components/terminology-search/terminology-search.slice';
 import {
+  BlankFieldset,
   MultiselectSmBot,
   OrgCheckbox,
   OrgSingleSelect,
@@ -58,7 +59,7 @@ export default function OrganizationSelector({ update }: any) {
   };
 
   return (
-    <>
+    <BlankFieldset>
       {user.organizationsInRole.ADMIN.length > 1 ? (
         <>
           <OrgSingleSelect
@@ -110,6 +111,6 @@ export default function OrganizationSelector({ update }: any) {
           </Paragraph>
         </>
       )}
-    </>
+    </BlankFieldset>
   );
 }

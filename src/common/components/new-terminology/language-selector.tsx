@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { MultiSelectData, Paragraph, Text } from 'suomifi-ui-components';
 import { useBreakpoints } from '../media-query/media-query-context';
 import LanguageBlock from './language-block';
-import { MultiselectSmBot } from './new-terminology.styles';
+import { BlankFieldset, BlankLegend, MultiselectSmBot } from './new-terminology.styles';
 
 export interface TerminologyName {
   lang: string;
@@ -58,17 +58,19 @@ export default function LanguageSelector({ update }: any) {
   };
 
   return (
-    <>
-      <Paragraph marginBottomSpacing="m">
-        <Text variant="bold">Sanaston kielet</Text>
-      </Paragraph>
+    <BlankFieldset>
+      <BlankLegend>
+        <Paragraph marginBottomSpacing="m">
+          <Text variant="bold">Sanaston kielet</Text>
+        </Paragraph>
 
-      <Paragraph marginBottomSpacing="m">
-        <Text>
-          Valitse sanastolle kielet, joilla sanaston sisältö on kuvattu. Anna
-          myös sanaston nimi ja kuvaus valituilla kielillä.
-        </Text>
-      </Paragraph>
+        <Paragraph marginBottomSpacing="m">
+          <Text>
+            Valitse sanastolle kielet, joilla sanaston sisältö on kuvattu. Anna
+            myös sanaston nimi ja kuvaus valituilla kielillä.
+          </Text>
+        </Paragraph>
+      </BlankLegend>
 
       <MultiselectSmBot
         labelText="Sanaston kielet"
@@ -93,6 +95,6 @@ export default function LanguageSelector({ update }: any) {
           key={`${language}-${idx}`}
         />
       ))}
-    </>
+    </BlankFieldset>
   );
 }

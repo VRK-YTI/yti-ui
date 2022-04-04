@@ -13,6 +13,17 @@ import {
 } from 'suomifi-ui-components';
 import Separator from '../separator';
 
+export const BlankFieldset = styled.fieldset`
+  border: 0;
+  margin: 0;
+  padding: 0;
+`;
+
+export const BlankLegend = styled.legend`
+  margin: 0;
+  padding: 0;
+`;
+
 export const ErrorIndicator = styled(Icon)`
   height: 24px;
   width: 24px;
