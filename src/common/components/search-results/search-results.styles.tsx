@@ -20,7 +20,6 @@ export const CardChip = styled(StaticChip)<CardChipProps>`
   padding: 0px 5px !important;
   text-transform: uppercase;
   vertical-align: bottom;
-  width: min-content;
 `;
 
 export const CardConcepts = styled(Text)`
