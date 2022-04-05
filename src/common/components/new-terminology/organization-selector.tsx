@@ -19,7 +19,7 @@ import {
 
 export default function OrganizationSelector({ update }: any) {
   const user = useSelector(selectLogin());
-  const { i18n } = useTranslation('admin');
+  const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const { data: organizations } = useGetOrganizationsQuery(i18n.language);
   const [selectedOrganization, setSelectedOrganization] =
@@ -63,37 +63,37 @@ export default function OrganizationSelector({ update }: any) {
       {user.organizationsInRole.ADMIN.length > 1 ? (
         <>
           <OrgSingleSelect
-            labelText="Sisällöntuottaja"
-            hintText="Voit lisätä vain organisaation, joka on antanut sinulle muokkausoikeudet"
-            ariaOptionsAvailableText="Options available"
-            clearButtonLabel="Tyhjennä"
+            labelText={t('org-label-text')}
+            hintText={t('org-hint-text')}
+            ariaOptionsAvailableText={t('org-aria-options-available-text')}
+            clearButtonLabel={t('clear-button-label')}
             isSmall={isSmall}
             items={adminOrgs}
             onItemSelectionChange={(item) => handleSelectOrganization(item)}
-            noItemsText="no items"
-            visualPlaceholder="Valitse organisaatio"
+            noItemsText={t('org-no-items')}
+            visualPlaceholder={t('org-visual-placeholder')}
           />
           <OrgCheckbox
             checked={showOtherOrgSelector}
             onClick={(value) => setShowOtherOrgSelector(value.checkboxState)}
             disabled={!selectedOrganization}
           >
-            Lisää muut vastuuorganisaatiot
+            {t('add-other-organizations')}
           </OrgCheckbox>
           {showOtherOrgSelector && (
             <MultiselectSmBot
-              labelText="Muut vastuuorganisaatiot"
+              labelText={t('other-orgs-label-text')}
               items={adminOrgs.filter(
                 (adminOrgs) =>
                   adminOrgs.uniqueItemId !== selectedOrganization?.uniqueItemId
               )}
               chipListVisible={true}
-              ariaChipActionLabel="Remove"
-              ariaSelectedAmountText="organizations selected"
-              ariaOptionsAvailableText="options available"
-              ariaOptionChipRemovedText="removed"
-              noItemsText="no items"
-              visualPlaceholder="Valitse muut vastuuorganisaatiot"
+              ariaChipActionLabel={t('aria-chip-action-label')}
+              ariaSelectedAmountText={t('chosen-other-organizations')}
+              ariaOptionsAvailableText={t('other-orgs-aria-options-available-text')}
+              ariaOptionChipRemovedText={t('organization-removed')}
+              noItemsText={t('no-other-orgs-available')}
+              visualPlaceholder={t('choose-other-orgs')}
               onItemSelectionsChange={(e) => setSelectedOtherOrganizations(e)}
               isSmall={isSmall}
             />
@@ -103,7 +103,7 @@ export default function OrganizationSelector({ update }: any) {
         <>
           <Paragraph>
             <Text variant="bold" smallScreen>
-              Sisällöntuottaja
+              {t('content-creator')}
             </Text>
           </Paragraph>
           <Paragraph>

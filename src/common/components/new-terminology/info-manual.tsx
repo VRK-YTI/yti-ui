@@ -8,6 +8,7 @@ import OrganizationSelector from './organization-selector';
 import Prefix from './prefix';
 import TypeSelector from './type-selector';
 import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info';
+import { useTranslation } from 'next-i18next';
 
 interface InfoManualProps {
   setIsValid: (valid: boolean) => void;
@@ -15,6 +16,7 @@ interface InfoManualProps {
 }
 
 export default function InfoManual({ setIsValid, setManualData }: InfoManualProps) {
+  const { t } = useTranslation('admin');
   const [terminologyData, setTerminologyData] = useState<NewTerminologyInfo>();
 
   useEffect(() => {
@@ -50,13 +52,15 @@ export default function InfoManual({ setIsValid, setManualData }: InfoManualProp
     setTerminologyData((values) => ({ ...values, [key]: data }));
   };
 
+  console.log('terminologyData', terminologyData);
+
   return (
     <form>
       <TallerSeparator />
       <LanguageSelector update={handleUpdate} />
       <TallerSeparator />
       <Paragraph marginBottomSpacing="m">
-        <Text variant="bold">Sanaston muut tiedot</Text>
+        <Text variant="bold">{t('terminology-other-information')}</Text>
       </Paragraph>
       <OrganizationSelector update={handleUpdate} />
       <TypeSelector update={handleUpdate} />

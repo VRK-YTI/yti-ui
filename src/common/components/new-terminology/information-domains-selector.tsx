@@ -6,7 +6,7 @@ import { useGetGroupsQuery } from '../terminology-search/terminology-search.slic
 import { BlankFieldset, MultiselectSmBot } from './new-terminology.styles';
 
 export default function InformationDomainsSelector({ update }: any) {
-  const { i18n } = useTranslation('admin');
+  const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const { data: informationDomains } = useGetGroupsQuery(i18n.language);
   const [selectedInfoDomains, setSelectedInfoDomains] = useState<
@@ -35,16 +35,16 @@ export default function InformationDomainsSelector({ update }: any) {
   return (
     <BlankFieldset>
       <MultiselectSmBot
-        labelText="Tietoalueet"
-        hintText="Valitse sanastolle sen sisältöä kuvaavat tietoalueet. Tietoalue auttaa sanaston löydettävyydessä."
+        labelText={t('info-domains')}
+        hintText={t('info-domains-hint')}
         items={infoDomains}
         chipListVisible={true}
-        ariaChipActionLabel="Remove"
-        ariaSelectedAmountText="languages selected"
-        ariaOptionsAvailableText="options available"
-        ariaOptionChipRemovedText="removed"
-        noItemsText="no items"
-        visualPlaceholder="Valitse sanaston aihealueet"
+        ariaChipActionLabel={t('aria-chip-action-label')}
+        ariaSelectedAmountText={t('info-domains-selected')}
+        ariaOptionsAvailableText={t('info-domains-available')}
+        ariaOptionChipRemovedText={t('aria-option-chip-removed-text')}
+        noItemsText={t('no-info-domains-available')}
+        visualPlaceholder={t('info-domains-placeholder')}
         onItemSelectionsChange={(e) => setSelectedInfoDomains(e)}
         isSmall={isSmall}
       />

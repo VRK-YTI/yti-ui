@@ -122,6 +122,7 @@ export const LangBlock = styled(Block)`
   min-width: 100%;
   border: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
   margin-bottom: ${(props) => props.theme.suomifi.spacing.xs};
+  background: ${(props) => props.theme.suomifi.colors.highlightLight4};
 `;
 
 export const LangTextInput = styled(TextInput)<{ isSmall: boolean }>`
@@ -164,4 +165,8 @@ export const TextInputSmBot = styled(TextInput)<{ isSmall: boolean }>`
 
 export const TextareaSmBot = styled(Textarea)`
   min-width: 100%;
+
+  textarea {
+    background: white;
+  }
 `;

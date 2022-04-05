@@ -18,7 +18,7 @@ import FileUpload from './file-upload';
 import InfoFile from './info-file';
 import InfoManual from './info-manual';
 import generateNewTerminology from './generate-new-terminology';
-import { useDeleteVocabularyMutation, usePostNewVocabularyMutation } from '../vocabulary/vocabulary.slice';
+import { usePostNewVocabularyMutation } from '../vocabulary/vocabulary.slice';
 import { useStoreDispatch } from '@app/store';
 import { terminologySearchApi } from '../terminology-search/terminology-search.slice';
 import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info';
@@ -54,6 +54,10 @@ export default function NewTerminology() {
   };
 
   const handlePost = (manualData: NewTerminologyInfo) => {
+    if (!isValid) {
+      console.log('not valid');
+      return;
+    }
     const newTerminology = generateNewTerminology({ data: manualData });
     const templateGraphID = newTerminology.type.graph.id;
     const prefix = manualData.prefix[0];
@@ -79,7 +83,7 @@ export default function NewTerminology() {
       >
         <ModalContent>
           <ModalTitle>
-            {!startFileUpload ? t('add-new-terminology') : 'Tiedostoa ladataan'}
+            {!startFileUpload ? t('add-new-terminology') : t('downloading-file')}
           </ModalTitle>
 
           {!startFileUpload ? renderInfoInput() : <FileUpload />}
@@ -87,11 +91,11 @@ export default function NewTerminology() {
 
         <ModalFooter>
           {/* <Button disabled={!isValid} onClick={() => setStartFileUpload(true)}> */}
-          <Button disabled={!isValid} onClick={() => handlePost(manualData)}>
-            Lisää sanasto
+          <Button onClick={() => handlePost(manualData)}>
+            {t('add-terminology')}
           </Button>
           <Button variant="secondary" onClick={() => handleClose()}>
-            Keskeytä
+            {t('cancel')}
           </Button>
         </ModalFooter>
       </Modal>
@@ -103,7 +107,7 @@ export default function NewTerminology() {
       <>
         <Paragraph marginBottomSpacing="m">
           <Text>
-            Tiedot ovat pakollisia, jos niitä ei ole merkitty valinnaisiksi.
+            {t('info-input-description')}
           </Text>
         </Paragraph>
 
@@ -112,8 +116,8 @@ export default function NewTerminology() {
           name="input-type"
           onChange={(e) => setInputType(e)}
         >
-          <RadioButton value="self">Täytän tiedot itse</RadioButton>
-          <RadioButton value="file">Tuon tiedostolla</RadioButton>
+          <RadioButton value="self">{t('by-hand')}</RadioButton>
+          <RadioButton value="file">{t('by-file')}</RadioButton>
         </RadioButtonGroup>
 
         {inputType === 'self' && <InfoManual setIsValid={setIsValid} setManualData={setManualData} />}

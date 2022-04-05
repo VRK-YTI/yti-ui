@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { MultiSelectData, Paragraph, Text } from 'suomifi-ui-components';
 import { TerminologyName } from './language-selector';
 import {
@@ -12,6 +12,7 @@ interface LanguageBlockProps {
   isSmall: boolean;
   terminologyNames: TerminologyName[];
   setTerminologyNames: Dispatch<SetStateAction<TerminologyName[]>>;
+  isError?: boolean;
 }
 
 export default function LanguageBlock({
@@ -19,10 +20,22 @@ export default function LanguageBlock({
   isSmall,
   terminologyNames,
   setTerminologyNames,
+  isError,
 }: LanguageBlockProps) {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [status, setStatus] = useState<'default' | 'error'>('default');
+  const [status, setStatus] = useState<'default' | 'error'>(isError ? 'error' : 'default');
+
+  useEffect(() => {
+    setTerminologyNames([
+      ...terminologyNames,
+      {
+        lang: lang.uniqueItemId,
+        name: '',
+        description: ''
+      }
+    ]);
+  }, []);
 
   const handleBlur = () => {
     if (terminologyNames?.some((tn) => tn.lang === lang.uniqueItemId)) {
@@ -45,15 +58,6 @@ export default function LanguageBlock({
       });
 
       setTerminologyNames(newTerminologyNames);
-    } else {
-      setTerminologyNames([
-        ...terminologyNames,
-        {
-          lang: lang.uniqueItemId,
-          name: name,
-          description: description,
-        },
-      ]);
     }
   };
 

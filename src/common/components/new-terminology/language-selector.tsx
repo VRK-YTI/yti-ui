@@ -1,3 +1,4 @@
+import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import { MultiSelectData, Paragraph, Text } from 'suomifi-ui-components';
 import { useBreakpoints } from '../media-query/media-query-context';
@@ -11,6 +12,7 @@ export interface TerminologyName {
 }
 
 export default function LanguageSelector({ update }: any) {
+  const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const [selectedLanguages, setSelectedLanguages] = useState<MultiSelectData[]>(
     []
@@ -21,18 +23,18 @@ export default function LanguageSelector({ update }: any) {
 
   const languages = [
     {
-      name: 'Suomi',
-      labelText: 'suomi FI',
+      name: t('languages-name-fi'),
+      labelText: t('language-label-text-fi'),
       uniqueItemId: 'fi',
     },
     {
-      name: 'Englanti',
-      labelText: 'englanti EN',
+      name: t('languages-name-en'),
+      labelText: t('language-label-text-en'),
       uniqueItemId: 'en',
     },
     {
-      name: 'Ruotsi',
-      labelText: 'ruotsi SV',
+      name: t('languages-name-sv'),
+      labelText: t('language-label-text-sv'),
       uniqueItemId: 'sv',
     },
   ];
@@ -61,27 +63,26 @@ export default function LanguageSelector({ update }: any) {
     <BlankFieldset>
       <BlankLegend>
         <Paragraph marginBottomSpacing="m">
-          <Text variant="bold">Sanaston kielet</Text>
+          <Text variant="bold">{t('terminology-languages')}</Text>
         </Paragraph>
 
         <Paragraph marginBottomSpacing="m">
           <Text>
-            Valitse sanastolle kielet, joilla sanaston sisältö on kuvattu. Anna
-            myös sanaston nimi ja kuvaus valituilla kielillä.
+            {t('terminology-languages-description')}
           </Text>
         </Paragraph>
       </BlankLegend>
 
       <MultiselectSmBot
-        labelText="Sanaston kielet"
+        labelText={t('terminology-languages')}
         items={languages}
         chipListVisible={true}
-        ariaChipActionLabel="Remove"
-        ariaSelectedAmountText="languages selected"
-        ariaOptionsAvailableText="options available"
-        ariaOptionChipRemovedText="removed"
-        noItemsText="no items"
-        visualPlaceholder="Valitse sanaston kielet"
+        ariaChipActionLabel={t('aria-chip-action-label')}
+        ariaSelectedAmountText={t('chosen-languages')}
+        ariaOptionsAvailableText={t('available-languages')}
+        ariaOptionChipRemovedText={t('language-removed')}
+        noItemsText={t('no-languages-available')}
+        visualPlaceholder={t('languages-visual-placeholder')}
         onItemSelectionsChange={(e) => handleSelectedLanguagesChange(e)}
         isSmall={isSmall}
       />

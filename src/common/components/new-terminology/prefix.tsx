@@ -1,3 +1,4 @@
+import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import { Paragraph, RadioButton, Text } from 'suomifi-ui-components';
 import { useBreakpoints } from '../media-query/media-query-context';
@@ -10,9 +11,9 @@ import {
 
 export default function Prefix({ update }: any) {
   const URI = 'http://uri.suomi.fi/';
-  // TODO: Implement actual randomization
   const randomURL = 'abcde56789';
 
+  const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const [prefix, setPrefix] = useState(randomURL);
   const [prefixType, setPrefixType] = useState('');
@@ -58,20 +59,20 @@ export default function Prefix({ update }: any) {
   return (
     <BlankFieldset>
       <RadioButtonGroupSmBot
-        labelText="Tunnus"
-        hintText="Sanaston yksilöivä tunnus, jota ei voi muuttaa sanaston luonnin jälkeen."
+        labelText={t('prefix')}
+        hintText={t('prefix-hint')}
         name="prefix"
         defaultValue="automatic"
         onChange={(e) => {
           handlePrefixTypeChange(e);
         }}
       >
-        <RadioButton value="automatic">Luo tunnus automaattisesti</RadioButton>
-        <RadioButton value="manual">Valitse oma tunnus</RadioButton>
+        <RadioButton value="automatic">{t('automatic-prefix')}</RadioButton>
+        <RadioButton value="manual">{t('manual-prefix')}</RadioButton>
       </RadioButtonGroupSmBot>
       {prefixType === 'manual' && (
         <TextInputSmBot
-          labelText="Tunnus"
+          labelText={t('prefix')}
           onChange={(e) => handleCustomChange(e as string)}
           debounce={300}
           isSmall={isSmall}
@@ -80,15 +81,15 @@ export default function Prefix({ update }: any) {
             status === 'error'
               ?
               isInUse
-              ? 'Tunnus on käytössä'
-              : 'Etuliitteen sallitut merkit ovat a-z, 0-9, alaviiva ja väliviiva'
+              ? t('prefix-taken')
+              : t('prefix-invalid')
               : ''
           }
         />
       )}
       <Paragraph>
         <Text variant="bold" smallScreen>
-          Url:n esikatselu
+          {t('url-preview')}
         </Text>
       </Paragraph>
       <Paragraph>
