@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import {
   Button,
+  InlineAlert,
   Modal,
   ModalContent,
   ModalFooter,
@@ -22,6 +23,7 @@ import { usePostNewVocabularyMutation } from '../vocabulary/vocabulary.slice';
 import { useStoreDispatch } from '@app/store';
 import { terminologySearchApi } from '../terminology-search/terminology-search.slice';
 import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info';
+import MissingInfoAlert from './missing-info-alert';
 
 export default function NewTerminology() {
   const user = useSelector(selectLogin());
@@ -33,6 +35,7 @@ export default function NewTerminology() {
   const [inputType, setInputType] = useState('');
   const [startFileUpload, setStartFileUpload] = useState(false);
   const [manualData, setManualData] = useState<NewTerminologyInfo>();
+  const [userPosted, setUserPosted] = useState(false);
   const [postNewVocabulary, newVocabulary] = usePostNewVocabularyMutation();
 
   useEffect(() => {
@@ -47,6 +50,7 @@ export default function NewTerminology() {
   }
 
   const handleClose = () => {
+    setUserPosted(false);
     setIsValid(false);
     setInputType('');
     setShowModal(false);
@@ -54,6 +58,7 @@ export default function NewTerminology() {
   };
 
   const handlePost = (manualData: NewTerminologyInfo) => {
+    setUserPosted(true);
     if (!isValid) {
       console.log('not valid');
       return;
@@ -91,6 +96,12 @@ export default function NewTerminology() {
 
         <ModalFooter>
           {/* <Button disabled={!isValid} onClick={() => setStartFileUpload(true)}> */}
+
+          {
+            userPosted
+            &&
+            <MissingInfoAlert data={manualData} />
+          }
           <Button onClick={() => handlePost(manualData)}>
             {t('add-terminology')}
           </Button>

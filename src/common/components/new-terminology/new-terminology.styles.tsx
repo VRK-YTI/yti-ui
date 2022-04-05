@@ -130,6 +130,13 @@ export const LangTextInput = styled(TextInput)<{ isSmall: boolean }>`
   margin-bottom: ${(props) => props.theme.suomifi.spacing.m};
 `;
 
+export const MissingInfoAlertUl = styled.ul`
+  padding: 0;
+  margin: 0;
+  margin-top: 6px;
+  padding-left: 14px;
+`;
+
 export const MultiselectSmBot = styled(MultiSelect)<{ isSmall: boolean }>`
   min-width: ${(props) => (props.isSmall ? '100%' : '480px')};
   margin-bottom: ${(props) => props.theme.suomifi.spacing.m};

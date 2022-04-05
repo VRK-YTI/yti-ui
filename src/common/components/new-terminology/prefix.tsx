@@ -27,6 +27,7 @@ export default function Prefix({ update }: any) {
   useEffect(() => {
     if (isInUse) {
       setStatus('error');
+      update('prefix', [prefix, false]);
     }
   }, [isInUse]);
 
