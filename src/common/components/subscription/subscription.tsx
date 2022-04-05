@@ -1,6 +1,6 @@
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
-import { Button } from 'suomifi-ui-components';
+import { Button, Icon } from 'suomifi-ui-components';
 import { useStoreDispatch } from '@app/store';
 import { Error } from '../../interfaces/error.interface';
 import { setAlert } from '../alert/alert.slice';
@@ -9,7 +9,6 @@ import {
   useGetSubscriptionQuery,
   useToggleSubscriptionMutation,
 } from './subscription.slice';
-import { Icon } from '../suomifi-7-tweaks/icon';
 
 interface SubscriptionProps {
   uri: string;
