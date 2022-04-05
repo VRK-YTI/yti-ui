@@ -5,7 +5,7 @@ import { BlankFieldset, BlankLegend, TextInputSmBot } from './new-terminology.st
 import isEmail from 'validator/lib/isEmail';
 import { useTranslation } from 'next-i18next';
 
-export default function ContactInfo({ update }: any) {
+export default function ContactInfo({ update, userPosted }: any) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const [contact, setContact] = useState('');
@@ -42,7 +42,7 @@ export default function ContactInfo({ update }: any) {
         onChange={(e) => setContact(e as string)}
         onBlur={() => validateContact()}
         type="email"
-        status={status}
+        status={(status === 'error' || (userPosted && !contact)) ? 'error' : 'default'}
         statusText={
           status === 'error' ? t('contact-email-invalid') : ''
         }

@@ -12,10 +12,11 @@ import { useTranslation } from 'next-i18next';
 
 interface InfoManualProps {
   setIsValid: (valid: boolean) => void;
-  setManualData: (object: Object) => void;
+  setManualData: (object: any) => void;
+  userPosted: boolean;
 }
 
-export default function InfoManual({ setIsValid, setManualData }: InfoManualProps) {
+export default function InfoManual({ setIsValid, setManualData, userPosted }: InfoManualProps) {
   const { t } = useTranslation('admin');
   const [terminologyData, setTerminologyData] = useState<NewTerminologyInfo>();
 
@@ -57,17 +58,17 @@ export default function InfoManual({ setIsValid, setManualData }: InfoManualProp
   return (
     <form>
       <TallerSeparator />
-      <LanguageSelector update={handleUpdate} />
+      <LanguageSelector update={handleUpdate} userPosted={userPosted} />
       <TallerSeparator />
       <Paragraph marginBottomSpacing="m">
         <Text variant="bold">{t('terminology-other-information')}</Text>
       </Paragraph>
-      <OrganizationSelector update={handleUpdate} />
+      <OrganizationSelector update={handleUpdate} userPosted={userPosted} />
       <TypeSelector update={handleUpdate} />
-      <InformationDomainsSelector update={handleUpdate} />
-      <Prefix update={handleUpdate} />
+      <InformationDomainsSelector update={handleUpdate} userPosted={userPosted} />
+      <Prefix update={handleUpdate} userPosted={userPosted} />
       <TallerSeparator />
-      <ContactInfo update={handleUpdate} />
+      <ContactInfo update={handleUpdate} userPosted={userPosted} />
     </form>
   );
 }

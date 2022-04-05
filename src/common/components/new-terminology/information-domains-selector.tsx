@@ -5,7 +5,7 @@ import { useBreakpoints } from '../media-query/media-query-context';
 import { useGetGroupsQuery } from '../terminology-search/terminology-search.slice';
 import { BlankFieldset, MultiselectSmBot } from './new-terminology.styles';
 
-export default function InformationDomainsSelector({ update }: any) {
+export default function InformationDomainsSelector({ update, userPosted }: any) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const { data: informationDomains } = useGetGroupsQuery(i18n.language);
@@ -47,6 +47,7 @@ export default function InformationDomainsSelector({ update }: any) {
         visualPlaceholder={t('info-domains-placeholder')}
         onItemSelectionsChange={(e) => setSelectedInfoDomains(e)}
         isSmall={isSmall}
+        status={(userPosted && selectedInfoDomains.length === 0) ? 'error' : 'default'}
       />
     </BlankFieldset>
   );

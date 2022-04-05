@@ -9,7 +9,7 @@ import {
   TextInputSmBot,
 } from './new-terminology.styles';
 
-export default function Prefix({ update }: any) {
+export default function Prefix({ update, userPosted }: any) {
   const URI = 'http://uri.suomi.fi/';
   const randomURL = 'abcde56789';
 
@@ -77,7 +77,7 @@ export default function Prefix({ update }: any) {
           onChange={(e) => handleCustomChange(e as string)}
           debounce={300}
           isSmall={isSmall}
-          status={status}
+          status={(status === 'error' || (userPosted && !prefix)) ? 'error' : 'default'}
           statusText={
             status === 'error'
               ?

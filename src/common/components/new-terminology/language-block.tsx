@@ -12,7 +12,7 @@ interface LanguageBlockProps {
   isSmall: boolean;
   terminologyNames: TerminologyName[];
   setTerminologyNames: Dispatch<SetStateAction<TerminologyName[]>>;
-  isError?: boolean;
+  userPosted: boolean;
 }
 
 export default function LanguageBlock({
@@ -20,11 +20,11 @@ export default function LanguageBlock({
   isSmall,
   terminologyNames,
   setTerminologyNames,
-  isError,
+  userPosted,
 }: LanguageBlockProps) {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [status, setStatus] = useState<'default' | 'error'>(isError ? 'error' : 'default');
+  const [status, setStatus] = useState<'default' | 'error'>(userPosted ? 'error' : 'default');
 
   useEffect(() => {
     setTerminologyNames([

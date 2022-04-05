@@ -57,10 +57,10 @@ export default function NewTerminology() {
     setStartFileUpload(false);
   };
 
-  const handlePost = (manualData: NewTerminologyInfo) => {
+  const handlePost = (manualData?: NewTerminologyInfo) => {
     setUserPosted(true);
-    if (!isValid) {
-      console.log('not valid');
+    if (!isValid || !manualData) {
+      console.error('Data not valid');
       return;
     }
     const newTerminology = generateNewTerminology({ data: manualData });
@@ -98,7 +98,7 @@ export default function NewTerminology() {
           {/* <Button disabled={!isValid} onClick={() => setStartFileUpload(true)}> */}
 
           {
-            userPosted
+            (userPosted && manualData)
             &&
             <MissingInfoAlert data={manualData} />
           }
@@ -131,7 +131,9 @@ export default function NewTerminology() {
           <RadioButton value="file">{t('by-file')}</RadioButton>
         </RadioButtonGroup>
 
-        {inputType === 'self' && <InfoManual setIsValid={setIsValid} setManualData={setManualData} />}
+        {inputType === 'self'
+          &&
+          <InfoManual setIsValid={setIsValid} setManualData={setManualData} userPosted={userPosted} />}
         {inputType === 'file' && <InfoFile setIsValid={setIsValid} />}
       </>
     );

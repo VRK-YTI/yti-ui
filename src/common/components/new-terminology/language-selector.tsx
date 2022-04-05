@@ -11,7 +11,7 @@ export interface TerminologyName {
   description: string;
 }
 
-export default function LanguageSelector({ update }: any) {
+export default function LanguageSelector({ update, userPosted }: any) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const [selectedLanguages, setSelectedLanguages] = useState<MultiSelectData[]>(
@@ -85,6 +85,7 @@ export default function LanguageSelector({ update }: any) {
         visualPlaceholder={t('languages-visual-placeholder')}
         onItemSelectionsChange={(e) => handleSelectedLanguagesChange(e)}
         isSmall={isSmall}
+        status={(userPosted && selectedLanguages.length === 0) ? 'error' : 'default'}
       />
 
       {selectedLanguages.map((language, idx) => (
@@ -93,6 +94,7 @@ export default function LanguageSelector({ update }: any) {
           isSmall={isSmall}
           terminologyNames={terminologyNames}
           setTerminologyNames={setTerminologyNames}
+          userPosted={userPosted}
           key={`${language}-${idx}`}
         />
       ))}

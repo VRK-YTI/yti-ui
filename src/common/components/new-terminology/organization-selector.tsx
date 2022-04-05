@@ -17,7 +17,7 @@ import {
   OrgSingleSelect,
 } from './new-terminology.styles';
 
-export default function OrganizationSelector({ update }: any) {
+export default function OrganizationSelector({ update, userPosted }: any) {
   const user = useSelector(selectLogin());
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -72,6 +72,7 @@ export default function OrganizationSelector({ update }: any) {
             onItemSelectionChange={(item) => handleSelectOrganization(item)}
             noItemsText={t('org-no-items')}
             visualPlaceholder={t('org-visual-placeholder')}
+            status={(userPosted && !selectedOrganization) ? 'error' : 'default'}
           />
           <OrgCheckbox
             checked={showOtherOrgSelector}
