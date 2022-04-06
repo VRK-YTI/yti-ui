@@ -45,6 +45,11 @@
   "RETIRED": "Retired",
   "SUPERSEDED": "Superseded",
   "INVALID": "Invalid",
+  "ADMIN": "Admin",
+  "DATA_MODEL_EDITOR": "Data model editor",
+  "TERMINOLOGY_EDITOR": "Terminology editor",
+  "CODE_LIST_EDITOR": "Code list editor",
+  "MEMBER": "Member",
   "filter-status-valid": "Valid ({{count}} item)",
   "filter-status-valid_plural": "Valid ({{count}} items)",
   "filter-status-draft": "Draft ({{count}} item)",
@@ -127,5 +132,6 @@
   "email-subscription-description": "Receive email notifications of changes made to this terminology.",
   "email-subscription-add": "Add email subscription",
   "email-subscription-delete": "Delete email subscription",
-  "email-subscription-subscribed": "Subscription added"
+  "email-subscription-subscribed": "Subscription added",
+  "email-subscription-unsubscribed": "Unsubscribed succesfully"
 }

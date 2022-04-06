@@ -19,12 +19,18 @@ import Separator from '@app/common/components/separator';
 import { useGetOrganizationsQuery } from '@app/common/components/terminology-search/terminology-search.slice';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import _ from 'lodash';
+import AccessRequest from '../../common/components/access-request';
+import SubscriptionBlock from './subscription-block';
+import EmailNotificationsBlock from './email-notifications-block';
+import { useGetSubscriptionsQuery } from '../../common/components/subscription/subscription.slice';
 
 export default function OwnInformation() {
   const user = useSelector(selectLogin());
   const { breakpoint } = useBreakpoints();
   const { t, i18n } = useTranslation('own-information');
   const { data: organizations } = useGetOrganizationsQuery(i18n.language);
+  const { data: subscriptions, refetch: refetchSubscriptions } =
+    useGetSubscriptionsQuery(null);
 
   const titleRef = useRef<HTMLHeadingElement>(null);
   useEffect(() => {
@@ -68,6 +74,24 @@ export default function OwnInformation() {
           >
             {renderOrganizationsAndRoles()}
           </BasicBlock>
+
+          <BasicBlock>
+            <AccessRequest organizations={organizations} />
+          </BasicBlock>
+
+          <Separator isLarge />
+
+          <EmailNotificationsBlock
+            subscriptions={subscriptions}
+            refetchSubscriptions={refetchSubscriptions}
+          />
+
+          {subscriptions && (
+            <SubscriptionBlock
+              subscriptions={subscriptions}
+              refetchSubscriptions={refetchSubscriptions}
+            />
+          )}
         </MainContent>
       </PageContent>
     </>
@@ -96,7 +120,7 @@ export default function OwnInformation() {
                 </OrganizationAndRolesHeading>
                 <ul>
                   {roles.map((role) => (
-                    <li key={role}>{role}</li>
+                    <li key={role}>{t(role, { ns: 'common' })}</li>
                   ))}
                 </ul>
               </OrganizationAndRolesItem>

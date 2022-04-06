@@ -1,7 +1,10 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import axiosBaseQuery from '@app/common/components/axios-base-query';
 import { HYDRATE } from 'next-redux-wrapper';
-import { Subscription } from '@app/common/interfaces/subscription.interface';
+import {
+  Subscription,
+  Subscriptions,
+} from '@app/common/interfaces/subscription.interface';
 
 export const subscriptionApi = createApi({
   reducerPath: 'subsriptionApi',
@@ -30,11 +33,54 @@ export const subscriptionApi = createApi({
         },
       }),
     }),
+    getSubscriptions: builder.query<Subscriptions, null>({
+      query: () => ({
+        url:
+          process.env.NODE_ENV === 'development'
+            ? '/user?fake.login.mail=admin@localhost'
+            : '/user',
+        method: 'GET',
+      }),
+    }),
+    toggleSubscription: builder.mutation<
+      Subscription,
+      { action: 'DELETE' | 'ADD'; uri: string }
+    >({
+      query: (params) => ({
+        url:
+          process.env.NODE_ENV === 'development'
+            ? '/subscriptions?fake.login.mail=admin@localhost'
+            : '/subscriptions',
+        method: 'POST',
+        data: {
+          action: params.action,
+          type: 'terminology',
+          uri: params.uri,
+        },
+      }),
+      invalidatesTags: ['Subscription'],
+    }),
+    toggleSubscriptions: builder.mutation<Subscriptions, 'DAILY' | 'DISABLED'>({
+      query: (subscriptionType) => ({
+        url:
+          process.env.NODE_ENV === 'development'
+            ? '/user/subscriptiontype?fake.login.mail=admin@localhost'
+            : '/user/subscriptiontype',
+        method: 'POST',
+        data: {
+          subscriptionType: subscriptionType,
+        },
+      }),
+      invalidatesTags: ['Subscription'],
+    }),
   }),
 });
 
 export const {
   useGetSubscriptionQuery,
+  useGetSubscriptionsQuery,
+  useToggleSubscriptionMutation,
+  useToggleSubscriptionsMutation,
   util: { getRunningOperationPromises },
 } = subscriptionApi;
 

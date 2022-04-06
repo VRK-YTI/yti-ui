@@ -45,6 +45,11 @@
   "RETIRED": "Poistettu käytöstä",
   "SUPERSEDED": "Korvattu",
   "INVALID": "Virheellinen",
+  "ADMIN": "Ylläpitäjä",
+  "DATA_MODEL_EDITOR": "Tietomallintaja",
+  "TERMINOLOGY_EDITOR": "Sanastotyöntekijä",
+  "CODE_LIST_EDITOR": "Koodistotyöntekijä",
+  "MEMBER": "Jäsen",
   "filter-status-valid": "Voimassa oleva ({{count}} kpl)",
   "filter-status-draft": "Luonnos ({{count}} kpl)",
   "filter-status-retired": "Poistettu käytöstä ({{count}} kpl)",
@@ -120,5 +125,6 @@
   "email-subscription-description": "Kun tilaat ilmoitukset, saat tietoja aineiston muutoksista sähköpostilla.",
   "email-subscription-add": "Tilaa ilmoitukset",
   "email-subscription-delete": "Poista ilmoitukset",
-  "email-subscription-subscribed": "Ilmoitukset tilattu onnistuneesti"
+  "email-subscription-subscribed": "Ilmoitukset tilattu onnistuneesti",
+  "email-subscription-unsubscribed": "Ilmoitukset poistettu onnistuneesti"
 }

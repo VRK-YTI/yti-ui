@@ -1,9 +1,12 @@
 import styled from 'styled-components';
 import { Button } from 'suomifi-ui-components';
 
-export const StyledButton = styled(Button)<{ color?: string }>`
-  width: 44px;
-  height: 44px;
+export const StyledButton = styled(Button)<{
+  color?: string;
+  isLarge?: boolean;
+}>`
+  width: ${(props) => (props.isLarge ? '44px' : '40px')};
+  height: ${(props) => (props.isLarge ? '44px' : '40px')};
   padding: 0;
   display: flex;
   align-items: center;
@@ -11,7 +14,7 @@ export const StyledButton = styled(Button)<{ color?: string }>`
 
   svg {
     color: ${(props) => props.color ?? props.theme.suomifi.colors.blackBase};
-    height: 24px;
-    width: 24px;
+    height: ${(props) => (props.isLarge ? '24px' : '16px')};
+    width: ${(props) => (props.isLarge ? '24px' : '16px')};
   }
 `;

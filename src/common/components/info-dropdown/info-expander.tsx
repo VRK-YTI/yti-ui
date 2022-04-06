@@ -94,7 +94,9 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
               title={t('email-subscription')}
               extra={
                 <BasicBlockExtraWrapper>
-                  <Subscription uri={data.uri} />
+                  <Subscription
+                    uri={data.uri?.replace(/\/terminological[\w-]+/g, '/')}
+                  />
                 </BasicBlockExtraWrapper>
               }
             >

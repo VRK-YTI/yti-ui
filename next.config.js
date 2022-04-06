@@ -12,7 +12,10 @@ module.exports = (phase, { defaultConfig }) => {
   }
 
   let config = {
-    reactStrictMode: false,
+    compiler: {
+      styledComponents: true,
+    },
+    reactStrictMode: true,
     i18n,
     eslint: {
       dirs: ['src'],
@@ -46,8 +49,7 @@ module.exports = (phase, { defaultConfig }) => {
           },
           {
             source: '/messaging-api/:path*',
-            destination:
-              'http://sanastot.dev.yti.cloud.vrk.fi/messaging-api/:path*',
+            destination: 'http://localhost:9801/messaging-api/:path*',
           },
         ];
       },
