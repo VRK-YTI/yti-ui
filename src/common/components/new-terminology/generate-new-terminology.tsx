@@ -7,6 +7,10 @@ interface GenerateNewTerminologyProps {
 }
 
 export default function generateNewTerminology({ data }: GenerateNewTerminologyProps) {
+  if (!data.mainOrg) {
+    return;
+  }
+
   const postData = Object.assign({}, template);
   const regex = '(?s)^.*$';
   console.log(data);

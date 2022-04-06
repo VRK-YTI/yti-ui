@@ -4,8 +4,14 @@ import { MultiSelectData } from 'suomifi-ui-components';
 import { useBreakpoints } from '../media-query/media-query-context';
 import { useGetGroupsQuery } from '../terminology-search/terminology-search.slice';
 import { BlankFieldset, MultiselectSmBot } from './new-terminology.styles';
+import { UpdateTerminology } from './update-terminology.interface';
 
-export default function InformationDomainsSelector({ update, userPosted }: any) {
+interface InformationDomainsSelectorProps {
+  update: ({ key, data }: UpdateTerminology) => void;
+  userPosted: boolean;
+}
+
+export default function InformationDomainsSelector({ update, userPosted }: InformationDomainsSelectorProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const { data: informationDomains } = useGetGroupsQuery(i18n.language);
@@ -14,7 +20,7 @@ export default function InformationDomainsSelector({ update, userPosted }: any) 
   >([]);
 
   useEffect(() => {
-    update('infoDomains', selectedInfoDomains);
+    update({ key: 'infoDomains', data: selectedInfoDomains });
   }, [selectedInfoDomains]);
 
   const infoDomains: MultiSelectData[] = informationDomains?.map(

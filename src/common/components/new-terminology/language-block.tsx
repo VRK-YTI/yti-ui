@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MultiSelectData, Paragraph, Text } from 'suomifi-ui-components';
 import { TerminologyName } from './language-selector';
 import {
@@ -11,7 +11,7 @@ interface LanguageBlockProps {
   lang: MultiSelectData;
   isSmall: boolean;
   terminologyNames: TerminologyName[];
-  setTerminologyNames: Dispatch<SetStateAction<TerminologyName[]>>;
+  setTerminologyNames: (value: TerminologyName[]) => void;
   userPosted: boolean;
 }
 

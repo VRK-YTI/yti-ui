@@ -4,8 +4,14 @@ import { useBreakpoints } from '../media-query/media-query-context';
 import { BlankFieldset, BlankLegend, TextInputSmBot } from './new-terminology.styles';
 import isEmail from 'validator/lib/isEmail';
 import { useTranslation } from 'next-i18next';
+import { UpdateTerminology } from './update-terminology.interface';
 
-export default function ContactInfo({ update, userPosted }: any) {
+interface ContactInfoProps {
+  update: ({ key, data }: UpdateTerminology) => void;
+  userPosted: boolean;
+}
+
+export default function ContactInfo({ update, userPosted }: ContactInfoProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const [contact, setContact] = useState('');
@@ -14,10 +20,10 @@ export default function ContactInfo({ update, userPosted }: any) {
   const validateContact = () => {
     if (contact !== '' && !isEmail(contact)) {
       setStatus('error');
-      update('contact', [contact, false]);
+      update({ key: 'contact', data: [contact, false] });
     } else {
       setStatus('default');
-      update('contact', [contact, contact !== '']);
+      update({ key: 'contact', data: [contact, contact !== ''] });
     }
   };
 

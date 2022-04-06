@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import {
   Button,
-  InlineAlert,
   Modal,
   ModalContent,
   ModalFooter,
@@ -63,10 +62,16 @@ export default function NewTerminology() {
       console.error('Data not valid');
       return;
     }
+
     const newTerminology = generateNewTerminology({ data: manualData });
+
+    if (!newTerminology) {
+      console.error('Main organization missing');
+      return;
+    }
+
     const templateGraphID = newTerminology.type.graph.id;
     const prefix = manualData.prefix[0];
-    console.log(newTerminology);
     postNewVocabulary({ templateGraphID, prefix, newTerminology });
   };
 

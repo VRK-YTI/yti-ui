@@ -8,8 +8,14 @@ import {
   RadioButtonGroupSmBot,
   TextInputSmBot,
 } from './new-terminology.styles';
+import { UpdateTerminology } from './update-terminology.interface';
 
-export default function Prefix({ update, userPosted }: any) {
+export interface PrefixProps {
+  update: ({ key, data }: UpdateTerminology) => void;
+  userPosted: boolean;
+}
+
+export default function Prefix({ update, userPosted }: PrefixProps) {
   const URI = 'http://uri.suomi.fi/';
   const randomURL = 'abcde56789';
 
@@ -21,13 +27,13 @@ export default function Prefix({ update, userPosted }: any) {
   const { data: isInUse } = useGetIfNamespaceInUseQuery(prefix !== '' && prefix);
 
   useEffect(() => {
-    update('prefix', [prefix, true]);
+    update({ key: 'prefix', data: [prefix, true] });
   }, []);
 
   useEffect(() => {
     if (isInUse) {
       setStatus('error');
-      update('prefix', [prefix, false]);
+      update({ key: 'prefix', data: [prefix, false] });
     }
   }, [isInUse]);
 
@@ -35,10 +41,10 @@ export default function Prefix({ update, userPosted }: any) {
     setPrefixType(value);
     if (value !== 'manual') {
       setPrefix(randomURL);
-      update('prefix', [randomURL, true]);
+      update({ key: 'prefix', data: [randomURL, true] });
     } else {
       setPrefix('');
-      update('prefix', ['', false]);
+      update({ key: 'prefix', data: ['', false] });
     }
   };
 
@@ -48,13 +54,13 @@ export default function Prefix({ update, userPosted }: any) {
 
     if (inputOnlyValid?.length !== e.length) {
       setStatus('error');
-      update('prefix', [e, false]);
+      update({key: 'prefix', data: [e, false]});
       return;
     } else if (status !== 'default') {
       setStatus('default');
     }
 
-    update('prefix', [e, e !== '']);
+    update({key: 'prefix', data: [e, e !== '']});
   };
 
   return (
@@ -82,8 +88,8 @@ export default function Prefix({ update, userPosted }: any) {
             status === 'error'
               ?
               isInUse
-              ? t('prefix-taken')
-              : t('prefix-invalid')
+                ? t('prefix-taken')
+                : t('prefix-invalid')
               : ''
           }
         />

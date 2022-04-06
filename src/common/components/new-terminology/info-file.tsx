@@ -15,7 +15,7 @@ interface infoFileProps {
 
 export default function InfoFile({ setIsValid }: infoFileProps) {
   const input = useRef(null);
-  const [file, setFile] = useState<DataTransferItem | null>(null);
+  const [file, setFile] = useState<File | null>(null);
 
   useEffect(() => {
     if (file) {
@@ -33,10 +33,14 @@ export default function InfoFile({ setIsValid }: infoFileProps) {
     }
 
     const droppedItems = e.dataTransfer.items;
+    if (droppedItems.length === 0) {
+      return;
+    }
 
     for (let i = 0; i < droppedItems.length; i++) {
-      if (droppedItems[i].getAsFile().name.endsWith('xlsx')) {
-        setFile(droppedItems[i].getAsFile());
+      const droppedItemAsFile = droppedItems[i].getAsFile();
+      if (droppedItemAsFile && droppedItemAsFile?.name.endsWith('xlsx')) {
+        setFile(droppedItemAsFile);
         break;
       }
     }
@@ -49,7 +53,7 @@ export default function InfoFile({ setIsValid }: infoFileProps) {
 
     for (let i = 0; i < selectedItems.length; i++) {
       if (selectedItems[i].name.endsWith('xlsx')) {
-        setFile(selectedItems[i]);
+        setFile(selectedItems[i].getAsFile());
         break;
       }
     }
@@ -78,7 +82,7 @@ export default function InfoFile({ setIsValid }: infoFileProps) {
               icon="plus"
               variant="secondary"
               onClick={() => {
-                input.current.click();
+                // input.current.click();
               }}
             >
               Lisää tiedosto

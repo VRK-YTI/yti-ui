@@ -14,7 +14,7 @@ export interface NewTerminologyInfo {
     name: string;
     uniqueItemId: string;
   }[];
-  mainOrg: {
+  mainOrg?: {
     labelText: string;
     name: string;
     organizationId: string;
@@ -27,4 +27,5 @@ export interface NewTerminologyInfo {
     uniqueItemId: string;
   }[];
   prefix: [string, boolean];
+  type: string;
 }

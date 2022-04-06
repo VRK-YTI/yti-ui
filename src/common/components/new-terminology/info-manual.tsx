@@ -9,16 +9,18 @@ import Prefix from './prefix';
 import TypeSelector from './type-selector';
 import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info';
 import { useTranslation } from 'next-i18next';
+import { TerminologyDataInitialState } from './terminology-initial-state';
+import { UpdateTerminology } from './update-terminology.interface';
 
 interface InfoManualProps {
   setIsValid: (valid: boolean) => void;
-  setManualData: (object: any) => void;
+  setManualData: (object: NewTerminologyInfo) => void;
   userPosted: boolean;
 }
 
 export default function InfoManual({ setIsValid, setManualData, userPosted }: InfoManualProps) {
   const { t } = useTranslation('admin');
-  const [terminologyData, setTerminologyData] = useState<NewTerminologyInfo>();
+  const [terminologyData, setTerminologyData] = useState<NewTerminologyInfo>(TerminologyDataInitialState);
 
   useEffect(() => {
     if (!terminologyData) {
@@ -30,15 +32,15 @@ export default function InfoManual({ setIsValid, setManualData, userPosted }: In
     if (Object.keys(terminologyData).length < 7) {
       valid = false;
     } else {
-      Object.keys(terminologyData).forEach((k) => {
-        if (k === 'otherOrgs') {
+      Object.entries(terminologyData).forEach(([key, value]) => {
+        if (key === 'otherOrgs') {
           return;
         }
 
         if (
-          !terminologyData[k] ||
-          terminologyData[k].length < 1 ||
-          terminologyData[k][1] === false
+          !value ||
+          value.length < 1 ||
+          value[1] === false
         ) {
           valid = false;
         }
@@ -49,7 +51,8 @@ export default function InfoManual({ setIsValid, setManualData, userPosted }: In
     setManualData(terminologyData);
   }, [terminologyData, setIsValid, setManualData]);
 
-  const handleUpdate = (key: string, data: any) => {
+  const handleUpdate = ({ key, data }: UpdateTerminology) => {
+    console.log('data', data);
     setTerminologyData((values) => ({ ...values, [key]: data }));
   };
 

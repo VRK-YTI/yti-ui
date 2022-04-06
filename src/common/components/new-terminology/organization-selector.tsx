@@ -16,8 +16,14 @@ import {
   OrgCheckbox,
   OrgSingleSelect,
 } from './new-terminology.styles';
+import { UpdateTerminology } from './update-terminology.interface';
 
-export default function OrganizationSelector({ update, userPosted }: any) {
+export interface OrganizationSelectorProps {
+  update: ({ key, data }: UpdateTerminology) => void;
+  userPosted: boolean;
+}
+
+export default function OrganizationSelector({ update, userPosted }: OrganizationSelectorProps) {
   const user = useSelector(selectLogin());
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -31,8 +37,8 @@ export default function OrganizationSelector({ update, userPosted }: any) {
     useState<boolean>(false);
 
   useEffect(() => {
-    update('mainOrg', selectedOrganization);
-    update('otherOrgs', selectedOtherOrganizations);
+    update({ key: 'mainOrg', data: selectedOrganization });
+    update({ key: 'otherOrgs', data: selectedOtherOrganizations });
   }, [selectedOrganization, selectedOtherOrganizations]);
 
   const adminOrgs: SingleSelectData[] = organizations?.map((org) => {

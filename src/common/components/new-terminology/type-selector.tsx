@@ -2,13 +2,18 @@ import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import { RadioButton } from 'suomifi-ui-components';
 import { BlankFieldset, RadioButtonGroupSmBot } from './new-terminology.styles';
+import { UpdateTerminology } from './update-terminology.interface';
 
-export default function TypeSelector({ update }: any) {
+export interface TypeSelectorProps {
+  update: ({ key, data }: UpdateTerminology) => void;
+}
+
+export default function TypeSelector({ update }: TypeSelectorProps) {
   const { t } = useTranslation('admin');
   const [selectedType, setSelectedType] = useState('terminology');
 
   useEffect(() => {
-    update('type', selectedType);
+    update({ key: 'type', data: selectedType });
   }, [selectedType]);
 
   return (

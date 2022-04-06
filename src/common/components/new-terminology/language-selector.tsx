@@ -4,6 +4,7 @@ import { MultiSelectData, Paragraph, Text } from 'suomifi-ui-components';
 import { useBreakpoints } from '../media-query/media-query-context';
 import LanguageBlock from './language-block';
 import { BlankFieldset, BlankLegend, MultiselectSmBot } from './new-terminology.styles';
+import { UpdateTerminology } from './update-terminology.interface';
 
 export interface TerminologyName {
   lang: string;
@@ -11,7 +12,12 @@ export interface TerminologyName {
   description: string;
 }
 
-export default function LanguageSelector({ update, userPosted }: any) {
+export interface LanguageSelectorProps {
+  update: ({ key, data }: UpdateTerminology) => void;
+  userPosted: boolean;
+}
+
+export default function LanguageSelector({ update, userPosted }: LanguageSelectorProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const [selectedLanguages, setSelectedLanguages] = useState<MultiSelectData[]>(
@@ -40,10 +46,12 @@ export default function LanguageSelector({ update, userPosted }: any) {
   ];
 
   useEffect(() => {
-    update('description', [
-      terminologyNames,
-      !terminologyNames.find((t) => !t.name),
-    ]);
+    update({
+      key: 'description', data: [
+        terminologyNames,
+        !terminologyNames.find((t) => !t.name),
+      ]
+    });
   }, [terminologyNames]);
 
   const handleSelectedLanguagesChange = (e: MultiSelectData[]) => {
