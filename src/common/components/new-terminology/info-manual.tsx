@@ -18,9 +18,15 @@ interface InfoManualProps {
   userPosted: boolean;
 }
 
-export default function InfoManual({ setIsValid, setManualData, userPosted }: InfoManualProps) {
+export default function InfoManual({
+  setIsValid,
+  setManualData,
+  userPosted,
+}: InfoManualProps) {
   const { t } = useTranslation('admin');
-  const [terminologyData, setTerminologyData] = useState<NewTerminologyInfo>(TerminologyDataInitialState);
+  const [terminologyData, setTerminologyData] = useState<NewTerminologyInfo>(
+    TerminologyDataInitialState
+  );
 
   useEffect(() => {
     if (!terminologyData) {
@@ -37,11 +43,7 @@ export default function InfoManual({ setIsValid, setManualData, userPosted }: In
           return;
         }
 
-        if (
-          !value ||
-          value.length < 1 ||
-          value[1] === false
-        ) {
+        if (!value || value.length < 1 || value[1] === false) {
           valid = false;
         }
       });
@@ -65,7 +67,10 @@ export default function InfoManual({ setIsValid, setManualData, userPosted }: In
       </Paragraph>
       <OrganizationSelector update={handleUpdate} userPosted={userPosted} />
       <TypeSelector update={handleUpdate} />
-      <InformationDomainsSelector update={handleUpdate} userPosted={userPosted} />
+      <InformationDomainsSelector
+        update={handleUpdate}
+        userPosted={userPosted}
+      />
       <Prefix update={handleUpdate} userPosted={userPosted} />
       <TallerSeparator />
       <ContactInfo update={handleUpdate} userPosted={userPosted} />

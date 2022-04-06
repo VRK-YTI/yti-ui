@@ -7,5 +7,5 @@ export const TerminologyDataInitialState: NewTerminologyInfo = {
   mainOrg: undefined,
   otherOrgs: [],
   prefix: ['', true],
-  type: 'terminology'
+  type: 'terminology',
 };

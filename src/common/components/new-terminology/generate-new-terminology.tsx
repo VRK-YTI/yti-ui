@@ -6,7 +6,9 @@ interface GenerateNewTerminologyProps {
   data: NewTerminologyInfo;
 }
 
-export default function generateNewTerminology({ data }: GenerateNewTerminologyProps) {
+export default function generateNewTerminology({
+  data,
+}: GenerateNewTerminologyProps) {
   if (!data.mainOrg) {
     return;
   }
@@ -24,18 +26,18 @@ export default function generateNewTerminology({ data }: GenerateNewTerminologyP
     {
       lang: '',
       regex: regex,
-      value: data.contact[0]
-    }
+      value: data.contact[0],
+    },
   ];
 
-  data.description[0].map(desc => {
+  data.description[0].map((desc) => {
     postData.properties.description = [
       ...postData.properties.description,
       {
         lang: desc.lang,
         regex: regex,
-        value: desc.description
-      }
+        value: desc.description,
+      },
     ];
 
     postData.properties.prefLabel = [
@@ -44,7 +46,7 @@ export default function generateNewTerminology({ data }: GenerateNewTerminologyP
         lang: desc.lang,
         regex: regex,
         value: desc.name,
-      }
+      },
     ];
 
     postData.properties.language = [
@@ -53,7 +55,7 @@ export default function generateNewTerminology({ data }: GenerateNewTerminologyP
         lang: '',
         regex: regex,
         value: desc.lang,
-      }
+      },
     ];
   });
 
@@ -64,12 +66,12 @@ export default function generateNewTerminology({ data }: GenerateNewTerminologyP
         graph: {
           id: data.mainOrg.organizationId,
         },
-        id: 'Organization'
-      }
-    }
+        id: 'Organization',
+      },
+    },
   ];
 
-  data.infoDomains.map(infoDomain => {
+  data.infoDomains.map((infoDomain) => {
     postData.references.inGroup = [
       ...postData.references.inGroup,
       {
@@ -78,9 +80,9 @@ export default function generateNewTerminology({ data }: GenerateNewTerminologyP
           graph: {
             id: infoDomain.groupId,
           },
-          id: 'Group'
-        }
-      }
+          id: 'Group',
+        },
+      },
     ];
   });
 

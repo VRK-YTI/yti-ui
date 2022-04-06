@@ -69,21 +69,21 @@ export const vocabularyApi = createApi({
       query: ({ templateGraphID, prefix, newTerminology }) => ({
         url: `/vocabulary?templateGraphId=${templateGraphID}&prefix=${prefix}`,
         method: 'POST',
-        data: newTerminology
-      })
+        data: newTerminology,
+      }),
     }),
     deleteVocabulary: builder.mutation<any, any>({
       query: (uuid) => ({
         url: `/vocabulary?graphId=${uuid}`,
-        method: 'DELETE'
-      })
+        method: 'DELETE',
+      }),
     }),
     getIfNamespaceInUse: builder.query<any, any>({
       query: (prefix) => ({
         url: `/namespaceInUse?prefix=${prefix}`,
-        method: 'GET'
-      })
-    })
+        method: 'GET',
+      }),
+    }),
   }),
 });
 

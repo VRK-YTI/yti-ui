@@ -26,7 +26,9 @@ export default function LanguageBlock({
   const { t } = useTranslation('admin');
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [status, setStatus] = useState<'default' | 'error'>(userPosted ? 'error' : 'default');
+  const [status, setStatus] = useState<'default' | 'error'>(
+    userPosted ? 'error' : 'default'
+  );
 
   useEffect(() => {
     setTerminologyNames([
@@ -34,8 +36,8 @@ export default function LanguageBlock({
       {
         lang: lang.uniqueItemId,
         name: '',
-        description: ''
-      }
+        description: '',
+      },
     ]);
   }, []);
 
@@ -74,9 +76,7 @@ export default function LanguageBlock({
         isSmall={isSmall}
         onChange={(e) => setName(e as string)}
         status={status}
-        statusText={
-          status === 'error' ? t('terminology-name-error') : ''
-        }
+        statusText={status === 'error' ? t('terminology-name-error') : ''}
       />
       <TextareaSmBot
         labelText={t('terminology-description')}

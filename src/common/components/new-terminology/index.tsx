@@ -42,7 +42,7 @@ export default function NewTerminology() {
       setShowModal(false);
       dispatch(terminologySearchApi.util.invalidateTags(['TerminologySearch']));
     }
-  }, [newVocabulary]);
+  }, [newVocabulary, dispatch]);
 
   if (!user.superuser) {
     return null;
@@ -82,6 +82,7 @@ export default function NewTerminology() {
         variant="secondary"
         fullWidth={isSmall}
         onClick={() => setShowModal(true)}
+        style={{whiteSpace: 'nowrap'}}
       >
         {t('add-new-terminology')}
       </Button>
@@ -93,20 +94,16 @@ export default function NewTerminology() {
       >
         <ModalContent>
           <ModalTitleAsH1 as={'h1'}>
-            {!startFileUpload ? t('add-new-terminology') : t('downloading-file')}
+            {!startFileUpload
+              ? t('add-new-terminology')
+              : t('downloading-file')}
           </ModalTitleAsH1>
 
           {!startFileUpload ? renderInfoInput() : <FileUpload />}
         </ModalContent>
 
         <ModalFooter>
-          {/* <Button disabled={!isValid} onClick={() => setStartFileUpload(true)}> */}
-
-          {
-            (userPosted && manualData)
-            &&
-            <MissingInfoAlert data={manualData} />
-          }
+          {userPosted && manualData && <MissingInfoAlert data={manualData} />}
           <Button onClick={() => handlePost(manualData)}>
             {t('add-terminology')}
           </Button>
@@ -122,13 +119,11 @@ export default function NewTerminology() {
     return (
       <>
         <Paragraph marginBottomSpacing="m">
-          <Text>
-            {t('info-input-description')}
-          </Text>
+          <Text>{t('info-input-description')}</Text>
         </Paragraph>
 
         <RadioButtonGroup
-          labelText="Miten lisäät tietoja?"
+          labelText={t('which-input')}
           name="input-type"
           onChange={(e) => setInputType(e)}
         >
@@ -136,9 +131,13 @@ export default function NewTerminology() {
           <RadioButton value="file">{t('by-file')}</RadioButton>
         </RadioButtonGroup>
 
-        {inputType === 'self'
-          &&
-          <InfoManual setIsValid={setIsValid} setManualData={setManualData} userPosted={userPosted} />}
+        {inputType === 'self' && (
+          <InfoManual
+            setIsValid={setIsValid}
+            setManualData={setManualData}
+            userPosted={userPosted}
+          />
+        )}
         {inputType === 'file' && <InfoFile setIsValid={setIsValid} />}
       </>
     );

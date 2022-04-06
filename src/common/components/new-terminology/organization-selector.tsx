@@ -23,7 +23,10 @@ export interface OrganizationSelectorProps {
   userPosted: boolean;
 }
 
-export default function OrganizationSelector({ update, userPosted }: OrganizationSelectorProps) {
+export default function OrganizationSelector({
+  update,
+  userPosted,
+}: OrganizationSelectorProps) {
   const user = useSelector(selectLogin());
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -78,7 +81,7 @@ export default function OrganizationSelector({ update, userPosted }: Organizatio
             onItemSelectionChange={(item) => handleSelectOrganization(item)}
             noItemsText={t('org-no-items')}
             visualPlaceholder={t('org-visual-placeholder')}
-            status={(userPosted && !selectedOrganization) ? 'error' : 'default'}
+            status={userPosted && !selectedOrganization ? 'error' : 'default'}
           />
           <OrgCheckbox
             checked={showOtherOrgSelector}
@@ -97,7 +100,9 @@ export default function OrganizationSelector({ update, userPosted }: Organizatio
               chipListVisible={true}
               ariaChipActionLabel={t('aria-chip-action-label')}
               ariaSelectedAmountText={t('chosen-other-organizations')}
-              ariaOptionsAvailableText={t('other-orgs-aria-options-available-text')}
+              ariaOptionsAvailableText={t(
+                'other-orgs-aria-options-available-text'
+              )}
               ariaOptionChipRemovedText={t('organization-removed')}
               noItemsText={t('no-other-orgs-available')}
               visualPlaceholder={t('choose-other-orgs')}

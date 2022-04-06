@@ -4,6 +4,7 @@
   "downloading-file": "Downloading file",
   "cancel": "Cancel",
   "info-input-description": "All fields are required unless marked optional",
+  "which-input": "How do you want to add new information?",
   "by-hand": "Fill information by hand",
   "by-file": "Import information with a file",
   "terminology-other-information": "Terminology miscellaneous information",

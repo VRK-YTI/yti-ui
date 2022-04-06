@@ -1,7 +1,11 @@
 import { useState } from 'react';
 import { Paragraph, Text } from 'suomifi-ui-components';
 import { useBreakpoints } from '../media-query/media-query-context';
-import { BlankFieldset, BlankLegend, TextInputSmBot } from './new-terminology.styles';
+import {
+  BlankFieldset,
+  BlankLegend,
+  TextInputSmBot,
+} from './new-terminology.styles';
 import isEmail from 'validator/lib/isEmail';
 import { useTranslation } from 'next-i18next';
 import { UpdateTerminology } from './update-terminology.interface';
@@ -34,9 +38,7 @@ export default function ContactInfo({ update, userPosted }: ContactInfoProps) {
           <Text variant="bold">{t('contact-information')}</Text>
         </Paragraph>
         <Paragraph marginBottomSpacing="m">
-          <Text>
-            {t('contact-information-description')}
-          </Text>
+          <Text>{t('contact-information-description')}</Text>
         </Paragraph>
       </BlankLegend>
 
@@ -48,10 +50,10 @@ export default function ContactInfo({ update, userPosted }: ContactInfoProps) {
         onChange={(e) => setContact(e as string)}
         onBlur={() => validateContact()}
         type="email"
-        status={(status === 'error' || (userPosted && !contact)) ? 'error' : 'default'}
-        statusText={
-          status === 'error' ? t('contact-email-invalid') : ''
+        status={
+          status === 'error' || (userPosted && !contact) ? 'error' : 'default'
         }
+        statusText={status === 'error' ? t('contact-email-invalid') : ''}
       />
     </BlankFieldset>
   );

@@ -24,7 +24,9 @@ export default function Prefix({ update, userPosted }: PrefixProps) {
   const [prefix, setPrefix] = useState(randomURL);
   const [prefixType, setPrefixType] = useState('');
   const [status, setStatus] = useState<'default' | 'error'>('default');
-  const { data: isInUse } = useGetIfNamespaceInUseQuery(prefix !== '' && prefix);
+  const { data: isInUse } = useGetIfNamespaceInUseQuery(
+    prefix !== '' && prefix
+  );
 
   useEffect(() => {
     update({ key: 'prefix', data: [prefix, true] });
@@ -54,13 +56,13 @@ export default function Prefix({ update, userPosted }: PrefixProps) {
 
     if (inputOnlyValid?.length !== e.length) {
       setStatus('error');
-      update({key: 'prefix', data: [e, false]});
+      update({ key: 'prefix', data: [e, false] });
       return;
     } else if (status !== 'default') {
       setStatus('default');
     }
 
-    update({key: 'prefix', data: [e, e !== '']});
+    update({ key: 'prefix', data: [e, e !== ''] });
   };
 
   return (
@@ -83,11 +85,12 @@ export default function Prefix({ update, userPosted }: PrefixProps) {
           onChange={(e) => handleCustomChange(e as string)}
           debounce={300}
           isSmall={isSmall}
-          status={(status === 'error' || (userPosted && !prefix)) ? 'error' : 'default'}
+          status={
+            status === 'error' || (userPosted && !prefix) ? 'error' : 'default'
+          }
           statusText={
             status === 'error'
-              ?
-              isInUse
+              ? isInUse
                 ? t('prefix-taken')
                 : t('prefix-invalid')
               : ''

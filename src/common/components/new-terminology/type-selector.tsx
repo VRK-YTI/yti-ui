@@ -24,7 +24,9 @@ export default function TypeSelector({ update }: TypeSelectorProps) {
         defaultValue="terminology"
         onChange={(e) => setSelectedType(e)}
       >
-        <RadioButton value="terminology">{t('terminological-vocabulary')}</RadioButton>
+        <RadioButton value="terminology">
+          {t('terminological-vocabulary')}
+        </RadioButton>
         <RadioButton value="other">{t('other-vocabulary')}</RadioButton>
       </RadioButtonGroupSmBot>
     </BlankFieldset>

@@ -75,9 +75,14 @@ export default function InfoFile({ setIsValid }: infoFileProps) {
         </Paragraph>
         {file === null ? (
           <>
-            <input type="file" ref={input} style={{ display: 'none' }} onChange={(e) => {
-              handleUpload(e);
-            }} />
+            <input
+              type="file"
+              ref={input}
+              style={{ display: 'none' }}
+              onChange={(e) => {
+                handleUpload(e);
+              }}
+            />
             <Button
               icon="plus"
               variant="secondary"
@@ -94,7 +99,9 @@ export default function InfoFile({ setIsValid }: infoFileProps) {
               <FileInfoStaticIcon icon="genericFile" />
               <div>
                 <Paragraph>
-                  <Text color={'highlightBase'} variant={'bold'}>{file.name}</Text>
+                  <Text color={'highlightBase'} variant={'bold'}>
+                    {file.name}
+                  </Text>
                 </Paragraph>
                 <Paragraph>
                   <Text color={'depthDark1'}>{file.size} KB</Text>
@@ -107,9 +114,7 @@ export default function InfoFile({ setIsValid }: infoFileProps) {
             <FileRemoveButton
               variant="secondaryNoBorder"
               icon="remove"
-              onClick={() =>
-                setFile(null)
-              }
+              onClick={() => setFile(null)}
             >
               Poista
             </FileRemoveButton>

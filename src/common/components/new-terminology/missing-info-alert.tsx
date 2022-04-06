@@ -16,7 +16,7 @@ export default function MissingInfoAlert({ data }: MissingInfoAlertProps) {
 
   if (renderCheck) {
     return (
-      <InlineAlert status='warning' role='alert'>
+      <InlineAlert status="warning" role="alert">
         {t('alert-missing-information')}:
         <MissingInfoAlertUl>
           {renderDescriptionAlerts()}
@@ -25,82 +25,55 @@ export default function MissingInfoAlert({ data }: MissingInfoAlertProps) {
           {renderPrefixAlerts()}
           {renderContactAlerts()}
         </MissingInfoAlertUl>
-      </InlineAlert >
+      </InlineAlert>
     );
   } else {
     return <></>;
   }
 
-
   function renderAlert() {
     if (
-      data.description[0].length === 0
-      ||
-      !data.mainOrg
-      ||
-      data.infoDomains.length === 0
-      ||
-      !data.prefix[0]
-      ||
-      data.prefix[1] === false
-      ||
-      !data.contact?.[0]
-      ||
+      data.description[0].length === 0 ||
+      !data.mainOrg ||
+      data.infoDomains.length === 0 ||
+      !data.prefix[0] ||
+      data.prefix[1] === false ||
+      !data.contact?.[0] ||
       data.contact?.[1] === false
     ) {
       return true;
     }
-
   }
 
   function renderDescriptionAlerts() {
     return (
       <>
-        {
-          data.description[0].length === 0 &&
-          <li>
-            {t('alert-description-languages-undefined')}
-          </li>
-        }
-        {
-          data.description[0]
-            .filter(desc => !desc.name)
-            .map((desc, idx) => {
-              return (
-                <li key={`description-${idx}`}>
-                  {t('alert-description-name-undefined')} {t(desc.lang)}
-                </li>
-              );
-            })
-        }
+        {data.description[0].length === 0 && (
+          <li>{t('alert-description-languages-undefined')}</li>
+        )}
+        {data.description[0]
+          .filter((desc) => !desc.name)
+          .map((desc, idx) => {
+            return (
+              <li key={`description-${idx}`}>
+                {t('alert-description-name-undefined')} {t(desc.lang)}
+              </li>
+            );
+          })}
       </>
     );
   }
 
   function renderOrganizationAlerts() {
-    return (
-      <>
-        {
-          !data.mainOrg
-          &&
-          <li>
-            {t('alert-main-org-undefined')}
-          </li>
-        }
-      </>
-    );
+    return <>{!data.mainOrg && <li>{t('alert-main-org-undefined')}</li>}</>;
   }
 
   function renderInformationDomainAlerts() {
     return (
       <>
-        {
-          data.infoDomains.length === 0
-          &&
-          <li>
-            {t('alert-information-domain-undefined')}
-          </li>
-        }
+        {data.infoDomains.length === 0 && (
+          <li>{t('alert-information-domain-undefined')}</li>
+        )}
       </>
     );
   }
@@ -108,20 +81,10 @@ export default function MissingInfoAlert({ data }: MissingInfoAlertProps) {
   function renderPrefixAlerts() {
     return (
       <>
-        {
-          !data.prefix[0]
-          &&
-          <li>
-            {t('alert-prefix-undefined')}
-          </li>
-        }
-        {
-          data.prefix[1] === false
-          &&
-          <li>
-            {t('alert-prefix-invalid-or-in-use')}
-          </li>
-        }
+        {!data.prefix[0] && <li>{t('alert-prefix-undefined')}</li>}
+        {data.prefix[1] === false && (
+          <li>{t('alert-prefix-invalid-or-in-use')}</li>
+        )}
       </>
     );
   }
@@ -129,22 +92,9 @@ export default function MissingInfoAlert({ data }: MissingInfoAlertProps) {
   function renderContactAlerts() {
     return (
       <>
-        {
-          !data.contact?.[0]
-          &&
-          <li>
-            {t('alert-contact-undefined')}
-          </li>
-        }
-        {
-          data.contact?.[1] === false
-          &&
-          <li>
-            {t('alert-contact-invalid')}
-          </li>
-        }
+        {!data.contact?.[0] && <li>{t('alert-contact-undefined')}</li>}
+        {data.contact?.[1] === false && <li>{t('alert-contact-invalid')}</li>}
       </>
     );
   }
-
 }

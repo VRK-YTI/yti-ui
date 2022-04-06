@@ -11,7 +11,10 @@ interface InformationDomainsSelectorProps {
   userPosted: boolean;
 }
 
-export default function InformationDomainsSelector({ update, userPosted }: InformationDomainsSelectorProps) {
+export default function InformationDomainsSelector({
+  update,
+  userPosted,
+}: InformationDomainsSelectorProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const { data: informationDomains } = useGetGroupsQuery(i18n.language);
@@ -53,7 +56,9 @@ export default function InformationDomainsSelector({ update, userPosted }: Infor
         visualPlaceholder={t('info-domains-placeholder')}
         onItemSelectionsChange={(e) => setSelectedInfoDomains(e)}
         isSmall={isSmall}
-        status={(userPosted && selectedInfoDomains.length === 0) ? 'error' : 'default'}
+        status={
+          userPosted && selectedInfoDomains.length === 0 ? 'error' : 'default'
+        }
       />
     </BlankFieldset>
   );

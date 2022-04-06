@@ -45,7 +45,7 @@ export const terminologySearchApi = createApi({
           pageFrom: Math.max(0, (value.urlState.page - 1) * 10),
         },
       }),
-      providesTags: ['TerminologySearch']
+      providesTags: ['TerminologySearch'],
     }),
     getGroups: builder.query<GroupSearchResult[], string>({
       query: (value) => ({

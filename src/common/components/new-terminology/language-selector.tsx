@@ -3,7 +3,11 @@ import { useEffect, useState } from 'react';
 import { MultiSelectData, Paragraph, Text } from 'suomifi-ui-components';
 import { useBreakpoints } from '../media-query/media-query-context';
 import LanguageBlock from './language-block';
-import { BlankFieldset, BlankLegend, MultiselectSmBot } from './new-terminology.styles';
+import {
+  BlankFieldset,
+  BlankLegend,
+  MultiselectSmBot,
+} from './new-terminology.styles';
 import { UpdateTerminology } from './update-terminology.interface';
 
 export interface TerminologyName {
@@ -17,7 +21,10 @@ export interface LanguageSelectorProps {
   userPosted: boolean;
 }
 
-export default function LanguageSelector({ update, userPosted }: LanguageSelectorProps) {
+export default function LanguageSelector({
+  update,
+  userPosted,
+}: LanguageSelectorProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const [selectedLanguages, setSelectedLanguages] = useState<MultiSelectData[]>(
@@ -47,10 +54,8 @@ export default function LanguageSelector({ update, userPosted }: LanguageSelecto
 
   useEffect(() => {
     update({
-      key: 'description', data: [
-        terminologyNames,
-        !terminologyNames.find((t) => !t.name),
-      ]
+      key: 'description',
+      data: [terminologyNames, !terminologyNames.find((t) => !t.name)],
     });
   }, [terminologyNames]);
 
@@ -75,9 +80,7 @@ export default function LanguageSelector({ update, userPosted }: LanguageSelecto
         </Paragraph>
 
         <Paragraph marginBottomSpacing="m">
-          <Text>
-            {t('terminology-languages-description')}
-          </Text>
+          <Text>{t('terminology-languages-description')}</Text>
         </Paragraph>
       </BlankLegend>
 
@@ -93,7 +96,9 @@ export default function LanguageSelector({ update, userPosted }: LanguageSelecto
         visualPlaceholder={t('languages-visual-placeholder')}
         onItemSelectionsChange={(e) => handleSelectedLanguagesChange(e)}
         isSmall={isSmall}
-        status={(userPosted && selectedLanguages.length === 0) ? 'error' : 'default'}
+        status={
+          userPosted && selectedLanguages.length === 0 ? 'error' : 'default'
+        }
       />
 
       {selectedLanguages.map((language, idx) => (
