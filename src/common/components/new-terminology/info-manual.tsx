@@ -52,11 +52,8 @@ export default function InfoManual({ setIsValid, setManualData, userPosted }: In
   }, [terminologyData, setIsValid, setManualData]);
 
   const handleUpdate = ({ key, data }: UpdateTerminology) => {
-    console.log('data', data);
     setTerminologyData((values) => ({ ...values, [key]: data }));
   };
-
-  console.log('terminologyData', terminologyData);
 
   return (
     <form>

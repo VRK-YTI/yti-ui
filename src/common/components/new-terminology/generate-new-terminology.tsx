@@ -13,7 +13,6 @@ export default function generateNewTerminology({ data }: GenerateNewTerminologyP
 
   const postData = Object.assign({}, template);
   const regex = '(?s)^.*$';
-  console.log(data);
 
   const now = new Date();
   const UUID = v4();
@@ -85,7 +84,6 @@ export default function generateNewTerminology({ data }: GenerateNewTerminologyP
     ];
   });
 
-  console.log(postData);
   return postData;
 }
 

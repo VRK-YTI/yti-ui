@@ -4,6 +4,7 @@ import {
   Button,
   Checkbox,
   Icon,
+  ModalTitle,
   MultiSelect,
   RadioButtonGroup,
   SingleSelect,
@@ -135,6 +136,12 @@ export const MissingInfoAlertUl = styled.ul`
   margin: 0;
   margin-top: 6px;
   padding-left: 14px;
+`;
+
+export const ModalTitleAsH1 = styled(ModalTitle)`
+  font-size: 22px;
+  margin-top: 0;
+  margin-bottom: 28px;
 `;
 
 export const MultiselectSmBot = styled(MultiSelect)<{ isSmall: boolean }>`

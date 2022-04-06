@@ -6,7 +6,6 @@ import {
   Modal,
   ModalContent,
   ModalFooter,
-  ModalTitle,
   Paragraph,
   RadioButton,
   RadioButtonGroup,
@@ -23,6 +22,7 @@ import { useStoreDispatch } from '@app/store';
 import { terminologySearchApi } from '../terminology-search/terminology-search.slice';
 import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info';
 import MissingInfoAlert from './missing-info-alert';
+import { ModalTitleAsH1 } from './new-terminology.styles';
 
 export default function NewTerminology() {
   const user = useSelector(selectLogin());
@@ -92,9 +92,9 @@ export default function NewTerminology() {
         onEscKeyDown={() => handleClose()}
       >
         <ModalContent>
-          <ModalTitle>
+          <ModalTitleAsH1 as={'h1'}>
             {!startFileUpload ? t('add-new-terminology') : t('downloading-file')}
-          </ModalTitle>
+          </ModalTitleAsH1>
 
           {!startFileUpload ? renderInfoInput() : <FileUpload />}
         </ModalContent>
