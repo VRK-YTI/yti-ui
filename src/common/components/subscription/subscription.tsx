@@ -9,7 +9,6 @@ import {
   useGetSubscriptionQuery,
   useToggleSubscriptionMutation,
 } from './subscription.slice';
-import { Icon } from '../suomifi-7-tweaks/icon';
 import InlineAlert from '../inline-alert';
 
 interface SubscriptionProps {
@@ -74,24 +73,15 @@ export default function Subscription({ uri }: SubscriptionProps) {
 
       <Button
         variant="secondary"
-        // message="alertOff"
+        // This is still commented because suomifi-components beta 7.x.1
+        // does not yet have these icons
+        // icon={subscribed ? 'alertOff' : 'alert'}
         onClick={() => handleSubscription(subscribed)}
       >
-        <Icon
-          icon={subscribed ? 'alertOff' : 'alert'}
-          mousePointer
-          color="currentColor"
-          className="fi-button_icon"
-        />
         {subscribed
           ? t('email-subscription-delete')
           : t('email-subscription-add')}
       </Button>
-      {/* <Button variant="secondary" onClick={() => handleSubscription(subscribed)}>
-        {subscribed
-          ? t('email-subscription-delete')
-          : t('email-subscription-add')}
-      </Button> */}
     </>
   );
 }
