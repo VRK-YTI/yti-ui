@@ -82,7 +82,7 @@ export default function NewTerminology() {
         variant="secondary"
         fullWidth={isSmall}
         onClick={() => setShowModal(true)}
-        style={{whiteSpace: 'nowrap'}}
+        style={{ whiteSpace: 'nowrap' }}
       >
         {t('add-new-terminology')}
       </Button>
