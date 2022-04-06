@@ -1,3 +1,4 @@
+import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import { MultiSelectData, Paragraph, Text } from 'suomifi-ui-components';
 import { TerminologyName } from './language-selector';
@@ -22,6 +23,7 @@ export default function LanguageBlock({
   setTerminologyNames,
   userPosted,
 }: LanguageBlockProps) {
+  const { t } = useTranslation('admin');
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [status, setStatus] = useState<'default' | 'error'>(userPosted ? 'error' : 'default');
@@ -67,19 +69,19 @@ export default function LanguageBlock({
         <Text variant="bold">{lang.labelText}</Text>
       </Paragraph>
       <LangTextInput
-        labelText="Sanaston nimi"
-        visualPlaceholder="Kirjoita otsikko"
+        labelText={t('terminology-name')}
+        visualPlaceholder={t('terminology-name-placeholder')}
         isSmall={isSmall}
         onChange={(e) => setName(e as string)}
         status={status}
         statusText={
-          status === 'error' ? 'Sanaston nimi ei voi olla määrittämätön' : ''
+          status === 'error' ? t('terminology-name-error') : ''
         }
       />
       <TextareaSmBot
-        labelText="Kuvaus (valinnainen)"
-        hintText="Laaja kuvaus sanaston sisällöstä, kohderyhmästä, tms."
-        visualPlaceholder="Kirjoita kuvaus"
+        labelText={t('terminology-description')}
+        hintText={t('terminology-description-hint')}
+        visualPlaceholder={t('terminology-description-placeholder')}
         onChange={(e) => setDescription(e.target.value)}
       />
     </LangBlock>

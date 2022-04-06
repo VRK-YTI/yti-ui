@@ -1,4 +1,5 @@
 import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info';
+import { useTranslation } from 'next-i18next';
 import { InlineAlert } from 'suomifi-ui-components';
 import { MissingInfoAlertUl } from './new-terminology.styles';
 
@@ -7,6 +8,7 @@ interface MissingInfoAlertProps {
 }
 
 export default function MissingInfoAlert({ data }: MissingInfoAlertProps) {
+  const { t } = useTranslation('admin');
   const renderCheck = renderAlert();
   if (!data || !renderCheck) {
     return null;
@@ -15,7 +17,7 @@ export default function MissingInfoAlert({ data }: MissingInfoAlertProps) {
   if (renderCheck) {
     return (
       < InlineAlert status='warning' >
-        Puttuvia tietoja:
+        {t('alert-missing-information')}:
         <MissingInfoAlertUl>
           {renderDescriptionAlerts()}
           {renderOrganizationAlerts()}
@@ -57,7 +59,7 @@ export default function MissingInfoAlert({ data }: MissingInfoAlertProps) {
         {
           data.description[0].length === 0 &&
           <li>
-            Sanaston kieliä ei ole määritelty
+            {t('alert-description-languages-undefined')}
           </li>
         }
         {
@@ -66,7 +68,7 @@ export default function MissingInfoAlert({ data }: MissingInfoAlertProps) {
             .map((desc, idx) => {
               return (
                 <li key={`description-${idx}`}>
-                  Sanaston nimi puuttuu kieleltä {desc.lang}
+                  {t('alert-description-name-undefined')} {t(desc.lang)}
                 </li>
               );
             })
@@ -82,7 +84,7 @@ export default function MissingInfoAlert({ data }: MissingInfoAlertProps) {
           !data.mainOrg
           &&
           <li>
-            Sisällöntuottajaa ei ole määritelty
+            {t('alert-main-org-undefined')}
           </li>
         }
       </>
@@ -96,7 +98,7 @@ export default function MissingInfoAlert({ data }: MissingInfoAlertProps) {
           data.infoDomains.length === 0
           &&
           <li>
-            Tietoaluetta ei määritelty
+            {t('alert-information-domain-undefined')}
           </li>
         }
       </>
@@ -110,14 +112,14 @@ export default function MissingInfoAlert({ data }: MissingInfoAlertProps) {
           !data.prefix[0]
           &&
           <li>
-            Tunnusta ei ole määritelty
+            {t('alert-prefix-undefined')}
           </li>
         }
         {
           data.prefix[1] === false
           &&
           <li>
-            Tunnus ei ole oikeassa muodossa tai se on jo käytössä
+            {t('alert-prefix-invalid-or-in-use')}
           </li>
         }
       </>
@@ -131,14 +133,14 @@ export default function MissingInfoAlert({ data }: MissingInfoAlertProps) {
           !data.contact?.[0]
           &&
           <li>
-            Yhteydenotto-osoitetta ei ole määritelty
+            {t('alert-contact-undefined')}
           </li>
         }
         {
           data.contact?.[1] === false
           &&
           <li>
-            Yhteydenotto-osoite ei ole oikeassa muodossa
+            {t('alert-contact-invalid')}
           </li>
         }
       </>
