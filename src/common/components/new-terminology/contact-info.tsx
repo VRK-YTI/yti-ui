@@ -46,7 +46,7 @@ export default function ContactInfo({ update, userPosted }: ContactInfoProps) {
         labelText={t('contact-email')}
         hintText={t('contact-hint-text')}
         visualPlaceholder={t('contact-visual-placeholder')}
-        isSmall={isSmall}
+        issmall={isSmall ? true : undefined}
         onChange={(e) => setContact(e as string)}
         onBlur={() => validateContact()}
         type="email"

@@ -95,7 +95,7 @@ export default function LanguageSelector({
         noItemsText={t('no-languages-available')}
         visualPlaceholder={t('languages-visual-placeholder')}
         onItemSelectionsChange={(e) => handleSelectedLanguagesChange(e)}
-        isSmall={isSmall}
+        issmall={isSmall ? true : undefined}
         status={
           userPosted && selectedLanguages.length === 0 ? 'error' : 'default'
         }

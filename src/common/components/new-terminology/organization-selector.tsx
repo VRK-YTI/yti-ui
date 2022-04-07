@@ -76,7 +76,7 @@ export default function OrganizationSelector({
             hintText={t('org-hint-text')}
             ariaOptionsAvailableText={t('org-aria-options-available-text')}
             clearButtonLabel={t('clear-button-label')}
-            isSmall={isSmall}
+            issmall={isSmall ? true : undefined}
             items={adminOrgs}
             onItemSelectionChange={(item) => handleSelectOrganization(item)}
             noItemsText={t('org-no-items')}
@@ -107,7 +107,7 @@ export default function OrganizationSelector({
               noItemsText={t('no-other-orgs-available')}
               visualPlaceholder={t('choose-other-orgs')}
               onItemSelectionsChange={(e) => setSelectedOtherOrganizations(e)}
-              isSmall={isSmall}
+              issmall={isSmall ? true : undefined}
             />
           )}
         </>

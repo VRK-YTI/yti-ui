@@ -84,7 +84,7 @@ export default function Prefix({ update, userPosted }: PrefixProps) {
           labelText={t('prefix')}
           onChange={(e) => handleCustomChange(e as string)}
           debounce={300}
-          isSmall={isSmall}
+          issmall={isSmall ? true : undefined}
           status={
             status === 'error' || (userPosted && !prefix) ? 'error' : 'default'
           }
