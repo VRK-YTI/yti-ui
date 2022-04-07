@@ -126,7 +126,7 @@ export const LangBlock = styled(Block)`
   background: ${(props) => props.theme.suomifi.colors.highlightLight4};
 `;
 
-export const LangTextInput = styled(TextInput) <{ isSmall: boolean }>`
+export const LangTextInput = styled(TextInput)<{ isSmall: boolean }>`
   min-width: ${(props) => (props.isSmall ? '100%' : '60%')};
   margin-bottom: ${(props) => props.theme.suomifi.spacing.m};
 `;
@@ -144,7 +144,7 @@ export const ModalTitleAsH1 = styled(ModalTitle)`
   margin-bottom: 28px;
 `;
 
-export const MultiselectSmBot = styled(MultiSelect) <{ issmall?: boolean }>`
+export const MultiselectSmBot = styled(MultiSelect)<{ issmall?: boolean }>`
   min-width: ${(props) => (props.issmall ? '100%' : '480px')};
   margin-bottom: ${(props) => props.theme.suomifi.spacing.m};
 `;
@@ -158,7 +158,7 @@ export const OrgCheckbox = styled(Checkbox)`
   margin-bottom: ${(props) => props.theme.suomifi.spacing.m};
 `;
 
-export const OrgSingleSelect = styled(SingleSelect) <{ issmall?: boolean }>`
+export const OrgSingleSelect = styled(SingleSelect)<{ issmall?: boolean }>`
   min-width: ${(props) => (props.issmall ? '100%' : '480px')};
 
   .fi-filter-input_action-elements-container {
@@ -176,7 +176,7 @@ export const TallerSeparator = styled(Separator)`
   margin: 30px 0;
 `;
 
-export const TextInputSmBot = styled(TextInput) <{ issmall?: boolean }>`
+export const TextInputSmBot = styled(TextInput)<{ issmall?: boolean }>`
   min-width: ${(props) => (props.issmall ? '100%' : '480px')};
   margin-bottom: ${(props) => props.theme.suomifi.spacing.m};
 `;
