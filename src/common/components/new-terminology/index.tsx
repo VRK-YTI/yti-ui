@@ -104,7 +104,7 @@ export default function NewTerminology() {
 
         <ModalFooter>
           {userPosted && manualData && <MissingInfoAlert data={manualData} />}
-          <Button onClick={() => handlePost(manualData)}>
+          <Button onClick={() => handlePost(manualData)} disabled={!inputType}>
             {t('add-terminology')}
           </Button>
           <Button variant="secondary" onClick={() => handleClose()}>
