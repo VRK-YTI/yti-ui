@@ -31,12 +31,9 @@ const createMockUser = (
 
 describe('has-permission', () => {
   it('should have admin rights with no target organization defined', () => {
-    const user = createMockUser(
-      { foo: ['ADMIN'] },
-      { ADMIN: ['foo'] }
-    );
+    const user = createMockUser({ foo: ['ADMIN'] }, { ADMIN: ['foo'] });
 
-    const rights = hasPermission({user: user, actions: 'CREATE_TERMINOLOGY'});
+    const rights = hasPermission({ user: user, actions: 'CREATE_TERMINOLOGY' });
     expect(rights).toBe(true);
   });
 
@@ -46,7 +43,7 @@ describe('has-permission', () => {
       { TERMINOLOGY_EDITOR: ['foo'], SOME_OTHER_ROLES: ['foo'] }
     );
 
-    const rights = hasPermission({user: user, actions: 'CREATE_TERMINOLOGY'});
+    const rights = hasPermission({ user: user, actions: 'CREATE_TERMINOLOGY' });
     expect(rights).toBe(true);
   });
 
@@ -56,17 +53,18 @@ describe('has-permission', () => {
       { SOME_OTHER_ROLES: ['foo'] }
     );
 
-    const rights = hasPermission({user: user, actions: 'CREATE_TERMINOLOGY'});
+    const rights = hasPermission({ user: user, actions: 'CREATE_TERMINOLOGY' });
     expect(rights).toBe(false);
   });
 
   it('should have admin rights with target organization defined', () => {
-    const user = createMockUser(
-      { foo: ['ADMIN'] },
-      { ADMIN: ['foo'] }
-    );
+    const user = createMockUser({ foo: ['ADMIN'] }, { ADMIN: ['foo'] });
 
-    const rights = hasPermission({user: user, actions: 'CREATE_TERMINOLOGY', targetOrganization: 'foo'});
+    const rights = hasPermission({
+      user: user,
+      actions: 'CREATE_TERMINOLOGY',
+      targetOrganization: 'foo',
+    });
     expect(rights).toBe(true);
   });
 
@@ -76,7 +74,11 @@ describe('has-permission', () => {
       { TERMINOLOGY_EDITOR: ['foo'], SOME_OTHER_ROLES: ['foo'] }
     );
 
-    const rights = hasPermission({user: user, actions: 'CREATE_TERMINOLOGY', targetOrganization: 'foo'});
+    const rights = hasPermission({
+      user: user,
+      actions: 'CREATE_TERMINOLOGY',
+      targetOrganization: 'foo',
+    });
     expect(rights).toBe(true);
   });
 
@@ -86,7 +88,11 @@ describe('has-permission', () => {
       { ADMIN: ['x'], SOME_OTHER_ROLES: ['foo'], TERMINOLOGY_EDITOR: ['x'] }
     );
 
-    const rights = hasPermission({user: user, actions: 'CREATE_TERMINOLOGY', targetOrganization: 'foo'});
+    const rights = hasPermission({
+      user: user,
+      actions: 'CREATE_TERMINOLOGY',
+      targetOrganization: 'foo',
+    });
     expect(rights).toBe(false);
   });
 
@@ -96,7 +102,11 @@ describe('has-permission', () => {
       { TERMINOLOGY_EDITOR: ['foo'], SOME_OTHER_ROLES: ['foo'] }
     );
 
-    const rights = hasPermission({user: user, actions: ['CREATE_TERMINOLOGY', 'EDIT_TERMINOLOGY'], targetOrganization: 'foo'});
+    const rights = hasPermission({
+      user: user,
+      actions: ['CREATE_TERMINOLOGY', 'EDIT_TERMINOLOGY'],
+      targetOrganization: 'foo',
+    });
     expect(rights).toBe(true);
   });
 
@@ -106,8 +116,11 @@ describe('has-permission', () => {
       { ADMIN: ['x'], SOME_OTHER_ROLES: ['foo'], TERMINOLOGY_EDITOR: ['x'] }
     );
 
-    const rights = hasPermission({user: user, actions: ['CREATE_TERMINOLOGY', 'EDIT_TERMINOLOGY'], targetOrganization: 'foo'});
+    const rights = hasPermission({
+      user: user,
+      actions: ['CREATE_TERMINOLOGY', 'EDIT_TERMINOLOGY'],
+      targetOrganization: 'foo',
+    });
     expect(rights).toBe(false);
   });
-
 });
