@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { useRouter } from 'next/router';
 import Matomo, { MatomoTracking } from '.';
 
@@ -13,12 +13,10 @@ describe('matomo', () => {
       events: {
         on: jest.fn(),
         off: jest.fn(),
-      }
+      },
     } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
 
-    render(
-      <Matomo />
-    );
+    render(<Matomo />);
 
     expect(window._paq).toBeUndefined();
   });
@@ -29,12 +27,10 @@ describe('matomo', () => {
       events: {
         on: jest.fn(),
         off: jest.fn(),
-      }
+      },
     } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
 
-    render(
-      <MatomoTracking url="matamo-test-url" siteId="1234" />
-    );
+    render(<MatomoTracking url="matamo-test-url" siteId="1234" />);
 
     expect(window._paq).toBeDefined();
   });
@@ -45,12 +41,10 @@ describe('matomo', () => {
       events: {
         on: jest.fn(),
         off: jest.fn(),
-      }
+      },
     } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
 
-    render(
-      <MatomoTracking url="matamo-test-url" siteId="1234" />
-    );
+    render(<MatomoTracking url="matamo-test-url" siteId="1234" />);
 
     expect(window._paq[0]).toStrictEqual(['disableCookies']);
   });

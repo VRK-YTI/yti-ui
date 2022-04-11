@@ -69,14 +69,11 @@ export function MatomoTracking({ url, siteId }: MatomoProps) {
     };
 
     router.events.on('routeChangeComplete', onRouteChangeComplete);
-    return () => router.events.off('routeChangeComplete', onRouteChangeComplete);
+    return () =>
+      router.events.off('routeChangeComplete', onRouteChangeComplete);
   }, [router.events, previousPath]);
 
-  console.log('rendering');
-
-  return (
-    <Script src={`${url}/matomo.js`} />
-  );
+  return <Script src={`${url}/matomo.js`} />;
 }
 
 const withEnv = () => {
