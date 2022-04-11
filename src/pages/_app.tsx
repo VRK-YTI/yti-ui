@@ -14,6 +14,7 @@ import { useSelector } from 'react-redux';
 import { selectTitle } from '@app/common/components/title/title.slice';
 import { selectLogin } from '@app/common/components/login/login.slice';
 import { setAlert } from '@app/common/components/alert/alert.slice';
+import Matomo from '@app/common/components/matomo';
 
 // https://nextjs.org/docs/advanced-features/custom-app
 function App({ Component, pageProps }: AppProps) {
@@ -39,22 +40,25 @@ function App({ Component, pageProps }: AppProps) {
   });
 
   return (
-    <SWRConfig
-      value={{
-        fetcher: async (url: string, init?: RequestInit) =>
-          axios.get(url).then((res) => res.data),
-        onError: (err) => {
-          console.error(err);
-        },
-      }}
-    >
-      <VisuallyHidden>
-        <div role="region" aria-live="assertive">
-          {t('navigated-to')} {title}
-        </div>
-      </VisuallyHidden>
-      <Component {...pageProps} />
-    </SWRConfig>
+    <>
+      <Matomo />
+      <SWRConfig
+        value={{
+          fetcher: async (url: string, init?: RequestInit) =>
+            axios.get(url).then((res) => res.data),
+          onError: (err) => {
+            console.error(err);
+          },
+        }}
+      >
+        <VisuallyHidden>
+          <div role="region" aria-live="assertive">
+            {t('navigated-to')} {title}
+          </div>
+        </VisuallyHidden>
+        <Component {...pageProps} />
+      </SWRConfig>
+    </>
   );
 }
 export default wrapper.withRedux(appWithTranslation(App));
