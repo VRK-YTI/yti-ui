@@ -133,5 +133,5 @@
   "email-subscription-add": "Add email subscription",
   "email-subscription-delete": "Delete email subscription",
   "email-subscription-subscribed": "Subscription added",
-  "email-subscription-unsubscribed": "Unsubscribed succesfully"
+  "email-subscription-subscribed-description": "You will now receive e-mail notifications of changes made to this terminology."
 }
