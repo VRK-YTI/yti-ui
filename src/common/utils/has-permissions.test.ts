@@ -1,5 +1,5 @@
 import { User } from '@app/common/interfaces/user.interface';
-import hasPermission from './has-permission';
+import { checkPermission } from './has-permission';
 
 const createMockUser = (
   rolesInOrganizations: {
@@ -33,7 +33,10 @@ describe('has-permission', () => {
   it('should have admin rights with no target organization defined', () => {
     const user = createMockUser({ foo: ['ADMIN'] }, { ADMIN: ['foo'] });
 
-    const rights = hasPermission({ user: user, actions: 'CREATE_TERMINOLOGY' });
+    const rights = checkPermission({
+      user: user,
+      actions: 'CREATE_TERMINOLOGY',
+    });
     expect(rights).toBe(true);
   });
 
@@ -43,7 +46,10 @@ describe('has-permission', () => {
       { TERMINOLOGY_EDITOR: ['foo'], SOME_OTHER_ROLES: ['foo'] }
     );
 
-    const rights = hasPermission({ user: user, actions: 'CREATE_TERMINOLOGY' });
+    const rights = checkPermission({
+      user: user,
+      actions: 'CREATE_TERMINOLOGY',
+    });
     expect(rights).toBe(true);
   });
 
@@ -53,14 +59,17 @@ describe('has-permission', () => {
       { SOME_OTHER_ROLES: ['foo'] }
     );
 
-    const rights = hasPermission({ user: user, actions: 'CREATE_TERMINOLOGY' });
+    const rights = checkPermission({
+      user: user,
+      actions: 'CREATE_TERMINOLOGY',
+    });
     expect(rights).toBe(false);
   });
 
   it('should have admin rights with target organization defined', () => {
     const user = createMockUser({ foo: ['ADMIN'] }, { ADMIN: ['foo'] });
 
-    const rights = hasPermission({
+    const rights = checkPermission({
       user: user,
       actions: 'CREATE_TERMINOLOGY',
       targetOrganization: 'foo',
@@ -74,7 +83,7 @@ describe('has-permission', () => {
       { TERMINOLOGY_EDITOR: ['foo'], SOME_OTHER_ROLES: ['foo'] }
     );
 
-    const rights = hasPermission({
+    const rights = checkPermission({
       user: user,
       actions: 'CREATE_TERMINOLOGY',
       targetOrganization: 'foo',
@@ -88,7 +97,7 @@ describe('has-permission', () => {
       { ADMIN: ['x'], SOME_OTHER_ROLES: ['foo'], TERMINOLOGY_EDITOR: ['x'] }
     );
 
-    const rights = hasPermission({
+    const rights = checkPermission({
       user: user,
       actions: 'CREATE_TERMINOLOGY',
       targetOrganization: 'foo',
@@ -102,7 +111,7 @@ describe('has-permission', () => {
       { TERMINOLOGY_EDITOR: ['foo'], SOME_OTHER_ROLES: ['foo'] }
     );
 
-    const rights = hasPermission({
+    const rights = checkPermission({
       user: user,
       actions: ['CREATE_TERMINOLOGY', 'EDIT_TERMINOLOGY'],
       targetOrganization: 'foo',
@@ -116,11 +125,22 @@ describe('has-permission', () => {
       { ADMIN: ['x'], SOME_OTHER_ROLES: ['foo'], TERMINOLOGY_EDITOR: ['x'] }
     );
 
-    const rights = hasPermission({
+    const rights = checkPermission({
       user: user,
       actions: ['CREATE_TERMINOLOGY', 'EDIT_TERMINOLOGY'],
       targetOrganization: 'foo',
     });
+    expect(rights).toBe(false);
+  });
+
+  it('should not have rights when rolesInOrganizations and organizationsInRole are undefined', () => {
+    const user = createMockUser({}, {});
+
+    const rights = checkPermission({
+      user: user,
+      actions: 'CREATE_TERMINOLOGY',
+    });
+
     expect(rights).toBe(false);
   });
 });
