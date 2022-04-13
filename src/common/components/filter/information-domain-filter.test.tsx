@@ -1,18 +1,13 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { render, screen } from '@testing-library/react';
-import { useRouter } from 'next/router';
 import { themeProvider } from '@app/tests/test-utils';
 import InformationDomainFilter from './information-domain-filter';
+import mockRouter from 'next-router-mock';
 
-jest.mock('next/router');
-const mockedUseRouter = useRouter as jest.MockedFunction<typeof useRouter>;
+jest.mock('next/dist/client/router', () => require('next-router-mock'));
 
 describe('informationDomainFilter', () => {
   it('should render component', () => {
-    mockedUseRouter.mockReturnValue({
-      query: { domain: 'd1' },
-    } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
+    mockRouter.setCurrentUrl('/?domain=d1');
 
     render(
       <InformationDomainFilter

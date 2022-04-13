@@ -1,9 +1,10 @@
-import { Dropdown, DropdownItem } from 'suomifi-ui-components';
+import { SingleSelect } from 'suomifi-ui-components';
 import { OrganizationSearchResult } from '@app/common/interfaces/terminology.interface';
 import useUrlState, {
   initialUrlState,
 } from '@app/common/utils/hooks/useUrlState';
-import { DropdownPlaceholder, DropdownWrapper } from './filter.styles';
+import { DropdownWrapper } from './filter.styles';
+import { useTranslation } from 'react-i18next';
 
 interface OrganizationFilterProps {
   organizations?: OrganizationSearchResult[];
