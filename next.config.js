@@ -36,23 +36,23 @@ module.exports = (phase, { defaultConfig }) => {
       const isProd = process.env.NODE_ENV === 'production';
 
       const ProductionContentSecurityPolicy = [
-        'base-uri \'self\';',
-        'default-src \'self\';',
-        'font-src \'self\';',
-        'img-src \'self\' data:;',
-        'script-src \'self\' \'unsafe-inline\';',
-        'style-src \'self\' \'unsafe-inline\' data:;',
-        'frame-src \'self\';'
+        "base-uri 'self';",
+        "default-src 'self';",
+        "font-src 'self';",
+        "img-src 'self' data:;",
+        "script-src 'self' 'unsafe-inline';",
+        "style-src 'self' 'unsafe-inline' data:;",
+        "frame-src 'self';",
       ];
 
       const ContentSecurityPolicy = [
-        'base-uri \'self\';',
-        'default-src \'self\';',
-        'font-src \'self\';',
-        'img-src \'self\' \'unsafe-eval\' \'unsafe-inline\' data:;',
-        'script-src \'self\' \'unsafe-inline\' \'unsafe-eval\';',
-        'style-src \'self\' \'unsafe-inline\' data:;',
-        'frame-src \'self\';'
+        "base-uri 'self';",
+        "default-src 'self';",
+        "font-src 'self';",
+        "img-src 'self' 'unsafe-eval' 'unsafe-inline' data:;",
+        "script-src 'self' 'unsafe-inline' 'unsafe-eval';",
+        "style-src 'self' 'unsafe-inline' data:;",
+        "frame-src 'self';",
       ];
 
       return [
@@ -61,7 +61,9 @@ module.exports = (phase, { defaultConfig }) => {
           headers: [
             {
               key: 'Content-Security-Policy',
-              value: isProd ? ProductionContentSecurityPolicy.join(' ') : ContentSecurityPolicy.join(' '),
+              value: isProd
+                ? ProductionContentSecurityPolicy.join(' ')
+                : ContentSecurityPolicy.join(' '),
             },
             {
               key: 'Referrer-Policy',
