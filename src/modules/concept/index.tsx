@@ -73,7 +73,7 @@ export default function Concept({
   }, [setConceptTitle, prefLabel]);
 
   useEffect(() => {
-    dispatch(setAlert([], [terminologyError, conceptError]));
+    dispatch(setAlert([terminologyError, conceptError], []));
   }, [dispatch, terminologyError, conceptError]);
 
   useEffect(() => {

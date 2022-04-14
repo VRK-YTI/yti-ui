@@ -40,8 +40,8 @@ function setAlertPrivate(alerts: Alert[]): AppThunk {
 
 export const setAlert =
   (
-    previousAlerts: Alert[],
-    alerts: (Error | SerializedError | undefined)[]
+    alerts: (Error | SerializedError | undefined)[],
+    previousAlerts: Alert[]
   ): AppThunk =>
   async (dispatch) => {
     const newAlerts = alerts.filter(

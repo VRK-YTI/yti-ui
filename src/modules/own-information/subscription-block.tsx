@@ -34,7 +34,6 @@ export default function SubscriptionBlock({
       const unsubscribedAll = subscription.data?.uri?.includes(',') ?? false;
       dispatch(
         setAlert(
-          [],
           [
             {
               status: 0,
@@ -44,13 +43,14 @@ export default function SubscriptionBlock({
                     item: unsubscribedItem ?? '',
                   }),
             },
-          ]
+          ],
+          []
         )
       );
 
       refetchSubscriptions();
     } else if (subscription.isError) {
-      dispatch(setAlert([], [subscription.error]));
+      dispatch(setAlert([subscription.error], []));
       console.error('subscription error', subscription.error);
     }
   }, [subscription, dispatch, unsubscribedItem, t, refetchSubscriptions]);

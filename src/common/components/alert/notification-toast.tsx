@@ -20,8 +20,10 @@ export default function NotificationToast({ alert }: NotificationToastProps) {
     const wait = setTimeout(() => {
       dispatch(
         setAlert(
-          [],
-          previousAlerts.filter((a) => a.error.status !== 0).map((a) => a.error)
+          previousAlerts
+            .filter((a) => a.error.status !== 0)
+            .map((a) => a.error),
+          []
         )
       );
     }, 5000);

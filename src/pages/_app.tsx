@@ -29,13 +29,13 @@ function App({ Component, pageProps }: AppProps) {
       window.localStorage.removeItem('user-signed');
       dispatch(
         setAlert(
-          [],
           [
             {
               status: 0,
               data: 'logged-out',
             },
-          ]
+          ],
+          []
         )
       );
     }

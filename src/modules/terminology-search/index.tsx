@@ -45,12 +45,10 @@ export default function TerminologySearch() {
 
   useEffect(() => {
     dispatch(
-      setAlert(previousAlerts, [
-        error,
-        groupsError,
-        organizationsError,
-        countsError,
-      ])
+      setAlert(
+        [error, groupsError, organizationsError, countsError],
+        previousAlerts
+      )
     );
   }, [
     dispatch,

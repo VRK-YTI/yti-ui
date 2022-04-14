@@ -75,7 +75,7 @@ export default function Vocabulary({
 
   useEffect(() => {
     dispatch(
-      setAlert([], [collectionsError, conceptsError, infoError, countsError])
+      setAlert([collectionsError, conceptsError, infoError, countsError], [])
     );
   }, [dispatch, collectionsError, conceptsError, infoError, countsError]);
 

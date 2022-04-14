@@ -13,13 +13,13 @@ describe('alert', () => {
 
     store.dispatch(
       setAlert(
-        [],
         [
           {
             status: 500,
             data: '500 error',
           },
-        ]
+        ],
+        []
       )
     );
 
@@ -39,7 +39,6 @@ describe('alert', () => {
 
     store.dispatch(
       setAlert(
-        [],
         [
           {
             status: 500,
@@ -57,7 +56,8 @@ describe('alert', () => {
             status: 500,
             data: '500 error',
           },
-        ]
+        ],
+        []
       )
     );
 
@@ -77,13 +77,13 @@ describe('alert', () => {
 
     store.dispatch(
       setAlert(
-        [],
         [
           {
             status: 0,
             data: 'notification',
           },
-        ]
+        ],
+        []
       )
     );
 
@@ -105,13 +105,13 @@ describe('alert', () => {
 
     store.dispatch(
       setAlert(
-        [],
         [
           {
             status: 500,
             data: '500 error',
           },
-        ]
+        ],
+        []
       )
     );
 
@@ -142,7 +142,6 @@ describe('alert', () => {
 
     store.dispatch(
       setAlert(
-        [],
         [
           {
             status: 500,
@@ -160,7 +159,8 @@ describe('alert', () => {
             status: 500,
             data: '500 error',
           },
-        ]
+        ],
+        []
       )
     );
 

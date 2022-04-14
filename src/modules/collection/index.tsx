@@ -77,7 +77,7 @@ export default function Collection({
   }, [setCollectionTitle, prefLabel]);
 
   useEffect(() => {
-    dispatch(setAlert([], [terminologyError, collectionError]));
+    dispatch(setAlert([terminologyError, collectionError], []));
   }, [dispatch, terminologyError, collectionError]);
 
   useEffect(() => {
