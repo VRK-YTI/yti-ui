@@ -77,18 +77,16 @@ export function MatomoTracking({ url, siteId }: MatomoProps) {
 }
 
 const withEnv = () => {
-  // disable this check if you want to use this in development
-  if (process.env.NODE_ENV !== 'production') {
+  const isEnabled = process.env.NEXT_PUBLIC_MATOMO_ENABLED === 'true';
+  const url = process.env.NEXT_PUBLIC_MATOMO_URL;
+  const siteId = process.env.NEXT_PUBLIC_MATOMO_SITE_ID;
+
+  // disable if any of required variables are missing
+  if (!isEnabled || !url || !siteId) {
     return null;
   }
 
-  // default values are pointing to development environment
-  return (
-    <MatomoTracking
-      url={process.env.MATOMO_URL ?? 'https://suomi.matomo.cloud'}
-      siteId={process.env.MATOMO_SITE_ID ?? '25'}
-    />
-  );
+  return <MatomoTracking url={url} siteId={siteId} />;
 };
 
 export default withEnv;
