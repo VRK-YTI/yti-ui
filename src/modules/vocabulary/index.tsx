@@ -23,7 +23,6 @@ import useUrlState from '@app/common/utils/hooks/useUrlState';
 import Pagination from '@app/common/components/pagination/pagination';
 import filterData from '@app/common/utils/filter-data';
 import { setAlert } from '@app/common/components/alert/alert.slice';
-import { Error } from '@app/common/interfaces/error.interface';
 import { useRouter } from 'next/router';
 import LoadIndicator from '@app/common/components/load-indicator';
 import { useStoreDispatch } from '@app/store';
@@ -76,12 +75,7 @@ export default function Vocabulary({
 
   useEffect(() => {
     dispatch(
-      setAlert([
-        collectionsError as Error,
-        conceptsError as Error,
-        infoError as Error,
-        countsError as Error,
-      ])
+      setAlert([], [collectionsError, conceptsError, infoError, countsError])
     );
   }, [dispatch, collectionsError, conceptsError, infoError, countsError]);
 

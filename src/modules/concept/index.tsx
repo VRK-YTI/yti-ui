@@ -29,7 +29,6 @@ import {
 } from './concept.styles';
 import { useStoreDispatch } from '@app/store';
 import { setAlert } from '@app/common/components/alert/alert.slice';
-import { Error } from '@app/common/interfaces/error.interface';
 import { useRouter } from 'next/router';
 import { setTitle } from '@app/common/components/title/title.slice';
 import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
@@ -74,7 +73,7 @@ export default function Concept({
   }, [setConceptTitle, prefLabel]);
 
   useEffect(() => {
-    dispatch(setAlert([terminologyError as Error, conceptError as Error]));
+    dispatch(setAlert([], [terminologyError, conceptError]));
   }, [dispatch, terminologyError, conceptError]);
 
   useEffect(() => {

@@ -10,7 +10,6 @@ import {
   Text,
 } from 'suomifi-ui-components';
 import { useStoreDispatch } from '../../../store';
-import { Error } from '../../interfaces/error.interface';
 import { OrganizationSearchResult } from '../../interfaces/terminology.interface';
 import { setAlert } from '../alert/alert.slice';
 import { selectLogin } from '../login/login.slice';
@@ -65,11 +64,11 @@ export default function AccessRequest({ organizations }: AccessRequestProps) {
 
   useEffect(() => {
     if (request.isSuccess) {
-      dispatch(setAlert([{ status: 0, data: t('access-request-sent') }]));
+      dispatch(setAlert([], [{ status: 0, data: t('access-request-sent') }]));
       refetch();
       handleClose();
     } else if (request.isError) {
-      dispatch(setAlert([request.error as Error]));
+      dispatch(setAlert([], [request.error]));
       refetch();
       handleClose();
     }

@@ -1,8 +1,11 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, SerializedError } from '@reduxjs/toolkit';
 import { AppState, AppThunk } from '@app/store';
 import { Error } from '@app/common/interfaces/error.interface';
 
-export type Alert = Error;
+export type Alert = {
+  error: Error;
+  visible?: boolean;
+};
 
 export interface AlertState {
   alerts: Alert[];
@@ -25,15 +28,47 @@ export const alertSlice = createSlice({
   },
 });
 
-export function setAlert(alerts: Alert[]): AppThunk {
+function setAlertPrivate(alerts: Alert[]): AppThunk {
   return (dispatch) => {
     dispatch(
       alertSlice.actions.setAlert({
-        alerts: alerts.filter((alert) => alert && alert.data),
+        alerts: alerts,
       })
     );
   };
 }
+
+export const setAlert =
+  (
+    previousAlerts: Alert[],
+    alerts: (Error | SerializedError | undefined)[]
+  ): AppThunk =>
+  async (dispatch) => {
+    const newAlerts = alerts.filter(
+      (alert) =>
+        alert &&
+        'data' in alert &&
+        !previousAlerts.map((pAlert) => pAlert.error).includes(alert)
+    ) as Error[];
+
+    if (newAlerts.length > 0) {
+      dispatch(
+        setAlertPrivate([
+          ...previousAlerts,
+          ...newAlerts.map((nAlert) => ({
+            error: nAlert,
+            visible: true,
+          })),
+        ])
+      );
+    }
+  };
+
+export const setAlertVisibility =
+  (alerts: Alert[]): AppThunk =>
+  async (dispatch) => {
+    dispatch(setAlertPrivate(alerts));
+  };
 
 export function selectAlert() {
   return (state: AppState): Alert[] => state.alert.alerts;

@@ -23,7 +23,6 @@ import {
   selectAlert,
   setAlert,
 } from '@app/common/components/alert/alert.slice';
-import { Error } from '@app/common/interfaces/error.interface';
 import LoadIndicator from '@app/common/components/load-indicator';
 import { useStoreDispatch } from '@app/store';
 import { useSelector } from 'react-redux';
@@ -46,15 +45,21 @@ export default function TerminologySearch() {
 
   useEffect(() => {
     dispatch(
-      setAlert([
-        ...previousAlerts,
-        error as Error,
-        groupsError as Error,
-        organizationsError as Error,
-        countsError as Error,
+      setAlert(previousAlerts, [
+        error,
+        groupsError,
+        organizationsError,
+        countsError,
       ])
     );
-  }, [dispatch, error, groupsError, organizationsError, countsError]);
+  }, [
+    dispatch,
+    error,
+    groupsError,
+    organizationsError,
+    countsError,
+    previousAlerts,
+  ]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
