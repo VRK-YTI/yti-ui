@@ -1,17 +1,14 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { renderHook } from '@testing-library/react-hooks';
-import { useRouter } from 'next/router';
+import { act } from '@testing-library/react';
 import useUrlState, { initialUrlState, isInitial } from './useUrlState';
+import mockRouter from 'next-router-mock';
+import singletonRouter from 'next/router';
 
-jest.mock('next/router');
-const mockedUseRouter = useRouter as jest.MockedFunction<typeof useRouter>;
+jest.mock('next/dist/client/router', () => require('next-router-mock'));
 
 describe('useUrlState', () => {
   it('no query parameters is same as initial state', () => {
-    mockedUseRouter.mockReturnValue({
-      query: {},
-    } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
+    mockRouter.setCurrentUrl('/');
 
     const { result } = renderHook(() => useUrlState());
 
@@ -19,9 +16,17 @@ describe('useUrlState', () => {
   });
 
   it('isInitial return true for initialState', () => {
-    mockedUseRouter.mockReturnValue({
-      query: initialUrlState,
-    } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
+    mockRouter.setCurrentUrl({
+      pathname: '/',
+      query: {
+        q: '',
+        domain: [],
+        organization: '',
+        status: ['valid', 'draft'],
+        type: 'concept',
+        page: '1',
+      },
+    });
 
     const { result } = renderHook(() => useUrlState());
 
@@ -34,7 +39,8 @@ describe('useUrlState', () => {
   });
 
   it('query parameters are mapped to url state', () => {
-    mockedUseRouter.mockReturnValue({
+    mockRouter.setCurrentUrl({
+      pathname: '/',
       query: {
         q: 'q-query-param',
         domain: ['domain-query-param'],
@@ -43,7 +49,7 @@ describe('useUrlState', () => {
         type: 'type-query-param',
         page: '10',
       },
-    } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
+    });
 
     const { result } = renderHook(() => useUrlState());
 
@@ -58,11 +64,7 @@ describe('useUrlState', () => {
   });
 
   it('in case of non-numerical page, default page number is is used instead', () => {
-    mockedUseRouter.mockReturnValue({
-      query: {
-        page: 'invalid-number',
-      },
-    } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
+    mockRouter.setCurrentUrl('/?page=invalid-number');
 
     const { result } = renderHook(() => useUrlState());
 
@@ -70,8 +72,8 @@ describe('useUrlState', () => {
   });
 
   it('resetUrlState clears query parameters', () => {
-    const push = jest.fn();
-    mockedUseRouter.mockReturnValue({
+    mockRouter.setCurrentUrl({
+      pathname: '/',
       query: {
         q: 'q-query-param',
         domain: ['domain-query-param'],
@@ -80,13 +82,12 @@ describe('useUrlState', () => {
         type: 'type-query-param',
         page: '10',
       },
-      push,
-    } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
+    });
 
     const { result } = renderHook(() => useUrlState());
-    result.current.resetUrlState();
+    act(() => result.current.resetUrlState());
 
-    expect(push.mock.calls[0][0]).toStrictEqual(
+    expect(singletonRouter).toStrictEqual(
       expect.objectContaining({
         query: {},
       })
@@ -94,8 +95,8 @@ describe('useUrlState', () => {
   });
 
   it('updateUrlState updates given query parameters', () => {
-    const push = jest.fn();
-    mockedUseRouter.mockReturnValue({
+    mockRouter.setCurrentUrl({
+      pathname: '/',
       query: {
         q: 'q-query-param',
         domain: ['domain-query-param'],
@@ -104,20 +105,21 @@ describe('useUrlState', () => {
         type: 'type-query-param',
         page: '10',
       },
-      push,
-    } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
-
-    const { result } = renderHook(() => useUrlState());
-    result.current.updateUrlState({
-      q: 'new-q-query-param',
-      domain: ['new-domain-query-param'],
-      organization: 'new-organization-query-param',
-      status: ['new-status-query-param'],
-      type: 'new-type-query-param',
-      page: 11,
     });
 
-    expect(push.mock.calls[0][0]).toStrictEqual(
+    const { result } = renderHook(() => useUrlState());
+    act(() =>
+      result.current.updateUrlState({
+        q: 'new-q-query-param',
+        domain: ['new-domain-query-param'],
+        organization: 'new-organization-query-param',
+        status: ['new-status-query-param'],
+        type: 'new-type-query-param',
+        page: 11,
+      })
+    );
+
+    expect(singletonRouter).toStrictEqual(
       expect.objectContaining({
         query: {
           q: 'new-q-query-param',
@@ -132,8 +134,8 @@ describe('useUrlState', () => {
   });
 
   it('patchUrlState updates given query parameters', () => {
-    const push = jest.fn();
-    mockedUseRouter.mockReturnValue({
+    mockRouter.setCurrentUrl({
+      pathname: '/',
       query: {
         q: 'q-query-param',
         domain: ['domain-query-param'],
@@ -142,15 +144,16 @@ describe('useUrlState', () => {
         type: 'type-query-param',
         page: '10',
       },
-      push,
-    } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
-
-    const { result } = renderHook(() => useUrlState());
-    result.current.patchUrlState({
-      q: 'new-q-query-param',
     });
 
-    expect(push.mock.calls[0][0]).toStrictEqual(
+    const { result } = renderHook(() => useUrlState());
+    act(() =>
+      result.current.patchUrlState({
+        q: 'new-q-query-param',
+      })
+    );
+
+    expect(singletonRouter).toStrictEqual(
       expect.objectContaining({
         query: expect.objectContaining({
           q: 'new-q-query-param',
@@ -160,8 +163,8 @@ describe('useUrlState', () => {
   });
 
   it('patchUrlState does not update other query parameters', () => {
-    const push = jest.fn();
-    mockedUseRouter.mockReturnValue({
+    mockRouter.setCurrentUrl({
+      pathname: '/',
       query: {
         q: 'q-query-param',
         domain: ['domain-query-param'],
@@ -170,15 +173,16 @@ describe('useUrlState', () => {
         type: 'type-query-param',
         page: '10',
       },
-      push,
-    } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
-
-    const { result } = renderHook(() => useUrlState());
-    result.current.patchUrlState({
-      q: 'new-q-query-param',
     });
 
-    expect(push.mock.calls[0][0]).toStrictEqual(
+    const { result } = renderHook(() => useUrlState());
+    act(() =>
+      result.current.patchUrlState({
+        q: 'new-q-query-param',
+      })
+    );
+
+    expect(singletonRouter).toStrictEqual(
       expect.objectContaining({
         query: expect.objectContaining({
           domain: ['domain-query-param'],
