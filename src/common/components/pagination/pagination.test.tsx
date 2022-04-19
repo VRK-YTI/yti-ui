@@ -1,22 +1,16 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Pagination from './pagination';
-import { useRouter } from 'next/router';
 import { themeProvider } from '@app/tests/test-utils';
+import mockRouter from 'next-router-mock';
+import singletonRouter from 'next/router';
 
-jest.mock('next/router');
-const mockedUseRouter = useRouter as jest.MockedFunction<typeof useRouter>;
+jest.mock('next/dist/client/router', () => require('next-router-mock'));
 
 describe('pagination', () => {
   it('should render component', () => {
-    mockedUseRouter.mockReturnValue({
-      query: { page: '0' },
-      route: '',
-      push: jest.fn(),
-    } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
+    mockRouter.setCurrentUrl('/?page=0');
 
     const data = {
       deepHits: null,
@@ -39,11 +33,7 @@ describe('pagination', () => {
   });
 
   it('should render empty when list is smaller than 10', () => {
-    mockedUseRouter.mockReturnValue({
-      query: {},
-      route: '',
-      push: jest.fn(),
-    } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
+    mockRouter.setCurrentUrl('/');
 
     const data = {
       deepHits: null,
@@ -60,12 +50,7 @@ describe('pagination', () => {
   });
 
   it('should change active item', async () => {
-    const push = jest.fn();
-    mockedUseRouter.mockReturnValue({
-      query: { page: 3 },
-      route: '',
-      push,
-    } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
+    mockRouter.setCurrentUrl('/?page=3');
 
     const data = {
       deepHits: null,
@@ -78,21 +63,23 @@ describe('pagination', () => {
       wrapper: themeProvider,
     });
 
-    expect(push).not.toHaveBeenCalled();
+    expect(singletonRouter).toMatchObject({
+      query: { page: '3' },
+    });
 
     userEvent.click(screen.getByText(5));
-    expect(push.mock.calls[0][0]).toStrictEqual(
-      expect.objectContaining({ query: { page: 5 } })
-    );
+    expect(singletonRouter).toMatchObject({
+      query: { page: 5 },
+    });
 
     userEvent.click(screen.getByTestId('pagination-left'));
-    expect(push.mock.calls[1][0]).toStrictEqual(
-      expect.objectContaining({ query: { page: 2 } })
-    );
+    expect(singletonRouter).toMatchObject({
+      query: { page: 4 },
+    });
 
     userEvent.click(screen.getByTestId('pagination-right'));
-    expect(push.mock.calls[2][0]).toStrictEqual(
-      expect.objectContaining({ query: { page: 4 } })
-    );
+    expect(singletonRouter).toMatchObject({
+      query: { page: 5 },
+    });
   });
 });

@@ -1,18 +1,13 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { render, screen } from '@testing-library/react';
-import { useRouter } from 'next/router';
 import { themeProvider } from '@app/tests/test-utils';
 import ResetAllFiltersButton from './reset-all-filters-button';
+import mockRouter from 'next-router-mock';
 
-jest.mock('next/router');
-const mockedUseRouter = useRouter as jest.MockedFunction<typeof useRouter>;
+jest.mock('next/dist/client/router', () => require('next-router-mock'));
 
 describe('reset-all-filters-button', () => {
   it('should render component', () => {
-    mockedUseRouter.mockReturnValue({
-      query: { q: 'lorem ipsum' },
-    } as any); // eslint-disable-line @typescript-eslint/no-explicit-any
+    mockRouter.setCurrentUrl('/?q=lorem ipsum');
 
     render(<ResetAllFiltersButton />, { wrapper: themeProvider });
 

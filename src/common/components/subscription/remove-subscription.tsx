@@ -16,6 +16,8 @@ import {
   RemoveModalContent,
   RemoveModalUl,
 } from './subscription.styles';
+import { useStoreDispatch } from '@app/store';
+import { subscriptionApi } from './subscription.slice';
 
 interface RemoveSubscriptionProps {
   resources?: Resource[];
@@ -36,6 +38,7 @@ export default function RemoveSubscription({
   const { t, i18n } = useTranslation('own-information');
   const { isSmall } = useBreakpoints();
   const [visible, setVisible] = useState(false);
+  const dispatch = useStoreDispatch();
 
   const handleUnsubscribe = () => {
     if (!resource) {
@@ -50,6 +53,7 @@ export default function RemoveSubscription({
       action: 'DELETE',
       uri: resource.uri.replace(/\/terminological[\w-]+/g, '/'),
     });
+    dispatch(subscriptionApi.internalActions.resetApiState());
   };
 
   const handleUnsubscribeAll = () => {
@@ -65,6 +69,7 @@ export default function RemoveSubscription({
     );
     setVisible(false);
     toggleSubscription({ action: 'DELETE', uri: uris });
+    dispatch(subscriptionApi.internalActions.resetApiState());
   };
 
   return (
@@ -103,38 +108,35 @@ export default function RemoveSubscription({
             <Text>{t('subscription-remove-email-description')}</Text>
           </Paragraph>
 
-          <Paragraph>
-            <Text smallScreen variant="bold">
-              {resources
-                ? t('subscription-resources-to-be-removed')
-                : t('subscription-resource-to-be-removed')}
-            </Text>
-            {resources && (
-              <RemoveModalUl>
-                {resources.map((resource, idx) => (
-                  <li key={`resource-${idx}`}>
-                    <Text smallScreen>
-                      {getPrefLabel({
-                        prefLabels: resource.prefLabel,
-                        lang: i18n.language,
-                      })}
-                    </Text>
-                  </li>
-                ))}
-              </RemoveModalUl>
-            )}
-            {resource && (
-              <>
-                <br />
-                <Text smallScreen>
-                  {getPrefLabel({
-                    prefLabels: resource.prefLabel,
-                    lang: i18n.language,
-                  })}
-                </Text>
-              </>
-            )}
-          </Paragraph>
+          <Text smallScreen variant="bold">
+            {resources
+              ? t('subscription-resources-to-be-removed')
+              : t('subscription-resource-to-be-removed')}
+          </Text>
+          {resources && (
+            <RemoveModalUl>
+              {resources.map((resource, idx) => (
+                <li key={`resource-${idx}`}>
+                  <Text smallScreen>
+                    {getPrefLabel({
+                      prefLabels: resource.prefLabel,
+                      lang: i18n.language,
+                    })}
+                  </Text>
+                </li>
+              ))}
+            </RemoveModalUl>
+          )}
+          {resource && (
+            <Paragraph>
+              <Text smallScreen>
+                {getPrefLabel({
+                  prefLabels: resource.prefLabel,
+                  lang: i18n.language,
+                })}
+              </Text>
+            </Paragraph>
+          )}
         </RemoveModalContent>
 
         <ModalFooter>

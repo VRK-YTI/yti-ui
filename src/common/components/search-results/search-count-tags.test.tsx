@@ -1,14 +1,13 @@
 import { render, screen } from '@testing-library/react';
-import { NextRouter, useRouter } from 'next/router';
 import { themeProvider } from '@app/tests/test-utils';
 import SearchCountTags from './search-count-tags';
+import mockRouter from 'next-router-mock';
 
-jest.mock('next/router');
-const mockedUseRouter = useRouter as jest.MockedFunction<typeof useRouter>;
+jest.mock('next/dist/client/router', () => require('next-router-mock'));
 
 describe('search-count-tags', () => {
   it('should render component', () => {
-    mockedUseRouter.mockReturnValue({ query: {} } as NextRouter);
+    mockRouter.setCurrentUrl('/');
 
     render(<SearchCountTags title="4 items found" />, {
       wrapper: themeProvider,

@@ -1,17 +1,16 @@
 import { render, screen } from '@testing-library/react';
-import { NextRouter, useRouter } from 'next/router';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
 import { lightTheme } from '@app/layouts/theme';
 import { makeStore } from '@app/store';
 import SearchResults from './search-results';
+import mockRouter from 'next-router-mock';
 
-jest.mock('next/router');
-const mockedUseRouter = useRouter as jest.MockedFunction<typeof useRouter>;
+jest.mock('next/dist/client/router', () => require('next-router-mock'));
 
 describe('search-results', () => {
   it('should render component', async () => {
-    mockedUseRouter.mockReturnValue({ query: {} } as NextRouter);
+    mockRouter.setCurrentUrl('/');
 
     const store = makeStore();
 
@@ -34,7 +33,7 @@ describe('search-results', () => {
   });
 
   it('should render data', () => {
-    mockedUseRouter.mockReturnValue({ query: {} } as NextRouter);
+    mockRouter.setCurrentUrl('/');
 
     const store = makeStore();
 

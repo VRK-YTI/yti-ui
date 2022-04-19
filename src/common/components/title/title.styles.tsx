@@ -22,7 +22,7 @@ export const StatusChip = styled(StaticChip)<TitleProps>`
   margin-top: ${(props) => props.theme.suomifi.spacing.xxs};
   padding: 0px 10px !important;
   text-transform: uppercase;
-  width: min-content;
+  align-self: start;
 `;
 
 export const TitleDescriptionWrapper = styled.div<{ isSmall: boolean }>`
