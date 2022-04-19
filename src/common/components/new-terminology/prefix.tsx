@@ -9,6 +9,7 @@ import {
   TextInputSmBot,
 } from './new-terminology.styles';
 import { UpdateTerminology } from './update-terminology.interface';
+import { v4 } from 'uuid';
 
 export interface PrefixProps {
   update: ({ key, data }: UpdateTerminology) => void;
@@ -17,10 +18,10 @@ export interface PrefixProps {
 
 export default function Prefix({ update, userPosted }: PrefixProps) {
   const URI = 'http://uri.suomi.fi/';
-  const randomURL = 'abcde56789';
 
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
+  const [randomURL] = useState(v4().substring(0, 8));
   const [prefix, setPrefix] = useState(randomURL);
   const [prefixType, setPrefixType] = useState('');
   const [status, setStatus] = useState<'default' | 'error'>('default');

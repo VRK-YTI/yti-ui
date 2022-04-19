@@ -39,7 +39,7 @@ export default function InfoManual({
       valid = false;
     } else {
       Object.entries(terminologyData).forEach(([key, value]) => {
-        if (key === 'otherOrgs') {
+        if (key === 'otherOrgs' || key === 'contact') {
           return;
         }
 

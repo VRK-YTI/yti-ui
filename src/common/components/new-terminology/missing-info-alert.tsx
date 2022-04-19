@@ -37,9 +37,7 @@ export default function MissingInfoAlert({ data }: MissingInfoAlertProps) {
       !data.mainOrg ||
       data.infoDomains.length === 0 ||
       !data.prefix[0] ||
-      data.prefix[1] === false ||
-      !data.contact?.[0] ||
-      data.contact?.[1] === false
+      data.prefix[1] === false
     ) {
       return true;
     }

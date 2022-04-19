@@ -77,5 +77,10 @@
   "terminology-description-placeholder": "Kirjoita kuvaus",
   "fi": "suomi",
   "en": "englanti",
-  "sv": "ruotsi"
+  "sv": "ruotsi",
+  "add-or-drag-a-new-file-here": "Liitä tai raahaa tiedosto tähän",
+  "allowed-file-formats": "Sallitut tiedostomuodot on:",
+  "add-file": "Lisää tiedosto",
+  "file-added": "Tiedosto lisätty",
+  "remove": "Poista"
 }

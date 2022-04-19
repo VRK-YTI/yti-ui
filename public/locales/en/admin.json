@@ -77,5 +77,10 @@
   "terminology-description-placeholder": "Enter description",
   "fi": "Finnish",
   "en": "English",
-  "sv": "Swedish"
+  "sv": "Swedish",
+  "add-or-drag-a-new-file-here": "Add or drag a file here",
+  "allowed-file-formats": "Allowed file formats:",
+  "add-file": "Add file",
+  "file-added": "File added",
+  "remove": "Remove"
 }

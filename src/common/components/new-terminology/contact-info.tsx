@@ -50,9 +50,7 @@ export default function ContactInfo({ update, userPosted }: ContactInfoProps) {
         onChange={(e) => setContact(e as string)}
         onBlur={() => validateContact()}
         type="email"
-        status={
-          status === 'error' || (userPosted && !contact) ? 'error' : 'default'
-        }
+        status={status === 'error' ? 'error' : 'default'}
         statusText={status === 'error' ? t('contact-email-invalid') : ''}
       />
     </BlankFieldset>

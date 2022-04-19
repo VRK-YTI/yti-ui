@@ -1,3 +1,4 @@
+import { useTranslation } from 'next-i18next';
 import { useEffect, useRef, useState } from 'react';
 import { Button, Paragraph, Text } from 'suomifi-ui-components';
 import {
@@ -14,6 +15,7 @@ interface infoFileProps {
 }
 
 export default function InfoFile({ setIsValid }: infoFileProps) {
+  const { t } = useTranslation('admin');
   const input = useRef(null);
   const [file, setFile] = useState<File | null>(null);
 
@@ -46,6 +48,8 @@ export default function InfoFile({ setIsValid }: infoFileProps) {
     }
   };
 
+  // TODO: Add better typing for this when implementing
+  // file upload
   const handleUpload = (e: any) => {
     e.preventDefault();
 
@@ -67,11 +71,11 @@ export default function InfoFile({ setIsValid }: infoFileProps) {
       <FileBlock padding="m">
         <Paragraph marginBottomSpacing="xxs">
           <Text variant="bold" smallScreen>
-            Liitä tai raahaa tiedostot tähän
+            {t('add-or-drag-a-new-file-here')}
           </Text>
         </Paragraph>
         <Paragraph marginBottomSpacing="l">
-          <Text smallScreen>Sallitut tiedostomuodot on: xlsx</Text>
+          <Text smallScreen>{t('allowed-file-formats')} xlsx</Text>
         </Paragraph>
         {file === null ? (
           <>
@@ -90,7 +94,7 @@ export default function InfoFile({ setIsValid }: infoFileProps) {
                 // input.current.click();
               }}
             >
-              Lisää tiedosto
+              {t('add-file')}
             </Button>
           </>
         ) : (
@@ -107,7 +111,7 @@ export default function InfoFile({ setIsValid }: infoFileProps) {
                   <Text color={'depthDark1'}>{file.size} KB</Text>
                 </Paragraph>
                 <Paragraph>
-                  <Text variant={'bold'}>Tiedosto lisätty</Text>
+                  <Text variant={'bold'}>{t('file-added')}</Text>
                 </Paragraph>
               </div>
             </FileInfo>
@@ -116,7 +120,7 @@ export default function InfoFile({ setIsValid }: infoFileProps) {
               icon="remove"
               onClick={() => setFile(null)}
             >
-              Poista
+              {t('remove')}
             </FileRemoveButton>
           </FileInfoBlock>
         )}

@@ -1,6 +1,5 @@
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import {
   Button,
   Modal,
@@ -11,7 +10,6 @@ import {
   RadioButtonGroup,
   Text,
 } from 'suomifi-ui-components';
-import { selectLogin } from '@app/common/components/login/login.slice';
 import { useBreakpoints } from '../media-query/media-query-context';
 import FileUpload from './file-upload';
 import InfoFile from './info-file';
@@ -23,9 +21,9 @@ import { terminologySearchApi } from '../terminology-search/terminology-search.s
 import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info';
 import MissingInfoAlert from './missing-info-alert';
 import { ModalTitleAsH1 } from './new-terminology.styles';
+import HasPermission from '@app/common/utils/has-permission';
 
 export default function NewTerminology() {
-  const user = useSelector(selectLogin());
   const dispatch = useStoreDispatch();
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -39,12 +37,12 @@ export default function NewTerminology() {
 
   useEffect(() => {
     if (newVocabulary.isSuccess) {
-      setShowModal(false);
+      handleClose();
       dispatch(terminologySearchApi.util.invalidateTags(['TerminologySearch']));
     }
   }, [newVocabulary, dispatch]);
 
-  if (!user.superuser) {
+  if (!HasPermission({ actions: 'CREATE_TERMINOLOGY' })) {
     return null;
   }
 
