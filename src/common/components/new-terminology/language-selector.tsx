@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { MultiSelectData, Paragraph, Text } from 'suomifi-ui-components';
 import { useBreakpoints } from '../media-query/media-query-context';
 import LanguageBlock from './language-block';
@@ -52,24 +52,71 @@ export default function LanguageSelector({
     },
   ];
 
-  useEffect(() => {
-    update({
-      key: 'description',
-      data: [terminologyNames, !terminologyNames.find((t) => !t.name)],
-    });
-  }, [terminologyNames]);
-
   const handleSelectedLanguagesChange = (e: MultiSelectData[]) => {
     setSelectedLanguages(e);
-    setTerminologyNames(
-      terminologyNames.filter((tn) => {
-        const languages: string[] = e.map((sl) => sl.uniqueItemId);
 
-        if (languages.includes(tn.lang)) {
-          return true;
+    let newTerminologyNames;
+
+    if (e.length < selectedLanguages.length) {
+      const currLanguages = e.map((item) => item.uniqueItemId);
+
+      newTerminologyNames = terminologyNames.filter((tn) => {
+        if (currLanguages.includes(tn.lang)) {
+          return tn;
         }
-      })
-    );
+      });
+    } else {
+      const newLanguage = e.filter(
+        (tn) =>
+          !terminologyNames.map((item) => item.lang).includes(tn.uniqueItemId)
+      )[0].uniqueItemId;
+
+      newTerminologyNames = [
+        ...terminologyNames,
+        {
+          lang: newLanguage,
+          name: '',
+          description: '',
+        },
+      ];
+    }
+
+    setTerminologyNames(newTerminologyNames);
+
+    update({
+      key: 'description',
+      data: [
+        newTerminologyNames,
+        !newTerminologyNames || !newTerminologyNames.find((t) => !t.name),
+      ],
+    });
+  };
+
+  const handleSelectedLanguageUpdate = (
+    id: string,
+    name: string,
+    description: string
+  ) => {
+    const updatedTerminologyNames = terminologyNames.map((tn) => {
+      if (tn.lang === id) {
+        return {
+          lang: id,
+          name: name,
+          description: description,
+        };
+      } else {
+        return tn;
+      }
+    });
+
+    setTerminologyNames(updatedTerminologyNames);
+    update({
+      key: 'description',
+      data: [
+        updatedTerminologyNames,
+        !updatedTerminologyNames.find((t) => !t.name),
+      ],
+    });
   };
 
   return (
@@ -105,9 +152,9 @@ export default function LanguageSelector({
         <LanguageBlock
           lang={language}
           isSmall={isSmall}
-          terminologyNames={terminologyNames}
-          setTerminologyNames={setTerminologyNames}
+          handleUpdate={handleSelectedLanguageUpdate}
           userPosted={userPosted}
+          id={language.uniqueItemId}
           key={`${language}-${idx}`}
         />
       ))}

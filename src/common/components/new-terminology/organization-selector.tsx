@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import {
   MultiSelectData,
@@ -33,16 +33,9 @@ export default function OrganizationSelector({
   const { data: organizations } = useGetOrganizationsQuery(i18n.language);
   const [selectedOrganization, setSelectedOrganization] =
     useState<SingleSelectData | null>();
-  const [selectedOtherOrganizations, setSelectedOtherOrganizations] = useState<
-    MultiSelectData[]
-  >([]);
+  const [, setSelectedOtherOrganizations] = useState<MultiSelectData[]>([]);
   const [showOtherOrgSelector, setShowOtherOrgSelector] =
     useState<boolean>(false);
-
-  useEffect(() => {
-    update({ key: 'mainOrg', data: selectedOrganization });
-    update({ key: 'otherOrgs', data: selectedOtherOrganizations });
-  }, [selectedOrganization, selectedOtherOrganizations]);
 
   const adminOrgs: SingleSelectData[] = organizations?.map((org) => {
     if (user.organizationsInRole.ADMIN.includes(org.id.toString())) {
@@ -61,10 +54,18 @@ export default function OrganizationSelector({
 
   const handleSelectOrganization = (value: SingleSelectData | null) => {
     setSelectedOrganization(value);
+    update({ key: 'mainOrg', data: value });
+    update({ key: 'otherOrgs', data: [] });
+
     if (!value) {
       setShowOtherOrgSelector(false);
       setSelectedOtherOrganizations([]);
     }
+  };
+
+  const handleSelectedOtherOrganizations = (value: MultiSelectData[]) => {
+    setSelectedOtherOrganizations(value);
+    update({ key: 'otherOrgs', data: value });
   };
 
   return (
@@ -106,7 +107,9 @@ export default function OrganizationSelector({
               ariaOptionChipRemovedText={t('organization-removed')}
               noItemsText={t('no-other-orgs-available')}
               visualPlaceholder={t('choose-other-orgs')}
-              onItemSelectionsChange={(e) => setSelectedOtherOrganizations(e)}
+              onItemSelectionsChange={(e) =>
+                handleSelectedOtherOrganizations(e)
+              }
               issmall={isSmall ? true : undefined}
             />
           )}

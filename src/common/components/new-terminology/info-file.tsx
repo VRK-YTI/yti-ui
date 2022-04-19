@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import { useEffect, useRef, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { Button, Paragraph, Text } from 'suomifi-ui-components';
 import {
   FileBlock,
@@ -48,16 +48,17 @@ export default function InfoFile({ setIsValid }: infoFileProps) {
     }
   };
 
-  // TODO: Add better typing for this when implementing
-  // file upload
-  const handleUpload = (e: any) => {
+  const handleUpload = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-
     const selectedItems = e.target.files;
 
+    if (!selectedItems) {
+      return;
+    }
+
     for (let i = 0; i < selectedItems.length; i++) {
-      if (selectedItems[i].name.endsWith('xlsx')) {
-        setFile(selectedItems[i].getAsFile());
+      if (selectedItems[i].name.endsWith('.xlsx')) {
+        setFile(selectedItems[i]);
         break;
       }
     }

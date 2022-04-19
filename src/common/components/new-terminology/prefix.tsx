@@ -18,27 +18,32 @@ export interface PrefixProps {
 
 export default function Prefix({ update, userPosted }: PrefixProps) {
   const URI = 'http://uri.suomi.fi/';
-
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const [randomURL] = useState(v4().substring(0, 8));
   const [prefix, setPrefix] = useState(randomURL);
   const [prefixType, setPrefixType] = useState('');
   const [status, setStatus] = useState<'default' | 'error'>('default');
+  const [initDone, setInitDone] = useState(false);
   const { data: isInUse } = useGetIfNamespaceInUseQuery(
-    prefix !== '' && prefix
+    prefix !== '' ? prefix : randomURL
   );
 
   useEffect(() => {
-    update({ key: 'prefix', data: [prefix, true] });
-  }, []);
+    if (!initDone) {
+      update({ key: 'prefix', data: [prefix, true] });
+      setInitDone(true);
+    }
+  }, [initDone, prefix, update]);
 
   useEffect(() => {
-    if (isInUse) {
+    if (isInUse && status !== 'error') {
       setStatus('error');
       update({ key: 'prefix', data: [prefix, false] });
+    } else if (!isInUse && status !== 'default') {
+      setStatus('default');
     }
-  }, [isInUse]);
+  }, [isInUse, update, prefix, status]);
 
   const handlePrefixTypeChange = (value: string) => {
     setPrefixType(value);

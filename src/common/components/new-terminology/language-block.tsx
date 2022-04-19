@@ -1,7 +1,6 @@
 import { useTranslation } from 'next-i18next';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { MultiSelectData, Paragraph, Text } from 'suomifi-ui-components';
-import { TerminologyName } from './language-selector';
 import {
   LangBlock,
   TextareaSmBot,
@@ -11,17 +10,22 @@ import {
 interface LanguageBlockProps {
   lang: MultiSelectData;
   isSmall: boolean;
-  terminologyNames: TerminologyName[];
-  setTerminologyNames: (value: TerminologyName[]) => void;
+  handleUpdate: (id: string, value: string, description: string) => void;
   userPosted: boolean;
+  id: string;
+}
+
+interface InfoUpdateProps {
+  tName?: string;
+  tDescription?: string;
 }
 
 export default function LanguageBlock({
   lang,
   isSmall,
-  terminologyNames,
-  setTerminologyNames,
+  handleUpdate,
   userPosted,
+  id,
 }: LanguageBlockProps) {
   const { t } = useTranslation('admin');
   const [name, setName] = useState('');
@@ -30,43 +34,32 @@ export default function LanguageBlock({
     userPosted ? 'error' : 'default'
   );
 
-  useEffect(() => {
-    setTerminologyNames([
-      ...terminologyNames,
-      {
-        lang: lang.uniqueItemId,
-        name: '',
-        description: '',
-      },
-    ]);
-  }, []);
+  const handleInfoUpdate = ({ tName, tDescription }: InfoUpdateProps) => {
+    if (tName || tName === '') {
+      setName(tName);
+      return;
+    }
+
+    if (tDescription) {
+      setDescription(tDescription);
+      return;
+    }
+
+    handleBlur();
+  };
 
   const handleBlur = () => {
-    if (terminologyNames?.some((tn) => tn.lang === lang.uniqueItemId)) {
-      const newTerminologyNames = terminologyNames.map((tn) => {
-        if (tn.lang === lang.uniqueItemId) {
-          if (name === '') {
-            setStatus('error');
-          } else {
-            setStatus('default');
-          }
-          return {
-            lang: lang.uniqueItemId,
-            name: name,
-            description: description,
-          };
-        } else {
-          setStatus('default');
-          return tn;
-        }
-      });
-
-      setTerminologyNames(newTerminologyNames);
+    if (!name) {
+      setStatus('error');
+    } else {
+      setStatus('default');
     }
+
+    handleUpdate(id, name, description);
   };
 
   return (
-    <LangBlock padding="m" onBlur={() => handleBlur()}>
+    <LangBlock padding="m" onBlur={() => handleInfoUpdate({})}>
       <Paragraph marginBottomSpacing="m">
         <Text variant="bold">{lang.labelText}</Text>
       </Paragraph>
@@ -74,7 +67,7 @@ export default function LanguageBlock({
         labelText={t('terminology-name')}
         visualPlaceholder={t('terminology-name-placeholder')}
         isSmall={isSmall}
-        onChange={(e) => setName(e as string)}
+        onChange={(e) => handleInfoUpdate({ tName: e as string })}
         status={status}
         statusText={status === 'error' ? t('terminology-name-error') : ''}
       />
@@ -82,7 +75,7 @@ export default function LanguageBlock({
         labelText={t('terminology-description')}
         hintText={t('terminology-description-hint')}
         visualPlaceholder={t('terminology-description-placeholder')}
-        onChange={(e) => setDescription(e.target.value)}
+        onChange={(e) => handleInfoUpdate({ tDescription: e.target.value })}
       />
     </LangBlock>
   );

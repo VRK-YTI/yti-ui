@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { MultiSelectData } from 'suomifi-ui-components';
 import { useBreakpoints } from '../media-query/media-query-context';
 import { useGetGroupsQuery } from '../terminology-search/terminology-search.slice';
@@ -22,9 +22,10 @@ export default function InformationDomainsSelector({
     MultiSelectData[]
   >([]);
 
-  useEffect(() => {
+  const handleChange = (e: MultiSelectData[]) => {
+    setSelectedInfoDomains(e);
     update({ key: 'infoDomains', data: selectedInfoDomains });
-  }, [selectedInfoDomains]);
+  };
 
   const infoDomains: MultiSelectData[] = informationDomains?.map(
     (infoDomain) => {
@@ -54,7 +55,7 @@ export default function InformationDomainsSelector({
         ariaOptionChipRemovedText={t('aria-option-chip-removed-text')}
         noItemsText={t('no-info-domains-available')}
         visualPlaceholder={t('info-domains-placeholder')}
-        onItemSelectionsChange={(e) => setSelectedInfoDomains(e)}
+        onItemSelectionsChange={(e) => handleChange(e)}
         issmall={isSmall ? true : undefined}
         status={
           userPosted && selectedInfoDomains.length === 0 ? 'error' : 'default'
