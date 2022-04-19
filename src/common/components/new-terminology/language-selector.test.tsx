@@ -17,7 +17,7 @@ describe('language-selector', () => {
     userEvent.click(screen.getByText('tr-language-label-text-fi'));
 
     expect(screen.getByText(/tr-terminology-name/)).toBeInTheDocument();
-    expect(mockUpdate).toHaveBeenCalledTimes(3);
+    expect(mockUpdate).toHaveBeenCalledTimes(1);
     expect(mockUpdate).toHaveBeenCalledWith({
       key: 'description',
       data: [

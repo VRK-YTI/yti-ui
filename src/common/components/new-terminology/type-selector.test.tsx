@@ -11,12 +11,12 @@ describe('type-selector', () => {
 
     userEvent.click(screen.getByText('tr-other-vocabulary'));
 
-    expect(mockUpdate).toHaveBeenCalledTimes(2);
+    expect(mockUpdate).toHaveBeenCalledTimes(1);
     expect(mockUpdate).toHaveBeenCalledWith({ key: 'type', data: 'other' });
 
     userEvent.click(screen.getByText('tr-terminological-vocabulary'));
 
-    expect(mockUpdate).toHaveBeenCalledTimes(3);
+    expect(mockUpdate).toHaveBeenCalledTimes(2);
     expect(mockUpdate).toHaveBeenCalledWith({
       key: 'type',
       data: 'terminology',

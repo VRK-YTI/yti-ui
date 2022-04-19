@@ -9,21 +9,14 @@ describe('language-block', () => {
     const mockUpdate = jest.fn();
 
     const lang = { uniqueItemId: 'fi' } as unknown as MultiSelectData;
-    const terminologyNames = [
-      {
-        lang: 'fi',
-        name: '',
-        description: '',
-      },
-    ];
 
     render(
       <LanguageBlock
         lang={lang}
         isSmall={false}
-        terminologyNames={terminologyNames}
-        setTerminologyNames={mockUpdate}
+        handleUpdate={mockUpdate}
         userPosted={false}
+        id="fi"
       />,
       { wrapper: themeProvider }
     );
@@ -34,14 +27,8 @@ describe('language-block', () => {
     userEvent.keyboard('title');
     userEvent.click(screen.getByText('tr-terminology-name'));
 
-    expect(mockUpdate).toHaveBeenCalledTimes(2);
-    expect(mockUpdate).toHaveBeenCalledWith([
-      {
-        lang: 'fi',
-        name: 'title',
-        description: '',
-      },
-    ]);
+    expect(mockUpdate).toHaveBeenCalledTimes(1);
+    expect(mockUpdate).toHaveBeenCalledWith('fi', 'title', '');
 
     userEvent.click(
       screen.getByPlaceholderText('tr-terminology-description-placeholder')
@@ -49,13 +36,7 @@ describe('language-block', () => {
     userEvent.keyboard('description');
     userEvent.click(screen.getByText('tr-terminology-name'));
 
-    expect(mockUpdate).toHaveBeenCalledTimes(4);
-    expect(mockUpdate).toHaveBeenCalledWith([
-      {
-        lang: 'fi',
-        name: 'title',
-        description: 'description',
-      },
-    ]);
+    expect(mockUpdate).toHaveBeenCalledTimes(3);
+    expect(mockUpdate).toHaveBeenCalledWith('fi', 'title', 'description');
   });
 });
