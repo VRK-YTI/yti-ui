@@ -7,19 +7,9 @@ export const CloseWrapper = styled.div`
   }
 `;
 
-export const DropdownPlaceholder = styled.i`
-  color: ${(props) => props.theme.suomifi.colors.depthDark1};
-`;
-
 export const DropdownWrapper = styled.div`
-  min-width: inherit;
-
-  > span {
-    min-width: 100%;
-
-    > div > div > * {
-      width: calc(100% - 47px);
-    }
+  > div {
+    width: 100%;
   }
 `;
 
