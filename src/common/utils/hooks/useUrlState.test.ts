@@ -1,5 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
-import { act } from '@testing-library/react';
+import { renderHook, act } from '@testing-library/react-hooks';
 import useUrlState, { initialUrlState, isInitial } from './useUrlState';
 import mockRouter from 'next-router-mock';
 import singletonRouter from 'next/router';
