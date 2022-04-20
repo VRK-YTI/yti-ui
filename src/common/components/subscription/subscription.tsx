@@ -20,24 +20,11 @@ export default function Subscription({ uri }: SubscriptionProps) {
   const { data, error } = useGetSubscriptionQuery(uri);
   const [toggleSubscription, subscription] = useToggleSubscriptionMutation();
   const [subscribed, setSubscribed] = useState(false);
-  const [userSubscribed, setUserSubscribed] = useState(false);
   const dispatch = useStoreDispatch();
 
   useEffect(() => {
     setSubscribed(data !== '' && data ? true : false);
   }, [data]);
-
-  useEffect(() => {
-    if (subscribed) {
-      const notificationTimer = setTimeout(() => {
-        setUserSubscribed(false);
-      }, 5000);
-
-      return () => {
-        clearTimeout(notificationTimer);
-      };
-    }
-  }, [subscribed]);
 
   useEffect(() => {
     if (subscription.isSuccess) {
@@ -50,7 +37,6 @@ export default function Subscription({ uri }: SubscriptionProps) {
   const handleSubscription = (subscribed: boolean) => {
     if (!error) {
       toggleSubscription({ action: subscribed ? 'DELETE' : 'ADD', uri: uri });
-      setUserSubscribed(subscribed ? false : true);
     }
   };
 
@@ -63,10 +49,9 @@ export default function Subscription({ uri }: SubscriptionProps) {
       >
         <Paragraph>
           <Text smallScreen>
-            {subscribed ?
-              t('email-subscription-subscribed')
-              :
-              t('email-subscription-unsubscribed')}
+            {subscribed
+              ? t('email-subscription-subscribed')
+              : t('email-subscription-unsubscribed')}
           </Text>
         </Paragraph>
       </InlineAlert>
