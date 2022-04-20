@@ -56,26 +56,24 @@ export default function Subscription({ uri }: SubscriptionProps) {
 
   return (
     <>
-      {subscribed && userSubscribed ? (
-        <InlineAlert noIcon style={{ marginBottom: '20px' }}>
-          <Paragraph>
-            <Text variant="bold">{t('email-subscription-subscribed')}</Text>
-          </Paragraph>
-          <Paragraph>
-            <Text smallScreen>
-              {t('email-subscription-subscribed-description')}
-            </Text>
-          </Paragraph>
-        </InlineAlert>
-      ) : (
-        <></>
-      )}
+      <InlineAlert
+        noIcon
+        status={subscribed ? 'neutral' : 'warning'}
+        style={{ marginBottom: '20px' }}
+      >
+        <Paragraph>
+          <Text smallScreen>
+            {subscribed ?
+              t('email-subscription-subscribed')
+              :
+              t('email-subscription-unsubscribed')}
+          </Text>
+        </Paragraph>
+      </InlineAlert>
 
       <Button
         variant="secondary"
-        // This is still commented because suomifi-components beta 7.x.1
-        // does not yet have these icons
-        // icon={subscribed ? 'alertOff' : 'alert'}
+        icon={subscribed ? 'alertOff' : 'alert'}
         onClick={() => handleSubscription(subscribed)}
       >
         {subscribed
