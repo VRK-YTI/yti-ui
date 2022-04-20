@@ -37,6 +37,7 @@ export const PaginationButton = styled(Button)`
   align-items: center;
   justify-content: center;
   font-size: ${(props) => props.theme.suomifi.typography.bodyTextSmall};
+  white-space: nowrap;
 `;
 
 export const PaginationMobile = styled.div`
