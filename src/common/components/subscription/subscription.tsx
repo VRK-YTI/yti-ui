@@ -20,24 +20,11 @@ export default function Subscription({ uri }: SubscriptionProps) {
   const { data, error } = useGetSubscriptionQuery(uri);
   const [toggleSubscription, subscription] = useToggleSubscriptionMutation();
   const [subscribed, setSubscribed] = useState(false);
-  const [userSubscribed, setUserSubscribed] = useState(false);
   const dispatch = useStoreDispatch();
 
   useEffect(() => {
     setSubscribed(data !== '' && data ? true : false);
   }, [data]);
-
-  useEffect(() => {
-    if (subscribed) {
-      const notificationTimer = setTimeout(() => {
-        setUserSubscribed(false);
-      }, 5000);
-
-      return () => {
-        clearTimeout(notificationTimer);
-      };
-    }
-  }, [subscribed]);
 
   useEffect(() => {
     if (subscription.isSuccess) {
@@ -50,32 +37,28 @@ export default function Subscription({ uri }: SubscriptionProps) {
   const handleSubscription = (subscribed: boolean) => {
     if (!error) {
       toggleSubscription({ action: subscribed ? 'DELETE' : 'ADD', uri: uri });
-      setUserSubscribed(subscribed ? false : true);
     }
   };
 
   return (
     <>
-      {subscribed && userSubscribed ? (
-        <InlineAlert noIcon style={{ marginBottom: '20px' }}>
-          <Paragraph>
-            <Text variant="bold">{t('email-subscription-subscribed')}</Text>
-          </Paragraph>
-          <Paragraph>
-            <Text smallScreen>
-              {t('email-subscription-subscribed-description')}
-            </Text>
-          </Paragraph>
-        </InlineAlert>
-      ) : (
-        <></>
-      )}
+      <InlineAlert
+        noIcon
+        status={subscribed ? 'neutral' : 'warning'}
+        style={{ marginBottom: '20px' }}
+      >
+        <Paragraph>
+          <Text smallScreen>
+            {subscribed
+              ? t('email-subscription-subscribed')
+              : t('email-subscription-unsubscribed')}
+          </Text>
+        </Paragraph>
+      </InlineAlert>
 
       <Button
         variant="secondary"
-        // This is still commented because suomifi-components beta 7.x.1
-        // does not yet have these icons
-        // icon={subscribed ? 'alertOff' : 'alert'}
+        icon={subscribed ? 'alertOff' : 'alert'}
         onClick={() => handleSubscription(subscribed)}
       >
         {subscribed

@@ -102,6 +102,8 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
             >
               {t('email-subscription-description')}
             </BasicBlock>
+
+            <Separator isLarge />
           </>
         )}
 
