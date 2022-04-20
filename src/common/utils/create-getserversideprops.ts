@@ -71,6 +71,7 @@ export function createCommonGetServerSideProps<
           props: {
             ...results?.props,
             ...(await serverSideTranslations(locale, [
+              'admin',
               'alert',
               'collection',
               'common',

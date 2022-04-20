@@ -4,6 +4,7 @@ import {
   Contributor,
   Description,
   StatusChip,
+  TitleDescriptionWrapper,
   TitleWrapper,
   TitleWrapperNoBreadcrumb,
 } from './title.styles';
@@ -14,6 +15,8 @@ import { useStoreDispatch } from '@app/store';
 import { setTitle } from './title.slice';
 import { useEffect, useRef } from 'react';
 import { getProperty } from '@app/common/utils/get-property';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import NewTerminology from '@app/common/components/new-terminology';
 
 interface TitleProps {
   info: string | VocabularyInfoDTO;
@@ -21,6 +24,7 @@ interface TitleProps {
 
 export default function Title({ info }: TitleProps) {
   const { t, i18n } = useTranslation('common');
+  const { isSmall } = useBreakpoints();
   const titleRef = useRef<HTMLHeadingElement>(null);
   const dispatch = useStoreDispatch();
   const title = getTitle(info);
@@ -43,7 +47,10 @@ export default function Title({ info }: TitleProps) {
     return (
       <TitleWrapperNoBreadcrumb>
         <Heading variant="h1">{info}</Heading>
-        <Description>{t('terminology-search-info')}</Description>
+        <TitleDescriptionWrapper isSmall={isSmall}>
+          <Description>{t('terminology-search-info')}</Description>
+          <NewTerminology />
+        </TitleDescriptionWrapper>
       </TitleWrapperNoBreadcrumb>
     );
   } else {
