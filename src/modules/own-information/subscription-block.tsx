@@ -12,7 +12,6 @@ import { useStoreDispatch } from '../../store';
 import { useToggleSubscriptionMutation } from '../../common/components/subscription/subscription.slice';
 import { setAlert } from '../../common/components/alert/alert.slice';
 import { useEffect, useState } from 'react';
-import { Error } from '../../common/interfaces/error.interface';
 import RemoveSubscription from '../../common/components/subscription/remove-subscription';
 import getPrefLabel from '../../common/utils/get-preflabel';
 
@@ -34,21 +33,24 @@ export default function SubscriptionBlock({
     if (subscription && subscription.isSuccess) {
       const unsubscribedAll = subscription.data?.uri?.includes(',') ?? false;
       dispatch(
-        setAlert([
-          {
-            status: 0,
-            data: unsubscribedAll
-              ? t('subscription-all-notifications-removed')
-              : t('subscription-notifications-removed', {
-                  item: unsubscribedItem ?? '',
-                }),
-          },
-        ])
+        setAlert(
+          [
+            {
+              status: 0,
+              data: unsubscribedAll
+                ? t('subscription-all-notifications-removed')
+                : t('subscription-notifications-removed', {
+                    item: unsubscribedItem ?? '',
+                  }),
+            },
+          ],
+          []
+        )
       );
 
       refetchSubscriptions();
     } else if (subscription.isError) {
-      dispatch(setAlert([subscription.error as Error]));
+      dispatch(setAlert([subscription.error], []));
       console.error('subscription error', subscription.error);
     }
   }, [subscription, dispatch, unsubscribedItem, t, refetchSubscriptions]);

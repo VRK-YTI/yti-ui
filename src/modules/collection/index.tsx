@@ -15,7 +15,6 @@ import { useBreakpoints } from '@app/common/components/media-query/media-query-c
 import PropertyValue from '@app/common/components/property-value';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import Separator from '@app/common/components/separator';
-import { Error } from '@app/common/interfaces/error.interface';
 import { useStoreDispatch } from '@app/store';
 import CollectionSidebar from './collection-sidebar';
 import {
@@ -78,7 +77,7 @@ export default function Collection({
   }, [setCollectionTitle, prefLabel]);
 
   useEffect(() => {
-    dispatch(setAlert([terminologyError as Error, collectionError as Error]));
+    dispatch(setAlert([terminologyError, collectionError], []));
   }, [dispatch, terminologyError, collectionError]);
 
   useEffect(() => {

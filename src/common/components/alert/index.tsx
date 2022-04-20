@@ -5,12 +5,12 @@ import { useStoreDispatch } from '@app/store';
 import { Error } from '@app/common/interfaces/error.interface';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import { AlertsWrapper, AlertToast } from './alert-toast.styles';
-import { selectAlert, setAlert } from './alert.slice';
+import { Alert, selectAlert, setAlertVisibility } from './alert.slice';
 import NotificationToast from './notification-toast';
 
 interface AlertToastProps {
   alert: Error;
-  alerts: Error[];
+  alerts: Alert[];
   type: 'neutral' | 'warning' | 'error';
 }
 
@@ -28,13 +28,17 @@ export function Alerts() {
       isSmall={isSmall}
     >
       {alerts.map((alert, idx) => {
-        if (alert.status === 0) {
+        if (!alert?.visible) {
+          return;
+        }
+
+        if (alert.error.status === 0) {
           return <NotificationToast key={`alert-${idx}`} alert={alert} />;
         } else {
           return (
-            <Alert
+            <AlertToastComponent
               key={`alert-${idx}`}
-              alert={alert}
+              alert={alert.error}
               alerts={alerts}
               type={'error'}
             />
@@ -45,11 +49,12 @@ export function Alerts() {
   );
 }
 
-export function Alert({ alert, alerts, type }: AlertToastProps) {
+export function AlertToastComponent({ alert, alerts, type }: AlertToastProps) {
   const { isSmall } = useBreakpoints();
   const { t } = useTranslation('alert');
   const [show, setShow] = useState(true);
   const dispatch = useStoreDispatch();
+  const alertsLength = alerts.filter((a) => a.visible).length;
 
   if (!show) {
     return null;
@@ -57,8 +62,16 @@ export function Alert({ alert, alerts, type }: AlertToastProps) {
 
   const handleClick = () => {
     setShow(false);
-    const newAlerts = alerts.slice(0, alerts.length - 1);
-    dispatch(setAlert(newAlerts));
+    const newAlerts = alerts.map((newAlert) => {
+      if (newAlert.error === alert) {
+        return {
+          error: newAlert.error,
+          visible: false,
+        };
+      }
+      return newAlert;
+    });
+    dispatch(setAlertVisibility(newAlerts));
   };
 
   return (
@@ -69,7 +82,7 @@ export function Alert({ alert, alerts, type }: AlertToastProps) {
       smallScreen={isSmall}
       isSmall={isSmall}
     >
-      {alerts.length > 1 && `(${alerts.length})`}{' '}
+      {alertsLength > 1 && `(${alertsLength})`}{' '}
       {t('error-occured', { id: alert.status ?? '' })}
     </AlertToast>
   );

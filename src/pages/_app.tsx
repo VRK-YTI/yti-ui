@@ -29,12 +29,15 @@ function App({ Component, pageProps }: AppProps) {
     } else if (login.anonymous && window.localStorage.getItem('user-signed')) {
       window.localStorage.removeItem('user-signed');
       dispatch(
-        setAlert([
-          {
-            status: 0,
-            data: 'logged-out',
-          },
-        ])
+        setAlert(
+          [
+            {
+              status: 0,
+              data: 'logged-out',
+            },
+          ],
+          []
+        )
       );
     }
   });

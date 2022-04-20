@@ -2,7 +2,6 @@ import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import { Button, Paragraph, Text } from 'suomifi-ui-components';
 import { useStoreDispatch } from '@app/store';
-import { Error } from '../../interfaces/error.interface';
 import { setAlert } from '../alert/alert.slice';
 import {
   subscriptionApi,
@@ -30,7 +29,7 @@ export default function Subscription({ uri }: SubscriptionProps) {
     if (subscription.isSuccess) {
       dispatch(subscriptionApi.internalActions.resetApiState());
     } else if (subscription.isError) {
-      dispatch(setAlert([subscription.error as Error]));
+      dispatch(setAlert([subscription.error], []));
     }
   }, [subscription, dispatch]);
 
