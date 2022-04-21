@@ -24,7 +24,7 @@ export default function InformationDomainsSelector({
 
   const handleChange = (e: MultiSelectData[]) => {
     setSelectedInfoDomains(e);
-    update({ key: 'infoDomains', data: selectedInfoDomains });
+    update({ key: 'infoDomains', data: e });
   };
 
   const infoDomains: MultiSelectData[] = informationDomains?.map(

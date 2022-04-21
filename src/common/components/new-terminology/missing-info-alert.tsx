@@ -77,20 +77,20 @@ export default function MissingInfoAlert({ data }: MissingInfoAlertProps) {
   }
 
   function renderPrefixAlerts() {
-    return (
-      <>
-        {!data.prefix[0] && <li>{t('alert-prefix-undefined')}</li>}
-        {data.prefix[1] === false && (
-          <li>{t('alert-prefix-invalid-or-in-use')}</li>
-        )}
-      </>
-    );
+    if (!data.prefix[0]) {
+      return <li>{t('alert-prefix-undefined')}</li>;
+    }
+
+    if (data.prefix[1] === false) {
+      return <li>{t('alert-prefix-invalid-or-in-use')}</li>;
+    }
+
+    return <></>;
   }
 
   function renderContactAlerts() {
     return (
       <>
-        {!data.contact?.[0] && <li>{t('alert-contact-undefined')}</li>}
         {data.contact?.[1] === false && <li>{t('alert-contact-invalid')}</li>}
       </>
     );

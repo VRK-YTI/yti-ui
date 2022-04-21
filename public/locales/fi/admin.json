@@ -37,7 +37,7 @@
   "url-preview": "Url:n esikatselu",
   "contact-information": "Yhteydenottotiedot",
   "contact-information-description": "Organisaation yleinen sähköpostiosoite, johon käyttäjä voi antaa palautetta sanaston sisältöön liittyen. Älä käytä henkilökohtaista sähköpostiosoitetta.",
-  "contact-email": "Yhteydenotto-osoite",
+  "contact-email": "Yhteydenotto-osoite (valinnainen)",
   "contact-hint-text": "Sanaston tiedoissa julkisesti näkyvä sähköpostiosoite.",
   "contact-visual-placeholder": "Esim. yllapito@example.org",
   "contact-email-invalid": "Sähköposti ei ole oikeassa muodossa",

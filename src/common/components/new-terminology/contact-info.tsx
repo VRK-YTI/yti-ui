@@ -27,7 +27,7 @@ export default function ContactInfo({ update, userPosted }: ContactInfoProps) {
       update({ key: 'contact', data: [contact, false] });
     } else {
       setStatus('default');
-      update({ key: 'contact', data: [contact, contact !== ''] });
+      update({ key: 'contact', data: [contact, true] });
     }
   };
 
