@@ -1,9 +1,4 @@
-import { Text } from 'suomifi-ui-components';
-import {
-  FilterFieldset,
-  FilterCheckbox,
-  FilterFieldsetLegend,
-} from './filter.styles';
+import { Checkbox, CheckboxGroup } from 'suomifi-ui-components';
 
 export interface Item {
   value: string;
@@ -26,23 +21,18 @@ export default function CheckboxFilter({
   checkboxVariant,
 }: CheckboxFilterProps) {
   return (
-    <FilterFieldset>
-      <FilterFieldsetLegend>
-        <Text variant="bold" smallScreen>
-          {title}
-        </Text>
-      </FilterFieldsetLegend>
+    <CheckboxGroup labelText={title}>
       {items.map(({ value, label }: Item) => (
-        <FilterCheckbox
+        <Checkbox
           key={value}
           onClick={({ checkboxState }) => update(value, checkboxState)}
           checked={selectedItems.includes(value)}
           variant={checkboxVariant}
         >
           {label}
-        </FilterCheckbox>
+        </Checkbox>
       ))}
-    </FilterFieldset>
+    </CheckboxGroup>
   );
 
   function update(item: string, isSelected: boolean) {
