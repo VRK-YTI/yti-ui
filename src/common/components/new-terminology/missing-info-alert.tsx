@@ -34,6 +34,7 @@ export default function MissingInfoAlert({ data }: MissingInfoAlertProps) {
   function renderAlert() {
     if (
       data.description[0].length === 0 ||
+      data.description[0].some(d => !d.name) ||
       !data.mainOrg ||
       data.infoDomains.length === 0 ||
       !data.prefix[0] ||
