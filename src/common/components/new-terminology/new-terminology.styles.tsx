@@ -160,10 +160,6 @@ export const OrgCheckbox = styled(Checkbox)`
 
 export const OrgSingleSelect = styled(SingleSelect)<{ issmall?: boolean }>`
   min-width: ${(props) => (props.issmall ? '100%' : '480px')};
-
-  .fi-filter-input_action-elements-container {
-    margin-top: 10px;
-  }
 `;
 
 export const SuccessIndicator = styled(Icon)`

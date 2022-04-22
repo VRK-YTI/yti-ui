@@ -37,7 +37,7 @@
   "url-preview": "URL preview",
   "contact-information": "Contact",
   "contact-information-description": "Organizations public email to which users can provice feedback about terminology and it's content. Do not use personal emails.",
-  "contact-email": "Email",
+  "contact-email": "Email (optional)",
   "contact-hint-text": "Email shown publicly in terminology information.",
   "contact-visual-placeholder": "E.g. support@example.org",
   "contact-email-invalid": "Email is in invalid form",

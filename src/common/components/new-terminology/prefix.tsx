@@ -24,6 +24,7 @@ export default function Prefix({ update, userPosted }: PrefixProps) {
   const [prefix, setPrefix] = useState(randomURL);
   const [prefixType, setPrefixType] = useState('');
   const [status, setStatus] = useState<'default' | 'error'>('default');
+  const [prefixValid, setPrefixValid] = useState(true);
   const [initDone, setInitDone] = useState(false);
   const { data: isInUse } = useGetIfNamespaceInUseQuery(
     prefix !== '' ? prefix : randomURL
@@ -40,10 +41,10 @@ export default function Prefix({ update, userPosted }: PrefixProps) {
     if (isInUse && status !== 'error') {
       setStatus('error');
       update({ key: 'prefix', data: [prefix, false] });
-    } else if (!isInUse && status !== 'default') {
+    } else if (!isInUse && prefixValid) {
       setStatus('default');
     }
-  }, [isInUse, update, prefix, status]);
+  }, [isInUse, update, prefix, status, prefixValid]);
 
   const handlePrefixTypeChange = (value: string) => {
     setPrefixType(value);
@@ -59,6 +60,7 @@ export default function Prefix({ update, userPosted }: PrefixProps) {
   const handleCustomChange = (e: string) => {
     setPrefix(e);
     const inputOnlyValid = e.match(/[a-z0-9\-_]*/g)?.join('');
+    setPrefixValid(inputOnlyValid?.length === e.length);
 
     if (inputOnlyValid?.length !== e.length) {
       setStatus('error');

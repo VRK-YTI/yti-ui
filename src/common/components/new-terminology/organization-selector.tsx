@@ -37,20 +37,22 @@ export default function OrganizationSelector({
   const [showOtherOrgSelector, setShowOtherOrgSelector] =
     useState<boolean>(false);
 
-  const adminOrgs: SingleSelectData[] = organizations?.map((org) => {
-    if (user.organizationsInRole.ADMIN.includes(org.id.toString())) {
-      const orgName = org.properties.prefLabel.value;
+  const adminOrgs: SingleSelectData[] = organizations
+    ?.map((org) => {
+      if (user.organizationsInRole.ADMIN.includes(org.id.toString())) {
+        const orgName = org.properties.prefLabel.value;
 
-      if (orgName) {
-        return {
-          name: orgName,
-          labelText: orgName,
-          uniqueItemId: org.id,
-          organizationId: org.type.graph.id,
-        } as SingleSelectData;
+        if (orgName) {
+          return {
+            name: orgName,
+            labelText: orgName,
+            uniqueItemId: org.id,
+            organizationId: org.type.graph.id,
+          } as SingleSelectData;
+        }
       }
-    }
-  }) as SingleSelectData[];
+    })
+    .filter((org) => org) as SingleSelectData[];
 
   const handleSelectOrganization = (value: SingleSelectData | null) => {
     setSelectedOrganization(value);
