@@ -20,7 +20,10 @@ export const initialUrlState: UrlState = {
 };
 
 export function isInitial(state: UrlState, name: keyof UrlState) {
-  return _.isEqual(state[name], initialUrlState[name]);
+  return _.isEqual(
+    _.sortBy(asArray(state[name])),
+    _.sortBy(asArray(initialUrlState[name]))
+  );
 }
 
 interface UseURLStateResult {
@@ -131,4 +134,10 @@ function asNumber(value: QueryParamValue, defaultValue = 0): number {
   const parsed = parseInt(value);
 
   return !isNaN(parsed) ? parsed : defaultValue;
+}
+
+function asArray(
+  value: string | number | string[] | number[]
+): (string | number)[] {
+  return Array.isArray(value) ? value : [value];
 }
