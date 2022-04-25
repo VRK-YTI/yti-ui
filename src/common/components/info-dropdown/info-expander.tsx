@@ -18,6 +18,8 @@ import FormattedDate from '@app/common/components/formatted-date';
 import { useSelector } from 'react-redux';
 import { selectLogin } from '@app/common/components/login/login.slice';
 import Subscription from '@app/common/components/subscription/subscription';
+import HasPermission from '@app/common/utils/has-permission';
+import NewConceptModal from '../new-concept-modal';
 
 interface InfoExpanderProps {
   data?: VocabularyInfoDTO;
@@ -61,6 +63,11 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
         <BasicBlock title={t('vocabulary-info-vocabulary-type')}>
           {t('vocabulary-info-terminological-dictionary')}
         </BasicBlock>
+
+        {HasPermission({
+          actions: 'CREATE_CONCEPT',
+          targetOrganization: data.references.contributor?.[0].id,
+        }) && <NewConceptModal />}
 
         <Separator isLarge />
 

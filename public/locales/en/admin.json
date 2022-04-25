@@ -82,5 +82,13 @@
   "allowed-file-formats": "Allowed file formats:",
   "add-file": "Add file",
   "file-added": "File added",
-  "remove": "Remove"
+  "remove": "Remove",
+  "continue": "Continue",
+  "cancel-variant": "Cancel",
+  "new-concept-to-terminology": "New concept to terminology",
+  "add-new-concept": "Add new concept",
+  "add-new-concept-description": "Concept's languages are inherited from the terminology information. Add a recommended term for the concept in at least one of the available languages.",
+  "you-have-right-new-concept": "You have the rights to create new concepts to this terminology",
+  "recommended-term": "Recommended term ({{lang}})",
+  "term-name-placeholder": "Give term name"
 }
