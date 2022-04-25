@@ -13,22 +13,6 @@ export const DropdownWrapper = styled.div`
   }
 `;
 
-export const FilterFieldset = styled.fieldset`
-  margin: 0;
-  padding: 0;
-  border: none;
-`;
-
-export const FilterFieldsetLegend = styled.legend`
-  padding: 0;
-  line-height: 1;
-`;
-
-export const FilterCheckbox = styled(Checkbox)`
-  font-size: ${(props) => props.theme.suomifi.typography.bodyTextSmall};
-  padding-top: ${(props) => props.theme.suomifi.spacing.xs};
-`;
-
 export const FilterRadioButton = styled(RadioButton)`
   font-size: ${(props) => props.theme.suomifi.typography.bodyTextSmall};
 `;
