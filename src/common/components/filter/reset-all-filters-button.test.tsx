@@ -15,4 +15,14 @@ describe('reset-all-filters-button', () => {
       screen.getByText('tr-vocabulary-filter-remove-all')
     ).toBeInTheDocument();
   });
+
+  it('should not render component when in initial state', () => {
+    mockRouter.setCurrentUrl('/?status=draft&status=valid');
+
+    render(<ResetAllFiltersButton />, { wrapper: themeProvider });
+
+    expect(
+      screen.queryByText('tr-vocabulary-filter-remove-all')
+    ).not.toBeInTheDocument();
+  });
 });
