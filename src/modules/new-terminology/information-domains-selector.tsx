@@ -1,8 +1,8 @@
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { MultiSelectData } from 'suomifi-ui-components';
-import { useBreakpoints } from '../media-query/media-query-context';
-import { useGetGroupsQuery } from '../terminology-search/terminology-search.slice';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import { useGetGroupsQuery } from '@app/common/components/terminology-search/terminology-search.slice';
 import { BlankFieldset, MultiselectSmBot } from './new-terminology.styles';
 import { UpdateTerminology } from './update-terminology.interface';
 

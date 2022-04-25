@@ -1,8 +1,8 @@
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import { Paragraph, RadioButton, Text } from 'suomifi-ui-components';
-import { useBreakpoints } from '../media-query/media-query-context';
-import { useGetIfNamespaceInUseQuery } from '../vocabulary/vocabulary.slice';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import { useGetIfNamespaceInUseQuery } from '@app/common/components/vocabulary/vocabulary.slice';
 import {
   BlankFieldset,
   RadioButtonGroupSmBot,

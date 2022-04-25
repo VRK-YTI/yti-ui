@@ -8,7 +8,7 @@ import {
   Text,
 } from 'suomifi-ui-components';
 import { selectLogin } from '@app/common/components/login/login.slice';
-import { useBreakpoints } from '../media-query/media-query-context';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import { useGetOrganizationsQuery } from '@app/common/components/terminology-search/terminology-search.slice';
 import {
   BlankFieldset,

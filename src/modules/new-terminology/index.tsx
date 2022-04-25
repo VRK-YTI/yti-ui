@@ -10,14 +10,14 @@ import {
   RadioButtonGroup,
   Text,
 } from 'suomifi-ui-components';
-import { useBreakpoints } from '../media-query/media-query-context';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import FileUpload from './file-upload';
 import InfoFile from './info-file';
 import InfoManual from './info-manual';
 import generateNewTerminology from './generate-new-terminology';
-import { usePostNewVocabularyMutation } from '../vocabulary/vocabulary.slice';
+import { usePostNewVocabularyMutation } from '@app/common/components/vocabulary/vocabulary.slice';
 import { useStoreDispatch } from '@app/store';
-import { terminologySearchApi } from '../terminology-search/terminology-search.slice';
+import { terminologySearchApi } from '@app/common/components/terminology-search/terminology-search.slice';
 import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info';
 import MissingInfoAlert from './missing-info-alert';
 import { ModalTitleAsH1 } from './new-terminology.styles';

@@ -12,7 +12,7 @@ import {
   Textarea,
   TextInput,
 } from 'suomifi-ui-components';
-import Separator from '../separator';
+import Separator from '@app/common/components/separator';
 
 export const BlankFieldset = styled.fieldset`
   border: 0;
