@@ -7,8 +7,8 @@ import {
   BlankFieldset,
   RadioButtonGroupSmBot,
   TextInputSmBot,
-} from './new-terminology.styles';
-import { UpdateTerminology } from './update-terminology.interface';
+} from './terminology-components.styles';
+import { UpdateTerminology } from '@app/modules/new-terminology/update-terminology.interface';
 import { v4 } from 'uuid';
 
 export interface PrefixProps {

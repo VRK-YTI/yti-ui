@@ -1,8 +1,11 @@
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { RadioButton } from 'suomifi-ui-components';
-import { BlankFieldset, RadioButtonGroupSmBot } from './new-terminology.styles';
-import { UpdateTerminology } from './update-terminology.interface';
+import {
+  BlankFieldset,
+  RadioButtonGroupSmBot,
+} from './terminology-components.styles';
+import { UpdateTerminology } from '@app/modules/new-terminology/update-terminology.interface';
 
 export interface TypeSelectorProps {
   update: ({ key, data }: UpdateTerminology) => void;

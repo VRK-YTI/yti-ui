@@ -15,8 +15,8 @@ import {
   MultiselectSmBot,
   OrgCheckbox,
   OrgSingleSelect,
-} from './new-terminology.styles';
-import { UpdateTerminology } from './update-terminology.interface';
+} from './terminology-components.styles';
+import { UpdateTerminology } from '@app/modules/new-terminology/update-terminology.interface';
 
 export interface OrganizationSelectorProps {
   update: ({ key, data }: UpdateTerminology) => void;

@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Paragraph, Text } from 'suomifi-ui-components';
-import ContactInfo from './contact-info';
-import InformationDomainsSelector from './information-domains-selector';
-import LanguageSelector from './language-selector';
+import ContactInfo from '@app/common/components/terminology-components/contact-info';
+import InformationDomainsSelector from '@app/common/components/terminology-components/information-domains-selector';
+import LanguageSelector from '@app/common/components/terminology-components/language-selector';
 import { TallerSeparator } from './new-terminology.styles';
-import OrganizationSelector from './organization-selector';
-import Prefix from './prefix';
-import TypeSelector from './type-selector';
+import OrganizationSelector from '@app/common/components/terminology-components/organization-selector';
+import Prefix from '@app/common/components/terminology-components/prefix';
+import TypeSelector from '@app/common/components/terminology-components/type-selector';
 import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info';
 import { useTranslation } from 'next-i18next';
 import { TerminologyDataInitialState } from './terminology-initial-state';

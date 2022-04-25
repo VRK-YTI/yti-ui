@@ -5,10 +5,10 @@ import {
   BlankFieldset,
   BlankLegend,
   TextInputSmBot,
-} from './new-terminology.styles';
+} from './terminology-components.styles';
 import isEmail from 'validator/lib/isEmail';
 import { useTranslation } from 'next-i18next';
-import { UpdateTerminology } from './update-terminology.interface';
+import { UpdateTerminology } from '@app/modules/new-terminology/update-terminology.interface';
 
 interface ContactInfoProps {
   update: ({ key, data }: UpdateTerminology) => void;
