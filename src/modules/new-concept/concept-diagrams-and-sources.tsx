@@ -1,11 +1,14 @@
+import { useTranslation } from 'next-i18next';
 import { ExpanderTitleButton } from 'suomifi-ui-components';
 import { ConceptExpander } from './new-concept.styles';
 
 export default function ConceptDiagramsAndSources() {
+  const { t } = useTranslation('admin');
+
   return (
     <ConceptExpander>
       <ExpanderTitleButton asHeading='h3'>
-        Käsitekaaviot ja lähteet
+        {t('concept-diagrams-and-sources')}
       </ExpanderTitleButton>
     </ConceptExpander>
   );

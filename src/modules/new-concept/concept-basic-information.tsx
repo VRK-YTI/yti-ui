@@ -7,15 +7,17 @@ import ConceptDiagramsAndSources from './concept-diagrams-and-sources';
 import OtherInformation from './other-information';
 import OrganizationInformation from './organizational-information';
 import RelationalInformation from './relational-information';
+import { useTranslation } from 'next-i18next';
 
 export default function ConceptBasicInformation() {
+  const { t } = useTranslation('admin');
 
   return (
     <>
       <Separator isLarge />
 
       <H2Sm variant='h2'>
-        Käsitteen perustiedot
+        {t('concept-basic-information')}
       </H2Sm>
 
       {renderDefinitions()}
@@ -45,20 +47,24 @@ export default function ConceptBasicInformation() {
   function renderDefinitionTextarea(lang: string) {
     return (
       <DefinitionTextarea
-        labelText={`Määritelmä, ${lang}`}
-        visualPlaceholder='Kirjoita määritelmä'
+        labelText={t('definition-label-text', { lang: lang, langUpper: lang.toUpperCase() })}
+        optionalText={t('optional')}
+        visualPlaceholder={t('give-definition')}
       />
     );
   }
 
   function renderExample() {
     return (
-      <BasicBlock title='Käyttöesimerkki' extra={
-        <BasicBlockExtraWrapper>
-          <Button variant='secondary'>Lisää uusi käyttöesimerkki</Button>
-        </BasicBlockExtraWrapper>
-      }>
-        Käyttöesimerkki on esimerkki käsitteen käytöstä.
+      <BasicBlock
+        title={t('example')}
+        extra={
+          <BasicBlockExtraWrapper>
+            <Button variant='secondary'>{t('add-new-example')}</Button>
+          </BasicBlockExtraWrapper>
+        }
+      >
+        {t('example-description')}
       </BasicBlock>
     );
   }
@@ -66,21 +72,24 @@ export default function ConceptBasicInformation() {
   function renderSubject() {
     return (
       <SubjectTextInput
-        labelText='Aihealue'
-        hintText='Voit määritellä käsitteelle aihealueen, johon se kuuluu.'
-        visualPlaceholder='Kirjoita aihealueen nimi'
+        labelText={t('subject')}
+        hintText={t('subject-hint-text')}
+        visualPlaceholder={t('subject-visual-placeholder')}
       />
     );
   }
 
   function renderNote() {
     return (
-      <BasicBlock title='Huomautus' extra={
-        <BasicBlockExtraWrapper>
-          <Button variant='secondary'>Lisää uusi huomautus</Button>
-        </BasicBlockExtraWrapper>
-      }>
-        Voit lisätä liittyvän muun huomautuksen. Älä lisää tähän tietoja, joille on olemassa oma kohtansa lomakkeella.
+      <BasicBlock
+        title={t('note')}
+        extra={
+          <BasicBlockExtraWrapper>
+            <Button variant='secondary'>{t('add-new-note')}</Button>
+          </BasicBlockExtraWrapper>
+        }
+      >
+        {t('new-note-description')}
       </BasicBlock>
     );
   }

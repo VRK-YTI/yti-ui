@@ -90,5 +90,22 @@
   "add-new-concept-description": "Concept's languages are inherited from the terminology information. Add a recommended term for the concept in at least one of the available languages.",
   "you-have-right-new-concept": "You have the rights to create new concepts to this terminology",
   "recommended-term": "Recommended term ({{lang}})",
-  "term-name-placeholder": "Give term name"
+  "term-name-placeholder": "Give term name",
+  "concept-basic-information": "Concept basic information",
+  "example": "Example",
+  "optional": "optional",
+  "give-definition": "Give definition",
+  "add-new-example": "Add new example",
+  "example-description": "Example gives information on how to use concept.",
+  "subject": "Subject",
+  "subject-hint-text": "You can assign a subject for concept to which it belongs to.",
+  "subject-visual-placeholder": "Give subject",
+  "note": "Note",
+  "add-new-note": "Add new note",
+  "new-note-description": "You can assign a note to concept. Do not add information here that has its own section on the form.",
+  "definition-label-text": "Definition, $t({{lang}}) {{langUpper}}",
+  "concept-diagrams-and-sources": "Concept diagrams and sources",
+  "organizational-information": "Organizational information",
+  "concept-other-information": "Concept's other information",
+  "relational-information": "Relational information"
 }
