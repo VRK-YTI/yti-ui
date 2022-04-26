@@ -3,6 +3,7 @@ import PropertyValue from '@app/common/components/property-value';
 import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
 import { useRouter } from 'next/router';
 import { Heading } from 'suomifi-ui-components';
+import ConceptBasicInformation from './concept-basic-information';
 import { NewConceptBlock } from './new-concept.styles';
 
 interface NewConceptProps {
@@ -37,6 +38,8 @@ export default function NewConcept({
 
       <NewConceptBlock>
         <Heading variant="h1">{getTermName()}</Heading>
+
+        <ConceptBasicInformation />
       </NewConceptBlock>
     </>
   );
