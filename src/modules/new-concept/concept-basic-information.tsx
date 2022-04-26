@@ -24,6 +24,7 @@ export default function ConceptBasicInformation() {
       {renderDefinitions()}
       {renderExample()}
       {renderSubject()}
+
       <Notes />
 
       <ExpanderBlock>

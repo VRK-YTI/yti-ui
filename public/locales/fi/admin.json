@@ -107,5 +107,8 @@
   "concept-diagrams-and-sources": "Käsitekaaviot ja lähteet",
   "organizational-information": "Hallinnolliset tiedot",
   "concept-other-information": "Käsitteen muut tiedot",
-  "relational-information": "Suhdetiedot"
+  "relational-information": "Suhdetiedot",
+  "language": "Kieli",
+  "note-textarea-label-text": "Käsitteeseen liittyvä huomautus",
+  "note-textarea-placeholder": "Kirjoita huomautus"
 }

@@ -107,5 +107,8 @@
   "concept-diagrams-and-sources": "Concept diagrams and sources",
   "organizational-information": "Organizational information",
   "concept-other-information": "Concept's other information",
-  "relational-information": "Relational information"
+  "relational-information": "Relational information",
+  "language": "Language",
+  "note-textarea-label-text": "Note related to concept",
+  "note-textarea-placeholder": "Give note"
 }

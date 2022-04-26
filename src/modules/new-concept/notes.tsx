@@ -44,15 +44,15 @@ export function Notes() {
     return (
       <NoteBlock>
         <div className='top-row'>
-          <Dropdown labelText='Kieli' defaultValue='fi'>
+          <Dropdown labelText={t('language')} defaultValue='fi'>
             <DropdownItem value='fi'>
-              suomi
+              {t('fi')}
             </DropdownItem>
             <DropdownItem value='sv'>
-              ruotsi
+              {t('sv')}
             </DropdownItem>
             <DropdownItem value='en'>
-              englanti
+              {t('en')}
             </DropdownItem>
           </Dropdown>
 
@@ -61,13 +61,13 @@ export function Notes() {
             icon='remove'
             onClick={() => handleClick()}
           >
-            Poista
+            {t('remove')}
           </Button>
         </div>
 
         <NoteTextarea
-          labelText='Käsitteeseen liittyvä huomautus'
-          visualPlaceholder='Kirjoita huomautus'
+          labelText={t('note-textarea-label-text')}
+          visualPlaceholder={t('note-textarea-placeholder')}
         />
       </NoteBlock>
     );
