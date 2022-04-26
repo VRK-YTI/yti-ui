@@ -25,13 +25,15 @@ interface HandleChangeProps {
   value: string;
 }
 
-export default function NewConceptModal({ terminologyId }: NewConceptModalProps) {
+export default function NewConceptModal({
+  terminologyId,
+}: NewConceptModalProps) {
   const { t } = useTranslation('admin');
   const [visible, setVisible] = useState(false);
   const [termName, setTermName] = useState({ FI: '', SV: '', EN: '' });
 
   const handleChange = ({ lang, value }: HandleChangeProps) => {
-    setTermName(termName => ({...termName, [lang]: value}));
+    setTermName((termName) => ({ ...termName, [lang]: value }));
   };
 
   return (
@@ -88,7 +90,10 @@ export default function NewConceptModal({ terminologyId }: NewConceptModalProps)
         </ModalContent>
 
         <ModalFooter>
-          <Link href={`/terminology/${terminologyId}/new-concept/${getTermName()}`} passHref>
+          <Link
+            href={`/terminology/${terminologyId}/new-concept/${getTermName()}`}
+            passHref
+          >
             <Button>{t('continue')}</Button>
           </Link>
           <Button variant="secondary" onClick={() => setVisible(false)}>

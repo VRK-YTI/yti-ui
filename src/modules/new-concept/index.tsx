@@ -10,33 +10,33 @@ interface NewConceptProps {
   conceptName: string;
 }
 
-export default function NewConcept({ terminologyId, conceptName }: NewConceptProps) {
+export default function NewConcept({
+  terminologyId,
+  conceptName,
+}: NewConceptProps) {
   const router = useRouter();
   const { data: terminology } = useGetVocabularyQuery(terminologyId);
   console.log(terminology);
   return (
     <>
       <Breadcrumb>
-        {router.query.terminologyId &&
+        {router.query.terminologyId && (
           <BreadcrumbLink url={`/terminology/${router.query.terminologyId}`}>
             <PropertyValue
               property={terminology?.properties.prefLabel}
               fallbackLanguage="fi"
             />
           </BreadcrumbLink>
-        }
-        {conceptName &&
-          <BreadcrumbLink url='' current>
+        )}
+        {conceptName && (
+          <BreadcrumbLink url="" current>
             {conceptName}
           </BreadcrumbLink>
-        }
+        )}
       </Breadcrumb>
 
       <NewConceptBlock>
-        <Heading variant='h1'>
-          {conceptName}
-        </Heading>
-
+        <Heading variant="h1">{conceptName}</Heading>
       </NewConceptBlock>
     </>
   );
