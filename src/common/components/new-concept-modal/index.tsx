@@ -1,4 +1,5 @@
 import { useTranslation } from 'next-i18next';
+import Link from 'next/link';
 import { useState } from 'react';
 import {
   Button,
@@ -15,9 +16,23 @@ import { BasicBlockExtraWrapper } from '../block/block.styles';
 import Separator from '../separator';
 import { TextInputBlock } from './new-concept-modal.styles';
 
-export default function NewConceptModal() {
+interface NewConceptModalProps {
+  terminologyId: string;
+}
+
+interface HandleChangeProps {
+  lang: 'FI' | 'SV' | 'EN';
+  value: string;
+}
+
+export default function NewConceptModal({ terminologyId }: NewConceptModalProps) {
   const { t } = useTranslation('admin');
   const [visible, setVisible] = useState(false);
+  const [termName, setTermName] = useState({ FI: '', SV: '', EN: '' });
+
+  const handleChange = ({ lang, value }: HandleChangeProps) => {
+    setTermName(termName => ({...termName, [lang]: value}));
+  };
 
   return (
     <>
@@ -55,22 +70,27 @@ export default function NewConceptModal() {
             <TextInput
               labelText={t('recommended-term', { lang: 'FI' })}
               visualPlaceholder={t('term-name-placeholder')}
+              onChange={(e) => handleChange({ lang: 'FI', value: e as string })}
             />
 
             <TextInput
               labelText={t('recommended-term', { lang: 'SV' })}
               visualPlaceholder={t('term-name-placeholder')}
+              onChange={(e) => handleChange({ lang: 'SV', value: e as string })}
             />
 
             <TextInput
               labelText={t('recommended-term', { lang: 'EN' })}
               visualPlaceholder={t('term-name-placeholder')}
+              onChange={(e) => handleChange({ lang: 'EN', value: e as string })}
             />
           </TextInputBlock>
         </ModalContent>
 
         <ModalFooter>
-          <Button>{t('continue')}</Button>
+          <Link href={`/terminology/${terminologyId}/new-concept/${getTermName()}`} passHref>
+            <Button>{t('continue')}</Button>
+          </Link>
           <Button variant="secondary" onClick={() => setVisible(false)}>
             {t('cancel-variant')}
           </Button>
@@ -78,4 +98,18 @@ export default function NewConceptModal() {
       </Modal>
     </>
   );
+
+  function getTermName() {
+    if (termName['FI']) {
+      return termName['FI'];
+    }
+
+    if (termName['SV']) {
+      return termName['SV'];
+    }
+
+    if (termName['EN']) {
+      return termName['EN'];
+    }
+  }
 }

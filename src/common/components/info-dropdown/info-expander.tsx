@@ -67,7 +67,7 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
         {HasPermission({
           actions: 'CREATE_CONCEPT',
           targetOrganization: data.references.contributor?.[0].id,
-        }) && <NewConceptModal />}
+        }) && <NewConceptModal terminologyId={data.type.graph.id} />}
 
         <Separator isLarge />
 
