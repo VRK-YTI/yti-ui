@@ -8,6 +8,7 @@ import OtherInformation from './other-information';
 import OrganizationInformation from './organizational-information';
 import RelationalInformation from './relational-information';
 import { useTranslation } from 'next-i18next';
+import { Notes } from './notes';
 
 export default function ConceptBasicInformation() {
   const { t } = useTranslation('admin');
@@ -23,7 +24,7 @@ export default function ConceptBasicInformation() {
       {renderDefinitions()}
       {renderExample()}
       {renderSubject()}
-      {renderNote()}
+      <Notes />
 
       <ExpanderBlock>
         <ConceptDiagramsAndSources />
@@ -76,21 +77,6 @@ export default function ConceptBasicInformation() {
         hintText={t('subject-hint-text')}
         visualPlaceholder={t('subject-visual-placeholder')}
       />
-    );
-  }
-
-  function renderNote() {
-    return (
-      <BasicBlock
-        title={t('note')}
-        extra={
-          <BasicBlockExtraWrapper>
-            <Button variant='secondary'>{t('add-new-note')}</Button>
-          </BasicBlockExtraWrapper>
-        }
-      >
-        {t('new-note-description')}
-      </BasicBlock>
     );
   }
 }
