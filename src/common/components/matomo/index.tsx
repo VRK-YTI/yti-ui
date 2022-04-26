@@ -77,6 +77,12 @@ export function MatomoTracking({ url, siteId }: MatomoProps) {
 }
 
 const withEnv = () => {
+  console.log('matomo config', {
+    enabled: process.env.NEXT_PUBLIC_MATOMO_ENABLED,
+    url: process.env.NEXT_PUBLIC_MATOMO_URL,
+    siteId: process.env.NEXT_PUBLIC_MATOMO_SITE_ID,
+  });
+
   const isEnabled = process.env.NEXT_PUBLIC_MATOMO_ENABLED === 'true';
   const url = process.env.NEXT_PUBLIC_MATOMO_URL;
   const siteId = process.env.NEXT_PUBLIC_MATOMO_SITE_ID;
