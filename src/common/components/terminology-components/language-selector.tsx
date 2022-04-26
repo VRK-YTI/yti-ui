@@ -1,14 +1,14 @@
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { MultiSelectData, Paragraph, Text } from 'suomifi-ui-components';
-import { useBreakpoints } from '../media-query/media-query-context';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import LanguageBlock from './language-block';
 import {
   BlankFieldset,
   BlankLegend,
   MultiselectSmBot,
-} from './new-terminology.styles';
-import { UpdateTerminology } from './update-terminology.interface';
+} from './terminology-components.styles';
+import { UpdateTerminology } from '@app/modules/new-terminology/update-terminology.interface';
 
 export interface TerminologyName {
   lang: string;

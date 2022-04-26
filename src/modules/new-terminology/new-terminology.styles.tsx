@@ -2,28 +2,11 @@ import styled, { keyframes } from 'styled-components';
 import {
   Block,
   Button,
-  Checkbox,
   Icon,
   ModalTitle,
-  MultiSelect,
-  RadioButtonGroup,
-  SingleSelect,
   StaticIcon,
-  Textarea,
-  TextInput,
 } from 'suomifi-ui-components';
-import Separator from '../separator';
-
-export const BlankFieldset = styled.fieldset`
-  border: 0;
-  margin: 0;
-  padding: 0;
-`;
-
-export const BlankLegend = styled.legend`
-  margin: 0;
-  padding: 0;
-`;
+import Separator from '@app/common/components/separator';
 
 export const ErrorIndicator = styled(Icon)`
   height: 24px;
@@ -119,18 +102,6 @@ export const DownloadIndicatorWrapper = styled(Block)`
   justify-content: center;
 `;
 
-export const LangBlock = styled(Block)`
-  min-width: 100%;
-  border: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
-  margin-bottom: ${(props) => props.theme.suomifi.spacing.xs};
-  background: ${(props) => props.theme.suomifi.colors.highlightLight4};
-`;
-
-export const LangTextInput = styled(TextInput)<{ isSmall: boolean }>`
-  min-width: ${(props) => (props.isSmall ? '100%' : '60%')};
-  margin-bottom: ${(props) => props.theme.suomifi.spacing.m};
-`;
-
 export const MissingInfoAlertUl = styled.ul`
   padding: 0;
   margin: 0;
@@ -144,24 +115,6 @@ export const ModalTitleAsH1 = styled(ModalTitle)`
   margin-bottom: 28px;
 `;
 
-export const MultiselectSmBot = styled(MultiSelect)<{ issmall?: boolean }>`
-  min-width: ${(props) => (props.issmall ? '100%' : '480px')};
-  margin-bottom: ${(props) => props.theme.suomifi.spacing.m};
-`;
-
-export const RadioButtonGroupSmBot = styled(RadioButtonGroup)`
-  margin-bottom: ${(props) => props.theme.suomifi.spacing.m};
-`;
-
-export const OrgCheckbox = styled(Checkbox)`
-  margin-top: ${(props) => props.theme.suomifi.spacing.xs};
-  margin-bottom: ${(props) => props.theme.suomifi.spacing.m};
-`;
-
-export const OrgSingleSelect = styled(SingleSelect)<{ issmall?: boolean }>`
-  min-width: ${(props) => (props.issmall ? '100%' : '480px')};
-`;
-
 export const SuccessIndicator = styled(Icon)`
   height: 16px;
   width: 20px;
@@ -170,17 +123,4 @@ export const SuccessIndicator = styled(Icon)`
 
 export const TallerSeparator = styled(Separator)`
   margin: 30px 0;
-`;
-
-export const TextInputSmBot = styled(TextInput)<{ issmall?: boolean }>`
-  min-width: ${(props) => (props.issmall ? '100%' : '480px')};
-  margin-bottom: ${(props) => props.theme.suomifi.spacing.m};
-`;
-
-export const TextareaSmBot = styled(Textarea)`
-  min-width: 100%;
-
-  textarea {
-    background: white;
-  }
 `;

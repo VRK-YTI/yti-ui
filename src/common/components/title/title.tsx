@@ -16,7 +16,7 @@ import { setTitle } from './title.slice';
 import { useEffect, useRef } from 'react';
 import { getProperty } from '@app/common/utils/get-property';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
-import NewTerminology from '@app/common/components/new-terminology';
+import NewTerminology from '@app/modules/new-terminology';
 
 interface TitleProps {
   info: string | VocabularyInfoDTO;

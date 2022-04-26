@@ -5,7 +5,7 @@ import {
   LangBlock,
   TextareaSmBot,
   LangTextInput,
-} from './new-terminology.styles';
+} from './terminology-components.styles';
 
 interface LanguageBlockProps {
   lang: MultiSelectData;
