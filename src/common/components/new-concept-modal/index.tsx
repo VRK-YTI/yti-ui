@@ -91,7 +91,7 @@ export default function NewConceptModal({
 
         <ModalFooter>
           <Link
-            href={`/terminology/${terminologyId}/new-concept/${getTermName()}`}
+            href={`/terminology/${terminologyId}/new-concept?${getTermNames()}`}
             passHref
           >
             <Button>{t('continue')}</Button>
@@ -104,17 +104,20 @@ export default function NewConceptModal({
     </>
   );
 
-  function getTermName() {
+  function getTermNames() {
+    const names = [];
     if (termName['FI']) {
-      return termName['FI'];
+      names.push(`fi=${termName['FI']}`);
     }
 
     if (termName['SV']) {
-      return termName['SV'];
+      names.push(`sv=${termName['SV']}`);
     }
 
     if (termName['EN']) {
-      return termName['EN'];
+      names.push(`en=${termName['EN']}`);
     }
+
+    return names.join('&');
   }
 }

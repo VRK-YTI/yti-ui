@@ -7,16 +7,16 @@ import { NewConceptBlock } from './new-concept.styles';
 
 interface NewConceptProps {
   terminologyId: string;
-  conceptName: string;
+  conceptNames: { [key: string]: string | undefined };
 }
 
 export default function NewConcept({
   terminologyId,
-  conceptName,
+  conceptNames,
 }: NewConceptProps) {
   const router = useRouter();
   const { data: terminology } = useGetVocabularyQuery(terminologyId);
-  console.log(terminology);
+
   return (
     <>
       <Breadcrumb>
@@ -28,16 +28,29 @@ export default function NewConcept({
             />
           </BreadcrumbLink>
         )}
-        {conceptName && (
+        {conceptNames && (
           <BreadcrumbLink url="" current>
-            {conceptName}
+            {getTermName()}
           </BreadcrumbLink>
         )}
       </Breadcrumb>
 
       <NewConceptBlock>
-        <Heading variant="h1">{conceptName}</Heading>
+        <Heading variant="h1">{getTermName()}</Heading>
       </NewConceptBlock>
     </>
   );
+
+  // Get first defined termName
+  // This would be smart to replace with a proper function
+  function getTermName() {
+    const conceptNameKeys = Object.keys(conceptNames);
+    for (let i = 0; i < conceptNameKeys.length; i++) {
+      if (conceptNames[conceptNameKeys[i]]) {
+        return conceptNames[conceptNameKeys[i]];
+      }
+    }
+
+    return '';
+  }
 }

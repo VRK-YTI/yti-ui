@@ -10,7 +10,11 @@ export default function NewConcept(props: {
   isSSRMobile: boolean;
 }) {
   const { query } = useRouter();
-  const conceptName = (query?.conceptName ?? '') as string;
+  const conceptNames = {
+    fi: query.fi as string,
+    sv: query.sv as string,
+    en: query.en as string,
+  };
   const terminologyId = (query?.terminologyId ?? '') as string;
 
   return (
@@ -18,7 +22,7 @@ export default function NewConcept(props: {
       <Layout>
         <NewConceptModule
           terminologyId={terminologyId}
-          conceptName={conceptName}
+          conceptNames={conceptNames}
         />
       </Layout>
     </MediaQueryContextProvider>
