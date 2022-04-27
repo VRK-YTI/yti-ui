@@ -1,31 +1,64 @@
-import { BasicBlock } from '@app/common/components/block';
-import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
 import Separator from '@app/common/components/separator';
-import { Button } from 'suomifi-ui-components';
-import { DefinitionTextarea, ExpanderBlock, H2Sm, SubjectTextInput } from './concept-basic-information.styles';
+import {
+  DefinitionTextarea,
+  ExpanderBlock,
+  H2Sm,
+  SubjectTextInput,
+} from './concept-basic-information.styles';
 import ConceptDiagramsAndSources from './concept-diagrams-and-sources';
 import OtherInformation from './other-information';
 import OrganizationInformation from './organizational-information';
 import RelationalInformation from './relational-information';
 import { useTranslation } from 'next-i18next';
 import { Notes } from './notes';
+import Examples from './examples';
+import { useState } from 'react';
+
+interface BasicInfoUpdateProps {
+  key: string;
+  lang?: string;
+  value: string;
+}
 
 export default function ConceptBasicInformation() {
   const { t } = useTranslation('admin');
+  const [basicInfo, setBasicInfo] = useState({
+    definition: {},
+    example: [],
+    subject: '',
+    note: [],
+  });
+
+  const handleBasicInfoUpdate = ({
+    key,
+    lang,
+    value,
+  }: BasicInfoUpdateProps) => {
+    if (lang) {
+      setBasicInfo((basicInfo) => ({
+        ...basicInfo,
+        [key]: { ...basicInfo[key], [lang]: value },
+      }));
+    } else {
+      setBasicInfo((basicInfo) => ({ ...basicInfo, [key]: value }));
+    }
+  };
+
+  console.log('basicInfo', basicInfo);
 
   return (
     <>
       <Separator isLarge />
 
-      <H2Sm variant='h2'>
-        {t('concept-basic-information')}
-      </H2Sm>
+      <H2Sm variant="h2">{t('concept-basic-information')}</H2Sm>
 
       {renderDefinitions()}
-      {renderExample()}
+
+      <Examples update={handleBasicInfoUpdate} />
+
       {renderSubject()}
 
-      <Notes />
+      <Notes update={handleBasicInfoUpdate} />
 
       <ExpanderBlock>
         <ConceptDiagramsAndSources />
@@ -49,25 +82,21 @@ export default function ConceptBasicInformation() {
   function renderDefinitionTextarea(lang: string) {
     return (
       <DefinitionTextarea
-        labelText={t('definition-label-text', { lang: lang, langUpper: lang.toUpperCase() })}
+        labelText={t('definition-label-text', {
+          lang: lang,
+          langUpper: lang.toUpperCase(),
+        })}
         optionalText={t('optional')}
         visualPlaceholder={t('give-definition')}
-      />
-    );
-  }
-
-  function renderExample() {
-    return (
-      <BasicBlock
-        title={t('example')}
-        extra={
-          <BasicBlockExtraWrapper>
-            <Button variant='secondary'>{t('add-new-example')}</Button>
-          </BasicBlockExtraWrapper>
+        onChange={(e) =>
+          handleBasicInfoUpdate({
+            key: 'definition',
+            lang: lang,
+            value: e.target.value,
+          })
         }
-      >
-        {t('example-description')}
-      </BasicBlock>
+        value={basicInfo.definition[lang] ?? ''}
+      />
     );
   }
 
@@ -77,6 +106,8 @@ export default function ConceptBasicInformation() {
         labelText={t('subject')}
         hintText={t('subject-hint-text')}
         visualPlaceholder={t('subject-visual-placeholder')}
+        onChange={(e) => handleBasicInfoUpdate({ key: 'subject', value: e })}
+        value={basicInfo.subject}
       />
     );
   }

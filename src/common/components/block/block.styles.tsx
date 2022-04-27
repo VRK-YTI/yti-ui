@@ -1,6 +1,9 @@
 import styled from 'styled-components';
 
-export const BasicBlockWrapper = styled.div<{ largeGap?: boolean; largeWidth?: boolean }>`
+export const BasicBlockWrapper = styled.div<{
+  largeGap?: boolean;
+  largeWidth?: boolean;
+}>`
   display: flex;
   flex-direction: column;
   gap: ${(props) => (props.largeGap ? '10px' : '5px')};

@@ -110,5 +110,7 @@
   "relational-information": "Suhdetiedot",
   "language": "Kieli",
   "note-textarea-label-text": "Käsitteeseen liittyvä huomautus",
-  "note-textarea-placeholder": "Kirjoita huomautus"
+  "note-textarea-placeholder": "Kirjoita huomautus",
+  "example-textarea-label-text": "Käsitteeseen liittyvä esimerkki",
+  "example-textarea-placeholder": "Kirjoita esimerkki"
 }

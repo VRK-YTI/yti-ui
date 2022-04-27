@@ -110,5 +110,7 @@
   "relational-information": "Relational information",
   "language": "Language",
   "note-textarea-label-text": "Note related to concept",
-  "note-textarea-placeholder": "Give note"
+  "note-textarea-placeholder": "Give note",
+  "example-textarea-label-text": "Example related to concept",
+  "example-textarea-placeholder": "Give example"
 }
