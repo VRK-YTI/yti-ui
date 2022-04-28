@@ -18,11 +18,11 @@ import {
 } from '@app/common/components/vocabulary/vocabulary.slice';
 import PageTitle from '@app/common/components/page-title';
 import {
-  CommonContextInterface,
+  CommonContextState,
   CommonContextProvider,
 } from '@app/common/components/common-context-provider';
 
-interface CollectionPageProps extends CommonContextInterface {
+interface CollectionPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
 }
 

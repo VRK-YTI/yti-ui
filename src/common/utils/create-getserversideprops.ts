@@ -11,7 +11,7 @@ import { ParsedUrlQuery } from 'querystring';
 import { Redirect } from 'next/dist/lib/load-custom-routes';
 import { SSRConfig } from 'next-i18next';
 import { setLogin } from '@app/common/components/login/login.slice';
-import { CommonContextInterface } from '../components/common-context-provider';
+import { CommonContextState } from '../components/common-context-provider';
 
 export interface LocalHandlerParams {
   req: NextIronRequest;
@@ -26,7 +26,7 @@ export type localHandler<T> = (context: LocalHandlerParams) => Promise<T>;
 
 export type CommonServerSideProps = UserProps &
   SSRConfig &
-  CommonContextInterface & {
+  CommonContextState & {
     isSSRMobile: boolean;
   };
 

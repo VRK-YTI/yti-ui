@@ -16,11 +16,11 @@ import {
 } from '@app/common/components/vocabulary/vocabulary.slice';
 import { initialUrlState } from '@app/common/utils/hooks/useUrlState';
 import {
-  CommonContextInterface,
+  CommonContextState,
   CommonContextProvider,
 } from '@app/common/components/common-context-provider';
 
-interface TerminologyPageProps extends CommonContextInterface {
+interface TerminologyPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
 }
 

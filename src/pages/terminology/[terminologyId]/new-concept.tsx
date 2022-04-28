@@ -4,11 +4,11 @@ import { default as NewConceptModule } from '@app/modules/new-concept';
 import { useRouter } from 'next/router';
 import { createCommonGetServerSideProps } from '@app/common/utils/create-getserversideprops';
 import {
-  CommonContextInterface,
+  CommonContextState,
   CommonContextProvider,
 } from '@app/common/components/common-context-provider';
 
-interface NewConceptPageProps extends CommonContextInterface {
+interface NewConceptPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
 }
 

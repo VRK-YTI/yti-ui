@@ -5,11 +5,11 @@ import { createCommonGetServerSideProps } from '@app/common/utils/create-getserv
 import PageTitle from '@app/common/components/page-title';
 import OwnInformation from '@app/modules/own-information';
 import {
-  CommonContextInterface,
+  CommonContextState,
   CommonContextProvider,
 } from '@app/common/components/common-context-provider';
 
-interface OwnInformationPageProps extends CommonContextInterface {
+interface OwnInformationPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
 }
 

@@ -4,12 +4,12 @@ import PageTitle from '@app/common/components/page-title';
 import ErrorLayout from '@app/layouts/error-layout';
 import {
   CommonContextProvider,
-  defaultCommonContextValue,
+  initialCommonContextState,
 } from '@app/common/components/common-context-provider';
 
 export default function Custom500() {
   return (
-    <CommonContextProvider value={defaultCommonContextValue}>
+    <CommonContextProvider value={initialCommonContextState}>
       <ErrorLayout>
         <PageTitle title="Error" siteTitle="Yhteentoimivuusalusta" />
         <Head>

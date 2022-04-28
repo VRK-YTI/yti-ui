@@ -5,12 +5,12 @@ import { SSRConfig, useTranslation } from 'next-i18next';
 import { createCommonGetServerSideProps } from '@app/common/utils/create-getserversideprops';
 import {
   CommonContextProvider,
-  CommonContextInterface,
+  CommonContextState,
 } from '@app/common/components/common-context-provider';
 import TerminologySearch from '@app/modules/terminology-search';
 import PageTitle from '@app/common/components/page-title';
 
-interface IndexPageProps extends CommonContextInterface {
+interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
 }
 

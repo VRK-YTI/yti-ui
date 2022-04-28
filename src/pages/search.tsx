@@ -5,7 +5,7 @@ import TerminologySearch from '@app/modules/terminology-search';
 import { createCommonGetServerSideProps } from '@app/common/utils/create-getserversideprops';
 import PageTitle from '@app/common/components/page-title';
 import {
-  CommonContextInterface,
+  CommonContextState,
   CommonContextProvider,
 } from '@app/common/components/common-context-provider';
 
@@ -13,7 +13,7 @@ import {
  * @deprecated Search-page has been replaced by Index-page.
  */
 
-interface SearchPageProps extends CommonContextInterface {
+interface SearchPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
 }
 
