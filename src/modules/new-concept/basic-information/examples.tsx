@@ -11,18 +11,35 @@ interface ExamplesProps {
 
 export default function Examples({ update }: ExamplesProps) {
   const { t } = useTranslation('admin');
-  const [examples, setExamples] = useState<number[]>([]);
+  const [examples, setExamples] = useState<any[]>([]);
   const [id, setId] = useState<number>(0);
 
-  const handleArrayUpdate = (id: number) => {
-    const updatedExamples = examples.filter((example) => example !== id);
+  const handleUpdate = ({id, lang, value}) => {
+    const updatedExamples = examples.map((example) => {
+      if (example.id === id) {
+        return {id: id, lang: lang ? lang : example.lang, value: value ? value : example.value};
+      }
+
+      return example;
+    });
+
+    console.log('updatedExamples', updatedExamples);
+
+    setExamples(updatedExamples);
+    update({key: 'example', value: updatedExamples});
+  };
+
+  const handleRemove = (id: number) => {
+    const updatedExamples = examples.filter((example) => example.id !== id);
+    console.log(updatedExamples);
     setExamples(updatedExamples);
     update({key: 'example', value: updatedExamples});
   };
 
   const handleClick = () => {
-    setExamples([...examples, id]);
-    update({key: 'example', value: [...examples, id]});
+    const updatedExamples = [...examples, {id: id, lang: 'fi', value: ''}];
+    setExamples(updatedExamples);
+    update({key: 'example', value: updatedExamples});
     setId(id + 1);
   };
 
@@ -35,7 +52,8 @@ export default function Examples({ update }: ExamplesProps) {
           <ConceptInfoBlockList
             list={examples}
             parent={'example'}
-            setList={handleArrayUpdate}
+            update={handleUpdate}
+            remove={handleRemove}
           />
 
           <Button
