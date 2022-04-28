@@ -12,6 +12,7 @@ import {
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import { HeaderWrapper } from '@app/modules/smart-header/smart-header.styles';
 import Logo from '@app/modules/smart-header/logo';
+import Matomo from '@app/common/components/matomo';
 
 export default function ErrorLayout({
   children,
@@ -22,6 +23,7 @@ export default function ErrorLayout({
 
   return (
     <ThemeProvider theme={lightTheme}>
+      <Matomo />
       <Head>
         <meta name="description" content="Terminology/React POC" />
         <meta name="og:title" content="Sanastot" />

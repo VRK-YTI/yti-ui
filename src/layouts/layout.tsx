@@ -14,6 +14,7 @@ import SmartHeader from '@app/modules/smart-header';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import SkipLink from '@app/common/components/skip-link/skip-link';
 import { Alerts } from '@app/common/components/alert';
+import Matomo from '@app/common/components/matomo';
 
 export default function Layout({
   children,
@@ -27,6 +28,8 @@ export default function Layout({
 
   return (
     <ThemeProvider theme={lightTheme}>
+      <Matomo />
+
       <Head>
         <meta name="description" content="Terminology/React POC" />
         <meta name="og:title" content={t('terminology')} />

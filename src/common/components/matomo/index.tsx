@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Script from 'next/script';
+import { CommonContext } from '../common-context-provider';
 
 declare global {
   interface Window {
@@ -76,23 +77,16 @@ export function MatomoTracking({ url, siteId }: MatomoProps) {
   return <Script src={`${url}/matomo.js`} />;
 }
 
-const withEnv = () => {
-  console.log('matomo config', {
-    enabled: process.env.NEXT_PUBLIC_MATOMO_ENABLED,
-    url: process.env.NEXT_PUBLIC_MATOMO_URL,
-    siteId: process.env.NEXT_PUBLIC_MATOMO_SITE_ID,
-  });
-
-  const isEnabled = process.env.NEXT_PUBLIC_MATOMO_ENABLED === 'true';
-  const url = process.env.NEXT_PUBLIC_MATOMO_URL;
-  const siteId = process.env.NEXT_PUBLIC_MATOMO_SITE_ID;
+const WithEnv = () => {
+  const { isMatomoEnabled, matomoUrl, matomoSiteId } =
+    useContext(CommonContext);
 
   // disable if any of required variables are missing
-  if (!isEnabled || !url || !siteId) {
+  if (!isMatomoEnabled || !matomoUrl || !matomoSiteId) {
     return null;
   }
 
-  return <MatomoTracking url={url} siteId={siteId} />;
+  return <MatomoTracking url={matomoUrl} siteId={matomoSiteId} />;
 };
 
-export default withEnv;
+export default WithEnv;

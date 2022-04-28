@@ -3,18 +3,22 @@ import React from 'react';
 import Layout from '@app/layouts/layout';
 import { SSRConfig, useTranslation } from 'next-i18next';
 import { createCommonGetServerSideProps } from '@app/common/utils/create-getserversideprops';
-import { MediaQueryContextProvider } from '@app/common/components/media-query/media-query-context';
+import {
+  CommonContextProvider,
+  CommonContextInterface,
+} from '@app/common/components/common-context-provider';
 import TerminologySearch from '@app/modules/terminology-search';
 import PageTitle from '@app/common/components/page-title';
 
-export default function IndexPage(props: {
+interface IndexPageProps extends CommonContextInterface {
   _netI18Next: SSRConfig;
-  isSSRMobile: boolean;
-}) {
+}
+
+export default function IndexPage(props: IndexPageProps) {
   const { t } = useTranslation('common');
 
   return (
-    <MediaQueryContextProvider value={{ isSSRMobile: props.isSSRMobile }}>
+    <CommonContextProvider value={props}>
       <Layout>
         <PageTitle title={t('terminology-site-title')} />
         <Head>
@@ -23,7 +27,7 @@ export default function IndexPage(props: {
 
         <TerminologySearch />
       </Layout>
-    </MediaQueryContextProvider>
+    </CommonContextProvider>
   );
 }
 

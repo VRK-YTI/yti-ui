@@ -7,7 +7,6 @@ import {
   LocalHandlerParams,
 } from '@app/common/utils/create-getserversideprops';
 import Vocabulary from '@app/modules/vocabulary';
-import { MediaQueryContextProvider } from '@app/common/components/media-query/media-query-context';
 import PageTitle from '@app/common/components/page-title';
 import {
   getCollections,
@@ -16,11 +15,16 @@ import {
   getVocabulary,
 } from '@app/common/components/vocabulary/vocabulary.slice';
 import { initialUrlState } from '@app/common/utils/hooks/useUrlState';
+import {
+  CommonContextInterface,
+  CommonContextProvider,
+} from '@app/common/components/common-context-provider';
 
-export default function TerminologyPage(props: {
+interface TerminologyPageProps extends CommonContextInterface {
   _netI18Next: SSRConfig;
-  isSSRMobile: boolean;
-}) {
+}
+
+export default function TerminologyPage(props: TerminologyPageProps) {
   const { t } = useTranslation('common');
   const { query } = useRouter();
   const terminologyId = (query?.terminologyId ?? '') as string;
@@ -29,7 +33,7 @@ export default function TerminologyPage(props: {
   >();
 
   return (
-    <MediaQueryContextProvider value={{ isSSRMobile: props.isSSRMobile }}>
+    <CommonContextProvider value={props}>
       {/* todo: use better feedbackSubject once more data is available */}
       <Layout feedbackSubject={`${t('terminology-id')} ${terminologyId}`}>
         <PageTitle title={terminologyTitle} />
@@ -39,7 +43,7 @@ export default function TerminologyPage(props: {
           setTerminologyTitle={setTerminologyTitle}
         />
       </Layout>
-    </MediaQueryContextProvider>
+    </CommonContextProvider>
   );
 }
 
