@@ -10,9 +10,8 @@ import OtherInformation from './other-information';
 import OrganizationInformation from './organizational-information';
 import RelationalInformation from './relational-information';
 import { useTranslation } from 'next-i18next';
-import { Notes } from './notes';
-import Examples from './examples';
 import { useState } from 'react';
+import ConceptInfoBlock from './concept-info-block';
 
 interface BasicInfoUpdateProps {
   key: string;
@@ -20,9 +19,20 @@ interface BasicInfoUpdateProps {
   value: string;
 }
 
+interface BasicInfoType {
+  definition: {
+    fi?: string;
+    sv?: string;
+    en?: string;
+  };
+  example: [];
+  subject: string;
+  note: [];
+}
+
 export default function ConceptBasicInformation() {
   const { t } = useTranslation('admin');
-  const [basicInfo, setBasicInfo] = useState({
+  const [basicInfo, setBasicInfo] = useState<BasicInfoType>({
     definition: {},
     example: [],
     subject: '',
@@ -34,17 +44,15 @@ export default function ConceptBasicInformation() {
     lang,
     value,
   }: BasicInfoUpdateProps) => {
-    if (lang) {
+    if (lang && key === 'definition') {
       setBasicInfo((basicInfo) => ({
         ...basicInfo,
-        [key]: { ...basicInfo[key], [lang]: value },
+        ['definition']: { ...basicInfo['definition'], [lang]: value },
       }));
     } else {
       setBasicInfo((basicInfo) => ({ ...basicInfo, [key]: value }));
     }
   };
-
-  console.log('basicInfo', basicInfo);
 
   return (
     <>
@@ -54,11 +62,11 @@ export default function ConceptBasicInformation() {
 
       {renderDefinitions()}
 
-      <Examples update={handleBasicInfoUpdate} />
+      <ConceptInfoBlock infoKey="example" update={handleBasicInfoUpdate} />
 
       {renderSubject()}
 
-      <Notes update={handleBasicInfoUpdate} />
+      <ConceptInfoBlock infoKey="note" update={handleBasicInfoUpdate} />
 
       <ExpanderBlock>
         <ConceptDiagramsAndSources />
@@ -95,7 +103,7 @@ export default function ConceptBasicInformation() {
             value: e.target.value,
           })
         }
-        value={basicInfo.definition[lang] ?? ''}
+        value={basicInfo.definition[lang as keyof BasicInfoType['definition']] ?? ''}
       />
     );
   }
@@ -106,7 +114,7 @@ export default function ConceptBasicInformation() {
         labelText={t('subject')}
         hintText={t('subject-hint-text')}
         visualPlaceholder={t('subject-visual-placeholder')}
-        onChange={(e) => handleBasicInfoUpdate({ key: 'subject', value: e })}
+        onChange={(e) => handleBasicInfoUpdate({ key: 'subject', value: e as string })}
         value={basicInfo.subject}
       />
     );

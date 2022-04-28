@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Textarea } from 'suomifi-ui-components';
 
-export const ConceptInfoBlock = styled.li`
+export const ConceptInfoBlockListItem = styled.li`
   background: ${(props) => props.theme.suomifi.colors.highlightLight4};
   border: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
   margin-bottom: ${(props) => props.theme.suomifi.spacing.m};
