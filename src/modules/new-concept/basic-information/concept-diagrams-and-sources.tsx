@@ -2,7 +2,11 @@ import { BasicBlock } from '@app/common/components/block';
 import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
 import { useTranslation } from 'next-i18next';
 import { Button, ExpanderTitleButton } from 'suomifi-ui-components';
-import { ConceptExpander, ExpanderContentFitted, WideTextarea } from './concept-basic-information.styles';
+import {
+  ConceptExpander,
+  ExpanderContentFitted,
+  WideTextarea,
+} from './concept-basic-information.styles';
 
 export default function ConceptDiagramsAndSources() {
   const { t } = useTranslation('admin');
@@ -17,7 +21,7 @@ export default function ConceptDiagramsAndSources() {
           title={t('concept-diagram-or-link')}
           extra={
             <BasicBlockExtraWrapper>
-              <Button variant='secondary'>{t('add-new-link')}</Button>
+              <Button variant="secondary">{t('add-new-link')}</Button>
             </BasicBlockExtraWrapper>
           }
         >
@@ -29,8 +33,7 @@ export default function ConceptDiagramsAndSources() {
           hintText={t('sources-hint-text')}
           visualPlaceholder={t('sources-placeholder')}
         />
-
       </ExpanderContentFitted>
-    </ConceptExpander >
+    </ConceptExpander>
   );
 }

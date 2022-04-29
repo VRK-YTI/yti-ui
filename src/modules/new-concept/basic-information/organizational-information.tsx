@@ -2,7 +2,11 @@ import { BasicBlock } from '@app/common/components/block';
 import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
 import { useTranslation } from 'next-i18next';
 import { Button, ExpanderTitleButton } from 'suomifi-ui-components';
-import { ConceptExpander, ExpanderContentFitted, WiderTextarea } from './concept-basic-information.styles';
+import {
+  ConceptExpander,
+  ExpanderContentFitted,
+  WiderTextarea,
+} from './concept-basic-information.styles';
 
 export default function OrganizationalInformation() {
   const { t } = useTranslation('admin');
@@ -34,15 +38,13 @@ export default function OrganizationalInformation() {
           title={t('admin-note')}
           extra={
             <BasicBlockExtraWrapper>
-              <Button variant='secondary'>{t('add-new-admin-note')}</Button>
+              <Button variant="secondary">{t('add-new-admin-note')}</Button>
             </BasicBlockExtraWrapper>
           }
         >
           {t('add-new-admin-note-description')}
         </BasicBlock>
-
       </ExpanderContentFitted>
-
     </ConceptExpander>
   );
 }
