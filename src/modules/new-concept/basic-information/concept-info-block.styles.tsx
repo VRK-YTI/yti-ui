@@ -1,5 +1,13 @@
 import styled from 'styled-components';
-import { Textarea } from 'suomifi-ui-components';
+import { Block, Textarea } from 'suomifi-ui-components';
+
+export const ChipBlock = styled(Block)`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: ${(props) => props.theme.suomifi.spacing.xs};
+  max-width: 100%;
+`;
 
 export const ConceptInfoBlockListItem = styled.li`
   background: ${(props) => props.theme.suomifi.colors.highlightLight4};
