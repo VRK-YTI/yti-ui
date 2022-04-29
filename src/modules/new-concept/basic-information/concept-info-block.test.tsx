@@ -34,12 +34,13 @@ describe('concept-info-block', () => {
 
     userEvent.click(screen.getByText('tr-add-new-example'));
     userEvent.click(screen.getByText('tr-add-new-example'));
+    userEvent.click(screen.getByText('tr-add-new-example'));
 
-    expect(screen.getAllByText(/tr-remove/)).toHaveLength(2);
+    expect(screen.getAllByText(/tr-remove/)).toHaveLength(3);
 
     userEvent.click(screen.getAllByText(/tr-remove/)[0]);
 
-    expect(screen.getAllByText(/tr-remove/)).toBeInTheDocument();
+    expect(screen.getAllByText(/tr-remove/)).toHaveLength(2);
   });
 
   it('should update information', async () => {

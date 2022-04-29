@@ -54,6 +54,8 @@ export default function ConceptBasicInformation() {
     }
   };
 
+  console.log(basicInfo);
+
   return (
     <>
       <Separator isLarge />

@@ -6,7 +6,7 @@ export const ConceptInfoBlockListItem = styled.li`
   border: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
   margin-bottom: ${(props) => props.theme.suomifi.spacing.m};
   padding: ${(props) => props.theme.suomifi.spacing.m};
-  width: 800px;
+  min-width: 475px;
 
   .top-row {
     display: flex;

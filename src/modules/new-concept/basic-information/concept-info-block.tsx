@@ -16,6 +16,9 @@ interface ConceptInfoBlockProps {
 
 interface ConceptInfoListItemProps {
   item: ItemType;
+  infoKey: string;
+  handleUpdate: (value: any) => void;
+  handleRemove: (value: any) => void;
 }
 
 interface ItemType {
@@ -72,6 +75,9 @@ export default function ConceptInfoBlock({
               return (
                 <ConceptInfoListItem
                   item={item}
+                  infoKey={infoKey}
+                  handleUpdate={handleUpdate}
+                  handleRemove={handleRemove}
                   key={`${infoKey}-${item.id}`}
                 />
               );
@@ -86,43 +92,47 @@ export default function ConceptInfoBlock({
       {t('example-description')}
     </BasicBlock>
   );
+}
 
-  function ConceptInfoListItem({ item }: ConceptInfoListItemProps) {
-    const [text, setText] = useState(item.value);
+function ConceptInfoListItem({
+  item,
+  infoKey,
+  handleUpdate,
+  handleRemove,
+}: ConceptInfoListItemProps) {
+  const { t } = useTranslation('admin');
+  const [text, setText] = useState(item.value);
 
-    return (
-      <ConceptInfoBlockListItem>
-        <div className="top-row">
-          <Dropdown
-            labelText={t('language')}
-            defaultValue="fi"
-            onChange={(e) =>
-              handleUpdate({ id: item.id, lang: e, value: text })
-            }
-            value={item.lang}
-          >
-            <DropdownItem value="fi">{t('fi')}</DropdownItem>
-            <DropdownItem value="sv">{t('sv')}</DropdownItem>
-            <DropdownItem value="en">{t('en')}</DropdownItem>
-          </Dropdown>
+  return (
+    <ConceptInfoBlockListItem>
+      <div className="top-row">
+        <Dropdown
+          labelText={t('language')}
+          defaultValue="fi"
+          onChange={(e) => handleUpdate({ id: item.id, lang: e, value: text })}
+          value={item.lang}
+        >
+          <DropdownItem value="fi">{t('fi')}</DropdownItem>
+          <DropdownItem value="sv">{t('sv')}</DropdownItem>
+          <DropdownItem value="en">{t('en')}</DropdownItem>
+        </Dropdown>
 
-          <Button
-            variant="secondaryNoBorder"
-            icon="remove"
-            onClick={() => handleRemove(item.id)}
-          >
-            {t('remove')}
-          </Button>
-        </div>
+        <Button
+          variant="secondaryNoBorder"
+          icon="remove"
+          onClick={() => handleRemove(item.id)}
+        >
+          {t('remove')}
+        </Button>
+      </div>
 
-        <ConceptInfoTextarea
-          labelText={t(`${infoKey}-textarea-label-text`)}
-          visualPlaceholder={t(`${infoKey}-textarea-placeholder`)}
-          onChange={(e) => setText(e.target.value)}
-          onBlur={(e) => handleUpdate({ id: item.id, value: text })}
-          value={text}
-        />
-      </ConceptInfoBlockListItem>
-    );
-  }
+      <ConceptInfoTextarea
+        labelText={t(`${infoKey}-textarea-label-text`)}
+        visualPlaceholder={t(`${infoKey}-textarea-placeholder`)}
+        onChange={(e) => setText(e.target.value)}
+        onBlur={(e) => handleUpdate({ id: item.id, value: text })}
+        value={text}
+      />
+    </ConceptInfoBlockListItem>
+  );
 }
