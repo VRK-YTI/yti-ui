@@ -12,12 +12,7 @@ import RelationalInformation from './relational-information';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import ConceptInfoBlock from './concept-info-block';
-
-interface BasicInfoUpdateProps {
-  key: string;
-  lang?: string;
-  value: string;
-}
+import { BasicInfoUpdate } from './concept-basic-information-interface';
 
 interface BasicInfoType {
   definition: {
@@ -39,11 +34,7 @@ export default function ConceptBasicInformation() {
     note: [],
   });
 
-  const handleBasicInfoUpdate = ({
-    key,
-    lang,
-    value,
-  }: BasicInfoUpdateProps) => {
+  const handleBasicInfoUpdate = ({ key, lang, value }: BasicInfoUpdate) => {
     if (lang && key === 'definition') {
       setBasicInfo((basicInfo) => ({
         ...basicInfo,

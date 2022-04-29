@@ -3,6 +3,7 @@ import { BasicBlockExtraWrapper } from '@app/common/components/block/block.style
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { Button, Dropdown, DropdownItem } from 'suomifi-ui-components';
+import { BasicInfoUpdate } from './concept-basic-information-interface';
 import {
   ConceptInfoBlockListItem,
   ConceptInfoBlockWrapper,
@@ -11,14 +12,14 @@ import {
 
 interface ConceptInfoBlockProps {
   infoKey: string;
-  update: (object: any) => void;
+  update: (object: BasicInfoUpdate) => void;
 }
 
 interface ConceptInfoListItemProps {
   item: ItemType;
   infoKey: string;
-  handleUpdate: (value: any) => void;
-  handleRemove: (value: any) => void;
+  handleUpdate: (value: ItemType) => void;
+  handleRemove: (id: number) => void;
 }
 
 interface ItemType {
