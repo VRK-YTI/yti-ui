@@ -1,6 +1,6 @@
 import Separator from '@app/common/components/separator';
 import {
-  DefinitionTextarea,
+  WiderTextarea,
   ExpanderBlock,
   H2Sm,
   SubjectTextInput,
@@ -45,8 +45,6 @@ export default function ConceptBasicInformation() {
     }
   };
 
-  console.log(basicInfo);
-
   return (
     <>
       <Separator isLarge />
@@ -82,7 +80,7 @@ export default function ConceptBasicInformation() {
 
   function renderDefinitionTextarea(lang: string) {
     return (
-      <DefinitionTextarea
+      <WiderTextarea
         labelText={t('definition-label-text', {
           lang: lang,
           langUpper: lang.toUpperCase(),

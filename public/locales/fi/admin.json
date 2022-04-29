@@ -112,5 +112,20 @@
   "note-textarea-label-text": "Käsitteeseen liittyvä huomautus",
   "note-textarea-placeholder": "Kirjoita huomautus",
   "example-textarea-label-text": "Käsitteeseen liittyvä esimerkki",
-  "example-textarea-placeholder": "Kirjoita esimerkki"
+  "example-textarea-placeholder": "Kirjoita esimerkki",
+  "concept-diagram-or-link": "Käsitekaavio tai muu linkki",
+  "add-new-link": "Lisää uusi linkki",
+  "add-new-link-description": "Käsitteen suhteiden kuvaamiseksi tehdyt käsitekaaviot.",
+  "sources": "Lähteet",
+  "sources-hint-text": "Käsitteen määrittelyssä käytetyt lähteet",
+  "sources-placeholder": "Kirjoita kuvaus",
+  "change-history": "Muutoshistoria",
+  "change-history-hint": "Merkintä termiin tehdystä yksittäisestä muutoksesta",
+  "change-history-placeholder": "Kirjoita verkkosivun tarkka osoite",
+  "etymology": "Käytön historiatieto \"etymologia\"",
+  "etymology-hint": "Termin aiempi käyttö tai merkitys",
+  "etymology-placeholder": "Kirjoita termin käytön historia",
+  "admin-note": "Ylläpitäjän muistiinpano",
+  "add-new-admin-note": "Lisää uusi muistiinpano",
+  "add-new-admin-note-description": "Ylläpitäjälle tai kääntäjille tarkoitettu muistiinpano. Ei näy kirjautumattomalle käyttäjälle."
 }
