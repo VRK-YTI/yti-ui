@@ -5,20 +5,15 @@ import ConceptBasicInformation from './concept-basic-information';
 
 describe('concept-basic-information', () => {
   it('should render component', () => {
-    render(
-        <ConceptBasicInformation />,
-      { wrapper: themeProvider }
-    );
+    render(<ConceptBasicInformation />, { wrapper: themeProvider });
 
-    expect(screen.getByText('tr-concept-basic-information')).toBeInTheDocument();
-
+    expect(
+      screen.getByText('tr-concept-basic-information')
+    ).toBeInTheDocument();
   });
 
   it('should update definition', () => {
-    render(
-        <ConceptBasicInformation />,
-      { wrapper: themeProvider }
-    );
+    render(<ConceptBasicInformation />, { wrapper: themeProvider });
 
     const textArea = screen.getAllByPlaceholderText(/tr-give-definition/);
     expect(textArea).toHaveLength(3);
@@ -32,7 +27,19 @@ describe('concept-basic-information', () => {
     userEvent.click(textArea[2]);
     userEvent.keyboard('English definition');
 
-    // expect(screen.getAllByText(/tr-definition-label-text/)[0].parentNode?.childNodes[1]).toContain('Finnish definition');
+    expect(screen.getByText('Finnish definition')).toBeInTheDocument();
+    expect(screen.getByText('Swedish definition')).toBeInTheDocument();
+    expect(screen.getByText('English definition')).toBeInTheDocument();
+  });
 
+  it('should update subject', () => {
+    render(<ConceptBasicInformation />, { wrapper: themeProvider });
+
+    userEvent.click(
+      screen.getByPlaceholderText('tr-subject-visual-placeholder')
+    );
+    userEvent.keyboard('New subject');
+
+    expect(screen.getByDisplayValue('New subject')).toBeInTheDocument();
   });
 });

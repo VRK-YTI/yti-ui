@@ -66,7 +66,7 @@ export default function ConceptInfoBlock({
       largeWidth
       title={t('example')}
       extra={
-        <BasicBlockExtraWrapper >
+        <BasicBlockExtraWrapper>
           <ConceptInfoBlockWrapper>
             {list.map((item) => {
               return (
@@ -96,7 +96,9 @@ export default function ConceptInfoBlock({
           <Dropdown
             labelText={t('language')}
             defaultValue="fi"
-            onChange={(e) => handleUpdate({ id: item.id, lang: e, value: text })}
+            onChange={(e) =>
+              handleUpdate({ id: item.id, lang: e, value: text })
+            }
             value={item.lang}
           >
             <DropdownItem value="fi">{t('fi')}</DropdownItem>
@@ -117,7 +119,7 @@ export default function ConceptInfoBlock({
           labelText={t(`${infoKey}-textarea-label-text`)}
           visualPlaceholder={t(`${infoKey}-textarea-placeholder`)}
           onChange={(e) => setText(e.target.value)}
-          onBlur={(e) => handleUpdate({ id: item.id, value: text})}
+          onBlur={(e) => handleUpdate({ id: item.id, value: text })}
           value={text}
         />
       </ConceptInfoBlockListItem>

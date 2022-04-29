@@ -103,7 +103,9 @@ export default function ConceptBasicInformation() {
             value: e.target.value,
           })
         }
-        value={basicInfo.definition[lang as keyof BasicInfoType['definition']] ?? ''}
+        value={
+          basicInfo.definition[lang as keyof BasicInfoType['definition']] ?? ''
+        }
       />
     );
   }
@@ -114,7 +116,9 @@ export default function ConceptBasicInformation() {
         labelText={t('subject')}
         hintText={t('subject-hint-text')}
         visualPlaceholder={t('subject-visual-placeholder')}
-        onChange={(e) => handleBasicInfoUpdate({ key: 'subject', value: e as string })}
+        onChange={(e) =>
+          handleBasicInfoUpdate({ key: 'subject', value: e as string })
+        }
         value={basicInfo.subject}
       />
     );

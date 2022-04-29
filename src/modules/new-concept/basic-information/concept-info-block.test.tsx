@@ -6,10 +6,9 @@ import ConceptInfoBlock from './concept-info-block';
 describe('concept-info-block', () => {
   it('should add new block', () => {
     const mockFunction = jest.fn();
-    render(
-        <ConceptInfoBlock infoKey='example' update={mockFunction} />,
-      { wrapper: themeProvider }
-    );
+    render(<ConceptInfoBlock infoKey="example" update={mockFunction} />, {
+      wrapper: themeProvider,
+    });
 
     userEvent.click(screen.getByText('tr-add-new-example'));
 
@@ -20,20 +19,18 @@ describe('concept-info-block', () => {
         {
           id: 0,
           lang: 'fi',
-          value: ''
-        }
-      ]
+          value: '',
+        },
+      ],
     });
     expect(screen.getByText('tr-remove')).toBeInTheDocument();
-
   });
 
   it('should remove block', () => {
     const mockFunction = jest.fn();
-    render(
-        <ConceptInfoBlock infoKey='example' update={mockFunction} />,
-      { wrapper: themeProvider }
-    );
+    render(<ConceptInfoBlock infoKey="example" update={mockFunction} />, {
+      wrapper: themeProvider,
+    });
 
     userEvent.click(screen.getByText('tr-add-new-example'));
     userEvent.click(screen.getByText('tr-add-new-example'));
@@ -42,19 +39,19 @@ describe('concept-info-block', () => {
 
     userEvent.click(screen.getAllByText(/tr-remove/)[0]);
 
-    expect(screen.getAllByText(/tr-remove/)).toHaveLength(1);
-
+    expect(screen.getAllByText(/tr-remove/)).toBeInTheDocument();
   });
 
   it('should update information', async () => {
     const mockFunction = jest.fn();
-    render(
-        <ConceptInfoBlock infoKey='example' update={mockFunction} />,
-      { wrapper: themeProvider }
-    );
+    render(<ConceptInfoBlock infoKey="example" update={mockFunction} />, {
+      wrapper: themeProvider,
+    });
 
     userEvent.click(screen.getByText('tr-add-new-example'));
-    userEvent.click(screen.getByPlaceholderText('tr-example-textarea-placeholder'));
+    userEvent.click(
+      screen.getByPlaceholderText('tr-example-textarea-placeholder')
+    );
     userEvent.keyboard('some text');
     userEvent.click(screen.getByText('tr-example-description'));
 
@@ -65,9 +62,9 @@ describe('concept-info-block', () => {
         {
           id: 0,
           lang: 'fi',
-          value: 'some text'
-        }
-      ]
+          value: 'some text',
+        },
+      ],
     });
   });
 });
