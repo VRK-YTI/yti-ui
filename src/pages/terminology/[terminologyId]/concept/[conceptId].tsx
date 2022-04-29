@@ -7,7 +7,6 @@ import {
   LocalHandlerParams,
 } from '@app/common/utils/create-getserversideprops';
 import Concept from '@app/modules/concept';
-import { MediaQueryContextProvider } from '@app/common/components/media-query/media-query-context';
 import {
   getConcept,
   getRunningOperationPromises as getConceptRunningOperationPromises,
@@ -17,11 +16,16 @@ import {
   getRunningOperationPromises as getVocabularyRunningOperationPromises,
 } from '@app/common/components/vocabulary/vocabulary.slice';
 import PageTitle from '@app/common/components/page-title';
+import {
+  CommonContextState,
+  CommonContextProvider,
+} from '@app/common/components/common-context-provider';
 
-export default function ConceptPage(props: {
+interface ConceptPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
-  isSSRMobile: boolean;
-}) {
+}
+
+export default function ConceptPage(props: ConceptPageProps) {
   const { t } = useTranslation('common');
   const { query } = useRouter();
   const terminologyId = (query?.terminologyId ?? '') as string;
@@ -29,7 +33,7 @@ export default function ConceptPage(props: {
   const [conceptTitle, setConceptTitle] = useState<string | undefined>();
 
   return (
-    <MediaQueryContextProvider value={{ isSSRMobile: props.isSSRMobile }}>
+    <CommonContextProvider value={props}>
       {/* todo: use better feedbackSubject once more data is available */}
       <Layout feedbackSubject={`${t('concept-id')} ${conceptId}`}>
         <PageTitle title={conceptTitle} />
@@ -40,7 +44,7 @@ export default function ConceptPage(props: {
           setConceptTitle={setConceptTitle}
         />
       </Layout>
-    </MediaQueryContextProvider>
+    </CommonContextProvider>
   );
 }
 

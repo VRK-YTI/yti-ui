@@ -1,14 +1,18 @@
-import { MediaQueryContextProvider } from '@app/common/components/media-query/media-query-context';
 import Layout from '@app/layouts/layout';
 import { SSRConfig } from 'next-i18next';
 import { default as NewConceptModule } from '@app/modules/new-concept';
 import { useRouter } from 'next/router';
 import { createCommonGetServerSideProps } from '@app/common/utils/create-getserversideprops';
+import {
+  CommonContextState,
+  CommonContextProvider,
+} from '@app/common/components/common-context-provider';
 
-export default function NewConcept(props: {
-  _nextI18Next: SSRConfig;
-  isSSRMobile: boolean;
-}) {
+interface NewConceptPageProps extends CommonContextState {
+  _netI18Next: SSRConfig;
+}
+
+export default function NewConcept(props: NewConceptPageProps) {
   const { query } = useRouter();
   const conceptNames = {
     fi: query.fi as string,
@@ -18,14 +22,14 @@ export default function NewConcept(props: {
   const terminologyId = (query?.terminologyId ?? '') as string;
 
   return (
-    <MediaQueryContextProvider value={{ isSSRMobile: props.isSSRMobile }}>
+    <CommonContextProvider value={props}>
       <Layout>
         <NewConceptModule
           terminologyId={terminologyId}
           conceptNames={conceptNames}
         />
       </Layout>
-    </MediaQueryContextProvider>
+    </CommonContextProvider>
   );
 }
 
