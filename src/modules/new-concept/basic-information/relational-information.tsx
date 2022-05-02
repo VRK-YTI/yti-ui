@@ -1,11 +1,8 @@
-import { BasicBlock } from '@app/common/components/block';
-import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
 import Separator from '@app/common/components/separator';
 import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
-import { Button, Checkbox, CheckboxGroup, Chip, ExpanderTitleButton, Paragraph, Text } from 'suomifi-ui-components';
+import { Checkbox, CheckboxGroup, ExpanderTitleButton } from 'suomifi-ui-components';
 import { ConceptExpander, ExpanderContentFitted } from './concept-basic-information.styles';
-import { ChipBlock } from './concept-info-block.styles';
+import RelationalInformationBlock from './relational-information-block';
 
 export default function RelationalInformation() {
   const { t } = useTranslation('admin');
@@ -17,7 +14,7 @@ export default function RelationalInformation() {
       </ExpanderTitleButton>
 
       <ExpanderContentFitted>
-        <BasicBlockWithChips
+        <RelationalInformationBlock
           title={'Hierkkinen yläkäsite'}
           buttonTitle={'Lisää uusi hierarkkinen yläkäsite'}
           description={'Laajempi käsite, johon tämä käsite liittyy.'}
@@ -26,7 +23,7 @@ export default function RelationalInformation() {
 
         <Separator isLarge />
 
-        <BasicBlockWithChips
+        <RelationalInformationBlock
           title={'Hierkkinen alakäsite'}
           buttonTitle={'Lisää uusi hierarkkinen alakäsite'}
           description={'Käsite, joka on hierarkkisessa suhteessa tähän käsitteeseen ja jonka sisältöön kuuluu tämän käsitteen sisältö.'}
@@ -35,7 +32,7 @@ export default function RelationalInformation() {
 
         <Separator isLarge />
 
-        <BasicBlockWithChips
+        <RelationalInformationBlock
           title={'Liittyvä käsite'}
           buttonTitle={'Lisää uusi liittyvä käsite'}
           description={'Käsite, joka liittyy tähän käsitteeseen.'}
@@ -44,7 +41,7 @@ export default function RelationalInformation() {
 
         <Separator isLarge />
 
-        <BasicBlockWithChips
+        <RelationalInformationBlock
           title={'Koostumussuhteinen yläkäsite'}
           buttonTitle={'Lisää uusi koostumussuhteinen yläkäsite'}
           description={'Käsite, johon tämä käsite kuuluu (on osa).'}
@@ -53,7 +50,7 @@ export default function RelationalInformation() {
 
         <Separator isLarge />
 
-        <BasicBlockWithChips
+        <RelationalInformationBlock
           title={'Koostumussuhteinen alakäsite'}
           buttonTitle={'Lisää uusi koostumussuhteinen alakäsite'}
           description={'Käsite, joka vastaa kokonaisuuden osaa.'}
@@ -62,7 +59,7 @@ export default function RelationalInformation() {
 
         <Separator isLarge />
 
-        <BasicBlockWithChips
+        <RelationalInformationBlock
           title={'Liittyvä käsite toisessa sanastossa'}
           buttonTitle={'Lisää uusi liittyvä käsite'}
           description={'Käsite joka liittyy tähän käsitteeseen. Sijaitsee toisessa sanastossa.'}
@@ -71,7 +68,7 @@ export default function RelationalInformation() {
 
         <Separator isLarge />
 
-        <BasicBlockWithChips
+        <RelationalInformationBlock
           title={'Vastaava käsite toisessa sanastossa'}
           buttonTitle={'Lisää uusi vastaava käsite'}
           description={'Käsite jota voidaan käyttää tämän käsitteen sijaan. Sijaitsee toisessa sanastossa.'}
@@ -97,48 +94,5 @@ export default function RelationalInformation() {
 
       </ExpanderContentFitted>
     </ConceptExpander>
-  );
-}
-
-function BasicBlockWithChips({ title, buttonTitle, description, chipDescription }: any) {
-  const [items, setItems] = useState<number[]>([]);
-  return (
-    <BasicBlock
-      title={title}
-      extra={
-        <BasicBlockExtraWrapper>
-          <Button
-            variant='secondary'
-            onClick={() => setItems([...items, items.length])}
-          >
-            {buttonTitle}
-          </Button>
-
-          {items.length > 0 &&
-            <div style={{marginTop: '20px'}}>
-              <Paragraph>
-                <Text variant='bold' smallScreen>{chipDescription}</Text>
-              </Paragraph>
-
-              <ChipBlock>
-                {items.map(item => {
-                  return (
-                    <Chip
-                      key={item}
-                      removable
-                      onClick={() => setItems(items.filter(tItem => tItem !== item))}
-                    >
-                      {item}
-                    </Chip>
-                  );
-                })}
-              </ChipBlock>
-            </div>
-          }
-        </ BasicBlockExtraWrapper>
-      }
-    >
-      {description}
-    </BasicBlock>
   );
 }

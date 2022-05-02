@@ -1,29 +1,27 @@
+import { useGetGroupsQuery } from '@app/common/components/terminology-search/terminology-search.slice';
 import { useTranslation } from 'next-i18next';
 import { ExpanderTitleButton, SingleSelect } from 'suomifi-ui-components';
 import { ConceptExpander, ExpanderContentFitted } from './concept-basic-information.styles';
 
 export default function OtherInformation() {
-  const { t } = useTranslation('admin');
+  const { t, i18n } = useTranslation('admin');
+  const { data: groups } = useGetGroupsQuery(i18n.language);
 
-  const items = [
-    {
-      uniqueItemId: '123',
-      labelText: 'Koulutus'
-    },
-    {
-      uniqueItemId: '456',
-      labelText: 'Asuminen'
-    }
-  ];
+  const groupsFormatted = groups?.map(group => {
+    return {
+      uniqueItemId: group.id,
+      labelText: group.properties.prefLabel.value
+    };
+  }) ?? [];
 
-  const items2 = [
+  const partOfSpeech = [
     {
       uniqueItemId: 'adjective',
-      labelText: 'Adjektiivi'
+      labelText: 'adjektiivi'
     },
     {
       uniqueItemId: 'verb',
-      labelText: 'Verbi'
+      labelText: 'verbi'
     }
   ];
 
@@ -38,8 +36,8 @@ export default function OtherInformation() {
           optionalText={t('optional')}
           clearButtonLabel='Tyhjennä valinnat'
           ariaOptionsAvailableText='Vaihtoehtoja saatavilla'
-          items={items}
-          noItemsText='Luokkia ei saatavilla'
+          items={groupsFormatted}
+          noItemsText='Käsitten luokkia ei saatavilla'
         />
 
         <SingleSelect
@@ -48,8 +46,8 @@ export default function OtherInformation() {
           hintText='Merkitään vain jos sanaluokka on adjektiivi tai verbi'
           clearButtonLabel='Tyhjennä valinnat'
           ariaOptionsAvailableText='Vaihtoehtoja saatavilla'
-          items={items2}
-          noItemsText='Luokkia ei saatavilla'
+          items={partOfSpeech}
+          noItemsText='Sanaluokkia ei saatavilla'
         />
 
       </ExpanderContentFitted>
