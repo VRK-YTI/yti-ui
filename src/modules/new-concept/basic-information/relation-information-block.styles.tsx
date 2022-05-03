@@ -12,16 +12,15 @@ export const ChipBlock = styled(Block)`
 export const ResultList = styled.li`
   display: flex;
   flex-direction: column;
-  gap: ${props => props.theme.suomifi.spacing.s};
-  margin-top: ${props => props.theme.suomifi.spacing.s};
+  gap: ${(props) => props.theme.suomifi.spacing.s};
+  margin-top: ${(props) => props.theme.suomifi.spacing.s};
 `;
 
 export const SearchBlock = styled(Block)`
-  background: ${props => props.theme.suomifi.colors.depthLight3};
-  border: 1px solid ${props => props.theme.suomifi.colors.depthLight1};
+  background: ${(props) => props.theme.suomifi.colors.depthLight3};
+  border: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
   display: flex;
   flex-direction: column;
-
 
   > div {
     display: flex;
@@ -32,10 +31,8 @@ export const SearchBlock = styled(Block)`
 
   > div:last-child {
     padding: 10px 0px 10px 20px;
-    border-top: 1px solid ${props => props.theme.suomifi.colors.depthLight1};
+    border-top: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
   }
 `;
 
-export const ModalFooterFitted = styled(ModalFooter)`
-
-`;
+export const ModalFooterFitted = styled(ModalFooter)``;

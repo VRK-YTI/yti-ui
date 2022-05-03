@@ -6,8 +6,7 @@ export const ModalSmWidth = styled(Modal)`
 `;
 
 export const ModalContentFitted = styled(ModalContent)`
-
   > *:not(:last-child) {
-    margin-bottom: ${props => props.theme.suomifi.spacing.m};
+    margin-bottom: ${(props) => props.theme.suomifi.spacing.m};
   }
 `;

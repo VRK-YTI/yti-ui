@@ -6,7 +6,9 @@ import { HYDRATE } from 'next-redux-wrapper';
 export const conceptApi = createApi({
   reducerPath: 'conceptAPI',
   baseQuery: axiosBaseQuery({
-    baseUrl: `${process.env.TERMINOLOGY_API_URL}/api/v1/frontend`,
+    baseUrl: process.env.TERMINOLOGY_API_URL ?
+      `${process.env.TERMINOLOGY_API_URL}/api/v1/frontend`
+      : '/terminology-api/api/v1/frontend',
   }),
   extractRehydrationInfo(action, { reducerPath }) {
     if (action.type === HYDRATE) {
@@ -24,11 +26,29 @@ export const conceptApi = createApi({
         method: 'GET',
       }),
     }),
+    searchConcept: builder.query<any, { terminologyId: string; query?: string }>({
+      query: (value) => ({
+        url: '/searchConcept',
+        method: 'POST',
+        data: {
+          highlight: true,
+          pageFrom: 0,
+          pageSize: 100,
+          ...(value.query && { query: value.query }),
+          sortDirection: 'ASC',
+          sortLanguage: 'fi',
+          terminologyId: [
+            value.terminologyId
+          ]
+        }
+      }),
+    })
   }),
 });
 
 export const {
   useGetConceptQuery,
+  useSearchConceptQuery,
   util: { getRunningOperationPromises },
 } = conceptApi;
 
