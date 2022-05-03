@@ -12,6 +12,7 @@ describe('matomo', () => {
     mockRouter.setCurrentUrl('/');
     delete window._paq;
   });
+
   it('should not render in test when used smart version', () => {
     render(<Matomo />);
 

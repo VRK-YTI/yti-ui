@@ -1,9 +1,6 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { useMediaQuery } from '@material-ui/core';
-
-const MediaQueryContext = React.createContext({ isSSRMobile: false });
-
-export const MediaQueryContextProvider = MediaQueryContext.Provider;
+import { CommonContext } from '../common-context-provider';
 
 export const mediaQueries = {
   s: '(max-width:767px)',
@@ -31,7 +28,7 @@ export interface UseBreakpointsResult {
 }
 
 export function useBreakpoints(): UseBreakpointsResult {
-  const { isSSRMobile } = useContext(MediaQueryContext);
+  const { isSSRMobile } = useContext(CommonContext);
   const matchSmall = useMediaQuery(mediaQueries.s);
   const matchMedium = useMediaQuery(mediaQueries.m);
   const matchLarge = useMediaQuery(mediaQueries.l);

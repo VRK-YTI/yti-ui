@@ -6,7 +6,6 @@ import {
   createCommonGetServerSideProps,
   LocalHandlerParams,
 } from '@app/common/utils/create-getserversideprops';
-import { MediaQueryContextProvider } from '@app/common/components/media-query/media-query-context';
 import Collection from '@app/modules/collection';
 import {
   getCollection,
@@ -18,11 +17,16 @@ import {
   getRunningOperationPromises as getVocabularyRunningOperationPromises,
 } from '@app/common/components/vocabulary/vocabulary.slice';
 import PageTitle from '@app/common/components/page-title';
+import {
+  CommonContextState,
+  CommonContextProvider,
+} from '@app/common/components/common-context-provider';
 
-export default function CollectionPage(props: {
+interface CollectionPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
-  isSSRMobile: boolean;
-}) {
+}
+
+export default function CollectionPage(props: CollectionPageProps) {
   const { t } = useTranslation('common');
   const { query } = useRouter();
   const terminologyId = (query?.terminologyId ?? '') as string;
@@ -30,7 +34,7 @@ export default function CollectionPage(props: {
   const [collectionTitle, setCollectionTitle] = useState<string | undefined>();
 
   return (
-    <MediaQueryContextProvider value={{ isSSRMobile: props.isSSRMobile }}>
+    <CommonContextProvider value={props}>
       {/* todo: use better feedbackSubject once more data is available */}
       <Layout feedbackSubject={`${t('collection-id')} ${collectionId}`}>
         <PageTitle title={collectionTitle} />
@@ -41,7 +45,7 @@ export default function CollectionPage(props: {
           setCollectionTitle={setCollectionTitle}
         />
       </Layout>
-    </MediaQueryContextProvider>
+    </CommonContextProvider>
   );
 }
 export const getServerSideProps = createCommonGetServerSideProps(

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Button, Checkbox, RadioButton } from 'suomifi-ui-components';
+import { Button, RadioButton } from 'suomifi-ui-components';
 
 export const CloseWrapper = styled.div`
   * {
