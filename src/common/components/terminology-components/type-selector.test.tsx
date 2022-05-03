@@ -12,14 +12,17 @@ describe('type-selector', () => {
     userEvent.click(screen.getByText('tr-other-vocabulary'));
 
     expect(mockUpdate).toHaveBeenCalledTimes(1);
-    expect(mockUpdate).toHaveBeenCalledWith({ key: 'type', data: 'other' });
+    expect(mockUpdate).toHaveBeenCalledWith({
+      key: 'type',
+      data: 'OTHER_VOCABULARY',
+    });
 
     userEvent.click(screen.getByText('tr-terminological-vocabulary'));
 
     expect(mockUpdate).toHaveBeenCalledTimes(2);
     expect(mockUpdate).toHaveBeenCalledWith({
       key: 'type',
-      data: 'terminology',
+      data: 'TERMINOLOGICAL_VOCABULARY',
     });
   });
 });

@@ -28,6 +28,8 @@ export default function InfoManual({
     TerminologyDataInitialState
   );
 
+  console.log(terminologyData);
+
   useEffect(() => {
     if (!terminologyData) {
       return;

@@ -11,6 +11,7 @@ export interface NewTerminology {
     prefLabel: CommonDTO[];
     priority: CommonDTO[];
     status: CommonDTO[];
+    terminologyType: CommonDTO[];
   };
   references: {
     contributor: {

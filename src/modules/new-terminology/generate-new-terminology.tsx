@@ -59,6 +59,14 @@ export default function generateNewTerminology({
     ];
   });
 
+  postData.properties.terminologyType = [
+    {
+      lang: '',
+      regex: '^(OTHER_VOCABULARY|TERMINOLOGICAL_VOCABULARY)$',
+      value: data.type,
+    },
+  ];
+
   postData.references.contributor = [
     {
       id: data.mainOrg.uniqueItemId,
@@ -112,6 +120,13 @@ const template: NewTerminology = {
         lang: '',
         regex: '(?s)^.*$',
         value: 'DRAFT',
+      },
+    ],
+    terminologyType: [
+      {
+        lang: '',
+        regex: '^(OTHER_VOCABULARY|TERMINOLOGICAL_VOCABULARY)$',
+        value: 'TERMINOLOGICAL_VOCABULARY',
       },
     ],
   },
