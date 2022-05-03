@@ -88,6 +88,12 @@ export const vocabularyApi = createApi({
         method: 'GET',
       }),
     }),
+    getVocabularies: builder.query<any, any>({
+      query: () => ({
+        url: '/vocabularies',
+        method: 'GET',
+      })
+    })
   }),
 });
 
@@ -98,6 +104,7 @@ export const {
   usePostNewVocabularyMutation,
   // useDeleteVocabularyMutation,
   useGetIfNamespaceInUseQuery,
+  useGetVocabulariesQuery,
   util: { getRunningOperationPromises },
 } = vocabularyApi;
 

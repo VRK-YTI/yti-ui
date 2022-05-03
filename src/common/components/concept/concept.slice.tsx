@@ -26,20 +26,32 @@ export const conceptApi = createApi({
         method: 'GET',
       }),
     }),
-    searchConcept: builder.query<any, { terminologyId: string; query?: string }>({
-      query: (value) => ({
+    searchConcept: builder.mutation<any, { terminologyId?: string; query?: string; notInTerminologyId?: string; status?: string }>({
+      query: (props) => ({
         url: '/searchConcept',
         method: 'POST',
         data: {
           highlight: true,
+          ...(props.notInTerminologyId && {
+            notInTerminologyId: [
+              props.notInTerminologyId
+            ]
+          }),
           pageFrom: 0,
           pageSize: 100,
-          ...(value.query && { query: value.query }),
+          ...(props.query && { query: props.query }),
           sortDirection: 'ASC',
           sortLanguage: 'fi',
-          terminologyId: [
-            value.terminologyId
-          ]
+          ...(props.status && {
+            status: [
+              props.status
+            ]
+          }),
+          ...(props.terminologyId && {
+            terminologyId: [
+              props.terminologyId
+            ]
+          })
         }
       }),
     })
@@ -48,7 +60,7 @@ export const conceptApi = createApi({
 
 export const {
   useGetConceptQuery,
-  useSearchConceptQuery,
+  useSearchConceptMutation,
   util: { getRunningOperationPromises },
 } = conceptApi;
 

@@ -1,7 +1,8 @@
 import { BasicBlock } from '@app/common/components/block';
 import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
-import { useSearchConceptQuery } from '@app/common/components/concept/concept.slice';
+import { useSearchConceptMutation } from '@app/common/components/concept/concept.slice';
 import { useTranslation } from 'next-i18next';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import {
   Button,
@@ -32,7 +33,6 @@ export default function RelationalInformationBlock({
   chipDescription,
 }: any) {
   const { i18n } = useTranslation('admin');
-  const { data } = useSearchConceptQuery({terminologyId: 'f286aa7c-8b44-44af-9c62-3b19130f961c', query: 'uusi'});
   const [items, setItems] = useState<any[]>([]);
 
   return (
@@ -44,7 +44,6 @@ export default function RelationalInformationBlock({
             buttonTitle={buttonTitle}
             items={items}
             setItems={setItems}
-            data={data}
           />
 
           {items.length > 0 && (
@@ -80,14 +79,14 @@ export default function RelationalInformationBlock({
   );
 }
 
-function ManageRelationalInfoModal({ buttonTitle, items, setItems, data }: any) {
+function ManageRelationalInfoModal({ buttonTitle, items, setItems }: any) {
   const [visible, setVisible] = useState(false);
   const [chosen, setChosen] = useState<any>(items);
   const [showChosen, setShowChosen] = useState(false);
 
   const status = [
-    { name: 'valid', uniqueItemId: 'valid1', labelText: 'VALID' },
-    { name: 'temp', uniqueItemId: 'temp2', labelText: 'TEMP' },
+    { name: 'VALID', uniqueItemId: 'VALID', labelText: 'VALID' },
+    { name: 'DRAFT', uniqueItemId: 'DRAFT', labelText: 'DRAFT' },
   ];
 
   const handleClose = () => {
@@ -116,7 +115,7 @@ function ManageRelationalInfoModal({ buttonTitle, items, setItems, data }: any) 
             ?
             renderChosen(chosen, setChosen, setShowChosen, showChosen)
             :
-            renderResults(buttonTitle, status, data, chosen, setChosen)
+            RenderResults(buttonTitle, status, chosen, setChosen)
           }
         </ModalContent>
 
@@ -145,13 +144,36 @@ function ManageRelationalInfoModal({ buttonTitle, items, setItems, data }: any) 
 }
 
 
-function renderResults(buttonTitle, items, data, chosen, setChosen) {
+function RenderResults(buttonTitle, items, chosen, setChosen) {
+  const router = useRouter();
+  const [searchTerm, setSearchTerm] = useState('');
+  const [status, setStatus] = useState('');
+  const [searchConcept, result] = useSearchConceptMutation();
+
+  console.log(status);
+
+  const handleSearch = () => {
+    searchConcept({
+      terminologyId: router.query.terminologyId as string,
+      query: searchTerm,
+      status: status
+    });
+  };
+
   const handleCheckbox = (e: any, concept: any) => {
     if (e.checkboxState) {
       setChosen([...chosen, concept]);
     } else {
       setChosen(chosen.filter((chose) => chose.id !== concept.id));
     }
+  };
+
+  const handleClearValues = () => {
+    setSearchTerm('');
+    setStatus('');
+    searchConcept({
+      terminologyId: router.query.terminologyId as string
+    });
   };
 
   return (
@@ -163,6 +185,8 @@ function renderResults(buttonTitle, items, data, chosen, setChosen) {
             labelText="Hakusana"
             clearButtonLabel="Tyhjennä"
             searchButtonLabel="Hae"
+            onChange={(value) => setSearchTerm(value as string)}
+            value={searchTerm}
           />
           <SingleSelect
             ariaOptionsAvailableText="Saatavilla"
@@ -170,23 +194,31 @@ function renderResults(buttonTitle, items, data, chosen, setChosen) {
             clearButtonLabel="Tyhjennä"
             items={items}
             noItemsText="Ei vaihtoehtoja"
+            onItemSelectionChange={(e) => setStatus(e)}
+            selectedItem={status}
           />
         </div>
         <div>
-          <Button>Hae</Button>
-          <Button variant="secondaryNoBorder" icon="remove">
+          <Button onClick={() => handleSearch()}>Hae</Button>
+          <Button
+            variant="secondaryNoBorder"
+            icon="remove"
+            onClick={() => handleClearValues()}
+          >
             Tyhjennä haku
           </Button>
         </div>
-        <div>
-          <Text variant="bold" smallScreen>
-            {data?.totalHitCount ?? 0} käsitettä
-          </Text>
-        </div>
+        {result.data?.totalHitCount &&
+          <div>
+            <Text variant="bold" smallScreen>
+              {result.data?.totalHitCount ?? 0} käsitettä
+            </Text>
+          </div>
+        }
       </SearchBlock>
 
       <ResultList>
-        {data?.concepts.map((concept, idx) => {
+        {result.data?.concepts?.map((concept, idx) => {
           return (
             <Expander key={`${concept.id}-${idx}`}>
               <ExpanderTitle
