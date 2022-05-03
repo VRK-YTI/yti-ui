@@ -1,10 +1,13 @@
 import styled from 'styled-components';
 
-export const BasicBlockWrapper = styled.div<{ largeGap?: boolean }>`
+export const BasicBlockWrapper = styled.div<{
+  largeGap?: boolean;
+  largeWidth?: boolean;
+}>`
   display: flex;
   flex-direction: column;
   gap: ${(props) => (props.largeGap ? '10px' : '5px')};
-  max-width: 695px;
+  max-width: ${(props) => (props.largeWidth ? '800px' : '695px')};
   font-size: 16px;
   line-height: 24px;
 

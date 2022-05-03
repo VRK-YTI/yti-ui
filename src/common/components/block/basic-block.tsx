@@ -6,6 +6,7 @@ export interface BasicBlockProps {
   children: React.ReactNode;
   extra?: React.ReactNode;
   largeGap?: boolean;
+  largeWidth?: boolean;
 }
 
 export default function BasicBlock({
@@ -13,9 +14,10 @@ export default function BasicBlock({
   children,
   extra,
   largeGap,
+  largeWidth,
 }: BasicBlockProps) {
   return (
-    <BasicBlockWrapper largeGap={largeGap}>
+    <BasicBlockWrapper largeGap={largeGap} largeWidth={largeWidth}>
       {title && <BasicBlockHeader>{title}</BasicBlockHeader>}
       {children}
       {extra}
