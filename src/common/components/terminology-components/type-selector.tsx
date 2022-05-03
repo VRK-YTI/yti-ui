@@ -1,5 +1,4 @@
 import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
 import { RadioButton } from 'suomifi-ui-components';
 import {
   BlankFieldset,
@@ -13,10 +12,8 @@ export interface TypeSelectorProps {
 
 export default function TypeSelector({ update }: TypeSelectorProps) {
   const { t } = useTranslation('admin');
-  const [, setSelectedType] = useState('TERMINOLOGICAL_VOCABULARY');
 
   const handleSetSelected = (value: string) => {
-    setSelectedType(value);
     update({ key: 'type', data: value });
   };
 
