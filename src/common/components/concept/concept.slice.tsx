@@ -6,8 +6,8 @@ import { HYDRATE } from 'next-redux-wrapper';
 export const conceptApi = createApi({
   reducerPath: 'conceptAPI',
   baseQuery: axiosBaseQuery({
-    baseUrl: process.env.TERMINOLOGY_API_URL ?
-      `${process.env.TERMINOLOGY_API_URL}/api/v1/frontend`
+    baseUrl: process.env.TERMINOLOGY_API_URL
+      ? `${process.env.TERMINOLOGY_API_URL}/api/v1/frontend`
       : '/terminology-api/api/v1/frontend',
   }),
   extractRehydrationInfo(action, { reducerPath }) {
@@ -26,16 +26,22 @@ export const conceptApi = createApi({
         method: 'GET',
       }),
     }),
-    searchConcept: builder.mutation<any, { terminologyId?: string; query?: string; notInTerminologyId?: string; status?: string }>({
+    searchConcept: builder.mutation<
+      any,
+      {
+        terminologyId?: string;
+        query?: string;
+        notInTerminologyId?: string;
+        status?: string;
+      }
+    >({
       query: (props) => ({
         url: '/searchConcept',
         method: 'POST',
         data: {
           highlight: true,
           ...(props.notInTerminologyId && {
-            notInTerminologyId: [
-              props.notInTerminologyId
-            ]
+            notInTerminologyId: [props.notInTerminologyId],
           }),
           pageFrom: 0,
           pageSize: 100,
@@ -43,18 +49,14 @@ export const conceptApi = createApi({
           sortDirection: 'ASC',
           sortLanguage: 'fi',
           ...(props.status && {
-            status: [
-              props.status
-            ]
+            status: [props.status],
           }),
           ...(props.terminologyId && {
-            terminologyId: [
-              props.terminologyId
-            ]
-          })
-        }
+            terminologyId: [props.terminologyId],
+          }),
+        },
       }),
-    })
+    }),
   }),
 });
 

@@ -92,8 +92,8 @@ export const vocabularyApi = createApi({
       query: () => ({
         url: '/vocabularies',
         method: 'GET',
-      })
-    })
+      }),
+    }),
   }),
 });
 

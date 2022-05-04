@@ -75,6 +75,7 @@ export default function RelationalInformation() {
             'Käsite joka liittyy tähän käsitteeseen. Sijaitsee toisessa sanastossa.'
           }
           chipDescription={'Valitut liittyvät käsitteet'}
+          fromOther
         />
 
         <Separator isLarge />
@@ -86,6 +87,7 @@ export default function RelationalInformation() {
             'Käsite jota voidaan käyttää tämän käsitteen sijaan. Sijaitsee toisessa sanastossa.'
           }
           chipDescription={'Valitut vastaavat käsitteet'}
+          fromOther
         />
 
         <Separator isLarge />

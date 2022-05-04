@@ -9,11 +9,13 @@ export const ChipBlock = styled(Block)`
   max-width: 100%;
 `;
 
-export const ResultList = styled.li`
+export const ResultList = styled.ul`
   display: flex;
   flex-direction: column;
   gap: ${(props) => props.theme.suomifi.spacing.s};
+  list-style: none;
   margin-top: ${(props) => props.theme.suomifi.spacing.s};
+  padding: 0;
 `;
 
 export const SearchBlock = styled(Block)`
