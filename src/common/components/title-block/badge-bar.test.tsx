@@ -5,12 +5,9 @@ import { themeProvider } from '../../../tests/test-utils';
 
 describe('badge bar', () => {
   it('should render one item without separators', () => {
-    render(
-      <BadgeBar data-testid="badge-bar">
-        A
-      </BadgeBar>,
-      { wrapper: themeProvider }
-    );
+    render(<BadgeBar data-testid="badge-bar">A</BadgeBar>, {
+      wrapper: themeProvider,
+    });
 
     expect(screen.getByTestId('badge-bar').innerHTML).toBe('A');
   });
@@ -25,6 +22,8 @@ describe('badge bar', () => {
       { wrapper: themeProvider }
     );
 
-    expect(screen.getByTestId('badge-bar').innerHTML).toBe('A \u00b7 B \u00b7 C');
+    expect(screen.getByTestId('badge-bar').innerHTML).toBe(
+      'A \u00b7 B \u00b7 C'
+    );
   });
 });
