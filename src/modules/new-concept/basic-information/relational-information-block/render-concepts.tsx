@@ -23,9 +23,9 @@ import FormattedDate from '@app/common/components/formatted-date';
 import { Concepts } from '@app/common/interfaces/concepts.interface';
 
 interface RenderConceptsProps {
-  concepts: Concepts[];
+  concepts?: Concepts[];
   chosen: Concepts[];
-  setChosen: (value: any) => void;
+  setChosen: (value: Concepts[]) => void;
   terminologyId: string;
   fromOther?: boolean;
 }
@@ -41,7 +41,7 @@ export default function RenderConcepts({
   const { data: terminology } = useGetVocabularyQuery(terminologyId);
   const { data: vocabularies } = useGetVocabulariesQuery(null);
 
-  const handleCheckbox = (e: any, concept: any) => {
+  const handleCheckbox = (e: { checkboxState: boolean }, concept: Concepts) => {
     if (e.checkboxState) {
       setChosen([...chosen, concept]);
     } else {
@@ -49,7 +49,11 @@ export default function RenderConcepts({
     }
   };
 
-  console.log(vocabularies);
+  if (!concepts) {
+    return null;
+  }
+
+  console.log(chosen);
 
   return (
     <>

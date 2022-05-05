@@ -3,7 +3,7 @@ import { BasicBlockExtraWrapper } from '@app/common/components/block/block.style
 import { Concepts } from '@app/common/interfaces/concepts.interface';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   Button,
   Chip,
@@ -117,16 +117,13 @@ function ManageRelationalInfoModal({
   const [visible, setVisible] = useState(false);
   const [chosen, setChosen] = useState<Concepts[]>(selectedConcepts);
   const [showChosen, setShowChosen] = useState(false);
-  const [searchResults, setSearchResults] = useState([]);
-
-  useEffect(() => {
-    setChosen(selectedConcepts);
-  }, [selectedConcepts]);
+  const [searchResults, setSearchResults] = useState<Concepts[]>();
 
   const handleClose = () => {
     setVisible(false);
     setShowChosen(false);
     setSelectedConcepts(selectedConcepts);
+    setChosen([]);
   };
 
   const handleChange = () => {
@@ -134,9 +131,14 @@ function ManageRelationalInfoModal({
     setSelectedConcepts(chosen);
   };
 
+  const handleSetVisible = () => {
+    setChosen(selectedConcepts);
+    setVisible(true);
+  };
+
   return (
     <>
-      <Button onClick={() => setVisible(true)} variant="secondary">
+      <Button onClick={() => handleSetVisible()} variant="secondary">
         {buttonTitle}
       </Button>
 

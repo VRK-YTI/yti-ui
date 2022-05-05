@@ -1,11 +1,12 @@
 import { useSearchConceptMutation } from '@app/common/components/concept/concept.slice';
+import { Concepts } from '@app/common/interfaces/concepts.interface';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import { Button, SearchInput, SingleSelect, Text } from 'suomifi-ui-components';
 import { SearchBlock } from './relation-information-block.styles';
 
 interface SearchProps {
-  setSearchResults: (value: any) => void;
+  setSearchResults: (value: Concepts[]) => void;
   terminologyId: string;
   fromOther?: boolean;
 }
