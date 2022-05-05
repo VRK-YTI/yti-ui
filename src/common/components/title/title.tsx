@@ -13,10 +13,11 @@ import { VocabularyInfoDTO } from '@app/common/interfaces/vocabulary.interface';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import { useStoreDispatch } from '@app/store';
 import { setTitle } from './title.slice';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { getProperty } from '@app/common/utils/get-property';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import NewTerminology from '@app/modules/new-terminology';
+import useTitleRef from '@app/common/utils/hooks/use-title-ref';
 
 interface TitleProps {
   info: string | VocabularyInfoDTO;
@@ -25,19 +26,13 @@ interface TitleProps {
 export default function Title({ info }: TitleProps) {
   const { t, i18n } = useTranslation('common');
   const { isSmall } = useBreakpoints();
-  const titleRef = useRef<HTMLHeadingElement>(null);
+  const titleRef = useTitleRef();
   const dispatch = useStoreDispatch();
   const title = getTitle(info);
 
   useEffect(() => {
     dispatch(setTitle(title));
   }, [dispatch, title]);
-
-  useEffect(() => {
-    if (titleRef.current) {
-      titleRef.current.focus();
-    }
-  }, [titleRef]);
 
   if (!info) {
     return <></>;

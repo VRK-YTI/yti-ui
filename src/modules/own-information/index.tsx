@@ -1,8 +1,6 @@
-import { Heading } from 'suomifi-ui-components';
 import { Breadcrumb, BreadcrumbLink } from '@app/common/components/breadcrumb';
 import { useTranslation } from 'next-i18next';
 import {
-  HeadingBlock,
   MainContent,
   OrganizationAndRoles,
   OrganizationAndRolesHeading,
@@ -11,7 +9,6 @@ import {
   PageContent,
 } from './own-information.styles';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
-import { useEffect, useRef } from 'react';
 import { BasicBlock } from '@app/common/components/block';
 import { useSelector } from 'react-redux';
 import { selectLogin } from '@app/common/components/login/login.slice';
@@ -25,6 +22,7 @@ import EmailNotificationsBlock from './email-notifications-block';
 import { useGetSubscriptionsQuery } from '../../common/components/subscription/subscription.slice';
 import InlineAlert from '@app/common/components/inline-alert';
 import { useGetRequestsQuery } from '@app/common/components/access-request/access-request.slice';
+import { MainTitle } from '@app/common/components/title-block';
 
 export default function OwnInformation() {
   const user = useSelector(selectLogin());
@@ -34,13 +32,6 @@ export default function OwnInformation() {
   const { data: subscriptions, refetch: refetchSubscriptions } =
     useGetSubscriptionsQuery(null);
   const { data: requests } = useGetRequestsQuery(null);
-
-  const titleRef = useRef<HTMLHeadingElement>(null);
-  useEffect(() => {
-    if (titleRef.current) {
-      titleRef.current.focus();
-    }
-  }, [titleRef]);
 
   if (user.anonymous) {
     return null;
@@ -56,11 +47,7 @@ export default function OwnInformation() {
 
       <PageContent breakpoint={breakpoint}>
         <MainContent id="main">
-          <HeadingBlock>
-            <Heading variant="h1" tabIndex={-1} ref={titleRef}>
-              {t('own-information')}
-            </Heading>
-          </HeadingBlock>
+          <MainTitle>{t('own-information')}</MainTitle>
 
           <BasicBlock title={<h2>{t('field-name')}</h2>}>
             {`${user.firstName} ${user.lastName}`}
