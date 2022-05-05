@@ -37,7 +37,7 @@ export default function RenderConcepts({
   terminologyId,
   fromOther,
 }: RenderConceptsProps) {
-  const { t } = useTranslation('admin');
+  const { t, i18n } = useTranslation('admin');
   const { data: terminology } = useGetVocabularyQuery(terminologyId);
   const { data: vocabularies } = useGetVocabulariesQuery(null);
 
@@ -53,8 +53,6 @@ export default function RenderConcepts({
     return null;
   }
 
-  console.log(chosen);
-
   return (
     <>
       <ResultList>
@@ -69,6 +67,7 @@ export default function RenderConcepts({
 
           const organizationTitle = getPropertyValue({
             fallbackLanguage: 'fi',
+            language: i18n.language,
             property: property,
           });
 
@@ -87,7 +86,24 @@ export default function RenderConcepts({
                     onClick={(e) => handleCheckbox(e, concept)}
                     checked={chosen.some((chose) => chose.id === concept.id)}
                   >
-                    <SanitizedTextContent text={concept.label.fi} />
+                    <SanitizedTextContent
+                      text={
+                        getPropertyValue({
+                          property: Object.keys(concept.label).map((key) => {
+                            const obj = {
+                              lang: key,
+                              value: concept.label[key],
+                              regex: '',
+                            };
+                            return obj;
+                          }),
+                          language: i18n.language,
+                          fallbackLanguage: 'fi',
+                        }) ??
+                        concept.label[i18n.language] ??
+                        concept.label.fi
+                      }
+                    />
                   </Checkbox>
                 </ExpanderTitle>
 

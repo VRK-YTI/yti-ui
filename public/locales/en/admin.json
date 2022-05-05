@@ -180,5 +180,6 @@
   "preferred-terms": "Preferred terms",
   "definition": "Definition",
   "contributor": "Contributor",
-  "modified-at": "Modified at"
+  "modified-at": "Modified at",
+  "save": "Save"
 }

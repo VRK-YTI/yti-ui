@@ -1,5 +1,6 @@
 import { BasicBlock } from '@app/common/components/block';
 import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
+import PropertyValue from '@app/common/components/property-value';
 import { Concepts } from '@app/common/interfaces/concepts.interface';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
@@ -81,7 +82,17 @@ export default function RelationalInformationBlock({
                         )
                       }
                     >
-                      {concept.label[i18n.language]}
+                      <PropertyValue
+                        property={Object.keys(concept.label).map((key) => {
+                          const obj = {
+                            lang: key,
+                            value: concept.label[key],
+                            regex: '',
+                          };
+                          return obj;
+                        })}
+                        fallbackLanguage={'fi'}
+                      />
                     </Chip>
                   );
                 })}
