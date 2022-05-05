@@ -20,14 +20,23 @@ import {
   PropertyBlock,
 } from '@app/common/components/block';
 import FormattedDate from '@app/common/components/formatted-date';
+import { Concepts } from '@app/common/interfaces/concepts.interface';
 
-export default function RenderConcepts(
-  result,
+interface RenderConceptsProps {
+  concepts: Concepts[];
+  chosen: Concepts[];
+  setChosen: (value: any) => void;
+  terminologyId: string;
+  fromOther?: boolean;
+}
+
+export default function RenderConcepts({
+  concepts,
   chosen,
   setChosen,
   terminologyId,
-  fromOther
-) {
+  fromOther,
+}: RenderConceptsProps) {
   const { t } = useTranslation('admin');
   const { data: terminology } = useGetVocabularyQuery(terminologyId);
   const { data: vocabularies } = useGetVocabulariesQuery(null);
@@ -40,15 +49,17 @@ export default function RenderConcepts(
     }
   };
 
+  console.log(vocabularies);
+
   return (
     <>
       <ResultList>
-        {result.data?.concepts?.map((concept, idx) => {
-          const conceptsVocabulary = vocabularies.filter(
+        {concepts?.map((concept, idx) => {
+          const conceptsVocabulary = vocabularies?.filter(
             (vocabulary) => vocabulary.type.graph.id === concept.terminology.id
           );
           const property =
-            fromOther && conceptsVocabulary.length > 0
+            fromOther && conceptsVocabulary && conceptsVocabulary.length > 0
               ? conceptsVocabulary[0].properties.prefLabel
               : terminology?.properties.prefLabel;
 
@@ -88,7 +99,15 @@ export default function RenderConcepts(
     </>
   );
 
-  function RenderExpanderContent({ terminologyId, conceptId }) {
+  interface RenderExpanderContentProps {
+    terminologyId: string;
+    conceptId: string;
+  }
+
+  function RenderExpanderContent({
+    terminologyId,
+    conceptId,
+  }: RenderExpanderContentProps) {
     const { t } = useTranslation('admin');
     const { data: concept } = useGetConceptQuery({
       terminologyId: terminologyId,

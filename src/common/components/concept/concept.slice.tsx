@@ -2,6 +2,7 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 import { Concept } from '@app/common/interfaces/concept.interface';
 import axiosBaseQuery from '@app/common/components/axios-base-query';
 import { HYDRATE } from 'next-redux-wrapper';
+import { Concepts } from '@app/common/interfaces/concepts.interface';
 
 export const conceptApi = createApi({
   reducerPath: 'conceptAPI',
@@ -27,7 +28,11 @@ export const conceptApi = createApi({
       }),
     }),
     searchConcept: builder.mutation<
-      any,
+      {
+        concepts: Concepts[];
+        resultStart: number;
+        totalHitCount: number;
+      },
       {
         terminologyId?: string;
         query?: string;

@@ -4,14 +4,20 @@ import { useEffect, useState } from 'react';
 import { Button, SearchInput, SingleSelect, Text } from 'suomifi-ui-components';
 import { SearchBlock } from './relation-information-block.styles';
 
+interface SearchProps {
+  setSearchResults: (value: any) => void;
+  terminologyId: string;
+  fromOther?: boolean;
+}
+
 export default function Search({
   setSearchResults,
   terminologyId,
   fromOther,
-}: any) {
+}: SearchProps) {
   const { t } = useTranslation('admin');
   const [searchTerm, setSearchTerm] = useState('');
-  const [status, setStatus] = useState('');
+  const [status, setStatus] = useState<typeof statuses[0] | null>();
   const [searchConcept, result] = useSearchConceptMutation();
 
   const statuses = [
@@ -49,7 +55,7 @@ export default function Search({
 
   useEffect(() => {
     if (result.isSuccess) {
-      setSearchResults(result);
+      setSearchResults(result.data.concepts);
     }
   }, [setSearchResults, result]);
 
@@ -69,7 +75,7 @@ export default function Search({
 
   const handleClearValues = () => {
     setSearchTerm('');
-    setStatus('');
+    setStatus(null);
     searchConcept({
       ...(fromOther
         ? { notInTerminologyId: terminologyId }
@@ -95,7 +101,7 @@ export default function Search({
           items={statuses}
           noItemsText={t('no-statuses-available')}
           onItemSelectionChange={(e) => setStatus(e)}
-          selectedItem={status}
+          selectedItem={status ? status : undefined}
         />
       </div>
       <div>

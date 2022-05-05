@@ -1,5 +1,6 @@
 import { BasicBlock } from '@app/common/components/block';
 import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
+import { Concepts } from '@app/common/interfaces/concepts.interface';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -20,16 +21,31 @@ import RenderChosen from './render-chosen';
 import RenderConcepts from './render-concepts';
 import Search from './search';
 
+interface RelationalInformationBlockProps {
+  title: string;
+  buttonTitle: string;
+  description: string;
+  chipLabel: string;
+  fromOther?: boolean;
+}
+
 export default function RelationalInformationBlock({
   title,
   buttonTitle,
   description,
   chipLabel,
   fromOther,
-}: any) {
+}: RelationalInformationBlockProps) {
   const { i18n } = useTranslation();
   const router = useRouter();
-  const [selectedConcepts, setSelectedConcepts] = useState<any[]>([]);
+  const terminologyId = Array.isArray(router.query.terminologyId)
+    ? router.query.terminologyId[0]
+    : router.query.terminologyId;
+  const [selectedConcepts, setSelectedConcepts] = useState<Concepts[]>([]);
+
+  if (!terminologyId) {
+    return null;
+  }
 
   return (
     <BasicBlock
@@ -40,7 +56,7 @@ export default function RelationalInformationBlock({
             buttonTitle={buttonTitle}
             selectedConcepts={selectedConcepts}
             setSelectedConcepts={setSelectedConcepts}
-            terminologyId={router.query.terminologyId}
+            terminologyId={terminologyId}
             chipLabel={chipLabel}
             fromOther={fromOther}
           />
@@ -57,7 +73,7 @@ export default function RelationalInformationBlock({
                 {selectedConcepts.map((concept) => {
                   return (
                     <Chip
-                      key={concept}
+                      key={concept.id}
                       removable
                       onClick={() =>
                         setSelectedConcepts(
@@ -80,6 +96,15 @@ export default function RelationalInformationBlock({
   );
 }
 
+interface ManageRelationalInfoModalProps {
+  buttonTitle: string;
+  selectedConcepts: Concepts[];
+  setSelectedConcepts: (value: Concepts[]) => void;
+  terminologyId: string;
+  chipLabel: string;
+  fromOther?: boolean;
+}
+
 function ManageRelationalInfoModal({
   buttonTitle,
   selectedConcepts,
@@ -87,10 +112,10 @@ function ManageRelationalInfoModal({
   terminologyId,
   chipLabel,
   fromOther,
-}: any) {
+}: ManageRelationalInfoModalProps) {
   const { t } = useTranslation('admin');
   const [visible, setVisible] = useState(false);
-  const [chosen, setChosen] = useState<any>(selectedConcepts);
+  const [chosen, setChosen] = useState<Concepts[]>(selectedConcepts);
   const [showChosen, setShowChosen] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
 
@@ -129,19 +154,24 @@ function ManageRelationalInfoModal({
               terminologyId={terminologyId}
               fromOther={fromOther ? true : false}
             />
-            {RenderConcepts(
-              searchResults,
-              chosen,
-              setChosen,
-              terminologyId,
-              fromOther ? true : false
-            )}
+            <RenderConcepts
+              concepts={searchResults}
+              chosen={chosen}
+              setChosen={setChosen}
+              terminologyId={terminologyId}
+              fromOther={fromOther ? true : false}
+            />
           </div>
 
           <div hidden={!showChosen}>
             <ModalTitle>{renderToggleView()}</ModalTitle>
 
-            {RenderChosen(chosen, setChosen, setShowChosen, chipLabel)}
+            <RenderChosen
+              chosen={chosen}
+              setChosen={setChosen}
+              setShowChosen={setShowChosen}
+              chipLabel={chipLabel}
+            />
           </div>
         </ModalContent>
 

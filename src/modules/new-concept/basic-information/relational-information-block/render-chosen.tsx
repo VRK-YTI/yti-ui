@@ -1,13 +1,21 @@
+import { Concepts } from '@app/common/interfaces/concepts.interface';
 import { Chip, Label } from 'suomifi-ui-components';
 import { ChipBlock } from './relation-information-block.styles';
 
-export default function RenderChosen(
+interface RenderChosenProps {
+  chosen: Concepts[];
+  setChosen: (value: Concepts[]) => void;
+  setShowChosen: (value: boolean) => void;
+  chipLabel: string;
+}
+
+export default function RenderChosen({
   chosen,
   setChosen,
   setShowChosen,
-  chipLabel
-) {
-  const handleChipRemove = (chose) => {
+  chipLabel,
+}: RenderChosenProps) {
+  const handleChipRemove = (chose: Concepts) => {
     const updatedChosen = chosen.filter((c) => c.id !== chose.id);
     setChosen(updatedChosen);
 
