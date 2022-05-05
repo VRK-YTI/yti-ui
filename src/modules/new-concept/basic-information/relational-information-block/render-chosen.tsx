@@ -1,7 +1,12 @@
 import { Chip, Label } from 'suomifi-ui-components';
 import { ChipBlock } from './relation-information-block.styles';
 
-export default function RenderChosen(chosen, setChosen, setShowChosen) {
+export default function RenderChosen(
+  chosen,
+  setChosen,
+  setShowChosen,
+  chipLabel
+) {
   const handleChipRemove = (chose) => {
     const updatedChosen = chosen.filter((c) => c.id !== chose.id);
     setChosen(updatedChosen);
@@ -13,7 +18,7 @@ export default function RenderChosen(chosen, setChosen, setShowChosen) {
 
   return (
     <>
-      <Label>Valitut hierarkkiset alakäsitteet</Label>
+      <Label>{chipLabel}</Label>
       <ChipBlock>
         {chosen.map((chose, idx) => {
           return (

@@ -24,7 +24,7 @@ export default function RelationalInformationBlock({
   title,
   buttonTitle,
   description,
-  chipDescription,
+  chipLabel,
   fromOther,
 }: any) {
   const { i18n } = useTranslation();
@@ -41,6 +41,7 @@ export default function RelationalInformationBlock({
             selectedConcepts={selectedConcepts}
             setSelectedConcepts={setSelectedConcepts}
             terminologyId={router.query.terminologyId}
+            chipLabel={chipLabel}
             fromOther={fromOther}
           />
 
@@ -48,7 +49,7 @@ export default function RelationalInformationBlock({
             <div style={{ marginTop: '20px' }}>
               <Paragraph>
                 <Text variant="bold" smallScreen>
-                  {chipDescription}
+                  {chipLabel}
                 </Text>
               </Paragraph>
 
@@ -84,8 +85,10 @@ function ManageRelationalInfoModal({
   selectedConcepts,
   setSelectedConcepts,
   terminologyId,
+  chipLabel,
   fromOther,
 }: any) {
+  const { t } = useTranslation('admin');
   const [visible, setVisible] = useState(false);
   const [chosen, setChosen] = useState<any>(selectedConcepts);
   const [showChosen, setShowChosen] = useState(false);
@@ -138,16 +141,16 @@ function ManageRelationalInfoModal({
           <div hidden={!showChosen}>
             <ModalTitle>{renderToggleView()}</ModalTitle>
 
-            {RenderChosen(chosen, setChosen, setShowChosen)}
+            {RenderChosen(chosen, setChosen, setShowChosen, chipLabel)}
           </div>
         </ModalContent>
 
         <ModalFooterFitted>
           {renderToggleView()}
 
-          <Button onClick={() => handleChange()}>Lisää käsitteet</Button>
+          <Button onClick={() => handleChange()}>{t('add-concepts')}</Button>
           <Button onClick={() => handleClose()} variant="secondary">
-            Peruuta
+            {t('cancel-variant')}
           </Button>
         </ModalFooterFitted>
       </Modal>
@@ -168,8 +171,8 @@ function ManageRelationalInfoModal({
           onClick={() => setShowChosen(!showChosen)}
         >
           {showChosen
-            ? 'Valitse lisää käsitteitä'
-            : `Näytä valinnat (${chosen.length})`}
+            ? t('add-more-concepts')
+            : t('show-chosen', { amount: chosen.length })}
         </Button>
       </div>
     );

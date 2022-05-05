@@ -21,11 +21,11 @@ export default function OtherInformation() {
   const partOfSpeech = [
     {
       uniqueItemId: 'adjective',
-      labelText: 'adjektiivi',
+      labelText: t('adjective'),
     },
     {
       uniqueItemId: 'verb',
-      labelText: 'verbi',
+      labelText: t('verb'),
     },
   ];
 
@@ -36,22 +36,22 @@ export default function OtherInformation() {
       </ExpanderTitleButton>
       <ExpanderContentFitted>
         <SingleSelect
-          labelText="Käsitteen luokka"
+          labelText={t('concept-class')}
           optionalText={t('optional')}
-          clearButtonLabel="Tyhjennä valinnat"
-          ariaOptionsAvailableText="Vaihtoehtoja saatavilla"
+          clearButtonLabel={t('clear-button-label')}
+          ariaOptionsAvailableText={t('concept-class-available')}
           items={groupsFormatted}
-          noItemsText="Käsitten luokkia ei saatavilla"
+          noItemsText={t('concept-class-no-items')}
         />
 
         <SingleSelect
-          labelText="Sanaluokka"
+          labelText={t('word-class')}
           optionalText={t('optional')}
-          hintText="Merkitään vain jos sanaluokka on adjektiivi tai verbi"
-          clearButtonLabel="Tyhjennä valinnat"
-          ariaOptionsAvailableText="Vaihtoehtoja saatavilla"
+          hintText={t('word-class-hint')}
+          clearButtonLabel={t('clear-button-label')}
+          ariaOptionsAvailableText={t('word-class-available')}
           items={partOfSpeech}
-          noItemsText="Sanaluokkia ei saatavilla"
+          noItemsText={t('word-class-no-items')}
         />
       </ExpanderContentFitted>
     </ConceptExpander>

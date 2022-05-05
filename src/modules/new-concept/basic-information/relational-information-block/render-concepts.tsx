@@ -14,6 +14,12 @@ import {
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import { useGetConceptQuery } from '@app/common/components/concept/concept.slice';
 import Separator from '@app/common/components/separator';
+import {
+  BasicBlock,
+  MultilingualPropertyBlock,
+  PropertyBlock,
+} from '@app/common/components/block';
+import FormattedDate from '@app/common/components/formatted-date';
 
 export default function RenderConcepts(
   result,
@@ -22,7 +28,7 @@ export default function RenderConcepts(
   terminologyId,
   fromOther
 ) {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('admin');
   const { data: terminology } = useGetVocabularyQuery(terminologyId);
   const { data: vocabularies } = useGetVocabulariesQuery(null);
 
@@ -55,12 +61,14 @@ export default function RenderConcepts(
             <li key={`${concept.id}-${idx}`}>
               <Expander>
                 <ExpanderTitle
-                  ariaCloseText="Sulje"
-                  ariaOpenText="Avaa"
+                  ariaCloseText={t('open-concept-expander')}
+                  ariaOpenText={t('close-concept-expander')}
                   toggleButtonAriaDescribedBy=""
                 >
                   <Checkbox
-                    hintText={`${organizationTitle} · ${t(concept.status)} `}
+                    hintText={`${organizationTitle} - ${t(concept.status, {
+                      ns: 'common',
+                    })}`}
                     onClick={(e) => handleCheckbox(e, concept)}
                     checked={chosen.some((chose) => chose.id === concept.id)}
                   >
@@ -81,6 +89,7 @@ export default function RenderConcepts(
   );
 
   function RenderExpanderContent({ terminologyId, conceptId }) {
+    const { t } = useTranslation('admin');
     const { data: concept } = useGetConceptQuery({
       terminologyId: terminologyId,
       conceptId: conceptId,
@@ -90,35 +99,28 @@ export default function RenderConcepts(
 
     return (
       <ExpanderContent>
-        <div>
-          Suositettavat termit{' '}
-          {getPropertyValue({
-            property:
-              concept?.references.prefLabelXl?.[0].properties?.prefLabel,
-            fallbackLanguage: 'fi',
-          })}
-        </div>
-        <div>
-          Määritelmä{' '}
-          {getPropertyValue({
-            property: concept?.properties.definition,
-            fallbackLanguage: 'fi',
-          })}
-        </div>
-        <Separator />
-        <div>
-          Vastuuorganisaatio{' '}
-          {getPropertyValue({
-            property:
-              terminology?.references.contributor?.[0].properties.prefLabel,
-            fallbackLanguage: 'fi',
-          })}
-        </div>
-        <div>Muut sisällöntuottajat </div>
-        <div>
-          Muokattu viimeksi {concept?.lastModifiedDate},{' '}
+        <MultilingualPropertyBlock
+          title={<h2>{t('preferred-terms')}</h2>}
+          data={concept?.references.prefLabelXl?.[0].properties?.prefLabel}
+        />
+        <MultilingualPropertyBlock
+          title={<h2>{t('definition')}</h2>}
+          data={concept?.properties.definition}
+        />
+
+        <Separator isLarge />
+
+        <PropertyBlock
+          title={t('contributor')}
+          property={
+            terminology?.references.contributor?.[0].properties.prefLabel
+          }
+        />
+
+        <BasicBlock title={t('modified-at')}>
+          <FormattedDate date={concept?.lastModifiedDate} />,{' '}
           {concept?.lastModifiedBy}
-        </div>
+        </BasicBlock>
       </ExpanderContent>
     );
   }

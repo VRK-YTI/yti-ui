@@ -9,26 +9,42 @@ export default function Search({
   terminologyId,
   fromOther,
 }: any) {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('admin');
   const [searchTerm, setSearchTerm] = useState('');
   const [status, setStatus] = useState('');
   const [searchConcept, result] = useSearchConceptMutation();
 
   const statuses = [
-    { name: 'VALID', uniqueItemId: 'VALID', labelText: t('VALID') },
+    {
+      name: 'VALID',
+      uniqueItemId: 'VALID',
+      labelText: t('VALID', { ns: 'common' }),
+    },
     {
       name: 'INCOMPLETE',
       uniqueItemId: 'INCOMPLETE',
-      labelText: t('INCOMPLETE'),
+      labelText: t('INCOMPLETE', { ns: 'common' }),
     },
-    { name: 'DRAFT', uniqueItemId: 'DRAFT', labelText: t('DRAFT') },
-    { name: 'RETIRED', uniqueItemId: 'RETIRED', labelText: t('RETIRED') },
+    {
+      name: 'DRAFT',
+      uniqueItemId: 'DRAFT',
+      labelText: t('DRAFT', { ns: 'common' }),
+    },
+    {
+      name: 'RETIRED',
+      uniqueItemId: 'RETIRED',
+      labelText: t('RETIRED', { ns: 'common' }),
+    },
     {
       name: 'SUPERSEDED',
       uniqueItemId: 'SUPERSEDED',
-      labelText: t('SUPERSEDED'),
+      labelText: t('SUPERSEDED', { ns: 'common' }),
     },
-    { name: 'INVALID', uniqueItemId: 'INVALID', labelText: t('INVALID') },
+    {
+      name: 'INVALID',
+      uniqueItemId: 'INVALID',
+      labelText: t('INVALID', { ns: 'common' }),
+    },
   ];
 
   useEffect(() => {
@@ -65,37 +81,37 @@ export default function Search({
     <SearchBlock>
       <div>
         <SearchInput
-          labelText="Hakusana"
-          clearButtonLabel="Tyhjennä"
-          searchButtonLabel="Hae"
+          labelText={t('search-term')}
+          clearButtonLabel={t('clear-button-label')}
+          searchButtonLabel={t('search')}
           onChange={(value) => setSearchTerm(value as string)}
           value={searchTerm}
           onSearch={() => handleSearch()}
         />
         <SingleSelect
-          ariaOptionsAvailableText="Saatavilla"
-          labelText="Käsitteen tila"
-          clearButtonLabel="Tyhjennä"
+          ariaOptionsAvailableText={t('statuses-available')}
+          labelText={t('concept-status')}
+          clearButtonLabel={t('clear-button-label')}
           items={statuses}
-          noItemsText="Ei vaihtoehtoja"
+          noItemsText={t('no-statuses-available')}
           onItemSelectionChange={(e) => setStatus(e)}
           selectedItem={status}
         />
       </div>
       <div>
-        <Button onClick={() => handleSearch()}>Hae</Button>
+        <Button onClick={() => handleSearch()}>{t('search')}</Button>
         <Button
           variant="secondaryNoBorder"
           icon="remove"
           onClick={() => handleClearValues()}
         >
-          Tyhjennä haku
+          {t('clear-search')}
         </Button>
       </div>
       {result.isSuccess ? (
         <div>
           <Text variant="bold" smallScreen>
-            {result.data?.totalHitCount} käsitettä
+            {t('number-of-concepts', { amount: result.data?.totalHitCount })}
           </Text>
         </div>
       ) : null}

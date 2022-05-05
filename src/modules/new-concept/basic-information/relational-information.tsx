@@ -22,71 +22,65 @@ export default function RelationalInformation() {
 
       <ExpanderContentFitted>
         <RelationalInformationBlock
-          title={'Hierkkinen yläkäsite'}
-          buttonTitle={'Lisää uusi hierarkkinen yläkäsite'}
-          description={'Laajempi käsite, johon tämä käsite liittyy.'}
-          chipDescription={'Valitut hierarkkiset yläkäsitteeet'}
+          title={t('broader-concept')}
+          buttonTitle={t('broader-concept-add')}
+          description={t('broader-concept-description')}
+          chipLabel={t('broader-concept-chip-label')}
         />
 
         <Separator isLarge />
 
         <RelationalInformationBlock
-          title={'Hierkkinen alakäsite'}
-          buttonTitle={'Lisää uusi hierarkkinen alakäsite'}
-          description={
-            'Käsite, joka on hierarkkisessa suhteessa tähän käsitteeseen ja jonka sisältöön kuuluu tämän käsitteen sisältö.'
-          }
-          chipDescription={'Valitut hierarkkiset alakäsitteeet'}
+          title={t('narrower-concept')}
+          buttonTitle={t('narrower-concept-add')}
+          description={t('narrower-concept-description')}
+          chipLabel={t('narrower-concept-chip-label')}
         />
 
         <Separator isLarge />
 
         <RelationalInformationBlock
-          title={'Liittyvä käsite'}
-          buttonTitle={'Lisää uusi liittyvä käsite'}
-          description={'Käsite, joka liittyy tähän käsitteeseen.'}
-          chipDescription={'Valitut liittyvät käsitteeet'}
+          title={t('related-concept')}
+          buttonTitle={t('related-concept-add')}
+          description={t('related-concept-description')}
+          chipLabel={t('related-concept-chip-label')}
         />
 
         <Separator isLarge />
 
         <RelationalInformationBlock
-          title={'Koostumussuhteinen yläkäsite'}
-          buttonTitle={'Lisää uusi koostumussuhteinen yläkäsite'}
-          description={'Käsite, johon tämä käsite kuuluu (on osa).'}
-          chipDescription={'Valitut koostumussuhteiset yläkäsitteet'}
+          title={t('is-part-of-concept')}
+          buttonTitle={t('is-part-of-concept-add')}
+          description={t('is-part-of-concept-description')}
+          chipLabel={t('is-part-of-concept-chip-label')}
         />
 
         <Separator isLarge />
 
         <RelationalInformationBlock
-          title={'Koostumussuhteinen alakäsite'}
-          buttonTitle={'Lisää uusi koostumussuhteinen alakäsite'}
-          description={'Käsite, joka vastaa kokonaisuuden osaa.'}
-          chipDescription={'Valitut koostumussuhteiset alakäsitteet'}
+          title={t('has-part-concept')}
+          buttonTitle={t('has-part-concept-add')}
+          description={t('has-part-concept-decription')}
+          chipLabel={t('has-part-concept-chip-label')}
         />
 
         <Separator isLarge />
 
         <RelationalInformationBlock
-          title={'Liittyvä käsite toisessa sanastossa'}
-          buttonTitle={'Lisää uusi liittyvä käsite'}
-          description={
-            'Käsite joka liittyy tähän käsitteeseen. Sijaitsee toisessa sanastossa.'
-          }
-          chipDescription={'Valitut liittyvät käsitteet'}
+          title={t('related-concept-in-other')}
+          buttonTitle={t('related-concept-in-other-add')}
+          description={t('related-concept-in-other-description')}
+          chipLabel={t('related-concept-in-other-chip-label')}
           fromOther
         />
 
         <Separator isLarge />
 
         <RelationalInformationBlock
-          title={'Vastaava käsite toisessa sanastossa'}
-          buttonTitle={'Lisää uusi vastaava käsite'}
-          description={
-            'Käsite jota voidaan käyttää tämän käsitteen sijaan. Sijaitsee toisessa sanastossa.'
-          }
-          chipDescription={'Valitut vastaavat käsitteet'}
+          title={t('match-in-other')}
+          buttonTitle={t('match-in-other-add')}
+          description={t('match-in-other-description')}
+          chipLabel={t('match-in-other-chip-label')}
           fromOther
         />
 
