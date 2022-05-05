@@ -14,7 +14,7 @@ export function getPropertyValue({
   language = '',
   fallbackLanguage = '',
   delimiter = false,
-}: GetPropertyValueParams): string | undefined {
+}: GetPropertyValueParams): string {
   const matchingProperties =
     getMatchingProperties(property ?? [], language) ??
     getMatchingProperties(property ?? [], fallbackLanguage) ??

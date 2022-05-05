@@ -1,7 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import React, { useEffect, useRef } from 'react';
-import { Heading, Text, VisuallyHidden } from 'suomifi-ui-components';
+import React, { useEffect } from 'react';
+import { VisuallyHidden } from 'suomifi-ui-components';
 import { setAlert } from '@app/common/components/alert/alert.slice';
 import {
   BasicBlock,
@@ -17,16 +17,16 @@ import { getPropertyValue } from '@app/common/components/property-value/get-prop
 import Separator from '@app/common/components/separator';
 import { useStoreDispatch } from '@app/store';
 import CollectionSidebar from './collection-sidebar';
-import {
-  BadgeBar,
-  HeadingBlock,
-  MainContent,
-  PageContent,
-} from './collection.styles';
+import { MainContent, PageContent } from './collection.styles';
 import { setTitle } from '@app/common/components/title/title.slice';
 import { useGetCollectionQuery } from '@app/common/components/collection/collection.slice';
 import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
 import { getProperty } from '@app/common/utils/get-property';
+import {
+  SubTitle,
+  MainTitle,
+  BadgeBar,
+} from '@app/common/components/title-block';
 
 interface CollectionProps {
   terminologyId: string;
@@ -43,7 +43,6 @@ export default function Collection({
   const { t, i18n } = useTranslation('collection');
   const dispatch = useStoreDispatch();
   const router = useRouter();
-  const titleRef = useRef<HTMLHeadingElement>(null);
 
   const { data: terminology, error: terminologyError } = useGetVocabularyQuery(
     terminologyId,
@@ -86,12 +85,6 @@ export default function Collection({
     }
   }, [collection, dispatch, prefLabel]);
 
-  useEffect(() => {
-    if (titleRef.current) {
-      titleRef.current.focus();
-    }
-  }, [titleRef]);
-
   return (
     <>
       <Breadcrumb>
@@ -118,31 +111,28 @@ export default function Collection({
 
       <PageContent breakpoint={breakpoint}>
         <MainContent id="main">
-          <HeadingBlock>
-            <Text>
-              <PropertyValue
-                property={getProperty(
-                  'prefLabel',
-                  terminology?.references.contributor
-                )}
-                fallbackLanguage="fi"
-              />
-            </Text>
-            <Heading variant="h1" tabIndex={-1} ref={titleRef}>
-              <PropertyValue
-                property={collection?.properties.prefLabel}
-                fallbackLanguage="fi"
-              />
-            </Heading>
-            <BadgeBar>
-              {t('heading')} &middot;{' '}
-              <PropertyValue
-                property={terminology?.properties.prefLabel}
-                fallbackLanguage="fi"
-              />
-            </BadgeBar>
-            <Text>{t('description')}</Text>
-          </HeadingBlock>
+          <SubTitle>
+            <PropertyValue
+              property={getProperty(
+                'prefLabel',
+                terminology?.references.contributor
+              )}
+              fallbackLanguage="fi"
+            />
+          </SubTitle>
+          <MainTitle>
+            <PropertyValue
+              property={collection?.properties.prefLabel}
+              fallbackLanguage="fi"
+            />
+          </MainTitle>
+          <BadgeBar>
+            {t('heading')}
+            <PropertyValue
+              property={terminology?.properties.prefLabel}
+              fallbackLanguage="fi"
+            />
+          </BadgeBar>
 
           <MultilingualPropertyBlock
             title={t('field-name')}
