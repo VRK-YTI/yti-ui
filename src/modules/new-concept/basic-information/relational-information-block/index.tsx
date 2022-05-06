@@ -23,26 +23,34 @@ import RenderConcepts from './render-concepts';
 import Search from './search';
 
 interface RelationalInformationBlockProps {
+  infoKey: string;
   title: string;
   buttonTitle: string;
   description: string;
   chipLabel: string;
+  updateData: (key: string, value: Concepts[]) => void;
   fromOther?: boolean;
 }
 
 export default function RelationalInformationBlock({
+  infoKey,
   title,
   buttonTitle,
   description,
   chipLabel,
+  updateData,
   fromOther,
 }: RelationalInformationBlockProps) {
-  const { i18n } = useTranslation();
   const router = useRouter();
   const terminologyId = Array.isArray(router.query.terminologyId)
     ? router.query.terminologyId[0]
     : router.query.terminologyId;
   const [selectedConcepts, setSelectedConcepts] = useState<Concepts[]>([]);
+
+  const handleUpdate = (value: Concepts[]) => {
+    setSelectedConcepts(value);
+    updateData(infoKey, value);
+  };
 
   if (!terminologyId) {
     return null;
@@ -56,7 +64,7 @@ export default function RelationalInformationBlock({
           <ManageRelationalInfoModal
             buttonTitle={buttonTitle}
             selectedConcepts={selectedConcepts}
-            setSelectedConcepts={setSelectedConcepts}
+            setSelectedConcepts={handleUpdate}
             terminologyId={terminologyId}
             chipLabel={chipLabel}
             fromOther={fromOther}
@@ -77,7 +85,7 @@ export default function RelationalInformationBlock({
                       key={concept.id}
                       removable
                       onClick={() =>
-                        setSelectedConcepts(
+                        handleUpdate(
                           selectedConcepts.filter((c) => c !== concept)
                         )
                       }

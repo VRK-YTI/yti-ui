@@ -9,7 +9,15 @@ import {
 } from './concept-basic-information.styles';
 import NewDiagramOrLink from './new-diagram-or-link';
 
-export default function ConceptDiagramsAndSources() {
+interface ConceptDiagramsAndSourcesProps {
+  infoKey: string;
+  update: (value: any) => void;
+}
+
+export default function ConceptDiagramsAndSources({
+  infoKey,
+  update,
+}: ConceptDiagramsAndSourcesProps) {
   const { t } = useTranslation('admin');
 
   return (

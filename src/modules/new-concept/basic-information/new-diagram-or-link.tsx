@@ -24,21 +24,21 @@ export default function NewDiagramOrLink() {
         appElementId="__next"
       >
         <ModalContentFitted>
-          <ModalTitle>Lisää uusi käsitekaavio tai muu linkki</ModalTitle>
+          <ModalTitle>{t('add-new-diagram-or-link')}</ModalTitle>
 
-          <TextInput labelText="Käsitekaavion nimi" />
-          <TextInput labelText="Käsitekaavion verkko-osoite" />
+          <TextInput labelText={t('diagram-name')} />
+          <TextInput labelText={t('diagram-url')} />
           <Textarea
-            labelText="Kuvaus"
+            labelText={t('description')}
             optionalText={t('optional')}
-            visualPlaceholder="Kirjoita kuvaus"
+            visualPlaceholder={t('sources-placeholder')}
             fullWidth
           />
         </ModalContentFitted>
         <ModalFooter>
-          <Button>Tallenna</Button>
+          <Button>{t('save')}</Button>
           <Button onClick={() => setVisible(false)} variant="secondary">
-            Peruuta
+            {t('cancel-variant')}
           </Button>
         </ModalFooter>
       </ModalSmWidth>

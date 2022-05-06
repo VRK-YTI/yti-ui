@@ -23,6 +23,10 @@ interface BasicInfoType {
   example: [];
   subject: string;
   note: [];
+  diagramAndSource: [];
+  orgInfo: {};
+  otherInfo: {};
+  relationalInfo: {};
 }
 
 export default function ConceptBasicInformation() {
@@ -32,6 +36,10 @@ export default function ConceptBasicInformation() {
     example: [],
     subject: '',
     note: [],
+    diagramAndSource: [],
+    orgInfo: {},
+    otherInfo: {},
+    relationalInfo: {},
   });
 
   const handleBasicInfoUpdate = ({ key, lang, value }: BasicInfoUpdate) => {
@@ -44,6 +52,8 @@ export default function ConceptBasicInformation() {
       setBasicInfo((basicInfo) => ({ ...basicInfo, [key]: value }));
     }
   };
+
+  console.log('basicInfo', basicInfo);
 
   return (
     <>
@@ -60,10 +70,19 @@ export default function ConceptBasicInformation() {
       <ConceptInfoBlock infoKey="note" update={handleBasicInfoUpdate} />
 
       <ExpanderBlock>
-        <ConceptDiagramsAndSources />
-        <OrganizationInformation />
-        <OtherInformation />
-        <RelationalInformation />
+        <ConceptDiagramsAndSources
+          infoKey="note"
+          update={handleBasicInfoUpdate}
+        />
+        <OrganizationInformation
+          infoKey="orgInfo"
+          update={handleBasicInfoUpdate}
+        />
+        <OtherInformation infoKey="otherInfo" update={handleBasicInfoUpdate} />
+        <RelationalInformation
+          infoKey="relationalInfo"
+          update={handleBasicInfoUpdate}
+        />
       </ExpanderBlock>
     </>
   );
