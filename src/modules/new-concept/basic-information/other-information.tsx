@@ -19,8 +19,10 @@ export default function OtherInformation({
 }: OtherInformationProps) {
   const { t, i18n } = useTranslation('admin');
   const { data: groups } = useGetGroupsQuery(i18n.language);
-  const [conceptClass, setConceptClass] = useState<string | null>();
-  const [wordClass, setWordClass] = useState<string | null>();
+  const [conceptClass, setConceptClass] = useState<
+    typeof groupsFormatted[0] | null
+  >();
+  const [wordClass, setWordClass] = useState<typeof partOfSpeech[0] | null>();
 
   const handleChange = () => {
     update({
@@ -63,8 +65,9 @@ export default function OtherInformation({
           clearButtonLabel={t('clear-button-label')}
           ariaOptionsAvailableText={t('concept-class-available')}
           items={groupsFormatted}
+          selectedItem={conceptClass ?? undefined}
           noItemsText={t('concept-class-no-items')}
-          onItemSelect={(e) => setConceptClass(e)}
+          onItemSelectionChange={(e) => setConceptClass(e)}
           onBlur={() => handleChange()}
         />
 
@@ -75,8 +78,9 @@ export default function OtherInformation({
           clearButtonLabel={t('clear-button-label')}
           ariaOptionsAvailableText={t('word-class-available')}
           items={partOfSpeech}
+          selectedItem={wordClass ?? undefined}
           noItemsText={t('word-class-no-items')}
-          onItemSelect={(e) => setWordClass(e)}
+          onItemSelectionChange={(e) => setWordClass(e)}
           onBlur={() => handleChange()}
         />
       </ExpanderContentFitted>

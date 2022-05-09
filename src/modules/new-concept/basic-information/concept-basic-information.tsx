@@ -1,7 +1,6 @@
 import Separator from '@app/common/components/separator';
 import {
   WiderTextarea,
-  ExpanderBlock,
   H2Sm,
   SubjectTextInput,
 } from './concept-basic-information.styles';
@@ -13,6 +12,7 @@ import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import ConceptInfoBlock from './concept-info-block';
 import { BasicInfoUpdate } from './concept-basic-information-interface';
+import { ExpanderGroup } from 'suomifi-ui-components';
 
 interface BasicInfoType {
   definition: {
@@ -53,8 +53,6 @@ export default function ConceptBasicInformation() {
     }
   };
 
-  console.log('basicInfo', basicInfo);
-
   return (
     <>
       <Separator isLarge />
@@ -69,7 +67,7 @@ export default function ConceptBasicInformation() {
 
       <ConceptInfoBlock infoKey="note" update={handleBasicInfoUpdate} />
 
-      <ExpanderBlock>
+      <ExpanderGroup closeAllText="" openAllText="">
         <ConceptDiagramsAndSources
           infoKey="note"
           update={handleBasicInfoUpdate}
@@ -83,7 +81,7 @@ export default function ConceptBasicInformation() {
           infoKey="relationalInfo"
           update={handleBasicInfoUpdate}
         />
-      </ExpanderBlock>
+      </ExpanderGroup>
     </>
   );
 

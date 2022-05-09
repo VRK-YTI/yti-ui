@@ -4,6 +4,14 @@ import userEvent from '@testing-library/user-event';
 import ConceptBasicInformation from './concept-basic-information';
 
 describe('concept-basic-information', () => {
+  let appRoot: HTMLDivElement | null = null;
+
+  beforeEach(() => {
+    appRoot = document.createElement('div');
+    appRoot.setAttribute('id', '__next');
+    document.body.appendChild(appRoot);
+  });
+
   it('should render component', () => {
     render(<ConceptBasicInformation />, { wrapper: themeProvider });
 

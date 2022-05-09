@@ -2,6 +2,7 @@ import { BasicBlock } from '@app/common/components/block';
 import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
 import { useTranslation } from 'next-i18next';
 import { ExpanderTitleButton } from 'suomifi-ui-components';
+import { BasicInfoUpdate } from './concept-basic-information-interface';
 import {
   ConceptExpander,
   ExpanderContentFitted,
@@ -11,7 +12,7 @@ import NewDiagramOrLink from './new-diagram-or-link';
 
 interface ConceptDiagramsAndSourcesProps {
   infoKey: string;
-  update: (value: any) => void;
+  update: (value: BasicInfoUpdate) => void;
 }
 
 export default function ConceptDiagramsAndSources({

@@ -24,7 +24,9 @@ export default function RelationalInformation({
   update,
 }: RelationalInformationProps) {
   const { t } = useTranslation('admin');
-  const [expandersData, setExpandersData] = useState({
+  const [expandersData, setExpandersData] = useState<{
+    [key: string]: Concepts[];
+  }>({
     broaderConcept: [],
     narrowerConcept: [],
     relatedConcept: [],
@@ -53,6 +55,7 @@ export default function RelationalInformation({
           buttonTitle={t('broader-concept-add')}
           description={t('broader-concept-description')}
           chipLabel={t('broader-concept-chip-label')}
+          data={expandersData}
           updateData={updateData}
         />
 
@@ -64,6 +67,7 @@ export default function RelationalInformation({
           buttonTitle={t('narrower-concept-add')}
           description={t('narrower-concept-description')}
           chipLabel={t('narrower-concept-chip-label')}
+          data={expandersData}
           updateData={updateData}
         />
 
@@ -75,6 +79,7 @@ export default function RelationalInformation({
           buttonTitle={t('related-concept-add')}
           description={t('related-concept-description')}
           chipLabel={t('related-concept-chip-label')}
+          data={expandersData}
           updateData={updateData}
         />
 
@@ -86,6 +91,7 @@ export default function RelationalInformation({
           buttonTitle={t('is-part-of-concept-add')}
           description={t('is-part-of-concept-description')}
           chipLabel={t('is-part-of-concept-chip-label')}
+          data={expandersData}
           updateData={updateData}
         />
 
@@ -97,6 +103,7 @@ export default function RelationalInformation({
           buttonTitle={t('has-part-concept-add')}
           description={t('has-part-concept-decription')}
           chipLabel={t('has-part-concept-chip-label')}
+          data={expandersData}
           updateData={updateData}
         />
 
@@ -109,6 +116,7 @@ export default function RelationalInformation({
           description={t('related-concept-in-other-description')}
           chipLabel={t('related-concept-in-other-chip-label')}
           updateData={updateData}
+          data={expandersData}
           fromOther
         />
 
@@ -121,6 +129,7 @@ export default function RelationalInformation({
           description={t('match-in-other-description')}
           chipLabel={t('match-in-other-chip-label')}
           updateData={updateData}
+          data={expandersData}
           fromOther
         />
 

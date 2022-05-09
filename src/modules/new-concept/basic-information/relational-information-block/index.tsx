@@ -28,6 +28,7 @@ interface RelationalInformationBlockProps {
   buttonTitle: string;
   description: string;
   chipLabel: string;
+  data: { [key: string]: Concepts[] };
   updateData: (key: string, value: Concepts[]) => void;
   fromOther?: boolean;
 }
@@ -38,6 +39,7 @@ export default function RelationalInformationBlock({
   buttonTitle,
   description,
   chipLabel,
+  data,
   updateData,
   fromOther,
 }: RelationalInformationBlockProps) {
@@ -45,7 +47,9 @@ export default function RelationalInformationBlock({
   const terminologyId = Array.isArray(router.query.terminologyId)
     ? router.query.terminologyId[0]
     : router.query.terminologyId;
-  const [selectedConcepts, setSelectedConcepts] = useState<Concepts[]>([]);
+  const [selectedConcepts, setSelectedConcepts] = useState<Concepts[]>(
+    data[infoKey]
+  );
 
   const handleUpdate = (value: Concepts[]) => {
     setSelectedConcepts(value);

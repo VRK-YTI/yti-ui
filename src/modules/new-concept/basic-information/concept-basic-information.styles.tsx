@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import {
-  Block,
   Expander,
   ExpanderContent,
   Heading,
@@ -10,14 +9,6 @@ import {
 
 export const ConceptExpander = styled(Expander)`
   width: 800px;
-`;
-
-export const ExpanderBlock = styled(Block)`
-  margin-top: ${(props) => props.theme.suomifi.spacing.m};
-
-  > *:not(:last-child) {
-    margin-bottom: ${(props) => props.theme.suomifi.spacing.s};
-  }
 `;
 
 export const ExpanderContentFitted = styled(ExpanderContent)`

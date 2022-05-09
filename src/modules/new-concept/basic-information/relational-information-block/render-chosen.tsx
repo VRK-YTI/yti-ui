@@ -33,7 +33,7 @@ export default function RenderChosen({
             <Chip
               removable
               onClick={() => handleChipRemove(chose)}
-              key={`${chose}-${idx}`}
+              key={`${chose.id}-${idx}`}
             >
               {chose.label.fi}
             </Chip>
