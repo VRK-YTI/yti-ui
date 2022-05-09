@@ -18,19 +18,22 @@ import { TextInputBlock } from './new-concept-modal.styles';
 
 interface NewConceptModalProps {
   terminologyId: string;
+  languages: string[];
 }
 
 interface HandleChangeProps {
-  lang: 'FI' | 'SV' | 'EN';
+  lang: string;
   value: string;
 }
 
 export default function NewConceptModal({
   terminologyId,
+  languages,
 }: NewConceptModalProps) {
   const { t } = useTranslation('admin');
   const [visible, setVisible] = useState(false);
-  const [termName, setTermName] = useState({ FI: '', SV: '', EN: '' });
+  const [termName, setTermName] = useState({});
+  const queryParams = new URLSearchParams(termName).toString();
 
   const handleChange = ({ lang, value }: HandleChangeProps) => {
     setTermName((termName) => ({ ...termName, [lang]: value }));
@@ -69,29 +72,20 @@ export default function NewConceptModal({
           </Paragraph>
 
           <TextInputBlock>
-            <TextInput
-              labelText={t('recommended-term', { lang: 'FI' })}
-              visualPlaceholder={t('term-name-placeholder')}
-              onChange={(e) => handleChange({ lang: 'FI', value: e as string })}
-            />
-
-            <TextInput
-              labelText={t('recommended-term', { lang: 'SV' })}
-              visualPlaceholder={t('term-name-placeholder')}
-              onChange={(e) => handleChange({ lang: 'SV', value: e as string })}
-            />
-
-            <TextInput
-              labelText={t('recommended-term', { lang: 'EN' })}
-              visualPlaceholder={t('term-name-placeholder')}
-              onChange={(e) => handleChange({ lang: 'EN', value: e as string })}
-            />
+            {languages.map((lang) => (
+              <TextInput
+                key={lang}
+                labelText={t('recommended-term', { lang: lang.toUpperCase() })}
+                visualPlaceholder={t('term-name-placeholder')}
+                onChange={(e) => handleChange({ lang, value: e as string })}
+              />
+            ))}
           </TextInputBlock>
         </ModalContent>
 
         <ModalFooter>
           <Link
-            href={`/terminology/${terminologyId}/new-concept?${getTermNames()}`}
+            href={`/terminology/${terminologyId}/new-concept?${queryParams}`}
             passHref
           >
             <Button>{t('continue')}</Button>
@@ -103,21 +97,4 @@ export default function NewConceptModal({
       </Modal>
     </>
   );
-
-  function getTermNames() {
-    const names = [];
-    if (termName['FI']) {
-      names.push(`fi=${termName['FI']}`);
-    }
-
-    if (termName['SV']) {
-      names.push(`sv=${termName['SV']}`);
-    }
-
-    if (termName['EN']) {
-      names.push(`en=${termName['EN']}`);
-    }
-
-    return names.join('&');
-  }
 }

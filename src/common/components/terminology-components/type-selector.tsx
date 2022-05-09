@@ -1,5 +1,4 @@
 import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
 import { RadioButton } from 'suomifi-ui-components';
 import {
   BlankFieldset,
@@ -13,10 +12,8 @@ export interface TypeSelectorProps {
 
 export default function TypeSelector({ update }: TypeSelectorProps) {
   const { t } = useTranslation('admin');
-  const [, setSelectedType] = useState('terminology');
 
   const handleSetSelected = (value: string) => {
-    setSelectedType(value);
     update({ key: 'type', data: value });
   };
 
@@ -25,13 +22,15 @@ export default function TypeSelector({ update }: TypeSelectorProps) {
       <RadioButtonGroupSmBot
         labelText={t('terminology-type')}
         name="terminology-type"
-        defaultValue="terminology"
+        defaultValue="TERMINOLOGICAL_VOCABULARY"
         onChange={(e) => handleSetSelected(e)}
       >
-        <RadioButton value="terminology">
+        <RadioButton value="TERMINOLOGICAL_VOCABULARY">
           {t('terminological-vocabulary')}
         </RadioButton>
-        <RadioButton value="other">{t('other-vocabulary')}</RadioButton>
+        <RadioButton value="OTHER_VOCABULARY">
+          {t('other-vocabulary')}
+        </RadioButton>
       </RadioButtonGroupSmBot>
     </BlankFieldset>
   );

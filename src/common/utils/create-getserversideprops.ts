@@ -11,6 +11,7 @@ import { ParsedUrlQuery } from 'querystring';
 import { Redirect } from 'next/dist/lib/load-custom-routes';
 import { SSRConfig } from 'next-i18next';
 import { setLogin } from '@app/common/components/login/login.slice';
+import { CommonContextState } from '../components/common-context-provider';
 
 export interface LocalHandlerParams {
   req: NextIronRequest;
@@ -24,7 +25,8 @@ export interface LocalHandlerParams {
 export type localHandler<T> = (context: LocalHandlerParams) => Promise<T>;
 
 export type CommonServerSideProps = UserProps &
-  SSRConfig & {
+  SSRConfig &
+  CommonContextState & {
     isSSRMobile: boolean;
   };
 
@@ -83,6 +85,9 @@ export function createCommonGetServerSideProps<
                 /Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i
               )
             ),
+            isMatomoEnabled: process.env.MATOMO_ENABLED === 'true',
+            matomoUrl: process.env.MATOMO_URL ?? null,
+            matomoSiteId: process.env.MATOMO_SITE_ID ?? null,
           },
         };
       }

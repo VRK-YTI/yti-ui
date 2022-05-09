@@ -16,12 +16,6 @@ export const MainContent = styled.main`
   padding-bottom: 40px;
 `;
 
-export const HeadingBlock = styled.div`
-  h1 {
-    line-height: 52px;
-  }
-`;
-
 export const OrganizationAndRolesWrapper = styled.div`
   border: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
 `;

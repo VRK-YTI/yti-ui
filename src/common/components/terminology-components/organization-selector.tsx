@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import {
   MultiSelectData,
@@ -36,6 +36,7 @@ export default function OrganizationSelector({
   const [, setSelectedOtherOrganizations] = useState<MultiSelectData[]>([]);
   const [showOtherOrgSelector, setShowOtherOrgSelector] =
     useState<boolean>(false);
+  const [mainOrgInitiated, setMainOrgInitiated] = useState(false);
 
   const adminOrgs: SingleSelectData[] = organizations
     ?.map((org) => {
@@ -53,6 +54,13 @@ export default function OrganizationSelector({
       }
     })
     .filter((org) => org) as SingleSelectData[];
+
+  useEffect(() => {
+    if (adminOrgs.length === 1 && !mainOrgInitiated) {
+      update({ key: 'mainOrg', data: adminOrgs[0] });
+      setMainOrgInitiated(true);
+    }
+  }, [adminOrgs, update, mainOrgInitiated]);
 
   const handleSelectOrganization = (value: SingleSelectData | null) => {
     setSelectedOrganization(value);
@@ -72,7 +80,7 @@ export default function OrganizationSelector({
 
   return (
     <BlankFieldset>
-      {user.organizationsInRole.ADMIN.length > 1 ? (
+      {adminOrgs.length > 1 ? (
         <>
           <OrgSingleSelect
             labelText={t('org-label-text')}
@@ -123,7 +131,7 @@ export default function OrganizationSelector({
               {t('content-creator')}
             </Text>
           </Paragraph>
-          <Paragraph>
+          <Paragraph marginBottomSpacing="m">
             <Text smallScreen>{adminOrgs[0].labelText}</Text>
           </Paragraph>
         </>

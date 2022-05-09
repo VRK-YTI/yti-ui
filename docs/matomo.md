@@ -11,9 +11,9 @@ protected so you can't corrupt its analytics accidentally.
 
 ```env
 # Matomo settings
-NEXT_PUBLIC_MATOMO_ENABLED=true
-NEXT_PUBLIC_MATOMO_URL=https://suomi.matomo.cloud
-NEXT_PUBLIC_MATOMO_SITE_ID=25
+MATOMO_ENABLED=true
+MATOMO_URL=https://suomi.matomo.cloud
+MATOMO_SITE_ID=25
 ```
 
 ## Servers
@@ -21,8 +21,8 @@ NEXT_PUBLIC_MATOMO_SITE_ID=25
 Add the following environment variables to the server config. Pick the values
 from site's settings in Matomo.
 
-| Name                         | Value                        | Notes                                                                     |
-| ---------------------------- | ---------------------------- | ------------------------------------------------------------------------- |
-| `NEXT_PUBLIC_MATOMO_ENABLED` | `true`                       | Value must be `true`, not `1` etc.                                        |
-| `NEXT_PUBLIC_MATOMO_URL`     | `https://suomi.matomo.cloud` | Check this from Matomo site settings. This must be without leading slash. |
-| `NEXT_PUBLIC_MATOMO_SITE_ID` | integer                      | Check this from Matomo site settings.                                     |
+| Name             | Value                        | Notes                                                                     |
+| ---------------- | ---------------------------- | ------------------------------------------------------------------------- |
+| `MATOMO_ENABLED` | `true`                       | Value must be `true`, not `1` etc.                                        |
+| `MATOMO_URL`     | `https://suomi.matomo.cloud` | Check this from Matomo site settings. This must be without leading slash. |
+| `MATOMO_SITE_ID` | integer                      | Check this from Matomo site settings.                                     |

@@ -1,11 +1,6 @@
 import { useTranslation } from 'next-i18next';
-import React, { useEffect, useRef } from 'react';
-import {
-  ExternalLink,
-  Heading,
-  Text,
-  VisuallyHidden,
-} from 'suomifi-ui-components';
+import React, { useEffect } from 'react';
+import { ExternalLink, VisuallyHidden } from 'suomifi-ui-components';
 import {
   BasicBlock,
   MultilingualPropertyBlock,
@@ -20,13 +15,7 @@ import { getPropertyValue } from '@app/common/components/property-value/get-prop
 import Separator from '@app/common/components/separator';
 import DetailsExpander from './details-expander';
 import ConceptSidebar from './concept-sidebar';
-import {
-  Badge,
-  BadgeBar,
-  HeadingBlock,
-  MainContent,
-  PageContent,
-} from './concept.styles';
+import { MainContent, PageContent } from './concept.styles';
 import { useStoreDispatch } from '@app/store';
 import { setAlert } from '@app/common/components/alert/alert.slice';
 import { useRouter } from 'next/router';
@@ -34,6 +23,12 @@ import { setTitle } from '@app/common/components/title/title.slice';
 import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
 import { useGetConceptQuery } from '@app/common/components/concept/concept.slice';
 import { getProperty } from '@app/common/utils/get-property';
+import {
+  SubTitle,
+  MainTitle,
+  BadgeBar,
+  Badge,
+} from '@app/common/components/title-block';
 
 export interface ConceptProps {
   terminologyId: string;
@@ -56,7 +51,6 @@ export default function Concept({
   const { t, i18n } = useTranslation('concept');
   const dispatch = useStoreDispatch();
   const router = useRouter();
-  const titleRef = useRef<HTMLHeadingElement>(null);
 
   if (conceptError && 'status' in conceptError && conceptError.status === 404) {
     router.push('/404');
@@ -82,11 +76,7 @@ export default function Concept({
     }
   }, [concept, dispatch, prefLabel]);
 
-  useEffect(() => {
-    if (titleRef.current) {
-      titleRef.current.focus();
-    }
-  }, [titleRef]);
+  const status = getPropertyValue({ property: concept?.properties.status });
 
   return (
     <>
@@ -111,42 +101,26 @@ export default function Concept({
 
       <PageContent breakpoint={breakpoint}>
         <MainContent id="main">
-          <HeadingBlock>
-            <Text>
-              <PropertyValue
-                property={getProperty(
-                  'prefLabel',
-                  terminology?.references.contributor
-                )}
-                fallbackLanguage="fi"
-              />
-            </Text>
-            <Heading variant="h1" tabIndex={-1} ref={titleRef}>
-              {prefLabel}
-            </Heading>
-            <BadgeBar>
-              <span>{t('heading')}</span> &middot;{' '}
-              <span>
-                <PropertyValue
-                  property={terminology?.properties.prefLabel}
-                  fallbackLanguage="fi"
-                />
-              </span>{' '}
-              &middot;{' '}
-              <Badge
-                isValid={
-                  getPropertyValue({ property: concept?.properties.status }) ===
-                  'VALID'
-                }
-              >
-                {t(
-                  getPropertyValue({ property: concept?.properties.status }) ??
-                    '',
-                  { ns: 'common' }
-                )}
-              </Badge>
-            </BadgeBar>
-          </HeadingBlock>
+          <SubTitle>
+            <PropertyValue
+              property={getProperty(
+                'prefLabel',
+                terminology?.references.contributor
+              )}
+              fallbackLanguage="fi"
+            />
+          </SubTitle>
+          <MainTitle>{prefLabel}</MainTitle>
+          <BadgeBar>
+            {t('heading')}
+            <PropertyValue
+              property={terminology?.properties.prefLabel}
+              fallbackLanguage="fi"
+            />
+            <Badge isValid={status === 'VALID'}>
+              {t(status, { ns: 'common' })}
+            </Badge>
+          </BadgeBar>
 
           <MultilingualPropertyBlock
             title={<h2>{t('field-definition')}</h2>}
