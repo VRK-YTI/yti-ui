@@ -12,7 +12,7 @@ import {
   ConceptExpander,
   ExpanderContentFitted,
 } from './concept-basic-information.styles';
-import RelationalInformationBlock from './relational-information-block';
+import RelationalInformationBlock from '../../../common/components/relational-information-block';
 
 interface RelationalInformationProps {
   infoKey: string;
