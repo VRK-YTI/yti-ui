@@ -13,19 +13,23 @@ import { useRouter } from 'next/router';
 import { Text } from 'suomifi-ui-components';
 import ConceptBasicInformation from './basic-information/concept-basic-information';
 import { NewConceptBlock } from './new-concept.styles';
+import ConceptTermsBlock from './concept-terms-block';
+import { asString } from '@app/common/utils/hooks/useUrlState';
 
 interface NewConceptProps {
   terminologyId: string;
   conceptNames: { [key: string]: string | undefined };
 }
 
-export default function NewConcept({
-  terminologyId,
-  conceptNames,
-}: NewConceptProps) {
+export default function NewConcept({ terminologyId }: NewConceptProps) {
   const { t } = useTranslation('concept');
   const router = useRouter();
   const { data: terminology } = useGetVocabularyQuery(terminologyId);
+  const languages =
+    terminology?.properties.language?.map(({ value }) => value) ?? [];
+  const preferredTerm = languages
+    .map((lang) => ({ lang, value: asString(router.query[lang]), regex: '' }))
+    .filter(({ value }) => !!value);
 
   return (
     <>
@@ -38,9 +42,9 @@ export default function NewConcept({
             />
           </BreadcrumbLink>
         )}
-        {conceptNames && (
+        {!!preferredTerm?.length && (
           <BreadcrumbLink url="" current>
-            {getTermName()}
+            <PropertyValue property={preferredTerm} fallbackLanguage="fi" />
           </BreadcrumbLink>
         )}
       </Breadcrumb>
@@ -55,7 +59,9 @@ export default function NewConcept({
             fallbackLanguage="fi"
           />
         </SubTitle>
-        <MainTitle>{getTermName()}</MainTitle>
+        <MainTitle>
+          <PropertyValue property={preferredTerm} fallbackLanguage="fi" />
+        </MainTitle>
         <BadgeBar>
           {t('heading')}
           <PropertyValue
@@ -66,21 +72,10 @@ export default function NewConcept({
         </BadgeBar>
         <Text>{t('new-concept-page-help')}</Text>
 
+        <ConceptTermsBlock languages={languages} />
+
         <ConceptBasicInformation />
       </NewConceptBlock>
     </>
   );
-
-  // Get first defined termName
-  // This would be smart to replace with a proper function
-  function getTermName() {
-    const conceptNameKeys = Object.keys(conceptNames);
-    for (let i = 0; i < conceptNameKeys.length; i++) {
-      if (conceptNames[conceptNameKeys[i]]) {
-        return conceptNames[conceptNameKeys[i]];
-      }
-    }
-
-    return '';
-  }
 }
