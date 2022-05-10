@@ -74,7 +74,7 @@ export default function RelationalInformationBlock({
             fromOther={fromOther}
           />
 
-          {selectedConcepts.length > 0 && (
+          {selectedConcepts?.length > 0 ? (
             <div style={{ marginTop: '20px' }}>
               <Paragraph>
                 <Text variant="bold" smallScreen>
@@ -110,7 +110,7 @@ export default function RelationalInformationBlock({
                 })}
               </ChipBlock>
             </div>
-          )}
+          ) : null}
         </BasicBlockExtraWrapper>
       }
     >
@@ -213,7 +213,7 @@ function ManageRelationalInfoModal({
   );
 
   function renderToggleView() {
-    if (chosen.length < 1) {
+    if (!chosen || chosen.length < 1) {
       return null;
     }
 
