@@ -127,5 +127,6 @@
   "etymology-placeholder": "Add history of the use of the term",
   "admin-note": "Admin note",
   "add-new-admin-note": "Add new note",
-  "add-new-admin-note-description": "A note for the administrator or translator. Not visible to non-logged in users."
+  "add-new-admin-note-description": "A note for the administrator or translator. Not visible to non-logged in users.",
+  "save": "Save"
 }

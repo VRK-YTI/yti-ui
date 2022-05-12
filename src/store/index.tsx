@@ -17,6 +17,7 @@ import { alertSlice } from '@app/common/components/alert/alert.slice';
 import { titleSlice } from '@app/common/components/title/title.slice';
 import { subscriptionApi } from '@app/common/components/subscription/subscription.slice';
 import { accessRequestApi } from '@app/common/components/access-request/access-request.slice';
+import { modifyApi } from '@app/common/components/modify/modify.slice';
 
 export function makeStore() {
   return configureStore({
@@ -33,6 +34,7 @@ export function makeStore() {
       [titleSlice.name]: titleSlice.reducer,
       [subscriptionApi.reducerPath]: subscriptionApi.reducer,
       [accessRequestApi.reducerPath]: accessRequestApi.reducer,
+      [modifyApi.reducerPath]: modifyApi.reducer,
     },
 
     middleware: (getDefaultMiddleware) =>

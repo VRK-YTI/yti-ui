@@ -10,8 +10,10 @@ import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabul
 import { getProperty } from '@app/common/utils/get-property';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 import { Text } from 'suomifi-ui-components';
 import ConceptBasicInformation from './basic-information/concept-basic-information';
+import FormFooter from './form-footer';
 import { NewConceptBlock } from './new-concept.styles';
 
 interface NewConceptProps {
@@ -26,6 +28,13 @@ export default function NewConcept({
   const { t } = useTranslation('concept');
   const router = useRouter();
   const { data: terminology } = useGetVocabularyQuery(terminologyId);
+
+  const [conceptInfo, setConceptInfo] = useState({
+    definition: {},
+    example: [],
+    subject: '',
+    note: [],
+  });
 
   return (
     <>
@@ -66,7 +75,9 @@ export default function NewConcept({
         </BadgeBar>
         <Text>{t('new-concept-page-help')}</Text>
 
-        <ConceptBasicInformation />
+        <ConceptBasicInformation setConceptInfo={setConceptInfo} />
+
+        <FormFooter conceptInfo={conceptInfo} terminologyId={router.query.terminologyId} />
       </NewConceptBlock>
     </>
   );

@@ -25,7 +25,7 @@ interface BasicInfoType {
   note: [];
 }
 
-export default function ConceptBasicInformation() {
+export default function ConceptBasicInformation({ setConceptInfo }: any) {
   const { t } = useTranslation('admin');
   const [basicInfo, setBasicInfo] = useState<BasicInfoType>({
     definition: {},
@@ -40,8 +40,13 @@ export default function ConceptBasicInformation() {
         ...basicInfo,
         ['definition']: { ...basicInfo['definition'], [lang]: value },
       }));
+      setConceptInfo((basicInfo) => ({
+        ...basicInfo,
+        ['definition']: { ...basicInfo['definition'], [lang]: value },
+      }));
     } else {
       setBasicInfo((basicInfo) => ({ ...basicInfo, [key]: value }));
+      setConceptInfo((basicInfo) => ({ ...basicInfo, [key]: value }));
     }
   };
 

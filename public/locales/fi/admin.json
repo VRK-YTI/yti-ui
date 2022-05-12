@@ -127,5 +127,6 @@
   "etymology-placeholder": "Kirjoita termin käytön historia",
   "admin-note": "Ylläpitäjän muistiinpano",
   "add-new-admin-note": "Lisää uusi muistiinpano",
-  "add-new-admin-note-description": "Ylläpitäjälle tai kääntäjille tarkoitettu muistiinpano. Ei näy kirjautumattomalle käyttäjälle."
+  "add-new-admin-note-description": "Ylläpitäjälle tai kääntäjille tarkoitettu muistiinpano. Ei näy kirjautumattomalle käyttäjälle.",
+  "save": "Tallenna"
 }

@@ -68,7 +68,7 @@ export default function ConceptInfoBlock({
   return (
     <BasicBlock
       largeWidth
-      title={t('example')}
+      title={t(infoKey)}
       extra={
         <BasicBlockExtraWrapper>
           <ConceptInfoBlockWrapper>
