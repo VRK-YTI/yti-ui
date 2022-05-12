@@ -1,11 +1,18 @@
 import { v4 } from 'uuid';
 
 export default function generateNewConcept(conceptInfo: any, terminologyId: string) {
+  if (!conceptInfo.terms.preferredTerm || conceptInfo.terms.preferredTerm.length < 1) {
+    return null;
+  }
+
   const now = new Date();
-  const UUID = v4();
   const regex = '(?s)^.*$';
+  let preferredTermIds: string[] = [];
 
   const terms = conceptInfo.terms?.preferredTerm?.map(term => {
+    const UUID = v4();
+    preferredTermIds = [...preferredTermIds, UUID];
+
     return (
       {
         createdBy: '',
@@ -119,13 +126,11 @@ export default function generateNewConcept(conceptInfo: any, terminologyId: stri
   const temp = {
     delete: [],
     save: [
-      // This form when handling terms
       ...terms,
-      // Basic information
       {
         createdBy: '',
         createdDate: now.toISOString(),
-        id: v4(), // conceptID
+        id: v4(), // This can be random, only referenced here
         lastModifiedBy: '',
         lastModifiedDate: now.toISOString(),
         properties: {
@@ -208,16 +213,20 @@ export default function generateNewConcept(conceptInfo: any, terminologyId: stri
           isPartOf: [],
           narrower: [],
           notRecommendedSynonym: [],
-          prefLabelXl: [{
-            id: UUID,
-            type: {
-              graph: {
-                id: terminologyId
-              },
-              id: 'Term',
-              uri: 'http://www.w3.org/2008/05/skos-xl#Label'
-            }
-          }],
+          prefLabelXl: preferredTermIds.map(id => {
+            return (
+              {
+                id: id,
+                type: {
+                  graph: {
+                    id: terminologyId
+                  },
+                  id: 'Term',
+                  uri: 'http://www.w3.org/2008/05/skos-xl#Label'
+                }
+              }
+            );
+          }),
           related: [],
           relatedMatch: [],
           searchTerm: []
@@ -236,6 +245,5 @@ export default function generateNewConcept(conceptInfo: any, terminologyId: stri
 
   console.log(temp);
 
-  // return null;
   return temp;
 }

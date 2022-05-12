@@ -1,7 +1,7 @@
 import generateNewConcept from './generate-new-concept';
 
 describe('generate-new-concept', () => {
-  it('should generate preferred term with all information', () => {
+  it('should generate a preferred term with all information', () => {
     const data = {
       terms: {
         preferredTerm: [
@@ -41,7 +41,7 @@ describe('generate-new-concept', () => {
     });
   });
 
-  it('should generate preferred term with only prefLabel', () => {
+  it('should generate a preferred term with only prefLabel', () => {
     const data = {
       terms: {
         preferredTerm: [
@@ -56,6 +56,7 @@ describe('generate-new-concept', () => {
     const received = generateNewConcept(data, '123-456-789');
 
     expect(received.delete).toStrictEqual([]);
+    expect(received.save).toHaveLength(2);
     expect(received.save[0].properties.prefLabel).toStrictEqual([{
       lang: 'fi',
       regex: '(?s)^.*$',
@@ -87,9 +88,73 @@ describe('generate-new-concept', () => {
       });
   });
 
+  it('should generate preferred terms with only prefLabel', () => {
+    const data = {
+      terms: {
+        preferredTerm: [
+          {
+            lang: 'fi',
+            prefLabel: 'suositettava termi fi'
+          },
+          {
+            lang: 'en',
+            prefLabel: 'suositettava termi en'
+          }
+        ]
+      }
+    };
+
+    const received = generateNewConcept(data, '123-456-789');
+
+    expect(received.delete).toStrictEqual([]);
+    expect(received.save).toHaveLength(3);
+
+    for (let i = 0; i < 2; i++) {
+      expect(received.save[i].properties.prefLabel).toStrictEqual([{
+        lang: i === 0 ? 'fi' : 'en',
+        regex: '(?s)^.*$',
+        value: i === 0 ? 'suositettava termi fi' : 'suositettava termi en'
+      }]);
+
+      expect(received.save[i].properties.editorialNote).toStrictEqual([]);
+      expect(received.save[i].properties.source).toStrictEqual([]);
+      expect(received.save[i].properties.status).toStrictEqual([{
+        lang: '',
+        regex: '(?s)^.*$',
+        value: 'DRAFT'
+      }]);
+
+      Object.keys(received.save[i].properties)
+        .filter(key => {
+          if (!['prefLabel', 'editorialNote', 'source', 'status'].includes(key)) {
+            return true;
+          }
+        })
+        .map(key => {
+          expect(received.save[i].properties[key]).toStrictEqual(
+            [{
+              lang: '',
+              regex: '(?s)^.*$',
+              value: ''
+            }]
+          );
+        });
+    }
+
+    expect(received.save[2].references.prefLabelXl).toHaveLength(2);
+  });
+
 
   it('should generate basic information', () => {
     const received = generateNewConcept({
+      terms: {
+        preferredTerm: [
+          {
+            lang: 'fi',
+            prefLabel: 'suositettava termi fi'
+          },
+        ]
+      },
       definition: {
         fi: 'määritelmä',
         en: 'definition'
@@ -112,8 +177,8 @@ describe('generate-new-concept', () => {
     }, '123-456-789');
 
     expect(received.delete).toStrictEqual([]);
-    expect(received.save).toHaveLength(1);
-    expect(received.save[0].properties.definition).toStrictEqual([
+    expect(received.save).toHaveLength(2);
+    expect(received.save[1].properties.definition).toStrictEqual([
       {
         lang: 'fi',
         regex: '(?s)^.*$',
@@ -125,26 +190,55 @@ describe('generate-new-concept', () => {
         value: 'definition'
       }
     ]);
-    expect(received.save[0].properties.example).toStrictEqual([
+    expect(received.save[1].properties.example).toStrictEqual([
       {
         lang: 'fi',
         regex: '(?s)^.*$',
         value: 'esimerkki'
       }
     ]);
-    expect(received.save[0].properties.subjectArea).toStrictEqual([
+    expect(received.save[1].properties.subjectArea).toStrictEqual([
       {
         lang: '',
         regex: '(?s)^.*$',
         value: 'subject'
       }
     ]);
-    expect(received.save[0].properties.note).toStrictEqual([
+    expect(received.save[1].properties.note).toStrictEqual([
       {
         lang: 'en',
         regex: '(?s)^.*$',
         value: 'note'
       }
     ]);
+  });
+
+  it('should return null of no preferredTerms are defined', () => {
+    const received = generateNewConcept({
+      terms: {
+        preferredTerm: []
+      },
+      definition: {
+        fi: 'määritelmä',
+        en: 'definition'
+      },
+      example: [
+        {
+          id: 0,
+          lang: 'fi',
+          value: 'esimerkki'
+        }
+      ],
+      subject: 'subject',
+      note: [
+        {
+          id: 0,
+          lang: 'en',
+          value: 'note'
+        }
+      ]
+    }, '123-456-789');
+
+    expect(received).toBeNull();
   });
 });
