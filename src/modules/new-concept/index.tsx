@@ -12,6 +12,7 @@ import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { Text } from 'suomifi-ui-components';
 import ConceptBasicInformation from './basic-information/concept-basic-information';
+import FormFooter from './form-footer';
 import { NewConceptBlock } from './new-concept.styles';
 import ConceptTermsBlock from './concept-terms-block';
 import { asString } from '@app/common/utils/hooks/useUrlState';
@@ -75,6 +76,8 @@ export default function NewConcept({ terminologyId }: NewConceptProps) {
         <ConceptTermsBlock languages={languages} />
 
         <ConceptBasicInformation />
+
+        <FormFooter />
       </NewConceptBlock>
     </>
   );
