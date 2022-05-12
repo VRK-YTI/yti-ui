@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { Collection } from '@app/common/interfaces/collection.interface';
 import {
+  VocabulariesDTO,
   VocabularyConcepts,
   VocabularyInfoDTO,
 } from '@app/common/interfaces/vocabulary.interface';
@@ -88,6 +89,12 @@ export const vocabularyApi = createApi({
         method: 'GET',
       }),
     }),
+    getVocabularies: builder.query<VocabulariesDTO[], null>({
+      query: () => ({
+        url: '/vocabularies',
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
@@ -98,6 +105,7 @@ export const {
   usePostNewVocabularyMutation,
   // useDeleteVocabularyMutation,
   useGetIfNamespaceInUseQuery,
+  useGetVocabulariesQuery,
   util: { getRunningOperationPromises },
 } = vocabularyApi;
 

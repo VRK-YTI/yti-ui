@@ -1,7 +1,6 @@
 import Separator from '@app/common/components/separator';
 import {
   WiderTextarea,
-  ExpanderBlock,
   H2Sm,
   SubjectTextInput,
 } from './concept-basic-information.styles';
@@ -13,6 +12,7 @@ import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import ConceptInfoBlock from './concept-info-block';
 import { BasicInfoUpdate } from './concept-basic-information-interface';
+import { ExpanderGroup } from 'suomifi-ui-components';
 
 interface BasicInfoType {
   definition: {
@@ -23,6 +23,10 @@ interface BasicInfoType {
   example: [];
   subject: string;
   note: [];
+  diagramAndSource: [];
+  orgInfo: {};
+  otherInfo: {};
+  relationalInfo: {};
 }
 
 export default function ConceptBasicInformation() {
@@ -32,6 +36,10 @@ export default function ConceptBasicInformation() {
     example: [],
     subject: '',
     note: [],
+    diagramAndSource: [],
+    orgInfo: {},
+    otherInfo: {},
+    relationalInfo: {},
   });
 
   const handleBasicInfoUpdate = ({ key, lang, value }: BasicInfoUpdate) => {
@@ -59,12 +67,21 @@ export default function ConceptBasicInformation() {
 
       <ConceptInfoBlock infoKey="note" update={handleBasicInfoUpdate} />
 
-      <ExpanderBlock>
-        <ConceptDiagramsAndSources />
-        <OrganizationInformation />
-        <OtherInformation />
-        <RelationalInformation />
-      </ExpanderBlock>
+      <ExpanderGroup closeAllText="" openAllText="">
+        <ConceptDiagramsAndSources
+          infoKey="note"
+          update={handleBasicInfoUpdate}
+        />
+        <OrganizationInformation
+          infoKey="orgInfo"
+          update={handleBasicInfoUpdate}
+        />
+        <OtherInformation infoKey="otherInfo" update={handleBasicInfoUpdate} />
+        <RelationalInformation
+          infoKey="relationalInfo"
+          update={handleBasicInfoUpdate}
+        />
+      </ExpanderGroup>
     </>
   );
 

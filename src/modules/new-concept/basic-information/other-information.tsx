@@ -1,15 +1,89 @@
+import { useGetGroupsQuery } from '@app/common/components/terminology-search/terminology-search.slice';
 import { useTranslation } from 'next-i18next';
-import { ExpanderTitleButton } from 'suomifi-ui-components';
-import { ConceptExpander } from './concept-basic-information.styles';
+import { useState } from 'react';
+import { ExpanderTitleButton, SingleSelect } from 'suomifi-ui-components';
+import { BasicInfoUpdate } from './concept-basic-information-interface';
+import {
+  ConceptExpander,
+  ExpanderContentFitted,
+} from './concept-basic-information.styles';
 
-export default function OtherInformation() {
-  const { t } = useTranslation('admin');
+interface OtherInformationProps {
+  infoKey: string;
+  update: (object: BasicInfoUpdate) => void;
+}
+
+export default function OtherInformation({
+  infoKey,
+  update,
+}: OtherInformationProps) {
+  const { t, i18n } = useTranslation('admin');
+  const { data: groups } = useGetGroupsQuery(i18n.language);
+  const [conceptClass, setConceptClass] = useState<
+    typeof groupsFormatted[0] | null
+  >();
+  const [wordClass, setWordClass] = useState<typeof partOfSpeech[0] | null>();
+
+  const handleChange = () => {
+    update({
+      key: infoKey,
+      value: {
+        conceptClass: conceptClass,
+        wordClass: wordClass,
+      },
+    });
+  };
+
+  const groupsFormatted =
+    groups?.map((group) => {
+      return {
+        uniqueItemId: group.id,
+        labelText: group.properties.prefLabel.value,
+      };
+    }) ?? [];
+
+  const partOfSpeech = [
+    {
+      uniqueItemId: 'adjective',
+      labelText: t('adjective'),
+    },
+    {
+      uniqueItemId: 'verb',
+      labelText: t('verb'),
+    },
+  ];
 
   return (
     <ConceptExpander>
       <ExpanderTitleButton asHeading="h3">
         {t('concept-other-information')}
       </ExpanderTitleButton>
+      <ExpanderContentFitted>
+        <SingleSelect
+          labelText={t('concept-class')}
+          optionalText={t('optional')}
+          clearButtonLabel={t('clear-button-label')}
+          ariaOptionsAvailableText={t('concept-class-available')}
+          items={groupsFormatted}
+          selectedItem={conceptClass ?? undefined}
+          noItemsText={t('concept-class-no-items')}
+          onItemSelectionChange={(e) => setConceptClass(e)}
+          onBlur={() => handleChange()}
+        />
+
+        <SingleSelect
+          labelText={t('word-class')}
+          optionalText={t('optional')}
+          hintText={t('word-class-hint')}
+          clearButtonLabel={t('clear-button-label')}
+          ariaOptionsAvailableText={t('word-class-available')}
+          items={partOfSpeech}
+          selectedItem={wordClass ?? undefined}
+          noItemsText={t('word-class-no-items')}
+          onItemSelectionChange={(e) => setWordClass(e)}
+          onBlur={() => handleChange()}
+        />
+      </ExpanderContentFitted>
     </ConceptExpander>
   );
 }

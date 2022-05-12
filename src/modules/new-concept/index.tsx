@@ -12,6 +12,7 @@ import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { Text } from 'suomifi-ui-components';
 import ConceptBasicInformation from './basic-information/concept-basic-information';
+import FormFooter from './form-footer';
 import { NewConceptBlock } from './new-concept.styles';
 
 interface NewConceptProps {
@@ -67,6 +68,8 @@ export default function NewConcept({
         <Text>{t('new-concept-page-help')}</Text>
 
         <ConceptBasicInformation />
+
+        <FormFooter />
       </NewConceptBlock>
     </>
   );

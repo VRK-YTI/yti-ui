@@ -1,6 +1,7 @@
 import { Group } from './group.interface';
 import { Organization } from './organization.interface';
-import { BaseEntity, Property } from './termed-data-types.interface';
+import { BaseEntity, Property, Type } from './termed-data-types.interface';
+import { GroupSearchResult } from './terminology.interface';
 
 export interface VocabularyInfoDTO
   extends BaseEntity<'TerminologicalVocabulary'> {
@@ -44,5 +45,32 @@ export interface VocabularyConceptDTO {
     status: string;
     uri: string;
   };
+  uri: string;
+}
+
+export interface VocabulariesDTO {
+  code: string;
+  id: string;
+  properties: {
+    contact: Property[];
+    language: Property[];
+    prefLabel: Property[];
+    status: Property[];
+    terminologyType: Property[];
+  };
+  references: {
+    contributor: {
+      code: string;
+      id: string;
+      properties: {
+        prefLabel: Property[];
+      };
+      references: {};
+      type: Type<string>;
+      uri: string;
+    };
+    inGroup: GroupSearchResult[];
+  };
+  type: Type<string>;
   uri: string;
 }
