@@ -137,12 +137,12 @@ export default function generateNewConcept(conceptInfo: any, terminologyId: stri
           changeNote: [{
             lang: '',
             regex: regex,
-            value: ''
+            value: conceptInfo.orgInfo?.changeHistory ?? ''
           }],
           conceptClass: [{
             lang: '',
             regex: regex,
-            value: ''
+            value: conceptInfo.otherInfo?.conceptClass?.labelText ?? ''
           }],
           conceptScope: [{
             lang: '',
@@ -172,7 +172,7 @@ export default function generateNewConcept(conceptInfo: any, terminologyId: stri
           historyNote: [{
             lang: '',
             regex: regex,
-            value: ''
+            value: conceptInfo.orgInfo?.etymology ?? ''
           }],
           notation: [{
             lang: '',
@@ -200,7 +200,7 @@ export default function generateNewConcept(conceptInfo: any, terminologyId: stri
           wordClass: [{
             lang: '',
             regex: regex,
-            value: ''
+            value: conceptInfo.otherInfo?.wordClass?.uniqueItemId ?? ''
           }]
         },
         references: {

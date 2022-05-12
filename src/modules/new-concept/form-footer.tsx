@@ -23,6 +23,8 @@ export default function FormFooter({ conceptInfo, terminologyId }: any) {
     // Remove this when terms are added to conceptInfo
     conceptInfo.terms = {preferredTerm: [{lang: 'fi', prefLabel: 'demo'}]};
 
+    console.log(conceptInfo);
+
     const postData = generateNewConcept(conceptInfo, terminologyId);
 
     if (postData) {

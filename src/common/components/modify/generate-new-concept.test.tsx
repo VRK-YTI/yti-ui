@@ -241,4 +241,70 @@ describe('generate-new-concept', () => {
 
     expect(received).toBeNull();
   });
+
+  it('should generate organizational information', () => {
+    const received = generateNewConcept({
+      terms: {
+        preferredTerm: [
+          {
+            lang: 'fi',
+            prefLabel: 'suositettava termi fi'
+          },
+        ]
+      },
+      orgInfo: {
+        changeHistory: 'muutoshistoriatieto',
+        etymology: 'käytön historiatieto'
+      }
+    }, '123-456-789');
+
+    expect(received.delete).toStrictEqual([]);
+    expect(received.save).toHaveLength(2);
+    expect(received.save[1].properties.changeNote).toStrictEqual([{
+      lang: '',
+      regex: '(?s)^.*$',
+      value: 'muutoshistoriatieto'
+    }]);
+    expect(received.save[1].properties.historyNote).toStrictEqual([{
+      lang: '',
+      regex: '(?s)^.*$',
+      value: 'käytön historiatieto'
+    }]);
+  });
+
+  it('should generate other information', () => {
+    const received = generateNewConcept({
+      terms: {
+        preferredTerm: [
+          {
+            lang: 'fi',
+            prefLabel: 'suositettava termi fi'
+          },
+        ]
+      },
+      otherInfo: {
+        conceptClass: {
+          uniqueItemId: '111-222',
+          labelText: 'Asuminen'
+        },
+        wordClass: {
+          uniqueItemId: 'verb',
+          labelText: 'verbi'
+        }
+      }
+    }, '123-456-789');
+
+    expect(received.delete).toStrictEqual([]);
+    expect(received.save).toHaveLength(2);
+    expect(received.save[1].properties.conceptClass).toStrictEqual([{
+      lang: '',
+      regex: '(?s)^.*$',
+      value: 'Asuminen'
+    }]);
+    expect(received.save[1].properties.wordClass).toStrictEqual([{
+      lang: '',
+      regex: '(?s)^.*$',
+      value: 'verb'
+    }]);
+  });
 });
