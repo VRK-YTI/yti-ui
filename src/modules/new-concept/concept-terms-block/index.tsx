@@ -5,6 +5,7 @@ import { useTranslation } from 'next-i18next';
 import { Button, ExpanderGroup } from 'suomifi-ui-components';
 import { LargeHeading, MediumHeading } from './concept-terms-block.styles';
 import TermExpander from './term-expander';
+import TermForm from './term-form';
 
 export interface ConceptTermsBlockProps {
   languages: string[];
@@ -31,7 +32,9 @@ export default function ConceptTermsBlock({
           <BasicBlockExtraWrapper isWide>
             <ExpanderGroup openAllText="" closeAllText="">
               {languages.map((lang) => (
-                <TermExpander key={lang} languages={languages} lang={lang} />
+                <TermExpander key={lang} languages={languages} lang={lang}>
+                  <TermForm lang={lang} />
+                </TermExpander>
               ))}
             </ExpanderGroup>
           </BasicBlockExtraWrapper>

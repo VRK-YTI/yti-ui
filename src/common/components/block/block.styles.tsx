@@ -32,7 +32,7 @@ export const BasicBlockExtraWrapper = styled.div<{
 }>`
   margin-top: 10px;
   text-align: ${(props) => props.position ?? 'left'};
-  min-width: ${(props) => props.isWide ? '800px' : 'unset'};
+  min-width: ${(props) => (props.isWide ? '800px' : 'unset')};
 `;
 
 export const List = styled.ul`
