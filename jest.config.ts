@@ -26,7 +26,7 @@ const config: Config.InitialOptions = {
   ],
   setupFilesAfterEnv: ['./jest.setup.ts'],
   testResultsProcessor: 'jest-junit',
-  coverageReporters: ['html']
+  coverageReporters: ['html'],
 };
 
 export default config;
