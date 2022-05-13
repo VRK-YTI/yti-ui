@@ -46,7 +46,7 @@ export default function NewConcept({
         )}
       </Breadcrumb>
 
-      <NewConceptBlock>
+      <NewConceptBlock variant="main" id="main">
         <SubTitle>
           <PropertyValue
             property={getProperty(
