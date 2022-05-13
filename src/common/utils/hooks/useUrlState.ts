@@ -98,7 +98,7 @@ function buildUrlStatePatch(state: UrlState): Partial<UrlState> {
 
 type QueryParamValue = string | string[] | undefined;
 
-function asString(
+export function asString(
   value: QueryParamValue,
   defaultValue = '',
   delimiter = ''
@@ -110,7 +110,7 @@ function asString(
   return value ?? defaultValue;
 }
 
-function asStringArray(
+export function asStringArray(
   value: QueryParamValue,
   defaultValue: string[] = []
 ): string[] {
@@ -122,7 +122,7 @@ function asStringArray(
   return value.length > 0 ? value : defaultValue;
 }
 
-function asNumber(value: QueryParamValue, defaultValue = 0): number {
+export function asNumber(value: QueryParamValue, defaultValue = 0): number {
   if (Array.isArray(value)) {
     value = value.filter(Boolean)[0];
   }
@@ -136,7 +136,7 @@ function asNumber(value: QueryParamValue, defaultValue = 0): number {
   return !isNaN(parsed) ? parsed : defaultValue;
 }
 
-function asArray(
+export function asArray(
   value: string | number | string[] | number[]
 ): (string | number)[] {
   return Array.isArray(value) ? value : [value];
