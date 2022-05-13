@@ -53,6 +53,10 @@ export function checkPermission({
   const rolesInTargetOrganization =
     targetOrganization && user.rolesInOrganizations[targetOrganization];
 
+  if (user.superuser) {
+    return true;
+  }
+
   // Return false if user doesn't have a role in target organization
   if (
     targetOrganization &&

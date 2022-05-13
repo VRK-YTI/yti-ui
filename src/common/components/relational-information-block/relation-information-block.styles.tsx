@@ -7,6 +7,10 @@ export const ChipBlock = styled(Block)`
   gap: 5px;
   margin-top: ${(props) => props.theme.suomifi.spacing.xs};
   max-width: 100%;
+
+  svg {
+    color: white !important;
+  }
 `;
 
 export const ResultList = styled.ul`
