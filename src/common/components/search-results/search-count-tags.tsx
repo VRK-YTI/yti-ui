@@ -36,7 +36,7 @@ export default function SearchCountTags({
   const { isSmall } = useBreakpoints();
 
   return (
-    <CountWrapper isSmall={isSmall}>
+    <CountWrapper $isSmall={isSmall}>
       <CountText aria-live="polite">
         <span aria-hidden={true}>{title}</span>
         <VisuallyHidden>

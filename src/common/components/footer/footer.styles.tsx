@@ -12,14 +12,14 @@ export const FooterContentWrapper = styled.div`
   }
 `;
 
-export const FooterLinkWrapper = styled.div<{ breakpoint: Breakpoint }>`
+export const FooterLinkWrapper = styled.div<{ $breakpoint: Breakpoint }>`
   display: flex;
   padding: ${(props) => props.theme.suomifi.spacing.m} 0;
   column-gap: ${(props) => props.theme.suomifi.spacing.xxl};
   row-gap: 18px;
   justify-content: flex-start;
   flex-wrap: wrap;
-  flex-direction: ${(props) => small(props.breakpoint, 'column', 'row')};
+  flex-direction: ${(props) => small(props.$breakpoint, 'column', 'row')};
 `;
 
 export const VersionInfo = styled.div`

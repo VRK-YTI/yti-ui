@@ -25,22 +25,22 @@ export default function MobileNavigation({
       <LoginButtons handleLoginModalClick={handleLoginModalClick} />
 
       <MobileMenuSection>
-        <MobileMenuItem active={router.pathname === '/'}>
+        <MobileMenuItem $active={router.pathname === '/'}>
           <Link href="/">{t('site-frontpage')}</Link>
         </MobileMenuItem>
         <MobileMenuItem>
           <Text>{t('site-services')}</Text>
         </MobileMenuItem>
-        <MobileMenuItem inset>
+        <MobileMenuItem $inset>
           <Link href="/">{t('terminology-title')}</Link>
         </MobileMenuItem>
-        <MobileMenuItem inset>
+        <MobileMenuItem $inset>
           <Link href="/">{t('codelist-title')}</Link>
         </MobileMenuItem>
-        <MobileMenuItem inset>
+        <MobileMenuItem $inset>
           <Link href="/">{t('datamodel-title')}</Link>
         </MobileMenuItem>
-        <MobileMenuItem inset>
+        <MobileMenuItem $inset>
           <Link href="/">{t('comments-title')}</Link>
         </MobileMenuItem>
         <MobileMenuItem>
@@ -53,7 +53,7 @@ export default function MobileNavigation({
           <Link href="/">{t('site-for-administrators')}</Link>
         </MobileMenuItem>
         {isLoggedIn && (
-          <MobileMenuItem active={router.pathname === '/own-information'}>
+          <MobileMenuItem $active={router.pathname === '/own-information'}>
             <Link className="main" href="/own-information">
               {t('own-information')}
             </Link>

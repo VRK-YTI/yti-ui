@@ -84,9 +84,9 @@ const enlarge = keyframes`
   }
 `;
 
-export const DownloadIndicator = styled.div<{ startFrame: number }>`
+export const DownloadIndicator = styled.div<{ $startFrame: number }>`
   animation: ${enlarge} 2s linear infinite;
-  animation-delay: ${(props) => props.startFrame}ms;
+  animation-delay: ${(props) => props.$startFrame}ms;
   background: ${(props) => props.theme.suomifi.colors.highlightBase};
   border-radius: 50%;
   height: 21px;

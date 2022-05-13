@@ -21,7 +21,7 @@ export default function LoginButtons({
 
   if (user?.anonymous ?? true) {
     return (
-      <LoginButtonsWrapper breakpoint={breakpoint}>
+      <LoginButtonsWrapper $breakpoint={breakpoint}>
         <Button
           icon="login"
           onClick={() =>

@@ -86,18 +86,21 @@ export const MobileMenuSection = styled.ul`
   background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
 `;
 
-export const MobileMenuItem = styled.li<{ active?: boolean; inset?: boolean }>`
+export const MobileMenuItem = styled.li<{
+  $active?: boolean;
+  $inset?: boolean;
+}>`
   height: 44px;
 
   * {
     display: block;
     padding-top: 9px;
     padding-bottom: 8px;
-    font-weight: ${(props) => (props.active ? 600 : 400)};
-    padding-left: ${(props) => (props.inset ? '25px' : '10px')};
+    font-weight: ${(props) => (props.$active ? 600 : 400)};
+    padding-left: ${(props) => (props.$inset ? '25px' : '10px')};
     border-left: 5px solid
       ${(props) =>
-        props.active
+        props.$active
           ? props.theme.suomifi.colors.highlightBase
           : 'transparent'};
   }

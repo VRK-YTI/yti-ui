@@ -66,7 +66,7 @@ export default function LanguageBlock({
       <LangTextInput
         labelText={t('terminology-name')}
         visualPlaceholder={t('terminology-name-placeholder')}
-        isSmall={isSmall}
+        $isSmall={isSmall}
         onChange={(e) => handleInfoUpdate({ tName: e as string })}
         status={status}
         statusText={status === 'error' ? t('terminology-name-error') : ''}

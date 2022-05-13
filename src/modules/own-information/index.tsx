@@ -45,7 +45,7 @@ export default function OwnInformation() {
         </BreadcrumbLink>
       </Breadcrumb>
 
-      <PageContent breakpoint={breakpoint}>
+      <PageContent $breakpoint={breakpoint}>
         <MainContent id="main">
           <MainTitle>{t('own-information')}</MainTitle>
 

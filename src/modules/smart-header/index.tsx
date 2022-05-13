@@ -67,7 +67,7 @@ export default function SmartHeader() {
   function renderMobileNavigation() {
     return (
       <Block variant="nav">
-        <NavigationContainer breakpoint="small">
+        <NavigationContainer $breakpoint="small">
           <MobileNavigation handleLoginModalClick={handleLoginModalClick} />
         </NavigationContainer>
       </Block>
@@ -78,8 +78,8 @@ export default function SmartHeader() {
     if (!isSmall) {
       return (
         <Block variant="nav">
-          <NavigationContainer breakpoint={breakpoint}>
-            <MarginContainer breakpoint={breakpoint}>
+          <NavigationContainer $breakpoint={breakpoint}>
+            <MarginContainer $breakpoint={breakpoint}>
               <DesktopNavigation />
             </MarginContainer>
           </NavigationContainer>
@@ -92,8 +92,8 @@ export default function SmartHeader() {
     return (
       <Block variant="header" role="banner">
         <HeaderContainer>
-          <MarginContainer breakpoint={breakpoint}>
-            <HeaderWrapper breakpoint={breakpoint}>
+          <MarginContainer $breakpoint={breakpoint}>
+            <HeaderWrapper $breakpoint={breakpoint}>
               {renderLogo()}
               {renderHeaderSearch()}
               {renderDesktopLocaleChooser()}

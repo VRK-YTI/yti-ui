@@ -42,7 +42,7 @@ export default function Title({ info }: TitleProps) {
     return (
       <TitleWrapperNoBreadcrumb>
         <Heading variant="h1">{info}</Heading>
-        <TitleDescriptionWrapper isSmall={isSmall}>
+        <TitleDescriptionWrapper $isSmall={isSmall}>
           <Description>{t('terminology-search-info')}</Description>
           <NewTerminology />
         </TitleDescriptionWrapper>

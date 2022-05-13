@@ -11,8 +11,8 @@ export default function ErrorHeader() {
   return (
     <Block variant="header">
       <HeaderContainer>
-        <MarginContainer breakpoint={breakpoint}>
-          <HeaderWrapper breakpoint={breakpoint}>
+        <MarginContainer $breakpoint={breakpoint}>
+          <HeaderWrapper $breakpoint={breakpoint}>
             <Logo />
           </HeaderWrapper>
         </MarginContainer>

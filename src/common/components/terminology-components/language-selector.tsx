@@ -142,7 +142,7 @@ export default function LanguageSelector({
         noItemsText={t('no-languages-available')}
         visualPlaceholder={t('languages-visual-placeholder')}
         onItemSelectionsChange={(e) => handleSelectedLanguagesChange(e)}
-        issmall={isSmall ? true : undefined}
+        $isSmall={isSmall ? true : undefined}
         status={
           userPosted && selectedLanguages.length === 0 ? 'error' : 'default'
         }

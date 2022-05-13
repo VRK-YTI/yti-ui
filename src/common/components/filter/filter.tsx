@@ -34,7 +34,7 @@ export function Filter({
         </SkipLink>
       )}
 
-      <FilterSection isModal={isModal} aria-labelledby="filter-title">
+      <FilterSection $isModal={isModal} aria-labelledby="filter-title">
         {renderTitle()}
         <FilterContent>
           <ResetAllFiltersButton />

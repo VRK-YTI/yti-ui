@@ -59,7 +59,7 @@ export default function InformationDomainsSelector({
         noItemsText={t('no-info-domains-available')}
         visualPlaceholder={t('info-domains-placeholder')}
         onItemSelectionsChange={(e) => handleChange(e)}
-        issmall={isSmall ? true : undefined}
+        $isSmall={isSmall ? true : undefined}
         status={
           userPosted && selectedInfoDomains.length === 0 ? 'error' : 'default'
         }

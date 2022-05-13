@@ -7,10 +7,10 @@ import {
   small,
 } from '@app/common/components/media-query/styled-helpers';
 
-export const MarginContainer = styled.div<{ breakpoint: Breakpoint }>`
+export const MarginContainer = styled.div<{ $breakpoint: Breakpoint }>`
   max-width: 1100px;
   margin: auto;
-  padding: ${(props) => resolve(props.breakpoint, '0 15px', '0 30px', 'auto')};
+  padding: ${(props) => resolve(props.$breakpoint, '0 15px', '0 30px', 'auto')};
 `;
 
 // main layout
@@ -34,9 +34,9 @@ export const HeaderContainer = styled.div`
   border-top: ${(props) => `3px solid ${props.theme.suomifi.colors.brandBase}`};
 `;
 
-export const NavigationContainer = styled.div<{ breakpoint: Breakpoint }>`
+export const NavigationContainer = styled.div<{ $breakpoint: Breakpoint }>`
   background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
-  border-bottom: ${(props) => small(props.breakpoint, '0px', '1px')} solid
+  border-bottom: ${(props) => small(props.$breakpoint, '0px', '1px')} solid
     ${(props) => props.theme.suomifi.colors.depthLight1};
 `;
 

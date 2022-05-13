@@ -20,9 +20,9 @@ const rotate = keyframes`
   to { transform: rotate(0deg); };
 `;
 
-export const LoadIcon = styled(Icon)<{ isSmall: boolean }>`
-  width: ${(props) => (props.isSmall ? '50px' : '100px')};
-  height: ${(props) => (props.isSmall ? '50px' : '100px')};
+export const LoadIcon = styled(Icon)<{ $isSmall: boolean }>`
+  width: ${(props) => (props.$isSmall ? '50px' : '100px')};
+  height: ${(props) => (props.$isSmall ? '50px' : '100px')};
   animation: ${rotate} 2s linear infinite;
   color: ${(props) => props.theme.suomifi.colors.highlightLight1};
   margin-top: ${(props) => props.theme.suomifi.spacing.xl};

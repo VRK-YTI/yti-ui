@@ -12,10 +12,10 @@ export const TermModalButton = styled(Button)`
   min-height: auto;
 `;
 
-export const TermModalChip = styled.span<{ isvalid?: string }>`
+export const TermModalChip = styled.span<{ $isValid?: string }>`
   align-items: center;
   background: ${(props) =>
-    props.isvalid === 'true'
+    props.$isValid === 'true'
       ? props.theme.suomifi.colors.successBase
       : props.theme.suomifi.colors.depthDark2};
   border-radius: 10px;

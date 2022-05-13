@@ -24,8 +24,8 @@ export function Alerts() {
 
   return (
     <AlertsWrapper
-      scrollY={typeof window !== 'undefined' ? window.scrollY : 0}
-      isSmall={isSmall}
+      $scrollY={typeof window !== 'undefined' ? window.scrollY : 0}
+      $isSmall={isSmall}
     >
       {alerts.map((alert, idx) => {
         if (!alert?.visible) {
@@ -80,7 +80,7 @@ export function AlertToastComponent({ alert, alerts, type }: AlertToastProps) {
       closeText={t('toast-close')}
       onCloseButtonClick={() => handleClick()}
       smallScreen={isSmall}
-      isSmall={isSmall}
+      $isSmall={isSmall}
     >
       {alertsLength > 1 && `(${alertsLength})`}{' '}
       {t('error-occured', { id: alert.status ?? '' })}
