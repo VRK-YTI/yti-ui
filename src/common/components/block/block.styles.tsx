@@ -28,9 +28,11 @@ export const BasicBlockHeader = styled.div`
 
 export const BasicBlockExtraWrapper = styled.div<{
   position?: 'left' | 'right';
+  isWide?: boolean;
 }>`
   margin-top: 10px;
   text-align: ${(props) => props.position ?? 'left'};
+  min-width: ${(props) => (props.isWide ? '800px' : 'unset')};
 `;
 
 export const List = styled.ul`
