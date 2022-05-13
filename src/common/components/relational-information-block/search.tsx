@@ -4,6 +4,7 @@ import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import { Button, SearchInput, SingleSelect, Text } from 'suomifi-ui-components';
 import { SearchBlock } from './relation-information-block.styles';
+import useMountEffect from '@app/common/utils/hooks/use-mount-effect';
 
 interface SearchProps {
   setSearchResults: (value: Concepts[]) => void;
@@ -60,10 +61,6 @@ export default function Search({
     }
   }, [setSearchResults, result]);
 
-  useEffect(() => {
-    handleSearch();
-  }, []);
-
   const handleSearch = () => {
     searchConcept({
       ...(fromOther
@@ -73,6 +70,8 @@ export default function Search({
       status: status?.uniqueItemId,
     });
   };
+
+  useMountEffect(handleSearch);
 
   const handleClearValues = () => {
     setSearchTerm('');
