@@ -26,7 +26,10 @@ export default function NewConcept(props: NewConceptPageProps) {
   return (
     <CommonContextProvider value={props}>
       <Layout>
-        <PageTitle title={t('new-concept-title')} siteTitle="Yhteentoimivuusalusta" />
+        <PageTitle
+          title={t('new-concept-title')}
+          siteTitle="Yhteentoimivuusalusta"
+        />
 
         <NewConceptModule
           terminologyId={terminologyId}
