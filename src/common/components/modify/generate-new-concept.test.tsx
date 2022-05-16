@@ -307,4 +307,119 @@ describe('generate-new-concept', () => {
       value: 'verb'
     }]);
   });
+
+  it('should generate relational information', () => {
+    const received = generateNewConcept({
+      terms: {
+        preferredTerm: [
+          {
+            lang: 'fi',
+            prefLabel: 'suositettava termi fi'
+          },
+        ]
+      },
+      relationalInfo: {
+        broaderConcept: [{
+          id: '111-001'
+        }],
+        hasPartConcept: [{
+          id: '111-004'
+        }],
+        isPartOfConcept: [{
+          id: '111-005'
+        }],
+        matchInOther: [{
+          id: '111-003',
+          terminology: {
+            id: '987-654-321'
+          }
+        }],
+        narrowerConcept: [{
+          id: '111-006'
+        }],
+        relatedConcept: [{
+          id: '111-007'
+        }],
+        relatedConceptInOther: [{
+          id: '111-002',
+          terminology: {
+            id: '987-654-321'
+          }
+        }],
+      }
+    }, '123-456-789');
+
+    expect(received.delete).toStrictEqual([]);
+    expect(received.save).toHaveLength(2);
+    expect(received.save[1].references.broader).toStrictEqual([{
+      id: '111-001',
+      type: {
+        graph: {
+          id: '123-456-789'
+        },
+        id: 'Concept',
+        uri: '',
+      }
+    }]);
+    expect(received.save[1].references.closeMatch).toStrictEqual([{
+      id: '111-002',
+      type: {
+        graph: {
+          id: '987-654-321'
+        },
+        id: 'ConceptLink',
+        uri: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#Resource',
+      }
+    }]);
+    expect(received.save[1].references.exactMatch).toStrictEqual([{
+      id: '111-003',
+      type: {
+        graph: {
+          id: '987-654-321'
+        },
+        id: 'ConceptLink',
+        uri: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#Resource',
+      }
+    }]);
+    expect(received.save[1].references.hasPart).toStrictEqual([{
+      id: '111-004',
+      type: {
+        graph: {
+          id: '123-456-789'
+        },
+        id: 'Concept',
+        uri: '',
+      }
+    }]);
+    expect(received.save[1].references.isPartOf).toStrictEqual([{
+      id: '111-005',
+      type: {
+        graph: {
+          id: '123-456-789'
+        },
+        id: 'Concept',
+        uri: '',
+      }
+    }]);
+    expect(received.save[1].references.narrower).toStrictEqual([{
+      id: '111-006',
+      type: {
+        graph: {
+          id: '123-456-789'
+        },
+        id: 'Concept',
+        uri: '',
+      }
+    }]);
+    expect(received.save[1].references.related).toStrictEqual([{
+      id: '111-007',
+      type: {
+        graph: {
+          id: '123-456-789'
+        },
+        id: 'Concept',
+        uri: '',
+      }
+    }]);
+  });
 });

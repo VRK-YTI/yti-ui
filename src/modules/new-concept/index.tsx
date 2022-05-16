@@ -34,6 +34,10 @@ export default function NewConcept({
     example: [],
     subject: '',
     note: [],
+    diagramAndSource: [],
+    orgInfo: {},
+    otherInfo: {},
+    relationalInfo: {},
   });
 
   return (

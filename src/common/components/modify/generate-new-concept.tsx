@@ -205,15 +205,93 @@ export default function generateNewConcept(conceptInfo: any, terminologyId: stri
         },
         references: {
           altLabelXl: [],
-          broader: [],
-          closeMatch: [],
-          exactMatch: [],
-          hasPart: [],
+          broader: conceptInfo.relationalInfo?.broaderConcept?.map(broader => {
+            return (
+              {
+                id: broader.id,
+                type: {
+                  graph: {
+                    id: terminologyId
+                  },
+                  id: 'Concept',
+                  uri: ''
+                }
+              }
+            );
+          }) ?? [],
+          closeMatch: conceptInfo.relationalInfo?.relatedConceptInOther?.map(related => {
+            return (
+              {
+                id: related.id,
+                type: {
+                  graph: {
+                    id: related.terminology?.id,
+                  },
+                  id: 'ConceptLink',
+                  uri: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#Resource'
+                }
+              }
+            );
+          }) ?? [],
+          exactMatch: conceptInfo.relationalInfo?.matchInOther?.map(match => {
+            return (
+              {
+                id: match.id,
+                type: {
+                  graph: {
+                    id: match.terminology?.id,
+                  },
+                  id: 'ConceptLink',
+                  uri: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#Resource'
+                }
+              }
+            );
+          }) ?? [],
+          hasPart: conceptInfo.relationalInfo?.hasPartConcept?.map(part => {
+            return (
+              {
+                id: part.id,
+                type: {
+                  graph: {
+                    id: terminologyId
+                  },
+                  id: 'Concept',
+                  uri: ''
+                }
+              }
+            );
+          }) ?? [],
           hiddenTerm: [],
-          isPartOf: [],
-          narrower: [],
+          isPartOf: conceptInfo.relationalInfo?.isPartOfConcept?.map(part => {
+            return (
+              {
+                id: part.id,
+                type: {
+                  graph: {
+                    id: terminologyId
+                  },
+                  id: 'Concept',
+                  uri: ''
+                }
+              }
+            );
+          }) ?? [],
+          narrower: conceptInfo.relationalInfo?.narrowerConcept?.map(concept => {
+            return (
+              {
+                id: concept.id,
+                type: {
+                  graph: {
+                    id: terminologyId
+                  },
+                  id: 'Concept',
+                  uri: ''
+                }
+              }
+            );
+          }) ?? [],
           notRecommendedSynonym: [],
-          prefLabelXl: preferredTermIds.map(id => {
+          prefLabelXl: preferredTermIds?.map(id => {
             return (
               {
                 id: id,
@@ -226,8 +304,21 @@ export default function generateNewConcept(conceptInfo: any, terminologyId: stri
                 }
               }
             );
-          }),
-          related: [],
+          }) ?? [],
+          related: conceptInfo.relationalInfo?.relatedConcept?.map(concept => {
+            return (
+              {
+                id: concept.id,
+                type: {
+                  graph: {
+                    id: terminologyId
+                  },
+                  id: 'Concept',
+                  uri: ''
+                }
+              }
+            );
+          }) ?? [],
           relatedMatch: [],
           searchTerm: []
         },

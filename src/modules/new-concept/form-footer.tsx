@@ -25,11 +25,11 @@ export default function FormFooter({ conceptInfo, terminologyId }: any) {
 
     console.log(conceptInfo);
 
-    const postData = generateNewConcept(conceptInfo, terminologyId);
+    // const postData = generateNewConcept(conceptInfo, terminologyId);
 
-    if (postData) {
-      postConcept(postData);
-    }
+    // if (postData) {
+    //   postConcept(postData);
+    // }
   };
 
   return (
