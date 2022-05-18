@@ -14,13 +14,13 @@ export const ButtonsDiv = styled.div`
   gap: ${(props) => props.theme.suomifi.spacing.xxs};
 `;
 
-export const UserInfoWrapper = styled.div<{ breakpoint: Breakpoint }>`
+export const UserInfoWrapper = styled.div<{ $breakpoint: Breakpoint }>`
   display: flex;
-  flex-direction: ${(props) => small(props.breakpoint, 'row', 'column')};
+  flex-direction: ${(props) => small(props.$breakpoint, 'row', 'column')};
   justify-content: space-between;
   row-gap: ${(props) => props.theme.suomifi.spacing.insetXxs};
-  height: ${(props) => small(props.breakpoint, '44px', 'auto')};
-  align-items: ${(props) => small(props.breakpoint, 'baseline', 'normal')};
+  height: ${(props) => small(props.$breakpoint, '44px', 'auto')};
+  align-items: ${(props) => small(props.$breakpoint, 'baseline', 'normal')};
 
   span {
     font-size: ${(props) => props.theme.suomifi.typography.bodyTextSmall};
@@ -34,16 +34,16 @@ export const UserInfoWrapper = styled.div<{ breakpoint: Breakpoint }>`
     line-height: 15px;
     font-weight: 600;
     text-transform: uppercase;
-    padding-block: ${(props) => small(props.breakpoint, '14px', '0')};
+    padding-block: ${(props) => small(props.$breakpoint, '14px', '0')};
   }
 `;
 
-export const LoginButtonsWrapper = styled.div<{ breakpoint: Breakpoint }>`
+export const LoginButtonsWrapper = styled.div<{ $breakpoint: Breakpoint }>`
   display: flex;
-  flex-direction: ${(props) => small(props.breakpoint, 'column', 'row')};
+  flex-direction: ${(props) => small(props.$breakpoint, 'column', 'row')};
   gap: ${(props) => props.theme.suomifi.spacing.xxs};
 
-  padding: ${(props) => small(props.breakpoint, '15px', '0')};
-  border-bottom: ${(props) => small(props.breakpoint, '1px', '0')} solid
+  padding: ${(props) => small(props.$breakpoint, '15px', '0')};
+  border-bottom: ${(props) => small(props.$breakpoint, '1px', '0')} solid
     ${(props) => props.theme.suomifi.colors.depthSecondary};
 `;

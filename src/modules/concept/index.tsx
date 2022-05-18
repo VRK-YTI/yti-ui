@@ -99,7 +99,7 @@ export default function Concept({
         )}
       </Breadcrumb>
 
-      <PageContent breakpoint={breakpoint}>
+      <PageContent $breakpoint={breakpoint}>
         <MainContent id="main">
           <SubTitle>
             <PropertyValue
@@ -117,7 +117,7 @@ export default function Concept({
               property={terminology?.properties.prefLabel}
               fallbackLanguage="fi"
             />
-            <Badge isValid={status === 'VALID'}>
+            <Badge $isValid={status === 'VALID'}>
               {t(status, { ns: 'common' })}
             </Badge>
           </BadgeBar>

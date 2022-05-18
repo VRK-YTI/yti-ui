@@ -36,7 +36,7 @@ export default function Footer({ feedbackSubject }: FooterProps) {
         </Paragraph>
       </FooterContentWrapper>
 
-      <FooterLinkWrapper breakpoint={breakpoint}>
+      <FooterLinkWrapper $breakpoint={breakpoint}>
         <ExternalLink
           href={`mailto:yhteentoimivuus@dvv.fi?subject=${subject}`}
           labelNewWindow={`${t('site-open-new-email')} yhteentoimivuus@dvv.fi`}

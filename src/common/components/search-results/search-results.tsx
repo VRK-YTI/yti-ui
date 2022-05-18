@@ -77,7 +77,7 @@ export default function SearchResults({
             renderQBeforeStatus
             count={data?.totalHitCount}
           />
-          <CardWrapper isSmall={isSmall}>
+          <CardWrapper $isSmall={isSmall}>
             {data?.terminologies?.map((terminology) => {
               return (
                 <Card key={terminology.id}>
@@ -163,7 +163,7 @@ export default function SearchResults({
               domains={domains}
               count={data?.totalHitCount}
             />
-            <CardWrapper isSmall={isSmall}>
+            <CardWrapper $isSmall={isSmall}>
               {data?.concepts.map((concept) => {
                 return (
                   <Card key={concept.id}>
@@ -250,7 +250,7 @@ export default function SearchResults({
           })}
           count={data.length}
         />
-        <CardWrapper isSmall={isSmall}>
+        <CardWrapper $isSmall={isSmall}>
           {data.map((collection, idx: number) => {
             const minId = Math.max(0, (urlState.page - 1) * 10);
             const maxId = minId + 10;

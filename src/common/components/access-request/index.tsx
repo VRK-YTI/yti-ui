@@ -141,7 +141,7 @@ export default function AccessRequest({ organizations }: AccessRequestProps) {
 
           <ModalContentBlock>
             <AccessRequstDropdown
-              error={error?.['dropdown']}
+              $error={error?.['dropdown']}
               labelText={t('access-organization')}
               visualPlaceholder={t('access-pick-org')}
               value={chosenOrganization}

@@ -17,7 +17,7 @@ export default function BasicBlock({
   largeWidth,
 }: BasicBlockProps) {
   return (
-    <BasicBlockWrapper largeGap={largeGap} largeWidth={largeWidth}>
+    <BasicBlockWrapper $largeGap={largeGap} $largeWidth={largeWidth}>
       {title && <BasicBlockHeader>{title}</BasicBlockHeader>}
       {children}
       {extra}

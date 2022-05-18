@@ -29,7 +29,7 @@ export default function ConceptTermsBlock({
           </MediumHeading>
         }
         extra={
-          <BasicBlockExtraWrapper isWide>
+          <BasicBlockExtraWrapper $isWide>
             <ExpanderGroup openAllText="" closeAllText="">
               {languages.map((lang) => (
                 <TermExpander key={lang} languages={languages} lang={lang}>

@@ -21,7 +21,7 @@ export default function Footer() {
         </Paragraph>
       </FooterContentWrapper>
 
-      <FooterLinkWrapper breakpoint={breakpoint}>
+      <FooterLinkWrapper $breakpoint={breakpoint}>
         <ExternalLink href="/" labelNewWindow={t('site-open-link-new-window')}>
           {t('terminology-footer-feedback')}
         </ExternalLink>

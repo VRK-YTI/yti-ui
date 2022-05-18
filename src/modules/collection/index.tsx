@@ -109,7 +109,7 @@ export default function Collection({
         )}
       </Breadcrumb>
 
-      <PageContent breakpoint={breakpoint}>
+      <PageContent $breakpoint={breakpoint}>
         <MainContent id="main">
           <SubTitle>
             <PropertyValue

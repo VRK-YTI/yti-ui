@@ -32,8 +32,8 @@ export default function ErrorLayout({
       <SiteContainer>
         <Block variant="header">
           <HeaderContainer>
-            <MarginContainer breakpoint={breakpoint}>
-              <HeaderWrapper breakpoint={breakpoint}>
+            <MarginContainer $breakpoint={breakpoint}>
+              <HeaderWrapper $breakpoint={breakpoint}>
                 <Logo />
               </HeaderWrapper>
             </MarginContainer>
@@ -41,7 +41,7 @@ export default function ErrorLayout({
         </Block>
 
         <ContentContainer>
-          <MarginContainer breakpoint={breakpoint}>
+          <MarginContainer $breakpoint={breakpoint}>
             <Block variant="main" id="main">
               {children}
             </Block>

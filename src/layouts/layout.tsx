@@ -43,11 +43,11 @@ export default function Layout({
 
         <ContentContainer>
           <Alerts />
-          <MarginContainer breakpoint={breakpoint}>{children}</MarginContainer>
+          <MarginContainer $breakpoint={breakpoint}>{children}</MarginContainer>
         </ContentContainer>
 
         <FooterContainer>
-          <MarginContainer breakpoint={breakpoint}>
+          <MarginContainer $breakpoint={breakpoint}>
             <Footer feedbackSubject={feedbackSubject} />
           </MarginContainer>
         </FooterContainer>

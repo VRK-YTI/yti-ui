@@ -12,11 +12,11 @@ export const FooterContentWrapper = styled.div`
   }
 `;
 
-export const FooterLinkWrapper = styled.div<{ breakpoint: Breakpoint }>`
+export const FooterLinkWrapper = styled.div<{ $breakpoint: Breakpoint }>`
   display: flex;
   padding-top: ${(props) => props.theme.suomifi.spacing.xs};
   column-gap: ${(props) => props.theme.suomifi.spacing.xxl};
   justify-content: flex-start;
   flex-wrap: wrap;
-  flex-direction: ${(props) => small(props.breakpoint, 'column', 'row')};
+  flex-direction: ${(props) => small(props.$breakpoint, 'column', 'row')};
 `;

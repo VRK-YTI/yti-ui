@@ -20,12 +20,12 @@ export const BadgeBarWrapper = styled.div`
   color: ${(props) => props.theme.suomifi.colors.depthDark1};
 `;
 
-export const Badge = styled.span<{ isValid?: boolean }>`
+export const Badge = styled.span<{ $isValid?: boolean }>`
   line-height: 18px;
   border-radius: 10px;
   padding: 0 5px;
   background-color: ${(props) =>
-    props.isValid
+    props.$isValid
       ? props.theme.suomifi.colors.successBase
       : props.theme.suomifi.colors.depthDark2};
   color: white;

@@ -34,8 +34,8 @@ export const SmallSearchButton = styled(Button)`
   flex-shrink: 0;
 `;
 
-export const SiteLogo = styled.div<{ breakpoint: Breakpoint }>`
-  flex-grow: ${(props) => small(props.breakpoint, '1', '0')};
+export const SiteLogo = styled.div<{ $breakpoint: Breakpoint }>`
+  flex-grow: ${(props) => small(props.$breakpoint, '1', '0')};
   line-height: 0;
 
   a {

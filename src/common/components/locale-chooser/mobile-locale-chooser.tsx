@@ -12,7 +12,7 @@ export default function MobileLocaleChooser() {
   return (
     <MobileMenuLanguageSection>
       {locales.map(({ locale, label, isCurrent, use }) => (
-        <MobileMenuLanguageItem key={locale} active={isCurrent}>
+        <MobileMenuLanguageItem key={locale} $active={isCurrent}>
           {isCurrent ? (
             <Text>{label}</Text>
           ) : (

@@ -50,7 +50,7 @@ export default function NewConcept({ terminologyId }: NewConceptProps) {
         )}
       </Breadcrumb>
 
-      <NewConceptBlock>
+      <NewConceptBlock variant="main" id="main">
         <SubTitle>
           <PropertyValue
             property={getProperty(

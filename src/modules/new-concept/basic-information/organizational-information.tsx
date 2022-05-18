@@ -45,7 +45,7 @@ export default function OrganizationalInformation({
           optionalText={t('optional')}
           hintText={t('change-history-hint')}
           visualPlaceholder={t('change-history-placeholder')}
-          smmargintop={'true'}
+          $smMarginTop={'true'}
           onBlur={() => handleChange()}
           onChange={(e) => setChangeHistory(e.target.value)}
           value={changeHistory}
@@ -56,7 +56,7 @@ export default function OrganizationalInformation({
           optionalText={t('optional')}
           hintText={t('etymology-hint')}
           visualPlaceholder={t('etymology-placeholder')}
-          smmargintop={'true'}
+          $smMarginTop={'true'}
           onBlur={() => handleChange()}
           onChange={(e) => setEtymology(e.target.value)}
           value={etymology}

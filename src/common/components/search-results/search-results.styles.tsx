@@ -84,18 +84,18 @@ export const CardTitleLink = styled(Link)`
   gap: ${(props) => props.theme.suomifi.spacing.xs};
 `;
 
-export const CardWrapper = styled.ul<{ isSmall: boolean }>`
+export const CardWrapper = styled.ul<{ $isSmall: boolean }>`
   border-top: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
   border-right: ${(props) =>
-    props.isSmall
+    props.$isSmall
       ? 'none'
       : `1px solid ${props.theme.suomifi.colors.depthLight1}`};
   border-left: ${(props) =>
-    props.isSmall
+    props.$isSmall
       ? 'none'
       : `1px solid ${props.theme.suomifi.colors.depthLight1}`};
-  margin-left: -${(props) => (props.isSmall ? props.theme.suomifi.spacing.s : '0')};
-  margin-right: -${(props) => (props.isSmall ? props.theme.suomifi.spacing.s : '0')};
+  margin-left: -${(props) => (props.$isSmall ? props.theme.suomifi.spacing.s : '0')};
+  margin-right: -${(props) => (props.$isSmall ? props.theme.suomifi.spacing.s : '0')};
   padding: 0;
   margin-top: 0;
 `;

@@ -32,7 +32,7 @@ export default function NotificationToast({ alert }: NotificationToastProps) {
   }, [dispatch, previousAlerts]);
 
   return (
-    <Toast role="alert" isSmall={isSmall}>
+    <Toast role="alert" $isSmall={isSmall}>
       <ToastIcon icon="checkCircle" />
       {t(alert.error.data)}
     </Toast>

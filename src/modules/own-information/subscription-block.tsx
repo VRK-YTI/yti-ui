@@ -60,7 +60,7 @@ export default function SubscriptionBlock({
       title={<h2>{t('field-subscriptions')}</h2>}
       extra={
         subscriptions.resources.length > 0 && (
-          <BasicBlockExtraWrapper position="right">
+          <BasicBlockExtraWrapper $position="right">
             <RemoveSubscription
               resources={subscriptions?.resources}
               toggleSubscription={toggleSubscription}

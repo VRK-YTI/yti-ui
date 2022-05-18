@@ -12,7 +12,7 @@ export const MobileMenuLanguageSection = styled.ul`
   background-color: ${(props) => props.theme.suomifi.colors.depthSecondary};
 `;
 
-export const MobileMenuLanguageItem = styled.li<{ active?: boolean }>`
+export const MobileMenuLanguageItem = styled.li<{ $active?: boolean }>`
   padding: 7.5px 15px;
 
   * {
@@ -20,6 +20,6 @@ export const MobileMenuLanguageItem = styled.li<{ active?: boolean }>`
     font-size: ${(props) =>
       props.theme.suomifi.values.typography.bodyTextSmall.fontSize.value}px;
     line-height: 24px;
-    font-weight: ${(props) => (props.active ? '600' : '400')};
+    font-weight: ${(props) => (props.$active ? '600' : '400')};
   }
 `;

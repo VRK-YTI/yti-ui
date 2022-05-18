@@ -1,13 +1,13 @@
 import styled from 'styled-components';
 
 export const BasicBlockWrapper = styled.div<{
-  largeGap?: boolean;
-  largeWidth?: boolean;
+  $largeGap?: boolean;
+  $largeWidth?: boolean;
 }>`
   display: flex;
   flex-direction: column;
-  gap: ${(props) => (props.largeGap ? '10px' : '5px')};
-  max-width: ${(props) => (props.largeWidth ? '800px' : '695px')};
+  gap: ${(props) => (props.$largeGap ? '10px' : '5px')};
+  max-width: ${(props) => (props.$largeWidth ? '800px' : '695px')};
   font-size: 16px;
   line-height: 24px;
 
@@ -27,12 +27,12 @@ export const BasicBlockHeader = styled.div`
 `;
 
 export const BasicBlockExtraWrapper = styled.div<{
-  position?: 'left' | 'right';
-  isWide?: boolean;
+  $position?: 'left' | 'right';
+  $isWide?: boolean;
 }>`
   margin-top: 10px;
-  text-align: ${(props) => props.position ?? 'left'};
-  min-width: ${(props) => (props.isWide ? '800px' : 'unset')};
+  text-align: ${(props) => props.$position ?? 'left'};
+  min-width: ${(props) => (props.$isWide ? '800px' : 'unset')};
 `;
 
 export const List = styled.ul`
