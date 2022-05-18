@@ -25,15 +25,23 @@ ENV NEXT_TELEMETRY_DISABLED 1
 ARG REWRITE_PROFILE=none
 ENV REWRITE_PROFILE $REWRITE_PROFILE
 ARG SKIP_TESTS
+ARG SKIP_COVERAGE
 ARG VERSION
 
 WORKDIR /app
 COPY . .
 COPY --from=deps /app/node_modules ./node_modules
-RUN if [ -z "$SKIP_TESTS" ] ; then \
-    npm run test:ci; \
-  else \
+
+RUN if [ "$SKIP_TESTS" ]; then \
     echo "Skipping tests"; \
+    mkdir -p coverage; \
+  elif [ "$SKIP_COVERAGE" ]; then \
+    echo "Running tests without coverage"; \
+    npm run test:ci:no-coverage; \
+    mkdir -p coverage; \
+  else \
+    echo "Running tests with coverage"; \
+    npm run test:ci; \
   fi
 
 # Create version.txt

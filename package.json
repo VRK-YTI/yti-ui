@@ -11,7 +11,8 @@
     "format": "prettier --write .",
     "test": "TZ=UTC jest",
     "test:watch": "TZ=UTC jest --watch",
-    "test:ci": "TZ=UTC jest --ci --runInBand --coverage"
+    "test:ci": "TZ=UTC jest --ci --runInBand --coverage",
+    "test:ci:no-coverage": "TZ=UTC jest --ci --runInBand"
   },
   "dependencies": {
     "@fontsource/source-sans-pro": "^4.5.1",
