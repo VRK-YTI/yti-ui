@@ -36,7 +36,7 @@ export default function HasPermission({
 }: hasPermissionProps) {
   const user = useSelector(selectLogin());
 
-  if (process.env.NEXT_PUBLIC_ADMIN_CONTROLS_ENABLED === 'false') {
+  if (process.env.NEXT_PUBLIC_ADMIN_CONTROLS_ENABLED !== 'true') {
     return false;
   }
 
