@@ -71,7 +71,7 @@ export const vocabularyApi = createApi({
       { templateGraphID: string; prefix: string; newTerminology: object }
     >({
       query: ({ templateGraphID, prefix, newTerminology }) => ({
-        url: `/vocabulary?templateGraphId=${templateGraphID}&prefix=${prefix}`,
+        url: `/validatedVocabulary?templateGraphId=${templateGraphID}&prefix=${prefix}`,
         method: 'POST',
         data: newTerminology,
       }),
