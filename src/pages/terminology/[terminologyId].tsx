@@ -48,7 +48,7 @@ export default function TerminologyPage(props: TerminologyPageProps) {
 }
 
 export const getServerSideProps = createCommonGetServerSideProps(
-  async ({ req, store, query, params }: LocalHandlerParams) => {
+  async ({ req, store, query, params, locale }: LocalHandlerParams) => {
     const id = Array.isArray(params.terminologyId)
       ? params.terminologyId[0]
       : params.terminologyId;
@@ -75,7 +75,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
 
     await store.dispatch(getVocabulary.initiate(id));
     await store.dispatch(getCollections.initiate(id));
-    await store.dispatch(getConceptResult.initiate({ urlState: urlState, id }));
+    await store.dispatch(getConceptResult.initiate({ urlState: urlState, id, language: locale }));
 
     await Promise.all(getRunningOperationPromises());
 

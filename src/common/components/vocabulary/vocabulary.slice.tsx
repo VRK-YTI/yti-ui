@@ -40,7 +40,7 @@ export const vocabularyApi = createApi({
     }),
     getConceptResult: builder.query<
       VocabularyConcepts,
-      { urlState: UrlState; id: string }
+      { urlState: UrlState; id: string; language: string }
     >({
       query: (value) => ({
         url: '/searchConcept',
@@ -51,7 +51,7 @@ export const vocabularyApi = createApi({
           pageSize: 10,
           query: value.urlState.q,
           sortDirection: 'ASC',
-          sortLanguage: 'fi',
+          sortLanguage: value.language,
           status: value.urlState.status.map((s) => s.toUpperCase()),
           terminologyId: [value.id],
         },
