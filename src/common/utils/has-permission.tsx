@@ -36,6 +36,10 @@ export default function HasPermission({
 }: hasPermissionProps) {
   const user = useSelector(selectLogin());
 
+  if (process.env.NEXT_PUBLIC_ADMIN_CONTROLS_ENABLED === 'false') {
+    return false;
+  }
+
   if (!user || user.anonymous) {
     return false;
   }
@@ -52,6 +56,11 @@ export function checkPermission({
   const rolesInOrganizations = Object.keys(user.rolesInOrganizations);
   const rolesInTargetOrganization =
     targetOrganization && user.rolesInOrganizations[targetOrganization];
+
+  // Return true if user is superuser
+  if (user.superuser) {
+    return true;
+  }
 
   // Return false if user doesn't have a role in target organization
   if (
