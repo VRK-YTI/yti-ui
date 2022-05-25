@@ -22,6 +22,7 @@ import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info'
 import MissingInfoAlert from './missing-info-alert';
 import { ModalTitleAsH1 } from './new-terminology.styles';
 import HasPermission from '@app/common/utils/has-permission';
+import { usePostImportExcelMutation } from '@app/common/components/excel/excel.slice';
 
 export default function NewTerminology() {
   const dispatch = useStoreDispatch();
@@ -32,8 +33,10 @@ export default function NewTerminology() {
   const [inputType, setInputType] = useState('');
   const [startFileUpload, setStartFileUpload] = useState(false);
   const [manualData, setManualData] = useState<NewTerminologyInfo>();
+  const [fileData, setFileData] = useState();
   const [userPosted, setUserPosted] = useState(false);
   const [postNewVocabulary, newVocabulary] = usePostNewVocabularyMutation();
+  const [postImportExcel] = usePostImportExcelMutation();
 
   useEffect(() => {
     if (newVocabulary.isSuccess) {
@@ -54,23 +57,31 @@ export default function NewTerminology() {
     setStartFileUpload(false);
   };
 
-  const handlePost = (manualData?: NewTerminologyInfo) => {
-    setUserPosted(true);
-    if (!isValid || !manualData) {
-      console.error('Data not valid');
-      return;
+  const handlePost = () => {
+    if (inputType === 'self') {
+      setUserPosted(true);
+      if (!isValid || !manualData) {
+        console.error('Data not valid');
+        return;
+      }
+
+      const newTerminology = generateNewTerminology({ data: manualData });
+
+      if (!newTerminology) {
+        console.error('Main organization missing');
+        return;
+      }
+
+      const templateGraphID = newTerminology.type.graph.id;
+      const prefix = manualData.prefix[0];
+      postNewVocabulary({ templateGraphID, prefix, newTerminology });
     }
 
-    const newTerminology = generateNewTerminology({ data: manualData });
-
-    if (!newTerminology) {
-      console.error('Main organization missing');
-      return;
+    if (inputType === 'file' && fileData) {
+      const formData = new FormData();
+      formData.append('file', fileData);
+      postImportExcel(formData);
     }
-
-    const templateGraphID = newTerminology.type.graph.id;
-    const prefix = manualData.prefix[0];
-    postNewVocabulary({ templateGraphID, prefix, newTerminology });
   };
 
   return (
@@ -102,7 +113,7 @@ export default function NewTerminology() {
 
         <ModalFooter>
           {userPosted && manualData && <MissingInfoAlert data={manualData} />}
-          <Button onClick={() => handlePost(manualData)} disabled={!inputType}>
+          <Button onClick={() => handlePost()} disabled={!inputType}>
             {t('add-terminology')}
           </Button>
           <Button variant="secondary" onClick={() => handleClose()}>
@@ -136,7 +147,7 @@ export default function NewTerminology() {
             userPosted={userPosted}
           />
         )}
-        {inputType === 'file' && <InfoFile setIsValid={setIsValid} />}
+        {inputType === 'file' && <InfoFile setIsValid={setIsValid} setFileData={setFileData} />}
       </>
     );
   }

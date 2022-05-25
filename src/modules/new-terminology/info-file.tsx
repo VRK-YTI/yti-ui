@@ -12,20 +12,22 @@ import {
 
 interface infoFileProps {
   setIsValid: (valid: boolean) => void;
+  setFileData: (data: any) => void;
 }
 
-export default function InfoFile({ setIsValid }: infoFileProps) {
+export default function InfoFile({ setIsValid, setFileData }: infoFileProps) {
   const { t } = useTranslation('admin');
-  const input = useRef(null);
+  const input = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
 
   useEffect(() => {
     if (file) {
+      setFileData(file);
       setIsValid(true);
     } else {
       setIsValid(false);
     }
-  }, [file, setIsValid]);
+  }, [file, setIsValid, setFileData]);
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -92,7 +94,7 @@ export default function InfoFile({ setIsValid }: infoFileProps) {
               icon="plus"
               variant="secondary"
               onClick={() => {
-                // input.current.click();
+                input.current && input.current.click();
               }}
             >
               {t('add-file')}
