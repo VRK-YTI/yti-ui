@@ -12,6 +12,7 @@ import { Redirect } from 'next/dist/lib/load-custom-routes';
 import { SSRConfig } from 'next-i18next';
 import { setLogin } from '@app/common/components/login/login.slice';
 import { CommonContextState } from '../components/common-context-provider';
+import { setAdminControls } from '../components/admin-controls/admin-controls.slice';
 
 export interface LocalHandlerParams {
   req: NextIronRequest;
@@ -66,6 +67,11 @@ export function createCommonGetServerSideProps<
         store.dispatch(
           setLogin(req.session.get<User>('user') || anonymousUser)
         );
+
+        store.dispatch(
+          setAdminControls(process.env.ADMIN_CONTROLS_DISABLED === 'true')
+        );
+
         const userAgent = req.headers['user-agent'] ?? '';
 
         return {

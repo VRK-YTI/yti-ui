@@ -1,4 +1,5 @@
 import { useSelector } from 'react-redux';
+import { selectAdminControls } from '../components/admin-controls/admin-controls.slice';
 import { selectLogin } from '../components/login/login.slice';
 import { User } from '../interfaces/user.interface';
 
@@ -35,8 +36,9 @@ export default function HasPermission({
   targetOrganization,
 }: hasPermissionProps) {
   const user = useSelector(selectLogin());
+  const isAdminControlsDisabled = useSelector(selectAdminControls());
 
-  if (process.env.NEXT_PUBLIC_ADMIN_CONTROLS_ENABLED !== 'true') {
+  if (isAdminControlsDisabled) {
     return false;
   }
 
