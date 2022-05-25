@@ -32,11 +32,17 @@ export const adminControlsSlice = createSlice({
 });
 
 export function setAdminControls(value: boolean): AppThunk {
-  return (dispatch) => dispatch(adminControlsSlice.actions.setAdminControls({ isAdminControlsDisabled: value }));
+  return (dispatch) =>
+    dispatch(
+      adminControlsSlice.actions.setAdminControls({
+        isAdminControlsDisabled: value,
+      })
+    );
 }
 
 export function selectAdminControls() {
-  return (state: AppState): boolean => state.adminControls.isAdminControlsDisabled;
+  return (state: AppState): boolean =>
+    state.adminControls.isAdminControlsDisabled;
 }
 
 export default adminControlsSlice.reducer;
