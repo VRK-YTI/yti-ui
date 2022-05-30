@@ -66,6 +66,13 @@ export default function NewTerminology() {
     dispatch(terminologySearchApi.util.invalidateTags(['TerminologySearch']));
   };
 
+  const handleSetInputType = (type: string) => {
+    setInputType(type);
+    setUserPosted(false);
+    setIsValid(false);
+    setStartFileUpload(false);
+  };
+
   const handlePost = () => {
     if (inputType === 'self') {
       setUserPosted(true);
@@ -112,18 +119,29 @@ export default function NewTerminology() {
         variant={isSmall ? 'smallScreen' : 'default'}
         onEscKeyDown={() => handleClose()}
       >
-        <ModalContent style={(inputType === 'file' && userPosted) ? {paddingBottom: '18px'} : {}}>
+        <ModalContent
+          style={
+            inputType === 'file' && userPosted ? { paddingBottom: '18px' } : {}
+          }
+        >
           <ModalTitleAsH1 as={'h1'}>
             {!startFileUpload
               ? t('add-new-terminology')
               : t('downloading-file')}
           </ModalTitleAsH1>
 
-          {!startFileUpload ? renderInfoInput() : <FileUpload importResponse={importExcel} handleClose={handleCloseRequest} />}
+          {!startFileUpload ? (
+            renderInfoInput()
+          ) : (
+            <FileUpload
+              importResponse={importExcel}
+              handlePost={handlePost}
+              handleClose={handleCloseRequest}
+            />
+          )}
         </ModalContent>
 
-        {!(inputType === 'file' && userPosted)
-          &&
+        {!(inputType === 'file' && userPosted) && (
           <ModalFooter>
             {userPosted && manualData && <MissingInfoAlert data={manualData} />}
             <Button onClick={() => handlePost()} disabled={!inputType}>
@@ -133,7 +151,7 @@ export default function NewTerminology() {
               {t('cancel')}
             </Button>
           </ModalFooter>
-        }
+        )}
       </Modal>
     </>
   );
@@ -148,7 +166,7 @@ export default function NewTerminology() {
         <RadioButtonGroup
           labelText={t('which-input')}
           name="input-type"
-          onChange={(e) => setInputType(e)}
+          onChange={(e) => handleSetInputType(e)}
         >
           <RadioButton value="self">{t('by-hand')}</RadioButton>
           <RadioButton value="file">{t('by-file')}</RadioButton>
@@ -161,7 +179,9 @@ export default function NewTerminology() {
             userPosted={userPosted}
           />
         )}
-        {inputType === 'file' && <InfoFile setIsValid={setIsValid} setFileData={setFileData} />}
+        {inputType === 'file' && (
+          <InfoFile setIsValid={setIsValid} setFileData={setFileData} />
+        )}
       </>
     );
   }

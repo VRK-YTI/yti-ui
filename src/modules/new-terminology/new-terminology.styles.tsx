@@ -8,6 +8,11 @@ import {
 } from 'suomifi-ui-components';
 import Separator from '@app/common/components/separator';
 
+export const ButtonBlock = styled(Block)`
+  display: flex;
+  gap: 20px;
+`;
+
 export const ErrorIndicator = styled(Icon)`
   height: 24px;
   width: 24px;
@@ -87,13 +92,15 @@ export const FileUploadWrapper = styled(Block)`
 
 export const DownloadIndicator = styled.div`
   ::after {
-    content: " ";
+    content: ' ';
     display: block;
     width: 40px;
     height: 40px;
     border-radius: 50%;
     border: 3px solid black;
-    border-color: ${(props) => props.theme.suomifi.colors.brandBase} ${(props) => props.theme.suomifi.colors.brandBase} ${(props) => props.theme.suomifi.colors.brandBase} transparent;
+    border-color: ${(props) => props.theme.suomifi.colors.brandBase}
+      ${(props) => props.theme.suomifi.colors.brandBase}
+      ${(props) => props.theme.suomifi.colors.brandBase} transparent;
     animation: ${rotate} 1.2s linear infinite;
   }
 `;

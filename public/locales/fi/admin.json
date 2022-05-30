@@ -212,5 +212,11 @@
   "term-change-note-placeholder": "Kirjoita verkkosivun tarkka osoite",
   "term-history-note-label": "Käytön historiatieto \"etymologia\"",
   "term-history-note-hint-text": "Termin aiempi käyttö tai merkitys",
-  "term-history-note-placeholer": "Kirjoita termin käytön historia"
+  "term-history-note-placeholer": "Kirjoita termin käytön historia",
+  "file-upload-failed": "Tiedoston lataus ei onnistunut. Kokeile uudelleen.",
+  "close": "Sulje",
+  "try-again": "Yritä uudelleen",
+  "download-failed": "Lataus epäonnistui",
+  "ready": "Valmis",
+  "loading": "Ladataan..."
 }

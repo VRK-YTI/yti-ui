@@ -1,7 +1,9 @@
 import { useGetImportStatusMutation } from '@app/common/components/excel/excel.slice';
+import { useTranslation } from 'next-i18next';
 import { useEffect } from 'react';
-import { Button, Text } from 'suomifi-ui-components';
+import { Button, InlineAlert, Text } from 'suomifi-ui-components';
 import {
+  ButtonBlock,
   DownloadIndicator,
   FileUploadWrapper,
   SuccessIndicator,
@@ -9,15 +11,24 @@ import {
 
 interface FileUploadProps {
   importResponse: any;
+  handlePost: () => void;
   handleClose: () => void;
 }
 
-export default function FileUpload({ importResponse, handleClose }: FileUploadProps) {
+export default function FileUpload({
+  importResponse,
+  handlePost,
+  handleClose,
+}: FileUploadProps) {
+  const { t } = useTranslation('admin');
   const [fetchImportStatus, importStatus] = useGetImportStatusMutation();
-  console.log('importResponse', importResponse);
 
   useEffect(() => {
-    if (importResponse.data?.message === 'SUCCESS' && (!importStatus.isLoading && importStatus.data?.status !== 'SUCCESS')) {
+    if (
+      importResponse.data?.message === 'SUCCESS' &&
+      !importStatus.isLoading &&
+      importStatus.data?.status !== 'SUCCESS'
+    ) {
       const timerId = setTimeout(() => {
         fetchImportStatus(importResponse.data.jobToken);
       }, 1000);
@@ -25,34 +36,51 @@ export default function FileUpload({ importResponse, handleClose }: FileUploadPr
     }
   }, [importResponse, fetchImportStatus, importStatus]);
 
-  console.log('importStatus', importStatus);
   return (
     <>
-      <FileUploadWrapper>
-        {importStatus.data?.status === 'SUCCESS'
-          ?
-          <>
-            <SuccessIndicator icon='check' color='white' />
-            <Text variant='bold'>
-              Valmis
-            </Text>
-
-          </>
-          :
-          <>
-            <DownloadIndicator />
-            <Text variant='bold'>
-              Ladataan...
-            </Text>
-          </>
-        }
-      </FileUploadWrapper>
-        <Button
-          disabled={importStatus.data?.status === 'SUCCESS' ? false : true}
-          onClick={() => handleClose()}
-        >
-          Sulje
-        </Button>
+      {importResponse.status === 'rejected' ? (
+        <>
+          <InlineAlert status="error" style={{ marginBottom: '25px' }}>
+            {t('download-failed')}
+          </InlineAlert>
+          <ButtonBlock>
+            <Button
+              onClick={() => handlePost()}
+            >
+              {t('try-again')}
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => handleClose()}
+            >
+              {t('close')}
+            </Button>
+          </ButtonBlock>
+        </>
+      ) : (
+        <>
+          <FileUploadWrapper>
+            {importStatus.data?.status === 'SUCCESS'
+              ?
+              <>
+                <SuccessIndicator icon="check" color="white" />
+                <Text variant="bold">{t('ready')}</Text>
+              </>
+              :
+              <>
+                <DownloadIndicator />
+                <Text variant="bold">{t('loading')}</Text>
+              </>
+            }
+          </FileUploadWrapper>
+          <Button
+            disabled={importStatus.data?.status === 'SUCCESS' ? false : true}
+            onClick={() => handleClose()}
+          >
+            {t('close')}
+          </Button>
+        </>
+      )}
     </>
   );
 }

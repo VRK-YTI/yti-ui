@@ -32,6 +32,11 @@ export default function InfoFile({ setIsValid, setFileData }: infoFileProps) {
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
+
+    if (file) {
+      return;
+    }
+
     setShowAlert(true);
 
     if (!e.dataTransfer.items) {
@@ -55,6 +60,11 @@ export default function InfoFile({ setIsValid, setFileData }: infoFileProps) {
 
   const handleUpload = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
+
+    if (file) {
+      return;
+    }
+
     const selectedItems = e.target.files;
     setShowAlert(true);
 
@@ -116,7 +126,9 @@ export default function InfoFile({ setIsValid, setFileData }: infoFileProps) {
                   </Text>
                 </Paragraph>
                 <Paragraph>
-                  <Text color={'depthDark1'}>{(file.size / 1000).toFixed(1)} KB</Text>
+                  <Text color={'depthDark1'}>
+                    {(file.size / 1000).toFixed(1)} KB
+                  </Text>
                 </Paragraph>
                 <Paragraph>
                   <Text variant={'bold'}>{t('file-added')}</Text>
@@ -133,11 +145,11 @@ export default function InfoFile({ setIsValid, setFileData }: infoFileProps) {
           </FileInfoBlock>
         )}
       </FileBlock>
-      {showAlert &&
-        <InlineAlert status='error'>
-          Tiedoston lataus ei onnistunut. Kokeile uudelleen.
+      {showAlert && (
+        <InlineAlert status="error">
+          {t('file-upload-failed')}
         </InlineAlert>
-      }
+      )}
     </FileWrapper>
   );
 }

@@ -18,7 +18,8 @@ const axiosBaseQuery = (
     try {
       const result = await axios({
         url: baseUrl + url,
-        headers: headers !== {} ? headers : { 'content-type': 'application/json' },
+        headers:
+          headers !== {} ? headers : { 'content-type': 'application/json' },
         method,
         data,
       });

@@ -46,7 +46,7 @@ export function makeStore() {
         countsApi.middleware,
         subscriptionApi.middleware,
         accessRequestApi.middleware,
-        excelApi.middleware,
+        excelApi.middleware
       ),
 
     // Development tools should be available only in development environments
