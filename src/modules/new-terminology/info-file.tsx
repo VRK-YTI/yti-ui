@@ -1,6 +1,6 @@
 import { useTranslation } from 'next-i18next';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
-import { Button, Paragraph, Text } from 'suomifi-ui-components';
+import { Button, InlineAlert, Paragraph, Text } from 'suomifi-ui-components';
 import {
   FileBlock,
   FileInfo,
@@ -19,6 +19,7 @@ export default function InfoFile({ setIsValid, setFileData }: infoFileProps) {
   const { t } = useTranslation('admin');
   const input = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
+  const [showAlert, setShowAlert] = useState(false);
 
   useEffect(() => {
     if (file) {
@@ -31,6 +32,7 @@ export default function InfoFile({ setIsValid, setFileData }: infoFileProps) {
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
+    setShowAlert(true);
 
     if (!e.dataTransfer.items) {
       return;
@@ -45,6 +47,7 @@ export default function InfoFile({ setIsValid, setFileData }: infoFileProps) {
       const droppedItemAsFile = droppedItems[i].getAsFile();
       if (droppedItemAsFile && droppedItemAsFile?.name.endsWith('xlsx')) {
         setFile(droppedItemAsFile);
+        setShowAlert(false);
         break;
       }
     }
@@ -53,6 +56,7 @@ export default function InfoFile({ setIsValid, setFileData }: infoFileProps) {
   const handleUpload = (e: ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     const selectedItems = e.target.files;
+    setShowAlert(true);
 
     if (!selectedItems) {
       return;
@@ -61,6 +65,7 @@ export default function InfoFile({ setIsValid, setFileData }: infoFileProps) {
     for (let i = 0; i < selectedItems.length; i++) {
       if (selectedItems[i].name.endsWith('.xlsx')) {
         setFile(selectedItems[i]);
+        setShowAlert(false);
         break;
       }
     }
@@ -111,7 +116,7 @@ export default function InfoFile({ setIsValid, setFileData }: infoFileProps) {
                   </Text>
                 </Paragraph>
                 <Paragraph>
-                  <Text color={'depthDark1'}>{file.size} KB</Text>
+                  <Text color={'depthDark1'}>{(file.size / 1000).toFixed(1)} KB</Text>
                 </Paragraph>
                 <Paragraph>
                   <Text variant={'bold'}>{t('file-added')}</Text>
@@ -128,6 +133,11 @@ export default function InfoFile({ setIsValid, setFileData }: infoFileProps) {
           </FileInfoBlock>
         )}
       </FileBlock>
+      {showAlert &&
+        <InlineAlert status='error'>
+          Tiedoston lataus ei onnistunut. Kokeile uudelleen.
+        </InlineAlert>
+      }
     </FileWrapper>
   );
 }

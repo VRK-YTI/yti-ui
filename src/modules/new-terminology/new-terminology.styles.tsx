@@ -60,46 +60,42 @@ export const FileRemoveButton = styled(Button)`
 
 export const FileWrapper = styled.div`
   margin-top: ${(props) => props.theme.suomifi.spacing.l};
+  display: flex;
+  flex-direction: column;
+  gap: ${(props) => props.theme.suomifi.spacing.l};
 `;
 
-const enlarge = keyframes`
+const rotate = keyframes`
   0% {
-    scale: 0;
-  }
-
-  25% {
-    scale: 1
-  }
-
-  35% {
-    scale: 1
-  }
-
-  70% {
-    scale: 0;
+    transform: rotate(0deg);
   }
 
   100% {
-    scale: 0;
+    transform: rotate(360deg);
   }
 `;
 
-export const DownloadIndicator = styled.div<{ $startFrame: number }>`
-  animation: ${enlarge} 2s linear infinite;
-  animation-delay: ${(props) => props.$startFrame}ms;
-  background: ${(props) => props.theme.suomifi.colors.highlightBase};
-  border-radius: 50%;
-  height: 21px;
-  width: 21px;
-`;
-
-export const DownloadIndicatorWrapper = styled(Block)`
+export const FileUploadWrapper = styled(Block)`
   align-items: center;
-  background: ${(props) => props.theme.suomifi.colors.depthLight3};
   display: flex;
+  flex-direction: column;
+  min-height: min-content;
   height: 100px;
   gap: 6px;
   justify-content: center;
+`;
+
+export const DownloadIndicator = styled.div`
+  ::after {
+    content: " ";
+    display: block;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 3px solid black;
+    border-color: ${(props) => props.theme.suomifi.colors.brandBase} ${(props) => props.theme.suomifi.colors.brandBase} ${(props) => props.theme.suomifi.colors.brandBase} transparent;
+    animation: ${rotate} 1.2s linear infinite;
+  }
 `;
 
 export const MissingInfoAlertUl = styled.ul`
@@ -116,9 +112,11 @@ export const ModalTitleAsH1 = styled(ModalTitle)`
 `;
 
 export const SuccessIndicator = styled(Icon)`
-  height: 16px;
+  height: 20px;
   width: 20px;
-  color: ${(props) => props.theme.suomifi.colors.successBase};
+  padding: 10px;
+  background-color: ${(props) => props.theme.suomifi.colors.successBase};
+  border-radius: 50%;
 `;
 
 export const TallerSeparator = styled(Separator)`

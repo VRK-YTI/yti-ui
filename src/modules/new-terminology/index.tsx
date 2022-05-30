@@ -36,14 +36,14 @@ export default function NewTerminology() {
   const [fileData, setFileData] = useState();
   const [userPosted, setUserPosted] = useState(false);
   const [postNewVocabulary, newVocabulary] = usePostNewVocabularyMutation();
-  const [postImportExcel] = usePostImportExcelMutation();
+  const [postImportExcel, importExcel] = usePostImportExcelMutation();
 
   useEffect(() => {
     if (newVocabulary.isSuccess) {
       handleClose();
       dispatch(terminologySearchApi.util.invalidateTags(['TerminologySearch']));
     }
-  }, [newVocabulary, dispatch]);
+  }, [newVocabulary, importExcel, dispatch]);
 
   if (!HasPermission({ actions: 'CREATE_TERMINOLOGY' })) {
     return null;
@@ -55,6 +55,15 @@ export default function NewTerminology() {
     setInputType('');
     setShowModal(false);
     setStartFileUpload(false);
+  };
+
+  const handleCloseRequest = () => {
+    setUserPosted(false);
+    setIsValid(false);
+    setInputType('');
+    setShowModal(false);
+    setStartFileUpload(false);
+    dispatch(terminologySearchApi.util.invalidateTags(['TerminologySearch']));
   };
 
   const handlePost = () => {
@@ -80,7 +89,9 @@ export default function NewTerminology() {
     if (inputType === 'file' && fileData) {
       const formData = new FormData();
       formData.append('file', fileData);
+      setStartFileUpload(true);
       postImportExcel(formData);
+      setUserPosted(true);
     }
   };
 
@@ -101,25 +112,28 @@ export default function NewTerminology() {
         variant={isSmall ? 'smallScreen' : 'default'}
         onEscKeyDown={() => handleClose()}
       >
-        <ModalContent>
+        <ModalContent style={(inputType === 'file' && userPosted) ? {paddingBottom: '18px'} : {}}>
           <ModalTitleAsH1 as={'h1'}>
             {!startFileUpload
               ? t('add-new-terminology')
               : t('downloading-file')}
           </ModalTitleAsH1>
 
-          {!startFileUpload ? renderInfoInput() : <FileUpload />}
+          {!startFileUpload ? renderInfoInput() : <FileUpload importResponse={importExcel} handleClose={handleCloseRequest} />}
         </ModalContent>
 
-        <ModalFooter>
-          {userPosted && manualData && <MissingInfoAlert data={manualData} />}
-          <Button onClick={() => handlePost()} disabled={!inputType}>
-            {t('add-terminology')}
-          </Button>
-          <Button variant="secondary" onClick={() => handleClose()}>
-            {t('cancel')}
-          </Button>
-        </ModalFooter>
+        {!(inputType === 'file' && userPosted)
+          &&
+          <ModalFooter>
+            {userPosted && manualData && <MissingInfoAlert data={manualData} />}
+            <Button onClick={() => handlePost()} disabled={!inputType}>
+              {t('add-terminology')}
+            </Button>
+            <Button variant="secondary" onClick={() => handleClose()}>
+              {t('cancel')}
+            </Button>
+          </ModalFooter>
+        }
       </Modal>
     </>
   );

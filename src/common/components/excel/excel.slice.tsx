@@ -13,7 +13,13 @@ export const excelApi = createApi({
         data: file
       }),
     }),
+    getImportStatus: builder.mutation<any, any>({
+      query: (token) => ({
+        url: `/import/status/${token}`,
+        method: 'GET',
+      })
+    })
   }),
 });
 
-export const { usePostImportExcelMutation } = excelApi;
+export const { usePostImportExcelMutation, useGetImportStatusMutation } = excelApi;
