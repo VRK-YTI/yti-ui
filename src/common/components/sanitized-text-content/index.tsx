@@ -5,7 +5,7 @@ import {
   SuomiExternalLink,
 } from './sanitized-text-content.styles';
 import { polyfill } from 'interweave-ssr';
-import Interweave, { Node } from 'interweave';
+import { Interweave, Node } from 'interweave';
 
 interface SanitizedTextContentProps {
   text: string;

@@ -23,9 +23,11 @@ describe('terminologyId page', () => {
         asymmetricMatch: (actual: any) => {
           // these checks ensure that the API request was made with the
           // expected query parameters
+          // eslint-disable-next-line jest/no-conditional-in-test
           if (actual.query !== 'test') {
             return false;
           }
+          // eslint-disable-next-line jest/no-conditional-in-test
           if (JSON.stringify(actual.status) !== JSON.stringify(['DRAFT'])) {
             return false;
           }

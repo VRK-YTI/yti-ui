@@ -77,7 +77,7 @@ export default function Prefix({ update, userPosted }: PrefixProps) {
     <BlankFieldset>
       <RadioButtonGroupSmBot
         labelText={t('prefix')}
-        hintText={t('prefix-hint')}
+        groupHintText={t('prefix-hint')}
         name="prefix"
         defaultValue="automatic"
         onChange={(e) => {
