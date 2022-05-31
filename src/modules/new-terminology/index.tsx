@@ -43,7 +43,7 @@ export default function NewTerminology() {
       handleClose();
       dispatch(terminologySearchApi.util.invalidateTags(['TerminologySearch']));
     }
-  }, [newVocabulary, importExcel, dispatch]);
+  }, [newVocabulary, dispatch]);
 
   if (!HasPermission({ actions: 'CREATE_TERMINOLOGY' })) {
     return null;
