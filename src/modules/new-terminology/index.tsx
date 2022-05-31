@@ -33,7 +33,7 @@ export default function NewTerminology() {
   const [inputType, setInputType] = useState('');
   const [startFileUpload, setStartFileUpload] = useState(false);
   const [manualData, setManualData] = useState<NewTerminologyInfo>();
-  const [fileData, setFileData] = useState();
+  const [fileData, setFileData] = useState<File | null>();
   const [userPosted, setUserPosted] = useState(false);
   const [postNewVocabulary, newVocabulary] = usePostNewVocabularyMutation();
   const [postImportExcel, importExcel] = usePostImportExcelMutation();
@@ -134,7 +134,8 @@ export default function NewTerminology() {
             renderInfoInput()
           ) : (
             <FileUpload
-              importResponse={importExcel}
+              importResponseData={importExcel.data}
+              importResponseStatus={importExcel.status}
               handlePost={handlePost}
               handleClose={handleCloseRequest}
             />

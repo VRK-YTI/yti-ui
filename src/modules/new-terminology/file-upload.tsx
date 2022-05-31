@@ -1,4 +1,5 @@
 import { useGetImportStatusMutation } from '@app/common/components/excel/excel.slice';
+import { ImportResponse } from '@app/common/interfaces/excel.interface';
 import { useTranslation } from 'next-i18next';
 import { useEffect } from 'react';
 import { Button, InlineAlert, Text } from 'suomifi-ui-components';
@@ -10,13 +11,15 @@ import {
 } from './new-terminology.styles';
 
 interface FileUploadProps {
-  importResponse: any;
+  importResponseData?: ImportResponse;
+  importResponseStatus: string;
   handlePost: () => void;
   handleClose: () => void;
 }
 
 export default function FileUpload({
-  importResponse,
+  importResponseData,
+  importResponseStatus,
   handlePost,
   handleClose,
 }: FileUploadProps) {
@@ -25,34 +28,27 @@ export default function FileUpload({
 
   useEffect(() => {
     if (
-      importResponse.data?.message === 'SUCCESS' &&
+      importResponseData?.message === 'SUCCESS' &&
       !importStatus.isLoading &&
       importStatus.data?.status !== 'SUCCESS'
     ) {
       const timerId = setTimeout(() => {
-        fetchImportStatus(importResponse.data.jobToken);
+        fetchImportStatus(importResponseData.jobToken);
       }, 1000);
       return () => clearTimeout(timerId);
     }
-  }, [importResponse, fetchImportStatus, importStatus]);
+  }, [importResponseData, fetchImportStatus, importStatus]);
 
   return (
     <>
-      {importResponse.status === 'rejected' ? (
+      {importResponseStatus === 'rejected' ? (
         <>
           <InlineAlert status="error" style={{ marginBottom: '25px' }}>
             {t('download-failed')}
           </InlineAlert>
           <ButtonBlock>
-            <Button
-              onClick={() => handlePost()}
-            >
-              {t('try-again')}
-            </Button>
-            <Button
-              variant="secondary"
-              onClick={() => handleClose()}
-            >
+            <Button onClick={() => handlePost()}>{t('try-again')}</Button>
+            <Button variant="secondary" onClick={() => handleClose()}>
               {t('close')}
             </Button>
           </ButtonBlock>
@@ -60,21 +56,24 @@ export default function FileUpload({
       ) : (
         <>
           <FileUploadWrapper>
-            {importStatus.data?.status === 'SUCCESS'
-              ?
+            {importStatus.data?.status.toLowerCase() === 'success' ? (
               <>
                 <SuccessIndicator icon="check" color="white" />
                 <Text variant="bold">{t('ready')}</Text>
               </>
-              :
+            ) : (
               <>
                 <DownloadIndicator />
                 <Text variant="bold">{t('loading')}</Text>
               </>
-            }
+            )}
           </FileUploadWrapper>
           <Button
-            disabled={importStatus.data?.status === 'SUCCESS' ? false : true}
+            disabled={
+              importStatus.data?.status.toLowerCase() === 'success'
+                ? false
+                : true
+            }
             onClick={() => handleClose()}
           >
             {t('close')}

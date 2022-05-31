@@ -12,7 +12,7 @@ import {
 
 interface infoFileProps {
   setIsValid: (valid: boolean) => void;
-  setFileData: (data: any) => void;
+  setFileData: (data: File | null) => void;
 }
 
 export default function InfoFile({ setIsValid, setFileData }: infoFileProps) {
@@ -146,9 +146,7 @@ export default function InfoFile({ setIsValid, setFileData }: infoFileProps) {
         )}
       </FileBlock>
       {showAlert && (
-        <InlineAlert status="error">
-          {t('file-upload-failed')}
-        </InlineAlert>
+        <InlineAlert status="error">{t('file-upload-failed')}</InlineAlert>
       )}
     </FileWrapper>
   );
