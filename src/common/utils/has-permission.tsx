@@ -1,4 +1,5 @@
 import { useSelector } from 'react-redux';
+import { selectAdminControls } from '../components/admin-controls/admin-controls.slice';
 import { selectLogin } from '../components/login/login.slice';
 import { User } from '../interfaces/user.interface';
 
@@ -35,6 +36,11 @@ export default function HasPermission({
   targetOrganization,
 }: hasPermissionProps) {
   const user = useSelector(selectLogin());
+  const isAdminControlsDisabled = useSelector(selectAdminControls());
+
+  if (isAdminControlsDisabled) {
+    return false;
+  }
 
   if (!user || user.anonymous) {
     return false;
@@ -52,6 +58,11 @@ export function checkPermission({
   const rolesInOrganizations = Object.keys(user.rolesInOrganizations);
   const rolesInTargetOrganization =
     targetOrganization && user.rolesInOrganizations[targetOrganization];
+
+  // Return true if user is superuser
+  if (user.superuser) {
+    return true;
+  }
 
   // Return false if user doesn't have a role in target organization
   if (

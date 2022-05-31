@@ -17,6 +17,7 @@ import { alertSlice } from '@app/common/components/alert/alert.slice';
 import { titleSlice } from '@app/common/components/title/title.slice';
 import { subscriptionApi } from '@app/common/components/subscription/subscription.slice';
 import { accessRequestApi } from '@app/common/components/access-request/access-request.slice';
+import { adminControlsSlice } from '@app/common/components/admin-controls/admin-controls.slice';
 import { excelApi } from '@app/common/components/excel/excel.slice';
 
 export function makeStore() {
@@ -34,6 +35,7 @@ export function makeStore() {
       [titleSlice.name]: titleSlice.reducer,
       [subscriptionApi.reducerPath]: subscriptionApi.reducer,
       [accessRequestApi.reducerPath]: accessRequestApi.reducer,
+      [adminControlsSlice.name]: adminControlsSlice.reducer,
       [excelApi.reducerPath]: excelApi.reducer,
     },
 

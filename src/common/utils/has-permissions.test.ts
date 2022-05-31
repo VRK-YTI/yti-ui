@@ -7,14 +7,15 @@ const createMockUser = (
   },
   organizationsInRole: {
     [key: string]: string[];
-  }
+  },
+  superuser?: boolean
 ): User => ({
   anonymous: false,
   email: 'admin@admin.fi',
   firstName: 'Admin',
   lastName: 'Admin',
   id: '',
-  superuser: true,
+  superuser: superuser ? true : false,
   newlyCreated: false,
   rolesInOrganizations: rolesInOrganizations,
   organizationsInRole: organizationsInRole,
@@ -142,5 +143,17 @@ describe('has-permission', () => {
     });
 
     expect(rights).toBe(false);
+  });
+
+  it('should have superuser rights', () => {
+    const user = createMockUser({}, {}, true);
+
+    const rights = checkPermission({
+      user: user,
+      actions: ['CREATE_TERMINOLOGY', 'EDIT_TERMINOLOGY', 'DELETE_TERMINOLOGY'],
+      targetOrganization: 'foo',
+    });
+
+    expect(rights).toBe(true);
   });
 });

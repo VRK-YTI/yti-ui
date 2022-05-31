@@ -1,7 +1,6 @@
 import { themeProvider } from '@app/tests/test-utils';
 import { render, screen } from '@testing-library/react';
 import InfoFile from './info-file';
-import { fireEvent } from '@testing-library/dom';
 
 describe('info-file', () => {
   it('should render component', () => {
