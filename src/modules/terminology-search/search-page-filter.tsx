@@ -10,6 +10,7 @@ import InformationDomainFilter from '@app/common/components/filter/information-d
 import OrganizationFilter from '@app/common/components/filter/organization-filter';
 import StatusFilter from '@app/common/components/filter/status-filter';
 import { KeywordFilter } from '@app/common/components/filter/keyword-filter';
+import LanguageFilter from '@app/common/components/filter/language-filter';
 
 export interface SearchPageFilterProps {
   isModal?: boolean;
@@ -41,6 +42,8 @@ export function SearchPageFilter({
         visualPlaceholder={t('terminology-search-filter-pick-organization')}
         organizations={organizations}
       />
+      <Separator />
+      <LanguageFilter />
       <Separator />
       <KeywordFilter
         title={t('vocabulary-filter-filter-by-keyword')}
