@@ -59,12 +59,19 @@ export default function FileUpload({
             {importStatus.data?.status.toLowerCase() === 'success' ? (
               <>
                 <SuccessIndicator icon="check" color="white" />
-                <Text variant="bold">{t('ready')}</Text>
+                <Text variant="bold">100% {t('percent-done')}</Text>
               </>
             ) : (
               <>
                 <DownloadIndicator />
-                <Text variant="bold">{t('loading')}</Text>
+                <Text variant="bold">
+                  {importStatus.data?.processingProgress &&
+                  importStatus.data?.processingTotal
+                    ? importStatus.data?.processingProgress /
+                      importStatus.data?.processingTotal
+                    : 0}
+                  % {t('percent-done')}
+                </Text>
               </>
             )}
           </FileUploadWrapper>

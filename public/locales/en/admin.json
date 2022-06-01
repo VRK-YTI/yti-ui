@@ -217,5 +217,6 @@
   "try-again": "Try again",
   "download-failed": "Download failed",
   "ready": "Ready",
-  "loading": "Loading..."
+  "loading": "Loading...",
+  "percent-done": "done"
 }

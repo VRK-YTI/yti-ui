@@ -27,7 +27,7 @@ describe('file-upload', () => {
       }
     );
 
-    expect(screen.getByText('tr-loading')).toBeInTheDocument();
+    expect(screen.getByText(/tr-percent-done/)).toBeInTheDocument();
   });
 
   it('should render try again', () => {

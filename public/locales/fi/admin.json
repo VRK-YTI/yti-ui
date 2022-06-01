@@ -218,5 +218,6 @@
   "try-again": "Yritä uudelleen",
   "download-failed": "Lataus epäonnistui",
   "ready": "Valmis",
-  "loading": "Ladataan..."
+  "loading": "Ladataan...",
+  "percent-done": "valmiina"
 }

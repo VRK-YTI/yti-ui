@@ -1,6 +1,6 @@
 export interface ImportStatus {
   processingProgress: number;
-  processingTota: number;
+  processingTotal: number;
   status: string;
 }
 
