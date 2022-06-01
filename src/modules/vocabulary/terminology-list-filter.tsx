@@ -6,6 +6,8 @@ import StatusFilter from '@app/common/components/filter/status-filter';
 import { KeywordFilter } from '@app/common/components/filter/keyword-filter';
 import TypeFilter from '@app/common/components/filter/type-filter';
 import useUrlState from '@app/common/utils/hooks/useUrlState';
+import LanguageFilter from '@app/common/components/filter/language-filter';
+import { FilterTopPartBlock } from './vocabulary.styles';
 
 export interface TerminologyListFilterProps {
   isModal?: boolean;
@@ -30,6 +32,15 @@ export function TerminologyListFilter({
       onModalClose={onModalClose}
       resultCount={resultCount}
     >
+      <FilterTopPartBlock>
+        <KeywordFilter
+          title={t('vocabulary-filter-filter-by-keyword')}
+          visualPlaceholder={t('vocabulary-filter-visual-placeholder')}
+          isModal={isModal}
+        />
+        <LanguageFilter />
+      </FilterTopPartBlock>
+      <Separator />
       <TypeFilter
         title={t('vocabulary-filter-show-only')}
         isModal={isModal}
@@ -38,25 +49,21 @@ export function TerminologyListFilter({
           collections: counts?.counts.categories.Collection,
         }}
       />
-      <Separator />
       {shouldRenderStatusFilter && (
-        <StatusFilter
-          title={t('terminology-search-filter-show-states')}
-          isModal={isModal}
-          counts={{
-            valid: counts?.counts.statuses.VALID,
-            draft: counts?.counts.statuses.DRAFT,
-            retired: counts?.counts.statuses.RETIRED,
-            superseded: counts?.counts.statuses.SUPERSEDED,
-          }}
-        />
+        <>
+          <Separator />
+          <StatusFilter
+            title={t('terminology-search-filter-show-states')}
+            isModal={isModal}
+            counts={{
+              valid: counts?.counts.statuses.VALID,
+              draft: counts?.counts.statuses.DRAFT,
+              retired: counts?.counts.statuses.RETIRED,
+              superseded: counts?.counts.statuses.SUPERSEDED,
+            }}
+          />
+        </>
       )}
-      {shouldRenderStatusFilter && <Separator />}
-      <KeywordFilter
-        title={t('vocabulary-filter-filter-by-keyword')}
-        visualPlaceholder={t('vocabulary-filter-visual-placeholder')}
-        isModal={isModal}
-      />
     </Filter>
   );
 }

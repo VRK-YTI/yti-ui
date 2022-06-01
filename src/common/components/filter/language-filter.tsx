@@ -34,6 +34,7 @@ export default function LanguageFilter() {
         items={languages}
         labelText='Rajaa kielen mukaan'
         noItemsText='Ei kieliä saatavilla'
+        visualPlaceholder='Valitse kieli'
         selectedItem={currLang}
         onItemSelect={lang => patchUrlState({
           lang: lang ?? undefined,

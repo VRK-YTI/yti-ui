@@ -51,7 +51,7 @@ export const vocabularyApi = createApi({
           pageSize: 10,
           query: value.urlState.q,
           sortDirection: 'ASC',
-          sortLanguage: 'fi',
+          sortLanguage: value.urlState.lang ?? 'fi',
           status: value.urlState.status.map((s) => s.toUpperCase()),
           terminologyId: [value.id],
         },
