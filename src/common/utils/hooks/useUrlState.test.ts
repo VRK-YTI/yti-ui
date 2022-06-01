@@ -21,7 +21,7 @@ describe('useUrlState', () => {
         q: '',
         domain: [],
         organization: '',
-        status: ['valid', 'draft'],
+        status: [],
         type: 'concept',
         page: '1',
       },

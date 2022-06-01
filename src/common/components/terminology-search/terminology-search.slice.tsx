@@ -27,7 +27,7 @@ export const terminologySearchApi = createApi({
   endpoints: (builder) => ({
     getSearchResult: builder.query<
       TerminologySearchResult,
-      { urlState: UrlState }
+      { urlState: UrlState; language: string }
     >({
       query: (value) => ({
         url: '/searchTerminology',
@@ -40,7 +40,7 @@ export const terminologySearchApi = createApi({
             ? [value.urlState.organization]
             : [],
           searchConcepts: true,
-          prefLang: 'fi',
+          prefLang: value.language,
           pageSize: 10,
           pageFrom: Math.max(0, (value.urlState.page - 1) * 10),
         },
