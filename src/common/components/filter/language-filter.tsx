@@ -1,4 +1,6 @@
-import useUrlState, { initialUrlState } from '@app/common/utils/hooks/useUrlState';
+import useUrlState, {
+  initialUrlState,
+} from '@app/common/utils/hooks/useUrlState';
 import { useTranslation } from 'next-i18next';
 import { SingleSelect } from 'suomifi-ui-components';
 import { DropdownWrapper } from './filter.styles';
@@ -10,16 +12,16 @@ export default function LanguageFilter() {
   const languages = [
     {
       labelText: t('vocabulary-info-fi'),
-      uniqueItemId: 'fi'
+      uniqueItemId: 'fi',
     },
     {
       labelText: t('vocabulary-info-en'),
-      uniqueItemId: 'en'
+      uniqueItemId: 'en',
     },
     {
       labelText: t('vocabulary-info-sv'),
-      uniqueItemId: 'sv'
-    }
+      uniqueItemId: 'sv',
+    },
   ];
 
   const currLang = languages.find(
@@ -29,17 +31,19 @@ export default function LanguageFilter() {
   return (
     <DropdownWrapper>
       <SingleSelect
-        ariaOptionsAvailableText='Kieliä saatavilla'
-        clearButtonLabel='Tyhjennä kielivalinta'
+        ariaOptionsAvailableText={t('languages-available')}
+        clearButtonLabel={t('clear-language-filter')}
         items={languages}
-        labelText='Rajaa kielen mukaan'
-        noItemsText='Ei kieliä saatavilla'
-        visualPlaceholder='Valitse kieli'
+        labelText={t('filter-by-language')}
+        noItemsText={t('no-languages-available')}
+        visualPlaceholder={t('choose-language')}
         selectedItem={currLang}
-        onItemSelect={lang => patchUrlState({
-          lang: lang ?? undefined,
-          page: initialUrlState.page,
-        })}
+        onItemSelect={(lang) =>
+          patchUrlState({
+            lang: lang ?? undefined,
+            page: initialUrlState.page,
+          })
+        }
       />
     </DropdownWrapper>
   );

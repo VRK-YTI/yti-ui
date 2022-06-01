@@ -129,5 +129,10 @@
   "email-subscription-add": "Tilaa ilmoitukset",
   "email-subscription-delete": "Poista ilmoitukset",
   "email-subscription-subscribed": "Sähköposti-ilmoitukset päällä",
-  "email-subscription-unsubscribed": "Sähköposti-ilmoitukset pois päältä"
+  "email-subscription-unsubscribed": "Sähköposti-ilmoitukset pois päältä",
+  "languages-available": "Kieliä saatavilla",
+  "clear-language-filter": "Tyhjennä kielivalinta",
+  "filter-by-language": "Rajaa kielen mukaan",
+  "no-languages-available": "Kieliä ei saatavilla",
+  "choose-language": "Valitse kieli"
 }

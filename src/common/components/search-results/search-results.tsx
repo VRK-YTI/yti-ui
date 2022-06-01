@@ -198,11 +198,21 @@ export default function SearchResults({
   }
 
   function getLabel(dto: VocabularyConceptDTO | TerminologyDTO) {
+    if (urlState.lang && dto.label[urlState.lang]) {
+      return urlState.lang === i18n.language
+        ? dto.label[urlState.lang].replaceAll(/<\/*[^>]>/g, '')
+        : `${dto.label[urlState.lang].replaceAll(/<\/*[^>]>/g, '')}
+        (${urlState.lang})`;
+    }
+
     if (dto.label[i18n.language]) {
       return dto.label[i18n.language].replaceAll(/<\/*[^>]>/g, '');
     }
 
-    return dto?.label?.[Object.keys(dto.label)[0]].replaceAll(/<\/*[^>]>/g, '');
+    return `${dto?.label?.[Object.keys(dto.label)[0]].replaceAll(
+      /<\/*[^>]>/g,
+      ''
+    )} (${Object.keys(dto.label)[0]})`;
   }
 
   function getDescription(terminology: TerminologyDTO) {

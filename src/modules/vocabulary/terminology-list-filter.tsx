@@ -38,7 +38,7 @@ export function TerminologyListFilter({
           visualPlaceholder={t('vocabulary-filter-visual-placeholder')}
           isModal={isModal}
         />
-        <LanguageFilter />
+        {shouldRenderStatusFilter && <LanguageFilter />}
       </FilterTopPartBlock>
       <Separator />
       <TypeFilter
