@@ -65,10 +65,14 @@ export default function FileUpload({
               <>
                 <DownloadIndicator />
                 <Text variant="bold">
-                  {importStatus.data?.processingProgress &&
-                  importStatus.data?.processingTotal
-                    ? importStatus.data?.processingProgress /
-                      importStatus.data?.processingTotal
+                  {importStatus.data?.processingProgress !== undefined &&
+                  importStatus.data?.processingTotal !== undefined &&
+                  importStatus.data?.processingTotal !== 0
+                    ? Math.floor(
+                        (importStatus.data?.processingProgress /
+                          importStatus.data?.processingTotal) *
+                          100
+                      )
                     : 0}
                   % {t('percent-done')}
                 </Text>
