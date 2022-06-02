@@ -198,14 +198,17 @@ export default function SearchResults({
   }
 
   function getLabel(dto: VocabularyConceptDTO | TerminologyDTO) {
+    // If language is defined in urlState get label without trailing language code
     if (urlState.lang && dto.label[urlState.lang]) {
       return dto.label[urlState.lang].replaceAll(/<\/*[^>]>/g, '');
     }
 
+    // If label exists in current UI language get label without trailing language code
     if (!urlState.lang && dto.label[i18n.language]) {
       return dto.label[i18n.language].replaceAll(/<\/*[^>]>/g, '');
     }
 
+    // Otherwise return label with trailing language code
     return `${dto?.label?.[Object.keys(dto.label)[0]].replaceAll(
       /<\/*[^>]>/g,
       ''
