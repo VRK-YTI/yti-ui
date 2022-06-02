@@ -211,5 +211,12 @@
   "term-change-note-placeholder": "Add the exact address of the website",
   "term-history-note-label": "Usage history information \"etymology\"",
   "term-history-note-hint-text": "Previous use or meaning of the term",
-  "term-history-note-placeholer": "Add history of the use of the term"
+  "term-history-note-placeholer": "Add history of the use of the term",
+  "file-upload-failed": "File upload failed. Try again.",
+  "close": "Close",
+  "try-again": "Try again",
+  "download-failed": "Download failed",
+  "ready": "Ready",
+  "loading": "Loading...",
+  "percent-done": "done"
 }
