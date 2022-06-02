@@ -19,6 +19,7 @@ import {
   CommonContextState,
   CommonContextProvider,
 } from '@app/common/components/common-context-provider';
+import { getVocabularyCount } from '@app/common/components/counts/counts.slice';
 
 interface TerminologyPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -73,11 +74,16 @@ export const getServerSideProps = createCommonGetServerSideProps(
       urlState.type = Array.isArray(query.type) ? query.type[0] : query.type;
     }
 
+    if (query && query.lang !== undefined) {
+      urlState.lang = Array.isArray(query.lang) ? query.lang[0] : query.lang;
+    }
+
     await store.dispatch(getVocabulary.initiate(id));
     await store.dispatch(getCollections.initiate(id));
     await store.dispatch(
       getConceptResult.initiate({ urlState: urlState, id, language: locale })
     );
+    await store.dispatch(getVocabularyCount.initiate(id));
 
     await Promise.all(getRunningOperationPromises());
 

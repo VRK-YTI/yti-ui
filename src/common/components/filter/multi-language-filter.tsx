@@ -38,7 +38,6 @@ export default function MultiLanguageFilter() {
         chipListVisible
         defaultSelectedItems={currLangs}
         onItemSelectionsChange={(lang) => {
-          console.log(lang);
           patchUrlState({
             lang: lang ? lang.map(l => l.uniqueItemId)[0] : '',
             page: initialUrlState.page,

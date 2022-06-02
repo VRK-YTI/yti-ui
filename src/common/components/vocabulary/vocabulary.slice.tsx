@@ -52,7 +52,7 @@ export const vocabularyApi = createApi({
           query: value.urlState.q,
           sortDirection: 'ASC',
           sortLanguage:
-            value.urlState
+            value.urlState.lang
               ? value.urlState.lang
               : value.language
                 ? value.language
