@@ -14,7 +14,5 @@ describe('search-count-tags', () => {
     });
 
     expect(screen.getByText(/4/)).toBeInTheDocument();
-    expect(screen.getByText(/tr-VALID/)).toBeInTheDocument();
-    expect(screen.getByText(/tr-DRAFT/)).toBeInTheDocument();
   });
 });

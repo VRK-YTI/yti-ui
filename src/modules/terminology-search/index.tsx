@@ -33,7 +33,7 @@ export default function TerminologySearch() {
   const { urlState } = useUrlState();
   const { data, error, isFetching, refetch } = useGetSearchResultQuery({
     urlState,
-    lang: i18n.language,
+    language: i18n.language,
   });
   const { data: groups, error: groupsError } = useGetGroupsQuery(i18n.language);
   const { data: organizations, error: organizationsError } =

@@ -17,7 +17,7 @@ describe('reset-all-filters-button', () => {
   });
 
   it('should not render component when in initial state', () => {
-    mockRouter.setCurrentUrl('/?status=draft&status=valid');
+    mockRouter.setCurrentUrl('/');
 
     render(<ResetAllFiltersButton />, { wrapper: themeProvider });
 

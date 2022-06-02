@@ -76,7 +76,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
     await store.dispatch(getVocabulary.initiate(id));
     await store.dispatch(getCollections.initiate(id));
     await store.dispatch(
-      getConceptResult.initiate({ urlState: urlState, id, lang: locale })
+      getConceptResult.initiate({ urlState: urlState, id, language: locale })
     );
 
     await Promise.all(getRunningOperationPromises());

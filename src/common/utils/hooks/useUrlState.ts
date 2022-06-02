@@ -15,7 +15,7 @@ export const initialUrlState: UrlState = {
   q: '',
   domain: [],
   organization: '',
-  status: ['valid', 'draft'],
+  status: [],
   type: 'concept',
   page: 1,
   lang: '',

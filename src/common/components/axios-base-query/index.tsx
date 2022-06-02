@@ -3,7 +3,8 @@ import { BaseQueryFn } from '@reduxjs/toolkit/query';
 import { Error } from '@app/common/interfaces/error.interface';
 
 const axiosBaseQuery = (
-  { baseUrl }: { baseUrl: string } = { baseUrl: '' }
+  { baseUrl }: { baseUrl: string } = { baseUrl: '' },
+  { headers }: { headers?: { [key: string]: string } } = { headers: {} }
 ): BaseQueryFn<
   {
     url: string;
@@ -17,7 +18,8 @@ const axiosBaseQuery = (
     try {
       const result = await axios({
         url: baseUrl + url,
-        headers: { 'content-type': 'application/json' },
+        headers:
+          headers !== {} ? headers : { 'content-type': 'application/json' },
         method,
         data,
       });

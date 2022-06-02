@@ -2,7 +2,7 @@
   "new-concept-title": "Uusi käsite",
   "add-new-terminology": "Lisää uusi sanasto",
   "add-terminology": "Lisää sanasto",
-  "downloading-file": "Tiedosta ladataan",
+  "downloading-file": "Tiedostoa ladataan",
   "cancel": "Keskeytä",
   "info-input-description": "Tiedot ovat pakollisia, jos niitä ei ole merkitty valinnaisiksi.",
   "which-input": "Miten lisäät tietoja?",
@@ -212,5 +212,12 @@
   "term-change-note-placeholder": "Kirjoita verkkosivun tarkka osoite",
   "term-history-note-label": "Käytön historiatieto \"etymologia\"",
   "term-history-note-hint-text": "Termin aiempi käyttö tai merkitys",
-  "term-history-note-placeholer": "Kirjoita termin käytön historia"
+  "term-history-note-placeholer": "Kirjoita termin käytön historia",
+  "file-upload-failed": "Tiedoston lataus ei onnistunut. Kokeile uudelleen.",
+  "close": "Sulje",
+  "try-again": "Yritä uudelleen",
+  "download-failed": "Lataus epäonnistui",
+  "ready": "Valmis",
+  "loading": "Ladataan...",
+  "percent-done": "valmiina"
 }
