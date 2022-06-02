@@ -1,11 +1,9 @@
-import useUrlState, {
-  initialUrlState,
-} from '@app/common/utils/hooks/useUrlState';
+import useUrlState, { initialUrlState } from '@app/common/utils/hooks/useUrlState';
 import { useTranslation } from 'next-i18next';
-import { SingleSelect } from 'suomifi-ui-components';
+import { MultiSelect } from 'suomifi-ui-components';
 import { DropdownWrapper } from './filter.styles';
 
-export default function LanguageFilter() {
+export default function MultiLanguageFilter() {
   const { t } = useTranslation('common');
   const { urlState, patchUrlState } = useUrlState();
 
@@ -24,25 +22,28 @@ export default function LanguageFilter() {
     },
   ];
 
-  const currLang = languages.find(
+  const currLangs = languages.filter(
     (lang) => lang.uniqueItemId === urlState.lang
-  );
+  ).filter(lang => lang);
 
   return (
     <DropdownWrapper>
-      <SingleSelect
-        ariaOptionsAvailableText={t('languages-available')}
-        clearButtonLabel={t('clear-language-filter')}
+      <MultiSelect
+        ariaOptionChipRemovedText=''
+        ariaOptionsAvailableText=''
+        ariaSelectedAmountText=''
         items={languages}
-        labelText={t('filter-by-language')}
-        noItemsText={t('no-languages-available')}
-        visualPlaceholder={t('choose-language')}
-        selectedItem={currLang}
-        onItemSelect={(lang) =>
+        labelText='Rajaa kielen mukaan'
+        noItemsText=''
+        chipListVisible
+        defaultSelectedItems={currLangs}
+        onItemSelectionsChange={(lang) => {
+          console.log(lang);
           patchUrlState({
-            lang: lang ? lang : '',
+            lang: lang ? lang.map(l => l.uniqueItemId)[0] : '',
             page: initialUrlState.page,
-          })
+          });
+        }
         }
       />
     </DropdownWrapper>

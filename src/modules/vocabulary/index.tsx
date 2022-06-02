@@ -53,7 +53,7 @@ export default function Vocabulary({
     error: conceptsError,
     isFetching: isFetchingConcepts,
     refetch: refetchConcepts,
-  } = useGetConceptResultQuery({ id, urlState });
+  } = useGetConceptResultQuery({ id, urlState, lang: i18n.language });
   const { data: info, error: infoError } = useGetVocabularyQuery(id);
   const { data: counts, error: countsError } = useGetVocabularyCountQuery(id);
   const [showModal, setShowModal] = useState(false);
