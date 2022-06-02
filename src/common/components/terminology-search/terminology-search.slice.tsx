@@ -7,6 +7,7 @@ import {
 } from '@app/common/interfaces/terminology.interface';
 import { UrlState } from '@app/common/utils/hooks/useUrlState';
 import axiosBaseQuery from '@app/common/components/axios-base-query';
+import { HYDRATE } from 'next-redux-wrapper';
 
 export const initialState = {};
 
@@ -23,6 +24,11 @@ export const terminologySearchApi = createApi({
       ? `${process.env.TERMINOLOGY_API_URL}/api/v1/frontend`
       : '/terminology-api/api/v1/frontend',
   }),
+  extractRehydrationInfo(action, { reducerPath }) {
+    if (action.type === HYDRATE) {
+      return action.payload[reducerPath];
+    }
+  },
   tagTypes: ['TerminologySearch'],
   endpoints: (builder) => ({
     getSearchResult: builder.query<
