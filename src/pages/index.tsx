@@ -75,7 +75,9 @@ export const getServerSideProps = createCommonGetServerSideProps(
       urlState.lang = Array.isArray(query.lang) ? query.lang[0] : query.lang;
     }
 
-    await store.dispatch(getSearchResult.initiate({ urlState: urlState, language: locale }));
+    await store.dispatch(
+      getSearchResult.initiate({ urlState: urlState, language: locale })
+    );
     await store.dispatch(getGroups.initiate(locale));
     await store.dispatch(getOrganizations.initiate(locale));
     await store.dispatch(getCounts.initiate(null));

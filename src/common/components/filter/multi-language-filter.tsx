@@ -1,4 +1,6 @@
-import useUrlState, { initialUrlState } from '@app/common/utils/hooks/useUrlState';
+import useUrlState, {
+  initialUrlState,
+} from '@app/common/utils/hooks/useUrlState';
 import { useTranslation } from 'next-i18next';
 import { MultiSelect } from 'suomifi-ui-components';
 import { DropdownWrapper } from './filter.styles';
@@ -22,28 +24,27 @@ export default function MultiLanguageFilter() {
     },
   ];
 
-  const currLangs = languages.filter(
-    (lang) => lang.uniqueItemId === urlState.lang
-  ).filter(lang => lang);
+  const currLangs = languages
+    .filter((lang) => lang.uniqueItemId === urlState.lang)
+    .filter((lang) => lang);
 
   return (
     <DropdownWrapper>
       <MultiSelect
-        ariaOptionChipRemovedText=''
-        ariaOptionsAvailableText=''
-        ariaSelectedAmountText=''
+        ariaOptionChipRemovedText=""
+        ariaOptionsAvailableText=""
+        ariaSelectedAmountText=""
         items={languages}
-        labelText='Rajaa kielen mukaan'
-        noItemsText=''
+        labelText="Rajaa kielen mukaan"
+        noItemsText=""
         chipListVisible
         defaultSelectedItems={currLangs}
         onItemSelectionsChange={(lang) => {
           patchUrlState({
-            lang: lang ? lang.map(l => l.uniqueItemId)[0] : '',
+            lang: lang ? lang.map((l) => l.uniqueItemId)[0] : '',
             page: initialUrlState.page,
           });
-        }
-        }
+        }}
       />
     </DropdownWrapper>
   );

@@ -199,13 +199,10 @@ export default function SearchResults({
 
   function getLabel(dto: VocabularyConceptDTO | TerminologyDTO) {
     if (urlState.lang && dto.label[urlState.lang]) {
-      return urlState.lang === i18n.language
-        ? dto.label[urlState.lang].replaceAll(/<\/*[^>]>/g, '')
-        : `${dto.label[urlState.lang].replaceAll(/<\/*[^>]>/g, '')}
-        (${urlState.lang})`;
+      return dto.label[urlState.lang].replaceAll(/<\/*[^>]>/g, '');
     }
 
-    if (dto.label[i18n.language]) {
+    if (!urlState.lang && dto.label[i18n.language]) {
       return dto.label[i18n.language].replaceAll(/<\/*[^>]>/g, '');
     }
 
