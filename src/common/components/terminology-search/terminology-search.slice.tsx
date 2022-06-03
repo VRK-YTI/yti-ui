@@ -46,9 +46,7 @@ export const terminologySearchApi = createApi({
             ? [value.urlState.organization]
             : [],
           searchConcepts: true,
-          prefLang: value.urlState.lang
-            ? value.urlState.lang
-            : value.language
+          prefLang: value.language
             ? value.language
             : 'fi',
           pageSize: 10,

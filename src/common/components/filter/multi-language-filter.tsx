@@ -32,11 +32,12 @@ export default function MultiLanguageFilter() {
     <DropdownWrapper>
       <MultiSelect
         ariaOptionChipRemovedText=""
-        ariaOptionsAvailableText=""
+        ariaOptionsAvailableText={t('languages-available')}
         ariaSelectedAmountText=""
         items={languages}
-        labelText="Rajaa kielen mukaan"
-        noItemsText=""
+        labelText={t('filter-by-language')}
+        noItemsText={t('no-languages-available')}
+        visualPlaceholder={t('choose-language')}
         chipListVisible
         defaultSelectedItems={currLangs}
         onItemSelectionsChange={(lang) => {
