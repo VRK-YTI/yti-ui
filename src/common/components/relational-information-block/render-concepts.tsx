@@ -80,9 +80,12 @@ export default function RenderConcepts({
                   toggleButtonAriaDescribedBy=""
                 >
                   <Checkbox
-                    hintText={`${organizationTitle} - ${t(concept.status, {
-                      ns: 'common',
-                    })}`}
+                    hintText={`${organizationTitle} - ${t(
+                      concept.status ?? 'DRAFT',
+                      {
+                        ns: 'common',
+                      }
+                    )}`}
                     onClick={(e) => handleCheckbox(e, concept)}
                     checked={chosen.some((chose) => chose.id === concept.id)}
                   >

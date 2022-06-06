@@ -35,7 +35,7 @@ export default function TermBlock({
           <TermModal data={{ term: term, type: type }} />
         </span>
         <span>
-          {type}, {t(term.properties.status?.[0].value ?? '')}
+          {type}, {t(term.properties.status?.[0].value ?? 'DRAFT')}
         </span>
       </span>
     ),

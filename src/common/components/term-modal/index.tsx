@@ -72,7 +72,11 @@ export default function TermModal({ data }: TermModalProps) {
           </ModalTitle>
 
           {renderInfo(t('term-modal-type'), data.type)}
-          {renderInfoChip(t('term-modal-status'), data.term.properties.status)}
+          {renderInfoChip(
+            t('term-modal-status'),
+            data.term.properties.status,
+            'DRAFT'
+          )}
           {renderInfo(
             t('term-modal-homograph-number'),
             data.term.properties.termHomographNumber?.[0].value
@@ -168,7 +172,11 @@ export default function TermModal({ data }: TermModalProps) {
     );
   }
 
-  function renderInfoChip(subtitle: string, value?: Property[]) {
+  function renderInfoChip(
+    subtitle: string,
+    value?: Property[],
+    defaultValue = ''
+  ) {
     if (!value) {
       return null;
     }
@@ -183,7 +191,9 @@ export default function TermModal({ data }: TermModalProps) {
           aria-disabled={true}
           $isValid={value[0].value === 'VALID' ? 'true' : undefined}
         >
-          {t(getPropertyValue({ property: value }) ?? '', { ns: 'common' })}
+          {t(getPropertyValue({ property: value }) ?? defaultValue, {
+            ns: 'common',
+          })}
         </TermModalChip>
       </>
     );
