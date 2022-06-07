@@ -2,9 +2,10 @@
 
 ## Development
 
-By default, Matomo is disabled in development. If you need to enable it, just
-add the following lines to `.env.local` and restart Next.js. These settings
-are the same as in development servers.
+By default, Matomo is disabled in development. If you need to enable it,
+uncheck "Only track visits and actions when the action URL starts with one of
+the above URLs." checkbox from site settings in Matomo and add the following
+lines to `.env.local` and restart Next.js.
 
 Be careful not to typo any of these variables. Production site is still
 protected so you can't corrupt its analytics accidentally.
