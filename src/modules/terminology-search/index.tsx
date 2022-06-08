@@ -27,13 +27,18 @@ import LoadIndicator from '@app/common/components/load-indicator';
 import { useStoreDispatch } from '@app/store';
 import { useSelector } from 'react-redux';
 
-export default function TerminologySearch() {
+interface TerminologySearch {
+  JSESSIONID?: string;
+}
+
+export default function TerminologySearch({ JSESSIONID }: TerminologySearch) {
   const { t, i18n } = useTranslation();
   const { isSmall } = useBreakpoints();
   const { urlState } = useUrlState();
   const { data, error, isFetching, refetch } = useGetSearchResultQuery({
     urlState,
     language: i18n.language,
+    JSESSIONID: JSESSIONID,
   });
   const { data: groups, error: groupsError } = useGetGroupsQuery(i18n.language);
   const { data: organizations, error: organizationsError } =
