@@ -25,8 +25,8 @@ export const conceptApi = createApi({
       query: ({ terminologyId, conceptId, JSESSIONID }) => ({
         url: `/concept?graphId=${terminologyId}&conceptId=${conceptId}`,
         method: 'GET',
-        localHeaders: { cookie: `JSESSIONID=${JSESSIONID}` }
-      })
+        localHeaders: { cookie: `JSESSIONID=${JSESSIONID}` },
+      }),
     }),
     searchConcept: builder.mutation<
       {

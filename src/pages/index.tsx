@@ -75,7 +75,11 @@ export const getServerSideProps = createCommonGetServerSideProps(
     const JSESSIONID = req.session.get('cookies')?.JSESSIONID ?? null;
 
     await store.dispatch(
-      getSearchResult.initiate({ urlState: urlState, language: locale, JSESSIONID: JSESSIONID })
+      getSearchResult.initiate({
+        urlState: urlState,
+        language: locale,
+        JSESSIONID: JSESSIONID,
+      })
     );
     await store.dispatch(getGroups.initiate(locale));
     await store.dispatch(getOrganizations.initiate(locale));

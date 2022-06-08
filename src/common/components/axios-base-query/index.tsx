@@ -4,7 +4,7 @@ import { Error } from '@app/common/interfaces/error.interface';
 
 const axiosBaseQuery = (
   { baseUrl }: { baseUrl: string } = { baseUrl: '' },
-  { headers }: { headers?: { [key: string]: string } } = { headers: {} },
+  { headers }: { headers?: { [key: string]: string } } = { headers: {} }
 ): BaseQueryFn<
   {
     url: string;
@@ -24,7 +24,7 @@ const axiosBaseQuery = (
         headers: reqHeader ? reqHeader : { 'content-type': 'application/json' },
         method,
         data,
-        withCredentials: true
+        withCredentials: true,
       });
       return { data: result.data };
     } catch (axiosError) {
@@ -39,7 +39,10 @@ const axiosBaseQuery = (
   };
 };
 
-function getHeader(headers?: { [key: string]: string }, localHeaders?: { [key: string]: string }) {
+function getHeader(
+  headers?: { [key: string]: string },
+  localHeaders?: { [key: string]: string }
+) {
   if (localHeaders) {
     return localHeaders;
   }
@@ -50,6 +53,5 @@ function getHeader(headers?: { [key: string]: string }, localHeaders?: { [key: s
 
   return null;
 }
-
 
 export default axiosBaseQuery;

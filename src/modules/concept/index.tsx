@@ -49,7 +49,7 @@ export default function Concept({
   const { data: concept, error: conceptError } = useGetConceptQuery({
     terminologyId,
     conceptId,
-    JSESSIONID
+    JSESSIONID,
   });
   const { t, i18n } = useTranslation('concept');
   const dispatch = useStoreDispatch();

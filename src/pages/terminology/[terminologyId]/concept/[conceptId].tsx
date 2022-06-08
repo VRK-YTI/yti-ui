@@ -66,15 +66,17 @@ export const getServerSideProps = createCommonGetServerSideProps(
     const JSESSIONID = req.session.get('cookies')?.JSESSIONID ?? null;
 
     await store.dispatch(getVocabulary.initiate(terminologyId));
-    await store.dispatch(getConcept.initiate({ terminologyId, conceptId, JSESSIONID }));
+    await store.dispatch(
+      getConcept.initiate({ terminologyId, conceptId, JSESSIONID })
+    );
 
     await Promise.all(getVocabularyRunningOperationPromises());
     await Promise.all(getConceptRunningOperationPromises());
 
     return {
       props: {
-        JSESSIONID: JSESSIONID
-      }
+        JSESSIONID: JSESSIONID,
+      },
     };
   }
 );

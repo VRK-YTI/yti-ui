@@ -50,7 +50,7 @@ export const terminologySearchApi = createApi({
           pageSize: 10,
           pageFrom: Math.max(0, (value.urlState.page - 1) * 10),
         },
-        localHeaders: { cookie: `JSESSIONID=${value.JSESSIONID}` }
+        localHeaders: { cookie: `JSESSIONID=${value.JSESSIONID}` },
       }),
       providesTags: ['TerminologySearch'],
     }),
