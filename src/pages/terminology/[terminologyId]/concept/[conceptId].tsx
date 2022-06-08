@@ -23,6 +23,7 @@ import {
 
 interface ConceptPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
+  JSESSIONID: string;
 }
 
 export default function ConceptPage(props: ConceptPageProps) {
@@ -42,6 +43,7 @@ export default function ConceptPage(props: ConceptPageProps) {
           terminologyId={terminologyId}
           conceptId={conceptId}
           setConceptTitle={setConceptTitle}
+          JSESSIONID={props.JSESSIONID}
         />
       </Layout>
     </CommonContextProvider>
@@ -61,12 +63,18 @@ export const getServerSideProps = createCommonGetServerSideProps(
       throw new Error('Invalid parameters for page');
     }
 
+    const JSESSIONID = req.session.get('cookies')?.JSESSIONID ?? null;
+
     await store.dispatch(getVocabulary.initiate(terminologyId));
-    await store.dispatch(getConcept.initiate({ terminologyId, conceptId }));
+    await store.dispatch(getConcept.initiate({ terminologyId, conceptId, JSESSIONID }));
 
     await Promise.all(getVocabularyRunningOperationPromises());
     await Promise.all(getConceptRunningOperationPromises());
 
-    return {};
+    return {
+      props: {
+        JSESSIONID: JSESSIONID
+      }
+    };
   }
 );

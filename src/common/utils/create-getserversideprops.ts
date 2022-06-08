@@ -56,6 +56,8 @@ export function createCommonGetServerSideProps<
         query: ParsedUrlQuery;
         locale: string;
       }) => {
+        // console.log(req.session.get('user'));
+        // console.log(req.session.get('cookies')['JSESSIONID']);
         const results = await handler?.({
           req,
           res,

@@ -33,7 +33,7 @@ export const terminologySearchApi = createApi({
   endpoints: (builder) => ({
     getSearchResult: builder.query<
       TerminologySearchResult,
-      { urlState: UrlState; language: string }
+      { urlState: UrlState; language: string; JSESSIONID?: string }
     >({
       query: (value) => ({
         url: '/searchTerminology',

@@ -34,12 +34,14 @@ export interface ConceptProps {
   terminologyId: string;
   conceptId: string;
   setConceptTitle: (title?: string) => void;
+  JSESSIONID: string;
 }
 
 export default function Concept({
   terminologyId,
   conceptId,
   setConceptTitle,
+  JSESSIONID,
 }: ConceptProps) {
   const { breakpoint } = useBreakpoints();
   const { data: terminology, error: terminologyError } =
@@ -47,6 +49,7 @@ export default function Concept({
   const { data: concept, error: conceptError } = useGetConceptQuery({
     terminologyId,
     conceptId,
+    JSESSIONID
   });
   const { t, i18n } = useTranslation('concept');
   const dispatch = useStoreDispatch();
@@ -177,13 +180,14 @@ export default function Concept({
             fallbackLanguage="fi"
           />
           <BasicBlock title={t('vocabulary-info-created-at', { ns: 'common' })}>
-            <FormattedDate date={concept?.createdDate} />, {concept?.createdBy}
+            <FormattedDate date={concept?.createdDate} />
+            {concept?.createdBy && `, ${concept.createdBy}`}
           </BasicBlock>
           <BasicBlock
             title={t('vocabulary-info-modified-at', { ns: 'common' })}
           >
-            <FormattedDate date={concept?.lastModifiedDate} />,{' '}
-            {concept?.lastModifiedBy}
+            <FormattedDate date={concept?.lastModifiedDate} />
+            {concept?.lastModifiedBy && `, ${concept.lastModifiedBy}`}
           </BasicBlock>
           <BasicBlock title="URI">{concept?.uri}</BasicBlock>
 

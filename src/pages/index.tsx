@@ -42,7 +42,7 @@ export default function IndexPage(props: IndexPageProps) {
 }
 
 export const getServerSideProps = createCommonGetServerSideProps(
-  async ({ store, locale, query }: LocalHandlerParams) => {
+  async ({ req, store, locale, query }: LocalHandlerParams) => {
     const urlState = Object.assign({}, initialUrlState);
 
     if (query && query.q !== undefined) {

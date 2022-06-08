@@ -20,12 +20,13 @@ export const conceptApi = createApi({
   endpoints: (builder) => ({
     getConcept: builder.query<
       Concept,
-      { terminologyId: string; conceptId: string }
+      { terminologyId: string; conceptId: string; JSESSIONID?: string }
     >({
-      query: ({ terminologyId, conceptId }) => ({
+      query: ({ terminologyId, conceptId, JSESSIONID }) => ({
         url: `/concept?graphId=${terminologyId}&conceptId=${conceptId}`,
         method: 'GET',
-      }),
+        localHeaders: { cookie: `JSESSIONID=${JSESSIONID}` }
+      })
     }),
     searchConcept: builder.mutation<
       {
