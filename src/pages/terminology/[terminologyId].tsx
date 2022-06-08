@@ -73,9 +73,9 @@ export const getServerSideProps = createCommonGetServerSideProps(
       urlState.type = Array.isArray(query.type) ? query.type[0] : query.type;
     }
 
-    await store.dispatch(getVocabulary.initiate(id));
-    await store.dispatch(getCollections.initiate(id));
-    await store.dispatch(
+    store.dispatch(getVocabulary.initiate(id));
+    store.dispatch(getCollections.initiate(id));
+    store.dispatch(
       getConceptResult.initiate({ urlState: urlState, id, language: locale })
     );
 

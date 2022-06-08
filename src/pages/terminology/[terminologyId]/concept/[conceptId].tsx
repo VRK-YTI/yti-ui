@@ -65,8 +65,8 @@ export const getServerSideProps = createCommonGetServerSideProps(
 
     const JSESSIONID = req.session.get('cookies')?.JSESSIONID ?? null;
 
-    await store.dispatch(getVocabulary.initiate(terminologyId));
-    await store.dispatch(
+    store.dispatch(getVocabulary.initiate(terminologyId));
+    store.dispatch(
       getConcept.initiate({ terminologyId, conceptId, JSESSIONID })
     );
 

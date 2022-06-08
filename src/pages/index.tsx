@@ -16,8 +16,12 @@ import {
   getGroups,
   getOrganizations,
   getSearchResult,
+  getRunningOperationPromises as terminologyGetRunningOperationPromises,
 } from '@app/common/components/terminology-search/terminology-search.slice';
-import { getCounts } from '@app/common/components/counts/counts.slice';
+import {
+  getCounts,
+  getRunningOperationPromises as countsGetRunningOperationPromises,
+} from '@app/common/components/counts/counts.slice';
 import { initialUrlState } from '@app/common/utils/hooks/useUrlState';
 
 interface IndexPageProps extends CommonContextState {
@@ -81,9 +85,12 @@ export const getServerSideProps = createCommonGetServerSideProps(
         JSESSIONID: JSESSIONID,
       })
     );
-    await store.dispatch(getGroups.initiate(locale));
-    await store.dispatch(getOrganizations.initiate(locale));
-    await store.dispatch(getCounts.initiate(null));
+    store.dispatch(getGroups.initiate(locale));
+    store.dispatch(getOrganizations.initiate(locale));
+    store.dispatch(getCounts.initiate(null));
+
+    await Promise.all(terminologyGetRunningOperationPromises());
+    await Promise.all(countsGetRunningOperationPromises());
 
     return {
       props: {
