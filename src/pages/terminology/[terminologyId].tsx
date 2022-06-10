@@ -22,6 +22,7 @@ import {
 
 interface TerminologyPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
+  JSESSIONID?: string;
 }
 
 export default function TerminologyPage(props: TerminologyPageProps) {
@@ -41,6 +42,7 @@ export default function TerminologyPage(props: TerminologyPageProps) {
         <Vocabulary
           id={terminologyId}
           setTerminologyTitle={setTerminologyTitle}
+          JSESSIONID={props.JSESSIONID}
         />
       </Layout>
     </CommonContextProvider>
@@ -73,14 +75,24 @@ export const getServerSideProps = createCommonGetServerSideProps(
       urlState.type = Array.isArray(query.type) ? query.type[0] : query.type;
     }
 
-    store.dispatch(getVocabulary.initiate(id));
+    const JSESSIONID = req.session.get('cookies')?.JSESSIONID ?? null;
+
+    store.dispatch(getVocabulary.initiate({ id, JSESSIONID }));
     store.dispatch(getCollections.initiate(id));
     store.dispatch(
-      getConceptResult.initiate({ urlState: urlState, id, language: locale })
+      getConceptResult.initiate({
+        urlState: urlState,
+        id,
+        language: locale,
+      })
     );
 
     await Promise.all(getRunningOperationPromises());
 
-    return {};
+    return {
+      props: {
+        JSESSIONID: JSESSIONID,
+      },
+    };
   }
 );

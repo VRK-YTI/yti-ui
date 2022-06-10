@@ -65,4 +65,41 @@ describe('infoExpander', () => {
 
     expect(screen.getByText('tr-email-subscription-add')).toBeInTheDocument();
   });
+
+  it('should render createdBy and modifiedBy when available', () => {
+    const store = makeStore();
+    const loginInitialState = Object.assign({}, initialState);
+    loginInitialState['anonymous'] = false;
+    loginInitialState['email'] = 'admin@localhost';
+    loginInitialState['firstName'] = 'Admin';
+    loginInitialState['lastName'] = 'User';
+    store.dispatch(setLogin(loginInitialState));
+
+    render(
+      <Provider store={store}>
+        <InfoExpander
+          data={
+            {
+              createdBy: 'Creator',
+              createdDate: '1970-01-01T00:00:00.000+00:00',
+              lastModifiedBy: 'Modifier',
+              lastModifiedDate: '1970-01-02T00:00:00.000+00:00',
+              properties: {},
+              references: {
+                contributor: [{ properties: { prefLabel: [] } }],
+                inGroup: [{ properties: { prefLabel: [] } }],
+              },
+            } as any
+          }
+        />
+      </Provider>,
+      { wrapper: themeProvider }
+    );
+
+    expect(screen.getByText(/1.1.1970, 0.00/)).toBeInTheDocument();
+    expect(screen.getByText(/Creator/)).toBeInTheDocument();
+
+    expect(screen.getByText(/2.1.1970, 0.00/)).toBeInTheDocument();
+    expect(screen.getByText(/Modifier/)).toBeInTheDocument();
+  });
 });

@@ -31,11 +31,13 @@ import { getPropertyValue } from '@app/common/components/property-value/get-prop
 interface VocabularyProps {
   id: string;
   setTerminologyTitle: (title?: string) => void;
+  JSESSIONID?: string;
 }
 
 export default function Vocabulary({
   id,
   setTerminologyTitle,
+  JSESSIONID,
 }: VocabularyProps) {
   const { t, i18n } = useTranslation('common');
   const { isSmall } = useBreakpoints();
@@ -53,8 +55,15 @@ export default function Vocabulary({
     error: conceptsError,
     isFetching: isFetchingConcepts,
     refetch: refetchConcepts,
-  } = useGetConceptResultQuery({ id, urlState, language: i18n.language });
-  const { data: info, error: infoError } = useGetVocabularyQuery(id);
+  } = useGetConceptResultQuery({
+    id,
+    urlState,
+    language: i18n.language,
+  });
+  const { data: info, error: infoError } = useGetVocabularyQuery({
+    id,
+    JSESSIONID,
+  });
   const { data: counts, error: countsError } = useGetVocabularyCountQuery(id);
   const [showModal, setShowModal] = useState(false);
   const [showLoadingConcepts, setShowLoadingConcepts] = useState(false);
