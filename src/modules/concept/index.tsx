@@ -77,7 +77,7 @@ export default function Concept({
   }, [concept, dispatch, prefLabel]);
 
   const status =
-    getPropertyValue({ property: concept?.properties.status }) ?? 'DRAFT';
+    getPropertyValue({ property: concept?.properties.status }) || 'DRAFT';
 
   return (
     <>
