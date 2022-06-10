@@ -27,6 +27,8 @@ import {
   MainTitle,
   BadgeBar,
 } from '@app/common/components/title-block';
+import { useSelector } from 'react-redux';
+import { selectReduxCookie } from '@app/common/components/redux-cookies/redux-cookies.slice';
 
 interface CollectionProps {
   terminologyId: string;
@@ -43,15 +45,16 @@ export default function Collection({
   const { t, i18n } = useTranslation('collection');
   const dispatch = useStoreDispatch();
   const router = useRouter();
+  const JSESSIONID = useSelector(selectReduxCookie('JSESSIONID'));
 
   const { data: terminology, error: terminologyError } = useGetVocabularyQuery(
-    terminologyId,
+    { id: terminologyId, JSESSIONID },
     {
       skip: router.isFallback,
     }
   );
   const { data: collection, error: collectionError } = useGetCollectionQuery(
-    { terminologyId, collectionId },
+    { terminologyId, collectionId, JSESSIONID },
     {
       skip: router.isFallback,
     }
@@ -161,14 +164,14 @@ export default function Collection({
             fallbackLanguage="fi"
           />
           <BasicBlock title={t('vocabulary-info-created-at', { ns: 'common' })}>
-            <FormattedDate date={collection?.createdDate} />,{' '}
-            {collection?.createdBy}
+            <FormattedDate date={collection?.createdDate} />
+            {collection?.createdBy && `, ${collection.createdBy}`}
           </BasicBlock>
           <BasicBlock
             title={t('vocabulary-info-modified-at', { ns: 'common' })}
           >
-            <FormattedDate date={collection?.lastModifiedDate} />,{' '}
-            {collection?.lastModifiedBy}
+            <FormattedDate date={collection?.lastModifiedDate} />
+            {collection?.lastModifiedBy && `, ${collection.lastModifiedBy}`}
           </BasicBlock>
           <BasicBlock title="URI">{collection?.uri}</BasicBlock>
         </MainContent>

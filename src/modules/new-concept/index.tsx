@@ -16,6 +16,8 @@ import FormFooter from './form-footer';
 import { NewConceptBlock } from './new-concept.styles';
 import ConceptTermsBlock from './concept-terms-block';
 import { asString } from '@app/common/utils/hooks/useUrlState';
+import { useSelector } from 'react-redux';
+import { selectReduxCookie } from '@app/common/components/redux-cookies/redux-cookies.slice';
 
 interface NewConceptProps {
   terminologyId: string;
@@ -25,7 +27,11 @@ interface NewConceptProps {
 export default function NewConcept({ terminologyId }: NewConceptProps) {
   const { t } = useTranslation('concept');
   const router = useRouter();
-  const { data: terminology } = useGetVocabularyQuery(terminologyId);
+  const JSESSIONID = useSelector(selectReduxCookie('JSESSIONID'));
+  const { data: terminology } = useGetVocabularyQuery({
+    id: terminologyId,
+    JSESSIONID,
+  });
   const languages =
     terminology?.properties.language?.map(({ value }) => value) ?? [];
   const preferredTerm = languages

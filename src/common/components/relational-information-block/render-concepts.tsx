@@ -21,6 +21,8 @@ import {
 } from '@app/common/components/block';
 import FormattedDate from '@app/common/components/formatted-date';
 import { Concepts } from '@app/common/interfaces/concepts.interface';
+import { useSelector } from 'react-redux';
+import { selectReduxCookie } from '../redux-cookies/redux-cookies.slice';
 
 interface RenderConceptsProps {
   concepts?: Concepts[];
@@ -38,7 +40,11 @@ export default function RenderConcepts({
   fromOther,
 }: RenderConceptsProps) {
   const { t, i18n } = useTranslation('admin');
-  const { data: terminology } = useGetVocabularyQuery(terminologyId);
+  const JSESSIONID = useSelector(selectReduxCookie('JSESSIONID'));
+  const { data: terminology } = useGetVocabularyQuery({
+    id: terminologyId,
+    JSESSIONID,
+  });
   const { data: vocabularies } = useGetVocabulariesQuery(null);
 
   const handleCheckbox = (e: { checkboxState: boolean }, concept: Concepts) => {
@@ -132,12 +138,16 @@ export default function RenderConcepts({
     conceptId,
   }: RenderExpanderContentProps) {
     const { t } = useTranslation('admin');
+    const JSESSIONID = useSelector(selectReduxCookie('JSESSIONID'));
     const { data: concept } = useGetConceptQuery({
       terminologyId: terminologyId,
       conceptId: conceptId,
+      JSESSIONID: JSESSIONID,
     });
-
-    const { data: terminology } = useGetVocabularyQuery(terminologyId);
+    const { data: terminology } = useGetVocabularyQuery({
+      id: terminologyId,
+      JSESSIONID,
+    });
 
     return (
       <ExpanderContent>

@@ -23,7 +23,6 @@ import {
 
 interface ConceptPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
-  JSESSIONID: string;
 }
 
 export default function ConceptPage(props: ConceptPageProps) {
@@ -43,7 +42,6 @@ export default function ConceptPage(props: ConceptPageProps) {
           terminologyId={terminologyId}
           conceptId={conceptId}
           setConceptTitle={setConceptTitle}
-          JSESSIONID={props.JSESSIONID}
         />
       </Layout>
     </CommonContextProvider>
@@ -65,7 +63,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
 
     const JSESSIONID = req.session.get('cookies')?.JSESSIONID ?? null;
 
-    store.dispatch(getVocabulary.initiate(terminologyId));
+    store.dispatch(getVocabulary.initiate({ id: terminologyId, JSESSIONID }));
     store.dispatch(
       getConcept.initiate({ terminologyId, conceptId, JSESSIONID })
     );
@@ -73,10 +71,6 @@ export const getServerSideProps = createCommonGetServerSideProps(
     await Promise.all(getVocabularyRunningOperationPromises());
     await Promise.all(getConceptRunningOperationPromises());
 
-    return {
-      props: {
-        JSESSIONID: JSESSIONID,
-      },
-    };
+    return {};
   }
 );

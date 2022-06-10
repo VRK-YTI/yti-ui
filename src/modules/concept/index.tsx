@@ -29,23 +29,26 @@ import {
   BadgeBar,
   Badge,
 } from '@app/common/components/title-block';
+import { useSelector } from 'react-redux';
+import { selectReduxCookie } from '@app/common/components/redux-cookies/redux-cookies.slice';
 
 export interface ConceptProps {
   terminologyId: string;
   conceptId: string;
   setConceptTitle: (title?: string) => void;
-  JSESSIONID: string;
 }
 
 export default function Concept({
   terminologyId,
   conceptId,
   setConceptTitle,
-  JSESSIONID,
 }: ConceptProps) {
+  const JSESSIONID = useSelector(selectReduxCookie('JSESSIONID'));
   const { breakpoint } = useBreakpoints();
-  const { data: terminology, error: terminologyError } =
-    useGetVocabularyQuery(terminologyId);
+  const { data: terminology, error: terminologyError } = useGetVocabularyQuery({
+    id: terminologyId,
+    JSESSIONID,
+  });
   const { data: concept, error: conceptError } = useGetConceptQuery({
     terminologyId,
     conceptId,

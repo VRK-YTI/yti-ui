@@ -26,15 +26,13 @@ import {
 import LoadIndicator from '@app/common/components/load-indicator';
 import { useStoreDispatch } from '@app/store';
 import { useSelector } from 'react-redux';
+import { selectReduxCookie } from '@app/common/components/redux-cookies/redux-cookies.slice';
 
-interface TerminologySearch {
-  JSESSIONID?: string;
-}
-
-export default function TerminologySearch({ JSESSIONID }: TerminologySearch) {
+export default function TerminologySearch() {
   const { t, i18n } = useTranslation();
   const { isSmall } = useBreakpoints();
   const { urlState } = useUrlState();
+  const JSESSIONID = useSelector(selectReduxCookie('JSESSIONID'));
   const { data, error, isFetching, refetch } = useGetSearchResultQuery({
     urlState,
     language: i18n.language,

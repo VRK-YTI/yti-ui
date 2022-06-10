@@ -27,22 +27,23 @@ import { useRouter } from 'next/router';
 import LoadIndicator from '@app/common/components/load-indicator';
 import { useStoreDispatch } from '@app/store';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
+import { selectReduxCookie } from '@app/common/components/redux-cookies/redux-cookies.slice';
+import { useSelector } from 'react-redux';
 
 interface VocabularyProps {
   id: string;
   setTerminologyTitle: (title?: string) => void;
-  JSESSIONID?: string;
 }
 
 export default function Vocabulary({
   id,
   setTerminologyTitle,
-  JSESSIONID,
 }: VocabularyProps) {
   const { t, i18n } = useTranslation('common');
   const { isSmall } = useBreakpoints();
   const { urlState } = useUrlState();
   const router = useRouter();
+  const JSESSIONID = useSelector(selectReduxCookie('JSESSIONID'));
   const dispatch = useStoreDispatch();
   const {
     data: collections,

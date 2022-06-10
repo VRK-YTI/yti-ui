@@ -13,6 +13,7 @@ import { SSRConfig } from 'next-i18next';
 import { setLogin } from '@app/common/components/login/login.slice';
 import { CommonContextState } from '../components/common-context-provider';
 import { setAdminControls } from '../components/admin-controls/admin-controls.slice';
+import { setReduxCookies } from '../components/redux-cookies/redux-cookies.slice';
 
 export interface LocalHandlerParams {
   req: NextIronRequest;
@@ -71,6 +72,10 @@ export function createCommonGetServerSideProps<
         store.dispatch(
           setAdminControls(process.env.ADMIN_CONTROLS_DISABLED === 'true')
         );
+
+        const JSESSIONID = req.session.get('cookies')?.JSESSIONID ?? null;
+
+        store.dispatch(setReduxCookies({ JSESSIONID: JSESSIONID }));
 
         const userAgent = req.headers['user-agent'] ?? '';
 

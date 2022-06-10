@@ -22,7 +22,6 @@ import {
 
 interface TerminologyPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
-  JSESSIONID?: string;
 }
 
 export default function TerminologyPage(props: TerminologyPageProps) {
@@ -42,7 +41,6 @@ export default function TerminologyPage(props: TerminologyPageProps) {
         <Vocabulary
           id={terminologyId}
           setTerminologyTitle={setTerminologyTitle}
-          JSESSIONID={props.JSESSIONID}
         />
       </Layout>
     </CommonContextProvider>
@@ -89,10 +87,6 @@ export const getServerSideProps = createCommonGetServerSideProps(
 
     await Promise.all(getRunningOperationPromises());
 
-    return {
-      props: {
-        JSESSIONID: JSESSIONID,
-      },
-    };
+    return {};
   }
 );

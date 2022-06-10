@@ -26,7 +26,6 @@ import { initialUrlState } from '@app/common/utils/hooks/useUrlState';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
-  JSESSIONID?: string;
 }
 
 export default function IndexPage(props: IndexPageProps) {
@@ -40,7 +39,7 @@ export default function IndexPage(props: IndexPageProps) {
           <link rel="shortcut icon" href="/favicon.ico" />
         </Head>
 
-        <TerminologySearch JSESSIONID={props.JSESSIONID} />
+        <TerminologySearch />
       </Layout>
     </CommonContextProvider>
   );
@@ -92,10 +91,6 @@ export const getServerSideProps = createCommonGetServerSideProps(
     await Promise.all(terminologyGetRunningOperationPromises());
     await Promise.all(countsGetRunningOperationPromises());
 
-    return {
-      props: {
-        JSESSIONID: JSESSIONID,
-      },
-    };
+    return {};
   }
 );
