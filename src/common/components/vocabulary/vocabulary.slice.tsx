@@ -57,14 +57,10 @@ export const vocabularyApi = createApi({
         },
       }),
     }),
-    getVocabulary: builder.query<
-      VocabularyInfoDTO,
-      { id: string; JSESSIONID?: string }
-    >({
+    getVocabulary: builder.query<VocabularyInfoDTO, { id: string }>({
       query: (value) => ({
         url: `/vocabulary?graphId=${value.id}`,
         method: 'GET',
-        localHeaders: { cookie: `JSESSIONID=${value.JSESSIONID}` },
       }),
     }),
     postNewVocabulary: builder.mutation<

@@ -27,8 +27,8 @@ import { useRouter } from 'next/router';
 import LoadIndicator from '@app/common/components/load-indicator';
 import { useStoreDispatch } from '@app/store';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
-import { selectReduxCookie } from '@app/common/components/redux-cookies/redux-cookies.slice';
 import { useSelector } from 'react-redux';
+import { selectLogin } from '@app/common/components/login/login.slice';
 
 interface VocabularyProps {
   id: string;
@@ -43,14 +43,14 @@ export default function Vocabulary({
   const { isSmall } = useBreakpoints();
   const { urlState } = useUrlState();
   const router = useRouter();
-  const JSESSIONID = useSelector(selectReduxCookie('JSESSIONID'));
   const dispatch = useStoreDispatch();
   const {
     data: collections,
     error: collectionsError,
     isFetching: isFetchingCollections,
+    isUninitialized: isUninitializedCollections,
     refetch: refetchCollections,
-  } = useGetCollectionsQuery(id);
+  } = useGetCollectionsQuery(id, { skip: urlState.type !== 'collection' });
   const {
     data: concepts,
     error: conceptsError,
@@ -61,14 +61,18 @@ export default function Vocabulary({
     urlState,
     language: i18n.language,
   });
-  const { data: info, error: infoError } = useGetVocabularyQuery({
+  const {
+    data: info,
+    error: infoError,
+    refetch: vocabularyRefetch,
+  } = useGetVocabularyQuery({
     id,
-    JSESSIONID,
   });
   const { data: counts, error: countsError } = useGetVocabularyCountQuery(id);
   const [showModal, setShowModal] = useState(false);
   const [showLoadingConcepts, setShowLoadingConcepts] = useState(false);
-  const [showLoadingCollections, setShowLoadingCollections] = useState(false);
+  const [showLoadingCollections, setShowLoadingCollections] = useState(true);
+  const loginInformation = useSelector(selectLogin());
 
   if (infoError && 'status' in infoError && infoError?.status === 404) {
     router.push('/404');
@@ -79,6 +83,7 @@ export default function Vocabulary({
     language: i18n.language,
     fallbackLanguage: 'fi',
   });
+
   useEffect(() => {
     setTerminologyTitle(prefLabel);
   }, [setTerminologyTitle, prefLabel]);
@@ -91,16 +96,25 @@ export default function Vocabulary({
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      setShowLoadingCollections(isFetchingCollections);
+      setShowLoadingCollections(
+        isUninitializedCollections || isFetchingCollections
+      );
       setShowLoadingConcepts(isFetchingConcepts);
     }, 1000);
     return () => clearTimeout(timer);
   }, [
     isFetchingConcepts,
     isFetchingCollections,
+    isUninitializedCollections,
     setShowLoadingConcepts,
     setShowLoadingCollections,
   ]);
+
+  useEffect(() => {
+    if (!loginInformation.anonymous) {
+      vocabularyRefetch();
+    }
+  }, [loginInformation, vocabularyRefetch]);
 
   return (
     <>

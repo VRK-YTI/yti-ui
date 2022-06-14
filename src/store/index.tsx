@@ -19,7 +19,6 @@ import { subscriptionApi } from '@app/common/components/subscription/subscriptio
 import { accessRequestApi } from '@app/common/components/access-request/access-request.slice';
 import { adminControlsSlice } from '@app/common/components/admin-controls/admin-controls.slice';
 import { excelApi } from '@app/common/components/excel/excel.slice';
-import { reduxCookiesSlice } from '@app/common/components/redux-cookies/redux-cookies.slice';
 
 export function makeStore() {
   return configureStore({
@@ -38,7 +37,6 @@ export function makeStore() {
       [accessRequestApi.reducerPath]: accessRequestApi.reducer,
       [adminControlsSlice.name]: adminControlsSlice.reducer,
       [excelApi.reducerPath]: excelApi.reducer,
-      [reduxCookiesSlice.name]: reduxCookiesSlice.reducer,
     },
 
     middleware: (getDefaultMiddleware) =>

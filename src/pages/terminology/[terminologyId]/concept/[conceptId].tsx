@@ -61,12 +61,8 @@ export const getServerSideProps = createCommonGetServerSideProps(
       throw new Error('Invalid parameters for page');
     }
 
-    const JSESSIONID = req.session.get('cookies')?.JSESSIONID ?? null;
-
-    store.dispatch(getVocabulary.initiate({ id: terminologyId, JSESSIONID }));
-    store.dispatch(
-      getConcept.initiate({ terminologyId, conceptId, JSESSIONID })
-    );
+    store.dispatch(getVocabulary.initiate({ id: terminologyId }));
+    store.dispatch(getConcept.initiate({ terminologyId, conceptId }));
 
     await Promise.all(getVocabularyRunningOperationPromises());
     await Promise.all(getConceptRunningOperationPromises());

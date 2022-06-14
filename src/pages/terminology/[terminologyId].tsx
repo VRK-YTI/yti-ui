@@ -9,7 +9,6 @@ import {
 import Vocabulary from '@app/modules/vocabulary';
 import PageTitle from '@app/common/components/page-title';
 import {
-  getCollections,
   getConceptResult,
   getRunningOperationPromises,
   getVocabulary,
@@ -48,7 +47,7 @@ export default function TerminologyPage(props: TerminologyPageProps) {
 }
 
 export const getServerSideProps = createCommonGetServerSideProps(
-  async ({ req, store, query, params, locale }: LocalHandlerParams) => {
+  async ({ store, query, params, locale }: LocalHandlerParams) => {
     const id = Array.isArray(params.terminologyId)
       ? params.terminologyId[0]
       : params.terminologyId;
@@ -73,10 +72,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
       urlState.type = Array.isArray(query.type) ? query.type[0] : query.type;
     }
 
-    const JSESSIONID = req.session.get('cookies')?.JSESSIONID ?? null;
-
-    store.dispatch(getVocabulary.initiate({ id, JSESSIONID }));
-    store.dispatch(getCollections.initiate(id));
+    store.dispatch(getVocabulary.initiate({ id }));
     store.dispatch(
       getConceptResult.initiate({
         urlState: urlState,

@@ -19,12 +19,11 @@ export const collectionApi = createApi({
   endpoints: (builder) => ({
     getCollection: builder.query<
       Collection,
-      { terminologyId: string; collectionId: string; JSESSIONID?: string }
+      { terminologyId: string; collectionId: string }
     >({
-      query: ({ terminologyId, collectionId, JSESSIONID }) => ({
+      query: ({ terminologyId, collectionId }) => ({
         url: `/collection?graphId=${terminologyId}&collectionId=${collectionId}`,
         method: 'GET',
-        localHeaders: { cookie: `JSESSIONID=${JSESSIONID}` },
       }),
     }),
     getCollections: builder.query<Collection[], string>({

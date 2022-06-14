@@ -33,7 +33,7 @@ export const terminologySearchApi = createApi({
   endpoints: (builder) => ({
     getSearchResult: builder.query<
       TerminologySearchResult,
-      { urlState: UrlState; language: string; JSESSIONID?: string }
+      { urlState: UrlState; language: string }
     >({
       query: (value) => ({
         url: '/searchTerminology',
@@ -50,7 +50,6 @@ export const terminologySearchApi = createApi({
           pageSize: 10,
           pageFrom: Math.max(0, (value.urlState.page - 1) * 10),
         },
-        localHeaders: { cookie: `JSESSIONID=${value.JSESSIONID}` },
       }),
       providesTags: ['TerminologySearch'],
     }),

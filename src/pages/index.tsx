@@ -15,14 +15,12 @@ import PageTitle from '@app/common/components/page-title';
 import {
   getGroups,
   getOrganizations,
-  getSearchResult,
   getRunningOperationPromises as terminologyGetRunningOperationPromises,
 } from '@app/common/components/terminology-search/terminology-search.slice';
 import {
   getCounts,
   getRunningOperationPromises as countsGetRunningOperationPromises,
 } from '@app/common/components/counts/counts.slice';
-import { initialUrlState } from '@app/common/utils/hooks/useUrlState';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -46,44 +44,7 @@ export default function IndexPage(props: IndexPageProps) {
 }
 
 export const getServerSideProps = createCommonGetServerSideProps(
-  async ({ req, store, locale, query }: LocalHandlerParams) => {
-    const urlState = Object.assign({}, initialUrlState);
-
-    if (query && query.q !== undefined) {
-      urlState.q = Array.isArray(query.q) ? query.q[0] : query.q;
-    }
-
-    if (query && query.status !== undefined) {
-      urlState.status = Array.isArray(query.status)
-        ? query.status
-        : [query.status];
-    }
-
-    if (query && query.type !== undefined) {
-      urlState.type = Array.isArray(query.type) ? query.type[0] : query.type;
-    }
-
-    if (query && query.domain) {
-      urlState.domain = Array.isArray(query.domain)
-        ? query.domain
-        : [query.domain];
-    }
-
-    if (query && query.organization) {
-      urlState.organization = Array.isArray(query.organization)
-        ? query.organization[0]
-        : query.organization;
-    }
-
-    const JSESSIONID = req.session.get('cookies')?.JSESSIONID ?? null;
-
-    await store.dispatch(
-      getSearchResult.initiate({
-        urlState: urlState,
-        language: locale,
-        JSESSIONID: JSESSIONID,
-      })
-    );
+  async ({ store, locale }: LocalHandlerParams) => {
     store.dispatch(getGroups.initiate(locale));
     store.dispatch(getOrganizations.initiate(locale));
     store.dispatch(getCounts.initiate(null));

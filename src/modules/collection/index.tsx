@@ -28,7 +28,7 @@ import {
   BadgeBar,
 } from '@app/common/components/title-block';
 import { useSelector } from 'react-redux';
-import { selectReduxCookie } from '@app/common/components/redux-cookies/redux-cookies.slice';
+import { selectLogin } from '@app/common/components/login/login.slice';
 
 interface CollectionProps {
   terminologyId: string;
@@ -45,16 +45,20 @@ export default function Collection({
   const { t, i18n } = useTranslation('collection');
   const dispatch = useStoreDispatch();
   const router = useRouter();
-  const JSESSIONID = useSelector(selectReduxCookie('JSESSIONID'));
+  const loginInformation = useSelector(selectLogin());
 
   const { data: terminology, error: terminologyError } = useGetVocabularyQuery(
-    { id: terminologyId, JSESSIONID },
+    { id: terminologyId },
     {
       skip: router.isFallback,
     }
   );
-  const { data: collection, error: collectionError } = useGetCollectionQuery(
-    { terminologyId, collectionId, JSESSIONID },
+  const {
+    data: collection,
+    error: collectionError,
+    refetch,
+  } = useGetCollectionQuery(
+    { terminologyId, collectionId },
     {
       skip: router.isFallback,
     }
@@ -87,6 +91,12 @@ export default function Collection({
       dispatch(setTitle(prefLabel ?? ''));
     }
   }, [collection, dispatch, prefLabel]);
+
+  useEffect(() => {
+    if (!loginInformation.anonymous) {
+      refetch();
+    }
+  }, [loginInformation, refetch]);
 
   return (
     <>

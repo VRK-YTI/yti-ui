@@ -30,7 +30,7 @@ import {
   Badge,
 } from '@app/common/components/title-block';
 import { useSelector } from 'react-redux';
-import { selectReduxCookie } from '@app/common/components/redux-cookies/redux-cookies.slice';
+import { selectLogin } from '@app/common/components/login/login.slice';
 
 export interface ConceptProps {
   terminologyId: string;
@@ -43,20 +43,22 @@ export default function Concept({
   conceptId,
   setConceptTitle,
 }: ConceptProps) {
-  const JSESSIONID = useSelector(selectReduxCookie('JSESSIONID'));
   const { breakpoint } = useBreakpoints();
   const { data: terminology, error: terminologyError } = useGetVocabularyQuery({
     id: terminologyId,
-    JSESSIONID,
   });
-  const { data: concept, error: conceptError } = useGetConceptQuery({
+  const {
+    data: concept,
+    error: conceptError,
+    refetch,
+  } = useGetConceptQuery({
     terminologyId,
     conceptId,
-    JSESSIONID,
   });
   const { t, i18n } = useTranslation('concept');
   const dispatch = useStoreDispatch();
   const router = useRouter();
+  const loginInformation = useSelector(selectLogin());
 
   if (conceptError && 'status' in conceptError && conceptError.status === 404) {
     router.push('/404');
@@ -81,6 +83,12 @@ export default function Concept({
       dispatch(setTitle(prefLabel ?? ''));
     }
   }, [concept, dispatch, prefLabel]);
+
+  useEffect(() => {
+    if (!loginInformation.anonymous) {
+      refetch();
+    }
+  }, [loginInformation, refetch]);
 
   const status =
     getPropertyValue({ property: concept?.properties.status }) ?? 'DRAFT';
