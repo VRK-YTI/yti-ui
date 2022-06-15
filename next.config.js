@@ -1,13 +1,97 @@
 const { i18n } = require('./next-i18next.config');
 const { PHASE_DEVELOPMENT_SERVER } = require('next/constants');
+const fs = require('fs');
 
 module.exports = (phase, { defaultConfig }) => {
+  let versionInfo;
+
+  if (fs.existsSync('public/version.txt')) {
+    versionInfo = fs.readFileSync('public/version.txt', 'utf8');
+  } else {
+    versionInfo = 'dev-local';
+  }
+
   let config = {
+    compiler: {
+      styledComponents: true,
+    },
     reactStrictMode: true,
     i18n,
     eslint: {
-      dirs: ['src']
-    }
+      dirs: ['src'],
+    },
+    async redirects() {
+      return [
+        {
+          source: '/concepts/:path*',
+          destination: '/terminology/:path*',
+          permanent: true,
+        },
+      ];
+    },
+    publicRuntimeConfig: {
+      versionInfo,
+    },
+    async headers() {
+      const isProd = process.env.NODE_ENV === 'production';
+      const matomoUrl = process.env.MATOMO_URL ?? '';
+
+      const ProductionContentSecurityPolicy = [
+        "base-uri 'self';",
+        "default-src 'self';",
+        "font-src 'self';",
+        "img-src 'self' data:;",
+        `script-src 'self' 'unsafe-inline' ${matomoUrl};`,
+        `connect-src 'self' ${matomoUrl};`,
+        "style-src 'self' 'unsafe-inline' data:;",
+        "frame-src 'self';",
+      ];
+
+      const ContentSecurityPolicy = [
+        "base-uri 'self';",
+        "default-src 'self';",
+        "font-src 'self';",
+        "img-src 'self' 'unsafe-eval' 'unsafe-inline' data:;",
+        `script-src 'self' 'unsafe-inline' 'unsafe-eval' ${matomoUrl};`,
+        `connect-src 'self' ${matomoUrl};`,
+        "style-src 'self' 'unsafe-inline' data:;",
+        "frame-src 'self';",
+      ];
+
+      return [
+        {
+          source: '/:path*',
+          headers: [
+            {
+              key: 'Content-Security-Policy',
+              value: isProd
+                ? ProductionContentSecurityPolicy.join(' ')
+                : ContentSecurityPolicy.join(' '),
+            },
+            {
+              key: 'Referrer-Policy',
+              value: 'same-origin',
+            },
+            {
+              key: 'Strict-Transport-Security',
+              value: 'max-age=31536000; includeSubDomains',
+            },
+            {
+              key: 'X-Content-Type-Options',
+              value: 'nosniff',
+            },
+            {
+              key: 'X-Frame-Options',
+              value: 'SAMEORIGIN',
+            },
+            {
+              key: 'X-XSS-Protection',
+              value: '1; mode=block',
+            },
+          ],
+        },
+      ];
+    },
   };
 
   if (process.env.REWRITE_PROFILE === 'local') {
@@ -21,8 +105,12 @@ module.exports = (phase, { defaultConfig }) => {
         return [
           {
             source: '/terminology-api/:path*',
-            destination: 'http://localhost:9103/terminology-api/:path*'
-          }
+            destination: 'http://localhost:9103/terminology-api/:path*',
+          },
+          {
+            source: '/messaging-api/:path*',
+            destination: 'http://localhost:9801/messaging-api/:path*',
+          },
         ];
       },
     };
@@ -37,8 +125,13 @@ module.exports = (phase, { defaultConfig }) => {
         return [
           {
             source: '/terminology-api/:path*',
-            destination: 'http://yti-terminology-api:9103/terminology-api/:path*'
-          }
+            destination:
+              'http://yti-terminology-api:9103/terminology-api/:path*',
+          },
+          {
+            source: '/messaging-api/:path*',
+            destination: 'http://yti-messaging-api:9801/messaging-api/:path*',
+          },
         ];
       },
     };

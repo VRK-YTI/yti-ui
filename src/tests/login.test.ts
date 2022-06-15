@@ -1,8 +1,8 @@
 import { createMocks } from 'node-mocks-http';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
-import login from '../pages/api/auth/login';
-import callback from '../pages/api/auth/callback';
+import login from '@app/pages/api/auth/login';
+import callback from '@app/pages/api/auth/callback';
 
 const fakeUser = {
   anonymous: false,
@@ -12,23 +12,18 @@ const fakeUser = {
   id: 'test-id',
   superuser: true,
   newlyCreated: false,
-  rolesInOrganizations: { 'test-organization-id': [ 'ADMIN' ] },
-  organizationsInRole: { ADMIN: [ 'test-organization-id' ] },
+  rolesInOrganizations: { 'test-organization-id': ['ADMIN'] },
+  organizationsInRole: { ADMIN: ['test-organization-id'] },
   enabled: true,
   username: 'admin@test.invalid',
-  authorities: [ { authority: 'ROLE_ADMIN' }, { authority: 'ROLE_USER' } ],
+  authorities: [{ authority: 'ROLE_ADMIN' }, { authority: 'ROLE_USER' }],
   accountNonExpired: true,
   accountNonLocked: true,
-  credentialsNonExpired: true
+  credentialsNonExpired: true,
 };
 
 describe('api endpoint - login', () => {
-
-  let mock: MockAdapter;
-
-  beforeAll(() => {
-    mock = new MockAdapter(axios, { onNoMatch: 'throwException' });
-  });
+  const mock = new MockAdapter(axios, { onNoMatch: 'throwException' });
 
   afterEach(() => {
     mock.reset();
@@ -37,15 +32,14 @@ describe('api endpoint - login', () => {
   /*
    * login endpoint should simply redirect to SSO
    */
-  test('redirect to SSO', async () => {
-
+  it('redirect to SSO', async () => {
     const targetPath = '/testable-target-path';
 
     const { req, res } = createMocks({
       method: 'GET',
       query: {
-        target: targetPath
-      }
+        target: targetPath,
+      },
     });
 
     await login(req, res);
@@ -54,30 +48,33 @@ describe('api endpoint - login', () => {
     expect(res._getStatusCode()).toBe(302);
 
     let redirectPath = '/api/auth/callback?target=' + targetPath;
-    redirectPath = `/Shibboleth.sso/Login?target=${encodeURIComponent(redirectPath)}`;
+    redirectPath = `/Shibboleth.sso/Login?target=${encodeURIComponent(
+      redirectPath
+    )}`;
     expect(res._getRedirectUrl()).toBe(redirectPath);
   });
 
-  test('callback on success', async () => {
-
+  it('callback on success', async () => {
     const targetPath = '/testable-target-path';
 
     const { req, res } = createMocks({
       method: 'GET',
       query: {
-        target: targetPath
+        target: targetPath,
       },
       headers: {
-        'Host': 'terminology-ui.invalid',
-        'X-Forwarded-For': '127.0.0.42'
+        Host: 'terminology-ui.invalid',
+        'X-Forwarded-For': '127.0.0.42',
       },
       cookies: {
-        '_shibsession_123': 'foo'
-      }
+        _shibsession_123: 'foo',
+      },
     });
 
     mock
-      .onGet('http://auth-proxy.invalid/terminology-api/api/v1/frontend/authenticated-user')
+      .onGet(
+        'http://auth-proxy.invalid/terminology-api/api/v1/frontend/authenticated-user'
+      )
       .reply(200, fakeUser, { 'set-cookie': ['JSESSIONID=foo'] });
 
     await callback(req, res);
@@ -85,15 +82,19 @@ describe('api endpoint - login', () => {
     // if successful, the api route will set some cookies for the browser
     expect(res.hasHeader('Set-Cookie')).toBeTruthy();
     const setCookies = res.getHeader('Set-Cookie');
-    expect(setCookies.length).toBe(2);
+    expect(setCookies).toHaveLength(2);
 
     // JSESSIONID from spring API
-    const jsessionid = setCookies.find((x: string) => x.startsWith('JSESSIONID='));
+    const jsessionid = setCookies.find((x: string) =>
+      x.startsWith('JSESSIONID=')
+    );
     expect(jsessionid).toBeDefined();
     expect(jsessionid).toBe('JSESSIONID=foo');
 
     // session cookie from next-iron-session
-    const session = setCookies.find((x: string) => x.startsWith('user-session-cookie='));
+    const session = setCookies.find((x: string) =>
+      x.startsWith('user-session-cookie=')
+    );
     expect(session).toBeDefined();
 
     // api route should redirect in the end

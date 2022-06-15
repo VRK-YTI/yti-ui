@@ -1,6 +1,5 @@
 import Head from 'next/head';
 import React from 'react';
-import { Block } from 'suomifi-ui-components';
 import { ThemeProvider } from 'styled-components';
 import { lightTheme } from './theme';
 import {
@@ -10,18 +9,18 @@ import {
   MarginContainer,
 } from './layout.styles';
 import { useTranslation } from 'next-i18next';
-import User from '../common/interfaces/user-interface';
-import Footer from '../common/components/footer/footer';
-import SmartHeader from '../modules/smart-header';
-import { useBreakpoints } from '../common/components/media-query/media-query-context';
+import Footer from '@app/common/components/footer/footer';
+import SmartHeader from '@app/modules/smart-header';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import SkipLink from '@app/common/components/skip-link/skip-link';
+import { Alerts } from '@app/common/components/alert';
+import Matomo from '@app/common/components/matomo';
 
 export default function Layout({
   children,
-  user,
   feedbackSubject,
 }: {
-  children: any;
-  user?: User;
+  children: React.ReactNode;
   feedbackSubject?: string;
 }) {
   const { t } = useTranslation('common');
@@ -29,25 +28,27 @@ export default function Layout({
 
   return (
     <ThemeProvider theme={lightTheme}>
+      <Matomo />
+
       <Head>
         <meta name="description" content="Terminology/React POC" />
         <meta name="og:title" content={t('terminology')} />
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
+
+      <SkipLink href="#main">{t('skip-link-main')}</SkipLink>
+
       <SiteContainer>
-        <SmartHeader user={user} />
+        <SmartHeader />
 
         <ContentContainer>
-          <MarginContainer breakpoint={breakpoint}>
-            <Block variant="main">
-              {children}
-            </Block>
-          </MarginContainer>
+          <Alerts />
+          <MarginContainer $breakpoint={breakpoint}>{children}</MarginContainer>
         </ContentContainer>
 
         <FooterContainer>
-          <MarginContainer breakpoint={breakpoint}>
-            <Footer props={{ user }} feedbackSubject={feedbackSubject} />
+          <MarginContainer $breakpoint={breakpoint}>
+            <Footer feedbackSubject={feedbackSubject} />
           </MarginContainer>
         </FooterContainer>
       </SiteContainer>

@@ -1,33 +1,32 @@
-import Head from 'next/head';
 import React from 'react';
-import { SSRConfig, useTranslation } from 'next-i18next';
-import Layout from '../layouts/layout';
-import TerminologySearch from '../modules/terminology-search';
-import { createCommonGetServerSideProps } from '../common/utils/create-getserversideprops';
-import User from '../common/interfaces/user-interface';
-import useUser from '../common/utils/hooks/useUser';
-import { MediaQueryContextProvider } from '../common/components/media-query/media-query-context';
+import { SSRConfig } from 'next-i18next';
+import Layout from '@app/layouts/layout';
+import TerminologySearch from '@app/modules/terminology-search';
+import { createCommonGetServerSideProps } from '@app/common/utils/create-getserversideprops';
+import PageTitle from '@app/common/components/page-title';
+import {
+  CommonContextState,
+  CommonContextProvider,
+} from '@app/common/components/common-context-provider';
 
+/*
+ * @deprecated Search-page has been replaced by Index-page.
+ */
 
-export default function SearchPage(props: {
+interface SearchPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
-  user: User;
-  isSSRMobile: boolean;
-}) {
-  const { t } = useTranslation('common');
-  const { user } = useUser({ initialData: props.user });
+}
+
+export default function SearchPage(props: SearchPageProps) {
+  console.warn('Search-page has been replaced by Index-page.');
 
   return (
-    <MediaQueryContextProvider value={{ isSSRMobile: props.isSSRMobile }}>
-      <Layout user={user}>
-        <Head>
-          <title>{t('terminology-search')} | {t('terminology-site-title')} | {t('interoperability-platform')}</title>
-          <meta name='description' content={t('terminology-search-info')} />
-        </Head>
-
+    <CommonContextProvider value={props}>
+      <Layout>
+        <PageTitle />
         <TerminologySearch />
       </Layout>
-    </MediaQueryContextProvider>
+    </CommonContextProvider>
   );
 }
 

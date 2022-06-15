@@ -1,42 +1,30 @@
 import styled from 'styled-components';
-import { Icon, Text } from 'suomifi-ui-components';
+import { Text } from 'suomifi-ui-components';
 
-export const CountPill = styled(Text)`
-  align-items: center;
-  border-radius: 25px;
-  background-color: ${(props) => props.theme.suomifi.colors.highlightBase};
-  color: ${(props) => props.theme.suomifi.colors.whiteBase};
-  display: flex;
-  font-size: 16px;
-  font-weight: 600;
-  gap: 8px;
-  padding-left: 10px;
-  padding-right: 10px;
-  width: max-content;
-`;
-
-export const CountPillIcon = styled(Icon)`
-  padding: 0px;
-  margin: 0px;
-
-  :hover {
-    cursor: pointer;
-  }
-`;
-
-export const CountPillWrapper = styled.div`
+export const ChipWrapper = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: ${(props) => props.theme.suomifi.spacing.insetM};
 `;
 
 export const CountText = styled(Text)`
   font-weight: 600;
 `;
 
-export const CountWrapper = styled.div`
+export const CountWrapper = styled.div<{ $isSmall: boolean }>`
+  background-color: ${(props) =>
+    props.$isSmall ? props.theme.suomifi.colors.depthLight3 : 'parent'};
+  border-top: ${(props) =>
+    props.$isSmall
+      ? `1px solid ${props.theme.suomifi.colors.depthLight1}`
+      : 'none'};
   display: flex;
   flex-direction: column;
   gap: 14px;
-  margin-bottom: 20px;
+  margin: ${(props) =>
+    props.$isSmall
+      ? `0 -${props.theme.suomifi.spacing.s}`
+      : `0px 0px ${props.theme.suomifi.spacing.m}`};
+  padding: ${(props) =>
+    props.$isSmall ? `${props.theme.suomifi.spacing.m}` : '0'};
 `;

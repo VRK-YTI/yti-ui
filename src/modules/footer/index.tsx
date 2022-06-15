@@ -1,8 +1,12 @@
 import { useTranslation } from 'react-i18next';
 import { ExternalLink, Paragraph, Text } from 'suomifi-ui-components';
 import Image from 'next/image';
-import { FooterContentWrapper, FooterLinkWrapper } from './footer.style';
-import { useBreakpoints } from '../../common/components/media-query/media-query-context';
+import { FooterContentWrapper, FooterLinkWrapper } from './footer.styles';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+
+/**
+ * @deprecated | use footer from ~/common/components
+ */
 
 export default function Footer() {
   const { t } = useTranslation('common');
@@ -17,7 +21,7 @@ export default function Footer() {
         </Paragraph>
       </FooterContentWrapper>
 
-      <FooterLinkWrapper breakpoint={breakpoint}>
+      <FooterLinkWrapper $breakpoint={breakpoint}>
         <ExternalLink href="/" labelNewWindow={t('site-open-link-new-window')}>
           {t('terminology-footer-feedback')}
         </ExternalLink>

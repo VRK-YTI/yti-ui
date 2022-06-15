@@ -1,9 +1,23 @@
 import { useTranslation } from 'react-i18next';
 import { Heading } from 'suomifi-ui-components';
-import { Contributor, Description, StatusPill, TitleWrapper } from './title.styles';
-import InfoExpander from '../info-dropdown/info-expander';
-import { VocabularyInfoDTO } from '../../interfaces/vocabulary.interface';
-import { Property } from '../../interfaces/termed-data-types.interface';
+import {
+  Contributor,
+  Description,
+  StatusChip,
+  TitleDescriptionWrapper,
+  TitleWrapper,
+  TitleWrapperNoBreadcrumb,
+} from './title.styles';
+import InfoExpander from '@app/common/components/info-dropdown/info-expander';
+import { VocabularyInfoDTO } from '@app/common/interfaces/vocabulary.interface';
+import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
+import { useStoreDispatch } from '@app/store';
+import { setTitle } from './title.slice';
+import { useEffect } from 'react';
+import { getProperty } from '@app/common/utils/get-property';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import NewTerminology from '@app/modules/new-terminology';
+import useTitleRef from '@app/common/utils/hooks/use-title-ref';
 
 interface TitleProps {
   info: string | VocabularyInfoDTO;
@@ -11,6 +25,14 @@ interface TitleProps {
 
 export default function Title({ info }: TitleProps) {
   const { t, i18n } = useTranslation('common');
+  const { isSmall } = useBreakpoints();
+  const titleRef = useTitleRef();
+  const dispatch = useStoreDispatch();
+  const title = getTitle(info);
+
+  useEffect(() => {
+    dispatch(setTitle(title));
+  }, [dispatch, title]);
 
   if (!info) {
     return <></>;
@@ -18,37 +40,52 @@ export default function Title({ info }: TitleProps) {
 
   if (typeof info === 'string') {
     return (
-      <TitleWrapper>
-        <Heading variant='h1'>{info}</Heading>
-        <Description>{t('terminology-search-info')}</Description>
-      </TitleWrapper>
+      <TitleWrapperNoBreadcrumb>
+        <Heading variant="h1">{info}</Heading>
+        <TitleDescriptionWrapper $isSmall={isSmall}>
+          <Description>{t('terminology-search-info')}</Description>
+          <NewTerminology />
+        </TitleDescriptionWrapper>
+      </TitleWrapperNoBreadcrumb>
     );
   } else {
-    const status = info.properties.status?.[0].value ?? '';
-    const title = info.properties.prefLabel?.find((pLabel: Property) => {
-      if (pLabel.lang === i18n.language) {
-        return pLabel;
-      }
-    })?.value ?? '';
+    const status = info.properties.status?.[0].value ?? 'DRAFT';
 
-    const contributor = info.references.contributor?.[0].properties.prefLabel?.find((pLabel: Property) => {
-      if (pLabel.lang === i18n.language) {
-        return pLabel;
-      }
-    })?.value ?? '';
+    const contributor =
+      getPropertyValue({
+        property: getProperty('prefLabel', info.references.contributor),
+        language: i18n.language,
+        fallbackLanguage: 'fi',
+      }) ?? '';
 
     return (
       <TitleWrapper>
         <Contributor>{contributor}</Contributor>
 
-        <Heading variant='h1'>{title}</Heading>
+        <Heading variant="h1" tabIndex={-1} ref={titleRef}>
+          {title}
+        </Heading>
 
-        <StatusPill valid={status === 'VALID' ? 'true' : undefined}>
+        <StatusChip valid={status === 'VALID' ? 'true' : undefined}>
           {t(`${status}`)}
-        </StatusPill>
+        </StatusChip>
 
         <InfoExpander data={info} />
       </TitleWrapper>
+    );
+  }
+
+  function getTitle(info: string | VocabularyInfoDTO) {
+    if (typeof info === 'string') {
+      return info;
+    }
+
+    return (
+      getPropertyValue({
+        property: info.properties.prefLabel,
+        language: i18n.language,
+        fallbackLanguage: 'fi',
+      }) ?? ''
     );
   }
 }

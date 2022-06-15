@@ -1,35 +1,45 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import DesktopAuthenticationPanel from './desktop-authentication-panel';
-import User from '../../interfaces/user-interface';
-import { themeProvider } from '../../../tests/test-utils';
+import { themeProvider } from '@app/tests/test-utils';
+import { makeStore } from '@app/store';
+import { Provider } from 'react-redux';
+import { setLogin } from '@app/common/components/login/login.slice';
+import { User } from '@app/common/interfaces/user.interface';
 
-describe('Authentication panel', () => {
-  test('should render login button for unauthenticated user', () => {
+describe('authentication panel', () => {
+  it('should render login button for unauthenticated user', () => {
+    const store = makeStore();
     render(
-      <DesktopAuthenticationPanel />,
+      <Provider store={store}>
+        <DesktopAuthenticationPanel />
+      </Provider>,
       { wrapper: themeProvider }
     );
 
-    expect(screen.queryByText('tr-site-login')).toBeTruthy();
+    expect(screen.getByText('tr-site-login')).toBeInTheDocument();
   });
 
-  test('should render logout button and user info for logged in user', () => {
+  it('should render logout button and user info for logged in user', () => {
+    const store = makeStore();
+    store.dispatch(
+      setLogin({
+        anonymous: false,
+        email: 'admin@localhost',
+        firstName: 'Admin',
+        lastName: 'User',
+      } as User)
+    );
+
     render(
-      <DesktopAuthenticationPanel
-        user={{
-          anonymous: false,
-          email: 'admin@localhost',
-          firstName: 'Admin',
-          lastName: 'User'
-        } as User}
-      />,
+      <Provider store={store}>
+        <DesktopAuthenticationPanel />
+      </Provider>,
       { wrapper: themeProvider }
     );
 
-    expect(screen.queryByText('Admin User')).toBeTruthy();
-    expect(screen.queryByText('tr-site-login')).toBeFalsy();
-    expect(screen.queryByText('tr-site-logout')).toBeTruthy();
+    expect(screen.getByText('Admin User')).toBeInTheDocument();
+    expect(screen.queryByText('tr-site-login')).not.toBeInTheDocument();
+    expect(screen.getByText('tr-site-logout')).toBeInTheDocument();
   });
-
 });

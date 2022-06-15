@@ -1,36 +1,83 @@
 import Head from 'next/head';
-import Link from 'next/link';
 import React from 'react';
-import Layout from '../layouts/layout';
+import Layout from '@app/layouts/layout';
 import { SSRConfig, useTranslation } from 'next-i18next';
-import useUser from '../common/utils/hooks/useUser';
-import { createCommonGetServerSideProps } from '../common/utils/create-getserversideprops';
-import User from '../common/interfaces/user-interface';
-import { MediaQueryContextProvider } from '../common/components/media-query/media-query-context';
+import {
+  createCommonGetServerSideProps,
+  LocalHandlerParams,
+} from '@app/common/utils/create-getserversideprops';
+import {
+  CommonContextProvider,
+  CommonContextState,
+} from '@app/common/components/common-context-provider';
+import TerminologySearch from '@app/modules/terminology-search';
+import PageTitle from '@app/common/components/page-title';
+import {
+  getGroups,
+  getOrganizations,
+  getSearchResult,
+} from '@app/common/components/terminology-search/terminology-search.slice';
+import { getCounts } from '@app/common/components/counts/counts.slice';
+import { initialUrlState } from '@app/common/utils/hooks/useUrlState';
 
-export default function IndexPage(props: {
+interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
-  user: User;
-  isSSRMobile: boolean;
-}) {
+}
+
+export default function IndexPage(props: IndexPageProps) {
   const { t } = useTranslation('common');
-  const { user, } = useUser({ initialData: props.user });
 
   return (
-    <MediaQueryContextProvider value={{ isSSRMobile: props.isSSRMobile }}>
-      <Layout user={user}>
+    <CommonContextProvider value={props}>
+      <Layout>
+        <PageTitle title={t('terminology-site-title')} />
         <Head>
-          <title>{t('terminology-site-title')} | {t('interoperability-platform')}</title>
           <link rel="shortcut icon" href="/favicon.ico" />
         </Head>
-        <section>
-          <Link href="/search?page=1">
-            <a>{t('terminology-search')}</a>
-          </Link>
-        </section>
+
+        <TerminologySearch />
       </Layout>
-    </MediaQueryContextProvider>
+    </CommonContextProvider>
   );
 }
 
-export const getServerSideProps = createCommonGetServerSideProps();
+export const getServerSideProps = createCommonGetServerSideProps(
+  async ({ store, locale, query }: LocalHandlerParams) => {
+    const urlState = Object.assign({}, initialUrlState);
+
+    if (query && query.q !== undefined) {
+      urlState.q = Array.isArray(query.q) ? query.q[0] : query.q;
+    }
+
+    if (query && query.status !== undefined) {
+      urlState.status = Array.isArray(query.status)
+        ? query.status
+        : [query.status];
+    }
+
+    if (query && query.type !== undefined) {
+      urlState.type = Array.isArray(query.type) ? query.type[0] : query.type;
+    }
+
+    if (query && query.domain) {
+      urlState.domain = Array.isArray(query.domain)
+        ? query.domain
+        : [query.domain];
+    }
+
+    if (query && query.organization) {
+      urlState.organization = Array.isArray(query.organization)
+        ? query.organization[0]
+        : query.organization;
+    }
+
+    await store.dispatch(
+      getSearchResult.initiate({ urlState: urlState, language: locale })
+    );
+    await store.dispatch(getGroups.initiate(locale));
+    await store.dispatch(getOrganizations.initiate(locale));
+    await store.dispatch(getCounts.initiate(null));
+
+    return {};
+  }
+);

@@ -8,7 +8,11 @@ export interface BreadcrumbLinkProps {
   children: React.ReactNode;
 }
 
-export default function BreadcrumbLink({ url, current = false, children }: BreadcrumbLinkProps) {
+export default function BreadcrumbLink({
+  url,
+  current = false,
+  children,
+}: BreadcrumbLinkProps) {
   if (current) {
     return (
       <SuomiFiBreadcrumbLink current={current}>
@@ -19,9 +23,11 @@ export default function BreadcrumbLink({ url, current = false, children }: Bread
 
   return (
     <Link href={url} passHref>
-      <SuomiFiBreadcrumbLink current={current}>
-        {children}
-      </SuomiFiBreadcrumbLink>
+      <div>
+        <SuomiFiBreadcrumbLink current={current}>
+          {children}
+        </SuomiFiBreadcrumbLink>
+      </div>
     </Link>
   );
 }

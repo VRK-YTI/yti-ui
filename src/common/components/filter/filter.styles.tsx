@@ -1,38 +1,31 @@
 import styled from 'styled-components';
-import { Button, Checkbox, Icon, RadioButton, SearchInput } from 'suomifi-ui-components';
-import { FilterStyledProps } from './filter-props';
+import { Button, RadioButton } from 'suomifi-ui-components';
 
-export const DropdownPlaceholder = styled.i`
-  color: ${(props) => props.theme.suomifi.colors.depthDark1};
-`;
-
-export const DropdownWrapper = styled.div`
-  min-width: inherit;
-
-  > span {
-    min-width: 100%;
-
-    > div > div > * {
-      width: calc(100% - 47px);
-    }
+export const CloseWrapper = styled.div`
+  * {
+    margin-bottom: ${(props) => props.theme.suomifi.spacing.s};
   }
 `;
 
-export const FilterCheckbox = styled(Checkbox)`
-  font-size: 16px;
-  padding-top: 10px;
+export const DropdownWrapper = styled.div`
+  > div {
+    width: 100%;
+  }
 `;
 
 export const FilterRadioButton = styled(RadioButton)`
-  font-size: 16px;
+  font-size: ${(props) => props.theme.suomifi.typography.bodyTextSmall};
 `;
 
-export const FilterWrapper = styled.div<FilterStyledProps>`
+export const FilterSection = styled.section<{ $isModal: boolean }>`
   background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
-  border: solid 1px ${(props) => props.theme.suomifi.colors.depthLight1};
+  border: ${(props) =>
+    props.$isModal
+      ? 'none'
+      : `solid 1px ${props.theme.suomifi.colors.depthLight1}`};
   height: max-content;
-  width: ${(props) => props.isModal ? '100%' : '350px'};
-  margin-bottom: ${(props) => props.isModal ? '0px' : '80px'};
+  width: ${(props) => (props.$isModal ? '100%' : '350px')};
+  margin-bottom: ${(props) => (props.$isModal ? '0px' : '80px')};
 `;
 
 export const Header = styled.div`
@@ -40,14 +33,15 @@ export const Header = styled.div`
   background-color: ${(props) => props.theme.suomifi.colors.highlightBase};
   color: ${(props) => props.theme.suomifi.colors.whiteBase};
   display: flex;
-  font-size: 18px;
+  font-size: ${(props) => props.theme.suomifi.typography.bodyText};
   font-weight: 600;
   justify-content: space-between;
   padding: 25px 20px 25px;
-  text-transform: uppercase;
 
-  > * {
-    text-transform: uppercase;
+  h2 {
+    font-size: inherit;
+    margin-top: 0;
+    margin-bottom: 0;
   }
 `;
 
@@ -64,26 +58,4 @@ export const HeaderButton = styled(Button)`
 
 export const FilterContent = styled.div`
   margin: 20px;
-`;
-
-export const RemoveIcon = styled(Icon)`
-  color: ${(props) => props.theme.suomifi.colors.highlightBase};
-  padding-right: 5px;
-`;
-
-export const RemoveWrapper = styled.div`
-  align-items: center;
-  display: flex;
-  font-weight: 600;
-  margin-left: 14px;
-
-  &:hover {
-    cursor: pointer;
-    text-decoration: underline;
-    text-decoration-color: ${(props) => props.theme.suomifi.colors.highlightBase};
-  }
-`;
-
-export const SearchInputWrapper = styled(SearchInput)<FilterStyledProps>`
-  min-width: ${(props) => props.isModal ? '100%' : 'inherit' }
 `;

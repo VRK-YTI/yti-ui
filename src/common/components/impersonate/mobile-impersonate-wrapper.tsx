@@ -1,7 +1,10 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, Text } from 'suomifi-ui-components';
-import { MobileMenuImpersonateItem, MobileMenuImpersonateSection } from './impersonate.styles';
+import {
+  MobileMenuImpersonateItem,
+  MobileMenuImpersonateSection,
+} from './impersonate.styles';
 import useFakeableUsers from './use-fakeable-users';
 
 export default function MobileImpersonateWrapper() {
@@ -18,8 +21,10 @@ export default function MobileImpersonateWrapper() {
         <Text>{t('impersonate-user')}</Text>
       </MobileMenuImpersonateItem>
       {users.map(({ id, displayName, impersonate }) => (
-        <MobileMenuImpersonateItem key={id} inset>
-          <Link href="#" onClick={impersonate}>{displayName}</Link>
+        <MobileMenuImpersonateItem key={id} $inset>
+          <Link href="#" onClick={impersonate}>
+            {displayName}
+          </Link>
         </MobileMenuImpersonateItem>
       ))}
     </MobileMenuImpersonateSection>

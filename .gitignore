@@ -4,7 +4,6 @@
 /node_modules
 /.pnp
 .pnp.js
-package-lock.json
 
 # testing
 /coverage
@@ -38,3 +37,6 @@ yarn-error.log*
 .vercel
 
 .vscode/*.json
+
+# generated during build
+next-env.d.ts

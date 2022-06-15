@@ -1,206 +1,203 @@
 import { useTranslation } from 'next-i18next';
-import React, { Dispatch, SetStateAction, useEffect } from 'react';
-import {
-  Expander,
-  ExpanderContent,
-  ExpanderGroup,
-  ExpanderTitleButton,
-  ExternalLink,
-  Heading,
-  Text
-} from 'suomifi-ui-components';
+import React, { useEffect } from 'react';
+import { ExternalLink, VisuallyHidden } from 'suomifi-ui-components';
 import {
   BasicBlock,
   MultilingualPropertyBlock,
   PropertyBlock,
-  TermBlock
-} from '../../common/components/block';
-import { Breadcrumb, BreadcrumbLink } from '../../common/components/breadcrumb';
-import { useGetConceptQuery } from '../../common/components/concept/concept-slice';
-import { useBreakpoints } from '../../common/components/media-query/media-query-context';
-import PropertyValue from '../../common/components/property-value';
-import { getPropertyValue } from '../../common/components/property-value/get-property-value';
-import Separator from '../../common/components/separator';
-import { useGetVocabularyQuery } from '../../common/components/vocabulary/vocabulary-slice';
-import FormatISODate from '../../common/utils/format-iso-date';
+  TermBlock,
+} from '@app/common/components/block';
+import { Breadcrumb, BreadcrumbLink } from '@app/common/components/breadcrumb';
+import FormattedDate from '@app/common/components/formatted-date';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import PropertyValue from '@app/common/components/property-value';
+import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
+import Separator from '@app/common/components/separator';
+import DetailsExpander from './details-expander';
 import ConceptSidebar from './concept-sidebar';
+import { MainContent, PageContent } from './concept.styles';
+import { useStoreDispatch } from '@app/store';
+import { setAlert } from '@app/common/components/alert/alert.slice';
+import { useRouter } from 'next/router';
+import { setTitle } from '@app/common/components/title/title.slice';
+import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
+import { useGetConceptQuery } from '@app/common/components/concept/concept.slice';
+import { getProperty } from '@app/common/utils/get-property';
 import {
-  Badge,
+  SubTitle,
+  MainTitle,
   BadgeBar,
-  HeadingBlock,
-  MainContent,
-  PageContent
-} from './concept.styles';
+  Badge,
+} from '@app/common/components/title-block';
 
 export interface ConceptProps {
   terminologyId: string;
   conceptId: string;
-  setConceptTitle: Dispatch<SetStateAction<string>>;
+  setConceptTitle: (title?: string) => void;
 }
 
-export default function Concept({ terminologyId, conceptId, setConceptTitle }: ConceptProps) {
+export default function Concept({
+  terminologyId,
+  conceptId,
+  setConceptTitle,
+}: ConceptProps) {
   const { breakpoint } = useBreakpoints();
-  const { data: terminology } = useGetVocabularyQuery(terminologyId);
-  const { data: concept } = useGetConceptQuery({ terminologyId, conceptId });
+  const { data: terminology, error: terminologyError } =
+    useGetVocabularyQuery(terminologyId);
+  const { data: concept, error: conceptError } = useGetConceptQuery({
+    terminologyId,
+    conceptId,
+  });
   const { t, i18n } = useTranslation('concept');
+  const dispatch = useStoreDispatch();
+  const router = useRouter();
+
+  if (conceptError && 'status' in conceptError && conceptError.status === 404) {
+    router.push('/404');
+  }
+
+  const prefLabel = getPropertyValue({
+    property: getProperty('prefLabel', concept?.references.prefLabelXl),
+    language: i18n.language,
+    fallbackLanguage: 'fi',
+  });
 
   useEffect(() => {
-    const title = getPropertyValue({
-      property: concept?.references.prefLabelXl?.[0].properties.prefLabel,
-      language: i18n.language
-    });
-    setConceptTitle(title ? title : '');
-  }, [concept]);
+    setConceptTitle(prefLabel);
+  }, [setConceptTitle, prefLabel]);
+
+  useEffect(() => {
+    dispatch(setAlert([terminologyError, conceptError], []));
+  }, [dispatch, terminologyError, conceptError]);
+
+  useEffect(() => {
+    if (concept) {
+      dispatch(setTitle(prefLabel ?? ''));
+    }
+  }, [concept, dispatch, prefLabel]);
+
+  const status =
+    getPropertyValue({ property: concept?.properties.status }) || 'DRAFT';
 
   return (
     <>
       <Breadcrumb>
-        <BreadcrumbLink url="/search?page=1">
-          {t('terminology-title', { ns: 'common' })}
-        </BreadcrumbLink>
-        <BreadcrumbLink url={`/terminology/${terminologyId}`}>
-          <PropertyValue property={terminology?.properties.prefLabel} />
-        </BreadcrumbLink>
-        <BreadcrumbLink url={`/terminology/${terminologyId}/concepts/${conceptId}`} current>
-          <PropertyValue property={concept?.references.prefLabelXl?.[0].properties.prefLabel} />
-        </BreadcrumbLink>
+        {!terminologyError && (
+          <BreadcrumbLink url={`/terminology/${terminologyId}`}>
+            <PropertyValue
+              property={terminology?.properties.prefLabel}
+              fallbackLanguage="fi"
+            />
+          </BreadcrumbLink>
+        )}
+        {!conceptError && (
+          <BreadcrumbLink
+            url={`/terminology/${terminologyId}/concepts/${conceptId}`}
+            current
+          >
+            {prefLabel}
+          </BreadcrumbLink>
+        )}
       </Breadcrumb>
 
-      <PageContent breakpoint={breakpoint}>
-        <MainContent>
-          <HeadingBlock>
-            <Text>
-              <PropertyValue
-                property={terminology?.references.contributor?.[0].properties.prefLabel}
-              />
-            </Text>
-            <Heading variant="h1">
-              <PropertyValue
-                property={concept?.references.prefLabelXl?.[0].properties.prefLabel}
-              />
-            </Heading>
-            <BadgeBar>
-              <span>{t('heading')}</span>
-              {' '}&middot;{' '}
-              <span><PropertyValue property={terminology?.properties.prefLabel} /></span>
-              {' '}&middot;{' '}
-              <Badge
-                isValid={getPropertyValue({ property: concept?.properties.status }) === 'VALID'}
-              >
-                {t(getPropertyValue({ property: concept?.properties.status }) ?? '', { ns: 'common' })}
-              </Badge>
-            </BadgeBar>
-          </HeadingBlock>
+      <PageContent $breakpoint={breakpoint}>
+        <MainContent id="main">
+          <SubTitle>
+            <PropertyValue
+              property={getProperty(
+                'prefLabel',
+                terminology?.references.contributor
+              )}
+              fallbackLanguage="fi"
+            />
+          </SubTitle>
+          <MainTitle>{prefLabel}</MainTitle>
+          <BadgeBar>
+            {t('heading')}
+            <PropertyValue
+              property={terminology?.properties.prefLabel}
+              fallbackLanguage="fi"
+            />
+            <Badge $isValid={status === 'VALID'}>
+              {t(status, { ns: 'common' })}
+            </Badge>
+          </BadgeBar>
 
           <MultilingualPropertyBlock
-            title={t('field-definition')}
+            title={<h2>{t('field-definition')}</h2>}
             data={concept?.properties.definition}
           />
           <MultilingualPropertyBlock
-            title={t('field-example')}
+            title={<h2>{t('field-example')}</h2>}
             data={concept?.properties.example}
           />
           <TermBlock
-            title={t('field-terms-label')}
+            title={<h2>{t('field-terms-label')}</h2>}
             data={[
-              ...(concept?.references.prefLabelXl ?? []).map(term => ({ term, type: t('field-terms-preferred') })),
-              ...(concept?.references.altLabelXl ?? []).map(term => ({ term, type: t('field-terms-alternative') })),
-              ...(concept?.references.notRecommendedSynonym ?? []).map(term => ({ term, type: t('field-terms-non-recommended') })),
-              ...(concept?.references.searchTerm ?? []).map(term => ({ term, type: t('field-terms-search-term') })),
-              ...(concept?.references.hiddenTerm ?? []).map(term => ({ term, type: t('field-terms-hidden') })),
+              ...(concept?.references.prefLabelXl ?? []).map((term) => ({
+                term,
+                type: t('field-terms-preferred'),
+              })),
+              ...(concept?.references.altLabelXl ?? []).map((term) => ({
+                term,
+                type: t('field-terms-alternative'),
+              })),
+              ...(concept?.references.notRecommendedSynonym ?? []).map(
+                (term) => ({ term, type: t('field-terms-non-recommended') })
+              ),
+              ...(concept?.references.searchTerm ?? []).map((term) => ({
+                term,
+                type: t('field-terms-search-term'),
+              })),
+              ...(concept?.references.hiddenTerm ?? []).map((term) => ({
+                term,
+                type: t('field-terms-hidden'),
+              })),
             ]}
           />
+
           <MultilingualPropertyBlock
-            title={t('field-note')}
+            title={<h2>{t('field-note')}</h2>}
             data={concept?.properties.note}
           />
 
-          <BasicBlock>
-            <ExpanderGroup openAllText="" closeAllText="" toggleAllButtonProps={{ style: { display: 'none' } }}>
-              <Expander>
-                <ExpanderTitleButton>{t('section-concept-diagrams-and-sources')}</ExpanderTitleButton>
-                <ExpanderContent>
-                  <PropertyBlock
-                    title={t('field-concept-diagrams')}
-                    property={undefined}
-                    fallbackLanguage="fi"
-                  />
-                  <PropertyBlock
-                    title={t('field-sources')}
-                    property={concept?.properties.source}
-                    fallbackLanguage="fi"
-                  />
-                </ExpanderContent>
-              </Expander>
-              <Expander>
-                <ExpanderTitleButton>{t('section-administrative-details')}</ExpanderTitleButton>
-                <ExpanderContent>
-                  <PropertyBlock
-                    title={t('field-change-note')}
-                    property={concept?.properties.changeNote}
-                    fallbackLanguage="fi"
-                  />
-                  <PropertyBlock
-                    title={t('field-history-note')}
-                    property={concept?.properties.historyNote}
-                    fallbackLanguage="fi"
-                  />
-                  <PropertyBlock
-                    title={t('field-editorial-note')}
-                    property={concept?.properties.editorialNote}
-                    fallbackLanguage="fi"
-                  />
-                  <PropertyBlock
-                    title={t('field-notation')}
-                    property={concept?.properties.notation}
-                    fallbackLanguage="fi"
-                  />
-                </ExpanderContent>
-              </Expander>
-              <Expander>
-                <ExpanderTitleButton>{t('section-other-details')}</ExpanderTitleButton>
-                <ExpanderContent>
-                  {/* <MultilingualPropertyBlock
-                    title="Aihealue"
-                    data={concept?.properties.something}
-                  /> */}
-                  <PropertyBlock
-                    title={t('field-concept-class')}
-                    property={concept?.properties.conceptClass}
-                  />
-                  <PropertyBlock
-                    title={t('field-word-class')}
-                    property={concept?.properties.wordClass}
-                  />
-                </ExpanderContent>
-              </Expander>
-            </ExpanderGroup>
-          </BasicBlock>
+          <DetailsExpander concept={concept} />
 
-          <Separator large />
+          <Separator isLarge />
+
+          <VisuallyHidden as="h2">
+            {t('additional-technical-information', { ns: 'common' })}
+          </VisuallyHidden>
 
           <PropertyBlock
             title={t('vocabulary-info-organization', { ns: 'common' })}
-            property={terminology?.references.contributor?.[0]?.properties.prefLabel}
+            property={
+              terminology?.references.contributor?.[0]?.properties.prefLabel
+            }
             fallbackLanguage="fi"
           />
           <BasicBlock title={t('vocabulary-info-created-at', { ns: 'common' })}>
-            {FormatISODate(concept?.createdDate)}, {concept?.createdBy}
+            <FormattedDate date={concept?.createdDate} />, {concept?.createdBy}
           </BasicBlock>
-          <BasicBlock title={t('vocabulary-info-modified-at', { ns: 'common' })}>
-            {FormatISODate(concept?.lastModifiedDate)}, {concept?.lastModifiedBy}
+          <BasicBlock
+            title={t('vocabulary-info-modified-at', { ns: 'common' })}
+          >
+            <FormattedDate date={concept?.lastModifiedDate} />,{' '}
+            {concept?.lastModifiedBy}
           </BasicBlock>
-          <BasicBlock title="URI">
-            {concept?.uri}
-          </BasicBlock>
+          <BasicBlock title="URI">{concept?.uri}</BasicBlock>
 
-          <Separator large />
+          <Separator isLarge />
 
           <BasicBlock
             extra={
               <ExternalLink
-                href={`mailto:${getPropertyValue({ property: terminology?.properties.contact })}?subject=${conceptId}`}
-                labelNewWindow={t('site-open-link-new-window', { ns: 'common' })}
+                href={`mailto:${getPropertyValue({
+                  property: terminology?.properties.contact,
+                })}?subject=${conceptId}`}
+                labelNewWindow={t('site-open-link-new-window', {
+                  ns: 'common',
+                })}
               >
                 {t('feedback-action')}
               </ExternalLink>
@@ -213,4 +210,4 @@ export default function Concept({ terminologyId, conceptId, setConceptTitle }: C
       </PageContent>
     </>
   );
-};
+}

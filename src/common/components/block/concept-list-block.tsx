@@ -1,8 +1,10 @@
 import React from 'react';
-import { Link } from 'suomifi-ui-components';
+import Link from 'next/link';
+import { Link as SuomiLink } from 'suomifi-ui-components';
 import { BasicBlock } from '.';
-import { Concept } from '../../interfaces/concept.interface';
-import PropertyValue from '../property-value';
+import { Concept } from '@app/common/interfaces/concept.interface';
+import { getProperty } from '@app/common/utils/get-property';
+import PropertyValue from '@app/common/components/property-value';
 import { List } from './block.styles';
 
 export interface ConceptListBlockProps {
@@ -16,6 +18,10 @@ export default function ConceptListBlock({
   data,
   extra,
 }: ConceptListBlockProps) {
+  if (!data?.length) {
+    return null;
+  }
+
   return (
     <BasicBlock title={title} extra={extra}>
       <List>
@@ -23,10 +29,17 @@ export default function ConceptListBlock({
           <li key={concept.id}>
             <Link
               href={`/terminology/${concept.identifier.type.graph.id}/concept/${concept.id}`}
+              passHref
             >
-              <PropertyValue
-                property={concept.references.prefLabelXl?.[0].properties.prefLabel}
-              />
+              <SuomiLink href="">
+                <PropertyValue
+                  property={getProperty(
+                    'prefLabel',
+                    concept.references.prefLabelXl
+                  )}
+                  fallbackLanguage="fi"
+                />
+              </SuomiLink>
             </Link>
           </li>
         ))}

@@ -1,9 +1,9 @@
-import styled from 'styled-components';
+import { StyledHr } from './separator.styles';
 
-const Separator = styled.hr<{ large?: boolean }>`
-  border: 0;
-  border-top: 1px solid ${props => props.theme.suomifi.colors.depthLight1};
-  margin: ${props => props.large ? '30px' : '20px'} 0;
-`;
+export interface SeparatorProps {
+  isLarge?: boolean;
+}
 
-export default Separator;
+export default function Separator({ isLarge = false }: SeparatorProps) {
+  return <StyledHr $isLarge={isLarge} aria-hidden="true" />;
+}

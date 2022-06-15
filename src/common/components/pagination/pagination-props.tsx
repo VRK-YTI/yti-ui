@@ -1,17 +1,9 @@
-import { TerminologySearchResult } from '../../interfaces/terminology.interface';
-import { AppDispatch, AppThunk } from '../../../store';
-import { NextRouter } from 'next/router';
+import { TerminologySearchResult } from '@app/common/interfaces/terminology.interface';
+import { VocabularyConcepts } from '@app/common/interfaces/vocabulary.interface';
+import { Collection } from '@app/common/interfaces/collection.interface';
 
 export interface PaginationProps {
-  data: TerminologySearchResult;
-  dispatch: AppDispatch;
+  data: TerminologySearchResult | VocabularyConcepts | Collection[];
   isSmall?: boolean;
   pageString: string;
-  setResultStart: (resultStart: number) => AppThunk;
-  query: NextRouter;
-}
-
-export interface PaginationButtonProps {
-  active?: boolean;
-  disabled?: boolean;
 }
