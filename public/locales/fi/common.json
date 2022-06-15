@@ -130,6 +130,5 @@
   "email-subscription-add": "Tilaa ilmoitukset",
   "email-subscription-delete": "Poista ilmoitukset",
   "email-subscription-subscribed": "Sähköposti-ilmoitukset päällä",
-  "email-subscription-unsubscribed": "Sähköposti-ilmoitukset pois päältä",
-  "interoperability-platform": "Yhteentoimivuusalusta"
+  "email-subscription-unsubscribed": "Sähköposti-ilmoitukset pois päältä"
 }

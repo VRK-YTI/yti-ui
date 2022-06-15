@@ -20,7 +20,6 @@ import {
   CommonContextState,
   CommonContextProvider,
 } from '@app/common/components/common-context-provider';
-import Head from 'next/head';
 
 interface ConceptPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -37,10 +36,6 @@ export default function ConceptPage(props: ConceptPageProps) {
     <CommonContextProvider value={props}>
       {/* todo: use better feedbackSubject once more data is available */}
       <Layout feedbackSubject={`${t('concept-id')} ${conceptId}`}>
-        <Head>
-          <title>{conceptTitle} | {t('terminology-site-title')} | {t('interoperability-platform')}</title>
-        </Head>
-
         <PageTitle title={conceptTitle} />
 
         <Concept

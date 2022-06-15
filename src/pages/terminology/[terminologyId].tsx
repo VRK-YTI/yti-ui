@@ -19,7 +19,6 @@ import {
   CommonContextState,
   CommonContextProvider,
 } from '@app/common/components/common-context-provider';
-import Head from 'next/head';
 
 interface TerminologyPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -37,10 +36,6 @@ export default function TerminologyPage(props: TerminologyPageProps) {
     <CommonContextProvider value={props}>
       {/* todo: use better feedbackSubject once more data is available */}
       <Layout feedbackSubject={`${t('terminology-id')} ${terminologyId}`}>
-        <Head>
-          <title>{terminologyTitle} | {t('terminology-site-title')} | {t('interoperability-platform')}</title>
-        </Head>
-
         <PageTitle title={terminologyTitle} />
 
         <Vocabulary

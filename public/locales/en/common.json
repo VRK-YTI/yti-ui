@@ -137,6 +137,5 @@
   "email-subscription-add": "Add email subscription",
   "email-subscription-delete": "Delete email subscription",
   "email-subscription-subscribed": "Email notifications on",
-  "email-subscription-unsubscribed": "Email notifications off",
-  "interoperability-platform": "Interoparability platform"
+  "email-subscription-unsubscribed": "Email notifications off"
 }
