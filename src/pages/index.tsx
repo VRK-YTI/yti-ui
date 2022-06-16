@@ -13,10 +13,12 @@ import TerminologySearch from '@app/modules/terminology-search';
 import {
   getGroups,
   getOrganizations,
-  getSearchResult,
+  getRunningOperationPromises as terminologyGetRunningOperationPromises,
 } from '@app/common/components/terminology-search/terminology-search.slice';
-import { getCounts } from '@app/common/components/counts/counts.slice';
-import { initialUrlState } from '@app/common/utils/hooks/useUrlState';
+import {
+  getCounts,
+  getRunningOperationPromises as countsGetRunningOperationPromises,
+} from '@app/common/components/counts/counts.slice';
 import PageHead from '@app/common/components/page-head';
 
 interface IndexPageProps extends CommonContextState {
@@ -43,41 +45,13 @@ export default function IndexPage(props: IndexPageProps) {
 }
 
 export const getServerSideProps = createCommonGetServerSideProps(
-  async ({ store, locale, query }: LocalHandlerParams) => {
-    const urlState = Object.assign({}, initialUrlState);
+  async ({ store, locale }: LocalHandlerParams) => {
+    store.dispatch(getGroups.initiate(locale));
+    store.dispatch(getOrganizations.initiate(locale));
+    store.dispatch(getCounts.initiate(null));
 
-    if (query && query.q !== undefined) {
-      urlState.q = Array.isArray(query.q) ? query.q[0] : query.q;
-    }
-
-    if (query && query.status !== undefined) {
-      urlState.status = Array.isArray(query.status)
-        ? query.status
-        : [query.status];
-    }
-
-    if (query && query.type !== undefined) {
-      urlState.type = Array.isArray(query.type) ? query.type[0] : query.type;
-    }
-
-    if (query && query.domain) {
-      urlState.domain = Array.isArray(query.domain)
-        ? query.domain
-        : [query.domain];
-    }
-
-    if (query && query.organization) {
-      urlState.organization = Array.isArray(query.organization)
-        ? query.organization[0]
-        : query.organization;
-    }
-
-    await store.dispatch(
-      getSearchResult.initiate({ urlState: urlState, language: locale })
-    );
-    await store.dispatch(getGroups.initiate(locale));
-    await store.dispatch(getOrganizations.initiate(locale));
-    await store.dispatch(getCounts.initiate(null));
+    await Promise.all(terminologyGetRunningOperationPromises());
+    await Promise.all(countsGetRunningOperationPromises());
 
     return {};
   }

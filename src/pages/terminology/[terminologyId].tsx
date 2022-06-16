@@ -8,7 +8,6 @@ import {
 } from '@app/common/utils/create-getserversideprops';
 import Vocabulary from '@app/modules/vocabulary';
 import {
-  getCollections,
   getConceptResult,
   getRunningOperationPromises,
   getVocabulary,
@@ -56,7 +55,7 @@ export default function TerminologyPage(props: TerminologyPageProps) {
 }
 
 export const getServerSideProps = createCommonGetServerSideProps(
-  async ({ req, store, query, params, locale }: LocalHandlerParams) => {
+  async ({ store, query, params, locale }: LocalHandlerParams) => {
     const id = Array.isArray(params.terminologyId)
       ? params.terminologyId[0]
       : params.terminologyId;
@@ -81,10 +80,13 @@ export const getServerSideProps = createCommonGetServerSideProps(
       urlState.type = Array.isArray(query.type) ? query.type[0] : query.type;
     }
 
-    await store.dispatch(getVocabulary.initiate(id));
-    await store.dispatch(getCollections.initiate(id));
-    await store.dispatch(
-      getConceptResult.initiate({ urlState: urlState, id, language: locale })
+    store.dispatch(getVocabulary.initiate({ id }));
+    store.dispatch(
+      getConceptResult.initiate({
+        urlState: urlState,
+        id,
+        language: locale,
+      })
     );
 
     await Promise.all(getRunningOperationPromises());

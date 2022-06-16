@@ -6,7 +6,9 @@ import { HYDRATE } from 'next-redux-wrapper';
 export const collectionApi = createApi({
   reducerPath: 'collectionAPI',
   baseQuery: axiosBaseQuery({
-    baseUrl: `${process.env.TERMINOLOGY_API_URL}/api/v1/frontend`,
+    baseUrl: process.env.TERMINOLOGY_API_URL
+      ? `${process.env.TERMINOLOGY_API_URL}/api/v1/frontend`
+      : '/terminology-api/api/v1/frontend',
   }),
   extractRehydrationInfo(action, { reducerPath }) {
     if (action.type === HYDRATE) {

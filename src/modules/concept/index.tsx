@@ -29,6 +29,8 @@ import {
   BadgeBar,
   Badge,
 } from '@app/common/components/title-block';
+import { useSelector } from 'react-redux';
+import { selectLogin } from '@app/common/components/login/login.slice';
 
 export interface ConceptProps {
   terminologyId: string;
@@ -46,15 +48,21 @@ export default function Concept({
   setConceptDescription,
 }: ConceptProps) {
   const { breakpoint } = useBreakpoints();
-  const { data: terminology, error: terminologyError } =
-    useGetVocabularyQuery(terminologyId);
-  const { data: concept, error: conceptError } = useGetConceptQuery({
+  const { data: terminology, error: terminologyError } = useGetVocabularyQuery({
+    id: terminologyId,
+  });
+  const {
+    data: concept,
+    error: conceptError,
+    refetch,
+  } = useGetConceptQuery({
     terminologyId,
     conceptId,
   });
   const { t, i18n } = useTranslation('concept');
   const dispatch = useStoreDispatch();
   const router = useRouter();
+  const loginInformation = useSelector(selectLogin());
 
   if (conceptError && 'status' in conceptError && conceptError.status === 404) {
     router.push('/404');
@@ -99,6 +107,12 @@ export default function Concept({
       dispatch(setTitle(prefLabel ?? ''));
     }
   }, [concept, dispatch, prefLabel]);
+
+  useEffect(() => {
+    if (!loginInformation.anonymous) {
+      refetch();
+    }
+  }, [loginInformation, refetch]);
 
   const status =
     getPropertyValue({ property: concept?.properties.status }) || 'DRAFT';
@@ -201,13 +215,14 @@ export default function Concept({
             fallbackLanguage="fi"
           />
           <BasicBlock title={t('vocabulary-info-created-at', { ns: 'common' })}>
-            <FormattedDate date={concept?.createdDate} />, {concept?.createdBy}
+            <FormattedDate date={concept?.createdDate} />
+            {concept?.createdBy && `, ${concept.createdBy}`}
           </BasicBlock>
           <BasicBlock
             title={t('vocabulary-info-modified-at', { ns: 'common' })}
           >
-            <FormattedDate date={concept?.lastModifiedDate} />,{' '}
-            {concept?.lastModifiedBy}
+            <FormattedDate date={concept?.lastModifiedDate} />
+            {concept?.lastModifiedBy && `, ${concept.lastModifiedBy}`}
           </BasicBlock>
           <BasicBlock title="URI">{concept?.uri}</BasicBlock>
 

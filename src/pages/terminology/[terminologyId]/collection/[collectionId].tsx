@@ -63,7 +63,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
       throw new Error('Invalid parameters for page');
     }
 
-    store.dispatch(getVocabulary.initiate(terminologyId));
+    store.dispatch(getVocabulary.initiate({ id: terminologyId }));
     store.dispatch(getCollection.initiate({ terminologyId, collectionId }));
     store.dispatch(getCollections.initiate(terminologyId));
 

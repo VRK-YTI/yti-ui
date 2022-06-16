@@ -132,9 +132,11 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
         />
         <BasicBlock title={t('vocabulary-info-created-at')}>
           <FormattedDate date={data.createdDate} />
+          {data.createdBy && `, ${data.createdBy}`}
         </BasicBlock>
         <BasicBlock title={t('vocabulary-info-modified-at')}>
           <FormattedDate date={data.lastModifiedDate} />
+          {data.lastModifiedBy && `, ${data.lastModifiedBy}`}
         </BasicBlock>
         <BasicBlock title="URI">{data.uri}</BasicBlock>
       </ExpanderContent>

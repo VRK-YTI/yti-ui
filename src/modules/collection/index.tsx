@@ -27,6 +27,8 @@ import {
   MainTitle,
   BadgeBar,
 } from '@app/common/components/title-block';
+import { useSelector } from 'react-redux';
+import { selectLogin } from '@app/common/components/login/login.slice';
 
 interface CollectionProps {
   terminologyId: string;
@@ -45,14 +47,19 @@ export default function Collection({
   const { t, i18n } = useTranslation('collection');
   const dispatch = useStoreDispatch();
   const router = useRouter();
+  const loginInformation = useSelector(selectLogin());
 
   const { data: terminology, error: terminologyError } = useGetVocabularyQuery(
-    terminologyId,
+    { id: terminologyId },
     {
       skip: router.isFallback,
     }
   );
-  const { data: collection, error: collectionError } = useGetCollectionQuery(
+  const {
+    data: collection,
+    error: collectionError,
+    refetch,
+  } = useGetCollectionQuery(
     { terminologyId, collectionId },
     {
       skip: router.isFallback,
@@ -97,6 +104,12 @@ export default function Collection({
       dispatch(setTitle(prefLabel ?? ''));
     }
   }, [collection, dispatch, prefLabel]);
+
+  useEffect(() => {
+    if (!loginInformation.anonymous) {
+      refetch();
+    }
+  }, [loginInformation, refetch]);
 
   return (
     <>
@@ -174,14 +187,14 @@ export default function Collection({
             fallbackLanguage="fi"
           />
           <BasicBlock title={t('vocabulary-info-created-at', { ns: 'common' })}>
-            <FormattedDate date={collection?.createdDate} />,{' '}
-            {collection?.createdBy}
+            <FormattedDate date={collection?.createdDate} />
+            {collection?.createdBy && `, ${collection.createdBy}`}
           </BasicBlock>
           <BasicBlock
             title={t('vocabulary-info-modified-at', { ns: 'common' })}
           >
-            <FormattedDate date={collection?.lastModifiedDate} />,{' '}
-            {collection?.lastModifiedBy}
+            <FormattedDate date={collection?.lastModifiedDate} />
+            {collection?.lastModifiedBy && `, ${collection.lastModifiedBy}`}
           </BasicBlock>
           <BasicBlock title="URI">{collection?.uri}</BasicBlock>
         </MainContent>
