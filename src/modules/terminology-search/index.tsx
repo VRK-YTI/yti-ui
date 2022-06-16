@@ -41,7 +41,7 @@ export default function TerminologySearch() {
   const { data: counts, error: countsError } = useGetCountsQuery(null);
   const dispatch = useStoreDispatch();
   const [showModal, setShowModal] = useState(false);
-  const [showLoading, setShowLoading] = useState(false);
+  const [showLoading, setShowLoading] = useState(true);
   const previousAlerts = useSelector(selectAlert());
 
   useEffect(() => {
