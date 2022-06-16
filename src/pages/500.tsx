@@ -1,20 +1,23 @@
-import Head from 'next/head';
 import Error from '@app/common/components/error/error';
-import PageTitle from '@app/common/components/page-title';
 import ErrorLayout from '@app/layouts/error-layout';
 import {
   CommonContextProvider,
   initialCommonContextState,
 } from '@app/common/components/common-context-provider';
+import PageHead from '@app/common/components/page-head';
 
 export default function Custom500() {
   return (
     <CommonContextProvider value={initialCommonContextState}>
       <ErrorLayout>
-        <PageTitle title="Error" siteTitle="Yhteentoimivuusalusta" />
-        <Head>
+        <PageHead
+          title="Error"
+          siteTitle="Yhteentoimivuusalusta"
+          description="An error occured"
+        >
           <link rel="shortcut icon" href="/favicon.ico" />
-        </Head>
+        </PageHead>
+
         <Error errorCode={500} />
       </ErrorLayout>
     </CommonContextProvider>

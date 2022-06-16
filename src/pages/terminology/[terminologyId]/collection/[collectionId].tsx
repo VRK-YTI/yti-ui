@@ -16,12 +16,11 @@ import {
   getVocabulary,
   getRunningOperationPromises as getVocabularyRunningOperationPromises,
 } from '@app/common/components/vocabulary/vocabulary.slice';
-import PageTitle from '@app/common/components/page-title';
 import {
   CommonContextState,
   CommonContextProvider,
 } from '@app/common/components/common-context-provider';
-import Head from 'next/head';
+import PageHead from '@app/common/components/page-head';
 
 interface CollectionPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -29,7 +28,7 @@ interface CollectionPageProps extends CommonContextState {
 
 export default function CollectionPage(props: CollectionPageProps) {
   const { t } = useTranslation('common');
-  const { query } = useRouter();
+  const { query, asPath } = useRouter();
   const terminologyId = (query?.terminologyId ?? '') as string;
   const collectionId = (query?.collectionId ?? '') as string;
   const [collectionTitle, setCollectionTitle] = useState<string | undefined>();
@@ -39,11 +38,7 @@ export default function CollectionPage(props: CollectionPageProps) {
     <CommonContextProvider value={props}>
       {/* todo: use better feedbackSubject once more data is available */}
       <Layout feedbackSubject={`${t('collection-id')} ${collectionId}`}>
-        <PageTitle title={[collectionTitle, vocabularyTitle]} />
-
-        <Head>
-          <meta name="description" content={t('terminology-search-info')} />
-        </Head>
+        <PageHead title={[collectionTitle, vocabularyTitle]} path={asPath} />
 
         <Collection
           terminologyId={terminologyId}

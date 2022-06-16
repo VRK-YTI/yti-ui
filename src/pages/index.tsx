@@ -1,4 +1,3 @@
-import Head from 'next/head';
 import React from 'react';
 import Layout from '@app/layouts/layout';
 import { SSRConfig, useTranslation } from 'next-i18next';
@@ -11,7 +10,6 @@ import {
   CommonContextState,
 } from '@app/common/components/common-context-provider';
 import TerminologySearch from '@app/modules/terminology-search';
-import PageTitle from '@app/common/components/page-title';
 import {
   getGroups,
   getOrganizations,
@@ -19,6 +17,7 @@ import {
 } from '@app/common/components/terminology-search/terminology-search.slice';
 import { getCounts } from '@app/common/components/counts/counts.slice';
 import { initialUrlState } from '@app/common/utils/hooks/useUrlState';
+import PageHead from '@app/common/components/page-head';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -30,11 +29,12 @@ export default function IndexPage(props: IndexPageProps) {
   return (
     <CommonContextProvider value={props}>
       <Layout>
-        <PageTitle title={t('terminology-site-title')} />
-        <Head>
+        <PageHead
+          title={t('terminology-site-title')}
+          description={t('terminology-search-info')}
+        >
           <link rel="shortcut icon" href="/favicon.ico" />
-          <meta name="description" content={t('terminology-search-info')} />
-        </Head>
+        </PageHead>
 
         <TerminologySearch />
       </Layout>

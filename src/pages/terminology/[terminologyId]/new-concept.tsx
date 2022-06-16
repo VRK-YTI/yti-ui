@@ -7,7 +7,7 @@ import {
   CommonContextState,
   CommonContextProvider,
 } from '@app/common/components/common-context-provider';
-import PageTitle from '@app/common/components/page-title';
+import PageHead from '@app/common/components/page-head';
 
 interface NewConceptPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -26,7 +26,7 @@ export default function NewConcept(props: NewConceptPageProps) {
   return (
     <CommonContextProvider value={props}>
       <Layout>
-        <PageTitle
+        <PageHead
           title={t('new-concept-title')}
           siteTitle="Yhteentoimivuusalusta"
         />

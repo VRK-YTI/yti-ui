@@ -1,15 +1,5 @@
 import { TerminologySearchResult } from '@app/common/interfaces/terminology.interface';
 
-// This type isn't correctly recognized.
-// import { TerminologySearchResult } from '../common/interfaces/terminology.interface';
-
-/*
-  Currently static pages and terminologies are added to sitemap.
-
-  For the future: Would be a good idea to add timestamp of last update to every
-  terminology. Check frequency would be good to add to them possibly to help scraping.
-*/
-
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const Sitemap = () => {};
 

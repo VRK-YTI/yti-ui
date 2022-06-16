@@ -15,12 +15,11 @@ import {
   getVocabulary,
   getRunningOperationPromises as getVocabularyRunningOperationPromises,
 } from '@app/common/components/vocabulary/vocabulary.slice';
-import PageTitle from '@app/common/components/page-title';
 import {
   CommonContextState,
   CommonContextProvider,
 } from '@app/common/components/common-context-provider';
-import Head from 'next/head';
+import PageHead from '@app/common/components/page-head';
 
 interface ConceptPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -28,7 +27,7 @@ interface ConceptPageProps extends CommonContextState {
 
 export default function ConceptPage(props: ConceptPageProps) {
   const { t } = useTranslation('common');
-  const { query } = useRouter();
+  const { query, asPath } = useRouter();
   const terminologyId = (query?.terminologyId ?? '') as string;
   const conceptId = (query?.conceptId ?? '') as string;
   const [conceptTitle, setConceptTitle] = useState<string | undefined>();
@@ -41,14 +40,11 @@ export default function ConceptPage(props: ConceptPageProps) {
     <CommonContextProvider value={props}>
       {/* todo: use better feedbackSubject once more data is available */}
       <Layout feedbackSubject={`${t('concept-id')} ${conceptId}`}>
-        <PageTitle title={[conceptTitle, vocabularyTitle]} />
-
-        <Head>
-          <meta
-            name="description"
-            content={conceptDescription ?? t('terminology-search-info')}
-          />
-        </Head>
+        <PageHead
+          title={[conceptTitle, vocabularyTitle]}
+          description={conceptDescription}
+          path={asPath}
+        />
 
         <Concept
           terminologyId={terminologyId}
