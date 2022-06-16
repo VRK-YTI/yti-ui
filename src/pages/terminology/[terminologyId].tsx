@@ -19,6 +19,7 @@ import {
   CommonContextState,
   CommonContextProvider,
 } from '@app/common/components/common-context-provider';
+import Head from 'next/head';
 
 interface TerminologyPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -31,16 +32,26 @@ export default function TerminologyPage(props: TerminologyPageProps) {
   const [terminologyTitle, setTerminologyTitle] = useState<
     string | undefined
   >();
+  const [terminologyDescription, setTerminologyDescription] = useState<
+    string | undefined
+  >();
 
   return (
     <CommonContextProvider value={props}>
       {/* todo: use better feedbackSubject once more data is available */}
       <Layout feedbackSubject={`${t('terminology-id')} ${terminologyId}`}>
         <PageTitle title={terminologyTitle} />
+        <Head>
+          <meta
+            name="description"
+            content={terminologyDescription ?? t('terminology-search-info')}
+          />
+        </Head>
 
         <Vocabulary
           id={terminologyId}
           setTerminologyTitle={setTerminologyTitle}
+          setTerminologyDescription={setTerminologyDescription}
         />
       </Layout>
     </CommonContextProvider>

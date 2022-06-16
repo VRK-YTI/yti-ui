@@ -21,6 +21,7 @@ import {
   CommonContextState,
   CommonContextProvider,
 } from '@app/common/components/common-context-provider';
+import Head from 'next/head';
 
 interface CollectionPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -32,17 +33,23 @@ export default function CollectionPage(props: CollectionPageProps) {
   const terminologyId = (query?.terminologyId ?? '') as string;
   const collectionId = (query?.collectionId ?? '') as string;
   const [collectionTitle, setCollectionTitle] = useState<string | undefined>();
+  const [vocabularyTitle, setVocabularyTitle] = useState<string | undefined>();
 
   return (
     <CommonContextProvider value={props}>
       {/* todo: use better feedbackSubject once more data is available */}
       <Layout feedbackSubject={`${t('collection-id')} ${collectionId}`}>
-        <PageTitle title={collectionTitle} />
+        <PageTitle title={[collectionTitle, vocabularyTitle]} />
+
+        <Head>
+          <meta name="description" content={t('terminology-search-info')} />
+        </Head>
 
         <Collection
           terminologyId={terminologyId}
           collectionId={collectionId}
           setCollectionTitle={setCollectionTitle}
+          setVocabularyTitle={setVocabularyTitle}
         />
       </Layout>
     </CommonContextProvider>

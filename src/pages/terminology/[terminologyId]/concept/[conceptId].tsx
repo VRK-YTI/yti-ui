@@ -20,6 +20,7 @@ import {
   CommonContextState,
   CommonContextProvider,
 } from '@app/common/components/common-context-provider';
+import Head from 'next/head';
 
 interface ConceptPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -31,17 +32,30 @@ export default function ConceptPage(props: ConceptPageProps) {
   const terminologyId = (query?.terminologyId ?? '') as string;
   const conceptId = (query?.conceptId ?? '') as string;
   const [conceptTitle, setConceptTitle] = useState<string | undefined>();
+  const [vocabularyTitle, setVocabularyTitle] = useState<string | undefined>();
+  const [conceptDescription, setConceptDescription] = useState<
+    string | undefined
+  >();
 
   return (
     <CommonContextProvider value={props}>
       {/* todo: use better feedbackSubject once more data is available */}
       <Layout feedbackSubject={`${t('concept-id')} ${conceptId}`}>
-        <PageTitle title={conceptTitle} />
+        <PageTitle title={[conceptTitle, vocabularyTitle]} />
+
+        <Head>
+          <meta
+            name="description"
+            content={conceptDescription ?? t('terminology-search-info')}
+          />
+        </Head>
 
         <Concept
           terminologyId={terminologyId}
           conceptId={conceptId}
           setConceptTitle={setConceptTitle}
+          setVocabularyTitle={setVocabularyTitle}
+          setConceptDescription={setConceptDescription}
         />
       </Layout>
     </CommonContextProvider>
@@ -49,7 +63,7 @@ export default function ConceptPage(props: ConceptPageProps) {
 }
 
 export const getServerSideProps = createCommonGetServerSideProps(
-  async ({ req, store, params }: LocalHandlerParams) => {
+  async ({ store, params }: LocalHandlerParams) => {
     const terminologyId = Array.isArray(params.terminologyId)
       ? params.terminologyId[0]
       : params.terminologyId;

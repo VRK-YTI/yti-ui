@@ -31,11 +31,13 @@ import { getPropertyValue } from '@app/common/components/property-value/get-prop
 interface VocabularyProps {
   id: string;
   setTerminologyTitle: (title?: string) => void;
+  setTerminologyDescription: (title?: string) => void;
 }
 
 export default function Vocabulary({
   id,
   setTerminologyTitle,
+  setTerminologyDescription,
 }: VocabularyProps) {
   const { t, i18n } = useTranslation('common');
   const { isSmall } = useBreakpoints();
@@ -69,9 +71,19 @@ export default function Vocabulary({
     language: i18n.language,
     fallbackLanguage: 'fi',
   });
+
   useEffect(() => {
     setTerminologyTitle(prefLabel);
   }, [setTerminologyTitle, prefLabel]);
+
+  useEffect(() => {
+    const description = getPropertyValue({
+      property: info?.properties.description,
+      language: i18n.language,
+      fallbackLanguage: 'fi',
+    });
+    description && setTerminologyDescription(description);
+  }, [i18n.language, info, setTerminologyDescription]);
 
   useEffect(() => {
     dispatch(

@@ -1,4 +1,4 @@
-import React from 'react';
+import { TerminologySearchResult } from '@app/common/interfaces/terminology.interface';
 
 // This type isn't correctly recognized.
 // import { TerminologySearchResult } from '../common/interfaces/terminology.interface';
@@ -10,10 +10,11 @@ import React from 'react';
   terminology. Check frequency would be good to add to them possibly to help scraping.
 */
 
+// eslint-disable-next-line @typescript-eslint/no-empty-function
 const Sitemap = () => {};
 
 export const getServerSideProps = async ({ res }: any) => {
-  const terminologies = await fetch(
+  const terminologies: TerminologySearchResult = await fetch(
     'http://localhost:3000/terminology-api/api/v1/frontend/searchTerminology',
     {
       method: 'POST',
@@ -30,22 +31,18 @@ export const getServerSideProps = async ({ res }: any) => {
     }
   ).then((data) => data.json());
 
+  const URI = 'https://sanastot.suomi.fi';
+
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
       <url>
-        <loc>https://localhost:3000</loc>
-      </url>
-      <url>
-        <loc>https://localhost:3000/search</loc>
-      </url>
-      <url>
-        <loc>https://localhost:3000/404</loc>
+        <loc>${URI}</loc>
       </url>
       ${terminologies.terminologies
-        .map(
-          (t: any) =>
+        ?.map(
+          (t) =>
             `<url>
-          <loc>http://localhost:3000/terminology/${t.id}</loc>
+          <loc>${URI}/terminology/${t.id}</loc>
         </url>`
         )
         .join('')}

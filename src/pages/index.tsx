@@ -33,6 +33,7 @@ export default function IndexPage(props: IndexPageProps) {
         <PageTitle title={t('terminology-site-title')} />
         <Head>
           <link rel="shortcut icon" href="/favicon.ico" />
+          <meta name="description" content={t('terminology-search-info')} />
         </Head>
 
         <TerminologySearch />
