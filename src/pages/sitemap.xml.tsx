@@ -5,8 +5,8 @@ import { GetServerSideProps } from 'next';
 const Sitemap = () => {};
 
 export const getServerSideProps: GetServerSideProps = async ({ res }) => {
-  const terminologies: TerminologySearchResult = await fetch(
-    'http://localhost:3000/terminology-api/api/v1/frontend/searchTerminology',
+  const terminologiesData: TerminologySearchResult = await fetch(
+    `${process.env.TERMINOLOGY_API_URL}/api/v1/frontend/searchTerminology`,
     {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
@@ -29,7 +29,7 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
       <url>
         <loc>${URI}</loc>
       </url>
-      ${terminologies.terminologies
+      ${terminologiesData.terminologies
         ?.map(
           (t) =>
             `<url>

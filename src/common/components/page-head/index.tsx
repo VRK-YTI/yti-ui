@@ -34,6 +34,7 @@ export default function PageHead({
       <meta property="og:description" content={desc} />
       <meta property="og:url" content={url} />
       <meta property="og:image" content={imageUri} />
+      <link rel="shortcut icon" href="/favicon.ico" />
       {children}
     </Head>
   );

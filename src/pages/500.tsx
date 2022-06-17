@@ -14,9 +14,7 @@ export default function Custom500() {
           title="Error"
           siteTitle="Yhteentoimivuusalusta"
           description="An error occured"
-        >
-          <link rel="shortcut icon" href="/favicon.ico" />
-        </PageHead>
+        />
 
         <Error errorCode={500} />
       </ErrorLayout>
