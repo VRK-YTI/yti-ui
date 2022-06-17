@@ -24,6 +24,7 @@ export default function PageHead({
   const url = path
     ? `https://sanastot.suomi.fi${path}`
     : 'https://sanastot.suomi.fi';
+  const imageUri = 'https://sanastot.suomi.fi/logo-suomi.fi.png';
 
   return (
     <Head>
@@ -32,6 +33,7 @@ export default function PageHead({
       <meta name="description" content={desc} />
       <meta property="og:description" content={desc} />
       <meta property="og:url" content={url} />
+      <meta property="og:image" content={imageUri} />
       {children}
     </Head>
   );

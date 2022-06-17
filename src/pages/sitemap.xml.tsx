@@ -1,9 +1,10 @@
 import { TerminologySearchResult } from '@app/common/interfaces/terminology.interface';
+import { GetServerSideProps } from 'next';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const Sitemap = () => {};
 
-export const getServerSideProps = async ({ res }: any) => {
+export const getServerSideProps: GetServerSideProps = async ({ res }) => {
   const terminologies: TerminologySearchResult = await fetch(
     'http://localhost:3000/terminology-api/api/v1/frontend/searchTerminology',
     {
