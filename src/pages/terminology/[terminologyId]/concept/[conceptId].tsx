@@ -61,8 +61,8 @@ export const getServerSideProps = createCommonGetServerSideProps(
       throw new Error('Invalid parameters for page');
     }
 
-    await store.dispatch(getVocabulary.initiate(terminologyId));
-    await store.dispatch(getConcept.initiate({ terminologyId, conceptId }));
+    store.dispatch(getVocabulary.initiate({ id: terminologyId }));
+    store.dispatch(getConcept.initiate({ terminologyId, conceptId }));
 
     await Promise.all(getVocabularyRunningOperationPromises());
     await Promise.all(getConceptRunningOperationPromises());

@@ -31,7 +31,7 @@ export default function TermForm({ lang }: TermFormProps) {
           </BasicBlockExtraWrapper>
         }
       >
-        Suositettava termi
+        {t('concept-preferred-terms-title')}
       </BasicBlock>
       <DropdownBlock labelText={t('term-status-label')} defaultValue="draft">
         <DropdownItem value="draft">
@@ -51,6 +51,9 @@ export default function TermForm({ lang }: TermFormProps) {
         </DropdownItem>
         <DropdownItem value="invalid">
           {t('INVALID', { ns: 'common' })}
+        </DropdownItem>
+        <DropdownItem value="suggested">
+          {t('SUGGESTED', { ns: 'common' })}
         </DropdownItem>
       </DropdownBlock>
       <WiderTextareaBlock

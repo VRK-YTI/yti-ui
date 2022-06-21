@@ -112,7 +112,7 @@ export default function SearchResults({
                           terminology.status === 'VALID' ? 'true' : undefined
                         }
                       >
-                        {t(terminology.status ?? '')}
+                        {t(terminology.status ?? 'DRAFT')}
                       </CardChip>
                     </div>
                   </CardSubtitle>
@@ -181,7 +181,7 @@ export default function SearchResults({
                     <CardSubtitle>
                       <div>{t('vocabulary-info-concept')}</div>
                       <span aria-hidden="true">&middot;</span>
-                      <div>{t(`${concept.status}`)}</div>
+                      <div>{t(`${concept.status ?? 'DRAFT'}`)}</div>
                     </CardSubtitle>
 
                     <CardDescription>{getDefinition(concept)}</CardDescription>

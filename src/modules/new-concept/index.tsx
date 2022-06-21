@@ -25,7 +25,9 @@ interface NewConceptProps {
 export default function NewConcept({ terminologyId }: NewConceptProps) {
   const { t } = useTranslation('concept');
   const router = useRouter();
-  const { data: terminology } = useGetVocabularyQuery(terminologyId);
+  const { data: terminology } = useGetVocabularyQuery({
+    id: terminologyId,
+  });
   const languages =
     terminology?.properties.language?.map(({ value }) => value) ?? [];
   const preferredTerm = languages

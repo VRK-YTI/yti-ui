@@ -1,7 +1,6 @@
 import Document, { DocumentContext } from 'next/document';
 import { ServerStyleSheet } from 'styled-components';
 import { ServerStyleSheets as MaterialUiServerStyleSheets } from '@material-ui/core/styles';
-import flush from 'styled-jsx/server';
 
 // https://github.com/msreekm/nextjs-material-ui-styled-components-boilerplate/blob/master/pages/_document.js
 export default class MyDocument extends Document {
@@ -17,7 +16,7 @@ export default class MyDocument extends Document {
             sheet.collectStyles(materialUiSheets.collect(<App {...props} />)),
         });
 
-      const initialProps = await Document.getInitialProps(ctx);
+      const initialProps = await ctx.defaultGetInitialProps(ctx);
       return {
         ...initialProps,
         styles: (
@@ -25,7 +24,6 @@ export default class MyDocument extends Document {
             {initialProps.styles}
             {materialUiSheets.getStyleElement()}
             {sheet.getStyleElement()}
-            {flush() || null}
           </>
         ),
       };

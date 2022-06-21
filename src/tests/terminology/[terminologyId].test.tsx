@@ -23,9 +23,11 @@ describe('terminologyId page', () => {
         asymmetricMatch: (actual: any) => {
           // these checks ensure that the API request was made with the
           // expected query parameters
+          // eslint-disable-next-line jest/no-conditional-in-test
           if (actual.query !== 'test') {
             return false;
           }
+          // eslint-disable-next-line jest/no-conditional-in-test
           if (JSON.stringify(actual.status) !== JSON.stringify(['DRAFT'])) {
             return false;
           }
@@ -53,15 +55,14 @@ describe('terminologyId page', () => {
     const data = Object.keys(initialState.vocabularyAPI.queries).map(
       (x) => initialState.vocabularyAPI.queries[x].data
     );
-    expect(data).toHaveLength(3);
+    expect(data).toHaveLength(2);
     expect(data).toContain('response from vocabulary');
-    expect(data).toContain('response from collections');
     expect(data).toContain('response from searchConcept');
 
     // check that all requests finished successfully
     const statuses = Object.keys(initialState.vocabularyAPI.queries)
       .map((x) => initialState.vocabularyAPI.queries[x].status)
       .filter((x) => x === 'fulfilled');
-    expect(statuses).toHaveLength(3);
+    expect(statuses).toHaveLength(2);
   });
 });

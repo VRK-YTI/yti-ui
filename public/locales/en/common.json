@@ -48,6 +48,7 @@
   "RETIRED": "Retired",
   "SUPERSEDED": "Superseded",
   "INVALID": "Invalid",
+  "SUGGESTED": "Suggested",
   "ADMIN": "Admin",
   "DATA_MODEL_EDITOR": "Data model editor",
   "TERMINOLOGY_EDITOR": "Terminology editor",

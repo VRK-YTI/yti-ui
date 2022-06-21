@@ -9,7 +9,6 @@ import {
 import Vocabulary from '@app/modules/vocabulary';
 import PageTitle from '@app/common/components/page-title';
 import {
-  getCollections,
   getConceptResult,
   getRunningOperationPromises,
   getVocabulary,
@@ -74,14 +73,13 @@ export const getServerSideProps = createCommonGetServerSideProps(
       urlState.type = Array.isArray(query.type) ? query.type[0] : query.type;
     }
 
-    if (query && query.lang !== undefined) {
-      urlState.lang = Array.isArray(query.lang) ? query.lang[0] : query.lang;
-    }
-
-    await store.dispatch(getVocabulary.initiate(id));
-    await store.dispatch(getCollections.initiate(id));
-    await store.dispatch(
-      getConceptResult.initiate({ urlState: urlState, id, language: locale })
+    store.dispatch(getVocabulary.initiate({ id }));
+    store.dispatch(
+      getConceptResult.initiate({
+        urlState: urlState,
+        id,
+        language: locale,
+      })
     );
     await store.dispatch(getVocabularyCount.initiate(id));
 

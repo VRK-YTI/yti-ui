@@ -49,7 +49,7 @@ export default function Title({ info }: TitleProps) {
       </TitleWrapperNoBreadcrumb>
     );
   } else {
-    const status = info.properties.status?.[0].value ?? '';
+    const status = info.properties.status?.[0].value ?? 'DRAFT';
 
     const contributor =
       getPropertyValue({

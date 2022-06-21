@@ -48,6 +48,7 @@
   "RETIRED": "Poistettu käytöstä",
   "SUPERSEDED": "Korvattu",
   "INVALID": "Virheellinen",
+  "SUGGESTED": "Ehdotus",
   "ADMIN": "Ylläpitäjä",
   "DATA_MODEL_EDITOR": "Tietomallintaja",
   "TERMINOLOGY_EDITOR": "Sanastotyöntekijä",

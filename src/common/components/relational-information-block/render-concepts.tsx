@@ -38,7 +38,9 @@ export default function RenderConcepts({
   fromOther,
 }: RenderConceptsProps) {
   const { t, i18n } = useTranslation('admin');
-  const { data: terminology } = useGetVocabularyQuery(terminologyId);
+  const { data: terminology } = useGetVocabularyQuery({
+    id: terminologyId,
+  });
   const { data: vocabularies } = useGetVocabulariesQuery(null);
 
   const handleCheckbox = (e: { checkboxState: boolean }, concept: Concepts) => {
@@ -80,9 +82,12 @@ export default function RenderConcepts({
                   toggleButtonAriaDescribedBy=""
                 >
                   <Checkbox
-                    hintText={`${organizationTitle} - ${t(concept.status, {
-                      ns: 'common',
-                    })}`}
+                    hintText={`${organizationTitle} - ${t(
+                      concept.status ?? 'DRAFT',
+                      {
+                        ns: 'common',
+                      }
+                    )}`}
                     onClick={(e) => handleCheckbox(e, concept)}
                     checked={chosen.some((chose) => chose.id === concept.id)}
                   >
@@ -133,8 +138,9 @@ export default function RenderConcepts({
       terminologyId: terminologyId,
       conceptId: conceptId,
     });
-
-    const { data: terminology } = useGetVocabularyQuery(terminologyId);
+    const { data: terminology } = useGetVocabularyQuery({
+      id: terminologyId,
+    });
 
     return (
       <ExpanderContent>
