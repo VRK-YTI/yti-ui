@@ -92,7 +92,7 @@ export default function SearchResults({
                       <CardTitleLink href="">
                         <CardTitleIcon icon="registers" />
                         <CardTitle>
-                          {getLabel(terminology)}
+                          {getLabel(terminology, false)}
                           <VisuallyHidden>
                             {terminology.contributors[0].label[i18n.language] ??
                               terminology.contributors[0].label['fi'] ??
@@ -197,9 +197,13 @@ export default function SearchResults({
     return null;
   }
 
-  function getLabel(dto: VocabularyConceptDTO | TerminologyDTO) {
-    // If language is defined in urlState get label without trailing language code
-    if (urlState.lang && dto.label[urlState.lang]) {
+  function getLabel(
+    dto: VocabularyConceptDTO | TerminologyDTO,
+    isConcept = true
+  ) {
+    // If language is defined in urlState and dto is Concept
+    // get label without trailing language code
+    if (isConcept && urlState.lang && dto.label[urlState.lang]) {
       return dto.label[urlState.lang].replaceAll(/<\/*[^>]>/g, '');
     }
 
@@ -208,11 +212,18 @@ export default function SearchResults({
       return dto.label[i18n.language].replaceAll(/<\/*[^>]>/g, '');
     }
 
-    // Otherwise return label with trailing language code
-    return `${dto?.label?.[Object.keys(dto.label)[0]].replaceAll(
-      /<\/*[^>]>/g,
-      ''
-    )} (${Object.keys(dto.label)[0]})`;
+    if (isConcept) {
+      // Otherwise return label with trailing language code
+      return `${dto?.label?.[Object.keys(dto.label)[0]].replaceAll(
+        /<\/*[^>]>/g,
+        ''
+      )} (${Object.keys(dto.label)[0]})`;
+    } else {
+      return `${dto?.label?.[Object.keys(dto.label)[0]].replaceAll(
+        /<\/*[^>]>/g,
+        ''
+      )}`;
+    }
   }
 
   function getDescription(terminology: TerminologyDTO) {

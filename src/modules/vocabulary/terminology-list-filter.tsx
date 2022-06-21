@@ -8,7 +8,6 @@ import TypeFilter from '@app/common/components/filter/type-filter';
 import useUrlState from '@app/common/utils/hooks/useUrlState';
 import LanguageFilter from '@app/common/components/filter/language-filter';
 import { FilterTopPartBlock } from './vocabulary.styles';
-import MultiLanguageFilter from '@app/common/components/filter/multi-language-filter';
 
 export interface TerminologyListFilterProps {
   isModal?: boolean;
@@ -39,12 +38,7 @@ export function TerminologyListFilter({
           visualPlaceholder={t('vocabulary-filter-visual-placeholder')}
           isModal={isModal}
         />
-        {shouldRenderStatusFilter && (
-          <>
-            <LanguageFilter />
-            <MultiLanguageFilter />
-          </>
-        )}
+        {shouldRenderStatusFilter && <LanguageFilter />}
         {/* If and when MultiSelect is to be used enable this.
           NOTE! You need modify useUrlState() to handle lang variable as string[]
           instead of string.
