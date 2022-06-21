@@ -95,7 +95,9 @@ export default function Concept({
       language: i18n.language,
       fallbackLanguage: 'fi',
     });
-    description && setConceptDescription(description);
+    if (description) {
+      setConceptDescription(description);
+    }
   }, [concept, i18n.language, setConceptDescription]);
 
   useEffect(() => {
