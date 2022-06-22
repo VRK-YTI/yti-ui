@@ -18,10 +18,12 @@ describe('language-filter', () => {
   it('should update router query', async () => {
     mockRouter.setCurrentUrl('/');
 
-    render(<LanguageFilter />, { wrapper: themeProvider });
+    render(<LanguageFilter languages={{ fi: 1, en: 1, sv: 2 }} />, {
+      wrapper: themeProvider,
+    });
 
     userEvent.click(screen.getByPlaceholderText('tr-choose-language'));
-    userEvent.click(screen.getByText('tr-vocabulary-info-fi'));
+    userEvent.click(screen.getByText('fi'));
 
     expect(mockRouter.query.lang).toBe('fi');
 
@@ -29,7 +31,7 @@ describe('language-filter', () => {
     expect(mockRouter.query.lang).toBeUndefined();
 
     userEvent.click(screen.getByPlaceholderText('tr-choose-language'));
-    userEvent.click(screen.getByText('tr-vocabulary-info-en'));
+    userEvent.click(screen.getByText('en'));
 
     expect(mockRouter.query.lang).toBe('en');
   });

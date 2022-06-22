@@ -1,30 +1,22 @@
+import { Property } from '@app/common/interfaces/termed-data-types.interface';
 import useUrlState, {
   initialUrlState,
 } from '@app/common/utils/hooks/useUrlState';
 import { useTranslation } from 'next-i18next';
+import { useState } from 'react';
 import { SingleSelect } from 'suomifi-ui-components';
 import { DropdownWrapper } from './filter.styles';
 
-export default function LanguageFilter() {
+interface LanguageFilterProps {
+  languages?: { [key: string]: number } | Property[];
+}
+
+export default function LanguageFilter({ languages }: LanguageFilterProps) {
   const { t } = useTranslation('common');
   const { urlState, patchUrlState } = useUrlState();
+  const [availableLanguages] = useState(setAvailableLanguages());
 
-  const languages = [
-    {
-      labelText: t('vocabulary-info-fi'),
-      uniqueItemId: 'fi',
-    },
-    {
-      labelText: t('vocabulary-info-en'),
-      uniqueItemId: 'en',
-    },
-    {
-      labelText: t('vocabulary-info-sv'),
-      uniqueItemId: 'sv',
-    },
-  ];
-
-  const currLang = languages.find(
+  const currLang = availableLanguages.find(
     (lang) => lang.uniqueItemId === urlState.lang
   );
 
@@ -33,7 +25,7 @@ export default function LanguageFilter() {
       <SingleSelect
         ariaOptionsAvailableText={t('languages-available')}
         clearButtonLabel={t('clear-language-filter')}
-        items={languages}
+        items={availableLanguages}
         labelText={t('filter-by-language')}
         noItemsText={t('no-languages-available')}
         visualPlaceholder={t('choose-language')}
@@ -47,4 +39,21 @@ export default function LanguageFilter() {
       />
     </DropdownWrapper>
   );
+
+  function setAvailableLanguages() {
+    if (!languages) {
+      return [];
+    }
+
+    if (Array.isArray(languages)) {
+      return languages.map((l) => ({
+        labelText: l.value,
+        uniqueItemId: l.value,
+      }));
+    }
+
+    return Object.keys(languages).map((l) => {
+      return { labelText: l, uniqueItemId: l };
+    });
+  }
 }

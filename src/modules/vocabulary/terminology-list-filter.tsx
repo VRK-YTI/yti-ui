@@ -8,12 +8,14 @@ import TypeFilter from '@app/common/components/filter/type-filter';
 import useUrlState from '@app/common/utils/hooks/useUrlState';
 import LanguageFilter from '@app/common/components/filter/language-filter';
 import { FilterTopPartBlock } from './vocabulary.styles';
+import { Property } from '@app/common/interfaces/termed-data-types.interface';
 
 export interface TerminologyListFilterProps {
   isModal?: boolean;
   onModalClose?: () => void;
   resultCount?: number;
   counts?: Counts;
+  languages?: Property[];
 }
 
 export function TerminologyListFilter({
@@ -21,6 +23,7 @@ export function TerminologyListFilter({
   onModalClose,
   resultCount,
   counts,
+  languages,
 }: TerminologyListFilterProps) {
   const { t } = useTranslation('common');
   const { urlState } = useUrlState();
@@ -33,7 +36,7 @@ export function TerminologyListFilter({
       resultCount={resultCount}
     >
       <FilterTopPartBlock>
-        <LanguageFilter />
+        <LanguageFilter languages={languages} />
         <KeywordFilter
           title={t('vocabulary-filter-filter-by-keyword')}
           visualPlaceholder={t('vocabulary-filter-visual-placeholder')}
