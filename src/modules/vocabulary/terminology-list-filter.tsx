@@ -33,17 +33,12 @@ export function TerminologyListFilter({
       resultCount={resultCount}
     >
       <FilterTopPartBlock>
+        <LanguageFilter />
         <KeywordFilter
           title={t('vocabulary-filter-filter-by-keyword')}
           visualPlaceholder={t('vocabulary-filter-visual-placeholder')}
           isModal={isModal}
         />
-        {shouldRenderStatusFilter && <LanguageFilter />}
-        {/* If and when MultiSelect is to be used enable this.
-          NOTE! You need modify useUrlState() to handle lang variable as string[]
-          instead of string.
-         */}
-        {/* {shouldRenderStatusFilter && <MultiLanguageFilter />} */}
       </FilterTopPartBlock>
       <Separator />
       <TypeFilter
