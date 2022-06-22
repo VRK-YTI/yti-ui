@@ -3,7 +3,6 @@ import { SSRConfig } from 'next-i18next';
 import Layout from '@app/layouts/layout';
 import TerminologySearch from '@app/modules/terminology-search';
 import { createCommonGetServerSideProps } from '@app/common/utils/create-getserversideprops';
-import PageTitle from '@app/common/components/page-title';
 import {
   CommonContextState,
   CommonContextProvider,
@@ -23,7 +22,6 @@ export default function SearchPage(props: SearchPageProps) {
   return (
     <CommonContextProvider value={props}>
       <Layout>
-        <PageTitle />
         <TerminologySearch />
       </Layout>
     </CommonContextProvider>
