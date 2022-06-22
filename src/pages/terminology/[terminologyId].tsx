@@ -7,7 +7,6 @@ import {
   LocalHandlerParams,
 } from '@app/common/utils/create-getserversideprops';
 import Vocabulary from '@app/modules/vocabulary';
-import PageTitle from '@app/common/components/page-title';
 import {
   getConceptResult,
   getRunningOperationPromises,
@@ -19,6 +18,7 @@ import {
   CommonContextProvider,
 } from '@app/common/components/common-context-provider';
 import { getVocabularyCount } from '@app/common/components/counts/counts.slice';
+import PageHead from '@app/common/components/page-head';
 
 interface TerminologyPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -26,9 +26,12 @@ interface TerminologyPageProps extends CommonContextState {
 
 export default function TerminologyPage(props: TerminologyPageProps) {
   const { t } = useTranslation('common');
-  const { query } = useRouter();
+  const { query, asPath } = useRouter();
   const terminologyId = (query?.terminologyId ?? '') as string;
   const [terminologyTitle, setTerminologyTitle] = useState<
+    string | undefined
+  >();
+  const [terminologyDescription, setTerminologyDescription] = useState<
     string | undefined
   >();
 
@@ -36,11 +39,16 @@ export default function TerminologyPage(props: TerminologyPageProps) {
     <CommonContextProvider value={props}>
       {/* todo: use better feedbackSubject once more data is available */}
       <Layout feedbackSubject={`${t('terminology-id')} ${terminologyId}`}>
-        <PageTitle title={terminologyTitle} />
+        <PageHead
+          title={terminologyTitle}
+          description={terminologyDescription}
+          path={asPath}
+        />
 
         <Vocabulary
           id={terminologyId}
           setTerminologyTitle={setTerminologyTitle}
+          setTerminologyDescription={setTerminologyDescription}
         />
       </Layout>
     </CommonContextProvider>
