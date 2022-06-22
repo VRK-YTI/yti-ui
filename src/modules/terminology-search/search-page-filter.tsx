@@ -44,7 +44,10 @@ export function SearchPageFilter({
           visualPlaceholder={t('terminology-search-filter-pick-organization')}
           organizations={organizations}
         />
-        <LanguageFilter languages={counts?.counts.languages} />
+        <LanguageFilter
+          labelText={t('display-by-language')}
+          languages={counts?.counts.languages}
+        />
         <KeywordFilter
           title={t('vocabulary-filter-filter-by-keyword')}
           visualPlaceholder={t('vocabulary-filter-visual-placeholder')}

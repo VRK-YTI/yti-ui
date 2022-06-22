@@ -10,17 +10,25 @@ describe('language-filter', () => {
   it('should render component', () => {
     mockRouter.setCurrentUrl('/');
 
-    render(<LanguageFilter />, { wrapper: themeProvider });
+    render(<LanguageFilter labelText="filter-label" />, {
+      wrapper: themeProvider,
+    });
 
-    expect(screen.getByText('tr-filter-by-language')).toBeInTheDocument();
+    expect(screen.getByText('filter-label')).toBeInTheDocument();
   });
 
   it('should update router query', async () => {
     mockRouter.setCurrentUrl('/');
 
-    render(<LanguageFilter languages={{ fi: 1, en: 1, sv: 2 }} />, {
-      wrapper: themeProvider,
-    });
+    render(
+      <LanguageFilter
+        labelText="filter-label"
+        languages={{ fi: 1, en: 1, sv: 2 }}
+      />,
+      {
+        wrapper: themeProvider,
+      }
+    );
 
     userEvent.click(screen.getByPlaceholderText('tr-choose-language'));
     userEvent.click(screen.getByText('fi'));

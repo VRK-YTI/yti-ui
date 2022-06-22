@@ -36,7 +36,10 @@ export function TerminologyListFilter({
       resultCount={resultCount}
     >
       <FilterTopPartBlock>
-        <LanguageFilter languages={languages} />
+        <LanguageFilter
+          labelText={t('filter-by-language')}
+          languages={languages}
+        />
         <KeywordFilter
           title={t('vocabulary-filter-filter-by-keyword')}
           visualPlaceholder={t('vocabulary-filter-visual-placeholder')}

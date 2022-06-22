@@ -8,10 +8,14 @@ import { SingleSelect } from 'suomifi-ui-components';
 import { DropdownWrapper } from './filter.styles';
 
 interface LanguageFilterProps {
+  labelText: string;
   languages?: { [key: string]: number } | Property[];
 }
 
-export default function LanguageFilter({ languages }: LanguageFilterProps) {
+export default function LanguageFilter({
+  labelText,
+  languages,
+}: LanguageFilterProps) {
   const { t } = useTranslation('common');
   const { urlState, patchUrlState } = useUrlState();
   const [availableLanguages] = useState(setAvailableLanguages());
@@ -26,7 +30,7 @@ export default function LanguageFilter({ languages }: LanguageFilterProps) {
         ariaOptionsAvailableText={t('languages-available')}
         clearButtonLabel={t('clear-language-filter')}
         items={availableLanguages}
-        labelText={t('filter-by-language')}
+        labelText={labelText}
         noItemsText={t('no-languages-available')}
         visualPlaceholder={t('choose-language')}
         selectedItem={currLang}
