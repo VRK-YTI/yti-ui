@@ -98,6 +98,7 @@ export default function RemoveSubscription({
         visible={visible}
         onEscKeyDown={() => setVisible(false)}
         variant={isSmall ? 'smallScreen' : 'default'}
+        scrollable={false}
       >
         <RemoveModalContent>
           <ModalTitle>

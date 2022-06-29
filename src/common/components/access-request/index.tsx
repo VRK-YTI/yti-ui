@@ -4,7 +4,10 @@ import { useSelector } from 'react-redux';
 import {
   Button,
   Checkbox,
+  CheckboxGroup,
   DropdownItem,
+  Modal,
+  ModalContent,
   ModalFooter,
   Paragraph,
   Text,
@@ -20,11 +23,7 @@ import {
 } from './access-request.slice';
 import {
   AccessRequestDescription,
-  AccessRequestModal,
-  AccessRequestModalContent,
-  AccessRequstDropdown,
-  CheckboxTitle,
-  CheckboxWrapper,
+  AccessRequestDropdown,
   ModalButton,
   ModalContentBlock,
   ModalTitleH1,
@@ -127,20 +126,21 @@ export default function AccessRequest({ organizations }: AccessRequestProps) {
         {t('access-request-access')}
       </ModalButton>
 
-      <AccessRequestModal
+      <Modal
         appElementId="__next"
         visible={visible}
         variant={isSmall ? 'smallScreen' : 'default'}
         onEscKeyDown={() => handleClose()}
+        scrollable={false}
       >
-        <AccessRequestModalContent>
+        <ModalContent>
           <ModalTitleH1 as="h1">{t('access-request-access')}</ModalTitleH1>
           <Paragraph>
             <Text>{t('access-org-description')}</Text>
           </Paragraph>
 
           <ModalContentBlock>
-            <AccessRequstDropdown
+            <AccessRequestDropdown
               $error={error?.['dropdown']}
               labelText={t('access-organization')}
               visualPlaceholder={t('access-pick-org')}
@@ -159,64 +159,57 @@ export default function AccessRequest({ organizations }: AccessRequestProps) {
                   </DropdownItem>
                 );
               })}
-            </AccessRequstDropdown>
+            </AccessRequestDropdown>
           </ModalContentBlock>
 
           <ModalContentBlock>
-            <CheckboxTitle>{t('access-services')}</CheckboxTitle>
-            <CheckboxWrapper>
-              <li>
-                <Checkbox
-                  checked={services[TERMINOLOGY]}
-                  onClick={(e) => handleCheckbox(TERMINOLOGY, e.checkboxState)}
-                  status={
-                    error?.['checkbox'] || error?.[TERMINOLOGY]
-                      ? 'error'
-                      : 'default'
-                  }
-                  statusText={
-                    error?.[TERMINOLOGY] ? t('access-request-already-sent') : ''
-                  }
-                  variant={isSmall ? 'large' : 'small'}
-                >
-                  {t('access-terminology')}
-                </Checkbox>
-              </li>
-              <li>
-                <Checkbox
-                  checked={services[CODE_LIST]}
-                  onClick={(e) => handleCheckbox(CODE_LIST, e.checkboxState)}
-                  status={
-                    error?.['checkbox'] || error?.[CODE_LIST]
-                      ? 'error'
-                      : 'default'
-                  }
-                  statusText={
-                    error?.[CODE_LIST] ? t('access-request-already-sent') : ''
-                  }
-                  variant={isSmall ? 'large' : 'small'}
-                >
-                  {t('access-reference-data')}
-                </Checkbox>
-              </li>
-              <li>
-                <Checkbox
-                  checked={services[DATA_MODEL]}
-                  onClick={(e) => handleCheckbox(DATA_MODEL, e.checkboxState)}
-                  status={error?.['checkbox'] ? 'error' : 'default'}
-                  statusText={
-                    (error?.['checkbox'] && t('access-pick-at-least-one')) ||
-                    (error[DATA_MODEL] && t('access-request-already-sent')) ||
-                    ''
-                  }
-                  variant={isSmall ? 'large' : 'small'}
-                >
-                  {t('access-data-vocabularies')}
-                </Checkbox>
-              </li>
-            </CheckboxWrapper>
+            <CheckboxGroup labelText={t('access-services')}>
+              <Checkbox
+                checked={services[TERMINOLOGY]}
+                onClick={(e) => handleCheckbox(TERMINOLOGY, e.checkboxState)}
+                status={
+                  error?.['checkbox'] || error?.[TERMINOLOGY]
+                    ? 'error'
+                    : 'default'
+                }
+                statusText={
+                  error?.[TERMINOLOGY] ? t('access-request-already-sent') : ''
+                }
+                variant={isSmall ? 'large' : 'small'}
+              >
+                {t('access-terminology')}
+              </Checkbox>
+              <Checkbox
+                checked={services[CODE_LIST]}
+                onClick={(e) => handleCheckbox(CODE_LIST, e.checkboxState)}
+                status={
+                  error?.['checkbox'] || error?.[CODE_LIST]
+                    ? 'error'
+                    : 'default'
+                }
+                statusText={
+                  error?.[CODE_LIST] ? t('access-request-already-sent') : ''
+                }
+                variant={isSmall ? 'large' : 'small'}
+              >
+                {t('access-reference-data')}
+              </Checkbox>
+              <Checkbox
+                checked={services[DATA_MODEL]}
+                onClick={(e) => handleCheckbox(DATA_MODEL, e.checkboxState)}
+                status={error?.['checkbox'] ? 'error' : 'default'}
+                statusText={
+                  (error?.['checkbox'] && t('access-pick-at-least-one')) ||
+                  (error[DATA_MODEL] && t('access-request-already-sent')) ||
+                  ''
+                }
+                variant={isSmall ? 'large' : 'small'}
+              >
+                {t('access-data-vocabularies')}
+              </Checkbox>
+            </CheckboxGroup>
           </ModalContentBlock>
-        </AccessRequestModalContent>
+        </ModalContent>
 
         <ModalFooter>
           <Button onClick={() => handleClick()}>
@@ -226,7 +219,7 @@ export default function AccessRequest({ organizations }: AccessRequestProps) {
             {t('access-cancel')}
           </Button>
         </ModalFooter>
-      </AccessRequestModal>
+      </Modal>
     </>
   );
 
