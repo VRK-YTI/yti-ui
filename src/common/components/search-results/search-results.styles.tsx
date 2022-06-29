@@ -14,8 +14,7 @@ export const CardConcepts = styled(Text)`
   }
 `;
 
-export const CardWrapper = styled.ul<{ $isSmall: boolean }>`
-  border-top: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
+export const ResultWrapper = styled.div<{ $isSmall: boolean }>`
   border-right: ${(props) =>
     props.$isSmall
       ? 'none'
@@ -28,6 +27,10 @@ export const CardWrapper = styled.ul<{ $isSmall: boolean }>`
   margin-right: -${(props) => (props.$isSmall ? props.theme.suomifi.spacing.s : '0')};
   padding: 0;
   margin-top: 0;
+
+  > *:first-child {
+    border-top: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
+  }
 
   > * {
     border-bottom: 1px solid

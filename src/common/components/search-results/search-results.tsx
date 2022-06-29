@@ -13,7 +13,7 @@ import {
 import PropertyValue from '@app/common/components/property-value';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import SearchCountTags from './search-count-tags';
-import { CardConcepts, CardWrapper } from './search-results.styles';
+import { CardConcepts, ResultWrapper } from './search-results.styles';
 import { Concept } from '@app/common/interfaces/concept.interface';
 import useUrlState from '@app/common/utils/hooks/useUrlState';
 import SanitizedTextContent from '@app/common/components/sanitized-text-content';
@@ -21,7 +21,7 @@ import ResultCard from './result-card';
 
 interface SearchResultsProps {
   data: TerminologySearchResult | VocabularyConcepts | Collection[];
-  type?: string;
+  type: 'terminology-search' | 'concepts' | 'collections';
   organizations?: OrganizationSearchResult[];
   domains?: GroupSearchResult[];
 }
@@ -40,11 +40,15 @@ export default function SearchResults({
     return null;
   }
 
-  if (type === 'terminology-search' && 'terminologies' in data) {
+  if (type === 'terminology-search') {
     return renderTerminologiesSearchResults();
-  } else if ('concepts' in data) {
+  }
+
+  if (type === 'concepts') {
     return renderConceptSearchResults();
-  } else if (type === 'collections') {
+  }
+
+  if (type === 'collections') {
     return renderConceptCollections();
   }
 
@@ -63,7 +67,7 @@ export default function SearchResults({
             renderQBeforeStatus
             count={data?.totalHitCount}
           />
-          <CardWrapper $isSmall={isSmall}>
+          <ResultWrapper $isSmall={isSmall}>
             {data?.terminologies?.map((terminology) => {
               return (
                 <ResultCard
@@ -83,7 +87,7 @@ export default function SearchResults({
                 />
               );
             })}
-          </CardWrapper>
+          </ResultWrapper>
         </>
       );
     }
@@ -104,7 +108,7 @@ export default function SearchResults({
               domains={domains}
               count={data?.totalHitCount}
             />
-            <CardWrapper $isSmall={isSmall}>
+            <ResultWrapper $isSmall={isSmall}>
               {data?.concepts.map((concept) => {
                 return (
                   <ResultCard
@@ -118,7 +122,7 @@ export default function SearchResults({
                   />
                 );
               })}
-            </CardWrapper>
+            </ResultWrapper>
           </>
         );
       }
@@ -128,60 +132,64 @@ export default function SearchResults({
   }
 
   function renderConceptCollections() {
-    if (!Array.isArray(data) || data.length < 1) {
-      return null;
+    if (Array.isArray(data)) {
+      return (
+        <>
+          <SearchCountTags
+            title={t('vocabulary-results-collections', {
+              count: data.length,
+            })}
+            count={data.length}
+          />
+          {data.length > 0 && (
+            <ResultWrapper $isSmall={isSmall}>
+              {data
+                .filter((collection, idx) => {
+                  const minId = Math.max(0, (urlState.page - 1) * 10);
+                  const maxId = minId + 10;
+                  if (idx >= minId && idx < maxId) {
+                    return collection;
+                  }
+                })
+                .map((collection) => {
+                  return (
+                    <ResultCard
+                      key={collection.id}
+                      description={
+                        <PropertyValue
+                          property={collection.properties.definition}
+                          fallbackLanguage={'fi'}
+                          fallback={t('vocabulary-results-no-description')}
+                        />
+                      }
+                      extra={
+                        <CardConcepts
+                          value={t('vocabulary-filter-concepts') as string}
+                        >
+                          {renderCollectionMembers(
+                            collection.references?.member
+                          )}
+                        </CardConcepts>
+                      }
+                      noStatus
+                      title={
+                        <PropertyValue
+                          property={collection.properties.prefLabel}
+                          fallbackLanguage="fi"
+                        />
+                      }
+                      titleLink={`/terminology/${collection.type.graph.id}/collection/${collection.id}`}
+                      type={t('vocabulary-info-collection')}
+                    />
+                  );
+                })}
+            </ResultWrapper>
+          )}
+        </>
+      );
     }
 
-    return (
-      <>
-        <SearchCountTags
-          title={t('vocabulary-results-collections', {
-            count: data.length,
-          })}
-          count={data.length}
-        />
-        <CardWrapper $isSmall={isSmall}>
-          {data
-            .filter((collection, idx) => {
-              const minId = Math.max(0, (urlState.page - 1) * 10);
-              const maxId = minId + 10;
-              if (idx >= minId && idx < maxId) {
-                return collection;
-              }
-            })
-            .map((collection) => {
-              return (
-                <ResultCard
-                  key={collection.id}
-                  description={
-                    <PropertyValue
-                      property={collection.properties.definition}
-                      fallbackLanguage={'fi'}
-                      fallback={t('vocabulary-results-no-description')}
-                    />
-                  }
-                  extra={
-                    <CardConcepts
-                      value={t('vocabulary-filter-concepts') as string}
-                    >
-                      {renderCollectionMembers(collection.references?.member)}
-                    </CardConcepts>
-                  }
-                  noStatus
-                  title={
-                    <PropertyValue
-                      property={collection.properties.prefLabel}
-                      fallbackLanguage="fi"
-                    />
-                  }
-                  titleLink={`/terminology/${collection.type.graph.id}/collection/${collection.id}`}
-                  type={t('vocabulary-info-collection')}
-                />
-              );
-            })}
-        </CardWrapper>
-      </>
-    );
+    return null;
   }
 
   function renderCollectionMembers(members?: Concept[]) {

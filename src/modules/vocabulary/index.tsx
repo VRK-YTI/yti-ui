@@ -183,7 +183,7 @@ export default function Vocabulary({
               ) : (
                 concepts && (
                   <>
-                    <SearchResults data={concepts} />
+                    <SearchResults data={concepts} type="concepts" />
                     <PaginationWrapper>
                       <Pagination
                         data={concepts}
