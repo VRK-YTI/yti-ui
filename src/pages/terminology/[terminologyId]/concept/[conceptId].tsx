@@ -39,8 +39,9 @@ export default function ConceptPage(props: ConceptPageProps) {
 
   return (
     <CommonContextProvider value={props}>
-      {/* todo: use better feedbackSubject once more data is available */}
-      <Layout feedbackSubject={`${t('concept-id')} ${conceptId}`}>
+      <Layout
+        feedbackSubject={`${t('feedback-concept')} - ${props.conceptTitle}`}
+      >
         <PageHead
           title={[props.conceptTitle, props.vocabularyTitle]}
           description={props.conceptDescription}

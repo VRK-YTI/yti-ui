@@ -38,8 +38,11 @@ export default function CollectionPage(props: CollectionPageProps) {
 
   return (
     <CommonContextProvider value={props}>
-      {/* todo: use better feedbackSubject once more data is available */}
-      <Layout feedbackSubject={`${t('collection-id')} ${collectionId}`}>
+      <Layout
+        feedbackSubject={`${t('feedback-collection')} - ${
+          props.collectionTitle
+        }`}
+      >
         <PageHead
           title={[props.collectionTitle, props.vocabularyTitle]}
           path={asPath}

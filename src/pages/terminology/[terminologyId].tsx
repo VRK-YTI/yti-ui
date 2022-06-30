@@ -34,8 +34,7 @@ export default function TerminologyPage(props: TerminologyPageProps) {
 
   return (
     <CommonContextProvider value={props}>
-      {/* todo: use better feedbackSubject once more data is available */}
-      <Layout feedbackSubject={`${t('terminology-id')} ${terminologyId}`}>
+      <Layout feedbackSubject={`${t('feedback-vocabulary')} - ${props.title}`}>
         <PageHead
           title={props.title ?? ''}
           description={props.description ?? ''}
