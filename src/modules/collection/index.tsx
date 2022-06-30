@@ -33,15 +33,11 @@ import { selectLogin } from '@app/common/components/login/login.slice';
 interface CollectionProps {
   terminologyId: string;
   collectionId: string;
-  setCollectionTitle: (title?: string) => void;
-  setVocabularyTitle: (title?: string) => void;
 }
 
 export default function Collection({
   terminologyId,
   collectionId,
-  setCollectionTitle,
-  setVocabularyTitle,
 }: CollectionProps) {
   const { breakpoint } = useBreakpoints();
   const { t, i18n } = useTranslation('collection');
@@ -79,21 +75,6 @@ export default function Collection({
     language: i18n.language,
     fallbackLanguage: 'fi',
   });
-
-  useEffect(() => {
-    setCollectionTitle(prefLabel);
-  }, [setCollectionTitle, prefLabel]);
-
-  useEffect(() => {
-    const label = getPropertyValue({
-      property: terminology?.properties.prefLabel,
-      language: i18n.language,
-      fallbackLanguage: 'fi',
-    });
-    if (label) {
-      setVocabularyTitle(label);
-    }
-  }, [setVocabularyTitle, terminology, i18n.language]);
 
   useEffect(() => {
     dispatch(setAlert([terminologyError, collectionError], []));

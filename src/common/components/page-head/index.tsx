@@ -20,7 +20,7 @@ export default function PageHead({
   const currSiteTitle = siteTitle ? siteTitle : t('site-title');
   const pageTitles = Array.isArray(title) ? title : [title];
   const currTitle = [...pageTitles, currSiteTitle].filter(Boolean).join(' | ');
-  const desc = description ?? t('terminology-search-info');
+  const desc = description ? description : t('terminology-search-info');
   const url = path
     ? `https://sanastot.suomi.fi${path}`
     : 'https://sanastot.suomi.fi';

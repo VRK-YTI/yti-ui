@@ -35,18 +35,9 @@ import { selectLogin } from '@app/common/components/login/login.slice';
 export interface ConceptProps {
   terminologyId: string;
   conceptId: string;
-  setConceptTitle: (title?: string) => void;
-  setVocabularyTitle: (title?: string) => void;
-  setConceptDescription: (description?: string) => void;
 }
 
-export default function Concept({
-  terminologyId,
-  conceptId,
-  setConceptTitle,
-  setVocabularyTitle,
-  setConceptDescription,
-}: ConceptProps) {
+export default function Concept({ terminologyId, conceptId }: ConceptProps) {
   const { breakpoint } = useBreakpoints();
   const { data: terminology, error: terminologyError } = useGetVocabularyQuery({
     id: terminologyId,
@@ -73,32 +64,6 @@ export default function Concept({
     language: i18n.language,
     fallbackLanguage: 'fi',
   });
-
-  useEffect(() => {
-    setConceptTitle(prefLabel);
-  }, [setConceptTitle, prefLabel]);
-
-  useEffect(() => {
-    const label = getPropertyValue({
-      property: terminology?.properties.prefLabel,
-      language: i18n.language,
-      fallbackLanguage: 'fi',
-    });
-    if (label) {
-      setVocabularyTitle(label);
-    }
-  }, [setVocabularyTitle, terminology, i18n.language]);
-
-  useEffect(() => {
-    const description = getPropertyValue({
-      property: concept?.properties.definition,
-      language: i18n.language,
-      fallbackLanguage: 'fi',
-    });
-    if (description) {
-      setConceptDescription(description);
-    }
-  }, [concept, i18n.language, setConceptDescription]);
 
   useEffect(() => {
     dispatch(setAlert([terminologyError, conceptError], []));

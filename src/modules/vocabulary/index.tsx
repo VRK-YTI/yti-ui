@@ -26,21 +26,14 @@ import { setAlert } from '@app/common/components/alert/alert.slice';
 import { useRouter } from 'next/router';
 import LoadIndicator from '@app/common/components/load-indicator';
 import { useStoreDispatch } from '@app/store';
-import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import { useSelector } from 'react-redux';
 import { selectLogin } from '@app/common/components/login/login.slice';
 
 interface VocabularyProps {
   id: string;
-  setTerminologyTitle: (title?: string) => void;
-  setTerminologyDescription: (title?: string) => void;
 }
 
-export default function Vocabulary({
-  id,
-  setTerminologyTitle,
-  setTerminologyDescription,
-}: VocabularyProps) {
+export default function Vocabulary({ id }: VocabularyProps) {
   const { t, i18n } = useTranslation('common');
   const { isSmall } = useBreakpoints();
   const { urlState } = useUrlState();
@@ -79,25 +72,6 @@ export default function Vocabulary({
   if (infoError && 'status' in infoError && infoError?.status === 404) {
     router.push('/404');
   }
-
-  const prefLabel = getPropertyValue({
-    property: info?.properties.prefLabel,
-    language: i18n.language,
-    fallbackLanguage: 'fi',
-  });
-
-  useEffect(() => {
-    setTerminologyTitle(prefLabel);
-  }, [setTerminologyTitle, prefLabel]);
-
-  useEffect(() => {
-    const description = getPropertyValue({
-      property: info?.properties.description,
-      language: i18n.language,
-      fallbackLanguage: 'fi',
-    });
-    description && setTerminologyDescription(description);
-  }, [i18n.language, info, setTerminologyDescription]);
 
   useEffect(() => {
     dispatch(
