@@ -14,7 +14,13 @@ import {
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import { FilterMobileButton } from '@app/modules/terminology-search/terminology-search.styles';
 import { useTranslation } from 'next-i18next';
-import { Modal, ModalContent } from 'suomifi-ui-components';
+import {
+  Modal,
+  ModalContent,
+  Notification,
+  Paragraph,
+  Text,
+} from 'suomifi-ui-components';
 import { Breadcrumb, BreadcrumbLink } from '@app/common/components/breadcrumb';
 import PropertyValue from '@app/common/components/property-value';
 import { useGetVocabularyCountQuery } from '@app/common/components/counts/counts.slice';
@@ -22,12 +28,10 @@ import { TerminologyListFilter } from './terminology-list-filter';
 import useUrlState from '@app/common/utils/hooks/useUrlState';
 import Pagination from '@app/common/components/pagination/pagination';
 import filterData from '@app/common/utils/filter-data';
-import { setAlert } from '@app/common/components/alert/alert.slice';
-import { useRouter } from 'next/router';
 import LoadIndicator from '@app/common/components/load-indicator';
-import { useStoreDispatch } from '@app/store';
 import { useSelector } from 'react-redux';
 import { selectLogin } from '@app/common/components/login/login.slice';
+import { useRouter } from 'next/router';
 
 interface VocabularyProps {
   id: string;
@@ -38,7 +42,6 @@ export default function Vocabulary({ id }: VocabularyProps) {
   const { isSmall } = useBreakpoints();
   const { urlState } = useUrlState();
   const router = useRouter();
-  const dispatch = useStoreDispatch();
   const {
     data: collections,
     error: collectionsError,
@@ -63,21 +66,11 @@ export default function Vocabulary({ id }: VocabularyProps) {
   } = useGetVocabularyQuery({
     id,
   });
-  const { data: counts, error: countsError } = useGetVocabularyCountQuery(id);
+  const { data: counts } = useGetVocabularyCountQuery(id);
   const [showModal, setShowModal] = useState(false);
   const [showLoadingConcepts, setShowLoadingConcepts] = useState(false);
   const [showLoadingCollections, setShowLoadingCollections] = useState(true);
   const loginInformation = useSelector(selectLogin());
-
-  if (infoError && 'status' in infoError && infoError?.status === 404) {
-    router.push('/404');
-  }
-
-  useEffect(() => {
-    dispatch(
-      setAlert([collectionsError, conceptsError, infoError, countsError], [])
-    );
-  }, [dispatch, collectionsError, conceptsError, infoError, countsError]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -101,17 +94,42 @@ export default function Vocabulary({ id }: VocabularyProps) {
     }
   }, [loginInformation, vocabularyRefetch]);
 
+  if (infoError) {
+    return (
+      <>
+        <Breadcrumb>
+          <BreadcrumbLink url={''} current>
+            ...
+          </BreadcrumbLink>
+        </Breadcrumb>
+        {/* TODO: Translations */}
+        <main id="main">
+          <Notification
+            closeText="Sulje"
+            headingText="Sanastoa ei löydy"
+            status="error"
+            onCloseButtonClick={() => router.push('/')}
+          >
+            <Paragraph>
+              <Text smallScreen>
+                Valitsemaasi sanastoa ei löydy. Tarkista sanaston osoite.
+              </Text>
+            </Paragraph>
+          </Notification>
+        </main>
+      </>
+    );
+  }
+
   return (
     <>
       <Breadcrumb>
-        {!infoError && (
-          <BreadcrumbLink url={`/terminology/${id}`} current>
-            <PropertyValue
-              property={info?.properties.prefLabel}
-              fallbackLanguage="fi"
-            />
-          </BreadcrumbLink>
-        )}
+        <BreadcrumbLink url={`/terminology/${id}`} current>
+          <PropertyValue
+            property={info?.properties.prefLabel}
+            fallbackLanguage="fi"
+          />
+        </BreadcrumbLink>
       </Breadcrumb>
 
       <main id="main">

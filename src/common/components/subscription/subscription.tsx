@@ -28,9 +28,10 @@ export default function Subscription({ uri }: SubscriptionProps) {
   useEffect(() => {
     if (subscription.isSuccess) {
       dispatch(subscriptionApi.internalActions.resetApiState());
-    } else if (subscription.isError) {
-      dispatch(setAlert([subscription.error], []));
     }
+    // } else if (subscription.isError) {
+    //   dispatch(setAlert([subscription.error], []));
+    // }
   }, [subscription, dispatch]);
 
   const handleSubscription = (subscribed: boolean) => {

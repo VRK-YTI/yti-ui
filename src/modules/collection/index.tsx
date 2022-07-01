@@ -1,8 +1,12 @@
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
-import { VisuallyHidden } from 'suomifi-ui-components';
-import { setAlert } from '@app/common/components/alert/alert.slice';
+import {
+  Notification,
+  Paragraph,
+  Text,
+  VisuallyHidden,
+} from 'suomifi-ui-components';
 import {
   BasicBlock,
   MultilingualPropertyBlock,
@@ -62,23 +66,11 @@ export default function Collection({
     }
   );
 
-  if (
-    collectionError &&
-    'status' in collectionError &&
-    collectionError.status === 404
-  ) {
-    router.push('/404');
-  }
-
   const prefLabel = getPropertyValue({
     property: collection?.properties.prefLabel,
     language: i18n.language,
     fallbackLanguage: 'fi',
   });
-
-  useEffect(() => {
-    dispatch(setAlert([terminologyError, collectionError], []));
-  }, [dispatch, terminologyError, collectionError]);
 
   useEffect(() => {
     if (collection) {
@@ -92,6 +84,46 @@ export default function Collection({
     }
   }, [loginInformation, refetch]);
 
+  if (collectionError) {
+    return (
+      <>
+        <Breadcrumb>
+          {!terminologyError && (
+            <BreadcrumbLink url={`/terminology/${terminologyId}`}>
+              <PropertyValue
+                property={terminology?.properties.prefLabel}
+                fallbackLanguage="fi"
+              />
+            </BreadcrumbLink>
+          )}
+          <BreadcrumbLink url={''} current>
+            ...
+          </BreadcrumbLink>
+        </Breadcrumb>
+        {/* TODO: Translations */}
+        <main id="main">
+          <Notification
+            closeText="sulje"
+            headingText="Käsitekokoelmaa ei löydy"
+            status="error"
+            onCloseButtonClick={() =>
+              router.push(
+                !terminologyError ? `/terminology/${terminologyId}` : '/'
+              )
+            }
+          >
+            <Paragraph>
+              <Text smallScreen>
+                Valitsemaasi käsitekokoelmaa ei löydy. Tarkista käsitekokoelman
+                osoite.
+              </Text>
+            </Paragraph>
+          </Notification>
+        </main>
+      </>
+    );
+  }
+
   return (
     <>
       <Breadcrumb>
@@ -103,17 +135,15 @@ export default function Collection({
             />
           </BreadcrumbLink>
         )}
-        {!collectionError && (
-          <BreadcrumbLink
-            url={`/terminology/${terminologyId}/collections/${collectionId}`}
-            current
-          >
-            <PropertyValue
-              property={collection?.properties.prefLabel}
-              fallbackLanguage="fi"
-            />
-          </BreadcrumbLink>
-        )}
+        <BreadcrumbLink
+          url={`/terminology/${terminologyId}/collections/${collectionId}`}
+          current
+        >
+          <PropertyValue
+            property={collection?.properties.prefLabel}
+            fallbackLanguage="fi"
+          />
+        </BreadcrumbLink>
       </Breadcrumb>
 
       <PageContent $breakpoint={breakpoint}>

@@ -20,6 +20,10 @@ import {
 import PageHead from '@app/common/components/page-head';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import { getStoreData } from '@app/common/components/page-head/utils';
+import {
+  getVocabularyCount,
+  getRunningOperationPromises as countsGetRunningOperationPromises,
+} from '@app/common/components/counts/counts.slice';
 
 interface TerminologyPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -81,8 +85,10 @@ export const getServerSideProps = createCommonGetServerSideProps(
         language: locale,
       })
     );
+    store.dispatch(getVocabularyCount.initiate(id));
 
     await Promise.all(getRunningOperationPromises());
+    await Promise.all(countsGetRunningOperationPromises());
 
     const vocabularyData = getStoreData({
       state: store.getState(),

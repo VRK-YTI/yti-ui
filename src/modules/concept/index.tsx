@@ -1,6 +1,12 @@
 import { useTranslation } from 'next-i18next';
 import React, { useEffect } from 'react';
-import { ExternalLink, VisuallyHidden } from 'suomifi-ui-components';
+import {
+  ExternalLink,
+  Notification,
+  Paragraph,
+  Text,
+  VisuallyHidden,
+} from 'suomifi-ui-components';
 import {
   BasicBlock,
   MultilingualPropertyBlock,
@@ -17,7 +23,6 @@ import DetailsExpander from './details-expander';
 import ConceptSidebar from './concept-sidebar';
 import { MainContent, PageContent } from './concept.styles';
 import { useStoreDispatch } from '@app/store';
-import { setAlert } from '@app/common/components/alert/alert.slice';
 import { useRouter } from 'next/router';
 import { setTitle } from '@app/common/components/title/title.slice';
 import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
@@ -55,19 +60,11 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
   const router = useRouter();
   const loginInformation = useSelector(selectLogin());
 
-  if (conceptError && 'status' in conceptError && conceptError.status === 404) {
-    router.push('/404');
-  }
-
   const prefLabel = getPropertyValue({
     property: getProperty('prefLabel', concept?.references.prefLabelXl),
     language: i18n.language,
     fallbackLanguage: 'fi',
   });
-
-  useEffect(() => {
-    dispatch(setAlert([terminologyError, conceptError], []));
-  }, [dispatch, terminologyError, conceptError]);
 
   useEffect(() => {
     if (concept) {
@@ -84,6 +81,45 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
   const status =
     getPropertyValue({ property: concept?.properties.status }) || 'DRAFT';
 
+  if (conceptError) {
+    return (
+      <>
+        <Breadcrumb>
+          {!terminologyError && (
+            <BreadcrumbLink url={`/terminology/${terminologyId}`}>
+              <PropertyValue
+                property={terminology?.properties.prefLabel}
+                fallbackLanguage="fi"
+              />
+            </BreadcrumbLink>
+          )}
+          <BreadcrumbLink url="" current>
+            ...
+          </BreadcrumbLink>
+        </Breadcrumb>
+        {/* TODO: Translations */}
+        <main id="main">
+          <Notification
+            closeText="sulje"
+            status="error"
+            headingText="Käsitettä ei löydy"
+            onCloseButtonClick={() =>
+              router.push(
+                !terminologyError ? `/terminology/${terminologyId}` : '/'
+              )
+            }
+          >
+            <Paragraph>
+              <Text smallScreen>
+                Valitsemaasi käsitettä ei löydy. Tarkista käsitteen osoite.
+              </Text>
+            </Paragraph>
+          </Notification>
+        </main>
+      </>
+    );
+  }
+
   return (
     <>
       <Breadcrumb>
@@ -95,14 +131,12 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
             />
           </BreadcrumbLink>
         )}
-        {!conceptError && (
-          <BreadcrumbLink
-            url={`/terminology/${terminologyId}/concepts/${conceptId}`}
-            current
-          >
-            {prefLabel}
-          </BreadcrumbLink>
-        )}
+        <BreadcrumbLink
+          url={`/terminology/${terminologyId}/concepts/${conceptId}`}
+          current
+        >
+          {prefLabel}
+        </BreadcrumbLink>
       </Breadcrumb>
 
       <PageContent $breakpoint={breakpoint}>
