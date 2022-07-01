@@ -100,11 +100,14 @@ export default function Collection({
             ...
           </BreadcrumbLink>
         </Breadcrumb>
-        {/* TODO: Translations */}
+
         <main id="main">
           <Notification
-            closeText="sulje"
-            headingText="Käsitekokoelmaa ei löydy"
+            closeText={t('close')}
+            headingText={t('error-not-found', {
+              context: 'collection',
+              ns: 'common',
+            })}
             status="error"
             onCloseButtonClick={() =>
               router.push(
@@ -114,8 +117,10 @@ export default function Collection({
           >
             <Paragraph>
               <Text smallScreen>
-                Valitsemaasi käsitekokoelmaa ei löydy. Tarkista käsitekokoelman
-                osoite.
+                {t('error-not-found-desc', {
+                  context: 'collection',
+                  ns: 'common',
+                })}
               </Text>
             </Paragraph>
           </Notification>

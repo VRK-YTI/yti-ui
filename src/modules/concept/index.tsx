@@ -97,12 +97,15 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
             ...
           </BreadcrumbLink>
         </Breadcrumb>
-        {/* TODO: Translations */}
+
         <main id="main">
           <Notification
-            closeText="sulje"
+            closeText={t('close')}
             status="error"
-            headingText="Käsitettä ei löydy"
+            headingText={t('error-not-found', {
+              context: 'concept',
+              ns: 'common',
+            })}
             onCloseButtonClick={() =>
               router.push(
                 !terminologyError ? `/terminology/${terminologyId}` : '/'
@@ -111,7 +114,10 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
           >
             <Paragraph>
               <Text smallScreen>
-                Valitsemaasi käsitettä ei löydy. Tarkista käsitteen osoite.
+                {t('error-not-found-desc', {
+                  context: 'concept',
+                  ns: 'common',
+                })}
               </Text>
             </Paragraph>
           </Notification>

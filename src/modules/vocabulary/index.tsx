@@ -102,17 +102,17 @@ export default function Vocabulary({ id }: VocabularyProps) {
             ...
           </BreadcrumbLink>
         </Breadcrumb>
-        {/* TODO: Translations */}
+
         <main id="main">
           <Notification
-            closeText="Sulje"
-            headingText="Sanastoa ei löydy"
+            closeText={t('close')}
+            headingText={t('error-not-found', { context: 'terminology' })}
             status="error"
             onCloseButtonClick={() => router.push('/')}
           >
             <Paragraph>
               <Text smallScreen>
-                Valitsemaasi sanastoa ei löydy. Tarkista sanaston osoite.
+                {t('error-not-found-desc', { context: 'terminology' })}
               </Text>
             </Paragraph>
           </Notification>
