@@ -28,7 +28,9 @@ export interface TerminologySearchResult {
   totalHitCount: number;
   resultStart: number;
   terminologies: TerminologyDTO[] | null;
-  deepHits: null;
+  deepHits: {
+    [key: string]: DeepHitsDTO[];
+  };
 }
 
 export interface GroupSearchResult {
@@ -61,4 +63,17 @@ export interface OrganizationSearchResult {
     };
     id: string;
   };
+}
+
+export interface DeepHitsDTO {
+  topHits: {
+    id: string;
+    label: {
+      [value: string]: string;
+    };
+    status: string;
+    uri: string;
+  }[];
+  totalHitCount: number;
+  type: string;
 }

@@ -18,6 +18,7 @@ import { Concept } from '@app/common/interfaces/concept.interface';
 import useUrlState from '@app/common/utils/hooks/useUrlState';
 import SanitizedTextContent from '@app/common/components/sanitized-text-content';
 import ResultCard from './result-card';
+import ResultCardExpander from './result-card-expander';
 
 interface SearchResultsProps {
   data: TerminologySearchResult | VocabularyConcepts | Collection[];
@@ -84,6 +85,15 @@ export default function SearchResults({
                   title={getLabel(terminology)}
                   titleLink={`/terminology/${terminology.id}`}
                   type={t('terminology-search-results-terminology')}
+                  extra={
+                    data.deepHits?.[terminology.id]?.[0] && (
+                      <ResultCardExpander
+                        deepHits={data.deepHits[terminology.id]}
+                        buttonLabel={t('results-with-query-from-terminology')}
+                        contentLabel={t('concepts')}
+                      />
+                    )
+                  }
                 />
               );
             })}
