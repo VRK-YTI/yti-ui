@@ -1,4 +1,11 @@
 import styled from 'styled-components';
+import { Block } from 'suomifi-ui-components';
+
+export const FilterTopPartBlock = styled(Block)`
+  display: flex;
+  flex-direction: column;
+  gap: ${(props) => props.theme.suomifi.spacing.m};
+`;
 
 export const ResultAndFilterContainer = styled.div`
   display: flex;

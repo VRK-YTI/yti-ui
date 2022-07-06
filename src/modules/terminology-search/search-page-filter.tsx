@@ -10,6 +10,8 @@ import InformationDomainFilter from '@app/common/components/filter/information-d
 import OrganizationFilter from '@app/common/components/filter/organization-filter';
 import StatusFilter from '@app/common/components/filter/status-filter';
 import { KeywordFilter } from '@app/common/components/filter/keyword-filter';
+import LanguageFilter from '@app/common/components/filter/language-filter';
+import { FilterTopPartBlock } from './terminology-search.styles';
 
 export interface SearchPageFilterProps {
   isModal?: boolean;
@@ -36,17 +38,22 @@ export function SearchPageFilter({
       onModalClose={onModalClose}
       resultCount={resultCount}
     >
-      <OrganizationFilter
-        title={t('terminology-search-filter-by-organization')}
-        visualPlaceholder={t('terminology-search-filter-pick-organization')}
-        organizations={organizations}
-      />
-      <Separator />
-      <KeywordFilter
-        title={t('vocabulary-filter-filter-by-keyword')}
-        visualPlaceholder={t('vocabulary-filter-visual-placeholder')}
-        isModal={isModal}
-      />
+      <FilterTopPartBlock>
+        <OrganizationFilter
+          title={t('terminology-search-filter-by-organization')}
+          visualPlaceholder={t('terminology-search-filter-pick-organization')}
+          organizations={organizations}
+        />
+        <LanguageFilter
+          labelText={t('display-by-language')}
+          languages={counts?.counts.languages}
+        />
+        <KeywordFilter
+          title={t('vocabulary-filter-filter-by-keyword')}
+          visualPlaceholder={t('vocabulary-filter-visual-placeholder')}
+          isModal={isModal}
+        />
+      </FilterTopPartBlock>
       <Separator />
       <StatusFilter
         title={t('terminology-search-filter-show-states')}

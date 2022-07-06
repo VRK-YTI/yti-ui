@@ -32,6 +32,7 @@ import { Concept } from '@app/common/interfaces/concept.interface';
 import useUrlState from '@app/common/utils/hooks/useUrlState';
 import SanitizedTextContent from '@app/common/components/sanitized-text-content';
 import { VisuallyHidden } from 'suomifi-ui-components';
+import { getPropertyValue } from '../property-value/get-property-value';
 
 interface SearchResultsProps {
   data: TerminologySearchResult | VocabularyConcepts | Collection[];
@@ -92,7 +93,7 @@ export default function SearchResults({
                       <CardTitleLink href="">
                         <CardTitleIcon icon="registers" />
                         <CardTitle>
-                          {getLabel(terminology)}
+                          {getLabel(terminology, false)}
                           <VisuallyHidden>
                             {terminology.contributors[0].label[i18n.language] ??
                               terminology.contributors[0].label['fi'] ??
@@ -197,12 +198,53 @@ export default function SearchResults({
     return null;
   }
 
-  function getLabel(dto: VocabularyConceptDTO | TerminologyDTO) {
-    if (dto.label[i18n.language]) {
+  function getLabel(
+    dto: VocabularyConceptDTO | TerminologyDTO | Collection,
+    isConcept = true
+  ) {
+    // If dto is of type Collection
+    if ('properties' in dto) {
+      let retVal = getPropertyValue({
+        property: dto.properties.prefLabel,
+        language: urlState.lang,
+      });
+
+      if (retVal !== '') {
+        return retVal.replaceAll(/<\/*[^>]>/g, '');
+      }
+
+      retVal = !urlState.lang
+        ? getPropertyValue({
+            property: dto.properties.prefLabel,
+            language: i18n.language,
+          })
+        : `${dto.properties.prefLabel?.[0].value} (${dto.properties.prefLabel?.[0].lang})`;
+      return retVal.replaceAll(/<\/*[^>]>/g, '');
+    }
+
+    // If language is defined in urlState and dto is Concept
+    // get label without trailing language code
+    if (isConcept && urlState.lang && dto.label[urlState.lang]) {
+      return dto.label[urlState.lang].replaceAll(/<\/*[^>]>/g, '');
+    }
+
+    // If label exists in current UI language get label without trailing language code
+    if (!urlState.lang && dto.label[i18n.language]) {
       return dto.label[i18n.language].replaceAll(/<\/*[^>]>/g, '');
     }
 
-    return dto?.label?.[Object.keys(dto.label)[0]].replaceAll(/<\/*[^>]>/g, '');
+    if (isConcept) {
+      // Otherwise return label with trailing language code
+      return `${dto?.label?.[Object.keys(dto.label)[0]].replaceAll(
+        /<\/*[^>]>/g,
+        ''
+      )} (${Object.keys(dto.label)[0]})`;
+    } else {
+      return `${dto?.label?.[Object.keys(dto.label)[0]].replaceAll(
+        /<\/*[^>]>/g,
+        ''
+      )}`;
+    }
   }
 
   function getDescription(terminology: TerminologyDTO) {
@@ -266,16 +308,11 @@ export default function SearchResults({
                     href={`/terminology/${collection.type.graph.id}/collection/${collection.id}`}
                   >
                     <CardTitleLink href="">
-                      <PropertyValue
-                        property={collection.properties.prefLabel}
-                        fallbackLanguage="fi"
-                      />
+                      {getLabel(collection)}
                     </CardTitleLink>
                   </Link>
                 </CardTitle>
-
                 <CardSubtitle>{t('vocabulary-info-collection')}</CardSubtitle>
-
                 <CardDescription>
                   <PropertyValue
                     property={collection.properties.definition}

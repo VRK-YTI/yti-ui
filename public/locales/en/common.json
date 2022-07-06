@@ -137,5 +137,11 @@
   "email-subscription-add": "Add email subscription",
   "email-subscription-delete": "Delete email subscription",
   "email-subscription-subscribed": "Email notifications on",
-  "email-subscription-unsubscribed": "Email notifications off"
+  "email-subscription-unsubscribed": "Email notifications off",
+  "languages-available": "Languages available",
+  "clear-language-filter": "Clear language filter",
+  "display-by-language": "Display by language",
+  "filter-by-language": "Filter by language",
+  "no-languages-available": "No languages available",
+  "choose-language": "Choose a language"
 }

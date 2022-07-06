@@ -17,6 +17,7 @@ import {
   CommonContextState,
   CommonContextProvider,
 } from '@app/common/components/common-context-provider';
+import { getVocabularyCount } from '@app/common/components/counts/counts.slice';
 import PageHead from '@app/common/components/page-head';
 
 interface TerminologyPageProps extends CommonContextState {
@@ -88,6 +89,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
         language: locale,
       })
     );
+    await store.dispatch(getVocabularyCount.initiate(id));
 
     await Promise.all(getRunningOperationPromises());
 

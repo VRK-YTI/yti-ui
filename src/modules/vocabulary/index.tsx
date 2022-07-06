@@ -153,7 +153,10 @@ export default function Vocabulary({
         )}
         <ResultAndFilterContainer>
           {!isSmall ? (
-            <TerminologyListFilter counts={counts} />
+            <TerminologyListFilter
+              counts={counts}
+              languages={info?.properties.language}
+            />
           ) : (
             <Modal
               appElementId="__next"
@@ -168,6 +171,7 @@ export default function Vocabulary({
                   onModalClose={() => setShowModal(false)}
                   resultCount={concepts?.totalHitCount}
                   counts={counts}
+                  languages={info?.properties.language}
                 />
               </ModalContent>
             </Modal>
