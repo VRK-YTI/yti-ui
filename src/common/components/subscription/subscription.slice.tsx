@@ -1,5 +1,5 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import axiosBaseQuery from '@app/common/components/axios-base-query';
+import { getTerminologyApiBaseQuery } from '@app/store/api-base-query';
 import { HYDRATE } from 'next-redux-wrapper';
 import {
   Subscription,
@@ -8,11 +8,7 @@ import {
 
 export const subscriptionApi = createApi({
   reducerPath: 'subsriptionApi',
-  baseQuery: axiosBaseQuery({
-    baseUrl: process.env.MESSAGING_API_URL
-      ? `${process.env.MESSAGING_API_URL}/api/v1`
-      : '/messaging-api/api/v1',
-  }),
+  baseQuery: getTerminologyApiBaseQuery(),
   extractRehydrationInfo(action, { reducerPath }) {
     if (action.type === HYDRATE) {
       return action.payload[reducerPath];

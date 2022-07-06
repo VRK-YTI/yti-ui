@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import OtherInformation from './other-information';
-import { themeProvider } from '@app/tests/test-utils';
+import { getMockContext, themeProvider } from '@app/tests/test-utils';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { makeStore } from '@app/store';
@@ -30,7 +30,7 @@ describe('other-information', () => {
   ]);
 
   it('should render component and content', () => {
-    const store = makeStore();
+    const store = makeStore(getMockContext());
     const mockFn = jest.fn();
 
     render(

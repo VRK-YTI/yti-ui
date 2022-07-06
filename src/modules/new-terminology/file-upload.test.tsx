@@ -1,12 +1,12 @@
 import { render, screen } from '@testing-library/react';
 import FileUpload from './file-upload';
-import { themeProvider } from '@app/tests/test-utils';
+import { getMockContext, themeProvider } from '@app/tests/test-utils';
 import { Provider } from 'react-redux';
 import { makeStore } from '@app/store';
 
 describe('file-upload', () => {
   it('should render component', () => {
-    const store = makeStore();
+    const store = makeStore(getMockContext());
     const mockClose = jest.fn();
     const mockPost = jest.fn();
 
@@ -31,7 +31,7 @@ describe('file-upload', () => {
   });
 
   it('should render try again', () => {
-    const store = makeStore();
+    const store = makeStore(getMockContext());
     const mockClose = jest.fn();
     const mockPost = jest.fn();
 
