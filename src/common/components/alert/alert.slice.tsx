@@ -4,7 +4,8 @@ import { Error } from '@app/common/interfaces/error.interface';
 
 export type Alert = {
   error: Error;
-  visible?: boolean;
+  visible: boolean;
+  displayText: string;
 };
 
 export interface AlertState {
@@ -40,34 +41,45 @@ function setAlertPrivate(alerts: Alert[]): AppThunk {
 
 export const setAlert =
   (
-    alerts: (Error | SerializedError | undefined)[],
+    alerts: {
+      error: Error | SerializedError | undefined;
+      displayText: string;
+    }[],
     previousAlerts: Alert[]
   ): AppThunk =>
   async (dispatch) => {
-    const newAlerts = alerts.filter(
-      (alert) =>
-        alert &&
-        'data' in alert &&
-        !previousAlerts.map((pAlert) => pAlert.error).includes(alert)
-    ) as Error[];
+    const newAlerts = alerts
+      .filter(
+        (alert) =>
+          alert.error &&
+          !previousAlerts.map((a) => a.displayText).includes(alert.displayText)
+      )
+      .map((alert) => ({
+        error: alert.error as Error,
+        visible: true,
+        displayText: alert.displayText,
+      }));
 
     if (newAlerts.length > 0) {
-      dispatch(
-        setAlertPrivate([
-          ...previousAlerts,
-          ...newAlerts.map((nAlert) => ({
-            error: nAlert,
-            visible: true,
-          })),
-        ])
-      );
+      dispatch(setAlertPrivate([...previousAlerts, ...newAlerts]));
     }
   };
 
 export const setAlertVisibility =
-  (alerts: Alert[]): AppThunk =>
+  (alerts: Alert[], displayText?: string): AppThunk =>
   async (dispatch) => {
-    dispatch(setAlertPrivate(alerts));
+    const updatedAlerts = alerts.map((alert) => {
+      if (alert.displayText === displayText) {
+        return {
+          error: alert.error,
+          displayText: alert.displayText,
+          visible: false,
+        };
+      }
+      return alert;
+    });
+
+    dispatch(setAlertPrivate(updatedAlerts));
   };
 
 export function selectAlert() {

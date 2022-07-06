@@ -63,11 +63,23 @@ export default function AccessRequest({ organizations }: AccessRequestProps) {
 
   useEffect(() => {
     if (request.isSuccess) {
-      dispatch(setAlert([{ status: 0, data: t('access-request-sent') }], []));
+      dispatch(
+        setAlert(
+          [
+            {
+              error: { status: 0, data: '' },
+              displayText: t('access-request-sent'),
+            },
+          ],
+          []
+        )
+      );
       refetch();
       handleClose();
     } else if (request.isError) {
-      dispatch(setAlert([request.error], []));
+      dispatch(
+        setAlert([{ error: request.error, displayText: '_access-request' }], [])
+      );
       refetch();
       handleClose();
     }
