@@ -17,7 +17,7 @@ describe('alert', () => {
         [
           {
             status: 500,
-            data: '500 error',
+            data: { error: '500 error' },
           },
         ],
         []
@@ -43,19 +43,19 @@ describe('alert', () => {
         [
           {
             status: 500,
-            data: '500 error',
+            data: { error: '500 error' },
           },
           {
             status: 500,
-            data: '500 error',
+            data: { error: '500 error' },
           },
           {
             status: 500,
-            data: '500 error',
+            data: { error: '500 error' },
           },
           {
             status: 500,
-            data: '500 error',
+            data: { error: '500 error' },
           },
         ],
         []
@@ -81,7 +81,7 @@ describe('alert', () => {
         [
           {
             status: 0,
-            data: 'notification',
+            data: { error: 'notification' },
           },
         ],
         []
@@ -109,7 +109,7 @@ describe('alert', () => {
         [
           {
             status: 500,
-            data: '500 error',
+            data: { error: '500 error' },
           },
         ],
         []
@@ -129,10 +129,8 @@ describe('alert', () => {
     expect(screen.queryByText('tr-error-occured')).not.toBeInTheDocument();
     expect(store.getState().alert.alerts).toStrictEqual([
       {
-        error: {
-          status: 500,
-          data: '500 error',
-        },
+        code: 500,
+        message: '500 error',
         visible: false,
       },
     ]);
@@ -146,19 +144,19 @@ describe('alert', () => {
         [
           {
             status: 500,
-            data: '500 error',
+            data: { error: '500 error' },
           },
           {
             status: 500,
-            data: '500 error',
+            data: { error: '500 error' },
           },
           {
             status: 500,
-            data: '500 error',
+            data: { error: '500 error' },
           },
           {
             status: 500,
-            data: '500 error',
+            data: { error: '500 error' },
           },
         ],
         []
@@ -178,31 +176,23 @@ describe('alert', () => {
     userEvent.click(screen.getAllByText('TR-TOAST-CLOSE')[2]);
     expect(store.getState().alert.alerts).toStrictEqual([
       {
-        error: {
-          status: 500,
-          data: '500 error',
-        },
+        code: 500,
+        message: '500 error',
         visible: true,
       },
       {
-        error: {
-          status: 500,
-          data: '500 error',
-        },
+        code: 500,
+        message: '500 error',
         visible: true,
       },
       {
-        error: {
-          status: 500,
-          data: '500 error',
-        },
+        code: 500,
+        message: '500 error',
         visible: false,
       },
       {
-        error: {
-          status: 500,
-          data: '500 error',
-        },
+        code: 500,
+        message: '500 error',
         visible: false,
       },
     ]);
