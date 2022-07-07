@@ -1,11 +1,7 @@
 import { BaseQueryFn } from '@reduxjs/toolkit/dist/query';
 import { BaseQueryApi } from '@reduxjs/toolkit/dist/query/baseQueryTypes';
 import { MaybePromise } from '@reduxjs/toolkit/dist/query/tsHelpers';
-import axios, {
-  AxiosError,
-  AxiosRequestConfig,
-  AxiosRequestHeaders,
-} from 'axios';
+import axios, { AxiosRequestConfig, AxiosRequestHeaders } from 'axios';
 import { NextIronContext } from '.';
 
 export type AxiosBaseQuery = {
@@ -24,10 +20,21 @@ export type AxiosBaseQueryArgs = {
   params?: AxiosRequestConfig['params'];
 };
 
+export type AxiosBaseQueryError =
+  | {
+      status: number;
+      data: unknown;
+    }
+  | {
+      status: 'GENERIC_ERROR';
+      data?: undefined;
+      error: string;
+    };
+
 const axiosBaseQuery =
   (
     { baseUrl, prepareHeaders }: AxiosBaseQuery = { baseUrl: '/' }
-  ): BaseQueryFn<AxiosBaseQueryArgs, unknown, unknown> =>
+  ): BaseQueryFn<AxiosBaseQueryArgs, unknown, AxiosBaseQueryError> =>
   async ({ url, method, data, params }, api) => {
     let headers: AxiosRequestHeaders = {};
     if (prepareHeaders) {
@@ -45,12 +52,21 @@ const axiosBaseQuery =
         headers: headers,
       });
       return { data: result.data };
-    } catch (axiosError) {
-      const err = axiosError as AxiosError;
+    } catch (error) {
+      if (!axios.isAxiosError(error) || !error.response) {
+        return {
+          error: {
+            status: 'GENERIC_ERROR',
+            error: (error as Error)?.message,
+          },
+        };
+      }
+
+      const response = error.response;
       return {
         error: {
-          status: err.response?.status,
-          data: err.response?.data || err.message,
+          status: response.status,
+          data: response.data,
         },
       };
     }

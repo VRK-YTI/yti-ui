@@ -21,8 +21,8 @@ export default function NotificationToast({ alert }: NotificationToastProps) {
       dispatch(
         setAlert(
           previousAlerts
-            .filter((a) => a.error.status !== 0)
-            .map((a) => a.error),
+            .filter((a) => a.code !== 0)
+            .map((a) => ({ status: a.code as number, data: a.message })),
           []
         )
       );
@@ -34,7 +34,7 @@ export default function NotificationToast({ alert }: NotificationToastProps) {
   return (
     <Toast role="alert" $isSmall={isSmall}>
       <ToastIcon icon="checkCircle" />
-      {t(alert.error.data)}
+      {t(alert.message)}
     </Toast>
   );
 }

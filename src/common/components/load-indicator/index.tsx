@@ -4,10 +4,11 @@ import { Text } from 'suomifi-ui-components';
 import { Error } from '@app/common/interfaces/error.interface';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import { LoadIcon, LoadWrapper, RefetchButton } from './load-indicator.styles';
+import { AxiosBaseQueryError } from '@app/store/axios-base-query';
 
 interface LoadIndicatorProps {
   isFetching: boolean;
-  error?: Error | SerializedError;
+  error?: AxiosBaseQueryError | Error | SerializedError;
   refetch: () => void;
 }
 
