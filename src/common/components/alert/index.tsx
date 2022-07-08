@@ -62,9 +62,7 @@ export function AlertToastComponent({ alert, alerts, type }: AlertToastProps) {
   const handleClick = () => {
     setShow(false);
     const newAlerts = alerts.map((newAlert) =>
-      newAlert === alert ?
-        { ...newAlert, visible: false } :
-        newAlert
+      newAlert === alert ? { ...newAlert, visible: false } : newAlert
     );
 
     dispatch(setAlertVisibility(newAlerts));
