@@ -25,7 +25,7 @@ const rotate = keyframes`
   }
 `;
 
-export const TestLoad = styled.div<{ $isSmall: boolean }>`
+export const LoadingIndicator = styled.div<{ $isSmall: boolean }>`
   margin-top: 50px;
 
   ::after {
