@@ -1,4 +1,5 @@
-import { isEqual, sortBy } from 'lodash';
+import isEqual from 'lodash/isEqual';
+import sortBy from 'lodash/sortBy';
 import { NextRouter, useRouter } from 'next/router';
 
 export interface UrlState {

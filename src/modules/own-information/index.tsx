@@ -15,7 +15,7 @@ import { selectLogin } from '@app/common/components/login/login.slice';
 import Separator from '@app/common/components/separator';
 import { useGetOrganizationsQuery } from '@app/common/components/terminology-search/terminology-search.slice';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
-import { sortBy } from 'lodash';
+import sortBy from 'lodash/sortBy';
 import AccessRequest from '../../common/components/access-request';
 import SubscriptionBlock from './subscription-block';
 import EmailNotificationsBlock from './email-notifications-block';

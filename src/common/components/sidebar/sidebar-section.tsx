@@ -8,7 +8,7 @@ import {
 } from '@app/common/interfaces/termed-data-types.interface';
 import PropertyValue from '@app/common/components/property-value';
 import { Term } from '@app/common/interfaces/term.interface';
-import { isEmpty } from 'lodash';
+import isEmpty from 'lodash/isEmpty';
 import { useGeneratedId } from '@app/common/utils/hooks/useGeneratedId';
 
 interface SidebarSectionProps<T> {
