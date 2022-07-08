@@ -24,6 +24,7 @@ describe('useUrlState', () => {
         status: [],
         type: 'concept',
         page: '1',
+        lang: '',
       },
     });
 
@@ -35,6 +36,7 @@ describe('useUrlState', () => {
     expect(isInitial(result.current.urlState, 'status')).toBeTruthy();
     expect(isInitial(result.current.urlState, 'type')).toBeTruthy();
     expect(isInitial(result.current.urlState, 'page')).toBeTruthy();
+    expect(isInitial(result.current.urlState, 'lang')).toBeTruthy();
   });
 
   it('query parameters are mapped to url state', () => {
@@ -47,6 +49,7 @@ describe('useUrlState', () => {
         status: ['status-query-param'],
         type: 'type-query-param',
         page: '10',
+        lang: 'q-lang-param',
       },
     });
 
@@ -59,6 +62,7 @@ describe('useUrlState', () => {
       status: ['status-query-param'],
       type: 'type-query-param',
       page: 10,
+      lang: 'q-lang-param',
     });
   });
 
@@ -80,6 +84,7 @@ describe('useUrlState', () => {
         status: ['status-query-param'],
         type: 'type-query-param',
         page: '10',
+        lang: 'q-lang-param',
       },
     });
 
@@ -103,6 +108,7 @@ describe('useUrlState', () => {
         status: ['status-query-param'],
         type: 'type-query-param',
         page: '10',
+        lang: 'q-lang-param',
       },
     });
 
@@ -115,6 +121,7 @@ describe('useUrlState', () => {
         status: ['new-status-query-param'],
         type: 'new-type-query-param',
         page: 11,
+        lang: 'new-q-lang-param',
       })
     );
 
@@ -127,6 +134,7 @@ describe('useUrlState', () => {
           status: ['new-status-query-param'],
           type: 'new-type-query-param',
           page: 11,
+          lang: 'new-q-lang-param',
         },
       })
     );
@@ -142,6 +150,7 @@ describe('useUrlState', () => {
         status: ['status-query-param'],
         type: 'type-query-param',
         page: '10',
+        lang: 'q-lang-param',
       },
     });
 
@@ -171,6 +180,7 @@ describe('useUrlState', () => {
         status: ['status-query-param'],
         type: 'type-query-param',
         page: '10',
+        lang: 'q-lang-param',
       },
     });
 
@@ -189,6 +199,7 @@ describe('useUrlState', () => {
           status: ['status-query-param'],
           type: 'type-query-param',
           page: 10,
+          lang: 'q-lang-param',
         }),
       })
     );

@@ -141,5 +141,11 @@
   "error-not-found-desc_concept": "Valitsemaasi käsitettä ei löydy. Tarkista käsitteen osoite.",
   "error-not-found-desc_collection": "Valitsemaasi käsitekokoelmaa ei löydy. Tarkista käsitekokoelman osoite.",
   "concepts": "Käsitteet",
-  "results-with-query-from-terminology": "Tuloksia hakusanalla sanastosta"
+  "results-with-query-from-terminology": "Tuloksia hakusanalla sanastosta",
+  "languages-available": "Kieliä saatavilla",
+  "clear-language-filter": "Tyhjennä kielivalinta",
+  "display-by-language": "Näytä sisältö kielellä",
+  "filter-by-language": "Rajaa kielen mukaan",
+  "no-languages-available": "Kieliä ei saatavilla",
+  "choose-language": "Valitse kieli"
 }

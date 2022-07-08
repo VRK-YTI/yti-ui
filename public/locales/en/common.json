@@ -148,5 +148,11 @@
   "error-not-found-desc_concept": "Requested concept not found. Make sure that the address is correct.",
   "error-not-found-desc_collection": "Requested collection not found. Make sure that the address is correct.",
   "concepts": "Concepts",
-  "results-with-query-from-terminology": "Results with query from terminology"
+  "results-with-query-from-terminology": "Results with query from terminology",
+  "languages-available": "Languages available",
+  "clear-language-filter": "Clear language filter",
+  "display-by-language": "Display by language",
+  "filter-by-language": "Filter by language",
+  "no-languages-available": "No languages available",
+  "choose-language": "Choose a language"
 }

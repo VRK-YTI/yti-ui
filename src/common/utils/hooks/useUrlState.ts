@@ -9,6 +9,7 @@ export interface UrlState {
   status: string[];
   type: string;
   page: number;
+  lang: string;
 }
 
 export const initialUrlState: UrlState = {
@@ -18,6 +19,7 @@ export const initialUrlState: UrlState = {
   status: [],
   type: 'concept',
   page: 1,
+  lang: '',
 };
 
 export function isInitial(state: UrlState, name: keyof UrlState) {
@@ -47,6 +49,7 @@ export default function useUrlState(): UseURLStateResult {
     status: asStringArray(router.query.status, initialUrlState.status),
     type: asString(router.query.type, initialUrlState.type),
     page: asNumber(router.query.page, initialUrlState.page),
+    lang: asString(router.query.lang, initialUrlState.lang),
   };
 
   return {
@@ -66,6 +69,7 @@ function updateURLState(router: NextRouter, state?: UrlState): void {
     status,
     type,
     page,
+    lang,
     /* eslint-enable @typescript-eslint/no-unused-vars */
     ...otherQueryParameters
   } = router.query;
@@ -93,7 +97,7 @@ function buildUrlStatePatch(state: UrlState): Partial<UrlState> {
   if (!isInitial(state, 'status')) patch.status = state.status;
   if (!isInitial(state, 'type')) patch.type = state.type;
   if (!isInitial(state, 'page')) patch.page = state.page;
-
+  if (!isInitial(state, 'lang')) patch.lang = state.lang;
   return patch;
 }
 

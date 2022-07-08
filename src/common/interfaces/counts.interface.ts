@@ -4,5 +4,6 @@ export interface Counts {
     categories: { [key: string]: number };
     statuses: { [key: string]: number };
     groups: { [key: string]: number };
+    languages?: { [key: string]: number };
   };
 }
