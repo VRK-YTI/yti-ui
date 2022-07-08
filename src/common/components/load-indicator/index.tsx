@@ -3,7 +3,11 @@ import { useTranslation } from 'next-i18next';
 import { Text } from 'suomifi-ui-components';
 import { Error } from '@app/common/interfaces/error.interface';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
-import { LoadWrapper, RefetchButton, LoadingIndicator } from './load-indicator.styles';
+import {
+  LoadWrapper,
+  RefetchButton,
+  LoadingIndicator,
+} from './load-indicator.styles';
 
 interface LoadIndicatorProps {
   isFetching: boolean;
