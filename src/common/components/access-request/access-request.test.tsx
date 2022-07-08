@@ -36,7 +36,7 @@ describe('access-request', () => {
     },
   ];
 
-  it('should render component', () => {
+  it('should render component', async () => {
     const store = makeStore();
 
     render(
@@ -47,7 +47,12 @@ describe('access-request', () => {
     );
 
     userEvent.click(screen.getByText('tr-access-request-access'));
-    expect(screen.getByText(/Test-org/)).toBeInTheDocument();
+    /*
+      Note: Because AccessRequestModal is dynamically imported
+      we need to wait for the component to be rendered for the
+      first check.
+    */
+    await expect(screen.findByText(/Test-org/)).resolves.toBeInTheDocument();
     expect(screen.getByText(/tr-access-terminology/)).toBeInTheDocument();
     expect(screen.getByText(/tr-access-reference-data/)).toBeInTheDocument();
     expect(screen.getByText(/tr-access-data-vocabularies/)).toBeInTheDocument();
