@@ -76,7 +76,7 @@ export default function Vocabulary({
   const [showLoadingCollections, setShowLoadingCollections] = useState(true);
   const loginInformation = useSelector(selectLogin());
 
-  if (infoError && 'status' in infoError && infoError?.status === 404) {
+  if (infoError && 'status' in infoError && infoError.status === 404) {
     router.push('/404');
   }
 

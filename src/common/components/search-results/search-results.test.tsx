@@ -5,6 +5,7 @@ import { lightTheme } from '@app/layouts/theme';
 import { makeStore } from '@app/store';
 import SearchResults from './search-results';
 import mockRouter from 'next-router-mock';
+import { getMockContext } from '@app/tests/test-utils';
 
 jest.mock('next/dist/client/router', () => require('next-router-mock'));
 
@@ -12,7 +13,7 @@ describe('search-results', () => {
   it('should render component', async () => {
     mockRouter.setCurrentUrl('/');
 
-    const store = makeStore();
+    const store = makeStore(getMockContext());
 
     const data = {
       totalHitCount: 0,
@@ -35,7 +36,7 @@ describe('search-results', () => {
   it('should render data', () => {
     mockRouter.setCurrentUrl('/');
 
-    const store = makeStore();
+    const store = makeStore(getMockContext());
 
     const data = {
       totalHitCount: 2,

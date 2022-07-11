@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import TermModal from '.';
 import { makeStore } from '@app/store';
-import { themeProvider } from '@app/tests/test-utils';
+import { getMockContext, themeProvider } from '@app/tests/test-utils';
 import { Term } from '@app/common/interfaces/term.interface';
 import {
   initialState,
@@ -20,7 +20,8 @@ describe('term-modal', () => {
   });
 
   it('should render everything in component', () => {
-    const store = makeStore();
+    const store = makeStore(getMockContext());
+
     store.dispatch(setLogin({ ...initialState, anonymous: false }));
 
     render(
@@ -58,7 +59,7 @@ describe('term-modal', () => {
   });
 
   it('should render parts of component', () => {
-    const store = makeStore();
+    const store = makeStore(getMockContext());
 
     delete data.term.properties.changeNote;
     delete data.term.properties.historyNote;

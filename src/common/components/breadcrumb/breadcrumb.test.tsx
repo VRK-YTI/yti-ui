@@ -4,10 +4,11 @@ import { ThemeProvider } from 'styled-components';
 import { Breadcrumb, BreadcrumbLink } from '.';
 import { lightTheme } from '@app/layouts/theme';
 import { makeStore } from '@app/store';
+import { getMockContext } from '@app/tests/test-utils';
 
 describe('breadcrumb', () => {
   it('should render component', () => {
-    const store = makeStore();
+    const store = makeStore(getMockContext());
 
     render(
       <Provider store={store}>
@@ -26,7 +27,7 @@ describe('breadcrumb', () => {
   });
 
   it('should render entire path', () => {
-    const store = makeStore();
+    const store = makeStore(getMockContext());
 
     render(
       <Provider store={store}>
@@ -47,7 +48,7 @@ describe('breadcrumb', () => {
   });
 
   it('should have one crumb to have status of "current"', () => {
-    const store = makeStore();
+    const store = makeStore(getMockContext());
 
     render(
       <Provider store={store}>

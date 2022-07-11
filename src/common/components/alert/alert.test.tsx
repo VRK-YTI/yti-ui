@@ -6,17 +6,18 @@ import { Alerts } from '.';
 import { lightTheme } from '@app/layouts/theme';
 import { makeStore } from '@app/store';
 import { setAlert } from './alert.slice';
+import { getMockContext } from '@app/tests/test-utils';
 
 describe('alert', () => {
   it('should render alert', () => {
-    const store = makeStore();
+    const store = makeStore(getMockContext());
 
     store.dispatch(
       setAlert(
         [
           {
             status: 500,
-            data: '500 error',
+            data: { error: '500 error' },
           },
         ],
         []
@@ -35,26 +36,26 @@ describe('alert', () => {
   });
 
   it('should render multiple alerts', () => {
-    const store = makeStore();
+    const store = makeStore(getMockContext());
 
     store.dispatch(
       setAlert(
         [
           {
             status: 500,
-            data: '500 error',
+            data: { error: '500 error' },
           },
           {
             status: 500,
-            data: '500 error',
+            data: { error: '500 error' },
           },
           {
             status: 500,
-            data: '500 error',
+            data: { error: '500 error' },
           },
           {
             status: 500,
-            data: '500 error',
+            data: { error: '500 error' },
           },
         ],
         []
@@ -73,14 +74,14 @@ describe('alert', () => {
   });
 
   it('should render non-error alert', () => {
-    const store = makeStore();
+    const store = makeStore(getMockContext());
 
     store.dispatch(
       setAlert(
         [
           {
             status: 0,
-            data: 'notification',
+            data: { error: 'notification' },
           },
         ],
         []
@@ -101,14 +102,14 @@ describe('alert', () => {
   });
 
   it('should hide alert when clicking close', async () => {
-    const store = makeStore();
+    const store = makeStore(getMockContext());
 
     store.dispatch(
       setAlert(
         [
           {
             status: 500,
-            data: '500 error',
+            data: { error: '500 error' },
           },
         ],
         []
@@ -128,36 +129,34 @@ describe('alert', () => {
     expect(screen.queryByText('tr-error-occured')).not.toBeInTheDocument();
     expect(store.getState().alert.alerts).toStrictEqual([
       {
-        error: {
-          status: 500,
-          data: '500 error',
-        },
+        code: 500,
+        message: '500 error',
         visible: false,
       },
     ]);
   });
 
   it('should hide multiple alert when closed', async () => {
-    const store = makeStore();
+    const store = makeStore(getMockContext());
 
     store.dispatch(
       setAlert(
         [
           {
             status: 500,
-            data: '500 error',
+            data: { error: '500 error' },
           },
           {
             status: 500,
-            data: '500 error',
+            data: { error: '500 error' },
           },
           {
             status: 500,
-            data: '500 error',
+            data: { error: '500 error' },
           },
           {
             status: 500,
-            data: '500 error',
+            data: { error: '500 error' },
           },
         ],
         []
@@ -177,31 +176,23 @@ describe('alert', () => {
     userEvent.click(screen.getAllByText('TR-TOAST-CLOSE')[2]);
     expect(store.getState().alert.alerts).toStrictEqual([
       {
-        error: {
-          status: 500,
-          data: '500 error',
-        },
+        code: 500,
+        message: '500 error',
         visible: true,
       },
       {
-        error: {
-          status: 500,
-          data: '500 error',
-        },
+        code: 500,
+        message: '500 error',
         visible: true,
       },
       {
-        error: {
-          status: 500,
-          data: '500 error',
-        },
+        code: 500,
+        message: '500 error',
         visible: false,
       },
       {
-        error: {
-          status: 500,
-          data: '500 error',
-        },
+        code: 500,
+        message: '500 error',
         visible: false,
       },
     ]);

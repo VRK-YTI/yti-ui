@@ -1,13 +1,13 @@
 import { render, screen } from '@testing-library/react';
 import RenderConcepts from './render-concepts';
-import { themeProvider } from '@app/tests/test-utils';
+import { getMockContext, themeProvider } from '@app/tests/test-utils';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { makeStore } from '@app/store';
 
 describe('render-concepts', () => {
   it('should render component', () => {
-    const store = makeStore();
+    const store = makeStore(getMockContext());
     const mockFn = jest.fn();
 
     render(
@@ -27,7 +27,7 @@ describe('render-concepts', () => {
   });
 
   it('should call update when concept selected', () => {
-    const store = makeStore();
+    const store = makeStore(getMockContext());
     const mockFn = jest.fn();
 
     render(
