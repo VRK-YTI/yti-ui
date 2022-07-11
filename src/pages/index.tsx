@@ -22,7 +22,6 @@ import {
 } from '@app/common/components/counts/counts.slice';
 import PageHead from '@app/common/components/page-head';
 import { initialUrlState } from '@app/common/utils/hooks/useUrlState';
-import { url } from 'inspector';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
