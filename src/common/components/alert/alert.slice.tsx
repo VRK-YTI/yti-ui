@@ -1,10 +1,11 @@
 import { createSlice, SerializedError } from '@reduxjs/toolkit';
 import { AppState, AppThunk } from '@app/store';
-import { Error } from '@app/common/interfaces/error.interface';
+import { AxiosBaseQueryError } from '@app/store/axios-base-query';
 
 export type Alert = {
-  error: Error;
-  visible: boolean;
+  code: number | string;
+  message: string;
+  visible?: boolean;
   displayText: string;
 };
 
@@ -42,23 +43,72 @@ function setAlertPrivate(alerts: Alert[]): AppThunk {
 export const setAlert =
   (
     alerts: {
-      error: Error | SerializedError | undefined;
+      error: AxiosBaseQueryError | SerializedError | undefined;
       displayText: string;
     }[],
     previousAlerts: Alert[]
   ): AppThunk =>
   async (dispatch) => {
     const newAlerts = alerts
-      .filter(
-        (alert) =>
+      .filter((alert) => {
+        // AxiosBaseQueryError
+        if (
           alert.error &&
-          !previousAlerts.map((a) => a.displayText).includes(alert.displayText)
-      )
-      .map((alert) => ({
-        error: alert.error as Error,
-        visible: true,
-        displayText: alert.displayText,
-      }));
+          'status' in alert.error &&
+          !previousAlerts
+            .map((pAlert) => pAlert.displayText)
+            .includes(alert.displayText)
+        ) {
+          return true;
+        }
+
+        // SerializedError
+        if (
+          alert.error &&
+          'code' in alert.error &&
+          alert.error?.code !== undefined &&
+          !previousAlerts
+            .map((pAlert) => pAlert.displayText)
+            .includes(alert.displayText)
+        ) {
+          return true;
+        }
+
+        // undefined
+        return false;
+      })
+      .map((e) => {
+        // AxiosBaseQueryError
+        if (e.error && 'status' in e.error) {
+          return {
+            code: e.error.status,
+            message:
+              (e.error.data as { error?: string })?.error ??
+              `Error code ${e.error.status}`,
+            visible: true,
+            displayText: e.displayText,
+          };
+        }
+
+        // SerializedError
+        if (e.error && 'code' in e.error) {
+          return {
+            code: e.error.code ?? 'UNKNOWN_ERROR',
+            message:
+              e.error.message ?? e.error.code
+                ? `Error code ${e.error.code}`
+                : 'Unknown error',
+            visible: true,
+            displayText: e.displayText,
+          };
+        }
+
+        return {
+          code: 'UNHANDLED_ERROR',
+          message: 'Unhandled error',
+          displayText: '_unhandled-error',
+        };
+      });
 
     if (newAlerts.length > 0) {
       dispatch(setAlertPrivate([...previousAlerts, ...newAlerts]));
@@ -71,7 +121,8 @@ export const setAlertVisibility =
     const updatedAlerts = alerts.map((alert) => {
       if (alert.displayText === displayText) {
         return {
-          error: alert.error,
+          code: alert.code,
+          message: alert.message,
           displayText: alert.displayText,
           visible: false,
         };

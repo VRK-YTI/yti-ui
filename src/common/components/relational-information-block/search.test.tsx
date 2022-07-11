@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import Search from './search';
-import { themeProvider } from '@app/tests/test-utils';
+import { getMockContext, themeProvider } from '@app/tests/test-utils';
 import userEvent from '@testing-library/user-event';
 import { waitFor } from '@testing-library/dom';
 import { Provider } from 'react-redux';
@@ -10,7 +10,7 @@ import axios from 'axios';
 
 describe('other-information', () => {
   it('should render component', async () => {
-    const store = makeStore();
+    const store = makeStore(getMockContext());
     const mockFn = jest.fn();
 
     const mockAdapter = new MockAdapter(axios);
@@ -35,7 +35,7 @@ describe('other-information', () => {
   });
 
   it('should call update after getting new results', async () => {
-    const store = makeStore();
+    const store = makeStore(getMockContext());
     const mockFn = jest.fn();
 
     const mockAdapter = new MockAdapter(axios);

@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import AccessRequest from '.';
 import { makeStore } from '../../../store';
-import { themeProvider } from '../../../tests/test-utils';
+import { getMockContext, themeProvider } from '../../../tests/test-utils';
 import { setLogin, initialState } from '../login/login.slice';
 
 describe('access-request', () => {
@@ -37,7 +37,7 @@ describe('access-request', () => {
   ];
 
   it('should render component', async () => {
-    const store = makeStore();
+    const store = makeStore(getMockContext());
 
     render(
       <Provider store={store}>
@@ -59,7 +59,7 @@ describe('access-request', () => {
   });
 
   it('should mark checkboxes if user already has role', () => {
-    const store = makeStore();
+    const store = makeStore(getMockContext());
     const loginInitialState = Object.assign({}, initialState);
     loginInitialState['rolesInOrganizations'] = {
       '123123-321321': ['TERMINOLOGY_EDITOR'],

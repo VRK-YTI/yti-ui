@@ -3,7 +3,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import InfoExpander from '@app/common/components/info-dropdown/info-expander';
-import { themeProvider } from '@app/tests/test-utils';
+import { getMockContext, themeProvider } from '@app/tests/test-utils';
 import { Provider } from 'react-redux';
 import { makeStore } from '@app/store';
 import {
@@ -13,7 +13,7 @@ import {
 
 describe('infoExpander', () => {
   it('should render export button', () => {
-    const store = makeStore();
+    const store = makeStore(getMockContext());
 
     render(
       <Provider store={store}>
@@ -38,7 +38,7 @@ describe('infoExpander', () => {
   });
 
   it('should render subscribe button', async () => {
-    const store = makeStore();
+    const store = makeStore(getMockContext());
     const loginInitialState = Object.assign({}, initialState);
     loginInitialState['anonymous'] = false;
     loginInitialState['email'] = 'admin@localhost';
@@ -69,7 +69,7 @@ describe('infoExpander', () => {
   });
 
   it('should render createdBy and modifiedBy when available', () => {
-    const store = makeStore();
+    const store = makeStore(getMockContext());
     const loginInitialState = Object.assign({}, initialState);
     loginInitialState['anonymous'] = false;
     loginInitialState['email'] = 'admin@localhost';

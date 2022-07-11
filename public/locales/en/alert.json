@@ -7,5 +7,6 @@
   "error-occured_counts": "ERROR {{id}}: An error occured while getting counts for statuses and information domains",
   "error-occured_subscription": "ERROR {{id}}: An error occured with subscription service",
   "error-occured_access-request": "ERROR {{id}}: An error occured with access request service",
+  "error-occured_unhandled-error": "ERROR {{id}}: An unknown error occured",
   "logged-out": "You have logged out."
 }

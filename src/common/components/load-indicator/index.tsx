@@ -1,17 +1,17 @@
 import { SerializedError } from '@reduxjs/toolkit';
 import { useTranslation } from 'next-i18next';
 import { Text } from 'suomifi-ui-components';
-import { Error } from '@app/common/interfaces/error.interface';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import {
   LoadWrapper,
   RefetchButton,
   LoadingIndicator,
 } from './load-indicator.styles';
+import { AxiosBaseQueryError } from '@app/store/axios-base-query';
 
 interface LoadIndicatorProps {
   isFetching: boolean;
-  error?: Error | SerializedError;
+  error?: AxiosBaseQueryError | SerializedError;
   refetch: () => void;
 }
 

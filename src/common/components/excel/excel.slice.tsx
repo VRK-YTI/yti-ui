@@ -1,5 +1,5 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import axiosBaseQuery from '@app/common/components/axios-base-query';
+import { getTerminologyApiBaseQuery } from '@app/store/api-base-query';
 import {
   ImportResponse,
   ImportStatus,
@@ -7,10 +7,10 @@ import {
 
 export const excelApi = createApi({
   reducerPath: 'excelApi',
-  baseQuery: axiosBaseQuery(
-    { baseUrl: '/terminology-api/api/v1' },
-    { headers: { 'content-type': 'multipart/form-data' } }
-  ),
+  baseQuery: getTerminologyApiBaseQuery((headers) => ({
+    ...headers,
+    'content-type': 'multipart/form-data',
+  })),
   tagTypes: ['excel'],
   endpoints: (builder) => ({
     postImportExcel: builder.mutation<ImportResponse, FormData>({

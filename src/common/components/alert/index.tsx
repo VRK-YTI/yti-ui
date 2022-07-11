@@ -37,7 +37,7 @@ export default function Alerts() {
         .map((alert, idx) => {
           if (idx === 0) {
             const alertsLength = alerts.filter((a) => a.visible).length;
-            const isError = alert.error.status !== 0 ? true : false;
+            const isError = alert.code !== 0 ? true : false;
 
             return (
               <Notification
@@ -50,7 +50,7 @@ export default function Alerts() {
                   <>
                     {alertsLength > 1 ? `(${alertsLength}) ` : ''}
                     {t(`error-occured${alert.displayText}`, {
-                      id: alert.error.status ?? '',
+                      id: alert.code ?? '',
                     })}
                   </>
                 ) : (

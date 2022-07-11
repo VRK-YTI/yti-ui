@@ -2,14 +2,15 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
-import Alerts from '.';
+import Alerts from './';
 import { lightTheme } from '@app/layouts/theme';
 import { makeStore } from '@app/store';
 import { setAlert } from './alert.slice';
+import { getMockContext } from '@app/tests/test-utils';
 
 describe('alert', () => {
   it('should render alert', () => {
-    const store = makeStore();
+    const store = makeStore(getMockContext());
 
     store.dispatch(
       setAlert(
@@ -17,7 +18,7 @@ describe('alert', () => {
           {
             error: {
               status: 500,
-              data: '500 error',
+              data: { error: '500 error' },
             },
             displayText: '_test-1',
           },
@@ -38,7 +39,7 @@ describe('alert', () => {
   });
 
   it('should render multiple alerts', () => {
-    const store = makeStore();
+    const store = makeStore(getMockContext());
 
     store.dispatch(
       setAlert(
@@ -88,7 +89,7 @@ describe('alert', () => {
   });
 
   it('should render non-error alert', () => {
-    const store = makeStore();
+    const store = makeStore(getMockContext());
 
     store.dispatch(
       setAlert(
@@ -118,7 +119,7 @@ describe('alert', () => {
   });
 
   it('should hide alert when clicking close', async () => {
-    const store = makeStore();
+    const store = makeStore(getMockContext());
 
     store.dispatch(
       setAlert(
@@ -150,10 +151,8 @@ describe('alert', () => {
     ).not.toBeInTheDocument();
     expect(store.getState().alert.alerts).toStrictEqual([
       {
-        error: {
-          status: 500,
-          data: '500 error',
-        },
+        code: 500,
+        message: 'Error code 500',
         displayText: '_test-1',
         visible: false,
       },
@@ -161,7 +160,7 @@ describe('alert', () => {
   });
 
   it('should hide multiple alert when closed', async () => {
-    const store = makeStore();
+    const store = makeStore(getMockContext());
 
     store.dispatch(
       setAlert(
@@ -212,34 +211,26 @@ describe('alert', () => {
     userEvent.click(screen.getByRole('button'));
     expect(store.getState().alert.alerts).toStrictEqual([
       {
-        error: {
-          status: 500,
-          data: '500 error',
-        },
+        code: 500,
+        message: 'Error code 500',
         displayText: '_test-1',
         visible: false,
       },
       {
-        error: {
-          status: 500,
-          data: '500 error',
-        },
+        code: 500,
+        message: 'Error code 500',
         displayText: '_test-2',
         visible: false,
       },
       {
-        error: {
-          status: 500,
-          data: '500 error',
-        },
+        code: 500,
+        message: 'Error code 500',
         displayText: '_test-3',
         visible: true,
       },
       {
-        error: {
-          status: 500,
-          data: '500 error',
-        },
+        code: 500,
+        message: 'Error code 500',
         displayText: '_test-4',
         visible: true,
       },
