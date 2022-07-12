@@ -55,7 +55,6 @@ export function TerminologyListFilter({
       <KeywordFilter
         title={t('vocabulary-filter-filter-by-keyword')}
         visualPlaceholder={t('vocabulary-filter-visual-placeholder')}
-        isModal={isModal}
       />
     </Filter>
   );

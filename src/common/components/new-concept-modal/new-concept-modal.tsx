@@ -11,6 +11,7 @@ import {
   Text,
   TextInput,
 } from 'suomifi-ui-components';
+import { useBreakpoints } from '../media-query/media-query-context';
 import { TextInputBlock } from './new-concept-modal.styles';
 
 interface NewConceptModalProps {
@@ -32,6 +33,7 @@ export default function NewConceptModal({
   setVisible,
 }: NewConceptModalProps) {
   const { t } = useTranslation('admin');
+  const { isSmall } = useBreakpoints();
   const [termName, setTermName] = useState({});
   const queryParams = new URLSearchParams(termName).toString();
 
@@ -44,6 +46,7 @@ export default function NewConceptModal({
       appElementId="__next"
       visible={visible}
       onEscKeyDown={() => setVisible(false)}
+      variant={!isSmall ? 'default' : 'smallScreen'}
     >
       <ModalContent>
         <ModalTitle>{t('add-new-concept')}</ModalTitle>
