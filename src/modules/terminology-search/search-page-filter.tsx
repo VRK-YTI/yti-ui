@@ -45,7 +45,7 @@ export function SearchPageFilter({
           organizations={organizations}
         />
         <LanguageFilter
-          labelText={t('display-by-language')}
+          labelText={t('filter-by-language')}
           languages={counts?.counts.languages}
         />
         <KeywordFilter

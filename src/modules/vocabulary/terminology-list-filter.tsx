@@ -37,7 +37,7 @@ export function TerminologyListFilter({
     >
       <FilterTopPartBlock>
         <LanguageFilter
-          labelText={t('filter-by-language')}
+          labelText={t('display-by-language')}
           languages={languages}
         />
         <KeywordFilter
