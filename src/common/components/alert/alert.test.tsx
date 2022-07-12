@@ -16,7 +16,7 @@ describe('alert', () => {
       setAlert(
         [
           {
-            error: {
+            note: {
               status: 500,
               data: { error: '500 error' },
             },
@@ -45,28 +45,28 @@ describe('alert', () => {
       setAlert(
         [
           {
-            error: {
+            note: {
               status: 500,
               data: '500 error',
             },
             displayText: '_test-1',
           },
           {
-            error: {
+            note: {
               status: 500,
               data: '500 error',
             },
             displayText: '_test-2',
           },
           {
-            error: {
+            note: {
               status: 500,
               data: '500 error',
             },
             displayText: '_test-3',
           },
           {
-            error: {
+            note: {
               status: 500,
               data: '500 error',
             },
@@ -95,7 +95,7 @@ describe('alert', () => {
       setAlert(
         [
           {
-            error: {
+            note: {
               status: 0,
               data: 'notification',
             },
@@ -125,7 +125,7 @@ describe('alert', () => {
       setAlert(
         [
           {
-            error: {
+            note: {
               status: 500,
               data: '500 error',
             },
@@ -166,28 +166,28 @@ describe('alert', () => {
       setAlert(
         [
           {
-            error: {
+            note: {
               status: 500,
               data: '500 error',
             },
             displayText: '_test-1',
           },
           {
-            error: {
+            note: {
               status: 500,
               data: '500 error',
             },
             displayText: '_test-2',
           },
           {
-            error: {
+            note: {
               status: 500,
               data: '500 error',
             },
             displayText: '_test-3',
           },
           {
-            error: {
+            note: {
               status: 500,
               data: '500 error',
             },

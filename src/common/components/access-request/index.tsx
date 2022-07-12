@@ -38,7 +38,7 @@ export default function AccessRequest({ organizations }: AccessRequestProps) {
         setAlert(
           [
             {
-              error: { status: 0, data: '' },
+              note: { status: 0, data: '' },
               displayText: t('access-request-sent'),
             },
           ],
@@ -49,7 +49,7 @@ export default function AccessRequest({ organizations }: AccessRequestProps) {
       handleClose();
     } else if (request.isError) {
       dispatch(
-        setAlert([{ error: request.error, displayText: '_access-request' }], [])
+        setAlert([{ note: request.error, displayText: '_access-request' }], [])
       );
       refetch();
       handleClose();

@@ -31,7 +31,7 @@ export default function Subscription({ uri }: SubscriptionProps) {
     } else if (subscription.isError) {
       dispatch(
         setAlert(
-          [{ error: subscription.error, displayText: '_subscription' }],
+          [{ note: subscription.error, displayText: '_subscription' }],
           []
         )
       );

@@ -43,7 +43,7 @@ function setAlertPrivate(alerts: Alert[]): AppThunk {
 export const setAlert =
   (
     alerts: {
-      error: AxiosBaseQueryError | SerializedError | undefined;
+      note: AxiosBaseQueryError | SerializedError | undefined;
       displayText: string;
     }[],
     previousAlerts: Alert[]
@@ -53,8 +53,8 @@ export const setAlert =
       .filter((alert) => {
         // AxiosBaseQueryError
         if (
-          alert.error &&
-          'status' in alert.error &&
+          alert.note &&
+          'status' in alert.note &&
           !previousAlerts
             .map((pAlert) => pAlert.displayText)
             .includes(alert.displayText)
@@ -64,9 +64,9 @@ export const setAlert =
 
         // SerializedError
         if (
-          alert.error &&
-          'code' in alert.error &&
-          alert.error?.code !== undefined &&
+          alert.note &&
+          'code' in alert.note &&
+          alert.note?.code !== undefined &&
           !previousAlerts
             .map((pAlert) => pAlert.displayText)
             .includes(alert.displayText)
@@ -79,24 +79,24 @@ export const setAlert =
       })
       .map((e) => {
         // AxiosBaseQueryError
-        if (e.error && 'status' in e.error) {
+        if (e.note && 'status' in e.note) {
           return {
-            code: e.error.status,
+            code: e.note.status,
             message:
-              (e.error.data as { error?: string })?.error ??
-              `Error code ${e.error.status}`,
+              (e.note.data as { error?: string })?.error ??
+              `Error code ${e.note.status}`,
             visible: true,
             displayText: e.displayText,
           };
         }
 
         // SerializedError
-        if (e.error && 'code' in e.error) {
+        if (e.note && 'code' in e.note) {
           return {
-            code: e.error.code ?? 'UNKNOWN_ERROR',
+            code: e.note.code ?? 'UNKNOWN_ERROR',
             message:
-              e.error.message ?? e.error.code
-                ? `Error code ${e.error.code}`
+              e.note.message ?? e.note.code
+                ? `Error code ${e.note.code}`
                 : 'Unknown error',
             visible: true,
             displayText: e.displayText,

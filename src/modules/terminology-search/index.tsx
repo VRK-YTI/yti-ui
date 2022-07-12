@@ -48,10 +48,10 @@ export default function TerminologySearch() {
     dispatch(
       setAlert(
         [
-          { error: error, displayText: '_terminology-search' },
-          { error: groupsError, displayText: '_groups' },
-          { error: organizationsError, displayText: '_organization' },
-          { error: countsError, displayText: '_counts' },
+          { note: error, displayText: '_terminology-search' },
+          { note: groupsError, displayText: '_groups' },
+          { note: organizationsError, displayText: '_organization' },
+          { note: countsError, displayText: '_counts' },
         ],
         previousAlerts
       )

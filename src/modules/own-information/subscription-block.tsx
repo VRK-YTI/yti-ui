@@ -36,7 +36,7 @@ export default function SubscriptionBlock({
         setAlert(
           [
             {
-              error: {
+              note: {
                 status: 0,
                 data: '',
               },
@@ -55,7 +55,7 @@ export default function SubscriptionBlock({
     } else if (subscription.isError) {
       dispatch(
         setAlert(
-          [{ error: subscription.error, displayText: '_subscription' }],
+          [{ note: subscription.error, displayText: '_subscription' }],
           []
         )
       );
