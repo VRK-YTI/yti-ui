@@ -28,8 +28,11 @@ export default function NewConcept({ terminologyId }: NewConceptProps) {
   const { data: terminology } = useGetVocabularyQuery({
     id: terminologyId,
   });
+
   const languages =
-    terminology?.properties.language?.map(({ value }) => value) ?? [];
+    terminology?.properties.language
+      ?.map(({ value }) => value)
+      .filter((language) => Object.keys(router.query).includes(language)) ?? [];
   const preferredTerm = languages
     .map((lang) => ({ lang, value: asString(router.query[lang]), regex: '' }))
     .filter(({ value }) => !!value);

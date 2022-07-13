@@ -1,11 +1,15 @@
+import dynamic from 'next/dynamic';
 import { BasicBlock } from '@app/common/components/block';
 import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
 import Separator from '@app/common/components/separator';
 import { useTranslation } from 'next-i18next';
+import { useState } from 'react';
 import { Button, ExpanderGroup } from 'suomifi-ui-components';
 import { LargeHeading, MediumHeading } from './concept-terms-block.styles';
 import TermExpander from './term-expander';
 import TermForm from './term-form';
+
+const NewTermModal = dynamic(() => import('./new-term-modal'));
 
 export interface ConceptTermsBlockProps {
   languages: string[];
@@ -15,6 +19,7 @@ export default function ConceptTermsBlock({
   languages,
 }: ConceptTermsBlockProps) {
   const { t } = useTranslation('admin');
+  const [modalVisible, setModalVisible] = useState(false);
 
   return (
     <>
@@ -51,7 +56,10 @@ export default function ConceptTermsBlock({
         }
         extra={
           <BasicBlockExtraWrapper>
-            <Button variant="secondary">{t('concept-add-term')}</Button>
+            <Button variant="secondary" onClick={() => setModalVisible(true)}>
+              {t('concept-add-term')}
+            </Button>
+            {modalVisible && <NewTermModal setVisible={setModalVisible} />}
           </BasicBlockExtraWrapper>
         }
       >

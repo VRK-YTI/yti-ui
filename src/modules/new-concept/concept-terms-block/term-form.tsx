@@ -2,13 +2,20 @@ import { BasicBlock } from '@app/common/components/block';
 import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
 import Separator from '@app/common/components/separator';
 import { useTranslation } from 'next-i18next';
-import { Button, DropdownItem, TextInput } from 'suomifi-ui-components';
+import {
+  Button,
+  DropdownItem,
+  SingleSelect,
+  TextInput,
+} from 'suomifi-ui-components';
 import {
   CheckboxBlock,
   DropdownBlock,
+  GrammaticalBlock,
   MediumHeading,
   WiderTextareaBlock,
 } from './concept-terms-block.styles';
+import NotesBlock from './notes-block';
 
 export interface TermFormProps {
   lang: string;
@@ -90,7 +97,70 @@ export default function TermForm({ lang }: TermFormProps) {
         visualPlaceholder={t('term-history-note-placeholer')}
       />
 
-      {/* Add rest of the fields here */}
+      <NotesBlock />
+
+      <Separator isLarge />
+
+      <MediumHeading variant="h2">Kieliopilliset lisätiedot</MediumHeading>
+
+      <GrammaticalBlock>
+        <SingleSelect
+          ariaOptionsAvailableText=""
+          clearButtonLabel=""
+          labelText="Termin tyyli"
+          optionalText="valinnainen"
+          noItemsText=""
+          visualPlaceholder="Valitse termin tyyli"
+          items={[{ labelText: 'puhekieli', uniqueItemId: 'spoken form' }]}
+        />
+
+        <SingleSelect
+          ariaOptionsAvailableText=""
+          clearButtonLabel=""
+          labelText="Termin suku"
+          optionalText="valinnainen"
+          noItemsText=""
+          visualPlaceholder="Valitse termin suku"
+          items={[
+            {
+              labelText: 'maskuliini',
+              uniqueItemId: 'masculine',
+            },
+            {
+              labelText: 'neutri',
+              uniqueItemId: 'neutral',
+            },
+            {
+              labelText: 'feminiini',
+              uniqueItemId: 'feminine',
+            },
+          ]}
+        />
+
+        <SingleSelect
+          ariaOptionsAvailableText=""
+          clearButtonLabel=""
+          labelText="Termin luku"
+          optionalText="valinnainen"
+          noItemsText=""
+          visualPlaceholder="Valitse termin luku"
+          items={[
+            { labelText: 'yksikkö', uniqueItemId: 'singular' },
+            { labelText: 'monikko', uniqueItemId: 'plural' },
+          ]}
+        />
+
+        <SingleSelect
+          ariaOptionsAvailableText=""
+          clearButtonLabel=""
+          labelText="Termin sanaluokka"
+          optionalText="valinnainen"
+          noItemsText=""
+          hintText="Merkitään jos termi on eri sanaluokasta kuin muunkieliset termit."
+          visualPlaceholder="Valitse sanaluokka"
+          items={[]}
+        />
+      </GrammaticalBlock>
     </>
   );
 }

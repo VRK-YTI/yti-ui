@@ -13,6 +13,7 @@ import {
 interface ConceptInfoBlockProps {
   infoKey: string;
   update: (object: BasicInfoUpdate) => void;
+  noLangOption?: boolean;
 }
 
 interface ConceptInfoListItemProps {
@@ -20,6 +21,7 @@ interface ConceptInfoListItemProps {
   infoKey: string;
   handleUpdate: (value: ItemType) => void;
   handleRemove: (id: number) => void;
+  noLangOption?: boolean;
 }
 
 interface ItemType {
@@ -31,6 +33,7 @@ interface ItemType {
 export default function ConceptInfoBlock({
   infoKey,
   update,
+  noLangOption = false,
 }: ConceptInfoBlockProps) {
   const { t } = useTranslation('admin');
   const [list, setList] = useState<ItemType[]>([]);
@@ -68,7 +71,7 @@ export default function ConceptInfoBlock({
   return (
     <BasicBlock
       largeWidth
-      title={t('example')}
+      title={t(infoKey)}
       extra={
         <BasicBlockExtraWrapper>
           <ConceptInfoBlockWrapper>
@@ -80,6 +83,7 @@ export default function ConceptInfoBlock({
                   handleUpdate={handleUpdate}
                   handleRemove={handleRemove}
                   key={`${infoKey}-${item.id}`}
+                  noLangOption={noLangOption}
                 />
               );
             })}
@@ -90,7 +94,7 @@ export default function ConceptInfoBlock({
         </BasicBlockExtraWrapper>
       }
     >
-      {t('example-description')}
+      {t(`${infoKey}-description`)}
     </BasicBlock>
   );
 }
@@ -100,9 +104,35 @@ function ConceptInfoListItem({
   infoKey,
   handleUpdate,
   handleRemove,
+  noLangOption,
 }: ConceptInfoListItemProps) {
   const { t } = useTranslation('admin');
   const [text, setText] = useState(item.value);
+
+  if (noLangOption) {
+    return (
+      <ConceptInfoBlockListItem>
+        <div className="top-row">
+          <ConceptInfoTextarea
+            labelText={t(`${infoKey}-textarea-label-text`)}
+            visualPlaceholder={t(`${infoKey}-textarea-placeholder`)}
+            onChange={(e) => setText(e.target.value)}
+            onBlur={(e) => handleUpdate({ id: item.id, value: text })}
+            value={text}
+            $noTopMargin
+          />
+
+          <Button
+            variant="secondaryNoBorder"
+            icon="remove"
+            onClick={() => handleRemove(item.id)}
+          >
+            {t('remove')}
+          </Button>
+        </div>
+      </ConceptInfoBlockListItem>
+    );
+  }
 
   return (
     <ConceptInfoBlockListItem>
@@ -117,7 +147,6 @@ function ConceptInfoListItem({
           <DropdownItem value="sv">{t('sv')}</DropdownItem>
           <DropdownItem value="en">{t('en')}</DropdownItem>
         </Dropdown>
-
         <Button
           variant="secondaryNoBorder"
           icon="remove"

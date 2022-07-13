@@ -12,6 +12,7 @@ export const ConceptInfoBlockListItem = styled.li`
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
+    gap: ${(props) => props.theme.suomifi.spacing.m};
   }
 `;
 
@@ -21,7 +22,12 @@ export const ConceptInfoBlockWrapper = styled.ul`
   padding: 0;
 `;
 
-export const ConceptInfoTextarea = styled(Textarea)`
-  margin-top: ${(props) => props.theme.suomifi.spacing.m};
+export const ConceptInfoTextarea = styled(Textarea)<{ $noTopMargin?: boolean }>`
+  margin-top: ${(props) =>
+    props.$noTopMargin ? '' : props.theme.suomifi.spacing.m};
   width: 760px;
+
+  textarea {
+    min-height: 88px;
+  }
 `;

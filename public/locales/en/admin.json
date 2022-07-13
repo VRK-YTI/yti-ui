@@ -109,7 +109,7 @@
   "subject-visual-placeholder": "Give subject",
   "note": "Note",
   "add-new-note": "Add new note",
-  "new-note-description": "You can assign a note to concept. Do not add information here that has its own section on the form.",
+  "note-description": "You can assign a note to concept. Do not add information here that has its own section on the form.",
   "definition-label-text": "Definition, $t({{lang}}) {{langUpper}}",
   "concept-diagrams-and-sources": "Concept diagrams and sources",
   "organizational-information": "Organizational information",
@@ -218,5 +218,10 @@
   "download-failed": "Download failed",
   "ready": "Ready",
   "loading": "Loading...",
-  "percent-done": "done"
+  "percent-done": "done",
+  "notes": "Ylläpitäjän muistiipano",
+  "notes-description": "Ylläpitäjälle tai kääntäjille tarkoitettu muistiinpano. Ei näy kirjautumattomalle käyttäjälle.",
+  "add-new-notes": "Lisää uusi muistiinpano",
+  "notes-textarea-label-text": "Ylläpitäjän muistiinpano",
+  "notes-textarea-placeholder": "Kirjoita muistiinpano tai kommentti"
 }

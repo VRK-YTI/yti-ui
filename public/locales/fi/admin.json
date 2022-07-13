@@ -109,7 +109,7 @@
   "subject-visual-placeholder": "Kirjoita aihealueen nimi",
   "note": "Huomautus",
   "add-new-note": "Lisää uusi huomautus",
-  "new-note-description": "Voit lisätä käsitteeseen liittyvän muun huomautuksen. Älä lisää tähän tietoja, joille on olemassa oma kohtansa lomakkeella.",
+  "note-description": "Voit lisätä käsitteeseen liittyvän muun huomautuksen. Älä lisää tähän tietoja, joille on olemassa oma kohtansa lomakkeella.",
   "definition-label-text": "Määritelmä, $t({{lang}}) {{langUpper}}",
   "concept-diagrams-and-sources": "Käsitekaaviot ja lähteet",
   "organizational-information": "Hallinnolliset tiedot",
@@ -219,5 +219,10 @@
   "download-failed": "Lataus epäonnistui",
   "ready": "Valmis",
   "loading": "Ladataan...",
-  "percent-done": "valmiina"
+  "percent-done": "valmiina",
+  "notes": "Ylläpitäjän muistiipano",
+  "notes-description": "Ylläpitäjälle tai kääntäjille tarkoitettu muistiinpano. Ei näy kirjautumattomalle käyttäjälle.",
+  "add-new-notes": "Lisää uusi muistiinpano",
+  "notes-textarea-label-text": "Ylläpitäjän muistiinpano",
+  "notes-textarea-placeholder": "Kirjoita muistiinpano tai kommentti"
 }
