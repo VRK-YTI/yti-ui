@@ -32,7 +32,7 @@ export const DropdownBlock = styled(Dropdown)`
   margin-top: ${(props) => props.theme.suomifi.spacing.m};
 `;
 
-export const WiderTextareaBlock = styled(Textarea) <{ smmargintop?: string }>`
+export const WiderTextareaBlock = styled(Textarea)<{ smmargintop?: string }>`
   margin-top: ${(props) =>
     props.smmargintop ? '' : props.theme.suomifi.spacing.m};
   width: 680px;
@@ -47,12 +47,12 @@ export const GrammaticalBlock = styled(Block)`
 export const TermEquivalencyBlock = styled(Block)`
   display: grid;
   font-size: 16px;
-  margin-top: ${props => props.theme.suomifi.spacing.m};
+  margin-top: ${(props) => props.theme.suomifi.spacing.m};
   width: min-content;
 
   label {
     font-weight: 600;
-    margin-bottom: ${props => props.theme.suomifi.spacing.xs};
+    margin-bottom: ${(props) => props.theme.suomifi.spacing.xs};
 
     span {
       font-weight: 400;
@@ -61,6 +61,6 @@ export const TermEquivalencyBlock = styled(Block)`
 `;
 
 export const RadioButtonGroupSpaced = styled(RadioButtonGroup)`
-  margin: ${props => props.theme.suomifi.spacing.m} 0;
+  margin: ${(props) => props.theme.suomifi.spacing.m} 0;
   max-width: 290px;
 `;

@@ -2,6 +2,7 @@ import { BasicBlock } from '@app/common/components/block';
 import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
 import Separator from '@app/common/components/separator';
 import { useTranslation } from 'next-i18next';
+import { useState } from 'react';
 import {
   Button,
   DropdownItem,
@@ -16,6 +17,7 @@ import {
   WiderTextareaBlock,
 } from './concept-terms-block.styles';
 import NotesBlock from './notes-block';
+import TermTypeModal from './term-type-modal';
 
 export interface TermFormProps {
   lang: string;
@@ -23,6 +25,8 @@ export interface TermFormProps {
 
 export default function TermForm({ lang }: TermFormProps) {
   const { t } = useTranslation('admin');
+  const [modalVisible, setModalVisible] = useState(false);
+
   return (
     <>
       <TextInput labelText={t('term-name-label')} />
@@ -34,7 +38,10 @@ export default function TermForm({ lang }: TermFormProps) {
         title={t('term-type-label')}
         extra={
           <BasicBlockExtraWrapper>
-            <Button variant="secondary">{t('change-term-type')}</Button>
+            <Button variant="secondary" onClick={() => setModalVisible(true)}>
+              {t('change-term-type')}
+            </Button>
+            {modalVisible && <TermTypeModal setVisibility={setModalVisible} />}
           </BasicBlockExtraWrapper>
         }
       >

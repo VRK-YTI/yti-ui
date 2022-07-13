@@ -13,7 +13,15 @@ import {
   SingleSelect,
   TextInput,
 } from 'suomifi-ui-components';
-import { CheckboxBlock, DropdownBlock, GrammaticalBlock, MediumHeading, RadioButtonGroupSpaced, TermEquivalencyBlock, WiderTextareaBlock } from './concept-terms-block.styles';
+import {
+  CheckboxBlock,
+  DropdownBlock,
+  GrammaticalBlock,
+  MediumHeading,
+  RadioButtonGroupSpaced,
+  TermEquivalencyBlock,
+  WiderTextareaBlock,
+} from './concept-terms-block.styles';
 import NotesBlock from './notes-block';
 
 interface NewTermModalProps {
@@ -37,41 +45,38 @@ export default function NewTermModal({ setVisible }: NewTermModalProps) {
         <TextInput labelText={t('term-name-label')} />
         <CheckboxBlock>{t('term-is-homograph-label')}</CheckboxBlock>
 
-        <RadioButtonGroupSpaced
-          labelText='Termin typppi'
-          name=''
-        >
+        <RadioButtonGroupSpaced labelText="Termin typppi" name="">
           <RadioButton
-            value='Synonyymi'
-            hintText='Termi, jolla on lähes sama merkitys kuin suositettavalla termillä'
+            value="Synonyymi"
+            hintText="Termi, jolla on lähes sama merkitys kuin suositettavalla termillä"
           >
             Synonyymi
           </RadioButton>
           <RadioButton
-            value='Ei suositettava synonyymi'
-            hintText='Termi, joka ei kuvaa kielellisesti hyvin käsitettä'
+            value="Ei suositettava synonyymi"
+            hintText="Termi, joka ei kuvaa kielellisesti hyvin käsitettä"
           >
             Ei suositettava synonyymi
           </RadioButton>
           <RadioButton
-            value='Hakutermi'
-            hintText='Termi, jolla käsitteen voi löytää palvelusta'
+            value="Hakutermi"
+            hintText="Termi, jolla käsitteen voi löytää palvelusta"
           >
             Hakutermi
           </RadioButton>
         </RadioButtonGroupSpaced>
 
         <SingleSelect
-          ariaOptionsAvailableText=''
-          clearButtonLabel=''
+          ariaOptionsAvailableText=""
+          clearButtonLabel=""
           items={[
             {
               labelText: 'suomi Fi',
-              uniqueItemId: 'fi'
-            }
+              uniqueItemId: 'fi',
+            },
           ]}
-          labelText='Kieli'
-          noItemsText=''
+          labelText="Kieli"
+          noItemsText=""
         />
 
         <DropdownBlock labelText={t('term-status-label')} defaultValue="draft">
@@ -119,22 +124,11 @@ export default function NewTermModal({ setVisible }: NewTermModalProps) {
           <span>
             Termin vastaavuus liittyy saman kieliversion suositettavaan termiin
           </span>
-          <Dropdown
-            labelText=''
-            defaultValue='undefined'
-          >
-            <DropdownItem value='undefined'>
-              Ei valintaa
-            </DropdownItem>
-            <DropdownItem value='<'>
-              {'<'}
-            </DropdownItem>
-            <DropdownItem value='>'>
-              {'>'}
-            </DropdownItem>
-            <DropdownItem value='~'>
-              Lähes sama kuin (~)
-            </DropdownItem>
+          <Dropdown labelText="" defaultValue="undefined">
+            <DropdownItem value="undefined">Ei valintaa</DropdownItem>
+            <DropdownItem value="<">{'<'}</DropdownItem>
+            <DropdownItem value=">">{'>'}</DropdownItem>
+            <DropdownItem value="~">Lähes sama kuin (~)</DropdownItem>
           </Dropdown>
         </TermEquivalencyBlock>
 
@@ -147,7 +141,9 @@ export default function NewTermModal({ setVisible }: NewTermModalProps) {
 
         <Separator isLarge />
 
-        <MediumHeading variant="h2">{t('administrative-details')}</MediumHeading>
+        <MediumHeading variant="h2">
+          {t('administrative-details')}
+        </MediumHeading>
 
         <WiderTextareaBlock
           labelText={t('term-change-note-label')}
@@ -215,6 +211,17 @@ export default function NewTermModal({ setVisible }: NewTermModalProps) {
             ]}
           />
 
+          <Dropdown
+            labelText="Termin vastaavuus"
+            optionalText={t('optional')}
+            defaultValue="undefined"
+          >
+            <DropdownItem value="undefined">Ei valintaa</DropdownItem>
+            <DropdownItem value="<">{'<'}</DropdownItem>
+            <DropdownItem value=">">{'>'}</DropdownItem>
+            <DropdownItem value="~">Lähes sama kuin (~)</DropdownItem>
+          </Dropdown>
+
           <SingleSelect
             ariaOptionsAvailableText=""
             clearButtonLabel=""
@@ -225,7 +232,6 @@ export default function NewTermModal({ setVisible }: NewTermModalProps) {
             visualPlaceholder="Valitse sanaluokka"
             items={[]}
           />
-
         </GrammaticalBlock>
       </ModalContent>
 
