@@ -20,19 +20,78 @@ import NotesBlock from './notes-block';
 import TermTypeModal from './term-type-modal';
 
 export interface TermFormProps {
-  lang: string;
+  term: any;
+  update: (value: any) => void;
 }
 
-export default function TermForm({ lang }: TermFormProps) {
+export default function TermForm({ term, update }: TermFormProps) {
   const { t } = useTranslation('admin');
   const [modalVisible, setModalVisible] = useState(false);
+  const [isHomographic, setIsHomographic] = useState(false);
+
+  const termStyle = [{ labelText: 'puhekieli', uniqueItemId: 'spoken-form' }];
+  const termFamily = [
+    {
+      labelText: 'maskuliini',
+      uniqueItemId: 'masculine',
+    },
+    {
+      labelText: 'neutri',
+      uniqueItemId: 'neutral',
+    },
+    {
+      labelText: 'feminiini',
+      uniqueItemId: 'feminine',
+    },
+  ];
+
+  const termConjugation = [
+    { labelText: 'yksikkö', uniqueItemId: 'singular' },
+    { labelText: 'monikko', uniqueItemId: 'plural' },
+  ];
+
+  const wordClass = [{ labelText: 'adj.', uniqueItemId: 'adjective' }];
+
+  const handleUpdate = (key: string, value?: string | string[] | null) => {
+    update({
+      termId: term.id,
+      key: key,
+      value: value,
+    });
+  };
+
+  const handleIsHomographic = () => {
+    if (isHomographic) {
+      handleUpdate('termHomographNumber', '');
+    }
+
+    setIsHomographic(!isHomographic);
+  };
 
   return (
     <>
-      <TextInput labelText={t('term-name-label')} />
-      <CheckboxBlock>{t('term-is-homograph-label')}</CheckboxBlock>
+      <TextInput
+        labelText={t('term-name-label')}
+        defaultValue={term.prefLabel}
+        onBlur={(e) => handleUpdate('prefLabel', e.target.value)}
+      />
+      <CheckboxBlock onClick={() => handleIsHomographic()}>
+        {t('term-is-homograph-label')}
+      </CheckboxBlock>
+
+      {isHomographic && (
+        <BasicBlock title={'Homonyymin järjestysnumero'}>
+          <TextInput
+            labelText=""
+            type="number"
+            defaultValue={term.termHomographNumber}
+            onChange={(e) => handleUpdate('termHomographNumber', e?.toString())}
+          />
+        </BasicBlock>
+      )}
+
       <BasicBlock title={t('language')}>
-        {t(`language-label-text-${lang}`)}
+        {t(`language-label-text-${term.language}`)}
       </BasicBlock>
       <BasicBlock
         title={t('term-type-label')}
@@ -47,7 +106,11 @@ export default function TermForm({ lang }: TermFormProps) {
       >
         {t('concept-preferred-terms-title')}
       </BasicBlock>
-      <DropdownBlock labelText={t('term-status-label')} defaultValue="draft">
+      <DropdownBlock
+        labelText={t('term-status-label')}
+        defaultValue={term.status}
+        onChange={(e) => handleUpdate('status', e)}
+      >
         <DropdownItem value="draft">
           {t('DRAFT', { ns: 'common' })}
         </DropdownItem>
@@ -74,18 +137,24 @@ export default function TermForm({ lang }: TermFormProps) {
         labelText={t('term-info-label')}
         optionalText={t('optional')}
         visualPlaceholder={t('term-info-placeholder')}
+        defaultValue={term.termInfo}
+        onBlur={(e) => handleUpdate('termInfo', e.target.value)}
       />
       <WiderTextareaBlock
         labelText={t('term-scope-label')}
         optionalText={t('optional')}
         hintText={t('term-scope-hint-text')}
         visualPlaceholder={t('term-scope-placeholder')}
+        defaultValue={term.scope}
+        onBlur={(e) => handleUpdate('scope', e.target.value)}
       />
       <WiderTextareaBlock
         labelText={t('term-sources-label')}
         optionalText={t('optional')}
         hintText={t('term-sources-hint-text')}
         visualPlaceholder={t('term-sources-placeholder')}
+        defaultValue={term.source}
+        onBlur={(e) => handleUpdate('source', e.target.value)}
       />
 
       <Separator isLarge />
@@ -96,15 +165,19 @@ export default function TermForm({ lang }: TermFormProps) {
         optionalText={t('optional')}
         hintText={t('term-change-note-hint-text')}
         visualPlaceholder={t('term-change-note-placeholder')}
+        defaultValue={term.changeNote}
+        onBlur={(e) => handleUpdate('changeNote', e.target.value)}
       />
       <WiderTextareaBlock
         labelText={t('term-history-note-label')}
         optionalText={t('optional')}
         hintText={t('term-history-note-hint-text')}
         visualPlaceholder={t('term-history-note-placeholer')}
+        defaultValue={term.historyNote}
+        onBlur={(e) => handleUpdate('historyNote', e.target.value)}
       />
 
-      <NotesBlock />
+      <NotesBlock update={handleUpdate} />
 
       <Separator isLarge />
 
@@ -118,7 +191,12 @@ export default function TermForm({ lang }: TermFormProps) {
           optionalText="valinnainen"
           noItemsText=""
           visualPlaceholder="Valitse termin tyyli"
-          items={[{ labelText: 'puhekieli', uniqueItemId: 'spoken form' }]}
+          items={termStyle}
+          defaultSelectedItem={
+            term.termStyle &&
+            termStyle.filter((ts) => ts.uniqueItemId === term.termStyle)[0]
+          }
+          onItemSelect={(e) => handleUpdate('termStyle', e)}
         />
 
         <SingleSelect
@@ -128,20 +206,12 @@ export default function TermForm({ lang }: TermFormProps) {
           optionalText="valinnainen"
           noItemsText=""
           visualPlaceholder="Valitse termin suku"
-          items={[
-            {
-              labelText: 'maskuliini',
-              uniqueItemId: 'masculine',
-            },
-            {
-              labelText: 'neutri',
-              uniqueItemId: 'neutral',
-            },
-            {
-              labelText: 'feminiini',
-              uniqueItemId: 'feminine',
-            },
-          ]}
+          items={termFamily}
+          defaultSelectedItem={
+            term.termFamily &&
+            termFamily.filter((ts) => ts.uniqueItemId === term.termFamily)[0]
+          }
+          onItemSelect={(e) => handleUpdate('termFamily', e)}
         />
 
         <SingleSelect
@@ -151,10 +221,14 @@ export default function TermForm({ lang }: TermFormProps) {
           optionalText="valinnainen"
           noItemsText=""
           visualPlaceholder="Valitse termin luku"
-          items={[
-            { labelText: 'yksikkö', uniqueItemId: 'singular' },
-            { labelText: 'monikko', uniqueItemId: 'plural' },
-          ]}
+          items={termConjugation}
+          defaultSelectedItem={
+            term.termConjugation &&
+            termConjugation.filter(
+              (ts) => ts.uniqueItemId === term.termConjugation
+            )[0]
+          }
+          onItemSelect={(e) => handleUpdate('termConjugation', e)}
         />
 
         <SingleSelect
@@ -165,7 +239,12 @@ export default function TermForm({ lang }: TermFormProps) {
           noItemsText=""
           hintText="Merkitään jos termi on eri sanaluokasta kuin muunkieliset termit."
           visualPlaceholder="Valitse sanaluokka"
-          items={[]}
+          items={wordClass}
+          defaultSelectedItem={
+            term.wordClass &&
+            wordClass.filter((ts) => ts.uniqueItemId === term.wordClass)[0]
+          }
+          onItemSelect={(e) => handleUpdate('wordClass', e)}
         />
       </GrammaticalBlock>
     </>

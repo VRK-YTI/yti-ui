@@ -30,10 +30,8 @@ export default function NewConcept({ terminologyId }: NewConceptProps) {
   });
 
   const languages =
-    terminology?.properties.language
-      ?.map(({ value }) => value)
-      .filter((language) => Object.keys(router.query).includes(language)) ?? [];
-  const preferredTerm = languages
+    terminology?.properties.language?.map(({ value }) => value) ?? [];
+  const preferredTerms = languages
     .map((lang) => ({ lang, value: asString(router.query[lang]), regex: '' }))
     .filter(({ value }) => !!value);
 
@@ -48,9 +46,9 @@ export default function NewConcept({ terminologyId }: NewConceptProps) {
             />
           </BreadcrumbLink>
         )}
-        {!!preferredTerm?.length && (
+        {!!preferredTerms?.length && (
           <BreadcrumbLink url="" current>
-            <PropertyValue property={preferredTerm} fallbackLanguage="fi" />
+            <PropertyValue property={preferredTerms} fallbackLanguage="fi" />
           </BreadcrumbLink>
         )}
       </Breadcrumb>
@@ -66,7 +64,7 @@ export default function NewConcept({ terminologyId }: NewConceptProps) {
           />
         </SubTitle>
         <MainTitle>
-          <PropertyValue property={preferredTerm} fallbackLanguage="fi" />
+          <PropertyValue property={preferredTerms} fallbackLanguage="fi" />
         </MainTitle>
         <BadgeBar>
           {t('heading')}
@@ -78,7 +76,10 @@ export default function NewConcept({ terminologyId }: NewConceptProps) {
         </BadgeBar>
         <Text>{t('new-concept-page-help')}</Text>
 
-        <ConceptTermsBlock languages={languages} />
+        <ConceptTermsBlock
+          languages={languages}
+          preferredTerms={preferredTerms}
+        />
 
         <ConceptBasicInformation />
 

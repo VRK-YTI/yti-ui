@@ -223,5 +223,8 @@
   "notes-description": "Ylläpitäjälle tai kääntäjille tarkoitettu muistiinpano. Ei näy kirjautumattomalle käyttäjälle.",
   "add-new-notes": "Lisää uusi muistiinpano",
   "notes-textarea-label-text": "Ylläpitäjän muistiinpano",
-  "notes-textarea-placeholder": "Kirjoita muistiinpano tai kommentti"
+  "notes-textarea-placeholder": "Kirjoita muistiinpano tai kommentti",
+  "recommended-term-no-suff": "Suositettava termi",
+  "synonym": "Synonyymi",
+  "not-recommended-synonym": "Ei suositettava synonyymi"
 }

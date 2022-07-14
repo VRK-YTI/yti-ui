@@ -26,9 +26,13 @@ import NotesBlock from './notes-block';
 
 interface NewTermModalProps {
   setVisible: (value: boolean) => void;
+  languages: string[];
 }
 
-export default function NewTermModal({ setVisible }: NewTermModalProps) {
+export default function NewTermModal({
+  setVisible,
+  languages,
+}: NewTermModalProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
 
@@ -69,12 +73,10 @@ export default function NewTermModal({ setVisible }: NewTermModalProps) {
         <SingleSelect
           ariaOptionsAvailableText=""
           clearButtonLabel=""
-          items={[
-            {
-              labelText: 'suomi Fi',
-              uniqueItemId: 'fi',
-            },
-          ]}
+          items={languages.map((language) => ({
+            labelText: language,
+            uniqueItemId: language,
+          }))}
           labelText="Kieli"
           noItemsText=""
         />
@@ -158,7 +160,7 @@ export default function NewTermModal({ setVisible }: NewTermModalProps) {
           visualPlaceholder={t('term-history-note-placeholer')}
         />
 
-        <NotesBlock />
+        <NotesBlock update={() => {console.log('temp');}} />
 
         <Separator isLarge />
 

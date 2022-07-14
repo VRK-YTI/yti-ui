@@ -1,14 +1,18 @@
-import { useState } from 'react';
 import ConceptInfoBlock from '../basic-information/concept-info-block';
 
-export default function NotesBlock() {
-  const [notes, setNotes] = useState<string[]>([]);
+interface NotesBlockProps {
+  update: (key: string, value?: string | string[] | null) => void;
+}
+
+export default function NotesBlock({ update }: NotesBlockProps) {
+  const handleUpdate = (e: { key: string; value: string[] }) => {
+    update('editorialNote', e.value);
+  };
 
   return (
     <ConceptInfoBlock
       infoKey="notes"
-      update={() => setNotes}
-      key="id"
+      update={handleUpdate}
       noLangOption={true}
     />
   );

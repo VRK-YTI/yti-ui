@@ -21,7 +21,7 @@ export default function TermTypeModal({ setVisibility }: TermTypeModalProps) {
   const [newType, setNewType] = useState<string>('');
 
   const termTypes = [
-    'recommended-term',
+    'recommended-term-no-suff',
     'synonym',
     'not-recommended-synonym',
     'search-term',
@@ -53,11 +53,11 @@ export default function TermTypeModal({ setVisibility }: TermTypeModalProps) {
           onChange={(e) => handleChange(e)}
         >
           {termTypes
-            .filter((type) => type !== 'recommended-term')
+            .filter((type) => type !== 'recommended-term-no-suff')
             .map((type, idx) => {
               return (
                 <DropdownItem key={`term-type-${idx}`} value={type}>
-                  {type}
+                  {t(type)}
                 </DropdownItem>
               );
             })}

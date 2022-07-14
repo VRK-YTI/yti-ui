@@ -1,7 +1,4 @@
-import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
-import { asString } from '@app/common/utils/hooks/useUrlState';
 import { useTranslation } from 'next-i18next';
-import { useRouter } from 'next/router';
 import {
   Checkbox,
   Expander,
@@ -13,7 +10,7 @@ import ExpanderTitle from '@app/common/components/expander-title';
 
 export interface TermExpanderProps {
   lang: string;
-  languages: string[];
+  prefLabel?: string;
   checkable?: boolean;
   completed?: boolean;
   children?: React.ReactNode;
@@ -21,22 +18,14 @@ export interface TermExpanderProps {
 
 export default function TermExpander({
   lang,
-  languages,
+  prefLabel,
   checkable,
   completed,
   children,
 }: TermExpanderProps) {
   const { t } = useTranslation('admin');
-  const router = useRouter();
-  const preferredTerm = languages
-    .map((lang) => ({ lang, value: asString(router.query[lang]), regex: '' }))
-    .filter(({ value }) => !!value);
-
   const primaryText = t(`language-label-text-${lang}`);
-  const secondaryText = `${getPropertyValue({
-    property: preferredTerm,
-    language: lang,
-  })} - ${t('DRAFT', { ns: 'common' })}`;
+  const secondaryText = `${prefLabel} - ${t('DRAFT', { ns: 'common' })}`;
 
   return (
     <Expander>
