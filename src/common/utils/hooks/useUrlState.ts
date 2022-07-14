@@ -1,4 +1,5 @@
-import _ from 'lodash';
+import isEqual from 'lodash/isEqual';
+import sortBy from 'lodash/sortBy';
 import { NextRouter, useRouter } from 'next/router';
 
 export interface UrlState {
@@ -22,9 +23,9 @@ export const initialUrlState: UrlState = {
 };
 
 export function isInitial(state: UrlState, name: keyof UrlState) {
-  return _.isEqual(
-    _.sortBy(asArray(state[name])),
-    _.sortBy(asArray(initialUrlState[name]))
+  return isEqual(
+    sortBy(asArray(state[name])),
+    sortBy(asArray(initialUrlState[name]))
   );
 }
 

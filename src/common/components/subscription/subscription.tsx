@@ -29,7 +29,12 @@ export default function Subscription({ uri }: SubscriptionProps) {
     if (subscription.isSuccess) {
       dispatch(subscriptionApi.internalActions.resetApiState());
     } else if (subscription.isError) {
-      dispatch(setAlert([subscription.error], []));
+      dispatch(
+        setAlert(
+          [{ note: subscription.error, displayText: '_subscription' }],
+          []
+        )
+      );
     }
   }, [subscription, dispatch]);
 

@@ -1,5 +1,12 @@
 {
   "toast-close": "Sulje",
   "error-occured": "ERROR {{id}}: Tapahtui virhe",
+  "error-occured_terminology-search": "ERROR {{id}}: Sanastojen listauksen haussa ilmeni ongelma",
+  "error-occured_groups": "ERROR {{id}}: Tietoalueiden haussa ilmeni ongelma",
+  "error-occured_organization": "ERROR {{id}}: Organisaatioiden haussa ilmeni ongelma",
+  "error-occured_counts": "ERROR {{id}}: Tilojen ja tietoalueiden lukumäärien haussa ilmeni ongelma",
+  "error-occured_subscription": "ERROR {{id}}: Sähköpostitilauksen toiminnassa ilmeni ongelma",
+  "error-occured_access-request": "ERROR {{id}}: Käyttöoikeuksien pyynnössä ilmeni ongelma",
+  "error-occured_unhandled-error": "ERROR {{id}}: Tapahtui odottamaton virhe",
   "logged-out": "Olet kirjautunut ulos palvelusta."
 }

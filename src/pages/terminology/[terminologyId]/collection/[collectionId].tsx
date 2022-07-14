@@ -1,6 +1,6 @@
 import { SSRConfig, useTranslation } from 'next-i18next';
 import { useRouter } from 'next/dist/client/router';
-import React, { useState } from 'react';
+import React from 'react';
 import Layout from '@app/layouts/layout';
 import {
   createCommonGetServerSideProps,
@@ -21,9 +21,13 @@ import {
   CommonContextProvider,
 } from '@app/common/components/common-context-provider';
 import PageHead from '@app/common/components/page-head';
+import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
+import { getStoreData } from '@app/common/components/page-head/utils';
 
 interface CollectionPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
+  collectionTitle?: string;
+  vocabularyTitle?: string;
 }
 
 export default function CollectionPage(props: CollectionPageProps) {
@@ -31,27 +35,27 @@ export default function CollectionPage(props: CollectionPageProps) {
   const { query, asPath } = useRouter();
   const terminologyId = (query?.terminologyId ?? '') as string;
   const collectionId = (query?.collectionId ?? '') as string;
-  const [collectionTitle, setCollectionTitle] = useState<string | undefined>();
-  const [vocabularyTitle, setVocabularyTitle] = useState<string | undefined>();
 
   return (
     <CommonContextProvider value={props}>
-      {/* todo: use better feedbackSubject once more data is available */}
-      <Layout feedbackSubject={`${t('collection-id')} ${collectionId}`}>
-        <PageHead title={[collectionTitle, vocabularyTitle]} path={asPath} />
-
-        <Collection
-          terminologyId={terminologyId}
-          collectionId={collectionId}
-          setCollectionTitle={setCollectionTitle}
-          setVocabularyTitle={setVocabularyTitle}
+      <Layout
+        feedbackSubject={`${t('feedback-collection')} - ${
+          props.collectionTitle
+        }`}
+      >
+        <PageHead
+          title={[props.collectionTitle, props.vocabularyTitle]}
+          path={asPath}
         />
+
+        <Collection terminologyId={terminologyId} collectionId={collectionId} />
       </Layout>
     </CommonContextProvider>
   );
 }
+
 export const getServerSideProps = createCommonGetServerSideProps(
-  async ({ req, store, params }: LocalHandlerParams) => {
+  async ({ store, params, locale }: LocalHandlerParams) => {
     const terminologyId = Array.isArray(params.terminologyId)
       ? params.terminologyId[0]
       : params.terminologyId;
@@ -70,6 +74,35 @@ export const getServerSideProps = createCommonGetServerSideProps(
     await Promise.all(getVocabularyRunningOperationPromises());
     await Promise.all(getCollectionRunningOperationPromises());
 
-    return {};
+    const vocabularyData = getStoreData({
+      state: store.getState(),
+      reduxKey: 'vocabularyAPI',
+      functionKey: 'getVocabulary',
+    });
+
+    const collectionData = getStoreData({
+      state: store.getState(),
+      reduxKey: 'collectionAPI',
+      functionKey: 'getCollection',
+    });
+
+    const vocabularyTitle = getPropertyValue({
+      property: vocabularyData?.properties?.prefLabel,
+      language: locale,
+      fallbackLanguage: 'fi',
+    });
+
+    const collectionTitle = getPropertyValue({
+      property: collectionData?.properties.prefLabel,
+      language: locale,
+      fallbackLanguage: 'fi',
+    });
+
+    return {
+      props: {
+        collectionTitle: collectionTitle,
+        vocabularyTitle: vocabularyTitle,
+      },
+    };
   }
 );

@@ -43,7 +43,9 @@ export default function EmailNotificationsBlock({
 
   return (
     <BasicBlock
-      title={<h2>{t('field-email-notifications')}</h2>}
+      title={
+        <h2 style={{ fontSize: '18px' }}>{t('field-email-notifications')}</h2>
+      }
       extra={
         <>
           <BasicBlockExtraWrapper>

@@ -1,4 +1,4 @@
-import { maxBy } from 'lodash';
+import maxBy from 'lodash/maxBy';
 import React from 'react';
 import SanitizedTextContent from '@app/common/components/sanitized-text-content';
 import {

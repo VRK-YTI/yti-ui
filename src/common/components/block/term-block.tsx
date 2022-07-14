@@ -5,6 +5,7 @@ import TermModal from '@app/common/components/term-modal';
 import MultilingualBlock, {
   MultilingualBlockItemMapper,
 } from './multilingual-block';
+import { TermWrapper } from './term-block.styles';
 
 export interface TermBlockProps {
   title: React.ReactNode;
@@ -27,17 +28,14 @@ export default function TermBlock({
   }> = ({ term, type }) => ({
     language: term.properties.prefLabel?.[0].lang ?? '',
     content: (
-      <span>
-        <span
-          style={{ display: 'inline-block', minWidth: '40%' }}
-          lang={term.properties.prefLabel?.[0].lang}
-        >
+      <TermWrapper>
+        <span lang={term.properties.prefLabel?.[0].lang}>
           <TermModal data={{ term: term, type: type }} />
         </span>
         <span>
           {type}, {t(term.properties.status?.[0].value ?? 'DRAFT')}
         </span>
-      </span>
+      </TermWrapper>
     ),
   });
 

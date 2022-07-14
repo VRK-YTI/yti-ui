@@ -7,13 +7,11 @@ import useUrlState, {
 interface KeywordFilterProps {
   title: string;
   visualPlaceholder: string;
-  isModal?: boolean;
 }
 
 export function KeywordFilter({
   title,
   visualPlaceholder,
-  isModal,
 }: KeywordFilterProps) {
   const { urlState, patchUrlState } = useUrlState();
   const q = urlState.q;

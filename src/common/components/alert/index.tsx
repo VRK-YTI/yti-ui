@@ -1,83 +1,67 @@
-import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
 import { useStoreDispatch } from '@app/store';
-import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
-import { AlertsWrapper, AlertToast } from './alert-toast.styles';
-import { Alert, selectAlert, setAlertVisibility } from './alert.slice';
-import NotificationToast from './notification-toast';
+import { useSelector } from 'react-redux';
+import { selectAlert, setAlertVisibility } from './alert.slice';
+import { useTranslation } from 'next-i18next';
+import { Notification } from 'suomifi-ui-components';
+import { AlertsWrapper } from './alert.styles';
+import { useEffect, useState } from 'react';
+import { useBreakpoints } from '../media-query/media-query-context';
 
-interface AlertToastProps {
-  alert: Alert;
-  alerts: Alert[];
-  type: 'neutral' | 'warning' | 'error';
-}
-
-export function Alerts() {
-  const { isSmall } = useBreakpoints();
-  const alerts = useSelector(selectAlert());
-
-  if (!alerts) {
-    return null;
-  }
-
-  return (
-    <AlertsWrapper
-      $scrollY={typeof window !== 'undefined' ? window.scrollY : 0}
-      $isSmall={isSmall}
-    >
-      {alerts.map((alert, idx) => {
-        if (!alert.visible) {
-          return;
-        }
-
-        if (alert.code === 0) {
-          return <NotificationToast key={`alert-${idx}`} alert={alert} />;
-        } else {
-          return (
-            <AlertToastComponent
-              key={`alert-${idx}`}
-              alert={alert}
-              alerts={alerts}
-              type={'error'}
-            />
-          );
-        }
-      })}
-    </AlertsWrapper>
-  );
-}
-
-export function AlertToastComponent({ alert, alerts, type }: AlertToastProps) {
-  const { isSmall } = useBreakpoints();
+export default function Alerts() {
   const { t } = useTranslation('alert');
-  const [show, setShow] = useState(true);
+  const [scrollPos, setScrollPos] = useState(0);
   const dispatch = useStoreDispatch();
-  const alertsLength = alerts.filter((a) => a.visible).length;
+  const alerts = useSelector(selectAlert());
+  const { isSmall } = useBreakpoints();
 
-  if (!show) {
-    return null;
-  }
-
-  const handleClick = () => {
-    setShow(false);
-    const newAlerts = alerts.map((newAlert) =>
-      newAlert === alert ? { ...newAlert, visible: false } : newAlert
-    );
-
-    dispatch(setAlertVisibility(newAlerts));
+  const handleSetVisible = (displayText: string) => {
+    dispatch(setAlertVisibility(alerts, displayText));
   };
 
+  const handleScroll = () => {
+    setScrollPos(window.scrollY);
+  };
+
+  useEffect(() => {
+    if (window) {
+      window.addEventListener('scroll', handleScroll);
+
+      return () => window.removeEventListener('scroll', handleScroll);
+    }
+  }, []);
+
   return (
-    <AlertToast
-      status={type}
-      closeText={t('toast-close')}
-      onCloseButtonClick={() => handleClick()}
-      smallScreen={isSmall}
-      $isSmall={isSmall}
-    >
-      {alertsLength > 1 && `(${alertsLength})`}{' '}
-      {t('error-occured', { id: alert.code ?? '' })}
-    </AlertToast>
+    <AlertsWrapper $scrollPos={scrollPos} $fromTop={isSmall ? 62 : 128}>
+      {alerts
+        .filter((alert) => alert.visible)
+        .map((alert, idx) => {
+          if (idx === 0) {
+            const alertsLength = alerts.filter((a) => a.visible).length;
+            const isError = alert.code !== 0 ? true : false;
+
+            return (
+              <Notification
+                key={`alert-${idx}`}
+                closeText=""
+                status={isError ? 'error' : 'neutral'}
+                onCloseButtonClick={() => handleSetVisible(alert.displayText)}
+              >
+                {isError ? (
+                  <>
+                    {alertsLength > 1 ? `(${alertsLength}) ` : ''}
+                    {t(`error-occured${alert.displayText}`, {
+                      id: alert.code ?? '',
+                    })}
+                  </>
+                ) : (
+                  <>{t(alert.displayText)}</>
+                )}
+              </Notification>
+            );
+          }
+
+          return null;
+        })}
+    </AlertsWrapper>
   );
 }
