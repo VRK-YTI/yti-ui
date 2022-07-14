@@ -14,7 +14,13 @@ import {
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import { FilterMobileButton } from '@app/modules/terminology-search/terminology-search.styles';
 import { useTranslation } from 'next-i18next';
-import { Modal, ModalContent } from 'suomifi-ui-components';
+import {
+  Modal,
+  ModalContent,
+  Notification,
+  Paragraph,
+  Text,
+} from 'suomifi-ui-components';
 import { Breadcrumb, BreadcrumbLink } from '@app/common/components/breadcrumb';
 import PropertyValue from '@app/common/components/property-value';
 import { useGetVocabularyCountQuery } from '@app/common/components/counts/counts.slice';
@@ -22,30 +28,20 @@ import { TerminologyListFilter } from './terminology-list-filter';
 import useUrlState from '@app/common/utils/hooks/useUrlState';
 import Pagination from '@app/common/components/pagination/pagination';
 import filterData from '@app/common/utils/filter-data';
-import { setAlert } from '@app/common/components/alert/alert.slice';
-import { useRouter } from 'next/router';
 import LoadIndicator from '@app/common/components/load-indicator';
-import { useStoreDispatch } from '@app/store';
-import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import { useSelector } from 'react-redux';
 import { selectLogin } from '@app/common/components/login/login.slice';
+import { useRouter } from 'next/router';
 
 interface VocabularyProps {
   id: string;
-  setTerminologyTitle: (title?: string) => void;
-  setTerminologyDescription: (title?: string) => void;
 }
 
-export default function Vocabulary({
-  id,
-  setTerminologyTitle,
-  setTerminologyDescription,
-}: VocabularyProps) {
+export default function Vocabulary({ id }: VocabularyProps) {
   const { t, i18n } = useTranslation('common');
   const { isSmall } = useBreakpoints();
   const { urlState } = useUrlState();
   const router = useRouter();
-  const dispatch = useStoreDispatch();
   const {
     data: collections,
     error: collectionsError,
@@ -70,40 +66,11 @@ export default function Vocabulary({
   } = useGetVocabularyQuery({
     id,
   });
-  const { data: counts, error: countsError } = useGetVocabularyCountQuery(id);
+  const { data: counts } = useGetVocabularyCountQuery(id);
   const [showModal, setShowModal] = useState(false);
   const [showLoadingConcepts, setShowLoadingConcepts] = useState(false);
   const [showLoadingCollections, setShowLoadingCollections] = useState(true);
   const loginInformation = useSelector(selectLogin());
-
-  if (infoError && 'status' in infoError && infoError.status === 404) {
-    router.push('/404');
-  }
-
-  const prefLabel = getPropertyValue({
-    property: info?.properties.prefLabel,
-    language: i18n.language,
-    fallbackLanguage: 'fi',
-  });
-
-  useEffect(() => {
-    setTerminologyTitle(prefLabel);
-  }, [setTerminologyTitle, prefLabel]);
-
-  useEffect(() => {
-    const description = getPropertyValue({
-      property: info?.properties.description,
-      language: i18n.language,
-      fallbackLanguage: 'fi',
-    });
-    description && setTerminologyDescription(description);
-  }, [i18n.language, info, setTerminologyDescription]);
-
-  useEffect(() => {
-    dispatch(
-      setAlert([collectionsError, conceptsError, infoError, countsError], [])
-    );
-  }, [dispatch, collectionsError, conceptsError, infoError, countsError]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -127,17 +94,42 @@ export default function Vocabulary({
     }
   }, [loginInformation, vocabularyRefetch]);
 
+  if (infoError) {
+    return (
+      <>
+        <Breadcrumb>
+          <BreadcrumbLink url={''} current>
+            ...
+          </BreadcrumbLink>
+        </Breadcrumb>
+
+        <main id="main">
+          <Notification
+            closeText={t('close')}
+            headingText={t('error-not-found', { context: 'terminology' })}
+            status="error"
+            onCloseButtonClick={() => router.push('/')}
+          >
+            <Paragraph>
+              <Text smallScreen>
+                {t('error-not-found-desc', { context: 'terminology' })}
+              </Text>
+            </Paragraph>
+          </Notification>
+        </main>
+      </>
+    );
+  }
+
   return (
     <>
       <Breadcrumb>
-        {!infoError && (
-          <BreadcrumbLink url={`/terminology/${id}`} current>
-            <PropertyValue
-              property={info?.properties.prefLabel}
-              fallbackLanguage="fi"
-            />
-          </BreadcrumbLink>
-        )}
+        <BreadcrumbLink url={`/terminology/${id}`} current>
+          <PropertyValue
+            property={info?.properties.prefLabel}
+            fallbackLanguage="fi"
+          />
+        </BreadcrumbLink>
       </Breadcrumb>
 
       <main id="main">
@@ -187,7 +179,7 @@ export default function Vocabulary({
               ) : (
                 concepts && (
                   <>
-                    <SearchResults data={concepts} />
+                    <SearchResults data={concepts} type="concepts" />
                     <PaginationWrapper>
                       <Pagination
                         data={concepts}

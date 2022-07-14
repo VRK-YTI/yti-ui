@@ -10,14 +10,12 @@ import {
   Chip,
   Modal,
   ModalContent,
+  ModalFooter,
   ModalTitle,
   Paragraph,
   Text,
 } from 'suomifi-ui-components';
-import {
-  ChipBlock,
-  ModalFooterFitted,
-} from './relation-information-block.styles';
+import { ChipBlock } from './relation-information-block.styles';
 import RenderChosen from './render-chosen';
 import RenderConcepts from './render-concepts';
 import Search from './search';
@@ -200,14 +198,14 @@ function ManageRelationalInfoModal({
           </div>
         </ModalContent>
 
-        <ModalFooterFitted>
+        <ModalFooter>
           {renderToggleView()}
 
           <Button onClick={() => handleChange()}>{t('add-concepts')}</Button>
           <Button onClick={() => handleClose()} variant="secondary">
             {t('cancel-variant')}
           </Button>
-        </ModalFooterFitted>
+        </ModalFooter>
       </Modal>
     </>
   );

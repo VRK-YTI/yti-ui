@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Block, ModalFooter } from 'suomifi-ui-components';
+import { Block } from 'suomifi-ui-components';
 
 export const ChipBlock = styled(Block)`
   display: flex;
@@ -36,5 +36,3 @@ export const SearchBlock = styled(Block)`
     border-top: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
   }
 `;
-
-export const ModalFooterFitted = styled(ModalFooter)``;

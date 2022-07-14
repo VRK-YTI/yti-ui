@@ -45,13 +45,12 @@ export function SearchPageFilter({
           organizations={organizations}
         />
         <LanguageFilter
-          labelText={t('display-by-language')}
+          labelText={t('filter-by-language')}
           languages={counts?.counts.languages}
         />
         <KeywordFilter
           title={t('vocabulary-filter-filter-by-keyword')}
           visualPlaceholder={t('vocabulary-filter-visual-placeholder')}
-          isModal={isModal}
         />
       </FilterTopPartBlock>
       <Separator />

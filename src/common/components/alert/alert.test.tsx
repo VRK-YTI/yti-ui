@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
-import { Alerts } from '.';
+import Alerts from './';
 import { lightTheme } from '@app/layouts/theme';
 import { makeStore } from '@app/store';
 import { setAlert } from './alert.slice';
@@ -16,8 +16,11 @@ describe('alert', () => {
       setAlert(
         [
           {
-            status: 500,
-            data: { error: '500 error' },
+            note: {
+              status: 500,
+              data: { error: '500 error' },
+            },
+            displayText: '_test-1',
           },
         ],
         []
@@ -32,7 +35,7 @@ describe('alert', () => {
       </Provider>
     );
 
-    expect(screen.getByText('tr-error-occured')).toBeInTheDocument();
+    expect(screen.getByText('tr-error-occured_test-1')).toBeInTheDocument();
   });
 
   it('should render multiple alerts', () => {
@@ -42,20 +45,32 @@ describe('alert', () => {
       setAlert(
         [
           {
-            status: 500,
-            data: { error: '500 error' },
+            note: {
+              status: 500,
+              data: '500 error',
+            },
+            displayText: '_test-1',
           },
           {
-            status: 500,
-            data: { error: '500 error' },
+            note: {
+              status: 500,
+              data: '500 error',
+            },
+            displayText: '_test-2',
           },
           {
-            status: 500,
-            data: { error: '500 error' },
+            note: {
+              status: 500,
+              data: '500 error',
+            },
+            displayText: '_test-3',
           },
           {
-            status: 500,
-            data: { error: '500 error' },
+            note: {
+              status: 500,
+              data: '500 error',
+            },
+            displayText: '_test-4',
           },
         ],
         []
@@ -70,7 +85,7 @@ describe('alert', () => {
       </Provider>
     );
 
-    expect(screen.queryAllByText(/tr-error-occured/)).toHaveLength(4);
+    expect(screen.getByText('(4) tr-error-occured_test-1')).toBeInTheDocument();
   });
 
   it('should render non-error alert', () => {
@@ -80,8 +95,11 @@ describe('alert', () => {
       setAlert(
         [
           {
-            status: 0,
-            data: { error: 'notification' },
+            note: {
+              status: 0,
+              data: 'notification',
+            },
+            displayText: 'logged-out',
           },
         ],
         []
@@ -97,8 +115,7 @@ describe('alert', () => {
     );
 
     expect(screen.queryByText('tr-error-occured')).not.toBeInTheDocument();
-    expect(screen.queryByText('TR-TOAST-CLOSE')).not.toBeInTheDocument();
-    expect(screen.getByText('tr-notification')).toBeInTheDocument();
+    expect(screen.getByText('tr-logged-out')).toBeInTheDocument();
   });
 
   it('should hide alert when clicking close', async () => {
@@ -108,8 +125,11 @@ describe('alert', () => {
       setAlert(
         [
           {
-            status: 500,
-            data: { error: '500 error' },
+            note: {
+              status: 500,
+              data: '500 error',
+            },
+            displayText: '_test-1',
           },
         ],
         []
@@ -124,13 +144,16 @@ describe('alert', () => {
       </Provider>
     );
 
-    expect(screen.getByText('tr-error-occured')).toBeInTheDocument();
-    userEvent.click(screen.getByText('TR-TOAST-CLOSE'));
-    expect(screen.queryByText('tr-error-occured')).not.toBeInTheDocument();
+    expect(screen.getByText('tr-error-occured_test-1')).toBeInTheDocument();
+    userEvent.click(screen.getByRole('button'));
+    expect(
+      screen.queryByText('tr-error-occured_test-1')
+    ).not.toBeInTheDocument();
     expect(store.getState().alert.alerts).toStrictEqual([
       {
         code: 500,
-        message: '500 error',
+        message: 'Error code 500',
+        displayText: '_test-1',
         visible: false,
       },
     ]);
@@ -143,20 +166,32 @@ describe('alert', () => {
       setAlert(
         [
           {
-            status: 500,
-            data: { error: '500 error' },
+            note: {
+              status: 500,
+              data: '500 error',
+            },
+            displayText: '_test-1',
           },
           {
-            status: 500,
-            data: { error: '500 error' },
+            note: {
+              status: 500,
+              data: '500 error',
+            },
+            displayText: '_test-2',
           },
           {
-            status: 500,
-            data: { error: '500 error' },
+            note: {
+              status: 500,
+              data: '500 error',
+            },
+            displayText: '_test-3',
           },
           {
-            status: 500,
-            data: { error: '500 error' },
+            note: {
+              status: 500,
+              data: '500 error',
+            },
+            displayText: '_test-4',
           },
         ],
         []
@@ -171,29 +206,33 @@ describe('alert', () => {
       </Provider>
     );
 
-    expect(screen.getAllByText(/tr-error-occured/)).toHaveLength(4);
-    userEvent.click(screen.getAllByText('TR-TOAST-CLOSE')[3]);
-    userEvent.click(screen.getAllByText('TR-TOAST-CLOSE')[2]);
+    expect(screen.getByText('(4) tr-error-occured_test-1')).toBeInTheDocument();
+    userEvent.click(screen.getByRole('button'));
+    userEvent.click(screen.getByRole('button'));
     expect(store.getState().alert.alerts).toStrictEqual([
       {
         code: 500,
-        message: '500 error',
-        visible: true,
-      },
-      {
-        code: 500,
-        message: '500 error',
-        visible: true,
-      },
-      {
-        code: 500,
-        message: '500 error',
+        message: 'Error code 500',
+        displayText: '_test-1',
         visible: false,
       },
       {
         code: 500,
-        message: '500 error',
+        message: 'Error code 500',
+        displayText: '_test-2',
         visible: false,
+      },
+      {
+        code: 500,
+        message: 'Error code 500',
+        displayText: '_test-3',
+        visible: true,
+      },
+      {
+        code: 500,
+        message: 'Error code 500',
+        displayText: '_test-4',
+        visible: true,
       },
     ]);
   });

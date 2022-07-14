@@ -36,8 +36,11 @@ export default function SubscriptionBlock({
         setAlert(
           [
             {
-              status: 0,
-              data: unsubscribedAll
+              note: {
+                status: 0,
+                data: '',
+              },
+              displayText: unsubscribedAll
                 ? t('subscription-all-notifications-removed')
                 : t('subscription-notifications-removed', {
                     item: unsubscribedItem ?? '',
@@ -50,7 +53,12 @@ export default function SubscriptionBlock({
 
       refetchSubscriptions();
     } else if (subscription.isError) {
-      dispatch(setAlert([subscription.error], []));
+      dispatch(
+        setAlert(
+          [{ note: subscription.error, displayText: '_subscription' }],
+          []
+        )
+      );
       console.error('subscription error', subscription.error);
     }
   }, [subscription, dispatch, unsubscribedItem, t, refetchSubscriptions]);

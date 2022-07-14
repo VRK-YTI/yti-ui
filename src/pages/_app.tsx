@@ -31,8 +31,11 @@ function App({ Component, pageProps }: AppProps) {
         setAlert(
           [
             {
-              status: 0,
-              data: 'logged-out',
+              note: {
+                status: 0,
+                data: 'logged-out',
+              },
+              displayText: 'logged-out',
             },
           ],
           []

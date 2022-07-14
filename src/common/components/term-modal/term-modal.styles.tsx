@@ -10,6 +10,7 @@ export const TermModalButton = styled(Button)`
   font-weight: 400;
   padding: 0;
   min-height: auto;
+  text-align: left;
 `;
 
 export const TermModalChip = styled.span<{ $isValid?: string }>`

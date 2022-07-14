@@ -13,7 +13,7 @@ import Footer from '@app/common/components/footer/footer';
 import SmartHeader from '@app/modules/smart-header';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import SkipLink from '@app/common/components/skip-link/skip-link';
-import { Alerts } from '@app/common/components/alert';
+import Alerts from '@app/common/components/alert';
 import Matomo from '@app/common/components/matomo';
 
 export default function Layout({

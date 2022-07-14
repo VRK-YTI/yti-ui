@@ -37,13 +37,12 @@ export function TerminologyListFilter({
     >
       <FilterTopPartBlock>
         <LanguageFilter
-          labelText={t('filter-by-language')}
+          labelText={t('display-by-language')}
           languages={languages}
         />
         <KeywordFilter
           title={t('vocabulary-filter-filter-by-keyword')}
           visualPlaceholder={t('vocabulary-filter-visual-placeholder')}
-          isModal={isModal}
         />
       </FilterTopPartBlock>
       <Separator />

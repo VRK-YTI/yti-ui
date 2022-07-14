@@ -1,3 +1,4 @@
+import { useTranslation } from 'next-i18next';
 import { RadioButtonGroup } from 'suomifi-ui-components';
 import { FilterRadioButton } from './filter.styles';
 
@@ -21,11 +22,13 @@ export default function RadioButtonFilter({
   onChange,
   radioButtonVariant,
 }: RadioButtonFilterProps) {
+  const { t } = useTranslation('common');
+
   return (
     <div>
       <RadioButtonGroup
         labelText={title}
-        name="vocabulary-filter-show-only"
+        name={t('vocabulary-filter-show-only')}
         value={selectedItem}
         onChange={onChange}
       >

@@ -1,8 +1,12 @@
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
-import { VisuallyHidden } from 'suomifi-ui-components';
-import { setAlert } from '@app/common/components/alert/alert.slice';
+import {
+  Notification,
+  Paragraph,
+  Text,
+  VisuallyHidden,
+} from 'suomifi-ui-components';
 import {
   BasicBlock,
   MultilingualPropertyBlock,
@@ -33,15 +37,11 @@ import { selectLogin } from '@app/common/components/login/login.slice';
 interface CollectionProps {
   terminologyId: string;
   collectionId: string;
-  setCollectionTitle: (title?: string) => void;
-  setVocabularyTitle: (title?: string) => void;
 }
 
 export default function Collection({
   terminologyId,
   collectionId,
-  setCollectionTitle,
-  setVocabularyTitle,
 }: CollectionProps) {
   const { breakpoint } = useBreakpoints();
   const { t, i18n } = useTranslation('collection');
@@ -66,38 +66,11 @@ export default function Collection({
     }
   );
 
-  if (
-    collectionError &&
-    'status' in collectionError &&
-    collectionError.status === 404
-  ) {
-    router.push('/404');
-  }
-
   const prefLabel = getPropertyValue({
     property: collection?.properties.prefLabel,
     language: i18n.language,
     fallbackLanguage: 'fi',
   });
-
-  useEffect(() => {
-    setCollectionTitle(prefLabel);
-  }, [setCollectionTitle, prefLabel]);
-
-  useEffect(() => {
-    const label = getPropertyValue({
-      property: terminology?.properties.prefLabel,
-      language: i18n.language,
-      fallbackLanguage: 'fi',
-    });
-    if (label) {
-      setVocabularyTitle(label);
-    }
-  }, [setVocabularyTitle, terminology, i18n.language]);
-
-  useEffect(() => {
-    dispatch(setAlert([terminologyError, collectionError], []));
-  }, [dispatch, terminologyError, collectionError]);
 
   useEffect(() => {
     if (collection) {
@@ -111,6 +84,51 @@ export default function Collection({
     }
   }, [loginInformation, refetch]);
 
+  if (collectionError) {
+    return (
+      <>
+        <Breadcrumb>
+          {!terminologyError && (
+            <BreadcrumbLink url={`/terminology/${terminologyId}`}>
+              <PropertyValue
+                property={terminology?.properties.prefLabel}
+                fallbackLanguage="fi"
+              />
+            </BreadcrumbLink>
+          )}
+          <BreadcrumbLink url={''} current>
+            ...
+          </BreadcrumbLink>
+        </Breadcrumb>
+
+        <main id="main">
+          <Notification
+            closeText={t('close')}
+            headingText={t('error-not-found', {
+              context: 'collection',
+              ns: 'common',
+            })}
+            status="error"
+            onCloseButtonClick={() =>
+              router.push(
+                !terminologyError ? `/terminology/${terminologyId}` : '/'
+              )
+            }
+          >
+            <Paragraph>
+              <Text smallScreen>
+                {t('error-not-found-desc', {
+                  context: 'collection',
+                  ns: 'common',
+                })}
+              </Text>
+            </Paragraph>
+          </Notification>
+        </main>
+      </>
+    );
+  }
+
   return (
     <>
       <Breadcrumb>
@@ -122,17 +140,15 @@ export default function Collection({
             />
           </BreadcrumbLink>
         )}
-        {!collectionError && (
-          <BreadcrumbLink
-            url={`/terminology/${terminologyId}/collections/${collectionId}`}
-            current
-          >
-            <PropertyValue
-              property={collection?.properties.prefLabel}
-              fallbackLanguage="fi"
-            />
-          </BreadcrumbLink>
-        )}
+        <BreadcrumbLink
+          url={`/terminology/${terminologyId}/collections/${collectionId}`}
+          current
+        >
+          <PropertyValue
+            property={collection?.properties.prefLabel}
+            fallbackLanguage="fi"
+          />
+        </BreadcrumbLink>
       </Breadcrumb>
 
       <PageContent $breakpoint={breakpoint}>

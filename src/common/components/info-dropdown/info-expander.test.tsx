@@ -37,7 +37,7 @@ describe('infoExpander', () => {
     ).toBeInTheDocument();
   });
 
-  it('should render subscribe button', () => {
+  it('should render subscribe button', async () => {
     const store = makeStore(getMockContext());
     const loginInitialState = Object.assign({}, initialState);
     loginInitialState['anonymous'] = false;
@@ -63,7 +63,9 @@ describe('infoExpander', () => {
       { wrapper: themeProvider }
     );
 
-    expect(screen.getByText('tr-email-subscription-add')).toBeInTheDocument();
+    await expect(
+      screen.findByText('tr-email-subscription-add')
+    ).resolves.toBeInTheDocument();
   });
 
   it('should render createdBy and modifiedBy when available', () => {

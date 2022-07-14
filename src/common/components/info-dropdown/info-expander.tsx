@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import dynamic from 'next/dynamic';
 import {
   Button,
   ExpanderContent,
@@ -17,9 +18,12 @@ import { BasicBlockExtraWrapper } from '@app/common/components/block/block.style
 import FormattedDate from '@app/common/components/formatted-date';
 import { useSelector } from 'react-redux';
 import { selectLogin } from '@app/common/components/login/login.slice';
-import Subscription from '@app/common/components/subscription/subscription';
 import HasPermission from '@app/common/utils/has-permission';
-import NewConceptModal from '../new-concept-modal';
+
+const Subscription = dynamic(
+  () => import('@app/common/components/subscription/subscription')
+);
+const NewConceptModal = dynamic(() => import('../new-concept-modal'));
 
 interface InfoExpanderProps {
   data?: VocabularyInfoDTO;

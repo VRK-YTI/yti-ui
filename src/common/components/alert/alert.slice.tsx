@@ -6,6 +6,7 @@ export type Alert = {
   code: number | string;
   message: string;
   visible?: boolean;
+  displayText: string;
 };
 
 export interface AlertState {
@@ -41,7 +42,10 @@ function setAlertPrivate(alerts: Alert[]): AppThunk {
 
 export const setAlert =
   (
-    alerts: (AxiosBaseQueryError | SerializedError | undefined)[],
+    alerts: {
+      note: AxiosBaseQueryError | SerializedError | undefined;
+      displayText: string;
+    }[],
     previousAlerts: Alert[]
   ): AppThunk =>
   async (dispatch) => {
@@ -49,19 +53,23 @@ export const setAlert =
       .filter((alert) => {
         // AxiosBaseQueryError
         if (
-          alert &&
-          'status' in alert &&
-          !previousAlerts.map((pAlert) => pAlert.code).includes(alert.status)
+          alert.note &&
+          'status' in alert.note &&
+          !previousAlerts
+            .map((pAlert) => pAlert.displayText)
+            .includes(alert.displayText)
         ) {
           return true;
         }
 
         // SerializedError
         if (
-          alert &&
-          'code' in alert &&
-          alert.code !== undefined &&
-          !previousAlerts.map((pAlert) => pAlert.code).includes(alert.code)
+          alert.note &&
+          'code' in alert.note &&
+          alert.note?.code !== undefined &&
+          !previousAlerts
+            .map((pAlert) => pAlert.displayText)
+            .includes(alert.displayText)
         ) {
           return true;
         }
@@ -69,33 +77,36 @@ export const setAlert =
         // undefined
         return false;
       })
-      .map((error) => {
+      .map((e) => {
         // AxiosBaseQueryError
-        if (error && 'status' in error) {
+        if (e.note && 'status' in e.note) {
           return {
-            code: error.status,
+            code: e.note.status,
             message:
-              (error.data as { error?: string })?.error ??
-              `Error code ${error.status}`,
+              (e.note.data as { error?: string })?.error ??
+              `Error code ${e.note.status}`,
             visible: true,
+            displayText: e.displayText,
           };
         }
 
         // SerializedError
-        if (error && 'code' in error) {
+        if (e.note && 'code' in e.note) {
           return {
-            code: error.code ?? 'UNKNOWN_ERROR',
+            code: e.note.code ?? 'UNKNOWN_ERROR',
             message:
-              error.message ?? error.code
-                ? `Error code ${error.code}`
+              e.note.message ?? e.note.code
+                ? `Error code ${e.note.code}`
                 : 'Unknown error',
             visible: true,
+            displayText: e.displayText,
           };
         }
 
         return {
           code: 'UNHANDLED_ERROR',
           message: 'Unhandled error',
+          displayText: '_unhandled-error',
         };
       });
 
@@ -105,9 +116,21 @@ export const setAlert =
   };
 
 export const setAlertVisibility =
-  (alerts: Alert[]): AppThunk =>
+  (alerts: Alert[], displayText?: string): AppThunk =>
   async (dispatch) => {
-    dispatch(setAlertPrivate(alerts));
+    const updatedAlerts = alerts.map((alert) => {
+      if (alert.displayText === displayText) {
+        return {
+          code: alert.code,
+          message: alert.message,
+          displayText: alert.displayText,
+          visible: false,
+        };
+      }
+      return alert;
+    });
+
+    dispatch(setAlertPrivate(updatedAlerts));
   };
 
 export function selectAlert() {

@@ -47,7 +47,12 @@ export default function TerminologySearch() {
   useEffect(() => {
     dispatch(
       setAlert(
-        [error, groupsError, organizationsError, countsError],
+        [
+          { note: error, displayText: '_terminology-search' },
+          { note: groupsError, displayText: '_groups' },
+          { note: organizationsError, displayText: '_organization' },
+          { note: countsError, displayText: '_counts' },
+        ],
         previousAlerts
       )
     );

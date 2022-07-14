@@ -1,6 +1,6 @@
 import { SSRConfig, useTranslation } from 'next-i18next';
 import { useRouter } from 'next/dist/client/router';
-import React, { useState } from 'react';
+import React from 'react';
 import Layout from '@app/layouts/layout';
 import {
   createCommonGetServerSideProps,
@@ -17,39 +17,35 @@ import {
   CommonContextState,
   CommonContextProvider,
 } from '@app/common/components/common-context-provider';
-import { getVocabularyCount } from '@app/common/components/counts/counts.slice';
 import PageHead from '@app/common/components/page-head';
+import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
+import { getStoreData } from '@app/common/components/page-head/utils';
+import {
+  getVocabularyCount,
+  getRunningOperationPromises as countsGetRunningOperationPromises,
+} from '@app/common/components/counts/counts.slice';
 
 interface TerminologyPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
+  title?: string;
+  description?: string;
 }
 
 export default function TerminologyPage(props: TerminologyPageProps) {
   const { t } = useTranslation('common');
   const { query, asPath } = useRouter();
   const terminologyId = (query?.terminologyId ?? '') as string;
-  const [terminologyTitle, setTerminologyTitle] = useState<
-    string | undefined
-  >();
-  const [terminologyDescription, setTerminologyDescription] = useState<
-    string | undefined
-  >();
 
   return (
     <CommonContextProvider value={props}>
-      {/* todo: use better feedbackSubject once more data is available */}
-      <Layout feedbackSubject={`${t('terminology-id')} ${terminologyId}`}>
+      <Layout feedbackSubject={`${t('feedback-vocabulary')} - ${props.title}`}>
         <PageHead
-          title={terminologyTitle}
-          description={terminologyDescription}
+          title={props.title ?? ''}
+          description={props.description ?? ''}
           path={asPath}
         />
 
-        <Vocabulary
-          id={terminologyId}
-          setTerminologyTitle={setTerminologyTitle}
-          setTerminologyDescription={setTerminologyDescription}
-        />
+        <Vocabulary id={terminologyId} />
       </Layout>
     </CommonContextProvider>
   );
@@ -89,10 +85,34 @@ export const getServerSideProps = createCommonGetServerSideProps(
         language: locale,
       })
     );
-    await store.dispatch(getVocabularyCount.initiate(id));
+    store.dispatch(getVocabularyCount.initiate(id));
 
     await Promise.all(getRunningOperationPromises());
+    await Promise.all(countsGetRunningOperationPromises());
 
-    return {};
+    const vocabularyData = getStoreData({
+      state: store.getState(),
+      reduxKey: 'vocabularyAPI',
+      functionKey: 'getVocabulary',
+    });
+
+    const title = getPropertyValue({
+      property: vocabularyData?.properties?.prefLabel,
+      language: locale,
+      fallbackLanguage: 'fi',
+    });
+
+    const description = getPropertyValue({
+      property: vocabularyData?.properties?.description,
+      language: locale,
+      fallbackLanguage: 'fi',
+    });
+
+    return {
+      props: {
+        title: title,
+        description: description,
+      },
+    };
   }
 );
