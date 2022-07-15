@@ -27,7 +27,7 @@ export interface TermFormProps {
 export default function TermForm({ term, update }: TermFormProps) {
   const { t } = useTranslation('admin');
   const [modalVisible, setModalVisible] = useState(false);
-  const [isHomographic, setIsHomographic] = useState(false);
+  const [isHomographic, setIsHomographic] = useState(term.termHomographNumber ? true : false);
 
   const termStyle = [{ labelText: 'puhekieli', uniqueItemId: 'spoken-form' }];
   const termFamily = [
@@ -75,7 +75,10 @@ export default function TermForm({ term, update }: TermFormProps) {
         defaultValue={term.prefLabel}
         onBlur={(e) => handleUpdate('prefLabel', e.target.value)}
       />
-      <CheckboxBlock onClick={() => handleIsHomographic()}>
+      <CheckboxBlock
+        defaultChecked={term.termHomographNumber ? true : false}
+        onClick={() => handleIsHomographic()}
+      >
         {t('term-is-homograph-label')}
       </CheckboxBlock>
 

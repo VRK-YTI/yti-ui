@@ -132,7 +132,7 @@
   "description": "Kuvaus",
   "change-history": "Muutoshistoria",
   "change-history-hint": "Merkintä termiin tehdystä yksittäisestä muutoksesta",
-  "change-history-placeholder": "Kirjoita verkkosivun tarkka osoite",
+  "change-history-placeholder": "Kirjoita muutoshistoria",
   "etymology": "Käytön historiatieto \"etymologia\"",
   "etymology-hint": "Termin aiempi käyttö tai merkitys",
   "etymology-placeholder": "Kirjoita termin käytön historia",

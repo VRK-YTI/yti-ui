@@ -1,7 +1,10 @@
-import { useGetGroupsQuery } from '@app/common/components/terminology-search/terminology-search.slice';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
-import { ExpanderTitleButton, SingleSelect } from 'suomifi-ui-components';
+import {
+  ExpanderTitleButton,
+  SingleSelect,
+  TextInput,
+} from 'suomifi-ui-components';
 import { BasicInfoUpdate } from './concept-basic-information-interface';
 import {
   ConceptExpander,
@@ -17,11 +20,8 @@ export default function OtherInformation({
   infoKey,
   update,
 }: OtherInformationProps) {
-  const { t, i18n } = useTranslation('admin');
-  const { data: groups } = useGetGroupsQuery(i18n.language);
-  const [conceptClass, setConceptClass] = useState<
-    typeof groupsFormatted[0] | null
-  >();
+  const { t } = useTranslation('admin');
+  const [conceptClass, setConceptClass] = useState<string | undefined>();
   const [wordClass, setWordClass] = useState<typeof partOfSpeech[0] | null>();
 
   const handleChange = () => {
@@ -33,14 +33,6 @@ export default function OtherInformation({
       },
     });
   };
-
-  const groupsFormatted =
-    groups?.map((group) => {
-      return {
-        uniqueItemId: group.id,
-        labelText: group.properties.prefLabel.value,
-      };
-    }) ?? [];
 
   const partOfSpeech = [
     {
@@ -59,15 +51,11 @@ export default function OtherInformation({
         {t('concept-other-information')}
       </ExpanderTitleButton>
       <ExpanderContentFitted>
-        <SingleSelect
+        <TextInput
           labelText={t('concept-class')}
           optionalText={t('optional')}
-          clearButtonLabel={t('clear-button-label')}
-          ariaOptionsAvailableText={t('concept-class-available')}
-          items={groupsFormatted}
-          selectedItem={conceptClass ?? undefined}
-          noItemsText={t('concept-class-no-items')}
-          onItemSelectionChange={(e) => setConceptClass(e)}
+          onChange={(e) => setConceptClass(e?.toString())}
+          value={conceptClass}
           onBlur={() => handleChange()}
         />
 

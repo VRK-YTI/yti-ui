@@ -5,7 +5,7 @@ import Separator from '@app/common/components/separator';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { Button, ExpanderGroup } from 'suomifi-ui-components';
-import { LargeHeading, MediumHeading } from './concept-terms-block.styles';
+import { LargeHeading, MediumHeading, OtherTermsExpanderGroup } from './concept-terms-block.styles';
 import TermExpander from './term-expander';
 import TermForm from './term-form';
 import { Property } from '@app/common/interfaces/termed-data-types.interface';
@@ -52,6 +52,7 @@ export default function ConceptTermsBlock({
 }: ConceptTermsBlockProps) {
   const { t } = useTranslation('admin');
   const [modalVisible, setModalVisible] = useState(false);
+  const [checkedTerms, setCheckedTerms] = useState<string[]>([]);
   const [terms, setTerms] = useState<ConceptTermType[]>(
     preferredTerms.map((term) => ({
       changeNote: '',
@@ -91,6 +92,30 @@ export default function ConceptTermsBlock({
     );
   };
 
+  const handleCheck = (id: string, state: boolean) => {
+    console.log(id, state);
+    if (!state && checkedTerms.includes(id)) {
+      setCheckedTerms(checkedTerms.filter((term) => term !== id));
+      return;
+    }
+
+    if (state && !checkedTerms.includes(id)) {
+      setCheckedTerms([...checkedTerms, id]);
+      return;
+    }
+
+    return;
+  };
+
+  const handleRemoveTerms = () => {
+    setTerms(terms.filter((term) => !checkedTerms.includes(term.id)));
+    setCheckedTerms([]);
+  };
+
+  const appendTerm = (newTerm: ConceptTermType) => {
+    setTerms([...terms, newTerm]);
+  };
+
   return (
     <>
       <Separator isLarge />
@@ -106,15 +131,13 @@ export default function ConceptTermsBlock({
         extra={
           <BasicBlockExtraWrapper $isWide>
             <ExpanderGroup openAllText="" closeAllText="">
-              {terms.map((term, idx) => (
-                <TermExpander
-                  key={`${term}-${idx}`}
-                  lang={term.language}
-                  prefLabel={term.prefLabel}
-                >
-                  <TermForm term={term} update={handleUpdate} />
-                </TermExpander>
-              ))}
+              {terms
+                .filter((term) => term.termType === 'recommended-term')
+                .map((term) => (
+                  <TermExpander key={term.id} term={term}>
+                    <TermForm term={term} update={handleUpdate} />
+                  </TermExpander>
+                ))}
             </ExpanderGroup>
           </BasicBlockExtraWrapper>
         }
@@ -137,23 +160,38 @@ export default function ConceptTermsBlock({
               <NewTermModal
                 setVisible={setModalVisible}
                 languages={languages}
+                appendTerm={appendTerm}
               />
             )}
-            {/* <ExpanderGroup openAllText="" closeAllText="">
-              {
-                terms.map((term, idx) => (
-                  <TermExpander
-                    key={`${term}-${idx}`}
-                    lang={term.language}
-                    prefLabel={term.prefLabel}
-                    checkable
-                  >
-                    <TermForm lang={term.language} />
-                  </TermExpander>
-                ))
-              }
-            </ExpanderGroup>
-            <Button disabled>Poista termi</Button> */}
+            {terms.filter((term) => term.termType !== 'recommended-term')
+              .length > 0 && (
+              <>
+                <OtherTermsExpanderGroup
+                  openAllText=""
+                  closeAllText=""
+                >
+                  {terms
+                    .filter((term) => term.termType !== 'recommended-term')
+                    .map((term) => (
+                      <TermExpander
+                        key={term.id}
+                        term={term}
+                        setChecked={handleCheck}
+                        checkable
+                      >
+                        <TermForm term={term} update={handleUpdate} />
+                      </TermExpander>
+                    ))}
+                </OtherTermsExpanderGroup>
+
+                <Button
+                  onClick={() => handleRemoveTerms()}
+                  disabled={checkedTerms.length < 1}
+                >
+                  Poista termi{checkedTerms.length > 1 && 't'}
+                </Button>
+              </>
+            )}
           </BasicBlockExtraWrapper>
         }
       >

@@ -9,23 +9,23 @@ import { SuccessIcon } from './concept-terms-block.styles';
 import ExpanderTitle from '@app/common/components/expander-title';
 
 export interface TermExpanderProps {
-  lang: string;
-  prefLabel?: string;
+  term: any;
+  setChecked?: (id: string, value: boolean) => void;
   checkable?: boolean;
   completed?: boolean;
   children?: React.ReactNode;
 }
 
 export default function TermExpander({
-  lang,
-  prefLabel,
+  term,
+  setChecked,
   checkable,
   completed,
   children,
 }: TermExpanderProps) {
   const { t } = useTranslation('admin');
-  const primaryText = t(`language-label-text-${lang}`);
-  const secondaryText = `${prefLabel} - ${t('DRAFT', { ns: 'common' })}`;
+  const primaryText = t(`language-label-text-${term.language}`);
+  const secondaryText = `${term.prefLabel} - ${t('DRAFT', { ns: 'common' })}`;
 
   return (
     <Expander>
@@ -35,7 +35,11 @@ export default function TermExpander({
           ariaCloseText="close expander"
           toggleButtonAriaDescribedBy="checkbox-id"
         >
-          <Checkbox hintText={secondaryText} id="checkbox-id">
+          <Checkbox
+            id={`${term.id}-checkbox`}
+            hintText={secondaryText}
+            onClick={(e) => setChecked && setChecked(term.id, e.checkboxState)}
+          >
             {primaryText}
           </Checkbox>
         </SuomifiExpanderTitle>

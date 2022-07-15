@@ -3,6 +3,7 @@ import {
   Block,
   Checkbox,
   Dropdown,
+  ExpanderGroup,
   Heading,
   Icon,
   RadioButtonGroup,
@@ -63,4 +64,8 @@ export const TermEquivalencyBlock = styled(Block)`
 export const RadioButtonGroupSpaced = styled(RadioButtonGroup)`
   margin: ${(props) => props.theme.suomifi.spacing.m} 0;
   max-width: 290px;
+`;
+
+export const OtherTermsExpanderGroup = styled(ExpanderGroup)`
+  margin-bottom: ${props => props.theme.suomifi.spacing.m};
 `;

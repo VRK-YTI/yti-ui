@@ -2,11 +2,7 @@ import Separator from '@app/common/components/separator';
 import { Concepts } from '@app/common/interfaces/concepts.interface';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
-import {
-  Checkbox,
-  CheckboxGroup,
-  ExpanderTitleButton,
-} from 'suomifi-ui-components';
+import { ExpanderTitleButton } from 'suomifi-ui-components';
 import { BasicInfoUpdate } from './concept-basic-information-interface';
 import {
   ConceptExpander,
@@ -133,6 +129,9 @@ export default function RelationalInformation({
           fromOther
         />
 
+        {/*
+        Note: This is disabled until further notice
+
         <Separator isLarge />
 
         <CheckboxGroup
@@ -148,7 +147,7 @@ export default function RelationalInformation({
           <Checkbox hintText="Julkisen hallinnon yhteinen sanasto">
             hakemus
           </Checkbox>
-        </CheckboxGroup>
+        </CheckboxGroup> */}
       </ExpanderContentFitted>
     </ConceptExpander>
   );
