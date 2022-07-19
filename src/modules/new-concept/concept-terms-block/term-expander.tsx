@@ -7,9 +7,10 @@ import {
 } from 'suomifi-ui-components';
 import { SuccessIcon } from './concept-terms-block.styles';
 import ExpanderTitle from '@app/common/components/expander-title';
+import { ConceptTermType } from './concept-term-block-types';
 
 export interface TermExpanderProps {
-  term: any;
+  term: ConceptTermType;
   setChecked?: (id: string, value: boolean) => void;
   checkable?: boolean;
   completed?: boolean;

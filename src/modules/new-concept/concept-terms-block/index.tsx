@@ -5,45 +5,26 @@ import Separator from '@app/common/components/separator';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { Button, ExpanderGroup } from 'suomifi-ui-components';
-import { LargeHeading, MediumHeading, OtherTermsExpanderGroup } from './concept-terms-block.styles';
+import {
+  LargeHeading,
+  MediumHeading,
+  OtherTermsExpanderGroup,
+} from './concept-terms-block.styles';
 import TermExpander from './term-expander';
 import TermForm from './term-form';
 import { Property } from '@app/common/interfaces/termed-data-types.interface';
 import { v4 } from 'uuid';
+import {
+  ConceptTermType,
+  ConceptTermUpdateProps,
+  ItemType,
+} from './concept-term-block-types';
 
 const NewTermModal = dynamic(() => import('./new-term-modal'));
 
 export interface ConceptTermsBlockProps {
   languages: string[];
   preferredTerms: Property[];
-}
-
-export interface ConceptTermType {
-  changeNote: string; // Muutoshistoria
-  draftComment: string; // !! luultavasti turha !!
-  editorialNote: string[];
-  historyNote: string;
-  id: string;
-  language: string;
-  prefLabel: string;
-  scope: string; // Käyttöala
-  source: string;
-  status: string;
-  termConjugation: string; // Termin luku
-  termEquivalency: string; // Termin vastaavuus
-  termEquivalencyRelation: string; // Termi, johon vastaavuus liittyy
-  termFamily: string;
-  termHomographNumber: string;
-  termInfo: string; // Termin lisätieto
-  termStyle: string;
-  termType: string;
-  wordClass: string;
-}
-
-interface UpdateProps {
-  termId: string;
-  key: keyof ConceptTermType;
-  value: string & string[];
 }
 
 export default function ConceptTermsBlock({
@@ -57,7 +38,7 @@ export default function ConceptTermsBlock({
     preferredTerms.map((term) => ({
       changeNote: '',
       draftComment: '',
-      editorialNote: [],
+      editorialNote: [] as ItemType[],
       historyNote: '',
       id: v4(),
       language: term.lang,
@@ -77,11 +58,10 @@ export default function ConceptTermsBlock({
     }))
   );
 
-  console.log('terms', terms);
+  const handleUpdate = ({ termId, key, value }: ConceptTermUpdateProps) => {
+    let updatedTerm = terms.filter((term) => term.id === termId)[0];
+    updatedTerm = { ...updatedTerm, [key]: value };
 
-  const handleUpdate = ({ termId, key, value }: UpdateProps) => {
-    const updatedTerm = terms.filter((term) => term.id === termId)[0];
-    updatedTerm[key] = value;
     setTerms(
       terms.map((term) => {
         if (term.id === termId) {
@@ -93,7 +73,6 @@ export default function ConceptTermsBlock({
   };
 
   const handleCheck = (id: string, state: boolean) => {
-    console.log(id, state);
     if (!state && checkedTerms.includes(id)) {
       setCheckedTerms(checkedTerms.filter((term) => term !== id));
       return;
@@ -166,10 +145,7 @@ export default function ConceptTermsBlock({
             {terms.filter((term) => term.termType !== 'recommended-term')
               .length > 0 && (
               <>
-                <OtherTermsExpanderGroup
-                  openAllText=""
-                  closeAllText=""
-                >
+                <OtherTermsExpanderGroup openAllText="" closeAllText="">
                   {terms
                     .filter((term) => term.termType !== 'recommended-term')
                     .map((term) => (

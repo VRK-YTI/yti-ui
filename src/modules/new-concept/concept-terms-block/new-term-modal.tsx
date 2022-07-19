@@ -15,6 +15,8 @@ import {
   TextInput,
 } from 'suomifi-ui-components';
 import { v4 } from 'uuid';
+import { ConceptTermType, ItemType } from './concept-term-block-types';
+import ListBlock from '../list-block';
 import {
   CheckboxBlock,
   DropdownBlock,
@@ -24,7 +26,6 @@ import {
   TermEquivalencyBlock,
   WiderTextareaBlock,
 } from './concept-terms-block.styles';
-import NotesBlock from './notes-block';
 
 interface NewTermModalProps {
   setVisible: (value: boolean) => void;
@@ -39,8 +40,13 @@ export default function NewTermModal({
 }: NewTermModalProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
+  const [invalidData, setInvalidData] = useState({
+    prefLabel: false,
+    termType: false,
+    language: false,
+  });
   const [isHomographic, setIsHomographic] = useState(false);
-  const [termData, setTermData] = useState({
+  const [termData, setTermData] = useState<ConceptTermType>({
     changeNote: '',
     draftComment: '',
     editorialNote: [],
@@ -62,9 +68,17 @@ export default function NewTermModal({
     wordClass: '',
   });
 
-  const handleUpdate = (key: string, value: string | string[]) => {
-    const updatedTerm = termData;
-    updatedTerm[key] = value;
+  const handleUpdate = (
+    key: keyof ConceptTermType,
+    value?: string | ItemType[] | null
+  ) => {
+    let updatedTerm = termData;
+    updatedTerm = { ...updatedTerm, [key]: value };
+
+    if (['prefLabel', 'termType', 'language'].includes(key)) {
+      setInvalidData(validateFormData(updatedTerm));
+    }
+
     setTermData(updatedTerm);
   };
 
@@ -76,6 +90,17 @@ export default function NewTermModal({
   };
 
   const handleClick = () => {
+    const invalidKeys = validateFormData(termData);
+    setInvalidData(invalidKeys);
+
+    if (
+      Object.keys(invalidKeys).filter(
+        (key) => invalidKeys[key as keyof typeof invalidKeys]
+      ).length > 0
+    ) {
+      return;
+    }
+
     appendTerm(termData);
     setVisible(false);
   };
@@ -94,6 +119,7 @@ export default function NewTermModal({
           labelText={t('term-name-label')}
           defaultValue={termData.prefLabel}
           onBlur={(e) => handleUpdate('prefLabel', e.target.value)}
+          status={invalidData.prefLabel ? 'error' : undefined}
         />
 
         <CheckboxBlock onClick={() => handleSetIsHomographic()}>
@@ -113,6 +139,12 @@ export default function NewTermModal({
           labelText="Termin typppi"
           name="term-type-radio-button-group"
           onChange={(e) => handleUpdate('termType', e)}
+          groupHintText={
+            invalidData.termType
+              ? 'Termin tyyppi pitää olla valittu'
+              : undefined
+          }
+          $isInvalid={invalidData.termType}
         >
           <RadioButton
             value="synonym"
@@ -146,6 +178,7 @@ export default function NewTermModal({
           onItemSelectionChange={(e) =>
             handleUpdate('language', e?.labelText || '')
           }
+          status={invalidData.language ? 'error' : undefined}
         />
 
         <DropdownBlock
@@ -216,7 +249,7 @@ export default function NewTermModal({
           optionalText={t('optional')}
           hintText={t('term-sources-hint-text')}
           visualPlaceholder={t('term-sources-placeholder')}
-          onChange={(e) => handleUpdate('sources', e.target.value)}
+          onChange={(e) => handleUpdate('source', e.target.value)}
         />
 
         <Separator isLarge />
@@ -240,10 +273,11 @@ export default function NewTermModal({
           onChange={(e) => handleUpdate('historyNote', e.target.value)}
         />
 
-        <NotesBlock
-          update={() => {
-            console.log('temp');
-          }}
+        <ListBlock
+          update={handleUpdate}
+          items={termData.editorialNote}
+          itemsKey={'editorialNote'}
+          noLangOption
         />
 
         <Separator isLarge />
@@ -342,4 +376,26 @@ export default function NewTermModal({
       </ModalFooter>
     </Modal>
   );
+}
+
+function validateFormData(data: any) {
+  const invalidData = {
+    prefLabel: false,
+    termType: false,
+    language: false,
+  };
+
+  if (!data.prefLabel || data.prefLabel === '') {
+    invalidData.prefLabel = true;
+  }
+
+  if (!data.termType || data.termType === '') {
+    invalidData.termType = true;
+  }
+
+  if (!data.language || data.language === '') {
+    invalidData.language = true;
+  }
+
+  return invalidData;
 }

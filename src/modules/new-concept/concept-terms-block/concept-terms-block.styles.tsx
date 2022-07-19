@@ -61,11 +61,27 @@ export const TermEquivalencyBlock = styled(Block)`
   }
 `;
 
-export const RadioButtonGroupSpaced = styled(RadioButtonGroup)`
+export const RadioButtonGroupSpaced = styled(RadioButtonGroup)<{
+  $isInvalid?: boolean;
+}>`
   margin: ${(props) => props.theme.suomifi.spacing.m} 0;
   max-width: 290px;
+
+  .fi-hint-text {
+    font-weight: 600;
+    color: ${(props) => props.theme.suomifi.colors.alertBase};
+  }
+
+  ${(props) =>
+    props.$isInvalid &&
+    `
+    .fi-icon-radio-base {
+      stroke: ${props.theme.suomifi.colors.alertBase} !important;
+      stroke-width: 1.3;
+    }
+  `}
 `;
 
 export const OtherTermsExpanderGroup = styled(ExpanderGroup)`
-  margin-bottom: ${props => props.theme.suomifi.spacing.m};
+  margin-bottom: ${(props) => props.theme.suomifi.spacing.m};
 `;

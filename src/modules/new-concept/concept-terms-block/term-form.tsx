@@ -9,6 +9,8 @@ import {
   SingleSelect,
   TextInput,
 } from 'suomifi-ui-components';
+import ListBlock from '../list-block';
+import { ConceptTermType, ItemType } from './concept-term-block-types';
 import {
   CheckboxBlock,
   DropdownBlock,
@@ -16,18 +18,23 @@ import {
   MediumHeading,
   WiderTextareaBlock,
 } from './concept-terms-block.styles';
-import NotesBlock from './notes-block';
 import TermTypeModal from './term-type-modal';
 
 export interface TermFormProps {
-  term: any;
-  update: (value: any) => void;
+  term: ConceptTermType;
+  update: (value: {
+    termId: string;
+    key: keyof ConceptTermType;
+    value: string | ItemType[];
+  }) => void;
 }
 
 export default function TermForm({ term, update }: TermFormProps) {
   const { t } = useTranslation('admin');
   const [modalVisible, setModalVisible] = useState(false);
-  const [isHomographic, setIsHomographic] = useState(term.termHomographNumber ? true : false);
+  const [isHomographic, setIsHomographic] = useState(
+    term.termHomographNumber ? true : false
+  );
 
   const termStyle = [{ labelText: 'puhekieli', uniqueItemId: 'spoken-form' }];
   const termFamily = [
@@ -52,11 +59,14 @@ export default function TermForm({ term, update }: TermFormProps) {
 
   const wordClass = [{ labelText: 'adj.', uniqueItemId: 'adjective' }];
 
-  const handleUpdate = (key: string, value?: string | string[] | null) => {
+  const handleUpdate = (
+    key: keyof ConceptTermType,
+    value?: string | ItemType[] | null
+  ) => {
     update({
       termId: term.id,
-      key: key,
-      value: value,
+      key: key as keyof ConceptTermType,
+      value: value as string | ItemType[],
     });
   };
 
@@ -180,7 +190,12 @@ export default function TermForm({ term, update }: TermFormProps) {
         onBlur={(e) => handleUpdate('historyNote', e.target.value)}
       />
 
-      <NotesBlock update={handleUpdate} />
+      <ListBlock
+        update={handleUpdate}
+        items={term.editorialNote}
+        itemsKey={'editorialNote'}
+        noLangOption
+      />
 
       <Separator isLarge />
 
@@ -196,8 +211,9 @@ export default function TermForm({ term, update }: TermFormProps) {
           visualPlaceholder="Valitse termin tyyli"
           items={termStyle}
           defaultSelectedItem={
-            term.termStyle &&
-            termStyle.filter((ts) => ts.uniqueItemId === term.termStyle)[0]
+            term.termStyle
+              ? termStyle.filter((ts) => ts.uniqueItemId === term.termStyle)[0]
+              : undefined
           }
           onItemSelect={(e) => handleUpdate('termStyle', e)}
         />
@@ -211,8 +227,11 @@ export default function TermForm({ term, update }: TermFormProps) {
           visualPlaceholder="Valitse termin suku"
           items={termFamily}
           defaultSelectedItem={
-            term.termFamily &&
-            termFamily.filter((ts) => ts.uniqueItemId === term.termFamily)[0]
+            term.termFamily
+              ? termFamily.filter(
+                  (ts) => ts.uniqueItemId === term.termFamily
+                )[0]
+              : undefined
           }
           onItemSelect={(e) => handleUpdate('termFamily', e)}
         />
@@ -226,10 +245,11 @@ export default function TermForm({ term, update }: TermFormProps) {
           visualPlaceholder="Valitse termin luku"
           items={termConjugation}
           defaultSelectedItem={
-            term.termConjugation &&
-            termConjugation.filter(
-              (ts) => ts.uniqueItemId === term.termConjugation
-            )[0]
+            term.termConjugation
+              ? termConjugation.filter(
+                  (ts) => ts.uniqueItemId === term.termConjugation
+                )[0]
+              : undefined
           }
           onItemSelect={(e) => handleUpdate('termConjugation', e)}
         />
@@ -244,8 +264,9 @@ export default function TermForm({ term, update }: TermFormProps) {
           visualPlaceholder="Valitse sanaluokka"
           items={wordClass}
           defaultSelectedItem={
-            term.wordClass &&
-            wordClass.filter((ts) => ts.uniqueItemId === term.wordClass)[0]
+            term.wordClass
+              ? wordClass.filter((ts) => ts.uniqueItemId === term.wordClass)[0]
+              : undefined
           }
           onItemSelect={(e) => handleUpdate('wordClass', e)}
         />
