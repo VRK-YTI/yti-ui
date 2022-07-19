@@ -25,11 +25,13 @@ const NewTermModal = dynamic(() => import('./new-term-modal'));
 export interface ConceptTermsBlockProps {
   languages: string[];
   preferredTerms: Property[];
+  updateTerms: (value: any) => void;
 }
 
 export default function ConceptTermsBlock({
   languages,
   preferredTerms,
+  updateTerms,
 }: ConceptTermsBlockProps) {
   const { t } = useTranslation('admin');
   const [modalVisible, setModalVisible] = useState(false);
@@ -61,15 +63,15 @@ export default function ConceptTermsBlock({
   const handleUpdate = ({ termId, key, value }: ConceptTermUpdateProps) => {
     let updatedTerm = terms.filter((term) => term.id === termId)[0];
     updatedTerm = { ...updatedTerm, [key]: value };
+    const updatedTerms = terms.map((term) => {
+      if (term.id === termId) {
+        return updatedTerm;
+      }
+      return term;
+    });
 
-    setTerms(
-      terms.map((term) => {
-        if (term.id === termId) {
-          return updatedTerm;
-        }
-        return term;
-      })
-    );
+    setTerms(updatedTerms);
+    updateTerms(updatedTerms);
   };
 
   const handleCheck = (id: string, state: boolean) => {

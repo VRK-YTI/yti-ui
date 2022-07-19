@@ -29,7 +29,9 @@ interface BasicInfoType {
   relationalInfo: {};
 }
 
-export default function ConceptBasicInformation() {
+export default function ConceptBasicInformation({
+  updateBasicInformation,
+}: any) {
   const { t } = useTranslation('admin');
   const [basicInfo, setBasicInfo] = useState<BasicInfoType>({
     definition: {},
@@ -44,12 +46,16 @@ export default function ConceptBasicInformation() {
 
   const handleBasicInfoUpdate = ({ key, lang, value }: BasicInfoUpdate) => {
     if (lang && key === 'definition') {
-      setBasicInfo((basicInfo) => ({
+      const newBasicInfo = {
         ...basicInfo,
         ['definition']: { ...basicInfo['definition'], [lang]: value },
-      }));
+      };
+      setBasicInfo(newBasicInfo);
+      updateBasicInformation(newBasicInfo);
     } else {
-      setBasicInfo((basicInfo) => ({ ...basicInfo, [key]: value }));
+      const newBasicInfo = { ...basicInfo, [key]: value };
+      setBasicInfo(newBasicInfo);
+      updateBasicInformation(newBasicInfo);
     }
   };
 
@@ -104,14 +110,14 @@ export default function ConceptBasicInformation() {
         })}
         optionalText={t('optional')}
         visualPlaceholder={t('give-definition')}
-        onChange={(e) =>
+        onBlur={(e) =>
           handleBasicInfoUpdate({
             key: 'definition',
             lang: lang,
             value: e.target.value,
           })
         }
-        value={
+        defaultValue={
           basicInfo.definition[lang as keyof BasicInfoType['definition']] ?? ''
         }
       />
@@ -124,10 +130,13 @@ export default function ConceptBasicInformation() {
         labelText={t('subject')}
         hintText={t('subject-hint-text')}
         visualPlaceholder={t('subject-visual-placeholder')}
-        onChange={(e) =>
-          handleBasicInfoUpdate({ key: 'subject', value: e as string })
+        onBlur={(e) =>
+          handleBasicInfoUpdate({
+            key: 'subject',
+            value: e.target.value as string,
+          })
         }
-        value={basicInfo.subject}
+        defaultValue={basicInfo.subject}
       />
     );
   }

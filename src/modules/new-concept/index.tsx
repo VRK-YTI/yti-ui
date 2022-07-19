@@ -16,6 +16,9 @@ import FormFooter from './form-footer';
 import { NewConceptBlock } from './new-concept.styles';
 import ConceptTermsBlock from './concept-terms-block';
 import { asString } from '@app/common/utils/hooks/useUrlState';
+import { useState } from 'react';
+import generateConcept from './generate-concept';
+import { useAddConceptMutation } from '@app/common/components/modify/modify.slice';
 
 interface NewConceptProps {
   terminologyId: string;
@@ -25,9 +28,30 @@ interface NewConceptProps {
 export default function NewConcept({ terminologyId }: NewConceptProps) {
   const { t } = useTranslation('concept');
   const router = useRouter();
+  const [addConcept] = useAddConceptMutation();
   const { data: terminology } = useGetVocabularyQuery({
     id: terminologyId,
   });
+
+  const [formData, setFormData] = useState({
+    terms: [],
+    basicInformation: {},
+  });
+
+  const HandlePost = () => {
+    const concept = generateConcept(formData);
+    console.log(concept);
+    addConcept(concept);
+  };
+
+  const updateTerms = (terms: any) => {
+    setFormData({ ...formData, terms: terms });
+  };
+
+  const updateBasicInformation = (basicInfo: any) => {
+    console.log(basicInfo);
+    setFormData({ ...formData, basicInformation: basicInfo });
+  };
 
   const languages =
     terminology?.properties.language?.map(({ value }) => value) ?? [];
@@ -79,11 +103,14 @@ export default function NewConcept({ terminologyId }: NewConceptProps) {
         <ConceptTermsBlock
           languages={languages}
           preferredTerms={preferredTerms}
+          updateTerms={updateTerms}
         />
 
-        <ConceptBasicInformation />
+        <ConceptBasicInformation
+          updateBasicInformation={updateBasicInformation}
+        />
 
-        <FormFooter />
+        <FormFooter handlePost={HandlePost} />
       </NewConceptBlock>
     </>
   );
