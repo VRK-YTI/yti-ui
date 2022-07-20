@@ -13,10 +13,11 @@ import {
   ConceptTermType,
   ItemType,
 } from '../concept-terms-block/concept-term-block-types';
+import { BasicInfoType } from '../basic-information/concept-basic-information-types';
 
 interface ListBlockProps {
   update: (
-    key: keyof ConceptTermType,
+    key: keyof ConceptTermType | keyof BasicInfoType['orgInfo'],
     value?: string | ItemType[] | null
   ) => void;
   items: ItemType[];

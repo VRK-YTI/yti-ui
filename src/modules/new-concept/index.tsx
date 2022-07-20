@@ -19,6 +19,12 @@ import { asString } from '@app/common/utils/hooks/useUrlState';
 import { useState } from 'react';
 import generateConcept from './generate-concept';
 import { useAddConceptMutation } from '@app/common/components/modify/modify.slice';
+import { v4 } from 'uuid';
+import {
+  ConceptTermType,
+  ItemType,
+} from './concept-terms-block/concept-term-block-types';
+import { BasicInfoType } from './basic-information/concept-basic-information-types';
 
 interface NewConceptProps {
   terminologyId: string;
@@ -33,31 +39,83 @@ export default function NewConcept({ terminologyId }: NewConceptProps) {
     id: terminologyId,
   });
 
-  const [formData, setFormData] = useState({
-    terms: [],
-    basicInformation: {},
+  const [languages] = useState(
+    terminology?.properties.language?.map(({ value }) => value) ?? []
+  );
+  const [preferredTerms] = useState(
+    languages
+      .map((lang) => ({ lang, value: asString(router.query[lang]), regex: '' }))
+      .filter(({ value }) => !!value)
+  );
+
+  const [formData, setFormData] = useState<{
+    terms: ConceptTermType[];
+    basicInformation: BasicInfoType;
+  }>({
+    terms: preferredTerms.map((term) => ({
+      changeNote: '',
+      draftComment: '',
+      editorialNote: [] as ItemType[],
+      historyNote: '',
+      id: v4(),
+      language: term.lang,
+      prefLabel: term.value,
+      scope: '',
+      source: '',
+      status: 'draft',
+      termConjugation: '',
+      termEquivalency: '',
+      termEquivalencyRelation: '',
+      termFamily: '',
+      termHomographNumber: '',
+      termInfo: '',
+      termStyle: '',
+      termType: 'recommended-term',
+      wordClass: '',
+    })),
+    basicInformation: {
+      definition: {},
+      example: [],
+      subject: '',
+      note: [],
+      diagramAndSource: {
+        diagram: [],
+        sources: ''
+      },
+      orgInfo: {
+        changeHistory: '',
+        editorialNote: [],
+        etymology: '',
+      },
+      otherInfo: {
+        conceptClass: '',
+        wordClass: '',
+      },
+      relationalInfo: {
+        broaderConcept: [],
+        narrowerConcept: [],
+        relatedConcept: [],
+        isPartOfConcept: [],
+        hasPartConcept: [],
+        relatedConceptInOther: [],
+        matchInOther: [],
+      },
+    },
   });
 
-  const HandlePost = () => {
+  const handlePost = () => {
     const concept = generateConcept(formData);
     console.log(concept);
-    addConcept(concept);
+    //addConcept(concept);
   };
 
-  const updateTerms = (terms: any) => {
+  const updateTerms = (terms: ConceptTermType[]) => {
     setFormData({ ...formData, terms: terms });
   };
 
-  const updateBasicInformation = (basicInfo: any) => {
-    console.log(basicInfo);
+  const updateBasicInformation = (basicInfo: BasicInfoType) => {
     setFormData({ ...formData, basicInformation: basicInfo });
   };
-
-  const languages =
-    terminology?.properties.language?.map(({ value }) => value) ?? [];
-  const preferredTerms = languages
-    .map((lang) => ({ lang, value: asString(router.query[lang]), regex: '' }))
-    .filter(({ value }) => !!value);
 
   return (
     <>
@@ -102,15 +160,17 @@ export default function NewConcept({ terminologyId }: NewConceptProps) {
 
         <ConceptTermsBlock
           languages={languages}
-          preferredTerms={preferredTerms}
           updateTerms={updateTerms}
+          initialValues={formData.terms}
         />
 
         <ConceptBasicInformation
           updateBasicInformation={updateBasicInformation}
+          initialValues={formData.basicInformation}
+          languages={preferredTerms}
         />
 
-        <FormFooter handlePost={HandlePost} />
+        <FormFooter handlePost={handlePost} />
       </NewConceptBlock>
     </>
   );

@@ -9,9 +9,25 @@ import {
 } from 'suomifi-ui-components';
 import { ModalContentFitted, ModalSmWidth } from './new-diagram-or-link.styles';
 
-export default function NewDiagramOrLink() {
+interface NewDiagramOrLinkProps {
+  addDiagram: (value: any) => void;
+}
+
+export default function NewDiagramOrLink({
+  addDiagram,
+}: NewDiagramOrLinkProps) {
   const { t } = useTranslation('admin');
   const [visible, setVisible] = useState(false);
+  const [diagramInfo, setDiagramInfo] = useState({
+    diagramName: '',
+    diagramUrl: '',
+    description: '',
+  });
+
+  const handleClick = () => {
+    addDiagram(diagramInfo);
+    setVisible(false);
+  };
 
   return (
     <>
@@ -26,17 +42,30 @@ export default function NewDiagramOrLink() {
         <ModalContentFitted>
           <ModalTitle>{t('add-new-diagram-or-link')}</ModalTitle>
 
-          <TextInput labelText={t('diagram-name')} />
-          <TextInput labelText={t('diagram-url')} />
+          <TextInput
+            labelText={t('diagram-name')}
+            onBlur={(e) =>
+              setDiagramInfo({ ...diagramInfo, diagramName: e.target.value })
+            }
+          />
+          <TextInput
+            labelText={t('diagram-url')}
+            onBlur={(e) =>
+              setDiagramInfo({ ...diagramInfo, diagramUrl: e.target.value })
+            }
+          />
           <Textarea
             labelText={t('description')}
             optionalText={t('optional')}
             visualPlaceholder={t('sources-placeholder')}
+            onBlur={(e) =>
+              setDiagramInfo({ ...diagramInfo, description: e.target.value })
+            }
             fullWidth
           />
         </ModalContentFitted>
         <ModalFooter>
-          <Button>{t('save')}</Button>
+          <Button onClick={() => handleClick()}>{t('save')}</Button>
           <Button onClick={() => setVisible(false)} variant="secondary">
             {t('cancel-variant')}
           </Button>

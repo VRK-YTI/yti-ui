@@ -5,7 +5,7 @@ import {
   SingleSelect,
   TextInput,
 } from 'suomifi-ui-components';
-import { BasicInfoUpdate } from './concept-basic-information-interface';
+import { BasicInfoUpdate } from './concept-basic-information-types';
 import {
   ConceptExpander,
   ExpanderContentFitted,
@@ -29,7 +29,7 @@ export default function OtherInformation({
       key: infoKey,
       value: {
         conceptClass: conceptClass,
-        wordClass: wordClass,
+        wordClass: wordClass?.uniqueItemId ?? '',
       },
     });
   };

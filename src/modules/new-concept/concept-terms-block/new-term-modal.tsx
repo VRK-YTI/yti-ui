@@ -30,7 +30,7 @@ import {
 interface NewTermModalProps {
   setVisible: (value: boolean) => void;
   languages: string[];
-  appendTerm: (value: any) => void;
+  appendTerm: (value: ConceptTermType) => void;
 }
 
 export default function NewTermModal({
@@ -69,7 +69,7 @@ export default function NewTermModal({
   });
 
   const handleUpdate = (
-    key: keyof ConceptTermType,
+    key: string,
     value?: string | ItemType[] | null
   ) => {
     let updatedTerm = termData;
@@ -378,7 +378,7 @@ export default function NewTermModal({
   );
 }
 
-function validateFormData(data: any) {
+function validateFormData(data: ConceptTermType) {
   const invalidData = {
     prefLabel: false,
     termType: false,

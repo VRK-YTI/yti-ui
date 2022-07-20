@@ -24,7 +24,7 @@ export interface TermFormProps {
   term: ConceptTermType;
   update: (value: {
     termId: string;
-    key: keyof ConceptTermType;
+    key: string;
     value: string | ItemType[];
   }) => void;
 }
@@ -59,14 +59,11 @@ export default function TermForm({ term, update }: TermFormProps) {
 
   const wordClass = [{ labelText: 'adj.', uniqueItemId: 'adjective' }];
 
-  const handleUpdate = (
-    key: keyof ConceptTermType,
-    value?: string | ItemType[] | null
-  ) => {
+  const handleUpdate = (key: string, value?: string | ItemType[] | null) => {
     update({
       termId: term.id,
-      key: key as keyof ConceptTermType,
-      value: value as string | ItemType[],
+      key: key,
+      value: value ?? '',
     });
   };
 
@@ -117,7 +114,7 @@ export default function TermForm({ term, update }: TermFormProps) {
           </BasicBlockExtraWrapper>
         }
       >
-        {t('concept-preferred-terms-title')}
+        {term.termType}
       </BasicBlock>
       <DropdownBlock
         labelText={t('term-status-label')}

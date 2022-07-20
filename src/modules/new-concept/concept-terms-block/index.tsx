@@ -12,53 +12,28 @@ import {
 } from './concept-terms-block.styles';
 import TermExpander from './term-expander';
 import TermForm from './term-form';
-import { Property } from '@app/common/interfaces/termed-data-types.interface';
-import { v4 } from 'uuid';
 import {
   ConceptTermType,
   ConceptTermUpdateProps,
-  ItemType,
 } from './concept-term-block-types';
 
 const NewTermModal = dynamic(() => import('./new-term-modal'));
 
 export interface ConceptTermsBlockProps {
   languages: string[];
-  preferredTerms: Property[];
-  updateTerms: (value: any) => void;
+  updateTerms: (value: ConceptTermType[]) => void;
+  initialValues: ConceptTermType[];
 }
 
 export default function ConceptTermsBlock({
   languages,
-  preferredTerms,
   updateTerms,
+  initialValues,
 }: ConceptTermsBlockProps) {
   const { t } = useTranslation('admin');
   const [modalVisible, setModalVisible] = useState(false);
   const [checkedTerms, setCheckedTerms] = useState<string[]>([]);
-  const [terms, setTerms] = useState<ConceptTermType[]>(
-    preferredTerms.map((term) => ({
-      changeNote: '',
-      draftComment: '',
-      editorialNote: [] as ItemType[],
-      historyNote: '',
-      id: v4(),
-      language: term.lang,
-      prefLabel: term.value,
-      scope: '',
-      source: '',
-      status: 'draft',
-      termConjugation: '',
-      termEquivalency: '',
-      termEquivalencyRelation: '',
-      termFamily: '',
-      termHomographNumber: '',
-      termInfo: '',
-      termStyle: '',
-      termType: 'recommended-term',
-      wordClass: '',
-    }))
-  );
+  const [terms, setTerms] = useState<ConceptTermType[]>(initialValues);
 
   const handleUpdate = ({ termId, key, value }: ConceptTermUpdateProps) => {
     let updatedTerm = terms.filter((term) => term.id === termId)[0];
@@ -89,12 +64,16 @@ export default function ConceptTermsBlock({
   };
 
   const handleRemoveTerms = () => {
-    setTerms(terms.filter((term) => !checkedTerms.includes(term.id)));
+    const newTerms = terms.filter((term) => !checkedTerms.includes(term.id));
+    setTerms(newTerms);
+    updateTerms(newTerms);
     setCheckedTerms([]);
   };
 
   const appendTerm = (newTerm: ConceptTermType) => {
-    setTerms([...terms, newTerm]);
+    const newTerms = [...terms, newTerm];
+    setTerms(newTerms);
+    updateTerms(newTerms);
   };
 
   return (

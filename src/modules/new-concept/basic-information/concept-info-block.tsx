@@ -3,7 +3,7 @@ import { BasicBlockExtraWrapper } from '@app/common/components/block/block.style
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { Button, Dropdown, DropdownItem } from 'suomifi-ui-components';
-import { BasicInfoUpdate } from './concept-basic-information-interface';
+import { BasicInfo, BasicInfoUpdate } from './concept-basic-information-types';
 import {
   ConceptInfoBlockListItem,
   ConceptInfoBlockWrapper,
@@ -17,17 +17,11 @@ interface ConceptInfoBlockProps {
 }
 
 interface ConceptInfoListItemProps {
-  item: ItemType;
+  item: BasicInfo;
   infoKey: string;
-  handleUpdate: (value: ItemType) => void;
-  handleRemove: (id: number) => void;
+  handleUpdate: (value: BasicInfo) => void;
+  handleRemove: (id: string) => void;
   noLangOption?: boolean;
-}
-
-interface ItemType {
-  id: number;
-  lang?: string;
-  value: string;
 }
 
 export default function ConceptInfoBlock({
@@ -36,10 +30,10 @@ export default function ConceptInfoBlock({
   noLangOption = false,
 }: ConceptInfoBlockProps) {
   const { t } = useTranslation('admin');
-  const [list, setList] = useState<ItemType[]>([]);
-  const [id, setId] = useState(0);
+  const [list, setList] = useState<BasicInfo[]>([]);
+  const [id, setId] = useState('0');
 
-  const handleUpdate = ({ id, lang, value }: ItemType) => {
+  const handleUpdate = ({ id, lang, value }: BasicInfo) => {
     const updatedList = list.map((item) => {
       if (item.id === id) {
         return {
@@ -55,7 +49,7 @@ export default function ConceptInfoBlock({
     update({ key: infoKey, value: updatedList });
   };
 
-  const handleRemove = (id: number) => {
+  const handleRemove = (id: string) => {
     const updatedList = list.filter((item) => item.id !== id);
     setList(updatedList);
     update({ key: infoKey, value: updatedList });
@@ -117,7 +111,7 @@ function ConceptInfoListItem({
             labelText={t(`${infoKey}-textarea-label-text`)}
             visualPlaceholder={t(`${infoKey}-textarea-placeholder`)}
             onChange={(e) => setText(e.target.value)}
-            onBlur={(e) => handleUpdate({ id: item.id, value: text })}
+            onBlur={() => handleUpdate({ id: item.id, value: text })}
             value={text}
             $noTopMargin
           />

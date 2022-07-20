@@ -11,41 +11,32 @@ import RelationalInformation from './relational-information';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import ConceptInfoBlock from './concept-info-block';
-import { BasicInfoUpdate } from './concept-basic-information-interface';
+import {
+  BasicInfoType,
+  BasicInfoUpdate,
+} from './concept-basic-information-types';
 import { ExpanderGroup } from 'suomifi-ui-components';
 
-interface BasicInfoType {
-  definition: {
-    fi?: string;
-    sv?: string;
-    en?: string;
-  };
-  example: [];
-  subject: string;
-  note: [];
-  diagramAndSource: [];
-  orgInfo: {};
-  otherInfo: {};
-  relationalInfo: {};
+interface ConceptBasicInformationProps {
+  updateBasicInformation: (value: BasicInfoType) => void;
+  initialValues: BasicInfoType;
+  languages: {
+    lang: string;
+    value: string;
+    regex: string;
+  }[];
 }
 
 export default function ConceptBasicInformation({
   updateBasicInformation,
-}: any) {
+  initialValues,
+  languages,
+}: ConceptBasicInformationProps) {
   const { t } = useTranslation('admin');
-  const [basicInfo, setBasicInfo] = useState<BasicInfoType>({
-    definition: {},
-    example: [],
-    subject: '',
-    note: [],
-    diagramAndSource: [],
-    orgInfo: {},
-    otherInfo: {},
-    relationalInfo: {},
-  });
+  const [basicInfo, setBasicInfo] = useState<BasicInfoType>(initialValues);
 
   const handleBasicInfoUpdate = ({ key, lang, value }: BasicInfoUpdate) => {
-    if (lang && key === 'definition') {
+    if (lang && key === 'definition' && typeof value === 'string') {
       const newBasicInfo = {
         ...basicInfo,
         ['definition']: { ...basicInfo['definition'], [lang]: value },
@@ -75,7 +66,7 @@ export default function ConceptBasicInformation({
 
       <ExpanderGroup closeAllText="" openAllText="">
         <ConceptDiagramsAndSources
-          infoKey="note"
+          infoKey="diagramAndSource"
           update={handleBasicInfoUpdate}
         />
         <OrganizationInformation
@@ -94,9 +85,9 @@ export default function ConceptBasicInformation({
   function renderDefinitions() {
     return (
       <>
-        {renderDefinitionTextarea('fi')}
-        {renderDefinitionTextarea('sv')}
-        {renderDefinitionTextarea('en')}
+        {languages.map(language => {
+          return renderDefinitionTextarea(language.lang);
+        })}
       </>
     );
   }
@@ -117,9 +108,7 @@ export default function ConceptBasicInformation({
             value: e.target.value,
           })
         }
-        defaultValue={
-          basicInfo.definition[lang as keyof BasicInfoType['definition']] ?? ''
-        }
+        defaultValue={basicInfo.definition[lang] ?? ''}
       />
     );
   }
@@ -133,7 +122,7 @@ export default function ConceptBasicInformation({
         onBlur={(e) =>
           handleBasicInfoUpdate({
             key: 'subject',
-            value: e.target.value as string,
+            value: e.target.value,
           })
         }
         defaultValue={basicInfo.subject}
