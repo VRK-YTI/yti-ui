@@ -80,7 +80,7 @@ export default function NewConcept({ terminologyId }: NewConceptProps) {
       note: [],
       diagramAndSource: {
         diagram: [],
-        sources: ''
+        sources: '',
       },
       orgInfo: {
         changeHistory: '',

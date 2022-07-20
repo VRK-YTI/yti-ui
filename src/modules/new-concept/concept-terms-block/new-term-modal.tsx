@@ -68,10 +68,7 @@ export default function NewTermModal({
     wordClass: '',
   });
 
-  const handleUpdate = (
-    key: string,
-    value?: string | ItemType[] | null
-  ) => {
+  const handleUpdate = (key: string, value?: string | ItemType[] | null) => {
     let updatedTerm = termData;
     updatedTerm = { ...updatedTerm, [key]: value };
 

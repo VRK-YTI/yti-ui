@@ -39,10 +39,10 @@ export default function generateConcept(data: generateConceptProps) {
       ],
       editorialNote: term.editorialNote
         ? term.editorialNote.map((note) => ({
-          lang: '',
-          regex: regex,
-          value: note.value,
-        }))
+            lang: '',
+            regex: regex,
+            value: note.value,
+          }))
         : [],
       historyNote: [
         {
@@ -67,12 +67,12 @@ export default function generateConcept(data: generateConceptProps) {
       ],
       source: term.source
         ? [
-          {
-            lang: '',
-            regex: regex,
-            value: term.scope,
-          },
-        ]
+            {
+              lang: '',
+              regex: regex,
+              value: term.scope,
+            },
+          ]
         : [],
       status: [
         {
@@ -199,60 +199,61 @@ export default function generateConcept(data: generateConceptProps) {
     }) ?? [];
 
   if (data.basicInformation.relationalInfo.relatedConceptInOther) {
-    externalTerms = [
-      ...externalTerms,
-      ...data.basicInformation.relationalInfo.relatedConceptInOther.map(
-        (related) => {
-          const id = v4();
-          relatedMatchIds = [...relatedMatchIds, id];
+    externalTerms =
+      [
+        ...externalTerms,
+        ...data.basicInformation.relationalInfo.relatedConceptInOther.map(
+          (related) => {
+            const id = v4();
+            relatedMatchIds = [...relatedMatchIds, id];
 
-          return {
-            createdBy: '',
-            createdDate: now.toISOString(),
-            id: id,
-            lastModifiedBy: '',
-            lastModifiedDate: now.toISOString(),
-            properties: {
-              prefLabel: Object.keys(related.label).map((key) => ({
-                lang: key,
-                regex: regex,
-                value: related.label[key],
-              })),
-              targetGraph: [
-                {
-                  lang: '',
-                  regex: regex,
-                  value: related.terminology.id,
-                },
-              ],
-              targetId: [
-                {
-                  lang: '',
-                  regex: regex,
-                  value: related.id,
-                },
-              ],
-              vocabularyLabel: Object.keys(related.terminology.label).map(
-                (key) => ({
+            return {
+              createdBy: '',
+              createdDate: now.toISOString(),
+              id: id,
+              lastModifiedBy: '',
+              lastModifiedDate: now.toISOString(),
+              properties: {
+                prefLabel: Object.keys(related.label).map((key) => ({
                   lang: key,
                   regex: regex,
-                  value: related.terminology.label[key],
-                })
-              ),
-            },
-            references: {},
-            referrers: {},
-            type: {
-              graph: {
-                id: related.id,
+                  value: related.label[key],
+                })),
+                targetGraph: [
+                  {
+                    lang: '',
+                    regex: regex,
+                    value: related.terminology.id,
+                  },
+                ],
+                targetId: [
+                  {
+                    lang: '',
+                    regex: regex,
+                    value: related.id,
+                  },
+                ],
+                vocabularyLabel: Object.keys(related.terminology.label).map(
+                  (key) => ({
+                    lang: key,
+                    regex: regex,
+                    value: related.terminology.label[key],
+                  })
+                ),
               },
-              id: 'ConceptLink',
-              uri: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#Resource',
-            },
-          };
-        }
-      ),
-    ] ?? [];
+              references: {},
+              referrers: {},
+              type: {
+                graph: {
+                  id: related.id,
+                },
+                id: 'ConceptLink',
+                uri: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#Resource',
+              },
+            };
+          }
+        ),
+      ] ?? [];
   }
 
   return [
@@ -288,17 +289,17 @@ export default function generateConcept(data: generateConceptProps) {
         ],
         definition: data.basicInformation.definition
           ? Object.keys(data.basicInformation.definition).map((lang) => ({
-            lang: lang,
-            regex: regex,
-            value: data.basicInformation.definition[lang] ?? '',
-          }))
-          : [
-            {
-              lang: '',
+              lang: lang,
               regex: regex,
-              value: '',
-            },
-          ],
+              value: data.basicInformation.definition[lang] ?? '',
+            }))
+          : [
+              {
+                lang: '',
+                regex: regex,
+                value: '',
+              },
+            ],
         editorialNote: data.basicInformation.orgInfo.editorialNote.map(
           (note) => ({
             lang: '',
@@ -362,19 +363,17 @@ export default function generateConcept(data: generateConceptProps) {
       },
       references: {
         altLabelXl: data.terms
-          .filter(term => term.termType === 'synonym')
-          .map(term => (
-            {
-              id: term.id,
-              type: {
-                graph: {
-                  id: '747340b9-8ab6-4aa4-b4e6-5327813505e5',
-                },
-                id: 'Term',
-                uri: 'http://www.w3.org/2008/05/skos-xl#Label'
-              }
-            }
-          )),
+          .filter((term) => term.termType === 'synonym')
+          .map((term) => ({
+            id: term.id,
+            type: {
+              graph: {
+                id: '747340b9-8ab6-4aa4-b4e6-5327813505e5',
+              },
+              id: 'Term',
+              uri: 'http://www.w3.org/2008/05/skos-xl#Label',
+            },
+          })),
         broader: data.basicInformation.relationalInfo.broaderConcept.map(
           (basic) => ({
             id: basic.id,
@@ -398,16 +397,18 @@ export default function generateConcept(data: generateConceptProps) {
             uri: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#Resource',
           },
         })),
-        hasPart: data.basicInformation.relationalInfo.hasPartConcept.map((part) => ({
-          id: part.id,
-          type: {
-            graph: {
-              id: 'ec43f161-b85d-4786-a4b9-d0da52edfba1',
+        hasPart: data.basicInformation.relationalInfo.hasPartConcept.map(
+          (part) => ({
+            id: part.id,
+            type: {
+              graph: {
+                id: 'ec43f161-b85d-4786-a4b9-d0da52edfba1',
+              },
+              id: 'Concept',
+              uri: '',
             },
-            id: 'Concept',
-            uri: '',
-          },
-        })),
+          })
+        ),
         hiddenTerm: [],
         isPartOf: data.basicInformation.relationalInfo.isPartOfConcept.map(
           (part) => ({
@@ -423,32 +424,30 @@ export default function generateConcept(data: generateConceptProps) {
         ),
         narrower: data.basicInformation.relationalInfo.narrowerConcept
           ? data.basicInformation.relationalInfo.narrowerConcept.map(
-            (narrow) => ({
-              id: narrow.id,
-              type: {
-                graph: {
-                  id: 'ec43f161-b85d-4786-a4b9-d0da52edfba1',
+              (narrow) => ({
+                id: narrow.id,
+                type: {
+                  graph: {
+                    id: 'ec43f161-b85d-4786-a4b9-d0da52edfba1',
+                  },
+                  id: 'Concept',
+                  uri: '',
                 },
-                id: 'Concept',
-                uri: '',
-              },
-            })
-          )
+              })
+            )
           : [],
         notRecommendedSynonym: data.terms
-          .filter(term => term.termType === 'not-recommended-synonym')
-          .map(term => (
-            {
-              id: term.id,
-              type: {
-                graph: {
-                  id: '747340b9-8ab6-4aa4-b4e6-5327813505e5',
-                },
-                id: 'Term',
-                uri: 'http://www.w3.org/2008/05/skos-xl#Label'
-              }
-            }
-          )),
+          .filter((term) => term.termType === 'not-recommended-synonym')
+          .map((term) => ({
+            id: term.id,
+            type: {
+              graph: {
+                id: '747340b9-8ab6-4aa4-b4e6-5327813505e5',
+              },
+              id: 'Term',
+              uri: 'http://www.w3.org/2008/05/skos-xl#Label',
+            },
+          })),
         prefLabelXl: data.terms
           .filter((term) => term.termType === 'recommended-term')
           .map((term) => ({
@@ -484,19 +483,17 @@ export default function generateConcept(data: generateConceptProps) {
           },
         })),
         searchTerm: data.terms
-          .filter(term => term.termType === 'search-term')
-          .map(term => (
-            {
-              id: term.id,
-              type: {
-                graph: {
-                  id: '747340b9-8ab6-4aa4-b4e6-5327813505e5',
-                },
-                id: 'Term',
-                uri: 'http://www.w3.org/2008/05/skos-xl#Label'
-              }
-            }
-          )),
+          .filter((term) => term.termType === 'search-term')
+          .map((term) => ({
+            id: term.id,
+            type: {
+              graph: {
+                id: '747340b9-8ab6-4aa4-b4e6-5327813505e5',
+              },
+              id: 'Term',
+              uri: 'http://www.w3.org/2008/05/skos-xl#Label',
+            },
+          })),
       },
       referrers: {},
       type: {

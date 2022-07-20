@@ -85,7 +85,7 @@ export default function ConceptBasicInformation({
   function renderDefinitions() {
     return (
       <>
-        {languages.map(language => {
+        {languages.map((language) => {
           return renderDefinitionTextarea(language.lang);
         })}
       </>

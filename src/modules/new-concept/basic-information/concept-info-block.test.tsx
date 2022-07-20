@@ -17,7 +17,7 @@ describe('concept-info-block', () => {
       key: 'example',
       value: [
         {
-          id: 0,
+          id: '0',
           lang: 'fi',
           value: '',
         },
@@ -61,7 +61,7 @@ describe('concept-info-block', () => {
       key: 'example',
       value: [
         {
-          id: 0,
+          id: '0',
           lang: 'fi',
           value: 'some text',
         },
