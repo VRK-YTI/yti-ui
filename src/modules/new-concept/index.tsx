@@ -16,7 +16,7 @@ import FormFooter from './form-footer';
 import { NewConceptBlock } from './new-concept.styles';
 import ConceptTermsBlock from './concept-terms-block';
 import { asString } from '@app/common/utils/hooks/useUrlState';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import generateConcept from './generate-concept';
 import { useAddConceptMutation } from '@app/common/components/modify/modify.slice';
 import { v4 } from 'uuid';
@@ -34,7 +34,7 @@ interface NewConceptProps {
 export default function NewConcept({ terminologyId }: NewConceptProps) {
   const { t } = useTranslation('concept');
   const router = useRouter();
-  const [addConcept] = useAddConceptMutation();
+  const [addConcept, addConceptStatus] = useAddConceptMutation();
   const { data: terminology } = useGetVocabularyQuery({
     id: terminologyId,
   });
@@ -47,6 +47,8 @@ export default function NewConcept({ terminologyId }: NewConceptProps) {
       .map((lang) => ({ lang, value: asString(router.query[lang]), regex: '' }))
       .filter(({ value }) => !!value)
   );
+  const [postedData, setPostedData] =
+    useState<ReturnType<typeof generateConcept>>();
 
   const [formData, setFormData] = useState<{
     terms: ConceptTermType[];
@@ -105,8 +107,8 @@ export default function NewConcept({ terminologyId }: NewConceptProps) {
 
   const handlePost = () => {
     const concept = generateConcept(formData);
-    console.log(concept);
-    //addConcept(concept);
+    setPostedData(concept);
+    addConcept(concept);
   };
 
   const updateTerms = (terms: ConceptTermType[]) => {
@@ -116,6 +118,17 @@ export default function NewConcept({ terminologyId }: NewConceptProps) {
   const updateBasicInformation = (basicInfo: BasicInfoType) => {
     setFormData({ ...formData, basicInformation: basicInfo });
   };
+
+  useEffect(() => {
+    if (addConceptStatus.isSuccess && postedData) {
+      router.push(
+        `/terminology/${router.query.terminologyId}/concept/${
+          postedData[postedData.length - 1].id
+        }`
+      );
+      console.log(addConceptStatus);
+    }
+  }, [addConceptStatus, postedData, router]);
 
   return (
     <>
