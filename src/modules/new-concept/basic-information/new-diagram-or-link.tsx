@@ -7,10 +7,11 @@ import {
   Textarea,
   TextInput,
 } from 'suomifi-ui-components';
+import { DiagramType } from './concept-basic-information-types';
 import { ModalContentFitted, ModalSmWidth } from './new-diagram-or-link.styles';
 
 interface NewDiagramOrLinkProps {
-  addDiagram: (value: any) => void;
+  addDiagram: (value: DiagramType) => void;
 }
 
 export default function NewDiagramOrLink({

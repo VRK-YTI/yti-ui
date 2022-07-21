@@ -2,7 +2,7 @@ import { BasicBlock } from '@app/common/components/block';
 import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
-import { Button, Dropdown, DropdownItem } from 'suomifi-ui-components';
+import { Button } from 'suomifi-ui-components';
 import {
   ListBlockWrapper,
   ListItem as LI,
@@ -110,7 +110,7 @@ interface ListItemProps {
   item: ItemType;
   itemsKey: string;
   handleRemove: (id: string) => void;
-  handleUpdate: any;
+  handleUpdate: (id: string, value: any) => void;
   noLangOption: boolean;
 }
 
@@ -147,34 +147,4 @@ function ListItem({
   }
 
   return <></>;
-
-  // return (
-  //   <LI>
-  //     <div className="top-row">
-  //       <Dropdown
-  //         labelText={t('language')}
-  //         defaultValue="fi"
-  //         onChange={(e) => handleUpdate({ id: item.id, lang: e, value: text })}
-  //         value={item.lang}
-  //       >
-  //         <DropdownItem value="fi">{t('fi')}</DropdownItem>
-  //         <DropdownItem value="sv">{t('sv')}</DropdownItem>
-  //         <DropdownItem value="en">{t('en')}</DropdownItem>
-  //       </Dropdown>
-  //       <Button
-  //         variant="secondaryNoBorder"
-  //         icon="remove"
-  //         onClick={() => handleRemove(item.id)}
-  //       >
-  //         {t('remove')}
-  //       </Button>
-
-  //       <ListItemTextarea
-  //         defaultValue={item.value}
-  //         $noTopMargin
-  //         onBlur={(e) => handleUpdate(item.id, e.target.value)}
-  //       />
-  //     </div>
-  //   </LI>
-  // );
 }
