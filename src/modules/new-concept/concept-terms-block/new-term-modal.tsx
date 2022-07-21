@@ -110,7 +110,7 @@ export default function NewTermModal({
       variant={!isSmall ? 'default' : 'smallScreen'}
     >
       <ModalContent>
-        <ModalTitle>Uusi termi</ModalTitle>
+        <ModalTitle>{t('new-term')}</ModalTitle>
 
         <TextInput
           labelText={t('term-name-label')}
@@ -125,7 +125,7 @@ export default function NewTermModal({
 
         {isHomographic && (
           <TextInput
-            labelText="Homonyymin järjestysnumero"
+            labelText={t('homograph-number')}
             type="number"
             defaultValue={termData.termHomographNumber}
             onBlur={(e) => handleUpdate('termHomographNumber', e.target.value)}
@@ -133,33 +133,28 @@ export default function NewTermModal({
         )}
 
         <RadioButtonGroupSpaced
-          labelText="Termin typppi"
+          labelText={t('term-type')}
           name="term-type-radio-button-group"
           onChange={(e) => handleUpdate('termType', e)}
           groupHintText={
-            invalidData.termType
-              ? 'Termin tyyppi pitää olla valittu'
-              : undefined
+            invalidData.termType ? t('term-type-error-msg') : undefined
           }
           $isInvalid={invalidData.termType}
         >
-          <RadioButton
-            value="synonym"
-            hintText="Termi, jolla on lähes sama merkitys kuin suositettavalla termillä"
-          >
-            Synonyymi
+          <RadioButton value="synonym" hintText={t('synonym-description')}>
+            {t('synonym')}
           </RadioButton>
           <RadioButton
             value="not-recommended-synonym"
-            hintText="Termi, joka ei kuvaa kielellisesti hyvin käsitettä"
+            hintText={t('not-recommended-term-description')}
           >
-            Ei suositettava synonyymi
+            {t('not-recommended-synonym')}
           </RadioButton>
           <RadioButton
             value="search-term"
-            hintText="Termi, jolla käsitteen voi löytää palvelusta"
+            hintText={t('search-term-description')}
           >
-            Hakutermi
+            {t('search-term')}
           </RadioButton>
         </RadioButtonGroupSpaced>
 
@@ -170,7 +165,7 @@ export default function NewTermModal({
             labelText: language,
             uniqueItemId: language,
           }))}
-          labelText="Kieli"
+          labelText={t('language')}
           noItemsText=""
           onItemSelectionChange={(e) =>
             handleUpdate('language', e?.labelText || '')
@@ -223,21 +218,19 @@ export default function NewTermModal({
 
         <TermEquivalencyBlock>
           <label>
-            Termin vastaavuus
+            {t('term-equivalency')}
             <span> ({t('optional')})</span>
           </label>
-          <span>
-            Termin vastaavuus liittyy saman kieliversion suositettavaan termiin
-          </span>
+          <span>{t('term-equivalency-description')}</span>
           <Dropdown
             labelText=""
             defaultValue="undefined"
             onChange={(e) => handleUpdate('termEquivalency', e)}
           >
-            <DropdownItem value="undefined">Ei valintaa</DropdownItem>
+            <DropdownItem value="undefined">{t('no-selection')}</DropdownItem>
             <DropdownItem value="<">{'<'}</DropdownItem>
             <DropdownItem value=">">{'>'}</DropdownItem>
-            <DropdownItem value="~">Lähes sama kuin (~)</DropdownItem>
+            <DropdownItem value="~">{t('almost-the-same-as')} (~)</DropdownItem>
           </Dropdown>
         </TermEquivalencyBlock>
 
@@ -279,40 +272,44 @@ export default function NewTermModal({
 
         <Separator isLarge />
 
-        <MediumHeading variant="h2">Kieliopilliset lisätiedot</MediumHeading>
+        <MediumHeading variant="h2">
+          {t('additional-grammatical-information')}
+        </MediumHeading>
 
         <GrammaticalBlock>
           <SingleSelect
-            ariaOptionsAvailableText=""
-            clearButtonLabel=""
-            labelText="Termin tyyli"
-            optionalText="valinnainen"
-            noItemsText=""
-            visualPlaceholder="Valitse termin tyyli"
-            items={[{ labelText: 'puhekieli', uniqueItemId: 'spoken-form' }]}
+            ariaOptionsAvailableText={t('available-term-styles')}
+            clearButtonLabel={t('clear-button-label')}
+            labelText={t('term-style')}
+            optionalText={t('optional')}
+            noItemsText={t('no-term-styles-available')}
+            visualPlaceholder={t('choose-term-style')}
+            items={[
+              { labelText: t('spoken-form'), uniqueItemId: 'spoken-form' },
+            ]}
             onItemSelectionChange={(e) =>
               handleUpdate('termStyle', e?.labelText || '')
             }
           />
 
           <SingleSelect
-            ariaOptionsAvailableText=""
-            clearButtonLabel=""
-            labelText="Termin suku"
-            optionalText="valinnainen"
-            noItemsText=""
-            visualPlaceholder="Valitse termin suku"
+            ariaOptionsAvailableText={t('available-term-familes')}
+            clearButtonLabel={t('clear-button-label')}
+            labelText={t('term-family')}
+            optionalText={t('optional')}
+            noItemsText={t('no-term-families-available')}
+            visualPlaceholder={t('choose-term-family')}
             items={[
               {
-                labelText: 'maskuliini',
+                labelText: t('masculine'),
                 uniqueItemId: 'masculine',
               },
               {
-                labelText: 'neutri',
+                labelText: t('neutral'),
                 uniqueItemId: 'neutral',
               },
               {
-                labelText: 'feminiini',
+                labelText: t('feminine'),
                 uniqueItemId: 'feminine',
               },
             ]}
@@ -322,15 +319,15 @@ export default function NewTermModal({
           />
 
           <SingleSelect
-            ariaOptionsAvailableText=""
-            clearButtonLabel=""
-            labelText="Termin luku"
-            optionalText="valinnainen"
-            noItemsText=""
-            visualPlaceholder="Valitse termin luku"
+            ariaOptionsAvailableText={t('available-term-conjugations')}
+            clearButtonLabel={t('clear-button-label')}
+            labelText={t('choose-term-conjugation')}
+            optionalText={t('optional')}
+            noItemsText={t('no-term-conjugations-available')}
+            visualPlaceholder={t('choose-term-conjugation')}
             items={[
-              { labelText: 'yksikkö', uniqueItemId: 'singular' },
-              { labelText: 'monikko', uniqueItemId: 'plural' },
+              { labelText: t('singular'), uniqueItemId: 'singular' },
+              { labelText: t('plural'), uniqueItemId: 'plural' },
             ]}
             onItemSelectionChange={(e) =>
               handleUpdate('termConjugation', e?.labelText || '')
@@ -338,26 +335,26 @@ export default function NewTermModal({
           />
 
           <Dropdown
-            labelText="Termin vastaavuus"
+            labelText={t('term-equivalency')}
             optionalText={t('optional')}
             defaultValue="undefined"
             onChange={(e) => handleUpdate('termEquivalency', e)}
           >
-            <DropdownItem value="undefined">Ei valintaa</DropdownItem>
+            <DropdownItem value="undefined">{t('no-selection')}</DropdownItem>
             <DropdownItem value="<">{'<'}</DropdownItem>
             <DropdownItem value=">">{'>'}</DropdownItem>
-            <DropdownItem value="~">Lähes sama kuin (~)</DropdownItem>
+            <DropdownItem value="~">{t('almost-the-same-as')} (~)</DropdownItem>
           </Dropdown>
 
           <SingleSelect
-            ariaOptionsAvailableText=""
-            clearButtonLabel=""
-            labelText="Termin sanaluokka"
-            optionalText="valinnainen"
-            noItemsText=""
-            hintText="Merkitään jos termi on eri sanaluokasta kuin muunkieliset termit."
-            visualPlaceholder="Valitse sanaluokka"
-            items={[{ labelText: 'test1', uniqueItemId: 'test1' }]}
+            ariaOptionsAvailableText={t('available-term-word-classes')}
+            clearButtonLabel={t('clear-button-label')}
+            labelText={t('term-word-class')}
+            optionalText={t('optional')}
+            noItemsText={t('no-term-word-classes-available')}
+            hintText={t('term-word-class-hint-text')}
+            visualPlaceholder={t('choose-term-word-class')}
+            items={[{ labelText: t('adjective'), uniqueItemId: 'adjective' }]}
             onItemSelectionChange={(e) =>
               handleUpdate('wordClass', e?.labelText || '')
             }
@@ -366,9 +363,9 @@ export default function NewTermModal({
       </ModalContent>
 
       <ModalFooter>
-        <Button onClick={() => handleClick()}>Hyväksy</Button>
+        <Button onClick={() => handleClick()}>{t('accept')}</Button>
         <Button variant="secondary" onClick={() => setVisible(false)}>
-          Peruuta
+          {t('cancel-variant')}
         </Button>
       </ModalFooter>
     </Modal>

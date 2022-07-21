@@ -36,28 +36,30 @@ export default function TermForm({ term, update }: TermFormProps) {
     term.termHomographNumber ? true : false
   );
 
-  const termStyle = [{ labelText: 'puhekieli', uniqueItemId: 'spoken-form' }];
+  const termStyle = [
+    { labelText: t('spoken-form'), uniqueItemId: 'spoken-form' },
+  ];
   const termFamily = [
     {
-      labelText: 'maskuliini',
+      labelText: t('masculine'),
       uniqueItemId: 'masculine',
     },
     {
-      labelText: 'neutri',
+      labelText: t('neutral'),
       uniqueItemId: 'neutral',
     },
     {
-      labelText: 'feminiini',
+      labelText: t('feminine'),
       uniqueItemId: 'feminine',
     },
   ];
 
   const termConjugation = [
-    { labelText: 'yksikkö', uniqueItemId: 'singular' },
-    { labelText: 'monikko', uniqueItemId: 'plural' },
+    { labelText: t('singular'), uniqueItemId: 'singular' },
+    { labelText: t('plural'), uniqueItemId: 'plural' },
   ];
 
-  const wordClass = [{ labelText: 'adj.', uniqueItemId: 'adjective' }];
+  const wordClass = [{ labelText: t('adjective'), uniqueItemId: 'adjective' }];
 
   const handleUpdate = (key: string, value?: string | ItemType[] | null) => {
     update({
@@ -90,7 +92,7 @@ export default function TermForm({ term, update }: TermFormProps) {
       </CheckboxBlock>
 
       {isHomographic && (
-        <BasicBlock title={'Homonyymin järjestysnumero'}>
+        <BasicBlock title={t('homograph-number')}>
           <TextInput
             labelText=""
             type="number"
@@ -114,7 +116,11 @@ export default function TermForm({ term, update }: TermFormProps) {
           </BasicBlockExtraWrapper>
         }
       >
-        {term.termType}
+        {t(
+          term.termType === 'recommended-term'
+            ? `${term.termType}-no-suff`
+            : term.termType
+        )}
       </BasicBlock>
       <DropdownBlock
         labelText={t('term-status-label')}
@@ -196,16 +202,18 @@ export default function TermForm({ term, update }: TermFormProps) {
 
       <Separator isLarge />
 
-      <MediumHeading variant="h2">Kieliopilliset lisätiedot</MediumHeading>
+      <MediumHeading variant="h2">
+        {t('additional-grammatical-information')}
+      </MediumHeading>
 
       <GrammaticalBlock>
         <SingleSelect
-          ariaOptionsAvailableText=""
-          clearButtonLabel=""
-          labelText="Termin tyyli"
-          optionalText="valinnainen"
-          noItemsText=""
-          visualPlaceholder="Valitse termin tyyli"
+          ariaOptionsAvailableText={t('available-term-styles')}
+          clearButtonLabel={t('clear-button-label')}
+          labelText={t('term-style')}
+          optionalText={t('optional')}
+          noItemsText={t('no-term-styles-available')}
+          visualPlaceholder={t('choose-term-style')}
           items={termStyle}
           defaultSelectedItem={
             term.termStyle
@@ -216,12 +224,12 @@ export default function TermForm({ term, update }: TermFormProps) {
         />
 
         <SingleSelect
-          ariaOptionsAvailableText=""
-          clearButtonLabel=""
-          labelText="Termin suku"
-          optionalText="valinnainen"
-          noItemsText=""
-          visualPlaceholder="Valitse termin suku"
+          ariaOptionsAvailableText={t('available-term-families')}
+          clearButtonLabel={t('clear-button-label')}
+          labelText={t('term-family')}
+          optionalText={t('optional')}
+          noItemsText={t('no-term-families-available')}
+          visualPlaceholder={t('choose-term-family')}
           items={termFamily}
           defaultSelectedItem={
             term.termFamily
@@ -234,12 +242,12 @@ export default function TermForm({ term, update }: TermFormProps) {
         />
 
         <SingleSelect
-          ariaOptionsAvailableText=""
-          clearButtonLabel=""
-          labelText="Termin luku"
-          optionalText="valinnainen"
-          noItemsText=""
-          visualPlaceholder="Valitse termin luku"
+          ariaOptionsAvailableText={t('available-term-conjugations')}
+          clearButtonLabel={t('clear-button-label')}
+          labelText={t('term-conjugation')}
+          optionalText={t('optional')}
+          noItemsText={t('no-term-conjugations-available')}
+          visualPlaceholder={t('choose-term-conjugation')}
           items={termConjugation}
           defaultSelectedItem={
             term.termConjugation
@@ -252,13 +260,13 @@ export default function TermForm({ term, update }: TermFormProps) {
         />
 
         <SingleSelect
-          ariaOptionsAvailableText=""
-          clearButtonLabel=""
-          labelText="Termin sanaluokka"
-          optionalText="valinnainen"
-          noItemsText=""
-          hintText="Merkitään jos termi on eri sanaluokasta kuin muunkieliset termit."
-          visualPlaceholder="Valitse sanaluokka"
+          ariaOptionsAvailableText={t('available-term-word-classes')}
+          clearButtonLabel={t('clear-button-label')}
+          labelText={t('term-word-class')}
+          optionalText={t('optional')}
+          noItemsText={t('no-term-word-classes-available')}
+          hintText={t('term-word-class-hint-text')}
+          visualPlaceholder={t('choose-term-word-class')}
           items={wordClass}
           defaultSelectedItem={
             term.wordClass
