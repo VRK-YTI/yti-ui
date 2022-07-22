@@ -3,11 +3,17 @@ import { ConceptTermType } from './concept-terms-block/concept-term-block-types'
 import { BasicInfoType } from './basic-information/concept-basic-information-types';
 
 interface generateConceptProps {
-  terms: ConceptTermType[];
-  basicInformation: BasicInfoType;
+  data: {
+    terms: ConceptTermType[];
+    basicInformation: BasicInfoType;
+  };
+  terminologyId: string;
 }
 
-export default function generateConcept(data: generateConceptProps) {
+export default function generateConcept({
+  data,
+  terminologyId,
+}: generateConceptProps) {
   const regex = '(?s)^.*$';
 
   console.log('data', data);
@@ -70,7 +76,7 @@ export default function generateConcept(data: generateConceptProps) {
             {
               lang: '',
               regex: regex,
-              value: term.scope,
+              value: term.source,
             },
           ]
         : [],
@@ -142,7 +148,7 @@ export default function generateConcept(data: generateConceptProps) {
     referrers: {},
     type: {
       graph: {
-        id: '747340b9-8ab6-4aa4-b4e6-5327813505e5',
+        id: terminologyId,
       },
       id: 'Term',
       uri: 'http://www.w3.org/2008/05/skos-xl#Label',
@@ -338,7 +344,13 @@ export default function generateConcept(data: generateConceptProps) {
           regex: regex,
           value: n.value ?? '',
         })),
-        source: [],
+        source: [
+          {
+            lang: '',
+            regex: regex,
+            value: '',
+          },
+        ],
         status: [
           {
             lang: '',
@@ -368,7 +380,7 @@ export default function generateConcept(data: generateConceptProps) {
             id: term.id,
             type: {
               graph: {
-                id: '747340b9-8ab6-4aa4-b4e6-5327813505e5',
+                id: terminologyId,
               },
               id: 'Term',
               uri: 'http://www.w3.org/2008/05/skos-xl#Label',
@@ -379,7 +391,7 @@ export default function generateConcept(data: generateConceptProps) {
             id: basic.id,
             type: {
               graph: {
-                id: 'ec43f161-b85d-4786-a4b9-d0da52edfba1',
+                id: terminologyId,
               },
               id: 'Concept',
               uri: '',
@@ -402,7 +414,7 @@ export default function generateConcept(data: generateConceptProps) {
             id: part.id,
             type: {
               graph: {
-                id: 'ec43f161-b85d-4786-a4b9-d0da52edfba1',
+                id: terminologyId,
               },
               id: 'Concept',
               uri: '',
@@ -415,7 +427,7 @@ export default function generateConcept(data: generateConceptProps) {
             id: part.id,
             type: {
               graph: {
-                id: 'ec43f161-b85d-4786-a4b9-d0da52edfba1',
+                id: terminologyId,
               },
               id: 'Concept',
               uri: '',
@@ -428,7 +440,7 @@ export default function generateConcept(data: generateConceptProps) {
                 id: narrow.id,
                 type: {
                   graph: {
-                    id: 'ec43f161-b85d-4786-a4b9-d0da52edfba1',
+                    id: terminologyId,
                   },
                   id: 'Concept',
                   uri: '',
@@ -442,7 +454,7 @@ export default function generateConcept(data: generateConceptProps) {
             id: term.id,
             type: {
               graph: {
-                id: '747340b9-8ab6-4aa4-b4e6-5327813505e5',
+                id: terminologyId,
               },
               id: 'Term',
               uri: 'http://www.w3.org/2008/05/skos-xl#Label',
@@ -454,7 +466,7 @@ export default function generateConcept(data: generateConceptProps) {
             id: term.id,
             type: {
               graph: {
-                id: '747340b9-8ab6-4aa4-b4e6-5327813505e5',
+                id: terminologyId,
               },
               id: 'Term',
               uri: 'http://www.w3.org/2008/05/skos-xl#Label',
@@ -465,7 +477,7 @@ export default function generateConcept(data: generateConceptProps) {
             id: related.id,
             type: {
               graph: {
-                id: 'ec43f161-b85d-4786-a4b9-d0da52edfba1',
+                id: terminologyId,
               },
               id: 'Concept',
               uri: '',
@@ -488,7 +500,7 @@ export default function generateConcept(data: generateConceptProps) {
             id: term.id,
             type: {
               graph: {
-                id: '747340b9-8ab6-4aa4-b4e6-5327813505e5',
+                id: terminologyId,
               },
               id: 'Term',
               uri: 'http://www.w3.org/2008/05/skos-xl#Label',
@@ -498,7 +510,7 @@ export default function generateConcept(data: generateConceptProps) {
       referrers: {},
       type: {
         graph: {
-          id: '747340b9-8ab6-4aa4-b4e6-5327813505e5',
+          id: terminologyId,
         },
         id: 'Concept',
         uri: 'http://www.w3.org/2004/02/skos/core#Concept',

@@ -288,7 +288,7 @@ export default function NewTermModal({
               { labelText: t('spoken-form'), uniqueItemId: 'spoken-form' },
             ]}
             onItemSelectionChange={(e) =>
-              handleUpdate('termStyle', e?.labelText || '')
+              handleUpdate('termStyle', e?.uniqueItemId || '')
             }
           />
 
@@ -314,7 +314,7 @@ export default function NewTermModal({
               },
             ]}
             onItemSelectionChange={(e) =>
-              handleUpdate('termFamily', e?.labelText || '')
+              handleUpdate('termFamily', e?.uniqueItemId || '')
             }
           />
 
@@ -330,7 +330,7 @@ export default function NewTermModal({
               { labelText: t('plural'), uniqueItemId: 'plural' },
             ]}
             onItemSelectionChange={(e) =>
-              handleUpdate('termConjugation', e?.labelText || '')
+              handleUpdate('termConjugation', e?.uniqueItemId || '')
             }
           />
 
@@ -356,7 +356,7 @@ export default function NewTermModal({
             visualPlaceholder={t('choose-term-word-class')}
             items={[{ labelText: t('adjective'), uniqueItemId: 'adjective' }]}
             onItemSelectionChange={(e) =>
-              handleUpdate('wordClass', e?.labelText || '')
+              handleUpdate('wordClass', e?.uniqueItemId || '')
             }
           />
         </GrammaticalBlock>

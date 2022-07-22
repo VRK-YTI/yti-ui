@@ -106,7 +106,19 @@ export default function NewConcept({ terminologyId }: NewConceptProps) {
   });
 
   const handlePost = () => {
-    const concept = generateConcept(formData);
+    const terminologyId = Array.isArray(router.query.terminologyId)
+      ? router.query.terminologyId[0]
+      : router.query.terminologyId;
+
+    if (!terminologyId) {
+      console.error('Invalid terminologyId');
+      return;
+    }
+
+    const concept = generateConcept({
+      data: formData,
+      terminologyId: terminologyId,
+    });
     setPostedData(concept);
     addConcept(concept);
   };
