@@ -6,5 +6,6 @@
   "heading": "Collection",
   "sidebar-header": "More about collections",
   "sidebar-section-heading-other-collections": "Other collection in the terminology",
-  "site-title": "Yhteentoimivuusalusta"
+  "site-title": "Yhteentoimivuusalusta",
+  "new-collection-page-help": "The language-versioned fields are displayed according to the languages selected in the vocabulary information. It is recommended to fill in all the information. Information is mandatory if not specifically marked as optional."
 }

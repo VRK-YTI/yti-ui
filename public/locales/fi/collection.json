@@ -6,5 +6,6 @@
   "heading": "Käsitekokoelma",
   "sidebar-header": "Lisää käsitekokoelmista",
   "sidebar-section-heading-other-collections": "Muut käsitekokoelmat tässä sanastossa",
-  "site-title": "Yhteentoimivuusalusta"
+  "site-title": "Yhteentoimivuusalusta",
+  "new-collection-page-help": "Kieliversioidut kentät näytetään sanaston tiedoissa valittujen kielten mukaan. Suositeltavaa on täyttää kaikki tiedot. Tiedot on pakollisia, jos niitä ei ole merkitty valinnaisiksi."
 }
