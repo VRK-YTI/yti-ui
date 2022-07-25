@@ -1,8 +1,10 @@
 import styled from 'styled-components';
 import {
   Block,
+  Button,
   Dropdown,
   ExpanderGroup,
+  Modal,
   TextInput,
 } from 'suomifi-ui-components';
 
@@ -47,4 +49,13 @@ export const SearchResultCountBlock = styled(Block)`
 
 export const ResultBlock = styled(ExpanderGroup)`
   margin-top: ${(props) => props.theme.suomifi.spacing.s};
+`;
+
+export const FooterButton = styled(Button)`
+  margin-top: ${(props) => props.theme.suomifi.spacing.xs} !important;
+`;
+
+export const SelectedConceptBlock = styled(Block)`
+  display: flex;
+  gap: ${(props) => props.theme.suomifi.spacing.xs};
 `;

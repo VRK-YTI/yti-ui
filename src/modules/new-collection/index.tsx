@@ -1,4 +1,5 @@
 import { Breadcrumb, BreadcrumbLink } from '@app/common/components/breadcrumb';
+import { useAddCollectionMutation } from '@app/common/components/modify/modify.slice';
 import PropertyValue from '@app/common/components/property-value';
 import Separator from '@app/common/components/separator';
 import {
@@ -13,6 +14,7 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { Button, Heading } from 'suomifi-ui-components';
 import ConceptPicker from './concept-picker';
+import generateCollection from './generate-collection';
 import {
   DescriptionTextarea,
   FooterBlock,
@@ -36,6 +38,8 @@ export default function NewCollection({
   const { data: terminology } = useGetVocabularyQuery({
     id: terminologyId,
   });
+  const [addCollection, result] = useAddCollectionMutation();
+
   const languages =
     terminology?.properties.language?.map(({ value }) => value) ?? [];
 
@@ -50,6 +54,48 @@ export default function NewCollection({
     })),
     concepts: [],
   });
+
+  console.log(formData);
+
+  const setName = (language: string, value: string) => {
+    const data = formData;
+    data.name = data.name.map((n) => {
+      if (n.lang === language) {
+        return {
+          lang: n.lang,
+          value: value,
+        };
+      }
+      return n;
+    });
+    setFormData(data);
+  };
+
+  const setDescription = (language: string, value: string) => {
+    const data = formData;
+    data.description = data.description.map((d) => {
+      if (d.lang === language) {
+        return {
+          lang: d.lang,
+          value: value,
+        };
+      }
+      return d;
+    });
+    setFormData(data);
+  };
+
+  const setConcepts = (concepts: any) => {
+    const data = formData;
+    data.concepts = concepts;
+    setFormData(data);
+  };
+
+  const handleClick = () => {
+    const data = generateCollection(formData, terminologyId);
+    console.log(data);
+    addCollection(data);
+  };
 
   return (
     <>
@@ -94,27 +140,34 @@ export default function NewCollection({
         <TextBlockWrapper>
           {languages.map((language) => (
             <NameTextInput
+              key={`name-input-${language}`}
               labelText={`Nimi, ${language.toUpperCase()}`}
               visualPlaceholder="Kirjoita nimi"
+              onBlur={(e) => setName(language, e.target.value)}
             />
           ))}
 
           {languages.map((language) => (
             <DescriptionTextarea
+              key={`description-textarea-${language}`}
               labelText={`Kuvaus, ${language.toUpperCase()}`}
               visualPlaceholder="Kirjoita määritelmä"
+              onBlur={(e) => setDescription(language, e.target.value)}
             />
           ))}
         </TextBlockWrapper>
 
         <Separator isLarge />
 
-        <ConceptPicker terminologyId={terminologyId} />
+        <ConceptPicker
+          terminologyId={terminologyId}
+          setFormConcepts={setConcepts}
+        />
 
         <Separator isLarge />
 
         <FooterBlock>
-          <Button>Tallenna</Button>
+          <Button onClick={() => handleClick()}>Tallenna</Button>
           <Button variant="secondary">Peruuta</Button>
         </FooterBlock>
       </NewCollectionBlock>

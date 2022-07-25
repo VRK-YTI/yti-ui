@@ -1,8 +1,18 @@
-import { BasicBlock } from '@app/common/components/block';
+import {
+  BasicBlock,
+  MultilingualPropertyBlock,
+} from '@app/common/components/block';
 import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
-import { useSearchConceptMutation } from '@app/common/components/concept/concept.slice';
+import {
+  useGetConceptQuery,
+  useSearchConceptMutation,
+} from '@app/common/components/concept/concept.slice';
+import FormattedDate from '@app/common/components/formatted-date';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
-import { Concept } from '@app/common/interfaces/concept.interface';
+import SanitizedTextContent from '@app/common/components/sanitized-text-content';
+import Separator from '@app/common/components/separator';
+import { Concepts } from '@app/common/interfaces/concepts.interface';
+import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import {
   Button,
@@ -16,25 +26,37 @@ import {
   ExpanderContent,
   ExpanderTitle,
   Checkbox,
+  Chip,
 } from 'suomifi-ui-components';
 import {
+  FooterButton,
   ResultBlock,
   SearchBlock,
   SearchDropdown,
   SearchResultCountBlock,
   SearchTextInput,
+  SelectedConceptBlock,
 } from './concept-picker.styles';
 
 interface ConceptPickerProps {
   terminologyId: string;
+  setFormConcepts: (value: any) => void;
 }
 
-export default function ConceptPicker({ terminologyId }: ConceptPickerProps) {
+export default function ConceptPicker({
+  terminologyId,
+  setFormConcepts,
+}: ConceptPickerProps) {
   const [visible, setVisible] = useState(false);
+  const [concepts, setConcepts] = useState<Concepts[]>([]);
 
   const handleClick = () => {
     setVisible(true);
   };
+
+  useEffect(() => {
+    setFormConcepts(concepts);
+  }, [concepts, setFormConcepts]);
 
   return (
     <>
@@ -49,6 +71,8 @@ export default function ConceptPicker({ terminologyId }: ConceptPickerProps) {
               <PickerModal
                 setVisible={setVisible}
                 terminologyId={terminologyId}
+                orgConcepts={concepts}
+                setConcepts={setConcepts}
               />
             )}
           </BasicBlockExtraWrapper>
@@ -57,6 +81,29 @@ export default function ConceptPicker({ terminologyId }: ConceptPickerProps) {
         Voit lisätä esimerkiksi samaan aihepiiriin kuuluvat käsitteet yhteen
         käsitekokoelmaan.
       </BasicBlock>
+
+      {concepts.length > 0 && (
+        <BasicBlock
+          title="Valitut käsitekokoeilmaan kuuluvat käsitteet"
+          extra={
+            <BasicBlockExtraWrapper>
+              <SelectedConceptBlock>
+                {concepts.map((concept) => (
+                  <Chip
+                    key={`concept-${concept.id}`}
+                    onClick={() =>
+                      setConcepts(concepts.filter((c) => c.id !== concept.id))
+                    }
+                    removable
+                  >
+                    {concept.label.fi ?? concept.label.en}
+                  </Chip>
+                ))}
+              </SelectedConceptBlock>
+            </BasicBlockExtraWrapper>
+          }
+        ></BasicBlock>
+      )}
     </>
   );
 }
@@ -64,106 +111,302 @@ export default function ConceptPicker({ terminologyId }: ConceptPickerProps) {
 interface PickerModalProps {
   setVisible: (value: boolean) => void;
   terminologyId: string;
+  orgConcepts: Concepts[];
+  setConcepts: (value: Concepts[]) => void;
 }
 
-function PickerModal({ setVisible, terminologyId }: PickerModalProps) {
+function PickerModal({
+  setVisible,
+  terminologyId,
+  orgConcepts,
+  setConcepts,
+}: PickerModalProps) {
+  const { t } = useTranslation('common');
   const { isSmall } = useBreakpoints();
   const [searchConcept, result] = useSearchConceptMutation();
-  const [selectedConcepts, setSelectedConcepts] = useState<Concept[]>([]);
+  const [selectedConcepts, setSelectedConcepts] =
+    useState<Concepts[]>(orgConcepts);
+  const [showSelected, setShowSelected] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [status, setStatus] = useState<string>('ALL');
+
+  const statuses = [
+    {
+      name: 'VALID',
+      uniqueItemId: 'VALID',
+      labelText: t('VALID', { ns: 'common' }),
+    },
+    {
+      name: 'INCOMPLETE',
+      uniqueItemId: 'INCOMPLETE',
+      labelText: t('INCOMPLETE', { ns: 'common' }),
+    },
+    {
+      name: 'DRAFT',
+      uniqueItemId: 'DRAFT',
+      labelText: t('DRAFT', { ns: 'common' }),
+    },
+    {
+      name: 'RETIRED',
+      uniqueItemId: 'RETIRED',
+      labelText: t('RETIRED', { ns: 'common' }),
+    },
+    {
+      name: 'SUPERSEDED',
+      uniqueItemId: 'SUPERSEDED',
+      labelText: t('SUPERSEDED', { ns: 'common' }),
+    },
+    {
+      name: 'INVALID',
+      uniqueItemId: 'INVALID',
+      labelText: t('INVALID', { ns: 'common' }),
+    },
+  ];
 
   const handleClick = () => {
+    setConcepts(selectedConcepts);
     setVisible(false);
   };
 
-  const handleCheckbox = (checkboxState: boolean, concept: Concept) => {
+  const handleCheckbox = (checkboxState: boolean, concept: Concepts) => {
     if (checkboxState) {
       setSelectedConcepts([...selectedConcepts, concept]);
     } else {
-      setSelectedConcepts(selectedConcepts.filter(c => c.id !== concept.id));
+      setSelectedConcepts(selectedConcepts.filter((c) => c.id !== concept.id));
     }
   };
 
-  // console.log(result.data);
-  console.log(selectedConcepts);
+  const handleDeselect = (id: string) => {
+    const updatedConcepts = selectedConcepts.filter(
+      (concept) => concept.id !== id
+    );
+    setSelectedConcepts(updatedConcepts);
+
+    if (updatedConcepts.length < 1) {
+      setShowSelected(false);
+    }
+  };
+
+  const handleSearch = () => {
+    searchConcept({
+      terminologyId: terminologyId,
+      query: searchTerm,
+      status: status !== 'ALL' ? status : undefined,
+    });
+  };
+
+  const handleClear = () => {
+    searchConcept({ terminologyId: terminologyId });
+    setSearchTerm('');
+  };
 
   useEffect(() => {
     searchConcept({ terminologyId: terminologyId });
-  }, [terminologyId]);
+  }, [terminologyId, searchConcept]);
+
+  console.log(status);
 
   return (
     <Modal
-      style={{
-        maxWidth: '900px !important',
-      }}
       appElementId="__next"
       visible={true}
       onEscKeyDown={() => setVisible(false)}
       variant={!isSmall ? 'default' : 'smallScreen'}
     >
       <ModalContent>
-        <ModalTitle>Lisää käsite käsitekokoelmaan</ModalTitle>
+        {showSelected ? (
+          <SelectedConcepts
+            selectedConcepts={selectedConcepts}
+            deselect={handleDeselect}
+          />
+        ) : (
+          <>
+            <ModalTitle>Lisää käsite käsitekokoelmaan</ModalTitle>
 
-        <SearchBlock>
-          <div>
-            <SearchTextInput
-              labelText="Hakusana"
-              icon="search"
-              visualPlaceholder="Kirjoita hakusana"
-            />
+            <SearchBlock>
+              <div>
+                <SearchTextInput
+                  labelText="Hakusana"
+                  icon="search"
+                  visualPlaceholder="Kirjoita hakusana"
+                  defaultValue={searchTerm}
+                  onChange={(e) => setSearchTerm(e?.toString() ?? '')}
+                  value={searchTerm}
+                />
 
-            <SearchDropdown labelText="Käsitteen tila">
-              <DropdownItem value="1">Kaikki tilat</DropdownItem>
-              <DropdownItem value="2">Testi2</DropdownItem>
-            </SearchDropdown>
-          </div>
-          <div>
-            <Button>Hae</Button>
-
-            <Button variant="secondaryNoBorder" iconRight="remove">
-              Tyhjennä haku
-            </Button>
-          </div>
-        </SearchBlock>
-        <SearchResultCountBlock>
-          <Text smallScreen variant="bold">
-            {result.data?.concepts.length} käsitettä
-          </Text>
-        </SearchResultCountBlock>
-
-        <ResultBlock closeAllText="" openAllText="">
-          {result.data?.concepts.map((concept, idx) => {
-            return (
-              <Expander key={`concept-${idx}`}>
-                <ExpanderTitle
-                  title=""
-                  ariaOpenText="open expander"
-                  ariaCloseText="close expander"
-                  toggleButtonAriaDescribedBy="checkbox-id"
+                <SearchDropdown
+                  labelText="Käsitteen tila"
+                  defaultValue="ALL"
+                  onChange={(e) => setStatus(e)}
                 >
-                  <Checkbox
-                    hintText={`${concept.status} ${
-                      concept.terminology.label.fi ??
-                      concept.terminology.label.en
-                    }`}
-                    id={`checkbox-id-${idx}`}
-                    onClick={(e) => handleCheckbox(e.checkboxState, concept)}
-                  >
-                    {concept.label.fi ?? concept.label.en}
-                  </Checkbox>
-                </ExpanderTitle>
-                <ExpanderContent>Testi123</ExpanderContent>
-              </Expander>
-            );
-          })}
-        </ResultBlock>
+                  <DropdownItem value="ALL">Kaikki tilat</DropdownItem>
+                  {statuses.map((status, idx) => (
+                    <DropdownItem
+                      key={`status-item-${idx}`}
+                      value={status.uniqueItemId}
+                    >
+                      {status.labelText}
+                    </DropdownItem>
+                  ))}
+                </SearchDropdown>
+              </div>
+              <div>
+                <Button onClick={() => handleSearch()}>Hae</Button>
+
+                <Button
+                  variant="secondaryNoBorder"
+                  iconRight="remove"
+                  onClick={() => handleClear()}
+                >
+                  Tyhjennä haku
+                </Button>
+              </div>
+            </SearchBlock>
+            <SearchResultCountBlock>
+              <Text smallScreen variant="bold">
+                {result.data?.concepts.length} käsitettä
+              </Text>
+            </SearchResultCountBlock>
+
+            <ResultBlock closeAllText="" openAllText="">
+              {result.data?.concepts.map((concept, idx) => {
+                return (
+                  <Expander key={`concept-${idx}`}>
+                    <ExpanderTitle
+                      title=""
+                      ariaOpenText="open expander"
+                      ariaCloseText="close expander"
+                      toggleButtonAriaDescribedBy="checkbox-id"
+                    >
+                      <Checkbox
+                        hintText={`${t(concept.status)} \u00B7 ${
+                          concept.terminology.label.fi ??
+                          concept.terminology.label.en
+                        }`}
+                        id={`checkbox-id-${idx}`}
+                        onClick={(e) =>
+                          handleCheckbox(e.checkboxState, concept)
+                        }
+                        defaultChecked={selectedConcepts
+                          .map((c) => c.id)
+                          .includes(concept.id)}
+                      >
+                        <SanitizedTextContent
+                          text={concept.label.fi ?? concept.label.en}
+                        />
+                      </Checkbox>
+                    </ExpanderTitle>
+                    <ExpanderConceptContent
+                      concept={concept}
+                      terminologyId={terminologyId}
+                    />
+                  </Expander>
+                );
+              })}
+            </ResultBlock>
+          </>
+        )}
       </ModalContent>
 
       <ModalFooter>
-        <Button onClick={() => handleClick()}>Tallenna</Button>
-        <Button variant="secondary" onClick={() => setVisible(false)}>
+        {selectedConcepts.length > 0 && (
+          <>
+            <FooterButton
+              variant="secondaryNoBorder"
+              iconRight={showSelected ? 'arrowLeft' : 'arrowRight'}
+              onClick={() => setShowSelected(!showSelected)}
+            >
+              {`Näytä valinnat (${selectedConcepts.length})`}
+            </FooterButton>
+            <br />
+          </>
+        )}
+        <FooterButton onClick={() => handleClick()}>
+          Lisää käsitteet
+        </FooterButton>
+        <FooterButton variant="secondary" onClick={() => setVisible(false)}>
           Peruuta
-        </Button>
+        </FooterButton>
       </ModalFooter>
     </Modal>
+  );
+}
+
+interface SelectedConceptProps {
+  selectedConcepts: Concepts[];
+  deselect: (value: string) => void;
+}
+
+function SelectedConcepts({
+  selectedConcepts,
+  deselect,
+}: SelectedConceptProps) {
+  return (
+    <>
+      <Text as="h3">Valitut käsitteet</Text>
+      <SelectedConceptBlock>
+        {selectedConcepts.map((concept, idx) => {
+          return (
+            <Chip
+              key={`selected-concept-${idx}`}
+              onClick={() => deselect(concept.id)}
+              removable
+            >
+              {concept.label.fi}
+            </Chip>
+          );
+        })}
+      </SelectedConceptBlock>
+    </>
+  );
+}
+
+interface ExpanderConceptContent {
+  concept: Concepts;
+  terminologyId: string;
+}
+
+function ExpanderConceptContent({
+  concept,
+  terminologyId,
+}: ExpanderConceptContent) {
+  const { data } = useGetConceptQuery({
+    terminologyId: terminologyId,
+    conceptId: concept.id,
+  });
+
+  return (
+    <ExpanderContent>
+      <MultilingualPropertyBlock
+        title="Suositettavat termit"
+        data={Object.keys(concept.label).map((key) => ({
+          lang: key,
+          regex: '(?s)^.*$',
+          value: concept.label[key],
+        }))}
+      />
+
+      {concept.definition && (
+        <MultilingualPropertyBlock
+          title="Määritelmä"
+          data={Object.keys(concept.definition).map((key) => ({
+            lang: key,
+            regex: '(?s)^.*$',
+            value: concept.definition[key],
+          }))}
+        />
+      )}
+
+      <Separator isLarge />
+
+      <BasicBlock title="Vastuuorganisaatio">
+        {concept.terminology.label.fi}
+      </BasicBlock>
+
+      <BasicBlock title="Muokattu viimeksi">
+        <FormattedDate date={concept.modified} />
+        {data?.lastModifiedBy && `, ${data?.lastModifiedBy}`}
+      </BasicBlock>
+    </ExpanderContent>
   );
 }
