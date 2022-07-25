@@ -204,8 +204,6 @@ function PickerModal({
     searchConcept({ terminologyId: terminologyId });
   }, [terminologyId, searchConcept]);
 
-  console.log(status);
-
   return (
     <Modal
       appElementId="__next"
@@ -245,7 +243,7 @@ function PickerModal({
                       key={`status-item-${idx}`}
                       value={status.uniqueItemId}
                     >
-                      {status.labelText}
+                      {status.labelText.fi}
                     </DropdownItem>
                   ))}
                 </SearchDropdown>
@@ -279,10 +277,9 @@ function PickerModal({
                       toggleButtonAriaDescribedBy="checkbox-id"
                     >
                       <Checkbox
-                        hintText={`${t(concept.status)} \u00B7 ${
-                          concept.terminology.label.fi ??
+                        hintText={`${t(concept.status)} \u00B7 ${concept.terminology.label.fi ??
                           concept.terminology.label.en
-                        }`}
+                          }`}
                         id={`checkbox-id-${idx}`}
                         onClick={(e) =>
                           handleCheckbox(e.checkboxState, concept)

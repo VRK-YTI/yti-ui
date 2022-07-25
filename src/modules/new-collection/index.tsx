@@ -11,7 +11,7 @@ import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabul
 import { getProperty } from '@app/common/utils/get-property';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Heading } from 'suomifi-ui-components';
 import ConceptPicker from './concept-picker';
 import generateCollection from './generate-collection';
@@ -55,7 +55,12 @@ export default function NewCollection({
     concepts: [],
   });
 
-  console.log(formData);
+
+  useEffect(() => {
+    if (result.isSuccess) {
+      return;
+    }
+  }, [result]);
 
   const setName = (language: string, value: string) => {
     const data = formData;
@@ -93,7 +98,6 @@ export default function NewCollection({
 
   const handleClick = () => {
     const data = generateCollection(formData, terminologyId);
-    console.log(data);
     addCollection(data);
   };
 

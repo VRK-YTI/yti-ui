@@ -15,13 +15,16 @@ export default function generateCollection(
       lastModifiedBy: '',
       lastModifiedDate: now.toISOString(),
       properties: {
-        definition: formData.description
-          .filter((d) => d.value !== '')
-          .map((d) => ({
-            lang: d.lang,
-            regex: regex,
-            value: d.value,
-          })),
+        definition:
+          formData.description.length > 0
+            ? formData.description
+                .filter((d) => d.value !== '')
+                .map((d) => ({
+                  lang: d.lang,
+                  regex: regex,
+                  value: d.value,
+                }))
+            : [],
         prefLabel: formData.name
           .filter((n) => n.value !== '')
           .map((n) => ({
@@ -36,7 +39,7 @@ export default function generateCollection(
           id: concept.id,
           type: {
             graph: {
-              íd: terminologyId,
+              id: terminologyId,
             },
             id: 'Concept',
             uri: '',
