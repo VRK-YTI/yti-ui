@@ -1,7 +1,8 @@
 import { v4 } from 'uuid';
+import { NewCollectionFormDataType } from '../new-collection.types';
 
 export default function generateCollection(
-  formData: any,
+  formData: NewCollectionFormDataType,
   terminologyId: string
 ) {
   const regex = '(?s)^.*$';

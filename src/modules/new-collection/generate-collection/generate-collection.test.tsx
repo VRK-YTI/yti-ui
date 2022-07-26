@@ -1,4 +1,5 @@
-import generateCollection from './generate-collection';
+import { Concepts } from '@app/common/interfaces/concepts.interface';
+import generateCollection from '.';
 
 describe('generate-collection', () => {
   it('should generate collection without concepts', () => {
@@ -95,7 +96,7 @@ describe('generate-collection', () => {
         { id: '123-123123-123' },
         { id: '456-456456-456' },
         { id: '789-789789-789' },
-      ],
+      ] as Concepts[],
     };
 
     const returned = generateCollection(data, 'terminologyId');

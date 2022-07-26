@@ -29,13 +29,13 @@ export default function NewConcept(props: NewConceptPageProps) {
     <CommonContextProvider value={props}>
       <Layout>
         <PageHead
-          title={t('new-collection-title')}
+          title={t('new-collection')}
           siteTitle="Yhteentoimivuusalusta"
         />
 
         <NewCollectionModule
           terminologyId={terminologyId}
-          collectionName={'uusi käsitekokoelma'}
+          collectionName={t('new-collection')}
         />
       </Layout>
     </CommonContextProvider>

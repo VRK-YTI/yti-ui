@@ -1,32 +1,21 @@
-import {
-  BasicBlock,
-  MultilingualPropertyBlock,
-} from '@app/common/components/block';
-import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
-import {
-  useGetConceptQuery,
-  useSearchConceptMutation,
-} from '@app/common/components/concept/concept.slice';
-import FormattedDate from '@app/common/components/formatted-date';
+import { useSearchConceptMutation } from '@app/common/components/concept/concept.slice';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import SanitizedTextContent from '@app/common/components/sanitized-text-content';
-import Separator from '@app/common/components/separator';
 import { Concepts } from '@app/common/interfaces/concepts.interface';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import {
   Button,
+  Checkbox,
+  Chip,
   DropdownItem,
+  Expander,
+  ExpanderTitle,
   Modal,
   ModalContent,
   ModalFooter,
   ModalTitle,
   Text,
-  Expander,
-  ExpanderContent,
-  ExpanderTitle,
-  Checkbox,
-  Chip,
 } from 'suomifi-ui-components';
 import {
   FooterButton,
@@ -37,100 +26,30 @@ import {
   SearchTextInput,
   SelectedConceptBlock,
 } from './concept-picker.styles';
+import { PickerModalProps, SelectedConceptProps } from './concept-picker.types';
+import { ExpanderConceptContent } from './expander-concept-content';
 
-interface ConceptPickerProps {
-  terminologyId: string;
-  setFormConcepts: (value: any) => void;
-}
-
-export default function ConceptPicker({
-  terminologyId,
-  setFormConcepts,
-}: ConceptPickerProps) {
-  const [visible, setVisible] = useState(false);
-  const [concepts, setConcepts] = useState<Concepts[]>([]);
-
-  const handleClick = () => {
-    setVisible(true);
-  };
-
-  useEffect(() => {
-    setFormConcepts(concepts);
-  }, [concepts, setFormConcepts]);
-
-  return (
-    <>
-      <BasicBlock
-        title="Käsitekokoelmaan kuuluvat käsitteet"
-        extra={
-          <BasicBlockExtraWrapper>
-            <Button variant="secondary" onClick={() => handleClick()}>
-              Lisää käsite käsitekokoelmaan
-            </Button>
-            {visible && (
-              <PickerModal
-                setVisible={setVisible}
-                terminologyId={terminologyId}
-                orgConcepts={concepts}
-                setConcepts={setConcepts}
-              />
-            )}
-          </BasicBlockExtraWrapper>
-        }
-      >
-        Voit lisätä esimerkiksi samaan aihepiiriin kuuluvat käsitteet yhteen
-        käsitekokoelmaan.
-      </BasicBlock>
-
-      {concepts.length > 0 && (
-        <BasicBlock
-          title="Valitut käsitekokoeilmaan kuuluvat käsitteet"
-          extra={
-            <BasicBlockExtraWrapper>
-              <SelectedConceptBlock>
-                {concepts.map((concept) => (
-                  <Chip
-                    key={`concept-${concept.id}`}
-                    onClick={() =>
-                      setConcepts(concepts.filter((c) => c.id !== concept.id))
-                    }
-                    removable
-                  >
-                    {concept.label.fi ?? concept.label.en}
-                  </Chip>
-                ))}
-              </SelectedConceptBlock>
-            </BasicBlockExtraWrapper>
-          }
-        ></BasicBlock>
-      )}
-    </>
-  );
-}
-
-interface PickerModalProps {
-  setVisible: (value: boolean) => void;
-  terminologyId: string;
-  orgConcepts: Concepts[];
-  setConcepts: (value: Concepts[]) => void;
-}
-
-function PickerModal({
+export default function PickerModal({
   setVisible,
   terminologyId,
   orgConcepts,
   setConcepts,
 }: PickerModalProps) {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('collection');
   const { isSmall } = useBreakpoints();
   const [searchConcept, result] = useSearchConceptMutation();
   const [selectedConcepts, setSelectedConcepts] =
     useState<Concepts[]>(orgConcepts);
   const [showSelected, setShowSelected] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const [status, setStatus] = useState<string>('ALL');
+  const [status, setStatus] = useState<string>('ALL-STATUSES');
 
   const statuses = [
+    {
+      name: 'ALL-STATUSES',
+      uniqueItemId: 'ALL-STATUSES',
+      labelText: t('ALL-STATUSES', { ns: 'common' }),
+    },
     {
       name: 'VALID',
       uniqueItemId: 'VALID',
@@ -187,11 +106,20 @@ function PickerModal({
     }
   };
 
+  const handleStatus = (value: string) => {
+    setStatus(value);
+    searchConcept({
+      terminologyId: terminologyId,
+      query: searchTerm,
+      status: value !== 'ALL-STATUSES' ? value : undefined,
+    });
+  };
+
   const handleSearch = () => {
     searchConcept({
       terminologyId: terminologyId,
       query: searchTerm,
-      status: status !== 'ALL' ? status : undefined,
+      status: status !== 'ALL-STATUSES' ? status : undefined,
     });
   };
 
@@ -219,68 +147,72 @@ function PickerModal({
           />
         ) : (
           <>
-            <ModalTitle>Lisää käsite käsitekokoelmaan</ModalTitle>
+            <ModalTitle>{t('add-concept-to-collection')}</ModalTitle>
 
             <SearchBlock>
               <div>
                 <SearchTextInput
-                  labelText="Hakusana"
+                  labelText={t('search-term')}
                   icon="search"
-                  visualPlaceholder="Kirjoita hakusana"
+                  visualPlaceholder={t('enter-search-term')}
                   defaultValue={searchTerm}
                   onChange={(e) => setSearchTerm(e?.toString() ?? '')}
+                  onBlur={() => handleSearch()}
                   value={searchTerm}
                 />
 
                 <SearchDropdown
-                  labelText="Käsitteen tila"
-                  defaultValue="ALL"
-                  onChange={(e) => setStatus(e)}
+                  labelText={t('concept-status')}
+                  defaultValue="ALL-STATUSES"
+                  onChange={(e) => handleStatus(e)}
                 >
-                  <DropdownItem value="ALL">Kaikki tilat</DropdownItem>
-                  {statuses.map((status, idx) => (
+                  {statuses.map((status) => (
                     <DropdownItem
-                      key={`status-item-${idx}`}
+                      key={`status-item-${status.uniqueItemId}`}
                       value={status.uniqueItemId}
                     >
-                      {status.labelText.fi}
+                      {status.labelText}
                     </DropdownItem>
                   ))}
                 </SearchDropdown>
               </div>
               <div>
-                <Button onClick={() => handleSearch()}>Hae</Button>
+                <Button onClick={() => handleSearch()}>{t('search')}</Button>
 
                 <Button
                   variant="secondaryNoBorder"
                   iconRight="remove"
                   onClick={() => handleClear()}
                 >
-                  Tyhjennä haku
+                  {t('clear-search')}
                 </Button>
               </div>
             </SearchBlock>
             <SearchResultCountBlock>
               <Text smallScreen variant="bold">
-                {result.data?.concepts.length} käsitettä
+                {t('number-of-concepts', {
+                  number: result.data?.concepts.length ?? 0,
+                })}
               </Text>
             </SearchResultCountBlock>
 
             <ResultBlock closeAllText="" openAllText="">
-              {result.data?.concepts.map((concept, idx) => {
+              {result.data?.concepts.map((concept) => {
                 return (
-                  <Expander key={`concept-${idx}`}>
+                  <Expander key={`concept-${concept.id}`}>
                     <ExpanderTitle
                       title=""
-                      ariaOpenText="open expander"
-                      ariaCloseText="close expander"
-                      toggleButtonAriaDescribedBy="checkbox-id"
+                      ariaOpenText={t('open-concept-info')}
+                      ariaCloseText={t('close-concept-info')}
+                      toggleButtonAriaDescribedBy={`checkbox-id-${concept.id}`}
                     >
+                      {/* TODO */}
                       <Checkbox
-                        hintText={`${t(concept.status)} \u00B7 ${concept.terminology.label.fi ??
+                        hintText={`${t(concept.status)} \u00B7 ${
+                          concept.terminology.label.fi ??
                           concept.terminology.label.en
-                          }`}
-                        id={`checkbox-id-${idx}`}
+                        }`}
+                        id={`checkbox-id-${concept.id}`}
                         onClick={(e) =>
                           handleCheckbox(e.checkboxState, concept)
                         }
@@ -313,34 +245,33 @@ function PickerModal({
               iconRight={showSelected ? 'arrowLeft' : 'arrowRight'}
               onClick={() => setShowSelected(!showSelected)}
             >
-              {`Näytä valinnat (${selectedConcepts.length})`}
+              {t('show-selected-concepts', {
+                number: selectedConcepts.length ?? 0,
+              })}
             </FooterButton>
             <br />
           </>
         )}
         <FooterButton onClick={() => handleClick()}>
-          Lisää käsitteet
+          {t('add-concept', { count: selectedConcepts.length })}
         </FooterButton>
         <FooterButton variant="secondary" onClick={() => setVisible(false)}>
-          Peruuta
+          {t('cancel-variant', { ns: 'admin' })}
         </FooterButton>
       </ModalFooter>
     </Modal>
   );
 }
 
-interface SelectedConceptProps {
-  selectedConcepts: Concepts[];
-  deselect: (value: string) => void;
-}
-
 function SelectedConcepts({
   selectedConcepts,
   deselect,
 }: SelectedConceptProps) {
+  const { t } = useTranslation('collection');
+
   return (
     <>
-      <Text as="h3">Valitut käsitteet</Text>
+      <Text as="h3">{t('selected-concepts')}</Text>
       <SelectedConceptBlock>
         {selectedConcepts.map((concept, idx) => {
           return (
@@ -349,61 +280,12 @@ function SelectedConcepts({
               onClick={() => deselect(concept.id)}
               removable
             >
+              {/* TODO */}
               {concept.label.fi}
             </Chip>
           );
         })}
       </SelectedConceptBlock>
     </>
-  );
-}
-
-interface ExpanderConceptContent {
-  concept: Concepts;
-  terminologyId: string;
-}
-
-function ExpanderConceptContent({
-  concept,
-  terminologyId,
-}: ExpanderConceptContent) {
-  const { data } = useGetConceptQuery({
-    terminologyId: terminologyId,
-    conceptId: concept.id,
-  });
-
-  return (
-    <ExpanderContent>
-      <MultilingualPropertyBlock
-        title="Suositettavat termit"
-        data={Object.keys(concept.label).map((key) => ({
-          lang: key,
-          regex: '(?s)^.*$',
-          value: concept.label[key],
-        }))}
-      />
-
-      {concept.definition && (
-        <MultilingualPropertyBlock
-          title="Määritelmä"
-          data={Object.keys(concept.definition).map((key) => ({
-            lang: key,
-            regex: '(?s)^.*$',
-            value: concept.definition[key],
-          }))}
-        />
-      )}
-
-      <Separator isLarge />
-
-      <BasicBlock title="Vastuuorganisaatio">
-        {concept.terminology.label.fi}
-      </BasicBlock>
-
-      <BasicBlock title="Muokattu viimeksi">
-        <FormattedDate date={concept.modified} />
-        {data?.lastModifiedBy && `, ${data?.lastModifiedBy}`}
-      </BasicBlock>
-    </ExpanderContent>
   );
 }

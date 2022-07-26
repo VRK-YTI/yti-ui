@@ -8,6 +8,7 @@ import {
   SubTitle,
 } from '@app/common/components/title-block';
 import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
+import { Concepts } from '@app/common/interfaces/concepts.interface';
 import { getProperty } from '@app/common/utils/get-property';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
@@ -23,11 +24,10 @@ import {
   PageHelpText,
   TextBlockWrapper,
 } from './new-collection.styles';
-
-interface NewCollectionProps {
-  terminologyId: string;
-  collectionName: string;
-}
+import {
+  NewCollectionFormDataType,
+  NewCollectionProps,
+} from './new-collection.types';
 
 export default function NewCollection({
   terminologyId,
@@ -43,7 +43,7 @@ export default function NewCollection({
   const languages =
     terminology?.properties.language?.map(({ value }) => value) ?? [];
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<NewCollectionFormDataType>({
     name: languages.map((language) => ({
       lang: language,
       value: '',
@@ -55,12 +55,13 @@ export default function NewCollection({
     concepts: [],
   });
 
-
   useEffect(() => {
     if (result.isSuccess) {
-      return;
+      router.push(
+        `/terminology/${router.query.terminologyId ?? terminologyId}`
+      );
     }
-  }, [result]);
+  }, [result, router, terminologyId]);
 
   const setName = (language: string, value: string) => {
     const data = formData;
@@ -90,7 +91,7 @@ export default function NewCollection({
     setFormData(data);
   };
 
-  const setConcepts = (concepts: any) => {
+  const setConcepts = (concepts: Concepts[]) => {
     const data = formData;
     data.concepts = concepts;
     setFormData(data);
@@ -139,14 +140,14 @@ export default function NewCollection({
 
         <Separator isLarge />
 
-        <Heading variant="h3">Käsitekokoelman perustiedot</Heading>
+        <Heading variant="h3">{t('collection-basic-information')}</Heading>
 
         <TextBlockWrapper>
           {languages.map((language) => (
             <NameTextInput
               key={`name-input-${language}`}
-              labelText={`Nimi, ${language.toUpperCase()}`}
-              visualPlaceholder="Kirjoita nimi"
+              labelText={`${t('field-name')}, ${language.toUpperCase()}`}
+              visualPlaceholder={t('enter-collection-name')}
               onBlur={(e) => setName(language, e.target.value)}
             />
           ))}
@@ -154,8 +155,8 @@ export default function NewCollection({
           {languages.map((language) => (
             <DescriptionTextarea
               key={`description-textarea-${language}`}
-              labelText={`Kuvaus, ${language.toUpperCase()}`}
-              visualPlaceholder="Kirjoita määritelmä"
+              labelText={`${t('field-definition')}, ${language.toUpperCase()}`}
+              visualPlaceholder={t('enter-collection-description')}
               onBlur={(e) => setDescription(language, e.target.value)}
             />
           ))}
@@ -171,8 +172,12 @@ export default function NewCollection({
         <Separator isLarge />
 
         <FooterBlock>
-          <Button onClick={() => handleClick()}>Tallenna</Button>
-          <Button variant="secondary">Peruuta</Button>
+          <Button onClick={() => handleClick()}>
+            {t('save', { ns: 'admin' })}
+          </Button>
+          <Button variant="secondary">
+            {t('cancel-variant', { ns: 'admin' })}
+          </Button>
         </FooterBlock>
       </NewCollectionBlock>
     </>

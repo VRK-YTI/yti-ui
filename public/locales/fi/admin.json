@@ -219,5 +219,6 @@
   "download-failed": "Lataus epäonnistui",
   "ready": "Valmis",
   "loading": "Ladataan...",
-  "percent-done": "valmiina"
+  "percent-done": "valmiina",
+  "new-collection": "Uusi käsitekokoelma"
 }
