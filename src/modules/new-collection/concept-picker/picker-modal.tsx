@@ -35,7 +35,7 @@ export default function PickerModal({
   orgConcepts,
   setConcepts,
 }: PickerModalProps) {
-  const { t } = useTranslation('collection');
+  const { t, i18n } = useTranslation('collection');
   const { isSmall } = useBreakpoints();
   const [searchConcept, result] = useSearchConceptMutation();
   const [selectedConcepts, setSelectedConcepts] =
@@ -206,11 +206,16 @@ export default function PickerModal({
                       ariaCloseText={t('close-concept-info')}
                       toggleButtonAriaDescribedBy={`checkbox-id-${concept.id}`}
                     >
-                      {/* TODO */}
                       <Checkbox
-                        hintText={`${t(concept.status)} \u00B7 ${
+                        hintText={`${t(concept.status, {
+                          ns: 'common',
+                        })} \u00B7 ${
+                          concept.terminology.label[i18n.language] ??
                           concept.terminology.label.fi ??
-                          concept.terminology.label.en
+                          concept.terminology.label[
+                            Object.keys(concept.terminology.label)[0]
+                          ] ??
+                          ''
                         }`}
                         id={`checkbox-id-${concept.id}`}
                         onClick={(e) =>
@@ -221,7 +226,12 @@ export default function PickerModal({
                           .includes(concept.id)}
                       >
                         <SanitizedTextContent
-                          text={concept.label.fi ?? concept.label.en}
+                          text={
+                            concept.label[i18n.language] ??
+                            concept.label.fi ??
+                            concept.label[Object.keys(concept.label)[0]] ??
+                            ''
+                          }
                         />
                       </Checkbox>
                     </ExpanderTitle>
@@ -267,7 +277,7 @@ function SelectedConcepts({
   selectedConcepts,
   deselect,
 }: SelectedConceptProps) {
-  const { t } = useTranslation('collection');
+  const { t, i18n } = useTranslation('collection');
 
   return (
     <>
@@ -280,8 +290,10 @@ function SelectedConcepts({
               onClick={() => deselect(concept.id)}
               removable
             >
-              {/* TODO */}
-              {concept.label.fi}
+              {concept.label[i18n.language] ??
+                concept.label.fi ??
+                concept.label[Object.keys(concept.label)[0]] ??
+                ''}
             </Chip>
           );
         })}

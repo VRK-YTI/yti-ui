@@ -4,7 +4,6 @@ import {
   Button,
   Dropdown,
   ExpanderGroup,
-  Modal,
   TextInput,
 } from 'suomifi-ui-components';
 

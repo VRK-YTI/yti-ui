@@ -39,6 +39,11 @@ export default function NewCollection({
     id: terminologyId,
   });
   const [addCollection, result] = useAddCollectionMutation();
+  const [newConceptId, setNewConceptId] = useState('');
+  const [errors, setErrors] = useState({
+    name: false,
+    description: false,
+  });
 
   const languages =
     terminology?.properties.language?.map(({ value }) => value) ?? [];
@@ -58,10 +63,12 @@ export default function NewCollection({
   useEffect(() => {
     if (result.isSuccess) {
       router.push(
-        `/terminology/${router.query.terminologyId ?? terminologyId}`
+        `/terminology/${
+          router.query.terminologyId ?? terminologyId
+        }/concept/${newConceptId}`
       );
     }
-  }, [result, router, terminologyId]);
+  }, [result, router, terminologyId, newConceptId]);
 
   const setName = (language: string, value: string) => {
     const data = formData;
@@ -75,6 +82,10 @@ export default function NewCollection({
       return n;
     });
     setFormData(data);
+
+    if (errors.name && data.name.filter((n) => n.value !== '').length > 0) {
+      setErrors({ ...errors, name: false });
+    }
   };
 
   const setDescription = (language: string, value: string) => {
@@ -89,6 +100,13 @@ export default function NewCollection({
       return d;
     });
     setFormData(data);
+
+    if (
+      errors.description &&
+      data.description.filter((d) => d.value !== '').length > 0
+    ) {
+      setErrors({ ...errors, description: false });
+    }
   };
 
   const setConcepts = (concepts: Concepts[]) => {
@@ -98,8 +116,28 @@ export default function NewCollection({
   };
 
   const handleClick = () => {
+    let errorOccurs = false;
+    if (formData.name.filter((n) => n.value !== '').length < 1) {
+      setErrors({ ...errors, name: true });
+      errorOccurs = true;
+    }
+
+    if (formData.description.filter((n) => n.value !== '').length < 1) {
+      setErrors({ ...errors, description: true });
+      errorOccurs = true;
+    }
+
+    if (errorOccurs) {
+      return;
+    }
+
     const data = generateCollection(formData, terminologyId);
+    setNewConceptId(data[0].id);
     addCollection(data);
+  };
+
+  const handleCancel = () => {
+    router.push(`/terminology/${router.query.terminologyId ?? terminologyId}`);
   };
 
   return (
@@ -149,6 +187,7 @@ export default function NewCollection({
               labelText={`${t('field-name')}, ${language.toUpperCase()}`}
               visualPlaceholder={t('enter-collection-name')}
               onBlur={(e) => setName(language, e.target.value)}
+              status={errors.name ? 'error' : 'default'}
             />
           ))}
 
@@ -158,6 +197,7 @@ export default function NewCollection({
               labelText={`${t('field-definition')}, ${language.toUpperCase()}`}
               visualPlaceholder={t('enter-collection-description')}
               onBlur={(e) => setDescription(language, e.target.value)}
+              status={errors.description ? 'error' : 'default'}
             />
           ))}
         </TextBlockWrapper>
@@ -175,7 +215,7 @@ export default function NewCollection({
           <Button onClick={() => handleClick()}>
             {t('save', { ns: 'admin' })}
           </Button>
-          <Button variant="secondary">
+          <Button variant="secondary" onClick={() => handleCancel()}>
             {t('cancel-variant', { ns: 'admin' })}
           </Button>
         </FooterBlock>

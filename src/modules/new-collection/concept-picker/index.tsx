@@ -16,7 +16,7 @@ export default function ConceptPicker({
   terminologyId,
   setFormConcepts,
 }: ConceptPickerProps) {
-  const { t } = useTranslation('collection');
+  const { t, i18n } = useTranslation('collection');
   const [visible, setVisible] = useState(false);
   const [concepts, setConcepts] = useState<Concepts[]>([]);
 
@@ -65,14 +65,18 @@ export default function ConceptPicker({
                     }
                     removable
                   >
-                    {/* TODO */}
-                    {concept.label.fi ?? concept.label.en}
+                    {concept.label[i18n.language] ??
+                      concept.label.fi ??
+                      concept.label[Object.keys(concept.label)[0]] ??
+                      ''}
                   </Chip>
                 ))}
               </SelectedConceptBlock>
             </BasicBlockExtraWrapper>
           }
-        ><></></BasicBlock>
+        >
+          <></>
+        </BasicBlock>
       )}
     </>
   );

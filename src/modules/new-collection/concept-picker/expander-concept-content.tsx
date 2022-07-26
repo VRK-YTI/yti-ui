@@ -4,7 +4,9 @@ import {
 } from '@app/common/components/block';
 import { useGetConceptQuery } from '@app/common/components/concept/concept.slice';
 import FormattedDate from '@app/common/components/formatted-date';
+import PropertyValue from '@app/common/components/property-value';
 import Separator from '@app/common/components/separator';
+import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
 import { useTranslation } from 'next-i18next';
 import { ExpanderContent } from 'suomifi-ui-components';
 import { ExpanderConceptContent } from './concept-picker.types';
@@ -17,6 +19,9 @@ export function ExpanderConceptContent({
   const { data } = useGetConceptQuery({
     terminologyId: terminologyId,
     conceptId: concept.id,
+  });
+  const { data: terminologyData } = useGetVocabularyQuery({
+    id: terminologyId,
   });
 
   return (
@@ -44,8 +49,11 @@ export function ExpanderConceptContent({
       <Separator isLarge />
 
       <BasicBlock title={t('admin-organization')}>
-        {/* TODO */}
-        {concept.terminology.label.fi}
+        <PropertyValue
+          property={
+            terminologyData?.references.contributor?.[0].properties.prefLabel
+          }
+        />
       </BasicBlock>
 
       <BasicBlock title={t('last-modified')}>

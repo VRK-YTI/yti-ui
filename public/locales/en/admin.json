@@ -219,5 +219,7 @@
   "ready": "Ready",
   "loading": "Loading...",
   "percent-done": "done",
-  "new-collection": "New collection"
+  "you-have-right-new-collection": "You have the rights to create new collections to this terminology",
+  "new-collection": "New collection",
+  "add-new-collection": "Add new collection"
 }

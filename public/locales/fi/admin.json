@@ -220,5 +220,7 @@
   "ready": "Valmis",
   "loading": "Ladataan...",
   "percent-done": "valmiina",
-  "new-collection": "Uusi käsitekokoelma"
+  "you-have-right-new-collection": "Sinulla on oikeudet luoda uusia käsitekokoelmia sanastoon",
+  "new-collection": "Uusi käsitekokoelma",
+  "add-new-collection": "Lisää uusi käsitekokoelma"
 }
