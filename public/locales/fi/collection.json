@@ -1,10 +1,9 @@
 {
-  "description": "Käsitekokoelma on tapa ryhmitellä tietyn aihepiirin käsitteitä.",
+  "close": "",
   "field-definition": "Kuvaus",
   "field-member": "Valikoimaan kuuluvat käsitteet",
   "field-name": "Nimi",
   "heading": "Käsitekokoelma",
   "sidebar-header": "Lisää käsitekokoelmista",
-  "sidebar-section-heading-other-collections": "Muut käsitekokoelmat tässä sanastossa",
-  "site-title": "Yhteentoimivuusalusta"
+  "sidebar-section-heading-other-collections": "Muut käsitekokoelmat tässä sanastossa"
 }
