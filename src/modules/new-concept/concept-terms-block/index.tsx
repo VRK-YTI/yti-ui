@@ -148,7 +148,7 @@ export default function ConceptTermsBlock({
                   onClick={() => handleRemoveTerms()}
                   disabled={checkedTerms.length < 1}
                 >
-                  {t('remove-term', {count: checkedTerms.length})}
+                  {t('remove-term', { count: checkedTerms.length })}
                 </Button>
               </>
             )}
