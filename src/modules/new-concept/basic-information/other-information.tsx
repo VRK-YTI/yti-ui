@@ -5,7 +5,7 @@ import {
   SingleSelect,
   TextInput,
 } from 'suomifi-ui-components';
-import { BasicInfoUpdate } from './concept-basic-information-types';
+import { BasicInfoUpdate } from './concept-basic-information';
 import {
   ConceptExpander,
   ExpanderContentFitted,

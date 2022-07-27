@@ -7,7 +7,8 @@ import {
   WiderTextarea,
 } from './concept-basic-information.styles';
 import ListBlock from '../list-block';
-import { BasicInfoUpdate, BasicInfo } from './concept-basic-information-types';
+import { ListType } from '../new-concept.types';
+import { BasicInfoUpdate } from './concept-basic-information';
 
 interface OrganizationalInformationProps {
   infoKey: string;
@@ -21,16 +22,16 @@ export default function OrganizationalInformation({
   const { t } = useTranslation('admin');
   const [changeHistory, setChangeHistory] = useState<string>('');
   const [etymology, setEtymology] = useState<string>('');
-  const [editorialNotes, setEditorialNotes] = useState<BasicInfo[]>([]);
+  const [editorialNotes, setEditorialNotes] = useState<ListType[]>([]);
 
-  const handleOrgInfo = (key: string, value?: string | BasicInfo[] | null) => {
-    if (key === 'editorialNote' && typeof value !== 'string') {
+  const handleOrgInfo = ({ key, lang, value }: BasicInfoUpdate) => {
+    if (typeof value !== 'string' && typeof value !== 'object') {
       setEditorialNotes(value ?? []);
       handleChange(true, value);
     }
   };
 
-  const handleChange = (useValue?: boolean, value?: BasicInfo[] | null) => {
+  const handleChange = (useValue?: boolean, value?: ListType[] | null) => {
     update({
       key: infoKey,
       value: {

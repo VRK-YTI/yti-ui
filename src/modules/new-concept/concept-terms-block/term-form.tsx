@@ -10,7 +10,7 @@ import {
   TextInput,
 } from 'suomifi-ui-components';
 import ListBlock from '../list-block';
-import { ConceptTermType, ItemType } from './concept-term-block-types';
+import { ConceptTermType, ListType } from '../new-concept.types';
 import {
   CheckboxBlock,
   DropdownBlock,
@@ -25,8 +25,13 @@ export interface TermFormProps {
   update: (value: {
     termId: string;
     key: string;
-    value: string | ItemType[];
+    value: string | ListType[];
   }) => void;
+}
+
+export interface TermFormUpdate {
+  key: string;
+  value: string | ListType[] | null;
 }
 
 export default function TermForm({ term, update }: TermFormProps) {
@@ -61,7 +66,7 @@ export default function TermForm({ term, update }: TermFormProps) {
 
   const wordClass = [{ labelText: t('adjective'), uniqueItemId: 'adjective' }];
 
-  const handleUpdate = (key: string, value?: string | ItemType[] | null) => {
+  const handleUpdate = ({ key, value }: TermFormUpdate) => {
     update({
       termId: term.id,
       key: key,
@@ -71,7 +76,7 @@ export default function TermForm({ term, update }: TermFormProps) {
 
   const handleIsHomographic = () => {
     if (isHomographic) {
-      handleUpdate('termHomographNumber', '');
+      handleUpdate({ key: 'termHomographNumber', value: '' });
     }
 
     setIsHomographic(!isHomographic);
@@ -82,7 +87,9 @@ export default function TermForm({ term, update }: TermFormProps) {
       <TextInput
         labelText={t('term-name-label')}
         defaultValue={term.prefLabel}
-        onBlur={(e) => handleUpdate('prefLabel', e.target.value)}
+        onBlur={(e) =>
+          handleUpdate({ key: 'prefLabel', value: e.target.value })
+        }
       />
       <CheckboxBlock
         defaultChecked={term.termHomographNumber ? true : false}
@@ -97,7 +104,12 @@ export default function TermForm({ term, update }: TermFormProps) {
             labelText=""
             type="number"
             defaultValue={term.termHomographNumber}
-            onChange={(e) => handleUpdate('termHomographNumber', e?.toString())}
+            onChange={(e) =>
+              handleUpdate({
+                key: 'termHomographNumber',
+                value: e?.toString() ?? '',
+              })
+            }
           />
         </BasicBlock>
       )}
@@ -112,7 +124,12 @@ export default function TermForm({ term, update }: TermFormProps) {
             <Button variant="secondary" onClick={() => setModalVisible(true)}>
               {t('change-term-type')}
             </Button>
-            {modalVisible && <TermTypeModal setVisibility={setModalVisible} />}
+            {modalVisible && (
+              <TermTypeModal
+                setVisibility={setModalVisible}
+                handleUpdate={handleUpdate}
+              />
+            )}
           </BasicBlockExtraWrapper>
         }
       >
@@ -125,7 +142,7 @@ export default function TermForm({ term, update }: TermFormProps) {
       <DropdownBlock
         labelText={t('term-status-label')}
         defaultValue={term.status}
-        onChange={(e) => handleUpdate('status', e)}
+        onChange={(e) => handleUpdate({ key: 'status', value: e })}
       >
         <DropdownItem value="draft">
           {t('DRAFT', { ns: 'common' })}
@@ -154,7 +171,7 @@ export default function TermForm({ term, update }: TermFormProps) {
         optionalText={t('optional')}
         visualPlaceholder={t('term-info-placeholder')}
         defaultValue={term.termInfo}
-        onBlur={(e) => handleUpdate('termInfo', e.target.value)}
+        onBlur={(e) => handleUpdate({ key: 'termInfo', value: e.target.value })}
       />
       <WiderTextareaBlock
         labelText={t('term-scope-label')}
@@ -162,7 +179,7 @@ export default function TermForm({ term, update }: TermFormProps) {
         hintText={t('term-scope-hint-text')}
         visualPlaceholder={t('term-scope-placeholder')}
         defaultValue={term.scope}
-        onBlur={(e) => handleUpdate('scope', e.target.value)}
+        onBlur={(e) => handleUpdate({ key: 'scope', value: e.target.value })}
       />
       <WiderTextareaBlock
         labelText={t('term-sources-label')}
@@ -170,7 +187,7 @@ export default function TermForm({ term, update }: TermFormProps) {
         hintText={t('term-sources-hint-text')}
         visualPlaceholder={t('term-sources-placeholder')}
         defaultValue={term.source}
-        onBlur={(e) => handleUpdate('source', e.target.value)}
+        onBlur={(e) => handleUpdate({ key: 'source', value: e.target.value })}
       />
 
       <Separator isLarge />
@@ -182,7 +199,9 @@ export default function TermForm({ term, update }: TermFormProps) {
         hintText={t('term-change-note-hint-text')}
         visualPlaceholder={t('term-change-note-placeholder')}
         defaultValue={term.changeNote}
-        onBlur={(e) => handleUpdate('changeNote', e.target.value)}
+        onBlur={(e) =>
+          handleUpdate({ key: 'changeNote', value: e.target.value })
+        }
       />
       <WiderTextareaBlock
         labelText={t('term-history-note-label')}
@@ -190,7 +209,9 @@ export default function TermForm({ term, update }: TermFormProps) {
         hintText={t('term-history-note-hint-text')}
         visualPlaceholder={t('term-history-note-placeholer')}
         defaultValue={term.historyNote}
-        onBlur={(e) => handleUpdate('historyNote', e.target.value)}
+        onBlur={(e) =>
+          handleUpdate({ key: 'historyNote', value: e.target.value })
+        }
       />
 
       <ListBlock
@@ -220,7 +241,7 @@ export default function TermForm({ term, update }: TermFormProps) {
               ? termStyle.filter((ts) => ts.uniqueItemId === term.termStyle)[0]
               : undefined
           }
-          onItemSelect={(e) => handleUpdate('termStyle', e)}
+          onItemSelect={(e) => handleUpdate({ key: 'termStyle', value: e })}
         />
 
         <SingleSelect
@@ -238,7 +259,7 @@ export default function TermForm({ term, update }: TermFormProps) {
                 )[0]
               : undefined
           }
-          onItemSelect={(e) => handleUpdate('termFamily', e)}
+          onItemSelect={(e) => handleUpdate({ key: 'termFamily', value: e })}
         />
 
         <SingleSelect
@@ -256,7 +277,9 @@ export default function TermForm({ term, update }: TermFormProps) {
                 )[0]
               : undefined
           }
-          onItemSelect={(e) => handleUpdate('termConjugation', e)}
+          onItemSelect={(e) =>
+            handleUpdate({ key: 'termConjugation', value: e })
+          }
         />
 
         <SingleSelect
@@ -273,7 +296,7 @@ export default function TermForm({ term, update }: TermFormProps) {
               ? wordClass.filter((ts) => ts.uniqueItemId === term.wordClass)[0]
               : undefined
           }
-          onItemSelect={(e) => handleUpdate('wordClass', e)}
+          onItemSelect={(e) => handleUpdate({ key: 'wordClass', value: e })}
         />
       </GrammaticalBlock>
     </>

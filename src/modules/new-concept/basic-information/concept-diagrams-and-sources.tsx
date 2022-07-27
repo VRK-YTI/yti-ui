@@ -3,10 +3,8 @@ import { BasicBlockExtraWrapper } from '@app/common/components/block/block.style
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { ExpanderTitleButton } from 'suomifi-ui-components';
-import {
-  BasicInfoUpdate,
-  DiagramType,
-} from './concept-basic-information-types';
+import { DiagramType } from '../new-concept.types';
+import { BasicInfoUpdate } from './concept-basic-information';
 import {
   ConceptExpander,
   ExpanderContentFitted,

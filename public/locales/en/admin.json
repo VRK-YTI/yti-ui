@@ -136,9 +136,9 @@
   "etymology": "Usage history information \"etymology\"",
   "etymology-hint": "Previous use or meaning of the term",
   "etymology-placeholder": "Add history of the use of the term",
-  "admin-note": "Admin note",
-  "add-new-admin-note": "Add new note",
-  "add-new-admin-note-description": "A note for the administrator or translator. Not visible to non-logged in users.",
+  "editorialNote": "Admin note",
+  "add-new-editorialNote": "Add new note",
+  "add-new-editorialNote-description": "A note for the administrator or translator. Not visible to non-logged in users.",
   "adjective": "adjective",
   "verb": "verb",
   "concept-class": "Concept class",
@@ -266,5 +266,10 @@
   "term-equivalency-description": "Term equivalence is related to the recommended term of the same language",
   "accept": "Accept",
   "no-selection": "No selection",
-  "almost-the-same-as": "Almost the same as"
+  "almost-the-same-as": "Almost the same as",
+  "remove-term_one": "Remove term",
+  "remove-term_other": "Remove terms",
+  "application": "application",
+  "term-new-type": "New type of term",
+  "choose-type": "Choose type"
 }

@@ -10,21 +10,20 @@ import OrganizationInformation from './organizational-information';
 import RelationalInformation from './relational-information';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
-import ConceptInfoBlock from './concept-info-block';
-import {
-  BasicInfoType,
-  BasicInfoUpdate,
-} from './concept-basic-information-types';
 import { ExpanderGroup } from 'suomifi-ui-components';
+import { BasicInfo, ListType } from '../new-concept.types';
+import ListBlock from '../list-block';
 
 interface ConceptBasicInformationProps {
-  updateBasicInformation: (value: BasicInfoType) => void;
-  initialValues: BasicInfoType;
-  languages: {
-    lang: string;
-    value: string;
-    regex: string;
-  }[];
+  updateBasicInformation: (value: BasicInfo) => void;
+  initialValues: BasicInfo;
+  languages: string[];
+}
+
+export interface BasicInfoUpdate {
+  key: string;
+  lang?: string;
+  value: string | object | ListType[];
 }
 
 export default function ConceptBasicInformation({
@@ -33,10 +32,10 @@ export default function ConceptBasicInformation({
   languages,
 }: ConceptBasicInformationProps) {
   const { t } = useTranslation('admin');
-  const [basicInfo, setBasicInfo] = useState<BasicInfoType>(initialValues);
+  const [basicInfo, setBasicInfo] = useState<BasicInfo>(initialValues);
 
   const handleBasicInfoUpdate = ({ key, lang, value }: BasicInfoUpdate) => {
-    if (lang && key === 'definition' && typeof value === 'string') {
+    if (key === 'definition' && lang && typeof value === 'string') {
       const newBasicInfo = {
         ...basicInfo,
         ['definition']: { ...basicInfo['definition'], [lang]: value },
@@ -53,16 +52,24 @@ export default function ConceptBasicInformation({
   return (
     <>
       <Separator isLarge />
-
       <H2Sm variant="h2">{t('concept-basic-information')}</H2Sm>
-
       {renderDefinitions()}
 
-      <ConceptInfoBlock infoKey="example" update={handleBasicInfoUpdate} />
+      <ListBlock
+        items={basicInfo.example}
+        itemsKey="example"
+        update={handleBasicInfoUpdate}
+        languages={languages}
+      />
 
       {renderSubject()}
 
-      <ConceptInfoBlock infoKey="note" update={handleBasicInfoUpdate} />
+      <ListBlock
+        items={basicInfo.note}
+        itemsKey="note"
+        update={handleBasicInfoUpdate}
+        languages={languages}
+      />
 
       <ExpanderGroup closeAllText="" openAllText="">
         <ConceptDiagramsAndSources
@@ -86,7 +93,7 @@ export default function ConceptBasicInformation({
     return (
       <>
         {languages.map((language) => {
-          return renderDefinitionTextarea(language.lang);
+          return renderDefinitionTextarea(language);
         })}
       </>
     );

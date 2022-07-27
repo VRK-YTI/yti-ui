@@ -131,26 +131,6 @@ export default function RelationalInformation({
           data={expandersData}
           fromOther
         />
-
-        {/*
-        Note: This is disabled until further notice
-
-        <Separator isLarge />
-
-        <CheckboxGroup
-          labelText="Valitse homonyymit muista sanastoista"
-          groupHintText="Muissa sanastoissa on käsitteitä, jotka vastaavat tätä käsitettä. Valitse ne, jotka haluat näytettävän käsitteesi yhteydessä."
-        >
-          <Checkbox hintText="Patentti- ja rekisterihallituksen sanasto">
-            hakemus
-          </Checkbox>
-          <Checkbox hintText="Opetus- ja koulutussanasto, 2. laitos">
-            hakemus
-          </Checkbox>
-          <Checkbox hintText="Julkisen hallinnon yhteinen sanasto">
-            hakemus
-          </Checkbox>
-        </CheckboxGroup> */}
       </ExpanderContentFitted>
     </ConceptExpander>
   );

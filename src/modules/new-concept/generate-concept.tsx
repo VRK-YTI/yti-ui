@@ -16,8 +16,6 @@ export default function generateConcept({
 }: generateConceptProps) {
   const regex = '(?s)^.*$';
 
-  console.log('data', data);
-
   const now = new Date();
   let matchingIds: string[] = [];
   let relatedMatchIds: string[] = [];

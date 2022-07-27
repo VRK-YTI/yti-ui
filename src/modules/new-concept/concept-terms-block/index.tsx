@@ -12,17 +12,20 @@ import {
 } from './concept-terms-block.styles';
 import TermExpander from './term-expander';
 import TermForm from './term-form';
-import {
-  ConceptTermType,
-  ConceptTermUpdateProps,
-} from './concept-term-block-types';
+import { ConceptTermType, ListType } from '../new-concept.types';
 
 const NewTermModal = dynamic(() => import('./new-term-modal'));
 
-export interface ConceptTermsBlockProps {
+interface ConceptTermsBlockProps {
   languages: string[];
   updateTerms: (value: ConceptTermType[]) => void;
   initialValues: ConceptTermType[];
+}
+
+export interface ConceptTermUpdateProps {
+  termId: string;
+  key: string;
+  value: string | ListType[];
 }
 
 export default function ConceptTermsBlock({
@@ -145,7 +148,7 @@ export default function ConceptTermsBlock({
                   onClick={() => handleRemoveTerms()}
                   disabled={checkedTerms.length < 1}
                 >
-                  Poista termi{checkedTerms.length > 1 && 't'}
+                  {t('remove-term', {count: checkedTerms.length})}
                 </Button>
               </>
             )}

@@ -10,15 +10,20 @@ import {
   ModalTitle,
 } from 'suomifi-ui-components';
 import { DropdownBlock } from './concept-terms-block.styles';
+import { TermFormUpdate } from './term-form';
 
 interface TermTypeModalProps {
   setVisibility: (value: boolean) => void;
+  handleUpdate: (value: TermFormUpdate) => void;
 }
 
-export default function TermTypeModal({ setVisibility }: TermTypeModalProps) {
+export default function TermTypeModal({
+  setVisibility,
+  handleUpdate,
+}: TermTypeModalProps) {
   const { t } = useTranslation('admin');
   const [isValid, setIsValid] = useState(false);
-  const [newType, setNewType] = useState<string>('');
+  const [newType, setNewType] = useState('');
 
   const termTypes = [
     'recommended-term-no-suff',
@@ -32,6 +37,14 @@ export default function TermTypeModal({ setVisibility }: TermTypeModalProps) {
     setIsValid(value !== '');
   };
 
+  const handleClick = () => {
+    if (isValid) {
+      handleUpdate({ key: 'termType', value: newType });
+      setVisibility(false);
+    }
+    return;
+  };
+
   return (
     <Modal
       appElementId="__next"
@@ -39,17 +52,17 @@ export default function TermTypeModal({ setVisibility }: TermTypeModalProps) {
       onEscKeyDown={() => setVisibility(false)}
     >
       <ModalContent>
-        <ModalTitle>Muuta termin tyyppi</ModalTitle>
+        <ModalTitle>{t('change-term-type')}</ModalTitle>
 
-        <BasicBlock title="Termin nimi">hakemus</BasicBlock>
+        <BasicBlock title={t('term-name-label')}>{t('application')}</BasicBlock>
 
         <BasicBlock title="Termin nykyinen tyyppi">
-          Suositettava termi
+          {t('recommended-term-no-suff')}
         </BasicBlock>
 
         <DropdownBlock
-          labelText={'Termin uusi tyyppi'}
-          visualPlaceholder="Valitse tyyppi"
+          labelText={t('term-new-type')}
+          visualPlaceholder={t('choose-type')}
           onChange={(e) => handleChange(e)}
         >
           {termTypes
@@ -64,9 +77,11 @@ export default function TermTypeModal({ setVisibility }: TermTypeModalProps) {
         </DropdownBlock>
       </ModalContent>
       <ModalFooter>
-        <Button disabled={!isValid}>Hyväksy</Button>
+        <Button disabled={!isValid} onClick={() => handleClick()}>
+          {t('accept')}
+        </Button>
         <Button variant="secondary" onClick={() => setVisibility(false)}>
-          Peruuta
+          {t('cancel-variant')}
         </Button>
       </ModalFooter>
     </Modal>

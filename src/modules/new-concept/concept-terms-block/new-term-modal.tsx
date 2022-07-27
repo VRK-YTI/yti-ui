@@ -15,8 +15,8 @@ import {
   TextInput,
 } from 'suomifi-ui-components';
 import { v4 } from 'uuid';
-import { ConceptTermType, ItemType } from './concept-term-block-types';
 import ListBlock from '../list-block';
+import { ConceptTermType } from '../new-concept.types';
 import {
   CheckboxBlock,
   DropdownBlock,
@@ -26,6 +26,7 @@ import {
   TermEquivalencyBlock,
   WiderTextareaBlock,
 } from './concept-terms-block.styles';
+import { TermFormUpdate } from './term-form';
 
 interface NewTermModalProps {
   setVisible: (value: boolean) => void;
@@ -68,7 +69,7 @@ export default function NewTermModal({
     wordClass: '',
   });
 
-  const handleUpdate = (key: string, value?: string | ItemType[] | null) => {
+  const handleUpdate = ({ key, value }: TermFormUpdate) => {
     let updatedTerm = termData;
     updatedTerm = { ...updatedTerm, [key]: value };
 
@@ -81,7 +82,7 @@ export default function NewTermModal({
 
   const handleSetIsHomographic = () => {
     if (isHomographic) {
-      handleUpdate('termHomographNumber', '');
+      handleUpdate({ key: 'termHomographNumber', value: '' });
     }
     setIsHomographic(!isHomographic);
   };
@@ -115,7 +116,9 @@ export default function NewTermModal({
         <TextInput
           labelText={t('term-name-label')}
           defaultValue={termData.prefLabel}
-          onBlur={(e) => handleUpdate('prefLabel', e.target.value)}
+          onBlur={(e) =>
+            handleUpdate({ key: 'prefLabel', value: e.target.value })
+          }
           status={invalidData.prefLabel ? 'error' : undefined}
         />
 
@@ -128,14 +131,19 @@ export default function NewTermModal({
             labelText={t('homograph-number')}
             type="number"
             defaultValue={termData.termHomographNumber}
-            onBlur={(e) => handleUpdate('termHomographNumber', e.target.value)}
+            onBlur={(e) =>
+              handleUpdate({
+                key: 'termHomographNumber',
+                value: e.target.value,
+              })
+            }
           />
         )}
 
         <RadioButtonGroupSpaced
           labelText={t('term-type')}
           name="term-type-radio-button-group"
-          onChange={(e) => handleUpdate('termType', e)}
+          onChange={(e) => handleUpdate({ key: 'termType', value: e })}
           groupHintText={
             invalidData.termType ? t('term-type-error-msg') : undefined
           }
@@ -159,16 +167,16 @@ export default function NewTermModal({
         </RadioButtonGroupSpaced>
 
         <SingleSelect
-          ariaOptionsAvailableText=""
+          ariaOptionsAvailableText={t('available-languages')}
           clearButtonLabel=""
           items={languages.map((language) => ({
-            labelText: language,
+            labelText: `${t(language)} ${language.toUpperCase()}`,
             uniqueItemId: language,
           }))}
           labelText={t('language')}
-          noItemsText=""
+          noItemsText={t('Kieliä ei saatavilla')}
           onItemSelectionChange={(e) =>
-            handleUpdate('language', e?.labelText || '')
+            handleUpdate({ key: 'language', value: e?.uniqueItemId || '' })
           }
           status={invalidData.language ? 'error' : undefined}
         />
@@ -176,7 +184,7 @@ export default function NewTermModal({
         <DropdownBlock
           labelText={t('term-status-label')}
           defaultValue={termData.status}
-          onChange={(e) => handleUpdate('status', e)}
+          onChange={(e) => handleUpdate({ key: 'status', value: e })}
         >
           <DropdownItem value="draft">
             {t('DRAFT', { ns: 'common' })}
@@ -205,7 +213,9 @@ export default function NewTermModal({
           labelText={t('term-info-label')}
           optionalText={t('optional')}
           visualPlaceholder={t('term-info-placeholder')}
-          onChange={(e) => handleUpdate('termInfo', e.target.value)}
+          onChange={(e) =>
+            handleUpdate({ key: 'termInfo', value: e.target.value })
+          }
         />
 
         <WiderTextareaBlock
@@ -213,7 +223,9 @@ export default function NewTermModal({
           optionalText={t('optional')}
           hintText={t('term-scope-hint-text')}
           visualPlaceholder={t('term-scope-placeholder')}
-          onChange={(e) => handleUpdate('scope', e.target.value)}
+          onChange={(e) =>
+            handleUpdate({ key: 'scope', value: e.target.value })
+          }
         />
 
         <TermEquivalencyBlock>
@@ -225,7 +237,7 @@ export default function NewTermModal({
           <Dropdown
             labelText=""
             defaultValue="undefined"
-            onChange={(e) => handleUpdate('termEquivalency', e)}
+            onChange={(e) => handleUpdate({ key: 'termEquivalency', value: e })}
           >
             <DropdownItem value="undefined">{t('no-selection')}</DropdownItem>
             <DropdownItem value="<">{'<'}</DropdownItem>
@@ -239,7 +251,9 @@ export default function NewTermModal({
           optionalText={t('optional')}
           hintText={t('term-sources-hint-text')}
           visualPlaceholder={t('term-sources-placeholder')}
-          onChange={(e) => handleUpdate('source', e.target.value)}
+          onChange={(e) =>
+            handleUpdate({ key: 'source', value: e.target.value })
+          }
         />
 
         <Separator isLarge />
@@ -253,14 +267,18 @@ export default function NewTermModal({
           optionalText={t('optional')}
           hintText={t('term-change-note-hint-text')}
           visualPlaceholder={t('term-change-note-placeholder')}
-          onChange={(e) => handleUpdate('changeNote', e.target.value)}
+          onChange={(e) =>
+            handleUpdate({ key: 'changeNote', value: e.target.value })
+          }
         />
         <WiderTextareaBlock
           labelText={t('term-history-note-label')}
           optionalText={t('optional')}
           hintText={t('term-history-note-hint-text')}
           visualPlaceholder={t('term-history-note-placeholer')}
-          onChange={(e) => handleUpdate('historyNote', e.target.value)}
+          onChange={(e) =>
+            handleUpdate({ key: 'historyNote', value: e.target.value })
+          }
         />
 
         <ListBlock
@@ -288,7 +306,7 @@ export default function NewTermModal({
               { labelText: t('spoken-form'), uniqueItemId: 'spoken-form' },
             ]}
             onItemSelectionChange={(e) =>
-              handleUpdate('termStyle', e?.uniqueItemId || '')
+              handleUpdate({ key: 'termStyle', value: e?.uniqueItemId || '' })
             }
           />
 
@@ -314,7 +332,7 @@ export default function NewTermModal({
               },
             ]}
             onItemSelectionChange={(e) =>
-              handleUpdate('termFamily', e?.uniqueItemId || '')
+              handleUpdate({ key: 'termFamily', value: e?.uniqueItemId || '' })
             }
           />
 
@@ -330,7 +348,10 @@ export default function NewTermModal({
               { labelText: t('plural'), uniqueItemId: 'plural' },
             ]}
             onItemSelectionChange={(e) =>
-              handleUpdate('termConjugation', e?.uniqueItemId || '')
+              handleUpdate({
+                key: 'termConjugation',
+                value: e?.uniqueItemId || '',
+              })
             }
           />
 
@@ -338,7 +359,7 @@ export default function NewTermModal({
             labelText={t('term-equivalency')}
             optionalText={t('optional')}
             defaultValue="undefined"
-            onChange={(e) => handleUpdate('termEquivalency', e)}
+            onChange={(e) => handleUpdate({ key: 'termEquivalency', value: e })}
           >
             <DropdownItem value="undefined">{t('no-selection')}</DropdownItem>
             <DropdownItem value="<">{'<'}</DropdownItem>
@@ -356,7 +377,7 @@ export default function NewTermModal({
             visualPlaceholder={t('choose-term-word-class')}
             items={[{ labelText: t('adjective'), uniqueItemId: 'adjective' }]}
             onItemSelectionChange={(e) =>
-              handleUpdate('wordClass', e?.uniqueItemId || '')
+              handleUpdate({ key: 'wordClass', value: e?.uniqueItemId || '' })
             }
           />
         </GrammaticalBlock>

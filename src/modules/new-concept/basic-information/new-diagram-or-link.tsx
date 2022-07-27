@@ -7,7 +7,7 @@ import {
   Textarea,
   TextInput,
 } from 'suomifi-ui-components';
-import { DiagramType } from './concept-basic-information-types';
+import { DiagramType } from '../new-concept.types';
 import { ModalContentFitted, ModalSmWidth } from './new-diagram-or-link.styles';
 
 interface NewDiagramOrLinkProps {
@@ -19,7 +19,7 @@ export default function NewDiagramOrLink({
 }: NewDiagramOrLinkProps) {
   const { t } = useTranslation('admin');
   const [visible, setVisible] = useState(false);
-  const [diagramInfo, setDiagramInfo] = useState({
+  const [diagramInfo, setDiagramInfo] = useState<DiagramType>({
     diagramName: '',
     diagramUrl: '',
     description: '',

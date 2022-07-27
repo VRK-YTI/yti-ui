@@ -21,10 +21,10 @@ import generateConcept from './generate-concept';
 import { useAddConceptMutation } from '@app/common/components/modify/modify.slice';
 import { v4 } from 'uuid';
 import {
+  BasicInfo,
+  NewConceptType,
   ConceptTermType,
-  ItemType,
-} from './concept-terms-block/concept-term-block-types';
-import { BasicInfoType } from './basic-information/concept-basic-information-types';
+} from './new-concept.types';
 
 interface NewConceptProps {
   terminologyId: string;
@@ -50,14 +50,11 @@ export default function NewConcept({ terminologyId }: NewConceptProps) {
   const [postedData, setPostedData] =
     useState<ReturnType<typeof generateConcept>>();
 
-  const [formData, setFormData] = useState<{
-    terms: ConceptTermType[];
-    basicInformation: BasicInfoType;
-  }>({
+  const [formData, setFormData] = useState<NewConceptType>({
     terms: preferredTerms.map((term) => ({
       changeNote: '',
       draftComment: '',
-      editorialNote: [] as ItemType[],
+      editorialNote: [],
       historyNote: '',
       id: v4(),
       language: term.lang,
@@ -106,10 +103,6 @@ export default function NewConcept({ terminologyId }: NewConceptProps) {
   });
 
   const handlePost = () => {
-    const terminologyId = Array.isArray(router.query.terminologyId)
-      ? router.query.terminologyId[0]
-      : router.query.terminologyId;
-
     if (!terminologyId) {
       console.error('Invalid terminologyId');
       return;
@@ -127,20 +120,19 @@ export default function NewConcept({ terminologyId }: NewConceptProps) {
     setFormData({ ...formData, terms: terms });
   };
 
-  const updateBasicInformation = (basicInfo: BasicInfoType) => {
+  const updateBasicInformation = (basicInfo: BasicInfo) => {
     setFormData({ ...formData, basicInformation: basicInfo });
   };
 
   useEffect(() => {
     if (addConceptStatus.isSuccess && postedData) {
       router.push(
-        `/terminology/${router.query.terminologyId}/concept/${
+        `/terminology/${terminologyId}/concept/${
           postedData[postedData.length - 1].id
         }`
       );
-      console.log(addConceptStatus);
     }
-  }, [addConceptStatus, postedData, router]);
+  }, [addConceptStatus, postedData, terminologyId, router]);
 
   return (
     <>
@@ -192,7 +184,7 @@ export default function NewConcept({ terminologyId }: NewConceptProps) {
         <ConceptBasicInformation
           updateBasicInformation={updateBasicInformation}
           initialValues={formData.basicInformation}
-          languages={preferredTerms}
+          languages={languages}
         />
 
         <FormFooter handlePost={handlePost} />
