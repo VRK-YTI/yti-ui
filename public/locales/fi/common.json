@@ -48,6 +48,7 @@
   "RETIRED": "Poistettu käytöstä",
   "SUPERSEDED": "Korvattu",
   "INVALID": "Virheellinen",
+  "ALL-STATUSES": "Kaikki tilat",
   "SUGGESTED": "Ehdotus",
   "ADMIN": "Ylläpitäjä",
   "DATA_MODEL_EDITOR": "Tietomallintaja",

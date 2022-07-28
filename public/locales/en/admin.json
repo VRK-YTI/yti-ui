@@ -218,5 +218,8 @@
   "download-failed": "Download failed",
   "ready": "Ready",
   "loading": "Loading...",
-  "percent-done": "done"
+  "percent-done": "done",
+  "you-have-right-new-collection": "You have the rights to create new collections to this terminology",
+  "new-collection": "New collection",
+  "add-new-collection": "Add new collection"
 }
