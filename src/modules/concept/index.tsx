@@ -36,6 +36,7 @@ import {
 } from '@app/common/components/title-block';
 import { useSelector } from 'react-redux';
 import { selectLogin } from '@app/common/components/login/login.slice';
+import { translateStatus } from '@app/common/utils/translation-helpers';
 
 export interface ConceptProps {
   terminologyId: string;
@@ -164,7 +165,7 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
               fallbackLanguage="fi"
             />
             <Badge $isValid={status === 'VALID'}>
-              {t(status, { ns: 'common' })}
+              {translateStatus(status, t)}
             </Badge>
           </BadgeBar>
 

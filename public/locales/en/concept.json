@@ -1,6 +1,6 @@
 {
-  "close": "",
-  "DRAFT": "",
+  "close": "Close",
+  "DRAFT": "Draft",
   "feedback-action": "Give feedback on the concept",
   "feedback-label": "You can give feedback on the concept to the responsible organization of the vocabulary.",
   "field-change-note": "Change note",

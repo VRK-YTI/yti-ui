@@ -1,4 +1,5 @@
 import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info';
+import { translateLanguage } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { InlineAlert } from 'suomifi-ui-components';
 import { MissingInfoAlertUl } from './new-terminology.styles';
@@ -55,7 +56,8 @@ export default function MissingInfoAlert({ data }: MissingInfoAlertProps) {
           .map((desc, idx) => {
             return (
               <li key={`description-${idx}`}>
-                {t('alert-description-name-undefined')} {t(desc.lang)}
+                {t('alert-description-name-undefined')}{' '}
+                {translateLanguage(desc.lang, t)}
               </li>
             );
           })}

@@ -13,13 +13,17 @@ import {
 interface ConceptInfoBlockProps {
   infoKey: string;
   update: (object: BasicInfoUpdate) => void;
+  addNewText: string;
+  inputLabel: string;
+  inputPlaceholder: string;
 }
 
 interface ConceptInfoListItemProps {
   item: ItemType;
-  infoKey: string;
   handleUpdate: (value: ItemType) => void;
   handleRemove: (id: number) => void;
+  inputLabel: string;
+  inputPlaceholder: string;
 }
 
 interface ItemType {
@@ -31,6 +35,9 @@ interface ItemType {
 export default function ConceptInfoBlock({
   infoKey,
   update,
+  addNewText,
+  inputLabel,
+  inputPlaceholder,
 }: ConceptInfoBlockProps) {
   const { t } = useTranslation('admin');
   const [list, setList] = useState<ItemType[]>([]);
@@ -76,16 +83,17 @@ export default function ConceptInfoBlock({
               return (
                 <ConceptInfoListItem
                   item={item}
-                  infoKey={infoKey}
                   handleUpdate={handleUpdate}
                   handleRemove={handleRemove}
                   key={`${infoKey}-${item.id}`}
+                  inputLabel={inputLabel}
+                  inputPlaceholder={inputPlaceholder}
                 />
               );
             })}
           </ConceptInfoBlockWrapper>
           <Button variant="secondary" onClick={() => handleAdd()}>
-            {t(`add-new-${infoKey}`)}
+            {addNewText}
           </Button>
         </BasicBlockExtraWrapper>
       }
@@ -97,9 +105,10 @@ export default function ConceptInfoBlock({
 
 function ConceptInfoListItem({
   item,
-  infoKey,
   handleUpdate,
   handleRemove,
+  inputLabel,
+  inputPlaceholder,
 }: ConceptInfoListItemProps) {
   const { t } = useTranslation('admin');
   const [text, setText] = useState(item.value);
@@ -128,8 +137,8 @@ function ConceptInfoListItem({
       </div>
 
       <ConceptInfoTextarea
-        labelText={t(`${infoKey}-textarea-label-text`)}
-        visualPlaceholder={t(`${infoKey}-textarea-placeholder`)}
+        labelText={inputLabel}
+        visualPlaceholder={inputPlaceholder}
         onChange={(e) => setText(e.target.value)}
         onBlur={(e) => handleUpdate({ id: item.id, value: text })}
         value={text}

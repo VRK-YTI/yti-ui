@@ -1,13 +1,8 @@
 {
-  "ADMIN": "Ylläpitäjä",
-  "CODE_LIST_EDITOR": "Koodistotyöntekijä",
   "collection-page": "Käsitekokoelman sivu",
   "concept-page": "Käsitteen sivu",
-  "DATA_MODEL_EDITOR": "Tietomallintaja",
   "front-page": "Etusivu",
-  "MEMBER": "Jäsen",
   "site-fake-login": "Fake",
-  "TERMINOLOGY_EDITOR": "Sanastotyöntekijä",
   "terminology-login-description-1": "Palveluun kirjaudutaan eDuuni-tunnuksilla. Kirjautumista vaaditaan jos haluat muokata palvelun sisältöä.",
   "terminology-login-description-2": "Alla olevalla painikkeella ohjaudut eDuuni-palvelun kirjautumiseen. Palaa sen jälkeen takaisin palveluun.",
   "terminology-search-filter-list": "RAJAA LISTAA",

@@ -1,6 +1,7 @@
 import { BasicBlock } from '@app/common/components/block';
 import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
 import Separator from '@app/common/components/separator';
+import { translateLanguage } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { Button, DropdownItem, TextInput } from 'suomifi-ui-components';
 import {
@@ -21,7 +22,7 @@ export default function TermForm({ lang }: TermFormProps) {
       <TextInput labelText={t('term-name-label')} />
       <CheckboxBlock>{t('term-is-homograph-label')}</CheckboxBlock>
       <BasicBlock title={t('language')}>
-        {t(`language-label-text-${lang}`)}
+        {translateLanguage(lang, t)} {lang.toUpperCase()}
       </BasicBlock>
       <BasicBlock
         title={t('term-type-label')}

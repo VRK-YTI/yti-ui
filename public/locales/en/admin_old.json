@@ -1,14 +1,8 @@
 {
-  "add-new-example": "Add new example",
-  "add-new-note": "Add new note",
   "alert-contact-undefined": "Contact email is undefined",
   "chosen-organizations": "Selected contributor",
-  "example-textarea-label-text": "Example related to concept",
-  "example-textarea-placeholder": "Give example",
   "loading": "Loading...",
   "new-note-description": "You can assign a note to concept. Do not add information here that has its own section on the form.",
   "note": "Note",
-  "note-textarea-label-text": "Note related to concept",
-  "note-textarea-placeholder": "Give note",
   "ready": "Ready"
 }

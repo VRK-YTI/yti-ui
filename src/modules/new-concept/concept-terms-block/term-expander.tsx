@@ -10,6 +10,7 @@ import {
 } from 'suomifi-ui-components';
 import { SuccessIcon } from './concept-terms-block.styles';
 import ExpanderTitle from '@app/common/components/expander-title';
+import { translateLanguage } from '@app/common/utils/translation-helpers';
 
 export interface TermExpanderProps {
   lang: string;
@@ -32,7 +33,7 @@ export default function TermExpander({
     .map((lang) => ({ lang, value: asString(router.query[lang]), regex: '' }))
     .filter(({ value }) => !!value);
 
-  const primaryText = t(`language-label-text-${lang}`);
+  const primaryText = `${translateLanguage(lang, t)} ${lang.toUpperCase()}`;
   const secondaryText = `${getPropertyValue({
     property: preferredTerm,
     language: lang,

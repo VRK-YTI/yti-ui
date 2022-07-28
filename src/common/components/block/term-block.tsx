@@ -6,6 +6,7 @@ import MultilingualBlock, {
   MultilingualBlockItemMapper,
 } from './multilingual-block';
 import { TermWrapper } from './term-block.styles';
+import { translateStatus } from '@app/common/utils/translation-helpers';
 
 export interface TermBlockProps {
   title: React.ReactNode;
@@ -33,7 +34,8 @@ export default function TermBlock({
           <TermModal data={{ term: term, type: type }} />
         </span>
         <span>
-          {type}, {t(term.properties.status?.[0].value ?? 'DRAFT')}
+          {type},{' '}
+          {translateStatus(term.properties.status?.[0].value ?? 'DRAFT', t)}
         </span>
       </TermWrapper>
     ),

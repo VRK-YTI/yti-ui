@@ -61,11 +61,23 @@ export default function ConceptBasicInformation() {
 
       {renderDefinitions()}
 
-      <ConceptInfoBlock infoKey="example" update={handleBasicInfoUpdate} />
+      <ConceptInfoBlock
+        infoKey="example"
+        update={handleBasicInfoUpdate}
+        addNewText={t('add-new-example')}
+        inputLabel={t('example-textarea-label-text')}
+        inputPlaceholder={t('example-textarea-placeholder')}
+      />
 
       {renderSubject()}
 
-      <ConceptInfoBlock infoKey="note" update={handleBasicInfoUpdate} />
+      <ConceptInfoBlock
+        infoKey="note"
+        update={handleBasicInfoUpdate}
+        addNewText={t('add-new-note')}
+        inputLabel={t('note-textarea-label-text')}
+        inputPlaceholder={t('note-textarea-placeholder')}
+      />
 
       <ExpanderGroup closeAllText="" openAllText="">
         <ConceptDiagramsAndSources

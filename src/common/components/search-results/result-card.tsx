@@ -1,4 +1,5 @@
 import { InformationDomainDTO } from '@app/common/interfaces/terminology.interface';
+import { translateStatus } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
 import { BaseIconKeys, Icon, VisuallyHidden } from 'suomifi-ui-components';
@@ -97,10 +98,10 @@ export default function ResultCard({
       <>
         <span aria-hidden={true}>&middot;</span>
         {noChip ? (
-          t(status ?? 'DRAFT')
+          translateStatus(status ?? 'DRAFT', t)
         ) : (
           <Status valid={status === 'VALID' ? 'true' : undefined}>
-            {t(status ?? 'DRAFT')}
+            {translateStatus(status ?? 'DRAFT', t)}
           </Status>
         )}
       </>

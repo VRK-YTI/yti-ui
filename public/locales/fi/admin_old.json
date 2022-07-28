@@ -1,14 +1,8 @@
 {
-  "add-new-example": "Lisää uusi käyttöesimerkki",
-  "add-new-note": "Lisää uusi huomautus",
   "alert-contact-undefined": "Yhteydenotto-osoitetta ei ole määritelty",
   "chosen-organizations": "Valitut organisaatiot",
-  "example-textarea-label-text": "Käsitteeseen liittyvä esimerkki",
-  "example-textarea-placeholder": "Kirjoita esimerkki",
   "loading": "Ladataan...",
   "new-note-description": "Voit lisätä käsitteeseen liittyvän muun huomautuksen. Älä lisää tähän tietoja, joille on olemassa oma kohtansa lomakkeella.",
   "note": "Huomautus",
-  "note-textarea-label-text": "Käsitteeseen liittyvä huomautus",
-  "note-textarea-placeholder": "Kirjoita huomautus",
   "ready": "Valmis"
 }

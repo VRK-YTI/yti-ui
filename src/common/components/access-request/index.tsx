@@ -49,7 +49,15 @@ export default function AccessRequest({ organizations }: AccessRequestProps) {
       handleClose();
     } else if (request.isError) {
       dispatch(
-        setAlert([{ note: request.error, displayText: '_access-request' }], [])
+        setAlert(
+          [
+            {
+              note: request.error,
+              displayText: t('error-occured_access-request', { ns: 'alert' }),
+            },
+          ],
+          []
+        )
       );
       refetch();
       handleClose();

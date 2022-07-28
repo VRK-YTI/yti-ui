@@ -1,13 +1,8 @@
 {
-  "ADMIN": "Admin",
-  "CODE_LIST_EDITOR": "Code list editor",
   "collection-page": "Collection page",
   "concept-page": "Concept page",
-  "DATA_MODEL_EDITOR": "Data model editor",
   "front-page": "Front page",
-  "MEMBER": "Member",
   "site-fake-login": "Fake",
-  "TERMINOLOGY_EDITOR": "Terminology editor",
   "terminology-login-description-1": "Log in with your eDuuni ID. Logging in is needed for editing the content in this web site.",
   "terminology-login-description-2": "The buttons below will lead you to the eDuuni ID service. You will be forwarded back to this web site automatically after logging in.",
   "terminology-search-filter-list": "FILTER LIST",

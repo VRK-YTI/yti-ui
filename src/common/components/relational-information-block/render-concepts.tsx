@@ -21,6 +21,7 @@ import {
 } from '@app/common/components/block';
 import FormattedDate from '@app/common/components/formatted-date';
 import { Concepts } from '@app/common/interfaces/concepts.interface';
+import { translateStatus } from '@app/common/utils/translation-helpers';
 
 interface RenderConceptsProps {
   concepts?: Concepts[];
@@ -82,11 +83,9 @@ export default function RenderConcepts({
                   toggleButtonAriaDescribedBy=""
                 >
                   <Checkbox
-                    hintText={`${organizationTitle} - ${t(
+                    hintText={`${organizationTitle} - ${translateStatus(
                       concept.status ?? 'DRAFT',
-                      {
-                        ns: 'common',
-                      }
+                      t
                     )}`}
                     onClick={(e) => handleCheckbox(e, concept)}
                     checked={chosen.some((chose) => chose.id === concept.id)}

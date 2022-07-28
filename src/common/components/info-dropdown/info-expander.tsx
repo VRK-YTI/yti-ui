@@ -19,6 +19,7 @@ import FormattedDate from '@app/common/components/formatted-date';
 import { useSelector } from 'react-redux';
 import { selectLogin } from '@app/common/components/login/login.slice';
 import HasPermission from '@app/common/utils/has-permission';
+import { translateLanguage } from '@app/common/utils/translation-helpers';
 
 const Subscription = dynamic(
   () => import('@app/common/components/subscription/subscription')
@@ -61,7 +62,7 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
           property={data.properties.language}
           delimiter=", "
           valueAccessor={({ value }) =>
-            `${t(`vocabulary-info-${value}`)} ${value.toUpperCase()}`
+            `${translateLanguage(value, t)} ${value.toUpperCase()}`
           }
         />
         <BasicBlock title={t('vocabulary-info-vocabulary-type')}>

@@ -1,6 +1,6 @@
 {
-  "close": "",
-  "DRAFT": "",
+  "close": "Sulje",
+  "DRAFT": "Luonnos",
   "feedback-action": "Anna palautetta käsitteestä",
   "feedback-label": "Voit antaa palautetta käsitteestä sanaston vastuuorganisaatiolle.",
   "field-change-note": "Muutoshistoriatiedot",
