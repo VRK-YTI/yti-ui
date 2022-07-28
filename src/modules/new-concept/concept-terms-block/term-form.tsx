@@ -126,6 +126,7 @@ export default function TermForm({ term, update }: TermFormProps) {
             </Button>
             {modalVisible && (
               <TermTypeModal
+                currentType={term.termType}
                 setVisibility={setModalVisible}
                 handleUpdate={handleUpdate}
               />

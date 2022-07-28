@@ -13,11 +13,13 @@ import { DropdownBlock } from './concept-terms-block.styles';
 import { TermFormUpdate } from './term-form';
 
 interface TermTypeModalProps {
+  currentType: string;
   setVisibility: (value: boolean) => void;
   handleUpdate: (value: TermFormUpdate) => void;
 }
 
 export default function TermTypeModal({
+  currentType,
   setVisibility,
   handleUpdate,
 }: TermTypeModalProps) {
@@ -26,7 +28,7 @@ export default function TermTypeModal({
   const [newType, setNewType] = useState('');
 
   const termTypes = [
-    'recommended-term-no-suff',
+    'recommended-term',
     'synonym',
     'not-recommended-synonym',
     'search-term',
@@ -57,7 +59,9 @@ export default function TermTypeModal({
         <BasicBlock title={t('term-name-label')}>{t('application')}</BasicBlock>
 
         <BasicBlock title="Termin nykyinen tyyppi">
-          {t('recommended-term-no-suff')}
+          {currentType === 'recommended-term'
+            ? t(`${currentType}-no-suff`)
+            : t(currentType)}
         </BasicBlock>
 
         <DropdownBlock
@@ -66,7 +70,9 @@ export default function TermTypeModal({
           onChange={(e) => handleChange(e)}
         >
           {termTypes
-            .filter((type) => type !== 'recommended-term-no-suff')
+            .filter(
+              (type) => type !== 'recommended-term' && type !== currentType
+            )
             .map((type, idx) => {
               return (
                 <DropdownItem key={`term-type-${idx}`} value={type}>

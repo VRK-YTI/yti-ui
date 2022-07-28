@@ -73,7 +73,10 @@ export default function NewTermModal({
     let updatedTerm = termData;
     updatedTerm = { ...updatedTerm, [key]: value };
 
-    if (['prefLabel', 'termType', 'language'].includes(key)) {
+    if (
+      Object.keys(invalidData).includes(key) &&
+      invalidData[key as keyof typeof invalidData]
+    ) {
       setInvalidData(validateFormData(updatedTerm));
     }
 
@@ -174,7 +177,7 @@ export default function NewTermModal({
             uniqueItemId: language,
           }))}
           labelText={t('language')}
-          noItemsText={t('Kieliä ei saatavilla')}
+          noItemsText={t('no-languages-available')}
           onItemSelectionChange={(e) =>
             handleUpdate({ key: 'language', value: e?.uniqueItemId || '' })
           }
