@@ -1,9 +1,10 @@
 import { v4 } from 'uuid';
-import { NewCollectionFormDataType } from '../new-collection.types';
+import { EditCollectionFormDataType } from '../edit-collection.types';
 
 export default function generateCollection(
-  formData: NewCollectionFormDataType,
-  terminologyId: string
+  formData: EditCollectionFormDataType,
+  terminologyId: string,
+  collectionId?: string
 ) {
   const regex = '(?s)^.*$';
   const now = new Date();
@@ -12,13 +13,13 @@ export default function generateCollection(
     {
       createdBy: '',
       createdDate: now.toISOString(),
-      id: v4(),
+      id: collectionId ? collectionId : v4(),
       lastModifiedBy: '',
       lastModifiedDate: now.toISOString(),
       properties: {
         definition:
-          formData.description.length > 0
-            ? formData.description
+          formData.definition.length > 0
+            ? formData.definition
                 .filter((d) => d.value !== '')
                 .map((d) => ({
                   lang: d.lang,
@@ -36,8 +37,8 @@ export default function generateCollection(
       },
       references: {
         broader: [],
-        member: formData.concepts.map((concept) => ({
-          id: concept.id,
+        member: formData.concepts.map((c) => ({
+          id: c.id,
           type: {
             graph: {
               id: terminologyId,

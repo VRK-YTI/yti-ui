@@ -1,24 +1,27 @@
 import { BasicBlock } from '@app/common/components/block';
 import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
-import { Concepts } from '@app/common/interfaces/concepts.interface';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import { Button, Chip } from 'suomifi-ui-components';
+import { EditCollectionFormDataType } from '../edit-collection.types';
 import { SelectedConceptBlock } from './concept-picker.styles';
 import PickerModal from './picker-modal';
 
 interface ConceptPickerProps {
+  formConcepts: EditCollectionFormDataType['concepts'];
   terminologyId: string;
-  setFormConcepts: (value: Concepts[]) => void;
+  setFormConcepts: (value: EditCollectionFormDataType['concepts']) => void;
 }
 
 export default function ConceptPicker({
+  formConcepts,
   terminologyId,
   setFormConcepts,
 }: ConceptPickerProps) {
   const { t, i18n } = useTranslation('collection');
   const [visible, setVisible] = useState(false);
-  const [concepts, setConcepts] = useState<Concepts[]>([]);
+  const [concepts, setConcepts] =
+    useState<EditCollectionFormDataType['concepts']>(formConcepts);
 
   const handleClick = () => {
     setVisible(true);
@@ -65,9 +68,9 @@ export default function ConceptPicker({
                     }
                     removable
                   >
-                    {concept.label[i18n.language] ??
-                      concept.label.fi ??
-                      concept.label[Object.keys(concept.label)[0]] ??
+                    {concept.prefLabels[i18n.language] ??
+                      concept.prefLabels['fi'] ??
+                      concept.prefLabels[Object.keys(concept.prefLabels)[0]] ??
                       ''}
                   </Chip>
                 ))}

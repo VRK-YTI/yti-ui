@@ -17,6 +17,7 @@ import {
   ModalTitle,
   Text,
 } from 'suomifi-ui-components';
+import { EditCollectionFormDataType } from '../edit-collection.types';
 import {
   FooterButton,
   ResultBlock,
@@ -39,7 +40,7 @@ export default function PickerModal({
   const { isSmall } = useBreakpoints();
   const [searchConcept, result] = useSearchConceptMutation();
   const [selectedConcepts, setSelectedConcepts] =
-    useState<Concepts[]>(orgConcepts);
+    useState<EditCollectionFormDataType['concepts']>(orgConcepts);
   const [showSelected, setShowSelected] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [status, setStatus] = useState<string>('ALL-STATUSES');
@@ -87,9 +88,17 @@ export default function PickerModal({
     setVisible(false);
   };
 
+  console.log('selectedConcepts', selectedConcepts);
+
   const handleCheckbox = (checkboxState: boolean, concept: Concepts) => {
     if (checkboxState) {
-      setSelectedConcepts([...selectedConcepts, concept]);
+      setSelectedConcepts([
+        ...selectedConcepts,
+        {
+          id: concept.id,
+          prefLabels: concept.label,
+        },
+      ]);
     } else {
       setSelectedConcepts(selectedConcepts.filter((c) => c.id !== concept.id));
     }
@@ -290,9 +299,9 @@ function SelectedConcepts({
               onClick={() => deselect(concept.id)}
               removable
             >
-              {concept.label[i18n.language] ??
-                concept.label.fi ??
-                concept.label[Object.keys(concept.label)[0]] ??
+              {concept.prefLabels[i18n.language] ??
+                concept.prefLabels.fi ??
+                concept.prefLabels[Object.keys(concept.prefLabels)[0]] ??
                 ''}
             </Chip>
           );

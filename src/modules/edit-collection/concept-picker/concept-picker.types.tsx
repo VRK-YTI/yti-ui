@@ -1,14 +1,15 @@
 import { Concepts } from '@app/common/interfaces/concepts.interface';
+import { EditCollectionFormDataType } from '../edit-collection.types';
 
 export interface PickerModalProps {
   setVisible: (value: boolean) => void;
   terminologyId: string;
-  orgConcepts: Concepts[];
-  setConcepts: (value: Concepts[]) => void;
+  orgConcepts: EditCollectionFormDataType['concepts'];
+  setConcepts: (value: EditCollectionFormDataType['concepts']) => void;
 }
 
 export interface SelectedConceptProps {
-  selectedConcepts: Concepts[];
+  selectedConcepts: EditCollectionFormDataType['concepts'];
   deselect: (value: string) => void;
 }
 
