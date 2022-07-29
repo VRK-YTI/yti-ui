@@ -271,5 +271,8 @@
   "remove-term_other": "Remove terms",
   "application": "application",
   "term-new-type": "New type of term",
-  "choose-type": "Choose type"
+  "choose-type": "Choose type",
+  "you-have-right-new-collection": "You have the rights to create new collections to this terminology",
+  "new-collection": "New collection",
+  "add-new-collection": "Add new collection"
 }

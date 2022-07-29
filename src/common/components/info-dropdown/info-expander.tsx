@@ -19,6 +19,7 @@ import FormattedDate from '@app/common/components/formatted-date';
 import { useSelector } from 'react-redux';
 import { selectLogin } from '@app/common/components/login/login.slice';
 import HasPermission from '@app/common/utils/has-permission';
+import Link from 'next/link';
 
 const Subscription = dynamic(
   () => import('@app/common/components/subscription/subscription')
@@ -78,6 +79,31 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
               data.properties.language?.map(({ value }) => value) ?? []
             }
           />
+        )}
+
+        {HasPermission({
+          actions: 'CREATE_COLLECTION',
+          targetOrganization: data.references.contributor?.[0].id,
+        }) && (
+          <>
+            <Separator isLarge />
+            <BasicBlock
+              title="Uusi käsitekokoelma sanastoon"
+              extra={
+                <BasicBlockExtraWrapper>
+                  <Link
+                    href={`/terminology/${data.identifier.type.graph.id}/new-collection`}
+                  >
+                    <Button icon="plus" variant="secondary">
+                      {t('add-new-collection', { ns: 'admin' })}
+                    </Button>
+                  </Link>
+                </BasicBlockExtraWrapper>
+              }
+            >
+              {t('you-have-right-new-collection', { ns: 'admin' })}
+            </BasicBlock>
+          </>
         )}
 
         <Separator isLarge />

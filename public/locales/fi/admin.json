@@ -271,5 +271,8 @@
   "remove-term_other": "Poista termit",
   "application": "hakemus",
   "term-new-type": "Termin uusi tyyppi",
-  "choose-type": "Valitse tyyppi"
+  "choose-type": "Valitse tyyppi",
+  "you-have-right-new-collection": "Sinulla on oikeudet luoda uusia käsitekokoelmia sanastoon",
+  "new-collection": "Uusi käsitekokoelma",
+  "add-new-collection": "Lisää uusi käsitekokoelma"
 }
