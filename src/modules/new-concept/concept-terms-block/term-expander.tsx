@@ -1,7 +1,4 @@
-import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
-import { asString } from '@app/common/utils/hooks/useUrlState';
 import { useTranslation } from 'next-i18next';
-import { useRouter } from 'next/router';
 import {
   Checkbox,
   Expander,
@@ -10,33 +7,26 @@ import {
 } from 'suomifi-ui-components';
 import { SuccessIcon } from './concept-terms-block.styles';
 import ExpanderTitle from '@app/common/components/expander-title';
+import { ConceptTermType } from './concept-term-block-types';
 
 export interface TermExpanderProps {
-  lang: string;
-  languages: string[];
+  term: ConceptTermType;
+  setChecked?: (id: string, value: boolean) => void;
   checkable?: boolean;
   completed?: boolean;
   children?: React.ReactNode;
 }
 
 export default function TermExpander({
-  lang,
-  languages,
+  term,
+  setChecked,
   checkable,
   completed,
   children,
 }: TermExpanderProps) {
   const { t } = useTranslation('admin');
-  const router = useRouter();
-  const preferredTerm = languages
-    .map((lang) => ({ lang, value: asString(router.query[lang]), regex: '' }))
-    .filter(({ value }) => !!value);
-
-  const primaryText = t(`language-label-text-${lang}`);
-  const secondaryText = `${getPropertyValue({
-    property: preferredTerm,
-    language: lang,
-  })} - ${t('DRAFT', { ns: 'common' })}`;
+  const primaryText = t(`language-label-text-${term.language}`);
+  const secondaryText = `${term.prefLabel} - ${t('DRAFT', { ns: 'common' })}`;
 
   return (
     <Expander>
@@ -46,7 +36,11 @@ export default function TermExpander({
           ariaCloseText="close expander"
           toggleButtonAriaDescribedBy="checkbox-id"
         >
-          <Checkbox hintText={secondaryText} id="checkbox-id">
+          <Checkbox
+            id={`${term.id}-checkbox`}
+            hintText={secondaryText}
+            onClick={(e) => setChecked && setChecked(term.id, e.checkboxState)}
+          >
             {primaryText}
           </Checkbox>
         </SuomifiExpanderTitle>

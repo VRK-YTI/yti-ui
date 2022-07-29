@@ -10,66 +10,70 @@ import OrganizationInformation from './organizational-information';
 import RelationalInformation from './relational-information';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
-import ConceptInfoBlock from './concept-info-block';
-import { BasicInfoUpdate } from './concept-basic-information-interface';
 import { ExpanderGroup } from 'suomifi-ui-components';
+import { BasicInfo, ListType } from '../new-concept.types';
+import ListBlock from '../list-block';
 
-interface BasicInfoType {
-  definition: {
-    fi?: string;
-    sv?: string;
-    en?: string;
-  };
-  example: [];
-  subject: string;
-  note: [];
-  diagramAndSource: [];
-  orgInfo: {};
-  otherInfo: {};
-  relationalInfo: {};
+interface ConceptBasicInformationProps {
+  updateBasicInformation: (value: BasicInfo) => void;
+  initialValues: BasicInfo;
+  languages: string[];
 }
 
-export default function ConceptBasicInformation() {
+export interface BasicInfoUpdate {
+  key: string;
+  lang?: string;
+  value: string | object | ListType[];
+}
+
+export default function ConceptBasicInformation({
+  updateBasicInformation,
+  initialValues,
+  languages,
+}: ConceptBasicInformationProps) {
   const { t } = useTranslation('admin');
-  const [basicInfo, setBasicInfo] = useState<BasicInfoType>({
-    definition: {},
-    example: [],
-    subject: '',
-    note: [],
-    diagramAndSource: [],
-    orgInfo: {},
-    otherInfo: {},
-    relationalInfo: {},
-  });
+  const [basicInfo, setBasicInfo] = useState<BasicInfo>(initialValues);
 
   const handleBasicInfoUpdate = ({ key, lang, value }: BasicInfoUpdate) => {
-    if (lang && key === 'definition') {
-      setBasicInfo((basicInfo) => ({
+    if (key === 'definition' && lang && typeof value === 'string') {
+      const newBasicInfo = {
         ...basicInfo,
         ['definition']: { ...basicInfo['definition'], [lang]: value },
-      }));
+      };
+      setBasicInfo(newBasicInfo);
+      updateBasicInformation(newBasicInfo);
     } else {
-      setBasicInfo((basicInfo) => ({ ...basicInfo, [key]: value }));
+      const newBasicInfo = { ...basicInfo, [key]: value };
+      setBasicInfo(newBasicInfo);
+      updateBasicInformation(newBasicInfo);
     }
   };
 
   return (
     <>
       <Separator isLarge />
-
       <H2Sm variant="h2">{t('concept-basic-information')}</H2Sm>
-
       {renderDefinitions()}
 
-      <ConceptInfoBlock infoKey="example" update={handleBasicInfoUpdate} />
+      <ListBlock
+        items={basicInfo.example}
+        itemsKey="example"
+        update={handleBasicInfoUpdate}
+        languages={languages}
+      />
 
       {renderSubject()}
 
-      <ConceptInfoBlock infoKey="note" update={handleBasicInfoUpdate} />
+      <ListBlock
+        items={basicInfo.note}
+        itemsKey="note"
+        update={handleBasicInfoUpdate}
+        languages={languages}
+      />
 
       <ExpanderGroup closeAllText="" openAllText="">
         <ConceptDiagramsAndSources
-          infoKey="note"
+          infoKey="diagramAndSource"
           update={handleBasicInfoUpdate}
         />
         <OrganizationInformation
@@ -88,9 +92,9 @@ export default function ConceptBasicInformation() {
   function renderDefinitions() {
     return (
       <>
-        {renderDefinitionTextarea('fi')}
-        {renderDefinitionTextarea('sv')}
-        {renderDefinitionTextarea('en')}
+        {languages.map((language) => {
+          return renderDefinitionTextarea(language);
+        })}
       </>
     );
   }
@@ -104,16 +108,14 @@ export default function ConceptBasicInformation() {
         })}
         optionalText={t('optional')}
         visualPlaceholder={t('give-definition')}
-        onChange={(e) =>
+        onBlur={(e) =>
           handleBasicInfoUpdate({
             key: 'definition',
             lang: lang,
             value: e.target.value,
           })
         }
-        value={
-          basicInfo.definition[lang as keyof BasicInfoType['definition']] ?? ''
-        }
+        defaultValue={basicInfo.definition[lang] ?? ''}
       />
     );
   }
@@ -124,10 +126,13 @@ export default function ConceptBasicInformation() {
         labelText={t('subject')}
         hintText={t('subject-hint-text')}
         visualPlaceholder={t('subject-visual-placeholder')}
-        onChange={(e) =>
-          handleBasicInfoUpdate({ key: 'subject', value: e as string })
+        onBlur={(e) =>
+          handleBasicInfoUpdate({
+            key: 'subject',
+            value: e.target.value,
+          })
         }
-        value={basicInfo.subject}
+        defaultValue={basicInfo.subject}
       />
     );
   }

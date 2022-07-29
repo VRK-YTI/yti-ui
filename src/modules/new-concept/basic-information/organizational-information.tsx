@@ -1,14 +1,14 @@
-import { BasicBlock } from '@app/common/components/block';
-import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
-import { Button, ExpanderTitleButton } from 'suomifi-ui-components';
-import { BasicInfoUpdate } from './concept-basic-information-interface';
+import { ExpanderTitleButton } from 'suomifi-ui-components';
 import {
   ConceptExpander,
   ExpanderContentFitted,
   WiderTextarea,
 } from './concept-basic-information.styles';
+import ListBlock from '../list-block';
+import { ListType } from '../new-concept.types';
+import { BasicInfoUpdate } from './concept-basic-information';
 
 interface OrganizationalInformationProps {
   infoKey: string;
@@ -20,15 +20,24 @@ export default function OrganizationalInformation({
   update,
 }: OrganizationalInformationProps) {
   const { t } = useTranslation('admin');
-  const [changeHistory, setChangeHistory] = useState('');
-  const [etymology, setEtymology] = useState('');
+  const [changeHistory, setChangeHistory] = useState<string>('');
+  const [etymology, setEtymology] = useState<string>('');
+  const [editorialNotes, setEditorialNotes] = useState<ListType[]>([]);
 
-  const handleChange = () => {
+  const handleOrgInfo = ({ key, lang, value }: BasicInfoUpdate) => {
+    if (typeof value !== 'string' && typeof value !== 'object') {
+      setEditorialNotes(value ?? []);
+      handleChange(true, value);
+    }
+  };
+
+  const handleChange = (useValue?: boolean, value?: ListType[] | null) => {
     update({
       key: infoKey,
       value: {
         changeHistory: changeHistory,
         etymology: etymology,
+        editorialNote: useValue ? value : editorialNotes,
       },
     });
   };
@@ -62,16 +71,12 @@ export default function OrganizationalInformation({
           value={etymology}
         />
 
-        <BasicBlock
-          title={t('admin-note')}
-          extra={
-            <BasicBlockExtraWrapper>
-              <Button variant="secondary">{t('add-new-admin-note')}</Button>
-            </BasicBlockExtraWrapper>
-          }
-        >
-          {t('add-new-admin-note-description')}
-        </BasicBlock>
+        <ListBlock
+          items={editorialNotes}
+          update={handleOrgInfo}
+          itemsKey={'editorialNote'}
+          noLangOption
+        />
       </ExpanderContentFitted>
     </ConceptExpander>
   );

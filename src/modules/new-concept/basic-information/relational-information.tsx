@@ -2,12 +2,11 @@ import Separator from '@app/common/components/separator';
 import { Concepts } from '@app/common/interfaces/concepts.interface';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
+import { ExpanderTitleButton } from 'suomifi-ui-components';
 import {
-  Checkbox,
-  CheckboxGroup,
-  ExpanderTitleButton,
-} from 'suomifi-ui-components';
-import { BasicInfoUpdate } from './concept-basic-information-interface';
+  BasicInfoType,
+  BasicInfoUpdate,
+} from './concept-basic-information-types';
 import {
   ConceptExpander,
   ExpanderContentFitted,
@@ -24,9 +23,9 @@ export default function RelationalInformation({
   update,
 }: RelationalInformationProps) {
   const { t } = useTranslation('admin');
-  const [expandersData, setExpandersData] = useState<{
-    [key: string]: Concepts[];
-  }>({
+  const [expandersData, setExpandersData] = useState<
+    BasicInfoType['relationalInfo']
+  >({
     broaderConcept: [],
     narrowerConcept: [],
     relatedConcept: [],
@@ -132,23 +131,6 @@ export default function RelationalInformation({
           data={expandersData}
           fromOther
         />
-
-        <Separator isLarge />
-
-        <CheckboxGroup
-          labelText="Valitse homonyymit muista sanastoista"
-          groupHintText="Muissa sanastoissa on käsitteitä, jotka vastaavat tätä käsitettä. Valitse ne, jotka haluat näytettävän käsitteesi yhteydessä."
-        >
-          <Checkbox hintText="Patentti- ja rekisterihallituksen sanasto">
-            hakemus
-          </Checkbox>
-          <Checkbox hintText="Opetus- ja koulutussanasto, 2. laitos">
-            hakemus
-          </Checkbox>
-          <Checkbox hintText="Julkisen hallinnon yhteinen sanasto">
-            hakemus
-          </Checkbox>
-        </CheckboxGroup>
       </ExpanderContentFitted>
     </ConceptExpander>
   );
