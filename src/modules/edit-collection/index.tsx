@@ -29,13 +29,15 @@ import {
 } from './edit-collection.types';
 import { useGetCollectionQuery } from '@app/common/components/collection/collection.slice';
 import { Collection } from '@app/common/interfaces/collection.interface';
+import useUser from '@app/common/utils/hooks/useUser';
 
 export default function EditCollection({
-  collectionId,
   terminologyId,
   collectionName,
+  collectionInfo,
 }: EditCollectionProps) {
   const { t } = useTranslation('collection');
+  const { user } = useUser();
   const router = useRouter();
   const { data: terminology } = useGetVocabularyQuery({
     id: terminologyId,
@@ -47,9 +49,12 @@ export default function EditCollection({
       It informs that collectionId might be undefined even
       though call is skipped if collectionId isn't defined.
     */
-    { collectionId: collectionId as string, terminologyId: terminologyId },
     {
-      skip: !collectionId,
+      collectionId: collectionInfo?.collectionId as string,
+      terminologyId: terminologyId,
+    },
+    {
+      skip: !collectionInfo?.collectionId,
     }
   );
 
@@ -69,7 +74,9 @@ export default function EditCollection({
 
   useEffect(() => {
     if (result.isSuccess) {
-      router.push(`/terminology/${terminologyId}/concept/${newCollectionId}`);
+      router.push(
+        `/terminology/${terminologyId}/collection/${newCollectionId}`
+      );
     }
   }, [result, router, terminologyId, newCollectionId]);
 
@@ -93,15 +100,24 @@ export default function EditCollection({
 
   const setDescription = (language: string, value: string) => {
     const data = formData;
-    data.definition = data.definition.map((d) => {
-      if (d.lang === language) {
-        return {
-          lang: d.lang,
-          value: value,
-        };
-      }
-      return d;
-    });
+
+    if (data.definition.some((d) => d.lang === language)) {
+      data.definition = data.definition.map((d) => {
+        if (d.lang === language) {
+          return {
+            lang: d.lang,
+            value: value,
+          };
+        }
+        return d;
+      });
+    } else {
+      data.definition.push({
+        lang: language,
+        value: value,
+      });
+    }
+
     setFormData(data);
 
     if (
@@ -136,13 +152,24 @@ export default function EditCollection({
       return;
     }
 
-    const data = generateCollection(formData, terminologyId, collectionId);
-    setNewCollectionId(collectionId ?? data[0].id);
+    const data = generateCollection(
+      formData,
+      terminologyId,
+      `${user?.firstName} ${user?.lastName}`,
+      collectionInfo
+    );
+    setNewCollectionId(collectionInfo?.collectionId ?? data[0].id);
     addCollection(data);
   };
 
   const handleCancel = () => {
-    router.push(`/terminology/${terminologyId}`);
+    if (collectionInfo?.collectionId) {
+      router.push(
+        `/terminology/${terminologyId}/collection/${collectionInfo?.collectionId}`
+      );
+    } else {
+      router.push(`/terminology/${terminologyId}`);
+    }
   };
 
   return (

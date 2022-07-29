@@ -28,7 +28,8 @@ describe('generate-collection', () => {
 
     const now = new Date();
 
-    const returned = generateCollection(data, 'terminologyId', 'collectionId');
+    const returned = generateCollection(data, 'terminologyId');
+    const collectionId = returned[0].id;
     returned[0].createdDate = now.toISOString();
     returned[0].lastModifiedDate = now.toISOString();
 
@@ -36,7 +37,7 @@ describe('generate-collection', () => {
       {
         createdBy: '',
         createdDate: now.toISOString(),
-        id: 'collectionId',
+        id: collectionId,
         lastModifiedBy: '',
         lastModifiedDate: now.toISOString(),
         properties: {

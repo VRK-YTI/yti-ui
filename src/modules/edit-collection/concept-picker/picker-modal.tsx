@@ -88,8 +88,6 @@ export default function PickerModal({
     setVisible(false);
   };
 
-  console.log('selectedConcepts', selectedConcepts);
-
   const handleCheckbox = (checkboxState: boolean, concept: Concepts) => {
     if (checkboxState) {
       setSelectedConcepts([

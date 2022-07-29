@@ -24,8 +24,13 @@ import { SSRConfig } from 'next-i18next';
 interface CollectionEditPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
   collectionLabel: string;
-  collectionId: string;
   terminologyId: string;
+  collectionInfo: {
+    collectionId: string;
+    createdBy: string;
+    collectionCode: string;
+    collectionUri: string;
+  };
 }
 
 export default function CollectionEdit(props: CollectionEditPageProps) {
@@ -38,9 +43,9 @@ export default function CollectionEdit(props: CollectionEditPageProps) {
         />
 
         <EditCollection
-          collectionId={props.collectionId}
           terminologyId={props.terminologyId}
           collectionName={props.collectionLabel}
+          collectionInfo={props.collectionInfo}
         />
       </Layout>
     </CommonContextProvider>
@@ -87,8 +92,13 @@ export const getServerSideProps = createCommonGetServerSideProps(
     return {
       props: {
         collectionLabel: collectionLabel,
-        collectionId: collectionId,
         terminologyId: terminologyId,
+        collectionInfo: {
+          collectionId: collectionId,
+          createdBy: collectionData.createdBy,
+          collectionCode: collectionData.code,
+          collectionUri: collectionData.uri,
+        },
       },
     };
   }
