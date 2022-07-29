@@ -1,8 +1,10 @@
 import { BasicBlock } from '@app/common/components/block';
 import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
 import { useTranslation } from 'next-i18next';
+import { useState } from 'react';
 import { ExpanderTitleButton } from 'suomifi-ui-components';
-import { BasicInfoUpdate } from './concept-basic-information-interface';
+import { DiagramType } from '../new-concept.types';
+import { BasicInfoUpdate } from './concept-basic-information';
 import {
   ConceptExpander,
   ExpanderContentFitted,
@@ -20,6 +22,22 @@ export default function ConceptDiagramsAndSources({
   update,
 }: ConceptDiagramsAndSourcesProps) {
   const { t } = useTranslation('admin');
+  const [sources, setSources] = useState<string>('');
+  const [diagrams, setDiagrams] = useState<DiagramType[]>([]);
+
+  const handleBlur = () => {
+    update({
+      key: infoKey,
+      value: {
+        diagrams: diagrams,
+        sources: sources,
+      },
+    });
+  };
+
+  const handleAddDiagram = (newDiagram: DiagramType) => {
+    setDiagrams([...diagrams, newDiagram]);
+  };
 
   return (
     <ConceptExpander>
@@ -30,8 +48,11 @@ export default function ConceptDiagramsAndSources({
         <BasicBlock
           title={t('concept-diagram-or-link')}
           extra={
-            <BasicBlockExtraWrapper>
-              <NewDiagramOrLink />
+            <BasicBlockExtraWrapper onBlur={() => handleBlur()}>
+              {diagrams.map((diagram, idx) => (
+                <div key={`'diagram-${idx}`}>{diagram.diagramName}</div>
+              ))}
+              <NewDiagramOrLink addDiagram={handleAddDiagram} />
             </BasicBlockExtraWrapper>
           }
         >
@@ -42,6 +63,9 @@ export default function ConceptDiagramsAndSources({
           labelText={t('sources')}
           hintText={t('sources-hint-text')}
           visualPlaceholder={t('sources-placeholder')}
+          onBlur={() => handleBlur()}
+          onChange={(e) => setSources(e.target.value)}
+          value={sources}
         />
       </ExpanderContentFitted>
     </ConceptExpander>

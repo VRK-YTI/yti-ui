@@ -19,7 +19,7 @@
   "field-terms-search-term": "Search term",
   "field-word-class": "Word class",
   "heading": "Concept",
-  "new-concept-page-help": "(en) Kieliversioidut kentät näytetään sanaston tiedoissa valittujen kielten mukaan. Suositeltavaa on täyttää kaikki tiedot. Tiedot ovat pakollisia, jos niitä ei ole merkitty valinnaisiksi.",
+  "new-concept-page-help": "The language-versioned fields are displayed according to the languages selected in the vocabulary information. It is recommended to fill in all the information. Information is mandatory if not specifically marked as optional.",
   "section-administrative-details": "Administrative details",
   "section-concept-diagrams-and-sources": "Concept diagrams and sources",
   "section-other-details": "Other details",
