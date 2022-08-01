@@ -45,7 +45,7 @@ export const terminologySearchApi = createApi({
           prefLang: value.language ? value.language : 'fi',
           pageSize: 10,
           pageFrom: Math.max(0, (value.urlState.page - 1) * 10),
-          language: value.urlState.lang ? value.urlState.lang : 'fi',
+          language: value.urlState.lang ? value.urlState.lang : null,
         },
       }),
       providesTags: ['TerminologySearch'],
