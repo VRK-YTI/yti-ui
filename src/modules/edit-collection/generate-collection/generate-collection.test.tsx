@@ -1,4 +1,3 @@
-import { Concepts } from '@app/common/interfaces/concepts.interface';
 import generateCollection from '.';
 
 describe('generate-collection', () => {
@@ -14,7 +13,7 @@ describe('generate-collection', () => {
           value: 'new collection',
         },
       ],
-      description: [
+      definition: [
         {
           lang: 'fi',
           value: 'kuvaus',
@@ -91,12 +90,30 @@ describe('generate-collection', () => {
           value: 'uusi käsitevalikoima',
         },
       ],
-      description: [],
+      definition: [],
       concepts: [
-        { id: '123-123123-123' },
-        { id: '456-456456-456' },
-        { id: '789-789789-789' },
-      ] as Concepts[],
+        {
+          id: '123-123123-123',
+          prefLabels: {
+            fi: 'fi',
+            en: 'en',
+          },
+        },
+        {
+          id: '456-456456-456',
+          prefLabels: {
+            fi: 'fi',
+            en: 'en',
+          },
+        },
+        {
+          id: '789-789789-789',
+          prefLabels: {
+            fi: 'fi',
+            en: 'en',
+          },
+        },
+      ],
     };
 
     const returned = generateCollection(data, 'terminologyId');
