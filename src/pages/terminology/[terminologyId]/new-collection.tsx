@@ -1,6 +1,6 @@
 import Layout from '@app/layouts/layout';
 import { SSRConfig, useTranslation } from 'next-i18next';
-import { default as NewCollectionModule } from '@app/modules/new-collection';
+import EditCollection from '@app/modules/edit-collection';
 import { useRouter } from 'next/router';
 import {
   createCommonGetServerSideProps,
@@ -16,11 +16,11 @@ import {
   getRunningOperationPromises,
 } from '@app/common/components/vocabulary/vocabulary.slice';
 
-interface NewConceptPageProps extends CommonContextState {
+interface NewCollectionPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
 }
 
-export default function NewConcept(props: NewConceptPageProps) {
+export default function NewConcept(props: NewCollectionPageProps) {
   const { t } = useTranslation('admin');
   const { query } = useRouter();
   const terminologyId = (query?.terminologyId ?? '') as string;
@@ -33,7 +33,7 @@ export default function NewConcept(props: NewConceptPageProps) {
           siteTitle="Yhteentoimivuusalusta"
         />
 
-        <NewCollectionModule
+        <EditCollection
           terminologyId={terminologyId}
           collectionName={t('new-collection')}
         />
