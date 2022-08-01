@@ -1,6 +1,6 @@
 import Layout from '@app/layouts/layout';
 import { SSRConfig, useTranslation } from 'next-i18next';
-import { default as NewConceptModule } from '@app/modules/new-concept';
+import { default as NewCollectionModule } from '@app/modules/new-collection';
 import { useRouter } from 'next/router';
 import {
   createCommonGetServerSideProps,
@@ -23,24 +23,19 @@ interface NewConceptPageProps extends CommonContextState {
 export default function NewConcept(props: NewConceptPageProps) {
   const { t } = useTranslation('admin');
   const { query } = useRouter();
-  const conceptNames = {
-    fi: query.fi as string,
-    sv: query.sv as string,
-    en: query.en as string,
-  };
   const terminologyId = (query?.terminologyId ?? '') as string;
 
   return (
     <CommonContextProvider value={props}>
       <Layout>
         <PageHead
-          title={t('new-concept-title')}
+          title={t('new-collection')}
           siteTitle="Yhteentoimivuusalusta"
         />
 
-        <NewConceptModule
+        <NewCollectionModule
           terminologyId={terminologyId}
-          conceptNames={conceptNames}
+          collectionName={t('new-collection')}
         />
       </Layout>
     </CommonContextProvider>

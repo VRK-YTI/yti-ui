@@ -50,3 +50,16 @@ export function translateRole(role: string, t: TFunction) {
       return role;
   }
 }
+
+export function translateTermType(type: string, t: TFunction) {
+  switch (type) {
+    case 'recommended-term':
+      return t('recommended-term', { ns: 'common' });
+    case 'synonym':
+      return t('synonym', { ns: 'common' });
+    case 'not-recommended-synonym':
+      return t('not-recommended-synonym', { ns: 'common' });
+    case 'search-term':
+      return t('search-term', { ns: 'common' });
+  }
+}

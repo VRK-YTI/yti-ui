@@ -20,6 +20,7 @@ import { accessRequestApi } from '@app/common/components/access-request/access-r
 import { adminControlsSlice } from '@app/common/components/admin-controls/admin-controls.slice';
 import { excelApi } from '@app/common/components/excel/excel.slice';
 import { NextIronRequest } from '@app/common/utils/session';
+import { modifyApi } from '@app/common/components/modify/modify.slice';
 
 // make Context from next-redux-wrapper compatible with next-iron-session
 export type NextIronContext = Context | (Context & { req: NextIronRequest });
@@ -41,6 +42,7 @@ export function makeStore(ctx: NextIronContext) {
       [accessRequestApi.reducerPath]: accessRequestApi.reducer,
       [adminControlsSlice.name]: adminControlsSlice.reducer,
       [excelApi.reducerPath]: excelApi.reducer,
+      [modifyApi.reducerPath]: modifyApi.reducer,
     },
 
     middleware: (getDefaultMiddleware) =>

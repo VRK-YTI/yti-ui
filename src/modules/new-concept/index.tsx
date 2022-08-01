@@ -16,6 +16,15 @@ import FormFooter from './form-footer';
 import { NewConceptBlock } from './new-concept.styles';
 import ConceptTermsBlock from './concept-terms-block';
 import { asString } from '@app/common/utils/hooks/useUrlState';
+import { useEffect, useState } from 'react';
+import generateConcept from './generate-concept';
+import { useAddConceptMutation } from '@app/common/components/modify/modify.slice';
+import { v4 } from 'uuid';
+import {
+  BasicInfo,
+  NewConceptType,
+  ConceptTermType,
+} from './new-concept.types';
 
 interface NewConceptProps {
   terminologyId: string;
@@ -25,14 +34,105 @@ interface NewConceptProps {
 export default function NewConcept({ terminologyId }: NewConceptProps) {
   const { t } = useTranslation('concept');
   const router = useRouter();
+  const [addConcept, addConceptStatus] = useAddConceptMutation();
   const { data: terminology } = useGetVocabularyQuery({
     id: terminologyId,
   });
-  const languages =
-    terminology?.properties.language?.map(({ value }) => value) ?? [];
-  const preferredTerm = languages
-    .map((lang) => ({ lang, value: asString(router.query[lang]), regex: '' }))
-    .filter(({ value }) => !!value);
+
+  const [languages] = useState(
+    terminology?.properties.language?.map(({ value }) => value) ?? []
+  );
+  const [preferredTerms] = useState(
+    languages
+      .map((lang) => ({ lang, value: asString(router.query[lang]), regex: '' }))
+      .filter(({ value }) => !!value)
+  );
+  const [postedData, setPostedData] =
+    useState<ReturnType<typeof generateConcept>>();
+
+  const [formData, setFormData] = useState<NewConceptType>({
+    terms: preferredTerms.map((term) => ({
+      changeNote: '',
+      draftComment: '',
+      editorialNote: [],
+      historyNote: '',
+      id: v4(),
+      language: term.lang,
+      prefLabel: term.value,
+      scope: '',
+      source: '',
+      status: 'draft',
+      termConjugation: '',
+      termEquivalency: '',
+      termEquivalencyRelation: '',
+      termFamily: '',
+      termHomographNumber: '',
+      termInfo: '',
+      termStyle: '',
+      termType: 'recommended-term',
+      wordClass: '',
+    })),
+    basicInformation: {
+      definition: {},
+      example: [],
+      subject: '',
+      note: [],
+      diagramAndSource: {
+        diagram: [],
+        sources: '',
+      },
+      orgInfo: {
+        changeHistory: '',
+        editorialNote: [],
+        etymology: '',
+      },
+      otherInfo: {
+        conceptClass: '',
+        wordClass: '',
+      },
+      relationalInfo: {
+        broaderConcept: [],
+        narrowerConcept: [],
+        relatedConcept: [],
+        isPartOfConcept: [],
+        hasPartConcept: [],
+        relatedConceptInOther: [],
+        matchInOther: [],
+      },
+    },
+  });
+
+  const handlePost = () => {
+    if (!terminologyId) {
+      console.error('Invalid terminologyId');
+      return;
+    }
+
+    const concept = generateConcept({
+      data: formData,
+      terminologyId: terminologyId,
+    });
+    setPostedData(concept);
+    addConcept(concept);
+  };
+
+  const updateTerms = (terms: ConceptTermType[]) => {
+    setFormData({ ...formData, terms: terms });
+  };
+
+  const updateBasicInformation = (basicInfo: BasicInfo) => {
+    setFormData({ ...formData, basicInformation: basicInfo });
+  };
+
+  useEffect(() => {
+    if (addConceptStatus.isSuccess && postedData) {
+      router.push(
+        `/terminology/${terminologyId}/concept/${
+          postedData[postedData.length - 1].id
+        }`
+      );
+    }
+  }, [addConceptStatus, postedData, terminologyId, router]);
 
   return (
     <>
@@ -45,9 +145,9 @@ export default function NewConcept({ terminologyId }: NewConceptProps) {
             />
           </BreadcrumbLink>
         )}
-        {!!preferredTerm?.length && (
+        {!!preferredTerms?.length && (
           <BreadcrumbLink url="" current>
-            <PropertyValue property={preferredTerm} fallbackLanguage="fi" />
+            <PropertyValue property={preferredTerms} fallbackLanguage="fi" />
           </BreadcrumbLink>
         )}
       </Breadcrumb>
@@ -63,7 +163,7 @@ export default function NewConcept({ terminologyId }: NewConceptProps) {
           />
         </SubTitle>
         <MainTitle>
-          <PropertyValue property={preferredTerm} fallbackLanguage="fi" />
+          <PropertyValue property={preferredTerms} fallbackLanguage="fi" />
         </MainTitle>
         <BadgeBar>
           {t('heading')}
@@ -75,11 +175,19 @@ export default function NewConcept({ terminologyId }: NewConceptProps) {
         </BadgeBar>
         <Text>{t('new-concept-page-help')}</Text>
 
-        <ConceptTermsBlock languages={languages} />
+        <ConceptTermsBlock
+          languages={languages}
+          updateTerms={updateTerms}
+          initialValues={formData.terms}
+        />
 
-        <ConceptBasicInformation />
+        <ConceptBasicInformation
+          updateBasicInformation={updateBasicInformation}
+          initialValues={formData.basicInformation}
+          languages={languages}
+        />
 
-        <FormFooter />
+        <FormFooter handlePost={handlePost} />
       </NewConceptBlock>
     </>
   );

@@ -33,7 +33,11 @@ describe('organizational-information', () => {
     expect(mockFn).toHaveBeenCalledTimes(1);
     expect(mockFn).toHaveBeenCalledWith({
       key: 'orgInfo',
-      value: { changeHistory: 'new history information', etymology: '' },
+      value: {
+        changeHistory: 'new history information',
+        editorialNote: [],
+        etymology: '',
+      },
     });
 
     userEvent.keyboard('new etymology information');
@@ -44,6 +48,7 @@ describe('organizational-information', () => {
       key: 'orgInfo',
       value: {
         changeHistory: 'new history information',
+        editorialNote: [],
         etymology: 'new etymology information',
       },
     });
