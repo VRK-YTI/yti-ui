@@ -174,7 +174,10 @@ export default function NewTermModal({
           ariaOptionsAvailableText={t('available-languages')}
           clearButtonLabel=""
           items={languages.map((language) => ({
-            labelText: `${translateLanguage(language, t)} ${language.toUpperCase()}`,
+            labelText: `${translateLanguage(
+              language,
+              t
+            )} ${language.toUpperCase()}`,
             uniqueItemId: language,
           }))}
           labelText={t('language')}

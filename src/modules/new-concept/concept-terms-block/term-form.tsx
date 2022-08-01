@@ -1,7 +1,10 @@
 import { BasicBlock } from '@app/common/components/block';
 import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
 import Separator from '@app/common/components/separator';
-import { translateLanguage, translateTermType } from '@app/common/utils/translation-helpers';
+import {
+  translateLanguage,
+  translateTermType,
+} from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import {

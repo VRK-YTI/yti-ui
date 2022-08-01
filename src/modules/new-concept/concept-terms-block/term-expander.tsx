@@ -26,7 +26,10 @@ export default function TermExpander({
   children,
 }: TermExpanderProps) {
   const { t } = useTranslation('admin');
-  const primaryText = `${translateLanguage(term.language, t)} ${term.language.toUpperCase()}`;
+  const primaryText = `${translateLanguage(
+    term.language,
+    t
+  )} ${term.language.toUpperCase()}`;
   const secondaryText = `${term.prefLabel} - ${t('DRAFT', { ns: 'common' })}`;
 
   return (

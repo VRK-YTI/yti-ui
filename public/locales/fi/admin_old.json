@@ -8,11 +8,14 @@
   "chosen-organizations": "Valitut organisaatiot",
   "concept-class-available": "Saatavilla olevat käsitteen luokat",
   "concept-class-no-items": "Käsitteen luokkia ei saatavilla",
+  "en": "englanti",
+  "fi": "suomi",
   "loading": "Ladataan...",
   "new-note-description": "Voit lisätä käsitteeseen liittyvän muun huomautuksen. Älä lisää tähän tietoja, joille on olemassa oma kohtansa lomakkeella.",
   "notes": "Ylläpitäjän muistiipano",
   "notes-description": "Ylläpitäjälle tai kääntäjille tarkoitettu muistiinpano. Ei näy kirjautumattomalle käyttäjälle.",
   "notes-textarea-label-text": "Ylläpitäjän muistiinpano",
   "notes-textarea-placeholder": "Kirjoita muistiinpano tai kommentti",
-  "ready": "Valmis"
+  "ready": "Valmis",
+  "sv": "ruotsi"
 }

@@ -215,7 +215,10 @@ export default function PickerModal({
                       toggleButtonAriaDescribedBy={`checkbox-id-${concept.id}`}
                     >
                       <Checkbox
-                        hintText={`${translateStatus(concept.status, t)} \u00B7 ${
+                        hintText={`${translateStatus(
+                          concept.status,
+                          t
+                        )} \u00B7 ${
                           concept.terminology.label[i18n.language] ??
                           concept.terminology.label.fi ??
                           concept.terminology.label[

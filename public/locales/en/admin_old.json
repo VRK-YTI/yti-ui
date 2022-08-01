@@ -8,11 +8,14 @@
   "chosen-organizations": "Selected contributor",
   "concept-class-available": "Available concept classes",
   "concept-class-no-items": "No concept classes available",
+  "en": "English",
+  "fi": "Finnish",
   "loading": "Loading...",
   "new-note-description": "You can assign a note to concept. Do not add information here that has its own section on the form.",
   "notes": "Editorial note",
   "notes-description": "Note meant for editors and translators. Isn't visible for unsigned users.",
   "notes-textarea-label-text": "Editorial note",
   "notes-textarea-placeholder": "Add note or a comment",
-  "ready": "Ready"
+  "ready": "Ready",
+  "sv": "Swedish"
 }
