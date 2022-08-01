@@ -18,7 +18,7 @@ export default function LoginModalView({
 }: {
   setVisible: Function;
 }) {
-  const { t , i18n} = useTranslation('common');
+  const { t, i18n } = useTranslation('common');
   const { isSmall } = useBreakpoints();
 
   return (
