@@ -1,5 +1,6 @@
 import axios from 'axios';
 import useSWR from 'swr';
+import { useTranslation } from 'next-i18next';
 
 export interface UseFakeableUsersResult {
   id: string;
@@ -14,6 +15,7 @@ export default function useFakeableUsers(): UseFakeableUsersResult[] {
     (url) => axios.get(url).then((r) => r.data),
     {}
   );
+  const { i18n } = useTranslation();
 
   return (
     data?.map(({ id, email, displayName }) => ({
@@ -23,7 +25,7 @@ export default function useFakeableUsers(): UseFakeableUsersResult[] {
       impersonate: () =>
         (window.location.href = `/api/auth/fake-login?fake.login.mail=${encodeURIComponent(
           email
-        )}`),
+        )}&target=/${i18n.language}`),
     })) ?? []
   );
 }
