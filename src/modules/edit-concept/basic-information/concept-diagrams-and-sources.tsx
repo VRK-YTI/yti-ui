@@ -24,11 +24,13 @@ interface ConceptDiagramsAndSourcesProps {
 export default function ConceptDiagramsAndSources({
   infoKey,
   update,
-  initialValues
+  initialValues,
 }: ConceptDiagramsAndSourcesProps) {
   const { t } = useTranslation('admin');
   const [sources, setSources] = useState<string>(initialValues?.sources ?? '');
-  const [diagrams, setDiagrams] = useState<DiagramType[]>(initialValues?.diagram ?? []);
+  const [diagrams, setDiagrams] = useState<DiagramType[]>(
+    initialValues?.diagram ?? []
+  );
 
   const handleBlur = () => {
     update({

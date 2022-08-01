@@ -14,7 +14,6 @@ export default function generateConcept({
   data,
   terminologyId,
 }: generateConceptProps) {
-
   // console.log(data);
 
   return;

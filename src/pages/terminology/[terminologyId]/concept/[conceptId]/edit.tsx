@@ -96,8 +96,8 @@ export const getServerSideProps = createCommonGetServerSideProps(
 
     return {
       props: {
-        conceptData: conceptData
-      }
+        conceptData: conceptData,
+      },
     };
   }
 );

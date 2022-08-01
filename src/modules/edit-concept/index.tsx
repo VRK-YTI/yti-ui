@@ -33,7 +33,10 @@ interface EditConceptProps {
   conceptData: Concept;
 }
 
-export default function EditConcept({ terminologyId, conceptData }: EditConceptProps) {
+export default function EditConcept({
+  terminologyId,
+  conceptData,
+}: EditConceptProps) {
   const { t } = useTranslation('concept');
   const router = useRouter();
   const [addConcept, addConceptStatus] = useAddConceptMutation();
@@ -85,7 +88,8 @@ export default function EditConcept({ terminologyId, conceptData }: EditConceptP
   useEffect(() => {
     if (addConceptStatus.isSuccess && postedData) {
       router.push(
-        `/terminology/${terminologyId}/concept/${postedData[postedData.length - 1].id
+        `/terminology/${terminologyId}/concept/${
+          postedData[postedData.length - 1].id
         }`
       );
     }

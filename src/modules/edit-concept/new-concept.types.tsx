@@ -43,14 +43,20 @@ export interface BasicInfo {
     wordClass: string;
   };
   relationalInfo: {
-    broaderConcept: Concepts[];
-    narrowerConcept: Concepts[];
-    relatedConcept: Concepts[];
-    isPartOfConcept: Concepts[];
-    hasPartConcept: Concepts[];
-    relatedConceptInOther: Concepts[];
-    matchInOther: Concepts[];
+    broaderConcept: RelationInfoType[];
+    narrowerConcept: RelationInfoType[];
+    relatedConcept: RelationInfoType[];
+    isPartOfConcept: RelationInfoType[];
+    hasPartConcept: RelationInfoType[];
+    relatedConceptInOther: RelationInfoType[];
+    matchInOther: RelationInfoType[];
   };
+}
+
+export interface RelationInfoType {
+  id: string;
+  label: { [key: string]: string };
+  terminologyId: string;
 }
 
 export interface ListType {

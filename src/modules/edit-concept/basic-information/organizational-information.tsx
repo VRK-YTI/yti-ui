@@ -26,9 +26,15 @@ export default function OrganizationalInformation({
   initialValues,
 }: OrganizationalInformationProps) {
   const { t } = useTranslation('admin');
-  const [changeHistory, setChangeHistory] = useState<string>(initialValues?.changeHistory ?? '');
-  const [etymology, setEtymology] = useState<string>(initialValues?.etymology ?? '');
-  const [editorialNotes, setEditorialNotes] = useState<ListType[]>(initialValues?.editorialNote ?? []);
+  const [changeHistory, setChangeHistory] = useState<string>(
+    initialValues?.changeHistory ?? ''
+  );
+  const [etymology, setEtymology] = useState<string>(
+    initialValues?.etymology ?? ''
+  );
+  const [editorialNotes, setEditorialNotes] = useState<ListType[]>(
+    initialValues?.editorialNote ?? []
+  );
 
   const handleOrgInfo = ({ key, lang, value }: BasicInfoUpdate) => {
     if (typeof value !== 'string' && typeof value !== 'object') {

@@ -90,6 +90,7 @@ export default function ConceptBasicInformation({
         <RelationalInformation
           infoKey="relationalInfo"
           update={handleBasicInfoUpdate}
+          initialValues={basicInfo.relationalInfo}
         />
       </ExpanderGroup>
     </>

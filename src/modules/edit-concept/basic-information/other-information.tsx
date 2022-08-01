@@ -26,14 +26,16 @@ export default function OtherInformation({
   initialValues,
 }: OtherInformationProps) {
   const { t } = useTranslation('admin');
-  const [conceptClass, setConceptClass] = useState<string | undefined>(initialValues?.conceptClass);
+  const [conceptClass, setConceptClass] = useState<string | undefined>(
+    initialValues?.conceptClass
+  );
   const [wordClass, setWordClass] = useState<typeof partOfSpeech[0] | null>(
     initialValues?.wordClass
-    ? {
-      uniqueItemId: initialValues.wordClass,
-      labelText: t(initialValues.wordClass),
-    }
-    : null
+      ? {
+          uniqueItemId: initialValues.wordClass,
+          labelText: t(initialValues.wordClass),
+        }
+      : null
   );
 
   const handleChange = () => {
