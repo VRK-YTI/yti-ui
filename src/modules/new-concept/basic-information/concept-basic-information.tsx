@@ -60,6 +60,11 @@ export default function ConceptBasicInformation({
         itemsKey="example"
         update={handleBasicInfoUpdate}
         languages={languages}
+        title={t('example')}
+        description={t('example-description')}
+        addNewText={t('add-new-example')}
+        inputLabel={t('example-textarea-label-text')}
+        inputPlaceholder={t('example-textarea-placeholder')}
       />
 
       {renderSubject()}
@@ -69,6 +74,11 @@ export default function ConceptBasicInformation({
         itemsKey="note"
         update={handleBasicInfoUpdate}
         languages={languages}
+        title={t('note')}
+        description={t('note-description')}
+        addNewText={t('add-new-note')}
+        inputLabel={t('note-textarea-label-text')}
+        inputPlaceholder={t('note-textarea-placeholder')}
       />
 
       <ExpanderGroup closeAllText="" openAllText="">

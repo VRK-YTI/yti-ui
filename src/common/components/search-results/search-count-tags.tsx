@@ -15,6 +15,7 @@ import {
   CountWrapper,
 } from './search-count-tags.styles';
 import Tag from './tag';
+import { translateStatus } from '@app/common/utils/translation-helpers';
 
 interface SearchCountTagsProps {
   title: ReactNode;
@@ -93,7 +94,7 @@ export default function SearchCountTags({
               }
               key={status}
             >
-              {t(status.toUpperCase())}
+              {translateStatus(status.toUpperCase(), t)}
             </Tag>
           );
         }

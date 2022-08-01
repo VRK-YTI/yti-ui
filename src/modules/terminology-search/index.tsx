@@ -48,10 +48,22 @@ export default function TerminologySearch() {
     dispatch(
       setAlert(
         [
-          { note: error, displayText: '_terminology-search' },
-          { note: groupsError, displayText: '_groups' },
-          { note: organizationsError, displayText: '_organization' },
-          { note: countsError, displayText: '_counts' },
+          {
+            note: error,
+            displayText: t('error-occured_terminology-search', { ns: 'alert' }),
+          },
+          {
+            note: groupsError,
+            displayText: t('error-occured_groups', { ns: 'alert' }),
+          },
+          {
+            note: organizationsError,
+            displayText: t('error-occured_organization', { ns: 'alert' }),
+          },
+          {
+            note: countsError,
+            displayText: t('error-occured_counts', { ns: 'alert' }),
+          },
         ],
         previousAlerts
       )
@@ -63,6 +75,7 @@ export default function TerminologySearch() {
     organizationsError,
     countsError,
     previousAlerts,
+    t,
   ]);
 
   useEffect(() => {

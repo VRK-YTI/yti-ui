@@ -7,6 +7,7 @@ import {
 } from 'suomifi-ui-components';
 import { SuccessIcon } from './concept-terms-block.styles';
 import ExpanderTitle from '@app/common/components/expander-title';
+import { translateLanguage } from '@app/common/utils/translation-helpers';
 import { ConceptTermType } from './concept-term-block-types';
 
 export interface TermExpanderProps {
@@ -25,7 +26,10 @@ export default function TermExpander({
   children,
 }: TermExpanderProps) {
   const { t } = useTranslation('admin');
-  const primaryText = t(`language-label-text-${term.language}`);
+  const primaryText = `${translateLanguage(
+    term.language,
+    t
+  )} ${term.language.toUpperCase()}`;
   const secondaryText = `${term.prefLabel} - ${t('DRAFT', { ns: 'common' })}`;
 
   return (

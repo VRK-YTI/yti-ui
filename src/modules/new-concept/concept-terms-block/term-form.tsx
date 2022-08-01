@@ -1,6 +1,10 @@
 import { BasicBlock } from '@app/common/components/block';
 import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
 import Separator from '@app/common/components/separator';
+import {
+  translateLanguage,
+  translateTermType,
+} from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import {
@@ -115,7 +119,7 @@ export default function TermForm({ term, update }: TermFormProps) {
       )}
 
       <BasicBlock title={t('language')}>
-        {t(`language-label-text-${term.language}`)}
+        {translateLanguage(term.language, t)} {term.language.toUpperCase()}
       </BasicBlock>
       <BasicBlock
         title={t('term-type-label')}
@@ -134,11 +138,7 @@ export default function TermForm({ term, update }: TermFormProps) {
           </BasicBlockExtraWrapper>
         }
       >
-        {t(
-          term.termType === 'recommended-term'
-            ? `${term.termType}-no-suff`
-            : term.termType
-        )}
+        {translateTermType(term.termType, t)}
       </BasicBlock>
       <DropdownBlock
         labelText={t('term-status-label')}
@@ -220,6 +220,11 @@ export default function TermForm({ term, update }: TermFormProps) {
         items={term.editorialNote}
         itemsKey={'editorialNote'}
         noLangOption
+        title={t('editorialNote')}
+        description={t('editorialNote-description')}
+        addNewText={t('add-new-editorialNote')}
+        inputLabel={t('editorialNote-textarea-label-text')}
+        inputPlaceholder={t('editorialNote-textarea-placeholder')}
       />
 
       <Separator isLarge />

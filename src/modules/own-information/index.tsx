@@ -23,6 +23,7 @@ import { useGetSubscriptionsQuery } from '../../common/components/subscription/s
 import InlineAlert from '@app/common/components/inline-alert';
 import { useGetRequestsQuery } from '@app/common/components/access-request/access-request.slice';
 import { MainTitle } from '@app/common/components/title-block';
+import { translateRole } from '@app/common/utils/translation-helpers';
 
 export default function OwnInformation() {
   const user = useSelector(selectLogin());
@@ -110,7 +111,7 @@ export default function OwnInformation() {
                 </OrganizationAndRolesHeading>
                 <ul>
                   {roles.map((role) => (
-                    <li key={role}>{t(role, { ns: 'common' })}</li>
+                    <li key={role}>{translateRole(role, t)}</li>
                   ))}
                 </ul>
               </OrganizationAndRolesItem>

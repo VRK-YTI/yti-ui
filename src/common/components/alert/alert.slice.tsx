@@ -106,7 +106,8 @@ export const setAlert =
         return {
           code: 'UNHANDLED_ERROR',
           message: 'Unhandled error',
-          displayText: '_unhandled-error',
+          // empty display text will be replaced later with default error message
+          displayText: '',
         };
       });
 

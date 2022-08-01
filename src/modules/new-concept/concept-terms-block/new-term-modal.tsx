@@ -1,5 +1,6 @@
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import Separator from '@app/common/components/separator';
+import { translateLanguage } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import {
@@ -173,7 +174,10 @@ export default function NewTermModal({
           ariaOptionsAvailableText={t('available-languages')}
           clearButtonLabel=""
           items={languages.map((language) => ({
-            labelText: `${t(language)} ${language.toUpperCase()}`,
+            labelText: `${translateLanguage(
+              language,
+              t
+            )} ${language.toUpperCase()}`,
             uniqueItemId: language,
           }))}
           labelText={t('language')}
@@ -289,6 +293,11 @@ export default function NewTermModal({
           items={termData.editorialNote}
           itemsKey={'editorialNote'}
           noLangOption
+          title={t('editorialNote')}
+          description={t('editorialNote-description')}
+          addNewText={t('add-new-editorialNote')}
+          inputLabel={t('editorialNote-textarea-label-text')}
+          inputPlaceholder={t('editorialNote-textarea-placeholder')}
         />
 
         <Separator isLarge />
@@ -314,7 +323,7 @@ export default function NewTermModal({
           />
 
           <SingleSelect
-            ariaOptionsAvailableText={t('available-term-familes')}
+            ariaOptionsAvailableText={t('available-term-families')}
             clearButtonLabel={t('clear-button-label')}
             labelText={t('term-family')}
             optionalText={t('optional')}

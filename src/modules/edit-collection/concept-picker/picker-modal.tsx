@@ -2,6 +2,7 @@ import { useSearchConceptMutation } from '@app/common/components/concept/concept
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import SanitizedTextContent from '@app/common/components/sanitized-text-content';
 import { Concepts } from '@app/common/interfaces/concepts.interface';
+import { translateStatus } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import {
@@ -214,9 +215,10 @@ export default function PickerModal({
                       toggleButtonAriaDescribedBy={`checkbox-id-${concept.id}`}
                     >
                       <Checkbox
-                        hintText={`${t(concept.status, {
-                          ns: 'common',
-                        })} \u00B7 ${
+                        hintText={`${translateStatus(
+                          concept.status,
+                          t
+                        )} \u00B7 ${
                           concept.terminology.label[i18n.language] ??
                           concept.terminology.label.fi ??
                           concept.terminology.label[
