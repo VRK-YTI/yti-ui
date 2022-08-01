@@ -1,6 +1,6 @@
 import Layout from '@app/layouts/layout';
 import { SSRConfig, useTranslation } from 'next-i18next';
-import { default as NewConceptModule } from '@app/modules/new-concept';
+import EditConcept from '@app/modules/edit-concept';
 import { useRouter } from 'next/router';
 import {
   createCommonGetServerSideProps,
@@ -38,7 +38,7 @@ export default function NewConcept(props: NewConceptPageProps) {
           siteTitle="Yhteentoimivuusalusta"
         />
 
-        <NewConceptModule
+        <EditConcept
           terminologyId={terminologyId}
           conceptNames={conceptNames}
         />

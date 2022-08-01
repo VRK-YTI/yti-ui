@@ -1,6 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import React, { useEffect } from 'react';
 import {
+  Button,
   ExternalLink,
   Notification,
   Paragraph,
@@ -36,6 +37,9 @@ import {
 } from '@app/common/components/title-block';
 import { useSelector } from 'react-redux';
 import { selectLogin } from '@app/common/components/login/login.slice';
+import HasPermission from '@app/common/utils/has-permission';
+import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
+import Link from 'next/link';
 
 export interface ConceptProps {
   terminologyId: string;
@@ -209,6 +213,32 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
           <DetailsExpander concept={concept} />
 
           <Separator isLarge />
+
+          {/* TODO: Käännös */}
+          {HasPermission({
+            actions: 'EDIT_CONCEPT',
+            targetOrganization: terminologyId,
+          }) && (
+            <>
+              <BasicBlock
+                title="Muokkaa käsitettä"
+                extra={
+                  <BasicBlockExtraWrapper>
+                    <Link
+                      href={`/terminology/${terminologyId}/concept/${conceptId}/edit`}
+                    >
+                      <Button variant="secondary" icon="edit">
+                        Muokkaa käsitettä
+                      </Button>
+                    </Link>
+                  </BasicBlockExtraWrapper>
+                }
+              >
+                Sinulla on oikeudet muokata tätä käsitettä.
+              </BasicBlock>
+              <Separator />
+            </>
+          )}
 
           <VisuallyHidden as="h2">
             {t('additional-technical-information', { ns: 'common' })}

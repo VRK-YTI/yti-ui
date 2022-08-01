@@ -14,8 +14,12 @@ export default function generateConcept({
   data,
   terminologyId,
 }: generateConceptProps) {
-  const regex = '(?s)^.*$';
 
+  // console.log(data);
+
+  return;
+
+  const regex = '(?s)^.*$';
   const now = new Date();
   let matchingIds: string[] = [];
   let relatedMatchIds: string[] = [];

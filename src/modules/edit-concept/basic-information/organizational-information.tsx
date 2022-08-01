@@ -13,16 +13,22 @@ import { BasicInfoUpdate } from './concept-basic-information';
 interface OrganizationalInformationProps {
   infoKey: string;
   update: (object: BasicInfoUpdate) => void;
+  initialValues?: {
+    changeHistory: string;
+    editorialNote: ListType[];
+    etymology: string;
+  };
 }
 
 export default function OrganizationalInformation({
   infoKey,
   update,
+  initialValues,
 }: OrganizationalInformationProps) {
   const { t } = useTranslation('admin');
-  const [changeHistory, setChangeHistory] = useState<string>('');
-  const [etymology, setEtymology] = useState<string>('');
-  const [editorialNotes, setEditorialNotes] = useState<ListType[]>([]);
+  const [changeHistory, setChangeHistory] = useState<string>(initialValues?.changeHistory ?? '');
+  const [etymology, setEtymology] = useState<string>(initialValues?.etymology ?? '');
+  const [editorialNotes, setEditorialNotes] = useState<ListType[]>(initialValues?.editorialNote ?? []);
 
   const handleOrgInfo = ({ key, lang, value }: BasicInfoUpdate) => {
     if (typeof value !== 'string' && typeof value !== 'object') {

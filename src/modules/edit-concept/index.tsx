@@ -19,19 +19,21 @@ import { asString } from '@app/common/utils/hooks/useUrlState';
 import { useEffect, useState } from 'react';
 import generateConcept from './generate-concept';
 import { useAddConceptMutation } from '@app/common/components/modify/modify.slice';
-import { v4 } from 'uuid';
 import {
   BasicInfo,
-  NewConceptType,
+  EditConceptType,
   ConceptTermType,
 } from './new-concept.types';
+import { Concept } from '@app/common/interfaces/concept.interface';
+import generateFormData from './generate-form-data';
 
-interface NewConceptProps {
+interface EditConceptProps {
   terminologyId: string;
   conceptNames: { [key: string]: string | undefined };
+  conceptData: Concept;
 }
 
-export default function NewConcept({ terminologyId }: NewConceptProps) {
+export default function EditConcept({ terminologyId, conceptData }: EditConceptProps) {
   const { t } = useTranslation('concept');
   const router = useRouter();
   const [addConcept, addConceptStatus] = useAddConceptMutation();
@@ -50,57 +52,10 @@ export default function NewConcept({ terminologyId }: NewConceptProps) {
   const [postedData, setPostedData] =
     useState<ReturnType<typeof generateConcept>>();
 
-  const [formData, setFormData] = useState<NewConceptType>({
-    terms: preferredTerms.map((term) => ({
-      changeNote: '',
-      draftComment: '',
-      editorialNote: [],
-      historyNote: '',
-      id: v4(),
-      language: term.lang,
-      prefLabel: term.value,
-      scope: '',
-      source: '',
-      status: 'draft',
-      termConjugation: '',
-      termEquivalency: '',
-      termEquivalencyRelation: '',
-      termFamily: '',
-      termHomographNumber: '',
-      termInfo: '',
-      termStyle: '',
-      termType: 'recommended-term',
-      wordClass: '',
-    })),
-    basicInformation: {
-      definition: {},
-      example: [],
-      subject: '',
-      note: [],
-      diagramAndSource: {
-        diagram: [],
-        sources: '',
-      },
-      orgInfo: {
-        changeHistory: '',
-        editorialNote: [],
-        etymology: '',
-      },
-      otherInfo: {
-        conceptClass: '',
-        wordClass: '',
-      },
-      relationalInfo: {
-        broaderConcept: [],
-        narrowerConcept: [],
-        relatedConcept: [],
-        isPartOfConcept: [],
-        hasPartConcept: [],
-        relatedConceptInOther: [],
-        matchInOther: [],
-      },
-    },
-  });
+  const [formData, setFormData] = useState<EditConceptType>(
+    generateFormData(conceptData)
+  );
+  console.log('FORMDATA:', formData);
 
   const handlePost = () => {
     if (!terminologyId) {
@@ -112,6 +67,9 @@ export default function NewConcept({ terminologyId }: NewConceptProps) {
       data: formData,
       terminologyId: terminologyId,
     });
+
+    return;
+
     setPostedData(concept);
     addConcept(concept);
   };
@@ -127,8 +85,7 @@ export default function NewConcept({ terminologyId }: NewConceptProps) {
   useEffect(() => {
     if (addConceptStatus.isSuccess && postedData) {
       router.push(
-        `/terminology/${terminologyId}/concept/${
-          postedData[postedData.length - 1].id
+        `/terminology/${terminologyId}/concept/${postedData[postedData.length - 1].id
         }`
       );
     }

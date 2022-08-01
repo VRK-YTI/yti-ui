@@ -65,7 +65,7 @@ export interface DiagramType {
   diagramUrl: string;
 }
 
-export interface NewConceptType {
+export interface EditConceptType {
   terms: ConceptTermType[];
   basicInformation: BasicInfo;
 }

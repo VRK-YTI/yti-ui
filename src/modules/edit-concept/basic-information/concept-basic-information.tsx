@@ -75,12 +75,18 @@ export default function ConceptBasicInformation({
         <ConceptDiagramsAndSources
           infoKey="diagramAndSource"
           update={handleBasicInfoUpdate}
+          initialValues={basicInfo.diagramAndSource}
         />
         <OrganizationInformation
           infoKey="orgInfo"
           update={handleBasicInfoUpdate}
+          initialValues={basicInfo.orgInfo}
         />
-        <OtherInformation infoKey="otherInfo" update={handleBasicInfoUpdate} />
+        <OtherInformation
+          infoKey="otherInfo"
+          update={handleBasicInfoUpdate}
+          initialValues={basicInfo.otherInfo}
+        />
         <RelationalInformation
           infoKey="relationalInfo"
           update={handleBasicInfoUpdate}

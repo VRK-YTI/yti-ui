@@ -16,6 +16,7 @@ export interface Concept extends BaseEntity<'Concept'> {
     note?: Property[];
     source?: Property[];
     status?: Property[];
+    subjectArea?: Property[];
     wordClass?: Property[];
   };
 
