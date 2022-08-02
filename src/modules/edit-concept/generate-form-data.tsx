@@ -1,12 +1,71 @@
 import { Concept } from '@app/common/interfaces/concept.interface';
+import { Property } from '@app/common/interfaces/termed-data-types.interface';
 import { v4 } from 'uuid';
 import { EditConceptType } from './new-concept.types';
 
-export default function generateFormData(conceptData?: Concept) {
+export default function generateFormData(
+  preferredTerms: {
+    lang: string;
+    value: string;
+    regex: string;
+  }[],
+  conceptData?: Concept,
+  terminologyLabel?: Property[],
+): EditConceptType {
   console.log('generateFormData', conceptData);
 
   if (!conceptData) {
-    return null;
+    return {
+      terms: preferredTerms.map((term) => ({
+        changeNote: '',
+        draftComment: '',
+        editorialNote: [],
+        historyNote: '',
+        id: v4(),
+        language: term.lang,
+        prefLabel: term.value,
+        scope: '',
+        source: '',
+        status: 'draft',
+        termConjugation: '',
+        termEquivalency: '',
+        termEquivalencyRelation: '',
+        termFamily: '',
+        termHomographNumber: '',
+        termInfo: '',
+        termStyle: '',
+        termType: 'recommended-term',
+        wordClass: '',
+      })),
+      basicInformation: {
+        definition: {},
+        example: [],
+        subject: '',
+        note: [],
+        diagramAndSource: {
+          diagram: [],
+          sources: '',
+        },
+        orgInfo: {
+          changeHistory: '',
+          editorialNote: [],
+          etymology: '',
+        },
+        otherInfo: {
+          conceptClass: '',
+          wordClass: '',
+        },
+        relationalInfo: {
+          broaderConcept: [],
+          narrowerConcept: [],
+          relatedConcept: [],
+          isPartOfConcept: [],
+          hasPartConcept: [],
+          relatedConceptInOther: [],
+          matchInOther: [],
+        },
+      },
+    };
   }
 
   const definition = new Map();
@@ -54,14 +113,16 @@ export default function generateFormData(conceptData?: Concept) {
             {
               return {
                 id: broad.id,
-                label: broad.references?.prefLabelXl
-                  ?.flatMap((label) =>
-                    label.properties.prefLabel?.flatMap((l) => ({
-                      [l.lang]: l.value,
-                    }))
-                  )
-                  .reduce((l) => l) ?? {},
+                label:
+                  broad.references?.prefLabelXl
+                    ?.flatMap((label) =>
+                      label.properties.prefLabel?.flatMap((l) => ({
+                        [l.lang]: l.value,
+                      }))
+                    )
+                    .reduce((l) => l) ?? {},
                 terminologyId: broad.type.graph.id,
+                terminologyLabel: terminologyLabel
               };
             }
           }) ?? [],
@@ -78,6 +139,7 @@ export default function generateFormData(conceptData?: Concept) {
                   )
                   .reduce((l) => l),
                 terminologyId: part.type.graph.id,
+                terminologyLabel: terminologyLabel
               };
             }
           }) ?? [],
@@ -94,19 +156,23 @@ export default function generateFormData(conceptData?: Concept) {
                   )
                   .reduce((l) => l),
                 terminologyId: part.type.graph.id,
+                terminologyLabel: terminologyLabel
               };
             }
           }) ?? [],
-        matchInOther: conceptData.references.exactMatch?.map((r) => {
-          {
-            console.log(r.properties?.prefLabel.flatMap(l => ({ [l.lang]: l.value })).reduce(l => l));
-            return {
-              id: r.properties?.targetId?.[0]?.value ?? '',
-              label: r.properties?.prefLabel.flatMap(l => ({ [l.lang]: l.value })).reduce(l => l),
-              terminologyId: r.properties.targetGraph?.[0].value ?? '',
-            };
-          }
-        }) ?? [],
+        matchInOther:
+          conceptData.references.exactMatch?.map((r) => {
+            {
+              return {
+                id: r.properties?.targetId?.[0]?.value ?? '',
+                label: r.properties?.prefLabel
+                  .flatMap((l) => ({ [l.lang]: l.value }))
+                  .reduce((l) => l),
+                terminologyId: r.properties.targetGraph?.[0].value ?? '',
+                terminologyLabel: r.properties.vocabularyLabel
+              };
+            }
+          }) ?? [],
         narrowerConcept:
           conceptData.references?.narrower?.map((narrow) => {
             {
@@ -120,6 +186,7 @@ export default function generateFormData(conceptData?: Concept) {
                   )
                   .reduce((l) => l),
                 terminologyId: narrow.type.graph.id,
+                terminologyLabel: terminologyLabel
               };
             }
           }) ?? [],
@@ -139,16 +206,19 @@ export default function generateFormData(conceptData?: Concept) {
               };
             }
           }) ?? [],
-        relatedConceptInOther: conceptData.references.relatedMatch?.map((r) => {
-          {
-            console.log(r.properties?.prefLabel.flatMap(l => ({ [l.lang]: l.value })).reduce(l => l));
-            return {
-              id: r.properties?.targetId?.[0]?.value ?? '',
-              label: r.properties?.prefLabel.flatMap(l => ({ [l.lang]: l.value })).reduce(l => l),
-              terminologyId: r.properties.targetGraph?.[0].value ?? '',
-            };
-          }
-        }) ?? [],
+        relatedConceptInOther:
+          conceptData.references.relatedMatch?.map((r) => {
+            {
+              return {
+                id: r.properties?.targetId?.[0]?.value ?? '',
+                label: r.properties?.prefLabel
+                  .flatMap((l) => ({ [l.lang]: l.value }))
+                  .reduce((l) => l),
+                terminologyId: r.properties.targetGraph?.[0].value ?? '',
+                terminologyLabel: r.properties.vocabularyLabel ?? []
+              };
+            }
+          }) ?? [],
       },
       subject: conceptData.properties.subjectArea?.[0].value ?? '',
     },
@@ -196,7 +266,7 @@ export default function generateFormData(conceptData?: Concept) {
                 value: note.value,
               })),
               historyNote: label.properties.historyNote?.[0].value,
-              id: v4(),
+              id: label.id,
               language: label.properties.prefLabel?.[0].lang ?? '',
               prefLabel: label.properties.prefLabel?.[0].value ?? '',
               scope: label.properties.scope?.[0].value ?? '',

@@ -50,14 +50,13 @@ export default function RelationalInformationBlock({
     data[infoKey]
   );
 
-  console.log('relationalInfoBlock | data:', data)
-
   const handleUpdate = (concepts: Concepts[]) => {
     const newValue =
       concepts.map((concept) => ({
         id: concept.id,
         label: concept.label,
         terminologyId: concept.terminology.id,
+        terminologyLabel: concept.terminology.label,
       })) ?? [];
 
     setSelectedConcepts(newValue);
@@ -107,16 +106,18 @@ export default function RelationalInformationBlock({
                         )
                       }
                     >
-                      {/* TODO: Smth */}
                       <PropertyValue
-                        property={concept.label && Object.keys(concept.label).map((key) => {
-                          const obj = {
-                            lang: key,
-                            value: concept.label[key],
-                            regex: '',
-                          };
-                          return obj;
-                        })}
+                        property={
+                          concept.label &&
+                          Object.keys(concept.label).map((key) => {
+                            const obj = {
+                              lang: key,
+                              value: concept.label[key],
+                              regex: '',
+                            };
+                            return obj;
+                          })
+                        }
                         fallbackLanguage={'fi'}
                       />
                     </Chip>
@@ -159,7 +160,9 @@ function ManageRelationalInfoModal({
   const handleSetSearchResults = (value: Concepts[]) => {
     if (value !== searchResults) {
       setSearchResults(value);
-      setChosen(value.filter(concept => selectedConceptIds.includes(concept.id)));
+      setChosen(
+        value.filter((concept) => selectedConceptIds.includes(concept.id))
+      );
     }
   };
 

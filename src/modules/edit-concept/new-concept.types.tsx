@@ -1,5 +1,3 @@
-import { Concepts } from '@app/common/interfaces/concepts.interface';
-
 export interface ConceptTermType {
   changeNote: string;
   draftComment: string;
@@ -57,6 +55,7 @@ export interface RelationInfoType {
   id: string;
   label: { [key: string]: string };
   terminologyId: string;
+  terminologyLabel: { [key: string]: string };
 }
 
 export interface ListType {

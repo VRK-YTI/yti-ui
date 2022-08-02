@@ -99,16 +99,17 @@ export default function ConceptBasicInformation({
   function renderDefinitions() {
     return (
       <>
-        {languages.map((language) => {
-          return renderDefinitionTextarea(language);
+        {languages.map((language, idx) => {
+          return renderDefinitionTextarea(language, idx);
         })}
       </>
     );
   }
 
-  function renderDefinitionTextarea(lang: string) {
+  function renderDefinitionTextarea(lang: string, idx: number) {
     return (
       <WiderTextarea
+        key={`definition-text-area-${idx}`}
         labelText={t('definition-label-text', {
           lang: lang,
           langUpper: lang.toUpperCase(),

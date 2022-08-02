@@ -239,7 +239,11 @@ export default function TermForm({ term, update }: TermFormProps) {
           items={termStyle}
           defaultSelectedItem={
             term.termStyle
-              ? termStyle.filter((ts) => ts.uniqueItemId === term.termStyle || ts.labelText === term.termStyle)[0]
+              ? termStyle.filter(
+                  (ts) =>
+                    ts.uniqueItemId === term.termStyle ||
+                    ts.labelText === term.termStyle
+                )[0]
               : undefined
           }
           onItemSelect={(e) => handleUpdate({ key: 'termStyle', value: e })}
@@ -256,7 +260,9 @@ export default function TermForm({ term, update }: TermFormProps) {
           defaultSelectedItem={
             term.termFamily
               ? termFamily.filter(
-                  (ts) => ts.uniqueItemId === term.termFamily || ts.labelText === term.termFamily
+                  (ts) =>
+                    ts.uniqueItemId === term.termFamily ||
+                    ts.labelText === term.termFamily
                 )[0]
               : undefined
           }
@@ -274,7 +280,9 @@ export default function TermForm({ term, update }: TermFormProps) {
           defaultSelectedItem={
             term.termConjugation
               ? termConjugation.filter(
-                  (ts) => ts.uniqueItemId === term.termConjugation || ts.labelText === term.termConjugation
+                  (ts) =>
+                    ts.uniqueItemId === term.termConjugation ||
+                    ts.labelText === term.termConjugation
                 )[0]
               : undefined
           }
@@ -294,7 +302,11 @@ export default function TermForm({ term, update }: TermFormProps) {
           items={wordClass}
           defaultSelectedItem={
             term.wordClass
-              ? wordClass.filter((ts) => ts.uniqueItemId === term.wordClass || ts.labelText === term.wordClass)[0]
+              ? wordClass.filter(
+                  (ts) =>
+                    ts.uniqueItemId === term.wordClass ||
+                    ts.labelText === term.wordClass
+                )[0]
               : undefined
           }
           onItemSelect={(e) => handleUpdate({ key: 'wordClass', value: e })}

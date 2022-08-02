@@ -29,8 +29,7 @@ import generateFormData from './generate-form-data';
 
 interface EditConceptProps {
   terminologyId: string;
-  conceptNames: { [key: string]: string | undefined };
-  conceptData: Concept;
+  conceptData?: Concept;
 }
 
 export default function EditConcept({
@@ -47,18 +46,23 @@ export default function EditConcept({
   const [languages] = useState(
     terminology?.properties.language?.map(({ value }) => value) ?? []
   );
-  const [preferredTerms] = useState(
-    languages
-      .map((lang) => ({ lang, value: asString(router.query[lang]), regex: '' }))
-      .filter(({ value }) => !!value)
-  );
+
+  const [preferredTerms] = useState<
+    {
+      lang: string;
+      regex: string;
+      value: string;
+    }[]
+  >(getPreferredTerms());
   const [postedData, setPostedData] =
     useState<ReturnType<typeof generateConcept>>();
 
   const [formData, setFormData] = useState<EditConceptType>(
-    generateFormData(conceptData)
+    generateFormData(preferredTerms, conceptData, terminology?.properties.prefLabel)
   );
+
   console.log('FORMDATA:', formData);
+  console.log('preferredTerms', preferredTerms);
 
   const handlePost = () => {
     if (!terminologyId) {
@@ -152,4 +156,26 @@ export default function EditConcept({
       </NewConceptBlock>
     </>
   );
+
+  function getPreferredTerms(): {
+    lang: string;
+    regex: string;
+    value: string;
+  }[] {
+    const temp = conceptData?.references?.prefLabelXl?.flatMap((label) =>
+      label.properties.prefLabel?.flatMap((l) => ({
+        lang: l.lang,
+        regex: '',
+        value: l.value,
+      }))
+    );
+
+    if (temp && !temp.some((t) => t === undefined)) {
+      return temp as ReturnType<typeof getPreferredTerms>;
+    }
+
+    return languages
+      .map((lang) => ({ lang, value: asString(router.query[lang]), regex: '' }))
+      .filter(({ value }) => !!value);
+  }
 }

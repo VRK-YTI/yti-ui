@@ -23,11 +23,7 @@ interface NewConceptPageProps extends CommonContextState {
 export default function NewConcept(props: NewConceptPageProps) {
   const { t } = useTranslation('admin');
   const { query } = useRouter();
-  const conceptNames = {
-    fi: query.fi as string,
-    sv: query.sv as string,
-    en: query.en as string,
-  };
+
   const terminologyId = (query?.terminologyId ?? '') as string;
 
   return (
@@ -40,7 +36,6 @@ export default function NewConcept(props: NewConceptPageProps) {
 
         <EditConcept
           terminologyId={terminologyId}
-          conceptNames={conceptNames}
         />
       </Layout>
     </CommonContextProvider>

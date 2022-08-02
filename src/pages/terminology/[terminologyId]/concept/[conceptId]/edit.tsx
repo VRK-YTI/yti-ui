@@ -34,12 +34,6 @@ export default function EditConcept(props: NewConceptPageProps) {
     ? router.query.terminologyId[0]
     : (router.query.terminologyId as string);
 
-  const conceptNames = {
-    fi: router.query.fi as string,
-    sv: router.query.sv as string,
-    en: router.query.en as string,
-  };
-
   return (
     <CommonContextProvider value={props}>
       <Layout>
@@ -50,7 +44,6 @@ export default function EditConcept(props: NewConceptPageProps) {
 
         <EditConceptModule
           terminologyId={terminologyId}
-          conceptNames={conceptNames}
           conceptData={props.conceptData}
         />
       </Layout>

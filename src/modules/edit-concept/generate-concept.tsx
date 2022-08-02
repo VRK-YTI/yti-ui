@@ -1,12 +1,8 @@
 import { v4 } from 'uuid';
-import { ConceptTermType } from './concept-terms-block/concept-term-block-types';
-import { BasicInfoType } from './basic-information/concept-basic-information-types';
+import { EditConceptType } from './new-concept.types';
 
 interface generateConceptProps {
-  data: {
-    terms: ConceptTermType[];
-    basicInformation: BasicInfoType;
-  };
+  data: EditConceptType;
   terminologyId: string;
 }
 
@@ -177,7 +173,7 @@ export default function generateConcept({
             {
               lang: '',
               regex: regex,
-              value: match.terminology.id,
+              value: match.terminologyId,
             },
           ],
           targetId: [
@@ -187,10 +183,10 @@ export default function generateConcept({
               value: match.id,
             },
           ],
-          vocabularyLabel: Object.keys(match.terminology.label).map((key) => ({
+          vocabularyLabel: Object.keys(match.terminologyLabel).map((key) => ({
             lang: key,
             regex: regex,
-            value: match.terminology.label[key],
+            value: match.terminologyLabel[key],
           })),
         },
         references: {},
@@ -230,7 +226,7 @@ export default function generateConcept({
                   {
                     lang: '',
                     regex: regex,
-                    value: related.terminology.id,
+                    value: related.terminologyId,
                   },
                 ],
                 targetId: [
@@ -240,11 +236,11 @@ export default function generateConcept({
                     value: related.id,
                   },
                 ],
-                vocabularyLabel: Object.keys(related.terminology.label).map(
+                vocabularyLabel: Object.keys(related.terminologyLabel).map(
                   (key) => ({
                     lang: key,
                     regex: regex,
-                    value: related.terminology.label[key],
+                    value: related.terminologyLabel[key],
                   })
                 ),
               },
