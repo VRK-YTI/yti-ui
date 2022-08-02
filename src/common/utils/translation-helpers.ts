@@ -37,15 +37,15 @@ export function translateLanguage(language: string, t: TFunction) {
 export function translateRole(role: string, t: TFunction) {
   switch (role) {
     case 'ADMIN':
-      return t('ADMIN', { ns: 'common' });
+      return t('roles.admin', { ns: 'common' });
     case 'CODE_LIST_EDITOR':
-      return t('CODE_LIST_EDITOR', { ns: 'common' });
+      return t('roles.code-list-editor', { ns: 'common' });
     case 'DATA_MODEL_EDITOR':
-      return t('DATA_MODEL_EDITOR', { ns: 'common' });
+      return t('roles.data-model-editor', { ns: 'common' });
     case 'MEMBER':
-      return t('MEMBER', { ns: 'common' });
+      return t('roles.member', { ns: 'common' });
     case 'TERMINOLOGY_EDITOR':
-      return t('TERMINOLOGY_EDITOR', { ns: 'common' });
+      return t('roles.terminology-editor', { ns: 'common' });
     default:
       return role;
   }
