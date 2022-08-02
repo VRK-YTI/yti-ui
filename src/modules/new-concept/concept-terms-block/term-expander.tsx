@@ -30,7 +30,9 @@ export default function TermExpander({
     term.language,
     t
   )} ${term.language.toUpperCase()}`;
-  const secondaryText = `${term.prefLabel} - ${t('DRAFT', { ns: 'common' })}`;
+  const secondaryText = `${term.prefLabel} - ${t('statuses.draft', {
+    ns: 'common',
+  })}`;
 
   return (
     <Expander>

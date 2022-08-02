@@ -34,7 +34,7 @@ describe('term-modal', () => {
     userEvent.click(screen.getByText('pref label'));
 
     expect(screen.getByText('Preferred term')).toBeInTheDocument();
-    expect(screen.getByText('tr-DRAFT')).toBeInTheDocument();
+    expect(screen.getByText('tr-statuses.draft')).toBeInTheDocument();
     expect(screen.getByText('1')).toBeInTheDocument();
     expect(screen.getByText('term info')).toBeInTheDocument();
     expect(screen.getByText('scope')).toBeInTheDocument();
@@ -77,7 +77,7 @@ describe('term-modal', () => {
     userEvent.click(screen.getByText('pref label'));
 
     expect(screen.getByText('Preferred term')).toBeInTheDocument();
-    expect(screen.getByText('tr-DRAFT')).toBeInTheDocument();
+    expect(screen.getByText('tr-statuses.draft')).toBeInTheDocument();
     expect(screen.getByText('1')).toBeInTheDocument();
     expect(screen.getByText('term info')).toBeInTheDocument();
     expect(screen.getByText('scope')).toBeInTheDocument();

@@ -3,19 +3,19 @@ import { TFunction } from 'next-i18next';
 export function translateStatus(status: string, t: TFunction) {
   switch (status) {
     case 'DRAFT':
-      return t('DRAFT', { ns: 'common' });
+      return t('statuses.draft', { ns: 'common' });
     case 'INCOMPLETE':
-      return t('INCOMPLETE', { ns: 'common' });
+      return t('statuses.incomplete', { ns: 'common' });
     case 'INVALID':
-      return t('INVALID', { ns: 'common' });
+      return t('statuses.invalid', { ns: 'common' });
     case 'RETIRED':
-      return t('RETIRED', { ns: 'common' });
+      return t('statuses.retired', { ns: 'common' });
     case 'SUGGESTED':
-      return t('SUGGESTED', { ns: 'common' });
+      return t('statuses.suggested', { ns: 'common' });
     case 'SUPERSEDED':
-      return t('SUPERSEDED', { ns: 'common' });
+      return t('statuses.superseded', { ns: 'common' });
     case 'VALID':
-      return t('VALID', { ns: 'common' });
+      return t('statuses.valid', { ns: 'common' });
     default:
       return status;
   }

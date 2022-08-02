@@ -171,7 +171,7 @@ export default function NewConcept({ terminologyId }: NewConceptProps) {
             property={terminology?.properties.prefLabel}
             fallbackLanguage="fi"
           />
-          <Badge>{t('DRAFT')}</Badge>
+          <Badge>{t('statuses.draft', { ns: 'common' })}</Badge>
         </BadgeBar>
         <Text>{t('new-concept-page-help')}</Text>
 
