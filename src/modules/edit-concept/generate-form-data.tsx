@@ -2,8 +2,12 @@ import { Concept } from '@app/common/interfaces/concept.interface';
 import { v4 } from 'uuid';
 import { EditConceptType } from './new-concept.types';
 
-export default function generateFormData(conceptData: Concept) {
+export default function generateFormData(conceptData?: Concept) {
   console.log('generateFormData', conceptData);
+
+  if (!conceptData) {
+    return null;
+  }
 
   const definition = new Map();
   conceptData.properties.definition?.map((d) => {
@@ -93,7 +97,16 @@ export default function generateFormData(conceptData: Concept) {
               };
             }
           }) ?? [],
-        matchInOther: [],
+        matchInOther: conceptData.references.exactMatch?.map((r) => {
+          {
+            console.log(r.properties?.prefLabel.flatMap(l => ({ [l.lang]: l.value })).reduce(l => l));
+            return {
+              id: r.properties?.targetId?.[0]?.value ?? '',
+              label: r.properties?.prefLabel.flatMap(l => ({ [l.lang]: l.value })).reduce(l => l),
+              terminologyId: r.properties.targetGraph?.[0].value ?? '',
+            };
+          }
+        }) ?? [],
         narrowerConcept:
           conceptData.references?.narrower?.map((narrow) => {
             {
@@ -128,16 +141,11 @@ export default function generateFormData(conceptData: Concept) {
           }) ?? [],
         relatedConceptInOther: conceptData.references.relatedMatch?.map((r) => {
           {
+            console.log(r.properties?.prefLabel.flatMap(l => ({ [l.lang]: l.value })).reduce(l => l));
             return {
-              id: r.id,
-              label: r.references?.prefLabelXl
-                ?.flatMap((label) =>
-                  label.properties.prefLabel.flatMap((l) => ({
-                    [l.lang]: l.value,
-                  }))
-                )
-                .reduce((l) => l),
-              terminologyId: r.type.graph.id,
+              id: r.properties?.targetId?.[0]?.value ?? '',
+              label: r.properties?.prefLabel.flatMap(l => ({ [l.lang]: l.value })).reduce(l => l),
+              terminologyId: r.properties.targetGraph?.[0].value ?? '',
             };
           }
         }) ?? [],
@@ -152,6 +160,7 @@ export default function generateFormData(conceptData: Concept) {
     'prefLabelXl',
     'searchTerm',
   ];
+
   const terms =
     Object.keys(conceptData.references)
       .filter((key) => termKeys.includes(key))

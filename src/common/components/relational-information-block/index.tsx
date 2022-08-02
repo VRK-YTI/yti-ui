@@ -50,6 +50,8 @@ export default function RelationalInformationBlock({
     data[infoKey]
   );
 
+  console.log('relationalInfoBlock | data:', data)
+
   const handleUpdate = (concepts: Concepts[]) => {
     const newValue =
       concepts.map((concept) => ({
@@ -105,8 +107,9 @@ export default function RelationalInformationBlock({
                         )
                       }
                     >
+                      {/* TODO: Smth */}
                       <PropertyValue
-                        property={Object.keys(concept.label).map((key) => {
+                        property={concept.label && Object.keys(concept.label).map((key) => {
                           const obj = {
                             lang: key,
                             value: concept.label[key],
