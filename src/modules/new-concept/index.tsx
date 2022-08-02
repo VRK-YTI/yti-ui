@@ -10,10 +10,9 @@ import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabul
 import { getProperty } from '@app/common/utils/get-property';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { Text } from 'suomifi-ui-components';
 import ConceptBasicInformation from './basic-information/concept-basic-information';
 import FormFooter from './form-footer';
-import { NewConceptBlock } from './new-concept.styles';
+import { NewConceptBlock, PageHelpText } from './new-concept.styles';
 import ConceptTermsBlock from './concept-terms-block';
 import { asString } from '@app/common/utils/hooks/useUrlState';
 import { useEffect, useState } from 'react';
@@ -173,7 +172,7 @@ export default function NewConcept({ terminologyId }: NewConceptProps) {
           />
           <Badge>{t('DRAFT')}</Badge>
         </BadgeBar>
-        <Text>{t('new-concept-page-help')}</Text>
+        <PageHelpText>{t('new-concept-page-help')}</PageHelpText>
 
         <ConceptTermsBlock
           languages={languages}

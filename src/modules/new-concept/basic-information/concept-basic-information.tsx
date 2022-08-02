@@ -13,6 +13,7 @@ import { useState } from 'react';
 import { ExpanderGroup } from 'suomifi-ui-components';
 import { BasicInfo, ListType } from '../new-concept.types';
 import ListBlock from '../list-block';
+import { translateLanguage } from '@app/common/utils/translation-helpers';
 
 interface ConceptBasicInformationProps {
   updateBasicInformation: (value: BasicInfo) => void;
@@ -113,7 +114,7 @@ export default function ConceptBasicInformation({
     return (
       <WiderTextarea
         labelText={t('definition-label-text', {
-          lang: lang,
+          lang: translateLanguage(lang, t),
           langUpper: lang.toUpperCase(),
         })}
         optionalText={t('optional')}

@@ -23,6 +23,7 @@ import {
   DropdownBlock,
   GrammaticalBlock,
   MediumHeading,
+  ModalDescription,
   RadioButtonGroupSpaced,
   TermEquivalencyBlock,
   WiderTextareaBlock,
@@ -116,6 +117,7 @@ export default function NewTermModal({
     >
       <ModalContent>
         <ModalTitle>{t('new-term')}</ModalTitle>
+        <ModalDescription>{t('new-term-modal-description')}</ModalDescription>
 
         <TextInput
           labelText={t('term-name-label')}

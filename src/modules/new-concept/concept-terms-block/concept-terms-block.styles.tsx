@@ -7,6 +7,7 @@ import {
   Heading,
   Icon,
   RadioButtonGroup,
+  Text,
   Textarea,
 } from 'suomifi-ui-components';
 
@@ -83,5 +84,10 @@ export const RadioButtonGroupSpaced = styled(RadioButtonGroup)<{
 `;
 
 export const OtherTermsExpanderGroup = styled(ExpanderGroup)`
+  margin-bottom: ${(props) => props.theme.suomifi.spacing.m};
+`;
+
+export const ModalDescription = styled(Text)`
+  display: inline-block;
   margin-bottom: ${(props) => props.theme.suomifi.spacing.m};
 `;

@@ -2,6 +2,7 @@ import {
   Checkbox,
   Expander,
   ExpanderContent,
+  ExpanderGroup,
   ExpanderTitle,
 } from 'suomifi-ui-components';
 import { ResultList } from './relation-information-block.styles';
@@ -58,8 +59,8 @@ export default function RenderConcepts({
 
   return (
     <>
-      <ResultList>
-        {concepts?.map((concept, idx) => {
+      <ExpanderGroup openAllText="" closeAllText="">
+        {concepts?.map((concept) => {
           const conceptsVocabulary = vocabularies?.filter(
             (vocabulary) => vocabulary.type.graph.id === concept.terminology.id
           );
@@ -75,51 +76,49 @@ export default function RenderConcepts({
           });
 
           return (
-            <li key={`${concept.id}-${idx}`}>
-              <Expander>
-                <ExpanderTitle
-                  ariaCloseText={t('open-concept-expander')}
-                  ariaOpenText={t('close-concept-expander')}
-                  toggleButtonAriaDescribedBy=""
+            <Expander key={concept.id}>
+              <ExpanderTitle
+                ariaCloseText={t('open-concept-expander')}
+                ariaOpenText={t('close-concept-expander')}
+                toggleButtonAriaDescribedBy=""
+              >
+                <Checkbox
+                  hintText={`${organizationTitle} - ${translateStatus(
+                    concept.status ?? 'DRAFT',
+                    t
+                  )}`}
+                  onClick={(e) => handleCheckbox(e, concept)}
+                  checked={chosen.some((chose) => chose.id === concept.id)}
                 >
-                  <Checkbox
-                    hintText={`${organizationTitle} - ${translateStatus(
-                      concept.status ?? 'DRAFT',
-                      t
-                    )}`}
-                    onClick={(e) => handleCheckbox(e, concept)}
-                    checked={chosen.some((chose) => chose.id === concept.id)}
-                  >
-                    <SanitizedTextContent
-                      text={
-                        getPropertyValue({
-                          property: Object.keys(concept.label).map((key) => {
-                            const obj = {
-                              lang: key,
-                              value: concept.label[key],
-                              regex: '',
-                            };
-                            return obj;
-                          }),
-                          language: i18n.language,
-                          fallbackLanguage: 'fi',
-                        }) ??
-                        concept.label[i18n.language] ??
-                        concept.label.fi
-                      }
-                    />
-                  </Checkbox>
-                </ExpanderTitle>
+                  <SanitizedTextContent
+                    text={
+                      getPropertyValue({
+                        property: Object.keys(concept.label).map((key) => {
+                          const obj = {
+                            lang: key,
+                            value: concept.label[key],
+                            regex: '',
+                          };
+                          return obj;
+                        }),
+                        language: i18n.language,
+                        fallbackLanguage: 'fi',
+                      }) ??
+                      concept.label[i18n.language] ??
+                      concept.label.fi
+                    }
+                  />
+                </Checkbox>
+              </ExpanderTitle>
 
-                <RenderExpanderContent
-                  terminologyId={concept.terminology.id}
-                  conceptId={concept.id}
-                />
-              </Expander>
-            </li>
+              <RenderExpanderContent
+                terminologyId={concept.terminology.id}
+                conceptId={concept.id}
+              />
+            </Expander>
           );
         })}
-      </ResultList>
+      </ExpanderGroup>
     </>
   );
 
