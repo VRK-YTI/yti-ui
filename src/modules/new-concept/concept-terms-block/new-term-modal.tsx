@@ -196,25 +196,25 @@ export default function NewTermModal({
           onChange={(e) => handleUpdate({ key: 'status', value: e })}
         >
           <DropdownItem value="draft">
-            {t('DRAFT', { ns: 'common' })}
+            {t('statuses.draft', { ns: 'common' })}
           </DropdownItem>
           <DropdownItem value="incomplete">
-            {t('INCOMPLETE', { ns: 'common' })}
+            {t('statuses.incomplete', { ns: 'common' })}
           </DropdownItem>
           <DropdownItem value="valid">
-            {t('VALID', { ns: 'common' })}
+            {t('statuses.valid', { ns: 'common' })}
           </DropdownItem>
           <DropdownItem value="superseded">
-            {t('SUPERSEDED', { ns: 'common' })}
+            {t('statuses.superseded', { ns: 'common' })}
           </DropdownItem>
           <DropdownItem value="retired">
-            {t('RETIRED', { ns: 'common' })}
+            {t('statuses.retired', { ns: 'common' })}
           </DropdownItem>
           <DropdownItem value="invalid">
-            {t('INVALID', { ns: 'common' })}
+            {t('statuses.invalid', { ns: 'common' })}
           </DropdownItem>
           <DropdownItem value="suggested">
-            {t('SUGGESTED', { ns: 'common' })}
+            {t('statuses.suggested', { ns: 'common' })}
           </DropdownItem>
         </DropdownBlock>
 

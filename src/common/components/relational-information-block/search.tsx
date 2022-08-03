@@ -26,32 +26,32 @@ export default function Search({
     {
       name: 'VALID',
       uniqueItemId: 'VALID',
-      labelText: t('VALID', { ns: 'common' }),
+      labelText: t('statuses.valid', { ns: 'common' }),
     },
     {
       name: 'INCOMPLETE',
       uniqueItemId: 'INCOMPLETE',
-      labelText: t('INCOMPLETE', { ns: 'common' }),
+      labelText: t('statuses.incomplete', { ns: 'common' }),
     },
     {
       name: 'DRAFT',
       uniqueItemId: 'DRAFT',
-      labelText: t('DRAFT', { ns: 'common' }),
+      labelText: t('statuses.draft', { ns: 'common' }),
     },
     {
       name: 'RETIRED',
       uniqueItemId: 'RETIRED',
-      labelText: t('RETIRED', { ns: 'common' }),
+      labelText: t('statuses.retired', { ns: 'common' }),
     },
     {
       name: 'SUPERSEDED',
       uniqueItemId: 'SUPERSEDED',
-      labelText: t('SUPERSEDED', { ns: 'common' }),
+      labelText: t('statuses.superseded', { ns: 'common' }),
     },
     {
       name: 'INVALID',
       uniqueItemId: 'INVALID',
-      labelText: t('INVALID', { ns: 'common' }),
+      labelText: t('statuses.invalid', { ns: 'common' }),
     },
   ];
 

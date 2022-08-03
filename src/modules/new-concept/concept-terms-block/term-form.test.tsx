@@ -70,16 +70,16 @@ describe('term-form', () => {
       { wrapper: themeProvider }
     );
 
-    // Expect two tr-DRAFT because the default value in dropdown is draft.
-    expect(screen.getAllByText(/tr-DRAFT/)).toHaveLength(2);
+    // Expect two tr-statuses.draft because the default value in dropdown is draft.
+    expect(screen.getAllByText(/tr-statuses\.draft/)).toHaveLength(2);
 
-    userEvent.click(screen.getAllByText(/tr-DRAFT/)[0]);
+    userEvent.click(screen.getAllByText(/tr-statuses\.draft/)[0]);
 
-    expect(screen.getByText('tr-INCOMPLETE')).toBeInTheDocument();
-    expect(screen.getByText('tr-VALID')).toBeInTheDocument();
-    expect(screen.getByText('tr-SUPERSEDED')).toBeInTheDocument();
-    expect(screen.getByText('tr-RETIRED')).toBeInTheDocument();
-    expect(screen.getByText('tr-INVALID')).toBeInTheDocument();
-    expect(screen.getByText('tr-SUGGESTED')).toBeInTheDocument();
+    expect(screen.getByText('tr-statuses.incomplete')).toBeInTheDocument();
+    expect(screen.getByText('tr-statuses.valid')).toBeInTheDocument();
+    expect(screen.getByText('tr-statuses.superseded')).toBeInTheDocument();
+    expect(screen.getByText('tr-statuses.retired')).toBeInTheDocument();
+    expect(screen.getByText('tr-statuses.invalid')).toBeInTheDocument();
+    expect(screen.getByText('tr-statuses.suggested')).toBeInTheDocument();
   });
 });
