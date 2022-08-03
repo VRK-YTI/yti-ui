@@ -34,9 +34,7 @@ export default function NewConcept(props: NewConceptPageProps) {
           siteTitle="Yhteentoimivuusalusta"
         />
 
-        <EditConcept
-          terminologyId={terminologyId}
-        />
+        <EditConcept terminologyId={terminologyId} />
       </Layout>
     </CommonContextProvider>
   );

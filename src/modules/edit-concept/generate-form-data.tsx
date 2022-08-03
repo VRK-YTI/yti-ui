@@ -1,7 +1,8 @@
 import { Concept } from '@app/common/interfaces/concept.interface';
+import { Term } from '@app/common/interfaces/term.interface';
 import { Property } from '@app/common/interfaces/termed-data-types.interface';
 import { v4 } from 'uuid';
-import { EditConceptType } from './new-concept.types';
+import { ConceptTermType, EditConceptType } from './new-concept.types';
 
 export default function generateFormData(
   preferredTerms: {
@@ -10,7 +11,7 @@ export default function generateFormData(
     regex: string;
   }[],
   conceptData?: Concept,
-  terminologyLabel?: Property[],
+  terminologyLabel?: Property[]
 ): EditConceptType {
   console.log('generateFormData', conceptData);
 
@@ -114,15 +115,22 @@ export default function generateFormData(
               return {
                 id: broad.id,
                 label:
-                  broad.references?.prefLabelXl
-                    ?.flatMap((label) =>
-                      label.properties.prefLabel?.flatMap((l) => ({
-                        [l.lang]: l.value,
-                      }))
-                    )
+                  broad.references.prefLabelXl
+                    ?.map((label) => {
+                      return (
+                        label.properties.prefLabel
+                          ?.map((l) => ({
+                            [l.lang]: l.value,
+                          }))
+                          .reduce((l) => l) ?? {}
+                      );
+                    })
                     .reduce((l) => l) ?? {},
                 terminologyId: broad.type.graph.id,
-                terminologyLabel: terminologyLabel
+                terminologyLabel:
+                  terminologyLabel
+                    ?.map((l) => ({ [l.lang]: l.value }))
+                    .reduce((l) => l) ?? {},
               };
             }
           }) ?? [],
@@ -131,15 +139,23 @@ export default function generateFormData(
             {
               return {
                 id: part.id,
-                label: part.references?.prefLabelXl
-                  ?.flatMap((label) =>
-                    label.properties.prefLabel.flatMap((l) => ({
-                      [l.lang]: l.value,
-                    }))
-                  )
-                  .reduce((l) => l),
+                label:
+                  part.references?.prefLabelXl
+                    ?.map((label) => {
+                      return (
+                        label.properties.prefLabel
+                          ?.map((l) => ({
+                            [l.lang]: l.value,
+                          }))
+                          .reduce((l) => l) ?? {}
+                      );
+                    })
+                    .reduce((l) => l) ?? {},
                 terminologyId: part.type.graph.id,
-                terminologyLabel: terminologyLabel
+                terminologyLabel:
+                  terminologyLabel
+                    ?.map((l) => ({ [l.lang]: l.value }))
+                    .reduce((l) => l) ?? {},
               };
             }
           }) ?? [],
@@ -148,15 +164,23 @@ export default function generateFormData(
             {
               return {
                 id: part.id,
-                label: part.references.prefLabelXl
-                  .flatMap((label) =>
-                    label.properties.prefLabel.flatMap((l) => ({
-                      [l.lang]: l.value,
-                    }))
-                  )
-                  .reduce((l) => l),
+                label:
+                  part.references.prefLabelXl
+                    ?.map((label) => {
+                      return (
+                        label.properties.prefLabel
+                          ?.map((l) => ({
+                            [l.lang]: l.value,
+                          }))
+                          .reduce((l) => l) ?? {}
+                      );
+                    })
+                    .reduce((l) => l) ?? {},
                 terminologyId: part.type.graph.id,
-                terminologyLabel: terminologyLabel
+                terminologyLabel:
+                  terminologyLabel
+                    ?.map((l) => ({ [l.lang]: l.value }))
+                    .reduce((l) => l) ?? {},
               };
             }
           }) ?? [],
@@ -165,11 +189,16 @@ export default function generateFormData(
             {
               return {
                 id: r.properties?.targetId?.[0]?.value ?? '',
-                label: r.properties?.prefLabel
-                  .flatMap((l) => ({ [l.lang]: l.value }))
-                  .reduce((l) => l),
+                label:
+                  r.properties?.prefLabel
+                    ?.map((l) => {
+                      return { [l.lang]: l.value };
+                    })
+                    .reduce((l) => l) ?? {},
                 terminologyId: r.properties.targetGraph?.[0].value ?? '',
                 terminologyLabel: r.properties.vocabularyLabel
+                  ? r.properties.vocabularyLabel
+                  : {},
               };
             }
           }) ?? [],
@@ -178,15 +207,23 @@ export default function generateFormData(
             {
               return {
                 id: narrow.id,
-                label: narrow.references?.prefLabelXl
-                  ?.flatMap((label) =>
-                    label.properties.prefLabel.flatMap((l) => ({
-                      [l.lang]: l.value,
-                    }))
-                  )
-                  .reduce((l) => l),
+                label:
+                  narrow.references?.prefLabelXl
+                    ?.map((label) => {
+                      return (
+                        label.properties.prefLabel
+                          ?.map((l) => ({
+                            [l.lang]: l.value,
+                          }))
+                          .reduce((l) => l) ?? {}
+                      );
+                    })
+                    .reduce((l) => l) ?? {},
                 terminologyId: narrow.type.graph.id,
-                terminologyLabel: terminologyLabel
+                terminologyLabel:
+                  terminologyLabel
+                    ?.map((l) => ({ [l.lang]: l.value }))
+                    .reduce((l) => l) ?? {},
               };
             }
           }) ?? [],
@@ -195,14 +232,23 @@ export default function generateFormData(
             {
               return {
                 id: r.id,
-                label: r.references?.prefLabelXl
-                  ?.flatMap((label) =>
-                    label.properties.prefLabel.flatMap((l) => ({
-                      [l.lang]: l.value,
-                    }))
-                  )
-                  .reduce((l) => l),
+                label:
+                  r.references?.prefLabelXl
+                    ?.map((label) => {
+                      return (
+                        label.properties.prefLabel
+                          ?.map((l) => ({
+                            [l.lang]: l.value,
+                          }))
+                          .reduce((l) => l) ?? {}
+                      );
+                    })
+                    .reduce((l) => l) ?? {},
                 terminologyId: r.type.graph.id,
+                terminologyLabel:
+                  terminologyLabel
+                    ?.map((l) => ({ [l.lang]: l.value }))
+                    .reduce((l) => l) ?? {},
               };
             }
           }) ?? [],
@@ -211,11 +257,12 @@ export default function generateFormData(
             {
               return {
                 id: r.properties?.targetId?.[0]?.value ?? '',
-                label: r.properties?.prefLabel
-                  .flatMap((l) => ({ [l.lang]: l.value }))
-                  .reduce((l) => l),
+                label:
+                  r.properties?.prefLabel
+                    ?.map((l) => ({ [l.lang]: l.value }))
+                    .reduce((l) => l) ?? {},
                 terminologyId: r.properties.targetGraph?.[0].value ?? '',
-                terminologyLabel: r.properties.vocabularyLabel ?? []
+                terminologyLabel: r.properties.vocabularyLabel ?? {},
               };
             }
           }) ?? [],
@@ -231,67 +278,69 @@ export default function generateFormData(
     'searchTerm',
   ];
 
-  const terms =
-    Object.keys(conceptData.references)
-      .filter((key) => termKeys.includes(key))
-      .map((key) => {
-        return conceptData.references[key as keyof Concept['references']]?.map(
-          (label) => {
-            let termType;
-            switch (key) {
-              case 'altLabelXl': {
-                termType = 'synonym';
-                break;
-              }
-              case 'notRecommendedSynonym': {
-                termType = 'not-recommended-synonym';
-                break;
-              }
-              case 'prefLabelXl': {
-                termType = 'recommended-term';
-                break;
-              }
-              case 'searchTerm': {
-                termType = 'search-term';
-                break;
-              }
-            }
+  const terms = Object.keys(conceptData.references)
+    .filter((key) => termKeys.includes(key))
+    ?.map((key) =>
+      conceptData.references[key as keyof Concept['references']]?.map(
+        (reference) => {
+          const r = reference as Term;
+          let termType = '';
 
-            return {
-              changeNote: label.properties.changeNote?.[0].value ?? '',
-              draftComment: '',
-              editorialNote: label.properties.editorialNote?.map((note) => ({
+          switch (key) {
+            case 'altLabelXl': {
+              termType = 'synonym';
+              break;
+            }
+            case 'notRecommendedSynonym': {
+              termType = 'not-recommended-synonym';
+              break;
+            }
+            case 'prefLabelXl': {
+              termType = 'recommended-term';
+              break;
+            }
+            case 'searchTerm': {
+              termType = 'search-term';
+              break;
+            }
+          }
+
+          return {
+            changeNote: r.properties.changeNote?.[0].value ?? '',
+            draftComment: '',
+            editorialNote:
+              r.properties.editorialNote?.map((note) => ({
                 id: v4(),
                 lang: note.lang,
                 value: note.value,
-              })),
-              historyNote: label.properties.historyNote?.[0].value,
-              id: label.id,
-              language: label.properties.prefLabel?.[0].lang ?? '',
-              prefLabel: label.properties.prefLabel?.[0].value ?? '',
-              scope: label.properties.scope?.[0].value ?? '',
-              source: label.properties.source?.[0].value ?? '',
-              status: label.properties.status?.[0].value ?? '',
-              termConjugation:
-                label.properties.termConjugation?.[0].value ?? '',
-              termEquivalency:
-                label.properties.termEquivalency?.[0].value ?? '',
-              termEquivalencyRelation:
-                label.properties.termEquivalencyRelation?.[0].value ?? '',
-              termFamily: label.properties.termFamily?.[0].value ?? '',
-              termHomographNumber:
-                label.properties.termHomographNumber?.[0].value ?? '',
-              termInfo: label.properties.termInfo?.[0].value ?? '',
-              termStyle: label.properties.termStyle?.[0].value ?? '',
-              termType: termType,
-              wordClass: label.properties.wordClass?.[0].value ?? '',
-            };
-          }
-        );
-      }) ?? [];
+              })) ?? [],
+            historyNote: r.properties.historyNote?.[0].value ?? '',
+            id: r.id,
+            language: r.properties.prefLabel?.[0].lang ?? '',
+            prefLabel: r.properties.prefLabel?.[0].value ?? '',
+            scope: r.properties.scope?.[0].value ?? '',
+            source: r.properties.source?.[0].value ?? '',
+            status: r.properties.status?.[0].value ?? '',
+            termConjugation: r.properties.termConjugation?.[0].value ?? '',
+            termEquivalency: r.properties.termEquivalency?.[0].value ?? '',
+            termEquivalencyRelation:
+              r.properties.termEquivalencyRelation?.[0].value ?? '',
+            termFamily: r.properties.termFamily?.[0].value ?? '',
+            termHomographNumber:
+              r.properties.termHomographNumber?.[0].value ?? '',
+            termInfo: r.properties.termInfo?.[0].value ?? '',
+            termStyle: r.properties.termStyle?.[0].value ?? '',
+            termType: termType,
+            wordClass: r.properties.wordClass?.[0].value ?? '',
+          };
+        }
+      )
+    )
+    .flat()
+    .filter((term) => term) as ConceptTermType[];
 
   return {
     ...retVal,
-    terms: terms.flat(),
+    terms: terms,
   };
 }

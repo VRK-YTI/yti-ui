@@ -54,11 +54,16 @@ export default function EditConcept({
       value: string;
     }[]
   >(getPreferredTerms());
+
   const [postedData, setPostedData] =
     useState<ReturnType<typeof generateConcept>>();
 
   const [formData, setFormData] = useState<EditConceptType>(
-    generateFormData(preferredTerms, conceptData, terminology?.properties.prefLabel)
+    generateFormData(
+      preferredTerms,
+      conceptData,
+      terminology?.properties.prefLabel
+    )
   );
 
   console.log('FORMDATA:', formData);
