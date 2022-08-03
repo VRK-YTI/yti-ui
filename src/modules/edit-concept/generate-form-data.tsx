@@ -13,8 +13,6 @@ export default function generateFormData(
   conceptData?: Concept,
   terminologyLabel?: Property[]
 ): EditConceptType {
-  console.log('generateFormData', conceptData);
-
   if (!conceptData) {
     return {
       terms: preferredTerms.map((term) => ({

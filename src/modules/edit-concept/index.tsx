@@ -26,6 +26,8 @@ import {
 } from './new-concept.types';
 import { Concept } from '@app/common/interfaces/concept.interface';
 import generateFormData from './generate-form-data';
+import { useSelector } from 'react-redux';
+import { selectLogin } from '@app/common/components/login/login.slice';
 
 interface EditConceptProps {
   terminologyId: string;
@@ -39,6 +41,7 @@ export default function EditConcept({
   const { t } = useTranslation('concept');
   const router = useRouter();
   const [addConcept, addConceptStatus] = useAddConceptMutation();
+  const user = useSelector(selectLogin());
   const { data: terminology } = useGetVocabularyQuery({
     id: terminologyId,
   });
@@ -66,22 +69,24 @@ export default function EditConcept({
     )
   );
 
-  console.log('FORMDATA:', formData);
-  console.log('preferredTerms', preferredTerms);
-
   const handlePost = () => {
     if (!terminologyId) {
       console.error('Invalid terminologyId');
       return;
     }
 
+    console.log('formData:', formData);
+    console.log('initialValue:', conceptData);
+
     const concept = generateConcept({
       data: formData,
       terminologyId: terminologyId,
+      initialValue: conceptData,
+      lastModifiedBy: `${user.firstName} ${user.lastName}`
     });
 
+    console.log('concept:', concept);
     return;
-
     setPostedData(concept);
     addConcept(concept);
   };
