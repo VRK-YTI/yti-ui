@@ -95,7 +95,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
         terminologyId: terminologyId,
         collectionInfo: {
           collectionId: collectionId,
-          createdBy: collectionData.createdBy,
+          createdBy: collectionData.createdBy ?? null,
           collectionCode: collectionData.code,
           collectionUri: collectionData.uri,
         },

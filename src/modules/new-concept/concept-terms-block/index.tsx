@@ -145,6 +145,7 @@ export default function ConceptTermsBlock({
                 </OtherTermsExpanderGroup>
 
                 <Button
+                  variant="secondaryNoBorder"
                   onClick={() => handleRemoveTerms()}
                   disabled={checkedTerms.length < 1}
                 >

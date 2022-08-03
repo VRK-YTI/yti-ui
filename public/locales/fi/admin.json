@@ -145,6 +145,7 @@
   "new-concept-title": "Uusi käsite",
   "new-concept-to-terminology": "Uusi käsite sanastoon",
   "new-term": "Uusi termi",
+  "new-term-modal-description": "Tiedot ovat pakollisia, jos niitä ei ole merkitty valinnaisiksi. Suositeltavaa on täyttää kaikki tiedot.",
   "no-info-domains-available": "Tietoalueita ei ole saatavilla",
   "no-languages-available": "Kieliä ei saatavilla",
   "no-other-orgs-available": "Muita vastuuorganisaatioita ei ole saatavilla",

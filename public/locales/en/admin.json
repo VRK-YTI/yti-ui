@@ -145,6 +145,7 @@
   "new-concept-title": "New Concept",
   "new-concept-to-terminology": "New concept to terminology",
   "new-term": "New term",
+  "new-term-modal-description": "All fields are required unless marked optional. It is recommended to fill in all the information.",
   "no-info-domains-available": "No information domains available",
   "no-languages-available": "No languages available",
   "no-other-orgs-available": "No other contributors available",

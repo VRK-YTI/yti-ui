@@ -93,16 +93,27 @@ export default function RelationalInformationBlock({
                       }
                     >
                       <PropertyValue
-                        property={Object.keys(concept.label).map((key) => {
-                          const obj = {
-                            lang: key,
-                            value: concept.label[key],
-                            regex: '',
-                          };
-                          return obj;
-                        })}
-                        fallbackLanguage={'fi'}
+                        property={Object.keys(concept.label).map((lang) => ({
+                          lang,
+                          value: concept.label[lang],
+                          regex: '',
+                        }))}
+                        fallbackLanguage="fi"
                       />
+
+                      {fromOther && ' - '}
+                      {fromOther && (
+                        <PropertyValue
+                          property={Object.keys(concept.terminology.label).map(
+                            (lang) => ({
+                              lang,
+                              value: concept.terminology.label[lang],
+                              regex: '',
+                            })
+                          )}
+                          fallbackLanguage="fi"
+                        />
+                      )}
                     </Chip>
                   );
                 })}

@@ -30,6 +30,7 @@ import {
 import { useGetCollectionQuery } from '@app/common/components/collection/collection.slice';
 import { Collection } from '@app/common/interfaces/collection.interface';
 import useUser from '@app/common/utils/hooks/useUser';
+import { translateLanguage } from '@app/common/utils/translation-helpers';
 
 export default function EditCollection({
   terminologyId,
@@ -216,7 +217,10 @@ export default function EditCollection({
           {languages.map((language) => (
             <NameTextInput
               key={`name-input-${language}`}
-              labelText={`${t('field-name')}, ${language.toUpperCase()}`}
+              labelText={`${t('field-name')}, ${translateLanguage(
+                language,
+                t
+              )} ${language.toUpperCase()}`}
               visualPlaceholder={t('enter-collection-name')}
               onBlur={(e) => setName(language, e.target.value)}
               status={errors.name ? 'error' : 'default'}
@@ -229,7 +233,10 @@ export default function EditCollection({
           {languages.map((language) => (
             <DescriptionTextarea
               key={`description-textarea-${language}`}
-              labelText={`${t('field-definition')}, ${language.toUpperCase()}`}
+              labelText={`${t('field-definition')}, ${translateLanguage(
+                language,
+                t
+              )} ${language.toUpperCase()}`}
               visualPlaceholder={t('enter-collection-description')}
               onBlur={(e) => setDescription(language, e.target.value)}
               status={errors.definition ? 'error' : 'default'}

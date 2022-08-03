@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Block } from 'suomifi-ui-components';
+import { Block, Text } from 'suomifi-ui-components';
 
 export const FooterBlock = styled(Block)`
   div {
@@ -14,4 +14,9 @@ export const NewConceptBlock = styled(Block)`
   margin-bottom: 80px;
   margin-top: ${(props) => props.theme.suomifi.spacing.m};
   padding: 30px 80px 20px 80px;
+`;
+
+export const PageHelpText = styled(Text)`
+  display: inline-block;
+  max-width: 700px;
 `;
