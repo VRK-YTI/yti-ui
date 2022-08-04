@@ -2,6 +2,7 @@ import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import {
+  Button,
   Notification,
   Paragraph,
   Text,
@@ -33,6 +34,9 @@ import {
 } from '@app/common/components/title-block';
 import { useSelector } from 'react-redux';
 import { selectLogin } from '@app/common/components/login/login.slice';
+import HasPermission from '@app/common/utils/has-permission';
+import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
+import Link from 'next/link';
 
 interface CollectionProps {
   terminologyId: string;
@@ -190,6 +194,30 @@ export default function Collection({
           />
 
           <Separator />
+
+          {HasPermission({
+            actions: 'EDIT_COLLECTION',
+            targetOrganization: terminology?.references.contributor?.[0].id,
+          }) && (
+            <>
+              <BasicBlock
+                title="Muokkaa käsitekokoelmaa"
+                extra={
+                  <BasicBlockExtraWrapper>
+                    <Link href={`${router.asPath}/edit`}>
+                      <Button variant="secondary" icon="edit">
+                        Muokkaa käsitekokoelmaa
+                      </Button>
+                    </Link>
+                  </BasicBlockExtraWrapper>
+                }
+              >
+                Sinulla on oikeudet muokata tätä käsitekokoelmaa
+              </BasicBlock>
+
+              <Separator />
+            </>
+          )}
 
           <VisuallyHidden as="h2">
             {t('additional-technical-information', { ns: 'common' })}

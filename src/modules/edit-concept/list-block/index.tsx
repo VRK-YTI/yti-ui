@@ -12,6 +12,7 @@ import { v4 } from 'uuid';
 import { ListType } from '../new-concept.types';
 import { TermFormUpdate } from '../concept-terms-block/term-form';
 import { BasicInfoUpdate } from '../basic-information/concept-basic-information';
+import { translateLanguage } from '@app/common/utils/translation-helpers';
 
 interface ListBlockProps {
   update: (object: BasicInfoUpdate & TermFormUpdate) => void;
@@ -19,6 +20,11 @@ interface ListBlockProps {
   itemsKey: 'editorialNote' | 'example' | 'note';
   languages?: string[];
   noLangOption?: boolean;
+  title: string;
+  description: string;
+  addNewText: string;
+  inputLabel: string;
+  inputPlaceholder: string;
 }
 
 export default function ListBlock({
@@ -27,8 +33,12 @@ export default function ListBlock({
   itemsKey,
   languages,
   noLangOption,
+  title,
+  description,
+  addNewText,
+  inputLabel,
+  inputPlaceholder,
 }: ListBlockProps) {
-  const { t } = useTranslation('admin');
   const [list, setList] = useState<ListType[]>(
     items
       ? items.map((note) => ({
@@ -77,7 +87,7 @@ export default function ListBlock({
   return (
     <BasicBlock
       largeWidth
-      title={t(itemsKey)}
+      title={title}
       extra={
         <BasicBlockExtraWrapper>
           <ListBlockWrapper>
@@ -90,16 +100,18 @@ export default function ListBlock({
                 handleUpdate={handleUpdate}
                 languages={languages}
                 noLangOption={noLangOption ? true : false}
+                inputLabel={inputLabel}
+                inputPlaceholder={inputPlaceholder}
               />
             ))}
           </ListBlockWrapper>
           <Button variant="secondary" onClick={() => handleAddition()}>
-            {t(`add-new-${itemsKey}`)}
+            {addNewText}
           </Button>
         </BasicBlockExtraWrapper>
       }
     >
-      {t(`${itemsKey}-description`)}
+      {description}
     </BasicBlock>
   );
 }
@@ -111,6 +123,8 @@ interface ListItemProps {
   handleUpdate: (id: string, value: string, lang?: string) => void;
   languages?: string[];
   noLangOption: boolean;
+  inputLabel: string;
+  inputPlaceholder: string;
 }
 
 function ListItem({
@@ -120,6 +134,8 @@ function ListItem({
   languages,
   noLangOption,
   itemsKey,
+  inputLabel,
+  inputPlaceholder,
 }: ListItemProps) {
   const { t } = useTranslation('admin');
 
@@ -137,7 +153,7 @@ function ListItem({
                 key={`${itemsKey}-list-item-${idx}`}
                 value={language}
               >
-                {t(language)}
+                {translateLanguage(language, t)}
               </DropdownItem>
             ))}
           </Dropdown>
@@ -151,8 +167,8 @@ function ListItem({
           </Button>
         </div>
         <ListItemTextarea
-          labelText={t(`${itemsKey}-textarea-label-text`)}
-          visualPlaceholder={t(`${itemsKey}-textarea-placeholder`)}
+          labelText={inputLabel}
+          visualPlaceholder={inputPlaceholder}
           defaultValue={item.value}
           onBlur={(e) => handleUpdate(item.id, e.target.value, item.lang)}
         />
@@ -165,8 +181,8 @@ function ListItem({
       <LI>
         <div className="top-row">
           <ListItemTextarea
-            labelText={t(`${itemsKey}-textarea-label-text`)}
-            visualPlaceholder={t(`${itemsKey}-textarea-placeholder`)}
+            labelText={inputLabel}
+            visualPlaceholder={inputPlaceholder}
             defaultValue={item.value}
             $noTopMargin
             onBlur={(e) => handleUpdate(item.id, e.target.value, '')}

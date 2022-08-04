@@ -10,14 +10,16 @@ export interface UserInfoProps {
 }
 
 export default function UserInfo({ breakpoint }: UserInfoProps) {
-  const { t } = useTranslation('common');
+  const { t, i18n } = useTranslation('common');
   const user = useSelector(selectLogin());
 
   if (!(user?.anonymous ?? true)) {
     return (
       <UserInfoWrapper $breakpoint={breakpoint}>
         <Text>{`${user?.firstName} ${user?.lastName}`}</Text>
-        <Link href="/api/auth/logout?target=/">{t('site-logout')}</Link>
+        <Link href={`/api/auth/logout?target=/${i18n.language}`}>
+          {t('site-logout')}
+        </Link>
       </UserInfoWrapper>
     );
   }

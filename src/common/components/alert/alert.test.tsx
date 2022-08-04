@@ -20,7 +20,7 @@ describe('alert', () => {
               status: 500,
               data: { error: '500 error' },
             },
-            displayText: '_test-1',
+            displayText: 'Error 1',
           },
         ],
         []
@@ -35,7 +35,7 @@ describe('alert', () => {
       </Provider>
     );
 
-    expect(screen.getByText('tr-error-occured_test-1')).toBeInTheDocument();
+    expect(screen.getByText('tr-error-alert')).toBeInTheDocument();
   });
 
   it('should render multiple alerts', () => {
@@ -49,28 +49,28 @@ describe('alert', () => {
               status: 500,
               data: '500 error',
             },
-            displayText: '_test-1',
+            displayText: 'Error 1',
           },
           {
             note: {
               status: 500,
               data: '500 error',
             },
-            displayText: '_test-2',
+            displayText: 'Error 2',
           },
           {
             note: {
               status: 500,
               data: '500 error',
             },
-            displayText: '_test-3',
+            displayText: 'Error 3',
           },
           {
             note: {
               status: 500,
               data: '500 error',
             },
-            displayText: '_test-4',
+            displayText: 'Error 4',
           },
         ],
         []
@@ -85,7 +85,7 @@ describe('alert', () => {
       </Provider>
     );
 
-    expect(screen.getByText('(4) tr-error-occured_test-1')).toBeInTheDocument();
+    expect(screen.getByText('(4) tr-error-alert')).toBeInTheDocument();
   });
 
   it('should render non-error alert', () => {
@@ -99,7 +99,7 @@ describe('alert', () => {
               status: 0,
               data: 'notification',
             },
-            displayText: 'logged-out',
+            displayText: 'Logged out',
           },
         ],
         []
@@ -114,8 +114,8 @@ describe('alert', () => {
       </Provider>
     );
 
-    expect(screen.queryByText('tr-error-occured')).not.toBeInTheDocument();
-    expect(screen.getByText('tr-logged-out')).toBeInTheDocument();
+    expect(screen.queryByText('tr-error-alert')).not.toBeInTheDocument();
+    expect(screen.getByText('Logged out')).toBeInTheDocument();
   });
 
   it('should hide alert when clicking close', async () => {
@@ -129,7 +129,7 @@ describe('alert', () => {
               status: 500,
               data: '500 error',
             },
-            displayText: '_test-1',
+            displayText: 'Error 1',
           },
         ],
         []
@@ -144,16 +144,14 @@ describe('alert', () => {
       </Provider>
     );
 
-    expect(screen.getByText('tr-error-occured_test-1')).toBeInTheDocument();
+    expect(screen.getByText('tr-error-alert')).toBeInTheDocument();
     userEvent.click(screen.getByRole('button'));
-    expect(
-      screen.queryByText('tr-error-occured_test-1')
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText('tr-error-alert')).not.toBeInTheDocument();
     expect(store.getState().alert.alerts).toStrictEqual([
       {
         code: 500,
         message: 'Error code 500',
-        displayText: '_test-1',
+        displayText: 'Error 1',
         visible: false,
       },
     ]);
@@ -170,28 +168,28 @@ describe('alert', () => {
               status: 500,
               data: '500 error',
             },
-            displayText: '_test-1',
+            displayText: 'Error 1',
           },
           {
             note: {
               status: 500,
               data: '500 error',
             },
-            displayText: '_test-2',
+            displayText: 'Error 2',
           },
           {
             note: {
               status: 500,
               data: '500 error',
             },
-            displayText: '_test-3',
+            displayText: 'Error 3',
           },
           {
             note: {
               status: 500,
               data: '500 error',
             },
-            displayText: '_test-4',
+            displayText: 'Error 4',
           },
         ],
         []
@@ -206,32 +204,32 @@ describe('alert', () => {
       </Provider>
     );
 
-    expect(screen.getByText('(4) tr-error-occured_test-1')).toBeInTheDocument();
+    expect(screen.getByText('(4) tr-error-alert')).toBeInTheDocument();
     userEvent.click(screen.getByRole('button'));
     userEvent.click(screen.getByRole('button'));
     expect(store.getState().alert.alerts).toStrictEqual([
       {
         code: 500,
         message: 'Error code 500',
-        displayText: '_test-1',
+        displayText: 'Error 1',
         visible: false,
       },
       {
         code: 500,
         message: 'Error code 500',
-        displayText: '_test-2',
+        displayText: 'Error 2',
         visible: false,
       },
       {
         code: 500,
         message: 'Error code 500',
-        displayText: '_test-3',
+        displayText: 'Error 3',
         visible: true,
       },
       {
         code: 500,
         message: 'Error code 500',
-        displayText: '_test-4',
+        displayText: 'Error 4',
         visible: true,
       },
     ]);

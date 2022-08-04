@@ -88,6 +88,11 @@ export default function OrganizationalInformation({
           update={handleOrgInfo}
           itemsKey={'editorialNote'}
           noLangOption
+          title={t('editorialNote')}
+          description={t('editorialNote-description')}
+          addNewText={t('add-new-editorialNote')}
+          inputLabel={t('editorialNote-textarea-label-text')}
+          inputPlaceholder={t('editorialNote-textarea-placeholder')}
         />
       </ExpanderContentFitted>
     </ConceptExpander>

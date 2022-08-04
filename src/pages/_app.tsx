@@ -35,7 +35,7 @@ function App({ Component, pageProps }: AppProps) {
                 status: 0,
                 data: 'logged-out',
               },
-              displayText: 'logged-out',
+              displayText: t('logged-out'),
             },
           ],
           []

@@ -2,6 +2,7 @@ import { useSearchConceptMutation } from '@app/common/components/concept/concept
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import SanitizedTextContent from '@app/common/components/sanitized-text-content';
 import { Concepts } from '@app/common/interfaces/concepts.interface';
+import { translateStatus } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import {
@@ -17,6 +18,7 @@ import {
   ModalTitle,
   Text,
 } from 'suomifi-ui-components';
+import { EditCollectionFormDataType } from '../edit-collection.types';
 import {
   FooterButton,
   ResultBlock,
@@ -39,7 +41,7 @@ export default function PickerModal({
   const { isSmall } = useBreakpoints();
   const [searchConcept, result] = useSearchConceptMutation();
   const [selectedConcepts, setSelectedConcepts] =
-    useState<Concepts[]>(orgConcepts);
+    useState<EditCollectionFormDataType['concepts']>(orgConcepts);
   const [showSelected, setShowSelected] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [status, setStatus] = useState<string>('ALL-STATUSES');
@@ -48,37 +50,37 @@ export default function PickerModal({
     {
       name: 'ALL-STATUSES',
       uniqueItemId: 'ALL-STATUSES',
-      labelText: t('ALL-STATUSES', { ns: 'common' }),
+      labelText: t('statuses.all-statuses', { ns: 'common' }),
     },
     {
       name: 'VALID',
       uniqueItemId: 'VALID',
-      labelText: t('VALID', { ns: 'common' }),
+      labelText: t('statuses.valid', { ns: 'common' }),
     },
     {
       name: 'INCOMPLETE',
       uniqueItemId: 'INCOMPLETE',
-      labelText: t('INCOMPLETE', { ns: 'common' }),
+      labelText: t('statuses.incomplete', { ns: 'common' }),
     },
     {
       name: 'DRAFT',
       uniqueItemId: 'DRAFT',
-      labelText: t('DRAFT', { ns: 'common' }),
+      labelText: t('statuses.draft', { ns: 'common' }),
     },
     {
       name: 'RETIRED',
       uniqueItemId: 'RETIRED',
-      labelText: t('RETIRED', { ns: 'common' }),
+      labelText: t('statuses.retired', { ns: 'common' }),
     },
     {
       name: 'SUPERSEDED',
       uniqueItemId: 'SUPERSEDED',
-      labelText: t('SUPERSEDED', { ns: 'common' }),
+      labelText: t('statuses.superseded', { ns: 'common' }),
     },
     {
       name: 'INVALID',
       uniqueItemId: 'INVALID',
-      labelText: t('INVALID', { ns: 'common' }),
+      labelText: t('statuses.invalid', { ns: 'common' }),
     },
   ];
 
@@ -89,7 +91,13 @@ export default function PickerModal({
 
   const handleCheckbox = (checkboxState: boolean, concept: Concepts) => {
     if (checkboxState) {
-      setSelectedConcepts([...selectedConcepts, concept]);
+      setSelectedConcepts([
+        ...selectedConcepts,
+        {
+          id: concept.id,
+          prefLabels: concept.label,
+        },
+      ]);
     } else {
       setSelectedConcepts(selectedConcepts.filter((c) => c.id !== concept.id));
     }
@@ -207,9 +215,10 @@ export default function PickerModal({
                       toggleButtonAriaDescribedBy={`checkbox-id-${concept.id}`}
                     >
                       <Checkbox
-                        hintText={`${t(concept.status, {
-                          ns: 'common',
-                        })} \u00B7 ${
+                        hintText={`${translateStatus(
+                          concept.status,
+                          t
+                        )} \u00B7 ${
                           concept.terminology.label[i18n.language] ??
                           concept.terminology.label.fi ??
                           concept.terminology.label[
@@ -290,9 +299,9 @@ function SelectedConcepts({
               onClick={() => deselect(concept.id)}
               removable
             >
-              {concept.label[i18n.language] ??
-                concept.label.fi ??
-                concept.label[Object.keys(concept.label)[0]] ??
+              {concept.prefLabels[i18n.language] ??
+                concept.prefLabels.fi ??
+                concept.prefLabels[Object.keys(concept.prefLabels)[0]] ??
                 ''}
             </Chip>
           );

@@ -18,7 +18,7 @@ export default function LoginModalView({
 }: {
   setVisible: Function;
 }) {
-  const { t } = useTranslation('common');
+  const { t, i18n } = useTranslation('common');
   const { isSmall } = useBreakpoints();
 
   return (
@@ -61,6 +61,6 @@ export default function LoginModalView({
 
   function login(e: MouseEvent | KeyboardEvent) {
     e.preventDefault();
-    window.location.href = '/api/auth/login?target=/';
+    window.location.href = `/api/auth/login?target=/${i18n.language}`;
   }
 }

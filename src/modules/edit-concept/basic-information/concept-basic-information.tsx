@@ -13,6 +13,7 @@ import { useState } from 'react';
 import { ExpanderGroup } from 'suomifi-ui-components';
 import { BasicInfo, ListType } from '../new-concept.types';
 import ListBlock from '../list-block';
+import { translateLanguage } from '@app/common/utils/translation-helpers';
 
 interface ConceptBasicInformationProps {
   updateBasicInformation: (value: BasicInfo) => void;
@@ -60,6 +61,11 @@ export default function ConceptBasicInformation({
         itemsKey="example"
         update={handleBasicInfoUpdate}
         languages={languages}
+        title={t('example')}
+        description={t('example-description')}
+        addNewText={t('add-new-example')}
+        inputLabel={t('example-textarea-label-text')}
+        inputPlaceholder={t('example-textarea-placeholder')}
       />
 
       {renderSubject()}
@@ -69,6 +75,11 @@ export default function ConceptBasicInformation({
         itemsKey="note"
         update={handleBasicInfoUpdate}
         languages={languages}
+        title={t('note')}
+        description={t('note-description')}
+        addNewText={t('add-new-note')}
+        inputLabel={t('note-textarea-label-text')}
+        inputPlaceholder={t('note-textarea-placeholder')}
       />
 
       <ExpanderGroup closeAllText="" openAllText="">
@@ -111,7 +122,7 @@ export default function ConceptBasicInformation({
       <WiderTextarea
         key={`definition-text-area-${idx}`}
         labelText={t('definition-label-text', {
-          lang: lang,
+          lang: translateLanguage(lang, t),
           langUpper: lang.toUpperCase(),
         })}
         optionalText={t('optional')}

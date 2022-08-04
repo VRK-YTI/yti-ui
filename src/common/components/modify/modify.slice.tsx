@@ -2,7 +2,7 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 import { HYDRATE } from 'next-redux-wrapper';
 import { getTerminologyApiBaseQuery } from '@app/store/api-base-query';
 import generateConcept from '@app/modules/edit-concept/generate-concept';
-import { NewCollectionFormDataType } from '@app/modules/new-collection/new-collection.types';
+import { EditCollectionFormDataType } from '@app/modules/edit-collection/edit-collection.types';
 
 export const modifyApi = createApi({
   reducerPath: 'modifyAPI',
@@ -28,7 +28,7 @@ export const modifyApi = createApi({
       }),
     }),
     addCollection: builder.mutation<
-      NewCollectionFormDataType,
+      EditCollectionFormDataType,
       null | undefined | {}
     >({
       query: (data) => ({

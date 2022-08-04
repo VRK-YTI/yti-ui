@@ -18,6 +18,7 @@ import { getProperty } from '@app/common/utils/get-property';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import NewTerminology from '@app/modules/new-terminology';
 import useTitleRef from '@app/common/utils/hooks/use-title-ref';
+import { translateStatus } from '@app/common/utils/translation-helpers';
 
 interface TitleProps {
   info: string | VocabularyInfoDTO;
@@ -67,7 +68,7 @@ export default function Title({ info }: TitleProps) {
         </Heading>
 
         <StatusChip valid={status === 'VALID' ? 'true' : undefined}>
-          {t(`${status}`)}
+          {translateStatus(status, t)}
         </StatusChip>
 
         <InfoExpander data={info} />

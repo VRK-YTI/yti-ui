@@ -21,6 +21,7 @@ import {
   TermText,
 } from './term-modal.styles';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import { translateStatus } from '@app/common/utils/translation-helpers';
 
 interface TermModalProps {
   data?: { term: Term; type: string };
@@ -191,9 +192,10 @@ export default function TermModal({ data }: TermModalProps) {
           aria-disabled={true}
           $isValid={value[0].value === 'VALID' ? 'true' : undefined}
         >
-          {t(getPropertyValue({ property: value }) ?? defaultValue, {
-            ns: 'common',
-          })}
+          {translateStatus(
+            getPropertyValue({ property: value }) ?? defaultValue,
+            t
+          )}
         </TermModalChip>
       </>
     );

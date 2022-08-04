@@ -38,6 +38,8 @@ export default function Alerts() {
           if (idx === 0) {
             const alertsLength = alerts.filter((a) => a.visible).length;
             const isError = alert.code !== 0 ? true : false;
+            const displayText =
+              alert.displayText === '' ? t('error-occured') : alert.displayText;
 
             return (
               <Notification
@@ -49,12 +51,13 @@ export default function Alerts() {
                 {isError ? (
                   <>
                     {alertsLength > 1 ? `(${alertsLength}) ` : ''}
-                    {t(`error-occured${alert.displayText}`, {
+                    {t('error-alert', {
                       id: alert.code ?? '',
+                      displayText,
                     })}
                   </>
                 ) : (
-                  <>{t(alert.displayText)}</>
+                  <>{displayText}</>
                 )}
               </Notification>
             );

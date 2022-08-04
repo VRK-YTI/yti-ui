@@ -1,12 +1,11 @@
 {
-  "toast-close": "Close",
-  "error-occured": "ERROR {{id}}: An error occured",
-  "error-occured_terminology-search": "ERROR {{id}}: An error occured while searching for terminologies",
-  "error-occured_groups": "ERROR {{id}}: An error occured while getting information domains",
-  "error-occured_organization": "ERROR {{id}}: An error occured while getting organizations",
-  "error-occured_counts": "ERROR {{id}}: An error occured while getting counts for statuses and information domains",
-  "error-occured_subscription": "ERROR {{id}}: An error occured with subscription service",
-  "error-occured_access-request": "ERROR {{id}}: An error occured with access request service",
-  "error-occured_unhandled-error": "ERROR {{id}}: An unknown error occured",
-  "logged-out": "You have logged out."
+  "error-alert": "ERROR {{id}}: {{displayText}}",
+  "error-occured": "An error occured",
+  "error-occured_access-request": "An error occured with access request service",
+  "error-occured_counts": "An error occured while getting counts for statuses and information domains",
+  "error-occured_groups": "An error occured while getting information domains",
+  "error-occured_organization": "An error occured while getting organizations",
+  "error-occured_subscription": "An error occured with subscription service",
+  "error-occured_terminology-search": "An error occured while searching for terminologies",
+  "error-occured_unhandled-error": "An unknown error occured"
 }

@@ -216,7 +216,8 @@ export default function SearchResults({
   function renderCollectionMembers(members?: Concept[]) {
     return members ? (
       members.map((m, idx) => {
-        const comma = idx < 4 && members.length > 1 ? ',' : '';
+        const comma =
+          idx < 4 && members.length > 1 && idx < members.length - 1 ? ',' : '';
 
         if (idx < 5 && m.references.prefLabelXl) {
           if (m.references.prefLabelXl.length === 1) {

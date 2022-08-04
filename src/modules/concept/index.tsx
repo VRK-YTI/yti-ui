@@ -40,6 +40,7 @@ import { selectLogin } from '@app/common/components/login/login.slice';
 import HasPermission from '@app/common/utils/has-permission';
 import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
 import Link from 'next/link';
+import { translateStatus } from '@app/common/utils/translation-helpers';
 
 export interface ConceptProps {
   terminologyId: string;
@@ -168,7 +169,7 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
               fallbackLanguage="fi"
             />
             <Badge $isValid={status === 'VALID'}>
-              {t(status, { ns: 'common' })}
+              {translateStatus(status, t)}
             </Badge>
           </BadgeBar>
 

@@ -1,4 +1,5 @@
 import { BasicBlock } from '@app/common/components/block';
+import { translateTermType } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import {
@@ -59,9 +60,7 @@ export default function TermTypeModal({
         <BasicBlock title={t('term-name-label')}>{t('application')}</BasicBlock>
 
         <BasicBlock title="Termin nykyinen tyyppi">
-          {currentType === 'recommended-term'
-            ? t(`${currentType}-no-suff`)
-            : t(currentType)}
+          {translateTermType(currentType, t)}
         </BasicBlock>
 
         <DropdownBlock
@@ -76,7 +75,7 @@ export default function TermTypeModal({
             .map((type, idx) => {
               return (
                 <DropdownItem key={`term-type-${idx}`} value={type}>
-                  {t(type)}
+                  {translateTermType(type, t)}
                 </DropdownItem>
               );
             })}
