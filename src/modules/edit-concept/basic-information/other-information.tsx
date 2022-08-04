@@ -1,3 +1,4 @@
+import { translateWordClass } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import {
@@ -33,7 +34,7 @@ export default function OtherInformation({
     initialValues?.wordClass
       ? {
           uniqueItemId: initialValues.wordClass,
-          labelText: t(initialValues.wordClass),
+          labelText: translateWordClass(initialValues.wordClass, t),
         }
       : null
   );
