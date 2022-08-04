@@ -32,7 +32,7 @@ export interface Concept extends BaseEntity<'Concept'> {
     notRecommendedSynonym?: Term[];
     prefLabelXl?: Term[];
     related?: Concept[];
-    relatedMatch: ConceptLink[];
+    relatedMatch?: ConceptLink[];
     searchTerm?: Term[];
   };
 

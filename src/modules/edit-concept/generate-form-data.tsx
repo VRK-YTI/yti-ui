@@ -25,7 +25,7 @@ export default function generateFormData(
         prefLabel: term.value,
         scope: '',
         source: '',
-        status: 'draft',
+        status: 'DRAFT',
         termConjugation: '',
         termEquivalency: '',
         termEquivalencyRelation: '',
