@@ -1,5 +1,6 @@
 export const conceptWithOneTerm = [
   {
+    code: '',
     createdBy: '',
     createdDate: '1970-01-01T00:00:00.000Z',
     id: '0',
@@ -116,8 +117,10 @@ export const conceptWithOneTerm = [
       id: 'Term',
       uri: 'http://www.w3.org/2008/05/skos-xl#Label',
     },
+    uri: '',
   },
   {
+    code: '',
     createdBy: '',
     createdDate: '1970-01-01T00:00:00.000Z',
     id: '1',
@@ -170,13 +173,7 @@ export const conceptWithOneTerm = [
         },
       ],
       note: [],
-      source: [
-        {
-          lang: '',
-          regex: '(?s)^.*$',
-          value: '',
-        },
-      ],
+      source: [],
       status: [
         {
           lang: '',
@@ -233,11 +230,13 @@ export const conceptWithOneTerm = [
       id: 'Concept',
       uri: 'http://www.w3.org/2004/02/skos/core#Concept',
     },
+    uri: '',
   },
 ];
 
 export const conceptWithInternalRelations = [
   {
+    code: '',
     createdBy: '',
     createdDate: '1970-01-01T00:00:00.000Z',
     id: '0',
@@ -354,8 +353,10 @@ export const conceptWithInternalRelations = [
       id: 'Term',
       uri: 'http://www.w3.org/2008/05/skos-xl#Label',
     },
+    uri: '',
   },
   {
+    code: '',
     createdBy: '',
     createdDate: '1970-01-01T00:00:00.000Z',
     id: '',
@@ -408,13 +409,7 @@ export const conceptWithInternalRelations = [
         },
       ],
       note: [],
-      source: [
-        {
-          lang: '',
-          regex: '(?s)^.*$',
-          value: '',
-        },
-      ],
+      source: [],
       status: [
         {
           lang: '',
@@ -526,11 +521,13 @@ export const conceptWithInternalRelations = [
       id: 'Concept',
       uri: 'http://www.w3.org/2004/02/skos/core#Concept',
     },
+    uri: '',
   },
 ];
 
 export const differentTerms = [
   {
+    code: '',
     createdBy: '',
     createdDate: '1970-01-01T00:00:00.000Z',
     id: '0',
@@ -659,8 +656,10 @@ export const differentTerms = [
       id: 'Term',
       uri: 'http://www.w3.org/2008/05/skos-xl#Label',
     },
+    uri: '',
   },
   {
+    code: '',
     createdBy: '',
     createdDate: '1970-01-01T00:00:00.000Z',
     id: '1',
@@ -789,8 +788,10 @@ export const differentTerms = [
       id: 'Term',
       uri: 'http://www.w3.org/2008/05/skos-xl#Label',
     },
+    uri: '',
   },
   {
+    code: '',
     createdBy: '',
     createdDate: '1970-01-01T00:00:00.000Z',
     id: '2',
@@ -919,8 +920,10 @@ export const differentTerms = [
       id: 'Term',
       uri: 'http://www.w3.org/2008/05/skos-xl#Label',
     },
+    uri: '',
   },
   {
+    code: '',
     createdBy: '',
     createdDate: '1970-01-01T00:00:00.000Z',
     id: '3',
@@ -1049,8 +1052,10 @@ export const differentTerms = [
       id: 'Term',
       uri: 'http://www.w3.org/2008/05/skos-xl#Label',
     },
+    uri: '',
   },
   {
+    code: '',
     createdBy: '',
     createdDate: '1970-01-01T00:00:00.000Z',
     id: '6e00b816-c077-4747-8597-46047005584d',
@@ -1131,7 +1136,7 @@ export const differentTerms = [
         {
           lang: '',
           regex: '(?s)^.*$',
-          value: '',
+          value: 'lähteet',
         },
       ],
       status: [
@@ -1223,5 +1228,6 @@ export const differentTerms = [
       id: 'Concept',
       uri: 'http://www.w3.org/2004/02/skos/core#Concept',
     },
+    uri: '',
   },
 ];

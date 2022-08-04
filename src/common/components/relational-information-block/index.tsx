@@ -47,7 +47,7 @@ export default function RelationalInformationBlock({
     ? router.query.terminologyId[0]
     : router.query.terminologyId;
   const [selectedConcepts, setSelectedConcepts] = useState<RelationInfoType[]>(
-    data[infoKey]
+    data[infoKey] ?? []
   );
 
   const handleUpdate = (concepts: Concepts[]) => {
