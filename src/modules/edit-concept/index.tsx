@@ -75,18 +75,13 @@ export default function EditConcept({
       return;
     }
 
-    console.log('formData:', formData);
-    console.log('initialValue:', conceptData);
-
     const concept = generateConcept({
       data: formData,
       terminologyId: terminologyId,
       initialValue: conceptData,
-      lastModifiedBy: `${user.firstName} ${user.lastName}`
+      lastModifiedBy: `${user.firstName} ${user.lastName}`,
     });
 
-    console.log('concept:', concept);
-    return;
     setPostedData(concept);
     addConcept(concept);
   };

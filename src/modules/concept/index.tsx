@@ -214,27 +214,26 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
 
           <Separator isLarge />
 
-          {/* TODO: Käännös */}
           {HasPermission({
             actions: 'EDIT_CONCEPT',
             targetOrganization: terminologyId,
           }) && (
             <>
               <BasicBlock
-                title="Muokkaa käsitettä"
+                title={t('edit-concept')}
                 extra={
                   <BasicBlockExtraWrapper>
                     <Link
                       href={`/terminology/${terminologyId}/concept/${conceptId}/edit`}
                     >
                       <Button variant="secondary" icon="edit">
-                        Muokkaa käsitettä
+                        {t('edit-concept')}
                       </Button>
                     </Link>
                   </BasicBlockExtraWrapper>
                 }
               >
-                Sinulla on oikeudet muokata tätä käsitettä.
+                {t('edit-concept-rights')}
               </BasicBlock>
               <Separator />
             </>

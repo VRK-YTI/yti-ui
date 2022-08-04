@@ -26,21 +26,25 @@ export default function generateConcept({
     const temp = new Map();
 
     Object.keys(initialValue.referrers).forEach((key) => {
-      if (typeof initialValue.referrers[key as keyof Concept['referrers']] !== 'string') {
-        const obj = initialValue.referrers[key as keyof Concept['referrers']]?.map(referrer => ({
+      if (
+        typeof initialValue.referrers[key as keyof Concept['referrers']] !==
+        'string'
+      ) {
+        const obj = initialValue.referrers[
+          key as keyof Concept['referrers']
+        ]?.map((referrer) => ({
           id: referrer.id,
           type: {
             graph: {
               id: terminologyId,
             },
             id: 'Collection',
-            uri: ''
-          }
+            uri: '',
+          },
         }));
 
         temp.set(key, obj);
       }
-
     });
 
     referrers = Object.fromEntries(temp);
@@ -48,14 +52,17 @@ export default function generateConcept({
     referrers = {};
   }
 
-
   const terms = data.terms.map((term) => {
-    const initialTerm = initialValue ? getInitialTerm(term.id, initialValue.references) : null;
+    const initialTerm = initialValue
+      ? getInitialTerm(term.id, initialValue.references)
+      : null;
 
     return {
       code: initialTerm ? initialTerm.code : '',
       createdBy: initialValue ? initialTerm?.createdBy ?? '' : '',
-      createdDate: initialValue ? initialTerm?.createdDate ?? '' : now.toISOString(),
+      createdDate: initialValue
+        ? initialTerm?.createdDate ?? ''
+        : now.toISOString(),
       id: term.id,
       lastModifiedBy: initialValue ? lastModifiedBy ?? '' : '',
       lastModifiedDate: now.toISOString(),
@@ -76,10 +83,10 @@ export default function generateConcept({
         ],
         editorialNote: term.editorialNote
           ? term.editorialNote.map((note) => ({
-            lang: '',
-            regex: regex,
-            value: note.value,
-          }))
+              lang: '',
+              regex: regex,
+              value: note.value,
+            }))
           : [],
         historyNote: [
           {
@@ -104,12 +111,12 @@ export default function generateConcept({
         ],
         source: term.source
           ? [
-            {
-              lang: '',
-              regex: regex,
-              value: term.source,
-            },
-          ]
+              {
+                lang: '',
+                regex: regex,
+                value: term.source,
+              },
+            ]
           : [],
         status: [
           {
@@ -176,21 +183,23 @@ export default function generateConcept({
         ],
       },
       references: {},
-      referrers: initialValue && term.termType === 'recommended-term'
-        ? {
-          prefLabelXl: [
-            {
-              id: initialValue.id,
-              type: {
-                graph: {
-                  id: terminologyId,
+      referrers:
+        initialValue && term.termType === 'recommended-term'
+          ? {
+              prefLabelXl: [
+                {
+                  id: initialValue.id,
+                  type: {
+                    graph: {
+                      id: terminologyId,
+                    },
+                    id: 'Concept',
+                    uri: '',
+                  },
                 },
-                id: 'Concept',
-                uri: ''
-              }
-            }]
-        }
-        : {},
+              ],
+            }
+          : {},
       type: {
         graph: {
           id: terminologyId,
@@ -198,27 +207,26 @@ export default function generateConcept({
         id: 'Term',
         uri: initialValue ? '' : 'http://www.w3.org/2008/05/skos-xl#Label',
       },
-      uri: initialTerm ? initialTerm.uri : ''
+      uri: initialTerm ? initialTerm.uri : '',
     };
   });
 
-
-  // TODO: Tässä jotain häikkää vielä
   let externalTerms =
     data.basicInformation.relationalInfo.matchInOther?.map((match) => {
-      const id = initialValue?.references.exactMatch?.find(m => m.properties?.targetId?.[0].value === match.id)?.id ?? v4();
-      const initialTerm = initialValue ? getInitialTerm(match.id, initialValue.references) : null;
+      const initialTerm = initialValue?.references.exactMatch?.find(
+        (m) => m.properties?.targetId?.[0].value === match.id
+      );
+      const id = initialTerm?.id ?? v4();
 
       matchingIds = [...matchingIds, id];
 
       return {
-        code: initialTerm ? initialTerm.code : '',
-        createdBy: initialValue ? initialTerm?.createdBy ?? '' : '',
-        createdDate: initialValue ? initialTerm?.createdDate ?? '' : now.toISOString(),
+        code: initialTerm?.code ?? '',
+        createdBy: initialTerm?.createdBy ?? '',
+        createdDate: initialTerm?.createdDate ?? '',
         id: id,
-        // TODO ei muokata
-        lastModifiedBy: initialValue ? lastModifiedBy ?? '' : '',
-        lastModifiedDate: now.toISOString(),
+        lastModifiedBy: initialTerm?.lastModifiedBy ?? '',
+        lastModifiedDate: initialTerm?.lastModifiedDate ?? '',
         properties: {
           prefLabel: Object.keys(match.label).map((key) => ({
             lang: key,
@@ -254,7 +262,7 @@ export default function generateConcept({
           id: 'ConceptLink',
           uri: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#Resource',
         },
-        uri: initialTerm ? initialTerm.uri : '',
+        uri: initialTerm?.uri ?? '',
       };
     }) ?? [];
 
@@ -264,18 +272,20 @@ export default function generateConcept({
         ...externalTerms,
         ...data.basicInformation.relationalInfo.relatedConceptInOther.map(
           (related) => {
-            const id = initialValue?.references.relatedMatch.find(m => m.properties?.targetId?.[0].value === related.id)?.id ?? v4();
+            const initialTerm = initialValue?.references.relatedMatch?.find(
+              (m) => m.properties?.targetId?.[0].value === related.id
+            );
+            const id = initialTerm?.id ?? v4();
 
             relatedMatchIds = [...relatedMatchIds, id];
 
             return {
-              // TODO: createdBy
-              code: initialValue?.references.relatedMatch.find(m => m.properties?.targetId?.[0].value === related.id)?.code ?? '',
-              createdBy: '',
-              createdDate: now.toISOString(),
+              code: initialTerm?.code ?? '',
+              createdBy: initialTerm?.createdBy ?? '',
+              createdDate: initialTerm?.createdDate ?? '',
               id: id,
-              lastModifiedBy: initialValue ? lastModifiedBy ?? '' : '',
-              lastModifiedDate: now.toISOString(),
+              lastModifiedBy: initialTerm?.lastModifiedBy ?? '',
+              lastModifiedDate: initialTerm?.lastModifiedDate ?? '',
               properties: {
                 prefLabel: Object.keys(related.label).map((key) => ({
                   lang: key,
@@ -311,10 +321,11 @@ export default function generateConcept({
                   id: terminologyId,
                 },
                 id: 'ConceptLink',
-                uri: initialValue ? '' : 'http://www.w3.org/1999/02/22-rdf-syntax-ns#Resource',
+                uri: initialValue
+                  ? ''
+                  : 'http://www.w3.org/1999/02/22-rdf-syntax-ns#Resource',
               },
-              // TODO: concept-linkki
-              uri: ''
+              uri: initialTerm?.uri ?? '',
             };
           }
         ),
@@ -355,17 +366,17 @@ export default function generateConcept({
         ],
         definition: data.basicInformation.definition
           ? Object.keys(data.basicInformation.definition).map((lang) => ({
-            lang: lang,
-            regex: regex,
-            value: data.basicInformation.definition[lang] ?? '',
-          }))
-          : [
-            {
-              lang: '',
+              lang: lang,
               regex: regex,
-              value: '',
-            },
-          ],
+              value: data.basicInformation.definition[lang] ?? '',
+            }))
+          : [
+              {
+                lang: '',
+                regex: regex,
+                value: '',
+              },
+            ],
         editorialNote: data.basicInformation.orgInfo.editorialNote.map(
           (note) => ({
             lang: '',
@@ -405,12 +416,13 @@ export default function generateConcept({
           value: n.value ?? '',
         })),
         source: data.basicInformation.diagramAndSource.sources
-          ?
-          [{
-            lang: '',
-            regex: regex,
-            value: data.basicInformation.diagramAndSource.sources,
-          }]
+          ? [
+              {
+                lang: '',
+                regex: regex,
+                value: data.basicInformation.diagramAndSource.sources,
+              },
+            ]
           : [],
         status: [
           {
@@ -444,7 +456,9 @@ export default function generateConcept({
                 id: terminologyId,
               },
               id: 'Term',
-              uri: initialValue ? '' : 'http://www.w3.org/2008/05/skos-xl#Label',
+              uri: initialValue
+                ? ''
+                : 'http://www.w3.org/2008/05/skos-xl#Label',
             },
           })),
         broader: data.basicInformation.relationalInfo.broaderConcept.map(
@@ -467,7 +481,9 @@ export default function generateConcept({
               id: terminologyId,
             },
             id: 'ConceptLink',
-            uri: initialValue ? '' : 'http://www.w3.org/1999/02/22-rdf-syntax-ns#Resource',
+            uri: initialValue
+              ? ''
+              : 'http://www.w3.org/1999/02/22-rdf-syntax-ns#Resource',
           },
         })),
         hasPart: data.basicInformation.relationalInfo.hasPartConcept.map(
@@ -497,17 +513,17 @@ export default function generateConcept({
         ),
         narrower: data.basicInformation.relationalInfo.narrowerConcept
           ? data.basicInformation.relationalInfo.narrowerConcept.map(
-            (narrow) => ({
-              id: narrow.id,
-              type: {
-                graph: {
-                  id: terminologyId,
+              (narrow) => ({
+                id: narrow.id,
+                type: {
+                  graph: {
+                    id: terminologyId,
+                  },
+                  id: 'Concept',
+                  uri: '',
                 },
-                id: 'Concept',
-                uri: '',
-              },
-            })
-          )
+              })
+            )
           : [],
         notRecommendedSynonym: data.terms
           .filter((term) => term.termType === 'not-recommended-synonym')
@@ -518,7 +534,9 @@ export default function generateConcept({
                 id: terminologyId,
               },
               id: 'Term',
-              uri: initialValue ? '' : 'http://www.w3.org/2008/05/skos-xl#Label',
+              uri: initialValue
+                ? ''
+                : 'http://www.w3.org/2008/05/skos-xl#Label',
             },
           })),
         prefLabelXl: data.terms
@@ -530,7 +548,9 @@ export default function generateConcept({
                 id: terminologyId,
               },
               id: 'Term',
-              uri: initialValue ? '' : 'http://www.w3.org/2008/05/skos-xl#Label',
+              uri: initialValue
+                ? ''
+                : 'http://www.w3.org/2008/05/skos-xl#Label',
             },
           })),
         related: data.basicInformation.relationalInfo.relatedConcept.map(
@@ -552,7 +572,9 @@ export default function generateConcept({
               id: terminologyId,
             },
             id: 'ConceptLink',
-            uri: initialValue ? '' : 'http://www.w3.org/1999/02/22-rdf-syntax-ns#Resource',
+            uri: initialValue
+              ? ''
+              : 'http://www.w3.org/1999/02/22-rdf-syntax-ns#Resource',
           },
         })),
         searchTerm: data.terms
@@ -564,7 +586,9 @@ export default function generateConcept({
                 id: terminologyId,
               },
               id: 'Term',
-              uri: initialValue ? '' : 'http://www.w3.org/2008/05/skos-xl#Label',
+              uri: initialValue
+                ? ''
+                : 'http://www.w3.org/2008/05/skos-xl#Label',
             },
           })),
       },
@@ -581,12 +605,11 @@ export default function generateConcept({
   ];
 }
 
-
 function getInitialTerm(id: string, terms: Concept['references']): Term | null {
   let retVal = null;
 
   for (const [, values] of Object.entries(terms)) {
-    values.forEach(value => {
+    values.forEach((value) => {
       if (value.id === id) {
         retVal = value;
       }

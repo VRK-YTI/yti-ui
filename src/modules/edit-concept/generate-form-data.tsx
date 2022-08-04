@@ -184,6 +184,11 @@ export default function generateFormData(
           }) ?? [],
         matchInOther:
           conceptData.references.exactMatch?.map((r) => {
+            const terminologyLabel = new Map();
+            r.properties.vocabularyLabel?.forEach((l) => {
+              terminologyLabel.set(l.lang, l.value);
+            });
+
             {
               return {
                 id: r.properties?.targetId?.[0]?.value ?? '',
@@ -194,8 +199,8 @@ export default function generateFormData(
                     })
                     .reduce((l) => l) ?? {},
                 terminologyId: r.properties.targetGraph?.[0].value ?? '',
-                terminologyLabel: r.properties.vocabularyLabel
-                  ? r.properties.vocabularyLabel
+                terminologyLabel: terminologyLabel
+                  ? Object.fromEntries(terminologyLabel)
                   : {},
               };
             }
@@ -252,6 +257,11 @@ export default function generateFormData(
           }) ?? [],
         relatedConceptInOther:
           conceptData.references.relatedMatch?.map((r) => {
+            const terminologyLabel = new Map();
+            r.properties.vocabularyLabel?.forEach((l) => {
+              terminologyLabel.set(l.lang, l.value);
+            });
+
             {
               return {
                 id: r.properties?.targetId?.[0]?.value ?? '',
@@ -260,7 +270,9 @@ export default function generateFormData(
                     ?.map((l) => ({ [l.lang]: l.value }))
                     .reduce((l) => l) ?? {},
                 terminologyId: r.properties.targetGraph?.[0].value ?? '',
-                terminologyLabel: r.properties.vocabularyLabel ?? {},
+                terminologyLabel: terminologyLabel
+                  ? Object.fromEntries(terminologyLabel)
+                  : {},
               };
             }
           }) ?? [],

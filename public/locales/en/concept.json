@@ -53,5 +53,7 @@
   "term-modal-conjugation": "Term conjugation",
   "term-modal-word-class": "Word class",
   "term-modal-arial-close": "Close term information",
-  "term-modal-close": "Close"
+  "term-modal-close": "Close",
+  "edit-concept": "Edit concept",
+  "edit-concept-rights": "You have rights to edit this concept."
 }

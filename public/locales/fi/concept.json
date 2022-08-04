@@ -53,5 +53,7 @@
   "term-modal-conjugation": "Termin luku",
   "term-modal-word-class": "Termin sanaluokka",
   "term-modal-arial-close": "Sulje termin tiedot",
-  "term-modal-close": "Sulje"
+  "term-modal-close": "Sulje",
+  "edit-concept": "Muokkaa käsitettä",
+  "edit-concept-rights": "Sinulla on oikeudet muokata tätä käsitettä."
 }
