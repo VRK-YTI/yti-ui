@@ -156,7 +156,10 @@ export default function EditConcept({
           languages={languages}
         />
 
-        <FormFooter handlePost={handlePost} />
+        <FormFooter
+          handlePost={handlePost}
+          isEdit={typeof conceptData !== 'undefined'}
+        />
       </NewConceptBlock>
     </>
   );
