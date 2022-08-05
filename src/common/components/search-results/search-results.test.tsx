@@ -1,3 +1,4 @@
+import '@app/tests/matchMedia.mock';
 import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
