@@ -15,15 +15,22 @@ import NewDiagramOrLink from './new-diagram-or-link';
 interface ConceptDiagramsAndSourcesProps {
   infoKey: string;
   update: (value: BasicInfoUpdate) => void;
+  initialValues?: {
+    diagram: DiagramType[];
+    sources: string;
+  };
 }
 
 export default function ConceptDiagramsAndSources({
   infoKey,
   update,
+  initialValues,
 }: ConceptDiagramsAndSourcesProps) {
   const { t } = useTranslation('admin');
-  const [sources, setSources] = useState<string>('');
-  const [diagrams, setDiagrams] = useState<DiagramType[]>([]);
+  const [sources, setSources] = useState<string>(initialValues?.sources ?? '');
+  const [diagrams, setDiagrams] = useState<DiagramType[]>(
+    initialValues?.diagram ?? []
+  );
 
   const handleBlur = () => {
     update({

@@ -125,100 +125,60 @@ describe('generate-concept', () => {
           broaderConcept: [
             {
               id: '148ab016-36ee-486a-862a-87d6dde2f86f',
-              uri: 'http://uri.suomi.fi/terminology/demo-terminology/concept-3001',
-              status: 'DRAFT',
               label: {
                 fi: 'other concept',
               },
-              modified: '1970-01-01T00:00:00.000Z',
-              narrower: ['de39c2e4-b04c-4fce-b69c-3d0cf286d912'],
-              terminology: {
-                id: '747340b9-8ab6-4aa4-b4e6-5327813505e5',
-                uri: 'http://uri.suomi.fi/terminology/demo-terminology/terminological-vocabulary-0',
-                status: 'INCOMPLETE',
-                label: {
-                  fi: 'demo terminology',
-                },
+              terminologyId: '747340b9-8ab6-4aa4-b4e6-5327813505e5',
+              terminologyLabel: {
+                fi: 'demo terminology',
               },
             },
           ],
           narrowerConcept: [
             {
               id: '148ab016-36ee-486a-862a-87d6dde2f86f',
-              uri: 'http://uri.suomi.fi/terminology/demo-terminology/concept-3001',
-              status: 'DRAFT',
               label: {
                 fi: 'other concept',
               },
-              modified: '1970-01-01T00:00:00.000Z',
-              narrower: ['de39c2e4-b04c-4fce-b69c-3d0cf286d912'],
-              terminology: {
-                id: '747340b9-8ab6-4aa4-b4e6-5327813505e5',
-                uri: 'http://uri.suomi.fi/terminology/demo-terminology/terminological-vocabulary-0',
-                status: 'INCOMPLETE',
-                label: {
-                  fi: 'demo terminology',
-                },
+              terminologyId: '747340b9-8ab6-4aa4-b4e6-5327813505e5',
+              terminologyLabel: {
+                fi: 'demo terminology',
               },
             },
           ],
           relatedConcept: [
             {
               id: '148ab016-36ee-486a-862a-87d6dde2f86f',
-              uri: 'http://uri.suomi.fi/terminology/demo-terminology/concept-3001',
-              status: 'DRAFT',
               label: {
                 fi: 'other concept',
               },
-              modified: '1970-01-01T00:00:00.000Z',
-              narrower: ['de39c2e4-b04c-4fce-b69c-3d0cf286d912'],
-              terminology: {
-                id: '747340b9-8ab6-4aa4-b4e6-5327813505e5',
-                uri: 'http://uri.suomi.fi/terminology/demo-terminology/terminological-vocabulary-0',
-                status: 'INCOMPLETE',
-                label: {
-                  fi: 'demo terminology',
-                },
+              terminologyId: '747340b9-8ab6-4aa4-b4e6-5327813505e5',
+              terminologyLabel: {
+                fi: 'demo terminology',
               },
             },
           ],
           isPartOfConcept: [
             {
               id: '148ab016-36ee-486a-862a-87d6dde2f86f',
-              uri: 'http://uri.suomi.fi/terminology/demo-terminology/concept-3001',
-              status: 'DRAFT',
               label: {
                 fi: 'other concept',
               },
-              modified: '1970-01-01T00:00:00.000Z',
-              narrower: ['de39c2e4-b04c-4fce-b69c-3d0cf286d912'],
-              terminology: {
-                id: '747340b9-8ab6-4aa4-b4e6-5327813505e5',
-                uri: 'http://uri.suomi.fi/terminology/demo-terminology/terminological-vocabulary-0',
-                status: 'INCOMPLETE',
-                label: {
-                  fi: 'demo terminology',
-                },
+              terminologyId: '747340b9-8ab6-4aa4-b4e6-5327813505e5',
+              terminologyLabel: {
+                fi: 'demo terminology',
               },
             },
           ],
           hasPartConcept: [
             {
               id: '148ab016-36ee-486a-862a-87d6dde2f86f',
-              uri: 'http://uri.suomi.fi/terminology/demo-terminology/concept-3001',
-              status: 'DRAFT',
               label: {
                 fi: 'other concept',
               },
-              modified: '1970-01-01T00:00:00.000Z',
-              narrower: ['de39c2e4-b04c-4fce-b69c-3d0cf286d912'],
-              terminology: {
-                id: '747340b9-8ab6-4aa4-b4e6-5327813505e5',
-                uri: 'http://uri.suomi.fi/terminology/demo-terminology/terminological-vocabulary-0',
-                status: 'INCOMPLETE',
-                label: {
-                  fi: 'demo terminology',
-                },
+              terminologyId: '747340b9-8ab6-4aa4-b4e6-5327813505e5',
+              terminologyLabel: {
+                fi: 'demo terminology',
               },
             },
           ],
@@ -381,7 +341,7 @@ describe('generate-concept', () => {
           },
         ],
         diagramAndSource: {
-          diagrams: [
+          diagram: [
             {
               diagramName: 'käsitekaavion nimi',
               diagramUrl: 'käsitekaavion verkko-osoite',

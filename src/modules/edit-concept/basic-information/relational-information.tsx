@@ -1,41 +1,31 @@
 import Separator from '@app/common/components/separator';
-import { Concepts } from '@app/common/interfaces/concepts.interface';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { ExpanderTitleButton } from 'suomifi-ui-components';
-import {
-  BasicInfoType,
-  BasicInfoUpdate,
-} from './concept-basic-information-types';
+import { BasicInfoUpdate } from './concept-basic-information-types';
 import {
   ConceptExpander,
   ExpanderContentFitted,
 } from './concept-basic-information.styles';
 import RelationalInformationBlock from '../../../common/components/relational-information-block';
+import { BasicInfo, RelationInfoType } from '../new-concept.types';
 
 interface RelationalInformationProps {
   infoKey: string;
   update: (object: BasicInfoUpdate) => void;
+  initialValues: BasicInfo['relationalInfo'];
 }
 
 export default function RelationalInformation({
   infoKey,
   update,
+  initialValues,
 }: RelationalInformationProps) {
   const { t } = useTranslation('admin');
-  const [expandersData, setExpandersData] = useState<
-    BasicInfoType['relationalInfo']
-  >({
-    broaderConcept: [],
-    narrowerConcept: [],
-    relatedConcept: [],
-    isPartOfConcept: [],
-    hasPartConcept: [],
-    relatedConceptInOther: [],
-    matchInOther: [],
-  });
+  const [expandersData, setExpandersData] =
+    useState<BasicInfo['relationalInfo']>(initialValues);
 
-  const updateData = (key: string, value: Concepts[]) => {
+  const updateData = (key: string, value: RelationInfoType[]) => {
     const updated = { ...expandersData, [key]: value };
     setExpandersData(updated);
     update({ key: infoKey, value: updated });

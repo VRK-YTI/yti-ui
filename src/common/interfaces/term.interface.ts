@@ -12,6 +12,7 @@ export interface Term extends BaseEntity<'Term'> {
     status?: Property[];
     termConjugation?: Property[];
     termEquivalency?: Property[];
+    termEquivalencyRelation?: Property[];
     termFamily?: Property[];
     termHomographNumber?: Property[];
     termInfo?: Property[];

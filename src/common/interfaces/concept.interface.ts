@@ -16,6 +16,7 @@ export interface Concept extends BaseEntity<'Concept'> {
     note?: Property[];
     source?: Property[];
     status?: Property[];
+    subjectArea?: Property[];
     wordClass?: Property[];
   };
 
@@ -31,7 +32,7 @@ export interface Concept extends BaseEntity<'Concept'> {
     notRecommendedSynonym?: Term[];
     prefLabelXl?: Term[];
     related?: Concept[];
-    relatedMatch: ConceptLink[];
+    relatedMatch?: ConceptLink[];
     searchTerm?: Term[];
   };
 

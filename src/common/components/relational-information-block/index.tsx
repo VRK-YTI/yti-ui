@@ -2,6 +2,7 @@ import { BasicBlock } from '@app/common/components/block';
 import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
 import PropertyValue from '@app/common/components/property-value';
 import { Concepts } from '@app/common/interfaces/concepts.interface';
+import { RelationInfoType } from '@app/modules/edit-concept/new-concept.types';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -26,8 +27,8 @@ interface RelationalInformationBlockProps {
   buttonTitle: string;
   description: string;
   chipLabel: string;
-  data: { [key: string]: Concepts[] };
-  updateData: (key: string, value: Concepts[]) => void;
+  data: { [key: string]: RelationInfoType[] };
+  updateData: (key: string, value: RelationInfoType[]) => void;
   fromOther?: boolean;
 }
 
@@ -45,13 +46,26 @@ export default function RelationalInformationBlock({
   const terminologyId = Array.isArray(router.query.terminologyId)
     ? router.query.terminologyId[0]
     : router.query.terminologyId;
-  const [selectedConcepts, setSelectedConcepts] = useState<Concepts[]>(
-    data[infoKey]
+  const [selectedConcepts, setSelectedConcepts] = useState<RelationInfoType[]>(
+    data[infoKey] ?? []
   );
 
-  const handleUpdate = (value: Concepts[]) => {
-    setSelectedConcepts(value);
-    updateData(infoKey, value);
+  const handleUpdate = (concepts: Concepts[]) => {
+    const newValue =
+      concepts.map((concept) => ({
+        id: concept.id,
+        label: concept.label,
+        terminologyId: concept.terminology.id,
+        terminologyLabel: concept.terminology.label,
+      })) ?? [];
+
+    setSelectedConcepts(newValue);
+    updateData(infoKey, newValue);
+  };
+
+  const handleChipClick = (concepts: RelationInfoType[]) => {
+    setSelectedConcepts(concepts);
+    updateData(infoKey, concepts);
   };
 
   if (!terminologyId) {
@@ -65,7 +79,7 @@ export default function RelationalInformationBlock({
         <BasicBlockExtraWrapper>
           <ManageRelationalInfoModal
             buttonTitle={buttonTitle}
-            selectedConcepts={selectedConcepts}
+            selectedConceptIds={selectedConcepts.map((concept) => concept.id)}
             setSelectedConcepts={handleUpdate}
             terminologyId={terminologyId}
             chipLabel={chipLabel}
@@ -87,8 +101,8 @@ export default function RelationalInformationBlock({
                       key={concept.id}
                       removable
                       onClick={() =>
-                        handleUpdate(
-                          selectedConcepts.filter((c) => c !== concept)
+                        handleChipClick(
+                          selectedConcepts.filter((c) => c.id !== concept.id)
                         )
                       }
                     >
@@ -104,10 +118,10 @@ export default function RelationalInformationBlock({
                       {fromOther && ' - '}
                       {fromOther && (
                         <PropertyValue
-                          property={Object.keys(concept.terminology.label).map(
+                          property={Object.keys(concept.terminologyLabel).map(
                             (lang) => ({
                               lang,
-                              value: concept.terminology.label[lang],
+                              value: concept.terminologyLabel[lang],
                               regex: '',
                             })
                           )}
@@ -130,7 +144,7 @@ export default function RelationalInformationBlock({
 
 interface ManageRelationalInfoModalProps {
   buttonTitle: string;
-  selectedConcepts: Concepts[];
+  selectedConceptIds: string[];
   setSelectedConcepts: (value: Concepts[]) => void;
   terminologyId: string;
   chipLabel: string;
@@ -139,7 +153,7 @@ interface ManageRelationalInfoModalProps {
 
 function ManageRelationalInfoModal({
   buttonTitle,
-  selectedConcepts,
+  selectedConceptIds,
   setSelectedConcepts,
   terminologyId,
   chipLabel,
@@ -147,14 +161,25 @@ function ManageRelationalInfoModal({
 }: ManageRelationalInfoModalProps) {
   const { t } = useTranslation('admin');
   const [visible, setVisible] = useState(false);
-  const [chosen, setChosen] = useState<Concepts[]>(selectedConcepts);
   const [showChosen, setShowChosen] = useState(false);
-  const [searchResults, setSearchResults] = useState<Concepts[]>();
+  const [searchResults, setSearchResults] = useState<Concepts[]>([]);
+  const [chosen, setChosen] = useState<Concepts[]>([]);
+
+  const handleSetSearchResults = (value: Concepts[]) => {
+    if (value !== searchResults) {
+      setSearchResults(value);
+      setChosen(
+        value.filter((concept) => selectedConceptIds.includes(concept.id))
+      );
+    }
+  };
 
   const handleClose = () => {
     setVisible(false);
     setShowChosen(false);
-    setSelectedConcepts(selectedConcepts);
+    setSelectedConcepts(
+      searchResults.filter((result) => selectedConceptIds.includes(result.id))
+    );
     setChosen([]);
   };
 
@@ -164,7 +189,9 @@ function ManageRelationalInfoModal({
   };
 
   const handleSetVisible = () => {
-    setChosen(selectedConcepts);
+    setChosen(
+      searchResults.filter((result) => selectedConceptIds.includes(result.id))
+    );
     setVisible(true);
   };
 
@@ -184,7 +211,7 @@ function ManageRelationalInfoModal({
             <ModalTitle>{buttonTitle}</ModalTitle>
 
             <Search
-              setSearchResults={setSearchResults}
+              setSearchResults={handleSetSearchResults}
               terminologyId={terminologyId}
               fromOther={fromOther ? true : false}
             />

@@ -63,3 +63,14 @@ export function translateTermType(type: string, t: TFunction) {
       return t('search-term', { ns: 'common' });
   }
 }
+
+export function translateWordClass(wordClass: string, t: TFunction) {
+  switch (wordClass) {
+    case 'adjective':
+      return t('adjective', { ns: 'admin' });
+    case 'verb':
+      return t('verb', { ns: 'admin' });
+    default:
+      return wordClass;
+  }
+}

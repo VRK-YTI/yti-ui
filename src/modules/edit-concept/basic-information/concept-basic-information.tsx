@@ -86,15 +86,22 @@ export default function ConceptBasicInformation({
         <ConceptDiagramsAndSources
           infoKey="diagramAndSource"
           update={handleBasicInfoUpdate}
+          initialValues={basicInfo.diagramAndSource}
         />
         <OrganizationInformation
           infoKey="orgInfo"
           update={handleBasicInfoUpdate}
+          initialValues={basicInfo.orgInfo}
         />
-        <OtherInformation infoKey="otherInfo" update={handleBasicInfoUpdate} />
+        <OtherInformation
+          infoKey="otherInfo"
+          update={handleBasicInfoUpdate}
+          initialValues={basicInfo.otherInfo}
+        />
         <RelationalInformation
           infoKey="relationalInfo"
           update={handleBasicInfoUpdate}
+          initialValues={basicInfo.relationalInfo}
         />
       </ExpanderGroup>
     </>
@@ -103,16 +110,17 @@ export default function ConceptBasicInformation({
   function renderDefinitions() {
     return (
       <>
-        {languages.map((language) => {
-          return renderDefinitionTextarea(language);
+        {languages.map((language, idx) => {
+          return renderDefinitionTextarea(language, idx);
         })}
       </>
     );
   }
 
-  function renderDefinitionTextarea(lang: string) {
+  function renderDefinitionTextarea(lang: string, idx: number) {
     return (
       <WiderTextarea
+        key={`definition-text-area-${idx}`}
         labelText={t('definition-label-text', {
           lang: translateLanguage(lang, t),
           langUpper: lang.toUpperCase(),

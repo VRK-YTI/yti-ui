@@ -1,5 +1,7 @@
 {
   "close": "Sulje",
+  "edit-concept": "Muokkaa käsitettä",
+  "edit-concept-rights": "Sinulla on oikeudet muokata tätä käsitettä.",
   "feedback-action": "Anna palautetta käsitteestä",
   "feedback-label": "Voit antaa palautetta käsitteestä sanaston vastuuorganisaatiolle.",
   "field-change-note": "Muutoshistoriatiedot",

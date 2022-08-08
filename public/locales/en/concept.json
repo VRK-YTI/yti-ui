@@ -1,5 +1,7 @@
 {
   "close": "Close",
+  "edit-concept": "Edit concept",
+  "edit-concept-rights": "You have rights to edit this concept.",
   "feedback-action": "Give feedback on the concept",
   "feedback-label": "You can give feedback on the concept to the responsible organization of the vocabulary.",
   "field-change-note": "Change note",

@@ -98,38 +98,16 @@ describe('relational-information-block', () => {
 const data = {
   relationalInformation: [
     {
-      altLabel: { fi: 'altLabel1' },
-      definition: { fi: 'definition1' },
       id: '123',
-      label: {
-        fi: 'label1',
-      },
-      modified: '',
-      status: 'VALID',
-      terminology: {
-        id: '',
-        label: { fi: 'terminology' },
-        status: 'VALID',
-        uri: '',
-      },
-      uri: '',
+      label: { fi: 'label1' },
+      terminologyId: '789',
+      terminologyLabel: { fi: 'terminology' },
     },
     {
-      altLabel: { fi: 'altLabel2' },
-      definition: { fi: 'definition2' },
       id: '456',
-      label: {
-        fi: 'label2',
-      },
-      modified: '',
-      status: 'VALID',
-      terminology: {
-        id: '',
-        label: { fi: 'terminology' },
-        status: 'VALID',
-        uri: '',
-      },
-      uri: '',
+      label: { fi: 'label2' },
+      terminologyId: '789',
+      terminologyLabel: { fi: 'terminology' },
     },
   ],
 };

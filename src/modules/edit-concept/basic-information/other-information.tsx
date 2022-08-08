@@ -1,3 +1,4 @@
+import { translateWordClass } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import {
@@ -14,15 +15,29 @@ import {
 interface OtherInformationProps {
   infoKey: string;
   update: (object: BasicInfoUpdate) => void;
+  initialValues?: {
+    conceptClass: string;
+    wordClass: string;
+  };
 }
 
 export default function OtherInformation({
   infoKey,
   update,
+  initialValues,
 }: OtherInformationProps) {
   const { t } = useTranslation('admin');
-  const [conceptClass, setConceptClass] = useState<string | undefined>();
-  const [wordClass, setWordClass] = useState<typeof partOfSpeech[0] | null>();
+  const [conceptClass, setConceptClass] = useState<string | undefined>(
+    initialValues?.conceptClass
+  );
+  const [wordClass, setWordClass] = useState<typeof partOfSpeech[0] | null>(
+    initialValues?.wordClass
+      ? {
+          uniqueItemId: initialValues.wordClass,
+          labelText: translateWordClass(initialValues.wordClass, t),
+        }
+      : null
+  );
 
   const handleChange = () => {
     update({

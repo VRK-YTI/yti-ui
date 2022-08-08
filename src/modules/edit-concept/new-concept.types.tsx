@@ -1,5 +1,3 @@
-import { Concepts } from '@app/common/interfaces/concepts.interface';
-
 export interface ConceptTermType {
   changeNote: string;
   draftComment: string;
@@ -43,14 +41,21 @@ export interface BasicInfo {
     wordClass: string;
   };
   relationalInfo: {
-    broaderConcept: Concepts[];
-    narrowerConcept: Concepts[];
-    relatedConcept: Concepts[];
-    isPartOfConcept: Concepts[];
-    hasPartConcept: Concepts[];
-    relatedConceptInOther: Concepts[];
-    matchInOther: Concepts[];
+    broaderConcept: RelationInfoType[];
+    narrowerConcept: RelationInfoType[];
+    relatedConcept: RelationInfoType[];
+    isPartOfConcept: RelationInfoType[];
+    hasPartConcept: RelationInfoType[];
+    relatedConceptInOther: RelationInfoType[];
+    matchInOther: RelationInfoType[];
   };
+}
+
+export interface RelationInfoType {
+  id: string;
+  label: { [key: string]: string };
+  terminologyId: string;
+  terminologyLabel: { [key: string]: string };
 }
 
 export interface ListType {
@@ -65,7 +70,7 @@ export interface DiagramType {
   diagramUrl: string;
 }
 
-export interface NewConceptType {
+export interface EditConceptType {
   terms: ConceptTermType[];
   basicInformation: BasicInfo;
 }

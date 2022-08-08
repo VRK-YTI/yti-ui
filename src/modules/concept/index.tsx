@@ -1,6 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import React, { useEffect } from 'react';
 import {
+  Button,
   ExternalLink,
   Notification,
   Paragraph,
@@ -36,6 +37,9 @@ import {
 } from '@app/common/components/title-block';
 import { useSelector } from 'react-redux';
 import { selectLogin } from '@app/common/components/login/login.slice';
+import HasPermission from '@app/common/utils/has-permission';
+import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
+import Link from 'next/link';
 import { translateStatus } from '@app/common/utils/translation-helpers';
 
 export interface ConceptProps {
@@ -210,6 +214,31 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
           <DetailsExpander concept={concept} />
 
           <Separator isLarge />
+
+          {HasPermission({
+            actions: 'EDIT_CONCEPT',
+            targetOrganization: terminologyId,
+          }) && (
+            <>
+              <BasicBlock
+                title={t('edit-concept')}
+                extra={
+                  <BasicBlockExtraWrapper>
+                    <Link
+                      href={`/terminology/${terminologyId}/concept/${conceptId}/edit`}
+                    >
+                      <Button variant="secondary" icon="edit">
+                        {t('edit-concept')}
+                      </Button>
+                    </Link>
+                  </BasicBlockExtraWrapper>
+                }
+              >
+                {t('edit-concept-rights')}
+              </BasicBlock>
+              <Separator />
+            </>
+          )}
 
           <VisuallyHidden as="h2">
             {t('additional-technical-information', { ns: 'common' })}

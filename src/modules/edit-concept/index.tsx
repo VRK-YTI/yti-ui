@@ -18,22 +18,29 @@ import { asString } from '@app/common/utils/hooks/useUrlState';
 import { useEffect, useState } from 'react';
 import generateConcept from './generate-concept';
 import { useAddConceptMutation } from '@app/common/components/modify/modify.slice';
-import { v4 } from 'uuid';
 import {
   BasicInfo,
-  NewConceptType,
+  EditConceptType,
   ConceptTermType,
 } from './new-concept.types';
+import { Concept } from '@app/common/interfaces/concept.interface';
+import generateFormData from './generate-form-data';
+import { useSelector } from 'react-redux';
+import { selectLogin } from '@app/common/components/login/login.slice';
 
-interface NewConceptProps {
+interface EditConceptProps {
   terminologyId: string;
-  conceptNames: { [key: string]: string | undefined };
+  conceptData?: Concept;
 }
 
-export default function NewConcept({ terminologyId }: NewConceptProps) {
+export default function EditConcept({
+  terminologyId,
+  conceptData,
+}: EditConceptProps) {
   const { t } = useTranslation('concept');
   const router = useRouter();
   const [addConcept, addConceptStatus] = useAddConceptMutation();
+  const user = useSelector(selectLogin());
   const { data: terminology } = useGetVocabularyQuery({
     id: terminologyId,
   });
@@ -41,65 +48,25 @@ export default function NewConcept({ terminologyId }: NewConceptProps) {
   const [languages] = useState(
     terminology?.properties.language?.map(({ value }) => value) ?? []
   );
-  const [preferredTerms] = useState(
-    languages
-      .map((lang) => ({ lang, value: asString(router.query[lang]), regex: '' }))
-      .filter(({ value }) => !!value)
-  );
+
+  const [preferredTerms] = useState<
+    {
+      lang: string;
+      regex: string;
+      value: string;
+    }[]
+  >(getPreferredTerms());
+
   const [postedData, setPostedData] =
     useState<ReturnType<typeof generateConcept>>();
 
-  const [formData, setFormData] = useState<NewConceptType>({
-    terms: preferredTerms.map((term) => ({
-      changeNote: '',
-      draftComment: '',
-      editorialNote: [],
-      historyNote: '',
-      id: v4(),
-      language: term.lang,
-      prefLabel: term.value,
-      scope: '',
-      source: '',
-      status: 'draft',
-      termConjugation: '',
-      termEquivalency: '',
-      termEquivalencyRelation: '',
-      termFamily: '',
-      termHomographNumber: '',
-      termInfo: '',
-      termStyle: '',
-      termType: 'recommended-term',
-      wordClass: '',
-    })),
-    basicInformation: {
-      definition: {},
-      example: [],
-      subject: '',
-      note: [],
-      diagramAndSource: {
-        diagram: [],
-        sources: '',
-      },
-      orgInfo: {
-        changeHistory: '',
-        editorialNote: [],
-        etymology: '',
-      },
-      otherInfo: {
-        conceptClass: '',
-        wordClass: '',
-      },
-      relationalInfo: {
-        broaderConcept: [],
-        narrowerConcept: [],
-        relatedConcept: [],
-        isPartOfConcept: [],
-        hasPartConcept: [],
-        relatedConceptInOther: [],
-        matchInOther: [],
-      },
-    },
-  });
+  const [formData, setFormData] = useState<EditConceptType>(
+    generateFormData(
+      preferredTerms,
+      conceptData,
+      terminology?.properties.prefLabel
+    )
+  );
 
   const handlePost = () => {
     if (!terminologyId) {
@@ -110,7 +77,10 @@ export default function NewConcept({ terminologyId }: NewConceptProps) {
     const concept = generateConcept({
       data: formData,
       terminologyId: terminologyId,
+      initialValue: conceptData,
+      lastModifiedBy: `${user.firstName} ${user.lastName}`,
     });
+
     setPostedData(concept);
     addConcept(concept);
   };
@@ -186,8 +156,33 @@ export default function NewConcept({ terminologyId }: NewConceptProps) {
           languages={languages}
         />
 
-        <FormFooter handlePost={handlePost} />
+        <FormFooter
+          handlePost={handlePost}
+          isEdit={typeof conceptData !== 'undefined'}
+        />
       </NewConceptBlock>
     </>
   );
+
+  function getPreferredTerms(): {
+    lang: string;
+    regex: string;
+    value: string;
+  }[] {
+    const temp = conceptData?.references?.prefLabelXl?.flatMap((label) =>
+      label.properties.prefLabel?.flatMap((l) => ({
+        lang: l.lang,
+        regex: '',
+        value: l.value,
+      }))
+    );
+
+    if (temp && !temp.some((t) => t === undefined)) {
+      return temp as ReturnType<typeof getPreferredTerms>;
+    }
+
+    return languages
+      .map((lang) => ({ lang, value: asString(router.query[lang]), regex: '' }))
+      .filter(({ value }) => !!value);
+  }
 }

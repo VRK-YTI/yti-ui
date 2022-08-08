@@ -5,7 +5,6 @@ import {
   ExpanderGroup,
   ExpanderTitle,
 } from 'suomifi-ui-components';
-import { ResultList } from './relation-information-block.styles';
 import SanitizedTextContent from '@app/common/components/sanitized-text-content';
 import { useTranslation } from 'next-i18next';
 import {
