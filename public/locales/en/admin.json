@@ -182,6 +182,7 @@
   "prefix-invalid": "Allowed characters for prefix are a-z, 0-9, underscore and dash",
   "prefix-taken": "Prefix in use",
   "recommended-term": "Recommended term ({{lang}})",
+  "recommended-term-missing-error": "Recommended term must be defined in at least one of the available languages.",
   "related-concept": "Related concept",
   "related-concept-add": "Add new related concept",
   "related-concept-chip-label": "Chosen related concepts",
