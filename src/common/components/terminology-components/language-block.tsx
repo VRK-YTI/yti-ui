@@ -1,6 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { MultiSelectData, Paragraph, Text } from 'suomifi-ui-components';
+import { TerminologyName } from './language-selector';
 import {
   LangBlock,
   TextareaSmBot,
@@ -13,6 +14,7 @@ interface LanguageBlockProps {
   handleUpdate: (id: string, value: string, description: string) => void;
   userPosted: boolean;
   id: string;
+  initialData?: TerminologyName;
 }
 
 interface InfoUpdateProps {
@@ -26,10 +28,11 @@ export default function LanguageBlock({
   handleUpdate,
   userPosted,
   id,
+  initialData,
 }: LanguageBlockProps) {
   const { t } = useTranslation('admin');
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
+  const [name, setName] = useState(initialData ? initialData.name : '');
+  const [description, setDescription] = useState(initialData ? initialData.description : '');
   const [status, setStatus] = useState<'default' | 'error'>(
     userPosted ? 'error' : 'default'
   );
@@ -70,12 +73,14 @@ export default function LanguageBlock({
         onChange={(e) => handleInfoUpdate({ tName: e as string })}
         status={status}
         statusText={status === 'error' ? t('terminology-name-error') : ''}
+        defaultValue={name}
       />
       <TextareaSmBot
         labelText={t('terminology-description')}
         hintText={t('terminology-description-hint')}
         visualPlaceholder={t('terminology-description-placeholder')}
         onChange={(e) => handleInfoUpdate({ tDescription: e.target.value })}
+        defaultValue={description}
       />
     </LangBlock>
   );

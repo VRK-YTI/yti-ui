@@ -65,12 +65,17 @@ export default function InfoManual({
       <LanguageSelector
         update={handleUpdate}
         userPosted={userPosted}
+        initialData={terminologyData}
       />
       <TallerSeparator />
       <Paragraph marginBottomSpacing="m">
         <Text variant="bold">{t('terminology-other-information')}</Text>
       </Paragraph>
-      <OrganizationSelector update={handleUpdate} userPosted={userPosted} />
+      <OrganizationSelector
+        update={handleUpdate}
+        userPosted={userPosted}
+        initialData={initialData}
+      />
       <TypeSelector update={handleUpdate} />
       <InformationDomainsSelector
         update={handleUpdate}

@@ -38,28 +38,29 @@ export default function generateInitialData(
       };
     }) ?? [];
 
-  const mainOrg =
-    data.references.contributor?.map((org) => {
-      const label = getPropertyValue({
-        property: org.properties.prefLabel,
-        language: lang,
-        fallbackLanguage: 'fi',
-      });
+  const mainOrg = data.references.contributor?.map((org) => {
+    const label = getPropertyValue({
+      property: org.properties.prefLabel,
+      language: lang,
+      fallbackLanguage: 'fi',
+    });
 
-      return {
-        organizationId: org.type.graph.id,
-        labelText: label,
-        name: label,
-        uniqueItemId: org.id,
-      };
-    })[0];
+    return {
+      organizationId: org.type.graph.id,
+      labelText: label,
+      name: label,
+      uniqueItemId: org.id,
+    };
+  })[0];
 
   const uriParts = data.uri.split('/');
-  const prefix = uriParts.map((part, idx) => {
-    if (uriParts[idx - 1] === 'terminology') {
-      return part;
-    }
-  }).filter(p => p)[0];
+  const prefix = uriParts
+    .map((part, idx) => {
+      if (uriParts[idx - 1] === 'terminology') {
+        return part;
+      }
+    })
+    .filter((p) => p)[0];
 
   const obj: NewTerminologyInfo = {
     contact: [data.properties.contact?.[0].value ?? '', true],
