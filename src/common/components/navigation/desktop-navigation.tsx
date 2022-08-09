@@ -1,4 +1,3 @@
-import { ClickAwayListener } from '@material-ui/core';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { MouseEventHandler, useState } from 'react';
@@ -14,6 +13,7 @@ import {
   NavigationItem,
   NavigationWrapper,
 } from './navigation.styles';
+import ClickOutsideListener from '@app/common/components/click-outside-listener';
 
 export default function DesktopNavigation() {
   const isLoggedIn = !useSelector(selectLogin()).anonymous;
@@ -46,7 +46,7 @@ export default function DesktopNavigation() {
           />
         </SuomiFiLink>
         {open && (
-          <ClickAwayListener onClickAway={() => setOpen(false)}>
+          <ClickOutsideListener onClickOutside={() => setOpen(false)}>
             <NavigationDropdownWrapper>
               <NavigationDropdownList>
                 <NavigationDropdownItem>
@@ -60,7 +60,7 @@ export default function DesktopNavigation() {
                 </NavigationDropdownItem>
               </NavigationDropdownList>
             </NavigationDropdownWrapper>
-          </ClickAwayListener>
+          </ClickOutsideListener>
         )}
       </NavigationItem>
       <NavigationItem>

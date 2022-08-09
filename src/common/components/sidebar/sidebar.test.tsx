@@ -1,3 +1,4 @@
+import '@app/tests/matchMedia.mock';
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { themeProvider } from '@app/tests/test-utils';

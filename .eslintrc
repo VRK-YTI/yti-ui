@@ -41,6 +41,7 @@
     "testing-library/render-result-naming-convention": 0,
     "jest/require-hook": 0,
     "jest/prefer-expect-assertions": 0,
-    "jest/no-hooks": 0
+    "jest/no-hooks": 0,
+    "jest/max-expects": 0
   }
 }

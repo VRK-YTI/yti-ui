@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { useMediaQuery } from '@material-ui/core';
+import { useMediaQuery } from 'usehooks-ts';
 import { CommonContext } from '../common-context-provider';
 
 export const mediaQueries = {

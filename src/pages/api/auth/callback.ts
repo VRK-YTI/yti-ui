@@ -23,7 +23,7 @@ export default withSession(async (req, res) => {
 
   let shibsession_value = '';
   if (shibsession_key !== undefined) {
-    shibsession_value = req.cookies[shibsession_key];
+    shibsession_value = req.cookies[shibsession_key] ?? '';
   } else {
     console.warn('No shibsression found, login failed');
     res.redirect(target);
