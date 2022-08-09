@@ -71,6 +71,31 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
         </BasicBlock>
 
         {HasPermission({
+          actions: 'EDIT_TERMINOLOGY',
+          targetOrganization: data.references.contributor?.[0].id,
+        }) && (
+          <>
+            <Separator isLarge />
+            <BasicBlock
+              title={t('edit-terminology-info', { ns: 'admin' })}
+              extra={
+                <BasicBlockExtraWrapper>
+                  <Link
+                    href={`/terminology/${data.identifier.type.graph.id}/edit`}
+                  >
+                    <Button icon="edit" variant="secondary">
+                      {t('edit-terminology', { ns: 'admin' })}
+                    </Button>
+                  </Link>
+                </BasicBlockExtraWrapper>
+              }
+            >
+              {t('you-have-right-edit-terminology', { ns: 'admin' })}
+            </BasicBlock>
+          </>
+        )}
+
+        {HasPermission({
           actions: 'CREATE_CONCEPT',
           targetOrganization: data.references.contributor?.[0].id,
         }) && (
@@ -89,7 +114,7 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
           <>
             <Separator isLarge />
             <BasicBlock
-              title="Uusi käsitekokoelma sanastoon"
+              title={t('new-collection-to-terminology', { ns: 'admin' })}
               extra={
                 <BasicBlockExtraWrapper>
                   <Link

@@ -90,6 +90,8 @@
   "diagram-url": "",
   "download-failed": "",
   "downloading-file": "",
+  "edit-terminology": "",
+  "edit-terminology-info": "",
   "editorialNote": "",
   "editorialNote-description": "",
   "editorialNote-textarea-label-text": "",
@@ -142,6 +144,7 @@
   "narrower-concept-description": "",
   "neutral": "",
   "new-collection": "",
+  "new-collection-to-terminology": "",
   "new-concept-title": "",
   "new-concept-to-terminology": "",
   "new-term": "",
@@ -258,6 +261,7 @@
   "word-class-available": "",
   "word-class-hint": "",
   "word-class-no-items": "",
+  "you-have-right-edit-terminology": "",
   "you-have-right-new-collection": "",
   "you-have-right-new-concept": ""
 }

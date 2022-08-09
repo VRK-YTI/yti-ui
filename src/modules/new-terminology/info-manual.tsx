@@ -16,16 +16,18 @@ interface InfoManualProps {
   setIsValid: (valid: boolean) => void;
   setManualData: (object: NewTerminologyInfo) => void;
   userPosted: boolean;
+  initialData?: NewTerminologyInfo;
 }
 
 export default function InfoManual({
   setIsValid,
   setManualData,
   userPosted,
+  initialData,
 }: InfoManualProps) {
   const { t } = useTranslation('admin');
   const [terminologyData, setTerminologyData] = useState<NewTerminologyInfo>(
-    TerminologyDataInitialState
+    initialData ? initialData : TerminologyDataInitialState
   );
 
   useEffect(() => {
@@ -60,7 +62,10 @@ export default function InfoManual({
   return (
     <form>
       <TallerSeparator />
-      <LanguageSelector update={handleUpdate} userPosted={userPosted} />
+      <LanguageSelector
+        update={handleUpdate}
+        userPosted={userPosted}
+      />
       <TallerSeparator />
       <Paragraph marginBottomSpacing="m">
         <Text variant="bold">{t('terminology-other-information')}</Text>

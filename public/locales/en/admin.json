@@ -90,6 +90,8 @@
   "diagram-url": "Diagram web address",
   "download-failed": "Download failed",
   "downloading-file": "Downloading file",
+  "edit-terminology": "Edit terminology",
+  "edit-terminology-info": "Edit terminology information",
   "editorialNote": "Admin note",
   "editorialNote-description": "Note meant for editors and translators. Isn't visible for unsigned users.",
   "editorialNote-textarea-label-text": "Editorial note",
@@ -142,6 +144,7 @@
   "narrower-concept-description": "Concept that is in hierarchical relation with this concept and contains semantic meaning of this concept.",
   "neutral": "neutral",
   "new-collection": "New collection",
+  "new-collection-to-terminology": "New collection to terminology",
   "new-concept-title": "New Concept",
   "new-concept-to-terminology": "New concept to terminology",
   "new-term": "New term",
@@ -258,6 +261,7 @@
   "word-class-available": "Available word classes",
   "word-class-hint": "Toggle only if word class is either an adjective or a verb",
   "word-class-no-items": "No word classes available",
+  "you-have-right-edit-terminology": "You have the rights to edit this terminology",
   "you-have-right-new-collection": "You have the rights to create new collections to this terminology",
   "you-have-right-new-concept": "You have the rights to create new concepts to this terminology"
 }
