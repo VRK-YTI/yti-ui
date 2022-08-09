@@ -41,19 +41,16 @@ export const modifyApi = createApi({
         },
       }),
     }),
-    editTerminology: builder.mutation<
-      NewTerminology,
-      null | undefined | {}
-    >({
+    editTerminology: builder.mutation<NewTerminology, null | undefined | {}>({
       query: (data) => ({
         url: '/modify',
         method: 'POST',
         data: {
           delete: [],
-          save: [data]
-        }
-      })
-    })
+          save: [data],
+        },
+      }),
+    }),
   }),
 });
 
@@ -64,4 +61,5 @@ export const {
   util: { getRunningOperationPromises },
 } = modifyApi;
 
-export const { addCollection, addConcept, editTerminology } = modifyApi.endpoints;
+export const { addCollection, addConcept, editTerminology } =
+  modifyApi.endpoints;

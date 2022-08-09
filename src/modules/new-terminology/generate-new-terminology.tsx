@@ -44,29 +44,23 @@ export default function generateNewTerminology({
     },
   ];
 
-  postData.properties.description = data.description[0].map((desc) => (
-    {
-      lang: desc.lang,
-      regex: regex,
-      value: desc.description,
-    }
-  ));
+  postData.properties.description = data.description[0].map((desc) => ({
+    lang: desc.lang,
+    regex: regex,
+    value: desc.description,
+  }));
 
-  postData.properties.prefLabel = data.description[0].map((desc) => (
-    {
-      lang: desc.lang,
-      regex: regex,
-      value: desc.name,
-    }
-  ));
+  postData.properties.prefLabel = data.description[0].map((desc) => ({
+    lang: desc.lang,
+    regex: regex,
+    value: desc.name,
+  }));
 
-  postData.properties.language = data.description[0].map((desc) => (
-    {
-      lang: '',
-      regex: regex,
-      value: desc.lang,
-    }
-  ));
+  postData.properties.language = data.description[0].map((desc) => ({
+    lang: '',
+    regex: regex,
+    value: desc.lang,
+  }));
 
   postData.properties.terminologyType = [
     {
@@ -124,8 +118,8 @@ export default function generateNewTerminology({
       {
         lang: '',
         regex: regex,
-        value: ''
-      }
+        value: '',
+      },
     ];
   }
 

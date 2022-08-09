@@ -33,9 +33,8 @@ export default function EditTerminology(props: EditTerminologyPageProps) {
   return (
     <CommonContextProvider value={props}>
       <Layout>
-        {/* TODO: Käännös */}
         <PageHead
-          title={'Muokkaa sanastoa'}
+          title={t('edit-terminology')}
           siteTitle="Yhteentoimivuusalusta"
         />
 

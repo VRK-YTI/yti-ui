@@ -54,14 +54,13 @@ export default function StatusSelector({
 
   return (
     <BlankFieldset>
-      {/* TODO: käännös */}
       <StatusSingleSelect
-        ariaOptionsAvailableText="Saatavilla oleva tilat"
-        clearButtonLabel=""
+        ariaOptionsAvailableText={t('statuses-available')}
+        clearButtonLabel={t('clear-button-label')}
         items={statuses}
-        labelText="Sanaston tila"
-        noItemsText="Tiloja ei saatavilla"
-        hintText='Jos et halua muokata sanastoa julkisesti, valitse sanaston tilaksi "Piilotettu"'
+        labelText={t('terminology-status')}
+        noItemsText={t('no-statuses-available')}
+        hintText={t('statuses-hint-text')}
         defaultSelectedItem={
           statuses.find((status) => status.uniqueItemId === defaultValue) ??
           undefined
