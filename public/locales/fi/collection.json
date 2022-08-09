@@ -1,6 +1,6 @@
 {
-  "add-concept": "Lisää käsite",
-  "add-concept_plural": "Lisää käsitteet",
+  "add-concept_one": "Lisää käsite",
+  "add-concept_other": "Lisää käsitteet",
   "add-concept-hint-text": "Voit lisätä esimerkiksi samaan aihepiiriin kuuluvat käsitteet yhteen käsitekokoelmaan.",
   "add-concept-to-collection": "Lisää käsite käsitekokoelmaan",
   "admin-organization": "Vastuuorganisaatio",

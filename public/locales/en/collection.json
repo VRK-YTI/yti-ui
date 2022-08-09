@@ -1,6 +1,6 @@
 {
-  "add-concept": "Add concept",
-  "add-concept_plural": "Add concepts",
+  "add-concept_one": "Add concept",
+  "add-concept_other": "Add concepts",
   "add-concept-hint-text": "You can add concepts belonging to the same subject area to one collection.",
   "add-concept-to-collection": "Add concept to collection",
   "admin-organization": "Administrative organization",
