@@ -27,6 +27,7 @@ import { Concept } from '@app/common/interfaces/concept.interface';
 import generateFormData from './generate-form-data';
 import { useSelector } from 'react-redux';
 import { selectLogin } from '@app/common/components/login/login.slice';
+import { Notification, Paragraph, Text } from 'suomifi-ui-components';
 
 interface EditConceptProps {
   terminologyId: string;
@@ -102,6 +103,49 @@ export default function EditConcept({
       );
     }
   }, [addConceptStatus, postedData, terminologyId, router]);
+
+  if (preferredTerms.length < 1) {
+    return (
+      <>
+        <Breadcrumb>
+          {router.query.terminologyId && (
+            <BreadcrumbLink url={`/terminology/${router.query.terminologyId}`}>
+              <PropertyValue
+                property={terminology?.properties.prefLabel}
+                fallbackLanguage="fi"
+              />
+            </BreadcrumbLink>
+          )}
+          <BreadcrumbLink url="" current>
+            ...
+          </BreadcrumbLink>
+        </Breadcrumb>
+
+        <main id="main">
+          <Notification
+            closeText={t('close')}
+            headingText={t('error-not-found', {
+              context: 'new-concept',
+              ns: 'common',
+            })}
+            status="error"
+            onCloseButtonClick={() =>
+              router.push(`/terminology/${terminologyId}`)
+            }
+          >
+            <Paragraph>
+              <Text smallScreen>
+                {t('error-not-found-desc', {
+                  context: 'new-concept',
+                  ns: 'common',
+                })}
+              </Text>
+            </Paragraph>
+          </Notification>
+        </main>
+      </>
+    );
+  }
 
   return (
     <>

@@ -182,6 +182,7 @@
   "prefix-invalid": "Etuliitteen sallitut merkit ovat a-z, 0-9, alaviiva ja väliviiva",
   "prefix-taken": "Tunnus on käytössä",
   "recommended-term": "Suositettava termi ({{lang}})",
+  "recommended-term-missing-error": "Suositettava termi tulee olla määritettynä vähintään yhdellä kielellä.",
   "related-concept": "Liittyvä käsite",
   "related-concept-add": "Lisää uusi liittyvä käsite",
   "related-concept-chip-label": "Valitut liittyvät käsitteeet",

@@ -182,6 +182,7 @@
   "prefix-invalid": "",
   "prefix-taken": "",
   "recommended-term": "",
+  "recommended-term-missing-error": "",
   "related-concept": "",
   "related-concept-add": "",
   "related-concept-chip-label": "",

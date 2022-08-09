@@ -1,8 +1,9 @@
 import { useTranslation } from 'next-i18next';
-import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import {
   Button,
+  InlineAlert,
   Modal,
   ModalContent,
   ModalFooter,
@@ -34,11 +35,35 @@ export default function NewConceptModal({
 }: NewConceptModalProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
-  const [termName, setTermName] = useState({});
+  const [termName, setTermName] = useState<{ [key: string]: string }>({});
+  const [isError, setIsError] = useState(false);
   const queryParams = new URLSearchParams(termName).toString();
+  const router = useRouter();
 
   const handleChange = ({ lang, value }: HandleChangeProps) => {
-    setTermName((termName) => ({ ...termName, [lang]: value }));
+    const newTerms = { ...termName, [lang]: value };
+    setTermName(newTerms);
+
+    if (
+      isError &&
+      Object.keys(newTerms).some((lang) => termName[lang] !== '')
+    ) {
+      setIsError(false);
+    }
+  };
+
+  const handleClick = () => {
+    const termLangs = Object.keys(termName);
+    if (
+      termLangs.length < 1 ||
+      !termLangs.some((lang) => termName[lang] !== '')
+    ) {
+      setIsError(true);
+      return;
+    }
+
+    setIsError(false);
+    router.push(`/terminology/${terminologyId}/new-concept?${queryParams}`);
   };
 
   return (
@@ -61,18 +86,19 @@ export default function NewConceptModal({
               labelText={t('recommended-term', { lang: lang.toUpperCase() })}
               visualPlaceholder={t('term-name-placeholder')}
               onChange={(e) => handleChange({ lang, value: e as string })}
+              status={isError ? 'error' : 'default'}
             />
           ))}
         </TextInputBlock>
       </ModalContent>
 
       <ModalFooter>
-        <Link
-          href={`/terminology/${terminologyId}/new-concept?${queryParams}`}
-          passHref
-        >
-          <Button>{t('continue')}</Button>
-        </Link>
+        {isError && (
+          <InlineAlert status="warning">
+            {t('recommended-term-missing-error')}
+          </InlineAlert>
+        )}
+        <Button onClick={() => handleClick()}>{t('continue')}</Button>
         <Button variant="secondary" onClick={() => setVisible(false)}>
           {t('cancel-variant')}
         </Button>
