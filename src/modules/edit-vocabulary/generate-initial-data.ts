@@ -3,8 +3,8 @@ import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info'
 import { VocabularyInfoDTO } from '@app/common/interfaces/vocabulary.interface';
 
 export default function generateInitialData(
-  data: VocabularyInfoDTO,
-  lang: string
+  lang: string,
+  data?: VocabularyInfoDTO
 ): NewTerminologyInfo | undefined {
   if (!data) {
     return undefined;
@@ -31,6 +31,7 @@ export default function generateInitialData(
       });
 
       return {
+        checked: false,
         groupId: group.type.graph.id,
         labelText: label,
         name: label,
@@ -67,6 +68,7 @@ export default function generateInitialData(
     description: [description, true],
     infoDomains: infoDomains,
     prefix: [prefix ?? '', true],
+    status: data.properties.status?.[0].value ?? 'DRAFT',
     type:
       data.properties.terminologyType?.[0].value ?? 'TERMINOLOGICAL_VOCABULARY',
     mainOrg: mainOrg,

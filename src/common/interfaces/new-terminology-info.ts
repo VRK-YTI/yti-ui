@@ -27,5 +27,6 @@ export interface NewTerminologyInfo {
     uniqueItemId: string;
   }[];
   prefix: [string, boolean];
+  status?: string;
   type: string;
 }

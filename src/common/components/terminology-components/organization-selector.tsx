@@ -38,9 +38,9 @@ export default function OrganizationSelector({
     useState<SingleSelectData | null>(
       initialData?.mainOrg
         ? {
-          labelText: initialData.mainOrg.labelText,
-          uniqueItemId: initialData.mainOrg?.uniqueItemId,
-        }
+            labelText: initialData.mainOrg.labelText,
+            uniqueItemId: initialData.mainOrg?.uniqueItemId,
+          }
         : null
     );
   const [, setSelectedOtherOrganizations] = useState<MultiSelectData[]>([]);

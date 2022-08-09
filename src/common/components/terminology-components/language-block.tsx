@@ -32,7 +32,9 @@ export default function LanguageBlock({
 }: LanguageBlockProps) {
   const { t } = useTranslation('admin');
   const [name, setName] = useState(initialData ? initialData.name : '');
-  const [description, setDescription] = useState(initialData ? initialData.description : '');
+  const [description, setDescription] = useState(
+    initialData ? initialData.description : ''
+  );
   const [status, setStatus] = useState<'default' | 'error'>(
     userPosted ? 'error' : 'default'
   );

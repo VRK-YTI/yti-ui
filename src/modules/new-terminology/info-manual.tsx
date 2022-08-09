@@ -11,6 +11,7 @@ import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info'
 import { useTranslation } from 'next-i18next';
 import { TerminologyDataInitialState } from './terminology-initial-state';
 import { UpdateTerminology } from './update-terminology.interface';
+import StatusSelector from './status-selector';
 
 interface InfoManualProps {
   setIsValid: (valid: boolean) => void;
@@ -76,14 +77,29 @@ export default function InfoManual({
         userPosted={userPosted}
         initialData={initialData}
       />
-      <TypeSelector update={handleUpdate} />
+      <TypeSelector update={handleUpdate} defaultValue={initialData?.type} />
+
+      {initialData && (
+        <StatusSelector
+          update={handleUpdate}
+          defaultValue={initialData.status}
+        />
+      )}
+
       <InformationDomainsSelector
         update={handleUpdate}
         userPosted={userPosted}
+        initialData={initialData}
       />
-      <Prefix update={handleUpdate} userPosted={userPosted} />
+
+      {!initialData && <Prefix update={handleUpdate} userPosted={userPosted} />}
+
       <TallerSeparator />
-      <ContactInfo update={handleUpdate} userPosted={userPosted} />
+      <ContactInfo
+        update={handleUpdate}
+        userPosted={userPosted}
+        defaultValue={initialData?.contact[0]}
+      />
     </form>
   );
 }

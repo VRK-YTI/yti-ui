@@ -52,22 +52,21 @@ export default function LanguageSelector({
   const [selectedLanguages, setSelectedLanguages] = useState<MultiSelectData[]>(
     initialData
       ? initialData.description[0]
-        .map((desc) => {
-          const lang = languages.find((l) => l.uniqueItemId === desc.lang);
-          return {
-            checked: true,
-            labelText: lang?.labelText ?? '',
-            name: lang?.name ?? '',
-            uniqueItemId: lang?.uniqueItemId ?? '',
-          };
-        })
-        .filter((l) => l.uniqueItemId)
+          .map((desc) => {
+            const lang = languages.find((l) => l.uniqueItemId === desc.lang);
+            return {
+              checked: true,
+              labelText: lang?.labelText ?? '',
+              name: lang?.name ?? '',
+              uniqueItemId: lang?.uniqueItemId ?? '',
+            };
+          })
+          .filter((l) => l.uniqueItemId)
       : []
   );
   const [terminologyNames, setTerminologyNames] = useState<TerminologyName[]>(
     initialData
-      ? initialData.description[0]
-        .map((desc) => ({
+      ? initialData.description[0].map((desc) => ({
           description: desc.description,
           lang: desc.lang,
           name: desc.name,
@@ -179,7 +178,11 @@ export default function LanguageSelector({
           handleUpdate={handleSelectedLanguageUpdate}
           userPosted={userPosted}
           id={language.uniqueItemId}
-          initialData={terminologyNames.filter(name => name.lang === language.uniqueItemId)[0]}
+          initialData={
+            terminologyNames.filter(
+              (name) => name.lang === language.uniqueItemId
+            )[0]
+          }
           key={`${language}-${idx}`}
         />
       ))}

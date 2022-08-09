@@ -1,4 +1,5 @@
 export interface NewTerminology {
+  code?: string;
   createdBy: string;
   createdDate: string;
   id: string;
@@ -41,6 +42,7 @@ export interface NewTerminology {
     id: string;
     uri: string;
   };
+  uri?: string;
 }
 
 interface CommonDTO {

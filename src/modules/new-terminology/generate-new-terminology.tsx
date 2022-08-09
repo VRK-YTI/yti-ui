@@ -4,10 +4,24 @@ import { v4 } from 'uuid';
 
 interface GenerateNewTerminologyProps {
   data: NewTerminologyInfo;
+  code?: string;
+  createdBy?: string;
+  createdDate?: string;
+  id?: string;
+  lastModifiedBy?: string;
+  terminologyId?: string;
+  uri?: string;
 }
 
 export default function generateNewTerminology({
   data,
+  code,
+  createdBy,
+  createdDate,
+  id,
+  lastModifiedBy,
+  terminologyId,
+  uri,
 }: GenerateNewTerminologyProps) {
   if (!data.mainOrg) {
     return;
@@ -18,8 +32,8 @@ export default function generateNewTerminology({
 
   const now = new Date();
   const UUID = v4();
-  postData.id = UUID;
-  postData.createdDate = now.toISOString();
+  postData.id = id ? id : UUID;
+  postData.createdDate = createdDate ? createdDate : now.toISOString();
   postData.lastModifiedDate = now.toISOString();
 
   postData.properties.contact = [
@@ -93,6 +107,22 @@ export default function generateNewTerminology({
       },
     ];
   });
+
+  postData.createdBy = createdBy ? createdBy : '';
+  postData.lastModifiedBy = lastModifiedBy ? lastModifiedBy : '';
+
+  if (code) {
+    postData.code = code;
+  }
+
+  if (terminologyId) {
+    postData.type.uri = '';
+    postData.type.graph.id = terminologyId;
+  }
+
+  if (uri) {
+    postData.uri = uri;
+  }
 
   return postData;
 }

@@ -8,9 +8,13 @@ import { UpdateTerminology } from '@app/modules/new-terminology/update-terminolo
 
 export interface TypeSelectorProps {
   update: ({ key, data }: UpdateTerminology) => void;
+  defaultValue?: string;
 }
 
-export default function TypeSelector({ update }: TypeSelectorProps) {
+export default function TypeSelector({
+  update,
+  defaultValue,
+}: TypeSelectorProps) {
   const { t } = useTranslation('admin');
 
   const handleSetSelected = (value: string) => {
@@ -22,7 +26,7 @@ export default function TypeSelector({ update }: TypeSelectorProps) {
       <RadioButtonGroupSmBot
         labelText={t('terminology-type')}
         name="terminology-type"
-        defaultValue="TERMINOLOGICAL_VOCABULARY"
+        defaultValue={defaultValue ?? 'TERMINOLOGICAL_VOCABULARY'}
         onChange={(e) => handleSetSelected(e)}
       >
         <RadioButton value="TERMINOLOGICAL_VOCABULARY">
