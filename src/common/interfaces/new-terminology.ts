@@ -9,6 +9,7 @@ export interface NewTerminology {
     contact: CommonDTO[];
     description: CommonDTO[];
     language: CommonDTO[];
+    origin?: CommonDTO[];
     prefLabel: CommonDTO[];
     priority: CommonDTO[];
     status: CommonDTO[];
@@ -22,6 +23,7 @@ export interface NewTerminology {
           id: string;
         };
         id: string;
+        uri?: string;
       };
     }[];
     inGroup: {
@@ -31,6 +33,7 @@ export interface NewTerminology {
           id: string;
         };
         id: string;
+        uri?: string;
       };
     }[];
   };

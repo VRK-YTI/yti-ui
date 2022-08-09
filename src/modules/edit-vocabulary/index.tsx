@@ -1,11 +1,12 @@
 import { Breadcrumb, BreadcrumbLink } from '@app/common/components/breadcrumb';
 import { selectLogin } from '@app/common/components/login/login.slice';
+import { useEditTerminologyMutation } from '@app/common/components/modify/modify.slice';
 import PropertyValue from '@app/common/components/property-value';
 import Title from '@app/common/components/title/title';
 import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Button, Heading, Paragraph, Text } from 'suomifi-ui-components';
 import generateNewTerminology from '../new-terminology/generate-new-terminology';
@@ -26,6 +27,7 @@ export default function EditVocabulary({ terminologyId }: EditVocabularyProps) {
   });
   const user = useSelector(selectLogin());
   const [data, setData] = useState(generateInitialData(i18n.language, info));
+  const [editTerminology, result] = useEditTerminologyMutation();
 
   const handleSubmit = () => {
     if (!data) {
@@ -43,12 +45,22 @@ export default function EditVocabulary({ terminologyId }: EditVocabularyProps) {
       uri: info?.uri,
     });
 
-    console.log(newData);
+    if (!newData) {
+      return;
+    }
+
+    editTerminology(newData);
   };
 
-  const handleCancel = () => {
+  const handleReturn = useCallback(() => {
     router.push(`/terminology/${terminologyId}`);
-  };
+  }, [router, terminologyId]);
+
+  useEffect(() => {
+    if (result.isSuccess) {
+      handleReturn();
+    }
+  }, [result, handleReturn]);
 
   if (infoError || !info) {
     return (
@@ -97,7 +109,7 @@ export default function EditVocabulary({ terminologyId }: EditVocabularyProps) {
 
         <FormFooter>
           <Button onClick={() => handleSubmit()}>{t('save')}</Button>
-          <Button variant="secondary" onClick={() => handleCancel()}>
+          <Button variant="secondary" onClick={() => handleReturn()}>
             {t('cancel')}
           </Button>
         </FormFooter>

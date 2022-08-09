@@ -44,34 +44,29 @@ export default function generateNewTerminology({
     },
   ];
 
-  data.description[0].map((desc) => {
-    postData.properties.description = [
-      ...postData.properties.description,
-      {
-        lang: desc.lang,
-        regex: regex,
-        value: desc.description,
-      },
-    ];
+  postData.properties.description = data.description[0].map((desc) => (
+    {
+      lang: desc.lang,
+      regex: regex,
+      value: desc.description,
+    }
+  ));
 
-    postData.properties.prefLabel = [
-      ...postData.properties.prefLabel,
-      {
-        lang: desc.lang,
-        regex: regex,
-        value: desc.name,
-      },
-    ];
+  postData.properties.prefLabel = data.description[0].map((desc) => (
+    {
+      lang: desc.lang,
+      regex: regex,
+      value: desc.name,
+    }
+  ));
 
-    postData.properties.language = [
-      ...postData.properties.language,
-      {
-        lang: '',
-        regex: regex,
-        value: desc.lang,
-      },
-    ];
-  });
+  postData.properties.language = data.description[0].map((desc) => (
+    {
+      lang: '',
+      regex: regex,
+      value: desc.lang,
+    }
+  ));
 
   postData.properties.terminologyType = [
     {
@@ -93,19 +88,26 @@ export default function generateNewTerminology({
     },
   ];
 
-  data.infoDomains.map((infoDomain) => {
-    postData.references.inGroup = [
-      ...postData.references.inGroup,
-      {
-        id: infoDomain.uniqueItemId,
-        type: {
-          graph: {
-            id: infoDomain.groupId,
-          },
-          id: 'Group',
+  if (terminologyId) {
+    postData.references.contributor[0].type.uri = '';
+  }
+
+  postData.references.inGroup = data.infoDomains.map((infoDomain) => {
+    const obj: NewTerminology['references']['inGroup'][0] = {
+      id: infoDomain.uniqueItemId,
+      type: {
+        graph: {
+          id: infoDomain.groupId,
         },
+        id: 'Group',
       },
-    ];
+    };
+
+    if (terminologyId) {
+      obj.type.uri = '';
+    }
+
+    return obj;
   });
 
   postData.createdBy = createdBy ? createdBy : '';
@@ -118,6 +120,13 @@ export default function generateNewTerminology({
   if (terminologyId) {
     postData.type.uri = '';
     postData.type.graph.id = terminologyId;
+    postData.properties.origin = [
+      {
+        lang: '',
+        regex: regex,
+        value: ''
+      }
+    ];
   }
 
   if (uri) {
@@ -167,6 +176,7 @@ const template: NewTerminology = {
   referrers: {},
   type: {
     graph: {
+      // Default value for TerminologicalVocabulary nodes
       id: '61cf6bde-46e6-40bb-b465-9b2c66bf4ad8',
     },
     id: 'TerminologicalVocabulary',
