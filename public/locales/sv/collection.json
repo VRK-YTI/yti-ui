@@ -21,13 +21,15 @@
   "heading": "",
   "last-modified": "",
   "new-collection-page-help": "",
-  "number-of-concepts": "",
+  "number-of-concepts_one": "",
+  "number-of-concepts_other": "",
   "open-concept-info": "",
   "recommended-terms": "",
   "search": "",
   "search-term": "",
   "selected-concepts": "",
-  "show-selected-concepts": "",
+  "show-selected-concepts_one": "",
+  "show-selected-concepts_other": "",
   "sidebar-header": "",
   "sidebar-section-heading-other-collections": ""
 }

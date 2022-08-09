@@ -199,7 +199,7 @@ export default function PickerModal({
             <SearchResultCountBlock>
               <Text smallScreen variant="bold">
                 {t('number-of-concepts', {
-                  number: result.data?.concepts.length ?? 0,
+                  count: result.data?.concepts.length ?? 0,
                 })}
               </Text>
             </SearchResultCountBlock>
@@ -265,7 +265,7 @@ export default function PickerModal({
               onClick={() => setShowSelected(!showSelected)}
             >
               {t('show-selected-concepts', {
-                number: selectedConcepts.length ?? 0,
+                count: selectedConcepts.length ?? 0,
               })}
             </FooterButton>
             <br />
