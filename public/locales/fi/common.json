@@ -14,7 +14,6 @@
   "email-subscription-delete": "Poista ilmoitukset",
   "email-subscription-description": "Kun tilaat ilmoitukset, saat tietoja aineiston muutoksista sähköpostilla.",
   "email-subscription-subscribed": "Sähköposti-ilmoitukset päällä",
-  "email-subscription-unsubscribed": "Sähköposti-ilmoitukset pois päältä",
   "error-not-found_collection": "Käsitekokoelmaa ei löydy",
   "error-not-found_concept": "Käsitettä ei löydy",
   "error-not-found_new-concept": "Uuden käsitteen suositettavia termejä ei ole määritetty.",

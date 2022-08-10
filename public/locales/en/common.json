@@ -14,7 +14,6 @@
   "email-subscription-delete": "Delete email subscription",
   "email-subscription-description": "Receive email notifications of changes made to this terminology.",
   "email-subscription-subscribed": "Email notifications on",
-  "email-subscription-unsubscribed": "Email notifications off",
   "error-not-found_collection": "Collection not found",
   "error-not-found_concept": "Concept not found",
   "error-not-found_new-concept": "Recommended terms for new concept are undefined.",
