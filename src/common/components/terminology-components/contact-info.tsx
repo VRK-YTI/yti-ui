@@ -9,6 +9,7 @@ import {
 import isEmail from 'validator/lib/isEmail';
 import { useTranslation } from 'next-i18next';
 import { UpdateTerminology } from '@app/modules/new-terminology/update-terminology.interface';
+import { EMAIL_MAX } from '@app/common/utils/constants';
 
 interface ContactInfoProps {
   update: ({ key, data }: UpdateTerminology) => void;
@@ -52,6 +53,7 @@ export default function ContactInfo({ update, userPosted }: ContactInfoProps) {
         type="email"
         status={status === 'error' ? 'error' : 'default'}
         statusText={status === 'error' ? t('contact-email-invalid') : ''}
+        maxLength={EMAIL_MAX}
       />
     </BlankFieldset>
   );

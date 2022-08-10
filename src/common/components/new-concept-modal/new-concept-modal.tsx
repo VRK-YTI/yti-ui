@@ -1,3 +1,4 @@
+import { TEXT_INPUT_MAX } from '@app/common/utils/constants';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -87,6 +88,7 @@ export default function NewConceptModal({
               visualPlaceholder={t('term-name-placeholder')}
               onChange={(e) => handleChange({ lang, value: e as string })}
               status={isError ? 'error' : 'default'}
+              maxLength={TEXT_INPUT_MAX}
             />
           ))}
         </TextInputBlock>

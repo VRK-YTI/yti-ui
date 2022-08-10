@@ -1,6 +1,7 @@
 import { BasicBlock } from '@app/common/components/block';
 import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
 import Separator from '@app/common/components/separator';
+import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from '@app/common/utils/constants';
 import {
   translateLanguage,
   translateTermType,
@@ -94,6 +95,7 @@ export default function TermForm({ term, update }: TermFormProps) {
         onBlur={(e) =>
           handleUpdate({ key: 'prefLabel', value: e.target.value })
         }
+        maxLength={TEXT_INPUT_MAX}
       />
       <CheckboxBlock
         defaultChecked={term.termHomographNumber ? true : false}
@@ -114,6 +116,7 @@ export default function TermForm({ term, update }: TermFormProps) {
                 value: e?.toString() ?? '',
               })
             }
+            min={0}
           />
         </BasicBlock>
       )}
@@ -173,6 +176,7 @@ export default function TermForm({ term, update }: TermFormProps) {
         visualPlaceholder={t('term-info-placeholder')}
         defaultValue={term.termInfo}
         onBlur={(e) => handleUpdate({ key: 'termInfo', value: e.target.value })}
+        maxLength={TEXT_AREA_MAX}
       />
       <WiderTextareaBlock
         labelText={t('term-scope-label')}
@@ -181,6 +185,7 @@ export default function TermForm({ term, update }: TermFormProps) {
         visualPlaceholder={t('term-scope-placeholder')}
         defaultValue={term.scope}
         onBlur={(e) => handleUpdate({ key: 'scope', value: e.target.value })}
+        maxLength={TEXT_AREA_MAX}
       />
       <WiderTextareaBlock
         labelText={t('term-sources-label')}
@@ -189,6 +194,7 @@ export default function TermForm({ term, update }: TermFormProps) {
         visualPlaceholder={t('term-sources-placeholder')}
         defaultValue={term.source}
         onBlur={(e) => handleUpdate({ key: 'source', value: e.target.value })}
+        maxLength={TEXT_AREA_MAX}
       />
 
       <Separator isLarge />
@@ -203,6 +209,7 @@ export default function TermForm({ term, update }: TermFormProps) {
         onBlur={(e) =>
           handleUpdate({ key: 'changeNote', value: e.target.value })
         }
+        maxLength={TEXT_AREA_MAX}
       />
       <WiderTextareaBlock
         labelText={t('term-history-note-label')}
@@ -213,6 +220,7 @@ export default function TermForm({ term, update }: TermFormProps) {
         onBlur={(e) =>
           handleUpdate({ key: 'historyNote', value: e.target.value })
         }
+        maxLength={TEXT_AREA_MAX}
       />
 
       <ListBlock

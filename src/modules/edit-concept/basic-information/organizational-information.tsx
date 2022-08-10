@@ -9,6 +9,7 @@ import {
 import ListBlock from '../list-block';
 import { ListType } from '../new-concept.types';
 import { BasicInfoUpdate } from './concept-basic-information';
+import { TEXT_AREA_MAX } from '@app/common/utils/constants';
 
 interface OrganizationalInformationProps {
   infoKey: string;
@@ -70,6 +71,7 @@ export default function OrganizationalInformation({
           onBlur={() => handleChange()}
           onChange={(e) => setChangeHistory(e.target.value)}
           value={changeHistory}
+          maxLength={TEXT_AREA_MAX}
         />
 
         <WiderTextarea
@@ -81,6 +83,7 @@ export default function OrganizationalInformation({
           onBlur={() => handleChange()}
           onChange={(e) => setEtymology(e.target.value)}
           value={etymology}
+          maxLength={TEXT_AREA_MAX}
         />
 
         <ListBlock

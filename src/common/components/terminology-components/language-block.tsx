@@ -1,3 +1,4 @@
+import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from '@app/common/utils/constants';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { MultiSelectData, Paragraph, Text } from 'suomifi-ui-components';
@@ -70,12 +71,14 @@ export default function LanguageBlock({
         onChange={(e) => handleInfoUpdate({ tName: e as string })}
         status={status}
         statusText={status === 'error' ? t('terminology-name-error') : ''}
+        maxLength={TEXT_INPUT_MAX}
       />
       <TextareaSmBot
         labelText={t('terminology-description')}
         hintText={t('terminology-description-hint')}
         visualPlaceholder={t('terminology-description-placeholder')}
         onChange={(e) => handleInfoUpdate({ tDescription: e.target.value })}
+        maxLength={TEXT_AREA_MAX}
       />
     </LangBlock>
   );
