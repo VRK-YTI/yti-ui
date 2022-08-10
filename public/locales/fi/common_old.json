@@ -12,9 +12,11 @@
   "terminology-search-keyword": "Hakusana",
   "terminology-search-result": "hakutulos sanastoista",
   "terminology-search-results": "hakutulosta sanastoista",
+  "terminology-search-results-terminology": "Terminologinen sanasto",
   "vocabulary-filter-clear-filter": "Tyhjennä haku",
   "vocabulary-filter-collections": "Käsitevalikoimat",
   "vocabulary-filter-search": "Hae",
   "vocabulary-filter-show-concept-states": "Näytä käsitteiden tilat",
+  "vocabulary-info-terminological-dictionary": "Terminologinen sanasto",
   "vocabulary-results-with-following-filters": "kpl seuraavilla rajauksilla"
 }
