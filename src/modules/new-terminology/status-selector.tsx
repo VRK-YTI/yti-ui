@@ -17,11 +17,7 @@ export default function StatusSelector({
   defaultValue,
 }: StatusSelectorProps) {
   const { t } = useTranslation('admin');
-  const [isError, setIsError] = useState(
-    defaultValue
-      ? false
-      : true
-  );
+  const [isError, setIsError] = useState(defaultValue ? false : true);
 
   const statuses = [
     {

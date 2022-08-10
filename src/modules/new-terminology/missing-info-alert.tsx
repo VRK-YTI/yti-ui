@@ -103,11 +103,7 @@ export default function MissingInfoAlert({ data }: MissingInfoAlertProps) {
 
   function renderStatusAlerts() {
     if (!data.status) {
-      return (
-        <li>
-          {t('alert-no-status')}
-        </li>
-      );
+      return <li>{t('alert-no-status')}</li>;
     }
   }
 }

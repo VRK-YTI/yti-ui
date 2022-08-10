@@ -97,9 +97,7 @@ export default function EditVocabulary({ terminologyId }: EditVocabularyProps) {
           <Heading variant="h3">{t('edit-terminology-info')}</Heading>
 
           <Paragraph>
-            <Text>
-              {t('info-input-description')}
-            </Text>
+            <Text>{t('info-input-description')}</Text>
           </Paragraph>
         </FormTitle>
 
