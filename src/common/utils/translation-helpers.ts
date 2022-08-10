@@ -74,3 +74,17 @@ export function translateWordClass(wordClass: string, t: TFunction) {
       return wordClass;
   }
 }
+
+export function translateTerminologyType(
+  type: string | undefined,
+  t: TFunction
+) {
+  switch (type) {
+    case 'TERMINOLOGICAL_VOCABULARY':
+      return t('TERMINOLOGICAL_VOCABULARY', { ns: 'common' });
+    case 'OTHER_VOCABULARY':
+      return t('OTHER_VOCABULARY', { ns: 'common' });
+    default:
+      return t('terminology-type-undefined', { ns: 'common' });
+  }
+}

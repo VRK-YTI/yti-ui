@@ -19,7 +19,10 @@ import FormattedDate from '@app/common/components/formatted-date';
 import { useSelector } from 'react-redux';
 import { selectLogin } from '@app/common/components/login/login.slice';
 import HasPermission from '@app/common/utils/has-permission';
-import { translateLanguage } from '@app/common/utils/translation-helpers';
+import {
+  translateLanguage,
+  translateTerminologyType,
+} from '@app/common/utils/translation-helpers';
 import Link from 'next/link';
 
 const Subscription = dynamic(
@@ -67,7 +70,10 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
           }
         />
         <BasicBlock title={t('vocabulary-info-vocabulary-type')}>
-          {t('vocabulary-info-terminological-dictionary')}
+          {translateTerminologyType(
+            data.properties?.terminologyType?.[0].value,
+            t
+          )}
         </BasicBlock>
 
         {HasPermission({

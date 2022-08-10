@@ -59,6 +59,7 @@
   "navigation-open": "Open navigation",
   "no-languages-available": "No languages available",
   "not-recommended-synonym": "Non-recommended synonym",
+  "OTHER_VOCABULARY": "Other vocabulary",
   "own-information": "Own information",
   "pagination-next-page": "Next page",
   "pagination-page": "Page",
@@ -104,6 +105,7 @@
     "valid": "Valid"
   },
   "synonym": "Synonym",
+  "TERMINOLOGICAL_VOCABULARY": "Terminological vocabulary",
   "terminology": "Terminology",
   "terminology-footer-accessibility": "Accessibility",
   "terminology-footer-feedback": "Feedback",
@@ -127,6 +129,7 @@
   "terminology-search-terminologies_plural": "Terminologies {{count}} items with following filters",
   "terminology-site-title": "Terminologies",
   "terminology-title": "Terminologies",
+  "terminology-type-undefined": "Terminology type undefined",
   "try-again": "Try again",
   "vocabulary-filter-concepts": "Concepts",
   "vocabulary-filter-filter-by-keyword": "Filter by word",

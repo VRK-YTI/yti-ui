@@ -59,6 +59,7 @@
   "navigation-open": "",
   "no-languages-available": "",
   "not-recommended-synonym": "",
+  "OTHER_VOCABULARY": "",
   "own-information": "",
   "pagination-next-page": "",
   "pagination-page": "",
@@ -104,6 +105,7 @@
     "valid": ""
   },
   "synonym": "",
+  "TERMINOLOGICAL_VOCABULARY": "",
   "terminology": "",
   "terminology-footer-accessibility": "",
   "terminology-footer-feedback": "",
@@ -127,6 +129,7 @@
   "terminology-search-terminologies_plural": "",
   "terminology-site-title": "",
   "terminology-title": "",
+  "terminology-type-undefined": "",
   "try-again": "",
   "vocabulary-filter-concepts": "",
   "vocabulary-filter-filter-by-keyword": "",
