@@ -1,11 +1,5 @@
 import styled from 'styled-components';
-import {
-  Block,
-  Button,
-  Dropdown,
-  ExpanderGroup,
-  TextInput,
-} from 'suomifi-ui-components';
+import { Block, Button, Dropdown, ExpanderGroup } from 'suomifi-ui-components';
 
 export const SearchBlock = styled(Block)`
   display: flex;
@@ -34,10 +28,6 @@ export const SearchDropdown = styled(Dropdown)`
   }
 `;
 
-export const SearchTextInput = styled(TextInput)`
-  width: 320px !important;
-`;
-
 export const SearchResultCountBlock = styled(Block)`
   background: ${(props) => props.theme.suomifi.colors.depthLight3};
   border-left: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
@@ -57,4 +47,5 @@ export const FooterButton = styled(Button)`
 export const SelectedConceptBlock = styled(Block)`
   display: flex;
   gap: ${(props) => props.theme.suomifi.spacing.xs};
+  flex-wrap: wrap;
 `;
