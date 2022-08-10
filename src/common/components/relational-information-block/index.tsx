@@ -263,7 +263,7 @@ function ManageRelationalInfoModal({
         >
           {showChosen
             ? t('add-more-concepts')
-            : t('show-chosen', { amount: chosen.length })}
+            : t('show-chosen', { count: chosen.length })}
         </Button>
       </div>
     );
