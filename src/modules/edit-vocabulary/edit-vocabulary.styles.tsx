@@ -17,7 +17,12 @@ export const FormTitle = styled(Block)`
 `;
 
 export const FormFooter = styled(Block)`
+  section {
+    width: 100%;
+  }
+
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   gap: ${(props) => props.theme.suomifi.spacing.s};
 `;

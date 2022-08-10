@@ -21,6 +21,7 @@ import { selectLogin } from '@app/common/components/login/login.slice';
 import HasPermission from '@app/common/utils/has-permission';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
 import Link from 'next/link';
+import { getPropertyValue } from '../property-value/get-property-value';
 
 const Subscription = dynamic(
   () => import('@app/common/components/subscription/subscription')
@@ -32,7 +33,7 @@ interface InfoExpanderProps {
 }
 
 export default function InfoExpander({ data }: InfoExpanderProps) {
-  const { t } = useTranslation('common');
+  const { t, i18n } = useTranslation('common');
   const user = useSelector(selectLogin());
 
   if (!data) {
@@ -53,11 +54,18 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
           title={t('vocabulary-info-description')}
           data={data.properties.description}
         />
-        <PropertyBlock
-          title={t('vocabulary-info-information-domain')}
-          property={data.references.inGroup?.[0]?.properties.prefLabel}
-          fallbackLanguage="fi"
-        />
+        <BasicBlock title={t('vocabulary-info-information-domain')}>
+          {data.references.inGroup
+            ?.map((group) =>
+              getPropertyValue({
+                property: group.properties.prefLabel,
+                language: i18n.language,
+                fallbackLanguage: 'fi',
+              })
+            )
+            .join(', ')}
+        </BasicBlock>
+
         <PropertyBlock
           title={t('vocabulary-info-languages')}
           property={data.properties.language}

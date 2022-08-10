@@ -25,6 +25,7 @@
   "alert-information-domain-undefined": "Tietoaluetta ei ole määritelty",
   "alert-main-org-undefined": "Sisällöntuottajaa ei ole määritelty",
   "alert-missing-information": "Puuttuvia tietoja",
+  "alert-no-status": "Sanaston tilaa ei ole määritetty",
   "alert-prefix-invalid-or-in-use": "Tunnus ei oikeassa muodossa tai se on jo käytössä",
   "alert-prefix-undefined": "Tunnusta ei ole määritelty",
   "allowed-file-formats": "Sallitut tiedostomuodot:",

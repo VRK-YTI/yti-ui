@@ -11,6 +11,7 @@ import { useSelector } from 'react-redux';
 import { Button, Heading, Paragraph, Text } from 'suomifi-ui-components';
 import generateNewTerminology from '../new-terminology/generate-new-terminology';
 import InfoManual from '../new-terminology/info-manual';
+import MissingInfoAlert from '../new-terminology/missing-info-alert';
 import { TallerSeparator } from '../new-terminology/new-terminology.styles';
 import { FormWrapper, FormFooter, FormTitle } from './edit-vocabulary.styles';
 import generateInitialData from './generate-initial-data';
@@ -27,10 +28,14 @@ export default function EditVocabulary({ terminologyId }: EditVocabularyProps) {
   });
   const user = useSelector(selectLogin());
   const [data, setData] = useState(generateInitialData(i18n.language, info));
+  const [isValid, setIsValid] = useState(true);
+  const [userPosted, setUserPosted] = useState(false);
   const [editTerminology, result] = useEditTerminologyMutation();
 
   const handleSubmit = () => {
-    if (!data) {
+    setUserPosted(true);
+
+    if (!data || !isValid) {
       return;
     }
 
@@ -89,25 +94,26 @@ export default function EditVocabulary({ terminologyId }: EditVocabularyProps) {
 
       <FormWrapper>
         <FormTitle>
-          <Heading variant="h3">Muokkaa sanaston tietoja</Heading>
+          <Heading variant="h3">{t('edit-terminology-info')}</Heading>
 
           <Paragraph>
             <Text>
-              Tiedot ovat pakollisia, jos niitä ei ole merkitty valinnaisiksi.
+              {t('info-input-description')}
             </Text>
           </Paragraph>
         </FormTitle>
 
         <InfoManual
-          setIsValid={() => false}
+          setIsValid={setIsValid}
           setManualData={setData}
-          userPosted={false}
+          userPosted={userPosted}
           initialData={data}
         />
 
         <TallerSeparator />
 
         <FormFooter>
+          {userPosted && data && <MissingInfoAlert data={data} />}
           <Button onClick={() => handleSubmit()}>{t('save')}</Button>
           <Button variant="secondary" onClick={() => handleReturn()}>
             {t('cancel')}

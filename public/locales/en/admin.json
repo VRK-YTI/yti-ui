@@ -25,6 +25,7 @@
   "alert-information-domain-undefined": "Information domains is undefined",
   "alert-main-org-undefined": "Contributor is undefined",
   "alert-missing-information": "Missing information",
+  "alert-no-status": "Terminology status is undefined",
   "alert-prefix-invalid-or-in-use": "Prefix is in invalid form or prefix is already in use",
   "alert-prefix-undefined": "Prefix is undefined",
   "allowed-file-formats": "Allowed file formats:",

@@ -25,6 +25,7 @@ export default function MissingInfoAlert({ data }: MissingInfoAlertProps) {
           {renderInformationDomainAlerts()}
           {renderPrefixAlerts()}
           {renderContactAlerts()}
+          {renderStatusAlerts()}
         </MissingInfoAlertUl>
       </InlineAlert>
     );
@@ -39,7 +40,8 @@ export default function MissingInfoAlert({ data }: MissingInfoAlertProps) {
       !data.mainOrg ||
       data.infoDomains.length === 0 ||
       !data.prefix[0] ||
-      data.prefix[1] === false
+      data.prefix[1] === false ||
+      (Object.keys(data).includes('status') && !data.status)
     ) {
       return true;
     }
@@ -97,5 +99,15 @@ export default function MissingInfoAlert({ data }: MissingInfoAlertProps) {
         {data.contact?.[1] === false && <li>{t('alert-contact-invalid')}</li>}
       </>
     );
+  }
+
+  function renderStatusAlerts() {
+    if (!data.status) {
+      return (
+        <li>
+          {t('alert-no-status')}
+        </li>
+      );
+    }
   }
 }

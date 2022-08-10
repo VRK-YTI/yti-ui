@@ -82,6 +82,7 @@ export default function InfoManual({
       {initialData && (
         <StatusSelector
           update={handleUpdate}
+          userPosted={userPosted}
           defaultValue={initialData.status}
         />
       )}
