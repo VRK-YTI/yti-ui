@@ -16,6 +16,7 @@ import {
   ModalContent,
   ModalFooter,
   ModalTitle,
+  SearchInput,
   Text,
 } from 'suomifi-ui-components';
 import { EditCollectionFormDataType } from '../edit-collection.types';
@@ -25,7 +26,6 @@ import {
   SearchBlock,
   SearchDropdown,
   SearchResultCountBlock,
-  SearchTextInput,
   SelectedConceptBlock,
 } from './concept-picker.styles';
 import { PickerModalProps, SelectedConceptProps } from './concept-picker.types';
@@ -91,11 +91,24 @@ export default function PickerModal({
 
   const handleCheckbox = (checkboxState: boolean, concept: Concepts) => {
     if (checkboxState) {
+      let label = concept.label;
+
+      if (Object.keys(label).some((key) => label[key].includes('<b>'))) {
+        const newLabel = new Map();
+        Object.keys(label).forEach((key) => {
+          newLabel.set(
+            key,
+            label[key].replaceAll('<b>', '').replaceAll('</b>', '')
+          );
+        });
+        label = Object.fromEntries(newLabel);
+      }
+
       setSelectedConcepts([
         ...selectedConcepts,
         {
           id: concept.id,
-          prefLabels: concept.label,
+          prefLabels: label,
         },
       ]);
     } else {
@@ -116,11 +129,6 @@ export default function PickerModal({
 
   const handleStatus = (value: string) => {
     setStatus(value);
-    searchConcept({
-      terminologyId: terminologyId,
-      query: searchTerm,
-      status: value !== 'ALL-STATUSES' ? value : undefined,
-    });
   };
 
   const handleSearch = () => {
@@ -159,14 +167,14 @@ export default function PickerModal({
 
             <SearchBlock>
               <div>
-                <SearchTextInput
+                <SearchInput
+                  clearButtonLabel=""
                   labelText={t('search-term')}
-                  icon="search"
-                  visualPlaceholder={t('enter-search-term')}
+                  searchButtonLabel=""
                   defaultValue={searchTerm}
                   onChange={(e) => setSearchTerm(e?.toString() ?? '')}
-                  onBlur={() => handleSearch()}
-                  value={searchTerm}
+                  onSearch={() => handleSearch()}
+                  visualPlaceholder={t('enter-search-term')}
                 />
 
                 <SearchDropdown
