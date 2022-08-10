@@ -84,6 +84,9 @@
   "content-creator": "",
   "continue": "",
   "contributor": "",
+  "copy-as-base": "",
+  "copy-as-base-description": "",
+  "copy-from-terminology-as-base": "",
   "definition": "",
   "definition-label-text": "",
   "description": "",
@@ -150,6 +153,7 @@
   "new-concept-to-terminology": "",
   "new-term": "",
   "new-term-modal-description": "",
+  "new-terminology-created": "",
   "no-info-domains-available": "",
   "no-languages-available": "",
   "no-other-orgs-available": "",
@@ -267,7 +271,11 @@
   "word-class-available": "",
   "word-class-hint": "",
   "word-class-no-items": "",
+<<<<<<< HEAD
   "you-have-right-edit-terminology": "",
+=======
+  "you-can-copy": "",
+>>>>>>> Added copy as a base modal for terminology
   "you-have-right-new-collection": "",
   "you-have-right-new-concept": ""
 }

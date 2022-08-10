@@ -4,6 +4,7 @@ import { Collection } from '@app/common/interfaces/collection.interface';
 import {
   VocabulariesDTO,
   VocabularyConcepts,
+  VocabularyCopyInfo,
   VocabularyInfoDTO,
 } from '@app/common/interfaces/vocabulary.interface';
 import { UrlState } from '@app/common/utils/hooks/useUrlState';
@@ -73,6 +74,19 @@ export const vocabularyApi = createApi({
         data: newTerminology,
       }),
     }),
+    postCreateVersion: builder.mutation<
+      VocabularyCopyInfo,
+      { graphId: string; newCode: string }
+    >({
+      query: ({ graphId, newCode }) => ({
+        url: `/createVersion`,
+        method: 'POST',
+        data: {
+          graphId: graphId,
+          newCode: newCode,
+        },
+      }),
+    }),
     // Note! This can added to use at any point
     // deleteVocabulary: builder.mutation<any, any>({
     //   query: (uuid) => ({
@@ -100,6 +114,7 @@ export const {
   useGetConceptResultQuery,
   useGetVocabularyQuery,
   usePostNewVocabularyMutation,
+  usePostCreateVersionMutation,
   // useDeleteVocabularyMutation,
   useGetIfNamespaceInUseQuery,
   useGetVocabulariesQuery,
