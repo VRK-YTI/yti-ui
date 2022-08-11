@@ -1,6 +1,6 @@
 {
-  "add-concept": "Add concept",
-  "add-concept_plural": "Add concepts",
+  "add-concept_one": "Add concept",
+  "add-concept_other": "Add concepts",
   "add-concept-hint-text": "You can add concepts belonging to the same subject area to one collection.",
   "add-concept-to-collection": "Add concept to collection",
   "admin-organization": "Administrative organization",
@@ -21,13 +21,15 @@
   "heading": "Collection",
   "last-modified": "Last modified",
   "new-collection-page-help": "The language-versioned fields are displayed according to the languages selected in the vocabulary information. It is recommended to fill in all the information. Information is mandatory if not specifically marked as optional.",
-  "number-of-concepts": "{{number}} concept",
+  "number-of-concepts_one": "{{count}} concept",
+  "number-of-concepts_other": "{{count}} concepts",
   "open-concept-info": "Open concept information",
   "recommended-terms": "Recommended terms",
   "search": "Search",
   "search-term": "Search term",
   "selected-concepts": "Selected concepts",
-  "show-selected-concepts": "Show selected ({{number}})",
+  "show-selected-concepts_one": "Show selected ({{count}})",
+  "show-selected-concepts_other": "Show selected ({{count}})",
   "sidebar-header": "More about collections",
   "sidebar-section-heading-other-collections": "Other collection in the terminology"
 }

@@ -117,7 +117,7 @@ export default function Search({
       {result.isSuccess ? (
         <div>
           <Text variant="bold" smallScreen>
-            {t('number-of-concepts', { amount: result.data?.totalHitCount })}
+            {t('number-of-concepts', { count: result.data?.totalHitCount })}
           </Text>
         </div>
       ) : null}

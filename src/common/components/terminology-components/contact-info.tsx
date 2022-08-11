@@ -13,12 +13,17 @@ import { UpdateTerminology } from '@app/modules/new-terminology/update-terminolo
 interface ContactInfoProps {
   update: ({ key, data }: UpdateTerminology) => void;
   userPosted: boolean;
+  defaultValue?: string;
 }
 
-export default function ContactInfo({ update, userPosted }: ContactInfoProps) {
+export default function ContactInfo({
+  update,
+  userPosted,
+  defaultValue,
+}: ContactInfoProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
-  const [contact, setContact] = useState('');
+  const [contact, setContact] = useState(defaultValue ?? '');
   const [status, setStatus] = useState<'default' | 'error'>('default');
 
   const validateContact = () => {
@@ -52,6 +57,7 @@ export default function ContactInfo({ update, userPosted }: ContactInfoProps) {
         type="email"
         status={status === 'error' ? 'error' : 'default'}
         statusText={status === 'error' ? t('contact-email-invalid') : ''}
+        defaultValue={contact}
       />
     </BlankFieldset>
   );
