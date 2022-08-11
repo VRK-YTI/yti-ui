@@ -30,6 +30,7 @@ const Subscription = dynamic(
   () => import('@app/common/components/subscription/subscription')
 );
 const NewConceptModal = dynamic(() => import('../new-concept-modal'));
+const CopyTerminologyModal = dynamic(() => import('../copy-terminology-modal'));
 
 interface InfoExpanderProps {
   data?: VocabularyInfoDTO;
@@ -170,6 +171,10 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
         >
           {t('vocabulary-info-vocabulary-export-description')}
         </BasicBlock>
+
+        {HasPermission({
+          actions: 'CREATE_TERMINOLOGY',
+        }) && <CopyTerminologyModal terminologyId={data.type.graph.id} />}
 
         {!user.anonymous && (
           <>
