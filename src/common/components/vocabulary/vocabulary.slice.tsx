@@ -79,7 +79,7 @@ export const vocabularyApi = createApi({
       { graphId: string; newCode: string }
     >({
       query: ({ graphId, newCode }) => ({
-        url: `/createVersion`,
+        url: '/createVersion',
         method: 'POST',
         data: {
           graphId: graphId,

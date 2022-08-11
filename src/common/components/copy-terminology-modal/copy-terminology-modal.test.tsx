@@ -28,12 +28,13 @@ describe('render', () => {
 
   it('should render component', () => {
     const store = makeStore(getMockContext());
+    const mockFn = jest.fn();
     render(
       <Provider store={store}>
         <CopyTerminologyModal
           terminologyId={'testid'}
           visible={true}
-          setVisible={() => {}}
+          setVisible={mockFn}
         />
       </Provider>,
       { wrapper: themeProvider }

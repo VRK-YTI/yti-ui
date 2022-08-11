@@ -51,34 +51,38 @@ export default function CopyTerminologyModal({
     setVisible(false);
   }, [setVisible]);
 
+  const showCreatedAlert = () => {
+    dispatch(
+      setAlert(
+        [
+          {
+            note: {
+              status: 0,
+              data: '',
+            },
+            displayText: t('new-terminology-created'),
+          },
+        ],
+        []
+      )
+    );
+  };
+
   useEffect(() => {
     if (createVersion.isSuccess && newGraphId) {
       handleClose();
       dispatch(terminologySearchApi.util.invalidateTags(['TerminologySearch']));
-      dispatch(
-        setAlert(
-          [
-            {
-              note: {
-                status: 0,
-                data: '',
-              },
-              displayText: t('new-terminology-created'),
-            },
-          ],
-          []
-        )
-      );
+      showCreatedAlert();
       router.push(`/terminology/${newGraphId}`);
     }
-  }, [createVersion, newGraphId]);
+  }, [createVersion, newGraphId, dispatch, handleClose, router]);
 
   const handlePost = () => {
     if (!newCode) {
       return;
     }
     setUserPosted(true);
-    var graphId = terminologyId;
+    const graphId = terminologyId;
     postCreateVersion({ graphId, newCode })
       .unwrap()
       .then((data) => {
