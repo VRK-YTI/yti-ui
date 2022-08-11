@@ -6,6 +6,7 @@ export interface TerminologySimpleDTO {
   uri: string;
   status: string;
   label: { [key: string]: string };
+  type?: string;
 }
 
 export interface ContributorsDTO {

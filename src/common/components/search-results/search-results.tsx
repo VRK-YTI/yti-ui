@@ -20,6 +20,7 @@ import SanitizedTextContent from '@app/common/components/sanitized-text-content'
 import ResultCard from './result-card';
 import ResultCardExpander from './result-card-expander';
 import { getPropertyValue } from '../property-value/get-property-value';
+import { translateTerminologyType } from '@app/common/utils/translation-helpers';
 
 interface SearchResultsProps {
   data: TerminologySearchResult | VocabularyConcepts | Collection[];
@@ -85,7 +86,10 @@ export default function SearchResults({
                   status={terminology.status}
                   title={getLabel(terminology)}
                   titleLink={`/terminology/${terminology.id}`}
-                  type={t('terminology-search-results-terminology')}
+                  type={translateTerminologyType(
+                    terminology.type ?? 'TERMINOLOGICAL_VOCABULARY',
+                    t
+                  )}
                   extra={
                     data.deepHits?.[terminology.id]?.[0] && (
                       <ResultCardExpander
