@@ -271,11 +271,8 @@
   "word-class-available": "Available word classes",
   "word-class-hint": "Toggle only if word class is either an adjective or a verb",
   "word-class-no-items": "No word classes available",
-<<<<<<< HEAD
-  "you-have-right-edit-terminology": "You have the rights to edit this terminology",
-=======
   "you-can-copy": "You can copy the terminology as a base for a newer version, where the original terminology will exist until the newer terminology is ready",
->>>>>>> Added copy as a base modal for terminology
+  "you-have-right-edit-terminology": "You have the rights to edit this terminology",
   "you-have-right-new-collection": "You have the rights to create new collections to this terminology",
   "you-have-right-new-concept": "You have the rights to create new concepts to this terminology"
 }

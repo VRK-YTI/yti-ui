@@ -271,11 +271,8 @@
   "word-class-available": "",
   "word-class-hint": "",
   "word-class-no-items": "",
-<<<<<<< HEAD
-  "you-have-right-edit-terminology": "",
-=======
   "you-can-copy": "",
->>>>>>> Added copy as a base modal for terminology
+  "you-have-right-edit-terminology": "",
   "you-have-right-new-collection": "",
   "you-have-right-new-concept": ""
 }

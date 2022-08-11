@@ -271,11 +271,8 @@
   "word-class-available": "Saatavilla olevat sanaluokat",
   "word-class-hint": "Merkitään vain jos sanaluokka on adjektiivi tai verbi",
   "word-class-no-items": "Sanaluokka ei saatavilla",
-<<<<<<< HEAD
-  "you-have-right-edit-terminology": "Sinulla on oikeudet muokata tätä sanastoa",
-=======
   "you-can-copy": "Voit kopioida sanaston pohjaksi uudelle versiolle, jolloin nykyinen sanasto säilyy olemassa kunnes uusi sanasto on valmis",
->>>>>>> Added copy as a base modal for terminology
+  "you-have-right-edit-terminology": "Sinulla on oikeudet muokata tätä sanastoa",
   "you-have-right-new-collection": "Sinulla on oikeudet luoda uusia käsitekokoelmia sanastoon",
   "you-have-right-new-concept": "Sinulla on oikeudet luoda uusia käsitteitä sanastoon"
 }
