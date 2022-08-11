@@ -51,19 +51,13 @@ export default function Subscription({ uri }: SubscriptionProps) {
 
   return (
     <>
-      <InlineAlert
-        noIcon
-        status={subscribed ? 'neutral' : 'warning'}
-        style={{ marginBottom: '20px' }}
-      >
-        <Paragraph>
-          <Text smallScreen>
-            {subscribed
-              ? t('email-subscription-subscribed')
-              : t('email-subscription-unsubscribed')}
-          </Text>
-        </Paragraph>
-      </InlineAlert>
+      {subscribed && (
+        <InlineAlert noIcon status={'neutral'} style={{ marginBottom: '20px' }}>
+          <Paragraph>
+            <Text smallScreen>{t('email-subscription-subscribed')}</Text>
+          </Paragraph>
+        </InlineAlert>
+      )}
 
       <Button
         variant="secondary"

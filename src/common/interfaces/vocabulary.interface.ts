@@ -12,6 +12,7 @@ export interface VocabularyInfoDTO
     prefLabel?: Property[];
     priority?: Property[];
     status?: Property[];
+    terminologyType?: Property[];
   };
 
   references: {

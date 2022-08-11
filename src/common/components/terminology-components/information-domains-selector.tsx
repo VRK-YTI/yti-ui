@@ -8,22 +8,34 @@ import {
   MultiselectSmBot,
 } from './terminology-components.styles';
 import { UpdateTerminology } from '@app/modules/new-terminology/update-terminology.interface';
+import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info';
 
 interface InformationDomainsSelectorProps {
   update: ({ key, data }: UpdateTerminology) => void;
   userPosted: boolean;
+  initialData?: NewTerminologyInfo;
 }
 
 export default function InformationDomainsSelector({
   update,
   userPosted,
+  initialData,
 }: InformationDomainsSelectorProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const { data: informationDomains } = useGetGroupsQuery(i18n.language);
   const [selectedInfoDomains, setSelectedInfoDomains] = useState<
     MultiSelectData[]
-  >([]);
+  >(
+    initialData
+      ? initialData.infoDomains.map((domain) => ({
+          labelText: domain.labelText,
+          uniqueItemId: domain.uniqueItemId,
+          chipText: domain.labelText,
+          disabled: false,
+        }))
+      : []
+  );
 
   const handleChange = (e: MultiSelectData[]) => {
     setSelectedInfoDomains(e);
@@ -63,6 +75,7 @@ export default function InformationDomainsSelector({
         status={
           userPosted && selectedInfoDomains.length === 0 ? 'error' : 'default'
         }
+        defaultSelectedItems={selectedInfoDomains}
       />
     </BlankFieldset>
   );

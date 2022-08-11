@@ -9,6 +9,7 @@ import {
   MultiselectSmBot,
 } from './terminology-components.styles';
 import { UpdateTerminology } from '@app/modules/new-terminology/update-terminology.interface';
+import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info';
 
 export interface TerminologyName {
   lang: string;
@@ -19,20 +20,16 @@ export interface TerminologyName {
 export interface LanguageSelectorProps {
   update: ({ key, data }: UpdateTerminology) => void;
   userPosted: boolean;
+  initialData?: NewTerminologyInfo;
 }
 
 export default function LanguageSelector({
   update,
   userPosted,
+  initialData,
 }: LanguageSelectorProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
-  const [selectedLanguages, setSelectedLanguages] = useState<MultiSelectData[]>(
-    []
-  );
-  const [terminologyNames, setTerminologyNames] = useState<TerminologyName[]>(
-    []
-  );
 
   const languages = [
     {
@@ -51,6 +48,31 @@ export default function LanguageSelector({
       uniqueItemId: 'sv',
     },
   ];
+
+  const [selectedLanguages, setSelectedLanguages] = useState<MultiSelectData[]>(
+    initialData
+      ? initialData.description[0]
+          .map((desc) => {
+            const lang = languages.find((l) => l.uniqueItemId === desc.lang);
+            return {
+              checked: true,
+              labelText: lang?.labelText ?? '',
+              name: lang?.name ?? '',
+              uniqueItemId: lang?.uniqueItemId ?? '',
+            };
+          })
+          .filter((l) => l.uniqueItemId)
+      : []
+  );
+  const [terminologyNames, setTerminologyNames] = useState<TerminologyName[]>(
+    initialData
+      ? initialData.description[0].map((desc) => ({
+          description: desc.description,
+          lang: desc.lang,
+          name: desc.name,
+        }))
+      : []
+  );
 
   const handleSelectedLanguagesChange = (e: MultiSelectData[]) => {
     setSelectedLanguages(e);
@@ -146,6 +168,7 @@ export default function LanguageSelector({
         status={
           userPosted && selectedLanguages.length === 0 ? 'error' : 'default'
         }
+        defaultSelectedItems={selectedLanguages}
       />
 
       {selectedLanguages.map((language, idx) => (
@@ -155,6 +178,11 @@ export default function LanguageSelector({
           handleUpdate={handleSelectedLanguageUpdate}
           userPosted={userPosted}
           id={language.uniqueItemId}
+          initialData={
+            terminologyNames.filter(
+              (name) => name.lang === language.uniqueItemId
+            )[0]
+          }
           key={`${language}-${idx}`}
         />
       ))}

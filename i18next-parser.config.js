@@ -12,8 +12,5 @@ module.exports = {
       lexer: 'JsxLexer',
     },
   ],
-  i18nextOptions: {
-    compatibilityJSON: 'v3',
-  },
   defaultNamespace: 'common',
 };

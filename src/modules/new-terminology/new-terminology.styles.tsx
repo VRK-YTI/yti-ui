@@ -4,6 +4,7 @@ import {
   Button,
   Icon,
   ModalTitle,
+  SingleSelect,
   StaticIcon,
 } from 'suomifi-ui-components';
 import Separator from '@app/common/components/separator';
@@ -128,4 +129,8 @@ export const SuccessIndicator = styled(Icon)`
 
 export const TallerSeparator = styled(Separator)`
   margin: 30px 0;
+`;
+
+export const StatusSingleSelect = styled(SingleSelect)`
+  margin-bottom: ${(props) => props.theme.suomifi.spacing.m};
 `;

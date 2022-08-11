@@ -1,6 +1,6 @@
 {
-  "add-concept": "Lisää käsite",
-  "add-concept_plural": "Lisää käsitteet",
+  "add-concept_one": "Lisää käsite",
+  "add-concept_other": "Lisää käsitteet",
   "add-concept-hint-text": "Voit lisätä esimerkiksi samaan aihepiiriin kuuluvat käsitteet yhteen käsitekokoelmaan.",
   "add-concept-to-collection": "Lisää käsite käsitekokoelmaan",
   "admin-organization": "Vastuuorganisaatio",
@@ -21,13 +21,15 @@
   "heading": "Käsitekokoelma",
   "last-modified": "Viimeksi muokattu",
   "new-collection-page-help": "Kieliversioidut kentät näytetään sanaston tiedoissa valittujen kielten mukaan. Suositeltavaa on täyttää kaikki tiedot. Tiedot on pakollisia, jos niitä ei ole merkitty valinnaisiksi.",
-  "number-of-concepts": "{{number}} käsitettä",
+  "number-of-concepts_one": "{{count}} käsite",
+  "number-of-concepts_other": "{{count}} käsitettä",
   "open-concept-info": "Avaa käsitteen tiedot",
   "recommended-terms": "Suositettavat termit",
   "search": "Hae",
   "search-term": "Hakusana",
   "selected-concepts": "Valitut käsitteet",
-  "show-selected-concepts": "Näytä valinnat ({{number}})",
+  "show-selected-concepts_one": "Näytä valinnat ({{count}})",
+  "show-selected-concepts_other": "Näytä valinnat ({{count}})",
   "sidebar-header": "Lisää käsitekokoelmista",
   "sidebar-section-heading-other-collections": "Muut käsitekokoelmat tässä sanastossa"
 }
