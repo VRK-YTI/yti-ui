@@ -79,7 +79,8 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
         />
         <BasicBlock title={t('vocabulary-info-vocabulary-type')}>
           {translateTerminologyType(
-            data.properties?.terminologyType?.[0].value,
+            data.properties?.terminologyType?.[0].value ??
+              'TERMINOLOGICAL_VOCABULARY',
             t
           )}
         </BasicBlock>
