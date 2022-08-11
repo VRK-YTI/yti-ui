@@ -59,7 +59,6 @@
   "navigation-open": "Avaa navigaatio",
   "no-languages-available": "Kieliä ei saatavilla",
   "not-recommended-synonym": "Ei suositettava synonyymi",
-  "OTHER_VOCABULARY": "Muu sanasto",
   "own-information": "Omat tiedot",
   "pagination-next-page": "Seuraava sivu",
   "pagination-page": "Sivu",
@@ -105,7 +104,6 @@
     "valid": "Voimassa oleva"
   },
   "synonym": "Synonyymi",
-  "TERMINOLOGICAL_VOCABULARY": "Terminologinen sanasto",
   "terminology": "Sanasto",
   "terminology-footer-accessibility": "Saavutettavuus",
   "terminology-footer-feedback": "Anna palautetta",
@@ -128,7 +126,11 @@
   "terminology-search-terminologies_plural": "Sanastoja {{count}} kpl seuraavilla rajauksilla",
   "terminology-site-title": "Sanastot",
   "terminology-title": "Sanastot",
-  "terminology-type-undefined": "Sanaston tyyppiä ei ole määritetty",
+  "terminology-type": {
+    "other-vocabulary": "Muu sanasto",
+    "terminologyical-vocabulary": "Terminologinen sanasto",
+    "undefined": "Sanaston tyyppiä ei ole määritetty"
+  },
   "try-again": "Yritä uudestaan",
   "vocabulary-filter-concepts": "Käsitteet",
   "vocabulary-filter-filter-by-keyword": "Rajaa sanalla",

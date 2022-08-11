@@ -75,16 +75,13 @@ export function translateWordClass(wordClass: string, t: TFunction) {
   }
 }
 
-export function translateTerminologyType(
-  type: string | undefined,
-  t: TFunction
-) {
+export function translateTerminologyType(type: string, t: TFunction) {
   switch (type) {
     case 'TERMINOLOGICAL_VOCABULARY':
-      return t('TERMINOLOGICAL_VOCABULARY', { ns: 'common' });
+      return t('terminology-type.terminologyical-vocabulary', { ns: 'common' });
     case 'OTHER_VOCABULARY':
-      return t('OTHER_VOCABULARY', { ns: 'common' });
+      return t('terminology-type.other-vocabulary', { ns: 'common' });
     default:
-      return t('terminology-type-undefined', { ns: 'common' });
+      return t('terminology-type.undefined', { ns: 'common' });
   }
 }
