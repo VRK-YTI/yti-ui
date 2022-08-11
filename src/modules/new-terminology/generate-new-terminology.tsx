@@ -4,10 +4,24 @@ import { v4 } from 'uuid';
 
 interface GenerateNewTerminologyProps {
   data: NewTerminologyInfo;
+  code?: string;
+  createdBy?: string;
+  createdDate?: string;
+  id?: string;
+  lastModifiedBy?: string;
+  terminologyId?: string;
+  uri?: string;
 }
 
 export default function generateNewTerminology({
   data,
+  code,
+  createdBy,
+  createdDate,
+  id,
+  lastModifiedBy,
+  terminologyId,
+  uri,
 }: GenerateNewTerminologyProps) {
   if (!data.mainOrg) {
     return;
@@ -18,8 +32,8 @@ export default function generateNewTerminology({
 
   const now = new Date();
   const UUID = v4();
-  postData.id = UUID;
-  postData.createdDate = now.toISOString();
+  postData.id = id ? id : UUID;
+  postData.createdDate = createdDate ? createdDate : now.toISOString();
   postData.lastModifiedDate = now.toISOString();
 
   postData.properties.contact = [
@@ -30,34 +44,23 @@ export default function generateNewTerminology({
     },
   ];
 
-  data.description[0].map((desc) => {
-    postData.properties.description = [
-      ...postData.properties.description,
-      {
-        lang: desc.lang,
-        regex: regex,
-        value: desc.description,
-      },
-    ];
+  postData.properties.description = data.description[0].map((desc) => ({
+    lang: desc.lang,
+    regex: regex,
+    value: desc.description,
+  }));
 
-    postData.properties.prefLabel = [
-      ...postData.properties.prefLabel,
-      {
-        lang: desc.lang,
-        regex: regex,
-        value: desc.name,
-      },
-    ];
+  postData.properties.prefLabel = data.description[0].map((desc) => ({
+    lang: desc.lang,
+    regex: regex,
+    value: desc.name,
+  }));
 
-    postData.properties.language = [
-      ...postData.properties.language,
-      {
-        lang: '',
-        regex: regex,
-        value: desc.lang,
-      },
-    ];
-  });
+  postData.properties.language = data.description[0].map((desc) => ({
+    lang: '',
+    regex: regex,
+    value: desc.lang,
+  }));
 
   postData.properties.terminologyType = [
     {
@@ -79,20 +82,50 @@ export default function generateNewTerminology({
     },
   ];
 
-  data.infoDomains.map((infoDomain) => {
-    postData.references.inGroup = [
-      ...postData.references.inGroup,
-      {
-        id: infoDomain.uniqueItemId,
-        type: {
-          graph: {
-            id: infoDomain.groupId,
-          },
-          id: 'Group',
+  if (terminologyId) {
+    postData.references.contributor[0].type.uri = '';
+  }
+
+  postData.references.inGroup = data.infoDomains.map((infoDomain) => {
+    const obj: NewTerminology['references']['inGroup'][0] = {
+      id: infoDomain.uniqueItemId,
+      type: {
+        graph: {
+          id: infoDomain.groupId,
         },
+        id: 'Group',
+      },
+    };
+
+    if (terminologyId) {
+      obj.type.uri = '';
+    }
+
+    return obj;
+  });
+
+  postData.createdBy = createdBy ? createdBy : '';
+  postData.lastModifiedBy = lastModifiedBy ? lastModifiedBy : '';
+
+  if (code) {
+    postData.code = code;
+  }
+
+  if (terminologyId) {
+    postData.type.uri = '';
+    postData.type.graph.id = terminologyId;
+    postData.properties.origin = [
+      {
+        lang: '',
+        regex: regex,
+        value: '',
       },
     ];
-  });
+  }
+
+  if (uri) {
+    postData.uri = uri;
+  }
 
   return postData;
 }
@@ -137,6 +170,7 @@ const template: NewTerminology = {
   referrers: {},
   type: {
     graph: {
+      // Default value for TerminologicalVocabulary nodes
       id: '61cf6bde-46e6-40bb-b465-9b2c66bf4ad8',
     },
     id: 'TerminologicalVocabulary',

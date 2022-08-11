@@ -17,22 +17,32 @@ import {
   OrgSingleSelect,
 } from './terminology-components.styles';
 import { UpdateTerminology } from '@app/modules/new-terminology/update-terminology.interface';
+import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info';
 
 export interface OrganizationSelectorProps {
   update: ({ key, data }: UpdateTerminology) => void;
   userPosted: boolean;
+  initialData?: NewTerminologyInfo;
 }
 
 export default function OrganizationSelector({
   update,
   userPosted,
+  initialData,
 }: OrganizationSelectorProps) {
   const user = useSelector(selectLogin());
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const { data: organizations } = useGetOrganizationsQuery(i18n.language);
   const [selectedOrganization, setSelectedOrganization] =
-    useState<SingleSelectData | null>();
+    useState<SingleSelectData | null>(
+      initialData?.mainOrg
+        ? {
+            labelText: initialData.mainOrg.labelText,
+            uniqueItemId: initialData.mainOrg?.uniqueItemId,
+          }
+        : null
+    );
   const [, setSelectedOtherOrganizations] = useState<MultiSelectData[]>([]);
   const [showOtherOrgSelector, setShowOtherOrgSelector] =
     useState<boolean>(false);
@@ -93,6 +103,7 @@ export default function OrganizationSelector({
             noItemsText={t('org-no-items')}
             visualPlaceholder={t('org-visual-placeholder')}
             status={userPosted && !selectedOrganization ? 'error' : 'default'}
+            defaultSelectedItem={selectedOrganization ?? undefined}
           />
           <OrgCheckbox
             checked={showOtherOrgSelector}

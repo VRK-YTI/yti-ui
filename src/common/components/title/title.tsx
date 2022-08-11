@@ -22,9 +22,10 @@ import { translateStatus } from '@app/common/utils/translation-helpers';
 
 interface TitleProps {
   info: string | VocabularyInfoDTO;
+  noExpander?: boolean;
 }
 
-export default function Title({ info }: TitleProps) {
+export default function Title({ info, noExpander }: TitleProps) {
   const { t, i18n } = useTranslation('common');
   const { isSmall } = useBreakpoints();
   const titleRef = useTitleRef();
@@ -71,7 +72,7 @@ export default function Title({ info }: TitleProps) {
           {translateStatus(status, t)}
         </StatusChip>
 
-        <InfoExpander data={info} />
+        {!noExpander && <InfoExpander data={info} />}
       </TitleWrapper>
     );
   }

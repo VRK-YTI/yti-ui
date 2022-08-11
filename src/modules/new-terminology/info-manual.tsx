@@ -11,21 +11,24 @@ import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info'
 import { useTranslation } from 'next-i18next';
 import { TerminologyDataInitialState } from './terminology-initial-state';
 import { UpdateTerminology } from './update-terminology.interface';
+import StatusSelector from './status-selector';
 
 interface InfoManualProps {
   setIsValid: (valid: boolean) => void;
   setManualData: (object: NewTerminologyInfo) => void;
   userPosted: boolean;
+  initialData?: NewTerminologyInfo;
 }
 
 export default function InfoManual({
   setIsValid,
   setManualData,
   userPosted,
+  initialData,
 }: InfoManualProps) {
   const { t } = useTranslation('admin');
   const [terminologyData, setTerminologyData] = useState<NewTerminologyInfo>(
-    TerminologyDataInitialState
+    initialData ? initialData : TerminologyDataInitialState
   );
 
   useEffect(() => {
@@ -60,20 +63,44 @@ export default function InfoManual({
   return (
     <form>
       <TallerSeparator />
-      <LanguageSelector update={handleUpdate} userPosted={userPosted} />
+      <LanguageSelector
+        update={handleUpdate}
+        userPosted={userPosted}
+        initialData={terminologyData}
+      />
       <TallerSeparator />
       <Paragraph marginBottomSpacing="m">
         <Text variant="bold">{t('terminology-other-information')}</Text>
       </Paragraph>
-      <OrganizationSelector update={handleUpdate} userPosted={userPosted} />
-      <TypeSelector update={handleUpdate} />
+      <OrganizationSelector
+        update={handleUpdate}
+        userPosted={userPosted}
+        initialData={initialData}
+      />
+      <TypeSelector update={handleUpdate} defaultValue={initialData?.type} />
+
+      {initialData && (
+        <StatusSelector
+          update={handleUpdate}
+          userPosted={userPosted}
+          defaultValue={initialData.status}
+        />
+      )}
+
       <InformationDomainsSelector
         update={handleUpdate}
         userPosted={userPosted}
+        initialData={initialData}
       />
-      <Prefix update={handleUpdate} userPosted={userPosted} />
+
+      {!initialData && <Prefix update={handleUpdate} userPosted={userPosted} />}
+
       <TallerSeparator />
-      <ContactInfo update={handleUpdate} userPosted={userPosted} />
+      <ContactInfo
+        update={handleUpdate}
+        userPosted={userPosted}
+        defaultValue={initialData?.contact[0]}
+      />
     </form>
   );
 }
