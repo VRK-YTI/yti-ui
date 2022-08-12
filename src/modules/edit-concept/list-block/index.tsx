@@ -188,6 +188,7 @@ function ListItem({
             defaultValue={item.value}
             $noTopMargin
             onBlur={(e) => handleUpdate(item.id, e.target.value, '')}
+            maxLength={TEXT_AREA_MAX}
           />
           <Button
             variant="secondaryNoBorder"
