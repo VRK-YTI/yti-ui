@@ -37,7 +37,11 @@ export default function ConceptPicker({
         title={t('concepts-in-collection')}
         extra={
           <BasicBlockExtraWrapper>
-            <Button variant="secondary" onClick={() => handleClick()} id="add-concepts-button">
+            <Button
+              variant="secondary"
+              onClick={() => handleClick()}
+              id="add-concepts-button"
+            >
               {t('add-concept-to-collection')}
             </Button>
             {visible && (

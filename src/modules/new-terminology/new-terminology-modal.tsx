@@ -114,7 +114,7 @@ export default function NewTerminologyModal({
           inputType === 'file' && userPosted ? { paddingBottom: '18px' } : {}
         }
       >
-        <ModalTitleAsH1 as={'h1'}>
+        <ModalTitleAsH1 as={'h1'} id="new-terminology-title">
           {!startFileUpload ? t('add-new-terminology') : t('downloading-file')}
         </ModalTitleAsH1>
 

@@ -50,8 +50,8 @@ export default function LoginModalView({
         </ModalContentSmPadding>
 
         <ModalFooter>
-          <Button onClick={(e) => login(e)}>{t('site-to-login')}</Button>
-          <Button variant="secondaryNoBorder" onClick={() => setVisible(false)}>
+          <Button onClick={(e) => login(e)} id="to-login-button">{t('site-to-login')}</Button>
+          <Button variant="secondaryNoBorder" onClick={() => setVisible(false)} id="cancel-button">
             {t('site-cancel')}
           </Button>
         </ModalFooter>

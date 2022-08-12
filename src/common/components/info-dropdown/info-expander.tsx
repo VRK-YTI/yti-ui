@@ -52,12 +52,14 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
         <MultilingualPropertyBlock
           title={t('vocabulary-info-name')}
           data={data.properties.prefLabel}
+          id="preferred-label"
         />
         <MultilingualPropertyBlock
           title={t('vocabulary-info-description')}
           data={data.properties.description}
+          id="description"
         />
-        <BasicBlock title={t('vocabulary-info-information-domain')}>
+        <BasicBlock title={t('vocabulary-info-information-domain')} id="information-domains">
           {data.references.inGroup
             ?.map((group) =>
               getPropertyValue({
@@ -76,8 +78,9 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
           valueAccessor={({ value }) =>
             `${translateLanguage(value, t)} ${value.toUpperCase()}`
           }
+          id="languages"
         />
-        <BasicBlock title={t('vocabulary-info-vocabulary-type')}>
+        <BasicBlock title={t('vocabulary-info-vocabulary-type')} id="type">
           {translateTerminologyType(
             data.properties?.terminologyType?.[0].value ??
               'TERMINOLOGICAL_VOCABULARY',
@@ -108,6 +111,7 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
                   </Link>
                 </BasicBlockExtraWrapper>
               }
+              id="edit-terminology-block"
             >
               {t('you-have-right-edit-terminology', { ns: 'admin' })}
             </BasicBlock>
@@ -149,6 +153,7 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
                   </Link>
                 </BasicBlockExtraWrapper>
               }
+              id="new-collection-block"
             >
               {t('you-have-right-new-collection', { ns: 'admin' })}
             </BasicBlock>
@@ -170,12 +175,13 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
                     '_blank'
                   );
                 }}
-                id="download-terminology-button"
+                id="export-terminology-button"
               >
                 {t('vocabulary-info-vocabulary-export')} (.xlsx)
               </Button>
             </BasicBlockExtraWrapper>
           }
+          id="export-terminology-block"
         >
           {t('vocabulary-info-vocabulary-export-description')}
         </BasicBlock>
@@ -193,6 +199,7 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
                   />
                 </BasicBlockExtraWrapper>
               }
+              id="email-subscription-block"
             >
               {t('email-subscription-description')}
             </BasicBlock>
@@ -209,16 +216,17 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
           title={t('vocabulary-info-organization')}
           property={data.references.contributor?.[0]?.properties.prefLabel}
           fallbackLanguage="fi"
+          id="organization"
         />
-        <BasicBlock title={t('vocabulary-info-created-at')}>
+        <BasicBlock title={t('vocabulary-info-created-at')} id="created-at">
           <FormattedDate date={data.createdDate} />
           {data.createdBy && `, ${data.createdBy}`}
         </BasicBlock>
-        <BasicBlock title={t('vocabulary-info-modified-at')}>
+        <BasicBlock title={t('vocabulary-info-modified-at')} id="modified-at">
           <FormattedDate date={data.lastModifiedDate} />
           {data.lastModifiedBy && `, ${data.lastModifiedBy}`}
         </BasicBlock>
-        <BasicBlock title="URI">{data.uri}</BasicBlock>
+        <BasicBlock title="URI" id="uri">{data.uri}</BasicBlock>
       </ExpanderContent>
     </InfoExpanderWrapper>
   );

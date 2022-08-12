@@ -195,7 +195,9 @@ export default function PickerModal({
                 </SearchDropdown>
               </div>
               <div>
-                <Button onClick={() => handleSearch()} id="search-button">{t('search')}</Button>
+                <Button onClick={() => handleSearch()} id="search-button">
+                  {t('search')}
+                </Button>
 
                 <Button
                   variant="secondaryNoBorder"
@@ -230,13 +232,14 @@ export default function PickerModal({
                         hintText={`${translateStatus(
                           concept.status,
                           t
-                        )} \u00B7 ${concept.terminology.label[i18n.language] ??
-                        concept.terminology.label.fi ??
-                        concept.terminology.label[
-                        Object.keys(concept.terminology.label)[0]
-                        ] ??
-                        ''
-                          }`}
+                        )} \u00B7 ${
+                          concept.terminology.label[i18n.language] ??
+                          concept.terminology.label.fi ??
+                          concept.terminology.label[
+                            Object.keys(concept.terminology.label)[0]
+                          ] ??
+                          ''
+                        }`}
                         id={`checkbox-id-${concept.id}`}
                         onClick={(e) =>
                           handleCheckbox(e.checkboxState, concept)
@@ -287,7 +290,11 @@ export default function PickerModal({
         <FooterButton onClick={() => handleClick()} id="submit-button">
           {t('add-concept', { count: selectedConcepts.length })}
         </FooterButton>
-        <FooterButton variant="secondary" onClick={() => setVisible(false)} id="cancel-button">
+        <FooterButton
+          variant="secondary"
+          onClick={() => setVisible(false)}
+          id="cancel-button"
+        >
           {t('cancel-variant', { ns: 'admin' })}
         </FooterButton>
       </ModalFooter>

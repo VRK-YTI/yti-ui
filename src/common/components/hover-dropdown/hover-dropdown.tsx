@@ -19,14 +19,14 @@ export interface HoverDropdownProps {
 
 export default function HoverDropdown({ children, items }: HoverDropdownProps) {
   return (
-    <HoverDropdownWrapper>
+    <HoverDropdownWrapper id="impersonate-block">
       <div>{children}</div>
       <HoverDropdownListWrapper>
         <HoverDropdownList>
           {items?.map(({ key, value, label, onClick }) => (
             <HoverDropdownItem key={key}>
               {value ? (
-                <Link href="#" onClick={onClick}>
+                <Link href="#" onClick={onClick} className="impersonate-item">
                   {label}
                 </Link>
               ) : (
