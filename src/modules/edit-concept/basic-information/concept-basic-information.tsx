@@ -14,6 +14,7 @@ import { ExpanderGroup } from 'suomifi-ui-components';
 import { BasicInfo, ListType } from '../new-concept.types';
 import ListBlock from '../list-block';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
+import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from '@app/common/utils/constants';
 
 interface ConceptBasicInformationProps {
   updateBasicInformation: (value: BasicInfo) => void;
@@ -135,6 +136,7 @@ export default function ConceptBasicInformation({
           })
         }
         defaultValue={basicInfo.definition[lang] ?? ''}
+        maxLength={TEXT_AREA_MAX}
         className="definition-input"
       />
     );
@@ -153,6 +155,7 @@ export default function ConceptBasicInformation({
           })
         }
         defaultValue={basicInfo.subject}
+        maxLength={TEXT_INPUT_MAX}
         id="subject-input"
       />
     );

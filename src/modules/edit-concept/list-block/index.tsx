@@ -13,6 +13,7 @@ import { ListType } from '../new-concept.types';
 import { TermFormUpdate } from '../concept-terms-block/term-form';
 import { BasicInfoUpdate } from '../basic-information/concept-basic-information';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
+import { TEXT_AREA_MAX } from '@app/common/utils/constants';
 
 interface ListBlockProps {
   update: (object: BasicInfoUpdate & TermFormUpdate) => void;
@@ -171,6 +172,7 @@ function ListItem({
           visualPlaceholder={inputPlaceholder}
           defaultValue={item.value}
           onBlur={(e) => handleUpdate(item.id, e.target.value, item.lang)}
+          maxLength={TEXT_AREA_MAX}
         />
       </LI>
     );

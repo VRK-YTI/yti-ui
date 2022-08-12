@@ -1,5 +1,6 @@
 import { BasicBlock } from '@app/common/components/block';
 import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
+import { TEXT_AREA_MAX } from '@app/common/utils/constants';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { ExpanderTitleButton } from 'suomifi-ui-components';
@@ -73,6 +74,7 @@ export default function ConceptDiagramsAndSources({
           onBlur={() => handleBlur()}
           onChange={(e) => setSources(e.target.value)}
           value={sources}
+          maxLength={TEXT_AREA_MAX}
           id="sources-input"
         />
       </ExpanderContentFitted>

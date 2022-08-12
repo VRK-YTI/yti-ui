@@ -1,3 +1,4 @@
+import { TEXT_INPUT_MAX } from '@app/common/utils/constants';
 import { translateWordClass } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
@@ -72,6 +73,7 @@ export default function OtherInformation({
           onChange={(e) => setConceptClass(e?.toString())}
           value={conceptClass}
           onBlur={() => handleChange()}
+          maxLength={TEXT_INPUT_MAX}
           id="concept-class-input"
         />
 

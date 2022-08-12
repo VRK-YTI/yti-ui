@@ -10,6 +10,7 @@ import {
 } from './terminology-components.styles';
 import { UpdateTerminology } from '@app/modules/new-terminology/update-terminology.interface';
 import { v4 } from 'uuid';
+import { TEXT_INPUT_MAX } from '@app/common/utils/constants';
 
 export interface PrefixProps {
   update: ({ key, data }: UpdateTerminology) => void;
@@ -108,6 +109,7 @@ export default function Prefix({ update, userPosted }: PrefixProps) {
                 : t('prefix-invalid')
               : ''
           }
+          maxLength={TEXT_INPUT_MAX}
           id="prefix-text-input"
         />
       )}

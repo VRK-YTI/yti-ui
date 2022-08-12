@@ -3,6 +3,7 @@ import { TextInput } from 'suomifi-ui-components';
 import useUrlState, {
   initialUrlState,
 } from '@app/common/utils/hooks/useUrlState';
+import { TEXT_INPUT_MAX } from '@app/common/utils/constants';
 
 interface KeywordFilterProps {
   title: string;
@@ -39,6 +40,7 @@ export function KeywordFilter({
         value={inputValue}
         visualPlaceholder={visualPlaceholder}
         fullWidth
+        maxLength={TEXT_INPUT_MAX}
         id="filter-keyword-input"
       />
     </div>

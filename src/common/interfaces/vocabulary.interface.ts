@@ -21,6 +21,11 @@ export interface VocabularyInfoDTO
   };
 }
 
+export interface VocabularyCopyInfo {
+  newGraphId: string;
+  uri: string;
+}
+
 export interface VocabularyConcepts {
   concepts: VocabularyConceptDTO[];
   resultStart: number;

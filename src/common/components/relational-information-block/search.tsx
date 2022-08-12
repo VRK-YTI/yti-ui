@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { Button, SearchInput, SingleSelect, Text } from 'suomifi-ui-components';
 import { SearchBlock } from './relation-information-block.styles';
 import useMountEffect from '@app/common/utils/hooks/use-mount-effect';
+import { TEXT_INPUT_MAX } from '@app/common/utils/constants';
 
 interface SearchProps {
   setSearchResults: (value: Concepts[]) => void;
@@ -93,6 +94,7 @@ export default function Search({
           onChange={(value) => setSearchTerm(value as string)}
           value={searchTerm}
           onSearch={() => handleSearch()}
+          maxLength={TEXT_INPUT_MAX}
           id="keyword-input"
         />
         <SingleSelect
