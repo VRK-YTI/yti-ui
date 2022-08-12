@@ -21,7 +21,7 @@ export default function PropertyBlock({
   fallbackLanguage,
   delimiter = false,
   extra,
-  id
+  id,
 }: PropertyBlockProps) {
   const { i18n } = useTranslation('common');
 

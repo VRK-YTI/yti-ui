@@ -59,7 +59,9 @@ export default function ResultCard({
   return (
     <CardBlock padding="m" className="result-card">
       {contributor && (
-        <OrganizationParagraph id="card-contributor">{contributor}</OrganizationParagraph>
+        <OrganizationParagraph id="card-contributor">
+          {contributor}
+        </OrganizationParagraph>
       )}
       <Link passHref href={titleLink}>
         <TitleLink href="">
@@ -100,7 +102,10 @@ export default function ResultCard({
         {noChip ? (
           translateStatus(status ?? 'DRAFT', t)
         ) : (
-          <Status valid={status === 'VALID' ? 'true' : undefined} id="card-status">
+          <Status
+            valid={status === 'VALID' ? 'true' : undefined}
+            id="card-status"
+          >
             {translateStatus(status ?? 'DRAFT', t)}
           </Status>
         )}

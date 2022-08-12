@@ -59,7 +59,10 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
           data={data.properties.description}
           id="description"
         />
-        <BasicBlock title={t('vocabulary-info-information-domain')} id="information-domains">
+        <BasicBlock
+          title={t('vocabulary-info-information-domain')}
+          id="information-domains"
+        >
           {data.references.inGroup
             ?.map((group) =>
               getPropertyValue({
@@ -226,7 +229,9 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
           <FormattedDate date={data.lastModifiedDate} />
           {data.lastModifiedBy && `, ${data.lastModifiedBy}`}
         </BasicBlock>
-        <BasicBlock title="URI" id="uri">{data.uri}</BasicBlock>
+        <BasicBlock title="URI" id="uri">
+          {data.uri}
+        </BasicBlock>
       </ExpanderContent>
     </InfoExpanderWrapper>
   );
