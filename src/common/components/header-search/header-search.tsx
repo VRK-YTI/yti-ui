@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 import useUrlState, {
   initialUrlState,
 } from '@app/common/utils/hooks/useUrlState';
+import { TEXT_INPUT_MAX } from '@app/common/utils/constants';
 
 export interface HeaderSearchProps {
   isSearchOpen: boolean;
@@ -61,6 +62,7 @@ export default function HeaderSearch({
           setSearchInputValue(String(value ?? ''));
           if (value === '') search();
         }}
+        maxLength={TEXT_INPUT_MAX}
       />
       {isSmall ? (
         <CloseButton

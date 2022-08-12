@@ -1,3 +1,4 @@
+import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from '@app/common/utils/constants';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import {
@@ -48,12 +49,14 @@ export default function NewDiagramOrLink({
             onBlur={(e) =>
               setDiagramInfo({ ...diagramInfo, diagramName: e.target.value })
             }
+            maxLength={TEXT_INPUT_MAX}
           />
           <TextInput
             labelText={t('diagram-url')}
             onBlur={(e) =>
               setDiagramInfo({ ...diagramInfo, diagramUrl: e.target.value })
             }
+            maxLength={TEXT_INPUT_MAX}
           />
           <Textarea
             labelText={t('description')}
@@ -63,6 +66,7 @@ export default function NewDiagramOrLink({
               setDiagramInfo({ ...diagramInfo, description: e.target.value })
             }
             fullWidth
+            maxLength={TEXT_AREA_MAX}
           />
         </ModalContentFitted>
         <ModalFooter>

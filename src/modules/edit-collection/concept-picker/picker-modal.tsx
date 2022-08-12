@@ -2,6 +2,7 @@ import { useSearchConceptMutation } from '@app/common/components/concept/concept
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import SanitizedTextContent from '@app/common/components/sanitized-text-content';
 import { Concepts } from '@app/common/interfaces/concepts.interface';
+import { TEXT_INPUT_MAX } from '@app/common/utils/constants';
 import { translateStatus } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
@@ -175,6 +176,7 @@ export default function PickerModal({
                   onChange={(e) => setSearchTerm(e?.toString() ?? '')}
                   onSearch={() => handleSearch()}
                   visualPlaceholder={t('enter-search-term')}
+                  maxLength={TEXT_INPUT_MAX}
                 />
 
                 <SearchDropdown

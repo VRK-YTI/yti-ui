@@ -31,6 +31,7 @@ import { useGetCollectionQuery } from '@app/common/components/collection/collect
 import { Collection } from '@app/common/interfaces/collection.interface';
 import useUser from '@app/common/utils/hooks/useUser';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
+import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from '@app/common/utils/constants';
 
 export default function EditCollection({
   terminologyId,
@@ -227,6 +228,7 @@ export default function EditCollection({
               defaultValue={
                 formData.name.find((n) => n.lang === language)?.value
               }
+              maxLength={TEXT_INPUT_MAX}
             />
           ))}
 
@@ -243,6 +245,7 @@ export default function EditCollection({
               defaultValue={
                 formData.definition.find((n) => n.lang === language)?.value
               }
+              maxLength={TEXT_AREA_MAX}
             />
           ))}
         </TextBlockWrapper>

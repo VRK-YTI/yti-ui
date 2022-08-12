@@ -1,5 +1,6 @@
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import Separator from '@app/common/components/separator';
+import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from '@app/common/utils/constants';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
@@ -126,6 +127,7 @@ export default function NewTermModal({
             handleUpdate({ key: 'prefLabel', value: e.target.value })
           }
           status={invalidData.prefLabel ? 'error' : undefined}
+          maxLength={TEXT_INPUT_MAX}
         />
 
         <CheckboxBlock onClick={() => handleSetIsHomographic()}>
@@ -143,6 +145,7 @@ export default function NewTermModal({
                 value: e.target.value,
               })
             }
+            maxLength={TEXT_INPUT_MAX}
           />
         )}
 
@@ -225,6 +228,7 @@ export default function NewTermModal({
           onChange={(e) =>
             handleUpdate({ key: 'termInfo', value: e.target.value })
           }
+          maxLength={TEXT_AREA_MAX}
         />
 
         <WiderTextareaBlock
@@ -235,6 +239,7 @@ export default function NewTermModal({
           onChange={(e) =>
             handleUpdate({ key: 'scope', value: e.target.value })
           }
+          maxLength={TEXT_AREA_MAX}
         />
 
         <TermEquivalencyBlock>
@@ -263,6 +268,7 @@ export default function NewTermModal({
           onChange={(e) =>
             handleUpdate({ key: 'source', value: e.target.value })
           }
+          maxLength={TEXT_AREA_MAX}
         />
 
         <Separator isLarge />
@@ -279,6 +285,7 @@ export default function NewTermModal({
           onChange={(e) =>
             handleUpdate({ key: 'changeNote', value: e.target.value })
           }
+          maxLength={TEXT_AREA_MAX}
         />
         <WiderTextareaBlock
           labelText={t('term-history-note-label')}
@@ -288,6 +295,7 @@ export default function NewTermModal({
           onChange={(e) =>
             handleUpdate({ key: 'historyNote', value: e.target.value })
           }
+          maxLength={TEXT_AREA_MAX}
         />
 
         <ListBlock
