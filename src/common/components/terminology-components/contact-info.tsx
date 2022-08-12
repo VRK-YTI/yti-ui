@@ -58,6 +58,7 @@ export default function ContactInfo({
         status={status === 'error' ? 'error' : 'default'}
         statusText={status === 'error' ? t('contact-email-invalid') : ''}
         defaultValue={contact}
+        id="contact-input"
       />
     </BlankFieldset>
   );

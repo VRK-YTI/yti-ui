@@ -61,6 +61,7 @@ export default function HeaderSearch({
           setSearchInputValue(String(value ?? ''));
           if (value === '') search();
         }}
+        id="top-header-search"
       />
       {isSmall ? (
         <CloseButton

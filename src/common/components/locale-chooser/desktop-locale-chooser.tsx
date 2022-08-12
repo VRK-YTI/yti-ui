@@ -7,7 +7,7 @@ export default function DesktopLocaleChooser() {
   const { locales, currentLocale } = useLocales();
 
   return (
-    <DesktopLocaleChooserWrapper>
+    <DesktopLocaleChooserWrapper id="locale-picker">
       <LanguageMenu name={currentLocale.label}>
         {locales.map(({ locale, label, isCurrent, use }) => (
           <LanguageMenuItem key={locale} selected={isCurrent} onSelect={use}>

@@ -135,6 +135,7 @@ export default function ConceptBasicInformation({
           })
         }
         defaultValue={basicInfo.definition[lang] ?? ''}
+        className="definition-input"
       />
     );
   }
@@ -152,6 +153,7 @@ export default function ConceptBasicInformation({
           })
         }
         defaultValue={basicInfo.subject}
+        id="subject-input"
       />
     );
   }

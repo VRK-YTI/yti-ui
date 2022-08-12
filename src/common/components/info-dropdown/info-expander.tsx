@@ -44,7 +44,7 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
   }
 
   return (
-    <InfoExpanderWrapper>
+    <InfoExpanderWrapper id="info-expander">
       <ExpanderTitleButton asHeading="h2">
         {t('vocabulary-info-terminology')}
       </ExpanderTitleButton>
@@ -98,7 +98,11 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
                   <Link
                     href={`/terminology/${data.identifier.type.graph.id}/edit`}
                   >
-                    <Button icon="edit" variant="secondary">
+                    <Button
+                      icon="edit"
+                      variant="secondary"
+                      id="edit-terminology-button"
+                    >
                       {t('edit-terminology', { ns: 'admin' })}
                     </Button>
                   </Link>
@@ -135,7 +139,11 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
                   <Link
                     href={`/terminology/${data.identifier.type.graph.id}/new-collection`}
                   >
-                    <Button icon="plus" variant="secondary">
+                    <Button
+                      icon="plus"
+                      variant="secondary"
+                      id="create-collection-button"
+                    >
                       {t('add-new-collection', { ns: 'admin' })}
                     </Button>
                   </Link>
@@ -162,6 +170,7 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
                     '_blank'
                   );
                 }}
+                id="download-terminology-button"
               >
                 {t('vocabulary-info-vocabulary-export')} (.xlsx)
               </Button>

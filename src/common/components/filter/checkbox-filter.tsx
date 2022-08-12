@@ -21,13 +21,14 @@ export default function CheckboxFilter({
   checkboxVariant,
 }: CheckboxFilterProps) {
   return (
-    <CheckboxGroup labelText={title}>
+    <CheckboxGroup labelText={title} className="filter-checkbox-group">
       {items.map(({ value, label }: Item) => (
         <Checkbox
           key={value}
           onClick={({ checkboxState }) => update(value, checkboxState)}
           checked={selectedItems.includes(value)}
           variant={checkboxVariant}
+          className="filter-checkbox-item"
         >
           {label}
         </Checkbox>

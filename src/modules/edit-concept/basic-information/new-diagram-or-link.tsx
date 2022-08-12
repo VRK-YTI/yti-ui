@@ -48,12 +48,14 @@ export default function NewDiagramOrLink({
             onBlur={(e) =>
               setDiagramInfo({ ...diagramInfo, diagramName: e.target.value })
             }
+            id="diagram-name-input"
           />
           <TextInput
             labelText={t('diagram-url')}
             onBlur={(e) =>
               setDiagramInfo({ ...diagramInfo, diagramUrl: e.target.value })
             }
+            id="diagram-url-input"
           />
           <Textarea
             labelText={t('description')}
@@ -63,11 +65,18 @@ export default function NewDiagramOrLink({
               setDiagramInfo({ ...diagramInfo, description: e.target.value })
             }
             fullWidth
+            id="description-input"
           />
         </ModalContentFitted>
         <ModalFooter>
-          <Button onClick={() => handleClick()}>{t('save')}</Button>
-          <Button onClick={() => setVisible(false)} variant="secondary">
+          <Button onClick={() => handleClick()} id="submit-button">
+            {t('save')}
+          </Button>
+          <Button
+            onClick={() => setVisible(false)}
+            variant="secondary"
+            id="cancel-button"
+          >
             {t('cancel-variant')}
           </Button>
         </ModalFooter>

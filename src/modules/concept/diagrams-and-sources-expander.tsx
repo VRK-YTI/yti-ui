@@ -32,7 +32,7 @@ export default function DiagramsAndSourcesExpander({
   }
 
   return (
-    <Expander>
+    <Expander id="diagrams-and-sources-expander">
       <ExpanderTitleButton>
         {t('section-concept-diagrams-and-sources')}
       </ExpanderTitleButton>

@@ -64,7 +64,11 @@ export default function LanguageBlock({
   };
 
   return (
-    <LangBlock padding="m" onBlur={() => handleInfoUpdate({})}>
+    <LangBlock
+      padding="m"
+      onBlur={() => handleInfoUpdate({})}
+      className="language-block"
+    >
       <Paragraph marginBottomSpacing="m">
         <Text variant="bold">{lang.labelText}</Text>
       </Paragraph>
@@ -76,6 +80,7 @@ export default function LanguageBlock({
         status={status}
         statusText={status === 'error' ? t('terminology-name-error') : ''}
         defaultValue={name}
+        className="terminology-name-input"
       />
       <TextareaSmBot
         labelText={t('terminology-description')}
@@ -83,6 +88,7 @@ export default function LanguageBlock({
         visualPlaceholder={t('terminology-description-placeholder')}
         onChange={(e) => handleInfoUpdate({ tDescription: e.target.value })}
         defaultValue={description}
+        className="terminology-description-input"
       />
     </LangBlock>
   );

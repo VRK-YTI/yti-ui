@@ -10,7 +10,7 @@ export default function MainTitle({ children }: MainTitleProps) {
   const titleRef = useTitleRef();
 
   return (
-    <MainTitleWrapper variant="h1" tabIndex={-1} ref={titleRef}>
+    <MainTitleWrapper variant="h1" tabIndex={-1} ref={titleRef} id="main-title">
       {children}
     </MainTitleWrapper>
   );

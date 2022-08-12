@@ -175,12 +175,14 @@ export default function PickerModal({
                   onChange={(e) => setSearchTerm(e?.toString() ?? '')}
                   onSearch={() => handleSearch()}
                   visualPlaceholder={t('enter-search-term')}
+                  id="keyword-input"
                 />
 
                 <SearchDropdown
                   labelText={t('concept-status')}
                   defaultValue="ALL-STATUSES"
                   onChange={(e) => handleStatus(e)}
+                  id="status-picker"
                 >
                   {statuses.map((status) => (
                     <DropdownItem
@@ -193,18 +195,19 @@ export default function PickerModal({
                 </SearchDropdown>
               </div>
               <div>
-                <Button onClick={() => handleSearch()}>{t('search')}</Button>
+                <Button onClick={() => handleSearch()} id="search-button">{t('search')}</Button>
 
                 <Button
                   variant="secondaryNoBorder"
                   iconRight="remove"
                   onClick={() => handleClear()}
+                  id="clear-button"
                 >
                   {t('clear-search')}
                 </Button>
               </div>
             </SearchBlock>
-            <SearchResultCountBlock>
+            <SearchResultCountBlock id="search-result-counts-block">
               <Text smallScreen variant="bold">
                 {t('number-of-concepts', {
                   count: result.data?.concepts.length ?? 0,
@@ -221,19 +224,19 @@ export default function PickerModal({
                       ariaOpenText={t('open-concept-info')}
                       ariaCloseText={t('close-concept-info')}
                       toggleButtonAriaDescribedBy={`checkbox-id-${concept.id}`}
+                      className="search-result-expander"
                     >
                       <Checkbox
                         hintText={`${translateStatus(
                           concept.status,
                           t
-                        )} \u00B7 ${
-                          concept.terminology.label[i18n.language] ??
-                          concept.terminology.label.fi ??
-                          concept.terminology.label[
-                            Object.keys(concept.terminology.label)[0]
-                          ] ??
-                          ''
-                        }`}
+                        )} \u00B7 ${concept.terminology.label[i18n.language] ??
+                        concept.terminology.label.fi ??
+                        concept.terminology.label[
+                        Object.keys(concept.terminology.label)[0]
+                        ] ??
+                        ''
+                          }`}
                         id={`checkbox-id-${concept.id}`}
                         onClick={(e) =>
                           handleCheckbox(e.checkboxState, concept)
@@ -241,6 +244,7 @@ export default function PickerModal({
                         defaultChecked={selectedConcepts
                           .map((c) => c.id)
                           .includes(concept.id)}
+                        className="search-result-checkbox"
                       >
                         <SanitizedTextContent
                           text={
@@ -271,6 +275,7 @@ export default function PickerModal({
               variant="secondaryNoBorder"
               iconRight={showSelected ? 'arrowLeft' : 'arrowRight'}
               onClick={() => setShowSelected(!showSelected)}
+              id="switch-view-button"
             >
               {t('show-selected-concepts', {
                 count: selectedConcepts.length ?? 0,
@@ -279,10 +284,10 @@ export default function PickerModal({
             <br />
           </>
         )}
-        <FooterButton onClick={() => handleClick()}>
+        <FooterButton onClick={() => handleClick()} id="submit-button">
           {t('add-concept', { count: selectedConcepts.length })}
         </FooterButton>
-        <FooterButton variant="secondary" onClick={() => setVisible(false)}>
+        <FooterButton variant="secondary" onClick={() => setVisible(false)} id="cancel-button">
           {t('cancel-variant', { ns: 'admin' })}
         </FooterButton>
       </ModalFooter>
@@ -299,7 +304,7 @@ function SelectedConcepts({
   return (
     <>
       <Text as="h3">{t('selected-concepts')}</Text>
-      <SelectedConceptBlock>
+      <SelectedConceptBlock id="selected-concepts-block">
         {selectedConcepts.map((concept, idx) => {
           return (
             <Chip

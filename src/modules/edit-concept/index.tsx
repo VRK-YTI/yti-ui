@@ -132,6 +132,7 @@ export default function EditConcept({
             onCloseButtonClick={() =>
               router.push(`/terminology/${terminologyId}`)
             }
+            id="error-notification"
           >
             <Paragraph>
               <Text smallScreen>

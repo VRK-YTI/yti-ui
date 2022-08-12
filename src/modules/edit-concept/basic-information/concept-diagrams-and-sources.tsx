@@ -47,7 +47,7 @@ export default function ConceptDiagramsAndSources({
   };
 
   return (
-    <ConceptExpander>
+    <ConceptExpander id="diagrams-and-sources-expander">
       <ExpanderTitleButton asHeading="h3">
         {t('concept-diagrams-and-sources')}
       </ExpanderTitleButton>
@@ -73,6 +73,7 @@ export default function ConceptDiagramsAndSources({
           onBlur={() => handleBlur()}
           onChange={(e) => setSources(e.target.value)}
           value={sources}
+          id="sources-input"
         />
       </ExpanderContentFitted>
     </ConceptExpander>

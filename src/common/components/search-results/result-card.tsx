@@ -57,7 +57,7 @@ export default function ResultCard({
   };
 
   return (
-    <CardBlock padding="m">
+    <CardBlock padding="m" className="result-card">
       {contributor && (
         <OrganizationParagraph>{contributor}</OrganizationParagraph>
       )}

@@ -63,6 +63,7 @@ export default function Subscription({ uri }: SubscriptionProps) {
         variant="secondary"
         icon={subscribed ? 'alertOff' : 'alert'}
         onClick={() => handleSubscription(subscribed)}
+        id="toggle-subscription-button"
       >
         {subscribed
           ? t('email-subscription-delete')

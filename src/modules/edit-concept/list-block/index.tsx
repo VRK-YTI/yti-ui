@@ -90,7 +90,7 @@ export default function ListBlock({
       title={title}
       extra={
         <BasicBlockExtraWrapper>
-          <ListBlockWrapper>
+          <ListBlockWrapper className="list-block">
             {list.map((item) => (
               <ListItem
                 key={item.id}

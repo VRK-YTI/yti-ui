@@ -55,7 +55,7 @@ export default function OrganizationalInformation({
   };
 
   return (
-    <ConceptExpander>
+    <ConceptExpander id="organization-information-expander">
       <ExpanderTitleButton asHeading="h3">
         {t('organizational-information')}
       </ExpanderTitleButton>
@@ -70,6 +70,7 @@ export default function OrganizationalInformation({
           onBlur={() => handleChange()}
           onChange={(e) => setChangeHistory(e.target.value)}
           value={changeHistory}
+          id="change-history-input"
         />
 
         <WiderTextarea
@@ -81,6 +82,7 @@ export default function OrganizationalInformation({
           onBlur={() => handleChange()}
           onChange={(e) => setEtymology(e.target.value)}
           value={etymology}
+          id="etymology-input"
         />
 
         <ListBlock

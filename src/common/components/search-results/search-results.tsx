@@ -70,7 +70,7 @@ export default function SearchResults({
             renderQBeforeStatus
             count={data?.totalHitCount}
           />
-          <ResultWrapper $isSmall={isSmall}>
+          <ResultWrapper $isSmall={isSmall} id="search-results">
             {data?.terminologies?.map((terminology) => {
               return (
                 <ResultCard

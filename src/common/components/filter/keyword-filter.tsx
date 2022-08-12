@@ -39,6 +39,7 @@ export function KeywordFilter({
         value={inputValue}
         visualPlaceholder={visualPlaceholder}
         fullWidth
+        id="filter-keyword-input"
       />
     </div>
   );

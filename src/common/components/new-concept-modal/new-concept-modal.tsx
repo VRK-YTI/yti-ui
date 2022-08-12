@@ -87,6 +87,7 @@ export default function NewConceptModal({
               visualPlaceholder={t('term-name-placeholder')}
               onChange={(e) => handleChange({ lang, value: e as string })}
               status={isError ? 'error' : 'default'}
+              className="concept-name-input"
             />
           ))}
         </TextInputBlock>
@@ -98,8 +99,14 @@ export default function NewConceptModal({
             {t('recommended-term-missing-error')}
           </InlineAlert>
         )}
-        <Button onClick={() => handleClick()}>{t('continue')}</Button>
-        <Button variant="secondary" onClick={() => setVisible(false)}>
+        <Button onClick={() => handleClick()} id="submit-button">
+          {t('continue')}
+        </Button>
+        <Button
+          variant="secondary"
+          onClick={() => setVisible(false)}
+          id="cancel-button"
+        >
           {t('cancel-variant')}
         </Button>
       </ModalFooter>

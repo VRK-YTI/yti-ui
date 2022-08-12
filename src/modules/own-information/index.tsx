@@ -94,7 +94,7 @@ export default function OwnInformation() {
     if (!organizationsAndRoles.length) return null;
 
     return (
-      <OrganizationAndRolesWrapper>
+      <OrganizationAndRolesWrapper id="organizations-and-roles">
         {organizationsAndRoles.map(({ organization, roles }) => {
           return (
             <OrganizationAndRoles key={organization.id}>

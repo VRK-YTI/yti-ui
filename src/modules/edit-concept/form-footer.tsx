@@ -25,8 +25,14 @@ export default function FormFooter({ handlePost, isEdit }: FormFooterProps) {
     <FooterBlock>
       <Separator isLarge />
       <div>
-        <Button onClick={() => handlePost()}>{t('save')}</Button>
-        <Button variant="secondary" onClick={() => handleCancel()}>
+        <Button onClick={() => handlePost()} id="submit-button">
+          {t('save')}
+        </Button>
+        <Button
+          variant="secondary"
+          onClick={() => handleCancel()}
+          id="cancel-button"
+        >
           {t('cancel-variant')}
         </Button>
       </div>

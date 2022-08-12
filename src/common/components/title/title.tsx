@@ -42,7 +42,7 @@ export default function Title({ info, noExpander }: TitleProps) {
 
   if (typeof info === 'string') {
     return (
-      <TitleWrapperNoBreadcrumb>
+      <TitleWrapperNoBreadcrumb id="page-title">
         <Heading variant="h1">{info}</Heading>
         <TitleDescriptionWrapper $isSmall={isSmall}>
           <Description>{t('terminology-search-info')}</Description>
@@ -61,7 +61,7 @@ export default function Title({ info, noExpander }: TitleProps) {
       }) ?? '';
 
     return (
-      <TitleWrapper>
+      <TitleWrapper id="page-title">
         <Contributor>{contributor}</Contributor>
 
         <Heading variant="h1" tabIndex={-1} ref={titleRef}>
