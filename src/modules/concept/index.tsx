@@ -181,6 +181,19 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
             title={<h2>{t('field-example')}</h2>}
             data={concept?.properties.example}
           />
+          <MultilingualPropertyBlock
+            title={<h2>Aihealue</h2>}
+            data={concept?.properties.subjectArea?.map((s) => ({
+              ...s,
+              lang: terminology?.properties.language
+                ?.map((l) => l.value)
+                .includes('fi')
+                ? 'fi'
+                : terminology?.properties.language?.map((l) => l.value)[0] ??
+                  'fi',
+            }))}
+          />
+
           <TermBlock
             title={<h2>{t('field-terms-label')}</h2>}
             data={[

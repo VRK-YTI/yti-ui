@@ -340,7 +340,7 @@ export default function generateConcept({
       createdBy: initialValue ? initialValue.createdBy : '',
       createdDate: now.toISOString(),
       id: initialValue ? initialValue.id : v4(),
-      lastModifiedBy: '',
+      lastModifiedBy: lastModifiedBy,
       lastModifiedDate: now.toISOString(),
       properties: {
         changeNote: [

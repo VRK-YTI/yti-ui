@@ -81,7 +81,9 @@ export default function EditConcept({
       initialValue: conceptData,
       lastModifiedBy: `${user.firstName} ${user.lastName}`,
     });
-
+    // console.log('initialValue', conceptData);
+    // console.log('concept', concept);
+    // return;
     setPostedData(concept);
     addConcept(concept);
   };

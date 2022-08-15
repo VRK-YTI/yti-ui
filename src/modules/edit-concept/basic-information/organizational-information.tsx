@@ -38,7 +38,7 @@ export default function OrganizationalInformation({
   );
 
   const handleOrgInfo = ({ key, lang, value }: BasicInfoUpdate) => {
-    if (typeof value !== 'string' && typeof value !== 'object') {
+    if (Array.isArray(value)) {
       setEditorialNotes(value ?? []);
       handleChange(true, value);
     }
