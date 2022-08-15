@@ -37,6 +37,12 @@ export const DescriptionTextarea = styled(Textarea)`
 `;
 
 export const FooterBlock = styled(Block)`
+  section {
+    width: 100%;
+  }
+
   display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
   gap: ${(props) => props.theme.suomifi.spacing.s};
 `;
