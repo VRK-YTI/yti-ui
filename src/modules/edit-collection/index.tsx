@@ -76,7 +76,7 @@ export default function EditCollection({
 
   useEffect(() => {
     if (result.isSuccess) {
-      router.push(
+      router.replace(
         `/terminology/${terminologyId}/collection/${newCollectionId}`
       );
     }
@@ -166,11 +166,11 @@ export default function EditCollection({
 
   const handleCancel = () => {
     if (collectionInfo?.collectionId) {
-      router.push(
+      router.replace(
         `/terminology/${terminologyId}/collection/${collectionInfo?.collectionId}`
       );
     } else {
-      router.push(`/terminology/${terminologyId}`);
+      router.replace(`/terminology/${terminologyId}`);
     }
   };
 

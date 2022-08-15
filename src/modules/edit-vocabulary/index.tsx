@@ -58,7 +58,7 @@ export default function EditVocabulary({ terminologyId }: EditVocabularyProps) {
   };
 
   const handleReturn = useCallback(() => {
-    router.push(`/terminology/${terminologyId}`);
+    router.replace(`/terminology/${terminologyId}`);
   }, [router, terminologyId]);
 
   useEffect(() => {
