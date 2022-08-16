@@ -45,7 +45,10 @@ export default function ConceptBasicInformation({
       setBasicInfo(newBasicInfo);
       updateBasicInformation(newBasicInfo);
     } else {
-      const newBasicInfo = { ...basicInfo, [key]: typeof value === 'string' ? value.trim() : value };
+      const newBasicInfo = {
+        ...basicInfo,
+        [key]: typeof value === 'string' ? value.trim() : value,
+      };
       setBasicInfo(newBasicInfo);
       updateBasicInformation(newBasicInfo);
     }
