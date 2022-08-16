@@ -8,6 +8,8 @@
   "close": "Close",
   "close-concept-info": "Close concept information",
   "collection-basic-information": "Collection basic information",
+  "collection-error-missing-definition": "Collection definition must be defined in at least one of the available languages.",
+  "collection-error-missing-name": "Collection name must be defined in at least one of the available languages.",
   "collections-selected-concepts": "Collections selected concepts",
   "concept-status": "Concept status",
   "concepts-in-collection": "Concepts in collection",
