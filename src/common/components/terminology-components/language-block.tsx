@@ -73,7 +73,9 @@ export default function LanguageBlock({
         labelText={t('terminology-name')}
         visualPlaceholder={t('terminology-name-placeholder')}
         $isSmall={isSmall}
-        onChange={(e) => handleInfoUpdate({ tName: e as string })}
+        onChange={(e) =>
+          handleInfoUpdate({ tName: e?.toString().trim() ?? '' })
+        }
         status={status}
         statusText={status === 'error' ? t('terminology-name-error') : ''}
         defaultValue={name}
@@ -83,7 +85,9 @@ export default function LanguageBlock({
         labelText={t('terminology-description')}
         hintText={t('terminology-description-hint')}
         visualPlaceholder={t('terminology-description-placeholder')}
-        onChange={(e) => handleInfoUpdate({ tDescription: e.target.value })}
+        onChange={(e) =>
+          handleInfoUpdate({ tDescription: e.target.value.trim() })
+        }
         maxLength={TEXT_AREA_MAX}
         defaultValue={description}
       />

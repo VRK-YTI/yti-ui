@@ -75,7 +75,7 @@ export default function ListBlock({
         return {
           id: item.id,
           lang: lang ? lang : '',
-          value: value,
+          value: value.trim(),
         };
       }
       return item;

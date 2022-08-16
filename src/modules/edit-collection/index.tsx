@@ -223,7 +223,7 @@ export default function EditCollection({
                 t
               )} ${language.toUpperCase()}`}
               visualPlaceholder={t('enter-collection-name')}
-              onBlur={(e) => setName(language, e.target.value)}
+              onBlur={(e) => setName(language, e.target.value.trim())}
               status={errors.name ? 'error' : 'default'}
               defaultValue={
                 formData.name.find((n) => n.lang === language)?.value
@@ -240,7 +240,7 @@ export default function EditCollection({
                 t
               )} ${language.toUpperCase()}`}
               visualPlaceholder={t('enter-collection-description')}
-              onBlur={(e) => setDescription(language, e.target.value)}
+              onBlur={(e) => setDescription(language, e.target.value.trim())}
               status={errors.definition ? 'error' : 'default'}
               defaultValue={
                 formData.definition.find((n) => n.lang === language)?.value
@@ -278,13 +278,13 @@ export default function EditCollection({
         name: collection.properties.prefLabel
           ? collection.properties.prefLabel.map((l) => ({
               lang: l.lang,
-              value: l.value,
+              value: l.value.trim(),
             }))
           : [],
         definition: collection.properties.definition
           ? collection.properties.definition.map((d) => ({
               lang: d.lang,
-              value: d.value,
+              value: d.value.trim(),
             }))
           : [],
         concepts: collection.references.member

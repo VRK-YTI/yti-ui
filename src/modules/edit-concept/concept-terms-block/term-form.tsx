@@ -75,7 +75,7 @@ export default function TermForm({ term, update }: TermFormProps) {
     update({
       termId: term.id,
       key: key,
-      value: value ?? '',
+      value: typeof value === 'string' ? value.trim() : value ?? '',
     });
   };
 

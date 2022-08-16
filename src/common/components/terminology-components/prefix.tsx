@@ -91,7 +91,7 @@ export default function Prefix({ update, userPosted }: PrefixProps) {
       {prefixType === 'manual' && (
         <TextInputSmBot
           labelText={t('prefix')}
-          onChange={(e) => handleCustomChange(e as string)}
+          onChange={(e) => handleCustomChange(e?.toString().trim() ?? '')}
           debounce={300}
           $isSmall={isSmall ? true : undefined}
           status={

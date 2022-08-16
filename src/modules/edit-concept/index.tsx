@@ -227,6 +227,6 @@ export default function EditConcept({
 
     return languages
       .map((lang) => ({ lang, value: asString(router.query[lang]), regex: '' }))
-      .filter(({ value }) => !!value);
+      .filter(({ value }) => !!value.trim());
   }
 }
