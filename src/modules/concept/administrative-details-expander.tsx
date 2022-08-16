@@ -56,19 +56,19 @@ export default function AdministrativeDetailsExpander({
         <PropertyBlock
           title={t('field-change-note')}
           property={concept?.properties.changeNote}
-       />
+        />
         <PropertyBlock
           title={t('field-history-note')}
           property={concept?.properties.historyNote}
-       />
+        />
         <PropertyBlock
           title={t('field-editorial-note')}
           property={concept?.properties.editorialNote}
-       />
+        />
         <PropertyBlock
           title={t('field-notation')}
           property={concept?.properties.notation}
-       />
+        />
       </ExpanderContent>
     </Expander>
   );

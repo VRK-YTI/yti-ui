@@ -50,11 +50,7 @@ export default function SidebarSection<T extends BaseEntity<string>>({
       if ('member' in currItem.references) {
         const prefLabels = Array.from(propertyAccessor(currItem) as Property[]);
 
-        return (
-          <PropertyValue
-            property={prefLabels as Property[]}
-         />
-        );
+        return <PropertyValue property={prefLabels as Property[]} />;
       } else {
         const prefLabels = Array.from(
           propertyAccessor(currItem) as Term[],
@@ -65,17 +61,11 @@ export default function SidebarSection<T extends BaseEntity<string>>({
           }
         );
 
-        return (
-          <PropertyValue
-            property={prefLabels as Property[]}
-         />
-        );
+        return <PropertyValue property={prefLabels as Property[]} />;
       }
     } else {
       return (
-        <PropertyValue
-          property={propertyAccessor(currItem) as Property[]}
-       />
+        <PropertyValue property={propertyAccessor(currItem) as Property[]} />
       );
     }
   }

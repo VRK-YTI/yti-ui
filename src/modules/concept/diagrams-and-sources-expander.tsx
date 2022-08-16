@@ -40,11 +40,11 @@ export default function DiagramsAndSourcesExpander({
         <PropertyBlock
           title={t('field-concept-diagrams')}
           property={undefined}
-       />
+        />
         <PropertyBlock
           title={t('field-sources')}
           property={concept?.properties.source}
-       />
+        />
       </ExpanderContent>
     </Expander>
   );

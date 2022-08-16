@@ -91,9 +91,7 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
         <Breadcrumb>
           {!terminologyError && (
             <BreadcrumbLink url={`/terminology/${terminologyId}`}>
-              <PropertyValue
-                property={terminology?.properties.prefLabel}
-             />
+              <PropertyValue property={terminology?.properties.prefLabel} />
             </BreadcrumbLink>
           )}
           <BreadcrumbLink url="" current>
@@ -134,9 +132,7 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
       <Breadcrumb>
         {!terminologyError && (
           <BreadcrumbLink url={`/terminology/${terminologyId}`}>
-            <PropertyValue
-              property={terminology?.properties.prefLabel}
-             />
+            <PropertyValue property={terminology?.properties.prefLabel} />
           </BreadcrumbLink>
         )}
         <BreadcrumbLink
@@ -155,14 +151,12 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
                 'prefLabel',
                 terminology?.references.contributor
               )}
-           />
+            />
           </SubTitle>
           <MainTitle>{prefLabel}</MainTitle>
           <BadgeBar>
             {t('heading')}
-            <PropertyValue
-              property={terminology?.properties.prefLabel}
-           />
+            <PropertyValue property={terminology?.properties.prefLabel} />
             <Badge $isValid={status === 'VALID'}>
               {translateStatus(status, t)}
             </Badge>
@@ -248,7 +242,7 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
             property={
               terminology?.references.contributor?.[0]?.properties.prefLabel
             }
-         />
+          />
           <BasicBlock title={t('vocabulary-info-created-at', { ns: 'common' })}>
             <FormattedDate date={concept?.createdDate} />
             {concept?.createdBy && `, ${concept.createdBy}`}

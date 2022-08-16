@@ -173,7 +173,7 @@ export default function SearchResults({
                       description={
                         <PropertyValue
                           property={collection.properties.definition}
-                         fallback={t('vocabulary-results-no-description')}
+                          fallback={t('vocabulary-results-no-description')}
                         />
                       }
                       extra={
@@ -188,7 +188,7 @@ export default function SearchResults({
                       noStatus
                       title={getPropertyValue({
                         property: collection.properties.prefLabel,
-                        language: urlState.lang ? urlState.lang : i18n.language
+                        language: urlState.lang ? urlState.lang : i18n.language,
                       })}
                       titleLink={`/terminology/${collection.type.graph.id}/collection/${collection.id}`}
                       type={t('vocabulary-info-collection')}

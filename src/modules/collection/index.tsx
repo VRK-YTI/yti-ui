@@ -73,7 +73,7 @@ export default function Collection({
   const prefLabel = getPropertyValue({
     property: collection?.properties.prefLabel,
     language: i18n.language,
- });
+  });
 
   useEffect(() => {
     if (collection) {
@@ -93,9 +93,7 @@ export default function Collection({
         <Breadcrumb>
           {!terminologyError && (
             <BreadcrumbLink url={`/terminology/${terminologyId}`}>
-              <PropertyValue
-                property={terminology?.properties.prefLabel}
-             />
+              <PropertyValue property={terminology?.properties.prefLabel} />
             </BreadcrumbLink>
           )}
           <BreadcrumbLink url={''} current>
@@ -136,18 +134,14 @@ export default function Collection({
       <Breadcrumb>
         {!terminologyError && (
           <BreadcrumbLink url={`/terminology/${terminologyId}`}>
-            <PropertyValue
-              property={terminology?.properties.prefLabel}
-           />
+            <PropertyValue property={terminology?.properties.prefLabel} />
           </BreadcrumbLink>
         )}
         <BreadcrumbLink
           url={`/terminology/${terminologyId}/collections/${collectionId}`}
           current
         >
-          <PropertyValue
-            property={collection?.properties.prefLabel}
-         />
+          <PropertyValue property={collection?.properties.prefLabel} />
         </BreadcrumbLink>
       </Breadcrumb>
 
@@ -159,18 +153,14 @@ export default function Collection({
                 'prefLabel',
                 terminology?.references.contributor
               )}
-           />
+            />
           </SubTitle>
           <MainTitle>
-            <PropertyValue
-              property={collection?.properties.prefLabel}
-           />
+            <PropertyValue property={collection?.properties.prefLabel} />
           </MainTitle>
           <BadgeBar>
             {t('heading')}
-            <PropertyValue
-              property={terminology?.properties.prefLabel}
-           />
+            <PropertyValue property={terminology?.properties.prefLabel} />
           </BadgeBar>
 
           <MultilingualPropertyBlock
@@ -225,7 +215,7 @@ export default function Collection({
             property={
               terminology?.references.contributor?.[0]?.properties.prefLabel
             }
-         />
+          />
           <BasicBlock title={t('vocabulary-info-created-at', { ns: 'common' })}>
             <FormattedDate date={collection?.createdDate} />
             {collection?.createdBy && `, ${collection.createdBy}`}

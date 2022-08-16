@@ -188,9 +188,7 @@ export default function EditCollection({
       <Breadcrumb>
         {router.query.terminologyId && (
           <BreadcrumbLink url={`/terminology/${router.query.terminologyId}`}>
-            <PropertyValue
-              property={terminology?.properties.prefLabel}
-           />
+            <PropertyValue property={terminology?.properties.prefLabel} />
           </BreadcrumbLink>
         )}
         <BreadcrumbLink url="" current>
@@ -205,14 +203,12 @@ export default function EditCollection({
               'prefLabel',
               terminology?.references.contributor
             )}
-         />
+          />
         </SubTitle>
         <MainTitle>{collectionName}</MainTitle>
         <BadgeBar>
           {t('heading')}
-          <PropertyValue
-            property={terminology?.properties.prefLabel}
-         />
+          <PropertyValue property={terminology?.properties.prefLabel} />
         </BadgeBar>
         <PageHelpText>{t('new-collection-page-help')}</PageHelpText>
 

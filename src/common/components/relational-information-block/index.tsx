@@ -112,7 +112,7 @@ export default function RelationalInformationBlock({
                           value: concept.label[lang],
                           regex: '',
                         }))}
-                     />
+                      />
 
                       {fromOther && ' - '}
                       {fromOther && (
@@ -124,7 +124,7 @@ export default function RelationalInformationBlock({
                               regex: '',
                             })
                           )}
-                       />
+                        />
                       )}
                     </Chip>
                   );

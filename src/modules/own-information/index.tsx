@@ -184,7 +184,7 @@ export default function OwnInformation() {
           ?.filter((organization) => organization.id === id)
           .map((organization) => organization.properties.prefLabel),
         language: i18n.language,
-     }) ?? ''
+      }) ?? ''
     );
   }
 }

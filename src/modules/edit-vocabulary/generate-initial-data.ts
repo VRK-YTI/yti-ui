@@ -27,7 +27,7 @@ export default function generateInitialData(
       const label = getPropertyValue({
         property: group.properties.prefLabel,
         language: lang,
-     });
+      });
 
       return {
         checked: false,
@@ -42,7 +42,7 @@ export default function generateInitialData(
     const label = getPropertyValue({
       property: org.properties.prefLabel,
       language: lang,
-   });
+    });
 
     return {
       organizationId: org.type.graph.id,

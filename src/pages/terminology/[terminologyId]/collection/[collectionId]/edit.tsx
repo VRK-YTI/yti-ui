@@ -86,7 +86,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
     const collectionLabel = getPropertyValue({
       property: collectionData?.properties?.prefLabel,
       language: locale,
-   });
+    });
 
     return {
       props: {

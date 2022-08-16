@@ -45,7 +45,7 @@ describe('propertyValue', () => {
           { lang: 'fi', value: 'Value (fi)', regex: '' },
           { lang: 'sv', value: 'Value (sv)', regex: '' },
         ]}
-     />
+      />
     );
 
     expect(screen.getByText('Value (fi)')).toBeInTheDocument();
