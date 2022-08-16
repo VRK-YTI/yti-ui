@@ -111,13 +111,14 @@ export default function NewTerminologyModal({
       visible={showModal}
       variant={isSmall ? 'smallScreen' : 'default'}
       onEscKeyDown={() => handleClose()}
+      className="new-terminology-modal"
     >
       <ModalContent
         style={
           inputType === 'file' && userPosted ? { paddingBottom: '18px' } : {}
         }
       >
-        <ModalTitleAsH1 as={'h1'}>
+        <ModalTitleAsH1 as={'h1'} id="new-terminology-title">
           {!startFileUpload ? t('add-new-terminology') : t('downloading-file')}
         </ModalTitleAsH1>
 
@@ -134,12 +135,20 @@ export default function NewTerminologyModal({
       </ModalContent>
 
       {!(inputType === 'file' && userPosted) && (
-        <ModalFooter>
+        <ModalFooter id="new-terminology-modal-footer">
           {userPosted && manualData && <MissingInfoAlert data={manualData} />}
-          <Button onClick={() => handlePost()} disabled={!inputType}>
+          <Button
+            onClick={() => handlePost()}
+            disabled={!inputType}
+            id="submit-button"
+          >
             {t('add-terminology')}
           </Button>
-          <Button variant="secondary" onClick={() => handleClose()}>
+          <Button
+            variant="secondary"
+            onClick={() => handleClose()}
+            id="cancel-button"
+          >
             {t('cancel')}
           </Button>
         </ModalFooter>
@@ -158,9 +167,14 @@ export default function NewTerminologyModal({
           labelText={t('which-input')}
           name="input-type"
           onChange={(e) => handleSetInputType(e)}
+          id="new-terminology-input-type"
         >
-          <RadioButton value="self">{t('by-hand')}</RadioButton>
-          <RadioButton value="file">{t('by-file')}</RadioButton>
+          <RadioButton value="self" id="new-terminology-input-type-hand">
+            {t('by-hand')}
+          </RadioButton>
+          <RadioButton value="file" id="new-terminology-input-type-file">
+            {t('by-file')}
+          </RadioButton>
         </RadioButtonGroup>
 
         {inputType === 'self' && (

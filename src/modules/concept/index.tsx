@@ -227,7 +227,11 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
                     <Link
                       href={`/terminology/${terminologyId}/concept/${conceptId}/edit`}
                     >
-                      <Button variant="secondary" icon="edit">
+                      <Button
+                        variant="secondary"
+                        icon="edit"
+                        id="edit-concept-button"
+                      >
                         {t('edit-concept')}
                       </Button>
                     </Link>

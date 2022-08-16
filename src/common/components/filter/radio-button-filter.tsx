@@ -31,6 +31,7 @@ export default function RadioButtonFilter({
         name={t('vocabulary-filter-show-only')}
         value={selectedItem}
         onChange={onChange}
+        id="filter-radio-button-group"
       >
         {items.map(({ value, label }) => (
           <FilterRadioButton
@@ -38,6 +39,7 @@ export default function RadioButtonFilter({
             key={value}
             checked={value === selectedItem}
             variant={radioButtonVariant}
+            className="filter-radio-button-item"
           >
             {label}
           </FilterRadioButton>

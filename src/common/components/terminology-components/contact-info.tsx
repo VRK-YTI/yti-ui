@@ -60,6 +60,7 @@ export default function ContactInfo({
         statusText={status === 'error' ? t('contact-email-invalid') : ''}
         defaultValue={contact}
         maxLength={EMAIL_MAX}
+        id="contact-input"
       />
     </BlankFieldset>
   );

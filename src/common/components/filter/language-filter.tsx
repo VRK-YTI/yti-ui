@@ -40,6 +40,7 @@ export default function LanguageFilter({
             page: initialUrlState.page,
           })
         }
+        id="filter-language-selector"
       />
     </DropdownWrapper>
   );

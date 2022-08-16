@@ -32,7 +32,7 @@ export default function RelationalInformation({
   };
 
   return (
-    <ConceptExpander>
+    <ConceptExpander id="relational-information-expander">
       <ExpanderTitleButton asHeading="h3">
         {t('relational-information')}
       </ExpanderTitleButton>

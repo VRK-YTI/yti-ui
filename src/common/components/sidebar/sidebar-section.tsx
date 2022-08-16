@@ -31,7 +31,7 @@ export default function SidebarSection<T extends BaseEntity<string>>({
   }
 
   return (
-    <>
+    <div className="sidebar-section">
       <SidebarSubHeader id={`${id}-header`}>{heading}</SidebarSubHeader>
       <SidebarLinkList aria-labelledby={`${id}-header`}>
         {items.map((item) => (
@@ -42,7 +42,7 @@ export default function SidebarSection<T extends BaseEntity<string>>({
           </SidebarLinkListItem>
         ))}
       </SidebarLinkList>
-    </>
+    </div>
   );
 
   function propertyValue(currItem: T) {

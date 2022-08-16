@@ -90,7 +90,7 @@ export default function SmartHeader() {
 
   function renderHeader() {
     return (
-      <Block variant="header" role="banner">
+      <Block variant="header" role="banner" id="top-header">
         <HeaderContainer>
           <MarginContainer $breakpoint={breakpoint}>
             <HeaderWrapper $breakpoint={breakpoint}>

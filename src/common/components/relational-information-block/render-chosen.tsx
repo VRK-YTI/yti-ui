@@ -27,7 +27,7 @@ export default function RenderChosen({
   return (
     <>
       <Label>{chipLabel}</Label>
-      <ChipBlock>
+      <ChipBlock id="chosen-concepts-block">
         {chosen.map((chose, idx) => {
           return (
             <Chip

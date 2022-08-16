@@ -67,6 +67,7 @@ export default function TermTypeModal({
           labelText={t('term-new-type')}
           visualPlaceholder={t('choose-type')}
           onChange={(e) => handleChange(e)}
+          id="term-type-picker"
         >
           {termTypes
             .filter(
@@ -82,10 +83,18 @@ export default function TermTypeModal({
         </DropdownBlock>
       </ModalContent>
       <ModalFooter>
-        <Button disabled={!isValid} onClick={() => handleClick()}>
+        <Button
+          disabled={!isValid}
+          onClick={() => handleClick()}
+          id="submit-button"
+        >
           {t('accept')}
         </Button>
-        <Button variant="secondary" onClick={() => setVisibility(false)}>
+        <Button
+          variant="secondary"
+          onClick={() => setVisibility(false)}
+          id="cancel-button"
+        >
           {t('cancel-variant')}
         </Button>
       </ModalFooter>

@@ -38,7 +38,7 @@ export default function OtherDetailsExpander({
   }
 
   return (
-    <Expander>
+    <Expander id="other-details-expander">
       <ExpanderTitleButton>{t('section-other-details')}</ExpanderTitleButton>
       <ExpanderContent>
         {/* <MultilingualPropertyBlock

@@ -6,7 +6,7 @@ import UserInfo from './user-info';
 
 export default function DesktopAuthenticationPanel() {
   return (
-    <DesktopAuthenticationPanelWrapper>
+    <DesktopAuthenticationPanelWrapper id="top-header-authentication">
       <DesktopImpersonateWrapper>
         <UserInfo breakpoint="large" />
         <LoginButtons />

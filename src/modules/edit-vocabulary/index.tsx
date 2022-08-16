@@ -118,8 +118,14 @@ export default function EditVocabulary({ terminologyId }: EditVocabularyProps) {
 
         <FormFooter>
           {userPosted && data && <MissingInfoAlert data={data} />}
-          <Button onClick={() => handleSubmit()}>{t('save')}</Button>
-          <Button variant="secondary" onClick={() => handleReturn()}>
+          <Button onClick={() => handleSubmit()} id="submit-button">
+            {t('save')}
+          </Button>
+          <Button
+            variant="secondary"
+            onClick={() => handleReturn()}
+            id="cancel-button"
+          >
             {t('cancel')}
           </Button>
         </FormFooter>

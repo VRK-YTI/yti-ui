@@ -37,14 +37,14 @@ export default function SearchCountTags({
   const { isSmall } = useBreakpoints();
 
   return (
-    <CountWrapper $isSmall={isSmall}>
-      <CountText aria-live="polite">
+    <CountWrapper $isSmall={isSmall} id="result-counts">
+      <CountText aria-live="polite" id="result-counts-text">
         <span aria-hidden={true}>{title}</span>
         <VisuallyHidden>
           {t('search-results-count', { count: count })}
         </VisuallyHidden>
       </CountText>
-      <ChipWrapper>
+      <ChipWrapper id="result-counts-chips">
         {renderOrganizationTag()}
         {renderQBeforeStatus && renderQTag()}
         {renderStatusTags()}

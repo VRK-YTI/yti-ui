@@ -33,7 +33,7 @@ export default function ResultCardExpander({
       : false;
 
   return (
-    <Expander>
+    <Expander id="search-result-expander">
       <ExpanderTitleButton>
         {buttonLabel}
         <ExpanderTitleHits>

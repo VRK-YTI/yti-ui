@@ -31,7 +31,11 @@ export default function ConceptPicker({
         title={t('concepts-in-collection')}
         extra={
           <BasicBlockExtraWrapper>
-            <Button variant="secondary" onClick={() => handleClick()}>
+            <Button
+              variant="secondary"
+              onClick={() => handleClick()}
+              id="add-concepts-button"
+            >
               {t('add-concept-to-collection')}
             </Button>
             {visible && (
@@ -53,7 +57,7 @@ export default function ConceptPicker({
           title={t('collections-selected-concepts')}
           extra={
             <BasicBlockExtraWrapper>
-              <SelectedConceptBlock>
+              <SelectedConceptBlock id="selected-concept-chips-block">
                 {concepts.map((concept) => (
                   <Chip
                     key={`concept-${concept.id}`}

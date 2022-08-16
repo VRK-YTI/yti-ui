@@ -85,7 +85,7 @@ export default function Search({
   };
 
   return (
-    <SearchBlock>
+    <SearchBlock id="search-block">
       <div>
         <SearchInput
           labelText={t('search-term')}
@@ -95,6 +95,7 @@ export default function Search({
           value={searchTerm}
           onSearch={() => handleSearch()}
           maxLength={TEXT_INPUT_MAX}
+          id="keyword-input"
         />
         <SingleSelect
           ariaOptionsAvailableText={t('statuses-available')}
@@ -104,20 +105,24 @@ export default function Search({
           noItemsText={t('no-statuses-available')}
           onItemSelectionChange={(e) => setStatus(e)}
           selectedItem={status ? status : undefined}
+          id="status-picker"
         />
       </div>
       <div>
-        <Button onClick={() => handleSearch()}>{t('search')}</Button>
+        <Button onClick={() => handleSearch()} id="search-button">
+          {t('search')}
+        </Button>
         <Button
           variant="secondaryNoBorder"
           icon="remove"
           onClick={() => handleClearValues()}
+          id="clear-search-button"
         >
           {t('clear-search')}
         </Button>
       </div>
       {result.isSuccess ? (
-        <div>
+        <div id="search-result-counts">
           <Text variant="bold" smallScreen>
             {t('number-of-concepts', { count: result.data?.totalHitCount })}
           </Text>

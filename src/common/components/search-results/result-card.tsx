@@ -57,26 +57,28 @@ export default function ResultCard({
   };
 
   return (
-    <CardBlock padding="m">
+    <CardBlock padding="m" className="result-card">
       {contributor && (
-        <OrganizationParagraph>{contributor}</OrganizationParagraph>
+        <OrganizationParagraph id="card-contributor">
+          {contributor}
+        </OrganizationParagraph>
       )}
       <Link passHref href={titleLink}>
         <TitleLink href="">
           {icon && <Icon icon={icon} />}
-          <Title variant="h2">
+          <Title variant="h2" id="card-title-link">
             {title}
             <VisuallyHidden>{contributor}</VisuallyHidden>
           </Title>
         </TitleLink>
       </Link>
-      <Subtitle>
+      <Subtitle id="card-subtitle">
         <div>{type}</div>
         {!noStatus && renderStatus()}
       </Subtitle>
-      <Description>{description}</Description>
+      <Description id="card-description">{description}</Description>
       {partOf && (
-        <PartOf>
+        <PartOf id="card-partof">
           <b>{t('terminology-search-results-information-domains')}: </b>
           {partOf.map((part, idx) => {
             const comma = idx !== partOf.length - 1 ? ', ' : '';
@@ -89,7 +91,7 @@ export default function ResultCard({
           })}
         </PartOf>
       )}
-      {extra && <Extra>{extra}</Extra>}
+      {extra && <Extra id="card-extra">{extra}</Extra>}
     </CardBlock>
   );
 
@@ -100,7 +102,10 @@ export default function ResultCard({
         {noChip ? (
           translateStatus(status ?? 'DRAFT', t)
         ) : (
-          <Status valid={status === 'VALID' ? 'true' : undefined}>
+          <Status
+            valid={status === 'VALID' ? 'true' : undefined}
+            id="card-status"
+          >
             {translateStatus(status ?? 'DRAFT', t)}
           </Status>
         )}

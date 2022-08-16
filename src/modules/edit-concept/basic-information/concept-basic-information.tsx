@@ -137,6 +137,7 @@ export default function ConceptBasicInformation({
         }
         defaultValue={basicInfo.definition[lang] ?? ''}
         maxLength={TEXT_AREA_MAX}
+        className="definition-input"
       />
     );
   }
@@ -155,6 +156,7 @@ export default function ConceptBasicInformation({
         }
         defaultValue={basicInfo.subject}
         maxLength={TEXT_INPUT_MAX}
+        id="subject-input"
       />
     );
   }

@@ -18,6 +18,7 @@ export default function ResetAllFiltersButton() {
           icon="remove"
           onClick={() => resetUrlState()}
           variant="secondaryNoBorder"
+          id="filter-reset-button"
         >
           {t('vocabulary-filter-remove-all')}
         </Button>

@@ -50,6 +50,7 @@ export default function OrganizationFilter({
             page: initialUrlState.page,
           })
         }
+        id="filter-organization-selector"
       />
     </DropdownWrapper>
   );

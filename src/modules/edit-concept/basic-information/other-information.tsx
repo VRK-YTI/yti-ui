@@ -62,7 +62,7 @@ export default function OtherInformation({
   ];
 
   return (
-    <ConceptExpander>
+    <ConceptExpander id="other-information-expander">
       <ExpanderTitleButton asHeading="h3">
         {t('concept-other-information')}
       </ExpanderTitleButton>
@@ -74,6 +74,7 @@ export default function OtherInformation({
           value={conceptClass}
           onBlur={() => handleChange()}
           maxLength={TEXT_INPUT_MAX}
+          id="concept-class-input"
         />
 
         <SingleSelect
@@ -87,6 +88,7 @@ export default function OtherInformation({
           noItemsText={t('word-class-no-items')}
           onItemSelectionChange={(e) => setWordClass(e)}
           onBlur={() => handleChange()}
+          id="word-class-picker"
         />
       </ExpanderContentFitted>
     </ConceptExpander>

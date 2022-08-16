@@ -98,6 +98,7 @@ export default function AccessRequestModal({
       variant={isSmall ? 'smallScreen' : 'default'}
       onEscKeyDown={() => handleCloseModal()}
       scrollable={false}
+      className="access-request-modal"
     >
       <ModalContent>
         <ModalTitleH1 as="h1">{t('access-request-access')}</ModalTitleH1>
@@ -114,6 +115,7 @@ export default function AccessRequestModal({
             onChange={(e) => {
               setChosenOrganization(e), setError({});
             }}
+            id="organization-selector"
           >
             {organizations?.map((organization, idx) => {
               return (
@@ -129,7 +131,7 @@ export default function AccessRequestModal({
         </ModalContentBlock>
 
         <ModalContentBlock>
-          <CheckboxGroup labelText={t('access-services')}>
+          <CheckboxGroup labelText={t('access-services')} id="service-selector">
             <Checkbox
               checked={services[TERMINOLOGY]}
               onClick={(e) => handleCheckbox(TERMINOLOGY, e.checkboxState)}
@@ -142,6 +144,7 @@ export default function AccessRequestModal({
                 error?.[TERMINOLOGY] ? t('access-request-already-sent') : ''
               }
               variant={isSmall ? 'large' : 'small'}
+              id="service-terminology"
             >
               {t('access-terminology')}
             </Checkbox>
@@ -155,6 +158,7 @@ export default function AccessRequestModal({
                 error?.[CODE_LIST] ? t('access-request-already-sent') : ''
               }
               variant={isSmall ? 'large' : 'small'}
+              id="service-code-list"
             >
               {t('access-reference-data')}
             </Checkbox>
@@ -168,6 +172,7 @@ export default function AccessRequestModal({
                 ''
               }
               variant={isSmall ? 'large' : 'small'}
+              id="service-data-model"
             >
               {t('access-data-vocabularies')}
             </Checkbox>
@@ -175,11 +180,15 @@ export default function AccessRequestModal({
         </ModalContentBlock>
       </ModalContent>
 
-      <ModalFooter>
-        <Button onClick={() => handleClick()}>
+      <ModalFooter id="modal-footer">
+        <Button onClick={() => handleClick()} id="submit-button">
           {t('access-send-request')}
         </Button>
-        <Button variant="secondary" onClick={() => handleCloseModal()}>
+        <Button
+          variant="secondary"
+          onClick={() => handleCloseModal()}
+          id="cancel-button"
+        >
           {t('access-cancel')}
         </Button>
       </ModalFooter>

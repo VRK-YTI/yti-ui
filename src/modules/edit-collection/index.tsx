@@ -223,7 +223,7 @@ export default function EditCollection({
 
         <Heading variant="h3">{t('collection-basic-information')}</Heading>
 
-        <TextBlockWrapper>
+        <TextBlockWrapper id="collection-text-info-block">
           {languages.map((language) => (
             <NameTextInput
               key={`name-input-${language}`}
@@ -238,6 +238,7 @@ export default function EditCollection({
                 formData.name.find((n) => n.lang === language)?.value
               }
               maxLength={TEXT_INPUT_MAX}
+              className="collection-name-input"
             />
           ))}
 
@@ -255,6 +256,7 @@ export default function EditCollection({
                 formData.definition.find((n) => n.lang === language)?.value
               }
               maxLength={TEXT_AREA_MAX}
+              className="collection-description-input"
             />
           ))}
         </TextBlockWrapper>
@@ -280,10 +282,14 @@ export default function EditCollection({
               </MissingInfoAlertUl>
             </InlineAlert>
           )}
-          <Button onClick={() => handleClick()}>
+          <Button onClick={() => handleClick()} id="submit-button">
             {t('save', { ns: 'admin' })}
           </Button>
-          <Button variant="secondary" onClick={() => handleCancel()}>
+          <Button
+            variant="secondary"
+            onClick={() => handleCancel()}
+            id="cancel-button"
+          >
             {t('cancel-variant', { ns: 'admin' })}
           </Button>
         </FooterBlock>

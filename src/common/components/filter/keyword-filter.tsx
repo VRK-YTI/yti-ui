@@ -41,6 +41,7 @@ export function KeywordFilter({
         visualPlaceholder={visualPlaceholder}
         fullWidth
         maxLength={TEXT_INPUT_MAX}
+        id="filter-keyword-input"
       />
     </div>
   );

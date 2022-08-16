@@ -205,7 +205,11 @@ export default function Collection({
                 extra={
                   <BasicBlockExtraWrapper>
                     <Link href={`${router.asPath}/edit`}>
-                      <Button variant="secondary" icon="edit">
+                      <Button
+                        variant="secondary"
+                        icon="edit"
+                        id="edit-collection-button"
+                      >
                         Muokkaa käsitekokoelmaa
                       </Button>
                     </Link>

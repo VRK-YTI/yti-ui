@@ -27,6 +27,7 @@ export default function LoginButtons({
           onClick={() =>
             handleLoginModalClick ? handleLoginModalClick() : setVisible(true)
           }
+          id="login-button"
         >
           {t('site-login')}
         </Button>

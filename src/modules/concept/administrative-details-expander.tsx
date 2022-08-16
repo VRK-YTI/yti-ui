@@ -48,7 +48,7 @@ export default function AdministrativeDetailsExpander({
   }
 
   return (
-    <Expander>
+    <Expander id="admin-details-expander">
       <ExpanderTitleButton>
         {t('section-administrative-details')}
       </ExpanderTitleButton>

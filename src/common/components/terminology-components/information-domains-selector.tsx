@@ -76,6 +76,7 @@ export default function InformationDomainsSelector({
           userPosted && selectedInfoDomains.length === 0 ? 'error' : 'default'
         }
         defaultSelectedItems={selectedInfoDomains}
+        id="information-domain-selector"
       />
     </BlankFieldset>
   );

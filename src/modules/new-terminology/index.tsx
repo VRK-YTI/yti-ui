@@ -24,6 +24,7 @@ export default function NewTerminology() {
         fullWidth={isSmall}
         onClick={() => setShowModal(true)}
         style={{ whiteSpace: 'nowrap' }}
+        id="new-terminology-button"
       >
         {t('add-new-terminology')}
       </Button>
