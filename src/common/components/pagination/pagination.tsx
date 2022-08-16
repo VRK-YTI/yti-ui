@@ -35,8 +35,10 @@ export default function Pagination({ data, pageString }: PaginationProps) {
     <PaginationWrapper>
       <ChevronButton
         disabled={urlState.page === 1}
-        onClick={() =>
-          urlState.page !== 1 && patchUrlState({ page: urlState.page - 1 })
+        onClick={() => {
+          urlState.page !== 1 && patchUrlState({ page: urlState.page - 1 });
+          window.scrollTo(0, 0);
+        }
         }
         data-testid="pagination-left"
         icon="chevronLeft"
@@ -54,10 +56,13 @@ export default function Pagination({ data, pageString }: PaginationProps) {
                   ? `pagination-item-${item}`
                   : `pagination-item-${item}-${idx}`
               }
-              onClick={() =>
+              onClick={() => {
                 urlState.page !== item &&
                 typeof item === 'number' &&
-                patchUrlState({ page: item })
+                patchUrlState({ page: item });
+                window.scrollTo(0, 0);
+              }
+
               }
               variant={item === urlState.page ? 'default' : 'secondaryNoBorder'}
               disabled={item === '...'}
@@ -74,9 +79,11 @@ export default function Pagination({ data, pageString }: PaginationProps) {
 
       <ChevronButton
         disabled={urlState.page === items[items.length - 1]}
-        onClick={() =>
+        onClick={() => {
           urlState.page !== items[items.length - 1] &&
-          patchUrlState({ page: urlState.page + 1 })
+          patchUrlState({ page: urlState.page + 1 });
+          window.scrollTo(0, 0);
+        }
         }
         data-testid="pagination-right"
         icon="chevronRight"
