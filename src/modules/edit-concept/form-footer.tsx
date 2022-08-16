@@ -20,7 +20,7 @@ export default function FormFooter({
 
   const handleCancel = () => {
     onCancel?.();
-    router.push(
+    router.replace(
       isEdit
         ? `/terminology/${router.query.terminologyId}/concept/${router.query.conceptId}`
         : `/terminology/${router.query.terminologyId}`

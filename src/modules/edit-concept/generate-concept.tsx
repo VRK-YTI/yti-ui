@@ -57,8 +57,7 @@ export default function generateConcept({
       ? getInitialTerm(term.id, initialValue.references)
       : null;
 
-    return {
-      code: initialTerm ? initialTerm.code : '',
+    const obj: any = {
       createdBy: initialValue ? initialTerm?.createdBy ?? '' : '',
       createdDate: initialValue
         ? initialTerm?.createdDate ?? ''
@@ -207,8 +206,14 @@ export default function generateConcept({
         id: 'Term',
         uri: initialValue ? '' : 'http://www.w3.org/2008/05/skos-xl#Label',
       },
-      uri: initialTerm ? initialTerm.uri : '',
     };
+
+    if (initialTerm) {
+      obj.code = initialTerm.code;
+      obj.uri = initialTerm.uri;
+    }
+
+    return obj;
   });
 
   let externalTerms =
@@ -332,11 +337,10 @@ export default function generateConcept({
       ] ?? [];
   }
 
-  return [
+  const retVal = [
     ...terms,
     ...externalTerms,
     {
-      code: initialValue?.code ?? '',
       createdBy: initialValue ? initialValue.createdBy : '',
       createdDate: now.toISOString(),
       id: initialValue ? initialValue.id : v4(),
@@ -600,9 +604,15 @@ export default function generateConcept({
         id: 'Concept',
         uri: initialValue ? '' : 'http://www.w3.org/2004/02/skos/core#Concept',
       },
-      uri: initialValue?.uri ?? '',
     },
   ];
+
+  if (initialValue) {
+    retVal[retVal.length - 1].code = initialValue.code ?? '';
+    retVal[retVal.length - 1].uri = initialValue.uri ?? '';
+  }
+
+  return retVal;
 }
 
 function getInitialTerm(id: string, terms: Concept['references']): Term | null {

@@ -2,6 +2,7 @@ import generateConcept from './generate-concept';
 import {
   conceptWithInternalRelations,
   conceptWithOneTerm,
+  conceptWithOneTermWithInitialData,
   differentTerms,
 } from './generate-concept-test-expected';
 
@@ -76,6 +77,186 @@ describe('generate-concept', () => {
     returned[1].id = '1';
 
     expect(returned).toStrictEqual(conceptWithOneTerm);
+  });
+
+  it('should generate concept with one term with initial data provided', () => {
+    const input = {
+      terms: [
+        {
+          changeNote: '',
+          draftComment: '',
+          editorialNote: [],
+          historyNote: '',
+          id: '789',
+          language: 'fi',
+          prefLabel: 'prefLabel',
+          scope: '',
+          source: '',
+          status: 'draft',
+          termConjugation: '',
+          termEquivalency: '',
+          termEquivalencyRelation: '',
+          termFamily: '',
+          termHomographNumber: '',
+          termInfo: '',
+          termStyle: '',
+          termType: 'recommended-term',
+          wordClass: '',
+        },
+      ],
+      basicInformation: {
+        definition: {},
+        example: [],
+        subject: '',
+        note: [],
+        diagramAndSource: {
+          diagram: [],
+          sources: '',
+        },
+        orgInfo: {
+          changeHistory: '',
+          editorialNote: [],
+          etymology: '',
+        },
+        otherInfo: {
+          conceptClass: '',
+          wordClass: '',
+        },
+        relationalInfo: {
+          broaderConcept: [],
+          narrowerConcept: [],
+          relatedConcept: [],
+          isPartOfConcept: [],
+          hasPartConcept: [],
+          relatedConceptInOther: [],
+          matchInOther: [],
+        },
+      },
+    };
+
+    const returned = generateConcept({
+      data: input,
+      terminologyId: 'terminologyId',
+      initialValue: {
+        code: 'concept-1000',
+        createdBy: 'Admin User',
+        createdDate: '1970-01-01T00:00:00.000Z',
+        id: '123',
+        identifier: {
+          id: '123',
+          type: {
+            graph: {
+              id: '456',
+            },
+            id: 'Concept',
+            uri: '',
+          },
+        },
+        lastModifiedBy: 'Admin User',
+        lastModifiedDate: '1970-01-01T00:00:00.000Z',
+        number: 0,
+        properties: {
+          status: [{ lang: '', value: 'DRAFT', regex: '(?s)^.*$' }],
+        },
+        references: {
+          prefLabelXl: [
+            {
+              code: 'term-1000',
+              createdBy: 'Admin User',
+              createdDate: '1970-01-01T00:00:00.000Z',
+              id: '789',
+              identifier: {
+                id: '789',
+                type: {
+                  graph: {
+                    id: '456',
+                  },
+                  id: 'Term',
+                  uri: '',
+                },
+              },
+              lastModifiedBy: 'Admin User',
+              lastModifiedDate: '1970-01-01T00:00:00.000Z',
+              number: 0,
+              properties: {
+                prefLabel: [
+                  {
+                    lang: 'fi',
+                    value: 'termi',
+                    regex: '(?s)^.*$',
+                  },
+                ],
+                status: [{ lang: '', value: 'DRAFT', regex: '(?s)^.*$' }],
+              },
+              references: {},
+              referrers: {
+                prefLabelXl: [
+                  {
+                    code: 'concept-1000',
+                    createdBy: 'Admin User',
+                    createdDate: '1970-01-01T00:00:00.000Z',
+                    id: '123',
+                    identifier: {
+                      id: '123',
+                      type: {
+                        graph: {
+                          id: '456',
+                        },
+                        id: 'Concept',
+                        uri: '',
+                      },
+                    },
+                    number: 0,
+                    properties: {
+                      status: [{ lang: '', value: 'DRAFT', regex: '(?s)^.*$' }],
+                    },
+                    references: {},
+                    referreres: {},
+                    type: {
+                      graph: {
+                        id: '456',
+                      },
+                      id: 'Concept',
+                      uri: '',
+                    },
+                    uri: 'sanastot.suomi.fi/sanasto/concept-1000',
+                  },
+                ],
+              },
+              type: {
+                graph: {
+                  id: '456',
+                },
+                id: 'Term',
+                uri: '',
+              },
+              uri: 'sanastot.suomi.fi/sanasto/term-1000',
+            },
+          ],
+        },
+        referrers: {},
+        type: {
+          graph: {
+            id: '456',
+          },
+          id: 'Concept',
+          uri: '',
+        },
+        uri: 'sanastot.suomi.fi/sanasto/concept-1000',
+      },
+      lastModifiedBy: 'Admin User',
+    }).map((json) => {
+      // Replacing generated time stamps with expected values
+      json.createdDate = '1970-01-01T00:00:00.000Z';
+      json.lastModifiedDate = '1970-01-01T00:00:00.000Z';
+      return json;
+    });
+
+    // Replacing the last object's id with expected value
+    // since it's randombly generated in the function
+    returned[1].id = '1';
+
+    expect(returned).toStrictEqual(conceptWithOneTermWithInitialData);
   });
 
   it('should generate concept with one term that has relations to same vocabulary concepts', () => {

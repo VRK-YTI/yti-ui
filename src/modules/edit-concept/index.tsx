@@ -104,7 +104,7 @@ export default function EditConcept({
 
   useEffect(() => {
     if (addConceptStatus.isSuccess && postedData) {
-      router.push(
+      router.replace(
         `/terminology/${terminologyId}/concept/${
           postedData[postedData.length - 1].id
         }`

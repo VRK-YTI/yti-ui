@@ -12,7 +12,7 @@ import { getProperty } from '@app/common/utils/get-property';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { Button, Heading } from 'suomifi-ui-components';
+import { Button, Heading, InlineAlert } from 'suomifi-ui-components';
 import ConceptPicker from './concept-picker';
 import generateCollection from './generate-collection';
 import {
@@ -33,6 +33,7 @@ import useUser from '@app/common/utils/hooks/useUser';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
 import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from '@app/common/utils/constants';
 import useConfirmBeforeLeavingPage from '@app/common/utils/hooks/use-confirm-before-leaving-page';
+import { MissingInfoAlertUl } from '../new-terminology/new-terminology.styles';
 
 export default function EditCollection({
   terminologyId,
@@ -79,7 +80,7 @@ export default function EditCollection({
 
   useEffect(() => {
     if (result.isSuccess) {
-      router.push(
+      router.replace(
         `/terminology/${terminologyId}/collection/${newCollectionId}`
       );
     }
@@ -147,12 +148,12 @@ export default function EditCollection({
   const handleClick = () => {
     let errorOccurs = false;
     if (formData.name.filter((n) => n.value !== '').length < 1) {
-      setErrors({ ...errors, name: true });
+      setErrors((errors) => ({ ...errors, name: true }));
       errorOccurs = true;
     }
 
     if (formData.definition.filter((n) => n.value !== '').length < 1) {
-      setErrors({ ...errors, definition: true });
+      setErrors((errors) => ({ ...errors, definition: true }));
       errorOccurs = true;
     }
 
@@ -174,11 +175,11 @@ export default function EditCollection({
   const handleCancel = () => {
     disableConfirmation();
     if (collectionInfo?.collectionId) {
-      router.push(
+      router.replace(
         `/terminology/${terminologyId}/collection/${collectionInfo?.collectionId}`
       );
     } else {
-      router.push(`/terminology/${terminologyId}`);
+      router.replace(`/terminology/${terminologyId}`);
     }
   };
 
@@ -269,6 +270,16 @@ export default function EditCollection({
         <Separator isLarge />
 
         <FooterBlock>
+          {(errors.name || errors.definition) && (
+            <InlineAlert status="warning">
+              <MissingInfoAlertUl>
+                {errors.name && <li>{t('collection-error-missing-name')}</li>}
+                {errors.definition && (
+                  <li>{t('collection-error-missing-definition')}</li>
+                )}
+              </MissingInfoAlertUl>
+            </InlineAlert>
+          )}
           <Button onClick={() => handleClick()}>
             {t('save', { ns: 'admin' })}
           </Button>

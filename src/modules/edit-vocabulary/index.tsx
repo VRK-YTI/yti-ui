@@ -63,7 +63,7 @@ export default function EditVocabulary({ terminologyId }: EditVocabularyProps) {
 
   const handleReturn = useCallback(() => {
     disableConfirmation();
-    router.push(`/terminology/${terminologyId}`);
+    router.replace(`/terminology/${terminologyId}`);
   }, [disableConfirmation, router, terminologyId]);
 
   useEffect(() => {
