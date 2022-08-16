@@ -162,7 +162,9 @@ export default function EditConcept({
           </BreadcrumbLink>
         )}
         {!!preferredTerms?.length && (
-          <BreadcrumbLink url="" current></BreadcrumbLink>
+          <BreadcrumbLink url="" current>
+            <PropertyValue property={preferredTerms} />
+          </BreadcrumbLink>
         )}
       </Breadcrumb>
 
@@ -175,7 +177,9 @@ export default function EditConcept({
             )}
           />
         </SubTitle>
-        <MainTitle></MainTitle>
+        <MainTitle>
+          <PropertyValue property={preferredTerms} />
+        </MainTitle>
         <BadgeBar>
           {t('heading')}
           <PropertyValue property={terminology?.properties.prefLabel} />
