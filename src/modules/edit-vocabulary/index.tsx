@@ -4,6 +4,7 @@ import { useEditTerminologyMutation } from '@app/common/components/modify/modify
 import PropertyValue from '@app/common/components/property-value';
 import Title from '@app/common/components/title/title';
 import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
+import useConfirmBeforeLeavingPage from '@app/common/utils/hooks/use-confirm-before-leaving-page';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
@@ -31,9 +32,12 @@ export default function EditVocabulary({ terminologyId }: EditVocabularyProps) {
   const [isValid, setIsValid] = useState(true);
   const [userPosted, setUserPosted] = useState(false);
   const [editTerminology, result] = useEditTerminologyMutation();
+  const { enableConfirmation, disableConfirmation } =
+    useConfirmBeforeLeavingPage('disabled');
 
   const handleSubmit = () => {
     setUserPosted(true);
+    disableConfirmation();
 
     if (!data || !isValid) {
       return;
@@ -58,8 +62,9 @@ export default function EditVocabulary({ terminologyId }: EditVocabularyProps) {
   };
 
   const handleReturn = useCallback(() => {
+    disableConfirmation();
     router.replace(`/terminology/${terminologyId}`);
-  }, [router, terminologyId]);
+  }, [disableConfirmation, router, terminologyId]);
 
   useEffect(() => {
     if (result.isSuccess) {
@@ -106,6 +111,7 @@ export default function EditVocabulary({ terminologyId }: EditVocabularyProps) {
           setManualData={setData}
           userPosted={userPosted}
           initialData={data}
+          onChange={enableConfirmation}
         />
 
         <TallerSeparator />
