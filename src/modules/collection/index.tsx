@@ -73,8 +73,7 @@ export default function Collection({
   const prefLabel = getPropertyValue({
     property: collection?.properties.prefLabel,
     language: i18n.language,
-    fallbackLanguage: 'fi',
-  });
+ });
 
   useEffect(() => {
     if (collection) {
@@ -96,8 +95,7 @@ export default function Collection({
             <BreadcrumbLink url={`/terminology/${terminologyId}`}>
               <PropertyValue
                 property={terminology?.properties.prefLabel}
-                fallbackLanguage="fi"
-              />
+             />
             </BreadcrumbLink>
           )}
           <BreadcrumbLink url={''} current>
@@ -140,8 +138,7 @@ export default function Collection({
           <BreadcrumbLink url={`/terminology/${terminologyId}`}>
             <PropertyValue
               property={terminology?.properties.prefLabel}
-              fallbackLanguage="fi"
-            />
+           />
           </BreadcrumbLink>
         )}
         <BreadcrumbLink
@@ -150,8 +147,7 @@ export default function Collection({
         >
           <PropertyValue
             property={collection?.properties.prefLabel}
-            fallbackLanguage="fi"
-          />
+         />
         </BreadcrumbLink>
       </Breadcrumb>
 
@@ -163,21 +159,18 @@ export default function Collection({
                 'prefLabel',
                 terminology?.references.contributor
               )}
-              fallbackLanguage="fi"
-            />
+           />
           </SubTitle>
           <MainTitle>
             <PropertyValue
               property={collection?.properties.prefLabel}
-              fallbackLanguage="fi"
-            />
+           />
           </MainTitle>
           <BadgeBar>
             {t('heading')}
             <PropertyValue
               property={terminology?.properties.prefLabel}
-              fallbackLanguage="fi"
-            />
+           />
           </BadgeBar>
 
           <MultilingualPropertyBlock
@@ -232,8 +225,7 @@ export default function Collection({
             property={
               terminology?.references.contributor?.[0]?.properties.prefLabel
             }
-            fallbackLanguage="fi"
-          />
+         />
           <BasicBlock title={t('vocabulary-info-created-at', { ns: 'common' })}>
             <FormattedDate date={collection?.createdDate} />
             {collection?.createdBy && `, ${collection.createdBy}`}

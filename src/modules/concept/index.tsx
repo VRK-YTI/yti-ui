@@ -68,7 +68,6 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
   const prefLabel = getPropertyValue({
     property: getProperty('prefLabel', concept?.references.prefLabelXl),
     language: i18n.language,
-    fallbackLanguage: 'fi',
   });
 
   useEffect(() => {
@@ -94,8 +93,7 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
             <BreadcrumbLink url={`/terminology/${terminologyId}`}>
               <PropertyValue
                 property={terminology?.properties.prefLabel}
-                fallbackLanguage="fi"
-              />
+             />
             </BreadcrumbLink>
           )}
           <BreadcrumbLink url="" current>
@@ -138,8 +136,7 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
           <BreadcrumbLink url={`/terminology/${terminologyId}`}>
             <PropertyValue
               property={terminology?.properties.prefLabel}
-              fallbackLanguage="fi"
-            />
+             />
           </BreadcrumbLink>
         )}
         <BreadcrumbLink
@@ -158,16 +155,14 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
                 'prefLabel',
                 terminology?.references.contributor
               )}
-              fallbackLanguage="fi"
-            />
+           />
           </SubTitle>
           <MainTitle>{prefLabel}</MainTitle>
           <BadgeBar>
             {t('heading')}
             <PropertyValue
               property={terminology?.properties.prefLabel}
-              fallbackLanguage="fi"
-            />
+           />
             <Badge $isValid={status === 'VALID'}>
               {translateStatus(status, t)}
             </Badge>
@@ -253,8 +248,7 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
             property={
               terminology?.references.contributor?.[0]?.properties.prefLabel
             }
-            fallbackLanguage="fi"
-          />
+         />
           <BasicBlock title={t('vocabulary-info-created-at', { ns: 'common' })}>
             <FormattedDate date={concept?.createdDate} />
             {concept?.createdBy && `, ${concept.createdBy}`}

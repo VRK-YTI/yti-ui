@@ -112,8 +112,7 @@ export default function RelationalInformationBlock({
                           value: concept.label[lang],
                           regex: '',
                         }))}
-                        fallbackLanguage="fi"
-                      />
+                     />
 
                       {fromOther && ' - '}
                       {fromOther && (
@@ -125,8 +124,7 @@ export default function RelationalInformationBlock({
                               regex: '',
                             })
                           )}
-                          fallbackLanguage="fi"
-                        />
+                       />
                       )}
                     </Chip>
                   );

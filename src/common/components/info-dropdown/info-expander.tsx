@@ -69,7 +69,6 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
               getPropertyValue({
                 property: group.properties.prefLabel,
                 language: i18n.language,
-                fallbackLanguage: 'fi',
               })
             )
             .join(', ')}
@@ -223,7 +222,6 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
         <PropertyBlock
           title={t('vocabulary-info-organization')}
           property={data.references.contributor?.[0]?.properties.prefLabel}
-          fallbackLanguage="fi"
           id="organization"
         />
         <BasicBlock title={t('vocabulary-info-created-at')} id="created-at">

@@ -69,8 +69,7 @@ export default function RenderConcepts({
               : terminology?.properties.prefLabel;
 
           const organizationTitle = getPropertyValue({
-            fallbackLanguage: 'fi',
-            language: i18n.language,
+           language: i18n.language,
             property: property,
           });
 
@@ -102,8 +101,7 @@ export default function RenderConcepts({
                           return obj;
                         }),
                         language: i18n.language,
-                        fallbackLanguage: 'fi',
-                      }) ??
+                     }) ??
                       concept.label[i18n.language] ??
                       concept.label.fi
                     }

@@ -120,8 +120,7 @@ export default function EditConcept({
             <BreadcrumbLink url={`/terminology/${router.query.terminologyId}`}>
               <PropertyValue
                 property={terminology?.properties.prefLabel}
-                fallbackLanguage="fi"
-              />
+             />
             </BreadcrumbLink>
           )}
           <BreadcrumbLink url="" current>
@@ -163,14 +162,12 @@ export default function EditConcept({
           <BreadcrumbLink url={`/terminology/${router.query.terminologyId}`}>
             <PropertyValue
               property={terminology?.properties.prefLabel}
-              fallbackLanguage="fi"
-            />
+           />
           </BreadcrumbLink>
         )}
         {!!preferredTerms?.length && (
           <BreadcrumbLink url="" current>
-            <PropertyValue property={preferredTerms} fallbackLanguage="fi" />
-          </BreadcrumbLink>
+         </BreadcrumbLink>
         )}
       </Breadcrumb>
 
@@ -181,18 +178,15 @@ export default function EditConcept({
               'prefLabel',
               terminology?.references.contributor
             )}
-            fallbackLanguage="fi"
-          />
+         />
         </SubTitle>
         <MainTitle>
-          <PropertyValue property={preferredTerms} fallbackLanguage="fi" />
-        </MainTitle>
+       </MainTitle>
         <BadgeBar>
           {t('heading')}
           <PropertyValue
             property={terminology?.properties.prefLabel}
-            fallbackLanguage="fi"
-          />
+         />
           <Badge>{t('statuses.draft', { ns: 'common' })}</Badge>
         </BadgeBar>
         <PageHelpText>{t('new-concept-page-help')}</PageHelpText>

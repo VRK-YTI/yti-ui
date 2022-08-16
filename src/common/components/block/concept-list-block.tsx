@@ -37,7 +37,6 @@ export default function ConceptListBlock({
                     'prefLabel',
                     concept.references.prefLabelXl
                   )}
-                  fallbackLanguage="fi"
                 />
               </SuomiLink>
             </Link>

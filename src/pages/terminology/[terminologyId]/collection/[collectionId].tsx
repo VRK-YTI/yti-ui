@@ -89,14 +89,12 @@ export const getServerSideProps = createCommonGetServerSideProps(
     const vocabularyTitle = getPropertyValue({
       property: vocabularyData?.properties?.prefLabel,
       language: locale,
-      fallbackLanguage: 'fi',
-    });
+   });
 
     const collectionTitle = getPropertyValue({
       property: collectionData?.properties.prefLabel,
       language: locale,
-      fallbackLanguage: 'fi',
-    });
+   });
 
     return {
       props: {

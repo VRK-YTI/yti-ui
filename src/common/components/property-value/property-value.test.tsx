@@ -14,7 +14,6 @@ describe('propertyValue', () => {
     render(
       <PropertyValue
         property={[{ lang: '', value: 'Value (no-lang)', regex: '' }]}
-        fallbackLanguage="fi"
       />
     );
 
@@ -30,7 +29,6 @@ describe('propertyValue', () => {
           { lang: 'en', value: 'Value (en)', regex: '' },
           { lang: 'fi', value: 'Value (fi)', regex: '' },
         ]}
-        fallbackLanguage="fi"
       />
     );
 
@@ -38,7 +36,7 @@ describe('propertyValue', () => {
     expect(screen.queryByText('Value (fi)')).not.toBeInTheDocument();
   });
 
-  it('should render localized value in fallback language when found', () => {
+  it('should render localized value in fallback language order (fi, en, sv) when found', () => {
     mockedUseTranslation.mockReturnValue({ i18n: { language: 'en' } });
 
     render(
@@ -47,24 +45,10 @@ describe('propertyValue', () => {
           { lang: 'fi', value: 'Value (fi)', regex: '' },
           { lang: 'sv', value: 'Value (sv)', regex: '' },
         ]}
-        fallbackLanguage="fi"
-      />
+     />
     );
 
     expect(screen.getByText('Value (fi)')).toBeInTheDocument();
-    expect(screen.queryByText('Value (sv)')).not.toBeInTheDocument();
-  });
-
-  it('should not render value in wrong language', () => {
-    mockedUseTranslation.mockReturnValue({ i18n: { language: 'en' } });
-
-    render(
-      <PropertyValue
-        property={[{ lang: 'sv', value: 'Value (sv)', regex: '' }]}
-        fallbackLanguage="fi"
-      />
-    );
-
     expect(screen.queryByText('Value (sv)')).not.toBeInTheDocument();
   });
 

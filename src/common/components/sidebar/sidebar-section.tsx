@@ -53,8 +53,7 @@ export default function SidebarSection<T extends BaseEntity<string>>({
         return (
           <PropertyValue
             property={prefLabels as Property[]}
-            fallbackLanguage="fi"
-          />
+         />
         );
       } else {
         const prefLabels = Array.from(
@@ -69,16 +68,14 @@ export default function SidebarSection<T extends BaseEntity<string>>({
         return (
           <PropertyValue
             property={prefLabels as Property[]}
-            fallbackLanguage="fi"
-          />
+         />
         );
       }
     } else {
       return (
         <PropertyValue
           property={propertyAccessor(currItem) as Property[]}
-          fallbackLanguage="fi"
-        />
+       />
       );
     }
   }

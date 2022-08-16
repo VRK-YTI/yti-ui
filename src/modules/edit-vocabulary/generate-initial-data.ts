@@ -27,8 +27,7 @@ export default function generateInitialData(
       const label = getPropertyValue({
         property: group.properties.prefLabel,
         language: lang,
-        fallbackLanguage: 'fi',
-      });
+     });
 
       return {
         checked: false,
@@ -43,8 +42,7 @@ export default function generateInitialData(
     const label = getPropertyValue({
       property: org.properties.prefLabel,
       language: lang,
-      fallbackLanguage: 'fi',
-    });
+   });
 
     return {
       organizationId: org.type.graph.id,
