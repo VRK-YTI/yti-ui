@@ -3,6 +3,7 @@ import { useBreakpoints } from '@app/common/components/media-query/media-query-c
 import { terminologySearchApi } from '@app/common/components/terminology-search/terminology-search.slice';
 import { usePostNewVocabularyMutation } from '@app/common/components/vocabulary/vocabulary.slice';
 import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info';
+import useConfirmBeforeLeavingPage from '@app/common/utils/hooks/use-confirm-before-leaving-page';
 import { useStoreDispatch } from '@app/store';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useState } from 'react';
@@ -41,6 +42,8 @@ export default function NewTerminologyModal({
   const [fileData, setFileData] = useState<File | null>();
   const [userPosted, setUserPosted] = useState(false);
   const [manualData, setManualData] = useState<NewTerminologyInfo>();
+  const { enableConfirmation, disableConfirmation } =
+    useConfirmBeforeLeavingPage('disabled');
 
   const [postNewVocabulary, newVocabulary] = usePostNewVocabularyMutation();
   const [postImportExcel, importExcel] = usePostImportExcelMutation();
@@ -51,7 +54,8 @@ export default function NewTerminologyModal({
     setInputType('');
     setShowModal(false);
     setStartFileUpload(false);
-  }, [setShowModal]);
+    disableConfirmation();
+  }, [setShowModal, disableConfirmation]);
 
   useEffect(() => {
     if (newVocabulary.isSuccess) {
@@ -164,6 +168,7 @@ export default function NewTerminologyModal({
             setIsValid={setIsValid}
             setManualData={setManualData}
             userPosted={userPosted}
+            onChange={enableConfirmation}
           />
         )}
         {inputType === 'file' && (

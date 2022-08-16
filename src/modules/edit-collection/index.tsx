@@ -32,6 +32,7 @@ import { Collection } from '@app/common/interfaces/collection.interface';
 import useUser from '@app/common/utils/hooks/useUser';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
 import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from '@app/common/utils/constants';
+import useConfirmBeforeLeavingPage from '@app/common/utils/hooks/use-confirm-before-leaving-page';
 
 export default function EditCollection({
   terminologyId,
@@ -73,6 +74,8 @@ export default function EditCollection({
   const [formData, setFormData] = useState<EditCollectionFormDataType>(
     setInitialData(collection)
   );
+  const { enableConfirmation, disableConfirmation } =
+    useConfirmBeforeLeavingPage('disabled');
 
   useEffect(() => {
     if (result.isSuccess) {
@@ -94,6 +97,7 @@ export default function EditCollection({
       return n;
     });
     setFormData(data);
+    enableConfirmation();
 
     if (errors.name && data.name.filter((n) => n.value !== '').length > 0) {
       setErrors({ ...errors, name: false });
@@ -121,6 +125,7 @@ export default function EditCollection({
     }
 
     setFormData(data);
+    enableConfirmation();
 
     if (
       errors.definition &&
@@ -133,9 +138,10 @@ export default function EditCollection({
   const setFormConcepts = (
     concepts: EditCollectionFormDataType['concepts']
   ) => {
-    const data = formData;
+    const data = { ...formData };
     data.concepts = concepts;
     setFormData(data);
+    enableConfirmation();
   };
 
   const handleClick = () => {
@@ -154,6 +160,7 @@ export default function EditCollection({
       return;
     }
 
+    disableConfirmation();
     const data = generateCollection(
       formData,
       terminologyId,
@@ -165,6 +172,7 @@ export default function EditCollection({
   };
 
   const handleCancel = () => {
+    disableConfirmation();
     if (collectionInfo?.collectionId) {
       router.push(
         `/terminology/${terminologyId}/collection/${collectionInfo?.collectionId}`
@@ -253,9 +261,9 @@ export default function EditCollection({
         <Separator isLarge />
 
         <ConceptPicker
-          formConcepts={formData.concepts}
+          concepts={formData.concepts}
           terminologyId={terminologyId}
-          setFormConcepts={setFormConcepts}
+          onChange={setFormConcepts}
         />
 
         <Separator isLarge />

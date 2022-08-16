@@ -28,6 +28,7 @@ import generateFormData from './generate-form-data';
 import { useSelector } from 'react-redux';
 import { selectLogin } from '@app/common/components/login/login.slice';
 import { Notification, Paragraph, Text } from 'suomifi-ui-components';
+import useConfirmBeforeLeavingPage from '@app/common/utils/hooks/use-confirm-before-leaving-page';
 
 interface EditConceptProps {
   terminologyId: string;
@@ -57,6 +58,10 @@ export default function EditConcept({
       value: string;
     }[]
   >(getPreferredTerms());
+  const { disableConfirmation, enableConfirmation } =
+    useConfirmBeforeLeavingPage(
+      preferredTerms.length > 0 && !conceptData ? 'enabled' : 'disabled'
+    );
 
   const [postedData, setPostedData] =
     useState<ReturnType<typeof generateConcept>>();
@@ -84,14 +89,17 @@ export default function EditConcept({
 
     setPostedData(concept);
     addConcept(concept);
+    disableConfirmation();
   };
 
   const updateTerms = (terms: ConceptTermType[]) => {
     setFormData({ ...formData, terms: terms });
+    enableConfirmation();
   };
 
   const updateBasicInformation = (basicInfo: BasicInfo) => {
     setFormData({ ...formData, basicInformation: basicInfo });
+    enableConfirmation();
   };
 
   useEffect(() => {
@@ -202,6 +210,7 @@ export default function EditConcept({
 
         <FormFooter
           handlePost={handlePost}
+          onCancel={disableConfirmation}
           isEdit={typeof conceptData !== 'undefined'}
         />
       </NewConceptBlock>
