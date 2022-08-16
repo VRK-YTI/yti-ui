@@ -86,7 +86,9 @@ export default function NewConceptModal({
               key={lang}
               labelText={t('recommended-term', { lang: lang.toUpperCase() })}
               visualPlaceholder={t('term-name-placeholder')}
-              onChange={(e) => handleChange({ lang, value: e as string })}
+              onChange={(e) =>
+                handleChange({ lang, value: e?.toString().trim() ?? '' })
+              }
               status={isError ? 'error' : 'default'}
               maxLength={TEXT_INPUT_MAX}
               className="concept-name-input"

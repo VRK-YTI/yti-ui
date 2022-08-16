@@ -48,8 +48,8 @@ export default function OrganizationalInformation({
     update({
       key: infoKey,
       value: {
-        changeHistory: changeHistory,
-        etymology: etymology,
+        changeHistory: changeHistory.trim(),
+        etymology: etymology.trim(),
         editorialNote: useValue ? value : editorialNotes,
       },
     });

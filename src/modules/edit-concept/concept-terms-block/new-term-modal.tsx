@@ -74,7 +74,10 @@ export default function NewTermModal({
 
   const handleUpdate = ({ key, value }: TermFormUpdate) => {
     let updatedTerm = termData;
-    updatedTerm = { ...updatedTerm, [key]: value };
+    updatedTerm = {
+      ...updatedTerm,
+      [key]: typeof value === 'string' ? value.trim() : value,
+    };
 
     if (
       Object.keys(invalidData).includes(key) &&
