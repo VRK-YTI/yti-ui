@@ -38,8 +38,7 @@ export default function Pagination({ data, pageString }: PaginationProps) {
         onClick={() => {
           urlState.page !== 1 && patchUrlState({ page: urlState.page - 1 });
           window.scrollTo(0, 0);
-        }
-        }
+        }}
         data-testid="pagination-left"
         icon="chevronLeft"
         iconProps={{ icon: 'chevronLeft' }}
@@ -58,12 +57,10 @@ export default function Pagination({ data, pageString }: PaginationProps) {
               }
               onClick={() => {
                 urlState.page !== item &&
-                typeof item === 'number' &&
-                patchUrlState({ page: item });
+                  typeof item === 'number' &&
+                  patchUrlState({ page: item });
                 window.scrollTo(0, 0);
-              }
-
-              }
+              }}
               variant={item === urlState.page ? 'default' : 'secondaryNoBorder'}
               disabled={item === '...'}
             >
@@ -81,10 +78,9 @@ export default function Pagination({ data, pageString }: PaginationProps) {
         disabled={urlState.page === items[items.length - 1]}
         onClick={() => {
           urlState.page !== items[items.length - 1] &&
-          patchUrlState({ page: urlState.page + 1 });
+            patchUrlState({ page: urlState.page + 1 });
           window.scrollTo(0, 0);
-        }
-        }
+        }}
         data-testid="pagination-right"
         icon="chevronRight"
         iconProps={{ icon: 'chevronRight' }}
