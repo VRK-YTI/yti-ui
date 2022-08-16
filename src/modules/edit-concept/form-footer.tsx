@@ -14,7 +14,7 @@ export default function FormFooter({ handlePost, isEdit }: FormFooterProps) {
   const router = useRouter();
 
   const handleCancel = () => {
-    router.push(
+    router.replace(
       isEdit
         ? `/terminology/${router.query.terminologyId}/concept/${router.query.conceptId}`
         : `/terminology/${router.query.terminologyId}`
