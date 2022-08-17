@@ -40,12 +40,10 @@ export default function DiagramsAndSourcesExpander({
         <PropertyBlock
           title={t('field-concept-diagrams')}
           property={undefined}
-          fallbackLanguage="fi"
         />
         <PropertyBlock
           title={t('field-sources')}
           property={concept?.properties.source}
-          fallbackLanguage="fi"
         />
       </ExpanderContent>
     </Expander>

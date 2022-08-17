@@ -8,7 +8,6 @@ export interface PropertyBlockProps {
   title?: React.ReactNode;
   property?: Property[];
   valueAccessor?: (property: Property) => string;
-  fallbackLanguage?: string;
   delimiter?: string | false;
   extra?: React.ReactNode;
   id?: string;
@@ -18,7 +17,6 @@ export default function PropertyBlock({
   title,
   property,
   valueAccessor,
-  fallbackLanguage,
   delimiter = false,
   extra,
   id,
@@ -29,7 +27,6 @@ export default function PropertyBlock({
     property,
     valueAccessor,
     language: i18n.language,
-    fallbackLanguage,
     delimiter,
   });
 

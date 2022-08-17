@@ -118,10 +118,7 @@ export default function EditConcept({
         <Breadcrumb>
           {router.query.terminologyId && (
             <BreadcrumbLink url={`/terminology/${router.query.terminologyId}`}>
-              <PropertyValue
-                property={terminology?.properties.prefLabel}
-                fallbackLanguage="fi"
-              />
+              <PropertyValue property={terminology?.properties.prefLabel} />
             </BreadcrumbLink>
           )}
           <BreadcrumbLink url="" current>
@@ -161,15 +158,12 @@ export default function EditConcept({
       <Breadcrumb>
         {router.query.terminologyId && (
           <BreadcrumbLink url={`/terminology/${router.query.terminologyId}`}>
-            <PropertyValue
-              property={terminology?.properties.prefLabel}
-              fallbackLanguage="fi"
-            />
+            <PropertyValue property={terminology?.properties.prefLabel} />
           </BreadcrumbLink>
         )}
         {!!preferredTerms?.length && (
           <BreadcrumbLink url="" current>
-            <PropertyValue property={preferredTerms} fallbackLanguage="fi" />
+            <PropertyValue property={preferredTerms} />
           </BreadcrumbLink>
         )}
       </Breadcrumb>
@@ -181,18 +175,14 @@ export default function EditConcept({
               'prefLabel',
               terminology?.references.contributor
             )}
-            fallbackLanguage="fi"
           />
         </SubTitle>
         <MainTitle>
-          <PropertyValue property={preferredTerms} fallbackLanguage="fi" />
+          <PropertyValue property={preferredTerms} />
         </MainTitle>
         <BadgeBar>
           {t('heading')}
-          <PropertyValue
-            property={terminology?.properties.prefLabel}
-            fallbackLanguage="fi"
-          />
+          <PropertyValue property={terminology?.properties.prefLabel} />
           <Badge>{t('statuses.draft', { ns: 'common' })}</Badge>
         </BadgeBar>
         <PageHelpText>{t('new-concept-page-help')}</PageHelpText>

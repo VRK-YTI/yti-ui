@@ -88,10 +88,7 @@ export default function EditVocabulary({ terminologyId }: EditVocabularyProps) {
     <>
       <Breadcrumb>
         <BreadcrumbLink url={`/terminology/${terminologyId}`} current>
-          <PropertyValue
-            property={info.properties.prefLabel}
-            fallbackLanguage="fi"
-          />
+          <PropertyValue property={info.properties.prefLabel} />
         </BreadcrumbLink>
       </Breadcrumb>
 

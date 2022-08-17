@@ -61,7 +61,6 @@ export default function Title({ info, noExpander }: TitleProps) {
       getPropertyValue({
         property: getProperty('prefLabel', info.references.contributor),
         language: i18n.language,
-        fallbackLanguage: 'fi',
       }) ?? '';
 
     return (
@@ -93,7 +92,6 @@ export default function Title({ info, noExpander }: TitleProps) {
       getPropertyValue({
         property: info.properties.prefLabel,
         language: i18n.language,
-        fallbackLanguage: 'fi',
       }) ?? ''
     );
   }

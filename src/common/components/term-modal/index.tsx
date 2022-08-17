@@ -50,10 +50,7 @@ export default function TermModal({ data }: TermModalProps) {
           be rendered. Same solution in <ModalTitle /> below.
         */}
         {data.term.properties.prefLabel?.[0].value ?? (
-          <PropertyValue
-            property={data.term.properties.prefLabel}
-            fallbackLanguage="fi"
-          />
+          <PropertyValue property={data.term.properties.prefLabel} />
         )}
       </TermModalButton>
       <Modal
@@ -65,10 +62,7 @@ export default function TermModal({ data }: TermModalProps) {
         <ModalContent>
           <ModalTitle>
             {data.term.properties.prefLabel?.[0].value ?? (
-              <PropertyValue
-                property={data.term.properties.prefLabel}
-                fallbackLanguage="fi"
-              />
+              <PropertyValue property={data.term.properties.prefLabel} />
             )}
           </ModalTitle>
 

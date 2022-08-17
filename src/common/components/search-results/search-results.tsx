@@ -167,21 +167,12 @@ export default function SearchResults({
                   }
                 })
                 .map((collection) => {
-                  const prefLabelLangs = collection.properties.prefLabel
-                    ?.map((pl) => pl.lang)
-                    .filter(
-                      (lang) =>
-                        (urlState.lang && lang !== urlState.lang) ||
-                        !urlState.lang
-                    );
-
                   return (
                     <ResultCard
                       key={collection.id}
                       description={
                         <PropertyValue
                           property={collection.properties.definition}
-                          fallbackLanguage={'fi'}
                           fallback={t('vocabulary-results-no-description')}
                         />
                       }
@@ -198,10 +189,6 @@ export default function SearchResults({
                       title={getPropertyValue({
                         property: collection.properties.prefLabel,
                         language: urlState.lang ? urlState.lang : i18n.language,
-                        fallbackLanguage:
-                          prefLabelLangs?.[0] !== urlState.lang
-                            ? prefLabelLangs?.[0]
-                            : 'fi',
                       })}
                       titleLink={`/terminology/${collection.type.graph.id}/collection/${collection.id}`}
                       type={t('vocabulary-info-collection')}
