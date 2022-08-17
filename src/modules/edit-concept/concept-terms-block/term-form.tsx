@@ -14,6 +14,7 @@ import {
   SingleSelect,
   TextInput,
 } from 'suomifi-ui-components';
+import { HandleSwitchTermsProps } from '.';
 import ListBlock from '../list-block';
 import { ConceptTermType, ListType } from '../new-concept.types';
 import {
@@ -32,6 +33,8 @@ export interface TermFormProps {
     key: string;
     value: string | ListType[];
   }) => void;
+  currentTerms: ConceptTermType[];
+  handleSwitchTerms: (value: HandleSwitchTermsProps) => void;
 }
 
 export interface TermFormUpdate {
@@ -39,7 +42,12 @@ export interface TermFormUpdate {
   value: string | ListType[] | null;
 }
 
-export default function TermForm({ term, update }: TermFormProps) {
+export default function TermForm({
+  term,
+  update,
+  currentTerms,
+  handleSwitchTerms,
+}: TermFormProps) {
   const { t } = useTranslation('admin');
   const [modalVisible, setModalVisible] = useState(false);
   const [isHomographic, setIsHomographic] = useState(
@@ -133,9 +141,12 @@ export default function TermForm({ term, update }: TermFormProps) {
             </Button>
             {modalVisible && (
               <TermTypeModal
-                currentType={term.termType}
+                currentTerm={term}
+                lang={term.language}
                 setVisibility={setModalVisible}
                 handleUpdate={handleUpdate}
+                currentTerms={currentTerms}
+                handleSwitchTerms={handleSwitchTerms}
               />
             )}
           </BasicBlockExtraWrapper>
