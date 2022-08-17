@@ -11,6 +11,7 @@ export interface MultilingualBlockProps<T> {
   data?: T[];
   mapper: MultilingualBlockItemMapper<T>;
   extra?: React.ReactNode;
+  id?: string;
 }
 
 export default function MultilingualBlock<T>({
@@ -18,13 +19,14 @@ export default function MultilingualBlock<T>({
   data,
   mapper,
   extra,
+  id,
 }: MultilingualBlockProps<T>) {
   if (!data) {
     return null;
   }
 
   return (
-    <BasicBlock title={title} extra={extra} largeGap>
+    <BasicBlock title={title} extra={extra} largeGap id={id}>
       <MultilingualDefinitionList items={data.map(mapper)} />
     </BasicBlock>
   );

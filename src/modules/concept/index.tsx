@@ -68,7 +68,6 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
   const prefLabel = getPropertyValue({
     property: getProperty('prefLabel', concept?.references.prefLabelXl),
     language: i18n.language,
-    fallbackLanguage: 'fi',
   });
 
   useEffect(() => {
@@ -92,10 +91,7 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
         <Breadcrumb>
           {!terminologyError && (
             <BreadcrumbLink url={`/terminology/${terminologyId}`}>
-              <PropertyValue
-                property={terminology?.properties.prefLabel}
-                fallbackLanguage="fi"
-              />
+              <PropertyValue property={terminology?.properties.prefLabel} />
             </BreadcrumbLink>
           )}
           <BreadcrumbLink url="" current>
@@ -136,10 +132,7 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
       <Breadcrumb>
         {!terminologyError && (
           <BreadcrumbLink url={`/terminology/${terminologyId}`}>
-            <PropertyValue
-              property={terminology?.properties.prefLabel}
-              fallbackLanguage="fi"
-            />
+            <PropertyValue property={terminology?.properties.prefLabel} />
           </BreadcrumbLink>
         )}
         <BreadcrumbLink
@@ -158,16 +151,12 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
                 'prefLabel',
                 terminology?.references.contributor
               )}
-              fallbackLanguage="fi"
             />
           </SubTitle>
           <MainTitle>{prefLabel}</MainTitle>
           <BadgeBar>
             {t('heading')}
-            <PropertyValue
-              property={terminology?.properties.prefLabel}
-              fallbackLanguage="fi"
-            />
+            <PropertyValue property={terminology?.properties.prefLabel} />
             <Badge $isValid={status === 'VALID'}>
               {translateStatus(status, t)}
             </Badge>
@@ -227,7 +216,11 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
                     <Link
                       href={`/terminology/${terminologyId}/concept/${conceptId}/edit`}
                     >
-                      <Button variant="secondary" icon="edit">
+                      <Button
+                        variant="secondary"
+                        icon="edit"
+                        id="edit-concept-button"
+                      >
                         {t('edit-concept')}
                       </Button>
                     </Link>
@@ -249,7 +242,6 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
             property={
               terminology?.references.contributor?.[0]?.properties.prefLabel
             }
-            fallbackLanguage="fi"
           />
           <BasicBlock title={t('vocabulary-info-created-at', { ns: 'common' })}>
             <FormattedDate date={concept?.createdDate} />

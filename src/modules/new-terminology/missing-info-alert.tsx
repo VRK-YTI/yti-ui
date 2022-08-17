@@ -17,7 +17,7 @@ export default function MissingInfoAlert({ data }: MissingInfoAlertProps) {
 
   if (renderCheck) {
     return (
-      <InlineAlert status="warning" role="alert">
+      <InlineAlert status="warning" role="alert" id="missing-info-alert">
         {t('alert-missing-information')}:
         <MissingInfoAlertUl>
           {renderDescriptionAlerts()}

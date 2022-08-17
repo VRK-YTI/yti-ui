@@ -18,6 +18,7 @@ interface InfoManualProps {
   setManualData: (object: NewTerminologyInfo) => void;
   userPosted: boolean;
   initialData?: NewTerminologyInfo;
+  onChange: () => void;
 }
 
 export default function InfoManual({
@@ -25,6 +26,7 @@ export default function InfoManual({
   setManualData,
   userPosted,
   initialData,
+  onChange,
 }: InfoManualProps) {
   const { t } = useTranslation('admin');
   const [terminologyData, setTerminologyData] = useState<NewTerminologyInfo>(
@@ -58,6 +60,7 @@ export default function InfoManual({
 
   const handleUpdate = ({ key, data }: UpdateTerminology) => {
     setTerminologyData((values) => ({ ...values, [key]: data }));
+    onChange();
   };
 
   return (

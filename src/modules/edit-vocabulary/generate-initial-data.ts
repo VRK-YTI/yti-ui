@@ -27,7 +27,6 @@ export default function generateInitialData(
       const label = getPropertyValue({
         property: group.properties.prefLabel,
         language: lang,
-        fallbackLanguage: 'fi',
       });
 
       return {
@@ -43,7 +42,6 @@ export default function generateInitialData(
     const label = getPropertyValue({
       property: org.properties.prefLabel,
       language: lang,
-      fallbackLanguage: 'fi',
     });
 
     return {

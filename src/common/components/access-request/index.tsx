@@ -81,6 +81,7 @@ export default function AccessRequest({ organizations }: AccessRequestProps) {
         icon="message"
         onClick={() => setVisible(true)}
         disabled={requestsError ? true : false}
+        id="access-request-button"
       >
         {t('access-request-access')}
       </ModalButton>

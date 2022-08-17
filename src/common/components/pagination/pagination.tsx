@@ -32,7 +32,7 @@ export default function Pagination({ data, pageString }: PaginationProps) {
   }
 
   return (
-    <PaginationWrapper>
+    <PaginationWrapper id="pagination">
       <ChevronButton
         disabled={urlState.page === 1}
         onClick={() =>
@@ -43,6 +43,7 @@ export default function Pagination({ data, pageString }: PaginationProps) {
         iconProps={{ icon: 'chevronLeft' }}
         variant="secondaryNoBorder"
         aria-label={t('pagination-previous-page')}
+        id="pagination-left-button"
       />
 
       {!breakPoints.isSmall ? (
@@ -61,6 +62,7 @@ export default function Pagination({ data, pageString }: PaginationProps) {
               }
               variant={item === urlState.page ? 'default' : 'secondaryNoBorder'}
               disabled={item === '...'}
+              className="pagination-number-button"
             >
               {item}
             </PaginationButton>
@@ -83,6 +85,7 @@ export default function Pagination({ data, pageString }: PaginationProps) {
         iconProps={{ icon: 'chevronRight' }}
         variant="secondaryNoBorder"
         aria-label={t('pagination-next-page')}
+        id="pagination-right-button"
       />
     </PaginationWrapper>
   );

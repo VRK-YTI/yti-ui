@@ -125,10 +125,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
     <>
       <Breadcrumb>
         <BreadcrumbLink url={`/terminology/${id}`} current>
-          <PropertyValue
-            property={info?.properties.prefLabel}
-            fallbackLanguage="fi"
-          />
+          <PropertyValue property={info?.properties.prefLabel} />
         </BreadcrumbLink>
       </Breadcrumb>
 

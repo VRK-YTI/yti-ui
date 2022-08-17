@@ -121,6 +121,7 @@ export default function TermTypeModal({
           labelText={t('term-new-type')}
           visualPlaceholder={t('choose-type')}
           onChange={(e) => handleChange(e)}
+          id="term-type-picker"
         >
           {termTypes
             .filter((type) => type !== currentTerm.termType)
@@ -189,12 +190,20 @@ export default function TermTypeModal({
           </InlineAlert>
         )}
         <Button
+
           disabled={isChangeDisabled || !isValid}
+
           onClick={() => handleClick()}
+
+          id="submit-button"
         >
           {t('accept')}
         </Button>
-        <Button variant="secondary" onClick={() => setVisibility(false)}>
+        <Button
+          variant="secondary"
+          onClick={() => setVisibility(false)}
+          id="cancel-button"
+        >
           {t('cancel-variant')}
         </Button>
       </ModalFooter>

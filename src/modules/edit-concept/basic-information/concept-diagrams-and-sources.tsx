@@ -48,7 +48,7 @@ export default function ConceptDiagramsAndSources({
   };
 
   return (
-    <ConceptExpander>
+    <ConceptExpander id="diagrams-and-sources-expander">
       <ExpanderTitleButton asHeading="h3">
         {t('concept-diagrams-and-sources')}
       </ExpanderTitleButton>
@@ -72,9 +72,10 @@ export default function ConceptDiagramsAndSources({
           hintText={t('sources-hint-text')}
           visualPlaceholder={t('sources-placeholder')}
           onBlur={() => handleBlur()}
-          onChange={(e) => setSources(e.target.value)}
+          onChange={(e) => setSources(e.target.value.trim())}
           value={sources}
           maxLength={TEXT_AREA_MAX}
+          id="sources-input"
         />
       </ExpanderContentFitted>
     </ConceptExpander>

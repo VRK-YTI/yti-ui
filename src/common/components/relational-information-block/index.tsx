@@ -94,7 +94,7 @@ export default function RelationalInformationBlock({
                 </Text>
               </Paragraph>
 
-              <ChipBlock>
+              <ChipBlock id="selected-concepts-chip-block">
                 {selectedConcepts.map((concept) => {
                   return (
                     <Chip
@@ -112,7 +112,6 @@ export default function RelationalInformationBlock({
                           value: concept.label[lang],
                           regex: '',
                         }))}
-                        fallbackLanguage="fi"
                       />
 
                       {fromOther && ' - '}
@@ -125,7 +124,6 @@ export default function RelationalInformationBlock({
                               regex: '',
                             })
                           )}
-                          fallbackLanguage="fi"
                         />
                       )}
                     </Chip>
@@ -197,7 +195,11 @@ function ManageRelationalInfoModal({
 
   return (
     <>
-      <Button onClick={() => handleSetVisible()} variant="secondary">
+      <Button
+        onClick={() => handleSetVisible()}
+        variant="secondary"
+        className="relational-info-modal-button"
+      >
         {buttonTitle}
       </Button>
 
@@ -239,8 +241,14 @@ function ManageRelationalInfoModal({
         <ModalFooter>
           {renderToggleView()}
 
-          <Button onClick={() => handleChange()}>{t('add-concepts')}</Button>
-          <Button onClick={() => handleClose()} variant="secondary">
+          <Button onClick={() => handleChange()} id="submit-button">
+            {t('add-concepts')}
+          </Button>
+          <Button
+            onClick={() => handleClose()}
+            variant="secondary"
+            id="cancel-button"
+          >
             {t('cancel-variant')}
           </Button>
         </ModalFooter>
@@ -260,6 +268,7 @@ function ManageRelationalInfoModal({
           icon={showChosen ? 'arrowLeft' : undefined}
           iconRight={!showChosen ? 'arrowRight' : undefined}
           onClick={() => setShowChosen(!showChosen)}
+          id="switch-view-button"
         >
           {showChosen
             ? t('add-more-concepts')

@@ -84,14 +84,19 @@ export default function Prefix({ update, userPosted }: PrefixProps) {
         onChange={(e) => {
           handlePrefixTypeChange(e);
         }}
+        id="prefix-input-type-selector"
       >
-        <RadioButton value="automatic">{t('automatic-prefix')}</RadioButton>
-        <RadioButton value="manual">{t('manual-prefix')}</RadioButton>
+        <RadioButton value="automatic" id="prefix-input-automatic">
+          {t('automatic-prefix')}
+        </RadioButton>
+        <RadioButton value="manual" id="prefix-input-manual">
+          {t('manual-prefix')}
+        </RadioButton>
       </RadioButtonGroupSmBot>
       {prefixType === 'manual' && (
         <TextInputSmBot
           labelText={t('prefix')}
-          onChange={(e) => handleCustomChange(e as string)}
+          onChange={(e) => handleCustomChange(e?.toString().trim() ?? '')}
           debounce={300}
           $isSmall={isSmall ? true : undefined}
           status={
@@ -105,6 +110,7 @@ export default function Prefix({ update, userPosted }: PrefixProps) {
               : ''
           }
           maxLength={TEXT_INPUT_MAX}
+          id="prefix-text-input"
         />
       )}
       <Paragraph>

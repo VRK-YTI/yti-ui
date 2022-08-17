@@ -63,6 +63,7 @@ export default function HeaderSearch({
           if (value === '') search();
         }}
         maxLength={TEXT_INPUT_MAX}
+        id="top-header-search"
       />
       {isSmall ? (
         <CloseButton

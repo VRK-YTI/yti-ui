@@ -83,7 +83,7 @@ export default function TermForm({
     update({
       termId: term.id,
       key: key,
-      value: value ?? '',
+      value: typeof value === 'string' ? value.trim() : value ?? '',
     });
   };
 
@@ -104,10 +104,12 @@ export default function TermForm({
           handleUpdate({ key: 'prefLabel', value: e.target.value })
         }
         maxLength={TEXT_INPUT_MAX}
+        id="term-name-input"
       />
       <CheckboxBlock
         defaultChecked={term.termHomographNumber ? true : false}
         onClick={() => handleIsHomographic()}
+        id="homograph-checkbox"
       >
         {t('term-is-homograph-label')}
       </CheckboxBlock>
@@ -125,6 +127,7 @@ export default function TermForm({
               })
             }
             min={0}
+            id="homograph-number-input"
           />
         </BasicBlock>
       )}
@@ -136,7 +139,11 @@ export default function TermForm({
         title={t('term-type-label')}
         extra={
           <BasicBlockExtraWrapper>
-            <Button variant="secondary" onClick={() => setModalVisible(true)}>
+            <Button
+              variant="secondary"
+              onClick={() => setModalVisible(true)}
+              id="change-type-button"
+            >
               {t('change-term-type')}
             </Button>
             {modalVisible && (
@@ -158,6 +165,7 @@ export default function TermForm({
         labelText={t('term-status-label')}
         defaultValue={term.status}
         onChange={(e) => handleUpdate({ key: 'status', value: e })}
+        id="status-picker"
       >
         <DropdownItem value="DRAFT">
           {t('statuses.draft', { ns: 'common' })}
@@ -188,6 +196,7 @@ export default function TermForm({
         defaultValue={term.termInfo}
         onBlur={(e) => handleUpdate({ key: 'termInfo', value: e.target.value })}
         maxLength={TEXT_AREA_MAX}
+        id="info-input"
       />
       <WiderTextareaBlock
         labelText={t('term-scope-label')}
@@ -196,6 +205,7 @@ export default function TermForm({
         visualPlaceholder={t('term-scope-placeholder')}
         defaultValue={term.scope}
         onBlur={(e) => handleUpdate({ key: 'scope', value: e.target.value })}
+        id="scope-input"
         maxLength={TEXT_AREA_MAX}
       />
       <WiderTextareaBlock
@@ -206,6 +216,7 @@ export default function TermForm({
         defaultValue={term.source}
         onBlur={(e) => handleUpdate({ key: 'source', value: e.target.value })}
         maxLength={TEXT_AREA_MAX}
+        id="sources-input"
       />
 
       <Separator isLarge />
@@ -220,6 +231,7 @@ export default function TermForm({
         onBlur={(e) =>
           handleUpdate({ key: 'changeNote', value: e.target.value })
         }
+        id="change-note-input"
         maxLength={TEXT_AREA_MAX}
       />
       <WiderTextareaBlock
@@ -232,6 +244,7 @@ export default function TermForm({
           handleUpdate({ key: 'historyNote', value: e.target.value })
         }
         maxLength={TEXT_AREA_MAX}
+        id="history-note-input"
       />
 
       <ListBlock
@@ -271,6 +284,7 @@ export default function TermForm({
               : undefined
           }
           onItemSelect={(e) => handleUpdate({ key: 'termStyle', value: e })}
+          id="style-picker"
         />
 
         <SingleSelect
@@ -291,6 +305,7 @@ export default function TermForm({
               : undefined
           }
           onItemSelect={(e) => handleUpdate({ key: 'termFamily', value: e })}
+          id="family-picker"
         />
 
         <SingleSelect
@@ -313,6 +328,7 @@ export default function TermForm({
           onItemSelect={(e) =>
             handleUpdate({ key: 'termConjugation', value: e })
           }
+          id="conjugations-picker"
         />
 
         <SingleSelect
@@ -334,6 +350,7 @@ export default function TermForm({
               : undefined
           }
           onItemSelect={(e) => handleUpdate({ key: 'wordClass', value: e })}
+          id="word-class-picker"
         />
       </GrammaticalBlock>
     </>

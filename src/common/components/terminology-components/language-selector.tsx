@@ -169,6 +169,7 @@ export default function LanguageSelector({
           userPosted && selectedLanguages.length === 0 ? 'error' : 'default'
         }
         defaultSelectedItems={selectedLanguages}
+        id="language-selector"
       />
 
       {selectedLanguages.map((language, idx) => (

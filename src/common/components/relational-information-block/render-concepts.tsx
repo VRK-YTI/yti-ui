@@ -57,7 +57,7 @@ export default function RenderConcepts({
   }
 
   return (
-    <>
+    <div id="concept-result-block">
       <ExpanderGroup openAllText="" closeAllText="">
         {concepts?.map((concept) => {
           const conceptsVocabulary = vocabularies?.filter(
@@ -69,13 +69,12 @@ export default function RenderConcepts({
               : terminology?.properties.prefLabel;
 
           const organizationTitle = getPropertyValue({
-            fallbackLanguage: 'fi',
             language: i18n.language,
             property: property,
           });
 
           return (
-            <Expander key={concept.id}>
+            <Expander key={concept.id} className="concept-result-item">
               <ExpanderTitle
                 ariaCloseText={t('open-concept-expander')}
                 ariaOpenText={t('close-concept-expander')}
@@ -88,6 +87,7 @@ export default function RenderConcepts({
                   )}`}
                   onClick={(e) => handleCheckbox(e, concept)}
                   checked={chosen.some((chose) => chose.id === concept.id)}
+                  className="concept-checkbox"
                 >
                   <SanitizedTextContent
                     text={
@@ -101,7 +101,6 @@ export default function RenderConcepts({
                           return obj;
                         }),
                         language: i18n.language,
-                        fallbackLanguage: 'fi',
                       }) ??
                       concept.label[i18n.language] ??
                       concept.label.fi
@@ -118,7 +117,7 @@ export default function RenderConcepts({
           );
         })}
       </ExpanderGroup>
-    </>
+    </div>
   );
 
   interface RenderExpanderContentProps {

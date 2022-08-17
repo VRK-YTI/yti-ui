@@ -86,7 +86,7 @@ export default function InfoFile({ setIsValid, setFileData }: infoFileProps) {
       onDrop={(e) => handleDrop(e)}
       onDragOver={(e) => e.preventDefault()}
     >
-      <FileBlock padding="m">
+      <FileBlock padding="m" id="file-drop-block">
         <Paragraph marginBottomSpacing="xxs">
           <Text variant="bold" smallScreen>
             {t('add-or-drag-a-new-file-here')}
@@ -111,6 +111,7 @@ export default function InfoFile({ setIsValid, setFileData }: infoFileProps) {
               onClick={() => {
                 input.current && input.current.click();
               }}
+              id="add-file-button"
             >
               {t('add-file')}
             </Button>
@@ -139,6 +140,7 @@ export default function InfoFile({ setIsValid, setFileData }: infoFileProps) {
               variant="secondaryNoBorder"
               icon="remove"
               onClick={() => setFile(null)}
+              id="remove-file-button"
             >
               {t('remove')}
             </FileRemoveButton>

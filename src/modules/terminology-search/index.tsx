@@ -93,6 +93,7 @@ export default function TerminologySearch() {
           variant="secondary"
           fullWidth
           onClick={() => setShowModal(!showModal)}
+          id="mobile-filter-button"
         >
           {t('vocabulary-filter-filter-list')}
         </FilterMobileButton>

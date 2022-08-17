@@ -47,7 +47,11 @@ export default function ConceptTermsBlock({
 
   const handleUpdate = ({ termId, key, value }: ConceptTermUpdateProps) => {
     let updatedTerm = terms.filter((term) => term.id === termId)[0];
-    updatedTerm = { ...updatedTerm, [key]: value };
+    updatedTerm = {
+      ...updatedTerm,
+      [key]: typeof value === 'string' ? value.trim() : value,
+    };
+
     const updatedTerms = terms.map((term) => {
       if (term.id === termId) {
         return updatedTerm;
@@ -135,7 +139,7 @@ export default function ConceptTermsBlock({
           </MediumHeading>
         }
         extra={
-          <BasicBlockExtraWrapper $isWide>
+          <BasicBlockExtraWrapper $isWide id="recommended-terms-block">
             <ExpanderGroup openAllText="" closeAllText="">
               {terms
                 .filter((term) => term.termType === 'recommended-term')
@@ -163,7 +167,7 @@ export default function ConceptTermsBlock({
           </MediumHeading>
         }
         extra={
-          <BasicBlockExtraWrapper $isWide>
+          <BasicBlockExtraWrapper $isWide id="other-terms-block">
             <Button variant="secondary" onClick={() => setModalVisible(true)}>
               {t('concept-add-term')}
             </Button>
@@ -201,6 +205,7 @@ export default function ConceptTermsBlock({
                   variant="secondaryNoBorder"
                   onClick={() => handleRemoveTerms()}
                   disabled={checkedTerms.length < 1}
+                  id="remove-terms-button"
                 >
                   {t('remove-term', { count: checkedTerms.length })}
                 </Button>

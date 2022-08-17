@@ -31,7 +31,7 @@ export default function SidebarSection<T extends BaseEntity<string>>({
   }
 
   return (
-    <>
+    <div className="sidebar-section">
       <SidebarSubHeader id={`${id}-header`}>{heading}</SidebarSubHeader>
       <SidebarLinkList aria-labelledby={`${id}-header`}>
         {items.map((item) => (
@@ -42,7 +42,7 @@ export default function SidebarSection<T extends BaseEntity<string>>({
           </SidebarLinkListItem>
         ))}
       </SidebarLinkList>
-    </>
+    </div>
   );
 
   function propertyValue(currItem: T) {
@@ -50,12 +50,7 @@ export default function SidebarSection<T extends BaseEntity<string>>({
       if ('member' in currItem.references) {
         const prefLabels = Array.from(propertyAccessor(currItem) as Property[]);
 
-        return (
-          <PropertyValue
-            property={prefLabels as Property[]}
-            fallbackLanguage="fi"
-          />
-        );
+        return <PropertyValue property={prefLabels as Property[]} />;
       } else {
         const prefLabels = Array.from(
           propertyAccessor(currItem) as Term[],
@@ -66,19 +61,11 @@ export default function SidebarSection<T extends BaseEntity<string>>({
           }
         );
 
-        return (
-          <PropertyValue
-            property={prefLabels as Property[]}
-            fallbackLanguage="fi"
-          />
-        );
+        return <PropertyValue property={prefLabels as Property[]} />;
       }
     } else {
       return (
-        <PropertyValue
-          property={propertyAccessor(currItem) as Property[]}
-          fallbackLanguage="fi"
-        />
+        <PropertyValue property={propertyAccessor(currItem) as Property[]} />
       );
     }
   }

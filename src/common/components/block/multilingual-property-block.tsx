@@ -8,6 +8,7 @@ export interface MultilingualPropertyBlockProps {
   data?: Property[];
   mapper?: MultilingualBlockItemMapper<Property>;
   extra?: React.ReactNode;
+  id?: string;
 }
 
 const defaultMapper: MultilingualBlockItemMapper<Property> = ({
@@ -23,6 +24,7 @@ export default function MultilingualPropertyBlock({
   data,
   mapper = defaultMapper,
   extra,
+  id,
 }: MultilingualPropertyBlockProps) {
   return (
     <MultilingualBlock<Property>
@@ -30,6 +32,7 @@ export default function MultilingualPropertyBlock({
       title={title}
       mapper={mapper}
       extra={extra}
+      id={id}
     />
   );
 }

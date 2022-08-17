@@ -8,18 +8,18 @@ export interface PropertyBlockProps {
   title?: React.ReactNode;
   property?: Property[];
   valueAccessor?: (property: Property) => string;
-  fallbackLanguage?: string;
   delimiter?: string | false;
   extra?: React.ReactNode;
+  id?: string;
 }
 
 export default function PropertyBlock({
   title,
   property,
   valueAccessor,
-  fallbackLanguage,
   delimiter = false,
   extra,
+  id,
 }: PropertyBlockProps) {
   const { i18n } = useTranslation('common');
 
@@ -27,7 +27,6 @@ export default function PropertyBlock({
     property,
     valueAccessor,
     language: i18n.language,
-    fallbackLanguage,
     delimiter,
   });
 
@@ -36,7 +35,7 @@ export default function PropertyBlock({
   }
 
   return (
-    <BasicBlock title={title} extra={extra}>
+    <BasicBlock title={title} extra={extra} id={id}>
       {children}
     </BasicBlock>
   );

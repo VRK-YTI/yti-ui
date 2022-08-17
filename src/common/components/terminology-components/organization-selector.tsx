@@ -104,11 +104,13 @@ export default function OrganizationSelector({
             visualPlaceholder={t('org-visual-placeholder')}
             status={userPosted && !selectedOrganization ? 'error' : 'default'}
             defaultSelectedItem={selectedOrganization ?? undefined}
+            id="main-organization-selector"
           />
           <OrgCheckbox
             checked={showOtherOrgSelector}
             onClick={(value) => setShowOtherOrgSelector(value.checkboxState)}
             disabled={!selectedOrganization}
+            id="other-organization-toggle"
           >
             {t('add-other-organizations')}
           </OrgCheckbox>
@@ -132,6 +134,7 @@ export default function OrganizationSelector({
                 handleSelectedOtherOrganizations(e)
               }
               $isSmall={isSmall ? true : undefined}
+              id="other-organizations-selector"
             />
           )}
         </>

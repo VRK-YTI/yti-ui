@@ -29,15 +29,22 @@ export default function DesktopNavigation() {
   const theme = useTheme();
 
   return (
-    <NavigationWrapper>
-      <NavigationItem active={router.pathname === '/'}>
+    <NavigationWrapper id="top-navigation">
+      <NavigationItem
+        active={router.pathname === '/'}
+        id="top-navigation-front-page"
+        className="top-navigation-li"
+      >
         <Link href="/" passHref>
           <SuomiFiLink className="main" href="">
             {t('site-frontpage')}
           </SuomiFiLink>
         </Link>
       </NavigationItem>
-      <NavigationItem>
+      <NavigationItem
+        id="top-navigation-services"
+        className="top-navigation-li"
+      >
         <SuomiFiLink className="main" href="" onClick={handleDropdown}>
           {t('site-services')}
           <Icon
@@ -47,15 +54,15 @@ export default function DesktopNavigation() {
         </SuomiFiLink>
         {open && (
           <ClickOutsideListener onClickOutside={() => setOpen(false)}>
-            <NavigationDropdownWrapper>
+            <NavigationDropdownWrapper id="top-navigation-dropdown">
               <NavigationDropdownList>
-                <NavigationDropdownItem>
+                <NavigationDropdownItem className="top-navigation-dropdown-li">
                   <SuomiFiLink href="/">{t('terminology-title')}</SuomiFiLink>
                 </NavigationDropdownItem>
-                <NavigationDropdownItem>
+                <NavigationDropdownItem className="top-navigation-dropdown-li">
                   <SuomiFiLink href="/">{t('codelist-title')}</SuomiFiLink>
                 </NavigationDropdownItem>
-                <NavigationDropdownItem>
+                <NavigationDropdownItem className="top-navigation-dropdown-li">
                   <SuomiFiLink href="/">{t('datamodel-title')}</SuomiFiLink>
                 </NavigationDropdownItem>
               </NavigationDropdownList>
@@ -63,23 +70,36 @@ export default function DesktopNavigation() {
           </ClickOutsideListener>
         )}
       </NavigationItem>
-      <NavigationItem>
+      <NavigationItem
+        id="top-navigation-site-information"
+        className="top-navigation-li"
+      >
         <SuomiFiLink className="main" href="/">
           {t('site-information')}
         </SuomiFiLink>
       </NavigationItem>
-      <NavigationItem>
+      <NavigationItem
+        id="top-navigation-for-developers"
+        className="top-navigation-li"
+      >
         <SuomiFiLink className="main" href="/">
           {t('site-for-developers')}
         </SuomiFiLink>
       </NavigationItem>
-      <NavigationItem>
+      <NavigationItem
+        id="top-navigation-for-administrators"
+        className="top-navigation-li"
+      >
         <SuomiFiLink className="main" href="/">
           {t('site-for-administrators')}
         </SuomiFiLink>
       </NavigationItem>
       {isLoggedIn && (
-        <NavigationItem active={router.pathname === '/own-information'}>
+        <NavigationItem
+          active={router.pathname === '/own-information'}
+          id="top-navigation-own-information"
+          className="top-navigation-li"
+        >
           <Link href="/own-information" passHref>
             <SuomiFiLink className="main" href="">
               {t('own-information')}

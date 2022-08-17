@@ -86,9 +86,12 @@ export default function NewConceptModal({
               key={lang}
               labelText={t('recommended-term', { lang: lang.toUpperCase() })}
               visualPlaceholder={t('term-name-placeholder')}
-              onChange={(e) => handleChange({ lang, value: e as string })}
+              onChange={(e) =>
+                handleChange({ lang, value: e?.toString().trim() ?? '' })
+              }
               status={isError ? 'error' : 'default'}
               maxLength={TEXT_INPUT_MAX}
+              className="concept-name-input"
             />
           ))}
         </TextInputBlock>
@@ -100,8 +103,14 @@ export default function NewConceptModal({
             {t('recommended-term-missing-error')}
           </InlineAlert>
         )}
-        <Button onClick={() => handleClick()}>{t('continue')}</Button>
-        <Button variant="secondary" onClick={() => setVisible(false)}>
+        <Button onClick={() => handleClick()} id="submit-button">
+          {t('continue')}
+        </Button>
+        <Button
+          variant="secondary"
+          onClick={() => setVisible(false)}
+          id="cancel-button"
+        >
           {t('cancel-variant')}
         </Button>
       </ModalFooter>

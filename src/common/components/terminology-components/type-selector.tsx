@@ -28,11 +28,12 @@ export default function TypeSelector({
         name="terminology-type"
         defaultValue={defaultValue ?? 'TERMINOLOGICAL_VOCABULARY'}
         onChange={(e) => handleSetSelected(e)}
+        id="terminology-type-selector"
       >
-        <RadioButton value="TERMINOLOGICAL_VOCABULARY">
+        <RadioButton value="TERMINOLOGICAL_VOCABULARY" id="type-terminological">
           {t('terminological-vocabulary')}
         </RadioButton>
-        <RadioButton value="OTHER_VOCABULARY">
+        <RadioButton value="OTHER_VOCABULARY" id="type-other">
           {t('other-vocabulary')}
         </RadioButton>
       </RadioButtonGroupSmBot>
