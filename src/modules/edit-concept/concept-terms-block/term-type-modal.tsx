@@ -190,11 +190,8 @@ export default function TermTypeModal({
           </InlineAlert>
         )}
         <Button
-
           disabled={isChangeDisabled || !isValid}
-
           onClick={() => handleClick()}
-
           id="submit-button"
         >
           {t('accept')}
