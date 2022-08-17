@@ -90,9 +90,11 @@ export default function ConceptTermsBlock({
     actionType,
     newRecommendedId,
     oldRecommendedId,
-    newType
+    newType,
   }: HandleSwitchTermsProps) => {
-    let newRecommended = terms.filter((term) => term.id === newRecommendedId)[0];
+    let newRecommended = terms.filter(
+      (term) => term.id === newRecommendedId
+    )[0];
     newRecommended = { ...newRecommended, termType: 'recommended-term' };
 
     let updatedTerms = terms.map((term) => {
@@ -101,7 +103,9 @@ export default function ConceptTermsBlock({
       }
 
       if (actionType === 'change' && term.id === oldRecommendedId) {
-        const oldRecommended = terms.filter((term) => term.id === oldRecommendedId)[0];
+        const oldRecommended = terms.filter(
+          (term) => term.id === oldRecommendedId
+        )[0];
         return { ...oldRecommended, termType: newType };
       }
 
@@ -109,7 +113,9 @@ export default function ConceptTermsBlock({
     });
 
     if (actionType === 'replace') {
-      updatedTerms = updatedTerms.filter(term => term.id !== oldRecommendedId);
+      updatedTerms = updatedTerms.filter(
+        (term) => term.id !== oldRecommendedId
+      );
     }
 
     setTerms(updatedTerms);
@@ -170,36 +176,36 @@ export default function ConceptTermsBlock({
             )}
             {terms.filter((term) => term.termType !== 'recommended-term')
               .length > 0 && (
-                <>
-                  <OtherTermsExpanderGroup openAllText="" closeAllText="">
-                    {terms
-                      .filter((term) => term.termType !== 'recommended-term')
-                      .map((term) => (
-                        <TermExpander
-                          key={term.id}
+              <>
+                <OtherTermsExpanderGroup openAllText="" closeAllText="">
+                  {terms
+                    .filter((term) => term.termType !== 'recommended-term')
+                    .map((term) => (
+                      <TermExpander
+                        key={term.id}
+                        term={term}
+                        setChecked={handleCheck}
+                        checkable
+                      >
+                        <TermForm
                           term={term}
-                          setChecked={handleCheck}
-                          checkable
-                        >
-                          <TermForm
-                            term={term}
-                            update={handleUpdate}
-                            currentTerms={terms}
-                            handleSwitchTerms={handleSwitchTerms}
-                          />
-                        </TermExpander>
-                      ))}
-                  </OtherTermsExpanderGroup>
+                          update={handleUpdate}
+                          currentTerms={terms}
+                          handleSwitchTerms={handleSwitchTerms}
+                        />
+                      </TermExpander>
+                    ))}
+                </OtherTermsExpanderGroup>
 
-                  <Button
-                    variant="secondaryNoBorder"
-                    onClick={() => handleRemoveTerms()}
-                    disabled={checkedTerms.length < 1}
-                  >
-                    {t('remove-term', { count: checkedTerms.length })}
-                  </Button>
-                </>
-              )}
+                <Button
+                  variant="secondaryNoBorder"
+                  onClick={() => handleRemoveTerms()}
+                  disabled={checkedTerms.length < 1}
+                >
+                  {t('remove-term', { count: checkedTerms.length })}
+                </Button>
+              </>
+            )}
           </BasicBlockExtraWrapper>
         }
       >

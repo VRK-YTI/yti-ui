@@ -43,12 +43,16 @@ export default function TermTypeModal({
   const [newType, setNewType] = useState('');
   const [action, setAction] = useState<'change' | 'replace'>('change');
   const [prevNewType, setPrevNewType] = useState('');
+  const isChangeDisabled =
+    currentTerms.filter(
+      (t) => t.termType === 'recommended-term' && t.id !== currentTerm.id
+    ).length < 1;
   const currRecommended =
     currentTerm.termType !== 'recommended-term'
       ? currentTerms.filter(
-        (term) =>
-          term.termType === 'recommended-term' && term.language === lang
-      )?.[0]
+          (term) =>
+            term.termType === 'recommended-term' && term.language === lang
+        )?.[0]
       : null;
 
   const termTypes = [
@@ -102,13 +106,14 @@ export default function TermTypeModal({
       appElementId="__next"
       visible={true}
       onEscKeyDown={() => setVisibility(false)}
+      style={{ width: '540px' }}
     >
       <ModalContent>
         <ModalTitle>{t('change-term-type')}</ModalTitle>
 
         <BasicBlock title={t('term-name-label')}>{t('application')}</BasicBlock>
 
-        <BasicBlock title="Termin nykyinen tyyppi">
+        <BasicBlock title={t('term-current-type')}>
           {translateTermType(currentTerm.termType, t)}
         </BasicBlock>
 
@@ -130,32 +135,35 @@ export default function TermTypeModal({
 
         {newType === 'recommended-term' && currRecommended && (
           <ModalTermTypeBlock>
-            <InlineAlert>
-              Jotta termin tyyppi voidaan muuttaa suositettavaksi, pitää
-              nykyiselle suositettavalle termille muuttaa uusi tyyppi.
-              Vaihtoehtoisesti voit myös poistaa nykyisen suositettavan termin.
-            </InlineAlert>
-            <BasicBlock title={'Nykyinen suositettava termi'}>
+            <InlineAlert>{t('term-type-change-hint')}</InlineAlert>
+            <BasicBlock title={t('current-recommended-term')}>
               {currentTerm.termType}
             </BasicBlock>
 
             <RadioButtonGroup
               defaultValue="change"
-              labelText="Toimenpide"
+              labelText={t('action')}
               name="radio-button-group"
               onChange={(e) => handleActionChange(e as 'change' | 'replace')}
             >
               <RadioButton value="change">
-                Muuta termin "{currRecommended.prefLabel}" tyyppi
+                {t('change-term-x-type', {
+                  termName: currRecommended.prefLabel,
+                })}
               </RadioButton>
               <RadioButton value="replace">
-                Poista termi "{currRecommended.prefLabel}" ja korvaa se termillä "{currentTerm.prefLabel}"
+                {t('remove-and-replace-term', {
+                  recommended: currRecommended.prefLabel,
+                  current: currentTerm.prefLabel,
+                })}
               </RadioButton>
             </RadioButtonGroup>
 
             {action === 'change' && (
               <DropdownBlock
-                labelText={`Termin "${currRecommended.prefLabel}" uusi tyyppi`}
+                labelText={t('term-x-new-type', {
+                  term: currRecommended.prefLabel,
+                })}
                 onChange={(e) => handlePrevTermTypeChange(e)}
                 defaultValue={prevNewType}
               >
@@ -173,8 +181,17 @@ export default function TermTypeModal({
           </ModalTermTypeBlock>
         )}
       </ModalContent>
+
       <ModalFooter>
-        <Button disabled={!isValid} onClick={() => handleClick()}>
+        {isChangeDisabled && (
+          <InlineAlert status="warning">
+            {t('type-change-alert-warning')}
+          </InlineAlert>
+        )}
+        <Button
+          disabled={isChangeDisabled || !isValid}
+          onClick={() => handleClick()}
+        >
           {t('accept')}
         </Button>
         <Button variant="secondary" onClick={() => setVisibility(false)}>
