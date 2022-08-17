@@ -328,7 +328,10 @@ export default function NewTermModal({
             noItemsText={t('no-term-styles-available')}
             visualPlaceholder={t('choose-term-style')}
             items={[
-              { labelText: t('spoken-form'), uniqueItemId: 'spoken-form' },
+              {
+                labelText: t('term-style.spoken-form', { ns: 'common' }),
+                uniqueItemId: 'spoken-form',
+              },
             ]}
             onItemSelectionChange={(e) =>
               handleUpdate({ key: 'termStyle', value: e?.uniqueItemId || '' })
@@ -344,15 +347,15 @@ export default function NewTermModal({
             visualPlaceholder={t('choose-term-family')}
             items={[
               {
-                labelText: t('masculine'),
+                labelText: t('term-family.masculine', { ns: 'common' }),
                 uniqueItemId: 'masculine',
               },
               {
-                labelText: t('neutral'),
+                labelText: t('term-family.neutral', { ns: 'common' }),
                 uniqueItemId: 'neutral',
               },
               {
-                labelText: t('feminine'),
+                labelText: t('term-family.feminine', { ns: 'common' }),
                 uniqueItemId: 'feminine',
               },
             ]}
@@ -369,8 +372,14 @@ export default function NewTermModal({
             noItemsText={t('no-term-conjugations-available')}
             visualPlaceholder={t('choose-term-conjugation')}
             items={[
-              { labelText: t('singular'), uniqueItemId: 'singular' },
-              { labelText: t('plural'), uniqueItemId: 'plural' },
+              {
+                labelText: t('term-conjugation.singular', { ns: 'common' }),
+                uniqueItemId: 'singular',
+              },
+              {
+                labelText: t('term-conjugation.plural', { ns: 'common' }),
+                uniqueItemId: 'plural',
+              },
             ]}
             onItemSelectionChange={(e) =>
               handleUpdate({
@@ -400,7 +409,12 @@ export default function NewTermModal({
             noItemsText={t('no-term-word-classes-available')}
             hintText={t('term-word-class-hint-text')}
             visualPlaceholder={t('choose-term-word-class')}
-            items={[{ labelText: t('adjective'), uniqueItemId: 'adjective' }]}
+            items={[
+              {
+                labelText: t('word-class.adjective', { ns: 'common' }),
+                uniqueItemId: 'adjective',
+              },
+            ]}
             onItemSelectionChange={(e) =>
               handleUpdate({ key: 'wordClass', value: e?.uniqueItemId || '' })
             }

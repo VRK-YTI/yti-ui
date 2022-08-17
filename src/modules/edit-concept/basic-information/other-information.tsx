@@ -53,11 +53,11 @@ export default function OtherInformation({
   const partOfSpeech = [
     {
       uniqueItemId: 'adjective',
-      labelText: t('adjective'),
+      labelText: t('word-class.adjective', { ns: 'common' }),
     },
     {
       uniqueItemId: 'verb',
-      labelText: t('verb'),
+      labelText: t('word-class.verb', { ns: 'common' }),
     },
   ];
 
