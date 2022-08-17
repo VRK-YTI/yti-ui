@@ -380,18 +380,6 @@ export default function NewTermModal({
             }
           />
 
-          <Dropdown
-            labelText={t('term-equivalency')}
-            optionalText={t('optional')}
-            defaultValue="undefined"
-            onChange={(e) => handleUpdate({ key: 'termEquivalency', value: e })}
-          >
-            <DropdownItem value="undefined">{t('no-selection')}</DropdownItem>
-            <DropdownItem value="<">{'<'}</DropdownItem>
-            <DropdownItem value=">">{'>'}</DropdownItem>
-            <DropdownItem value="~">{t('almost-the-same-as')} (~)</DropdownItem>
-          </Dropdown>
-
           <SingleSelect
             ariaOptionsAvailableText={t('available-term-word-classes')}
             clearButtonLabel={t('clear-button-label')}
