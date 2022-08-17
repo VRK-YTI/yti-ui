@@ -6,6 +6,7 @@
   "close": "Sulje",
   "codelist-title": "Koodistot",
   "comments-title": "Kommentointi",
+  "concept-label-undefined": "Käsitteen nimeä ei ole määritetty",
   "concepts": "Käsitteet",
   "confirm-page-leave": "Haluatko varmasti poistua sivulta? Tekemiäsi muutoksia ei tallenneta.",
   "datamodel-title": "Tietomallit",

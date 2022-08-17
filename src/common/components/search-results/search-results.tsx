@@ -306,26 +306,28 @@ export default function SearchResults({
 
     // If language is defined in urlState and dto is Concept
     // get label without trailing language code
-    if (isConcept && urlState.lang && dto.label[urlState.lang]) {
+    if (isConcept && urlState.lang && dto.label?.[urlState.lang]) {
       return dto.label[urlState.lang].replaceAll(/<\/*[^>]>/g, '');
     }
 
     // If label exists in current UI language get label without trailing language code
-    if (!urlState.lang && dto.label[i18n.language]) {
+    if (!urlState.lang && dto.label?.[i18n.language]) {
       return dto.label[i18n.language].replaceAll(/<\/*[^>]>/g, '');
     }
 
-    if (isConcept) {
+    if (isConcept && dto.label) {
       // Otherwise return label with trailing language code
       return `${dto?.label?.[Object.keys(dto.label)[0]].replaceAll(
         /<\/*[^>]>/g,
         ''
       )} (${Object.keys(dto.label)[0]})`;
-    } else {
+    } else if (dto.label) {
       return `${dto?.label?.[Object.keys(dto.label)[0]].replaceAll(
         /<\/*[^>]>/g,
         ''
       )}`;
+    } else {
+      return t('concept-label-undefined');
     }
   }
 

@@ -1,4 +1,5 @@
 import { Concepts } from '@app/common/interfaces/concepts.interface';
+import { useTranslation } from 'next-i18next';
 import { Chip, Label } from 'suomifi-ui-components';
 import { ChipBlock } from './relation-information-block.styles';
 
@@ -15,6 +16,7 @@ export default function RenderChosen({
   setShowChosen,
   chipLabel,
 }: RenderChosenProps) {
+  const { t } = useTranslation('admin');
   const handleChipRemove = (chose: Concepts) => {
     const updatedChosen = chosen.filter((c) => c.id !== chose.id);
     setChosen(updatedChosen);
@@ -35,7 +37,9 @@ export default function RenderChosen({
               onClick={() => handleChipRemove(chose)}
               key={`${chose.id}-${idx}`}
             >
-              {chose.label.fi}
+              {chose.label
+                ? chose.label.fi
+                : t('concept-label-undefined', { ns: 'common' })}
             </Chip>
           );
         })}
