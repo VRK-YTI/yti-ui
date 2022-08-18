@@ -8,6 +8,7 @@ export interface PropertyValueProps {
   valueAccessor?: (property: Property) => string;
   delimiter?: string | false;
   fallback?: string;
+  stripHtml?: boolean;
 }
 
 /**
@@ -37,6 +38,7 @@ export default function PropertyValue({
   valueAccessor,
   delimiter = false,
   fallback,
+  stripHtml = false,
 }: PropertyValueProps) {
   const { i18n } = useTranslation('common');
 
@@ -45,6 +47,7 @@ export default function PropertyValue({
     valueAccessor,
     language: i18n.language,
     delimiter,
+    stripHtml,
   });
 
   if (!value) {

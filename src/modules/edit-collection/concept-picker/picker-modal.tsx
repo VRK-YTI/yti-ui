@@ -99,7 +99,7 @@ export default function PickerModal({
         Object.keys(label).forEach((key) => {
           newLabel.set(
             key,
-            label[key].replaceAll('<b>', '').replaceAll('</b>', '')
+            label[key].replaceAll(/<\/*[^>]>/g, '')
           );
         });
         label = Object.fromEntries(newLabel);
