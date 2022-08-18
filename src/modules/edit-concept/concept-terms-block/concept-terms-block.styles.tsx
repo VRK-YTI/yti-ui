@@ -91,3 +91,11 @@ export const ModalDescription = styled(Text)`
   display: inline-block;
   margin-bottom: ${(props) => props.theme.suomifi.spacing.m};
 `;
+
+export const ModalTermTypeBlock = styled(Block)`
+  margin-top: ${(props) => props.theme.suomifi.spacing.m};
+
+  > div:first-of-type {
+    margin-bottom: ${(props) => props.theme.suomifi.spacing.m};
+  }
+`;
