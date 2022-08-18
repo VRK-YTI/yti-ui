@@ -91,19 +91,21 @@ export default function RenderConcepts({
                 >
                   <SanitizedTextContent
                     text={
-                      getPropertyValue({
-                        property: Object.keys(concept.label).map((key) => {
-                          const obj = {
-                            lang: key,
-                            value: concept.label[key],
-                            regex: '',
-                          };
-                          return obj;
-                        }),
-                        language: i18n.language,
-                      }) ??
-                      concept.label[i18n.language] ??
-                      concept.label.fi
+                      concept.label
+                        ? getPropertyValue({
+                            property: Object.keys(concept.label).map((key) => {
+                              const obj = {
+                                lang: key,
+                                value: concept.label[key],
+                                regex: '',
+                              };
+                              return obj;
+                            }),
+                            language: i18n.language,
+                          }) ??
+                          concept.label[i18n.language] ??
+                          concept.label.fi
+                        : t('concept-label-undefined', { ns: 'common' })
                     }
                   />
                 </Checkbox>

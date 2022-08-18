@@ -62,17 +62,8 @@ export function translateTermType(type: string, t: TFunction) {
       return t('not-recommended-synonym', { ns: 'common' });
     case 'search-term':
       return t('search-term', { ns: 'common' });
-  }
-}
-
-export function translateWordClass(wordClass: string, t: TFunction) {
-  switch (wordClass) {
-    case 'adjective':
-      return t('adjective', { ns: 'admin' });
-    case 'verb':
-      return t('verb', { ns: 'admin' });
     default:
-      return wordClass;
+      return type;
   }
 }
 
@@ -84,6 +75,53 @@ export function translateTerminologyType(type: string, t: TFunction) {
       return t('terminology-type.other-vocabulary', { ns: 'common' });
     default:
       return t('terminology-type.undefined', { ns: 'common' });
+  }
+}
+
+export function translateTermStyle(termStyle: string, t: TFunction) {
+  switch (termStyle) {
+    case 'spoken-form':
+      return t('term-style.spoken-form', { ns: 'common' });
+    default:
+      return termStyle;
+  }
+}
+
+export function translateTermFamily(termFamily: string, t: TFunction) {
+  switch (termFamily) {
+    case 'masculine':
+      return t('term-family.masculine', { ns: 'common' });
+    case 'neutral':
+      return t('term-family.neutral', { ns: 'common' });
+    case 'feminine':
+      return t('term-family.feminine', { ns: 'common' });
+    default:
+      return termFamily;
+  }
+}
+
+export function translateTermConjugation(
+  termConjugation: string,
+  t: TFunction
+) {
+  switch (termConjugation) {
+    case 'singular':
+      return t('term-conjugation.singular', { ns: 'common' });
+    case 'plural':
+      return t('term-conjugation.plural', { ns: 'common' });
+    default:
+      return termConjugation;
+  }
+}
+
+export function translateWordClass(wordClass: string, t: TFunction) {
+  switch (wordClass) {
+    case 'adjective':
+      return t('word-class.adjective', { ns: 'common' });
+    case 'verb':
+      return t('word-class.verb', { ns: 'common' });
+    default:
+      return wordClass;
   }
 }
 

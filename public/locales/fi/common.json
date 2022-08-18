@@ -6,6 +6,7 @@
   "close": "Sulje",
   "codelist-title": "Koodistot",
   "comments-title": "Kommentointi",
+  "concept-label-undefined": "Käsitteen nimeä ei ole määritetty",
   "concepts": "Käsitteet",
   "confirm-page-leave": "Haluatko varmasti poistua sivulta? Tekemiäsi muutoksia ei tallenneta.",
   "datamodel-title": "Tietomallit",
@@ -104,6 +105,18 @@
     "valid": "Voimassa oleva"
   },
   "synonym": "Synonyymi",
+  "term-conjugation": {
+    "plural": "monikko",
+    "singular": "yksikkö"
+  },
+  "term-family": {
+    "feminine": "feminiini",
+    "masculine": "maskuliini",
+    "neutral": "neutri"
+  },
+  "term-style": {
+    "spoken-form": "puhekieli"
+  },
   "terminology": "Sanasto",
   "terminology-footer-accessibility": "Saavutettavuus",
   "terminology-footer-feedback": "Anna palautetta",
@@ -161,5 +174,9 @@
   "vocabulary-results-concepts_other": "Käsitteitä {{count}} kpl seuraavilla rajauksilla",
   "vocabulary-results-more": "muuta",
   "vocabulary-results-no-concepts": "Ei käsitteitä",
-  "vocabulary-results-no-description": "Kuvausta ei ole annettu."
+  "vocabulary-results-no-description": "Kuvausta ei ole annettu.",
+  "word-class": {
+    "adjective": "adjektiivi",
+    "verb": "verbi"
+  }
 }

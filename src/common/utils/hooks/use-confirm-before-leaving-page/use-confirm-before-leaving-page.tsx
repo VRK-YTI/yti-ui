@@ -22,7 +22,7 @@ const routeChangeHandler = (url: string) => {
 
 const enableConfirmation = () => {
   if (confirmationState !== 'enabled') {
-    window.addEventListener('beforeunload', beforeUnloadHandler);
+    global.window?.addEventListener('beforeunload', beforeUnloadHandler);
     Router.events.on('routeChangeStart', routeChangeHandler);
     confirmationState = 'enabled';
   }
@@ -30,7 +30,7 @@ const enableConfirmation = () => {
 
 const disableConfirmation = () => {
   if (confirmationState !== 'disabled') {
-    window.removeEventListener('beforeunload', beforeUnloadHandler);
+    global.window?.removeEventListener('beforeunload', beforeUnloadHandler);
     Router.events.off('routeChangeStart', routeChangeHandler);
     confirmationState = 'disabled';
   }

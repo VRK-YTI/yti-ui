@@ -6,6 +6,7 @@
   "close": "Close",
   "codelist-title": "Reference Data",
   "comments-title": "Comments",
+  "concept-label-undefined": "Concept label is undefined",
   "concepts": "Concepts",
   "confirm-page-leave": "Are you sure you want to leave the page? Changes you made won't be saved.",
   "datamodel-title": "Data Vocabularies",
@@ -104,6 +105,18 @@
     "valid": "Valid"
   },
   "synonym": "Synonym",
+  "term-conjugation": {
+    "plural": "plural",
+    "singular": "singular"
+  },
+  "term-family": {
+    "feminine": "feminine",
+    "masculine": "masculine",
+    "neutral": "neutral"
+  },
+  "term-style": {
+    "spoken-form": "spoken form"
+  },
   "terminology": "Terminology",
   "terminology-footer-accessibility": "Accessibility",
   "terminology-footer-feedback": "Feedback",
@@ -161,5 +174,9 @@
   "vocabulary-results-concepts_other": "Concepts {{count}} items with following filters",
   "vocabulary-results-more": "more",
   "vocabulary-results-no-concepts": "No concepts",
-  "vocabulary-results-no-description": "No description"
+  "vocabulary-results-no-description": "No description",
+  "word-class": {
+    "adjective": "adjective",
+    "verb": "verb"
+  }
 }

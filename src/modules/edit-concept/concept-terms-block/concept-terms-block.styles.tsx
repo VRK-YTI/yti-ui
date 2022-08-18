@@ -92,6 +92,14 @@ export const ModalDescription = styled(Text)`
   margin-bottom: ${(props) => props.theme.suomifi.spacing.m};
 `;
 
+export const ModalTermTypeBlock = styled(Block)`
+  margin-top: ${(props) => props.theme.suomifi.spacing.m};
+
+  > div:first-of-type {
+    margin-bottom: ${(props) => props.theme.suomifi.spacing.m};
+  }
+`;
+
 export const ExpanderIcon = styled(Icon)`
   color: ${(props) => props.theme.suomifi.colors.alertBase} !important;
   margin-left: ${(props) => props.theme.suomifi.spacing.xs};

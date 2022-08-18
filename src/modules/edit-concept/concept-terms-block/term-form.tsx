@@ -14,6 +14,7 @@ import {
   SingleSelect,
   TextInput,
 } from 'suomifi-ui-components';
+import { HandleSwitchTermsProps } from '.';
 import ListBlock from '../list-block';
 import { ConceptTermType, ListType } from '../new-concept.types';
 import { FormError } from '../validate-form';
@@ -33,6 +34,8 @@ export interface TermFormProps {
     key: string;
     value: string | ListType[];
   }) => void;
+  currentTerms: ConceptTermType[];
+  handleSwitchTerms: (value: HandleSwitchTermsProps) => void;
   errors: FormError;
 }
 
@@ -41,7 +44,12 @@ export interface TermFormUpdate {
   value: string | ListType[] | null;
 }
 
-export default function TermForm({ term, update, errors }: TermFormProps) {
+export default function TermForm({
+  term,
+  update, errors,
+  currentTerms,
+  handleSwitchTerms,
+}: TermFormProps) {
   const { t } = useTranslation('admin');
   const [modalVisible, setModalVisible] = useState(false);
   const [isHomographic, setIsHomographic] = useState(
@@ -50,29 +58,43 @@ export default function TermForm({ term, update, errors }: TermFormProps) {
   const [prefLabel, setPrefLabel] = useState(term.prefLabel);
 
   const termStyle = [
-    { labelText: t('spoken-form'), uniqueItemId: 'spoken-form' },
+    {
+      labelText: t('term-style.spoken-form', { ns: 'common' }),
+      uniqueItemId: 'spoken-form',
+    },
   ];
   const termFamily = [
     {
-      labelText: t('masculine'),
+      labelText: t('term-family.masculine', { ns: 'common' }),
       uniqueItemId: 'masculine',
     },
     {
-      labelText: t('neutral'),
+      labelText: t('term-family.neutral', { ns: 'common' }),
       uniqueItemId: 'neutral',
     },
     {
-      labelText: t('feminine'),
+      labelText: t('term-family.feminine', { ns: 'common' }),
       uniqueItemId: 'feminine',
     },
   ];
 
   const termConjugation = [
-    { labelText: t('singular'), uniqueItemId: 'singular' },
-    { labelText: t('plural'), uniqueItemId: 'plural' },
+    {
+      labelText: t('term-conjugation.singular', { ns: 'common' }),
+      uniqueItemId: 'singular',
+    },
+    {
+      labelText: t('term-conjugation.plural', { ns: 'common' }),
+      uniqueItemId: 'plural',
+    },
   ];
 
-  const wordClass = [{ labelText: t('adjective'), uniqueItemId: 'adjective' }];
+  const wordClass = [
+    {
+      labelText: t('word-class.adjective', { ns: 'common' }),
+      uniqueItemId: 'adjective',
+    },
+  ];
 
   const handleUpdate = ({ key, value }: TermFormUpdate) => {
     if (key === 'prefLabel' && typeof value === 'string') {
@@ -148,9 +170,12 @@ export default function TermForm({ term, update, errors }: TermFormProps) {
             </Button>
             {modalVisible && (
               <TermTypeModal
-                currentType={term.termType}
+                currentTerm={term}
+                lang={term.language}
                 setVisibility={setModalVisible}
                 handleUpdate={handleUpdate}
+                currentTerms={currentTerms}
+                handleSwitchTerms={handleSwitchTerms}
               />
             )}
           </BasicBlockExtraWrapper>
