@@ -97,10 +97,7 @@ export default function PickerModal({
       if (Object.keys(label).some((key) => label[key].includes('<b>'))) {
         const newLabel = new Map();
         Object.keys(label).forEach((key) => {
-          newLabel.set(
-            key,
-            label[key].replaceAll(/<\/*[^>]>/g, '')
-          );
+          newLabel.set(key, label[key].replaceAll(/<\/*[^>]>/g, ''));
         });
         label = Object.fromEntries(newLabel);
       }

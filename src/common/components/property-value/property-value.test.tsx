@@ -89,9 +89,7 @@ describe('propertyValue', () => {
 
     render(
       <PropertyValue
-        property={[
-          { lang: 'en', value: 'This <b>is</b> a test', regex: '' },
-        ]}
+        property={[{ lang: 'en', value: 'This <b>is</b> a test', regex: '' }]}
         stripHtml
       />
     );
