@@ -4,7 +4,6 @@ import {
   Expander,
   ExpanderContent,
   ExpanderTitle as SuomifiExpanderTitle,
-  Icon,
 } from 'suomifi-ui-components';
 import { ExpanderIcon, SuccessIcon } from './concept-terms-block.styles';
 import ExpanderTitle from '@app/common/components/expander-title';

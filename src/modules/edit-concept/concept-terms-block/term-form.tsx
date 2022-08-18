@@ -46,7 +46,8 @@ export interface TermFormUpdate {
 
 export default function TermForm({
   term,
-  update, errors,
+  update,
+  errors,
   currentTerms,
   handleSwitchTerms,
 }: TermFormProps) {

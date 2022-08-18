@@ -9,6 +9,16 @@ export interface FormError {
   total: boolean;
 }
 
+// This is meant to be used with unit tests
+export const EmptyFormError = {
+  termPrefLabel: false,
+  recommendedTerms: false,
+  example: false,
+  note: false,
+  editorialNote: false,
+  total: false,
+};
+
 export default function validateForm(data: EditConceptType): FormError {
   const errors = {
     termPrefLabel: false,

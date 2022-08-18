@@ -27,7 +27,7 @@ interface ListBlockProps {
   addNewText: string;
   inputLabel: string;
   inputPlaceholder: string;
-  errors: FormError;
+  errors?: FormError;
 }
 
 export default function ListBlock({
@@ -130,7 +130,7 @@ interface ListItemProps {
   noLangOption: boolean;
   inputLabel: string;
   inputPlaceholder: string;
-  error: boolean;
+  error?: boolean;
 }
 
 function ListItem({

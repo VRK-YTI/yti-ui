@@ -149,13 +149,10 @@ export default function ConceptTermsBlock({
                 .map((term) => (
                   <TermExpander key={term.id} term={term} errors={errors}>
                     <TermForm
-
                       term={term}
-
                       update={handleUpdate}
                       currentTerms={terms}
                       handleSwitchTerms={handleSwitchTerms}
-
                       errors={errors}
                     />
                   </TermExpander>
@@ -200,13 +197,10 @@ export default function ConceptTermsBlock({
                         errors={errors}
                       >
                         <TermForm
-
                           term={term}
-
                           update={handleUpdate}
                           currentTerms={terms}
                           handleSwitchTerms={handleSwitchTerms}
-
                           errors={errors}
                         />
                       </TermExpander>
