@@ -22,6 +22,13 @@ interface ConceptTermsBlockProps {
   initialValues: ConceptTermType[];
 }
 
+export interface HandleSwitchTermsProps {
+  actionType: 'change' | 'replace';
+  newRecommendedId: string;
+  oldRecommendedId: string;
+  newType: string;
+}
+
 export interface ConceptTermUpdateProps {
   termId: string;
   key: string;
@@ -83,6 +90,42 @@ export default function ConceptTermsBlock({
     updateTerms(newTerms);
   };
 
+  const handleSwitchTerms = ({
+    actionType,
+    newRecommendedId,
+    oldRecommendedId,
+    newType,
+  }: HandleSwitchTermsProps) => {
+    let newRecommended = terms.filter(
+      (term) => term.id === newRecommendedId
+    )[0];
+    newRecommended = { ...newRecommended, termType: 'recommended-term' };
+
+    let updatedTerms = terms.map((term) => {
+      if (term.id === newRecommendedId) {
+        return newRecommended;
+      }
+
+      if (actionType === 'change' && term.id === oldRecommendedId) {
+        const oldRecommended = terms.filter(
+          (term) => term.id === oldRecommendedId
+        )[0];
+        return { ...oldRecommended, termType: newType };
+      }
+
+      return term;
+    });
+
+    if (actionType === 'replace') {
+      updatedTerms = updatedTerms.filter(
+        (term) => term.id !== oldRecommendedId
+      );
+    }
+
+    setTerms(updatedTerms);
+    updateTerms(updatedTerms);
+  };
+
   return (
     <>
       <Separator isLarge />
@@ -102,7 +145,12 @@ export default function ConceptTermsBlock({
                 .filter((term) => term.termType === 'recommended-term')
                 .map((term) => (
                   <TermExpander key={term.id} term={term}>
-                    <TermForm term={term} update={handleUpdate} />
+                    <TermForm
+                      term={term}
+                      update={handleUpdate}
+                      currentTerms={terms}
+                      handleSwitchTerms={handleSwitchTerms}
+                    />
                   </TermExpander>
                 ))}
             </ExpanderGroup>
@@ -143,7 +191,12 @@ export default function ConceptTermsBlock({
                         setChecked={handleCheck}
                         checkable
                       >
-                        <TermForm term={term} update={handleUpdate} />
+                        <TermForm
+                          term={term}
+                          update={handleUpdate}
+                          currentTerms={terms}
+                          handleSwitchTerms={handleSwitchTerms}
+                        />
                       </TermExpander>
                     ))}
                 </OtherTermsExpanderGroup>

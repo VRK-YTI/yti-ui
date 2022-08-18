@@ -42,6 +42,7 @@ export default function RelationalInformationBlock({
   updateData,
   fromOther,
 }: RelationalInformationBlockProps) {
+  const { t } = useTranslation('admin');
   const router = useRouter();
   const terminologyId = Array.isArray(router.query.terminologyId)
     ? router.query.terminologyId[0]
@@ -106,14 +107,17 @@ export default function RelationalInformationBlock({
                         )
                       }
                     >
-                      <PropertyValue
-                        property={Object.keys(concept.label).map((lang) => ({
-                          lang,
-                          value: concept.label[lang],
-                          regex: '',
-                        }))}
-                      />
-
+                      {concept.label ? (
+                        <PropertyValue
+                          property={Object.keys(concept.label).map((lang) => ({
+                            lang,
+                            value: concept.label[lang],
+                            regex: '',
+                          }))}
+                        />
+                      ) : (
+                        t('concept-label-undefined', { ns: 'common' })
+                      )}
                       {fromOther && ' - '}
                       {fromOther && (
                         <PropertyValue
