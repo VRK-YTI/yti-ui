@@ -65,7 +65,11 @@ export default function LanguageBlock({
   };
 
   return (
-    <LangBlock padding="m" onBlur={() => handleInfoUpdate({})}>
+    <LangBlock
+      padding="m"
+      onBlur={() => handleInfoUpdate({})}
+      className="language-block"
+    >
       <Paragraph marginBottomSpacing="m">
         <Text variant="bold">{lang.labelText}</Text>
       </Paragraph>
@@ -73,19 +77,25 @@ export default function LanguageBlock({
         labelText={t('terminology-name')}
         visualPlaceholder={t('terminology-name-placeholder')}
         $isSmall={isSmall}
-        onChange={(e) => handleInfoUpdate({ tName: e as string })}
+        onChange={(e) =>
+          handleInfoUpdate({ tName: e?.toString().trim() ?? '' })
+        }
         status={status}
         statusText={status === 'error' ? t('terminology-name-error') : ''}
         defaultValue={name}
         maxLength={TEXT_INPUT_MAX}
+        className="terminology-name-input"
       />
       <TextareaSmBot
         labelText={t('terminology-description')}
         hintText={t('terminology-description-hint')}
         visualPlaceholder={t('terminology-description-placeholder')}
-        onChange={(e) => handleInfoUpdate({ tDescription: e.target.value })}
+        onChange={(e) =>
+          handleInfoUpdate({ tDescription: e.target.value.trim() })
+        }
         maxLength={TEXT_AREA_MAX}
         defaultValue={description}
+        className="terminology-description-input"
       />
     </LangBlock>
   );

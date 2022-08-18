@@ -42,10 +42,14 @@ export default function Title({ info, noExpander }: TitleProps) {
 
   if (typeof info === 'string') {
     return (
-      <TitleWrapperNoBreadcrumb>
-        <Heading variant="h1">{info}</Heading>
+      <TitleWrapperNoBreadcrumb id="page-title-block">
+        <Heading variant="h1" id="page-title">
+          {info}
+        </Heading>
         <TitleDescriptionWrapper $isSmall={isSmall}>
-          <Description>{t('terminology-search-info')}</Description>
+          <Description id="page-description">
+            {t('terminology-search-info')}
+          </Description>
           <NewTerminology />
         </TitleDescriptionWrapper>
       </TitleWrapperNoBreadcrumb>
@@ -57,18 +61,20 @@ export default function Title({ info, noExpander }: TitleProps) {
       getPropertyValue({
         property: getProperty('prefLabel', info.references.contributor),
         language: i18n.language,
-        fallbackLanguage: 'fi',
       }) ?? '';
 
     return (
-      <TitleWrapper>
-        <Contributor>{contributor}</Contributor>
+      <TitleWrapper id="page-title-block">
+        <Contributor id="contributor">{contributor}</Contributor>
 
-        <Heading variant="h1" tabIndex={-1} ref={titleRef}>
+        <Heading variant="h1" tabIndex={-1} ref={titleRef} id="page-title">
           {title}
         </Heading>
 
-        <StatusChip valid={status === 'VALID' ? 'true' : undefined}>
+        <StatusChip
+          valid={status === 'VALID' ? 'true' : undefined}
+          id="status-chip"
+        >
           {translateStatus(status, t)}
         </StatusChip>
 
@@ -86,7 +92,6 @@ export default function Title({ info, noExpander }: TitleProps) {
       getPropertyValue({
         property: info.properties.prefLabel,
         language: i18n.language,
-        fallbackLanguage: 'fi',
       }) ?? ''
     );
   }

@@ -12,7 +12,7 @@ import { getProperty } from '@app/common/utils/get-property';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { Button, Heading } from 'suomifi-ui-components';
+import { Button, Heading, InlineAlert } from 'suomifi-ui-components';
 import ConceptPicker from './concept-picker';
 import generateCollection from './generate-collection';
 import {
@@ -32,6 +32,8 @@ import { Collection } from '@app/common/interfaces/collection.interface';
 import useUser from '@app/common/utils/hooks/useUser';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
 import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from '@app/common/utils/constants';
+import useConfirmBeforeLeavingPage from '@app/common/utils/hooks/use-confirm-before-leaving-page';
+import { MissingInfoAlertUl } from '../new-terminology/new-terminology.styles';
 
 export default function EditCollection({
   terminologyId,
@@ -73,10 +75,12 @@ export default function EditCollection({
   const [formData, setFormData] = useState<EditCollectionFormDataType>(
     setInitialData(collection)
   );
+  const { enableConfirmation, disableConfirmation } =
+    useConfirmBeforeLeavingPage('disabled');
 
   useEffect(() => {
     if (result.isSuccess) {
-      router.push(
+      router.replace(
         `/terminology/${terminologyId}/collection/${newCollectionId}`
       );
     }
@@ -94,6 +98,7 @@ export default function EditCollection({
       return n;
     });
     setFormData(data);
+    enableConfirmation();
 
     if (errors.name && data.name.filter((n) => n.value !== '').length > 0) {
       setErrors({ ...errors, name: false });
@@ -121,6 +126,7 @@ export default function EditCollection({
     }
 
     setFormData(data);
+    enableConfirmation();
 
     if (
       errors.definition &&
@@ -133,20 +139,21 @@ export default function EditCollection({
   const setFormConcepts = (
     concepts: EditCollectionFormDataType['concepts']
   ) => {
-    const data = formData;
+    const data = { ...formData };
     data.concepts = concepts;
     setFormData(data);
+    enableConfirmation();
   };
 
   const handleClick = () => {
     let errorOccurs = false;
     if (formData.name.filter((n) => n.value !== '').length < 1) {
-      setErrors({ ...errors, name: true });
+      setErrors((errors) => ({ ...errors, name: true }));
       errorOccurs = true;
     }
 
     if (formData.definition.filter((n) => n.value !== '').length < 1) {
-      setErrors({ ...errors, definition: true });
+      setErrors((errors) => ({ ...errors, definition: true }));
       errorOccurs = true;
     }
 
@@ -154,6 +161,7 @@ export default function EditCollection({
       return;
     }
 
+    disableConfirmation();
     const data = generateCollection(
       formData,
       terminologyId,
@@ -165,12 +173,13 @@ export default function EditCollection({
   };
 
   const handleCancel = () => {
+    disableConfirmation();
     if (collectionInfo?.collectionId) {
-      router.push(
+      router.replace(
         `/terminology/${terminologyId}/collection/${collectionInfo?.collectionId}`
       );
     } else {
-      router.push(`/terminology/${terminologyId}`);
+      router.replace(`/terminology/${terminologyId}`);
     }
   };
 
@@ -179,10 +188,7 @@ export default function EditCollection({
       <Breadcrumb>
         {router.query.terminologyId && (
           <BreadcrumbLink url={`/terminology/${router.query.terminologyId}`}>
-            <PropertyValue
-              property={terminology?.properties.prefLabel}
-              fallbackLanguage="fi"
-            />
+            <PropertyValue property={terminology?.properties.prefLabel} />
           </BreadcrumbLink>
         )}
         <BreadcrumbLink url="" current>
@@ -197,16 +203,12 @@ export default function EditCollection({
               'prefLabel',
               terminology?.references.contributor
             )}
-            fallbackLanguage="fi"
           />
         </SubTitle>
         <MainTitle>{collectionName}</MainTitle>
         <BadgeBar>
           {t('heading')}
-          <PropertyValue
-            property={terminology?.properties.prefLabel}
-            fallbackLanguage="fi"
-          />
+          <PropertyValue property={terminology?.properties.prefLabel} />
         </BadgeBar>
         <PageHelpText>{t('new-collection-page-help')}</PageHelpText>
 
@@ -214,7 +216,7 @@ export default function EditCollection({
 
         <Heading variant="h3">{t('collection-basic-information')}</Heading>
 
-        <TextBlockWrapper>
+        <TextBlockWrapper id="collection-text-info-block">
           {languages.map((language) => (
             <NameTextInput
               key={`name-input-${language}`}
@@ -223,12 +225,13 @@ export default function EditCollection({
                 t
               )} ${language.toUpperCase()}`}
               visualPlaceholder={t('enter-collection-name')}
-              onBlur={(e) => setName(language, e.target.value)}
+              onBlur={(e) => setName(language, e.target.value.trim())}
               status={errors.name ? 'error' : 'default'}
               defaultValue={
                 formData.name.find((n) => n.lang === language)?.value
               }
               maxLength={TEXT_INPUT_MAX}
+              className="collection-name-input"
             />
           ))}
 
@@ -240,12 +243,13 @@ export default function EditCollection({
                 t
               )} ${language.toUpperCase()}`}
               visualPlaceholder={t('enter-collection-description')}
-              onBlur={(e) => setDescription(language, e.target.value)}
+              onBlur={(e) => setDescription(language, e.target.value.trim())}
               status={errors.definition ? 'error' : 'default'}
               defaultValue={
                 formData.definition.find((n) => n.lang === language)?.value
               }
               maxLength={TEXT_AREA_MAX}
+              className="collection-description-input"
             />
           ))}
         </TextBlockWrapper>
@@ -253,18 +257,32 @@ export default function EditCollection({
         <Separator isLarge />
 
         <ConceptPicker
-          formConcepts={formData.concepts}
+          concepts={formData.concepts}
           terminologyId={terminologyId}
-          setFormConcepts={setFormConcepts}
+          onChange={setFormConcepts}
         />
 
         <Separator isLarge />
 
         <FooterBlock>
-          <Button onClick={() => handleClick()}>
+          {(errors.name || errors.definition) && (
+            <InlineAlert status="warning">
+              <MissingInfoAlertUl>
+                {errors.name && <li>{t('collection-error-missing-name')}</li>}
+                {errors.definition && (
+                  <li>{t('collection-error-missing-definition')}</li>
+                )}
+              </MissingInfoAlertUl>
+            </InlineAlert>
+          )}
+          <Button onClick={() => handleClick()} id="submit-button">
             {t('save', { ns: 'admin' })}
           </Button>
-          <Button variant="secondary" onClick={() => handleCancel()}>
+          <Button
+            variant="secondary"
+            onClick={() => handleCancel()}
+            id="cancel-button"
+          >
             {t('cancel-variant', { ns: 'admin' })}
           </Button>
         </FooterBlock>
@@ -278,13 +296,13 @@ export default function EditCollection({
         name: collection.properties.prefLabel
           ? collection.properties.prefLabel.map((l) => ({
               lang: l.lang,
-              value: l.value,
+              value: l.value.trim(),
             }))
           : [],
         definition: collection.properties.definition
           ? collection.properties.definition.map((d) => ({
               lang: d.lang,
-              value: d.value,
+              value: d.value.trim(),
             }))
           : [],
         concepts: collection.references.member

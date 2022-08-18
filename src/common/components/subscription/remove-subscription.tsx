@@ -79,6 +79,7 @@ export default function RemoveSubscription({
           variant="secondary"
           icon="alertOff"
           onClick={() => setVisible(true)}
+          id="remove-all-notifications-button"
         >
           {t('subscription-remove-all-notifications')}
         </Button>
@@ -99,6 +100,7 @@ export default function RemoveSubscription({
         onEscKeyDown={() => setVisible(false)}
         variant={isSmall ? 'smallScreen' : 'default'}
         scrollable={false}
+        className="remove-subscriptions-modal"
       >
         <RemoveModalContent>
           <ModalTitle>
@@ -115,10 +117,10 @@ export default function RemoveSubscription({
               : t('subscription-resource-to-be-removed')}
           </Text>
           {resources && (
-            <RemoveModalUl>
+            <RemoveModalUl id="to-be-removed-subscriptions-ul">
               {resources.map((resource, idx) => (
                 <li key={`resource-${idx}`}>
-                  <Text smallScreen>
+                  <Text smallScreen className="to-be-removed-subscription">
                     {getPrefLabel({
                       prefLabels: resource.prefLabel,
                       lang: i18n.language,
@@ -145,10 +147,15 @@ export default function RemoveSubscription({
             onClick={() =>
               resources ? handleUnsubscribeAll() : handleUnsubscribe()
             }
+            id="submit-button"
           >
             {t('subscription-remove')}
           </Button>
-          <Button variant="secondary" onClick={() => setVisible(false)}>
+          <Button
+            variant="secondary"
+            onClick={() => setVisible(false)}
+            id="cancel-button"
+          >
             {t('subscription-cancel')}
           </Button>
         </ModalFooter>

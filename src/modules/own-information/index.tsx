@@ -94,7 +94,7 @@ export default function OwnInformation() {
     if (!organizationsAndRoles.length) return null;
 
     return (
-      <OrganizationAndRolesWrapper>
+      <OrganizationAndRolesWrapper id="organizations-and-roles">
         {organizationsAndRoles.map(({ organization, roles }) => {
           return (
             <OrganizationAndRoles key={organization.id}>
@@ -184,7 +184,6 @@ export default function OwnInformation() {
           ?.filter((organization) => organization.id === id)
           .map((organization) => organization.properties.prefLabel),
         language: i18n.language,
-        fallbackLanguage: 'fi',
       }) ?? ''
     );
   }

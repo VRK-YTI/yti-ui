@@ -40,12 +40,15 @@ export default function ConceptBasicInformation({
     if (key === 'definition' && lang && typeof value === 'string') {
       const newBasicInfo = {
         ...basicInfo,
-        ['definition']: { ...basicInfo['definition'], [lang]: value },
+        ['definition']: { ...basicInfo['definition'], [lang]: value.trim() },
       };
       setBasicInfo(newBasicInfo);
       updateBasicInformation(newBasicInfo);
     } else {
-      const newBasicInfo = { ...basicInfo, [key]: value };
+      const newBasicInfo = {
+        ...basicInfo,
+        [key]: typeof value === 'string' ? value.trim() : value,
+      };
       setBasicInfo(newBasicInfo);
       updateBasicInformation(newBasicInfo);
     }
@@ -137,6 +140,7 @@ export default function ConceptBasicInformation({
         }
         defaultValue={basicInfo.definition[lang] ?? ''}
         maxLength={TEXT_AREA_MAX}
+        className="definition-input"
       />
     );
   }
@@ -155,6 +159,7 @@ export default function ConceptBasicInformation({
         }
         defaultValue={basicInfo.subject}
         maxLength={TEXT_INPUT_MAX}
+        id="subject-input"
       />
     );
   }

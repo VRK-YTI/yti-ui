@@ -28,6 +28,7 @@ import generateFormData from './generate-form-data';
 import { useSelector } from 'react-redux';
 import { selectLogin } from '@app/common/components/login/login.slice';
 import { Notification, Paragraph, Text } from 'suomifi-ui-components';
+import useConfirmBeforeLeavingPage from '@app/common/utils/hooks/use-confirm-before-leaving-page';
 
 interface EditConceptProps {
   terminologyId: string;
@@ -57,6 +58,10 @@ export default function EditConcept({
       value: string;
     }[]
   >(getPreferredTerms());
+  const { disableConfirmation, enableConfirmation } =
+    useConfirmBeforeLeavingPage(
+      preferredTerms.length > 0 && !conceptData ? 'enabled' : 'disabled'
+    );
 
   const [postedData, setPostedData] =
     useState<ReturnType<typeof generateConcept>>();
@@ -86,19 +91,22 @@ export default function EditConcept({
     // return;
     setPostedData(concept);
     addConcept(concept);
+    disableConfirmation();
   };
 
   const updateTerms = (terms: ConceptTermType[]) => {
     setFormData({ ...formData, terms: terms });
+    enableConfirmation();
   };
 
   const updateBasicInformation = (basicInfo: BasicInfo) => {
     setFormData({ ...formData, basicInformation: basicInfo });
+    enableConfirmation();
   };
 
   useEffect(() => {
     if (addConceptStatus.isSuccess && postedData) {
-      router.push(
+      router.replace(
         `/terminology/${terminologyId}/concept/${
           postedData[postedData.length - 1].id
         }`
@@ -112,10 +120,7 @@ export default function EditConcept({
         <Breadcrumb>
           {router.query.terminologyId && (
             <BreadcrumbLink url={`/terminology/${router.query.terminologyId}`}>
-              <PropertyValue
-                property={terminology?.properties.prefLabel}
-                fallbackLanguage="fi"
-              />
+              <PropertyValue property={terminology?.properties.prefLabel} />
             </BreadcrumbLink>
           )}
           <BreadcrumbLink url="" current>
@@ -134,6 +139,7 @@ export default function EditConcept({
             onCloseButtonClick={() =>
               router.push(`/terminology/${terminologyId}`)
             }
+            id="error-notification"
           >
             <Paragraph>
               <Text smallScreen>
@@ -154,15 +160,12 @@ export default function EditConcept({
       <Breadcrumb>
         {router.query.terminologyId && (
           <BreadcrumbLink url={`/terminology/${router.query.terminologyId}`}>
-            <PropertyValue
-              property={terminology?.properties.prefLabel}
-              fallbackLanguage="fi"
-            />
+            <PropertyValue property={terminology?.properties.prefLabel} />
           </BreadcrumbLink>
         )}
         {!!preferredTerms?.length && (
           <BreadcrumbLink url="" current>
-            <PropertyValue property={preferredTerms} fallbackLanguage="fi" />
+            <PropertyValue property={preferredTerms} />
           </BreadcrumbLink>
         )}
       </Breadcrumb>
@@ -174,18 +177,14 @@ export default function EditConcept({
               'prefLabel',
               terminology?.references.contributor
             )}
-            fallbackLanguage="fi"
           />
         </SubTitle>
         <MainTitle>
-          <PropertyValue property={preferredTerms} fallbackLanguage="fi" />
+          <PropertyValue property={preferredTerms} />
         </MainTitle>
         <BadgeBar>
           {t('heading')}
-          <PropertyValue
-            property={terminology?.properties.prefLabel}
-            fallbackLanguage="fi"
-          />
+          <PropertyValue property={terminology?.properties.prefLabel} />
           <Badge>{t('statuses.draft', { ns: 'common' })}</Badge>
         </BadgeBar>
         <PageHelpText>{t('new-concept-page-help')}</PageHelpText>
@@ -204,6 +203,7 @@ export default function EditConcept({
 
         <FormFooter
           handlePost={handlePost}
+          onCancel={disableConfirmation}
           isEdit={typeof conceptData !== 'undefined'}
         />
       </NewConceptBlock>
@@ -229,6 +229,6 @@ export default function EditConcept({
 
     return languages
       .map((lang) => ({ lang, value: asString(router.query[lang]), regex: '' }))
-      .filter(({ value }) => !!value);
+      .filter(({ value }) => !!value.trim());
   }
 }

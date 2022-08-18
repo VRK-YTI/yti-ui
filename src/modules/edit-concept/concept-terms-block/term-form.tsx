@@ -14,6 +14,7 @@ import {
   SingleSelect,
   TextInput,
 } from 'suomifi-ui-components';
+import { HandleSwitchTermsProps } from '.';
 import ListBlock from '../list-block';
 import { ConceptTermType, ListType } from '../new-concept.types';
 import {
@@ -32,6 +33,8 @@ export interface TermFormProps {
     key: string;
     value: string | ListType[];
   }) => void;
+  currentTerms: ConceptTermType[];
+  handleSwitchTerms: (value: HandleSwitchTermsProps) => void;
 }
 
 export interface TermFormUpdate {
@@ -39,7 +42,12 @@ export interface TermFormUpdate {
   value: string | ListType[] | null;
 }
 
-export default function TermForm({ term, update }: TermFormProps) {
+export default function TermForm({
+  term,
+  update,
+  currentTerms,
+  handleSwitchTerms,
+}: TermFormProps) {
   const { t } = useTranslation('admin');
   const [modalVisible, setModalVisible] = useState(false);
   const [isHomographic, setIsHomographic] = useState(
@@ -47,35 +55,49 @@ export default function TermForm({ term, update }: TermFormProps) {
   );
 
   const termStyle = [
-    { labelText: t('spoken-form'), uniqueItemId: 'spoken-form' },
+    {
+      labelText: t('term-style.spoken-form', { ns: 'common' }),
+      uniqueItemId: 'spoken-form',
+    },
   ];
   const termFamily = [
     {
-      labelText: t('masculine'),
+      labelText: t('term-family.masculine', { ns: 'common' }),
       uniqueItemId: 'masculine',
     },
     {
-      labelText: t('neutral'),
+      labelText: t('term-family.neutral', { ns: 'common' }),
       uniqueItemId: 'neutral',
     },
     {
-      labelText: t('feminine'),
+      labelText: t('term-family.feminine', { ns: 'common' }),
       uniqueItemId: 'feminine',
     },
   ];
 
   const termConjugation = [
-    { labelText: t('singular'), uniqueItemId: 'singular' },
-    { labelText: t('plural'), uniqueItemId: 'plural' },
+    {
+      labelText: t('term-conjugation.singular', { ns: 'common' }),
+      uniqueItemId: 'singular',
+    },
+    {
+      labelText: t('term-conjugation.plural', { ns: 'common' }),
+      uniqueItemId: 'plural',
+    },
   ];
 
-  const wordClass = [{ labelText: t('adjective'), uniqueItemId: 'adjective' }];
+  const wordClass = [
+    {
+      labelText: t('word-class.adjective', { ns: 'common' }),
+      uniqueItemId: 'adjective',
+    },
+  ];
 
   const handleUpdate = ({ key, value }: TermFormUpdate) => {
     update({
       termId: term.id,
       key: key,
-      value: value ?? '',
+      value: typeof value === 'string' ? value.trim() : value ?? '',
     });
   };
 
@@ -96,10 +118,12 @@ export default function TermForm({ term, update }: TermFormProps) {
           handleUpdate({ key: 'prefLabel', value: e.target.value })
         }
         maxLength={TEXT_INPUT_MAX}
+        id="term-name-input"
       />
       <CheckboxBlock
         defaultChecked={term.termHomographNumber ? true : false}
         onClick={() => handleIsHomographic()}
+        id="homograph-checkbox"
       >
         {t('term-is-homograph-label')}
       </CheckboxBlock>
@@ -117,6 +141,7 @@ export default function TermForm({ term, update }: TermFormProps) {
               })
             }
             min={0}
+            id="homograph-number-input"
           />
         </BasicBlock>
       )}
@@ -128,14 +153,21 @@ export default function TermForm({ term, update }: TermFormProps) {
         title={t('term-type-label')}
         extra={
           <BasicBlockExtraWrapper>
-            <Button variant="secondary" onClick={() => setModalVisible(true)}>
+            <Button
+              variant="secondary"
+              onClick={() => setModalVisible(true)}
+              id="change-type-button"
+            >
               {t('change-term-type')}
             </Button>
             {modalVisible && (
               <TermTypeModal
-                currentType={term.termType}
+                currentTerm={term}
+                lang={term.language}
                 setVisibility={setModalVisible}
                 handleUpdate={handleUpdate}
+                currentTerms={currentTerms}
+                handleSwitchTerms={handleSwitchTerms}
               />
             )}
           </BasicBlockExtraWrapper>
@@ -147,6 +179,7 @@ export default function TermForm({ term, update }: TermFormProps) {
         labelText={t('term-status-label')}
         defaultValue={term.status}
         onChange={(e) => handleUpdate({ key: 'status', value: e })}
+        id="status-picker"
       >
         <DropdownItem value="DRAFT">
           {t('statuses.draft', { ns: 'common' })}
@@ -177,6 +210,7 @@ export default function TermForm({ term, update }: TermFormProps) {
         defaultValue={term.termInfo}
         onBlur={(e) => handleUpdate({ key: 'termInfo', value: e.target.value })}
         maxLength={TEXT_AREA_MAX}
+        id="info-input"
       />
       <WiderTextareaBlock
         labelText={t('term-scope-label')}
@@ -185,6 +219,7 @@ export default function TermForm({ term, update }: TermFormProps) {
         visualPlaceholder={t('term-scope-placeholder')}
         defaultValue={term.scope}
         onBlur={(e) => handleUpdate({ key: 'scope', value: e.target.value })}
+        id="scope-input"
         maxLength={TEXT_AREA_MAX}
       />
       <WiderTextareaBlock
@@ -195,6 +230,7 @@ export default function TermForm({ term, update }: TermFormProps) {
         defaultValue={term.source}
         onBlur={(e) => handleUpdate({ key: 'source', value: e.target.value })}
         maxLength={TEXT_AREA_MAX}
+        id="sources-input"
       />
 
       <Separator isLarge />
@@ -209,6 +245,7 @@ export default function TermForm({ term, update }: TermFormProps) {
         onBlur={(e) =>
           handleUpdate({ key: 'changeNote', value: e.target.value })
         }
+        id="change-note-input"
         maxLength={TEXT_AREA_MAX}
       />
       <WiderTextareaBlock
@@ -221,6 +258,7 @@ export default function TermForm({ term, update }: TermFormProps) {
           handleUpdate({ key: 'historyNote', value: e.target.value })
         }
         maxLength={TEXT_AREA_MAX}
+        id="history-note-input"
       />
 
       <ListBlock
@@ -260,6 +298,7 @@ export default function TermForm({ term, update }: TermFormProps) {
               : undefined
           }
           onItemSelect={(e) => handleUpdate({ key: 'termStyle', value: e })}
+          id="style-picker"
         />
 
         <SingleSelect
@@ -280,6 +319,7 @@ export default function TermForm({ term, update }: TermFormProps) {
               : undefined
           }
           onItemSelect={(e) => handleUpdate({ key: 'termFamily', value: e })}
+          id="family-picker"
         />
 
         <SingleSelect
@@ -302,6 +342,7 @@ export default function TermForm({ term, update }: TermFormProps) {
           onItemSelect={(e) =>
             handleUpdate({ key: 'termConjugation', value: e })
           }
+          id="conjugations-picker"
         />
 
         <SingleSelect
@@ -323,6 +364,7 @@ export default function TermForm({ term, update }: TermFormProps) {
               : undefined
           }
           onItemSelect={(e) => handleUpdate({ key: 'wordClass', value: e })}
+          id="word-class-picker"
         />
       </GrammaticalBlock>
     </>

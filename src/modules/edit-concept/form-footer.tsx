@@ -6,15 +6,21 @@ import { FooterBlock } from './new-concept.styles';
 
 interface FormFooterProps {
   handlePost: () => void;
+  onCancel?: () => void;
   isEdit: boolean;
 }
 
-export default function FormFooter({ handlePost, isEdit }: FormFooterProps) {
+export default function FormFooter({
+  handlePost,
+  onCancel,
+  isEdit,
+}: FormFooterProps) {
   const { t } = useTranslation('admin');
   const router = useRouter();
 
   const handleCancel = () => {
-    router.push(
+    onCancel?.();
+    router.replace(
       isEdit
         ? `/terminology/${router.query.terminologyId}/concept/${router.query.conceptId}`
         : `/terminology/${router.query.terminologyId}`
@@ -25,8 +31,14 @@ export default function FormFooter({ handlePost, isEdit }: FormFooterProps) {
     <FooterBlock>
       <Separator isLarge />
       <div>
-        <Button onClick={() => handlePost()}>{t('save')}</Button>
-        <Button variant="secondary" onClick={() => handleCancel()}>
+        <Button onClick={() => handlePost()} id="submit-button">
+          {t('save')}
+        </Button>
+        <Button
+          variant="secondary"
+          onClick={() => handleCancel()}
+          id="cancel-button"
+        >
           {t('cancel-variant')}
         </Button>
       </div>

@@ -50,6 +50,7 @@ export default function NewDiagramOrLink({
               setDiagramInfo({ ...diagramInfo, diagramName: e.target.value })
             }
             maxLength={TEXT_INPUT_MAX}
+            id="diagram-name-input"
           />
           <TextInput
             labelText={t('diagram-url')}
@@ -57,6 +58,7 @@ export default function NewDiagramOrLink({
               setDiagramInfo({ ...diagramInfo, diagramUrl: e.target.value })
             }
             maxLength={TEXT_INPUT_MAX}
+            id="diagram-url-input"
           />
           <Textarea
             labelText={t('description')}
@@ -66,12 +68,19 @@ export default function NewDiagramOrLink({
               setDiagramInfo({ ...diagramInfo, description: e.target.value })
             }
             fullWidth
+            id="description-input"
             maxLength={TEXT_AREA_MAX}
           />
         </ModalContentFitted>
         <ModalFooter>
-          <Button onClick={() => handleClick()}>{t('save')}</Button>
-          <Button onClick={() => setVisible(false)} variant="secondary">
+          <Button onClick={() => handleClick()} id="submit-button">
+            {t('save')}
+          </Button>
+          <Button
+            onClick={() => setVisible(false)}
+            variant="secondary"
+            id="cancel-button"
+          >
             {t('cancel-variant')}
           </Button>
         </ModalFooter>

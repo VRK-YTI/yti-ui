@@ -48,18 +48,22 @@ export default function EmailNotificationsBlock({
       }
       extra={
         <>
-          <BasicBlockExtraWrapper>
-            <ToggleButton checked={checked} onClick={() => handleClick()}>
+          <BasicBlockExtraWrapper id="email-notifications">
+            <ToggleButton
+              checked={checked}
+              onClick={() => handleClick()}
+              id="email-notifications-toggle"
+            >
               {t('field-email-notifications')}
             </ToggleButton>
           </BasicBlockExtraWrapper>
           <BasicBlockExtraWrapper>
             {checked ? (
-              <InlineAlert noIcon>
+              <InlineAlert noIcon id="notifications-on">
                 {t('subscription-notifications-on')}
               </InlineAlert>
             ) : (
-              <InlineAlert status="warning">
+              <InlineAlert status="warning" id="notifications-off">
                 {t('subscription-notifications-off')}
               </InlineAlert>
             )}

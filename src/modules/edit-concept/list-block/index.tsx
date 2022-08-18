@@ -75,7 +75,7 @@ export default function ListBlock({
         return {
           id: item.id,
           lang: lang ? lang : '',
-          value: value,
+          value: value.trim(),
         };
       }
       return item;
@@ -91,7 +91,7 @@ export default function ListBlock({
       title={title}
       extra={
         <BasicBlockExtraWrapper>
-          <ListBlockWrapper>
+          <ListBlockWrapper className="list-block">
             {list.map((item) => (
               <ListItem
                 key={item.id}
@@ -188,6 +188,7 @@ function ListItem({
             defaultValue={item.value}
             $noTopMargin
             onBlur={(e) => handleUpdate(item.id, e.target.value, '')}
+            maxLength={TEXT_AREA_MAX}
           />
           <Button
             variant="secondaryNoBorder"

@@ -21,7 +21,13 @@ import {
   TermText,
 } from './term-modal.styles';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
-import { translateStatus } from '@app/common/utils/translation-helpers';
+import {
+  translateStatus,
+  translateTermConjugation,
+  translateTermFamily,
+  translateTermStyle,
+  translateWordClass,
+} from '@app/common/utils/translation-helpers';
 
 interface TermModalProps {
   data?: { term: Term; type: string };
@@ -50,10 +56,7 @@ export default function TermModal({ data }: TermModalProps) {
           be rendered. Same solution in <ModalTitle /> below.
         */}
         {data.term.properties.prefLabel?.[0].value ?? (
-          <PropertyValue
-            property={data.term.properties.prefLabel}
-            fallbackLanguage="fi"
-          />
+          <PropertyValue property={data.term.properties.prefLabel} />
         )}
       </TermModalButton>
       <Modal
@@ -65,10 +68,7 @@ export default function TermModal({ data }: TermModalProps) {
         <ModalContent>
           <ModalTitle>
             {data.term.properties.prefLabel?.[0].value ?? (
-              <PropertyValue
-                property={data.term.properties.prefLabel}
-                fallbackLanguage="fi"
-              />
+              <PropertyValue property={data.term.properties.prefLabel} />
             )}
           </ModalTitle>
 
@@ -130,19 +130,31 @@ export default function TermModal({ data }: TermModalProps) {
             data={[
               {
                 subtitle: t('term-modal-style'),
-                value: data.term.properties.termStyle?.[0].value,
+                value: translateTermStyle(
+                  data.term.properties.termStyle?.[0].value ?? '',
+                  t
+                ),
               },
               {
                 subtitle: t('term-modal-family'),
-                value: data.term.properties.termFamily?.[0].value,
+                value: translateTermFamily(
+                  data.term.properties.termFamily?.[0].value ?? '',
+                  t
+                ),
               },
               {
                 subtitle: t('term-modal-conjugation'),
-                value: data.term.properties.termConjugation?.[0].value,
+                value: translateTermConjugation(
+                  data.term.properties.termConjugation?.[0].value ?? '',
+                  t
+                ),
               },
               {
                 subtitle: t('term-modal-word-class'),
-                value: data.term.properties.wordClass?.[0].value,
+                value: translateWordClass(
+                  data.term.properties.wordClass?.[0].value ?? '',
+                  t
+                ),
               },
             ]}
           />

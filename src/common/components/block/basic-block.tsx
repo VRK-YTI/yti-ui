@@ -7,6 +7,7 @@ export interface BasicBlockProps {
   extra?: React.ReactNode;
   largeGap?: boolean;
   largeWidth?: boolean;
+  id?: string;
 }
 
 export default function BasicBlock({
@@ -15,9 +16,14 @@ export default function BasicBlock({
   extra,
   largeGap,
   largeWidth,
+  id,
 }: BasicBlockProps) {
   return (
-    <BasicBlockWrapper $largeGap={largeGap} $largeWidth={largeWidth}>
+    <BasicBlockWrapper
+      $largeGap={largeGap}
+      $largeWidth={largeWidth}
+      id={id ?? 'basic-block'}
+    >
       {title && <BasicBlockHeader>{title}</BasicBlockHeader>}
       {children}
       {extra}

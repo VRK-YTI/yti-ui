@@ -32,6 +32,7 @@ export default function NewConceptModal({
               icon="plus"
               variant="secondary"
               onClick={() => setVisible(true)}
+              id="new-concept-button"
             >
               {t('add-new-concept')}
             </Button>

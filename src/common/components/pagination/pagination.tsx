@@ -32,17 +32,19 @@ export default function Pagination({ data, pageString }: PaginationProps) {
   }
 
   return (
-    <PaginationWrapper>
+    <PaginationWrapper id="pagination">
       <ChevronButton
         disabled={urlState.page === 1}
-        onClick={() =>
-          urlState.page !== 1 && patchUrlState({ page: urlState.page - 1 })
-        }
+        onClick={() => {
+          urlState.page !== 1 && patchUrlState({ page: urlState.page - 1 });
+          window.scrollTo(0, 0);
+        }}
         data-testid="pagination-left"
         icon="chevronLeft"
         iconProps={{ icon: 'chevronLeft' }}
         variant="secondaryNoBorder"
         aria-label={t('pagination-previous-page')}
+        id="pagination-left-button"
       />
 
       {!breakPoints.isSmall ? (
@@ -54,13 +56,15 @@ export default function Pagination({ data, pageString }: PaginationProps) {
                   ? `pagination-item-${item}`
                   : `pagination-item-${item}-${idx}`
               }
-              onClick={() =>
+              onClick={() => {
                 urlState.page !== item &&
-                typeof item === 'number' &&
-                patchUrlState({ page: item })
-              }
+                  typeof item === 'number' &&
+                  patchUrlState({ page: item });
+                window.scrollTo(0, 0);
+              }}
               variant={item === urlState.page ? 'default' : 'secondaryNoBorder'}
               disabled={item === '...'}
+              className="pagination-number-button"
             >
               {item}
             </PaginationButton>
@@ -74,15 +78,17 @@ export default function Pagination({ data, pageString }: PaginationProps) {
 
       <ChevronButton
         disabled={urlState.page === items[items.length - 1]}
-        onClick={() =>
+        onClick={() => {
           urlState.page !== items[items.length - 1] &&
-          patchUrlState({ page: urlState.page + 1 })
-        }
+            patchUrlState({ page: urlState.page + 1 });
+          window.scrollTo(0, 0);
+        }}
         data-testid="pagination-right"
         icon="chevronRight"
         iconProps={{ icon: 'chevronRight' }}
         variant="secondaryNoBorder"
         aria-label={t('pagination-next-page')}
+        id="pagination-right-button"
       />
     </PaginationWrapper>
   );

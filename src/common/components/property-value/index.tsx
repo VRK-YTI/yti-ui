@@ -6,7 +6,6 @@ import { getPropertyValue } from './get-property-value';
 export interface PropertyValueProps {
   property?: Property[];
   valueAccessor?: (property: Property) => string;
-  fallbackLanguage?: string;
   delimiter?: string | false;
   fallback?: string;
 }
@@ -36,7 +35,6 @@ export interface PropertyValueProps {
 export default function PropertyValue({
   property,
   valueAccessor,
-  fallbackLanguage,
   delimiter = false,
   fallback,
 }: PropertyValueProps) {
@@ -46,7 +44,6 @@ export default function PropertyValue({
     property,
     valueAccessor,
     language: i18n.language,
-    fallbackLanguage,
     delimiter,
   });
 

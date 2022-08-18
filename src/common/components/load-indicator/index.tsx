@@ -26,7 +26,7 @@ export default function LoadIndicator({
   if (isFetching) {
     return (
       <LoadWrapper>
-        <LoadingIndicator $isSmall={isSmall} />
+        <LoadingIndicator $isSmall={isSmall} id="load-indicator" />
       </LoadWrapper>
     );
   } else if (error) {

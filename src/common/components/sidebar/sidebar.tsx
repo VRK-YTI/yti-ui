@@ -11,7 +11,7 @@ export default function Sidebar({ children, isEmpty }: SidebarProps) {
   const { breakpoint } = useBreakpoints();
 
   return (
-    <SidebarWrapper $breakpoint={breakpoint} aria-hidden={isEmpty}>
+    <SidebarWrapper $breakpoint={breakpoint} aria-hidden={isEmpty} id="sidebar">
       {children}
     </SidebarWrapper>
   );

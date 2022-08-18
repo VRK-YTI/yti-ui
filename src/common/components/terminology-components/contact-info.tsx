@@ -53,13 +53,14 @@ export default function ContactInfo({
         hintText={t('contact-hint-text')}
         visualPlaceholder={t('contact-visual-placeholder')}
         $isSmall={isSmall ? true : undefined}
-        onChange={(e) => setContact(e as string)}
+        onChange={(e) => setContact(e?.toString().trim() ?? '')}
         onBlur={() => validateContact()}
         type="email"
         status={status === 'error' ? 'error' : 'default'}
         statusText={status === 'error' ? t('contact-email-invalid') : ''}
         defaultValue={contact}
         maxLength={EMAIL_MAX}
+        id="contact-input"
       />
     </BlankFieldset>
   );

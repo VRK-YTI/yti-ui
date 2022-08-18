@@ -1,6 +1,5 @@
 export const conceptWithOneTerm = [
   {
-    code: '',
     createdBy: '',
     createdDate: '1970-01-01T00:00:00.000Z',
     id: '0',
@@ -117,10 +116,8 @@ export const conceptWithOneTerm = [
       id: 'Term',
       uri: 'http://www.w3.org/2008/05/skos-xl#Label',
     },
-    uri: '',
   },
   {
-    code: '',
     createdBy: '',
     createdDate: '1970-01-01T00:00:00.000Z',
     id: '1',
@@ -230,13 +227,260 @@ export const conceptWithOneTerm = [
       id: 'Concept',
       uri: 'http://www.w3.org/2004/02/skos/core#Concept',
     },
-    uri: '',
+  },
+];
+
+export const conceptWithOneTermWithInitialData = [
+  {
+    code: 'term-1000',
+    createdBy: 'Admin User',
+    createdDate: '1970-01-01T00:00:00.000Z',
+    id: '789',
+    lastModifiedBy: 'Admin User',
+    lastModifiedDate: '1970-01-01T00:00:00.000Z',
+    properties: {
+      changeNote: [
+        {
+          lang: '',
+          regex: '(?s)^.*$',
+          value: '',
+        },
+      ],
+      draftComment: [
+        {
+          lang: '',
+          regex: '(?s)^.*$',
+          value: '',
+        },
+      ],
+      editorialNote: [],
+      historyNote: [
+        {
+          lang: '',
+          regex: '(?s)^.*$',
+          value: '',
+        },
+      ],
+      prefLabel: [
+        {
+          lang: 'fi',
+          regex: '(?s)^.*$',
+          value: 'prefLabel',
+        },
+      ],
+      scope: [
+        {
+          lang: '',
+          regex: '(?s)^.*$',
+          value: '',
+        },
+      ],
+      source: [],
+      status: [
+        {
+          lang: '',
+          regex: '(?s)^.*$',
+          value: 'DRAFT',
+        },
+      ],
+      termConjugation: [
+        {
+          lang: '',
+          regex: '(?s)^.*$',
+          value: '',
+        },
+      ],
+      termEquivalency: [
+        {
+          lang: '',
+          regex: '(?s)^.*$',
+          value: '',
+        },
+      ],
+      termEquivalencyRelation: [
+        {
+          lang: '',
+          regex: '(?s)^.*$',
+          value: '',
+        },
+      ],
+      termFamily: [
+        {
+          lang: '',
+          regex: '(?s)^.*$',
+          value: '',
+        },
+      ],
+      termHomographNumber: [
+        {
+          lang: '',
+          regex: '(?s)^.*$',
+          value: '',
+        },
+      ],
+      termInfo: [
+        {
+          lang: '',
+          regex: '(?s)^.*$',
+          value: '',
+        },
+      ],
+      termStyle: [
+        {
+          lang: '',
+          regex: '(?s)^.*$',
+          value: '',
+        },
+      ],
+      wordClass: [
+        {
+          lang: '',
+          regex: '(?s)^.*$',
+          value: '',
+        },
+      ],
+    },
+    references: {},
+    referrers: {
+      prefLabelXl: [
+        {
+          id: '123',
+          type: {
+            graph: {
+              id: 'terminologyId',
+            },
+            id: 'Concept',
+            uri: '',
+          },
+        },
+      ],
+    },
+    type: {
+      graph: {
+        id: 'terminologyId',
+      },
+      id: 'Term',
+      uri: '',
+    },
+    uri: 'sanastot.suomi.fi/sanasto/term-1000',
+  },
+  {
+    code: 'concept-1000',
+    createdBy: 'Admin User',
+    createdDate: '1970-01-01T00:00:00.000Z',
+    id: '1',
+    lastModifiedBy: '',
+    lastModifiedDate: '1970-01-01T00:00:00.000Z',
+    properties: {
+      changeNote: [
+        {
+          lang: '',
+          regex: '(?s)^.*$',
+          value: '',
+        },
+      ],
+      conceptClass: [
+        {
+          lang: '',
+          regex: '(?s)^.*$',
+          value: '',
+        },
+      ],
+      conceptScope: [
+        {
+          lang: '',
+          regex: '(?s)^.*$',
+          value: '',
+        },
+      ],
+      definition: [],
+      editorialNote: [],
+      example: [],
+      externalLink: [
+        {
+          lang: '',
+          regex: '(?s)^.*$',
+          value: '',
+        },
+      ],
+      historyNote: [
+        {
+          lang: '',
+          regex: '(?s)^.*$',
+          value: '',
+        },
+      ],
+      notation: [
+        {
+          lang: '',
+          regex: '(?s)^.*$',
+          value: '',
+        },
+      ],
+      note: [],
+      source: [],
+      status: [
+        {
+          lang: '',
+          regex: '(?s)^.*$',
+          value: 'DRAFT',
+        },
+      ],
+      subjectArea: [
+        {
+          lang: '',
+          regex: '(?s)^.*$',
+          value: '',
+        },
+      ],
+      wordClass: [
+        {
+          lang: '',
+          regex: '(?s)^.*$',
+          value: '',
+        },
+      ],
+    },
+    references: {
+      altLabelXl: [],
+      broader: [],
+      closeMatch: [],
+      exactMatch: [],
+      hasPart: [],
+      hiddenTerm: [],
+      isPartOf: [],
+      narrower: [],
+      notRecommendedSynonym: [],
+      prefLabelXl: [
+        {
+          id: '789',
+          type: {
+            graph: {
+              id: 'terminologyId',
+            },
+            id: 'Term',
+            uri: '',
+          },
+        },
+      ],
+      related: [],
+      relatedMatch: [],
+      searchTerm: [],
+    },
+    referrers: {},
+    type: {
+      graph: {
+        id: 'terminologyId',
+      },
+      id: 'Concept',
+      uri: '',
+    },
+    uri: 'sanastot.suomi.fi/sanasto/concept-1000',
   },
 ];
 
 export const conceptWithInternalRelations = [
   {
-    code: '',
     createdBy: '',
     createdDate: '1970-01-01T00:00:00.000Z',
     id: '0',
@@ -353,10 +597,8 @@ export const conceptWithInternalRelations = [
       id: 'Term',
       uri: 'http://www.w3.org/2008/05/skos-xl#Label',
     },
-    uri: '',
   },
   {
-    code: '',
     createdBy: '',
     createdDate: '1970-01-01T00:00:00.000Z',
     id: '',
@@ -521,13 +763,11 @@ export const conceptWithInternalRelations = [
       id: 'Concept',
       uri: 'http://www.w3.org/2004/02/skos/core#Concept',
     },
-    uri: '',
   },
 ];
 
 export const differentTerms = [
   {
-    code: '',
     createdBy: '',
     createdDate: '1970-01-01T00:00:00.000Z',
     id: '0',
@@ -656,10 +896,8 @@ export const differentTerms = [
       id: 'Term',
       uri: 'http://www.w3.org/2008/05/skos-xl#Label',
     },
-    uri: '',
   },
   {
-    code: '',
     createdBy: '',
     createdDate: '1970-01-01T00:00:00.000Z',
     id: '1',
@@ -788,10 +1026,8 @@ export const differentTerms = [
       id: 'Term',
       uri: 'http://www.w3.org/2008/05/skos-xl#Label',
     },
-    uri: '',
   },
   {
-    code: '',
     createdBy: '',
     createdDate: '1970-01-01T00:00:00.000Z',
     id: '2',
@@ -920,10 +1156,8 @@ export const differentTerms = [
       id: 'Term',
       uri: 'http://www.w3.org/2008/05/skos-xl#Label',
     },
-    uri: '',
   },
   {
-    code: '',
     createdBy: '',
     createdDate: '1970-01-01T00:00:00.000Z',
     id: '3',
@@ -1052,10 +1286,8 @@ export const differentTerms = [
       id: 'Term',
       uri: 'http://www.w3.org/2008/05/skos-xl#Label',
     },
-    uri: '',
   },
   {
-    code: '',
     createdBy: '',
     createdDate: '1970-01-01T00:00:00.000Z',
     id: '6e00b816-c077-4747-8597-46047005584d',
@@ -1228,6 +1460,5 @@ export const differentTerms = [
       id: 'Concept',
       uri: 'http://www.w3.org/2004/02/skos/core#Concept',
     },
-    uri: '',
   },
 ];

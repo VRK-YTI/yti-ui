@@ -70,7 +70,7 @@ export default function SearchResults({
             renderQBeforeStatus
             count={data?.totalHitCount}
           />
-          <ResultWrapper $isSmall={isSmall}>
+          <ResultWrapper $isSmall={isSmall} id="search-results">
             {data?.terminologies?.map((terminology) => {
               return (
                 <ResultCard
@@ -167,21 +167,12 @@ export default function SearchResults({
                   }
                 })
                 .map((collection) => {
-                  const prefLabelLangs = collection.properties.prefLabel
-                    ?.map((pl) => pl.lang)
-                    .filter(
-                      (lang) =>
-                        (urlState.lang && lang !== urlState.lang) ||
-                        !urlState.lang
-                    );
-
                   return (
                     <ResultCard
                       key={collection.id}
                       description={
                         <PropertyValue
                           property={collection.properties.definition}
-                          fallbackLanguage={'fi'}
                           fallback={t('vocabulary-results-no-description')}
                         />
                       }
@@ -198,10 +189,6 @@ export default function SearchResults({
                       title={getPropertyValue({
                         property: collection.properties.prefLabel,
                         language: urlState.lang ? urlState.lang : i18n.language,
-                        fallbackLanguage:
-                          prefLabelLangs?.[0] !== urlState.lang
-                            ? prefLabelLangs?.[0]
-                            : 'fi',
                       })}
                       titleLink={`/terminology/${collection.type.graph.id}/collection/${collection.id}`}
                       type={t('vocabulary-info-collection')}
@@ -319,26 +306,28 @@ export default function SearchResults({
 
     // If language is defined in urlState and dto is Concept
     // get label without trailing language code
-    if (isConcept && urlState.lang && dto.label[urlState.lang]) {
+    if (isConcept && urlState.lang && dto.label?.[urlState.lang]) {
       return dto.label[urlState.lang].replaceAll(/<\/*[^>]>/g, '');
     }
 
     // If label exists in current UI language get label without trailing language code
-    if (!urlState.lang && dto.label[i18n.language]) {
+    if (!urlState.lang && dto.label?.[i18n.language]) {
       return dto.label[i18n.language].replaceAll(/<\/*[^>]>/g, '');
     }
 
-    if (isConcept) {
+    if (isConcept && dto.label) {
       // Otherwise return label with trailing language code
       return `${dto?.label?.[Object.keys(dto.label)[0]].replaceAll(
         /<\/*[^>]>/g,
         ''
       )} (${Object.keys(dto.label)[0]})`;
-    } else {
+    } else if (dto.label) {
       return `${dto?.label?.[Object.keys(dto.label)[0]].replaceAll(
         /<\/*[^>]>/g,
         ''
       )}`;
+    } else {
+      return t('concept-label-undefined');
     }
   }
 
