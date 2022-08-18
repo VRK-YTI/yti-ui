@@ -13,7 +13,7 @@ import {
 import TermExpander from './term-expander';
 import TermForm from './term-form';
 import { ConceptTermType, ListType } from '../new-concept.types';
-import validateForm from '../validate-form';
+import { FormError } from '../validate-form';
 
 const NewTermModal = dynamic(() => import('./new-term-modal'));
 
@@ -21,7 +21,7 @@ interface ConceptTermsBlockProps {
   languages: string[];
   updateTerms: (value: ConceptTermType[]) => void;
   initialValues: ConceptTermType[];
-  errors: ReturnType<typeof validateForm>;
+  errors: FormError;
 }
 
 export interface ConceptTermUpdateProps {
@@ -105,7 +105,11 @@ export default function ConceptTermsBlock({
                 .filter((term) => term.termType === 'recommended-term')
                 .map((term) => (
                   <TermExpander key={term.id} term={term}>
-                    <TermForm term={term} update={handleUpdate} />
+                    <TermForm
+                      term={term}
+                      update={handleUpdate}
+                      errors={errors}
+                    />
                   </TermExpander>
                 ))}
             </ExpanderGroup>
@@ -146,7 +150,11 @@ export default function ConceptTermsBlock({
                         setChecked={handleCheck}
                         checkable
                       >
-                        <TermForm term={term} update={handleUpdate} />
+                        <TermForm
+                          term={term}
+                          update={handleUpdate}
+                          errors={errors}
+                        />
                       </TermExpander>
                     ))}
                 </OtherTermsExpanderGroup>

@@ -10,6 +10,7 @@ import ListBlock from '../list-block';
 import { ListType } from '../new-concept.types';
 import { BasicInfoUpdate } from './concept-basic-information';
 import { TEXT_AREA_MAX } from '@app/common/utils/constants';
+import { FormError } from '../validate-form';
 
 interface OrganizationalInformationProps {
   infoKey: string;
@@ -19,12 +20,14 @@ interface OrganizationalInformationProps {
     editorialNote: ListType[];
     etymology: string;
   };
+  errors: FormError;
 }
 
 export default function OrganizationalInformation({
   infoKey,
   update,
   initialValues,
+  errors,
 }: OrganizationalInformationProps) {
   const { t } = useTranslation('admin');
   const [changeHistory, setChangeHistory] = useState<string>(
@@ -98,6 +101,7 @@ export default function OrganizationalInformation({
           addNewText={t('add-new-editorialNote')}
           inputLabel={t('editorialNote-textarea-label-text')}
           inputPlaceholder={t('editorialNote-textarea-placeholder')}
+          errors={errors}
         />
       </ExpanderContentFitted>
     </ConceptExpander>

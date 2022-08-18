@@ -1,6 +1,16 @@
 import { EditConceptType } from './new-concept.types';
 
-export default function validateForm(data: EditConceptType) {
+export interface FormError {
+  termPrefLabel: boolean;
+  recommendedTerms: boolean;
+  termEditorialNote: boolean;
+  example: boolean;
+  note: boolean;
+  editorialNote: boolean;
+  total: boolean;
+}
+
+export default function validateForm(data: EditConceptType): FormError {
   const errors = {
     termPrefLabel: false,
     recommendedTerms: false,

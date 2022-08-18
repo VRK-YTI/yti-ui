@@ -15,13 +15,13 @@ import { BasicInfo, ListType } from '../new-concept.types';
 import ListBlock from '../list-block';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
 import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from '@app/common/utils/constants';
-import validateForm from '../validate-form';
+import { FormError } from '../validate-form';
 
 interface ConceptBasicInformationProps {
   updateBasicInformation: (value: BasicInfo) => void;
   initialValues: BasicInfo;
   languages: string[];
-  errors: ReturnType<typeof validateForm>;
+  errors: FormError;
 }
 
 export interface BasicInfoUpdate {
@@ -73,6 +73,7 @@ export default function ConceptBasicInformation({
         addNewText={t('add-new-example')}
         inputLabel={t('example-textarea-label-text')}
         inputPlaceholder={t('example-textarea-placeholder')}
+        errors={errors}
       />
 
       {renderSubject()}
@@ -87,6 +88,7 @@ export default function ConceptBasicInformation({
         addNewText={t('add-new-note')}
         inputLabel={t('note-textarea-label-text')}
         inputPlaceholder={t('note-textarea-placeholder')}
+        errors={errors}
       />
 
       <ExpanderGroup closeAllText="" openAllText="">
@@ -99,6 +101,7 @@ export default function ConceptBasicInformation({
           infoKey="orgInfo"
           update={handleBasicInfoUpdate}
           initialValues={basicInfo.orgInfo}
+          errors={errors}
         />
         <OtherInformation
           infoKey="otherInfo"

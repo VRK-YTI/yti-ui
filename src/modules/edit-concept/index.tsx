@@ -29,7 +29,7 @@ import { useSelector } from 'react-redux';
 import { selectLogin } from '@app/common/components/login/login.slice';
 import { Notification, Paragraph, Text } from 'suomifi-ui-components';
 import useConfirmBeforeLeavingPage from '@app/common/utils/hooks/use-confirm-before-leaving-page';
-import validateForm from './validate-form';
+import validateForm, { FormError } from './validate-form';
 
 interface EditConceptProps {
   terminologyId: string;
@@ -59,7 +59,7 @@ export default function EditConcept({
     }[]
   >(getPreferredTerms());
   const [postedData, setPostedData] =
-    useState<ReturnType<typeof generateConcept>>();
+    useState<FormError>();
   const [formData, setFormData] = useState<EditConceptType>(
     generateFormData(
       preferredTerms,

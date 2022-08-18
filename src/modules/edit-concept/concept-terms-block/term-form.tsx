@@ -16,6 +16,7 @@ import {
 } from 'suomifi-ui-components';
 import ListBlock from '../list-block';
 import { ConceptTermType, ListType } from '../new-concept.types';
+import { FormError } from '../validate-form';
 import {
   CheckboxBlock,
   DropdownBlock,
@@ -32,6 +33,7 @@ export interface TermFormProps {
     key: string;
     value: string | ListType[];
   }) => void;
+  errors: FormError;
 }
 
 export interface TermFormUpdate {
@@ -39,12 +41,13 @@ export interface TermFormUpdate {
   value: string | ListType[] | null;
 }
 
-export default function TermForm({ term, update }: TermFormProps) {
+export default function TermForm({ term, update, errors }: TermFormProps) {
   const { t } = useTranslation('admin');
   const [modalVisible, setModalVisible] = useState(false);
   const [isHomographic, setIsHomographic] = useState(
     term.termHomographNumber ? true : false
   );
+  const [prefLabel, setPrefLabel] = useState(term.prefLabel);
 
   const termStyle = [
     { labelText: t('spoken-form'), uniqueItemId: 'spoken-form' },
@@ -72,6 +75,10 @@ export default function TermForm({ term, update }: TermFormProps) {
   const wordClass = [{ labelText: t('adjective'), uniqueItemId: 'adjective' }];
 
   const handleUpdate = ({ key, value }: TermFormUpdate) => {
+    if (key === 'prefLabel' && typeof value === 'string') {
+      setPrefLabel(value);
+    }
+
     update({
       termId: term.id,
       key: key,
@@ -97,6 +104,7 @@ export default function TermForm({ term, update }: TermFormProps) {
         }
         maxLength={TEXT_INPUT_MAX}
         id="term-name-input"
+        status={errors.termPrefLabel && prefLabel === '' ? 'error' : 'default'}
       />
       <CheckboxBlock
         defaultChecked={term.termHomographNumber ? true : false}
@@ -246,6 +254,7 @@ export default function TermForm({ term, update }: TermFormProps) {
         addNewText={t('add-new-editorialNote')}
         inputLabel={t('editorialNote-textarea-label-text')}
         inputPlaceholder={t('editorialNote-textarea-placeholder')}
+        errors={errors}
       />
 
       <Separator isLarge />
