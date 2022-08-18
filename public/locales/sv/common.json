@@ -104,6 +104,18 @@
     "valid": ""
   },
   "synonym": "",
+  "term-conjugation": {
+    "plural": "",
+    "singular": ""
+  },
+  "term-family": {
+    "feminine": "",
+    "masculine": "",
+    "neutral": ""
+  },
+  "term-style": {
+    "spoken-form": ""
+  },
   "terminology": "",
   "terminology-footer-accessibility": "",
   "terminology-footer-feedback": "",
@@ -161,5 +173,9 @@
   "vocabulary-results-concepts_other": "",
   "vocabulary-results-more": "",
   "vocabulary-results-no-concepts": "",
-  "vocabulary-results-no-description": ""
+  "vocabulary-results-no-description": "",
+  "word-class": {
+    "adjective": "",
+    "verb": ""
+  }
 }

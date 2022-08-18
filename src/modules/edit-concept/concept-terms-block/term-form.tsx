@@ -47,29 +47,43 @@ export default function TermForm({ term, update }: TermFormProps) {
   );
 
   const termStyle = [
-    { labelText: t('spoken-form'), uniqueItemId: 'spoken-form' },
+    {
+      labelText: t('term-style.spoken-form', { ns: 'common' }),
+      uniqueItemId: 'spoken-form',
+    },
   ];
   const termFamily = [
     {
-      labelText: t('masculine'),
+      labelText: t('term-family.masculine', { ns: 'common' }),
       uniqueItemId: 'masculine',
     },
     {
-      labelText: t('neutral'),
+      labelText: t('term-family.neutral', { ns: 'common' }),
       uniqueItemId: 'neutral',
     },
     {
-      labelText: t('feminine'),
+      labelText: t('term-family.feminine', { ns: 'common' }),
       uniqueItemId: 'feminine',
     },
   ];
 
   const termConjugation = [
-    { labelText: t('singular'), uniqueItemId: 'singular' },
-    { labelText: t('plural'), uniqueItemId: 'plural' },
+    {
+      labelText: t('term-conjugation.singular', { ns: 'common' }),
+      uniqueItemId: 'singular',
+    },
+    {
+      labelText: t('term-conjugation.plural', { ns: 'common' }),
+      uniqueItemId: 'plural',
+    },
   ];
 
-  const wordClass = [{ labelText: t('adjective'), uniqueItemId: 'adjective' }];
+  const wordClass = [
+    {
+      labelText: t('word-class.adjective', { ns: 'common' }),
+      uniqueItemId: 'adjective',
+    },
+  ];
 
   const handleUpdate = ({ key, value }: TermFormUpdate) => {
     update({
