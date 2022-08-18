@@ -3,17 +3,20 @@ import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { Button } from 'suomifi-ui-components';
 import { FooterBlock } from './new-concept.styles';
+import validateForm from './validate-form';
 
 interface FormFooterProps {
   handlePost: () => void;
   onCancel?: () => void;
   isEdit: boolean;
+  errors: ReturnType<typeof validateForm>;
 }
 
 export default function FormFooter({
   handlePost,
   onCancel,
   isEdit,
+  errors,
 }: FormFooterProps) {
   const { t } = useTranslation('admin');
   const router = useRouter();

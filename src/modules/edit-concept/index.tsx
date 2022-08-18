@@ -29,6 +29,7 @@ import { useSelector } from 'react-redux';
 import { selectLogin } from '@app/common/components/login/login.slice';
 import { Notification, Paragraph, Text } from 'suomifi-ui-components';
 import useConfirmBeforeLeavingPage from '@app/common/utils/hooks/use-confirm-before-leaving-page';
+import validateForm from './validate-form';
 
 interface EditConceptProps {
   terminologyId: string;
@@ -50,7 +51,6 @@ export default function EditConcept({
   const [languages] = useState(
     terminology?.properties.language?.map(({ value }) => value) ?? []
   );
-
   const [preferredTerms] = useState<
     {
       lang: string;
@@ -58,14 +58,8 @@ export default function EditConcept({
       value: string;
     }[]
   >(getPreferredTerms());
-  const { disableConfirmation, enableConfirmation } =
-    useConfirmBeforeLeavingPage(
-      preferredTerms.length > 0 && !conceptData ? 'enabled' : 'disabled'
-    );
-
   const [postedData, setPostedData] =
     useState<ReturnType<typeof generateConcept>>();
-
   const [formData, setFormData] = useState<EditConceptType>(
     generateFormData(
       preferredTerms,
@@ -73,10 +67,24 @@ export default function EditConcept({
       terminology?.properties.prefLabel
     )
   );
+  const [errors, setErrors] = useState<ReturnType<typeof validateForm>>(
+    validateForm(formData)
+  );
+
+  const { disableConfirmation, enableConfirmation } =
+    useConfirmBeforeLeavingPage(
+      preferredTerms.length > 0 && !conceptData ? 'enabled' : 'disabled'
+    );
 
   const handlePost = () => {
     if (!terminologyId) {
       console.error('Invalid terminologyId');
+      return;
+    }
+
+    const errors = validateForm(formData);
+    setErrors(errors);
+    if (errors.total) {
       return;
     }
 
@@ -87,6 +95,7 @@ export default function EditConcept({
       lastModifiedBy: `${user.firstName} ${user.lastName}`,
     });
 
+    return;
     setPostedData(concept);
     addConcept(concept);
     disableConfirmation();
@@ -191,18 +200,21 @@ export default function EditConcept({
           languages={languages}
           updateTerms={updateTerms}
           initialValues={formData.terms}
+          errors={errors}
         />
 
         <ConceptBasicInformation
           updateBasicInformation={updateBasicInformation}
           initialValues={formData.basicInformation}
           languages={languages}
+          errors={errors}
         />
 
         <FormFooter
           handlePost={handlePost}
           onCancel={disableConfirmation}
           isEdit={typeof conceptData !== 'undefined'}
+          errors={errors}
         />
       </NewConceptBlock>
     </>

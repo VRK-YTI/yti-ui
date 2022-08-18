@@ -15,11 +15,13 @@ import { BasicInfo, ListType } from '../new-concept.types';
 import ListBlock from '../list-block';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
 import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from '@app/common/utils/constants';
+import validateForm from '../validate-form';
 
 interface ConceptBasicInformationProps {
   updateBasicInformation: (value: BasicInfo) => void;
   initialValues: BasicInfo;
   languages: string[];
+  errors: ReturnType<typeof validateForm>;
 }
 
 export interface BasicInfoUpdate {
@@ -32,6 +34,7 @@ export default function ConceptBasicInformation({
   updateBasicInformation,
   initialValues,
   languages,
+  errors,
 }: ConceptBasicInformationProps) {
   const { t } = useTranslation('admin');
   const [basicInfo, setBasicInfo] = useState<BasicInfo>(initialValues);

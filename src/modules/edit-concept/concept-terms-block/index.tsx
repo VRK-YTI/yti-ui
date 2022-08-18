@@ -13,6 +13,7 @@ import {
 import TermExpander from './term-expander';
 import TermForm from './term-form';
 import { ConceptTermType, ListType } from '../new-concept.types';
+import validateForm from '../validate-form';
 
 const NewTermModal = dynamic(() => import('./new-term-modal'));
 
@@ -20,6 +21,7 @@ interface ConceptTermsBlockProps {
   languages: string[];
   updateTerms: (value: ConceptTermType[]) => void;
   initialValues: ConceptTermType[];
+  errors: ReturnType<typeof validateForm>;
 }
 
 export interface ConceptTermUpdateProps {
@@ -32,6 +34,7 @@ export default function ConceptTermsBlock({
   languages,
   updateTerms,
   initialValues,
+  errors,
 }: ConceptTermsBlockProps) {
   const { t } = useTranslation('admin');
   const [modalVisible, setModalVisible] = useState(false);
