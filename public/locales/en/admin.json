@@ -94,6 +94,14 @@
   "diagram-url": "Diagram web address",
   "download-failed": "Download failed",
   "downloading-file": "Downloading file",
+  "edit-concept-error": {
+    "default": "Concept has missing information",
+    "editorialNote": "At least one editorial note is missing a descriptive text",
+    "example": "At least one example is missing a descriptive text",
+    "note": "At least one note is missing a descriptive text",
+    "recommendedTerms": "Concept is missing a preferred term ",
+    "termPrefLabel": "At least on preferred term is missing a name"
+  },
   "edit-terminology": "Edit terminology",
   "edit-terminology-info": "Edit terminology information",
   "editorialNote": "Admin note",

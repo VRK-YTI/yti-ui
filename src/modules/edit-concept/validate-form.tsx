@@ -3,7 +3,6 @@ import { EditConceptType } from './new-concept.types';
 export interface FormError {
   termPrefLabel: boolean;
   recommendedTerms: boolean;
-  termEditorialNote: boolean;
   example: boolean;
   note: boolean;
   editorialNote: boolean;
@@ -14,7 +13,6 @@ export default function validateForm(data: EditConceptType): FormError {
   const errors = {
     termPrefLabel: false,
     recommendedTerms: false,
-    termEditorialNote: false,
     example: false,
     note: false,
     editorialNote: false,
@@ -45,7 +43,7 @@ export default function validateForm(data: EditConceptType): FormError {
           .length > 0
     ).length > 0
   ) {
-    errors.termEditorialNote = true;
+    errors.editorialNote = true;
   }
 
   // If there are examples with empty values

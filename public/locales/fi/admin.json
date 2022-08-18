@@ -94,6 +94,14 @@
   "diagram-url": "Käsitekaavion verkko-osoite",
   "download-failed": "Lataus epäonnistui",
   "downloading-file": "Tiedostoa ladataan",
+  "edit-concept-error": {
+    "default": "Käsitteen tiedoissa ilmeni puuttuvia tietoja",
+    "editorialNote": "Vähintään yhdeltä ylläpitäjän muistiipanolta puuttuu selite",
+    "example": "Vähintään yhdeltä käyttöesimerkiltä puuttuu selite",
+    "note": "Vähintään yhdeltä huomautukselta puuttuu selite",
+    "recommendedTerms": "Käsitteeltä puuttuu suositettava termi",
+    "termPrefLabel": "Vähintään yhdeltä termiltä puuttuu nimi"
+  },
   "edit-terminology": "Muokkaa sanastoa",
   "edit-terminology-info": "Muokkaa sanaston tietoja",
   "editorialNote": "Ylläpitäjän muistiinpano",

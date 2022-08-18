@@ -106,7 +106,7 @@ export default function ListBlock({
                 noLangOption={noLangOption ? true : false}
                 inputLabel={inputLabel}
                 inputPlaceholder={inputPlaceholder}
-                error={errors[itemsKey]}
+                error={errors?.[itemsKey]}
               />
             ))}
           </ListBlockWrapper>

@@ -1,3 +1,4 @@
+import { FormError } from '@app/modules/edit-concept/validate-form';
 import { TFunction } from 'next-i18next';
 
 export function translateStatus(status: string, t: TFunction) {
@@ -83,5 +84,25 @@ export function translateTerminologyType(type: string, t: TFunction) {
       return t('terminology-type.other-vocabulary', { ns: 'common' });
     default:
       return t('terminology-type.undefined', { ns: 'common' });
+  }
+}
+
+export function translateEditConceptError(
+  error: keyof FormError,
+  t: TFunction
+) {
+  switch (error) {
+    case 'editorialNote':
+      return t('edit-concept-error.editorialNote', { ns: 'admin' });
+    case 'example':
+      return t('edit-concept-error.example', { ns: 'admin' });
+    case 'note':
+      return t('edit-concept-error.note', { ns: 'admin' });
+    case 'recommendedTerms':
+      return t('edit-concept-error.recommendedTerms', { ns: 'admin' });
+    case 'termPrefLabel':
+      return t('edit-concept-error.termPrefLabel', { ns: 'admin' });
+    default:
+      return t('edit-concept-error.default', { ns: 'admin' });
   }
 }

@@ -104,7 +104,7 @@ export default function ConceptTermsBlock({
               {terms
                 .filter((term) => term.termType === 'recommended-term')
                 .map((term) => (
-                  <TermExpander key={term.id} term={term}>
+                  <TermExpander key={term.id} term={term} errors={errors}>
                     <TermForm
                       term={term}
                       update={handleUpdate}
@@ -149,6 +149,7 @@ export default function ConceptTermsBlock({
                         term={term}
                         setChecked={handleCheck}
                         checkable
+                        errors={errors}
                       >
                         <TermForm
                           term={term}

@@ -59,7 +59,7 @@ export default function EditConcept({
     }[]
   >(getPreferredTerms());
   const [postedData, setPostedData] =
-    useState<FormError>();
+    useState<ReturnType<typeof generateConcept>>();
   const [formData, setFormData] = useState<EditConceptType>(
     generateFormData(
       preferredTerms,
@@ -67,9 +67,7 @@ export default function EditConcept({
       terminology?.properties.prefLabel
     )
   );
-  const [errors, setErrors] = useState<ReturnType<typeof validateForm>>(
-    validateForm(formData)
-  );
+  const [errors, setErrors] = useState<FormError>(validateForm(formData));
 
   const { disableConfirmation, enableConfirmation } =
     useConfirmBeforeLeavingPage(
@@ -95,7 +93,6 @@ export default function EditConcept({
       lastModifiedBy: `${user.firstName} ${user.lastName}`,
     });
 
-    return;
     setPostedData(concept);
     addConcept(concept);
     disableConfirmation();

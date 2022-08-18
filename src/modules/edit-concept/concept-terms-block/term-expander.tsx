@@ -4,11 +4,13 @@ import {
   Expander,
   ExpanderContent,
   ExpanderTitle as SuomifiExpanderTitle,
+  Icon,
 } from 'suomifi-ui-components';
-import { SuccessIcon } from './concept-terms-block.styles';
+import { ExpanderIcon, SuccessIcon } from './concept-terms-block.styles';
 import ExpanderTitle from '@app/common/components/expander-title';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
 import { ConceptTermType } from './concept-term-block-types';
+import { FormError } from '../validate-form';
 
 export interface TermExpanderProps {
   term: ConceptTermType;
@@ -16,6 +18,7 @@ export interface TermExpanderProps {
   checkable?: boolean;
   completed?: boolean;
   children?: React.ReactNode;
+  errors: FormError;
 }
 
 export default function TermExpander({
@@ -24,6 +27,7 @@ export default function TermExpander({
   checkable,
   completed,
   children,
+  errors,
 }: TermExpanderProps) {
   const { t } = useTranslation('admin');
   const primaryText = `${translateLanguage(
@@ -33,6 +37,11 @@ export default function TermExpander({
   const secondaryText = `${term.prefLabel} - ${t('statuses.draft', {
     ns: 'common',
   })}`;
+
+  const displayIcon =
+    (errors.termPrefLabel && !term.prefLabel) ||
+    (errors.editorialNote &&
+      term.editorialNote.filter((n) => !n.value || n.value === '').length > 0);
 
   return (
     <Expander>
@@ -47,12 +56,20 @@ export default function TermExpander({
             hintText={secondaryText}
             onClick={(e) => setChecked && setChecked(term.id, e.checkboxState)}
           >
-            {primaryText}
+            <>
+              {primaryText}
+              {displayIcon && <ExpanderIcon icon="error" />}
+            </>
           </Checkbox>
         </SuomifiExpanderTitle>
       ) : (
         <ExpanderTitle
-          title={primaryText}
+          title={
+            <>
+              {primaryText}
+              {displayIcon && <ExpanderIcon icon="error" />}
+            </>
+          }
           extra={
             <>
               {secondaryText}
