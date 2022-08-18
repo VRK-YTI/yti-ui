@@ -6,6 +6,7 @@
   "close": "Close",
   "codelist-title": "Reference Data",
   "comments-title": "Comments",
+  "concept-label-undefined": "Concept label is undefined",
   "concepts": "Concepts",
   "confirm-page-leave": "Are you sure you want to leave the page? Changes you made won't be saved.",
   "datamodel-title": "Data Vocabularies",
