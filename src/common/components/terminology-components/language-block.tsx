@@ -69,6 +69,7 @@ export default function LanguageBlock({
       padding="m"
       onBlur={() => handleInfoUpdate({})}
       className="language-block"
+      $isSmall={isSmall}
     >
       <Paragraph marginBottomSpacing="m">
         <Text variant="bold">{lang.labelText}</Text>

@@ -131,6 +131,8 @@ export const TallerSeparator = styled(Separator)`
   margin: 30px 0;
 `;
 
-export const StatusSingleSelect = styled(SingleSelect)`
+export const StatusSingleSelect = styled(SingleSelect)<{$isSmall?: boolean}>`
   margin-bottom: ${(props) => props.theme.suomifi.spacing.m};
+  min-width: ${(props) => (props.$isSmall ? '100%' : '480px')};
+  width: min-content;
 `;
