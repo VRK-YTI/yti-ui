@@ -1,6 +1,7 @@
 import { Concepts } from '@app/common/interfaces/concepts.interface';
 import { useTranslation } from 'next-i18next';
 import { Chip, Label } from 'suomifi-ui-components';
+import PropertyValue from '../property-value';
 import { ChipBlock } from './relation-information-block.styles';
 
 interface RenderChosenProps {
@@ -30,16 +31,22 @@ export default function RenderChosen({
     <>
       <Label>{chipLabel}</Label>
       <ChipBlock id="chosen-concepts-block">
-        {chosen.map((chose, idx) => {
+        {chosen.map((chose) => {
           return (
             <Chip
               removable
               onClick={() => handleChipRemove(chose)}
-              key={`${chose.id}-${idx}`}
+              key={chose.id}
             >
-              {chose.label
-                ? chose.label.fi
-                : t('concept-label-undefined', { ns: 'common' })}
+              <PropertyValue
+                property={Object.keys(chose.label).map((lang) => ({
+                  lang,
+                  value: chose.label[lang],
+                  regex: '',
+                }))}
+                stripHtml
+                fallback={t('concept-label-undefined', { ns: 'common' })}
+              />
             </Chip>
           );
         })}

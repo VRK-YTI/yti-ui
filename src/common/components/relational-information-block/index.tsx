@@ -187,7 +187,16 @@ function ManageRelationalInfoModal({
 
   const handleChange = () => {
     handleClose();
-    setSelectedConcepts(chosen);
+    const choseWithoutHtml = chosen.map((concept) => ({
+      ...concept,
+      label: Object.fromEntries(
+        Object.entries(concept.label).map(([lang, label]) => [
+          lang,
+          label.replaceAll(/<\/*[^>]>/g, ''),
+        ])
+      ),
+    }));
+    setSelectedConcepts(choseWithoutHtml);
   };
 
   const handleSetVisible = () => {

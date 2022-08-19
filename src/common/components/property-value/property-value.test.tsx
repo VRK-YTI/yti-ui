@@ -83,4 +83,17 @@ describe('propertyValue', () => {
 
     expect(screen.getByText('Value 1Value 2')).toBeInTheDocument();
   });
+
+  it('should ignore html elements when stripHtml is enabled', () => {
+    mockedUseTranslation.mockReturnValue({ i18n: { language: 'en' } });
+
+    render(
+      <PropertyValue
+        property={[{ lang: 'en', value: 'This <b>is</b> a test', regex: '' }]}
+        stripHtml
+      />
+    );
+
+    expect(screen.getByText('This is a test')).toBeInTheDocument();
+  });
 });
