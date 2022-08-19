@@ -64,10 +64,8 @@ export default function EditCollection({
 
   const [addCollection, result] = useAddCollectionMutation();
   const [newCollectionId, setNewCollectionId] = useState('');
-  const [errors, setErrors] = useState({
-    name: false,
-    definition: false,
-  });
+  const [errors, setErrors] = useState<{ [key: string]: boolean }>({});
+  const [emptyError, setEmptyError] = useState(false);
 
   const languages =
     terminology?.properties.language?.map(({ value }) => value) ?? [];
@@ -88,20 +86,36 @@ export default function EditCollection({
 
   const setName = (language: string, value: string) => {
     const data = formData;
-    data.name = data.name.map((n) => {
-      if (n.lang === language) {
-        return {
-          lang: n.lang,
-          value: value,
-        };
-      }
-      return n;
-    });
+    if (data.name.some((n) => n.lang === language)) {
+      data.name = data.name.map((n) => {
+        if (n.lang === language) {
+          return {
+            lang: n.lang,
+            value: value,
+          };
+        }
+        return n;
+      });
+    } else {
+      data.name.push({
+        lang: language,
+        value: value,
+      });
+    }
     setFormData(data);
     enableConfirmation();
 
-    if (errors.name && data.name.filter((n) => n.value !== '').length > 0) {
-      setErrors({ ...errors, name: false });
+    const nameCount = formData.name.filter(
+      (n) => n.value && n.lang === language
+    ).length;
+    const defCount = formData.definition.filter(
+      (n) => n.value && n.lang === language
+    ).length;
+    if (errors[language] && nameCount == defCount) {
+      setErrors({ ...errors, [language]: false });
+    }
+    if (value) {
+      setEmptyError(false);
     }
   };
 
@@ -128,11 +142,17 @@ export default function EditCollection({
     setFormData(data);
     enableConfirmation();
 
-    if (
-      errors.definition &&
-      data.definition.filter((d) => d.value !== '').length > 0
-    ) {
-      setErrors({ ...errors, definition: false });
+    const nameCount = formData.name.filter(
+      (n) => n.value && n.lang === language
+    ).length;
+    const defCount = formData.definition.filter(
+      (n) => n.value && n.lang === language
+    ).length;
+    if (errors[language] && nameCount == defCount) {
+      setErrors({ ...errors, [language]: false });
+    }
+    if (value) {
+      setEmptyError(false);
     }
   };
 
@@ -147,13 +167,24 @@ export default function EditCollection({
 
   const handleClick = () => {
     let errorOccurs = false;
-    if (formData.name.filter((n) => n.value !== '').length < 1) {
-      setErrors((errors) => ({ ...errors, name: true }));
-      errorOccurs = true;
-    }
+    languages.forEach((language) => {
+      const nameCount = formData.name.filter(
+        (n) => n.value && n.lang === language
+      ).length;
+      const defCount = formData.definition.filter(
+        (n) => n.value && n.lang === language
+      ).length;
+      if (nameCount !== defCount) {
+        setErrors((errors) => ({ ...errors, [language]: true }));
+        errorOccurs = true;
+      }
+    });
 
-    if (formData.definition.filter((n) => n.value !== '').length < 1) {
-      setErrors((errors) => ({ ...errors, definition: true }));
+    if (
+      formData.name.every((n) => !n.value) &&
+      formData.definition.every((n) => !n.value)
+    ) {
+      setEmptyError(true);
       errorOccurs = true;
     }
 
@@ -226,7 +257,7 @@ export default function EditCollection({
               )} ${language.toUpperCase()}`}
               visualPlaceholder={t('enter-collection-name')}
               onBlur={(e) => setName(language, e.target.value.trim())}
-              status={errors.name ? 'error' : 'default'}
+              status={errors[language] ? 'error' : 'default'}
               defaultValue={
                 formData.name.find((n) => n.lang === language)?.value
               }
@@ -244,7 +275,7 @@ export default function EditCollection({
               )} ${language.toUpperCase()}`}
               visualPlaceholder={t('enter-collection-description')}
               onBlur={(e) => setDescription(language, e.target.value.trim())}
-              status={errors.definition ? 'error' : 'default'}
+              status={errors[language] ? 'error' : 'default'}
               defaultValue={
                 formData.definition.find((n) => n.lang === language)?.value
               }
@@ -265,13 +296,20 @@ export default function EditCollection({
         <Separator isLarge />
 
         <FooterBlock>
-          {(errors.name || errors.definition) && (
+          {emptyError && (
+            <InlineAlert status="warning">{t('no-empty-form')}</InlineAlert>
+          )}
+          {languages.some((n) => errors[n]) && (
             <InlineAlert status="warning">
               <MissingInfoAlertUl>
-                {errors.name && <li>{t('collection-error-missing-name')}</li>}
-                {errors.definition && (
-                  <li>{t('collection-error-missing-definition')}</li>
-                )}
+                {languages
+                  .filter((n) => errors[n])
+                  .map((lang) => (
+                    <li key={`error${lang}`}>
+                      {t('no-pairless-language')}
+                      {translateLanguage(lang, t)}
+                    </li>
+                  ))}
               </MissingInfoAlertUl>
             </InlineAlert>
           )}
