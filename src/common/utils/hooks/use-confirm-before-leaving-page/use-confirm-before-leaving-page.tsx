@@ -1,5 +1,6 @@
 import Router from 'next/router';
 import { useTranslation } from 'next-i18next';
+import { useEffect } from 'react';
 
 export type ConfirmationState = 'enabled' | 'disabled';
 
@@ -49,6 +50,9 @@ export default function useConfirmBeforeLeavingPage(
       disableConfirmation();
     }
   }
+
+  // Disable automatically on unmount (= when page changes)
+  useEffect(() => disableConfirmation, []);
 
   return {
     enableConfirmation,
