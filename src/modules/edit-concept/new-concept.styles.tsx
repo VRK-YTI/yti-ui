@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { Block, Text } from 'suomifi-ui-components';
 
 export const FooterBlock = styled(Block)`
-  div {
+  > div {
     display: flex;
     gap: ${(props) => props.theme.suomifi.spacing.s};
   }

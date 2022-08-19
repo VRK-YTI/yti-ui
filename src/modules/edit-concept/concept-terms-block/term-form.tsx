@@ -17,6 +17,7 @@ import {
 import { HandleSwitchTermsProps } from '.';
 import ListBlock from '../list-block';
 import { ConceptTermType, ListType } from '../new-concept.types';
+import { FormError } from '../validate-form';
 import {
   CheckboxBlock,
   DropdownBlock,
@@ -35,6 +36,7 @@ export interface TermFormProps {
   }) => void;
   currentTerms: ConceptTermType[];
   handleSwitchTerms: (value: HandleSwitchTermsProps) => void;
+  errors: FormError;
 }
 
 export interface TermFormUpdate {
@@ -45,6 +47,7 @@ export interface TermFormUpdate {
 export default function TermForm({
   term,
   update,
+  errors,
   currentTerms,
   handleSwitchTerms,
 }: TermFormProps) {
@@ -53,6 +56,7 @@ export default function TermForm({
   const [isHomographic, setIsHomographic] = useState(
     term.termHomographNumber ? true : false
   );
+  const [prefLabel, setPrefLabel] = useState(term.prefLabel);
 
   const termStyle = [
     {
@@ -94,6 +98,10 @@ export default function TermForm({
   ];
 
   const handleUpdate = ({ key, value }: TermFormUpdate) => {
+    if (key === 'prefLabel' && typeof value === 'string') {
+      setPrefLabel(value);
+    }
+
     update({
       termId: term.id,
       key: key,
@@ -119,6 +127,7 @@ export default function TermForm({
         }
         maxLength={TEXT_INPUT_MAX}
         id="term-name-input"
+        status={errors.termPrefLabel && prefLabel === '' ? 'error' : 'default'}
       />
       <CheckboxBlock
         defaultChecked={term.termHomographNumber ? true : false}
@@ -271,6 +280,7 @@ export default function TermForm({
         addNewText={t('add-new-editorialNote')}
         inputLabel={t('editorialNote-textarea-label-text')}
         inputPlaceholder={t('editorialNote-textarea-placeholder')}
+        errors={errors}
       />
 
       <Separator isLarge />

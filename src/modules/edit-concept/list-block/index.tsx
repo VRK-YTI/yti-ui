@@ -14,6 +14,7 @@ import { TermFormUpdate } from '../concept-terms-block/term-form';
 import { BasicInfoUpdate } from '../basic-information/concept-basic-information';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
 import { TEXT_AREA_MAX } from '@app/common/utils/constants';
+import { FormError } from '../validate-form';
 
 interface ListBlockProps {
   update: (object: BasicInfoUpdate & TermFormUpdate) => void;
@@ -26,6 +27,7 @@ interface ListBlockProps {
   addNewText: string;
   inputLabel: string;
   inputPlaceholder: string;
+  errors?: FormError;
 }
 
 export default function ListBlock({
@@ -39,6 +41,7 @@ export default function ListBlock({
   addNewText,
   inputLabel,
   inputPlaceholder,
+  errors,
 }: ListBlockProps) {
   const [list, setList] = useState<ListType[]>(
     items
@@ -103,6 +106,7 @@ export default function ListBlock({
                 noLangOption={noLangOption ? true : false}
                 inputLabel={inputLabel}
                 inputPlaceholder={inputPlaceholder}
+                error={errors?.[itemsKey]}
               />
             ))}
           </ListBlockWrapper>
@@ -126,6 +130,7 @@ interface ListItemProps {
   noLangOption: boolean;
   inputLabel: string;
   inputPlaceholder: string;
+  error?: boolean;
 }
 
 function ListItem({
@@ -137,8 +142,15 @@ function ListItem({
   itemsKey,
   inputLabel,
   inputPlaceholder,
+  error,
 }: ListItemProps) {
   const { t } = useTranslation('admin');
+  const [text, setText] = useState(item.value);
+
+  const handleBlur = (id: string, text: string, lang?: string) => {
+    setText(text);
+    handleUpdate(id, text, lang);
+  };
 
   if (!noLangOption && languages && languages.length > 0) {
     return (
@@ -171,8 +183,9 @@ function ListItem({
           labelText={inputLabel}
           visualPlaceholder={inputPlaceholder}
           defaultValue={item.value}
-          onBlur={(e) => handleUpdate(item.id, e.target.value, item.lang)}
+          onBlur={(e) => handleBlur(item.id, e.target.value, item.lang)}
           maxLength={TEXT_AREA_MAX}
+          status={error && text === '' ? 'error' : 'default'}
         />
       </LI>
     );
@@ -187,8 +200,9 @@ function ListItem({
             visualPlaceholder={inputPlaceholder}
             defaultValue={item.value}
             $noTopMargin
-            onBlur={(e) => handleUpdate(item.id, e.target.value, '')}
+            onBlur={(e) => handleBlur(item.id, e.target.value, '')}
             maxLength={TEXT_AREA_MAX}
+            status={error && text === '' ? 'error' : 'default'}
           />
           <Button
             variant="secondaryNoBorder"

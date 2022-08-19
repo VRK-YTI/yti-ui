@@ -1,19 +1,23 @@
 import Separator from '@app/common/components/separator';
+import { translateEditConceptError } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { Button } from 'suomifi-ui-components';
+import { Button, InlineAlert } from 'suomifi-ui-components';
 import { FooterBlock } from './new-concept.styles';
+import { FormError } from './validate-form';
 
 interface FormFooterProps {
   handlePost: () => void;
   onCancel?: () => void;
   isEdit: boolean;
+  errors: FormError;
 }
 
 export default function FormFooter({
   handlePost,
   onCancel,
   isEdit,
+  errors,
 }: FormFooterProps) {
   const { t } = useTranslation('admin');
   const router = useRouter();
@@ -30,6 +34,24 @@ export default function FormFooter({
   return (
     <FooterBlock>
       <Separator isLarge />
+      {errors.total && (
+        <div style={{ marginBottom: '20px' }}>
+          <InlineAlert
+            status="warning"
+            labelText={translateEditConceptError('total', t)}
+          >
+            <ul>
+              {Object.keys(errors)
+                .filter((k) => k !== 'total' && errors[k as keyof FormError])
+                .map((k, idx) => (
+                  <li key={`footer-errors-${idx}`}>
+                    {translateEditConceptError(k as keyof FormError, t)}
+                  </li>
+                ))}
+            </ul>
+          </InlineAlert>
+        </div>
+      )}
       <div>
         <Button onClick={() => handlePost()} id="submit-button">
           {t('save')}

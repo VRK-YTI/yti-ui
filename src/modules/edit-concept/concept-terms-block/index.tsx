@@ -13,6 +13,7 @@ import {
 import TermExpander from './term-expander';
 import TermForm from './term-form';
 import { ConceptTermType, ListType } from '../new-concept.types';
+import { FormError } from '../validate-form';
 
 const NewTermModal = dynamic(() => import('./new-term-modal'));
 
@@ -20,6 +21,7 @@ interface ConceptTermsBlockProps {
   languages: string[];
   updateTerms: (value: ConceptTermType[]) => void;
   initialValues: ConceptTermType[];
+  errors: FormError;
 }
 
 export interface HandleSwitchTermsProps {
@@ -39,6 +41,7 @@ export default function ConceptTermsBlock({
   languages,
   updateTerms,
   initialValues,
+  errors,
 }: ConceptTermsBlockProps) {
   const { t } = useTranslation('admin');
   const [modalVisible, setModalVisible] = useState(false);
@@ -144,12 +147,13 @@ export default function ConceptTermsBlock({
               {terms
                 .filter((term) => term.termType === 'recommended-term')
                 .map((term) => (
-                  <TermExpander key={term.id} term={term}>
+                  <TermExpander key={term.id} term={term} errors={errors}>
                     <TermForm
                       term={term}
                       update={handleUpdate}
                       currentTerms={terms}
                       handleSwitchTerms={handleSwitchTerms}
+                      errors={errors}
                     />
                   </TermExpander>
                 ))}
@@ -190,12 +194,14 @@ export default function ConceptTermsBlock({
                         term={term}
                         setChecked={handleCheck}
                         checkable
+                        errors={errors}
                       >
                         <TermForm
                           term={term}
                           update={handleUpdate}
                           currentTerms={terms}
                           handleSwitchTerms={handleSwitchTerms}
+                          errors={errors}
                         />
                       </TermExpander>
                     ))}

@@ -60,7 +60,7 @@ export default function NewTermModal({
     prefLabel: '',
     scope: '',
     source: '',
-    status: 'draft',
+    status: 'DRAFT',
     termConjugation: '',
     termEquivalency: '',
     termEquivalencyRelation: '',

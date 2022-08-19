@@ -96,6 +96,14 @@
   "diagram-url": "",
   "download-failed": "",
   "downloading-file": "",
+  "edit-concept-error": {
+    "default": "",
+    "editorialNote": "",
+    "example": "",
+    "note": "",
+    "recommendedTerms": "",
+    "termPrefLabel": ""
+  },
   "edit-terminology": "",
   "edit-terminology-info": "",
   "editorialNote": "",

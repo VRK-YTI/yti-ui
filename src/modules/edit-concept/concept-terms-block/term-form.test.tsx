@@ -2,6 +2,7 @@ import { themeProvider } from '@app/tests/test-utils';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { v4 } from 'uuid';
+import { EmptyFormError } from '../validate-form';
 import TermForm from './term-form';
 
 describe('term-form', () => {
@@ -32,6 +33,9 @@ describe('term-form', () => {
           termType: 'recommended-term',
           wordClass: '',
         }}
+        errors={EmptyFormError}
+        currentTerms={[]}
+        handleSwitchTerms={mockFn}
       />,
       { wrapper: themeProvider }
     );
@@ -66,6 +70,9 @@ describe('term-form', () => {
           termType: 'recommended-term',
           wordClass: '',
         }}
+        errors={EmptyFormError}
+        currentTerms={[]}
+        handleSwitchTerms={mockFn}
       />,
       { wrapper: themeProvider }
     );

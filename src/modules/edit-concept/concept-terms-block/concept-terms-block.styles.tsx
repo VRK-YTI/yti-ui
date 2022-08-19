@@ -99,3 +99,10 @@ export const ModalTermTypeBlock = styled(Block)`
     margin-bottom: ${(props) => props.theme.suomifi.spacing.m};
   }
 `;
+
+export const ExpanderIcon = styled(Icon)`
+  color: ${(props) => props.theme.suomifi.colors.alertBase} !important;
+  margin-left: ${(props) => props.theme.suomifi.spacing.xs};
+  position: relative;
+  top: 3px;
+`;
