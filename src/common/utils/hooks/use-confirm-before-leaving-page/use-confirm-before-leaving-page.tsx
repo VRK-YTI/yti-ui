@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 
 export type ConfirmationState = 'enabled' | 'disabled';
 
-let confirmationState: ConfirmationState;
+let confirmationState: ConfirmationState | undefined;
 let message = '';
 
 const beforeUnloadHandler = (event: BeforeUnloadEvent) => {
@@ -37,6 +37,11 @@ const disableConfirmation = () => {
   }
 };
 
+const resetConfirmation = () => {
+  disableConfirmation();
+  confirmationState = undefined;
+};
+
 export default function useConfirmBeforeLeavingPage(
   initialState: ConfirmationState
 ) {
@@ -51,8 +56,10 @@ export default function useConfirmBeforeLeavingPage(
     }
   }
 
-  // Disable automatically on unmount (= when page changes)
-  useEffect(() => disableConfirmation, []);
+  // Reset on unmount (= when page changes)
+  useEffect(() => {
+    return () => resetConfirmation();
+  }, []);
 
   return {
     enableConfirmation,
