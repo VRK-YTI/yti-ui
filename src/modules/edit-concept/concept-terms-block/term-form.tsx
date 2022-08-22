@@ -135,6 +135,7 @@ export default function TermForm({
         defaultChecked={term.termHomographNumber ? true : false}
         onClick={() => handleIsHomographic()}
         id="homograph-checkbox"
+        variant={isSmall ? 'large' : 'small'}
       >
         {t('term-is-homograph-label')}
       </CheckboxBlock>

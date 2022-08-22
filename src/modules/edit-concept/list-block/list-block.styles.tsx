@@ -23,22 +23,23 @@ export const ListItem = styled.li<{ $isSmall?: boolean; $sameLevel?: boolean }>`
   .button-block {
     order: ${(props) => (props.$isSmall ? '2' : '1')};
     margin-top: ${(props) =>
-    props.$isSmall || props.$sameLevel ? props.theme.suomifi.spacing.s : ''};
+      props.$isSmall || props.$sameLevel ? props.theme.suomifi.spacing.s : ''};
     min-height: 0;
     height: min-content;
 
     ${(props) =>
-    props.$isSmall || props.$sameLevel
-      ? `
+      props.$isSmall || props.$sameLevel
+        ? `
     display: flex;
     flex-direction: row-reverse;
     width: 100%;
     `
-      : ''};
+        : ''};
   }
 
-  ${props => props.$isSmall
-    ? `
+  ${(props) =>
+    props.$isSmall
+      ? `
     > span {
       width: calc(100% - 50px) !important;
     }
@@ -48,11 +49,10 @@ export const ListItem = styled.li<{ $isSmall?: boolean; $sameLevel?: boolean }>`
       width: 100% !important;
     }
     `
-    : ''};
-
+      : ''};
 `;
 
-export const ListItemTextarea = styled(Textarea) <{
+export const ListItemTextarea = styled(Textarea)<{
   $noTopMargin?: boolean;
   $isSmall?: boolean;
 }>`

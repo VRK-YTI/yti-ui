@@ -18,7 +18,7 @@ export const ResultList = styled.ul`
   padding: 0;
 `;
 
-export const SearchBlock = styled(Block) <{ $isSmall?: boolean }>`
+export const SearchBlock = styled(Block)<{ $isSmall?: boolean }>`
   background: ${(props) => props.theme.suomifi.colors.depthLight3};
   border: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
   display: flex;
@@ -26,13 +26,13 @@ export const SearchBlock = styled(Block) <{ $isSmall?: boolean }>`
 
   > div {
     display: flex;
-    flex-direction: ${props => props.$isSmall ? 'column' : 'row'};
+    flex-direction: ${(props) => (props.$isSmall ? 'column' : 'row')};
     gap: 15px;
-    padding: ${props => props.$isSmall ? '10px' : '10px 0px 10px 20px'};
+    padding: ${(props) => (props.$isSmall ? '10px' : '10px 0px 10px 20px')};
   }
 
   > div:last-child {
-    padding: ${props => props.$isSmall ? '10px' : '10px 0px 10px 20px'};
+    padding: ${(props) => (props.$isSmall ? '10px' : '10px 0px 10px 20px')};
     border-top: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
   }
 `;
