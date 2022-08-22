@@ -34,6 +34,7 @@ import { translateLanguage } from '@app/common/utils/translation-helpers';
 import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from '@app/common/utils/constants';
 import useConfirmBeforeLeavingPage from '@app/common/utils/hooks/use-confirm-before-leaving-page';
 import { MissingInfoAlertUl } from '../new-terminology/new-terminology.styles';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 
 export default function EditCollection({
   terminologyId,
@@ -42,6 +43,7 @@ export default function EditCollection({
 }: EditCollectionProps) {
   const { t } = useTranslation('collection');
   const { user } = useUser();
+  const { isSmall } = useBreakpoints();
   const router = useRouter();
   const { data: terminology } = useGetVocabularyQuery({
     id: terminologyId,
@@ -196,7 +198,7 @@ export default function EditCollection({
         </BreadcrumbLink>
       </Breadcrumb>
 
-      <NewCollectionBlock>
+      <NewCollectionBlock $isSmall={isSmall}>
         <SubTitle>
           <PropertyValue
             property={getProperty(
@@ -295,32 +297,32 @@ export default function EditCollection({
       return {
         name: collection.properties.prefLabel
           ? collection.properties.prefLabel.map((l) => ({
-              lang: l.lang,
-              value: l.value.trim(),
-            }))
+            lang: l.lang,
+            value: l.value.trim(),
+          }))
           : [],
         definition: collection.properties.definition
           ? collection.properties.definition.map((d) => ({
-              lang: d.lang,
-              value: d.value.trim(),
-            }))
+            lang: d.lang,
+            value: d.value.trim(),
+          }))
           : [],
         concepts: collection.references.member
           ? collection.references.member.map((m) => {
-              const prefLabels = new Map();
+            const prefLabels = new Map();
 
-              m.references.prefLabelXl?.map((label) => {
-                prefLabels.set(
-                  label.properties.prefLabel?.[0].lang,
-                  label.properties.prefLabel?.[0].value
-                );
-              });
+            m.references.prefLabelXl?.map((label) => {
+              prefLabels.set(
+                label.properties.prefLabel?.[0].lang,
+                label.properties.prefLabel?.[0].value
+              );
+            });
 
-              return {
-                id: m.id,
-                prefLabels: Object.fromEntries(prefLabels),
-              };
-            })
+            return {
+              id: m.id,
+              prefLabels: Object.fromEntries(prefLabels),
+            };
+          })
           : [],
       };
     }
