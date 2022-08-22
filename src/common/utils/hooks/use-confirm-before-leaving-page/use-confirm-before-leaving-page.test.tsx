@@ -20,7 +20,9 @@ describe('useConfirmBeforeLeavingPage', () => {
   });
 
   it('should register event listeners when initialized in enabled state', async () => {
-    const { unmount } = renderHook(() => useConfirmBeforeLeavingPage('enabled'));
+    const { unmount } = renderHook(() =>
+      useConfirmBeforeLeavingPage('enabled')
+    );
 
     expect(window.addEventListener).toHaveBeenCalledWith(
       'beforeunload',
@@ -35,7 +37,9 @@ describe('useConfirmBeforeLeavingPage', () => {
   });
 
   it('should not register event listeners when initialized in disabled state', async () => {
-    const { unmount } = renderHook(() => useConfirmBeforeLeavingPage('disabled'));
+    const { unmount } = renderHook(() =>
+      useConfirmBeforeLeavingPage('disabled')
+    );
 
     expect(window.addEventListener).not.toHaveBeenCalledWith(
       'beforeunload',
@@ -50,7 +54,9 @@ describe('useConfirmBeforeLeavingPage', () => {
   });
 
   it('should disable confirmation when disableConfirmation is called', async () => {
-    const { result, unmount } = renderHook(() => useConfirmBeforeLeavingPage('enabled'));
+    const { result, unmount } = renderHook(() =>
+      useConfirmBeforeLeavingPage('enabled')
+    );
 
     expect(window.removeEventListener).not.toHaveBeenCalledWith(
       'beforeunload',
