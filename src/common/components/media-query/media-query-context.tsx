@@ -27,6 +27,10 @@ export interface UseBreakpointsResult {
   breakpoint: Breakpoint;
 }
 
+// Note. If you encounter "TypeError: window.matchMedia is not a function" in
+// tests because of using useBreakpoints hook, you should add
+// `import '@app/tests/matchMedia.mock';` at the beginning of your test file.
+
 export function useBreakpoints(): UseBreakpointsResult {
   const { isSSRMobile } = useContext(CommonContext);
   const matchSmall = useMediaQuery(mediaQueries.s);
