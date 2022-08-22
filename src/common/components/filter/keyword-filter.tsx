@@ -3,7 +3,7 @@ import { TextInput } from 'suomifi-ui-components';
 import useUrlState, {
   initialUrlState,
 } from '@app/common/utils/hooks/useUrlState';
-import { TEXT_INPUT_MAX } from '@app/common/utils/constants';
+import { SEARCH_FIELD_PATTERN, TEXT_INPUT_MAX } from '@app/common/utils/constants';
 
 interface KeywordFilterProps {
   title: string;
@@ -25,6 +25,12 @@ export function KeywordFilter({
       page: initialUrlState.page,
     });
 
+    const handleChange = (val: string) => {
+      if(val.match(SEARCH_FIELD_PATTERN)){
+        setInputValue(val ?? '');
+      }
+    };
+
   return (
     <div>
       <TextInput
@@ -35,7 +41,7 @@ export function KeywordFilter({
         }}
         labelText={title}
         onBlur={() => update(inputValue)}
-        onChange={(val) => setInputValue(val?.toString() ?? '')}
+        onChange={(val) => handleChange(val?.toString() ?? '')}
         onKeyDown={(e) => e.key === 'Enter' && update(inputValue)}
         value={inputValue}
         visualPlaceholder={visualPlaceholder}

@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 import useUrlState, {
   initialUrlState,
 } from '@app/common/utils/hooks/useUrlState';
-import { TEXT_INPUT_MAX } from '@app/common/utils/constants';
+import { SEARCH_FIELD_PATTERN, TEXT_INPUT_MAX } from '@app/common/utils/constants';
 
 export interface HeaderSearchProps {
   isSearchOpen: boolean;
@@ -29,6 +29,14 @@ export default function HeaderSearch({
   const [searchInputValue, setSearchInputValue] = useState<string>(
     isSearchPage ? q : ''
   );
+
+  const handleChange = (val: string) => {
+    if(val.match(SEARCH_FIELD_PATTERN)){
+      setSearchInputValue(val ?? '');
+    }
+    if (val === '') search();
+  };
+
   useEffect(() => {
     if (isSearchPage) {
       setSearchInputValue(q);
@@ -58,10 +66,7 @@ export default function HeaderSearch({
         onSearch={(value) => {
           if (typeof value === 'string') search(value);
         }}
-        onChange={(value) => {
-          setSearchInputValue(String(value ?? ''));
-          if (value === '') search();
-        }}
+        onChange={(value) => handleChange(value?.toString() ?? '')}
         maxLength={TEXT_INPUT_MAX}
         id="top-header-search"
       />
