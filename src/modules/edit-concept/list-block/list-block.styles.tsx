@@ -7,12 +7,12 @@ export const ListBlockWrapper = styled.ul`
   padding: 0;
 `;
 
-export const ListItem = styled.li`
+export const ListItem = styled.li<{ $isSmall?: boolean }>`
   background: ${(props) => props.theme.suomifi.colors.highlightLight4};
   border: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
   margin-bottom: ${(props) => props.theme.suomifi.spacing.m};
   padding: ${(props) => props.theme.suomifi.spacing.m};
-  min-width: 475px;
+  min-width: ${props => props.$isSmall ? 'auto' : '475px'};
 
   .top-row {
     display: flex;

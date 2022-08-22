@@ -15,6 +15,7 @@ import { BasicInfoUpdate } from '../basic-information/concept-basic-information'
 import { translateLanguage } from '@app/common/utils/translation-helpers';
 import { TEXT_AREA_MAX } from '@app/common/utils/constants';
 import { FormError } from '../validate-form';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 
 interface ListBlockProps {
   update: (object: BasicInfoUpdate & TermFormUpdate) => void;
@@ -145,6 +146,7 @@ function ListItem({
   error,
 }: ListItemProps) {
   const { t } = useTranslation('admin');
+  const { isSmall } = useBreakpoints();
   const [text, setText] = useState(item.value);
 
   const handleBlur = (id: string, text: string, lang?: string) => {
@@ -154,7 +156,7 @@ function ListItem({
 
   if (!noLangOption && languages && languages.length > 0) {
     return (
-      <LI>
+      <LI $isSmall={isSmall}>
         <div className="top-row">
           <Dropdown
             labelText={t('language')}

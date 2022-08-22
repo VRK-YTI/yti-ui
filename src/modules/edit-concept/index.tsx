@@ -30,6 +30,7 @@ import { selectLogin } from '@app/common/components/login/login.slice';
 import { Notification, Paragraph, Text } from 'suomifi-ui-components';
 import useConfirmBeforeLeavingPage from '@app/common/utils/hooks/use-confirm-before-leaving-page';
 import validateForm, { FormError } from './validate-form';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 
 interface EditConceptProps {
   terminologyId: string;
@@ -41,6 +42,7 @@ export default function EditConcept({
   conceptData,
 }: EditConceptProps) {
   const { t } = useTranslation('concept');
+  const { isSmall } = useBreakpoints();
   const router = useRouter();
   const [addConcept, addConceptStatus] = useAddConceptMutation();
   const user = useSelector(selectLogin());
@@ -111,8 +113,7 @@ export default function EditConcept({
   useEffect(() => {
     if (addConceptStatus.isSuccess && postedData) {
       router.replace(
-        `/terminology/${terminologyId}/concept/${
-          postedData[postedData.length - 1].id
+        `/terminology/${terminologyId}/concept/${postedData[postedData.length - 1].id
         }`
       );
     }
@@ -174,7 +175,11 @@ export default function EditConcept({
         )}
       </Breadcrumb>
 
-      <NewConceptBlock variant="main" id="main">
+      <NewConceptBlock
+        variant="main"
+        id="main"
+        $isSmall={isSmall}
+      >
         <SubTitle>
           <PropertyValue
             property={getProperty(
