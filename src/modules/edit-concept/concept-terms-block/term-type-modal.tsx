@@ -141,7 +141,7 @@ export default function TermTypeModal({
           <ModalTermTypeBlock>
             <InlineAlert>{t('term-type-change-hint')}</InlineAlert>
             <BasicBlock title={t('current-recommended-term')}>
-              {currentTerm.termType}
+              {currentTerm.prefLabel}
             </BasicBlock>
 
             <RadioButtonGroup
