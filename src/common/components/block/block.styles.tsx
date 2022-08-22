@@ -8,7 +8,8 @@ export const BasicBlockWrapper = styled.div<{
   display: flex;
   flex-direction: column;
   gap: ${(props) => (props.$largeGap ? '10px' : '5px')};
-  max-width: ${(props) => (props.$largeWidth ? '800px' : props.$isSmall ? '100%' : '695px')};
+  max-width: ${(props) =>
+    props.$largeWidth ? '800px' : props.$isSmall ? '100%' : '695px'};
   font-size: 16px;
   line-height: 24px;
 
@@ -34,7 +35,8 @@ export const BasicBlockExtraWrapper = styled.div<{
 }>`
   margin-top: 10px;
   text-align: ${(props) => props.$position ?? 'left'};
-  min-width: ${(props) => (props.$isWide && !props.$isSmall ? '800px' : 'unset')};
+  min-width: ${(props) =>
+    props.$isWide && !props.$isSmall ? '800px' : 'unset'};
 `;
 
 export const List = styled.ul`

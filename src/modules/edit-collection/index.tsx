@@ -297,32 +297,32 @@ export default function EditCollection({
       return {
         name: collection.properties.prefLabel
           ? collection.properties.prefLabel.map((l) => ({
-            lang: l.lang,
-            value: l.value.trim(),
-          }))
+              lang: l.lang,
+              value: l.value.trim(),
+            }))
           : [],
         definition: collection.properties.definition
           ? collection.properties.definition.map((d) => ({
-            lang: d.lang,
-            value: d.value.trim(),
-          }))
+              lang: d.lang,
+              value: d.value.trim(),
+            }))
           : [],
         concepts: collection.references.member
           ? collection.references.member.map((m) => {
-            const prefLabels = new Map();
+              const prefLabels = new Map();
 
-            m.references.prefLabelXl?.map((label) => {
-              prefLabels.set(
-                label.properties.prefLabel?.[0].lang,
-                label.properties.prefLabel?.[0].value
-              );
-            });
+              m.references.prefLabelXl?.map((label) => {
+                prefLabels.set(
+                  label.properties.prefLabel?.[0].lang,
+                  label.properties.prefLabel?.[0].value
+                );
+              });
 
-            return {
-              id: m.id,
-              prefLabels: Object.fromEntries(prefLabels),
-            };
-          })
+              return {
+                id: m.id,
+                prefLabels: Object.fromEntries(prefLabels),
+              };
+            })
           : [],
       };
     }

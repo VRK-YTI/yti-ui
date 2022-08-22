@@ -113,7 +113,8 @@ export default function EditConcept({
   useEffect(() => {
     if (addConceptStatus.isSuccess && postedData) {
       router.replace(
-        `/terminology/${terminologyId}/concept/${postedData[postedData.length - 1].id
+        `/terminology/${terminologyId}/concept/${
+          postedData[postedData.length - 1].id
         }`
       );
     }
@@ -175,11 +176,7 @@ export default function EditConcept({
         )}
       </Breadcrumb>
 
-      <NewConceptBlock
-        variant="main"
-        id="main"
-        $isSmall={isSmall}
-      >
+      <NewConceptBlock variant="main" id="main" $isSmall={isSmall}>
         <SubTitle>
           <PropertyValue
             property={getProperty(
