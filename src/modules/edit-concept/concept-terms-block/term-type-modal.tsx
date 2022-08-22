@@ -1,4 +1,5 @@
 import { BasicBlock } from '@app/common/components/block';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import { translateTermType } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
@@ -39,6 +40,7 @@ export default function TermTypeModal({
   handleSwitchTerms,
 }: TermTypeModalProps) {
   const { t } = useTranslation('admin');
+  const { isSmall } = useBreakpoints();
   const [isValid, setIsValid] = useState(false);
   const [newType, setNewType] = useState('');
   const [action, setAction] = useState<'change' | 'replace'>('change');
@@ -107,6 +109,7 @@ export default function TermTypeModal({
       visible={true}
       onEscKeyDown={() => setVisibility(false)}
       style={{ width: '540px' }}
+      variant={isSmall ? 'smallScreen' : 'default'}
     >
       <ModalContent>
         <ModalTitle>{t('change-term-type')}</ModalTitle>
