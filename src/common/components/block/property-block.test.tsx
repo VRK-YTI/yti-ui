@@ -1,3 +1,4 @@
+import '@app/tests/matchMedia.mock';
 import { render, screen } from '@testing-library/react';
 import { PropertyBlock } from '.';
 
