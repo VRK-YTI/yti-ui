@@ -360,6 +360,6 @@ export default function SearchResults({
       );
     }
 
-    return t('terminology-search-no-description');
+    return t('terminology-search-no-definition');
   }
 }
