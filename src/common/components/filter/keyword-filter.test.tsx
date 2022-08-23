@@ -7,32 +7,22 @@ import userEvent from '@testing-library/user-event';
 jest.mock('next/dist/client/router', () => require('next-router-mock'));
 
 describe('keyword-filter', () => {
-    it('should render component', () => {
-        render(
-            <KeywordFilter
-              title='testTitle'
-              visualPlaceholder='testPlaceholder'
-            />
-          ,
-          { wrapper: themeProvider }
-        );
-    
-        expect(
-          screen.getByLabelText('testTitle')
-        ).toBeInTheDocument();
-    
-        expect(screen.getByPlaceholderText('testPlaceholder')).toBeInTheDocument();
-      });
+  it('should render component', () => {
+    render(
+      <KeywordFilter title="testTitle" visualPlaceholder="testPlaceholder" />,
+      { wrapper: themeProvider }
+    );
+
+    expect(screen.getByLabelText('testTitle')).toBeInTheDocument();
+
+    expect(screen.getByPlaceholderText('testPlaceholder')).toBeInTheDocument();
+  });
 
   it('should render component with query set in url', () => {
     mockRouter.setCurrentUrl('/?q=testquery');
 
     render(
-        <KeywordFilter
-          title='testTitle'
-          visualPlaceholder='testPlaceholder'
-        />
-      ,
+      <KeywordFilter title="testTitle" visualPlaceholder="testPlaceholder" />,
       { wrapper: themeProvider }
     );
 
@@ -45,11 +35,7 @@ describe('keyword-filter', () => {
     mockRouter.setCurrentUrl('/');
 
     render(
-        <KeywordFilter
-          title='testTitle'
-          visualPlaceholder='testPlaceholder'
-        />
-      ,
+      <KeywordFilter title="testTitle" visualPlaceholder="testPlaceholder" />,
       { wrapper: themeProvider }
     );
 
@@ -64,31 +50,44 @@ describe('keyword-filter', () => {
     mockRouter.setCurrentUrl('/');
 
     render(
-        <KeywordFilter
-          title='testTitle'
-          visualPlaceholder='testPlaceholder'
-        />
-      ,
+      <KeywordFilter title="testTitle" visualPlaceholder="testPlaceholder" />,
       { wrapper: themeProvider }
     );
 
-    userEvent.click(screen.getByPlaceholderText('testPlaceholder'));
+    const input = screen.getByLabelText('testTitle');
+    const title = screen.getByText('testTitle');
+
+    userEvent.click(input);
     userEvent.keyboard('>');
-    userEvent.click(screen.getByText('testTitle'));
+    userEvent.click(title);
 
+    console.log(input);
     expect(mockRouter.query.q).toBeUndefined();
 
-    userEvent.click(screen.getByPlaceholderText('testPlaceholder'));
+    userEvent.click(input);
     userEvent.keyboard('<');
-    userEvent.click(screen.getByText('testTitle'));
+    userEvent.click(title);
 
+    console.log(input);
     expect(mockRouter.query.q).toBeUndefined();
 
-    userEvent.click(screen.getByPlaceholderText('testPlaceholder'));
-    userEvent.keyboard('test<text');
-    userEvent.click(screen.getByText('testTitle'));
+    userEvent.clear(input);
 
-    //should be the value set in keyboard but < sign is removed
-    expect(mockRouter.query.q).toBe('testtext');
+    userEvent.click(input);
+    userEvent.keyboard('test value');
+    userEvent.click(title);
+
+    console.log(input);
+    expect(mockRouter.query.q).toBe('test value');
+
+    userEvent.click(input);
+    userEvent.keyboard('>');
+    userEvent.click(title);
+
+    console.log(input);
+    expect(mockRouter.query.q).toBe('test value');
+    expect(
+      screen.getByText('tr-filter-character-not-allowed')
+    ).toBeInTheDocument();
   });
 });

@@ -8,7 +8,10 @@ import { useRouter } from 'next/router';
 import useUrlState, {
   initialUrlState,
 } from '@app/common/utils/hooks/useUrlState';
-import { SEARCH_FIELD_PATTERN, TEXT_INPUT_MAX } from '@app/common/utils/constants';
+import {
+  SEARCH_FIELD_PATTERN,
+  TEXT_INPUT_MAX,
+} from '@app/common/utils/constants';
 
 export interface HeaderSearchProps {
   isSearchOpen: boolean;
@@ -31,7 +34,7 @@ export default function HeaderSearch({
   );
 
   const handleChange = (val: string) => {
-    if(val.match(SEARCH_FIELD_PATTERN)){
+    if (val.match(SEARCH_FIELD_PATTERN)) {
       setSearchInputValue(val ?? '');
     }
     if (val === '') search();

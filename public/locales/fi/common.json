@@ -30,6 +30,7 @@
   "feedback-terminologies": "Yhteydenottopyyntö: Sanastot",
   "feedback-vocabulary": "Yhteydenottopyyntö: Sanasto",
   "filter-by-language": "Rajaa kielen mukaan",
+  "filter-character-not-allowed": "< ja > merkit eivät ole sallittuja",
   "filter-status-draft_one": "Luonnos ({{count}} kpl)",
   "filter-status-draft_other": "Luonnos ({{count}} kpl)",
   "filter-status-retired_one": "Poistettu käytöstä ({{count}} kpl)",
