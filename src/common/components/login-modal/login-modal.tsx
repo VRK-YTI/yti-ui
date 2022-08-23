@@ -12,6 +12,7 @@ import {
   ModalStyled,
   ModalTitleH1,
 } from './login-modal.styles';
+import { KeyboardEvent, MouseEvent } from 'react';
 
 export default function LoginModalView({
   setVisible,

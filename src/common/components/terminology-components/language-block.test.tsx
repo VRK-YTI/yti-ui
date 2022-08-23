@@ -25,18 +25,20 @@ describe('language-block', () => {
       screen.getByPlaceholderText('tr-terminology-name-placeholder')
     );
     userEvent.keyboard('title');
-    userEvent.click(screen.getByText('tr-terminology-name'));
+    userEvent.click(
+      screen.getByPlaceholderText('tr-terminology-description-placeholder')
+    );
 
-    expect(mockUpdate).toHaveBeenCalledTimes(1);
     expect(mockUpdate).toHaveBeenCalledWith('fi', 'title', '');
 
     userEvent.click(
       screen.getByPlaceholderText('tr-terminology-description-placeholder')
     );
     userEvent.keyboard('description');
-    userEvent.click(screen.getByText('tr-terminology-name'));
+    userEvent.click(
+      screen.getByPlaceholderText('tr-terminology-name-placeholder')
+    );
 
-    expect(mockUpdate).toHaveBeenCalledTimes(3);
     expect(mockUpdate).toHaveBeenCalledWith('fi', 'title', 'description');
   });
 });

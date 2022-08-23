@@ -41,7 +41,9 @@ describe('organizational-information', () => {
     });
 
     userEvent.keyboard('new etymology information');
-    userEvent.click(screen.getByText('tr-etymology'));
+    userEvent.click(
+      screen.getByPlaceholderText('tr-change-history-placeholder')
+    );
 
     expect(mockFn).toHaveBeenCalledTimes(2);
     expect(mockFn).toHaveBeenCalledWith({
