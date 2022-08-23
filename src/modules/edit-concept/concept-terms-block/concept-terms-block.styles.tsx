@@ -30,8 +30,19 @@ export const CheckboxBlock = styled(Checkbox)`
   margin-top: ${(props) => props.theme.suomifi.spacing.s};
 `;
 
-export const DropdownBlock = styled(Dropdown)`
+export const DropdownBlock = styled(Dropdown)<{ $isSmall?: boolean }>`
   margin-top: ${(props) => props.theme.suomifi.spacing.m};
+  width: ${(props) => (props.$isSmall ? '100%' : '')};
+
+  .fi-dropdown_button {
+    ${(props) =>
+      props.$isSmall
+        ? `
+      width: calc(100% - 50px) !important;
+      min-width: min-content !important;
+    `
+        : ''};
+  }
 `;
 
 export const WiderTextareaBlock = styled(Textarea)<{ smmargintop?: string }>`
@@ -40,10 +51,24 @@ export const WiderTextareaBlock = styled(Textarea)<{ smmargintop?: string }>`
   width: 680px;
 `;
 
-export const GrammaticalBlock = styled(Block)`
+export const GrammaticalBlock = styled(Block)<{ $isSmall?: boolean }>`
   display: grid;
   gap: ${(props) => props.theme.suomifi.spacing.m};
   margin-top: ${(props) => props.theme.suomifi.spacing.m};
+
+  .fi-single-select {
+    ${(props) =>
+      props.$isSmall
+        ? `
+      width: 100% !important;
+    `
+        : ''};
+  }
+
+  .fi-filter-input_input {
+    min-width: min-content !important;
+    width: 100% !important;
+  }
 `;
 
 export const TermEquivalencyBlock = styled(Block)`

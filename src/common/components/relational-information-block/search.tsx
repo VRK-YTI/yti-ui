@@ -6,6 +6,7 @@ import { Button, SearchInput, SingleSelect, Text } from 'suomifi-ui-components';
 import { SearchBlock } from './relation-information-block.styles';
 import useMountEffect from '@app/common/utils/hooks/use-mount-effect';
 import { TEXT_INPUT_MAX } from '@app/common/utils/constants';
+import { useBreakpoints } from '../media-query/media-query-context';
 
 interface SearchProps {
   setSearchResults: (value: Concepts[]) => void;
@@ -19,6 +20,7 @@ export default function Search({
   fromOther,
 }: SearchProps) {
   const { t } = useTranslation('admin');
+  const { isSmall } = useBreakpoints();
   const [searchTerm, setSearchTerm] = useState('');
   const [status, setStatus] = useState<typeof statuses[0] | null>();
   const [searchConcept, result] = useSearchConceptMutation();
@@ -85,7 +87,7 @@ export default function Search({
   };
 
   return (
-    <SearchBlock id="search-block">
+    <SearchBlock id="search-block" $isSmall={isSmall}>
       <div>
         <SearchInput
           labelText={t('search-term')}

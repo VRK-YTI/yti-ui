@@ -15,6 +15,7 @@ import { BasicInfoUpdate } from '../basic-information/concept-basic-information'
 import { translateLanguage } from '@app/common/utils/translation-helpers';
 import { TEXT_AREA_MAX } from '@app/common/utils/constants';
 import { FormError } from '../validate-form';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 
 interface ListBlockProps {
   update: (object: BasicInfoUpdate & TermFormUpdate) => void;
@@ -145,6 +146,7 @@ function ListItem({
   error,
 }: ListItemProps) {
   const { t } = useTranslation('admin');
+  const { isSmall } = useBreakpoints();
   const [text, setText] = useState(item.value);
 
   const handleBlur = (id: string, text: string, lang?: string) => {
@@ -154,23 +156,28 @@ function ListItem({
 
   if (!noLangOption && languages && languages.length > 0) {
     return (
-      <LI>
-        <div className="top-row">
-          <Dropdown
-            labelText={t('language')}
-            defaultValue={item.lang}
-            onChange={(e) => handleUpdate(item.id, item.value, e)}
-          >
-            {languages?.map((language, idx) => (
-              <DropdownItem
-                key={`${itemsKey}-list-item-${idx}`}
-                value={language}
-              >
-                {translateLanguage(language, t)}
-              </DropdownItem>
-            ))}
-          </Dropdown>
-
+      <LI $isSmall={isSmall}>
+        <Dropdown
+          labelText={t('language')}
+          defaultValue={item.lang}
+          onChange={(e) => handleUpdate(item.id, item.value, e)}
+        >
+          {languages?.map((language, idx) => (
+            <DropdownItem key={`${itemsKey}-list-item-${idx}`} value={language}>
+              {translateLanguage(language, t)}
+            </DropdownItem>
+          ))}
+        </Dropdown>
+        <ListItemTextarea
+          labelText={inputLabel}
+          visualPlaceholder={inputPlaceholder}
+          defaultValue={item.value}
+          onBlur={(e) => handleBlur(item.id, e.target.value, item.lang)}
+          maxLength={TEXT_AREA_MAX}
+          status={error && text === '' ? 'error' : 'default'}
+          $isSmall={isSmall}
+        />
+        <div className="button-block">
           <Button
             variant="secondaryNoBorder"
             icon="remove"
@@ -179,31 +186,23 @@ function ListItem({
             {t('remove')}
           </Button>
         </div>
-        <ListItemTextarea
-          labelText={inputLabel}
-          visualPlaceholder={inputPlaceholder}
-          defaultValue={item.value}
-          onBlur={(e) => handleBlur(item.id, e.target.value, item.lang)}
-          maxLength={TEXT_AREA_MAX}
-          status={error && text === '' ? 'error' : 'default'}
-        />
       </LI>
     );
   }
 
   if (noLangOption) {
     return (
-      <LI>
-        <div className="top-row">
-          <ListItemTextarea
-            labelText={inputLabel}
-            visualPlaceholder={inputPlaceholder}
-            defaultValue={item.value}
-            $noTopMargin
-            onBlur={(e) => handleBlur(item.id, e.target.value, '')}
-            maxLength={TEXT_AREA_MAX}
-            status={error && text === '' ? 'error' : 'default'}
-          />
+      <LI $isSmall={isSmall} $sameLevel>
+        <ListItemTextarea
+          labelText={inputLabel}
+          visualPlaceholder={inputPlaceholder}
+          defaultValue={item.value}
+          $noTopMargin
+          onBlur={(e) => handleBlur(item.id, e.target.value, '')}
+          maxLength={TEXT_AREA_MAX}
+          status={error && text === '' ? 'error' : 'default'}
+        />
+        <div className="button-block">
           <Button
             variant="secondaryNoBorder"
             icon="remove"

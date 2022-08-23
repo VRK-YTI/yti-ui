@@ -1,3 +1,4 @@
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import { BlankFieldset } from '@app/common/components/terminology-components/terminology-components.styles';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
@@ -17,6 +18,7 @@ export default function StatusSelector({
   defaultValue,
 }: StatusSelectorProps) {
   const { t } = useTranslation('admin');
+  const { isSmall } = useBreakpoints();
   const [isError, setIsError] = useState(defaultValue ? false : true);
 
   const statuses = [
@@ -72,6 +74,7 @@ export default function StatusSelector({
         }
         status={userPosted && isError ? 'error' : 'default'}
         onItemSelectionChange={(e) => handleChange(e)}
+        $isSmall={isSmall}
       />
     </BlankFieldset>
   );

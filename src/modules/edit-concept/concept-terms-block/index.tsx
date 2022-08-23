@@ -14,6 +14,7 @@ import TermExpander from './term-expander';
 import TermForm from './term-form';
 import { ConceptTermType, ListType } from '../new-concept.types';
 import { FormError } from '../validate-form';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 
 const NewTermModal = dynamic(() => import('./new-term-modal'));
 
@@ -44,6 +45,7 @@ export default function ConceptTermsBlock({
   errors,
 }: ConceptTermsBlockProps) {
   const { t } = useTranslation('admin');
+  const { isSmall } = useBreakpoints();
   const [modalVisible, setModalVisible] = useState(false);
   const [checkedTerms, setCheckedTerms] = useState<string[]>([]);
   const [terms, setTerms] = useState<ConceptTermType[]>(initialValues);
@@ -142,7 +144,11 @@ export default function ConceptTermsBlock({
           </MediumHeading>
         }
         extra={
-          <BasicBlockExtraWrapper $isWide id="recommended-terms-block">
+          <BasicBlockExtraWrapper
+            $isWide
+            $isSmall={isSmall}
+            id="recommended-terms-block"
+          >
             <ExpanderGroup openAllText="" closeAllText="">
               {terms
                 .filter((term) => term.termType === 'recommended-term')
@@ -171,7 +177,11 @@ export default function ConceptTermsBlock({
           </MediumHeading>
         }
         extra={
-          <BasicBlockExtraWrapper $isWide id="other-terms-block">
+          <BasicBlockExtraWrapper
+            $isWide
+            $isSmall={isSmall}
+            id="other-terms-block"
+          >
             <Button variant="secondary" onClick={() => setModalVisible(true)}>
               {t('concept-add-term')}
             </Button>

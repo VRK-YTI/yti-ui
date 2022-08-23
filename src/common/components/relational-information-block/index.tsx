@@ -16,6 +16,7 @@ import {
   Paragraph,
   Text,
 } from 'suomifi-ui-components';
+import { useBreakpoints } from '../media-query/media-query-context';
 import { ChipBlock } from './relation-information-block.styles';
 import RenderChosen from './render-chosen';
 import RenderConcepts from './render-concepts';
@@ -162,6 +163,7 @@ function ManageRelationalInfoModal({
   fromOther,
 }: ManageRelationalInfoModalProps) {
   const { t } = useTranslation('admin');
+  const { isSmall } = useBreakpoints();
   const [visible, setVisible] = useState(false);
   const [showChosen, setShowChosen] = useState(false);
   const [searchResults, setSearchResults] = useState<Concepts[]>([]);
@@ -220,6 +222,7 @@ function ManageRelationalInfoModal({
         appElementId="__next"
         visible={visible}
         onEscKeyDown={() => handleClose()}
+        variant={isSmall ? 'smallScreen' : 'default'}
       >
         <ModalContent>
           <div hidden={showChosen}>
