@@ -44,8 +44,8 @@ export const vocabularyApi = createApi({
         method: 'POST',
         data: {
           highlight: true,
-          pageFrom: Math.max(0, (value.urlState.page - 1) * 10),
-          pageSize: 10,
+          pageFrom: Math.max(0, (value.urlState.page - 1) * 100),
+          pageSize: 100,
           query: value.urlState.q,
           sortDirection: 'ASC',
           sortLanguage: value.urlState.lang

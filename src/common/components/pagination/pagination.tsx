@@ -17,12 +17,12 @@ export default function Pagination({ data, pageString }: PaginationProps) {
   let items: number[];
   if ('totalHitCount' in data) {
     items = Array.from(
-      { length: Math.ceil(data.totalHitCount / 10) },
+      { length: Math.ceil(data.totalHitCount / 100) },
       (_, item) => item + 1
     );
   } else {
     items = Array.from(
-      { length: Math.ceil(data.length / 10) },
+      { length: Math.ceil(data.length / 100) },
       (_, item) => item + 1
     );
   }
