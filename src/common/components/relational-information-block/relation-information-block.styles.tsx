@@ -31,7 +31,7 @@ export const SearchBlock = styled(Block)<{ $isSmall?: boolean }>`
     padding: ${(props) => (props.$isSmall ? '10px' : '10px 0px 10px 20px')};
 
     > div {
-      width: ${(props) => props.$isSmall ? '100%': 'auto'};
+      width: ${(props) => (props.$isSmall ? '100%' : 'auto')};
     }
   }
 
