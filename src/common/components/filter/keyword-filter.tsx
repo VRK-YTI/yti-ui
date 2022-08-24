@@ -3,7 +3,11 @@ import { TextInput } from 'suomifi-ui-components';
 import useUrlState, {
   initialUrlState,
 } from '@app/common/utils/hooks/useUrlState';
-import { TEXT_INPUT_MAX } from '@app/common/utils/constants';
+import {
+  SEARCH_FIELD_PATTERN,
+  TEXT_INPUT_MAX,
+} from '@app/common/utils/constants';
+import { useTranslation } from 'next-i18next';
 
 interface KeywordFilterProps {
   title: string;
@@ -17,17 +21,33 @@ export function KeywordFilter({
   const { urlState, patchUrlState } = useUrlState();
   const q = urlState.q;
   const [inputValue, setInputValue] = useState(q);
+  const [error, setError] = useState(false);
+  const { t } = useTranslation('common');
   useEffect(() => setInputValue(q), [q, setInputValue]);
 
-  const update = (q: string) =>
-    patchUrlState({
-      q,
-      page: initialUrlState.page,
-    });
+  const update = (q: string) => {
+    if (!error) {
+      patchUrlState({
+        q,
+        page: initialUrlState.page,
+      });
+    }
+  };
+
+  const handleChange = (val: string) => {
+    setInputValue(val ?? '');
+    if (val.match(SEARCH_FIELD_PATTERN)) {
+      setError(false);
+    } else {
+      setError(true);
+    }
+  };
 
   return (
     <div>
       <TextInput
+        status={error ? 'error' : 'default'}
+        statusText={error ? t('filter-character-not-allowed') : ''}
         icon={inputValue ? 'close' : undefined}
         iconProps={{
           fill: 'hsl(212, 63%, 45%)',
@@ -35,7 +55,7 @@ export function KeywordFilter({
         }}
         labelText={title}
         onBlur={() => update(inputValue)}
-        onChange={(val) => setInputValue(val?.toString() ?? '')}
+        onChange={(val) => handleChange(val?.toString() ?? '')}
         onKeyDown={(e) => e.key === 'Enter' && update(inputValue)}
         value={inputValue}
         visualPlaceholder={visualPlaceholder}
