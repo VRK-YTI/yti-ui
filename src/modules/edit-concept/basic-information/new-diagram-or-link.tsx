@@ -1,3 +1,4 @@
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from '@app/common/utils/constants';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
@@ -19,6 +20,7 @@ export default function NewDiagramOrLink({
   addDiagram,
 }: NewDiagramOrLinkProps) {
   const { t } = useTranslation('admin');
+  const { isSmall } = useBreakpoints();
   const [visible, setVisible] = useState(false);
   const [diagramInfo, setDiagramInfo] = useState<DiagramType>({
     diagramName: '',
@@ -40,6 +42,7 @@ export default function NewDiagramOrLink({
         visible={visible}
         onEscKeyDown={() => setVisible(false)}
         appElementId="__next"
+        variant={isSmall ? 'smallScreen' : 'default'}
       >
         <ModalContentFitted>
           <ModalTitle>{t('add-new-diagram-or-link')}</ModalTitle>

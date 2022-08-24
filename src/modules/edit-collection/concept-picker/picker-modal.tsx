@@ -163,7 +163,7 @@ export default function PickerModal({
           <>
             <ModalTitle>{t('add-concept-to-collection')}</ModalTitle>
 
-            <SearchBlock>
+            <SearchBlock $isSmall={isSmall}>
               <div>
                 <SearchInput
                   clearButtonLabel=""
@@ -182,6 +182,7 @@ export default function PickerModal({
                   defaultValue="ALL-STATUSES"
                   onChange={(e) => handleStatus(e)}
                   id="status-picker"
+                  $isSmall={isSmall}
                 >
                   {statuses.map((status) => (
                     <DropdownItem
@@ -247,6 +248,7 @@ export default function PickerModal({
                           .map((c) => c.id)
                           .includes(concept.id)}
                         className="search-result-checkbox"
+                        variant={isSmall ? 'large' : 'small'}
                       >
                         <SanitizedTextContent
                           text={

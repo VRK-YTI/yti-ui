@@ -1,4 +1,5 @@
 import { BasicBlock } from '@app/common/components/block';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import { translateTermType } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
@@ -39,21 +40,21 @@ export default function TermTypeModal({
   handleSwitchTerms,
 }: TermTypeModalProps) {
   const { t } = useTranslation('admin');
+  const { isSmall } = useBreakpoints();
   const [isValid, setIsValid] = useState(false);
   const [newType, setNewType] = useState('');
   const [action, setAction] = useState<'change' | 'replace'>('change');
   const [prevNewType, setPrevNewType] = useState('');
+
+  const recommendedTerms = currentTerms.filter(
+    (t) => t.termType === 'recommended-term'
+  );
   const isChangeDisabled =
-    currentTerms.filter(
-      (t) => t.termType === 'recommended-term' && t.id !== currentTerm.id
-    ).length < 1;
-  const currRecommended =
+    recommendedTerms.filter((t) => t.id !== currentTerm.id).length < 1;
+  const currentRecommendedTerm =
     currentTerm.termType !== 'recommended-term'
-      ? currentTerms.filter(
-          (term) =>
-            term.termType === 'recommended-term' && term.language === lang
-        )?.[0]
-      : null;
+      ? recommendedTerms.filter((t) => t.language === lang)?.[0]
+      : undefined;
 
   const termTypes = [
     'recommended-term',
@@ -68,7 +69,7 @@ export default function TermTypeModal({
       setIsValid(true);
       setPrevNewType('');
     } else {
-      setIsValid(currRecommended ? false : true);
+      setIsValid(currentRecommendedTerm ? false : true);
     }
   };
 
@@ -92,7 +93,7 @@ export default function TermTypeModal({
       handleSwitchTerms({
         actionType: action,
         newRecommendedId: currentTerm.id,
-        oldRecommendedId: currRecommended?.id ?? '',
+        oldRecommendedId: currentRecommendedTerm?.id ?? '',
         newType: prevNewType,
       });
     } else {
@@ -107,11 +108,14 @@ export default function TermTypeModal({
       visible={true}
       onEscKeyDown={() => setVisibility(false)}
       style={{ width: '540px' }}
+      variant={isSmall ? 'smallScreen' : 'default'}
     >
       <ModalContent>
         <ModalTitle>{t('change-term-type')}</ModalTitle>
 
-        <BasicBlock title={t('term-name-label')}>{t('application')}</BasicBlock>
+        <BasicBlock title={t('term-name-label')}>
+          {currentTerm.prefLabel}
+        </BasicBlock>
 
         <BasicBlock title={t('term-current-type')}>
           {translateTermType(currentTerm.termType, t)}
@@ -125,20 +129,20 @@ export default function TermTypeModal({
         >
           {termTypes
             .filter((type) => type !== currentTerm.termType)
-            .map((type, idx) => {
+            .map((type) => {
               return (
-                <DropdownItem key={`term-type-${idx}`} value={type}>
+                <DropdownItem key={type} value={type}>
                   {translateTermType(type, t)}
                 </DropdownItem>
               );
             })}
         </DropdownBlock>
 
-        {newType === 'recommended-term' && currRecommended && (
+        {newType === 'recommended-term' && currentRecommendedTerm && (
           <ModalTermTypeBlock>
             <InlineAlert>{t('term-type-change-hint')}</InlineAlert>
             <BasicBlock title={t('current-recommended-term')}>
-              {currentTerm.termType}
+              {currentRecommendedTerm.prefLabel}
             </BasicBlock>
 
             <RadioButtonGroup
@@ -149,12 +153,12 @@ export default function TermTypeModal({
             >
               <RadioButton value="change">
                 {t('change-term-x-type', {
-                  termName: currRecommended.prefLabel,
+                  termName: currentRecommendedTerm.prefLabel,
                 })}
               </RadioButton>
               <RadioButton value="replace">
                 {t('remove-and-replace-term', {
-                  recommended: currRecommended.prefLabel,
+                  recommended: currentRecommendedTerm.prefLabel,
                   current: currentTerm.prefLabel,
                 })}
               </RadioButton>
@@ -163,16 +167,16 @@ export default function TermTypeModal({
             {action === 'change' && (
               <DropdownBlock
                 labelText={t('term-x-new-type', {
-                  term: currRecommended.prefLabel,
+                  term: currentRecommendedTerm.prefLabel,
                 })}
                 onChange={(e) => handlePrevTermTypeChange(e)}
                 defaultValue={prevNewType}
               >
                 {termTypes
                   .filter((type) => type !== 'recommended-term')
-                  .map((type, idx) => {
+                  .map((type) => {
                     return (
-                      <DropdownItem key={`term-type-${idx}`} value={type}>
+                      <DropdownItem key={type} value={type}>
                         {translateTermType(type, t)}
                       </DropdownItem>
                     );

@@ -34,6 +34,7 @@ import { translateLanguage } from '@app/common/utils/translation-helpers';
 import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from '@app/common/utils/constants';
 import useConfirmBeforeLeavingPage from '@app/common/utils/hooks/use-confirm-before-leaving-page';
 import { MissingInfoAlertUl } from '../new-terminology/new-terminology.styles';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 
 export default function EditCollection({
   terminologyId,
@@ -42,6 +43,7 @@ export default function EditCollection({
 }: EditCollectionProps) {
   const { t } = useTranslation('collection');
   const { user } = useUser();
+  const { isSmall } = useBreakpoints();
   const router = useRouter();
   const { data: terminology } = useGetVocabularyQuery({
     id: terminologyId,
@@ -227,7 +229,7 @@ export default function EditCollection({
         </BreadcrumbLink>
       </Breadcrumb>
 
-      <NewCollectionBlock>
+      <NewCollectionBlock $isSmall={isSmall}>
         <SubTitle>
           <PropertyValue
             property={getProperty(

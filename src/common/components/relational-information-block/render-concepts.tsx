@@ -22,6 +22,7 @@ import {
 import FormattedDate from '@app/common/components/formatted-date';
 import { Concepts } from '@app/common/interfaces/concepts.interface';
 import { translateStatus } from '@app/common/utils/translation-helpers';
+import { useBreakpoints } from '../media-query/media-query-context';
 
 interface RenderConceptsProps {
   concepts?: Concepts[];
@@ -39,6 +40,7 @@ export default function RenderConcepts({
   fromOther,
 }: RenderConceptsProps) {
   const { t, i18n } = useTranslation('admin');
+  const { isSmall } = useBreakpoints();
   const { data: terminology } = useGetVocabularyQuery({
     id: terminologyId,
   });
@@ -88,6 +90,7 @@ export default function RenderConcepts({
                   onClick={(e) => handleCheckbox(e, concept)}
                   checked={chosen.some((chose) => chose.id === concept.id)}
                   className="concept-checkbox"
+                  variant={isSmall ? 'large' : 'small'}
                 >
                   <SanitizedTextContent
                     text={

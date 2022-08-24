@@ -1,5 +1,6 @@
 import { BasicBlock } from '@app/common/components/block';
 import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
+import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import Separator from '@app/common/components/separator';
 import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from '@app/common/utils/constants';
 import {
@@ -52,6 +53,7 @@ export default function TermForm({
   handleSwitchTerms,
 }: TermFormProps) {
   const { t } = useTranslation('admin');
+  const { isSmall } = useBreakpoints();
   const [modalVisible, setModalVisible] = useState(false);
   const [isHomographic, setIsHomographic] = useState(
     term.termHomographNumber ? true : false
@@ -133,6 +135,7 @@ export default function TermForm({
         defaultChecked={term.termHomographNumber ? true : false}
         onClick={() => handleIsHomographic()}
         id="homograph-checkbox"
+        variant={isSmall ? 'large' : 'small'}
       >
         {t('term-is-homograph-label')}
       </CheckboxBlock>
@@ -189,6 +192,7 @@ export default function TermForm({
         defaultValue={term.status}
         onChange={(e) => handleUpdate({ key: 'status', value: e })}
         id="status-picker"
+        $isSmall={isSmall}
       >
         <DropdownItem value="DRAFT">
           {t('statuses.draft', { ns: 'common' })}
@@ -289,7 +293,7 @@ export default function TermForm({
         {t('additional-grammatical-information')}
       </MediumHeading>
 
-      <GrammaticalBlock>
+      <GrammaticalBlock $isSmall={isSmall}>
         <SingleSelect
           ariaOptionsAvailableText={t('available-term-styles')}
           clearButtonLabel={t('clear-button-label')}

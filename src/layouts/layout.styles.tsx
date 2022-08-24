@@ -11,6 +11,7 @@ export const MarginContainer = styled.div<{ $breakpoint: Breakpoint }>`
   max-width: 1100px;
   margin: auto;
   padding: ${(props) => resolve(props.$breakpoint, '0 15px', '0 30px', 'auto')};
+  min-width: 300px;
 `;
 
 // main layout

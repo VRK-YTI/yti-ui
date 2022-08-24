@@ -15,7 +15,7 @@ describe('pagination', () => {
 
     const data = {
       deepHits: null,
-      totalHitCount: 80,
+      totalHitCount: 800,
       resultStart: 0,
       terminologies: [],
     };
@@ -38,7 +38,7 @@ describe('pagination', () => {
 
     const data = {
       deepHits: null,
-      totalHitCount: 7,
+      totalHitCount: 70,
       resultStart: 0,
       terminologies: [],
     };
@@ -55,7 +55,7 @@ describe('pagination', () => {
 
     const data = {
       deepHits: null,
-      totalHitCount: 50,
+      totalHitCount: 500,
       resultStart: 0,
       terminologies: [],
     };

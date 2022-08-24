@@ -20,7 +20,9 @@ describe('useConfirmBeforeLeavingPage', () => {
   });
 
   it('should register event listeners when initialized in enabled state', async () => {
-    renderHook(() => useConfirmBeforeLeavingPage('enabled'));
+    const { unmount } = renderHook(() =>
+      useConfirmBeforeLeavingPage('enabled')
+    );
 
     expect(window.addEventListener).toHaveBeenCalledWith(
       'beforeunload',
@@ -30,10 +32,14 @@ describe('useConfirmBeforeLeavingPage', () => {
       'routeChangeStart',
       expect.any(Function)
     );
+
+    unmount();
   });
 
   it('should not register event listeners when initialized in disabled state', async () => {
-    renderHook(() => useConfirmBeforeLeavingPage('disabled'));
+    const { unmount } = renderHook(() =>
+      useConfirmBeforeLeavingPage('disabled')
+    );
 
     expect(window.addEventListener).not.toHaveBeenCalledWith(
       'beforeunload',
@@ -43,10 +49,14 @@ describe('useConfirmBeforeLeavingPage', () => {
       'routeChangeStart',
       expect.any(Function)
     );
+
+    unmount();
   });
 
   it('should disable confirmation when disableConfirmation is called', async () => {
-    const { result } = renderHook(() => useConfirmBeforeLeavingPage('enabled'));
+    const { result, unmount } = renderHook(() =>
+      useConfirmBeforeLeavingPage('enabled')
+    );
 
     expect(window.removeEventListener).not.toHaveBeenCalledWith(
       'beforeunload',
@@ -67,10 +77,12 @@ describe('useConfirmBeforeLeavingPage', () => {
       'routeChangeStart',
       expect.any(Function)
     );
+
+    unmount();
   });
 
   it('should enable confirmation when enableConfirmation is called', async () => {
-    const { result } = renderHook(() =>
+    const { result, unmount } = renderHook(() =>
       useConfirmBeforeLeavingPage('disabled')
     );
 
@@ -93,5 +105,7 @@ describe('useConfirmBeforeLeavingPage', () => {
       'routeChangeStart',
       expect.any(Function)
     );
+
+    unmount();
   });
 });

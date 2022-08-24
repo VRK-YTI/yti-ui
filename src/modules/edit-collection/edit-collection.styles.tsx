@@ -1,12 +1,12 @@
 import styled from 'styled-components';
 import { Block, Text, Textarea, TextInput } from 'suomifi-ui-components';
 
-export const NewCollectionBlock = styled(Block)`
+export const NewCollectionBlock = styled(Block)<{ $isSmall?: boolean }>`
   background: white;
   border: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
   margin-bottom: 80px;
   margin-top: ${(props) => props.theme.suomifi.spacing.m};
-  padding: 30px 80px 20px 80px;
+  padding: ${(props) => (props.$isSmall ? '20px' : '30px 80px 20px 80px')};
 `;
 
 export const PageHelpText = styled(Text)`

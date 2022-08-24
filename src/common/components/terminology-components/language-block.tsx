@@ -46,7 +46,7 @@ export default function LanguageBlock({
   };
 
   return (
-    <LangBlock padding="m" className="language-block">
+    <LangBlock padding="m" className="language-block" $isSmall={isSmall}>
       <Paragraph marginBottomSpacing="m">
         <Text variant="bold">{lang.labelText}</Text>
       </Paragraph>

@@ -5,6 +5,7 @@ import {
   RadioButtonGroupSmBot,
 } from './terminology-components.styles';
 import { UpdateTerminology } from '@app/modules/new-terminology/update-terminology.interface';
+import { useBreakpoints } from '../media-query/media-query-context';
 
 export interface TypeSelectorProps {
   update: ({ key, data }: UpdateTerminology) => void;
@@ -16,6 +17,7 @@ export default function TypeSelector({
   defaultValue,
 }: TypeSelectorProps) {
   const { t } = useTranslation('admin');
+  const { isSmall } = useBreakpoints();
 
   const handleSetSelected = (value: string) => {
     update({ key: 'type', data: value });
@@ -30,10 +32,18 @@ export default function TypeSelector({
         onChange={(e) => handleSetSelected(e)}
         id="terminology-type-selector"
       >
-        <RadioButton value="TERMINOLOGICAL_VOCABULARY" id="type-terminological">
+        <RadioButton
+          value="TERMINOLOGICAL_VOCABULARY"
+          id="type-terminological"
+          variant={isSmall ? 'large' : 'small'}
+        >
           {t('terminological-vocabulary')}
         </RadioButton>
-        <RadioButton value="OTHER_VOCABULARY" id="type-other">
+        <RadioButton
+          value="OTHER_VOCABULARY"
+          id="type-other"
+          variant={isSmall ? 'large' : 'small'}
+        >
           {t('other-vocabulary')}
         </RadioButton>
       </RadioButtonGroupSmBot>
