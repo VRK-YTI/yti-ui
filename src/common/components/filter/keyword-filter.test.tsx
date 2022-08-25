@@ -41,7 +41,7 @@ describe('keyword-filter', () => {
 
     userEvent.click(screen.getByPlaceholderText('testPlaceholder'));
     userEvent.keyboard('new value');
-    userEvent.click(screen.getByText('testTitle'));
+    userEvent.tab();
 
     expect(mockRouter.query.q).toBe('new value');
   });
@@ -55,36 +55,31 @@ describe('keyword-filter', () => {
     );
 
     const input = screen.getByLabelText('testTitle');
-    const title = screen.getByText('testTitle');
 
     userEvent.click(input);
     userEvent.keyboard('>');
-    userEvent.click(title);
+    userEvent.tab();
 
-    console.log(input);
     expect(mockRouter.query.q).toBeUndefined();
 
     userEvent.click(input);
     userEvent.keyboard('<');
-    userEvent.click(title);
+    userEvent.tab();
 
-    console.log(input);
     expect(mockRouter.query.q).toBeUndefined();
 
     userEvent.clear(input);
 
     userEvent.click(input);
     userEvent.keyboard('test value');
-    userEvent.click(title);
+    userEvent.tab();
 
-    console.log(input);
     expect(mockRouter.query.q).toBe('test value');
 
     userEvent.click(input);
     userEvent.keyboard('>');
-    userEvent.click(title);
+    userEvent.tab();
 
-    console.log(input);
     expect(mockRouter.query.q).toBe('test value');
     expect(
       screen.getByText('tr-filter-character-not-allowed')
