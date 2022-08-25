@@ -70,7 +70,7 @@ export default function OtherInformation({
         <TextInput
           labelText={t('concept-class')}
           optionalText={t('optional')}
-          onChange={(e) => setConceptClass(e?.toString())}
+          onChange={(e) => setConceptClass(e?.toString().trim())}
           value={conceptClass}
           onBlur={() => handleChange()}
           maxLength={TEXT_INPUT_MAX}
