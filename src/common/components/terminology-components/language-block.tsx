@@ -18,11 +18,6 @@ interface LanguageBlockProps {
   initialData?: TerminologyName;
 }
 
-interface InfoUpdateProps {
-  tName?: string;
-  tDescription?: string;
-}
-
 export default function LanguageBlock({
   lang,
   isSmall,
@@ -40,20 +35,6 @@ export default function LanguageBlock({
     userPosted ? 'error' : 'default'
   );
 
-  const handleInfoUpdate = ({ tName, tDescription }: InfoUpdateProps) => {
-    if (tName || tName === '') {
-      setName(tName);
-      return;
-    }
-
-    if (tDescription) {
-      setDescription(tDescription);
-      return;
-    }
-
-    handleBlur();
-  };
-
   const handleBlur = () => {
     if (!name) {
       setStatus('error');
@@ -65,12 +46,7 @@ export default function LanguageBlock({
   };
 
   return (
-    <LangBlock
-      padding="m"
-      onBlur={() => handleInfoUpdate({})}
-      className="language-block"
-      $isSmall={isSmall}
-    >
+    <LangBlock padding="m" className="language-block" $isSmall={isSmall}>
       <Paragraph marginBottomSpacing="m">
         <Text variant="bold">{lang.labelText}</Text>
       </Paragraph>
@@ -78,9 +54,8 @@ export default function LanguageBlock({
         labelText={t('terminology-name')}
         visualPlaceholder={t('terminology-name-placeholder')}
         $isSmall={isSmall}
-        onChange={(e) =>
-          handleInfoUpdate({ tName: e?.toString().trim() ?? '' })
-        }
+        onChange={(e) => setName(e?.toString().trim() ?? '')}
+        onBlur={handleBlur}
         status={status}
         statusText={status === 'error' ? t('terminology-name-error') : ''}
         defaultValue={name}
@@ -91,9 +66,8 @@ export default function LanguageBlock({
         labelText={t('terminology-description')}
         hintText={t('terminology-description-hint')}
         visualPlaceholder={t('terminology-description-placeholder')}
-        onChange={(e) =>
-          handleInfoUpdate({ tDescription: e.target.value.trim() })
-        }
+        onChange={(e) => setDescription(e.target.value.trim())}
+        onBlur={handleBlur}
         maxLength={TEXT_AREA_MAX}
         defaultValue={description}
         className="terminology-description-input"
