@@ -40,3 +40,5 @@ yarn-error.log*
 
 # github actions
 .github
+
+docs
