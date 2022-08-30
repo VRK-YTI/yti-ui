@@ -1,7 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import useUrlState, {
   initialUrlState,
-} from '@app/common/utils/hooks/useUrlState';
+} from '@app/common/utils/hooks/use-url-state';
 import RadioButtonFilter from './radio-button-filter';
 
 export interface TypeFilterProps {

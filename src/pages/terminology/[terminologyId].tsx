@@ -12,7 +12,7 @@ import {
   getRunningOperationPromises,
   getVocabulary,
 } from '@app/common/components/vocabulary/vocabulary.slice';
-import { initialUrlState } from '@app/common/utils/hooks/useUrlState';
+import { initialUrlState } from '@app/common/utils/hooks/use-url-state';
 import {
   CommonContextState,
   CommonContextProvider,

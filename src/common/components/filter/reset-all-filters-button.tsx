@@ -1,6 +1,6 @@
 import { useTranslation } from 'next-i18next';
 import { Button } from 'suomifi-ui-components';
-import useUrlState, { isInitial } from '@app/common/utils/hooks/useUrlState';
+import useUrlState, { isInitial } from '@app/common/utils/hooks/use-url-state';
 import Separator from '@app/common/components/separator';
 
 export default function ResetAllFiltersButton() {

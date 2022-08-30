@@ -18,7 +18,7 @@ import { Modal, ModalContent } from 'suomifi-ui-components';
 import { useEffect, useState } from 'react';
 import { useGetCountsQuery } from '@app/common/components/counts/counts.slice';
 import { SearchPageFilter } from './search-page-filter';
-import useUrlState from '@app/common/utils/hooks/useUrlState';
+import useUrlState from '@app/common/utils/hooks/use-url-state';
 import {
   selectAlert,
   setAlert,

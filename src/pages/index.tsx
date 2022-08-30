@@ -21,7 +21,7 @@ import {
   getRunningOperationPromises as countsGetRunningOperationPromises,
 } from '@app/common/components/counts/counts.slice';
 import PageHead from '@app/common/components/page-head';
-import { initialUrlState } from '@app/common/utils/hooks/useUrlState';
+import { initialUrlState } from '@app/common/utils/hooks/use-url-state';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;

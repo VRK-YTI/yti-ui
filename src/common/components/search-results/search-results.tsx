@@ -15,7 +15,7 @@ import { useBreakpoints } from '@app/common/components/media-query/media-query-c
 import SearchCountTags from './search-count-tags';
 import { CardConcepts, ResultWrapper } from './search-results.styles';
 import { Concept } from '@app/common/interfaces/concept.interface';
-import useUrlState from '@app/common/utils/hooks/useUrlState';
+import useUrlState from '@app/common/utils/hooks/use-url-state';
 import SanitizedTextContent from '@app/common/components/sanitized-text-content';
 import ResultCard from './result-card';
 import ResultCardExpander from './result-card-expander';

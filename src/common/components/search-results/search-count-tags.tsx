@@ -7,7 +7,7 @@ import {
 } from '@app/common/interfaces/terminology.interface';
 import useUrlState, {
   initialUrlState,
-} from '@app/common/utils/hooks/useUrlState';
+} from '@app/common/utils/hooks/use-url-state';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import {
   ChipWrapper,

@@ -5,7 +5,7 @@ import { Filter } from '@app/common/components/filter/filter';
 import StatusFilter from '@app/common/components/filter/status-filter';
 import { KeywordFilter } from '@app/common/components/filter/keyword-filter';
 import TypeFilter from '@app/common/components/filter/type-filter';
-import useUrlState from '@app/common/utils/hooks/useUrlState';
+import useUrlState from '@app/common/utils/hooks/use-url-state';
 import LanguageFilter from '@app/common/components/filter/language-filter';
 import { FilterTopPartBlock } from './vocabulary.styles';
 import { Property } from '@app/common/interfaces/termed-data-types.interface';
