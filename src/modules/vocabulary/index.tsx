@@ -25,7 +25,7 @@ import { Breadcrumb, BreadcrumbLink } from '@app/common/components/breadcrumb';
 import PropertyValue from '@app/common/components/property-value';
 import { useGetVocabularyCountQuery } from '@app/common/components/counts/counts.slice';
 import { TerminologyListFilter } from './terminology-list-filter';
-import useUrlState from '@app/common/utils/hooks/useUrlState';
+import useUrlState from '@app/common/utils/hooks/use-url-state';
 import Pagination from '@app/common/components/pagination/pagination';
 import filterData from '@app/common/utils/filter-data';
 import LoadIndicator from '@app/common/components/load-indicator';

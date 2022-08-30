@@ -14,7 +14,7 @@ import ConceptBasicInformation from './basic-information/concept-basic-informati
 import FormFooter from './form-footer';
 import { NewConceptBlock, PageHelpText } from './new-concept.styles';
 import ConceptTermsBlock from './concept-terms-block';
-import { asString } from '@app/common/utils/hooks/useUrlState';
+import { asString } from '@app/common/utils/hooks/use-url-state';
 import { useEffect, useState } from 'react';
 import generateConcept from './generate-concept';
 import { useAddConceptMutation } from '@app/common/components/modify/modify.slice';

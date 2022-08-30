@@ -3,7 +3,7 @@ import { Property } from '@app/common/interfaces/termed-data-types.interface';
 import CheckboxFilter from './checkbox-filter';
 import useUrlState, {
   initialUrlState,
-} from '@app/common/utils/hooks/useUrlState';
+} from '@app/common/utils/hooks/use-url-state';
 
 export interface InformationDomain {
   id: string;

@@ -7,7 +7,7 @@ import { CloseButton } from './header-search.styles';
 import { useRouter } from 'next/router';
 import useUrlState, {
   initialUrlState,
-} from '@app/common/utils/hooks/useUrlState';
+} from '@app/common/utils/hooks/use-url-state';
 import {
   SEARCH_FIELD_PATTERN,
   TEXT_INPUT_MAX,

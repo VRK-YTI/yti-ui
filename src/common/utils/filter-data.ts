@@ -4,7 +4,7 @@ import {
   VocabularyConceptDTO,
   VocabularyConcepts,
 } from '@app/common/interfaces/vocabulary.interface';
-import { UrlState } from './hooks/useUrlState';
+import { UrlState } from './hooks/use-url-state';
 
 export default function filterData(
   data: VocabularyConcepts | Collection[],

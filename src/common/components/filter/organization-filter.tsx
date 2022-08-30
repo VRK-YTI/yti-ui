@@ -2,7 +2,7 @@ import { SingleSelect } from 'suomifi-ui-components';
 import { OrganizationSearchResult } from '@app/common/interfaces/terminology.interface';
 import useUrlState, {
   initialUrlState,
-} from '@app/common/utils/hooks/useUrlState';
+} from '@app/common/utils/hooks/use-url-state';
 import { DropdownWrapper } from './filter.styles';
 import { useTranslation } from 'next-i18next';
 
