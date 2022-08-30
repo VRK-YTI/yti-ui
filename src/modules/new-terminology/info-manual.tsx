@@ -40,11 +40,11 @@ export default function InfoManual({
 
     let valid = true;
 
-    if (Object.keys(terminologyData).length < 7) {
+    if (Object.keys(terminologyData).length < 6) {
       valid = false;
     } else {
       Object.entries(terminologyData).forEach(([key, value]) => {
-        if (key === 'otherOrgs' || key === 'contact') {
+        if (key === 'contact') {
           return;
         }
 

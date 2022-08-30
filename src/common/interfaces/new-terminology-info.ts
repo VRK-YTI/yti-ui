@@ -14,13 +14,7 @@ export interface NewTerminologyInfo {
     name: string;
     uniqueItemId: string;
   }[];
-  mainOrg?: {
-    labelText: string;
-    name: string;
-    organizationId: string;
-    uniqueItemId: string;
-  };
-  otherOrgs?: {
+  contributors: {
     labelText: string;
     name: string;
     organizationId: string;

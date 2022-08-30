@@ -23,7 +23,7 @@ export default function generateNewTerminology({
   terminologyId,
   uri,
 }: GenerateNewTerminologyProps) {
-  if (!data.mainOrg) {
+  if (!data.contributors) {
     return;
   }
 
@@ -70,6 +70,17 @@ export default function generateNewTerminology({
     },
   ];
 
+  postData.references.contributor = data.contributors.map((contributor) => ({
+    id: contributor.uniqueItemId,
+    type: {
+      graph: {
+        id: contributor.organizationId,
+      },
+      id: 'Organization',
+    },
+  }));
+
+  /*
   postData.references.contributor = [
     {
       id: data.mainOrg.uniqueItemId,
@@ -80,7 +91,7 @@ export default function generateNewTerminology({
         id: 'Organization',
       },
     },
-  ];
+  ];*/
 
   if (terminologyId) {
     postData.references.contributor[0].type.uri = '';

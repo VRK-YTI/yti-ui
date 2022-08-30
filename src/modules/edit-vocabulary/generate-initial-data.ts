@@ -38,7 +38,7 @@ export default function generateInitialData(
       };
     }) ?? [];
 
-  const mainOrg = data.references.contributor?.map((org) => {
+  const contributors = data.references.contributor?.map((org) => {
     const label = getPropertyValue({
       property: org.properties.prefLabel,
       language: lang,
@@ -50,7 +50,7 @@ export default function generateInitialData(
       name: label,
       uniqueItemId: org.id,
     };
-  })[0];
+  }) ?? [];
 
   const uriParts = data.uri.split('/');
   const prefix = uriParts
@@ -69,8 +69,7 @@ export default function generateInitialData(
     status: data.properties.status?.[0].value ?? 'DRAFT',
     type:
       data.properties.terminologyType?.[0].value ?? 'TERMINOLOGICAL_VOCABULARY',
-    mainOrg: mainOrg,
-    otherOrgs: [],
+    contributors: contributors,
   };
 
   return obj;

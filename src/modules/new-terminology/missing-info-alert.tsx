@@ -37,7 +37,7 @@ export default function MissingInfoAlert({ data }: MissingInfoAlertProps) {
     if (
       data.description[0].length === 0 ||
       data.description[0].some((d) => !d.name) ||
-      !data.mainOrg ||
+      data.contributors.length === 0 ||
       data.infoDomains.length === 0 ||
       !data.prefix[0] ||
       data.prefix[1] === false ||
@@ -68,7 +68,7 @@ export default function MissingInfoAlert({ data }: MissingInfoAlertProps) {
   }
 
   function renderOrganizationAlerts() {
-    return <>{!data.mainOrg && <li>{t('alert-main-org-undefined')}</li>}</>;
+    return <>{(data.contributors.length === 0) && <li>{t('alert-org-undefined')}</li>}</>;
   }
 
   function renderInformationDomainAlerts() {
