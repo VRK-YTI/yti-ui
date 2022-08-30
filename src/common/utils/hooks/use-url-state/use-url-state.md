@@ -35,11 +35,7 @@ Usually, you want to use the patch instead of the update. And of course, reset
 clears it to the initial state.
 
 ```ts
-const {
-  updateUrlState,
-  patchUrlState,
-  resetUrlState
-} = useUrlState();
+const { updateUrlState, patchUrlState, resetUrlState } = useUrlState();
 ```
 
 Changes don't take effect immediately but instead on the next render.
