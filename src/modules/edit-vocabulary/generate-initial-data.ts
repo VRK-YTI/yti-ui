@@ -38,19 +38,20 @@ export default function generateInitialData(
       };
     }) ?? [];
 
-  const contributors = data.references.contributor?.map((org) => {
-    const label = getPropertyValue({
-      property: org.properties.prefLabel,
-      language: lang,
-    });
+  const contributors =
+    data.references.contributor?.map((org) => {
+      const label = getPropertyValue({
+        property: org.properties.prefLabel,
+        language: lang,
+      });
 
-    return {
-      organizationId: org.type.graph.id,
-      labelText: label,
-      name: label,
-      uniqueItemId: org.id,
-    };
-  }) ?? [];
+      return {
+        organizationId: org.type.graph.id,
+        labelText: label,
+        name: label,
+        uniqueItemId: org.id,
+      };
+    }) ?? [];
 
   const uriParts = data.uri.split('/');
   const prefix = uriParts

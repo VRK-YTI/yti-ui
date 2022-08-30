@@ -1,10 +1,6 @@
 import { useTranslation } from 'next-i18next';
 import { useSelector } from 'react-redux';
-import {
-  MultiSelectData,
-  Paragraph,
-  Text,
-} from 'suomifi-ui-components';
+import { MultiSelectData, Paragraph, Text } from 'suomifi-ui-components';
 import { selectLogin } from '@app/common/components/login/login.slice';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import { useGetOrganizationsQuery } from '@app/common/components/terminology-search/terminology-search.slice';
@@ -31,15 +27,16 @@ export default function OrganizationSelector({
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const { data: organizations } = useGetOrganizationsQuery(i18n.language);
-  const [selectedOrganizations, setSelectedOrganizations] =
-    useState<MultiSelectData[]>(
-      initialData ?
-        initialData.contributors.map((contributor) => ({
+  const [selectedOrganizations, setSelectedOrganizations] = useState<
+    MultiSelectData[]
+  >(
+    initialData
+      ? initialData.contributors.map((contributor) => ({
           labelText: contributor.labelText,
           uniqueItemId: contributor.uniqueItemId,
         }))
-        : []
-    );
+      : []
+  );
 
   const adminOrgs: MultiSelectData[] = organizations
     ?.map((org) => {
@@ -78,13 +75,15 @@ export default function OrganizationSelector({
           hintText={t('org-hint-text')}
           $isSmall={isSmall ? true : undefined}
           items={adminOrgs}
-          onItemSelectionsChange={(e) =>
-            handleSelectOrganizations(e)
-          }
+          onItemSelectionsChange={(e) => handleSelectOrganizations(e)}
           chipListVisible={true}
           noItemsText={t('no-orgs-available')}
           visualPlaceholder={t('choose-orgs')}
-          status={userPosted && selectedOrganizations.length === 0 ? 'error' : 'default'}
+          status={
+            userPosted && selectedOrganizations.length === 0
+              ? 'error'
+              : 'default'
+          }
           defaultSelectedItems={selectedOrganizations ?? undefined}
           id="organizations-selector"
           ariaOptionsAvailableText={t('orgs-aria-options-available-text')}

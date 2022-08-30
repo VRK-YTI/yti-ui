@@ -68,7 +68,11 @@ export default function MissingInfoAlert({ data }: MissingInfoAlertProps) {
   }
 
   function renderOrganizationAlerts() {
-    return <>{(data.contributors.length === 0) && <li>{t('alert-org-undefined')}</li>}</>;
+    return (
+      <>
+        {data.contributors.length === 0 && <li>{t('alert-org-undefined')}</li>}
+      </>
+    );
   }
 
   function renderInformationDomainAlerts() {
