@@ -41,6 +41,7 @@ import HasPermission from '@app/common/utils/has-permission';
 import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
 import Link from 'next/link';
 import { translateStatus } from '@app/common/utils/translation-helpers';
+import isEmail from 'validator/lib/isEmail';
 
 export interface ConceptProps {
   terminologyId: string;
@@ -84,6 +85,8 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
 
   const status =
     getPropertyValue({ property: concept?.properties.status }) || 'DRAFT';
+
+  const email = getPropertyValue({ property: terminology?.properties.contact });
 
   if (conceptError) {
     return (
@@ -260,9 +263,9 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
           <BasicBlock
             extra={
               <ExternalLink
-                href={`mailto:${getPropertyValue({
-                  property: terminology?.properties.contact,
-                })}?subject=${conceptId}`}
+                href={`mailto:${
+                  isEmail(email) ? email : 'yhteentoimivuus@dvv.fi'
+                }?subject=${conceptId}`}
                 labelNewWindow={t('site-open-link-new-window', {
                   ns: 'common',
                 })}
