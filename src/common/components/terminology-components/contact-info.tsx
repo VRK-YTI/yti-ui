@@ -42,7 +42,7 @@ export default function ContactInfo({
         visualPlaceholder={t('contact-visual-placeholder')}
         $isSmall={isSmall ? true : undefined}
         onChange={(e) => setContact(e?.toString().trim() ?? '')}
-        onBlur={() => update({key: 'contact', data: contact})}
+        onBlur={() => update({ key: 'contact', data: contact })}
         type="text"
         defaultValue={contact}
         maxLength={EMAIL_MAX}

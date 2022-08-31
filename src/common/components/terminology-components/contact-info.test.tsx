@@ -24,13 +24,20 @@ describe('contact-info', () => {
       data: 'admin@email.org',
     });
   });
-  
+
   it('should show initial data', () => {
     const mockUpdate = jest.fn();
 
-    render(<ContactInfo defaultValue="test contact info" update={mockUpdate} userPosted={false} />, {
-      wrapper: themeProvider,
-    });
+    render(
+      <ContactInfo
+        defaultValue="test contact info"
+        update={mockUpdate}
+        userPosted={false}
+      />,
+      {
+        wrapper: themeProvider,
+      }
+    );
 
     expect(screen.getByDisplayValue('test contact info')).toBeInTheDocument();
   });
