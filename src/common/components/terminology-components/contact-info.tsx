@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Paragraph, Text } from 'suomifi-ui-components';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import {
@@ -40,7 +39,9 @@ export default function ContactInfo({
         hintText={t('contact-hint-text')}
         visualPlaceholder={t('contact-visual-placeholder')}
         $isSmall={isSmall ? true : undefined}
-        onChange={(e) => update({key: 'contact', data: e?.toString().trim() ?? ''})}
+        onChange={(e) =>
+          update({ key: 'contact', data: e?.toString().trim() ?? '' })
+        }
         type="email"
         defaultValue={defaultValue ?? ''}
         maxLength={EMAIL_MAX}
