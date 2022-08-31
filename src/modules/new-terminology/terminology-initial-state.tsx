@@ -4,8 +4,7 @@ export const TerminologyDataInitialState: NewTerminologyInfo = {
   contact: ['', true],
   description: [[], true],
   infoDomains: [],
-  mainOrg: undefined,
-  otherOrgs: [],
+  contributors: [],
   prefix: ['', true],
   type: 'TERMINOLOGICAL_VOCABULARY',
 };

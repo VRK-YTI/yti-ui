@@ -26,13 +26,14 @@ describe('generate-initial-data', () => {
           uniqueItemId: '654-456',
         },
       ],
-      mainOrg: {
-        labelText: 'Yhteentoimivuusalustan yllapito',
-        name: 'Yhteentoimivuusalustan yllapito',
-        organizationId: '456-456',
-        uniqueItemId: '456-123',
-      },
-      otherOrgs: [],
+      contributors: [
+        {
+          labelText: 'Yhteentoimivuusalustan yllapito',
+          name: 'Yhteentoimivuusalustan yllapito',
+          organizationId: '456-456',
+          uniqueItemId: '456-123',
+        },
+      ],
       prefix: ['abc1234', true],
       status: 'DRAFT',
       type: 'TERMINOLOGICAL_VOCABULARY',
@@ -81,13 +82,14 @@ describe('generate-initial-data', () => {
           uniqueItemId: '987-123',
         },
       ],
-      mainOrg: {
-        labelText: 'Yhteentoimivuusalustan yllapito',
-        name: 'Yhteentoimivuusalustan yllapito',
-        organizationId: '456-456',
-        uniqueItemId: '456-123',
-      },
-      otherOrgs: [],
+      contributors: [
+        {
+          labelText: 'Yhteentoimivuusalustan yllapito',
+          name: 'Yhteentoimivuusalustan yllapito',
+          organizationId: '456-456',
+          uniqueItemId: '456-123',
+        },
+      ],
       prefix: ['abc1234', true],
       status: 'VALID',
       type: 'OTHER_VOCABULARY',
