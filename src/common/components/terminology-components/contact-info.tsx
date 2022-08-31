@@ -8,6 +8,7 @@ import {
 import { useTranslation } from 'next-i18next';
 import { UpdateTerminology } from '@app/modules/new-terminology/update-terminology.interface';
 import { EMAIL_MAX } from '@app/common/utils/constants';
+import { useState } from 'react';
 
 interface ContactInfoProps {
   update: ({ key, data }: UpdateTerminology) => void;
@@ -22,6 +23,7 @@ export default function ContactInfo({
 }: ContactInfoProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
+  const [contact, setContact] = useState(defaultValue ?? '');
 
   return (
     <BlankFieldset>
@@ -39,11 +41,10 @@ export default function ContactInfo({
         hintText={t('contact-hint-text')}
         visualPlaceholder={t('contact-visual-placeholder')}
         $isSmall={isSmall ? true : undefined}
-        onChange={(e) =>
-          update({ key: 'contact', data: e?.toString().trim() ?? '' })
-        }
-        type="email"
-        defaultValue={defaultValue ?? ''}
+        onChange={(e) => setContact(e?.toString().trim() ?? '')}
+        onBlur={() => update({key: 'contact', data: contact})}
+        type="text"
+        defaultValue={contact}
         maxLength={EMAIL_MAX}
         id="contact-input"
       />

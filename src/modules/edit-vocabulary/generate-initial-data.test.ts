@@ -6,7 +6,7 @@ describe('generate-initial-data', () => {
     const returned = generateInitialData('fi', dataSmall);
 
     const expected = {
-      contact: ['yhteentoimivuus@dvv.fi', true],
+      contact: 'yhteentoimivuus@dvv.fi',
       description: [
         [
           {
@@ -45,7 +45,7 @@ describe('generate-initial-data', () => {
   it('should generate data from large input', () => {
     const returned = generateInitialData('fi', dataLarge);
     const expected = {
-      contact: ['yhteentoimivuus@dvv.fi', true],
+      contact: 'yhteentoimivuus@dvv.fi',
       description: [
         [
           {
