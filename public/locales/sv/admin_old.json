@@ -1,11 +1,22 @@
 {
   "add-new-admin-note": "",
   "add-new-admin-note-description": "",
+  "add-other-organizations": "",
   "admin-note": "",
+  "alert-main-org-undefined": "",
   "available-term-familes": "",
+  "choose-other-orgs": "",
+  "chosen-other-organizations": "",
   "concept-class-available": "",
   "concept-class-no-items": "",
   "en": "",
   "fi": "",
+  "no-other-orgs-available": "",
+  "org-aria-options-available-text": "",
+  "org-label-text": "",
+  "org-no-items": "",
+  "org-visual-placeholder": "",
+  "other-orgs-aria-options-available-text": "",
+  "other-orgs-label-text": "",
   "sv": ""
 }

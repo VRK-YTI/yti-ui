@@ -1,23 +1,16 @@
 import { useTranslation } from 'next-i18next';
-import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import {
-  MultiSelectData,
-  Paragraph,
-  SingleSelectData,
-  Text,
-} from 'suomifi-ui-components';
+import { MultiSelectData, Paragraph, Text } from 'suomifi-ui-components';
 import { selectLogin } from '@app/common/components/login/login.slice';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import { useGetOrganizationsQuery } from '@app/common/components/terminology-search/terminology-search.slice';
 import {
   BlankFieldset,
   MultiselectSmBot,
-  OrgCheckbox,
-  OrgSingleSelect,
 } from './terminology-components.styles';
 import { UpdateTerminology } from '@app/modules/new-terminology/update-terminology.interface';
 import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info';
+import { useEffect, useState } from 'react';
 
 export interface OrganizationSelectorProps {
   update: ({ key, data }: UpdateTerminology) => void;
@@ -34,21 +27,18 @@ export default function OrganizationSelector({
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const { data: organizations } = useGetOrganizationsQuery(i18n.language);
-  const [selectedOrganization, setSelectedOrganization] =
-    useState<SingleSelectData | null>(
-      initialData?.mainOrg
-        ? {
-            labelText: initialData.mainOrg.labelText,
-            uniqueItemId: initialData.mainOrg?.uniqueItemId,
-          }
-        : null
-    );
-  const [, setSelectedOtherOrganizations] = useState<MultiSelectData[]>([]);
-  const [showOtherOrgSelector, setShowOtherOrgSelector] =
-    useState<boolean>(false);
-  const [mainOrgInitiated, setMainOrgInitiated] = useState(false);
+  const [selectedOrganizations, setSelectedOrganizations] = useState<
+    MultiSelectData[]
+  >(
+    initialData
+      ? initialData.contributors.map((contributor) => ({
+          labelText: contributor.labelText,
+          uniqueItemId: contributor.uniqueItemId,
+        }))
+      : []
+  );
 
-  const adminOrgs: SingleSelectData[] = organizations
+  const adminOrgs: MultiSelectData[] = organizations
     ?.map((org) => {
       if (user.organizationsInRole.ADMIN.includes(org.id.toString())) {
         const orgName = org.properties.prefLabel.value;
@@ -59,85 +49,48 @@ export default function OrganizationSelector({
             labelText: orgName,
             uniqueItemId: org.id,
             organizationId: org.type.graph.id,
-          } as SingleSelectData;
+          } as MultiSelectData;
         }
       }
     })
-    .filter((org) => org) as SingleSelectData[];
+    .filter((org) => org) as MultiSelectData[];
 
   useEffect(() => {
-    if (adminOrgs.length === 1 && !mainOrgInitiated) {
-      update({ key: 'mainOrg', data: adminOrgs[0] });
-      setMainOrgInitiated(true);
+    if (adminOrgs.length === 1 && selectedOrganizations.length === 0) {
+      setSelectedOrganizations(adminOrgs);
+      update({ key: 'contributors', data: adminOrgs });
     }
-  }, [adminOrgs, update, mainOrgInitiated]);
+  }, [adminOrgs, update, selectedOrganizations]);
 
-  const handleSelectOrganization = (value: SingleSelectData | null) => {
-    setSelectedOrganization(value);
-    update({ key: 'mainOrg', data: value });
-    update({ key: 'otherOrgs', data: [] });
-
-    if (!value) {
-      setShowOtherOrgSelector(false);
-      setSelectedOtherOrganizations([]);
-    }
-  };
-
-  const handleSelectedOtherOrganizations = (value: MultiSelectData[]) => {
-    setSelectedOtherOrganizations(value);
-    update({ key: 'otherOrgs', data: value });
+  const handleSelectOrganizations = (value: MultiSelectData[]) => {
+    setSelectedOrganizations(value);
+    update({ key: 'contributors', data: value });
   };
 
   return (
     <BlankFieldset>
       {adminOrgs.length > 1 ? (
-        <>
-          <OrgSingleSelect
-            labelText={t('org-label-text')}
-            hintText={t('org-hint-text')}
-            ariaOptionsAvailableText={t('org-aria-options-available-text')}
-            clearButtonLabel={t('clear-button-label')}
-            $isSmall={isSmall ? true : undefined}
-            items={adminOrgs}
-            onItemSelectionChange={(item) => handleSelectOrganization(item)}
-            noItemsText={t('org-no-items')}
-            visualPlaceholder={t('org-visual-placeholder')}
-            status={userPosted && !selectedOrganization ? 'error' : 'default'}
-            defaultSelectedItem={selectedOrganization ?? undefined}
-            id="main-organization-selector"
-          />
-          <OrgCheckbox
-            checked={showOtherOrgSelector}
-            onClick={(value) => setShowOtherOrgSelector(value.checkboxState)}
-            disabled={!selectedOrganization}
-            id="other-organization-toggle"
-          >
-            {t('add-other-organizations')}
-          </OrgCheckbox>
-          {showOtherOrgSelector && (
-            <MultiselectSmBot
-              labelText={t('other-orgs-label-text')}
-              items={adminOrgs.filter(
-                (adminOrgs) =>
-                  adminOrgs.uniqueItemId !== selectedOrganization?.uniqueItemId
-              )}
-              chipListVisible={true}
-              ariaChipActionLabel={t('aria-chip-action-label')}
-              ariaSelectedAmountText={t('chosen-other-organizations')}
-              ariaOptionsAvailableText={t(
-                'other-orgs-aria-options-available-text'
-              )}
-              ariaOptionChipRemovedText={t('organization-removed')}
-              noItemsText={t('no-other-orgs-available')}
-              visualPlaceholder={t('choose-other-orgs')}
-              onItemSelectionsChange={(e) =>
-                handleSelectedOtherOrganizations(e)
-              }
-              $isSmall={isSmall ? true : undefined}
-              id="other-organizations-selector"
-            />
-          )}
-        </>
+        <MultiselectSmBot
+          labelText={t('orgs-label-text')}
+          hintText={t('org-hint-text')}
+          $isSmall={isSmall ? true : undefined}
+          items={adminOrgs}
+          onItemSelectionsChange={(e) => handleSelectOrganizations(e)}
+          chipListVisible={true}
+          noItemsText={t('no-orgs-available')}
+          visualPlaceholder={t('choose-orgs')}
+          status={
+            userPosted && selectedOrganizations.length === 0
+              ? 'error'
+              : 'default'
+          }
+          defaultSelectedItems={selectedOrganizations ?? undefined}
+          id="organizations-selector"
+          ariaOptionsAvailableText={t('orgs-aria-options-available-text')}
+          ariaChipActionLabel={t('aria-chip-action-label')}
+          ariaSelectedAmountText={t('chosen-organizations')}
+          ariaOptionChipRemovedText={t('organization-removed')}
+        />
       ) : (
         <>
           <Paragraph>
