@@ -63,7 +63,7 @@ export default function generateInitialData(
     .filter((p) => p)[0];
 
   const obj: NewTerminologyInfo = {
-    contact: [data.properties.contact?.[0].value ?? '', true],
+    contact: data.properties.contact?.[0].value ?? '',
     description: [description, true],
     infoDomains: infoDomains,
     prefix: [prefix ?? '', true],

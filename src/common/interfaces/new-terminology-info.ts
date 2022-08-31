@@ -1,5 +1,5 @@
 export interface NewTerminologyInfo {
-  contact: [string, boolean];
+  contact: string;
   description: [
     {
       lang: string;
