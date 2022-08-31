@@ -80,19 +80,6 @@ export default function generateNewTerminology({
     },
   }));
 
-  /*
-  postData.references.contributor = [
-    {
-      id: data.mainOrg.uniqueItemId,
-      type: {
-        graph: {
-          id: data.mainOrg.organizationId,
-        },
-        id: 'Organization',
-      },
-    },
-  ];*/
-
   if (terminologyId) {
     postData.references.contributor[0].type.uri = '';
   }
