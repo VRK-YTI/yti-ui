@@ -40,7 +40,7 @@ export default function generateNewTerminology({
     {
       lang: '',
       regex: regex,
-      value: data.contact[0] ? data.contact[0] : 'yhteentoimivuus@dvv.fi',
+      value: data.contact ? data.contact : 'yhteentoimivuus@dvv.fi',
     },
   ];
 

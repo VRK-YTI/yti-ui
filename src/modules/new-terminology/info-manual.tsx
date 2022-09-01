@@ -102,7 +102,7 @@ export default function InfoManual({
       <ContactInfo
         update={handleUpdate}
         userPosted={userPosted}
-        defaultValue={initialData?.contact[0]}
+        defaultValue={initialData?.contact}
       />
     </form>
   );

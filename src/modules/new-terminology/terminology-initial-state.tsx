@@ -1,7 +1,7 @@
 import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info';
 
 export const TerminologyDataInitialState: NewTerminologyInfo = {
-  contact: ['', true],
+  contact: '',
   description: [[], true],
   infoDomains: [],
   contributors: [],

@@ -24,7 +24,6 @@ export default function MissingInfoAlert({ data }: MissingInfoAlertProps) {
           {renderOrganizationAlerts()}
           {renderInformationDomainAlerts()}
           {renderPrefixAlerts()}
-          {renderContactAlerts()}
           {renderStatusAlerts()}
         </MissingInfoAlertUl>
       </InlineAlert>
@@ -95,14 +94,6 @@ export default function MissingInfoAlert({ data }: MissingInfoAlertProps) {
     }
 
     return <></>;
-  }
-
-  function renderContactAlerts() {
-    return (
-      <>
-        {data.contact?.[1] === false && <li>{t('alert-contact-invalid')}</li>}
-      </>
-    );
   }
 
   function renderStatusAlerts() {

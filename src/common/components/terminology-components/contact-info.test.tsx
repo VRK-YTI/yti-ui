@@ -21,28 +21,24 @@ describe('contact-info', () => {
     expect(mockUpdate).toHaveBeenCalledTimes(1);
     expect(mockUpdate).toHaveBeenCalledWith({
       key: 'contact',
-      data: ['admin@email.org', true],
+      data: 'admin@email.org',
     });
   });
 
-  it('should mark invalid input', () => {
+  it('should show initial data', () => {
     const mockUpdate = jest.fn();
 
-    render(<ContactInfo update={mockUpdate} userPosted={false} />, {
-      wrapper: themeProvider,
-    });
-
-    userEvent.click(
-      screen.getByPlaceholderText('tr-contact-visual-placeholder')
+    render(
+      <ContactInfo
+        defaultValue="test contact info"
+        update={mockUpdate}
+        userPosted={false}
+      />,
+      {
+        wrapper: themeProvider,
+      }
     );
-    userEvent.keyboard('adminemail.org');
-    userEvent.click(screen.getByText('tr-contact-information'));
 
-    expect(mockUpdate).toHaveBeenCalledTimes(1);
-    expect(mockUpdate).toHaveBeenCalledWith({
-      key: 'contact',
-      data: ['adminemail.org', false],
-    });
-    expect(screen.getByText('tr-contact-email-invalid')).toBeInTheDocument();
+    expect(screen.getByDisplayValue('test contact info')).toBeInTheDocument();
   });
 });
