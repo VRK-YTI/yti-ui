@@ -40,3 +40,5 @@ yarn-error.log*
 
 # generated during build
 next-env.d.ts
+
+/public/locales/**/*_old.json
