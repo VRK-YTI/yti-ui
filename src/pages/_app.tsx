@@ -68,6 +68,13 @@ export default wrapper.withRedux(appWithTranslation(App));
 // setup a11y checker for development
 if (process.env.NODE_ENV !== 'production' && typeof window !== 'undefined') {
   import('@axe-core/react').then(({ default: axe }) =>
-    axe(React, ReactDOM, 1000)
+    axe(React, ReactDOM, 1000, undefined, undefined, (results) => {
+      if (results.violations.length > 0) {
+        console.log(
+          'Potential a11y violations found by axe',
+          results.violations
+        );
+      }
+    })
   );
 }
