@@ -9,6 +9,7 @@ import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useState } from 'react';
 import {
   Button,
+  LoadingSpinner,
   Modal,
   ModalContent,
   ModalFooter,
@@ -22,7 +23,7 @@ import generateNewTerminology from './generate-new-terminology';
 import InfoFile from './info-file';
 import InfoManual from './info-manual';
 import MissingInfoAlert from './missing-info-alert';
-import { ModalTitleAsH1 } from './new-terminology.styles';
+import { CreatingIconWrapper, ModalTitleAsH1 } from './new-terminology.styles';
 
 interface NewTerminologyModalProps {
   showModal: boolean;
@@ -47,6 +48,7 @@ export default function NewTerminologyModal({
 
   const [postNewVocabulary, newVocabulary] = usePostNewVocabularyMutation();
   const [postImportExcel, importExcel] = usePostImportExcelMutation();
+  const [isCreating, setIsCreating] = useState<boolean>(false);
 
   const handleClose = useCallback(() => {
     setUserPosted(false);
@@ -79,6 +81,7 @@ export default function NewTerminologyModal({
   const handlePost = () => {
     if (inputType === 'self') {
       setUserPosted(true);
+      setIsCreating(true);
       if (!isValid || !manualData) {
         console.error('Data not valid');
         return;
@@ -139,7 +142,7 @@ export default function NewTerminologyModal({
           {userPosted && manualData && <MissingInfoAlert data={manualData} />}
           <Button
             onClick={() => handlePost()}
-            disabled={!inputType}
+            disabled={!inputType || isCreating}
             id="submit-button"
           >
             {t('add-terminology')}
@@ -151,6 +154,11 @@ export default function NewTerminologyModal({
           >
             {t('cancel')}
           </Button>
+          {isCreating && (
+            <CreatingIconWrapper role="alert" aria-live="assertive" aria-label='Luodaan'>
+              <LoadingSpinner textAlign="right" variant='small' text="Luodaan..."></LoadingSpinner>
+            </CreatingIconWrapper>
+          )}
         </ModalFooter>
       )}
     </Modal>

@@ -136,3 +136,7 @@ export const StatusSingleSelect = styled(SingleSelect)<{ $isSmall?: boolean }>`
   min-width: ${(props) => (props.$isSmall ? '100%' : '480px')};
   width: min-content;
 `;
+
+export const CreatingIconWrapper = styled.div`
+  display: inline-block;
+`;
