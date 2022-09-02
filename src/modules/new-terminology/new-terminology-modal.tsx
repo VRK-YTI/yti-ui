@@ -79,6 +79,9 @@ export default function NewTerminologyModal({
   };
 
   const handlePost = () => {
+    if (userPosted) {
+      return;
+    }
     if (inputType === 'self') {
       setUserPosted(true);
       setIsCreating(true);
@@ -142,7 +145,7 @@ export default function NewTerminologyModal({
           {userPosted && manualData && <MissingInfoAlert data={manualData} />}
           <Button
             onClick={() => handlePost()}
-            disabled={!inputType || isCreating}
+            disabled={!inputType}
             id="submit-button"
           >
             {t('add-terminology')}
@@ -155,8 +158,13 @@ export default function NewTerminologyModal({
             {t('cancel')}
           </Button>
           {isCreating && (
-            <CreatingIconWrapper role="alert" aria-live="assertive" aria-label='Luodaan'>
-              <LoadingSpinner textAlign="right" variant='small' text="Luodaan..."></LoadingSpinner>
+            <CreatingIconWrapper role="alert">
+              <LoadingSpinner
+                textAlign="right"
+                variant="small"
+                status="loading"
+                text="Luodaan..."
+              />
             </CreatingIconWrapper>
           )}
         </ModalFooter>
