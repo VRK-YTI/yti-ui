@@ -137,6 +137,8 @@ export const StatusSingleSelect = styled(SingleSelect)<{ $isSmall?: boolean }>`
   width: min-content;
 `;
 
-export const CreatingIconWrapper = styled.div`
-  display: inline-block;
+export const FooterBlock = styled(Block)`
+  display: flex;
+  align-items: center;
+  gap: ${(props) => props.theme.suomifi.spacing.s};
 `;

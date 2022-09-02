@@ -23,7 +23,7 @@ import generateNewTerminology from './generate-new-terminology';
 import InfoFile from './info-file';
 import InfoManual from './info-manual';
 import MissingInfoAlert from './missing-info-alert';
-import { CreatingIconWrapper, ModalTitleAsH1 } from './new-terminology.styles';
+import { FooterBlock, ModalTitleAsH1 } from './new-terminology.styles';
 
 interface NewTerminologyModalProps {
   showModal: boolean;
@@ -53,6 +53,7 @@ export default function NewTerminologyModal({
   const handleClose = useCallback(() => {
     setUserPosted(false);
     setIsValid(false);
+    setIsCreating(false);
     setInputType('');
     setShowModal(false);
     setStartFileUpload(false);
@@ -79,12 +80,12 @@ export default function NewTerminologyModal({
   };
 
   const handlePost = () => {
+    setIsCreating(true);
     if (userPosted) {
       return;
     }
     if (inputType === 'self') {
       setUserPosted(true);
-      setIsCreating(true);
       if (!isValid || !manualData) {
         console.error('Data not valid');
         return;
@@ -108,6 +109,7 @@ export default function NewTerminologyModal({
       setStartFileUpload(true);
       postImportExcel(formData);
       setUserPosted(true);
+      setIsCreating(true);
     }
   };
 
@@ -143,30 +145,32 @@ export default function NewTerminologyModal({
       {!(inputType === 'file' && userPosted) && (
         <ModalFooter id="new-terminology-modal-footer">
           {userPosted && manualData && <MissingInfoAlert data={manualData} />}
-          <Button
-            onClick={() => handlePost()}
-            disabled={!inputType}
-            id="submit-button"
-          >
-            {t('add-terminology')}
-          </Button>
-          <Button
-            variant="secondary"
-            onClick={() => handleClose()}
-            id="cancel-button"
-          >
-            {t('cancel')}
-          </Button>
-          {isCreating && (
-            <CreatingIconWrapper role="alert">
-              <LoadingSpinner
-                textAlign="right"
-                variant="small"
-                status="loading"
-                text="Luodaan..."
-              />
-            </CreatingIconWrapper>
-          )}
+          <FooterBlock>
+            <Button
+              onClick={() => handlePost()}
+              disabled={!inputType || isCreating}
+              id="submit-button"
+            >
+              {t('add-terminology')}
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => handleClose()}
+              id="cancel-button"
+            >
+              {t('cancel')}
+            </Button>
+            {isCreating && (
+              <div role="alert">
+                <LoadingSpinner
+                  textAlign="right"
+                  variant="small"
+                  status="loading"
+                  text={t('adding-terminology')}
+                />
+              </div>
+            )}
+          </FooterBlock>
         </ModalFooter>
       )}
     </Modal>
