@@ -9,6 +9,7 @@ import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useState } from 'react';
 import {
   Button,
+  LoadingSpinner,
   Modal,
   ModalContent,
   ModalFooter,
@@ -22,7 +23,7 @@ import generateNewTerminology from './generate-new-terminology';
 import InfoFile from './info-file';
 import InfoManual from './info-manual';
 import MissingInfoAlert from './missing-info-alert';
-import { ModalTitleAsH1 } from './new-terminology.styles';
+import { FooterBlock, ModalTitleAsH1 } from './new-terminology.styles';
 
 interface NewTerminologyModalProps {
   showModal: boolean;
@@ -47,10 +48,12 @@ export default function NewTerminologyModal({
 
   const [postNewVocabulary, newVocabulary] = usePostNewVocabularyMutation();
   const [postImportExcel, importExcel] = usePostImportExcelMutation();
+  const [isCreating, setIsCreating] = useState<boolean>(false);
 
   const handleClose = useCallback(() => {
     setUserPosted(false);
     setIsValid(false);
+    setIsCreating(false);
     setInputType('');
     setShowModal(false);
     setStartFileUpload(false);
@@ -77,6 +80,9 @@ export default function NewTerminologyModal({
   };
 
   const handlePost = () => {
+    if (userPosted) {
+      return;
+    }
     if (inputType === 'self') {
       setUserPosted(true);
       if (!isValid || !manualData) {
@@ -91,6 +97,7 @@ export default function NewTerminologyModal({
         return;
       }
 
+      setIsCreating(true);
       const templateGraphID = newTerminology.type.graph.id;
       const prefix = manualData.prefix[0];
       postNewVocabulary({ templateGraphID, prefix, newTerminology });
@@ -102,6 +109,7 @@ export default function NewTerminologyModal({
       setStartFileUpload(true);
       postImportExcel(formData);
       setUserPosted(true);
+      setIsCreating(true);
     }
   };
 
@@ -137,20 +145,32 @@ export default function NewTerminologyModal({
       {!(inputType === 'file' && userPosted) && (
         <ModalFooter id="new-terminology-modal-footer">
           {userPosted && manualData && <MissingInfoAlert data={manualData} />}
-          <Button
-            onClick={() => handlePost()}
-            disabled={!inputType}
-            id="submit-button"
-          >
-            {t('add-terminology')}
-          </Button>
-          <Button
-            variant="secondary"
-            onClick={() => handleClose()}
-            id="cancel-button"
-          >
-            {t('cancel')}
-          </Button>
+          <FooterBlock>
+            <Button
+              onClick={() => handlePost()}
+              disabled={!inputType || isCreating}
+              id="submit-button"
+            >
+              {t('add-terminology')}
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => handleClose()}
+              id="cancel-button"
+            >
+              {t('cancel')}
+            </Button>
+            {isCreating && (
+              <div role="alert">
+                <LoadingSpinner
+                  textAlign="right"
+                  variant="small"
+                  status="loading"
+                  text={t('adding-terminology')}
+                />
+              </div>
+            )}
+          </FooterBlock>
         </ModalFooter>
       )}
     </Modal>

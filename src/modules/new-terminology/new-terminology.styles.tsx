@@ -136,3 +136,9 @@ export const StatusSingleSelect = styled(SingleSelect)<{ $isSmall?: boolean }>`
   min-width: ${(props) => (props.$isSmall ? '100%' : '480px')};
   width: min-content;
 `;
+
+export const FooterBlock = styled(Block)`
+  display: flex;
+  align-items: center;
+  gap: ${(props) => props.theme.suomifi.spacing.s};
+`;
