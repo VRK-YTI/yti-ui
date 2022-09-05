@@ -4,9 +4,10 @@ import {
   ExpanderContent,
   ExpanderTitleButton,
 } from 'suomifi-ui-components';
-import { PropertyBlock } from '@app/common/components/block';
+import { BasicBlock, PropertyBlock } from '@app/common/components/block';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import { Concept } from '@app/common/interfaces/concept.interface';
+import { PropertyList } from './concept.styles';
 
 export function hasDiagramsAndSources(concept?: Concept, language?: string) {
   const rest = { language, fallbackLanguage: 'fi' };
@@ -41,10 +42,13 @@ export default function DiagramsAndSourcesExpander({
           title={t('field-concept-diagrams')}
           property={undefined}
         />
-        <PropertyBlock
-          title={t('field-sources')}
-          property={concept?.properties.source}
-        />
+        <BasicBlock title={t('field-sources')}>
+          <PropertyList>
+            {concept?.properties.source?.map((source, idx) => (
+              <li key={`${source}-${idx}`}>{source.value}</li>
+            ))}
+          </PropertyList>
+        </BasicBlock>
       </ExpanderContent>
     </Expander>
   );

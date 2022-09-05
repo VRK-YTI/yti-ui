@@ -16,6 +16,7 @@ import { getPropertyValue } from '@app/common/components/property-value/get-prop
 import TermExpander from './term-expander';
 import {
   TermHeading,
+  PropertyList,
   TermModalButton,
   TermModalChip,
   TermText,
@@ -98,7 +99,7 @@ export default function TermModal({ data }: TermModalProps) {
           {/* {renderInfo('Termi, johon vastaavuus liittyy', data.term.referrers.prefLabel?.[0].properties.wordClas?.[0].value)} */}
           {renderInfo(
             t('term-modal-source'),
-            data.term.properties.source?.[0].value
+            data.term.properties.source?.map((source) => source.value)
           )}
 
           <TermExpander
@@ -114,7 +115,9 @@ export default function TermModal({ data }: TermModalProps) {
               },
               {
                 subtitle: t('term-modal-editorial-note'),
-                value: data.term.properties.editorialNote?.[0].value,
+                value: data.term.properties.editorialNote?.map(
+                  (note) => note.value
+                ),
                 checkCondition: !user.anonymous,
               },
               {
@@ -172,7 +175,7 @@ export default function TermModal({ data }: TermModalProps) {
     </>
   );
 
-  function renderInfo(subtitle: string, value?: string) {
+  function renderInfo(subtitle: string, value?: string | string[]) {
     if (!value) {
       return null;
     }
@@ -180,7 +183,15 @@ export default function TermModal({ data }: TermModalProps) {
     return (
       <>
         <TermHeading variant="h3">{subtitle}</TermHeading>
-        <TermText>{value}</TermText>
+        {Array.isArray(value) ? (
+          <PropertyList>
+            {value.map((v, idx) => (
+              <li key={`term-source-${idx}`}>{v}</li>
+            ))}
+          </PropertyList>
+        ) : (
+          <TermText>{value}</TermText>
+        )}
       </>
     );
   }

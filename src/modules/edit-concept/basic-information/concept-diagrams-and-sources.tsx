@@ -1,15 +1,14 @@
 import { BasicBlock } from '@app/common/components/block';
 import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
-import { TEXT_AREA_MAX } from '@app/common/utils/constants';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { ExpanderTitleButton } from 'suomifi-ui-components';
-import { DiagramType } from '../new-concept.types';
+import ListBlock from '../list-block';
+import { DiagramType, ListType } from '../new-concept.types';
 import { BasicInfoUpdate } from './concept-basic-information';
 import {
   ConceptExpander,
   ExpanderContentFitted,
-  WideTextarea,
 } from './concept-basic-information.styles';
 import NewDiagramOrLink from './new-diagram-or-link';
 
@@ -18,7 +17,7 @@ interface ConceptDiagramsAndSourcesProps {
   update: (value: BasicInfoUpdate) => void;
   initialValues?: {
     diagram: DiagramType[];
-    sources: string;
+    sources: ListType[];
   };
 }
 
@@ -28,7 +27,9 @@ export default function ConceptDiagramsAndSources({
   initialValues,
 }: ConceptDiagramsAndSourcesProps) {
   const { t } = useTranslation('admin');
-  const [sources, setSources] = useState<string>(initialValues?.sources ?? '');
+  const [sources, setSources] = useState<ListType[]>(
+    initialValues?.sources ?? []
+  );
   const [diagrams, setDiagrams] = useState<DiagramType[]>(
     initialValues?.diagram ?? []
   );
@@ -45,6 +46,20 @@ export default function ConceptDiagramsAndSources({
 
   const handleAddDiagram = (newDiagram: DiagramType) => {
     setDiagrams([...diagrams, newDiagram]);
+  };
+
+  const handleAddSource = ({ value }: BasicInfoUpdate) => {
+    setSources([...sources, value as ListType]);
+
+    if (typeof value !== 'string' && Array.isArray(value)) {
+      update({
+        key: infoKey,
+        value: {
+          diagrams: diagrams,
+          sources: value,
+        },
+      });
+    }
   };
 
   return (
@@ -67,15 +82,16 @@ export default function ConceptDiagramsAndSources({
           {t('add-new-link-description')}
         </BasicBlock>
 
-        <WideTextarea
-          labelText={t('sources')}
-          hintText={t('sources-hint-text')}
-          visualPlaceholder={t('sources-placeholder')}
-          onBlur={() => handleBlur()}
-          onChange={(e) => setSources(e.target.value.trim())}
-          value={sources}
-          maxLength={TEXT_AREA_MAX}
-          id="sources-input"
+        <ListBlock
+          update={handleAddSource}
+          items={sources}
+          itemsKey={'source'}
+          noLangOption
+          title={t('source', { count: 2 })}
+          description={t('sources-hint-text-concept')}
+          addNewText={t('add-new-source')}
+          inputLabel={t('source', { count: 1 })}
+          inputPlaceholder={t('sources-placeholder')}
         />
       </ExpanderContentFitted>
     </ConceptExpander>

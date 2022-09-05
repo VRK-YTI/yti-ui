@@ -20,7 +20,7 @@ import { useBreakpoints } from '@app/common/components/media-query/media-query-c
 interface ListBlockProps {
   update: (object: BasicInfoUpdate & TermFormUpdate) => void;
   items?: ListType[];
-  itemsKey: 'editorialNote' | 'example' | 'note';
+  itemsKey: 'editorialNote' | 'example' | 'note' | 'source';
   languages?: string[];
   noLangOption?: boolean;
   title: string;

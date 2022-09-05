@@ -173,6 +173,10 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
             title={<h2>{t('field-example')}</h2>}
             data={concept?.properties.example}
           />
+          <PropertyBlock
+            title={t('field-subject-area')}
+            property={concept?.properties.subjectArea}
+          />
           <TermBlock
             title={<h2>{t('field-terms-label')}</h2>}
             data={[

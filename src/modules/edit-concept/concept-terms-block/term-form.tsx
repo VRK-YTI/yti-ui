@@ -235,15 +235,18 @@ export default function TermForm({
         id="scope-input"
         maxLength={TEXT_AREA_MAX}
       />
-      <WiderTextareaBlock
-        labelText={t('term-sources-label')}
-        optionalText={t('optional')}
-        hintText={t('term-sources-hint-text')}
-        visualPlaceholder={t('term-sources-placeholder')}
-        defaultValue={term.source}
-        onBlur={(e) => handleUpdate({ key: 'source', value: e.target.value })}
-        maxLength={TEXT_AREA_MAX}
-        id="sources-input"
+
+      <ListBlock
+        update={handleUpdate}
+        items={term.source}
+        itemsKey={'source'}
+        noLangOption
+        title={t('source', { count: 2 })}
+        description={t('sources-hint-text-term')}
+        addNewText={t('add-new-source')}
+        inputLabel={t('source', { count: 1 })}
+        inputPlaceholder={t('sources-placeholder')}
+        errors={errors}
       />
 
       <Separator isLarge />
