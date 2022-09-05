@@ -6,6 +6,7 @@ export interface FormError {
   example: boolean;
   note: boolean;
   editorialNote: boolean;
+  source: boolean;
   total: boolean;
 }
 
@@ -16,6 +17,7 @@ export const EmptyFormError = {
   example: false,
   note: false,
   editorialNote: false,
+  source: false,
   total: false,
 };
 
@@ -26,6 +28,7 @@ export default function validateForm(data: EditConceptType): FormError {
     example: false,
     note: false,
     editorialNote: false,
+    source: false,
     total: false,
   };
 
