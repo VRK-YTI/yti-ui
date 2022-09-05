@@ -80,7 +80,6 @@ export default function NewTerminologyModal({
   };
 
   const handlePost = () => {
-    setIsCreating(true);
     if (userPosted) {
       return;
     }
@@ -98,6 +97,7 @@ export default function NewTerminologyModal({
         return;
       }
 
+      setIsCreating(true);
       const templateGraphID = newTerminology.type.graph.id;
       const prefix = manualData.prefix[0];
       postNewVocabulary({ templateGraphID, prefix, newTerminology });
