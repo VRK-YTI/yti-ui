@@ -1,4 +1,3 @@
-import '@app/tests/matchMedia.mock';
 import { render, screen } from '@testing-library/react';
 import OrganizationalInformation from './organizational-information';
 import { themeProvider } from '@app/tests/test-utils';
