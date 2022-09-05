@@ -12,6 +12,9 @@ module.exports = (phase, { defaultConfig }) => {
   }
 
   let config = {
+    experimental: {
+      scrollRestoration: true,
+    },
     compiler: {
       styledComponents: true,
     },
