@@ -65,8 +65,7 @@ export default function NewTerminologyModal({
     if (newVocabulary.isSuccess) {
       handleClose();
       dispatch(terminologySearchApi.util.invalidateTags(['TerminologySearch']));
-    }
-    if (newVocabulary.isError) {
+    } else if (newVocabulary.isError) {
       setIsCreating(false);
       const errorMessage =
         'status' in newVocabulary.error && newVocabulary.error.status === 401
