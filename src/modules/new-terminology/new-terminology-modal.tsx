@@ -80,9 +80,6 @@ export default function NewTerminologyModal({
   };
 
   const handlePost = () => {
-    if (userPosted) {
-      return;
-    }
     if (inputType === 'self') {
       setUserPosted(true);
       if (!isValid || !manualData) {
