@@ -1,3 +1,4 @@
+import { setAlert } from '@app/common/components/alert/alert.slice';
 import { usePostImportExcelMutation } from '@app/common/components/excel/excel.slice';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import { terminologySearchApi } from '@app/common/components/terminology-search/terminology-search.slice';
@@ -65,7 +66,25 @@ export default function NewTerminologyModal({
       handleClose();
       dispatch(terminologySearchApi.util.invalidateTags(['TerminologySearch']));
     }
-  }, [newVocabulary, dispatch, handleClose]);
+    if (newVocabulary.isError) {
+      setIsCreating(false);
+      const errorMessage =
+        'status' in newVocabulary.error && newVocabulary.error.status === 401
+          ? t('error-occurred_session', { ns: 'alert' })
+          : t('error-occured', { ns: 'alert' });
+      dispatch(
+        setAlert(
+          [
+            {
+              note: newVocabulary.error,
+              displayText: errorMessage,
+            },
+          ],
+          []
+        )
+      );
+    }
+  }, [t, newVocabulary, dispatch, handleClose]);
 
   const handleCloseRequest = () => {
     handleClose();

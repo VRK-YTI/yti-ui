@@ -7,5 +7,6 @@
   "error-occured_organization": "Organisaatioiden haussa ilmeni ongelma",
   "error-occured_subscription": "Sähköpostitilauksen toiminnassa ilmeni ongelma",
   "error-occured_terminology-search": "Sanastojen listauksen haussa ilmeni ongelma",
-  "error-occured_unhandled-error": "Tapahtui odottamaton virhe"
+  "error-occured_unhandled-error": "Tapahtui odottamaton virhe",
+  "error-occurred_session": "Istunnossa ilmeni ongelma, kokeile kirjautua uudelleen"
 }
