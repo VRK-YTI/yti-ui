@@ -1,4 +1,3 @@
-import '@app/tests/matchMedia.mock';
 import { makeStore } from '@app/store';
 import { getMockContext, themeProvider } from '@app/tests/test-utils';
 import { render, screen } from '@testing-library/react';

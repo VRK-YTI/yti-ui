@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import '@app/tests/matchMedia.mock';
+
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import InfoExpander from '@app/common/components/info-dropdown/info-expander';
