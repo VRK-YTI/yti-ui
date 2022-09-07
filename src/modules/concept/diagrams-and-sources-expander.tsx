@@ -44,8 +44,8 @@ export default function DiagramsAndSourcesExpander({
         />
         <BasicBlock title={t('field-sources')}>
           <PropertyList>
-            {concept?.properties.source?.map((source, idx) => (
-              <li key={`${source}-${idx}`}>{source.value}</li>
+            {concept?.properties.source?.map((source) => (
+              <li key={source.value}>{source.value}</li>
             ))}
           </PropertyList>
         </BasicBlock>

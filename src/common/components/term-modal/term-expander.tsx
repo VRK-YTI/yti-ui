@@ -31,8 +31,8 @@ export default function TermExpander({ title, data }: TermExpanderProps) {
                 <TermHeading variant="h4">{d.subtitle}</TermHeading>
                 {Array.isArray(d.value) ? (
                   <PropertyList>
-                    {d.value.map((value, idx) => (
-                      <li key={`${value}-${idx}`}>{value}</li>
+                    {d.value.map((value) => (
+                      <li key={value}>{value}</li>
                     ))}
                   </PropertyList>
                 ) : (

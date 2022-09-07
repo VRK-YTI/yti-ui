@@ -185,8 +185,8 @@ export default function TermModal({ data }: TermModalProps) {
         <TermHeading variant="h3">{subtitle}</TermHeading>
         {Array.isArray(value) ? (
           <PropertyList>
-            {value.map((v, idx) => (
-              <li key={`term-source-${idx}`}>{v}</li>
+            {value.map((v) => (
+              <li key={v}>{v}</li>
             ))}
           </PropertyList>
         ) : (

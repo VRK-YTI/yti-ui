@@ -64,8 +64,8 @@ export default function AdministrativeDetailsExpander({
         />
         <BasicBlock title={t('field-editorial-note')}>
           <PropertyList>
-            {concept?.properties.editorialNote?.map((note, idx) => (
-              <li key={`${note}-${idx}`}>{note.value}</li>
+            {concept?.properties.editorialNote?.map((note) => (
+              <li key={note.value}>{note.value}</li>
             ))}
           </PropertyList>
         </BasicBlock>
