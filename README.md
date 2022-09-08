@@ -7,12 +7,15 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with
 
 ## Installing node.js
 
-This app needs Node.js v16. You need to install it before you can continue.
+This app runs on Node.js. You need to install it before you can continue.
 
-If you are using Linux, you can use [nvm](https://github.com/nvm-sh/nvm) which
-makes it easy to install Node and switch between versions in the future. Follow
-its installing instructions and then install Node.js by running
-`nvm install 16`.
+The easiest way to install Node.js is to use
+[nvm](https://github.com/nvm-sh/nvm). We have defined Node.js version in
+`.nvmrc` so you just need to run `nvm install` and `nvm use` to install the
+correct version.
+
+If you can't use nvm, check current Node.js version from `.nvmrc` and install it
+manually.
 
 ## Getting Started
 
