@@ -7,7 +7,7 @@ export interface ConceptTermType {
   language: string;
   prefLabel: string;
   scope: string;
-  source: string;
+  source: ListType[];
   status: string;
   termConjugation: string;
   termEquivalency: string;
@@ -29,7 +29,7 @@ export interface BasicInfo {
   note: ListType[];
   diagramAndSource: {
     diagram: DiagramType[];
-    sources: string;
+    sources: ListType[];
   };
   orgInfo: {
     changeHistory: string;

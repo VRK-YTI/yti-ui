@@ -39,7 +39,7 @@ describe('term-modal', () => {
     expect(screen.getByText('term info')).toBeInTheDocument();
     expect(screen.getByText('scope')).toBeInTheDocument();
     expect(screen.getByText('term equivalency')).toBeInTheDocument();
-    expect(screen.getByText('source')).toBeInTheDocument();
+    expect(screen.getByText('source 1')).toBeInTheDocument();
 
     userEvent.click(
       screen.getByText('tr-term-modal-organizational-information')
@@ -82,7 +82,8 @@ describe('term-modal', () => {
     expect(screen.getByText('term info')).toBeInTheDocument();
     expect(screen.getByText('scope')).toBeInTheDocument();
     expect(screen.getByText('term equivalency')).toBeInTheDocument();
-    expect(screen.getByText('source')).toBeInTheDocument();
+    expect(screen.getByText('source 1')).toBeInTheDocument();
+    expect(screen.getByText('source 2')).toBeInTheDocument();
 
     expect(
       screen.queryByText('tr-term-modal-organizational-information')
@@ -149,7 +150,12 @@ const data = {
       source: [
         {
           lang: 'fi',
-          value: 'source',
+          value: 'source 1',
+          regex: '',
+        },
+        {
+          lang: 'fi',
+          value: 'source 2',
           regex: '',
         },
       ],

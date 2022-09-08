@@ -27,7 +27,7 @@ describe('concept-diagrams-and-sources', () => {
     ).toBeInTheDocument();
     expect(screen.getByText('tr-concept-diagram-or-link')).toBeInTheDocument();
     expect(
-      screen.getByPlaceholderText('tr-sources-placeholder')
+      screen.getByText('tr-sources-hint-text-concept')
     ).toBeInTheDocument();
   });
 });

@@ -109,13 +109,11 @@ export default function generateConcept({
           },
         ],
         source: term.source
-          ? [
-              {
-                lang: '',
-                regex: regex,
-                value: term.source,
-              },
-            ]
+          ? term.source.map((note) => ({
+              lang: '',
+              regex: regex,
+              value: note.value,
+            }))
           : [],
         status: [
           {
@@ -419,15 +417,13 @@ export default function generateConcept({
           regex: regex,
           value: n.value ?? '',
         })),
-        source: data.basicInformation.diagramAndSource.sources
-          ? [
-              {
-                lang: '',
-                regex: regex,
-                value: data.basicInformation.diagramAndSource.sources,
-              },
-            ]
-          : [],
+        source: data.basicInformation.diagramAndSource.sources.map(
+          (source) => ({
+            lang: '',
+            regex: regex,
+            value: source.value ?? '',
+          })
+        ),
         status: [
           {
             lang: '',

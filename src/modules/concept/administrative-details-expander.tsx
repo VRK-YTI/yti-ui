@@ -4,9 +4,10 @@ import {
   ExpanderContent,
   ExpanderTitleButton,
 } from 'suomifi-ui-components';
-import { PropertyBlock } from '@app/common/components/block';
+import { BasicBlock, PropertyBlock } from '@app/common/components/block';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import { Concept } from '@app/common/interfaces/concept.interface';
+import { PropertyList } from './concept.styles';
 
 export function hasAdministrativeDetails(concept?: Concept, language?: string) {
   const rest = { language, fallbackLanguage: 'fi' };
@@ -61,10 +62,13 @@ export default function AdministrativeDetailsExpander({
           title={t('field-history-note')}
           property={concept?.properties.historyNote}
         />
-        <PropertyBlock
-          title={t('field-editorial-note')}
-          property={concept?.properties.editorialNote}
-        />
+        <BasicBlock title={t('field-editorial-note')}>
+          <PropertyList>
+            {concept?.properties.editorialNote?.map((note) => (
+              <li key={note.value}>{note.value}</li>
+            ))}
+          </PropertyList>
+        </BasicBlock>
         <PropertyBlock
           title={t('field-notation')}
           property={concept?.properties.notation}

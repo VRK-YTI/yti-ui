@@ -15,7 +15,7 @@ export const emptyFormExpected = {
       language: 'fi',
       prefLabel: 'demo',
       scope: '',
-      source: '',
+      source: [],
       status: 'DRAFT',
       termConjugation: '',
       termEquivalency: '',
@@ -35,7 +35,7 @@ export const emptyFormExpected = {
     note: [],
     diagramAndSource: {
       diagram: [],
-      sources: '',
+      sources: [],
     },
     orgInfo: {
       changeHistory: '',
@@ -202,7 +202,7 @@ export const simpleDataExpected = {
       language: 'fi',
       prefLabel: 'demo',
       scope: '',
-      source: '',
+      source: [],
       status: 'DRAFT',
       termConjugation: '',
       termEquivalency: '',
@@ -222,7 +222,7 @@ export const simpleDataExpected = {
     note: [],
     diagramAndSource: {
       diagram: [],
-      sources: '',
+      sources: [],
     },
     orgInfo: {
       changeHistory: '',
@@ -2231,7 +2231,13 @@ export const extensiveDataExpected = {
       language: 'fi',
       prefLabel: 'synonyymi',
       scope: 'käyttöala',
-      source: 'käyttöala',
+      source: [
+        {
+          id: extensiveDataReturned.terms[0].source[0].id,
+          lang: '',
+          value: 'käyttöala',
+        },
+      ],
       status: 'DRAFT',
       termConjugation: 'monikko',
       termEquivalency: '~',
@@ -2258,7 +2264,13 @@ export const extensiveDataExpected = {
       language: 'fi',
       prefLabel: 'Hakusana',
       scope: 'käyttöala',
-      source: 'käyttöala',
+      source: [
+        {
+          id: extensiveDataReturned.terms[1].source[0].id,
+          lang: '',
+          value: 'käyttöala',
+        },
+      ],
       status: 'DRAFT',
       termConjugation: 'monikko',
       termEquivalency: '~',
@@ -2285,7 +2297,13 @@ export const extensiveDataExpected = {
       language: 'fi',
       prefLabel: 'demo',
       scope: 'käyttöala',
-      source: 'käyttöala',
+      source: [
+        {
+          id: extensiveDataReturned.terms[2].source[0].id,
+          lang: '',
+          value: 'käyttöala',
+        },
+      ],
       status: 'DRAFT',
       termConjugation: 'singular',
       termEquivalency: '',
@@ -2312,7 +2330,13 @@ export const extensiveDataExpected = {
       language: 'fi',
       prefLabel: 'Ei-suositettava synonyymi',
       scope: 'käyttöala',
-      source: 'käyttöala',
+      source: [
+        {
+          id: extensiveDataReturned.terms[3].source[0].id,
+          lang: '',
+          value: 'käyttöala',
+        },
+      ],
       status: 'DRAFT',
       termConjugation: 'yksikkö',
       termEquivalency: '~',
@@ -2332,7 +2356,14 @@ export const extensiveDataExpected = {
     },
     diagramAndSource: {
       diagram: [],
-      sources: 'lähde',
+      sources: [
+        {
+          id: extensiveDataReturned.basicInformation.diagramAndSource.sources[0]
+            .id,
+          lang: '',
+          value: 'lähde',
+        },
+      ],
     },
     example: [
       {

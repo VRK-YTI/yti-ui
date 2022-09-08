@@ -27,7 +27,7 @@ export interface BasicInfoType {
   note: BasicInfo[];
   diagramAndSource: {
     diagram: DiagramType[];
-    sources: string;
+    sources: string[];
   };
   orgInfo: {
     changeHistory: string;

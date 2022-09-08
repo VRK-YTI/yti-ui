@@ -59,7 +59,7 @@ export default function NewTermModal({
     language: '',
     prefLabel: '',
     scope: '',
-    source: '',
+    source: [],
     status: 'DRAFT',
     termConjugation: '',
     termEquivalency: '',
@@ -263,15 +263,15 @@ export default function NewTermModal({
           </Dropdown>
         </TermEquivalencyBlock>
 
-        <WiderTextareaBlock
-          labelText={t('term-sources-label')}
-          optionalText={t('optional')}
-          hintText={t('term-sources-hint-text')}
-          visualPlaceholder={t('term-sources-placeholder')}
-          onChange={(e) =>
-            handleUpdate({ key: 'source', value: e.target.value })
-          }
-          maxLength={TEXT_AREA_MAX}
+        <ListBlock
+          update={handleUpdate}
+          itemsKey={'source'}
+          noLangOption
+          title={t('source', { count: 2 })}
+          description={t('sources-hint-text-term')}
+          addNewText={t('add-new-source')}
+          inputLabel={t('source', { count: 1 })}
+          inputPlaceholder={t('sources-placeholder')}
         />
 
         <Separator isLarge />
