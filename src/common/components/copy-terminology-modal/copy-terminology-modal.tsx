@@ -36,6 +36,7 @@ export default function CopyTerminologyModal({
   const [randomURL] = useState(v4().substring(0, 8));
   const [userPosted, setUserPosted] = useState(false);
   const [newGraphId, setNewGraphId] = useState('');
+  const [error, setError] = useState(false);
   const [postCreateVersion, createVersion] = usePostCreateVersionMutation();
   const [newCode, setNewCode] = useState(randomURL);
   const router = useRouter();
@@ -43,6 +44,8 @@ export default function CopyTerminologyModal({
   const handleUpdate = ({ key, data }: UpdateTerminology) => {
     if (key === 'prefix') {
       setNewCode((data as [string, boolean])[0]);
+      //second value is isValid
+      setError(!(data as [string, boolean])[1]);
     }
   };
 
@@ -51,34 +54,30 @@ export default function CopyTerminologyModal({
     setVisible(false);
   }, [setVisible]);
 
-  const showCreatedAlert = () => {
-    dispatch(
-      setAlert(
-        [
-          {
-            note: {
-              status: 0,
-              data: '',
-            },
-            displayText: t('new-terminology-created'),
-          },
-        ],
-        []
-      )
-    );
-  };
-
   useEffect(() => {
     if (createVersion.isSuccess && newGraphId) {
       handleClose();
       dispatch(terminologySearchApi.util.invalidateTags(['TerminologySearch']));
-      showCreatedAlert();
+      dispatch(
+        setAlert(
+          [
+            {
+              note: {
+                status: 0,
+                data: '',
+              },
+              displayText: t('new-terminology-created'),
+            },
+          ],
+          []
+        )
+      );
       router.push(`/terminology/${newGraphId}`);
     }
-  }, [createVersion, newGraphId, dispatch, handleClose, router]);
+  }, [createVersion, newGraphId, dispatch, handleClose, router, t]);
 
   const handlePost = () => {
-    if (!newCode) {
+    if (!newCode || error) {
       return;
     }
     setUserPosted(true);
