@@ -104,4 +104,58 @@ describe('infoExpander', () => {
     expect(screen.getByText(/2.1.1970, 0.00/)).toBeInTheDocument();
     expect(screen.getByText(/Modifier/)).toBeInTheDocument();
   });
+
+  it('should render one or multiple organizations', () => {
+    const store = makeStore(getMockContext());
+    const loginInitialState = Object.assign({}, initialState);
+    loginInitialState['anonymous'] = false;
+    loginInitialState['email'] = 'admin@localhost';
+    loginInitialState['firstName'] = 'Admin';
+    loginInitialState['lastName'] = 'User';
+    store.dispatch(setLogin(loginInitialState));
+
+    render(
+      <Provider store={store}>
+        <InfoExpander
+          data={
+            {
+              createdBy: 'Creator',
+              createdDate: '1970-01-01T00:00:00.000+00:00',
+              lastModifiedBy: 'Modifier',
+              lastModifiedDate: '1970-01-02T00:00:00.000+00:00',
+              properties: {},
+              references: {
+                contributor: [
+                  {
+                    id: 'testi 1',
+                    properties: {
+                      prefLabel: [{ lang: 'en', value: 'testi 1' }],
+                    },
+                  },
+                  {
+                    id: 'testi 2',
+                    properties: {
+                      prefLabel: [{ lang: 'en', value: 'testi 2' }],
+                    },
+                  },
+                  {
+                    id: 'testi 3',
+                    properties: {
+                      prefLabel: [{ lang: 'en', value: 'testi 3' }],
+                    },
+                  },
+                ],
+                inGroup: [{ properties: { prefLabel: [] } }],
+              },
+            } as any
+          }
+        />
+      </Provider>,
+      { wrapper: themeProvider }
+    );
+
+    expect(screen.getByText('testi 1')).toBeInTheDocument();
+    expect(screen.getByText(/testi 2/)).toBeInTheDocument();
+    expect(screen.getByText('testi 3')).toBeInTheDocument();
+  });
 });

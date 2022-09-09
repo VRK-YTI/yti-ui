@@ -10,3 +10,15 @@ export const InfoExpanderDivider = styled.hr`
   border-top: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
   margin: ${(props) => props.theme.suomifi.spacing.xl} 0;
 `;
+
+export const PropertyList = styled.ul`
+  list-style: none;
+  padding: 0px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  font-size: 16px;
+
+  li:not(:last-child) {
+    margin-bottom: ${(props) => props.theme.suomifi.spacing.xs};
+  }
+`;

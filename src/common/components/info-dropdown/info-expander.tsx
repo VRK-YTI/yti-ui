@@ -6,7 +6,7 @@ import {
   ExpanderTitleButton,
   VisuallyHidden,
 } from 'suomifi-ui-components';
-import { InfoExpanderWrapper } from './info-expander.styles';
+import { InfoExpanderWrapper, PropertyList } from './info-expander.styles';
 import { VocabularyInfoDTO } from '@app/common/interfaces/vocabulary.interface';
 import Separator from '@app/common/components/separator';
 import {
@@ -218,12 +218,19 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
         <VisuallyHidden as="h3">
           {t('additional-technical-information', { ns: 'common' })}
         </VisuallyHidden>
-
-        <PropertyBlock
-          title={t('vocabulary-info-organization')}
-          property={data.references.contributor?.[0]?.properties.prefLabel}
-          id="organization"
-        />
+        <BasicBlock title={t('vocabulary-info-organization')} id="organization">
+          <PropertyList>
+            {data.references.contributor
+              ?.filter((c) => c && c.properties.prefLabel)
+              .map((contributor) => (
+                <li key={contributor.id}>
+                  {getPropertyValue({
+                    property: contributor?.properties.prefLabel,
+                  })}
+                </li>
+              ))}
+          </PropertyList>
+        </BasicBlock>
         <BasicBlock title={t('vocabulary-info-created-at')} id="created-at">
           <FormattedDate date={data.createdDate} />
           {data.createdBy && `, ${data.createdBy}`}

@@ -75,11 +75,7 @@ export default function SearchResults({
               return (
                 <ResultCard
                   key={terminology.id}
-                  contributor={
-                    terminology.contributors[0].label[i18n.language] ??
-                    terminology.contributors[0].label['fi'] ??
-                    ''
-                  }
+                  contributors={terminology.contributors}
                   description={getDescription(terminology)}
                   icon="registers"
                   partOf={terminology.informationDomains}

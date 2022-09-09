@@ -1,4 +1,7 @@
-import { InformationDomainDTO } from '@app/common/interfaces/terminology.interface';
+import {
+  ContributorsDTO,
+  InformationDomainDTO,
+} from '@app/common/interfaces/terminology.interface';
 import { translateStatus } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
@@ -16,7 +19,7 @@ import {
 } from './result-card.styles';
 
 interface ResultCardProps {
-  contributor?: string;
+  contributors?: ContributorsDTO[];
   description: string | JSX.Element;
   extra?: JSX.Element | (JSX.Element | undefined)[];
   icon?: BaseIconKeys;
@@ -30,7 +33,7 @@ interface ResultCardProps {
 }
 
 export default function ResultCard({
-  contributor,
+  contributors,
   description,
   extra,
   icon,
@@ -58,9 +61,9 @@ export default function ResultCard({
 
   return (
     <CardBlock padding="m" className="result-card">
-      {contributor && (
+      {contributors && contributors.length > 0 && (
         <OrganizationParagraph id="card-contributor">
-          {contributor}
+          {getLabel(contributors[0].label)} ja {contributors.length - 1} muuta
         </OrganizationParagraph>
       )}
       <Link passHref href={titleLink}>
@@ -68,7 +71,11 @@ export default function ResultCard({
           {icon && <Icon icon={icon} />}
           <Title variant="h2" id="card-title-link">
             {title}
-            <VisuallyHidden>{contributor}</VisuallyHidden>
+            <VisuallyHidden>
+              {contributors
+                ?.map((contributor) => getLabel(contributor.label))
+                .join(', ')}
+            </VisuallyHidden>
           </Title>
         </TitleLink>
       </Link>
