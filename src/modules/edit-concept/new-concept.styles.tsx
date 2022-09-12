@@ -20,3 +20,9 @@ export const PageHelpText = styled(Text)`
   display: inline-block;
   max-width: 700px;
 `;
+
+export const ButtonBlock = styled(Block)`
+  display: flex;
+  align-items: center;
+  gap: ${(props) => props.theme.suomifi.spacing.s};
+`;

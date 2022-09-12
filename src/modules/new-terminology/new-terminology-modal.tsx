@@ -1,6 +1,7 @@
 import { setAlert } from '@app/common/components/alert/alert.slice';
 import { usePostImportExcelMutation } from '@app/common/components/excel/excel.slice';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import SaveSpinner from '@app/common/components/save-spinner';
 import { terminologySearchApi } from '@app/common/components/terminology-search/terminology-search.slice';
 import { usePostNewVocabularyMutation } from '@app/common/components/vocabulary/vocabulary.slice';
 import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info';
@@ -10,7 +11,6 @@ import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useState } from 'react';
 import {
   Button,
-  LoadingSpinner,
   Modal,
   ModalContent,
   ModalFooter,
@@ -175,16 +175,7 @@ export default function NewTerminologyModal({
             >
               {t('cancel')}
             </Button>
-            {isCreating && (
-              <div role="alert">
-                <LoadingSpinner
-                  textAlign="right"
-                  variant="small"
-                  status="loading"
-                  text={t('adding-terminology')}
-                />
-              </div>
-            )}
+            {isCreating && <SaveSpinner text={t('adding-terminology')} />}
           </FooterBlock>
         </ModalFooter>
       )}

@@ -206,6 +206,8 @@
   "remove-term_one": "Poista termi",
   "remove-term_other": "Poista termit",
   "save": "Tallenna",
+  "saving-concept": "Tallennetaan käsitettä",
+  "saving-terminology": "Tallennetaan sanastoa",
   "search": "Hae",
   "search-term": "Hakusana",
   "search-term-description": "Termi, jolla käsitteen voi löytää palvelusta",

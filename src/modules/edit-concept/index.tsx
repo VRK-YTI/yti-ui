@@ -45,6 +45,7 @@ export default function EditConcept({
   const { isSmall } = useBreakpoints();
   const router = useRouter();
   const [addConcept, addConceptStatus] = useAddConceptMutation();
+  const [isCreating, setIsCreating] = useState(false);
   const user = useSelector(selectLogin());
   const { data: terminology } = useGetVocabularyQuery({
     id: terminologyId,
@@ -88,6 +89,7 @@ export default function EditConcept({
       return;
     }
 
+    setIsCreating(true);
     const concept = generateConcept({
       data: formData,
       terminologyId: terminologyId,
@@ -212,6 +214,7 @@ export default function EditConcept({
         <FormFooter
           handlePost={handlePost}
           onCancel={disableConfirmation}
+          isCreating={isCreating}
           isEdit={typeof conceptData !== 'undefined'}
           errors={errors}
         />
