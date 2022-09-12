@@ -19,7 +19,7 @@ describe('generate-concept', () => {
           language: 'fi',
           prefLabel: 'prefLabel',
           scope: '',
-          source: '',
+          source: [],
           status: 'draft',
           termConjugation: '',
           termEquivalency: '',
@@ -39,7 +39,7 @@ describe('generate-concept', () => {
         note: [],
         diagramAndSource: {
           diagram: [],
-          sources: '',
+          sources: [],
         },
         orgInfo: {
           changeHistory: '',
@@ -91,7 +91,7 @@ describe('generate-concept', () => {
           language: 'fi',
           prefLabel: 'prefLabel',
           scope: '',
-          source: '',
+          source: [],
           status: 'draft',
           termConjugation: '',
           termEquivalency: '',
@@ -111,7 +111,7 @@ describe('generate-concept', () => {
         note: [],
         diagramAndSource: {
           diagram: [],
-          sources: '',
+          sources: [],
         },
         orgInfo: {
           changeHistory: '',
@@ -271,7 +271,7 @@ describe('generate-concept', () => {
           language: 'fi',
           prefLabel: 'prefLabel',
           scope: '',
-          source: '',
+          source: [],
           status: 'draft',
           termConjugation: '',
           termEquivalency: '',
@@ -291,7 +291,7 @@ describe('generate-concept', () => {
         note: [],
         diagramAndSource: {
           diagram: [],
-          sources: '',
+          sources: [],
         },
         orgInfo: {
           changeHistory: '',
@@ -408,7 +408,13 @@ describe('generate-concept', () => {
           language: 'fi',
           prefLabel: 'demo',
           scope: 'käyttöala',
-          source: 'lähteet',
+          source: [
+            {
+              id: '6ef5a9b4-3843-4865-92ae-513d767f2636',
+              lang: '',
+              value: 'lähteet',
+            },
+          ],
           status: 'draft',
           termConjugation: 'singular',
           termEquivalency: '',
@@ -435,7 +441,13 @@ describe('generate-concept', () => {
           language: 'fi',
           prefLabel: 'synonyymi',
           scope: 'käyttöala',
-          source: 'lähteet',
+          source: [
+            {
+              id: '6ef5a9b4-3843-4865-92ae-513d767f2636',
+              lang: '',
+              value: 'lähteet',
+            },
+          ],
           status: 'draft',
           termConjugation: 'singular',
           termEquivalency: '~',
@@ -462,7 +474,13 @@ describe('generate-concept', () => {
           language: 'fi',
           prefLabel: 'ei-suositettava synonyymi',
           scope: 'käyttöala',
-          source: 'lähteet',
+          source: [
+            {
+              id: '6ef5a9b4-3843-4865-92ae-513d767f2636',
+              lang: '',
+              value: 'lähteet',
+            },
+          ],
           status: 'draft',
           termConjugation: 'singular',
           termEquivalency: '~',
@@ -489,7 +507,13 @@ describe('generate-concept', () => {
           language: 'fi',
           prefLabel: 'hakusana',
           scope: 'käyttöala',
-          source: 'lähteet',
+          source: [
+            {
+              id: '6ef5a9b4-3843-4865-92ae-513d767f2636',
+              lang: '',
+              value: 'lähteet',
+            },
+          ],
           status: 'draft',
           termConjugation: 'singular',
           termEquivalency: '~',
@@ -529,7 +553,13 @@ describe('generate-concept', () => {
               description: 'kuvaus',
             },
           ],
-          sources: 'lähteet',
+          sources: [
+            {
+              id: '0',
+              lang: '',
+              value: 'lähteet',
+            },
+          ],
         },
         orgInfo: {
           changeHistory: 'muutoshistoria',

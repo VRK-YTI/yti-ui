@@ -37,3 +37,15 @@ export const TermText = styled(Text)`
   font-size: 16px;
   margin-bottom: ${(props) => props.theme.suomifi.spacing.m};
 `;
+
+export const PropertyList = styled.ul`
+  list-style: none;
+  padding: 0px;
+  margin-top: 0px;
+  margin-bottom: ${(props) => props.theme.suomifi.spacing.m};
+  font-size: 16px;
+
+  li {
+    margin-bottom: ${(props) => props.theme.suomifi.spacing.xs};
+  }
+`;

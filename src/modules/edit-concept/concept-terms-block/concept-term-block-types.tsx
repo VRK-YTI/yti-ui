@@ -7,7 +7,7 @@ export interface ConceptTermType {
   language: string;
   prefLabel: string;
   scope: string; // Käyttöala
-  source: string;
+  source: ItemType[];
   status: string;
   termConjugation: string; // Termin luku
   termEquivalency: string; // Termin vastaavuus

@@ -1,4 +1,3 @@
-import '@app/tests/matchMedia.mock';
 import { render, screen } from '@testing-library/react';
 import NewDiagramOrLink from './new-diagram-or-link';
 import { themeProvider } from '@app/tests/test-utils';

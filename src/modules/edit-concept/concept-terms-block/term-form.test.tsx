@@ -1,4 +1,3 @@
-import '@app/tests/matchMedia.mock';
 import { themeProvider } from '@app/tests/test-utils';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -22,7 +21,7 @@ describe('term-form', () => {
           language: 'fi',
           prefLabel: 'prefLabel',
           scope: '',
-          source: '',
+          source: [],
           status: 'DRAFT',
           termConjugation: '',
           termEquivalency: '',
@@ -59,7 +58,7 @@ describe('term-form', () => {
           language: 'fi',
           prefLabel: 'prefLabel',
           scope: '',
-          source: '',
+          source: [],
           status: 'DRAFT',
           termConjugation: '',
           termEquivalency: '',

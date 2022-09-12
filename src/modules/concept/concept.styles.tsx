@@ -15,3 +15,15 @@ export const MainContent = styled.main`
   padding: ${(props) => props.theme.suomifi.spacing.m};
   padding-bottom: 40px;
 `;
+
+export const PropertyList = styled.ul`
+  list-style: none;
+  padding: 0px;
+  margin-top: 0px;
+  margin-bottom: ${(props) => props.theme.suomifi.spacing.m};
+  font-size: 16px;
+
+  li {
+    margin-bottom: ${(props) => props.theme.suomifi.spacing.xs};
+  }
+`;

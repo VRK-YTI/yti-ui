@@ -1,4 +1,3 @@
-import '@app/tests/matchMedia.mock';
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import DesktopAuthenticationPanel from './desktop-authentication-panel';

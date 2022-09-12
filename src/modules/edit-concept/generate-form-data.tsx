@@ -24,7 +24,7 @@ export default function generateFormData(
         language: term.lang,
         prefLabel: term.value,
         scope: '',
-        source: '',
+        source: [],
         status: 'DRAFT',
         termConjugation: '',
         termEquivalency: '',
@@ -43,7 +43,7 @@ export default function generateFormData(
         note: [],
         diagramAndSource: {
           diagram: [],
-          sources: '',
+          sources: [],
         },
         orgInfo: {
           changeHistory: '',
@@ -78,7 +78,12 @@ export default function generateFormData(
       definition: Object.fromEntries(definition),
       diagramAndSource: {
         diagram: [],
-        sources: conceptData.properties.source?.[0].value ?? '',
+        sources:
+          conceptData.properties.source?.map((e) => ({
+            id: v4(),
+            lang: e.lang,
+            value: e.value,
+          })) ?? [],
       },
       example:
         conceptData.properties.example?.map((e) => ({
@@ -329,7 +334,12 @@ export default function generateFormData(
             language: r.properties.prefLabel?.[0].lang ?? '',
             prefLabel: r.properties.prefLabel?.[0].value ?? '',
             scope: r.properties.scope?.[0].value ?? '',
-            source: r.properties.source?.[0].value ?? '',
+            source:
+              r.properties.source?.map((note) => ({
+                id: v4(),
+                lang: note.lang,
+                value: note.value,
+              })) ?? [],
             status: r.properties.status?.[0].value ?? '',
             termConjugation: r.properties.termConjugation?.[0].value ?? '',
             termEquivalency: r.properties.termEquivalency?.[0].value ?? '',

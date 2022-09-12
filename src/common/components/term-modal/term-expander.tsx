@@ -3,11 +3,15 @@ import {
   ExpanderContent,
   ExpanderTitleButton,
 } from 'suomifi-ui-components';
-import { TermHeading, TermText } from './term-modal.styles';
+import { PropertyList, TermHeading, TermText } from './term-modal.styles';
 
 interface TermExpanderProps {
   title: string;
-  data: { subtitle: string; value?: string; checkCondition?: boolean }[];
+  data: {
+    subtitle: string;
+    value?: string | string[];
+    checkCondition?: boolean;
+  }[];
 }
 
 export default function TermExpander({ title, data }: TermExpanderProps) {
@@ -25,7 +29,15 @@ export default function TermExpander({ title, data }: TermExpanderProps) {
             return (
               <div key={`${title}-${idx}`}>
                 <TermHeading variant="h4">{d.subtitle}</TermHeading>
-                <TermText>{d.value}</TermText>
+                {Array.isArray(d.value) ? (
+                  <PropertyList>
+                    {d.value.map((value) => (
+                      <li key={value}>{value}</li>
+                    ))}
+                  </PropertyList>
+                ) : (
+                  <TermText>{d.value}</TermText>
+                )}
               </div>
             );
           })}

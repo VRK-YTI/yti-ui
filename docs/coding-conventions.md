@@ -63,7 +63,14 @@ files. Feel free to use the files you need.
 
 Use at least `index` file so that your component can be imported as
 `.../components/my-component` instead of
-`.../components/my-compoent/my-component`.
+`.../components/my-component/my-component`.
+
+## Module structure
+
+When you create a new module which contains some components, hooks, etc. export
+only its public API from `index.ts`. This way module will be more modular
+instead of a directory with a set of components. This way the module can hide
+its internal things.
 
 ## Filenames
 
