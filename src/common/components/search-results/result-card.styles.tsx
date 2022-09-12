@@ -19,11 +19,6 @@ export const Extra = styled(Block)`
 export const OrganizationParagraph = styled(Paragraph)`
   color: ${(props) => props.theme.suomifi.colors.depthDark1};
   font-size: 14px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
 `;
 
 export const Title = styled(Heading)`

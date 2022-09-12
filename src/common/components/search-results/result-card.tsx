@@ -63,7 +63,9 @@ export default function ResultCard({
     <CardBlock padding="m" className="result-card">
       {contributors && contributors.length > 0 && (
         <OrganizationParagraph id="card-contributor">
-          {getLabel(contributors[0].label)} ja {contributors.length - 1} muuta
+          {contributors.length === 1
+            ? getLabel(contributors[0].label)
+            : `${contributors.length} ${t('card-organizations')}`}
         </OrganizationParagraph>
       )}
       <Link passHref href={titleLink}>

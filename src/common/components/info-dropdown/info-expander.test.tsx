@@ -155,7 +155,7 @@ describe('infoExpander', () => {
     );
 
     expect(screen.getByText('testi 1')).toBeInTheDocument();
-    expect(screen.getByText(/testi 2/)).toBeInTheDocument();
+    expect(screen.getByText('testi 2')).toBeInTheDocument();
     expect(screen.getByText('testi 3')).toBeInTheDocument();
   });
 });
