@@ -213,6 +213,8 @@
   "show-chosen_other": "Show {{ count }} chosen concepts",
   "source_one": "Source",
   "source_other": "Sources",
+  "source-name": "",
+  "source-url": "",
   "sources-hint-text-concept": "Sources used to define the concept",
   "sources-hint-text-term": "Sources used to define the term",
   "sources-placeholder": "Add description",

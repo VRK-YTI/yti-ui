@@ -213,6 +213,8 @@
   "show-chosen_other": "",
   "source_one": "",
   "source_other": "",
+  "source-name": "",
+  "source-url": "",
   "sources-hint-text-concept": "",
   "sources-hint-text-term": "",
   "sources-placeholder": "",

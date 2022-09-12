@@ -3,14 +3,15 @@ import { BasicBlockExtraWrapper } from '@app/common/components/block/block.style
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { ExpanderTitleButton } from 'suomifi-ui-components';
-import ListBlock from '../list-block';
 import { DiagramType, ListType } from '../new-concept.types';
 import { BasicInfoUpdate } from './concept-basic-information';
 import {
   ConceptExpander,
   ExpanderContentFitted,
 } from './concept-basic-information.styles';
+import Diagrams from './diagrams';
 import NewDiagramOrLink from './new-diagram-or-link';
+import Sources from './sources';
 
 interface ConceptDiagramsAndSourcesProps {
   infoKey: string;
@@ -75,24 +76,26 @@ export default function ConceptDiagramsAndSources({
               {diagrams.map((diagram, idx) => (
                 <div key={`'diagram-${idx}`}>{diagram.diagramName}</div>
               ))}
-              <NewDiagramOrLink addDiagram={handleAddDiagram} />
+              <Diagrams />
             </BasicBlockExtraWrapper>
           }
         >
           {t('add-new-link-description')}
         </BasicBlock>
 
-        <ListBlock
-          update={handleAddSource}
-          items={sources}
-          itemsKey={'source'}
-          noLangOption
+        <BasicBlock
           title={t('source', { count: 2 })}
-          description={t('sources-hint-text-concept')}
-          addNewText={t('add-new-source')}
-          inputLabel={t('source', { count: 1 })}
-          inputPlaceholder={t('sources-placeholder')}
-        />
+          extra={
+            <BasicBlockExtraWrapper onBlur={() => handleBlur()}>
+              {diagrams.map((diagram, idx) => (
+                <div key={`'diagram-${idx}`}>{diagram.diagramName}</div>
+              ))}
+              <Sources />
+            </BasicBlockExtraWrapper>
+          }
+        >
+          {t('sources-hint-text-concept')}
+        </BasicBlock>
       </ExpanderContentFitted>
     </ConceptExpander>
   );
