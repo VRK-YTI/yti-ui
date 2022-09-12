@@ -2,7 +2,7 @@ import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import { Paragraph, RadioButton, Text } from 'suomifi-ui-components';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
-import { useGetIfNamespaceInUseQuery } from '@app/common/components/vocabulary/vocabulary.slice';
+import { useGetIfNamespaceInUseMutation } from '@app/common/components/vocabulary/vocabulary.slice';
 import {
   BlankFieldset,
   RadioButtonGroupSmBot,
@@ -27,9 +27,7 @@ export default function Prefix({ update, userPosted }: PrefixProps) {
   const [status, setStatus] = useState<'default' | 'error'>('default');
   const [prefixValid, setPrefixValid] = useState(true);
   const [initDone, setInitDone] = useState(false);
-  const { data: isInUse } = useGetIfNamespaceInUseQuery(
-    prefix !== '' ? prefix : randomURL
-  );
+  const [getIsInUse, isInUse] = useGetIfNamespaceInUseMutation();
 
   useEffect(() => {
     if (!initDone) {
@@ -39,10 +37,14 @@ export default function Prefix({ update, userPosted }: PrefixProps) {
   }, [initDone, prefix, update]);
 
   useEffect(() => {
-    if (isInUse && status !== 'error') {
+    if (!isInUse.isSuccess) {
+      return;
+    }
+
+    if (isInUse.data === true && status !== 'error') {
       setStatus('error');
       update({ key: 'prefix', data: [prefix, false] });
-    } else if (!isInUse && prefixValid) {
+    } else if (isInUse.data === false && prefixValid) {
       setStatus('default');
     }
   }, [isInUse, update, prefix, status, prefixValid]);
@@ -70,6 +72,8 @@ export default function Prefix({ update, userPosted }: PrefixProps) {
     } else if (status !== 'default') {
       setStatus('default');
     }
+
+    getIsInUse(e !== '' ? e : randomURL);
 
     update({ key: 'prefix', data: [e, e !== ''] });
   };
@@ -104,7 +108,7 @@ export default function Prefix({ update, userPosted }: PrefixProps) {
           }
           statusText={
             status === 'error'
-              ? isInUse
+              ? isInUse.data === true
                 ? t('prefix-taken')
                 : t('prefix-invalid')
               : ''
