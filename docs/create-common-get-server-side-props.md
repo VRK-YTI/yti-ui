@@ -28,7 +28,7 @@ be merged with the other stuff inside the `createCommonGetServerSideProps`.
 
 ```ts
 export const getServerSideProps = createCommonGetServerSideProps(
-  async ({ params, /* ... */ }: LocalHandlerParams) => {
+  async ({ params /* ... */ }: LocalHandlerParams) => {
     // Do something here with params, store, etc. Then return at least {} that
     // will be merged to the result of createCommonGetServerSideProps.
 
