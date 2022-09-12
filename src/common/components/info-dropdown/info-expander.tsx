@@ -25,6 +25,7 @@ import {
 } from '@app/common/utils/translation-helpers';
 import Link from 'next/link';
 import { getPropertyValue } from '../property-value/get-property-value';
+import PropertyValue from '../property-value';
 
 const Subscription = dynamic(
   () => import('@app/common/components/subscription/subscription')
@@ -224,9 +225,7 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
               ?.filter((c) => c && c.properties.prefLabel)
               .map((contributor) => (
                 <li key={contributor.id}>
-                  {getPropertyValue({
-                    property: contributor?.properties.prefLabel,
-                  })}
+                  <PropertyValue property={contributor?.properties.prefLabel} />
                 </li>
               ))}
           </PropertyList>
