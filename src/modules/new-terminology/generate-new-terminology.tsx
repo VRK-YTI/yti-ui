@@ -70,6 +70,16 @@ export default function generateNewTerminology({
     },
   ];
 
+  if (data.status) {
+    postData.properties.status = [
+      {
+        lang: '',
+        regex: '(?s)^.*$',
+        value: data.status,
+      },
+    ];
+  }
+
   postData.references.contributor = data.contributors.map((contributor) => ({
     id: contributor.uniqueItemId,
     type: {

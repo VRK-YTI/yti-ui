@@ -55,7 +55,7 @@ export default function StatusSelector({
   ];
 
   const handleChange = (e: SingleSelectData | null) => {
-    update({ key: 'status', data: e });
+    update({ key: 'status', data: e?.uniqueItemId });
     setIsError(e !== null ? false : true);
   };
 
