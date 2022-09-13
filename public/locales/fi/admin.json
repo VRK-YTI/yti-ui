@@ -213,8 +213,6 @@
   "show-chosen_other": "Näytä {{count}} valintaa",
   "source_one": "Lähde",
   "source_other": "Lähteet",
-  "source-name": "Lähteen linkin nimi",
-  "source-url": "Lähteen verkko-osoite",
   "sources-hint-text-concept": "Käsitteen määrittelyssä käytetyt lähteet",
   "sources-hint-text-term": "Termin määrittelyssä käytetyt lähteet",
   "sources-placeholder": "Kirjoita kuvaus",

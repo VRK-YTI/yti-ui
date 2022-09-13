@@ -10,7 +10,6 @@ import {
   ExpanderContentFitted,
 } from './concept-basic-information.styles';
 import Diagrams from './diagrams';
-import NewDiagramOrLink from './new-diagram-or-link';
 import Sources from './sources';
 
 interface ConceptDiagramsAndSourcesProps {

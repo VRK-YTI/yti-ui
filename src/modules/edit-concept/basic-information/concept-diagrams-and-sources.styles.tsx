@@ -7,17 +7,17 @@ export const ItemsList = styled.ul`
   padding: 0;
 
   > li {
-    margin-bottom: ${props => props.theme.suomifi.spacing.s};
+    margin-bottom: ${(props) => props.theme.suomifi.spacing.s};
   }
 `;
 
 export const ColoredBlock = styled(Block)`
-  background-color: ${props => props.theme.suomifi.colors.highlightLight4};
-  border: 1px solid ${props => props.theme.suomifi.colors.depthLight1};
-  padding: ${props => props.theme.suomifi.spacing.m};
+  background-color: ${(props) => props.theme.suomifi.colors.highlightLight4};
+  border: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
+  padding: ${(props) => props.theme.suomifi.spacing.m};
 
   > *:not(:first-child):not(:last-child) {
-    margin-bottom: ${props => props.theme.suomifi.spacing.m};
+    margin-bottom: ${(props) => props.theme.suomifi.spacing.m};
   }
 
   > div:first-child {
