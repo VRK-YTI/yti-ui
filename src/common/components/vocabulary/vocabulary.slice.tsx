@@ -94,7 +94,7 @@ export const vocabularyApi = createApi({
     //     method: 'DELETE',
     //   }),
     // }),
-    getIfNamespaceInUse: builder.query<boolean, string>({
+    getIfNamespaceInUse: builder.mutation<boolean, string>({
       query: (prefix) => ({
         url: `/namespaceInUse?prefix=${prefix}`,
         method: 'GET',
@@ -116,7 +116,7 @@ export const {
   usePostNewVocabularyMutation,
   usePostCreateVersionMutation,
   // useDeleteVocabularyMutation,
-  useGetIfNamespaceInUseQuery,
+  useGetIfNamespaceInUseMutation,
   useGetVocabulariesQuery,
   util: { getRunningOperationPromises },
 } = vocabularyApi;
