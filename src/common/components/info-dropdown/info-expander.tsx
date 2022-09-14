@@ -46,6 +46,8 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
     return null;
   }
 
+  const contact = getPropertyValue({ property: data.properties.contact });
+
   return (
     <InfoExpanderWrapper id="info-expander">
       <ExpanderTitleButton asHeading="h2">
@@ -93,21 +95,19 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
           )}
         </BasicBlock>
 
-        {data.properties.contact?.[0]?.value && (
+        {contact && (
           <BasicBlock title={t('contact')}>
             <ExternalLink
-              href={`mailto:${data.properties.contact[0].value}?subject=${t(
+              href={`mailto:${contact}?subject=${t(
                 'feedback-vocabulary'
               )} - ${getPropertyValue({
                 property: data.properties.prefLabel,
                 language: i18n.language,
               })}`}
-              labelNewWindow={`${t('site-open-new-email')} ${
-                data.properties.contact[0].value
-              }`}
+              labelNewWindow={`${t('site-open-new-email')} ${contact}`}
               style={{ fontSize: '16px' }}
             >
-              {data.properties.contact?.[0].value}
+              {contact}
             </ExternalLink>
           </BasicBlock>
         )}
