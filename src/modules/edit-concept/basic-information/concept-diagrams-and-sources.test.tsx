@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { themeProvider } from '@app/tests/test-utils';
 import ConceptDiagramsAndSources from './concept-diagrams-and-sources';
+import { EmptyFormError } from '../validate-form';
 
 describe('concept-diagrams-and-sources', () => {
   let appRoot: HTMLDivElement | null = null;
@@ -18,6 +19,7 @@ describe('concept-diagrams-and-sources', () => {
       <ConceptDiagramsAndSources
         infoKey="diagramsAndSources"
         update={mockFn}
+        errors={EmptyFormError}
       />,
       { wrapper: themeProvider }
     );
