@@ -44,22 +44,22 @@ export default function ConceptDiagramsAndSources({
     });
   };
 
-  const handleAddDiagram = (newDiagram: DiagramType) => {
-    setDiagrams([...diagrams, newDiagram]);
-  };
-
-  const handleAddSource = ({ value }: BasicInfoUpdate) => {
-    setSources([...sources, value as ListType]);
-
-    if (typeof value !== 'string' && Array.isArray(value)) {
-      update({
-        key: infoKey,
-        value: {
-          diagrams: diagrams,
-          sources: value,
-        },
-      });
+  const handleRemove = (s?: ListType[], d?: DiagramType[]) => {
+    if (s) {
+      setSources(s);
     }
+
+    if (d) {
+      setDiagrams(d);
+    }
+
+    update({
+      key: infoKey,
+      value: {
+        diagrams: d ? d : diagrams,
+        sources: s ? s : sources,
+      },
+    });
   };
 
   return (
@@ -72,10 +72,11 @@ export default function ConceptDiagramsAndSources({
           title={t('concept-diagram-or-link')}
           extra={
             <BasicBlockExtraWrapper onBlur={() => handleBlur()}>
-              {diagrams.map((diagram, idx) => (
-                <div key={`'diagram-${idx}`}>{diagram.diagramName}</div>
-              ))}
-              <Diagrams />
+              <Diagrams
+                diagrams={diagrams}
+                setDiagrams={setDiagrams}
+                handleRemove={handleRemove}
+              />
             </BasicBlockExtraWrapper>
           }
         >
@@ -86,10 +87,11 @@ export default function ConceptDiagramsAndSources({
           title={t('source', { count: 2 })}
           extra={
             <BasicBlockExtraWrapper onBlur={() => handleBlur()}>
-              {diagrams.map((diagram, idx) => (
-                <div key={`'diagram-${idx}`}>{diagram.diagramName}</div>
-              ))}
-              <Sources />
+              <Sources
+                sources={sources}
+                setSources={setSources}
+                handleRemove={handleRemove}
+              />
             </BasicBlockExtraWrapper>
           }
         >

@@ -391,13 +391,15 @@ export default function generateConcept({
           regex: regex,
           value: ex.value ?? '',
         })),
-        externalLink: [
-          {
+        externalLink: data.basicInformation.diagramAndSource.diagrams?.map(
+          (diagram) => ({
             lang: '',
             regex: regex,
-            value: '',
-          },
-        ],
+            value: `{"name":"${diagram.name ?? ''}","url":"${
+              diagram.url ?? ''
+            }","description":"${diagram.description ?? ''}}"`,
+          })
+        ) ?? [{ lang: '', regex: regex, value: '' }],
         historyNote: [
           {
             lang: '',

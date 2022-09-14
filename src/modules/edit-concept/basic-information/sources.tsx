@@ -1,34 +1,50 @@
 import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
 import { Button, Text } from 'suomifi-ui-components';
 import { v4 } from 'uuid';
+import { DiagramType, ListType } from '../new-concept.types';
 import {
   ColoredBlock,
   FullwidthTextarea,
   ItemsList,
 } from './concept-diagrams-and-sources.styles';
 
-interface SourcesType {
-  description: string;
-  id: string;
+interface SourcesProps {
+  sources: ListType[];
+  setSources: (value: ListType[]) => void;
+  handleRemove: (s?: ListType[], d?: DiagramType[]) => void;
 }
 
-export default function Sources() {
+export default function Sources({
+  sources,
+  setSources,
+  handleRemove,
+}: SourcesProps) {
   const { t } = useTranslation('admin');
-  const [sources, setSources] = useState<SourcesType[]>([]);
 
   const handleAddSource = () => {
     setSources([
       ...sources,
       {
-        description: '',
+        value: '',
         id: v4(),
       },
     ]);
   };
 
   const handleRemoveSource = (id: string) => {
-    setSources(sources.filter((d) => d.id !== id));
+    handleRemove(sources.filter((d) => d.id !== id));
+  };
+
+  const handleChange = (id: string, value: string) => {
+    setSources(
+      sources.map((source) => {
+        if (source.id !== id) {
+          return source;
+        } else {
+          return { ...source, value: value };
+        }
+      })
+    );
   };
 
   return (
@@ -48,7 +64,10 @@ export default function Sources() {
                 </Button>
               </div>
 
-              <FullwidthTextarea labelText={t('sources-hint-text-concept')} />
+              <FullwidthTextarea
+                labelText={t('sources-hint-text-concept')}
+                onChange={(e) => handleChange(source.id, e.target.value)}
+              />
             </ColoredBlock>
           </li>
         ))}

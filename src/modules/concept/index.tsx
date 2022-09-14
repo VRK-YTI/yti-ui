@@ -88,6 +88,8 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
 
   const email = getPropertyValue({ property: terminology?.properties.contact });
 
+  console.log(concept);
+
   if (conceptError) {
     return (
       <>

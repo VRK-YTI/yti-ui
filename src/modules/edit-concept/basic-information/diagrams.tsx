@@ -1,30 +1,32 @@
 import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
 import { Button, Text, TextInput } from 'suomifi-ui-components';
 import { v4 } from 'uuid';
+import { DiagramType, ListType } from '../new-concept.types';
 import {
   ColoredBlock,
   FullwidthTextarea,
   ItemsList,
 } from './concept-diagrams-and-sources.styles';
 
-interface DiagramType {
-  name: string;
-  link: string;
-  description: string;
-  id: string;
+interface DiagramsProps {
+  diagrams: DiagramType[];
+  setDiagrams: (value: DiagramType[]) => void;
+  handleRemove: (s?: ListType[], d?: DiagramType[]) => void;
 }
 
-export default function Diagrams() {
+export default function Diagrams({
+  diagrams,
+  setDiagrams,
+  handleRemove,
+}: DiagramsProps) {
   const { t } = useTranslation('admin');
-  const [diagrams, setDiagrams] = useState<DiagramType[]>([]);
 
   const handleAddDiagram = () => {
     setDiagrams([
       ...diagrams,
       {
         name: '',
-        link: '',
+        url: '',
         description: '',
         id: v4(),
       },
@@ -32,7 +34,22 @@ export default function Diagrams() {
   };
 
   const handleRemoveDiagram = (id: string) => {
-    setDiagrams(diagrams.filter((d) => d.id !== id));
+    handleRemove(
+      undefined,
+      diagrams.filter((d) => d.id !== id)
+    );
+  };
+
+  const handleUpdate = (id: string, key: string, value: string) => {
+    setDiagrams(
+      diagrams.map((d) => {
+        if (d.id !== id) {
+          return d;
+        } else {
+          return { ...d, [key]: value };
+        }
+      })
+    );
   };
 
   return (
@@ -52,13 +69,26 @@ export default function Diagrams() {
                 </Button>
               </div>
 
-              <TextInput labelText={t('diagram-name')} />
+              <TextInput
+                labelText={t('diagram-name')}
+                onChange={(e) =>
+                  handleUpdate(diagram.id, 'name', e?.toString() ?? '')
+                }
+              />
 
-              <TextInput labelText={t('diagram-url')} />
+              <TextInput
+                labelText={t('diagram-url')}
+                onChange={(e) =>
+                  handleUpdate(diagram.id, 'url', e?.toString() ?? '')
+                }
+              />
 
               <FullwidthTextarea
                 labelText={t('description')}
                 optionalText={t('optional')}
+                onChange={(e) =>
+                  handleUpdate(diagram.id, 'description', e.target.value)
+                }
               />
             </ColoredBlock>
           </li>
