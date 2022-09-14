@@ -46,3 +46,9 @@ export const FooterBlock = styled(Block)`
   flex-wrap: wrap;
   gap: ${(props) => props.theme.suomifi.spacing.s};
 `;
+
+export const ButtonBlock = styled(Block)`
+  display: flex;
+  align-items: center;
+  gap: ${(props) => props.theme.suomifi.spacing.s};
+`;

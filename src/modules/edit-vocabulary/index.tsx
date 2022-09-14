@@ -2,6 +2,7 @@ import { Breadcrumb, BreadcrumbLink } from '@app/common/components/breadcrumb';
 import { selectLogin } from '@app/common/components/login/login.slice';
 import { useEditTerminologyMutation } from '@app/common/components/modify/modify.slice';
 import PropertyValue from '@app/common/components/property-value';
+import SaveSpinner from '@app/common/components/save-spinner';
 import Title from '@app/common/components/title/title';
 import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
 import useConfirmBeforeLeavingPage from '@app/common/utils/hooks/use-confirm-before-leaving-page';
@@ -14,7 +15,12 @@ import generateNewTerminology from '../new-terminology/generate-new-terminology'
 import InfoManual from '../new-terminology/info-manual';
 import MissingInfoAlert from '../new-terminology/missing-info-alert';
 import { TallerSeparator } from '../new-terminology/new-terminology.styles';
-import { FormWrapper, FormFooter, FormTitle } from './edit-vocabulary.styles';
+import {
+  FormWrapper,
+  FormFooter,
+  FormTitle,
+  ButtonBlock,
+} from './edit-vocabulary.styles';
 import generateInitialData from './generate-initial-data';
 
 interface EditVocabularyProps {
@@ -31,6 +37,7 @@ export default function EditVocabulary({ terminologyId }: EditVocabularyProps) {
   const [data, setData] = useState(generateInitialData(i18n.language, info));
   const [isValid, setIsValid] = useState(true);
   const [userPosted, setUserPosted] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
   const [editTerminology, result] = useEditTerminologyMutation();
   const { enableConfirmation, disableConfirmation } =
     useConfirmBeforeLeavingPage('disabled');
@@ -57,7 +64,7 @@ export default function EditVocabulary({ terminologyId }: EditVocabularyProps) {
     if (!newData) {
       return;
     }
-
+    setIsCreating(true);
     editTerminology(newData);
   };
 
@@ -115,16 +122,23 @@ export default function EditVocabulary({ terminologyId }: EditVocabularyProps) {
 
         <FormFooter>
           {userPosted && data && <MissingInfoAlert data={data} />}
-          <Button onClick={() => handleSubmit()} id="submit-button">
-            {t('save')}
-          </Button>
-          <Button
-            variant="secondary"
-            onClick={() => handleReturn()}
-            id="cancel-button"
-          >
-            {t('cancel')}
-          </Button>
+          <ButtonBlock>
+            <Button
+              disabled={isCreating}
+              onClick={() => handleSubmit()}
+              id="submit-button"
+            >
+              {t('save')}
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => handleReturn()}
+              id="cancel-button"
+            >
+              {t('cancel')}
+            </Button>
+            {isCreating && <SaveSpinner text={t('saving-terminology')} />}
+          </ButtonBlock>
         </FormFooter>
       </FormWrapper>
     </>

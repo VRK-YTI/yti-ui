@@ -206,6 +206,8 @@
   "remove-term_one": "Remove term",
   "remove-term_other": "Remove terms",
   "save": "Save",
+  "saving-concept": "Saving concept",
+  "saving-terminology": "Saving terminology",
   "search": "Search",
   "search-term": "Search term",
   "search-term-description": "Term used to find concept in the service",

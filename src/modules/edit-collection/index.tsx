@@ -16,6 +16,7 @@ import { Button, Heading, InlineAlert } from 'suomifi-ui-components';
 import ConceptPicker from './concept-picker';
 import generateCollection from './generate-collection';
 import {
+  ButtonBlock,
   DescriptionTextarea,
   FooterBlock,
   NameTextInput,
@@ -35,6 +36,7 @@ import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from '@app/common/utils/constants';
 import useConfirmBeforeLeavingPage from '@app/common/utils/hooks/use-confirm-before-leaving-page';
 import { MissingInfoAlertUl } from '../new-terminology/new-terminology.styles';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import SaveSpinner from '@app/common/components/save-spinner';
 
 export default function EditCollection({
   terminologyId,
@@ -68,6 +70,7 @@ export default function EditCollection({
   const [newCollectionId, setNewCollectionId] = useState('');
   const [errors, setErrors] = useState<{ [key: string]: boolean }>({});
   const [emptyError, setEmptyError] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
 
   const languages =
     terminology?.properties.language?.map(({ value }) => value) ?? [];
@@ -195,6 +198,7 @@ export default function EditCollection({
     }
 
     disableConfirmation();
+    setIsCreating(true);
     const data = generateCollection(
       formData,
       terminologyId,
@@ -315,16 +319,23 @@ export default function EditCollection({
               </MissingInfoAlertUl>
             </InlineAlert>
           )}
-          <Button onClick={() => handleClick()} id="submit-button">
-            {t('save', { ns: 'admin' })}
-          </Button>
-          <Button
-            variant="secondary"
-            onClick={() => handleCancel()}
-            id="cancel-button"
-          >
-            {t('cancel-variant', { ns: 'admin' })}
-          </Button>
+          <ButtonBlock>
+            <Button
+              disabled={isCreating}
+              onClick={() => handleClick()}
+              id="submit-button"
+            >
+              {t('save', { ns: 'admin' })}
+            </Button>
+            <Button
+              variant="secondary"
+              onClick={() => handleCancel()}
+              id="cancel-button"
+            >
+              {t('cancel-variant', { ns: 'admin' })}
+            </Button>
+            {isCreating && <SaveSpinner text={t('saving-collection')} />}
+          </ButtonBlock>
         </FooterBlock>
       </NewCollectionBlock>
     </>

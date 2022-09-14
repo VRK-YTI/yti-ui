@@ -1,15 +1,17 @@
+import SaveSpinner from '@app/common/components/save-spinner';
 import Separator from '@app/common/components/separator';
 import { translateEditConceptError } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { Button, InlineAlert } from 'suomifi-ui-components';
-import { FooterBlock } from './new-concept.styles';
+import { ButtonBlock, FooterBlock } from './new-concept.styles';
 import { FormError } from './validate-form';
 
 interface FormFooterProps {
   handlePost: () => void;
   onCancel?: () => void;
   isEdit: boolean;
+  isCreating: boolean;
   errors: FormError;
 }
 
@@ -17,6 +19,7 @@ export default function FormFooter({
   handlePost,
   onCancel,
   isEdit,
+  isCreating,
   errors,
 }: FormFooterProps) {
   const { t } = useTranslation('admin');
@@ -52,8 +55,12 @@ export default function FormFooter({
           </InlineAlert>
         </div>
       )}
-      <div>
-        <Button onClick={() => handlePost()} id="submit-button">
+      <ButtonBlock>
+        <Button
+          disabled={isCreating}
+          onClick={() => handlePost()}
+          id="submit-button"
+        >
           {t('save')}
         </Button>
         <Button
@@ -63,7 +70,8 @@ export default function FormFooter({
         >
           {t('cancel-variant')}
         </Button>
-      </div>
+        {isCreating && <SaveSpinner text={t('saving-concept')} />}
+      </ButtonBlock>
     </FooterBlock>
   );
 }
