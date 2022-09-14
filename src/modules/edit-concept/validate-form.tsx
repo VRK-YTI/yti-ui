@@ -7,6 +7,7 @@ export interface FormError {
   note: boolean;
   editorialNote: boolean;
   source: boolean;
+  diagrams: boolean;
   total: boolean;
 }
 
@@ -18,6 +19,7 @@ export const EmptyFormError = {
   note: false,
   editorialNote: false,
   source: false,
+  diagrams: false,
   total: false,
 };
 
@@ -29,6 +31,7 @@ export default function validateForm(data: EditConceptType): FormError {
     note: false,
     editorialNote: false,
     source: false,
+    diagrams: false,
     total: false,
   };
 
@@ -85,6 +88,30 @@ export default function validateForm(data: EditConceptType): FormError {
     ).length > 0
   ) {
     errors.editorialNote = true;
+  }
+
+  // If there are sources with empty values
+  if (
+    data.basicInformation.diagramAndSource.sources.length > 0 &&
+    data.basicInformation.diagramAndSource.sources.filter(
+      (source) => !source.value || source.value === ''
+    ).length > 0
+  ) {
+    errors.source = true;
+  }
+
+  // If there are diagrams with empty values
+  if (
+    data.basicInformation.diagramAndSource.diagrams.length > 0 &&
+    data.basicInformation.diagramAndSource.diagrams.filter(
+      (diagram) =>
+        !diagram.name ||
+        diagram.name === '' ||
+        !diagram.url ||
+        diagram.url === ''
+    ).length > 0
+  ) {
+    errors.diagrams = true;
   }
 
   // Setting total of errors if one error is found in object

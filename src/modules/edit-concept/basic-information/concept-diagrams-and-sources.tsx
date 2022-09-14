@@ -4,6 +4,7 @@ import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { ExpanderTitleButton } from 'suomifi-ui-components';
 import { DiagramType, ListType } from '../new-concept.types';
+import { FormError } from '../validate-form';
 import { BasicInfoUpdate } from './concept-basic-information';
 import {
   ConceptExpander,
@@ -19,12 +20,14 @@ interface ConceptDiagramsAndSourcesProps {
     diagrams: DiagramType[];
     sources: ListType[];
   };
+  errors: FormError;
 }
 
 export default function ConceptDiagramsAndSources({
   infoKey,
   update,
   initialValues,
+  errors,
 }: ConceptDiagramsAndSourcesProps) {
   const { t } = useTranslation('admin');
   const [sources, setSources] = useState<ListType[]>(
@@ -76,6 +79,7 @@ export default function ConceptDiagramsAndSources({
                 diagrams={diagrams}
                 setDiagrams={setDiagrams}
                 handleRemove={handleRemove}
+                isError={errors.diagrams}
               />
             </BasicBlockExtraWrapper>
           }
@@ -91,6 +95,7 @@ export default function ConceptDiagramsAndSources({
                 sources={sources}
                 setSources={setSources}
                 handleRemove={handleRemove}
+                isError={errors.source}
               />
             </BasicBlockExtraWrapper>
           }

@@ -95,10 +95,12 @@
   "downloading-file": "Tiedostoa ladataan",
   "edit-concept-error": {
     "default": "Käsitteen tiedoissa ilmeni puuttuvia tietoja",
+    "diagrams": "Vähintään yhdeltä käsitekaaviolta puuttuu nimi ja/tai verkko-osoite",
     "editorialNote": "Vähintään yhdeltä ylläpitäjän muistiipanolta puuttuu selite",
     "example": "Vähintään yhdeltä käyttöesimerkiltä puuttuu selite",
     "note": "Vähintään yhdeltä huomautukselta puuttuu selite",
     "recommendedTerms": "Käsitteeltä puuttuu suositettava termi",
+    "source": "Vähintään yhdeltä lähteeltä puuttuu arvo",
     "termPrefLabel": "Vähintään yhdeltä termiltä puuttuu nimi"
   },
   "edit-terminology": "Muokkaa sanastoa",

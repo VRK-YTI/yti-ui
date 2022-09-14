@@ -12,12 +12,14 @@ interface SourcesProps {
   sources: ListType[];
   setSources: (value: ListType[]) => void;
   handleRemove: (s?: ListType[], d?: DiagramType[]) => void;
+  isError: boolean;
 }
 
 export default function Sources({
   sources,
   setSources,
   handleRemove,
+  isError,
 }: SourcesProps) {
   const { t } = useTranslation('admin');
 
@@ -68,6 +70,7 @@ export default function Sources({
                 labelText={t('sources-hint-text-concept')}
                 onChange={(e) => handleChange(source.id, e.target.value)}
                 defaultValue={source.value}
+                status={isError && source.value === '' ? 'error' : 'default'}
               />
             </ColoredBlock>
           </li>

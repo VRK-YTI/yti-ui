@@ -95,10 +95,12 @@
   "downloading-file": "Downloading file",
   "edit-concept-error": {
     "default": "Concept has missing information",
+    "diagrams": "At least one diagram is missing name and/or url",
     "editorialNote": "At least one editorial note is missing a descriptive text",
     "example": "At least one example is missing a descriptive text",
     "note": "At least one note is missing a descriptive text",
     "recommendedTerms": "Concept is missing a preferred term ",
+    "source": "At least one source is missing a value",
     "termPrefLabel": "At least on preferred term is missing a name"
   },
   "edit-terminology": "Edit terminology",

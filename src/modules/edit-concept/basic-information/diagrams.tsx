@@ -12,12 +12,14 @@ interface DiagramsProps {
   diagrams: DiagramType[];
   setDiagrams: (value: DiagramType[]) => void;
   handleRemove: (s?: ListType[], d?: DiagramType[]) => void;
+  isError: boolean;
 }
 
 export default function Diagrams({
   diagrams,
   setDiagrams,
   handleRemove,
+  isError,
 }: DiagramsProps) {
   const { t } = useTranslation('admin');
 
@@ -75,6 +77,7 @@ export default function Diagrams({
                 onChange={(e) =>
                   handleUpdate(diagram.id, 'name', e?.toString() ?? '')
                 }
+                status={isError && diagram.name === '' ? 'error' : 'default'}
               />
 
               <TextInput
@@ -83,6 +86,7 @@ export default function Diagrams({
                 onChange={(e) =>
                   handleUpdate(diagram.id, 'url', e?.toString() ?? '')
                 }
+                status={isError && diagram.url === '' ? 'error' : 'default'}
               />
 
               <FullwidthTextarea
