@@ -3,7 +3,7 @@ export default function getDiagramValues(diagram: string) {
     return {
       name: '',
       url: '',
-      description: ''
+      description: '',
     };
   }
 
