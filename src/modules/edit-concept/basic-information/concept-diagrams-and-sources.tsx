@@ -16,7 +16,7 @@ interface ConceptDiagramsAndSourcesProps {
   infoKey: string;
   update: (value: BasicInfoUpdate) => void;
   initialValues?: {
-    diagram: DiagramType[];
+    diagrams: DiagramType[];
     sources: ListType[];
   };
 }
@@ -31,7 +31,7 @@ export default function ConceptDiagramsAndSources({
     initialValues?.sources ?? []
   );
   const [diagrams, setDiagrams] = useState<DiagramType[]>(
-    initialValues?.diagram ?? []
+    initialValues?.diagrams ?? []
   );
 
   const handleBlur = () => {

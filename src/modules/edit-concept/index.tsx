@@ -95,10 +95,6 @@ export default function EditConcept({
       lastModifiedBy: `${user.firstName} ${user.lastName}`,
     });
 
-    console.log(formData);
-    console.log(concept);
-    // return;
-
     setPostedData(concept);
     addConcept(concept);
     disableConfirmation();

@@ -170,7 +170,13 @@ export const conceptWithOneTerm = [
         },
       ],
       note: [],
-      source: [],
+      source: [
+        {
+          lang: '',
+          regex: '(?s)^.*$',
+          value: '',
+        },
+      ],
       status: [
         {
           lang: '',
@@ -418,7 +424,13 @@ export const conceptWithOneTermWithInitialData = [
         },
       ],
       note: [],
-      source: [],
+      source: [
+        {
+          lang: '',
+          regex: '(?s)^.*$',
+          value: '',
+        },
+      ],
       status: [
         {
           lang: '',
@@ -651,7 +663,13 @@ export const conceptWithInternalRelations = [
         },
       ],
       note: [],
-      source: [],
+      source: [
+        {
+          lang: '',
+          regex: '(?s)^.*$',
+          value: '',
+        },
+      ],
       status: [
         {
           lang: '',
@@ -1340,7 +1358,8 @@ export const differentTerms = [
         {
           lang: '',
           regex: '(?s)^.*$',
-          value: '',
+          value:
+            '"{"name":"käsitekaavion nimi","url":"käsitekaavion verkko-osoite","description":"kuvaus"}"',
         },
       ],
       historyNote: [

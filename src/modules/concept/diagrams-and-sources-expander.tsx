@@ -1,15 +1,16 @@
-import { i18n, useTranslation } from 'next-i18next';
+import { useTranslation } from 'next-i18next';
 import {
   Expander,
   ExpanderContent,
   ExpanderTitleButton,
   ExternalLink,
 } from 'suomifi-ui-components';
-import { BasicBlock, PropertyBlock } from '@app/common/components/block';
+import { BasicBlock } from '@app/common/components/block';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import { Concept } from '@app/common/interfaces/concept.interface';
 import { PropertyList } from './concept.styles';
 import Link from 'next/link';
+import getDiagramValues from '@app/common/utils/get-diagram-values';
 
 export function hasDiagramsAndSources(concept?: Concept, language?: string) {
   const rest = { language, fallbackLanguage: 'fi' };
@@ -56,17 +57,6 @@ export default function DiagramsAndSourcesExpander({
     return null;
   }
 
-  const getValuesFromObj = (link: string) => {
-    const name = link.split('{"name":"')[1].split('","url')[0];
-    const url = link.split('"url":"')[1].split('","description')[0];
-    const description = link.split('"description":"')[1].split('}')[0];
-    return {
-      name: name,
-      url: url,
-      description: description,
-    };
-  };
-
   return (
     <Expander id="diagrams-and-sources-expander">
       <ExpanderTitleButton>
@@ -77,7 +67,7 @@ export default function DiagramsAndSourcesExpander({
           <BasicBlock title={t('field-concept-diagrams')}>
             <PropertyList $smBot>
               {concept?.properties.externalLink?.map((l, idx) => {
-                const link = getValuesFromObj(l.value);
+                const link = getDiagramValues(l.value);
                 return (
                   <li key={`diagrams-${idx}`}>
                     <Link href={link.url} passHref>

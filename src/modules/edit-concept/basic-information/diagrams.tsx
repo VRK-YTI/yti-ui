@@ -71,6 +71,7 @@ export default function Diagrams({
 
               <TextInput
                 labelText={t('diagram-name')}
+                defaultValue={diagram.name}
                 onChange={(e) =>
                   handleUpdate(diagram.id, 'name', e?.toString() ?? '')
                 }
@@ -78,6 +79,7 @@ export default function Diagrams({
 
               <TextInput
                 labelText={t('diagram-url')}
+                defaultValue={diagram.url}
                 onChange={(e) =>
                   handleUpdate(diagram.id, 'url', e?.toString() ?? '')
                 }
@@ -86,6 +88,7 @@ export default function Diagrams({
               <FullwidthTextarea
                 labelText={t('description')}
                 optionalText={t('optional')}
+                defaultValue={diagram.description}
                 onChange={(e) =>
                   handleUpdate(diagram.id, 'description', e.target.value)
                 }

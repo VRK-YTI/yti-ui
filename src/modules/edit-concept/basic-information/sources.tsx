@@ -67,6 +67,7 @@ export default function Sources({
               <FullwidthTextarea
                 labelText={t('sources-hint-text-concept')}
                 onChange={(e) => handleChange(source.id, e.target.value)}
+                defaultValue={source.value}
               />
             </ColoredBlock>
           </li>

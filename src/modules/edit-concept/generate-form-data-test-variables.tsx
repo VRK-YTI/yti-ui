@@ -34,7 +34,7 @@ export const emptyFormExpected = {
     subject: '',
     note: [],
     diagramAndSource: {
-      diagram: [],
+      diagrams: [],
       sources: [],
     },
     orgInfo: {
@@ -221,7 +221,7 @@ export const simpleDataExpected = {
     subject: '',
     note: [],
     diagramAndSource: {
-      diagram: [],
+      diagrams: [],
       sources: [],
     },
     orgInfo: {
@@ -2355,7 +2355,7 @@ export const extensiveDataExpected = {
       en: 'definition',
     },
     diagramAndSource: {
-      diagram: [],
+      diagrams: [],
       sources: [
         {
           id: extensiveDataReturned.basicInformation.diagramAndSource.sources[0]
