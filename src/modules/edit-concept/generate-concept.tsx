@@ -391,13 +391,18 @@ export default function generateConcept({
           regex: regex,
           value: ex.value ?? '',
         })),
-        externalLink: [
-          {
-            lang: '',
-            regex: regex,
-            value: '',
-          },
-        ],
+        externalLink:
+          data.basicInformation.diagramAndSource.diagrams?.length > 0
+            ? data.basicInformation.diagramAndSource.diagrams?.map(
+                (diagram) => ({
+                  lang: '',
+                  regex: regex,
+                  value: `"{"name":"${diagram.name ?? ''}","url":"${
+                    diagram.url ?? ''
+                  }","description":"${diagram.description ?? ''}"}"`,
+                })
+              )
+            : [{ lang: '', regex: regex, value: '' }],
         historyNote: [
           {
             lang: '',
@@ -417,13 +422,14 @@ export default function generateConcept({
           regex: regex,
           value: n.value ?? '',
         })),
-        source: data.basicInformation.diagramAndSource.sources.map(
-          (source) => ({
-            lang: '',
-            regex: regex,
-            value: source.value ?? '',
-          })
-        ),
+        source:
+          data.basicInformation.diagramAndSource.sources?.length > 0
+            ? data.basicInformation.diagramAndSource.sources.map((source) => ({
+                lang: '',
+                regex: regex,
+                value: source.value ?? '',
+              }))
+            : [{ lang: '', regex: regex, value: '' }],
         status: [
           {
             lang: '',

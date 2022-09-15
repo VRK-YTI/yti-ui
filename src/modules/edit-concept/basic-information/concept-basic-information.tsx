@@ -96,6 +96,7 @@ export default function ConceptBasicInformation({
           infoKey="diagramAndSource"
           update={handleBasicInfoUpdate}
           initialValues={basicInfo.diagramAndSource}
+          errors={errors}
         />
         <OrganizationInformation
           infoKey="orgInfo"

@@ -1,6 +1,7 @@
 import { Concept } from '@app/common/interfaces/concept.interface';
 import { Term } from '@app/common/interfaces/term.interface';
 import { Property } from '@app/common/interfaces/termed-data-types.interface';
+import getDiagramValues from '@app/common/utils/get-diagram-values';
 import { v4 } from 'uuid';
 import { ConceptTermType, EditConceptType } from './new-concept.types';
 
@@ -42,7 +43,7 @@ export default function generateFormData(
         subject: '',
         note: [],
         diagramAndSource: {
-          diagram: [],
+          diagrams: [],
           sources: [],
         },
         orgInfo: {
@@ -77,7 +78,16 @@ export default function generateFormData(
     basicInformation: {
       definition: Object.fromEntries(definition),
       diagramAndSource: {
-        diagram: [],
+        diagrams:
+          conceptData.properties.externalLink?.map((l) => {
+            const dValues = getDiagramValues(l.value);
+            return {
+              description: dValues.description,
+              id: v4(),
+              name: dValues.name,
+              url: dValues.url,
+            };
+          }) ?? [],
         sources:
           conceptData.properties.source?.map((e) => ({
             id: v4(),

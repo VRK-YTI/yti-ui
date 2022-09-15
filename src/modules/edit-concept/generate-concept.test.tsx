@@ -38,7 +38,7 @@ describe('generate-concept', () => {
         subject: '',
         note: [],
         diagramAndSource: {
-          diagram: [],
+          diagrams: [],
           sources: [],
         },
         orgInfo: {
@@ -110,7 +110,7 @@ describe('generate-concept', () => {
         subject: '',
         note: [],
         diagramAndSource: {
-          diagram: [],
+          diagrams: [],
           sources: [],
         },
         orgInfo: {
@@ -290,7 +290,7 @@ describe('generate-concept', () => {
         subject: '',
         note: [],
         diagramAndSource: {
-          diagram: [],
+          diagrams: [],
           sources: [],
         },
         orgInfo: {
@@ -546,10 +546,11 @@ describe('generate-concept', () => {
           },
         ],
         diagramAndSource: {
-          diagram: [
+          diagrams: [
             {
-              diagramName: 'käsitekaavion nimi',
-              diagramUrl: 'käsitekaavion verkko-osoite',
+              id: '123',
+              name: 'käsitekaavion nimi',
+              url: 'käsitekaavion verkko-osoite',
               description: 'kuvaus',
             },
           ],
