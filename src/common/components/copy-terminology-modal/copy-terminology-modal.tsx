@@ -18,6 +18,7 @@ import Prefix from '../terminology-components/prefix';
 import { UpdateTerminology } from '@app/modules/new-terminology/update-terminology.interface';
 import { setAlert } from '../alert/alert.slice';
 import { useRouter } from 'next/router';
+import InlineAlert from '../inline-alert';
 
 interface CopyTerminologyModalProps {
   terminologyId: string;
@@ -77,10 +78,11 @@ export default function CopyTerminologyModal({
   }, [createVersion, newGraphId, dispatch, handleClose, router, t]);
 
   const handlePost = () => {
+    setUserPosted(true);
     if (!newCode || error) {
       return;
     }
-    setUserPosted(true);
+
     const graphId = terminologyId;
     postCreateVersion({ graphId, newCode })
       .unwrap()
@@ -105,7 +107,12 @@ export default function CopyTerminologyModal({
       </ModalContent>
 
       <ModalFooter>
-        <Button onClick={(e) => handlePost()}>{t('save')}</Button>
+        {userPosted && newCode === '' && (
+          <InlineAlert status="warning">
+            {t('alert-prefix-undefined')}
+          </InlineAlert>
+        )}
+        <Button onClick={() => handlePost()}>{t('save')}</Button>
         <Button variant="secondary" onClick={() => handleClose()}>
           {t('cancel-variant')}
         </Button>
