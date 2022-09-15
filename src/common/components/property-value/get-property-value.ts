@@ -5,6 +5,7 @@ export interface GetPropertyValueParams {
   valueAccessor?: (property: Property) => string;
   language?: string;
   delimiter?: string | false;
+  fallback?: string;
   stripHtml?: boolean;
 }
 
@@ -13,6 +14,7 @@ export function getPropertyValue({
   valueAccessor = ({ value }) => value,
   language = '',
   delimiter = false,
+  fallback,
   stripHtml = false,
 }: GetPropertyValueParams): string {
   const matchingProperties =
@@ -31,9 +33,10 @@ export function getPropertyValue({
   }
 
   if (stripHtml) {
-    return result.replace(/(<([^>]+)>)/gi, '');
+    result = result.replace(/(<([^>]+)>)/gi, '');
   }
-  return result;
+
+  return result ?? fallback;
 }
 
 function getMatchingProperties(properties: Property[], language: string) {
