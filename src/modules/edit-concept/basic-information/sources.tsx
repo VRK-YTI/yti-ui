@@ -78,7 +78,7 @@ export default function Sources({
       </ItemsList>
 
       <Button variant="secondary" onClick={() => handleAddSource()}>
-        {t('add-new-link')}
+        {t('add-new-source')}
       </Button>
     </>
   );
