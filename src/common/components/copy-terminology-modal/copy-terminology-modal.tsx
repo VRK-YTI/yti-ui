@@ -19,6 +19,8 @@ import { UpdateTerminology } from '@app/modules/new-terminology/update-terminolo
 import { setAlert } from '../alert/alert.slice';
 import { useRouter } from 'next/router';
 import InlineAlert from '../inline-alert';
+import SaveSpinner from '../save-spinner';
+import { FooterBlock } from './copy-terminology-modal.styles';
 
 interface CopyTerminologyModalProps {
   terminologyId: string;
@@ -112,10 +114,15 @@ export default function CopyTerminologyModal({
             {t('alert-prefix-undefined')}
           </InlineAlert>
         )}
-        <Button onClick={() => handlePost()}>{t('save')}</Button>
-        <Button variant="secondary" onClick={() => handleClose()}>
-          {t('cancel-variant')}
-        </Button>
+        <FooterBlock>
+          <Button onClick={() => handlePost()}>{t('save')}</Button>
+          <Button variant="secondary" onClick={() => handleClose()}>
+            {t('cancel-variant')}
+          </Button>
+          {createVersion.isLoading && (
+            <SaveSpinner text={t('copying-terminology')} />
+          )}
+        </FooterBlock>
       </ModalFooter>
     </Modal>
   );
