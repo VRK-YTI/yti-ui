@@ -116,7 +116,10 @@
   "example-textarea-label-text": "",
   "example-textarea-placeholder": "",
   "file-added": "",
-  "file-upload-failed": "",
+  "file-upload-error": {
+    "incorrect-file-type": "",
+    "upload-error": ""
+  },
   "give-definition": "",
   "has-part-concept": "",
   "has-part-concept-add": "",

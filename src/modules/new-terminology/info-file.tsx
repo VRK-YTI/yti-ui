@@ -1,3 +1,4 @@
+import { translateFileUploadError } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { Button, InlineAlert, Paragraph, Text } from 'suomifi-ui-components';
@@ -19,7 +20,9 @@ export default function InfoFile({ setIsValid, setFileData }: infoFileProps) {
   const { t } = useTranslation('admin');
   const input = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
-  const [showAlert, setShowAlert] = useState(false);
+  const [alert, setAlert] = useState<
+    'none' | 'upload-error' | 'incorrect-file-type'
+  >('none');
 
   useEffect(() => {
     if (file) {
@@ -37,14 +40,14 @@ export default function InfoFile({ setIsValid, setFileData }: infoFileProps) {
       return;
     }
 
-    setShowAlert(true);
-
     if (!e.dataTransfer.items) {
+      setAlert('upload-error');
       return;
     }
 
     const droppedItems = e.dataTransfer.items;
     if (droppedItems.length === 0) {
+      setAlert('upload-error');
       return;
     }
 
@@ -52,8 +55,12 @@ export default function InfoFile({ setIsValid, setFileData }: infoFileProps) {
       const droppedItemAsFile = droppedItems[i].getAsFile();
       if (droppedItemAsFile && droppedItemAsFile?.name.endsWith('xlsx')) {
         setFile(droppedItemAsFile);
-        setShowAlert(false);
+        setAlert('none');
         break;
+      }
+
+      if (alert === 'none') {
+        setAlert('incorrect-file-type');
       }
     }
   };
@@ -66,17 +73,23 @@ export default function InfoFile({ setIsValid, setFileData }: infoFileProps) {
     }
 
     const selectedItems = e.target.files;
-    setShowAlert(true);
 
     if (!selectedItems) {
+      setAlert('upload-error');
       return;
     }
 
     for (let i = 0; i < selectedItems.length; i++) {
       if (selectedItems[i].name.endsWith('.xlsx')) {
         setFile(selectedItems[i]);
-        setShowAlert(false);
+        setAlert('none');
         break;
+      }
+
+      if (alert === 'none') {
+        // Setting alert to upload-error here because
+        // input is set to accept only .xlsx files below
+        setAlert('upload-error');
       }
     }
   };
@@ -100,6 +113,7 @@ export default function InfoFile({ setIsValid, setFileData }: infoFileProps) {
             <input
               type="file"
               ref={input}
+              accept=".xlsx"
               style={{ display: 'none' }}
               onChange={(e) => {
                 handleUpload(e);
@@ -147,8 +161,10 @@ export default function InfoFile({ setIsValid, setFileData }: infoFileProps) {
           </FileInfoBlock>
         )}
       </FileBlock>
-      {showAlert && (
-        <InlineAlert status="error">{t('file-upload-failed')}</InlineAlert>
+      {alert !== 'none' && (
+        <InlineAlert status="error">
+          {translateFileUploadError(alert, t)}
+        </InlineAlert>
       )}
     </FileWrapper>
   );

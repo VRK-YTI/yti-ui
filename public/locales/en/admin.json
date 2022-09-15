@@ -116,7 +116,10 @@
   "example-textarea-label-text": "Example related to concept",
   "example-textarea-placeholder": "Give example",
   "file-added": "File added",
-  "file-upload-failed": "File upload failed. Try again.",
+  "file-upload-error": {
+    "incorrect-file-type": "Incorrect file type. Allowed file type is xlsx.",
+    "upload-error": "File upload failed. Try again."
+  },
   "give-definition": "Give definition",
   "has-part-concept": "Has part concept",
   "has-part-concept-add": "Add new has part concept",
