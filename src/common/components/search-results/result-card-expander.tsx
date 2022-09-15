@@ -93,17 +93,21 @@ export default function ResultCardExpander({
   }
 
   function renderHitsInContent() {
-    return deepHits.map((deepHit, hitIdx) => {
-      return deepHit.topHits.map((hit, idx) => {
-        return (
-          <Link key={`${hitIdx}-${idx}`} href={hit.uri} passHref>
-            <SuomiFiLink href="">
-              <SanitizedTextContent text={getText(hit.label)} />
-            </SuomiFiLink>
-          </Link>
-        );
-      });
-    });
+    return deepHits.map((deepHit, hitIdx) =>
+      deepHit.topHits.map((hit, idx) => {
+        if (hit.uri) {
+          return (
+            <Link key={`${hitIdx}-${idx}`} href={hit.uri} passHref>
+              <SuomiFiLink href="">
+                <SanitizedTextContent text={getText(hit.label)} />
+              </SuomiFiLink>
+            </Link>
+          );
+        } else {
+          return <SanitizedTextContent text={getText(hit.label)} />;
+        }
+      })
+    );
   }
 
   function getText(label: { [key: string]: string }) {
