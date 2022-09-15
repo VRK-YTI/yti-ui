@@ -8,6 +8,7 @@ import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info'
 import useConfirmBeforeLeavingPage from '@app/common/utils/hooks/use-confirm-before-leaving-page';
 import { useStoreDispatch } from '@app/store';
 import { useTranslation } from 'next-i18next';
+import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import {
   Button,
@@ -38,6 +39,7 @@ export default function NewTerminologyModal({
   const dispatch = useStoreDispatch();
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
+  const router = useRouter();
   const [isValid, setIsValid] = useState(false);
   const [inputType, setInputType] = useState('');
   const [startFileUpload, setStartFileUpload] = useState(false);
@@ -63,8 +65,16 @@ export default function NewTerminologyModal({
 
   useEffect(() => {
     if (newVocabulary.isSuccess) {
-      handleClose();
       dispatch(terminologySearchApi.util.invalidateTags(['TerminologySearch']));
+
+      // API should return ID of new terminology but just in case if
+      // create is succesful and ID is missing then just close the modal
+      if (newVocabulary.data.length > 0) {
+        disableConfirmation();
+        router.push(`/terminology/${newVocabulary.data}`);
+      } else {
+        handleClose();
+      }
     } else if (newVocabulary.isError) {
       setIsCreating(false);
       const errorMessage =
@@ -83,7 +93,7 @@ export default function NewTerminologyModal({
         )
       );
     }
-  }, [t, newVocabulary, dispatch, handleClose]);
+  }, [t, newVocabulary, dispatch, handleClose, router, disableConfirmation]);
 
   const handleCloseRequest = () => {
     handleClose();
