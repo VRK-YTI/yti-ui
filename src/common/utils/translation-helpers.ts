@@ -140,6 +140,10 @@ export function translateEditConceptError(
       return t('edit-concept-error.recommendedTerms', { ns: 'admin' });
     case 'termPrefLabel':
       return t('edit-concept-error.termPrefLabel', { ns: 'admin' });
+    case 'source':
+      return t('edit-concept-error.source', { ns: 'admin' });
+    case 'diagrams':
+      return t('edit-concept-error.diagrams', { ns: 'admin' });
     default:
       return t('edit-concept-error.default', { ns: 'admin' });
   }

@@ -9,6 +9,7 @@ export interface Concept extends BaseEntity<'Concept'> {
     conceptClass?: Property[];
     conceptScope?: Property[];
     definition?: Property[];
+    externalLink?: Property[];
     editorialNote?: Property[];
     example?: Property[];
     historyNote?: Property[];

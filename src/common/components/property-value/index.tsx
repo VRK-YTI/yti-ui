@@ -6,6 +6,7 @@ import { getPropertyValue } from './get-property-value';
 export interface PropertyValueProps {
   property?: Property[];
   valueAccessor?: (property: Property) => string;
+  language?: string;
   delimiter?: string | false;
   fallback?: string;
   stripHtml?: boolean;
@@ -36,6 +37,7 @@ export interface PropertyValueProps {
 export default function PropertyValue({
   property,
   valueAccessor,
+  language,
   delimiter = false,
   fallback,
   stripHtml = false,
@@ -45,14 +47,11 @@ export default function PropertyValue({
   const value = getPropertyValue({
     property,
     valueAccessor,
-    language: i18n.language,
+    language: language ?? i18n.language,
     delimiter,
+    fallback,
     stripHtml,
   });
-
-  if (!value) {
-    return <>{fallback}</>;
-  }
 
   return <>{value}</>;
 }

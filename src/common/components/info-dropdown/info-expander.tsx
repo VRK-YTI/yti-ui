@@ -4,6 +4,7 @@ import {
   Button,
   ExpanderContent,
   ExpanderTitleButton,
+  ExternalLink,
   VisuallyHidden,
 } from 'suomifi-ui-components';
 import { InfoExpanderWrapper, PropertyList } from './info-expander.styles';
@@ -44,6 +45,8 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
   if (!data) {
     return null;
   }
+
+  const contact = getPropertyValue({ property: data.properties.contact });
 
   return (
     <InfoExpanderWrapper id="info-expander">
@@ -91,6 +94,23 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
             t
           )}
         </BasicBlock>
+
+        {contact && (
+          <BasicBlock title={t('contact')}>
+            <ExternalLink
+              href={`mailto:${contact}?subject=${t(
+                'feedback-vocabulary'
+              )} - ${getPropertyValue({
+                property: data.properties.prefLabel,
+                language: i18n.language,
+              })}`}
+              labelNewWindow={`${t('site-open-new-email')} ${contact}`}
+              style={{ fontSize: '16px' }}
+            >
+              {contact}
+            </ExternalLink>
+          </BasicBlock>
+        )}
 
         {HasPermission({
           actions: 'EDIT_TERMINOLOGY',

@@ -7,7 +7,6 @@
   "add-new-collection": "",
   "add-new-concept": "",
   "add-new-concept-description": "",
-  "add-new-diagram-or-link": "",
   "add-new-editorialNote": "",
   "add-new-example": "",
   "add-new-link": "",
@@ -97,10 +96,12 @@
   "downloading-file": "",
   "edit-concept-error": {
     "default": "",
+    "diagrams": "",
     "editorialNote": "",
     "example": "",
     "note": "",
     "recommendedTerms": "",
+    "source": "",
     "termPrefLabel": ""
   },
   "edit-terminology": "",

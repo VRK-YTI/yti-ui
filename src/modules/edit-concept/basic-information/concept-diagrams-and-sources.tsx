@@ -3,35 +3,38 @@ import { BasicBlockExtraWrapper } from '@app/common/components/block/block.style
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { ExpanderTitleButton } from 'suomifi-ui-components';
-import ListBlock from '../list-block';
 import { DiagramType, ListType } from '../new-concept.types';
+import { FormError } from '../validate-form';
 import { BasicInfoUpdate } from './concept-basic-information';
 import {
   ConceptExpander,
   ExpanderContentFitted,
 } from './concept-basic-information.styles';
-import NewDiagramOrLink from './new-diagram-or-link';
+import Diagrams from './diagrams';
+import Sources from './sources';
 
 interface ConceptDiagramsAndSourcesProps {
   infoKey: string;
   update: (value: BasicInfoUpdate) => void;
   initialValues?: {
-    diagram: DiagramType[];
+    diagrams: DiagramType[];
     sources: ListType[];
   };
+  errors: FormError;
 }
 
 export default function ConceptDiagramsAndSources({
   infoKey,
   update,
   initialValues,
+  errors,
 }: ConceptDiagramsAndSourcesProps) {
   const { t } = useTranslation('admin');
   const [sources, setSources] = useState<ListType[]>(
     initialValues?.sources ?? []
   );
   const [diagrams, setDiagrams] = useState<DiagramType[]>(
-    initialValues?.diagram ?? []
+    initialValues?.diagrams ?? []
   );
 
   const handleBlur = () => {
@@ -44,22 +47,22 @@ export default function ConceptDiagramsAndSources({
     });
   };
 
-  const handleAddDiagram = (newDiagram: DiagramType) => {
-    setDiagrams([...diagrams, newDiagram]);
-  };
-
-  const handleAddSource = ({ value }: BasicInfoUpdate) => {
-    setSources([...sources, value as ListType]);
-
-    if (typeof value !== 'string' && Array.isArray(value)) {
-      update({
-        key: infoKey,
-        value: {
-          diagrams: diagrams,
-          sources: value,
-        },
-      });
+  const handleRemove = (s?: ListType[], d?: DiagramType[]) => {
+    if (s) {
+      setSources(s);
     }
+
+    if (d) {
+      setDiagrams(d);
+    }
+
+    update({
+      key: infoKey,
+      value: {
+        diagrams: d ? d : diagrams,
+        sources: s ? s : sources,
+      },
+    });
   };
 
   return (
@@ -72,27 +75,33 @@ export default function ConceptDiagramsAndSources({
           title={t('concept-diagram-or-link')}
           extra={
             <BasicBlockExtraWrapper onBlur={() => handleBlur()}>
-              {diagrams.map((diagram, idx) => (
-                <div key={`'diagram-${idx}`}>{diagram.diagramName}</div>
-              ))}
-              <NewDiagramOrLink addDiagram={handleAddDiagram} />
+              <Diagrams
+                diagrams={diagrams}
+                setDiagrams={setDiagrams}
+                handleRemove={handleRemove}
+                isError={errors.diagrams}
+              />
             </BasicBlockExtraWrapper>
           }
         >
           {t('add-new-link-description')}
         </BasicBlock>
 
-        <ListBlock
-          update={handleAddSource}
-          items={sources}
-          itemsKey={'source'}
-          noLangOption
+        <BasicBlock
           title={t('source', { count: 2 })}
-          description={t('sources-hint-text-concept')}
-          addNewText={t('add-new-source')}
-          inputLabel={t('source', { count: 1 })}
-          inputPlaceholder={t('sources-placeholder')}
-        />
+          extra={
+            <BasicBlockExtraWrapper onBlur={() => handleBlur()}>
+              <Sources
+                sources={sources}
+                setSources={setSources}
+                handleRemove={handleRemove}
+                isError={errors.source}
+              />
+            </BasicBlockExtraWrapper>
+          }
+        >
+          {t('sources-hint-text-concept')}
+        </BasicBlock>
       </ExpanderContentFitted>
     </ConceptExpander>
   );

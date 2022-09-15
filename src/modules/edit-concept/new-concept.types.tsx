@@ -28,7 +28,7 @@ export interface BasicInfo {
   subject: string;
   note: ListType[];
   diagramAndSource: {
-    diagram: DiagramType[];
+    diagrams: DiagramType[];
     sources: ListType[];
   };
   orgInfo: {
@@ -66,8 +66,9 @@ export interface ListType {
 
 export interface DiagramType {
   description: string;
-  diagramName: string;
-  diagramUrl: string;
+  name: string;
+  url: string;
+  id: string;
 }
 
 export interface EditConceptType {

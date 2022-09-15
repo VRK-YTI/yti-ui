@@ -7,7 +7,6 @@
   "add-new-collection": "Add new collection",
   "add-new-concept": "Add new concept",
   "add-new-concept-description": "Concept's languages are inherited from the terminology information. Add a recommended term for the concept in at least one of the available languages.",
-  "add-new-diagram-or-link": "Add new diagram or link",
   "add-new-editorialNote": "Add new note",
   "add-new-example": "Add new example",
   "add-new-link": "Add new link",
@@ -97,10 +96,12 @@
   "downloading-file": "Downloading file",
   "edit-concept-error": {
     "default": "Concept has missing information",
+    "diagrams": "At least one diagram is missing name and/or url",
     "editorialNote": "At least one editorial note is missing a descriptive text",
     "example": "At least one example is missing a descriptive text",
     "note": "At least one note is missing a descriptive text",
     "recommendedTerms": "Concept is missing a preferred term ",
+    "source": "At least one source is missing a value",
     "termPrefLabel": "At least on preferred term is missing a name"
   },
   "edit-terminology": "Edit terminology",
