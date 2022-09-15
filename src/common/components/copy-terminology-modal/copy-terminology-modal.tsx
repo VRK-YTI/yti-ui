@@ -58,8 +58,7 @@ export default function CopyTerminologyModal({
   }, [setVisible]);
 
   useEffect(() => {
-    if (createVersion.isSuccess && newGraphId) {
-      handleClose();
+    if (createVersion.isSuccess) {
       dispatch(terminologySearchApi.util.invalidateTags(['TerminologySearch']));
       dispatch(
         setAlert(
@@ -75,7 +74,12 @@ export default function CopyTerminologyModal({
           []
         )
       );
-      router.push(`/terminology/${newGraphId}`);
+
+      if (newGraphId) {
+        router.push(`/terminology/${newGraphId}`);
+      } else {
+        handleClose();
+      }
     }
   }, [createVersion, newGraphId, dispatch, handleClose, router, t]);
 
@@ -115,7 +119,12 @@ export default function CopyTerminologyModal({
           </InlineAlert>
         )}
         <FooterBlock>
-          <Button onClick={() => handlePost()}>{t('save')}</Button>
+          <Button
+            onClick={() => handlePost()}
+            disabled={createVersion.isLoading}
+          >
+            {t('save')}
+          </Button>
           <Button variant="secondary" onClick={() => handleClose()}>
             {t('cancel-variant')}
           </Button>
