@@ -31,17 +31,8 @@ export default function LanguageBlock({
   const [description, setDescription] = useState(
     initialData ? initialData.description : ''
   );
-  const [status, setStatus] = useState<'default' | 'error'>(
-    userPosted ? 'error' : 'default'
-  );
 
   const handleBlur = () => {
-    if (!name) {
-      setStatus('error');
-    } else {
-      setStatus('default');
-    }
-
     handleUpdate(id, name, description);
   };
 
@@ -56,8 +47,10 @@ export default function LanguageBlock({
         $isSmall={isSmall}
         onChange={(e) => setName(e?.toString().trim() ?? '')}
         onBlur={handleBlur}
-        status={status}
-        statusText={status === 'error' ? t('terminology-name-error') : ''}
+        status={userPosted && name.length < 1 ? 'error' : 'default'}
+        statusText={
+          userPosted && name.length < 1 ? t('terminology-name-error') : ''
+        }
         defaultValue={name}
         maxLength={TEXT_INPUT_MAX}
         className="terminology-name-input"
