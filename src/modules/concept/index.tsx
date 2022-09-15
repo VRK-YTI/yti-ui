@@ -269,10 +269,12 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
               <ExternalLink
                 href={`mailto:${
                   isEmail(email) ? email : 'yhteentoimivuus@dvv.fi'
-                }?subject=${conceptId}`}
-                labelNewWindow={t('site-open-link-new-window', {
+                }?subject=${t('feedback-concept', {
                   ns: 'common',
-                })}
+                })} - ${prefLabel}`}
+                labelNewWindow={`${t('site-open-new-email', {
+                  ns: 'common',
+                })} ${isEmail(email) ? email : 'yhteentoimivuus@dvv.fi'}`}
               >
                 {t('feedback-action')}
               </ExternalLink>
