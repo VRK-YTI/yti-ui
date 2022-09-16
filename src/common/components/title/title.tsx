@@ -5,6 +5,7 @@ import {
   Description,
   StatusChip,
   TitleDescriptionWrapper,
+  TitleTerminologyType,
   TitleWrapper,
   TitleWrapperNoBreadcrumb,
 } from './title.styles';
@@ -18,7 +19,10 @@ import { getProperty } from '@app/common/utils/get-property';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import NewTerminology from '@app/modules/new-terminology';
 import useTitleRef from '@app/common/utils/hooks/use-title-ref';
-import { translateStatus } from '@app/common/utils/translation-helpers';
+import {
+  translateStatus,
+  translateTerminologyType,
+} from '@app/common/utils/translation-helpers';
 
 interface TitleProps {
   info: string | VocabularyInfoDTO;
@@ -63,6 +67,11 @@ export default function Title({ info, noExpander }: TitleProps) {
         language: i18n.language,
       }) ?? '';
 
+    const terminologyType = translateTerminologyType(
+      info.properties?.terminologyType?.[0].value ?? '',
+      t
+    );
+
     return (
       <TitleWrapper id="page-title-block">
         <Contributor id="contributor">{contributor}</Contributor>
@@ -71,12 +80,21 @@ export default function Title({ info, noExpander }: TitleProps) {
           {title}
         </Heading>
 
-        <StatusChip
-          valid={status === 'VALID' ? 'true' : undefined}
-          id="status-chip"
-        >
-          {translateStatus(status, t)}
-        </StatusChip>
+        <div>
+          {terminologyType && (
+            <>
+              <TitleTerminologyType>{terminologyType}</TitleTerminologyType>
+              &middot;
+            </>
+          )}
+
+          <StatusChip
+            valid={status === 'VALID' ? 'true' : undefined}
+            id="status-chip"
+          >
+            {translateStatus(status, t)}
+          </StatusChip>
+        </div>
 
         {!noExpander && <InfoExpander data={info} />}
       </TitleWrapper>

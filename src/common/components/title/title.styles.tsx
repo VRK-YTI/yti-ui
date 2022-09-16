@@ -36,10 +36,23 @@ export const TitleDescriptionWrapper = styled.div<{ $isSmall: boolean }>`
 export const TitleWrapper = styled.div`
   display: flex;
   flex-direction: column;
+
+  > div {
+    display: flex;
+    align-items: center;
+    gap: ${(props) => props.theme.suomifi.spacing.xxs};
+  }
 `;
 
 export const TitleWrapperNoBreadcrumb = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 18px;
+`;
+
+export const TitleTerminologyType = styled(Text)`
+  color: ${(props) => props.theme.suomifi.colors.depthDark1};
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
 `;
