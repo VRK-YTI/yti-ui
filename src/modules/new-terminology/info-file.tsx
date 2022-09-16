@@ -84,12 +84,8 @@ export default function InfoFile({ setIsValid, setFileData }: infoFileProps) {
         setFile(selectedItems[i]);
         setAlert('none');
         break;
-      }
-
-      if (alert === 'none') {
-        // Setting alert to upload-error here because
-        // input is set to accept only .xlsx files below
-        setAlert('upload-error');
+      } else if (alert === 'none' && selectedItems[i].name.length > 0) {
+        setAlert('incorrect-file-type');
       }
     }
   };
