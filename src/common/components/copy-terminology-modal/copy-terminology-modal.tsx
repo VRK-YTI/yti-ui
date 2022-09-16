@@ -18,6 +18,9 @@ import Prefix from '../terminology-components/prefix';
 import { UpdateTerminology } from '@app/modules/new-terminology/update-terminology.interface';
 import { setAlert } from '../alert/alert.slice';
 import { useRouter } from 'next/router';
+import InlineAlert from '../inline-alert';
+import SaveSpinner from '../save-spinner';
+import { FooterBlock } from './copy-terminology-modal.styles';
 
 interface CopyTerminologyModalProps {
   terminologyId: string;
@@ -55,8 +58,7 @@ export default function CopyTerminologyModal({
   }, [setVisible]);
 
   useEffect(() => {
-    if (createVersion.isSuccess && newGraphId) {
-      handleClose();
+    if (createVersion.isSuccess) {
       dispatch(terminologySearchApi.util.invalidateTags(['TerminologySearch']));
       dispatch(
         setAlert(
@@ -72,15 +74,21 @@ export default function CopyTerminologyModal({
           []
         )
       );
-      router.push(`/terminology/${newGraphId}`);
+
+      if (newGraphId) {
+        router.push(`/terminology/${newGraphId}`);
+      } else {
+        handleClose();
+      }
     }
   }, [createVersion, newGraphId, dispatch, handleClose, router, t]);
 
   const handlePost = () => {
+    setUserPosted(true);
     if (!newCode || error) {
       return;
     }
-    setUserPosted(true);
+
     const graphId = terminologyId;
     postCreateVersion({ graphId, newCode })
       .unwrap()
@@ -105,10 +113,25 @@ export default function CopyTerminologyModal({
       </ModalContent>
 
       <ModalFooter>
-        <Button onClick={(e) => handlePost()}>{t('save')}</Button>
-        <Button variant="secondary" onClick={() => handleClose()}>
-          {t('cancel-variant')}
-        </Button>
+        {userPosted && newCode === '' && (
+          <InlineAlert status="warning">
+            {t('alert-prefix-undefined')}
+          </InlineAlert>
+        )}
+        <FooterBlock>
+          <Button
+            onClick={() => handlePost()}
+            disabled={createVersion.isLoading}
+          >
+            {t('save')}
+          </Button>
+          <Button variant="secondary" onClick={() => handleClose()}>
+            {t('cancel-variant')}
+          </Button>
+          {createVersion.isLoading && (
+            <SaveSpinner text={t('copying-terminology')} />
+          )}
+        </FooterBlock>
       </ModalFooter>
     </Modal>
   );

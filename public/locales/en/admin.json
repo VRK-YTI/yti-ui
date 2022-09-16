@@ -85,6 +85,7 @@
   "copy-as-base": "Copy as a base",
   "copy-as-base-description": "The prefix is a visible part of a vocabularies url-address and as such a part of the addresses of the concepts within the vocabulary",
   "copy-from-terminology-as-base": "Create a new version of the terminology",
+  "copying-terminology": "Copying terminology",
   "current-recommended-term": "Current recommended term",
   "definition": "Definition",
   "definition-label-text": "Definition, $t({{lang}}) {{langUpper}}",
@@ -117,7 +118,10 @@
   "example-textarea-label-text": "Example related to concept",
   "example-textarea-placeholder": "Give example",
   "file-added": "File added",
-  "file-upload-failed": "File upload failed. Try again.",
+  "file-upload-error": {
+    "incorrect-file-type": "Incorrect file type. Allowed file type is xlsx.",
+    "upload-error": "File upload failed. Try again."
+  },
   "give-definition": "Give definition",
   "has-part-concept": "Has part concept",
   "has-part-concept-add": "Add new has part concept",

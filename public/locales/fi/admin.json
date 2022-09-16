@@ -85,6 +85,7 @@
   "copy-as-base": "Kopioi pohjaksi",
   "copy-as-base-description": "Tunnus on näkyvä osa sanaston url-osoitetta ja näin ollen myös osa sanastossa sijaitsevien käsitteiden osoitteita",
   "copy-from-terminology-as-base": "Luo uusi versio sanastosta",
+  "copying-terminology": "Kopioidaan sanastoa",
   "current-recommended-term": "Nykyinen suositettava termi",
   "definition": "Määritelmä",
   "definition-label-text": "Määritelmä, $t({{lang}}) {{langUpper}}",
@@ -117,7 +118,10 @@
   "example-textarea-label-text": "Käsitteeseen liittyvä esimerkki",
   "example-textarea-placeholder": "Kirjoita esimerkki",
   "file-added": "Tiedosto lisätty",
-  "file-upload-failed": "Tiedoston lataus ei onnistunut. Kokeile uudelleen.",
+  "file-upload-error": {
+    "incorrect-file-type": "Väärä tiedostotyyppi. Sallittu tiedostotyyppi on xlsx.",
+    "upload-error": "Tiedoston lataus ei onnistunut. Kokeile uudelleen."
+  },
   "give-definition": "Kirjoita määritelmä",
   "has-part-concept": "Koostumussuhteinen alakäsite",
   "has-part-concept-add": "Lisää uusi koostumussuhteinen alakäsite",

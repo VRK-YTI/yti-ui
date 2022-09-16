@@ -165,7 +165,9 @@ export default function AccessRequestModal({
             <Checkbox
               checked={services[DATA_MODEL]}
               onClick={(e) => handleCheckbox(DATA_MODEL, e.checkboxState)}
-              status={error?.['checkbox'] ? 'error' : 'default'}
+              status={
+                error?.['checkbox'] || error?.[DATA_MODEL] ? 'error' : 'default'
+              }
               statusText={
                 (error?.['checkbox'] && t('access-pick-at-least-one')) ||
                 (error[DATA_MODEL] && t('access-request-already-sent')) ||

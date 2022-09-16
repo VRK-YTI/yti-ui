@@ -85,6 +85,7 @@
   "copy-as-base": "",
   "copy-as-base-description": "",
   "copy-from-terminology-as-base": "",
+  "copying-terminology": "",
   "current-recommended-term": "",
   "definition": "",
   "definition-label-text": "",
@@ -117,7 +118,10 @@
   "example-textarea-label-text": "",
   "example-textarea-placeholder": "",
   "file-added": "",
-  "file-upload-failed": "",
+  "file-upload-error": {
+    "incorrect-file-type": "",
+    "upload-error": ""
+  },
   "give-definition": "",
   "has-part-concept": "",
   "has-part-concept-add": "",
