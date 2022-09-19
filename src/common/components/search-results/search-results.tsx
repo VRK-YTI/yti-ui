@@ -156,8 +156,8 @@ export default function SearchResults({
             <ResultWrapper $isSmall={isSmall}>
               {data
                 .filter((collection, idx) => {
-                  const minId = Math.max(0, (urlState.page - 1) * 10);
-                  const maxId = minId + 10;
+                  const minId = Math.max(0, (urlState.page - 1) * 50);
+                  const maxId = minId + 50;
                   if (idx >= minId && idx < maxId) {
                     return collection;
                   }
