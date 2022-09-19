@@ -201,7 +201,7 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
                 }}
                 id="export-terminology-button"
               >
-                {t('vocabulary-info-vocabulary-export')} (.xlsx)
+                {t('vocabulary-info-vocabulary-export-button')}
               </Button>
             </BasicBlockExtraWrapper>
           }
