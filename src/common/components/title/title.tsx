@@ -17,7 +17,6 @@ import { useEffect } from 'react';
 import { getProperty } from '@app/common/utils/get-property';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import NewTerminology from '@app/modules/new-terminology';
-import useTitleRef from '@app/common/utils/hooks/use-title-ref';
 import { translateStatus } from '@app/common/utils/translation-helpers';
 
 interface TitleProps {
@@ -28,7 +27,6 @@ interface TitleProps {
 export default function Title({ info, noExpander }: TitleProps) {
   const { t, i18n } = useTranslation('common');
   const { isSmall } = useBreakpoints();
-  const titleRef = useTitleRef();
   const dispatch = useStoreDispatch();
   const title = getTitle(info);
 
@@ -67,7 +65,7 @@ export default function Title({ info, noExpander }: TitleProps) {
       <TitleWrapper id="page-title-block">
         <Contributor id="contributor">{contributor}</Contributor>
 
-        <Heading variant="h1" tabIndex={-1} ref={titleRef} id="page-title">
+        <Heading variant="h1" tabIndex={-1} id="page-title">
           {title}
         </Heading>
 
