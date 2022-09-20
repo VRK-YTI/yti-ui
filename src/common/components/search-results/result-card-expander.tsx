@@ -104,7 +104,12 @@ export default function ResultCardExpander({
             </Link>
           );
         } else {
-          return <SanitizedTextContent text={getText(hit.label)} />;
+          return (
+            <SanitizedTextContent
+              key={hit.id ?? idx}
+              text={getText(hit.label)}
+            />
+          );
         }
       })
     );
