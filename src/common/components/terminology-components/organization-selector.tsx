@@ -1,7 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import { useSelector } from 'react-redux';
 import { MultiSelectData, Paragraph, Text } from 'suomifi-ui-components';
-import { selectLogin } from '@app/common/components/login/login.slice';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import { useGetOrganizationsQuery } from '@app/common/components/terminology-search/terminology-search.slice';
 import {
@@ -11,6 +9,7 @@ import {
 import { UpdateTerminology } from '@app/modules/new-terminology/update-terminology.interface';
 import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info';
 import { useEffect, useState } from 'react';
+import HasPermission from '@app/common/utils/has-permission';
 
 export interface OrganizationSelectorProps {
   update: ({ key, data }: UpdateTerminology) => void;
@@ -23,7 +22,6 @@ export default function OrganizationSelector({
   userPosted,
   initialData,
 }: OrganizationSelectorProps) {
-  const user = useSelector(selectLogin());
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const { data: organizations } = useGetOrganizationsQuery(i18n.language);
@@ -40,7 +38,12 @@ export default function OrganizationSelector({
 
   const adminOrgs: MultiSelectData[] = organizations
     ?.map((org) => {
-      if (user.organizationsInRole.ADMIN.includes(org.id.toString())) {
+      if (
+        HasPermission({
+          actions: ['CREATE_TERMINOLOGY'],
+          targetOrganization: org.id.toString(),
+        })
+      ) {
         const orgName = org.properties.prefLabel.value;
 
         if (orgName) {

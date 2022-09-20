@@ -184,7 +184,7 @@ export default function Collection({
           }) && (
             <>
               <BasicBlock
-                title="Muokkaa käsitekokoelmaa"
+                title={t('edit-collection')}
                 extra={
                   <BasicBlockExtraWrapper>
                     <Link href={`${router.asPath}/edit`}>
@@ -193,13 +193,13 @@ export default function Collection({
                         icon="edit"
                         id="edit-collection-button"
                       >
-                        Muokkaa käsitekokoelmaa
+                        {t('edit-collection')}
                       </Button>
                     </Link>
                   </BasicBlockExtraWrapper>
                 }
               >
-                Sinulla on oikeudet muokata tätä käsitekokoelmaa
+                {t('edit-collection-rights')}
               </BasicBlock>
 
               <Separator />
