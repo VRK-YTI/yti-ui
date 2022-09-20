@@ -180,7 +180,7 @@ export default function Collection({
 
           {HasPermission({
             actions: 'EDIT_COLLECTION',
-            targetOrganization: terminology?.references.contributor?.[0].id,
+            targetOrganization: terminology?.references.contributor,
           }) && (
             <>
               <BasicBlock

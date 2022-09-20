@@ -114,7 +114,7 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
 
         {HasPermission({
           actions: 'EDIT_TERMINOLOGY',
-          targetOrganization: data.references.contributor?.[0].id,
+          targetOrganization: data.references.contributor,
         }) && (
           <>
             <Separator isLarge />
@@ -144,7 +144,7 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
 
         {HasPermission({
           actions: 'CREATE_CONCEPT',
-          targetOrganization: data.references.contributor?.[0].id,
+          targetOrganization: data.references.contributor,
         }) && (
           <NewConceptModal
             terminologyId={data.type.graph.id}
@@ -156,7 +156,7 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
 
         {HasPermission({
           actions: 'CREATE_COLLECTION',
-          targetOrganization: data.references.contributor?.[0].id,
+          targetOrganization: data.references.contributor,
         }) && (
           <>
             <Separator isLarge />

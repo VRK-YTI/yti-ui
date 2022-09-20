@@ -1,6 +1,7 @@
 import { useSelector } from 'react-redux';
 import { selectAdminControls } from '../components/admin-controls/admin-controls.slice';
 import { selectLogin } from '../components/login/login.slice';
+import { Organization } from '../interfaces/organization.interface';
 import { User } from '../interfaces/user.interface';
 
 const actions = [
@@ -22,13 +23,13 @@ type Actions = typeof actions[number];
 
 export interface hasPermissionProps {
   actions: Actions | Actions[];
-  targetOrganization?: string;
+  targetOrganization?: string | Organization[];
 }
 
 export interface checkPermissionProps {
   user: User;
   actions: Actions[];
-  targetOrganization?: string;
+  targetOrganizations?: string[];
 }
 
 export default function HasPermission({
@@ -46,21 +47,34 @@ export default function HasPermission({
     return false;
   }
 
+  if (!targetOrganization) {
+    return checkPermission({
+      user,
+      actions: Array.isArray(actions) ? actions : [actions],
+    });
+  }
+
   return checkPermission({
     user,
     actions: Array.isArray(actions) ? actions : [actions],
-    targetOrganization,
+    targetOrganizations:
+      typeof targetOrganization === 'string'
+        ? [targetOrganization]
+        : targetOrganization.map((org) => org.id),
   });
 }
 
 export function checkPermission({
   user,
   actions,
-  targetOrganization,
+  targetOrganizations,
 }: checkPermissionProps) {
-  const organizationsInRole = Object.keys(user.organizationsInRole);
-  const rolesInTargetOrganization =
-    targetOrganization && user.rolesInOrganizations[targetOrganization];
+  const rolesInOrganizations = Object.keys(user.organizationsInRole);
+  const rolesInTargetOrganizations =
+    targetOrganizations &&
+    targetOrganizations
+      ?.flatMap((org) => user.rolesInOrganizations[org])
+      .filter((t) => t);
 
   // Return true if user is superuser
   if (user.superuser) {
@@ -68,14 +82,14 @@ export function checkPermission({
   }
 
   // Return true if target organization is undefined and user has admin role
-  if (organizationsInRole.includes('ADMIN') && !targetOrganization) {
+  if (rolesInOrganizations.includes('ADMIN') && !targetOrganizations) {
     return true;
   }
 
   // Return true if user has admin role in target organization
   if (
-    organizationsInRole.includes('ADMIN') &&
-    rolesInTargetOrganization?.includes('ADMIN')
+    rolesInOrganizations.includes('ADMIN') &&
+    rolesInTargetOrganizations?.includes('ADMIN')
   ) {
     return true;
   }
@@ -83,8 +97,8 @@ export function checkPermission({
   // Return true if user has terminology editor role and actions
   // don't include admin actions
   if (
-    !targetOrganization &&
-    organizationsInRole.includes('TERMINOLOGY_EDITOR') &&
+    !targetOrganizations &&
+    rolesInOrganizations.includes('TERMINOLOGY_EDITOR') &&
     !actions.some((action) => action.includes('ADMIN'))
   ) {
     return true;
@@ -93,7 +107,7 @@ export function checkPermission({
   // Return true if user has terminology editor role for target
   // organization and actions don't include admin actions
   if (
-    rolesInTargetOrganization?.includes('TERMINOLOGY_EDITOR') &&
+    rolesInTargetOrganizations?.includes('TERMINOLOGY_EDITOR') &&
     !actions.some((action) => action.includes('ADMIN'))
   ) {
     return true;

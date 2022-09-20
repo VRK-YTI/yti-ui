@@ -213,7 +213,7 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
 
           {HasPermission({
             actions: 'EDIT_CONCEPT',
-            targetOrganization: terminology?.references.contributor?.[0].id,
+            targetOrganization: terminology?.references.contributor,
           }) && (
             <>
               <BasicBlock
