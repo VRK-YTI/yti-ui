@@ -27,7 +27,7 @@ export interface hasPermissionProps {
 
 export interface checkPermissionProps {
   user: User;
-  actions: Actions | Actions[];
+  actions: Actions[];
   targetOrganization?: string;
 }
 
@@ -46,7 +46,11 @@ export default function HasPermission({
     return false;
   }
 
-  return checkPermission({ user, actions, targetOrganization });
+  return checkPermission({
+    user,
+    actions: Array.isArray(actions) ? actions : [actions],
+    targetOrganization,
+  });
 }
 
 export function checkPermission({
@@ -55,21 +59,12 @@ export function checkPermission({
   targetOrganization,
 }: checkPermissionProps) {
   const organizationsInRole = Object.keys(user.organizationsInRole);
-  const rolesInOrganizations = Object.keys(user.rolesInOrganizations);
   const rolesInTargetOrganization =
     targetOrganization && user.rolesInOrganizations[targetOrganization];
 
   // Return true if user is superuser
   if (user.superuser) {
     return true;
-  }
-
-  // Return false if user doesn't have a role in target organization
-  if (
-    targetOrganization &&
-    !rolesInOrganizations.includes(targetOrganization)
-  ) {
-    return false;
   }
 
   // Return true if target organization is undefined and user has admin role
@@ -90,9 +85,7 @@ export function checkPermission({
   if (
     !targetOrganization &&
     organizationsInRole.includes('TERMINOLOGY_EDITOR') &&
-    (Array.isArray(actions)
-      ? !actions.some((action) => action.includes('ADMIN'))
-      : !actions.includes('ADMIN'))
+    !actions.some((action) => action.includes('ADMIN'))
   ) {
     return true;
   }
@@ -101,9 +94,7 @@ export function checkPermission({
   // organization and actions don't include admin actions
   if (
     rolesInTargetOrganization?.includes('TERMINOLOGY_EDITOR') &&
-    (Array.isArray(actions)
-      ? !actions.some((action) => action.includes('ADMIN'))
-      : !actions.includes('ADMIN'))
+    !actions.some((action) => action.includes('ADMIN'))
   ) {
     return true;
   }

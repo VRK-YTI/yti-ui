@@ -36,7 +36,7 @@ describe('has-permission', () => {
 
     const rights = checkPermission({
       user: user,
-      actions: 'CREATE_TERMINOLOGY',
+      actions: ['CREATE_TERMINOLOGY'],
     });
     expect(rights).toBe(true);
   });
@@ -49,7 +49,7 @@ describe('has-permission', () => {
 
     const rights = checkPermission({
       user: user,
-      actions: 'CREATE_TERMINOLOGY',
+      actions: ['CREATE_TERMINOLOGY'],
     });
     expect(rights).toBe(true);
   });
@@ -62,7 +62,7 @@ describe('has-permission', () => {
 
     const rights = checkPermission({
       user: user,
-      actions: 'CREATE_TERMINOLOGY',
+      actions: ['CREATE_TERMINOLOGY'],
     });
     expect(rights).toBe(false);
   });
@@ -72,7 +72,7 @@ describe('has-permission', () => {
 
     const rights = checkPermission({
       user: user,
-      actions: 'CREATE_TERMINOLOGY',
+      actions: ['CREATE_TERMINOLOGY'],
       targetOrganization: 'foo',
     });
     expect(rights).toBe(true);
@@ -86,7 +86,7 @@ describe('has-permission', () => {
 
     const rights = checkPermission({
       user: user,
-      actions: 'CREATE_TERMINOLOGY',
+      actions: ['CREATE_TERMINOLOGY'],
       targetOrganization: 'foo',
     });
     expect(rights).toBe(true);
@@ -100,7 +100,7 @@ describe('has-permission', () => {
 
     const rights = checkPermission({
       user: user,
-      actions: 'CREATE_TERMINOLOGY',
+      actions: ['CREATE_TERMINOLOGY'],
       targetOrganization: 'foo',
     });
     expect(rights).toBe(false);
@@ -139,7 +139,7 @@ describe('has-permission', () => {
 
     const rights = checkPermission({
       user: user,
-      actions: 'CREATE_TERMINOLOGY',
+      actions: ['CREATE_TERMINOLOGY'],
     });
 
     expect(rights).toBe(false);
@@ -151,6 +151,36 @@ describe('has-permission', () => {
     const rights = checkPermission({
       user: user,
       actions: ['CREATE_TERMINOLOGY', 'EDIT_TERMINOLOGY', 'DELETE_TERMINOLOGY'],
+      targetOrganization: 'foo',
+    });
+
+    expect(rights).toBe(true);
+  });
+
+  it('should have rights to edit concept', () => {
+    const user = createMockUser(
+      { foo: ['TERMINOLOGY_EDITOR'] },
+      { TERMINOLOGY_EDITOR: ['foo'] }
+    );
+
+    const rights = checkPermission({
+      user: user,
+      actions: ['EDIT_CONCEPT'],
+      targetOrganization: 'foo',
+    });
+
+    expect(rights).toBe(true);
+  });
+
+  it('should have rights to edit collection', () => {
+    const user = createMockUser(
+      { foo: ['TERMINOLOGY_EDITOR'] },
+      { TERMINOLOGY_EDITOR: ['foo'] }
+    );
+
+    const rights = checkPermission({
+      user: user,
+      actions: ['EDIT_COLLECTION'],
       targetOrganization: 'foo',
     });
 
