@@ -10,12 +10,14 @@ export interface StatusSelectorProps {
   update: ({ key, data }: UpdateTerminology) => void;
   userPosted: boolean;
   defaultValue?: string;
+  disabled?: boolean;
 }
 
 export default function StatusSelector({
   update,
   userPosted,
   defaultValue,
+  disabled,
 }: StatusSelectorProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -75,6 +77,7 @@ export default function StatusSelector({
         status={userPosted && isError ? 'error' : 'default'}
         onItemSelectionChange={(e) => handleChange(e)}
         $isSmall={isSmall}
+        disabled={disabled}
       />
     </BlankFieldset>
   );

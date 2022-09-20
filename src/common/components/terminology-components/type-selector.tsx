@@ -10,11 +10,13 @@ import { useBreakpoints } from '../media-query/media-query-context';
 export interface TypeSelectorProps {
   update: ({ key, data }: UpdateTerminology) => void;
   defaultValue?: string;
+  disabled?: boolean;
 }
 
 export default function TypeSelector({
   update,
   defaultValue,
+  disabled,
 }: TypeSelectorProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -36,6 +38,7 @@ export default function TypeSelector({
           value="TERMINOLOGICAL_VOCABULARY"
           id="type-terminological"
           variant={isSmall ? 'large' : 'small'}
+          disabled={disabled}
         >
           {t('terminological-vocabulary')}
         </RadioButton>
@@ -43,6 +46,7 @@ export default function TypeSelector({
           value="OTHER_VOCABULARY"
           id="type-other"
           variant={isSmall ? 'large' : 'small'}
+          disabled={disabled}
         >
           {t('other-vocabulary')}
         </RadioButton>

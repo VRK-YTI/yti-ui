@@ -4,6 +4,7 @@
   "error-occured_access-request": "An error occurred with access request service",
   "error-occured_counts": "An error occurred while getting counts for statuses and information domains",
   "error-occured_groups": "An error occurred while getting information domains",
+  "error-occured_internal-server": "An error occurred within the webpage, please try again",
   "error-occured_organization": "An error occurred while getting organizations",
   "error-occured_subscription": "An error occurred with subscription service",
   "error-occured_terminology-search": "An error occurred while searching for terminologies",
