@@ -213,7 +213,10 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
 
           {HasPermission({
             actions: 'EDIT_CONCEPT',
-            targetOrganization: terminologyId,
+            // Added terminology object as a fallback if terminologyId isn't
+            // defined for some reason in SSR
+            targetOrganization:
+              terminologyId ?? terminology?.references.contributor?.[0].id,
           }) && (
             <>
               <BasicBlock
