@@ -36,7 +36,7 @@ describe('has-permission', () => {
 
     const rights = checkPermission({
       user: user,
-      actions: 'CREATE_TERMINOLOGY',
+      actions: ['CREATE_TERMINOLOGY'],
     });
     expect(rights).toBe(true);
   });
@@ -49,7 +49,7 @@ describe('has-permission', () => {
 
     const rights = checkPermission({
       user: user,
-      actions: 'CREATE_TERMINOLOGY',
+      actions: ['CREATE_TERMINOLOGY'],
     });
     expect(rights).toBe(true);
   });
@@ -62,7 +62,7 @@ describe('has-permission', () => {
 
     const rights = checkPermission({
       user: user,
-      actions: 'CREATE_TERMINOLOGY',
+      actions: ['CREATE_TERMINOLOGY'],
     });
     expect(rights).toBe(false);
   });
@@ -72,8 +72,8 @@ describe('has-permission', () => {
 
     const rights = checkPermission({
       user: user,
-      actions: 'CREATE_TERMINOLOGY',
-      targetOrganization: 'foo',
+      actions: ['CREATE_TERMINOLOGY'],
+      targetOrganizations: ['foo'],
     });
     expect(rights).toBe(true);
   });
@@ -86,8 +86,8 @@ describe('has-permission', () => {
 
     const rights = checkPermission({
       user: user,
-      actions: 'CREATE_TERMINOLOGY',
-      targetOrganization: 'foo',
+      actions: ['CREATE_TERMINOLOGY'],
+      targetOrganizations: ['foo'],
     });
     expect(rights).toBe(true);
   });
@@ -100,8 +100,8 @@ describe('has-permission', () => {
 
     const rights = checkPermission({
       user: user,
-      actions: 'CREATE_TERMINOLOGY',
-      targetOrganization: 'foo',
+      actions: ['CREATE_TERMINOLOGY'],
+      targetOrganizations: ['foo'],
     });
     expect(rights).toBe(false);
   });
@@ -115,7 +115,7 @@ describe('has-permission', () => {
     const rights = checkPermission({
       user: user,
       actions: ['CREATE_TERMINOLOGY', 'EDIT_TERMINOLOGY'],
-      targetOrganization: 'foo',
+      targetOrganizations: ['foo'],
     });
     expect(rights).toBe(true);
   });
@@ -129,7 +129,7 @@ describe('has-permission', () => {
     const rights = checkPermission({
       user: user,
       actions: ['CREATE_TERMINOLOGY', 'EDIT_TERMINOLOGY'],
-      targetOrganization: 'foo',
+      targetOrganizations: ['foo'],
     });
     expect(rights).toBe(false);
   });
@@ -139,7 +139,7 @@ describe('has-permission', () => {
 
     const rights = checkPermission({
       user: user,
-      actions: 'CREATE_TERMINOLOGY',
+      actions: ['CREATE_TERMINOLOGY'],
     });
 
     expect(rights).toBe(false);
@@ -151,9 +151,81 @@ describe('has-permission', () => {
     const rights = checkPermission({
       user: user,
       actions: ['CREATE_TERMINOLOGY', 'EDIT_TERMINOLOGY', 'DELETE_TERMINOLOGY'],
-      targetOrganization: 'foo',
+      targetOrganizations: ['foo'],
     });
 
     expect(rights).toBe(true);
+  });
+
+  it('should have rights to edit concept', () => {
+    const user = createMockUser(
+      { foo: ['TERMINOLOGY_EDITOR'] },
+      { TERMINOLOGY_EDITOR: ['foo'] }
+    );
+
+    const rights = checkPermission({
+      user: user,
+      actions: ['EDIT_CONCEPT'],
+      targetOrganizations: ['foo'],
+    });
+
+    expect(rights).toBe(true);
+  });
+
+  it('should have rights to edit collection', () => {
+    const user = createMockUser(
+      { foo: ['TERMINOLOGY_EDITOR'] },
+      { TERMINOLOGY_EDITOR: ['foo'] }
+    );
+
+    const rights = checkPermission({
+      user: user,
+      actions: ['EDIT_COLLECTION'],
+      targetOrganizations: ['foo'],
+    });
+
+    expect(rights).toBe(true);
+  });
+
+  it('should have rights with multiple target organizations defined', () => {
+    const editorUser = createMockUser(
+      { foo: ['TERMINOLOGY_EDITOR'], temp: ['SOME_OTHER_ROLES'] },
+      { TERMINOLOGY_EDITOR: ['foo'], SOME_OTHER_ROLES: ['temp'] }
+    );
+
+    const adminUser = createMockUser(
+      { foo: ['TERMINOLOGY_EDITOR'], temp: ['ADMIN'] },
+      { TERMINOLOGY_EDITOR: ['foo'], ADMIN: ['temp'] }
+    );
+
+    const editorRights = checkPermission({
+      user: editorUser,
+      actions: ['EDIT_COLLECTION'],
+      targetOrganizations: ['foo', 'temp'],
+    });
+
+    const adminRights = checkPermission({
+      user: adminUser,
+      actions: ['EDIT_COLLECTION'],
+      targetOrganizations: ['foo', 'temp'],
+    });
+
+    expect(editorRights).toBe(true);
+    expect(adminRights).toBe(true);
+  });
+
+  it('should not have rights with multiple target organizations defined', () => {
+    const user = createMockUser(
+      { foo: ['RANDOM_ROLE'], temp: ['SOME_OTHER_ROLES'] },
+      { RANDOM_ROLE: ['foo'], SOME_OTHER_ROLES: ['temp'] }
+    );
+
+    const rights = checkPermission({
+      user: user,
+      actions: ['EDIT_COLLECTION'],
+      targetOrganizations: ['foo', 'temp'],
+    });
+
+    expect(rights).toBe(false);
   });
 });
