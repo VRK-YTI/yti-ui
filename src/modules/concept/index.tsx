@@ -35,8 +35,6 @@ import {
   BadgeBar,
   Badge,
 } from '@app/common/components/title-block';
-import { useSelector } from 'react-redux';
-import { selectLogin } from '@app/common/components/login/login.slice';
 import HasPermission from '@app/common/utils/has-permission';
 import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
 import Link from 'next/link';
@@ -53,18 +51,13 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
   const { data: terminology, error: terminologyError } = useGetVocabularyQuery({
     id: terminologyId,
   });
-  const {
-    data: concept,
-    error: conceptError,
-    refetch,
-  } = useGetConceptQuery({
+  const { data: concept, error: conceptError } = useGetConceptQuery({
     terminologyId,
     conceptId,
   });
   const { t, i18n } = useTranslation('concept');
   const dispatch = useStoreDispatch();
   const router = useRouter();
-  const loginInformation = useSelector(selectLogin());
 
   const prefLabel = getPropertyValue({
     property: getProperty('prefLabel', concept?.references.prefLabelXl),
@@ -76,12 +69,6 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
       dispatch(setTitle(prefLabel ?? ''));
     }
   }, [concept, dispatch, prefLabel]);
-
-  useEffect(() => {
-    if (!loginInformation.anonymous) {
-      refetch();
-    }
-  }, [loginInformation, refetch]);
 
   const status =
     getPropertyValue({ property: concept?.properties.status }) || 'DRAFT';

@@ -32,8 +32,6 @@ import {
   MainTitle,
   BadgeBar,
 } from '@app/common/components/title-block';
-import { useSelector } from 'react-redux';
-import { selectLogin } from '@app/common/components/login/login.slice';
 import HasPermission from '@app/common/utils/has-permission';
 import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
 import Link from 'next/link';
@@ -51,7 +49,6 @@ export default function Collection({
   const { t, i18n } = useTranslation('collection');
   const dispatch = useStoreDispatch();
   const router = useRouter();
-  const loginInformation = useSelector(selectLogin());
 
   const { data: terminology, error: terminologyError } = useGetVocabularyQuery(
     { id: terminologyId },
@@ -59,11 +56,7 @@ export default function Collection({
       skip: router.isFallback,
     }
   );
-  const {
-    data: collection,
-    error: collectionError,
-    refetch,
-  } = useGetCollectionQuery(
+  const { data: collection, error: collectionError } = useGetCollectionQuery(
     { terminologyId, collectionId },
     {
       skip: router.isFallback,
@@ -80,12 +73,6 @@ export default function Collection({
       dispatch(setTitle(prefLabel ?? ''));
     }
   }, [collection, dispatch, prefLabel]);
-
-  useEffect(() => {
-    if (!loginInformation.anonymous) {
-      refetch();
-    }
-  }, [loginInformation, refetch]);
 
   if (collectionError) {
     return (
