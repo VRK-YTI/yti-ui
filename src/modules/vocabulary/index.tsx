@@ -29,8 +29,6 @@ import useUrlState from '@app/common/utils/hooks/use-url-state';
 import Pagination from '@app/common/components/pagination/pagination';
 import filterData from '@app/common/utils/filter-data';
 import LoadIndicator from '@app/common/components/load-indicator';
-import { useSelector } from 'react-redux';
-import { selectLogin } from '@app/common/components/login/login.slice';
 import { useRouter } from 'next/router';
 
 interface VocabularyProps {
@@ -59,18 +57,13 @@ export default function Vocabulary({ id }: VocabularyProps) {
     urlState,
     language: i18n.language,
   });
-  const {
-    data: info,
-    error: infoError,
-    refetch: vocabularyRefetch,
-  } = useGetVocabularyQuery({
+  const { data: info, error: infoError } = useGetVocabularyQuery({
     id,
   });
   const { data: counts } = useGetVocabularyCountQuery(id);
   const [showModal, setShowModal] = useState(false);
   const [showLoadingConcepts, setShowLoadingConcepts] = useState(false);
   const [showLoadingCollections, setShowLoadingCollections] = useState(true);
-  const loginInformation = useSelector(selectLogin());
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -87,12 +80,6 @@ export default function Vocabulary({ id }: VocabularyProps) {
     setShowLoadingConcepts,
     setShowLoadingCollections,
   ]);
-
-  useEffect(() => {
-    if (!loginInformation.anonymous) {
-      vocabularyRefetch();
-    }
-  }, [loginInformation, vocabularyRefetch]);
 
   if (infoError) {
     return (
