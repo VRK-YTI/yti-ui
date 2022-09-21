@@ -19,6 +19,7 @@ interface InfoManualProps {
   userPosted: boolean;
   initialData?: NewTerminologyInfo;
   onChange: () => void;
+  disabled?: boolean;
 }
 
 export default function InfoManual({
@@ -27,6 +28,7 @@ export default function InfoManual({
   userPosted,
   initialData,
   onChange,
+  disabled,
 }: InfoManualProps) {
   const { t } = useTranslation('admin');
   const [terminologyData, setTerminologyData] = useState<NewTerminologyInfo>(
@@ -67,6 +69,7 @@ export default function InfoManual({
     <form>
       <TallerSeparator />
       <LanguageSelector
+        disabled={disabled}
         update={handleUpdate}
         userPosted={userPosted}
         initialData={terminologyData}
@@ -76,11 +79,16 @@ export default function InfoManual({
         <Text variant="bold">{t('terminology-other-information')}</Text>
       </Paragraph>
       <OrganizationSelector
+        disabled={disabled}
         update={handleUpdate}
         userPosted={userPosted}
         initialData={initialData}
       />
-      <TypeSelector update={handleUpdate} defaultValue={initialData?.type} />
+      <TypeSelector
+        disabled={disabled}
+        update={handleUpdate}
+        defaultValue={initialData?.type}
+      />
 
       {initialData && (
         <StatusSelector
@@ -91,15 +99,23 @@ export default function InfoManual({
       )}
 
       <InformationDomainsSelector
+        disabled={disabled}
         update={handleUpdate}
         userPosted={userPosted}
         initialData={initialData}
       />
 
-      {!initialData && <Prefix update={handleUpdate} userPosted={userPosted} />}
+      {!initialData && (
+        <Prefix
+          disabled={disabled}
+          update={handleUpdate}
+          userPosted={userPosted}
+        />
+      )}
 
       <TallerSeparator />
       <ContactInfo
+        disabled={disabled}
         update={handleUpdate}
         userPosted={userPosted}
         defaultValue={initialData?.contact}

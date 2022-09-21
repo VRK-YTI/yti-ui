@@ -16,12 +16,14 @@ export interface OrganizationSelectorProps {
   update: ({ key, data }: UpdateTerminology) => void;
   userPosted: boolean;
   initialData?: NewTerminologyInfo;
+  disabled?: boolean;
 }
 
 export default function OrganizationSelector({
   update,
   userPosted,
   initialData,
+  disabled,
 }: OrganizationSelectorProps) {
   const user = useSelector(selectLogin());
   const { t, i18n } = useTranslation('admin');
@@ -90,6 +92,7 @@ export default function OrganizationSelector({
           ariaChipActionLabel={t('aria-chip-action-label')}
           ariaSelectedAmountText={t('chosen-organizations')}
           ariaOptionChipRemovedText={t('organization-removed')}
+          disabled={disabled}
         />
       ) : (
         <>

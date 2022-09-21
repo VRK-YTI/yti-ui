@@ -162,3 +162,17 @@ export function translateFileUploadError(
       return;
   }
 }
+
+export function translateHttpError(
+  status: number | 'GENERIC_ERROR',
+  t: TFunction
+) {
+  switch (status) {
+    case 401:
+      return t('error-occurred_session', { ns: 'alert' });
+    case 500:
+      return t('error-occurred_internal-server', { ns: 'alert' });
+    default:
+      return t('error-occured_unhandled-error', { ns: 'alert' });
+  }
+}

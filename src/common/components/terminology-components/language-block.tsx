@@ -16,6 +16,7 @@ interface LanguageBlockProps {
   userPosted: boolean;
   id: string;
   initialData?: TerminologyName;
+  disabled?: boolean;
 }
 
 export default function LanguageBlock({
@@ -25,6 +26,7 @@ export default function LanguageBlock({
   userPosted,
   id,
   initialData,
+  disabled,
 }: LanguageBlockProps) {
   const { t } = useTranslation('admin');
   const [name, setName] = useState(initialData ? initialData.name : '');
@@ -54,6 +56,7 @@ export default function LanguageBlock({
         defaultValue={name}
         maxLength={TEXT_INPUT_MAX}
         className="terminology-name-input"
+        disabled={disabled}
       />
       <TextareaSmBot
         labelText={t('terminology-description')}
@@ -64,6 +67,7 @@ export default function LanguageBlock({
         maxLength={TEXT_AREA_MAX}
         defaultValue={description}
         className="terminology-description-input"
+        disabled={disabled}
       />
     </LangBlock>
   );

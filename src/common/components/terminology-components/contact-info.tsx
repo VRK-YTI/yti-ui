@@ -14,12 +14,14 @@ interface ContactInfoProps {
   update: ({ key, data }: UpdateTerminology) => void;
   userPosted: boolean;
   defaultValue?: string;
+  disabled?: boolean;
 }
 
 export default function ContactInfo({
   update,
   userPosted,
   defaultValue,
+  disabled,
 }: ContactInfoProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -47,6 +49,7 @@ export default function ContactInfo({
         defaultValue={contact}
         maxLength={EMAIL_MAX}
         id="contact-input"
+        disabled={disabled}
       />
     </BlankFieldset>
   );

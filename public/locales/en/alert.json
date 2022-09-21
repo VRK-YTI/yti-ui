@@ -8,5 +8,6 @@
   "error-occured_subscription": "An error occurred with subscription service",
   "error-occured_terminology-search": "An error occurred while searching for terminologies",
   "error-occured_unhandled-error": "An unknown error occurred",
+  "error-occurred_internal-server": "An error occurred, please try again later",
   "error-occurred_session": "An error occured with the session, try logging in again"
 }

@@ -1,4 +1,3 @@
-import { setAlert } from '@app/common/components/alert/alert.slice';
 import { usePostImportExcelMutation } from '@app/common/components/excel/excel.slice';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import SaveSpinner from '@app/common/components/save-spinner';
@@ -6,12 +5,14 @@ import { terminologySearchApi } from '@app/common/components/terminology-search/
 import { usePostNewVocabularyMutation } from '@app/common/components/vocabulary/vocabulary.slice';
 import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info';
 import useConfirmBeforeLeavingPage from '@app/common/utils/hooks/use-confirm-before-leaving-page';
+import { translateHttpError } from '@app/common/utils/translation-helpers';
 import { useStoreDispatch } from '@app/store';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import {
   Button,
+  InlineAlert,
   Modal,
   ModalContent,
   ModalFooter,
@@ -52,11 +53,13 @@ export default function NewTerminologyModal({
   const [postNewVocabulary, newVocabulary] = usePostNewVocabularyMutation();
   const [postImportExcel, importExcel] = usePostImportExcelMutation();
   const [isCreating, setIsCreating] = useState<boolean>(false);
+  const [error, setError] = useState(false);
 
   const handleClose = useCallback(() => {
     setUserPosted(false);
     setIsValid(false);
     setIsCreating(false);
+    setError(false);
     setInputType('');
     setShowModal(false);
     setStartFileUpload(false);
@@ -77,21 +80,7 @@ export default function NewTerminologyModal({
       }
     } else if (newVocabulary.isError) {
       setIsCreating(false);
-      const errorMessage =
-        'status' in newVocabulary.error && newVocabulary.error.status === 401
-          ? t('error-occurred_session', { ns: 'alert' })
-          : t('error-occured', { ns: 'alert' });
-      dispatch(
-        setAlert(
-          [
-            {
-              note: newVocabulary.error,
-              displayText: errorMessage,
-            },
-          ],
-          []
-        )
-      );
+      setError(true);
     }
   }, [t, newVocabulary, dispatch, handleClose, router, disableConfirmation]);
 
@@ -170,10 +159,20 @@ export default function NewTerminologyModal({
       {!(inputType === 'file' && userPosted) && (
         <ModalFooter id="new-terminology-modal-footer">
           {userPosted && manualData && <MissingInfoAlert data={manualData} />}
+          {newVocabulary.isError && (
+            <InlineAlert status="error" role="alert" id="api-error-alert">
+              {translateHttpError(
+                'status' in newVocabulary.error
+                  ? newVocabulary.error.status
+                  : 'GENERIC_ERROR',
+                t
+              )}
+            </InlineAlert>
+          )}
           <FooterBlock>
             <Button
               onClick={() => handlePost()}
-              disabled={!inputType || isCreating}
+              disabled={!inputType || isCreating || error}
               id="submit-button"
             >
               {t('add-terminology')}
@@ -205,16 +204,25 @@ export default function NewTerminologyModal({
           onChange={(e) => handleSetInputType(e)}
           id="new-terminology-input-type"
         >
-          <RadioButton value="self" id="new-terminology-input-type-hand">
+          <RadioButton
+            disabled={error}
+            value="self"
+            id="new-terminology-input-type-hand"
+          >
             {t('by-hand')}
           </RadioButton>
-          <RadioButton value="file" id="new-terminology-input-type-file">
+          <RadioButton
+            disabled={error}
+            value="file"
+            id="new-terminology-input-type-file"
+          >
             {t('by-file')}
           </RadioButton>
         </RadioButtonGroup>
 
         {inputType === 'self' && (
           <InfoManual
+            disabled={error}
             setIsValid={setIsValid}
             setManualData={setManualData}
             userPosted={userPosted}

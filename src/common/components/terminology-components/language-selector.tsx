@@ -21,12 +21,14 @@ export interface LanguageSelectorProps {
   update: ({ key, data }: UpdateTerminology) => void;
   userPosted: boolean;
   initialData?: NewTerminologyInfo;
+  disabled?: boolean;
 }
 
 export default function LanguageSelector({
   update,
   userPosted,
   initialData,
+  disabled,
 }: LanguageSelectorProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -170,6 +172,7 @@ export default function LanguageSelector({
         }
         defaultSelectedItems={selectedLanguages}
         id="language-selector"
+        disabled={disabled}
       />
 
       {selectedLanguages.map((language, idx) => (
@@ -185,6 +188,7 @@ export default function LanguageSelector({
             )[0]
           }
           key={`${language}-${idx}`}
+          disabled={disabled}
         />
       ))}
     </BlankFieldset>

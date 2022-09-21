@@ -15,9 +15,10 @@ import { TEXT_INPUT_MAX } from '@app/common/utils/constants';
 export interface PrefixProps {
   update: ({ key, data }: UpdateTerminology) => void;
   userPosted: boolean;
+  disabled?: boolean;
 }
 
-export default function Prefix({ update, userPosted }: PrefixProps) {
+export default function Prefix({ update, userPosted, disabled }: PrefixProps) {
   const URI = 'http://uri.suomi.fi/';
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -90,10 +91,18 @@ export default function Prefix({ update, userPosted }: PrefixProps) {
         }}
         id="prefix-input-type-selector"
       >
-        <RadioButton value="automatic" id="prefix-input-automatic">
+        <RadioButton
+          value="automatic"
+          id="prefix-input-automatic"
+          disabled={disabled}
+        >
           {t('automatic-prefix')}
         </RadioButton>
-        <RadioButton value="manual" id="prefix-input-manual">
+        <RadioButton
+          value="manual"
+          id="prefix-input-manual"
+          disabled={disabled}
+        >
           {t('manual-prefix')}
         </RadioButton>
       </RadioButtonGroupSmBot>
@@ -115,6 +124,7 @@ export default function Prefix({ update, userPosted }: PrefixProps) {
           }
           maxLength={TEXT_INPUT_MAX}
           id="prefix-text-input"
+          disabled={disabled}
         />
       )}
       <Paragraph>

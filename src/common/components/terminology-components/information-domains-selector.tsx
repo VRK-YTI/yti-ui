@@ -14,12 +14,14 @@ interface InformationDomainsSelectorProps {
   update: ({ key, data }: UpdateTerminology) => void;
   userPosted: boolean;
   initialData?: NewTerminologyInfo;
+  disabled?: boolean;
 }
 
 export default function InformationDomainsSelector({
   update,
   userPosted,
   initialData,
+  disabled,
 }: InformationDomainsSelectorProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -77,6 +79,7 @@ export default function InformationDomainsSelector({
         }
         defaultSelectedItems={selectedInfoDomains}
         id="information-domain-selector"
+        disabled={disabled}
       />
     </BlankFieldset>
   );
