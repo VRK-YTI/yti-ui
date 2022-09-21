@@ -4,10 +4,10 @@
   "error-occured_access-request": "",
   "error-occured_counts": "",
   "error-occured_groups": "",
-  "error-occured_internal-server": "",
   "error-occured_organization": "",
   "error-occured_subscription": "",
   "error-occured_terminology-search": "",
   "error-occured_unhandled-error": "",
+  "error-occurred_internal-server": "",
   "error-occurred_session": ""
 }
