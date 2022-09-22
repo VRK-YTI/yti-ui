@@ -33,7 +33,11 @@ import filterData from '@app/common/utils/filter-data';
 import LoadIndicator from '@app/common/components/load-indicator';
 import { useRouter } from 'next/router';
 import HasPermission from '@app/common/utils/has-permission';
-import NewConceptModal from '@app/common/components/new-concept-modal';
+import dynamic from 'next/dynamic';
+
+const NewConceptModal = dynamic(
+  () => import('@app/common/components/new-concept-modal')
+);
 
 interface VocabularyProps {
   id: string;
