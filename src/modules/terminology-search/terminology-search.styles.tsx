@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { Block, Button } from 'suomifi-ui-components';
 
 export const FilterMobileButton = styled(Button)`
-  margin-top: 20px;
+  margin-top: ${(props) => props.theme.suomifi.spacing.xs};
 `;
 
 export const FilterTopPartBlock = styled(Block)`

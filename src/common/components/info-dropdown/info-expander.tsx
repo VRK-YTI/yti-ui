@@ -31,7 +31,6 @@ import PropertyValue from '../property-value';
 const Subscription = dynamic(
   () => import('@app/common/components/subscription/subscription')
 );
-const NewConceptModal = dynamic(() => import('../new-concept-modal'));
 const CopyTerminologyModal = dynamic(() => import('../copy-terminology-modal'));
 
 interface InfoExpanderProps {
@@ -140,18 +139,6 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
               {t('you-have-right-edit-terminology', { ns: 'admin' })}
             </BasicBlock>
           </>
-        )}
-
-        {HasPermission({
-          actions: 'CREATE_CONCEPT',
-          targetOrganization: data.references.contributor,
-        }) && (
-          <NewConceptModal
-            terminologyId={data.type.graph.id}
-            languages={
-              data.properties.language?.map(({ value }) => value) ?? []
-            }
-          />
         )}
 
         {HasPermission({

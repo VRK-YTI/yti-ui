@@ -160,7 +160,6 @@
   "new-collection": "New collection",
   "new-collection-to-terminology": "New collection to terminology",
   "new-concept-title": "New Concept",
-  "new-concept-to-terminology": "New concept to terminology",
   "new-term": "New term",
   "new-term-modal-description": "All fields are required unless marked optional. It is recommended to fill in all the information.",
   "new-terminology-created": "New terminology created",
@@ -281,6 +280,5 @@
   "word-class-no-items": "No word classes available",
   "you-can-copy": "You can copy the terminology as a base for a newer version, where the original terminology will exist until the newer terminology is ready",
   "you-have-right-edit-terminology": "You have the rights to edit this terminology",
-  "you-have-right-new-collection": "You have the rights to create new collections to this terminology",
-  "you-have-right-new-concept": "You have the rights to create new concepts to this terminology"
+  "you-have-right-new-collection": "You have the rights to create new collections to this terminology"
 }

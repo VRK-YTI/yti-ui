@@ -149,6 +149,8 @@
     "undefined": "Sanaston tyyppiä ei ole määritetty"
   },
   "try-again": "Yritä uudestaan",
+  "vocabulary-collections": "Sanaston käsitekokoelmat",
+  "vocabulary-concepts": "Sanaston käsitteet",
   "vocabulary-filter-concepts": "Käsitteet",
   "vocabulary-filter-filter-by-keyword": "Rajaa sanalla",
   "vocabulary-filter-filter-list": "Rajaa listaa",
