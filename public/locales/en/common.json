@@ -149,6 +149,8 @@
     "undefined": "Terminology type undefined"
   },
   "try-again": "Try again",
+  "vocabulary-collections": "Terminology collections",
+  "vocabulary-concepts": "Terminology concepts",
   "vocabulary-filter-concepts": "Concepts",
   "vocabulary-filter-filter-by-keyword": "Filter by word",
   "vocabulary-filter-filter-list": "Filter list",

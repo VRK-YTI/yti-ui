@@ -160,7 +160,6 @@
   "new-collection": "",
   "new-collection-to-terminology": "",
   "new-concept-title": "",
-  "new-concept-to-terminology": "",
   "new-term": "",
   "new-term-modal-description": "",
   "new-terminology-created": "",
@@ -281,6 +280,5 @@
   "word-class-no-items": "",
   "you-can-copy": "",
   "you-have-right-edit-terminology": "",
-  "you-have-right-new-collection": "",
-  "you-have-right-new-concept": ""
+  "you-have-right-new-collection": ""
 }

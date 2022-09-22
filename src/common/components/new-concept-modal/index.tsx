@@ -2,9 +2,6 @@ import { useTranslation } from 'next-i18next';
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
 import { Button } from 'suomifi-ui-components';
-import { BasicBlock } from '../block';
-import { BasicBlockExtraWrapper } from '../block/block.styles';
-import Separator from '../separator';
 
 const NewConceptModalDynamic = dynamic(() => import('./new-concept-modal'));
 
@@ -22,25 +19,14 @@ export default function NewConceptModal({
 
   return (
     <>
-      <Separator isLarge />
-
-      <BasicBlock
-        title={t('new-concept-to-terminology')}
-        extra={
-          <BasicBlockExtraWrapper>
-            <Button
-              icon="plus"
-              variant="secondary"
-              onClick={() => setVisible(true)}
-              id="new-concept-button"
-            >
-              {t('add-new-concept')}
-            </Button>
-          </BasicBlockExtraWrapper>
-        }
+      <Button
+        icon="plus"
+        variant="secondary"
+        onClick={() => setVisible(true)}
+        id="new-concept-button"
       >
-        {t('you-have-right-new-concept')}
-      </BasicBlock>
+        {t('add-new-concept')}
+      </Button>
 
       {visible && (
         <NewConceptModalDynamic

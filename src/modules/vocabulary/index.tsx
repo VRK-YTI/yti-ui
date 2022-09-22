@@ -10,11 +10,13 @@ import {
   ResultAndFilterContainer,
   ResultAndStatsWrapper,
   PaginationWrapper,
+  QuickActionsWrapper,
 } from './vocabulary.styles';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import { FilterMobileButton } from '@app/modules/terminology-search/terminology-search.styles';
 import { useTranslation } from 'next-i18next';
 import {
+  Heading,
   Modal,
   ModalContent,
   Notification,
@@ -30,6 +32,8 @@ import Pagination from '@app/common/components/pagination/pagination';
 import filterData from '@app/common/utils/filter-data';
 import LoadIndicator from '@app/common/components/load-indicator';
 import { useRouter } from 'next/router';
+import HasPermission from '@app/common/utils/has-permission';
+import NewConceptModal from '@app/common/components/new-concept-modal';
 
 interface VocabularyProps {
   id: string;
@@ -118,15 +122,6 @@ export default function Vocabulary({ id }: VocabularyProps) {
 
       <main id="main">
         {info && <Title info={info} />}
-        {isSmall && (
-          <FilterMobileButton
-            variant="secondary"
-            fullWidth
-            onClick={() => setShowModal(!showModal)}
-          >
-            {t('vocabulary-filter-filter-list')}
-          </FilterMobileButton>
-        )}
         <ResultAndFilterContainer>
           {!isSmall ? (
             <TerminologyListFilter
@@ -153,6 +148,35 @@ export default function Vocabulary({ id }: VocabularyProps) {
             </Modal>
           )}
           <ResultAndStatsWrapper id="search-results">
+            <QuickActionsWrapper isSmall={isSmall}>
+              <Heading variant="h2" id="results-title">
+                {urlState.type === 'concept'
+                  ? t('vocabulary-concepts')
+                  : t('vocabulary-collections')}
+              </Heading>
+              {HasPermission({
+                actions: 'CREATE_CONCEPT',
+                targetOrganization: info?.references.contributor,
+              }) && (
+                <NewConceptModal
+                  terminologyId={id}
+                  languages={
+                    info?.properties.language?.map(({ value }) => value) ?? []
+                  }
+                />
+              )}
+            </QuickActionsWrapper>
+
+            {isSmall && (
+              <FilterMobileButton
+                variant="secondary"
+                fullWidth
+                onClick={() => setShowModal(!showModal)}
+              >
+                {t('vocabulary-filter-filter-list')}
+              </FilterMobileButton>
+            )}
+
             {urlState.type === 'concept' &&
               ((showLoadingConcepts && isFetchingConcepts) || conceptsError ? (
                 <LoadIndicator

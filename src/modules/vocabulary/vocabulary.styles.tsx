@@ -30,3 +30,14 @@ export const PaginationWrapper = styled.div`
   flex-direction: row;
   justify-content: center;
 `;
+
+export const QuickActionsWrapper = styled.div<{ isSmall?: boolean }>`
+  width: 100%;
+  display: flex;
+  flex-direction: ${(props) => (props.isSmall ? 'column' : 'row')};
+
+  gap: ${(props) => props.theme.suomifi.spacing.xs};
+  & :nth-child(1) {
+    flex-grow: 1;
+  }
+`;
