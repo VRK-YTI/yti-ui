@@ -224,7 +224,7 @@ export default function generateConcept({
       matchingIds = [...matchingIds, id];
 
       return {
-        code: initialTerm?.code ?? '',
+        code: initialTerm?.code,
         createdBy: initialTerm?.createdBy ?? '',
         createdDate: initialTerm?.createdDate ?? '',
         id: id,
@@ -265,7 +265,7 @@ export default function generateConcept({
           id: 'ConceptLink',
           uri: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#Resource',
         },
-        uri: initialTerm?.uri ?? '',
+        uri: initialTerm?.uri,
       };
     }) ?? [];
 
@@ -283,7 +283,7 @@ export default function generateConcept({
             relatedMatchIds = [...relatedMatchIds, id];
 
             return {
-              code: initialTerm?.code ?? '',
+              code: initialTerm?.code,
               createdBy: initialTerm?.createdBy ?? '',
               createdDate: initialTerm?.createdDate ?? '',
               id: id,
@@ -328,7 +328,7 @@ export default function generateConcept({
                   ? ''
                   : 'http://www.w3.org/1999/02/22-rdf-syntax-ns#Resource',
               },
-              uri: initialTerm?.uri ?? '',
+              uri: initialTerm?.uri,
             };
           }
         ),
