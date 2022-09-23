@@ -6,6 +6,10 @@ import {
   CommonContextProvider,
   CommonContextState,
 } from '@app/common/components/common-context-provider';
+import {
+  getAuthenticatedUser,
+  getRunningOperationPromises as authenticatedUserGetRunningOperationPromises
+} from '@app/common/components/login/login.slice';
 import PageHead from '@app/common/components/page-head';
 import { getStoreData } from '@app/common/components/page-head/utils';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
@@ -73,9 +77,11 @@ export const getServerSideProps = createCommonGetServerSideProps(
         terminologyId: terminologyId,
       })
     );
+    store.dispatch(getAuthenticatedUser.initiate());
 
     await Promise.all(getCollectionRunningOperationPromises());
     await Promise.all(getRunningOperationPromises());
+    await Promise.all(authenticatedUserGetRunningOperationPromises());
 
     const collectionData = getStoreData({
       state: store.getState(),

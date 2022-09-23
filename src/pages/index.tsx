@@ -22,6 +22,10 @@ import {
 } from '@app/common/components/counts/counts.slice';
 import PageHead from '@app/common/components/page-head';
 import { initialUrlState } from '@app/common/utils/hooks/use-url-state';
+import {
+  getAuthenticatedUser,
+  getRunningOperationPromises as authenticatedUserGetRunningOperationPromises
+} from '@app/common/components/login/login.slice';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -86,9 +90,11 @@ export const getServerSideProps = createCommonGetServerSideProps(
     store.dispatch(getGroups.initiate(locale));
     store.dispatch(getOrganizations.initiate(locale));
     store.dispatch(getCounts.initiate(null));
+    store.dispatch(getAuthenticatedUser.initiate());
 
     await Promise.all(terminologyGetRunningOperationPromises());
     await Promise.all(countsGetRunningOperationPromises());
+    await Promise.all(authenticatedUserGetRunningOperationPromises());
 
     return {};
   }

@@ -23,6 +23,10 @@ import {
 import PageHead from '@app/common/components/page-head';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import { getStoreData } from '@app/common/components/page-head/utils';
+import {
+  getAuthenticatedUser,
+  getRunningOperationPromises as authenticatedUserGetRunningOperationPromises
+} from '@app/common/components/login/login.slice';
 
 interface CollectionPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -70,9 +74,11 @@ export const getServerSideProps = createCommonGetServerSideProps(
     store.dispatch(getVocabulary.initiate({ id: terminologyId }));
     store.dispatch(getCollection.initiate({ terminologyId, collectionId }));
     store.dispatch(getCollections.initiate(terminologyId));
+    store.dispatch(getAuthenticatedUser.initiate());
 
     await Promise.all(getVocabularyRunningOperationPromises());
     await Promise.all(getCollectionRunningOperationPromises());
+    await Promise.all(authenticatedUserGetRunningOperationPromises());
 
     const vocabularyData = getStoreData({
       state: store.getState(),

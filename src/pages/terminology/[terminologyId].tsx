@@ -24,6 +24,10 @@ import {
   getVocabularyCount,
   getRunningOperationPromises as countsGetRunningOperationPromises,
 } from '@app/common/components/counts/counts.slice';
+import {
+  getAuthenticatedUser,
+  getRunningOperationPromises as authenticatedUserGetRunningOperationPromises
+} from '@app/common/components/login/login.slice';
 
 interface TerminologyPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -86,9 +90,11 @@ export const getServerSideProps = createCommonGetServerSideProps(
       })
     );
     store.dispatch(getVocabularyCount.initiate(id));
+    store.dispatch(getAuthenticatedUser.initiate());
 
     await Promise.all(getRunningOperationPromises());
     await Promise.all(countsGetRunningOperationPromises());
+    await Promise.all(authenticatedUserGetRunningOperationPromises());
 
     const vocabularyData = getStoreData({
       state: store.getState(),

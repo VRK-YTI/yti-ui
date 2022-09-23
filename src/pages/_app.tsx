@@ -42,7 +42,7 @@ function App({ Component, pageProps }: AppProps) {
         )
       );
     }
-  });
+  }, [dispatch, login.anonymous, t]);
 
   return (
     <SWRConfig

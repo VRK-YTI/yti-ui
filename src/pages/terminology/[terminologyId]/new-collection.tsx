@@ -15,6 +15,10 @@ import {
   getVocabulary,
   getRunningOperationPromises,
 } from '@app/common/components/vocabulary/vocabulary.slice';
+import {
+  getAuthenticatedUser,
+  getRunningOperationPromises as authenticatedUserGetRunningOperationPromises
+} from '@app/common/components/login/login.slice';
 
 interface NewCollectionPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -53,7 +57,10 @@ export const getServerSideProps = createCommonGetServerSideProps(
     }
 
     store.dispatch(getVocabulary.initiate({ id: terminologyId }));
+    store.dispatch(getAuthenticatedUser.initiate());
+
     await Promise.all(getRunningOperationPromises());
+    await Promise.all(authenticatedUserGetRunningOperationPromises());
 
     return {};
   }

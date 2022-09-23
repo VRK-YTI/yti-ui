@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux';
 import { selectAdminControls } from '../components/admin-controls/admin-controls.slice';
-import { selectLogin } from '../components/login/login.slice';
+import { selectLogin, setLogin, useGetAuthenticatedUserQuery } from '../components/login/login.slice';
 import { Organization } from '../interfaces/organization.interface';
 import { User } from '../interfaces/user.interface';
 
@@ -36,8 +36,13 @@ export default function HasPermission({
   actions,
   targetOrganization,
 }: hasPermissionProps) {
+  const { data: authenticatedUser } = useGetAuthenticatedUserQuery();
   const user = useSelector(selectLogin());
   const isAdminControlsDisabled = useSelector(selectAdminControls());
+
+  if (authenticatedUser && authenticatedUser !== user) {
+    setLogin(authenticatedUser);
+  }
 
   if (isAdminControlsDisabled) {
     return false;

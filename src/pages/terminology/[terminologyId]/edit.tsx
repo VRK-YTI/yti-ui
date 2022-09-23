@@ -2,6 +2,10 @@ import {
   CommonContextProvider,
   CommonContextState,
 } from '@app/common/components/common-context-provider';
+import {
+  getAuthenticatedUser,
+  getRunningOperationPromises as authenticatedUserGetRunningOperationPromises
+} from '@app/common/components/login/login.slice';
 import PageHead from '@app/common/components/page-head';
 import {
   getGroups,
@@ -57,9 +61,11 @@ export const getServerSideProps = createCommonGetServerSideProps(
     store.dispatch(getVocabulary.initiate({ id: terminologyId }));
     store.dispatch(getOrganizations.initiate(locale));
     store.dispatch(getGroups.initiate(locale));
+    store.dispatch(getAuthenticatedUser.initiate());
 
     await Promise.all(getRunningOperationPromises());
     await Promise.all(getTermSearchRunningOperationPromises());
+    await Promise.all(authenticatedUserGetRunningOperationPromises());
 
     return {};
   }

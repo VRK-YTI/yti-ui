@@ -21,6 +21,10 @@ import {
 } from '@app/common/components/concept/concept.slice';
 import { getStoreData } from '@app/common/components/page-head/utils';
 import { Concept } from '@app/common/interfaces/concept.interface';
+import {
+  getAuthenticatedUser,
+  getRunningOperationPromises as authenticatedUserGetRunningOperationPromises
+} from '@app/common/components/login/login.slice';
 
 interface NewConceptPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -52,7 +56,7 @@ export default function EditConcept(props: NewConceptPageProps) {
 }
 
 export const getServerSideProps = createCommonGetServerSideProps(
-  async ({ store, query, params }: LocalHandlerParams) => {
+  async ({ store, params }: LocalHandlerParams) => {
     const terminologyId = Array.isArray(params.terminologyId)
       ? params.terminologyId[0]
       : params.terminologyId;
@@ -66,26 +70,17 @@ export const getServerSideProps = createCommonGetServerSideProps(
 
     store.dispatch(getVocabulary.initiate({ id: terminologyId }));
     store.dispatch(getConcept.initiate({ terminologyId, conceptId }));
+    store.dispatch(getAuthenticatedUser.initiate());
 
     await Promise.all(getVocabularyRunningOperationPromises());
     await Promise.all(getConceptRunningOperationPromises());
+    await Promise.all(authenticatedUserGetRunningOperationPromises());
 
     const conceptData = getStoreData({
       state: store.getState(),
       reduxKey: 'conceptAPI',
       functionKey: 'getConcept',
     });
-
-    // const terminologyId = Array.isArray(query.terminologyId)
-    //   ? query.terminologyId[0]
-    //   : query.terminologyId;
-
-    // if (terminologyId === undefined) {
-    //   throw new Error('Invalid parameter for page');
-    // }
-
-    // store.dispatch(getVocabulary.initiate({ id: terminologyId }));
-    // await Promise.all(getRunningOperationPromises());
 
     return {
       props: {
