@@ -35,7 +35,7 @@ export default function OwnInformation() {
   const { data: requests } = useGetRequestsQuery(null);
 
   if (user.anonymous) {
-    return <></>;
+    return null;
   }
 
   return (
