@@ -170,6 +170,11 @@ export default function NewTerminologyModal({
               )}
             </InlineAlert>
           )}
+          {unauthenticatedUser && (
+            <InlineAlert status="error" role="alert" id="unauthenticated-alert">
+              {t('error-occurred_unauthenticated', { ns: 'alert' })}
+            </InlineAlert>
+          )}
           <FooterBlock>
             <Button
               onClick={() => handlePost()}
