@@ -23,8 +23,9 @@ import { getStoreData } from '@app/common/components/page-head/utils';
 import { Concept } from '@app/common/interfaces/concept.interface';
 import {
   getAuthenticatedUser,
-  getRunningOperationPromises as authenticatedUserGetRunningOperationPromises
+  getRunningOperationPromises as authenticatedUserGetRunningOperationPromises,
 } from '@app/common/components/login/login.slice';
+import { ssrHasPermission } from '@app/common/utils/ssr-permission-check';
 
 interface NewConceptPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -75,6 +76,15 @@ export const getServerSideProps = createCommonGetServerSideProps(
     await Promise.all(getVocabularyRunningOperationPromises());
     await Promise.all(getConceptRunningOperationPromises());
     await Promise.all(authenticatedUserGetRunningOperationPromises());
+
+    if (!ssrHasPermission(store.getState(), ['EDIT_CONCEPT'])) {
+      return {
+        redirect: {
+          destination: '/401',
+          permanent: false,
+        },
+      };
+    }
 
     const conceptData = getStoreData({
       state: store.getState(),

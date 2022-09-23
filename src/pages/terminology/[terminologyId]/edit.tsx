@@ -4,7 +4,7 @@ import {
 } from '@app/common/components/common-context-provider';
 import {
   getAuthenticatedUser,
-  getRunningOperationPromises as authenticatedUserGetRunningOperationPromises
+  getRunningOperationPromises as authenticatedUserGetRunningOperationPromises,
 } from '@app/common/components/login/login.slice';
 import PageHead from '@app/common/components/page-head';
 import {
@@ -20,6 +20,7 @@ import {
   createCommonGetServerSideProps,
   LocalHandlerParams,
 } from '@app/common/utils/create-getserversideprops';
+import { ssrHasPermission } from '@app/common/utils/ssr-permission-check';
 import Layout from '@app/layouts/layout';
 import EditVocabulary from '@app/modules/edit-vocabulary';
 import { SSRConfig, useTranslation } from 'next-i18next';
@@ -66,6 +67,15 @@ export const getServerSideProps = createCommonGetServerSideProps(
     await Promise.all(getRunningOperationPromises());
     await Promise.all(getTermSearchRunningOperationPromises());
     await Promise.all(authenticatedUserGetRunningOperationPromises());
+
+    if (!ssrHasPermission(store.getState(), ['EDIT_TERMINOLOGY'])) {
+      return {
+        redirect: {
+          destination: '/401',
+          permanent: false,
+        },
+      };
+    }
 
     return {};
   }

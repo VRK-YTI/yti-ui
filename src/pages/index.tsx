@@ -24,7 +24,7 @@ import PageHead from '@app/common/components/page-head';
 import { initialUrlState } from '@app/common/utils/hooks/use-url-state';
 import {
   getAuthenticatedUser,
-  getRunningOperationPromises as authenticatedUserGetRunningOperationPromises
+  getRunningOperationPromises as authenticatedUserGetRunningOperationPromises,
 } from '@app/common/components/login/login.slice';
 
 interface IndexPageProps extends CommonContextState {

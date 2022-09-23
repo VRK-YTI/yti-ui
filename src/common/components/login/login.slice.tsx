@@ -82,13 +82,11 @@ export function selectLogin() {
 
 export default loginSlice.reducer;
 
-export const {
-  getAuthenticatedUser,
-  getAuthenticatedUserMut,
-} = loginApi.endpoints;
+export const { getAuthenticatedUser, getAuthenticatedUserMut } =
+  loginApi.endpoints;
 
 export const {
   useGetAuthenticatedUserQuery,
   useGetAuthenticatedUserMutMutation,
-  util: { getRunningOperationPromises }
+  util: { getRunningOperationPromises },
 } = loginApi;

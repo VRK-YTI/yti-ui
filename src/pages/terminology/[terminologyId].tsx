@@ -26,7 +26,7 @@ import {
 } from '@app/common/components/counts/counts.slice';
 import {
   getAuthenticatedUser,
-  getRunningOperationPromises as authenticatedUserGetRunningOperationPromises
+  getRunningOperationPromises as authenticatedUserGetRunningOperationPromises,
 } from '@app/common/components/login/login.slice';
 
 interface TerminologyPageProps extends CommonContextState {

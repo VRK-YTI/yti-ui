@@ -57,7 +57,7 @@ export function makeStore(ctx: NextIronContext) {
         accessRequestApi.middleware,
         excelApi.middleware,
         modifyApi.middleware,
-        loginApi.middleware,
+        loginApi.middleware
       ),
 
     // Development tools should be available only in development environments

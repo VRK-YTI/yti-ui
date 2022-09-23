@@ -25,7 +25,7 @@ import { getProperty } from '@app/common/utils/get-property';
 import { getStoreData } from '@app/common/components/page-head/utils';
 import {
   getAuthenticatedUser,
-  getRunningOperationPromises as authenticatedUserGetRunningOperationPromises
+  getRunningOperationPromises as authenticatedUserGetRunningOperationPromises,
 } from '@app/common/components/login/login.slice';
 
 interface ConceptPageProps extends CommonContextState {

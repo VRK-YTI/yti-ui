@@ -8,7 +8,7 @@ import {
 } from '@app/common/components/common-context-provider';
 import {
   getAuthenticatedUser,
-  getRunningOperationPromises as authenticatedUserGetRunningOperationPromises
+  getRunningOperationPromises as authenticatedUserGetRunningOperationPromises,
 } from '@app/common/components/login/login.slice';
 import PageHead from '@app/common/components/page-head';
 import { getStoreData } from '@app/common/components/page-head/utils';
@@ -21,6 +21,7 @@ import {
   createCommonGetServerSideProps,
   LocalHandlerParams,
 } from '@app/common/utils/create-getserversideprops';
+import { ssrHasPermission } from '@app/common/utils/ssr-permission-check';
 import Layout from '@app/layouts/layout';
 import EditCollection from '@app/modules/edit-collection';
 import { SSRConfig } from 'next-i18next';
@@ -82,6 +83,15 @@ export const getServerSideProps = createCommonGetServerSideProps(
     await Promise.all(getCollectionRunningOperationPromises());
     await Promise.all(getRunningOperationPromises());
     await Promise.all(authenticatedUserGetRunningOperationPromises());
+
+    if (!ssrHasPermission(store.getState(), ['EDIT_COLLECTION'])) {
+      return {
+        redirect: {
+          destination: '/401',
+          permanent: false,
+        },
+      };
+    }
 
     const collectionData = getStoreData({
       state: store.getState(),

@@ -17,8 +17,9 @@ import {
 } from '@app/common/components/vocabulary/vocabulary.slice';
 import {
   getAuthenticatedUser,
-  getRunningOperationPromises as authenticatedUserGetRunningOperationPromises
+  getRunningOperationPromises as authenticatedUserGetRunningOperationPromises,
 } from '@app/common/components/login/login.slice';
+import { ssrHasPermission } from '@app/common/utils/ssr-permission-check';
 
 interface NewCollectionPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -61,6 +62,15 @@ export const getServerSideProps = createCommonGetServerSideProps(
 
     await Promise.all(getRunningOperationPromises());
     await Promise.all(authenticatedUserGetRunningOperationPromises());
+
+    if (!ssrHasPermission(store.getState(), ['CREATE_COLLECTION'])) {
+      return {
+        redirect: {
+          destination: '/401',
+          permanent: false,
+        },
+      };
+    }
 
     return {};
   }
