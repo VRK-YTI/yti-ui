@@ -27,6 +27,7 @@ import {
 import Link from 'next/link';
 import { getPropertyValue } from '../property-value/get-property-value';
 import PropertyValue from '../property-value';
+import RemoveTerminologyModal from '../remove-terminology-modal';
 
 const Subscription = dynamic(
   () => import('@app/common/components/subscription/subscription')
@@ -200,6 +201,19 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
         {HasPermission({
           actions: 'CREATE_TERMINOLOGY',
         }) && <CopyTerminologyModal terminologyId={data.type.graph.id} />}
+
+        {HasPermission({
+          actions: 'DELETE_TERMINOLOGY',
+        }) && (
+          <RemoveTerminologyModal
+            terminologyId={data.type.graph.id}
+            terminologyName={getPropertyValue({
+              property: data.properties.prefLabel,
+              language: i18n.language,
+            })}
+            disabled={data.properties.status?.[0].value === 'VALID'}
+          />
+        )}
 
         {!user.anonymous && (
           <>
