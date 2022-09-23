@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Button } from 'suomifi-ui-components';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import HasPermission from '@app/common/utils/has-permission';
+import { useGetAuthenticatedUserMutMutation } from '@app/common/components/login/login.slice';
 
 const NewTerminologyModal = dynamic(() => import('./new-terminology-modal'));
 
@@ -11,10 +12,17 @@ export default function NewTerminology() {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const [showModal, setShowModal] = useState(false);
+  const [getAuthenticatedUser, authenticatedUser] =
+    useGetAuthenticatedUserMutMutation();
 
   if (!HasPermission({ actions: 'CREATE_TERMINOLOGY' })) {
     return null;
   }
+
+  const handleClick = () => {
+    setShowModal(true);
+    getAuthenticatedUser();
+  };
 
   return (
     <>
@@ -22,7 +30,7 @@ export default function NewTerminology() {
         icon="plus"
         variant="secondary"
         fullWidth={isSmall}
-        onClick={() => setShowModal(true)}
+        onClick={() => handleClick()}
         style={{ whiteSpace: 'nowrap' }}
         id="new-terminology-button"
       >
@@ -33,6 +41,7 @@ export default function NewTerminology() {
         <NewTerminologyModal
           showModal={showModal}
           setShowModal={setShowModal}
+          unauthenticatedUser={authenticatedUser.data?.anonymous}
         />
       )}
     </>
