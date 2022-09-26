@@ -172,9 +172,6 @@ function ManageRelationalInfoModal({
   const handleSetSearchResults = (value: Concepts[]) => {
     if (value !== searchResults) {
       setSearchResults(value);
-      setChosen(
-        value.filter((concept) => selectedConceptIds.includes(concept.id))
-      );
     }
   };
 
@@ -185,6 +182,7 @@ function ManageRelationalInfoModal({
       searchResults.filter((result) => selectedConceptIds.includes(result.id))
     );
     setChosen([]);
+    setSearchResults([]);
   };
 
   const handleChange = () => {
@@ -199,6 +197,7 @@ function ManageRelationalInfoModal({
       ),
     }));
     setSelectedConcepts(choseWithoutHtml);
+    setSearchResults([]);
   };
 
   const handleSetVisible = () => {
@@ -237,7 +236,6 @@ function ManageRelationalInfoModal({
               concepts={searchResults}
               chosen={chosen}
               setChosen={setChosen}
-              terminologyId={terminologyId}
               fromOther={fromOther ? true : false}
             />
           </div>

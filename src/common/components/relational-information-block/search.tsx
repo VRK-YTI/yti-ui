@@ -11,7 +11,7 @@ import { useBreakpoints } from '../media-query/media-query-context';
 interface SearchProps {
   setSearchResults: (value: Concepts[]) => void;
   terminologyId: string;
-  fromOther?: boolean;
+  fromOther: boolean;
 }
 
 export default function Search({
@@ -74,7 +74,7 @@ export default function Search({
     });
   };
 
-  useMountEffect(handleSearch);
+  useMountEffect(handleSearch, fromOther);
 
   const handleClearValues = () => {
     setSearchTerm('');
