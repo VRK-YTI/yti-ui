@@ -48,7 +48,7 @@ export default function RenderConcepts({
   }
 
   return (
-    <div id="concept-result-block">
+    <div id="concept-result-block" style={{ width: '100%' }}>
       <ExpanderGroup openAllText="" closeAllText="">
         {concepts?.map((concept) => {
           return (

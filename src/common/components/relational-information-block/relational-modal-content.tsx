@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { SingleSelectData } from 'suomifi-ui-components';
 import { useSearchConceptMutation } from '../concept/concept.slice';
 import { LocalPagination } from '../pagination/pagination';
+import { RelationalModalBlock } from './relation-information-block.styles';
 import RenderConcepts from './render-concepts';
 import Search from './search';
 
@@ -112,6 +113,11 @@ export default function RelationModalContent({
   };
 
   useEffect(() => {
+    if (result.isUninitialized) {
+      setSearchResults([]);
+      setTotalResults(0);
+    }
+
     if (result.isSuccess) {
       setSearchResults(result.data.concepts);
       setTotalResults(result.data.totalHitCount);
@@ -136,7 +142,7 @@ export default function RelationModalContent({
   useMountEffect(handleSearch, fromOther);
 
   return (
-    <>
+    <RelationalModalBlock>
       <Search
         handleSearch={handleSearch}
         handleClearValues={handleClearValues}
@@ -160,6 +166,6 @@ export default function RelationModalContent({
         totalHitCount={totalResults}
         maxTotal={20}
       />
-    </>
+    </RelationalModalBlock>
   );
 }
