@@ -165,7 +165,7 @@ export default function RelationModalContent({
         setCurrentPage={handlePageChange}
         totalHitCount={totalResults}
         maxTotal={20}
-        pageString={t('pagination-page')}
+        pageString={t('pagination-page', { ns: 'common' })}
       />
     </RelationalModalBlock>
   );
