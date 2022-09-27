@@ -92,6 +92,7 @@ export default function SearchResults({
                         deepHits={data.deepHits[terminology.id]}
                         buttonLabel={t('results-with-query-from-terminology')}
                         contentLabel={t('concepts')}
+                        terminologyId={terminology.id}
                       />
                     )
                   }
