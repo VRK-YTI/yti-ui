@@ -94,6 +94,84 @@ export default function Pagination({ data, pageString }: PaginationProps) {
   );
 }
 
+interface LocalPaginationProps {
+  totalHitCount: number;
+  currentPage: number;
+  setCurrentPage: (value: number) => void;
+  maxTotal: number;
+}
+
+export function LocalPagination({
+  totalHitCount,
+  currentPage,
+  setCurrentPage,
+  maxTotal,
+}: LocalPaginationProps) {
+  const breakPoints = useBreakpoints();
+  const { t } = useTranslation();
+
+  const items = Array.from(
+    { length: Math.ceil(totalHitCount / maxTotal) },
+    (_, item) => item + 1
+  );
+
+  if (items.length < 2) {
+    return <></>;
+  }
+
+  return (
+    <PaginationWrapper id="pagination">
+      <ChevronButton
+        disabled={currentPage === 1}
+        onClick={() => setCurrentPage(currentPage - 1)}
+        data-testid="pagination-left"
+        icon="chevronLeft"
+        iconProps={{ icon: 'chevronLeft' }}
+        variant="secondaryNoBorder"
+        aria-label={t('pagination-previous-page')}
+        id="pagination-left-button"
+      />
+
+      {!breakPoints.isSmall ? (
+        FormatItemsList(items, 1).map((item, idx) => {
+          return (
+            <PaginationButton
+              key={
+                item !== '...'
+                  ? `pagination-item-${item}`
+                  : `pagination-item-${item}-${idx}`
+              }
+              onClick={() =>
+                setCurrentPage(typeof item === 'number' ? item : parseInt(item))
+              }
+              variant={item === currentPage ? 'default' : 'secondaryNoBorder'}
+              disabled={item === '...'}
+              className="pagination-number-button"
+            >
+              {item}
+            </PaginationButton>
+          );
+        })
+      ) : (
+        <PaginationMobile>
+          {/* {pageString} {urlState.page}/{items.length} */}
+        </PaginationMobile>
+      )}
+
+      <ChevronButton
+        disabled={currentPage === items[items.length - 1]}
+        onClick={() => setCurrentPage(currentPage + 1)}
+        data-testid="pagination-right"
+        icon="chevronRight"
+        iconProps={{ icon: 'chevronRight' }}
+        variant="secondaryNoBorder"
+        aria-label={t('pagination-next-page')}
+        id="pagination-right-button"
+      />
+    </PaginationWrapper>
+  );
+}
+
 function FormatItemsList(list: number[], activeItem: number) {
   const formattedList = [];
   const displayMax = 7;

@@ -18,14 +18,12 @@ interface RenderConceptsProps {
   concepts?: Concepts[];
   chosen: Concepts[];
   setChosen: (value: Concepts[]) => void;
-  fromOther?: boolean;
 }
 
 export default function RenderConcepts({
   concepts,
   chosen,
   setChosen,
-  fromOther,
 }: RenderConceptsProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -36,8 +34,6 @@ export default function RenderConcepts({
   useEffect(() => {
     setExpandersOpen(concepts?.map((c) => [c.id, false]));
   }, [concepts]);
-
-  // console.log(expandersOpen);
 
   const handleCheckbox = (e: { checkboxState: boolean }, concept: Concepts) => {
     if (e.checkboxState) {

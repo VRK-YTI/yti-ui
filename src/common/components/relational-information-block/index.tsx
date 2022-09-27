@@ -18,9 +18,8 @@ import {
 } from 'suomifi-ui-components';
 import { useBreakpoints } from '../media-query/media-query-context';
 import { ChipBlock } from './relation-information-block.styles';
+import RelationModalContent from './relational-modal-content';
 import RenderChosen from './render-chosen';
-import RenderConcepts from './render-concepts';
-import Search from './search';
 
 interface RelationalInformationBlockProps {
   infoKey: string;
@@ -166,22 +165,16 @@ function ManageRelationalInfoModal({
   const { isSmall } = useBreakpoints();
   const [visible, setVisible] = useState(false);
   const [showChosen, setShowChosen] = useState(false);
-  const [searchResults, setSearchResults] = useState<Concepts[]>([]);
   const [chosen, setChosen] = useState<Concepts[]>([]);
-
-  const handleSetSearchResults = (value: Concepts[]) => {
-    if (value !== searchResults) {
-      setSearchResults(value);
-    }
-  };
+  const [searchResults, setSearchResults] = useState<Concepts[]>([]);
 
   const handleClose = () => {
     setVisible(false);
     setShowChosen(false);
+    setChosen([]);
     setSelectedConcepts(
       searchResults.filter((result) => selectedConceptIds.includes(result.id))
     );
-    setChosen([]);
     setSearchResults([]);
   };
 
@@ -226,17 +219,14 @@ function ManageRelationalInfoModal({
         <ModalContent>
           <div hidden={showChosen}>
             <ModalTitle>{buttonTitle}</ModalTitle>
-
-            <Search
-              setSearchResults={handleSetSearchResults}
-              terminologyId={terminologyId}
-              fromOther={fromOther ? true : false}
-            />
-            <RenderConcepts
-              concepts={searchResults}
+            <RelationModalContent
+              fromOther={fromOther}
               chosen={chosen}
               setChosen={setChosen}
-              fromOther={fromOther ? true : false}
+              searchResults={searchResults}
+              setSearchResults={setSearchResults}
+              terminologyId={terminologyId}
+              initialChosenConcepts={selectedConceptIds}
             />
           </div>
 

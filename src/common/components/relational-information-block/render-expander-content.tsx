@@ -41,8 +41,7 @@ function RenderExpanderContent({
   if (conceptIsLoading) {
     return (
       <ExpanderContent>
-        {/* TODO: Add translation */}
-        <SaveSpinner text={'Ladataan'} />
+        <SaveSpinner text={t('loading', { ns: 'common' })} />
       </ExpanderContent>
     );
   }

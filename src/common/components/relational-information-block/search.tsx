@@ -1,90 +1,39 @@
-import { useSearchConceptMutation } from '@app/common/components/concept/concept.slice';
-import { Concepts } from '@app/common/interfaces/concepts.interface';
 import { useTranslation } from 'next-i18next';
-import { useEffect, useState } from 'react';
-import { Button, SearchInput, SingleSelect, Text } from 'suomifi-ui-components';
+import {
+  Button,
+  SearchInput,
+  SingleSelect,
+  SingleSelectData,
+  Text,
+} from 'suomifi-ui-components';
 import { SearchBlock } from './relation-information-block.styles';
-import useMountEffect from '@app/common/utils/hooks/use-mount-effect';
 import { TEXT_INPUT_MAX } from '@app/common/utils/constants';
 import { useBreakpoints } from '../media-query/media-query-context';
+import { StatusesType } from './relational-modal-content';
 
 interface SearchProps {
-  setSearchResults: (value: Concepts[]) => void;
-  terminologyId: string;
-  fromOther: boolean;
+  handleSearch: () => void;
+  handleClearValues: () => void;
+  setSearchTerm: (value: string) => void;
+  searchTerm: string;
+  setStatus: (value: (StatusesType & SingleSelectData) | null) => void;
+  status?: StatusesType | null;
+  statuses: StatusesType[];
+  totalHitCount?: number;
 }
 
 export default function Search({
-  setSearchResults,
-  terminologyId,
-  fromOther,
+  handleSearch,
+  handleClearValues,
+  setSearchTerm,
+  searchTerm,
+  setStatus,
+  status,
+  statuses,
+  totalHitCount,
 }: SearchProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [status, setStatus] = useState<typeof statuses[0] | null>();
-  const [searchConcept, result] = useSearchConceptMutation();
-
-  const statuses = [
-    {
-      name: 'VALID',
-      uniqueItemId: 'VALID',
-      labelText: t('statuses.valid', { ns: 'common' }),
-    },
-    {
-      name: 'INCOMPLETE',
-      uniqueItemId: 'INCOMPLETE',
-      labelText: t('statuses.incomplete', { ns: 'common' }),
-    },
-    {
-      name: 'DRAFT',
-      uniqueItemId: 'DRAFT',
-      labelText: t('statuses.draft', { ns: 'common' }),
-    },
-    {
-      name: 'RETIRED',
-      uniqueItemId: 'RETIRED',
-      labelText: t('statuses.retired', { ns: 'common' }),
-    },
-    {
-      name: 'SUPERSEDED',
-      uniqueItemId: 'SUPERSEDED',
-      labelText: t('statuses.superseded', { ns: 'common' }),
-    },
-    {
-      name: 'INVALID',
-      uniqueItemId: 'INVALID',
-      labelText: t('statuses.invalid', { ns: 'common' }),
-    },
-  ];
-
-  useEffect(() => {
-    if (result.isSuccess) {
-      setSearchResults(result.data.concepts);
-    }
-  }, [setSearchResults, result]);
-
-  const handleSearch = () => {
-    searchConcept({
-      ...(fromOther
-        ? { notInTerminologyId: terminologyId }
-        : { terminologyId: terminologyId }),
-      query: searchTerm,
-      status: status?.uniqueItemId,
-    });
-  };
-
-  useMountEffect(handleSearch, fromOther);
-
-  const handleClearValues = () => {
-    setSearchTerm('');
-    setStatus(null);
-    searchConcept({
-      ...(fromOther
-        ? { notInTerminologyId: terminologyId }
-        : { terminologyId: terminologyId }),
-    });
-  };
 
   return (
     <SearchBlock id="search-block" $isSmall={isSmall}>
@@ -123,10 +72,10 @@ export default function Search({
           {t('clear-search')}
         </Button>
       </div>
-      {result.isSuccess ? (
+      {totalHitCount ? (
         <div id="search-result-counts">
           <Text variant="bold" smallScreen>
-            {t('number-of-concepts', { count: result.data?.totalHitCount })}
+            {t('number-of-concepts', { count: totalHitCount })}
           </Text>
         </div>
       ) : null}

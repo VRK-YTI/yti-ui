@@ -34,6 +34,8 @@ export const conceptApi = createApi({
         query?: string;
         notInTerminologyId?: string;
         status?: string;
+        pageFrom?: number;
+        pageSize?: number;
       }
     >({
       query: (props) => ({
@@ -44,8 +46,8 @@ export const conceptApi = createApi({
           ...(props.notInTerminologyId && {
             notInTerminologyId: [props.notInTerminologyId],
           }),
-          pageFrom: 0,
-          pageSize: 100,
+          pageFrom: props.pageFrom ?? 0,
+          pageSize: props.pageSize ?? 100,
           ...(props.query && { query: props.query }),
           sortDirection: 'ASC',
           sortLanguage: 'fi',
