@@ -99,6 +99,7 @@ interface LocalPaginationProps {
   currentPage: number;
   setCurrentPage: (value: number) => void;
   maxTotal: number;
+  pageString: string;
 }
 
 export function LocalPagination({
@@ -106,6 +107,7 @@ export function LocalPagination({
   currentPage,
   setCurrentPage,
   maxTotal,
+  pageString,
 }: LocalPaginationProps) {
   const breakPoints = useBreakpoints();
   const { t } = useTranslation();
@@ -154,7 +156,7 @@ export function LocalPagination({
         })
       ) : (
         <PaginationMobile>
-          {/* {pageString} {urlState.page}/{items.length} */}
+          {pageString} {currentPage}/{items.length}
         </PaginationMobile>
       )}
 
