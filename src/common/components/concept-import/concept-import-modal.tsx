@@ -69,7 +69,9 @@ export default function ConceptImportModal({
       variant={!isSmall ? 'default' : 'smallScreen'}
     >
       <ModalContent style={userPosted ? { paddingBottom: '18px' } : {}}>
-        <ModalTitle>{t('import-concepts')}</ModalTitle>
+        <ModalTitle>
+          {!startFileUpload ? t('import-concepts') : t('downloading-file')}
+        </ModalTitle>
         {!startFileUpload ? (
           <InfoFile setFileData={setFileData} setIsValid={setIsValid} />
         ) : (

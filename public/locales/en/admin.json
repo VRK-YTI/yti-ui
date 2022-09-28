@@ -100,8 +100,8 @@
   "description": "Description",
   "diagram-name": "Diagram name",
   "diagram-url": "Diagram web address",
-  "download-failed": "Download failed",
-  "downloading-file": "Downloading file",
+  "download-failed": "Import failed",
+  "downloading-file": "Importing file",
   "edit-concept-error": {
     "default": "Concept has missing information",
     "diagrams": "At least one diagram is missing name and/or url",
