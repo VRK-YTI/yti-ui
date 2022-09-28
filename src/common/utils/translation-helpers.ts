@@ -176,3 +176,22 @@ export function translateHttpError(
       return t('error-occured_unhandled-error', { ns: 'alert' });
   }
 }
+
+export function translateExcelParseError(message: string, t: TFunction) {
+  switch (message) {
+    case 'terminology-no-language':
+      return t('concept-import.terminology-no-language', { ns: 'admin' });
+    case 'term-missing-language-suffix':
+      return t('concept-import.term-missing-language-suffix', { ns: 'admin' });
+    case 'value-not-valid':
+      return t('concept-import.value-not-valid', { ns: 'admin' });
+    case 'property-missing-language-suffix':
+      return t('concept-import.property-missing-language-suffix', {
+        ns: 'admin',
+      });
+    case 'status-column-missing':
+      return t('concept-import.status-column-missing', { ns: 'admin' });
+    default:
+      return t('concept-import.undefined-error', { ns: 'admin' });
+  }
+}

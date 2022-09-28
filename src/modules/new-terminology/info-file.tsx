@@ -11,12 +11,12 @@ import {
   FileWrapper,
 } from './new-terminology.styles';
 
-interface infoFileProps {
+interface InfoFileProps {
   setIsValid: (valid: boolean) => void;
   setFileData: (data: File | null) => void;
 }
 
-export default function InfoFile({ setIsValid, setFileData }: infoFileProps) {
+export default function InfoFile({ setIsValid, setFileData }: InfoFileProps) {
   const { t } = useTranslation('admin');
   const input = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);

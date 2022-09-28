@@ -67,6 +67,14 @@
   "concept-class": "Käsitteen luokka",
   "concept-diagram-or-link": "Käsitekaavio tai muu linkki",
   "concept-diagrams-and-sources": "Käsitekaaviot ja lähteet",
+  "concept-import": {
+    "property-missing-language-suffix": "Käsitteen tiedon avaimesta puuttuu kieli suffiksi",
+    "status-column-missing": "Tila kenttä puuttuu",
+    "term-missing-language-suffix": "Termin avaimesta puuttuu kieli suffiksi",
+    "terminology-no-language": "Sanastossa ei ole annettua kieltä",
+    "undefined-error": "Käsitteiden tuonnissa tapahtui virhe",
+    "value-not-valid": "Arvo solussa on virheellinen"
+  },
   "concept-other-information": "Käsitteen muut tiedot",
   "concept-other-terms-description": "Voit lisätä käsitteelle muita termejä, kuten ei suositettavan termin tai synonyymin.",
   "concept-other-terms-title": "Muut termit",
@@ -117,6 +125,9 @@
   "example-description": "Käyttöesimerkki on esimerkki käsitteen käytöstä.",
   "example-textarea-label-text": "Käsitteeseen liittyvä esimerkki",
   "example-textarea-placeholder": "Kirjoita esimerkki",
+  "excel-column": "Sarake",
+  "excel-row": "Rivi",
+  "excel-sheet": "Taulukko",
   "file-added": "Tiedosto lisätty",
   "file-upload-error": {
     "incorrect-file-type": "Väärä tiedostotyyppi. Sallittu tiedostotyyppi on xlsx.",
@@ -128,6 +139,8 @@
   "has-part-concept-chip-label": "Valitut koostumussuhteiset alakäsitteet",
   "has-part-concept-decription": "Käsite, joka vastaa kokonaisuuden osaa.",
   "homograph-number": "Homonyymin järjestysnumero",
+  "import-concepts": "Tuo käsitteitä",
+  "import-concepts-to-terminology": "Tuo käsitteet sanastoon",
   "info-domains": "Tietoalueet",
   "info-domains-available": "Saatavilla olevat tietoalueet",
   "info-domains-hint": "Valitse sanastolle sen sisältöä kuvaavat tietoalueet. Tietoalue auttaa sanaston löydettävyydessä.",
