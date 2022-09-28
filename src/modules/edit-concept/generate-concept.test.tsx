@@ -4,6 +4,7 @@ import {
   conceptWithOneTerm,
   conceptWithOneTermWithInitialData,
   differentTerms,
+  removeTerm,
 } from './generate-concept-test-expected';
 
 describe('generate-concept', () => {
@@ -65,7 +66,9 @@ describe('generate-concept', () => {
     const returned = generateConcept({
       data: input,
       terminologyId: 'terminologyId',
-    }).map((json) => {
+    });
+
+    const save = returned.save.map((json) => {
       // Replacing generated time stamps with expected values
       json.createdDate = '1970-01-01T00:00:00.000Z';
       json.lastModifiedDate = '1970-01-01T00:00:00.000Z';
@@ -74,7 +77,7 @@ describe('generate-concept', () => {
 
     // Replacing the last object's id with expected value
     // since it's randombly generated in the function
-    returned[1].id = '1';
+    save[1].id = '1';
 
     expect(returned).toStrictEqual(conceptWithOneTerm);
   });
@@ -245,7 +248,8 @@ describe('generate-concept', () => {
         uri: 'sanastot.suomi.fi/sanasto/concept-1000',
       },
       lastModifiedBy: 'Admin User',
-    }).map((json) => {
+    });
+    const save = returned.save.map((json) => {
       // Replacing generated time stamps with expected values
       json.createdDate = '1970-01-01T00:00:00.000Z';
       json.lastModifiedDate = '1970-01-01T00:00:00.000Z';
@@ -254,7 +258,7 @@ describe('generate-concept', () => {
 
     // Replacing the last object's id with expected value
     // since it's randombly generated in the function
-    returned[1].id = '1';
+    save[1].id = '1';
 
     expect(returned).toStrictEqual(conceptWithOneTermWithInitialData);
   });
@@ -372,7 +376,8 @@ describe('generate-concept', () => {
     const returned = generateConcept({
       data: input,
       terminologyId: 'terminologyId',
-    }).map((json) => {
+    });
+    const save = returned.save.map((json) => {
       // Replacing generated ids and time stamps with known values
       json.createdDate = '1970-01-01T00:00:00.000Z';
       json.lastModifiedDate = '1970-01-01T00:00:00.000Z';
@@ -381,11 +386,11 @@ describe('generate-concept', () => {
     });
 
     const expected = conceptWithInternalRelations;
-    const lastObjectId = returned[1].id;
+    const lastObjectId = save[1].id;
 
     // Changing expected values last object's id to match
     // what's returned. expected-value set id randomly
-    expected[1].id = lastObjectId;
+    expected.save[1].id = lastObjectId;
 
     expect(returned).toStrictEqual(expected);
   });
@@ -592,7 +597,8 @@ describe('generate-concept', () => {
     const returned = generateConcept({
       data: input,
       terminologyId: 'terminologyId',
-    }).map((json) => {
+    });
+    const save = returned.save.map((json) => {
       // Replacing generated ids and time stamps with known values
       json.createdDate = '1970-01-01T00:00:00.000Z';
       json.lastModifiedDate = '1970-01-01T00:00:00.000Z';
@@ -601,11 +607,297 @@ describe('generate-concept', () => {
     });
 
     const expected = differentTerms;
-    const lastObjectId = returned[4].id;
+    const lastObjectId = save[4].id;
 
     // Changing expected values last object's id to match
     // what's returned. expected-value set id randomly
-    expected[4].id = lastObjectId;
+    expected.save[4].id = lastObjectId;
+
+    expect(returned).toStrictEqual(expected);
+  });
+
+  it('should remove term properly', () => {
+    const input = {
+      terms: [
+        {
+          changeNote: '',
+          draftComment: '',
+          editorialNote: [],
+          historyNote: '',
+          id: '0',
+          language: 'fi',
+          prefLabel: 'demo fi',
+          scope: '',
+          source: [],
+          status: 'draft',
+          termConjugation: '',
+          termEquivalency: '',
+          termEquivalencyRelation: '',
+          termFamily: '',
+          termHomographNumber: '',
+          termInfo: '',
+          termStyle: '',
+          termType: 'recommended-term',
+          wordClass: '',
+        },
+      ],
+      basicInformation: {
+        definition: {},
+        example: [],
+        subject: '',
+        note: [],
+        diagramAndSource: {
+          diagrams: [],
+          sources: [],
+        },
+        orgInfo: {
+          changeHistory: '',
+          editorialNote: [],
+          etymology: '',
+        },
+        otherInfo: {
+          conceptClass: '',
+          wordClass: '',
+        },
+        relationalInfo: {
+          broaderConcept: [],
+          narrowerConcept: [],
+          relatedConcept: [],
+          isPartOfConcept: [],
+          hasPartConcept: [],
+          relatedConceptInOther: [],
+          matchInOther: [],
+        },
+      },
+    };
+
+    const returned = generateConcept({
+      data: input,
+      terminologyId: 'terminologyId',
+      initialValue: {
+        id: 'abad6405-2843-42e3-bacd-9448e34fd049',
+        code: 'concept-1',
+        uri: 'http://uri.suomi.fi/terminology/212e3cf8/concept-1',
+        number: 0,
+        createdBy: '',
+        createdDate: '1970-01-01T00:00:00.000Z',
+        lastModifiedBy: '',
+        lastModifiedDate: '1970-01-01T00:00:00.000Z',
+        type: {
+          id: 'Concept',
+          graph: {
+            id: 'terminologyId',
+          },
+          uri: '',
+        },
+        properties: {
+          status: [
+            {
+              lang: '',
+              value: 'DRAFT',
+              regex: '(?s)^.* $',
+            },
+          ],
+        },
+        references: {
+          prefLabelXl: [
+            {
+              id: '0',
+              code: 'term-3',
+              uri: 'http://uri.suomi.fi/terminology/212e3cf8/term-3',
+              number: 0,
+              createdBy: '',
+              createdDate: '1970-01-01T00:00:00.000Z',
+              lastModifiedBy: '',
+              lastModifiedDate: '1970-01-01T00:00:00.000Z',
+              type: {
+                id: 'Term',
+                graph: {
+                  id: 'terminologyId',
+                },
+                uri: '',
+              },
+              properties: {
+                prefLabel: [
+                  {
+                    lang: 'fi',
+                    value: 'demo fi',
+                    regex: '(?s)^.* $',
+                  },
+                ],
+                status: [
+                  {
+                    lang: '',
+                    value: 'DRAFT',
+                    regex: '(?s)^.* $',
+                  },
+                ],
+              },
+              references: {},
+              referrers: {
+                prefLabelXl: [
+                  {
+                    id: 'abad6405-2843-42e3-bacd-9448e34fd049',
+                    code: 'concept-1',
+                    uri: 'http://uri.suomi.fi/terminology/212e3cf8/concept-1',
+                    number: 0,
+                    createdDate: '1970-01-01T00:00:00.000Z',
+                    lastModifiedDate: '1970-01-01T00:00:00.000Z',
+                    type: {
+                      id: 'Concept',
+                      graph: {
+                        id: 'terminologyId',
+                      },
+                      uri: '',
+                    },
+                    properties: {
+                      status: [
+                        {
+                          lang: '',
+                          value: 'DRAFT',
+                          regex: '(?s)^.* $',
+                        },
+                      ],
+                    },
+                    references: {},
+                    referrers: {},
+                    identifier: {
+                      id: 'abad6405-2843-42e3-bacd-9448e34fd049',
+                      type: {
+                        id: 'Concept',
+                        graph: {
+                          id: 'terminologyId',
+                        },
+                        uri: '',
+                      },
+                    },
+                  },
+                ],
+              },
+              identifier: {
+                id: 'd17ed9bb-1c1f-4b46-a63d-648130e7ba19',
+                type: {
+                  id: 'Term',
+                  graph: {
+                    id: 'terminologyId',
+                  },
+                  uri: '',
+                },
+              },
+            },
+            {
+              id: 'ffd68efb-d5c8-4ea2-9fb8-fa7b0b688fe9',
+              code: 'term-4',
+              uri: 'http://uri.suomi.fi/terminology/212e3cf8/term-4',
+              number: 0,
+              createdBy: '',
+              createdDate: '2022-09-28T07:35:08.000+00:00',
+              lastModifiedBy: '',
+              lastModifiedDate: '2022-09-28T07:35:08.000+00:00',
+              type: {
+                id: 'Term',
+                graph: {
+                  id: 'terminologyId',
+                },
+                uri: '',
+              },
+              properties: {
+                prefLabel: [
+                  {
+                    lang: 'en',
+                    value: 'demo en',
+                    regex: '(?s)^.* $',
+                  },
+                ],
+                status: [
+                  {
+                    lang: '',
+                    value: 'DRAFT',
+                    regex: '(?s)^.* $',
+                  },
+                ],
+              },
+              references: {},
+              referrers: {
+                prefLabelXl: [
+                  {
+                    id: 'abad6405-2843-42e3-bacd-9448e34fd049',
+                    code: 'concept-1',
+                    uri: 'http://uri.suomi.fi/terminology/212e3cf8/concept-1',
+                    number: 0,
+                    createdDate: '2022-09-28T07:34:46.000+00: 00',
+                    lastModifiedDate: '2022-09-28T07:35:08.000+00: 00',
+                    type: {
+                      id: 'Concept',
+                      graph: {
+                        id: 'terminologyId',
+                      },
+                      uri: '',
+                    },
+                    properties: {
+                      status: [
+                        {
+                          lang: '',
+                          value: 'DRAFT',
+                          regex: '(?s)^.* $',
+                        },
+                      ],
+                    },
+                    references: {},
+                    referrers: {},
+                    identifier: {
+                      id: 'abad6405-2843-42e3-bacd-9448e34fd049',
+                      type: {
+                        id: 'Concept',
+                        graph: {
+                          id: 'terminologyId',
+                        },
+                        uri: '',
+                      },
+                    },
+                  },
+                ],
+              },
+              identifier: {
+                id: 'ffd68efb-d5c8-4ea2-9fb8-fa7b0b688fe9',
+                type: {
+                  id: 'Term',
+                  graph: {
+                    id: 'terminologyId',
+                  },
+                  uri: '',
+                },
+              },
+            },
+          ],
+        },
+        referrers: {},
+        identifier: {
+          id: 'abad6405-2843-42e3-bacd-9448e34fd049',
+          type: {
+            id: 'Concept',
+            graph: {
+              id: 'terminologyId',
+            },
+            uri: '',
+          },
+        },
+      },
+    });
+    const save = returned.save.map((json) => {
+      // Replacing generated ids and time stamps with known values
+      json.createdDate = '1970-01-01T00:00:00.000Z';
+      json.lastModifiedDate = '1970-01-01T00:00:00.000Z';
+
+      return json;
+    });
+
+    const expected = removeTerm;
+    const lastObjectId = save[1].id;
+
+    // Changing expected values last object's id to match
+    // what's returned. expected-value set id randomly
+    returned.save[1].id = lastObjectId;
 
     expect(returned).toStrictEqual(expected);
   });

@@ -16,6 +16,7 @@ export default function generateConcept({
   initialValue,
   lastModifiedBy,
 }: generateConceptProps) {
+  console.log(initialValue);
   const regex = '(?s)^.*$';
   const now = new Date();
   let matchingIds: string[] = [];
@@ -614,7 +615,34 @@ export default function generateConcept({
     retVal[retVal.length - 1].uri = initialValue.uri ?? '';
   }
 
-  return retVal;
+  const initialTermIds =
+    initialValue &&
+    Object.keys(initialValue?.references).flatMap((key) =>
+      initialValue?.references[key as keyof Concept['references']]?.map(
+        (val) => val.id && val.id
+      )
+    );
+
+  const newTermIds = data.terms.map((term) => term.id);
+
+  const deleteVal = initialTermIds?.filter((initId) =>
+    newTermIds.some((id) => id !== initId)
+  );
+
+  return {
+    delete:
+      deleteVal?.map((d) => ({
+        id: d,
+        type: {
+          graph: {
+            id: terminologyId,
+          },
+          id: 'Term',
+          uri: '',
+        },
+      })) ?? [],
+    save: retVal,
+  };
 }
 
 function getInitialTerm(id: string, terms: Concept['references']): Term | null {

@@ -22,10 +22,7 @@ export const modifyApi = createApi({
       query: (data) => ({
         url: '/modify',
         method: 'POST',
-        data: {
-          delete: [],
-          save: data,
-        },
+        data: data,
       }),
     }),
     addCollection: builder.mutation<
