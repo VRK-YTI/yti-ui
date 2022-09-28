@@ -1,7 +1,7 @@
 import { Concepts } from '@app/common/interfaces/concepts.interface';
 import useMountEffect from '@app/common/utils/hooks/use-mount-effect';
 import { useTranslation } from 'next-i18next';
-import { useEffect, useState } from 'react';
+import { createRef, useEffect, useState } from 'react';
 import { SingleSelectData } from 'suomifi-ui-components';
 import { useSearchConceptMutation } from '../concept/concept.slice';
 import { LocalPagination } from '../pagination/pagination';
@@ -43,6 +43,7 @@ export default function RelationModalContent({
   const [totalResults, setTotalResults] = useState(0);
   const [currPage, setCurrPage] = useState(1);
   const [initialized, setInitialized] = useState(false);
+  const modalRef = createRef<HTMLDivElement>();
 
   const statuses: StatusesType[] = [
     {
@@ -110,6 +111,13 @@ export default function RelationModalContent({
       pageFrom: (num - 1) * 20,
       pageSize: 20,
     });
+    focusToTop();
+  };
+
+  const focusToTop = () => {
+    if (modalRef.current) {
+      modalRef.current.scrollIntoView();
+    }
   };
 
   useEffect(() => {
@@ -143,6 +151,7 @@ export default function RelationModalContent({
 
   return (
     <RelationalModalBlock>
+      <div ref={modalRef} />
       <Search
         handleSearch={handleSearch}
         handleClearValues={handleClearValues}
