@@ -18,12 +18,14 @@ interface ResultCardExpanderProps {
   deepHits: DeepHitsDTO[];
   buttonLabel: string;
   contentLabel: string;
+  terminologyId: string;
 }
 
 export default function ResultCardExpander({
   deepHits,
   buttonLabel,
   contentLabel,
+  terminologyId,
 }: ResultCardExpanderProps) {
   const { t, i18n } = useTranslation();
   const suffix =
@@ -42,7 +44,7 @@ export default function ResultCardExpander({
       </ExpanderTitleButton>
       <ExpanderContent>
         <ExpanderContentTitle variant="h4">{contentLabel}</ExpanderContentTitle>
-        <HitsWrapper>{renderHitsInContent()}</HitsWrapper>
+        <HitsWrapper>{renderHitsInContent(terminologyId)}</HitsWrapper>
       </ExpanderContent>
     </Expander>
   );
@@ -92,12 +94,16 @@ export default function ResultCardExpander({
     });
   }
 
-  function renderHitsInContent() {
+  function renderHitsInContent(terminologyId: string) {
     return deepHits.map((deepHit, hitIdx) =>
       deepHit.topHits.map((hit, idx) => {
         if (hit.uri) {
           return (
-            <Link key={`${hitIdx}-${idx}`} href={hit.uri} passHref>
+            <Link
+              key={`${hitIdx}-${idx}`}
+              href={`/terminology/${terminologyId}/concept/${hit.id}`}
+              passHref
+            >
               <SuomiFiLink href="">
                 <SanitizedTextContent text={getText(hit.label)} />
               </SuomiFiLink>
