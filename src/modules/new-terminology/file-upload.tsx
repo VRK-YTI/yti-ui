@@ -57,7 +57,7 @@ export default function FileUpload({
                       errorInfo.data.errorDetails?.sheet
                     }`}</li>
                   )}
-                  {errorInfo.data.errorDetails?.row && (
+                  {errorInfo.data.errorDetails?.row != undefined && (
                     <li>{`${t('excel-row')}: ${
                       errorInfo.data.errorDetails?.row
                     }`}</li>
