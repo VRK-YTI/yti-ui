@@ -38,6 +38,7 @@ export function MatomoTracking({ url, siteId }: MatomoProps) {
     matomo('enableLinkTracking');
     matomo('setTrackerUrl', `${url}/matomo.php`);
     matomo('setSiteId', siteId);
+    matomo('enableJSErrorTracking');
   }, [siteId, url]);
 
   useEffect(() => {
