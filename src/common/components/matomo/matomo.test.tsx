@@ -61,8 +61,8 @@ describe('matomo', () => {
 
     jest.runAllTimers();
 
-    expect(window._paq?.[6]).toStrictEqual(['setCustomUrl', '/another-page']);
-    expect(window._paq?.[8]).toStrictEqual(['trackPageView']);
+    expect(window._paq?.[7]).toStrictEqual(['setCustomUrl', '/another-page']);
+    expect(window._paq?.[9]).toStrictEqual(['trackPageView']);
   });
 
   it('should log referrer url when page changes', () => {
@@ -74,7 +74,7 @@ describe('matomo', () => {
 
     jest.runAllTimers();
 
-    expect(window._paq?.[5]).toStrictEqual(['setReferrerUrl', '/']);
+    expect(window._paq?.[6]).toStrictEqual(['setReferrerUrl', '/']);
   });
 
   it('should log new page title when page changes', () => {
@@ -86,7 +86,7 @@ describe('matomo', () => {
 
     jest.runAllTimers();
 
-    expect(window._paq?.[7]).toStrictEqual([
+    expect(window._paq?.[8]).toStrictEqual([
       'setDocumentTitle',
       'Another Page',
     ]);
@@ -100,6 +100,6 @@ describe('matomo', () => {
 
     jest.runAllTimers();
 
-    expect(window._paq).toHaveLength(5);
+    expect(window._paq).toHaveLength(6);
   });
 });
