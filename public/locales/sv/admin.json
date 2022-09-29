@@ -67,6 +67,14 @@
   "concept-class": "",
   "concept-diagram-or-link": "",
   "concept-diagrams-and-sources": "",
+  "concept-import": {
+    "property-missing-language-suffix": "",
+    "status-column-missing": "",
+    "term-missing-language-suffix": "",
+    "terminology-no-language": "",
+    "undefined-error": "",
+    "value-not-valid": ""
+  },
   "concept-other-information": "",
   "concept-other-terms-description": "",
   "concept-other-terms-title": "",
@@ -117,6 +125,9 @@
   "example-description": "",
   "example-textarea-label-text": "",
   "example-textarea-placeholder": "",
+  "excel-column": "",
+  "excel-row": "",
+  "excel-sheet": "",
   "file-added": "",
   "file-upload-error": {
     "incorrect-file-type": "",
@@ -128,6 +139,8 @@
   "has-part-concept-chip-label": "",
   "has-part-concept-decription": "",
   "homograph-number": "",
+  "import-concepts": "",
+  "import-concepts-to-terminology": "",
   "info-domains": "",
   "info-domains-available": "",
   "info-domains-hint": "",

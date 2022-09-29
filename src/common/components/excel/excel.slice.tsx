@@ -26,8 +26,21 @@ export const excelApi = createApi({
         method: 'GET',
       }),
     }),
+    postSimpleImportExcel: builder.mutation<
+      ImportResponse,
+      { terminologyId: string; file: FormData }
+    >({
+      query: (props) => ({
+        url: `/import/simpleExcel/${props.terminologyId}`,
+        method: 'POST',
+        data: props.file,
+      }),
+    }),
   }),
 });
 
-export const { usePostImportExcelMutation, useGetImportStatusMutation } =
-  excelApi;
+export const {
+  usePostImportExcelMutation,
+  useGetImportStatusMutation,
+  usePostSimpleImportExcelMutation,
+} = excelApi;

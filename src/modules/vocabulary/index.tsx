@@ -34,6 +34,7 @@ import LoadIndicator from '@app/common/components/load-indicator';
 import { useRouter } from 'next/router';
 import HasPermission from '@app/common/utils/has-permission';
 import dynamic from 'next/dynamic';
+import ConceptImportModal from '@app/common/components/concept-import';
 
 const NewConceptModal = dynamic(
   () => import('@app/common/components/new-concept-modal')
@@ -162,12 +163,18 @@ export default function Vocabulary({ id }: VocabularyProps) {
                 actions: 'CREATE_CONCEPT',
                 targetOrganization: info?.references.contributor,
               }) && (
-                <NewConceptModal
-                  terminologyId={id}
-                  languages={
-                    info?.properties.language?.map(({ value }) => value) ?? []
-                  }
-                />
+                <>
+                  <NewConceptModal
+                    terminologyId={id}
+                    languages={
+                      info?.properties.language?.map(({ value }) => value) ?? []
+                    }
+                  />
+                  <ConceptImportModal
+                    refetch={refetchConcepts}
+                    terminologyId={id}
+                  />
+                </>
               )}
             </QuickActionsWrapper>
 
