@@ -200,10 +200,12 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
 
         {HasPermission({
           actions: 'CREATE_TERMINOLOGY',
+          targetOrganization: data.references.contributor,
         }) && <CopyTerminologyModal terminologyId={data.type.graph.id} />}
 
         {HasPermission({
           actions: 'DELETE_TERMINOLOGY',
+          targetOrganization: data.references.contributor,
         }) && (
           <RemoveTerminologyModal
             terminologyId={data.type.graph.id}
