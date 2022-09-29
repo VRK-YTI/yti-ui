@@ -614,19 +614,21 @@ export default function generateConcept({
     retVal[retVal.length - 1].uri = initialValue.uri ?? '';
   }
 
-  const initialTermIds =
-    initialValue &&
-    Object.keys(initialValue?.references).flatMap((key) =>
-      initialValue?.references[key as keyof Concept['references']]?.map(
-        (val) => val.id && val.id
+  const initialTermIds: string[] = initialValue
+    ? Object.keys(initialValue?.references).flatMap(
+        (key) =>
+          initialValue?.references[key as keyof Concept['references']]?.map(
+            (val) => val.id
+          ) ?? []
       )
-    );
+    : [];
 
   const newTermIds = data.terms.map((term) => term.id);
 
-  const deleteVal = initialTermIds?.filter((initId) =>
-    newTermIds.some((id) => id !== initId)
-  );
+  const deleteVal =
+    initialTermIds.length > 0
+      ? initialTermIds?.filter((initId) => !newTermIds.includes(initId))
+      : [];
 
   return {
     delete:
