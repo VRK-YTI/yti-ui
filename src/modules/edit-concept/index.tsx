@@ -116,7 +116,7 @@ export default function EditConcept({
     if (addConceptStatus.isSuccess && postedData) {
       router.replace(
         `/terminology/${terminologyId}/concept/${
-          postedData[postedData.length - 1].id
+          postedData.save[postedData.save.length - 1].id
         }`
       );
     }

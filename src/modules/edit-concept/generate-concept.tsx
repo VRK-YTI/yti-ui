@@ -614,7 +614,36 @@ export default function generateConcept({
     retVal[retVal.length - 1].uri = initialValue.uri ?? '';
   }
 
-  return retVal;
+  const initialTermIds: string[] = initialValue
+    ? Object.keys(initialValue?.references).flatMap(
+        (key) =>
+          initialValue?.references[key as keyof Concept['references']]?.map(
+            (val) => val.id
+          ) ?? []
+      )
+    : [];
+
+  const newTermIds = data.terms.map((term) => term.id);
+
+  const deleteVal =
+    initialTermIds.length > 0
+      ? initialTermIds?.filter((initId) => !newTermIds.includes(initId))
+      : [];
+
+  return {
+    delete:
+      deleteVal?.map((d) => ({
+        id: d,
+        type: {
+          graph: {
+            id: terminologyId,
+          },
+          id: 'Term',
+          uri: '',
+        },
+      })) ?? [],
+    save: retVal,
+  };
 }
 
 function getInitialTerm(id: string, terms: Concept['references']): Term | null {
