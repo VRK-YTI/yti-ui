@@ -195,3 +195,68 @@ export function translateExcelParseError(message: string, t: TFunction) {
       return t('concept-import.undefined-error', { ns: 'admin' });
   }
 }
+
+export function translateRemovalModalTitle(type: 'terminology' | 'concept' | 'collection', t: TFunction) {
+  switch (type) {
+    case 'terminology':
+      return t('remove-modal.terminology-title', { ns: 'admin' });
+    case 'concept':
+      return t('remove-modal.concept-title', { ns: 'admin' });
+    case 'collection':
+      return t('remove-modal.collection-title', { ns: 'admin' });
+    default:
+      return '';
+  }
+}
+
+export function translateRemovalModalConfirmation(type: 'terminology' | 'concept' | 'collection', targetName: string, t: TFunction) {
+  switch (type) {
+    case 'terminology':
+      return t('remove-modal.terminology-confirmation', { ns: 'admin', targetName: targetName });
+    case 'concept':
+      return t('remove-modal.concept-confirmation', { ns: 'admin', targetName: targetName });
+    case 'collection':
+      return t('remove-modal.collection-confirmation', { ns: 'admin', targetName: targetName });
+    default:
+      return '';
+  }
+}
+
+export function translateRemovalModalDescription(type: 'terminology' | 'concept' | 'collection', t: TFunction) {
+  switch (type) {
+    case 'terminology':
+      return t('remove-modal.terminology-description', { ns: 'admin' });
+    case 'concept':
+      return t('remove-modal.concept-description', { ns: 'admin' });
+    case 'collection':
+      return t('remove-modal.collection-description', { ns: 'admin' });
+    default:
+      return '';
+  }
+}
+
+export function translateRemovalModalProcessing(type: 'terminology' | 'concept' | 'collection', t: TFunction) {
+  switch (type) {
+    case 'terminology':
+      return t('remove-modal.terminology-processing', { ns: 'admin' });
+    case 'concept':
+      return t('remove-modal.concept-processing', { ns: 'admin' });
+    case 'collection':
+      return t('remove-modal.collection-processing', { ns: 'admin' });
+    default:
+      return '';
+  }
+}
+
+export function translateRemovalModalRemoved(type: 'terminology' | 'concept' | 'collection', targetName: string, t: TFunction) {
+  switch (type) {
+    case 'terminology':
+      return t('remove-modal.terminology-removed', { ns: 'admin', targetName: targetName });
+    case 'concept':
+      return t('remove-modal.concept-removed', { ns: 'admin', targetName: targetName });
+    case 'collection':
+      return t('remove-modal.collection-removed', { ns: 'admin', targetName: targetName });
+    default:
+      return '';
+  }
+}

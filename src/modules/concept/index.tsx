@@ -40,6 +40,7 @@ import { BasicBlockExtraWrapper } from '@app/common/components/block/block.style
 import Link from 'next/link';
 import { translateStatus } from '@app/common/utils/translation-helpers';
 import isEmail from 'validator/lib/isEmail';
+import RemovalModal from '@app/common/components/removal-modal';
 
 export interface ConceptProps {
   terminologyId: string;
@@ -202,30 +203,44 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
             actions: 'EDIT_CONCEPT',
             targetOrganization: terminology?.references.contributor,
           }) && (
-            <>
-              <BasicBlock
-                title={t('edit-concept')}
-                extra={
-                  <BasicBlockExtraWrapper>
-                    <Link
-                      href={`/terminology/${terminologyId}/concept/${conceptId}/edit`}
-                    >
-                      <Button
-                        variant="secondary"
-                        icon="edit"
-                        id="edit-concept-button"
+              <>
+                <BasicBlock
+                  title={t('edit-concept')}
+                  extra={
+                    <BasicBlockExtraWrapper>
+                      <Link
+                        href={`/terminology/${terminologyId}/concept/${conceptId}/edit`}
                       >
-                        {t('edit-concept')}
-                      </Button>
-                    </Link>
-                  </BasicBlockExtraWrapper>
-                }
-              >
-                {t('edit-concept-rights')}
-              </BasicBlock>
-              <Separator />
-            </>
-          )}
+                        <Button
+                          variant="secondary"
+                          icon="edit"
+                          id="edit-concept-button"
+                        >
+                          {t('edit-concept')}
+                        </Button>
+                      </Link>
+                    </BasicBlockExtraWrapper>
+                  }
+                >
+                  {t('edit-concept-rights')}
+                </BasicBlock>
+                <Separator />
+              </>
+            )}
+
+          {HasPermission({
+            actions: 'DELETE_CONCEPT',
+            targetOrganization: terminology?.references.contributor,
+          }) && (
+              <>
+                <RemovalModal
+                  targetId={concept?.id ?? ''}
+                  targetName={prefLabel}
+                  type="concept"
+                />
+                <Separator />
+              </>
+            )}
 
           <VisuallyHidden as="h2">
             {t('additional-technical-information', { ns: 'common' })}
@@ -254,11 +269,10 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
           <BasicBlock
             extra={
               <ExternalLink
-                href={`mailto:${
-                  isEmail(email) ? email : 'yhteentoimivuus@dvv.fi'
-                }?subject=${t('feedback-concept', {
-                  ns: 'common',
-                })} - ${prefLabel}`}
+                href={`mailto:${isEmail(email) ? email : 'yhteentoimivuus@dvv.fi'
+                  }?subject=${t('feedback-concept', {
+                    ns: 'common',
+                  })} - ${prefLabel}`}
                 labelNewWindow={`${t('site-open-new-email', {
                   ns: 'common',
                 })} ${isEmail(email) ? email : 'yhteentoimivuus@dvv.fi'}`}

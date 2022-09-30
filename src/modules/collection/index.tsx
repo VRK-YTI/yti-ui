@@ -35,6 +35,7 @@ import {
 import HasPermission from '@app/common/utils/has-permission';
 import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
 import Link from 'next/link';
+import RemovalModal from '@app/common/components/removal-modal';
 
 interface CollectionProps {
   terminologyId: string;
@@ -191,6 +192,20 @@ export default function Collection({
 
               <Separator />
             </>
+          )}
+
+          {HasPermission({
+            actions: 'DELETE_COLLECTION',
+            targetOrganization: terminology?.references.contributor,
+          }) && (
+            <>
+                <RemovalModal
+                  targetId={collection?.id ?? ''}
+                  targetName={prefLabel}
+                  type="collection"
+                />
+                <Separator />
+              </>
           )}
 
           <VisuallyHidden as="h2">

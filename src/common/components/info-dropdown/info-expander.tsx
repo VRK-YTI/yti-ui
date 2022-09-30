@@ -27,7 +27,7 @@ import {
 import Link from 'next/link';
 import { getPropertyValue } from '../property-value/get-property-value';
 import PropertyValue from '../property-value';
-import RemoveTerminologyModal from '../remove-terminology-modal';
+import RemovalModal from '../removal-modal';
 
 const Subscription = dynamic(
   () => import('@app/common/components/subscription/subscription')
@@ -90,7 +90,7 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
         <BasicBlock title={t('vocabulary-info-vocabulary-type')} id="type">
           {translateTerminologyType(
             data.properties?.terminologyType?.[0].value ??
-              'TERMINOLOGICAL_VOCABULARY',
+            'TERMINOLOGICAL_VOCABULARY',
             t
           )}
         </BasicBlock>
@@ -116,61 +116,61 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
           actions: 'EDIT_TERMINOLOGY',
           targetOrganization: data.references.contributor,
         }) && (
-          <>
-            <Separator isLarge />
-            <BasicBlock
-              title={t('edit-terminology-info', { ns: 'admin' })}
-              extra={
-                <BasicBlockExtraWrapper>
-                  <Link
-                    href={`/terminology/${data.identifier.type.graph.id}/edit`}
-                  >
-                    <Button
-                      icon="edit"
-                      variant="secondary"
-                      id="edit-terminology-button"
+            <>
+              <Separator isLarge />
+              <BasicBlock
+                title={t('edit-terminology-info', { ns: 'admin' })}
+                extra={
+                  <BasicBlockExtraWrapper>
+                    <Link
+                      href={`/terminology/${data.identifier.type.graph.id}/edit`}
                     >
-                      {t('edit-terminology', { ns: 'admin' })}
-                    </Button>
-                  </Link>
-                </BasicBlockExtraWrapper>
-              }
-              id="edit-terminology-block"
-            >
-              {t('you-have-right-edit-terminology', { ns: 'admin' })}
-            </BasicBlock>
-          </>
-        )}
+                      <Button
+                        icon="edit"
+                        variant="secondary"
+                        id="edit-terminology-button"
+                      >
+                        {t('edit-terminology', { ns: 'admin' })}
+                      </Button>
+                    </Link>
+                  </BasicBlockExtraWrapper>
+                }
+                id="edit-terminology-block"
+              >
+                {t('you-have-right-edit-terminology', { ns: 'admin' })}
+              </BasicBlock>
+            </>
+          )}
 
         {HasPermission({
           actions: 'CREATE_COLLECTION',
           targetOrganization: data.references.contributor,
         }) && (
-          <>
-            <Separator isLarge />
-            <BasicBlock
-              title={t('new-collection-to-terminology', { ns: 'admin' })}
-              extra={
-                <BasicBlockExtraWrapper>
-                  <Link
-                    href={`/terminology/${data.identifier.type.graph.id}/new-collection`}
-                  >
-                    <Button
-                      icon="plus"
-                      variant="secondary"
-                      id="create-collection-button"
+            <>
+              <Separator isLarge />
+              <BasicBlock
+                title={t('new-collection-to-terminology', { ns: 'admin' })}
+                extra={
+                  <BasicBlockExtraWrapper>
+                    <Link
+                      href={`/terminology/${data.identifier.type.graph.id}/new-collection`}
                     >
-                      {t('add-new-collection', { ns: 'admin' })}
-                    </Button>
-                  </Link>
-                </BasicBlockExtraWrapper>
-              }
-              id="new-collection-block"
-            >
-              {t('you-have-right-new-collection', { ns: 'admin' })}
-            </BasicBlock>
-          </>
-        )}
+                      <Button
+                        icon="plus"
+                        variant="secondary"
+                        id="create-collection-button"
+                      >
+                        {t('add-new-collection', { ns: 'admin' })}
+                      </Button>
+                    </Link>
+                  </BasicBlockExtraWrapper>
+                }
+                id="new-collection-block"
+              >
+                {t('you-have-right-new-collection', { ns: 'admin' })}
+              </BasicBlock>
+            </>
+          )}
 
         <Separator isLarge />
 
@@ -207,15 +207,18 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
           actions: 'DELETE_TERMINOLOGY',
           targetOrganization: data.references.contributor,
         }) && (
-          <RemoveTerminologyModal
-            terminologyId={data.type.graph.id}
-            terminologyName={getPropertyValue({
-              property: data.properties.prefLabel,
-              language: i18n.language,
-            })}
-            disabled={data.properties.status?.[0].value === 'VALID'}
-          />
-        )}
+            <>
+              <Separator isLarge />
+              <RemovalModal
+                targetId={data.type.graph.id}
+                targetName={getPropertyValue({
+                  property: data.properties.prefLabel,
+                  language: i18n.language,
+                })}
+                type='terminology'
+              />
+            </>
+          )}
 
         {!user.anonymous && (
           <>
