@@ -203,44 +203,45 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
             actions: 'EDIT_CONCEPT',
             targetOrganization: terminology?.references.contributor,
           }) && (
-              <>
-                <BasicBlock
-                  title={t('edit-concept')}
-                  extra={
-                    <BasicBlockExtraWrapper>
-                      <Link
-                        href={`/terminology/${terminologyId}/concept/${conceptId}/edit`}
+            <>
+              <BasicBlock
+                title={t('edit-concept')}
+                extra={
+                  <BasicBlockExtraWrapper>
+                    <Link
+                      href={`/terminology/${terminologyId}/concept/${conceptId}/edit`}
+                    >
+                      <Button
+                        variant="secondary"
+                        icon="edit"
+                        id="edit-concept-button"
                       >
-                        <Button
-                          variant="secondary"
-                          icon="edit"
-                          id="edit-concept-button"
-                        >
-                          {t('edit-concept')}
-                        </Button>
-                      </Link>
-                    </BasicBlockExtraWrapper>
-                  }
-                >
-                  {t('edit-concept-rights')}
-                </BasicBlock>
-                <Separator />
-              </>
-            )}
+                        {t('edit-concept')}
+                      </Button>
+                    </Link>
+                  </BasicBlockExtraWrapper>
+                }
+              >
+                {t('edit-concept-rights')}
+              </BasicBlock>
+              <Separator />
+            </>
+          )}
 
           {HasPermission({
             actions: 'DELETE_CONCEPT',
             targetOrganization: terminology?.references.contributor,
           }) && (
-              <>
-                <RemovalModal
-                  targetId={concept?.id ?? ''}
-                  targetName={prefLabel}
-                  type="concept"
-                />
-                <Separator />
-              </>
-            )}
+            <>
+              <RemovalModal
+                removalData={concept}
+                targetId={concept?.id ?? ''}
+                targetName={prefLabel}
+                type="concept"
+              />
+              <Separator />
+            </>
+          )}
 
           <VisuallyHidden as="h2">
             {t('additional-technical-information', { ns: 'common' })}
@@ -269,10 +270,11 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
           <BasicBlock
             extra={
               <ExternalLink
-                href={`mailto:${isEmail(email) ? email : 'yhteentoimivuus@dvv.fi'
-                  }?subject=${t('feedback-concept', {
-                    ns: 'common',
-                  })} - ${prefLabel}`}
+                href={`mailto:${
+                  isEmail(email) ? email : 'yhteentoimivuus@dvv.fi'
+                }?subject=${t('feedback-concept', {
+                  ns: 'common',
+                })} - ${prefLabel}`}
                 labelNewWindow={`${t('site-open-new-email', {
                   ns: 'common',
                 })} ${isEmail(email) ? email : 'yhteentoimivuus@dvv.fi'}`}

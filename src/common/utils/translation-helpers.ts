@@ -196,7 +196,10 @@ export function translateExcelParseError(message: string, t: TFunction) {
   }
 }
 
-export function translateRemovalModalTitle(type: 'terminology' | 'concept' | 'collection', t: TFunction) {
+export function translateRemovalModalTitle(
+  type: 'terminology' | 'concept' | 'collection',
+  t: TFunction
+) {
   switch (type) {
     case 'terminology':
       return t('remove-modal.terminology-title', { ns: 'admin' });
@@ -209,20 +212,36 @@ export function translateRemovalModalTitle(type: 'terminology' | 'concept' | 'co
   }
 }
 
-export function translateRemovalModalConfirmation(type: 'terminology' | 'concept' | 'collection', targetName: string, t: TFunction) {
+export function translateRemovalModalConfirmation(
+  type: 'terminology' | 'concept' | 'collection',
+  targetName: string,
+  t: TFunction
+) {
   switch (type) {
     case 'terminology':
-      return t('remove-modal.terminology-confirmation', { ns: 'admin', targetName: targetName });
+      return t('remove-modal.terminology-confirmation', {
+        ns: 'admin',
+        targetName: targetName,
+      });
     case 'concept':
-      return t('remove-modal.concept-confirmation', { ns: 'admin', targetName: targetName });
+      return t('remove-modal.concept-confirmation', {
+        ns: 'admin',
+        targetName: targetName,
+      });
     case 'collection':
-      return t('remove-modal.collection-confirmation', { ns: 'admin', targetName: targetName });
+      return t('remove-modal.collection-confirmation', {
+        ns: 'admin',
+        targetName: targetName,
+      });
     default:
       return '';
   }
 }
 
-export function translateRemovalModalDescription(type: 'terminology' | 'concept' | 'collection', t: TFunction) {
+export function translateRemovalModalDescription(
+  type: 'terminology' | 'concept' | 'collection',
+  t: TFunction
+) {
   switch (type) {
     case 'terminology':
       return t('remove-modal.terminology-description', { ns: 'admin' });
@@ -235,7 +254,10 @@ export function translateRemovalModalDescription(type: 'terminology' | 'concept'
   }
 }
 
-export function translateRemovalModalProcessing(type: 'terminology' | 'concept' | 'collection', t: TFunction) {
+export function translateRemovalModalProcessing(
+  type: 'terminology' | 'concept' | 'collection',
+  t: TFunction
+) {
   switch (type) {
     case 'terminology':
       return t('remove-modal.terminology-processing', { ns: 'admin' });
@@ -248,14 +270,27 @@ export function translateRemovalModalProcessing(type: 'terminology' | 'concept' 
   }
 }
 
-export function translateRemovalModalRemoved(type: 'terminology' | 'concept' | 'collection', targetName: string, t: TFunction) {
+export function translateRemovalModalRemoved(
+  type: 'terminology' | 'concept' | 'collection',
+  targetName: string,
+  t: TFunction
+) {
   switch (type) {
     case 'terminology':
-      return t('remove-modal.terminology-removed', { ns: 'admin', targetName: targetName });
+      return t('remove-modal.terminology-removed', {
+        ns: 'admin',
+        targetName: targetName,
+      });
     case 'concept':
-      return t('remove-modal.concept-removed', { ns: 'admin', targetName: targetName });
+      return t('remove-modal.concept-removed', {
+        ns: 'admin',
+        targetName: targetName,
+      });
     case 'collection':
-      return t('remove-modal.collection-removed', { ns: 'admin', targetName: targetName });
+      return t('remove-modal.collection-removed', {
+        ns: 'admin',
+        targetName: targetName,
+      });
     default:
       return '';
   }

@@ -1,4 +1,12 @@
-import { translateRemovalModalConfirmation, translateRemovalModalDescription, translateRemovalModalProcessing, translateRemovalModalRemoved, translateRemovalModalTitle } from '@app/common/utils/translation-helpers';
+import { Collection } from '@app/common/interfaces/collection.interface';
+import { Concept } from '@app/common/interfaces/concept.interface';
+import {
+  translateRemovalModalConfirmation,
+  translateRemovalModalDescription,
+  translateRemovalModalProcessing,
+  translateRemovalModalRemoved,
+  translateRemovalModalTitle,
+} from '@app/common/utils/translation-helpers';
 import { useStoreDispatch } from '@app/store';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
@@ -12,10 +20,14 @@ import {
 } from 'suomifi-ui-components';
 import { BasicBlock } from '../block';
 import { BasicBlockExtraWrapper } from '../block/block.styles';
-import { useDeleteConceptMutation } from '../remove/remove.slice';
+import { useDeleteTargetMutation } from '../remove/remove.slice';
 import SaveSpinner from '../save-spinner';
 import { terminologySearchApi } from '../terminology-search/terminology-search.slice';
 import { useDeleteVocabularyMutation } from '../vocabulary/vocabulary.slice';
+import {
+  generateCollectionData,
+  generateConceptData,
+} from './generate-removal-data';
 import {
   FooterBlock,
   RemoveModal,
@@ -23,26 +35,56 @@ import {
 } from './removal-modal.styles';
 
 interface RemovalModalProps {
+  removalData?: Concept | Collection;
   targetId: string;
   targetName: string;
   type: 'terminology' | 'concept' | 'collection';
 }
 
-export default function RemovalModal({ targetId, targetName, type }: RemovalModalProps) {
+export default function RemovalModal({
+  removalData,
+  targetId,
+  targetName,
+  type,
+}: RemovalModalProps) {
   const { t } = useTranslation('admin');
   const dispatch = useStoreDispatch();
   const router = useRouter();
   const [visible, setVisible] = useState(false);
   const [deleteVocabulary, terminology] = useDeleteVocabularyMutation();
-  const [deleteConcept, concept] = useDeleteConceptMutation();
+  const [deleteTarget, target] = useDeleteTargetMutation();
 
   const handleClick = () => {
     if (type === 'terminology') {
       deleteVocabulary(targetId);
     }
 
-    if (type === 'concept') {
-      deleteConcept(null);
+    if (
+      type === 'concept' &&
+      removalData &&
+      'references.prefLabelXl' in removalData
+    ) {
+      const data = generateConceptData(removalData);
+
+      if (data.length < 2) {
+        return null;
+      }
+
+      deleteTarget(data);
+    }
+
+    if (
+      type === 'collection' &&
+      removalData &&
+      'properties.prefLabel' in removalData
+    ) {
+      const data = generateCollectionData(removalData);
+
+      if (data.length < 1) {
+        return null;
+      }
+
+      deleteTarget(data);
     }
   };
 
@@ -51,22 +93,26 @@ export default function RemovalModal({ targetId, targetName, type }: RemovalModa
       router.push('/');
       dispatch(terminologySearchApi.util.invalidateTags(['TerminologySearch']));
     }
+
+    if (removalData) {
+      router.push(`/terminology/${removalData.type.graph.id}`);
+    }
   };
 
   const isUninitialized = () => {
-    return terminology.isUninitialized && concept.isUninitialized;
+    return terminology.isUninitialized && target.isUninitialized;
   };
 
   const isLoading = () => {
-    return terminology.isLoading || concept.isLoading;
+    return terminology.isLoading || target.isLoading;
   };
 
   const isSuccess = () => {
-    return terminology.isSuccess || concept.isSuccess;
+    return terminology.isSuccess || target.isSuccess;
   };
 
   const isError = () => {
-    return terminology.isError || concept.isError;
+    return terminology.isError || target.isError;
   };
 
   return (

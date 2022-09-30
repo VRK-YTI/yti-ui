@@ -199,13 +199,14 @@ export default function Collection({
             targetOrganization: terminology?.references.contributor,
           }) && (
             <>
-                <RemovalModal
-                  targetId={collection?.id ?? ''}
-                  targetName={prefLabel}
-                  type="collection"
-                />
-                <Separator />
-              </>
+              <RemovalModal
+                removalData={collection}
+                targetId={collection?.id ?? ''}
+                targetName={prefLabel}
+                type="collection"
+              />
+              <Separator />
+            </>
           )}
 
           <VisuallyHidden as="h2">
