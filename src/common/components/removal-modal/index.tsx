@@ -21,6 +21,7 @@ import {
 } from 'suomifi-ui-components';
 import { BasicBlock } from '../block';
 import { BasicBlockExtraWrapper } from '../block/block.styles';
+import { useBreakpoints } from '../media-query/media-query-context';
 import { useDeleteTargetMutation } from '../remove/remove.slice';
 import SaveSpinner from '../save-spinner';
 import { terminologySearchApi } from '../terminology-search/terminology-search.slice';
@@ -61,6 +62,7 @@ export default function RemovalModal({
 }: RemovalModalProps) {
   const { t } = useTranslation('admin');
   const dispatch = useStoreDispatch();
+  const { isSmall } = useBreakpoints();
   const router = useRouter();
   const [visible, setVisible] = useState(false);
   const [deleteVocabulary, terminology] = useDeleteVocabularyMutation();
@@ -136,6 +138,13 @@ export default function RemovalModal({
             >
               {translateRemovalModalTitle(removalData.type, t)}
             </Button>
+            {isDisabled && removalData.type === 'terminology' && (
+              <Paragraph style={{ marginTop: '10px' }}>
+                <Text smallScreen variant="bold">
+                  {t('remove-modal.remove-disabled')}
+                </Text>
+              </Paragraph>
+            )}
           </BasicBlockExtraWrapper>
         }
       >
@@ -146,6 +155,7 @@ export default function RemovalModal({
         appElementId="__next"
         visible={visible}
         onEscKeyDown={() => !isSuccess() && setVisible(false)}
+        variant={isSmall ? 'smallScreen' : 'default'}
       >
         <RemoveModalContent>
           <ModalTitle>

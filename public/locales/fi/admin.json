@@ -231,6 +231,7 @@
     "concept-processing": "Poistetaan käsitettä",
     "concept-removed": "Käsite {{targetName}} poistettu.",
     "concept-title": "Poista käsite",
+    "remove-disabled": "Voimassa olevaa sanastoa ei saa poistaa kokonaan. Muuta sanaston tilaksi Poistettu käytöstä tai Korvattu, mikäli tämä sanasto on korvattu toisella sanastolla.",
     "terminology-confirmation": "Haluatko varmasti poistaa sanaston {{targetName}}?",
     "terminology-description": "Sinulla on oikeudet poistaa tämä sanasto. Sanaston poistaminen on lopullista.",
     "terminology-processing": "Poistetaan sanastoa",
