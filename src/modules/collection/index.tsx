@@ -200,10 +200,10 @@ export default function Collection({
           }) && (
             <>
               <RemovalModal
-                removalData={collection}
+                isDisabled={false}
+                removalData={{ type: 'collection', data: collection }}
                 targetId={collection?.id ?? ''}
                 targetName={prefLabel}
-                type="collection"
               />
               <Separator />
             </>

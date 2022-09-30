@@ -196,6 +196,22 @@ export function translateExcelParseError(message: string, t: TFunction) {
   }
 }
 
+export function translateRemovalModalError(
+  type: 'terminology' | 'concept' | 'collection',
+  t: TFunction
+) {
+  switch (type) {
+    case 'terminology':
+      return t('error-occurred_remove-terminology', { ns: 'alert' });
+    case 'concept':
+      return t('error-occurred_remove-concept', { ns: 'alert' });
+    case 'collection':
+      return t('error-occurred_remove-collection', { ns: 'alert' });
+    default:
+      return t('error-occured', { ns: 'alert' });
+  }
+}
+
 export function translateRemovalModalTitle(
   type: 'terminology' | 'concept' | 'collection',
   t: TFunction

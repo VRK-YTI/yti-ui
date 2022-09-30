@@ -234,10 +234,10 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
           }) && (
             <>
               <RemovalModal
-                removalData={concept}
+                isDisabled={concept?.properties.status?.[0].value === 'VALID'}
+                removalData={{ type: 'concept', data: concept }}
                 targetId={concept?.id ?? ''}
                 targetName={prefLabel}
-                type="concept"
               />
               <Separator />
             </>

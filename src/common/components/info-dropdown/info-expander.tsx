@@ -210,12 +210,13 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
           <>
             <Separator isLarge />
             <RemovalModal
+              isDisabled={data.properties.status?.[0].value === 'VALID'}
+              removalData={{ type: 'terminology' }}
               targetId={data.type.graph.id}
               targetName={getPropertyValue({
                 property: data.properties.prefLabel,
                 language: i18n.language,
               })}
-              type="terminology"
             />
           </>
         )}
