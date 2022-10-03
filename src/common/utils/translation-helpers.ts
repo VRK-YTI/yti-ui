@@ -144,6 +144,8 @@ export function translateEditConceptError(
       return t('edit-concept-error.source', { ns: 'admin' });
     case 'diagrams':
       return t('edit-concept-error.diagrams', { ns: 'admin' });
+    case 'status':
+      return t('edit-concept-error.status', { ns: 'admin' });
     default:
       return t('edit-concept-error.default', { ns: 'admin' });
   }

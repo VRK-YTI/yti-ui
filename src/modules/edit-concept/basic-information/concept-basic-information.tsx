@@ -16,6 +16,7 @@ import ListBlock from '../list-block';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
 import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from '@app/common/utils/constants';
 import { FormError } from '../validate-form';
+import StatusPicker from './status-picker';
 
 interface ConceptBasicInformationProps {
   updateBasicInformation: (value: BasicInfo) => void;
@@ -88,6 +89,12 @@ export default function ConceptBasicInformation({
         addNewText={t('add-new-note')}
         inputLabel={t('note-textarea-label-text')}
         inputPlaceholder={t('note-textarea-placeholder')}
+        errors={errors}
+      />
+
+      <StatusPicker
+        initialValue={basicInfo.status}
+        update={handleBasicInfoUpdate}
         errors={errors}
       />
 

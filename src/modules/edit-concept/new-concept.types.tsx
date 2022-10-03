@@ -25,6 +25,7 @@ export interface BasicInfo {
     [key: string]: string;
   };
   example: ListType[];
+  status: string;
   subject: string;
   note: ListType[];
   diagramAndSource: {
