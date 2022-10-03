@@ -10,7 +10,10 @@ import {
   ModalTitle,
 } from 'suomifi-ui-components';
 import { createErrorMessage, ExcelError } from '../excel/excel.error';
-import { usePostSimpleImportExcelMutation } from '../excel/excel.slice';
+import {
+  usePostImportNTRFMutation,
+  usePostSimpleImportExcelMutation,
+} from '../excel/excel.slice';
 import { useBreakpoints } from '../media-query/media-query-context';
 
 interface ConceptImportModalProps {
@@ -33,8 +36,10 @@ export default function ConceptImportModal({
   const [userPosted, setUserPosted] = useState(false);
   const [startFileUpload, setStartFileUpload] = useState(false);
   const [error, setError] = useState<ExcelError | undefined>(undefined);
+  const [fileType, setFileType] = useState<'xlsx' | 'xml' | null>();
   const [postSimpleImportExcel, simpleImportExcel] =
     usePostSimpleImportExcelMutation();
+  const [postImportNTRF, importNTRF] = usePostImportNTRFMutation();
 
   const handleClose = useCallback(() => {
     setStartFileUpload(false);
@@ -51,7 +56,13 @@ export default function ConceptImportModal({
       formData.append('file', fileData);
       setStartFileUpload(true);
       setUserPosted(true);
-      postSimpleImportExcel({ terminologyId: terminologyId, file: formData });
+      if (fileData.name.includes('.xlsx')) {
+        setFileType('xlsx');
+        postSimpleImportExcel({ terminologyId: terminologyId, file: formData });
+      } else if (fileData.name.includes('.xml')) {
+        setFileType('xml');
+        postImportNTRF({ terminologyId: terminologyId, file: formData });
+      }
     }
   };
 
@@ -76,8 +87,12 @@ export default function ConceptImportModal({
           <InfoFile setFileData={setFileData} setIsValid={setIsValid} />
         ) : (
           <FileUpload
-            importResponseData={simpleImportExcel.data}
-            importResponseStatus={simpleImportExcel.status}
+            importResponseData={
+              fileType === 'xlsx' ? simpleImportExcel.data : importNTRF.data
+            }
+            importResponseStatus={
+              fileType === 'xlsx' ? simpleImportExcel.status : importNTRF.status
+            }
             handlePost={handlePost}
             handleClose={handleClose}
             errorInfo={error}

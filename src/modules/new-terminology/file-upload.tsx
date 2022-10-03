@@ -32,12 +32,12 @@ export default function FileUpload({
 
   useEffect(() => {
     if (
-      importResponseData?.message === 'SUCCESS' &&
+      importResponseData?.jobtoken &&
       !importStatus.isLoading &&
       importStatus.data?.status !== 'SUCCESS'
     ) {
       const timerId = setTimeout(() => {
-        fetchImportStatus(importResponseData.jobToken);
+        fetchImportStatus(importResponseData.jobtoken);
       }, 1000);
       return () => clearTimeout(timerId);
     }

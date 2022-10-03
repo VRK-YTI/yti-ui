@@ -5,6 +5,6 @@ export interface ImportStatus {
 }
 
 export interface ImportResponse {
-  jobToken: string;
+  jobtoken: string;
   message: string;
 }

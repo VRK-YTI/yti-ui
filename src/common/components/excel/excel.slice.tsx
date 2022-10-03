@@ -36,6 +36,13 @@ export const excelApi = createApi({
         data: props.file,
       }),
     }),
+    postImportNTRF: builder.mutation<any, any>({
+      query: (props) => ({
+        url: `/import/ntrf/${props.terminologyId}`,
+        method: 'POST',
+        data: props.file,
+      }),
+    }),
   }),
 });
 
@@ -43,4 +50,5 @@ export const {
   usePostImportExcelMutation,
   useGetImportStatusMutation,
   usePostSimpleImportExcelMutation,
+  usePostImportNTRFMutation,
 } = excelApi;

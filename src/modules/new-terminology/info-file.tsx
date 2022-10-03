@@ -53,7 +53,11 @@ export default function InfoFile({ setIsValid, setFileData }: InfoFileProps) {
 
     for (let i = 0; i < droppedItems.length; i++) {
       const droppedItemAsFile = droppedItems[i].getAsFile();
-      if (droppedItemAsFile && droppedItemAsFile?.name.endsWith('xlsx')) {
+      if (
+        droppedItemAsFile &&
+        (droppedItemAsFile.name.endsWith('xlsx') ||
+          droppedItemAsFile.name.endsWith('xml'))
+      ) {
         setFile(droppedItemAsFile);
         setAlert('none');
         break;
@@ -80,7 +84,10 @@ export default function InfoFile({ setIsValid, setFileData }: InfoFileProps) {
     }
 
     for (let i = 0; i < selectedItems.length; i++) {
-      if (selectedItems[i].name.endsWith('.xlsx')) {
+      if (
+        selectedItems[i].name.endsWith('.xlsx') ||
+        selectedItems[i].name.endsWith('xml')
+      ) {
         setFile(selectedItems[i]);
         setAlert('none');
         break;
