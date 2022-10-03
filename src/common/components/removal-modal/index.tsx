@@ -7,6 +7,7 @@ import {
   translateRemovalModalProcessing,
   translateRemovalModalRemoved,
   translateRemovalModalTitle,
+  translateRemovalModalWarning,
 } from '@app/common/utils/translation-helpers';
 import { useStoreDispatch } from '@app/store';
 import { useTranslation } from 'next-i18next';
@@ -38,6 +39,7 @@ import {
 
 interface RemovalModalProps {
   isDisabled: boolean;
+  nonDescriptive?: boolean;
   removalData:
     | {
         type: 'terminology';
@@ -56,6 +58,7 @@ interface RemovalModalProps {
 
 export default function RemovalModal({
   isDisabled,
+  nonDescriptive,
   removalData,
   targetId,
   targetName,
@@ -125,31 +128,52 @@ export default function RemovalModal({
 
   return (
     <>
-      <BasicBlock
-        title={translateRemovalModalTitle(removalData.type, t)}
-        extra={
-          <BasicBlockExtraWrapper>
-            <Button
-              variant="secondary"
-              icon="remove"
-              id={`open-remove-${removalData.type}-modal`}
-              onClick={() => setVisible(true)}
-              disabled={isDisabled}
-            >
-              {translateRemovalModalTitle(removalData.type, t)}
-            </Button>
-            {isDisabled && removalData.type === 'terminology' && (
-              <Paragraph style={{ marginTop: '10px' }}>
-                <Text smallScreen variant="bold">
-                  {t('remove-modal.remove-disabled')}
-                </Text>
-              </Paragraph>
-            )}
-          </BasicBlockExtraWrapper>
-        }
-      >
-        {translateRemovalModalDescription(removalData.type, t)}
-      </BasicBlock>
+      {!nonDescriptive ? (
+        <BasicBlock
+          title={translateRemovalModalTitle(removalData.type, t)}
+          extra={
+            <BasicBlockExtraWrapper>
+              <Button
+                variant="secondary"
+                icon="remove"
+                id={`open-remove-${removalData.type}-modal`}
+                onClick={() => setVisible(true)}
+                disabled={isDisabled}
+              >
+                {translateRemovalModalTitle(removalData.type, t)}
+              </Button>
+              {isDisabled && removalData.type === 'terminology' && (
+                <Paragraph style={{ marginTop: '10px' }}>
+                  <Text smallScreen variant="bold">
+                    {t('remove-modal.remove-disabled')}
+                  </Text>
+                </Paragraph>
+              )}
+            </BasicBlockExtraWrapper>
+          }
+        >
+          {translateRemovalModalDescription(removalData.type, t)}
+        </BasicBlock>
+      ) : (
+        <>
+          <Button
+            variant="secondary"
+            icon="remove"
+            id={`open-remove-${removalData.type}-modal`}
+            onClick={() => setVisible(true)}
+            disabled={isDisabled}
+          >
+            {translateRemovalModalTitle(removalData.type, t)}
+          </Button>
+          {isDisabled && removalData.type === 'terminology' && (
+            <Paragraph style={{ marginTop: '10px' }}>
+              <Text smallScreen variant="bold">
+                {t('remove-modal.remove-disabled')}
+              </Text>
+            </Paragraph>
+          )}
+        </>
+      )}
 
       <RemoveModal
         appElementId="__next"
@@ -181,6 +205,9 @@ export default function RemovalModal({
           <Text>
             {translateRemovalModalConfirmation(removalData.type, targetName, t)}
           </Text>
+        </Paragraph>
+        <Paragraph>
+          <Text>{translateRemovalModalWarning(removalData.type, t)}</Text>
         </Paragraph>
       </>
     );
@@ -228,7 +255,7 @@ export default function RemovalModal({
         <>
           <Button onClick={() => handleClick()}>{t('remove')}</Button>
           <Button variant="secondary" onClick={() => setVisible(false)}>
-            {t('cancel')}
+            {t('cancel-variant')}
           </Button>
         </>
       );

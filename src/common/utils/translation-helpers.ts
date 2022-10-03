@@ -311,3 +311,25 @@ export function translateRemovalModalRemoved(
       return '';
   }
 }
+
+export function translateRemovalModalWarning(
+  type: 'terminology' | 'concept' | 'collection',
+  t: TFunction
+) {
+  switch (type) {
+    case 'terminology':
+      return t('remove-modal.terminology-warning', {
+        ns: 'admin',
+      });
+    case 'concept':
+      return t('remove-modal.concept-warning', {
+        ns: 'admin',
+      });
+    case 'collection':
+      return t('remove-modal.collection-warning', {
+        ns: 'admin',
+      });
+    default:
+      return '';
+  }
+}

@@ -22,7 +22,7 @@ import { getPropertyValue } from '@app/common/components/property-value/get-prop
 import Separator from '@app/common/components/separator';
 import { useStoreDispatch } from '@app/store';
 import CollectionSidebar from './collection-sidebar';
-import { MainContent, PageContent } from './collection.styles';
+import { EditToolsBlock, MainContent, PageContent } from './collection.styles';
 import { setTitle } from '@app/common/components/title/title.slice';
 import { useGetCollectionQuery } from '@app/common/components/collection/collection.slice';
 import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
@@ -167,45 +167,52 @@ export default function Collection({
           <Separator />
 
           {HasPermission({
-            actions: 'EDIT_COLLECTION',
+            actions: ['EDIT_COLLECTION', 'DELETE_COLLECTION'],
             targetOrganization: terminology?.references.contributor,
           }) && (
             <>
               <BasicBlock
-                title={t('edit-collection')}
+                title={t('edit-collection-block-title')}
                 extra={
                   <BasicBlockExtraWrapper>
-                    <Link href={`${router.asPath}/edit`}>
-                      <Button
-                        variant="secondary"
-                        icon="edit"
-                        id="edit-collection-button"
-                      >
-                        {t('edit-collection')}
-                      </Button>
-                    </Link>
+                    <EditToolsBlock>
+                      {HasPermission({
+                        actions: 'EDIT_COLLECTION',
+                        targetOrganization: terminology?.references.contributor,
+                      }) && (
+                        <Link href={`${router.asPath}/edit`}>
+                          <Button
+                            variant="secondary"
+                            icon="edit"
+                            id="edit-collection-button"
+                          >
+                            {t('edit-collection')}
+                          </Button>
+                        </Link>
+                      )}
+                      {HasPermission({
+                        actions: 'DELETE_COLLECTION',
+                        targetOrganization: terminology?.references.contributor,
+                      }) && (
+                        <>
+                          <RemovalModal
+                            isDisabled={false}
+                            nonDescriptive={true}
+                            removalData={{
+                              type: 'collection',
+                              data: collection,
+                            }}
+                            targetId={collection?.id ?? ''}
+                            targetName={prefLabel}
+                          />
+                        </>
+                      )}
+                    </EditToolsBlock>
                   </BasicBlockExtraWrapper>
                 }
-              >
-                {t('edit-collection-rights')}
-              </BasicBlock>
+              ></BasicBlock>
 
-              <Separator />
-            </>
-          )}
-
-          {HasPermission({
-            actions: 'DELETE_COLLECTION',
-            targetOrganization: terminology?.references.contributor,
-          }) && (
-            <>
-              <RemovalModal
-                isDisabled={false}
-                removalData={{ type: 'collection', data: collection }}
-                targetId={collection?.id ?? ''}
-                targetName={prefLabel}
-              />
-              <Separator />
+              <Separator isLarge />
             </>
           )}
 
