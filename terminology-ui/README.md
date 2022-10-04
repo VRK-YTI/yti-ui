@@ -50,4 +50,4 @@ auto-updates as you edit the file.
 
 ## Troubleshooting and more documentation
 
-You can find more documentation in [docs](./docs).
+You can find more documentation in [docs](../docs).

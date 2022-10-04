@@ -9,13 +9,12 @@
     "start": "next start",
     "lint": "prettier --check . && next lint --dir src",
     "format": "prettier --write .",
-    "test": "TZ=UTC jest",
+    "test": "TZ=UTC jest --coverage",
     "test:watch": "TZ=UTC jest --watch",
     "test:ci": "TZ=UTC jest --ci --runInBand --coverage",
     "test:ci:no-coverage": "TZ=UTC jest --ci --runInBand",
     "i18n": "i18next 'src/**/*.{ts,tsx}'",
     "i18n:ci": "i18next 'src/**/*.{ts,tsx}' --fail-on-warnings --fail-on-update",
-    "prepare": "husky install",
     "lint-staged": "lint-staged"
   },
   "dependencies": {
@@ -70,7 +69,6 @@
     "eslint-plugin-jest-dom": "^4.0.1",
     "eslint-plugin-react-hooks": "^4.3.0",
     "eslint-plugin-testing-library": "^5.0.6",
-    "husky": "^8.0.0",
     "i18next-parser": "^6.5.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^27.2.5",
