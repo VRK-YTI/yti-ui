@@ -246,49 +246,6 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
               <Separator isLarge />
             </>
           )}
-          {/* {HasPermission({
-            actions: 'EDIT_CONCEPT',
-            targetOrganization: terminology?.references.contributor,
-          }) && (
-              <>
-                <BasicBlock
-                  title={t('edit-concept')}
-                  extra={
-                    <BasicBlockExtraWrapper>
-                      <Link
-                        href={`/terminology/${terminologyId}/concept/${conceptId}/edit`}
-                      >
-                        <Button
-                          variant="secondary"
-                          icon="edit"
-                          id="edit-concept-button"
-                        >
-                          {t('edit-concept')}
-                        </Button>
-                      </Link>
-                    </BasicBlockExtraWrapper>
-                  }
-                >
-                  {t('edit-concept-rights')}
-                </BasicBlock>
-                <Separator />
-              </>
-            )}
-
-          {HasPermission({
-            actions: 'DELETE_CONCEPT',
-            targetOrganization: terminology?.references.contributor,
-          }) && (
-              <>
-                <RemovalModal
-                  isDisabled={concept?.properties.status?.[0].value === 'VALID'}
-                  removalData={{ type: 'concept', data: concept }}
-                  targetId={concept?.id ?? ''}
-                  targetName={prefLabel}
-                />
-                <Separator />
-              </>
-            )} */}
 
           <VisuallyHidden as="h2">
             {t('additional-technical-information', { ns: 'common' })}
