@@ -151,8 +151,8 @@ export function translateEditConceptError(
 
 export function translateFileUploadError(
   error: 'none' | 'upload-error' | 'incorrect-file-type',
-  t: TFunction,
-  fileTypes?: string[]
+  fileTypes: string[],
+  t: TFunction
 ) {
   switch (error) {
     case 'upload-error':
@@ -160,8 +160,8 @@ export function translateFileUploadError(
     case 'incorrect-file-type':
       return t('file-upload-error.incorrect-file-type', {
         ns: 'admin',
-        count: fileTypes?.length,
-        fileTypes: fileTypes?.join(', '),
+        count: fileTypes.length,
+        fileTypes: fileTypes.join(', '),
       });
     default:
       return;

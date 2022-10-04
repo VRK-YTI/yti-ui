@@ -169,7 +169,7 @@ export default function FileDropArea({
       </FileBlock>
       {alert !== 'none' && (
         <InlineAlert status="error">
-          {translateFileUploadError(alert, t, validFileTypes)}
+          {translateFileUploadError(alert, validFileTypes, t)}
         </InlineAlert>
       )}
     </FileWrapper>
