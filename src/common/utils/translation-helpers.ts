@@ -193,6 +193,10 @@ export function translateExcelParseError(message: string, t: TFunction) {
       });
     case 'status-column-missing':
       return t('concept-import.status-column-missing', { ns: 'admin' });
+    case 'prefLabel-column-missing':
+      return t('concept-import.prefLabel-column-missing', { ns: 'admin' });
+    case 'prefLabel-row-missing':
+      return t('concept-import.prefLabel-row-missing', { ns: 'admin' });
     default:
       return t('concept-import.undefined-error', { ns: 'admin' });
   }

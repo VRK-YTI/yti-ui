@@ -68,6 +68,8 @@
   "concept-diagram-or-link": "",
   "concept-diagrams-and-sources": "",
   "concept-import": {
+    "prefLabel-column-missing": "",
+    "prefLabel-row-missing": "",
     "property-missing-language-suffix": "",
     "status-column-missing": "",
     "term-missing-language-suffix": "",

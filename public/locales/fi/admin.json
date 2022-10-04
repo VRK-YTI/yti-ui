@@ -68,6 +68,8 @@
   "concept-diagram-or-link": "Käsitekaavio tai muu linkki",
   "concept-diagrams-and-sources": "Käsitekaaviot ja lähteet",
   "concept-import": {
+    "prefLabel-column-missing": "prefLabel kenttä puuttuu",
+    "prefLabel-row-missing": "prefLabel pitää määrittää vähintään yhdellä kielellä",
     "property-missing-language-suffix": "Käsitteen tiedon avaimesta puuttuu kieli suffiksi",
     "status-column-missing": "Tila kenttä puuttuu",
     "term-missing-language-suffix": "Termin avaimesta puuttuu kieli suffiksi",
