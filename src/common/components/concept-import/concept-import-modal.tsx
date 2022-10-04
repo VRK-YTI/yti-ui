@@ -1,5 +1,4 @@
 import FileUpload from '@app/modules/new-terminology/file-upload';
-import InfoFile from '@app/modules/new-terminology/info-file';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useState } from 'react';
 import {
@@ -9,6 +8,7 @@ import {
   ModalFooter,
   ModalTitle,
 } from 'suomifi-ui-components';
+import FileDropArea from '../file-drop-area';
 import { createErrorMessage, ExcelError } from '../import/excel.error';
 import {
   usePostImportNTRFMutation,
@@ -45,10 +45,10 @@ export default function ConceptImportModal({
     setStartFileUpload(false);
     setVisible(false);
     setUserPosted(false);
-    if (simpleImportExcel.isSuccess) {
+    if (simpleImportExcel.isSuccess || importNTRF.isSuccess) {
       refetch();
     }
-  }, [setVisible, refetch, simpleImportExcel]);
+  }, [setVisible, refetch, simpleImportExcel, importNTRF]);
 
   const handlePost = () => {
     if (fileData) {
@@ -84,7 +84,7 @@ export default function ConceptImportModal({
           {!startFileUpload ? t('import-concepts') : t('downloading-file')}
         </ModalTitle>
         {!startFileUpload ? (
-          <InfoFile
+          <FileDropArea
             setFileData={setFileData}
             setIsValid={setIsValid}
             validFileTypes={['xlsx', 'xml']}

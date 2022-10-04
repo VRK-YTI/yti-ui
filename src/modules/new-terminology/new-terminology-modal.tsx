@@ -1,3 +1,4 @@
+import FileDropArea from '@app/common/components/file-drop-area';
 import { usePostImportExcelMutation } from '@app/common/components/import/import.slice';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import SaveSpinner from '@app/common/components/save-spinner';
@@ -23,7 +24,6 @@ import {
 } from 'suomifi-ui-components';
 import FileUpload from './file-upload';
 import generateNewTerminology from './generate-new-terminology';
-import InfoFile from './info-file';
 import InfoManual from './info-manual';
 import MissingInfoAlert from './missing-info-alert';
 import { FooterBlock, ModalTitleAsH1 } from './new-terminology.styles';
@@ -230,7 +230,7 @@ export default function NewTerminologyModal({
           />
         )}
         {inputType === 'file' && (
-          <InfoFile
+          <FileDropArea
             setIsValid={setIsValid}
             setFileData={setFileData}
             validFileTypes={['xlsx']}

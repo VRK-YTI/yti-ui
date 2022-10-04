@@ -9,19 +9,19 @@ import {
   FileInfoStaticIcon,
   FileRemoveButton,
   FileWrapper,
-} from './new-terminology.styles';
+} from './file-drop-area.styles';
 
-interface InfoFileProps {
+interface FileDropAreaProps {
   setIsValid: (valid: boolean) => void;
   setFileData: (data: File | null) => void;
   validFileTypes: string[];
 }
 
-export default function InfoFile({
+export default function FileDropArea({
   setIsValid,
   setFileData,
   validFileTypes,
-}: InfoFileProps) {
+}: FileDropAreaProps) {
   const { t } = useTranslation('admin');
   const input = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
