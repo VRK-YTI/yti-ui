@@ -110,6 +110,7 @@
     "note": "At least one note is missing a descriptive text",
     "recommendedTerms": "Concept is missing a preferred term ",
     "source": "At least one source is missing a value",
+    "status": "Concept's status is undefined",
     "termPrefLabel": "At least on preferred term is missing a name"
   },
   "edit-terminology": "Edit terminology",

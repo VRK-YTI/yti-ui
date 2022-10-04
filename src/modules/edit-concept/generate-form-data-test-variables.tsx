@@ -31,6 +31,7 @@ export const emptyFormExpected = {
   basicInformation: {
     definition: {},
     example: [],
+    status: 'DRAFT',
     subject: '',
     note: [],
     diagramAndSource: {
@@ -218,6 +219,7 @@ export const simpleDataExpected = {
   basicInformation: {
     definition: {},
     example: [],
+    status: 'DRAFT',
     subject: '',
     note: [],
     diagramAndSource: {
@@ -2483,6 +2485,7 @@ export const extensiveDataExpected = {
         },
       ],
     },
+    status: 'DRAFT',
     subject: 'aihealue',
   },
 };

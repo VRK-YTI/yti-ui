@@ -1405,7 +1405,7 @@ export const differentTerms = {
           {
             lang: '',
             regex: '(?s)^.*$',
-            value: 'DRAFT',
+            value: 'VALID',
           },
         ],
         subjectArea: [
