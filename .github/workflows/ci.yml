@@ -3,7 +3,7 @@ name: yti-terminology-ui CI
 on:
   pull_request:
     branches:
-      - v2
+      - monorepo
 
 jobs:
   build:
