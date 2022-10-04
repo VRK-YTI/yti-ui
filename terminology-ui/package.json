@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "prettier --check . && next lint --dir src",
     "format": "prettier --write .",
-    "test": "TZ=UTC jest --coverage",
+    "test": "TZ=UTC jest",
     "test:watch": "TZ=UTC jest --watch",
     "test:ci": "TZ=UTC jest --ci --runInBand --coverage",
     "test:ci:no-coverage": "TZ=UTC jest --ci --runInBand",
