@@ -14,9 +14,14 @@ import {
 interface InfoFileProps {
   setIsValid: (valid: boolean) => void;
   setFileData: (data: File | null) => void;
+  validFileTypes: string[];
 }
 
-export default function InfoFile({ setIsValid, setFileData }: InfoFileProps) {
+export default function InfoFile({
+  setIsValid,
+  setFileData,
+  validFileTypes,
+}: InfoFileProps) {
   const { t } = useTranslation('admin');
   const input = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -55,8 +60,7 @@ export default function InfoFile({ setIsValid, setFileData }: InfoFileProps) {
       const droppedItemAsFile = droppedItems[i].getAsFile();
       if (
         droppedItemAsFile &&
-        (droppedItemAsFile.name.endsWith('xlsx') ||
-          droppedItemAsFile.name.endsWith('xml'))
+        validFileTypes.some((type) => droppedItemAsFile.name.endsWith(type))
       ) {
         setFile(droppedItemAsFile);
         setAlert('none');
@@ -84,10 +88,7 @@ export default function InfoFile({ setIsValid, setFileData }: InfoFileProps) {
     }
 
     for (let i = 0; i < selectedItems.length; i++) {
-      if (
-        selectedItems[i].name.endsWith('.xlsx') ||
-        selectedItems[i].name.endsWith('xml')
-      ) {
+      if (validFileTypes.some((type) => selectedItems[i].name.endsWith(type))) {
         setFile(selectedItems[i]);
         setAlert('none');
         break;
@@ -109,7 +110,9 @@ export default function InfoFile({ setIsValid, setFileData }: InfoFileProps) {
           </Text>
         </Paragraph>
         <Paragraph marginBottomSpacing="l">
-          <Text smallScreen>{t('allowed-file-formats')} xlsx</Text>
+          <Text smallScreen>
+            {t('allowed-file-formats')} {validFileTypes.join(', ')}
+          </Text>
         </Paragraph>
         {file === null ? (
           <>
@@ -166,7 +169,7 @@ export default function InfoFile({ setIsValid, setFileData }: InfoFileProps) {
       </FileBlock>
       {alert !== 'none' && (
         <InlineAlert status="error">
-          {translateFileUploadError(alert, t)}
+          {translateFileUploadError(alert, t, validFileTypes)}
         </InlineAlert>
       )}
     </FileWrapper>

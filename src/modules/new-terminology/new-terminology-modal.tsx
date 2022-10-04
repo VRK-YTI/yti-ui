@@ -1,4 +1,4 @@
-import { usePostImportExcelMutation } from '@app/common/components/excel/excel.slice';
+import { usePostImportExcelMutation } from '@app/common/components/import/import.slice';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import SaveSpinner from '@app/common/components/save-spinner';
 import { terminologySearchApi } from '@app/common/components/terminology-search/terminology-search.slice';
@@ -230,7 +230,11 @@ export default function NewTerminologyModal({
           />
         )}
         {inputType === 'file' && (
-          <InfoFile setIsValid={setIsValid} setFileData={setFileData} />
+          <InfoFile
+            setIsValid={setIsValid}
+            setFileData={setFileData}
+            validFileTypes={['xlsx']}
+          />
         )}
       </>
     );

@@ -18,7 +18,7 @@ import { titleSlice } from '@app/common/components/title/title.slice';
 import { subscriptionApi } from '@app/common/components/subscription/subscription.slice';
 import { accessRequestApi } from '@app/common/components/access-request/access-request.slice';
 import { adminControlsSlice } from '@app/common/components/admin-controls/admin-controls.slice';
-import { excelApi } from '@app/common/components/excel/excel.slice';
+import { importApi } from '@app/common/components/import/import.slice';
 import { NextIronRequest } from '@app/common/utils/session';
 import { modifyApi } from '@app/common/components/modify/modify.slice';
 
@@ -41,7 +41,7 @@ export function makeStore(ctx: NextIronContext) {
       [subscriptionApi.reducerPath]: subscriptionApi.reducer,
       [accessRequestApi.reducerPath]: accessRequestApi.reducer,
       [adminControlsSlice.name]: adminControlsSlice.reducer,
-      [excelApi.reducerPath]: excelApi.reducer,
+      [importApi.reducerPath]: importApi.reducer,
       [modifyApi.reducerPath]: modifyApi.reducer,
     },
 
@@ -54,7 +54,7 @@ export function makeStore(ctx: NextIronContext) {
         countsApi.middleware,
         subscriptionApi.middleware,
         accessRequestApi.middleware,
-        excelApi.middleware,
+        importApi.middleware,
         modifyApi.middleware
       ),
 

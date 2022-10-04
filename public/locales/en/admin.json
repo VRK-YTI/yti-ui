@@ -130,7 +130,8 @@
   "excel-sheet": "Sheet",
   "file-added": "File added",
   "file-upload-error": {
-    "incorrect-file-type": "Incorrect file type. Allowed file type is xlsx.",
+    "incorrect-file-type_one": "Incorrect file type. Allowed file type is {{fileTypes}}.",
+    "incorrect-file-type_other": "Incorrect file type. Allowed file typea are {{fileTypes}}.",
     "upload-error": "File upload failed. Try again."
   },
   "give-definition": "Give definition",

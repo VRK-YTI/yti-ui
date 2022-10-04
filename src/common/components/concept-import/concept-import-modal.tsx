@@ -9,11 +9,11 @@ import {
   ModalFooter,
   ModalTitle,
 } from 'suomifi-ui-components';
-import { createErrorMessage, ExcelError } from '../excel/excel.error';
+import { createErrorMessage, ExcelError } from '../import/excel.error';
 import {
   usePostImportNTRFMutation,
   usePostSimpleImportExcelMutation,
-} from '../excel/excel.slice';
+} from '../import/import.slice';
 import { useBreakpoints } from '../media-query/media-query-context';
 
 interface ConceptImportModalProps {
@@ -84,7 +84,11 @@ export default function ConceptImportModal({
           {!startFileUpload ? t('import-concepts') : t('downloading-file')}
         </ModalTitle>
         {!startFileUpload ? (
-          <InfoFile setFileData={setFileData} setIsValid={setIsValid} />
+          <InfoFile
+            setFileData={setFileData}
+            setIsValid={setIsValid}
+            validFileTypes={['xlsx', 'xml']}
+          />
         ) : (
           <FileUpload
             importResponseData={

@@ -3,9 +3,9 @@ import { getTerminologyApiBaseQuery } from '@app/store/api-base-query';
 import {
   ImportResponse,
   ImportStatus,
-} from '@app/common/interfaces/excel.interface';
+} from '@app/common/interfaces/import.interface';
 
-export const excelApi = createApi({
+export const importApi = createApi({
   reducerPath: 'excelApi',
   baseQuery: getTerminologyApiBaseQuery((headers) => ({
     ...headers,
@@ -36,7 +36,10 @@ export const excelApi = createApi({
         data: props.file,
       }),
     }),
-    postImportNTRF: builder.mutation<any, any>({
+    postImportNTRF: builder.mutation<
+      ImportResponse,
+      { terminologyId: string; file: FormData }
+    >({
       query: (props) => ({
         url: `/import/ntrf/${props.terminologyId}`,
         method: 'POST',
@@ -51,4 +54,4 @@ export const {
   useGetImportStatusMutation,
   usePostSimpleImportExcelMutation,
   usePostImportNTRFMutation,
-} = excelApi;
+} = importApi;

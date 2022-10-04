@@ -8,7 +8,11 @@ describe('info-file', () => {
     const mockSetIsValid = jest.fn();
 
     render(
-      <InfoFile setFileData={mockSetFileData} setIsValid={mockSetIsValid} />,
+      <InfoFile
+        setFileData={mockSetFileData}
+        setIsValid={mockSetIsValid}
+        validFileTypes={['xlsx']}
+      />,
       {
         wrapper: themeProvider,
       }
