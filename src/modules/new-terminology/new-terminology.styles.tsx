@@ -1,10 +1,5 @@
 import styled, { keyframes } from 'styled-components';
-import {
-  Block,
-  Icon,
-  ModalTitle,
-  SingleSelect,
-} from 'suomifi-ui-components';
+import { Block, Icon, ModalTitle, SingleSelect } from 'suomifi-ui-components';
 import Separator from '@app/common/components/separator';
 
 export const ButtonBlock = styled(Block)`

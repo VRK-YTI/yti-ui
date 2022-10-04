@@ -119,7 +119,7 @@ export default function FileDropArea({
             <input
               type="file"
               ref={input}
-              accept=".xlsx"
+              accept={validFileTypes.map((type) => `.${type}`).join(',')}
               style={{ display: 'none' }}
               onChange={(e) => {
                 handleUpload(e);
