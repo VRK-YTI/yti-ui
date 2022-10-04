@@ -40,6 +40,7 @@ export default function generateFormData(
       basicInformation: {
         definition: {},
         example: [],
+        status: 'DRAFT',
         subject: '',
         note: [],
         diagramAndSource: {
@@ -292,6 +293,7 @@ export default function generateFormData(
             }
           }) ?? [],
       },
+      status: conceptData.properties.status?.[0].value ?? 'DRAFT',
       subject: conceptData.properties.subjectArea?.[0].value ?? '',
     },
   };

@@ -36,6 +36,7 @@ describe('generate-concept', () => {
       basicInformation: {
         definition: {},
         example: [],
+        status: 'DRAFT',
         subject: '',
         note: [],
         diagramAndSource: {
@@ -110,6 +111,7 @@ describe('generate-concept', () => {
       basicInformation: {
         definition: {},
         example: [],
+        status: 'DRAFT',
         subject: '',
         note: [],
         diagramAndSource: {
@@ -291,6 +293,7 @@ describe('generate-concept', () => {
       basicInformation: {
         definition: {},
         example: [],
+        status: 'DRAFT',
         subject: '',
         note: [],
         diagramAndSource: {
@@ -542,6 +545,7 @@ describe('generate-concept', () => {
             value: 'käyttöesimerkki',
           },
         ],
+        status: 'VALID',
         subject: 'aihealue',
         note: [
           {
@@ -644,6 +648,7 @@ describe('generate-concept', () => {
       basicInformation: {
         definition: {},
         example: [],
+        status: 'DRAFT',
         subject: '',
         note: [],
         diagramAndSource: {

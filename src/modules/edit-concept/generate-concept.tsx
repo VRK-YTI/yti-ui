@@ -434,7 +434,7 @@ export default function generateConcept({
           {
             lang: '',
             regex: regex,
-            value: 'DRAFT',
+            value: data.basicInformation.status,
           },
         ],
         subjectArea: [
