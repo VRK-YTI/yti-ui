@@ -8,12 +8,13 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        working-directory: terminology-ui
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          working-directory: terminology-ui
           node-version: "16"
           cache: "npm"
       - run: npm ci
