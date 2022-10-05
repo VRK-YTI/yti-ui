@@ -1,4 +1,3 @@
-import { FormError } from '@app/modules/edit-concept/validate-form';
 import { TFunction } from 'next-i18next';
 
 export function translateStatus(status: string, t: TFunction) {
@@ -125,10 +124,7 @@ export function translateWordClass(wordClass: string, t: TFunction) {
   }
 }
 
-export function translateEditConceptError(
-  error: keyof FormError,
-  t: TFunction
-) {
+export function translateEditConceptError(error: string, t: TFunction) {
   switch (error) {
     case 'editorialNote':
       return t('edit-concept-error.editorialNote', { ns: 'admin' });
@@ -146,6 +142,14 @@ export function translateEditConceptError(
       return t('edit-concept-error.diagrams', { ns: 'admin' });
     case 'status':
       return t('edit-concept-error.status', { ns: 'admin' });
+    case 'prefLabel':
+      return t('edit-concept-error.prefLabel', { ns: 'admin' });
+    case 'termType':
+      return t('edit-concept-error.termType', { ns: 'admin' });
+    case 'language':
+      return t('edit-concept-error.language', { ns: 'admin' });
+    case 'recommendedTermDuplicate':
+      return t('edit-concept-error.recommendedTermDuplicate', { ns: 'admin' });
     default:
       return t('edit-concept-error.default', { ns: 'admin' });
   }

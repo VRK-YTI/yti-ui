@@ -190,6 +190,9 @@ export default function ConceptTermsBlock({
                 setVisible={setModalVisible}
                 languages={languages}
                 appendTerm={appendTerm}
+                recommendedTermLangs={terms
+                  .filter((t) => t.termType === 'recommended-term')
+                  .map((term) => term.language)}
               />
             )}
             {terms.filter((term) => term.termType !== 'recommended-term')

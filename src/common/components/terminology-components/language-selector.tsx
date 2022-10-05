@@ -111,7 +111,9 @@ export default function LanguageSelector({
       key: 'description',
       data: [
         newTerminologyNames,
-        !newTerminologyNames || !newTerminologyNames.find((t) => !t.name),
+        !newTerminologyNames ||
+          (!newTerminologyNames.find((t) => !t.name) &&
+            newTerminologyNames.length > 0),
       ],
     });
   };

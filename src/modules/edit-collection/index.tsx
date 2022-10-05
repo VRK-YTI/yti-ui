@@ -12,7 +12,7 @@ import { getProperty } from '@app/common/utils/get-property';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { Button, Heading, InlineAlert } from 'suomifi-ui-components';
+import { Button, Heading } from 'suomifi-ui-components';
 import ConceptPicker from './concept-picker';
 import generateCollection from './generate-collection';
 import {
@@ -34,9 +34,9 @@ import useUser from '@app/common/utils/hooks/useUser';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
 import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from '@app/common/utils/constants';
 import useConfirmBeforeLeavingPage from '@app/common/utils/hooks/use-confirm-before-leaving-page';
-import { MissingInfoAlertUl } from '../new-terminology/new-terminology.styles';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import SaveSpinner from '@app/common/components/save-spinner';
+import FormFooterAlert from '@app/common/components/form-footer-alert';
 
 export default function EditCollection({
   terminologyId,
@@ -302,22 +302,18 @@ export default function EditCollection({
         <Separator isLarge />
 
         <FooterBlock>
-          {emptyError && (
-            <InlineAlert status="warning">{t('no-empty-form')}</InlineAlert>
-          )}
+          {emptyError && <FormFooterAlert alerts={[t('no-empty-form')]} />}
           {languages.some((n) => errors[n]) && (
-            <InlineAlert status="warning">
-              <MissingInfoAlertUl>
-                {languages
-                  .filter((n) => errors[n])
-                  .map((lang) => (
-                    <li key={`error${lang}`}>
-                      {t('no-pairless-language')}
-                      {translateLanguage(lang, t)}
-                    </li>
-                  ))}
-              </MissingInfoAlertUl>
-            </InlineAlert>
+            <FormFooterAlert
+              alerts={languages
+                .filter((n) => errors[n])
+                .map(
+                  (lang) =>
+                    `${t('no-pairless-language')}
+                    ${translateLanguage(lang, t)}
+                    `
+                )}
+            />
           )}
           <ButtonBlock>
             <Button
