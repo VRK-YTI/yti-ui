@@ -133,7 +133,8 @@
   "excel-sheet": "Taulukko",
   "file-added": "Tiedosto lisätty",
   "file-upload-error": {
-    "incorrect-file-type": "Väärä tiedostotyyppi. Sallittu tiedostotyyppi on xlsx.",
+    "incorrect-file-type_one": "Väärä tiedostotyyppi. Sallittu tiedostotyyppi on {{fileTypes}}.",
+    "incorrect-file-type_other": "Väärä tiedostotyyppi. Sallitut tiedostotyypit on {{fileTypes}}.",
     "upload-error": "Tiedoston lataus ei onnistunut. Kokeile uudelleen."
   },
   "give-definition": "Kirjoita määritelmä",

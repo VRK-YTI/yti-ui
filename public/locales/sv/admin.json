@@ -133,7 +133,8 @@
   "excel-sheet": "",
   "file-added": "",
   "file-upload-error": {
-    "incorrect-file-type": "",
+    "incorrect-file-type_one": "",
+    "incorrect-file-type_other": "",
     "upload-error": ""
   },
   "give-definition": "",
