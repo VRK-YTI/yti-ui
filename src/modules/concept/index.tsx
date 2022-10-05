@@ -22,7 +22,7 @@ import { getPropertyValue } from '@app/common/components/property-value/get-prop
 import Separator from '@app/common/components/separator';
 import DetailsExpander from './details-expander';
 import ConceptSidebar from './concept-sidebar';
-import { MainContent, PageContent } from './concept.styles';
+import { EditToolsBlock, MainContent, PageContent } from './concept.styles';
 import { useStoreDispatch } from '@app/store';
 import { useRouter } from 'next/router';
 import { setTitle } from '@app/common/components/title/title.slice';
@@ -40,6 +40,7 @@ import { BasicBlockExtraWrapper } from '@app/common/components/block/block.style
 import Link from 'next/link';
 import { translateStatus } from '@app/common/utils/translation-helpers';
 import isEmail from 'validator/lib/isEmail';
+import RemovalModal from '@app/common/components/removal-modal';
 
 export interface ConceptProps {
   terminologyId: string;
@@ -199,31 +200,50 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
           <Separator isLarge />
 
           {HasPermission({
-            actions: 'EDIT_CONCEPT',
+            actions: ['EDIT_CONCEPT', 'DELETE_CONCEPT'],
             targetOrganization: terminology?.references.contributor,
           }) && (
             <>
               <BasicBlock
-                title={t('edit-concept')}
+                title={t('edit-collection-block-title')}
                 extra={
                   <BasicBlockExtraWrapper>
-                    <Link
-                      href={`/terminology/${terminologyId}/concept/${conceptId}/edit`}
-                    >
-                      <Button
-                        variant="secondary"
-                        icon="edit"
-                        id="edit-concept-button"
-                      >
-                        {t('edit-concept')}
-                      </Button>
-                    </Link>
+                    <EditToolsBlock>
+                      {HasPermission({
+                        actions: ['EDIT_CONCEPT'],
+                        targetOrganization: terminology?.references.contributor,
+                      }) && (
+                        <Link
+                          href={`/terminology/${terminologyId}/concept/${conceptId}/edit`}
+                        >
+                          <Button
+                            variant="secondary"
+                            icon="edit"
+                            id="edit-concept-button"
+                          >
+                            {t('edit-concept')}
+                          </Button>
+                        </Link>
+                      )}
+                      {HasPermission({
+                        actions: ['DELETE_CONCEPT'],
+                        targetOrganization: terminology?.references.contributor,
+                      }) && (
+                        <RemovalModal
+                          isDisabled={
+                            concept?.properties.status?.[0].value === 'VALID'
+                          }
+                          nonDescriptive={true}
+                          removalData={{ type: 'concept', data: concept }}
+                          targetId={concept?.id ?? ''}
+                          targetName={prefLabel}
+                        />
+                      )}
+                    </EditToolsBlock>
                   </BasicBlockExtraWrapper>
                 }
-              >
-                {t('edit-concept-rights')}
-              </BasicBlock>
-              <Separator />
+              />
+              <Separator isLarge />
             </>
           )}
 

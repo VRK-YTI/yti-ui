@@ -434,7 +434,7 @@ export default function generateConcept({
           {
             lang: '',
             regex: regex,
-            value: 'DRAFT',
+            value: data.basicInformation.status,
           },
         ],
         subjectArea: [
@@ -615,33 +615,80 @@ export default function generateConcept({
   }
 
   const initialTermIds: string[] = initialValue
-    ? Object.keys(initialValue?.references).flatMap(
-        (key) =>
+    ? Object.keys(initialValue?.references).flatMap((key) => {
+        if (key === 'exactMatch' || key === 'relatedMatch') {
+          return [];
+        }
+
+        return (
           initialValue?.references[key as keyof Concept['references']]?.map(
             (val) => val.id
           ) ?? []
-      )
+        );
+      })
     : [];
 
-  const newTermIds = data.terms.map((term) => term.id);
+  let initialInOtherIds = initialValue
+    ? initialValue.references.exactMatch?.map((match) => match.identifier.id) ??
+      []
+    : [];
 
-  const deleteVal =
+  initialInOtherIds = initialValue
+    ? [
+        ...initialInOtherIds,
+        ...(initialValue.references.relatedMatch?.map(
+          (match) => match.identifier.id
+        ) ?? []),
+      ]
+    : initialInOtherIds;
+
+  const newTermIds = data.terms.map((term) => term.id);
+  const inOtherIds = [
+    ...data.basicInformation.relationalInfo.matchInOther.map(
+      (match) => match.id
+    ),
+    ...data.basicInformation.relationalInfo.relatedConceptInOther.map(
+      (related) => related.id
+    ),
+  ];
+
+  let deleteVal =
     initialTermIds.length > 0
-      ? initialTermIds?.filter((initId) => !newTermIds.includes(initId))
+      ? initialTermIds
+          .filter((initId) => !newTermIds.includes(initId))
+          .map((id) => ({
+            id: id,
+            type: {
+              graph: {
+                id: terminologyId,
+              },
+              id: 'Term',
+              uri: '',
+            },
+          }))
       : [];
 
+  deleteVal =
+    initialInOtherIds.length > 0
+      ? [
+          ...deleteVal,
+          ...initialInOtherIds
+            .filter((id) => !inOtherIds.includes(id))
+            .map((id) => ({
+              id: id,
+              type: {
+                graph: {
+                  id: terminologyId,
+                },
+                id: 'ConceptLink',
+                uri: '',
+              },
+            })),
+        ]
+      : deleteVal;
+
   return {
-    delete:
-      deleteVal?.map((d) => ({
-        id: d,
-        type: {
-          graph: {
-            id: terminologyId,
-          },
-          id: 'Term',
-          uri: '',
-        },
-      })) ?? [],
+    delete: deleteVal,
     save: retVal,
   };
 }

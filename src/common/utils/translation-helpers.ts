@@ -144,6 +144,8 @@ export function translateEditConceptError(
       return t('edit-concept-error.source', { ns: 'admin' });
     case 'diagrams':
       return t('edit-concept-error.diagrams', { ns: 'admin' });
+    case 'status':
+      return t('edit-concept-error.status', { ns: 'admin' });
     default:
       return t('edit-concept-error.default', { ns: 'admin' });
   }
@@ -196,7 +198,149 @@ export function translateExcelParseError(message: string, t: TFunction) {
       });
     case 'status-column-missing':
       return t('concept-import.status-column-missing', { ns: 'admin' });
+    case 'prefLabel-column-missing':
+      return t('concept-import.prefLabel-column-missing', { ns: 'admin' });
+    case 'prefLabel-row-missing':
+      return t('concept-import.prefLabel-row-missing', { ns: 'admin' });
     default:
       return t('concept-import.undefined-error', { ns: 'admin' });
+  }
+}
+
+export function translateRemovalModalError(
+  type: 'terminology' | 'concept' | 'collection',
+  t: TFunction
+) {
+  switch (type) {
+    case 'terminology':
+      return t('error-occurred_remove-terminology', { ns: 'alert' });
+    case 'concept':
+      return t('error-occurred_remove-concept', { ns: 'alert' });
+    case 'collection':
+      return t('error-occurred_remove-collection', { ns: 'alert' });
+    default:
+      return t('error-occured', { ns: 'alert' });
+  }
+}
+
+export function translateRemovalModalTitle(
+  type: 'terminology' | 'concept' | 'collection',
+  t: TFunction
+) {
+  switch (type) {
+    case 'terminology':
+      return t('remove-modal.terminology-title', { ns: 'admin' });
+    case 'concept':
+      return t('remove-modal.concept-title', { ns: 'admin' });
+    case 'collection':
+      return t('remove-modal.collection-title', { ns: 'admin' });
+    default:
+      return '';
+  }
+}
+
+export function translateRemovalModalConfirmation(
+  type: 'terminology' | 'concept' | 'collection',
+  targetName: string,
+  t: TFunction
+) {
+  switch (type) {
+    case 'terminology':
+      return t('remove-modal.terminology-confirmation', {
+        ns: 'admin',
+        targetName: targetName,
+      });
+    case 'concept':
+      return t('remove-modal.concept-confirmation', {
+        ns: 'admin',
+        targetName: targetName,
+      });
+    case 'collection':
+      return t('remove-modal.collection-confirmation', {
+        ns: 'admin',
+        targetName: targetName,
+      });
+    default:
+      return '';
+  }
+}
+
+export function translateRemovalModalDescription(
+  type: 'terminology' | 'concept' | 'collection',
+  t: TFunction
+) {
+  switch (type) {
+    case 'terminology':
+      return t('remove-modal.terminology-description', { ns: 'admin' });
+    case 'concept':
+      return t('remove-modal.concept-description', { ns: 'admin' });
+    case 'collection':
+      return t('remove-modal.collection-description', { ns: 'admin' });
+    default:
+      return '';
+  }
+}
+
+export function translateRemovalModalProcessing(
+  type: 'terminology' | 'concept' | 'collection',
+  t: TFunction
+) {
+  switch (type) {
+    case 'terminology':
+      return t('remove-modal.terminology-processing', { ns: 'admin' });
+    case 'concept':
+      return t('remove-modal.concept-processing', { ns: 'admin' });
+    case 'collection':
+      return t('remove-modal.collection-processing', { ns: 'admin' });
+    default:
+      return '';
+  }
+}
+
+export function translateRemovalModalRemoved(
+  type: 'terminology' | 'concept' | 'collection',
+  targetName: string,
+  t: TFunction
+) {
+  switch (type) {
+    case 'terminology':
+      return t('remove-modal.terminology-removed', {
+        ns: 'admin',
+        targetName: targetName,
+      });
+    case 'concept':
+      return t('remove-modal.concept-removed', {
+        ns: 'admin',
+        targetName: targetName,
+      });
+    case 'collection':
+      return t('remove-modal.collection-removed', {
+        ns: 'admin',
+        targetName: targetName,
+      });
+    default:
+      return '';
+  }
+}
+
+export function translateRemovalModalWarning(
+  type: 'terminology' | 'concept' | 'collection',
+  t: TFunction
+) {
+  switch (type) {
+    case 'terminology':
+      return t('remove-modal.terminology-warning', {
+        ns: 'admin',
+      });
+    case 'concept':
+      return t('remove-modal.concept-warning', {
+        ns: 'admin',
+      });
+    case 'collection':
+      return t('remove-modal.collection-warning', {
+        ns: 'admin',
+      });
+    default:
+      return '';
   }
 }
