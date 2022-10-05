@@ -25,3 +25,16 @@ export const EditToolsBlock = styled(Block)`
     width: max-content;
   }
 `;
+
+export const PropertyList = styled.ul<{ $smBot?: boolean }>`
+  list-style: none;
+  padding: 0px;
+  margin-top: 0px;
+  margin-bottom: ${(props) =>
+    props.$smBot ? '0px' : props.theme.suomifi.spacing.m};
+  font-size: 16px;
+
+  li {
+    margin-bottom: ${(props) => props.theme.suomifi.spacing.xs};
+  }
+`;

@@ -22,7 +22,12 @@ import { getPropertyValue } from '@app/common/components/property-value/get-prop
 import Separator from '@app/common/components/separator';
 import DetailsExpander from './details-expander';
 import ConceptSidebar from './concept-sidebar';
-import { EditToolsBlock, MainContent, PageContent } from './concept.styles';
+import {
+  EditToolsBlock,
+  MainContent,
+  PageContent,
+  PropertyList,
+} from './concept.styles';
 import { useStoreDispatch } from '@app/store';
 import { useRouter } from 'next/router';
 import { setTitle } from '@app/common/components/title/title.slice';
@@ -230,9 +235,7 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
                         targetOrganization: terminology?.references.contributor,
                       }) && (
                         <RemovalModal
-                          isDisabled={
-                            concept?.properties.status?.[0].value === 'VALID'
-                          }
+                          isDisabled={false}
                           nonDescriptive={true}
                           removalData={{ type: 'concept', data: concept }}
                           targetId={concept?.id ?? ''}
@@ -251,12 +254,23 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
             {t('additional-technical-information', { ns: 'common' })}
           </VisuallyHidden>
 
-          <PropertyBlock
+          <BasicBlock
             title={t('vocabulary-info-organization', { ns: 'common' })}
-            property={
-              terminology?.references.contributor?.[0]?.properties.prefLabel
-            }
-          />
+            id="organization"
+          >
+            <PropertyList $smBot={true}>
+              {terminology?.references.contributor
+                ?.filter((c) => c && c.properties.prefLabel)
+                .map((contributor) => (
+                  <li key={contributor.id}>
+                    <PropertyValue
+                      property={contributor?.properties.prefLabel}
+                    />
+                  </li>
+                ))}
+            </PropertyList>
+          </BasicBlock>
+
           <BasicBlock title={t('vocabulary-info-created-at', { ns: 'common' })}>
             <FormattedDate date={concept?.createdDate} />
             {concept?.createdBy && `, ${concept.createdBy}`}
