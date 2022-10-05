@@ -4,7 +4,7 @@ import { BasicBlockHeader, BasicBlockWrapper } from './block.styles';
 
 export interface BasicBlockProps {
   title?: React.ReactNode;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   extra?: React.ReactNode;
   largeGap?: boolean;
   largeWidth?: boolean;
@@ -28,7 +28,7 @@ export default function BasicBlock({
       id={id ?? 'basic-block'}
     >
       {title && <BasicBlockHeader>{title}</BasicBlockHeader>}
-      {children}
+      {children && children}
       {extra}
     </BasicBlockWrapper>
   );

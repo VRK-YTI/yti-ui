@@ -1,7 +1,10 @@
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import Separator from '@app/common/components/separator';
 import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from '@app/common/utils/constants';
-import { translateLanguage } from '@app/common/utils/translation-helpers';
+import {
+  translateLanguage,
+  translateWordClass,
+} from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import {
@@ -71,6 +74,29 @@ export default function NewTermModal({
     termType: '',
     wordClass: '',
   });
+
+  const wordClasses = [
+    {
+      labelText: translateWordClass('noun', t),
+      uniqueItemId: 'noun',
+    },
+    {
+      labelText: translateWordClass('adjective', t),
+      uniqueItemId: 'adjective',
+    },
+    {
+      labelText: translateWordClass('pronoun', t),
+      uniqueItemId: 'pronoun',
+    },
+    {
+      labelText: translateWordClass('verb', t),
+      uniqueItemId: 'verb',
+    },
+    {
+      labelText: translateWordClass('numeral', t),
+      uniqueItemId: 'numeral',
+    },
+  ];
 
   const handleUpdate = ({ key, value }: TermFormUpdate) => {
     let updatedTerm = termData;
@@ -320,7 +346,16 @@ export default function NewTermModal({
         </MediumHeading>
 
         <GrammaticalBlock>
-          <SingleSelect
+          <TextInput
+            labelText={t('term-style')}
+            optionalText={t('optional')}
+            onBlur={(e) =>
+              handleUpdate({ key: 'termStyle', value: e.target.value ?? '' })
+            }
+          />
+
+          {/* TODO: Remove commented */}
+          {/* <SingleSelect
             ariaOptionsAvailableText={t('available-term-styles')}
             clearButtonLabel={t('clear-button-label')}
             labelText={t('term-style')}
@@ -336,7 +371,7 @@ export default function NewTermModal({
             onItemSelectionChange={(e) =>
               handleUpdate({ key: 'termStyle', value: e?.uniqueItemId || '' })
             }
-          />
+          /> */}
 
           <SingleSelect
             ariaOptionsAvailableText={t('available-term-families')}
@@ -397,12 +432,7 @@ export default function NewTermModal({
             noItemsText={t('no-term-word-classes-available')}
             hintText={t('term-word-class-hint-text')}
             visualPlaceholder={t('choose-term-word-class')}
-            items={[
-              {
-                labelText: t('word-class.adjective', { ns: 'common' }),
-                uniqueItemId: 'adjective',
-              },
-            ]}
+            items={wordClasses}
             onItemSelectionChange={(e) =>
               handleUpdate({ key: 'wordClass', value: e?.uniqueItemId || '' })
             }

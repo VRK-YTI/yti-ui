@@ -6,6 +6,7 @@ import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from '@app/common/utils/constants';
 import {
   translateLanguage,
   translateTermType,
+  translateWordClass,
 } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
@@ -24,6 +25,9 @@ import {
   DropdownBlock,
   GrammaticalBlock,
   MediumHeading,
+  TermFormBottomBlock,
+  TermFormRemoveButton,
+  TermFormTopBlock,
   WiderTextareaBlock,
 } from './concept-terms-block.styles';
 import TermTypeModal from './term-type-modal';
@@ -38,6 +42,7 @@ export interface TermFormProps {
   currentTerms: ConceptTermType[];
   handleSwitchTerms: (value: HandleSwitchTermsProps) => void;
   errors: FormError;
+  handleRemoveTerm?: (value: string) => void;
 }
 
 export interface TermFormUpdate {
@@ -51,6 +56,7 @@ export default function TermForm({
   errors,
   currentTerms,
   handleSwitchTerms,
+  handleRemoveTerm,
 }: TermFormProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -60,12 +66,6 @@ export default function TermForm({
   );
   const [prefLabel, setPrefLabel] = useState(term.prefLabel);
 
-  const termStyle = [
-    {
-      labelText: t('term-style.spoken-form', { ns: 'common' }),
-      uniqueItemId: 'spoken-form',
-    },
-  ];
   const termFamily = [
     {
       labelText: t('term-family.masculine', { ns: 'common' }),
@@ -92,10 +92,26 @@ export default function TermForm({
     },
   ];
 
-  const wordClass = [
+  const wordClasses = [
     {
-      labelText: t('word-class.adjective', { ns: 'common' }),
+      labelText: translateWordClass('noun', t),
+      uniqueItemId: 'noun',
+    },
+    {
+      labelText: translateWordClass('adjective', t),
       uniqueItemId: 'adjective',
+    },
+    {
+      labelText: translateWordClass('pronoun', t),
+      uniqueItemId: 'pronoun',
+    },
+    {
+      labelText: translateWordClass('verb', t),
+      uniqueItemId: 'verb',
+    },
+    {
+      labelText: translateWordClass('numeral', t),
+      uniqueItemId: 'numeral',
     },
   ];
 
@@ -121,16 +137,29 @@ export default function TermForm({
 
   return (
     <>
-      <TextInput
-        labelText={t('term-name-label')}
-        defaultValue={term.prefLabel}
-        onBlur={(e) =>
-          handleUpdate({ key: 'prefLabel', value: e.target.value })
-        }
-        maxLength={TEXT_INPUT_MAX}
-        id="term-name-input"
-        status={errors.termPrefLabel && prefLabel === '' ? 'error' : 'default'}
-      />
+      <TermFormTopBlock>
+        <TextInput
+          labelText={t('term-name-label')}
+          defaultValue={term.prefLabel}
+          onBlur={(e) =>
+            handleUpdate({ key: 'prefLabel', value: e.target.value })
+          }
+          maxLength={TEXT_INPUT_MAX}
+          id="term-name-input"
+          status={
+            errors.termPrefLabel && prefLabel === '' ? 'error' : 'default'
+          }
+        />
+        {handleRemoveTerm && !isSmall && (
+          <TermFormRemoveButton
+            variant="secondaryNoBorder"
+            icon="remove"
+            onClick={() => handleRemoveTerm(term.id)}
+          >
+            {t('remove-term', { count: 1 })}
+          </TermFormRemoveButton>
+        )}
+      </TermFormTopBlock>
       <CheckboxBlock
         defaultChecked={term.termHomographNumber ? true : false}
         onClick={() => handleIsHomographic()}
@@ -297,25 +326,12 @@ export default function TermForm({
       </MediumHeading>
 
       <GrammaticalBlock $isSmall={isSmall}>
-        <SingleSelect
-          ariaOptionsAvailableText={t('available-term-styles')}
-          clearButtonLabel={t('clear-button-label')}
+        <TextInput
           labelText={t('term-style')}
-          optionalText={t('optional')}
-          noItemsText={t('no-term-styles-available')}
-          visualPlaceholder={t('choose-term-style')}
-          items={termStyle}
-          defaultSelectedItem={
-            term.termStyle
-              ? termStyle.filter(
-                  (ts) =>
-                    ts.uniqueItemId === term.termStyle ||
-                    ts.labelText === term.termStyle
-                )[0]
-              : undefined
+          defaultValue={term.termStyle}
+          onBlur={(e) =>
+            handleUpdate({ key: 'termStyle', value: e.target.value ?? '' })
           }
-          onItemSelect={(e) => handleUpdate({ key: 'termStyle', value: e })}
-          id="style-picker"
         />
 
         <SingleSelect
@@ -370,10 +386,10 @@ export default function TermForm({
           noItemsText={t('no-term-word-classes-available')}
           hintText={t('term-word-class-hint-text')}
           visualPlaceholder={t('choose-term-word-class')}
-          items={wordClass}
+          items={wordClasses}
           defaultSelectedItem={
             term.wordClass
-              ? wordClass.filter(
+              ? wordClasses.filter(
                   (ts) =>
                     ts.uniqueItemId === term.wordClass ||
                     ts.labelText === term.wordClass
@@ -383,6 +399,17 @@ export default function TermForm({
           onItemSelect={(e) => handleUpdate({ key: 'wordClass', value: e })}
           id="word-class-picker"
         />
+        {handleRemoveTerm && isSmall && (
+          <TermFormBottomBlock>
+            <TermFormRemoveButton
+              variant="secondaryNoBorder"
+              icon="remove"
+              onClick={() => handleRemoveTerm(term.id)}
+            >
+              {t('remove-term', { count: 1 })}
+            </TermFormRemoveButton>
+          </TermFormBottomBlock>
+        )}
       </GrammaticalBlock>
     </>
   );

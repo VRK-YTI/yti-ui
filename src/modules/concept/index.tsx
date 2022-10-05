@@ -152,18 +152,6 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
             </Badge>
           </BadgeBar>
 
-          <MultilingualPropertyBlock
-            title={<h2>{t('field-definition')}</h2>}
-            data={concept?.properties.definition}
-          />
-          <MultilingualPropertyBlock
-            title={<h2>{t('field-example')}</h2>}
-            data={concept?.properties.example}
-          />
-          <PropertyBlock
-            title={t('field-subject-area')}
-            property={concept?.properties.subjectArea}
-          />
           <TermBlock
             title={<h2>{t('field-terms-label')}</h2>}
             data={[
@@ -190,8 +178,23 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
           />
 
           <MultilingualPropertyBlock
+            title={<h2>{t('field-definition')}</h2>}
+            data={concept?.properties.definition}
+          />
+
+          <PropertyBlock
+            title={t('field-subject-area')}
+            property={concept?.properties.subjectArea}
+          />
+
+          <MultilingualPropertyBlock
             title={<h2>{t('field-note')}</h2>}
             data={concept?.properties.note}
+          />
+
+          <MultilingualPropertyBlock
+            title={<h2>{t('field-example')}</h2>}
+            data={concept?.properties.example}
           />
 
           <DetailsExpander concept={concept} />

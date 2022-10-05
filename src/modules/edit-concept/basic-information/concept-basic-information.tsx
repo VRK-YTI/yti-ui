@@ -62,7 +62,9 @@ export default function ConceptBasicInformation({
     <>
       <Separator isLarge />
       <H2Sm variant="h2">{t('concept-basic-information')}</H2Sm>
+
       {renderDefinitions()}
+      {renderSubject()}
 
       <ListBlock
         items={basicInfo.note}
@@ -75,8 +77,6 @@ export default function ConceptBasicInformation({
         inputPlaceholder={t('note-textarea-placeholder')}
         errors={errors}
       />
-
-      {renderSubject()}
 
       <ListBlock
         items={basicInfo.example}

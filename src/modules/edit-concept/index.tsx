@@ -193,7 +193,11 @@ export default function EditConcept({
         <BadgeBar>
           {t('heading')}
           <PropertyValue property={terminology?.properties.prefLabel} />
-          <Badge>{t('statuses.draft', { ns: 'common' })}</Badge>
+          <Badge $isValid={formData.basicInformation.status === 'VALID'}>
+            {t(`statuses.${formData.basicInformation.status.toLowerCase()}`, {
+              ns: 'common',
+            })}
+          </Badge>
         </BadgeBar>
         <PageHelpText>{t('new-concept-page-help')}</PageHelpText>
 
