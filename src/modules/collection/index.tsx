@@ -11,7 +11,6 @@ import {
 import {
   BasicBlock,
   MultilingualPropertyBlock,
-  PropertyBlock,
   ConceptListBlock,
 } from '@app/common/components/block';
 import { Breadcrumb, BreadcrumbLink } from '@app/common/components/breadcrumb';

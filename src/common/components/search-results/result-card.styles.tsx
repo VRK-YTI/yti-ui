@@ -27,12 +27,15 @@ export const Title = styled(Heading)`
 `;
 
 export const TitleLink = styled(Link)`
-  align-items: center;
   color: ${(props) => props.theme.suomifi.colors.highlightBase};
   display: flex;
   font-size: 22px;
   font-weight: 600;
   gap: ${(props) => props.theme.suomifi.spacing.xs};
+
+  > svg {
+    padding-top: 6px;
+  }
 `;
 
 export const Subtitle = styled.p`
