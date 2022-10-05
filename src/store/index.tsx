@@ -21,6 +21,7 @@ import { adminControlsSlice } from '@app/common/components/admin-controls/admin-
 import { excelApi } from '@app/common/components/excel/excel.slice';
 import { NextIronRequest } from '@app/common/utils/session';
 import { modifyApi } from '@app/common/components/modify/modify.slice';
+import { removeApi } from '@app/common/components/remove/remove.slice';
 
 // make Context from next-redux-wrapper compatible with next-iron-session
 export type NextIronContext = Context | (Context & { req: NextIronRequest });
@@ -43,6 +44,7 @@ export function makeStore(ctx: NextIronContext) {
       [adminControlsSlice.name]: adminControlsSlice.reducer,
       [excelApi.reducerPath]: excelApi.reducer,
       [modifyApi.reducerPath]: modifyApi.reducer,
+      [removeApi.reducerPath]: removeApi.reducer,
     },
 
     middleware: (getDefaultMiddleware) =>
@@ -55,7 +57,8 @@ export function makeStore(ctx: NextIronContext) {
         subscriptionApi.middleware,
         accessRequestApi.middleware,
         excelApi.middleware,
-        modifyApi.middleware
+        modifyApi.middleware,
+        removeApi.middleware
       ),
 
     // Development tools should be available only in development environments

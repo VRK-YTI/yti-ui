@@ -9,6 +9,8 @@
   "error-occured_terminology-search": "Sanastojen listauksen haussa ilmeni ongelma",
   "error-occured_unhandled-error": "Tapahtui odottamaton virhe",
   "error-occurred_internal-server": "Tapahtui virhe, kokeile uudelleen myöhemmin",
+  "error-occurred_remove-collection": "Käsitekokoelman poistamisessa ilmeni ongelma",
+  "error-occurred_remove-concept": "Käsitteen poistamisessa ilmeni ongelma",
   "error-occurred_remove-terminology": "Sanaston poistamisessa ilmeni ongelma",
   "error-occurred_session": "Istunnossa ilmeni ongelma, kokeile kirjautua uudelleen"
 }

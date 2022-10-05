@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { Breakpoint } from '@app/common/components/media-query/media-query-context';
 import { small } from '@app/common/components/media-query/styled-helpers';
+import { Block } from 'suomifi-ui-components';
 
 export const PageContent = styled.div<{ $breakpoint: Breakpoint }>`
   border: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
@@ -26,5 +27,15 @@ export const PropertyList = styled.ul<{ $smBot?: boolean }>`
 
   li {
     margin-bottom: ${(props) => props.theme.suomifi.spacing.xs};
+  }
+`;
+
+export const EditToolsBlock = styled(Block)`
+  display: flex;
+  flex-direction: column;
+  gap: ${(props) => props.theme.suomifi.spacing.s};
+
+  > button {
+    width: max-content;
   }
 `;
