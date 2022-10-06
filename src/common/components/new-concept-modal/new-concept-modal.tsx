@@ -99,7 +99,7 @@ export default function NewConceptModal({
 
       <ModalFooter>
         {isError && (
-          <FormFooterAlert alerts={[t('recommended-term-missing-error')]}/>
+          <FormFooterAlert alerts={[t('recommended-term-missing-error')]} />
         )}
         <Button onClick={() => handleClick()} id="submit-button">
           {t('continue')}

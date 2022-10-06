@@ -184,9 +184,6 @@
   "vocabulary-results-no-description": "Kuvausta ei ole annettu.",
   "word-class": {
     "adjective": "adjektiivi",
-    "noun": "substantiivi",
-    "numeral": "numeraali",
-    "pronoun": "pronomini",
     "verb": "verbi"
   }
 }

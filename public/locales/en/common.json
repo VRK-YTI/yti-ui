@@ -184,9 +184,6 @@
   "vocabulary-results-no-description": "No description",
   "word-class": {
     "adjective": "adjective",
-    "noun": "noun",
-    "numeral": "numeral",
-    "pronoun": "pronoun",
     "verb": "verb"
   }
 }
