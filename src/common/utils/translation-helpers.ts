@@ -117,6 +117,12 @@ export function translateWordClass(wordClass: string, t: TFunction) {
   switch (wordClass) {
     case 'adjective':
       return t('word-class.adjective', { ns: 'common' });
+    case 'pronoun':
+      return t('word-class.pronoun', { ns: 'common' });
+    case 'noun':
+      return t('word-class.noun', { ns: 'common' });
+    case 'numeral':
+      return t('word-class.numeral', { ns: 'common' });
     case 'verb':
       return t('word-class.verb', { ns: 'common' });
     default:
@@ -157,13 +163,18 @@ export function translateEditConceptError(error: string, t: TFunction) {
 
 export function translateFileUploadError(
   error: 'none' | 'upload-error' | 'incorrect-file-type',
+  fileTypes: string[],
   t: TFunction
 ) {
   switch (error) {
     case 'upload-error':
       return t('file-upload-error.upload-error', { ns: 'admin' });
     case 'incorrect-file-type':
-      return t('file-upload-error.incorrect-file-type', { ns: 'admin' });
+      return t('file-upload-error.incorrect-file-type', {
+        ns: 'admin',
+        count: fileTypes.length,
+        fileTypes: fileTypes.join(', '),
+      });
     default:
       return;
   }

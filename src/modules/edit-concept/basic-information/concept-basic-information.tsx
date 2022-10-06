@@ -62,21 +62,8 @@ export default function ConceptBasicInformation({
     <>
       <Separator isLarge />
       <H2Sm variant="h2">{t('concept-basic-information')}</H2Sm>
+
       {renderDefinitions()}
-
-      <ListBlock
-        items={basicInfo.example}
-        itemsKey="example"
-        update={handleBasicInfoUpdate}
-        languages={languages}
-        title={t('example')}
-        description={t('example-description')}
-        addNewText={t('add-new-example')}
-        inputLabel={t('example-textarea-label-text')}
-        inputPlaceholder={t('example-textarea-placeholder')}
-        errors={errors}
-      />
-
       {renderSubject()}
 
       <ListBlock
@@ -85,10 +72,21 @@ export default function ConceptBasicInformation({
         update={handleBasicInfoUpdate}
         languages={languages}
         title={t('note')}
-        description={t('note-description')}
         addNewText={t('add-new-note')}
         inputLabel={t('note-textarea-label-text')}
         inputPlaceholder={t('note-textarea-placeholder')}
+        errors={errors}
+      />
+
+      <ListBlock
+        items={basicInfo.example}
+        itemsKey="example"
+        update={handleBasicInfoUpdate}
+        languages={languages}
+        title={t('example')}
+        addNewText={t('add-new-example')}
+        inputLabel={t('example-textarea-label-text')}
+        inputPlaceholder={t('example-textarea-placeholder')}
         errors={errors}
       />
 
@@ -99,6 +97,11 @@ export default function ConceptBasicInformation({
       />
 
       <ExpanderGroup closeAllText="" openAllText="">
+        <RelationalInformation
+          infoKey="relationalInfo"
+          update={handleBasicInfoUpdate}
+          initialValues={basicInfo.relationalInfo}
+        />
         <ConceptDiagramsAndSources
           infoKey="diagramAndSource"
           update={handleBasicInfoUpdate}
@@ -115,11 +118,6 @@ export default function ConceptBasicInformation({
           infoKey="otherInfo"
           update={handleBasicInfoUpdate}
           initialValues={basicInfo.otherInfo}
-        />
-        <RelationalInformation
-          infoKey="relationalInfo"
-          update={handleBasicInfoUpdate}
-          initialValues={basicInfo.relationalInfo}
         />
       </ExpanderGroup>
     </>
@@ -163,8 +161,8 @@ export default function ConceptBasicInformation({
     return (
       <SubjectTextInput
         labelText={t('subject')}
-        hintText={t('subject-hint-text')}
         visualPlaceholder={t('subject-visual-placeholder')}
+        optionalText={t('optional')}
         onBlur={(e) =>
           handleBasicInfoUpdate({
             key: 'subject',

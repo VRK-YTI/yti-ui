@@ -1,5 +1,4 @@
 import FileUpload from '@app/modules/new-terminology/file-upload';
-import InfoFile from '@app/modules/new-terminology/info-file';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useState } from 'react';
 import {
@@ -9,8 +8,12 @@ import {
   ModalFooter,
   ModalTitle,
 } from 'suomifi-ui-components';
-import { createErrorMessage, ExcelError } from '../excel/excel.error';
-import { usePostSimpleImportExcelMutation } from '../excel/excel.slice';
+import FileDropArea from '../file-drop-area';
+import { createErrorMessage, ExcelError } from '../import/excel.error';
+import {
+  usePostImportNTRFMutation,
+  usePostSimpleImportExcelMutation,
+} from '../import/import.slice';
 import { useBreakpoints } from '../media-query/media-query-context';
 
 interface ConceptImportModalProps {
@@ -33,17 +36,19 @@ export default function ConceptImportModal({
   const [userPosted, setUserPosted] = useState(false);
   const [startFileUpload, setStartFileUpload] = useState(false);
   const [error, setError] = useState<ExcelError | undefined>(undefined);
+  const [fileType, setFileType] = useState<'xlsx' | 'xml' | null>();
   const [postSimpleImportExcel, simpleImportExcel] =
     usePostSimpleImportExcelMutation();
+  const [postImportNTRF, importNTRF] = usePostImportNTRFMutation();
 
   const handleClose = useCallback(() => {
     setStartFileUpload(false);
     setVisible(false);
     setUserPosted(false);
-    if (simpleImportExcel.isSuccess) {
+    if (simpleImportExcel.isSuccess || importNTRF.isSuccess) {
       refetch();
     }
-  }, [setVisible, refetch, simpleImportExcel]);
+  }, [setVisible, refetch, simpleImportExcel, importNTRF]);
 
   const handlePost = () => {
     if (fileData) {
@@ -51,7 +56,13 @@ export default function ConceptImportModal({
       formData.append('file', fileData);
       setStartFileUpload(true);
       setUserPosted(true);
-      postSimpleImportExcel({ terminologyId: terminologyId, file: formData });
+      if (fileData.name.includes('.xlsx')) {
+        setFileType('xlsx');
+        postSimpleImportExcel({ terminologyId: terminologyId, file: formData });
+      } else if (fileData.name.includes('.xml')) {
+        setFileType('xml');
+        postImportNTRF({ terminologyId: terminologyId, file: formData });
+      }
     }
   };
 
@@ -73,11 +84,19 @@ export default function ConceptImportModal({
           {!startFileUpload ? t('import-concepts') : t('downloading-file')}
         </ModalTitle>
         {!startFileUpload ? (
-          <InfoFile setFileData={setFileData} setIsValid={setIsValid} />
+          <FileDropArea
+            setFileData={setFileData}
+            setIsValid={setIsValid}
+            validFileTypes={['xlsx', 'xml']}
+          />
         ) : (
           <FileUpload
-            importResponseData={simpleImportExcel.data}
-            importResponseStatus={simpleImportExcel.status}
+            importResponseData={
+              fileType === 'xlsx' ? simpleImportExcel.data : importNTRF.data
+            }
+            importResponseStatus={
+              fileType === 'xlsx' ? simpleImportExcel.status : importNTRF.status
+            }
             handlePost={handlePost}
             handleClose={handleClose}
             errorInfo={error}

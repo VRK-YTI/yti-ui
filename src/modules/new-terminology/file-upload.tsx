@@ -1,6 +1,6 @@
-import { ExcelError } from '@app/common/components/excel/excel.error';
-import { useGetImportStatusMutation } from '@app/common/components/excel/excel.slice';
-import { ImportResponse } from '@app/common/interfaces/excel.interface';
+import { ExcelError } from '@app/common/components/import/excel.error';
+import { useGetImportStatusMutation } from '@app/common/components/import/import.slice';
+import { ImportResponse } from '@app/common/interfaces/import.interface';
 import { translateExcelParseError } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
@@ -46,12 +46,17 @@ export default function FileUpload({
     }
 
     if (
-      importResponseData?.message === 'SUCCESS' &&
+      (importResponseData?.jobtoken || importResponseData?.jobToken) &&
       !importStatus.isLoading &&
       importStatus.data?.status !== 'SUCCESS'
     ) {
       const timerId = setTimeout(() => {
-        fetchImportStatus(importResponseData.jobToken);
+        if (importResponseData.jobtoken) {
+          fetchImportStatus(importResponseData.jobtoken);
+        }
+        if (importResponseData.jobToken) {
+          fetchImportStatus(importResponseData.jobToken);
+        }
       }, 1000);
       return () => clearTimeout(timerId);
     }

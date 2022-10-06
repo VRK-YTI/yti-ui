@@ -31,6 +31,7 @@ import { Notification, Paragraph, Text } from 'suomifi-ui-components';
 import useConfirmBeforeLeavingPage from '@app/common/utils/hooks/use-confirm-before-leaving-page';
 import validateForm, { FormError } from './validate-form';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import { translateStatus } from '@app/common/utils/translation-helpers';
 
 interface EditConceptProps {
   terminologyId: string;
@@ -193,7 +194,9 @@ export default function EditConcept({
         <BadgeBar>
           {t('heading')}
           <PropertyValue property={terminology?.properties.prefLabel} />
-          <Badge>{t('statuses.draft', { ns: 'common' })}</Badge>
+          <Badge $isValid={formData.basicInformation.status === 'VALID'}>
+            {translateStatus(formData.basicInformation.status, t)}
+          </Badge>
         </BadgeBar>
         <PageHelpText>{t('new-concept-page-help')}</PageHelpText>
 
