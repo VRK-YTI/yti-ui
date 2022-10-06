@@ -6,7 +6,6 @@ import {
   ModalContent,
   ModalFooter,
   ModalTitle,
-  Paragraph,
   Text,
 } from 'suomifi-ui-components';
 import { useBreakpoints } from '../media-query/media-query-context';
@@ -20,7 +19,10 @@ import { setAlert } from '../alert/alert.slice';
 import { useRouter } from 'next/router';
 import InlineAlert from '../inline-alert';
 import SaveSpinner from '../save-spinner';
-import { FooterBlock } from './copy-terminology-modal.styles';
+import {
+  DescriptionParagraph,
+  FooterBlock,
+} from './copy-terminology-modal.styles';
 
 interface CopyTerminologyModalProps {
   terminologyId: string;
@@ -76,12 +78,18 @@ export default function CopyTerminologyModal({
       );
 
       if (newGraphId) {
-        router.push(`/terminology/${newGraphId}`);
-      } else {
-        handleClose();
+        // Using this version of push() params instead of something like this:
+        // router.push(`/terminology/${newGraphId}`);
+        // Expander on the page wouldn't be closed by default so this
+        // version is used to force page refresh.
+        router.push({
+          pathname: '/terminology/[tId]',
+          query: { tId: newGraphId },
+        });
+        setVisible(false);
       }
     }
-  }, [createVersion, newGraphId, dispatch, handleClose, router, t]);
+  }, [createVersion, newGraphId, dispatch, handleClose, router, t, setVisible]);
 
   const handlePost = () => {
     setUserPosted(true);
@@ -106,9 +114,9 @@ export default function CopyTerminologyModal({
     >
       <ModalContent>
         <ModalTitle>{t('copy-as-base')}</ModalTitle>
-        <Paragraph>
+        <DescriptionParagraph>
           <Text>{t('copy-as-base-description')}</Text>
-        </Paragraph>
+        </DescriptionParagraph>
         <Prefix update={handleUpdate} userPosted={userPosted} />
       </ModalContent>
 

@@ -39,6 +39,10 @@ export function SearchPageFilter({
       resultCount={resultCount}
     >
       <FilterTopPartBlock>
+        <KeywordFilter
+          title={t('vocabulary-filter-filter-by-keyword')}
+          visualPlaceholder={t('vocabulary-filter-visual-placeholder')}
+        />
         <OrganizationFilter
           title={t('terminology-search-filter-by-organization')}
           visualPlaceholder={t('terminology-search-filter-pick-organization')}
@@ -47,10 +51,6 @@ export function SearchPageFilter({
         <LanguageFilter
           labelText={t('filter-by-language')}
           languages={counts?.counts.languages}
-        />
-        <KeywordFilter
-          title={t('vocabulary-filter-filter-by-keyword')}
-          visualPlaceholder={t('vocabulary-filter-visual-placeholder')}
         />
       </FilterTopPartBlock>
       <Separator />

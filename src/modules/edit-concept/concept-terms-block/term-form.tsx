@@ -94,24 +94,12 @@ export default function TermForm({
 
   const wordClasses = [
     {
-      labelText: translateWordClass('noun', t),
-      uniqueItemId: 'noun',
-    },
-    {
       labelText: translateWordClass('adjective', t),
       uniqueItemId: 'adjective',
     },
     {
-      labelText: translateWordClass('pronoun', t),
-      uniqueItemId: 'pronoun',
-    },
-    {
       labelText: translateWordClass('verb', t),
       uniqueItemId: 'verb',
-    },
-    {
-      labelText: translateWordClass('numeral', t),
-      uniqueItemId: 'numeral',
     },
   ];
 

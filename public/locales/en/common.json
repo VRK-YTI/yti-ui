@@ -153,7 +153,7 @@
   "vocabulary-collections": "Terminology collections",
   "vocabulary-concepts": "Terminology concepts",
   "vocabulary-filter-concepts": "Concepts",
-  "vocabulary-filter-filter-by-keyword": "Filter by word",
+  "vocabulary-filter-filter-by-keyword": "Search by word",
   "vocabulary-filter-filter-list": "Filter list",
   "vocabulary-filter-items": "items",
   "vocabulary-filter-remove-all": "Clear all",
@@ -184,9 +184,6 @@
   "vocabulary-results-no-description": "No description",
   "word-class": {
     "adjective": "adjective",
-    "noun": "noun",
-    "numeral": "numeral",
-    "pronoun": "pronoun",
     "verb": "verb"
   }
 }

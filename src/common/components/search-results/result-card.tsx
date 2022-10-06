@@ -70,7 +70,7 @@ export default function ResultCard({
       )}
       <Link passHref href={titleLink}>
         <TitleLink href="">
-          {icon && <Icon icon={icon} />}
+          {icon && <Icon icon={icon} style={{ minWidth: 'max-content' }} />}
           <Title variant="h2" id="card-title-link">
             {title}
             <VisuallyHidden>

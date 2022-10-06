@@ -1,9 +1,10 @@
+import FormFooterAlert from '@app/common/components/form-footer-alert';
 import SaveSpinner from '@app/common/components/save-spinner';
 import Separator from '@app/common/components/separator';
 import { translateEditConceptError } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { Button, InlineAlert } from 'suomifi-ui-components';
+import { Button } from 'suomifi-ui-components';
 import { ButtonBlock, FooterBlock } from './new-concept.styles';
 import { FormError } from './validate-form';
 
@@ -38,21 +39,12 @@ export default function FormFooter({
     <FooterBlock>
       <Separator isLarge />
       {errors.total && (
-        <div style={{ marginBottom: '20px' }}>
-          <InlineAlert
-            status="warning"
-            labelText={translateEditConceptError('total', t)}
-          >
-            <ul>
-              {Object.keys(errors)
-                .filter((k) => k !== 'total' && errors[k as keyof FormError])
-                .map((k, idx) => (
-                  <li key={`footer-errors-${idx}`}>
-                    {translateEditConceptError(k as keyof FormError, t)}
-                  </li>
-                ))}
-            </ul>
-          </InlineAlert>
+        <div style={{ marginBottom: '15px' }}>
+          <FormFooterAlert
+            alerts={Object.keys(errors)
+              .filter((k) => k !== 'total' && errors[k as keyof FormError])
+              .map((k) => translateEditConceptError(k as keyof FormError, t))}
+          />
         </div>
       )}
       <ButtonBlock>

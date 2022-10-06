@@ -11,7 +11,6 @@ import {
 import {
   BasicBlock,
   MultilingualPropertyBlock,
-  PropertyBlock,
   ConceptListBlock,
 } from '@app/common/components/block';
 import { Breadcrumb, BreadcrumbLink } from '@app/common/components/breadcrumb';
@@ -22,7 +21,12 @@ import { getPropertyValue } from '@app/common/components/property-value/get-prop
 import Separator from '@app/common/components/separator';
 import { useStoreDispatch } from '@app/store';
 import CollectionSidebar from './collection-sidebar';
-import { EditToolsBlock, MainContent, PageContent } from './collection.styles';
+import {
+  EditToolsBlock,
+  MainContent,
+  PageContent,
+  PropertyList,
+} from './collection.styles';
 import { setTitle } from '@app/common/components/title/title.slice';
 import { useGetCollectionQuery } from '@app/common/components/collection/collection.slice';
 import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
@@ -220,12 +224,23 @@ export default function Collection({
             {t('additional-technical-information', { ns: 'common' })}
           </VisuallyHidden>
 
-          <PropertyBlock
+          <BasicBlock
             title={t('vocabulary-info-organization', { ns: 'common' })}
-            property={
-              terminology?.references.contributor?.[0]?.properties.prefLabel
-            }
-          />
+            id="organization"
+          >
+            <PropertyList $smBot={true}>
+              {terminology?.references.contributor
+                ?.filter((c) => c && c.properties.prefLabel)
+                .map((contributor) => (
+                  <li key={contributor.id}>
+                    <PropertyValue
+                      property={contributor?.properties.prefLabel}
+                    />
+                  </li>
+                ))}
+            </PropertyList>
+          </BasicBlock>
+
           <BasicBlock title={t('vocabulary-info-created-at', { ns: 'common' })}>
             <FormattedDate date={collection?.createdDate} />
             {collection?.createdBy && `, ${collection.createdBy}`}
