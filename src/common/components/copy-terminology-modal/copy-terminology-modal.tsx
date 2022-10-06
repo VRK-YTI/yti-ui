@@ -6,7 +6,6 @@ import {
   ModalContent,
   ModalFooter,
   ModalTitle,
-  Paragraph,
   Text,
 } from 'suomifi-ui-components';
 import { useBreakpoints } from '../media-query/media-query-context';
@@ -85,7 +84,7 @@ export default function CopyTerminologyModal({
         // version is used to force page refresh.
         router.push({
           pathname: '/terminology/[tId]',
-          query: { tId: newGraphId}
+          query: { tId: newGraphId },
         });
         setVisible(false);
       }

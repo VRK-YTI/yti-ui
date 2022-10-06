@@ -3,7 +3,7 @@ import { useGetImportStatusMutation } from '@app/common/components/excel/excel.s
 import { ImportResponse } from '@app/common/interfaces/excel.interface';
 import { translateExcelParseError } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, InlineAlert, Text } from 'suomifi-ui-components';
 import {
   ButtonBlock,
@@ -29,8 +29,22 @@ export default function FileUpload({
 }: FileUploadProps) {
   const { t } = useTranslation('admin');
   const [fetchImportStatus, importStatus] = useGetImportStatusMutation();
+  const [getStatusRetries, setGetStatusRetries] = useState(0);
+
+  const handleTryAgain = () => {
+    setGetStatusRetries(0);
+    handlePost();
+  };
 
   useEffect(() => {
+    if (getStatusRetries > 9) {
+      return;
+    }
+
+    if (importStatus.isError) {
+      setGetStatusRetries(getStatusRetries + 1);
+    }
+
     if (
       importResponseData?.message === 'SUCCESS' &&
       !importStatus.isLoading &&
@@ -41,11 +55,11 @@ export default function FileUpload({
       }, 1000);
       return () => clearTimeout(timerId);
     }
-  }, [importResponseData, fetchImportStatus, importStatus]);
+  }, [importResponseData, fetchImportStatus, importStatus, getStatusRetries]);
 
   return (
     <>
-      {importResponseStatus === 'rejected' ? (
+      {importResponseStatus === 'rejected' || getStatusRetries > 3 ? (
         <>
           <InlineAlert status="error" style={{ marginBottom: '25px' }}>
             {errorInfo ? (
@@ -74,7 +88,7 @@ export default function FileUpload({
             )}
           </InlineAlert>
           <ButtonBlock>
-            <Button onClick={() => handlePost()}>{t('try-again')}</Button>
+            <Button onClick={() => handleTryAgain()}>{t('try-again')}</Button>
             <Button variant="secondary" onClick={() => handleClose()}>
               {t('close')}
             </Button>

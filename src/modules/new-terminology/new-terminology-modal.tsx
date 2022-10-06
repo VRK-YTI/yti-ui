@@ -181,6 +181,7 @@ export default function NewTerminologyModal({
               variant="secondary"
               onClick={() => handleClose()}
               id="cancel-button"
+              disabled={isCreating}
             >
               {t('cancel')}
             </Button>
@@ -205,14 +206,14 @@ export default function NewTerminologyModal({
           id="new-terminology-input-type"
         >
           <RadioButton
-            disabled={error}
+            disabled={error || isCreating}
             value="self"
             id="new-terminology-input-type-hand"
           >
             {t('by-hand')}
           </RadioButton>
           <RadioButton
-            disabled={error}
+            disabled={error || isCreating}
             value="file"
             id="new-terminology-input-type-file"
           >
@@ -222,7 +223,7 @@ export default function NewTerminologyModal({
 
         {inputType === 'self' && (
           <InfoManual
-            disabled={error}
+            disabled={error || isCreating}
             setIsValid={setIsValid}
             setManualData={setManualData}
             userPosted={userPosted}
