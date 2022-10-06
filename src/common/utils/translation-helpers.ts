@@ -118,6 +118,12 @@ export function translateWordClass(wordClass: string, t: TFunction) {
   switch (wordClass) {
     case 'adjective':
       return t('word-class.adjective', { ns: 'common' });
+    case 'pronoun':
+      return t('word-class.pronoun', { ns: 'common' });
+    case 'noun':
+      return t('word-class.noun', { ns: 'common' });
+    case 'numeral':
+      return t('word-class.numeral', { ns: 'common' });
     case 'verb':
       return t('word-class.verb', { ns: 'common' });
     default:

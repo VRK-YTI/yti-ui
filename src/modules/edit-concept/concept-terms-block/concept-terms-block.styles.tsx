@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import {
   Block,
+  Button,
   Checkbox,
   Dropdown,
   ExpanderGroup,
@@ -130,4 +131,20 @@ export const ExpanderIcon = styled(Icon)`
   margin-left: ${(props) => props.theme.suomifi.spacing.xs};
   position: relative;
   top: 3px;
+`;
+
+export const TermFormTopBlock = styled(Block)`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`;
+
+export const TermFormBottomBlock = styled(Block)`
+  display: flex;
+  justify-content: flex-end;
+`;
+
+export const TermFormRemoveButton = styled(Button)`
+  height: min-content;
+  white-space: nowrap;
 `;

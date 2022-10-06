@@ -24,7 +24,7 @@ interface ListBlockProps {
   languages?: string[];
   noLangOption?: boolean;
   title: string;
-  description: string;
+  description?: string;
   addNewText: string;
   inputLabel: string;
   inputPlaceholder: string;
