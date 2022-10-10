@@ -628,17 +628,18 @@ export default function generateConcept({
       })
     : [];
 
-  let initialInOtherIds = initialValue
-    ? initialValue.references.exactMatch?.map((match) => match.identifier.id) ??
-      []
+  let initialInOtherIds: string[] = initialValue
+    ? initialValue.references.exactMatch
+        ?.map((match) => match.properties.targetId?.[0].value ?? '')
+        .filter((val) => val) ?? []
     : [];
 
   initialInOtherIds = initialValue
     ? [
         ...initialInOtherIds,
-        ...(initialValue.references.relatedMatch?.map(
-          (match) => match.identifier.id
-        ) ?? []),
+        ...(initialValue.references.relatedMatch
+          ?.map((match) => match.properties.targetId?.[0].value ?? '')
+          .filter((val) => val) ?? []),
       ]
     : initialInOtherIds;
 
@@ -651,6 +652,12 @@ export default function generateConcept({
       (related) => related.id
     ),
   ];
+
+  console.log(initialValue?.references);
+  console.log(data.terms);
+  console.log('initialTermIds', initialTermIds);
+  console.log('newTermIds', newTermIds);
+  console.log('inOtherIds', inOtherIds);
 
   let deleteVal =
     initialTermIds.length > 0
@@ -668,6 +675,7 @@ export default function generateConcept({
           }))
       : [];
 
+  console.log('deleteVal #1', deleteVal);
   deleteVal =
     initialInOtherIds.length > 0
       ? [
@@ -686,6 +694,7 @@ export default function generateConcept({
             })),
         ]
       : deleteVal;
+  console.log('deleteVal #2', deleteVal);
 
   return {
     delete: deleteVal,

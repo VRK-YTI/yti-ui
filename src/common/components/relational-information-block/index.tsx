@@ -172,9 +172,6 @@ function ManageRelationalInfoModal({
     setVisible(false);
     setShowChosen(false);
     setChosen([]);
-    setSelectedConcepts(
-      searchResults.filter((result) => selectedConceptIds.includes(result.id))
-    );
     setSearchResults([]);
   };
 
