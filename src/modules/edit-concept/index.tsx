@@ -97,6 +97,7 @@ export default function EditConcept({
       initialValue: conceptData,
       lastModifiedBy: `${user.firstName} ${user.lastName}`,
     });
+
     setPostedData(concept);
     addConcept(concept);
     disableConfirmation();

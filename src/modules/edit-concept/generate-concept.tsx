@@ -653,12 +653,6 @@ export default function generateConcept({
     ),
   ];
 
-  console.log(initialValue?.references);
-  console.log(data.terms);
-  console.log('initialTermIds', initialTermIds);
-  console.log('newTermIds', newTermIds);
-  console.log('inOtherIds', inOtherIds);
-
   let deleteVal =
     initialTermIds.length > 0
       ? initialTermIds
@@ -675,7 +669,6 @@ export default function generateConcept({
           }))
       : [];
 
-  console.log('deleteVal #1', deleteVal);
   deleteVal =
     initialInOtherIds.length > 0
       ? [
@@ -694,7 +687,6 @@ export default function generateConcept({
             })),
         ]
       : deleteVal;
-  console.log('deleteVal #2', deleteVal);
 
   return {
     delete: deleteVal,
