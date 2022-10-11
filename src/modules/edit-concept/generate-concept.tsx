@@ -20,6 +20,7 @@ export default function generateConcept({
   const now = new Date();
   let matchingIds: string[] = [];
   let relatedMatchIds: string[] = [];
+  let closeMatchIds: string[] = [];
 
   let referrers: object;
   if (initialValue && initialValue.referrers) {
@@ -335,6 +336,70 @@ export default function generateConcept({
       ] ?? [];
   }
 
+  if (data.basicInformation.relationalInfo.closeMatch) {
+    externalTerms =
+      [
+        ...externalTerms,
+        ...data.basicInformation.relationalInfo.closeMatch.map((match) => {
+          const initialTerm = initialValue?.references.closeMatch?.find(
+            (m) => m.properties?.targetId?.[0].value === match.id
+          );
+          const id = initialTerm?.id ?? v4();
+
+          closeMatchIds = [...closeMatchIds, id];
+
+          return {
+            code: initialTerm?.code,
+            createdBy: initialTerm?.createdBy ?? '',
+            createdDate: initialTerm?.createdDate ?? '',
+            id: id,
+            lastModifiedBy: initialTerm?.lastModifiedBy ?? '',
+            lastModifiedDate: initialTerm?.lastModifiedDate ?? '',
+            properties: {
+              prefLabel: Object.keys(match.label).map((key) => ({
+                lang: key,
+                regex: regex,
+                value: match.label[key],
+              })),
+              targetGraph: [
+                {
+                  lang: '',
+                  regex: regex,
+                  value: match.terminologyId,
+                },
+              ],
+              targetId: [
+                {
+                  lang: '',
+                  regex: regex,
+                  value: match.id,
+                },
+              ],
+              vocabularyLabel: Object.keys(match.terminologyLabel).map(
+                (key) => ({
+                  lang: key,
+                  regex: regex,
+                  value: match.terminologyLabel[key],
+                })
+              ),
+            },
+            references: {},
+            referrers: {},
+            type: {
+              graph: {
+                id: terminologyId,
+              },
+              id: 'ConceptLink',
+              uri: initialValue
+                ? ''
+                : 'http://www.w3.org/1999/02/22-rdf-syntax-ns#Resource',
+            },
+            uri: initialTerm?.uri,
+          };
+        }),
+      ] ?? [];
+  }
+
   const retVal = [
     ...terms,
     ...externalTerms,
@@ -479,7 +544,18 @@ export default function generateConcept({
             },
           })
         ),
-        closeMatch: [],
+        closeMatch: closeMatchIds.map((id) => ({
+          id: id,
+          type: {
+            graph: {
+              id: terminologyId,
+            },
+            id: 'ConceptLink',
+            uri: initialValue
+              ? ''
+              : 'http://www.w3.org/1999/02/22-rdf-syntax-ns#Resource',
+          },
+        })),
         exactMatch: matchingIds.map((id) => ({
           id: id,
           type: {
@@ -640,6 +716,15 @@ export default function generateConcept({
         ...(initialValue.references.relatedMatch
           ?.map((match) => match.properties.targetId?.[0].value ?? '')
           .filter((val) => val) ?? []),
+      ]
+    : initialInOtherIds;
+
+  initialInOtherIds = initialValue
+    ? [
+        ...initialInOtherIds,
+        ...(initialValue.references.closeMatch?.map(
+          (match) => match.identifier.id
+        ) ?? []),
       ]
     : initialInOtherIds;
 

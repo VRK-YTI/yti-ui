@@ -49,6 +49,7 @@ export interface BasicInfo {
     hasPartConcept: RelationInfoType[];
     relatedConceptInOther: RelationInfoType[];
     matchInOther: RelationInfoType[];
+    closeMatch: RelationInfoType[];
   };
 }
 
