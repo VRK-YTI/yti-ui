@@ -281,7 +281,7 @@ export default function generateFormData(
 
             {
               return {
-                id: r.properties.targetId?.[0].value ?? '' ?? '',
+                id: r.properties.targetId?.[0].value ?? '',
                 label:
                   r.properties?.prefLabel
                     ?.map((l) => ({ [l.lang]: l.value }))
@@ -302,7 +302,7 @@ export default function generateFormData(
 
             {
               return {
-                id: m.id ?? '',
+                id: m.properties.targetId?.[0].value ?? '',
                 label:
                   m.properties.prefLabel
                     ?.map((l) => ({ [l.lang]: l.value }))
