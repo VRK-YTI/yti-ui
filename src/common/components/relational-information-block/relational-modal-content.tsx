@@ -93,6 +93,12 @@ export default function RelationModalContent({
   const handleClearValues = () => {
     setSearchTerm('');
     setStatus(null);
+
+    if (fromOther) {
+      result.reset();
+      return;
+    }
+
     searchConcept({
       ...(fromOther
         ? { notInTerminologyId: terminologyId }
