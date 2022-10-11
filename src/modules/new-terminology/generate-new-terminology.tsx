@@ -11,6 +11,7 @@ interface GenerateNewTerminologyProps {
   lastModifiedBy?: string;
   terminologyId?: string;
   uri?: string;
+  origin?: string;
 }
 
 export default function generateNewTerminology({
@@ -22,6 +23,7 @@ export default function generateNewTerminology({
   lastModifiedBy,
   terminologyId,
   uri,
+  origin,
 }: GenerateNewTerminologyProps) {
   if (!data.contributors) {
     return;
@@ -126,7 +128,7 @@ export default function generateNewTerminology({
       {
         lang: '',
         regex: regex,
-        value: '',
+        value: origin ? origin : '',
       },
     ];
   }
@@ -134,6 +136,8 @@ export default function generateNewTerminology({
   if (uri) {
     postData.uri = uri;
   }
+
+  console.log(postData);
 
   return postData;
 }
