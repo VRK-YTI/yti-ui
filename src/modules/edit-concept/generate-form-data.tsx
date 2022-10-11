@@ -64,6 +64,7 @@ export default function generateFormData(
           hasPartConcept: [],
           relatedConceptInOther: [],
           matchInOther: [],
+          closeMatch: [],
         },
       },
     };
@@ -286,6 +287,27 @@ export default function generateFormData(
                     ?.map((l) => ({ [l.lang]: l.value }))
                     .reduce((l) => l) ?? {},
                 terminologyId: r.properties.targetGraph?.[0].value ?? '',
+                terminologyLabel: terminologyLabel
+                  ? Object.fromEntries(terminologyLabel)
+                  : {},
+              };
+            }
+          }) ?? [],
+        closeMatch:
+          conceptData.references.closeMatch?.map((m) => {
+            const terminologyLabel = new Map();
+            m.properties.vocabularyLabel?.forEach((l) => {
+              terminologyLabel.set(l.lang, l.value);
+            });
+
+            {
+              return {
+                id: m.id ?? '',
+                label:
+                  m.properties.prefLabel
+                    ?.map((l) => ({ [l.lang]: l.value }))
+                    .reduce((l) => l) ?? {},
+                terminologyId: m.properties.targetGraph?.[0].value ?? '',
                 terminologyLabel: terminologyLabel
                   ? Object.fromEntries(terminologyLabel)
                   : {},
