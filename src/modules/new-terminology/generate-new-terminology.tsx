@@ -137,8 +137,6 @@ export default function generateNewTerminology({
     postData.uri = uri;
   }
 
-  console.log(postData);
-
   return postData;
 }
 
