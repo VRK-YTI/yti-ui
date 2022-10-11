@@ -1,11 +1,10 @@
-import { GetServerSidePropsContext, NextApiResponse } from 'next';
+import { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import {
-  User,
   anonymousUser,
   UserProps,
 } from '@app/common/interfaces/user.interface';
-import withSession, { NextIronRequest } from './session';
+import withSession from './session';
 import { AppStore, wrapper } from '@app/store';
 import { ParsedUrlQuery } from 'querystring';
 import { Redirect } from 'next/dist/lib/load-custom-routes';
@@ -14,12 +13,7 @@ import { setLogin } from '@app/common/components/login/login.slice';
 import { CommonContextState } from '../components/common-context-provider';
 import { setAdminControls } from '../components/admin-controls/admin-controls.slice';
 
-export interface LocalHandlerParams {
-  req: NextIronRequest;
-  res: NextApiResponse;
-  params: ParsedUrlQuery;
-  query: ParsedUrlQuery;
-  locale: string;
+export interface LocalHandlerParams extends GetServerSidePropsContext {
   store: AppStore;
 }
 
@@ -38,35 +32,22 @@ export type CreateCommonGetServerSidePropsResult<T> = (
 >;
 
 export function createCommonGetServerSideProps<
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  T extends { [key: string]: any }
+  T extends { [key: string]: unknown }
 >(handler?: localHandler<T>): CreateCommonGetServerSidePropsResult<T> {
   return wrapper.getServerSideProps((store) => {
     return withSession<{ props: UserProps }>(
-      async ({
-        req,
-        res,
-        params,
-        query,
-        locale,
-      }: {
-        req: NextIronRequest;
-        res: NextApiResponse;
-        params: ParsedUrlQuery;
-        query: ParsedUrlQuery;
-        locale: string;
-      }) => {
+      async ({ req, res, resolvedUrl, params, query, locale }) => {
         const results = await handler?.({
           req,
           res,
+          resolvedUrl,
           params,
           query,
           locale,
           store,
         });
-        store.dispatch(
-          setLogin(req.session.get<User>('user') || anonymousUser)
-        );
+
+        store.dispatch(setLogin(req.session.user || anonymousUser));
 
         store.dispatch(
           setAdminControls(process.env.ADMIN_CONTROLS_DISABLED === 'true')
