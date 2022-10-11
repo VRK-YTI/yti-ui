@@ -628,17 +628,18 @@ export default function generateConcept({
       })
     : [];
 
-  let initialInOtherIds = initialValue
-    ? initialValue.references.exactMatch?.map((match) => match.identifier.id) ??
-      []
+  let initialInOtherIds: string[] = initialValue
+    ? initialValue.references.exactMatch
+        ?.map((match) => match.properties.targetId?.[0].value ?? '')
+        .filter((val) => val) ?? []
     : [];
 
   initialInOtherIds = initialValue
     ? [
         ...initialInOtherIds,
-        ...(initialValue.references.relatedMatch?.map(
-          (match) => match.identifier.id
-        ) ?? []),
+        ...(initialValue.references.relatedMatch
+          ?.map((match) => match.properties.targetId?.[0].value ?? '')
+          .filter((val) => val) ?? []),
       ]
     : initialInOtherIds;
 
