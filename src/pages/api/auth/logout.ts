@@ -1,14 +1,20 @@
-import withSession from '@app/common/utils/session';
+import { userCookieOptions } from '@app/common/utils/user-cookie-options';
+import { withIronSessionApiRoute } from 'iron-session/next';
 
-export default withSession(async (req, res) => {
-  const target = (req.query['target'] as string) ?? '/';
+export default withIronSessionApiRoute(
+  async function logout(req, res) {
+    const target = (req.query['target'] as string) ?? '/';
 
-  // invalidate cookie
-  res.setHeader(
-    'Set-Cookie',
-    'JSESSIONID=deleted; path=/terminology-api; expires=Thu, 01 Jan 1970 00:00:00 GMT'
-  );
+    // invalidate cookie
+    res.setHeader(
+      'Set-Cookie',
+      'JSESSIONID=deleted; path=/terminology-api; expires=Thu, 01 Jan 1970 00:00:00 GMT'
+    );
 
-  req.session.destroy();
-  res.redirect(target);
-});
+    req.session.destroy();
+    res.redirect(target);
+  },
+  {
+    ...userCookieOptions,
+  }
+);

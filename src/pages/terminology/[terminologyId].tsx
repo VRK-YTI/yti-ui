@@ -53,6 +53,10 @@ export default function TerminologyPage(props: TerminologyPageProps) {
 
 export const getServerSideProps = createCommonGetServerSideProps(
   async ({ store, query, params, locale }: LocalHandlerParams) => {
+    if (!params) {
+      throw new Error('Missing parameters for page');
+    }
+
     const id = Array.isArray(params.terminologyId)
       ? params.terminologyId[0]
       : params.terminologyId;
@@ -82,7 +86,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
       getConceptResult.initiate({
         urlState: urlState,
         id,
-        language: locale,
+        language: locale ?? 'fi',
       })
     );
     store.dispatch(getVocabularyCount.initiate(id));

@@ -81,10 +81,10 @@ export const getServerSideProps = createCommonGetServerSideProps(
     }
 
     store.dispatch(
-      getSearchResult.initiate({ urlState: urlState, language: locale })
+      getSearchResult.initiate({ urlState: urlState, language: locale ?? 'fi' })
     );
-    store.dispatch(getGroups.initiate(locale));
-    store.dispatch(getOrganizations.initiate(locale));
+    store.dispatch(getGroups.initiate(locale ?? 'fi'));
+    store.dispatch(getOrganizations.initiate(locale ?? 'fi'));
     store.dispatch(getCounts.initiate(null));
 
     await Promise.all(terminologyGetRunningOperationPromises());

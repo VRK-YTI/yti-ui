@@ -2,6 +2,7 @@
 import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 import { withIronSessionSsr } from 'iron-session/next';
 import { userCookieOptions } from './user-cookie-options';
+import { User } from '../interfaces/user.interface';
 
 function withSession<
   P extends { [key: string]: unknown } = { [key: string]: unknown }
@@ -14,3 +15,10 @@ function withSession<
 }
 
 export default withSession;
+
+declare module 'iron-session' {
+  interface IronSessionData {
+    user?: User;
+    cookies?: { [value: string]: string };
+  }
+}
