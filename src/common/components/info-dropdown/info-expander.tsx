@@ -261,6 +261,14 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
           <FormattedDate date={data.createdDate} />
           {data.createdBy && `, ${data.createdBy}`}
         </BasicBlock>
+        {data.properties.origin && (
+          <BasicBlock
+            title={t('vocabulary-info-copied-from')}
+            id="copied-from-terminology"
+          >
+            {data.properties.origin[0].value}
+          </BasicBlock>
+        )}
         <BasicBlock title={t('vocabulary-info-modified-at')} id="modified-at">
           <FormattedDate date={data.lastModifiedDate} />
           {data.lastModifiedBy && `, ${data.lastModifiedBy}`}

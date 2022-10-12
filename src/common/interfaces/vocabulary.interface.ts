@@ -9,6 +9,7 @@ export interface VocabularyInfoDTO
     contact?: Property[];
     description?: Property[];
     language?: Property[];
+    origin?: Property[];
     prefLabel?: Property[];
     priority?: Property[];
     status?: Property[];
