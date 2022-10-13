@@ -5,6 +5,11 @@ import { withIronSessionApiRoute } from 'iron-session/next';
 
 export default withIronSessionApiRoute(
   async function fakeLogin(req, res) {
+    if (process.env.ENV_TYPE === 'production') {
+      res.status(403).json({ msg: 'Access denied' });
+      return;
+    }
+
     let user: User | null = null;
     const cookies: { [key: string]: string } = {};
     const target = (req.query['target'] as string) ?? '/';
