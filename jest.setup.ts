@@ -1,5 +1,6 @@
 import '@testing-library/jest-dom';
 import * as crypto from 'crypto';
+import { TextEncoder, TextDecoder } from 'util';
 
 process.env.TERMINOLOGY_API_URL =
   'http://terminology-api.invalid/terminology-api';
@@ -20,3 +21,8 @@ Object.defineProperty(window, 'matchMedia', {
     dispatchEvent: jest.fn(),
   })),
 });
+
+// Workaround for session.save()
+//https://stackoverflow.com/a/68468204
+global.TextEncoder = TextEncoder;
+(global as any).TextDecoder = TextDecoder;

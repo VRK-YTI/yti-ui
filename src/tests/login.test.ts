@@ -1,8 +1,9 @@
-import { createMocks } from 'node-mocks-http';
+import { createRequest, createResponse } from 'node-mocks-http';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import login from '@app/pages/api/auth/login';
 import callback from '@app/pages/api/auth/callback';
+import { ApiRequest, ApiResponse, getHeader } from './test-utils';
 
 const fakeUser = {
   anonymous: false,
@@ -35,12 +36,13 @@ describe('api endpoint - login', () => {
   it('redirect to SSO', async () => {
     const targetPath = '/testable-target-path';
 
-    const { req, res } = createMocks({
+    const req = createRequest<ApiRequest>({
       method: 'GET',
       query: {
         target: targetPath,
       },
     });
+    const res = createResponse<ApiResponse>();
 
     await login(req, res);
 
@@ -57,7 +59,7 @@ describe('api endpoint - login', () => {
   it('callback on success', async () => {
     const targetPath = '/testable-target-path';
 
-    const { req, res } = createMocks({
+    const req = createRequest<ApiRequest>({
       method: 'GET',
       query: {
         target: targetPath,
@@ -70,6 +72,7 @@ describe('api endpoint - login', () => {
         _shibsession_123: 'foo',
       },
     });
+    const res = createResponse<ApiResponse>();
 
     mock
       .onGet(
@@ -81,7 +84,7 @@ describe('api endpoint - login', () => {
 
     // if successful, the api route will set some cookies for the browser
     expect(res.hasHeader('Set-Cookie')).toBeTruthy();
-    const setCookies = res.getHeader('Set-Cookie');
+    const setCookies = getHeader(res.getHeader('Set-Cookie'));
     expect(setCookies).toHaveLength(2);
 
     // JSESSIONID from spring API

@@ -1,10 +1,7 @@
 import React from 'react';
 import Layout from '@app/layouts/layout';
 import { SSRConfig, useTranslation } from 'next-i18next';
-import {
-  createCommonGetServerSideProps,
-  LocalHandlerParams,
-} from '@app/common/utils/create-getserversideprops';
+import { createCommonGetServerSideProps } from '@app/common/utils/create-getserversideprops';
 import {
   CommonContextProvider,
   CommonContextState,
