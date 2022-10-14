@@ -55,6 +55,11 @@ import { UserService } from 'yti-common-ui/services/user.service';
                           class="dropdown-item"
                           (click)="selectFile()"
                           translate>Import concepts</button>
+                  <a id="vocabulary_excel_export_button"
+                     *ngIf="canExport"
+                     class="dropdown-item"
+                     href='/terminology-api/api/v1/export/{{graphId}}?format=xlsx'
+                     translate>Export terminology Excel</a>
                 </div>
               </div>
             </div>
@@ -159,7 +164,7 @@ export class VocabularyMainComponent implements OnDestroy {
   }
 
   get showMenu(): boolean {
-    return this.canSubscribe || this.canImport;
+    return this.canSubscribe || this.canImport || this.canExport;
   }
 
   get canSubscribe(): boolean {
@@ -172,6 +177,14 @@ export class VocabularyMainComponent implements OnDestroy {
     }
 
     return !this.isEditing() && this.authorizationManager.canEdit(this.vocabulary);
+  }
+
+  get canExport(): boolean {
+    if (!this.vocabulary) {
+      return false;
+    }
+
+    return !this.isEditing();
   }
 
   get canAddSubscription(): boolean {
