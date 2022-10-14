@@ -692,7 +692,11 @@ export default function generateConcept({
 
   const initialTermIds: string[] = initialValue
     ? Object.keys(initialValue?.references).flatMap((key) => {
-        if (key === 'exactMatch' || key === 'relatedMatch') {
+        if (
+          key === 'exactMatch' ||
+          key === 'relatedMatch' ||
+          key === 'closeMatch'
+        ) {
           return [];
         }
 
@@ -706,7 +710,7 @@ export default function generateConcept({
 
   let initialInOtherIds: string[] = initialValue
     ? initialValue.references.exactMatch
-        ?.map((match) => match.properties.targetId?.[0].value ?? '')
+        ?.map((match) => match.id ?? '')
         .filter((val) => val) ?? []
     : [];
 
@@ -714,7 +718,7 @@ export default function generateConcept({
     ? [
         ...initialInOtherIds,
         ...(initialValue.references.relatedMatch
-          ?.map((match) => match.properties.targetId?.[0].value ?? '')
+          ?.map((match) => match.id ?? '')
           .filter((val) => val) ?? []),
       ]
     : initialInOtherIds;
@@ -722,9 +726,9 @@ export default function generateConcept({
   initialInOtherIds = initialValue
     ? [
         ...initialInOtherIds,
-        ...(initialValue.references.closeMatch?.map(
-          (match) => match.identifier.id
-        ) ?? []),
+        ...(initialValue.references.closeMatch
+          ?.map((match) => match.id ?? '')
+          .filter((val) => val) ?? []),
       ]
     : initialInOtherIds;
 
@@ -736,6 +740,7 @@ export default function generateConcept({
     ...data.basicInformation.relationalInfo.relatedConceptInOther.map(
       (related) => related.id
     ),
+    ...data.basicInformation.relationalInfo.closeMatch.map((close) => close.id),
   ];
 
   let deleteVal =
