@@ -135,7 +135,7 @@ export default function RelationModalContent({
     if (result.isSuccess) {
       setSearchResults(result.data.concepts);
       setTotalResults(result.data.totalHitCount);
-      if (!initialized) {
+      if (!initialized && !fromOther) {
         setChosen(
           result.data.concepts.filter((c) =>
             initialChosenConcepts.includes(c.id)
@@ -148,6 +148,7 @@ export default function RelationModalContent({
     setSearchResults,
     setTotalResults,
     setChosen,
+    fromOther,
     result,
     initialChosenConcepts,
     initialized,
