@@ -277,6 +277,9 @@ export default function RemovalModal({
       return (
         <>
           <Button onClick={() => handleClick()}>{t('try-again')}</Button>
+          <Button variant="secondary" onClick={() => setVisible(false)}>
+            {t('cancel-variant')}
+          </Button>
         </>
       );
     }

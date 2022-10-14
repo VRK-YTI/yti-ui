@@ -3,6 +3,7 @@
   "error-occured": "Tapahtui virhe",
   "error-occured_access-request": "Käyttöoikeuksien pyynnössä ilmeni ongelma",
   "error-occured_counts": "Tilojen ja tietoalueiden lukumäärien haussa ilmeni ongelma",
+  "error-occured_download-excel": "Sanaston latauksessa ilmeni ongelma",
   "error-occured_groups": "Tietoalueiden haussa ilmeni ongelma",
   "error-occured_organization": "Organisaatioiden haussa ilmeni ongelma",
   "error-occured_subscription": "Sähköpostitilauksen toiminnassa ilmeni ongelma",

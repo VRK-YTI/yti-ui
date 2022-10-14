@@ -8,6 +8,7 @@ import {
   Heading,
   Icon,
   RadioButtonGroup,
+  SingleSelect,
   Text,
   Textarea,
 } from 'suomifi-ui-components';
@@ -91,8 +92,7 @@ export const TermEquivalencyBlock = styled(Block)`
 export const RadioButtonGroupSpaced = styled(RadioButtonGroup)<{
   $isInvalid?: boolean;
 }>`
-  margin: ${(props) => props.theme.suomifi.spacing.m} 0;
-  max-width: 290px;
+  margin: ${(props) => props.theme.suomifi.spacing.m} 0 0 0;
 
   .fi-hint-text {
     font-weight: 600;
@@ -147,4 +147,8 @@ export const TermFormBottomBlock = styled(Block)`
 export const TermFormRemoveButton = styled(Button)`
   height: min-content;
   white-space: nowrap;
+`;
+
+export const LanguageSingleSelect = styled(SingleSelect)`
+  margin-top: ${(props) => props.theme.suomifi.spacing.s};
 `;
