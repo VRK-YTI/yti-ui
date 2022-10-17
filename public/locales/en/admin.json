@@ -92,7 +92,7 @@
   "content-creator": "Contributor",
   "continue": "Continue",
   "contributor": "Contributor",
-  "copy-as-base": "Copy as a base",
+  "copy-as-base": "Create new version of terminology",
   "copy-as-base-description": "The prefix is a visible part of a vocabularies url-address and as such a part of the addresses of the concepts within the vocabulary",
   "copy-from-terminology-as-base": "Create a new version of the terminology",
   "copying-terminology": "Copying terminology",
@@ -178,7 +178,6 @@
   "narrower-concept-chip-label": "Chosen narrower concepts",
   "narrower-concept-description": "Concept that is in hierarchical relation with this concept and contains semantic meaning of this concept.",
   "new-collection": "New collection",
-  "new-collection-to-terminology": "New collection to terminology",
   "new-concept-title": "New Concept",
   "new-term": "New term",
   "new-term-modal-description": "All fields are required unless marked optional. It is recommended to fill in all the information.",
@@ -319,7 +318,5 @@
   "word-class-available": "Available word classes",
   "word-class-hint": "Toggle only if word class is either an adjective or a verb",
   "word-class-no-items": "No word classes available",
-  "you-can-copy": "You can copy the terminology as a base for a newer version, where the original terminology will exist until the newer terminology is ready",
-  "you-have-right-edit-terminology": "You have the rights to edit this terminology",
-  "you-have-right-new-collection": "You have the rights to create new collections to this terminology"
+  "you-can-copy": "You can copy the terminology as a base for a newer version, where the original terminology will exist until the newer terminology is ready"
 }
