@@ -235,10 +235,10 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
           {t('vocabulary-info-vocabulary-export-description')}
         </BasicBlock>
 
+        <Separator isLarge />
+
         {!user.anonymous && (
           <>
-            <Separator isLarge />
-
             <BasicBlock
               title={t('email-subscription')}
               extra={
