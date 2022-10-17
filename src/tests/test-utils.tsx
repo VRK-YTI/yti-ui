@@ -3,8 +3,13 @@ import { ThemeProvider } from 'styled-components';
 import { SWRConfig } from 'swr';
 import { lightTheme } from '@app/layouts/theme';
 import { NextIronContext } from '@app/store';
-import httpMocks, { RequestOptions } from 'node-mocks-http';
+import httpMocks, {
+  createRequest,
+  createResponse,
+  RequestOptions,
+} from 'node-mocks-http';
 import { ParsedUrlQuery } from 'querystring';
+import { NextApiRequest, NextApiResponse } from 'next';
 
 interface TestUtilsProps {
   children: React.ReactNode;
@@ -33,3 +38,20 @@ export const getMockContext = (options?: {
   resolvedUrl: options?.resolvedUrl ?? '',
   locale: options?.locale ?? 'en',
 });
+
+export type ApiRequest = NextApiRequest & ReturnType<typeof createRequest>;
+export type ApiResponse = NextApiResponse & ReturnType<typeof createResponse>;
+
+export function getHeader(
+  header: string | number | string[] | undefined
+): string[] {
+  if (Array.isArray(header)) {
+    return header;
+  }
+
+  if (typeof header === 'number' || typeof header === 'string') {
+    return [header.toString()];
+  }
+
+  return [];
+}

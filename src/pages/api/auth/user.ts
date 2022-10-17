@@ -1,18 +1,24 @@
 import { anonymousUser } from '@app/common/interfaces/user.interface';
-import withSession from '@app/common/utils/session';
+import { userCookieOptions } from '@app/common/utils/user-cookie-options';
+import { withIronSessionApiRoute } from 'iron-session/next';
 
-export default withSession(async (req, res) => {
-  const user = req.session.get('user');
+export default withIronSessionApiRoute(
+  async function user(req, res) {
+    const user = req.session.user;
 
-  if (user) {
-    // in a real world application you might read the user id from the session and then do a database request
-    // to get more information on the user if needed
-    res.json({
-      ...user,
-    });
-  } else {
-    res.json({
-      ...anonymousUser,
-    });
+    if (user) {
+      // in a real world application you might read the user id from the session and then do a database request
+      // to get more information on the user if needed
+      res.json({
+        ...user,
+      });
+    } else {
+      res.json({
+        ...anonymousUser,
+      });
+    }
+  },
+  {
+    ...userCookieOptions,
   }
-});
+);
