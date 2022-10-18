@@ -22,7 +22,12 @@ import { getPropertyValue } from '@app/common/components/property-value/get-prop
 import Separator from '@app/common/components/separator';
 import DetailsExpander from './details-expander';
 import ConceptSidebar from './concept-sidebar';
-import { MainContent, PageContent } from './concept.styles';
+import {
+  EditToolsBlock,
+  MainContent,
+  PageContent,
+  PropertyList,
+} from './concept.styles';
 import { useStoreDispatch } from '@app/store';
 import { useRouter } from 'next/router';
 import { setTitle } from '@app/common/components/title/title.slice';
@@ -40,6 +45,7 @@ import { BasicBlockExtraWrapper } from '@app/common/components/block/block.style
 import Link from 'next/link';
 import { translateStatus } from '@app/common/utils/translation-helpers';
 import isEmail from 'validator/lib/isEmail';
+import RemovalModal from '@app/common/components/removal-modal';
 
 export interface ConceptProps {
   terminologyId: string;
@@ -152,18 +158,6 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
             </Badge>
           </BadgeBar>
 
-          <MultilingualPropertyBlock
-            title={<h2>{t('field-definition')}</h2>}
-            data={concept?.properties.definition}
-          />
-          <MultilingualPropertyBlock
-            title={<h2>{t('field-example')}</h2>}
-            data={concept?.properties.example}
-          />
-          <PropertyBlock
-            title={t('field-subject-area')}
-            property={concept?.properties.subjectArea}
-          />
           <TermBlock
             title={<h2>{t('field-terms-label')}</h2>}
             data={[
@@ -190,8 +184,23 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
           />
 
           <MultilingualPropertyBlock
+            title={<h2>{t('field-definition')}</h2>}
+            data={concept?.properties.definition}
+          />
+
+          <PropertyBlock
+            title={t('field-subject-area')}
+            property={concept?.properties.subjectArea}
+          />
+
+          <MultilingualPropertyBlock
             title={<h2>{t('field-note')}</h2>}
             data={concept?.properties.note}
+          />
+
+          <MultilingualPropertyBlock
+            title={<h2>{t('field-example')}</h2>}
+            data={concept?.properties.example}
           />
 
           <DetailsExpander concept={concept} />
@@ -199,31 +208,48 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
           <Separator isLarge />
 
           {HasPermission({
-            actions: 'EDIT_CONCEPT',
+            actions: ['EDIT_CONCEPT', 'DELETE_CONCEPT'],
             targetOrganization: terminology?.references.contributor,
           }) && (
             <>
               <BasicBlock
-                title={t('edit-concept')}
+                title={t('edit-collection-block-title')}
                 extra={
                   <BasicBlockExtraWrapper>
-                    <Link
-                      href={`/terminology/${terminologyId}/concept/${conceptId}/edit`}
-                    >
-                      <Button
-                        variant="secondary"
-                        icon="edit"
-                        id="edit-concept-button"
-                      >
-                        {t('edit-concept')}
-                      </Button>
-                    </Link>
+                    <EditToolsBlock>
+                      {HasPermission({
+                        actions: ['EDIT_CONCEPT'],
+                        targetOrganization: terminology?.references.contributor,
+                      }) && (
+                        <Link
+                          href={`/terminology/${terminologyId}/concept/${conceptId}/edit`}
+                        >
+                          <Button
+                            variant="secondary"
+                            icon="edit"
+                            id="edit-concept-button"
+                          >
+                            {t('edit-concept')}
+                          </Button>
+                        </Link>
+                      )}
+                      {HasPermission({
+                        actions: ['DELETE_CONCEPT'],
+                        targetOrganization: terminology?.references.contributor,
+                      }) && (
+                        <RemovalModal
+                          isDisabled={false}
+                          nonDescriptive={true}
+                          removalData={{ type: 'concept', data: concept }}
+                          targetId={concept?.id ?? ''}
+                          targetName={prefLabel}
+                        />
+                      )}
+                    </EditToolsBlock>
                   </BasicBlockExtraWrapper>
                 }
-              >
-                {t('edit-concept-rights')}
-              </BasicBlock>
-              <Separator />
+              />
+              <Separator isLarge />
             </>
           )}
 
@@ -231,12 +257,23 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
             {t('additional-technical-information', { ns: 'common' })}
           </VisuallyHidden>
 
-          <PropertyBlock
+          <BasicBlock
             title={t('vocabulary-info-organization', { ns: 'common' })}
-            property={
-              terminology?.references.contributor?.[0]?.properties.prefLabel
-            }
-          />
+            id="organization"
+          >
+            <PropertyList $smBot={true}>
+              {terminology?.references.contributor
+                ?.filter((c) => c && c.properties.prefLabel)
+                .map((contributor) => (
+                  <li key={contributor.id}>
+                    <PropertyValue
+                      property={contributor?.properties.prefLabel}
+                    />
+                  </li>
+                ))}
+            </PropertyList>
+          </BasicBlock>
+
           <BasicBlock title={t('vocabulary-info-created-at', { ns: 'common' })}>
             <FormattedDate date={concept?.createdDate} />
             {concept?.createdBy && `, ${concept.createdBy}`}

@@ -25,6 +25,7 @@ export interface BasicInfo {
     [key: string]: string;
   };
   example: ListType[];
+  status: string;
   subject: string;
   note: ListType[];
   diagramAndSource: {
@@ -48,6 +49,7 @@ export interface BasicInfo {
     hasPartConcept: RelationInfoType[];
     relatedConceptInOther: RelationInfoType[];
     matchInOther: RelationInfoType[];
+    closeMatch: RelationInfoType[];
   };
 }
 

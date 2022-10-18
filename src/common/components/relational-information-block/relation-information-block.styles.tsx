@@ -23,6 +23,7 @@ export const SearchBlock = styled(Block)<{ $isSmall?: boolean }>`
   border: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
   display: flex;
   flex-direction: column;
+  width: 100%;
 
   > div {
     display: flex;
@@ -39,4 +40,10 @@ export const SearchBlock = styled(Block)<{ $isSmall?: boolean }>`
     padding: ${(props) => (props.$isSmall ? '10px' : '10px 0px 10px 20px')};
     border-top: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
   }
+`;
+
+export const RelationalModalBlock = styled(Block)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 `;

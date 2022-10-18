@@ -228,4 +228,19 @@ describe('has-permission', () => {
 
     expect(rights).toBe(false);
   });
+
+  it('should not have rights to delete a concept from a different organization', () => {
+    const user = createMockUser(
+      { foo: ['TERMINOLOGY_EDITOR'] },
+      { TERMINOLOGY_EDITOR: ['temp'] }
+    );
+
+    const rights = checkPermission({
+      user: user,
+      actions: ['DELETE_CONCEPT'],
+      targetOrganizations: ['temp'],
+    });
+
+    expect(rights).toBe(false);
+  });
 });

@@ -3,12 +3,16 @@
   "error-occured": "",
   "error-occured_access-request": "",
   "error-occured_counts": "",
+  "error-occured_download-excel": "",
   "error-occured_groups": "",
   "error-occured_organization": "",
   "error-occured_subscription": "",
   "error-occured_terminology-search": "",
   "error-occured_unhandled-error": "",
   "error-occurred_internal-server": "",
+  "error-occurred_remove-collection": "",
+  "error-occurred_remove-concept": "",
+  "error-occurred_remove-terminology": "",
   "error-occurred_session": "",
   "error-occurred_unauthenticated": ""
 }

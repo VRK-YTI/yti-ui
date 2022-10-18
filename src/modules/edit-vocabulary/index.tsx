@@ -59,6 +59,7 @@ export default function EditVocabulary({ terminologyId }: EditVocabularyProps) {
       lastModifiedBy: `${user.firstName} ${user.lastName}`,
       terminologyId: terminologyId,
       uri: info?.uri,
+      origin: info?.properties.origin?.[0].value,
     });
 
     if (!newData) {

@@ -40,6 +40,7 @@ export default function generateFormData(
       basicInformation: {
         definition: {},
         example: [],
+        status: 'DRAFT',
         subject: '',
         note: [],
         diagramAndSource: {
@@ -63,6 +64,7 @@ export default function generateFormData(
           hasPartConcept: [],
           relatedConceptInOther: [],
           matchInOther: [],
+          closeMatch: [],
         },
       },
     };
@@ -206,7 +208,7 @@ export default function generateFormData(
 
             {
               return {
-                id: r.properties?.targetId?.[0]?.value ?? '',
+                id: r.id ?? '',
                 label:
                   r.properties?.prefLabel
                     ?.map((l) => {
@@ -279,7 +281,7 @@ export default function generateFormData(
 
             {
               return {
-                id: r.properties?.targetId?.[0]?.value ?? '',
+                id: r.id ?? '',
                 label:
                   r.properties?.prefLabel
                     ?.map((l) => ({ [l.lang]: l.value }))
@@ -291,7 +293,29 @@ export default function generateFormData(
               };
             }
           }) ?? [],
+        closeMatch:
+          conceptData.references.closeMatch?.map((m) => {
+            const terminologyLabel = new Map();
+            m.properties.vocabularyLabel?.forEach((l) => {
+              terminologyLabel.set(l.lang, l.value);
+            });
+
+            {
+              return {
+                id: m.id ?? '',
+                label:
+                  m.properties.prefLabel
+                    ?.map((l) => ({ [l.lang]: l.value }))
+                    .reduce((l) => l) ?? {},
+                terminologyId: m.properties.targetGraph?.[0].value ?? '',
+                terminologyLabel: terminologyLabel
+                  ? Object.fromEntries(terminologyLabel)
+                  : {},
+              };
+            }
+          }) ?? [],
       },
+      status: conceptData.properties.status?.[0].value ?? 'DRAFT',
       subject: conceptData.properties.subjectArea?.[0].value ?? '',
     },
   };

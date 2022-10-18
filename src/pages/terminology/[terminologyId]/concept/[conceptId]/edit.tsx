@@ -58,6 +58,10 @@ export default function EditConcept(props: NewConceptPageProps) {
 
 export const getServerSideProps = createCommonGetServerSideProps(
   async ({ store, params }: LocalHandlerParams) => {
+    if (!params) {
+      throw new Error('Missing parameters for page');
+    }
+
     const terminologyId = Array.isArray(params.terminologyId)
       ? params.terminologyId[0]
       : params.terminologyId;

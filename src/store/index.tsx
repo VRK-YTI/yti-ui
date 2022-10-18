@@ -18,12 +18,13 @@ import { titleSlice } from '@app/common/components/title/title.slice';
 import { subscriptionApi } from '@app/common/components/subscription/subscription.slice';
 import { accessRequestApi } from '@app/common/components/access-request/access-request.slice';
 import { adminControlsSlice } from '@app/common/components/admin-controls/admin-controls.slice';
-import { excelApi } from '@app/common/components/excel/excel.slice';
-import { NextIronRequest } from '@app/common/utils/session';
+import { importApi } from '@app/common/components/import/import.slice';
 import { modifyApi } from '@app/common/components/modify/modify.slice';
+import { removeApi } from '@app/common/components/remove/remove.slice';
+import { NextApiRequest } from 'next';
 
 // make Context from next-redux-wrapper compatible with next-iron-session
-export type NextIronContext = Context | (Context & { req: NextIronRequest });
+export type NextIronContext = Context | (Context & { req: NextApiRequest });
 
 export function makeStore(ctx: NextIronContext) {
   return configureStore({
@@ -42,8 +43,9 @@ export function makeStore(ctx: NextIronContext) {
       [subscriptionApi.reducerPath]: subscriptionApi.reducer,
       [accessRequestApi.reducerPath]: accessRequestApi.reducer,
       [adminControlsSlice.name]: adminControlsSlice.reducer,
-      [excelApi.reducerPath]: excelApi.reducer,
+      [importApi.reducerPath]: importApi.reducer,
       [modifyApi.reducerPath]: modifyApi.reducer,
+      [removeApi.reducerPath]: removeApi.reducer,
     },
 
     middleware: (getDefaultMiddleware) =>
@@ -55,9 +57,9 @@ export function makeStore(ctx: NextIronContext) {
         countsApi.middleware,
         subscriptionApi.middleware,
         accessRequestApi.middleware,
-        excelApi.middleware,
+        importApi.middleware,
         modifyApi.middleware,
-        loginApi.middleware
+        removeApi.middleware
       ),
 
     // Development tools should be available only in development environments

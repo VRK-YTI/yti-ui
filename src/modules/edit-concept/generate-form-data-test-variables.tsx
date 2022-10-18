@@ -31,6 +31,7 @@ export const emptyFormExpected = {
   basicInformation: {
     definition: {},
     example: [],
+    status: 'DRAFT',
     subject: '',
     note: [],
     diagramAndSource: {
@@ -54,6 +55,7 @@ export const emptyFormExpected = {
       hasPartConcept: [],
       relatedConceptInOther: [],
       matchInOther: [],
+      closeMatch: [],
     },
   },
 };
@@ -218,6 +220,7 @@ export const simpleDataExpected = {
   basicInformation: {
     definition: {},
     example: [],
+    status: 'DRAFT',
     subject: '',
     note: [],
     diagramAndSource: {
@@ -241,6 +244,7 @@ export const simpleDataExpected = {
       hasPartConcept: [],
       relatedConceptInOther: [],
       matchInOther: [],
+      closeMatch: [],
     },
   },
 };
@@ -2200,6 +2204,72 @@ export const extensiveDataReturned = generateFormData(
           },
         },
       ],
+      closeMatch: [
+        {
+          id: 'a87ae2c2-3c16-494a-9f82-928fc1840a1f',
+          code: 'concept-link-2000',
+          uri: 'http://uri.suomi.fi/terminology/sanasto/concept-link-2000',
+          number: 0,
+          createdBy: 'Admin User',
+          createdDate: '1970-01-01T00:00:00.000Z',
+          lastModifiedBy: 'Admin User',
+          lastModifiedDate: '1970-01-01T00:00:00.000Z',
+          type: {
+            id: 'ConceptLink',
+            graph: {
+              id: '1987987-987-987987',
+            },
+            uri: '',
+          },
+          properties: {
+            prefLabel: [
+              {
+                lang: 'fi',
+                value: 'demo',
+                regex: '(?s)^.*$',
+              },
+            ],
+            vocabularyLabel: [
+              {
+                lang: 'fi',
+                value: 'testi',
+                regex: '(?s)^.*$',
+              },
+              {
+                lang: 'en',
+                value: 'test',
+                regex: '(?s)^.*$',
+              },
+            ],
+            targetId: [
+              {
+                lang: '',
+                value: '7b179ea2-b28c-497e-9e81-6ff254235ea1',
+                regex: '(?s)^.*$',
+              },
+            ],
+            targetGraph: [
+              {
+                lang: '',
+                value: 'ec43f161-b85d-4786-a4b9-d0da52edfba1',
+                regex: '(?s)^.*$',
+              },
+            ],
+          },
+          references: {},
+          referrers: {},
+          identifier: {
+            id: 'a87ae2c2-3c16-494a-9f82-928fc1840a1f',
+            type: {
+              id: 'ConceptLink',
+              graph: {
+                id: '987987-987-987987',
+              },
+              uri: '',
+            },
+          },
+        },
+      ],
     },
     referrers: {},
     type: {
@@ -2434,7 +2504,7 @@ export const extensiveDataExpected = {
       ],
       matchInOther: [
         {
-          id: '7b179ea2-b28c-497e-9e81-6ff254235ea1',
+          id: '8ee81e29-e0f1-4a23-b23b-28a976fcf87f',
           label: {
             fi: 'demo',
           },
@@ -2471,7 +2541,20 @@ export const extensiveDataExpected = {
       ],
       relatedConceptInOther: [
         {
-          id: '7b179ea2-b28c-497e-9e81-6ff254235ea1',
+          id: 'a87ae2c2-3c16-494a-9f82-928fc1840a1e',
+          label: {
+            fi: 'demo',
+          },
+          terminologyId: 'ec43f161-b85d-4786-a4b9-d0da52edfba1',
+          terminologyLabel: {
+            fi: 'testi',
+            en: 'test',
+          },
+        },
+      ],
+      closeMatch: [
+        {
+          id: 'a87ae2c2-3c16-494a-9f82-928fc1840a1f',
           label: {
             fi: 'demo',
           },
@@ -2483,6 +2566,7 @@ export const extensiveDataExpected = {
         },
       ],
     },
+    status: 'DRAFT',
     subject: 'aihealue',
   },
 };

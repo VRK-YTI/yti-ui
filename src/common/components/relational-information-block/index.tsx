@@ -18,9 +18,8 @@ import {
 } from 'suomifi-ui-components';
 import { useBreakpoints } from '../media-query/media-query-context';
 import { ChipBlock } from './relation-information-block.styles';
+import RelationModalContent from './relational-modal-content';
 import RenderChosen from './render-chosen';
-import RenderConcepts from './render-concepts';
-import Search from './search';
 
 interface RelationalInformationBlockProps {
   infoKey: string;
@@ -43,6 +42,7 @@ export default function RelationalInformationBlock({
   updateData,
   fromOther,
 }: RelationalInformationBlockProps) {
+  const [chosen, setChosen] = useState<Concepts[]>([]);
   const { t } = useTranslation('admin');
   const router = useRouter();
   const terminologyId = Array.isArray(router.query.terminologyId)
@@ -67,6 +67,9 @@ export default function RelationalInformationBlock({
 
   const handleChipClick = (concepts: RelationInfoType[]) => {
     setSelectedConcepts(concepts);
+    setChosen(
+      chosen.filter((c) => concepts.map((concept) => concept.id).includes(c.id))
+    );
     updateData(infoKey, concepts);
   };
 
@@ -86,6 +89,8 @@ export default function RelationalInformationBlock({
             terminologyId={terminologyId}
             chipLabel={chipLabel}
             fromOther={fromOther}
+            chosen={chosen}
+            setChosen={setChosen}
           />
 
           {selectedConcepts?.length > 0 ? (
@@ -151,6 +156,8 @@ interface ManageRelationalInfoModalProps {
   setSelectedConcepts: (value: Concepts[]) => void;
   terminologyId: string;
   chipLabel: string;
+  chosen: Concepts[];
+  setChosen: (value: Concepts[]) => void;
   fromOther?: boolean;
 }
 
@@ -161,34 +168,22 @@ function ManageRelationalInfoModal({
   terminologyId,
   chipLabel,
   fromOther,
+  chosen,
+  setChosen,
 }: ManageRelationalInfoModalProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const [visible, setVisible] = useState(false);
   const [showChosen, setShowChosen] = useState(false);
   const [searchResults, setSearchResults] = useState<Concepts[]>([]);
-  const [chosen, setChosen] = useState<Concepts[]>([]);
-
-  const handleSetSearchResults = (value: Concepts[]) => {
-    if (value !== searchResults) {
-      setSearchResults(value);
-      setChosen(
-        value.filter((concept) => selectedConceptIds.includes(concept.id))
-      );
-    }
-  };
 
   const handleClose = () => {
     setVisible(false);
     setShowChosen(false);
-    setSelectedConcepts(
-      searchResults.filter((result) => selectedConceptIds.includes(result.id))
-    );
-    setChosen([]);
+    setSearchResults([]);
   };
 
   const handleChange = () => {
-    handleClose();
     const choseWithoutHtml = chosen.map((concept) => ({
       ...concept,
       label: Object.fromEntries(
@@ -199,12 +194,15 @@ function ManageRelationalInfoModal({
       ),
     }));
     setSelectedConcepts(choseWithoutHtml);
+    handleClose();
   };
 
   const handleSetVisible = () => {
-    setChosen(
-      searchResults.filter((result) => selectedConceptIds.includes(result.id))
-    );
+    if (!fromOther) {
+      setChosen(
+        searchResults.filter((result) => selectedConceptIds.includes(result.id))
+      );
+    }
     setVisible(true);
   };
 
@@ -227,18 +225,14 @@ function ManageRelationalInfoModal({
         <ModalContent>
           <div hidden={showChosen}>
             <ModalTitle>{buttonTitle}</ModalTitle>
-
-            <Search
-              setSearchResults={handleSetSearchResults}
-              terminologyId={terminologyId}
-              fromOther={fromOther ? true : false}
-            />
-            <RenderConcepts
-              concepts={searchResults}
+            <RelationModalContent
+              fromOther={fromOther}
               chosen={chosen}
               setChosen={setChosen}
+              searchResults={searchResults}
+              setSearchResults={setSearchResults}
               terminologyId={terminologyId}
-              fromOther={fromOther ? true : false}
+              initialChosenConcepts={selectedConceptIds}
             />
           </div>
 

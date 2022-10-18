@@ -1,7 +1,12 @@
+import FormFooterAlert from '@app/common/components/form-footer-alert';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import Separator from '@app/common/components/separator';
 import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from '@app/common/utils/constants';
-import { translateLanguage } from '@app/common/utils/translation-helpers';
+import {
+  translateEditConceptError,
+  translateLanguage,
+  translateWordClass,
+} from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import {
@@ -23,6 +28,7 @@ import {
   CheckboxBlock,
   DropdownBlock,
   GrammaticalBlock,
+  LanguageSingleSelect,
   MediumHeading,
   ModalDescription,
   RadioButtonGroupSpaced,
@@ -35,12 +41,14 @@ interface NewTermModalProps {
   setVisible: (value: boolean) => void;
   languages: string[];
   appendTerm: (value: ConceptTermType) => void;
+  recommendedTermLangs: string[];
 }
 
 export default function NewTermModal({
   setVisible,
   languages,
   appendTerm,
+  recommendedTermLangs,
 }: NewTermModalProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -48,6 +56,7 @@ export default function NewTermModal({
     prefLabel: false,
     termType: false,
     language: false,
+    recommendedTermDuplicate: false,
   });
   const [isHomographic, setIsHomographic] = useState(false);
   const [termData, setTermData] = useState<ConceptTermType>({
@@ -72,6 +81,17 @@ export default function NewTermModal({
     wordClass: '',
   });
 
+  const wordClasses = [
+    {
+      labelText: translateWordClass('adjective', t),
+      uniqueItemId: 'adjective',
+    },
+    {
+      labelText: translateWordClass('verb', t),
+      uniqueItemId: 'verb',
+    },
+  ];
+
   const handleUpdate = ({ key, value }: TermFormUpdate) => {
     let updatedTerm = termData;
     updatedTerm = {
@@ -83,7 +103,7 @@ export default function NewTermModal({
       Object.keys(invalidData).includes(key) &&
       invalidData[key as keyof typeof invalidData]
     ) {
-      setInvalidData(validateFormData(updatedTerm));
+      setInvalidData(validateFormData(updatedTerm, recommendedTermLangs));
     }
 
     setTermData(updatedTerm);
@@ -97,7 +117,7 @@ export default function NewTermModal({
   };
 
   const handleClick = () => {
-    const invalidKeys = validateFormData(termData);
+    const invalidKeys = validateFormData(termData, recommendedTermLangs);
     setInvalidData(invalidKeys);
 
     if (
@@ -152,6 +172,28 @@ export default function NewTermModal({
           />
         )}
 
+        <LanguageSingleSelect
+          ariaOptionsAvailableText={t('available-languages')}
+          clearButtonLabel=""
+          items={languages.map((language) => ({
+            labelText: `${translateLanguage(
+              language,
+              t
+            )} ${language.toUpperCase()}`,
+            uniqueItemId: language,
+          }))}
+          labelText={t('language')}
+          noItemsText={t('no-languages-available')}
+          onItemSelectionChange={(e) =>
+            handleUpdate({ key: 'language', value: e?.uniqueItemId || '' })
+          }
+          status={
+            invalidData.language || invalidData.recommendedTermDuplicate
+              ? 'error'
+              : undefined
+          }
+        />
+
         <RadioButtonGroupSpaced
           labelText={t('term-type')}
           name="term-type-radio-button-group"
@@ -159,8 +201,17 @@ export default function NewTermModal({
           groupHintText={
             invalidData.termType ? t('term-type-error-msg') : undefined
           }
-          $isInvalid={invalidData.termType}
+          $isInvalid={
+            invalidData.termType || invalidData.recommendedTermDuplicate
+          }
         >
+          <RadioButton
+            value="recommended-term"
+            hintText={t('recommended-term-description')}
+            disabled={prefLabelInLangExists(termData, recommendedTermLangs)}
+          >
+            {t('recommended-term', { ns: 'common' })}
+          </RadioButton>
           <RadioButton value="synonym" hintText={t('synonym-description')}>
             {t('synonym')}
           </RadioButton>
@@ -177,24 +228,6 @@ export default function NewTermModal({
             {t('search-term')}
           </RadioButton>
         </RadioButtonGroupSpaced>
-
-        <SingleSelect
-          ariaOptionsAvailableText={t('available-languages')}
-          clearButtonLabel=""
-          items={languages.map((language) => ({
-            labelText: `${translateLanguage(
-              language,
-              t
-            )} ${language.toUpperCase()}`,
-            uniqueItemId: language,
-          }))}
-          labelText={t('language')}
-          noItemsText={t('no-languages-available')}
-          onItemSelectionChange={(e) =>
-            handleUpdate({ key: 'language', value: e?.uniqueItemId || '' })
-          }
-          status={invalidData.language ? 'error' : undefined}
-        />
 
         <DropdownBlock
           labelText={t('term-status-label')}
@@ -320,21 +353,11 @@ export default function NewTermModal({
         </MediumHeading>
 
         <GrammaticalBlock>
-          <SingleSelect
-            ariaOptionsAvailableText={t('available-term-styles')}
-            clearButtonLabel={t('clear-button-label')}
+          <TextInput
             labelText={t('term-style')}
             optionalText={t('optional')}
-            noItemsText={t('no-term-styles-available')}
-            visualPlaceholder={t('choose-term-style')}
-            items={[
-              {
-                labelText: t('term-style.spoken-form', { ns: 'common' }),
-                uniqueItemId: 'spoken-form',
-              },
-            ]}
-            onItemSelectionChange={(e) =>
-              handleUpdate({ key: 'termStyle', value: e?.uniqueItemId || '' })
+            onBlur={(e) =>
+              handleUpdate({ key: 'termStyle', value: e.target.value ?? '' })
             }
           />
 
@@ -397,12 +420,7 @@ export default function NewTermModal({
             noItemsText={t('no-term-word-classes-available')}
             hintText={t('term-word-class-hint-text')}
             visualPlaceholder={t('choose-term-word-class')}
-            items={[
-              {
-                labelText: t('word-class.adjective', { ns: 'common' }),
-                uniqueItemId: 'adjective',
-              },
-            ]}
+            items={wordClasses}
             onItemSelectionChange={(e) =>
               handleUpdate({ key: 'wordClass', value: e?.uniqueItemId || '' })
             }
@@ -411,6 +429,11 @@ export default function NewTermModal({
       </ModalContent>
 
       <ModalFooter>
+        <FormFooterAlert
+          alerts={Object.keys(invalidData)
+            .filter((key) => invalidData[key as keyof typeof invalidData])
+            .map((key) => translateEditConceptError(key, t))}
+        />
         <Button onClick={() => handleClick()}>{t('accept')}</Button>
         <Button variant="secondary" onClick={() => setVisible(false)}>
           {t('cancel-variant')}
@@ -420,11 +443,15 @@ export default function NewTermModal({
   );
 }
 
-function validateFormData(data: ConceptTermType) {
+function validateFormData(
+  data: ConceptTermType,
+  recommendedTermLangs: string[]
+) {
   const invalidData = {
     prefLabel: false,
     termType: false,
     language: false,
+    recommendedTermDuplicate: false,
   };
 
   if (!data.prefLabel || data.prefLabel === '') {
@@ -439,5 +466,26 @@ function validateFormData(data: ConceptTermType) {
     invalidData.language = true;
   }
 
+  if (
+    data.termType === 'recommended-term' &&
+    recommendedTermLangs?.length > 0 &&
+    recommendedTermLangs.includes(data.language)
+  ) {
+    invalidData.recommendedTermDuplicate = true;
+  }
+
   return invalidData;
+}
+
+function prefLabelInLangExists(
+  data: ConceptTermType,
+  recommendedTermLangs: string[]
+) {
+  if (
+    recommendedTermLangs?.length > 0 &&
+    recommendedTermLangs.includes(data.language)
+  ) {
+    return true;
+  }
+  return false;
 }

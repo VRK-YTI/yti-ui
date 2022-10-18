@@ -121,6 +121,19 @@ export default function RelationalInformation({
           data={expandersData}
           fromOther
         />
+
+        <Separator isLarge />
+
+        <RelationalInformationBlock
+          infoKey={'closeMatch'}
+          title={t('close-match-in-other')}
+          buttonTitle={t('close-match-in-other-add')}
+          description={t('close-match-in-other-description')}
+          chipLabel={t('close-match-in-other-chip-label')}
+          updateData={updateData}
+          data={expandersData}
+          fromOther
+        />
       </ExpanderContentFitted>
     </ConceptExpander>
   );

@@ -11,7 +11,6 @@ import {
 import {
   BasicBlock,
   MultilingualPropertyBlock,
-  PropertyBlock,
   ConceptListBlock,
 } from '@app/common/components/block';
 import { Breadcrumb, BreadcrumbLink } from '@app/common/components/breadcrumb';
@@ -22,7 +21,12 @@ import { getPropertyValue } from '@app/common/components/property-value/get-prop
 import Separator from '@app/common/components/separator';
 import { useStoreDispatch } from '@app/store';
 import CollectionSidebar from './collection-sidebar';
-import { MainContent, PageContent } from './collection.styles';
+import {
+  EditToolsBlock,
+  MainContent,
+  PageContent,
+  PropertyList,
+} from './collection.styles';
 import { setTitle } from '@app/common/components/title/title.slice';
 import { useGetCollectionQuery } from '@app/common/components/collection/collection.slice';
 import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
@@ -35,6 +39,7 @@ import {
 import HasPermission from '@app/common/utils/has-permission';
 import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
 import Link from 'next/link';
+import RemovalModal from '@app/common/components/removal-modal';
 
 interface CollectionProps {
   terminologyId: string;
@@ -166,30 +171,52 @@ export default function Collection({
           <Separator />
 
           {HasPermission({
-            actions: 'EDIT_COLLECTION',
+            actions: ['EDIT_COLLECTION', 'DELETE_COLLECTION'],
             targetOrganization: terminology?.references.contributor,
           }) && (
             <>
               <BasicBlock
-                title={t('edit-collection')}
+                title={t('edit-collection-block-title')}
                 extra={
                   <BasicBlockExtraWrapper>
-                    <Link href={`${router.asPath}/edit`}>
-                      <Button
-                        variant="secondary"
-                        icon="edit"
-                        id="edit-collection-button"
-                      >
-                        {t('edit-collection')}
-                      </Button>
-                    </Link>
+                    <EditToolsBlock>
+                      {HasPermission({
+                        actions: 'EDIT_COLLECTION',
+                        targetOrganization: terminology?.references.contributor,
+                      }) && (
+                        <Link href={`${router.asPath}/edit`}>
+                          <Button
+                            variant="secondary"
+                            icon="edit"
+                            id="edit-collection-button"
+                          >
+                            {t('edit-collection')}
+                          </Button>
+                        </Link>
+                      )}
+                      {HasPermission({
+                        actions: 'DELETE_COLLECTION',
+                        targetOrganization: terminology?.references.contributor,
+                      }) && (
+                        <>
+                          <RemovalModal
+                            isDisabled={false}
+                            nonDescriptive={true}
+                            removalData={{
+                              type: 'collection',
+                              data: collection,
+                            }}
+                            targetId={collection?.id ?? ''}
+                            targetName={prefLabel}
+                          />
+                        </>
+                      )}
+                    </EditToolsBlock>
                   </BasicBlockExtraWrapper>
                 }
-              >
-                {t('edit-collection-rights')}
-              </BasicBlock>
+              ></BasicBlock>
 
-              <Separator />
+              <Separator isLarge />
             </>
           )}
 
@@ -197,12 +224,23 @@ export default function Collection({
             {t('additional-technical-information', { ns: 'common' })}
           </VisuallyHidden>
 
-          <PropertyBlock
+          <BasicBlock
             title={t('vocabulary-info-organization', { ns: 'common' })}
-            property={
-              terminology?.references.contributor?.[0]?.properties.prefLabel
-            }
-          />
+            id="organization"
+          >
+            <PropertyList $smBot={true}>
+              {terminology?.references.contributor
+                ?.filter((c) => c && c.properties.prefLabel)
+                .map((contributor) => (
+                  <li key={contributor.id}>
+                    <PropertyValue
+                      property={contributor?.properties.prefLabel}
+                    />
+                  </li>
+                ))}
+            </PropertyList>
+          </BasicBlock>
+
           <BasicBlock title={t('vocabulary-info-created-at', { ns: 'common' })}>
             <FormattedDate date={collection?.createdDate} />
             {collection?.createdBy && `, ${collection.createdBy}`}

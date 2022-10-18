@@ -4,7 +4,6 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import {
   Button,
-  InlineAlert,
   Modal,
   ModalContent,
   ModalFooter,
@@ -13,6 +12,7 @@ import {
   Text,
   TextInput,
 } from 'suomifi-ui-components';
+import FormFooterAlert from '../form-footer-alert';
 import { useBreakpoints } from '../media-query/media-query-context';
 import { TextInputBlock } from './new-concept-modal.styles';
 
@@ -99,9 +99,7 @@ export default function NewConceptModal({
 
       <ModalFooter>
         {isError && (
-          <InlineAlert status="warning">
-            {t('recommended-term-missing-error')}
-          </InlineAlert>
+          <FormFooterAlert alerts={[t('recommended-term-missing-error')]} />
         )}
         <Button onClick={() => handleClick()} id="submit-button">
           {t('continue')}

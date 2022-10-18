@@ -1,4 +1,5 @@
-import { usePostImportExcelMutation } from '@app/common/components/excel/excel.slice';
+import FileDropArea from '@app/common/components/file-drop-area';
+import { usePostImportExcelMutation } from '@app/common/components/import/import.slice';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import SaveSpinner from '@app/common/components/save-spinner';
 import { terminologySearchApi } from '@app/common/components/terminology-search/terminology-search.slice';
@@ -23,7 +24,6 @@ import {
 } from 'suomifi-ui-components';
 import FileUpload from './file-upload';
 import generateNewTerminology from './generate-new-terminology';
-import InfoFile from './info-file';
 import InfoManual from './info-manual';
 import MissingInfoAlert from './missing-info-alert';
 import { FooterBlock, ModalTitleAsH1 } from './new-terminology.styles';
@@ -187,6 +187,7 @@ export default function NewTerminologyModal({
               variant="secondary"
               onClick={() => handleClose()}
               id="cancel-button"
+              disabled={isCreating}
             >
               {t('cancel')}
             </Button>
@@ -211,14 +212,14 @@ export default function NewTerminologyModal({
           id="new-terminology-input-type"
         >
           <RadioButton
-            disabled={error || unauthenticatedUser}
+            disabled={error || isCreating || unauthenticatedUser}
             value="self"
             id="new-terminology-input-type-hand"
           >
             {t('by-hand')}
           </RadioButton>
           <RadioButton
-            disabled={error || unauthenticatedUser}
+            disabled={error || isCreating || unauthenticatedUser}
             value="file"
             id="new-terminology-input-type-file"
           >
@@ -228,7 +229,7 @@ export default function NewTerminologyModal({
 
         {inputType === 'self' && (
           <InfoManual
-            disabled={error || unauthenticatedUser}
+            disabled={error || isCreating || unauthenticatedUser}
             setIsValid={setIsValid}
             setManualData={setManualData}
             userPosted={userPosted}
@@ -236,7 +237,11 @@ export default function NewTerminologyModal({
           />
         )}
         {inputType === 'file' && (
-          <InfoFile setIsValid={setIsValid} setFileData={setFileData} />
+          <FileDropArea
+            setIsValid={setIsValid}
+            setFileData={setFileData}
+            validFileTypes={['xlsx']}
+          />
         )}
       </>
     );

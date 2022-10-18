@@ -1,50 +1,39 @@
 import {
   Checkbox,
   Expander,
-  ExpanderContent,
   ExpanderGroup,
   ExpanderTitle,
 } from 'suomifi-ui-components';
 import SanitizedTextContent from '@app/common/components/sanitized-text-content';
 import { useTranslation } from 'next-i18next';
-import {
-  useGetVocabulariesQuery,
-  useGetVocabularyQuery,
-} from '@app/common/components/vocabulary/vocabulary.slice';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
-import { useGetConceptQuery } from '@app/common/components/concept/concept.slice';
-import Separator from '@app/common/components/separator';
-import {
-  BasicBlock,
-  MultilingualPropertyBlock,
-  PropertyBlock,
-} from '@app/common/components/block';
-import FormattedDate from '@app/common/components/formatted-date';
+import getPrefLabel from '@app/common/utils/get-preflabel';
 import { Concepts } from '@app/common/interfaces/concepts.interface';
 import { translateStatus } from '@app/common/utils/translation-helpers';
 import { useBreakpoints } from '../media-query/media-query-context';
+import { useEffect, useState } from 'react';
+import RenderExpanderContent from './render-expander-content';
 
 interface RenderConceptsProps {
   concepts?: Concepts[];
   chosen: Concepts[];
   setChosen: (value: Concepts[]) => void;
-  terminologyId: string;
-  fromOther?: boolean;
 }
 
 export default function RenderConcepts({
   concepts,
   chosen,
   setChosen,
-  terminologyId,
-  fromOther,
 }: RenderConceptsProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
-  const { data: terminology } = useGetVocabularyQuery({
-    id: terminologyId,
-  });
-  const { data: vocabularies } = useGetVocabulariesQuery(null);
+  const [expandersOpen, setExpandersOpen] = useState(
+    concepts?.map((c) => [c.id, false])
+  );
+
+  useEffect(() => {
+    setExpandersOpen(concepts?.map((c) => [c.id, false]));
+  }, [concepts]);
 
   const handleCheckbox = (e: { checkboxState: boolean }, concept: Concepts) => {
     if (e.checkboxState) {
@@ -59,34 +48,34 @@ export default function RenderConcepts({
   }
 
   return (
-    <div id="concept-result-block">
+    <div id="concept-result-block" style={{ width: '100%' }}>
       <ExpanderGroup openAllText="" closeAllText="">
         {concepts?.map((concept) => {
-          const conceptsVocabulary = vocabularies?.filter(
-            (vocabulary) => vocabulary.type.graph.id === concept.terminology.id
-          );
-          const property =
-            fromOther && conceptsVocabulary && conceptsVocabulary.length > 0
-              ? conceptsVocabulary[0].properties.prefLabel
-              : terminology?.properties.prefLabel;
-
-          const organizationTitle = getPropertyValue({
-            language: i18n.language,
-            property: property,
-          });
-
           return (
-            <Expander key={concept.id} className="concept-result-item">
+            <Expander
+              key={concept.id}
+              className="concept-result-item"
+              onOpenChange={(open) => {
+                setExpandersOpen(
+                  expandersOpen?.map((c) => {
+                    if (c[0] === concept.id) {
+                      return [c[0], open];
+                    }
+                    return c;
+                  })
+                );
+              }}
+            >
               <ExpanderTitle
                 ariaCloseText={t('open-concept-expander')}
                 ariaOpenText={t('close-concept-expander')}
                 toggleButtonAriaDescribedBy=""
               >
                 <Checkbox
-                  hintText={`${organizationTitle} - ${translateStatus(
-                    concept.status ?? 'DRAFT',
-                    t
-                  )}`}
+                  hintText={`${getPrefLabel({
+                    prefLabels: concept.terminology.label,
+                    lang: i18n.language,
+                  })} - ${translateStatus(concept.status ?? 'DRAFT', t)}`}
                   onClick={(e) => handleCheckbox(e, concept)}
                   checked={chosen.some((chose) => chose.id === concept.id)}
                   className="concept-checkbox"
@@ -117,6 +106,11 @@ export default function RenderConcepts({
               <RenderExpanderContent
                 terminologyId={concept.terminology.id}
                 conceptId={concept.id}
+                isOpen={
+                  (expandersOpen?.filter(
+                    (c) => c[0] === concept.id
+                  )?.[0]?.[1] as boolean) ?? false
+                }
               />
             </Expander>
           );
@@ -124,50 +118,4 @@ export default function RenderConcepts({
       </ExpanderGroup>
     </div>
   );
-
-  interface RenderExpanderContentProps {
-    terminologyId: string;
-    conceptId: string;
-  }
-
-  function RenderExpanderContent({
-    terminologyId,
-    conceptId,
-  }: RenderExpanderContentProps) {
-    const { t } = useTranslation('admin');
-    const { data: concept } = useGetConceptQuery({
-      terminologyId: terminologyId,
-      conceptId: conceptId,
-    });
-    const { data: terminology } = useGetVocabularyQuery({
-      id: terminologyId,
-    });
-
-    return (
-      <ExpanderContent>
-        <MultilingualPropertyBlock
-          title={<h2>{t('preferred-terms')}</h2>}
-          data={concept?.references.prefLabelXl?.[0].properties?.prefLabel}
-        />
-        <MultilingualPropertyBlock
-          title={<h2>{t('definition')}</h2>}
-          data={concept?.properties.definition}
-        />
-
-        <Separator isLarge />
-
-        <PropertyBlock
-          title={t('contributor')}
-          property={
-            terminology?.references.contributor?.[0].properties.prefLabel
-          }
-        />
-
-        <BasicBlock title={t('modified-at')}>
-          <FormattedDate date={concept?.lastModifiedDate} />,{' '}
-          {concept?.lastModifiedBy}
-        </BasicBlock>
-      </ExpanderContent>
-    );
-  }
 }

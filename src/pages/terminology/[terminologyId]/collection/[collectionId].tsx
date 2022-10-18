@@ -60,6 +60,10 @@ export default function CollectionPage(props: CollectionPageProps) {
 
 export const getServerSideProps = createCommonGetServerSideProps(
   async ({ store, params, locale }: LocalHandlerParams) => {
+    if (!params) {
+      throw new Error('Missing parameters for page');
+    }
+
     const terminologyId = Array.isArray(params.terminologyId)
       ? params.terminologyId[0]
       : params.terminologyId;

@@ -87,13 +87,12 @@ export const vocabularyApi = createApi({
         },
       }),
     }),
-    // Note! This can added to use at any point
-    // deleteVocabulary: builder.mutation<any, any>({
-    //   query: (uuid) => ({
-    //     url: `/vocabulary?graphId=${uuid}`,
-    //     method: 'DELETE',
-    //   }),
-    // }),
+    deleteVocabulary: builder.mutation<null, string>({
+      query: (uuid) => ({
+        url: `/vocabulary?graphId=${uuid}`,
+        method: 'DELETE',
+      }),
+    }),
     getIfNamespaceInUse: builder.mutation<boolean, string>({
       query: (prefix) => ({
         url: `/namespaceInUse?prefix=${prefix}`,
@@ -115,7 +114,7 @@ export const {
   useGetVocabularyQuery,
   usePostNewVocabularyMutation,
   usePostCreateVersionMutation,
-  // useDeleteVocabularyMutation,
+  useDeleteVocabularyMutation,
   useGetIfNamespaceInUseMutation,
   useGetVocabulariesQuery,
   util: { getRunningOperationPromises },

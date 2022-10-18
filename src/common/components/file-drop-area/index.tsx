@@ -9,14 +9,19 @@ import {
   FileInfoStaticIcon,
   FileRemoveButton,
   FileWrapper,
-} from './new-terminology.styles';
+} from './file-drop-area.styles';
 
-interface infoFileProps {
+interface FileDropAreaProps {
   setIsValid: (valid: boolean) => void;
   setFileData: (data: File | null) => void;
+  validFileTypes: string[];
 }
 
-export default function InfoFile({ setIsValid, setFileData }: infoFileProps) {
+export default function FileDropArea({
+  setIsValid,
+  setFileData,
+  validFileTypes,
+}: FileDropAreaProps) {
   const { t } = useTranslation('admin');
   const input = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -53,7 +58,10 @@ export default function InfoFile({ setIsValid, setFileData }: infoFileProps) {
 
     for (let i = 0; i < droppedItems.length; i++) {
       const droppedItemAsFile = droppedItems[i].getAsFile();
-      if (droppedItemAsFile && droppedItemAsFile?.name.endsWith('xlsx')) {
+      if (
+        droppedItemAsFile &&
+        validFileTypes.some((type) => droppedItemAsFile.name.endsWith(type))
+      ) {
         setFile(droppedItemAsFile);
         setAlert('none');
         break;
@@ -80,7 +88,7 @@ export default function InfoFile({ setIsValid, setFileData }: infoFileProps) {
     }
 
     for (let i = 0; i < selectedItems.length; i++) {
-      if (selectedItems[i].name.endsWith('.xlsx')) {
+      if (validFileTypes.some((type) => selectedItems[i].name.endsWith(type))) {
         setFile(selectedItems[i]);
         setAlert('none');
         break;
@@ -102,14 +110,16 @@ export default function InfoFile({ setIsValid, setFileData }: infoFileProps) {
           </Text>
         </Paragraph>
         <Paragraph marginBottomSpacing="l">
-          <Text smallScreen>{t('allowed-file-formats')} xlsx</Text>
+          <Text smallScreen>
+            {t('allowed-file-formats')} {validFileTypes.join(', ')}
+          </Text>
         </Paragraph>
         {file === null ? (
           <>
             <input
               type="file"
               ref={input}
-              accept=".xlsx"
+              accept={validFileTypes.map((type) => `.${type}`).join(',')}
               style={{ display: 'none' }}
               onChange={(e) => {
                 handleUpload(e);
@@ -159,7 +169,7 @@ export default function InfoFile({ setIsValid, setFileData }: infoFileProps) {
       </FileBlock>
       {alert !== 'none' && (
         <InlineAlert status="error">
-          {translateFileUploadError(alert, t)}
+          {translateFileUploadError(alert, validFileTypes, t)}
         </InlineAlert>
       )}
     </FileWrapper>

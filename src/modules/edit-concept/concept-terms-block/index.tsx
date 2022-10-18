@@ -47,7 +47,6 @@ export default function ConceptTermsBlock({
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const [modalVisible, setModalVisible] = useState(false);
-  const [checkedTerms, setCheckedTerms] = useState<string[]>([]);
   const [terms, setTerms] = useState<ConceptTermType[]>(initialValues);
 
   const handleUpdate = ({ termId, key, value }: ConceptTermUpdateProps) => {
@@ -68,25 +67,10 @@ export default function ConceptTermsBlock({
     updateTerms(updatedTerms);
   };
 
-  const handleCheck = (id: string, state: boolean) => {
-    if (!state && checkedTerms.includes(id)) {
-      setCheckedTerms(checkedTerms.filter((term) => term !== id));
-      return;
-    }
-
-    if (state && !checkedTerms.includes(id)) {
-      setCheckedTerms([...checkedTerms, id]);
-      return;
-    }
-
-    return;
-  };
-
-  const handleRemoveTerms = () => {
-    const newTerms = terms.filter((term) => !checkedTerms.includes(term.id));
+  const handleRemoveTerm = (id: string) => {
+    const newTerms = terms.filter((term) => term.id !== id);
     setTerms(newTerms);
     updateTerms(newTerms);
-    setCheckedTerms([]);
   };
 
   const appendTerm = (newTerm: ConceptTermType) => {
@@ -133,7 +117,7 @@ export default function ConceptTermsBlock({
 
   return (
     <>
-      <Separator isLarge />
+      <Separator />
 
       <LargeHeading variant="h2">{t('concept-terms-title')}</LargeHeading>
 
@@ -190,6 +174,9 @@ export default function ConceptTermsBlock({
                 setVisible={setModalVisible}
                 languages={languages}
                 appendTerm={appendTerm}
+                recommendedTermLangs={terms
+                  .filter((t) => t.termType === 'recommended-term')
+                  .map((term) => term.language)}
               />
             )}
             {terms.filter((term) => term.termType !== 'recommended-term')
@@ -199,39 +186,23 @@ export default function ConceptTermsBlock({
                   {terms
                     .filter((term) => term.termType !== 'recommended-term')
                     .map((term) => (
-                      <TermExpander
-                        key={term.id}
-                        term={term}
-                        setChecked={handleCheck}
-                        checkable
-                        errors={errors}
-                      >
+                      <TermExpander key={term.id} term={term} errors={errors}>
                         <TermForm
                           term={term}
                           update={handleUpdate}
                           currentTerms={terms}
                           handleSwitchTerms={handleSwitchTerms}
                           errors={errors}
+                          handleRemoveTerm={handleRemoveTerm}
                         />
                       </TermExpander>
                     ))}
                 </OtherTermsExpanderGroup>
-
-                <Button
-                  variant="secondaryNoBorder"
-                  onClick={() => handleRemoveTerms()}
-                  disabled={checkedTerms.length < 1}
-                  id="remove-terms-button"
-                >
-                  {t('remove-term', { count: checkedTerms.length })}
-                </Button>
               </>
             )}
           </BasicBlockExtraWrapper>
         }
-      >
-        {t('concept-other-terms-description')}
-      </BasicBlock>
+      />
     </>
   );
 }
