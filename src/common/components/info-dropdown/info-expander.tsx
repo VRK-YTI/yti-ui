@@ -135,7 +135,7 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
           <>
             <Separator isLarge />
             <BasicBlock
-              title={'Sanaston toiminnot'}
+              title={t('terminology-actions', { ns: 'admin' })}
               extra={
                 <BasicBlockExtraWrapper>
                   <ActionBlock>
@@ -176,7 +176,7 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
           <>
             <Separator isLarge />
             <BasicBlock
-              title={'Käsitteiden toiminnot'}
+              title={t('concept-actions', { ns: 'admin' })}
               extra={
                 <BasicBlockExtraWrapper>
                   <ActionBlock>
