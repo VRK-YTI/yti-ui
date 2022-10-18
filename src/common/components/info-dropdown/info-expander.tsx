@@ -28,6 +28,9 @@ import Link from 'next/link';
 import { getPropertyValue } from '../property-value/get-property-value';
 import PropertyValue from '../property-value';
 import RemovalModal from '../removal-modal';
+import axios from 'axios';
+import { useStoreDispatch } from '@app/store';
+import { setAlert } from '../alert/alert.slice';
 
 const Subscription = dynamic(
   () => import('@app/common/components/subscription/subscription')
@@ -41,12 +44,51 @@ interface InfoExpanderProps {
 export default function InfoExpander({ data }: InfoExpanderProps) {
   const { t, i18n } = useTranslation('common');
   const user = useSelector(selectLogin());
+  const dispatch = useStoreDispatch();
 
   if (!data) {
     return null;
   }
 
   const contact = getPropertyValue({ property: data.properties.contact });
+
+  const handleDownloadClick = async () => {
+    const result = await axios.get(
+      `/terminology-api/api/v1/export/${data.type.graph.id}?format=xlsx`
+    );
+
+    if (result.status !== 200) {
+      dispatch(
+        setAlert(
+          [
+            {
+              note: result,
+              displayText: t('error-occured_download-excel', { ns: 'alert' }),
+            },
+          ],
+          []
+        )
+      );
+      return;
+    }
+
+    const url = window.URL.createObjectURL(new Blob([result.data]));
+    const fileName = result.headers['content-disposition']
+      .split('=')[1]
+      .endsWith('.xlsx')
+      ? result.headers['content-disposition'].split('=')[1].trim()
+      : `${getPropertyValue({
+          property: data.properties.prefLabel,
+          language: i18n.language,
+        })}_export.xlsx`;
+    const link = document.createElement('a');
+
+    link.href = url;
+    link.setAttribute('download', fileName);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  };
 
   return (
     <InfoExpanderWrapper id="info-expander">
@@ -181,12 +223,7 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
               <Button
                 icon="download"
                 variant="secondary"
-                onClick={() => {
-                  window.open(
-                    `/terminology-api/api/v1/export/${data.type.graph.id}?format=xlsx`,
-                    '_blank'
-                  );
-                }}
+                onClick={() => handleDownloadClick()}
                 id="export-terminology-button"
               >
                 {t('vocabulary-info-vocabulary-export')} (.xlsx)
