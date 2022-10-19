@@ -238,7 +238,6 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
                         targetOrganization: terminology?.references.contributor,
                       }) && (
                         <RemovalModal
-                          isDisabled={false}
                           nonDescriptive={true}
                           removalData={{ type: 'concept', data: concept }}
                           targetId={concept?.id ?? ''}

@@ -247,8 +247,7 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
           <>
             <Separator isLarge />
             <RemovalModal
-              isDisabled={data.properties.status?.[0].value === 'VALID'}
-              removalData={{ type: 'terminology' }}
+              removalData={{ type: 'terminology', data: data }}
               targetId={data.type.graph.id}
               targetName={getPropertyValue({
                 property: data.properties.prefLabel,
