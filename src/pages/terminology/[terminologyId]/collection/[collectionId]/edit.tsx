@@ -21,6 +21,7 @@ import {
   createCommonGetServerSideProps,
   LocalHandlerParams,
 } from '@app/common/utils/create-getserversideprops';
+import { ssrIsAuthenticated } from '@app/common/utils/ssr-is-authenticated';
 import { ssrHasPermission } from '@app/common/utils/ssr-permission-check';
 import Layout from '@app/layouts/layout';
 import EditCollection from '@app/modules/edit-collection';
@@ -90,6 +91,9 @@ export const getServerSideProps = createCommonGetServerSideProps(
           destination: '/401',
           permanent: false,
         },
+        props: {
+          isAuthenticated: ssrIsAuthenticated(store.getState()),
+        },
       };
     }
 
@@ -114,6 +118,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
           collectionCode: collectionData.code,
           collectionUri: collectionData.uri,
         },
+        isAuthenticated: ssrIsAuthenticated(store.getState()),
       },
     };
   }

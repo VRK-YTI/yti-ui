@@ -70,7 +70,7 @@ if (process.env.NODE_ENV !== 'production' && typeof window !== 'undefined') {
   import('@axe-core/react').then(({ default: axe }) =>
     axe(React, ReactDOM, 1000, undefined, undefined, (results) => {
       if (results.violations.length > 0) {
-        console.log(
+        console.warn(
           'Potential a11y violations found by axe',
           results.violations
         );

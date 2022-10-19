@@ -23,6 +23,7 @@ import {
   getAuthenticatedUser,
   getRunningOperationPromises as authenticatedUserGetRunningOperationPromises,
 } from '@app/common/components/login/login.slice';
+import { ssrIsAuthenticated } from '@app/common/utils/ssr-is-authenticated';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -93,6 +94,10 @@ export const getServerSideProps = createCommonGetServerSideProps(
     await Promise.all(countsGetRunningOperationPromises());
     await Promise.all(authenticatedUserGetRunningOperationPromises());
 
-    return {};
+    return {
+      props: {
+        isAuthenticated: ssrIsAuthenticated(store.getState()),
+      },
+    };
   }
 );

@@ -46,7 +46,19 @@ export function createCommonGetServerSideProps<
           store,
         });
 
-        store.dispatch(setLogin(req.session.user || anonymousUser));
+        if (
+          results?.props &&
+          typeof (results.props as Record<string, boolean>)[
+            'isAuthenticated'
+          ] === 'boolean' &&
+          !(results.props as Record<string, boolean>).isAuthenticated
+        ) {
+          store.dispatch(setLogin(anonymousUser));
+        } else {
+          store.dispatch(
+            setLogin(req.session.user ? req.session.user : anonymousUser)
+          );
+        }
 
         store.dispatch(
           setAdminControls(process.env.ADMIN_CONTROLS_DISABLED === 'true')

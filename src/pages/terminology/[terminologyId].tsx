@@ -28,6 +28,7 @@ import {
   getAuthenticatedUser,
   getRunningOperationPromises as authenticatedUserGetRunningOperationPromises,
 } from '@app/common/components/login/login.slice';
+import { ssrIsAuthenticated } from '@app/common/utils/ssr-is-authenticated';
 
 interface TerminologyPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -120,6 +121,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
       props: {
         title: title,
         description: description,
+        isAuthenticated: ssrIsAuthenticated(store.getState()),
       },
     };
   }

@@ -20,6 +20,7 @@ import {
   createCommonGetServerSideProps,
   LocalHandlerParams,
 } from '@app/common/utils/create-getserversideprops';
+import { ssrIsAuthenticated } from '@app/common/utils/ssr-is-authenticated';
 import { ssrHasPermission } from '@app/common/utils/ssr-permission-check';
 import Layout from '@app/layouts/layout';
 import EditVocabulary from '@app/modules/edit-vocabulary';
@@ -78,9 +79,16 @@ export const getServerSideProps = createCommonGetServerSideProps(
           destination: '/401',
           permanent: false,
         },
+        props: {
+          isAuthenticated: ssrIsAuthenticated(store.getState()),
+        },
       };
     }
 
-    return {};
+    return {
+      props: {
+        isAuthenticated: ssrIsAuthenticated(store.getState()),
+      },
+    };
   }
 );

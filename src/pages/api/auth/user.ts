@@ -2,6 +2,10 @@ import { anonymousUser } from '@app/common/interfaces/user.interface';
 import { userCookieOptions } from '@app/common/utils/user-cookie-options';
 import { withIronSessionApiRoute } from 'iron-session/next';
 
+/**
+ * @deprecated Should /pages/api/user.ts instead of this
+ */
+
 export default withIronSessionApiRoute(
   async function user(req, res) {
     const user = req.session.user;

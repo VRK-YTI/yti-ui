@@ -18,6 +18,8 @@ export function ssrHasPermission(storeState: AppState, actions: Actions[]) {
   return checkPermission({
     user: user,
     actions: actions,
-    targetOrganizations: vocabulary.references.contributor,
+    targetOrganizations: vocabulary.references
+      ? vocabulary.references.contributor
+      : undefined,
   });
 }

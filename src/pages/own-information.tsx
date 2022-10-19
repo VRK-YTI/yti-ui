@@ -16,6 +16,7 @@ import {
   getRunningOperationPromises,
 } from '@app/common/components/login/login.slice';
 import { getStoreData } from '@app/common/components/page-head/utils';
+import { ssrIsAuthenticated } from '@app/common/utils/ssr-is-authenticated';
 
 interface OwnInformationPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -53,11 +54,16 @@ export const getServerSideProps = createCommonGetServerSideProps(
           destination: '/401',
           permanent: false,
         },
+        props: {
+          isAuthenticated: ssrIsAuthenticated(store.getState()),
+        },
       };
     }
 
     return {
-      props: {},
+      props: {
+        isAuthenticated: ssrIsAuthenticated(store.getState()),
+      },
     };
   }
 );

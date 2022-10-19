@@ -20,6 +20,7 @@ import {
   getRunningOperationPromises as authenticatedUserGetRunningOperationPromises,
 } from '@app/common/components/login/login.slice';
 import { ssrHasPermission } from '@app/common/utils/ssr-permission-check';
+import { ssrIsAuthenticated } from '@app/common/utils/ssr-is-authenticated';
 
 interface NewConceptPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -67,9 +68,16 @@ export const getServerSideProps = createCommonGetServerSideProps(
           destination: '/401',
           permanent: false,
         },
+        props: {
+          isAuthenticated: ssrIsAuthenticated(store.getState()),
+        },
       };
     }
 
-    return {};
+    return {
+      props: {
+        isAuthenticated: ssrIsAuthenticated(store.getState()),
+      },
+    };
   }
 );
