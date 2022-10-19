@@ -42,6 +42,7 @@ export default function RelationalInformationBlock({
   updateData,
   fromOther,
 }: RelationalInformationBlockProps) {
+  const [chosen, setChosen] = useState<Concepts[]>([]);
   const { t } = useTranslation('admin');
   const router = useRouter();
   const terminologyId = Array.isArray(router.query.terminologyId)
@@ -66,6 +67,9 @@ export default function RelationalInformationBlock({
 
   const handleChipClick = (concepts: RelationInfoType[]) => {
     setSelectedConcepts(concepts);
+    setChosen(
+      chosen.filter((c) => concepts.map((concept) => concept.id).includes(c.id))
+    );
     updateData(infoKey, concepts);
   };
 
@@ -85,6 +89,8 @@ export default function RelationalInformationBlock({
             terminologyId={terminologyId}
             chipLabel={chipLabel}
             fromOther={fromOther}
+            chosen={chosen}
+            setChosen={setChosen}
           />
 
           {selectedConcepts?.length > 0 ? (
@@ -150,6 +156,8 @@ interface ManageRelationalInfoModalProps {
   setSelectedConcepts: (value: Concepts[]) => void;
   terminologyId: string;
   chipLabel: string;
+  chosen: Concepts[];
+  setChosen: (value: Concepts[]) => void;
   fromOther?: boolean;
 }
 
@@ -160,23 +168,22 @@ function ManageRelationalInfoModal({
   terminologyId,
   chipLabel,
   fromOther,
+  chosen,
+  setChosen,
 }: ManageRelationalInfoModalProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const [visible, setVisible] = useState(false);
   const [showChosen, setShowChosen] = useState(false);
-  const [chosen, setChosen] = useState<Concepts[]>([]);
   const [searchResults, setSearchResults] = useState<Concepts[]>([]);
 
   const handleClose = () => {
     setVisible(false);
     setShowChosen(false);
-    setChosen([]);
     setSearchResults([]);
   };
 
   const handleChange = () => {
-    handleClose();
     const choseWithoutHtml = chosen.map((concept) => ({
       ...concept,
       label: Object.fromEntries(
@@ -187,13 +194,15 @@ function ManageRelationalInfoModal({
       ),
     }));
     setSelectedConcepts(choseWithoutHtml);
-    setSearchResults([]);
+    handleClose();
   };
 
   const handleSetVisible = () => {
-    setChosen(
-      searchResults.filter((result) => selectedConceptIds.includes(result.id))
-    );
+    if (!fromOther) {
+      setChosen(
+        searchResults.filter((result) => selectedConceptIds.includes(result.id))
+      );
+    }
     setVisible(true);
   };
 

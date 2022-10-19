@@ -28,6 +28,7 @@ import {
   CheckboxBlock,
   DropdownBlock,
   GrammaticalBlock,
+  LanguageSingleSelect,
   MediumHeading,
   ModalDescription,
   RadioButtonGroupSpaced,
@@ -171,41 +172,7 @@ export default function NewTermModal({
           />
         )}
 
-        <RadioButtonGroupSpaced
-          labelText={t('term-type')}
-          name="term-type-radio-button-group"
-          onChange={(e) => handleUpdate({ key: 'termType', value: e })}
-          groupHintText={
-            invalidData.termType ? t('term-type-error-msg') : undefined
-          }
-          $isInvalid={
-            invalidData.termType || invalidData.recommendedTermDuplicate
-          }
-        >
-          <RadioButton
-            value="recommended-term"
-            hintText={t('recommended-term-description')}
-          >
-            {t('recommended-term', { ns: 'common' })}
-          </RadioButton>
-          <RadioButton value="synonym" hintText={t('synonym-description')}>
-            {t('synonym')}
-          </RadioButton>
-          <RadioButton
-            value="not-recommended-synonym"
-            hintText={t('not-recommended-term-description')}
-          >
-            {t('not-recommended-synonym')}
-          </RadioButton>
-          <RadioButton
-            value="search-term"
-            hintText={t('search-term-description')}
-          >
-            {t('search-term')}
-          </RadioButton>
-        </RadioButtonGroupSpaced>
-
-        <SingleSelect
+        <LanguageSingleSelect
           ariaOptionsAvailableText={t('available-languages')}
           clearButtonLabel=""
           items={languages.map((language) => ({
@@ -226,6 +193,41 @@ export default function NewTermModal({
               : undefined
           }
         />
+
+        <RadioButtonGroupSpaced
+          labelText={t('term-type')}
+          name="term-type-radio-button-group"
+          onChange={(e) => handleUpdate({ key: 'termType', value: e })}
+          groupHintText={
+            invalidData.termType ? t('term-type-error-msg') : undefined
+          }
+          $isInvalid={
+            invalidData.termType || invalidData.recommendedTermDuplicate
+          }
+        >
+          <RadioButton
+            value="recommended-term"
+            hintText={t('recommended-term-description')}
+            disabled={prefLabelInLangExists(termData, recommendedTermLangs)}
+          >
+            {t('recommended-term', { ns: 'common' })}
+          </RadioButton>
+          <RadioButton value="synonym" hintText={t('synonym-description')}>
+            {t('synonym')}
+          </RadioButton>
+          <RadioButton
+            value="not-recommended-synonym"
+            hintText={t('not-recommended-term-description')}
+          >
+            {t('not-recommended-synonym')}
+          </RadioButton>
+          <RadioButton
+            value="search-term"
+            hintText={t('search-term-description')}
+          >
+            {t('search-term')}
+          </RadioButton>
+        </RadioButtonGroupSpaced>
 
         <DropdownBlock
           labelText={t('term-status-label')}
@@ -473,4 +475,17 @@ function validateFormData(
   }
 
   return invalidData;
+}
+
+function prefLabelInLangExists(
+  data: ConceptTermType,
+  recommendedTermLangs: string[]
+) {
+  if (
+    recommendedTermLangs?.length > 0 &&
+    recommendedTermLangs.includes(data.language)
+  ) {
+    return true;
+  }
+  return false;
 }

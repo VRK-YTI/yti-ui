@@ -19,12 +19,12 @@ import { subscriptionApi } from '@app/common/components/subscription/subscriptio
 import { accessRequestApi } from '@app/common/components/access-request/access-request.slice';
 import { adminControlsSlice } from '@app/common/components/admin-controls/admin-controls.slice';
 import { importApi } from '@app/common/components/import/import.slice';
-import { NextIronRequest } from '@app/common/utils/session';
 import { modifyApi } from '@app/common/components/modify/modify.slice';
 import { removeApi } from '@app/common/components/remove/remove.slice';
+import { NextApiRequest } from 'next';
 
 // make Context from next-redux-wrapper compatible with next-iron-session
-export type NextIronContext = Context | (Context & { req: NextIronRequest });
+export type NextIronContext = Context | (Context & { req: NextApiRequest });
 
 export function makeStore(ctx: NextIronContext) {
   return configureStore({

@@ -297,7 +297,7 @@
   "term-type-error-msg": "Term type has to be defined",
   "term-type-label": "Term type",
   "term-word-class": "Term word class",
-  "term-word-class-hint-text": "Marked if the term is from a different word category than terms in other languages.",
+  "term-word-class-hint-text": "Marked only if the term is not a noun.",
   "term-x-new-type": "Term \"{{term}}\" new type",
   "terminological-vocabulary": "Terminological vocabulary",
   "terminology-actions": "Terminology actions",

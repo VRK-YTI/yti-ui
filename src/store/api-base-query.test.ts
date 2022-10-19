@@ -50,7 +50,7 @@ describe('axios base query', () => {
       // store JSESSIONID in session so we can check later it's propagated to
       // the API request as a cookie
       const cookies: { [key: string]: string } = { JSESSIONID: 'foo' };
-      req.session.set('cookies', cookies);
+      req.session.cookies = cookies;
       req.session.save();
 
       // initiate API call

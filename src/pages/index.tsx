@@ -1,10 +1,7 @@
 import React from 'react';
 import Layout from '@app/layouts/layout';
 import { SSRConfig, useTranslation } from 'next-i18next';
-import {
-  createCommonGetServerSideProps,
-  LocalHandlerParams,
-} from '@app/common/utils/create-getserversideprops';
+import { createCommonGetServerSideProps } from '@app/common/utils/create-getserversideprops';
 import {
   CommonContextProvider,
   CommonContextState,
@@ -45,7 +42,7 @@ export default function IndexPage(props: IndexPageProps) {
 }
 
 export const getServerSideProps = createCommonGetServerSideProps(
-  async ({ store, locale, query }: LocalHandlerParams) => {
+  async ({ store, locale, query }) => {
     const urlState = Object.assign({}, initialUrlState);
 
     if (query) {
@@ -81,10 +78,10 @@ export const getServerSideProps = createCommonGetServerSideProps(
     }
 
     store.dispatch(
-      getSearchResult.initiate({ urlState: urlState, language: locale })
+      getSearchResult.initiate({ urlState: urlState, language: locale ?? 'fi' })
     );
-    store.dispatch(getGroups.initiate(locale));
-    store.dispatch(getOrganizations.initiate(locale));
+    store.dispatch(getGroups.initiate(locale ?? 'fi'));
+    store.dispatch(getOrganizations.initiate(locale ?? 'fi'));
     store.dispatch(getCounts.initiate(null));
 
     await Promise.all(terminologyGetRunningOperationPromises());

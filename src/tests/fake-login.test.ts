@@ -1,7 +1,8 @@
-import { createMocks } from 'node-mocks-http';
+import { createRequest, createResponse } from 'node-mocks-http';
 import fakeLogin from '@app/pages/api/auth/fake-login';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
+import { ApiRequest, ApiResponse, getHeader } from './test-utils';
 
 const fakeUser = {
   anonymous: false,
@@ -35,12 +36,13 @@ describe('api endpoint - fake login', () => {
   it('successful login', async () => {
     const targetPath = '/testable-target-path';
 
-    const { req, res } = createMocks({
+    const req = createRequest<ApiRequest>({
       method: 'GET',
       query: {
         target: targetPath,
       },
     });
+    const res = createResponse<ApiResponse>();
 
     mock
       .onGet(
@@ -57,18 +59,19 @@ describe('api endpoint - fake login', () => {
 
     // if successful, the api route will set some cookies for the browser
     expect(res.hasHeader('Set-Cookie')).toBeTruthy();
-    const setCookies = res.getHeader('Set-Cookie');
+    // eslint-disable-next-line jest/no-conditional-in-test
+    const setCookies = getHeader(res.getHeader('Set-Cookie'));
     expect(setCookies).toHaveLength(2);
 
     // JSESSIONID from spring API
-    const jsessionid = setCookies.find((x: string) =>
+    const jsessionid = setCookies?.find((x: string) =>
       x.startsWith('JSESSIONID=')
     );
     expect(jsessionid).toBeDefined();
     expect(jsessionid).toBe('JSESSIONID=foo');
 
     // session cookie from next-iron-session
-    const session = setCookies.find((x: string) =>
+    const session = setCookies?.find((x: string) =>
       x.startsWith('user-session-cookie=')
     );
     expect(session).toBeDefined();
@@ -84,18 +87,19 @@ describe('api endpoint - fake login', () => {
   it('server failure', async () => {
     const targetPath = '/testable-target-path';
 
-    const { req, res } = createMocks({
-      method: 'GET',
-      query: {
-        target: targetPath,
-      },
-    });
-
     mock
       .onGet(
         'http://terminology-api.invalid/terminology-api/api/v1/frontend/authenticated-user?fake.login.mail=admin%40localhost'
       )
       .reply(500, { error: 'An error occurred' });
+
+    const req = createRequest<ApiRequest>({
+      method: 'GET',
+      query: {
+        target: targetPath,
+      },
+    });
+    const res = createResponse<ApiResponse>();
 
     await fakeLogin(req, res);
 

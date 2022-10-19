@@ -297,7 +297,7 @@
   "term-type-error-msg": "Termin tyyppi tulee olla valittu",
   "term-type-label": "Termin tyyppi",
   "term-word-class": "Termin sanaluokka",
-  "term-word-class-hint-text": "Merkitään jos termi on eri sanaluokasta kuin muunkieliset termit.",
+  "term-word-class-hint-text": "Merkitään vain, jos termin sanaluokka on muu kuin substantiivi.",
   "term-x-new-type": "Termin \"{{term}}\" uusi tyyppi",
   "terminological-vocabulary": "Terminologinen sanasto",
   "terminology-actions": "Sanaston toiminnot",
