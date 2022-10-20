@@ -42,7 +42,9 @@ export default function RelationalInformationBlock({
   updateData,
   fromOther,
 }: RelationalInformationBlockProps) {
-  const [chosen, setChosen] = useState<Concepts[]>([]);
+  const [chosen, setChosen] = useState<Concepts[] | RelationInfoType[]>(
+    fromOther ? data[infoKey] : []
+  );
   const { t } = useTranslation('admin');
   const router = useRouter();
   const terminologyId = Array.isArray(router.query.terminologyId)
@@ -52,14 +54,25 @@ export default function RelationalInformationBlock({
     data[infoKey] ?? []
   );
 
-  const handleUpdate = (concepts: Concepts[]) => {
+  const handleUpdate = (concepts: Concepts[] | RelationInfoType[]) => {
     const newValue =
-      concepts.map((concept) => ({
-        id: concept.id,
-        label: concept.label,
-        terminologyId: concept.terminology.id,
-        terminologyLabel: concept.terminology.label,
-      })) ?? [];
+      concepts.map((concept) => {
+        if ('terminology' in concept) {
+          return {
+            id: concept.id,
+            label: concept.label,
+            terminologyId: concept.terminology.id,
+            terminologyLabel: concept.terminology.label,
+          };
+        } else {
+          return {
+            id: concept.id,
+            label: concept.label,
+            terminologyId: concept.terminologyId,
+            terminologyLabel: concept.terminologyLabel,
+          };
+        }
+      }) ?? [];
 
     setSelectedConcepts(newValue);
     updateData(infoKey, newValue);
@@ -67,10 +80,22 @@ export default function RelationalInformationBlock({
 
   const handleChipClick = (concepts: RelationInfoType[]) => {
     setSelectedConcepts(concepts);
-    setChosen(
-      chosen.filter((c) => concepts.map((concept) => concept.id).includes(c.id))
-    );
     updateData(infoKey, concepts);
+
+    if (concepts.length < 1) {
+      return setChosen([]);
+    } else {
+      const newIds: string[] = concepts.map((concept) => concept.id);
+      setChosen(
+        'terminology' in concepts[0]
+          ? (chosen as Concepts[]).filter((c: Concepts) =>
+              newIds.includes(c.id)
+            )
+          : (chosen as RelationInfoType[]).filter((c: RelationInfoType) =>
+              newIds.includes(c.id)
+            )
+      );
+    }
   };
 
   if (!terminologyId) {
@@ -153,11 +178,11 @@ export default function RelationalInformationBlock({
 interface ManageRelationalInfoModalProps {
   buttonTitle: string;
   selectedConceptIds: string[];
-  setSelectedConcepts: (value: Concepts[]) => void;
+  setSelectedConcepts: (value: Concepts[] | RelationInfoType[]) => void;
   terminologyId: string;
   chipLabel: string;
-  chosen: Concepts[];
-  setChosen: (value: Concepts[]) => void;
+  chosen: Concepts[] | RelationInfoType[];
+  setChosen: (value: Concepts[] | RelationInfoType[]) => void;
   fromOther?: boolean;
 }
 
@@ -185,13 +210,21 @@ function ManageRelationalInfoModal({
 
   const handleChange = () => {
     const choseWithoutHtml = chosen.map((concept) => ({
-      ...concept,
+      id: concept.id,
       label: Object.fromEntries(
         Object.entries(concept.label).map(([lang, label]) => [
           lang,
           label.replaceAll(/<\/*[^>]>/g, ''),
         ])
       ),
+      terminologyId:
+        'terminology' in concept
+          ? concept.terminology.id
+          : concept.terminologyId,
+      terminologyLabel:
+        'terminology' in concept
+          ? concept.terminology.label
+          : concept.terminologyLabel,
     }));
     setSelectedConcepts(choseWithoutHtml);
     handleClose();
