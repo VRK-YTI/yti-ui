@@ -98,7 +98,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
     if (!collectionData) {
       return {
         redirect: {
-          destination: '/401',
+          destination: '/404',
           permanent: false,
         },
       };
