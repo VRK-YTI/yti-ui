@@ -1,0 +1,17 @@
+{
+  "error-alert": "\r",
+  "error-occured": "Fel\r",
+  "error-occured_access-request": "\r",
+  "error-occured_counts": "\r",
+  "error-occured_download-excel": "\r",
+  "error-occured_groups": "\r",
+  "error-occured_organization": "\r",
+  "error-occured_subscription": "\r",
+  "error-occured_terminology-search": "\r",
+  "error-occured_unhandled-error": "\r",
+  "error-occurred_internal-server": "\r",
+  "error-occurred_remove-collection": "\r",
+  "error-occurred_remove-concept": "\r",
+  "error-occurred_remove-terminology": "\r",
+  "error-occurred_session": "\r"
+}
