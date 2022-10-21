@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Expander } from 'suomifi-ui-components';
+import { Block, Expander } from 'suomifi-ui-components';
 
 export const InfoExpanderWrapper = styled(Expander)`
   margin-top: ${(props) => props.theme.suomifi.spacing.m};
@@ -20,5 +20,15 @@ export const PropertyList = styled.ul`
 
   li:not(:last-child) {
     margin-bottom: ${(props) => props.theme.suomifi.spacing.xs};
+  }
+`;
+
+export const ActionBlock = styled(Block)`
+  display: flex;
+  flex-direction: column;
+  gap: ${(props) => props.theme.suomifi.spacing.s};
+
+  > * {
+    width: max-content;
   }
 `;

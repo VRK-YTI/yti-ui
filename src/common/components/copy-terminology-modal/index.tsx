@@ -12,13 +12,36 @@ const CopyTerminologyModalDynamic = dynamic(
 
 interface CopyTerminologyModalProps {
   terminologyId: string;
+  noWrap?: boolean;
 }
 
 export default function CopyTerminologyModal({
   terminologyId,
+  noWrap,
 }: CopyTerminologyModalProps) {
   const { t } = useTranslation('admin');
   const [visible, setVisible] = useState(false);
+
+  if (noWrap) {
+    return (
+      <>
+        <Button
+          icon="copy"
+          variant="secondary"
+          onClick={() => setVisible(true)}
+        >
+          {t('copy-as-base')}
+        </Button>
+        {visible && (
+          <CopyTerminologyModalDynamic
+            terminologyId={terminologyId}
+            visible={visible}
+            setVisible={setVisible}
+          />
+        )}
+      </>
+    );
+  }
 
   return (
     <>
