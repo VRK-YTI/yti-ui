@@ -14,8 +14,7 @@ const encoding = 'utf8';
 const jsonPath = '../public/locales/fi';
 
 function handleKey(stream, data, key) {
-
-  Object.keys(data).map(k => {
+  Object.keys(data).map((k) => {
     let currentKey = key ? `${key}.${k}` : k;
     if (typeof data[k] === 'object') {
       handleKey(stream, data[k], currentKey);
@@ -26,8 +25,10 @@ function handleKey(stream, data, key) {
 }
 
 function json2csv() {
-  fileNames.forEach(fileName => {
-    const translations = JSON.parse(fs.readFileSync(`${jsonPath}/${fileName}.json`, encoding));
+  fileNames.forEach((fileName) => {
+    const translations = JSON.parse(
+      fs.readFileSync(`${jsonPath}/${fileName}.json`, encoding)
+    );
     const stream = fs.createWriteStream(`csv/${fileName}.csv`, encoding);
     stream.write('KEY;FI;SV\n');
 
@@ -36,7 +37,7 @@ function json2csv() {
 }
 
 function handleNestedObject(nestedObj, keyParts, value) {
-  for (let i=0; i<keyParts.length; i++) {
+  for (let i = 0; i < keyParts.length; i++) {
     const keyPart = keyParts[i];
 
     if (keyParts.length > 1) {
@@ -47,7 +48,11 @@ function handleNestedObject(nestedObj, keyParts, value) {
       if (keyParts.length === 1) {
         nestedObj[keyPart] = value;
       } else {
-        nestedObj[keyPart] = handleNestedObject(nestedObj[keyPart], keyParts.slice(1), value);
+        nestedObj[keyPart] = handleNestedObject(
+          nestedObj[keyPart],
+          keyParts.slice(1),
+          value
+        );
         break;
       }
     } else {
@@ -58,8 +63,7 @@ function handleNestedObject(nestedObj, keyParts, value) {
 }
 
 function csv2json() {
-  fileNames.forEach(fileName => {
-
+  fileNames.forEach((fileName) => {
     const data = fs.readFileSync(`csv/${fileName}.csv`, encoding);
 
     const translations = data.split(/\n/).reduce((result, line, idx) => {
@@ -80,7 +84,10 @@ function csv2json() {
       return result;
     }, {});
 
-    fs.writeFileSync(`json/${fileName}.json`, JSON.stringify(translations, null, 2));
+    fs.writeFileSync(
+      `json/${fileName}.json`,
+      JSON.stringify(translations, null, 2)
+    );
   });
 }
 
@@ -93,4 +100,3 @@ if (target === 'json2csv') {
 } else {
   console.info('Specify target csv2json or json2csv');
 }
-

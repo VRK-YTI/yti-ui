@@ -1,9 +1,11 @@
 JSON -> CSV
+
 ```
 node localeFileHandler.js json2csv
 ```
 
 CSV -> JSON
+
 ```
 node localeFileHandler.js csv2json
 ```
