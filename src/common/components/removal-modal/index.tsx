@@ -66,7 +66,7 @@ export default function RemovalModal({
 }: RemovalModalProps) {
   const { t } = useTranslation('admin');
   const dispatch = useStoreDispatch();
-  const { isSmall } = useBreakpoints();
+  const { isSmall, isMedium } = useBreakpoints();
   const router = useRouter();
   const [visible, setVisible] = useState(false);
   const [showError, setShowError] = useState(false);
@@ -174,7 +174,9 @@ export default function RemovalModal({
       )}
 
       {showError && (
-        <div style={{ marginTop: '20px' }}>
+        <div
+          style={{ width: isSmall || isMedium ? '100%' : 'calc(100% * 1.5)' }}
+        >
           <Notification
             closeText={t('close')}
             status="error"

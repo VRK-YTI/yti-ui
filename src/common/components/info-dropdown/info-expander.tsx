@@ -7,7 +7,11 @@ import {
   ExternalLink,
   VisuallyHidden,
 } from 'suomifi-ui-components';
-import { InfoExpanderWrapper, PropertyList } from './info-expander.styles';
+import {
+  ActionBlock,
+  InfoExpanderWrapper,
+  PropertyList,
+} from './info-expander.styles';
 import { VocabularyInfoDTO } from '@app/common/interfaces/vocabulary.interface';
 import Separator from '@app/common/components/separator';
 import {
@@ -28,6 +32,10 @@ import Link from 'next/link';
 import { getPropertyValue } from '../property-value/get-property-value';
 import PropertyValue from '../property-value';
 import RemovalModal from '../removal-modal';
+import NewConceptModal from '../new-concept-modal';
+import ConceptImportModal from '../concept-import';
+import { useGetConceptResultQuery } from '../vocabulary/vocabulary.slice';
+import useUrlState from '@app/common/utils/hooks/use-url-state';
 import axios from 'axios';
 import { useStoreDispatch } from '@app/store';
 import { setAlert } from '../alert/alert.slice';
@@ -43,7 +51,15 @@ interface InfoExpanderProps {
 
 export default function InfoExpander({ data }: InfoExpanderProps) {
   const { t, i18n } = useTranslation('common');
+  const { urlState } = useUrlState();
   const user = useSelector(selectLogin());
+  const terminologyId =
+    data?.type?.graph.id ?? data?.identifier?.type.graph?.id ?? '';
+  const { refetch: refetchConcepts } = useGetConceptResultQuery({
+    id: terminologyId,
+    urlState,
+    language: i18n.language,
+  });
   const dispatch = useStoreDispatch();
 
   if (!data) {
@@ -161,56 +177,76 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
           <>
             <Separator isLarge />
             <BasicBlock
-              title={t('edit-terminology-info', { ns: 'admin' })}
+              title={t('terminology-actions', { ns: 'admin' })}
               extra={
                 <BasicBlockExtraWrapper>
-                  <Link
-                    href={`/terminology/${data.identifier.type.graph.id}/edit`}
-                  >
-                    <Button
-                      icon="edit"
-                      variant="secondary"
-                      id="edit-terminology-button"
-                    >
-                      {t('edit-terminology', { ns: 'admin' })}
-                    </Button>
-                  </Link>
+                  <ActionBlock>
+                    <Link href={`/terminology/${terminologyId}/edit`}>
+                      <Button
+                        icon="edit"
+                        variant="secondary"
+                        id="edit-terminology-button"
+                      >
+                        {t('edit-terminology', { ns: 'admin' })}
+                      </Button>
+                    </Link>
+                    <CopyTerminologyModal
+                      terminologyId={terminologyId}
+                      noWrap
+                    />
+                    <RemovalModal
+                      removalData={{ type: 'terminology', data: data }}
+                      targetId={terminologyId}
+                      targetName={getPropertyValue({
+                        property: data.properties.prefLabel,
+                        language: i18n.language,
+                      })}
+                      nonDescriptive
+                    />
+                  </ActionBlock>
                 </BasicBlockExtraWrapper>
               }
-              id="edit-terminology-block"
-            >
-              {t('you-have-right-edit-terminology', { ns: 'admin' })}
-            </BasicBlock>
+            />
           </>
         )}
 
         {HasPermission({
-          actions: 'CREATE_COLLECTION',
+          actions: 'EDIT_TERMINOLOGY',
           targetOrganization: data.references.contributor,
         }) && (
           <>
             <Separator isLarge />
             <BasicBlock
-              title={t('new-collection-to-terminology', { ns: 'admin' })}
+              title={t('concept-actions', { ns: 'admin' })}
               extra={
                 <BasicBlockExtraWrapper>
-                  <Link
-                    href={`/terminology/${data.identifier.type.graph.id}/new-collection`}
-                  >
-                    <Button
-                      icon="plus"
-                      variant="secondary"
-                      id="create-collection-button"
-                    >
-                      {t('add-new-collection', { ns: 'admin' })}
-                    </Button>
-                  </Link>
+                  <ActionBlock>
+                    <NewConceptModal
+                      terminologyId={terminologyId}
+                      languages={
+                        data.properties.language?.map(({ value }) => value) ??
+                        []
+                      }
+                    />
+
+                    <ConceptImportModal
+                      refetch={() => refetchConcepts()}
+                      terminologyId={terminologyId}
+                    />
+
+                    <Link href={`/terminology/${terminologyId}/new-collection`}>
+                      <Button
+                        icon="plus"
+                        variant="secondary"
+                        id="create-collection-button"
+                      >
+                        {t('add-new-collection', { ns: 'admin' })}
+                      </Button>
+                    </Link>
+                  </ActionBlock>
                 </BasicBlockExtraWrapper>
               }
-              id="new-collection-block"
-            >
-              {t('you-have-right-new-collection', { ns: 'admin' })}
-            </BasicBlock>
+            />
           </>
         )}
 
@@ -226,7 +262,7 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
                 onClick={() => handleDownloadClick()}
                 id="export-terminology-button"
               >
-                {t('vocabulary-info-vocabulary-export')} (.xlsx)
+                {t('vocabulary-info-vocabulary-button')}
               </Button>
             </BasicBlockExtraWrapper>
           }
@@ -235,32 +271,10 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
           {t('vocabulary-info-vocabulary-export-description')}
         </BasicBlock>
 
-        {HasPermission({
-          actions: 'CREATE_TERMINOLOGY',
-          targetOrganization: data.references.contributor,
-        }) && <CopyTerminologyModal terminologyId={data.type.graph.id} />}
-
-        {HasPermission({
-          actions: 'DELETE_TERMINOLOGY',
-          targetOrganization: data.references.contributor,
-        }) && (
-          <>
-            <Separator isLarge />
-            <RemovalModal
-              removalData={{ type: 'terminology', data: data }}
-              targetId={data.type.graph.id}
-              targetName={getPropertyValue({
-                property: data.properties.prefLabel,
-                language: i18n.language,
-              })}
-            />
-          </>
-        )}
+        <Separator isLarge />
 
         {!user.anonymous && (
           <>
-            <Separator isLarge />
-
             <BasicBlock
               title={t('email-subscription')}
               extra={
