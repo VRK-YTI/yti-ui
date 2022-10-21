@@ -55,7 +55,7 @@ export default function ConceptPage(props: ConceptPageProps) {
 }
 
 export const getServerSideProps = createCommonGetServerSideProps(
-  async ({ store, params, locale }: LocalHandlerParams) => {
+  async ({ store, params, locale, res }: LocalHandlerParams) => {
     if (!params) {
       throw new Error('Missing parameters for page');
     }
@@ -88,6 +88,15 @@ export const getServerSideProps = createCommonGetServerSideProps(
       reduxKey: 'conceptAPI',
       functionKey: 'getConcept',
     });
+
+    if (!conceptData) {
+      return {
+        redirect: {
+          destination: '/401',
+          permanent: false,
+        },
+      };
+    }
 
     const vocabularyTitle = getPropertyValue({
       property: vocabularyData?.properties?.prefLabel,
