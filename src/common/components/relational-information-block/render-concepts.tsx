@@ -13,6 +13,7 @@ import { translateStatus } from '@app/common/utils/translation-helpers';
 import { useBreakpoints } from '../media-query/media-query-context';
 import { useEffect, useState } from 'react';
 import RenderExpanderContent from './render-expander-content';
+import { useRouter } from 'next/router';
 
 interface RenderConceptsProps {
   concepts?: Concepts[];
@@ -27,6 +28,7 @@ export default function RenderConcepts({
 }: RenderConceptsProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
+  const { query } = useRouter();
   const [expandersOpen, setExpandersOpen] = useState(
     concepts?.map((c) => [c.id, false])
   );
@@ -50,71 +52,75 @@ export default function RenderConcepts({
   return (
     <div id="concept-result-block" style={{ width: '100%' }}>
       <ExpanderGroup openAllText="" closeAllText="">
-        {concepts?.map((concept) => {
-          return (
-            <Expander
-              key={concept.id}
-              className="concept-result-item"
-              onOpenChange={(open) => {
-                setExpandersOpen(
-                  expandersOpen?.map((c) => {
-                    if (c[0] === concept.id) {
-                      return [c[0], open];
-                    }
-                    return c;
-                  })
-                );
-              }}
-            >
-              <ExpanderTitle
-                ariaCloseText={t('open-concept-expander')}
-                ariaOpenText={t('close-concept-expander')}
-                toggleButtonAriaDescribedBy=""
+        {concepts
+          ?.filter((c) => c.id !== query.conceptId)
+          .map((concept) => {
+            return (
+              <Expander
+                key={concept.id}
+                className="concept-result-item"
+                onOpenChange={(open) => {
+                  setExpandersOpen(
+                    expandersOpen?.map((c) => {
+                      if (c[0] === concept.id) {
+                        return [c[0], open];
+                      }
+                      return c;
+                    })
+                  );
+                }}
               >
-                <Checkbox
-                  hintText={`${getPrefLabel({
-                    prefLabels: concept.terminology.label,
-                    lang: i18n.language,
-                  })} - ${translateStatus(concept.status ?? 'DRAFT', t)}`}
-                  onClick={(e) => handleCheckbox(e, concept)}
-                  checked={chosen.some((chose) => chose.id === concept.id)}
-                  className="concept-checkbox"
-                  variant={isSmall ? 'large' : 'small'}
+                <ExpanderTitle
+                  ariaCloseText={t('open-concept-expander')}
+                  ariaOpenText={t('close-concept-expander')}
+                  toggleButtonAriaDescribedBy=""
                 >
-                  <SanitizedTextContent
-                    text={
-                      concept.label
-                        ? getPropertyValue({
-                            property: Object.keys(concept.label).map((key) => {
-                              const obj = {
-                                lang: key,
-                                value: concept.label[key],
-                                regex: '',
-                              };
-                              return obj;
-                            }),
-                            language: i18n.language,
-                          }) ??
-                          concept.label[i18n.language] ??
-                          concept.label.fi
-                        : t('concept-label-undefined', { ns: 'common' })
-                    }
-                  />
-                </Checkbox>
-              </ExpanderTitle>
+                  <Checkbox
+                    hintText={`${getPrefLabel({
+                      prefLabels: concept.terminology.label,
+                      lang: i18n.language,
+                    })} - ${translateStatus(concept.status ?? 'DRAFT', t)}`}
+                    onClick={(e) => handleCheckbox(e, concept)}
+                    checked={chosen.some((chose) => chose.id === concept.id)}
+                    className="concept-checkbox"
+                    variant={isSmall ? 'large' : 'small'}
+                  >
+                    <SanitizedTextContent
+                      text={
+                        concept.label
+                          ? getPropertyValue({
+                              property: Object.keys(concept.label).map(
+                                (key) => {
+                                  const obj = {
+                                    lang: key,
+                                    value: concept.label[key],
+                                    regex: '',
+                                  };
+                                  return obj;
+                                }
+                              ),
+                              language: i18n.language,
+                            }) ??
+                            concept.label[i18n.language] ??
+                            concept.label.fi
+                          : t('concept-label-undefined', { ns: 'common' })
+                      }
+                    />
+                  </Checkbox>
+                </ExpanderTitle>
 
-              <RenderExpanderContent
-                terminologyId={concept.terminology.id}
-                conceptId={concept.id}
-                isOpen={
-                  (expandersOpen?.filter(
-                    (c) => c[0] === concept.id
-                  )?.[0]?.[1] as boolean) ?? false
-                }
-              />
-            </Expander>
-          );
-        })}
+                <RenderExpanderContent
+                  terminologyId={concept.terminology.id}
+                  conceptId={concept.id}
+                  isOpen={
+                    (expandersOpen?.filter(
+                      (c) => c[0] === concept.id
+                    )?.[0]?.[1] as boolean) ?? false
+                  }
+                />
+              </Expander>
+            );
+          })}
       </ExpanderGroup>
     </div>
   );
