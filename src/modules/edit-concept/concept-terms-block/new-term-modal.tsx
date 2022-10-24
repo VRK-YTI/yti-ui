@@ -28,6 +28,7 @@ import {
   CheckboxBlock,
   DropdownBlock,
   GrammaticalBlock,
+  HomographTextInput,
   LanguageSingleSelect,
   MediumHeading,
   ModalDescription,
@@ -158,7 +159,7 @@ export default function NewTermModal({
         </CheckboxBlock>
 
         {isHomographic && (
-          <TextInput
+          <HomographTextInput
             labelText={t('homograph-number')}
             type="number"
             defaultValue={termData.termHomographNumber}

@@ -24,6 +24,7 @@ import {
   CheckboxBlock,
   DropdownBlock,
   GrammaticalBlock,
+  HomographTextInput,
   MediumHeading,
   TermFormBottomBlock,
   TermFormRemoveButton,
@@ -158,21 +159,19 @@ export default function TermForm({
       </CheckboxBlock>
 
       {isHomographic && (
-        <BasicBlock title={t('homograph-number')}>
-          <TextInput
-            labelText=""
-            type="number"
-            defaultValue={term.termHomographNumber}
-            onChange={(e) =>
-              handleUpdate({
-                key: 'termHomographNumber',
-                value: e?.toString() ?? '',
-              })
-            }
-            min={0}
-            id="homograph-number-input"
-          />
-        </BasicBlock>
+        <HomographTextInput
+          labelText={t('homograph-number')}
+          type="number"
+          defaultValue={term.termHomographNumber}
+          onChange={(e) =>
+            handleUpdate({
+              key: 'termHomographNumber',
+              value: e?.toString() ?? '',
+            })
+          }
+          min={0}
+          id="homograph-number-input"
+        />
       )}
 
       <BasicBlock title={t('language')}>

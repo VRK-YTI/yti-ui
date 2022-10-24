@@ -11,6 +11,7 @@ import {
   SingleSelect,
   Text,
   Textarea,
+  TextInput,
 } from 'suomifi-ui-components';
 
 export const LargeHeading = styled(Heading)`
@@ -150,5 +151,9 @@ export const TermFormRemoveButton = styled(Button)`
 `;
 
 export const LanguageSingleSelect = styled(SingleSelect)`
+  margin-top: ${(props) => props.theme.suomifi.spacing.s};
+`;
+
+export const HomographTextInput = styled(TextInput)`
   margin-top: ${(props) => props.theme.suomifi.spacing.s};
 `;
