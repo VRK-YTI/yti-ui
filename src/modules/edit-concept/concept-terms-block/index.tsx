@@ -51,6 +51,7 @@ export default function ConceptTermsBlock({
 
   const handleUpdate = ({ termId, key, value }: ConceptTermUpdateProps) => {
     let updatedTerm = terms.filter((term) => term.id === termId)[0];
+
     updatedTerm = {
       ...updatedTerm,
       [key]: typeof value === 'string' ? value.trim() : value,
@@ -137,7 +138,11 @@ export default function ConceptTermsBlock({
               {terms
                 .filter((term) => term.termType === 'recommended-term')
                 .map((term) => (
-                  <TermExpander key={term.id} term={term} errors={errors}>
+                  <TermExpander
+                    key={`recommended-term-${term.id}`}
+                    term={term}
+                    errors={errors}
+                  >
                     <TermForm
                       term={term}
                       update={handleUpdate}
@@ -181,24 +186,26 @@ export default function ConceptTermsBlock({
             )}
             {terms.filter((term) => term.termType !== 'recommended-term')
               .length > 0 && (
-              <>
-                <OtherTermsExpanderGroup openAllText="" closeAllText="">
-                  {terms
-                    .filter((term) => term.termType !== 'recommended-term')
-                    .map((term) => (
-                      <TermExpander key={term.id} term={term} errors={errors}>
-                        <TermForm
-                          term={term}
-                          update={handleUpdate}
-                          currentTerms={terms}
-                          handleSwitchTerms={handleSwitchTerms}
-                          errors={errors}
-                          handleRemoveTerm={handleRemoveTerm}
-                        />
-                      </TermExpander>
-                    ))}
-                </OtherTermsExpanderGroup>
-              </>
+              <OtherTermsExpanderGroup openAllText="" closeAllText="">
+                {terms
+                  .filter((term) => term.termType !== 'recommended-term')
+                  .map((term) => (
+                    <TermExpander
+                      key={`other-term-${term.id}`}
+                      term={term}
+                      errors={errors}
+                    >
+                      <TermForm
+                        term={term}
+                        update={handleUpdate}
+                        currentTerms={terms}
+                        handleSwitchTerms={handleSwitchTerms}
+                        errors={errors}
+                        handleRemoveTerm={handleRemoveTerm}
+                      />
+                    </TermExpander>
+                  ))}
+              </OtherTermsExpanderGroup>
             )}
           </BasicBlockExtraWrapper>
         }
