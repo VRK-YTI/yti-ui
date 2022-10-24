@@ -200,7 +200,6 @@ export default function Collection({
                       }) && (
                         <>
                           <RemovalModal
-                            isDisabled={false}
                             nonDescriptive={true}
                             removalData={{
                               type: 'collection',

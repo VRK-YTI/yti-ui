@@ -195,8 +195,7 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
                       noWrap
                     />
                     <RemovalModal
-                      isDisabled={data.properties.status?.[0].value === 'VALID'}
-                      removalData={{ type: 'terminology' }}
+                      removalData={{ type: 'terminology', data: data }}
                       targetId={terminologyId}
                       targetName={getPropertyValue({
                         property: data.properties.prefLabel,
