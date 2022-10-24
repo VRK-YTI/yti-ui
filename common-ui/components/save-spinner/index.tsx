@@ -12,7 +12,7 @@ export default function SaveSpinner({ text }: SaveSpinnerProps) {
         textAlign="right"
         variant="small"
         status="loading"
-        text={text + "asd"}
+        text={text}
       />
     </div>
   );
