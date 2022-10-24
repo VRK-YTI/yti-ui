@@ -7,6 +7,10 @@ on:
 
 jobs:
   build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: terminology-ui
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -15,12 +19,11 @@ jobs:
           cache: "npm"
           cache-dependency-path: "terminology-ui/package-lock.json"
       - name: install common
-          working-directory: common-ui
-          run: npm ci
-      - name: check terminology
-          working-directory: terminology-ui
-          run: npm ci
-          run: npm run test:ci
-          run: npm run lint
-          run: npm run build
-          run: npm run i18n:ci
+        run: npm ci
+        working-directory: common-ui
+      - name: install terminology
+        run: npm ci
+      - run: npm run test:ci
+      - run: npm run lint
+      - run: npm run build
+      - run: npm run i18n:ci
