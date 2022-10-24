@@ -12,6 +12,7 @@ import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import {
   Button,
+  Dropdown,
   DropdownItem,
   SingleSelect,
   TextInput,
@@ -25,6 +26,7 @@ import {
   DropdownBlock,
   GrammaticalBlock,
   MediumHeading,
+  TermEquivalencyBlock,
   TermFormBottomBlock,
   TermFormRemoveButton,
   TermFormTopBlock,
@@ -252,6 +254,25 @@ export default function TermForm({
         id="scope-input"
         maxLength={TEXT_AREA_MAX}
       />
+
+      <TermEquivalencyBlock>
+        <label>
+          {t('term-equivalency')}
+          <span> ({t('optional')})</span>
+        </label>
+        <span>{t('term-equivalency-description')}</span>
+        <Dropdown
+          labelText=""
+          labelMode="hidden"
+          defaultValue={term.termEquivalency}
+          onChange={(e) => handleUpdate({ key: 'termEquivalency', value: e })}
+        >
+          <DropdownItem value="undefined">{t('no-selection')}</DropdownItem>
+          <DropdownItem value="<">{'<'}</DropdownItem>
+          <DropdownItem value=">">{'>'}</DropdownItem>
+          <DropdownItem value="~">{t('almost-the-same-as')} (~)</DropdownItem>
+        </Dropdown>
+      </TermEquivalencyBlock>
 
       <ListBlock
         update={handleUpdate}
