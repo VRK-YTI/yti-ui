@@ -19,7 +19,7 @@ jobs:
           cache: "npm"
           cache-dependency-path: "terminology-ui/package-lock.json"
       - run: npm ci
-        - working-directory: common-ui
+          working-directory: common-ui
       - run: npm ci
       - run: npm run test:ci
       - run: npm run lint
