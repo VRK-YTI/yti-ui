@@ -18,11 +18,18 @@
     "jsx": "preserve",
     "types": ["jest"],
     "incremental": true,
-    "baseUrl": "./",
+    "baseUrl": ".",
     "paths": {
-      "@app/*": ["src/*"]
+      "@app/*": ["src/*"],
+      "@common/*": ["../common-ui/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "../common-ui/**/*.ts",
+    "../common-ui/**/*.tsx"
+  ],
+  "exclude": ["node_modules", "../common-ui/node_modules"]
 }
