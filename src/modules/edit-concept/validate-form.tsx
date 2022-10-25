@@ -9,6 +9,7 @@ export interface FormError {
   source: boolean;
   status: boolean;
   diagrams: boolean;
+  termConjugation: boolean;
   total: boolean;
 }
 
@@ -22,6 +23,7 @@ export const EmptyFormError = {
   source: false,
   status: false,
   diagrams: false,
+  termConjugation: false,
   total: false,
 };
 
@@ -35,6 +37,7 @@ export default function validateForm(data: EditConceptType): FormError {
     source: false,
     status: false,
     diagrams: false,
+    termConjugation: false,
     total: false,
   };
 
@@ -124,6 +127,16 @@ export default function validateForm(data: EditConceptType): FormError {
     !data.basicInformation.status
   ) {
     errors.status = true;
+  }
+
+  // If any terms conjugation is not one of the available
+  // Currently available conjugations are 'singular' and 'plural'
+  if (
+    data.terms
+      .map((t) => t.termConjugation)
+      .filter((c) => c && !['singular', 'plural'].includes(c)).length > 0
+  ) {
+    errors.termConjugation = true;
   }
 
   // Setting total of errors if one error is found in object
