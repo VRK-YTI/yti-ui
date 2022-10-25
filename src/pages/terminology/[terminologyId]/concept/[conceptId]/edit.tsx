@@ -21,12 +21,6 @@ import {
 } from '@app/common/components/concept/concept.slice';
 import { getStoreData } from '@app/common/components/page-head/utils';
 import { Concept } from '@app/common/interfaces/concept.interface';
-import {
-  getAuthenticatedUser,
-  getRunningOperationPromises as authenticatedUserGetRunningOperationPromises,
-} from '@app/common/components/login/login.slice';
-import { ssrHasPermission } from '@app/common/utils/ssr-permission-check';
-import { ssrIsAuthenticated } from '@app/common/utils/ssr-is-authenticated';
 
 interface NewConceptPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -76,23 +70,9 @@ export const getServerSideProps = createCommonGetServerSideProps(
 
     store.dispatch(getVocabulary.initiate({ id: terminologyId }));
     store.dispatch(getConcept.initiate({ terminologyId, conceptId }));
-    store.dispatch(getAuthenticatedUser.initiate());
 
     await Promise.all(getVocabularyRunningOperationPromises());
     await Promise.all(getConceptRunningOperationPromises());
-    await Promise.all(authenticatedUserGetRunningOperationPromises());
-
-    if (!ssrHasPermission(store.getState(), ['EDIT_CONCEPT'])) {
-      return {
-        redirect: {
-          destination: '/401',
-          permanent: false,
-        },
-        props: {
-          isAuthenticated: ssrIsAuthenticated(store.getState()),
-        },
-      };
-    }
 
     const conceptData = getStoreData({
       state: store.getState(),
@@ -103,7 +83,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
     return {
       props: {
         conceptData: conceptData ?? null,
-        isAuthenticated: ssrIsAuthenticated(store.getState()),
+        requireAuthenticated: true,
       },
     };
   }

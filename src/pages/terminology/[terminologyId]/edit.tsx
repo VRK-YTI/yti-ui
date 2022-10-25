@@ -2,10 +2,6 @@ import {
   CommonContextProvider,
   CommonContextState,
 } from '@app/common/components/common-context-provider';
-import {
-  getAuthenticatedUser,
-  getRunningOperationPromises as authenticatedUserGetRunningOperationPromises,
-} from '@app/common/components/login/login.slice';
 import PageHead from '@app/common/components/page-head';
 import {
   getGroups,
@@ -20,8 +16,6 @@ import {
   createCommonGetServerSideProps,
   LocalHandlerParams,
 } from '@app/common/utils/create-getserversideprops';
-import { ssrIsAuthenticated } from '@app/common/utils/ssr-is-authenticated';
-import { ssrHasPermission } from '@app/common/utils/ssr-permission-check';
 import Layout from '@app/layouts/layout';
 import EditVocabulary from '@app/modules/edit-vocabulary';
 import { SSRConfig, useTranslation } from 'next-i18next';
@@ -67,27 +61,13 @@ export const getServerSideProps = createCommonGetServerSideProps(
     store.dispatch(getVocabulary.initiate({ id: terminologyId }));
     store.dispatch(getOrganizations.initiate(locale ?? 'fi'));
     store.dispatch(getGroups.initiate(locale ?? 'fi'));
-    store.dispatch(getAuthenticatedUser.initiate());
 
     await Promise.all(getRunningOperationPromises());
     await Promise.all(getTermSearchRunningOperationPromises());
-    await Promise.all(authenticatedUserGetRunningOperationPromises());
-
-    if (!ssrHasPermission(store.getState(), ['EDIT_TERMINOLOGY'])) {
-      return {
-        redirect: {
-          destination: '/401',
-          permanent: false,
-        },
-        props: {
-          isAuthenticated: ssrIsAuthenticated(store.getState()),
-        },
-      };
-    }
 
     return {
       props: {
-        isAuthenticated: ssrIsAuthenticated(store.getState()),
+        requireAuthenticated: true,
       },
     };
   }

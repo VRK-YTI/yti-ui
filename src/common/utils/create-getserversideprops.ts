@@ -2,15 +2,20 @@ import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import {
   anonymousUser,
+  User,
   UserProps,
 } from '@app/common/interfaces/user.interface';
 import withSession from './session';
 import { AppStore, wrapper } from '@app/store';
 import { ParsedUrlQuery } from 'querystring';
 import { SSRConfig } from 'next-i18next';
-import { setLogin } from '@app/common/components/login/login.slice';
+import {
+  getAuthenticatedUser,
+  setLogin,
+} from '@app/common/components/login/login.slice';
 import { CommonContextState } from '../components/common-context-provider';
 import { setAdminControls } from '../components/admin-controls/admin-controls.slice';
+import { getStoreData } from '../components/page-head/utils';
 
 export interface LocalHandlerParams extends GetServerSidePropsContext {
   store: AppStore;
@@ -46,17 +51,18 @@ export function createCommonGetServerSideProps<
           store,
         });
 
-        if (
-          results?.props &&
-          typeof (results.props as Record<string, boolean>)[
-            'isAuthenticated'
-          ] === 'boolean' &&
-          !(results.props as Record<string, boolean>).isAuthenticated
-        ) {
+        await store.dispatch(getAuthenticatedUser.initiate());
+        const user: User = getStoreData({
+          state: store.getState(),
+          reduxKey: 'loginApi',
+          functionKey: 'getAuthenticatedUser',
+        });
+
+        if (!user || user.anonymous) {
           store.dispatch(setLogin(anonymousUser));
         } else {
           store.dispatch(
-            setLogin(req.session.user ? req.session.user : anonymousUser)
+            setLogin(user ? user : req.session.user ?? anonymousUser)
           );
         }
 
@@ -72,8 +78,19 @@ export function createCommonGetServerSideProps<
             : {}
           : {};
 
+        const redirectProp =
+          results?.props &&
+          (results.props as Record<string, boolean>).requireAuthenticated &&
+          user.anonymous
+            ? {
+                permanent: false,
+                destination: '/401',
+              }
+            : undefined;
+
         return {
           ...results,
+          redirect: redirectProp,
           props: {
             ...resultsProps,
             ...(await serverSideTranslations(locale ?? 'fi', [

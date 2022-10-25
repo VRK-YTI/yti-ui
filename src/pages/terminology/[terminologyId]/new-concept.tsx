@@ -15,12 +15,6 @@ import {
   getVocabulary,
   getRunningOperationPromises,
 } from '@app/common/components/vocabulary/vocabulary.slice';
-import {
-  getAuthenticatedUser,
-  getRunningOperationPromises as authenticatedUserGetRunningOperationPromises,
-} from '@app/common/components/login/login.slice';
-import { ssrHasPermission } from '@app/common/utils/ssr-permission-check';
-import { ssrIsAuthenticated } from '@app/common/utils/ssr-is-authenticated';
 
 interface NewConceptPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -57,26 +51,12 @@ export const getServerSideProps = createCommonGetServerSideProps(
     }
 
     store.dispatch(getVocabulary.initiate({ id: terminologyId }));
-    store.dispatch(getAuthenticatedUser.initiate());
 
     await Promise.all(getRunningOperationPromises());
-    await Promise.all(authenticatedUserGetRunningOperationPromises());
-
-    if (!ssrHasPermission(store.getState(), ['CREATE_CONCEPT'])) {
-      return {
-        redirect: {
-          destination: '/401',
-          permanent: false,
-        },
-        props: {
-          isAuthenticated: ssrIsAuthenticated(store.getState()),
-        },
-      };
-    }
 
     return {
       props: {
-        isAuthenticated: ssrIsAuthenticated(store.getState()),
+        requireAuthenticated: true,
       },
     };
   }

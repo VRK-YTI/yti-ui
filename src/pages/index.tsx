@@ -19,11 +19,6 @@ import {
 } from '@app/common/components/counts/counts.slice';
 import PageHead from '@app/common/components/page-head';
 import { initialUrlState } from '@app/common/utils/hooks/use-url-state';
-import {
-  getAuthenticatedUser,
-  getRunningOperationPromises as authenticatedUserGetRunningOperationPromises,
-} from '@app/common/components/login/login.slice';
-import { ssrIsAuthenticated } from '@app/common/utils/ssr-is-authenticated';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -88,16 +83,10 @@ export const getServerSideProps = createCommonGetServerSideProps(
     store.dispatch(getGroups.initiate(locale ?? 'fi'));
     store.dispatch(getOrganizations.initiate(locale ?? 'fi'));
     store.dispatch(getCounts.initiate(null));
-    store.dispatch(getAuthenticatedUser.initiate());
 
     await Promise.all(terminologyGetRunningOperationPromises());
     await Promise.all(countsGetRunningOperationPromises());
-    await Promise.all(authenticatedUserGetRunningOperationPromises());
 
-    return {
-      props: {
-        isAuthenticated: ssrIsAuthenticated(store.getState()),
-      },
-    };
+    return {};
   }
 );
