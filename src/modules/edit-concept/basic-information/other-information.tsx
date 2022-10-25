@@ -1,12 +1,7 @@
 import { TEXT_INPUT_MAX } from '@app/common/utils/constants';
-import { translateWordClass } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
-import {
-  ExpanderTitleButton,
-  SingleSelect,
-  TextInput,
-} from 'suomifi-ui-components';
+import { ExpanderTitleButton, TextInput } from 'suomifi-ui-components';
 import { BasicInfoUpdate } from './concept-basic-information';
 import {
   ConceptExpander,
@@ -31,35 +26,16 @@ export default function OtherInformation({
   const [conceptClass, setConceptClass] = useState<string | undefined>(
     initialValues?.conceptClass
   );
-  const [wordClass, setWordClass] = useState<typeof partOfSpeech[0] | null>(
-    initialValues?.wordClass
-      ? {
-          uniqueItemId: initialValues.wordClass,
-          labelText: translateWordClass(initialValues.wordClass, t),
-        }
-      : null
-  );
 
   const handleChange = () => {
     update({
       key: infoKey,
       value: {
         conceptClass: conceptClass,
-        wordClass: wordClass?.uniqueItemId ?? '',
+        wordClass: '',
       },
     });
   };
-
-  const partOfSpeech = [
-    {
-      uniqueItemId: 'adjective',
-      labelText: t('word-class.adjective', { ns: 'common' }),
-    },
-    {
-      uniqueItemId: 'verb',
-      labelText: t('word-class.verb', { ns: 'common' }),
-    },
-  ];
 
   return (
     <ConceptExpander id="other-information-expander">
@@ -75,20 +51,6 @@ export default function OtherInformation({
           onBlur={() => handleChange()}
           maxLength={TEXT_INPUT_MAX}
           id="concept-class-input"
-        />
-
-        <SingleSelect
-          labelText={t('word-class')}
-          optionalText={t('optional')}
-          hintText={t('word-class-hint')}
-          clearButtonLabel={t('clear-button-label')}
-          ariaOptionsAvailableText={t('word-class-available')}
-          items={partOfSpeech}
-          selectedItem={wordClass ?? undefined}
-          noItemsText={t('word-class-no-items')}
-          onItemSelectionChange={(e) => setWordClass(e)}
-          onBlur={() => handleChange()}
-          id="word-class-picker"
         />
       </ExpanderContentFitted>
     </ConceptExpander>

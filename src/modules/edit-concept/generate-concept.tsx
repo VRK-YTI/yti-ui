@@ -513,7 +513,7 @@ export default function generateConcept({
           {
             lang: '',
             regex: regex,
-            value: data.basicInformation.otherInfo.wordClass ?? '',
+            value: '',
           },
         ],
       },
