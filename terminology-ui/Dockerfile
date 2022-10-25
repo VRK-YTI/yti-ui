@@ -6,7 +6,15 @@ FROM node:16.13.1-alpine3.14@sha256:a9b9cb880fa429b0bea899cd3b1bc081ab7277cc97e6
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
-COPY package.json package-lock.json ./
+COPY terminology-ui/package.json terminology-ui/package-lock.json ./terminology-ui/
+WORKDIR /app/terminology-ui
+RUN npm ci
+
+
+# Install common library and its nodes
+WORKDIR /app
+COPY common-ui ./common-ui
+WORKDIR /app/common-ui
 RUN npm ci
 
 #
@@ -29,8 +37,10 @@ ARG SKIP_COVERAGE
 ARG VERSION
 
 WORKDIR /app
-COPY . .
-COPY --from=deps /app/node_modules ./node_modules
+COPY terminology-ui ./terminology-ui
+COPY --from=deps /app/terminology-ui/node_modules ./terminology-ui/node_modules
+COPY --from=deps /app/common-ui ./common-ui
+WORKDIR /app/terminology-ui
 
 RUN if [ "$SKIP_TESTS" ]; then \
     echo "Skipping tests"; \
@@ -54,7 +64,7 @@ RUN npm run build && npm install --production --ignore-scripts --prefer-offline
 #
 
 FROM node:16.13.1-alpine3.14@sha256:a9b9cb880fa429b0bea899cd3b1bc081ab7277cc97e6d2dcd84bd9753b2027e1 AS runner
-WORKDIR /app
+WORKDIR /app/terminology-ui
 
 ENV NODE_ENV production
 
@@ -67,14 +77,14 @@ RUN apk add curl
 # the application.
 RUN apk add libcap && setcap 'cap_net_bind_service=+ep' /usr/local/bin/node
 
-COPY --from=builder /app/next.config.js ./
-COPY --from=builder /app/next-i18next.config.js ./
-COPY --from=builder /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/junit.xml ./
-COPY --from=builder /app/coverage ./coverage
+COPY --from=builder /app/terminology-ui/next.config.js ./
+COPY --from=builder /app//terminology-ui/next-i18next.config.js ./
+COPY --from=builder /app/terminology-ui/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/terminology-ui/.next ./.next
+COPY --from=builder /app/terminology-ui/node_modules ./node_modules
+COPY --from=builder /app/terminology-ui/package.json ./package.json
+COPY --from=builder /app/terminology-ui/junit.xml ./
+COPY --from=builder /app/terminology-ui/coverage ./coverage
 
 USER nextjs
 
