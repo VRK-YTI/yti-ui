@@ -1,5 +1,6 @@
 import { Concepts } from '@app/common/interfaces/concepts.interface';
 import useMountEffect from '@app/common/utils/hooks/use-mount-effect';
+import { RelationInfoType } from '@app/modules/edit-concept/new-concept.types';
 import { useTranslation } from 'next-i18next';
 import { createRef, useEffect, useState } from 'react';
 import { SingleSelectData } from 'suomifi-ui-components';
@@ -11,8 +12,8 @@ import Search from './search';
 
 interface RelationModalContentProps {
   fromOther?: boolean;
-  chosen: Concepts[];
-  setChosen: (value: Concepts[]) => void;
+  chosen: Concepts[] | RelationInfoType[];
+  setChosen: (value: Concepts[] | RelationInfoType[]) => void;
   searchResults: Concepts[];
   setSearchResults: (value: Concepts[]) => void;
   terminologyId: string;
@@ -135,7 +136,7 @@ export default function RelationModalContent({
     if (result.isSuccess) {
       setSearchResults(result.data.concepts);
       setTotalResults(result.data.totalHitCount);
-      if (!initialized && !fromOther) {
+      if (!initialized) {
         setChosen(
           result.data.concepts.filter((c) =>
             initialChosenConcepts.includes(c.id)

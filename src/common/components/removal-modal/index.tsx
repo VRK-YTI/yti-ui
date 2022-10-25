@@ -1,5 +1,6 @@
 import { Collection } from '@app/common/interfaces/collection.interface';
 import { Concept } from '@app/common/interfaces/concept.interface';
+import { VocabularyInfoDTO } from '@app/common/interfaces/vocabulary.interface';
 import {
   translateRemovalModalConfirmation,
   translateRemovalModalDescription,
@@ -17,6 +18,7 @@ import {
   Button,
   InlineAlert,
   ModalTitle,
+  Notification,
   Paragraph,
   Text,
 } from 'suomifi-ui-components';
@@ -38,11 +40,11 @@ import {
 } from './removal-modal.styles';
 
 interface RemovalModalProps {
-  isDisabled: boolean;
   nonDescriptive?: boolean;
   removalData:
     | {
         type: 'terminology';
+        data?: VocabularyInfoDTO;
       }
     | {
         type: 'concept';
@@ -57,7 +59,6 @@ interface RemovalModalProps {
 }
 
 export default function RemovalModal({
-  isDisabled,
   nonDescriptive,
   removalData,
   targetId,
@@ -65,9 +66,10 @@ export default function RemovalModal({
 }: RemovalModalProps) {
   const { t } = useTranslation('admin');
   const dispatch = useStoreDispatch();
-  const { isSmall } = useBreakpoints();
+  const { isSmall, isMedium } = useBreakpoints();
   const router = useRouter();
   const [visible, setVisible] = useState(false);
+  const [showError, setShowError] = useState(false);
   const [deleteVocabulary, terminology] = useDeleteVocabularyMutation();
   const [deleteTarget, target] = useDeleteTargetMutation();
 
@@ -110,6 +112,18 @@ export default function RemovalModal({
     }
   };
 
+  const handleVisibility = () => {
+    if (
+      removalData.type === 'terminology' &&
+      removalData.data?.properties.status?.[0].value === 'VALID'
+    ) {
+      setShowError(true);
+      return;
+    }
+
+    setVisible(true);
+  };
+
   const isUninitialized = () => {
     return terminology.isUninitialized && target.isUninitialized;
   };
@@ -137,18 +151,10 @@ export default function RemovalModal({
                 variant="secondary"
                 icon="remove"
                 id={`open-remove-${removalData.type}-modal`}
-                onClick={() => setVisible(true)}
-                disabled={isDisabled}
+                onClick={() => handleVisibility()}
               >
                 {translateRemovalModalTitle(removalData.type, t)}
               </Button>
-              {isDisabled && removalData.type === 'terminology' && (
-                <Paragraph style={{ marginTop: '10px' }}>
-                  <Text smallScreen variant="bold">
-                    {t('remove-modal.remove-disabled')}
-                  </Text>
-                </Paragraph>
-              )}
             </BasicBlockExtraWrapper>
           }
         >
@@ -160,19 +166,27 @@ export default function RemovalModal({
             variant="secondary"
             icon="remove"
             id={`open-remove-${removalData.type}-modal`}
-            onClick={() => setVisible(true)}
-            disabled={isDisabled}
+            onClick={() => handleVisibility()}
           >
             {translateRemovalModalTitle(removalData.type, t)}
           </Button>
-          {isDisabled && removalData.type === 'terminology' && (
-            <Paragraph style={{ marginTop: '10px' }}>
-              <Text smallScreen variant="bold">
-                {t('remove-modal.remove-disabled')}
-              </Text>
-            </Paragraph>
-          )}
         </>
+      )}
+
+      {showError && (
+        <div
+          style={{ width: isSmall || isMedium ? '100%' : 'calc(100% * 1.5)' }}
+        >
+          <Notification
+            closeText={t('close')}
+            status="error"
+            headingText={t('remove-modal.remove-disabled-title')}
+            onCloseButtonClick={() => setShowError(false)}
+            smallScreen={isSmall}
+          >
+            {t('remove-modal.remove-disabled')}
+          </Notification>
+        </div>
       )}
 
       <RemoveModal

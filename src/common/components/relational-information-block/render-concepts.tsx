@@ -14,11 +14,12 @@ import { useBreakpoints } from '../media-query/media-query-context';
 import { useEffect, useState } from 'react';
 import RenderExpanderContent from './render-expander-content';
 import { useRouter } from 'next/router';
+import { RelationInfoType } from '@app/modules/edit-concept/new-concept.types';
 
 interface RenderConceptsProps {
   concepts?: Concepts[];
-  chosen: Concepts[];
-  setChosen: (value: Concepts[]) => void;
+  chosen: Concepts[] | RelationInfoType[];
+  setChosen: (value: Concepts[] | RelationInfoType[]) => void;
 }
 
 export default function RenderConcepts({
@@ -37,11 +38,24 @@ export default function RenderConcepts({
     setExpandersOpen(concepts?.map((c) => [c.id, false]));
   }, [concepts]);
 
-  const handleCheckbox = (e: { checkboxState: boolean }, concept: Concepts) => {
+  const handleCheckbox = (
+    e: { checkboxState: boolean },
+    concept: Concepts | RelationInfoType
+  ) => {
     if (e.checkboxState) {
-      setChosen([...chosen, concept]);
+      setChosen(
+        'terminology' in concept
+          ? [...(chosen as Concepts[]), concept]
+          : [...(chosen as RelationInfoType[]), concept]
+      );
     } else {
-      setChosen(chosen.filter((chose) => chose.id !== concept.id));
+      setChosen(
+        'terminology' in chosen
+          ? (chosen as Concepts[]).filter((chose) => chose.id !== concept.id)
+          : (chosen as RelationInfoType[]).filter(
+              (chose) => chose.id !== concept.id
+            )
+      );
     }
   };
 

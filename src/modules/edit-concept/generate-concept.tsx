@@ -693,13 +693,19 @@ export default function generateConcept({
   const initialTermIds: string[] = initialValue
     ? Object.keys(initialValue?.references).flatMap((key) => {
         if (
-          key === 'exactMatch' ||
-          key === 'relatedMatch' ||
-          key === 'closeMatch'
+          [
+            'broader',
+            'closeMatch',
+            'exactMatch',
+            'hasPart',
+            'isPartOf',
+            'narrower',
+            'related',
+            'relatedMatch',
+          ].includes(key)
         ) {
           return [];
         }
-
         return (
           initialValue?.references[key as keyof Concept['references']]?.map(
             (val) => val.id
@@ -710,7 +716,7 @@ export default function generateConcept({
 
   let initialInOtherIds: string[] = initialValue
     ? initialValue.references.exactMatch
-        ?.map((match) => match.id ?? '')
+        ?.map((match) => match.properties.targetId?.[0].value ?? '')
         .filter((val) => val) ?? []
     : [];
 
@@ -718,7 +724,7 @@ export default function generateConcept({
     ? [
         ...initialInOtherIds,
         ...(initialValue.references.relatedMatch
-          ?.map((match) => match.id ?? '')
+          ?.map((match) => match.properties.targetId?.[0].value ?? '')
           .filter((val) => val) ?? []),
       ]
     : initialInOtherIds;
@@ -727,7 +733,7 @@ export default function generateConcept({
     ? [
         ...initialInOtherIds,
         ...(initialValue.references.closeMatch
-          ?.map((match) => match.id ?? '')
+          ?.map((match) => match.properties.targetId?.[0].value ?? '')
           .filter((val) => val) ?? []),
       ]
     : initialInOtherIds;
