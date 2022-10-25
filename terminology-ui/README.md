@@ -52,4 +52,4 @@ auto-updates as you edit the file.
 
 You can find more documentation in [docs](../docs).
 
-Test modification 1
+Test modification 2
