@@ -287,6 +287,7 @@ export default function NewTermModal({
           <span>{t('term-equivalency-description')}</span>
           <Dropdown
             labelText=""
+            labelMode="hidden"
             defaultValue="undefined"
             onChange={(e) => handleUpdate({ key: 'termEquivalency', value: e })}
           >

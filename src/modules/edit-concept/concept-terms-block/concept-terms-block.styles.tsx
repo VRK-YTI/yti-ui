@@ -88,6 +88,10 @@ export const TermEquivalencyBlock = styled(Block)`
       font-weight: 400;
     }
   }
+
+  > span {
+    margin-bottom: ${(props) => props.theme.suomifi.spacing.xs};
+  }
 `;
 
 export const RadioButtonGroupSpaced = styled(RadioButtonGroup)<{
