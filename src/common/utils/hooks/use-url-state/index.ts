@@ -79,7 +79,15 @@ function updateURLState(router: NextRouter, state?: UrlState): void {
       pathname: router.pathname,
       query: {
         ...otherQueryParameters,
-        ...buildUrlStatePatch({ ...initialUrlState, ...state }),
+        ...buildUrlStatePatch({
+          // ...initialUrlState,
+          ...{
+            ...initialUrlState,
+            type:
+              typeof type === 'string' ? type.toString() : initialUrlState.type,
+          },
+          ...state,
+        }),
       },
     },
     undefined,
