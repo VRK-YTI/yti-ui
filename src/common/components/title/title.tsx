@@ -1,10 +1,12 @@
 import { useTranslation } from 'react-i18next';
-import { Heading } from 'suomifi-ui-components';
+import { Heading, Text } from 'suomifi-ui-components';
 import {
   Contributor,
   Description,
   StatusChip,
   TitleDescriptionWrapper,
+  TitleType,
+  TitleTypeAndStatusWrapper,
   TitleWrapper,
   TitleWrapperNoBreadcrumb,
 } from './title.styles';
@@ -17,7 +19,12 @@ import { useEffect } from 'react';
 import { getProperty } from '@app/common/utils/get-property';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import NewTerminology from '@app/modules/new-terminology';
-import { translateStatus } from '@app/common/utils/translation-helpers';
+import {
+  translateStatus,
+  translateTerminologyType,
+  translateTermType,
+} from '@app/common/utils/translation-helpers';
+import { Badge, BadgeBar, MainTitle } from '../title-block';
 
 interface TitleProps {
   info: string | VocabularyInfoDTO;
@@ -54,7 +61,8 @@ export default function Title({ info, noExpander }: TitleProps) {
     );
   } else {
     const status = info.properties.status?.[0].value ?? 'DRAFT';
-
+    const terminologyType =
+      info.properties.terminologyType?.[0].value ?? 'TERMINOLOGICAL_VOCABULARY';
     const contributor =
       getPropertyValue({
         property: getProperty('prefLabel', info.references.contributor),
@@ -69,12 +77,16 @@ export default function Title({ info, noExpander }: TitleProps) {
           {title}
         </Heading>
 
-        <StatusChip
-          valid={status === 'VALID' ? 'true' : undefined}
-          id="status-chip"
-        >
-          {translateStatus(status, t)}
-        </StatusChip>
+        <TitleTypeAndStatusWrapper>
+          <TitleType>{translateTerminologyType(terminologyType, t)}</TitleType>{' '}
+          &middot;
+          <StatusChip
+            valid={status === 'VALID' ? 'true' : undefined}
+            id="status-chip"
+          >
+            {translateStatus(status, t)}
+          </StatusChip>
+        </TitleTypeAndStatusWrapper>
 
         {!noExpander && <InfoExpander data={info} />}
       </TitleWrapper>
