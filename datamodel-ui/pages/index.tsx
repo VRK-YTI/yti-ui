@@ -20,7 +20,7 @@ const Home: NextPage = () => {
         </h1>
 
         <Block>
-          <SaveSpinner text='aa'></SaveSpinner>
+          <SaveSpinner text='test'></SaveSpinner>
         </Block>
 
         <p className={styles.description}>
