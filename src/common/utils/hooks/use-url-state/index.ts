@@ -80,7 +80,6 @@ function updateURLState(router: NextRouter, state?: UrlState): void {
       query: {
         ...otherQueryParameters,
         ...buildUrlStatePatch({
-          // ...initialUrlState,
           ...{
             ...initialUrlState,
             type:
