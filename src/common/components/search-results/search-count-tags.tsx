@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { VisuallyHidden } from 'suomifi-ui-components';
+import { Text, VisuallyHidden } from 'suomifi-ui-components';
 import {
   GroupSearchResult,
   OrganizationSearchResult,
@@ -16,6 +16,7 @@ import {
 } from './search-count-tags.styles';
 import Tag from './tag';
 import { translateStatus } from '@app/common/utils/translation-helpers';
+import { isEqual } from 'lodash';
 
 interface SearchCountTagsProps {
   title: ReactNode;
@@ -47,12 +48,25 @@ export default function SearchCountTags({
       <ChipWrapper id="result-counts-chips">
         {renderOrganizationTag()}
         {renderQBeforeStatus && renderQTag()}
+        {renderLanguageTags()}
         {renderStatusTags()}
         {!renderQBeforeStatus && renderQTag()}
         {renderDomainTags()}
+        {renderNoActiveFilters()}
       </ChipWrapper>
     </CountWrapper>
   );
+
+  function renderNoActiveFilters() {
+    // Ignoring type here on purpose
+    if (isEqual({ ...urlState, type: '' }, { ...initialUrlState, type: '' })) {
+      return (
+        <Text style={{ fontSize: '16px', lineHeight: '0' }}>
+          {t('no-filters')}
+        </Text>
+      );
+    }
+  }
 
   function renderOrganizationTag() {
     if (urlState.organization) {
@@ -121,5 +135,22 @@ export default function SearchCountTags({
         }
       })
       .filter(Boolean);
+  }
+
+  function renderLanguageTags() {
+    if (urlState.lang) {
+      return (
+        <Tag
+          onRemove={() =>
+            patchUrlState({
+              lang: '',
+            })
+          }
+          key={urlState.lang}
+        >
+          {urlState.lang}
+        </Tag>
+      );
+    }
   }
 }
