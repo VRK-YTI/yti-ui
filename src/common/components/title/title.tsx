@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { Heading, Text } from 'suomifi-ui-components';
+import { Heading } from 'suomifi-ui-components';
 import {
   Contributor,
   Description,
@@ -22,9 +22,7 @@ import NewTerminology from '@app/modules/new-terminology';
 import {
   translateStatus,
   translateTerminologyType,
-  translateTermType,
 } from '@app/common/utils/translation-helpers';
-import { Badge, BadgeBar, MainTitle } from '../title-block';
 
 interface TitleProps {
   info: string | VocabularyInfoDTO;
