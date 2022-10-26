@@ -108,6 +108,7 @@
   "edit-concept-error": {
     "default": "",
     "diagrams": "",
+    "diagramsUri": "",
     "editorialNote": "",
     "example": "",
     "language": "",

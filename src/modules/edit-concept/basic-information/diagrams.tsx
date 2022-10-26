@@ -86,7 +86,11 @@ export default function Diagrams({
                 onChange={(e) =>
                   handleUpdate(diagram.id, 'url', e?.toString() ?? '')
                 }
-                status={isError && diagram.url === '' ? 'error' : 'default'}
+                status={
+                  isError && (diagram.url === '' || !diagram.url.includes('.'))
+                    ? 'error'
+                    : 'default'
+                }
               />
 
               <FullwidthTextarea

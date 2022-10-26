@@ -9,6 +9,7 @@ export interface FormError {
   source: boolean;
   status: boolean;
   diagrams: boolean;
+  diagramsUri: boolean;
   total: boolean;
 }
 
@@ -22,6 +23,7 @@ export const EmptyFormError = {
   source: false,
   status: false,
   diagrams: false,
+  diagramsUri: false,
   total: false,
 };
 
@@ -35,6 +37,7 @@ export default function validateForm(data: EditConceptType): FormError {
     source: false,
     status: false,
     diagrams: false,
+    diagramsUri: false,
     total: false,
   };
 
@@ -115,6 +118,16 @@ export default function validateForm(data: EditConceptType): FormError {
     ).length > 0
   ) {
     errors.diagrams = true;
+  }
+
+  // If there urls in diagrams that are incorrect (e.g. currently don't have any full stops (.))
+  if (
+    !errors.diagrams &&
+    data.basicInformation.diagramAndSource.diagrams.filter(
+      (diagram) => !diagram.url.includes('.')
+    ).length > 0
+  ) {
+    errors.diagramsUri = true;
   }
 
   // If the status is undefined

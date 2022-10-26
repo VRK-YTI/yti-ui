@@ -106,11 +106,19 @@ export default function EditConcept({
   const updateTerms = (terms: ConceptTermType[]) => {
     setFormData({ ...formData, terms: terms });
     enableConfirmation();
+    if (errors.total) {
+      const errors = validateForm({ ...formData, terms: terms });
+      setErrors(errors);
+    }
   };
 
   const updateBasicInformation = (basicInfo: BasicInfo) => {
     setFormData({ ...formData, basicInformation: basicInfo });
     enableConfirmation();
+    if (errors.total) {
+      const errors = validateForm({ ...formData, basicInformation: basicInfo });
+      setErrors(errors);
+    }
   };
 
   useEffect(() => {
