@@ -218,7 +218,7 @@ export default function SearchResults({
 
               return (
                 <div key={`${value}-${idx}`}>
-                  {value}
+                  {urlState.q !== '' ? highlightCollectionMember(value) : value}
                   {comma}&nbsp;
                 </div>
               );
@@ -230,7 +230,8 @@ export default function SearchResults({
 
               return (
                 <div key={`${value}-${idx}`}>
-                  {value} ({lang}){comma}&nbsp;
+                  {urlState.q !== '' ? highlightCollectionMember(value) : value}{' '}
+                  ({lang}){comma}&nbsp;
                 </div>
               );
             }
@@ -246,7 +247,7 @@ export default function SearchResults({
             if (value !== '') {
               return (
                 <div key={`${value}-${idx}`}>
-                  {value}
+                  {urlState.q !== '' ? highlightCollectionMember(value) : value}
                   {comma}&nbsp;
                 </div>
               );
@@ -258,7 +259,8 @@ export default function SearchResults({
 
               return (
                 <div key={`${value}-${idx}`}>
-                  {value} ({lang}){comma}&nbsp;
+                  {urlState.q !== '' ? highlightCollectionMember(value) : value}{' '}
+                  ({lang}){comma}&nbsp;
                 </div>
               );
             }
@@ -358,5 +360,17 @@ export default function SearchResults({
     }
 
     return t('terminology-search-no-definition');
+  }
+
+  function highlightCollectionMember(value?: string) {
+    if (!value) {
+      return value;
+    }
+
+    return (
+      <SanitizedTextContent
+        text={value.replaceAll(urlState.q, `<b>${urlState.q}</b>`)}
+      />
+    );
   }
 }
