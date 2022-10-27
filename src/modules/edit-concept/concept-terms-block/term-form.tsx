@@ -384,6 +384,15 @@ export default function TermForm({
             handleUpdate({ key: 'termConjugation', value: e })
           }
           id={`conjugations-picker_${term.id}`}
+          status={
+            term.termConjugation &&
+            !termConjugation
+              .map((c) => c.uniqueItemId)
+              .includes(term.termConjugation) &&
+            errors.termConjugation
+              ? 'error'
+              : 'default'
+          }
         />
 
         <SingleSelect

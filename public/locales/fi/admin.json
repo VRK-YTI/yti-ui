@@ -117,6 +117,7 @@
     "recommendedTerms": "Käsitteeltä puuttuu suositettava termi",
     "source": "Vähintään yhdeltä lähteeltä puuttuu arvo",
     "status": "Käsitteen tilaa ei ole määritetty",
+    "termConjugation": "Yhdellä tai useammalla termillä on väärin asetettu termin luku",
     "termPrefLabel": "Vähintään yhdeltä termiltä puuttuu nimi",
     "termType": "Termin tyyppiä ei ole määritetty"
   },
