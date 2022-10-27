@@ -1,6 +1,7 @@
 const { i18n } = require('./next-i18next.config');
 const { PHASE_DEVELOPMENT_SERVER } = require('next/constants');
 const fs = require('fs');
+const withTM = require('next-transpile-modules')(['../common-ui']);
 
 module.exports = (phase, { defaultConfig }) => {
   let versionInfo;
@@ -140,5 +141,5 @@ module.exports = (phase, { defaultConfig }) => {
     };
   }
 
-  return config;
+  return withTM(config);
 };

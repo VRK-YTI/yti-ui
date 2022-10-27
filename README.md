@@ -1,53 +1,29 @@
-# yti-terminology-ui
+# YTI UI monorepo
 
-A user interface for the terminology editor
+This is a monorepo for all the 'v2' UI projects for YTI.
+The purpose of the monorepo is to make it easier to share a common component library with all the UI projects.
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped with
-[`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Troubleshooting and documentation
 
-## Installing node.js
+Documentation and common troubleshooting problems can be found in the [docs](./docs/)
 
-This app runs on Node.js. You need to install it before you can continue.
+## Directories
 
-The easiest way to install Node.js is to use
-[nvm](https://github.com/nvm-sh/nvm). We have defined Node.js version in
-`.nvmrc` so you just need to run `nvm install` and `nvm use` to install the
-correct version.
+The top level directory (where this README is located) contains mostly git files and some IDE settings. The docs folder is as explained above.
 
-If you can't use nvm, check current Node.js version from `.nvmrc` and install it
-manually.
+The [common-ui](./common-ui/) folder is the common component library. Read the [common-ui README](./common-ui/README.md) on how to use this in the other projects. The common-ui folder should only contain components that will be used in multiple different projects
 
-## Getting Started
+The following directories are UI projects for various different YTI services:
 
-Install dependencies
+- [terminology-ui](./terminology-ui/)
+- [datamodel-ui](./datamodel-ui/)
 
-```bash
-npm install
-```
+These UI projects
 
-Create file .env.local to the project root directory and add the following lines
+## READMES
 
-```
-TERMINOLOGY_API_URL=http://localhost:9103/terminology-api
-REWRITE_PROFILE=local
-SECRET_COOKIE_PASSWORD=<random string min 32 characters>
-```
+If you want specific information on how to run/use the different projects please the README.md files within each project folder
 
-Run terminology-api backend application (and all its dependencies) for example
-by using [yti-compose](https://github.com/VRK-YTI/yti-compose)
-
-Run the development server:
-
-```bash
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the
-result.
-
-You can start editing the page by modifying `src/pages/index.tsx`. The page
-auto-updates as you edit the file.
-
-## Troubleshooting and more documentation
-
-You can find more documentation in [docs](./docs).
+- [common-ui](./common-ui/README.md)
+- [terminology-ui](./terminology-ui/README.md)
+- [datamodel-ui](./datamodel-ui/README.md)

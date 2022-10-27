@@ -18,11 +18,11 @@
     "jsx": "preserve",
     "types": ["jest"],
     "incremental": true,
-    "baseUrl": "./",
+    "baseUrl": ".",
     "paths": {
       "@app/*": ["src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]
 }
