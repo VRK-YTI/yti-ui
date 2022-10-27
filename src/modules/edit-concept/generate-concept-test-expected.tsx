@@ -1419,7 +1419,7 @@ export const differentTerms = {
           {
             lang: '',
             regex: '(?s)^.*$',
-            value: 'adjective',
+            value: '',
           },
         ],
       },

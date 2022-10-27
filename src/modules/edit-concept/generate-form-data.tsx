@@ -385,7 +385,7 @@ export default function generateFormData(
             termInfo: r.properties.termInfo?.[0].value ?? '',
             termStyle: r.properties.termStyle?.[0].value ?? '',
             termType: termType,
-            wordClass: r.properties.wordClass?.[0].value ?? '',
+            wordClass: '',
           };
         }
       )
