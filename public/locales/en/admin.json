@@ -118,6 +118,7 @@
     "recommendedTerms": "Concept is missing a preferred term ",
     "source": "At least one source is missing a value",
     "status": "Concept's status is undefined",
+    "termConjugation": "One or more term has incorrect term conjugation set",
     "termPrefLabel": "At least on preferred term is missing a name",
     "termType": "Term's type is undefined"
   },
@@ -318,9 +319,5 @@
   "type-change-alert-warning": "Recommended term type cannot be changed because no other recommended terms have been defined. Add a new recommended term or change an already existing term to recommended term.",
   "url-preview": "URL preview",
   "which-input": "How do you want to add new information?",
-  "word-class": "Word class",
-  "word-class-available": "Available word classes",
-  "word-class-hint": "Toggle only if word class is either an adjective or a verb",
-  "word-class-no-items": "No word classes available",
   "you-can-copy": "You can copy the terminology as a base for a newer version, where the original terminology will exist until the newer terminology is ready"
 }

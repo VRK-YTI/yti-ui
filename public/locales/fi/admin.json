@@ -118,6 +118,7 @@
     "recommendedTerms": "Käsitteeltä puuttuu suositettava termi",
     "source": "Vähintään yhdeltä lähteeltä puuttuu arvo",
     "status": "Käsitteen tilaa ei ole määritetty",
+    "termConjugation": "Yhdellä tai useammalla termillä on väärin asetettu termin luku",
     "termPrefLabel": "Vähintään yhdeltä termiltä puuttuu nimi",
     "termType": "Termin tyyppiä ei ole määritetty"
   },
@@ -318,9 +319,5 @@
   "type-change-alert-warning": "Suositettavan termin tyyppiä ei voi muuttaa, koska muita suositettavia termejä ei ole määritetty. Lisää uusi suositettava termi tai muuta olemassa oleva termi suositettavaksi termiksi.",
   "url-preview": "Url:n esikatselu",
   "which-input": "Miten lisäät tietoja?",
-  "word-class": "Sanaluokka",
-  "word-class-available": "Saatavilla olevat sanaluokat",
-  "word-class-hint": "Merkitään vain jos sanaluokka on adjektiivi tai verbi",
-  "word-class-no-items": "Sanaluokka ei saatavilla",
   "you-can-copy": "Voit kopioida sanaston pohjaksi uudelle versiolle, jolloin nykyinen sanasto säilyy olemassa kunnes uusi sanasto on valmis"
 }

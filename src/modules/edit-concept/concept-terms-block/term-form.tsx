@@ -12,6 +12,7 @@ import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import {
   Button,
+  Dropdown,
   DropdownItem,
   SingleSelect,
   TextInput,
@@ -26,6 +27,7 @@ import {
   GrammaticalBlock,
   HomographTextInput,
   MediumHeading,
+  TermEquivalencyBlock,
   TermFormBottomBlock,
   TermFormRemoveButton,
   TermFormTopBlock,
@@ -252,6 +254,25 @@ export default function TermForm({
         maxLength={TEXT_AREA_MAX}
       />
 
+      <TermEquivalencyBlock>
+        <label>
+          {t('term-equivalency')}
+          <span> ({t('optional')})</span>
+        </label>
+        <span>{t('term-equivalency-description')}</span>
+        <Dropdown
+          labelText=""
+          labelMode="hidden"
+          defaultValue={term.termEquivalency}
+          onChange={(e) => handleUpdate({ key: 'termEquivalency', value: e })}
+        >
+          <DropdownItem value="undefined">{t('no-selection')}</DropdownItem>
+          <DropdownItem value="<">{'<'}</DropdownItem>
+          <DropdownItem value=">">{'>'}</DropdownItem>
+          <DropdownItem value="~">{t('almost-the-same-as')} (~)</DropdownItem>
+        </Dropdown>
+      </TermEquivalencyBlock>
+
       <ListBlock
         update={handleUpdate}
         items={term.source}
@@ -363,6 +384,15 @@ export default function TermForm({
             handleUpdate({ key: 'termConjugation', value: e })
           }
           id={`conjugations-picker_${term.id}`}
+          status={
+            term.termConjugation &&
+            !termConjugation
+              .map((c) => c.uniqueItemId)
+              .includes(term.termConjugation) &&
+            errors.termConjugation
+              ? 'error'
+              : 'default'
+          }
         />
 
         <SingleSelect

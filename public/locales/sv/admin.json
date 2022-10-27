@@ -118,6 +118,7 @@
     "recommendedTerms": "",
     "source": "",
     "status": "",
+    "termConjugation": "",
     "termPrefLabel": "",
     "termType": ""
   },
@@ -318,9 +319,5 @@
   "type-change-alert-warning": "",
   "url-preview": "",
   "which-input": "",
-  "word-class": "",
-  "word-class-available": "",
-  "word-class-hint": "",
-  "word-class-no-items": "",
   "you-can-copy": ""
 }

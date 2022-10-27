@@ -2317,7 +2317,7 @@ export const extensiveDataExpected = {
       termInfo: 'termin lisätieto',
       termStyle: 'puhekieli',
       termType: 'synonym',
-      wordClass: 'adjektiivi',
+      wordClass: '',
     },
     {
       changeNote: 'muutoshistoria',
@@ -2350,7 +2350,7 @@ export const extensiveDataExpected = {
       termInfo: 'termin lisätieto',
       termStyle: 'puhekieli',
       termType: 'search-term',
-      wordClass: 'adjektiivi',
+      wordClass: '',
     },
     {
       changeNote: 'muutoshistoria',
@@ -2383,7 +2383,7 @@ export const extensiveDataExpected = {
       termInfo: 'termin lisätieto',
       termStyle: 'spoken-form',
       termType: 'recommended-term',
-      wordClass: 'adjective',
+      wordClass: '',
     },
     {
       changeNote: 'muutoshistoria',
@@ -2416,7 +2416,7 @@ export const extensiveDataExpected = {
       termInfo: 'termin lisätieto',
       termStyle: 'puhekieli',
       termType: 'not-recommended-synonym',
-      wordClass: 'adjektiivi',
+      wordClass: '',
     },
   ],
   basicInformation: {
