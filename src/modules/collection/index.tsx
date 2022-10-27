@@ -180,36 +180,25 @@ export default function Collection({
                 extra={
                   <BasicBlockExtraWrapper>
                     <EditToolsBlock>
-                      {HasPermission({
-                        actions: 'EDIT_COLLECTION',
-                        targetOrganization: terminology?.references.contributor,
-                      }) && (
-                        <Link href={`${router.asPath}/edit`}>
-                          <Button
-                            variant="secondary"
-                            icon="edit"
-                            id="edit-collection-button"
-                          >
-                            {t('edit-collection')}
-                          </Button>
-                        </Link>
-                      )}
-                      {HasPermission({
-                        actions: 'DELETE_COLLECTION',
-                        targetOrganization: terminology?.references.contributor,
-                      }) && (
-                        <>
-                          <RemovalModal
-                            nonDescriptive={true}
-                            removalData={{
-                              type: 'collection',
-                              data: collection,
-                            }}
-                            targetId={collection?.id ?? ''}
-                            targetName={prefLabel}
-                          />
-                        </>
-                      )}
+                      <Link href={`${router.asPath}/edit`}>
+                        <Button
+                          variant="secondary"
+                          icon="edit"
+                          id="edit-collection-button"
+                        >
+                          {t('edit-collection')}
+                        </Button>
+                      </Link>
+
+                      <RemovalModal
+                        nonDescriptive={true}
+                        removalData={{
+                          type: 'collection',
+                          data: collection,
+                        }}
+                        targetId={collection?.id ?? ''}
+                        targetName={prefLabel}
+                      />
                     </EditToolsBlock>
                   </BasicBlockExtraWrapper>
                 }
