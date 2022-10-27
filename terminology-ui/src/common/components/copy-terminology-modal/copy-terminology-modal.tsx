@@ -18,11 +18,11 @@ import { UpdateTerminology } from '@app/modules/new-terminology/update-terminolo
 import { setAlert } from '../alert/alert.slice';
 import { useRouter } from 'next/router';
 import InlineAlert from '../inline-alert';
-import SaveSpinner from '../save-spinner';
 import {
   DescriptionParagraph,
   FooterBlock,
 } from './copy-terminology-modal.styles';
+import SaveSpinner from '@common/components/save-spinner';
 
 interface CopyTerminologyModalProps {
   terminologyId: string;
