@@ -74,7 +74,7 @@ describe('useUrlState', () => {
     expect(isInitial(result.current.urlState, 'page')).toBeTruthy();
   });
 
-  it('resetUrlState clears query parameters', () => {
+  it('resetUrlState clears query parameters', async () => {
     mockRouter.setCurrentUrl({
       pathname: '/',
       query: {
@@ -93,7 +93,9 @@ describe('useUrlState', () => {
 
     expect(singletonRouter).toStrictEqual(
       expect.objectContaining({
-        query: {},
+        query: {
+          type: 'type-query-param',
+        },
       })
     );
   });

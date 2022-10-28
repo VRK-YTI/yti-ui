@@ -8,6 +8,7 @@ export const ChipWrapper = styled.div`
 `;
 
 export const CountText = styled(Text)`
+  font-size: 16px;
   font-weight: 600;
 `;
 

@@ -62,6 +62,7 @@
   "navigated-to": "Siirrytty sivulle",
   "navigation-close": "Sulje navigaatio",
   "navigation-open": "Avaa navigaatio",
+  "no-filters": "Ei rajauksia",
   "no-languages-available": "Kieliä ei saatavilla",
   "not-recommended-synonym": "Ei suositettava synonyymi",
   "own-information": "Omat tiedot",
@@ -96,6 +97,7 @@
   "site-services": "Palvelut",
   "site-title": "Yhteentoimivuusalusta",
   "site-to-login": "Jatka kirjautumaan",
+  "site-tools": "Työkalut",
   "skip-link-main": "Siirry suoraan sisältöön.",
   "skip-link-search-results": "Siirry suoraan hakutuloksiin.",
   "statuses": {
