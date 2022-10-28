@@ -202,81 +202,97 @@ export default function SearchResults({
   }
 
   function renderCollectionMembers(members?: Concept[]) {
-    return members ? (
-      members.map((m, idx) => {
-        const comma =
-          idx < 4 && members.length > 1 && idx < members.length - 1 ? ',' : '';
+    if (!members) {
+      return <>{t('vocabulary-results-no-concepts')}</>;
+    }
 
-        if (idx < 5 && m.references.prefLabelXl) {
-          if (m.references.prefLabelXl.length === 1) {
-            if (
-              m.references.prefLabelXl[0].properties.prefLabel?.[0].lang ===
-              i18n.language
-            ) {
-              const value =
-                m.references.prefLabelXl[0].properties.prefLabel?.[0].value;
+    let tempMembers = members;
 
-              return (
-                <div key={`${value}-${idx}`}>
-                  {urlState.q !== '' ? highlightCollectionMember(value) : value}
-                  {comma}&nbsp;
-                </div>
-              );
-            } else {
-              const value =
-                m.references.prefLabelXl[0].properties.prefLabel?.[0].value;
-              const lang =
-                m.references.prefLabelXl[0].properties.prefLabel?.[0].lang;
+    if (
+      members.some((member) =>
+        member.references.prefLabelXl?.[0].properties.prefLabel
+          ?.filter((l) => l.lang)[0]
+          .value.includes(urlState.q)
+      )
+    ) {
+      tempMembers = tempMembers.filter((member) =>
+        member.references.prefLabelXl?.[0].properties.prefLabel
+          ?.filter((l) => l.lang)[0]
+          .value.includes(urlState.q)
+      );
+    }
 
-              return (
-                <div key={`${value}-${idx}`}>
-                  {urlState.q !== '' ? highlightCollectionMember(value) : value}{' '}
-                  ({lang}){comma}&nbsp;
-                </div>
-              );
-            }
-          } else if (m.references.prefLabelXl.length > 1) {
-            let value;
+    return members.map((m, idx) => {
+      const comma =
+        idx < 4 && members.length > 1 && idx < members.length - 1 ? ',' : '';
 
-            m.references.prefLabelXl?.forEach((pLabelXl) => {
-              if (pLabelXl.properties.prefLabel?.[0].lang === i18n.language) {
-                value = pLabelXl.properties.prefLabel?.[0].value;
-              }
-            });
+      if (idx < 5 && m.references.prefLabelXl) {
+        if (m.references.prefLabelXl.length === 1) {
+          if (
+            m.references.prefLabelXl[0].properties.prefLabel?.[0].lang ===
+            i18n.language
+          ) {
+            const value =
+              m.references.prefLabelXl[0].properties.prefLabel?.[0].value;
 
-            if (value !== '') {
-              return (
-                <div key={`${value}-${idx}`}>
-                  {urlState.q !== '' ? highlightCollectionMember(value) : value}
-                  {comma}&nbsp;
-                </div>
-              );
-            } else {
-              value =
-                m.references.prefLabelXl?.[0].properties.prefLabel?.[0].value;
-              const lang =
-                m.references.prefLabelXl?.[0].properties.prefLabel?.[0].lang;
+            return (
+              <div key={`${value}-${idx}`}>
+                {urlState.q !== '' ? highlightCollectionMember(value) : value}
+                {comma}&nbsp;
+              </div>
+            );
+          } else {
+            const value =
+              m.references.prefLabelXl[0].properties.prefLabel?.[0].value;
+            const lang =
+              m.references.prefLabelXl[0].properties.prefLabel?.[0].lang;
 
-              return (
-                <div key={`${value}-${idx}`}>
-                  {urlState.q !== '' ? highlightCollectionMember(value) : value}{' '}
-                  ({lang}){comma}&nbsp;
-                </div>
-              );
-            }
+            return (
+              <div key={`${value}-${idx}`}>
+                {urlState.q !== '' ? highlightCollectionMember(value) : value} (
+                {lang}){comma}&nbsp;
+              </div>
+            );
           }
-        } else if (idx === 5) {
-          const surplus = members.length - idx;
-          return (
-            <div key={`surplus-${idx}`}>
-              + {surplus} {t('vocabulary-results-more')}
-            </div>
-          );
+        } else if (m.references.prefLabelXl.length > 1) {
+          let value;
+
+          m.references.prefLabelXl?.forEach((pLabelXl) => {
+            if (pLabelXl.properties.prefLabel?.[0].lang === i18n.language) {
+              value = pLabelXl.properties.prefLabel?.[0].value;
+            }
+          });
+
+          if (value !== '') {
+            return (
+              <div key={`${value}-${idx}`}>
+                {urlState.q !== '' ? highlightCollectionMember(value) : value}
+                {comma}&nbsp;
+              </div>
+            );
+          } else {
+            value =
+              m.references.prefLabelXl?.[0].properties.prefLabel?.[0].value;
+            const lang =
+              m.references.prefLabelXl?.[0].properties.prefLabel?.[0].lang;
+
+            return (
+              <div key={`${value}-${idx}`}>
+                {urlState.q !== '' ? highlightCollectionMember(value) : value} (
+                {lang}){comma}&nbsp;
+              </div>
+            );
+          }
         }
-      })
-    ) : (
-      <>{t('vocabulary-results-no-concepts')}</>
-    );
+      } else if (idx === 5) {
+        const surplus = members.length - idx;
+        return (
+          <div key={`surplus-${idx}`}>
+            + {surplus} {t('vocabulary-results-more')}
+          </div>
+        );
+      }
+    });
   }
 
   function getLabel(
