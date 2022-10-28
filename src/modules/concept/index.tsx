@@ -141,14 +141,6 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
 
       <PageContent $breakpoint={breakpoint}>
         <MainContent id="main">
-          <SubTitle>
-            <PropertyValue
-              property={getProperty(
-                'prefLabel',
-                terminology?.references.contributor
-              )}
-            />
-          </SubTitle>
           <MainTitle>{prefLabel}</MainTitle>
           <BadgeBar>
             {t('heading')}
