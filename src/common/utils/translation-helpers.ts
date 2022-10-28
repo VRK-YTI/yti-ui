@@ -150,6 +150,8 @@ export function translateEditConceptError(error: string, t: TFunction) {
       return t('edit-concept-error.language', { ns: 'admin' });
     case 'recommendedTermDuplicate':
       return t('edit-concept-error.recommendedTermDuplicate', { ns: 'admin' });
+    case 'diagramsUri':
+      return t('edit-concept-error.diagramsUri', { ns: 'admin' });
     case 'termConjugation':
       return t('edit-concept-error.termConjugation', { ns: 'admin' });
     default:

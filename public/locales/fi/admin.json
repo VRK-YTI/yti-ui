@@ -108,6 +108,7 @@
   "edit-concept-error": {
     "default": "Käsitteen tiedoissa ilmeni puuttuvia tietoja",
     "diagrams": "Vähintään yhdeltä käsitekaaviolta puuttuu nimi ja/tai verkko-osoite",
+    "diagramsUri": "Yhdellä tai useammalla käsitekaaviolla on virheellinen verkko-osoite",
     "editorialNote": "Vähintään yhdeltä ylläpitäjän muistiipanolta puuttuu selite",
     "example": "Vähintään yhdeltä käyttöesimerkiltä puuttuu selite",
     "language": "Termin kieltä ei ole määritetty",

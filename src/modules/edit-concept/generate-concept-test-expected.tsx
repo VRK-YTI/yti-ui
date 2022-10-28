@@ -1370,7 +1370,7 @@ export const differentTerms = {
             lang: '',
             regex: '(?s)^.*$',
             value:
-              '"{"name":"käsitekaavion nimi","url":"käsitekaavion verkko-osoite","description":"kuvaus"}"',
+              '"{"name":"käsitekaavion nimi","url":"https://käsitekaavion-verkko-osoite.fi","description":"kuvaus"}"',
           },
         ],
         historyNote: [

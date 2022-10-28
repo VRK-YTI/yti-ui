@@ -562,7 +562,7 @@ describe('generate-concept', () => {
             {
               id: '123',
               name: 'käsitekaavion nimi',
-              url: 'käsitekaavion verkko-osoite',
+              url: 'käsitekaavion-verkko-osoite.fi',
               description: 'kuvaus',
             },
           ],

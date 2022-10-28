@@ -108,6 +108,7 @@
   "edit-concept-error": {
     "default": "Concept has missing information",
     "diagrams": "At least one diagram is missing name and/or url",
+    "diagramsUri": "One or more diagram's url is not in valid form",
     "editorialNote": "At least one editorial note is missing a descriptive text",
     "example": "At least one example is missing a descriptive text",
     "language": "Term's language is undefined",

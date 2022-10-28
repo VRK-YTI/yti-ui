@@ -1,5 +1,6 @@
 import { Concept } from '@app/common/interfaces/concept.interface';
 import { Term } from '@app/common/interfaces/term.interface';
+import toUri from '@app/common/utils/to-uri';
 import { v4 } from 'uuid';
 import { EditConceptType } from './new-concept.types';
 
@@ -463,7 +464,7 @@ export default function generateConcept({
                   lang: '',
                   regex: regex,
                   value: `"{"name":"${diagram.name ?? ''}","url":"${
-                    diagram.url ?? ''
+                    diagram.url ? toUri(diagram.url) : ''
                   }","description":"${diagram.description ?? ''}"}"`,
                 })
               )
