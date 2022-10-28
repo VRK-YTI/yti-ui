@@ -13,5 +13,6 @@
   "error-occurred_remove-collection": "",
   "error-occurred_remove-concept": "",
   "error-occurred_remove-terminology": "",
-  "error-occurred_session": ""
+  "error-occurred_session": "",
+  "error-occurred_unauthenticated": ""
 }

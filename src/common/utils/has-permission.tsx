@@ -1,6 +1,11 @@
+import { useStoreDispatch } from '@app/store';
 import { useSelector } from 'react-redux';
 import { selectAdminControls } from '../components/admin-controls/admin-controls.slice';
-import { selectLogin } from '../components/login/login.slice';
+import {
+  selectLogin,
+  setLogin,
+  useGetAuthenticatedUserQuery,
+} from '../components/login/login.slice';
 import { Organization } from '../interfaces/organization.interface';
 import { User } from '../interfaces/user.interface';
 
@@ -19,7 +24,7 @@ const actions = [
   'DELETE_COLLECTION',
 ] as const;
 
-type Actions = typeof actions[number];
+export type Actions = typeof actions[number];
 
 export interface hasPermissionProps {
   actions: Actions | Actions[];
@@ -36,14 +41,29 @@ export default function HasPermission({
   actions,
   targetOrganization,
 }: hasPermissionProps) {
+  const { data: authenticatedUser } = useGetAuthenticatedUserQuery();
+  const dispatch = useStoreDispatch();
   const user = useSelector(selectLogin());
   const isAdminControlsDisabled = useSelector(selectAdminControls());
+
+  if (
+    authenticatedUser &&
+    (authenticatedUser.anonymous !== user.anonymous ||
+      authenticatedUser.username !== user.username)
+  ) {
+    dispatch(setLogin(authenticatedUser));
+  }
 
   if (isAdminControlsDisabled) {
     return false;
   }
 
-  if (!user || user.anonymous) {
+  if (
+    !user ||
+    user.anonymous ||
+    !authenticatedUser ||
+    authenticatedUser.anonymous
+  ) {
     return false;
   }
 

@@ -13,5 +13,6 @@
   "error-occurred_remove-collection": "An error occured while removing collection",
   "error-occurred_remove-concept": "An error occured while removing concept",
   "error-occurred_remove-terminology": "An error occured while removing terminology",
-  "error-occurred_session": "An error occured with the session, try logging in again"
+  "error-occurred_session": "An error occured with the session, try logging in again",
+  "error-occurred_unauthenticated": "An error occured with login information verification. Please login to the service again."
 }

@@ -73,7 +73,6 @@ export const getServerSideProps = createCommonGetServerSideProps(
         terminologyId: terminologyId,
       })
     );
-
     await Promise.all(getCollectionRunningOperationPromises());
     await Promise.all(getRunningOperationPromises());
 
@@ -98,6 +97,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
           collectionCode: collectionData.code,
           collectionUri: collectionData.uri,
         },
+        requireAuthenticated: true,
       },
     };
   }

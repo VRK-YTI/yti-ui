@@ -31,29 +31,30 @@ import { FooterBlock, ModalTitleAsH1 } from './new-terminology.styles';
 interface NewTerminologyModalProps {
   showModal: boolean;
   setShowModal: (value: boolean) => void;
+  unauthenticatedUser?: boolean;
 }
 
 export default function NewTerminologyModal({
   showModal,
   setShowModal,
+  unauthenticatedUser,
 }: NewTerminologyModalProps) {
   const dispatch = useStoreDispatch();
+  const router = useRouter();
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
-  const router = useRouter();
+  const { enableConfirmation, disableConfirmation } =
+    useConfirmBeforeLeavingPage('disabled');
   const [isValid, setIsValid] = useState(false);
   const [inputType, setInputType] = useState('');
   const [startFileUpload, setStartFileUpload] = useState(false);
   const [fileData, setFileData] = useState<File | null>();
   const [userPosted, setUserPosted] = useState(false);
   const [manualData, setManualData] = useState<NewTerminologyInfo>();
-  const { enableConfirmation, disableConfirmation } =
-    useConfirmBeforeLeavingPage('disabled');
-
-  const [postNewVocabulary, newVocabulary] = usePostNewVocabularyMutation();
-  const [postImportExcel, importExcel] = usePostImportExcelMutation();
   const [isCreating, setIsCreating] = useState<boolean>(false);
   const [error, setError] = useState(false);
+  const [postNewVocabulary, newVocabulary] = usePostNewVocabularyMutation();
+  const [postImportExcel, importExcel] = usePostImportExcelMutation();
 
   const handleClose = useCallback(() => {
     setUserPosted(false);
@@ -169,6 +170,11 @@ export default function NewTerminologyModal({
               )}
             </InlineAlert>
           )}
+          {unauthenticatedUser && (
+            <InlineAlert status="error" role="alert" id="unauthenticated-alert">
+              {t('error-occurred_unauthenticated', { ns: 'alert' })}
+            </InlineAlert>
+          )}
           <FooterBlock>
             <Button
               onClick={() => handlePost()}
@@ -206,14 +212,14 @@ export default function NewTerminologyModal({
           id="new-terminology-input-type"
         >
           <RadioButton
-            disabled={error || isCreating}
+            disabled={error || isCreating || unauthenticatedUser}
             value="self"
             id="new-terminology-input-type-hand"
           >
             {t('by-hand')}
           </RadioButton>
           <RadioButton
-            disabled={error || isCreating}
+            disabled={error || isCreating || unauthenticatedUser}
             value="file"
             id="new-terminology-input-type-file"
           >
@@ -223,7 +229,7 @@ export default function NewTerminologyModal({
 
         {inputType === 'self' && (
           <InfoManual
-            disabled={error || isCreating}
+            disabled={error || isCreating || unauthenticatedUser}
             setIsValid={setIsValid}
             setManualData={setManualData}
             userPosted={userPosted}
