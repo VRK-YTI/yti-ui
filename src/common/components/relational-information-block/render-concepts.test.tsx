@@ -4,20 +4,22 @@ import { getMockContext, themeProvider } from '@app/tests/test-utils';
 import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { makeStore } from '@app/store';
+import mockRouter from 'next-router-mock';
+
+jest.mock('next/dist/client/router', () => require('next-router-mock'));
 
 describe('render-concepts', () => {
   it('should render component', () => {
     const store = makeStore(getMockContext());
     const mockFn = jest.fn();
 
+    mockRouter.setCurrentUrl(
+      'terminology/123-456-789/concept/123-123-123/edit'
+    );
+
     render(
       <Provider store={store}>
-        <RenderConcepts
-          concepts={concepts}
-          chosen={[]}
-          setChosen={mockFn}
-          terminologyId="123-456-789"
-        />
+        <RenderConcepts concepts={concepts} chosen={[]} setChosen={mockFn} />
       </Provider>,
       { wrapper: themeProvider }
     );
@@ -30,14 +32,13 @@ describe('render-concepts', () => {
     const store = makeStore(getMockContext());
     const mockFn = jest.fn();
 
+    mockRouter.setCurrentUrl(
+      'terminology/123-456-789/concept/123-123-123/edit'
+    );
+
     render(
       <Provider store={store}>
-        <RenderConcepts
-          concepts={concepts}
-          chosen={[]}
-          setChosen={mockFn}
-          terminologyId="123-456-789"
-        />
+        <RenderConcepts concepts={concepts} chosen={[]} setChosen={mockFn} />
       </Provider>,
       { wrapper: themeProvider }
     );
