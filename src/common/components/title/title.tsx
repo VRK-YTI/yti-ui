@@ -61,16 +61,9 @@ export default function Title({ info, noExpander }: TitleProps) {
     const status = info.properties.status?.[0].value ?? 'DRAFT';
     const terminologyType =
       info.properties.terminologyType?.[0].value ?? 'TERMINOLOGICAL_VOCABULARY';
-    const contributor =
-      getPropertyValue({
-        property: getProperty('prefLabel', info.references.contributor),
-        language: i18n.language,
-      }) ?? '';
 
     return (
       <TitleWrapper id="page-title-block">
-        <Contributor id="contributor">{contributor}</Contributor>
-
         <Heading variant="h1" tabIndex={-1} id="page-title">
           {title}
         </Heading>
