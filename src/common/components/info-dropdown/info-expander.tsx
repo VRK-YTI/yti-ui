@@ -70,7 +70,8 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
 
   const handleDownloadClick = async () => {
     const result = await axios.get(
-      `/terminology-api/api/v1/export/${data.type.graph.id}?format=xlsx`
+      `/terminology-api/api/v1/export/${data.type.graph.id}?format=xlsx`,
+      { responseType: 'arraybuffer' }
     );
 
     if (result.status !== 200) {
