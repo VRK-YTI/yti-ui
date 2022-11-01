@@ -46,7 +46,7 @@ export default function DesktopNavigation() {
         className="top-navigation-li"
       >
         <SuomiFiLink className="main" href="" onClick={handleDropdown}>
-          {t('site-services')}
+          {t('site-tools')}
           <Icon
             color={theme.suomifi.colors.highlightBase}
             icon={open ? 'chevronUp' : 'chevronDown'}

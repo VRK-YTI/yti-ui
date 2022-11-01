@@ -26,8 +26,8 @@ export default function Footer({ feedbackSubject }: FooterProps) {
       <FooterContentWrapper id="footer">
         <Image
           src="/logo-suomi.fi.png"
-          width="254"
-          height="70"
+          width="138"
+          height="38"
           alt=""
           aria-hidden
         />

@@ -38,7 +38,9 @@ export default function TermExpander({
   const displayIcon =
     (errors.termPrefLabel && !term.prefLabel) ||
     (errors.editorialNote &&
-      term.editorialNote.filter((n) => !n.value || n.value === '').length > 0);
+      term.editorialNote.filter((n) => !n.value || n.value === '').length >
+        0) ||
+    errors.termConjugation;
 
   return (
     <Expander>

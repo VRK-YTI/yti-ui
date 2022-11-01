@@ -11,6 +11,7 @@ import {
   SingleSelect,
   Text,
   Textarea,
+  TextInput,
 } from 'suomifi-ui-components';
 
 export const LargeHeading = styled(Heading)`
@@ -87,6 +88,10 @@ export const TermEquivalencyBlock = styled(Block)`
       font-weight: 400;
     }
   }
+
+  > span {
+    margin-bottom: ${(props) => props.theme.suomifi.spacing.xs};
+  }
 `;
 
 export const RadioButtonGroupSpaced = styled(RadioButtonGroup)<{
@@ -150,5 +155,9 @@ export const TermFormRemoveButton = styled(Button)`
 `;
 
 export const LanguageSingleSelect = styled(SingleSelect)`
+  margin-top: ${(props) => props.theme.suomifi.spacing.s};
+`;
+
+export const HomographTextInput = styled(TextInput)`
   margin-top: ${(props) => props.theme.suomifi.spacing.s};
 `;

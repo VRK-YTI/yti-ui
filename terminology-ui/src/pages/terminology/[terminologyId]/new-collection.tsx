@@ -53,8 +53,13 @@ export const getServerSideProps = createCommonGetServerSideProps(
     }
 
     store.dispatch(getVocabulary.initiate({ id: terminologyId }));
+
     await Promise.all(getRunningOperationPromises());
 
-    return {};
+    return {
+      props: {
+        requireAuthenticated: true,
+      },
+    };
   }
 );

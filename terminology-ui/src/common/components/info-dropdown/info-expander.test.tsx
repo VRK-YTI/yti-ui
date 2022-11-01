@@ -10,10 +10,14 @@ import {
   setLogin,
   initialState,
 } from '@app/common/components/login/login.slice';
+import mockRouter from 'next-router-mock';
+
+jest.mock('next/dist/client/router', () => require('next-router-mock'));
 
 describe('infoExpander', () => {
   it('should render export button', () => {
     const store = makeStore(getMockContext());
+    mockRouter.setCurrentUrl('/terminology/123-123');
 
     render(
       <Provider store={store}>
@@ -46,6 +50,8 @@ describe('infoExpander', () => {
     loginInitialState['lastName'] = 'User';
     store.dispatch(setLogin(loginInitialState));
 
+    mockRouter.setCurrentUrl('/terminology/123-123');
+
     render(
       <Provider store={store}>
         <InfoExpander
@@ -76,6 +82,8 @@ describe('infoExpander', () => {
     loginInitialState['firstName'] = 'Admin';
     loginInitialState['lastName'] = 'User';
     store.dispatch(setLogin(loginInitialState));
+
+    mockRouter.setCurrentUrl('/terminology/123-123');
 
     render(
       <Provider store={store}>
@@ -113,6 +121,8 @@ describe('infoExpander', () => {
     loginInitialState['firstName'] = 'Admin';
     loginInitialState['lastName'] = 'User';
     store.dispatch(setLogin(loginInitialState));
+
+    mockRouter.setCurrentUrl('/terminology/123-123');
 
     render(
       <Provider store={store}>

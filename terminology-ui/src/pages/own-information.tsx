@@ -27,4 +27,10 @@ export default function OwnInformationPage(props: OwnInformationPageProps) {
   );
 }
 
-export const getServerSideProps = createCommonGetServerSideProps();
+export const getServerSideProps = createCommonGetServerSideProps(async () => {
+  return {
+    props: {
+      requireAuthenticated: true,
+    },
+  };
+});

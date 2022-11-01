@@ -1,12 +1,13 @@
 import { Concepts } from '@app/common/interfaces/concepts.interface';
+import { RelationInfoType } from '@app/modules/edit-concept/new-concept.types';
 import { useTranslation } from 'next-i18next';
 import { Chip, Label } from 'suomifi-ui-components';
 import PropertyValue from '../property-value';
 import { ChipBlock } from './relation-information-block.styles';
 
 interface RenderChosenProps {
-  chosen: Concepts[];
-  setChosen: (value: Concepts[]) => void;
+  chosen: Concepts[] | RelationInfoType[];
+  setChosen: (value: Concepts[] | RelationInfoType[]) => void;
   setShowChosen: (value: boolean) => void;
   chipLabel: string;
 }
@@ -18,8 +19,11 @@ export default function RenderChosen({
   chipLabel,
 }: RenderChosenProps) {
   const { t } = useTranslation('admin');
-  const handleChipRemove = (chose: Concepts) => {
-    const updatedChosen = chosen.filter((c) => c.id !== chose.id);
+  const handleChipRemove = (chose: Concepts | RelationInfoType) => {
+    const updatedChosen =
+      'terminology' in chosen
+        ? (chosen as Concepts[]).filter((c) => c.id !== chose.id)
+        : (chosen as RelationInfoType[]).filter((c) => c.id !== chose.id);
     setChosen(updatedChosen);
 
     if (updatedChosen.length < 1) {

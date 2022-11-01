@@ -83,6 +83,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
     return {
       props: {
         conceptData: conceptData ?? null,
+        requireAuthenticated: true,
       },
     };
   }

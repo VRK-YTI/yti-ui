@@ -42,6 +42,7 @@ export const Header = styled.div`
     font-size: inherit;
     margin-top: 0;
     margin-bottom: 0;
+    text-transform: uppercase;
   }
 `;
 

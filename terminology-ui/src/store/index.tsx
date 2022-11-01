@@ -12,7 +12,7 @@ import { conceptApi } from '@app/common/components/concept/concept.slice';
 import { useDispatch } from 'react-redux';
 import { collectionApi } from '@app/common/components/collection/collection.slice';
 import { countsApi } from '@app/common/components/counts/counts.slice';
-import { loginSlice } from '@app/common/components/login/login.slice';
+import { loginApi, loginSlice } from '@app/common/components/login/login.slice';
 import { alertSlice } from '@app/common/components/alert/alert.slice';
 import { titleSlice } from '@app/common/components/title/title.slice';
 import { subscriptionApi } from '@app/common/components/subscription/subscription.slice';
@@ -37,6 +37,7 @@ export function makeStore(ctx: NextIronContext) {
       [collectionApi.reducerPath]: collectionApi.reducer,
       [countsApi.reducerPath]: countsApi.reducer,
       [loginSlice.name]: loginSlice.reducer,
+      [loginApi.reducerPath]: loginApi.reducer,
       [alertSlice.name]: alertSlice.reducer,
       [titleSlice.name]: titleSlice.reducer,
       [subscriptionApi.reducerPath]: subscriptionApi.reducer,
@@ -58,7 +59,8 @@ export function makeStore(ctx: NextIronContext) {
         accessRequestApi.middleware,
         importApi.middleware,
         modifyApi.middleware,
-        removeApi.middleware
+        removeApi.middleware,
+        loginApi.middleware
       ),
 
     // Development tools should be available only in development environments

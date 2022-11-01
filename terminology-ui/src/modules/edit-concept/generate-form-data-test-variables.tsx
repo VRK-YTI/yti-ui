@@ -2317,7 +2317,7 @@ export const extensiveDataExpected = {
       termInfo: 'termin lisätieto',
       termStyle: 'puhekieli',
       termType: 'synonym',
-      wordClass: 'adjektiivi',
+      wordClass: '',
     },
     {
       changeNote: 'muutoshistoria',
@@ -2350,7 +2350,7 @@ export const extensiveDataExpected = {
       termInfo: 'termin lisätieto',
       termStyle: 'puhekieli',
       termType: 'search-term',
-      wordClass: 'adjektiivi',
+      wordClass: '',
     },
     {
       changeNote: 'muutoshistoria',
@@ -2383,7 +2383,7 @@ export const extensiveDataExpected = {
       termInfo: 'termin lisätieto',
       termStyle: 'spoken-form',
       termType: 'recommended-term',
-      wordClass: 'adjective',
+      wordClass: '',
     },
     {
       changeNote: 'muutoshistoria',
@@ -2416,7 +2416,7 @@ export const extensiveDataExpected = {
       termInfo: 'termin lisätieto',
       termStyle: 'puhekieli',
       termType: 'not-recommended-synonym',
-      wordClass: 'adjektiivi',
+      wordClass: '',
     },
   ],
   basicInformation: {
@@ -2504,7 +2504,7 @@ export const extensiveDataExpected = {
       ],
       matchInOther: [
         {
-          id: '8ee81e29-e0f1-4a23-b23b-28a976fcf87f',
+          id: '7b179ea2-b28c-497e-9e81-6ff254235ea1',
           label: {
             fi: 'demo',
           },
@@ -2541,7 +2541,7 @@ export const extensiveDataExpected = {
       ],
       relatedConceptInOther: [
         {
-          id: 'a87ae2c2-3c16-494a-9f82-928fc1840a1e',
+          id: '7b179ea2-b28c-497e-9e81-6ff254235ea1',
           label: {
             fi: 'demo',
           },
@@ -2554,7 +2554,7 @@ export const extensiveDataExpected = {
       ],
       closeMatch: [
         {
-          id: 'a87ae2c2-3c16-494a-9f82-928fc1840a1f',
+          id: '7b179ea2-b28c-497e-9e81-6ff254235ea1',
           label: {
             fi: 'demo',
           },

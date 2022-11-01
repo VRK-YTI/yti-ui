@@ -13,11 +13,13 @@ import { translateStatus } from '@app/common/utils/translation-helpers';
 import { useBreakpoints } from '../media-query/media-query-context';
 import { useEffect, useState } from 'react';
 import RenderExpanderContent from './render-expander-content';
+import { useRouter } from 'next/router';
+import { RelationInfoType } from '@app/modules/edit-concept/new-concept.types';
 
 interface RenderConceptsProps {
   concepts?: Concepts[];
-  chosen: Concepts[];
-  setChosen: (value: Concepts[]) => void;
+  chosen: Concepts[] | RelationInfoType[];
+  setChosen: (value: Concepts[] | RelationInfoType[]) => void;
 }
 
 export default function RenderConcepts({
@@ -26,6 +28,7 @@ export default function RenderConcepts({
   setChosen,
 }: RenderConceptsProps) {
   const { t, i18n } = useTranslation('admin');
+  const { query } = useRouter();
   const { isSmall } = useBreakpoints();
   const [expandersOpen, setExpandersOpen] = useState(
     concepts?.map((c) => [c.id, false])
@@ -35,11 +38,24 @@ export default function RenderConcepts({
     setExpandersOpen(concepts?.map((c) => [c.id, false]));
   }, [concepts]);
 
-  const handleCheckbox = (e: { checkboxState: boolean }, concept: Concepts) => {
+  const handleCheckbox = (
+    e: { checkboxState: boolean },
+    concept: Concepts | RelationInfoType
+  ) => {
     if (e.checkboxState) {
-      setChosen([...chosen, concept]);
+      setChosen(
+        'terminology' in concept
+          ? [...(chosen as Concepts[]), concept]
+          : [...(chosen as RelationInfoType[]), concept]
+      );
     } else {
-      setChosen(chosen.filter((chose) => chose.id !== concept.id));
+      setChosen(
+        'terminology' in chosen
+          ? (chosen as Concepts[]).filter((chose) => chose.id !== concept.id)
+          : (chosen as RelationInfoType[]).filter(
+              (chose) => chose.id !== concept.id
+            )
+      );
     }
   };
 
@@ -50,71 +66,75 @@ export default function RenderConcepts({
   return (
     <div id="concept-result-block" style={{ width: '100%' }}>
       <ExpanderGroup openAllText="" closeAllText="">
-        {concepts?.map((concept) => {
-          return (
-            <Expander
-              key={concept.id}
-              className="concept-result-item"
-              onOpenChange={(open) => {
-                setExpandersOpen(
-                  expandersOpen?.map((c) => {
-                    if (c[0] === concept.id) {
-                      return [c[0], open];
-                    }
-                    return c;
-                  })
-                );
-              }}
-            >
-              <ExpanderTitle
-                ariaCloseText={t('open-concept-expander')}
-                ariaOpenText={t('close-concept-expander')}
-                toggleButtonAriaDescribedBy=""
+        {concepts
+          ?.filter((concept) => concept.id !== query.conceptId)
+          .map((concept) => {
+            return (
+              <Expander
+                key={concept.id}
+                className="concept-result-item"
+                onOpenChange={(open) => {
+                  setExpandersOpen(
+                    expandersOpen?.map((c) => {
+                      if (c[0] === concept.id) {
+                        return [c[0], open];
+                      }
+                      return c;
+                    })
+                  );
+                }}
               >
-                <Checkbox
-                  hintText={`${getPrefLabel({
-                    prefLabels: concept.terminology.label,
-                    lang: i18n.language,
-                  })} - ${translateStatus(concept.status ?? 'DRAFT', t)}`}
-                  onClick={(e) => handleCheckbox(e, concept)}
-                  checked={chosen.some((chose) => chose.id === concept.id)}
-                  className="concept-checkbox"
-                  variant={isSmall ? 'large' : 'small'}
+                <ExpanderTitle
+                  ariaCloseText={t('open-concept-expander')}
+                  ariaOpenText={t('close-concept-expander')}
+                  toggleButtonAriaDescribedBy=""
                 >
-                  <SanitizedTextContent
-                    text={
-                      concept.label
-                        ? getPropertyValue({
-                            property: Object.keys(concept.label).map((key) => {
-                              const obj = {
-                                lang: key,
-                                value: concept.label[key],
-                                regex: '',
-                              };
-                              return obj;
-                            }),
-                            language: i18n.language,
-                          }) ??
-                          concept.label[i18n.language] ??
-                          concept.label.fi
-                        : t('concept-label-undefined', { ns: 'common' })
-                    }
-                  />
-                </Checkbox>
-              </ExpanderTitle>
+                  <Checkbox
+                    hintText={`${getPrefLabel({
+                      prefLabels: concept.terminology.label,
+                      lang: i18n.language,
+                    })} - ${translateStatus(concept.status ?? 'DRAFT', t)}`}
+                    onClick={(e) => handleCheckbox(e, concept)}
+                    checked={chosen.some((chose) => chose.id === concept.id)}
+                    className="concept-checkbox"
+                    variant={isSmall ? 'large' : 'small'}
+                  >
+                    <SanitizedTextContent
+                      text={
+                        concept.label
+                          ? getPropertyValue({
+                              property: Object.keys(concept.label).map(
+                                (key) => {
+                                  const obj = {
+                                    lang: key,
+                                    value: concept.label[key],
+                                    regex: '',
+                                  };
+                                  return obj;
+                                }
+                              ),
+                              language: i18n.language,
+                            }) ??
+                            concept.label[i18n.language] ??
+                            concept.label.fi
+                          : t('concept-label-undefined', { ns: 'common' })
+                      }
+                    />
+                  </Checkbox>
+                </ExpanderTitle>
 
-              <RenderExpanderContent
-                terminologyId={concept.terminology.id}
-                conceptId={concept.id}
-                isOpen={
-                  (expandersOpen?.filter(
-                    (c) => c[0] === concept.id
-                  )?.[0]?.[1] as boolean) ?? false
-                }
-              />
-            </Expander>
-          );
-        })}
+                <RenderExpanderContent
+                  terminologyId={concept.terminology.id}
+                  conceptId={concept.id}
+                  isOpen={
+                    (expandersOpen?.filter(
+                      (c) => c[0] === concept.id
+                    )?.[0]?.[1] as boolean) ?? false
+                  }
+                />
+              </Expander>
+            );
+          })}
       </ExpanderGroup>
     </div>
   );

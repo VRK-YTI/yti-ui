@@ -95,6 +95,15 @@ export const getServerSideProps = createCommonGetServerSideProps(
       language: locale,
     });
 
+    if (!collectionData) {
+      return {
+        redirect: {
+          destination: '/404',
+          permanent: false,
+        },
+      };
+    }
+
     const collectionTitle = getPropertyValue({
       property: collectionData?.properties.prefLabel,
       language: locale,

@@ -141,14 +141,6 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
 
       <PageContent $breakpoint={breakpoint}>
         <MainContent id="main">
-          <SubTitle>
-            <PropertyValue
-              property={getProperty(
-                'prefLabel',
-                terminology?.references.contributor
-              )}
-            />
-          </SubTitle>
           <MainTitle>{prefLabel}</MainTitle>
           <BadgeBar>
             {t('heading')}
@@ -217,34 +209,24 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
                 extra={
                   <BasicBlockExtraWrapper>
                     <EditToolsBlock>
-                      {HasPermission({
-                        actions: ['EDIT_CONCEPT'],
-                        targetOrganization: terminology?.references.contributor,
-                      }) && (
-                        <Link
-                          href={`/terminology/${terminologyId}/concept/${conceptId}/edit`}
+                      <Link
+                        href={`/terminology/${terminologyId}/concept/${conceptId}/edit`}
+                      >
+                        <Button
+                          variant="secondary"
+                          icon="edit"
+                          id="edit-concept-button"
                         >
-                          <Button
-                            variant="secondary"
-                            icon="edit"
-                            id="edit-concept-button"
-                          >
-                            {t('edit-concept')}
-                          </Button>
-                        </Link>
-                      )}
-                      {HasPermission({
-                        actions: ['DELETE_CONCEPT'],
-                        targetOrganization: terminology?.references.contributor,
-                      }) && (
-                        <RemovalModal
-                          isDisabled={false}
-                          nonDescriptive={true}
-                          removalData={{ type: 'concept', data: concept }}
-                          targetId={concept?.id ?? ''}
-                          targetName={prefLabel}
-                        />
-                      )}
+                          {t('edit-concept')}
+                        </Button>
+                      </Link>
+
+                      <RemovalModal
+                        nonDescriptive={true}
+                        removalData={{ type: 'concept', data: concept }}
+                        targetId={concept?.id ?? ''}
+                        targetName={prefLabel}
+                      />
                     </EditToolsBlock>
                   </BasicBlockExtraWrapper>
                 }

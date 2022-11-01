@@ -12,6 +12,7 @@ import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import {
   Button,
+  Dropdown,
   DropdownItem,
   SingleSelect,
   TextInput,
@@ -24,7 +25,9 @@ import {
   CheckboxBlock,
   DropdownBlock,
   GrammaticalBlock,
+  HomographTextInput,
   MediumHeading,
+  TermEquivalencyBlock,
   TermFormBottomBlock,
   TermFormRemoveButton,
   TermFormTopBlock,
@@ -133,7 +136,7 @@ export default function TermForm({
             handleUpdate({ key: 'prefLabel', value: e.target.value })
           }
           maxLength={TEXT_INPUT_MAX}
-          id="term-name-input"
+          id={`term-name-input_${term.id}`}
           status={
             errors.termPrefLabel && prefLabel === '' ? 'error' : 'default'
           }
@@ -151,28 +154,26 @@ export default function TermForm({
       <CheckboxBlock
         defaultChecked={term.termHomographNumber ? true : false}
         onClick={() => handleIsHomographic()}
-        id="homograph-checkbox"
+        id={`homograph-checkbox_${term.id}`}
         variant={isSmall ? 'large' : 'small'}
       >
         {t('term-is-homograph-label')}
       </CheckboxBlock>
 
       {isHomographic && (
-        <BasicBlock title={t('homograph-number')}>
-          <TextInput
-            labelText=""
-            type="number"
-            defaultValue={term.termHomographNumber}
-            onChange={(e) =>
-              handleUpdate({
-                key: 'termHomographNumber',
-                value: e?.toString() ?? '',
-              })
-            }
-            min={0}
-            id="homograph-number-input"
-          />
-        </BasicBlock>
+        <HomographTextInput
+          labelText={t('homograph-number')}
+          type="number"
+          defaultValue={term.termHomographNumber}
+          onChange={(e) =>
+            handleUpdate({
+              key: 'termHomographNumber',
+              value: e?.toString() ?? '',
+            })
+          }
+          min={0}
+          id={`homograph-number-input_${term.id}`}
+        />
       )}
 
       <BasicBlock title={t('language')}>
@@ -185,7 +186,7 @@ export default function TermForm({
             <Button
               variant="secondary"
               onClick={() => setModalVisible(true)}
-              id="change-type-button"
+              id={`change-type-button_${term.id}`}
             >
               {t('change-term-type')}
             </Button>
@@ -208,7 +209,7 @@ export default function TermForm({
         labelText={t('term-status-label')}
         defaultValue={term.status}
         onChange={(e) => handleUpdate({ key: 'status', value: e })}
-        id="status-picker"
+        id={`status-picker_${term.id}`}
         $isSmall={isSmall}
       >
         <DropdownItem value="DRAFT">
@@ -240,7 +241,7 @@ export default function TermForm({
         defaultValue={term.termInfo}
         onBlur={(e) => handleUpdate({ key: 'termInfo', value: e.target.value })}
         maxLength={TEXT_AREA_MAX}
-        id="info-input"
+        id={`info-input_${term.id}`}
       />
       <WiderTextareaBlock
         labelText={t('term-scope-label')}
@@ -249,9 +250,28 @@ export default function TermForm({
         visualPlaceholder={t('term-scope-placeholder')}
         defaultValue={term.scope}
         onBlur={(e) => handleUpdate({ key: 'scope', value: e.target.value })}
-        id="scope-input"
+        id={`scope-input_${term.id}`}
         maxLength={TEXT_AREA_MAX}
       />
+
+      <TermEquivalencyBlock>
+        <label>
+          {t('term-equivalency')}
+          <span> ({t('optional')})</span>
+        </label>
+        <span>{t('term-equivalency-description')}</span>
+        <Dropdown
+          labelText=""
+          labelMode="hidden"
+          defaultValue={term.termEquivalency}
+          onChange={(e) => handleUpdate({ key: 'termEquivalency', value: e })}
+        >
+          <DropdownItem value="undefined">{t('no-selection')}</DropdownItem>
+          <DropdownItem value="<">{'<'}</DropdownItem>
+          <DropdownItem value=">">{'>'}</DropdownItem>
+          <DropdownItem value="~">{t('almost-the-same-as')} (~)</DropdownItem>
+        </Dropdown>
+      </TermEquivalencyBlock>
 
       <ListBlock
         update={handleUpdate}
@@ -278,7 +298,7 @@ export default function TermForm({
         onBlur={(e) =>
           handleUpdate({ key: 'changeNote', value: e.target.value })
         }
-        id="change-note-input"
+        id={`change-note-input_${term.id}`}
         maxLength={TEXT_AREA_MAX}
       />
       <WiderTextareaBlock
@@ -291,7 +311,7 @@ export default function TermForm({
           handleUpdate({ key: 'historyNote', value: e.target.value })
         }
         maxLength={TEXT_AREA_MAX}
-        id="history-note-input"
+        id={`history-note-input_${term.id}`}
       />
 
       <ListBlock
@@ -340,7 +360,7 @@ export default function TermForm({
               : undefined
           }
           onItemSelect={(e) => handleUpdate({ key: 'termFamily', value: e })}
-          id="family-picker"
+          id={`family-picker_${term.id}`}
         />
 
         <SingleSelect
@@ -363,7 +383,16 @@ export default function TermForm({
           onItemSelect={(e) =>
             handleUpdate({ key: 'termConjugation', value: e })
           }
-          id="conjugations-picker"
+          id={`conjugations-picker_${term.id}`}
+          status={
+            term.termConjugation &&
+            !termConjugation
+              .map((c) => c.uniqueItemId)
+              .includes(term.termConjugation) &&
+            errors.termConjugation
+              ? 'error'
+              : 'default'
+          }
         />
 
         <SingleSelect
@@ -385,7 +414,7 @@ export default function TermForm({
               : undefined
           }
           onItemSelect={(e) => handleUpdate({ key: 'wordClass', value: e })}
-          id="word-class-picker"
+          id={`word-class-picker_${term.id}`}
         />
         {handleRemoveTerm && isSmall && (
           <TermFormBottomBlock>

@@ -33,7 +33,7 @@ export default function ResetAllFiltersButton() {
       isInitial(urlState, 'domain') &&
       isInitial(urlState, 'organization') &&
       isInitial(urlState, 'status') &&
-      isInitial(urlState, 'type')
+      isInitial(urlState, 'lang')
     );
   }
 }

@@ -65,6 +65,10 @@ export const getServerSideProps = createCommonGetServerSideProps(
     await Promise.all(getRunningOperationPromises());
     await Promise.all(getTermSearchRunningOperationPromises());
 
-    return {};
+    return {
+      props: {
+        requireAuthenticated: true,
+      },
+    };
   }
 );

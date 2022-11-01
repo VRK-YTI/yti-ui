@@ -79,7 +79,7 @@ export default function ConceptDiagramsAndSources({
                 diagrams={diagrams}
                 setDiagrams={setDiagrams}
                 handleRemove={handleRemove}
-                isError={errors.diagrams}
+                isError={errors.diagrams || errors.diagramsUri}
               />
             </BasicBlockExtraWrapper>
           }

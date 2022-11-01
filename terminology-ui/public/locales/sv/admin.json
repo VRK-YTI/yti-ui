@@ -63,6 +63,7 @@
   "close-match-in-other-add": "",
   "close-match-in-other-chip-label": "",
   "close-match-in-other-description": "",
+  "concept-actions": "",
   "concept-add-term": "",
   "concept-basic-information": "",
   "concept-class": "",
@@ -107,6 +108,7 @@
   "edit-concept-error": {
     "default": "",
     "diagrams": "",
+    "diagramsUri": "",
     "editorialNote": "",
     "example": "",
     "language": "",
@@ -116,6 +118,7 @@
     "recommendedTerms": "",
     "source": "",
     "status": "",
+    "termConjugation": "",
     "termPrefLabel": "",
     "termType": ""
   },
@@ -178,7 +181,6 @@
   "narrower-concept-chip-label": "",
   "narrower-concept-description": "",
   "new-collection": "",
-  "new-collection-to-terminology": "",
   "new-concept-title": "",
   "new-term": "",
   "new-term-modal-description": "",
@@ -240,6 +242,7 @@
     "concept-title": "",
     "concept-warning": "",
     "remove-disabled": "",
+    "remove-disabled-title": "",
     "terminology-confirmation": "",
     "terminology-description": "",
     "terminology-processing": "",
@@ -300,6 +303,7 @@
   "term-word-class-hint-text": "",
   "term-x-new-type": "",
   "terminological-vocabulary": "",
+  "terminology-actions": "",
   "terminology-description": "",
   "terminology-description-hint": "",
   "terminology-description-placeholder": "",
@@ -315,11 +319,5 @@
   "type-change-alert-warning": "",
   "url-preview": "",
   "which-input": "",
-  "word-class": "",
-  "word-class-available": "",
-  "word-class-hint": "",
-  "word-class-no-items": "",
-  "you-can-copy": "",
-  "you-have-right-edit-terminology": "",
-  "you-have-right-new-collection": ""
+  "you-can-copy": ""
 }

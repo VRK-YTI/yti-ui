@@ -62,6 +62,7 @@
   "navigated-to": "",
   "navigation-close": "",
   "navigation-open": "",
+  "no-filters": "",
   "no-languages-available": "",
   "not-recommended-synonym": "",
   "own-information": "",
@@ -96,6 +97,7 @@
   "site-services": "",
   "site-title": "",
   "site-to-login": "",
+  "site-tools": "",
   "skip-link-main": "",
   "skip-link-search-results": "",
   "statuses": {
@@ -173,6 +175,7 @@
   "vocabulary-info-organization": "",
   "vocabulary-info-sv": "",
   "vocabulary-info-terminology": "",
+  "vocabulary-info-vocabulary-button": "",
   "vocabulary-info-vocabulary-export": "",
   "vocabulary-info-vocabulary-export-description": "",
   "vocabulary-info-vocabulary-type": "",
