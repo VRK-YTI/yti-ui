@@ -24,6 +24,7 @@ export default withIronSessionApiRoute(
     let shibsession_value = '';
     if (shibsession_key !== undefined) {
       shibsession_value = req.cookies[shibsession_key] ?? '';
+      console.log(`Found _shibsession: ${shibsession_value}`);
     } else {
       console.warn('No shibsression found, login failed');
       res.redirect(target);
@@ -40,6 +41,7 @@ export default withIronSessionApiRoute(
       const apiPath = new URL(apiBase).pathname;
       const fetchUrl =
         proxyUrl + apiPath + '/api/v1/frontend/authenticated-user';
+      console.log(`fetchUrl: ${fetchUrl}`);
 
       // Shibboleth configuration requires X-Forwarded-For to allow access with
       // the _shibsession cookie. Otherwise the "consistentAddress" setting will
@@ -75,6 +77,8 @@ export default withIronSessionApiRoute(
           'User from response appears to be anonymous, login may have failed'
         );
       }
+      console.log('authenticated-user reports user:');
+      console.log(user);
 
       // Pass the cookie from the api to the client.
       // This works since the API is already in the same domain,
@@ -83,6 +87,9 @@ export default withIronSessionApiRoute(
         (x) => x.startsWith('JSESSIONID=')
       );
       if (jsessionid.length > 0) {
+        console.log(`found JSESSIONID: ${jsessionid}`);
+        console.log('full headers');
+        console.log(response.headers);
         res.setHeader('Set-Cookie', jsessionid);
       } else {
         console.warn('No JSESSIONID found in response');
@@ -95,6 +102,7 @@ export default withIronSessionApiRoute(
         .forEach((x) => {
           const [key, value] = x.split('=');
           cookies[key] = value;
+          console.log(`assigning to session ${key}=${value}`);
         });
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -111,6 +119,7 @@ export default withIronSessionApiRoute(
     }
 
     if (user !== null && cookies !== null) {
+      console.log('building session');
       req.session.user = user;
 
       // cookies are stored in session for use with API calls in getServerSideProps

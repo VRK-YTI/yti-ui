@@ -19,6 +19,7 @@ export const getTerminologyApiBaseQuery = (
       // narrow down type to NextIronRequest
       if ('req' in ctx && ctx.req && 'session' in ctx.req) {
         session_id = ctx.req.session?.cookies?.['JSESSIONID'] ?? null;
+        console.log(`found JSESSIONID in session: ${session_id}`);
 
         // assign JSESSIONID to cookie
         if (session_id) {

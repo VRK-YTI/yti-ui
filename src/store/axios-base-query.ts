@@ -44,6 +44,10 @@ const axiosBaseQuery =
     }
 
     try {
+      console.log(`request url: ${baseUrl + url}`);
+      console.log('headers:');
+      console.log(headers);
+
       const result = await axios({
         url: baseUrl + url,
         method,

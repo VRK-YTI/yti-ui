@@ -51,16 +51,26 @@ export function createCommonGetServerSideProps<
           store,
         });
 
+        console.log('SSR got these headers:');
+        console.log(req.headers);
+
+        console.log('requesting authenticated-user');
         await store.dispatch(getAuthenticatedUser.initiate());
         const user: User = getStoreData({
           state: store.getState(),
           reduxKey: 'loginApi',
           functionKey: 'getAuthenticatedUser',
         });
+        console.log('found this user data:');
+        console.log(user);
 
         if (!user || user.anonymous) {
+          console.log('login is anonymous');
           store.dispatch(setLogin(anonymousUser));
         } else {
+          console.log('login is real user');
+          console.log(user);
+          console.log(req.session.user);
           store.dispatch(
             setLogin(user ? user : req.session.user ?? anonymousUser)
           );
