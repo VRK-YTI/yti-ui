@@ -30,7 +30,13 @@ import { HttpErrorResponse } from '@angular/common/http';
       </button>
 
       <h4 class="tool-inner-title" translate>Terminologies</h4>
-      <div class="tool-info"><p translate>ToolInfo</p></div>
+      <div class="tool-info"><p translate>ToolInfo</p>
+      <p>
+        <span translate>BetaLinkPrefix</span>
+        <a href="https://sanastot.beta.yti.cloud.dvv.fi/" target="_blank" rel="noopener noreferrer" translate>BetaLink</a>
+        <span>.</span>
+      </p>
+      </div>
 
       <div><span class="search-label" translate>Search vocabularies</span></div>
       <div class="row">

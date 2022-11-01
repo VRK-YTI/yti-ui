@@ -558,3 +558,9 @@ msgid "Reference does not match any concepts."
 msgstr ""
 "{{ lineNumber }}: Referensen “{{ name }}” saknar begrepp för värdet "
 "“{{ value }}”"
+
+msgid "BetaLinkPrefix"
+msgstr "Testa nya "
+
+msgid "BetaLink"
+msgstr "Ordlistor betan"

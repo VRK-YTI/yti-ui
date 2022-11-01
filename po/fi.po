@@ -563,3 +563,9 @@ msgid "Reference does not match any concepts."
 msgstr ""
 "{{ lineNumber }}: Viittauksella “{{ name }}” ei löydy käsitettä arvolle "
 "“{{ value }}”"
+
+msgid "BetaLinkPrefix"
+msgstr "Kokeile uutta "
+
+msgid "BetaLink"
+msgstr "Sanastot betaa"
