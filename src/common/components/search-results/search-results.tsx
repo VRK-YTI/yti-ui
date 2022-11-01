@@ -157,8 +157,8 @@ export default function SearchResults({
             <ResultWrapper $isSmall={isSmall}>
               {data
                 .filter((collection, idx) => {
-                  const minId = Math.max(0, (urlState.page - 1) * 10);
-                  const maxId = minId + 10;
+                  const minId = Math.max(0, (urlState.page - 1) * 50);
+                  const maxId = minId + 50;
                   if (idx >= minId && idx < maxId) {
                     return collection;
                   }
@@ -222,9 +222,11 @@ export default function SearchResults({
       );
     }
 
-    return members.map((m, idx) => {
+    const membersListed = tempMembers.map((m, idx) => {
       const comma =
-        idx < 4 && members.length > 1 && idx < members.length - 1 ? ',' : '';
+        idx < 4 && tempMembers.length > 1 && idx < tempMembers.length - 1
+          ? ','
+          : '';
 
       if (idx < 5 && m.references.prefLabelXl) {
         if (m.references.prefLabelXl.length === 1) {
@@ -285,7 +287,7 @@ export default function SearchResults({
           }
         }
       } else if (idx === 5) {
-        const surplus = members.length - idx;
+        const surplus = tempMembers.length - idx;
         return (
           <div key={`surplus-${idx}`}>
             + {surplus} {t('vocabulary-results-more')}
@@ -293,6 +295,16 @@ export default function SearchResults({
         );
       }
     });
+
+    if (tempMembers.length < members.length && tempMembers.length < 5) {
+      membersListed.push(
+        <div key={`surplus-${members.length - tempMembers.length}`}>
+          + {members.length - tempMembers.length} {t('vocabulary-results-more')}
+        </div>
+      );
+    }
+
+    return membersListed;
   }
 
   function getLabel(
