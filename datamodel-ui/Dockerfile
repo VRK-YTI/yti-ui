@@ -6,7 +6,15 @@ FROM node:16.13.1-alpine3.14@sha256:a9b9cb880fa429b0bea899cd3b1bc081ab7277cc97e6
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
-COPY package.json package-lock.json ./
+COPY datamodel-ui/package.json datamodel-ui/package-lock.json ./datamodel-ui/
+WORKDIR /app/datamodel-ui
+RUN npm ci
+
+
+# Install common library and its nodes
+WORKDIR /app
+COPY common-ui ./common-ui
+WORKDIR /app/common-ui
 RUN npm ci
 
 #
@@ -29,20 +37,11 @@ ARG SKIP_COVERAGE
 ARG VERSION
 
 WORKDIR /app
-COPY . .
-COPY --from=deps /app/node_modules ./node_modules
+COPY datamodel-ui ./datamodel-ui
+COPY --from=deps /app/datamodel-ui/node_modules ./datamodel-ui/node_modules
+COPY --from=deps /app/common-ui ./common-ui
+WORKDIR /app/datamodel-ui
 
-RUN if [ "$SKIP_TESTS" ]; then \
-    echo "Skipping tests"; \
-    mkdir -p coverage; \
-  elif [ "$SKIP_COVERAGE" ]; then \
-    echo "Running tests without coverage"; \
-    npm run test:ci:no-coverage; \
-    mkdir -p coverage; \
-  else \
-    echo "Running tests with coverage"; \
-    npm run test:ci; \
-  fi
 
 # Create version.txt
 RUN echo "$VERSION" > public/version.txt
@@ -54,27 +53,28 @@ RUN npm run build && npm install --production --ignore-scripts --prefer-offline
 #
 
 FROM node:16.13.1-alpine3.14@sha256:a9b9cb880fa429b0bea899cd3b1bc081ab7277cc97e6d2dcd84bd9753b2027e1 AS runner
-WORKDIR /app
+WORKDIR /app/datamodel-ui
 
 ENV NODE_ENV production
 
 RUN addgroup -g 1001 -S nodejs && adduser -S nextjs -u 1001
 
 # for testing during dev:
-RUN apk add curl
+RUN apk add curl bash
 
 # Allow process to run on port 80 for compatibility with earlier versions of
 # the application.
 RUN apk add libcap && setcap 'cap_net_bind_service=+ep' /usr/local/bin/node
 
-COPY --from=builder /app/next.config.js ./
-COPY --from=builder /app/next-i18next.config.js ./
-COPY --from=builder /app/public ./public
-COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/junit.xml ./
-COPY --from=builder /app/coverage ./coverage
+COPY --from=builder /app/datamodel-ui/next.config.js ./
+# COPY --from=builder /app//datamodel-ui/next-i18next.config.js ./
+COPY --from=builder /app/datamodel-ui/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/datamodel-ui/.next ./.next
+COPY --from=builder /app/datamodel-ui/node_modules ./node_modules
+COPY --from=builder /app/datamodel-ui/package.json ./package.json
+COPY --from=builder /app/common-ui ../common-ui
+# COPY --from=builder /app/datamodel-ui/junit.xml ./
+# COPY --from=builder /app/datamodel-ui/coverage ./coverage
 
 USER nextjs
 
