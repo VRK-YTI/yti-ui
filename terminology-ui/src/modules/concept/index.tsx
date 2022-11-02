@@ -19,7 +19,7 @@ import FormattedDate from '@app/common/components/formatted-date';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import PropertyValue from '@app/common/components/property-value';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
-import Separator from '@app/common/components/separator';
+import Separator from '@common/components/separator';
 import DetailsExpander from './details-expander';
 import ConceptSidebar from './concept-sidebar';
 import {

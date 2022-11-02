@@ -1,4 +1,4 @@
-import Separator from '@app/common/components/separator';
+import Separator from '@common/components/separator';
 import {
   WiderTextarea,
   H2Sm,

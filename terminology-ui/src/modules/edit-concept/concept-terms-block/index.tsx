@@ -1,7 +1,7 @@
 import dynamic from 'next/dynamic';
 import { BasicBlock } from '@app/common/components/block';
 import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
-import Separator from '@app/common/components/separator';
+import Separator from '@common/components/separator';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { Button, ExpanderGroup } from 'suomifi-ui-components';

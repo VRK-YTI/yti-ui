@@ -1,6 +1,6 @@
 import { useTranslation } from 'next-i18next';
 import { Counts } from '@app/common/interfaces/counts.interface';
-import Separator from '@app/common/components/separator';
+import Separator from '@common/components/separator';
 import { Filter } from '@app/common/components/filter/filter';
 import StatusFilter from '@app/common/components/filter/status-filter';
 import { KeywordFilter } from '@app/common/components/filter/keyword-filter';

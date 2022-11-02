@@ -5,7 +5,7 @@ import {
 import { useGetConceptQuery } from '@app/common/components/concept/concept.slice';
 import FormattedDate from '@app/common/components/formatted-date';
 import PropertyValue from '@app/common/components/property-value';
-import Separator from '@app/common/components/separator';
+import Separator from '@common/components/separator';
 import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
 import { useTranslation } from 'next-i18next';
 import { ExpanderContent } from 'suomifi-ui-components';

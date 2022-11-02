@@ -13,7 +13,7 @@ import {
   PropertyList,
 } from './info-expander.styles';
 import { VocabularyInfoDTO } from '@app/common/interfaces/vocabulary.interface';
-import Separator from '@app/common/components/separator';
+import Separator from '@common/components/separator';
 import {
   BasicBlock,
   MultilingualPropertyBlock,

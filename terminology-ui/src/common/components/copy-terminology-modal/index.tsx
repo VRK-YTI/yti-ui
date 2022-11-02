@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Button } from 'suomifi-ui-components';
 import { BasicBlock } from '../block';
 import { BasicBlockExtraWrapper } from '../block/block.styles';
-import Separator from '../separator';
+import Separator from '@common/components/separator';
 
 const CopyTerminologyModalDynamic = dynamic(
   () => import('./copy-terminology-modal')

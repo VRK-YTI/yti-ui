@@ -12,7 +12,7 @@ import { useBreakpoints } from '@app/common/components/media-query/media-query-c
 import { BasicBlock } from '@app/common/components/block';
 import { useSelector } from 'react-redux';
 import { selectLogin } from '@app/common/components/login/login.slice';
-import Separator from '@app/common/components/separator';
+import Separator from '@common/components/separator';
 import { useGetOrganizationsQuery } from '@app/common/components/terminology-search/terminology-search.slice';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import sortBy from 'lodash/sortBy';

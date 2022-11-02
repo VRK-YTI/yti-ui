@@ -5,7 +5,7 @@ import { useGetVocabularyQuery } from '../vocabulary/vocabulary.slice';
 import { ExpanderContent } from 'suomifi-ui-components';
 import SaveSpinner from '../save-spinner';
 import { BasicBlock, MultilingualPropertyBlock, PropertyBlock } from '../block';
-import Separator from '../separator';
+import Separator from '@common/components/separator';
 import FormattedDate from '../formatted-date';
 
 interface RenderExpanderContentProps {

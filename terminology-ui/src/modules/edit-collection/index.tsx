@@ -1,7 +1,7 @@
 import { Breadcrumb, BreadcrumbLink } from '@app/common/components/breadcrumb';
 import { useAddCollectionMutation } from '@app/common/components/modify/modify.slice';
 import PropertyValue from '@app/common/components/property-value';
-import Separator from '@app/common/components/separator';
+import Separator from '@common/components/separator';
 import {
   BadgeBar,
   MainTitle,

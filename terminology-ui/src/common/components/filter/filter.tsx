@@ -1,6 +1,6 @@
 import { useTranslation } from 'next-i18next';
 import { Button } from 'suomifi-ui-components';
-import Separator from '@app/common/components/separator';
+import Separator from '@common/components/separator';
 import SkipLink from '@app/common/components/skip-link/skip-link';
 import {
   CloseWrapper,
