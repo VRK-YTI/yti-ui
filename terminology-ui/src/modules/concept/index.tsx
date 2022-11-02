@@ -34,12 +34,7 @@ import { setTitle } from '@app/common/components/title/title.slice';
 import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
 import { useGetConceptQuery } from '@app/common/components/concept/concept.slice';
 import { getProperty } from '@app/common/utils/get-property';
-import {
-  SubTitle,
-  MainTitle,
-  BadgeBar,
-  Badge,
-} from '@app/common/components/title-block';
+import { MainTitle, BadgeBar, Badge } from '@app/common/components/title-block';
 import HasPermission from '@app/common/utils/has-permission';
 import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
 import Link from 'next/link';
