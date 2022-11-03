@@ -1,6 +1,7 @@
 const { i18n } = require('./next-i18next.config');
 const { PHASE_DEVELOPMENT_SERVER } = require('next/constants');
 const fs = require('fs');
+const path = require('path');
 const withTM = require('next-transpile-modules')(['../common-ui']);
 
 module.exports = (phase, { defaultConfig }) => {
@@ -32,6 +33,22 @@ module.exports = (phase, { defaultConfig }) => {
           permanent: true,
         },
       ];
+    },
+    webpack: config => {
+      config.resolve.alias['styled-components'] = path.resolve(
+        __dirname,
+        '../common-ui/node_modules/styled-components',
+      );
+      config.resolve.alias['suomifi-ui-components'] = path.resolve(
+        __dirname,
+        '../common-ui/node_modules/suomifi-ui-components',
+      );
+      config.resolve.alias['suomifi-design-tokens'] = path.resolve(
+        __dirname,
+        '../common-ui/node_modules/suomifi-design-tokens',
+      );
+
+      return config;
     },
     publicRuntimeConfig: {
       versionInfo,
