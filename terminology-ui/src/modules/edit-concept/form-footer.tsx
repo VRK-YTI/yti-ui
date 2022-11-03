@@ -1,5 +1,5 @@
 import FormFooterAlert from '@app/common/components/form-footer-alert';
-import SaveSpinner from '@app/common/components/save-spinner';
+import SaveSpinner from '@common/components/save-spinner';
 import Separator from '@common/components/separator';
 import { translateEditConceptError } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';

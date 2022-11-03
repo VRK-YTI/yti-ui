@@ -26,7 +26,7 @@ import { BasicBlock } from '../block';
 import { BasicBlockExtraWrapper } from '../block/block.styles';
 import { useBreakpoints } from '../media-query/media-query-context';
 import { useDeleteTargetMutation } from '../remove/remove.slice';
-import SaveSpinner from '../save-spinner';
+import SaveSpinner from '@common/components/save-spinner';
 import { terminologySearchApi } from '../terminology-search/terminology-search.slice';
 import { useDeleteVocabularyMutation } from '../vocabulary/vocabulary.slice';
 import {

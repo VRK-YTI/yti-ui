@@ -26,7 +26,7 @@ export default function Layout({
   feedbackSubject?: string;
 }) {
   const { t } = useTranslation('common');
-  const { breakpoint, isSmall } = useBreakpoints();
+  const { breakpoint } = useBreakpoints();
   const { publicRuntimeConfig } = getConfig();
 
   return (
@@ -51,7 +51,11 @@ export default function Layout({
 
         <FooterContainer>
           <MarginContainer $breakpoint={breakpoint}>
-            <Footer t={t} feedbackSubject={feedbackSubject} versionInfo={publicRuntimeConfig?.versionInfo}/>
+            <Footer
+              t={t}
+              feedbackSubject={feedbackSubject}
+              versionInfo={publicRuntimeConfig?.versionInfo}
+            />
           </MarginContainer>
         </FooterContainer>
       </SiteContainer>

@@ -3,7 +3,7 @@ import { useTranslation } from 'next-i18next';
 import { useGetConceptQuery } from '../concept/concept.slice';
 import { useGetVocabularyQuery } from '../vocabulary/vocabulary.slice';
 import { ExpanderContent } from 'suomifi-ui-components';
-import SaveSpinner from '../save-spinner';
+import SaveSpinner from '@common/components/save-spinner';
 import { BasicBlock, MultilingualPropertyBlock, PropertyBlock } from '../block';
 import Separator from '@common/components/separator';
 import FormattedDate from '../formatted-date';
