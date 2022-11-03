@@ -1,6 +1,5 @@
 import dynamic from 'next/dynamic';
-import { BasicBlock } from '@app/common/components/block';
-import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
+import { BasicBlock, BasicBlockExtraWrapper } from '@common/components/block';
 import Separator from '@common/components/separator';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';

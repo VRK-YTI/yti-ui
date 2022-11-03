@@ -1,7 +1,5 @@
-import {
-  BasicBlock,
-  MultilingualPropertyBlock,
-} from '@app/common/components/block';
+import { BasicBlock } from '@common/components/block';
+import { MultilingualPropertyBlock } from '@app/common/components/block';
 import { useGetConceptQuery } from '@app/common/components/concept/concept.slice';
 import FormattedDate from '@app/common/components/formatted-date';
 import PropertyValue from '@app/common/components/property-value';

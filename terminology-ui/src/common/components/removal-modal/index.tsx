@@ -22,8 +22,7 @@ import {
   Paragraph,
   Text,
 } from 'suomifi-ui-components';
-import { BasicBlock } from '../block';
-import { BasicBlockExtraWrapper } from '../block/block.styles';
+import { BasicBlock, BasicBlockExtraWrapper } from '@common/components/block';
 import { useBreakpoints } from '../media-query/media-query-context';
 import { useDeleteTargetMutation } from '../remove/remove.slice';
 import SaveSpinner from '@common/components/save-spinner';

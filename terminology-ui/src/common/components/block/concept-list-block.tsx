@@ -1,11 +1,10 @@
 import React from 'react';
 import Link from 'next/link';
 import { Link as SuomiLink } from 'suomifi-ui-components';
-import { BasicBlock } from '.';
+import { BasicBlock, List } from '@common/components/block';
 import { Concept } from '@app/common/interfaces/concept.interface';
 import { getProperty } from '@app/common/utils/get-property';
 import PropertyValue from '@app/common/components/property-value';
-import { List } from './block.styles';
 
 export interface ConceptListBlockProps {
   title: React.ReactNode;

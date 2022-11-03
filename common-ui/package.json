@@ -8,6 +8,7 @@
     "suomifi-ui-components": "^9.0.0"
   },
   "devDependencies": {
+    "@testing-library/react": "^12.1.2",
     "@types/node": "^16.11.6",
     "@types/react": "17.0.25",
     "@types/react-dom": "18.0.6",

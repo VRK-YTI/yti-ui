@@ -1,5 +1,4 @@
-import { BasicBlock } from '@app/common/components/block';
-import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
+import { BasicBlock, BasicBlockExtraWrapper } from '@common/components/block';
 import PropertyValue from '@app/common/components/property-value';
 import { Concepts } from '@app/common/interfaces/concepts.interface';
 import { RelationInfoType } from '@app/modules/edit-concept/new-concept.types';

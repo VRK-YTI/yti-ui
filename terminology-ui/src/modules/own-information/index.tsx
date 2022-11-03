@@ -9,7 +9,7 @@ import {
   PageContent,
 } from './own-information.styles';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
-import { BasicBlock } from '@app/common/components/block';
+import { BasicBlock } from '@common/components/block';
 import { useSelector } from 'react-redux';
 import { selectLogin } from '@app/common/components/login/login.slice';
 import Separator from '@common/components/separator';

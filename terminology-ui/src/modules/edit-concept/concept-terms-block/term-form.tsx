@@ -1,5 +1,4 @@
-import { BasicBlock } from '@app/common/components/block';
-import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
+import { BasicBlock, BasicBlockExtraWrapper } from '@common/components/block';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import Separator from '@common/components/separator';
 import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from '@app/common/utils/constants';

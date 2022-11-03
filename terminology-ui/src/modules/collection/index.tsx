@@ -8,8 +8,8 @@ import {
   Text,
   VisuallyHidden,
 } from 'suomifi-ui-components';
+import { BasicBlock, BasicBlockExtraWrapper } from '@common/components/block';
 import {
-  BasicBlock,
   MultilingualPropertyBlock,
   ConceptListBlock,
 } from '@app/common/components/block';
@@ -37,7 +37,6 @@ import {
   BadgeBar,
 } from '@app/common/components/title-block';
 import HasPermission from '@app/common/utils/has-permission';
-import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
 import Link from 'next/link';
 import RemovalModal from '@app/common/components/removal-modal';
 

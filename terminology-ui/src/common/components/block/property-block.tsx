@@ -1,6 +1,6 @@
 import { useTranslation } from 'next-i18next';
 import React from 'react';
-import { BasicBlock } from '.';
+import { BasicBlock } from '@common/components/block';
 import { Property } from '@app/common/interfaces/termed-data-types.interface';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 

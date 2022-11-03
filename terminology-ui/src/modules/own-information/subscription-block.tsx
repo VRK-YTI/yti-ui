@@ -1,12 +1,11 @@
 import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
-import { BasicBlock } from '../../common/components/block';
+import { BasicBlock, BasicBlockExtraWrapper } from '@common/components/block';
 import {
   SubscriptionsList,
   SubscriptionsListItem,
 } from './own-information.styles';
 import { Link as SuomiLink } from 'suomifi-ui-components';
-import { BasicBlockExtraWrapper } from '../../common/components/block/block.styles';
 import { Subscriptions } from '../../common/interfaces/subscription.interface';
 import { useStoreDispatch } from '../../store';
 import { useToggleSubscriptionMutation } from '../../common/components/subscription/subscription.slice';

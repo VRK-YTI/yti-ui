@@ -14,12 +14,11 @@ import {
 } from './info-expander.styles';
 import { VocabularyInfoDTO } from '@app/common/interfaces/vocabulary.interface';
 import Separator from '@common/components/separator';
+import { BasicBlock, BasicBlockExtraWrapper } from '@common/components/block';
 import {
-  BasicBlock,
   MultilingualPropertyBlock,
   PropertyBlock,
 } from '@app/common/components/block';
-import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
 import FormattedDate from '@app/common/components/formatted-date';
 import { useSelector } from 'react-redux';
 import { selectLogin } from '@app/common/components/login/login.slice';

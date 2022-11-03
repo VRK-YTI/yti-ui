@@ -1,4 +1,4 @@
-import { BasicBlock } from '.';
+import { BasicBlock } from '@common/components/block';
 import MultilingualDefinitionList from '@app/common/components/multilingual-definition-list/multilingual-definition-list';
 
 export type MultilingualBlockItemMapper<T> = (item: T) => {

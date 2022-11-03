@@ -8,8 +8,8 @@ import {
   Text,
   VisuallyHidden,
 } from 'suomifi-ui-components';
+import { BasicBlock, BasicBlockExtraWrapper } from '@common/components/block';
 import {
-  BasicBlock,
   MultilingualPropertyBlock,
   PropertyBlock,
   TermBlock,
@@ -36,7 +36,6 @@ import { useGetConceptQuery } from '@app/common/components/concept/concept.slice
 import { getProperty } from '@app/common/utils/get-property';
 import { MainTitle, BadgeBar, Badge } from '@app/common/components/title-block';
 import HasPermission from '@app/common/utils/has-permission';
-import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
 import Link from 'next/link';
 import { translateStatus } from '@app/common/utils/translation-helpers';
 import isEmail from 'validator/lib/isEmail';
