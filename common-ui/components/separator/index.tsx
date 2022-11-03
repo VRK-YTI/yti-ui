@@ -1,15 +1,14 @@
 import { StyledHr } from './separator.styles';
-import { ThemeProvider } from 'styled-components';
-import { lightTheme } from '../theme';
+import CommonWrapper from '../wrapper';
 
 export interface SeparatorProps {
   isLarge?: boolean;
 }
 
-export default function Separator({ isLarge = false }: SeparatorProps) {
+function Separator({ isLarge = false }: SeparatorProps) {
   return (
-    <ThemeProvider theme={lightTheme}>
       <StyledHr $isLarge={isLarge} aria-hidden="true" />
-    </ThemeProvider>
   );
 }
+
+export default CommonWrapper(Separator)
