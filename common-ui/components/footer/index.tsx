@@ -5,8 +5,6 @@ import {
   VersionInfo,
 } from './footer.styles';
 import { useBreakpoints } from '../media-query';
-import { ThemeProvider } from 'styled-components';
-import { lightTheme } from '../theme';
 import CommonWrapper from '../wrapper';
 
 export interface FooterProps {

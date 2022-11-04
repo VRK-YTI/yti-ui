@@ -2,11 +2,7 @@ import { Breadcrumb, BreadcrumbLink } from '@app/common/components/breadcrumb';
 import { useAddCollectionMutation } from '@app/common/components/modify/modify.slice';
 import PropertyValue from '@app/common/components/property-value';
 import Separator from '@common/components/separator';
-import {
-  BadgeBar,
-  MainTitle,
-  SubTitle,
-} from '@app/common/components/title-block';
+import { BadgeBar, MainTitle, SubTitle } from '@common/components/title-block';
 import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
 import { getProperty } from '@app/common/utils/get-property';
 import { useTranslation } from 'next-i18next';

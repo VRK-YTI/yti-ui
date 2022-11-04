@@ -15,6 +15,7 @@
     "next/core-web-vitals",
     "prettier"
   ],
+  "plugins": ["import"],
   "rules": {
     "semi": [2, "always"],
     "quotes": ["error", "single"],
@@ -43,5 +44,13 @@
     "jest/prefer-expect-assertions": 0,
     "jest/no-hooks": 0,
     "jest/max-expects": 0
+  },
+  "settings": {
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
+    },
+    "import/resolver": {
+      "typescript": {}
+    }
   }
 }

@@ -31,11 +31,7 @@ import { setTitle } from '@app/common/components/title/title.slice';
 import { useGetCollectionQuery } from '@app/common/components/collection/collection.slice';
 import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
 import { getProperty } from '@app/common/utils/get-property';
-import {
-  SubTitle,
-  MainTitle,
-  BadgeBar,
-} from '@app/common/components/title-block';
+import { SubTitle, MainTitle, BadgeBar } from '@common/components/title-block';
 import HasPermission from '@app/common/utils/has-permission';
 import Link from 'next/link';
 import RemovalModal from '@app/common/components/removal-modal';

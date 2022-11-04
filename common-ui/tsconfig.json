@@ -20,7 +20,7 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@app/*": ["src/*"]
+      "@common/*": ["src/*"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx"],

@@ -20,6 +20,7 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
+      "*": ["node_modules/", "../common-ui/node_modules/*"],
       "@app/*": ["src/*"],
       "@common/*": ["../common-ui/*"]
     }

@@ -22,7 +22,7 @@ import EmailNotificationsBlock from './email-notifications-block';
 import { useGetSubscriptionsQuery } from '../../common/components/subscription/subscription.slice';
 import InlineAlert from '@app/common/components/inline-alert';
 import { useGetRequestsQuery } from '@app/common/components/access-request/access-request.slice';
-import { MainTitle } from '@app/common/components/title-block';
+import { MainTitle } from '@common/components/title-block';
 import { translateRole } from '@app/common/utils/translation-helpers';
 
 export default function OwnInformation() {

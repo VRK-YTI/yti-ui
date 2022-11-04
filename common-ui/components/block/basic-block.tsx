@@ -21,6 +21,7 @@ function BasicBlock({
   id,
 }: BasicBlockProps) {
   const { isSmall } = useBreakpoints();
+
   return (
     <BasicBlockWrapper
       $largeGap={largeGap}
