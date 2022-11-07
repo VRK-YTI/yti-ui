@@ -19,7 +19,6 @@ import {
 } from '@app/common/utils/create-getserversideprops';
 import Layout from '@app/layouts/layout';
 import EditCollection from '@app/modules/edit-collection';
-import { useStoreDispatch } from '@app/store';
 import { SSRConfig } from 'next-i18next';
 
 interface CollectionEditPageProps extends CommonContextState {
@@ -55,8 +54,6 @@ export default function CollectionEdit(props: CollectionEditPageProps) {
 
 export const getServerSideProps = createCommonGetServerSideProps(
   async ({ store, query, locale }: LocalHandlerParams) => {
-    const dispatch = useStoreDispatch();
-
     const collectionId = Array.isArray(query.collectionId)
       ? query.collectionId[0]
       : query.collectionId;
@@ -76,8 +73,8 @@ export const getServerSideProps = createCommonGetServerSideProps(
         terminologyId: terminologyId,
       })
     );
-    await Promise.all(dispatch(getCollectionRunningQueriesThunk()));
-    await Promise.all(dispatch(getRunningQueriesThunk()));
+    await Promise.all(store.dispatch(getCollectionRunningQueriesThunk()));
+    await Promise.all(store.dispatch(getRunningQueriesThunk()));
 
     const collectionData = getStoreData({
       state: store.getState(),

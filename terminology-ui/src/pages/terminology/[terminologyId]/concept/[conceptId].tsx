@@ -23,7 +23,6 @@ import PageHead from '@app/common/components/page-head';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import { getProperty } from '@app/common/utils/get-property';
 import { getStoreData } from '@app/common/components/page-head/utils';
-import { useStoreDispatch } from '@app/store';
 
 interface ConceptPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -57,8 +56,6 @@ export default function ConceptPage(props: ConceptPageProps) {
 
 export const getServerSideProps = createCommonGetServerSideProps(
   async ({ store, params, locale }: LocalHandlerParams) => {
-    const dispatch = useStoreDispatch();
-
     if (!params) {
       throw new Error('Missing parameters for page');
     }
@@ -77,8 +74,8 @@ export const getServerSideProps = createCommonGetServerSideProps(
     store.dispatch(getVocabulary.initiate({ id: terminologyId }));
     store.dispatch(getConcept.initiate({ terminologyId, conceptId }));
 
-    await Promise.all(dispatch(getVocabularyRunningQueriesThunk()));
-    await Promise.all(dispatch(getConceptRunningQueriesThunk()));
+    await Promise.all(store.dispatch(getVocabularyRunningQueriesThunk()));
+    await Promise.all(store.dispatch(getConceptRunningQueriesThunk()));
 
     const vocabularyData = getStoreData({
       state: store.getState(),

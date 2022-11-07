@@ -19,7 +19,6 @@ import {
 } from '@app/common/components/counts/counts.slice';
 import PageHead from '@app/common/components/page-head';
 import { initialUrlState } from '@app/common/utils/hooks/use-url-state';
-import { useStoreDispatch } from '@app/store';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -45,7 +44,6 @@ export default function IndexPage(props: IndexPageProps) {
 export const getServerSideProps = createCommonGetServerSideProps(
   async ({ store, locale, query }) => {
     const urlState = Object.assign({}, initialUrlState);
-    const dispatch = useStoreDispatch();
 
     if (query) {
       if (query.q !== undefined) {
@@ -86,8 +84,8 @@ export const getServerSideProps = createCommonGetServerSideProps(
     store.dispatch(getOrganizations.initiate(locale ?? 'fi'));
     store.dispatch(getCounts.initiate(null));
 
-    await Promise.all(dispatch(terminologyGetRunningQueriesThunk()));
-    await Promise.all(dispatch(countsGetRunningQueriesThunk()));
+    await Promise.all(store.dispatch(terminologyGetRunningQueriesThunk()));
+    await Promise.all(store.dispatch(countsGetRunningQueriesThunk()));
 
     return {};
   }

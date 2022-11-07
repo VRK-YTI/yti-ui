@@ -15,7 +15,6 @@ import {
   getVocabulary,
   getRunningQueriesThunk,
 } from '@app/common/components/vocabulary/vocabulary.slice';
-import { useStoreDispatch } from '@app/store';
 
 interface NewConceptPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -43,7 +42,6 @@ export default function NewConcept(props: NewConceptPageProps) {
 
 export const getServerSideProps = createCommonGetServerSideProps(
   async ({ store, query }: LocalHandlerParams) => {
-    const dispatch = useStoreDispatch();
     const terminologyId = Array.isArray(query.terminologyId)
       ? query.terminologyId[0]
       : query.terminologyId;
@@ -54,7 +52,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
 
     store.dispatch(getVocabulary.initiate({ id: terminologyId }));
 
-    await Promise.all(dispatch(getRunningQueriesThunk()));
+    await Promise.all(store.dispatch(getRunningQueriesThunk()));
 
     return {
       props: {

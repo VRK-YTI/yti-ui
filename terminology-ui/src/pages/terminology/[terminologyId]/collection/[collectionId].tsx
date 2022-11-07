@@ -23,7 +23,6 @@ import {
 import PageHead from '@app/common/components/page-head';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import { getStoreData } from '@app/common/components/page-head/utils';
-import { useStoreDispatch } from '@app/store';
 
 interface CollectionPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -57,8 +56,6 @@ export default function CollectionPage(props: CollectionPageProps) {
 
 export const getServerSideProps = createCommonGetServerSideProps(
   async ({ store, params, locale }: LocalHandlerParams) => {
-    const dispatch = useStoreDispatch();
-
     if (!params) {
       throw new Error('Missing parameters for page');
     }
@@ -78,8 +75,8 @@ export const getServerSideProps = createCommonGetServerSideProps(
     store.dispatch(getCollection.initiate({ terminologyId, collectionId }));
     store.dispatch(getCollections.initiate(terminologyId));
 
-    await Promise.all(dispatch(getVocabularyRunningQueriesThunk()));
-    await Promise.all(dispatch(getCollectionRunningQueriesThunk()));
+    await Promise.all(store.dispatch(getVocabularyRunningQueriesThunk()));
+    await Promise.all(store.dispatch(getCollectionRunningQueriesThunk()));
 
     const vocabularyData = getStoreData({
       state: store.getState(),

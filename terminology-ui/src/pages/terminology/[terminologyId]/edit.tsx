@@ -18,7 +18,6 @@ import {
 } from '@app/common/utils/create-getserversideprops';
 import Layout from '@app/layouts/layout';
 import EditVocabulary from '@app/modules/edit-vocabulary';
-import { useStoreDispatch } from '@app/store';
 import { SSRConfig, useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 
@@ -47,8 +46,6 @@ export default function EditTerminology(props: EditTerminologyPageProps) {
 
 export const getServerSideProps = createCommonGetServerSideProps(
   async ({ store, params, locale }: LocalHandlerParams) => {
-    const dispatch = useStoreDispatch();
-
     if (!params) {
       throw new Error('Missing parameters for page');
     }
@@ -65,8 +62,8 @@ export const getServerSideProps = createCommonGetServerSideProps(
     store.dispatch(getOrganizations.initiate(locale ?? 'fi'));
     store.dispatch(getGroups.initiate(locale ?? 'fi'));
 
-    await Promise.all(dispatch(getRunningQueriesThunk()));
-    await Promise.all(dispatch(getTermSearchRunningQueriesThunk()));
+    await Promise.all(store.dispatch(getRunningQueriesThunk()));
+    await Promise.all(store.dispatch(getTermSearchRunningQueriesThunk()));
 
     return {
       props: {
