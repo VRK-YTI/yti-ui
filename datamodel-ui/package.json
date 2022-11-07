@@ -13,7 +13,8 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "suomifi-ui-components": "^9.0.0",
-    "next-transpile-modules": "^9.0.0"
+    "next-transpile-modules": "^9.0.0",
+    "yti-common-ui": "file:../common-ui/components"
   },
   "devDependencies": {
     "@types/node": "^16.11.6",
