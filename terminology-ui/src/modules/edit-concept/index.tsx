@@ -5,7 +5,7 @@ import {
   SubTitle,
   BadgeBar,
   Badge,
-} from '@common/components/title-block';
+} from 'yti-common-ui/title-block';
 import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
 import { getProperty } from '@app/common/utils/get-property';
 import { useTranslation } from 'next-i18next';

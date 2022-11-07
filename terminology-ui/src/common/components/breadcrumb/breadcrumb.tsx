@@ -3,7 +3,7 @@ import { BreadcrumbWrapper } from './breadcrumb.styles';
 import { useTranslation } from 'next-i18next';
 import React from 'react';
 import BreadcrumbLink from './breadcrumb-link';
-import { useBreakpoints } from '@common/components/media-query';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 
 export interface BreadcrumbProps {
   children: React.ReactNode;

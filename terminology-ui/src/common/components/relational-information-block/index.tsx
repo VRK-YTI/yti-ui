@@ -1,4 +1,4 @@
-import { BasicBlock, BasicBlockExtraWrapper } from '@common/components/block';
+import { BasicBlock, BasicBlockExtraWrapper } from 'yti-common-ui/block';
 import PropertyValue from '@app/common/components/property-value';
 import { Concepts } from '@app/common/interfaces/concepts.interface';
 import { RelationInfoType } from '@app/modules/edit-concept/new-concept.types';

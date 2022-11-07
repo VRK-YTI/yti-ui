@@ -1,4 +1,4 @@
-import { BasicBlock, BasicBlockExtraWrapper } from '@common/components/block';
+import { BasicBlock, BasicBlockExtraWrapper } from 'yti-common-ui/block';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { Button, Dropdown, DropdownItem } from 'suomifi-ui-components';

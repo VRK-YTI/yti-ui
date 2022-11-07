@@ -1,6 +1,6 @@
 import dynamic from 'next/dynamic';
-import { BasicBlock, BasicBlockExtraWrapper } from '@common/components/block';
-import Separator from '@common/components/separator';
+import { BasicBlock, BasicBlockExtraWrapper } from 'yti-common-ui/block';
+import Separator from 'yti-common-ui/separator';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { Button, ExpanderGroup } from 'suomifi-ui-components';

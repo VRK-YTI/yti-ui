@@ -1,4 +1,4 @@
-import Separator from '@common/components/separator';
+import Separator from 'yti-common-ui/separator';
 import {
   WiderTextarea,
   H2Sm,

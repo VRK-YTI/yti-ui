@@ -34,7 +34,7 @@ export const collectionApi = createApi({
 export const {
   useGetCollectionQuery,
   useGetCollectionsQuery,
-  util: { getRunningOperationPromises },
+  util: { getRunningQueriesThunk },
 } = collectionApi;
 
 export const { getCollection, getCollections } = collectionApi.endpoints;

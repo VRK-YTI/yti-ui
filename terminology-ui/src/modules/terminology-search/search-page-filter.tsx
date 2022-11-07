@@ -4,7 +4,7 @@ import {
   GroupSearchResult,
   OrganizationSearchResult,
 } from '@app/common/interfaces/terminology.interface';
-import Separator from '@common/components/separator';
+import Separator from 'yti-common-ui/separator';
 import { Filter } from '@app/common/components/filter/filter';
 import InformationDomainFilter from '@app/common/components/filter/information-domain-filter';
 import OrganizationFilter from '@app/common/components/filter/organization-filter';

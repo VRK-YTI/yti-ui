@@ -9,7 +9,7 @@ import {
 import Vocabulary from '@app/modules/vocabulary';
 import {
   getConceptResult,
-  getRunningOperationPromises,
+  getRunningQueriesThunk,
   getVocabulary,
 } from '@app/common/components/vocabulary/vocabulary.slice';
 import { initialUrlState } from '@app/common/utils/hooks/use-url-state';
@@ -22,8 +22,9 @@ import { getPropertyValue } from '@app/common/components/property-value/get-prop
 import { getStoreData } from '@app/common/components/page-head/utils';
 import {
   getVocabularyCount,
-  getRunningOperationPromises as countsGetRunningOperationPromises,
+  getRunningQueriesThunk as countsGetRunningQueriesThunk,
 } from '@app/common/components/counts/counts.slice';
+import { useStoreDispatch } from '@app/store';
 
 interface TerminologyPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -53,6 +54,8 @@ export default function TerminologyPage(props: TerminologyPageProps) {
 
 export const getServerSideProps = createCommonGetServerSideProps(
   async ({ store, query, params, locale }: LocalHandlerParams) => {
+    const dispatch = useStoreDispatch();
+
     if (!params) {
       throw new Error('Missing parameters for page');
     }
@@ -91,8 +94,8 @@ export const getServerSideProps = createCommonGetServerSideProps(
     );
     store.dispatch(getVocabularyCount.initiate(id));
 
-    await Promise.all(getRunningOperationPromises());
-    await Promise.all(countsGetRunningOperationPromises());
+    await Promise.all(dispatch(getRunningQueriesThunk()));
+    await Promise.all(dispatch(countsGetRunningQueriesThunk()));
 
     const vocabularyData = getStoreData({
       state: store.getState(),

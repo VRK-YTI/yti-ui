@@ -4,7 +4,7 @@ import useTitleRef from '../../utils/hooks/use-title-ref';
 import CommonWrapper from '../wrapper';
 
 export interface MainTitleProps {
-  children?: React.ReactNode;
+  children?: JSX.Element | string;
 }
 
 function MainTitle({ children }: MainTitleProps) {

@@ -1,6 +1,6 @@
 import {
   getCollection,
-  getRunningOperationPromises as getCollectionRunningOperationPromises,
+  getRunningQueriesThunk as getCollectionRunningQueriesThunk,
 } from '@app/common/components/collection/collection.slice';
 import {
   CommonContextProvider,
@@ -11,7 +11,7 @@ import { getStoreData } from '@app/common/components/page-head/utils';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import {
   getVocabulary,
-  getRunningOperationPromises,
+  getRunningQueriesThunk,
 } from '@app/common/components/vocabulary/vocabulary.slice';
 import {
   createCommonGetServerSideProps,
@@ -19,6 +19,7 @@ import {
 } from '@app/common/utils/create-getserversideprops';
 import Layout from '@app/layouts/layout';
 import EditCollection from '@app/modules/edit-collection';
+import { useStoreDispatch } from '@app/store';
 import { SSRConfig } from 'next-i18next';
 
 interface CollectionEditPageProps extends CommonContextState {
@@ -54,6 +55,8 @@ export default function CollectionEdit(props: CollectionEditPageProps) {
 
 export const getServerSideProps = createCommonGetServerSideProps(
   async ({ store, query, locale }: LocalHandlerParams) => {
+    const dispatch = useStoreDispatch();
+
     const collectionId = Array.isArray(query.collectionId)
       ? query.collectionId[0]
       : query.collectionId;
@@ -73,8 +76,8 @@ export const getServerSideProps = createCommonGetServerSideProps(
         terminologyId: terminologyId,
       })
     );
-    await Promise.all(getCollectionRunningOperationPromises());
-    await Promise.all(getRunningOperationPromises());
+    await Promise.all(dispatch(getCollectionRunningQueriesThunk()));
+    await Promise.all(dispatch(getRunningQueriesThunk()));
 
     const collectionData = getStoreData({
       state: store.getState(),

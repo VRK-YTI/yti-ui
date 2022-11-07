@@ -1,7 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Link as SuomiLink } from 'suomifi-ui-components';
-import { BasicBlock, List } from '@common/components/block';
+import { BasicBlock, List } from 'yti-common-ui/block';
 import { Concept } from '@app/common/interfaces/concept.interface';
 import { getProperty } from '@app/common/utils/get-property';
 import PropertyValue from '@app/common/components/property-value';

@@ -69,7 +69,7 @@ export const {
   useGetGroupsQuery,
   useGetSearchResultQuery,
   useGetOrganizationsQuery,
-  util: { getRunningOperationPromises },
+  util: { getRunningQueriesThunk },
 } = terminologySearchApi;
 
 export const { getSearchResult, getGroups, getOrganizations } =

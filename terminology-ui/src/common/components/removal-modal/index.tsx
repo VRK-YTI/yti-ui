@@ -22,10 +22,10 @@ import {
   Paragraph,
   Text,
 } from 'suomifi-ui-components';
-import { BasicBlock, BasicBlockExtraWrapper } from '@common/components/block';
+import { BasicBlock, BasicBlockExtraWrapper } from 'yti-common-ui/block';
 import { useBreakpoints } from '../media-query/media-query-context';
 import { useDeleteTargetMutation } from '../remove/remove.slice';
-import SaveSpinner from '@common/components/save-spinner';
+import SaveSpinner from 'yti-common-ui/save-spinner';
 import { terminologySearchApi } from '../terminology-search/terminology-search.slice';
 import { useDeleteVocabularyMutation } from '../vocabulary/vocabulary.slice';
 import {

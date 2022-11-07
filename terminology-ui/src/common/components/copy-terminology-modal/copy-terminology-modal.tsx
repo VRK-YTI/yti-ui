@@ -22,7 +22,7 @@ import {
   DescriptionParagraph,
   FooterBlock,
 } from './copy-terminology-modal.styles';
-import SaveSpinner from '@common/components/save-spinner';
+import SaveSpinner from 'yti-common-ui/save-spinner';
 
 interface CopyTerminologyModalProps {
   terminologyId: string;

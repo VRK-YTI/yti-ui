@@ -1,7 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import React from 'react';
 import { useGetCollectionsQuery } from '@app/common/components/collection/collection.slice';
-import Separator from '@common/components/separator';
+import Separator from 'yti-common-ui/separator';
 import {
   Sidebar,
   SidebarHeader,

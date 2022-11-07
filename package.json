@@ -1,0 +1,9 @@
+{
+  "name": "yhteentoimiva-monorepo",
+  "private": true,
+  "workspaces": [
+    "common-ui",
+    "datamode-ui",
+    "terminology-ui"
+  ]
+}

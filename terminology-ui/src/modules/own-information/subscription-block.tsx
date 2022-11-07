@@ -1,6 +1,6 @@
 import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
-import { BasicBlock, BasicBlockExtraWrapper } from '@common/components/block';
+import { BasicBlock, BasicBlockExtraWrapper } from 'yti-common-ui/block';
 import {
   SubscriptionsList,
   SubscriptionsListItem,

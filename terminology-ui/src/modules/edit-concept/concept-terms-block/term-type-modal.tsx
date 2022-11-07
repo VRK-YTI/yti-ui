@@ -1,4 +1,4 @@
-import { BasicBlock } from '@common/components/block';
+import { BasicBlock } from 'yti-common-ui/block';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import { translateTermType } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';

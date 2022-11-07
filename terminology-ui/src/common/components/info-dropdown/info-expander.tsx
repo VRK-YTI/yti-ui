@@ -13,8 +13,8 @@ import {
   PropertyList,
 } from './info-expander.styles';
 import { VocabularyInfoDTO } from '@app/common/interfaces/vocabulary.interface';
-import Separator from '@common/components/separator';
-import { BasicBlock, BasicBlockExtraWrapper } from '@common/components/block';
+import Separator from 'yti-common-ui/separator';
+import { BasicBlock, BasicBlockExtraWrapper } from 'yti-common-ui/block';
 import {
   MultilingualPropertyBlock,
   PropertyBlock,

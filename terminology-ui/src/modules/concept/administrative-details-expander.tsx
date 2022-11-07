@@ -4,7 +4,7 @@ import {
   ExpanderContent,
   ExpanderTitleButton,
 } from 'suomifi-ui-components';
-import { BasicBlock } from '@common/components/block';
+import { BasicBlock } from 'yti-common-ui/block';
 import { PropertyBlock } from '@app/common/components/block';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import { Concept } from '@app/common/interfaces/concept.interface';

@@ -22,7 +22,7 @@ import {
   ModalTitleH1,
 } from './access-request.styles';
 
-interface AccessRequestModalProps {
+export interface AccessRequestModalProps {
   visible: boolean;
   handleClose: () => void;
   organizations?: OrganizationSearchResult[];
@@ -90,6 +90,10 @@ export default function AccessRequestModal({
       setError({});
     }
   };
+
+  if (!visible) {
+    return <></>;
+  }
 
   return (
     <Modal

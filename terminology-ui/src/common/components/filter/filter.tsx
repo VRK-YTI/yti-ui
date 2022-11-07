@@ -1,7 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import { Button } from 'suomifi-ui-components';
-import Separator from '@common/components/separator';
-import SkipLink from '@common/components/skip-link';
+import Separator from 'yti-common-ui/separator';
+import SkipLink from 'yti-common-ui/skip-link';
 import {
   CloseWrapper,
   FilterContent,

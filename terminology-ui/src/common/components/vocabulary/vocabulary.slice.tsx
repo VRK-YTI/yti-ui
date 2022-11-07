@@ -117,7 +117,7 @@ export const {
   useDeleteVocabularyMutation,
   useGetIfNamespaceInUseMutation,
   useGetVocabulariesQuery,
-  util: { getRunningOperationPromises },
+  util: { getRunningQueriesThunk },
 } = vocabularyApi;
 
 export default vocabularySlice.reducer;

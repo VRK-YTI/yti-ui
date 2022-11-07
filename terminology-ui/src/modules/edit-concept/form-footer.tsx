@@ -1,6 +1,6 @@
 import FormFooterAlert from '@app/common/components/form-footer-alert';
-import SaveSpinner from '@common/components/save-spinner';
-import Separator from '@common/components/separator';
+import SaveSpinner from 'yti-common-ui/save-spinner';
+import Separator from 'yti-common-ui/separator';
 import { translateEditConceptError } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';

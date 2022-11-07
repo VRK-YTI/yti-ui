@@ -2,7 +2,7 @@ import { Breadcrumb, BreadcrumbLink } from '@app/common/components/breadcrumb';
 import { selectLogin } from '@app/common/components/login/login.slice';
 import { useEditTerminologyMutation } from '@app/common/components/modify/modify.slice';
 import PropertyValue from '@app/common/components/property-value';
-import SaveSpinner from '@common/components/save-spinner';
+import SaveSpinner from 'yti-common-ui/save-spinner';
 import Title from '@app/common/components/title/title';
 import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
 import useConfirmBeforeLeavingPage from '@app/common/utils/hooks/use-confirm-before-leaving-page';

@@ -8,7 +8,7 @@ import {
   Text,
   VisuallyHidden,
 } from 'suomifi-ui-components';
-import { BasicBlock, BasicBlockExtraWrapper } from '@common/components/block';
+import { BasicBlock, BasicBlockExtraWrapper } from 'yti-common-ui/block';
 import {
   MultilingualPropertyBlock,
   ConceptListBlock,
@@ -18,7 +18,7 @@ import FormattedDate from '@app/common/components/formatted-date';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import PropertyValue from '@app/common/components/property-value';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
-import Separator from '@common/components/separator';
+import Separator from 'yti-common-ui/separator';
 import { useStoreDispatch } from '@app/store';
 import CollectionSidebar from './collection-sidebar';
 import {
@@ -31,7 +31,7 @@ import { setTitle } from '@app/common/components/title/title.slice';
 import { useGetCollectionQuery } from '@app/common/components/collection/collection.slice';
 import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
 import { getProperty } from '@app/common/utils/get-property';
-import { SubTitle, MainTitle, BadgeBar } from '@common/components/title-block';
+import { SubTitle, MainTitle, BadgeBar } from 'yti-common-ui/title-block';
 import HasPermission from '@app/common/utils/has-permission';
 import Link from 'next/link';
 import RemovalModal from '@app/common/components/removal-modal';

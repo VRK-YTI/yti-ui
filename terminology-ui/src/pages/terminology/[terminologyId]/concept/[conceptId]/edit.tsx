@@ -13,14 +13,15 @@ import { default as EditConceptModule } from '@app/modules/edit-concept';
 import { useRouter } from 'next/router';
 import {
   getVocabulary,
-  getRunningOperationPromises as getVocabularyRunningOperationPromises,
+  getRunningQueriesThunk as getVocabularyRunningQueriesThunk,
 } from '@app/common/components/vocabulary/vocabulary.slice';
 import {
   getConcept,
-  getRunningOperationPromises as getConceptRunningOperationPromises,
+  getRunningQueriesThunk as getConceptRunningQueriesThunk,
 } from '@app/common/components/concept/concept.slice';
 import { getStoreData } from '@app/common/components/page-head/utils';
 import { Concept } from '@app/common/interfaces/concept.interface';
+import { useStoreDispatch } from '@app/store';
 
 interface NewConceptPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -53,6 +54,8 @@ export default function EditConcept(props: NewConceptPageProps) {
 
 export const getServerSideProps = createCommonGetServerSideProps(
   async ({ store, params }: LocalHandlerParams) => {
+    const dispatch = useStoreDispatch();
+
     if (!params) {
       throw new Error('Missing parameters for page');
     }
@@ -71,8 +74,8 @@ export const getServerSideProps = createCommonGetServerSideProps(
     store.dispatch(getVocabulary.initiate({ id: terminologyId }));
     store.dispatch(getConcept.initiate({ terminologyId, conceptId }));
 
-    await Promise.all(getVocabularyRunningOperationPromises());
-    await Promise.all(getConceptRunningOperationPromises());
+    await Promise.all(dispatch(getVocabularyRunningQueriesThunk()));
+    await Promise.all(dispatch(getConceptRunningQueriesThunk()));
 
     const conceptData = getStoreData({
       state: store.getState(),

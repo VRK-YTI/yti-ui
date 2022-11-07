@@ -34,22 +34,6 @@ module.exports = (phase, { defaultConfig }) => {
         },
       ];
     },
-    webpack: (config) => {
-      config.resolve.alias['styled-components'] = path.resolve(
-        __dirname,
-        '../common-ui/node_modules/styled-components'
-      );
-      config.resolve.alias['suomifi-ui-components'] = path.resolve(
-        __dirname,
-        '../common-ui/node_modules/suomifi-ui-components'
-      );
-      config.resolve.alias['suomifi-design-tokens'] = path.resolve(
-        __dirname,
-        '../common-ui/node_modules/suomifi-design-tokens'
-      );
-
-      return config;
-    },
     publicRuntimeConfig: {
       versionInfo,
     },
