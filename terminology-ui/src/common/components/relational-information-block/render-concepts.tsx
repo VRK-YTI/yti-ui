@@ -10,7 +10,7 @@ import { getPropertyValue } from '@app/common/components/property-value/get-prop
 import getPrefLabel from '@app/common/utils/get-preflabel';
 import { Concepts } from '@app/common/interfaces/concepts.interface';
 import { translateStatus } from '@app/common/utils/translation-helpers';
-import { useBreakpoints } from '../media-query/media-query-context';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 import { useEffect, useState } from 'react';
 import RenderExpanderContent from './render-expander-content';
 import { useRouter } from 'next/router';

@@ -8,7 +8,7 @@ import {
 } from 'suomifi-ui-components';
 import { SearchBlock } from './relation-information-block.styles';
 import { TEXT_INPUT_MAX } from '@app/common/utils/constants';
-import { useBreakpoints } from '../media-query/media-query-context';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 import { StatusesType } from './relational-modal-content';
 
 interface SearchProps {

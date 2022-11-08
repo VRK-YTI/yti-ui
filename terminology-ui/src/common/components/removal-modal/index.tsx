@@ -23,7 +23,7 @@ import {
   Text,
 } from 'suomifi-ui-components';
 import { BasicBlock, BasicBlockExtraWrapper } from 'yti-common-ui/block';
-import { useBreakpoints } from '../media-query/media-query-context';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 import { useDeleteTargetMutation } from '../remove/remove.slice';
 import SaveSpinner from 'yti-common-ui/save-spinner';
 import { terminologySearchApi } from '../terminology-search/terminology-search.slice';

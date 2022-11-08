@@ -1,5 +1,5 @@
 import { BasicBlock, BasicBlockExtraWrapper } from 'yti-common-ui/block';
-import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 import Separator from 'yti-common-ui/separator';
 import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from '@app/common/utils/constants';
 import {

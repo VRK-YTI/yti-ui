@@ -14,7 +14,7 @@ import { BasicInfoUpdate } from '../basic-information/concept-basic-information'
 import { translateLanguage } from '@app/common/utils/translation-helpers';
 import { TEXT_AREA_MAX } from '@app/common/utils/constants';
 import { FormError } from '../validate-form';
-import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 
 interface ListBlockProps {
   update: (object: BasicInfoUpdate & TermFormUpdate) => void;

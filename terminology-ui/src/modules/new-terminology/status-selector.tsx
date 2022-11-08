@@ -1,4 +1,4 @@
-import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 import { BlankFieldset } from '@app/common/components/terminology-components/terminology-components.styles';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';

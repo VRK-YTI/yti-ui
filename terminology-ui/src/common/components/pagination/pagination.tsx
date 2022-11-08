@@ -5,7 +5,7 @@ import {
   PaginationWrapper,
 } from './pagination.styles';
 import { PaginationProps } from './pagination-props';
-import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 import useUrlState from '@app/common/utils/hooks/use-url-state';
 import { useTranslation } from 'next-i18next';
 

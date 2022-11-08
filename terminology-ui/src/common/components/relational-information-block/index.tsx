@@ -15,7 +15,7 @@ import {
   Paragraph,
   Text,
 } from 'suomifi-ui-components';
-import { useBreakpoints } from '../media-query/media-query-context';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 import { ChipBlock } from './relation-information-block.styles';
 import RelationModalContent from './relational-modal-content';
 import RenderChosen from './render-chosen';

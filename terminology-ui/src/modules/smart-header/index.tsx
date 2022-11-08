@@ -19,7 +19,7 @@ import MobileNavigation from '@app/common/components/navigation/mobile-navigatio
 import DesktopLocaleChooser from '@app/common/components/locale-chooser/desktop-locale-chooser';
 import UserInfo from '@app/common/components/authentication-panel/user-info';
 import HeaderSearch from '@app/common/components/header-search/header-search';
-import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 import LoginModalView from '@app/common/components/login-modal/login-modal';
 
 export default function SmartHeader() {

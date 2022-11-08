@@ -9,7 +9,7 @@ import {
   MarginContainer,
   HeaderContainer,
 } from './layout.styles';
-import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 import { HeaderWrapper } from '@app/modules/smart-header/smart-header.styles';
 import Logo from '@app/modules/smart-header/logo';
 import Matomo from '@app/common/components/matomo';

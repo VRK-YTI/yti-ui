@@ -14,7 +14,7 @@ import {
   Text,
 } from 'suomifi-ui-components';
 import { selectLogin } from '../login/login.slice';
-import { useBreakpoints } from '../media-query/media-query-context';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 import { AccessRequest } from './access-request.interface';
 import {
   AccessRequestDropdown,

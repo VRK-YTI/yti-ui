@@ -1,6 +1,6 @@
 import FileDropArea from '@app/common/components/file-drop-area';
 import { usePostImportExcelMutation } from '@app/common/components/import/import.slice';
-import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 import SaveSpinner from 'yti-common-ui/save-spinner';
 import { terminologySearchApi } from '@app/common/components/terminology-search/terminology-search.slice';
 import { usePostNewVocabularyMutation } from '@app/common/components/vocabulary/vocabulary.slice';

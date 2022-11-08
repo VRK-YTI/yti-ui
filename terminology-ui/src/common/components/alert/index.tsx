@@ -5,7 +5,7 @@ import { useTranslation } from 'next-i18next';
 import { Notification } from 'suomifi-ui-components';
 import { AlertsWrapper } from './alert.styles';
 import { useEffect, useState } from 'react';
-import { useBreakpoints } from '../media-query/media-query-context';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 
 export default function Alerts() {
   const { t } = useTranslation('alert');

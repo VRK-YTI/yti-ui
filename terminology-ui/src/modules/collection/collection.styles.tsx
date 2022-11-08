@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { Breakpoint } from '@app/common/components/media-query/media-query-context';
-import { small } from '@app/common/components/media-query/styled-helpers';
+import { Breakpoint } from 'yti-common-ui/media-query';
+import { small } from 'yti-common-ui/media-query/styled-helpers';
 import { Block } from 'suomifi-ui-components';
 
 export const PageContent = styled.div<{ $breakpoint: Breakpoint }>`

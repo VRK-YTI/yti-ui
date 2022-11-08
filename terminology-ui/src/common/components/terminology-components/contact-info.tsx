@@ -1,5 +1,5 @@
 import { Paragraph, Text } from 'suomifi-ui-components';
-import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 import {
   BlankFieldset,
   BlankLegend,

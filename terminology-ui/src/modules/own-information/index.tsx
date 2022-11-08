@@ -8,7 +8,7 @@ import {
   OrganizationAndRolesWrapper,
   PageContent,
 } from './own-information.styles';
-import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 import { BasicBlock } from 'yti-common-ui/block';
 import { useSelector } from 'react-redux';
 import { selectLogin } from '@app/common/components/login/login.slice';
