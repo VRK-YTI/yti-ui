@@ -19,9 +19,9 @@ manually.
 
 ## Getting Started
 
-Ensure that project root folder has package.json and package-lock.json files. Run `npm i` in root if package-lock.json is missing.
-
 Install dependencies
+
+Run in root folder:
 
 ```bash
 npm install
