@@ -9,12 +9,12 @@ import {
   MarginContainer,
 } from './layout.styles';
 import { useTranslation } from 'next-i18next';
-import Footer from 'yti-common-ui/footer';
-import SmartHeader from '@app/modules/smart-header';
-import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
-import SkipLink from 'yti-common-ui/skip-link';
-import Alerts from '@app/common/components/alert';
-import Matomo from '@app/common/components/matomo';
+import Footer from '../footer';
+// import SmartHeader from '@app/modules/smart-header';
+import { useBreakpoints } from '../media-query';
+import SkipLink from '../skip-link';
+// import Alerts from '@app/common/components/alert';
+// import Matomo from '@app/common/components/matomo';
 import getConfig from 'next/config';
 
 export default function Layout({
@@ -28,9 +28,11 @@ export default function Layout({
   const { breakpoint } = useBreakpoints();
   const { publicRuntimeConfig } = getConfig();
 
+  // TODO: MONOREPO Add missing dependencies
+
   return (
     <ThemeProvider theme={lightTheme}>
-      <Matomo />
+      {/* <Matomo /> */}
 
       <Head>
         <meta name="description" content="Terminology/React POC" />
@@ -41,10 +43,10 @@ export default function Layout({
       <SkipLink href="#main">{t('skip-link-main')}</SkipLink>
 
       <SiteContainer>
-        <SmartHeader />
+        {/* <SmartHeader /> */}
 
         <ContentContainer>
-          <Alerts />
+          {/* <Alerts /> */}
           <MarginContainer $breakpoint={breakpoint}>{children}</MarginContainer>
         </ContentContainer>
 

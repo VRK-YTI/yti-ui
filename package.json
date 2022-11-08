@@ -3,7 +3,7 @@
   "private": true,
   "workspaces": [
     "common-ui",
-    "datamode-ui",
+    "datamodel-ui",
     "terminology-ui"
   ]
 }
