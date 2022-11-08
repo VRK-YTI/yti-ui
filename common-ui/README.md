@@ -4,7 +4,8 @@ YTI Common components library
 
 ## Getting started
 
-To use common-ui you will need to install its node modules. You can do this by running `npm i` inside the common-ui folder.
+To use common-ui you will need to run `npm i` first in the root folder so that package.json and are present package-lock.json.
+After that you will need to install its node modules. You can do this by running `npm i` inside the common-ui folder.
 
 ### tsconfig
 
