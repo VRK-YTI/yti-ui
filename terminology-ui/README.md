@@ -21,7 +21,7 @@ manually.
 
 Install dependencies
 
-Run in root folder:
+Run in yti-terminology-ui root folder:
 
 ```bash
 npm install
@@ -33,6 +33,17 @@ Create file .env.local to the project root directory and add the following lines
 TERMINOLOGY_API_URL=http://localhost:9103/terminology-api
 REWRITE_PROFILE=local
 SECRET_COOKIE_PASSWORD=<random string min 32 characters>
+```
+
+Add the following to `.vscode/settings.json` in [yti-terminology-ui] root directory. 
+This is necessary for VSCodes eslint to work correctly.
+
+```
+{
+  "eslint.workingDirectories": [
+    { "directory": "./terminology-ui", "changeProcessCWD": true }
+  ]
+}
 ```
 
 Run terminology-api backend application (and all its dependencies) for example
