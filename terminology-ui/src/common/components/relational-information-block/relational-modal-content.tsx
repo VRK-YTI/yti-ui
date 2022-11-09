@@ -43,7 +43,6 @@ export default function RelationModalContent({
   >();
   const [totalResults, setTotalResults] = useState(0);
   const [currPage, setCurrPage] = useState(1);
-  const [initialized, setInitialized] = useState(false);
   const modalRef = createRef<HTMLDivElement>();
 
   const statuses: StatusesType[] = [
@@ -136,23 +135,13 @@ export default function RelationModalContent({
     if (result.isSuccess) {
       setSearchResults(result.data.concepts);
       setTotalResults(result.data.totalHitCount);
-      if (!initialized) {
-        setChosen(
-          result.data.concepts.filter((c) =>
-            initialChosenConcepts.includes(c.id)
-          )
-        );
-        setInitialized(true);
-      }
     }
   }, [
     setSearchResults,
     setTotalResults,
-    setChosen,
     fromOther,
     result,
     initialChosenConcepts,
-    initialized,
   ]);
 
   useMountEffect(handleSearch, fromOther);
