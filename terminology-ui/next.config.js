@@ -1,7 +1,6 @@
 const { i18n } = require('./next-i18next.config');
 const { PHASE_DEVELOPMENT_SERVER } = require('next/constants');
 const fs = require('fs');
-const path = require('path');
 const withTM = require('next-transpile-modules')(['../common-ui']);
 
 module.exports = (phase, { defaultConfig }) => {
