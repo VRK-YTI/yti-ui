@@ -17,7 +17,6 @@ import { CommonContextState } from 'yti-common-ui/common-context-provider';
 // import { setAdminControls } from '../components/admin-controls/admin-controls.slice';
 import { getStoreData } from './utils';
 
-
 export interface LocalHandlerParams extends GetServerSidePropsContext {
   store: AppStore;
 }

@@ -1,5 +1,5 @@
 const { i18n } = require('./next-i18next.config');
-const withTM = require("next-transpile-modules")(["../common-ui"]);
+const withTM = require('next-transpile-modules')(['../common-ui']);
 
 let config = {
   compiler: {
@@ -9,7 +9,7 @@ let config = {
   eslint: {
     dirs: ['src'],
   },
-  i18n
+  i18n,
 };
 
 if (process.env.REWRITE_PROFILE === 'local') {
@@ -39,8 +39,7 @@ if (process.env.REWRITE_PROFILE === 'local') {
       return [
         {
           source: '/datamodel-api/:path*',
-          destination:
-            'http://yti-terminology-api:9004/datamodel-api/:path*',
+          destination: 'http://yti-terminology-api:9004/datamodel-api/:path*',
         },
       ];
     },
