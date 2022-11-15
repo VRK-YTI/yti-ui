@@ -35,21 +35,24 @@ export default withIronSessionApiRoute(
       // Pass the cookie from the api to the client.
       // This works since the API is already in the same domain,
       // just has a more specifi Path set
-      const jsessionid = (response.headers['set-cookie'] as string[]).filter(
-        (x) => x.startsWith('JSESSIONID=')
-      );
-      if (jsessionid.length > 0) {
-        res.setHeader('Set-Cookie', jsessionid);
-      }
 
-      // Collect cookies from Set-Cookie into an object.
-      // These will be saved in the session for later use.
-      (response.headers['set-cookie'] as string[])
-        .map((x) => x.split(';')[0])
-        .forEach((x) => {
-          const [key, value] = x.split('=');
-          cookies[key] = value;
-        });
+      if (response.headers['set-cookie']) {
+        const jsessionid = (response.headers['set-cookie'] as string[]).filter(
+          (x) => x.startsWith('JSESSIONID=')
+        );
+        if (jsessionid.length > 0) {
+          res.setHeader('Set-Cookie', jsessionid);
+        }
+
+        // Collect cookies from Set-Cookie into an object.
+        // These will be saved in the session for later use.
+        (response.headers['set-cookie'] as string[])
+          .map((x) => x.split(';')[0])
+          .forEach((x) => {
+            const [key, value] = x.split('=');
+            cookies[key] = value;
+          });
+      }
     } catch (error) {
       if (axios.isAxiosError(error)) {
         // handleAxiosError(error);
