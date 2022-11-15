@@ -15,8 +15,6 @@ import useUrlState from "../../utils/hooks/use-url-state";
 import ResultCard from "./result-card";
 import ResultCardExpander from "./result-card-expander";
 import { BaseIconKeys } from "suomifi-ui-components";
-// import { getPropertyValue } from '../property-value/get-property-value';
-// import { translateTerminologyType } from '@app/common/utils/translation-helpers';
 
 export interface SearchResultData {
   id: string;

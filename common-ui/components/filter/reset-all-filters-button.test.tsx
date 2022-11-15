@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { themeProvider } from "@app/tests/test-utils";
+import { themeProvider } from "../../utils/test-utils";
 import ResetAllFiltersButton from "./reset-all-filters-button";
 import mockRouter from "next-router-mock";
 

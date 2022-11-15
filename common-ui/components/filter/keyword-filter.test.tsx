@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
-import { themeProvider } from "@app/tests/test-utils";
+import { themeProvider } from "../../utils/test-utils";
 import mockRouter from "next-router-mock";
-import { KeywordFilter } from "./keyword-filter";
+import KeywordFilter from "./keyword-filter";
 import userEvent from "@testing-library/user-event";
 
 jest.mock("next/dist/client/router", () => require("next-router-mock"));

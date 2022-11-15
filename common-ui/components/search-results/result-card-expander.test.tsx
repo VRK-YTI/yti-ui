@@ -1,4 +1,4 @@
-import { themeProvider } from "@app/tests/test-utils";
+import { themeProvider } from "../../utils/test-utils";
 import { render, screen } from "@testing-library/react";
 import ResultCardExpander from "./result-card-expander";
 

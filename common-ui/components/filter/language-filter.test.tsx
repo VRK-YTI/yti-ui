@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import LanguageFilter from "./language-filter";
-import { themeProvider } from "@app/tests/test-utils";
+import { themeProvider } from "../../utils/test-utils";
 import mockRouter from "next-router-mock";
 import userEvent from "@testing-library/user-event";
 

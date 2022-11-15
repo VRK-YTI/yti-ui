@@ -1,11 +1,9 @@
 import { render, screen } from "@testing-library/react";
 import { Provider } from "react-redux";
 import { ThemeProvider } from "styled-components";
-import { lightTheme } from "@app/layouts/theme";
-import { makeStore } from "@app/store";
-import SearchResults from "./search-results";
+import { lightTheme } from "../theme";
+import SearchResults, { SearchResultData } from "./search-results";
 import mockRouter from "next-router-mock";
-import { getMockContext } from "@app/tests/test-utils";
 
 jest.mock("next/dist/client/router", () => require("next-router-mock"));
 
@@ -13,21 +11,24 @@ describe("search-results", () => {
   it("should render component", async () => {
     mockRouter.setCurrentUrl("/");
 
-    const store = makeStore(getMockContext());
-
-    const data = {
-      totalHitCount: 0,
-      resultStart: 0,
-      terminologies: null,
-      deepHits: null,
-    };
+    const data: SearchResultData[] = [
+      {
+        id: '1',
+        contributors: ['contibutor-1'],
+        description: 'description',
+        icon: 'alert',
+        status: 'VALID',
+        partOf: ['information-domain'],
+        title: 'title',
+        titleLink: 'https://suomi.fi/title',
+        type: 'type',
+      }
+    ];
 
     render(
-      <Provider store={store}>
-        <ThemeProvider theme={lightTheme}>
-          <SearchResults data={data} />
-        </ThemeProvider>
-      </Provider>
+      <ThemeProvider theme={lightTheme}>
+        <SearchResults data={data} totalHitCount={data.length}/>
+      </ThemeProvider>
     );
 
     expect(screen.queryAllByRole("div")).toStrictEqual([]);
@@ -36,97 +37,45 @@ describe("search-results", () => {
   it("should render data", () => {
     mockRouter.setCurrentUrl("/");
 
-    const store = makeStore(getMockContext());
-
-    const data = {
-      totalHitCount: 2,
-      resultStart: 0,
-      deepHits: null,
-      terminologies: [
-        {
-          code: "code-01",
-          contributors: [
-            {
-              id: "contributor",
-              label: {
-                en: "en-contributor",
-                fi: "fi-contributor",
-                sv: "sv-contributor",
-              },
-            },
-          ],
-          description: {
-            en: "en-description",
-            fi: "fi-description",
-            sv: "en-description",
-          },
-          id: "01",
-          informationDomains: [
-            {
-              id: "informationDomain-01",
-              label: {
-                en: "en-label",
-                fi: "fi-label",
-                sv: "sv-label",
-              },
-            },
-          ],
-          label: {
-            en: "en-label-01",
-            fi: "fi-label-01",
-            sv: "sv-label-01",
-          },
-          status: "VALID",
-          uri: "https://suomi.fi",
-        },
-        {
-          code: "code-02",
-          contributors: [
-            {
-              id: "contributor",
-              label: {
-                en: "en-contributor",
-                fi: "fi-contributor",
-                sv: "sv-contributor",
-              },
-            },
-          ],
-          description: {
-            en: "en-description",
-            fi: "fi-description",
-            sv: "en-description",
-          },
-          id: "02",
-          informationDomains: [
-            {
-              id: "informationDomain-01",
-              label: {
-                en: "en-label",
-                fi: "fi-label",
-                sv: "sv-label",
-              },
-            },
-          ],
-          label: {
-            en: "en-label-02",
-            fi: "fi-label-02",
-            sv: "sv-label-02",
-          },
-          status: "VALID",
-          uri: "https://suomi.fi",
-        },
-      ],
-    };
+    const data: SearchResultData[] = [
+      {
+        id: '1',
+        contributors: ['contributor-1'],
+        description: 'description-1',
+        icon: 'alert',
+        status: 'VALID',
+        partOf: ['information-domain-1'],
+        title: 'title-1',
+        titleLink: 'https://suomi.fi/title-2',
+        type: 'type1',
+      },
+      {
+        id: '2',
+        contributors: ['contributor-2', 'contributor-3'],
+        description: 'description-2',
+        icon: 'alert',
+        status: 'DRAFT',
+        partOf: ['information-domain-1', 'information-domain-2'],
+        title: 'title-2',
+        titleLink: 'https://suomi.fi/title-2',
+        type: 'type2',
+      }
+    ];
 
     render(
-      <Provider store={store}>
-        <ThemeProvider theme={lightTheme}>
-          <SearchResults data={data} type={"terminology-search"} />
-        </ThemeProvider>
-      </Provider>
+      <ThemeProvider theme={lightTheme}>
+        <SearchResults data={data} totalHitCount={data.length} />
+      </ThemeProvider>
     );
 
-    expect(screen.getByText(/fi-label-01/)).toBeInTheDocument();
-    expect(screen.getByText(/fi-label-02/)).toBeInTheDocument();
+    expect(screen.getByText('tr-search-count-tags-title')).toBeInTheDocument();
+
+    expect(screen.getByText('title-1')).toBeInTheDocument();
+    expect(screen.getByText('title-2')).toBeInTheDocument();
+
+    // Should find in both visible and hidden
+    expect(screen.queryAllByText('contributor-1')).toHaveLength(2);
+    expect(screen.getByText('2 tr-card-organizations')).toBeInTheDocument();
+    expect(screen.getByText('contributor-2, contributor-3')).toBeInTheDocument();
   });
 });

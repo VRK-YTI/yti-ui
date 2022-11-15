@@ -1,4 +1,4 @@
-import { translateStatus } from "../../utils/translation-helpers";
+import { translateStatus } from '../../utils/translation-helpers';
 import { useTranslation } from "next-i18next";
 import Link from "next/link";
 import { BaseIconKeys, Icon, VisuallyHidden } from "suomifi-ui-components";
@@ -64,7 +64,7 @@ export default function ResultCard({
         </TitleLink>
       </Link>
       <Subtitle id="card-subtitle">
-        <div>{type}</div>
+        <span>{type}</span>
         {!noStatus && renderStatus()}
       </Subtitle>
       <Description id="card-description">

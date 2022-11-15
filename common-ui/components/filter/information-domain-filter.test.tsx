@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { themeProvider } from "@app/tests/test-utils";
+import { themeProvider } from "../../utils/test-utils";
 import InformationDomainFilter from "./information-domain-filter";
 import mockRouter from "next-router-mock";
 
