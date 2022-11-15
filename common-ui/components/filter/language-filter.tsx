@@ -1,11 +1,9 @@
-import { Property } from '@app/common/interfaces/termed-data-types.interface';
-import useUrlState, {
-  initialUrlState,
-} from '../../utils/hooks/use-url-state';
-import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
-import { SingleSelect } from 'suomifi-ui-components';
-import { DropdownWrapper } from './filter.styles';
+import { Property } from "@app/common/interfaces/termed-data-types.interface";
+import useUrlState, { initialUrlState } from "../../utils/hooks/use-url-state";
+import { useTranslation } from "next-i18next";
+import { useState } from "react";
+import { SingleSelect } from "suomifi-ui-components";
+import { DropdownWrapper } from "./filter.styles";
 
 interface LanguageFilterProps {
   labelText: string;
@@ -16,7 +14,7 @@ export default function LanguageFilter({
   labelText,
   languages,
 }: LanguageFilterProps) {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation("common");
   const { urlState, patchUrlState } = useUrlState();
   const [availableLanguages] = useState(setAvailableLanguages());
 
@@ -27,16 +25,16 @@ export default function LanguageFilter({
   return (
     <DropdownWrapper>
       <SingleSelect
-        ariaOptionsAvailableText={t('languages-available')}
-        clearButtonLabel={t('clear-language-filter')}
+        ariaOptionsAvailableText={t("languages-available")}
+        clearButtonLabel={t("clear-language-filter")}
         items={availableLanguages}
         labelText={labelText}
-        noItemsText={t('no-languages-available')}
-        visualPlaceholder={t('choose-language')}
+        noItemsText={t("no-languages-available")}
+        visualPlaceholder={t("choose-language")}
         selectedItem={currLang}
         onItemSelect={(lang) =>
           patchUrlState({
-            lang: lang ? lang : '',
+            lang: lang ? lang : "",
             page: initialUrlState.page,
           })
         }

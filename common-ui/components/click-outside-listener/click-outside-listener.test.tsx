@@ -1,20 +1,20 @@
-import React from 'react';
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import ClickOutsideListener from '.';
+import React from "react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import ClickOutsideListener from ".";
 
-describe('click outside listener', () => {
-  it('should render children', async () => {
+describe("click outside listener", () => {
+  it("should render children", async () => {
     render(
       <ClickOutsideListener onClickOutside={jest.fn()}>
         Children
       </ClickOutsideListener>
     );
 
-    expect(screen.getByText('Children')).toBeInTheDocument();
+    expect(screen.getByText("Children")).toBeInTheDocument();
   });
 
-  it('should trigger onClickOutside when clicked outside', () => {
+  it("should trigger onClickOutside when clicked outside", () => {
     const mockFn = jest.fn();
     render(
       <div>
@@ -25,11 +25,11 @@ describe('click outside listener', () => {
       </div>
     );
 
-    userEvent.click(screen.getByText('Click here'));
+    userEvent.click(screen.getByText("Click here"));
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
 
-  it('should not trigger onClickOutside when clicked inside', () => {
+  it("should not trigger onClickOutside when clicked inside", () => {
     const mockFn = jest.fn();
     render(
       <ClickOutsideListener onClickOutside={mockFn}>
@@ -37,7 +37,7 @@ describe('click outside listener', () => {
       </ClickOutsideListener>
     );
 
-    userEvent.click(screen.getByText('Click here'));
+    userEvent.click(screen.getByText("Click here"));
     expect(mockFn).not.toHaveBeenCalled();
   });
 });

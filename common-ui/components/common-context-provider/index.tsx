@@ -1,4 +1,4 @@
-import { createContext } from 'react';
+import { createContext } from "react";
 
 // Note. Undefined is not allowed here so null must be used instead.
 export interface CommonContextState {

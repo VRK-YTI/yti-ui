@@ -1,6 +1,6 @@
-import React from 'react';
-import CommonWrapper from '../wrapper';
-import { BadgeBarWrapper } from './title-block.styles';
+import React from "react";
+import CommonWrapper from "../wrapper";
+import { BadgeBarWrapper } from "./title-block.styles";
 
 export interface BadgeBarProps {
   children: React.ReactNode;
@@ -11,7 +11,7 @@ function BadgeBar({ children, ...rest }: BadgeBarProps) {
     <BadgeBarWrapper {...rest}>
       {React.Children.map(children, (child, i) => (
         <>
-          {i > 0 && ' \u00b7 '}
+          {i > 0 && " \u00b7 "}
           {child}
         </>
       ))}
@@ -19,4 +19,4 @@ function BadgeBar({ children, ...rest }: BadgeBarProps) {
   );
 }
 
-export default CommonWrapper(BadgeBar)
+export default CommonWrapper(BadgeBar);

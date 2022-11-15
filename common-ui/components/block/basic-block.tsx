@@ -1,7 +1,7 @@
-import CommonWrapper from '../wrapper';
-import React from 'react';
-import { useBreakpoints } from '../media-query';
-import { BasicBlockHeader, BasicBlockWrapper } from './block.styles';
+import CommonWrapper from "../wrapper";
+import React from "react";
+import { useBreakpoints } from "../media-query";
+import { BasicBlockHeader, BasicBlockWrapper } from "./block.styles";
 
 export interface BasicBlockProps {
   title?: React.ReactNode;
@@ -27,7 +27,7 @@ function BasicBlock({
       $largeGap={largeGap}
       $largeWidth={largeWidth}
       $isSmall={isSmall}
-      id={id ?? 'basic-block'}
+      id={id ?? "basic-block"}
     >
       {title && <BasicBlockHeader>{title}</BasicBlockHeader>}
       {children && children}
@@ -36,4 +36,4 @@ function BasicBlock({
   );
 }
 
-export default CommonWrapper(BasicBlock)
+export default CommonWrapper(BasicBlock);

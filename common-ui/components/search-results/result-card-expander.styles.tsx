@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import { Block, Heading } from 'suomifi-ui-components';
+import styled from "styled-components";
+import { Block, Heading } from "suomifi-ui-components";
 
 export const ExpanderContentTitle = styled(Heading)`
   font-size: 16px !important;

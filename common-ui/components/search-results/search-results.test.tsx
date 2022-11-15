@@ -1,17 +1,17 @@
-import { render, screen } from '@testing-library/react';
-import { Provider } from 'react-redux';
-import { ThemeProvider } from 'styled-components';
-import { lightTheme } from '@app/layouts/theme';
-import { makeStore } from '@app/store';
-import SearchResults from './search-results';
-import mockRouter from 'next-router-mock';
-import { getMockContext } from '@app/tests/test-utils';
+import { render, screen } from "@testing-library/react";
+import { Provider } from "react-redux";
+import { ThemeProvider } from "styled-components";
+import { lightTheme } from "@app/layouts/theme";
+import { makeStore } from "@app/store";
+import SearchResults from "./search-results";
+import mockRouter from "next-router-mock";
+import { getMockContext } from "@app/tests/test-utils";
 
-jest.mock('next/dist/client/router', () => require('next-router-mock'));
+jest.mock("next/dist/client/router", () => require("next-router-mock"));
 
-describe('search-results', () => {
-  it('should render component', async () => {
-    mockRouter.setCurrentUrl('/');
+describe("search-results", () => {
+  it("should render component", async () => {
+    mockRouter.setCurrentUrl("/");
 
     const store = makeStore(getMockContext());
 
@@ -30,11 +30,11 @@ describe('search-results', () => {
       </Provider>
     );
 
-    expect(screen.queryAllByRole('div')).toStrictEqual([]);
+    expect(screen.queryAllByRole("div")).toStrictEqual([]);
   });
 
-  it('should render data', () => {
-    mockRouter.setCurrentUrl('/');
+  it("should render data", () => {
+    mockRouter.setCurrentUrl("/");
 
     const store = makeStore(getMockContext());
 
@@ -44,76 +44,76 @@ describe('search-results', () => {
       deepHits: null,
       terminologies: [
         {
-          code: 'code-01',
+          code: "code-01",
           contributors: [
             {
-              id: 'contributor',
+              id: "contributor",
               label: {
-                en: 'en-contributor',
-                fi: 'fi-contributor',
-                sv: 'sv-contributor',
+                en: "en-contributor",
+                fi: "fi-contributor",
+                sv: "sv-contributor",
               },
             },
           ],
           description: {
-            en: 'en-description',
-            fi: 'fi-description',
-            sv: 'en-description',
+            en: "en-description",
+            fi: "fi-description",
+            sv: "en-description",
           },
-          id: '01',
+          id: "01",
           informationDomains: [
             {
-              id: 'informationDomain-01',
+              id: "informationDomain-01",
               label: {
-                en: 'en-label',
-                fi: 'fi-label',
-                sv: 'sv-label',
+                en: "en-label",
+                fi: "fi-label",
+                sv: "sv-label",
               },
             },
           ],
           label: {
-            en: 'en-label-01',
-            fi: 'fi-label-01',
-            sv: 'sv-label-01',
+            en: "en-label-01",
+            fi: "fi-label-01",
+            sv: "sv-label-01",
           },
-          status: 'VALID',
-          uri: 'https://suomi.fi',
+          status: "VALID",
+          uri: "https://suomi.fi",
         },
         {
-          code: 'code-02',
+          code: "code-02",
           contributors: [
             {
-              id: 'contributor',
+              id: "contributor",
               label: {
-                en: 'en-contributor',
-                fi: 'fi-contributor',
-                sv: 'sv-contributor',
+                en: "en-contributor",
+                fi: "fi-contributor",
+                sv: "sv-contributor",
               },
             },
           ],
           description: {
-            en: 'en-description',
-            fi: 'fi-description',
-            sv: 'en-description',
+            en: "en-description",
+            fi: "fi-description",
+            sv: "en-description",
           },
-          id: '02',
+          id: "02",
           informationDomains: [
             {
-              id: 'informationDomain-01',
+              id: "informationDomain-01",
               label: {
-                en: 'en-label',
-                fi: 'fi-label',
-                sv: 'sv-label',
+                en: "en-label",
+                fi: "fi-label",
+                sv: "sv-label",
               },
             },
           ],
           label: {
-            en: 'en-label-02',
-            fi: 'fi-label-02',
-            sv: 'sv-label-02',
+            en: "en-label-02",
+            fi: "fi-label-02",
+            sv: "sv-label-02",
           },
-          status: 'VALID',
-          uri: 'https://suomi.fi',
+          status: "VALID",
+          uri: "https://suomi.fi",
         },
       ],
     };
@@ -121,7 +121,7 @@ describe('search-results', () => {
     render(
       <Provider store={store}>
         <ThemeProvider theme={lightTheme}>
-          <SearchResults data={data} type={'terminology-search'} />
+          <SearchResults data={data} type={"terminology-search"} />
         </ThemeProvider>
       </Provider>
     );

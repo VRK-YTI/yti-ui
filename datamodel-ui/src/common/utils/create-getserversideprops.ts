@@ -11,6 +11,7 @@ import { ParsedUrlQuery } from 'querystring';
 import { SSRConfig } from 'next-i18next';
 import {
   getAuthenticatedUser,
+  getRunningQueriesThunk,
   setLogin,
 } from '@app/common/components/login/login.slice';
 import { CommonContextState } from 'yti-common-ui/common-context-provider';
@@ -51,7 +52,9 @@ export function createCommonGetServerSideProps<
           store,
         });
 
-        await store.dispatch(getAuthenticatedUser.initiate());
+        store.dispatch(getAuthenticatedUser.initiate());
+        await Promise.all(store.dispatch(getRunningQueriesThunk()));
+
         const user: User = getStoreData({
           state: store.getState(),
           reduxKey: 'loginApi',

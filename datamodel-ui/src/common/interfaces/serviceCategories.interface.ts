@@ -50,7 +50,7 @@ export interface ServiceCategories {
     ts: string;
     dc: string;
   };
-};
+}
 
 export const InitialServiceCategories: ServiceCategories = {
   '@graph': [],
@@ -69,7 +69,7 @@ export const InitialServiceCategories: ServiceCategories = {
     },
     dcap: '',
     schema: '',
-    'void': '',
+    void: '',
     adms: '',
     dcam: '',
     skosxl: '',

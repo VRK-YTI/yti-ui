@@ -1,5 +1,5 @@
-import React, { useRef } from 'react';
-import { useOnClickOutside } from 'usehooks-ts';
+import React, { useRef } from "react";
+import { useOnClickOutside } from "usehooks-ts";
 
 export interface ClickOutsideListenerProps {
   children?: React.ReactNode;

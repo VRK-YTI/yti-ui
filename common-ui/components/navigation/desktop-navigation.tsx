@@ -1,24 +1,24 @@
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { MouseEventHandler, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useSelector } from 'react-redux';
-import { useTheme } from 'styled-components';
-import { Icon, Link as SuomiFiLink } from 'suomifi-ui-components';
-import { selectLogin } from '@app/common/components/login/login.slice';
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { MouseEventHandler, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useSelector } from "react-redux";
+import { useTheme } from "styled-components";
+import { Icon, Link as SuomiFiLink } from "suomifi-ui-components";
+import { selectLogin } from "@app/common/components/login/login.slice";
 import {
   NavigationDropdownItem,
   NavigationDropdownList,
   NavigationDropdownWrapper,
   NavigationItem,
   NavigationWrapper,
-} from './navigation.styles';
-import ClickOutsideListener from '../click-outside-listener';
+} from "./navigation.styles";
+import ClickOutsideListener from "../click-outside-listener";
 
 export default function DesktopNavigation() {
   // TODO: Remove false from here
   const isLoggedIn = !useSelector(selectLogin()).anonymous ?? false;
-  const { t } = useTranslation('common');
+  const { t } = useTranslation("common");
   const [open, setOpen] = useState(false);
   const router = useRouter();
 
@@ -32,13 +32,13 @@ export default function DesktopNavigation() {
   return (
     <NavigationWrapper id="top-navigation">
       <NavigationItem
-        active={router.pathname === '/'}
+        active={router.pathname === "/"}
         id="top-navigation-front-page"
         className="top-navigation-li"
       >
         <Link href="/" passHref>
           <SuomiFiLink className="main" href="">
-            {t('site-frontpage')}
+            {t("site-frontpage")}
           </SuomiFiLink>
         </Link>
       </NavigationItem>
@@ -47,10 +47,10 @@ export default function DesktopNavigation() {
         className="top-navigation-li"
       >
         <SuomiFiLink className="main" href="" onClick={handleDropdown}>
-          {t('site-tools')}
+          {t("site-tools")}
           <Icon
             color={theme.suomifi.colors.highlightBase}
-            icon={open ? 'chevronUp' : 'chevronDown'}
+            icon={open ? "chevronUp" : "chevronDown"}
           />
         </SuomiFiLink>
         {open && (
@@ -58,13 +58,13 @@ export default function DesktopNavigation() {
             <NavigationDropdownWrapper id="top-navigation-dropdown">
               <NavigationDropdownList>
                 <NavigationDropdownItem className="top-navigation-dropdown-li">
-                  <SuomiFiLink href="/">{t('terminology-title')}</SuomiFiLink>
+                  <SuomiFiLink href="/">{t("terminology-title")}</SuomiFiLink>
                 </NavigationDropdownItem>
                 <NavigationDropdownItem className="top-navigation-dropdown-li">
-                  <SuomiFiLink href="/">{t('codelist-title')}</SuomiFiLink>
+                  <SuomiFiLink href="/">{t("codelist-title")}</SuomiFiLink>
                 </NavigationDropdownItem>
                 <NavigationDropdownItem className="top-navigation-dropdown-li">
-                  <SuomiFiLink href="/">{t('datamodel-title')}</SuomiFiLink>
+                  <SuomiFiLink href="/">{t("datamodel-title")}</SuomiFiLink>
                 </NavigationDropdownItem>
               </NavigationDropdownList>
             </NavigationDropdownWrapper>
@@ -76,7 +76,7 @@ export default function DesktopNavigation() {
         className="top-navigation-li"
       >
         <SuomiFiLink className="main" href="/">
-          {t('site-information')}
+          {t("site-information")}
         </SuomiFiLink>
       </NavigationItem>
       <NavigationItem
@@ -84,7 +84,7 @@ export default function DesktopNavigation() {
         className="top-navigation-li"
       >
         <SuomiFiLink className="main" href="/">
-          {t('site-for-developers')}
+          {t("site-for-developers")}
         </SuomiFiLink>
       </NavigationItem>
       <NavigationItem
@@ -92,18 +92,18 @@ export default function DesktopNavigation() {
         className="top-navigation-li"
       >
         <SuomiFiLink className="main" href="/">
-          {t('site-for-administrators')}
+          {t("site-for-administrators")}
         </SuomiFiLink>
       </NavigationItem>
       {isLoggedIn && (
         <NavigationItem
-          active={router.pathname === '/own-information'}
+          active={router.pathname === "/own-information"}
           id="top-navigation-own-information"
           className="top-navigation-li"
         >
           <Link href="/own-information" passHref>
             <SuomiFiLink className="main" href="">
-              {t('own-information')}
+              {t("own-information")}
             </SuomiFiLink>
           </Link>
         </NavigationItem>

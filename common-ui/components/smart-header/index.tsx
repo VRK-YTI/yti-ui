@@ -1,25 +1,25 @@
-import React, { useState } from 'react';
-import { Block } from 'suomifi-ui-components';
-import Modal from 'react-modal';
+import React, { useState } from "react";
+import { Block } from "suomifi-ui-components";
+import Modal from "react-modal";
 import {
   HeaderContainer,
   MarginContainer,
   NavigationContainer,
-} from '../layout/layout.styles';
-import Logo from './logo';
-import MobileNavigationToggleButton from './mobile-navigation-toggle-button';
+} from "../layout/layout.styles";
+import Logo from "./logo";
+import MobileNavigationToggleButton from "./mobile-navigation-toggle-button";
 import {
   HeaderWrapper,
   ModalOverlay,
   ModalContent,
-} from './smart-header.styles';
-import DesktopAuthenticationPanel from '../authentication-panel/desktop-authentication-panel';
-import DesktopNavigation from '../navigation/desktop-navigation';
+} from "./smart-header.styles";
+import DesktopAuthenticationPanel from "../authentication-panel/desktop-authentication-panel";
+import DesktopNavigation from "../navigation/desktop-navigation";
 // import MobileNavigation from '@app/common/components/navigation/mobile-navigation';
-import DesktopLocaleChooser from '../locale-chooser/desktop-locale-chooser';
-// import UserInfo from '@app/common/components/authentication-panel/user-info';
-import HeaderSearch from '../header-search';
-import { useBreakpoints } from '../media-query';
+import DesktopLocaleChooser from "../locale-chooser/desktop-locale-chooser";
+import UserInfo from "../authentication-panel/user-info";
+import HeaderSearch from "../header-search";
+import { useBreakpoints } from "../media-query";
 // import LoginModalView from '@app/common/components/login-modal/login-modal';
 
 export default function SmartHeader() {
@@ -28,7 +28,7 @@ export default function SmartHeader() {
   const [isLoginExpanded, setIsLoginExpanded] = useState(false);
   const { breakpoint, isSmall } = useBreakpoints();
 
-  Modal.setAppElement('#__next');
+  Modal.setAppElement("#__next");
 
   const handleLoginModalClick = () => {
     setIsLoginExpanded(true);
@@ -100,7 +100,7 @@ export default function SmartHeader() {
               {/* {renderMobileNavigationToggleButton()} */}
               {renderDesktopAuthenticationPanel()}
             </HeaderWrapper>
-            {/* {renderUserInfo()} */}
+            {renderUserInfo()}
           </MarginContainer>
         </HeaderContainer>
       </Block>

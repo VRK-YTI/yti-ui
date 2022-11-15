@@ -1,41 +1,51 @@
-import { useTranslation } from 'react-i18next';
-import { Collection } from '@app/common/interfaces/collection.interface';
+import { useTranslation } from "react-i18next";
+import { Collection } from "@app/common/interfaces/collection.interface";
 import {
   GroupSearchResult,
   OrganizationSearchResult,
   TerminologyDTO,
-  TerminologySearchResult,
-} from '@app/common/interfaces/terminology.interface';
-import {
-  VocabularyConceptDTO,
-  VocabularyConcepts,
-} from '@app/common/interfaces/vocabulary.interface';
+} from "@app/common/interfaces/terminology.interface";
+import { VocabularyConceptDTO } from "@app/common/interfaces/vocabulary.interface";
 // import PropertyValue from '@app/common/components/property-value';
-import { useBreakpoints } from '../media-query';
-import SearchCountTags from './search-count-tags';
-import { CardConcepts, ResultWrapper } from './search-results.styles';
-import { Concept } from '@app/common/interfaces/concept.interface';
-import useUrlState from '../../utils/hooks/use-url-state';
+import { useBreakpoints } from "../media-query";
+import SearchCountTags from "./search-count-tags";
+import { CardConcepts, ResultWrapper } from "./search-results.styles";
+import useUrlState from "../../utils/hooks/use-url-state";
 // import SanitizedTextContent from '@app/common/components/sanitized-text-content';
-import ResultCard from './result-card';
-import ResultCardExpander from './result-card-expander';
+import ResultCard from "./result-card";
+import ResultCardExpander from "./result-card-expander";
+import { BaseIconKeys } from "suomifi-ui-components";
 // import { getPropertyValue } from '../property-value/get-property-value';
 // import { translateTerminologyType } from '@app/common/utils/translation-helpers';
 
+export interface SearchResultData {
+  id: string;
+  contributors?: string[];
+  description?: string;
+  icon: BaseIconKeys;
+  status: string;
+  partOf: string[];
+  title: string;
+  titleLink: string;
+  type: string;
+}
+
 interface SearchResultsProps {
-  data: TerminologySearchResult | VocabularyConcepts | Collection[] | any;
-  type: 'terminology-search' | 'concepts' | 'collections';
+  data?: SearchResultData[];
+  totalHitCount?: number;
+  type?: "terminology-search" | "concepts" | "collections";
   organizations?: OrganizationSearchResult[];
   domains?: GroupSearchResult[];
 }
 
 export default function SearchResults({
   data,
+  totalHitCount,
   type,
   organizations,
   domains,
 }: SearchResultsProps) {
-  const { t, i18n } = useTranslation('common');
+  const { t, i18n } = useTranslation("common");
   const { urlState } = useUrlState();
   const { isSmall } = useBreakpoints();
 
@@ -46,49 +56,37 @@ export default function SearchResults({
   return (
     <>
       <SearchCountTags
-        title={'testi'}
+        title={t('search-count-tags-title', { count: totalHitCount ?? 0 })}
         organizations={organizations}
         domains={domains}
         count={10}
       />
       <ResultWrapper $isSmall={isSmall} id="search-results">
-        {data.map(d => {
+        {data.map((d) => {
           return (
             <ResultCard
               key={d.id}
-              description={d.comment.fi}
-              title={d.label.fi}
-              titleLink={'localhost:3000'}
-              type={d.type === 'profile' ? 'soveltamisprofiili' : 'tietokomponenttikirjasto'}
-              // contributors={d.contributor}
-              icon='applicationProfile'
+              description={d.description}
+              title={d.title}
+              titleLink={d.titleLink}
+              type={d.type}
+              contributors={d.contributors}
+              icon={d.icon}
+              status={d.status}
+              partOf={d.partOf}
             />
-          )
+          );
         })}
       </ResultWrapper>
     </>
-  )
-
-  if (type === 'terminology-search') {
-    return renderTerminologiesSearchResults();
-  }
-
-  if (type === 'concepts') {
-    return renderConceptSearchResults();
-  }
-
-  if (type === 'collections') {
-    return renderConceptCollections();
-  }
-
-  return <></>;
+  );
 
   function renderTerminologiesSearchResults() {
-    if ('terminologies' in data) {
+    if ("terminologies" in data) {
       return (
         <>
           <SearchCountTags
-            title={t('terminology-search-terminologies', {
+            title={t("terminology-search-terminologies", {
               count: data?.totalHitCount ?? 0,
             })}
             organizations={organizations}
@@ -109,15 +107,15 @@ export default function SearchResults({
                   title={getLabel(terminology)}
                   titleLink={`/terminology/${terminology.id}`}
                   type={translateTerminologyType(
-                    terminology.type ?? 'TERMINOLOGICAL_VOCABULARY',
+                    terminology.type ?? "TERMINOLOGICAL_VOCABULARY",
                     t
                   )}
                   extra={
                     data.deepHits?.[terminology.id]?.[0] && (
                       <ResultCardExpander
                         deepHits={data.deepHits[terminology.id]}
-                        buttonLabel={t('results-with-query-from-terminology')}
-                        contentLabel={t('concepts')}
+                        buttonLabel={t("results-with-query-from-terminology")}
+                        contentLabel={t("concepts")}
                         terminologyId={terminology.id}
                       />
                     )
@@ -134,12 +132,12 @@ export default function SearchResults({
   }
 
   function renderConceptSearchResults() {
-    if ('concepts' in data) {
+    if ("concepts" in data) {
       if (data && !Array.isArray(data)) {
         return (
           <>
             <SearchCountTags
-              title={t('vocabulary-results-concepts', {
+              title={t("vocabulary-results-concepts", {
                 count: data?.totalHitCount ?? 0,
               })}
               organizations={organizations}
@@ -156,7 +154,7 @@ export default function SearchResults({
                     status={concept.status}
                     title={getLabel(concept)}
                     titleLink={`/terminology/${concept.terminology.id}/concept/${concept.id}`}
-                    type={t('vocabulary-info-concept')}
+                    type={t("vocabulary-info-concept")}
                   />
                 );
               })}
@@ -174,7 +172,7 @@ export default function SearchResults({
       return (
         <>
           <SearchCountTags
-            title={t('vocabulary-results-collections', {
+            title={t("vocabulary-results-collections", {
               count: data.length,
             })}
             count={data.length}
@@ -196,12 +194,12 @@ export default function SearchResults({
                       description={
                         <PropertyValue
                           property={collection.properties.definition}
-                          fallback={t('vocabulary-results-no-description')}
+                          fallback={t("vocabulary-results-no-description")}
                         />
                       }
                       extra={
                         <CardConcepts
-                          value={t('vocabulary-filter-concepts') as string}
+                          value={t("vocabulary-filter-concepts") as string}
                         >
                           {renderCollectionMembers(
                             collection.references?.member
@@ -214,7 +212,7 @@ export default function SearchResults({
                         language: urlState.lang ? urlState.lang : i18n.language,
                       })}
                       titleLink={`/terminology/${collection.type.graph.id}/collection/${collection.id}`}
-                      type={t('vocabulary-info-collection')}
+                      type={t("vocabulary-info-collection")}
                     />
                   );
                 })}
@@ -231,7 +229,7 @@ export default function SearchResults({
     return members ? (
       members.map((m, idx) => {
         const comma =
-          idx < 4 && members.length > 1 && idx < members.length - 1 ? ',' : '';
+          idx < 4 && members.length > 1 && idx < members.length - 1 ? "," : "";
 
         if (idx < 5 && m.references.prefLabelXl) {
           if (m.references.prefLabelXl.length === 1) {
@@ -269,7 +267,7 @@ export default function SearchResults({
               }
             });
 
-            if (value !== '') {
+            if (value !== "") {
               return (
                 <div key={`${value}-${idx}`}>
                   {value}
@@ -293,13 +291,13 @@ export default function SearchResults({
           const surplus = members.length - idx;
           return (
             <div key={`surplus-${idx}`}>
-              + {surplus} {t('vocabulary-results-more')}
+              + {surplus} {t("vocabulary-results-more")}
             </div>
           );
         }
       })
     ) : (
-      <>{t('vocabulary-results-no-concepts')}</>
+      <>{t("vocabulary-results-no-concepts")}</>
     );
   }
 
@@ -308,14 +306,14 @@ export default function SearchResults({
     isConcept = true
   ) {
     // If dto is of type Collection
-    if ('properties' in dto) {
+    if ("properties" in dto) {
       let retVal = getPropertyValue({
         property: dto.properties.prefLabel,
         language: urlState.lang,
       });
 
-      if (retVal !== '') {
-        return retVal.replaceAll(/<\/*[^>]>/g, '');
+      if (retVal !== "") {
+        return retVal.replaceAll(/<\/*[^>]>/g, "");
       }
 
       retVal = !urlState.lang
@@ -324,33 +322,33 @@ export default function SearchResults({
           language: i18n.language,
         })
         : `${dto.properties.prefLabel?.[0].value} (${dto.properties.prefLabel?.[0].lang})`;
-      return retVal.replaceAll(/<\/*[^>]>/g, '');
+      return retVal.replaceAll(/<\/*[^>]>/g, "");
     }
 
     // If language is defined in urlState and dto is Concept
     // get label without trailing language code
     if (isConcept && urlState.lang && dto.label?.[urlState.lang]) {
-      return dto.label[urlState.lang].replaceAll(/<\/*[^>]>/g, '');
+      return dto.label[urlState.lang].replaceAll(/<\/*[^>]>/g, "");
     }
 
     // If label exists in current UI language get label without trailing language code
     if (!urlState.lang && dto.label?.[i18n.language]) {
-      return dto.label[i18n.language].replaceAll(/<\/*[^>]>/g, '');
+      return dto.label[i18n.language].replaceAll(/<\/*[^>]>/g, "");
     }
 
     if (isConcept && dto.label) {
       // Otherwise return label with trailing language code
       return `${dto?.label?.[Object.keys(dto.label)[0]].replaceAll(
         /<\/*[^>]>/g,
-        ''
+        ""
       )} (${Object.keys(dto.label)[0]})`;
     } else if (dto.label) {
       return `${dto?.label?.[Object.keys(dto.label)[0]].replaceAll(
         /<\/*[^>]>/g,
-        ''
+        ""
       )}`;
     } else {
-      return t('concept-label-undefined');
+      return t("concept-label-undefined");
     }
   }
 
@@ -365,7 +363,7 @@ export default function SearchResults({
       ];
     }
 
-    return t('terminology-search-no-description');
+    return t("terminology-search-no-description");
   }
 
   function getDefinition(concept: VocabularyConceptDTO) {
@@ -383,6 +381,6 @@ export default function SearchResults({
       );
     }
 
-    return t('terminology-search-no-definition');
+    return t("terminology-search-no-definition");
   }
 }

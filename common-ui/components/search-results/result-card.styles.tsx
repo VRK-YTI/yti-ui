@@ -1,12 +1,12 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 import {
   Block,
   Heading,
   Link,
   Paragraph,
   StaticChip,
-} from 'suomifi-ui-components';
-import { CardChipProps } from './search-count-tags.props';
+} from "suomifi-ui-components";
+import { CardChipProps } from "./search-count-tags.props";
 
 export const CardBlock = styled(Block)`
   background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
@@ -65,7 +65,7 @@ export const PartOf = styled.p`
 export const Status = styled(StaticChip)<CardChipProps>`
   background-color: ${(props) =>
     props.valid
-      ? 'hsl(166, 90%, 30%)'
+      ? "hsl(166, 90%, 30%)"
       : props.theme.suomifi.colors.depthDark1} !important;
   font-size: 12px;
   line-height: 0;

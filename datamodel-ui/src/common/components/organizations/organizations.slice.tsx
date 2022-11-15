@@ -22,9 +22,9 @@ export const organizationsApi = createApi({
   }),
 });
 
-export const { getOrganizations } =
-organizationsApi.endpoints;
-
 export const {
-  useGetOrganizationsQuery
+  useGetOrganizationsQuery,
+  util: { getRunningQueriesThunk },
 } = organizationsApi;
+
+export const { getOrganizations } = organizationsApi.endpoints;

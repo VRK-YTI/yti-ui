@@ -19,4 +19,4 @@ function SaveSpinner({ text }: SaveSpinnerProps) {
   );
 }
 
-export default CommonWrapper(SaveSpinner)
+export default CommonWrapper(SaveSpinner);

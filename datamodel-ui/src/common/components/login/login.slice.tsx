@@ -88,5 +88,5 @@ export const { getAuthenticatedUser, getAuthenticatedUserMut } =
 export const {
   useGetAuthenticatedUserQuery,
   useGetAuthenticatedUserMutMutation,
-  util: { getRunningOperationPromises },
+  util: { getRunningQueriesThunk },
 } = loginApi;

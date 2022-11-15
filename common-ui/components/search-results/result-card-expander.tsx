@@ -1,18 +1,18 @@
-import { DeepHitsDTO } from '@app/common/interfaces/terminology.interface';
-import { useTranslation } from 'next-i18next';
-import Link from 'next/link';
+import { DeepHitsDTO } from "@app/common/interfaces/terminology.interface";
+import { useTranslation } from "next-i18next";
+import Link from "next/link";
 import {
   Expander,
   ExpanderContent,
   ExpanderTitleButton,
   Link as SuomiFiLink,
-} from 'suomifi-ui-components';
+} from "suomifi-ui-components";
 // import SanitizedTextContent from '../sanitized-text-content';
 import {
   ExpanderContentTitle,
   ExpanderTitleHits,
   HitsWrapper,
-} from './result-card-expander.styles';
+} from "./result-card-expander.styles";
 
 interface ResultCardExpanderProps {
   deepHits: DeepHitsDTO[];
@@ -58,7 +58,7 @@ export default function ResultCardExpander({
       return deepHit.topHits
         .filter((_, idx) => hitIdx + idx < 3)
         .map((topHit, idx) => {
-          const comma = hitIdx + idx < 2 && idx < totalHits - 1 ? ', ' : '';
+          const comma = hitIdx + idx < 2 && idx < totalHits - 1 ? ", " : "";
 
           return (
             <>
@@ -77,12 +77,12 @@ export default function ResultCardExpander({
         .map((topHit, idx) => {
           const comma =
             hitIdx + idx < 2
-              ? ', '
+              ? ", "
               : ` + ${
                   deepHits
                     .map((dh) => dh.totalHitCount)
                     .reduce((dh) => dh + dh) - 3
-                } ${t('vocabulary-results-more')}`;
+                } ${t("vocabulary-results-more")}`;
 
           return (
             <>
@@ -126,14 +126,14 @@ export default function ResultCardExpander({
       return label[i18n.language];
     }
 
-    if (label['fi']) {
-      return label['fi'];
+    if (label["fi"]) {
+      return label["fi"];
     }
 
     if (label[Object.keys(label)[0]]) {
       return label[Object.keys(label)[0]];
     }
 
-    return '';
+    return "";
   }
 }

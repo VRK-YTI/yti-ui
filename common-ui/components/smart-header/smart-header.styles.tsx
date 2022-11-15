@@ -1,12 +1,12 @@
-import styled from 'styled-components';
-import { Breakpoint } from '../media-query';
-import { small } from '../media-query/styled-helpers';
+import styled from "styled-components";
+import { Breakpoint } from "../media-query";
+import { small } from "../media-query/styled-helpers";
 
 export const HeaderWrapper = styled.div<{ $breakpoint: Breakpoint }>`
   display: flex;
   align-items: center;
-  height: ${(props) => small(props.$breakpoint, '57px', '72px')};
-  column-gap: ${(props) => small(props.$breakpoint, '0', '20px')};
+  height: ${(props) => small(props.$breakpoint, "57px", "72px")};
+  column-gap: ${(props) => small(props.$breakpoint, "0", "20px")};
 `;
 
 export const LogoWrapper = styled.div`

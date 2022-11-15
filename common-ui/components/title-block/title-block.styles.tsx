@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import { Heading, Text } from 'suomifi-ui-components';
+import styled from "styled-components";
+import { Heading, Text } from "suomifi-ui-components";
 
 export const SubTitle = styled(Text)`
   color: ${(props) => props.theme.suomifi.colors.depthDark1};

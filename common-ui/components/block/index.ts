@@ -1,9 +1,8 @@
-import BasicBlock from './basic-block';
-import { BasicBlockWrapper, BasicBlockExtraWrapper, List } from './block.styles';
-
-export {
-  BasicBlock,
+import BasicBlock from "./basic-block";
+import {
   BasicBlockWrapper,
   BasicBlockExtraWrapper,
-  List
-};
+  List,
+} from "./block.styles";
+
+export { BasicBlock, BasicBlockWrapper, BasicBlockExtraWrapper, List };

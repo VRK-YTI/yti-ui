@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { SearchInput } from 'suomifi-ui-components';
-import { useTranslation } from 'react-i18next';
-import IconButton from '../icon-button';
-import { useBreakpoints } from '../media-query';
-import { CloseButton } from './header-search.styles';
-import { useRouter } from 'next/router';
+import React, { useEffect, useState } from "react";
+import { SearchInput } from "suomifi-ui-components";
+import { useTranslation } from "react-i18next";
+import IconButton from "../icon-button";
+import { useBreakpoints } from "../media-query";
+import { CloseButton } from "./header-search.styles";
+import { useRouter } from "next/router";
 // import useUrlState, {
 //   initialUrlState,
 // } from '@app/common/utils/hooks/use-url-state';
@@ -22,10 +22,10 @@ export default function HeaderSearch({
   isSearchOpen,
   setIsSearchOpen,
 }: HeaderSearchProps) {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation("common");
   const { isSmall } = useBreakpoints();
   const router = useRouter();
-  const isSearchPage = router.route === '/';
+  const isSearchPage = router.route === "/";
 
   // const { urlState, patchUrlState } = useUrlState();
   // const q = urlState.q;
@@ -51,7 +51,7 @@ export default function HeaderSearch({
       <IconButton
         isLarge
         icon="search"
-        aria-label={t('terminology-search-open')}
+        aria-label={t("terminology-search-open")}
         onClick={() => setIsSearchOpen(true)}
       />
     );
@@ -59,17 +59,17 @@ export default function HeaderSearch({
   return (
     <>
       <SearchInput
-        clearButtonLabel={t('terminology-search-clear')}
+        clearButtonLabel={t("terminology-search-clear")}
         labelText=""
         // value={searchInputValue ?? ''}
         labelMode="hidden"
-        searchButtonLabel={t('terminology-search')}
-        visualPlaceholder={t('terminology-search-placeholder')}
+        searchButtonLabel={t("terminology-search")}
+        visualPlaceholder={t("terminology-search-placeholder")}
         wrapperProps={{ style: { flexGrow: isSmall ? 1 : 0 } }}
         onSearch={(value) => {
-          if (typeof value === 'string') search(value);
+          if (typeof value === "string") search(value);
         }}
-        onChange={(value) => handleChange(value?.toString() ?? '')}
+        onChange={(value) => handleChange(value?.toString() ?? "")}
         // maxLength={TEXT_INPUT_MAX}
         id="top-header-search"
       />
@@ -78,7 +78,7 @@ export default function HeaderSearch({
           onClick={() => setIsSearchOpen(false)}
           variant="secondaryNoBorder"
         >
-          {t('close')}
+          {t("close")}
         </CloseButton>
       ) : null}
     </>
@@ -87,13 +87,13 @@ export default function HeaderSearch({
   function search(q?: string) {
     if (isSearchPage) {
       patchUrlState({
-        q: q ?? '',
+        q: q ?? "",
         page: initialUrlState.page,
       });
     } else {
       return router.push(
         {
-          pathname: '/',
+          pathname: "/",
           query: q ? { q } : {},
         },
         undefined,

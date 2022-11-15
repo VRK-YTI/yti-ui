@@ -1,21 +1,24 @@
 export interface DataModel {
-  id: string;
-  useContext: string;
-  status: string;
-  statusModified: string;
-  modified: string;
-  created: string;
-  contentModified: string;
-  type: 'library' | 'profile';
-  prefix: string;
-  namespace: string;
-  label: {
-    [key: string]: string;
-  };
   comment: {
     [key: string]: string;
   };
+  contentModified?: string;
   contributor: string[];
+  created: string;
+  documentation?: {
+    [key: string]: string;
+  };
+  id: string;
   isPartOf: string[];
+  label: {
+    [key: string]: string;
+  };
   language: string[];
+  modified: string;
+  namespace: string;
+  prefix: string;
+  status: string;
+  statusModified: string;
+  type: 'library' | 'profile';
+  useContext: string;
 }

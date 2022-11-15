@@ -1,4 +1,4 @@
-import { Checkbox, CheckboxGroup } from 'suomifi-ui-components';
+import { Checkbox, CheckboxGroup } from "suomifi-ui-components";
 
 export interface Item {
   value: string;
@@ -10,7 +10,7 @@ export interface CheckboxFilterProps {
   items: Item[];
   selectedItems: string[];
   onChange?: (selectedItems: string[]) => void;
-  checkboxVariant: 'large' | 'small';
+  checkboxVariant: "large" | "small";
 }
 
 export default function CheckboxFilter({

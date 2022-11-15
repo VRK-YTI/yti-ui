@@ -7,7 +7,7 @@ export const serviceCategoriesApi = createApi({
   reducerPath: 'serviceCategoriesApi',
   baseQuery: getDatamodelApiBaseQuery((headers) => ({
     ...headers,
-    'accept': 'application/ld+json',
+    accept: 'application/ld+json',
   })),
   tagTypes: ['serviceCategories'],
   extractRehydrationInfo(action, { reducerPath }) {
@@ -25,10 +25,9 @@ export const serviceCategoriesApi = createApi({
   }),
 });
 
-
-export const { getServiceCategories } =
-serviceCategoriesApi.endpoints;
+export const { getServiceCategories } = serviceCategoriesApi.endpoints;
 
 export const {
-  useGetServiceCategoriesQuery
+  useGetServiceCategoriesQuery,
+  util: { getRunningQueriesThunk },
 } = serviceCategoriesApi;

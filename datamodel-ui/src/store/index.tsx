@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { loginApi, loginSlice } from '@app/common/components/login/login.slice';
 import { serviceCategoriesApi } from '@app/common/components/serviceCategories/serviceCategories.slice';
 import { organizationsApi } from '@app/common/components/organizations/organizations.slice';
+import { searchModelsApi } from '@app/common/components/searchModels/searchModels.slice';
 
 // make Context from next-redux-wrapper compatible with next-iron-session
 export type NextIronContext = Context | (Context & { req: NextApiRequest });
@@ -16,6 +17,7 @@ export function makeStore(ctx: NextIronContext) {
       [loginApi.reducerPath]: loginApi.reducer,
       [serviceCategoriesApi.reducerPath]: serviceCategoriesApi.reducer,
       [organizationsApi.reducerPath]: organizationsApi.reducer,
+      [searchModelsApi.reducerPath]: searchModelsApi.reducer,
     },
 
     middleware: (getDefaultMiddleware) =>
@@ -23,6 +25,7 @@ export function makeStore(ctx: NextIronContext) {
         loginApi.middleware,
         serviceCategoriesApi.middleware,
         organizationsApi.middleware,
+        searchModelsApi.middleware
       ),
 
     // Development tools should be available only in development environments

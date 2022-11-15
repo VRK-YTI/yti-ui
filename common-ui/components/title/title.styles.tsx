@@ -1,6 +1,6 @@
-import styled from 'styled-components';
-import { StaticChip, Text } from 'suomifi-ui-components';
-import { TitleProps } from './title.props';
+import styled from "styled-components";
+import { StaticChip, Text } from "suomifi-ui-components";
+import { TitleProps } from "./title.props";
 
 export const Contributor = styled(Text)`
   font-size: 22px;
@@ -15,7 +15,7 @@ export const Description = styled(Text)`
 export const StatusChip = styled(StaticChip)<TitleProps>`
   background-color: ${(props) =>
     props.valid
-      ? 'hsl(166, 90%, 30%)'
+      ? "hsl(166, 90%, 30%)"
       : props.theme.suomifi.colors.depthDark1} !important;
   font-size: 12px;
   line-height: 0;
@@ -27,7 +27,7 @@ export const StatusChip = styled(StaticChip)<TitleProps>`
 
 export const TitleDescriptionWrapper = styled.div<{ $isSmall: boolean }>`
   display: flex;
-  flex-direction: ${(props) => (props.$isSmall ? 'column' : 'row')};
+  flex-direction: ${(props) => (props.$isSmall ? "column" : "row")};
   gap: 20px;
   justify-content: space-between;
   align-items: baseline;

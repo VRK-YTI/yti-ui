@@ -1,6 +1,6 @@
-import { useRouter } from 'next/router';
+import { useRouter } from "next/router";
 
-export type Locale = 'fi' | 'sv' | 'en';
+export type Locale = "fi" | "sv" | "en";
 
 export interface UseLocalesResult {
   locales: {
@@ -14,16 +14,16 @@ export interface UseLocalesResult {
 
 export default function useLocales(): UseLocalesResult {
   const router = useRouter();
-  const currentLocale = router.locale?.toLowerCase() ?? 'fi';
+  const currentLocale = router.locale?.toLowerCase() ?? "fi";
 
-  if (!['fi', /*'sv',*/ 'en'].includes(currentLocale)) {
+  if (!["fi", /*'sv',*/ "en"].includes(currentLocale)) {
     console.warn(`Unsupported locale: ${currentLocale}`);
   }
 
   const locales: { locale: Locale; label: string }[] = [
-    { locale: 'fi', label: 'Suomeksi (FI)' },
+    { locale: "fi", label: "Suomeksi (FI)" },
     // { locale: 'sv', label: 'På svenska (SV)' },
-    { locale: 'en', label: 'In English (EN)' },
+    { locale: "en", label: "In English (EN)" },
   ];
 
   return {

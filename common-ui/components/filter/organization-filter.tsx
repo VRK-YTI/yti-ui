@@ -1,10 +1,8 @@
-import { SingleSelect, SingleSelectData } from 'suomifi-ui-components';
-import { OrganizationSearchResult } from '@app/common/interfaces/terminology.interface';
-import useUrlState, {
-  initialUrlState,
-} from '../../utils/hooks/use-url-state';
-import { DropdownWrapper } from './filter.styles';
-import { useTranslation } from 'next-i18next';
+import { SingleSelect, SingleSelectData } from "suomifi-ui-components";
+import { OrganizationSearchResult } from "@app/common/interfaces/terminology.interface";
+import useUrlState, { initialUrlState } from "../../utils/hooks/use-url-state";
+import { DropdownWrapper } from "./filter.styles";
+import { useTranslation } from "next-i18next";
 
 interface OrganizationFilterProps {
   organizations?: SingleSelectData[];
@@ -32,13 +30,13 @@ export default function OrganizationFilter({
     <DropdownWrapper>
       <SingleSelect
         labelText={title}
-        clearButtonLabel={t('terminology-search-filter-clear-organization')}
+        clearButtonLabel={t("terminology-search-filter-clear-organization")}
         items={organizations}
         selectedItem={selectedItem}
         visualPlaceholder={visualPlaceholder}
-        noItemsText={t('terminology-search-filter-no-matching-organizations')}
+        noItemsText={t("terminology-search-filter-no-matching-organizations")}
         ariaOptionsAvailableText={
-          'terminology-search-filter-organizations-available'
+          "terminology-search-filter-organizations-available"
         }
         onItemSelect={(uniqueItemId) =>
           patchUrlState({
