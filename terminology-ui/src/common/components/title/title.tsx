@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Heading } from 'suomifi-ui-components';
 import {
-  Contributor,
   Description,
   StatusChip,
   TitleDescriptionWrapper,
@@ -16,7 +15,6 @@ import { getPropertyValue } from '@app/common/components/property-value/get-prop
 import { useStoreDispatch } from '@app/store';
 import { setTitle } from './title.slice';
 import { useEffect } from 'react';
-import { getProperty } from '@app/common/utils/get-property';
 import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
 import NewTerminology from '@app/modules/new-terminology';
 import {
