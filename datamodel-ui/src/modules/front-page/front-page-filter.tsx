@@ -10,25 +10,35 @@ import Filter, {
 import Separator from 'yti-common-ui/separator';
 
 interface FrontPageFilterProps {
+  isModal?: boolean;
+  onModalClose?: () => void;
+  resultCount?: number;
   organizations?: Organizations;
   serviceCategories?: ServiceCategories;
 }
 
 export default function FrontPageFilter({
+  isModal,
+  onModalClose,
+  resultCount,
   organizations,
   serviceCategories,
 }: FrontPageFilterProps) {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation('common');
 
   if (!organizations || !serviceCategories) {
     return <></>;
   }
 
   return (
-    <Filter>
+    <Filter
+      isModal={isModal}
+      onModalClose={onModalClose}
+      resultCount={resultCount}
+    >
       <KeywordFilter
-        title="Hae sanalla"
-        visualPlaceholder="Esim. päivähoito, opiskelu..."
+        title={t('filter-by-keyword')}
+        visualPlaceholder={t('filter-by-keyword-placeholder')}
       />
       <Separator />
       <OrganizationFilter
@@ -42,11 +52,11 @@ export default function FrontPageFilter({
             }))
             .sort((x, y) => x.labelText.localeCompare(y.labelText)) ?? []
         }
-        title="Rajaa organisaation mukaan"
-        visualPlaceholder="Valitse organisaatio"
+        title={t('filter-by-organization')}
+        visualPlaceholder={t('filter-by-organization-placeholder')}
       />
       <Separator />
-      <LanguageFilter labelText="Rajaa kielen mukaan" languages={[]} />
+      <LanguageFilter labelText={t('filter-by-language')} languages={[]} />
       <Separator />
       <InformationDomainFilter
         title="Näytä tietoalueittain"
@@ -61,7 +71,7 @@ export default function FrontPageFilter({
             .sort((x, y) => x.name.localeCompare(y.name)) ?? []
         }
         counts={{}}
-        isModal={false}
+        isModal={isModal}
       />
     </Filter>
   );

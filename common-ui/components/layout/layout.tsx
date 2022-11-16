@@ -28,8 +28,6 @@ export default function Layout({
   const { breakpoint } = useBreakpoints();
   const { publicRuntimeConfig } = getConfig();
 
-  // TODO: MONOREPO Add missing dependencies
-
   return (
     <ThemeProvider theme={lightTheme}>
       {/* <Matomo /> */}

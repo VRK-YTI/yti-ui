@@ -1,7 +1,7 @@
 import { useTranslation } from "next-i18next";
 import { Button } from "suomifi-ui-components";
 import Separator from "../separator";
-// import SkipLink from 'yti-common-ui/skip-link';
+import SkipLink from '../skip-link';
 import {
   CloseWrapper,
   FilterContent,
@@ -28,11 +28,11 @@ export default function Filter({
 
   return (
     <div>
-      {/* {!isModal && (
+      {!isModal && (
         <SkipLink href="#search-results">
           {t('skip-link-search-results')}
         </SkipLink>
-      )} */}
+      )}
 
       <FilterSection
         $isModal={isModal}
@@ -53,14 +53,14 @@ export default function Filter({
     if (!isModal) {
       return (
         <Header>
-          <h2 id="filter-title">{t("vocabulary-filter-filter-list")}</h2>
+          <h2 id="filter-title">{t("filter-list")}</h2>
         </Header>
       );
     }
 
     return (
       <Header>
-        <h2 id="filter-title">{t("vocabulary-filter-filter-list")}</h2>
+        <h2 id="filter-title">{t("filter-list")}</h2>
         <HeaderButton iconRight="close" onClick={onModalClose}>
           {t("close")}
         </HeaderButton>
