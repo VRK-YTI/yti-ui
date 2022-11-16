@@ -1,7 +1,7 @@
 import { useTranslation } from "next-i18next";
 import useUrlState, {
   initialUrlState,
-} from "@app/common/utils/hooks/use-url-state";
+} from "../../utils/hooks/use-url-state";
 import CheckboxFilter from "./checkbox-filter";
 
 export interface StatusFilterProps {

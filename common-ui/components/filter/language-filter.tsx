@@ -1,24 +1,21 @@
-import { Property } from "@app/common/interfaces/termed-data-types.interface";
 import useUrlState, { initialUrlState } from "../../utils/hooks/use-url-state";
 import { useTranslation } from "next-i18next";
-import { useState } from "react";
-import { SingleSelect } from "suomifi-ui-components";
+import { SingleSelect, SingleSelectData } from "suomifi-ui-components";
 import { DropdownWrapper } from "./filter.styles";
 
 interface LanguageFilterProps {
   labelText: string;
-  languages?: { [key: string]: number } | Property[];
+  languages?: SingleSelectData[];
 }
 
 export default function LanguageFilter({
   labelText,
-  languages,
+  languages = [],
 }: LanguageFilterProps) {
   const { t } = useTranslation("common");
   const { urlState, patchUrlState } = useUrlState();
-  const [availableLanguages] = useState(setAvailableLanguages());
 
-  const currLang = availableLanguages.find(
+  const currLang = languages.find(
     (lang) => lang.uniqueItemId === urlState.lang
   );
 
@@ -27,7 +24,7 @@ export default function LanguageFilter({
       <SingleSelect
         ariaOptionsAvailableText={t("languages-available")}
         clearButtonLabel={t("clear-language-filter")}
-        items={availableLanguages}
+        items={languages}
         labelText={labelText}
         noItemsText={t("no-languages-available")}
         visualPlaceholder={t("choose-language")}
@@ -42,21 +39,4 @@ export default function LanguageFilter({
       />
     </DropdownWrapper>
   );
-
-  function setAvailableLanguages() {
-    if (!languages) {
-      return [];
-    }
-
-    if (Array.isArray(languages)) {
-      return languages.map((l) => ({
-        labelText: l.value,
-        uniqueItemId: l.value,
-      }));
-    }
-
-    return Object.keys(languages).map((l) => {
-      return { labelText: l, uniqueItemId: l };
-    });
-  }
 }

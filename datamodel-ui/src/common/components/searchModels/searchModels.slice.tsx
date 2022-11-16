@@ -2,6 +2,7 @@ import { HYDRATE } from 'next-redux-wrapper';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
 import { SearchModels } from '@app/common/interfaces/searchModels.interface';
+import { UrlState } from 'yti-common-ui/utils/hooks/use-url-state';
 
 export const searchModelsApi = createApi({
   reducerPath: 'searchModelsApi',
@@ -13,8 +14,8 @@ export const searchModelsApi = createApi({
     }
   },
   endpoints: (builder) => ({
-    getSearchModels: builder.query<SearchModels, void>({
-      query: () => ({
+    getSearchModels: builder.query<SearchModels, { urlState: UrlState }>({
+      query: (props) => ({
         url: '/searchModels',
         method: 'POST',
         data: {
@@ -22,6 +23,8 @@ export const searchModelsApi = createApi({
           pageSize: 1000,
           searchResources: true,
           sortLang: 'fi',
+          query: props.urlState.q,
+          language: props.urlState.lang ? props.urlState.lang : null,
         },
       }),
     }),

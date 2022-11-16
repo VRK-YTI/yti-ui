@@ -16,13 +16,15 @@ import { useGetSearchModelsQuery } from '@app/common/components/searchModels/sea
 import getLanguageVersion from '@app/common/utils/get-language-version';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { Modal, ModalContent, SingleSelectData } from 'suomifi-ui-components';
+import useUrlState from 'yti-common-ui/utils/hooks/use-url-state';
 
 export default function FrontPage() {
   const { t, i18n } = useTranslation('common');
   const { isSmall } = useBreakpoints();
+  const { urlState } = useUrlState();
   const { data: serviceCategories } = useGetServiceCategoriesQuery();
   const { data: organizations } = useGetOrganizationsQuery();
-  const { data: searchModels } = useGetSearchModelsQuery();
+  const { data: searchModels } = useGetSearchModelsQuery({ urlState });
   const [showModal, setShowModal] = useState(false);
 
   const languages: SingleSelectData[] = useMemo(() => {
@@ -32,15 +34,15 @@ export default function FrontPage() {
 
     let languages: SingleSelectData[] = [];
 
-    searchModels.models.forEach(m => {
+    searchModels.models.forEach((m) => {
       if (languages.length === 0) {
-        languages = m.language.map(l => ({
+        languages = m.language.map((l) => ({
           labelText: l,
-          uniqueItemId: l
+          uniqueItemId: l,
         }));
       } else {
-        m.language.forEach(l => {
-          if (!languages.map(lang => lang.uniqueItemId).includes(l)) {
+        m.language.forEach((l) => {
+          if (!languages.map((lang) => lang.uniqueItemId).includes(l)) {
             languages = [...languages, { labelText: l, uniqueItemId: l }];
           }
         });
@@ -62,7 +64,7 @@ export default function FrontPage() {
             organizations?.['@graph']
               .find((o) => o['@id'].replace('urn:uuid:', '') === c)
               ?.prefLabel.filter((l) => l['@language'] === i18n.language)?.[0][
-            '@value'
+              '@value'
             ] ?? ''
         )
         .filter((c) => c.length > 0);
@@ -73,7 +75,7 @@ export default function FrontPage() {
             serviceCategories?.['@graph']
               .find((c) => c.identifier === p)
               ?.label.filter((l) => l['@language'] === i18n.language)?.[0][
-            '@value'
+              '@value'
             ] ?? ''
         )
         .filter((p) => p.length > 0);
@@ -99,9 +101,6 @@ export default function FrontPage() {
     });
   }, [searchModels, serviceCategories, organizations, i18n.language, t]);
 
-
-  console.log('languages', languages);
-
   return (
     <main id="main">
       <Title
@@ -123,6 +122,7 @@ export default function FrontPage() {
           <FrontPageFilter
             organizations={organizations}
             serviceCategories={serviceCategories}
+            languages={languages}
           />
         ) : (
           <Modal
@@ -139,6 +139,7 @@ export default function FrontPage() {
                 resultCount={searchModels?.totalHitCount}
                 organizations={organizations}
                 serviceCategories={serviceCategories}
+                languages={languages}
               />
             </ModalContent>
           </Modal>

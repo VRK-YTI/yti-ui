@@ -20,7 +20,7 @@ export default function ResetAllFiltersButton() {
           variant="secondaryNoBorder"
           id="filter-reset-button"
         >
-          {t("vocabulary-filter-remove-all")}
+          {t("filter-remove-all")}
         </Button>
       </div>
       <Separator />
