@@ -45,3 +45,71 @@ export interface Concept extends BaseEntity<'Concept'> {
     related?: BaseEntity<string>[]; // Concept[]?
   };
 }
+
+export function getConceptMock(prefLabel: Property): Concept {
+  return {
+    code: '001',
+    createdBy: 'Admin User',
+    createdDate: '1970-01-01T00:00:00.000+00:00',
+    id: '001',
+    identifier: {
+      id: '',
+      type: {
+        id: 'Concept',
+        graph: {
+          id: '',
+        },
+        uri: '',
+      },
+    },
+    lastModifiedBy: 'Admin User',
+    lastModifiedDate: '1970-01-01T00:00:00.000+00:00',
+    number: 1,
+    properties: {},
+    references: {
+      prefLabelXl: [
+        {
+          code: '001',
+          createdBy: 'Admin User',
+          createdDate: '1970-01-01T00:00:00.000+00:00',
+          id: '001',
+          identifier: {
+            id: '',
+            type: {
+              id: 'Term',
+              graph: {
+                id: '',
+              },
+              uri: '',
+            },
+          },
+          lastModifiedBy: 'Admin User',
+          lastModifiedDate: '1970-01-01T00:00:00.000+00:00',
+          number: 1,
+          properties: {
+            prefLabel: [prefLabel],
+          },
+          references: {},
+          referrers: {},
+          type: {
+            id: 'Term',
+            graph: {
+              id: '',
+            },
+            uri: '',
+          },
+          uri: '',
+        },
+      ],
+    },
+    referrers: {},
+    type: {
+      id: 'Concept',
+      graph: {
+        id: '',
+      },
+      uri: '',
+    },
+    uri: '',
+  };
+}
