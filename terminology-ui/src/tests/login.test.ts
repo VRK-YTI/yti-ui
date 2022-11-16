@@ -82,7 +82,7 @@ describe('api endpoint - login', () => {
         'http://auth-proxy.invalid/terminology-api/api/v1/frontend/authenticated-user'
       )
       .reply(200, fakeUser, {
-        'set-cookie': [ 'JSESSIONID=foo' ]
+        'set-cookie': ['JSESSIONID=foo'],
       });
 
     await callback(req, res);
