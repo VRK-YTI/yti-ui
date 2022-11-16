@@ -1,6 +1,6 @@
-import { useTranslation } from "next-i18next";
-import { Button } from "suomifi-ui-components";
-import Separator from "../separator";
+import { useTranslation } from 'next-i18next';
+import { Button } from 'suomifi-ui-components';
+import Separator from '../separator';
 import SkipLink from '../skip-link';
 import {
   CloseWrapper,
@@ -8,8 +8,8 @@ import {
   FilterSection,
   Header,
   HeaderButton,
-} from "./filter.styles";
-import ResetAllFiltersButton from "./reset-all-filters-button";
+} from './filter.styles';
+import ResetAllFiltersButton from './reset-all-filters-button';
 
 export interface FilterProps {
   isModal?: boolean;
@@ -24,7 +24,7 @@ export default function Filter({
   resultCount = 0,
   children,
 }: FilterProps) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
 
   return (
     <div>
@@ -53,16 +53,16 @@ export default function Filter({
     if (!isModal) {
       return (
         <Header>
-          <h2 id="filter-title">{t("filter-list")}</h2>
+          <h2 id="filter-title">{t('filter-list')}</h2>
         </Header>
       );
     }
 
     return (
       <Header>
-        <h2 id="filter-title">{t("filter-list")}</h2>
+        <h2 id="filter-title">{t('filter-list')}</h2>
         <HeaderButton iconRight="close" onClick={onModalClose}>
-          {t("close")}
+          {t('close')}
         </HeaderButton>
       </Header>
     );
@@ -76,10 +76,10 @@ export default function Filter({
     return (
       <CloseWrapper>
         <Separator />
-        <div>{t("filter-with-current", { count: resultCount })}</div>
+        <div>{t('filter-with-current', { count: resultCount })}</div>
         <div>
           <Button fullWidth onClick={onModalClose}>
-            {t("close")}
+            {t('close')}
           </Button>
         </div>
       </CloseWrapper>

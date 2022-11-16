@@ -24,7 +24,7 @@ state.
 
 ```ts
 const { urlState } = useUrlState();
-isInitial(urlState, "q");
+isInitial(urlState, 'q');
 ```
 
 ### Updating URL state

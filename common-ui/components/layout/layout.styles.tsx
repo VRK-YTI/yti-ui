@@ -1,13 +1,13 @@
 // shared layout helper
 
-import styled from "styled-components";
-import { Breakpoint } from "../media-query";
-import { resolve, small } from "../media-query/styled-helpers";
+import styled from 'styled-components';
+import { Breakpoint } from '../media-query';
+import { resolve, small } from '../media-query/styled-helpers';
 
 export const MarginContainer = styled.div<{ $breakpoint: Breakpoint }>`
   max-width: 1100px;
   margin: auto;
-  padding: ${(props) => resolve(props.$breakpoint, "0 15px", "0 30px", "auto")};
+  padding: ${(props) => resolve(props.$breakpoint, '0 15px', '0 30px', 'auto')};
   min-width: 300px;
 `;
 
@@ -34,7 +34,7 @@ export const HeaderContainer = styled.div`
 
 export const NavigationContainer = styled.div<{ $breakpoint: Breakpoint }>`
   background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
-  border-bottom: ${(props) => small(props.$breakpoint, "0px", "1px")} solid
+  border-bottom: ${(props) => small(props.$breakpoint, '0px', '1px')} solid
     ${(props) => props.theme.suomifi.colors.depthLight1};
 `;
 

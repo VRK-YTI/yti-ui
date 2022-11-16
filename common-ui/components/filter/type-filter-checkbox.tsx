@@ -1,5 +1,5 @@
-import { useState } from "react";
-import CheckboxFilter from "./checkbox-filter";
+import { useState } from 'react';
+import CheckboxFilter from './checkbox-filter';
 
 interface Item {
   value: string;
@@ -7,7 +7,7 @@ interface Item {
 }
 
 export interface TypeCheckboxFilterProps {
-  title: string,
+  title: string;
   items: Item[];
   isModal?: boolean;
 }
@@ -15,7 +15,7 @@ export interface TypeCheckboxFilterProps {
 export default function TypeCheckboxFilter({
   title,
   items,
-  isModal
+  isModal,
 }: TypeCheckboxFilterProps) {
   // This should removed when urlState supports changes needed for this component to work
   const [selectedItems, setSelectedItems] = useState<string[]>([]);

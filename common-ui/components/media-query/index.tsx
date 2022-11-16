@@ -1,11 +1,11 @@
-import { useContext } from "react";
-import { useMediaQuery } from "usehooks-ts";
-import { CommonContext } from "../common-context-provider";
+import { useContext } from 'react';
+import { useMediaQuery } from 'usehooks-ts';
+import { CommonContext } from '../common-context-provider';
 
 export const mediaQueries = {
-  s: "(max-width:767px)",
-  m: "(min-width:768px) and (max-width:1199px)",
-  l: "(min-width:1200px)",
+  s: '(max-width:767px)',
+  m: '(min-width:768px) and (max-width:1199px)',
+  l: '(min-width:1200px)',
 };
 
 /*
@@ -18,7 +18,7 @@ export const mediaQueries = {
   xl: '(min-width:1200px)'
 */
 
-export type Breakpoint = "small" | "medium" | "large";
+export type Breakpoint = 'small' | 'medium' | 'large';
 
 export interface UseBreakpointsResult {
   isSmall: boolean;
@@ -33,11 +33,11 @@ export function useBreakpoints(): UseBreakpointsResult {
   const matchMedium = useMediaQuery(mediaQueries.m);
   const matchLarge = useMediaQuery(mediaQueries.l);
 
-  const isSmall = global["matchMedia"] ? matchSmall : isSSRMobile;
-  const isMedium = global["matchMedia"] ? matchMedium : false;
-  const isLarge = global["matchMedia"] ? matchLarge : !isSSRMobile;
+  const isSmall = global['matchMedia'] ? matchSmall : isSSRMobile;
+  const isMedium = global['matchMedia'] ? matchMedium : false;
+  const isLarge = global['matchMedia'] ? matchLarge : !isSSRMobile;
 
-  const breakpoint = isSmall ? "small" : isMedium ? "medium" : "large";
+  const breakpoint = isSmall ? 'small' : isMedium ? 'medium' : 'large';
 
   return {
     isSmall,

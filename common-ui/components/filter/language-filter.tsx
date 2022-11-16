@@ -1,7 +1,7 @@
-import useUrlState, { initialUrlState } from "../../utils/hooks/use-url-state";
-import { useTranslation } from "next-i18next";
-import { SingleSelect, SingleSelectData } from "suomifi-ui-components";
-import { DropdownWrapper } from "./filter.styles";
+import useUrlState, { initialUrlState } from '../../utils/hooks/use-url-state';
+import { useTranslation } from 'next-i18next';
+import { SingleSelect, SingleSelectData } from 'suomifi-ui-components';
+import { DropdownWrapper } from './filter.styles';
 
 interface LanguageFilterProps {
   labelText: string;
@@ -12,7 +12,7 @@ export default function LanguageFilter({
   labelText,
   languages = [],
 }: LanguageFilterProps) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
   const { urlState, patchUrlState } = useUrlState();
 
   const currLang = languages.find(
@@ -22,16 +22,16 @@ export default function LanguageFilter({
   return (
     <DropdownWrapper>
       <SingleSelect
-        ariaOptionsAvailableText={t("languages-available")}
-        clearButtonLabel={t("clear-language-filter")}
+        ariaOptionsAvailableText={t('languages-available')}
+        clearButtonLabel={t('clear-language-filter')}
         items={languages}
         labelText={labelText}
-        noItemsText={t("no-languages-available")}
-        visualPlaceholder={t("choose-language")}
+        noItemsText={t('no-languages-available')}
+        visualPlaceholder={t('choose-language')}
         selectedItem={currLang}
         onItemSelect={(lang) =>
           patchUrlState({
-            lang: lang ? lang : "",
+            lang: lang ? lang : '',
             page: initialUrlState.page,
           })
         }

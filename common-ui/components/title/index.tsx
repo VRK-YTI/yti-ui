@@ -1,5 +1,5 @@
-import { useTranslation } from "react-i18next";
-import { Heading } from "suomifi-ui-components";
+import { useTranslation } from 'react-i18next';
+import { Heading } from 'suomifi-ui-components';
 import {
   Description,
   StatusChip,
@@ -8,8 +8,8 @@ import {
   TitleTypeAndStatusWrapper,
   TitleWrapper,
   TitleWrapperNoBreadcrumb,
-} from "./title.styles";
-import { useBreakpoints } from "../media-query";
+} from './title.styles';
+import { useBreakpoints } from '../media-query';
 
 interface TitleProps {
   title: string;
@@ -18,7 +18,7 @@ interface TitleProps {
 }
 
 export default function Title({ title, description, noExpander }: TitleProps) {
-  const { t, i18n } = useTranslation("common");
+  const { t, i18n } = useTranslation('common');
   const { isSmall } = useBreakpoints();
   // const dispatch = useStoreDispatch();
   // const title = getTitle(info);

@@ -1,6 +1,6 @@
-import isEqual from "lodash/isEqual";
-import sortBy from "lodash/sortBy";
-import { NextRouter, useRouter } from "next/router";
+import isEqual from 'lodash/isEqual';
+import sortBy from 'lodash/sortBy';
+import { NextRouter, useRouter } from 'next/router';
 
 export interface UrlState {
   q: string;
@@ -13,13 +13,13 @@ export interface UrlState {
 }
 
 export const initialUrlState: UrlState = {
-  q: "",
+  q: '',
   domain: [],
-  organization: "",
+  organization: '',
   status: [],
-  type: "concept",
+  type: 'concept',
   page: 1,
-  lang: "",
+  lang: '',
 };
 
 export function isInitial(state: UrlState, name: keyof UrlState) {
@@ -83,7 +83,7 @@ function updateURLState(router: NextRouter, state?: UrlState): void {
           ...{
             ...initialUrlState,
             type:
-              typeof type === "string" ? type.toString() : initialUrlState.type,
+              typeof type === 'string' ? type.toString() : initialUrlState.type,
           },
           ...state,
         }),
@@ -97,14 +97,14 @@ function updateURLState(router: NextRouter, state?: UrlState): void {
 function buildUrlStatePatch(state: UrlState): Partial<UrlState> {
   const patch: Partial<UrlState> = {};
 
-  if (!isInitial(state, "q")) patch.q = state.q;
-  if (!isInitial(state, "domain")) patch.domain = state.domain;
-  if (!isInitial(state, "organization"))
+  if (!isInitial(state, 'q')) patch.q = state.q;
+  if (!isInitial(state, 'domain')) patch.domain = state.domain;
+  if (!isInitial(state, 'organization'))
     patch.organization = state.organization;
-  if (!isInitial(state, "status")) patch.status = state.status;
-  if (!isInitial(state, "type")) patch.type = state.type;
-  if (!isInitial(state, "page")) patch.page = state.page;
-  if (!isInitial(state, "lang")) patch.lang = state.lang;
+  if (!isInitial(state, 'status')) patch.status = state.status;
+  if (!isInitial(state, 'type')) patch.type = state.type;
+  if (!isInitial(state, 'page')) patch.page = state.page;
+  if (!isInitial(state, 'lang')) patch.lang = state.lang;
   return patch;
 }
 
@@ -112,8 +112,8 @@ type QueryParamValue = string | string[] | undefined;
 
 export function asString(
   value: QueryParamValue,
-  defaultValue = "",
-  delimiter = ""
+  defaultValue = '',
+  delimiter = ''
 ): string {
   if (Array.isArray(value)) {
     value = value.join(delimiter);
@@ -127,7 +127,7 @@ export function asStringArray(
   defaultValue: string[] = []
 ): string[] {
   if (!Array.isArray(value)) {
-    value = [value ?? ""];
+    value = [value ?? ''];
   }
 
   value = value.filter(Boolean);

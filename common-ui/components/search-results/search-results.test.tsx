@@ -1,15 +1,15 @@
-import { render, screen } from "@testing-library/react";
-import { Provider } from "react-redux";
-import { ThemeProvider } from "styled-components";
-import { lightTheme } from "../theme";
-import SearchResults, { SearchResultData } from "./search-results";
-import mockRouter from "next-router-mock";
+import { render, screen } from '@testing-library/react';
+import { Provider } from 'react-redux';
+import { ThemeProvider } from 'styled-components';
+import { lightTheme } from '../theme';
+import SearchResults, { SearchResultData } from './search-results';
+import mockRouter from 'next-router-mock';
 
-jest.mock("next/dist/client/router", () => require("next-router-mock"));
+jest.mock('next/dist/client/router', () => require('next-router-mock'));
 
-describe("search-results", () => {
-  it("should render component", async () => {
-    mockRouter.setCurrentUrl("/");
+describe('search-results', () => {
+  it('should render component', async () => {
+    mockRouter.setCurrentUrl('/');
 
     const data: SearchResultData[] = [
       {
@@ -22,20 +22,20 @@ describe("search-results", () => {
         title: 'title',
         titleLink: 'https://suomi.fi/title',
         type: 'type',
-      }
+      },
     ];
 
     render(
       <ThemeProvider theme={lightTheme}>
-        <SearchResults data={data} totalHitCount={data.length}/>
+        <SearchResults data={data} totalHitCount={data.length} />
       </ThemeProvider>
     );
 
-    expect(screen.queryAllByRole("div")).toStrictEqual([]);
+    expect(screen.queryAllByRole('div')).toStrictEqual([]);
   });
 
-  it("should render data", () => {
-    mockRouter.setCurrentUrl("/");
+  it('should render data', () => {
+    mockRouter.setCurrentUrl('/');
 
     const data: SearchResultData[] = [
       {
@@ -59,7 +59,7 @@ describe("search-results", () => {
         title: 'title-2',
         titleLink: 'https://suomi.fi/title-2',
         type: 'type2',
-      }
+      },
     ];
 
     render(
@@ -76,6 +76,8 @@ describe("search-results", () => {
     // Should find in both visible and hidden
     expect(screen.queryAllByText('contributor-1')).toHaveLength(2);
     expect(screen.getByText('2 tr-card-organizations')).toBeInTheDocument();
-    expect(screen.getByText('contributor-2, contributor-3')).toBeInTheDocument();
+    expect(
+      screen.getByText('contributor-2, contributor-3')
+    ).toBeInTheDocument();
   });
 });

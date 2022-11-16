@@ -1,6 +1,6 @@
 import { setLogin } from './login.slice';
 import { makeStore } from '@app/store';
-import { getMockContext } from '@app/tests/test-utils';
+import { getMockContext } from '@app/../tests/test-utils';
 
 describe('login.slice', () => {
   it('setLogin sets login with a given value', () => {

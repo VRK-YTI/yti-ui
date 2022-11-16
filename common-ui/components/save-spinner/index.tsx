@@ -1,6 +1,6 @@
-import CommonWrapper from "../wrapper";
-import React from "react";
-import { LoadingSpinner } from "suomifi-ui-components";
+import CommonWrapper from '../wrapper';
+import React from 'react';
+import { LoadingSpinner } from 'suomifi-ui-components';
 
 interface SaveSpinnerProps {
   text: string;

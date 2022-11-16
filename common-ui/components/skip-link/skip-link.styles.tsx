@@ -1,6 +1,6 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
-export const SkipLinkWrapper = styled("span")`
+export const SkipLinkWrapper = styled('span')`
   a {
     border: 0;
     clip: rect(0, 0, 0, 0);

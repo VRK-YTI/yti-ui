@@ -1,26 +1,26 @@
 import useUrlState, {
   initialUrlState,
-} from "@app/common/utils/hooks/use-url-state";
-import { useTranslation } from "next-i18next";
-import { MultiSelect } from "suomifi-ui-components";
-import { DropdownWrapper } from "./filter.styles";
+} from '@app/common/utils/hooks/use-url-state';
+import { useTranslation } from 'next-i18next';
+import { MultiSelect } from 'suomifi-ui-components';
+import { DropdownWrapper } from './filter.styles';
 
 export default function MultiLanguageFilter() {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
   const { urlState, patchUrlState } = useUrlState();
 
   const languages = [
     {
-      labelText: t("vocabulary-info-fi"),
-      uniqueItemId: "fi",
+      labelText: t('vocabulary-info-fi'),
+      uniqueItemId: 'fi',
     },
     {
-      labelText: t("vocabulary-info-en"),
-      uniqueItemId: "en",
+      labelText: t('vocabulary-info-en'),
+      uniqueItemId: 'en',
     },
     {
-      labelText: t("vocabulary-info-sv"),
-      uniqueItemId: "sv",
+      labelText: t('vocabulary-info-sv'),
+      uniqueItemId: 'sv',
     },
   ];
 
@@ -32,17 +32,17 @@ export default function MultiLanguageFilter() {
     <DropdownWrapper>
       <MultiSelect
         ariaOptionChipRemovedText=""
-        ariaOptionsAvailableText={t("languages-available")}
+        ariaOptionsAvailableText={t('languages-available')}
         ariaSelectedAmountText=""
         items={languages}
-        labelText={t("filter-by-language")}
-        noItemsText={t("no-languages-available")}
-        visualPlaceholder={t("choose-language")}
+        labelText={t('filter-by-language')}
+        noItemsText={t('no-languages-available')}
+        visualPlaceholder={t('choose-language')}
         chipListVisible
         defaultSelectedItems={currLangs}
         onItemSelectionsChange={(lang) => {
           patchUrlState({
-            lang: lang ? lang.map((l) => l.uniqueItemId)[0] : "",
+            lang: lang ? lang.map((l) => l.uniqueItemId)[0] : '',
             page: initialUrlState.page,
           });
         }}

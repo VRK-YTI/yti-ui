@@ -1,25 +1,27 @@
-import { ReactNode } from "react";
-import { useTranslation } from "react-i18next";
-import { Text, VisuallyHidden } from "suomifi-ui-components";
-import {
-  GroupSearchResult,
-  OrganizationSearchResult,
-} from "@app/common/interfaces/terminology.interface";
-import useUrlState, { initialUrlState } from "../../utils/hooks/use-url-state";
-import { useBreakpoints } from "../media-query";
+import { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Text, VisuallyHidden } from 'suomifi-ui-components';
+import useUrlState, { initialUrlState } from '../../utils/hooks/use-url-state';
+import { useBreakpoints } from '../media-query';
 import {
   ChipWrapper,
   CountText,
   CountWrapper,
-} from "./search-count-tags.styles";
-import Tag from "./tag";
-// import { translateStatus } from '@app/common/utils/translation-helpers';
-import { isEqual } from "lodash";
+} from './search-count-tags.styles';
+import Tag from './tag';
+import { translateStatus } from '../../utils/translation-helpers';
+import { isEqual } from 'lodash';
 
 interface SearchCountTagsProps {
   title: ReactNode;
-  organizations?: OrganizationSearchResult[];
-  domains?: GroupSearchResult[];
+  organizations?: {
+    label: string;
+    id: string;
+  }[];
+  domains?: {
+    label: string;
+    id: string;
+  }[];
   renderQBeforeStatus?: boolean;
   count: number;
 }
@@ -31,7 +33,7 @@ export default function SearchCountTags({
   renderQBeforeStatus = false,
   count = 0,
 }: SearchCountTagsProps) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
   const { urlState, patchUrlState } = useUrlState();
   const { isSmall } = useBreakpoints();
 
@@ -40,7 +42,7 @@ export default function SearchCountTags({
       <CountText aria-live="polite" id="result-counts-text">
         <span aria-hidden={true}>{title}</span>
         <VisuallyHidden>
-          {t("search-results-count", { count: count })}
+          {t('search-results-count', { count: count })}
         </VisuallyHidden>
       </CountText>
       <ChipWrapper id="result-counts-chips">
@@ -57,10 +59,10 @@ export default function SearchCountTags({
 
   function renderNoActiveFilters() {
     // Ignoring type here on purpose
-    if (isEqual({ ...urlState, type: "" }, { ...initialUrlState, type: "" })) {
+    if (isEqual({ ...urlState, type: '' }, { ...initialUrlState, type: '' })) {
       return (
-        <Text style={{ fontSize: "16px", lineHeight: "0" }}>
-          {t("no-filters")}
+        <Text style={{ fontSize: '16px', lineHeight: '0' }}>
+          {t('no-filters')}
         </Text>
       );
     }
@@ -76,7 +78,7 @@ export default function SearchCountTags({
         >
           {
             organizations.filter((o) => o.id === urlState.organization)[0]
-              ?.properties.prefLabel.value
+              ?.label
           }
         </Tag>
       );
@@ -94,7 +96,7 @@ export default function SearchCountTags({
   }
 
   function renderStatusTags() {
-    return ["valid", "draft", "retired", "superseded"]
+    return ['valid', 'draft', 'retired', 'superseded']
       .map((status) => {
         if (urlState.status.includes(status)) {
           return (
@@ -127,7 +129,7 @@ export default function SearchCountTags({
               }
               key={domain.id}
             >
-              {domain.properties.prefLabel.value}
+              {domain.label}
             </Tag>
           );
         }
@@ -141,7 +143,7 @@ export default function SearchCountTags({
         <Tag
           onRemove={() =>
             patchUrlState({
-              lang: "",
+              lang: '',
             })
           }
           key={urlState.lang}

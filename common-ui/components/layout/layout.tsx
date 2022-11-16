@@ -1,21 +1,21 @@
-import Head from "next/head";
-import React from "react";
-import { ThemeProvider } from "styled-components";
-import { lightTheme } from "./theme";
+import Head from 'next/head';
+import React from 'react';
+import { ThemeProvider } from 'styled-components';
+import { lightTheme } from './theme';
 import {
   ContentContainer,
   FooterContainer,
   SiteContainer,
   MarginContainer,
-} from "./layout.styles";
-import { useTranslation } from "next-i18next";
-import Footer from "../footer";
-import SmartHeader from "../smart-header";
-import { useBreakpoints } from "../media-query";
-import SkipLink from "../skip-link";
+} from './layout.styles';
+import { useTranslation } from 'next-i18next';
+import Footer from '../footer';
+import SmartHeader from '../smart-header';
+import { useBreakpoints } from '../media-query';
+import SkipLink from '../skip-link';
 // import Alerts from '@app/common/components/alert';
 // import Matomo from '@app/common/components/matomo';
-import getConfig from "next/config";
+import getConfig from 'next/config';
 
 export default function Layout({
   children,
@@ -24,7 +24,7 @@ export default function Layout({
   children: React.ReactNode;
   feedbackSubject?: string;
 }) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
   const { breakpoint } = useBreakpoints();
   const { publicRuntimeConfig } = getConfig();
 
@@ -34,11 +34,11 @@ export default function Layout({
 
       <Head>
         <meta name="description" content="Terminology/React POC" />
-        <meta name="og:title" content={t("terminology")} />
+        <meta name="og:title" content={t('terminology')} />
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
 
-      <SkipLink href="#main">{t("skip-link-main")}</SkipLink>
+      <SkipLink href="#main">{t('skip-link-main')}</SkipLink>
 
       <SiteContainer>
         <SmartHeader />

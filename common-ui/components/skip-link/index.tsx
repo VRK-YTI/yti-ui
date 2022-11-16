@@ -1,7 +1,7 @@
-import React from "react";
-import { Link as SuomiLink } from "suomifi-ui-components";
-import { SkipLinkWrapper } from "./skip-link.styles";
-import CommonWrapper from "../wrapper";
+import React from 'react';
+import { Link as SuomiLink } from 'suomifi-ui-components';
+import { SkipLinkWrapper } from './skip-link.styles';
+import CommonWrapper from '../wrapper';
 
 export interface SkipLinkProps {
   children: string;

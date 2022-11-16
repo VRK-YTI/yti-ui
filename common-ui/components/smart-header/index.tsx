@@ -1,26 +1,26 @@
-import React, { useState } from "react";
-import { Block } from "suomifi-ui-components";
-import Modal from "react-modal";
+import React, { useState } from 'react';
+import { Block } from 'suomifi-ui-components';
+import Modal from 'react-modal';
 import {
   HeaderContainer,
   MarginContainer,
   NavigationContainer,
-} from "../layout/layout.styles";
-import Logo from "./logo";
-import MobileNavigationToggleButton from "./mobile-navigation-toggle-button";
+} from '../layout/layout.styles';
+import Logo from './logo';
+import MobileNavigationToggleButton from './mobile-navigation-toggle-button';
 import {
   HeaderWrapper,
   ModalOverlay,
   ModalContent,
-} from "./smart-header.styles";
-import DesktopAuthenticationPanel from "../authentication-panel/desktop-authentication-panel";
-import DesktopNavigation from "../navigation/desktop-navigation";
-// import MobileNavigation from '@app/common/components/navigation/mobile-navigation';
-import DesktopLocaleChooser from "../locale-chooser/desktop-locale-chooser";
-import UserInfo from "../authentication-panel/user-info";
-import HeaderSearch from "../header-search";
-import { useBreakpoints } from "../media-query";
-// import LoginModalView from '@app/common/components/login-modal/login-modal';
+} from './smart-header.styles';
+import DesktopAuthenticationPanel from '../authentication-panel/desktop-authentication-panel';
+import DesktopNavigation from '../navigation/desktop-navigation';
+import MobileNavigation from '../navigation/mobile-navigation';
+import DesktopLocaleChooser from '../locale-chooser/desktop-locale-chooser';
+import UserInfo from '../authentication-panel/user-info';
+import HeaderSearch from '../header-search';
+import { useBreakpoints } from '../media-query';
+import LoginModalView from '../login-modal/login-modal';
 
 export default function SmartHeader() {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -28,7 +28,7 @@ export default function SmartHeader() {
   const [isLoginExpanded, setIsLoginExpanded] = useState(false);
   const { breakpoint, isSmall } = useBreakpoints();
 
-  Modal.setAppElement("#__next");
+  Modal.setAppElement('#__next');
 
   const handleLoginModalClick = () => {
     setIsLoginExpanded(true);

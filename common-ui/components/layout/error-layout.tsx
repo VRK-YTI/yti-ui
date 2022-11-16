@@ -1,15 +1,15 @@
-import Head from "next/head";
-import React from "react";
-import { Block } from "suomifi-ui-components";
-import { ThemeProvider } from "styled-components";
-import { lightTheme } from "./theme";
+import Head from 'next/head';
+import React from 'react';
+import { Block } from 'suomifi-ui-components';
+import { ThemeProvider } from 'styled-components';
+import { lightTheme } from './theme';
 import {
   ContentContainer,
   SiteContainer,
   MarginContainer,
   HeaderContainer,
-} from "./layout.styles";
-import { useBreakpoints } from "../media-query";
+} from './layout.styles';
+import { useBreakpoints } from '../media-query';
 // import { HeaderWrapper } from '@app/modules/smart-header/smart-header.styles';
 // import Logo from '@app/modules/smart-header/logo';
 // import Matomo from '@app/common/components/matomo';

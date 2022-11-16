@@ -1,5 +1,5 @@
-import { StyledHr } from "./separator.styles";
-import CommonWrapper from "../wrapper";
+import { StyledHr } from './separator.styles';
+import CommonWrapper from '../wrapper';
 
 export interface SeparatorProps {
   isLarge?: boolean;

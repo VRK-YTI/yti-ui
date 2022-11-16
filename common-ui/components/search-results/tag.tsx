@@ -1,4 +1,4 @@
-import { Chip } from "suomifi-ui-components";
+import { Chip } from 'suomifi-ui-components';
 
 export interface TagProps {
   children: React.ReactNode;

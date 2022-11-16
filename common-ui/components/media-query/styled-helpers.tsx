@@ -1,4 +1,4 @@
-import { Breakpoint } from "./index";
+import { Breakpoint } from './index';
 
 export function resolve(
   breakpoint: Breakpoint,

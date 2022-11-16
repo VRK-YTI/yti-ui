@@ -1,7 +1,7 @@
-import React from "react";
-import { MainTitleWrapper } from "./title-block.styles";
-import useTitleRef from "../../utils/hooks/use-title-ref";
-import CommonWrapper from "../wrapper";
+import React from 'react';
+import { MainTitleWrapper } from './title-block.styles';
+import useTitleRef from '../../utils/hooks/use-title-ref';
+import CommonWrapper from '../wrapper';
 
 export interface MainTitleProps {
   children?: JSX.Element | string;

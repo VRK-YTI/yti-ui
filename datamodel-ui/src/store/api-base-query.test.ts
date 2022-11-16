@@ -4,12 +4,12 @@ import {
   createCommonGetServerSideProps,
   LocalHandlerParams,
 } from '@app/common/utils/create-getserversideprops';
-import {
-  getRunningQueriesThunk,
-  getVocabulary,
-} from '@app/common/components/vocabulary/vocabulary.slice';
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
+import {
+  getOrganizations,
+  getRunningQueriesThunk,
+} from '@app/common/components/organizations/organizations.slice';
 
 describe('axios base query', () => {
   const mock = new MockAdapter(axios, { onNoMatch: 'throwException' });
@@ -22,7 +22,6 @@ describe('axios base query', () => {
   // stored in session, it is passed onto API calls or authorization purposes
   it('should pass JSESSIONID in cookie', async () => {
     const jsessionidValue = 'foo';
-    const vocabularyId = '42';
 
     const ctx: GetServerSidePropsContext = {
       req: httpMocks.createRequest({ headers: { foo: 'bar' } }),
@@ -37,7 +36,6 @@ describe('axios base query', () => {
       return [
         200,
         'JSESSIONID exists in headers: ' +
-          // eslint-disable-next-line jest/no-conditional-in-test
           (config.headers?.['Cookie'] === `JSESSIONID=${jsessionidValue}`
             ? 'yes'
             : 'no'),
@@ -54,12 +52,12 @@ describe('axios base query', () => {
       req.session.save();
 
       // initiate API call
-      store.dispatch(getVocabulary.initiate({ id: vocabularyId }));
+      store.dispatch(getOrganizations.initiate());
       await Promise.all(store.dispatch(getRunningQueriesThunk()));
 
       // get the result from the API call
-      const data = store.getState().vocabularyAPI.queries[
-        'getVocabulary({"id":"42"})'
+      const data = store.getState().organizationsApi.queries[
+        'getOrganizations()'
       ]?.data as string;
 
       return {

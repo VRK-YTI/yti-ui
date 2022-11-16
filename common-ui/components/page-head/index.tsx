@@ -23,9 +23,7 @@ export default function PageHead({
   const pageTitles = Array.isArray(title) ? title : [title];
   const currTitle = [...pageTitles, currSiteTitle].filter(Boolean).join(' | ');
   const desc = description ? description : t('service-description');
-  const url = path
-  ? `${baseUrl}${path}`
-  : baseUrl
+  const url = path ? `${baseUrl}${path}` : baseUrl;
   const imageUri = `${baseUrl}/logo-suomi.fi.png`;
 
   return (

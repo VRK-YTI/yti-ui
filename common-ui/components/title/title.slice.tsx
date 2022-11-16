@@ -1,16 +1,16 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { AppState, AppThunk } from "@app/store";
+import { createSlice } from '@reduxjs/toolkit';
+import { AppState, AppThunk } from '@app/store';
 
 export interface TitleState {
   title: string;
 }
 
 export const titleInitialState = {
-  title: "",
+  title: '',
 };
 
 export const titleSlice = createSlice({
-  name: "title",
+  name: 'title',
   initialState: titleInitialState,
   reducers: {
     setTitle(state, action) {
@@ -22,7 +22,7 @@ export const titleSlice = createSlice({
   },
 });
 
-export function setTitle(title: TitleState["title"]): AppThunk {
+export function setTitle(title: TitleState['title']): AppThunk {
   return (dispatch) =>
     dispatch(
       titleSlice.actions.setTitle({
@@ -32,7 +32,7 @@ export function setTitle(title: TitleState["title"]): AppThunk {
 }
 
 export function selectTitle() {
-  return (state: AppState): TitleState["title"] => state.title.title;
+  return (state: AppState): TitleState['title'] => state.title.title;
 }
 
 export default titleSlice.reducer;

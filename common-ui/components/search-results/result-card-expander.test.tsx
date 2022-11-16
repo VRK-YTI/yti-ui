@@ -1,27 +1,21 @@
-import { themeProvider } from "../../utils/test-utils";
-import { render, screen } from "@testing-library/react";
-import ResultCardExpander from "./result-card-expander";
+import { themeProvider } from '../../utils/test-utils';
+import { render, screen } from '@testing-library/react';
+import ResultCardExpander from './result-card-expander';
 
-describe("result-card-expander", () => {
-  it("should render component", () => {
+describe('result-card-expander', () => {
+  it('should render component', () => {
     render(
       <ResultCardExpander
         buttonLabel="button-label"
         contentLabel="content-label"
         deepHits={[
           {
-            topHits: [
-              {
-                id: "123-123",
-                label: {
-                  fi: "hit-label",
-                },
-                status: "DRAFT",
-                uri: "https://suomi.fi",
-              },
-            ],
-            totalHitCount: 1,
-            type: "CONCEPT",
+            label: 'hit-label-1',
+            id: '01',
+          },
+          {
+            label: 'hit-label-2',
+            id: '02',
           },
         ]}
       />,
@@ -30,44 +24,28 @@ describe("result-card-expander", () => {
 
     expect(screen.getByText(/button-label/)).toBeInTheDocument();
     expect(screen.getByText(/content-label/)).toBeInTheDocument();
-    expect(screen.getAllByText(/hit-label/)).toHaveLength(2);
+    expect(screen.getAllByText(/hit-label/)).toHaveLength(4);
+    expect(screen.queryAllByText('hit-label-1')).toHaveLength(2);
+    expect(screen.queryAllByText('hit-label-2')).toHaveLength(2);
   });
 
-  it("should render commas correctly", () => {
+  it('should render commas correctly', () => {
     render(
       <ResultCardExpander
         buttonLabel="button-label"
         contentLabel="content-label"
         deepHits={[
           {
-            topHits: [
-              {
-                id: "123-123",
-                label: {
-                  fi: "hit-label1",
-                },
-                status: "DRAFT",
-                uri: "https://suomi.fi",
-              },
-              {
-                id: "456-456",
-                label: {
-                  fi: "hit-label2",
-                },
-                status: "DRAFT",
-                uri: "https://suomi.fi",
-              },
-              {
-                id: "789-789",
-                label: {
-                  fi: "hit-label3",
-                },
-                status: "DRAFT",
-                uri: "https://suomi.fi",
-              },
-            ],
-            totalHitCount: 3,
-            type: "CONCEPT",
+            label: 'hit-label-1',
+            id: '01',
+          },
+          {
+            label: 'hit-label-2',
+            id: '02',
+          },
+          {
+            label: 'hit-label-3',
+            id: '03',
           },
         ]}
       />,
@@ -77,7 +55,7 @@ describe("result-card-expander", () => {
     expect(
       screen.getByText((_, node) => {
         const includesText = (node: Element | null) =>
-          node?.textContent === "hit-label1, hit-label2, hit-label3";
+          node?.textContent === 'hit-label-1, hit-label-2, hit-label-3';
         return includesText(node);
       })
     ).toBeValid();
@@ -90,58 +68,28 @@ describe("result-card-expander", () => {
         contentLabel="content-label"
         deepHits={[
           {
-            topHits: [
-              {
-                id: "123-123",
-                label: {
-                  fi: "hit-label1",
-                },
-                status: "DRAFT",
-                uri: "https://suomi.fi",
-              },
-              {
-                id: "456-456",
-                label: {
-                  fi: "hit-label2",
-                },
-                status: "DRAFT",
-                uri: "https://suomi.fi",
-              },
-              {
-                id: "789-789",
-                label: {
-                  fi: "hit-label3",
-                },
-                status: "DRAFT",
-                uri: "https://suomi.fi",
-              },
-              {
-                id: "321-321",
-                label: {
-                  fi: "hit-label4",
-                },
-                status: "DRAFT",
-                uri: "https://suomi.fi",
-              },
-              {
-                id: "654-654",
-                label: {
-                  fi: "hit-label5",
-                },
-                status: "DRAFT",
-                uri: "https://suomi.fi",
-              },
-              {
-                id: "987-987",
-                label: {
-                  fi: "hit-label6",
-                },
-                status: "DRAFT",
-                uri: "https://suomi.fi",
-              },
-            ],
-            totalHitCount: 6,
-            type: "CONCEPT",
+            label: 'hit-label-1',
+            id: '01',
+          },
+          {
+            label: 'hit-label-2',
+            id: '02',
+          },
+          {
+            label: 'hit-label-3',
+            id: '03',
+          },
+          {
+            label: 'hit-label-4',
+            id: '04',
+          },
+          {
+            label: 'hit-label-5',
+            id: '05',
+          },
+          {
+            label: 'hit-label-6',
+            id: '06',
           },
         ]}
       />,
@@ -152,13 +100,13 @@ describe("result-card-expander", () => {
       screen.getByText((_, node) => {
         const includesText = (node: Element | null) =>
           node?.textContent ===
-          "hit-label1, hit-label2, hit-label3 + 3 tr-vocabulary-results-more";
+          'hit-label-1, hit-label-2, hit-label-3 + 3 tr-vocabulary-results-more';
         return includesText(node);
       })
     ).toBeValid();
 
-    expect(screen.getByText(/hit-label4/)).toBeInTheDocument();
-    expect(screen.getByText(/hit-label5/)).toBeInTheDocument();
-    expect(screen.getByText(/hit-label6/)).toBeInTheDocument();
+    expect(screen.getByText(/hit-label-4/)).toBeInTheDocument();
+    expect(screen.getByText(/hit-label-5/)).toBeInTheDocument();
+    expect(screen.getByText(/hit-label-6/)).toBeInTheDocument();
   });
 });

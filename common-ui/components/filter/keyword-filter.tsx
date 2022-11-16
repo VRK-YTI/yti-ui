@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import { TextInput } from "suomifi-ui-components";
-import useUrlState, { initialUrlState } from "../../utils/hooks/use-url-state";
-import { SEARCH_FIELD_PATTERN, TEXT_INPUT_MAX } from "../../utils/constants";
-import { useTranslation } from "next-i18next";
+import { useEffect, useState } from 'react';
+import { TextInput } from 'suomifi-ui-components';
+import useUrlState, { initialUrlState } from '../../utils/hooks/use-url-state';
+import { SEARCH_FIELD_PATTERN, TEXT_INPUT_MAX } from '../../utils/constants';
+import { useTranslation } from 'next-i18next';
 
 interface KeywordFilterProps {
   title: string;
@@ -17,7 +17,7 @@ export default function KeywordFilter({
   const q = urlState.q;
   const [inputValue, setInputValue] = useState(q);
   const [error, setError] = useState(false);
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
   useEffect(() => setInputValue(q), [q, setInputValue]);
 
   const update = (q: string) => {
@@ -30,7 +30,7 @@ export default function KeywordFilter({
   };
 
   const handleChange = (val: string) => {
-    setInputValue(val ?? "");
+    setInputValue(val ?? '');
     if (val.match(SEARCH_FIELD_PATTERN)) {
       setError(false);
     } else {
@@ -41,17 +41,17 @@ export default function KeywordFilter({
   return (
     <div>
       <TextInput
-        status={error ? "error" : "default"}
-        statusText={error ? t("filter-character-not-allowed") : ""}
-        icon={inputValue ? "close" : undefined}
+        status={error ? 'error' : 'default'}
+        statusText={error ? t('filter-character-not-allowed') : ''}
+        icon={inputValue ? 'close' : undefined}
         iconProps={{
-          fill: "hsl(212, 63%, 45%)",
-          onClick: () => update(""),
+          fill: 'hsl(212, 63%, 45%)',
+          onClick: () => update(''),
         }}
         labelText={title}
         onBlur={() => update(inputValue)}
-        onChange={(val) => handleChange(val?.toString() ?? "")}
-        onKeyDown={(e) => e.key === "Enter" && update(inputValue)}
+        onChange={(val) => handleChange(val?.toString() ?? '')}
+        onKeyDown={(e) => e.key === 'Enter' && update(inputValue)}
         value={inputValue}
         visualPlaceholder={visualPlaceholder}
         fullWidth

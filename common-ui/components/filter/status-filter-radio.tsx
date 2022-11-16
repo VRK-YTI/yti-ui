@@ -1,5 +1,5 @@
-import { useState } from "react";
-import RadioButtonFilter, { Item } from "./radio-button-filter";
+import { useState } from 'react';
+import RadioButtonFilter, { Item } from './radio-button-filter';
 
 export interface StatusFilterRadioProps {
   title: string;
@@ -10,7 +10,7 @@ export interface StatusFilterRadioProps {
 export default function StatusFilterRadio({
   title,
   items,
-  isModal
+  isModal,
 }: StatusFilterRadioProps) {
   // This should removed when urlState supports changes needed for this component to work
   const [selectedItem, setSelectedItem] = useState(items[0].value);
@@ -24,5 +24,4 @@ export default function StatusFilterRadio({
       selectedItem={selectedItem}
     />
   );
-
 }

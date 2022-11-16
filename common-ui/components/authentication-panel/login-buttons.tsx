@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
-import { Button } from "suomifi-ui-components";
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useSelector } from 'react-redux';
+import { Button } from 'suomifi-ui-components';
 // import LoginModalView from '../login-modal';
-import { selectLogin } from "@app/common/components/login/login.slice";
-import { useBreakpoints } from "../media-query";
-import { LoginButtonsWrapper } from "./authentication-panel.styles";
+import { selectLogin } from '@app/common/components/login/login.slice';
+import { useBreakpoints } from '../media-query';
+import { LoginButtonsWrapper } from './authentication-panel.styles';
 
 interface LoginButtonsProps {
   handleLoginModalClick?: () => void;
@@ -14,7 +14,7 @@ interface LoginButtonsProps {
 export default function LoginButtons({
   handleLoginModalClick,
 }: LoginButtonsProps) {
-  const { t } = useTranslation("common");
+  const { t } = useTranslation('common');
   const [visible, setVisible] = useState(false);
   const { breakpoint } = useBreakpoints();
   const user = useSelector(selectLogin());
@@ -29,7 +29,7 @@ export default function LoginButtons({
           }
           id="login-button"
         >
-          {t("site-login")}
+          {t('site-login')}
         </Button>
 
         {/* {visible ? <LoginModalView setVisible={setVisible} /> : null} */}
