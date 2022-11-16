@@ -114,7 +114,7 @@ export default function FrontPage() {
           onClick={() => setShowModal(!showModal)}
           id="mobile-filter-button"
         >
-          {t('vocabulary-filter-filter-list')}
+          {t('filter-list')}
         </FilterMobileButton>
       )}
       <ResultAndFilterContainer>

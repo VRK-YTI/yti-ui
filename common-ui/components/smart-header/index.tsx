@@ -39,8 +39,8 @@ export default function SmartHeader() {
     <>
       {renderHeader()}
       {renderDesktopNavigation()}
-      {/* {renderMobileNavigationModal()}
-      {renderLoginModal()} */}
+      {renderMobileNavigationModal()}
+      {renderLoginModal()}
     </>
   );
 
@@ -97,7 +97,7 @@ export default function SmartHeader() {
               {renderLogo()}
               {renderHeaderSearch()}
               {renderDesktopLocaleChooser()}
-              {/* {renderMobileNavigationToggleButton()} */}
+              {renderMobileNavigationToggleButton()}
               {renderDesktopAuthenticationPanel()}
             </HeaderWrapper>
             {renderUserInfo()}

@@ -36,6 +36,7 @@ describe('axios base query', () => {
       return [
         200,
         'JSESSIONID exists in headers: ' +
+          // eslint-disable-next-line jest/no-conditional-in-test
           (config.headers?.['Cookie'] === `JSESSIONID=${jsessionidValue}`
             ? 'yes'
             : 'no'),

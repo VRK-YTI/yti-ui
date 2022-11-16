@@ -6,15 +6,10 @@ FROM node:16.13.1-alpine3.14@sha256:a9b9cb880fa429b0bea899cd3b1bc081ab7277cc97e6
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
-COPY datamodel-ui/package.json datamodel-ui/package-lock.json ./datamodel-ui/
-WORKDIR /app/datamodel-ui
-RUN npm ci
-
-
-# Install common library and its nodes
-WORKDIR /app
+COPY datamodel-ui ./datamodel-ui/
 COPY common-ui ./common-ui
-WORKDIR /app/common-ui
+COPY package.json package-lock.json ./
+
 RUN npm ci
 
 #
@@ -40,6 +35,8 @@ WORKDIR /app
 COPY datamodel-ui ./datamodel-ui
 COPY --from=deps /app/datamodel-ui/node_modules ./datamodel-ui/node_modules
 COPY --from=deps /app/common-ui ./common-ui
+COPY --from=deps /app/node_modules ./node_modules
+
 WORKDIR /app/datamodel-ui
 
 
@@ -67,12 +64,13 @@ RUN apk add curl bash
 RUN apk add libcap && setcap 'cap_net_bind_service=+ep' /usr/local/bin/node
 
 COPY --from=builder /app/datamodel-ui/next.config.js ./
-# COPY --from=builder /app//datamodel-ui/next-i18next.config.js ./
+COPY --from=builder /app/datamodel-ui/next-i18next.config.js ./
 COPY --from=builder /app/datamodel-ui/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/datamodel-ui/.next ./.next
-COPY --from=builder /app/datamodel-ui/node_modules ./node_modules
+COPY --from=builder /app/datamodel-ui/node_modules /app/node_modules ./node_modules/
 COPY --from=builder /app/datamodel-ui/package.json ./package.json
 COPY --from=builder /app/common-ui ../common-ui
+
 # COPY --from=builder /app/datamodel-ui/junit.xml ./
 # COPY --from=builder /app/datamodel-ui/coverage ./coverage
 
