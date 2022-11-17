@@ -1,6 +1,6 @@
 import {
   getCollection,
-  getRunningOperationPromises as getCollectionRunningOperationPromises,
+  getRunningQueriesThunk as getCollectionRunningQueriesThunk,
 } from '@app/common/components/collection/collection.slice';
 import {
   CommonContextProvider,
@@ -11,7 +11,7 @@ import { getStoreData } from '@app/common/components/page-head/utils';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import {
   getVocabulary,
-  getRunningOperationPromises,
+  getRunningQueriesThunk,
 } from '@app/common/components/vocabulary/vocabulary.slice';
 import {
   createCommonGetServerSideProps,
@@ -73,8 +73,8 @@ export const getServerSideProps = createCommonGetServerSideProps(
         terminologyId: terminologyId,
       })
     );
-    await Promise.all(getCollectionRunningOperationPromises());
-    await Promise.all(getRunningOperationPromises());
+    await Promise.all(store.dispatch(getCollectionRunningQueriesThunk()));
+    await Promise.all(store.dispatch(getRunningQueriesThunk()));
 
     const collectionData = getStoreData({
       state: store.getState(),

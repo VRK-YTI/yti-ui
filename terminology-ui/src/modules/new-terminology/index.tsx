@@ -2,7 +2,7 @@ import dynamic from 'next/dynamic';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { Button } from 'suomifi-ui-components';
-import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 import HasPermission from '@app/common/utils/has-permission';
 import { useGetAuthenticatedUserMutMutation } from '@app/common/components/login/login.slice';
 

@@ -1,8 +1,7 @@
 import { useTranslation } from 'next-i18next';
-import { BasicBlock } from '../../common/components/block';
+import { BasicBlock, BasicBlockExtraWrapper } from 'yti-common-ui/block';
 import InlineAlert from '../../common/components/inline-alert';
 import { ToggleButton } from 'suomifi-ui-components';
-import { BasicBlockExtraWrapper } from '../../common/components/block/block.styles';
 import { useToggleSubscriptionsMutation } from '../../common/components/subscription/subscription.slice';
 import { useEffect, useState } from 'react';
 import { Subscriptions } from '../../common/interfaces/subscription.interface';

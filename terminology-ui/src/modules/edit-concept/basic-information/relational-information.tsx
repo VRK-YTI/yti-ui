@@ -1,4 +1,4 @@
-import Separator from '@app/common/components/separator';
+import Separator from 'yti-common-ui/separator';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { ExpanderTitleButton } from 'suomifi-ui-components';

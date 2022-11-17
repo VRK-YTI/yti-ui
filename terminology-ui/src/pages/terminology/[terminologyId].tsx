@@ -9,7 +9,7 @@ import {
 import Vocabulary from '@app/modules/vocabulary';
 import {
   getConceptResult,
-  getRunningOperationPromises,
+  getRunningQueriesThunk,
   getVocabulary,
 } from '@app/common/components/vocabulary/vocabulary.slice';
 import { initialUrlState } from '@app/common/utils/hooks/use-url-state';
@@ -22,7 +22,7 @@ import { getPropertyValue } from '@app/common/components/property-value/get-prop
 import { getStoreData } from '@app/common/components/page-head/utils';
 import {
   getVocabularyCount,
-  getRunningOperationPromises as countsGetRunningOperationPromises,
+  getRunningQueriesThunk as countsGetRunningQueriesThunk,
 } from '@app/common/components/counts/counts.slice';
 
 interface TerminologyPageProps extends CommonContextState {
@@ -91,8 +91,8 @@ export const getServerSideProps = createCommonGetServerSideProps(
     );
     store.dispatch(getVocabularyCount.initiate(id));
 
-    await Promise.all(getRunningOperationPromises());
-    await Promise.all(countsGetRunningOperationPromises());
+    await Promise.all(store.dispatch(getRunningQueriesThunk()));
+    await Promise.all(store.dispatch(countsGetRunningQueriesThunk()));
 
     const vocabularyData = getStoreData({
       state: store.getState(),

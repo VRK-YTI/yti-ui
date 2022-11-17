@@ -13,11 +13,11 @@ import { default as EditConceptModule } from '@app/modules/edit-concept';
 import { useRouter } from 'next/router';
 import {
   getVocabulary,
-  getRunningOperationPromises as getVocabularyRunningOperationPromises,
+  getRunningQueriesThunk as getVocabularyRunningQueriesThunk,
 } from '@app/common/components/vocabulary/vocabulary.slice';
 import {
   getConcept,
-  getRunningOperationPromises as getConceptRunningOperationPromises,
+  getRunningQueriesThunk as getConceptRunningQueriesThunk,
 } from '@app/common/components/concept/concept.slice';
 import { getStoreData } from '@app/common/components/page-head/utils';
 import { Concept } from '@app/common/interfaces/concept.interface';
@@ -71,8 +71,8 @@ export const getServerSideProps = createCommonGetServerSideProps(
     store.dispatch(getVocabulary.initiate({ id: terminologyId }));
     store.dispatch(getConcept.initiate({ terminologyId, conceptId }));
 
-    await Promise.all(getVocabularyRunningOperationPromises());
-    await Promise.all(getConceptRunningOperationPromises());
+    await Promise.all(store.dispatch(getVocabularyRunningQueriesThunk()));
+    await Promise.all(store.dispatch(getConceptRunningQueriesThunk()));
 
     const conceptData = getStoreData({
       state: store.getState(),

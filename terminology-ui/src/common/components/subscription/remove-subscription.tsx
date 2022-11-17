@@ -10,7 +10,7 @@ import {
 import { Resource } from '../../interfaces/subscription.interface';
 import getPrefLabel from '../../utils/get-preflabel';
 import IconButton from '../icon-button/icon-button';
-import { useBreakpoints } from '../media-query/media-query-context';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 import {
   RemoveModal,
   RemoveModalContent,

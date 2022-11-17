@@ -1,6 +1,6 @@
 import styled, { keyframes } from 'styled-components';
 import { Block, Icon, ModalTitle, SingleSelect } from 'suomifi-ui-components';
-import Separator from '@app/common/components/separator';
+import Separator from 'yti-common-ui/separator';
 
 export const ButtonBlock = styled(Block)`
   display: flex;

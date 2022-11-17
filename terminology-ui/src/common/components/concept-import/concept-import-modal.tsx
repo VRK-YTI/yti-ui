@@ -14,7 +14,7 @@ import {
   usePostImportNTRFMutation,
   usePostSimpleImportExcelMutation,
 } from '../import/import.slice';
-import { useBreakpoints } from '../media-query/media-query-context';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 
 interface ConceptImportModalProps {
   terminologyId: string;

@@ -1,5 +1,4 @@
-import { BasicBlock } from '@app/common/components/block';
-import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
+import { BasicBlock, BasicBlockExtraWrapper } from 'yti-common-ui/block';
 import PropertyValue from '@app/common/components/property-value';
 import { Concepts } from '@app/common/interfaces/concepts.interface';
 import { RelationInfoType } from '@app/modules/edit-concept/new-concept.types';
@@ -16,7 +15,7 @@ import {
   Paragraph,
   Text,
 } from 'suomifi-ui-components';
-import { useBreakpoints } from '../media-query/media-query-context';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 import { ChipBlock } from './relation-information-block.styles';
 import RelationModalContent from './relational-modal-content';
 import RenderChosen from './render-chosen';

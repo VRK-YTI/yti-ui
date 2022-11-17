@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { Button } from 'suomifi-ui-components';
 import LoginModalView from '@app/common/components/login-modal/login-modal';
 import { selectLogin } from '@app/common/components/login/login.slice';
-import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 import { LoginButtonsWrapper } from './authentication-panel.styles';
 
 interface LoginButtonsProps {

@@ -10,7 +10,14 @@ const config: Config.InitialOptions = {
   ],
   moduleNameMapper: {
     '^@app(.*)$': '<rootDir>/src$1',
+    '^@common(.*)$': '<rootDir>/../common-ui$1',
   },
+  moduleDirectories: [
+    'node_modules',
+    'src',
+    '<rootDir>/../common-ui/node_modules',
+    '<rootDir>/../common-ui',
+  ],
   testPathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/.next/'],
   testEnvironment: 'jsdom',
   transform: {

@@ -13,7 +13,7 @@ import {
 import SearchResults from '@app/common/components/search-results/search-results';
 import Pagination from '@app/common/components/pagination/pagination';
 import { useTranslation } from 'next-i18next';
-import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 import { Modal, ModalContent } from 'suomifi-ui-components';
 import { useEffect, useState } from 'react';
 import { useGetCountsQuery } from '@app/common/components/counts/counts.slice';

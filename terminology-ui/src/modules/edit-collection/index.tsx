@@ -1,12 +1,8 @@
 import { Breadcrumb, BreadcrumbLink } from '@app/common/components/breadcrumb';
 import { useAddCollectionMutation } from '@app/common/components/modify/modify.slice';
 import PropertyValue from '@app/common/components/property-value';
-import Separator from '@app/common/components/separator';
-import {
-  BadgeBar,
-  MainTitle,
-  SubTitle,
-} from '@app/common/components/title-block';
+import Separator from 'yti-common-ui/separator';
+import { BadgeBar, MainTitle, SubTitle } from 'yti-common-ui/title-block';
 import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
 import { getProperty } from '@app/common/utils/get-property';
 import { useTranslation } from 'next-i18next';
@@ -34,8 +30,8 @@ import useUser from '@app/common/utils/hooks/useUser';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
 import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from '@app/common/utils/constants';
 import useConfirmBeforeLeavingPage from '@app/common/utils/hooks/use-confirm-before-leaving-page';
-import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
-import SaveSpinner from '@app/common/components/save-spinner';
+import { useBreakpoints } from 'yti-common-ui/media-query';
+import SaveSpinner from 'yti-common-ui/save-spinner';
 import FormFooterAlert from '@app/common/components/form-footer-alert';
 
 export default function EditCollection({

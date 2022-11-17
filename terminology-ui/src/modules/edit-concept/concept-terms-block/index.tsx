@@ -1,7 +1,6 @@
 import dynamic from 'next/dynamic';
-import { BasicBlock } from '@app/common/components/block';
-import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
-import Separator from '@app/common/components/separator';
+import { BasicBlock, BasicBlockExtraWrapper } from 'yti-common-ui/block';
+import Separator from 'yti-common-ui/separator';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { Button, ExpanderGroup } from 'suomifi-ui-components';
@@ -14,7 +13,7 @@ import TermExpander from './term-expander';
 import TermForm from './term-form';
 import { ConceptTermType, ListType } from '../new-concept.types';
 import { FormError } from '../validate-form';
-import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 
 const NewTermModal = dynamic(() => import('./new-term-modal'));
 

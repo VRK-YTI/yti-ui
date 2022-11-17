@@ -10,12 +10,12 @@ import TerminologySearch from '@app/modules/terminology-search';
 import {
   getGroups,
   getOrganizations,
-  getRunningOperationPromises as terminologyGetRunningOperationPromises,
+  getRunningQueriesThunk as terminologyGetRunningQueriesThunk,
   getSearchResult,
 } from '@app/common/components/terminology-search/terminology-search.slice';
 import {
   getCounts,
-  getRunningOperationPromises as countsGetRunningOperationPromises,
+  getRunningQueriesThunk as countsGetRunningQueriesThunk,
 } from '@app/common/components/counts/counts.slice';
 import PageHead from '@app/common/components/page-head';
 import { initialUrlState } from '@app/common/utils/hooks/use-url-state';
@@ -84,8 +84,8 @@ export const getServerSideProps = createCommonGetServerSideProps(
     store.dispatch(getOrganizations.initiate(locale ?? 'fi'));
     store.dispatch(getCounts.initiate(null));
 
-    await Promise.all(terminologyGetRunningOperationPromises());
-    await Promise.all(countsGetRunningOperationPromises());
+    await Promise.all(store.dispatch(terminologyGetRunningQueriesThunk()));
+    await Promise.all(store.dispatch(countsGetRunningQueriesThunk()));
 
     return {};
   }

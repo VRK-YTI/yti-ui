@@ -6,11 +6,11 @@ import PageHead from '@app/common/components/page-head';
 import {
   getGroups,
   getOrganizations,
-  getRunningOperationPromises as getTermSearchRunningOperationPromises,
+  getRunningQueriesThunk as getTermSearchRunningQueriesThunk,
 } from '@app/common/components/terminology-search/terminology-search.slice';
 import {
   getVocabulary,
-  getRunningOperationPromises,
+  getRunningQueriesThunk,
 } from '@app/common/components/vocabulary/vocabulary.slice';
 import {
   createCommonGetServerSideProps,
@@ -62,8 +62,8 @@ export const getServerSideProps = createCommonGetServerSideProps(
     store.dispatch(getOrganizations.initiate(locale ?? 'fi'));
     store.dispatch(getGroups.initiate(locale ?? 'fi'));
 
-    await Promise.all(getRunningOperationPromises());
-    await Promise.all(getTermSearchRunningOperationPromises());
+    await Promise.all(store.dispatch(getRunningQueriesThunk()));
+    await Promise.all(store.dispatch(getTermSearchRunningQueriesThunk()));
 
     return {
       props: {

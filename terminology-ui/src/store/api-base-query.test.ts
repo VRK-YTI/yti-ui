@@ -5,7 +5,7 @@ import {
   LocalHandlerParams,
 } from '@app/common/utils/create-getserversideprops';
 import {
-  getRunningOperationPromises,
+  getRunningQueriesThunk,
   getVocabulary,
 } from '@app/common/components/vocabulary/vocabulary.slice';
 import MockAdapter from 'axios-mock-adapter';
@@ -55,7 +55,7 @@ describe('axios base query', () => {
 
       // initiate API call
       store.dispatch(getVocabulary.initiate({ id: vocabularyId }));
-      await Promise.all(getRunningOperationPromises());
+      await Promise.all(store.dispatch(getRunningQueriesThunk()));
 
       // get the result from the API call
       const data = store.getState().vocabularyAPI.queries[

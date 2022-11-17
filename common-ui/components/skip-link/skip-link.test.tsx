@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { themeProvider } from '@app/tests/test-utils';
-import SkipLink from './skip-link';
+import SkipLink from '.';
 
 describe('skipLink', () => {
   it('should render', () => {

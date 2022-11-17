@@ -10,11 +10,11 @@ import Collection from '@app/modules/collection';
 import {
   getCollection,
   getCollections,
-  getRunningOperationPromises as getCollectionRunningOperationPromises,
+  getRunningQueriesThunk as getCollectionRunningQueriesThunk,
 } from '@app/common/components/collection/collection.slice';
 import {
   getVocabulary,
-  getRunningOperationPromises as getVocabularyRunningOperationPromises,
+  getRunningQueriesThunk as getVocabularyRunningQueriesThunk,
 } from '@app/common/components/vocabulary/vocabulary.slice';
 import {
   CommonContextState,
@@ -75,8 +75,8 @@ export const getServerSideProps = createCommonGetServerSideProps(
     store.dispatch(getCollection.initiate({ terminologyId, collectionId }));
     store.dispatch(getCollections.initiate(terminologyId));
 
-    await Promise.all(getVocabularyRunningOperationPromises());
-    await Promise.all(getCollectionRunningOperationPromises());
+    await Promise.all(store.dispatch(getVocabularyRunningQueriesThunk()));
+    await Promise.all(store.dispatch(getCollectionRunningQueriesThunk()));
 
     const vocabularyData = getStoreData({
       state: store.getState(),

@@ -15,7 +15,7 @@ import { getPropertyValue } from '@app/common/components/property-value/get-prop
 import { useStoreDispatch } from '@app/store';
 import { setTitle } from './title.slice';
 import { useEffect } from 'react';
-import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 import NewTerminology from '@app/modules/new-terminology';
 import {
   translateStatus,

@@ -9,12 +9,13 @@ import {
   MarginContainer,
 } from './layout.styles';
 import { useTranslation } from 'next-i18next';
-import Footer from '@app/common/components/footer/footer';
+import Footer from 'yti-common-ui/footer';
 import SmartHeader from '@app/modules/smart-header';
-import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
-import SkipLink from '@app/common/components/skip-link/skip-link';
+import { useBreakpoints } from 'yti-common-ui/media-query';
+import SkipLink from 'yti-common-ui/skip-link';
 import Alerts from '@app/common/components/alert';
 import Matomo from '@app/common/components/matomo';
+import getConfig from 'next/config';
 
 export default function Layout({
   children,
@@ -25,6 +26,7 @@ export default function Layout({
 }) {
   const { t } = useTranslation('common');
   const { breakpoint } = useBreakpoints();
+  const { publicRuntimeConfig } = getConfig();
 
   return (
     <ThemeProvider theme={lightTheme}>
@@ -48,7 +50,11 @@ export default function Layout({
 
         <FooterContainer>
           <MarginContainer $breakpoint={breakpoint}>
-            <Footer feedbackSubject={feedbackSubject} />
+            <Footer
+              t={t}
+              feedbackSubject={feedbackSubject}
+              versionInfo={publicRuntimeConfig?.versionInfo}
+            />
           </MarginContainer>
         </FooterContainer>
       </SiteContainer>

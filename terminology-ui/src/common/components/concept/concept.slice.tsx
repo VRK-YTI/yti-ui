@@ -66,7 +66,7 @@ export const conceptApi = createApi({
 export const {
   useGetConceptQuery,
   useSearchConceptMutation,
-  util: { getRunningOperationPromises },
+  util: { getRunningQueriesThunk },
 } = conceptApi;
 
 export const { getConcept } = conceptApi.endpoints;

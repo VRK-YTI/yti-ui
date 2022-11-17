@@ -5,7 +5,7 @@ import {
   SubTitle,
   BadgeBar,
   Badge,
-} from '@app/common/components/title-block';
+} from 'yti-common-ui/title-block';
 import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
 import { getProperty } from '@app/common/utils/get-property';
 import { useTranslation } from 'next-i18next';
@@ -30,7 +30,7 @@ import { selectLogin } from '@app/common/components/login/login.slice';
 import { Notification, Paragraph, Text } from 'suomifi-ui-components';
 import useConfirmBeforeLeavingPage from '@app/common/utils/hooks/use-confirm-before-leaving-page';
 import validateForm, { FormError } from './validate-form';
-import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 import { translateStatus } from '@app/common/utils/translation-helpers';
 
 interface EditConceptProps {

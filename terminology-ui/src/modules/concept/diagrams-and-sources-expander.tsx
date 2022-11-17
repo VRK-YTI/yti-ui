@@ -5,7 +5,7 @@ import {
   ExpanderTitleButton,
   ExternalLink,
 } from 'suomifi-ui-components';
-import { BasicBlock } from '@app/common/components/block';
+import { BasicBlock } from 'yti-common-ui/block';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import { Concept } from '@app/common/interfaces/concept.interface';
 import { PropertyList } from './concept.styles';

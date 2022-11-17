@@ -12,7 +12,7 @@ import {
   PaginationWrapper,
   QuickActionsWrapper,
 } from './vocabulary.styles';
-import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 import { FilterMobileButton } from '@app/modules/terminology-search/terminology-search.styles';
 import { useTranslation } from 'next-i18next';
 import {

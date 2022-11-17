@@ -8,7 +8,7 @@ import {
   ModalTitle,
   Text,
 } from 'suomifi-ui-components';
-import { useBreakpoints } from '../media-query/media-query-context';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 import { usePostCreateVersionMutation } from '../vocabulary/vocabulary.slice';
 import { v4 } from 'uuid';
 import { useStoreDispatch } from '@app/store';
@@ -22,7 +22,7 @@ import {
   DescriptionParagraph,
   FooterBlock,
 } from './copy-terminology-modal.styles';
-import SaveSpinner from '@common/components/save-spinner';
+import SaveSpinner from 'yti-common-ui/save-spinner';
 
 interface CopyTerminologyModalProps {
   terminologyId: string;

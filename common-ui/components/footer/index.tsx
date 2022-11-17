@@ -1,30 +1,28 @@
-import { useTranslation } from 'react-i18next';
 import { ExternalLink, Paragraph, Text } from 'suomifi-ui-components';
-import Image from 'next/image';
 import {
   FooterContentWrapper,
   FooterLinkWrapper,
   VersionInfo,
 } from './footer.styles';
-import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
-import getConfig from 'next/config';
+import { useBreakpoints } from '../media-query';
+import CommonWrapper from '../wrapper';
 
 export interface FooterProps {
+  t: any;
   feedbackSubject?: string;
+  versionInfo?: string;
 }
 
-export default function Footer({ feedbackSubject }: FooterProps) {
-  const { t } = useTranslation('common');
+function Footer({ t, feedbackSubject, versionInfo }: FooterProps) {
   const subject = encodeURIComponent(
     feedbackSubject ?? String(t('feedback-terminologies'))
   );
   const { breakpoint } = useBreakpoints();
-  const { publicRuntimeConfig } = getConfig();
 
   return (
     <>
       <FooterContentWrapper id="footer">
-        <Image
+        <img
           src="/logo-suomi.fi.png"
           width="138"
           height="38"
@@ -60,7 +58,9 @@ export default function Footer({ feedbackSubject }: FooterProps) {
           {t('terminology-footer-accessibility')}
         </ExternalLink>
       </FooterLinkWrapper>
-      <VersionInfo aria-hidden>{publicRuntimeConfig?.versionInfo}</VersionInfo>
+      <VersionInfo aria-hidden>{versionInfo}</VersionInfo>
     </>
   );
 }
+
+export default CommonWrapper(Footer)

@@ -13,13 +13,12 @@ import {
   PropertyList,
 } from './info-expander.styles';
 import { VocabularyInfoDTO } from '@app/common/interfaces/vocabulary.interface';
-import Separator from '@app/common/components/separator';
+import Separator from 'yti-common-ui/separator';
+import { BasicBlock, BasicBlockExtraWrapper } from 'yti-common-ui/block';
 import {
-  BasicBlock,
   MultilingualPropertyBlock,
   PropertyBlock,
 } from '@app/common/components/block';
-import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
 import FormattedDate from '@app/common/components/formatted-date';
 import { useSelector } from 'react-redux';
 import { selectLogin } from '@app/common/components/login/login.slice';

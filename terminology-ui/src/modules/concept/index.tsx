@@ -8,18 +8,18 @@ import {
   Text,
   VisuallyHidden,
 } from 'suomifi-ui-components';
+import { BasicBlock, BasicBlockExtraWrapper } from 'yti-common-ui/block';
 import {
-  BasicBlock,
   MultilingualPropertyBlock,
   PropertyBlock,
   TermBlock,
 } from '@app/common/components/block';
 import { Breadcrumb, BreadcrumbLink } from '@app/common/components/breadcrumb';
 import FormattedDate from '@app/common/components/formatted-date';
-import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 import PropertyValue from '@app/common/components/property-value';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
-import Separator from '@app/common/components/separator';
+import Separator from 'yti-common-ui/separator';
 import DetailsExpander from './details-expander';
 import ConceptSidebar from './concept-sidebar';
 import {
@@ -34,9 +34,8 @@ import { setTitle } from '@app/common/components/title/title.slice';
 import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
 import { useGetConceptQuery } from '@app/common/components/concept/concept.slice';
 import { getProperty } from '@app/common/utils/get-property';
-import { MainTitle, BadgeBar, Badge } from '@app/common/components/title-block';
+import { MainTitle, BadgeBar, Badge } from 'yti-common-ui/title-block';
 import HasPermission from '@app/common/utils/has-permission';
-import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
 import Link from 'next/link';
 import { translateStatus } from '@app/common/utils/translation-helpers';
 import isEmail from 'validator/lib/isEmail';

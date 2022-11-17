@@ -1,11 +1,8 @@
 // shared layout helper
 
 import styled from 'styled-components';
-import { Breakpoint } from '@app/common/components/media-query/media-query-context';
-import {
-  resolve,
-  small,
-} from '@app/common/components/media-query/styled-helpers';
+import { Breakpoint } from 'yti-common-ui/media-query';
+import { resolve, small } from 'yti-common-ui/media-query/styled-helpers';
 
 export const MarginContainer = styled.div<{ $breakpoint: Breakpoint }>`
   max-width: 1100px;

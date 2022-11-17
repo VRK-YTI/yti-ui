@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { SearchInput } from 'suomifi-ui-components';
 import { useTranslation } from 'react-i18next';
 import IconButton from '@app/common/components/icon-button/icon-button';
-import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 import { CloseButton } from './header-search.styles';
 import { useRouter } from 'next/router';
 import useUrlState, {

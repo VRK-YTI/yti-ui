@@ -13,7 +13,7 @@ import {
 import PageHead from '@app/common/components/page-head';
 import {
   getVocabulary,
-  getRunningOperationPromises,
+  getRunningQueriesThunk,
 } from '@app/common/components/vocabulary/vocabulary.slice';
 
 interface NewConceptPageProps extends CommonContextState {
@@ -52,7 +52,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
 
     store.dispatch(getVocabulary.initiate({ id: terminologyId }));
 
-    await Promise.all(getRunningOperationPromises());
+    await Promise.all(store.dispatch(getRunningQueriesThunk()));
 
     return {
       props: {

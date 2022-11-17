@@ -2,9 +2,8 @@ import { useTranslation } from 'next-i18next';
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
 import { Button } from 'suomifi-ui-components';
-import { BasicBlock } from '../block';
-import { BasicBlockExtraWrapper } from '../block/block.styles';
-import Separator from '../separator';
+import { BasicBlock, BasicBlockExtraWrapper } from 'yti-common-ui/block';
+import Separator from 'yti-common-ui/separator';
 
 const CopyTerminologyModalDynamic = dynamic(
   () => import('./copy-terminology-modal')

@@ -34,7 +34,7 @@ export const countsApi = createApi({
 export const {
   useGetCountsQuery,
   useGetVocabularyCountQuery,
-  util: { getRunningOperationPromises },
+  util: { getRunningQueriesThunk },
 } = countsApi;
 
 export const { getCounts, getVocabularyCount } = countsApi.endpoints;

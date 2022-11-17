@@ -1,12 +1,13 @@
 import React from 'react';
 import { MainTitleWrapper } from './title-block.styles';
-import useTitleRef from '@app/common/utils/hooks/use-title-ref';
+import useTitleRef from '../../utils/hooks/use-title-ref';
+import CommonWrapper from '../wrapper';
 
 export interface MainTitleProps {
-  children?: React.ReactNode;
+  children?: JSX.Element | string;
 }
 
-export default function MainTitle({ children }: MainTitleProps) {
+function MainTitle({ children }: MainTitleProps) {
   const titleRef = useTitleRef();
 
   return (
@@ -15,3 +16,5 @@ export default function MainTitle({ children }: MainTitleProps) {
     </MainTitleWrapper>
   );
 }
+
+export default CommonWrapper(MainTitle)

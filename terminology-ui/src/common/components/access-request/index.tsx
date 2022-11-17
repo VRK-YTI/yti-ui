@@ -13,8 +13,11 @@ import {
   ModalButton,
   Title,
 } from './access-request.styles';
+import { AccessRequestModalProps } from './access-request-modal';
 
-const AccessRequestModal = dynamic(() => import('./access-request-modal'));
+const AccessRequestModal = dynamic<AccessRequestModalProps>(() =>
+  import('./access-request-modal').then((module) => module.default)
+);
 
 interface AccessRequestProps {
   organizations?: OrganizationSearchResult[];

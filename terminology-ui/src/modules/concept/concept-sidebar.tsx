@@ -1,7 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import React from 'react';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
-import Separator from '@app/common/components/separator';
+import Separator from 'yti-common-ui/separator';
 import {
   Sidebar,
   SidebarHeader,

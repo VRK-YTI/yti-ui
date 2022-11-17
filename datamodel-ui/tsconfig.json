@@ -20,16 +20,13 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@app/*": ["src/*"],
-      "@common/*": ["../common-ui/*"]
+      "@app/*": ["src/*"]
     }
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "../common-ui/**/*.ts",
-    "../common-ui/**/*.tsx"
   ],
-  "exclude": ["node_modules", "../common-ui/node_modules"]
+  "exclude": ["node_modules"]
 }
