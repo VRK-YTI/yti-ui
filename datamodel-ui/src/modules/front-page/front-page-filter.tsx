@@ -31,8 +31,7 @@ export default function FrontPageFilter({
   languages,
 }: FrontPageFilterProps) {
   const { t, i18n } = useTranslation('common');
-  console.log('organizations', organizations);
-  console.log('serviceCategories', serviceCategories);
+
   if (!organizations || !serviceCategories) {
     return <></>;
   }

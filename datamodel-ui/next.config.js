@@ -39,7 +39,7 @@ if (process.env.REWRITE_PROFILE === 'local') {
       return [
         {
           source: '/datamodel-api/:path*',
-          destination: 'http://yti-terminology-api:9004/datamodel-api/:path*',
+          destination: 'http://yti-datamodel-api:9004/datamodel-api/:path*',
         },
       ];
     },
