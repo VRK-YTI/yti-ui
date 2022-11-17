@@ -1,4 +1,3 @@
-import CommonWrapper from '../wrapper';
 import React from 'react';
 import { useBreakpoints } from '../media-query';
 import { BasicBlockHeader, BasicBlockWrapper } from './block.styles';
@@ -12,7 +11,7 @@ export interface BasicBlockProps {
   id?: string;
 }
 
-function BasicBlock({
+export default function BasicBlock({
   title,
   children,
   extra,
@@ -35,5 +34,3 @@ function BasicBlock({
     </BasicBlockWrapper>
   );
 }
-
-export default CommonWrapper(BasicBlock);

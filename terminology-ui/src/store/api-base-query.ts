@@ -26,9 +26,53 @@ export const getTerminologyApiBaseQuery = (
         }
       }
 
+      // Additionally, if the browser provided us with _shibsession_..., pass
+      // it to the request as well. This helps with cases where JSESSIONID
+      // isn't enough for the spring API.
+      if ('req' in ctx && ctx.req && 'cookies' in ctx.req) {
+        const shibCookies = Object.keys(ctx.req.cookies).filter((x) =>
+          x.startsWith('_shibsession')
+        );
+
+        for (const key of shibCookies) {
+          const val = ctx.req.cookies[key];
+          if (val !== undefined) {
+            cookies[key] = val;
+          }
+        }
+      }
+
       let headers: AxiosRequestHeaders = {
         'content-type': 'application/json',
       };
+
+      // X-Forwarded-For needs to match client requests or Shibboleth will
+      // invalidate the session
+      if (
+        'req' in ctx &&
+        ctx.req &&
+        'headers' in ctx.req &&
+        ctx.req.headers['x-forwarded-for'] !== undefined
+      ) {
+        const hdr = Array.isArray(ctx.req.headers['x-forwarded-for'])
+          ? ctx.req.headers['x-forwarded-for'][0]
+          : ctx.req.headers['x-forwarded-for'];
+        headers['X-Forwarded-For'] = hdr;
+      }
+
+      // Host needs to match client requests or Shibboleth will
+      // invalidate the session
+      if (
+        'req' in ctx &&
+        ctx.req &&
+        'headers' in ctx.req &&
+        ctx.req.headers['host'] !== undefined
+      ) {
+        const hdr = Array.isArray(ctx.req.headers['host'])
+          ? ctx.req.headers['host'][0]
+          : ctx.req.headers['host'];
+        headers['Host'] = hdr;
+      }
 
       // prepare cookie header; this should only happen in SSR, since ctx.req
       // is empty on browser

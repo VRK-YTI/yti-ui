@@ -5,15 +5,15 @@ import {
   VersionInfo,
 } from './footer.styles';
 import { useBreakpoints } from '../media-query';
-import CommonWrapper from '../wrapper';
+import { TFunction } from 'next-i18next';
 
 export interface FooterProps {
-  t: any;
+  t: TFunction;
   feedbackSubject?: string;
   versionInfo?: string;
 }
 
-function Footer({ t, feedbackSubject, versionInfo }: FooterProps) {
+export default function Footer({ t, feedbackSubject, versionInfo }: FooterProps) {
   const subject = encodeURIComponent(
     feedbackSubject ?? String(t('feedback-terminologies'))
   );
@@ -62,5 +62,3 @@ function Footer({ t, feedbackSubject, versionInfo }: FooterProps) {
     </>
   );
 }
-
-export default CommonWrapper(Footer);

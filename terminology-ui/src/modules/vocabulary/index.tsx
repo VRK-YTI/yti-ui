@@ -29,7 +29,7 @@ import { useGetVocabularyCountQuery } from '@app/common/components/counts/counts
 import { TerminologyListFilter } from './terminology-list-filter';
 import useUrlState from '@app/common/utils/hooks/use-url-state';
 import Pagination from '@app/common/components/pagination/pagination';
-import filterData from '@app/common/utils/filter-data';
+import filterCollectionData from '@app/common/utils/filter-collection-data';
 import LoadIndicator from '@app/common/components/load-indicator';
 import { useRouter } from 'next/router';
 import HasPermission from '@app/common/utils/has-permission';
@@ -227,21 +227,15 @@ export default function Vocabulary({ id }: VocabularyProps) {
     }
 
     if (collections) {
+      const data =
+        filterCollectionData(collections, urlState, i18n.language) ??
+        collections;
+
       return (
         <>
-          <SearchResults
-            data={
-              filterData(collections, urlState, i18n.language) ?? collections
-            }
-            type="collections"
-          />
+          <SearchResults data={data} type="collections" />
           <PaginationWrapper>
-            <Pagination
-              data={
-                filterData(collections, urlState, i18n.language) ?? collections
-              }
-              pageString={t('pagination-page')}
-            />
+            <Pagination data={data} pageString={t('pagination-page')} />
           </PaginationWrapper>
         </>
       );

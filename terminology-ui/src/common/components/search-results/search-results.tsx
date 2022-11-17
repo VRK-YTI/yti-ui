@@ -157,8 +157,8 @@ export default function SearchResults({
             <ResultWrapper $isSmall={isSmall}>
               {data
                 .filter((collection, idx) => {
-                  const minId = Math.max(0, (urlState.page - 1) * 10);
-                  const maxId = minId + 10;
+                  const minId = Math.max(0, (urlState.page - 1) * 50);
+                  const maxId = minId + 50;
                   if (idx >= minId && idx < maxId) {
                     return collection;
                   }
@@ -202,79 +202,109 @@ export default function SearchResults({
   }
 
   function renderCollectionMembers(members?: Concept[]) {
-    return members ? (
-      members.map((m, idx) => {
-        const comma =
-          idx < 4 && members.length > 1 && idx < members.length - 1 ? ',' : '';
+    if (!members) {
+      return <>{t('vocabulary-results-no-concepts')}</>;
+    }
 
-        if (idx < 5 && m.references.prefLabelXl) {
-          if (m.references.prefLabelXl.length === 1) {
-            if (
-              m.references.prefLabelXl[0].properties.prefLabel?.[0].lang ===
-              i18n.language
-            ) {
-              const value =
-                m.references.prefLabelXl[0].properties.prefLabel?.[0].value;
+    let tempMembers = members;
 
-              return (
-                <div key={`${value}-${idx}`}>
-                  {value}
-                  {comma}&nbsp;
-                </div>
-              );
-            } else {
-              const value =
-                m.references.prefLabelXl[0].properties.prefLabel?.[0].value;
-              const lang =
-                m.references.prefLabelXl[0].properties.prefLabel?.[0].lang;
+    if (
+      members.some((member) =>
+        member.references.prefLabelXl?.[0].properties.prefLabel
+          ?.filter((l) => l.lang)[0]
+          .value.includes(urlState.q)
+      )
+    ) {
+      tempMembers = tempMembers.filter((member) =>
+        member.references.prefLabelXl?.[0].properties.prefLabel
+          ?.filter((l) => l.lang)[0]
+          .value.includes(urlState.q)
+      );
+    }
 
-              return (
-                <div key={`${value}-${idx}`}>
-                  {value} ({lang}){comma}&nbsp;
-                </div>
-              );
-            }
-          } else if (m.references.prefLabelXl.length > 1) {
-            let value;
+    const membersListed = tempMembers.map((m, idx) => {
+      const comma =
+        idx < 4 && tempMembers.length > 1 && idx < tempMembers.length - 1
+          ? ','
+          : '';
 
-            m.references.prefLabelXl?.forEach((pLabelXl) => {
-              if (pLabelXl.properties.prefLabel?.[0].lang === i18n.language) {
-                value = pLabelXl.properties.prefLabel?.[0].value;
-              }
-            });
+      if (idx < 5 && m.references.prefLabelXl) {
+        if (m.references.prefLabelXl.length === 1) {
+          if (
+            m.references.prefLabelXl[0].properties.prefLabel?.[0].lang ===
+            i18n.language
+          ) {
+            const value =
+              m.references.prefLabelXl[0].properties.prefLabel?.[0].value;
 
-            if (value !== '') {
-              return (
-                <div key={`${value}-${idx}`}>
-                  {value}
-                  {comma}&nbsp;
-                </div>
-              );
-            } else {
-              value =
-                m.references.prefLabelXl?.[0].properties.prefLabel?.[0].value;
-              const lang =
-                m.references.prefLabelXl?.[0].properties.prefLabel?.[0].lang;
+            return (
+              <div key={`${value}-${idx}`}>
+                {urlState.q !== '' ? highlightCollectionMember(value) : value}
+                {comma}&nbsp;
+              </div>
+            );
+          } else {
+            const value =
+              m.references.prefLabelXl[0].properties.prefLabel?.[0].value;
+            const lang =
+              m.references.prefLabelXl[0].properties.prefLabel?.[0].lang;
 
-              return (
-                <div key={`${value}-${idx}`}>
-                  {value} ({lang}){comma}&nbsp;
-                </div>
-              );
-            }
+            return (
+              <div key={`${value}-${idx}`}>
+                {urlState.q !== '' ? highlightCollectionMember(value) : value} (
+                {lang}){comma}&nbsp;
+              </div>
+            );
           }
-        } else if (idx === 5) {
-          const surplus = members.length - idx;
-          return (
-            <div key={`surplus-${idx}`}>
-              + {surplus} {t('vocabulary-results-more')}
-            </div>
-          );
+        } else if (m.references.prefLabelXl.length > 1) {
+          let value;
+
+          m.references.prefLabelXl?.forEach((pLabelXl) => {
+            if (pLabelXl.properties.prefLabel?.[0].lang === i18n.language) {
+              value = pLabelXl.properties.prefLabel?.[0].value;
+            }
+          });
+
+          if (value !== '') {
+            return (
+              <div key={`${value}-${idx}`}>
+                {urlState.q !== '' ? highlightCollectionMember(value) : value}
+                {comma}&nbsp;
+              </div>
+            );
+          } else {
+            value =
+              m.references.prefLabelXl?.[0].properties.prefLabel?.[0].value;
+            const lang =
+              m.references.prefLabelXl?.[0].properties.prefLabel?.[0].lang;
+
+            return (
+              <div key={`${value}-${idx}`}>
+                {urlState.q !== '' ? highlightCollectionMember(value) : value} (
+                {lang}){comma}&nbsp;
+              </div>
+            );
+          }
         }
-      })
-    ) : (
-      <>{t('vocabulary-results-no-concepts')}</>
-    );
+      } else if (idx === 5) {
+        const surplus = tempMembers.length - idx;
+        return (
+          <div key={`surplus-${idx}`}>
+            + {surplus} {t('vocabulary-results-more')}
+          </div>
+        );
+      }
+    });
+
+    if (tempMembers.length < members.length && tempMembers.length < 5) {
+      membersListed.push(
+        <div key={`surplus-${members.length - tempMembers.length}`}>
+          + {members.length - tempMembers.length} {t('vocabulary-results-more')}
+        </div>
+      );
+    }
+
+    return membersListed;
   }
 
   function getLabel(
@@ -358,5 +388,16 @@ export default function SearchResults({
     }
 
     return t('terminology-search-no-definition');
+  }
+  function highlightCollectionMember(value?: string) {
+    if (!value) {
+      return value;
+    }
+
+    return (
+      <SanitizedTextContent
+        text={value.replaceAll(urlState.q, `<b>${urlState.q}</b>`)}
+      />
+    );
   }
 }

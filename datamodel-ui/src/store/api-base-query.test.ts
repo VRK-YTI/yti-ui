@@ -32,7 +32,7 @@ describe('axios base query', () => {
     };
 
     // any API call would be fine here
-    mock.onGet(/\/v1\/frontend\/vocabulary\?graphId=\d+/).reply((config) => {
+    mock.onGet(/\/api\/v1\/organizations/).reply((config) => {
       return [
         200,
         'JSESSIONID exists in headers: ' +
@@ -58,7 +58,7 @@ describe('axios base query', () => {
 
       // get the result from the API call
       const data = store.getState().organizationsApi.queries[
-        'getOrganizations()'
+        'getOrganizations(undefined)'
       ]?.data as string;
 
       return {

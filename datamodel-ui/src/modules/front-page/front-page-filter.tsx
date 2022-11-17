@@ -51,7 +51,7 @@ export default function FrontPageFilter({
         organizations={
           organizations?.['@graph']
             .map((org) => ({
-              labelText: org.prefLabel.filter(
+              labelText: org.prefLabel?.filter(
                 (l) => l['@language'] === i18n.language
               )[0]['@value'],
               uniqueItemId: org['@id'],

@@ -63,7 +63,7 @@ export default function FrontPage() {
           (c) =>
             organizations?.['@graph']
               .find((o) => o['@id'].replace('urn:uuid:', '') === c)
-              ?.prefLabel.filter((l) => l['@language'] === i18n.language)?.[0][
+              ?.prefLabel?.filter((l) => l['@language'] === i18n.language)?.[0][
               '@value'
             ] ?? ''
         )
