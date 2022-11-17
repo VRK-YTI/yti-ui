@@ -63,9 +63,9 @@ export default function FrontPage() {
           (c) =>
             organizations?.['@graph']
               .find((o) => o['@id'].replace('urn:uuid:', '') === c)
-              ?.prefLabel?.filter((l) => l['@language'] === i18n.language)?.[0][
-              '@value'
-            ] ?? ''
+              ?.prefLabel?.filter(
+                (l) => (l['@language'] ?? '') === i18n.language
+              )?.[0]?.['@value'] ?? ''
         )
         .filter((c) => c.length > 0);
 
@@ -74,9 +74,9 @@ export default function FrontPage() {
           (p) =>
             serviceCategories?.['@graph']
               .find((c) => c.identifier === p)
-              ?.label.filter((l) => l['@language'] === i18n.language)?.[0][
-              '@value'
-            ] ?? ''
+              ?.label.filter(
+                (l) => (l['@language'] ?? '') === i18n.language
+              )?.[0]?.['@value'] ?? ''
         )
         .filter((p) => p.length > 0);
 

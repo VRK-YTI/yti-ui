@@ -31,7 +31,8 @@ export default function FrontPageFilter({
   languages,
 }: FrontPageFilterProps) {
   const { t, i18n } = useTranslation('common');
-
+  console.log('organizations', organizations);
+  console.log('serviceCategories', serviceCategories);
   if (!organizations || !serviceCategories) {
     return <></>;
   }
@@ -51,9 +52,10 @@ export default function FrontPageFilter({
         organizations={
           organizations?.['@graph']
             .map((org) => ({
-              labelText: org.prefLabel?.filter(
-                (l) => l['@language'] === i18n.language
-              )[0]['@value'],
+              labelText:
+                org.prefLabel?.filter(
+                  (l) => l['@language'] === i18n.language
+                )[0]['@value'] ?? '',
               uniqueItemId: org['@id'],
             }))
             .sort((x, y) => x.labelText.localeCompare(y.labelText)) ?? []
@@ -115,9 +117,11 @@ export default function FrontPageFilter({
           serviceCategories?.['@graph']
             .map((g) => ({
               id: g['@id'],
-              name: g.label.filter((l) => l['@language'] === i18n.language)[0][
-                '@value'
-              ],
+              name: g.label
+                ? g.label.filter(
+                    (l) => (l['@language'] ?? '') === i18n.language
+                  )?.[0]?.['@value']
+                : '',
             }))
             .sort((x, y) => x.name.localeCompare(y.name)) ?? []
         }
