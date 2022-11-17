@@ -376,7 +376,10 @@ export default function TermForm({
                   (ts) =>
                     ts.uniqueItemId === term.termConjugation ||
                     ts.labelText === term.termConjugation
-                )[0]
+                )[0] ?? {
+                  uniqueItemdId: term.termConjugation,
+                  labelText: term.termConjugation,
+                }
               : undefined
           }
           onItemSelect={(e) =>
