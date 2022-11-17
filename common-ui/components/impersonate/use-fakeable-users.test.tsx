@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react-hooks';
 import axios from 'axios';
-import { clearSWRCache } from '@app/tests/test-utils';
+import { clearSWRCache } from '../../utils/test-utils';
 import useFakeableUsers from './use-fakeable-users';
 
 jest.mock('axios');

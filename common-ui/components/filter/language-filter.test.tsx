@@ -23,7 +23,21 @@ describe('language-filter', () => {
     render(
       <LanguageFilter
         labelText="filter-label"
-        languages={{ fi: 1, en: 1, sv: 2 }}
+        languages={[
+          {
+            labelText: 'fi',
+            uniqueItemId: 'fi'
+          },
+          {
+            labelText: 'en',
+            uniqueItemId: 'en'
+          },
+          {
+            labelText: 'sv',
+            uniqueItemId: 'sv'
+          }
+
+        ]}
       />,
       {
         wrapper: themeProvider,

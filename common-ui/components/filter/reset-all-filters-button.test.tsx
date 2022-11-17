@@ -12,7 +12,7 @@ describe('reset-all-filters-button', () => {
     render(<ResetAllFiltersButton />, { wrapper: themeProvider });
 
     expect(
-      screen.getByText('tr-vocabulary-filter-remove-all')
+      screen.getByText('tr-filter-remove-all')
     ).toBeInTheDocument();
   });
 
@@ -22,7 +22,7 @@ describe('reset-all-filters-button', () => {
     render(<ResetAllFiltersButton />, { wrapper: themeProvider });
 
     expect(
-      screen.queryByText('tr-vocabulary-filter-remove-all')
+      screen.queryByText('tr-filter-remove-all')
     ).not.toBeInTheDocument();
   });
 });

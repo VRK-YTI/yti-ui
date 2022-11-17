@@ -1,6 +1,6 @@
 import useUrlState, {
   initialUrlState,
-} from '@app/common/utils/hooks/use-url-state';
+} from '../../utils/hooks/use-url-state';
 import { useTranslation } from 'next-i18next';
 import { MultiSelect } from 'suomifi-ui-components';
 import { DropdownWrapper } from './filter.styles';

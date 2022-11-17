@@ -5,13 +5,13 @@ import IconButton from '../icon-button';
 import { useBreakpoints } from '../media-query';
 import { CloseButton } from './header-search.styles';
 import { useRouter } from 'next/router';
-// import useUrlState, {
-//   initialUrlState,
-// } from '@app/common/utils/hooks/use-url-state';
-// import {
-//   SEARCH_FIELD_PATTERN,
-//   TEXT_INPUT_MAX,
-// } from '@app/common/utils/constants';
+import useUrlState, {
+  initialUrlState,
+} from '../../utils/hooks/use-url-state';
+import {
+  SEARCH_FIELD_PATTERN,
+  TEXT_INPUT_MAX,
+} from '../../utils/constants';
 
 export interface HeaderSearchProps {
   isSearchOpen: boolean;
@@ -27,24 +27,24 @@ export default function HeaderSearch({
   const router = useRouter();
   const isSearchPage = router.route === '/';
 
-  // const { urlState, patchUrlState } = useUrlState();
-  // const q = urlState.q;
-  // const [searchInputValue, setSearchInputValue] = useState<string>(
-  //   isSearchPage ? q : ''
-  // );
+  const { urlState, patchUrlState } = useUrlState();
+  const q = urlState.q;
+  const [searchInputValue, setSearchInputValue] = useState<string>(
+    isSearchPage ? q : ''
+  );
 
   const handleChange = (val: string) => {
-    // if (val.match(SEARCH_FIELD_PATTERN)) {
-    //   setSearchInputValue(val ?? '');
-    // }
-    // if (val === '') search();
+    if (val.match(SEARCH_FIELD_PATTERN)) {
+      setSearchInputValue(val ?? '');
+    }
+    if (val === '') search();
   };
 
-  // useEffect(() => {
-  //   if (isSearchPage) {
-  //     setSearchInputValue(q);
-  //   }
-  // }, [q, setSearchInputValue, isSearchPage]);
+  useEffect(() => {
+    if (isSearchPage) {
+      setSearchInputValue(q);
+    }
+  }, [q, setSearchInputValue, isSearchPage]);
 
   if (isSmall && !isSearchOpen) {
     return (
@@ -61,7 +61,7 @@ export default function HeaderSearch({
       <SearchInput
         clearButtonLabel={t('terminology-search-clear')}
         labelText=""
-        // value={searchInputValue ?? ''}
+        value={searchInputValue ?? ''}
         labelMode="hidden"
         searchButtonLabel={t('terminology-search')}
         visualPlaceholder={t('terminology-search-placeholder')}
@@ -70,7 +70,7 @@ export default function HeaderSearch({
           if (typeof value === 'string') search(value);
         }}
         onChange={(value) => handleChange(value?.toString() ?? '')}
-        // maxLength={TEXT_INPUT_MAX}
+        maxLength={TEXT_INPUT_MAX}
         id="top-header-search"
       />
       {isSmall ? (
@@ -85,20 +85,20 @@ export default function HeaderSearch({
   );
 
   function search(q?: string) {
-    // if (isSearchPage) {
-    //   patchUrlState({
-    //     q: q ?? "",
-    //     page: initialUrlState.page,
-    //   });
-    // } else {
-    //   return router.push(
-    //     {
-    //       pathname: "/",
-    //       query: q ? { q } : {},
-    //     },
-    //     undefined,
-    //     { shallow: true }
-    //   );
-    // }
+    if (isSearchPage) {
+      patchUrlState({
+        q: q ?? '',
+        page: initialUrlState.page,
+      });
+    } else {
+      return router.push(
+        {
+          pathname: '/',
+          query: q ? { q } : {},
+        },
+        undefined,
+        { shallow: true }
+      );
+    }
   }
 }

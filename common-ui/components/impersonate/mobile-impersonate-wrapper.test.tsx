@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import MobileImpersonateWrapper from './mobile-impersonate-wrapper';
 import useFakeableUsers, { UseFakeableUsersResult } from './use-fakeable-users';
-import { themeProvider } from '@app/tests/test-utils';
+import { themeProvider } from '../../utils/test-utils';
 
 jest.mock('./use-fakeable-users');
 const mockedUseFakeableUsers = useFakeableUsers as jest.MockedFunction<
