@@ -37,7 +37,7 @@ export default function IndexPage(props: IndexPageProps) {
           description={t('service-description')}
         />
 
-        <FrontPage />
+        {/* <FrontPage /> */}
       </Layout>
     </CommonContextProvider>
   );
