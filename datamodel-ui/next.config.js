@@ -44,6 +44,13 @@ if (process.env.REWRITE_PROFILE === 'local') {
       ];
     },
   };
+  config = {
+    ...config,
+    env: {
+      DATAMODEL_API_URL: process.env.DATAMODEL_API_URL,
+      SECRET_COOKIE_PASSWORD: process.env.SECRET_COOKIE_PASSWORD,
+    }
+  };
 }
 
 const nextConfig = withTM(config);
