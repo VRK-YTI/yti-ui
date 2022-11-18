@@ -12,6 +12,69 @@ let config = {
   i18n,
 };
 
+const isProd = process.env.NODE_ENV === 'production';
+
+const ProductionContentSecurityPolicy = [
+  "base-uri 'self';",
+  "default-src 'self';",
+  "font-src 'self';",
+  "img-src 'self' data:;",
+  "script-src 'self' 'unsafe-inline';",
+  "connect-src 'self';",
+  "style-src 'self' 'unsafe-inline' data:;",
+  "frame-src 'self';",
+];
+
+const ContentSecurityPolicy = [
+  "base-uri 'self';",
+  "default-src 'self';",
+  "font-src 'self';",
+  "img-src 'self' 'unsafe-eval' 'unsafe-inline' data:;",
+  "script-src 'self' 'unsafe-inline' 'unsafe-eval';",
+  "connect-src 'self';",
+  "style-src 'self' 'unsafe-inline' data:;",
+  "frame-src 'self';",
+];
+
+const headers = [
+  {
+    source: '/:path*',
+    headers: [
+      {
+        key: 'Content-Security-Policy',
+        value: isProd
+          ? ProductionContentSecurityPolicy.join(' ')
+          : ContentSecurityPolicy.join(' '),
+      },
+      {
+        key: 'Referrer-Policy',
+        value: 'same-origin',
+      },
+      {
+        key: 'Strict-Transport-Security',
+        value: 'max-age=31536000; includeSubDomains',
+      },
+      {
+        key: 'X-Content-Type-Options',
+        value: 'nosniff',
+      },
+      {
+        key: 'X-Frame-Options',
+        value: 'SAMEORIGIN',
+      },
+      {
+        key: 'X-XSS-Protection',
+        value: '1; mode=block',
+      },
+    ],
+  },
+];
+
+config = {
+  ...config,
+  headers: headers
+};
+
 if (process.env.REWRITE_PROFILE === 'local') {
   // if run locally in a development environment, the API may run either as a
   // container or as a process, but will always listen on the same port
