@@ -99,7 +99,7 @@ module.exports = () => {
         return [
           {
             source: '/datamodel-api/:path*',
-            destination: 'http://yti-datamodel-api:9004/datamodel-api/:path*',
+            destination: 'http://yti-auth-proxy/datamodel-api/:path*',
           },
         ];
       },
