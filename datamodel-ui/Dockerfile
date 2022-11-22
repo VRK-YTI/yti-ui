@@ -6,7 +6,7 @@ FROM node:16.13.1-alpine3.14@sha256:a9b9cb880fa429b0bea899cd3b1bc081ab7277cc97e6
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
-COPY datamodel-ui ./datamodel-ui/
+COPY datamodel-ui/package.json ./datamodel-ui/
 COPY common-ui ./common-ui
 COPY package.json package-lock.json ./
 
@@ -36,9 +36,14 @@ COPY datamodel-ui ./datamodel-ui
 COPY --from=deps /app/datamodel-ui/node_modules ./datamodel-ui/node_modules
 COPY --from=deps /app/common-ui ./common-ui
 COPY --from=deps /app/node_modules ./node_modules
-
 WORKDIR /app/datamodel-ui
 
+# Removing env.local when running locally
+RUN if [ -f ".env.local" ]; then \
+    echo ".env.local found!"; \
+    rm .env.local; \
+    echo ".env.local removed."; \
+fi
 
 # Create version.txt
 RUN echo "$VERSION" > public/version.txt
