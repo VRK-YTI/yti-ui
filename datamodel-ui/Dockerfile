@@ -74,6 +74,7 @@ COPY --from=builder /app/datamodel-ui/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/datamodel-ui/.next ./.next
 COPY --from=builder /app/datamodel-ui/node_modules /app/node_modules ./node_modules/
 COPY --from=builder /app/datamodel-ui/package.json ./package.json
+COPY --from=builder /app/datamodel-ui/.env ./
 COPY --from=builder /app/common-ui ../common-ui
 
 # COPY --from=builder /app/datamodel-ui/junit.xml ./

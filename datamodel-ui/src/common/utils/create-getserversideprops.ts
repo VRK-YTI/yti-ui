@@ -97,21 +97,13 @@ export function createCommonGetServerSideProps<
           props: {
             ...resultsProps,
             ...(await serverSideTranslations(locale ?? 'fi', [
-              'admin',
-              'alert',
-              'collection',
               'common',
-              'concept',
-              'own-information',
             ])),
             isSSRMobile: Boolean(
               userAgent.match(
                 /Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i
               )
             ),
-            isMatomoEnabled: process.env.MATOMO_ENABLED === 'true',
-            matomoUrl: process.env.MATOMO_URL ?? null,
-            matomoSiteId: process.env.MATOMO_SITE_ID ?? null,
           },
         };
       }

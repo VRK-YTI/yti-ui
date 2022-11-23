@@ -89,6 +89,7 @@ COPY --from=builder /app/terminology-ui/node_modules /app/node_modules ./node_mo
 COPY --from=builder /app/terminology-ui/package.json ./package.json
 COPY --from=builder /app/terminology-ui/junit.xml ./
 COPY --from=builder /app/terminology-ui/coverage ./coverage
+COPY --from=builder /app/terminology-ui/.env ./
 COPY --from=builder /app/common-ui ../common-ui
 
 USER nextjs

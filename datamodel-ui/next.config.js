@@ -99,16 +99,9 @@ module.exports = () => {
         return [
           {
             source: '/datamodel-api/:path*',
-            destination: 'http://yti-auth-proxy/datamodel-api/:path*',
+            destination: 'http://yti-datamodel-api:9004/datamodel-api/:path*',
           },
         ];
-      },
-    };
-    config = {
-      ...config,
-      env: {
-        DATAMODEL_API_URL: process.env.DATAMODEL_API_URL,
-        SECRET_COOKIE_PASSWORD: process.env.SECRET_COOKIE_PASSWORD,
       },
     };
   }

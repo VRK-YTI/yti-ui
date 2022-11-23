@@ -139,15 +139,6 @@ module.exports = (phase, { defaultConfig }) => {
         ];
       },
     };
-    config = {
-      ...config,
-      env: {
-        TERMINOLOGY_API_URL: process.env.TERMINOLOGY_API_URL,
-        MESSAGING_API_URL: process.env.MESSAGING_API_URL,
-        AUTH_PROXY_URL: process.env.AUTH_PROXY_URL,
-        SECRET_COOKIE_PASSWORD: process.env.SECRET_COOKIE_PASSWORD,
-      }
-    };
   }
 
   return withTM(config);
