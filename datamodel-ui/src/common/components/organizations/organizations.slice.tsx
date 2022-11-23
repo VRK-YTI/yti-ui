@@ -18,6 +18,16 @@ export const organizationsApi = createApi({
         url: '/organizations',
         method: 'GET',
       }),
+      transformResponse: (response: Organizations) => {
+        const formattedResponse = response;
+
+        formattedResponse['@graph'] = response['@graph'].map((g) => ({
+          ...g,
+          prefLabel: Array.isArray(g.prefLabel) ? g.prefLabel : [g.prefLabel],
+        }));
+
+        return formattedResponse;
+      },
     }),
   }),
 });
