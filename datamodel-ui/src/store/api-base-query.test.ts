@@ -7,9 +7,9 @@ import {
 import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import {
-  getOrganizations,
+  getServiceCategories,
   getRunningQueriesThunk,
-} from '@app/common/components/organizations/organizations.slice';
+} from '@app/common/components/serviceCategories/serviceCategories.slice';
 
 describe('axios base query', () => {
   const mock = new MockAdapter(axios, { onNoMatch: 'throwException' });
@@ -32,7 +32,7 @@ describe('axios base query', () => {
     };
 
     // any API call would be fine here
-    mock.onGet(/\/api\/v1\/organizations/).reply((config) => {
+    mock.onGet(/\/api\/v1\/serviceCategories/).reply((config) => {
       return [
         200,
         'JSESSIONID exists in headers: ' +
@@ -53,12 +53,12 @@ describe('axios base query', () => {
       req.session.save();
 
       // initiate API call
-      store.dispatch(getOrganizations.initiate());
+      store.dispatch(getServiceCategories.initiate());
       await Promise.all(store.dispatch(getRunningQueriesThunk()));
 
       // get the result from the API call
-      const data = store.getState().organizationsApi.queries[
-        'getOrganizations(undefined)'
+      const data = store.getState().serviceCategoriesApi.queries[
+        'getServiceCategories(undefined)'
       ]?.data as string;
 
       return {
