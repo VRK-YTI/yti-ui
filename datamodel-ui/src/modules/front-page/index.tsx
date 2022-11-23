@@ -53,7 +53,15 @@ export default function FrontPage() {
   }, [searchModels]);
 
   const data: SearchResultData[] = useMemo(() => {
-    if (!searchModels || !organizations || !serviceCategories) {
+    if (
+      !searchModels ||
+      !organizations ||
+      !serviceCategories ||
+      !organizations['@graph'] ||
+      organizations['@graph'].length < 1 ||
+      !serviceCategories['@graph'] ||
+      serviceCategories['@graph'].length < 1
+    ) {
       return [];
     }
 

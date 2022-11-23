@@ -44,30 +44,29 @@ export default function IndexPage(props: IndexPageProps) {
 }
 
 export const getServerSideProps = createCommonGetServerSideProps(
-  // Disabling SSR for now
-  // async ({ store, query }) => {
-  //   const urlState = Object.assign({}, initialUrlState);
+  async ({ store, query }) => {
+    const urlState = Object.assign({}, initialUrlState);
 
-  //   if (query) {
-  //     if (query.q !== undefined) {
-  //       urlState.q = Array.isArray(query.q) ? query.q[0] : query.q;
-  //     }
+    if (query) {
+      if (query.q !== undefined) {
+        urlState.q = Array.isArray(query.q) ? query.q[0] : query.q;
+      }
 
-  //     if (query.lang !== undefined) {
-  //       urlState.lang = Array.isArray(query.lang) ? query.lang[0] : query.lang;
-  //     }
-  //   }
+      if (query.lang !== undefined) {
+        urlState.lang = Array.isArray(query.lang) ? query.lang[0] : query.lang;
+      }
+    }
 
-  //   store.dispatch(getServiceCategories.initiate());
-  //   store.dispatch(getOrganizations.initiate());
-  //   store.dispatch(getSearchModels.initiate({ urlState }));
+    store.dispatch(getServiceCategories.initiate());
+    store.dispatch(getOrganizations.initiate());
+    store.dispatch(getSearchModels.initiate({ urlState }));
 
-  //   await Promise.all(
-  //     store.dispatch(getServiceCategoriesRunningQueriesThunk())
-  //   );
-  //   await Promise.all(store.dispatch(getOrganizationsRunningQueriesThunk()));
-  //   await Promise.all(store.dispatch(getSearchModelsRunningQueriesThunk()));
+    await Promise.all(
+      store.dispatch(getServiceCategoriesRunningQueriesThunk())
+    );
+    await Promise.all(store.dispatch(getOrganizationsRunningQueriesThunk()));
+    await Promise.all(store.dispatch(getSearchModelsRunningQueriesThunk()));
 
-  //   return {};
-  // }
+    return {};
+  }
 );
