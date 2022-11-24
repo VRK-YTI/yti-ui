@@ -38,6 +38,7 @@ import useUrlState from '@app/common/utils/hooks/use-url-state';
 import axios from 'axios';
 import { useStoreDispatch } from '@app/store';
 import { setAlert } from '../alert/alert.slice';
+import StatusMassEdit from '../status-mass-edit';
 
 const Subscription = dynamic(
   () => import('@app/common/components/subscription/subscription')
@@ -243,6 +244,8 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
                         {t('add-new-collection', { ns: 'admin' })}
                       </Button>
                     </Link>
+
+                    <StatusMassEdit terminologyId={terminologyId} />
                   </ActionBlock>
                 </BasicBlockExtraWrapper>
               }
