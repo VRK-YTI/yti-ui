@@ -105,22 +105,24 @@ export default function FileUpload({
             {importStatus.data?.status.toLowerCase() === 'success' ? (
               <>
                 <SuccessIndicator icon="check" color="white" />
-                <Text variant="bold">100% {t('percent-done')}</Text>
+                <Text variant="bold">{t('percent-done', { count: 100 })}</Text>
               </>
             ) : (
               <>
                 <DownloadIndicator />
                 <Text variant="bold">
-                  {importStatus.data?.processingProgress !== undefined &&
-                  importStatus.data?.processingTotal !== undefined &&
-                  importStatus.data?.processingTotal !== 0
-                    ? Math.floor(
-                        (importStatus.data?.processingProgress /
-                          importStatus.data?.processingTotal) *
-                          100
-                      )
-                    : 0}
-                  % {t('percent-done')}
+                  {t('percent-done', {
+                    count:
+                      importStatus.data?.processingProgress !== undefined &&
+                      importStatus.data?.processingTotal !== undefined &&
+                      importStatus.data?.processingTotal !== 0
+                        ? Math.floor(
+                            (importStatus.data?.processingProgress /
+                              importStatus.data?.processingTotal) *
+                              100
+                          )
+                        : 0,
+                  })}
                 </Text>
               </>
             )}
