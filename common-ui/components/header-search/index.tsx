@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { SearchInput } from 'suomifi-ui-components';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-i18next';
 import IconButton from '../icon-button';
 import { useBreakpoints } from '../media-query';
 import { CloseButton } from './header-search.styles';

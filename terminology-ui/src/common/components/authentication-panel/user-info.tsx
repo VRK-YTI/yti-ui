@@ -1,5 +1,5 @@
 import { Link, Text } from 'suomifi-ui-components';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-i18next';
 import { UserInfoWrapper } from './authentication-panel.styles';
 import { Breakpoint } from 'yti-common-ui/media-query';
 import { useSelector } from 'react-redux';

@@ -13,6 +13,7 @@ node_modules
 */coverage
 
 # next.js
+.next/
 */.next/
 /out/
 #where does this come from

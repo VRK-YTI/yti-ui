@@ -80,7 +80,6 @@ export default withIronSessionApiRoute(
       // This works since the API is already in the same domain,
       // just has a more specific Path set
       if (response.headers['set-cookie']) {
-
         // Collect cookies from Set-Cookie into an object.
         // These will be saved in the session for later use.
         (response.headers['set-cookie'] as string[])

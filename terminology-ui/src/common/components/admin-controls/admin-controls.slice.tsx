@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { HYDRATE } from 'next-redux-wrapper';
 import { AppState, AppThunk } from '@app/store';
+import isHydrate from '@app/store/isHydrate';
 
 interface AdminControlsState {
   isAdminControlsDisabled: boolean;
@@ -21,13 +21,13 @@ export const adminControlsSlice = createSlice({
       };
     },
   },
-  extraReducers: {
-    [HYDRATE]: (state, action) => {
+  extraReducers: (builder) => {
+    builder.addMatcher(isHydrate, (state, action) => {
       return {
         ...state,
         ...action.payload.adminControls,
       };
-    },
+    });
   },
 });
 

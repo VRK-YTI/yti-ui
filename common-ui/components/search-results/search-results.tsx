@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-i18next';
 import { useBreakpoints } from '../media-query';
 import SearchCountTags from './search-count-tags';
 import { CardConcepts, ResultWrapper } from './search-results.styles';
