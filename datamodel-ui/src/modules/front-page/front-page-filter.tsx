@@ -54,7 +54,7 @@ export default function FrontPageFilter({
               labelText:
                 org.prefLabel?.filter(
                   (l) => l['@language'] === i18n.language
-                )[0]['@value'] ?? '',
+                )?.[0]?.['@value'] ?? '',
               uniqueItemId: org['@id'],
             }))
             .sort((x, y) => x.labelText.localeCompare(y.labelText)) ?? []
