@@ -10,7 +10,7 @@ import {
 } from './layout.styles';
 import { useTranslation } from 'next-i18next';
 import Footer from '../footer';
-// import SmartHeader from '@app/modules/smart-header';
+import SmartHeader from '../smart-header';
 import { useBreakpoints } from '../media-query';
 import SkipLink from '../skip-link';
 // import Alerts from '@app/common/components/alert';
@@ -28,8 +28,6 @@ export default function Layout({
   const { breakpoint } = useBreakpoints();
   const { publicRuntimeConfig } = getConfig();
 
-  // TODO: MONOREPO Add missing dependencies
-
   return (
     <ThemeProvider theme={lightTheme}>
       {/* <Matomo /> */}
@@ -43,7 +41,7 @@ export default function Layout({
       <SkipLink href="#main">{t('skip-link-main')}</SkipLink>
 
       <SiteContainer>
-        {/* <SmartHeader /> */}
+        <SmartHeader />
 
         <ContentContainer>
           {/* <Alerts /> */}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import HoverDropdown from './hover-dropdown';
+import HoverDropdown from '.';
 import { themeProvider } from '@app/tests/test-utils';
 
 describe('hoverDropdown', () => {

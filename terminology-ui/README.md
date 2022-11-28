@@ -35,7 +35,7 @@ REWRITE_PROFILE=local
 SECRET_COOKIE_PASSWORD=<random string min 32 characters>
 ```
 
-Add the following to `.vscode/settings.json` in [yti-terminology-ui] root directory.
+Add the following to `.vscode/settings.json` in [yti-terminology-ui] root directory. 
 This is necessary for VSCodes eslint to work correctly.
 
 ```
