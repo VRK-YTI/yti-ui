@@ -1,3 +1,4 @@
+import { StatusCountsObjects } from '@app/common/interfaces/status-counts.interface';
 import useUrlState from '@app/common/utils/hooks/use-url-state';
 import { translateStatus } from '@app/common/utils/translation-helpers';
 import { DownloadIndicator } from '@app/modules/new-terminology/new-terminology.styles';
@@ -17,6 +18,7 @@ import {
   SingleSelectData,
   Text,
 } from 'suomifi-ui-components';
+import { useGetStatusCountsQuery } from '../counts/counts.slice';
 import { useModifyStatusesMutation } from '../modify-statuses/modify-statuses.slice';
 import { useGetConceptResultQuery } from '../vocabulary/vocabulary.slice';
 import {
@@ -52,6 +54,8 @@ export default function StatusMassEdit({ terminologyId }: StatusMassEditProps) {
     chosenTargetTypeInitial
   );
   const [userPosted, setUserPosted] = useState(false);
+  const { data: statusCounts, refetch: refetchCounts } =
+    useGetStatusCountsQuery(terminologyId);
   const { refetch } = useGetConceptResultQuery({
     id: terminologyId,
     // Setting type to concept to correctly fetch updated concept
@@ -62,6 +66,7 @@ export default function StatusMassEdit({ terminologyId }: StatusMassEditProps) {
 
   const handleClose = () => {
     refetch();
+    refetchCounts();
     setVisible(false);
     setChosenStartState(null);
     setChosenEndState(null);
@@ -135,19 +140,39 @@ export default function StatusMassEdit({ terminologyId }: StatusMassEditProps) {
               noItemsText={t('start-states-not-available')}
               items={[
                 {
-                  labelText: t('draft', { count: 0 }),
+                  labelText: t('draft', {
+                    count: statusCounts
+                      ? statusCounts.counts.concepts.DRAFT +
+                        statusCounts.counts.terms.DRAFT
+                      : 0,
+                  }),
                   uniqueItemId: 'DRAFT',
                 },
                 {
-                  labelText: t('valid', { count: 0 }),
+                  labelText: t('valid', {
+                    count: statusCounts
+                      ? statusCounts.counts.concepts.VALID +
+                        statusCounts.counts.terms.VALID
+                      : 0,
+                  }),
                   uniqueItemId: 'VALID',
                 },
                 {
-                  labelText: t('superseded', { count: 0 }),
+                  labelText: t('superseded', {
+                    count: statusCounts
+                      ? statusCounts.counts.concepts.SUPERSEDED +
+                        statusCounts.counts.terms.SUPERSEDED
+                      : 0,
+                  }),
                   uniqueItemId: 'SUPERSEDED',
                 },
                 {
-                  labelText: t('retired', { count: 0 }),
+                  labelText: t('retired', {
+                    count: statusCounts
+                      ? statusCounts.counts.concepts.RETIRED +
+                        statusCounts.counts.terms.RETIRED
+                      : 0,
+                  }),
                   uniqueItemId: 'RETIRED',
                 },
               ]}
@@ -161,14 +186,26 @@ export default function StatusMassEdit({ terminologyId }: StatusMassEditProps) {
                     handleSetChoseTargetType('concept', checkboxState)
                   }
                 >
-                  {t('concepts', { count: 0 })}
+                  {t('concepts', {
+                    count: statusCounts
+                      ? statusCounts.counts.concepts[
+                          chosenStartState as keyof StatusCountsObjects
+                        ]
+                      : 0,
+                  })}
                 </Checkbox>
                 <Checkbox
                   onClick={({ checkboxState }) =>
                     handleSetChoseTargetType('term', checkboxState)
                   }
                 >
-                  {t('terms', { count: 0 })}
+                  {t('terms', {
+                    count: statusCounts
+                      ? statusCounts.counts.terms[
+                          chosenStartState as keyof StatusCountsObjects
+                        ]
+                      : 0,
+                  })}
                 </Checkbox>
               </CheckboxGroup>
             )}
