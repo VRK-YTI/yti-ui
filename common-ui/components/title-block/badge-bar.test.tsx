@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import BadgeBar from './badge-bar';
-import { themeProvider } from '../../../tests/test-utils';
+import { themeProvider } from '../../utils/test-utils';
 
 describe('badge bar', () => {
   it('should render one item without separators', () => {

@@ -40,10 +40,16 @@ import Link from 'next/link';
 import { translateStatus } from '@app/common/utils/translation-helpers';
 import isEmail from 'validator/lib/isEmail';
 import RemovalModal from '@app/common/components/removal-modal';
+import { Term } from '@app/common/interfaces/term.interface';
 
 export interface ConceptProps {
   terminologyId: string;
   conceptId: string;
+}
+
+interface TermBlockType {
+  term: Term;
+  type: string;
 }
 
 export default function Concept({ terminologyId, conceptId }: ConceptProps) {
@@ -63,17 +69,35 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
     property: getProperty('prefLabel', concept?.references.prefLabelXl),
     language: i18n.language,
   });
+  const status =
+  getPropertyValue({ property: concept?.properties.status }) || 'DRAFT';
+  const email = getPropertyValue({ property: terminology?.properties.contact });
+
+  // Prioritizes Finnish and Swedish over other languages
+  function compareLocales(t1: TermBlockType, t2: TermBlockType): number {
+    const t1Lang = t1.term.properties.prefLabel?.[0].lang.toLowerCase() ?? '';
+    const t2Lang = t2.term.properties.prefLabel?.[0].lang.toLowerCase() ?? '';
+
+    if (t1Lang === 'fi' || t2Lang === 'fi') {
+      return t1Lang === 'fi' ? -1 : 1;
+    }
+
+    if (t1Lang === 'sv' ||  t2Lang === 'sv') {
+      return t1Lang === 'sv' ? -1 : 1;
+    }
+
+    if (t1Lang !== t2Lang) {
+      return t1Lang > t2Lang ? 1 : -1;
+    }
+
+    return 0;
+  }
 
   useEffect(() => {
     if (concept) {
       dispatch(setTitle(prefLabel ?? ''));
     }
   }, [concept, dispatch, prefLabel]);
-
-  const status =
-    getPropertyValue({ property: concept?.properties.status }) || 'DRAFT';
-
-  const email = getPropertyValue({ property: terminology?.properties.contact });
 
   if (conceptError) {
     return (
@@ -166,7 +190,7 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
                 term,
                 type: t('field-terms-hidden'),
               })),
-            ]}
+            ].sort((t1, t2) => compareLocales(t1, t2))}
           />
 
           <MultilingualPropertyBlock

@@ -2,10 +2,7 @@
 
 import styled from 'styled-components';
 import { Breakpoint } from '../media-query';
-import {
-  resolve,
-  small,
-} from '../media-query/styled-helpers';
+import { resolve, small } from '../media-query/styled-helpers';
 
 export const MarginContainer = styled.div<{ $breakpoint: Breakpoint }>`
   max-width: 1100px;

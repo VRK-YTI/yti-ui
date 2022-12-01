@@ -1,5 +1,4 @@
 import React from 'react';
-import CommonWrapper from '../wrapper';
 import { BadgeBarWrapper } from './title-block.styles';
 
 export interface BadgeBarProps {
@@ -19,4 +18,3 @@ function BadgeBar({ children, ...rest }: BadgeBarProps) {
   );
 }
 
-export default CommonWrapper(BadgeBar)
