@@ -118,11 +118,11 @@ export default function FrontPageFilter({
           serviceCategories?.['@graph']
             .map((g) => ({
               id: g['@id'],
-              name: g.label
-                ? g.label.filter(
-                    (l) => (l['@language'] ?? '') === i18n.language
-                  )?.[0]?.['@value']
-                : '',
+              name: getPropertyLanguageVersion({
+                data: g.label,
+                lang: i18n.language,
+                appendLocale: true,
+              }),
             }))
             .sort((x, y) => x.name.localeCompare(y.name)) ?? []
         }

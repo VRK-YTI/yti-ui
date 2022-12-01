@@ -30,7 +30,7 @@ export function getLanguageVersion({
 }
 
 interface getPropertyLanguageVersionProps {
-  data: {
+  data?: {
     '@language': string;
     '@value': string;
   }[];
