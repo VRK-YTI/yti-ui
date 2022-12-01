@@ -95,8 +95,6 @@ export default function TermModal({ data }: TermModalProps) {
             t('term-modal-equivalency'),
             data.term.properties.termEquivalency?.[0].value
           )}
-          {/* TODO: Termi, john vastaavuus liittyy isn't probably implemented yet*/}
-          {/* {renderInfo('Termi, johon vastaavuus liittyy', data.term.referrers.prefLabel?.[0].properties.wordClas?.[0].value)} */}
           {renderInfo(
             t('term-modal-source'),
             data.term.properties.source?.map((source) => source.value)
