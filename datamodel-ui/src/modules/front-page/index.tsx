@@ -13,7 +13,7 @@ import SearchResults, {
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import { useGetSearchModelsQuery } from '@app/common/components/searchModels/searchModels.slice';
-import getLanguageVersion from '@app/common/utils/get-language-version';
+import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { Modal, ModalContent, SingleSelectData } from 'suomifi-ui-components';
 import useUrlState from 'yti-common-ui/utils/hooks/use-url-state';
