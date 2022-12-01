@@ -27,22 +27,22 @@ export default function TermExpander({
     term.language,
     t
   )} ${term.language.toUpperCase()}`;
-  const primaryText = `${term.prefLabel} ${term.termType !== 'recommended-term'
+  const primaryText = `${term.prefLabel} ${
+    term.termType !== 'recommended-term'
       ? `- ${translateTermType(term.termType, t)}`
       : ''
-    } - ${t('statuses.draft', {
-      ns: 'common',
-    })}`;
+  } - ${t('statuses.draft', {
+    ns: 'common',
+  })}`;
 
   const displayIcon =
     (errors.termPrefLabel && !term.prefLabel) ||
     (errors.editorialNote &&
       term.editorialNote.filter((n) => !n.value || n.value === '').length >
-      0) ||
+        0) ||
     (errors.termConjugation &&
       term.termConjugation &&
-      !['singulary', 'plural'].includes(term.termConjugation)
-    );
+      !['singular', 'plural'].includes(term.termConjugation));
 
   return (
     <Expander>
