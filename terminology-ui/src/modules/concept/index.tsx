@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   ExternalLink,
@@ -53,7 +53,18 @@ interface TermBlockType {
 }
 
 export default function Concept({ terminologyId, conceptId }: ConceptProps) {
+  const { t, i18n } = useTranslation('concept');
   const { breakpoint } = useBreakpoints();
+  const dispatch = useStoreDispatch();
+  const router = useRouter();
+  const [termBlockData, setTermBlockData] = useState<
+    | {
+        term: Term;
+        type: string;
+      }[]
+    | undefined
+  >();
+
   const { data: terminology, error: terminologyError } = useGetVocabularyQuery({
     id: terminologyId,
   });
@@ -61,16 +72,13 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
     terminologyId,
     conceptId,
   });
-  const { t, i18n } = useTranslation('concept');
-  const dispatch = useStoreDispatch();
-  const router = useRouter();
 
   const prefLabel = getPropertyValue({
     property: getProperty('prefLabel', concept?.references.prefLabelXl),
     language: i18n.language,
   });
   const status =
-  getPropertyValue({ property: concept?.properties.status }) || 'DRAFT';
+    getPropertyValue({ property: concept?.properties.status }) || 'DRAFT';
   const email = getPropertyValue({ property: terminology?.properties.contact });
 
   // Prioritizes Finnish and Swedish over other languages
@@ -82,7 +90,7 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
       return t1Lang === 'fi' ? -1 : 1;
     }
 
-    if (t1Lang === 'sv' ||  t2Lang === 'sv') {
+    if (t1Lang === 'sv' || t2Lang === 'sv') {
       return t1Lang === 'sv' ? -1 : 1;
     }
 
@@ -96,8 +104,35 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
   useEffect(() => {
     if (concept) {
       dispatch(setTitle(prefLabel ?? ''));
+
+      if (!termBlockData) {
+        setTermBlockData(
+          [
+            ...(concept.references.prefLabelXl ?? []).map((term) => ({
+              term,
+              type: t('field-terms-preferred'),
+            })),
+            ...(concept.references.altLabelXl ?? []).map((term) => ({
+              term,
+              type: t('field-terms-alternative'),
+            })),
+            ...(concept.references.notRecommendedSynonym ?? []).map((term) => ({
+              term,
+              type: t('field-terms-non-recommended'),
+            })),
+            ...(concept.references.searchTerm ?? []).map((term) => ({
+              term,
+              type: t('field-terms-search-term'),
+            })),
+            ...(concept.references.hiddenTerm ?? []).map((term) => ({
+              term,
+              type: t('field-terms-hidden'),
+            })),
+          ].sort((t1, t2) => compareLocales(t1, t2))
+        );
+      }
     }
-  }, [concept, dispatch, prefLabel]);
+  }, [concept, dispatch, prefLabel, termBlockData, t]);
 
   if (conceptError) {
     return (
@@ -170,27 +205,7 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
 
           <TermBlock
             title={<h2>{t('field-terms-label')}</h2>}
-            data={[
-              ...(concept?.references.prefLabelXl ?? []).map((term) => ({
-                term,
-                type: t('field-terms-preferred'),
-              })),
-              ...(concept?.references.altLabelXl ?? []).map((term) => ({
-                term,
-                type: t('field-terms-alternative'),
-              })),
-              ...(concept?.references.notRecommendedSynonym ?? []).map(
-                (term) => ({ term, type: t('field-terms-non-recommended') })
-              ),
-              ...(concept?.references.searchTerm ?? []).map((term) => ({
-                term,
-                type: t('field-terms-search-term'),
-              })),
-              ...(concept?.references.hiddenTerm ?? []).map((term) => ({
-                term,
-                type: t('field-terms-hidden'),
-              })),
-            ].sort((t1, t2) => compareLocales(t1, t2))}
+            data={termBlockData}
           />
 
           <MultilingualPropertyBlock
