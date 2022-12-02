@@ -10,7 +10,8 @@ export default withIronSessionApiRoute(
       return;
     }
 
-    const withAuthProxy = process.env.TERMINOLOGY_API_URL?.includes('yti-auth-proxy');
+    const withAuthProxy =
+      process.env.TERMINOLOGY_API_URL?.includes('yti-auth-proxy');
 
     let user: User | null = null;
     const cookies: { [key: string]: string } = {};

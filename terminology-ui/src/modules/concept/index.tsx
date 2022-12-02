@@ -70,7 +70,7 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
     language: i18n.language,
   });
   const status =
-  getPropertyValue({ property: concept?.properties.status }) || 'DRAFT';
+    getPropertyValue({ property: concept?.properties.status }) || 'DRAFT';
   const email = getPropertyValue({ property: terminology?.properties.contact });
 
   // Prioritizes Finnish and Swedish over other languages
@@ -82,7 +82,7 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
       return t1Lang === 'fi' ? -1 : 1;
     }
 
-    if (t1Lang === 'sv' ||  t2Lang === 'sv') {
+    if (t1Lang === 'sv' || t2Lang === 'sv') {
       return t1Lang === 'sv' ? -1 : 1;
     }
 
