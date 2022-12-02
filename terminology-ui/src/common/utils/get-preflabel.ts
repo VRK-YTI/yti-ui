@@ -5,11 +5,23 @@ interface getPrefLabelProps {
 
 export default function getPrefLabel({ prefLabels, lang }: getPrefLabelProps) {
   if (!prefLabels) {
-    return 'null';
+    return '';
   }
-  return (
-    prefLabels[lang] ??
-    prefLabels['fi'] + ' (fi)' ??
-    prefLabels[Object.keys(prefLabels)[0]] + ` (${Object.keys(prefLabels)[0]})`
-  );
+
+  if (prefLabels[lang]) {
+    return prefLabels[lang];
+  }
+
+  if (prefLabels['fi']) {
+    return prefLabels['fi'] + ' (fi)';
+  }
+
+  if (Object.keys(prefLabels).length > 0) {
+    return (
+      prefLabels[Object.keys(prefLabels)[0]] +
+      ` (${Object.keys(prefLabels)[0]})`
+    );
+  }
+
+  return '';
 }

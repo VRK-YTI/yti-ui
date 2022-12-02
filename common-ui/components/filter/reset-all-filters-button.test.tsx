@@ -11,9 +11,7 @@ describe('reset-all-filters-button', () => {
 
     render(<ResetAllFiltersButton />, { wrapper: themeProvider });
 
-    expect(
-      screen.getByText('tr-filter-remove-all')
-    ).toBeInTheDocument();
+    expect(screen.getByText('tr-filter-remove-all')).toBeInTheDocument();
   });
 
   it('should not render component when in initial state', () => {
@@ -21,8 +19,6 @@ describe('reset-all-filters-button', () => {
 
     render(<ResetAllFiltersButton />, { wrapper: themeProvider });
 
-    expect(
-      screen.queryByText('tr-filter-remove-all')
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText('tr-filter-remove-all')).not.toBeInTheDocument();
   });
 });

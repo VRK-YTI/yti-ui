@@ -1,12 +1,9 @@
-import { useTranslation } from 'react-i18next';
 import { useBreakpoints } from '../media-query';
 import SearchCountTags from './search-count-tags';
-import { CardConcepts, ResultWrapper } from './search-results.styles';
-import useUrlState from '../../utils/hooks/use-url-state';
-import SanitizedTextContent from '../sanitized-text-content';
+import { ResultWrapper } from './search-results.styles';
 import ResultCard from './result-card';
-import ResultCardExpander from './result-card-expander';
 import { BaseIconKeys } from 'suomifi-ui-components';
+import ResultCardExpander from './result-card-expander';
 
 export interface SearchResultData {
   id: string;
@@ -22,8 +19,6 @@ export interface SearchResultData {
 
 interface SearchResultsProps {
   data?: SearchResultData[];
-  totalHitCount?: number;
-  type?: 'terminology-search' | 'concepts' | 'collections';
   organizations?: {
     label: string;
     id: string;
@@ -32,17 +27,33 @@ interface SearchResultsProps {
     label: string;
     id: string;
   }[];
+  partOfText: string;
+  noDescriptionText: string;
+  tagsTitle: string;
+  tagsHiddenTitle: string;
+  extra?: {
+    buttonLabel: string;
+    contentLabel: string;
+    deepHits: {
+      [key: string]: {
+        label: string;
+        id: string;
+        uri?: string;
+      }[];
+    };
+  };
 }
 
 export default function SearchResults({
   data,
-  totalHitCount,
-  type,
   organizations,
   domains,
+  partOfText,
+  noDescriptionText,
+  tagsTitle,
+  tagsHiddenTitle,
+  extra,
 }: SearchResultsProps) {
-  const { t, i18n } = useTranslation('common');
-  const { urlState } = useUrlState();
   const { isSmall } = useBreakpoints();
 
   if (!data) {
@@ -52,10 +63,10 @@ export default function SearchResults({
   return (
     <>
       <SearchCountTags
-        title={t('search-count-tags-title', { count: totalHitCount ?? 0 })}
+        title={tagsTitle}
+        hiddenTitle={tagsHiddenTitle}
         organizations={organizations}
         domains={domains}
-        count={10}
       />
       <ResultWrapper $isSmall={isSmall} id="search-results">
         {data.map((d) => {
@@ -70,6 +81,18 @@ export default function SearchResults({
               icon={d.icon}
               status={d.status}
               partOf={d.partOf}
+              partOfText={partOfText}
+              noDescriptionText={noDescriptionText}
+              extra={
+                extra &&
+                extra.deepHits?.[d.id] && (
+                  <ResultCardExpander
+                    buttonLabel={extra.buttonLabel}
+                    contentLabel={extra.contentLabel}
+                    deepHits={extra.deepHits[d.id]}
+                  />
+                )
+              }
             />
           );
         })}

@@ -1,4 +1,3 @@
-import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Text, VisuallyHidden } from 'suomifi-ui-components';
 import useUrlState, { initialUrlState } from '../../utils/hooks/use-url-state';
@@ -13,7 +12,8 @@ import { translateStatus } from '../../utils/translation-helpers';
 import { isEqual } from 'lodash';
 
 interface SearchCountTagsProps {
-  title: ReactNode;
+  title: string;
+  hiddenTitle: string;
   organizations?: {
     label: string;
     id: string;
@@ -23,7 +23,6 @@ interface SearchCountTagsProps {
     id: string;
   }[];
   renderQBeforeStatus?: boolean;
-  count: number;
 }
 
 export default function SearchCountTags({
@@ -31,7 +30,7 @@ export default function SearchCountTags({
   organizations = [],
   domains = [],
   renderQBeforeStatus = false,
-  count = 0,
+  hiddenTitle,
 }: SearchCountTagsProps) {
   const { t } = useTranslation('common');
   const { urlState, patchUrlState } = useUrlState();
@@ -41,9 +40,7 @@ export default function SearchCountTags({
     <CountWrapper $isSmall={isSmall} id="result-counts">
       <CountText aria-live="polite" id="result-counts-text">
         <span aria-hidden={true}>{title}</span>
-        <VisuallyHidden>
-          {t('search-results-count', { count: count })}
-        </VisuallyHidden>
+        <VisuallyHidden>{hiddenTitle}</VisuallyHidden>
       </CountText>
       <ChipWrapper id="result-counts-chips">
         {renderOrganizationTag()}

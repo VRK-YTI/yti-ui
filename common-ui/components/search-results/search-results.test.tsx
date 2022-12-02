@@ -1,5 +1,4 @@
 import { render, screen } from '@testing-library/react';
-import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
 import { lightTheme } from '../theme';
 import SearchResults, { SearchResultData } from './search-results';
@@ -27,7 +26,13 @@ describe('search-results', () => {
 
     render(
       <ThemeProvider theme={lightTheme}>
-        <SearchResults data={data} totalHitCount={data.length} />
+        <SearchResults
+          data={data}
+          noDescriptionText={'no-description-text'}
+          partOfText={'part-of-text'}
+          tagsHiddenTitle={'tags-hidden-title'}
+          tagsTitle={'tags-title'}
+        />
       </ThemeProvider>
     );
 
@@ -64,11 +69,17 @@ describe('search-results', () => {
 
     render(
       <ThemeProvider theme={lightTheme}>
-        <SearchResults data={data} totalHitCount={data.length} />
+        <SearchResults
+          data={data}
+          noDescriptionText={'no-description-text'}
+          partOfText={'part-of-text'}
+          tagsHiddenTitle={'tags-hidden-title'}
+          tagsTitle={'tags-title'}
+        />
       </ThemeProvider>
     );
 
-    expect(screen.getByText('tr-search-count-tags-title')).toBeInTheDocument();
+    expect(screen.getByText('tags-title')).toBeInTheDocument();
 
     expect(screen.getByText('title-1')).toBeInTheDocument();
     expect(screen.getByText('title-2')).toBeInTheDocument();

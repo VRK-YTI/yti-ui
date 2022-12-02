@@ -148,6 +148,8 @@ export default function FrontPage() {
           <SearchResults
             data={data}
             totalHitCount={searchModels?.totalHitCount}
+            partOfText={t('card-information-domains')}
+            noDescriptionText={t('no-description')}
           />
         </ResultAndStatsWrapper>
       </ResultAndFilterContainer>

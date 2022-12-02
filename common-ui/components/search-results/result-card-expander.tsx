@@ -90,7 +90,9 @@ export default function ResultCardExpander({
           </Link>
         );
       } else {
-        return <SanitizedTextContent text={hit.label} key={`${hit.id}-${idx}`} />;
+        return (
+          <SanitizedTextContent text={hit.label} key={`${hit.id}-${idx}`} />
+        );
       }
     });
   }

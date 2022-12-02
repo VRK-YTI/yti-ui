@@ -13,6 +13,7 @@ import {
   Status,
   Extra,
 } from './result-card.styles';
+import SanitizedTextContent from '../sanitized-text-content';
 
 interface ResultCardProps {
   contributors?: string[];
@@ -20,10 +21,12 @@ interface ResultCardProps {
   extra?: JSX.Element | (JSX.Element | undefined)[];
   icon?: BaseIconKeys;
   noChip?: boolean;
+  noDescriptionText: string;
   noStatus?: boolean;
+  partOfText: string;
   partOf?: string[];
   status?: string;
-  title: string | JSX.Element;
+  title: string;
   titleLink: string;
   type: string;
 }
@@ -35,7 +38,9 @@ export default function ResultCard({
   icon,
   noChip = false,
   noStatus = false,
+  noDescriptionText,
   partOf,
+  partOfText,
   status,
   title,
   titleLink,
@@ -56,7 +61,7 @@ export default function ResultCard({
         <TitleLink href="">
           {icon && <Icon icon={icon} style={{ minWidth: 'max-content' }} />}
           <Title variant="h2" id="card-title-link">
-            {title}
+            <SanitizedTextContent text={title} />
             <VisuallyHidden>
               {contributors?.join(', ') ?? t('no-contributors')}
             </VisuallyHidden>
@@ -70,11 +75,11 @@ export default function ResultCard({
       <Description id="card-description">
         {description && description.length > 0
           ? description
-          : t('no-description')}
+          : noDescriptionText}
       </Description>
       {partOf && (
         <PartOf id="card-partof">
-          <b>{t('card-information-domains')}: </b>
+          <b>{partOfText}: </b>
           {partOf.join(', ')}
         </PartOf>
       )}

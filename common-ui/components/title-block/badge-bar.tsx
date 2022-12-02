@@ -17,4 +17,3 @@ export default function BadgeBar({ children, ...rest }: BadgeBarProps) {
     </BadgeBarWrapper>
   );
 }
-

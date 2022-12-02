@@ -90,15 +90,7 @@ describe('api endpoint - login', () => {
     // if successful, the api route will set some cookies for the browser
     expect(res.hasHeader('Set-Cookie')).toBeTruthy();
     const setCookies = getHeader(res.getHeader('Set-Cookie'));
-    expect(setCookies).toHaveLength(2);
-
-    // JSESSIONID from spring API
-    const jsessionid = setCookies.find((x: string) =>
-      x.startsWith('JSESSIONID=')
-    );
-
-    expect(jsessionid).toBeDefined();
-    expect(jsessionid).toBe('JSESSIONID=foo');
+    expect(setCookies).toHaveLength(1);
 
     // session cookie from next-iron-session
     const session = setCookies.find((x: string) =>
