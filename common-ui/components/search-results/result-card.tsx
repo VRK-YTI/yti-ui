@@ -18,7 +18,7 @@ import SanitizedTextContent from '../sanitized-text-content';
 interface ResultCardProps {
   contributors?: string[];
   description?: string;
-  extra?: JSX.Element | (JSX.Element | undefined)[];
+  extra?: JSX.Element | string;
   icon?: BaseIconKeys;
   noChip?: boolean;
   noDescriptionText: string;

@@ -4,9 +4,8 @@ import {
   useGetConceptResultQuery,
   useGetVocabularyQuery,
 } from '@app/common/components/vocabulary/vocabulary.slice';
-import SearchResults from '@app/common/components/search-results/search-results';
 import {
-  default as SearchResultsCommon,
+  default as SearchResults,
   SearchResultData,
 } from 'yti-common-ui/search-results/search-results';
 import Title from '@app/common/components/title/title';
@@ -41,6 +40,7 @@ import dynamic from 'next/dynamic';
 import ConceptImportModal from '@app/common/components/concept-import';
 import getPrefLabel from '@app/common/utils/get-preflabel';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
+import { Property } from '@app/common/interfaces/termed-data-types.interface';
 
 const NewConceptModal = dynamic(
   () => import('@app/common/components/new-concept-modal')
@@ -88,10 +88,15 @@ export default function Vocabulary({ id }: VocabularyProps) {
     return conceptsData.concepts.map((concept) => ({
       id: concept.id,
       description:
-        getPrefLabel({ prefLabels: concept.definition, lang: urlState.lang !== '' ? urlState.lang : i18n.language }) ??
-        '',
+        getPrefLabel({
+          prefLabels: concept.definition,
+          lang: urlState.lang !== '' ? urlState.lang : i18n.language,
+        }) ?? '',
       status: concept.status,
-      title: getPrefLabel({ prefLabels: concept.label, lang: urlState.lang !== '' ? urlState.lang : i18n.language }),
+      title: getPrefLabel({
+        prefLabels: concept.label,
+        lang: urlState.lang !== '' ? urlState.lang : i18n.language,
+      }),
       titleLink: `${id}/concept/${concept.id}`,
       type: t('vocabulary-info-concept'),
     }));
@@ -241,7 +246,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
               ) : (
                 conceptsData && (
                   <>
-                    <SearchResultsCommon
+                    <SearchResults
                       noDescriptionText={t('terminology-search-no-definition')}
                       tagsHiddenTitle=""
                       tagsTitle={t('vocabulary-results-concepts', {
@@ -252,7 +257,6 @@ export default function Vocabulary({ id }: VocabularyProps) {
                       organizations={[]}
                       noChip
                     />
-                    <SearchResults data={conceptsData} type="concepts" />
                     <PaginationWrapper>
                       <Pagination
                         data={conceptsData}
@@ -287,29 +291,33 @@ export default function Vocabulary({ id }: VocabularyProps) {
 
       const collectionMembers: { [key: string]: string }[] =
         collectionsData.map((collection) => {
-          const memberLabels = collection.references.member.map((m) => {
-            const labels = m.references.prefLabelXl
-              .flatMap((label) => label.properties.prefLabel)
-              .filter((val) => val);
+          const memberLabels =
+            collection.references.member?.map((m) => {
+              const labels: Property[] =
+                m.references.prefLabelXl
+                  ?.flatMap((label) => label.properties.prefLabel ?? [])
+                  .filter((val) => val) ?? [];
 
-            if (labels) {
-              return Object.assign(
-                {},
-                labels.reduce(
-                  (obj, item) => ({
-                    ...obj,
-                    [item.lang]: urlState.q
-                      ? item.value.replaceAll(
-                          urlState.q,
-                          `<b>${urlState.q}</b>`
-                        )
-                      : item.value,
-                  }),
-                  {}
-                )
-              );
-            }
-          });
+              if (labels) {
+                return Object.assign(
+                  {},
+                  labels.reduce(
+                    (obj, item) => ({
+                      ...obj,
+                      [item.lang]: urlState.q
+                        ? item.value.replaceAll(
+                            urlState.q,
+                            `<b>${urlState.q}</b>`
+                          )
+                        : item.value,
+                    }),
+                    {}
+                  )
+                );
+              }
+
+              return [];
+            }) ?? [];
 
           const membersWithCorrectLabels = memberLabels.map((label) =>
             getPrefLabel({
@@ -344,7 +352,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
           };
         });
 
-      const collectionsExtra = Object.assign(...collectionMembers);
+      const collectionsExtra = Object.assign({}, ...collectionMembers);
 
       const filteredCollections =
         urlState.q !== ''
@@ -362,7 +370,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
 
       return (
         <>
-          <SearchResultsCommon
+          <SearchResults
             noDescriptionText={t('terminology-search-no-definition')}
             tagsHiddenTitle=""
             tagsTitle={t('vocabulary-results-collections', {
