@@ -10,8 +10,7 @@ import {
   PaginationWrapper,
   FilterMobileButton,
 } from './terminology-search.styles';
-import {
-  default as CommonSearchResults,
+import SearchResults, {
   SearchResultData,
 } from 'yti-common-ui/search-results/search-results';
 import Pagination from '@app/common/components/pagination/pagination';
@@ -61,7 +60,12 @@ export default function TerminologySearch() {
       contributors: terminology.contributors.map((c) =>
         getPrefLabel({ prefLabels: c.label, lang: i18n.language })
       ),
-      description: '',
+      description: terminology.description
+        ? getPrefLabel({
+            prefLabels: terminology.description,
+            lang: i18n.language,
+          })
+        : '',
       icon: 'registers',
       status: terminology.status,
       partOf: terminology.informationDomains.map((d) =>
@@ -210,7 +214,7 @@ export default function TerminologySearch() {
           ) : (
             data && (
               <>
-                <CommonSearchResults
+                <SearchResults
                   data={results}
                   domains={groups}
                   organizations={organizations}
@@ -225,9 +229,11 @@ export default function TerminologySearch() {
                     count: data?.totalHitCount ?? 0,
                   })}
                   extra={{
-                    buttonLabel: t('results-with-query-from-terminology'),
-                    contentLabel: t('concepts'),
-                    deepHits,
+                    expander: {
+                      buttonLabel: t('results-with-query-from-terminology'),
+                      contentLabel: t('concepts'),
+                      deepHits,
+                    },
                   }}
                 />
                 <PaginationWrapper>

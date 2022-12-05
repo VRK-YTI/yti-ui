@@ -1,17 +1,18 @@
 import { useBreakpoints } from '../media-query';
 import SearchCountTags from './search-count-tags';
-import { ResultWrapper } from './search-results.styles';
+import { CardConcepts, ResultWrapper } from './search-results.styles';
 import ResultCard from './result-card';
 import { BaseIconKeys } from 'suomifi-ui-components';
 import ResultCardExpander from './result-card-expander';
+import SanitizedTextContent from '../sanitized-text-content';
 
 export interface SearchResultData {
   id: string;
   contributors?: string[];
   description?: string;
-  icon: BaseIconKeys;
-  status: string;
-  partOf: string[];
+  icon?: BaseIconKeys;
+  status?: string;
+  partOf?: string[];
   title: string;
   titleLink: string;
   type: string;
@@ -27,19 +28,30 @@ interface SearchResultsProps {
     label: string;
     id: string;
   }[];
-  partOfText: string;
+  partOfText?: string;
   noDescriptionText: string;
+  noChip?: boolean;
   tagsTitle: string;
   tagsHiddenTitle: string;
   extra?: {
-    buttonLabel: string;
-    contentLabel: string;
-    deepHits: {
-      [key: string]: {
-        label: string;
-        id: string;
-        uri?: string;
-      }[];
+    expander: {
+      buttonLabel: string;
+      contentLabel: string;
+      deepHits: {
+        [key: string]: {
+          label: string;
+          id: string;
+          uri?: string;
+        }[];
+      };
+    };
+  } |
+  {
+    other: {
+      title: string;
+      items: {
+        [key: string]: string;
+      };
     };
   };
 }
@@ -50,6 +62,7 @@ export default function SearchResults({
   domains,
   partOfText,
   noDescriptionText,
+  noChip,
   tagsTitle,
   tagsHiddenTitle,
   extra,
@@ -83,14 +96,20 @@ export default function SearchResults({
               partOf={d.partOf}
               partOfText={partOfText}
               noDescriptionText={noDescriptionText}
+              noChip={noChip}
               extra={
                 extra &&
-                extra.deepHits?.[d.id] && (
-                  <ResultCardExpander
-                    buttonLabel={extra.buttonLabel}
-                    contentLabel={extra.contentLabel}
-                    deepHits={extra.deepHits[d.id]}
+                ('expander' in extra ?
+                  extra.expander.deepHits[d.id] && <ResultCardExpander
+                    buttonLabel={extra.expander.buttonLabel}
+                    contentLabel={extra.expander.contentLabel}
+                    deepHits={extra.expander.deepHits[d.id]}
                   />
+                  :
+                  extra.other.items[d.id] &&
+                  <CardConcepts value={extra.other.title}>
+                    <SanitizedTextContent text={extra.other.items[d.id]} />
+                  </CardConcepts>
                 )
               }
             />

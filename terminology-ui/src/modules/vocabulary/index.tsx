@@ -1,10 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   useGetCollectionsQuery,
   useGetConceptResultQuery,
   useGetVocabularyQuery,
 } from '@app/common/components/vocabulary/vocabulary.slice';
 import SearchResults from '@app/common/components/search-results/search-results';
+import {
+  default as SearchResultsCommon,
+  SearchResultData,
+} from 'yti-common-ui/search-results/search-results';
 import Title from '@app/common/components/title/title';
 import {
   ResultAndFilterContainer,
@@ -35,6 +39,8 @@ import { useRouter } from 'next/router';
 import HasPermission from '@app/common/utils/has-permission';
 import dynamic from 'next/dynamic';
 import ConceptImportModal from '@app/common/components/concept-import';
+import getPrefLabel from '@app/common/utils/get-preflabel';
+import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 
 const NewConceptModal = dynamic(
   () => import('@app/common/components/new-concept-modal')
@@ -50,14 +56,14 @@ export default function Vocabulary({ id }: VocabularyProps) {
   const { urlState } = useUrlState();
   const router = useRouter();
   const {
-    data: collections,
+    data: collectionsData,
     error: collectionsError,
     isFetching: isFetchingCollections,
     isUninitialized: isUninitializedCollections,
     refetch: refetchCollections,
   } = useGetCollectionsQuery(id, { skip: urlState.type !== 'collection' });
   const {
-    data: concepts,
+    data: conceptsData,
     error: conceptsError,
     isFetching: isFetchingConcepts,
     refetch: refetchConcepts,
@@ -73,6 +79,43 @@ export default function Vocabulary({ id }: VocabularyProps) {
   const [showModal, setShowModal] = useState(false);
   const [showLoadingConcepts, setShowLoadingConcepts] = useState(false);
   const [showLoadingCollections, setShowLoadingCollections] = useState(true);
+
+  const concepts: SearchResultData[] = useMemo(() => {
+    if (!conceptsData) {
+      return [];
+    }
+
+    return conceptsData.concepts.map((concept) => ({
+      id: concept.id,
+      description:
+        getPrefLabel({ prefLabels: concept.definition, lang: urlState.lang !== '' ? urlState.lang : i18n.language }) ??
+        '',
+      status: concept.status,
+      title: getPrefLabel({ prefLabels: concept.label, lang: urlState.lang !== '' ? urlState.lang : i18n.language }),
+      titleLink: `${id}/concept/${concept.id}`,
+      type: t('vocabulary-info-concept'),
+    }));
+  }, [conceptsData, t, i18n.language, id, urlState.lang]);
+
+  const collections: SearchResultData[] = useMemo(() => {
+    if (!collectionsData) {
+      return [];
+    }
+
+    return collectionsData.map((collection) => ({
+      id: collection.id,
+      description: getPropertyValue({
+        property: collection.properties.definition,
+        language: urlState.lang !== '' ? urlState.lang : i18n.language,
+      }),
+      title: getPropertyValue({
+        property: collection.properties.prefLabel,
+        language: urlState.lang !== '' ? urlState.lang : i18n.language,
+      }),
+      titleLink: `${id}/collection/${collection.id}`,
+      type: t('vocabulary-info-collection'),
+    }));
+  }, [collectionsData, t, id, urlState.lang, i18n.language]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -145,7 +188,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
                 <TerminologyListFilter
                   isModal
                   onModalClose={() => setShowModal(false)}
-                  resultCount={concepts?.totalHitCount}
+                  resultCount={conceptsData?.totalHitCount}
                   counts={counts}
                   languages={info?.properties.language}
                 />
@@ -196,12 +239,23 @@ export default function Vocabulary({ id }: VocabularyProps) {
                   refetch={refetchConcepts}
                 />
               ) : (
-                concepts && (
+                conceptsData && (
                   <>
-                    <SearchResults data={concepts} type="concepts" />
+                    <SearchResultsCommon
+                      noDescriptionText={t('terminology-search-no-definition')}
+                      tagsHiddenTitle=""
+                      tagsTitle={t('vocabulary-results-concepts', {
+                        count: conceptsData.totalHitCount,
+                      })}
+                      data={concepts}
+                      domains={[]}
+                      organizations={[]}
+                      noChip
+                    />
+                    <SearchResults data={conceptsData} type="concepts" />
                     <PaginationWrapper>
                       <Pagination
-                        data={concepts}
+                        data={conceptsData}
                         pageString={t('pagination-page')}
                       />
                     </PaginationWrapper>
@@ -226,14 +280,104 @@ export default function Vocabulary({ id }: VocabularyProps) {
       );
     }
 
-    if (collections) {
+    if (collectionsData) {
       const data =
-        filterCollectionData(collections, urlState, i18n.language) ??
-        collections;
+        filterCollectionData(collectionsData, urlState, i18n.language) ??
+        collectionsData;
+
+      const collectionMembers: { [key: string]: string }[] =
+        collectionsData.map((collection) => {
+          const memberLabels = collection.references.member.map((m) => {
+            const labels = m.references.prefLabelXl
+              .flatMap((label) => label.properties.prefLabel)
+              .filter((val) => val);
+
+            if (labels) {
+              return Object.assign(
+                {},
+                labels.reduce(
+                  (obj, item) => ({
+                    ...obj,
+                    [item.lang]: urlState.q
+                      ? item.value.replaceAll(
+                          urlState.q,
+                          `<b>${urlState.q}</b>`
+                        )
+                      : item.value,
+                  }),
+                  {}
+                )
+              );
+            }
+          });
+
+          const membersWithCorrectLabels = memberLabels.map((label) =>
+            getPrefLabel({
+              prefLabels: label,
+              lang: urlState.lang !== '' ? urlState.lang : i18n.language,
+            })
+          );
+
+          if (urlState.q !== '') {
+            const matchingMembers = membersWithCorrectLabels
+              .filter((value) => value.includes(urlState.q))
+              .slice(0, 5);
+
+            if (
+              matchingMembers.length > 0 &&
+              matchingMembers.length !== membersWithCorrectLabels.length
+            ) {
+              const diff =
+                membersWithCorrectLabels.length - matchingMembers.length;
+              return {
+                [collection.id]: `${matchingMembers.join(', ')} + ${diff} ${t(
+                  'vocabulary-results-more'
+                )}`,
+              };
+            }
+
+            return { [collection.id]: matchingMembers.join(', ') };
+          }
+
+          return {
+            [collection.id]: membersWithCorrectLabels.slice(0, 5).join(', '),
+          };
+        });
+
+      const collectionsExtra = Object.assign(...collectionMembers);
+
+      const filteredCollections =
+        urlState.q !== ''
+          ? collections.filter((collection) => {
+              if (
+                collection.title.includes(urlState.q) ||
+                collectionsExtra[collection.id] ||
+                collectionsExtra[collection.id] !== ''
+              ) {
+                return true;
+              }
+              return false;
+            })
+          : collections;
 
       return (
         <>
-          <SearchResults data={data} type="collections" />
+          <SearchResultsCommon
+            noDescriptionText={t('terminology-search-no-definition')}
+            tagsHiddenTitle=""
+            tagsTitle={t('vocabulary-results-collections', {
+              count: filteredCollections.length,
+            })}
+            data={filteredCollections}
+            domains={[]}
+            organizations={[]}
+            extra={{
+              other: {
+                title: t('vocabulary-filter-concepts'),
+                items: collectionsExtra,
+              },
+            }}
+          />
           <PaginationWrapper>
             <Pagination data={data} pageString={t('pagination-page')} />
           </PaginationWrapper>

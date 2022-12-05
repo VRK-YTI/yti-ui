@@ -22,8 +22,7 @@ interface ResultCardProps {
   icon?: BaseIconKeys;
   noChip?: boolean;
   noDescriptionText: string;
-  noStatus?: boolean;
-  partOfText: string;
+  partOfText?: string;
   partOf?: string[];
   status?: string;
   title: string;
@@ -37,7 +36,6 @@ export default function ResultCard({
   extra,
   icon,
   noChip = false,
-  noStatus = false,
   noDescriptionText,
   partOf,
   partOfText,
@@ -70,7 +68,7 @@ export default function ResultCard({
       </Link>
       <Subtitle id="card-subtitle">
         <span>{type}</span>
-        {!noStatus && renderStatus()}
+        {!status || status.length < 1 && renderStatus()}
       </Subtitle>
       <Description id="card-description">
         {description && description.length > 0
