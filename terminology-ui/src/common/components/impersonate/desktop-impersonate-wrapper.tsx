@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import HoverDropdown from '@app/common/components/hover-dropdown/hover-dropdown';
+import HoverDropdown from '@app/common/components/hover-dropdown';
 import useFakeableUsers from './use-fakeable-users';
 
 export interface DesktopImpersonateWrapperProps {

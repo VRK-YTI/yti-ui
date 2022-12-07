@@ -10,6 +10,9 @@ export default withIronSessionApiRoute(
       return;
     }
 
+    const withAuthProxy =
+      process.env.TERMINOLOGY_API_URL?.includes('yti-auth-proxy');
+
     let user: User | null = null;
     const cookies: { [key: string]: string } = {};
     const target = (req.query['target'] as string) ?? '/';
@@ -20,12 +23,28 @@ export default withIronSessionApiRoute(
         process.env.TERMINOLOGY_API_URL + '/api/v1/frontend/authenticated-user';
       fetchUrl += '?fake.login.mail=' + encodeURIComponent(email);
 
+      let authProxyHeaders = {};
+
+      if (withAuthProxy) {
+        const forwardedFor = req.headers['x-forwarded-for'] as string;
+        const host = req.headers['host'] as string;
+
+        authProxyHeaders = {
+          Host: host,
+          'X-Forwarded-For': forwardedFor,
+        };
+      }
+
       const response = await axios.get(fetchUrl, {
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...authProxyHeaders,
+        },
       });
 
       // should receive a fake user on success
       user = response.data;
+
       if (user && user.anonymous) {
         console.warn(
           'User from response appears to be anonymous, login may have failed'

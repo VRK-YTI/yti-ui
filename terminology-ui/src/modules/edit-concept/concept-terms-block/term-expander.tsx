@@ -40,7 +40,9 @@ export default function TermExpander({
     (errors.editorialNote &&
       term.editorialNote.filter((n) => !n.value || n.value === '').length >
         0) ||
-    errors.termConjugation;
+    (errors.termConjugation &&
+      term.termConjugation &&
+      !['singular', 'plural'].includes(term.termConjugation));
 
   return (
     <Expander>

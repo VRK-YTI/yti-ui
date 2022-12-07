@@ -1,12 +1,11 @@
-import CommonWrapper from "../wrapper";
-import React from "react";
-import { LoadingSpinner } from "suomifi-ui-components";
+import React from 'react';
+import { LoadingSpinner } from 'suomifi-ui-components';
 
 interface SaveSpinnerProps {
   text: string;
 }
 
-function SaveSpinner({ text }: SaveSpinnerProps) {
+export default function SaveSpinner({ text }: SaveSpinnerProps) {
   return (
     <div role="alert">
       <LoadingSpinner
@@ -18,5 +17,3 @@ function SaveSpinner({ text }: SaveSpinnerProps) {
     </div>
   );
 }
-
-export default CommonWrapper(SaveSpinner)

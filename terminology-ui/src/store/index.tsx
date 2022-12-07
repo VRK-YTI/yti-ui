@@ -22,6 +22,7 @@ import { importApi } from '@app/common/components/import/import.slice';
 import { modifyApi } from '@app/common/components/modify/modify.slice';
 import { removeApi } from '@app/common/components/remove/remove.slice';
 import { NextApiRequest } from 'next';
+import { modifyStatusesApi } from '@app/common/components/modify-statuses/modify-statuses.slice';
 
 // make Context from next-redux-wrapper compatible with next-iron-session
 export type NextIronContext = Context | (Context & { req: NextApiRequest });
@@ -46,6 +47,7 @@ export function makeStore(ctx: NextIronContext) {
       [importApi.reducerPath]: importApi.reducer,
       [modifyApi.reducerPath]: modifyApi.reducer,
       [removeApi.reducerPath]: removeApi.reducer,
+      [modifyStatusesApi.reducerPath]: modifyStatusesApi.reducer,
     },
 
     middleware: (getDefaultMiddleware) =>
@@ -60,7 +62,8 @@ export function makeStore(ctx: NextIronContext) {
         importApi.middleware,
         modifyApi.middleware,
         removeApi.middleware,
-        loginApi.middleware
+        loginApi.middleware,
+        modifyStatusesApi.middleware
       ),
 
     // Development tools should be available only in development environments
