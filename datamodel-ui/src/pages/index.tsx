@@ -44,7 +44,7 @@ export default function IndexPage(props: IndexPageProps) {
 }
 
 export const getServerSideProps = createCommonGetServerSideProps(
-  async ({ store, query }) => {
+  async ({ store, query, locale }) => {
     const urlState = Object.assign({}, initialUrlState);
 
     if (query) {
@@ -52,14 +52,36 @@ export const getServerSideProps = createCommonGetServerSideProps(
         urlState.q = Array.isArray(query.q) ? query.q[0] : query.q;
       }
 
-      if (query.lang !== undefined) {
+      if (query.status !== undefined) {
+        urlState.status = Array.isArray(query.status)
+          ? query.status
+          : [query.status];
+      }
+
+      if (query.types !== undefined) {
+        urlState.types = Array.isArray(query.types) ? query.types : [query.types];
+      }
+
+      if (query.domain) {
+        urlState.domain = Array.isArray(query.domain)
+          ? query.domain
+          : [query.domain];
+      }
+
+      if (query.organization) {
+        urlState.organization = Array.isArray(query.organization)
+          ? query.organization[0]
+          : query.organization;
+      }
+
+      if (query.lang) {
         urlState.lang = Array.isArray(query.lang) ? query.lang[0] : query.lang;
       }
     }
 
     store.dispatch(getServiceCategories.initiate());
     store.dispatch(getOrganizations.initiate());
-    store.dispatch(getSearchModels.initiate({ urlState }));
+    store.dispatch(getSearchModels.initiate({ urlState, lang: locale ?? 'fi' }));
 
     await Promise.all(
       store.dispatch(getServiceCategoriesRunningQueriesThunk())

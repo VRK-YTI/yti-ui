@@ -28,39 +28,44 @@ interface SearchResultsProps {
     label: string;
     id: string;
   }[];
+  types?: {
+    label: string;
+    id: string;
+  }[];
   partOfText?: string;
   noDescriptionText: string;
   noChip?: boolean;
   tagsTitle: string;
   tagsHiddenTitle: string;
   extra?:
-    | {
-        expander: {
-          buttonLabel: string;
-          contentLabel: string;
-          deepHits: {
-            [key: string]: {
-              label: string;
-              id: string;
-              uri?: string;
-            }[];
-          };
-        };
-      }
-    | {
-        other: {
-          title: string;
-          items: {
-            [key: string]: string;
-          };
-        };
+  | {
+    expander: {
+      buttonLabel: string;
+      contentLabel: string;
+      deepHits: {
+        [key: string]: {
+          label: string;
+          id: string;
+          uri?: string;
+        }[];
       };
+    };
+  }
+  | {
+    other: {
+      title: string;
+      items: {
+        [key: string]: string;
+      };
+    };
+  };
 }
 
 export default function SearchResults({
   data,
   organizations,
   domains,
+  types,
   partOfText,
   noDescriptionText,
   noChip,
@@ -80,6 +85,7 @@ export default function SearchResults({
         title={tagsTitle}
         hiddenTitle={tagsHiddenTitle}
         organizations={organizations}
+        types={types}
         domains={domains}
       />
       <ResultWrapper $isSmall={isSmall} id="search-results">
@@ -102,21 +108,21 @@ export default function SearchResults({
                 extra &&
                 ('expander' in extra
                   ? extra.expander.deepHits[d.id] && (
-                      <ResultCardExpander
-                        buttonLabel={extra.expander.buttonLabel}
-                        contentLabel={extra.expander.contentLabel}
-                        deepHits={extra.expander.deepHits[d.id]}
-                      />
-                    )
+                    <ResultCardExpander
+                      buttonLabel={extra.expander.buttonLabel}
+                      contentLabel={extra.expander.contentLabel}
+                      deepHits={extra.expander.deepHits[d.id]}
+                    />
+                  )
                   : extra.other.items[d.id] && (
-                      <>
-                        <CardConcepts value={extra.other.title}>
-                          <SanitizedTextContent
-                            text={extra.other.items[d.id]}
-                          />
-                        </CardConcepts>
-                      </>
-                    ))
+                    <>
+                      <CardConcepts value={extra.other.title}>
+                        <SanitizedTextContent
+                          text={extra.other.items[d.id]}
+                        />
+                      </CardConcepts>
+                    </>
+                  ))
               }
             />
           );

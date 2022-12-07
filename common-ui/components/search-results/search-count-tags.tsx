@@ -22,6 +22,10 @@ interface SearchCountTagsProps {
     label: string;
     id: string;
   }[];
+  types?: {
+    label: string;
+    id: string;
+  }[];
   renderQBeforeStatus?: boolean;
 }
 
@@ -29,6 +33,7 @@ export default function SearchCountTags({
   title,
   organizations = [],
   domains = [],
+  types = [],
   renderQBeforeStatus = false,
   hiddenTitle,
 }: SearchCountTagsProps) {
@@ -45,6 +50,7 @@ export default function SearchCountTags({
       <ChipWrapper id="result-counts-chips">
         {renderOrganizationTag()}
         {renderQBeforeStatus && renderQTag()}
+        {renderTypesTags()}
         {renderLanguageTags()}
         {renderStatusTags()}
         {!renderQBeforeStatus && renderQTag()}
@@ -93,14 +99,14 @@ export default function SearchCountTags({
   }
 
   function renderStatusTags() {
-    return ['valid', 'draft', 'retired', 'superseded']
+    return ['valid', 'draft', 'retired', 'superseded', 'invalid']
       .map((status) => {
-        if (urlState.status.includes(status)) {
+        if (urlState.status.includes(status) || urlState.status.includes(status.toUpperCase())) {
           return (
             <Tag
               onRemove={() =>
                 patchUrlState({
-                  status: urlState.status.filter((s) => s !== status),
+                  status: urlState.status.filter((s) => s !== status && s !== status.toUpperCase()),
                 })
               }
               key={status}
@@ -149,5 +155,26 @@ export default function SearchCountTags({
         </Tag>
       );
     }
+  }
+
+  function renderTypesTags() {
+    return types
+      .map((type) => {
+        if (urlState.types.includes(type.id)) {
+          return (
+            <Tag
+              onRemove={() =>
+                patchUrlState({
+                  types: urlState.types.filter((t) => t !== type.id),
+                })
+              }
+              key={type.id}
+            >
+              {type.label}
+            </Tag>
+          );
+        }
+      })
+      .filter(Boolean);
   }
 }

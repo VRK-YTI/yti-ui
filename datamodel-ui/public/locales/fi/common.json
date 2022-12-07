@@ -21,6 +21,7 @@
   "filter-with-current_other": "{{count}} kpl seuraavilla rajauksilla",
   "languages-available": "Kieliä saatavilla",
   "library": "Tietokomponenttikirjasto",
+  "library-variant": "Ydintietomalli",
   "library-with-count_one": "Ydintietomalli ({{count}}) kpl",
   "library-with-count_other": "Ydintietomalli ({{count}}) kpl",
   "profile": "Soveltamisprofiili",

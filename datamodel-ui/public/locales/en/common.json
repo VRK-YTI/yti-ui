@@ -21,6 +21,7 @@
   "filter-with-current_other": "{{count}} items with following filters",
   "languages-available": "Languages available",
   "library": "Core Vocabulary",
+  "library-variant": "Core Data Model",
   "library-with-count_one": "Core Data Model ({{count}}) item",
   "library-with-count_other": "Core Data Model ({{count}}) items",
   "no-description": "No description",
