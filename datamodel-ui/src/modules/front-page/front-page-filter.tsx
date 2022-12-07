@@ -57,7 +57,7 @@ export default function FrontPageFilter({
                 lang: i18n.language,
                 appendLocale: true,
               }),
-              uniqueItemId: org['@id'],
+              uniqueItemId: org['@id'].replaceAll('urn:uuid:', ''),
             }))
             .sort((x, y) => x.labelText.localeCompare(y.labelText)) ?? []
         }
@@ -117,7 +117,7 @@ export default function FrontPageFilter({
         domains={
           serviceCategories?.['@graph']
             .map((g) => ({
-              id: g['@id'],
+              id: g.identifier,
               name: getPropertyLanguageVersion({
                 data: g.label,
                 lang: i18n.language,

@@ -38,20 +38,16 @@ export default function FrontPage() {
       return [];
     }
 
-    return organizationsData['@graph'].map((org) => ({
-      id: org['@id'].replaceAll('urn:uuid:', ''),
-      label:
-        org['prefLabel'].find(
-          (label) => label['@language'] === i18n.language
-        )?.['@value'] ??
-        org['prefLabel'].find((label) => label['@language'] === 'fi')?.[
-          '@value'
-        ] ??
-        org['prefLabel'].find((label) => Object.keys(label['@language'])[0])?.[
-          '@value'
-        ] ??
-        '',
-    }));
+    return organizationsData['@graph'].map((org) => {
+      const id = org['@id'].replaceAll('urn:uuid:', '');
+      return {
+        id: id,
+        label: getPropertyLanguageVersion({
+          data: org.prefLabel,
+          lang: i18n.language,
+        }),
+      };
+    });
   }, [organizationsData, i18n.language]);
 
   const serviceCategories = useMemo(() => {
@@ -61,15 +57,10 @@ export default function FrontPage() {
 
     return serviceCategoriesData['@graph'].map((category) => ({
       id: category.identifier,
-      label:
-        category.label.find((l) => l['@language'] === i18n.language)?.[
-          '@value'
-        ] ??
-        category.label.find((l) => l['@language'] === 'fi')?.['@value'] ??
-        category.label.find(
-          (l) => l['@language'] === Object.keys(l['@language'])[0]
-        )?.['@value'] ??
-        '',
+      label: getPropertyLanguageVersion({
+        data: category.label,
+        lang: i18n.language,
+      }),
     }));
   }, [serviceCategoriesData, i18n.language]);
 
@@ -118,8 +109,9 @@ export default function FrontPage() {
       const partOf: string[] = m.isPartOf
         .map((p) =>
           getPropertyLanguageVersion({
-            data: serviceCategoriesData?.['@graph'].find((c) => c.identifier === p)
-              ?.label,
+            data: serviceCategoriesData?.['@graph'].find(
+              (c) => c.identifier === p
+            )?.label,
             lang: i18n.language,
           })
         )
