@@ -1,4 +1,13 @@
 #!/usr/bin/env sh
-#. "$(dirname -- "$0")/_/husky.sh"
+. "$(dirname -- "$0")/_/husky.sh"
 
-#npm run lint-staged
+cd terminology-ui
+npm run lint-staged
+
+cd ..
+cd datamodel-ui
+npm run lint-staged
+
+cd ..
+cd common-ui
+npm run lint-staged
