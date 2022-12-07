@@ -340,6 +340,8 @@
   "terminology-other-information": "Sanaston muut tiedot",
   "terminology-status": "Sanaston tila",
   "terminology-type": "Sanastotyyppi",
+  "terminology-update-failed": "Päivitys epäonnistui. Muutoksia ei tallennettu.",
+  "terminology-update-status-failed": "Päivityksen tilan haussa ilmeni ongelma.",
   "terms_one": "Termit ({{count}} kpl)",
   "terms_other": "Termit ({{count}} kpl)",
   "try-again": "Yritä uudelleen",
