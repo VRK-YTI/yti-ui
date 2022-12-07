@@ -33,6 +33,9 @@ export const searchModelsApi = createApi({
             : [],
           groups: props.urlState.domain,
           type: props.urlState.types ?? [],
+          ...(props.urlState.status.length === 0
+            ? { status: ['VALID', 'DRAFT'] }
+            : { status: props.urlState.status }),
         },
       }),
     }),

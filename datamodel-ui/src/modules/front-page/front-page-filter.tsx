@@ -87,7 +87,7 @@ export default function FrontPageFilter({
         title={t('show')}
         items={[
           {
-            value: 'in-use',
+            value: 'VALID,DRAFT',
             label: t('datamodels-in-use'),
             hintText: `${translateStatus('VALID', t)}, ${translateStatus(
               'DRAFT',
@@ -95,7 +95,7 @@ export default function FrontPageFilter({
             )}`,
           },
           {
-            value: 'unused',
+            value: 'RETIRED,SUPERSEDED,INVALID',
             label: t('datamodels-unused'),
             hintText: `${translateStatus('RETIRED', t)}, ${translateStatus(
               'SUPERSEDED',
@@ -103,7 +103,7 @@ export default function FrontPageFilter({
             )}, ${translateStatus('INVALID', t)}`,
           },
           {
-            value: 'all',
+            value: 'VALID,DRAFT,RETIRED,SUPERSEDED,INVALID',
             label: t('datamodels-all'),
           },
         ]}
