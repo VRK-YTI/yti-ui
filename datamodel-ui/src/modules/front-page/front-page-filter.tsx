@@ -1,5 +1,6 @@
 import { Organizations } from '@app/common/interfaces/organizations.interface';
 import { ServiceCategories } from '@app/common/interfaces/serviceCategories.interface';
+import { getPropertyLanguageVersion } from '@app/common/utils/get-language-version';
 import { useTranslation } from 'next-i18next';
 import { SingleSelectData } from 'suomifi-ui-components';
 import Filter, {
@@ -51,11 +52,12 @@ export default function FrontPageFilter({
         organizations={
           organizations?.['@graph']
             .map((org) => ({
-              labelText:
-                org.prefLabel?.filter(
-                  (l) => l['@language'] === i18n.language
-                )[0]['@value'] ?? '',
-              uniqueItemId: org['@id'].replace('urn:uuid:', ''),
+              labelText: getPropertyLanguageVersion({
+                data: org.prefLabel,
+                lang: i18n.language,
+                appendLocale: true,
+              }),
+              uniqueItemId: org['@id'],
             }))
             .sort((x, y) => x.labelText.localeCompare(y.labelText)) ?? []
         }
@@ -115,12 +117,12 @@ export default function FrontPageFilter({
         domains={
           serviceCategories?.['@graph']
             .map((g) => ({
-              id: g.identifier,
-              name: g.label
-                ? g.label.filter(
-                    (l) => (l['@language'] ?? '') === i18n.language
-                  )?.[0]?.['@value']
-                : '',
+              id: g['@id'],
+              name: getPropertyLanguageVersion({
+                data: g.label,
+                lang: i18n.language,
+                appendLocale: true,
+              }),
             }))
             .sort((x, y) => x.name.localeCompare(y.name)) ?? []
         }

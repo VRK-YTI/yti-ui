@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-i18next';
 import { useSelector } from 'react-redux';
 import { Button } from 'suomifi-ui-components';
 // import LoginModalView from '../login-modal';
