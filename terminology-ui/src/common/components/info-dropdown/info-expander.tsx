@@ -38,6 +38,7 @@ import useUrlState from '@app/common/utils/hooks/use-url-state';
 import axios from 'axios';
 import { useStoreDispatch } from '@app/store';
 import { setAlert } from '../alert/alert.slice';
+import UpdateWithFileModal from '../update-with-file-modal';
 import StatusMassEdit from '../status-mass-edit';
 
 const Subscription = dynamic(
@@ -191,10 +192,14 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
                         {t('edit-terminology', { ns: 'admin' })}
                       </Button>
                     </Link>
+
+                    <UpdateWithFileModal />
+
                     <CopyTerminologyModal
                       terminologyId={terminologyId}
                       noWrap
                     />
+
                     <RemovalModal
                       removalData={{ type: 'terminology', data: data }}
                       targetId={terminologyId}
