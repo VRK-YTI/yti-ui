@@ -4,6 +4,7 @@ import { AppState, AppThunk } from '@app/store';
 import { User } from '@app/common/interfaces/user.interface';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
+import isHydrate from '@app/store/isHydrate';
 
 export const initialState: User = {
   anonymous: true,
@@ -37,13 +38,13 @@ export const loginSlice = createSlice({
       };
     },
   },
-  extraReducers: {
-    [HYDRATE]: (state, action) => {
+  extraReducers: (builder) => {
+    builder.addMatcher(isHydrate, (state, action) => {
       return {
         ...state,
         ...action.payload.login,
       };
-    },
+    });
   },
 });
 

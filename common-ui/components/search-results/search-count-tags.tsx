@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-i18next';
 import { Text, VisuallyHidden } from 'suomifi-ui-components';
 import useUrlState, { initialUrlState } from '../../utils/hooks/use-url-state';
 import { useBreakpoints } from '../media-query';

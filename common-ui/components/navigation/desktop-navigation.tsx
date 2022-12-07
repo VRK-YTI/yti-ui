@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { MouseEventHandler, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'next-i18next';
 import { useSelector } from 'react-redux';
 import { useTheme } from 'styled-components';
 import { Icon, Link as SuomiFiLink } from 'suomifi-ui-components';
