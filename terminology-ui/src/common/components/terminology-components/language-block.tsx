@@ -1,4 +1,4 @@
-import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from '@app/common/utils/constants';
+import { DEFINITION_MAX, TEXT_INPUT_MAX } from '@app/common/utils/constants';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { MultiSelectData, Paragraph, Text } from 'suomifi-ui-components';
@@ -64,7 +64,7 @@ export default function LanguageBlock({
         visualPlaceholder={t('terminology-description-placeholder')}
         onChange={(e) => setDescription(e.target.value.trim())}
         onBlur={handleBlur}
-        maxLength={TEXT_AREA_MAX}
+        maxLength={DEFINITION_MAX}
         defaultValue={description}
         className="terminology-description-input"
         disabled={disabled}

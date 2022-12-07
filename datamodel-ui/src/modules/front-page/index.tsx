@@ -13,7 +13,10 @@ import SearchResults, {
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import { useGetSearchModelsQuery } from '@app/common/components/searchModels/searchModels.slice';
-import getLanguageVersion from '@app/common/utils/get-language-version';
+import {
+  getLanguageVersion,
+  getPropertyLanguageVersion,
+} from '@app/common/utils/get-language-version';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { Modal, ModalContent, SingleSelectData } from 'suomifi-ui-components';
 import useUrlState from 'yti-common-ui/utils/hooks/use-url-state';
@@ -59,24 +62,23 @@ export default function FrontPage() {
 
     return searchModels.models.map((m) => {
       const contributors: string[] = m.contributor
-        .map(
-          (c) =>
-            organizations?.['@graph']
-              .find((o) => o['@id'].replace('urn:uuid:', '') === c)
-              ?.prefLabel?.filter(
-                (l) => (l['@language'] ?? '') === i18n.language
-              )?.[0]?.['@value'] ?? ''
+        .map((c) =>
+          getPropertyLanguageVersion({
+            data: organizations?.['@graph'].find(
+              (o) => o['@id'].replace('urn:uuid:', '') === c
+            )?.prefLabel,
+            lang: i18n.language,
+          })
         )
         .filter((c) => c.length > 0);
 
       const partOf: string[] = m.isPartOf
-        .map(
-          (p) =>
-            serviceCategories?.['@graph']
-              .find((c) => c.identifier === p)
-              ?.label.filter(
-                (l) => (l['@language'] ?? '') === i18n.language
-              )?.[0]?.['@value'] ?? ''
+        .map((p) =>
+          getPropertyLanguageVersion({
+            data: serviceCategories?.['@graph'].find((c) => c.identifier === p)
+              ?.label,
+            lang: i18n.language,
+          })
         )
         .filter((p) => p.length > 0);
 
