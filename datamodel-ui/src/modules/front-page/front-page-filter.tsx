@@ -55,7 +55,7 @@ export default function FrontPageFilter({
                 org.prefLabel?.filter(
                   (l) => l['@language'] === i18n.language
                 )[0]['@value'] ?? '',
-              uniqueItemId: org['@id'],
+              uniqueItemId: org['@id'].replace('urn:uuid:', ''),
             }))
             .sort((x, y) => x.labelText.localeCompare(y.labelText)) ?? []
         }
@@ -115,7 +115,7 @@ export default function FrontPageFilter({
         domains={
           serviceCategories?.['@graph']
             .map((g) => ({
-              id: g['@id'],
+              id: g.identifier,
               name: g.label
                 ? g.label.filter(
                     (l) => (l['@language'] ?? '') === i18n.language

@@ -15,7 +15,7 @@ export default function OrganizationFilter({
   visualPlaceholder,
 }: OrganizationFilterProps) {
   const { urlState, patchUrlState } = useUrlState();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   if (!organizations) {
     return null;

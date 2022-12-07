@@ -68,7 +68,7 @@ export default function ResultCard({
       </Link>
       <Subtitle id="card-subtitle">
         <span>{type}</span>
-        {!status || status.length < 1 && renderStatus()}
+        {status && renderStatus()}
       </Subtitle>
       <Description id="card-description">
         {description && description.length > 0

@@ -14,7 +14,10 @@ export const searchModelsApi = createApi({
     }
   },
   endpoints: (builder) => ({
-    getSearchModels: builder.query<SearchModels, { urlState: UrlState }>({
+    getSearchModels: builder.query<
+      SearchModels,
+      { urlState: UrlState; lang: string }
+    >({
       query: (props) => ({
         url: '/searchModels',
         method: 'POST',
@@ -22,9 +25,14 @@ export const searchModelsApi = createApi({
           pageFrom: 0,
           pageSize: 1000,
           searchResources: true,
-          sortLang: 'fi',
+          sortLang: props.lang ?? 'fi',
           query: props.urlState.q,
           language: props.urlState.lang ? props.urlState.lang : null,
+          organizations: props.urlState.organization
+            ? [props.urlState.organization]
+            : [],
+          groups: props.urlState.domain,
+          type: props.urlState.types ?? [],
         },
       }),
     }),

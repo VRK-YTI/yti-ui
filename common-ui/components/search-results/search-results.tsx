@@ -33,27 +33,28 @@ interface SearchResultsProps {
   noChip?: boolean;
   tagsTitle: string;
   tagsHiddenTitle: string;
-  extra?: {
-    expander: {
-      buttonLabel: string;
-      contentLabel: string;
-      deepHits: {
-        [key: string]: {
-          label: string;
-          id: string;
-          uri?: string;
-        }[];
+  extra?:
+    | {
+        expander: {
+          buttonLabel: string;
+          contentLabel: string;
+          deepHits: {
+            [key: string]: {
+              label: string;
+              id: string;
+              uri?: string;
+            }[];
+          };
+        };
+      }
+    | {
+        other: {
+          title: string;
+          items: {
+            [key: string]: string;
+          };
+        };
       };
-    };
-  } |
-  {
-    other: {
-      title: string;
-      items: {
-        [key: string]: string;
-      };
-    };
-  };
 }
 
 export default function SearchResults({
@@ -99,20 +100,23 @@ export default function SearchResults({
               noChip={noChip}
               extra={
                 extra &&
-                ('expander' in extra ?
-                  extra.expander.deepHits[d.id] && <ResultCardExpander
-                    buttonLabel={extra.expander.buttonLabel}
-                    contentLabel={extra.expander.contentLabel}
-                    deepHits={extra.expander.deepHits[d.id]}
-                  />
-                  :
-                  extra.other.items[d.id] &&
-                  <>
-                    <CardConcepts value={extra.other.title}>
-                      <SanitizedTextContent text={extra.other.items[d.id]} />
-                    </CardConcepts>
-                  </>
-                )
+                ('expander' in extra
+                  ? extra.expander.deepHits[d.id] && (
+                      <ResultCardExpander
+                        buttonLabel={extra.expander.buttonLabel}
+                        contentLabel={extra.expander.contentLabel}
+                        deepHits={extra.expander.deepHits[d.id]}
+                      />
+                    )
+                  : extra.other.items[d.id] && (
+                      <>
+                        <CardConcepts value={extra.other.title}>
+                          <SanitizedTextContent
+                            text={extra.other.items[d.id]}
+                          />
+                        </CardConcepts>
+                      </>
+                    ))
               }
             />
           );
