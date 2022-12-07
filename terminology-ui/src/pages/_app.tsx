@@ -1,4 +1,3 @@
-import ReactDOM from 'react-dom';
 import { SWRConfig } from 'swr';
 import '../../styles/globals.scss';
 import type { AppProps } from 'next/app';

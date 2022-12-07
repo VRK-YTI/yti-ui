@@ -59,7 +59,9 @@ export const getServerSideProps = createCommonGetServerSideProps(
       }
 
       if (query.types !== undefined) {
-        urlState.types = Array.isArray(query.types) ? query.types : [query.types];
+        urlState.types = Array.isArray(query.types)
+          ? query.types
+          : [query.types];
       }
 
       if (query.domain) {
@@ -81,7 +83,9 @@ export const getServerSideProps = createCommonGetServerSideProps(
 
     store.dispatch(getServiceCategories.initiate());
     store.dispatch(getOrganizations.initiate());
-    store.dispatch(getSearchModels.initiate({ urlState, lang: locale ?? 'fi' }));
+    store.dispatch(
+      getSearchModels.initiate({ urlState, lang: locale ?? 'fi' })
+    );
 
     await Promise.all(
       store.dispatch(getServiceCategoriesRunningQueriesThunk())

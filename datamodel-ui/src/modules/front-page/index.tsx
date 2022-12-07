@@ -42,10 +42,10 @@ export default function FrontPage() {
           (label) => label['@language'] === i18n.language
         )?.['@value'] ??
         org['prefLabel'].find((label) => label['@language'] === 'fi')?.[
-        '@value'
+          '@value'
         ] ??
         org['prefLabel'].find((label) => Object.keys(label['@language'])[0])?.[
-        '@value'
+          '@value'
         ] ??
         '',
     }));
@@ -60,7 +60,7 @@ export default function FrontPage() {
       id: category.identifier,
       label:
         category.label.find((l) => l['@language'] === i18n.language)?.[
-        '@value'
+          '@value'
         ] ??
         category.label.find((l) => l['@language'] === 'fi')?.['@value'] ??
         category.label.find(
@@ -206,7 +206,7 @@ export default function FrontPage() {
               {
                 id: 'library',
                 label: t('library-variant'),
-              }
+              },
             ]}
             partOfText={t('card-information-domains')}
             noDescriptionText={t('no-description')}
