@@ -101,12 +101,17 @@ export default function SearchCountTags({
   function renderStatusTags() {
     return ['valid', 'draft', 'retired', 'superseded', 'invalid']
       .map((status) => {
-        if (urlState.status.includes(status) || urlState.status.includes(status.toUpperCase())) {
+        if (
+          urlState.status.includes(status) ||
+          urlState.status.includes(status.toUpperCase())
+        ) {
           return (
             <Tag
               onRemove={() =>
                 patchUrlState({
-                  status: urlState.status.filter((s) => s !== status && s !== status.toUpperCase()),
+                  status: urlState.status.filter(
+                    (s) => s !== status && s !== status.toUpperCase()
+                  ),
                 })
               }
               key={status}
