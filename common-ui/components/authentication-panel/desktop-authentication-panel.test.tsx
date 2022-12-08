@@ -1,7 +1,6 @@
 // TODO: This should be implemented after login information can be parsed here
 // or there's a different solution
 
-
 // TODO: Remove this placeholder
 import React from 'react';
 
@@ -10,7 +9,6 @@ describe('authentication pangel', () => {
     expect(1).toBe(1);
   });
 });
-
 
 // import React from 'react';
 // import { render, screen } from '@testing-library/react';

@@ -53,10 +53,10 @@ export default function ResultCardExpander({
       const comma = idx < 2 && idx < totalHits - 1 ? ', ' : '';
 
       return (
-        <>
+        <span key={`${hit.id}-${idx}`}>
           <SanitizedTextContent text={hit.label} />
           {comma}
-        </>
+        </span>
       );
     });
   }
@@ -71,10 +71,10 @@ export default function ResultCardExpander({
             : ` + ${deepHits.length - 1 - idx} ${t('vocabulary-results-more')}`;
 
         return (
-          <>
+          <span key={`${hit.id}-${idx}`}>
             <SanitizedTextContent text={hit.label} />
             {comma}
-          </>
+          </span>
         );
       });
   }
@@ -90,7 +90,9 @@ export default function ResultCardExpander({
           </Link>
         );
       } else {
-        return <SanitizedTextContent text={hit.label} />;
+        return (
+          <SanitizedTextContent text={hit.label} key={`${hit.id}-${idx}`} />
+        );
       }
     });
   }

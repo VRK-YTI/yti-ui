@@ -13,7 +13,11 @@ export interface FooterProps {
   versionInfo?: string;
 }
 
-export default function Footer({ t, feedbackSubject, versionInfo }: FooterProps) {
+export default function Footer({
+  t,
+  feedbackSubject,
+  versionInfo,
+}: FooterProps) {
   const subject = encodeURIComponent(
     feedbackSubject ?? String(t('feedback-terminologies'))
   );

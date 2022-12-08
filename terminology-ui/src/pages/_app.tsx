@@ -1,4 +1,3 @@
-import ReactDOM from 'react-dom';
 import { SWRConfig } from 'swr';
 import '../../styles/globals.scss';
 import type { AppProps } from 'next/app';
@@ -65,16 +64,26 @@ function App({ Component, pageProps }: AppProps) {
 }
 export default wrapper.withRedux(appWithTranslation(App));
 
+// axe-core is disabled for time being as it is too broken currently
+// Problems:
+// - Fills server logs with unnecessary logs
+//   ^ This has had a ticket open from November without any progress so far (1.12.2022)
+//
+// - Throws unnecessary client errors (like findDOMnode that don't occur without it)
+//   when strict mode is enabled and we don't have any reason to disable it
+//   ^ Deque has had a ticket open from 2020 to fix this problem so no need to get
+//     hopes up anytime soon
+
 // setup a11y checker for development
-if (process.env.NODE_ENV !== 'production' && typeof window !== 'undefined') {
-  import('@axe-core/react').then(({ default: axe }) =>
-    axe(React, ReactDOM, 1000, undefined, undefined, (results) => {
-      if (results.violations.length > 0) {
-        console.warn(
-          'Potential a11y violations found by axe',
-          results.violations
-        );
-      }
-    })
-  );
-}
+// if (process.env.NODE_ENV !== 'production' && typeof window !== 'undefined') {
+//   import('@axe-core/react').then(({ default: axe }) =>
+//     axe(React, ReactDOM, 1000, undefined, undefined, (results) => {
+//       if (results.violations.length > 0) {
+//         console.warn(
+//           'Potential a11y violations found by axe',
+//           results.violations
+//         );
+//       }
+//     })
+//   );
+// }

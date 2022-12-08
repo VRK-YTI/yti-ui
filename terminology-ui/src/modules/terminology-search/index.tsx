@@ -10,12 +10,14 @@ import {
   PaginationWrapper,
   FilterMobileButton,
 } from './terminology-search.styles';
-import SearchResults from '@app/common/components/search-results/search-results';
+import SearchResults, {
+  SearchResultData,
+} from 'yti-common-ui/search-results/search-results';
 import Pagination from '@app/common/components/pagination/pagination';
 import { useTranslation } from 'next-i18next';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { Modal, ModalContent } from 'suomifi-ui-components';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useGetCountsQuery } from '@app/common/components/counts/counts.slice';
 import { SearchPageFilter } from './search-page-filter';
 import useUrlState from '@app/common/utils/hooks/use-url-state';
@@ -26,6 +28,8 @@ import {
 import LoadIndicator from '@app/common/components/load-indicator';
 import { useStoreDispatch } from '@app/store';
 import { useSelector } from 'react-redux';
+import getPrefLabel from '@app/common/utils/get-preflabel';
+import { translateTerminologyType } from '@app/common/utils/translation-helpers';
 
 export default function TerminologySearch() {
   const { t, i18n } = useTranslation();
@@ -35,14 +39,89 @@ export default function TerminologySearch() {
     urlState,
     language: i18n.language,
   });
-  const { data: groups, error: groupsError } = useGetGroupsQuery(i18n.language);
-  const { data: organizations, error: organizationsError } =
+  const { data: groupsData, error: groupsError } = useGetGroupsQuery(
+    i18n.language
+  );
+  const { data: orgsData, error: organizationsError } =
     useGetOrganizationsQuery(i18n.language);
   const { data: counts, error: countsError } = useGetCountsQuery(null);
   const dispatch = useStoreDispatch();
   const [showModal, setShowModal] = useState(false);
   const [showLoading, setShowLoading] = useState(true);
   const previousAlerts = useSelector(selectAlert());
+
+  const results: SearchResultData[] = useMemo(() => {
+    if (!data || !data.terminologies) {
+      return [];
+    }
+
+    return data.terminologies.map((terminology) => ({
+      id: terminology.id,
+      contributors: terminology.contributors.map((c) =>
+        getPrefLabel({ prefLabels: c.label, lang: i18n.language })
+      ),
+      description: terminology.description
+        ? getPrefLabel({
+            prefLabels: terminology.description,
+            lang: i18n.language,
+          })
+        : '',
+      icon: 'registers',
+      status: terminology.status,
+      partOf: terminology.informationDomains.map((d) =>
+        getPrefLabel({ prefLabels: d.label, lang: i18n.language })
+      ),
+      title: getPrefLabel({
+        prefLabels: terminology.label,
+        lang: i18n.language,
+      }),
+      titleLink: `terminology/${terminology.id}`,
+      type: translateTerminologyType(terminology.type ?? '', t),
+    }));
+  }, [data, t, i18n.language]);
+
+  const deepHits = useMemo(() => {
+    if (!data || !data.deepHits) {
+      return {};
+    }
+
+    const keys = Object.keys(data.deepHits);
+    const returnValue: {
+      [key: string]: { label: string; id: string; uri: string }[];
+    } = {};
+
+    keys.forEach((key) => {
+      returnValue[key] = data.deepHits[key][0].topHits.map((hit) => ({
+        label: getPrefLabel({ prefLabels: hit.label, lang: i18n.language }),
+        id: hit.id,
+        uri: `terminology/${key}/concept/${hit.id}`,
+      }));
+    });
+
+    return returnValue;
+  }, [data, i18n.language]);
+
+  const organizations = useMemo(() => {
+    if (!orgsData) {
+      return [];
+    }
+
+    return orgsData.map((o) => ({
+      id: o.id,
+      label: o.properties.prefLabel.value,
+    }));
+  }, [orgsData]);
+
+  const groups = useMemo(() => {
+    if (!groupsData) {
+      return [];
+    }
+
+    return groupsData.map((g) => ({
+      id: g.id,
+      label: g.properties.prefLabel.value,
+    }));
+  }, [groupsData]);
 
   useEffect(() => {
     dispatch(
@@ -88,7 +167,7 @@ export default function TerminologySearch() {
   return (
     <main id="main">
       <Title info={t('terminology-title')} />
-      {isSmall && groups && organizations && (
+      {isSmall && groupsData && orgsData && (
         <FilterMobileButton
           variant="secondary"
           fullWidth
@@ -101,8 +180,8 @@ export default function TerminologySearch() {
       <ResultAndFilterContainer>
         {!isSmall ? (
           <SearchPageFilter
-            organizations={organizations}
-            groups={groups}
+            organizations={orgsData}
+            groups={groupsData}
             counts={counts}
           />
         ) : (
@@ -118,8 +197,8 @@ export default function TerminologySearch() {
                 isModal
                 onModalClose={() => setShowModal(false)}
                 resultCount={data?.totalHitCount}
-                organizations={organizations}
-                groups={groups}
+                organizations={orgsData}
+                groups={groupsData}
                 counts={counts}
               />
             </ModalContent>
@@ -136,10 +215,26 @@ export default function TerminologySearch() {
             data && (
               <>
                 <SearchResults
-                  data={data}
-                  type="terminology-search"
-                  organizations={organizations}
+                  data={results}
                   domains={groups}
+                  organizations={organizations}
+                  partOfText={t(
+                    'terminology-search-results-information-domains'
+                  )}
+                  noDescriptionText={t('vocabulary-results-no-description')}
+                  tagsTitle={t('terminology-search-terminologies', {
+                    count: data?.totalHitCount ?? 0,
+                  })}
+                  tagsHiddenTitle={t('search-results-count', {
+                    count: data?.totalHitCount ?? 0,
+                  })}
+                  extra={{
+                    expander: {
+                      buttonLabel: t('results-with-query-from-terminology'),
+                      contentLabel: t('concepts'),
+                      deepHits,
+                    },
+                  }}
                 />
                 <PaginationWrapper>
                   <Pagination data={data} pageString={t('pagination-page')} />

@@ -57,7 +57,7 @@ export default function FrontPageFilter({
                 lang: i18n.language,
                 appendLocale: true,
               }),
-              uniqueItemId: org['@id'],
+              uniqueItemId: org['@id'].replaceAll('urn:uuid:', ''),
             }))
             .sort((x, y) => x.labelText.localeCompare(y.labelText)) ?? []
         }
@@ -89,7 +89,7 @@ export default function FrontPageFilter({
         title={t('show')}
         items={[
           {
-            value: 'in-use',
+            value: 'VALID,DRAFT',
             label: t('datamodels-in-use'),
             hintText: `${translateStatus('VALID', t)}, ${translateStatus(
               'DRAFT',
@@ -97,7 +97,7 @@ export default function FrontPageFilter({
             )}`,
           },
           {
-            value: 'unused',
+            value: 'RETIRED,SUPERSEDED,INVALID',
             label: t('datamodels-unused'),
             hintText: `${translateStatus('RETIRED', t)}, ${translateStatus(
               'SUPERSEDED',
@@ -105,7 +105,7 @@ export default function FrontPageFilter({
             )}, ${translateStatus('INVALID', t)}`,
           },
           {
-            value: 'all',
+            value: 'VALID,DRAFT,RETIRED,SUPERSEDED,INVALID',
             label: t('datamodels-all'),
           },
         ]}
@@ -117,7 +117,7 @@ export default function FrontPageFilter({
         domains={
           serviceCategories?.['@graph']
             .map((g) => ({
-              id: g['@id'],
+              id: g.identifier,
               name: getPropertyLanguageVersion({
                 data: g.label,
                 lang: i18n.language,

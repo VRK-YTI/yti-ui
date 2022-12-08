@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import useUrlState, { initialUrlState } from '../../utils/hooks/use-url-state';
 import RadioButtonFilter, { Item } from './radio-button-filter';
 
 export interface StatusFilterRadioProps {
@@ -12,16 +12,20 @@ export default function StatusFilterRadio({
   items,
   isModal,
 }: StatusFilterRadioProps) {
-  // This should removed when urlState supports changes needed for this component to work
-  const [selectedItem, setSelectedItem] = useState(items[0].value);
+  const { urlState, patchUrlState } = useUrlState();
 
   return (
     <RadioButtonFilter
       title={title}
       items={items}
-      onChange={(e) => setSelectedItem(e)}
+      onChange={(status) => {
+        patchUrlState({
+          status: status === 'VALID,DRAFT' ? [] : status.split(','),
+          page: initialUrlState.page,
+        });
+      }}
       radioButtonVariant={isModal ? 'large' : 'small'}
-      selectedItem={selectedItem}
+      selectedItem={urlState.status.length < 1 ? 'VALID,DRAFT' : urlState.status.join(',')}
     />
   );
 }

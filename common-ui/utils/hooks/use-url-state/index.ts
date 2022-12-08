@@ -8,6 +8,7 @@ export interface UrlState {
   organization: string;
   status: string[];
   type: string;
+  types: string[];
   page: number;
   lang: string;
 }
@@ -18,6 +19,7 @@ export const initialUrlState: UrlState = {
   organization: '',
   status: [],
   type: 'concept',
+  types: [],
   page: 1,
   lang: '',
 };
@@ -48,6 +50,7 @@ export default function useUrlState(): UseURLStateResult {
     ),
     status: asStringArray(router.query.status, initialUrlState.status),
     type: asString(router.query.type, initialUrlState.type),
+    types: asStringArray(router.query.types, initialUrlState.types),
     page: asNumber(router.query.page, initialUrlState.page),
     lang: asString(router.query.lang, initialUrlState.lang),
   };
@@ -68,6 +71,7 @@ function updateURLState(router: NextRouter, state?: UrlState): void {
     organization,
     status,
     type,
+    types,
     page,
     lang,
     /* eslint-enable @typescript-eslint/no-unused-vars */
@@ -103,6 +107,7 @@ function buildUrlStatePatch(state: UrlState): Partial<UrlState> {
     patch.organization = state.organization;
   if (!isInitial(state, 'status')) patch.status = state.status;
   if (!isInitial(state, 'type')) patch.type = state.type;
+  if (!isInitial(state, 'types')) patch.types = state.types;
   if (!isInitial(state, 'page')) patch.page = state.page;
   if (!isInitial(state, 'lang')) patch.lang = state.lang;
   return patch;

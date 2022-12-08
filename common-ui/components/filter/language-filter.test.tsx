@@ -26,17 +26,16 @@ describe('language-filter', () => {
         languages={[
           {
             labelText: 'fi',
-            uniqueItemId: 'fi'
+            uniqueItemId: 'fi',
           },
           {
             labelText: 'en',
-            uniqueItemId: 'en'
+            uniqueItemId: 'en',
           },
           {
             labelText: 'sv',
-            uniqueItemId: 'sv'
-          }
-
+            uniqueItemId: 'sv',
+          },
         ]}
       />,
       {

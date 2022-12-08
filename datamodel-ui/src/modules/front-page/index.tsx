@@ -25,10 +25,44 @@ export default function FrontPage() {
   const { t, i18n } = useTranslation('common');
   const { isSmall } = useBreakpoints();
   const { urlState } = useUrlState();
-  const { data: serviceCategories } = useGetServiceCategoriesQuery();
-  const { data: organizations } = useGetOrganizationsQuery();
-  const { data: searchModels } = useGetSearchModelsQuery({ urlState });
+  const { data: serviceCategoriesData } = useGetServiceCategoriesQuery();
+  const { data: organizationsData } = useGetOrganizationsQuery();
+  const { data: searchModels } = useGetSearchModelsQuery({
+    urlState,
+    lang: i18n.language,
+  });
   const [showModal, setShowModal] = useState(false);
+
+  const organizations = useMemo(() => {
+    if (!organizationsData) {
+      return [];
+    }
+
+    return organizationsData['@graph'].map((org) => {
+      const id = org['@id'].replaceAll('urn:uuid:', '');
+      return {
+        id: id,
+        label: getPropertyLanguageVersion({
+          data: org.prefLabel,
+          lang: i18n.language,
+        }),
+      };
+    });
+  }, [organizationsData, i18n.language]);
+
+  const serviceCategories = useMemo(() => {
+    if (!serviceCategoriesData) {
+      return [];
+    }
+
+    return serviceCategoriesData['@graph'].map((category) => ({
+      id: category.identifier,
+      label: getPropertyLanguageVersion({
+        data: category.label,
+        lang: i18n.language,
+      }),
+    }));
+  }, [serviceCategoriesData, i18n.language]);
 
   const languages: SingleSelectData[] = useMemo(() => {
     if (!searchModels || searchModels.models.length < 1) {
@@ -56,7 +90,7 @@ export default function FrontPage() {
   }, [searchModels]);
 
   const data: SearchResultData[] = useMemo(() => {
-    if (!searchModels || !organizations || !serviceCategories) {
+    if (!searchModels || !organizationsData || !serviceCategoriesData) {
       return [];
     }
 
@@ -64,7 +98,7 @@ export default function FrontPage() {
       const contributors: string[] = m.contributor
         .map((c) =>
           getPropertyLanguageVersion({
-            data: organizations?.['@graph'].find(
+            data: organizationsData?.['@graph'].find(
               (o) => o['@id'].replace('urn:uuid:', '') === c
             )?.prefLabel,
             lang: i18n.language,
@@ -75,8 +109,9 @@ export default function FrontPage() {
       const partOf: string[] = m.isPartOf
         .map((p) =>
           getPropertyLanguageVersion({
-            data: serviceCategories?.['@graph'].find((c) => c.identifier === p)
-              ?.label,
+            data: serviceCategoriesData?.['@graph'].find(
+              (c) => c.identifier === p
+            )?.label,
             lang: i18n.language,
           })
         )
@@ -101,7 +136,13 @@ export default function FrontPage() {
         type: t(m.type),
       };
     });
-  }, [searchModels, serviceCategories, organizations, i18n.language, t]);
+  }, [
+    searchModels,
+    serviceCategoriesData,
+    organizationsData,
+    i18n.language,
+    t,
+  ]);
 
   return (
     <main id="main">
@@ -122,8 +163,8 @@ export default function FrontPage() {
       <ResultAndFilterContainer>
         {!isSmall ? (
           <FrontPageFilter
-            organizations={organizations}
-            serviceCategories={serviceCategories}
+            organizations={organizationsData}
+            serviceCategories={serviceCategoriesData}
             languages={languages}
           />
         ) : (
@@ -139,8 +180,8 @@ export default function FrontPage() {
                 isModal
                 onModalClose={() => setShowModal(false)}
                 resultCount={searchModels?.totalHitCount}
-                organizations={organizations}
-                serviceCategories={serviceCategories}
+                organizations={organizationsData}
+                serviceCategories={serviceCategoriesData}
                 languages={languages}
               />
             </ModalContent>
@@ -149,7 +190,24 @@ export default function FrontPage() {
         <ResultAndStatsWrapper id="search-results">
           <SearchResults
             data={data}
-            totalHitCount={searchModels?.totalHitCount}
+            organizations={organizations}
+            domains={serviceCategories}
+            types={[
+              {
+                id: 'profile',
+                label: t('profile'),
+              },
+              {
+                id: 'library',
+                label: t('library-variant'),
+              },
+            ]}
+            partOfText={t('card-information-domains')}
+            noDescriptionText={t('no-description')}
+            tagsHiddenTitle={''}
+            tagsTitle={t('results-with-current', {
+              count: searchModels?.totalHitCount ?? 0,
+            })}
           />
         </ResultAndStatsWrapper>
       </ResultAndFilterContainer>

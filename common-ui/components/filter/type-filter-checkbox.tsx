@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import useUrlState, { initialUrlState } from '../../utils/hooks/use-url-state';
 import CheckboxFilter from './checkbox-filter';
 
 interface Item {
@@ -17,16 +17,20 @@ export default function TypeCheckboxFilter({
   items,
   isModal,
 }: TypeCheckboxFilterProps) {
-  // This should removed when urlState supports changes needed for this component to work
-  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const { urlState, patchUrlState } = useUrlState();
 
   return (
     <CheckboxFilter
       items={items}
-      selectedItems={selectedItems}
+      selectedItems={urlState.types}
       title={title}
       checkboxVariant={isModal ? 'large' : 'small'}
-      onChange={(e) => setSelectedItems(Array.isArray(e) ? e : [e])}
+      onChange={(types) =>
+        patchUrlState({
+          types,
+          page: initialUrlState.page,
+        })
+      }
     />
   );
 }

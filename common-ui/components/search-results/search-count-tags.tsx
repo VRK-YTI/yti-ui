@@ -1,5 +1,4 @@
-import { ReactNode } from 'react';
-import { useTranslation } from 'next-i18next';
+import { useTranslation } from 'react-i18next';
 import { Text, VisuallyHidden } from 'suomifi-ui-components';
 import useUrlState, { initialUrlState } from '../../utils/hooks/use-url-state';
 import { useBreakpoints } from '../media-query';
@@ -13,7 +12,8 @@ import { translateStatus } from '../../utils/translation-helpers';
 import { isEqual } from 'lodash';
 
 interface SearchCountTagsProps {
-  title: ReactNode;
+  title: string;
+  hiddenTitle: string;
   organizations?: {
     label: string;
     id: string;
@@ -22,16 +22,20 @@ interface SearchCountTagsProps {
     label: string;
     id: string;
   }[];
+  types?: {
+    label: string;
+    id: string;
+  }[];
   renderQBeforeStatus?: boolean;
-  count: number;
 }
 
 export default function SearchCountTags({
   title,
   organizations = [],
   domains = [],
+  types = [],
   renderQBeforeStatus = false,
-  count = 0,
+  hiddenTitle,
 }: SearchCountTagsProps) {
   const { t } = useTranslation('common');
   const { urlState, patchUrlState } = useUrlState();
@@ -41,13 +45,12 @@ export default function SearchCountTags({
     <CountWrapper $isSmall={isSmall} id="result-counts">
       <CountText aria-live="polite" id="result-counts-text">
         <span aria-hidden={true}>{title}</span>
-        <VisuallyHidden>
-          {t('search-results-count', { count: count })}
-        </VisuallyHidden>
+        <VisuallyHidden>{hiddenTitle}</VisuallyHidden>
       </CountText>
       <ChipWrapper id="result-counts-chips">
         {renderOrganizationTag()}
         {renderQBeforeStatus && renderQTag()}
+        {renderTypesTags()}
         {renderLanguageTags()}
         {renderStatusTags()}
         {!renderQBeforeStatus && renderQTag()}
@@ -96,14 +99,14 @@ export default function SearchCountTags({
   }
 
   function renderStatusTags() {
-    return ['valid', 'draft', 'retired', 'superseded']
+    return ['valid', 'draft', 'retired', 'superseded', 'invalid']
       .map((status) => {
-        if (urlState.status.includes(status)) {
+        if (urlState.status.includes(status) || urlState.status.includes(status.toUpperCase())) {
           return (
             <Tag
               onRemove={() =>
                 patchUrlState({
-                  status: urlState.status.filter((s) => s !== status),
+                  status: urlState.status.filter((s) => s !== status && s !== status.toUpperCase()),
                 })
               }
               key={status}
@@ -152,5 +155,26 @@ export default function SearchCountTags({
         </Tag>
       );
     }
+  }
+
+  function renderTypesTags() {
+    return types
+      .map((type) => {
+        if (urlState.types.includes(type.id)) {
+          return (
+            <Tag
+              onRemove={() =>
+                patchUrlState({
+                  types: urlState.types.filter((t) => t !== type.id),
+                })
+              }
+              key={type.id}
+            >
+              {type.label}
+            </Tag>
+          );
+        }
+      })
+      .filter(Boolean);
   }
 }

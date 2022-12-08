@@ -8,6 +8,9 @@ import singletonRouter from 'next/router';
 
 jest.mock('next/dist/client/router', () => require('next-router-mock'));
 
+// This is used to remove "Not implemented..." errors
+jest.spyOn(window, 'scrollTo').mockImplementation();
+
 describe('pagination', () => {
   it('should render component', () => {
     mockRouter.setCurrentUrl('/?page=0');
