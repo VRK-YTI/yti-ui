@@ -22,6 +22,7 @@
   "alert-description-languages-undefined": "Terminology description is undefined",
   "alert-description-name-undefined": "Terminology name is undefined in",
   "alert-information-domain-undefined": "Information domains is undefined",
+  "alert-invalid-email": "Invalid email",
   "alert-no-status": "Terminology status is undefined",
   "alert-org-undefined": "Contributors is undefined",
   "alert-prefix-invalid-or-in-use": "Prefix is in invalid form or prefix is already in use",

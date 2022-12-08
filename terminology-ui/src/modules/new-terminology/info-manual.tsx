@@ -46,8 +46,11 @@ export default function InfoManual({
       valid = false;
     } else {
       Object.entries(terminologyData).forEach(([key, value]) => {
-        if (key === 'contact') {
-          return;
+        if (
+          key === 'contact' &&
+          value.match(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/) === null
+        ) {
+          valid = false;
         }
 
         if (!value || value.length < 1 || value[1] === false) {
