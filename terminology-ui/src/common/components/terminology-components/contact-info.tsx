@@ -50,6 +50,13 @@ export default function ContactInfo({
         maxLength={EMAIL_MAX}
         id="contact-input"
         disabled={disabled}
+        status={
+          userPosted &&
+          contact !== '' &&
+          contact.match(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/) === null
+            ? 'error'
+            : 'default'
+        }
       />
     </BlankFieldset>
   );
