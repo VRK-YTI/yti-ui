@@ -40,6 +40,7 @@ import { useStoreDispatch } from '@app/store';
 import { setAlert } from '../alert/alert.slice';
 import UpdateWithFileModal from '../update-with-file-modal';
 import StatusMassEdit from '../status-mass-edit';
+import isEmail from 'validator/lib/isEmail';
 
 const Subscription = dynamic(
   () => import('@app/common/components/subscription/subscription')
@@ -158,9 +159,9 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
         {contact && (
           <BasicBlock title={t('contact')}>
             <ExternalLink
-              href={`mailto:${contact}?subject=${t(
-                'feedback-vocabulary'
-              )} - ${getPropertyValue({
+              href={`mailto:${
+                isEmail(contact) ? contact : 'yhteentoimivuus@dvv.fi'
+              }?subject=${t('feedback-vocabulary')} - ${getPropertyValue({
                 property: data.properties.prefLabel,
                 language: i18n.language,
               })}`}

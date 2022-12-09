@@ -12,6 +12,7 @@ import { useTranslation } from 'next-i18next';
 import { TerminologyDataInitialState } from './terminology-initial-state';
 import { UpdateTerminology } from './update-terminology.interface';
 import StatusSelector from './status-selector';
+import isEmail from 'validator/lib/isEmail';
 
 interface InfoManualProps {
   setIsValid: (valid: boolean) => void;
@@ -46,10 +47,7 @@ export default function InfoManual({
       valid = false;
     } else {
       Object.entries(terminologyData).forEach(([key, value]) => {
-        if (
-          key === 'contact' &&
-          value.match(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/) === null
-        ) {
+        if (key === 'contact' && !isEmail(value)) {
           valid = false;
         }
 
