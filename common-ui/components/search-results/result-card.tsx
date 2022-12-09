@@ -71,9 +71,13 @@ export default function ResultCard({
         {status && renderStatus()}
       </Subtitle>
       <Description id="card-description">
-        {description && description.length > 0
-          ? description
-          : noDescriptionText}
+        <SanitizedTextContent
+          text={
+            description && description.length > 0
+              ? description
+              : noDescriptionText
+          }
+        />
       </Description>
       {partOf && (
         <PartOf id="card-partof">

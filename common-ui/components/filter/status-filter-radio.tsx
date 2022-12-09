@@ -25,7 +25,9 @@ export default function StatusFilterRadio({
         });
       }}
       radioButtonVariant={isModal ? 'large' : 'small'}
-      selectedItem={urlState.status.length < 1 ? 'VALID,DRAFT' : urlState.status.join(',')}
+      selectedItem={
+        urlState.status.length < 1 ? 'VALID,DRAFT' : urlState.status.join(',')
+      }
     />
   );
 }
