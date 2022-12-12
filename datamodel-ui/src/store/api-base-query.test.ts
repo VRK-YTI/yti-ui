@@ -9,7 +9,7 @@ import axios from 'axios';
 import {
   getServiceCategories,
   getRunningQueriesThunk,
-} from '@app/common/components/serviceCategories/serviceCategories.slice';
+} from '@app/common/components/service-categories/service-categories.slice';
 
 describe('axios base query', () => {
   const mock = new MockAdapter(axios, { onNoMatch: 'throwException' });

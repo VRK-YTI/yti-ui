@@ -13,11 +13,11 @@ import {
 import {
   getServiceCategories,
   getRunningQueriesThunk as getServiceCategoriesRunningQueriesThunk,
-} from '@app/common/components/serviceCategories/serviceCategories.slice';
+} from '@app/common/components/service-categories/service-categories.slice';
 import {
   getSearchModels,
   getRunningQueriesThunk as getSearchModelsRunningQueriesThunk,
-} from '@app/common/components/searchModels/searchModels.slice';
+} from '@app/common/components/search-models/search-models.slice';
 import { initialUrlState } from 'yti-common-ui/utils/hooks/use-url-state';
 import PageHead from 'yti-common-ui/page-head';
 
