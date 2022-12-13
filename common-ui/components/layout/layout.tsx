@@ -20,9 +20,13 @@ import getConfig from 'next/config';
 export default function Layout({
   children,
   feedbackSubject,
+  user,
+  fakeableUsers,
 }: {
   children: React.ReactNode;
   feedbackSubject?: string;
+  user?: any;
+  fakeableUsers?: any;
 }) {
   const { t } = useTranslation('common');
   const { breakpoint } = useBreakpoints();
@@ -41,7 +45,7 @@ export default function Layout({
       <SkipLink href="#main">{t('skip-link-main')}</SkipLink>
 
       <SiteContainer>
-        <SmartHeader />
+        <SmartHeader user={user} fakeableUsers={fakeableUsers} />
 
         <ContentContainer>
           {/* <Alerts /> */}

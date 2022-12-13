@@ -5,13 +5,16 @@ import {
   MobileMenuImpersonateItem,
   MobileMenuImpersonateSection,
 } from './impersonate.styles';
-import useFakeableUsers from './use-fakeable-users';
+import { FakeableUser } from 'interfaces/fakeable-user.interface';
 
-export default function MobileImpersonateWrapper() {
-  const users = useFakeableUsers();
+export default function MobileImpersonateWrapper({
+  fakeableUsers,
+}: {
+  fakeableUsers?: FakeableUser[];
+}) {
   const { t } = useTranslation();
 
-  if (!users?.length) {
+  if (!fakeableUsers?.length) {
     return null;
   }
 
@@ -20,7 +23,7 @@ export default function MobileImpersonateWrapper() {
       <MobileMenuImpersonateItem>
         <Text>{t('impersonate-user')}</Text>
       </MobileMenuImpersonateItem>
-      {users.map(({ id, displayName, impersonate }) => (
+      {fakeableUsers.map(({ id, displayName, impersonate }) => (
         <MobileMenuImpersonateItem key={id} $inset>
           <Link href="#" onClick={impersonate}>
             {displayName}

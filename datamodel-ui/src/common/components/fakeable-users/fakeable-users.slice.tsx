@@ -1,4 +1,4 @@
-import { User } from '@app/common/interfaces/user.interface';
+import { FakeableUser } from '@app/common/interfaces/fakeable-user.interface';
 import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { HYDRATE } from 'next-redux-wrapper';
@@ -13,7 +13,7 @@ export const fakeableUsersApi = createApi({
     }
   },
   endpoints: (builder) => ({
-    getFakeableUsers: builder.query<User[], void>({
+    getFakeableUsers: builder.query<FakeableUser[], void>({
       query: () => ({
         url: '/fakeableUsers',
         method: 'GET',
@@ -24,4 +24,9 @@ export const fakeableUsersApi = createApi({
 
 export default fakeableUsersApi.reducer;
 
-export const { useGetFakeableUsersQuery } = fakeableUsersApi;
+export const {
+  useGetFakeableUsersQuery,
+  util: { getRunningQueriesThunk },
+} = fakeableUsersApi;
+
+export const { getFakeableUsers } = fakeableUsersApi.endpoints;

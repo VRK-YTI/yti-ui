@@ -20,17 +20,29 @@ import {
 } from '@app/common/components/search-models/search-models.slice';
 import { initialUrlState } from 'yti-common-ui/utils/hooks/use-url-state';
 import PageHead from 'yti-common-ui/page-head';
+import { FakeableUser } from '@app/common/interfaces/fakeable-user.interface';
 
-interface IndexPageProps extends CommonContextState {
+interface IndexPageProps extends Omit<CommonContextState, 'fakeableUsers'> {
   _netI18Next: SSRConfig;
+  fakeableUsers: FakeableUser[];
 }
 
 export default function IndexPage(props: IndexPageProps) {
-  const { t } = useTranslation('common');
+  const { t, i18n } = useTranslation('common');
 
   return (
     <CommonContextProvider value={props}>
-      <Layout>
+      <Layout
+        user={props.user}
+        fakeableUsers={props.fakeableUsers?.map((user) => ({
+          ...user,
+          displayName: `${user.firstName} ${user.lastName}`,
+          impersonate: () =>
+            (window.location.href = `/api/auth/fake-login?fake.login.mail=${encodeURIComponent(
+              user.email
+            )}&target=/${i18n.language ?? 'fi'}`),
+        }))}
+      >
         <PageHead
           baseUrl="https://tietomallit.suomi.fi"
           title={t('datamodel-title')}

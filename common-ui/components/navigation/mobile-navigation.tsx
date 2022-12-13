@@ -1,26 +1,25 @@
 import { useRouter } from 'next/router';
 import React from 'react';
 import { useTranslation } from 'next-i18next';
-import { useSelector } from 'react-redux';
 import { Link, Text } from 'suomifi-ui-components';
 import LoginButtons from '../authentication-panel/login-buttons';
 import MobileImpersonateWrapper from '../impersonate/mobile-impersonate-wrapper';
 import MobileLocaleChooser from '../locale-chooser/mobile-locale-chooser';
-// import { selectLogin } from "../login/login.slice";
 import { MobileMenuItem, MobileMenuSection } from './navigation.styles';
 
 interface MobileNavigationProps {
+  isLoggedIn: boolean;
+  fakeableUsers?: any;
   handleLoginModalClick?: () => void;
 }
 
 export default function MobileNavigation({
+  isLoggedIn,
+  fakeableUsers,
   handleLoginModalClick,
 }: MobileNavigationProps) {
   const { t } = useTranslation('common');
   const router = useRouter();
-  // TODO: Solve how to get login information
-  // const isLoggedIn = !useSelector(selectLogin()).anonymous;
-  const isLoggedIn = false;
 
   return (
     <>
@@ -64,7 +63,7 @@ export default function MobileNavigation({
       </MobileMenuSection>
 
       <MobileLocaleChooser />
-      <MobileImpersonateWrapper />
+      <MobileImpersonateWrapper fakeableUsers={fakeableUsers} />
     </>
   );
 }
