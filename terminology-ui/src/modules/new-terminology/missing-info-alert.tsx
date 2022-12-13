@@ -2,6 +2,7 @@ import FormFooterAlert from '@app/common/components/form-footer-alert';
 import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
+import isEmail from 'validator/lib/isEmail';
 
 interface MissingInfoAlertProps {
   data: NewTerminologyInfo;
@@ -41,9 +42,7 @@ export default function MissingInfoAlert({ data }: MissingInfoAlertProps) {
       !data.prefix[0] ||
       data.prefix[1] === false ||
       (Object.keys(data).includes('status') && !data.status) ||
-      (data.contact &&
-        data.contact.match(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/) ===
-          null)
+      (data.contact && !isEmail(data.contact))
     ) {
       return true;
     }
@@ -106,10 +105,7 @@ export default function MissingInfoAlert({ data }: MissingInfoAlertProps) {
   }
 
   function renderContactAlerts(): string {
-    if (
-      data.contact &&
-      data.contact.match(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/) === null
-    ) {
+    if (data.contact && !isEmail(data.contact)) {
       return t('alert-invalid-email');
     }
 

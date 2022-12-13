@@ -1,4 +1,5 @@
 import { useStoreDispatch } from '@app/store';
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { selectAdminControls } from '../components/admin-controls/admin-controls.slice';
 import {
@@ -46,13 +47,15 @@ export default function HasPermission({
   const user = useSelector(selectLogin());
   const isAdminControlsDisabled = useSelector(selectAdminControls());
 
-  if (
-    authenticatedUser &&
-    (authenticatedUser.anonymous !== user.anonymous ||
-      authenticatedUser.username !== user.username)
-  ) {
-    dispatch(setLogin(authenticatedUser));
-  }
+  useEffect(() => {
+    if (
+      authenticatedUser &&
+      (authenticatedUser.anonymous !== user.anonymous ||
+        authenticatedUser.username !== user.username)
+    ) {
+      dispatch(setLogin(authenticatedUser));
+    }
+  }, [authenticatedUser, dispatch, user]);
 
   if (isAdminControlsDisabled) {
     return false;

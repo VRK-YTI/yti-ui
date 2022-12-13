@@ -26,12 +26,11 @@ export default function SanitizedTextContent({
       !node.getAttribute('href')?.includes('script')
     ) {
       if (internalTypes.includes(node.getAttribute('data-type') as string)) {
+        const url = node.getAttribute('href') ?? '';
         return (
           <Link
             passHref
-            href={`/terminology-api/api/v1/resolve?uri=${node.getAttribute(
-              'href'
-            )}`}
+            href={url?.includes('uri.suomi.fi') ? `${url}&env=env_v2` : url}
           >
             <SuomiInternalLink href="">{children}</SuomiInternalLink>
           </Link>

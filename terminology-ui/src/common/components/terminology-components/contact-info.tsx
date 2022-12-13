@@ -9,6 +9,7 @@ import { useTranslation } from 'next-i18next';
 import { UpdateTerminology } from '@app/modules/new-terminology/update-terminology.interface';
 import { EMAIL_MAX } from '@app/common/utils/constants';
 import { useState } from 'react';
+import isEmail from 'validator/lib/isEmail';
 
 interface ContactInfoProps {
   update: ({ key, data }: UpdateTerminology) => void;
@@ -51,9 +52,7 @@ export default function ContactInfo({
         id="contact-input"
         disabled={disabled}
         status={
-          userPosted &&
-          contact !== '' &&
-          contact.match(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/) === null
+          userPosted && contact !== '' && !isEmail(contact)
             ? 'error'
             : 'default'
         }
