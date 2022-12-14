@@ -16,7 +16,7 @@ import {
   createCommonGetServerSideProps,
   LocalHandlerParams,
 } from '@app/common/utils/create-getserversideprops';
-import Layout from 'yti-common-ui/layout/layout';
+import Layout from '@app/common/components/layout';
 import EditVocabulary from '@app/modules/edit-vocabulary';
 import { SSRConfig, useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';

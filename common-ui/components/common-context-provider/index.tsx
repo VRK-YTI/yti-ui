@@ -1,5 +1,6 @@
 import { FakeableUser } from '../../interfaces/fakeable-user.interface';
 import { createContext } from 'react';
+import { User } from '../../interfaces/user.interface';
 
 // Note. Undefined is not allowed here so null must be used instead.
 export interface CommonContextState {
@@ -7,7 +8,7 @@ export interface CommonContextState {
   isMatomoEnabled: boolean;
   matomoUrl: string | null;
   matomoSiteId: string | null;
-  user: object | null;
+  user: User | null;
   fakeableUsers: FakeableUser[] | null;
 }
 

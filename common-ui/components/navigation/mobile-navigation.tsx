@@ -6,10 +6,11 @@ import LoginButtons from '../authentication-panel/login-buttons';
 import MobileImpersonateWrapper from '../impersonate/mobile-impersonate-wrapper';
 import MobileLocaleChooser from '../locale-chooser/mobile-locale-chooser';
 import { MobileMenuItem, MobileMenuSection } from './navigation.styles';
+import { FakeableUser } from '../../interfaces/fakeable-user.interface';
 
 interface MobileNavigationProps {
   isLoggedIn: boolean;
-  fakeableUsers?: any;
+  fakeableUsers?: FakeableUser[];
   handleLoginModalClick?: () => void;
 }
 

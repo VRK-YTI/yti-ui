@@ -13,22 +13,25 @@ import Footer from '../footer';
 import SmartHeader from '../smart-header';
 import { useBreakpoints } from '../media-query';
 import SkipLink from '../skip-link';
-// import Alerts from '@app/common/components/alert';
-// import Matomo from '@app/common/components/matomo';
 import getConfig from 'next/config';
 import { FakeableUser } from '../../interfaces/fakeable-user.interface';
 import generateFakeableUsers from '../../utils/generate-impersonate';
+import { User } from '../../interfaces/user.interface';
 
 export default function Layout({
   children,
   feedbackSubject,
   user,
   fakeableUsers,
+  matomo,
+  alerts,
 }: {
   children: React.ReactNode;
   feedbackSubject?: string;
-  user?: any;
+  user?: User;
   fakeableUsers?: FakeableUser[] | null;
+  matomo?: React.ReactNode;
+  alerts?: React.ReactNode;
 }) {
   const { t, i18n } = useTranslation('common');
   const { breakpoint } = useBreakpoints();
@@ -36,7 +39,7 @@ export default function Layout({
 
   return (
     <ThemeProvider theme={lightTheme}>
-      {/* <Matomo /> */}
+      {matomo && matomo}
 
       <Head>
         <meta name="description" content="Terminology/React POC" />
@@ -53,7 +56,7 @@ export default function Layout({
         />
 
         <ContentContainer>
-          {/* <Alerts /> */}
+          {alerts && alerts}
           <MarginContainer $breakpoint={breakpoint}>{children}</MarginContainer>
         </ContentContainer>
 

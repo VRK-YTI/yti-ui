@@ -4,7 +4,7 @@ import {
   anonymousUser,
   User,
   UserProps,
-} from '@app/common/interfaces/user.interface';
+} from 'yti-common-ui/interfaces/user.interface';
 import withSession from './session';
 import { AppStore, wrapper } from '@app/store';
 import { ParsedUrlQuery } from 'querystring';

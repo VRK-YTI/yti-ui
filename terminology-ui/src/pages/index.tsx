@@ -1,12 +1,7 @@
 import React from 'react';
-// import Layout from '@app/layouts/layout';
-import Layout from 'yti-common-ui/layout/layout';
+import Layout from '@app/common/components/layout';
 import { SSRConfig, useTranslation } from 'next-i18next';
 import { createCommonGetServerSideProps } from '@app/common/utils/create-getserversideprops';
-// import {
-//   CommonContextProvider,
-//   CommonContextState,
-// } from '@app/common/components/common-context-provider';
 import {
   CommonContextProvider,
   CommonContextState,

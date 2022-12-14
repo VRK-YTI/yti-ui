@@ -4,12 +4,13 @@ import DesktopImpersonateWrapper from '../impersonate/desktop-impersonate-wrappe
 import { DesktopAuthenticationPanelWrapper } from './authentication-panel.styles';
 import LoginButtons from './login-buttons';
 import UserInfo from './user-info';
+import { User } from '../../interfaces/user.interface';
 
 export default function DesktopAuthenticationPanel({
   user,
   fakeableUsers,
 }: {
-  user?: any;
+  user?: User;
   fakeableUsers?: FakeableUser[];
 }) {
   return (

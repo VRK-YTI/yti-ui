@@ -4,7 +4,7 @@ import {
   anonymousUser,
   User,
   UserProps,
-} from '@app/common/interfaces/user.interface';
+} from 'yti-common-ui/interfaces/user.interface';
 import withSession from './session';
 import { AppStore, wrapper } from '@app/store';
 import { ParsedUrlQuery } from 'querystring';
@@ -13,7 +13,7 @@ import {
   getAuthenticatedUser,
   setLogin,
 } from '@app/common/components/login/login.slice';
-import { CommonContextState } from '../components/common-context-provider';
+import { CommonContextState } from 'yti-common-ui/common-context-provider';
 import { setAdminControls } from '../components/admin-controls/admin-controls.slice';
 import { getStoreData } from '../components/page-head/utils';
 import { getFakeableUsers } from '../components/fakeable-user/fakeable-user.slice';

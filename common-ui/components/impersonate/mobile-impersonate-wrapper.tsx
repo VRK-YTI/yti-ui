@@ -14,7 +14,7 @@ export default function MobileImpersonateWrapper({
 }) {
   const { t } = useTranslation();
 
-  if (!fakeableUsers?.length) {
+  if (!fakeableUsers || fakeableUsers.length < 1) {
     return null;
   }
 

@@ -1,4 +1,4 @@
-import Layout from 'yti-common-ui/layout/layout';
+import Layout from '@app/common/components/layout';
 import { SSRConfig, useTranslation } from 'next-i18next';
 import EditCollection from '@app/modules/edit-collection';
 import { useRouter } from 'next/router';

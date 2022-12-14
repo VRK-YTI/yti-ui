@@ -4,10 +4,11 @@ import { Button } from 'suomifi-ui-components';
 import LoginModalView from '../login-modal';
 import { useBreakpoints } from '../media-query';
 import { LoginButtonsWrapper } from './authentication-panel.styles';
+import { User } from '../../interfaces/user.interface';
 
 interface LoginButtonsProps {
   handleLoginModalClick?: () => void;
-  user?: any;
+  user?: User;
 }
 
 export default function LoginButtons({

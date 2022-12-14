@@ -1,5 +1,5 @@
 import React from 'react';
-import Layout from 'yti-common-ui/layout/layout';
+import Layout from '@app/common/components/layout';
 import { SSRConfig, useTranslation } from 'next-i18next';
 import { createCommonGetServerSideProps } from '@app/common/utils/create-getserversideprops';
 import OwnInformation from '@app/modules/own-information';

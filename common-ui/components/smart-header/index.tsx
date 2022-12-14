@@ -22,12 +22,13 @@ import HeaderSearch from '../header-search';
 import { useBreakpoints } from '../media-query';
 import LoginModalView from '../login-modal';
 import { FakeableUser } from '../../interfaces/fakeable-user.interface';
+import { User } from '../../interfaces/user.interface';
 
 export default function SmartHeader({
   user,
   fakeableUsers,
 }: {
-  user?: any;
+  user?: User;
   fakeableUsers?: FakeableUser[];
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
