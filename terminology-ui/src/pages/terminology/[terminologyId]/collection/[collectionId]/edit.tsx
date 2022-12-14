@@ -5,7 +5,7 @@ import {
 import {
   CommonContextProvider,
   CommonContextState,
-} from '@app/common/components/common-context-provider';
+} from 'yti-common-ui/common-context-provider';
 import PageHead from '@app/common/components/page-head';
 import { getStoreData } from '@app/common/components/page-head/utils';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
@@ -17,7 +17,7 @@ import {
   createCommonGetServerSideProps,
   LocalHandlerParams,
 } from '@app/common/utils/create-getserversideprops';
-import Layout from '@app/layouts/layout';
+import Layout from 'yti-common-ui/layout/layout';
 import EditCollection from '@app/modules/edit-collection';
 import { SSRConfig } from 'next-i18next';
 
@@ -36,7 +36,7 @@ interface CollectionEditPageProps extends CommonContextState {
 export default function CollectionEdit(props: CollectionEditPageProps) {
   return (
     <CommonContextProvider value={props}>
-      <Layout>
+      <Layout user={props.user} fakeableUsers={props.fakeableUsers}>
         <PageHead
           title={props.collectionLabel}
           siteTitle="Yhteentoimivuusalusta"

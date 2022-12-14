@@ -1,4 +1,4 @@
-import Layout from '@app/layouts/layout';
+import Layout from 'yti-common-ui/layout/layout';
 import { SSRConfig, useTranslation } from 'next-i18next';
 import EditCollection from '@app/modules/edit-collection';
 import { useRouter } from 'next/router';
@@ -9,7 +9,7 @@ import {
 import {
   CommonContextState,
   CommonContextProvider,
-} from '@app/common/components/common-context-provider';
+} from 'yti-common-ui/common-context-provider';
 import PageHead from '@app/common/components/page-head';
 import {
   getVocabulary,
@@ -27,7 +27,7 @@ export default function NewConcept(props: NewCollectionPageProps) {
 
   return (
     <CommonContextProvider value={props}>
-      <Layout>
+      <Layout user={props.user} fakeableUsers={props.fakeableUsers}>
         <PageHead
           title={t('new-collection')}
           siteTitle="Yhteentoimivuusalusta"

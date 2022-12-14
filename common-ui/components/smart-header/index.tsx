@@ -21,7 +21,7 @@ import UserInfo from '../authentication-panel/user-info';
 import HeaderSearch from '../header-search';
 import { useBreakpoints } from '../media-query';
 import LoginModalView from '../login-modal';
-import { FakeableUser } from 'interfaces/fakeable-user.interface';
+import { FakeableUser } from '../../interfaces/fakeable-user.interface';
 
 export default function SmartHeader({
   user,

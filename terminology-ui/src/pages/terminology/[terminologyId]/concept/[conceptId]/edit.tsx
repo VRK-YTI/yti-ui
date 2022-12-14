@@ -1,4 +1,4 @@
-import Layout from '@app/layouts/layout';
+import Layout from 'yti-common-ui/layout/layout';
 import { SSRConfig, useTranslation } from 'next-i18next';
 import {
   createCommonGetServerSideProps,
@@ -7,7 +7,7 @@ import {
 import {
   CommonContextState,
   CommonContextProvider,
-} from '@app/common/components/common-context-provider';
+} from 'yti-common-ui/common-context-provider';
 import PageHead from '@app/common/components/page-head';
 import { default as EditConceptModule } from '@app/modules/edit-concept';
 import { useRouter } from 'next/router';
@@ -36,7 +36,7 @@ export default function EditConcept(props: NewConceptPageProps) {
 
   return (
     <CommonContextProvider value={props}>
-      <Layout>
+      <Layout user={props.user} fakeableUsers={props.fakeableUsers}>
         <PageHead
           title={t('new-concept-title')}
           siteTitle="Yhteentoimivuusalusta"

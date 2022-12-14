@@ -1,4 +1,4 @@
-import { FakeableUser } from 'interfaces/fakeable-user.interface';
+import { FakeableUser } from '../../interfaces/fakeable-user.interface';
 import React from 'react';
 import DesktopImpersonateWrapper from '../impersonate/desktop-impersonate-wrapper';
 import { DesktopAuthenticationPanelWrapper } from './authentication-panel.styles';

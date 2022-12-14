@@ -3,6 +3,5 @@ export interface FakeableUser {
   email: string;
   firstName: string;
   lastName: string;
-  displayName?: string;
-  impersonate?: () => void;
+  displayName: string;
 }

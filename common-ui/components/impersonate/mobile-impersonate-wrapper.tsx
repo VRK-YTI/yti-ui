@@ -5,7 +5,7 @@ import {
   MobileMenuImpersonateItem,
   MobileMenuImpersonateSection,
 } from './impersonate.styles';
-import { FakeableUser } from 'interfaces/fakeable-user.interface';
+import { FakeableUser } from '../../interfaces/fakeable-user.interface';
 
 export default function MobileImpersonateWrapper({
   fakeableUsers,

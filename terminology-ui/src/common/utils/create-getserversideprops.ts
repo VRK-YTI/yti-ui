@@ -16,6 +16,8 @@ import {
 import { CommonContextState } from '../components/common-context-provider';
 import { setAdminControls } from '../components/admin-controls/admin-controls.slice';
 import { getStoreData } from '../components/page-head/utils';
+import { getFakeableUsers } from '../components/fakeable-user/fakeable-user.slice';
+import { FakeableUser } from '../interfaces/fakeable-user.interface';
 
 export interface LocalHandlerParams extends GetServerSidePropsContext {
   store: AppStore;
@@ -66,6 +68,16 @@ export function createCommonGetServerSideProps<
           );
         }
 
+        if (process.env.NODE_ENV !== 'production') {
+          await store.dispatch(getFakeableUsers.initiate());
+        }
+
+        const fakeableUsers: FakeableUser[] = getStoreData({
+          state: store.getState(),
+          reduxKey: 'fakeableUsers',
+          functionKey: 'getFakeableUsers',
+        });
+
         store.dispatch(
           setAdminControls(process.env.ADMIN_CONTROLS_DISABLED === 'true')
         );
@@ -109,6 +121,8 @@ export function createCommonGetServerSideProps<
             isMatomoEnabled: process.env.MATOMO_ENABLED === 'true',
             matomoUrl: process.env.MATOMO_URL ?? null,
             matomoSiteId: process.env.MATOMO_SITE_ID ?? null,
+            user: user ?? null,
+            fakeableUsers: fakeableUsers ?? null,
           },
         };
       }

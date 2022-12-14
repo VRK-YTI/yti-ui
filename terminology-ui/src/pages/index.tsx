@@ -1,11 +1,16 @@
 import React from 'react';
-import Layout from '@app/layouts/layout';
+// import Layout from '@app/layouts/layout';
+import Layout from 'yti-common-ui/layout/layout';
 import { SSRConfig, useTranslation } from 'next-i18next';
 import { createCommonGetServerSideProps } from '@app/common/utils/create-getserversideprops';
+// import {
+//   CommonContextProvider,
+//   CommonContextState,
+// } from '@app/common/components/common-context-provider';
 import {
   CommonContextProvider,
   CommonContextState,
-} from '@app/common/components/common-context-provider';
+} from 'yti-common-ui/common-context-provider';
 import TerminologySearch from '@app/modules/terminology-search';
 import {
   getGroups,
@@ -29,7 +34,7 @@ export default function IndexPage(props: IndexPageProps) {
 
   return (
     <CommonContextProvider value={props}>
-      <Layout>
+      <Layout user={props.user} fakeableUsers={props.fakeableUsers}>
         <PageHead
           title={t('terminology-site-title')}
           description={t('terminology-search-info')}

@@ -1,5 +1,5 @@
 import { Organizations } from '@app/common/interfaces/organizations.interface';
-import { ServiceCategories } from '@app/common/interfaces/serviceCategories.interface';
+import { ServiceCategories } from '@app/common/interfaces/service-categories.interface';
 import { getPropertyLanguageVersion } from '@app/common/utils/get-language-version';
 import { useTranslation } from 'next-i18next';
 import { SingleSelectData } from 'suomifi-ui-components';

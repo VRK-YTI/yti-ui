@@ -1,12 +1,12 @@
 import React from 'react';
-import Layout from '@app/layouts/layout';
+import Layout from 'yti-common-ui/layout/layout';
 import { SSRConfig, useTranslation } from 'next-i18next';
 import { createCommonGetServerSideProps } from '@app/common/utils/create-getserversideprops';
 import OwnInformation from '@app/modules/own-information';
 import {
   CommonContextState,
   CommonContextProvider,
-} from '@app/common/components/common-context-provider';
+} from 'yti-common-ui/common-context-provider';
 import PageHead from '@app/common/components/page-head';
 
 interface OwnInformationPageProps extends CommonContextState {
@@ -18,7 +18,7 @@ export default function OwnInformationPage(props: OwnInformationPageProps) {
 
   return (
     <CommonContextProvider value={props}>
-      <Layout>
+      <Layout user={props.user} fakeableUsers={props.fakeableUsers}>
         <PageHead title={t('own-information')} />
 
         <OwnInformation />

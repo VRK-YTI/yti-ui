@@ -16,6 +16,8 @@ import SkipLink from '../skip-link';
 // import Alerts from '@app/common/components/alert';
 // import Matomo from '@app/common/components/matomo';
 import getConfig from 'next/config';
+import { FakeableUser } from '../../interfaces/fakeable-user.interface';
+import generateFakeableUsers from '../../utils/generate-impersonate';
 
 export default function Layout({
   children,
@@ -26,9 +28,9 @@ export default function Layout({
   children: React.ReactNode;
   feedbackSubject?: string;
   user?: any;
-  fakeableUsers?: any;
+  fakeableUsers?: FakeableUser[] | null;
 }) {
-  const { t } = useTranslation('common');
+  const { t, i18n } = useTranslation('common');
   const { breakpoint } = useBreakpoints();
   const { publicRuntimeConfig } = getConfig();
 
@@ -45,7 +47,10 @@ export default function Layout({
       <SkipLink href="#main">{t('skip-link-main')}</SkipLink>
 
       <SiteContainer>
-        <SmartHeader user={user} fakeableUsers={fakeableUsers} />
+        <SmartHeader
+          user={user}
+          fakeableUsers={generateFakeableUsers(i18n.language, fakeableUsers)}
+        />
 
         <ContentContainer>
           {/* <Alerts /> */}
