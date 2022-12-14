@@ -36,7 +36,7 @@ export default withIronSessionApiRoute(
       const proxyUrl = process.env.AUTH_PROXY_URL ?? 'http://yti-auth-proxy';
       const apiBase =
         process.env.DATAMODEL_API_URL ??
-        'http://yti-datamodel-api:9004/terminology-api';
+        'http://yti-datamodel-api:9004/datamodel-api';
       const apiPath = new URL(apiBase).pathname;
       const fetchUrl = proxyUrl + apiPath + '/api/v1/user';
 
