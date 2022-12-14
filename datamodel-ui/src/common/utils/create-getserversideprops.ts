@@ -118,8 +118,8 @@ export function createCommonGetServerSideProps<
                 /Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i
               )
             ),
-            user: user,
-            fakeableUsers: fakeableUsers,
+            user: user ?? null,
+            fakeableUsers: fakeableUsers ?? null,
           },
         };
       }

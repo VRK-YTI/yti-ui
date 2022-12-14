@@ -34,14 +34,16 @@ export default function IndexPage(props: IndexPageProps) {
     <CommonContextProvider value={props}>
       <Layout
         user={props.user}
-        fakeableUsers={props.fakeableUsers?.map((user) => ({
-          ...user,
-          displayName: `${user.firstName} ${user.lastName}`,
-          impersonate: () =>
-            (window.location.href = `/api/auth/fake-login?fake.login.mail=${encodeURIComponent(
-              user.email
-            )}&target=/${i18n.language ?? 'fi'}`),
-        }))}
+        fakeableUsers={
+          props.fakeableUsers?.map((user) => ({
+            ...user,
+            displayName: `${user.firstName} ${user.lastName}`,
+            impersonate: () =>
+              (window.location.href = `/api/auth/fake-login?fake.login.mail=${encodeURIComponent(
+                user.email
+              )}&target=/${i18n.language ?? 'fi'}`),
+          })) ?? []
+        }
       >
         <PageHead
           baseUrl="https://tietomallit.suomi.fi"

@@ -6,8 +6,8 @@ export interface CommonContextState {
   isMatomoEnabled: boolean;
   matomoUrl: string | null;
   matomoSiteId: string | null;
-  user?: object;
-  fakeableUsers?: object[];
+  user: object | null;
+  fakeableUsers: object[] | null;
 }
 
 export const initialCommonContextState: CommonContextState = {
@@ -15,8 +15,8 @@ export const initialCommonContextState: CommonContextState = {
   isMatomoEnabled: false,
   matomoUrl: null,
   matomoSiteId: null,
-  user: {},
-  fakeableUsers: [],
+  user: null,
+  fakeableUsers: null,
 };
 
 export const CommonContext = createContext<CommonContextState>(
