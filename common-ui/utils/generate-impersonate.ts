@@ -4,7 +4,7 @@ export default function generateFakeableUsers(
   language: string,
   fakeableUsers?: FakeableUser[] | null
 ): FakeableUser[] {
-  if (!fakeableUsers || fakeableUsers.length < 1) {
+  if (!fakeableUsers || fakeableUsers === null || fakeableUsers.length < 1) {
     return [];
   }
 

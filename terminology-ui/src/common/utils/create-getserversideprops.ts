@@ -18,6 +18,7 @@ import { setAdminControls } from '../components/admin-controls/admin-controls.sl
 import { getStoreData } from '../components/page-head/utils';
 import { getFakeableUsers } from '../components/fakeable-user/fakeable-user.slice';
 import { FakeableUser } from '../interfaces/fakeable-user.interface';
+import { isEqual } from 'lodash';
 
 export interface LocalHandlerParams extends GetServerSidePropsContext {
   store: AppStore;
@@ -122,7 +123,7 @@ export function createCommonGetServerSideProps<
             matomoUrl: process.env.MATOMO_URL ?? null,
             matomoSiteId: process.env.MATOMO_SITE_ID ?? null,
             user: user ?? null,
-            fakeableUsers: fakeableUsers ?? null,
+            fakeableUsers: isEqual(fakeableUsers, {}) ? null : fakeableUsers,
           },
         };
       }

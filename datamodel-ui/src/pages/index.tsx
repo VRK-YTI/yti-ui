@@ -30,7 +30,10 @@ export default function IndexPage(props: IndexPageProps) {
 
   return (
     <CommonContextProvider value={props}>
-      <Layout user={props.user} fakeableUsers={props.fakeableUsers}>
+      <Layout
+        user={props.user ?? undefined}
+        fakeableUsers={props.fakeableUsers}
+      >
         <PageHead
           baseUrl="https://tietomallit.suomi.fi"
           title={t('datamodel-title')}

@@ -22,6 +22,7 @@ import {
   getRunningQueriesThunk as getFakeableRunningQueriesThunk,
 } from '../components/fakeable-users/fakeable-users.slice';
 import { FakeableUser } from '../interfaces/fakeable-user.interface';
+import { isEqual } from 'lodash';
 
 export interface LocalHandlerParams extends GetServerSidePropsContext {
   store: AppStore;
@@ -119,7 +120,7 @@ export function createCommonGetServerSideProps<
               )
             ),
             user: user ?? null,
-            fakeableUsers: fakeableUsers ?? null,
+            fakeableUsers: isEqual(fakeableUsers, {}) ? null : fakeableUsers,
           },
         };
       }
