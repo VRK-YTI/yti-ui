@@ -1,5 +1,6 @@
 import { AxiosBaseQueryError } from '@app/store/axios-base-query';
 import { SerializedError } from '@reduxjs/toolkit';
+import { useTranslation } from 'next-i18next';
 
 export interface ExcelError {
   code: string;
@@ -14,6 +15,40 @@ export interface ExcelErrorDetails {
     column: string;
   };
 }
+
+type ExcelErrorDetailBlockProps = {
+  errorInfo: ExcelError;
+};
+
+export const ExcelErrorDetailBlock = ({
+  errorInfo,
+}: ExcelErrorDetailBlockProps) => {
+  const { t } = useTranslation('admin');
+
+  if (!errorInfo.data.errorDetails) {
+    return <></>;
+  }
+
+  return (
+    <>
+      <ul>
+        {errorInfo.data.errorDetails?.sheet && (
+          <li>{`${t('excel-sheet')}: ${
+            errorInfo.data.errorDetails?.sheet
+          }`}</li>
+        )}
+        {errorInfo.data.errorDetails?.row != undefined && (
+          <li>{`${t('excel-row')}: ${errorInfo.data.errorDetails?.row}`}</li>
+        )}
+        {errorInfo.data.errorDetails?.column && (
+          <li>{`${t('excel-column')}: ${
+            errorInfo.data.errorDetails?.column
+          }`}</li>
+        )}
+      </ul>
+    </>
+  );
+};
 
 export const createErrorMessage = (
   error: AxiosBaseQueryError | SerializedError | undefined
