@@ -1,4 +1,4 @@
-import { User } from './user.interface';
+import { User } from 'yti-common-ui/interfaces/user.interface';
 
 export interface AuthenticationFunctions {
   signInFakeUser: () => Promise<User>;

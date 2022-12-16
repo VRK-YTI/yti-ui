@@ -1,4 +1,4 @@
-import { User } from '@app/common/interfaces/user.interface';
+import { User } from 'yti-common-ui/interfaces/user.interface';
 import { checkPermission } from './has-permission';
 
 const createMockUser = (

@@ -1,7 +1,7 @@
 import { HYDRATE } from 'next-redux-wrapper';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
-import { ServiceCategories } from '@app/common/interfaces/serviceCategories.interface';
+import { ServiceCategories } from '@app/common/interfaces/service-categories.interface';
 
 export const serviceCategoriesApi = createApi({
   reducerPath: 'serviceCategoriesApi',

@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Script from 'next/script';
-import { CommonContext } from '../common-context-provider';
+import { CommonContext } from 'yti-common-ui/common-context-provider';
 
 declare global {
   interface Window {

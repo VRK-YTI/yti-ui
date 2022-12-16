@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
 import Alerts from './';
-import { lightTheme } from '@app/layouts/theme';
+import { lightTheme } from 'yti-common-ui/layout/theme';
 import { makeStore } from '@app/store';
 import { setAlert } from './alert.slice';
 import { getMockContext } from '@app/tests/test-utils';

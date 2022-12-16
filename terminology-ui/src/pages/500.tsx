@@ -1,9 +1,9 @@
 import Error from '@app/common/components/error/error';
-import ErrorLayout from '@app/layouts/error-layout';
+import ErrorLayout from 'yti-common-ui/layout/layout';
 import {
   CommonContextProvider,
   initialCommonContextState,
-} from '@app/common/components/common-context-provider';
+} from 'yti-common-ui/common-context-provider';
 import PageHead from '@app/common/components/page-head';
 
 export default function Custom500() {

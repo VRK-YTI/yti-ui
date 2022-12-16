@@ -1,9 +1,9 @@
 import React from 'react';
 import { Block } from 'suomifi-ui-components';
-import { HeaderContainer, MarginContainer } from '@app/layouts/layout.styles';
+import { HeaderContainer, MarginContainer } from '../layout/layout.styles';
 import Logo from './logo';
 import { HeaderWrapper } from './smart-header.styles';
-import { useBreakpoints } from 'yti-common-ui/media-query';
+import { useBreakpoints } from '../media-query';
 
 export default function ErrorHeader() {
   const { breakpoint } = useBreakpoints();

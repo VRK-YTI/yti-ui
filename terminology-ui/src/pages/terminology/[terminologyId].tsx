@@ -1,7 +1,7 @@
 import { SSRConfig, useTranslation } from 'next-i18next';
 import { useRouter } from 'next/dist/client/router';
 import React from 'react';
-import Layout from '@app/layouts/layout';
+import Layout from '@app/common/components/layout';
 import {
   createCommonGetServerSideProps,
   LocalHandlerParams,
@@ -16,7 +16,7 @@ import { initialUrlState } from '@app/common/utils/hooks/use-url-state';
 import {
   CommonContextState,
   CommonContextProvider,
-} from '@app/common/components/common-context-provider';
+} from 'yti-common-ui/common-context-provider';
 import PageHead from '@app/common/components/page-head';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import { getStoreData } from '@app/common/components/page-head/utils';
@@ -38,7 +38,11 @@ export default function TerminologyPage(props: TerminologyPageProps) {
 
   return (
     <CommonContextProvider value={props}>
-      <Layout feedbackSubject={`${t('feedback-vocabulary')} - ${props.title}`}>
+      <Layout
+        user={props.user}
+        fakeableUsers={props.fakeableUsers}
+        feedbackSubject={`${t('feedback-vocabulary')} - ${props.title}`}
+      >
         <PageHead
           title={props.title ?? ''}
           description={props.description ?? ''}

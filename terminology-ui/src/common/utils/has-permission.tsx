@@ -8,7 +8,7 @@ import {
   useGetAuthenticatedUserQuery,
 } from '../components/login/login.slice';
 import { Organization } from '../interfaces/organization.interface';
-import { User } from '../interfaces/user.interface';
+import { User } from 'yti-common-ui/interfaces/user.interface';
 
 const actions = [
   'ADMIN_TERMINOLOGY',

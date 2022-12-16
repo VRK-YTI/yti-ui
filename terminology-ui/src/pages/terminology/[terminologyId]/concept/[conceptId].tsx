@@ -1,7 +1,7 @@
 import { SSRConfig, useTranslation } from 'next-i18next';
 import { useRouter } from 'next/dist/client/router';
 import React from 'react';
-import Layout from '@app/layouts/layout';
+import Layout from '@app/common/components/layout';
 import {
   createCommonGetServerSideProps,
   LocalHandlerParams,
@@ -18,7 +18,7 @@ import {
 import {
   CommonContextState,
   CommonContextProvider,
-} from '@app/common/components/common-context-provider';
+} from 'yti-common-ui/common-context-provider';
 import PageHead from '@app/common/components/page-head';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import { getProperty } from '@app/common/utils/get-property';
@@ -40,6 +40,8 @@ export default function ConceptPage(props: ConceptPageProps) {
   return (
     <CommonContextProvider value={props}>
       <Layout
+        user={props.user}
+        fakeableUsers={props.fakeableUsers}
         feedbackSubject={`${t('feedback-concept')} - ${props.conceptTitle}`}
       >
         <PageHead

@@ -2,10 +2,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { MouseEventHandler, useState } from 'react';
 import { useTranslation } from 'next-i18next';
-import { useSelector } from 'react-redux';
 import { useTheme } from 'styled-components';
 import { Icon, Link as SuomiFiLink } from 'suomifi-ui-components';
-import { selectLogin } from '@app/common/components/login/login.slice';
 import {
   NavigationDropdownItem,
   NavigationDropdownList,
@@ -15,9 +13,11 @@ import {
 } from './navigation.styles';
 import ClickOutsideListener from '../click-outside-listener';
 
-export default function DesktopNavigation() {
-  // TODO: Remove false from here
-  const isLoggedIn = !useSelector(selectLogin()).anonymous ?? false;
+export default function DesktopNavigation({
+  isLoggedIn,
+}: {
+  isLoggedIn: boolean;
+}) {
   const { t } = useTranslation('common');
   const [open, setOpen] = useState(false);
   const router = useRouter();

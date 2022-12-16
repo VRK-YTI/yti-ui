@@ -4,7 +4,7 @@ import {
   anonymousUser,
   User,
   UserProps,
-} from '@app/common/interfaces/user.interface';
+} from 'yti-common-ui/interfaces/user.interface';
 import withSession from './session';
 import { AppStore, wrapper } from '@app/store';
 import { ParsedUrlQuery } from 'querystring';
@@ -17,6 +17,12 @@ import {
 import { CommonContextState } from 'yti-common-ui/common-context-provider';
 // import { setAdminControls } from '../components/admin-controls/admin-controls.slice';
 import { getStoreData } from './utils';
+import {
+  getFakeableUsers,
+  getRunningQueriesThunk as getFakeableRunningQueriesThunk,
+} from '../components/fakeable-users/fakeable-users.slice';
+import { FakeableUser } from '../interfaces/fakeable-user.interface';
+import { isEqual } from 'lodash';
 
 export interface LocalHandlerParams extends GetServerSidePropsContext {
   store: AppStore;
@@ -69,6 +75,17 @@ export function createCommonGetServerSideProps<
           );
         }
 
+        if (process.env.NODE_ENV !== 'production') {
+          store.dispatch(getFakeableUsers.initiate());
+          await Promise.all(store.dispatch(getFakeableRunningQueriesThunk()));
+        }
+
+        const fakeableUsers: FakeableUser[] = getStoreData({
+          state: store.getState(),
+          reduxKey: 'fakeableUsers',
+          functionKey: 'getFakeableUsers',
+        });
+
         // store.dispatch(
         //   setAdminControls(process.env.ADMIN_CONTROLS_DISABLED === 'true')
         // );
@@ -102,6 +119,8 @@ export function createCommonGetServerSideProps<
                 /Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i
               )
             ),
+            user: user ?? null,
+            fakeableUsers: isEqual(fakeableUsers, {}) ? null : fakeableUsers,
           },
         };
       }

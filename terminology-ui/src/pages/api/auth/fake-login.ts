@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { User } from '@app/common/interfaces/user.interface';
+import { User } from 'yti-common-ui/interfaces/user.interface';
 import { userCookieOptions } from '@app/common/utils/user-cookie-options';
 import { withIronSessionApiRoute } from 'iron-session/next';
 

@@ -20,9 +20,17 @@ import DesktopLocaleChooser from '../locale-chooser/desktop-locale-chooser';
 import UserInfo from '../authentication-panel/user-info';
 import HeaderSearch from '../header-search';
 import { useBreakpoints } from '../media-query';
-import LoginModalView from '../login-modal/login-modal';
+import LoginModalView from '../login-modal';
+import { FakeableUser } from '../../interfaces/fakeable-user.interface';
+import { User } from '../../interfaces/user.interface';
 
-export default function SmartHeader() {
+export default function SmartHeader({
+  user,
+  fakeableUsers,
+}: {
+  user?: User;
+  fakeableUsers?: FakeableUser[];
+}) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isLoginExpanded, setIsLoginExpanded] = useState(false);
@@ -68,7 +76,11 @@ export default function SmartHeader() {
     return (
       <Block variant="nav">
         <NavigationContainer $breakpoint="small">
-          <MobileNavigation handleLoginModalClick={handleLoginModalClick} />
+          <MobileNavigation
+            handleLoginModalClick={handleLoginModalClick}
+            isLoggedIn={user?.anonymous ?? false}
+            fakeableUsers={fakeableUsers}
+          />
         </NavigationContainer>
       </Block>
     );
@@ -80,7 +92,7 @@ export default function SmartHeader() {
         <Block variant="nav">
           <NavigationContainer $breakpoint={breakpoint}>
             <MarginContainer $breakpoint={breakpoint}>
-              <DesktopNavigation />
+              <DesktopNavigation isLoggedIn={!user?.anonymous ?? false} />
             </MarginContainer>
           </NavigationContainer>
         </Block>
@@ -141,13 +153,15 @@ export default function SmartHeader() {
 
   function renderDesktopAuthenticationPanel() {
     if (!isSmall) {
-      return <DesktopAuthenticationPanel />;
+      return (
+        <DesktopAuthenticationPanel user={user} fakeableUsers={fakeableUsers} />
+      );
     }
   }
 
   function renderUserInfo() {
     if (isSmall && isExpanded) {
-      return <UserInfo breakpoint="small" />;
+      return <UserInfo breakpoint="small" user={user} />;
     }
   }
 
