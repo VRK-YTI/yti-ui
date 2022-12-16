@@ -1,19 +1,20 @@
 import React from 'react';
 import { useTranslation } from 'next-i18next';
 import HoverDropdown from '../hover-dropdown/hover-dropdown';
-import useFakeableUsers from './use-fakeable-users';
+import { FakeableUser } from '../../interfaces/fakeable-user.interface';
 
 export interface DesktopImpersonateWrapperProps {
   children: React.ReactNode;
+  fakeableUsers?: FakeableUser[];
 }
 
 export default function DesktopImpersonateWrapper({
   children,
+  fakeableUsers,
 }: DesktopImpersonateWrapperProps) {
-  const users = useFakeableUsers();
   const { t } = useTranslation();
 
-  if (!users?.length) {
+  if (!fakeableUsers || !fakeableUsers?.length) {
     return <>{children}</>;
   }
 
@@ -21,12 +22,19 @@ export default function DesktopImpersonateWrapper({
     <HoverDropdown
       items={[
         { key: 'impersonate-user', label: t('impersonate-user') },
-        ...(users?.map(({ id, email, displayName, impersonate }) => ({
-          key: id,
-          value: email,
-          label: displayName,
-          onClick: impersonate,
-        })) ?? []),
+        ...(fakeableUsers?.map(
+          ({ id, email, displayName, firstName, lastName, impersonate }) => ({
+            key: id,
+            value: email,
+            label: displayName ?? `${firstName} ${lastName}`,
+            onClick:
+              impersonate ??
+              (() =>
+                console.error(
+                  `Impersonate for user ${displayName} not implemented`
+                )),
+          })
+        ) ?? []),
       ]}
     >
       {children}

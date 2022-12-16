@@ -1,7 +1,7 @@
 import React from 'react';
 import { ThemeProvider } from 'styled-components';
 import { SWRConfig } from 'swr';
-import { lightTheme } from '@app/layouts/theme';
+import { lightTheme } from 'yti-common-ui/layout/theme';
 import { NextIronContext } from '@app/store';
 import httpMocks, {
   createRequest,

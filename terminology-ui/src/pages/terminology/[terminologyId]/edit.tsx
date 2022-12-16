@@ -1,7 +1,7 @@
 import {
   CommonContextProvider,
   CommonContextState,
-} from '@app/common/components/common-context-provider';
+} from 'yti-common-ui/common-context-provider';
 import PageHead from '@app/common/components/page-head';
 import {
   getGroups,
@@ -16,7 +16,7 @@ import {
   createCommonGetServerSideProps,
   LocalHandlerParams,
 } from '@app/common/utils/create-getserversideprops';
-import Layout from '@app/layouts/layout';
+import Layout from '@app/common/components/layout';
 import EditVocabulary from '@app/modules/edit-vocabulary';
 import { SSRConfig, useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
@@ -32,7 +32,7 @@ export default function EditTerminology(props: EditTerminologyPageProps) {
 
   return (
     <CommonContextProvider value={props}>
-      <Layout>
+      <Layout user={props.user} fakeableUsers={props.fakeableUsers}>
         <PageHead
           title={t('edit-terminology')}
           siteTitle="Yhteentoimivuusalusta"

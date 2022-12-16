@@ -5,7 +5,6 @@ import { StyledButton } from './icon-button.styles';
 export interface IconButtonProps extends ButtonProps {
   icon: ButtonProps['icon'];
   color?: string;
-  isLarge?: boolean;
 }
 
 export default function IconButton({

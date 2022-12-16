@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
 import { Breadcrumb, BreadcrumbLink } from '.';
-import { lightTheme } from '@app/layouts/theme';
+import { lightTheme } from 'yti-common-ui/layout/theme';
 import { makeStore } from '@app/store';
 import { getMockContext } from '@app/tests/test-utils';
 

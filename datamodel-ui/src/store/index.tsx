@@ -3,9 +3,10 @@ import { Context, createWrapper } from 'next-redux-wrapper';
 import { NextApiRequest } from 'next';
 import { useDispatch } from 'react-redux';
 import { loginApi, loginSlice } from '@app/common/components/login/login.slice';
-import { serviceCategoriesApi } from '@app/common/components/serviceCategories/serviceCategories.slice';
+import { serviceCategoriesApi } from '@app/common/components/service-categories/service-categories.slice';
 import { organizationsApi } from '@app/common/components/organizations/organizations.slice';
-import { searchModelsApi } from '@app/common/components/searchModels/searchModels.slice';
+import { searchModelsApi } from '@app/common/components/search-models/search-models.slice';
+import { fakeableUsersApi } from '@app/common/components/fakeable-users/fakeable-users.slice';
 
 // make Context from next-redux-wrapper compatible with next-iron-session
 export type NextIronContext = Context | (Context & { req: NextApiRequest });
@@ -18,6 +19,7 @@ export function makeStore(ctx: NextIronContext) {
       [serviceCategoriesApi.reducerPath]: serviceCategoriesApi.reducer,
       [organizationsApi.reducerPath]: organizationsApi.reducer,
       [searchModelsApi.reducerPath]: searchModelsApi.reducer,
+      [fakeableUsersApi.reducerPath]: fakeableUsersApi.reducer,
     },
 
     middleware: (getDefaultMiddleware) =>
@@ -25,7 +27,8 @@ export function makeStore(ctx: NextIronContext) {
         loginApi.middleware,
         serviceCategoriesApi.middleware,
         organizationsApi.middleware,
-        searchModelsApi.middleware
+        searchModelsApi.middleware,
+        fakeableUsersApi.middleware
       ),
 
     // Development tools should be available only in development environments

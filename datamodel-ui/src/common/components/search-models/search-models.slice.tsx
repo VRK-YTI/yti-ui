@@ -1,7 +1,7 @@
 import { HYDRATE } from 'next-redux-wrapper';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
-import { SearchModels } from '@app/common/interfaces/searchModels.interface';
+import { SearchModels } from '@app/common/interfaces/search-models.interface';
 import { UrlState } from 'yti-common-ui/utils/hooks/use-url-state';
 
 export const searchModelsApi = createApi({

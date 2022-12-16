@@ -14,6 +14,11 @@ import {
 } from 'suomifi-ui-components';
 import FileDropArea from '../file-drop-area';
 import {
+  createErrorMessage,
+  ExcelError,
+  ExcelErrorDetailBlock,
+} from '../import/excel.error';
+import {
   useGetImportStatusMutation,
   usePostImportExcelMutation,
 } from '../import/import.slice';
@@ -30,6 +35,7 @@ export default function UpdateWithFileModal() {
   const [userPosted, setUserPosted] = useState(false);
   const [fileData, setFileData] = useState<File | null>();
   const [getStatusRetries, setGetStatusRetries] = useState(0);
+  const [error, setError] = useState<ExcelError | undefined>(undefined);
   const [postImportExcel, importExcel] = usePostImportExcelMutation();
   const [fetchImportStatus, importStatus] = useGetImportStatusMutation();
 
@@ -56,6 +62,10 @@ export default function UpdateWithFileModal() {
   useEffect(() => {
     if (getStatusRetries > 9) {
       return;
+    }
+
+    if (importExcel.isError) {
+      setError(createErrorMessage(importExcel.error));
     }
 
     if (importStatus.isError) {
@@ -167,7 +177,34 @@ export default function UpdateWithFileModal() {
         {importExcel.isError && (
           <div id="error-block">
             <InlineAlert status="error">
-              {t('terminology-update-failed')}
+              {error ? (
+                <>
+                  {error.data.message === 'incorrect-sheet-count' ? (
+                    <>
+                      <Paragraph>
+                        {t('import-incorrect-excel-file-1.update-terminology')}{' '}
+                        <ExternalLink
+                          href="https://wiki.dvv.fi/pages/viewpage.action?pageId=21783347"
+                          labelNewWindow={t('site-open-link-new-window')}
+                        >
+                          {t('import-incorrect-excel-file-link')}
+                        </ExternalLink>
+                      </Paragraph>
+                      <br />
+                      <Paragraph>
+                        {t('import-incorrect-excel-file-2.update-terminology')}
+                      </Paragraph>
+                    </>
+                  ) : (
+                    <>
+                      <>{t('terminology-update-failed')}</>
+                      <ExcelErrorDetailBlock errorInfo={error} />
+                    </>
+                  )}
+                </>
+              ) : (
+                <>{t('terminology-update-failed')}</>
+              )}
             </InlineAlert>
           </div>
         )}

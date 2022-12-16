@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useMediaQuery } from 'usehooks-ts';
 import { CommonContext } from '../common-context-provider';
 
@@ -29,9 +29,19 @@ export interface UseBreakpointsResult {
 
 export function useBreakpoints(): UseBreakpointsResult {
   const { isSSRMobile } = useContext(CommonContext);
-  const matchSmall = useMediaQuery(mediaQueries.s);
-  const matchMedium = useMediaQuery(mediaQueries.m);
-  const matchLarge = useMediaQuery(mediaQueries.l);
+  const [matchSmall, setMatchSmall] = useState<boolean>(false);
+  const [matchMedium, setMatchMedium] = useState<boolean>(false);
+  const [matchLarge, setMatchLarge] = useState<boolean>(true);
+
+  const s = useMediaQuery(mediaQueries.s);
+  const m = useMediaQuery(mediaQueries.m);
+  const l = useMediaQuery(mediaQueries.l);
+
+  useEffect(() => {
+    setMatchSmall(s);
+    setMatchMedium(m);
+    setMatchLarge(l);
+  }, [s, m, l]);
 
   const isSmall = global['matchMedia'] ? matchSmall : isSSRMobile;
   const isMedium = global['matchMedia'] ? matchMedium : false;

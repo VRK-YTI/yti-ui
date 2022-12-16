@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import SanitizedTextContent from './index';
 import { ThemeProvider } from 'styled-components';
-import { lightTheme } from '@app/layouts/theme';
+import { lightTheme } from 'yti-common-ui/layout/theme';
 
 describe('sanitized-text-content', () => {
   it('should render component without links', () => {
