@@ -3,11 +3,13 @@ import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import {
   Button,
+  ExternalLink,
   InlineAlert,
   Modal,
   ModalContent,
   ModalFooter,
   ModalTitle,
+  Paragraph,
   Text,
 } from 'suomifi-ui-components';
 import FileDropArea from '../file-drop-area';
@@ -18,6 +20,7 @@ import {
 import {
   ModalContentWrapper,
   SuccessIcon,
+  UpdateDescriptionBlock,
 } from './update-with-file-modal.styles';
 
 export default function UpdateWithFileModal() {
@@ -94,6 +97,20 @@ export default function UpdateWithFileModal() {
       <>
         <ModalContent>
           <ModalTitle>{t('update-terminology-with-file')}</ModalTitle>
+          <UpdateDescriptionBlock>
+            <Paragraph>
+              {t('update-terminology-description-1')}{' '}
+              <ExternalLink
+                href="https://wiki.dvv.fi/pages/viewpage.action?pageId=21783347"
+                labelNewWindow={t('link-opens-new-window-external', {
+                  ns: 'common',
+                })}
+              >
+                {t('from-terminology-manual')}
+              </ExternalLink>
+            </Paragraph>
+            <Paragraph>{t('update-terminology-description-2')}</Paragraph>
+          </UpdateDescriptionBlock>
           <FileDropArea
             setFileData={setFileData}
             setIsValid={setIsValid}
