@@ -187,7 +187,7 @@ export default function FrontPage() {
             </ModalContent>
           </Modal>
         )}
-        <ResultAndStatsWrapper id="search-results">
+        <ResultAndStatsWrapper id="search-results-wrapper">
           <SearchResults
             data={data}
             organizations={organizations}
