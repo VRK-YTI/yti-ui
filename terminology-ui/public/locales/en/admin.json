@@ -165,6 +165,15 @@
   "homograph-number": "Homograph number",
   "import-concepts": "Import concepts",
   "import-concepts-to-terminology": "Import concepts to terminology",
+  "import-incorrect-excel-file-1": {
+    "concept-import": "File does not match the specifications of the concept import file. Check the specifications of the file in",
+    "update-terminology": "File does not match the specifications of the update file. Check the specifications of the file in"
+  },
+  "import-incorrect-excel-file-2": {
+    "concept-import": "If you want to update concepts or other information of the terminology, select the 'Update terminology with a file'-action from the 'Terminology'-view.",
+    "update-terminology": "If you are adding concepts, select the 'Import concepts'-action."
+  },
+  "import-incorrect-excel-file-link": "The Data Vocabularies Tool instructions.",
   "info-domains": "Information domains",
   "info-domains-available": "Available information domains",
   "info-domains-hint": "Select information domains for the terminology. Setting information domain(s) makes terminology easier for users to find.",
@@ -281,6 +290,7 @@
   "select-targets-to-be-changed": "Select targets you want to change",
   "show-chosen_one": "Show {{ count }} chosen concept",
   "show-chosen_other": "Show {{ count }} chosen concepts",
+  "site-open-link-new-window": "",
   "source_one": "Source",
   "source_other": "Sources",
   "sources-hint-text-concept": "Sources used to define the concept",

@@ -165,6 +165,15 @@
   "homograph-number": "",
   "import-concepts": "",
   "import-concepts-to-terminology": "",
+  "import-incorrect-excel-file-1": {
+    "concept-import": "",
+    "update-terminology": ""
+  },
+  "import-incorrect-excel-file-2": {
+    "concept-import": "",
+    "update-terminology": ""
+  },
+  "import-incorrect-excel-file-link": "",
   "info-domains": "",
   "info-domains-available": "",
   "info-domains-hint": "",
@@ -281,6 +290,7 @@
   "select-targets-to-be-changed": "",
   "show-chosen_one": "",
   "show-chosen_other": "",
+  "site-open-link-new-window": "",
   "source_one": "",
   "source_other": "",
   "sources-hint-text-concept": "",

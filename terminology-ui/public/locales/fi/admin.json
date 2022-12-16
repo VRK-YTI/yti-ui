@@ -165,6 +165,15 @@
   "homograph-number": "Homonyymin järjestysnumero",
   "import-concepts": "Tuo käsitteet",
   "import-concepts-to-terminology": "Tuo käsitteet sanastoon",
+  "import-incorrect-excel-file-1": {
+    "concept-import": "Tiedosto ei vastaa käsitteiden tuontiin tarkoitetun tiedoston määrityksiä. Tarkista tiedoston määritykset",
+    "update-terminology": "Tiedosto ei vastaa päivitystiedoston määrityksiä. Tarkista tiedoston määritykset"
+  },
+  "import-incorrect-excel-file-2": {
+    "concept-import": "Mikäli haluat päivittää sanastossa olevia käsitteitä tai muita sanaston tietoja, valitse 'Päivitä sanasto tiedostolla' -toiminto 'Sanaston tiedot ja toiminnot' -näkymästä.",
+    "update-terminology": "Mikäli olet lisäämässä käsitteitä sanastoon valite 'Tuo käsitteitä'-toiminto."
+  },
+  "import-incorrect-excel-file-link": "Sanastot-työkalun käyttöohjeista.",
   "info-domains": "Tietoalueet",
   "info-domains-available": "Saatavilla olevat tietoalueet",
   "info-domains-hint": "Valitse sanastolle sen sisältöä kuvaavat tietoalueet. Tietoalue auttaa sanaston löydettävyydessä.",
@@ -281,6 +290,7 @@
   "select-targets-to-be-changed": "Valitse muutettavat kohteet",
   "show-chosen_one": "Näytä {{count}} valinta",
   "show-chosen_other": "Näytä {{count}} valintaa",
+  "site-open-link-new-window": "",
   "source_one": "Lähde",
   "source_other": "Lähteet",
   "sources-hint-text-concept": "Käsitteen määrittelyssä käytetyt lähteet",
