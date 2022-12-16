@@ -7,7 +7,7 @@ import {
   CommonContextState,
   CommonContextProvider,
 } from 'yti-common-ui/common-context-provider';
-import PageHead from '@app/common/components/page-head';
+import PageHead from 'yti-common-ui/page-head';
 
 interface OwnInformationPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -19,7 +19,10 @@ export default function OwnInformationPage(props: OwnInformationPageProps) {
   return (
     <CommonContextProvider value={props}>
       <Layout user={props.user} fakeableUsers={props.fakeableUsers}>
-        <PageHead title={t('own-information')} />
+        <PageHead
+          baseUrl="https://sanastot.suomi.fi"
+          title={t('own-information')}
+        />
 
         <OwnInformation />
       </Layout>

@@ -17,7 +17,7 @@ import {
   getCounts,
   getRunningQueriesThunk as countsGetRunningQueriesThunk,
 } from '@app/common/components/counts/counts.slice';
-import PageHead from '@app/common/components/page-head';
+import PageHead from 'yti-common-ui/page-head';
 import { initialUrlState } from '@app/common/utils/hooks/use-url-state';
 
 interface IndexPageProps extends CommonContextState {
@@ -31,6 +31,7 @@ export default function IndexPage(props: IndexPageProps) {
     <CommonContextProvider value={props}>
       <Layout user={props.user} fakeableUsers={props.fakeableUsers}>
         <PageHead
+          baseUrl="https://sanastot.suomi.fi"
           title={t('terminology-site-title')}
           description={t('terminology-search-info')}
         />

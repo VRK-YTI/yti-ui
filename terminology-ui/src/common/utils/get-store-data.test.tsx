@@ -1,4 +1,4 @@
-import { getStoreData } from './utils';
+import { getStoreData } from './get-store-data';
 
 describe('page-head-utils', () => {
   it('should return correct object', () => {

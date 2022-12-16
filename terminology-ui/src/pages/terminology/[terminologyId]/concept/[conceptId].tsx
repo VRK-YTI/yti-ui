@@ -19,10 +19,10 @@ import {
   CommonContextState,
   CommonContextProvider,
 } from 'yti-common-ui/common-context-provider';
-import PageHead from '@app/common/components/page-head';
+import PageHead from 'yti-common-ui/page-head';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import { getProperty } from '@app/common/utils/get-property';
-import { getStoreData } from '@app/common/components/page-head/utils';
+import { getStoreData } from '@app/common/utils/get-store-data';
 
 interface ConceptPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -45,6 +45,7 @@ export default function ConceptPage(props: ConceptPageProps) {
         feedbackSubject={`${t('feedback-concept')} - ${props.conceptTitle}`}
       >
         <PageHead
+          baseUrl="https://sanastot.suomi.fi"
           title={[props.conceptTitle, props.vocabularyTitle]}
           description={props.conceptDescription}
           path={asPath}
