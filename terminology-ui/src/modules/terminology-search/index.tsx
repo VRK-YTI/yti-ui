@@ -25,7 +25,7 @@ import {
   selectAlert,
   setAlert,
 } from '@app/common/components/alert/alert.slice';
-import LoadIndicator from '@app/common/components/load-indicator';
+import LoadIndicator from 'yti-common-ui/load-indicator';
 import { useStoreDispatch } from '@app/store';
 import { useSelector } from 'react-redux';
 import getPrefLabel from '@app/common/utils/get-preflabel';

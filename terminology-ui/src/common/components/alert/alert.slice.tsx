@@ -1,6 +1,6 @@
 import { createSlice, SerializedError } from '@reduxjs/toolkit';
 import { AppState, AppThunk } from '@app/store';
-import { AxiosBaseQueryError } from '@app/store/axios-base-query';
+import { AxiosBaseQueryError } from 'yti-common-ui/interfaces/axios-base-query.interface';
 import { Alert } from 'yti-common-ui/interfaces/alert';
 
 export interface AlertState {

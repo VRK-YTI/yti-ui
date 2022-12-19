@@ -33,7 +33,7 @@ import { TerminologyListFilter } from './terminology-list-filter';
 import useUrlState from '@app/common/utils/hooks/use-url-state';
 import Pagination from '@app/common/components/pagination/pagination';
 import filterCollectionData from '@app/common/utils/filter-collection-data';
-import LoadIndicator from '@app/common/components/load-indicator';
+import LoadIndicator from 'yti-common-ui/load-indicator';
 import { useRouter } from 'next/router';
 import HasPermission from '@app/common/utils/has-permission';
 import dynamic from 'next/dynamic';
