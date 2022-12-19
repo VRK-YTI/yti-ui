@@ -5,11 +5,12 @@ import {
   initialCommonContextState,
 } from 'yti-common-ui/common-context-provider';
 import PageHead from 'yti-common-ui/page-head';
+import Matomo from 'yti-common-ui/matomo';
 
 export default function Custom500() {
   return (
     <CommonContextProvider value={initialCommonContextState}>
-      <ErrorLayout>
+      <ErrorLayout matomo={<Matomo />}>
         <PageHead
           baseUrl="https://sanastot.suomi.fi"
           title="Error"

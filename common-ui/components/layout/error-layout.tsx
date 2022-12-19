@@ -12,19 +12,19 @@ import {
 import { useBreakpoints } from '../media-query';
 import { HeaderWrapper } from '../smart-header/smart-header.styles';
 import Logo from '../smart-header/logo';
-// TODO: Add support for Matomo
-// import Matomo from '@app/common/components/matomo';
 
 export default function ErrorLayout({
   children,
+  matomo,
 }: {
   children: React.ReactNode;
+  matomo?: React.ReactNode;
 }) {
   const { breakpoint } = useBreakpoints();
 
   return (
     <ThemeProvider theme={lightTheme}>
-      {/* <Matomo /> */}
+      {matomo && matomo}
       <Head>
         <meta name="description" content="Terminology/React POC" />
         <meta name="og:title" content="Sanastot" />

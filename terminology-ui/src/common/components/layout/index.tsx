@@ -2,7 +2,7 @@ import { FakeableUser } from 'yti-common-ui/interfaces/fakeable-user.interface';
 import { User } from 'yti-common-ui/interfaces/user.interface';
 import { default as CommonLayout } from 'yti-common-ui/layout/layout';
 import Alerts from 'yti-common-ui/alerts';
-import Matomo from '../matomo';
+import Matomo from 'yti-common-ui/matomo';
 import { Alert } from 'yti-common-ui/interfaces/alert';
 import { useStoreDispatch } from '@app/store';
 import { selectAlert, setAlertVisibility } from '../alert/alert.slice';
