@@ -1,12 +1,13 @@
 import { useTranslation } from 'next-i18next';
 import { Counts } from '@app/common/interfaces/counts.interface';
 import Separator from 'yti-common-ui/separator';
-import { Filter } from '@app/common/components/filter/filter';
-import StatusFilter from '@app/common/components/filter/status-filter';
-import { KeywordFilter } from '@app/common/components/filter/keyword-filter';
-import TypeFilter from '@app/common/components/filter/type-filter';
+import Filter, {
+  KeywordFilter,
+  LanguageFilter,
+  TypeFilter,
+  StatusFilter,
+} from 'yti-common-ui/filter';
 import useUrlState from '@app/common/utils/hooks/use-url-state';
-import LanguageFilter from '@app/common/components/filter/language-filter';
 import { FilterTopPartBlock } from './vocabulary.styles';
 import { Property } from '@app/common/interfaces/termed-data-types.interface';
 
@@ -42,7 +43,12 @@ export function TerminologyListFilter({
         />
         <LanguageFilter
           labelText={t('display-by-language')}
-          languages={languages}
+          languages={
+            languages?.map((lang) => ({
+              labelText: lang.value,
+              uniqueItemId: lang.value,
+            })) ?? []
+          }
         />
       </FilterTopPartBlock>
       <Separator />

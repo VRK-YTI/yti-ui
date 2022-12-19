@@ -232,7 +232,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
                 fullWidth
                 onClick={() => setShowModal(!showModal)}
               >
-                {t('vocabulary-filter-filter-list')}
+                {t('filter-list')}
               </FilterMobileButton>
             )}
 
