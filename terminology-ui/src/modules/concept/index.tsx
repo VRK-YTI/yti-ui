@@ -120,10 +120,6 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
               term,
               type: t('field-terms-non-recommended'),
             })),
-            ...(concept.references.searchTerm ?? []).map((term) => ({
-              term,
-              type: t('field-terms-search-term'),
-            })),
             ...(concept.references.hiddenTerm ?? []).map((term) => ({
               term,
               type: t('field-terms-hidden'),
