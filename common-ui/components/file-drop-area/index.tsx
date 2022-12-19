@@ -1,5 +1,4 @@
-import { translateFileUploadError } from '@app/common/utils/translation-helpers';
-import { useTranslation } from 'next-i18next';
+import { TFunction, useTranslation } from 'next-i18next';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { Button, InlineAlert, Paragraph, Text } from 'suomifi-ui-components';
 import {
@@ -15,12 +14,18 @@ interface FileDropAreaProps {
   setIsValid: (valid: boolean) => void;
   setFileData: (data: File | null) => void;
   validFileTypes: string[];
+  translateFileUploadError: (
+    error: 'none' | 'upload-error' | 'incorrect-file-type',
+    fileTypes: string[],
+    t: TFunction
+  ) => string | undefined;
 }
 
 export default function FileDropArea({
   setIsValid,
   setFileData,
   validFileTypes,
+  translateFileUploadError,
 }: FileDropAreaProps) {
   const { t } = useTranslation('admin');
   const input = useRef<HTMLInputElement>(null);

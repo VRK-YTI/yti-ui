@@ -1,4 +1,4 @@
-import FileDropArea from '@app/common/components/file-drop-area';
+import FileDropArea from 'yti-common-ui/file-drop-area';
 import { usePostImportExcelMutation } from '@app/common/components/import/import.slice';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import SaveSpinner from 'yti-common-ui/save-spinner';
@@ -6,7 +6,10 @@ import { terminologySearchApi } from '@app/common/components/terminology-search/
 import { usePostNewVocabularyMutation } from '@app/common/components/vocabulary/vocabulary.slice';
 import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info';
 import useConfirmBeforeLeavingPage from '@app/common/utils/hooks/use-confirm-before-leaving-page';
-import { translateHttpError } from '@app/common/utils/translation-helpers';
+import {
+  translateFileUploadError,
+  translateHttpError,
+} from '@app/common/utils/translation-helpers';
 import { useStoreDispatch } from '@app/store';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
@@ -241,6 +244,7 @@ export default function NewTerminologyModal({
             setIsValid={setIsValid}
             setFileData={setFileData}
             validFileTypes={['xlsx']}
+            translateFileUploadError={translateFileUploadError}
           />
         )}
       </>
