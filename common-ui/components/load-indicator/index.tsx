@@ -1,5 +1,5 @@
 import { SerializedError } from '@reduxjs/toolkit';
-import { AxiosBaseQuery } from 'interfaces/axios-base-query.interface';
+import { AxiosBaseQueryError } from '../../interfaces/axios-base-query.interface';
 import { useTranslation } from 'next-i18next';
 import { Text } from 'suomifi-ui-components';
 import { useBreakpoints } from '../media-query';
@@ -11,7 +11,7 @@ import {
 
 interface LoadIndicatorProps {
   isFetching: boolean;
-  error?: AxiosBaseQuery | SerializedError;
+  error?: AxiosBaseQueryError | SerializedError;
   refetch: () => void;
 }
 
