@@ -1,4 +1,4 @@
-import { Breadcrumb, BreadcrumbLink } from '@app/common/components/breadcrumb';
+import { Breadcrumb, BreadcrumbLink } from 'yti-common-ui/breadcrumb';
 import { selectLogin } from '@app/common/components/login/login.slice';
 import { useEditTerminologyMutation } from '@app/common/components/modify/modify.slice';
 import PropertyValue from '@app/common/components/property-value';

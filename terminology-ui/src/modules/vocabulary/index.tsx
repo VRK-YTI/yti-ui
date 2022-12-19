@@ -26,7 +26,7 @@ import {
   Paragraph,
   Text,
 } from 'suomifi-ui-components';
-import { Breadcrumb, BreadcrumbLink } from '@app/common/components/breadcrumb';
+import { Breadcrumb, BreadcrumbLink } from 'yti-common-ui/breadcrumb';
 import PropertyValue from '@app/common/components/property-value';
 import { useGetVocabularyCountQuery } from '@app/common/components/counts/counts.slice';
 import { TerminologyListFilter } from './terminology-list-filter';

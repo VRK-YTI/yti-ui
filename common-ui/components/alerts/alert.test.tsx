@@ -3,7 +3,6 @@ import userEvent from '@testing-library/user-event';
 import { ThemeProvider } from 'styled-components';
 import Alerts from './';
 import { lightTheme } from '../layout/theme';
-import { Alert } from '../../interfaces/alert';
 
 describe('alert', () => {
   it('should render alert', () => {

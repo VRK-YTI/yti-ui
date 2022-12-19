@@ -1,4 +1,4 @@
-import { Breadcrumb, BreadcrumbLink } from '@app/common/components/breadcrumb';
+import { Breadcrumb, BreadcrumbLink } from 'yti-common-ui/breadcrumb';
 import { useTranslation } from 'next-i18next';
 import {
   MainContent,

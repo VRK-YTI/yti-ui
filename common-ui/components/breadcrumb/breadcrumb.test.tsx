@@ -2,24 +2,18 @@ import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
 import { Breadcrumb, BreadcrumbLink } from '.';
-import { lightTheme } from 'yti-common-ui/layout/theme';
-import { makeStore } from '@app/store';
-import { getMockContext } from '@app/tests/test-utils';
+import { lightTheme } from '../layout/theme';
 
 describe('breadcrumb', () => {
   it('should render component', () => {
-    const store = makeStore(getMockContext());
-
     render(
-      <Provider store={store}>
-        <ThemeProvider theme={lightTheme}>
-          <Breadcrumb>
-            <BreadcrumbLink url={'/terminology/123123'} current>
-              terminology
-            </BreadcrumbLink>
-          </Breadcrumb>
-        </ThemeProvider>
-      </Provider>
+      <ThemeProvider theme={lightTheme}>
+        <Breadcrumb>
+          <BreadcrumbLink url={'/terminology/123123'} current>
+            terminology
+          </BreadcrumbLink>
+        </Breadcrumb>
+      </ThemeProvider>
     );
 
     expect(screen.getByText('tr-terminology-title')).toBeInTheDocument();
@@ -27,19 +21,15 @@ describe('breadcrumb', () => {
   });
 
   it('should render entire path', () => {
-    const store = makeStore(getMockContext());
-
     render(
-      <Provider store={store}>
-        <ThemeProvider theme={lightTheme}>
-          <Breadcrumb>
-            <BreadcrumbLink url="/terminology/test123">test</BreadcrumbLink>
-            <BreadcrumbLink url="" current>
-              concept-title
-            </BreadcrumbLink>
-          </Breadcrumb>
-        </ThemeProvider>
-      </Provider>
+      <ThemeProvider theme={lightTheme}>
+        <Breadcrumb>
+          <BreadcrumbLink url="/terminology/test123">test</BreadcrumbLink>
+          <BreadcrumbLink url="" current>
+            concept-title
+          </BreadcrumbLink>
+        </Breadcrumb>
+      </ThemeProvider>
     );
 
     expect(screen.getByText('concept-title')).toBeInTheDocument();
@@ -48,19 +38,15 @@ describe('breadcrumb', () => {
   });
 
   it('should have one crumb to have status of "current"', () => {
-    const store = makeStore(getMockContext());
-
     render(
-      <Provider store={store}>
-        <ThemeProvider theme={lightTheme}>
-          <Breadcrumb>
-            <BreadcrumbLink url="/terminology/test123">test</BreadcrumbLink>
-            <BreadcrumbLink url="" current>
-              concept-title
-            </BreadcrumbLink>
-          </Breadcrumb>
-        </ThemeProvider>
-      </Provider>
+      <ThemeProvider theme={lightTheme}>
+        <Breadcrumb>
+          <BreadcrumbLink url="/terminology/test123">test</BreadcrumbLink>
+          <BreadcrumbLink url="" current>
+            concept-title
+          </BreadcrumbLink>
+        </Breadcrumb>
+      </ThemeProvider>
     );
 
     expect(screen.getByText('concept-title')).toBeInTheDocument();
