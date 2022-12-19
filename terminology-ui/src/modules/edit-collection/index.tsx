@@ -32,7 +32,7 @@ import { DEFINITION_MAX, TEXT_INPUT_MAX } from '@app/common/utils/constants';
 import useConfirmBeforeLeavingPage from '@app/common/utils/hooks/use-confirm-before-leaving-page';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import SaveSpinner from 'yti-common-ui/save-spinner';
-import FormFooterAlert from '@app/common/components/form-footer-alert';
+import FormFooterAlert from 'yti-common-ui/form-footer-alert';
 
 export default function EditCollection({
   terminologyId,
