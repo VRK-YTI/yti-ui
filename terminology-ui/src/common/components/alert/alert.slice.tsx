@@ -1,13 +1,7 @@
 import { createSlice, SerializedError } from '@reduxjs/toolkit';
 import { AppState, AppThunk } from '@app/store';
 import { AxiosBaseQueryError } from '@app/store/axios-base-query';
-
-export type Alert = {
-  code: number | string;
-  message: string;
-  visible?: boolean;
-  displayText: string;
-};
+import { Alert } from 'yti-common-ui/interfaces/alert';
 
 export interface AlertState {
   alerts: Alert[];

@@ -1,21 +1,22 @@
-import { useStoreDispatch } from '@app/store';
-import { useSelector } from 'react-redux';
-import { selectAlert, setAlertVisibility } from './alert.slice';
 import { useTranslation } from 'next-i18next';
 import { Notification } from 'suomifi-ui-components';
 import { AlertsWrapper } from './alert.styles';
 import { useEffect, useState } from 'react';
-import { useBreakpoints } from 'yti-common-ui/media-query';
+import { useBreakpoints } from '../media-query';
+import { Alert } from '../../interfaces/alert';
 
-export default function Alerts() {
+interface AlertsProps {
+  alerts: Alert[];
+  setAlertVisibility: (alerts: Alert[], displayText: string) => void;
+}
+
+export default function Alerts({ alerts, setAlertVisibility }: AlertsProps) {
   const { t } = useTranslation('alert');
   const [scrollPos, setScrollPos] = useState(0);
-  const dispatch = useStoreDispatch();
-  const alerts = useSelector(selectAlert());
   const { isSmall } = useBreakpoints();
 
   const handleSetVisible = (displayText: string) => {
-    dispatch(setAlertVisibility(alerts, displayText));
+    setAlertVisibility(alerts, displayText);
   };
 
   const handleScroll = () => {

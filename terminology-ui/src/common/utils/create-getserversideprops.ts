@@ -123,7 +123,10 @@ export function createCommonGetServerSideProps<
             matomoUrl: process.env.MATOMO_URL ?? null,
             matomoSiteId: process.env.MATOMO_SITE_ID ?? null,
             user: user ?? null,
-            fakeableUsers: isEqual(fakeableUsers, {}) ? null : fakeableUsers,
+            fakeableUsers:
+              !fakeableUsers || isEqual(fakeableUsers, {})
+                ? null
+                : fakeableUsers,
           },
         };
       }
