@@ -1,5 +1,5 @@
-import Error from '@app/common/components/error/error';
-import ErrorLayout from 'yti-common-ui/layout/layout';
+import Error from 'yti-common-ui/error/error';
+import ErrorLayout from 'yti-common-ui/layout/error-layout';
 import {
   CommonContextProvider,
   initialCommonContextState,

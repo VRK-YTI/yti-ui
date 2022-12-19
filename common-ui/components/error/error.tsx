@@ -1,5 +1,5 @@
 import { Paragraph, Text } from 'suomifi-ui-components';
-import { useBreakpoints } from 'yti-common-ui/media-query';
+import { useBreakpoints } from '../media-query';
 import {
   ErrorCard,
   ErrorIcon,

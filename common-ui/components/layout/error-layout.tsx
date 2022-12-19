@@ -10,8 +10,9 @@ import {
   HeaderContainer,
 } from './layout.styles';
 import { useBreakpoints } from '../media-query';
-// import { HeaderWrapper } from '@app/modules/smart-header/smart-header.styles';
-// import Logo from '@app/modules/smart-header/logo';
+import { HeaderWrapper } from '../smart-header/smart-header.styles';
+import Logo from '../smart-header/logo';
+// TODO: Add support for Matomo
 // import Matomo from '@app/common/components/matomo';
 
 export default function ErrorLayout({
@@ -33,9 +34,9 @@ export default function ErrorLayout({
         <Block variant="header">
           <HeaderContainer>
             <MarginContainer $breakpoint={breakpoint}>
-              {/* <HeaderWrapper $breakpoint={breakpoint}>
+              <HeaderWrapper $breakpoint={breakpoint}>
                 <Logo />
-              </HeaderWrapper> */}
+              </HeaderWrapper>
             </MarginContainer>
           </HeaderContainer>
         </Block>
