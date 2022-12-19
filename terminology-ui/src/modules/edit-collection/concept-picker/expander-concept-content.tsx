@@ -1,7 +1,7 @@
 import { BasicBlock } from 'yti-common-ui/block';
 import { MultilingualPropertyBlock } from '@app/common/components/block';
 import { useGetConceptQuery } from '@app/common/components/concept/concept.slice';
-import FormattedDate from '@app/common/components/formatted-date';
+import FormattedDate from 'yti-common-ui/formatted-date';
 import PropertyValue from '@app/common/components/property-value';
 import Separator from 'yti-common-ui/separator';
 import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';

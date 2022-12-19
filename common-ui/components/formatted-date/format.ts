@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import { Locale } from '@app/common/components/locale-chooser/use-locales';
+import { Locale } from '../locale-chooser/use-locales';
 
 export default function format(date: string, locale: Locale): string {
   const formats: { [key in Locale]: string } = {

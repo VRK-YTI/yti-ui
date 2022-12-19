@@ -15,7 +15,7 @@ import {
   TermBlock,
 } from '@app/common/components/block';
 import { Breadcrumb, BreadcrumbLink } from 'yti-common-ui/breadcrumb';
-import FormattedDate from '@app/common/components/formatted-date';
+import FormattedDate from 'yti-common-ui/formatted-date';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import PropertyValue from '@app/common/components/property-value';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
