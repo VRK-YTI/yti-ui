@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { Breakpoint } from 'yti-common-ui/media-query';
-import { small } from 'yti-common-ui/media-query/styled-helpers';
+import { Breakpoint } from '../media-query';
+import { small } from '../media-query/styled-helpers';
 
 export const SidebarWrapper = styled.aside<{ $breakpoint: Breakpoint }>`
   flex-grow: 1;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useBreakpoints } from 'yti-common-ui/media-query';
+import { useBreakpoints } from '../media-query';
 import { SidebarWrapper } from './sidebar.styles';
 
 export interface SidebarProps {
