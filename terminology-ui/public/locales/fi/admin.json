@@ -174,7 +174,7 @@
   },
   "import-incorrect-excel-file-2": {
     "concept-import": "Mikäli haluat päivittää sanastossa olevia käsitteitä tai muita sanaston tietoja, valitse 'Päivitä sanasto tiedostolla' -toiminto 'Sanaston tiedot ja toiminnot' -näkymästä.",
-    "update-terminology": "Mikäli olet lisäämässä käsitteitä sanastoon valite 'Tuo käsitteitä'-toiminto."
+    "update-terminology": "Mikäli olet lisäämässä käsitteitä sanastoon valitse 'Tuo käsitteitä'-toiminto."
   },
   "import-incorrect-excel-file-link": "Sanastot-työkalun käyttöohjeista.",
   "info-domains": "Tietoalueet",
