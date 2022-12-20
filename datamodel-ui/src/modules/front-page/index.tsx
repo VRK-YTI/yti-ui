@@ -20,6 +20,10 @@ import {
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { Modal, ModalContent, SingleSelectData } from 'suomifi-ui-components';
 import useUrlState from 'yti-common-ui/utils/hooks/use-url-state';
+import {
+  Description,
+  TitleDescriptionWrapper,
+} from 'yti-common-ui/title/title.styles';
 
 export default function FrontPage() {
   const { t, i18n } = useTranslation('common');
@@ -148,7 +152,14 @@ export default function FrontPage() {
     <main id="main">
       <Title
         title={t('data-vocabularies')}
-        description={t('service-description')}
+        noBreadcrumbs={true}
+        extra={
+          <TitleDescriptionWrapper $isSmall={isSmall}>
+            <Description id="page-description">
+              {t('service-description')}
+            </Description>
+          </TitleDescriptionWrapper>
+        }
       />
       {isSmall && (
         <FilterMobileButton
