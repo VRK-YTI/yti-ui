@@ -7,12 +7,12 @@ import Separator from 'yti-common-ui/separator';
 import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
 import { useTranslation } from 'next-i18next';
 import { ExpanderContent } from 'suomifi-ui-components';
-import { ExpanderConceptContent } from './concept-picker.types';
+import { ExpanderConceptContent as ExpanderConceptContentType } from './concept-picker.types';
 
 export function ExpanderConceptContent({
   concept,
   terminologyId,
-}: ExpanderConceptContent) {
+}: ExpanderConceptContentType) {
   const { t } = useTranslation('collection');
   const { data } = useGetConceptQuery({
     terminologyId: terminologyId,
