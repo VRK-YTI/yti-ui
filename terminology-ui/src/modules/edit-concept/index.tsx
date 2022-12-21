@@ -26,7 +26,11 @@ import {
 import { Concept } from '@app/common/interfaces/concept.interface';
 import generateFormData from './generate-form-data';
 import { useSelector } from 'react-redux';
-import { selectLogin } from '@app/common/components/login/login.slice';
+import {
+  selectLogin,
+  useGetAuthenticatedUserMutMutation,
+  useGetAuthenticatedUserQuery,
+} from '@app/common/components/login/login.slice';
 import { Notification, Paragraph, Text } from 'suomifi-ui-components';
 import useConfirmBeforeLeavingPage from '@app/common/utils/hooks/use-confirm-before-leaving-page';
 import validateForm, { FormError } from './validate-form';
@@ -51,6 +55,9 @@ export default function EditConcept({
   const { data: terminology } = useGetVocabularyQuery({
     id: terminologyId,
   });
+  const { data: authenticatedUser } = useGetAuthenticatedUserQuery();
+  const [getAuthenticatedMutUser, authenticatedMutUser] =
+    useGetAuthenticatedUserMutMutation();
 
   const [languages] = useState(
     terminology?.properties.language?.map(({ value }) => value) ?? []
@@ -79,6 +86,8 @@ export default function EditConcept({
     );
 
   const handlePost = () => {
+    getAuthenticatedMutUser();
+
     if (!terminologyId) {
       console.error('Invalid terminologyId');
       return;
@@ -228,6 +237,9 @@ export default function EditConcept({
           isCreating={isCreating}
           isEdit={typeof conceptData !== 'undefined'}
           errors={errors}
+          anonymousUser={
+            authenticatedUser?.anonymous || authenticatedMutUser.data?.anonymous
+          }
         />
       </NewConceptBlock>
     </>

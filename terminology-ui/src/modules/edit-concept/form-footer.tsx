@@ -4,7 +4,7 @@ import Separator from 'yti-common-ui/separator';
 import { translateEditConceptError } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { Button } from 'suomifi-ui-components';
+import { Button, InlineAlert } from 'suomifi-ui-components';
 import { ButtonBlock, FooterBlock } from './new-concept.styles';
 import { FormError } from './validate-form';
 
@@ -14,6 +14,7 @@ interface FormFooterProps {
   isEdit: boolean;
   isCreating: boolean;
   errors: FormError;
+  anonymousUser?: boolean;
 }
 
 export default function FormFooter({
@@ -22,6 +23,7 @@ export default function FormFooter({
   isEdit,
   isCreating,
   errors,
+  anonymousUser,
 }: FormFooterProps) {
   const { t } = useTranslation('admin');
   const router = useRouter();
@@ -38,6 +40,13 @@ export default function FormFooter({
   return (
     <FooterBlock>
       <Separator isLarge />
+      {anonymousUser && (
+        <div style={{ marginBottom: '15px' }}>
+          <InlineAlert status="error" role="alert" id="unauthenticated-alert">
+            {t('error-occurred_unauthenticated', { ns: 'alert' })}
+          </InlineAlert>
+        </div>
+      )}
       {errors.total && (
         <div style={{ marginBottom: '15px' }}>
           <FormFooterAlert
@@ -49,7 +58,7 @@ export default function FormFooter({
       )}
       <ButtonBlock>
         <Button
-          disabled={isCreating}
+          disabled={isCreating || anonymousUser}
           onClick={() => handlePost()}
           id="submit-button"
         >

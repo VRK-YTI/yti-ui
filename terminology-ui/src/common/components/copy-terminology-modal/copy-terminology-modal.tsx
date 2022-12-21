@@ -28,12 +28,14 @@ interface CopyTerminologyModalProps {
   terminologyId: string;
   visible: boolean;
   setVisible: (value: boolean) => void;
+  unauthenticatedUser?: boolean;
 }
 
 export default function CopyTerminologyModal({
   terminologyId,
   visible,
   setVisible,
+  unauthenticatedUser,
 }: CopyTerminologyModalProps) {
   const { t } = useTranslation('admin');
   const dispatch = useStoreDispatch();
@@ -117,10 +119,19 @@ export default function CopyTerminologyModal({
         <DescriptionParagraph>
           <Text>{t('copy-as-base-description')}</Text>
         </DescriptionParagraph>
-        <Prefix update={handleUpdate} userPosted={userPosted} />
+        <Prefix
+          update={handleUpdate}
+          userPosted={userPosted}
+          disabled={unauthenticatedUser}
+        />
       </ModalContent>
 
       <ModalFooter>
+        {unauthenticatedUser && (
+          <InlineAlert status="error" role="alert" id="unauthenticated-alert">
+            {t('error-occurred_unauthenticated', { ns: 'alert' })}
+          </InlineAlert>
+        )}
         {userPosted && newCode === '' && (
           <InlineAlert status="warning">
             {t('alert-prefix-undefined')}
@@ -129,7 +140,7 @@ export default function CopyTerminologyModal({
         <FooterBlock>
           <Button
             onClick={() => handlePost()}
-            disabled={createVersion.isLoading}
+            disabled={createVersion.isLoading || unauthenticatedUser}
           >
             {t('save')}
           </Button>

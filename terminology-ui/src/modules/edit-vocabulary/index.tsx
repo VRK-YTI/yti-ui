@@ -1,5 +1,9 @@
 import { Breadcrumb, BreadcrumbLink } from '@app/common/components/breadcrumb';
-import { selectLogin } from '@app/common/components/login/login.slice';
+import {
+  selectLogin,
+  useGetAuthenticatedUserMutMutation,
+  useGetAuthenticatedUserQuery,
+} from '@app/common/components/login/login.slice';
 import { useEditTerminologyMutation } from '@app/common/components/modify/modify.slice';
 import PropertyValue from '@app/common/components/property-value';
 import SaveSpinner from 'yti-common-ui/save-spinner';
@@ -10,7 +14,13 @@ import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { Button, Heading, Paragraph, Text } from 'suomifi-ui-components';
+import {
+  Button,
+  Heading,
+  InlineAlert,
+  Paragraph,
+  Text,
+} from 'suomifi-ui-components';
 import generateNewTerminology from '../new-terminology/generate-new-terminology';
 import InfoManual from '../new-terminology/info-manual';
 import MissingInfoAlert from '../new-terminology/missing-info-alert';
@@ -41,8 +51,12 @@ export default function EditVocabulary({ terminologyId }: EditVocabularyProps) {
   const [editTerminology, result] = useEditTerminologyMutation();
   const { enableConfirmation, disableConfirmation } =
     useConfirmBeforeLeavingPage('disabled');
+  const { data: authenticatedUser } = useGetAuthenticatedUserQuery();
+  const [getAuthenticatedMutUser, authenticatedMutUser] =
+    useGetAuthenticatedUserMutMutation();
 
   const handleSubmit = () => {
+    getAuthenticatedMutUser();
     setUserPosted(true);
     disableConfirmation();
 
@@ -122,10 +136,20 @@ export default function EditVocabulary({ terminologyId }: EditVocabularyProps) {
         <TallerSeparator />
 
         <FormFooter>
+          {(authenticatedUser?.anonymous ||
+            authenticatedMutUser.data?.anonymous) && (
+            <InlineAlert status="error" role="alert" id="unauthenticated-alert">
+              {t('error-occurred_unauthenticated', { ns: 'alert' })}
+            </InlineAlert>
+          )}
           {userPosted && data && <MissingInfoAlert data={data} />}
           <ButtonBlock>
             <Button
-              disabled={isCreating}
+              disabled={
+                isCreating ||
+                authenticatedUser?.anonymous ||
+                authenticatedMutUser.data?.anonymous
+              }
               onClick={() => handleSubmit()}
               id="submit-button"
             >

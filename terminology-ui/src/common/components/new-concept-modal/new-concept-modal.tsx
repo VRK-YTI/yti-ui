@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import {
   Button,
+  InlineAlert,
   Modal,
   ModalContent,
   ModalFooter,
@@ -21,6 +22,7 @@ interface NewConceptModalProps {
   languages: string[];
   visible: boolean;
   setVisible: (value: boolean) => void;
+  unauthenticatedUser?: boolean;
 }
 
 interface HandleChangeProps {
@@ -33,6 +35,7 @@ export default function NewConceptModal({
   languages,
   visible,
   setVisible,
+  unauthenticatedUser,
 }: NewConceptModalProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -92,16 +95,26 @@ export default function NewConceptModal({
               status={isError ? 'error' : 'default'}
               maxLength={TEXT_INPUT_MAX}
               className="concept-name-input"
+              disabled={unauthenticatedUser}
             />
           ))}
         </TextInputBlock>
       </ModalContent>
 
       <ModalFooter>
+        {unauthenticatedUser && (
+          <InlineAlert status="error" role="alert" id="unauthenticated-alert">
+            {t('error-occurred_unauthenticated', { ns: 'alert' })}
+          </InlineAlert>
+        )}
         {isError && (
           <FormFooterAlert alerts={[t('recommended-term-missing-error')]} />
         )}
-        <Button onClick={() => handleClick()} id="submit-button">
+        <Button
+          onClick={() => handleClick()}
+          id="submit-button"
+          disabled={unauthenticatedUser}
+        >
           {t('continue')}
         </Button>
         <Button
