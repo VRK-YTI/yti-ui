@@ -7,13 +7,12 @@ import Title from 'yti-common-ui/title';
 import {
   ResultAndFilterContainer,
   ResultAndStatsWrapper,
-  PaginationWrapper,
   FilterMobileButton,
 } from './terminology-search.styles';
 import SearchResults, {
   SearchResultData,
 } from 'yti-common-ui/search-results/search-results';
-import Pagination from '@app/common/components/pagination/pagination';
+import Pagination from 'yti-common-ui/pagination';
 import { useTranslation } from 'next-i18next';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { Modal, ModalContent } from 'suomifi-ui-components';
@@ -258,9 +257,7 @@ export default function TerminologySearch() {
                     },
                   }}
                 />
-                <PaginationWrapper>
-                  <Pagination data={data} pageString={t('pagination-page')} />
-                </PaginationWrapper>
+                <Pagination maxPages={Math.round(data.totalHitCount / 50)} />
               </>
             )
           )}

@@ -12,7 +12,6 @@ import Title from 'yti-common-ui/title';
 import {
   ResultAndFilterContainer,
   ResultAndStatsWrapper,
-  PaginationWrapper,
   QuickActionsWrapper,
 } from './vocabulary.styles';
 import { useBreakpoints } from 'yti-common-ui/media-query';
@@ -31,8 +30,7 @@ import PropertyValue from '@app/common/components/property-value';
 import { useGetVocabularyCountQuery } from '@app/common/components/counts/counts.slice';
 import { TerminologyListFilter } from './terminology-list-filter';
 import useUrlState from '@app/common/utils/hooks/use-url-state';
-import Pagination from '@app/common/components/pagination/pagination';
-import filterCollectionData from '@app/common/utils/filter-collection-data';
+import Pagination from 'yti-common-ui/pagination';
 import LoadIndicator from 'yti-common-ui/load-indicator';
 import { useRouter } from 'next/router';
 import HasPermission from '@app/common/utils/has-permission';
@@ -314,12 +312,9 @@ export default function Vocabulary({ id }: VocabularyProps) {
                       organizations={[]}
                       noChip
                     />
-                    <PaginationWrapper>
-                      <Pagination
-                        data={conceptsData}
-                        pageString={t('pagination-page')}
-                      />
-                    </PaginationWrapper>
+                    <Pagination
+                      maxPages={Math.round(conceptsData.totalHitCount / 50)}
+                    />
                   </>
                 )
               ))}
@@ -342,10 +337,6 @@ export default function Vocabulary({ id }: VocabularyProps) {
     }
 
     if (collectionsData) {
-      const data =
-        filterCollectionData(collectionsData, urlState, i18n.language) ??
-        collectionsData;
-
       const collectionMembers: { [key: string]: string }[] =
         collectionsData.map((collection) => {
           const memberLabels =
@@ -443,9 +434,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
               },
             }}
           />
-          <PaginationWrapper>
-            <Pagination data={data} pageString={t('pagination-page')} />
-          </PaginationWrapper>
+          <Pagination maxPages={filteredCollections.length / 50} />
         </>
       );
     }
