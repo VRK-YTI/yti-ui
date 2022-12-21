@@ -3,10 +3,12 @@ import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useState } from 'react';
 import {
   Button,
+  ExternalLink,
   Modal,
   ModalContent,
   ModalFooter,
   ModalTitle,
+  Paragraph,
 } from 'suomifi-ui-components';
 import FileDropArea from 'yti-common-ui/file-drop-area';
 import { createErrorMessage, ExcelError } from '../import/excel.error';
@@ -16,6 +18,7 @@ import {
 } from '../import/import.slice';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { translateFileUploadError } from '@app/common/utils/translation-helpers';
+import { ImportDescriptionBlock } from './concept-import.styles';
 
 interface ConceptImportModalProps {
   terminologyId: string;
@@ -85,12 +88,29 @@ export default function ConceptImportModal({
           {!startFileUpload ? t('import-concepts') : t('downloading-file')}
         </ModalTitle>
         {!startFileUpload ? (
-          <FileDropArea
-            setFileData={setFileData}
-            setIsValid={setIsValid}
-            validFileTypes={['xlsx', 'xml']}
-            translateFileUploadError={translateFileUploadError}
-          />
+          <>
+            <ImportDescriptionBlock>
+              <Paragraph>
+                {t('import-concepts-description-1')}{' '}
+                <ExternalLink
+                  href="https://wiki.dvv.fi/pages/viewpage.action?pageId=21783347"
+                  labelNewWindow={t('link-opens-new-window-external', {
+                    ns: 'common',
+                  })}
+                >
+                  {t('from-terminology-manual')}
+                </ExternalLink>
+              </Paragraph>
+              <Paragraph>{t('import-concepts-description-2')}</Paragraph>
+            </ImportDescriptionBlock>
+
+            <FileDropArea
+              setFileData={setFileData}
+              setIsValid={setIsValid}
+              validFileTypes={['xlsx', 'xml']}
+              translateFileUploadError={translateFileUploadError}
+            />
+          </>
         ) : (
           <FileUpload
             importResponseData={

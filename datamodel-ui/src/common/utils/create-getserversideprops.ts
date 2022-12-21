@@ -75,7 +75,7 @@ export function createCommonGetServerSideProps<
           );
         }
 
-        if (process.env.NODE_ENV !== 'production') {
+        if (process.env.ENV_TYPE !== 'production') {
           store.dispatch(getFakeableUsers.initiate());
           await Promise.all(store.dispatch(getFakeableRunningQueriesThunk()));
         }

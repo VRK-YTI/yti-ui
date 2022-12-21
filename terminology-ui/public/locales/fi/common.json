@@ -110,7 +110,7 @@
   "statuses": {
     "all-statuses": "Kaikki tilat",
     "draft": "Luonnos",
-    "incomplete": "Keskeneräinen",
+    "incomplete": "Piilotettu",
     "invalid": "Virheellinen",
     "retired": "Poistettu käytöstä",
     "suggested": "Ehdotus",
