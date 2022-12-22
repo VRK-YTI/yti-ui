@@ -24,13 +24,6 @@ export const ResultAndStatsWrapper = styled.div`
   width: 100%;
 `;
 
-export const PaginationWrapper = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-`;
-
 export const QuickActionsWrapper = styled.div<{ isSmall?: boolean }>`
   width: 100%;
   display: flex;

@@ -19,7 +19,7 @@ import {
   MultilingualPropertyBlock,
   PropertyBlock,
 } from '@app/common/components/block';
-import FormattedDate from '@app/common/components/formatted-date';
+import FormattedDate from 'yti-common-ui/formatted-date';
 import { useSelector } from 'react-redux';
 import { selectLogin } from '@app/common/components/login/login.slice';
 import HasPermission from '@app/common/utils/has-permission';

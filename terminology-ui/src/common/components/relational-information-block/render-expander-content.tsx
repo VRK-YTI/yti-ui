@@ -7,7 +7,7 @@ import SaveSpinner from 'yti-common-ui/save-spinner';
 import { BasicBlock } from 'yti-common-ui/block';
 import { MultilingualPropertyBlock, PropertyBlock } from '../block';
 import Separator from 'yti-common-ui/separator';
-import FormattedDate from '../formatted-date';
+import FormattedDate from 'yti-common-ui/formatted-date';
 
 interface RenderExpanderContentProps {
   terminologyId: string;

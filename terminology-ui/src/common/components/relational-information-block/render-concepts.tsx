@@ -4,7 +4,7 @@ import {
   ExpanderGroup,
   ExpanderTitle,
 } from 'suomifi-ui-components';
-import SanitizedTextContent from '@app/common/components/sanitized-text-content';
+import SanitizedTextContent from 'yti-common-ui/sanitized-text-content';
 import { useTranslation } from 'next-i18next';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import getPrefLabel from '@app/common/utils/get-preflabel';
