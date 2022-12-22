@@ -157,6 +157,7 @@
     "incorrect-file-type_other": "Fel filtyp. Tillåtna filtyper är {{fileTypes}}.",
     "upload-error": "Laddning av filen gick fel. Försök igen."
   },
+  "from-terminology-manual": "",
   "give-definition": "Ange definition",
   "has-part-concept": "Delbegrepp",
   "has-part-concept-add": "Lägg till ett nytt delgrepp",
@@ -164,6 +165,8 @@
   "has-part-concept-decription": "Begrepp, som beskriver en del av en helhet",
   "homograph-number": "Homonymens ordningsnummer",
   "import-concepts": "Importera begrepp",
+  "import-concepts-description-1": "",
+  "import-concepts-description-2": "",
   "import-concepts-to-terminology": "Importera begreppen till ordlistan",
   "import-incorrect-excel-file-1": {
     "concept-import": "",
@@ -267,6 +270,7 @@
     "concept-title": "Radera begreppet",
     "concept-warning": "Radering av begreppet kan inte återkallas.",
     "remove-disabled": "Gällande ordlista kan inte raderas i sin helhet. Förändra ordlistans status till Ur bruk eller Ersatt, om ordlistan har ersatts med en annan ordlista.",
+    "remove-disabled-title": "",
     "terminology-confirmation": "Ordlistan {{targetName}} raderas?",
     "terminology-description": "Du har rätt till att radera denna ordlista. Ordlistans radering är slutlig.",
     "terminology-processing": "Ordlistan raderas",
@@ -357,6 +361,8 @@
   "try-again": "Försök igen",
   "type-change-alert-warning": "Typ av den rekommenderade termen kan inte förändras eftersom inga andra rekommenderade termer har definierats. Lägg till en ny rekommenderad term eller förändra typen av en nuvarande term till rekommenderad term.",
   "update-terminology": "",
+  "update-terminology-description-1": "",
+  "update-terminology-description-2": "",
   "update-terminology-with-file": "",
   "updating-terminology": "",
   "url-preview": "Förhandsvisa URL",

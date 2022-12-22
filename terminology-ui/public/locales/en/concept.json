@@ -20,7 +20,6 @@
   "field-terms-label": "Terms",
   "field-terms-non-recommended": "Non-recommended synonym",
   "field-terms-preferred": "Preferred term",
-  "field-terms-search-term": "Search term",
   "field-word-class": "Word class",
   "heading": "Concept",
   "new-concept-page-help": "The language-versioned fields are displayed according to the languages selected in the vocabulary information. It is recommended to fill in all the information. Information is mandatory if not specifically marked as optional.",
