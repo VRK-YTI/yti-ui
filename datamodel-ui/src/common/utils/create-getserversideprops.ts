@@ -120,7 +120,10 @@ export function createCommonGetServerSideProps<
               )
             ),
             user: user ?? null,
-            fakeableUsers: isEqual(fakeableUsers, {}) ? null : fakeableUsers,
+            fakeableUsers:
+              !fakeableUsers || isEqual(fakeableUsers, {})
+                ? null
+                : fakeableUsers,
           },
         };
       }

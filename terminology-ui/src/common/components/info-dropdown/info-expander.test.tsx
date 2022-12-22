@@ -11,6 +11,7 @@ import {
   initialState,
 } from '@app/common/components/login/login.slice';
 import mockRouter from 'next-router-mock';
+import { v4 } from 'uuid';
 
 jest.mock('next/dist/client/router', () => require('next-router-mock'));
 
@@ -26,7 +27,7 @@ describe('infoExpander', () => {
             {
               properties: {},
               references: {
-                contributor: [{ properties: { prefLabel: [] } }],
+                contributor: [{ properties: { prefLabel: [] }, id: v4() }],
                 inGroup: [{ properties: { prefLabel: [] } }],
               },
             } as any
@@ -59,7 +60,7 @@ describe('infoExpander', () => {
             {
               properties: {},
               references: {
-                contributor: [{ properties: { prefLabel: [] } }],
+                contributor: [{ properties: { prefLabel: [] }, id: v4() }],
                 inGroup: [{ properties: { prefLabel: [] } }],
               },
             } as any
@@ -96,7 +97,7 @@ describe('infoExpander', () => {
               lastModifiedDate: '1970-01-02T00:00:00.000+00:00',
               properties: {},
               references: {
-                contributor: [{ properties: { prefLabel: [] } }],
+                contributor: [{ properties: { prefLabel: [] }, id: v4() }],
                 inGroup: [{ properties: { prefLabel: [] } }],
               },
             } as any

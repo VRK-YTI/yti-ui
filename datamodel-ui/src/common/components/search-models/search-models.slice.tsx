@@ -22,8 +22,8 @@ export const searchModelsApi = createApi({
         url: '/searchModels',
         method: 'POST',
         data: {
-          pageFrom: 0,
-          pageSize: 1000,
+          pageFrom: Math.max(0, (props.urlState.page - 1) * 50),
+          pageSize: 50,
           searchResources: true,
           sortLang: props.lang ?? 'fi',
           query: props.urlState.q,

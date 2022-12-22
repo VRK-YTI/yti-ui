@@ -5,12 +5,13 @@ import {
   OrganizationSearchResult,
 } from '@app/common/interfaces/terminology.interface';
 import Separator from 'yti-common-ui/separator';
-import { Filter } from '@app/common/components/filter/filter';
-import InformationDomainFilter from '@app/common/components/filter/information-domain-filter';
-import OrganizationFilter from '@app/common/components/filter/organization-filter';
-import StatusFilter from '@app/common/components/filter/status-filter';
-import { KeywordFilter } from '@app/common/components/filter/keyword-filter';
-import LanguageFilter from '@app/common/components/filter/language-filter';
+import Filter, {
+  KeywordFilter,
+  OrganizationFilter,
+  LanguageFilter,
+  StatusFilter,
+  InformationDomainFilter,
+} from 'yti-common-ui/filter';
 import { FilterTopPartBlock } from './terminology-search.styles';
 
 export interface SearchPageFilterProps {
@@ -46,11 +47,23 @@ export function SearchPageFilter({
         <OrganizationFilter
           title={t('terminology-search-filter-by-organization')}
           visualPlaceholder={t('terminology-search-filter-pick-organization')}
-          organizations={organizations}
+          organizations={
+            organizations?.map((org) => ({
+              labelText: org.properties.prefLabel.value,
+              uniqueItemId: org.id,
+            })) ?? []
+          }
         />
         <LanguageFilter
           labelText={t('filter-by-language')}
-          languages={counts?.counts.languages}
+          languages={
+            counts && counts.counts.languages
+              ? Object.keys(counts?.counts.languages).map((key) => ({
+                  labelText: key,
+                  uniqueItemId: key,
+                }))
+              : []
+          }
         />
       </FilterTopPartBlock>
       <Separator />
@@ -70,7 +83,7 @@ export function SearchPageFilter({
         domains={
           groups?.map((group) => ({
             id: group.id,
-            name: group.properties.prefLabel,
+            name: group.properties.prefLabel.value,
           })) ?? []
         }
         isModal={isModal}

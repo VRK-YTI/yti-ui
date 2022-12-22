@@ -17,9 +17,9 @@ import {
   CommonContextState,
   CommonContextProvider,
 } from 'yti-common-ui/common-context-provider';
-import PageHead from '@app/common/components/page-head';
+import PageHead from 'yti-common-ui/page-head';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
-import { getStoreData } from '@app/common/components/page-head/utils';
+import { getStoreData } from '@app/common/utils/get-store-data';
 import {
   getVocabularyCount,
   getRunningQueriesThunk as countsGetRunningQueriesThunk,
@@ -44,6 +44,7 @@ export default function TerminologyPage(props: TerminologyPageProps) {
         feedbackSubject={`${t('feedback-vocabulary')} - ${props.title}`}
       >
         <PageHead
+          baseUrl="https://sanastot.suomi.fi"
           title={props.title ?? ''}
           description={props.description ?? ''}
           path={asPath}
@@ -73,6 +74,13 @@ export const getServerSideProps = createCommonGetServerSideProps(
 
     if (query && query.q !== undefined) {
       urlState.q = Array.isArray(query.q) ? query.q[0] : query.q;
+    }
+
+    if (query && query.page !== undefined) {
+      const pageValue = Array.isArray(query.page)
+        ? parseInt(query.page[0], 10)
+        : parseInt(query.page, 10);
+      urlState.page = !isNaN(pageValue) ? pageValue : initialUrlState.page;
     }
 
     if (query && query.status !== undefined) {

@@ -20,9 +20,9 @@ import {
   CommonContextState,
   CommonContextProvider,
 } from 'yti-common-ui/common-context-provider';
-import PageHead from '@app/common/components/page-head';
+import PageHead from 'yti-common-ui/page-head';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
-import { getStoreData } from '@app/common/components/page-head/utils';
+import { getStoreData } from '@app/common/utils/get-store-data';
 
 interface CollectionPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -46,6 +46,7 @@ export default function CollectionPage(props: CollectionPageProps) {
         }`}
       >
         <PageHead
+          baseUrl="https://sanastot.suomi.fi"
           title={[props.collectionTitle, props.vocabularyTitle]}
           path={asPath}
         />

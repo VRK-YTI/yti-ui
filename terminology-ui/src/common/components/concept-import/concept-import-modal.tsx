@@ -10,13 +10,14 @@ import {
   ModalTitle,
   Paragraph,
 } from 'suomifi-ui-components';
-import FileDropArea from '../file-drop-area';
+import FileDropArea from 'yti-common-ui/file-drop-area';
 import { createErrorMessage, ExcelError } from '../import/excel.error';
 import {
   usePostImportNTRFMutation,
   usePostSimpleImportExcelMutation,
 } from '../import/import.slice';
 import { useBreakpoints } from 'yti-common-ui/media-query';
+import { translateFileUploadError } from '@app/common/utils/translation-helpers';
 import { ImportDescriptionBlock } from './concept-import.styles';
 
 interface ConceptImportModalProps {
@@ -102,10 +103,12 @@ export default function ConceptImportModal({
               </Paragraph>
               <Paragraph>{t('import-concepts-description-2')}</Paragraph>
             </ImportDescriptionBlock>
+
             <FileDropArea
               setFileData={setFileData}
               setIsValid={setIsValid}
               validFileTypes={['xlsx', 'xml']}
+              translateFileUploadError={translateFileUploadError}
             />
           </>
         ) : (

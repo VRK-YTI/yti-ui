@@ -3,17 +3,16 @@ import {
   useGetSearchResultQuery,
   useGetOrganizationsQuery,
 } from '@app/common/components/terminology-search/terminology-search.slice';
-import Title from '@app/common/components/title/title';
+import Title from 'yti-common-ui/title';
 import {
   ResultAndFilterContainer,
   ResultAndStatsWrapper,
-  PaginationWrapper,
   FilterMobileButton,
 } from './terminology-search.styles';
 import SearchResults, {
   SearchResultData,
 } from 'yti-common-ui/search-results/search-results';
-import Pagination from '@app/common/components/pagination/pagination';
+import Pagination from 'yti-common-ui/pagination';
 import { useTranslation } from 'next-i18next';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { Modal, ModalContent } from 'suomifi-ui-components';
@@ -25,11 +24,17 @@ import {
   selectAlert,
   setAlert,
 } from '@app/common/components/alert/alert.slice';
-import LoadIndicator from '@app/common/components/load-indicator';
+import LoadIndicator from 'yti-common-ui/load-indicator';
 import { useStoreDispatch } from '@app/store';
 import { useSelector } from 'react-redux';
 import getPrefLabel from '@app/common/utils/get-preflabel';
 import { translateTerminologyType } from '@app/common/utils/translation-helpers';
+import {
+  Description,
+  TitleDescriptionWrapper,
+} from 'yti-common-ui/title/title.styles';
+import NewTerminology from '@app/modules/new-terminology';
+import { setTitle } from '@app/common/components/title/title.slice';
 
 export default function TerminologySearch() {
   const { t, i18n } = useTranslation();
@@ -158,6 +163,10 @@ export default function TerminologySearch() {
   ]);
 
   useEffect(() => {
+    dispatch(setTitle(t('terminology-title')));
+  }, [dispatch, t]);
+
+  useEffect(() => {
     const timer = setTimeout(() => {
       setShowLoading(isFetching);
     }, 1000);
@@ -166,7 +175,19 @@ export default function TerminologySearch() {
 
   return (
     <main id="main">
-      <Title info={t('terminology-title')} />
+      <Title
+        title={t('terminology-title')}
+        noBreadcrumbs={true}
+        extra={
+          <TitleDescriptionWrapper $isSmall={isSmall}>
+            <Description id="page-description">
+              {t('terminology-search-info')}
+            </Description>
+            <NewTerminology />
+          </TitleDescriptionWrapper>
+        }
+      />
+
       {isSmall && groupsData && orgsData && (
         <FilterMobileButton
           variant="secondary"
@@ -174,7 +195,7 @@ export default function TerminologySearch() {
           onClick={() => setShowModal(!showModal)}
           id="mobile-filter-button"
         >
-          {t('vocabulary-filter-filter-list')}
+          {t('filter-list')}
         </FilterMobileButton>
       )}
       <ResultAndFilterContainer>
@@ -236,9 +257,7 @@ export default function TerminologySearch() {
                     },
                   }}
                 />
-                <PaginationWrapper>
-                  <Pagination data={data} pageString={t('pagination-page')} />
-                </PaginationWrapper>
+                <Pagination maxPages={Math.round(data.totalHitCount / 50)} />
               </>
             )
           )}

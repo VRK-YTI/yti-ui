@@ -8,7 +8,7 @@ import {
   useGetSubscriptionQuery,
   useToggleSubscriptionMutation,
 } from './subscription.slice';
-import InlineAlert from '../inline-alert';
+import InlineAlert from 'yti-common-ui/inline-alert';
 
 interface SubscriptionProps {
   uri: string;
