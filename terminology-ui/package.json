@@ -13,7 +13,7 @@
     "test:watch": "TZ=UTC jest --watch",
     "test:ci": "TZ=UTC jest --ci --runInBand --coverage",
     "test:ci:no-coverage": "TZ=UTC jest --ci --runInBand",
-    "i18n": "i18next 'src/**/*.{ts,tsx}'",
+    "i18n": "i18next 'src/**/*.{ts,tsx}' '../common-ui/**/*.{ts,tsx}'",
     "i18n:ci": "i18next 'src/**/*.{ts,tsx}' --fail-on-warnings --fail-on-update",
     "lint-staged": "lint-staged"
   },

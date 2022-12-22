@@ -1,5 +1,5 @@
 {
-  "error-alert": "ERROR {{id}}: {{displayText}}",
+  "error-alert": "VIRHE {{id}}: {{displayText}}",
   "error-occured": "Tapahtui virhe",
   "error-occured_access-request": "Käyttöoikeuksien pyynnössä ilmeni ongelma",
   "error-occured_counts": "Tilojen ja tietoalueiden lukumäärien haussa ilmeni ongelma",
