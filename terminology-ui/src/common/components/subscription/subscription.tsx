@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Button, Paragraph, Text } from 'suomifi-ui-components';
 import { useStoreDispatch } from '@app/store';
 import { setAlert } from '../alert/alert.slice';
@@ -18,15 +18,18 @@ export default function Subscription({ uri }: SubscriptionProps) {
   const { t } = useTranslation('common');
   const { data, error } = useGetSubscriptionQuery(uri);
   const [toggleSubscription, subscription] = useToggleSubscriptionMutation();
-  const [subscribed, setSubscribed] = useState(false);
+  const [subscribed, setSubscribed] = useState(
+    data !== '' && data ? true : false
+  );
   const dispatch = useStoreDispatch();
 
-  useEffect(() => {
-    setSubscribed(data !== '' && data ? true : false);
-  }, [data]);
+  const setSubscribedState = useCallback(() => {
+    setSubscribed(() => !subscribed);
+  }, [subscribed]);
 
   useEffect(() => {
     if (subscription.isSuccess) {
+      setSubscribedState();
       dispatch(subscriptionApi.internalActions.resetApiState());
     } else if (subscription.isError) {
       dispatch(
@@ -41,7 +44,7 @@ export default function Subscription({ uri }: SubscriptionProps) {
         )
       );
     }
-  }, [subscription, dispatch, t]);
+  }, [subscription, dispatch, t, setSubscribedState]);
 
   const handleSubscription = (subscribed: boolean) => {
     if (!error) {

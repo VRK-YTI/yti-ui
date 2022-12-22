@@ -45,4 +45,5 @@ export const {
   util: { getRunningQueriesThunk },
 } = countsApi;
 
-export const { getCounts, getVocabularyCount } = countsApi.endpoints;
+export const { getCounts, getVocabularyCount, getStatusCounts } =
+  countsApi.endpoints;
