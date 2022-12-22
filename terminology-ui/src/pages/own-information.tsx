@@ -8,6 +8,10 @@ import {
   CommonContextProvider,
 } from 'yti-common-ui/common-context-provider';
 import PageHead from '@app/common/components/page-head';
+import {
+  getSubscriptions,
+  getRunningQueriesThunk,
+} from '@app/common/components/subscription/subscription.slice';
 
 interface OwnInformationPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -27,10 +31,16 @@ export default function OwnInformationPage(props: OwnInformationPageProps) {
   );
 }
 
-export const getServerSideProps = createCommonGetServerSideProps(async () => {
-  return {
-    props: {
-      requireAuthenticated: true,
-    },
-  };
-});
+export const getServerSideProps = createCommonGetServerSideProps(
+  async ({ store }) => {
+    store.dispatch(getSubscriptions.initiate(null));
+
+    Promise.all(store.dispatch(getRunningQueriesThunk()));
+
+    return {
+      props: {
+        requireAuthenticated: true,
+      },
+    };
+  }
+);
