@@ -8,7 +8,7 @@ import {
   CommonContextState,
   CommonContextProvider,
 } from 'yti-common-ui/common-context-provider';
-import PageHead from '@app/common/components/page-head';
+import PageHead from 'yti-common-ui/page-head';
 import { default as EditConceptModule } from '@app/modules/edit-concept';
 import { useRouter } from 'next/router';
 import {
@@ -19,7 +19,7 @@ import {
   getConcept,
   getRunningQueriesThunk as getConceptRunningQueriesThunk,
 } from '@app/common/components/concept/concept.slice';
-import { getStoreData } from '@app/common/components/page-head/utils';
+import { getStoreData } from '@app/common/utils/get-store-data';
 import { Concept } from '@app/common/interfaces/concept.interface';
 
 interface NewConceptPageProps extends CommonContextState {
@@ -38,6 +38,7 @@ export default function EditConcept(props: NewConceptPageProps) {
     <CommonContextProvider value={props}>
       <Layout user={props.user} fakeableUsers={props.fakeableUsers}>
         <PageHead
+          baseUrl="https://sanastot.suomi.fi"
           title={t('new-concept-title')}
           siteTitle="Yhteentoimivuusalusta"
         />

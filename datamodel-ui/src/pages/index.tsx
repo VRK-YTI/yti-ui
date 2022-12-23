@@ -55,6 +55,13 @@ export const getServerSideProps = createCommonGetServerSideProps(
         urlState.q = Array.isArray(query.q) ? query.q[0] : query.q;
       }
 
+      if (query.page !== undefined) {
+        const pageValue = Array.isArray(query.page)
+          ? parseInt(query.page[0], 10)
+          : parseInt(query.page, 10);
+        urlState.page = !isNaN(pageValue) ? pageValue : initialUrlState.page;
+      }
+
       if (query.status !== undefined) {
         urlState.status = Array.isArray(query.status)
           ? query.status

@@ -2,6 +2,7 @@ import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useState } from 'react';
 import {
   Button,
+  InlineAlert,
   Modal,
   ModalContent,
   ModalFooter,
@@ -17,7 +18,6 @@ import Prefix from '../terminology-components/prefix';
 import { UpdateTerminology } from '@app/modules/new-terminology/update-terminology.interface';
 import { setAlert } from '../alert/alert.slice';
 import { useRouter } from 'next/router';
-import InlineAlert from '../inline-alert';
 import {
   DescriptionParagraph,
   FooterBlock,

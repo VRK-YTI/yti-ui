@@ -1,35 +1,12 @@
 import { BaseQueryFn } from '@reduxjs/toolkit/dist/query';
 import { BaseQueryApi } from '@reduxjs/toolkit/dist/query/baseQueryTypes';
-import { MaybePromise } from '@reduxjs/toolkit/dist/query/tsHelpers';
-import axios, { AxiosRequestConfig, AxiosRequestHeaders } from 'axios';
+import axios, { AxiosRequestHeaders } from 'axios';
 import { NextIronContext } from '.';
-
-export type AxiosBaseQuery = {
-  baseUrl: string;
-  prepareHeaders?: (
-    api: Pick<BaseQueryApi, 'getState' | 'endpoint' | 'type' | 'forced'> & {
-      extra: NextIronContext;
-    }
-  ) => MaybePromise<AxiosRequestHeaders>;
-};
-
-export type AxiosBaseQueryArgs = {
-  url: string;
-  method: AxiosRequestConfig['method'];
-  data?: AxiosRequestConfig['data'];
-  params?: AxiosRequestConfig['params'];
-};
-
-export type AxiosBaseQueryError =
-  | {
-      status: number;
-      data: unknown;
-    }
-  | {
-      status: 'GENERIC_ERROR';
-      data?: undefined;
-      error: string;
-    };
+import {
+  AxiosBaseQuery,
+  AxiosBaseQueryArgs,
+  AxiosBaseQueryError,
+} from 'yti-common-ui/interfaces/axios-base-query.interface';
 
 const axiosBaseQuery =
   (

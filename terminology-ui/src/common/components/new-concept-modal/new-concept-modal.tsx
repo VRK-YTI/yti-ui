@@ -13,7 +13,7 @@ import {
   Text,
   TextInput,
 } from 'suomifi-ui-components';
-import FormFooterAlert from '../form-footer-alert';
+import FormFooterAlert from 'yti-common-ui/form-footer-alert';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { TextInputBlock } from './new-concept-modal.styles';
 

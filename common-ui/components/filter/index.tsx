@@ -5,6 +5,8 @@ import LanguageFilter from './language-filter';
 import InformationDomainFilter from './information-domain-filter';
 import StatusFilterRadio from './status-filter-radio';
 import TypeFilterCheckbox from './type-filter-checkbox';
+import StatusFilter from './status-filter';
+import TypeFilter from './type-filter';
 
 export default Filter;
 export {
@@ -14,4 +16,6 @@ export {
   InformationDomainFilter,
   StatusFilterRadio,
   TypeFilterCheckbox,
+  StatusFilter,
+  TypeFilter,
 };

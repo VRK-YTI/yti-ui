@@ -1,4 +1,4 @@
-import FormFooterAlert from '@app/common/components/form-footer-alert';
+import FormFooterAlert from 'yti-common-ui/form-footer-alert';
 import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';

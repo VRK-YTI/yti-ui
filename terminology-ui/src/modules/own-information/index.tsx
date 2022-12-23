@@ -1,4 +1,4 @@
-import { Breadcrumb, BreadcrumbLink } from '@app/common/components/breadcrumb';
+import { Breadcrumb, BreadcrumbLink } from 'yti-common-ui/breadcrumb';
 import { useTranslation } from 'next-i18next';
 import {
   MainContent,
@@ -20,7 +20,7 @@ import AccessRequest from '../../common/components/access-request';
 import SubscriptionBlock from './subscription-block';
 import EmailNotificationsBlock from './email-notifications-block';
 import { useGetSubscriptionsQuery } from '../../common/components/subscription/subscription.slice';
-import InlineAlert from '@app/common/components/inline-alert';
+import InlineAlert from 'yti-common-ui/inline-alert';
 import { useGetRequestsQuery } from '@app/common/components/access-request/access-request.slice';
 import { MainTitle } from 'yti-common-ui/title-block';
 import { translateRole } from '@app/common/utils/translation-helpers';

@@ -47,11 +47,14 @@ export default function InfoManual({
       valid = false;
     } else {
       Object.entries(terminologyData).forEach(([key, value]) => {
-        if (key === 'contact' && !isEmail(value)) {
+        if (key === 'contact' && value !== '' && !isEmail(value)) {
           valid = false;
         }
 
-        if (!value || value.length < 1 || value[1] === false) {
+        if (
+          key !== 'contact' &&
+          (!value || value.length < 1 || value[1] === false)
+        ) {
           valid = false;
         }
       });
@@ -68,7 +71,7 @@ export default function InfoManual({
 
   return (
     <form>
-      <TallerSeparator />
+      {/* <TallerSeparator /> */}
       <LanguageSelector
         disabled={disabled}
         update={handleUpdate}

@@ -8,11 +8,10 @@ import {
   default as SearchResults,
   SearchResultData,
 } from 'yti-common-ui/search-results/search-results';
-import Title from '@app/common/components/title/title';
+import Title from 'yti-common-ui/title';
 import {
   ResultAndFilterContainer,
   ResultAndStatsWrapper,
-  PaginationWrapper,
   QuickActionsWrapper,
 } from './vocabulary.styles';
 import { useBreakpoints } from 'yti-common-ui/media-query';
@@ -26,14 +25,13 @@ import {
   Paragraph,
   Text,
 } from 'suomifi-ui-components';
-import { Breadcrumb, BreadcrumbLink } from '@app/common/components/breadcrumb';
+import { Breadcrumb, BreadcrumbLink } from 'yti-common-ui/breadcrumb';
 import PropertyValue from '@app/common/components/property-value';
 import { useGetVocabularyCountQuery } from '@app/common/components/counts/counts.slice';
 import { TerminologyListFilter } from './terminology-list-filter';
 import useUrlState from '@app/common/utils/hooks/use-url-state';
-import Pagination from '@app/common/components/pagination/pagination';
-import filterCollectionData from '@app/common/utils/filter-collection-data';
-import LoadIndicator from '@app/common/components/load-indicator';
+import Pagination from 'yti-common-ui/pagination';
+import LoadIndicator from 'yti-common-ui/load-indicator';
 import { useRouter } from 'next/router';
 import HasPermission from '@app/common/utils/has-permission';
 import dynamic from 'next/dynamic';
@@ -41,6 +39,18 @@ import ConceptImportModal from '@app/common/components/concept-import';
 import getPrefLabel from '@app/common/utils/get-preflabel';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import { Property } from '@app/common/interfaces/termed-data-types.interface';
+import {
+  StatusChip,
+  TitleType,
+  TitleTypeAndStatusWrapper,
+} from 'yti-common-ui/title/title.styles';
+import {
+  translateStatus,
+  translateTerminologyType,
+} from '@app/common/utils/translation-helpers';
+import InfoExpander from '@app/common/components/info-dropdown/info-expander';
+import { useStoreDispatch } from '@app/store';
+import { setTitle } from '@app/common/components/title/title.slice';
 
 const NewConceptModal = dynamic(
   () => import('@app/common/components/new-concept-modal')
@@ -55,6 +65,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
   const { isSmall } = useBreakpoints();
   const { urlState } = useUrlState();
   const router = useRouter();
+  const dispatch = useStoreDispatch();
   const {
     data: collectionsData,
     error: collectionsError,
@@ -138,6 +149,17 @@ export default function Vocabulary({ id }: VocabularyProps) {
     setShowLoadingCollections,
   ]);
 
+  useEffect(() => {
+    dispatch(
+      setTitle(
+        getPropertyValue({
+          property: info?.properties.prefLabel,
+          language: i18n.language,
+        })
+      )
+    );
+  }, [dispatch, info?.properties.prefLabel, i18n.language]);
+
   if (infoError) {
     return (
       <>
@@ -174,7 +196,40 @@ export default function Vocabulary({ id }: VocabularyProps) {
       </Breadcrumb>
 
       <main id="main">
-        {info && <Title info={info} />}
+        <Title
+          title={getPropertyValue({
+            property: info?.properties.prefLabel,
+            language: i18n.language,
+          })}
+          extra={
+            <>
+              <TitleTypeAndStatusWrapper>
+                <TitleType>
+                  {translateTerminologyType(
+                    info?.properties.terminologyType?.[0].value ??
+                      'TERMINOLOGICAL_VOCABULARY',
+                    t
+                  )}
+                </TitleType>{' '}
+                &middot;
+                <StatusChip
+                  valid={
+                    info?.properties.status?.[0].value === 'VALID'
+                      ? 'true'
+                      : undefined
+                  }
+                  id="status-chip"
+                >
+                  {translateStatus(
+                    info?.properties.status?.[0].value ?? 'DRAFT',
+                    t
+                  )}
+                </StatusChip>
+              </TitleTypeAndStatusWrapper>
+              <InfoExpander data={info} />
+            </>
+          }
+        />
         <ResultAndFilterContainer>
           {!isSmall ? (
             <TerminologyListFilter
@@ -232,7 +287,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
                 fullWidth
                 onClick={() => setShowModal(!showModal)}
               >
-                {t('vocabulary-filter-filter-list')}
+                {t('filter-list')}
               </FilterMobileButton>
             )}
 
@@ -257,12 +312,9 @@ export default function Vocabulary({ id }: VocabularyProps) {
                       organizations={[]}
                       noChip
                     />
-                    <PaginationWrapper>
-                      <Pagination
-                        data={conceptsData}
-                        pageString={t('pagination-page')}
-                      />
-                    </PaginationWrapper>
+                    <Pagination
+                      maxPages={Math.round(conceptsData.totalHitCount / 50)}
+                    />
                   </>
                 )
               ))}
@@ -285,10 +337,6 @@ export default function Vocabulary({ id }: VocabularyProps) {
     }
 
     if (collectionsData) {
-      const data =
-        filterCollectionData(collectionsData, urlState, i18n.language) ??
-        collectionsData;
-
       const collectionMembers: { [key: string]: string }[] =
         collectionsData.map((collection) => {
           const memberLabels =
@@ -386,9 +434,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
               },
             }}
           />
-          <PaginationWrapper>
-            <Pagination data={data} pageString={t('pagination-page')} />
-          </PaginationWrapper>
+          <Pagination maxPages={filteredCollections.length / 50} />
         </>
       );
     }

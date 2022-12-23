@@ -1,4 +1,4 @@
-import FormFooterAlert from '@app/common/components/form-footer-alert';
+import FormFooterAlert from 'yti-common-ui/form-footer-alert';
 import SaveSpinner from 'yti-common-ui/save-spinner';
 import Separator from 'yti-common-ui/separator';
 import { translateEditConceptError } from '@app/common/utils/translation-helpers';

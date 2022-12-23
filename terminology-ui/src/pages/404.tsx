@@ -1,17 +1,19 @@
 import React from 'react';
-import Error from '@app/common/components/error/error';
+import Error from 'yti-common-ui/error/error';
 import ErrorLayout from 'yti-common-ui/layout/error-layout';
 import {
   CommonContextProvider,
   initialCommonContextState,
 } from 'yti-common-ui/common-context-provider';
-import PageHead from '@app/common/components/page-head';
+import PageHead from 'yti-common-ui/page-head';
+import Matomo from 'yti-common-ui/matomo';
 
 export default function Custom404() {
   return (
     <CommonContextProvider value={initialCommonContextState}>
-      <ErrorLayout>
+      <ErrorLayout matomo={<Matomo />}>
         <PageHead
+          baseUrl="https://sanastot.suomi.fi"
           title="Error"
           siteTitle="Yhteentoimivuusalusta"
           description="An error occured"

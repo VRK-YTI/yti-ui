@@ -6,8 +6,8 @@ import {
   CommonContextProvider,
   CommonContextState,
 } from 'yti-common-ui/common-context-provider';
-import PageHead from '@app/common/components/page-head';
-import { getStoreData } from '@app/common/components/page-head/utils';
+import PageHead from 'yti-common-ui/page-head';
+import { getStoreData } from '@app/common/utils/get-store-data';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import {
   getVocabulary,
@@ -38,6 +38,7 @@ export default function CollectionEdit(props: CollectionEditPageProps) {
     <CommonContextProvider value={props}>
       <Layout user={props.user} fakeableUsers={props.fakeableUsers}>
         <PageHead
+          baseUrl="https://sanastot.suomi.fi"
           title={props.collectionLabel}
           siteTitle="Yhteentoimivuusalusta"
         />
