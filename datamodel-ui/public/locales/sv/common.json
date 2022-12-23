@@ -1,3 +1,7 @@
 {
-  "site-frontpage": ""
+  "site-description-1": "I interoperabilitetsplattformen, som upprätthålls av Myndigheten för digitalisering och befolkningsdata, hittar du verktyg för fastställande av driftskompatibelt informerande innehåll. Plattformen består av ordlistor, koder och datamodeller som behövs i dataflödet och i annan informationshantering.",
+  "site-description-2": "Interoperatibilitetsplattformen är avsedd både för den offentliga förvaltningen och för den privata sektorn. Verktygen i plattformen kan utan avgift användas för terminologiskt arbete med ordlistor, för att administrera koder och för datamodellering. De som producerar datainnehållet ansvarar för att definiera sin information samt för att den är uppdaterad och av god kvalitet.",
+  "site-description-3": "Du kan även utnyttja de färdiga datadefinitionerna som finns på interoperabilitetsplattformen. Utnyttjandet av färdiga koder och datamodeller i systemutvecklingen är kostnadseffektivt och förbättrar kompatibiliteten mellan de olika aktörernas system. Att använda enhetliga begrepp underlättar tjänsteplaneringen och förståeligheten.",
+  "site-frontpage": "Startsidan",
+  "site-title": "Interoperabilitetsplattform"
 }
