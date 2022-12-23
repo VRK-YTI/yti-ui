@@ -79,9 +79,9 @@
   "concept-import": {
     "prefLabel-column-missing": "prefLabel kenttä puuttuu",
     "prefLabel-row-missing": "prefLabel pitää määrittää vähintään yhdellä kielellä",
-    "property-missing-language-suffix": "Käsitteen tiedon avaimesta puuttuu kieli suffiksi",
+    "property-missing-language-suffix": "Käsitteen tiedon avaimesta puuttuu kielen koodiarvo",
     "status-column-missing": "Tila kenttä puuttuu",
-    "term-missing-language-suffix": "Termin avaimesta puuttuu kieli suffiksi",
+    "term-missing-language-suffix": "Termin avaimesta puuttuu kielen koodiarvo",
     "terminology-no-language": "Sanastossa ei ole annettua kieltä",
     "undefined-error": "Käsitteiden tuonnissa tapahtui virhe",
     "value-not-valid": "Arvo solussa on virheellinen"

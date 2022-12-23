@@ -1,4 +1,4 @@
-import FileDropArea from '@app/common/components/file-drop-area';
+import FileDropArea from 'yti-common-ui/file-drop-area';
 import { usePostImportExcelMutation } from '@app/common/components/import/import.slice';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import SaveSpinner from 'yti-common-ui/save-spinner';
@@ -6,7 +6,10 @@ import { terminologySearchApi } from '@app/common/components/terminology-search/
 import { usePostNewVocabularyMutation } from '@app/common/components/vocabulary/vocabulary.slice';
 import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info';
 import useConfirmBeforeLeavingPage from '@app/common/utils/hooks/use-confirm-before-leaving-page';
-import { translateHttpError } from '@app/common/utils/translation-helpers';
+import {
+  translateFileUploadError,
+  translateHttpError,
+} from '@app/common/utils/translation-helpers';
 import { useStoreDispatch } from '@app/store';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
@@ -18,8 +21,8 @@ import {
   ModalContent,
   ModalFooter,
   Paragraph,
-  RadioButton,
-  RadioButtonGroup,
+  // RadioButton,
+  // RadioButtonGroup,
   Text,
 } from 'suomifi-ui-components';
 import FileUpload from './file-upload';
@@ -46,7 +49,9 @@ export default function NewTerminologyModal({
   const { enableConfirmation, disableConfirmation } =
     useConfirmBeforeLeavingPage('disabled');
   const [isValid, setIsValid] = useState(false);
-  const [inputType, setInputType] = useState('');
+  // inputType set to default to 'self' because creating
+  // new terminology with a file is disabled on purpose
+  const [inputType, setInputType] = useState('self');
   const [startFileUpload, setStartFileUpload] = useState(false);
   const [fileData, setFileData] = useState<File | null>();
   const [userPosted, setUserPosted] = useState(false);
@@ -61,7 +66,7 @@ export default function NewTerminologyModal({
     setIsValid(false);
     setIsCreating(false);
     setError(false);
-    setInputType('');
+    setInputType('self');
     setShowModal(false);
     setStartFileUpload(false);
     disableConfirmation();
@@ -90,16 +95,17 @@ export default function NewTerminologyModal({
     dispatch(terminologySearchApi.util.invalidateTags(['TerminologySearch']));
   };
 
-  const handleSetInputType = (type: string) => {
-    setInputType(type);
-    setUserPosted(false);
-    setIsValid(false);
-    setStartFileUpload(false);
-  };
+  // const handleSetInputType = (type: string) => {
+  //   setInputType(type);
+  //   setUserPosted(false);
+  //   setIsValid(false);
+  //   setStartFileUpload(false);
+  // };
 
   const handlePost = () => {
     if (inputType === 'self') {
       setUserPosted(true);
+
       if (!isValid || !manualData) {
         console.error('Data not valid');
         return;
@@ -205,7 +211,7 @@ export default function NewTerminologyModal({
           <Text>{t('info-input-description')}</Text>
         </Paragraph>
 
-        <RadioButtonGroup
+        {/* <RadioButtonGroup
           labelText={t('which-input')}
           name="input-type"
           onChange={(e) => handleSetInputType(e)}
@@ -225,7 +231,7 @@ export default function NewTerminologyModal({
           >
             {t('by-file')}
           </RadioButton>
-        </RadioButtonGroup>
+        </RadioButtonGroup> */}
 
         {inputType === 'self' && (
           <InfoManual
@@ -241,6 +247,7 @@ export default function NewTerminologyModal({
             setIsValid={setIsValid}
             setFileData={setFileData}
             validFileTypes={['xlsx']}
+            translateFileUploadError={translateFileUploadError}
           />
         )}
       </>

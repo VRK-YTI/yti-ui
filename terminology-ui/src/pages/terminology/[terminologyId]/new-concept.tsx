@@ -10,7 +10,7 @@ import {
   CommonContextState,
   CommonContextProvider,
 } from 'yti-common-ui/common-context-provider';
-import PageHead from '@app/common/components/page-head';
+import PageHead from 'yti-common-ui/page-head';
 import {
   getVocabulary,
   getRunningQueriesThunk,
@@ -30,6 +30,7 @@ export default function NewConcept(props: NewConceptPageProps) {
     <CommonContextProvider value={props}>
       <Layout user={props.user} fakeableUsers={props.fakeableUsers}>
         <PageHead
+          baseUrl="https://sanastot.suomi.fi"
           title={t('new-concept-title')}
           siteTitle="Yhteentoimivuusalusta"
         />

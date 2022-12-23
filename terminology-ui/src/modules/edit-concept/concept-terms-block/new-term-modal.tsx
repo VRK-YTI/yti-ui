@@ -1,4 +1,4 @@
-import FormFooterAlert from '@app/common/components/form-footer-alert';
+import FormFooterAlert from 'yti-common-ui/form-footer-alert';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import Separator from 'yti-common-ui/separator';
 import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from '@app/common/utils/constants';

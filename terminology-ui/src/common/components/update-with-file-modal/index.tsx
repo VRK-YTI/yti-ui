@@ -1,3 +1,4 @@
+import { translateFileUploadError } from '@app/common/utils/translation-helpers';
 import { DownloadIndicator } from '@app/modules/new-terminology/new-terminology.styles';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
@@ -12,7 +13,7 @@ import {
   Paragraph,
   Text,
 } from 'suomifi-ui-components';
-import FileDropArea from '../file-drop-area';
+import FileDropArea from 'yti-common-ui/file-drop-area';
 import {
   createErrorMessage,
   ExcelError,
@@ -125,6 +126,7 @@ export default function UpdateWithFileModal() {
             setFileData={setFileData}
             setIsValid={setIsValid}
             validFileTypes={['xlsx']}
+            translateFileUploadError={translateFileUploadError}
           />
         </ModalContent>
         <ModalFooter>

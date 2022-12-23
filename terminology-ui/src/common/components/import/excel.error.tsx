@@ -1,4 +1,4 @@
-import { AxiosBaseQueryError } from '@app/store/axios-base-query';
+import { AxiosBaseQueryError } from 'yti-common-ui/interfaces/axios-base-query.interface';
 import { SerializedError } from '@reduxjs/toolkit';
 import { useTranslation } from 'next-i18next';
 

@@ -10,20 +10,21 @@ import {
   HeaderContainer,
 } from './layout.styles';
 import { useBreakpoints } from '../media-query';
-// import { HeaderWrapper } from '@app/modules/smart-header/smart-header.styles';
-// import Logo from '@app/modules/smart-header/logo';
-// import Matomo from '@app/common/components/matomo';
+import { HeaderWrapper } from '../smart-header/smart-header.styles';
+import Logo from '../smart-header/logo';
 
 export default function ErrorLayout({
   children,
+  matomo,
 }: {
   children: React.ReactNode;
+  matomo?: React.ReactNode;
 }) {
   const { breakpoint } = useBreakpoints();
 
   return (
     <ThemeProvider theme={lightTheme}>
-      {/* <Matomo /> */}
+      {matomo && matomo}
       <Head>
         <meta name="description" content="Terminology/React POC" />
         <meta name="og:title" content="Sanastot" />
@@ -33,9 +34,9 @@ export default function ErrorLayout({
         <Block variant="header">
           <HeaderContainer>
             <MarginContainer $breakpoint={breakpoint}>
-              {/* <HeaderWrapper $breakpoint={breakpoint}>
+              <HeaderWrapper $breakpoint={breakpoint}>
                 <Logo />
-              </HeaderWrapper> */}
+              </HeaderWrapper>
             </MarginContainer>
           </HeaderContainer>
         </Block>

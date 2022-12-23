@@ -1,4 +1,4 @@
-import { Breadcrumb, BreadcrumbLink } from '@app/common/components/breadcrumb';
+import { Breadcrumb, BreadcrumbLink } from 'yti-common-ui/breadcrumb';
 import PropertyValue from '@app/common/components/property-value';
 import {
   MainTitle,
