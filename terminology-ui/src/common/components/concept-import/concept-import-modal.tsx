@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import {
   Button,
   ExternalLink,
+  InlineAlert,
   Modal,
   ModalContent,
   ModalFooter,
@@ -25,6 +26,7 @@ interface ConceptImportModalProps {
   visible: boolean;
   setVisible: (value: boolean) => void;
   refetch: () => void;
+  unauthenticatedUser?: boolean;
 }
 
 export default function ConceptImportModal({
@@ -32,6 +34,7 @@ export default function ConceptImportModal({
   visible,
   setVisible,
   refetch,
+  unauthenticatedUser,
 }: ConceptImportModalProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -127,7 +130,15 @@ export default function ConceptImportModal({
       </ModalContent>
       {!userPosted && (
         <ModalFooter id="concept-import-modal-footer">
-          <Button disabled={!isValid} onClick={handlePost}>
+          {unauthenticatedUser && (
+            <InlineAlert status="error" role="alert" id="unauthenticated-alert">
+              {t('error-occurred_unauthenticated', { ns: 'alert' })}
+            </InlineAlert>
+          )}
+          <Button
+            disabled={!isValid || unauthenticatedUser}
+            onClick={handlePost}
+          >
             {t('import-concepts-to-terminology')}
           </Button>
           <Button variant="secondary" onClick={handleClose}>

@@ -2,6 +2,7 @@ import { useTranslation } from 'next-i18next';
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
 import { Button } from 'suomifi-ui-components';
+import { useGetAuthenticatedUserMutMutation } from '../login/login.slice';
 
 const ConceptImportModalDynamic = dynamic(
   () => import('./concept-import-modal')
@@ -19,13 +20,17 @@ export default function ConceptImportModal({
   const { t } = useTranslation('admin');
   const [visible, setVisible] = useState(false);
 
+  const [getAuthenticatedUser, authenticatedUser] =
+    useGetAuthenticatedUserMutMutation();
+
+  const handleClick = () => {
+    getAuthenticatedUser();
+    setVisible(true);
+  };
+
   return (
     <>
-      <Button
-        icon="upload"
-        variant="secondary"
-        onClick={() => setVisible(true)}
-      >
+      <Button icon="upload" variant="secondary" onClick={() => handleClick()}>
         {t('import-concepts')}
       </Button>
 
@@ -35,6 +40,7 @@ export default function ConceptImportModal({
           visible={visible}
           setVisible={setVisible}
           refetch={refetch}
+          unauthenticatedUser={authenticatedUser.data?.anonymous}
         />
       )}
     </>
