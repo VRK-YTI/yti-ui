@@ -29,7 +29,7 @@ export default function AccessRequest({ organizations }: AccessRequestProps) {
     data: requests,
     error: requestsError,
     refetch,
-  } = useGetRequestsQuery(null);
+  } = useGetRequestsQuery();
   const [postRequest, request] = usePostRequestMutation();
   const [visible, setVisible] = useState(false);
 

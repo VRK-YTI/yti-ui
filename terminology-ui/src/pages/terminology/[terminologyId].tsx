@@ -22,6 +22,7 @@ import { getPropertyValue } from '@app/common/components/property-value/get-prop
 import { getStoreData } from '@app/common/utils/get-store-data';
 import {
   getVocabularyCount,
+  getStatusCounts,
   getRunningQueriesThunk as countsGetRunningQueriesThunk,
 } from '@app/common/components/counts/counts.slice';
 
@@ -102,6 +103,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
       })
     );
     store.dispatch(getVocabularyCount.initiate(id));
+    store.dispatch(getStatusCounts.initiate(id));
 
     await Promise.all(store.dispatch(getRunningQueriesThunk()));
     await Promise.all(store.dispatch(countsGetRunningQueriesThunk()));

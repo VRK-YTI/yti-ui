@@ -7,7 +7,7 @@ export const accessRequestApi = createApi({
   baseQuery: getTerminologyApiBaseQuery(),
   tagTypes: ['AccessRequest'],
   endpoints: (builder) => ({
-    getRequests: builder.query<AccessRequest[], null>({
+    getRequests: builder.query<AccessRequest[], void>({
       query: () => ({
         url: '/requests',
         method: 'GET',
@@ -22,6 +22,12 @@ export const accessRequestApi = createApi({
   }),
 });
 
-export const { useGetRequestsQuery, usePostRequestMutation } = accessRequestApi;
+export const {
+  useGetRequestsQuery,
+  usePostRequestMutation,
+  util: { getRunningQueriesThunk, getRunningMutationsThunk },
+} = accessRequestApi;
+
+export const { getRequests } = accessRequestApi.endpoints;
 
 export default accessRequestApi.reducer;
