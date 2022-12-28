@@ -25,6 +25,7 @@ import {
   TitleDescriptionWrapper,
 } from 'yti-common-ui/title/title.styles';
 import Pagination from 'yti-common-ui/pagination';
+import { translateModelType } from '@app/common/utils/translation-helpers';
 
 export default function FrontPage() {
   const { t, i18n } = useTranslation('common');
@@ -138,7 +139,7 @@ export default function FrontPage() {
           appendLocale: true,
         }),
         titleLink: `/model/${m.prefix}`,
-        type: t(m.type),
+        type: translateModelType(m.type, t),
       };
     });
   }, [
