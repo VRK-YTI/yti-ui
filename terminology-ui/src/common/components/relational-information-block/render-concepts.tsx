@@ -64,8 +64,8 @@ export default function RenderConcepts({
   }
 
   return (
-    <div id="concept-result-block" style={{ width: '100%' }}>
-      <ExpanderGroup openAllText="" closeAllText="">
+    <div id="concept-result-block" style={{ width: '100%', marginTop: '12px' }}>
+      <ExpanderGroup openAllText="" closeAllText="" showToggleAllButton={false}>
         {concepts
           ?.filter((concept) => concept.id !== query.conceptId)
           .map((concept) => {

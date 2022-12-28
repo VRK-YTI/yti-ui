@@ -217,7 +217,11 @@ export default function PickerModal({
               </Text>
             </SearchResultCountBlock>
 
-            <ResultBlock closeAllText="" openAllText="">
+            <ResultBlock
+              closeAllText=""
+              openAllText=""
+              showToggleAllButton={false}
+            >
               {result.data?.concepts.map((concept) => {
                 return (
                   <Expander key={`concept-${concept.id}`}>

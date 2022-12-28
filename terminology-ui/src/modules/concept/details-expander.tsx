@@ -1,5 +1,4 @@
 import { useTranslation } from 'next-i18next';
-import { ExpanderGroup } from 'suomifi-ui-components';
 import { BasicBlock } from 'yti-common-ui/block';
 import { Concept } from '@app/common/interfaces/concept.interface';
 import AdministrativeDetailsExpander, {
@@ -11,6 +10,7 @@ import DiagramsAndSourcesExpander, {
 import OtherDetailsExpander, {
   hasOtherDetails,
 } from './other-details-expander';
+import { DetailsExpanderGroup } from './concept.styles';
 
 export interface DetailsExpanderProps {
   concept?: Concept;
@@ -31,15 +31,16 @@ export default function DetailsExpander({ concept }: DetailsExpanderProps) {
 
   return (
     <BasicBlock>
-      <ExpanderGroup
+      <DetailsExpanderGroup
         openAllText=""
         closeAllText=""
         toggleAllButtonProps={{ style: { display: 'none' } }}
+        showToggleAllButton={false}
       >
         <DiagramsAndSourcesExpander concept={concept} />
         <AdministrativeDetailsExpander concept={concept} />
         <OtherDetailsExpander concept={concept} />
-      </ExpanderGroup>
+      </DetailsExpanderGroup>
     </BasicBlock>
   );
 }
