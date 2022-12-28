@@ -17,8 +17,8 @@ export default function Pagination({ maxPages }: PaginationProps) {
     return null;
   }
 
-  const firstShown = (urlState.page - 1) * 50 + 1;
-  const lastShown = urlState.page * 50;
+  const firstShown = (urlState.page - 1) * 2 + 1;
+  const lastShown = urlState.page * 2;
 
   return (
     <PaginationWrapper>

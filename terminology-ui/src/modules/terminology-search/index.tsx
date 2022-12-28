@@ -257,7 +257,7 @@ export default function TerminologySearch() {
                     },
                   }}
                 />
-                <Pagination maxPages={Math.ceil(data.totalHitCount / 50)} />
+                <Pagination maxPages={Math.ceil(data.totalHitCount / 2)} />
               </>
             )
           )}
