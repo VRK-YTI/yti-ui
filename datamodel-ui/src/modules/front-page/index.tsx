@@ -223,7 +223,7 @@ export default function FrontPage() {
             })}
           />
           <Pagination
-            maxPages={Math.round((searchModels?.totalHitCount ?? 1) / 50)}
+            maxPages={Math.ceil((searchModels?.totalHitCount ?? 1) / 50)}
           />
         </ResultAndStatsWrapper>
       </ResultAndFilterContainer>

@@ -313,7 +313,7 @@ export default function Vocabulary({ id }: VocabularyProps) {
                       noChip
                     />
                     <Pagination
-                      maxPages={Math.round(conceptsData.totalHitCount / 50)}
+                      maxPages={Math.ceil(conceptsData.totalHitCount / 50)}
                     />
                   </>
                 )
