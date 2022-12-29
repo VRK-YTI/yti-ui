@@ -184,8 +184,8 @@ export default function RelationModalContent({
 
       <DetachedPagination
         currentPage={currPage}
-        maxPages={Math.round(totalResults / 2)}
-        maxTotal={2}
+        maxPages={Math.ceil(totalResults / 20)}
+        maxTotal={20}
         setCurrentPage={handlePageChange}
       />
     </RelationalModalBlock>
