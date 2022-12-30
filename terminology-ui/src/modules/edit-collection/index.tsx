@@ -27,7 +27,7 @@ import {
 import { useGetCollectionQuery } from '@app/common/components/collection/collection.slice';
 import { Collection } from '@app/common/interfaces/collection.interface';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
-import { DEFINITION_MAX, TEXT_INPUT_MAX } from '@app/common/utils/constants';
+import { TEXT_INPUT_MAX, TEXT_AREA_MAX } from 'yti-common-ui/utils/constants';
 import useConfirmBeforeLeavingPage from '@app/common/utils/hooks/use-confirm-before-leaving-page';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import SaveSpinner from 'yti-common-ui/save-spinner';
@@ -288,7 +288,7 @@ export default function EditCollection({
               defaultValue={
                 formData.definition.find((n) => n.lang === language)?.value
               }
-              maxLength={DEFINITION_MAX}
+              maxLength={TEXT_AREA_MAX}
               className="collection-description-input"
             />
           ))}
