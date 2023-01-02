@@ -1,5 +1,4 @@
-import { BasicBlock } from '@app/common/components/block';
-import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
+import { BasicBlock, BasicBlockExtraWrapper } from 'yti-common-ui/block';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { ExpanderTitleButton } from 'suomifi-ui-components';

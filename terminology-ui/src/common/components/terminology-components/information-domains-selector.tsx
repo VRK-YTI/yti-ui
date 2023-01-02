@@ -1,7 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { MultiSelectData } from 'suomifi-ui-components';
-import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 import { useGetGroupsQuery } from '@app/common/components/terminology-search/terminology-search.slice';
 import {
   BlankFieldset,

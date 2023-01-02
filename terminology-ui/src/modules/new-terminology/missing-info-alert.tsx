@@ -1,7 +1,8 @@
-import FormFooterAlert from '@app/common/components/form-footer-alert';
+import FormFooterAlert from 'yti-common-ui/form-footer-alert';
 import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
+import isEmail from 'validator/lib/isEmail';
 
 interface MissingInfoAlertProps {
   data: NewTerminologyInfo;
@@ -10,6 +11,7 @@ interface MissingInfoAlertProps {
 export default function MissingInfoAlert({ data }: MissingInfoAlertProps) {
   const { t } = useTranslation('admin');
   const render = renderAlert();
+
   if (!data || !render) {
     return null;
   }
@@ -23,6 +25,7 @@ export default function MissingInfoAlert({ data }: MissingInfoAlertProps) {
           renderInformationDomainAlerts(),
           renderPrefixAlerts(),
           renderStatusAlerts(),
+          renderContactAlerts(),
         ].filter((alert) => alert)}
       />
     );
@@ -38,7 +41,8 @@ export default function MissingInfoAlert({ data }: MissingInfoAlertProps) {
       data.infoDomains.length === 0 ||
       !data.prefix[0] ||
       data.prefix[1] === false ||
-      (Object.keys(data).includes('status') && !data.status)
+      (Object.keys(data).includes('status') && !data.status) ||
+      (data.contact && !isEmail(data.contact))
     ) {
       return true;
     }
@@ -95,6 +99,14 @@ export default function MissingInfoAlert({ data }: MissingInfoAlertProps) {
   function renderStatusAlerts(): string {
     if (Object.keys(data).includes('status') && !data.status) {
       return t('alert-no-status');
+    }
+
+    return '';
+  }
+
+  function renderContactAlerts(): string {
+    if (data.contact && !isEmail(data.contact)) {
+      return t('alert-invalid-email');
     }
 
     return '';

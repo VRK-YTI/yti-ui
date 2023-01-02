@@ -1,7 +1,7 @@
 import { SSRConfig, useTranslation } from 'next-i18next';
 import { useRouter } from 'next/dist/client/router';
 import React from 'react';
-import Layout from '@app/layouts/layout';
+import Layout from '@app/common/components/layout';
 import {
   createCommonGetServerSideProps,
   LocalHandlerParams,
@@ -10,19 +10,19 @@ import Collection from '@app/modules/collection';
 import {
   getCollection,
   getCollections,
-  getRunningOperationPromises as getCollectionRunningOperationPromises,
+  getRunningQueriesThunk as getCollectionRunningQueriesThunk,
 } from '@app/common/components/collection/collection.slice';
 import {
   getVocabulary,
-  getRunningOperationPromises as getVocabularyRunningOperationPromises,
+  getRunningQueriesThunk as getVocabularyRunningQueriesThunk,
 } from '@app/common/components/vocabulary/vocabulary.slice';
 import {
   CommonContextState,
   CommonContextProvider,
-} from '@app/common/components/common-context-provider';
-import PageHead from '@app/common/components/page-head';
+} from 'yti-common-ui/common-context-provider';
+import PageHead from 'yti-common-ui/page-head';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
-import { getStoreData } from '@app/common/components/page-head/utils';
+import { getStoreData } from '@app/common/utils/get-store-data';
 
 interface CollectionPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -39,11 +39,14 @@ export default function CollectionPage(props: CollectionPageProps) {
   return (
     <CommonContextProvider value={props}>
       <Layout
+        user={props.user}
+        fakeableUsers={props.fakeableUsers}
         feedbackSubject={`${t('feedback-collection')} - ${
           props.collectionTitle
         }`}
       >
         <PageHead
+          baseUrl="https://sanastot.suomi.fi"
           title={[props.collectionTitle, props.vocabularyTitle]}
           path={asPath}
         />
@@ -75,8 +78,8 @@ export const getServerSideProps = createCommonGetServerSideProps(
     store.dispatch(getCollection.initiate({ terminologyId, collectionId }));
     store.dispatch(getCollections.initiate(terminologyId));
 
-    await Promise.all(getVocabularyRunningOperationPromises());
-    await Promise.all(getCollectionRunningOperationPromises());
+    await Promise.all(store.dispatch(getVocabularyRunningQueriesThunk()));
+    await Promise.all(store.dispatch(getCollectionRunningQueriesThunk()));
 
     const vocabularyData = getStoreData({
       state: store.getState(),

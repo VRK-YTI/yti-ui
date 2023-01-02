@@ -1,7 +1,7 @@
 import { SSRConfig, useTranslation } from 'next-i18next';
 import { useRouter } from 'next/dist/client/router';
 import React from 'react';
-import Layout from '@app/layouts/layout';
+import Layout from '@app/common/components/layout';
 import {
   createCommonGetServerSideProps,
   LocalHandlerParams,
@@ -9,20 +9,21 @@ import {
 import Vocabulary from '@app/modules/vocabulary';
 import {
   getConceptResult,
-  getRunningOperationPromises,
+  getRunningQueriesThunk,
   getVocabulary,
 } from '@app/common/components/vocabulary/vocabulary.slice';
 import { initialUrlState } from '@app/common/utils/hooks/use-url-state';
 import {
   CommonContextState,
   CommonContextProvider,
-} from '@app/common/components/common-context-provider';
-import PageHead from '@app/common/components/page-head';
+} from 'yti-common-ui/common-context-provider';
+import PageHead from 'yti-common-ui/page-head';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
-import { getStoreData } from '@app/common/components/page-head/utils';
+import { getStoreData } from '@app/common/utils/get-store-data';
 import {
   getVocabularyCount,
-  getRunningOperationPromises as countsGetRunningOperationPromises,
+  getStatusCounts,
+  getRunningQueriesThunk as countsGetRunningQueriesThunk,
 } from '@app/common/components/counts/counts.slice';
 
 interface TerminologyPageProps extends CommonContextState {
@@ -38,8 +39,13 @@ export default function TerminologyPage(props: TerminologyPageProps) {
 
   return (
     <CommonContextProvider value={props}>
-      <Layout feedbackSubject={`${t('feedback-vocabulary')} - ${props.title}`}>
+      <Layout
+        user={props.user}
+        fakeableUsers={props.fakeableUsers}
+        feedbackSubject={`${t('feedback-vocabulary')} - ${props.title}`}
+      >
         <PageHead
+          baseUrl="https://sanastot.suomi.fi"
           title={props.title ?? ''}
           description={props.description ?? ''}
           path={asPath}
@@ -71,6 +77,13 @@ export const getServerSideProps = createCommonGetServerSideProps(
       urlState.q = Array.isArray(query.q) ? query.q[0] : query.q;
     }
 
+    if (query && query.page !== undefined) {
+      const pageValue = Array.isArray(query.page)
+        ? parseInt(query.page[0], 10)
+        : parseInt(query.page, 10);
+      urlState.page = !isNaN(pageValue) ? pageValue : initialUrlState.page;
+    }
+
     if (query && query.status !== undefined) {
       urlState.status = Array.isArray(query.status)
         ? query.status
@@ -90,9 +103,10 @@ export const getServerSideProps = createCommonGetServerSideProps(
       })
     );
     store.dispatch(getVocabularyCount.initiate(id));
+    store.dispatch(getStatusCounts.initiate(id));
 
-    await Promise.all(getRunningOperationPromises());
-    await Promise.all(countsGetRunningOperationPromises());
+    await Promise.all(store.dispatch(getRunningQueriesThunk()));
+    await Promise.all(store.dispatch(countsGetRunningQueriesThunk()));
 
     const vocabularyData = getStoreData({
       state: store.getState(),

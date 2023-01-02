@@ -22,11 +22,10 @@ import {
   Paragraph,
   Text,
 } from 'suomifi-ui-components';
-import { BasicBlock } from '../block';
-import { BasicBlockExtraWrapper } from '../block/block.styles';
-import { useBreakpoints } from '../media-query/media-query-context';
+import { BasicBlock, BasicBlockExtraWrapper } from 'yti-common-ui/block';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 import { useDeleteTargetMutation } from '../remove/remove.slice';
-import SaveSpinner from '../save-spinner';
+import SaveSpinner from 'yti-common-ui/save-spinner';
 import { terminologySearchApi } from '../terminology-search/terminology-search.slice';
 import { useDeleteVocabularyMutation } from '../vocabulary/vocabulary.slice';
 import {
@@ -38,6 +37,7 @@ import {
   RemoveModal,
   RemoveModalContent,
 } from './removal-modal.styles';
+import { useGetAuthenticatedUserMutMutation } from '../login/login.slice';
 
 interface RemovalModalProps {
   nonDescriptive?: boolean;
@@ -72,6 +72,8 @@ export default function RemovalModal({
   const [showError, setShowError] = useState(false);
   const [deleteVocabulary, terminology] = useDeleteVocabularyMutation();
   const [deleteTarget, target] = useDeleteTargetMutation();
+  const [getAuthenticatedUser, authenticatedUser] =
+    useGetAuthenticatedUserMutMutation();
 
   const handleClick = () => {
     if (removalData.type === 'terminology') {
@@ -122,6 +124,7 @@ export default function RemovalModal({
     }
 
     setVisible(true);
+    getAuthenticatedUser();
   };
 
   const isUninitialized = () => {
@@ -202,6 +205,11 @@ export default function RemovalModal({
           {renderConfirmation()}
           {renderProcessing()}
           {renderFinished()}
+          {authenticatedUser.data?.anonymous && (
+            <InlineAlert status="error" role="alert" id="unauthenticated-alert">
+              {t('error-occurred_unauthenticated', { ns: 'alert' })}
+            </InlineAlert>
+          )}
         </RemoveModalContent>
         <FooterBlock>{renderFooter()}</FooterBlock>
       </RemoveModal>
@@ -267,7 +275,12 @@ export default function RemovalModal({
     if (isUninitialized()) {
       return (
         <>
-          <Button onClick={() => handleClick()}>{t('remove')}</Button>
+          <Button
+            onClick={() => handleClick()}
+            disabled={authenticatedUser.data?.anonymous}
+          >
+            {t('remove')}
+          </Button>
           <Button variant="secondary" onClick={() => setVisible(false)}>
             {t('cancel-variant')}
           </Button>

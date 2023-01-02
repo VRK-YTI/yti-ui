@@ -1,4 +1,4 @@
-import Separator from '@app/common/components/separator';
+import Separator from 'yti-common-ui/separator';
 import {
   WiderTextarea,
   H2Sm,
@@ -14,7 +14,7 @@ import { ExpanderGroup } from 'suomifi-ui-components';
 import { BasicInfo, ListType } from '../new-concept.types';
 import ListBlock from '../list-block';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
-import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from '@app/common/utils/constants';
+import { DEFINITION_MAX, TEXT_INPUT_MAX } from '@app/common/utils/constants';
 import { FormError } from '../validate-form';
 import StatusPicker from './status-picker';
 
@@ -151,7 +151,7 @@ export default function ConceptBasicInformation({
           })
         }
         defaultValue={basicInfo.definition[lang] ?? ''}
-        maxLength={TEXT_AREA_MAX}
+        maxLength={DEFINITION_MAX}
         className="definition-input"
       />
     );

@@ -1,4 +1,4 @@
-import { Breadcrumb, BreadcrumbLink } from '@app/common/components/breadcrumb';
+import { Breadcrumb, BreadcrumbLink } from 'yti-common-ui/breadcrumb';
 import { useTranslation } from 'next-i18next';
 import {
   MainContent,
@@ -8,11 +8,11 @@ import {
   OrganizationAndRolesWrapper,
   PageContent,
 } from './own-information.styles';
-import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
-import { BasicBlock } from '@app/common/components/block';
+import { useBreakpoints } from 'yti-common-ui/media-query';
+import { BasicBlock } from 'yti-common-ui/block';
 import { useSelector } from 'react-redux';
 import { selectLogin } from '@app/common/components/login/login.slice';
-import Separator from '@app/common/components/separator';
+import Separator from 'yti-common-ui/separator';
 import { useGetOrganizationsQuery } from '@app/common/components/terminology-search/terminology-search.slice';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import sortBy from 'lodash/sortBy';
@@ -20,9 +20,9 @@ import AccessRequest from '../../common/components/access-request';
 import SubscriptionBlock from './subscription-block';
 import EmailNotificationsBlock from './email-notifications-block';
 import { useGetSubscriptionsQuery } from '../../common/components/subscription/subscription.slice';
-import InlineAlert from '@app/common/components/inline-alert';
+import InlineAlert from 'yti-common-ui/inline-alert';
 import { useGetRequestsQuery } from '@app/common/components/access-request/access-request.slice';
-import { MainTitle } from '@app/common/components/title-block';
+import { MainTitle } from 'yti-common-ui/title-block';
 import { translateRole } from '@app/common/utils/translation-helpers';
 
 export default function OwnInformation() {
@@ -32,7 +32,7 @@ export default function OwnInformation() {
   const { data: organizations } = useGetOrganizationsQuery(i18n.language);
   const { data: subscriptions, refetch: refetchSubscriptions } =
     useGetSubscriptionsQuery(null);
-  const { data: requests } = useGetRequestsQuery(null);
+  const { data: requests } = useGetRequestsQuery();
 
   if (user.anonymous) {
     return null;

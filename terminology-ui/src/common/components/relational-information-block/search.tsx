@@ -8,7 +8,7 @@ import {
 } from 'suomifi-ui-components';
 import { SearchBlock } from './relation-information-block.styles';
 import { TEXT_INPUT_MAX } from '@app/common/utils/constants';
-import { useBreakpoints } from '../media-query/media-query-context';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 import { StatusesType } from './relational-modal-content';
 
 interface SearchProps {
@@ -38,12 +38,24 @@ export default function Search({
   return (
     <SearchBlock id="search-block" $isSmall={isSmall}>
       <div>
+        {/*
+         * This component has both onSearch and onKeyPressDownCapture intentionally.
+         *
+         * onSearch does not call handleSearch() when text value is empty so
+         * onKeyPressCapture handles these situations
+         */}
         <SearchInput
           labelText={t('search-term')}
           clearButtonLabel={t('clear-button-label')}
           searchButtonLabel={t('search')}
           onChange={(value) => setSearchTerm(value as string)}
           value={searchTerm}
+          onKeyPressCapture={(e) => {
+            const inputValue = e.target as HTMLInputElement;
+            if (inputValue.value === '' && e.key === 'Enter') {
+              handleSearch();
+            }
+          }}
           onSearch={() => handleSearch()}
           maxLength={TEXT_INPUT_MAX}
           id="keyword-input"

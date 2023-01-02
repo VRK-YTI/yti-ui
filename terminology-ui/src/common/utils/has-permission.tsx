@@ -1,4 +1,5 @@
 import { useStoreDispatch } from '@app/store';
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { selectAdminControls } from '../components/admin-controls/admin-controls.slice';
 import {
@@ -7,7 +8,7 @@ import {
   useGetAuthenticatedUserQuery,
 } from '../components/login/login.slice';
 import { Organization } from '../interfaces/organization.interface';
-import { User } from '../interfaces/user.interface';
+import { User } from 'yti-common-ui/interfaces/user.interface';
 
 const actions = [
   'ADMIN_TERMINOLOGY',
@@ -46,13 +47,15 @@ export default function HasPermission({
   const user = useSelector(selectLogin());
   const isAdminControlsDisabled = useSelector(selectAdminControls());
 
-  if (
-    authenticatedUser &&
-    (authenticatedUser.anonymous !== user.anonymous ||
-      authenticatedUser.username !== user.username)
-  ) {
-    dispatch(setLogin(authenticatedUser));
-  }
+  useEffect(() => {
+    if (
+      authenticatedUser &&
+      (authenticatedUser.anonymous !== user.anonymous ||
+        authenticatedUser.username !== user.username)
+    ) {
+      dispatch(setLogin(authenticatedUser));
+    }
+  }, [authenticatedUser, dispatch, user]);
 
   if (isAdminControlsDisabled) {
     return false;

@@ -1,13 +1,10 @@
 import { useTranslation } from 'next-i18next';
 import React from 'react';
 import { useGetCollectionsQuery } from '@app/common/components/collection/collection.slice';
-import Separator from '@app/common/components/separator';
-import {
-  Sidebar,
-  SidebarHeader,
-  SidebarSection,
-} from '@app/common/components/sidebar';
+import Separator from 'yti-common-ui/separator';
+import { Sidebar, SidebarHeader, SidebarSection } from 'yti-common-ui/sidebar';
 import { Collection } from '@app/common/interfaces/collection.interface';
+import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 
 export interface CollectionSidebarProps {
   collection: Collection;
@@ -16,12 +13,19 @@ export interface CollectionSidebarProps {
 export default function CollectionSidebar({
   collection,
 }: CollectionSidebarProps) {
-  const { t } = useTranslation('collection');
+  const { t, i18n } = useTranslation('collection');
   const terminologyId = collection.type.graph.id;
   const { data: collections } = useGetCollectionsQuery(terminologyId);
-  const otherCollections = collections?.filter(
-    (other) => other.id !== collection.id
-  );
+  const otherCollections = collections
+    ?.filter((other) => other.id !== collection.id)
+    .map((c) => ({
+      id: c.id,
+      href: `/terminology/${terminologyId}/collection/${c.id}`,
+      value: getPropertyValue({
+        property: c.properties.prefLabel,
+        language: i18n.language,
+      }),
+    }));
 
   const isEmpty = !otherCollections?.length;
 
@@ -34,11 +38,9 @@ export default function CollectionSidebar({
         </>
       )}
 
-      <SidebarSection<Collection>
+      <SidebarSection
         heading={t('sidebar-section-heading-other-collections')}
         items={otherCollections}
-        href={({ id }) => `/terminology/${terminologyId}/collection/${id}`}
-        propertyAccessor={(collection) => collection.properties?.prefLabel}
       />
     </Sidebar>
   );

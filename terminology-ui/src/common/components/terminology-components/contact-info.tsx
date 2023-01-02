@@ -1,5 +1,5 @@
 import { Paragraph, Text } from 'suomifi-ui-components';
-import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 import {
   BlankFieldset,
   BlankLegend,
@@ -9,6 +9,7 @@ import { useTranslation } from 'next-i18next';
 import { UpdateTerminology } from '@app/modules/new-terminology/update-terminology.interface';
 import { EMAIL_MAX } from '@app/common/utils/constants';
 import { useState } from 'react';
+import isEmail from 'validator/lib/isEmail';
 
 interface ContactInfoProps {
   update: ({ key, data }: UpdateTerminology) => void;
@@ -50,6 +51,11 @@ export default function ContactInfo({
         maxLength={EMAIL_MAX}
         id="contact-input"
         disabled={disabled}
+        status={
+          userPosted && contact !== '' && !isEmail(contact)
+            ? 'error'
+            : 'default'
+        }
       />
     </BlankFieldset>
   );

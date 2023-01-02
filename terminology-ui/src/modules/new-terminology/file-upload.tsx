@@ -1,10 +1,19 @@
-import { ExcelError } from '@app/common/components/import/excel.error';
+import {
+  ExcelError,
+  ExcelErrorDetailBlock,
+} from '@app/common/components/import/excel.error';
 import { useGetImportStatusMutation } from '@app/common/components/import/import.slice';
 import { ImportResponse } from '@app/common/interfaces/import.interface';
 import { translateExcelParseError } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
-import { Button, InlineAlert, Text } from 'suomifi-ui-components';
+import {
+  Button,
+  ExternalLink,
+  InlineAlert,
+  Paragraph,
+  Text,
+} from 'suomifi-ui-components';
 import {
   ButtonBlock,
   DownloadIndicator,
@@ -69,24 +78,28 @@ export default function FileUpload({
           <InlineAlert status="error" style={{ marginBottom: '25px' }}>
             {errorInfo ? (
               <>
-                {translateExcelParseError(errorInfo.data.message, t)}
-                <ul>
-                  {errorInfo.data.errorDetails?.sheet && (
-                    <li>{`${t('excel-sheet')}: ${
-                      errorInfo.data.errorDetails?.sheet
-                    }`}</li>
-                  )}
-                  {errorInfo.data.errorDetails?.row != undefined && (
-                    <li>{`${t('excel-row')}: ${
-                      errorInfo.data.errorDetails?.row
-                    }`}</li>
-                  )}
-                  {errorInfo.data.errorDetails?.column && (
-                    <li>{`${t('excel-column')}: ${
-                      errorInfo.data.errorDetails?.column
-                    }`}</li>
-                  )}
-                </ul>
+                {errorInfo.data.message === 'incorrect-sheet-count' ? (
+                  <>
+                    <Paragraph>
+                      {t('import-incorrect-excel-file-1.concept-import')}{' '}
+                      <ExternalLink
+                        href="https://wiki.dvv.fi/pages/viewpage.action?pageId=21783347"
+                        labelNewWindow={t('site-open-link-new-window')}
+                      >
+                        {t('import-incorrect-excel-file-link')}
+                      </ExternalLink>
+                    </Paragraph>
+                    <br />
+                    <Paragraph>
+                      {t('import-incorrect-excel-file-2.concept-import')}
+                    </Paragraph>
+                  </>
+                ) : (
+                  <>
+                    {translateExcelParseError(errorInfo.data.message, t)}
+                    <ExcelErrorDetailBlock errorInfo={errorInfo} />
+                  </>
+                )}
               </>
             ) : (
               <>{t('download-failed')}</>
@@ -105,22 +118,24 @@ export default function FileUpload({
             {importStatus.data?.status.toLowerCase() === 'success' ? (
               <>
                 <SuccessIndicator icon="check" color="white" />
-                <Text variant="bold">100% {t('percent-done')}</Text>
+                <Text variant="bold">{t('percent-done', { count: 100 })}</Text>
               </>
             ) : (
               <>
                 <DownloadIndicator />
                 <Text variant="bold">
-                  {importStatus.data?.processingProgress !== undefined &&
-                  importStatus.data?.processingTotal !== undefined &&
-                  importStatus.data?.processingTotal !== 0
-                    ? Math.floor(
-                        (importStatus.data?.processingProgress /
-                          importStatus.data?.processingTotal) *
-                          100
-                      )
-                    : 0}
-                  % {t('percent-done')}
+                  {t('percent-done', {
+                    count:
+                      importStatus.data?.processingProgress !== undefined &&
+                      importStatus.data?.processingTotal !== undefined &&
+                      importStatus.data?.processingTotal !== 0
+                        ? Math.floor(
+                            (importStatus.data?.processingProgress /
+                              importStatus.data?.processingTotal) *
+                              100
+                          )
+                        : 0,
+                  })}
                 </Text>
               </>
             )}

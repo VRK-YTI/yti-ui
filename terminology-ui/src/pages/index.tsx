@@ -1,23 +1,23 @@
 import React from 'react';
-import Layout from '@app/layouts/layout';
+import Layout from '@app/common/components/layout';
 import { SSRConfig, useTranslation } from 'next-i18next';
 import { createCommonGetServerSideProps } from '@app/common/utils/create-getserversideprops';
 import {
   CommonContextProvider,
   CommonContextState,
-} from '@app/common/components/common-context-provider';
+} from 'yti-common-ui/common-context-provider';
 import TerminologySearch from '@app/modules/terminology-search';
 import {
   getGroups,
   getOrganizations,
-  getRunningOperationPromises as terminologyGetRunningOperationPromises,
+  getRunningQueriesThunk as terminologyGetRunningQueriesThunk,
   getSearchResult,
 } from '@app/common/components/terminology-search/terminology-search.slice';
 import {
   getCounts,
-  getRunningOperationPromises as countsGetRunningOperationPromises,
+  getRunningQueriesThunk as countsGetRunningQueriesThunk,
 } from '@app/common/components/counts/counts.slice';
-import PageHead from '@app/common/components/page-head';
+import PageHead from 'yti-common-ui/page-head';
 import { initialUrlState } from '@app/common/utils/hooks/use-url-state';
 
 interface IndexPageProps extends CommonContextState {
@@ -29,8 +29,9 @@ export default function IndexPage(props: IndexPageProps) {
 
   return (
     <CommonContextProvider value={props}>
-      <Layout>
+      <Layout user={props.user} fakeableUsers={props.fakeableUsers}>
         <PageHead
+          baseUrl="https://sanastot.suomi.fi"
           title={t('terminology-site-title')}
           description={t('terminology-search-info')}
         />
@@ -48,6 +49,13 @@ export const getServerSideProps = createCommonGetServerSideProps(
     if (query) {
       if (query.q !== undefined) {
         urlState.q = Array.isArray(query.q) ? query.q[0] : query.q;
+      }
+
+      if (query.page !== undefined) {
+        const pageValue = Array.isArray(query.page)
+          ? parseInt(query.page[0], 10)
+          : parseInt(query.page, 10);
+        urlState.page = !isNaN(pageValue) ? pageValue : initialUrlState.page;
       }
 
       if (query.status !== undefined) {
@@ -84,8 +92,8 @@ export const getServerSideProps = createCommonGetServerSideProps(
     store.dispatch(getOrganizations.initiate(locale ?? 'fi'));
     store.dispatch(getCounts.initiate(null));
 
-    await Promise.all(terminologyGetRunningOperationPromises());
-    await Promise.all(countsGetRunningOperationPromises());
+    await Promise.all(store.dispatch(terminologyGetRunningQueriesThunk()));
+    await Promise.all(store.dispatch(countsGetRunningQueriesThunk()));
 
     return {};
   }

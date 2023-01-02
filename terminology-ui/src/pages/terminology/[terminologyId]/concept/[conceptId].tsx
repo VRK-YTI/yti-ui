@@ -1,7 +1,7 @@
 import { SSRConfig, useTranslation } from 'next-i18next';
 import { useRouter } from 'next/dist/client/router';
 import React from 'react';
-import Layout from '@app/layouts/layout';
+import Layout from '@app/common/components/layout';
 import {
   createCommonGetServerSideProps,
   LocalHandlerParams,
@@ -9,20 +9,20 @@ import {
 import Concept from '@app/modules/concept';
 import {
   getConcept,
-  getRunningOperationPromises as getConceptRunningOperationPromises,
+  getRunningQueriesThunk as getConceptRunningQueriesThunk,
 } from '@app/common/components/concept/concept.slice';
 import {
   getVocabulary,
-  getRunningOperationPromises as getVocabularyRunningOperationPromises,
+  getRunningQueriesThunk as getVocabularyRunningQueriesThunk,
 } from '@app/common/components/vocabulary/vocabulary.slice';
 import {
   CommonContextState,
   CommonContextProvider,
-} from '@app/common/components/common-context-provider';
-import PageHead from '@app/common/components/page-head';
+} from 'yti-common-ui/common-context-provider';
+import PageHead from 'yti-common-ui/page-head';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import { getProperty } from '@app/common/utils/get-property';
-import { getStoreData } from '@app/common/components/page-head/utils';
+import { getStoreData } from '@app/common/utils/get-store-data';
 
 interface ConceptPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -40,9 +40,12 @@ export default function ConceptPage(props: ConceptPageProps) {
   return (
     <CommonContextProvider value={props}>
       <Layout
+        user={props.user}
+        fakeableUsers={props.fakeableUsers}
         feedbackSubject={`${t('feedback-concept')} - ${props.conceptTitle}`}
       >
         <PageHead
+          baseUrl="https://sanastot.suomi.fi"
           title={[props.conceptTitle, props.vocabularyTitle]}
           description={props.conceptDescription}
           path={asPath}
@@ -55,7 +58,7 @@ export default function ConceptPage(props: ConceptPageProps) {
 }
 
 export const getServerSideProps = createCommonGetServerSideProps(
-  async ({ store, params, locale, res }: LocalHandlerParams) => {
+  async ({ store, params, locale }: LocalHandlerParams) => {
     if (!params) {
       throw new Error('Missing parameters for page');
     }
@@ -74,8 +77,8 @@ export const getServerSideProps = createCommonGetServerSideProps(
     store.dispatch(getVocabulary.initiate({ id: terminologyId }));
     store.dispatch(getConcept.initiate({ terminologyId, conceptId }));
 
-    await Promise.all(getVocabularyRunningOperationPromises());
-    await Promise.all(getConceptRunningOperationPromises());
+    await Promise.all(store.dispatch(getVocabularyRunningQueriesThunk()));
+    await Promise.all(store.dispatch(getConceptRunningQueriesThunk()));
 
     const vocabularyData = getStoreData({
       state: store.getState(),

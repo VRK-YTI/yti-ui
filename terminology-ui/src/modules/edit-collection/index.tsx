@@ -1,18 +1,14 @@
-import { Breadcrumb, BreadcrumbLink } from '@app/common/components/breadcrumb';
+import { Breadcrumb, BreadcrumbLink } from 'yti-common-ui/breadcrumb';
 import { useAddCollectionMutation } from '@app/common/components/modify/modify.slice';
 import PropertyValue from '@app/common/components/property-value';
-import Separator from '@app/common/components/separator';
-import {
-  BadgeBar,
-  MainTitle,
-  SubTitle,
-} from '@app/common/components/title-block';
+import Separator from 'yti-common-ui/separator';
+import { BadgeBar, MainTitle, SubTitle } from 'yti-common-ui/title-block';
 import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
 import { getProperty } from '@app/common/utils/get-property';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { Button, Heading } from 'suomifi-ui-components';
+import { Button, Heading, InlineAlert } from 'suomifi-ui-components';
 import ConceptPicker from './concept-picker';
 import generateCollection from './generate-collection';
 import {
@@ -30,13 +26,16 @@ import {
 } from './edit-collection.types';
 import { useGetCollectionQuery } from '@app/common/components/collection/collection.slice';
 import { Collection } from '@app/common/interfaces/collection.interface';
-import useUser from '@app/common/utils/hooks/useUser';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
-import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from '@app/common/utils/constants';
+import { DEFINITION_MAX, TEXT_INPUT_MAX } from '@app/common/utils/constants';
 import useConfirmBeforeLeavingPage from '@app/common/utils/hooks/use-confirm-before-leaving-page';
-import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
-import SaveSpinner from '@app/common/components/save-spinner';
-import FormFooterAlert from '@app/common/components/form-footer-alert';
+import { useBreakpoints } from 'yti-common-ui/media-query';
+import SaveSpinner from 'yti-common-ui/save-spinner';
+import FormFooterAlert from 'yti-common-ui/form-footer-alert';
+import {
+  useGetAuthenticatedUserMutMutation,
+  useGetAuthenticatedUserQuery,
+} from '@app/common/components/login/login.slice';
 
 export default function EditCollection({
   terminologyId,
@@ -44,7 +43,6 @@ export default function EditCollection({
   collectionInfo,
 }: EditCollectionProps) {
   const { t } = useTranslation('collection');
-  const { user } = useUser();
   const { isSmall } = useBreakpoints();
   const router = useRouter();
   const { data: terminology } = useGetVocabularyQuery({
@@ -65,6 +63,9 @@ export default function EditCollection({
       skip: !collectionInfo?.collectionId,
     }
   );
+  const { data: authenticatedUser } = useGetAuthenticatedUserQuery();
+  const [getAuthenticatedMutUser, authenticatedMutUser] =
+    useGetAuthenticatedUserMutMutation();
 
   const [addCollection, result] = useAddCollectionMutation();
   const [newCollectionId, setNewCollectionId] = useState('');
@@ -171,6 +172,8 @@ export default function EditCollection({
   };
 
   const handleClick = () => {
+    getAuthenticatedMutUser();
+
     let errorOccurs = false;
     languages.forEach((language) => {
       const nameCount = formData.name.filter(
@@ -202,7 +205,7 @@ export default function EditCollection({
     const data = generateCollection(
       formData,
       terminologyId,
-      `${user?.firstName} ${user?.lastName}`,
+      `${authenticatedUser?.firstName} ${authenticatedUser?.lastName}`,
       collectionInfo
     );
     setNewCollectionId(collectionInfo?.collectionId ?? data[0].id);
@@ -285,7 +288,7 @@ export default function EditCollection({
               defaultValue={
                 formData.definition.find((n) => n.lang === language)?.value
               }
-              maxLength={TEXT_AREA_MAX}
+              maxLength={DEFINITION_MAX}
               className="collection-description-input"
             />
           ))}
@@ -302,6 +305,12 @@ export default function EditCollection({
         <Separator isLarge />
 
         <FooterBlock>
+          {(authenticatedUser?.anonymous ||
+            authenticatedMutUser.data?.anonymous) && (
+            <InlineAlert status="error" role="alert" id="unauthenticated-alert">
+              {t('error-occurred_unauthenticated', { ns: 'alert' })}
+            </InlineAlert>
+          )}
           {emptyError && <FormFooterAlert alerts={[t('no-empty-form')]} />}
           {languages.some((n) => errors[n]) && (
             <FormFooterAlert
@@ -317,7 +326,11 @@ export default function EditCollection({
           )}
           <ButtonBlock>
             <Button
-              disabled={isCreating}
+              disabled={
+                isCreating ||
+                authenticatedUser?.anonymous ||
+                authenticatedMutUser.data?.anonymous
+              }
               onClick={() => handleClick()}
               id="submit-button"
             >

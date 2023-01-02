@@ -1,5 +1,5 @@
-import { BasicBlock } from '@app/common/components/block';
-import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import { BasicBlock } from 'yti-common-ui/block';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 import { translateTermType } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';

@@ -1,0 +1,10 @@
+@import '~suomifi-design-tokens/dist/tokens';
+@import 'suomifi-ui-components/dist/main.css';
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  @include fi-text-body-text;
+  background-color: $fi-color-depth-light3;
+}

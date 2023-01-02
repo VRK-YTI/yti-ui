@@ -1,6 +1,6 @@
 // OBSOLETE
 import useSWR from 'swr';
-import { User } from '@app/common/interfaces/user.interface';
+import { User } from 'yti-common-ui/interfaces/user.interface';
 
 export default function useUser({
   redirectTo = '',

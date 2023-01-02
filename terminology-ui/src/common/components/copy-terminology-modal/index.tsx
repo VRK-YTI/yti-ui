@@ -2,9 +2,9 @@ import { useTranslation } from 'next-i18next';
 import dynamic from 'next/dynamic';
 import { useState } from 'react';
 import { Button } from 'suomifi-ui-components';
-import { BasicBlock } from '../block';
-import { BasicBlockExtraWrapper } from '../block/block.styles';
-import Separator from '../separator';
+import { BasicBlock, BasicBlockExtraWrapper } from 'yti-common-ui/block';
+import Separator from 'yti-common-ui/separator';
+import { useGetAuthenticatedUserMutMutation } from '@app/common/components/login/login.slice';
 
 const CopyTerminologyModalDynamic = dynamic(
   () => import('./copy-terminology-modal')
@@ -21,15 +21,18 @@ export default function CopyTerminologyModal({
 }: CopyTerminologyModalProps) {
   const { t } = useTranslation('admin');
   const [visible, setVisible] = useState(false);
+  const [getAuthenticatedUser, authenticatedUser] =
+    useGetAuthenticatedUserMutMutation();
+
+  const handleClick = () => {
+    getAuthenticatedUser();
+    setVisible(true);
+  };
 
   if (noWrap) {
     return (
       <>
-        <Button
-          icon="copy"
-          variant="secondary"
-          onClick={() => setVisible(true)}
-        >
+        <Button icon="copy" variant="secondary" onClick={() => handleClick()}>
           {t('copy-as-base')}
         </Button>
         {visible && (
@@ -37,6 +40,7 @@ export default function CopyTerminologyModal({
             terminologyId={terminologyId}
             visible={visible}
             setVisible={setVisible}
+            unauthenticatedUser={authenticatedUser.data?.anonymous}
           />
         )}
       </>
@@ -54,7 +58,7 @@ export default function CopyTerminologyModal({
             <Button
               icon="copy"
               variant="secondary"
-              onClick={() => setVisible(true)}
+              onClick={() => handleClick()}
             >
               {t('copy-as-base')}
             </Button>
@@ -69,6 +73,7 @@ export default function CopyTerminologyModal({
           terminologyId={terminologyId}
           visible={visible}
           setVisible={setVisible}
+          unauthenticatedUser={authenticatedUser.data?.anonymous}
         />
       )}
     </>

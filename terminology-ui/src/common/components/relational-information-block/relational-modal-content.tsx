@@ -2,10 +2,11 @@ import { Concepts } from '@app/common/interfaces/concepts.interface';
 import useMountEffect from '@app/common/utils/hooks/use-mount-effect';
 import { RelationInfoType } from '@app/modules/edit-concept/new-concept.types';
 import { useTranslation } from 'next-i18next';
+import { useRouter } from 'next/router';
 import { createRef, useEffect, useState } from 'react';
 import { SingleSelectData } from 'suomifi-ui-components';
+import { DetachedPagination } from 'yti-common-ui/pagination';
 import { useSearchConceptMutation } from '../concept/concept.slice';
-import { LocalPagination } from '../pagination/pagination';
 import { RelationalModalBlock } from './relation-information-block.styles';
 import RenderConcepts from './render-concepts';
 import Search from './search';
@@ -36,6 +37,7 @@ export default function RelationModalContent({
   initialChosenConcepts,
 }: RelationModalContentProps) {
   const { t } = useTranslation('admin');
+  const { query } = useRouter();
   const [searchConcept, result] = useSearchConceptMutation();
   const [searchTerm, setSearchTerm] = useState('');
   const [status, setStatus] = useState<
@@ -43,7 +45,6 @@ export default function RelationModalContent({
   >();
   const [totalResults, setTotalResults] = useState(0);
   const [currPage, setCurrPage] = useState(1);
-  const [initialized, setInitialized] = useState(false);
   const modalRef = createRef<HTMLDivElement>();
 
   const statuses: StatusesType[] = [
@@ -135,24 +136,28 @@ export default function RelationModalContent({
 
     if (result.isSuccess) {
       setSearchResults(result.data.concepts);
-      setTotalResults(result.data.totalHitCount);
-      if (!initialized) {
-        setChosen(
-          result.data.concepts.filter((c) =>
-            initialChosenConcepts.includes(c.id)
-          )
-        );
-        setInitialized(true);
-      }
+
+      const totalHits =
+        !fromOther && typeof query.conceptId !== 'undefined'
+          ? result.data.concepts
+              .map((c) => c.id)
+              .includes(
+                Array.isArray(query.conceptId)
+                  ? query.conceptId[0]
+                  : query.conceptId
+              )
+            ? result.data.totalHitCount - 1
+            : result.data.totalHitCount
+          : result.data.totalHitCount;
+      setTotalResults(totalHits);
     }
   }, [
     setSearchResults,
     setTotalResults,
-    setChosen,
     fromOther,
     result,
     initialChosenConcepts,
-    initialized,
+    query.conceptId,
   ]);
 
   useMountEffect(handleSearch, fromOther);
@@ -168,7 +173,7 @@ export default function RelationModalContent({
         setStatus={setStatus}
         status={status}
         statuses={statuses}
-        totalHitCount={result.data?.totalHitCount}
+        totalHitCount={totalResults}
       />
 
       <RenderConcepts
@@ -177,12 +182,11 @@ export default function RelationModalContent({
         setChosen={setChosen}
       />
 
-      <LocalPagination
+      <DetachedPagination
         currentPage={currPage}
-        setCurrentPage={handlePageChange}
-        totalHitCount={totalResults}
+        maxPages={Math.ceil(totalResults / 20)}
         maxTotal={20}
-        pageString={t('pagination-page', { ns: 'common' })}
+        setCurrentPage={handlePageChange}
       />
     </RelationalModalBlock>
   );

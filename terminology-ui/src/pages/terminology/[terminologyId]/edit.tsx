@@ -1,22 +1,22 @@
 import {
   CommonContextProvider,
   CommonContextState,
-} from '@app/common/components/common-context-provider';
-import PageHead from '@app/common/components/page-head';
+} from 'yti-common-ui/common-context-provider';
+import PageHead from 'yti-common-ui/page-head';
 import {
   getGroups,
   getOrganizations,
-  getRunningOperationPromises as getTermSearchRunningOperationPromises,
+  getRunningQueriesThunk as getTermSearchRunningQueriesThunk,
 } from '@app/common/components/terminology-search/terminology-search.slice';
 import {
   getVocabulary,
-  getRunningOperationPromises,
+  getRunningQueriesThunk,
 } from '@app/common/components/vocabulary/vocabulary.slice';
 import {
   createCommonGetServerSideProps,
   LocalHandlerParams,
 } from '@app/common/utils/create-getserversideprops';
-import Layout from '@app/layouts/layout';
+import Layout from '@app/common/components/layout';
 import EditVocabulary from '@app/modules/edit-vocabulary';
 import { SSRConfig, useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
@@ -32,8 +32,9 @@ export default function EditTerminology(props: EditTerminologyPageProps) {
 
   return (
     <CommonContextProvider value={props}>
-      <Layout>
+      <Layout user={props.user} fakeableUsers={props.fakeableUsers}>
         <PageHead
+          baseUrl="https://sanastot.suomi.fi"
           title={t('edit-terminology')}
           siteTitle="Yhteentoimivuusalusta"
         />
@@ -62,8 +63,8 @@ export const getServerSideProps = createCommonGetServerSideProps(
     store.dispatch(getOrganizations.initiate(locale ?? 'fi'));
     store.dispatch(getGroups.initiate(locale ?? 'fi'));
 
-    await Promise.all(getRunningOperationPromises());
-    await Promise.all(getTermSearchRunningOperationPromises());
+    await Promise.all(store.dispatch(getRunningQueriesThunk()));
+    await Promise.all(store.dispatch(getTermSearchRunningQueriesThunk()));
 
     return {
       props: {

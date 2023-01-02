@@ -2,13 +2,14 @@ import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useState } from 'react';
 import {
   Button,
+  InlineAlert,
   Modal,
   ModalContent,
   ModalFooter,
   ModalTitle,
   Text,
 } from 'suomifi-ui-components';
-import { useBreakpoints } from '../media-query/media-query-context';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 import { usePostCreateVersionMutation } from '../vocabulary/vocabulary.slice';
 import { v4 } from 'uuid';
 import { useStoreDispatch } from '@app/store';
@@ -17,23 +18,24 @@ import Prefix from '../terminology-components/prefix';
 import { UpdateTerminology } from '@app/modules/new-terminology/update-terminology.interface';
 import { setAlert } from '../alert/alert.slice';
 import { useRouter } from 'next/router';
-import InlineAlert from '../inline-alert';
 import {
   DescriptionParagraph,
   FooterBlock,
 } from './copy-terminology-modal.styles';
-import SaveSpinner from '@common/components/save-spinner';
+import SaveSpinner from 'yti-common-ui/save-spinner';
 
 interface CopyTerminologyModalProps {
   terminologyId: string;
   visible: boolean;
   setVisible: (value: boolean) => void;
+  unauthenticatedUser?: boolean;
 }
 
 export default function CopyTerminologyModal({
   terminologyId,
   visible,
   setVisible,
+  unauthenticatedUser,
 }: CopyTerminologyModalProps) {
   const { t } = useTranslation('admin');
   const dispatch = useStoreDispatch();
@@ -117,10 +119,19 @@ export default function CopyTerminologyModal({
         <DescriptionParagraph>
           <Text>{t('copy-as-base-description')}</Text>
         </DescriptionParagraph>
-        <Prefix update={handleUpdate} userPosted={userPosted} />
+        <Prefix
+          update={handleUpdate}
+          userPosted={userPosted}
+          disabled={unauthenticatedUser}
+        />
       </ModalContent>
 
       <ModalFooter>
+        {unauthenticatedUser && (
+          <InlineAlert status="error" role="alert" id="unauthenticated-alert">
+            {t('error-occurred_unauthenticated', { ns: 'alert' })}
+          </InlineAlert>
+        )}
         {userPosted && newCode === '' && (
           <InlineAlert status="warning">
             {t('alert-prefix-undefined')}
@@ -129,7 +140,7 @@ export default function CopyTerminologyModal({
         <FooterBlock>
           <Button
             onClick={() => handlePost()}
-            disabled={createVersion.isLoading}
+            disabled={createVersion.isLoading || unauthenticatedUser}
           >
             {t('save')}
           </Button>

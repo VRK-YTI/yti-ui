@@ -4,13 +4,13 @@ import {
   ExpanderGroup,
   ExpanderTitle,
 } from 'suomifi-ui-components';
-import SanitizedTextContent from '@app/common/components/sanitized-text-content';
+import SanitizedTextContent from 'yti-common-ui/sanitized-text-content';
 import { useTranslation } from 'next-i18next';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
 import getPrefLabel from '@app/common/utils/get-preflabel';
 import { Concepts } from '@app/common/interfaces/concepts.interface';
 import { translateStatus } from '@app/common/utils/translation-helpers';
-import { useBreakpoints } from '../media-query/media-query-context';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 import { useEffect, useState } from 'react';
 import RenderExpanderContent from './render-expander-content';
 import { useRouter } from 'next/router';

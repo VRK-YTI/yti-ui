@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { userCookieOptions } from '@app/common/utils/user-cookie-options';
-import { User } from '@app/common/interfaces/user.interface';
+import { User } from 'yti-common-ui/interfaces/user.interface';
 import { withIronSessionApiRoute } from 'iron-session/next';
 
 export default withIronSessionApiRoute(
@@ -79,23 +79,16 @@ export default withIronSessionApiRoute(
       // Pass the cookie from the api to the client.
       // This works since the API is already in the same domain,
       // just has a more specific Path set
-      const jsessionid = (response.headers['set-cookie'] as string[]).filter(
-        (x) => x.startsWith('JSESSIONID=')
-      );
-      if (jsessionid.length > 0) {
-        res.setHeader('Set-Cookie', jsessionid);
-      } else {
-        console.warn('No JSESSIONID found in response');
+      if (response.headers['set-cookie']) {
+        // Collect cookies from Set-Cookie into an object.
+        // These will be saved in the session for later use.
+        (response.headers['set-cookie'] as string[])
+          .map((x) => x.split(';')[0])
+          .forEach((x) => {
+            const [key, value] = x.split('=');
+            cookies[key] = value;
+          });
       }
-
-      // Collect cookies from Set-Cookie into an object.
-      // These will be saved in the session for later use.
-      (response.headers['set-cookie'] as string[])
-        .map((x) => x.split(';')[0])
-        .forEach((x) => {
-          const [key, value] = x.split('=');
-          cookies[key] = value;
-        });
     } catch (error) {
       if (axios.isAxiosError(error)) {
         // handleAxiosError(error);

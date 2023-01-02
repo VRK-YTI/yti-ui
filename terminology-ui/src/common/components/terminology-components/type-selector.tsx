@@ -5,7 +5,7 @@ import {
   RadioButtonGroupSmBot,
 } from './terminology-components.styles';
 import { UpdateTerminology } from '@app/modules/new-terminology/update-terminology.interface';
-import { useBreakpoints } from '../media-query/media-query-context';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 
 export interface TypeSelectorProps {
   update: ({ key, data }: UpdateTerminology) => void;

@@ -1,20 +1,18 @@
-import {
-  BasicBlock,
-  MultilingualPropertyBlock,
-} from '@app/common/components/block';
+import { BasicBlock } from 'yti-common-ui/block';
+import { MultilingualPropertyBlock } from '@app/common/components/block';
 import { useGetConceptQuery } from '@app/common/components/concept/concept.slice';
-import FormattedDate from '@app/common/components/formatted-date';
+import FormattedDate from 'yti-common-ui/formatted-date';
 import PropertyValue from '@app/common/components/property-value';
-import Separator from '@app/common/components/separator';
+import Separator from 'yti-common-ui/separator';
 import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
 import { useTranslation } from 'next-i18next';
 import { ExpanderContent } from 'suomifi-ui-components';
-import { ExpanderConceptContent } from './concept-picker.types';
+import { ExpanderConceptContent as ExpanderConceptContentType } from './concept-picker.types';
 
 export function ExpanderConceptContent({
   concept,
   terminologyId,
-}: ExpanderConceptContent) {
+}: ExpanderConceptContentType) {
   const { t } = useTranslation('collection');
   const { data } = useGetConceptQuery({
     terminologyId: terminologyId,

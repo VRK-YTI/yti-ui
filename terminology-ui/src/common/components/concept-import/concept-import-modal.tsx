@@ -3,24 +3,30 @@ import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useState } from 'react';
 import {
   Button,
+  ExternalLink,
+  InlineAlert,
   Modal,
   ModalContent,
   ModalFooter,
   ModalTitle,
+  Paragraph,
 } from 'suomifi-ui-components';
-import FileDropArea from '../file-drop-area';
+import FileDropArea from 'yti-common-ui/file-drop-area';
 import { createErrorMessage, ExcelError } from '../import/excel.error';
 import {
   usePostImportNTRFMutation,
   usePostSimpleImportExcelMutation,
 } from '../import/import.slice';
-import { useBreakpoints } from '../media-query/media-query-context';
+import { useBreakpoints } from 'yti-common-ui/media-query';
+import { translateFileUploadError } from '@app/common/utils/translation-helpers';
+import { ImportDescriptionBlock } from './concept-import.styles';
 
 interface ConceptImportModalProps {
   terminologyId: string;
   visible: boolean;
   setVisible: (value: boolean) => void;
   refetch: () => void;
+  unauthenticatedUser?: boolean;
 }
 
 export default function ConceptImportModal({
@@ -28,6 +34,7 @@ export default function ConceptImportModal({
   visible,
   setVisible,
   refetch,
+  unauthenticatedUser,
 }: ConceptImportModalProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -84,11 +91,29 @@ export default function ConceptImportModal({
           {!startFileUpload ? t('import-concepts') : t('downloading-file')}
         </ModalTitle>
         {!startFileUpload ? (
-          <FileDropArea
-            setFileData={setFileData}
-            setIsValid={setIsValid}
-            validFileTypes={['xlsx', 'xml']}
-          />
+          <>
+            <ImportDescriptionBlock>
+              <Paragraph>
+                {t('import-concepts-description-1')}{' '}
+                <ExternalLink
+                  href="https://wiki.dvv.fi/pages/viewpage.action?pageId=21783347"
+                  labelNewWindow={t('link-opens-new-window-external', {
+                    ns: 'common',
+                  })}
+                >
+                  {t('from-terminology-manual')}
+                </ExternalLink>
+              </Paragraph>
+              <Paragraph>{t('import-concepts-description-2')}</Paragraph>
+            </ImportDescriptionBlock>
+
+            <FileDropArea
+              setFileData={setFileData}
+              setIsValid={setIsValid}
+              validFileTypes={['xlsx', 'xml']}
+              translateFileUploadError={translateFileUploadError}
+            />
+          </>
         ) : (
           <FileUpload
             importResponseData={
@@ -105,7 +130,15 @@ export default function ConceptImportModal({
       </ModalContent>
       {!userPosted && (
         <ModalFooter id="concept-import-modal-footer">
-          <Button disabled={!isValid} onClick={handlePost}>
+          {unauthenticatedUser && (
+            <InlineAlert status="error" role="alert" id="unauthenticated-alert">
+              {t('error-occurred_unauthenticated', { ns: 'alert' })}
+            </InlineAlert>
+          )}
+          <Button
+            disabled={!isValid || unauthenticatedUser}
+            onClick={handlePost}
+          >
             {t('import-concepts-to-terminology')}
           </Button>
           <Button variant="secondary" onClick={handleClose}>

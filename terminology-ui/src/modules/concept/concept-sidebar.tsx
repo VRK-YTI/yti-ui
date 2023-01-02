@@ -1,22 +1,16 @@
 import { useTranslation } from 'next-i18next';
 import React from 'react';
-import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
-import Separator from '@app/common/components/separator';
-import {
-  Sidebar,
-  SidebarHeader,
-  SidebarSection,
-} from '@app/common/components/sidebar';
-import { Collection } from '@app/common/interfaces/collection.interface';
-import { ConceptLink } from '@app/common/interfaces/concept-link.interface';
+import Separator from 'yti-common-ui/separator';
+import { Sidebar, SidebarHeader, SidebarSection } from 'yti-common-ui/sidebar';
 import { Concept } from '@app/common/interfaces/concept.interface';
+import getReferenceValues from './get-reference-values';
 
 export interface ConceptSidebarProps {
   concept?: Concept;
 }
 
 export default function ConceptSidebar({ concept }: ConceptSidebarProps) {
-  const { t } = useTranslation('concept');
+  const { t, i18n } = useTranslation('concept');
 
   const terminologyId = concept?.type.graph.id;
 
@@ -48,78 +42,73 @@ export default function ConceptSidebar({ concept }: ConceptSidebarProps) {
 
       {shouldRenderDivider1 && <Separator />}
 
-      <SidebarSection<Concept>
+      <SidebarSection
         heading={t('sidebar-section-heading-broader')}
-        items={concept?.references.broader}
-        href={({ id }) => `/terminology/${terminologyId}/concept/${id}`}
-        propertyAccessor={({ references }) => references?.prefLabelXl}
+        items={getReferenceValues(
+          concept?.references.broader,
+          i18n.language,
+          terminologyId
+        )}
       />
 
-      <SidebarSection<Concept>
+      <SidebarSection
         heading={t('sidebar-section-heading-narrower')}
-        items={concept?.references.narrower}
-        href={({ id }) => `/terminology/${terminologyId}/concept/${id}`}
-        propertyAccessor={({ references }) => references?.prefLabelXl}
+        items={getReferenceValues(
+          concept?.references.narrower,
+          i18n.language,
+          terminologyId
+        )}
       />
 
-      <SidebarSection<Concept>
+      <SidebarSection
         heading={t('sidebar-section-heading-related')}
-        items={concept?.references.related}
-        href={({ id }) => `/terminology/${terminologyId}/concept/${id}`}
-        propertyAccessor={({ references }) => references?.prefLabelXl}
+        items={getReferenceValues(
+          concept?.references.related,
+          i18n.language,
+          terminologyId
+        )}
       />
 
-      <SidebarSection<Concept>
+      <SidebarSection
         heading={t('sidebar-section-heading-is-part-of')}
-        items={concept?.references.isPartOf}
-        href={({ id }) => `/terminology/${terminologyId}/concept/${id}`}
-        propertyAccessor={({ references }) => references?.prefLabelXl}
+        items={getReferenceValues(
+          concept?.references.isPartOf,
+          i18n.language,
+          terminologyId
+        )}
       />
 
-      <SidebarSection<Concept>
+      <SidebarSection
         heading={t('sidebar-section-heading-has-part')}
-        items={concept?.references.hasPart}
-        href={({ id }) => `/terminology/${terminologyId}/concept/${id}`}
-        propertyAccessor={({ references }) => references?.prefLabelXl}
+        items={getReferenceValues(
+          concept?.references.hasPart,
+          i18n.language,
+          terminologyId
+        )}
       />
 
-      <SidebarSection<ConceptLink>
+      <SidebarSection
         heading={t('sidebar-section-heading-related-match')}
-        items={concept?.references.relatedMatch}
-        href={({ properties }) => {
-          const terminologyId = getPropertyValue({
-            property: properties.targetGraph,
-          });
-          const conceptId = getPropertyValue({ property: properties.targetId });
-          return `/terminology/${terminologyId}/concept/${conceptId}`;
-        }}
-        propertyAccessor={({ properties }) => properties?.prefLabel}
+        items={getReferenceValues(
+          concept?.references.relatedMatch,
+          i18n.language
+        )}
       />
 
-      <SidebarSection<ConceptLink>
+      <SidebarSection
         heading={t('sidebar-section-heading-exact-match')}
-        items={concept?.references.exactMatch}
-        href={({ properties }) => {
-          const terminologyId = getPropertyValue({
-            property: properties.targetGraph,
-          });
-          const conceptId = getPropertyValue({ property: properties.targetId });
-          return `/terminology/${terminologyId}/concept/${conceptId}`;
-        }}
-        propertyAccessor={({ properties }) => properties?.prefLabel}
+        items={getReferenceValues(
+          concept?.references.exactMatch,
+          i18n.language
+        )}
       />
 
-      <SidebarSection<ConceptLink>
+      <SidebarSection
         heading={t('sidebar-section-heading-close-match')}
-        items={concept?.references.closeMatch}
-        href={({ properties }) => {
-          const terminologyId = getPropertyValue({
-            property: properties.targetGraph,
-          });
-          const conceptId = getPropertyValue({ property: properties.targetId });
-          return `/terminology/${terminologyId}/concept/${conceptId}`;
-        }}
-        propertyAccessor={({ properties }) => properties?.prefLabel}
+        items={getReferenceValues(
+          concept?.references.closeMatch,
+          i18n.language
+        )}
       />
 
       {shouldRenderDivider2 && <Separator />}
@@ -133,11 +122,13 @@ export default function ConceptSidebar({ concept }: ConceptSidebarProps) {
 
       {shouldRenderDivider3 && <Separator />}
 
-      <SidebarSection<Collection>
+      <SidebarSection
         heading={t('sidebar-section-heading-member')}
-        items={concept?.referrers.member}
-        href={({ id }) => `/terminology/${terminologyId}/collection/${id}`}
-        propertyAccessor={({ properties }) => properties?.prefLabel}
+        items={getReferenceValues(
+          concept?.referrers.member,
+          i18n.language,
+          terminologyId
+        )}
       />
     </Sidebar>
   );

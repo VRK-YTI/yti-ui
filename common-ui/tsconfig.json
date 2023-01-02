@@ -20,7 +20,8 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@app/*": ["src/*"]
+      "@components/*": ["components/*"],
+      "@utils/*": ["utils/*"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx"],

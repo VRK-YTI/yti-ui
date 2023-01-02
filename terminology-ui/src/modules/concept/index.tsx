@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   ExternalLink,
@@ -8,18 +8,18 @@ import {
   Text,
   VisuallyHidden,
 } from 'suomifi-ui-components';
+import { BasicBlock, BasicBlockExtraWrapper } from 'yti-common-ui/block';
 import {
-  BasicBlock,
   MultilingualPropertyBlock,
   PropertyBlock,
   TermBlock,
 } from '@app/common/components/block';
-import { Breadcrumb, BreadcrumbLink } from '@app/common/components/breadcrumb';
-import FormattedDate from '@app/common/components/formatted-date';
-import { useBreakpoints } from '@app/common/components/media-query/media-query-context';
+import { Breadcrumb, BreadcrumbLink } from 'yti-common-ui/breadcrumb';
+import FormattedDate from 'yti-common-ui/formatted-date';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 import PropertyValue from '@app/common/components/property-value';
 import { getPropertyValue } from '@app/common/components/property-value/get-property-value';
-import Separator from '@app/common/components/separator';
+import Separator from 'yti-common-ui/separator';
 import DetailsExpander from './details-expander';
 import ConceptSidebar from './concept-sidebar';
 import {
@@ -34,26 +34,37 @@ import { setTitle } from '@app/common/components/title/title.slice';
 import { useGetVocabularyQuery } from '@app/common/components/vocabulary/vocabulary.slice';
 import { useGetConceptQuery } from '@app/common/components/concept/concept.slice';
 import { getProperty } from '@app/common/utils/get-property';
-import {
-  SubTitle,
-  MainTitle,
-  BadgeBar,
-  Badge,
-} from '@app/common/components/title-block';
+import { MainTitle, BadgeBar, Badge } from 'yti-common-ui/title-block';
 import HasPermission from '@app/common/utils/has-permission';
-import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
 import Link from 'next/link';
 import { translateStatus } from '@app/common/utils/translation-helpers';
 import isEmail from 'validator/lib/isEmail';
 import RemovalModal from '@app/common/components/removal-modal';
+import { Term } from '@app/common/interfaces/term.interface';
 
 export interface ConceptProps {
   terminologyId: string;
   conceptId: string;
 }
 
+interface TermBlockType {
+  term: Term;
+  type: string;
+}
+
 export default function Concept({ terminologyId, conceptId }: ConceptProps) {
+  const { t, i18n } = useTranslation('concept');
   const { breakpoint } = useBreakpoints();
+  const dispatch = useStoreDispatch();
+  const router = useRouter();
+  const [termBlockData, setTermBlockData] = useState<
+    | {
+        term: Term;
+        type: string;
+      }[]
+    | undefined
+  >();
+
   const { data: terminology, error: terminologyError } = useGetVocabularyQuery({
     id: terminologyId,
   });
@@ -61,25 +72,63 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
     terminologyId,
     conceptId,
   });
-  const { t, i18n } = useTranslation('concept');
-  const dispatch = useStoreDispatch();
-  const router = useRouter();
 
   const prefLabel = getPropertyValue({
     property: getProperty('prefLabel', concept?.references.prefLabelXl),
     language: i18n.language,
   });
+  const status =
+    getPropertyValue({ property: concept?.properties.status }) || 'DRAFT';
+  const email = getPropertyValue({ property: terminology?.properties.contact });
+
+  // Prioritizes Finnish and Swedish over other languages
+  function compareLocales(t1: TermBlockType, t2: TermBlockType): number {
+    const t1Lang = t1.term.properties.prefLabel?.[0].lang.toLowerCase() ?? '';
+    const t2Lang = t2.term.properties.prefLabel?.[0].lang.toLowerCase() ?? '';
+
+    if (t1Lang === 'fi' || t2Lang === 'fi') {
+      return t1Lang === 'fi' ? -1 : 1;
+    }
+
+    if (t1Lang === 'sv' || t2Lang === 'sv') {
+      return t1Lang === 'sv' ? -1 : 1;
+    }
+
+    if (t1Lang !== t2Lang) {
+      return t1Lang > t2Lang ? 1 : -1;
+    }
+
+    return 0;
+  }
 
   useEffect(() => {
     if (concept) {
       dispatch(setTitle(prefLabel ?? ''));
+
+      if (!termBlockData) {
+        setTermBlockData(
+          [
+            ...(concept.references.prefLabelXl ?? []).map((term) => ({
+              term,
+              type: t('field-terms-preferred'),
+            })),
+            ...(concept.references.altLabelXl ?? []).map((term) => ({
+              term,
+              type: t('field-terms-alternative'),
+            })),
+            ...(concept.references.notRecommendedSynonym ?? []).map((term) => ({
+              term,
+              type: t('field-terms-non-recommended'),
+            })),
+            ...(concept.references.hiddenTerm ?? []).map((term) => ({
+              term,
+              type: t('field-terms-hidden'),
+            })),
+          ].sort((t1, t2) => compareLocales(t1, t2))
+        );
+      }
     }
-  }, [concept, dispatch, prefLabel]);
-
-  const status =
-    getPropertyValue({ property: concept?.properties.status }) || 'DRAFT';
-
-  const email = getPropertyValue({ property: terminology?.properties.contact });
+  }, [concept, dispatch, prefLabel, termBlockData, t]);
 
   if (conceptError) {
     return (
@@ -152,27 +201,7 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
 
           <TermBlock
             title={<h2>{t('field-terms-label')}</h2>}
-            data={[
-              ...(concept?.references.prefLabelXl ?? []).map((term) => ({
-                term,
-                type: t('field-terms-preferred'),
-              })),
-              ...(concept?.references.altLabelXl ?? []).map((term) => ({
-                term,
-                type: t('field-terms-alternative'),
-              })),
-              ...(concept?.references.notRecommendedSynonym ?? []).map(
-                (term) => ({ term, type: t('field-terms-non-recommended') })
-              ),
-              ...(concept?.references.searchTerm ?? []).map((term) => ({
-                term,
-                type: t('field-terms-search-term'),
-              })),
-              ...(concept?.references.hiddenTerm ?? []).map((term) => ({
-                term,
-                type: t('field-terms-hidden'),
-              })),
-            ]}
+            data={termBlockData}
           />
 
           <MultilingualPropertyBlock

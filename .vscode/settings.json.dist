@@ -5,5 +5,11 @@
     "**/node_modules": true,
     "out": true,
     "yarn.lock": true
-  }
+  },
+  // This is needed now that we're using npm workspaces
+  "eslint.workingDirectories": [
+    { "directory": "./terminology-ui", "changeProcessCWD": true },
+    { "directory": "./datamodel-ui", "changeProcessCWD": true },
+    { "directory": "./common-ui", "changeProcessCWD": true}
+  ]
 }

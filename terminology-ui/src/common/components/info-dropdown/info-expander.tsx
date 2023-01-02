@@ -13,14 +13,13 @@ import {
   PropertyList,
 } from './info-expander.styles';
 import { VocabularyInfoDTO } from '@app/common/interfaces/vocabulary.interface';
-import Separator from '@app/common/components/separator';
+import Separator from 'yti-common-ui/separator';
+import { BasicBlock, BasicBlockExtraWrapper } from 'yti-common-ui/block';
 import {
-  BasicBlock,
   MultilingualPropertyBlock,
   PropertyBlock,
 } from '@app/common/components/block';
-import { BasicBlockExtraWrapper } from '@app/common/components/block/block.styles';
-import FormattedDate from '@app/common/components/formatted-date';
+import FormattedDate from 'yti-common-ui/formatted-date';
 import { useSelector } from 'react-redux';
 import { selectLogin } from '@app/common/components/login/login.slice';
 import HasPermission from '@app/common/utils/has-permission';
@@ -39,6 +38,9 @@ import useUrlState from '@app/common/utils/hooks/use-url-state';
 import axios from 'axios';
 import { useStoreDispatch } from '@app/store';
 import { setAlert } from '../alert/alert.slice';
+import UpdateWithFileModal from '../update-with-file-modal';
+import StatusMassEdit from '../status-mass-edit';
+import isEmail from 'validator/lib/isEmail';
 
 const Subscription = dynamic(
   () => import('@app/common/components/subscription/subscription')
@@ -157,9 +159,9 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
         {contact && (
           <BasicBlock title={t('contact')}>
             <ExternalLink
-              href={`mailto:${contact}?subject=${t(
-                'feedback-vocabulary'
-              )} - ${getPropertyValue({
+              href={`mailto:${
+                isEmail(contact) ? contact : 'yhteentoimivuus@dvv.fi'
+              }?subject=${t('feedback-vocabulary')} - ${getPropertyValue({
                 property: data.properties.prefLabel,
                 language: i18n.language,
               })}`}
@@ -191,10 +193,14 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
                         {t('edit-terminology', { ns: 'admin' })}
                       </Button>
                     </Link>
+
+                    <UpdateWithFileModal />
+
                     <CopyTerminologyModal
                       terminologyId={terminologyId}
                       noWrap
                     />
+
                     <RemovalModal
                       removalData={{ type: 'terminology', data: data }}
                       targetId={terminologyId}
@@ -244,6 +250,8 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
                         {t('add-new-collection', { ns: 'admin' })}
                       </Button>
                     </Link>
+
+                    <StatusMassEdit terminologyId={terminologyId} />
                   </ActionBlock>
                 </BasicBlockExtraWrapper>
               }

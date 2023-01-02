@@ -1,4 +1,4 @@
-import Layout from '@app/layouts/layout';
+import Layout from '@app/common/components/layout';
 import { SSRConfig, useTranslation } from 'next-i18next';
 import {
   createCommonGetServerSideProps,
@@ -7,19 +7,19 @@ import {
 import {
   CommonContextState,
   CommonContextProvider,
-} from '@app/common/components/common-context-provider';
-import PageHead from '@app/common/components/page-head';
+} from 'yti-common-ui/common-context-provider';
+import PageHead from 'yti-common-ui/page-head';
 import { default as EditConceptModule } from '@app/modules/edit-concept';
 import { useRouter } from 'next/router';
 import {
   getVocabulary,
-  getRunningOperationPromises as getVocabularyRunningOperationPromises,
+  getRunningQueriesThunk as getVocabularyRunningQueriesThunk,
 } from '@app/common/components/vocabulary/vocabulary.slice';
 import {
   getConcept,
-  getRunningOperationPromises as getConceptRunningOperationPromises,
+  getRunningQueriesThunk as getConceptRunningQueriesThunk,
 } from '@app/common/components/concept/concept.slice';
-import { getStoreData } from '@app/common/components/page-head/utils';
+import { getStoreData } from '@app/common/utils/get-store-data';
 import { Concept } from '@app/common/interfaces/concept.interface';
 
 interface NewConceptPageProps extends CommonContextState {
@@ -36,8 +36,9 @@ export default function EditConcept(props: NewConceptPageProps) {
 
   return (
     <CommonContextProvider value={props}>
-      <Layout>
+      <Layout user={props.user} fakeableUsers={props.fakeableUsers}>
         <PageHead
+          baseUrl="https://sanastot.suomi.fi"
           title={t('new-concept-title')}
           siteTitle="Yhteentoimivuusalusta"
         />
@@ -71,8 +72,8 @@ export const getServerSideProps = createCommonGetServerSideProps(
     store.dispatch(getVocabulary.initiate({ id: terminologyId }));
     store.dispatch(getConcept.initiate({ terminologyId, conceptId }));
 
-    await Promise.all(getVocabularyRunningOperationPromises());
-    await Promise.all(getConceptRunningOperationPromises());
+    await Promise.all(store.dispatch(getVocabularyRunningQueriesThunk()));
+    await Promise.all(store.dispatch(getConceptRunningQueriesThunk()));
 
     const conceptData = getStoreData({
       state: store.getState(),

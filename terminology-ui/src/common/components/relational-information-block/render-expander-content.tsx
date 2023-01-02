@@ -3,10 +3,11 @@ import { useTranslation } from 'next-i18next';
 import { useGetConceptQuery } from '../concept/concept.slice';
 import { useGetVocabularyQuery } from '../vocabulary/vocabulary.slice';
 import { ExpanderContent } from 'suomifi-ui-components';
-import SaveSpinner from '../save-spinner';
-import { BasicBlock, MultilingualPropertyBlock, PropertyBlock } from '../block';
-import Separator from '../separator';
-import FormattedDate from '../formatted-date';
+import SaveSpinner from 'yti-common-ui/save-spinner';
+import { BasicBlock } from 'yti-common-ui/block';
+import { MultilingualPropertyBlock, PropertyBlock } from '../block';
+import Separator from 'yti-common-ui/separator';
+import FormattedDate from 'yti-common-ui/formatted-date';
 
 interface RenderExpanderContentProps {
   terminologyId: string;

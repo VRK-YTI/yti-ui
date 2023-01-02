@@ -59,6 +59,7 @@ describe('api endpoint - login', () => {
   it('callback on success', async () => {
     const targetPath = '/testable-target-path';
 
+    // simulate arrival to callback.ts from Shibboleth
     const req = createRequest<ApiRequest>({
       method: 'GET',
       query: {
@@ -69,30 +70,27 @@ describe('api endpoint - login', () => {
         'X-Forwarded-For': '127.0.0.42',
       },
       cookies: {
+        // shibsession like it would've been set by /Shibboleth.sso/SAML2/POST
         _shibsession_123: 'foo',
       },
     });
     const res = createResponse<ApiResponse>();
 
+    // callback will call authenticated-user for user details
     mock
       .onGet(
         'http://auth-proxy.invalid/terminology-api/api/v1/frontend/authenticated-user'
       )
-      .reply(200, fakeUser, { 'set-cookie': ['JSESSIONID=foo'] });
+      .reply(200, fakeUser, {
+        'set-cookie': ['JSESSIONID=foo'],
+      });
 
     await callback(req, res);
 
     // if successful, the api route will set some cookies for the browser
     expect(res.hasHeader('Set-Cookie')).toBeTruthy();
     const setCookies = getHeader(res.getHeader('Set-Cookie'));
-    expect(setCookies).toHaveLength(2);
-
-    // JSESSIONID from spring API
-    const jsessionid = setCookies.find((x: string) =>
-      x.startsWith('JSESSIONID=')
-    );
-    expect(jsessionid).toBeDefined();
-    expect(jsessionid).toBe('JSESSIONID=foo');
+    expect(setCookies).toHaveLength(1);
 
     // session cookie from next-iron-session
     const session = setCookies.find((x: string) =>

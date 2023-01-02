@@ -4,7 +4,7 @@ import {
   anonymousUser,
   User,
   UserProps,
-} from '@app/common/interfaces/user.interface';
+} from 'yti-common-ui/interfaces/user.interface';
 import withSession from './session';
 import { AppStore, wrapper } from '@app/store';
 import { ParsedUrlQuery } from 'querystring';
@@ -13,9 +13,12 @@ import {
   getAuthenticatedUser,
   setLogin,
 } from '@app/common/components/login/login.slice';
-import { CommonContextState } from '../components/common-context-provider';
+import { CommonContextState } from 'yti-common-ui/common-context-provider';
 import { setAdminControls } from '../components/admin-controls/admin-controls.slice';
-import { getStoreData } from '../components/page-head/utils';
+import { getStoreData } from '@app/common/utils/get-store-data';
+import { getFakeableUsers } from '../components/fakeable-user/fakeable-user.slice';
+import { FakeableUser } from '../interfaces/fakeable-user.interface';
+import { isEqual } from 'lodash';
 
 export interface LocalHandlerParams extends GetServerSidePropsContext {
   store: AppStore;
@@ -66,6 +69,16 @@ export function createCommonGetServerSideProps<
           );
         }
 
+        if (process.env.ENV_TYPE !== 'production') {
+          await store.dispatch(getFakeableUsers.initiate());
+        }
+
+        const fakeableUsers: FakeableUser[] = getStoreData({
+          state: store.getState(),
+          reduxKey: 'fakeableUsers',
+          functionKey: 'getFakeableUsers',
+        });
+
         store.dispatch(
           setAdminControls(process.env.ADMIN_CONTROLS_DISABLED === 'true')
         );
@@ -109,6 +122,11 @@ export function createCommonGetServerSideProps<
             isMatomoEnabled: process.env.MATOMO_ENABLED === 'true',
             matomoUrl: process.env.MATOMO_URL ?? null,
             matomoSiteId: process.env.MATOMO_SITE_ID ?? null,
+            user: user ?? null,
+            fakeableUsers:
+              !fakeableUsers || isEqual(fakeableUsers, {})
+                ? null
+                : fakeableUsers,
           },
         };
       }

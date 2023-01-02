@@ -9,7 +9,7 @@ Documentation and common troubleshooting problems can be found in the [docs](./d
 
 ## Directories
 
-The top level directory (where this README is located) contains mostly git files and some IDE settings. The docs folder is as explained above.
+The top level directory (where this README is located) contains git files, some IDE settings and package.json and package-lock.json that are shared between projects found in package.json. The docs folder is as explained above.
 
 The [common-ui](./common-ui/) folder is the common component library. Read the [common-ui README](./common-ui/README.md) on how to use this in the other projects. The common-ui folder should only contain components that will be used in multiple different projects
 
