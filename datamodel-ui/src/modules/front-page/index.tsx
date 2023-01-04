@@ -26,6 +26,7 @@ import {
 } from 'yti-common-ui/title/title.styles';
 import Pagination from 'yti-common-ui/pagination';
 import { translateModelType } from '@app/common/utils/translation-helpers';
+import ModelFormModal from '../model-form/model-form-modal';
 
 export default function FrontPage() {
   const { t, i18n } = useTranslation('common');
@@ -155,6 +156,7 @@ export default function FrontPage() {
       <Title
         title={t('data-vocabularies')}
         noBreadcrumbs={true}
+        editButton={<ModelFormModal />}
         extra={
           <TitleDescriptionWrapper $isSmall={isSmall}>
             <Description id="page-description">
