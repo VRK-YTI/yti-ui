@@ -4,10 +4,24 @@ import getOrganizations from '@app/common/utils/get-organizations';
 import getServiceCategories from '@app/common/utils/get-service-categories';
 import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
-import { RadioButton, RadioButtonGroup } from 'suomifi-ui-components';
+import {
+  HintText,
+  Label,
+  Paragraph,
+  RadioButton,
+  RadioButtonGroup,
+  Text,
+  TextInput,
+} from 'suomifi-ui-components';
 import Separator from 'yti-common-ui/separator';
-import { ModelFormContainer, WideMultiSelect } from './model-form.styles';
+import {
+  BlockContainer,
+  ModelFormContainer,
+  WideMultiSelect,
+} from './model-form.styles';
 import LanguageSelector from 'yti-common-ui/form/language-selector';
+import Prefix from 'yti-common-ui/form/prefix';
+import { useGetFreePrefixMutation } from '@app/common/components/prefix';
 
 export default function ModelForm() {
   const { t, i18n } = useTranslation('adming');
@@ -63,7 +77,7 @@ export default function ModelForm() {
   console.log('languages', languages);
 
   return (
-    <ModelFormContainer>
+    <div>
       <RadioButtonGroup
         labelText="Tietomallin tyyppi"
         name="type"
@@ -83,9 +97,9 @@ export default function ModelForm() {
         </RadioButton>
       </RadioButtonGroup>
 
-      <Separator />
+      <Separator isLarge />
 
-      <div>
+      <BlockContainer>
         <LanguageSelector
           items={languages}
           labelText="Tietosisällön kielet"
@@ -100,39 +114,80 @@ export default function ModelForm() {
           ariaOptionChipRemovedText={''}
           noItemsText={''}
         />
-      </div>
-      <Separator />
 
-      <WideMultiSelect
-        chipListVisible={true}
-        labelText="Tietoalueet"
-        hintText="Valitse tietomallille sen sisältöä kuvaavat tietoalueet. Tietoalue auttaa tietomallin löydettävyydessä."
-        visualPlaceholder="Valitse tietomallin tietoalueet"
-        removeAllButtonLabel="Poista kaikki valinnat"
-        allowItemAddition={false}
-        items={serviceCategories}
-        ariaChipActionLabel={''}
-        ariaSelectedAmountText={''}
-        ariaOptionsAvailableText={''}
-        ariaOptionChipRemovedText={''}
-        noItemsText={''}
-      />
+        <Prefix
+          validatePrefixMutation={useGetFreePrefixMutation}
+          typeInUri={'datamodel'}
+        />
+      </BlockContainer>
 
-      <WideMultiSelect
-        chipListVisible={true}
-        labelText="Sisällöntuottajat"
-        hintText="Voit lisätä vain organisaation, joka on antanut sinulle muokkausoikeudet"
-        visualPlaceholder="Valitse sisällöntuottajat"
-        removeAllButtonLabel="Poista kaikki valinnat"
-        items={organizations}
-        ariaChipActionLabel={''}
-        ariaSelectedAmountText={''}
-        ariaOptionsAvailableText={''}
-        ariaOptionChipRemovedText={''}
-        noItemsText={''}
-      />
+      <Separator isLarge />
 
-      <Separator />
-    </ModelFormContainer>
+      <BlockContainer>
+        <WideMultiSelect
+          chipListVisible={true}
+          labelText="Tietoalueet"
+          hintText="Valitse tietomallille sen sisältöä kuvaavat tietoalueet. Tietoalue auttaa tietomallin löydettävyydessä."
+          visualPlaceholder="Valitse tietomallin tietoalueet"
+          removeAllButtonLabel="Poista kaikki valinnat"
+          allowItemAddition={false}
+          items={serviceCategories}
+          ariaChipActionLabel={''}
+          ariaSelectedAmountText={''}
+          ariaOptionsAvailableText={''}
+          ariaOptionChipRemovedText={''}
+          noItemsText={''}
+        />
+
+        <WideMultiSelect
+          chipListVisible={true}
+          labelText="Sisällöntuottajat"
+          hintText="Voit lisätä vain organisaation, joka on antanut sinulle muokkausoikeudet"
+          visualPlaceholder="Valitse sisällöntuottajat"
+          removeAllButtonLabel="Poista kaikki valinnat"
+          items={organizations}
+          ariaChipActionLabel={''}
+          ariaSelectedAmountText={''}
+          ariaOptionsAvailableText={''}
+          ariaOptionChipRemovedText={''}
+          noItemsText={''}
+        />
+      </BlockContainer>
+
+      <Separator isLarge />
+
+      <BlockContainer>
+        <div>
+          <Label>Palaute</Label>
+          <HintText>
+            Voit pyytää käyttäjää antamaan palautetta tietomallista.
+          </HintText>
+        </div>
+
+        <RadioButtonGroup
+          labelText="Palautteen vastaanottotapa"
+          name="feedback"
+          defaultValue="email"
+          id="feedback-type-group"
+        >
+          <RadioButton value="email">Sähköposti</RadioButton>
+          <RadioButton value="undefined">Ei vielä tiedossa</RadioButton>
+        </RadioButtonGroup>
+
+        <Paragraph>
+          <Text>
+            Anna organisaation yleinen sähköpostiosoite, johon käyttäjä voi
+            antaa palautetta tietomallista.
+            <br />
+            Älä käytä henkilökohtaista sähköpostiosoitetta.
+          </Text>
+        </Paragraph>
+
+        <TextInput
+          labelText="Organisaation yleinen sähköpostiosoite"
+          visualPlaceholder="Esim. yllapito@example.org"
+        />
+      </BlockContainer>
+    </div>
   );
 }
