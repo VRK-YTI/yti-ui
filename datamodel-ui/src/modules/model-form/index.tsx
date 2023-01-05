@@ -3,48 +3,31 @@ import { useGetServiceCategoriesQuery } from '@app/common/components/service-cat
 import getOrganizations from '@app/common/utils/get-organizations';
 import getServiceCategories from '@app/common/utils/get-service-categories';
 import { useTranslation } from 'next-i18next';
-import { useMemo, useState } from 'react';
-import {
-  HintText,
-  Label,
-  Paragraph,
-  RadioButton,
-  RadioButtonGroup,
-  Text,
-  TextInput,
-} from 'suomifi-ui-components';
+import { useEffect, useMemo } from 'react';
+import { Block, RadioButton, RadioButtonGroup } from 'suomifi-ui-components';
 import Separator from 'yti-common-ui/separator';
-import {
-  BlockContainer,
-  ModelFormContainer,
-  WideMultiSelect,
-} from './model-form.styles';
+import { BlockContainer, WideMultiSelect } from './model-form.styles';
 import LanguageSelector from 'yti-common-ui/form/language-selector';
 import Prefix from 'yti-common-ui/form/prefix';
+import Contact from 'yti-common-ui/form/contact';
 import { useGetFreePrefixMutation } from '@app/common/components/prefix';
+import { ModelFormType } from '@app/common/interfaces/model-form.interface';
+import { FormErrors } from './validate-form';
 
-export default function ModelForm() {
-  const { t, i18n } = useTranslation('adming');
-  const [languages, setLanguages] = useState([
-    {
-      labelText: 'suomi FI',
-      uniqueItemId: 'fi',
-      title: '',
-      description: '',
-    },
-    {
-      labelText: 'ruotsi SV',
-      uniqueItemId: 'sv',
-      title: '',
-      description: '',
-    },
-    {
-      labelText: 'englanti EN',
-      uniqueItemId: 'en',
-      title: '',
-      description: '',
-    },
-  ]);
+interface ModelFormProps {
+  formData: ModelFormType;
+  setFormData: (value: ModelFormType) => void;
+  userPosted: boolean;
+  errors?: FormErrors;
+}
+
+export default function ModelForm({
+  formData,
+  setFormData,
+  userPosted,
+  errors,
+}: ModelFormProps) {
+  const { t, i18n } = useTranslation('admin');
   const { data: serviceCategoriesData } = useGetServiceCategoriesQuery();
   const { data: organizationsData } = useGetOrganizationsQuery();
 
@@ -74,24 +57,28 @@ export default function ModelForm() {
       .sort((o1, o2) => (o1.labelText > o2.labelText ? 1 : -1));
   }, [organizationsData, i18n.language]);
 
-  console.log('languages', languages);
-
   return (
-    <div>
+    <Block>
       <RadioButtonGroup
         labelText="Tietomallin tyyppi"
         name="type"
         defaultValue="profile"
+        id="model-type-group"
+        onChange={(e) =>
+          setFormData({ ...formData, type: e as 'profile' | 'library' })
+        }
       >
         <RadioButton
           value="profile"
           hintText="Tiettyyn asiayhteyteen liittyvä tietomalli, joka hyödyntää ydintietomalleja"
+          id="profile-radio-button"
         >
           Soveltamisprofiili
         </RadioButton>
         <RadioButton
           value="library"
           hintText="Yleinen ja uudelleenkäytettävä tietojen sisällön ja rakenteen kuvaus"
+          id="library-radio-button"
         >
           Ydintietomalli
         </RadioButton>
@@ -101,23 +88,40 @@ export default function ModelForm() {
 
       <BlockContainer>
         <LanguageSelector
-          items={languages}
+          items={formData.languages}
+          languages={formData.languages}
           labelText="Tietosisällön kielet"
           hintText="Valitse tietomallille kielet, joilla tietomallin sisältö on kuvattu."
           visualPlaceholder="Valitse tietomallin kielet"
           isWide={true}
-          setLanguages={setLanguages}
+          setLanguages={(e) =>
+            setFormData({
+              ...formData,
+              languages: e,
+            })
+          }
+          userPosted={userPosted}
           allowItemAddition={false}
           ariaChipActionLabel={''}
           ariaSelectedAmountText={''}
           ariaOptionsAvailableText={''}
           ariaOptionChipRemovedText={''}
           noItemsText={''}
+          status={errors?.languageAmount ? 'error' : 'default'}
         />
 
         <Prefix
+          prefix={formData.prefix}
+          setPrefix={(e) =>
+            setFormData({
+              ...formData,
+              prefix: e,
+            })
+          }
           validatePrefixMutation={useGetFreePrefixMutation}
           typeInUri={'datamodel'}
+          initialData={formData.prefix}
+          error={errors?.prefix ?? false}
         />
       </BlockContainer>
 
@@ -131,7 +135,14 @@ export default function ModelForm() {
           visualPlaceholder="Valitse tietomallin tietoalueet"
           removeAllButtonLabel="Poista kaikki valinnat"
           allowItemAddition={false}
+          onItemSelectionsChange={(e) =>
+            setFormData({
+              ...formData,
+              serviceCategories: e,
+            })
+          }
           items={serviceCategories}
+          status={userPosted && errors?.serviceCategories ? 'error' : 'default'}
           ariaChipActionLabel={''}
           ariaSelectedAmountText={''}
           ariaOptionsAvailableText={''}
@@ -145,7 +156,15 @@ export default function ModelForm() {
           hintText="Voit lisätä vain organisaation, joka on antanut sinulle muokkausoikeudet"
           visualPlaceholder="Valitse sisällöntuottajat"
           removeAllButtonLabel="Poista kaikki valinnat"
+          allowItemAddition={false}
+          onItemSelectionsChange={(e) =>
+            setFormData({
+              ...formData,
+              organizations: e,
+            })
+          }
           items={organizations}
+          status={userPosted && errors?.organizations ? 'error' : 'default'}
           ariaChipActionLabel={''}
           ariaSelectedAmountText={''}
           ariaOptionsAvailableText={''}
@@ -157,37 +176,16 @@ export default function ModelForm() {
       <Separator isLarge />
 
       <BlockContainer>
-        <div>
-          <Label>Palaute</Label>
-          <HintText>
-            Voit pyytää käyttäjää antamaan palautetta tietomallista.
-          </HintText>
-        </div>
-
-        <RadioButtonGroup
-          labelText="Palautteen vastaanottotapa"
-          name="feedback"
-          defaultValue="email"
-          id="feedback-type-group"
-        >
-          <RadioButton value="email">Sähköposti</RadioButton>
-          <RadioButton value="undefined">Ei vielä tiedossa</RadioButton>
-        </RadioButtonGroup>
-
-        <Paragraph>
-          <Text>
-            Anna organisaation yleinen sähköpostiosoite, johon käyttäjä voi
-            antaa palautetta tietomallista.
-            <br />
-            Älä käytä henkilökohtaista sähköpostiosoitetta.
-          </Text>
-        </Paragraph>
-
-        <TextInput
-          labelText="Organisaation yleinen sähköpostiosoite"
-          visualPlaceholder="Esim. yllapito@example.org"
+        <Contact
+          contact={formData.contact}
+          setContact={(e) =>
+            setFormData({
+              ...formData,
+              contact: e,
+            })
+          }
         />
       </BlockContainer>
-    </div>
+    </Block>
   );
 }

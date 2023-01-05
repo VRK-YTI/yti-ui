@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   Label,
   Paragraph,
@@ -7,24 +7,32 @@ import {
   RadioButtonGroup,
   Text,
 } from 'suomifi-ui-components';
-import { v4 } from 'uuid';
 import { TEXT_INPUT_MAX } from '../../utils/constants';
 import { PrefixContainer, TextInput } from './prefix.styles';
 
 interface PrefixProps {
+  prefix: string;
+  setPrefix: (value: string) => void;
   validatePrefixMutation: any;
   typeInUri: string;
+  initialData: string;
+  error: boolean;
+  disabled?: boolean;
 }
 
 export default function Prefix({
+  prefix,
+  setPrefix,
   validatePrefixMutation,
   typeInUri,
+  initialData,
+  error,
+  disabled,
 }: PrefixProps) {
   const URI = 'http://uri.suomi.fi';
   const { t } = useTranslation('admin');
-  const [randomURL] = useState(v4().substring(0, 8));
+  const [initalPrefix] = useState(prefix);
   const [inputType, setInputType] = useState('automatic');
-  const [prefix, setPrefix] = useState(randomURL);
   const [prefixValid, setPrefixValid] = useState(true);
   const [validatePrefix, validPrefix] = validatePrefixMutation();
 
@@ -32,12 +40,13 @@ export default function Prefix({
     setInputType(e);
 
     if (e === 'automatic') {
-      setPrefix(randomURL);
+      setPrefix(initalPrefix);
       setPrefixValid(true);
       return;
     }
 
     setPrefix('');
+    setPrefixValid(false);
   };
 
   const handleTextInput = (e: string) => {
@@ -53,16 +62,6 @@ export default function Prefix({
     setPrefixValid(false);
   };
 
-  useEffect(() => {
-    if (validPrefix.isError) {
-      setPrefixValid(false);
-    }
-
-    if (validPrefix.isSuccess) {
-      setPrefixValid(validPrefix.data);
-    }
-  }, [validPrefix]);
-
   return (
     <PrefixContainer>
       <RadioButtonGroup
@@ -74,10 +73,18 @@ export default function Prefix({
         name="prefix"
         onChange={(e) => handleInputTypeChange(e)}
       >
-        <RadioButton value="automatic" id="prefix-input-automatic">
+        <RadioButton
+          value="automatic"
+          id="prefix-input-automatic"
+          disabled={disabled}
+        >
           Luo tunnus automaattisesti
         </RadioButton>
-        <RadioButton value="manual" id="prefix-input-manual">
+        <RadioButton
+          value="manual"
+          id="prefix-input-manual"
+          disabled={disabled}
+        >
           Kirjoita oma tunnus
         </RadioButton>
       </RadioButtonGroup>
@@ -91,8 +98,20 @@ export default function Prefix({
             debounce={500}
             maxLength={TEXT_INPUT_MAX}
             id="prefix-text-input"
-            status={prefixValid ? 'default' : 'error'}
+            status={
+              (prefix !== '' && (!prefixValid || validPrefix.data === false)) ||
+              error
+                ? 'error'
+                : 'default'
+            }
+            statusText={
+              (prefix !== '' &&
+                ((!prefixValid && 'invalid form') ||
+                  (validPrefix.data === false && 'taken'))) ||
+              ''
+            }
             defaultValue={prefix}
+            disabled={disabled}
           />
         </div>
       )}

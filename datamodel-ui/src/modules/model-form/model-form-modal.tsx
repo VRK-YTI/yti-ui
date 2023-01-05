@@ -1,5 +1,5 @@
 import { selectLogin } from '@app/common/components/login/login.slice';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import {
   Button,
@@ -11,17 +11,47 @@ import {
 } from 'suomifi-ui-components';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import ModelForm from '.';
+import { FormErrors, validateForm } from './validate-form';
+import { useInitialModelForm } from '@app/common/utils/hooks/use-initial-model-form';
+import FormFooterAlert from 'yti-common-ui/form-footer-alert';
+import { translateModelFormErrors } from '@app/common/utils/translation-helpers';
+import { useTranslation } from 'next-i18next';
 
 export default function ModelFormModal() {
+  const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const [visible, setVisible] = useState(false);
   const user = useSelector(selectLogin());
-
-  console.log('user', user);
+  const [formData, setFormData] = useState(useInitialModelForm());
+  const [errors, setErrors] = useState<FormErrors>();
+  const [userPosted, setUserPosted] = useState(false);
 
   const handleClose = () => {
     setVisible(false);
+    setUserPosted(false);
   };
+
+  const handleSubmit = () => {
+    setUserPosted(true);
+    if (!formData) {
+      return;
+    }
+
+    const errors = validateForm(formData);
+    setErrors(errors);
+    if (Object.values(errors).includes(true)) {
+      return;
+    }
+  };
+
+  useEffect(() => {
+    if (!userPosted) {
+      return;
+    }
+
+    const errors = validateForm(formData);
+    setErrors(errors);
+  }, [userPosted, formData]);
 
   if (user.anonymous) {
     return null;
@@ -48,10 +78,26 @@ export default function ModelFormModal() {
           <Paragraph style={{ marginBottom: '30px' }}>
             Tiedot ovat pakollisia, jos niitä ei ole merkitty valinnaisiksi.
           </Paragraph>
-          <ModelForm />
+          <ModelForm
+            formData={formData}
+            setFormData={setFormData}
+            userPosted={userPosted}
+            errors={userPosted ? errors : undefined}
+          />
         </ModalContent>
         <ModalFooter>
-          <Button>Luo tietomalli</Button>
+          {userPosted && (
+            <FormFooterAlert
+              alerts={
+                errors &&
+                Object.keys(errors)
+                  .filter((key) => errors[key as keyof FormErrors])
+                  .map((error) => translateModelFormErrors(error, t))
+              }
+            />
+          )}
+
+          <Button onClick={() => handleSubmit()}>Luo tietomalli</Button>
           <Button variant="secondary" onClick={() => handleClose()}>
             Keskeytä
           </Button>
