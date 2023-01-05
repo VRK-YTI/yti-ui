@@ -35,6 +35,7 @@ import { SubTitle, MainTitle, BadgeBar } from 'yti-common-ui/title-block';
 import HasPermission from '@app/common/utils/has-permission';
 import Link from 'next/link';
 import RemovalModal from '@app/common/components/removal-modal';
+import { useGetBlockData } from './utils';
 
 interface CollectionProps {
   terminologyId: string;
@@ -67,6 +68,8 @@ export default function Collection({
     property: collection?.properties.prefLabel,
     language: i18n.language,
   });
+
+  const { prefLabels, definitions } = useGetBlockData(collection);
 
   useEffect(() => {
     if (collection) {
@@ -152,11 +155,11 @@ export default function Collection({
 
           <MultilingualPropertyBlock
             title={t('field-name')}
-            data={collection?.properties.prefLabel}
+            data={prefLabels}
           />
           <MultilingualPropertyBlock
             title={t('field-definition')}
-            data={collection?.properties.definition}
+            data={definitions}
           />
           <ConceptListBlock
             title={<h2>{t('field-member')}</h2>}
