@@ -25,6 +25,11 @@ export default function LanguageSelector(
     languages: LanguageBlockType[];
     setLanguages: (value: LanguageBlockType[]) => void;
     userPosted: boolean;
+    translations: {
+      textInput: string;
+      textDescription: string;
+      optionalText: string;
+    };
     disabled?: boolean;
     isWide?: boolean;
   }
@@ -115,7 +120,7 @@ export default function LanguageSelector(
             <Text variant="bold">{item.labelText}</Text>
           </Paragraph>
           <NameInput
-            labelText="Tietomallin nimi"
+            labelText={props.translations.textInput}
             className={'name-input'}
             onBlur={(e) => handleTitleChange(e.target.value, item.uniqueItemId)}
             status={
@@ -127,9 +132,9 @@ export default function LanguageSelector(
             }
           />
           <DescriptionInput
-            labelText="Kuvaus"
+            labelText={props.translations.textDescription}
             className={'description-input'}
-            optionalText="valinnainen"
+            optionalText={props.translations.optionalText}
             onBlur={(e) =>
               handleDescriptionChange(e.target.value, item.uniqueItemId)
             }

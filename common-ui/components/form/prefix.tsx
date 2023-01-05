@@ -1,4 +1,3 @@
-import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import {
   Label,
@@ -15,8 +14,18 @@ interface PrefixProps {
   setPrefix: (value: string) => void;
   validatePrefixMutation: any;
   typeInUri: string;
-  initialData: string;
   error: boolean;
+  translations: {
+    label: string;
+    hintText: string;
+    automatic: string;
+    manual: string;
+    textInputLabel: string;
+    textInputHint: string;
+    errorInvalid: string;
+    errorTaken: string;
+    uriPreview: string;
+  };
   disabled?: boolean;
 }
 
@@ -25,12 +34,11 @@ export default function Prefix({
   setPrefix,
   validatePrefixMutation,
   typeInUri,
-  initialData,
   error,
+  translations,
   disabled,
 }: PrefixProps) {
   const URI = 'http://uri.suomi.fi';
-  const { t } = useTranslation('admin');
   const [initalPrefix] = useState(prefix);
   const [inputType, setInputType] = useState('automatic');
   const [prefixValid, setPrefixValid] = useState(true);
@@ -65,10 +73,8 @@ export default function Prefix({
   return (
     <PrefixContainer>
       <RadioButtonGroup
-        labelText={'Tunnus'}
-        groupHintText={
-          'Tietomallin yksilöivä tunnus, jota ei voi muuttaa sanaston luonnin jälkeen.'
-        }
+        labelText={translations.label}
+        groupHintText={translations.hintText}
         defaultValue="automatic"
         name="prefix"
         onChange={(e) => handleInputTypeChange(e)}
@@ -78,22 +84,22 @@ export default function Prefix({
           id="prefix-input-automatic"
           disabled={disabled}
         >
-          Luo tunnus automaattisesti
+          {translations.automatic}
         </RadioButton>
         <RadioButton
           value="manual"
           id="prefix-input-manual"
           disabled={disabled}
         >
-          Kirjoita oma tunnus
+          {translations.manual}
         </RadioButton>
       </RadioButtonGroup>
 
       {inputType === 'manual' && (
         <div>
           <TextInput
-            labelText="Tunnus"
-            visualPlaceholder="Kirjoita tunnus"
+            labelText={translations.textInputLabel}
+            visualPlaceholder={translations.textInputHint}
             onChange={(e) => handleTextInput(e?.toString().trim() ?? '')}
             debounce={500}
             maxLength={TEXT_INPUT_MAX}
@@ -106,8 +112,8 @@ export default function Prefix({
             }
             statusText={
               (prefix !== '' &&
-                ((!prefixValid && 'invalid form') ||
-                  (validPrefix.data === false && 'taken'))) ||
+                ((!prefixValid && translations.errorInvalid) ||
+                  (validPrefix.data === false && translations.errorTaken))) ||
               ''
             }
             defaultValue={prefix}
@@ -117,7 +123,7 @@ export default function Prefix({
       )}
 
       <div>
-        <Label>URI:n esikatselu</Label>
+        <Label>{translations.uriPreview}</Label>
         <Paragraph>
           <Text smallScreen>
             {URI}/{typeInUri}/{prefix}

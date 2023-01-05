@@ -12,9 +12,24 @@ import {
 interface ContactProps {
   contact: string;
   setContact: (value: string) => void;
+  translations: {
+    label: string;
+    labelHint: string;
+    inputOptionLabel: string;
+    email: string;
+    undefined: string;
+    inputDescription1: string;
+    inputDescription2: string;
+    inputLabel: string;
+    inputPlaceholder: string;
+  };
 }
 
-export default function Contact({ contact, setContact }: ContactProps) {
+export default function Contact({
+  contact,
+  setContact,
+  translations,
+}: ContactProps) {
   const [input, setInput] = useState(true);
   const [defaultContact] = useState(contact);
 
@@ -31,41 +46,38 @@ export default function Contact({ contact, setContact }: ContactProps) {
   return (
     <>
       <div>
-        <Label>Palaute</Label>
-        <HintText>
-          Voit pyytää käyttäjää antamaan palautetta tie tomallista.
-        </HintText>
+        <Label>{translations.label}</Label>
+        <HintText>{translations.labelHint}</HintText>
       </div>
 
       <RadioButtonGroup
-        labelText="Palautteen vastaanottotapa"
+        labelText={translations.inputOptionLabel}
         name="feedback"
         defaultValue="email"
         id="feedback-type-group"
         onChange={(e) => handleChange(e)}
       >
         <RadioButton value="email" id="email-radio-button">
-          Sähköposti
+          {translations.email}
         </RadioButton>
         <RadioButton value="undefined" id="undefined-radio-button">
-          Ei vielä tiedossa
+          {translations.undefined}
         </RadioButton>
       </RadioButtonGroup>
 
       {input && (
         <>
           <Paragraph>
-            <Text>
-              Anna organisaation yleinen sähköpostiosoite, johon käyttäjä voi
-              antaa palautetta tietomallista.
+            <Text smallScreen>
+              {translations.inputDescription1}
               <br />
-              Älä käytä henkilökohtaista sähköpostiosoitetta.
+              {translations.inputDescription2}
             </Text>
           </Paragraph>
 
           <TextInput
-            labelText="Organisaation yleinen sähköpostiosoite"
-            visualPlaceholder="Esim. yllapito@example.org"
+            labelText={translations.inputLabel}
+            visualPlaceholder={translations.inputPlaceholder}
             id="contact-input"
             defaultValue={defaultContact}
             onBlur={(e) => setContact(e.target.value ?? '')}

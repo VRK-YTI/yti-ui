@@ -64,7 +64,7 @@ export default function ModelFormModal() {
         style={{ height: 'min-content' }}
         onClick={() => setVisible(true)}
       >
-        Lisää tietomalli
+        {t('add-new-model')}
       </Button>
 
       <Modal
@@ -74,9 +74,9 @@ export default function ModelFormModal() {
         variant={isSmall ? 'smallScreen' : 'default'}
       >
         <ModalContent>
-          <ModalTitle>Lisää uusi tietomalli</ModalTitle>
+          <ModalTitle>{t('add-new-model')}</ModalTitle>
           <Paragraph style={{ marginBottom: '30px' }}>
-            Tiedot ovat pakollisia, jos niitä ei ole merkitty valinnaisiksi.
+            {t('add-new-model-description')}
           </Paragraph>
           <ModelForm
             formData={formData}
@@ -97,9 +97,9 @@ export default function ModelFormModal() {
             />
           )}
 
-          <Button onClick={() => handleSubmit()}>Luo tietomalli</Button>
+          <Button onClick={() => handleSubmit()}>{t('create-model')}</Button>
           <Button variant="secondary" onClick={() => handleClose()}>
-            Keskeytä
+            {t('cancel')}
           </Button>
         </ModalFooter>
       </Modal>

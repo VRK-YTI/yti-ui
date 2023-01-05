@@ -113,7 +113,11 @@ export function createCommonGetServerSideProps<
           redirect: redirectProp,
           props: {
             ...resultsProps,
-            ...(await serverSideTranslations(locale ?? 'fi', ['common'])),
+            ...(await serverSideTranslations(locale ?? 'fi', [
+              'admin',
+              'alert',
+              'common',
+            ])),
             isSSRMobile: Boolean(
               userAgent.match(
                 /Android|BlackBerry|iPhone|iPad|iPod|Opera Mini|IEMobile|WPDesktop/i

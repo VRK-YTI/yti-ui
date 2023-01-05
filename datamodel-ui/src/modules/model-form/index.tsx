@@ -3,7 +3,7 @@ import { useGetServiceCategoriesQuery } from '@app/common/components/service-cat
 import getOrganizations from '@app/common/utils/get-organizations';
 import getServiceCategories from '@app/common/utils/get-service-categories';
 import { useTranslation } from 'next-i18next';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import { Block, RadioButton, RadioButtonGroup } from 'suomifi-ui-components';
 import Separator from 'yti-common-ui/separator';
 import { BlockContainer, WideMultiSelect } from './model-form.styles';
@@ -60,7 +60,7 @@ export default function ModelForm({
   return (
     <Block>
       <RadioButtonGroup
-        labelText="Tietomallin tyyppi"
+        labelText={t('datamodel-type')}
         name="type"
         defaultValue="profile"
         id="model-type-group"
@@ -70,17 +70,17 @@ export default function ModelForm({
       >
         <RadioButton
           value="profile"
-          hintText="Tiettyyn asiayhteyteen liittyvä tietomalli, joka hyödyntää ydintietomalleja"
+          hintText={t('profile-hint-text')}
           id="profile-radio-button"
         >
-          Soveltamisprofiili
+          {t('profile', { ns: 'common' })}
         </RadioButton>
         <RadioButton
           value="library"
-          hintText="Yleinen ja uudelleenkäytettävä tietojen sisällön ja rakenteen kuvaus"
+          hintText={t('library-hint-text')}
           id="library-radio-button"
         >
-          Ydintietomalli
+          {t('library-variant', { ns: 'common' })}
         </RadioButton>
       </RadioButtonGroup>
 
@@ -90,9 +90,9 @@ export default function ModelForm({
         <LanguageSelector
           items={formData.languages}
           languages={formData.languages}
-          labelText="Tietosisällön kielet"
-          hintText="Valitse tietomallille kielet, joilla tietomallin sisältö on kuvattu."
-          visualPlaceholder="Valitse tietomallin kielet"
+          labelText={t('information-description-languages')}
+          hintText={t('information-description-languages-hint-text')}
+          visualPlaceholder={t('select-information-description-languages')}
           isWide={true}
           setLanguages={(e) =>
             setFormData({
@@ -101,6 +101,11 @@ export default function ModelForm({
             })
           }
           userPosted={userPosted}
+          translations={{
+            textInput: t('language-input-text'),
+            textDescription: t('description'),
+            optionalText: t('optional'),
+          }}
           allowItemAddition={false}
           ariaChipActionLabel={''}
           ariaSelectedAmountText={''}
@@ -120,8 +125,18 @@ export default function ModelForm({
           }
           validatePrefixMutation={useGetFreePrefixMutation}
           typeInUri={'datamodel'}
-          initialData={formData.prefix}
           error={errors?.prefix ?? false}
+          translations={{
+            automatic: t('create-prefix-automatically'),
+            errorInvalid: t('error-prefix-invalid'),
+            errorTaken: t('error-prefix-taken'),
+            hintText: t('prefix-input-hint-text'),
+            label: t('prefix'),
+            manual: t('input-prefix-manually'),
+            textInputHint: t('input-prefix'),
+            textInputLabel: t('prefix'),
+            uriPreview: t('uri-preview'),
+          }}
         />
       </BlockContainer>
 
@@ -130,10 +145,10 @@ export default function ModelForm({
       <BlockContainer>
         <WideMultiSelect
           chipListVisible={true}
-          labelText="Tietoalueet"
-          hintText="Valitse tietomallille sen sisältöä kuvaavat tietoalueet. Tietoalue auttaa tietomallin löydettävyydessä."
-          visualPlaceholder="Valitse tietomallin tietoalueet"
-          removeAllButtonLabel="Poista kaikki valinnat"
+          labelText={t('information-domains')}
+          hintText={t('information-domains-hint-text')}
+          visualPlaceholder={t('select-information-domains-for-data-model')}
+          removeAllButtonLabel={t('clear-all-selections')}
           allowItemAddition={false}
           onItemSelectionsChange={(e) =>
             setFormData({
@@ -152,10 +167,10 @@ export default function ModelForm({
 
         <WideMultiSelect
           chipListVisible={true}
-          labelText="Sisällöntuottajat"
-          hintText="Voit lisätä vain organisaation, joka on antanut sinulle muokkausoikeudet"
-          visualPlaceholder="Valitse sisällöntuottajat"
-          removeAllButtonLabel="Poista kaikki valinnat"
+          labelText={t('contributors')}
+          hintText={t('contributors-hint-text')}
+          visualPlaceholder={t('select-contributors')}
+          removeAllButtonLabel={t('clear-all-selections')}
           allowItemAddition={false}
           onItemSelectionsChange={(e) =>
             setFormData({
@@ -184,6 +199,17 @@ export default function ModelForm({
               contact: e,
             })
           }
+          translations={{
+            email: t('email'),
+            inputDescription1: t('contact-description-1'),
+            inputDescription2: t('contact-description-2'),
+            inputLabel: t('contact-input-label'),
+            inputOptionLabel: t('contact-input-type-label'),
+            inputPlaceholder: t('contact-input-placeholder'),
+            label: t('feedback'),
+            labelHint: t('contact-input-hint'),
+            undefined: t('still-unknown'),
+          }}
         />
       </BlockContainer>
     </Block>

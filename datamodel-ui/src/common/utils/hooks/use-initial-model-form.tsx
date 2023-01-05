@@ -3,28 +3,28 @@ import { useTranslation } from 'next-i18next';
 import { v4 } from 'uuid';
 
 export function useInitialModelForm(): ModelFormType {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('admin');
   const prefix = v4().substring(0, 8);
 
   return {
     contact: '',
     languages: [
       {
-        labelText: 'suomi FI',
+        labelText: t('language-finnish-with-suffix'),
         uniqueItemId: 'fi',
         title: '',
         description: '',
         selected: false,
       },
       {
-        labelText: 'ruotsi SV',
+        labelText: t('language-swedish-with-suffix'),
         uniqueItemId: 'sv',
         title: '',
         description: '',
         selected: false,
       },
       {
-        labelText: 'englanti EN',
+        labelText: t('language-english-with-suffix'),
         uniqueItemId: 'en',
         title: '',
         description: '',
@@ -34,6 +34,6 @@ export function useInitialModelForm(): ModelFormType {
     organizations: [],
     prefix: prefix,
     serviceCategories: [],
-    type: 'profile',
+    type: 'profile' as ModelFormType['type'],
   };
 }
