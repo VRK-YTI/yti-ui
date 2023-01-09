@@ -8,11 +8,14 @@ import {
 } from 'suomifi-ui-components';
 import { TEXT_INPUT_MAX } from '../../utils/constants';
 import { PrefixContainer, TextInput } from './prefix.styles';
+import { UseMutation } from '@reduxjs/toolkit/dist/query/react/buildHooks';
 
 interface PrefixProps {
   prefix: string;
   setPrefix: (value: string) => void;
-  validatePrefixMutation: any;
+  // Using 'any' here same way useMutation() is implemented
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  validatePrefixMutation: UseMutation<any>;
   typeInUri: string;
   error: boolean;
   translations: {
@@ -26,6 +29,7 @@ interface PrefixProps {
     errorTaken: string;
     uriPreview: string;
   };
+  invertCheck?: boolean;
   disabled?: boolean;
 }
 
@@ -36,6 +40,7 @@ export default function Prefix({
   typeInUri,
   error,
   translations,
+  invertCheck,
   disabled,
 }: PrefixProps) {
   const URI = 'http://uri.suomi.fi';
@@ -105,7 +110,9 @@ export default function Prefix({
             maxLength={TEXT_INPUT_MAX}
             id="prefix-text-input"
             status={
-              (prefix !== '' && (!prefixValid || validPrefix.data === false)) ||
+              (prefix !== '' &&
+                (!prefixValid ||
+                  validPrefix.data === (invertCheck ? true : false))) ||
               error
                 ? 'error'
                 : 'default'
@@ -113,7 +120,8 @@ export default function Prefix({
             statusText={
               (prefix !== '' &&
                 ((!prefixValid && translations.errorInvalid) ||
-                  (validPrefix.data === false && translations.errorTaken))) ||
+                  (validPrefix.data === (invertCheck ? true : false) &&
+                    translations.errorTaken))) ||
               ''
             }
             defaultValue={prefix}
