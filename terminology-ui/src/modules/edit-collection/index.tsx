@@ -126,7 +126,6 @@ export default function EditCollection({
       setErrors({ ...errors, [language]: false });
     }
 
-    console.log('here', nameCount, defCount);
     if (value && value !== '') {
       setEmptyError(false);
     }
