@@ -40,8 +40,6 @@
   "broader-concept-add": "Lisää uusi hierarkkinen yläkäsite",
   "broader-concept-chip-label": "Valitut hierarkkiset yläkäsitteet",
   "broader-concept-description": "Laajempi käsite, johon tämä käsite liittyy.",
-  "by-file": "Tuon tiedostolla",
-  "by-hand": "Täytän tiedot itse",
   "cancel": "Keskeytä",
   "cancel-variant": "Peruuta",
   "change-concepts-status": "Muuta käsitteiden tilatietoja",
@@ -366,8 +364,7 @@
   "update-terminology-with-file": "Päivitä sanasto tiedostolla",
   "updating-terminology": "Päivitetään sanastoa",
   "url-preview": "Url:n esikatselu",
-  "valid_one": "Voimassa olevan ({{count}} kpl)",
-  "valid_other": "Voimassa olevan ({{count}} kpl)",
-  "which-input": "Miten lisäät tietoja?",
+  "valid_one": "Voimassa oleva ({{count}} kpl)",
+  "valid_other": "Voimassa oleva ({{count}} kpl)",
   "you-can-copy": "Voit kopioida sanaston pohjaksi uudelle versiolle, jolloin nykyinen sanasto säilyy olemassa kunnes uusi sanasto on valmis"
 }

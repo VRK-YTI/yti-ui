@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
   Button,
   ExternalLink,
@@ -40,16 +40,11 @@ import Link from 'next/link';
 import { translateStatus } from '@app/common/utils/translation-helpers';
 import isEmail from 'validator/lib/isEmail';
 import RemovalModal from '@app/common/components/removal-modal';
-import { Term } from '@app/common/interfaces/term.interface';
+import { useGetBlockData } from './utils';
 
 export interface ConceptProps {
   terminologyId: string;
   conceptId: string;
-}
-
-interface TermBlockType {
-  term: Term;
-  type: string;
 }
 
 export default function Concept({ terminologyId, conceptId }: ConceptProps) {
@@ -57,14 +52,6 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
   const { breakpoint } = useBreakpoints();
   const dispatch = useStoreDispatch();
   const router = useRouter();
-  const [termBlockData, setTermBlockData] = useState<
-    | {
-        term: Term;
-        type: string;
-      }[]
-    | undefined
-  >();
-
   const { data: terminology, error: terminologyError } = useGetVocabularyQuery({
     id: terminologyId,
   });
@@ -72,6 +59,8 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
     terminologyId,
     conceptId,
   });
+
+  const { terms, definitions, notes, examples } = useGetBlockData(concept);
 
   const prefLabel = getPropertyValue({
     property: getProperty('prefLabel', concept?.references.prefLabelXl),
@@ -81,54 +70,11 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
     getPropertyValue({ property: concept?.properties.status }) || 'DRAFT';
   const email = getPropertyValue({ property: terminology?.properties.contact });
 
-  // Prioritizes Finnish and Swedish over other languages
-  function compareLocales(t1: TermBlockType, t2: TermBlockType): number {
-    const t1Lang = t1.term.properties.prefLabel?.[0].lang.toLowerCase() ?? '';
-    const t2Lang = t2.term.properties.prefLabel?.[0].lang.toLowerCase() ?? '';
-
-    if (t1Lang === 'fi' || t2Lang === 'fi') {
-      return t1Lang === 'fi' ? -1 : 1;
-    }
-
-    if (t1Lang === 'sv' || t2Lang === 'sv') {
-      return t1Lang === 'sv' ? -1 : 1;
-    }
-
-    if (t1Lang !== t2Lang) {
-      return t1Lang > t2Lang ? 1 : -1;
-    }
-
-    return 0;
-  }
-
   useEffect(() => {
     if (concept) {
       dispatch(setTitle(prefLabel ?? ''));
-
-      if (!termBlockData) {
-        setTermBlockData(
-          [
-            ...(concept.references.prefLabelXl ?? []).map((term) => ({
-              term,
-              type: t('field-terms-preferred'),
-            })),
-            ...(concept.references.altLabelXl ?? []).map((term) => ({
-              term,
-              type: t('field-terms-alternative'),
-            })),
-            ...(concept.references.notRecommendedSynonym ?? []).map((term) => ({
-              term,
-              type: t('field-terms-non-recommended'),
-            })),
-            ...(concept.references.hiddenTerm ?? []).map((term) => ({
-              term,
-              type: t('field-terms-hidden'),
-            })),
-          ].sort((t1, t2) => compareLocales(t1, t2))
-        );
-      }
     }
-  }, [concept, dispatch, prefLabel, termBlockData, t]);
+  }, [concept, dispatch, prefLabel]);
 
   if (conceptError) {
     return (
@@ -199,14 +145,11 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
             </Badge>
           </BadgeBar>
 
-          <TermBlock
-            title={<h2>{t('field-terms-label')}</h2>}
-            data={termBlockData}
-          />
+          <TermBlock title={<h2>{t('field-terms-label')}</h2>} data={terms} />
 
           <MultilingualPropertyBlock
             title={<h2>{t('field-definition')}</h2>}
-            data={concept?.properties.definition}
+            data={definitions}
           />
 
           <PropertyBlock
@@ -216,12 +159,12 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
 
           <MultilingualPropertyBlock
             title={<h2>{t('field-note')}</h2>}
-            data={concept?.properties.note}
+            data={notes}
           />
 
           <MultilingualPropertyBlock
             title={<h2>{t('field-example')}</h2>}
-            data={concept?.properties.example}
+            data={examples}
           />
 
           <DetailsExpander concept={concept} />

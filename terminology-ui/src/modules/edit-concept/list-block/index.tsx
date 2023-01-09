@@ -12,7 +12,7 @@ import { ListType } from '../new-concept.types';
 import { TermFormUpdate } from '../concept-terms-block/term-form';
 import { BasicInfoUpdate } from '../basic-information/concept-basic-information';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
-import { TEXT_AREA_MAX } from '@app/common/utils/constants';
+import { TEXT_AREA_MAX } from 'yti-common-ui/utils/constants';
 import { FormError } from '../validate-form';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 

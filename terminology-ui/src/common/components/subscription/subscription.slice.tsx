@@ -1,5 +1,5 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { getTerminologyApiBaseQuery } from '@app/store/api-base-query';
+import { getMessagingApiBaseQuery } from '@app/store/api-base-query';
 import { HYDRATE } from 'next-redux-wrapper';
 import {
   Subscription,
@@ -8,7 +8,7 @@ import {
 
 export const subscriptionApi = createApi({
   reducerPath: 'subsriptionApi',
-  baseQuery: getTerminologyApiBaseQuery(),
+  baseQuery: getMessagingApiBaseQuery(),
   extractRehydrationInfo(action, { reducerPath }) {
     if (action.type === HYDRATE) {
       return action.payload[reducerPath];
@@ -19,7 +19,7 @@ export const subscriptionApi = createApi({
     getSubscription: builder.query<Subscription | '', string>({
       query: (url) => ({
         url:
-          process.env.NODE_ENV === 'development'
+          process.env.ENV_TYPE !== 'production'
             ? '/subscriptions?fake.login.mail=admin@localhost'
             : '/subscriptions',
         method: 'POST',
@@ -32,7 +32,7 @@ export const subscriptionApi = createApi({
     getSubscriptions: builder.query<Subscriptions, null>({
       query: () => ({
         url:
-          process.env.NODE_ENV === 'development'
+          process.env.ENV_TYPE !== 'production'
             ? '/user?fake.login.mail=admin@localhost'
             : '/user',
         method: 'GET',
@@ -44,7 +44,7 @@ export const subscriptionApi = createApi({
     >({
       query: (params) => ({
         url:
-          process.env.NODE_ENV === 'development'
+          process.env.ENV_TYPE !== 'production'
             ? '/subscriptions?fake.login.mail=admin@localhost'
             : '/subscriptions',
         method: 'POST',
@@ -77,7 +77,7 @@ export const {
   useGetSubscriptionsQuery,
   useToggleSubscriptionMutation,
   useToggleSubscriptionsMutation,
-  util: { getRunningOperationPromises },
+  util: { getRunningQueriesThunk, getRunningMutationsThunk },
 } = subscriptionApi;
 
-export const { getSubscription } = subscriptionApi.endpoints;
+export const { getSubscription, getSubscriptions } = subscriptionApi.endpoints;

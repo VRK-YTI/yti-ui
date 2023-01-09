@@ -23,6 +23,7 @@ import {
   useGetImportStatusMutation,
   usePostImportExcelMutation,
 } from '../import/import.slice';
+import { useGetAuthenticatedUserMutMutation } from '../login/login.slice';
 import {
   ModalContentWrapper,
   SuccessIcon,
@@ -39,12 +40,19 @@ export default function UpdateWithFileModal() {
   const [error, setError] = useState<ExcelError | undefined>(undefined);
   const [postImportExcel, importExcel] = usePostImportExcelMutation();
   const [fetchImportStatus, importStatus] = useGetImportStatusMutation();
+  const [getAuthenticatedUser, authenticatedUser] =
+    useGetAuthenticatedUserMutMutation();
 
   const handleClose = () => {
     setVisible(false);
     setIsValid(false);
     setUserPosted(false);
     setFileData(null);
+  };
+
+  const handleVisible = () => {
+    getAuthenticatedUser();
+    setVisible(true);
   };
 
   const handlePost = () => {
@@ -85,11 +93,7 @@ export default function UpdateWithFileModal() {
 
   return (
     <>
-      <Button
-        variant="secondary"
-        icon="upload"
-        onClick={() => setVisible(true)}
-      >
+      <Button variant="secondary" icon="upload" onClick={() => handleVisible()}>
         {t('update-terminology-with-file')}
       </Button>
 
@@ -130,6 +134,11 @@ export default function UpdateWithFileModal() {
           />
         </ModalContent>
         <ModalFooter>
+          {authenticatedUser.data?.anonymous && (
+            <InlineAlert status="error" role="alert" id="unauthenticated-alert">
+              {t('error-occurred_unauthenticated', { ns: 'alert' })}
+            </InlineAlert>
+          )}
           <Button disabled={!isValid} onClick={() => handlePost()}>
             {t('update-terminology')}
           </Button>
@@ -226,6 +235,7 @@ export default function UpdateWithFileModal() {
 
           <Button
             disabled={
+              authenticatedUser.data?.anonymous ||
               importExcel.isLoading ||
               (importExcel.data?.jobToken && importStatus.isUninitialized) ||
               importStatus.isLoading ||

@@ -32,7 +32,7 @@ export default function OwnInformation() {
   const { data: organizations } = useGetOrganizationsQuery(i18n.language);
   const { data: subscriptions, refetch: refetchSubscriptions } =
     useGetSubscriptionsQuery(null);
-  const { data: requests } = useGetRequestsQuery(null);
+  const { data: requests } = useGetRequestsQuery();
 
   if (user.anonymous) {
     return null;

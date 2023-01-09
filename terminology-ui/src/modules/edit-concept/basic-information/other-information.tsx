@@ -1,4 +1,4 @@
-import { TEXT_INPUT_MAX } from '@app/common/utils/constants';
+import { TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { ExpanderTitleButton, TextInput } from 'suomifi-ui-components';

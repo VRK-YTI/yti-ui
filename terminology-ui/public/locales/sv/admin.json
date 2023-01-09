@@ -40,8 +40,6 @@
   "broader-concept-add": "Lägg till ett nytt hierarkiskt överordnat begrepp",
   "broader-concept-chip-label": "Valda hiearkiskt överordnade begrepp",
   "broader-concept-description": "Bredare begrepp som detta begrepp anknyter till.",
-  "by-file": "Jag laddar uppgifterna med en fil",
-  "by-hand": "Jag fyller i uppgifterna själv",
   "cancel": "Avbryta",
   "cancel-variant": "Ångra",
   "change-concepts-status": "",
@@ -368,6 +366,5 @@
   "url-preview": "Förhandsvisa URL",
   "valid_one": "",
   "valid_other": "",
-  "which-input": "Hur kan du lägga till uppgifter?",
   "you-can-copy": "Du kan kopiera en ordlista och basera en ny ordlista på den. Då den nuvarande ordlista finns kvar ännu till den nya ordlistan är färdig "
 }

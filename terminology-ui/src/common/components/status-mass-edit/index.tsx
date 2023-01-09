@@ -19,6 +19,7 @@ import {
   Text,
 } from 'suomifi-ui-components';
 import { useGetStatusCountsQuery } from '../counts/counts.slice';
+import { useGetAuthenticatedUserMutMutation } from '../login/login.slice';
 import { useModifyStatusesMutation } from '../modify-statuses/modify-statuses.slice';
 import { useGetConceptResultQuery } from '../vocabulary/vocabulary.slice';
 import {
@@ -63,6 +64,13 @@ export default function StatusMassEdit({ terminologyId }: StatusMassEditProps) {
     urlState: { ...urlState, type: 'concept' },
     language: i18n.language,
   });
+  const [getAuthenticatedUser, authenticatedUser] =
+    useGetAuthenticatedUserMutMutation();
+
+  const handleOpen = () => {
+    setVisible(true);
+    getAuthenticatedUser();
+  };
 
   const handleClose = () => {
     refetch();
@@ -108,7 +116,7 @@ export default function StatusMassEdit({ terminologyId }: StatusMassEditProps) {
 
   return (
     <>
-      <Button variant="secondary" icon="edit" onClick={() => setVisible(true)}>
+      <Button variant="secondary" icon="edit" onClick={() => handleOpen()}>
         {t('change-concepts-status')}
       </Button>
 
@@ -243,8 +251,15 @@ export default function StatusMassEdit({ terminologyId }: StatusMassEditProps) {
         </ModalContent>
 
         <ModalFooter>
+          {authenticatedUser.data?.anonymous && (
+            <InlineAlert status="error" role="alert" id="unauthenticated-alert">
+              {t('error-occurred_unauthenticated', { ns: 'alert' })}
+            </InlineAlert>
+          )}
           <Button
-            disabled={chosenEndState === null}
+            disabled={
+              chosenEndState === null || authenticatedUser.data?.anonymous
+            }
             onClick={() => handleSubmit()}
           >
             {t('save')}

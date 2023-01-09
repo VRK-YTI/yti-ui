@@ -40,8 +40,6 @@
   "broader-concept-add": "Add new broader concept",
   "broader-concept-chip-label": "Chosen broader concepts",
   "broader-concept-description": "Concept that is conceptually broader than this concept.",
-  "by-file": "Import information with a file",
-  "by-hand": "Fill information by hand",
   "cancel": "Cancel",
   "cancel-variant": "Cancel",
   "change-concepts-status": "Change statuses of concepts",
@@ -368,6 +366,5 @@
   "url-preview": "URL preview",
   "valid_one": "Valid ({{count}} item)",
   "valid_other": "Valid ({{count}} items)",
-  "which-input": "How do you want to add new information?",
   "you-can-copy": "You can copy the terminology as a base for a newer version, where the original terminology will exist until the newer terminology is ready"
 }

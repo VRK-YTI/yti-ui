@@ -10,7 +10,7 @@ import {
 } from './terminology-components.styles';
 import { UpdateTerminology } from '@app/modules/new-terminology/update-terminology.interface';
 import { v4 } from 'uuid';
-import { TEXT_INPUT_MAX } from '@app/common/utils/constants';
+import { TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
 
 export interface PrefixProps {
   update: ({ key, data }: UpdateTerminology) => void;

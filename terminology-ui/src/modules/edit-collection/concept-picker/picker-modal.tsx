@@ -2,7 +2,7 @@ import { useSearchConceptMutation } from '@app/common/components/concept/concept
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import SanitizedTextContent from 'yti-common-ui/sanitized-text-content';
 import { Concepts } from '@app/common/interfaces/concepts.interface';
-import { TEXT_INPUT_MAX } from '@app/common/utils/constants';
+import { TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
 import { translateStatus } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
