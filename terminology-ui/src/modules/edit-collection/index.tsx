@@ -117,10 +117,16 @@ export default function EditCollection({
     const defCount = formData.definition.filter(
       (n) => n.value && n.lang === language
     ).length;
+
+    if (nameCount !== defCount) {
+      setErrors({ ...errors, [language]: true });
+    }
+
     if (errors[language] && nameCount == defCount) {
       setErrors({ ...errors, [language]: false });
     }
-    if (value) {
+
+    if (value && value !== '') {
       setEmptyError(false);
     }
   };
@@ -154,10 +160,16 @@ export default function EditCollection({
     const defCount = formData.definition.filter(
       (n) => n.value && n.lang === language
     ).length;
+
+    if (nameCount !== defCount) {
+      setErrors({ ...errors, [language]: true });
+    }
+
     if (errors[language] && nameCount == defCount) {
       setErrors({ ...errors, [language]: false });
     }
-    if (value) {
+
+    if (value && value !== '') {
       setEmptyError(false);
     }
   };

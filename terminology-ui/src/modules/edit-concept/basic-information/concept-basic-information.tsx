@@ -1,5 +1,6 @@
 import Separator from 'yti-common-ui/separator';
 import {
+  ExpanderGroup,
   WiderTextarea,
   H2Sm,
   SubjectTextInput,
@@ -10,7 +11,6 @@ import OrganizationInformation from './organizational-information';
 import RelationalInformation from './relational-information';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
-import { ExpanderGroup } from 'suomifi-ui-components';
 import { BasicInfo, ListType } from '../new-concept.types';
 import ListBlock from '../list-block';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
@@ -96,7 +96,7 @@ export default function ConceptBasicInformation({
         errors={errors}
       />
 
-      <ExpanderGroup closeAllText="" openAllText="">
+      <ExpanderGroup closeAllText="" openAllText="" showToggleAllButton={false}>
         <RelationalInformation
           infoKey="relationalInfo"
           update={handleBasicInfoUpdate}

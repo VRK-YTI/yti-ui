@@ -133,7 +133,11 @@ export default function ConceptTermsBlock({
             $isSmall={isSmall}
             id="recommended-terms-block"
           >
-            <ExpanderGroup openAllText="" closeAllText="">
+            <ExpanderGroup
+              openAllText=""
+              closeAllText=""
+              showToggleAllButton={false}
+            >
               {terms
                 .filter((term) => term.termType === 'recommended-term')
                 .map((term) => (
@@ -185,7 +189,11 @@ export default function ConceptTermsBlock({
             )}
             {terms.filter((term) => term.termType !== 'recommended-term')
               .length > 0 && (
-              <OtherTermsExpanderGroup openAllText="" closeAllText="">
+              <OtherTermsExpanderGroup
+                openAllText=""
+                closeAllText=""
+                showToggleAllButton={false}
+              >
                 {terms
                   .filter((term) => term.termType !== 'recommended-term')
                   .map((term) => (
