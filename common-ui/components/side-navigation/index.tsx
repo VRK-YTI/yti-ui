@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { Button, Icon } from 'suomifi-ui-components';
 import {
   SideNavigationButtonGroup,
   SideNavigationContainer,
   SideNavigationContent,
+  SideNavigationVisibleButtonGroup,
   SideNavigationWrapper,
   ToggleButton,
 } from './side-navigation.styles';
@@ -20,15 +22,33 @@ export default function SideNavigation({
 
   return (
     <SideNavigationContainer>
-      <ToggleButton
-        icon={open ? 'chevronLeft' : 'chevronRight'}
-        onClick={() => setOpen(!open)}
-        variant="secondaryNoBorder"
-      />
-      <SideNavigationWrapper $open={open}>
-        <SideNavigationContent>{children}</SideNavigationContent>
+      <div>
+        <ToggleButton
+          onClick={() => setOpen(!open)}
+          variant="secondaryNoBorder"
+        >
+          <Icon icon={open ? 'chevronLeft' : 'chevronRight'} />
+        </ToggleButton>
 
-        <SideNavigationButtonGroup>{buttons}</SideNavigationButtonGroup>
+        <SideNavigationVisibleButtonGroup>
+          <Button icon="minus" />
+          <Button icon="plus" />
+          <Button icon="plus" />
+          <Button icon="swapRounded" />
+          <Button icon="download" />
+          <Button icon="save" />
+          <Button icon="chevronDown" variant="secondaryNoBorder" />
+        </SideNavigationVisibleButtonGroup>
+      </div>
+
+      <SideNavigationWrapper $open={open}>
+        {open && (
+          <>
+            <SideNavigationContent>{children}</SideNavigationContent>
+
+            <SideNavigationButtonGroup>{buttons}</SideNavigationButtonGroup>
+          </>
+        )}
       </SideNavigationWrapper>
     </SideNavigationContainer>
   );

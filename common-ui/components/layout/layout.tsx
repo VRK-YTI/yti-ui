@@ -25,6 +25,7 @@ export default function Layout({
   fakeableUsers,
   matomo,
   alerts,
+  fullWidth,
 }: {
   children: React.ReactNode;
   feedbackSubject?: string;
@@ -32,6 +33,7 @@ export default function Layout({
   fakeableUsers?: FakeableUser[] | null;
   matomo?: React.ReactNode;
   alerts?: React.ReactNode;
+  fullWidth?: boolean;
 }) {
   const { t, i18n } = useTranslation('common');
   const { breakpoint } = useBreakpoints();
@@ -57,7 +59,9 @@ export default function Layout({
 
         <ContentContainer>
           {alerts && alerts}
-          <MarginContainer $breakpoint={breakpoint}>{children}</MarginContainer>
+          <MarginContainer $breakpoint={breakpoint} $maxWidth={fullWidth}>
+            {children}
+          </MarginContainer>
         </ContentContainer>
 
         <FooterContainer>

@@ -4,8 +4,11 @@ import styled from 'styled-components';
 import { Breakpoint } from '../media-query';
 import { resolve, small } from '../media-query/styled-helpers';
 
-export const MarginContainer = styled.div<{ $breakpoint: Breakpoint }>`
-  max-width: 1100px;
+export const MarginContainer = styled.div<{
+  $breakpoint: Breakpoint;
+  $maxWidth?: boolean;
+}>`
+  max-width: ${(props) => (props.$maxWidth ? '100%' : '1100px')};
   margin: auto;
   padding: ${(props) => resolve(props.$breakpoint, '0 15px', '0 30px', 'auto')};
   min-width: 300px;
