@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { SearchInput } from 'suomifi-ui-components';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 import { default as CommonSideNavigation } from 'yti-common-ui/side-navigation';
 import { SideNavigationButton } from 'yti-common-ui/side-navigation/side-navigation.styles';
 
 export default function SideNavigation() {
+  const { isSmall } = useBreakpoints();
   const [activeView, setActiveView] = useState<
     'search' | 'info' | 'classes' | 'attributes' | 'associations' | 'layout'
   >('search');
@@ -38,7 +40,7 @@ export default function SideNavigation() {
               Luokat
             </SideNavigationButton>
             <SideNavigationButton
-              icon="chatHeart"
+              icon="history"
               variant="secondaryNoBorder"
               $active={activeView === 'attributes'}
               onClick={() => setActiveView('attributes')}
@@ -46,20 +48,12 @@ export default function SideNavigation() {
               Attribuutit
             </SideNavigationButton>
             <SideNavigationButton
-              icon="chatHeart"
+              icon="heart"
               variant="secondaryNoBorder"
               $active={activeView === 'associations'}
               onClick={() => setActiveView('associations')}
             >
               Assosiaatiot
-            </SideNavigationButton>
-            <SideNavigationButton
-              variant="secondaryNoBorder"
-              icon="alert"
-              $active={activeView === 'layout'}
-              onClick={() => setActiveView('layout')}
-            >
-              Asettelu
             </SideNavigationButton>
           </>
         }

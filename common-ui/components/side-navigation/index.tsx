@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Button, Icon } from 'suomifi-ui-components';
 import {
+  MoveButton,
   SideNavigationButtonGroup,
   SideNavigationContainer,
   SideNavigationContent,
@@ -21,11 +22,12 @@ export default function SideNavigation({
   const [open, setOpen] = useState(false);
 
   return (
-    <SideNavigationContainer>
+    <SideNavigationContainer $open={open}>
       <div>
         <ToggleButton
           onClick={() => setOpen(!open)}
           variant="secondaryNoBorder"
+          $open={open}
         >
           <Icon icon={open ? 'chevronLeft' : 'chevronRight'} />
         </ToggleButton>
@@ -33,7 +35,12 @@ export default function SideNavigation({
         <SideNavigationVisibleButtonGroup>
           <Button icon="minus" />
           <Button icon="plus" />
-          <Button icon="plus" />
+          <MoveButton>
+            <Icon icon="arrowUp" id="up" />
+            <Icon icon="arrowRight" id="right" />
+            <Icon icon="arrowDown" id="down" />
+            <Icon icon="arrowLeft" id="left" />
+          </MoveButton>
           <Button icon="swapRounded" />
           <Button icon="download" />
           <Button icon="save" />

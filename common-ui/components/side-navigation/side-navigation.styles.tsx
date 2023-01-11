@@ -1,13 +1,21 @@
 import styled from 'styled-components';
 import { Button } from 'suomifi-ui-components';
 
-export const SideNavigationContainer = styled.div`
+export const SideNavigationContainer = styled.div<{ $open: boolean }>`
   min-height: 100%;
   height: 100%;
   width: min-content;
   display: flex;
   flex-direction: row-reverse;
   margin: ${(props) => props.theme.suomifi.spacing.s};
+
+  ${(props) =>
+    props.$open &&
+    `> div:first-child {
+      position: relative;
+      right: 1px;
+    }
+    `}
 `;
 
 export const SideNavigationContent = styled.div`
@@ -26,10 +34,8 @@ export const SideNavigationWrapper = styled.div<{ $open: boolean }>`
   flex-direction: row-reverse;
   border: ${(props) =>
     props.$open
-      ? `1px solid ${props.theme.suomifi.colors.depthLight1}`
+      ? `1px solid ${props.theme.suomifi.colors.depthDark3}`
       : 'none'};
-
-  border-right: 0;
 `;
 
 export const SideNavigationButtonGroup = styled.div`
@@ -52,7 +58,7 @@ export const SideNavigationVisibleButtonGroup = styled.div`
   align-items: center;
 
   background: ${(props) => props.theme.suomifi.colors.whiteBase};
-  border: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
+  border: 1px solid ${(props) => props.theme.suomifi.colors.depthDark3};
   border-top: 0;
   border-radius: 0 2px 2px 0;
 
@@ -100,13 +106,14 @@ export const SideNavigationButton = styled(Button)<{ $active?: boolean }>`
   }
 `;
 
-export const ToggleButton = styled(Button)`
+export const ToggleButton = styled(Button)<{ $open: boolean }>`
   height: 70px;
-  border: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1} !important;
+  border: 1px solid ${(props) => props.theme.suomifi.colors.depthDark3} !important;
   border-radius: 0 2px 2px 0;
   background: ${(props) => props.theme.suomifi.colors.whiteBase} !important;
   padding: 15px 0;
-  // box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.2);
+
+  ${(props) => props.$open && 'border-left: none !important;'}
 
   svg {
     height: 40px !important;
@@ -114,6 +121,35 @@ export const ToggleButton = styled(Button)`
   }
 
   path {
-    color: ${(props) => props.theme.suomifi.colors.blackBase};
+    color: ${(props) => props.theme.suomifi.colors.highlightDark1};
+  }
+`;
+
+export const MoveButton = styled(Button)`
+  position: relative;
+
+  > * {
+    position: absolute;
+    left: 50%;
+    right: 50%;
+
+    width: 10px !important;
+    height: auto !important;
+  }
+
+  #up {
+    transform: translate(-50%, -75%);
+  }
+
+  #right {
+    transform: translate(-25%, -50%);
+  }
+
+  #down {
+    transform: translate(-50%, -25%);
+  }
+
+  #left {
+    transform: translate(-75%, -50%);
   }
 `;
