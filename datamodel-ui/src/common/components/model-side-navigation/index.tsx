@@ -5,13 +5,13 @@ import { default as CommonSideNavigation } from 'yti-common-ui/side-navigation';
 import { SideNavigationButton } from 'yti-common-ui/side-navigation/side-navigation.styles';
 
 export default function SideNavigation() {
-  const { isSmall } = useBreakpoints();
+  const { isMedium, isLarge } = useBreakpoints();
   const [activeView, setActiveView] = useState<
     'search' | 'info' | 'classes' | 'attributes' | 'associations' | 'layout'
   >('search');
 
   return (
-    <div style={{ height: '1500px' }}>
+    <div style={{ height: '80vw' }}>
       <CommonSideNavigation
         buttons={
           <>
@@ -19,41 +19,46 @@ export default function SideNavigation() {
               icon="search"
               variant="secondaryNoBorder"
               $active={activeView === 'search'}
+              $isLarge={isLarge}
               onClick={() => setActiveView('search')}
             >
-              Hae
+              {isLarge && 'Hae'}
             </SideNavigationButton>
             <SideNavigationButton
               icon="info"
               variant="secondaryNoBorder"
               $active={activeView === 'info'}
+              $isLarge={isLarge}
               onClick={() => setActiveView('info')}
             >
-              Tiedot
+              {isLarge && 'Tiedot'}
             </SideNavigationButton>
             <SideNavigationButton
               icon="chatHeart"
               variant="secondaryNoBorder"
               $active={activeView === 'classes'}
+              $isLarge={isLarge}
               onClick={() => setActiveView('classes')}
             >
-              Luokat
+              {isLarge && 'Luokat'}
             </SideNavigationButton>
             <SideNavigationButton
               icon="history"
               variant="secondaryNoBorder"
               $active={activeView === 'attributes'}
+              $isLarge={isLarge}
               onClick={() => setActiveView('attributes')}
             >
-              Attribuutit
+              {isLarge && 'Attribuutit'}
             </SideNavigationButton>
             <SideNavigationButton
               icon="heart"
               variant="secondaryNoBorder"
               $active={activeView === 'associations'}
+              $isLarge={isLarge}
               onClick={() => setActiveView('associations')}
             >
-              Assosiaatiot
+              {isLarge && 'Assosiaatiot'}
             </SideNavigationButton>
           </>
         }

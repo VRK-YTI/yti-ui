@@ -11,15 +11,16 @@ import {
 } from './side-navigation.styles';
 
 interface SideNavigationProps {
-  children: React.ReactFragment;
   buttons: React.ReactFragment;
+  children: React.ReactFragment;
 }
 
 export default function SideNavigation({
-  children,
   buttons,
+  children,
 }: SideNavigationProps) {
   const [open, setOpen] = useState(false);
+  const [sideOpen, setSideOpen] = useState(true);
 
   return (
     <SideNavigationContainer $open={open}>
@@ -31,20 +32,27 @@ export default function SideNavigation({
         >
           <Icon icon={open ? 'chevronLeft' : 'chevronRight'} />
         </ToggleButton>
-
         <SideNavigationVisibleButtonGroup>
-          <Button icon="minus" />
-          <Button icon="plus" />
-          <MoveButton>
-            <Icon icon="arrowUp" id="up" />
-            <Icon icon="arrowRight" id="right" />
-            <Icon icon="arrowDown" id="down" />
-            <Icon icon="arrowLeft" id="left" />
-          </MoveButton>
-          <Button icon="swapRounded" />
-          <Button icon="download" />
-          <Button icon="save" />
-          <Button icon="chevronDown" variant="secondaryNoBorder" />
+          {sideOpen && (
+            <>
+              <Button icon="minus" />
+              <Button icon="plus" />
+              <MoveButton>
+                <Icon icon="arrowUp" id="up" />
+                <Icon icon="arrowRight" id="right" />
+                <Icon icon="arrowDown" id="down" />
+                <Icon icon="arrowLeft" id="left" />
+              </MoveButton>
+              <Button icon="swapRounded" />
+              <Button icon="download" />
+              <Button icon="save" />
+            </>
+          )}
+          <Button
+            icon={sideOpen ? 'chevronUp' : 'chevronDown'}
+            variant="secondaryNoBorder"
+            onClick={() => setSideOpen(!sideOpen)}
+          />
         </SideNavigationVisibleButtonGroup>
       </div>
 

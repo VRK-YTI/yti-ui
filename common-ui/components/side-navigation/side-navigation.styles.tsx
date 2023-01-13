@@ -7,7 +7,8 @@ export const SideNavigationContainer = styled.div<{ $open: boolean }>`
   width: min-content;
   display: flex;
   flex-direction: row-reverse;
-  margin: ${(props) => props.theme.suomifi.spacing.s};
+
+  position: relative;
 
   ${(props) =>
     props.$open &&
@@ -75,9 +76,12 @@ export const SideNavigationVisibleButtonGroup = styled.div`
   }
 `;
 
-export const SideNavigationButton = styled(Button)<{ $active?: boolean }>`
-  height: 100px;
-  width: 100px;
+export const SideNavigationButton = styled(Button)<{
+  $active?: boolean;
+  $isLarge?: boolean;
+}>`
+  height: ${(props) => (props.$isLarge ? '100px' : '50px')};
+  width: ${(props) => (props.$isLarge ? '100px' : '50px')};
   text-transform: uppercase;
   font-weight: 400;
   display: flex;
