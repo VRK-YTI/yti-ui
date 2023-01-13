@@ -54,16 +54,16 @@ export function useGetBlockData(concept?: Concept) {
       setDefinitions(sortedDefinitions);
     }
 
-    if (!notes && concept.properties.definition) {
-      const sortedDefinitions = concept.properties.definition
+    if (!notes && concept.properties.note) {
+      const sortedDefinitions = concept.properties.note
         .slice()
         .sort((t1, t2) => compareLocales(t1, t2));
 
       setNotes(sortedDefinitions);
     }
 
-    if (!examples && concept.properties.definition) {
-      const sortedDefinitions = concept.properties.definition
+    if (!examples && concept.properties.example) {
+      const sortedDefinitions = concept.properties.example
         .slice()
         .sort((t1, t2) => compareLocales(t1, t2));
 
