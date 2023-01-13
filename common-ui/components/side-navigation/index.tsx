@@ -1,5 +1,5 @@
 import { useBreakpoints } from '../media-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Icon } from 'suomifi-ui-components';
 import {
   MoveButton,
@@ -23,6 +23,13 @@ export default function SideNavigation({
   const { isSmall } = useBreakpoints();
   const [open, setOpen] = useState(false);
   const [sideOpen, setSideOpen] = useState(true);
+
+  useEffect(() => {
+    // Setting side buttons visible whether
+    // view is small or not to ensure that
+    // these buttons are always visible
+    setSideOpen(true);
+  }, [isSmall]);
 
   return (
     <SideNavigationContainer $open={open} $isSmall={isSmall}>
