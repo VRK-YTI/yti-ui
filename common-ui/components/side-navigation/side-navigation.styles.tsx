@@ -1,12 +1,16 @@
+import { Breakpoint } from '../media-query';
+import { resolve } from '../media-query/styled-helpers';
 import styled from 'styled-components';
 import { Button } from 'suomifi-ui-components';
 
-export const SideNavigationContainer = styled.div<{ $open: boolean }>`
-  min-height: 100%;
-  height: 100%;
+export const SideNavigationContainer = styled.div<{
+  $open: boolean;
+  $isSmall: boolean;
+}>`
+  height: ${(props) => (props.$isSmall ? 'min-content' : '70vh')};
   width: min-content;
   display: flex;
-  flex-direction: row-reverse;
+  flex-direction: ${(props) => (props.$isSmall ? 'column' : 'row-reverse')};
 
   position: relative;
 
@@ -15,14 +19,12 @@ export const SideNavigationContainer = styled.div<{ $open: boolean }>`
     `> div:first-child {
       position: relative;
       right: 1px;
-    }
-    `}
+    }`}
 `;
 
-export const SideNavigationContent = styled.div`
+export const SideNavigationContent = styled.div<{ $isSmall: boolean }>`
   height: 100%;
   width: 100%;
-  padding: ${(props) => props.theme.suomifi.spacing.xs};
   background: ${(props) => props.theme.suomifi.colors.whiteBase};
 `;
 
@@ -39,29 +41,41 @@ export const SideNavigationWrapper = styled.div<{ $open: boolean }>`
       : 'none'};
 `;
 
-export const SideNavigationButtonGroup = styled.div`
+export const SideNavigationButtonGroup = styled.div<{ $isSmall: boolean }>`
   display: flex;
-  flex-direction: column;
+  flex-direction: ${(props) => (props.$isSmall ? 'row' : 'column')};
   font: 12px;
   height: 100%;
   background: ${(props) => props.theme.suomifi.colors.highlightLight3};
 
+  ${(props) =>
+    props.$isSmall
+      ? 'width: 100vw;'
+      : `
+
   > *:not(:last-child) {
-    border-bottom: 3px solid ${(props) => props.theme.suomifi.colors.whiteBase};
+    border-bottom: 3px solid ${props.theme.suomifi.colors.whiteBase};
   }
+  `}
 `;
 
-export const SideNavigationVisibleButtonGroup = styled.div`
+export const SideNavigationVisibleButtonGroup = styled.div<{
+  $isSmall: boolean;
+}>`
   padding: 6px 2px;
   display: flex;
-  flex-direction: column;
+  flex-direction: ${(props) => (props.$isSmall ? 'row' : 'column')};
   gap: 6px;
   align-items: center;
 
-  background: ${(props) => props.theme.suomifi.colors.whiteBase};
-  border: 1px solid ${(props) => props.theme.suomifi.colors.depthDark3};
-  border-top: 0;
-  border-radius: 0 2px 2px 0;
+  ${(props) =>
+    !props.$isSmall &&
+    `
+    background: ${props.theme.suomifi.colors.whiteBase};
+    border: 1px solid ${props.theme.suomifi.colors.depthDark3};
+    border-top: 0;
+    border-radius: 0 2px 2px 0;
+  `}
 
   button {
     min-width: min-content !important;
@@ -70,6 +84,8 @@ export const SideNavigationVisibleButtonGroup = styled.div`
     height: 30px !important;
     padding: 0;
 
+    ${(props) => props.$isSmall && 'opacity: 0.5;'}
+
     svg {
       margin: 0 !important;
     }
@@ -77,11 +93,11 @@ export const SideNavigationVisibleButtonGroup = styled.div`
 `;
 
 export const SideNavigationButton = styled(Button)<{
+  $breakpoint: Breakpoint;
   $active?: boolean;
-  $isLarge?: boolean;
 }>`
-  height: ${(props) => (props.$isLarge ? '100px' : '50px')};
-  width: ${(props) => (props.$isLarge ? '100px' : '50px')};
+  height: ${(props) => resolve(props.$breakpoint, '50px', '50px', '100px')};
+  width: ${(props) => resolve(props.$breakpoint, '50px', '50px', '100px')};
   text-transform: uppercase;
   font-weight: 400;
   display: flex;
@@ -92,6 +108,7 @@ export const SideNavigationButton = styled(Button)<{
   border-radius: 0;
 
   ${(props) =>
+    props.$breakpoint !== 'small' &&
     props.$active && {
       background: props.theme.suomifi.colors.whiteBase + ' !important;',
       borderLeft:
@@ -103,7 +120,9 @@ export const SideNavigationButton = styled(Button)<{
 
   svg {
     color: ${(props) =>
-      props.$active ? props.theme.suomifi.colors.blackBase : 'inherit'};
+      props.$breakpoint !== 'small' && props.$active
+        ? props.theme.suomifi.colors.blackBase
+        : 'inherit'};
     width: 20px !important;
     height: auto !important;
     margin: 0 !important;

@@ -3,15 +3,38 @@ import { SearchInput } from 'suomifi-ui-components';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { default as CommonSideNavigation } from 'yti-common-ui/side-navigation';
 import { SideNavigationButton } from 'yti-common-ui/side-navigation/side-navigation.styles';
+import {
+  ModelSideNavigationContainer,
+  ViewContainer,
+} from './model-side-navigation.styles';
 
 export default function SideNavigation() {
-  const { isMedium, isLarge } = useBreakpoints();
+  const { breakpoint, isSmall, isLarge } = useBreakpoints();
   const [activeView, setActiveView] = useState<
-    'search' | 'info' | 'classes' | 'attributes' | 'associations' | 'layout'
-  >('search');
+    | ''
+    | 'search'
+    | 'info'
+    | 'classes'
+    | 'attributes'
+    | 'associations'
+    | 'layout'
+  >(isSmall ? '' : 'search');
+
+  const handleSetActiveView = (view: typeof activeView) => {
+    if (!isSmall) {
+      setActiveView(view);
+      return;
+    }
+
+    if (view === activeView) {
+      setActiveView('');
+    } else {
+      setActiveView(view);
+    }
+  };
 
   return (
-    <div style={{ height: '80vw' }}>
+    <ModelSideNavigationContainer $isSmall={isSmall}>
       <CommonSideNavigation
         buttons={
           <>
@@ -19,8 +42,8 @@ export default function SideNavigation() {
               icon="search"
               variant="secondaryNoBorder"
               $active={activeView === 'search'}
-              $isLarge={isLarge}
-              onClick={() => setActiveView('search')}
+              $breakpoint={breakpoint}
+              onClick={() => handleSetActiveView('search')}
             >
               {isLarge && 'Hae'}
             </SideNavigationButton>
@@ -28,8 +51,8 @@ export default function SideNavigation() {
               icon="info"
               variant="secondaryNoBorder"
               $active={activeView === 'info'}
-              $isLarge={isLarge}
-              onClick={() => setActiveView('info')}
+              $breakpoint={breakpoint}
+              onClick={() => handleSetActiveView('info')}
             >
               {isLarge && 'Tiedot'}
             </SideNavigationButton>
@@ -37,8 +60,8 @@ export default function SideNavigation() {
               icon="chatHeart"
               variant="secondaryNoBorder"
               $active={activeView === 'classes'}
-              $isLarge={isLarge}
-              onClick={() => setActiveView('classes')}
+              $breakpoint={breakpoint}
+              onClick={() => handleSetActiveView('classes')}
             >
               {isLarge && 'Luokat'}
             </SideNavigationButton>
@@ -46,8 +69,8 @@ export default function SideNavigation() {
               icon="history"
               variant="secondaryNoBorder"
               $active={activeView === 'attributes'}
-              $isLarge={isLarge}
-              onClick={() => setActiveView('attributes')}
+              $breakpoint={breakpoint}
+              onClick={() => handleSetActiveView('attributes')}
             >
               {isLarge && 'Attribuutit'}
             </SideNavigationButton>
@@ -55,8 +78,8 @@ export default function SideNavigation() {
               icon="heart"
               variant="secondaryNoBorder"
               $active={activeView === 'associations'}
-              $isLarge={isLarge}
-              onClick={() => setActiveView('associations')}
+              $breakpoint={breakpoint}
+              onClick={() => handleSetActiveView('associations')}
             >
               {isLarge && 'Assosiaatiot'}
             </SideNavigationButton>
@@ -65,7 +88,7 @@ export default function SideNavigation() {
       >
         {renderView(activeView)}
       </CommonSideNavigation>
-    </div>
+    </ModelSideNavigationContainer>
   );
 }
 
@@ -84,33 +107,39 @@ function renderView(view: string) {
     case 'layout':
       return renderLayoutView();
     default:
-      return renderSearchView();
+      return renderEmptyView();
   }
 }
 
 function renderSearchView() {
   return (
-    <SearchInput
-      labelText="Hae tietomallista"
-      visualPlaceholder="Hae..."
-      clearButtonLabel=""
-      searchButtonLabel=""
-    />
+    <ViewContainer>
+      <SearchInput
+        labelText="Hae tietomallista"
+        visualPlaceholder="Hae..."
+        clearButtonLabel=""
+        searchButtonLabel=""
+      />
+    </ViewContainer>
   );
 }
 
 function renderInfoView() {
-  return <>Info</>;
+  return <ViewContainer>Info</ViewContainer>;
 }
 function renderClassesView() {
-  return <>Classes</>;
+  return <ViewContainer>Classes</ViewContainer>;
 }
 function renderAttributesView() {
-  return <>Attributes</>;
+  return <ViewContainer>Attributes</ViewContainer>;
 }
 function renderAssociationsView() {
-  return <>Associations</>;
+  return <ViewContainer>Associations</ViewContainer>;
 }
 function renderLayoutView() {
-  return <>Layout</>;
+  return <ViewContainer>Layout</ViewContainer>;
+}
+
+function renderEmptyView() {
+  return <></>;
 }

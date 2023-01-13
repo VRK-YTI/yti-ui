@@ -6,9 +6,13 @@ export const TitleWrapper = styled.div`
 `;
 
 export const ContentWrapper = styled.div`
-  height: 80vw;
+  height: 70vh;
 
   .react-flow__nodes > * {
     position: absolute;
+  }
+
+  .react-flow__attribution {
+    visibility: hidden;
   }
 `;

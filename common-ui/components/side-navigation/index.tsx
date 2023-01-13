@@ -1,3 +1,4 @@
+import { useBreakpoints } from '../media-query';
 import { useState } from 'react';
 import { Button, Icon } from 'suomifi-ui-components';
 import {
@@ -19,20 +20,23 @@ export default function SideNavigation({
   buttons,
   children,
 }: SideNavigationProps) {
+  const { isSmall } = useBreakpoints();
   const [open, setOpen] = useState(false);
   const [sideOpen, setSideOpen] = useState(true);
 
   return (
-    <SideNavigationContainer $open={open}>
+    <SideNavigationContainer $open={open} $isSmall={isSmall}>
       <div>
-        <ToggleButton
-          onClick={() => setOpen(!open)}
-          variant="secondaryNoBorder"
-          $open={open}
-        >
-          <Icon icon={open ? 'chevronLeft' : 'chevronRight'} />
-        </ToggleButton>
-        <SideNavigationVisibleButtonGroup>
+        {!isSmall && (
+          <ToggleButton
+            onClick={() => setOpen(!open)}
+            variant="secondaryNoBorder"
+            $open={open}
+          >
+            <Icon icon={open ? 'chevronLeft' : 'chevronRight'} />
+          </ToggleButton>
+        )}
+        <SideNavigationVisibleButtonGroup $isSmall={isSmall}>
           {sideOpen && (
             <>
               <Button icon="minus" />
@@ -48,20 +52,37 @@ export default function SideNavigation({
               <Button icon="save" />
             </>
           )}
-          <Button
-            icon={sideOpen ? 'chevronUp' : 'chevronDown'}
-            variant="secondaryNoBorder"
-            onClick={() => setSideOpen(!sideOpen)}
-          />
+          {!isSmall && (
+            <Button
+              icon={sideOpen ? 'chevronUp' : 'chevronDown'}
+              variant="secondaryNoBorder"
+              onClick={() => setSideOpen(!sideOpen)}
+            />
+          )}
         </SideNavigationVisibleButtonGroup>
       </div>
+
+      {isSmall && (
+        <div style={{ width: '100%' }}>
+          <SideNavigationContent $isSmall={isSmall}>
+            {children}
+          </SideNavigationContent>
+          <SideNavigationButtonGroup $isSmall={isSmall}>
+            {buttons}
+          </SideNavigationButtonGroup>
+        </div>
+      )}
 
       <SideNavigationWrapper $open={open}>
         {open && (
           <>
-            <SideNavigationContent>{children}</SideNavigationContent>
+            <SideNavigationContent $isSmall={isSmall}>
+              {children}
+            </SideNavigationContent>
 
-            <SideNavigationButtonGroup>{buttons}</SideNavigationButtonGroup>
+            <SideNavigationButtonGroup $isSmall={isSmall}>
+              {buttons}
+            </SideNavigationButtonGroup>
           </>
         )}
       </SideNavigationWrapper>
