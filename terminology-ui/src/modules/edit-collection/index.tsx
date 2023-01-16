@@ -311,9 +311,15 @@ export default function EditCollection({
               {t('error-occurred_unauthenticated', { ns: 'alert' })}
             </InlineAlert>
           )}
-          {emptyError && <FormFooterAlert alerts={[t('no-empty-form')]} />}
+          {emptyError && (
+            <FormFooterAlert
+              alerts={[t('no-empty-form')]}
+              labelText={t('missing-information')}
+            />
+          )}
           {languages.some((n) => errors[n]) && (
             <FormFooterAlert
+              labelText={t('missing-information')}
               alerts={languages
                 .filter((n) => errors[n])
                 .map(

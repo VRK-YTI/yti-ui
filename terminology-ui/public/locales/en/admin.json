@@ -199,6 +199,7 @@
   "match-in-other-add": "Add new matching concept",
   "match-in-other-chip-label": "Chosen matching concepts in other vocabularies",
   "match-in-other-description": "Exact copy of this concept in different terminology.",
+  "missing-information": "Missing information",
   "modified-at": "Modified at",
   "narrower-concept": "Narrower concept",
   "narrower-concept-add": "Add new narrower concept",

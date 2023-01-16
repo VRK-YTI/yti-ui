@@ -432,6 +432,7 @@ export default function NewTermModal({
 
       <ModalFooter>
         <FormFooterAlert
+          labelText={t('missing-information')}
           alerts={Object.keys(invalidData)
             .filter((key) => invalidData[key as keyof typeof invalidData])
             .map((key) => translateEditConceptError(key, t))}
