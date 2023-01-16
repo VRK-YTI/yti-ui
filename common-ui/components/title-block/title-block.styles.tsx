@@ -11,13 +11,26 @@ export const MainTitleWrapper = styled(Heading)`
   line-height: 52px;
 `;
 
-export const BadgeBarWrapper = styled.div`
-  font-size: 12px;
+export const BadgeBarWrapper = styled.div<{ $larger?: boolean }>`
+  font-size: ${(props) => (props.$larger ? '14px' : '12px')};
   text-transform: uppercase;
   font-weight: 600;
   line-height: 15px;
   margin-bottom: 20px;
   color: ${(props) => props.theme.suomifi.colors.depthDark1};
+
+  > span:last-child {
+    font-size: 12px;
+  }
+
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  svg {
+    height: 20px !important;
+    width: 20px !important;
+  }
 `;
 
 export const Badge = styled.span<{ $isValid?: boolean }>`
