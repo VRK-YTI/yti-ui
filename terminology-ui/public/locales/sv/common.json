@@ -33,7 +33,7 @@
   "feedback-vocabulary": "Ge feedback: Ordlista",
   "filter-by-language": "Begränsa engligt språket",
   "filter-character-not-allowed": "< och > tecken är inte tillåtna",
-  "filter-list": "Avgränsä sökresultaten",
+  "filter-list": "Avgränsa sökresultaten",
   "filter-remove-all": "Ta bort alla begränsningar",
   "filter-status-draft_one": "Utkast ({{count}} st.)",
   "filter-status-draft_other": "Utkast ({{count}} st.)",
