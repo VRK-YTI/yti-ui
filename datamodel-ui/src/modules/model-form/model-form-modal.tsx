@@ -16,6 +16,7 @@ import { useInitialModelForm } from '@app/common/utils/hooks/use-initial-model-f
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
 import { translateModelFormErrors } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
+import generatePayload from './generate-payload';
 
 export default function ModelFormModal() {
   const { t } = useTranslation('admin');
@@ -42,6 +43,9 @@ export default function ModelFormModal() {
     if (Object.values(errors).includes(true)) {
       return;
     }
+
+    const payload = generatePayload(formData);
+    console.log(payload);
   };
 
   useEffect(() => {

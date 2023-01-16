@@ -124,7 +124,7 @@ export default function ModelForm({
             })
           }
           validatePrefixMutation={useGetFreePrefixMutation}
-          typeInUri={'datamodel'}
+          typeInUri={'datamodel/ns'}
           error={errors?.prefix ?? false}
           translations={{
             automatic: t('create-prefix-automatically'),
