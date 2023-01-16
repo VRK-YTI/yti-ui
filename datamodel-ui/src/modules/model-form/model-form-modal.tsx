@@ -92,6 +92,7 @@ export default function ModelFormModal() {
         <ModalFooter>
           {userPosted && (
             <FormFooterAlert
+              labelText={t('missing-information-title')}
               alerts={
                 errors &&
                 Object.keys(errors)
