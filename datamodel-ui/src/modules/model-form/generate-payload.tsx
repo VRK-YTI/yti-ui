@@ -1,16 +1,5 @@
 import { ModelFormType } from '@app/common/interfaces/model-form.interface';
-
-interface NewModel {
-  id: string;
-  description: { [key: string]: string };
-  label: { [key: string]: string };
-  groups: string[];
-  languages: string[];
-  organizations: string[];
-  prefix: string;
-  status: string;
-  type: string;
-}
+import { NewModel } from '@app/common/interfaces/new-model';
 
 export default function generatePayload(data: ModelFormType): NewModel {
   const SUOMI_FI_NAMESPACE = 'http://uri.suomi.fi/datamodel/ns/';

@@ -1,5 +1,5 @@
 import { selectLogin } from '@app/common/components/login/login.slice';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import {
   Button,
@@ -17,20 +17,35 @@ import FormFooterAlert from 'yti-common-ui/form-footer-alert';
 import { translateModelFormErrors } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import generatePayload from './generate-payload';
+import { usePutModelMutation } from '@app/common/components/model/model.slice';
 
-export default function ModelFormModal() {
+interface ModelFormModalProps {
+  refetch: () => void;
+}
+
+export default function ModelFormModal({ refetch }: ModelFormModalProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const [visible, setVisible] = useState(false);
   const user = useSelector(selectLogin());
-  const [formData, setFormData] = useState(useInitialModelForm());
+  const [modelFormInitialData] = useState(useInitialModelForm());
+  const [formData, setFormData] = useState(modelFormInitialData);
   const [errors, setErrors] = useState<FormErrors>();
   const [userPosted, setUserPosted] = useState(false);
+  const [putModel, result] = usePutModelMutation();
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setVisible(false);
     setUserPosted(false);
-  };
+    setFormData(modelFormInitialData);
+  }, [modelFormInitialData]);
+
+  useEffect(() => {
+    if (userPosted && result.isSuccess) {
+      refetch();
+      handleClose();
+    }
+  }, [result, refetch, userPosted, handleClose]);
 
   const handleSubmit = () => {
     setUserPosted(true);
@@ -40,12 +55,14 @@ export default function ModelFormModal() {
 
     const errors = validateForm(formData);
     setErrors(errors);
+
     if (Object.values(errors).includes(true)) {
       return;
     }
 
     const payload = generatePayload(formData);
-    console.log(payload);
+
+    putModel(payload);
   };
 
   useEffect(() => {
