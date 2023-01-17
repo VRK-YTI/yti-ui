@@ -9,18 +9,22 @@ import {
   ExternalLink,
   Heading,
 } from 'suomifi-ui-components';
-import { BasicBlock } from 'yti-common-ui/block';
+import { BasicBlock, MultilingualBlock } from 'yti-common-ui/block';
 import {
   getBaseModelPrefix,
+  getComments,
   getIsPartOf,
   getLanguages,
   getLink,
+  getTitles,
   getUri,
 } from '@app/common/utils/get-value';
 import { ModelInfoListWrapper, ModelInfoWrapper } from './model.styles';
+import { translateLanguage } from '@app/common/utils/translation-helpers';
+import { compareLocales } from '@app/common/utils/compare-locals';
 
 export default function ModelInfoView() {
-  const { i18n } = useTranslation('common');
+  const { t, i18n } = useTranslation('common');
   const { query } = useRouter();
   const [modelId] = useState(
     Array.isArray(query.modelId) ? query.modelId[0] : query.modelId ?? ''
@@ -37,15 +41,35 @@ export default function ModelInfoView() {
     <ModelInfoWrapper>
       <Heading variant="h2">Tiedot</Heading>
 
-      <BasicBlock title="Nimi"></BasicBlock>
-      <BasicBlock title="Kuvaus"></BasicBlock>
+      <BasicBlock title="Nimi">
+        <MultilingualBlock
+          data={getTitles(modelInfo)
+            .map((title) => ({
+              lang: title['@language'],
+              value: title['@value'],
+            }))
+            .sort((a, b) => compareLocales(a.lang, b.lang))}
+        />
+      </BasicBlock>
+      <BasicBlock title="Kuvaus">
+        <MultilingualBlock
+          data={getComments(modelInfo)
+            .map((comment) => ({
+              lang: comment['@language'],
+              value: comment['@value'],
+            }))
+            .sort((a, b) => compareLocales(a.lang, b.lang))}
+        />
+      </BasicBlock>
       <BasicBlock title="Tunnus">{getBaseModelPrefix(modelInfo)}</BasicBlock>
       <BasicBlock title="Tietomallin URI">{getUri(modelInfo)}</BasicBlock>
       <BasicBlock title="Tietoalueet">
         {getIsPartOf(modelInfo, i18n.language).join(', ')}
       </BasicBlock>
       <BasicBlock title="Tietomallin kielet">
-        {getLanguages(modelInfo).join(', ')}
+        {getLanguages(modelInfo)
+          .map((lang) => `${translateLanguage(lang, t)} ${lang.toUpperCase()}`)
+          .join(', ')}
       </BasicBlock>
 
       <BasicBlock title="Käytetyt sanastot">Ei lisätty</BasicBlock>

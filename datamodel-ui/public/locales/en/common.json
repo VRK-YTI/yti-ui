@@ -40,6 +40,11 @@
   "impersonate-user": "Impersonate user",
   "interoperability-logo-title": "Interoperability platform logo",
   "jump-to-page": "Jump to page",
+  "languages": {
+    "en": "English",
+    "fi": "Finnish",
+    "sv": "Swedish"
+  },
   "languages-available": "Languages available",
   "library": "Core Vocabulary",
   "library-variant": "Core Data Model",

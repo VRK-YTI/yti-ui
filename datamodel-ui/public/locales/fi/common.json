@@ -40,6 +40,11 @@
   "impersonate-user": "Esiinny käyttäjänä",
   "interoperability-logo-title": "",
   "jump-to-page": "Siirry sivulle",
+  "languages": {
+    "en": "englanti",
+    "fi": "suomi",
+    "sv": "ruotsi"
+  },
   "languages-available": "Kieliä saatavilla",
   "library": "Tietokomponenttikirjasto",
   "library-variant": "Ydintietomalli",

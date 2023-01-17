@@ -1,6 +1,7 @@
 import {
   BaseInfo,
   Group,
+  LangObject,
   Link,
   Model,
   Organization,
@@ -99,6 +100,25 @@ export function getTitle(data?: Model, lang?: string): string {
   });
 }
 
+export function getTitles(data?: Model): LangObject[] {
+  const target = getBaseInfo(data);
+
+  if (!target) {
+    return [];
+  }
+
+  const labels =
+    'label' in target && Array.isArray(target['@type'])
+      ? target.label
+      : undefined;
+
+  if (!labels) {
+    return [];
+  }
+
+  return Array.isArray(labels) ? labels : [labels];
+}
+
 export function getType(data?: Model): string {
   const target = getBaseInfo(data);
 
@@ -155,6 +175,16 @@ export function getComment(data?: Model, lang?: string): string {
     lang: lang ?? 'fi',
     appendLocale: true,
   });
+}
+
+export function getComments(data?: Model): LangObject[] {
+  const target = getBaseInfo(data);
+
+  if (!target || !target.comment) {
+    return [];
+  }
+
+  return target.comment;
 }
 
 export function getContact(data?: Model, lang?: string): string {
