@@ -30,10 +30,15 @@ export function getLanguageVersion({
 }
 
 interface getPropertyLanguageVersionProps {
-  data?: {
-    '@language': string;
-    '@value': string;
-  }[];
+  data?:
+    | {
+        '@language': string;
+        '@value': string;
+      }
+    | {
+        '@language': string;
+        '@value': string;
+      }[];
   lang: string;
   appendLocale?: boolean;
 }
@@ -47,22 +52,24 @@ export function getPropertyLanguageVersion({
     return '';
   }
 
-  if (data.some((d) => d['@language'] === lang)) {
-    const retObject = data.find((d) => d['@language'] === lang);
+  const dataArray = !Array.isArray(data) ? [data] : data;
+
+  if (dataArray.some((d) => d['@language'] === lang)) {
+    const retObject = dataArray.find((d) => d['@language'] === lang);
 
     return retObject ? retObject['@value'] : '';
   }
 
-  if (data.some((d) => d['@language'] === 'fi')) {
-    const retObject = data.find((d) => d['@language'] === 'fi');
+  if (dataArray.some((d) => d['@language'] === 'fi')) {
+    const retObject = dataArray.find((d) => d['@language'] === 'fi');
     const retValue = retObject ? retObject['@value'] : '';
 
     return appendLocale ? `${retValue} (fi)` : retValue;
   }
 
-  if (data.length > 0) {
-    const localeKey = data[0]['@language'];
-    const retObject = data.find((d) => d['@language'] === localeKey);
+  if (dataArray.length > 0) {
+    const localeKey = dataArray[0]['@language'];
+    const retObject = dataArray.find((d) => d['@language'] === localeKey);
     const retValue = retObject ? retObject['@value'] : '';
 
     return appendLocale ? `${retValue} (${localeKey})` : retValue;

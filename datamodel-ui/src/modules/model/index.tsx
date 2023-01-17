@@ -4,6 +4,8 @@ import { ContentWrapper, TitleWrapper } from './model.styles';
 import { Breadcrumb, BreadcrumbLink } from 'yti-common-ui/breadcrumb';
 import { Icon } from 'suomifi-ui-components';
 import { Panel, ReactFlow } from 'reactflow';
+import ModelInfoView from './model-info-view';
+import SearchView from './search-view';
 
 export default function Model() {
   return (
@@ -71,7 +73,40 @@ export default function Model() {
           ]}
         >
           <Panel position="top-left">
-            <SideNavigation />
+            <SideNavigation
+              views={[
+                {
+                  id: 'search',
+                  icon: 'search',
+                  buttonLabel: 'Hae',
+                  component: <SearchView />,
+                },
+                {
+                  id: 'info',
+                  icon: 'info',
+                  buttonLabel: 'Tiedot',
+                  component: <ModelInfoView />,
+                },
+                {
+                  id: 'classes',
+                  icon: 'chatHeart',
+                  buttonLabel: 'Luokat',
+                  component: <></>,
+                },
+                {
+                  id: 'attributes',
+                  icon: 'history',
+                  buttonLabel: 'Attribuutit',
+                  component: <></>,
+                },
+                {
+                  id: 'associations',
+                  icon: 'heart',
+                  buttonLabel: 'Assosisaatiot',
+                  component: <></>,
+                },
+              ]}
+            />
           </Panel>
         </ReactFlow>
       </ContentWrapper>

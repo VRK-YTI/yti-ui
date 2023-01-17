@@ -16,3 +16,20 @@ export const ContentWrapper = styled.div`
     visibility: hidden;
   }
 `;
+
+export const ModelInfoWrapper = styled.div`
+  width: 350px;
+  height: min-content;
+
+  overflow: scroll;
+
+  h2 {
+    font-size: 18px !important;
+  }
+`;
+
+export const ModelInfoListWrapper = styled.div`
+  > * {
+    margin-bottom: ${(props) => props.theme.suomifi.spacing.s};
+  }
+`;

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { SearchInput } from 'suomifi-ui-components';
+import { BaseIconKeys } from 'suomifi-ui-components';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { default as CommonSideNavigation } from 'yti-common-ui/side-navigation';
 import { SideNavigationButton } from 'yti-common-ui/side-navigation/side-navigation.styles';
@@ -8,28 +8,33 @@ import {
   ViewContainer,
 } from './model-side-navigation.styles';
 
-export default function SideNavigation() {
-  const { breakpoint, isSmall, isLarge } = useBreakpoints();
-  const [activeView, setActiveView] = useState<
-    | ''
-    | 'search'
-    | 'info'
-    | 'classes'
-    | 'attributes'
-    | 'associations'
-    | 'layout'
-  >(isSmall ? '' : 'search');
+type ViewType = {
+  id: string;
+  icon: BaseIconKeys;
+  buttonLabel: string;
+  component: React.ReactFragment;
+};
 
-  const handleSetActiveView = (view: typeof activeView) => {
+interface SideNavigationProps {
+  views: ViewType[];
+}
+
+export default function SideNavigation({ views }: SideNavigationProps) {
+  const { breakpoint, isSmall, isLarge } = useBreakpoints();
+  const [activeView, setActiveView] = useState<ViewType | undefined>(
+    isSmall ? undefined : views?.[0] ?? undefined
+  );
+
+  const handleSetActiveView = (viewId: string) => {
     if (!isSmall) {
-      setActiveView(view);
+      setActiveView(views.find((view) => view.id === viewId));
       return;
     }
 
-    if (view === activeView) {
-      setActiveView('');
+    if (viewId === activeView?.id) {
+      setActiveView(undefined);
     } else {
-      setActiveView(view);
+      setActiveView(views.find((view) => view.id === viewId));
     }
   };
 
@@ -38,108 +43,25 @@ export default function SideNavigation() {
       <CommonSideNavigation
         buttons={
           <>
-            <SideNavigationButton
-              icon="search"
-              variant="secondaryNoBorder"
-              $active={activeView === 'search'}
-              $breakpoint={breakpoint}
-              onClick={() => handleSetActiveView('search')}
-            >
-              {isLarge && 'Hae'}
-            </SideNavigationButton>
-            <SideNavigationButton
-              icon="info"
-              variant="secondaryNoBorder"
-              $active={activeView === 'info'}
-              $breakpoint={breakpoint}
-              onClick={() => handleSetActiveView('info')}
-            >
-              {isLarge && 'Tiedot'}
-            </SideNavigationButton>
-            <SideNavigationButton
-              icon="chatHeart"
-              variant="secondaryNoBorder"
-              $active={activeView === 'classes'}
-              $breakpoint={breakpoint}
-              onClick={() => handleSetActiveView('classes')}
-            >
-              {isLarge && 'Luokat'}
-            </SideNavigationButton>
-            <SideNavigationButton
-              icon="history"
-              variant="secondaryNoBorder"
-              $active={activeView === 'attributes'}
-              $breakpoint={breakpoint}
-              onClick={() => handleSetActiveView('attributes')}
-            >
-              {isLarge && 'Attribuutit'}
-            </SideNavigationButton>
-            <SideNavigationButton
-              icon="heart"
-              variant="secondaryNoBorder"
-              $active={activeView === 'associations'}
-              $breakpoint={breakpoint}
-              onClick={() => handleSetActiveView('associations')}
-            >
-              {isLarge && 'Assosiaatiot'}
-            </SideNavigationButton>
+            {views.map((view) => (
+              <SideNavigationButton
+                key={view.id}
+                icon={view.icon}
+                variant="secondaryNoBorder"
+                $active={activeView?.id === view.id}
+                $breakpoint={breakpoint}
+                onClick={() => handleSetActiveView(view.id)}
+              >
+                {isLarge && view.buttonLabel}
+              </SideNavigationButton>
+            ))}
           </>
         }
       >
-        {renderView(activeView)}
+        {typeof activeView !== 'undefined' && activeView.component && (
+          <ViewContainer>{activeView.component}</ViewContainer>
+        )}
       </CommonSideNavigation>
     </ModelSideNavigationContainer>
   );
-}
-
-function renderView(view: string) {
-  switch (view) {
-    case 'search':
-      return renderSearchView();
-    case 'info':
-      return renderInfoView();
-    case 'classes':
-      return renderClassesView();
-    case 'attributes':
-      return renderAttributesView();
-    case 'associations':
-      return renderAssociationsView();
-    case 'layout':
-      return renderLayoutView();
-    default:
-      return renderEmptyView();
-  }
-}
-
-function renderSearchView() {
-  return (
-    <ViewContainer>
-      <SearchInput
-        labelText="Hae tietomallista"
-        visualPlaceholder="Hae..."
-        clearButtonLabel=""
-        searchButtonLabel=""
-      />
-    </ViewContainer>
-  );
-}
-
-function renderInfoView() {
-  return <ViewContainer>Info</ViewContainer>;
-}
-function renderClassesView() {
-  return <ViewContainer>Classes</ViewContainer>;
-}
-function renderAttributesView() {
-  return <ViewContainer>Attributes</ViewContainer>;
-}
-function renderAssociationsView() {
-  return <ViewContainer>Associations</ViewContainer>;
-}
-function renderLayoutView() {
-  return <ViewContainer>Layout</ViewContainer>;
-}
-
-function renderEmptyView() {
-  return <></>;
 }

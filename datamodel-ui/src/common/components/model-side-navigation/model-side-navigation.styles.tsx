@@ -12,5 +12,5 @@ export const ModelSideNavigationContainer = styled.div<{ $isSmall: boolean }>`
 `;
 
 export const ViewContainer = styled.div`
-  padding: ${(props) => props.theme.suomifi.spacing.xs};
+  padding: ${(props) => props.theme.suomifi.spacing.s};
 `;
