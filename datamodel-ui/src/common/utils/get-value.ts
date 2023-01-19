@@ -1,10 +1,13 @@
 import {
   BaseInfo,
+  DataVocabulary,
   Group,
   LangObject,
   Link,
   Model,
   Organization,
+  ReferenceData,
+  Terminology,
 } from '../interfaces/model.interface';
 import { Status } from '../interfaces/status.interface';
 import { getPropertyLanguageVersion } from './get-language-version';
@@ -15,11 +18,33 @@ export function getBaseInfo(data?: Model): BaseInfo | undefined {
   }
 
   const target = data['@graph'].find(
-    (g) => '@type' in g && Array.isArray(g['@type'])
+    (g) => '@type' in g && Array.isArray(g['@type']) && 'contributor' in g
   );
 
   if (target) {
     return target as BaseInfo;
+  }
+
+  return;
+}
+
+export function getDataVocabulariesInfo(
+  data?: Model
+): DataVocabulary[] | undefined {
+  if (!data) {
+    return;
+  }
+
+  const target = data['@graph'].filter(
+    (g) =>
+      '@type' in g &&
+      Array.isArray(g['@type']) &&
+      'preferredXMLNamespaceName' in g &&
+      Array.isArray(g.preferredXMLNamespaceName)
+  );
+
+  if (target.length > 0) {
+    return target as DataVocabulary[];
   }
 
   return;
@@ -47,7 +72,8 @@ function getOrganizationInfo(data?: Model): Organization[] | undefined {
   }
 
   const target = data['@graph'].filter(
-    (g) => '@type' in g && !Array.isArray(g['@type']) && 'prefLabel' in g
+    (g) =>
+      '@type' in g && g['@type'] === 'foaf:Organization' && 'prefLabel' in g
   );
 
   if (target.length > 0) {
@@ -68,6 +94,38 @@ function getLinkInfo(data?: Model): Link[] | undefined {
 
   if (target.length > 0) {
     return target as Link[];
+  }
+
+  return;
+}
+
+function getTerminologyInfo(data?: Model): Terminology[] | undefined {
+  if (!data) {
+    return;
+  }
+
+  const target = data['@graph'].filter(
+    (g) => '@type' in g && g['@type'] === 'skos:ConceptScheme'
+  );
+
+  if (target.length > 0) {
+    return target as Terminology[];
+  }
+
+  return;
+}
+
+function getReferenceDataInfo(data?: Model): ReferenceData[] | undefined {
+  if (!data) {
+    return;
+  }
+
+  const target = data['@graph'].filter(
+    (g) => '@type' in g && g['@type'] === 'iow:FCodeScheme'
+  );
+
+  if (target.length > 0) {
+    return target as ReferenceData[];
   }
 
   return;
@@ -184,7 +242,7 @@ export function getComments(data?: Model): LangObject[] {
     return [];
   }
 
-  return target.comment;
+  return Array.isArray(target.comment) ? target.comment : [target.comment];
 }
 
 export function getContact(data?: Model, lang?: string): string {
@@ -275,7 +333,7 @@ export function getIsPartOf(data?: Model, lang?: string): string[] {
   const target = getBaseInfo(data);
   const groups = getGroupInfo(data);
 
-  if (!target || typeof groups === 'undefined') {
+  if (!target || !target.isPartOf || !groups) {
     return [];
   }
 
@@ -319,4 +377,74 @@ export function getUri(data?: Model): string {
   }
 
   return target['@id'];
+}
+
+export function getTerminology(
+  data?: Model,
+  lang?: string
+): {
+  description: string;
+  title: string;
+  url: string;
+}[] {
+  const target = getTerminologyInfo(data);
+
+  if (!target) {
+    return [];
+  }
+
+  return target.map((t) => ({
+    description: t['@id'],
+    title: getPropertyLanguageVersion({
+      data: t.prefLabel,
+      lang: lang ?? 'fi',
+    }),
+    url: t['@id'],
+  }));
+}
+
+export function getReferenceData(
+  data?: Model,
+  lang?: string
+): {
+  description: string;
+  title: string;
+  url: string;
+}[] {
+  const target = getReferenceDataInfo(data);
+
+  if (!target) {
+    return [];
+  }
+
+  return target.map((t) => ({
+    description: t['@id'],
+    title: getPropertyLanguageVersion({
+      data: t.title,
+      lang: lang ?? 'fi',
+    }),
+    url: t['@id'],
+  }));
+}
+
+export function getDataVocabularies(
+  data?: Model,
+  lang?: string
+): {
+  title: string;
+  url: string;
+}[] {
+  const target = getDataVocabulariesInfo(data);
+
+  if (!target) {
+    return [];
+  }
+
+  return target.map((t) => ({
+    title: getPropertyLanguageVersion({
+      data: t.label,
+      lang: lang ?? 'fi',
+    }),
+    url: t['@id'],
+  }));
 }

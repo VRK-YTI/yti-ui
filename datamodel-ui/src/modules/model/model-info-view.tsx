@@ -1,7 +1,7 @@
 import { useGetModelQuery } from '@app/common/components/model/model.slice';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   Expander,
   ExpanderGroup,
@@ -13,15 +13,23 @@ import { BasicBlock, MultilingualBlock } from 'yti-common-ui/block';
 import {
   getBaseModelPrefix,
   getComments,
+  getContact,
+  getCreated,
+  getDataVocabularies,
   getIsPartOf,
   getLanguages,
   getLink,
+  getOrganization,
+  getReferenceData,
+  getTerminology,
   getTitles,
   getUri,
 } from '@app/common/utils/get-value';
 import { ModelInfoListWrapper, ModelInfoWrapper } from './model.styles';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
 import { compareLocales } from '@app/common/utils/compare-locals';
+import Separator from 'yti-common-ui/separator';
+import FormattedDate from 'yti-common-ui/formatted-date';
 
 export default function ModelInfoView() {
   const { t, i18n } = useTranslation('common');
@@ -31,9 +39,29 @@ export default function ModelInfoView() {
   );
   const { data: modelInfo } = useGetModelQuery(modelId);
 
-  console.log(modelInfo);
+  const data = useMemo(() => {
+    if (!modelInfo) {
+      return undefined;
+    }
 
-  if (!modelInfo) {
+    return {
+      title: getTitles(modelInfo),
+      description: getComments(modelInfo),
+      prefix: getBaseModelPrefix(modelInfo),
+      uri: getUri(modelInfo),
+      isPartOf: getIsPartOf(modelInfo, i18n.language),
+      languages: getLanguages(modelInfo),
+      terminologies: getTerminology(modelInfo, i18n.language),
+      referenceData: getReferenceData(modelInfo, i18n.language),
+      dataVocabularies: getDataVocabularies(modelInfo, i18n.language),
+      links: getLink(modelInfo),
+      organizations: getOrganization(modelInfo),
+      contact: getContact(modelInfo),
+      created: getCreated(modelInfo),
+    };
+  }, [modelInfo, i18n.language]);
+
+  if (!modelInfo || !data) {
     return <ModelInfoWrapper />;
   }
 
@@ -43,7 +71,7 @@ export default function ModelInfoView() {
 
       <BasicBlock title="Nimi">
         <MultilingualBlock
-          data={getTitles(modelInfo)
+          data={data.title
             .map((title) => ({
               lang: title['@language'],
               value: title['@value'],
@@ -52,40 +80,80 @@ export default function ModelInfoView() {
         />
       </BasicBlock>
       <BasicBlock title="Kuvaus">
-        <MultilingualBlock
-          data={getComments(modelInfo)
-            .map((comment) => ({
-              lang: comment['@language'],
-              value: comment['@value'],
-            }))
-            .sort((a, b) => compareLocales(a.lang, b.lang))}
-        />
+        {data.description.length > 0 ? (
+          <MultilingualBlock
+            data={data.description
+              .map((comment) => ({
+                lang: comment['@language'],
+                value: comment['@value'],
+              }))
+              .sort((a, b) => compareLocales(a.lang, b.lang))}
+          />
+        ) : (
+          'Ei lisätty'
+        )}
       </BasicBlock>
-      <BasicBlock title="Tunnus">{getBaseModelPrefix(modelInfo)}</BasicBlock>
-      <BasicBlock title="Tietomallin URI">{getUri(modelInfo)}</BasicBlock>
-      <BasicBlock title="Tietoalueet">
-        {getIsPartOf(modelInfo, i18n.language).join(', ')}
-      </BasicBlock>
+      <BasicBlock title="Tunnus">{data.prefix}</BasicBlock>
+      <BasicBlock title="Tietomallin URI">{data.uri}</BasicBlock>
+      <BasicBlock title="Tietoalueet">{data.isPartOf.join(', ')}</BasicBlock>
       <BasicBlock title="Tietomallin kielet">
-        {getLanguages(modelInfo)
+        {data.languages
           .map((lang) => `${translateLanguage(lang, t)} ${lang.toUpperCase()}`)
           .join(', ')}
       </BasicBlock>
 
-      <BasicBlock title="Käytetyt sanastot">Ei lisätty</BasicBlock>
-      <BasicBlock title="Käytetyt koodistot">Ei lisätty</BasicBlock>
-      <BasicBlock title="Käytetyt tietomallit">Ei lisätty</BasicBlock>
+      <BasicBlock title="Käytetyt sanastot">
+        {data.terminologies.length > 0
+          ? data.terminologies.map((t, idx) => (
+              <div key={`model-terminologies-${idx}`}>
+                <ExternalLink href={t.url} labelNewWindow="avaa uuden sivun">
+                  {t.title}
+                </ExternalLink>
+                <br />
+                {t.description}
+              </div>
+            ))
+          : 'Ei lisätty'}
+      </BasicBlock>
+      <BasicBlock title="Käytetyt koodistot">
+        {data.referenceData.length > 0
+          ? data.referenceData.map((t, idx) => (
+              <div key={`model-data-references-${idx}`}>
+                <ExternalLink href={t.url} labelNewWindow="avaa uuden sivun">
+                  {t.title}
+                </ExternalLink>
+                <br />
+                {t.description}
+              </div>
+            ))
+          : 'Ei lisätty'}
+      </BasicBlock>
+      <BasicBlock title="Käytetyt tietomallit">
+        {data.dataVocabularies.length > 0
+          ? getDataVocabularies(modelInfo, i18n.language).map((t, idx) => (
+              <div key={`model-data-references-${idx}`}>
+                <ExternalLink href={t.url} labelNewWindow="avaa uuden sivun">
+                  {t.title}
+                </ExternalLink>
+              </div>
+            ))
+          : 'Ei lisätty'}
+      </BasicBlock>
       <BasicBlock title="Linkit">
         <ModelInfoListWrapper>
-          {getLink(modelInfo).map((link, idx) => (
-            <div key={`model-link-${idx}`}>
-              <ExternalLink href={link.url} labelNewWindow="avaa uuden sivun">
-                {link.title}
-              </ExternalLink>
-              <br />
-              {link.description}
-            </div>
-          ))}
+          {data.links.length > 0 ? (
+            data.links.map((link, idx) => (
+              <div key={`model-link-${idx}`}>
+                <ExternalLink href={link.url} labelNewWindow="avaa uuden sivun">
+                  {link.title}
+                </ExternalLink>
+                <br />
+                {link.description}
+              </div>
+            ))
+          ) : (
+            <div>Ei lisätty</div>
+          )}
         </ModelInfoListWrapper>
       </BasicBlock>
 
@@ -96,6 +164,25 @@ export default function ModelInfoView() {
           </ExpanderTitleButton>
         </Expander>
       </ExpanderGroup>
+
+      <Separator isLarge />
+
+      <BasicBlock title="Sisällöntuottajat">
+        {data.organizations.join(', ')}
+      </BasicBlock>
+
+      <BasicBlock title="Palaute">
+        <ExternalLink
+          href={`mailto:${data.contact}?subject=Yhteydenotto`}
+          labelNewWindow=""
+        >
+          {data.contact}
+        </ExternalLink>
+      </BasicBlock>
+
+      <BasicBlock title="Luotu">
+        <FormattedDate date={data.created} />
+      </BasicBlock>
     </ModelInfoWrapper>
   );
 }

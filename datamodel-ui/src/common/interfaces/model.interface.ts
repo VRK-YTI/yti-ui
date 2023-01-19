@@ -17,7 +17,7 @@ export interface LangObject {
 export interface BaseInfo {
   '@id': string;
   '@type': string[];
-  comment?: LangObject[];
+  comment?: LangObject | LangObject[];
   contact?: LangObject;
   contributor: string | string[];
   created: string;
@@ -37,6 +37,14 @@ export interface BaseInfo {
   statusModified: string;
   useContext: string;
   versionInfo: Status;
+}
+
+export interface DataVocabulary {
+  '@id': string;
+  '@type': string[];
+  label: LangObject | LangObject[];
+  preferredXMLNamespaceName: string[];
+  preferredXMLNamespacePrefix: string;
 }
 
 export interface Group {
@@ -59,6 +67,25 @@ export interface Link {
   description: LangObject;
   homepage: string;
   title: LangObject;
+}
+
+export interface Terminology {
+  '@id': string;
+  '@type': string;
+  modified: string;
+  prefLabel: LangObject | LangObject[];
+  versionInfo: Status;
+}
+
+export interface ReferenceData {
+  '@id': string;
+  '@type': string;
+  creator: string;
+  description: LangObject | LangObject[];
+  identifier: string;
+  isPartOf: string | string[];
+  status: Status;
+  title: LangObject | LangObject[];
 }
 
 export interface Model {
@@ -110,7 +137,15 @@ export interface Model {
     void: string;
     xsd: string;
   };
-  '@graph': (BaseInfo | Link | Group | Organization)[];
+  '@graph': (
+    | BaseInfo
+    | DataVocabulary
+    | Link
+    | Group
+    | Organization
+    | Terminology
+    | ReferenceData
+  )[];
 }
 
 export const initialModel: Model = {
