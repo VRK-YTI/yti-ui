@@ -40,7 +40,7 @@ export default function Model() {
   return (
     <>
       <TitleWrapper>
-        <Breadcrumb>
+        <Breadcrumb baseUrl={t('datamodel-title')}>
           <BreadcrumbLink current={true} url="">
             {model.title}
           </BreadcrumbLink>

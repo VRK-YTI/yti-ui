@@ -55,7 +55,7 @@ export default function ModelInfoView() {
       referenceData: getReferenceData(modelInfo, i18n.language),
       dataVocabularies: getDataVocabularies(modelInfo, i18n.language),
       links: getLink(modelInfo),
-      organizations: getOrganization(modelInfo),
+      organizations: getOrganization(modelInfo, i18n.language),
       contact: getContact(modelInfo),
       created: getCreated(modelInfo),
     };
@@ -67,9 +67,9 @@ export default function ModelInfoView() {
 
   return (
     <ModelInfoWrapper>
-      <Heading variant="h2">Tiedot</Heading>
+      <Heading variant="h2">{t('details')}</Heading>
 
-      <BasicBlock title="Nimi">
+      <BasicBlock title={t('name')}>
         <MultilingualBlock
           data={data.title
             .map((title) => ({
@@ -79,7 +79,7 @@ export default function ModelInfoView() {
             .sort((a, b) => compareLocales(a.lang, b.lang))}
         />
       </BasicBlock>
-      <BasicBlock title="Kuvaus">
+      <BasicBlock title={t('description')}>
         {data.description.length > 0 ? (
           <MultilingualBlock
             data={data.description
@@ -90,61 +90,83 @@ export default function ModelInfoView() {
               .sort((a, b) => compareLocales(a.lang, b.lang))}
           />
         ) : (
-          'Ei lisätty'
+          t('not-added')
         )}
       </BasicBlock>
-      <BasicBlock title="Tunnus">{data.prefix}</BasicBlock>
-      <BasicBlock title="Tietomallin URI">{data.uri}</BasicBlock>
-      <BasicBlock title="Tietoalueet">{data.isPartOf.join(', ')}</BasicBlock>
-      <BasicBlock title="Tietomallin kielet">
+      <BasicBlock title={t('prefix')}>{data.prefix}</BasicBlock>
+      <BasicBlock title={t('model-uri')}>{data.uri}</BasicBlock>
+      <BasicBlock title={t('information-domains')}>
+        {data.isPartOf.join(', ')}
+      </BasicBlock>
+      <BasicBlock title={t('model-languages')}>
         {data.languages
           .map((lang) => `${translateLanguage(lang, t)} ${lang.toUpperCase()}`)
           .join(', ')}
       </BasicBlock>
 
-      <BasicBlock title="Käytetyt sanastot">
+      <BasicBlock title={t('terminologies-used')}>
         {data.terminologies.length > 0
-          ? data.terminologies.map((t, idx) => (
+          ? data.terminologies.map((terminology, idx) => (
               <div key={`model-terminologies-${idx}`}>
-                <ExternalLink href={t.url} labelNewWindow="avaa uuden sivun">
-                  {t.title}
+                <ExternalLink
+                  href={terminology.url}
+                  labelNewWindow={`${t('link-opens-new-window-external')} ${
+                    terminology.url
+                  }`}
+                >
+                  {terminology.title}
                 </ExternalLink>
                 <br />
-                {t.description}
+                {terminology.description}
               </div>
             ))
-          : 'Ei lisätty'}
+          : t('not-added')}
       </BasicBlock>
-      <BasicBlock title="Käytetyt koodistot">
+      <BasicBlock title={t('reference-data-used')}>
         {data.referenceData.length > 0
-          ? data.referenceData.map((t, idx) => (
+          ? data.referenceData.map((reference, idx) => (
               <div key={`model-data-references-${idx}`}>
-                <ExternalLink href={t.url} labelNewWindow="avaa uuden sivun">
-                  {t.title}
+                <ExternalLink
+                  href={reference.url}
+                  labelNewWindow={`${t('link-opens-new-window-external')} ${
+                    reference.url
+                  }`}
+                >
+                  {reference.title}
                 </ExternalLink>
                 <br />
-                {t.description}
+                {reference.description}
               </div>
             ))
-          : 'Ei lisätty'}
+          : t('not-added')}
       </BasicBlock>
-      <BasicBlock title="Käytetyt tietomallit">
+      <BasicBlock title={t('data-vocabularies-used')}>
         {data.dataVocabularies.length > 0
-          ? getDataVocabularies(modelInfo, i18n.language).map((t, idx) => (
+          ? data.dataVocabularies.map((vocab, idx) => (
               <div key={`model-data-references-${idx}`}>
-                <ExternalLink href={t.url} labelNewWindow="avaa uuden sivun">
-                  {t.title}
+                <ExternalLink
+                  href={vocab.url}
+                  labelNewWindow={`${t('link-opens-new-window-external')} ${
+                    vocab.url
+                  }`}
+                >
+                  {vocab.title}
                 </ExternalLink>
               </div>
             ))
-          : 'Ei lisätty'}
+          : t('not-added')}
       </BasicBlock>
-      <BasicBlock title="Linkit">
+      <BasicBlock title={t('links')}>
         <ModelInfoListWrapper>
           {data.links.length > 0 ? (
             data.links.map((link, idx) => (
               <div key={`model-link-${idx}`}>
-                <ExternalLink href={link.url} labelNewWindow="avaa uuden sivun">
+                <ExternalLink
+                  href={link.url}
+                  labelNewWindow={`${t('link-opens-new-window-external')} ${
+                    link.url
+                  }`}
+                >
                   {link.title}
                 </ExternalLink>
                 <br />
@@ -152,35 +174,33 @@ export default function ModelInfoView() {
               </div>
             ))
           ) : (
-            <div>Ei lisätty</div>
+            <div>{t('not-added')}</div>
           )}
         </ModelInfoListWrapper>
       </BasicBlock>
 
       <ExpanderGroup closeAllText="" openAllText="" showToggleAllButton={false}>
         <Expander>
-          <ExpanderTitleButton>
-            Viittaukset muista komponenteista
-          </ExpanderTitleButton>
+          <ExpanderTitleButton>{t('usage-from-other')}</ExpanderTitleButton>
         </Expander>
       </ExpanderGroup>
 
       <Separator isLarge />
 
-      <BasicBlock title="Sisällöntuottajat">
+      <BasicBlock title={t('contributors')}>
         {data.organizations.join(', ')}
       </BasicBlock>
 
-      <BasicBlock title="Palaute">
+      <BasicBlock title={t('feedback')}>
         <ExternalLink
-          href={`mailto:${data.contact}?subject=Yhteydenotto`}
+          href={`mailto:${data.contact}?subject=${data.title}`}
           labelNewWindow=""
         >
           {data.contact}
         </ExternalLink>
       </BasicBlock>
 
-      <BasicBlock title="Luotu">
+      <BasicBlock title={t('created')}>
         <FormattedDate date={data.created} />
       </BasicBlock>
     </ModelInfoWrapper>

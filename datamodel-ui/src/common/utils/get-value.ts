@@ -338,7 +338,12 @@ export function getIsPartOf(data?: Model, lang?: string): string[] {
   }
 
   if (typeof target.isPartOf === 'string') {
-    return [target.isPartOf];
+    return [
+      getPropertyLanguageVersion({
+        data: groups.find((graph) => graph['@id'] === target.isPartOf)?.label,
+        lang: lang ?? 'fi',
+      }),
+    ];
   }
 
   return target.isPartOf.map((partOf) =>
@@ -398,6 +403,7 @@ export function getTerminology(
     title: getPropertyLanguageVersion({
       data: t.prefLabel,
       lang: lang ?? 'fi',
+      appendLocale: true,
     }),
     url: t['@id'],
   }));
@@ -422,6 +428,7 @@ export function getReferenceData(
     title: getPropertyLanguageVersion({
       data: t.title,
       lang: lang ?? 'fi',
+      appendLocale: true,
     }),
     url: t['@id'],
   }));
@@ -444,6 +451,7 @@ export function getDataVocabularies(
     title: getPropertyLanguageVersion({
       data: t.label,
       lang: lang ?? 'fi',
+      appendLocale: true,
     }),
     url: t['@id'],
   }));
