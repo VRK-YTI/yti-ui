@@ -6,13 +6,35 @@ export const TitleWrapper = styled.div`
 `;
 
 export const ContentWrapper = styled.div`
-  height: 70vh;
+  max-height: 70vh;
+  height: 100%;
 
   .react-flow__nodes > * {
     position: absolute;
   }
 
   .react-flow__attribution {
-    visibility: hidden;
+    display: none;
+  }
+`;
+
+export const ModelInfoWrapper = styled.div`
+  width: 360px;
+  height: 70vh;
+
+  h2 {
+    font-size: 18px !important;
+  }
+
+  :after {
+    content: ' ';
+    display: block;
+    height: ${(props) => props.theme.suomifi.spacing.xl};
+  }
+`;
+
+export const ModelInfoListWrapper = styled.div`
+  > * {
+    margin-bottom: ${(props) => props.theme.suomifi.spacing.s};
   }
 `;

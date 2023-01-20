@@ -26,6 +26,7 @@ export const SideNavigationContent = styled.div<{ $isSmall: boolean }>`
   height: 100%;
   width: 100%;
   background: ${(props) => props.theme.suomifi.colors.whiteBase};
+  overflow: scroll;
 `;
 
 export const SideNavigationWrapper = styled.div<{ $open: boolean }>`
