@@ -199,6 +199,7 @@
   "match-in-other-add": "Lägg till ett nytt motsvarande begrepp",
   "match-in-other-chip-label": "Valda motsvarande begreppen",
   "match-in-other-description": "Ett begrepp som kan användas i stället av detta begrepp. Finns i en annan ordlista.",
+  "missing-information": "",
   "modified-at": "Redigerad",
   "narrower-concept": "Hierarkiskt underordnat begrepp",
   "narrower-concept-add": "Lägg till ett hierarkiskt underordnat begrepp",

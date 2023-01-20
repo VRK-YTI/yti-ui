@@ -7,7 +7,8 @@ import { serviceCategoriesApi } from '@app/common/components/service-categories/
 import { organizationsApi } from '@app/common/components/organizations/organizations.slice';
 import { searchModelsApi } from '@app/common/components/search-models/search-models.slice';
 import { fakeableUsersApi } from '@app/common/components/fakeable-users/fakeable-users.slice';
-import { modelApi } from '@app/common/components/model/model.slice';
+import { prefixApi } from '@app/common/components/prefix';
+import { modelApi, modelApiV2 } from '@app/common/components/model/model.slice';
 
 // make Context from next-redux-wrapper compatible with next-iron-session
 export type NextIronContext = Context | (Context & { req: NextApiRequest });
@@ -21,7 +22,9 @@ export function makeStore(ctx: NextIronContext) {
       [organizationsApi.reducerPath]: organizationsApi.reducer,
       [searchModelsApi.reducerPath]: searchModelsApi.reducer,
       [fakeableUsersApi.reducerPath]: fakeableUsersApi.reducer,
+      [prefixApi.reducerPath]: prefixApi.reducer,
       [modelApi.reducerPath]: modelApi.reducer,
+      [modelApiV2.reducerPath]: modelApiV2.reducer,
     },
 
     middleware: (getDefaultMiddleware) =>
@@ -31,7 +34,9 @@ export function makeStore(ctx: NextIronContext) {
         organizationsApi.middleware,
         searchModelsApi.middleware,
         fakeableUsersApi.middleware,
-        modelApi.middleware
+        prefixApi.middleware,
+        modelApi.middleware,
+        modelApiV2.middleware
       ),
 
     // Development tools should be available only in development environments

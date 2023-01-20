@@ -5,7 +5,8 @@ import InformationDomainsSelector from '@app/common/components/terminology-compo
 import LanguageSelector from '@app/common/components/terminology-components/language-selector';
 import { TallerSeparator } from './new-terminology.styles';
 import OrganizationSelector from '@app/common/components/terminology-components/organization-selector';
-import Prefix from '@app/common/components/terminology-components/prefix';
+// import Prefix from '@app/common/components/terminology-components/prefix';
+import Prefix from 'yti-common-ui/form/prefix';
 import TypeSelector from '@app/common/components/terminology-components/type-selector';
 import { NewTerminologyInfo } from '@app/common/interfaces/new-terminology-info';
 import { useTranslation } from 'next-i18next';
@@ -13,6 +14,7 @@ import { TerminologyDataInitialState } from './terminology-initial-state';
 import { UpdateTerminology } from './update-terminology.interface';
 import StatusSelector from './status-selector';
 import isEmail from 'validator/lib/isEmail';
+import { useGetIfNamespaceInUseMutation } from '@app/common/components/vocabulary/vocabulary.slice';
 
 interface InfoManualProps {
   setIsValid: (valid: boolean) => void;
@@ -109,13 +111,30 @@ export default function InfoManual({
         initialData={initialData}
       />
 
-      {!initialData && (
-        <Prefix
-          disabled={disabled}
-          update={handleUpdate}
-          userPosted={userPosted}
-        />
-      )}
+      <Prefix
+        prefix={terminologyData.prefix[0]}
+        setPrefix={(value) =>
+          handleUpdate({
+            key: 'prefix',
+            data: [value, true],
+          })
+        }
+        validatePrefixMutation={useGetIfNamespaceInUseMutation}
+        typeInUri={'terminology'}
+        error={false}
+        translations={{
+          automatic: t('automatic-prefix'),
+          errorInvalid: t('prefix-invalid'),
+          errorTaken: t('prefix-taken'),
+          hintText: t('prefix-hint'),
+          label: t('prefix'),
+          manual: t('manual-prefix'),
+          textInputHint: '',
+          textInputLabel: t('prefix'),
+          uriPreview: t('url-preview'),
+        }}
+        invertCheck
+      />
 
       <TallerSeparator />
       <ContactInfo

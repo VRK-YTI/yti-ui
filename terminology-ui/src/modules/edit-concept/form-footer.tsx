@@ -50,6 +50,7 @@ export default function FormFooter({
       {errors.total && (
         <div style={{ marginBottom: '15px' }}>
           <FormFooterAlert
+            labelText={t('missing-information')}
             alerts={Object.keys(errors)
               .filter((k) => k !== 'total' && errors[k as keyof FormError])
               .map((k) => translateEditConceptError(k as keyof FormError, t))}

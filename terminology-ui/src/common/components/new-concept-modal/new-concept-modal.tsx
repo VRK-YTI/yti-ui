@@ -108,7 +108,10 @@ export default function NewConceptModal({
           </InlineAlert>
         )}
         {isError && (
-          <FormFooterAlert alerts={[t('recommended-term-missing-error')]} />
+          <FormFooterAlert
+            labelText={t('missing-information')}
+            alerts={[t('recommended-term-missing-error')]}
+          />
         )}
         <Button
           onClick={() => handleClick()}

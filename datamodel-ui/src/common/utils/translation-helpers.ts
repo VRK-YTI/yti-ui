@@ -11,6 +11,23 @@ export function translateModelType(type: string, t: TFunction) {
   }
 }
 
+export function translateModelFormErrors(error: string, t: TFunction) {
+  switch (error) {
+    case 'languageAmount':
+      return t('missing-languages', { ns: 'admin' });
+    case 'titleAmount':
+      return t('missing-language-title', { ns: 'admin' });
+    case 'prefix':
+      return t('missing-prefix', { ns: 'admin' });
+    case 'serviceCategories':
+      return t('missing-information-domain', { ns: 'admin' });
+    case 'organizations':
+      return t('missing-organizations', { ns: 'admin' });
+    default:
+      return t('missing-general', { ns: 'admin' });
+  }
+}
+
 export function translateStatus(status: string, t: TFunction) {
   switch (status) {
     case 'DRAFT':

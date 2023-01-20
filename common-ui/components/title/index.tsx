@@ -1,14 +1,20 @@
 import { Heading } from 'suomifi-ui-components';
-import { TitleWrapper, TitleWrapperNoBreadcrumb } from './title.styles';
+import {
+  TitleRow,
+  TitleWrapper,
+  TitleWrapperNoBreadcrumb,
+} from './title.styles';
 
 interface TitleProps {
   title: string;
+  editButton?: React.ReactNode;
   extra?: React.ReactNode;
   noBreadcrumbs?: boolean;
 }
 
 export default function Title({
   title,
+  editButton,
   extra,
   noBreadcrumbs = false,
 }: TitleProps) {
@@ -19,9 +25,12 @@ export default function Title({
   const renderContent = () => {
     return (
       <>
-        <Heading variant="h1" id="page-title">
-          {title}
-        </Heading>
+        <TitleRow>
+          <Heading variant="h1" id="page-title">
+            {title}
+          </Heading>
+          {editButton && editButton}
+        </TitleRow>
         {extra && extra}
       </>
     );
