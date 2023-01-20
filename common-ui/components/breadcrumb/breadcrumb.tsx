@@ -6,10 +6,11 @@ import BreadcrumbLink from './breadcrumb-link';
 import { useBreakpoints } from '../media-query';
 
 export interface BreadcrumbProps {
+  baseUrl?: string;
   children: React.ReactNode;
 }
 
-export default function Breadcrumb({ children }: BreadcrumbProps) {
+export default function Breadcrumb({ baseUrl, children }: BreadcrumbProps) {
   const { t } = useTranslation('common');
   const { isSmall } = useBreakpoints();
 
@@ -21,7 +22,9 @@ export default function Breadcrumb({ children }: BreadcrumbProps) {
   return (
     <BreadcrumbWrapper id="breadcrumb">
       <SuomiFiBreadcrumb aria-label={t('breadcrumb')} href="/">
-        <BreadcrumbLink url="/">{t('terminology-title')}</BreadcrumbLink>
+        <BreadcrumbLink url="/">
+          {baseUrl ? baseUrl : t('terminology-title')}
+        </BreadcrumbLink>
 
         {children}
       </SuomiFiBreadcrumb>

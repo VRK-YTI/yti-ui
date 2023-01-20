@@ -115,6 +115,7 @@ export const RadioButtonGroupSpaced = styled(RadioButtonGroup)<{
 `;
 
 export const OtherTermsExpanderGroup = styled(ExpanderGroup)`
+  margin-top: ${(props) => props.theme.suomifi.spacing.s};
   margin-bottom: ${(props) => props.theme.suomifi.spacing.m};
 `;
 

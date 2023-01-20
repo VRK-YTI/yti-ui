@@ -7,7 +7,7 @@ import {
 } from './terminology-components.styles';
 import { useTranslation } from 'next-i18next';
 import { UpdateTerminology } from '@app/modules/new-terminology/update-terminology.interface';
-import { EMAIL_MAX } from '@app/common/utils/constants';
+import { EMAIL_MAX } from 'yti-common-ui/utils/constants';
 import { useState } from 'react';
 import isEmail from 'validator/lib/isEmail';
 

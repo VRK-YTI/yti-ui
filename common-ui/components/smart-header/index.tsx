@@ -78,7 +78,7 @@ export default function SmartHeader({
         <NavigationContainer $breakpoint="small">
           <MobileNavigation
             handleLoginModalClick={handleLoginModalClick}
-            isLoggedIn={user?.anonymous ?? false}
+            isLoggedIn={!user?.anonymous ?? false}
             fakeableUsers={fakeableUsers}
           />
         </NavigationContainer>

@@ -15,7 +15,12 @@ import SearchResults, {
 import Pagination from 'yti-common-ui/pagination';
 import { useTranslation } from 'next-i18next';
 import { useBreakpoints } from 'yti-common-ui/media-query';
-import { Modal, ModalContent } from 'suomifi-ui-components';
+import {
+  Modal,
+  ModalContent,
+  Paragraph,
+  Link as SuomiFiLink,
+} from 'suomifi-ui-components';
 import { useEffect, useMemo, useState } from 'react';
 import { useGetCountsQuery } from '@app/common/components/counts/counts.slice';
 import { SearchPageFilter } from './search-page-filter';
@@ -35,6 +40,7 @@ import {
 } from 'yti-common-ui/title/title.styles';
 import NewTerminology from '@app/modules/new-terminology';
 import { setTitle } from '@app/common/components/title/title.slice';
+import Link from 'next/link';
 
 export default function TerminologySearch() {
   const { t, i18n } = useTranslation();
@@ -179,12 +185,21 @@ export default function TerminologySearch() {
         title={t('terminology-title')}
         noBreadcrumbs={true}
         extra={
-          <TitleDescriptionWrapper $isSmall={isSmall}>
-            <Description id="page-description">
-              {t('terminology-search-info')}
-            </Description>
-            <NewTerminology />
-          </TitleDescriptionWrapper>
+          <>
+            <TitleDescriptionWrapper $isSmall={isSmall}>
+              <Description id="page-description">
+                {t('terminology-search-info')}
+              </Description>
+              <NewTerminology />
+            </TitleDescriptionWrapper>
+            <Paragraph>
+              {t('move-to-former')}{' '}
+              <Link href="https://sanastot.suomi.fi/" passHref>
+                <SuomiFiLink href="">{t('to-terminology-tool')}</SuomiFiLink>
+              </Link>
+              .
+            </Paragraph>
+          </>
         }
       />
 

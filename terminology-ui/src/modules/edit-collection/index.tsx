@@ -27,7 +27,7 @@ import {
 import { useGetCollectionQuery } from '@app/common/components/collection/collection.slice';
 import { Collection } from '@app/common/interfaces/collection.interface';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
-import { DEFINITION_MAX, TEXT_INPUT_MAX } from '@app/common/utils/constants';
+import { TEXT_INPUT_MAX, TEXT_AREA_MAX } from 'yti-common-ui/utils/constants';
 import useConfirmBeforeLeavingPage from '@app/common/utils/hooks/use-confirm-before-leaving-page';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import SaveSpinner from 'yti-common-ui/save-spinner';
@@ -117,10 +117,16 @@ export default function EditCollection({
     const defCount = formData.definition.filter(
       (n) => n.value && n.lang === language
     ).length;
+
+    if (nameCount !== defCount) {
+      setErrors({ ...errors, [language]: true });
+    }
+
     if (errors[language] && nameCount == defCount) {
       setErrors({ ...errors, [language]: false });
     }
-    if (value) {
+
+    if (value && value !== '') {
       setEmptyError(false);
     }
   };
@@ -154,10 +160,16 @@ export default function EditCollection({
     const defCount = formData.definition.filter(
       (n) => n.value && n.lang === language
     ).length;
+
+    if (nameCount !== defCount) {
+      setErrors({ ...errors, [language]: true });
+    }
+
     if (errors[language] && nameCount == defCount) {
       setErrors({ ...errors, [language]: false });
     }
-    if (value) {
+
+    if (value && value !== '') {
       setEmptyError(false);
     }
   };
@@ -288,7 +300,7 @@ export default function EditCollection({
               defaultValue={
                 formData.definition.find((n) => n.lang === language)?.value
               }
-              maxLength={DEFINITION_MAX}
+              maxLength={TEXT_AREA_MAX}
               className="collection-description-input"
             />
           ))}

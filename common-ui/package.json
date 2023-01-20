@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "peerDependencies": {
+    "dayjs": "^1.11.2",
     "interweave": "^13.0.0",
     "interweave-ssr": "^2.0.0",
     "lodash": "^4.17.21",

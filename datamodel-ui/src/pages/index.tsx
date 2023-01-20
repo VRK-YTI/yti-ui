@@ -2,7 +2,7 @@ import {
   CommonContextProvider,
   CommonContextState,
 } from 'yti-common-ui/common-context-provider';
-import Layout from 'yti-common-ui/layout/layout';
+import Layout from '@app/common/components/layout';
 import { SSRConfig, useTranslation } from 'next-i18next';
 import { createCommonGetServerSideProps } from '@app/common/utils/create-getserversideprops';
 import FrontPage from '@app/modules/front-page';
