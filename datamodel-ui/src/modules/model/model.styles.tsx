@@ -8,28 +8,14 @@ export const TitleWrapper = styled.div`
 
 export const ContentWrapper = styled.div`
   height: 100%;
-
-  .react-flow__nodes > * {
-    position: absolute;
-  }
-
-  .react-flow__attribution {
-    display: none;
-  }
+  width: 100%;
 `;
 
 export const ModelInfoWrapper = styled.div`
-  width: 360px;
-  height: 70vh;
+  width: 100%;
 
   h2 {
     font-size: 18px !important;
-  }
-
-  :after {
-    content: ' ';
-    display: block;
-    height: ${(props) => props.theme.suomifi.spacing.xl};
   }
 `;
 
@@ -40,6 +26,7 @@ export const ModelInfoListWrapper = styled.div`
 `;
 
 export const ModelFlow = styled(ReactFlow)`
+  max-height: 100%;
   height: 100%;
   width: 100%;
 
@@ -49,5 +36,10 @@ export const ModelFlow = styled(ReactFlow)`
 
   .react-flow__attribution {
     display: none;
+  }
+
+  .react-flow__viewport {
+    transform-origin: 0 0;
+    pointer-events: none;
   }
 `;

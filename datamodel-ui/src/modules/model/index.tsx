@@ -1,9 +1,9 @@
-import SideNavigation from '@app/common/components/model-side-navigation';
+import Drawer from '@app/common/components/model-drawer';
 import { MainTitle, BadgeBar, Badge } from 'yti-common-ui/title-block';
 import { ContentWrapper, ModelFlow, TitleWrapper } from './model.styles';
 import { Breadcrumb, BreadcrumbLink } from 'yti-common-ui/breadcrumb';
 import { Icon } from 'suomifi-ui-components';
-import { Panel } from 'reactflow';
+import { MiniMap, Panel } from 'reactflow';
 import ModelInfoView from './model-info-view';
 import SearchView from './search-view';
 import { useRouter } from 'next/router';
@@ -37,8 +37,66 @@ export default function Model() {
     [modelInfo, i18n.language]
   );
 
+  // return (
+  //   <div style={{height: '100vh', width: '100vw'}}>
+  //   <ModelFlow
+  //     nodes={[
+  //       {
+  //         id: '1',
+  //         position: { x: 300, y: 300 },
+  //         data: { label: '1' },
+  //         style: {
+  //           border: '1px solid black',
+  //           width: 'min-content',
+  //           padding: '5px',
+  //         },
+  //       },
+  //       {
+  //         id: '2',
+  //         position: { x: 400, y: 300 },
+  //         data: { label: '2' },
+  //         style: {
+  //           border: '1px solid black',
+  //           width: 'min-content',
+  //           padding: '5px',
+  //         },
+  //       },
+  //       {
+  //         id: '3',
+  //         position: { x: 500, y: 300 },
+  //         data: { label: '3' },
+  //         style: {
+  //           border: '1px solid black',
+  //           width: 'min-content',
+  //           padding: '5px',
+  //         },
+  //       },
+  //       {
+  //         id: '4',
+  //         position: { x: 600, y: 300 },
+  //         data: { label: '4' },
+  //         style: {
+  //           border: '1px solid black',
+  //           width: 'min-content',
+  //           padding: '5px',
+  //         },
+  //       },
+  //     ]}
+  //   >
+  //     <MiniMap />
+  //   </ModelFlow>
+  //   </div>
+  // );
+
   return (
-    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div
+      style={{
+        maxHeight: '100vh',
+        height: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
       <TitleWrapper>
         <Breadcrumb baseUrl={t('datamodel-title')}>
           <BreadcrumbLink current={true} url="">
@@ -103,42 +161,40 @@ export default function Model() {
             },
           ]}
         >
-          <Panel position="top-left" style={{ height: '100%' }}>
-            <SideNavigation
-              views={[
-                {
-                  id: 'search',
-                  icon: 'search',
-                  buttonLabel: 'Hae',
-                  component: <SearchView />,
-                },
-                {
-                  id: 'info',
-                  icon: 'info',
-                  buttonLabel: 'Tiedot',
-                  component: <ModelInfoView />,
-                },
-                {
-                  id: 'classes',
-                  icon: 'chatHeart',
-                  buttonLabel: 'Luokat',
-                  component: <></>,
-                },
-                {
-                  id: 'attributes',
-                  icon: 'history',
-                  buttonLabel: 'Attribuutit',
-                  component: <></>,
-                },
-                {
-                  id: 'associations',
-                  icon: 'heart',
-                  buttonLabel: 'Assosisaatiot',
-                  component: <></>,
-                },
-              ]}
-            />
-          </Panel>
+          <Drawer
+            views={[
+              {
+                id: 'search',
+                icon: 'search',
+                buttonLabel: 'Hae',
+                component: <SearchView />,
+              },
+              {
+                id: 'info',
+                icon: 'info',
+                buttonLabel: 'Tiedot',
+                component: <ModelInfoView />,
+              },
+              {
+                id: 'classes',
+                icon: 'chatHeart',
+                buttonLabel: 'Luokat',
+                component: <></>,
+              },
+              {
+                id: 'attributes',
+                icon: 'history',
+                buttonLabel: 'Attribuutit',
+                component: <></>,
+              },
+              {
+                id: 'associations',
+                icon: 'heart',
+                buttonLabel: 'Assosisaatiot',
+                component: <></>,
+              },
+            ]}
+          />
         </ModelFlow>
       </ContentWrapper>
     </div>

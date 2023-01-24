@@ -9,6 +9,7 @@ export const SubTitle = styled(Text)`
 
 export const MainTitleWrapper = styled(Heading)`
   line-height: 52px;
+  margin-bottom: 5px;
 `;
 
 export const BadgeBarWrapper = styled.div<{ $larger?: boolean }>`

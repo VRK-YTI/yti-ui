@@ -3,12 +3,13 @@ import { resolve } from '../media-query/styled-helpers';
 import styled from 'styled-components';
 import { Button } from 'suomifi-ui-components';
 
-export const SideNavigationContainer = styled.div<{
+export const DrawerContainer = styled.div<{
   $open: boolean;
   $isSmall: boolean;
 }>`
+  max-height: 100%;
   height: 100%;
-  width: min-content;
+  width: 100%;
   display: flex;
   flex-direction: ${(props) => (props.$isSmall ? 'column' : 'row-reverse')};
 
@@ -16,23 +17,22 @@ export const SideNavigationContainer = styled.div<{
 
   ${(props) =>
     props.$open &&
-    `> div:first-child {
+    `> button:first-child {
       position: relative;
       right: 1px;
     }`}
 `;
 
-export const SideNavigationContent = styled.div<{ $isSmall: boolean }>`
-  height: 100%;
-  width: 100%;
+export const DrawerContent = styled.div<{ $isSmall: boolean }>`
+  width: 390px;
   background: ${(props) => props.theme.suomifi.colors.whiteBase};
   overflow: scroll;
 `;
 
-export const SideNavigationWrapper = styled.div<{ $open: boolean }>`
-  min-height: 100%;
+export const DrawerWrapper = styled.div<{ $open: boolean }>`
+  min-height: min-content;
+  max-height: 100%;
   height: 100%;
-  overflow: hidden;
   width: ${(props) => (props.$open ? 'min-content' : '0')};
   display: flex;
   flex-direction: row-reverse;
@@ -42,7 +42,7 @@ export const SideNavigationWrapper = styled.div<{ $open: boolean }>`
       : 'none'};
 `;
 
-export const SideNavigationButtonGroup = styled.div<{ $isSmall: boolean }>`
+export const DrawerButtonGroup = styled.div<{ $isSmall: boolean }>`
   display: flex;
   flex-direction: ${(props) => (props.$isSmall ? 'row' : 'column')};
   font: 12px;
@@ -58,6 +58,25 @@ export const SideNavigationButtonGroup = styled.div<{ $isSmall: boolean }>`
     border-bottom: 3px solid ${props.theme.suomifi.colors.whiteBase};
   }
   `}
+`;
+
+export const ToggleButton = styled(Button)<{ $open: boolean }>`
+  height: 70px;
+  border: 1px solid ${(props) => props.theme.suomifi.colors.depthDark3} !important;
+  border-radius: 0 2px 2px 0;
+  background: ${(props) => props.theme.suomifi.colors.whiteBase} !important;
+  padding: 15px 0;
+
+  ${(props) => props.$open && 'border-left: none !important;'}
+
+  svg {
+    height: 40px !important;
+    width: 40px !important;
+  }
+
+  path {
+    color: ${(props) => props.theme.suomifi.colors.highlightDark1};
+  }
 `;
 
 export const SideNavigationVisibleButtonGroup = styled.div<{
@@ -127,25 +146,6 @@ export const SideNavigationButton = styled(Button)<{
     width: 20px !important;
     height: auto !important;
     margin: 0 !important;
-  }
-`;
-
-export const ToggleButton = styled(Button)<{ $open: boolean }>`
-  height: 70px;
-  border: 1px solid ${(props) => props.theme.suomifi.colors.depthDark3} !important;
-  border-radius: 0 2px 2px 0;
-  background: ${(props) => props.theme.suomifi.colors.whiteBase} !important;
-  padding: 15px 0;
-
-  ${(props) => props.$open && 'border-left: none !important;'}
-
-  svg {
-    height: 40px !important;
-    width: 40px !important;
-  }
-
-  path {
-    color: ${(props) => props.theme.suomifi.colors.highlightDark1};
   }
 `;
 
