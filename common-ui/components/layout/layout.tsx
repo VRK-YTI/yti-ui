@@ -25,7 +25,7 @@ export default function Layout({
   fakeableUsers,
   matomo,
   alerts,
-  fullWidth,
+  fullScreen,
 }: {
   children: React.ReactNode;
   feedbackSubject?: string;
@@ -33,7 +33,7 @@ export default function Layout({
   fakeableUsers?: FakeableUser[] | null;
   matomo?: React.ReactNode;
   alerts?: React.ReactNode;
-  fullWidth?: boolean;
+  fullScreen?: boolean;
 }) {
   const { t, i18n } = useTranslation('common');
   const { breakpoint } = useBreakpoints();
@@ -50,30 +50,37 @@ export default function Layout({
       </Head>
 
       <SkipLink href="#main">{t('skip-link-main')}</SkipLink>
-
-      <SiteContainer>
-        <SmartHeader
-          user={user}
-          fakeableUsers={generateFakeableUsers(i18n.language, fakeableUsers)}
-        />
-
-        <ContentContainer>
-          {alerts && alerts}
-          <MarginContainer $breakpoint={breakpoint} $maxWidth={fullWidth}>
+      {fullScreen ? (
+        <SiteContainer>
+          <ContentContainer $fullScreen={fullScreen}>
             {children}
-          </MarginContainer>
-        </ContentContainer>
+          </ContentContainer>
+        </SiteContainer>
+      ) : (
+        <SiteContainer>
+          <SmartHeader
+            user={user}
+            fakeableUsers={generateFakeableUsers(i18n.language, fakeableUsers)}
+          />
 
-        <FooterContainer>
-          <MarginContainer $breakpoint={breakpoint}>
-            <Footer
-              t={t}
-              feedbackSubject={feedbackSubject}
-              versionInfo={publicRuntimeConfig?.versionInfo}
-            />
-          </MarginContainer>
-        </FooterContainer>
-      </SiteContainer>
+          <ContentContainer>
+            {alerts && alerts}
+            <MarginContainer $breakpoint={breakpoint}>
+              {children}
+            </MarginContainer>
+          </ContentContainer>
+
+          <FooterContainer>
+            <MarginContainer $breakpoint={breakpoint}>
+              <Footer
+                t={t}
+                feedbackSubject={feedbackSubject}
+                versionInfo={publicRuntimeConfig?.versionInfo}
+              />
+            </MarginContainer>
+          </FooterContainer>
+        </SiteContainer>
+      )}
     </ThemeProvider>
   );
 }

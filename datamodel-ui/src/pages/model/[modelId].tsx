@@ -15,7 +15,7 @@ interface IndexPageProps extends CommonContextState {
 export default function ModelPage(props: IndexPageProps) {
   return (
     <CommonContextProvider value={props}>
-      <Layout fullWidth={true}>
+      <Layout fullScreen>
         <PageHead baseUrl="https://tietomallit.suomi.fi" />
 
         <Model />

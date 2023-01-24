@@ -1,9 +1,9 @@
 import SideNavigation from '@app/common/components/model-side-navigation';
 import { MainTitle, BadgeBar, Badge } from 'yti-common-ui/title-block';
-import { ContentWrapper, TitleWrapper } from './model.styles';
+import { ContentWrapper, ModelFlow, TitleWrapper } from './model.styles';
 import { Breadcrumb, BreadcrumbLink } from 'yti-common-ui/breadcrumb';
 import { Icon } from 'suomifi-ui-components';
-import { Panel, ReactFlow } from 'reactflow';
+import { Panel } from 'reactflow';
 import ModelInfoView from './model-info-view';
 import SearchView from './search-view';
 import { useRouter } from 'next/router';
@@ -38,7 +38,7 @@ export default function Model() {
   );
 
   return (
-    <>
+    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
       <TitleWrapper>
         <Breadcrumb baseUrl={t('datamodel-title')}>
           <BreadcrumbLink current={true} url="">
@@ -59,7 +59,7 @@ export default function Model() {
       </TitleWrapper>
 
       <ContentWrapper>
-        <ReactFlow
+        <ModelFlow
           nodes={[
             {
               id: '1',
@@ -103,7 +103,7 @@ export default function Model() {
             },
           ]}
         >
-          <Panel position="top-left">
+          <Panel position="top-left" style={{ height: '100%' }}>
             <SideNavigation
               views={[
                 {
@@ -139,8 +139,8 @@ export default function Model() {
               ]}
             />
           </Panel>
-        </ReactFlow>
+        </ModelFlow>
       </ContentWrapper>
-    </>
+    </div>
   );
 }

@@ -7,7 +7,7 @@ export const SideNavigationContainer = styled.div<{
   $open: boolean;
   $isSmall: boolean;
 }>`
-  height: ${(props) => (props.$isSmall ? 'min-content' : '70vh')};
+  height: 100%;
   width: min-content;
   display: flex;
   flex-direction: ${(props) => (props.$isSmall ? 'column' : 'row-reverse')};

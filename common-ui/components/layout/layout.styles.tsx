@@ -6,14 +6,10 @@ import { resolve, small } from '../media-query/styled-helpers';
 
 export const MarginContainer = styled.div<{
   $breakpoint: Breakpoint;
-  $maxWidth?: boolean;
 }>`
-  max-width: ${(props) => (props.$maxWidth ? '100%' : '1100px')};
+  max-width: 1100px;
   margin: auto;
-  padding: ${(props) =>
-    props.$maxWidth
-      ? '0'
-      : resolve(props.$breakpoint, '0 15px', '0 30px', 'auto')};
+  padding: ${(props) => resolve(props.$breakpoint, '0 15px', '0 30px', 'auto')};
   min-width: 300px;
 `;
 
@@ -46,11 +42,22 @@ export const NavigationContainer = styled.div<{ $breakpoint: Breakpoint }>`
 
 // content layout
 
-export const ContentContainer = styled.div`
-  background-color: ${(props) => props.theme.suomifi.colors.depthLight3};
+export const ContentContainer = styled.div<{ $fullScreen?: boolean }>`
+  background-color: ${(props) =>
+    props.$fullScreen
+      ? props.theme.suomifi.colors.whiteBase
+      : props.theme.suomifi.colors.depthLight3};
   border-bottom: ${(props) =>
+    !props.$fullScreen &&
     `1px solid ${props.theme.suomifi.colors.depthLight1}`};
   flex-grow: 1;
+
+  ${(props) =>
+    props.$fullScreen &&
+    `
+    display: flex;
+    flex-direction: column;
+  `}
 `;
 
 export const FooterContainer = styled.footer`

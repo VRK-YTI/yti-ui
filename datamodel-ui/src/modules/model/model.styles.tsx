@@ -1,3 +1,4 @@
+import { ReactFlow } from 'reactflow';
 import styled from 'styled-components';
 
 export const TitleWrapper = styled.div`
@@ -6,7 +7,6 @@ export const TitleWrapper = styled.div`
 `;
 
 export const ContentWrapper = styled.div`
-  max-height: 70vh;
   height: 100%;
 
   .react-flow__nodes > * {
@@ -36,5 +36,18 @@ export const ModelInfoWrapper = styled.div`
 export const ModelInfoListWrapper = styled.div`
   > * {
     margin-bottom: ${(props) => props.theme.suomifi.spacing.s};
+  }
+`;
+
+export const ModelFlow = styled(ReactFlow)`
+  height: 100%;
+  width: 100%;
+
+  .react-flow__nodes > * {
+    position: absolute;
+  }
+
+  .react-flow__attribution {
+    display: none;
   }
 `;

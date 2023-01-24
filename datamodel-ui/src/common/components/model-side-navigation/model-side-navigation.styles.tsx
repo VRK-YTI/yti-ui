@@ -9,6 +9,7 @@ export const ModelSideNavigationContainer = styled.div<{ $isSmall: boolean }>`
   `}
 
   width: min-content;
+  height: 100%;
 `;
 
 export const ViewContainer = styled.div`
