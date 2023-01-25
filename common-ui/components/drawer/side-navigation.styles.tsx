@@ -11,22 +11,48 @@ export const DrawerContainer = styled.div<{
   height: 100%;
   width: 100%;
   display: flex;
-  flex-direction: ${(props) => (props.$isSmall ? 'column' : 'row-reverse')};
+  flex-direction: ${(props) =>
+    props.$isSmall ? 'column-reverse' : 'row-reverse'};
 
   position: relative;
 
   ${(props) =>
     props.$open &&
-    `> button:first-child {
+    `
+    > button:first-child {
       position: relative;
       right: 1px;
-    }`}
+    }
+    `}
+
+  .small-screen-wrapper {
+    max-height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
 `;
 
-export const DrawerContent = styled.div<{ $isSmall: boolean }>`
-  width: 390px;
+export const DrawerContent = styled.div<{
+  $isSmall: boolean;
+  $viewOpen?: boolean;
+}>`
+  width: ${(props) => (props.$isSmall ? '100vw' : '390px')};
   background: ${(props) => props.theme.suomifi.colors.whiteBase};
   overflow: scroll;
+
+  ${(props) =>
+    props.$isSmall &&
+    `
+    max-height: 100%;
+    overflow: scroll;
+  `}
+
+  ${(props) =>
+    props.$isSmall &&
+    props.$viewOpen &&
+    `
+    height: 100vh;
+  `}
 `;
 
 export const DrawerWrapper = styled.div<{ $open: boolean }>`
@@ -51,9 +77,14 @@ export const DrawerButtonGroup = styled.div<{ $isSmall: boolean }>`
 
   ${(props) =>
     props.$isSmall
-      ? 'width: 100vw;'
+      ? `
+      width: 100vw;
+      max-width: 100vw;
+      height: min-content;
+      justify-content: space-evenly;
+      flex: 1;
+      `
       : `
-
   > *:not(:last-child) {
     border-bottom: 3px solid ${props.theme.suomifi.colors.whiteBase};
   }
@@ -116,8 +147,8 @@ export const SideNavigationButton = styled(Button)<{
   $breakpoint: Breakpoint;
   $active?: boolean;
 }>`
-  height: ${(props) => resolve(props.$breakpoint, '50px', '50px', '100px')};
-  width: ${(props) => resolve(props.$breakpoint, '50px', '50px', '100px')};
+  height: ${(props) => resolve(props.$breakpoint, 'auto', '50px', '100px')};
+  width: ${(props) => resolve(props.$breakpoint, 'auto', '50px', '100px')};
   text-transform: uppercase;
   font-weight: 400;
   display: flex;
@@ -128,15 +159,33 @@ export const SideNavigationButton = styled(Button)<{
   border-radius: 0;
 
   ${(props) =>
-    props.$breakpoint !== 'small' &&
-    props.$active && {
-      background: props.theme.suomifi.colors.whiteBase + ' !important;',
-      borderLeft:
-        '3px solid ' +
-        props.theme.suomifi.colors.highlightDark1 +
-        ' !important;',
-      color: `${props.theme.suomifi.colors.blackBase} !important;`,
-    }}
+    props.$breakpoint === 'small' &&
+    `
+    padding: 0;
+    min-width: 55px;
+    width: 100%;
+    height: 60px;
+    `}
+
+  ${(props) =>
+    props.$active &&
+    (props.$breakpoint !== 'small'
+      ? {
+          background: props.theme.suomifi.colors.whiteBase + ' !important;',
+          borderLeft:
+            '3px solid ' +
+            props.theme.suomifi.colors.highlightDark1 +
+            ' !important;',
+          color: `${props.theme.suomifi.colors.blackBase} !important;`,
+        }
+      : {
+          background: props.theme.suomifi.colors.whiteBase + ' !important;',
+          borderBottom:
+            '3px solid ' +
+            props.theme.suomifi.colors.highlightDark1 +
+            ' !important;',
+          color: `${props.theme.suomifi.colors.blackBase} !important;`,
+        })}
 
   svg {
     color: ${(props) =>

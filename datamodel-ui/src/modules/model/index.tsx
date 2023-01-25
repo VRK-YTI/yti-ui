@@ -170,6 +170,12 @@ export default function Model() {
                 component: <SearchView />,
               },
               {
+                id: 'graph',
+                icon: 'calendar',
+                buttonLabel: 'Kaavio',
+                component: <></>,
+              },
+              {
                 id: 'info',
                 icon: 'info',
                 buttonLabel: 'Tiedot',
@@ -185,12 +191,14 @@ export default function Model() {
                 id: 'attributes',
                 icon: 'history',
                 buttonLabel: 'Attribuutit',
+                buttonLabelSm: 'Attr.',
                 component: <></>,
               },
               {
                 id: 'associations',
                 icon: 'heart',
                 buttonLabel: 'Assosisaatiot',
+                buttonLabelSm: 'Assos.',
                 component: <></>,
               },
             ]}

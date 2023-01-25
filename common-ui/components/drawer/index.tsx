@@ -13,10 +13,15 @@ import {
 
 interface SideNavigationProps {
   buttons: React.ReactFragment;
+  viewOpen?: boolean;
   children: React.ReactFragment;
 }
 
-export default function Drawer({ buttons, children }: SideNavigationProps) {
+export default function Drawer({
+  buttons,
+  viewOpen,
+  children,
+}: SideNavigationProps) {
   const { isSmall } = useBreakpoints();
   const [open, setOpen] = useState(false);
 
@@ -31,6 +36,7 @@ export default function Drawer({ buttons, children }: SideNavigationProps) {
           <Icon icon={open ? 'chevronLeft' : 'chevronRight'} />
         </ToggleButton>
       )}
+
       {/* <SideNavigationVisibleButtonGroup $isSmall={isSmall}>
           {sideOpen && (
             <>
@@ -57,8 +63,10 @@ export default function Drawer({ buttons, children }: SideNavigationProps) {
         </SideNavigationVisibleButtonGroup> */}
 
       {isSmall && (
-        <div style={{ width: '100%' }}>
-          <DrawerContent $isSmall={isSmall}>{children}</DrawerContent>
+        <div className="small-screen-wrapper">
+          <DrawerContent $isSmall={isSmall} $viewOpen={viewOpen}>
+            {children}
+          </DrawerContent>
           <DrawerButtonGroup $isSmall={isSmall}>{buttons}</DrawerButtonGroup>
         </div>
       )}

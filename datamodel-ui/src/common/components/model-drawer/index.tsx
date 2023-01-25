@@ -6,13 +6,15 @@ import { SideNavigationButton } from 'yti-common-ui/drawer/side-navigation.style
 import {
   ModelDrawerContainer,
   DrawerViewContainer,
+  ModelPanel,
 } from './model-side-navigation.styles';
-import { Panel } from 'reactflow';
+import { resolve } from 'yti-common-ui/media-query/styled-helpers';
 
 type ViewType = {
   id: string;
   icon: BaseIconKeys;
   buttonLabel: string;
+  buttonLabelSm?: string;
   component: React.ReactFragment;
 };
 
@@ -21,7 +23,7 @@ interface SideNavigationProps {
 }
 
 export default function Drawer({ views }: SideNavigationProps) {
-  const { breakpoint, isSmall, isLarge } = useBreakpoints();
+  const { breakpoint, isSmall } = useBreakpoints();
   const [activeView, setActiveView] = useState<ViewType | undefined>(
     isSmall ? undefined : views?.[0] ?? undefined
   );
@@ -40,15 +42,7 @@ export default function Drawer({ views }: SideNavigationProps) {
   };
 
   return (
-    <Panel
-      position="top-left"
-      style={{
-        height: '100%',
-        maxHeight: '100%',
-        position: 'absolute',
-        display: 'flex',
-      }}
-    >
+    <ModelPanel position="top-left" $isSmall={isSmall}>
       <ModelDrawerContainer $isSmall={isSmall}>
         <CommonDrawer
           buttons={
@@ -62,17 +56,23 @@ export default function Drawer({ views }: SideNavigationProps) {
                   $breakpoint={breakpoint}
                   onClick={() => handleSetActiveView(view.id)}
                 >
-                  {isLarge && view.buttonLabel}
+                  {resolve(
+                    breakpoint,
+                    view.buttonLabelSm ?? view.buttonLabel,
+                    '',
+                    view.buttonLabel
+                  )}
                 </SideNavigationButton>
               ))}
             </>
           }
+          viewOpen={typeof activeView !== 'undefined'}
         >
           {typeof activeView !== 'undefined' && activeView.component && (
             <DrawerViewContainer>{activeView.component}</DrawerViewContainer>
           )}
         </CommonDrawer>
       </ModelDrawerContainer>
-    </Panel>
+    </ModelPanel>
   );
 }
