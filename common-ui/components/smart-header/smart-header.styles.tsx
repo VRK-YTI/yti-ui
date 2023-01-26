@@ -2,11 +2,24 @@ import styled from 'styled-components';
 import { Breakpoint } from '../media-query';
 import { small } from '../media-query/styled-helpers';
 
-export const HeaderWrapper = styled.div<{ $breakpoint: Breakpoint }>`
+export const HeaderWrapper = styled.div<{
+  $breakpoint: Breakpoint;
+  $fullHeight?: boolean;
+}>`
   display: flex;
-  align-items: center;
-  height: ${(props) => small(props.$breakpoint, '57px', '72px')};
+  align-items: ${(props) => (props.$fullHeight ? 'flex-start' : 'center')};
+  height: ${(props) =>
+    props.$fullHeight
+      ? 'min-content'
+      : small(props.$breakpoint, '57px', '72px')};
   column-gap: ${(props) => small(props.$breakpoint, '0', '20px')};
+
+  ${(props) =>
+    props.$fullHeight &&
+    `
+    width: 100vw;
+    max-width: 100vw;
+    `}
 `;
 
 export const LogoWrapper = styled.div`
@@ -36,7 +49,7 @@ export const ModalOverlay = styled.div`
   bottom: 0;
   z-index: 1000;
   background-color: transparent;
-  transition: background-color 0.3s ease;
+  transition: background - color 0.3s ease;
 
   &.ReactModal__Overlay--after-open {
     background-color: rgba(0, 0, 0, 0.6);

@@ -1,9 +1,28 @@
 import { ReactFlow } from 'reactflow';
 import styled from 'styled-components';
 
-export const TitleWrapper = styled.div`
+export const TitleWrapper = styled.div<{ $fullScreen?: boolean }>`
   padding: 0 0 ${(props) => props.theme.suomifi.spacing.s}
     ${(props) => props.theme.suomifi.spacing.m};
+
+  ${(props) =>
+    props.$fullScreen &&
+    `
+    flex: 1;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+
+    max-height: min-content;
+    overflow: hidden;
+
+    .tools {
+      display: inherit;
+      gap: inherit;
+      align-self: flex-start;
+      padding-top: 20px;
+    }
+  `}
 `;
 
 export const ContentWrapper = styled.div`

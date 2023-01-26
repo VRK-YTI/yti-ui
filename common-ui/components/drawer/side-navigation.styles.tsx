@@ -82,7 +82,10 @@ export const DrawerButtonGroup = styled.div<{ $isSmall: boolean }>`
       max-width: 100vw;
       height: min-content;
       justify-content: space-evenly;
-      flex: 1;
+
+      > *:not(:last-child) {
+        border-right: 3px solid ${props.theme.suomifi.colors.whiteBase};
+      }
       `
       : `
   > *:not(:last-child) {
@@ -115,18 +118,10 @@ export const SideNavigationVisibleButtonGroup = styled.div<{
 }>`
   padding: 6px 2px;
   display: flex;
-  flex-direction: ${(props) => (props.$isSmall ? 'row' : 'column')};
+  flex-direction: row;
   gap: 6px;
   align-items: center;
-
-  ${(props) =>
-    !props.$isSmall &&
-    `
-    background: ${props.theme.suomifi.colors.whiteBase};
-    border: 1px solid ${props.theme.suomifi.colors.depthDark3};
-    border-top: 0;
-    border-radius: 0 2px 2px 0;
-  `}
+  width: min-content;
 
   button {
     min-width: min-content !important;
@@ -143,7 +138,7 @@ export const SideNavigationVisibleButtonGroup = styled.div<{
   }
 `;
 
-export const SideNavigationButton = styled(Button)<{
+export const DrawerButton = styled(Button)<{
   $breakpoint: Breakpoint;
   $active?: boolean;
 }>`

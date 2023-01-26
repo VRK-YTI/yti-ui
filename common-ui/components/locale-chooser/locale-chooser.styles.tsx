@@ -1,7 +1,11 @@
 import styled from 'styled-components';
 
-export const DesktopLocaleChooserWrapper = styled.div`
+export const DesktopLocaleChooserWrapper = styled.div<{ $noFlex?: boolean }>`
+  ${(props) =>
+    !props.$noFlex &&
+    `
   flex-grow: 1;
+  `}
   flex-shrink: 0;
 `;
 

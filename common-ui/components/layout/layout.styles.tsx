@@ -27,11 +27,14 @@ export const SiteContainer = styled.div`
 
 // header layout
 
-export const HeaderContainer = styled.div`
+export const HeaderContainer = styled.div<{ $noBorder?: boolean }>`
   background-color: ${(props) => props.theme.suomifi.colors.whiteBase};
-  border-bottom: ${(props) =>
-    `1px solid ${props.theme.suomifi.colors.depthLight1}`};
-  border-top: ${(props) => `3px solid ${props.theme.suomifi.colors.brandBase}`};
+  ${(props) =>
+    !props.$noBorder &&
+    `
+  border-bottom: 1px solid ${props.theme.suomifi.colors.depthLight1};
+  border-top: 3px solid ${props.theme.suomifi.colors.brandBase};
+  `}
 `;
 
 export const NavigationContainer = styled.div<{ $breakpoint: Breakpoint }>`

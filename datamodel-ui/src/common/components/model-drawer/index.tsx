@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { BaseIconKeys } from 'suomifi-ui-components';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { default as CommonDrawer } from 'yti-common-ui/drawer';
-import { SideNavigationButton } from 'yti-common-ui/drawer/side-navigation.styles';
+import { DrawerButton } from 'yti-common-ui/drawer/side-navigation.styles';
 import {
   ModelDrawerContainer,
   DrawerViewContainer,
@@ -48,7 +48,7 @@ export default function Drawer({ views }: SideNavigationProps) {
           buttons={
             <>
               {views.map((view) => (
-                <SideNavigationButton
+                <DrawerButton
                   key={view.id}
                   icon={view.icon}
                   variant="secondaryNoBorder"
@@ -62,7 +62,7 @@ export default function Drawer({ views }: SideNavigationProps) {
                     '',
                     view.buttonLabel
                   )}
-                </SideNavigationButton>
+                </DrawerButton>
               ))}
             </>
           }
