@@ -140,7 +140,9 @@ export default function SmartHeader({
             $fullHeight={typeof fullScreenElements !== 'undefined'}
           >
             {fullScreenElements}
-            <div style={{ display: 'flex', padding: '20px 20px 0 0' }}>
+            <div
+              style={{ display: 'flex', padding: '20px 20px 0 0', gap: '10px' }}
+            >
               {renderDesktopLocaleChooser()}
               {renderMobileNavigationToggleButton()}
               {renderDesktopAuthenticationPanel()}

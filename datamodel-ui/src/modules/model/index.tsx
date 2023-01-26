@@ -2,28 +2,8 @@ import Drawer from '@app/common/components/model-drawer';
 import { ContentWrapper, ModelFlow } from './model.styles';
 import ModelInfoView from './model-info-view';
 import SearchView from './search-view';
-import { useRouter } from 'next/router';
-import { useMemo, useState } from 'react';
-import { useGetModelQuery } from '@app/common/components/model/model.slice';
-import { useTranslation } from 'next-i18next';
-import { getStatus, getTitle } from '@app/common/utils/get-value';
 
 export default function Model() {
-  const { t, i18n } = useTranslation('common');
-  const { query } = useRouter();
-  const [modelId] = useState(
-    Array.isArray(query.modelId) ? query.modelId[0] : query.modelId ?? ''
-  );
-  const { data: modelInfo } = useGetModelQuery(modelId);
-
-  const model = useMemo(
-    () => ({
-      title: getTitle(modelInfo, i18n.language),
-      status: getStatus(modelInfo),
-    }),
-    [modelInfo, i18n.language]
-  );
-
   return (
     <div
       style={{

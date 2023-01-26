@@ -113,7 +113,7 @@ export const ToggleButton = styled(Button)<{ $open: boolean }>`
   }
 `;
 
-export const SideNavigationVisibleButtonGroup = styled.div<{
+export const ToolsButtonGroup = styled.div<{
   $isSmall: boolean;
 }>`
   padding: 6px 2px;

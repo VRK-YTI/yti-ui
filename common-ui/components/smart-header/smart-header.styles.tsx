@@ -49,7 +49,7 @@ export const ModalOverlay = styled.div`
   bottom: 0;
   z-index: 1000;
   background-color: transparent;
-  transition: background - color 0.3s ease;
+  transition: background-color 0.3s ease;
 
   &.ReactModal__Overlay--after-open {
     background-color: rgba(0, 0, 0, 0.6);

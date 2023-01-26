@@ -14,13 +14,14 @@ import {
 } from '@app/common/utils/translation-helpers';
 import {
   MoveButton,
-  SideNavigationVisibleButtonGroup,
+  ToolsButtonGroup,
 } from 'yti-common-ui/drawer/side-navigation.styles';
 import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
 import { useBreakpoints } from 'yti-common-ui/media-query';
+import { Model } from '@app/common/interfaces/model.interface';
 
-export default function ModelHeader({ modelInfo }: any) {
+export default function ModelHeader({ modelInfo }: { modelInfo?: Model }) {
   const { isSmall, isLarge } = useBreakpoints();
   const { t, i18n } = useTranslation('common');
 
@@ -68,7 +69,7 @@ export default function ModelHeader({ modelInfo }: any) {
       {isLarge && (
         <div className="tools">
           <>
-            <SideNavigationVisibleButtonGroup $isSmall={isSmall}>
+            <ToolsButtonGroup $isSmall={isSmall}>
               <>
                 <Button icon="plus" />
                 <Button icon="minus" />
@@ -84,7 +85,7 @@ export default function ModelHeader({ modelInfo }: any) {
                 <Button icon="save" />
                 <Button icon="menu" variant="secondary" />
               </>
-            </SideNavigationVisibleButtonGroup>
+            </ToolsButtonGroup>
           </>
         </div>
       )}
