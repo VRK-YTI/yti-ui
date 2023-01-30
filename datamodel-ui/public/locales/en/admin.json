@@ -21,6 +21,7 @@
   "email": "Email",
   "error-prefix-invalid": "Allowed characters for prefix are a-z, 0-9, underscore and dash",
   "error-prefix-taken": "Prefix in use",
+  "error-unauthenticated": "An error occured with login information verification. Please login to the service again.",
   "feedback": "Feedback",
   "file-added": "",
   "information-description-languages": "Information description languages",

@@ -1,8 +1,12 @@
-import { selectLogin } from '@app/common/components/login/login.slice';
+import {
+  selectLogin,
+  useGetAuthenticatedUserMutMutation,
+} from '@app/common/components/login/login.slice';
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import {
   Button,
+  InlineAlert,
   Modal,
   ModalContent,
   ModalFooter,
@@ -14,7 +18,10 @@ import ModelForm from '.';
 import { FormErrors, validateForm } from './validate-form';
 import { useInitialModelForm } from '@app/common/utils/hooks/use-initial-model-form';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
-import { translateModelFormErrors } from '@app/common/utils/translation-helpers';
+import {
+  translateLanguage,
+  translateModelFormErrors,
+} from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import generatePayload from './generate-payload';
 import { usePutModelMutation } from '@app/common/components/model/model.slice';
@@ -32,7 +39,14 @@ export default function ModelFormModal({ refetch }: ModelFormModalProps) {
   const [formData, setFormData] = useState(modelFormInitialData);
   const [errors, setErrors] = useState<FormErrors>();
   const [userPosted, setUserPosted] = useState(false);
+  const [getAuthenticatedUser, authenticateUser] =
+    useGetAuthenticatedUserMutMutation();
   const [putModel, result] = usePutModelMutation();
+
+  const handleOpen = () => {
+    setVisible(true);
+    getAuthenticatedUser();
+  };
 
   const handleClose = useCallback(() => {
     setVisible(false);
@@ -83,7 +97,7 @@ export default function ModelFormModal({ refetch }: ModelFormModalProps) {
       <Button
         icon="plus"
         style={{ height: 'min-content' }}
-        onClick={() => setVisible(true)}
+        onClick={() => handleOpen()}
       >
         {t('add-new-model')}
       </Button>
@@ -103,19 +117,20 @@ export default function ModelFormModal({ refetch }: ModelFormModalProps) {
             formData={formData}
             setFormData={setFormData}
             userPosted={userPosted}
+            disabled={authenticateUser.data && authenticateUser.data.anonymous}
             errors={userPosted ? errors : undefined}
           />
         </ModalContent>
         <ModalFooter>
+          {authenticateUser.data && authenticateUser.data.anonymous && (
+            <InlineAlert status="error" role="alert" id="unauthenticated-alert">
+              {t('error-unauthenticated')}
+            </InlineAlert>
+          )}
           {userPosted && (
             <FormFooterAlert
               labelText={t('missing-information-title')}
-              alerts={
-                errors &&
-                Object.keys(errors)
-                  .filter((key) => errors[key as keyof FormErrors])
-                  .map((error) => translateModelFormErrors(error, t))
-              }
+              alerts={getErrors(errors)}
             />
           )}
 
@@ -127,4 +142,25 @@ export default function ModelFormModal({ refetch }: ModelFormModalProps) {
       </Modal>
     </>
   );
+
+  function getErrors(errors?: FormErrors): string[] | undefined {
+    if (!errors) {
+      return [];
+    }
+
+    const langsWithError = Object.entries(errors)
+      .filter(([_, value]) => Array.isArray(value))
+      ?.flatMap(([key, value]) =>
+        (value as string[]).map(
+          (lang) =>
+            `${translateModelFormErrors(key, t)} ${translateLanguage(lang, t)}`
+        )
+      );
+
+    const otherErrors = Object.entries(errors)
+      .filter(([_, value]) => value && !Array.isArray(value))
+      ?.map(([key, _]) => translateModelFormErrors(key, t));
+
+    return [...langsWithError, ...otherErrors];
+  }
 }

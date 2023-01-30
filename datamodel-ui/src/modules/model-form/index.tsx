@@ -18,6 +18,7 @@ interface ModelFormProps {
   formData: ModelFormType;
   setFormData: (value: ModelFormType) => void;
   userPosted: boolean;
+  disabled?: boolean;
   errors?: FormErrors;
 }
 
@@ -25,6 +26,7 @@ export default function ModelForm({
   formData,
   setFormData,
   userPosted,
+  disabled,
   errors,
 }: ModelFormProps) {
   const { t, i18n } = useTranslation('admin');
@@ -72,6 +74,7 @@ export default function ModelForm({
           value="profile"
           hintText={t('profile-hint-text')}
           id="profile-radio-button"
+          disabled={disabled}
         >
           {t('profile', { ns: 'common' })}
         </RadioButton>
@@ -79,6 +82,7 @@ export default function ModelForm({
           value="library"
           hintText={t('library-hint-text')}
           id="library-radio-button"
+          disabled={disabled}
         >
           {t('library-variant', { ns: 'common' })}
         </RadioButton>
@@ -113,6 +117,7 @@ export default function ModelForm({
           ariaOptionChipRemovedText={''}
           noItemsText={''}
           status={errors?.languageAmount ? 'error' : 'default'}
+          disabled={disabled}
         />
 
         <Prefix
@@ -137,6 +142,7 @@ export default function ModelForm({
             textInputLabel: t('prefix'),
             uriPreview: t('uri-preview'),
           }}
+          disabled={disabled}
         />
       </BlockContainer>
 
@@ -163,6 +169,7 @@ export default function ModelForm({
           ariaOptionsAvailableText={''}
           ariaOptionChipRemovedText={''}
           noItemsText={''}
+          disabled={disabled}
         />
 
         <WideMultiSelect
@@ -185,6 +192,7 @@ export default function ModelForm({
           ariaOptionsAvailableText={''}
           ariaOptionChipRemovedText={''}
           noItemsText={''}
+          disabled={disabled}
         />
       </BlockContainer>
 
@@ -210,6 +218,7 @@ export default function ModelForm({
             labelHint: t('contact-input-hint'),
             undefined: t('still-unknown'),
           }}
+          disabled={disabled}
         />
       </BlockContainer>
     </Block>

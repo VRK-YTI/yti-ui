@@ -108,6 +108,7 @@ export default function LanguageSelector(
         ariaOptionChipRemovedText={props.ariaOptionChipRemovedText ?? ''}
         noItemsText={props.noItemsText ?? ''}
         status={props.status}
+        disabled={props.disabled}
       />
 
       {selectedItems.map((item, idx) => (

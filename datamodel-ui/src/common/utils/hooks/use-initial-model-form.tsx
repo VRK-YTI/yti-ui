@@ -4,7 +4,15 @@ import { v4 } from 'uuid';
 
 export function useInitialModelForm(): ModelFormType {
   const { t } = useTranslation('admin');
-  const prefix = v4().substring(0, 8);
+  let prefix = v4().substring(0, 8);
+
+  // If prefix starts with a number replace it with any alphabet
+  if (/^\d/.test(prefix)) {
+    const alphabets = 'abcdefghijklmnopqrstuvwxyz';
+    prefix =
+      alphabets[Math.floor(Math.random() * alphabets.length)] +
+      prefix.substring(1);
+  }
 
   return {
     contact: '',
