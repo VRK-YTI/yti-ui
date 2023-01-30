@@ -69,7 +69,6 @@ export default function EditCollection({
 
   const [addCollection, result] = useAddCollectionMutation();
   const [newCollectionId, setNewCollectionId] = useState('');
-  const [errors, setErrors] = useState<{ [key: string]: boolean }>({});
   const [emptyError, setEmptyError] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
 
@@ -111,21 +110,6 @@ export default function EditCollection({
     setFormData(data);
     enableConfirmation();
 
-    const nameCount = formData.name.filter(
-      (n) => n.value && n.lang === language
-    ).length;
-    const defCount = formData.definition.filter(
-      (n) => n.value && n.lang === language
-    ).length;
-
-    if (nameCount !== defCount) {
-      setErrors({ ...errors, [language]: true });
-    }
-
-    if (errors[language] && nameCount == defCount) {
-      setErrors({ ...errors, [language]: false });
-    }
-
     if (value && value !== '') {
       setEmptyError(false);
     }
@@ -153,25 +137,6 @@ export default function EditCollection({
 
     setFormData(data);
     enableConfirmation();
-
-    const nameCount = formData.name.filter(
-      (n) => n.value && n.lang === language
-    ).length;
-    const defCount = formData.definition.filter(
-      (n) => n.value && n.lang === language
-    ).length;
-
-    if (nameCount !== defCount) {
-      setErrors({ ...errors, [language]: true });
-    }
-
-    if (errors[language] && nameCount == defCount) {
-      setErrors({ ...errors, [language]: false });
-    }
-
-    if (value && value !== '') {
-      setEmptyError(false);
-    }
   };
 
   const setFormConcepts = (
@@ -186,29 +151,8 @@ export default function EditCollection({
   const handleClick = () => {
     getAuthenticatedMutUser();
 
-    let errorOccurs = false;
-    languages.forEach((language) => {
-      const nameCount = formData.name.filter(
-        (n) => n.value && n.lang === language
-      ).length;
-      const defCount = formData.definition.filter(
-        (n) => n.value && n.lang === language
-      ).length;
-      if (nameCount !== defCount) {
-        setErrors((errors) => ({ ...errors, [language]: true }));
-        errorOccurs = true;
-      }
-    });
-
-    if (
-      formData.name.every((n) => !n.value) &&
-      formData.definition.every((n) => !n.value)
-    ) {
+    if (formData.name.every((n) => !n.value)) {
       setEmptyError(true);
-      errorOccurs = true;
-    }
-
-    if (errorOccurs) {
       return;
     }
 
@@ -278,7 +222,7 @@ export default function EditCollection({
               )} ${language.toUpperCase()}`}
               visualPlaceholder={t('enter-collection-name')}
               onBlur={(e) => setName(language, e.target.value.trim())}
-              status={errors[language] ? 'error' : 'default'}
+              status={emptyError ? 'error' : 'default'}
               defaultValue={
                 formData.name.find((n) => n.lang === language)?.value
               }
@@ -294,9 +238,9 @@ export default function EditCollection({
                 language,
                 t
               )} ${language.toUpperCase()}`}
+              optionalText={t('optional', { ns: 'admin' })}
               visualPlaceholder={t('enter-collection-description')}
               onBlur={(e) => setDescription(language, e.target.value.trim())}
-              status={errors[language] ? 'error' : 'default'}
               defaultValue={
                 formData.definition.find((n) => n.lang === language)?.value
               }
@@ -326,20 +270,7 @@ export default function EditCollection({
           {emptyError && (
             <FormFooterAlert
               alerts={[t('no-empty-form')]}
-              labelText={t('missing-information')}
-            />
-          )}
-          {languages.some((n) => errors[n]) && (
-            <FormFooterAlert
-              labelText={t('missing-information')}
-              alerts={languages
-                .filter((n) => errors[n])
-                .map(
-                  (lang) =>
-                    `${t('no-pairless-language')}
-                    ${translateLanguage(lang, t)}
-                    `
-                )}
+              labelText={t('missing-information', { ns: 'admin' })}
             />
           )}
           <ButtonBlock>
