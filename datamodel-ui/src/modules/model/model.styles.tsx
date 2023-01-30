@@ -1,13 +1,53 @@
+import { ReactFlow } from 'reactflow';
 import styled from 'styled-components';
 
-export const TitleWrapper = styled.div`
+export const TitleWrapper = styled.div<{ $fullScreen?: boolean }>`
   padding: 0 0 ${(props) => props.theme.suomifi.spacing.s}
     ${(props) => props.theme.suomifi.spacing.m};
+
+  ${(props) =>
+    props.$fullScreen &&
+    `
+    flex: 1;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+
+    max-height: min-content;
+    overflow: hidden;
+
+    .tools {
+      display: inherit;
+      gap: inherit;
+      align-self: flex-start;
+      padding-top: 20px;
+    }
+  `}
 `;
 
 export const ContentWrapper = styled.div`
-  max-height: 70vh;
   height: 100%;
+  width: 100%;
+`;
+
+export const ModelInfoWrapper = styled.div`
+  width: 100%;
+
+  h2 {
+    font-size: 18px !important;
+  }
+`;
+
+export const ModelInfoListWrapper = styled.div`
+  > * {
+    margin-bottom: ${(props) => props.theme.suomifi.spacing.s};
+  }
+`;
+
+export const ModelFlow = styled(ReactFlow)`
+  max-height: 100%;
+  height: 100%;
+  width: 100%;
 
   .react-flow__nodes > * {
     position: absolute;
@@ -16,25 +56,9 @@ export const ContentWrapper = styled.div`
   .react-flow__attribution {
     display: none;
   }
-`;
 
-export const ModelInfoWrapper = styled.div`
-  width: 360px;
-  height: 70vh;
-
-  h2 {
-    font-size: 18px !important;
-  }
-
-  :after {
-    content: ' ';
-    display: block;
-    height: ${(props) => props.theme.suomifi.spacing.xl};
-  }
-`;
-
-export const ModelInfoListWrapper = styled.div`
-  > * {
-    margin-bottom: ${(props) => props.theme.suomifi.spacing.s};
+  .react-flow__viewport {
+    transform-origin: 0 0;
+    pointer-events: none;
   }
 `;

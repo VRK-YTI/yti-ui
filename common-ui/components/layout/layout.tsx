@@ -1,4 +1,3 @@
-import Head from 'next/head';
 import React from 'react';
 import { ThemeProvider } from 'styled-components';
 import { lightTheme } from './theme';
@@ -25,7 +24,7 @@ export default function Layout({
   fakeableUsers,
   matomo,
   alerts,
-  fullWidth,
+  fullScreenElements,
 }: {
   children: React.ReactNode;
   feedbackSubject?: string;
@@ -33,7 +32,7 @@ export default function Layout({
   fakeableUsers?: FakeableUser[] | null;
   matomo?: React.ReactNode;
   alerts?: React.ReactNode;
-  fullWidth?: boolean;
+  fullScreenElements?: React.ReactNode;
 }) {
   const { t, i18n } = useTranslation('common');
   const { breakpoint } = useBreakpoints();
@@ -43,37 +42,46 @@ export default function Layout({
     <ThemeProvider theme={lightTheme}>
       {matomo && matomo}
 
-      <Head>
-        <meta name="description" content="Terminology/React POC" />
-        <meta name="og:title" content={t('terminology')} />
-        <meta name="twitter:card" content="summary_large_image" />
-      </Head>
-
       <SkipLink href="#main">{t('skip-link-main')}</SkipLink>
+      {fullScreenElements ? (
+        <SiteContainer>
+          <SmartHeader
+            user={user}
+            fakeableUsers={generateFakeableUsers(i18n.language, fakeableUsers)}
+            fullScreenElements={fullScreenElements}
+          />
 
-      <SiteContainer>
-        <SmartHeader
-          user={user}
-          fakeableUsers={generateFakeableUsers(i18n.language, fakeableUsers)}
-        />
-
-        <ContentContainer>
-          {alerts && alerts}
-          <MarginContainer $breakpoint={breakpoint} $maxWidth={fullWidth}>
+          <ContentContainer
+            $fullScreen={typeof fullScreenElements !== 'undefined'}
+          >
             {children}
-          </MarginContainer>
-        </ContentContainer>
+          </ContentContainer>
+        </SiteContainer>
+      ) : (
+        <SiteContainer>
+          <SmartHeader
+            user={user}
+            fakeableUsers={generateFakeableUsers(i18n.language, fakeableUsers)}
+          />
 
-        <FooterContainer>
-          <MarginContainer $breakpoint={breakpoint}>
-            <Footer
-              t={t}
-              feedbackSubject={feedbackSubject}
-              versionInfo={publicRuntimeConfig?.versionInfo}
-            />
-          </MarginContainer>
-        </FooterContainer>
-      </SiteContainer>
+          <ContentContainer>
+            {alerts && alerts}
+            <MarginContainer $breakpoint={breakpoint}>
+              {children}
+            </MarginContainer>
+          </ContentContainer>
+
+          <FooterContainer>
+            <MarginContainer $breakpoint={breakpoint}>
+              <Footer
+                t={t}
+                feedbackSubject={feedbackSubject}
+                versionInfo={publicRuntimeConfig?.versionInfo}
+              />
+            </MarginContainer>
+          </FooterContainer>
+        </SiteContainer>
+      )}
     </ThemeProvider>
   );
 }
