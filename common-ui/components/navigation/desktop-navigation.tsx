@@ -61,10 +61,14 @@ export default function DesktopNavigation({
                   <SuomiFiLink href="/">{t('terminology-title')}</SuomiFiLink>
                 </NavigationDropdownItem>
                 <NavigationDropdownItem className="top-navigation-dropdown-li">
-                  <SuomiFiLink href="/">{t('codelist-title')}</SuomiFiLink>
+                  <SuomiFiLink href="https://koodistot.suomi.fi/">
+                    {t('codelist-title')}
+                  </SuomiFiLink>
                 </NavigationDropdownItem>
                 <NavigationDropdownItem className="top-navigation-dropdown-li">
-                  <SuomiFiLink href="/">{t('datamodel-title')}</SuomiFiLink>
+                  <SuomiFiLink href="https://tietomallit.suomi.fi/">
+                    {t('datamodel-title')}
+                  </SuomiFiLink>
                 </NavigationDropdownItem>
               </NavigationDropdownList>
             </NavigationDropdownWrapper>
