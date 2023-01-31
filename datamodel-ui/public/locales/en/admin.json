@@ -38,7 +38,7 @@
   "missing-general": "Model is missing information",
   "missing-information-domain": "Information domain hasn't been set",
   "missing-information-title": "Missing information",
-  "missing-language-title": "Title is missing in some language(s)",
+  "missing-language-title": "Title is missing in language",
   "missing-languages": "Language hasn't been set",
   "missing-organizations": "Organizations haven't been set",
   "missing-prefix": "Prefix hasn't been set",
