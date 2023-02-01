@@ -2,16 +2,16 @@ import { ModelFormType } from '@app/common/interfaces/model-form.interface';
 
 export interface FormErrors {
   languageAmount: boolean;
-  titleAmount: boolean;
+  titleAmount: string[];
   prefix: boolean;
   serviceCategories: boolean;
   organizations: boolean;
 }
 
 export function validateForm(data: ModelFormType) {
-  const errors = {
+  const errors: FormErrors = {
     languageAmount: false,
-    titleAmount: false,
+    titleAmount: [],
     prefix: false,
     serviceCategories: false,
     organizations: false,
@@ -30,7 +30,13 @@ export function validateForm(data: ModelFormType) {
       (lang) => !lang.title || lang.title === '' || lang.title.length < 1
     ).length > 0
   ) {
-    errors.titleAmount = true;
+    const langsWithError = selectedLanguages
+      .filter(
+        (lang) => !lang.title || lang.title === '' || lang.title.length < 1
+      )
+      .map((lang) => lang.uniqueItemId);
+
+    errors.titleAmount = langsWithError ?? [];
   }
 
   // Prefix should be defined

@@ -23,12 +23,14 @@ interface ContactProps {
     inputLabel: string;
     inputPlaceholder: string;
   };
+  disabled?: boolean;
 }
 
 export default function Contact({
   contact,
   setContact,
   translations,
+  disabled,
 }: ContactProps) {
   const [input, setInput] = useState(true);
   const [defaultContact] = useState(contact);
@@ -57,10 +59,14 @@ export default function Contact({
         id="feedback-type-group"
         onChange={(e) => handleChange(e)}
       >
-        <RadioButton value="email" id="email-radio-button">
+        <RadioButton value="email" id="email-radio-button" disabled={disabled}>
           {translations.email}
         </RadioButton>
-        <RadioButton value="undefined" id="undefined-radio-button">
+        <RadioButton
+          value="undefined"
+          id="undefined-radio-button"
+          disabled={disabled}
+        >
           {translations.undefined}
         </RadioButton>
       </RadioButtonGroup>
@@ -81,6 +87,7 @@ export default function Contact({
             id="contact-input"
             defaultValue={defaultContact}
             onBlur={(e) => setContact(e.target.value ?? '')}
+            disabled={disabled}
           />
         </>
       )}

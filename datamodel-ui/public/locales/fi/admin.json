@@ -21,6 +21,7 @@
   "email": "Sähköposti",
   "error-prefix-invalid": "Etuliitteen sallitut merkit ovat a-z, 0-9, alaviiva ja väliviiva",
   "error-prefix-taken": "Tunnus on käytössä",
+  "error-unauthenticated": "Kirjautumistietojen varmistuksessa ilmeni ongelma. Kirjaudu palveluun uudestaan.",
   "feedback": "Palaute",
   "file-added": "",
   "information-description-languages": "Tietosisällön kielet",
