@@ -49,17 +49,14 @@ export default function FrontPageFilter({
       />
       <Separator />
       <OrganizationFilter
-        organizations={
-          organizations.map((org) => ({
-            labelText: getLanguageVersion({
-              data: org.label,
-              lang: i18n.language,
-              appendLocale: true,
-            }),
-            uniqueItemId: org.id.replaceAll('urn:uuid:', ''),
-          }))
-          // .sort((x, y) => x.labelText.localeCompare(y.labelText)) ?? []
-        }
+        organizations={organizations.map((org) => ({
+          labelText: getLanguageVersion({
+            data: org.label,
+            lang: i18n.language,
+            appendLocale: true,
+          }),
+          uniqueItemId: org.id.replaceAll('urn:uuid:', ''),
+        }))}
         title={t('filter-by-organization')}
         visualPlaceholder={t('filter-by-organization-placeholder')}
       />
@@ -113,17 +110,14 @@ export default function FrontPageFilter({
       <Separator />
       <InformationDomainFilter
         title={t('show-by-information-domain')}
-        domains={
-          serviceCategories.map((g) => ({
-            id: g.identifier,
-            name: getLanguageVersion({
-              data: g.label,
-              lang: i18n.language,
-              appendLocale: true,
-            }),
-          }))
-          // .sort((x, y) => x.name.localeCompare(y.name)) ?? []
-        }
+        domains={serviceCategories.map((g) => ({
+          id: g.identifier,
+          name: getLanguageVersion({
+            data: g.label,
+            lang: i18n.language,
+            appendLocale: true,
+          }),
+        }))}
         counts={{}}
         isModal={isModal}
       />
