@@ -1,17 +1,17 @@
-import { ServiceCategories } from '@app/common/interfaces/service-categories.interface';
-import { getPropertyLanguageVersion } from './get-language-version';
+import { ServiceCategory } from '@app/common/interfaces/service-categories.interface';
+import { getLanguageVersion } from './get-language-version';
 
 export default function getServiceCategories(
-  serviceCategoriesData?: ServiceCategories,
+  serviceCategoriesData?: ServiceCategory[],
   lang?: string
 ) {
   if (!serviceCategoriesData) {
     return [];
   }
 
-  return serviceCategoriesData['@graph'].map((category) => ({
+  return serviceCategoriesData.map((category) => ({
     id: category.identifier,
-    label: getPropertyLanguageVersion({
+    label: getLanguageVersion({
       data: category.label,
       lang: lang ?? 'fi',
     }),

@@ -1,458 +1,217 @@
 import {
-  BaseInfo,
   DataVocabulary,
-  Group,
   LangObject,
-  Link,
-  Model,
-  Organization,
+  ModelType,
   ReferenceData,
   Terminology,
 } from '../interfaces/model.interface';
 import { Status } from '../interfaces/status.interface';
-import { getPropertyLanguageVersion } from './get-language-version';
-
-export function getBaseInfo(data?: Model): BaseInfo | undefined {
-  if (!data) {
-    return;
-  }
-
-  const target = data['@graph'].find(
-    (g) => '@type' in g && Array.isArray(g['@type']) && 'contributor' in g
-  );
-
-  if (target) {
-    return target as BaseInfo;
-  }
-
-  return;
-}
+import { Type } from '../interfaces/type.interface';
+import { getLanguageVersion } from './get-language-version';
 
 export function getDataVocabulariesInfo(
-  data?: Model
+  data?: ModelType
 ): DataVocabulary[] | undefined {
   if (!data) {
     return;
   }
 
-  const target = data['@graph'].filter(
-    (g) =>
-      '@type' in g &&
-      Array.isArray(g['@type']) &&
-      'preferredXMLNamespaceName' in g &&
-      Array.isArray(g.preferredXMLNamespaceName)
-  );
-
-  if (target.length > 0) {
-    return target as DataVocabulary[];
-  }
-
-  return;
+  return [...data.externalNamespaces, ...data.internalNamespaces];
 }
 
-function getGroupInfo(data?: Model): Group[] | undefined {
+function getTerminologyInfo(data?: ModelType): Terminology[] {
   if (!data) {
-    return;
+    return [];
   }
 
-  const target = data['@graph'].filter(
-    (g) => '@type' in g && !Array.isArray(g['@type']) && 'label' in g
-  );
-
-  if (target.length > 0) {
-    return target as Group[];
-  }
-
-  return;
+  return [];
 }
 
-function getOrganizationInfo(data?: Model): Organization[] | undefined {
+function getReferenceDataInfo(data?: ModelType): ReferenceData[] {
   if (!data) {
-    return;
+    return [];
   }
 
-  const target = data['@graph'].filter(
-    (g) =>
-      '@type' in g && g['@type'] === 'foaf:Organization' && 'prefLabel' in g
-  );
-
-  if (target.length > 0) {
-    return target as Organization[];
-  }
-
-  return;
+  return [];
 }
 
-function getLinkInfo(data?: Model): Link[] | undefined {
-  if (!data) {
-    return;
-  }
-
-  const target = data['@graph'].filter(
-    (g) => !('type' in g) && 'homepage' in g
-  );
-
-  if (target.length > 0) {
-    return target as Link[];
-  }
-
-  return;
+function getLangObject(data: { [key: string]: string }) {
+  return Object.keys(data).map((lang: string) => {
+    return {
+      lang,
+      value: data[lang],
+    };
+  });
 }
 
-function getTerminologyInfo(data?: Model): Terminology[] | undefined {
-  if (!data) {
-    return;
-  }
-
-  const target = data['@graph'].filter(
-    (g) => '@type' in g && g['@type'] === 'skos:ConceptScheme'
-  );
-
-  if (target.length > 0) {
-    return target as Terminology[];
-  }
-
-  return;
-}
-
-function getReferenceDataInfo(data?: Model): ReferenceData[] | undefined {
-  if (!data) {
-    return;
-  }
-
-  const target = data['@graph'].filter(
-    (g) => '@type' in g && g['@type'] === 'iow:FCodeScheme'
-  );
-
-  if (target.length > 0) {
-    return target as ReferenceData[];
-  }
-
-  return;
-}
-
-export function getTitle(data?: Model, lang?: string): string {
+export function getTitle(data?: ModelType, lang?: string): string {
   if (!data) {
     return '';
   }
 
-  const target = getBaseInfo(data);
-
-  if (!target) {
-    return '';
-  }
-
-  const labels =
-    'label' in target && Array.isArray(target['@type'])
-      ? target.label
-      : undefined;
-
-  if (!labels || (Array.isArray(labels) && labels.length < 1)) {
-    return '';
-  }
-
-  return getPropertyLanguageVersion({
-    data: labels,
+  return getLanguageVersion({
+    data: data.label,
     lang: lang ?? 'fi',
     appendLocale: true,
   });
 }
 
-export function getTitles(data?: Model): LangObject[] {
-  const target = getBaseInfo(data);
-
-  if (!target) {
+export function getTitles(data?: ModelType): LangObject[] {
+  if (!data) {
     return [];
   }
 
-  const labels =
-    'label' in target && Array.isArray(target['@type'])
-      ? target.label
-      : undefined;
-
-  if (!labels) {
-    return [];
-  }
-
-  return Array.isArray(labels) ? labels : [labels];
+  return getLangObject(data.label);
 }
 
-export function getType(data?: Model): string {
-  const target = getBaseInfo(data);
-
-  if (!target) {
-    return '';
+export function getType(data?: ModelType): Type {
+  if (!data) {
+    return 'PROFILE';
   }
 
-  if (target['@type'].includes('dcap:DCAP')) {
-    return 'profile';
-  } else {
-    return 'library-variant';
-  }
+  return data.type;
 }
 
-export function getStatus(data?: Model): Status {
-  const target = getBaseInfo(data);
-
-  if (!target) {
+export function getStatus(data?: ModelType): Status {
+  if (!data) {
     return 'DRAFT';
   }
 
-  return target.versionInfo ?? 'DRAFT';
+  return data.status ?? 'DRAFT';
 }
 
-export function getCreated(data?: Model): string {
-  const target = getBaseInfo(data);
+export function getBaseModelPrefix(data?: ModelType) {
+  return data?.prefix;
+}
 
-  if (!target) {
+export function getCreated(data?: ModelType): string {
+  return data?.created ?? '';
+}
+
+export function getModified(data?: ModelType): string {
+  return data?.modified ?? '';
+}
+
+export function getComment(data?: ModelType, lang?: string): string {
+  if (!data) {
     return '';
   }
 
-  return target.created;
-}
-
-export function getModified(data?: Model): string {
-  const target = getBaseInfo(data);
-
-  if (!target) {
-    return '';
-  }
-
-  return target.modified;
-}
-
-export function getComment(data?: Model, lang?: string): string {
-  const target = getBaseInfo(data);
-
-  if (!target) {
-    return '';
-  }
-
-  return getPropertyLanguageVersion({
-    data: target.comment,
+  return getLanguageVersion({
+    data: data.description,
     lang: lang ?? 'fi',
     appendLocale: true,
   });
 }
 
-export function getComments(data?: Model): LangObject[] {
-  const target = getBaseInfo(data);
-
-  if (!target || !target.comment) {
+export function getComments(data?: ModelType): LangObject[] {
+  if (!data || !data.description) {
     return [];
   }
 
-  return Array.isArray(target.comment) ? target.comment : [target.comment];
+  return getLangObject(data.description);
 }
 
-export function getContact(data?: Model, lang?: string): string {
-  const target = getBaseInfo(data);
-
-  if (!target || !target.contact) {
-    return '';
-  }
-
-  return getPropertyLanguageVersion({
-    data: target.contact,
-    lang: lang ?? 'fi',
-  });
+export function getContact(data?: ModelType): string {
+  return data?.contact ?? '';
 }
 
-export function getDocumentation(data?: Model): string {
-  const target = getBaseInfo(data);
-
-  if (!target) {
-    return '';
-  }
-
-  return target.documentation ? target.documentation['@value'] : '';
+export function getDocumentation(data?: ModelType): string {
+  return '';
 }
 
-export function getGroup(data?: Model, lang?: string): string[] {
-  const target = getGroupInfo(data);
-
-  if (!target) {
-    return [];
-  }
-
-  return target.map((t) =>
-    getPropertyLanguageVersion({
-      data: t.label,
-      lang: lang ?? 'fi',
-      appendLocale: true,
-    })
-  );
+export function getGroup(data?: ModelType, lang?: string): string[] {
+  return data?.groups ?? [];
 }
 
-export function getOrganization(data?: Model, lang?: string): string[] {
-  const target = getOrganizationInfo(data);
-
-  if (!target) {
-    return [];
-  }
-
-  return target.map((t) =>
-    getPropertyLanguageVersion({
-      data: t.prefLabel,
-      lang: lang ?? 'fi',
-      appendLocale: true,
-    })
-  );
+export function getOrganization(data?: ModelType, lang?: string): string[] {
+  return data?.organizations ?? [];
 }
 
 export function getLink(
-  data?: Model,
+  data?: ModelType,
   lang?: string
 ): {
   description: string;
   title: string;
   url: string;
 }[] {
-  const target = getLinkInfo(data);
+  return [];
+}
 
-  if (!target) {
+export function getIsPartOf(data?: ModelType, lang?: string): string[] {
+  if (!data || !data.groups) {
     return [];
   }
 
-  return target.map((t) => ({
-    description: getPropertyLanguageVersion({
-      data: t.description,
-      lang: lang ?? 'fi',
-      appendLocale: true,
-    }),
-    title: getPropertyLanguageVersion({
-      data: t.title,
-      lang: lang ?? 'fi',
-      appendLocale: true,
-    }),
-    url: t.homepage,
-  }));
+  return data.groups;
 }
 
-export function getIsPartOf(data?: Model, lang?: string): string[] {
-  const target = getBaseInfo(data);
-  const groups = getGroupInfo(data);
-
-  if (!target || !target.isPartOf || !groups) {
-    return [];
-  }
-
-  if (typeof target.isPartOf === 'string') {
-    return [
-      getPropertyLanguageVersion({
-        data: groups.find((graph) => graph['@id'] === target.isPartOf)?.label,
-        lang: lang ?? 'fi',
-      }),
-    ];
-  }
-
-  return target.isPartOf.map((partOf) =>
-    getPropertyLanguageVersion({
-      data: groups.find((graph) => graph['@id'] === partOf)?.label,
-      lang: lang ?? 'fi',
-    })
-  );
+export function getLanguages(data?: ModelType): string[] {
+  return data?.languages ?? [];
 }
 
-export function getBaseModelPrefix(data?: Model): string {
-  const target = getBaseInfo(data);
-
-  if (!target || !target.preferredXMLNamespacePrefix) {
-    return '';
-  }
-
-  return target.preferredXMLNamespacePrefix;
-}
-
-export function getLanguages(data?: Model): string[] {
-  const target = getBaseInfo(data);
-
-  if (typeof target === 'undefined' || !target['dcterms:language']) {
-    return [];
-  }
-
-  return target['dcterms:language']['@list'];
-}
-
-export function getUri(data?: Model): string {
-  const target = getBaseInfo(data);
-
-  if (!target) {
-    return '';
-  }
-
-  return target['@id'];
+export function getUri(data?: ModelType): string {
+  return `http://uri.suomi.fi/datamodel/ns/${data?.prefix}`;
 }
 
 export function getTerminology(
-  data?: Model,
+  data?: ModelType,
   lang?: string
 ): {
   description: string;
   title: string;
   url: string;
 }[] {
-  const target = getTerminologyInfo(data);
-
-  if (!target) {
+  if (!data) {
     return [];
   }
 
-  return target.map((t) => ({
-    description: t['@id'],
-    title: getPropertyLanguageVersion({
-      data: t.prefLabel,
-      lang: lang ?? 'fi',
-      appendLocale: true,
-    }),
-    url: t['@id'],
-  }));
+  const terminologies = getTerminologyInfo(data);
+
+  return terminologies?.map((terminology) => {
+    return {
+      description: '',
+      title: '',
+      url: '',
+    };
+  });
 }
 
 export function getReferenceData(
-  data?: Model,
+  data?: ModelType,
   lang?: string
 ): {
   description: string;
   title: string;
   url: string;
 }[] {
-  const target = getReferenceDataInfo(data);
+  const referenceData = getReferenceDataInfo(data);
 
-  if (!target) {
-    return [];
-  }
-
-  return target.map((t) => ({
-    description: t['@id'],
-    title: getPropertyLanguageVersion({
-      data: t.title,
-      lang: lang ?? 'fi',
-      appendLocale: true,
-    }),
-    url: t['@id'],
-  }));
+  return referenceData?.map((ref) => {
+    return {
+      description: '',
+      title: '',
+      url: '',
+    };
+  });
 }
 
 export function getDataVocabularies(
-  data?: Model,
+  data?: ModelType,
   lang?: string
 ): {
   title: string;
   url: string;
 }[] {
-  const target = getDataVocabulariesInfo(data);
+  const dataVocabularies = getDataVocabulariesInfo(data);
 
-  if (!target) {
+  if (!dataVocabularies) {
     return [];
   }
 
-  return target.map((t) => ({
-    title: getPropertyLanguageVersion({
-      data: t.label,
-      lang: lang ?? 'fi',
-      appendLocale: true,
-    }),
-    url: t['@id'],
+  return dataVocabularies.map((t) => ({
+    title: '',
+    url: t.id,
   }));
 }
