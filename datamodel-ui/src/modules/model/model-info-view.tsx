@@ -3,11 +3,13 @@ import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useMemo, useState } from 'react';
 import {
+  Button,
   Expander,
   ExpanderGroup,
   ExpanderTitleButton,
   ExternalLink,
   Heading,
+  Tooltip,
 } from 'suomifi-ui-components';
 import { BasicBlock, MultilingualBlock } from 'yti-common-ui/block';
 import {
@@ -25,11 +27,17 @@ import {
   getTitles,
   getUri,
 } from '@app/common/utils/get-value';
-import { ModelInfoListWrapper, ModelInfoWrapper } from './model.styles';
+import {
+  ModelInfoListWrapper,
+  ModelInfoWrapper,
+  TooltipWrapper,
+} from './model.styles';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
 import { compareLocales } from '@app/common/utils/compare-locals';
 import Separator from 'yti-common-ui/separator';
 import FormattedDate from 'yti-common-ui/formatted-date';
+import ModelForm from '../model-form';
+import { useInitialModelForm } from '@app/common/utils/hooks/use-initial-model-form';
 
 export default function ModelInfoView() {
   const { t, i18n } = useTranslation('common');
@@ -37,7 +45,10 @@ export default function ModelInfoView() {
   const [modelId] = useState(
     Array.isArray(query.modelId) ? query.modelId[0] : query.modelId ?? ''
   );
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [showEditView, setShowEditView] = useState(false);
   const { data: modelInfo } = useGetModelQuery(modelId);
+  const [initialData] = useState(useInitialModelForm());
 
   const data = useMemo(() => {
     if (!modelInfo) {
@@ -67,7 +78,52 @@ export default function ModelInfoView() {
 
   return (
     <ModelInfoWrapper>
-      <Heading variant="h2">{t('details')}</Heading>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}
+      >
+        <Heading variant="h2">{t('details')}</Heading>
+        <div>
+          <Button
+            variant="secondary"
+            onClick={() => setShowTooltip(!showTooltip)}
+            iconRight={'menu'}
+          >
+            Toiminnot
+          </Button>
+          <TooltipWrapper>
+            <Tooltip
+              ariaCloseButtonLabelText=""
+              ariaToggleButtonLabelText=""
+              open={showTooltip}
+              onCloseButtonClick={() => setShowTooltip(false)}
+            >
+              <Button
+                variant="secondaryNoBorder"
+                onClick={() => setShowEditView(true)}
+              >
+                Muokkaa
+              </Button>
+              <Button variant="secondaryNoBorder">Näytä tiedostona</Button>
+              <Button variant="secondaryNoBorder">Lataan tiedostona</Button>
+              <Button variant="secondaryNoBorder">
+                Muuta tietomallin resurssin tiloja
+              </Button>
+              <Button variant="secondaryNoBorder">
+                Luo kopio tietomallista
+              </Button>
+              <Button variant="secondaryNoBorder">
+                Tilaa sähköposti-ilmoitukset
+              </Button>
+              <hr />
+              <Button variant="secondaryNoBorder">Poista</Button>
+            </Tooltip>
+          </TooltipWrapper>
+        </div>
+      </div>
 
       <BasicBlock title={t('name')}>
         <MultilingualBlock
