@@ -13,7 +13,7 @@ import {
   getRunningQueriesThunk,
 } from '@app/common/components/model/model.slice';
 import { getStoreData } from '@app/common/utils/utils';
-import { Model as ModelType } from '@app/common/interfaces/model.interface';
+import { ModelType } from '@app/common/interfaces/model.interface';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -56,7 +56,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
 
     const modelInfo = getStoreData({
       functionKey: `getModel("${modelId}")`,
-      reduxKey: 'modelApi',
+      reduxKey: 'model',
       state: store.getState(),
     });
 

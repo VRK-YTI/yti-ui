@@ -13,10 +13,7 @@ import SearchResults, {
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'next-i18next';
 import { useGetSearchModelsQuery } from '@app/common/components/search-models/search-models.slice';
-import {
-  getLanguageVersion,
-  getPropertyLanguageVersion,
-} from '@app/common/utils/get-language-version';
+import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { Modal, ModalContent, SingleSelectData } from 'suomifi-ui-components';
 import useUrlState from 'yti-common-ui/utils/hooks/use-url-state';
@@ -33,9 +30,9 @@ export default function FrontPage() {
   const { isSmall } = useBreakpoints();
   const { urlState } = useUrlState();
   const { data: serviceCategoriesData, refetch: refetchServiceCategoriesData } =
-    useGetServiceCategoriesQuery();
+    useGetServiceCategoriesQuery(i18n.language);
   const { data: organizationsData, refetch: refetchOrganizationsData } =
-    useGetOrganizationsQuery();
+    useGetOrganizationsQuery(i18n.language);
   const { data: searchModels, refetch: refetchSearchModels } =
     useGetSearchModelsQuery({
       urlState,
@@ -48,14 +45,11 @@ export default function FrontPage() {
       return [];
     }
 
-    return organizationsData['@graph'].map((org) => {
-      const id = org['@id'].replaceAll('urn:uuid:', '');
+    return organizationsData.map((org) => {
+      const id = org.id.replaceAll('urn:uuid:', '');
       return {
         id: id,
-        label: getPropertyLanguageVersion({
-          data: org.prefLabel,
-          lang: i18n.language,
-        }),
+        label: org.label[i18n.language] ?? org.label['fi'],
       };
     });
   }, [organizationsData, i18n.language]);
@@ -65,12 +59,9 @@ export default function FrontPage() {
       return [];
     }
 
-    return serviceCategoriesData['@graph'].map((category) => ({
+    return serviceCategoriesData.map((category) => ({
       id: category.identifier,
-      label: getPropertyLanguageVersion({
-        data: category.label,
-        lang: i18n.language,
-      }),
+      label: category.label[i18n.language],
     }));
   }, [serviceCategoriesData, i18n.language]);
 
@@ -107,21 +98,20 @@ export default function FrontPage() {
     return searchModels.models.map((m) => {
       const contributors: string[] = m.contributor
         .map((c) =>
-          getPropertyLanguageVersion({
-            data: organizationsData?.['@graph'].find(
-              (o) => o['@id'].replace('urn:uuid:', '') === c
-            )?.prefLabel,
+          getLanguageVersion({
+            data: organizationsData.find(
+              (o) => o.id.replace('urn:uuid:', '') === c
+            )?.label,
             lang: i18n.language,
+            appendLocale: true,
           })
         )
-        .filter((c) => c.length > 0);
+        .filter((c) => c && c.length > 0);
 
       const partOf: string[] = m.isPartOf
         .map((p) =>
-          getPropertyLanguageVersion({
-            data: serviceCategoriesData?.['@graph'].find(
-              (c) => c.identifier === p
-            )?.label,
+          getLanguageVersion({
+            data: serviceCategoriesData.find((c) => c.identifier === p)?.label,
             lang: i18n.language,
           })
         )

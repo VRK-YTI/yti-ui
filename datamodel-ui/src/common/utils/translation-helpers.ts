@@ -1,10 +1,11 @@
 import { TFunction } from 'next-i18next';
+import { Type } from '../interfaces/type.interface';
 
-export function translateModelType(type: string, t: TFunction) {
+export function translateModelType(type: Type, t: TFunction) {
   switch (type) {
-    case 'library':
+    case 'LIBRARY':
       return t('library');
-    case 'profile':
+    case 'PROFILE':
       return t('profile');
     default:
       return t('profile');

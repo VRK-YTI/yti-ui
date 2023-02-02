@@ -30,8 +30,10 @@ export default function ModelForm({
   errors,
 }: ModelFormProps) {
   const { t, i18n } = useTranslation('admin');
-  const { data: serviceCategoriesData } = useGetServiceCategoriesQuery();
-  const { data: organizationsData } = useGetOrganizationsQuery();
+  const { data: serviceCategoriesData } = useGetServiceCategoriesQuery(
+    i18n.language
+  );
+  const { data: organizationsData } = useGetOrganizationsQuery(i18n.language);
 
   const serviceCategories = useMemo(() => {
     if (!serviceCategoriesData) {
