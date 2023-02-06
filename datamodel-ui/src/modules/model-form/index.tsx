@@ -183,7 +183,7 @@ export default function ModelForm({
             >{`http://uri.suomi.fi/datamodel/ns/${formData.prefix}`}</Text>
           </div>
 
-          <Dropdown labelText={'Tila'}>
+          <Dropdown labelText={'Tila'} defaultValue={formData.status ?? ''}>
             <DropdownItem value={'DRAFT'}>Luonnos</DropdownItem>
             <DropdownItem value={'VALID'}>Voimassa oleva</DropdownItem>
             <DropdownItem value={'SUPERSEDED'}>Korvattu</DropdownItem>

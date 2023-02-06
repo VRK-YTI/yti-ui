@@ -13,6 +13,7 @@ import {
 } from 'suomifi-ui-components';
 import { BasicBlock, MultilingualBlock } from 'yti-common-ui/block';
 import {
+  getBaseInfo,
   getBaseModelPrefix,
   getComments,
   getContact,
@@ -70,6 +71,11 @@ export default function ModelInfoView() {
     };
   }, [modelInfo, i18n.language]);
 
+  const handleEditViewItemClick = (setItem: (value: boolean) => void) => {
+    setItem(true);
+    setShowTooltip(false);
+  };
+
   if (!modelInfo || !data) {
     return <ModelInfoWrapper />;
   }
@@ -110,9 +116,20 @@ export default function ModelInfoView() {
                 selected: true,
               },
             ],
-            organizations: [],
+            organizations: [
+              {
+                labelText: 'Uusi organisaatio',
+                uniqueItemId: '35ac8cd3-ed8e-48da-852d-0171f66459d4',
+              },
+            ],
             prefix: 'demo123',
-            serviceCategories: [],
+            serviceCategories: [
+              {
+                labelText: 'Elinkeinot',
+                uniqueItemId: 'P11',
+              },
+            ],
+            status: getBaseInfo(modelInfo)?.versionInfo,
             type: 'profile',
           }}
           setFormData={() => null}
@@ -150,7 +167,7 @@ export default function ModelInfoView() {
             >
               <Button
                 variant="secondaryNoBorder"
-                onClick={() => setShowEditView(true)}
+                onClick={() => handleEditViewItemClick(setShowEditView)}
               >
                 Muokkaa
               </Button>
