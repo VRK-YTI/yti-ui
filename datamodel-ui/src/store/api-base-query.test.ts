@@ -32,7 +32,7 @@ describe('axios base query', () => {
     };
 
     // any API call would be fine here
-    mock.onGet(/\/api\/v1\/serviceCategories/).reply((config) => {
+    mock.onGet(/\/v2\/frontend\/serviceCategories/).reply((config) => {
       return [
         200,
         'JSESSIONID exists in headers: ' +
@@ -53,12 +53,12 @@ describe('axios base query', () => {
       req.session.save();
 
       // initiate API call
-      store.dispatch(getServiceCategories.initiate());
+      store.dispatch(getServiceCategories.initiate('fi'));
       await Promise.all(store.dispatch(getRunningQueriesThunk()));
 
       // get the result from the API call
       const data = store.getState().serviceCategoriesApi.queries[
-        'getServiceCategories(undefined)'
+        'getServiceCategories("fi")'
       ]?.data as string;
 
       return {

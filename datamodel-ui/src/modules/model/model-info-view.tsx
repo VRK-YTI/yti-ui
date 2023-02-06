@@ -191,23 +191,15 @@ export default function ModelInfoView() {
 
       <BasicBlock title={t('name')}>
         <MultilingualBlock
-          data={data.title
-            .map((title) => ({
-              lang: title['@language'],
-              value: title['@value'],
-            }))
-            .sort((a, b) => compareLocales(a.lang, b.lang))}
+          data={data.title.sort((a, b) => compareLocales(a.lang, b.lang))}
         />
       </BasicBlock>
       <BasicBlock title={t('description')}>
         {data.description.length > 0 ? (
           <MultilingualBlock
-            data={data.description
-              .map((comment) => ({
-                lang: comment['@language'],
-                value: comment['@value'],
-              }))
-              .sort((a, b) => compareLocales(a.lang, b.lang))}
+            data={data.description.sort((a, b) =>
+              compareLocales(a.lang, b.lang)
+            )}
           />
         ) : (
           t('not-added')

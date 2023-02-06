@@ -19,7 +19,7 @@ export const searchModelsApi = createApi({
       { urlState: UrlState; lang: string }
     >({
       query: (props) => ({
-        url: '/searchModels',
+        url: '/frontend/searchModels',
         method: 'POST',
         data: {
           pageFrom: Math.max(0, (props.urlState.page - 1) * 50),

@@ -38,7 +38,7 @@ export default withIronSessionApiRoute(
         process.env.DATAMODEL_API_URL ??
         'http://yti-datamodel-api:9004/datamodel-api';
       const apiPath = new URL(apiBase).pathname;
-      const fetchUrl = proxyUrl + apiPath + '/api/v1/user';
+      const fetchUrl = proxyUrl + apiPath + '/v2/user';
 
       // Shibboleth configuration requires X-Forwarded-For to allow access with
       // the _shibsession cookie. Otherwise the "consistentAddress" setting will

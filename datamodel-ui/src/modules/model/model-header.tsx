@@ -2,12 +2,7 @@ import { MainTitle, BadgeBar, Badge } from 'yti-common-ui/title-block';
 import { TitleWrapper } from './model.styles';
 import { Breadcrumb, BreadcrumbLink } from 'yti-common-ui/breadcrumb';
 import { Button, Icon } from 'suomifi-ui-components';
-import {
-  getBaseModelPrefix,
-  getStatus,
-  getTitle,
-  getType,
-} from '@app/common/utils/get-value';
+import { getStatus, getTitle, getType } from '@app/common/utils/get-value';
 import {
   translateModelType,
   translateStatus,
@@ -19,9 +14,9 @@ import {
 import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
 import { useBreakpoints } from 'yti-common-ui/media-query';
-import { Model } from '@app/common/interfaces/model.interface';
+import { ModelType } from '@app/common/interfaces/model.interface';
 
-export default function ModelHeader({ modelInfo }: { modelInfo?: Model }) {
+export default function ModelHeader({ modelInfo }: { modelInfo?: ModelType }) {
   const { isSmall, isLarge } = useBreakpoints();
   const { t, i18n } = useTranslation('common');
 
@@ -59,9 +54,9 @@ export default function ModelHeader({ modelInfo }: { modelInfo?: Model }) {
             <Icon icon="applicationProfile" color="hsl(212, 63%, 49%)" />{' '}
             {translateModelType(getType(modelInfo), t)}
           </div>
-          <span>{getBaseModelPrefix(modelInfo)}</span>
+          <span>{modelInfo?.prefix}</span>
           <Badge $isValid={model.status === 'VALID'}>
-            {translateStatus(model.status, t)}
+            {translateStatus(getStatus(modelInfo), t)}
           </Badge>
         </BadgeBar>
       </div>

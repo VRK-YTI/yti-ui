@@ -1,22 +1,18 @@
-import { Organizations } from '../interfaces/organizations.interface';
-import { getPropertyLanguageVersion } from './get-language-version';
+import { Organization } from '../interfaces/organizations.interface';
 
 export default function getOrganizations(
-  organizationsData?: Organizations,
+  organizationsData?: Organization[],
   lang?: string
 ) {
   if (!organizationsData) {
     return [];
   }
 
-  return organizationsData['@graph'].map((org) => {
-    const id = org['@id'].replaceAll('urn:uuid:', '');
+  return organizationsData.map((org) => {
+    const id = org.id.replaceAll('urn:uuid:', '');
     return {
       id: id,
-      label: getPropertyLanguageVersion({
-        data: org.prefLabel,
-        lang: lang ?? 'fi',
-      }),
+      label: org.label[lang ?? 'fi'],
     };
   });
 }

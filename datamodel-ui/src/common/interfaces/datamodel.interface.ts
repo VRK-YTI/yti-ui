@@ -1,3 +1,5 @@
+import { Type } from './type.interface';
+
 export interface DataModel {
   comment: {
     [key: string]: string;
@@ -19,6 +21,6 @@ export interface DataModel {
   prefix: string;
   status: string;
   statusModified: string;
-  type: 'library' | 'profile';
+  type: Type;
   useContext: string;
 }
