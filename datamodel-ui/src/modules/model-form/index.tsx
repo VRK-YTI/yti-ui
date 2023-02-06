@@ -4,15 +4,27 @@ import getOrganizations from '@app/common/utils/get-organizations';
 import getServiceCategories from '@app/common/utils/get-service-categories';
 import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
-import { Block, RadioButton, RadioButtonGroup } from 'suomifi-ui-components';
+import {
+  Dropdown,
+  DropdownItem,
+  Label,
+  RadioButton,
+  RadioButtonGroup,
+  Text,
+} from 'suomifi-ui-components';
 import Separator from 'yti-common-ui/separator';
-import { BlockContainer, WideMultiSelect } from './model-form.styles';
+import {
+  BlockContainer,
+  ModelFormContainer,
+  WideMultiSelect,
+} from './model-form.styles';
 import LanguageSelector from 'yti-common-ui/form/language-selector';
 import Prefix from 'yti-common-ui/form/prefix';
 import Contact from 'yti-common-ui/form/contact';
 import { useGetFreePrefixMutation } from '@app/common/components/prefix';
 import { ModelFormType } from '@app/common/interfaces/model-form.interface';
 import { FormErrors } from './validate-form';
+import AddBlock from './add-block';
 
 interface ModelFormProps {
   formData: ModelFormType;
@@ -20,6 +32,7 @@ interface ModelFormProps {
   userPosted: boolean;
   disabled?: boolean;
   errors?: FormErrors;
+  editMode?: boolean;
 }
 
 export default function ModelForm({
@@ -28,6 +41,7 @@ export default function ModelForm({
   userPosted,
   disabled,
   errors,
+  editMode,
 }: ModelFormProps) {
   const { t, i18n } = useTranslation('admin');
   const { data: serviceCategoriesData } = useGetServiceCategoriesQuery();
@@ -60,37 +74,65 @@ export default function ModelForm({
   }, [organizationsData, i18n.language]);
 
   return (
-    <Block>
-      <RadioButtonGroup
-        labelText={t('datamodel-type')}
-        name="type"
-        defaultValue="profile"
-        id="model-type-group"
-        onChange={(e) =>
-          setFormData({ ...formData, type: e as 'profile' | 'library' })
-        }
-      >
-        <RadioButton
-          value="profile"
-          hintText={t('profile-hint-text')}
-          id="profile-radio-button"
-          disabled={disabled}
-        >
-          {t('profile', { ns: 'common' })}
-        </RadioButton>
-        <RadioButton
-          value="library"
-          hintText={t('library-hint-text')}
-          id="library-radio-button"
-          disabled={disabled}
-        >
-          {t('library-variant', { ns: 'common' })}
-        </RadioButton>
-      </RadioButtonGroup>
-
-      <Separator isLarge />
+    <ModelFormContainer>
+      {renderModelType()}
+      {renderLanguages()}
+      {renderPrefix()}
 
       <BlockContainer>
+        {renderInformationDomains()}
+        {renderUsedBlock()}
+        {!editMode && renderContributors()}
+      </BlockContainer>
+
+      <Separator isLarge />
+      {editMode && renderContributors()}
+      {renderContact()}
+    </ModelFormContainer>
+  );
+
+  function renderModelType() {
+    if (editMode) {
+      return <></>;
+    }
+
+    return (
+      <>
+        <RadioButtonGroup
+          labelText={t('datamodel-type')}
+          name="type"
+          defaultValue="profile"
+          id="model-type-group"
+          onChange={(e) =>
+            setFormData({ ...formData, type: e as 'profile' | 'library' })
+          }
+        >
+          <RadioButton
+            value="profile"
+            hintText={t('profile-hint-text')}
+            id="profile-radio-button"
+            disabled={disabled}
+          >
+            {t('profile', { ns: 'common' })}
+          </RadioButton>
+          <RadioButton
+            value="library"
+            hintText={t('library-hint-text')}
+            id="library-radio-button"
+            disabled={disabled}
+          >
+            {t('library-variant', { ns: 'common' })}
+          </RadioButton>
+        </RadioButtonGroup>
+
+        <Separator />
+      </>
+    );
+  }
+
+  function renderLanguages() {
+    return (
+      <div>
         <LanguageSelector
           items={formData.languages}
           languages={formData.languages}
@@ -118,8 +160,42 @@ export default function ModelForm({
           noItemsText={''}
           status={errors?.languageAmount ? 'error' : 'default'}
           disabled={disabled}
+          defaultSelectedItems={formData.languages.filter(
+            (lang) => lang.selected
+          )}
         />
+      </div>
+    );
+  }
 
+  function renderPrefix() {
+    if (editMode) {
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+          <div>
+            <Label>Tunnus</Label>
+            <Text smallScreen>{formData.prefix}</Text>
+          </div>
+          <div>
+            <Label>Nimiavaruus</Label>
+            <Text
+              smallScreen
+            >{`http://uri.suomi.fi/datamodel/ns/${formData.prefix}`}</Text>
+          </div>
+
+          <Dropdown labelText={'Tila'}>
+            <DropdownItem value={'DRAFT'}>Luonnos</DropdownItem>
+            <DropdownItem value={'VALID'}>Voimassa oleva</DropdownItem>
+            <DropdownItem value={'SUPERSEDED'}>Korvattu</DropdownItem>
+            <DropdownItem value={'RETIRED'}>Poistettu käytöstä</DropdownItem>
+            <DropdownItem value={'INVALID'}>Virheellinen</DropdownItem>
+          </Dropdown>
+        </div>
+      );
+    }
+
+    return (
+      <>
         <Prefix
           prefix={formData.prefix}
           setPrefix={(e) =>
@@ -143,84 +219,100 @@ export default function ModelForm({
             uriPreview: t('uri-preview'),
           }}
           disabled={disabled}
+          noAuto
+          fullWidth
         />
-      </BlockContainer>
+        <Separator />
+      </>
+    );
+  }
 
-      <Separator isLarge />
+  function renderInformationDomains() {
+    return (
+      <WideMultiSelect
+        chipListVisible={true}
+        labelText={t('information-domains')}
+        hintText={t('information-domains-hint-text')}
+        visualPlaceholder={t('select-information-domains-for-data-model')}
+        removeAllButtonLabel={t('clear-all-selections')}
+        allowItemAddition={false}
+        onItemSelectionsChange={(e) =>
+          setFormData({
+            ...formData,
+            serviceCategories: e,
+          })
+        }
+        items={serviceCategories}
+        status={userPosted && errors?.serviceCategories ? 'error' : 'default'}
+        ariaChipActionLabel={''}
+        ariaSelectedAmountText={''}
+        ariaOptionsAvailableText={''}
+        ariaOptionChipRemovedText={''}
+        noItemsText={''}
+        disabled={disabled}
+        defaultSelectedItems={formData.serviceCategories}
+      />
+    );
+  }
 
-      <BlockContainer>
-        <WideMultiSelect
-          chipListVisible={true}
-          labelText={t('information-domains')}
-          hintText={t('information-domains-hint-text')}
-          visualPlaceholder={t('select-information-domains-for-data-model')}
-          removeAllButtonLabel={t('clear-all-selections')}
-          allowItemAddition={false}
-          onItemSelectionsChange={(e) =>
-            setFormData({
-              ...formData,
-              serviceCategories: e,
-            })
-          }
-          items={serviceCategories}
-          status={userPosted && errors?.serviceCategories ? 'error' : 'default'}
-          ariaChipActionLabel={''}
-          ariaSelectedAmountText={''}
-          ariaOptionsAvailableText={''}
-          ariaOptionChipRemovedText={''}
-          noItemsText={''}
-          disabled={disabled}
-        />
+  function renderContributors() {
+    return (
+      <WideMultiSelect
+        chipListVisible={true}
+        labelText={t('contributors')}
+        hintText={t('contributors-hint-text')}
+        visualPlaceholder={t('select-contributors')}
+        removeAllButtonLabel={t('clear-all-selections')}
+        allowItemAddition={false}
+        onItemSelectionsChange={(e) =>
+          setFormData({
+            ...formData,
+            organizations: e,
+          })
+        }
+        items={organizations}
+        status={userPosted && errors?.organizations ? 'error' : 'default'}
+        ariaChipActionLabel={''}
+        ariaSelectedAmountText={''}
+        ariaOptionsAvailableText={''}
+        ariaOptionChipRemovedText={''}
+        noItemsText={''}
+        defaultSelectedItems={formData.organizations}
+      />
+    );
+  }
 
-        <WideMultiSelect
-          chipListVisible={true}
-          labelText={t('contributors')}
-          hintText={t('contributors-hint-text')}
-          visualPlaceholder={t('select-contributors')}
-          removeAllButtonLabel={t('clear-all-selections')}
-          allowItemAddition={false}
-          onItemSelectionsChange={(e) =>
-            setFormData({
-              ...formData,
-              organizations: e,
-            })
-          }
-          items={organizations}
-          status={userPosted && errors?.organizations ? 'error' : 'default'}
-          ariaChipActionLabel={''}
-          ariaSelectedAmountText={''}
-          ariaOptionsAvailableText={''}
-          ariaOptionChipRemovedText={''}
-          noItemsText={''}
-          disabled={disabled}
-        />
-      </BlockContainer>
+  function renderUsedBlock() {
+    if (!editMode) {
+      return <></>;
+    }
+    return <AddBlock />;
+  }
 
-      <Separator isLarge />
-
-      <BlockContainer>
-        <Contact
-          contact={formData.contact}
-          setContact={(e) =>
-            setFormData({
-              ...formData,
-              contact: e,
-            })
-          }
-          translations={{
-            email: t('email'),
-            inputDescription1: t('contact-description-1'),
-            inputDescription2: t('contact-description-2'),
-            inputLabel: t('contact-input-label'),
-            inputOptionLabel: t('contact-input-type-label'),
-            inputPlaceholder: t('contact-input-placeholder'),
-            label: t('feedback'),
-            labelHint: t('contact-input-hint'),
-            undefined: t('still-unknown'),
-          }}
-          disabled={disabled}
-        />
-      </BlockContainer>
-    </Block>
-  );
+  function renderContact() {
+    return (
+      <Contact
+        contact={formData.contact}
+        setContact={(e) =>
+          setFormData({
+            ...formData,
+            contact: e,
+          })
+        }
+        translations={{
+          email: t('email'),
+          inputDescription1: t('contact-description-1'),
+          inputDescription2: t('contact-description-2'),
+          inputLabel: t('contact-input-label'),
+          inputOptionLabel: t('contact-input-type-label'),
+          inputPlaceholder: t('contact-input-placeholder'),
+          label: t('feedback'),
+          labelHint: t('contact-input-hint'),
+          optional: t('optional'),
+          undefined: t('still-unknown'),
+        }}
+        disabled={disabled}
+      />
+    );
+  }
 }

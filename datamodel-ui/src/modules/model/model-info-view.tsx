@@ -76,6 +76,55 @@ export default function ModelInfoView() {
     return <ModelInfoWrapper />;
   }
 
+  if (showEditView) {
+    return (
+      <ModelInfoWrapper>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginBottom: '20px',
+          }}
+        >
+          <Heading variant="h2">{t('details')}</Heading>
+          <div>
+            <Button>Tallenna</Button>
+            <Button
+              variant="secondary"
+              style={{ marginLeft: '10px' }}
+              onClick={() => setShowEditView(false)}
+            >
+              Peruuta
+            </Button>
+          </div>
+        </div>
+
+        <ModelForm
+          formData={{
+            contact: 'yhteystieto@mail.com',
+            languages: [
+              {
+                labelText: t('language-finnish-with-suffix', { ns: 'admin' }),
+                uniqueItemId: 'fi',
+                title: 'Tietomalli',
+                description: 'Tietomallin kuvaus',
+                selected: true,
+              },
+            ],
+            organizations: [],
+            prefix: 'demo123',
+            serviceCategories: [],
+            type: 'profile',
+          }}
+          setFormData={() => null}
+          userPosted={false}
+          editMode={true}
+        />
+      </ModelInfoWrapper>
+    );
+  }
+
   return (
     <ModelInfoWrapper>
       <div

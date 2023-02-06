@@ -1,18 +1,8 @@
 import { ModelFormType } from '@app/common/interfaces/model-form.interface';
 import { useTranslation } from 'next-i18next';
-import { v4 } from 'uuid';
 
 export function useInitialModelForm(): ModelFormType {
   const { t } = useTranslation('admin');
-  let prefix = v4().substring(0, 8);
-
-  // If prefix starts with a number replace it with any alphabet
-  if (/^\d/.test(prefix)) {
-    const alphabets = 'abcdefghijklmnopqrstuvwxyz';
-    prefix =
-      alphabets[Math.floor(Math.random() * alphabets.length)] +
-      prefix.substring(1);
-  }
 
   return {
     contact: '',
@@ -40,7 +30,7 @@ export function useInitialModelForm(): ModelFormType {
       },
     ],
     organizations: [],
-    prefix: prefix,
+    prefix: '',
     serviceCategories: [],
     type: 'profile' as ModelFormType['type'],
   };

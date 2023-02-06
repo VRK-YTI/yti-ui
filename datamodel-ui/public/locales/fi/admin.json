@@ -44,7 +44,7 @@
   "missing-prefix": "Tietomallin tunnusta ei ole määritelty",
   "optional": "valinnainen",
   "prefix": "Tunnus",
-  "prefix-input-hint-text": "Tietomallin yksilöivä tunnus, jota ei voi muuttaa sanaston luonnin jälkeen.",
+  "prefix-input-hint-text": "Tietomallin yksilöivä tunnus, jota ei voi muuttaa sanaston luonnin jälkeen. Tunnuksen tulee alkaa pienellä kirjaimella ja sen pitää olla 2-10 merkkiä pitkä. Sallitut merkit ovat a-z, 0-9, \"_\" ja \"-\".",
   "profile-hint-text": "Tiettyyn asiayhteyteen liittyvä tietomalli, joka hyödyntää ydintietomalleja",
   "remove": "Poista",
   "select-contributors": "Valitse sisällöntuottajat",
