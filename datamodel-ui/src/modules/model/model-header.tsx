@@ -15,7 +15,7 @@ import {
 import {
   MoveButton,
   ToolsButtonGroup,
-} from 'yti-common-ui/drawer/side-navigation.styles';
+} from 'yti-common-ui/drawer/drawer.styles';
 import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
 import { useBreakpoints } from 'yti-common-ui/media-query';

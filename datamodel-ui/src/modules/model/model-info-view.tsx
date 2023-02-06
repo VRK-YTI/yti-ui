@@ -37,7 +37,6 @@ import { compareLocales } from '@app/common/utils/compare-locals';
 import Separator from 'yti-common-ui/separator';
 import FormattedDate from 'yti-common-ui/formatted-date';
 import ModelForm from '../model-form';
-import { useInitialModelForm } from '@app/common/utils/hooks/use-initial-model-form';
 
 export default function ModelInfoView() {
   const { t, i18n } = useTranslation('common');
@@ -48,7 +47,6 @@ export default function ModelInfoView() {
   const [showTooltip, setShowTooltip] = useState(false);
   const [showEditView, setShowEditView] = useState(false);
   const { data: modelInfo } = useGetModelQuery(modelId);
-  const [initialData] = useState(useInitialModelForm());
 
   const data = useMemo(() => {
     if (!modelInfo) {
