@@ -1,4 +1,6 @@
 {
+  "actions": "Toiminnot",
+  "add-email-subscription": "Tilaa sähköposti-ilmoitukset",
   "breadcrumb": "Murupolku",
   "card-information-domains": "Tietoalueet",
   "card-organizations": "sisällöntuottajaa",
@@ -17,6 +19,7 @@
   "datamodels-unused": "Ei käytössä olevat tietomallit",
   "description": "Kuvaus",
   "details": "Tiedot",
+  "download-as-file": "Lataa tiedostona",
   "error-occured": "Tapahtui virhe",
   "feedback": "Palaute",
   "feedback-terminologies": "",
@@ -84,6 +87,7 @@
   "results-with-current_other": "Tietomalleja {{count}} kpl seuraavilla rajauksilla",
   "service-description": "Tietomallit-työkalulla kuvataan tietojärjestelmien ja rajapintojen tietosisältöjä ja -rakennetta. Tietomallit-työkalu tekee julkishallinnon julkisten tietojen loogisesta tietomallityöstö avointa ja julkista, joka helpottaa tietomallien hyödyntämistä yli organisaatiorajojen.",
   "show": "Näytä",
+  "show-as-file": "Näytä tiedostona",
   "show-by-information-domain": "Näytä tietoalueittain",
   "show-only": "Näytä vain",
   "site-cancel": "Peruuta",

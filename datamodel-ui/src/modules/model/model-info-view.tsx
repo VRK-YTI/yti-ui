@@ -152,7 +152,7 @@ export default function ModelInfoView() {
             onClick={() => setShowTooltip(!showTooltip)}
             iconRight={'menu'}
           >
-            Toiminnot
+            {t('actions')}
           </Button>
           <TooltipWrapper>
             <Tooltip
@@ -166,21 +166,25 @@ export default function ModelInfoView() {
                 onClick={() => handleEditViewItemClick(setShowEditView)}
                 disabled={!formData}
               >
-                Muokkaa
+                {t('edit', { ns: 'admin' })}
               </Button>
-              <Button variant="secondaryNoBorder">Näytä tiedostona</Button>
-              <Button variant="secondaryNoBorder">Lataan tiedostona</Button>
+              <Button variant="secondaryNoBorder">{t('show-as-file')}</Button>
               <Button variant="secondaryNoBorder">
-                Muuta tietomallin resurssin tiloja
-              </Button>
-              <Button variant="secondaryNoBorder">
-                Luo kopio tietomallista
+                {t('download-as-file')}
               </Button>
               <Button variant="secondaryNoBorder">
-                Tilaa sähköposti-ilmoitukset
+                {t('update-models-resources-statuses', { ns: 'admin' })}
+              </Button>
+              <Button variant="secondaryNoBorder">
+                {t('create-copy-from-model', { ns: 'admin' })}
+              </Button>
+              <Button variant="secondaryNoBorder">
+                {t('add-email-subscription')}
               </Button>
               <hr />
-              <Button variant="secondaryNoBorder">Poista</Button>
+              <Button variant="secondaryNoBorder">
+                {t('remove', { ns: 'admin' })}
+              </Button>
             </Tooltip>
           </TooltipWrapper>
         </div>

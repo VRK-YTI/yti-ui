@@ -26,13 +26,14 @@ import { ModelFormType } from '@app/common/interfaces/model-form.interface';
 import { FormErrors } from './validate-form';
 import AddBlock from './add-block';
 import { Status } from '@app/common/interfaces/status.interface';
+import { FormUpdateErrors } from '../model/validate-form-update';
 
 interface ModelFormProps {
   formData: ModelFormType;
   setFormData: (value: ModelFormType) => void;
   userPosted: boolean;
   disabled?: boolean;
-  errors?: FormErrors;
+  errors?: FormErrors | FormUpdateErrors;
   editMode?: boolean;
 }
 
@@ -176,11 +177,11 @@ export default function ModelForm({
       return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <div>
-            <Label>Tunnus</Label>
+            <Label>{t('prefix')}</Label>
             <Text smallScreen>{formData.prefix}</Text>
           </div>
           <div>
-            <Label>Nimiavaruus</Label>
+            <Label>{t('namespace')}</Label>
             <Text
               smallScreen
             >{`http://uri.suomi.fi/datamodel/ns/${formData.prefix}`}</Text>
@@ -196,11 +197,21 @@ export default function ModelForm({
               })
             }
           >
-            <DropdownItem value={'DRAFT'}>Luonnos</DropdownItem>
-            <DropdownItem value={'VALID'}>Voimassa oleva</DropdownItem>
-            <DropdownItem value={'SUPERSEDED'}>Korvattu</DropdownItem>
-            <DropdownItem value={'RETIRED'}>Poistettu käytöstä</DropdownItem>
-            <DropdownItem value={'INVALID'}>Virheellinen</DropdownItem>
+            <DropdownItem value={'DRAFT'}>
+              {t('statuses.draft', { ns: 'common' })}
+            </DropdownItem>
+            <DropdownItem value={'VALID'}>
+              {t('statuses.valid', { ns: 'common' })}
+            </DropdownItem>
+            <DropdownItem value={'SUPERSEDED'}>
+              {t('statuses.superseded', { ns: 'common' })}
+            </DropdownItem>
+            <DropdownItem value={'RETIRED'}>
+              {t('statuses.retired', { ns: 'common' })}
+            </DropdownItem>
+            <DropdownItem value={'INVALID'}>
+              {t('statuses.invalid', { ns: 'common' })}
+            </DropdownItem>
           </Dropdown>
         </div>
       );
@@ -218,7 +229,7 @@ export default function ModelForm({
           }
           validatePrefixMutation={useGetFreePrefixMutation}
           typeInUri={'datamodel/ns'}
-          error={errors?.prefix ?? false}
+          error={errors && 'prefix' in errors ? errors?.prefix : false}
           translations={{
             automatic: t('create-prefix-automatically'),
             errorInvalid: t('error-prefix-invalid'),

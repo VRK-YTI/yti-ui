@@ -38,6 +38,7 @@ export default function ModelEditView({
 }: ModelEditViewProps) {
   const { t, i18n } = useTranslation('admin');
   const [errors, setErrors] = useState<FormUpdateErrors>();
+  const [userPosted, setUserPosted] = useState(false);
   const [postModel, result] = usePostModelMutation();
   const [formData, setFormData] = useState<ModelFormType>({
     contact: '',
@@ -67,7 +68,18 @@ export default function ModelEditView({
     }
   }, [result, handleSuccess]);
 
+  useEffect(() => {
+    if (!userPosted) {
+      return;
+    }
+
+    const errors = validateFormUpdate(formData);
+    setErrors(errors);
+  }, [userPosted, formData]);
+
   const handleSubmit = () => {
+    setUserPosted(true);
+
     if (!formData) {
       return;
     }
@@ -94,15 +106,15 @@ export default function ModelEditView({
           marginBottom: '20px',
         }}
       >
-        <Heading variant="h2">{t('details')}</Heading>
+        <Heading variant="h2">{t('details', { ns: 'common' })}</Heading>
         <div>
-          <Button onClick={() => handleSubmit()}>Tallenna</Button>
+          <Button onClick={() => handleSubmit()}>{t('save')}</Button>
           <Button
             variant="secondary"
             style={{ marginLeft: '10px' }}
             onClick={() => setShow(false)}
           >
-            Peruuta
+            {t('cancel-variant')}
           </Button>
         </div>
       </div>
@@ -117,8 +129,9 @@ export default function ModelEditView({
       <ModelForm
         formData={formData}
         setFormData={setFormData}
-        userPosted={false}
+        userPosted={userPosted}
         editMode={true}
+        errors={userPosted ? errors : undefined}
       />
     </ModelInfoWrapper>
   );

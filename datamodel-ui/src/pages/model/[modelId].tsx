@@ -11,9 +11,8 @@ import ModelHeader from '@app/modules/model/model-header';
 import {
   getModel,
   getRunningQueriesThunk,
+  useGetModelQuery,
 } from '@app/common/components/model/model.slice';
-import { getStoreData } from '@app/common/utils/utils';
-import { ModelType } from '@app/common/interfaces/model.interface';
 import {
   getServiceCategories,
   getRunningQueriesThunk as getServiceQueriesThunk,
@@ -25,16 +24,18 @@ import {
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
-  modelInfo?: ModelType;
+  modelId: string;
 }
 
 export default function ModelPage(props: IndexPageProps) {
+  const { data } = useGetModelQuery(props.modelId);
+
   return (
     <CommonContextProvider value={props}>
       <Layout
         user={props.user ?? undefined}
         fakeableUsers={props.fakeableUsers}
-        fullScreenElements={<ModelHeader modelInfo={props.modelInfo} />}
+        fullScreenElements={<ModelHeader modelInfo={data} />}
       >
         <PageHead baseUrl="https://tietomallit.suomi.fi" />
 
@@ -66,15 +67,9 @@ export const getServerSideProps = createCommonGetServerSideProps(
     await Promise.all(store.dispatch(getServiceQueriesThunk()));
     await Promise.all(store.dispatch(getOrgQueriesThunk()));
 
-    const modelInfo = getStoreData({
-      functionKey: `getModel("${modelId}")`,
-      reduxKey: 'model',
-      state: store.getState(),
-    });
-
     return {
       props: {
-        modelInfo: modelInfo,
+        modelId: modelId,
       },
     };
   }

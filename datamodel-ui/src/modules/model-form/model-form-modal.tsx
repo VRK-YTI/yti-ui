@@ -26,6 +26,7 @@ import { useTranslation } from 'next-i18next';
 import generatePayload from './generate-payload';
 import { usePutModelMutation } from '@app/common/components/model/model.slice';
 import getApiError from '@app/common/utils/getApiErrors';
+import { useRouter } from 'next/router';
 
 interface ModelFormModalProps {
   refetch: () => void;
@@ -34,6 +35,7 @@ interface ModelFormModalProps {
 export default function ModelFormModal({ refetch }: ModelFormModalProps) {
   const { t } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
+  const router = useRouter();
   const [visible, setVisible] = useState(false);
   const user = useSelector(selectLogin());
   const [modelFormInitialData] = useState(useInitialModelForm());
@@ -59,8 +61,9 @@ export default function ModelFormModal({ refetch }: ModelFormModalProps) {
     if (userPosted && result.isSuccess) {
       refetch();
       handleClose();
+      router.push(`/model/${formData.prefix}`);
     }
-  }, [result, refetch, userPosted, handleClose]);
+  }, [result, refetch, userPosted, handleClose, router, formData.prefix]);
 
   const handleSubmit = () => {
     setUserPosted(true);

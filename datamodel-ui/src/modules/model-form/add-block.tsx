@@ -8,31 +8,31 @@ export default function AddBlock() {
   return (
     <AddBlockWrapper>
       <Label htmlFor="terminologies" optionalText={t('optional')}>
-        Käytetyt sanastot
+        {t('terminologies-in-use')}
       </Label>
       <Button variant="secondary" icon="plus" id="terminologies" disabled>
-        Lisää sanasto
+        {t('add-terminology')}
       </Button>
 
       <Label htmlFor="codes" optionalText={t('optional')}>
-        Käytetyt koodistot
+        {t('reference-data-in-use')}
       </Label>
       <Button variant="secondary" icon="plus" id="codes" disabled>
-        Lisää koodisto
+        {t('add-reference-data')}
       </Button>
 
       <Label htmlFor="data-models" optionalText={t('optional')}>
-        Käytetyt tietomallit
+        {t('data-models-in-use')}
       </Label>
       <Button variant="secondary" icon="plus" id="data-models" disabled>
-        Lisää tietomalli
+        {t('add-data-model')}
       </Button>
 
       <Label htmlFor="links" optionalText={t('optional')}>
-        Linkit
+        {t('links')}
       </Label>
       <Button variant="secondary" icon="plus" id="links" disabled>
-        Lisää uusi linkki
+        {t('add-new-link')}
       </Button>
     </AddBlockWrapper>
   );

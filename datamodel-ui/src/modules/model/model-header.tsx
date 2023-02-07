@@ -40,7 +40,7 @@ export default function ModelHeader({ modelInfo }: { modelInfo?: ModelType }) {
           maxWidth: '100%',
           minWidth: 0,
           whiteSpace: 'nowrap',
-          overflow: 'visible  ',
+          overflow: 'visible',
         }}
       >
         <Breadcrumb baseUrl={t('datamodel-title')}>
