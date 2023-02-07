@@ -25,8 +25,7 @@ import {
 import { useTranslation } from 'next-i18next';
 import generatePayload from './generate-payload';
 import { usePutModelMutation } from '@app/common/components/model/model.slice';
-import { SerializedError } from '@reduxjs/toolkit';
-import { AxiosBaseQueryError } from 'yti-common-ui/interfaces/axios-base-query.interface';
+import getApiError from '@app/common/utils/getApiErrors';
 
 interface ModelFormModalProps {
   refetch: () => void;
@@ -144,29 +143,6 @@ export default function ModelFormModal({ refetch }: ModelFormModalProps) {
       </Modal>
     </>
   );
-
-  function getApiError(error: AxiosBaseQueryError | SerializedError) {
-    let errorStatus = '';
-    let errorMessage = '';
-
-    if (
-      'data' in error &&
-      typeof error.data === 'object' &&
-      error.data !== null
-    ) {
-      if ('status' in error.data && typeof error.data.status === 'string') {
-        errorStatus = error.data.status ?? 'GENERAL_ERROR';
-      }
-      if ('message' in error.data && typeof error.data.message === 'string') {
-        errorMessage = error.data.message ?? 'Unexpected error occured';
-      }
-    } else {
-      errorStatus = 'GENERAL_ERROR';
-      errorMessage = 'Unexpected error occured';
-    }
-
-    return `${errorStatus}: ${errorMessage}`;
-  }
 
   function getErrors(errors?: FormErrors): string[] | undefined {
     if (!errors) {

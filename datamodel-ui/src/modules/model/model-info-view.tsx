@@ -1,7 +1,7 @@
 import { useGetModelQuery } from '@app/common/components/model/model.slice';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   Button,
   Expander,
@@ -13,16 +13,17 @@ import {
 } from 'suomifi-ui-components';
 import { BasicBlock, MultilingualBlock } from 'yti-common-ui/block';
 import {
-  getBaseInfo,
   getBaseModelPrefix,
   getComments,
   getContact,
   getCreated,
   getDataVocabularies,
   getIsPartOf,
+  getIsPartOfWithId,
   getLanguages,
   getLink,
-  getOrganization,
+  getOrganizations,
+  getOrganizationsWithId,
   getReferenceData,
   getTerminology,
   getTitles,
@@ -37,7 +38,10 @@ import { translateLanguage } from '@app/common/utils/translation-helpers';
 import { compareLocales } from '@app/common/utils/compare-locals';
 import Separator from 'yti-common-ui/separator';
 import FormattedDate from 'yti-common-ui/formatted-date';
-import ModelForm from '../model-form';
+import { useGetServiceCategoriesQuery } from '@app/common/components/service-categories/service-categories.slice';
+import { useGetOrganizationsQuery } from '@app/common/components/organizations/organizations.slice';
+import { ModelFormType } from '@app/common/interfaces/model-form.interface';
+import ModelEditView from './model-edit-view';
 
 export default function ModelInfoView() {
   const { t, i18n } = useTranslation('common');
@@ -47,7 +51,14 @@ export default function ModelInfoView() {
   );
   const [showTooltip, setShowTooltip] = useState(false);
   const [showEditView, setShowEditView] = useState(false);
-  const { data: modelInfo } = useGetModelQuery(modelId);
+  const [formData, setFormData] = useState<ModelFormType | undefined>();
+  const { data: modelInfo, refetch } = useGetModelQuery(modelId);
+  const { data: serviceCategories } = useGetServiceCategoriesQuery(
+    i18n.language ?? 'fi'
+  );
+  const { data: organizations } = useGetOrganizationsQuery(
+    i18n.language ?? 'fi'
+  );
 
   const data = useMemo(() => {
     if (!modelInfo) {
@@ -59,17 +70,50 @@ export default function ModelInfoView() {
       description: getComments(modelInfo),
       prefix: getBaseModelPrefix(modelInfo),
       uri: getUri(modelInfo),
-      isPartOf: getIsPartOf(modelInfo, i18n.language),
+      isPartOf: getIsPartOf(modelInfo, serviceCategories, i18n.language),
       languages: getLanguages(modelInfo),
       terminologies: getTerminology(modelInfo, i18n.language),
       referenceData: getReferenceData(modelInfo, i18n.language),
       dataVocabularies: getDataVocabularies(modelInfo, i18n.language),
       links: getLink(modelInfo),
-      organizations: getOrganization(modelInfo, i18n.language),
+      organizations: getOrganizations(modelInfo, organizations, i18n.language),
       contact: getContact(modelInfo),
       created: getCreated(modelInfo),
     };
-  }, [modelInfo, i18n.language]);
+  }, [modelInfo, i18n.language, organizations, serviceCategories]);
+
+  useEffect(() => {
+    if (modelInfo && serviceCategories && organizations) {
+      setFormData({
+        contact: '',
+        languages:
+          modelInfo?.languages.map((lang) => ({
+            labelText: translateLanguage(lang, t),
+            uniqueItemId: lang,
+            title:
+              Object.entries(modelInfo.label).find((t) => t[0] === lang)?.[1] ??
+              '',
+            description:
+              Object.entries(modelInfo.description).find(
+                (d) => d[0] === lang
+              )?.[1] ?? '',
+            selected: true,
+          })) ?? [],
+        organizations:
+          getOrganizationsWithId(modelInfo, organizations, i18n.language) ?? [],
+        prefix: modelInfo?.prefix ?? '',
+        serviceCategories:
+          getIsPartOfWithId(modelInfo, serviceCategories, i18n.language) ?? [],
+        status: modelInfo?.status ?? 'DRAFT',
+        type: modelInfo?.type ?? 'PROFILE',
+      });
+    }
+  }, [modelInfo, serviceCategories, organizations, t, i18n.language]);
+
+  const handleSuccess = () => {
+    refetch();
+    setShowEditView(false);
+  };
 
   const handleEditViewItemClick = (setItem: (value: boolean) => void) => {
     setItem(true);
@@ -80,63 +124,15 @@ export default function ModelInfoView() {
     return <ModelInfoWrapper />;
   }
 
-  if (showEditView) {
+  if (showEditView && formData && organizations && serviceCategories) {
     return (
-      <ModelInfoWrapper>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            marginBottom: '20px',
-          }}
-        >
-          <Heading variant="h2">{t('details')}</Heading>
-          <div>
-            <Button>Tallenna</Button>
-            <Button
-              variant="secondary"
-              style={{ marginLeft: '10px' }}
-              onClick={() => setShowEditView(false)}
-            >
-              Peruuta
-            </Button>
-          </div>
-        </div>
-
-        <ModelForm
-          formData={{
-            contact: 'yhteystieto@mail.com',
-            languages: [
-              {
-                labelText: t('language-finnish-with-suffix', { ns: 'admin' }),
-                uniqueItemId: 'fi',
-                title: 'Tietomalli',
-                description: 'Tietomallin kuvaus',
-                selected: true,
-              },
-            ],
-            organizations: [
-              {
-                labelText: 'Uusi organisaatio',
-                uniqueItemId: '35ac8cd3-ed8e-48da-852d-0171f66459d4',
-              },
-            ],
-            prefix: 'demo123',
-            serviceCategories: [
-              {
-                labelText: 'Elinkeinot',
-                uniqueItemId: 'P11',
-              },
-            ],
-            status: getBaseInfo(modelInfo)?.versionInfo,
-            type: 'profile',
-          }}
-          setFormData={() => null}
-          userPosted={false}
-          editMode={true}
-        />
-      </ModelInfoWrapper>
+      <ModelEditView
+        model={modelInfo}
+        organizations={organizations}
+        serviceCategories={serviceCategories}
+        setShow={setShowEditView}
+        handleSuccess={handleSuccess}
+      />
     );
   }
 
@@ -168,6 +164,7 @@ export default function ModelInfoView() {
               <Button
                 variant="secondaryNoBorder"
                 onClick={() => handleEditViewItemClick(setShowEditView)}
+                disabled={!formData}
               >
                 Muokkaa
               </Button>

@@ -1,3 +1,4 @@
+import { MultiSelectData } from 'suomifi-ui-components';
 import {
   DataVocabulary,
   LangObject,
@@ -5,6 +6,8 @@ import {
   ReferenceData,
   Terminology,
 } from '../interfaces/model.interface';
+import { Organization } from '../interfaces/organizations.interface';
+import { ServiceCategory } from '../interfaces/service-categories.interface';
 import { Status } from '../interfaces/status.interface';
 import { Type } from '../interfaces/type.interface';
 import { getLanguageVersion } from './get-language-version';
@@ -124,8 +127,50 @@ export function getGroup(data?: ModelType, lang?: string): string[] {
   return data?.groups ?? [];
 }
 
-export function getOrganization(data?: ModelType, lang?: string): string[] {
-  return data?.organizations ?? [];
+export function getOrganizations(
+  data?: ModelType,
+  organizations?: Organization[],
+  lang?: string
+): string[] {
+  if (!data) {
+    return [];
+  }
+
+  if (!organizations) {
+    return data.organizations;
+  }
+
+  return data.organizations.map((id) =>
+    getLanguageVersion({
+      data: organizations.find((org) => org.id === id)?.label,
+      lang: lang ?? 'fi',
+    })
+  );
+}
+
+export function getOrganizationsWithId(
+  data?: ModelType,
+  organizations?: Organization[],
+  lang?: string
+): MultiSelectData[] {
+  if (!data) {
+    return [];
+  }
+
+  if (!organizations) {
+    return data.organizations.map((org) => ({
+      labelText: org,
+      uniqueItemId: org,
+    }));
+  }
+
+  return data.organizations.map((id) => ({
+    labelText: getLanguageVersion({
+      data: organizations.find((org) => org.id === id)?.label,
+      lang: lang ?? 'fi',
+    }),
+    uniqueItemId: id,
+  }));
 }
 
 export function getLink(
@@ -139,12 +184,52 @@ export function getLink(
   return [];
 }
 
-export function getIsPartOf(data?: ModelType, lang?: string): string[] {
+export function getIsPartOf(
+  data?: ModelType,
+  serviceGroups?: ServiceCategory[],
+  lang?: string
+): string[] {
   if (!data || !data.groups) {
     return [];
   }
 
-  return data.groups;
+  if (!serviceGroups) {
+    return data.groups;
+  }
+
+  return data.groups
+    .map((id) =>
+      getLanguageVersion({
+        data: serviceGroups.find((group) => group.identifier === id)?.label,
+        lang: lang ?? 'fi',
+      })
+    )
+    .sort((a, b) => (a > b ? 1 : -1));
+}
+
+export function getIsPartOfWithId(
+  data?: ModelType,
+  serviceGroups?: ServiceCategory[],
+  lang?: string
+): MultiSelectData[] {
+  if (!data || !data.groups) {
+    return [];
+  }
+
+  if (!serviceGroups) {
+    return data.groups.map((group) => ({
+      labelText: group,
+      uniqueItemId: group,
+    }));
+  }
+
+  return data.groups.map((id) => ({
+    labelText: getLanguageVersion({
+      data: serviceGroups.find((group) => group.identifier === id)?.label,
+      lang: lang ?? 'fi',
+    }),
+    uniqueItemId: id,
+  }));
 }
 
 export function getLanguages(data?: ModelType): string[] {

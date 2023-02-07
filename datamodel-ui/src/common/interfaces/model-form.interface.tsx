@@ -1,5 +1,6 @@
 import { MultiSelectData } from 'suomifi-ui-components';
 import { LanguageBlockType } from 'yti-common-ui/form/language-selector';
+import { ModelType } from './model.interface';
 import { Status } from './status.interface';
 
 export interface ModelFormType {
@@ -9,5 +10,5 @@ export interface ModelFormType {
   prefix: string;
   serviceCategories: MultiSelectData[];
   status?: Status;
-  type: 'profile' | 'library';
+  type: ModelType['type'];
 }

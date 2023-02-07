@@ -25,6 +25,7 @@ import { useGetFreePrefixMutation } from '@app/common/components/prefix';
 import { ModelFormType } from '@app/common/interfaces/model-form.interface';
 import { FormErrors } from './validate-form';
 import AddBlock from './add-block';
+import { Status } from '@app/common/interfaces/status.interface';
 
 interface ModelFormProps {
   formData: ModelFormType;
@@ -103,14 +104,14 @@ export default function ModelForm({
         <RadioButtonGroup
           labelText={t('datamodel-type')}
           name="type"
-          defaultValue="profile"
+          defaultValue="PROFILE"
           id="model-type-group"
           onChange={(e) =>
-            setFormData({ ...formData, type: e as 'profile' | 'library' })
+            setFormData({ ...formData, type: e as 'PROFILE' | 'LIBRARY' })
           }
         >
           <RadioButton
-            value="profile"
+            value="PROFILE"
             hintText={t('profile-hint-text')}
             id="profile-radio-button"
             disabled={disabled}
@@ -118,7 +119,7 @@ export default function ModelForm({
             {t('profile', { ns: 'common' })}
           </RadioButton>
           <RadioButton
-            value="library"
+            value="LIBRARY"
             hintText={t('library-hint-text')}
             id="library-radio-button"
             disabled={disabled}
@@ -185,7 +186,16 @@ export default function ModelForm({
             >{`http://uri.suomi.fi/datamodel/ns/${formData.prefix}`}</Text>
           </div>
 
-          <Dropdown labelText={'Tila'} defaultValue={formData.status ?? ''}>
+          <Dropdown
+            labelText={'Tila'}
+            defaultValue={formData.status ?? ''}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                status: e as Status | undefined,
+              })
+            }
+          >
             <DropdownItem value={'DRAFT'}>Luonnos</DropdownItem>
             <DropdownItem value={'VALID'}>Voimassa oleva</DropdownItem>
             <DropdownItem value={'SUPERSEDED'}>Korvattu</DropdownItem>

@@ -14,6 +14,14 @@ import {
 } from '@app/common/components/model/model.slice';
 import { getStoreData } from '@app/common/utils/utils';
 import { ModelType } from '@app/common/interfaces/model.interface';
+import {
+  getServiceCategories,
+  getRunningQueriesThunk as getServiceQueriesThunk,
+} from '@app/common/components/service-categories/service-categories.slice';
+import {
+  getOrganizations,
+  getRunningQueriesThunk as getOrgQueriesThunk,
+} from '@app/common/components/organizations/organizations.slice';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -51,8 +59,12 @@ export const getServerSideProps = createCommonGetServerSideProps(
     }
 
     store.dispatch(getModel.initiate(modelId));
+    store.dispatch(getServiceCategories.initiate(locale ?? 'fi'));
+    store.dispatch(getOrganizations.initiate(locale ?? 'fi'));
 
     await Promise.all(store.dispatch(getRunningQueriesThunk()));
+    await Promise.all(store.dispatch(getServiceQueriesThunk()));
+    await Promise.all(store.dispatch(getOrgQueriesThunk()));
 
     const modelInfo = getStoreData({
       functionKey: `getModel("${modelId}")`,
