@@ -1,7 +1,7 @@
-import { DEFINITION_MAX, TEXT_INPUT_MAX } from '@app/common/utils/constants';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { MultiSelectData, Paragraph, Text } from 'suomifi-ui-components';
+import { TEXT_AREA_MAX, TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
 import { TerminologyName } from './language-selector';
 import {
   LangBlock,
@@ -64,7 +64,7 @@ export default function LanguageBlock({
         visualPlaceholder={t('terminology-description-placeholder')}
         onChange={(e) => setDescription(e.target.value.trim())}
         onBlur={handleBlur}
-        maxLength={DEFINITION_MAX}
+        maxLength={TEXT_AREA_MAX}
         defaultValue={description}
         className="terminology-description-input"
         disabled={disabled}

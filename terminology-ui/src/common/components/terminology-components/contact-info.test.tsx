@@ -1,4 +1,4 @@
-import { themeProvider } from '@app/tests/test-utils';
+import { themeProvider } from 'yti-common-ui/utils/test-utils';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ContactInfo from './contact-info';

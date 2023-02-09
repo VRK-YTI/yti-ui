@@ -27,7 +27,7 @@ import {
 import { useGetCollectionQuery } from '@app/common/components/collection/collection.slice';
 import { Collection } from '@app/common/interfaces/collection.interface';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
-import { DEFINITION_MAX, TEXT_INPUT_MAX } from '@app/common/utils/constants';
+import { TEXT_INPUT_MAX, TEXT_AREA_MAX } from 'yti-common-ui/utils/constants';
 import useConfirmBeforeLeavingPage from '@app/common/utils/hooks/use-confirm-before-leaving-page';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import SaveSpinner from 'yti-common-ui/save-spinner';
@@ -69,7 +69,6 @@ export default function EditCollection({
 
   const [addCollection, result] = useAddCollectionMutation();
   const [newCollectionId, setNewCollectionId] = useState('');
-  const [errors, setErrors] = useState<{ [key: string]: boolean }>({});
   const [emptyError, setEmptyError] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
 
@@ -111,16 +110,7 @@ export default function EditCollection({
     setFormData(data);
     enableConfirmation();
 
-    const nameCount = formData.name.filter(
-      (n) => n.value && n.lang === language
-    ).length;
-    const defCount = formData.definition.filter(
-      (n) => n.value && n.lang === language
-    ).length;
-    if (errors[language] && nameCount == defCount) {
-      setErrors({ ...errors, [language]: false });
-    }
-    if (value) {
+    if (value && value !== '') {
       setEmptyError(false);
     }
   };
@@ -147,19 +137,6 @@ export default function EditCollection({
 
     setFormData(data);
     enableConfirmation();
-
-    const nameCount = formData.name.filter(
-      (n) => n.value && n.lang === language
-    ).length;
-    const defCount = formData.definition.filter(
-      (n) => n.value && n.lang === language
-    ).length;
-    if (errors[language] && nameCount == defCount) {
-      setErrors({ ...errors, [language]: false });
-    }
-    if (value) {
-      setEmptyError(false);
-    }
   };
 
   const setFormConcepts = (
@@ -174,29 +151,8 @@ export default function EditCollection({
   const handleClick = () => {
     getAuthenticatedMutUser();
 
-    let errorOccurs = false;
-    languages.forEach((language) => {
-      const nameCount = formData.name.filter(
-        (n) => n.value && n.lang === language
-      ).length;
-      const defCount = formData.definition.filter(
-        (n) => n.value && n.lang === language
-      ).length;
-      if (nameCount !== defCount) {
-        setErrors((errors) => ({ ...errors, [language]: true }));
-        errorOccurs = true;
-      }
-    });
-
-    if (
-      formData.name.every((n) => !n.value) &&
-      formData.definition.every((n) => !n.value)
-    ) {
+    if (formData.name.every((n) => !n.value)) {
       setEmptyError(true);
-      errorOccurs = true;
-    }
-
-    if (errorOccurs) {
       return;
     }
 
@@ -266,7 +222,7 @@ export default function EditCollection({
               )} ${language.toUpperCase()}`}
               visualPlaceholder={t('enter-collection-name')}
               onBlur={(e) => setName(language, e.target.value.trim())}
-              status={errors[language] ? 'error' : 'default'}
+              status={emptyError ? 'error' : 'default'}
               defaultValue={
                 formData.name.find((n) => n.lang === language)?.value
               }
@@ -282,13 +238,13 @@ export default function EditCollection({
                 language,
                 t
               )} ${language.toUpperCase()}`}
+              optionalText={t('optional', { ns: 'admin' })}
               visualPlaceholder={t('enter-collection-description')}
               onBlur={(e) => setDescription(language, e.target.value.trim())}
-              status={errors[language] ? 'error' : 'default'}
               defaultValue={
                 formData.definition.find((n) => n.lang === language)?.value
               }
-              maxLength={DEFINITION_MAX}
+              maxLength={TEXT_AREA_MAX}
               className="collection-description-input"
             />
           ))}
@@ -311,17 +267,10 @@ export default function EditCollection({
               {t('error-occurred_unauthenticated', { ns: 'alert' })}
             </InlineAlert>
           )}
-          {emptyError && <FormFooterAlert alerts={[t('no-empty-form')]} />}
-          {languages.some((n) => errors[n]) && (
+          {emptyError && (
             <FormFooterAlert
-              alerts={languages
-                .filter((n) => errors[n])
-                .map(
-                  (lang) =>
-                    `${t('no-pairless-language')}
-                    ${translateLanguage(lang, t)}
-                    `
-                )}
+              alerts={[t('no-empty-form')]}
+              labelText={t('missing-information', { ns: 'admin' })}
             />
           )}
           <ButtonBlock>

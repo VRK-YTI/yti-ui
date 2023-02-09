@@ -33,6 +33,13 @@ export const TitleDescriptionWrapper = styled.div<{ $isSmall: boolean }>`
   align-items: baseline;
 `;
 
+export const TitleRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-end;
+`;
+
 export const TitleType = styled(Text)`
   color: ${(props) => props.theme.suomifi.colors.depthDark1};
   font-size: 12px;

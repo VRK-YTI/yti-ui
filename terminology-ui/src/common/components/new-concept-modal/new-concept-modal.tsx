@@ -1,4 +1,4 @@
-import { TEXT_INPUT_MAX } from '@app/common/utils/constants';
+import { TEXT_INPUT_MAX } from 'yti-common-ui/utils/constants';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -108,7 +108,10 @@ export default function NewConceptModal({
           </InlineAlert>
         )}
         {isError && (
-          <FormFooterAlert alerts={[t('recommended-term-missing-error')]} />
+          <FormFooterAlert
+            labelText={t('missing-information')}
+            alerts={[t('recommended-term-missing-error')]}
+          />
         )}
         <Button
           onClick={() => handleClick()}

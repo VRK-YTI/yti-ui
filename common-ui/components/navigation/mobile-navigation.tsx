@@ -45,14 +45,8 @@ export default function MobileNavigation({
         <MobileMenuItem $inset>
           <Link href="/">{t('comments-title')}</Link>
         </MobileMenuItem>
-        <MobileMenuItem>
-          <Link href="/">{t('site-information')}</Link>
-        </MobileMenuItem>
-        <MobileMenuItem>
-          <Link href="/">{t('site-for-developers')}</Link>
-        </MobileMenuItem>
-        <MobileMenuItem>
-          <Link href="/">{t('site-for-administrators')}</Link>
+        <MobileMenuItem $active={router.pathname === '/site-information'}>
+          <Link href="/site-information">{t('site-information')}</Link>
         </MobileMenuItem>
         {isLoggedIn && (
           <MobileMenuItem $active={router.pathname === '/own-information'}>

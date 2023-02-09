@@ -3,6 +3,7 @@ import {
   Block,
   Expander,
   ExpanderContent,
+  ExpanderGroup as ExpanderGroupFi,
   Heading,
   Textarea,
   TextInput,
@@ -10,6 +11,10 @@ import {
 
 export const ConceptExpander = styled(Expander)`
   width: 800px;
+`;
+
+export const ExpanderGroup = styled(ExpanderGroupFi)`
+  margin-top: ${(props) => props.theme.suomifi.spacing.s};
 `;
 
 export const ExpanderBlock = styled(Block)`

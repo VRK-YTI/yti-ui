@@ -19,6 +19,7 @@ export default function MissingInfoAlert({ data }: MissingInfoAlertProps) {
   if (render) {
     return (
       <FormFooterAlert
+        labelText={t('missing-information')}
         alerts={[
           ...renderDescriptionAlerts(),
           renderOrganizationAlerts(),

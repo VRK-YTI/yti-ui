@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "peerDependencies": {
+    "dayjs": "^1.11.2",
     "interweave": "^13.0.0",
     "interweave-ssr": "^2.0.0",
     "lodash": "^4.17.21",
@@ -11,6 +12,7 @@
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "usehooks-ts": "^2.6.0",
+    "uuid": "^9.0.0",
     "suomifi-ui-components": "^9.1.0-beta.3"
   },
   "devDependencies": {

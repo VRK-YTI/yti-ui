@@ -27,9 +27,11 @@ import { User } from '../../interfaces/user.interface';
 export default function SmartHeader({
   user,
   fakeableUsers,
+  fullScreenElements,
 }: {
   user?: User;
   fakeableUsers?: FakeableUser[];
+  fullScreenElements?: React.ReactNode;
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -42,6 +44,16 @@ export default function SmartHeader({
     setIsLoginExpanded(true);
     setIsExpanded(false);
   };
+
+  if (fullScreenElements) {
+    return (
+      <>
+        {renderFullScreenHeader()}
+        {renderMobileNavigationModal()}
+        {renderLoginModal()}
+      </>
+    );
+  }
 
   return (
     <>
@@ -78,7 +90,7 @@ export default function SmartHeader({
         <NavigationContainer $breakpoint="small">
           <MobileNavigation
             handleLoginModalClick={handleLoginModalClick}
-            isLoggedIn={user?.anonymous ?? false}
+            isLoggedIn={!user?.anonymous ?? false}
             fakeableUsers={fakeableUsers}
           />
         </NavigationContainer>
@@ -119,6 +131,29 @@ export default function SmartHeader({
     );
   }
 
+  function renderFullScreenHeader() {
+    return (
+      <Block variant="header" role="banner" id="top-header">
+        <HeaderContainer $noBorder={typeof fullScreenElements !== 'undefined'}>
+          <HeaderWrapper
+            $breakpoint={breakpoint}
+            $fullHeight={typeof fullScreenElements !== 'undefined'}
+          >
+            {fullScreenElements}
+            <div
+              style={{ display: 'flex', padding: '20px 20px 0 0', gap: '10px' }}
+            >
+              {renderDesktopLocaleChooser()}
+              {renderMobileNavigationToggleButton()}
+              {renderDesktopAuthenticationPanel()}
+            </div>
+          </HeaderWrapper>
+          {renderUserInfo()}
+        </HeaderContainer>
+      </Block>
+    );
+  }
+
   function renderLogo() {
     if (!isSearchOpen || !isSmall) {
       return <Logo />;
@@ -136,7 +171,11 @@ export default function SmartHeader({
 
   function renderDesktopLocaleChooser() {
     if (!isSmall) {
-      return <DesktopLocaleChooser />;
+      return (
+        <DesktopLocaleChooser
+          noFlex={typeof fullScreenElements !== 'undefined'}
+        />
+      );
     }
   }
 

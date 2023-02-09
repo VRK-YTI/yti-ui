@@ -31,4 +31,16 @@ export type AxiosBaseQueryError =
       status: 'GENERIC_ERROR';
       data?: undefined;
       error: string;
+    }
+  | {
+      status: number;
+      data: {
+        status: string;
+        message: string;
+        details: {
+          field: string;
+          rejectedValue: string;
+          message: string;
+        };
+      };
     };

@@ -1,7 +1,7 @@
 import { HYDRATE } from 'next-redux-wrapper';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
-import { Organizations } from '@app/common/interfaces/organizations.interface';
+import { Organization } from '@app/common/interfaces/organizations.interface';
 
 export const organizationsApi = createApi({
   reducerPath: 'organizationsApi',
@@ -13,21 +13,11 @@ export const organizationsApi = createApi({
     }
   },
   endpoints: (builder) => ({
-    getOrganizations: builder.query<Organizations, void>({
-      query: () => ({
-        url: '/organizations',
+    getOrganizations: builder.query<Organization[], string>({
+      query: (value) => ({
+        url: `/frontend/organizations?sortLang=${value}`,
         method: 'GET',
       }),
-      transformResponse: (response: Organizations) => {
-        const formattedResponse = response;
-
-        formattedResponse['@graph'] = response['@graph'].map((g) => ({
-          ...g,
-          prefLabel: Array.isArray(g.prefLabel) ? g.prefLabel : [g.prefLabel],
-        }));
-
-        return formattedResponse;
-      },
     }),
   }),
 });

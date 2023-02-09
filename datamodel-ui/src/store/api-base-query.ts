@@ -6,8 +6,8 @@ export const getDatamodelApiBaseQuery = (
 ) =>
   axiosBaseQuery({
     baseUrl: process.env.DATAMODEL_API_URL
-      ? `${process.env.DATAMODEL_API_URL}/api/v1`
-      : '/datamodel-api/api/v1',
+      ? `${process.env.DATAMODEL_API_URL}/v2`
+      : '/datamodel-api/v2',
 
     // prepareHeaders is used to take the JSESSIONID stored in session
     // and provide it as a cookie for API calls

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Breakpoint } from 'yti-common-ui/media-query';
 import { small } from 'yti-common-ui/media-query/styled-helpers';
-import { Block } from 'suomifi-ui-components';
+import { Block, ExpanderGroup } from 'suomifi-ui-components';
 
 export const PageContent = styled.div<{ $breakpoint: Breakpoint }>`
   border: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
@@ -38,4 +38,8 @@ export const EditToolsBlock = styled(Block)`
   > button {
     width: max-content;
   }
+`;
+
+export const DetailsExpanderGroup = styled(ExpanderGroup)`
+  margin-top: ${(props) => props.theme.suomifi.spacing.s};
 `;

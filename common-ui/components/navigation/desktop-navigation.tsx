@@ -61,10 +61,14 @@ export default function DesktopNavigation({
                   <SuomiFiLink href="/">{t('terminology-title')}</SuomiFiLink>
                 </NavigationDropdownItem>
                 <NavigationDropdownItem className="top-navigation-dropdown-li">
-                  <SuomiFiLink href="/">{t('codelist-title')}</SuomiFiLink>
+                  <SuomiFiLink href="https://koodistot.suomi.fi/">
+                    {t('codelist-title')}
+                  </SuomiFiLink>
                 </NavigationDropdownItem>
                 <NavigationDropdownItem className="top-navigation-dropdown-li">
-                  <SuomiFiLink href="/">{t('datamodel-title')}</SuomiFiLink>
+                  <SuomiFiLink href="https://tietomallit.suomi.fi/">
+                    {t('datamodel-title')}
+                  </SuomiFiLink>
                 </NavigationDropdownItem>
               </NavigationDropdownList>
             </NavigationDropdownWrapper>
@@ -74,26 +78,13 @@ export default function DesktopNavigation({
       <NavigationItem
         id="top-navigation-site-information"
         className="top-navigation-li"
+        active={router.pathname === '/site-information'}
       >
-        <SuomiFiLink className="main" href="/">
-          {t('site-information')}
-        </SuomiFiLink>
-      </NavigationItem>
-      <NavigationItem
-        id="top-navigation-for-developers"
-        className="top-navigation-li"
-      >
-        <SuomiFiLink className="main" href="/">
-          {t('site-for-developers')}
-        </SuomiFiLink>
-      </NavigationItem>
-      <NavigationItem
-        id="top-navigation-for-administrators"
-        className="top-navigation-li"
-      >
-        <SuomiFiLink className="main" href="/">
-          {t('site-for-administrators')}
-        </SuomiFiLink>
+        <Link href="/site-information" passHref>
+          <SuomiFiLink className="main" href="">
+            {t('site-information')}
+          </SuomiFiLink>
+        </Link>
       </NavigationItem>
       {isLoggedIn && (
         <NavigationItem

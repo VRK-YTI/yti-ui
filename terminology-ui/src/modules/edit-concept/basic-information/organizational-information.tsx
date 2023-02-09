@@ -9,7 +9,7 @@ import {
 import ListBlock from '../list-block';
 import { ListType } from '../new-concept.types';
 import { BasicInfoUpdate } from './concept-basic-information';
-import { TEXT_AREA_MAX } from '@app/common/utils/constants';
+import { TEXT_AREA_MAX } from 'yti-common-ui/utils/constants';
 import { FormError } from '../validate-form';
 
 interface OrganizationalInformationProps {
