@@ -34,9 +34,13 @@ export default function LanguageSelector(
     isWide?: boolean;
   }
 ) {
-  const [selectedItems, setSelectedItems] = useState<MultiSelectData[]>([]);
+  const [selectedItems, setSelectedItems] = useState<
+    (MultiSelectData & LanguageBlockType)[]
+  >(props.defaultSelectedItems ?? []);
 
-  const handleSelectedChange = (value: MultiSelectData[]) => {
+  const handleSelectedChange = (
+    value: (MultiSelectData & LanguageBlockType)[]
+  ) => {
     setSelectedItems(value);
 
     const selectedIds = value.map((item) => item.uniqueItemId);
@@ -99,7 +103,9 @@ export default function LanguageSelector(
         $isWide={props.isWide}
         allowItemAddition={false}
         selectedItems={selectedItems}
-        onItemSelectionsChange={(e) => handleSelectedChange(e)}
+        onItemSelectionsChange={(e) =>
+          handleSelectedChange(e as (MultiSelectData & LanguageBlockType)[])
+        }
         onRemoveAll={() => setSelectedItems([])}
         defaultSelectedItems={selectedItems}
         ariaChipActionLabel={props.ariaChipActionLabel ?? ''}
@@ -131,6 +137,7 @@ export default function LanguageSelector(
                 ? 'error'
                 : 'default'
             }
+            defaultValue={item.title}
           />
           <DescriptionInput
             labelText={props.translations.textDescription}
@@ -139,6 +146,7 @@ export default function LanguageSelector(
             onBlur={(e) =>
               handleDescriptionChange(e.target.value, item.uniqueItemId)
             }
+            defaultValue={item.description}
           />
         </LanguageBlock>
       ))}

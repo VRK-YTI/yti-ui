@@ -19,7 +19,7 @@ export const DrawerContainer = styled.div<{
   ${(props) =>
     props.$open &&
     `
-    > button:first-child {
+    button:first-child {
       position: relative;
       right: 1px;
     }
@@ -32,11 +32,22 @@ export const DrawerContainer = styled.div<{
   }
 `;
 
-export const DrawerContent = styled.div<{
+export const DrawerContent = styled.div.attrs<{
+  $isSmall: boolean;
+  $width?: number;
+}>((props) => ({
+  style: {
+    width: props.$isSmall
+      ? '100vw'
+      : props.$width
+      ? `${props.$width}px`
+      : '390px',
+  },
+}))<{
   $isSmall: boolean;
   $viewOpen?: boolean;
+  $width?: number;
 }>`
-  width: ${(props) => (props.$isSmall ? '100vw' : '390px')};
   background: ${(props) => props.theme.suomifi.colors.whiteBase};
   overflow: scroll;
 

@@ -1,4 +1,6 @@
 {
+  "actions": "Actions",
+  "add-email-subscription": "Add email subscription",
   "breadcrumb": "Breadcrumb",
   "card-information-domains": "Information domain",
   "card-organizations": "organizations",
@@ -17,6 +19,7 @@
   "datamodels-unused": "Data Vocabularies not in use",
   "description": "Description",
   "details": "Details",
+  "download-as-file": "Download as file",
   "error-occured": "An error occured",
   "feedback": "Feedback",
   "feedback-terminologies": "",
@@ -84,6 +87,7 @@
   "results-with-current_other": "{{count}} Data Vocabularies with following filters",
   "service-description": "The Data Vocabularies Tool is a service for describing libraries and application profiles as linked data models. This tool allows the logical data modeling process of public administration data to be open and public, which eases the utilization of data models across organizational boundaries.",
   "show": "Show",
+  "show-as-file": "Show as file",
   "show-by-information-domain": "Show by information domain",
   "show-only": "Show only",
   "site-cancel": "Cancel",

@@ -2,7 +2,10 @@ import { HYDRATE } from 'next-redux-wrapper';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
 import { NewModel } from '@app/common/interfaces/new-model.interface';
-import { ModelType } from '@app/common/interfaces/model.interface';
+import {
+  ModelType,
+  ModelUpdatePayload,
+} from '@app/common/interfaces/model.interface';
 
 export const modelApi = createApi({
   reducerPath: 'model',
@@ -27,12 +30,26 @@ export const modelApi = createApi({
         method: 'GET',
       }),
     }),
+    postModel: builder.mutation<
+      string,
+      {
+        payload: ModelUpdatePayload;
+        prefix: string;
+      }
+    >({
+      query: (value) => ({
+        url: `/model/${value.prefix}`,
+        method: 'POST',
+        data: value.payload,
+      }),
+    }),
   }),
 });
 
 export const {
   usePutModelMutation,
   useGetModelQuery,
+  usePostModelMutation,
   util: { getRunningQueriesThunk },
 } = modelApi;
 
