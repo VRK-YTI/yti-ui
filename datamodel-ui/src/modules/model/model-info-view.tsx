@@ -1,13 +1,15 @@
 import { useGetModelQuery } from '@app/common/components/model/model.slice';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
+  Button,
   Expander,
   ExpanderGroup,
   ExpanderTitleButton,
   ExternalLink,
   Heading,
+  Tooltip,
 } from 'suomifi-ui-components';
 import { BasicBlock, MultilingualBlock } from 'yti-common-ui/block';
 import {
@@ -17,19 +19,29 @@ import {
   getCreated,
   getDataVocabularies,
   getIsPartOf,
+  getIsPartOfWithId,
   getLanguages,
   getLink,
-  getOrganization,
+  getOrganizations,
+  getOrganizationsWithId,
   getReferenceData,
   getTerminology,
   getTitles,
   getUri,
 } from '@app/common/utils/get-value';
-import { ModelInfoListWrapper, ModelInfoWrapper } from './model.styles';
+import {
+  ModelInfoListWrapper,
+  ModelInfoWrapper,
+  TooltipWrapper,
+} from './model.styles';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
 import { compareLocales } from '@app/common/utils/compare-locals';
 import Separator from 'yti-common-ui/separator';
 import FormattedDate from 'yti-common-ui/formatted-date';
+import { useGetServiceCategoriesQuery } from '@app/common/components/service-categories/service-categories.slice';
+import { useGetOrganizationsQuery } from '@app/common/components/organizations/organizations.slice';
+import { ModelFormType } from '@app/common/interfaces/model-form.interface';
+import ModelEditView from './model-edit-view';
 
 export default function ModelInfoView() {
   const { t, i18n } = useTranslation('common');
@@ -37,7 +49,16 @@ export default function ModelInfoView() {
   const [modelId] = useState(
     Array.isArray(query.modelId) ? query.modelId[0] : query.modelId ?? ''
   );
-  const { data: modelInfo } = useGetModelQuery(modelId);
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [showEditView, setShowEditView] = useState(false);
+  const [formData, setFormData] = useState<ModelFormType | undefined>();
+  const { data: modelInfo, refetch } = useGetModelQuery(modelId);
+  const { data: serviceCategories } = useGetServiceCategoriesQuery(
+    i18n.language ?? 'fi'
+  );
+  const { data: organizations } = useGetOrganizationsQuery(
+    i18n.language ?? 'fi'
+  );
 
   const data = useMemo(() => {
     if (!modelInfo) {
@@ -49,25 +70,125 @@ export default function ModelInfoView() {
       description: getComments(modelInfo),
       prefix: getBaseModelPrefix(modelInfo),
       uri: getUri(modelInfo),
-      isPartOf: getIsPartOf(modelInfo, i18n.language),
+      isPartOf: getIsPartOf(modelInfo, serviceCategories, i18n.language),
       languages: getLanguages(modelInfo),
       terminologies: getTerminology(modelInfo, i18n.language),
       referenceData: getReferenceData(modelInfo, i18n.language),
       dataVocabularies: getDataVocabularies(modelInfo, i18n.language),
       links: getLink(modelInfo),
-      organizations: getOrganization(modelInfo, i18n.language),
+      organizations: getOrganizations(modelInfo, organizations, i18n.language),
       contact: getContact(modelInfo),
       created: getCreated(modelInfo),
     };
-  }, [modelInfo, i18n.language]);
+  }, [modelInfo, i18n.language, organizations, serviceCategories]);
+
+  useEffect(() => {
+    if (modelInfo && serviceCategories && organizations) {
+      setFormData({
+        contact: '',
+        languages:
+          modelInfo?.languages.map((lang) => ({
+            labelText: translateLanguage(lang, t),
+            uniqueItemId: lang,
+            title:
+              Object.entries(modelInfo.label).find((t) => t[0] === lang)?.[1] ??
+              '',
+            description:
+              Object.entries(modelInfo.description).find(
+                (d) => d[0] === lang
+              )?.[1] ?? '',
+            selected: true,
+          })) ?? [],
+        organizations:
+          getOrganizationsWithId(modelInfo, organizations, i18n.language) ?? [],
+        prefix: modelInfo?.prefix ?? '',
+        serviceCategories:
+          getIsPartOfWithId(modelInfo, serviceCategories, i18n.language) ?? [],
+        status: modelInfo?.status ?? 'DRAFT',
+        type: modelInfo?.type ?? 'PROFILE',
+      });
+    }
+  }, [modelInfo, serviceCategories, organizations, t, i18n.language]);
+
+  const handleSuccess = () => {
+    refetch();
+    setShowEditView(false);
+  };
+
+  const handleEditViewItemClick = (setItem: (value: boolean) => void) => {
+    setItem(true);
+    setShowTooltip(false);
+  };
 
   if (!modelInfo || !data) {
     return <ModelInfoWrapper />;
   }
 
+  if (showEditView && formData && organizations && serviceCategories) {
+    return (
+      <ModelEditView
+        model={modelInfo}
+        organizations={organizations}
+        serviceCategories={serviceCategories}
+        setShow={setShowEditView}
+        handleSuccess={handleSuccess}
+      />
+    );
+  }
+
   return (
     <ModelInfoWrapper>
-      <Heading variant="h2">{t('details')}</Heading>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}
+      >
+        <Heading variant="h2">{t('details')}</Heading>
+        <div>
+          <Button
+            variant="secondary"
+            onClick={() => setShowTooltip(!showTooltip)}
+            iconRight={'menu'}
+          >
+            {t('actions')}
+          </Button>
+          <TooltipWrapper>
+            <Tooltip
+              ariaCloseButtonLabelText=""
+              ariaToggleButtonLabelText=""
+              open={showTooltip}
+              onCloseButtonClick={() => setShowTooltip(false)}
+            >
+              <Button
+                variant="secondaryNoBorder"
+                onClick={() => handleEditViewItemClick(setShowEditView)}
+                disabled={!formData}
+              >
+                {t('edit', { ns: 'admin' })}
+              </Button>
+              <Button variant="secondaryNoBorder">{t('show-as-file')}</Button>
+              <Button variant="secondaryNoBorder">
+                {t('download-as-file')}
+              </Button>
+              <Button variant="secondaryNoBorder">
+                {t('update-models-resources-statuses', { ns: 'admin' })}
+              </Button>
+              <Button variant="secondaryNoBorder">
+                {t('create-copy-from-model', { ns: 'admin' })}
+              </Button>
+              <Button variant="secondaryNoBorder">
+                {t('add-email-subscription')}
+              </Button>
+              <hr />
+              <Button variant="secondaryNoBorder">
+                {t('remove', { ns: 'admin' })}
+              </Button>
+            </Tooltip>
+          </TooltipWrapper>
+        </div>
+      </div>
 
       <BasicBlock title={t('name')}>
         <MultilingualBlock

@@ -31,6 +31,8 @@ interface PrefixProps {
   };
   invertCheck?: boolean;
   disabled?: boolean;
+  fullWidth?: boolean;
+  noAuto?: boolean;
 }
 
 export default function Prefix({
@@ -42,14 +44,18 @@ export default function Prefix({
   translations,
   invertCheck,
   disabled,
+  fullWidth,
+  noAuto,
 }: PrefixProps) {
   const URI = 'http://uri.suomi.fi';
   const [initalPrefix] = useState(prefix);
-  const [inputType, setInputType] = useState('automatic');
+  const [inputType, setInputType] = useState<'manual' | 'automatic'>(
+    noAuto ? 'manual' : 'automatic'
+  );
   const [prefixValid, setPrefixValid] = useState(true);
   const [validatePrefix, validPrefix] = validatePrefixMutation();
 
-  const handleInputTypeChange = (e: string) => {
+  const handleInputTypeChange = (e: typeof inputType) => {
     setInputType(e);
 
     if (e === 'automatic') {
@@ -77,33 +83,36 @@ export default function Prefix({
 
   return (
     <PrefixContainer>
-      <RadioButtonGroup
-        labelText={translations.label}
-        groupHintText={translations.hintText}
-        defaultValue="automatic"
-        name="prefix"
-        onChange={(e) => handleInputTypeChange(e)}
-      >
-        <RadioButton
-          value="automatic"
-          id="prefix-input-automatic"
-          disabled={disabled}
+      {!noAuto && (
+        <RadioButtonGroup
+          labelText={translations.label}
+          groupHintText={translations.hintText}
+          defaultValue="automatic"
+          name="prefix"
+          onChange={(e) => handleInputTypeChange(e as typeof inputType)}
         >
-          {translations.automatic}
-        </RadioButton>
-        <RadioButton
-          value="manual"
-          id="prefix-input-manual"
-          disabled={disabled}
-        >
-          {translations.manual}
-        </RadioButton>
-      </RadioButtonGroup>
+          <RadioButton
+            value="automatic"
+            id="prefix-input-automatic"
+            disabled={disabled}
+          >
+            {translations.automatic}
+          </RadioButton>
+          <RadioButton
+            value="manual"
+            id="prefix-input-manual"
+            disabled={disabled}
+          >
+            {translations.manual}
+          </RadioButton>
+        </RadioButtonGroup>
+      )}
 
       {inputType === 'manual' && (
         <div>
           <TextInput
             labelText={translations.textInputLabel}
+            hintText={noAuto ? translations.hintText : ''}
             visualPlaceholder={translations.textInputHint}
             onChange={(e) => handleTextInput(e?.toString().trim() ?? '')}
             debounce={500}
@@ -126,6 +135,7 @@ export default function Prefix({
             }
             defaultValue={prefix}
             disabled={disabled}
+            fullWidth={fullWidth}
           />
         </div>
       )}

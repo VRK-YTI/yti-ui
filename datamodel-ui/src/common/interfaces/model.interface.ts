@@ -69,3 +69,15 @@ export interface LangObject {
   lang: string;
   value: string;
 }
+
+export interface ModelUpdatePayload {
+  status: string;
+  label: { [key: string]: string };
+  description: { [key: string]: string };
+  languages: string[];
+  organizations: string[];
+  groups: string[];
+  // Namespaces need better typing
+  internalNamespaces: string[];
+  externalNamespaces: string[];
+}

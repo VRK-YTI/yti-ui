@@ -1,4 +1,6 @@
 {
+  "actions": "",
+  "add-email-subscription": "",
   "breadcrumb": "",
   "card-information-domains": "",
   "card-organizations": "",
@@ -17,6 +19,7 @@
   "datamodels-unused": "",
   "description": "",
   "details": "",
+  "download-as-file": "",
   "error-occured": "",
   "feedback": "",
   "feedback-terminologies": "",
@@ -84,6 +87,7 @@
   "results-with-current_other": "",
   "service-description": "",
   "show": "",
+  "show-as-file": "",
   "show-by-information-domain": "",
   "show-only": "",
   "site-cancel": "",
