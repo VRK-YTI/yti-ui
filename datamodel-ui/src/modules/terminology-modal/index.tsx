@@ -44,42 +44,10 @@ export default function TerminologyModal() {
   const [visible, setVisible] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDomain, setSelectedDomain] = useState<string | null>();
-  const [infoDomains] = useState([
-    {
-      labelText: 'Test #1',
-      uniqueItemId: '001',
-    },
-    {
-      labelText: 'Test #2',
-      uniqueItemId: '002',
-    },
-  ]);
+  const [infoDomains] = useState([]);
   const [initialSelected] = useState([]);
   const [selected, setSelected] = useState<{ id: string; title: string }[]>([]);
-  const [searchResults, setSearchResults] = useState<TerminologyResult[]>([
-    {
-      id: '001',
-      title: 'Title1',
-      languages: ['fi', 'en', 'sv'],
-      informationDomain: ['Rakennettu ympäristö'],
-      status: 'VALID',
-      description:
-        'Sanasto liittyy käynnissä olevaan digikaavoitukseen ja kaavan kansallisen tietomallin kehittämiseen. Kehittämistyötä tehdään Maankäyttöpäätökset-hankkeen Kuntapilottiina yms yms',
-      uri: 'http://url.suomi.fi',
-    },
-    {
-      id: '002',
-      title: 'Aluehallinnon aluejohto',
-      languages: ['fi'],
-      informationDomain: [
-        'Rakennettu ympäristö',
-        'Terveydenhuolto',
-        'Sairaanhoito',
-      ],
-      status: 'DRAFT',
-      uri: 'http://url.suomi.fi',
-    },
-  ]);
+  const [searchResults, setSearchResults] = useState<TerminologyResult[]>([]);
 
   const handleSearchTermChange = (value: string) => {
     setSearchTerm(value);
@@ -127,8 +95,7 @@ export default function TerminologyModal() {
         variant={isSmall ? 'smallScreen' : 'default'}
       >
         <ModalContent>
-          <ModalTitle>Lisää viittaus sanastoihin</ModalTitle>
-
+          <ModalTitle>{t('add-reference-to-terminologies')}</ModalTitle>
           {renderSearchBlock()}
           {renderResults()}
         </ModalContent>
@@ -137,10 +104,10 @@ export default function TerminologyModal() {
             disabled={isEqual(initialSelected, selected)}
             onClick={() => handleSubmit()}
           >
-            Lisää valitut
+            {t('add-selected')}
           </Button>
           <Button variant="secondary" onClick={() => handleClose()}>
-            Peruuta
+            {t('cancel-variant')}
           </Button>
         </ModalFooter>
       </Modal>
@@ -152,9 +119,9 @@ export default function TerminologyModal() {
       <div>
         <SearchBlock $isSmall={isSmall}>
           <SearchInput
-            labelText="Hae sanastoa"
-            clearButtonLabel=""
-            searchButtonLabel=""
+            labelText={t('search-for-terminology')}
+            clearButtonLabel={t('clear-all-selections')}
+            searchButtonLabel={t('search')}
             defaultValue={searchTerm}
             onBlur={(e) => handleSearchTermChange(e.target.value)}
             onSearch={(e) => handleSearchTermChange(e ? e.toString() : '')}
@@ -162,11 +129,12 @@ export default function TerminologyModal() {
           />
 
           <SingleSelect
-            labelText="Tietoalue"
-            visualPlaceholder="Kirjoita tai valitse"
+            labelText={t('information-domain')}
+            visualPlaceholder={t('input-or-select')}
+            // This text can be left empty because item addition isn't enabled
             itemAdditionHelpText=""
-            ariaOptionsAvailableText=""
-            clearButtonLabel=""
+            ariaOptionsAvailableText={t('information-domains-available')}
+            clearButtonLabel={t('clear-all-selections')}
             items={infoDomains}
             onItemSelect={(e) => setSelectedDomain(e)}
           />
@@ -187,19 +155,15 @@ export default function TerminologyModal() {
 
   function renderResults() {
     if (searchResults.length < 1) {
-      return (
-        <Text>
-          Etsi sanastoja syöttämällä hakukenttään hakusana tai valitsemalla
-          tietoalue. Tietoalue-pudotusvalikosta voit kohdistaa haun tiettyyn
-          tietoalueeseen.
-        </Text>
-      );
+      return <Text>{t('add-refrence-to-terminologies-description')}</Text>;
     }
 
     return (
       <div>
         <SearchResultCount>
-          <Text variant="bold">{searchResults.length} sanastoa</Text>
+          <Text variant="bold">
+            {t('terminology-counts', { count: searchResults.length })}
+          </Text>
         </SearchResultCount>
 
         <SearchResultsBlock>

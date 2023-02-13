@@ -48,11 +48,8 @@ export default function AsFileModal({ type }: AsFileModalProps) {
     return (
       <SimpleModalContent>
         <div>
-          <ModalTitle>Näytä tiedostona</ModalTitle>
-          <Text variant="bold">
-            Valitse tiedostoformaatti, jossa haluat tarkastella tietomallia.
-            Tiedosto aukeaa uudelle välilehdelle.
-          </Text>
+          <ModalTitle>{t('show-as-file')}</ModalTitle>
+          <Text variant="bold">{t('show-as-file-description')}</Text>
           <RadioButtonGroupSimple
             labelText=""
             defaultValue="JSON-LD"
@@ -67,9 +64,9 @@ export default function AsFileModal({ type }: AsFileModalProps) {
         </div>
 
         <ButtonFooter>
-          <Button onClick={() => handleSubmit()}>Näytä</Button>
+          <Button onClick={() => handleSubmit()}>{t('show')}</Button>
           <Button variant="secondary" onClick={() => handleClose()}>
-            Peruuta
+            {t('site-cancel')}
           </Button>
         </ButtonFooter>
       </SimpleModalContent>
@@ -80,10 +77,8 @@ export default function AsFileModal({ type }: AsFileModalProps) {
     return (
       <SimpleModalContent>
         <div>
-          <ModalTitle>Lataa tiedostona</ModalTitle>
-          <Text variant="bold">
-            Valitse tiedostoformaatti, jossa haluat ladata tietomallin.
-          </Text>
+          <ModalTitle>{t('download-as-file')}</ModalTitle>
+          <Text variant="bold">{t('download-as-file-description')}</Text>
           <RadioButtonGroupSimple
             labelText=""
             name="file-types-radio-button-group"
@@ -98,9 +93,9 @@ export default function AsFileModal({ type }: AsFileModalProps) {
         </div>
 
         <ButtonFooter>
-          <Button onClick={() => handleSubmit()}>Lataa</Button>
+          <Button onClick={() => handleSubmit()}>{t('download')}</Button>
           <Button variant="secondary" onClick={() => handleClose()}>
-            Peruuta
+            {t('site-cancel')}
           </Button>
         </ButtonFooter>
       </SimpleModalContent>
