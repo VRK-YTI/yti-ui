@@ -112,7 +112,14 @@ export default function TerminologyModal() {
 
   return (
     <>
-      <Button onClick={() => setVisible(true)}>Click</Button>
+      <Button
+        variant="secondary"
+        icon="plus"
+        id="terminologies"
+        onClick={() => setVisible(true)}
+      >
+        {t('add-terminology')}
+      </Button>
       <Modal
         appElementId="__next"
         visible={visible}

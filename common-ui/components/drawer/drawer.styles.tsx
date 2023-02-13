@@ -49,7 +49,7 @@ export const DrawerContent = styled.div.attrs<{
   $width?: number;
 }>`
   background: ${(props) => props.theme.suomifi.colors.whiteBase};
-  overflow: scroll;
+  overflow-y: scroll;
 
   ${(props) =>
     props.$isSmall &&

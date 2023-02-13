@@ -1,3 +1,4 @@
+import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import { Button, ModalTitle, RadioButton, Text } from 'suomifi-ui-components';
 import { useBreakpoints } from 'yti-common-ui/media-query';
@@ -13,6 +14,7 @@ interface AsFileModalProps {
 }
 
 export default function AsFileModal({ type }: AsFileModalProps) {
+  const { t } = useTranslation('common');
   const { isSmall } = useBreakpoints();
   const [visible, setVisible] = useState(false);
   const fileTypes = ['JSON-LD', 'RDF', 'XML', 'Turtle', 'OpenAPI'];
@@ -27,7 +29,9 @@ export default function AsFileModal({ type }: AsFileModalProps) {
 
   return (
     <>
-      <Button onClick={() => setVisible(true)}>Click {type}</Button>
+      <Button onClick={() => setVisible(true)} variant="secondaryNoBorder">
+        {type === 'show' ? t('show-as-file') : t('download-as-file')}
+      </Button>
 
       <NarrowModal
         appElementId="__next"
