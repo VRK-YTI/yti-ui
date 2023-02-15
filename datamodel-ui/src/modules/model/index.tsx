@@ -2,6 +2,7 @@ import Drawer from '@app/common/components/model-drawer';
 import { ContentWrapper, ModelFlow } from './model.styles';
 import ModelInfoView from './model-info-view';
 import SearchView from './search-view';
+import ClassView from './class-view';
 
 export default function Model() {
   return (
@@ -76,7 +77,7 @@ export default function Model() {
                 id: 'classes',
                 icon: 'chatHeart',
                 buttonLabel: 'Luokat',
-                component: <></>,
+                component: <ClassView />,
               },
               {
                 id: 'attributes',

@@ -1,6 +1,6 @@
 import { ReactFlow } from 'reactflow';
 import styled from 'styled-components';
-import { Block } from 'suomifi-ui-components';
+import { Block, SearchInput } from 'suomifi-ui-components';
 
 export const TitleWrapper = styled.div<{ $fullScreen?: boolean }>`
   padding: 0 0 ${(props) => props.theme.suomifi.spacing.s}
@@ -103,4 +103,9 @@ export const TooltipWrapper = styled(Block)`
       aria-hidden: true;
     }
   }
+`;
+
+export const FullwidthSearchInput = styled(SearchInput)`
+  width: 100%;
+  max-width: 380px;
 `;
