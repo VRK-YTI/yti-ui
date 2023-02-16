@@ -19,13 +19,16 @@ import InlineList from '@app/common/components/inline-list';
 import { useState } from 'react';
 import { ClassFormWrapper } from './class-form.styles';
 import AttributeModal from '../attribute-modal';
-import ClassModal from '../class-modal';
 
 export interface ClassFormProps {
   handleReturn: (value?: any) => void;
+  handleSubmit: () => void;
 }
 
-export default function ClassForm({ handleReturn }: ClassFormProps) {
+export default function ClassForm({
+  handleReturn,
+  handleSubmit,
+}: ClassFormProps) {
   const languages = [
     { labelText: 'Suomi (fi)', uniqueItemId: 'fi' },
     { labelText: 'Ruotsi (sv)', uniqueItemId: 'sv' },
@@ -62,8 +65,10 @@ export default function ClassForm({ handleReturn }: ClassFormProps) {
         <Text variant="bold">Luokan nimi</Text>
 
         <div style={{ display: 'flex', gap: '10px' }}>
-          <Button>Tallenna</Button>
-          <Button variant="secondary">Peruuta</Button>
+          <Button onClick={() => handleSubmit()}>Tallenna</Button>
+          <Button variant="secondary" onClick={() => handleReturn()}>
+            Peruuta
+          </Button>
         </div>
       </div>
 
