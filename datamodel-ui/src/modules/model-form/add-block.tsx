@@ -1,5 +1,6 @@
 import { useTranslation } from 'next-i18next';
 import { Button, Label } from 'suomifi-ui-components';
+import TerminologyModal from '../terminology-modal';
 import { AddBlockWrapper } from './model-form.styles';
 
 export default function AddBlock() {
@@ -10,9 +11,7 @@ export default function AddBlock() {
       <Label htmlFor="terminologies" optionalText={t('optional')}>
         {t('terminologies-in-use')}
       </Label>
-      <Button variant="secondary" icon="plus" id="terminologies" disabled>
-        {t('add-terminology')}
-      </Button>
+      <TerminologyModal />
 
       <Label htmlFor="codes" optionalText={t('optional')}>
         {t('reference-data-in-use')}

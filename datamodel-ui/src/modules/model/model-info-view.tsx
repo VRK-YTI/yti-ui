@@ -42,6 +42,7 @@ import { useGetServiceCategoriesQuery } from '@app/common/components/service-cat
 import { useGetOrganizationsQuery } from '@app/common/components/organizations/organizations.slice';
 import { ModelFormType } from '@app/common/interfaces/model-form.interface';
 import ModelEditView from './model-edit-view';
+import AsFileModal from '../as-file-modal';
 
 export default function ModelInfoView() {
   const { t, i18n } = useTranslation('common');
@@ -168,10 +169,8 @@ export default function ModelInfoView() {
               >
                 {t('edit', { ns: 'admin' })}
               </Button>
-              <Button variant="secondaryNoBorder">{t('show-as-file')}</Button>
-              <Button variant="secondaryNoBorder">
-                {t('download-as-file')}
-              </Button>
+              <AsFileModal type="show" />
+              <AsFileModal type="download" />
               <Button variant="secondaryNoBorder">
                 {t('update-models-resources-statuses', { ns: 'admin' })}
               </Button>
