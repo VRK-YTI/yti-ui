@@ -51,7 +51,9 @@ export default function ClassModal({ handleFollowUp }: ClassModalProps) {
           >
             Luo valitulle alaluokka
           </Button>
-          <Button icon="plus">Luo uusi luokka</Button>
+          <Button icon="plus" onClick={() => handleFollowUp(selectedClass)}>
+            Luo uusi luokka
+          </Button>
           <Button variant="secondaryNoBorder" onClick={() => handleClose()}>
             Peruuta
           </Button>

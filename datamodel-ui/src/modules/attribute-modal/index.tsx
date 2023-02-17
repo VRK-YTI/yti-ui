@@ -1,14 +1,16 @@
 import { useState } from 'react';
 import {
   Button,
-  Modal,
   ModalContent,
   ModalFooter,
   ModalTitle,
 } from 'suomifi-ui-components';
+import { useBreakpoints } from 'yti-common-ui/media-query';
 import MultiColumnSearch from 'yti-common-ui/multi-column-search';
+import { LargeModal } from './attribute-modal.styles';
 
 export default function AttributeModal() {
+  const { isSmall } = useBreakpoints();
   const [visible, setVisible] = useState(false);
   const [selected, setSelected] = useState('');
 
@@ -17,10 +19,18 @@ export default function AttributeModal() {
       <Button variant="secondary" onClick={() => setVisible(true)}>
         Lisää attribuutti
       </Button>
-      <Modal appElementId="__next" visible={visible}>
+      <LargeModal
+        appElementId="__next"
+        visible={visible}
+        variant={isSmall ? 'smallScreen' : 'default'}
+      >
         <ModalContent>
           <ModalTitle>Lisää attribuutti</ModalTitle>
-          <MultiColumnSearch setSelected={setSelected} />
+          <MultiColumnSearch
+            selected={selected}
+            setSelected={setSelected}
+            languageVersioned
+          />
         </ModalContent>
         <ModalFooter>
           <Button>Ota käyttöön sellaisenaan</Button>
@@ -28,7 +38,7 @@ export default function AttributeModal() {
             Peruuta
           </Button>
         </ModalFooter>
-      </Modal>
+      </LargeModal>
     </div>
   );
 }

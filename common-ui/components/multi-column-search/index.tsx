@@ -49,11 +49,13 @@ type Params = {
 interface MultiColumnSearchProps {
   selected?: string;
   setSelected: (value: string) => void;
+  languageVersioned?: boolean;
 }
 
 export default function MultiColumnSearch({
   selected,
   setSelected,
+  languageVersioned,
 }: MultiColumnSearchProps) {
   const { isSmall } = useBreakpoints();
   const [params, setParams] = useState<Params>({
@@ -120,6 +122,15 @@ export default function MultiColumnSearch({
             },
           ]}
         />
+        {languageVersioned && (
+          <SingleSelect
+            labelText="Sisällön kieli"
+            itemAdditionHelpText=""
+            ariaOptionsAvailableText=""
+            clearButtonLabel=""
+            items={[{ labelText: 'Suomi', uniqueItemId: 'fi' }]}
+          />
+        )}
       </SearchToolsBlock>
 
       <ResultsTable cellSpacing={0}>
