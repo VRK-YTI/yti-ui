@@ -39,7 +39,7 @@ export default function ModelPage(props: IndexPageProps) {
       >
         <PageHead baseUrl="https://tietomallit.suomi.fi" />
 
-        <Model />
+        <Model modelId={props.modelId} />
       </Layout>
     </CommonContextProvider>
   );

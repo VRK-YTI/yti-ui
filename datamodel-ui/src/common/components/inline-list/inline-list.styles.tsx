@@ -22,4 +22,8 @@ export const ListItem = styled.div`
     white-space: nowrap;
     min-width: min-content;
   }
+
+  .fi-link--external {
+    font-size: 16px;
+  }
 `;

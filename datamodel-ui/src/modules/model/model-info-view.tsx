@@ -60,8 +60,6 @@ export default function ModelInfoView() {
     i18n.language ?? 'fi'
   );
 
-  console.log('modelInfo', modelInfo);
-
   const data = useMemo(() => {
     if (!modelInfo) {
       return undefined;

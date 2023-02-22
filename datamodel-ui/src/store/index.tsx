@@ -10,6 +10,7 @@ import { fakeableUsersApi } from '@app/common/components/fakeable-users/fakeable
 import { prefixApi } from '@app/common/components/prefix';
 import { modelApi } from '@app/common/components/model/model.slice';
 import { classApi } from '@app/common/components/class/class.slice';
+import { searchInternalClassesApi } from '@app/common/components/search-internal-classes/search-internal-classes.slice';
 
 // make Context from next-redux-wrapper compatible with next-iron-session
 export type NextIronContext = Context | (Context & { req: NextApiRequest });
@@ -26,6 +27,7 @@ export function makeStore(ctx: NextIronContext) {
       [prefixApi.reducerPath]: prefixApi.reducer,
       [modelApi.reducerPath]: modelApi.reducer,
       [classApi.reducerPath]: classApi.reducer,
+      [searchInternalClassesApi.reducerPath]: searchInternalClassesApi.reducer,
     },
 
     middleware: (getDefaultMiddleware) =>
@@ -37,7 +39,8 @@ export function makeStore(ctx: NextIronContext) {
         fakeableUsersApi.middleware,
         prefixApi.middleware,
         modelApi.middleware,
-        classApi.middleware
+        classApi.middleware,
+        searchInternalClassesApi.middleware
       ),
 
     // Development tools should be available only in development environments

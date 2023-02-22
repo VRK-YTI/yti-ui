@@ -1,5 +1,4 @@
-import { Status } from 'interfaces/status.interface';
-import { useState } from 'react';
+import { useTranslation } from 'next-i18next';
 import {
   ExternalLink,
   Icon,
@@ -8,7 +7,6 @@ import {
   SingleSelect,
   Text,
 } from 'suomifi-ui-components';
-import { useBreakpoints } from '../media-query';
 import {
   ResultsTable,
   SearchToolsBlock,
@@ -39,41 +37,46 @@ import {
  * Menusta kirjaudu sisään pois jos kirjautunut
  */
 
-type Params = {
-  keyword: string | null;
-  dataModel: string | null;
-  infoDomain: string | null;
-  status: Status | null;
-};
+export interface ResultType {
+  target: {
+    identifier: string;
+    label: string;
+    linkLabel: string;
+    link: string;
+    modified: string;
+    status: string;
+    isValid?: boolean;
+  };
+  partOf: {
+    label: string;
+    type: string;
+    domains: string[];
+  };
+  subClass: {
+    label: string;
+    link: string;
+    partOf: string;
+  };
+}
 
 interface MultiColumnSearchProps {
-  selected?: string;
-  setSelected: (value: string) => void;
+  results: ResultType[];
+  selectedId?: string;
+  setSelectedId: (value: string) => void;
   languageVersioned?: boolean;
 }
 
 export default function MultiColumnSearch({
-  selected,
-  setSelected,
+  results,
+  selectedId,
+  setSelectedId,
   languageVersioned,
 }: MultiColumnSearchProps) {
-  const { isSmall } = useBreakpoints();
-  const [params, setParams] = useState<Params>({
-    keyword: '',
-    dataModel: null,
-    infoDomain: null,
-    status: null,
-  });
-  const [results, setResults] = useState([
-    {
-      id: '1',
-      title: 'Aikaväli',
-    },
-    {
-      id: '2',
-      title: 'Ajanjakso',
-    },
-  ]);
+  const { i18n } = useTranslation('admin');
+
+  const handleRadioButtonClick = (id: string) => {
+    setSelectedId(id);
+  };
 
   return (
     <div>
@@ -151,44 +154,44 @@ export default function MultiColumnSearch({
           </tr>
 
           {results.map((result) => (
-            <tr key={`result-${result.id}`}>
+            <tr key={`result-${result.target.identifier}`}>
               <td className="td-with-radio-button">
                 <div>
                   <RadioButton
-                    value={result.id}
-                    checked={result.id === selected}
-                    onChange={(e) => setSelected(e.target.value)}
+                    value={result.target.identifier}
+                    checked={result.target.identifier === selectedId}
+                    onChange={(e) => handleRadioButtonClick(e.target.value)}
                   />
                 </div>
                 <div>
-                  {result.title}
-                  <ExternalLink href={''} labelNewWindow="">
-                    ns:{result.title}
+                  {result.target.label}
+                  <ExternalLink href={result.target.link} labelNewWindow="">
+                    {result.target.linkLabel}
                   </ExternalLink>
                 </div>
               </td>
               <td style={{ width: '40%' }}>
                 <div>
-                  <Text>Tietomallin nimi</Text>
+                  <Text>{result.partOf.label}</Text>
                   <Text>
-                    <Icon icon="calendar" /> Tietomallin tyyppi
+                    <Icon icon="calendar" /> {result.partOf.type}
                   </Text>
-                  <Text>Tietomallin tietoalueet</Text>
+                  <Text>{result.partOf.domains.join(', ')}</Text>
                 </div>
               </td>
               <td style={{ width: '20%' }}>
                 <div>
-                  <ExternalLink href={''} labelNewWindow="">
-                    Käsitteen linkki
+                  <ExternalLink href={result.subClass.link} labelNewWindow="">
+                    {result.subClass.label}
                   </ExternalLink>
-                  <Text>Sanaston nimi</Text>
+                  <Text>{result.subClass.partOf}</Text>
                 </div>
               </td>
               <td style={{ width: '15%' }}>
                 <div>
-                  <Text>Päiväys</Text>
-                  <StatusChip $isValid={result.id === '1'}>
-                    Voimassa oleva
+                  <Text>{result.target.modified}</Text>
+                  <StatusChip $isValid={result.target.isValid}>
+                    {result.target.status}
                   </StatusChip>
                 </div>
               </td>

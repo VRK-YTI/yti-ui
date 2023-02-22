@@ -6,9 +6,7 @@ import {
   ExpanderGroup,
   ExpanderTitleButton,
   Heading,
-  InlineAlert,
   Label,
-  SingleSelect,
   Text,
   Textarea,
   TextInput,
@@ -17,36 +15,41 @@ import {
 import Separator from 'yti-common-ui/separator';
 import InlineList from '@app/common/components/inline-list';
 import { useState } from 'react';
-import { ClassFormWrapper } from './class-form.styles';
+import {
+  ClassFormWrapper,
+  LanguageVersionedWrapper,
+} from './class-form.styles';
 import AttributeModal from '../attribute-modal';
+import { getLanguageVersion } from '@app/common/utils/get-language-version';
+import { useTranslation } from 'next-i18next';
+import { Status } from '@app/common/interfaces/status.interface';
+import ConceptBlock from './concept-block';
+import { ClassFormType } from '@app/common/interfaces/class-form.interface';
 
 export interface ClassFormProps {
   handleReturn: (value?: any) => void;
   handleSubmit: () => void;
+  data: ClassFormType;
+  setData: (value: ClassFormType) => void;
 }
 
 export default function ClassForm({
   handleReturn,
   handleSubmit,
+  data,
+  setData,
 }: ClassFormProps) {
-  const languages = [
-    { labelText: 'Suomi (fi)', uniqueItemId: 'fi' },
-    { labelText: 'Ruotsi (sv)', uniqueItemId: 'sv' },
-    { labelText: 'Englanti (en)', uniqueItemId: 'en' },
-  ];
-  const [upperClasses, setUpperClasses] = useState([
-    {
-      id: '1',
-      label: 'ns:Luokka',
-    },
-    {
-      id: '2',
-      label: 'jhs:Aikaväli',
-    },
-  ]);
+  const { i18n } = useTranslation('admin');
+  const [contentLang, setContentLang] = useState('fi');
+  const [languages, setLanguages] = useState(Object.keys(data.label));
+  // const languages = [
+  //   { labelText: 'Suomi (fi)', uniqueItemId: 'fi' },
+  //   { labelText: 'Ruotsi (sv)', uniqueItemId: 'sv' },
+  //   { labelText: 'Englanti (en)', uniqueItemId: 'en' },
+  // ];
 
-  const handleUpperClassRemoval = (id: string) => {
-    setUpperClasses(upperClasses.filter((uc) => uc.id !== id));
+  const handleSubClassOfRemoval = (id: string) => {
+    setData({ ...data, subClassOf: data.subClassOf.filter((s) => s !== id) });
   };
 
   return (
@@ -62,7 +65,10 @@ export default function ClassForm({
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Text variant="bold">Luokan nimi</Text>
+        <Text variant="bold">
+          {Object.entries(data.label).find((l) => l[1] !== '')?.[1] ??
+            'Luokan nimi'}
+        </Text>
 
         <div style={{ display: 'flex', gap: '10px' }}>
           <Button onClick={() => handleSubmit()}>Tallenna</Button>
@@ -72,38 +78,36 @@ export default function ClassForm({
         </div>
       </div>
 
-      <div>
-        <Dropdown labelText="Sisällön kieli" defaultValue={'fi'}>
-          {languages.map((l) => (
-            <DropdownItem key={l.uniqueItemId} value={l.uniqueItemId}>
-              {l.labelText}
-            </DropdownItem>
-          ))}
-        </Dropdown>
-      </div>
-
-      {/* TODO: Move to own component */}
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '10px',
-          alignItems: 'flex-start',
-        }}
-      >
-        <Label>Käsite</Label>
-        <InlineAlert status="warning">Käsitettä ei ole määritelty</InlineAlert>
-        <Button variant="secondary">Valitse käsite</Button>
-      </div>
-
-      <TextInput
-        labelText="Luokan nimi"
-        visualPlaceholder="Kirjoita luokan nimi"
+      <ConceptBlock
+        concept={
+          data.equivalentClass.length > 0 ? data.equivalentClass[0] : undefined
+        }
+        setConcept={(value: object | undefined) =>
+          setData({ ...data, equivalentClass: value ? [value] : [] })
+        }
       />
+
+      <LanguageVersionedWrapper>
+        {Object.keys(data.label).map((lang) => (
+          <TextInput
+            key={`label-${lang}`}
+            labelText={`Luokan nimi, ${lang}`}
+            value={data.label[lang]}
+            onChange={(e) =>
+              setData({
+                ...data,
+                label: { ...data.label, [lang]: e?.toString() ?? '' },
+              })
+            }
+          />
+        ))}
+      </LanguageVersionedWrapper>
 
       <TextInput
         labelText="Luokan tunnus"
         visualPlaceholder="Kirjoita luokan tunnus"
+        defaultValue={data.identifier}
+        onChange={(e) => setData({ ...data, identifier: e?.toString() ?? '' })}
         tooltipComponent={
           <Tooltip ariaToggleButtonLabelText={''} ariaCloseButtonLabelText={''}>
             <Text>Tooltip sisältö</Text>
@@ -114,8 +118,15 @@ export default function ClassForm({
       <div className="spread-content">
         <Label>Yläluokat</Label>
         <InlineList
-          items={upperClasses}
-          handleRemoval={handleUpperClassRemoval}
+          items={
+            data.subClassOf.length > 0
+              ? data.subClassOf.map((s) => ({
+                  label: s.label,
+                  id: s.identifier,
+                }))
+              : []
+          }
+          handleRemoval={handleSubClassOfRemoval}
         />
         <Button variant="secondary">Lisää yläluokka</Button>
       </div>
@@ -126,12 +137,37 @@ export default function ClassForm({
       </div>
 
       <div>
-        <Dropdown labelText="Tila" defaultValue="DRAFT">
+        <Dropdown
+          labelText="Tila"
+          defaultValue={data.status}
+          onChange={(e) => setData({ ...data, status: e as Status })}
+        >
           <DropdownItem value="DRAFT">Luonnos</DropdownItem>
+          <DropdownItem value="VALID">Voimassa oleva</DropdownItem>
+          <DropdownItem value="INCOMPLETE">Keskeneräinen</DropdownItem>
+          <DropdownItem value="INVALID">Virheellinen</DropdownItem>
+          <DropdownItem value="RETIRED">Poistettu käytöstä</DropdownItem>
+          <DropdownItem value="SUGGESTED">Ehdotus</DropdownItem>
+          <DropdownItem value="SUPERSEDED">Korvattu</DropdownItem>
         </Dropdown>
       </div>
 
-      <Textarea labelText="Lisätiedot" optionalText="valinnainen" />
+      <LanguageVersionedWrapper>
+        {languages.map((lang) => (
+          <Textarea
+            key={`comment-${lang}`}
+            labelText={`Lisätiedot, ${lang}`}
+            optionalText="valinnainen"
+            defaultValue={data.comment[lang as keyof typeof data.comment]}
+            onChange={(e) =>
+              setData({
+                ...data,
+                note: { ...data.note, [lang]: e.target.value },
+              })
+            }
+          />
+        ))}
+      </LanguageVersionedWrapper>
 
       <Separator />
 
@@ -145,30 +181,27 @@ export default function ClassForm({
       </div>
 
       <div className="spread-content">
-        <Label>Yläluokilta perityt attribuutit 6kpl</Label>
+        <Label>
+          Yläluokilta perityt attribuutit{' '}
+          {data.subClassOf.length > 0
+            ? data.subClassOf[0].attributes.length
+            : 0}
+          kpl
+        </Label>
         <ExpanderGroup
           closeAllText=""
           openAllText=""
           showToggleAllButton={false}
         >
-          <Expander>
-            <ExpanderTitleButton>Alkamisaika</ExpanderTitleButton>
-          </Expander>
-          <Expander>
-            <ExpanderTitleButton>Päättymisaika</ExpanderTitleButton>
-          </Expander>
-          <Expander>
-            <ExpanderTitleButton>Alkamispäivämäärä</ExpanderTitleButton>
-          </Expander>
-          <Expander>
-            <ExpanderTitleButton>Päättymispäivämäärä</ExpanderTitleButton>
-          </Expander>
-          <Expander>
-            <ExpanderTitleButton>Alkamishetki</ExpanderTitleButton>
-          </Expander>
-          <Expander>
-            <ExpanderTitleButton>Päättymishetki</ExpanderTitleButton>
-          </Expander>
+          {data.subClassOf.length > 0 ? (
+            data.subClassOf[0].attributes.map((attr) => (
+              <Expander key={attr}>
+                <ExpanderTitleButton>{attr}</ExpanderTitleButton>
+              </Expander>
+            ))
+          ) : (
+            <Text smallScreen>Ei perittyjä attribuutteja.</Text>
+          )}
         </ExpanderGroup>
       </div>
 
@@ -188,7 +221,12 @@ export default function ClassForm({
 
       <Separator />
 
-      <Textarea labelText="Muokkaajan kommentti" optionalText="valinnainen" />
+      <Textarea
+        labelText="Muokkaajan kommentti"
+        optionalText="valinnainen"
+        defaultValue={data.comment}
+        onChange={(e) => setData({ ...data, comment: e.target.value })}
+      />
     </ClassFormWrapper>
   );
 }

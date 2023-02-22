@@ -18,7 +18,7 @@ export default function InlineList({ items, handleRemoval }: InlineListProps) {
     <List>
       {items.map((item) => (
         <ListItem key={item.id}>
-          <ExternalLink href="" labelNewWindow="">
+          <ExternalLink href={item.id} labelNewWindow="">
             {item.label}
           </ExternalLink>
           <Button

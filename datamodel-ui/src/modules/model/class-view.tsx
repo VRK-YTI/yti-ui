@@ -1,3 +1,16 @@
+import { usePutClassMutation } from '@app/common/components/class/class.slice';
+import {
+  ClassFormType,
+  initialClassForm,
+} from '@app/common/interfaces/class-form.interface';
+import {
+  ClassType,
+  initialClass,
+} from '@app/common/interfaces/class.interface';
+import { InternalClass } from '@app/common/interfaces/internal-class.interface';
+import { getLanguageVersion } from '@app/common/utils/get-language-version';
+import { useTranslation } from 'next-i18next';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import {
   Button,
@@ -15,12 +28,62 @@ import Separator from 'yti-common-ui/separator';
 import ClassForm from '../class-form';
 import ClassModal from '../class-modal';
 import { FullwidthSearchInput } from './model.styles';
+import {
+  classFormToNewClass,
+  internalClassToClassForm,
+  validateClassForm,
+} from './utils';
 
-export default function ClassView() {
+interface ClassView {
+  modelId: string;
+}
+
+export default function ClassView({ modelId }: ClassView) {
+  const { i18n } = useTranslation('common');
+  const [formData, setFormData] = useState<ClassFormType>(initialClassForm);
   const [view, setView] = useState<'listing' | 'class' | 'form'>('listing');
+  const [putClass, result] = usePutClassMutation();
 
-  const handleFollowUpAction = (value: any) => {
+  const mockClassList: ClassType[] = [
+    {
+      comment: 'Kommentti',
+      equivalentClass: [],
+      identifier: 'ns:luokka-1',
+      label: {
+        fi: 'Ensimmäisen luokan nimi',
+        en: 'First class name',
+      },
+      note: {
+        fi: 'Huomautus',
+        en: 'Note',
+      },
+      status: 'VALID',
+      subClassOf: ['ns:Luokka'],
+      subject: 'luokka-1',
+    },
+    {
+      comment: '',
+      equivalentClass: [],
+      identifier: 'ns:luokka-2',
+      label: {
+        fi: 'Toisen luokan nimi',
+      },
+      note: {},
+      status: 'DRAFT',
+      subClassOf: [],
+      subject: 'luokka-2',
+    },
+  ];
+
+  const handleFollowUpAction = (value?: InternalClass) => {
     setView('form');
+
+    if (!value) {
+      setFormData(initialClassForm);
+      return;
+    }
+
+    setFormData(internalClassToClassForm(value));
   };
 
   const handleFormReturn = () => {
@@ -28,7 +91,16 @@ export default function ClassView() {
   };
 
   const handleFormSubmit = () => {
+    const errors = validateClassForm(formData);
+    const data = classFormToNewClass(formData);
+
+    // setView('class');
+    // putClass({ modelId: modelId, data: data });
+  };
+
+  const handleListItemClick = (value: ClassType) => {
     setView('class');
+    setFormData(value);
   };
 
   return (
@@ -53,7 +125,7 @@ export default function ClassView() {
             alignItems: 'flex-end',
           }}
         >
-          <Text variant="bold">0 luokkaa</Text>
+          <Text variant="bold">{mockClassList.length} luokkaa</Text>
           <ClassModal handleFollowUp={handleFollowUpAction} />
         </div>
 
@@ -63,7 +135,18 @@ export default function ClassView() {
             clearButtonLabel=""
             searchButtonLabel=""
           />
-          <Text>Tietomallissa ei ole vielä yhtään luokkaa.</Text>
+          {mockClassList.length < 1 ? (
+            <Text>Tietomallissa ei ole vielä yhtään luokkaa.</Text>
+          ) : (
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              {mockClassList.map((c) => (
+                // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+                <div key={c.identifier} onClick={() => handleListItemClick(c)}>
+                  {c.label.fi}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </>
     );
@@ -78,6 +161,8 @@ export default function ClassView() {
       <ClassForm
         handleReturn={handleFormReturn}
         handleSubmit={handleFormSubmit}
+        data={formData}
+        setData={setFormData}
       />
     );
   }
@@ -110,12 +195,16 @@ export default function ClassView() {
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-          <Text variant="bold">Luokan nimi</Text>
-          <StatusChip>Luonnos</StatusChip>
+          <Text variant="bold">
+            {getLanguageVersion({ data: formData.label, lang: i18n.language })}
+          </Text>
+          <StatusChip $isValid={formData.status === 'VALID'}>
+            {formData.status}
+          </StatusChip>
         </div>
 
         <BasicBlock title="Luokan tunnus">
-          ns:Luokan-tunnus
+          {formData.identifier}
           <Button
             icon="copy"
             variant="secondary"
@@ -135,42 +224,31 @@ export default function ClassView() {
         </div>
 
         <BasicBlock title="Yläluokka">
-          <Link href="" style={{ fontSize: '16px' }}>
-            ns:Aikaväli
-          </Link>
+          {formData.subClassOf.map((c) => (
+            <Link key={c} href="" style={{ fontSize: '16px' }}>
+              {c}
+            </Link>
+          ))}
         </BasicBlock>
 
         <BasicBlock title="Vastaavat luokat">Ei vastaavia luokkia</BasicBlock>
 
-        <BasicBlock title="Lisätiedot">Ei huomautusta</BasicBlock>
+        <BasicBlock title="Lisätiedot">
+          {formData.comment ?? 'Ei huomautusta'}
+        </BasicBlock>
 
         <div style={{ marginTop: '20px' }}>
-          <Label style={{ marginBottom: '10px' }}>Attribuutit 7kpl</Label>
+          <Label style={{ marginBottom: '10px' }}>Attribuutit 2kpl</Label>
           <ExpanderGroup
             closeAllText=""
             openAllText=""
             showToggleAllButton={false}
           >
             <Expander>
-              <ExpanderTitleButton>Alkamisaika</ExpanderTitleButton>
+              <ExpanderTitleButton>Attribuutti #1</ExpanderTitleButton>
             </Expander>
             <Expander>
-              <ExpanderTitleButton>Päättymisaika</ExpanderTitleButton>
-            </Expander>
-            <Expander>
-              <ExpanderTitleButton>Alkamispäivämäärä</ExpanderTitleButton>
-            </Expander>
-            <Expander>
-              <ExpanderTitleButton>Päättymispäivämäärä</ExpanderTitleButton>
-            </Expander>
-            <Expander>
-              <ExpanderTitleButton>Alkamishetki</ExpanderTitleButton>
-            </Expander>
-            <Expander>
-              <ExpanderTitleButton>Päättymishetki</ExpanderTitleButton>
-            </Expander>
-            <Expander>
-              <ExpanderTitleButton>Kesto</ExpanderTitleButton>
+              <ExpanderTitleButton>Attribuutti #2</ExpanderTitleButton>
             </Expander>
           </ExpanderGroup>
         </div>
@@ -187,7 +265,7 @@ export default function ClassView() {
           <BasicBlock title="Luotu">Päiväys</BasicBlock>
 
           <BasicBlock title="Muokkaajan kommentti">
-            Loin uuden aliluokan
+            {getLanguageVersion({ data: formData.note, lang: i18n.language })}
           </BasicBlock>
         </div>
       </div>

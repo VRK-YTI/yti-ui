@@ -16,3 +16,12 @@ export const ClassFormWrapper = styled.div`
     width: 100% !important;
   }
 `;
+
+export const LanguageVersionedWrapper = styled.div`
+  background-color: ${(props) => props.theme.suomifi.colors.highlightLight4};
+  padding: ${(props) => props.theme.suomifi.spacing.s};
+
+  > *:not(:last-child) {
+    margin-bottom: ${(props) => props.theme.suomifi.spacing.m};
+  }
+`;

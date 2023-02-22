@@ -4,7 +4,11 @@ import ModelInfoView from './model-info-view';
 import SearchView from './search-view';
 import ClassView from './class-view';
 
-export default function Model() {
+interface ModelProps {
+  modelId: string;
+}
+
+export default function Model({ modelId }: ModelProps) {
   return (
     <div
       style={{
@@ -77,7 +81,7 @@ export default function Model() {
                 id: 'classes',
                 icon: 'chatHeart',
                 buttonLabel: 'Luokat',
-                component: <ClassView />,
+                component: <ClassView modelId={modelId} />,
               },
               {
                 id: 'attributes',
