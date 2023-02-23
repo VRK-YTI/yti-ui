@@ -1,12 +1,12 @@
 import { ClassFormType } from '@app/common/interfaces/class-form.interface';
 import { InternalClass } from '@app/common/interfaces/internal-class.interface';
-import { NewClass } from '@app/common/interfaces/new-class.interface';
+import { ClassType } from '@app/common/interfaces/class.interface';
 
-export function internalClassToClassForm(data: InternalClass): ClassFormType {
-  const label = Object.keys(data.label).reduce(
-    (acc, key) => ({ ...acc, [key]: '' }),
-    {}
-  );
+export function internalClassToClassForm(
+  data: InternalClass,
+  languages: string[]
+): ClassFormType {
+  const label = languages.reduce((acc, lang) => ({ ...acc, [lang]: '' }), {});
 
   return {
     comment: '',
@@ -31,7 +31,7 @@ export function internalClassToClassForm(data: InternalClass): ClassFormType {
 }
 
 // TODO: Need to add equivalentClass, subClassOf and subject after backend is ready
-export function classFormToNewClass(data: ClassFormType): NewClass {
+export function classFormToClass(data: ClassFormType): ClassType {
   return {
     comment: data.comment,
     equivalentClass: [],

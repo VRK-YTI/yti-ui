@@ -20,7 +20,7 @@ import { Locale } from 'yti-common-ui//locale-chooser/use-locales';
 import { InternalClass } from '@app/common/interfaces/internal-class.interface';
 
 export interface ClassModalProps {
-  handleFollowUp: (value?: object) => void;
+  handleFollowUp: (value?: InternalClass) => void;
 }
 
 export default function ClassModal({ handleFollowUp }: ClassModalProps) {
@@ -110,7 +110,6 @@ export default function ClassModal({ handleFollowUp }: ClassModalProps) {
   };
 
   const handleSearch = () => {
-    console.log('searchParams', searchParams);
     searchInternalClasses(searchParams);
   };
 
@@ -143,7 +142,7 @@ export default function ClassModal({ handleFollowUp }: ClassModalProps) {
           <Button disabled={!selectedId} onClick={() => handleSubmit()}>
             Luo valitulle alaluokka
           </Button>
-          <Button icon="plus" onClick={() => handleFollowUp()} disabled>
+          <Button icon="plus" onClick={() => handleFollowUp()}>
             Luo uusi luokka
           </Button>
           <Button variant="secondaryNoBorder" onClick={() => handleClose()}>

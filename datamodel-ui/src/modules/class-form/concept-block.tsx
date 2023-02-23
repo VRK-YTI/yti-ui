@@ -1,5 +1,6 @@
 import { ClassFormType } from '@app/common/interfaces/class-form.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
+import { translateStatus } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 import {
@@ -29,14 +30,14 @@ import {
 
 interface ConceptBlockProps {
   concept?: ClassFormType['equivalentClass'][0];
-  setConcept: (value: object | undefined) => void;
+  setConcept: (value: ClassFormType['equivalentClass'][0] | undefined) => void;
 }
 
 export default function ConceptBlock({
   concept,
   setConcept,
 }: ConceptBlockProps) {
-  const { i18n } = useTranslation('admin');
+  const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const [visible, setVisible] = useState(false);
   const [selected, setSelected] = useState<
@@ -168,7 +169,7 @@ export default function ConceptBlock({
                 items={terminologyOptions}
               />
             </SearchBlock>
-
+            {console.log(data)}
             {data.length < 1 ? (
               <Text>Etsi käsitettä syöttämällä hakukenttään hakusana.</Text>
             ) : (
@@ -187,20 +188,43 @@ export default function ConceptBlock({
                       <RadioButton
                         value={d.uri}
                         checked={selected?.identifier === d.uri}
-                        onChange={(e) => handleRadioButtonClick(e.target.value)}
+                        onChange={() =>
+                          handleRadioButtonClick({
+                            label: d.title,
+                            identifier: d.uri,
+                          })
+                        }
                       />
                       <div>
-                        <Text>{d.title}</Text>
+                        <Text>
+                          {getLanguageVersion({
+                            data: d.title,
+                            lang: i18n.language,
+                            appendLocale: true,
+                          })}
+                        </Text>
                         <div className="subtitle">
-                          <Text>{d.terminologyLabel}</Text>
+                          <Text>
+                            {getLanguageVersion({
+                              data: d.terminologyLabel,
+                              lang: i18n.language,
+                              appendLocale: true,
+                            })}
+                          </Text>
                           <StaticChip
                             className={d.status === 'VALID' ? 'valid' : 'other'}
                           >
-                            {d.status}
+                            {translateStatus(d.status, t)}
                           </StaticChip>
                         </div>
 
-                        <Text className="description">{d.description}</Text>
+                        <Text className="description">
+                          {getLanguageVersion({
+                            data: d.description,
+                            lang: i18n.language,
+                            appendLocale: true,
+                          })}
+                        </Text>
                         <br />
                         <ExternalLink href={d.uri} labelNewWindow="">
                           {d.uri}

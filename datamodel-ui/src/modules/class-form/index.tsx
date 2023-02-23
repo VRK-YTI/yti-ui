@@ -14,23 +14,22 @@ import {
 } from 'suomifi-ui-components';
 import Separator from 'yti-common-ui/separator';
 import InlineList from '@app/common/components/inline-list';
-import { useState } from 'react';
 import {
   ClassFormWrapper,
   LanguageVersionedWrapper,
 } from './class-form.styles';
 import AttributeModal from '../attribute-modal';
-import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { useTranslation } from 'next-i18next';
 import { Status } from '@app/common/interfaces/status.interface';
 import ConceptBlock from './concept-block';
 import { ClassFormType } from '@app/common/interfaces/class-form.interface';
 
 export interface ClassFormProps {
-  handleReturn: (value?: any) => void;
+  handleReturn: () => void;
   handleSubmit: () => void;
   data: ClassFormType;
   setData: (value: ClassFormType) => void;
+  languages: string[];
 }
 
 export default function ClassForm({
@@ -38,18 +37,15 @@ export default function ClassForm({
   handleSubmit,
   data,
   setData,
+  languages,
 }: ClassFormProps) {
   const { i18n } = useTranslation('admin');
-  const [contentLang, setContentLang] = useState('fi');
-  const [languages, setLanguages] = useState(Object.keys(data.label));
-  // const languages = [
-  //   { labelText: 'Suomi (fi)', uniqueItemId: 'fi' },
-  //   { labelText: 'Ruotsi (sv)', uniqueItemId: 'sv' },
-  //   { labelText: 'Englanti (en)', uniqueItemId: 'en' },
-  // ];
 
   const handleSubClassOfRemoval = (id: string) => {
-    setData({ ...data, subClassOf: data.subClassOf.filter((s) => s !== id) });
+    setData({
+      ...data,
+      subClassOf: data.subClassOf.filter((s) => s.identifier !== id),
+    });
   };
 
   return (
@@ -82,13 +78,13 @@ export default function ClassForm({
         concept={
           data.equivalentClass.length > 0 ? data.equivalentClass[0] : undefined
         }
-        setConcept={(value: object | undefined) =>
+        setConcept={(value: ClassFormType['equivalentClass'][0] | undefined) =>
           setData({ ...data, equivalentClass: value ? [value] : [] })
         }
       />
 
       <LanguageVersionedWrapper>
-        {Object.keys(data.label).map((lang) => (
+        {languages.map((lang) => (
           <TextInput
             key={`label-${lang}`}
             labelText={`Luokan nimi, ${lang}`}
@@ -158,7 +154,7 @@ export default function ClassForm({
             key={`comment-${lang}`}
             labelText={`Lisätiedot, ${lang}`}
             optionalText="valinnainen"
-            defaultValue={data.comment[lang as keyof typeof data.comment]}
+            defaultValue={data.note[lang as keyof typeof data.note]}
             onChange={(e) =>
               setData({
                 ...data,

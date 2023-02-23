@@ -2,7 +2,6 @@ import { HYDRATE } from 'next-redux-wrapper';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
 import { ClassType } from '@app/common/interfaces/class.interface';
-import { NewClass } from '@app/common/interfaces/new-class.interface';
 
 export const classApi = createApi({
   reducerPath: 'class',
@@ -14,7 +13,7 @@ export const classApi = createApi({
     }
   },
   endpoints: (builder) => ({
-    putClass: builder.mutation<string, { modelId: string; data: NewClass }>({
+    putClass: builder.mutation<string, { modelId: string; data: ClassType }>({
       query: (value) => ({
         url: `/class/${value.modelId}`,
         method: 'PUT',
@@ -27,13 +26,23 @@ export const classApi = createApi({
         method: 'GET',
       }),
     }),
+    getClassMut: builder.mutation<
+      ClassType,
+      { modelId: string; classId: string }
+    >({
+      query: (value) => ({
+        url: `/class/${value.modelId}/${value.classId}`,
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
 export const {
   usePutClassMutation,
   useGetClassQuery,
+  useGetClassMutMutation,
   util: { getRunningQueriesThunk },
 } = classApi;
 
-export const { putClass, getClass } = classApi.endpoints;
+export const { putClass, getClass, getClassMut } = classApi.endpoints;

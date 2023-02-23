@@ -1,17 +1,17 @@
-import { usePutClassMutation } from '@app/common/components/class/class.slice';
+import {
+  useGetClassMutMutation,
+  usePutClassMutation,
+} from '@app/common/components/class/class.slice';
+import { useGetModelQuery } from '@app/common/components/model/model.slice';
 import {
   ClassFormType,
   initialClassForm,
 } from '@app/common/interfaces/class-form.interface';
-import {
-  ClassType,
-  initialClass,
-} from '@app/common/interfaces/class.interface';
+import { ClassType } from '@app/common/interfaces/class.interface';
 import { InternalClass } from '@app/common/interfaces/internal-class.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { useTranslation } from 'next-i18next';
-import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   Button,
   Expander,
@@ -29,7 +29,7 @@ import ClassForm from '../class-form';
 import ClassModal from '../class-modal';
 import { FullwidthSearchInput } from './model.styles';
 import {
-  classFormToNewClass,
+  classFormToClass,
   internalClassToClassForm,
   validateClassForm,
 } from './utils';
@@ -40,38 +40,46 @@ interface ClassView {
 
 export default function ClassView({ modelId }: ClassView) {
   const { i18n } = useTranslation('common');
+  const { data: modelInfo } = useGetModelQuery(modelId);
   const [formData, setFormData] = useState<ClassFormType>(initialClassForm);
   const [view, setView] = useState<'listing' | 'class' | 'form'>('listing');
-  const [putClass, result] = usePutClassMutation();
+  const [putClass, putClassResult] = usePutClassMutation();
+  const [getClass, getClassResult] = useGetClassMutMutation();
+
+  const languages: string[] = useMemo(() => {
+    if (!modelInfo) {
+      return [];
+    }
+
+    return modelInfo.languages;
+  }, [modelInfo]);
 
   const mockClassList: ClassType[] = [
     {
-      comment: 'Kommentti',
-      equivalentClass: [],
-      identifier: 'ns:luokka-1',
       label: {
-        fi: 'Ensimmäisen luokan nimi',
-        en: 'First class name',
+        fi: 'Uusi luokka',
       },
+      status: 'DRAFT',
+      equivalentClass: [],
+      subClassOf: [],
       note: {
         fi: 'Huomautus',
-        en: 'Note',
       },
-      status: 'VALID',
-      subClassOf: ['ns:Luokka'],
-      subject: 'luokka-1',
+      subject: 'http://uri.suomi.fi/terminology/demo',
+      identifier: 'uusiluokka',
     },
     {
-      comment: '',
-      equivalentClass: [],
-      identifier: 'ns:luokka-2',
       label: {
-        fi: 'Toisen luokan nimi',
+        fi: 'aaa111',
       },
-      note: {},
       status: 'DRAFT',
+      equivalentClass: [],
       subClassOf: [],
-      subject: 'luokka-2',
+      note: {
+        fi: 'Lisätiedot',
+      },
+      subject: 'http://uri.suomi.fi/terminology/demo',
+      identifier: 'aaa111',
     },
   ];
 
@@ -83,7 +91,7 @@ export default function ClassView({ modelId }: ClassView) {
       return;
     }
 
-    setFormData(internalClassToClassForm(value));
+    setFormData(internalClassToClassForm(value, languages));
   };
 
   const handleFormReturn = () => {
@@ -92,16 +100,27 @@ export default function ClassView({ modelId }: ClassView) {
 
   const handleFormSubmit = () => {
     const errors = validateClassForm(formData);
-    const data = classFormToNewClass(formData);
+    const data = classFormToClass(formData);
 
-    // setView('class');
-    // putClass({ modelId: modelId, data: data });
+    putClass({ modelId: modelId, data: data });
   };
 
-  const handleListItemClick = (value: ClassType) => {
+  const handleListItemClick = (value: ClassFormType) => {
     setView('class');
     setFormData(value);
   };
+
+  useEffect(() => {
+    if (putClassResult.isSuccess) {
+      getClass({ modelId: modelId, classId: formData.identifier });
+    }
+  }, [putClassResult, modelId, formData.identifier, getClass]);
+
+  useEffect(() => {
+    if (getClassResult.isSuccess) {
+      setView('class');
+    }
+  }, [getClassResult]);
 
   return (
     <div>
@@ -141,7 +160,12 @@ export default function ClassView({ modelId }: ClassView) {
             <div style={{ display: 'flex', flexDirection: 'column' }}>
               {mockClassList.map((c) => (
                 // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
-                <div key={c.identifier} onClick={() => handleListItemClick(c)}>
+                <div
+                  key={c.identifier}
+                  onClick={() =>
+                    getClass({ modelId: modelId, classId: c.identifier })
+                  }
+                >
                   {c.label.fi}
                 </div>
               ))}
@@ -163,14 +187,17 @@ export default function ClassView({ modelId }: ClassView) {
         handleSubmit={handleFormSubmit}
         data={formData}
         setData={setFormData}
+        languages={languages}
       />
     );
   }
 
   function renderClass() {
-    if (view !== 'class') {
+    if (view !== 'class' || !getClassResult.isSuccess) {
       return <></>;
     }
+
+    const data = getClassResult.data;
 
     return (
       <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -196,19 +223,20 @@ export default function ClassView({ modelId }: ClassView) {
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
           <Text variant="bold">
-            {getLanguageVersion({ data: formData.label, lang: i18n.language })}
+            {getLanguageVersion({ data: data.label, lang: i18n.language })}
           </Text>
           <StatusChip $isValid={formData.status === 'VALID'}>
-            {formData.status}
+            {data.status}
           </StatusChip>
         </div>
 
         <BasicBlock title="Luokan tunnus">
-          {formData.identifier}
+          {data.identifier}
           <Button
             icon="copy"
             variant="secondary"
             style={{ width: 'min-content', whiteSpace: 'nowrap' }}
+            onClick={() => navigator.clipboard.writeText(data.identifier)}
           >
             Kopioi leikepöydälle
           </Button>
@@ -224,9 +252,9 @@ export default function ClassView({ modelId }: ClassView) {
         </div>
 
         <BasicBlock title="Yläluokka">
-          {formData.subClassOf.map((c) => (
+          {data.subClassOf.map((c) => (
             <Link key={c} href="" style={{ fontSize: '16px' }}>
-              {c}
+              {c.split('/').pop()?.replace('#', ':')}
             </Link>
           ))}
         </BasicBlock>
@@ -234,7 +262,7 @@ export default function ClassView({ modelId }: ClassView) {
         <BasicBlock title="Vastaavat luokat">Ei vastaavia luokkia</BasicBlock>
 
         <BasicBlock title="Lisätiedot">
-          {formData.comment ?? 'Ei huomautusta'}
+          {data.comment ?? 'Ei huomautusta'}
         </BasicBlock>
 
         <div style={{ marginTop: '20px' }}>
@@ -265,7 +293,7 @@ export default function ClassView({ modelId }: ClassView) {
           <BasicBlock title="Luotu">Päiväys</BasicBlock>
 
           <BasicBlock title="Muokkaajan kommentti">
-            {getLanguageVersion({ data: formData.note, lang: i18n.language })}
+            {getLanguageVersion({ data: data.note, lang: i18n.language })}
           </BasicBlock>
         </div>
       </div>
