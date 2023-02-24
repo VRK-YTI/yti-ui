@@ -23,7 +23,7 @@ import {
   Text,
 } from 'suomifi-ui-components';
 import { BasicBlock } from 'yti-common-ui/block';
-import { StatusChip } from 'yti-common-ui/multi-column-search/multi-column-search.styles';
+import { StatusChip } from '@app/common/components/multi-column-search/multi-column-search.styles';
 import Separator from 'yti-common-ui/separator';
 import ClassForm from '../class-form';
 import ClassModal from '../class-modal';
@@ -103,11 +103,6 @@ export default function ClassView({ modelId }: ClassView) {
     const data = classFormToClass(formData);
 
     putClass({ modelId: modelId, data: data });
-  };
-
-  const handleListItemClick = (value: ClassFormType) => {
-    setView('class');
-    setFormData(value);
   };
 
   useEffect(() => {

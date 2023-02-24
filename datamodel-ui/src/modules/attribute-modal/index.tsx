@@ -6,7 +6,7 @@ import {
   ModalTitle,
 } from 'suomifi-ui-components';
 import { useBreakpoints } from 'yti-common-ui/media-query';
-import MultiColumnSearch from 'yti-common-ui/multi-column-search';
+import MultiColumnSearch from '@app/common/components/multi-column-search';
 import { LargeModal } from './attribute-modal.styles';
 
 export default function AttributeModal() {

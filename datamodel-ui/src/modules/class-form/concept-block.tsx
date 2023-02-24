@@ -169,7 +169,7 @@ export default function ConceptBlock({
                 items={terminologyOptions}
               />
             </SearchBlock>
-            {console.log(data)}
+
             {data.length < 1 ? (
               <Text>Etsi käsitettä syöttämällä hakukenttään hakusana.</Text>
             ) : (

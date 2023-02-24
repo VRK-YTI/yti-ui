@@ -1,9 +1,11 @@
-import { useGetInternalClassesMutation } from '@app/common/components/search-internal-classes/search-internal-classes.slice';
-import { ClassType } from '@app/common/interfaces/class.interface';
+import {
+  InternalClassesSearchParams,
+  useGetInternalClassesMutation,
+} from '@app/common/components/search-internal-classes/search-internal-classes.slice';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { translateStatus } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
-import { useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Button,
   ModalContent,
@@ -13,7 +15,7 @@ import {
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import MultiColumnSearch, {
   ResultType,
-} from 'yti-common-ui/multi-column-search';
+} from '@app/common/components/multi-column-search';
 import { LargeModal } from './class-modal.styles';
 import format from 'yti-common-ui/formatted-date/format';
 import { Locale } from 'yti-common-ui//locale-chooser/use-locales';
@@ -28,75 +30,17 @@ export default function ClassModal({ handleFollowUp }: ClassModalProps) {
   const { isSmall } = useBreakpoints();
   const [visible, setVisible] = useState(false);
   const [selectedId, setSelectedId] = useState<undefined | string>();
-  const [searchParams, setSearchParams] = useState({
-    query: '',
-    status: [],
-    groups: [],
-    sortLang: i18n.language,
-    pageSize: 50,
-    pageFrom: 0,
-  });
+  const [resultsFormatted, setResultsFormatted] = useState<ResultType[]>([]);
   const [searchInternalClasses, result] = useGetInternalClassesMutation();
-
-  const [resultsMock, setResultsMock] = useState<InternalClass[]>([
+  const [searchParams, setSearchParams] = useState<InternalClassesSearchParams>(
     {
-      id: 'http://uri.suomi.fi/datamodel/ns/demo321#uusiluokka',
-      label: {
-        fi: 'Uusi luokka',
-      },
-      status: 'VALID',
-      modified: '2023-02-22T05:43:40.814Z',
-      created: '2023-02-22T05:43:40.814Z',
-      isDefinedBy: 'http://uri.suomi.fi/datamodel/ns/demo321',
-      note: {
-        fi: 'Huomautus',
-      },
-      identifier: 'uusiluokka',
-      namespace: 'http://uri.suomi.fi/datamodel/ns/demo321#',
-    },
-    {
-      id: 'http://uri.suomi.fi/datamodel/ns/demo321#vanhaluokka',
-      label: {
-        fi: 'Vanha luokka',
-        en: 'Old class',
-      },
-      status: 'DRAFT',
-      modified: '2023-02-22T05:43:40.814Z',
-      created: '2023-02-22T05:43:40.814Z',
-      isDefinedBy: 'http://uri.suomi.fi/datamodel/ns/demo321',
-      note: {
-        fi: 'Huomautus',
-        en: 'Huomautus',
-      },
-      identifier: 'vanhaluokka',
-      namespace: 'http://uri.suomi.fi/datamodel/ns/demo321#',
-    },
-  ]);
-
-  const resultsFormatted: ResultType[] = useMemo(
-    () =>
-      resultsMock.map((r) => ({
-        target: {
-          identifier: r.identifier,
-          label: getLanguageVersion({ data: r.label, lang: i18n.language }),
-          linkLabel: r.id.split('/').pop()?.replace('#', ':') ?? r.identifier,
-          link: r.id,
-          status: translateStatus(r.status, t),
-          isValid: r.status === 'VALID',
-          modified: format(r.modified, (i18n.language as Locale) ?? 'fi'),
-        },
-        partOf: {
-          label: 'Tietomallin nimi',
-          type: 'Tietomallin tyyppi',
-          domains: ['Asuminen', 'Elinkeinot'],
-        },
-        subClass: {
-          label: 'Linkki käsitteeseen',
-          link: '#',
-          partOf: 'Sanaston nimi',
-        },
-      })),
-    []
+      query: '',
+      status: ['VALID'],
+      groups: [],
+      sortLang: i18n.language,
+      pageSize: 50,
+      pageFrom: 0,
+    }
   );
 
   const handleOpen = () => {
@@ -109,14 +53,53 @@ export default function ClassModal({ handleFollowUp }: ClassModalProps) {
     setVisible(false);
   };
 
-  const handleSearch = () => {
-    searchInternalClasses(searchParams);
+  const handleSearch = (obj?: InternalClassesSearchParams) => {
+    if (obj) {
+      setSearchParams(obj);
+    }
+
+    searchInternalClasses(obj ?? searchParams);
   };
 
   const handleSubmit = () => {
-    const target = resultsMock.find((r) => r.identifier === selectedId);
+    const target = result.data?.responseObjects.find(
+      (r) => r.identifier === selectedId
+    );
     handleFollowUp(target);
   };
+
+  const getLinkLabel = (ns: string, id: string) => {
+    const namespace = ns.split('#').at(0)?.split('/').pop();
+    return `${namespace}:${id}`;
+  };
+
+  useEffect(() => {
+    if (result.isSuccess) {
+      setResultsFormatted(
+        result.data.responseObjects.map((r) => ({
+          target: {
+            identifier: r.identifier,
+            label: getLanguageVersion({ data: r.label, lang: i18n.language }),
+            linkLabel: getLinkLabel(r.namespace, r.identifier),
+            link: r.id,
+            status: translateStatus(r.status, t),
+            isValid: r.status === 'VALID',
+            modified: format(r.modified, (i18n.language as Locale) ?? 'fi'),
+          },
+          partOf: {
+            label: 'Tietomallin nimi',
+            type: 'Tietomallin tyyppi',
+            domains: ['Asuminen', 'Elinkeinot'],
+          },
+          subClass: {
+            label: 'Linkki käsitteeseen',
+            link: '#',
+            partOf: 'Sanaston nimi',
+          },
+        }))
+      );
+    }
+  }, [result, i18n.language, t]);
 
   return (
     <>
@@ -136,6 +119,8 @@ export default function ClassModal({ handleFollowUp }: ClassModalProps) {
             results={resultsFormatted}
             selectedId={selectedId}
             setSelectedId={setSelectedId}
+            searchParams={searchParams}
+            setSearchParams={handleSearch}
           />
         </ModalContent>
         <ModalFooter>
