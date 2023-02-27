@@ -23,6 +23,13 @@ import { useTranslation } from 'next-i18next';
 import { Status } from '@app/common/interfaces/status.interface';
 import ConceptBlock from './concept-block';
 import { ClassFormType } from '@app/common/interfaces/class-form.interface';
+import { ClassFormErrors } from '../model/utils';
+import FormFooterAlert from 'yti-common-ui/form-footer-alert';
+import { statusList } from 'yti-common-ui/utils/status-list';
+import {
+  translateClassFormErrors,
+  translateStatus,
+} from '@app/common/utils/translation-helpers';
 
 export interface ClassFormProps {
   handleReturn: () => void;
@@ -30,6 +37,8 @@ export interface ClassFormProps {
   data: ClassFormType;
   setData: (value: ClassFormType) => void;
   languages: string[];
+  errors: ClassFormErrors;
+  userPosted: boolean;
 }
 
 export default function ClassForm({
@@ -38,8 +47,10 @@ export default function ClassForm({
   data,
   setData,
   languages,
+  errors,
+  userPosted,
 }: ClassFormProps) {
-  const { i18n } = useTranslation('admin');
+  const { t } = useTranslation('admin');
 
   const handleSubClassOfRemoval = (id: string) => {
     setData({
@@ -55,24 +66,36 @@ export default function ClassForm({
           icon="arrowLeft"
           variant="secondaryNoBorder"
           onClick={() => handleReturn()}
+          style={{ textTransform: 'uppercase' }}
         >
-          TAKAISIN
+          {t('back', { ns: 'common' })}
         </Button>
       </div>
 
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <Text variant="bold">
           {Object.entries(data.label).find((l) => l[1] !== '')?.[1] ??
-            'Luokan nimi'}
+            t('class-name')}
         </Text>
 
         <div style={{ display: 'flex', gap: '10px' }}>
-          <Button onClick={() => handleSubmit()}>Tallenna</Button>
+          <Button onClick={() => handleSubmit()}>{t('save')}</Button>
           <Button variant="secondary" onClick={() => handleReturn()}>
-            Peruuta
+            {t('cancel-variant')}
           </Button>
         </div>
       </div>
+
+      {userPosted && (
+        <div>
+          <FormFooterAlert
+            labelText={t('missing-information-title', { ns: 'admin' })}
+            alerts={Object.entries(errors)
+              .filter((err) => err[1])
+              .map((err) => translateClassFormErrors(err[0], t))}
+          />
+        </div>
+      )}
 
       <ConceptBlock
         concept={
@@ -87,7 +110,7 @@ export default function ClassForm({
         {languages.map((lang) => (
           <TextInput
             key={`label-${lang}`}
-            labelText={`Luokan nimi, ${lang}`}
+            labelText={`${t('class-name')}, ${lang}`}
             value={data.label[lang]}
             onChange={(e) =>
               setData({
@@ -100,8 +123,8 @@ export default function ClassForm({
       </LanguageVersionedWrapper>
 
       <TextInput
-        labelText="Luokan tunnus"
-        visualPlaceholder="Kirjoita luokan tunnus"
+        labelText={t('class-identifier')}
+        visualPlaceholder={t('input-class-identifier')}
         defaultValue={data.identifier}
         onChange={(e) => setData({ ...data, identifier: e?.toString() ?? '' })}
         tooltipComponent={
@@ -112,7 +135,7 @@ export default function ClassForm({
       />
 
       <div className="spread-content">
-        <Label>Yläluokat</Label>
+        <Label>{t('upper-classes')}</Label>
         <InlineList
           items={
             data.subClassOf.length > 0
@@ -124,27 +147,25 @@ export default function ClassForm({
           }
           handleRemoval={handleSubClassOfRemoval}
         />
-        <Button variant="secondary">Lisää yläluokka</Button>
+        <Button variant="secondary">{t('add-upper-class')}</Button>
       </div>
 
       <div className="spread-content">
-        <Label>Vastaavat luokat</Label>
-        <Button variant="secondary">Lisää vastaava luokka</Button>
+        <Label>{t('corresponding-classes')}</Label>
+        <Button variant="secondary">{t('add-corresponding-class')}</Button>
       </div>
 
       <div>
         <Dropdown
-          labelText="Tila"
+          labelText={t('status')}
           defaultValue={data.status}
           onChange={(e) => setData({ ...data, status: e as Status })}
         >
-          <DropdownItem value="DRAFT">Luonnos</DropdownItem>
-          <DropdownItem value="VALID">Voimassa oleva</DropdownItem>
-          <DropdownItem value="INCOMPLETE">Keskeneräinen</DropdownItem>
-          <DropdownItem value="INVALID">Virheellinen</DropdownItem>
-          <DropdownItem value="RETIRED">Poistettu käytöstä</DropdownItem>
-          <DropdownItem value="SUGGESTED">Ehdotus</DropdownItem>
-          <DropdownItem value="SUPERSEDED">Korvattu</DropdownItem>
+          {statusList.map((status) => (
+            <DropdownItem key={status} value={status}>
+              {translateStatus(status, t)}
+            </DropdownItem>
+          ))}
         </Dropdown>
       </div>
 
@@ -152,8 +173,8 @@ export default function ClassForm({
         {languages.map((lang) => (
           <Textarea
             key={`comment-${lang}`}
-            labelText={`Lisätiedot, ${lang}`}
-            optionalText="valinnainen"
+            labelText={`${t('additional-information')}, ${lang}`}
+            optionalText={t('optional')}
             defaultValue={data.note[lang as keyof typeof data.note]}
             onChange={(e) =>
               setData({
@@ -168,21 +189,22 @@ export default function ClassForm({
       <Separator />
 
       <div>
-        <Heading variant="h3">Attribuutit</Heading>
+        <Heading variant="h3">{t('attributes')}</Heading>
       </div>
 
       <div className="spread-content">
-        <Label>Luokkaan lisätyt attribuutit 0kpl</Label>
+        <Label>{t('attributes-added-to-class', { count: 0 })}</Label>
         <AttributeModal />
       </div>
 
       <div className="spread-content">
         <Label>
-          Yläluokilta perityt attribuutit{' '}
-          {data.subClassOf.length > 0
-            ? data.subClassOf[0].attributes.length
-            : 0}
-          kpl
+          {t('attributes-inherited-from-upper-classes', {
+            count:
+              data.subClassOf.length > 0
+                ? data.subClassOf[0].attributes.length
+                : 0,
+          })}
         </Label>
         <ExpanderGroup
           closeAllText=""
@@ -196,30 +218,32 @@ export default function ClassForm({
               </Expander>
             ))
           ) : (
-            <Text smallScreen>Ei perittyjä attribuutteja.</Text>
+            <Text smallScreen>{t('no-inherited-attributes')}</Text>
           )}
         </ExpanderGroup>
       </div>
 
       <div>
-        <Heading variant="h3">Assosiaatiot</Heading>
+        <Heading variant="h3">{t('associations')}</Heading>
       </div>
 
       <div className="spread-content">
-        <Label>Luokkaan lisätyt assosiaatiot 0kpl</Label>
-        <Button variant="secondary">Lisää assosiaatio</Button>
+        <Label>{t('associations-added-to-class', { count: 0 })}</Label>
+        <Button variant="secondary">{t('add-association')}</Button>
       </div>
 
       <div className="spread-content">
-        <Label>Yläluokilta perityt assosiaatiot 0kpl</Label>
-        <Text smallScreen>Ei perittyjä assosiaatiota.</Text>
+        <Label>
+          {t('associations-inherited-from-upper-classes', { count: 0 })}
+        </Label>
+        <Text smallScreen>{t('no-inherited-associations')}</Text>
       </div>
 
       <Separator />
 
       <Textarea
-        labelText="Muokkaajan kommentti"
-        optionalText="valinnainen"
+        labelText={t('editor-comment')}
+        optionalText={t('optional')}
         defaultValue={data.comment}
         onChange={(e) => setData({ ...data, comment: e.target.value })}
       />

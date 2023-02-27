@@ -1,4 +1,7 @@
-import { translateStatus } from '@app/common/utils/translation-helpers';
+import {
+  translateLanguage,
+  translateStatus,
+} from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
 import {
@@ -20,30 +23,6 @@ import { statusList } from 'yti-common-ui/utils/status-list';
 import { useGetServiceCategoriesQuery } from '../service-categories/service-categories.slice';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { isEqual } from 'lodash';
-
-/**
- * Sivujen ikonit 85px kork
- * sivujen nimien loppuun ... jos menee yli
- * Sivujen nimet pois mobiilissa
- * Kaavion valinta näkyviin mobiilissa
- *
- * kuviin ja tekstiin enemmän väliä
- *
- *
- * Mobiilissa yläpalkki piiloon scrollatessa
- *
- *
- * Lisää viittaus sanastoihin värin alphaa 50%
- *
- *
- * Mobiili
- * - Etusivu
- * - Tietoa palvelusta
- * - Kielet
- *
- *
- * Menusta kirjaudu sisään pois jos kirjautunut
- */
 
 export interface ResultType {
   target: {
@@ -91,7 +70,7 @@ export default function MultiColumnSearch({
   } = useGetServiceCategoriesQuery(i18n.language);
   const [dataModelType] = useState<SingleSelectData[]>([
     {
-      labelText: 'Tähän tietomalliin lisätyt tietomallit',
+      labelText: t('data-models-added-to-this-model'),
       uniqueItemId: 'this',
     },
   ]);
@@ -101,6 +80,11 @@ export default function MultiColumnSearch({
       uniqueItemId: status,
     }))
   );
+  const [languages] = useState<SingleSelectData[]>([
+    { labelText: translateLanguage('fi', t), uniqueItemId: 'fi' },
+    { labelText: translateLanguage('sv', t), uniqueItemId: 'sv' },
+    { labelText: translateLanguage('en', t), uniqueItemId: 'en' },
+  ]);
 
   const serviceCategories: SingleSelectData[] = useMemo(() => {
     if (!serviceCategoriesIsSuccess) {
@@ -109,7 +93,7 @@ export default function MultiColumnSearch({
 
     const returnValue = [
       {
-        labelText: 'Kaikki tietoalueet',
+        labelText: t('information-domains-all'),
         uniqueItemId: '-1',
       },
     ];
@@ -123,7 +107,7 @@ export default function MultiColumnSearch({
         uniqueItemId: result.identifier,
       }))
     );
-  }, [serviceCategoriesResult, i18n.language, serviceCategoriesIsSuccess]);
+  }, [serviceCategoriesResult, serviceCategoriesIsSuccess, t, i18n.language]);
 
   const handleRadioButtonClick = (id: string) => {
     setSelectedId(id);
@@ -145,30 +129,30 @@ export default function MultiColumnSearch({
       <SearchToolsBlock>
         <SearchInput
           className="wider"
-          clearButtonLabel=""
-          labelText="Haku"
-          searchButtonLabel=""
-          visualPlaceholder="Hae nimellä"
+          clearButtonLabel={t('clear-keyword-filter')}
+          labelText={t('search', { ns: 'common' })}
+          searchButtonLabel={t('search-by-keyword', { ns: 'common' })}
+          visualPlaceholder={t('search-by-keyword', { ns: 'common' })}
           defaultValue={searchParams.query}
           onChange={(e) => handleSearchChange('query', e?.toString() ?? '')}
           debounce={300}
         />
         <SingleSelect
           className="wider"
-          labelText="Tietomalli"
+          labelText={t('data-model')}
           itemAdditionHelpText=""
-          ariaOptionsAvailableText=""
-          clearButtonLabel=""
+          ariaOptionsAvailableText={t('data-models-available')}
+          clearButtonLabel={t('clear-selection')}
           defaultSelectedItem={dataModelType.find(
             (type) => type.uniqueItemId === 'this'
           )}
           items={dataModelType}
         />
         <SingleSelect
-          labelText="Tietoalue"
+          labelText={t('information-domain')}
           itemAdditionHelpText=""
-          ariaOptionsAvailableText=""
-          clearButtonLabel=""
+          ariaOptionsAvailableText={t('information-domains-available')}
+          clearButtonLabel={t('clear-selection')}
           defaultSelectedItem={serviceCategories.find(
             (category) => category.uniqueItemId === '-1'
           )}
@@ -186,10 +170,10 @@ export default function MultiColumnSearch({
           items={serviceCategories}
         />
         <SingleSelect
-          labelText="Tila"
+          labelText={t('status')}
           itemAdditionHelpText=""
-          ariaOptionsAvailableText=""
-          clearButtonLabel=""
+          ariaOptionsAvailableText={t('statuses-available')}
+          clearButtonLabel={t('clear-selection')}
           selectedItem={
             searchParams.status && searchParams.status.length > 0
               ? statuses.find(
@@ -204,11 +188,14 @@ export default function MultiColumnSearch({
         />
         {languageVersioned && (
           <SingleSelect
-            labelText="Sisällön kieli"
+            labelText={t('content-language')}
             itemAdditionHelpText=""
-            ariaOptionsAvailableText=""
-            clearButtonLabel=""
-            items={[{ labelText: 'Suomi', uniqueItemId: 'fi' }]}
+            ariaOptionsAvailableText={t('content-languages-available')}
+            clearButtonLabel={t('clear-selection')}
+            defaultSelectedItem={languages.find(
+              (lang) => lang.uniqueItemId === i18n.language ?? 'fi'
+            )}
+            items={languages}
           />
         )}
       </SearchToolsBlock>
@@ -217,16 +204,16 @@ export default function MultiColumnSearch({
         <tbody>
           <tr>
             <td>
-              <Text variant="bold">Luokan nimi</Text>
+              <Text variant="bold">{t('class-name')}</Text>
             </td>
             <td>
-              <Text variant="bold">Tietomalli</Text>
+              <Text variant="bold">{t('data-model')}</Text>
             </td>
             <td>
-              <Text variant="bold">Käsite</Text>
+              <Text variant="bold">{t('concept')}</Text>
             </td>
             <td>
-              <Text variant="bold">Muokattu</Text>
+              <Text variant="bold">{t('modified')}</Text>
             </td>
           </tr>
 
@@ -242,7 +229,12 @@ export default function MultiColumnSearch({
                 </div>
                 <div>
                   {result.target.label}
-                  <ExternalLink href={result.target.link} labelNewWindow="">
+                  <ExternalLink
+                    href={result.target.link}
+                    labelNewWindow={t('link-opens-new-window-external', {
+                      ns: 'common',
+                    })}
+                  >
                     {result.target.linkLabel}
                   </ExternalLink>
                 </div>
@@ -258,7 +250,12 @@ export default function MultiColumnSearch({
               </td>
               <td style={{ width: '20%' }}>
                 <div>
-                  <ExternalLink href={result.subClass.link} labelNewWindow="">
+                  <ExternalLink
+                    href={result.subClass.link}
+                    labelNewWindow={t('link-opens-new-window-external', {
+                      ns: 'common',
+                    })}
+                  >
                     {result.subClass.label}
                   </ExternalLink>
                   <Text>{result.subClass.partOf}</Text>

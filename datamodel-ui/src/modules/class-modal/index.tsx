@@ -114,7 +114,7 @@ export default function ClassModal({ handleFollowUp }: ClassModalProps) {
         variant={isSmall ? 'smallScreen' : 'default'}
       >
         <ModalContent>
-          <ModalTitle>Lisää luokka</ModalTitle>
+          <ModalTitle>{t('add-class')}</ModalTitle>
           <MultiColumnSearch
             results={resultsFormatted}
             selectedId={selectedId}
@@ -125,13 +125,13 @@ export default function ClassModal({ handleFollowUp }: ClassModalProps) {
         </ModalContent>
         <ModalFooter>
           <Button disabled={!selectedId} onClick={() => handleSubmit()}>
-            Luo valitulle alaluokka
+            {t('create-subclass-for-selected')}
           </Button>
           <Button icon="plus" onClick={() => handleFollowUp()}>
-            Luo uusi luokka
+            {t('create-new-class')}
           </Button>
           <Button variant="secondaryNoBorder" onClick={() => handleClose()}>
-            Peruuta
+            {t('cancel-variant')}
           </Button>
         </ModalFooter>
       </LargeModal>

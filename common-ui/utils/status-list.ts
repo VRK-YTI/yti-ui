@@ -1,4 +1,4 @@
-import { Status } from 'interfaces/status.interface';
+import { Status } from '../interfaces/status.interface';
 
 export const statusList: Status[] = [
   'DRAFT',

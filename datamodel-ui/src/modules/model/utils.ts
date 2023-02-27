@@ -44,6 +44,27 @@ export function classFormToClass(data: ClassFormType): ClassType {
   };
 }
 
-export function validateClassForm(data: ClassFormType): boolean {
-  return false;
+export interface ClassFormErrors {
+  identifier: boolean;
+  label: boolean;
+}
+
+export function validateClassForm(data: ClassFormType): ClassFormErrors {
+  const returnErrors: ClassFormErrors = {
+    identifier: true,
+    label: true,
+  };
+
+  if (
+    Object.values(data.label).filter((value) => value || value !== '').length >
+    0
+  ) {
+    returnErrors.label = false;
+  }
+
+  if (data.identifier && data.identifier !== '') {
+    returnErrors.identifier = false;
+  }
+
+  return returnErrors;
 }

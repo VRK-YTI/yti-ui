@@ -45,7 +45,9 @@ export default function ConceptBlock({
   >(concept);
   const [terminologyOptions] = useState([
     {
-      labelText: 'Tietomallin linkitetyt sanastot',
+      labelText:
+        t('terminologies-linked-to-data-model') +
+        'Tietomallin linkitetyt sanastot',
       uniqueItemId: 'linked',
     },
   ]);
@@ -111,10 +113,10 @@ export default function ConceptBlock({
 
   return (
     <>
-      <BasicBlock title="Käsite">
+      <BasicBlock title={t('concept')}>
         {!concept ? (
           <InlineAlert status="warning" style={{ marginBottom: '5px' }}>
-            Käsitettä ei ole määritelty
+            {t('concept-undefined')}
           </InlineAlert>
         ) : (
           <SelectedConceptsGroup
@@ -124,7 +126,7 @@ export default function ConceptBlock({
           >
             <Expander>
               <ExpanderTitleButton>
-                Käsitteen määritelmä
+                {t('concept-definition')}
                 <HintText>
                   {getLanguageVersion({
                     data: concept.label,
@@ -140,7 +142,7 @@ export default function ConceptBlock({
           style={{ width: 'min-content', whiteSpace: 'nowrap' }}
           onClick={() => handleOpen()}
         >
-          Valitse käsite
+          {t('select-concept')}
         </Button>
 
         <Modal
@@ -150,18 +152,18 @@ export default function ConceptBlock({
           onEscKeyDown={() => setVisible(false)}
         >
           <ModalContent>
-            <ModalTitle>Valitse käsite</ModalTitle>
+            <ModalTitle>{t('select-concept')}</ModalTitle>
             <SearchBlock>
               <SearchInput
-                labelText="Hae käsitettä"
-                clearButtonLabel=""
-                searchButtonLabel=""
+                labelText={t('search-concept')}
+                clearButtonLabel={t('clear-selection')}
+                searchButtonLabel={t('search-concept')}
               />
               <SingleSelect
-                clearButtonLabel=""
-                labelText="Sanasto"
-                noItemsText=""
-                ariaOptionsAvailableText=""
+                clearButtonLabel={t('clear-selection')}
+                labelText={t('terminology')}
+                noItemsText={t('no-terminologies-available')}
+                ariaOptionsAvailableText={t('terminologies-available')}
                 allowItemAddition={false}
                 defaultSelectedItem={terminologyOptions.find(
                   (o) => o.uniqueItemId === 'linked'
@@ -171,10 +173,12 @@ export default function ConceptBlock({
             </SearchBlock>
 
             {data.length < 1 ? (
-              <Text>Etsi käsitettä syöttämällä hakukenttään hakusana.</Text>
+              <Text>{t('search-concept-by-keyword')}</Text>
             ) : (
               <>
-                <Text variant="bold">{data.length} käsitettä</Text>
+                <Text variant="bold">
+                  {t('concept-counts', { count: data.length })}
+                </Text>
                 <SearchResultWrapper>
                   {data.map((d, idx) => (
                     <div
@@ -239,10 +243,10 @@ export default function ConceptBlock({
 
           <ModalFooter>
             <Button disabled={!selected} onClick={() => handleSubmit()}>
-              Valitse käsite
+              {t('select-concept')}
             </Button>
             <Button variant="secondary" onClick={() => handleClose()}>
-              Peruuta
+              {t('cancel-variant')}
             </Button>
           </ModalFooter>
         </Modal>

@@ -29,6 +29,7 @@ import ClassForm from '../class-form';
 import ClassModal from '../class-modal';
 import { FullwidthSearchInput } from './model.styles';
 import {
+  ClassFormErrors,
   classFormToClass,
   internalClassToClassForm,
   validateClassForm,
@@ -39,9 +40,13 @@ interface ClassView {
 }
 
 export default function ClassView({ modelId }: ClassView) {
-  const { i18n } = useTranslation('common');
+  const { t, i18n } = useTranslation('common');
   const { data: modelInfo } = useGetModelQuery(modelId);
   const [formData, setFormData] = useState<ClassFormType>(initialClassForm);
+  const [formErrors, setFormErrors] = useState<ClassFormErrors>(
+    validateClassForm(formData)
+  );
+  const [userPosted, setUserPosted] = useState(false);
   const [view, setView] = useState<'listing' | 'class' | 'form'>('listing');
   const [putClass, putClassResult] = usePutClassMutation();
   const [getClass, getClassResult] = useGetClassMutMutation();
@@ -58,6 +63,7 @@ export default function ClassView({ modelId }: ClassView) {
     {
       label: {
         fi: 'Uusi luokka',
+        en: 'New class',
       },
       status: 'DRAFT',
       equivalentClass: [],
@@ -70,7 +76,7 @@ export default function ClassView({ modelId }: ClassView) {
     },
     {
       label: {
-        fi: 'aaa111',
+        fi: 'Test',
       },
       status: 'DRAFT',
       equivalentClass: [],
@@ -99,9 +105,18 @@ export default function ClassView({ modelId }: ClassView) {
   };
 
   const handleFormSubmit = () => {
-    const errors = validateClassForm(formData);
-    const data = classFormToClass(formData);
+    if (!userPosted) {
+      setUserPosted(true);
+    }
 
+    const errors = validateClassForm(formData);
+    setFormErrors(errors);
+
+    if (Object.values(errors).filter((val) => val === true).length > 0) {
+      return;
+    }
+
+    const data = classFormToClass(formData);
     putClass({ modelId: modelId, data: data });
   };
 
@@ -139,7 +154,9 @@ export default function ClassView({ modelId }: ClassView) {
             alignItems: 'flex-end',
           }}
         >
-          <Text variant="bold">{mockClassList.length} luokkaa</Text>
+          <Text variant="bold">
+            {t('classes', { count: mockClassList.length })}
+          </Text>
           <ClassModal handleFollowUp={handleFollowUpAction} />
         </div>
 
@@ -183,6 +200,8 @@ export default function ClassView({ modelId }: ClassView) {
         data={formData}
         setData={setFormData}
         languages={languages}
+        errors={formErrors}
+        userPosted={userPosted}
       />
     );
   }
@@ -208,11 +227,12 @@ export default function ClassView({ modelId }: ClassView) {
             variant="secondaryNoBorder"
             icon="arrowLeft"
             onClick={() => setView('listing')}
+            style={{ textTransform: 'uppercase' }}
           >
-            TAKAISIN
+            {t('back')}
           </Button>
           <Button variant="secondary" iconRight="menu">
-            Toiminnot
+            {t('actions')}
           </Button>
         </div>
 
@@ -225,7 +245,7 @@ export default function ClassView({ modelId }: ClassView) {
           </StatusChip>
         </div>
 
-        <BasicBlock title="Luokan tunnus">
+        <BasicBlock title={t('class-identifier')}>
           {data.identifier}
           <Button
             icon="copy"
@@ -233,20 +253,20 @@ export default function ClassView({ modelId }: ClassView) {
             style={{ width: 'min-content', whiteSpace: 'nowrap' }}
             onClick={() => navigator.clipboard.writeText(data.identifier)}
           >
-            Kopioi leikepöydälle
+            {t('copy-to-clipboard')}
           </Button>
         </BasicBlock>
 
         <div style={{ marginTop: '20px' }}>
           <Expander>
             <ExpanderTitleButton>
-              Käsitteen määritelmä
-              <HintText>Aikaväli</HintText>
+              {t('concept-definition')}
+              <HintText>{t('interval')}</HintText>
             </ExpanderTitleButton>
           </Expander>
         </div>
 
-        <BasicBlock title="Yläluokka">
+        <BasicBlock title={t('upper-class')}>
           {data.subClassOf.map((c) => (
             <Link key={c} href="" style={{ fontSize: '16px' }}>
               {c.split('/').pop()?.replace('#', ':')}
@@ -254,14 +274,18 @@ export default function ClassView({ modelId }: ClassView) {
           ))}
         </BasicBlock>
 
-        <BasicBlock title="Vastaavat luokat">Ei vastaavia luokkia</BasicBlock>
+        <BasicBlock title={t('equivalent-classes')}>
+          {t('no-equivalent-classes')}
+        </BasicBlock>
 
-        <BasicBlock title="Lisätiedot">
-          {data.comment ?? 'Ei huomautusta'}
+        <BasicBlock title={t('additional-information')}>
+          {data.comment ?? t('no-comment')}
         </BasicBlock>
 
         <div style={{ marginTop: '20px' }}>
-          <Label style={{ marginBottom: '10px' }}>Attribuutit 2kpl</Label>
+          <Label style={{ marginBottom: '10px' }}>
+            {t('attributes', { count: 2 })}
+          </Label>
           <ExpanderGroup
             closeAllText=""
             openAllText=""
@@ -276,18 +300,20 @@ export default function ClassView({ modelId }: ClassView) {
           </ExpanderGroup>
         </div>
 
-        <BasicBlock title="Assosiaatiot 0kpl">Ei assosiaatioita</BasicBlock>
+        <BasicBlock title={t('associations', { count: 0 })}>
+          {t('no-assocations')}
+        </BasicBlock>
 
-        <BasicBlock title="Viittaukset muista komponenteista">
-          Ei viittauksia
+        <BasicBlock title={t('references-from-other-components')}>
+          {t('no-references')}
         </BasicBlock>
 
         <Separator />
 
         <div>
-          <BasicBlock title="Luotu">Päiväys</BasicBlock>
+          <BasicBlock title={t('created')}>Päiväys</BasicBlock>
 
-          <BasicBlock title="Muokkaajan kommentti">
+          <BasicBlock title={t('editor-comment')}>
             {getLanguageVersion({ data: data.note, lang: i18n.language })}
           </BasicBlock>
         </div>
