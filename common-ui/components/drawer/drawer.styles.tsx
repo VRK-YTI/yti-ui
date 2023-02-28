@@ -153,12 +153,13 @@ export const DrawerButton = styled(Button)<{
   $breakpoint: Breakpoint;
   $active?: boolean;
 }>`
-  height: ${(props) => resolve(props.$breakpoint, 'auto', '50px', '100px')};
+  height: ${(props) => resolve(props.$breakpoint, 'auto', '50px', '85px')};
   width: ${(props) => resolve(props.$breakpoint, 'auto', '50px', '100px')};
   text-transform: uppercase;
   font-weight: 400;
   display: flex;
   flex-direction: column;
+  gap: 5px;
   align-items: center;
   justify-content: center;
   white-space: nowrap;

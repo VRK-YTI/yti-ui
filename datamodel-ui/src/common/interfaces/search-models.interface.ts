@@ -4,5 +4,5 @@ export interface SearchModels {
   totalHitCount: number;
   pageSize: number;
   pageFrom: number;
-  models: DataModel[];
+  responseObjects: DataModel[];
 }
