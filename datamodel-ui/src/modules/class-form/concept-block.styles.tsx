@@ -63,9 +63,10 @@ export const SearchResultWrapper = styled.div`
     }
 
     .fi-chip {
-      padding: 1px 5px 2px;
+      padding: 1px 5px;
       font-size: 12px;
       line-height: 15px;
+      text-transform: uppercase;
     }
 
     .valid {

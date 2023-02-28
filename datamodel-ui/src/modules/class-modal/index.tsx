@@ -50,6 +50,14 @@ export default function ClassModal({ handleFollowUp }: ClassModalProps) {
 
   const handleClose = () => {
     setSelectedId(undefined);
+    setSearchParams({
+      query: '',
+      status: ['VALID'],
+      groups: [],
+      sortLang: i18n.language,
+      pageSize: 50,
+      pageFrom: 0,
+    });
     setVisible(false);
   };
 

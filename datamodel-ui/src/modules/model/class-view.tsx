@@ -21,13 +21,14 @@ import {
   Label,
   Link,
   Text,
+  Tooltip,
 } from 'suomifi-ui-components';
 import { BasicBlock } from 'yti-common-ui/block';
 import { StatusChip } from '@app/common/components/multi-column-search/multi-column-search.styles';
 import Separator from 'yti-common-ui/separator';
 import ClassForm from '../class-form';
 import ClassModal from '../class-modal';
-import { FullwidthSearchInput } from './model.styles';
+import { FullwidthSearchInput, TooltipWrapper } from './model.styles';
 import {
   ClassFormErrors,
   classFormToClass,
@@ -47,6 +48,7 @@ export default function ClassView({ modelId }: ClassView) {
     validateClassForm(formData)
   );
   const [userPosted, setUserPosted] = useState(false);
+  const [showTooltip, setShowTooltip] = useState(false);
   const [view, setView] = useState<'listing' | 'class' | 'form'>('listing');
   const [putClass, putClassResult] = usePutClassMutation();
   const [getClass, getClassResult] = useGetClassMutMutation();
@@ -93,7 +95,9 @@ export default function ClassView({ modelId }: ClassView) {
     setView('form');
 
     if (!value) {
-      setFormData(initialClassForm);
+      const initialData = initialClassForm;
+      const label = Object.fromEntries(languages.map((lang) => [lang, '']));
+      setFormData({ ...initialData, label: label });
       return;
     }
 
@@ -102,6 +106,20 @@ export default function ClassView({ modelId }: ClassView) {
 
   const handleFormReturn = () => {
     setView('listing');
+    setUserPosted(false);
+    setFormData(initialClassForm);
+    setFormErrors(validateClassForm(initialClassForm));
+  };
+
+  const setFormDataHandler = (value: ClassFormType) => {
+    if (
+      userPosted &&
+      Object.values(formErrors).filter((val) => val === true).length > 0
+    ) {
+      setFormErrors(validateClassForm(value));
+    }
+
+    setFormData(value);
   };
 
   const handleFormSubmit = () => {
@@ -198,7 +216,7 @@ export default function ClassView({ modelId }: ClassView) {
         handleReturn={handleFormReturn}
         handleSubmit={handleFormSubmit}
         data={formData}
-        setData={setFormData}
+        setData={setFormDataHandler}
         languages={languages}
         errors={formErrors}
         userPosted={userPosted}
@@ -210,7 +228,6 @@ export default function ClassView({ modelId }: ClassView) {
     if (view !== 'class' || !getClassResult.isSuccess) {
       return <></>;
     }
-
     const data = getClassResult.data;
 
     return (
@@ -221,6 +238,7 @@ export default function ClassView({ modelId }: ClassView) {
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'flex-start',
+            marginBottom: '20px',
           }}
         >
           <Button
@@ -231,9 +249,36 @@ export default function ClassView({ modelId }: ClassView) {
           >
             {t('back')}
           </Button>
-          <Button variant="secondary" iconRight="menu">
-            {t('actions')}
-          </Button>
+          <div>
+            <Button
+              variant="secondary"
+              iconRight="menu"
+              onClick={() => setShowTooltip(!showTooltip)}
+            >
+              {t('actions')}
+            </Button>
+            <TooltipWrapper>
+              <Tooltip
+                ariaCloseButtonLabelText=""
+                ariaToggleButtonLabelText=""
+                open={showTooltip}
+                onCloseButtonClick={() => setShowTooltip(false)}
+              >
+                <Button variant="secondaryNoBorder">
+                  {t('edit', { ns: 'admin' })}
+                </Button>
+                <Separator />
+                <Button variant="secondaryNoBorder">{t('show-as-file')}</Button>
+                <Button variant="secondaryNoBorder">
+                  {t('download-as-file')}
+                </Button>
+                <Separator />
+                <Button variant="secondaryNoBorder">
+                  {t('remove', { ns: 'admin' })}
+                </Button>
+              </Tooltip>
+            </TooltipWrapper>
+          </div>
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>

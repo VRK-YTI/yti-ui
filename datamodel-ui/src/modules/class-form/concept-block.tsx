@@ -107,6 +107,7 @@ export default function ConceptBlock({
   };
 
   const handleSubmit = () => {
+    console.log(selected);
     setConcept(selected);
     handleClose();
   };

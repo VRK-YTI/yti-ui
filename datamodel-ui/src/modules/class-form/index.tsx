@@ -101,9 +101,26 @@ export default function ClassForm({
         concept={
           data.equivalentClass.length > 0 ? data.equivalentClass[0] : undefined
         }
-        setConcept={(value: ClassFormType['equivalentClass'][0] | undefined) =>
-          setData({ ...data, equivalentClass: value ? [value] : [] })
-        }
+        setConcept={(
+          value: ClassFormType['equivalentClass'][0] | undefined
+        ) => {
+          const label = value
+            ? Object.fromEntries(
+                Object.entries(data.label).map((obj) => {
+                  if (value.label[obj[0]] != null) {
+                    return [[obj[0]], value.label[obj[0]]];
+                  }
+                  return [[obj[0]], data.label[obj[0]]];
+                })
+              )
+            : undefined;
+
+          setData({
+            ...data,
+            equivalentClass: value ? [value] : [],
+            label: label ? label : data.label,
+          });
+        }}
       />
 
       <LanguageVersionedWrapper>
@@ -111,13 +128,14 @@ export default function ClassForm({
           <TextInput
             key={`label-${lang}`}
             labelText={`${t('class-name')}, ${lang}`}
-            value={data.label[lang]}
+            value={data.label[lang] ?? ''}
             onChange={(e) =>
               setData({
                 ...data,
                 label: { ...data.label, [lang]: e?.toString() ?? '' },
               })
             }
+            status={userPosted && errors.label ? 'error' : 'default'}
           />
         ))}
       </LanguageVersionedWrapper>
@@ -126,6 +144,7 @@ export default function ClassForm({
         labelText={t('class-identifier')}
         visualPlaceholder={t('input-class-identifier')}
         defaultValue={data.identifier}
+        status={userPosted && errors.identifier ? 'error' : 'default'}
         onChange={(e) => setData({ ...data, identifier: e?.toString() ?? '' })}
         tooltipComponent={
           <Tooltip ariaToggleButtonLabelText={''} ariaCloseButtonLabelText={''}>
