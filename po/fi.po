@@ -568,4 +568,4 @@ msgid "BetaLinkPrefix"
 msgstr "Kokeile uutta "
 
 msgid "BetaLink"
-msgstr "Sanastot betaa"
+msgstr "Sanastot-työkalua"

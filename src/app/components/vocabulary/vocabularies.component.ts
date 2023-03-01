@@ -33,7 +33,7 @@ import { HttpErrorResponse } from '@angular/common/http';
       <div class="tool-info"><p translate>ToolInfo</p>
       <p>
         <span translate>BetaLinkPrefix</span>
-        <a href="https://sanastot.beta.yti.cloud.dvv.fi/" target="_blank" rel="noopener noreferrer" translate>BetaLink</a>
+        <a href="https://sanastot.suomi.fi/" target="_blank" rel="noopener noreferrer" translate>BetaLink</a>
         <span>.</span>
       </p>
       </div>
