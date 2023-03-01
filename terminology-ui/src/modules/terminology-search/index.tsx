@@ -194,7 +194,7 @@ export default function TerminologySearch() {
             </TitleDescriptionWrapper>
             <Paragraph>
               {t('move-to-former')}{' '}
-              <Link href="https://sanastot.suomi.fi/" passHref>
+              <Link href="https://sanastot.beta.yti.cloud.dvv.fi/" passHref>
                 <SuomiFiLink href="">{t('to-terminology-tool')}</SuomiFiLink>
               </Link>
               .
