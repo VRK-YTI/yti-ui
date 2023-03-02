@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { BaseIconKeys } from 'suomifi-ui-components';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { default as CommonDrawer } from 'yti-common-ui/drawer';
-import { DrawerButton } from 'yti-common-ui/drawer/side-navigation.styles';
+import { DrawerButton } from 'yti-common-ui/drawer/drawer.styles';
 import {
   ModelDrawerContainer,
   DrawerViewContainer,

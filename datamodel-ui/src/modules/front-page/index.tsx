@@ -66,20 +66,20 @@ export default function FrontPage() {
   }, [serviceCategoriesData, i18n.language]);
 
   const languages: SingleSelectData[] = useMemo(() => {
-    if (!searchModels || searchModels.models.length < 1) {
+    if (!searchModels || searchModels.totalHitCount < 1) {
       return [];
     }
 
     let languages: SingleSelectData[] = [];
 
-    searchModels.models.forEach((m) => {
+    searchModels.responseObjects.forEach((object) => {
       if (languages.length === 0) {
-        languages = m.language.map((l) => ({
+        languages = object.language.map((l) => ({
           labelText: l,
           uniqueItemId: l,
         }));
       } else {
-        m.language.forEach((l) => {
+        object.language.forEach((l) => {
           if (!languages.map((lang) => lang.uniqueItemId).includes(l)) {
             languages = [...languages, { labelText: l, uniqueItemId: l }];
           }
@@ -95,8 +95,8 @@ export default function FrontPage() {
       return [];
     }
 
-    return searchModels.models.map((m) => {
-      const contributors: string[] = m.contributor
+    return searchModels.responseObjects.map((object) => {
+      const contributors: string[] = object.contributor
         .map((c) =>
           getLanguageVersion({
             data: organizationsData.find(
@@ -108,7 +108,7 @@ export default function FrontPage() {
         )
         .filter((c) => c && c.length > 0);
 
-      const partOf: string[] = m.isPartOf
+      const partOf: string[] = object.isPartOf
         .map((p) =>
           getLanguageVersion({
             data: serviceCategoriesData.find((c) => c.identifier === p)?.label,
@@ -118,22 +118,22 @@ export default function FrontPage() {
         .filter((p) => p.length > 0);
 
       return {
-        id: m.id,
+        id: object.id,
         contributors: contributors,
         description: getLanguageVersion({
-          data: m.comment,
+          data: object.comment,
           lang: i18n.language,
         }),
         icon: 'applicationProfile',
-        status: m.status,
+        status: object.status,
         partOf: partOf,
         title: getLanguageVersion({
-          data: m.label,
+          data: object.label,
           lang: i18n.language,
           appendLocale: true,
         }),
-        titleLink: `/model/${m.prefix}`,
-        type: translateModelType(m.type, t),
+        titleLink: `/model/${object.prefix}`,
+        type: translateModelType(object.type, t),
       };
     });
   }, [

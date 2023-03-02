@@ -1,13 +1,14 @@
+import { Status } from './status.interface';
 import { Type } from './type.interface';
 
 export interface DataModel {
   comment: {
     [key: string]: string;
   };
-  contentModified?: string;
+  contentModified: string;
   contributor: string[];
   created: string;
-  documentation?: {
+  documentation: {
     [key: string]: string;
   };
   id: string;
@@ -17,10 +18,7 @@ export interface DataModel {
   };
   language: string[];
   modified: string;
-  namespace: string;
   prefix: string;
-  status: string;
-  statusModified: string;
+  status: Status;
   type: Type;
-  useContext: string;
 }

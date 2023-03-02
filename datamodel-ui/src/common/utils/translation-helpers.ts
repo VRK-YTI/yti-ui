@@ -29,6 +29,17 @@ export function translateModelFormErrors(error: string, t: TFunction) {
   }
 }
 
+export function translateClassFormErrors(error: string, t: TFunction) {
+  switch (error) {
+    case 'identifier':
+      return t('class-missing-identifier', { ns: 'admin' });
+    case 'label':
+      return t('class-missing-language-title', { ns: 'admin' });
+    default:
+      return t('class-missing-general', { ns: 'admin' });
+  }
+}
+
 export function translateStatus(status: string, t: TFunction) {
   switch (status) {
     case 'DRAFT':

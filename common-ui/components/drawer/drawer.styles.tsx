@@ -19,7 +19,7 @@ export const DrawerContainer = styled.div<{
   ${(props) =>
     props.$open &&
     `
-    > button:first-child {
+    button:first-child {
       position: relative;
       right: 1px;
     }
@@ -32,13 +32,24 @@ export const DrawerContainer = styled.div<{
   }
 `;
 
-export const DrawerContent = styled.div<{
+export const DrawerContent = styled.div.attrs<{
+  $isSmall: boolean;
+  $width?: number;
+}>((props) => ({
+  style: {
+    width: props.$isSmall
+      ? '100vw'
+      : props.$width
+      ? `${props.$width}px`
+      : '390px',
+  },
+}))<{
   $isSmall: boolean;
   $viewOpen?: boolean;
+  $width?: number;
 }>`
-  width: ${(props) => (props.$isSmall ? '100vw' : '390px')};
   background: ${(props) => props.theme.suomifi.colors.whiteBase};
-  overflow: scroll;
+  overflow-y: scroll;
 
   ${(props) =>
     props.$isSmall &&
@@ -142,12 +153,13 @@ export const DrawerButton = styled(Button)<{
   $breakpoint: Breakpoint;
   $active?: boolean;
 }>`
-  height: ${(props) => resolve(props.$breakpoint, 'auto', '50px', '100px')};
+  height: ${(props) => resolve(props.$breakpoint, 'auto', '50px', '85px')};
   width: ${(props) => resolve(props.$breakpoint, 'auto', '50px', '100px')};
   text-transform: uppercase;
   font-weight: 400;
   display: flex;
   flex-direction: column;
+  gap: 5px;
   align-items: center;
   justify-content: center;
   white-space: nowrap;

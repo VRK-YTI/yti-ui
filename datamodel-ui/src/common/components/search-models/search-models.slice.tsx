@@ -20,7 +20,7 @@ export const searchModelsApi = createApi({
     >({
       query: (props) => ({
         url: '/frontend/searchModels',
-        method: 'POST',
+        method: 'GET',
         data: {
           pageFrom: Math.max(0, (props.urlState.page - 1) * 50),
           pageSize: 50,

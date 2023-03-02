@@ -1,5 +1,5 @@
 import { useBreakpoints } from '../media-query';
-import { useState } from 'react';
+import { useEffect, useState, MouseEvent as ReactMouseEvent } from 'react';
 import { Icon } from 'suomifi-ui-components';
 import {
   DrawerButtonGroup,
@@ -7,7 +7,7 @@ import {
   DrawerContent,
   DrawerWrapper,
   ToggleButton,
-} from './side-navigation.styles';
+} from './drawer.styles';
 
 interface SideNavigationProps {
   buttons: React.ReactFragment;
@@ -22,17 +22,55 @@ export default function Drawer({
 }: SideNavigationProps) {
   const { isSmall } = useBreakpoints();
   const [open, setOpen] = useState(false);
+  const [width, setWidth] = useState(390);
+
+  const handleResize = (e: ReactMouseEvent<HTMLDivElement>) => {
+    const initWidth = width;
+    const startPos = e.pageX;
+
+    function onMouseMove(e: MouseEvent) {
+      const newWidth = initWidth - startPos + e.pageX;
+      if (newWidth >= 390 && newWidth <= window.innerWidth - 150) {
+        setWidth(() => newWidth);
+      }
+    }
+
+    function onMouseUp() {
+      window.removeEventListener('mousemove', onMouseMove);
+    }
+
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp, { once: true });
+  };
+
+  useEffect(() => {
+    if (isSmall) {
+      setWidth(390);
+    }
+  }, [isSmall]);
 
   return (
     <DrawerContainer $open={open} $isSmall={isSmall}>
       {!isSmall && (
-        <ToggleButton
-          onClick={() => setOpen(!open)}
-          variant="secondaryNoBorder"
-          $open={open}
-        >
-          <Icon icon={open ? 'chevronLeft' : 'chevronRight'} />
-        </ToggleButton>
+        <div>
+          <ToggleButton
+            onClick={() => setOpen(!open)}
+            variant="secondaryNoBorder"
+            $open={open}
+          >
+            <Icon icon={open ? 'chevronLeft' : 'chevronRight'} />
+          </ToggleButton>
+
+          {/* eslint-disable-next-line jsx-a11y/no-static-element-interactions*/}
+          <div
+            style={{
+              height: '100%',
+              width: '8px',
+              cursor: 'w-resize',
+            }}
+            onMouseDown={(e) => handleResize(e)}
+          />
+        </div>
       )}
 
       {isSmall && (
@@ -47,7 +85,9 @@ export default function Drawer({
       <DrawerWrapper $open={open}>
         {open && (
           <>
-            <DrawerContent $isSmall={isSmall}>{children}</DrawerContent>
+            <DrawerContent $isSmall={isSmall} $width={width}>
+              {children}
+            </DrawerContent>
 
             <DrawerButtonGroup $isSmall={isSmall}>{buttons}</DrawerButtonGroup>
           </>

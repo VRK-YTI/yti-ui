@@ -3,7 +3,7 @@ import { TextInput as TextInputDS } from 'suomifi-ui-components';
 
 export const TextInput = styled(TextInputDS)`
   width: 100%;
-  max-width: 450px;
+  max-width: ${(props) => (props.fullWidth ? '100%' : '450px')};
 `;
 
 export const PrefixContainer = styled.div`

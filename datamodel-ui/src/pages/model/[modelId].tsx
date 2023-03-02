@@ -11,26 +11,35 @@ import ModelHeader from '@app/modules/model/model-header';
 import {
   getModel,
   getRunningQueriesThunk,
+  useGetModelQuery,
 } from '@app/common/components/model/model.slice';
-import { getStoreData } from '@app/common/utils/utils';
-import { ModelType } from '@app/common/interfaces/model.interface';
+import {
+  getServiceCategories,
+  getRunningQueriesThunk as getServiceQueriesThunk,
+} from '@app/common/components/service-categories/service-categories.slice';
+import {
+  getOrganizations,
+  getRunningQueriesThunk as getOrgQueriesThunk,
+} from '@app/common/components/organizations/organizations.slice';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
-  modelInfo?: ModelType;
+  modelId: string;
 }
 
 export default function ModelPage(props: IndexPageProps) {
+  const { data } = useGetModelQuery(props.modelId);
+
   return (
     <CommonContextProvider value={props}>
       <Layout
         user={props.user ?? undefined}
         fakeableUsers={props.fakeableUsers}
-        fullScreenElements={<ModelHeader modelInfo={props.modelInfo} />}
+        fullScreenElements={<ModelHeader modelInfo={data} />}
       >
         <PageHead baseUrl="https://tietomallit.suomi.fi" />
 
-        <Model />
+        <Model modelId={props.modelId} />
       </Layout>
     </CommonContextProvider>
   );
@@ -51,18 +60,16 @@ export const getServerSideProps = createCommonGetServerSideProps(
     }
 
     store.dispatch(getModel.initiate(modelId));
+    store.dispatch(getServiceCategories.initiate(locale ?? 'fi'));
+    store.dispatch(getOrganizations.initiate(locale ?? 'fi'));
 
     await Promise.all(store.dispatch(getRunningQueriesThunk()));
-
-    const modelInfo = getStoreData({
-      functionKey: `getModel("${modelId}")`,
-      reduxKey: 'model',
-      state: store.getState(),
-    });
+    await Promise.all(store.dispatch(getServiceQueriesThunk()));
+    await Promise.all(store.dispatch(getOrgQueriesThunk()));
 
     return {
       props: {
-        modelInfo: modelInfo,
+        modelId: modelId,
       },
     };
   }
