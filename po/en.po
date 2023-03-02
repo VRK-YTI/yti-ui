@@ -555,4 +555,4 @@ msgid "BetaLinkPrefix"
 msgstr "Try out the new "
 
 msgid "BetaLink"
-msgstr "Terminologies beta"
+msgstr "Terminologies tool"

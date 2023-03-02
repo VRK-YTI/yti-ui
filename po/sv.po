@@ -560,7 +560,7 @@ msgstr ""
 "“{{ value }}”"
 
 msgid "BetaLinkPrefix"
-msgstr "Testa nya "
+msgstr "Gå till det nya "
 
 msgid "BetaLink"
-msgstr "Ordlistor betan"
+msgstr "Ordlistor-verktyget"
