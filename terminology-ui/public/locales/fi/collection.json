@@ -14,6 +14,9 @@
   "definition": "Määritelmä",
   "edit-collection": "Muokkaa käsitekokoelmaa",
   "edit-collection-block-title": "Käsitekokoelman toiminnot",
+  "edit-collection-error": {
+    "prefLabel": "Käsitekokoelman nimi tulee olla määritettynä vähintään yhdellä kielellä."
+  },
   "enter-collection-description": "Kirjoita kuvaus",
   "enter-collection-name": "Kirjoita nimi",
   "enter-search-term": "Kirjoita hakusana",
@@ -23,8 +26,6 @@
   "heading": "Käsitekokoelma",
   "last-modified": "Viimeksi muokattu",
   "new-collection-page-help": "Kieliversioidut kentät näytetään sanaston tiedoissa valittujen kielten mukaan. Suositeltavaa on täyttää kaikki tiedot. Tiedot on pakollisia, jos niitä ei ole merkitty valinnaisiksi.",
-  "no-empty-form": "Tyhjän lomakkeen lähettäminen ei ole sallittua",
-  "no-pairless-language": "Nimi tai kuvaus puuttuu kieleltä ",
   "number-of-concepts_one": "{{count}} käsite",
   "number-of-concepts_other": "{{count}} käsitettä",
   "open-concept-info": "Avaa käsitteen tiedot",

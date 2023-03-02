@@ -269,7 +269,7 @@ export default function EditCollection({
           )}
           {emptyError && (
             <FormFooterAlert
-              alerts={[t('no-empty-form')]}
+              alerts={[t('edit-collection-error.prefLabel')]}
               labelText={t('missing-information', { ns: 'admin' })}
             />
           )}

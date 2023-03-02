@@ -62,7 +62,7 @@
   "link-opens-new-window-external": "Öppnar ett nytt fönster på sidan",
   "loading": "Laddas",
   "logged-out": "Du har loggat ut från tjänsten.",
-  "move-to-former": "",
+  "move-to-former": "Gå till den tidigare versionen av",
   "navigate-to-homepage": "Gå till hemsidan",
   "navigated-to": "Navigerad på sidan",
   "navigation-close": "Stäng navigationen",
@@ -132,7 +132,6 @@
   "term-style": {
     "spoken-form": "talspråk"
   },
-  "terminology": "Ordlistor",
   "terminology-footer-accessibility": "Tillgänglighet",
   "terminology-footer-feedback": "Ge feedback",
   "terminology-footer-information-security": "Dataskyddsbeskrivning",
@@ -159,7 +158,7 @@
     "terminologyical-vocabulary": "Terminologisk ordlista",
     "undefined": "Ordlistans typ har inte definierats"
   },
-  "to-terminology-tool": "",
+  "to-terminology-tool": "verktyget Ordlistor",
   "try-again": "Försök igen",
   "value-is-not-allowed": "\"{{value}}\" ej tillåtet",
   "vocabulary-collections": "Ordlistans begreppsurval",
