@@ -8,14 +8,13 @@ import {
   DrawerViewContainer,
   ModelPanel,
 } from './model-side-navigation.styles';
-import { resolve } from 'yti-common-ui/media-query/styled-helpers';
 
 type ViewType = {
   id: string;
   icon: BaseIconKeys;
   buttonLabel: string;
   buttonLabelSm?: string;
-  component: React.ReactFragment;
+  component?: React.ReactFragment;
 };
 
 interface SideNavigationProps {
@@ -23,54 +22,42 @@ interface SideNavigationProps {
 }
 
 export default function Drawer({ views }: SideNavigationProps) {
-  const { breakpoint, isSmall } = useBreakpoints();
+  const { breakpoint, isSmall, isLarge } = useBreakpoints();
   const [activeView, setActiveView] = useState<ViewType | undefined>(
     isSmall ? undefined : views?.[0] ?? undefined
   );
 
   const handleSetActiveView = (viewId: string) => {
-    if (!isSmall) {
-      setActiveView(views.find((view) => view.id === viewId));
-      return;
-    }
-
-    if (viewId === activeView?.id) {
-      setActiveView(undefined);
-    } else {
-      setActiveView(views.find((view) => view.id === viewId));
-    }
+    setActiveView(views.find((view) => view.id === viewId));
   };
 
   return (
     <ModelPanel position="top-left" $isSmall={isSmall}>
       <ModelDrawerContainer $isSmall={isSmall}>
         <CommonDrawer
-          buttons={
-            <>
-              {views.map((view) => (
-                <DrawerButton
-                  key={view.id}
-                  icon={view.icon}
-                  variant="secondaryNoBorder"
-                  $active={activeView?.id === view.id}
-                  $breakpoint={breakpoint}
-                  onClick={() => handleSetActiveView(view.id)}
-                >
-                  {resolve(
-                    breakpoint,
-                    view.buttonLabelSm ?? view.buttonLabel,
-                    '',
-                    view.buttonLabel
-                  )}
-                </DrawerButton>
-              ))}
-            </>
+          buttons={views
+            .filter((view) => (isSmall ? true : !view.id.includes('-small')))
+            .map((view) => (
+              <DrawerButton
+                key={view.id}
+                icon={view.icon}
+                variant="secondaryNoBorder"
+                $active={activeView?.id === view.id}
+                $breakpoint={breakpoint}
+                onClick={() => handleSetActiveView(view.id)}
+              >
+                {isLarge && view.buttonLabel}
+              </DrawerButton>
+            ))}
+          viewOpen={
+            typeof activeView !== 'undefined' &&
+            typeof activeView.component !== 'undefined'
           }
-          viewOpen={typeof activeView !== 'undefined'}
         >
-          {typeof activeView !== 'undefined' && activeView.component && (
-            <DrawerViewContainer>{activeView.component}</DrawerViewContainer>
-          )}
+          {typeof activeView !== 'undefined' &&
+            typeof activeView.component !== 'undefined' && (
+              <DrawerViewContainer>{activeView.component}</DrawerViewContainer>
+            )}
         </CommonDrawer>
       </ModelDrawerContainer>
     </ModelPanel>

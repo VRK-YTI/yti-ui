@@ -1,13 +1,5 @@
 import { useState } from 'react';
-import {
-  HintText,
-  Label,
-  RadioButtonGroup,
-  RadioButton,
-  TextInput,
-  Paragraph,
-  Text,
-} from 'suomifi-ui-components';
+import { HintText, Label, TextInput } from 'suomifi-ui-components';
 import { ContactWrapper } from './contact.styles';
 
 interface ContactProps {

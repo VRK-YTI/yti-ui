@@ -85,7 +85,7 @@ export const SearchResult = styled.div`
   }
 
   .highlighted-content {
-    background-color: ${(props) => props.theme.suomifi.colors.warningBase};
+    background-color: rgba(250, 175, 0, 0.5);
   }
 `;
 
