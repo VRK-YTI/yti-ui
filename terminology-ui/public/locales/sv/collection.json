@@ -14,6 +14,9 @@
   "definition": "Definition",
   "edit-collection": "Redigera begreppsurvalet",
   "edit-collection-block-title": "Begreppsurvalets funktioner",
+  "edit-collection-error": {
+    "prefLabel": ""
+  },
   "enter-collection-description": "Ange en beskrivning",
   "enter-collection-name": "Ange ett namn",
   "enter-search-term": "Ange ett sökord",
@@ -23,8 +26,6 @@
   "heading": "Begreppsurval",
   "last-modified": "Redigerad",
   "new-collection-page-help": "Fält med olika språkversioner visas på ordlistans uppgifter enligt de valda språken. Det rekommenderas att fylla i alla fält. Fälten är obligatoriskt att fylla i om de inte har markerats valfria.",
-  "no-empty-form": "Det är inte tillåtet att sända ett tomt formulär",
-  "no-pairless-language": "Namn eller beskrivning har inte definierats för språket",
   "number-of-concepts_one": "{{count}} begrepp",
   "number-of-concepts_other": "{{count}} begrepp",
   "open-concept-info": "Öppna begreppets uppgifter",

@@ -14,6 +14,9 @@
   "definition": "Definition",
   "edit-collection": "Edit collection",
   "edit-collection-block-title": "Collection functionalities",
+  "edit-collection-error": {
+    "prefLabel": "Collection name must be defined in at least one of the available languages."
+  },
   "enter-collection-description": "Enter a definition",
   "enter-collection-name": "Enter a name",
   "enter-search-term": "Enter search term",
@@ -23,8 +26,6 @@
   "heading": "Collection",
   "last-modified": "Last modified",
   "new-collection-page-help": "The language-versioned fields are displayed according to the languages selected in the vocabulary information. It is recommended to fill in all the information. Information is mandatory if not specifically marked as optional.",
-  "no-empty-form": "Sending an empty form is not allowed",
-  "no-pairless-language": "Name or definition is missing from language ",
   "number-of-concepts_one": "{{count}} concept",
   "number-of-concepts_other": "{{count}} concepts",
   "open-concept-info": "Open concept information",
