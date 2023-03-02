@@ -563,4 +563,4 @@ msgid "BetaLinkPrefix"
 msgstr "Gå till det nya "
 
 msgid "BetaLink"
-msgstr "Ordlistor-verktyget"
+msgstr "verktyget Ordlistor"
