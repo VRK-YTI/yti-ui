@@ -24,5 +24,5 @@ export const ModelDrawerContainer = styled.div<{ $isSmall: boolean }>`
 
 export const DrawerViewContainer = styled.div`
   height: min-content;
-  padding: ${(props) => props.theme.suomifi.spacing.s};
+  width: inherit;
 `;

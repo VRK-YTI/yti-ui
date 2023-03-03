@@ -13,12 +13,12 @@ import {
   translateModelFormErrors,
 } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button, Heading } from 'suomifi-ui-components';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
 import ModelForm from '../model-form';
 import generatePayload from './generate-payload';
-import { ModelInfoWrapper } from './model.styles';
+import { ModelInfoWrapper, StaticHeaderWrapper } from './model.styles';
 import { FormUpdateErrors, validateFormUpdate } from './validate-form-update';
 
 interface ModelEditViewProps {
@@ -39,6 +39,8 @@ export default function ModelEditView({
   const { t, i18n } = useTranslation('admin');
   const [errors, setErrors] = useState<FormUpdateErrors>();
   const [userPosted, setUserPosted] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const [headerHeight, setHeaderHeight] = useState(0);
   const [postModel, result] = usePostModelMutation();
   const [formData, setFormData] = useState<ModelFormType>({
     contact: '',
@@ -77,6 +79,20 @@ export default function ModelEditView({
     setErrors(errors);
   }, [userPosted, formData]);
 
+  useEffect(() => {
+    if (ref.current) {
+      setHeaderHeight(ref.current.clientHeight);
+    }
+
+    if (
+      ref.current &&
+      ((errors && Object.values(errors).filter((val) => val).length > 0) ||
+        result.isError)
+    ) {
+      setHeaderHeight(ref.current.clientHeight);
+    }
+  }, [ref, errors, result]);
+
   const handleSubmit = () => {
     setUserPosted(true);
 
@@ -97,43 +113,40 @@ export default function ModelEditView({
   };
 
   return (
-    <ModelInfoWrapper>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          marginBottom: '20px',
-        }}
-      >
-        <Heading variant="h2">{t('details', { ns: 'common' })}</Heading>
+    <>
+      <StaticHeaderWrapper ref={ref}>
         <div>
-          <Button onClick={() => handleSubmit()}>{t('save')}</Button>
-          <Button
-            variant="secondary"
-            style={{ marginLeft: '10px' }}
-            onClick={() => setShow(false)}
-          >
-            {t('cancel-variant')}
-          </Button>
+          <Heading variant="h2">{t('details', { ns: 'common' })}</Heading>
+          <div>
+            <Button onClick={() => handleSubmit()}>{t('save')}</Button>
+            <Button
+              variant="secondary"
+              style={{ marginLeft: '10px' }}
+              onClick={() => setShow(false)}
+            >
+              {t('cancel-variant')}
+            </Button>
+          </div>
         </div>
-      </div>
 
-      <div style={{ marginBottom: '20px' }}>
-        <FormFooterAlert
-          labelText={t('missing-information-title', { ns: 'admin' })}
-          alerts={getErrors(errors)}
+        <div>
+          <FormFooterAlert
+            labelText={t('missing-information-title', { ns: 'admin' })}
+            alerts={getErrors(errors)}
+          />
+        </div>
+      </StaticHeaderWrapper>
+
+      <ModelInfoWrapper $height={headerHeight}>
+        <ModelForm
+          formData={formData}
+          setFormData={setFormData}
+          userPosted={userPosted}
+          editMode={true}
+          errors={userPosted ? errors : undefined}
         />
-      </div>
-
-      <ModelForm
-        formData={formData}
-        setFormData={setFormData}
-        userPosted={userPosted}
-        editMode={true}
-        errors={userPosted ? errors : undefined}
-      />
-    </ModelInfoWrapper>
+      </ModelInfoWrapper>
+    </>
   );
 
   function getErrors(errors?: FormUpdateErrors): string[] | undefined {
