@@ -116,7 +116,7 @@ export function getComments(data?: ModelType): LangObject[] {
 }
 
 export function getContact(data?: ModelType): string {
-  return data?.contact ?? '';
+  return data?.contact ?? 'yhteentoimivuus@dvv.fi';
 }
 
 export function getDocumentation(data?: ModelType): string {

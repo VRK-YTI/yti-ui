@@ -74,17 +74,27 @@ export default function MultiColumnSearch({
       uniqueItemId: 'this',
     },
   ]);
-  const [statuses] = useState<SingleSelectData[]>(
-    statusList.map((status) => ({
-      labelText: translateStatus(status, t),
-      uniqueItemId: status,
-    }))
-  );
   const [languages] = useState<SingleSelectData[]>([
     { labelText: translateLanguage('fi', t), uniqueItemId: 'fi' },
     { labelText: translateLanguage('sv', t), uniqueItemId: 'sv' },
     { labelText: translateLanguage('en', t), uniqueItemId: 'en' },
   ]);
+
+  const statuses: SingleSelectData[] = useMemo(() => {
+    const returnValue = [
+      {
+        labelText: t('status-all'),
+        uniqueItemId: '-1',
+      },
+    ];
+
+    return returnValue.concat(
+      statusList.map((status) => ({
+        labelText: translateStatus(status, t),
+        uniqueItemId: status,
+      }))
+    );
+  }, [t]);
 
   const serviceCategories: SingleSelectData[] = useMemo(() => {
     if (!serviceCategoriesIsSuccess) {
@@ -117,7 +127,7 @@ export default function MultiColumnSearch({
     key: keyof InternalClassesSearchParams,
     value: typeof searchParams[keyof InternalClassesSearchParams]
   ) => {
-    if (key === 'groups' && isEqual(value, ['-1'])) {
+    if ((key === 'groups' || key === 'status') && isEqual(value, ['-1'])) {
       setSearchParams({ ...searchParams, [key]: [] });
       return;
     }

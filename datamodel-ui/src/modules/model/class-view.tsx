@@ -335,7 +335,7 @@ export default function ClassView({ modelId }: ClassView) {
           </BasicBlock>
 
           <BasicBlock title={t('additional-information')}>
-            {data.comment ?? t('no-comment')}
+            {data.editorialNote ?? t('no-comment')}
           </BasicBlock>
 
           <div style={{ marginTop: '20px' }}>

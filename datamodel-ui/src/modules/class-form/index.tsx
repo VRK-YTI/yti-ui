@@ -287,8 +287,8 @@ export default function ClassForm({
         <Textarea
           labelText={t('editor-comment')}
           optionalText={t('optional')}
-          defaultValue={data.comment}
-          onChange={(e) => setData({ ...data, comment: e.target.value })}
+          defaultValue={data.editorialNote}
+          onChange={(e) => setData({ ...data, editorialNote: e.target.value })}
         />
       </ClassFormWrapper>
     </>

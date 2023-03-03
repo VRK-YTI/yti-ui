@@ -44,6 +44,7 @@ import { useGetOrganizationsQuery } from '@app/common/components/organizations/o
 import { ModelFormType } from '@app/common/interfaces/model-form.interface';
 import ModelEditView from './model-edit-view';
 import AsFileModal from '../as-file-modal';
+import { getLanguageVersion } from '@app/common/utils/get-language-version';
 
 export default function ModelInfoView() {
   const { t, i18n } = useTranslation('common');
@@ -91,7 +92,7 @@ export default function ModelInfoView() {
       setFormData({
         contact: '',
         languages:
-          modelInfo?.languages.map((lang) => ({
+          modelInfo.languages.map((lang) => ({
             labelText: translateLanguage(lang, t),
             uniqueItemId: lang,
             title:
@@ -314,10 +315,15 @@ export default function ModelInfoView() {
         <BasicBlock title={t('contributors')}>
           {data.organizations.join(', ')}
         </BasicBlock>
-
         <BasicBlock title={t('feedback')}>
           <ExternalLink
-            href={`mailto:${data.contact}?subject=${data.title}`}
+            href={`mailto:${data.contact}?subject=${getLanguageVersion({
+              data: data.title.reduce(
+                (acc, curr) => ({ ...acc, [curr.lang]: curr.value }),
+                {}
+              ),
+              lang: i18n.language,
+            })}`}
             labelNewWindow=""
           >
             {data.contact}
