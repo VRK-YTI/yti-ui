@@ -1,7 +1,7 @@
 import { useGetModelQuery } from '@app/common/components/model/model.slice';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Button,
   Expander,
@@ -32,6 +32,7 @@ import {
 import {
   ModelInfoListWrapper,
   ModelInfoWrapper,
+  StaticHeaderWrapper,
   TooltipWrapper,
 } from './model.styles';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
@@ -43,6 +44,7 @@ import { useGetOrganizationsQuery } from '@app/common/components/organizations/o
 import { ModelFormType } from '@app/common/interfaces/model-form.interface';
 import ModelEditView from './model-edit-view';
 import AsFileModal from '../as-file-modal';
+import { getLanguageVersion } from '@app/common/utils/get-language-version';
 
 export default function ModelInfoView() {
   const { t, i18n } = useTranslation('common');
@@ -53,6 +55,8 @@ export default function ModelInfoView() {
   const [showTooltip, setShowTooltip] = useState(false);
   const [showEditView, setShowEditView] = useState(false);
   const [formData, setFormData] = useState<ModelFormType | undefined>();
+  const [headerHeight, setHeaderHeight] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
   const { data: modelInfo, refetch } = useGetModelQuery(modelId);
   const { data: serviceCategories } = useGetServiceCategoriesQuery(
     i18n.language ?? 'fi'
@@ -88,7 +92,7 @@ export default function ModelInfoView() {
       setFormData({
         contact: '',
         languages:
-          modelInfo?.languages.map((lang) => ({
+          modelInfo.languages.map((lang) => ({
             labelText: translateLanguage(lang, t),
             uniqueItemId: lang,
             title:
@@ -121,6 +125,12 @@ export default function ModelInfoView() {
     setShowTooltip(false);
   };
 
+  useEffect(() => {
+    if (ref.current) {
+      setHeaderHeight(ref.current.clientHeight);
+    }
+  }, [ref]);
+
   if (!modelInfo || !data) {
     return <ModelInfoWrapper />;
   }
@@ -138,183 +148,192 @@ export default function ModelInfoView() {
   }
 
   return (
-    <ModelInfoWrapper>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-        }}
-      >
-        <Heading variant="h2">{t('details')}</Heading>
+    <>
+      <StaticHeaderWrapper ref={ref}>
         <div>
-          <Button
-            variant="secondary"
-            onClick={() => setShowTooltip(!showTooltip)}
-            iconRight={'menu'}
-          >
-            {t('actions')}
-          </Button>
-          <TooltipWrapper>
-            <Tooltip
-              ariaCloseButtonLabelText=""
-              ariaToggleButtonLabelText=""
-              open={showTooltip}
-              onCloseButtonClick={() => setShowTooltip(false)}
+          <Heading variant="h2">{t('details')}</Heading>
+          <div>
+            <Button
+              variant="secondary"
+              onClick={() => setShowTooltip(!showTooltip)}
+              iconRight={'menu'}
             >
-              <Button
-                variant="secondaryNoBorder"
-                onClick={() => handleEditViewItemClick(setShowEditView)}
-                disabled={!formData}
+              {t('actions')}
+            </Button>
+            <TooltipWrapper>
+              <Tooltip
+                ariaCloseButtonLabelText=""
+                ariaToggleButtonLabelText=""
+                open={showTooltip}
+                onCloseButtonClick={() => setShowTooltip(false)}
               >
-                {t('edit', { ns: 'admin' })}
-              </Button>
-              <AsFileModal type="show" />
-              <AsFileModal type="download" />
-              <Button variant="secondaryNoBorder">
-                {t('update-models-resources-statuses', { ns: 'admin' })}
-              </Button>
-              <Button variant="secondaryNoBorder">
-                {t('create-copy-from-model', { ns: 'admin' })}
-              </Button>
-              <Button variant="secondaryNoBorder">
-                {t('add-email-subscription')}
-              </Button>
-              <hr />
-              <Button variant="secondaryNoBorder">
-                {t('remove', { ns: 'admin' })}
-              </Button>
-            </Tooltip>
-          </TooltipWrapper>
+                <Button
+                  variant="secondaryNoBorder"
+                  onClick={() => handleEditViewItemClick(setShowEditView)}
+                  disabled={!formData}
+                >
+                  {t('edit', { ns: 'admin' })}
+                </Button>
+                <AsFileModal type="show" />
+                <AsFileModal type="download" />
+                <Button variant="secondaryNoBorder">
+                  {t('update-models-resources-statuses', { ns: 'admin' })}
+                </Button>
+                <Button variant="secondaryNoBorder">
+                  {t('create-copy-from-model', { ns: 'admin' })}
+                </Button>
+                <Button variant="secondaryNoBorder">
+                  {t('add-email-subscription')}
+                </Button>
+                <hr />
+                <Button variant="secondaryNoBorder">
+                  {t('remove', { ns: 'admin' })}
+                </Button>
+              </Tooltip>
+            </TooltipWrapper>
+          </div>
         </div>
-      </div>
+      </StaticHeaderWrapper>
 
-      <BasicBlock title={t('name')}>
-        <MultilingualBlock
-          data={data.title.sort((a, b) => compareLocales(a.lang, b.lang))}
-        />
-      </BasicBlock>
-      <BasicBlock title={t('description')}>
-        {data.description.length > 0 ? (
+      <ModelInfoWrapper $height={headerHeight}>
+        <BasicBlock title={t('name')}>
           <MultilingualBlock
-            data={data.description.sort((a, b) =>
-              compareLocales(a.lang, b.lang)
-            )}
+            data={data.title.sort((a, b) => compareLocales(a.lang, b.lang))}
           />
-        ) : (
-          t('not-added')
-        )}
-      </BasicBlock>
-      <BasicBlock title={t('prefix')}>{data.prefix}</BasicBlock>
-      <BasicBlock title={t('model-uri')}>{data.uri}</BasicBlock>
-      <BasicBlock title={t('information-domains')}>
-        {data.isPartOf.join(', ')}
-      </BasicBlock>
-      <BasicBlock title={t('model-languages')}>
-        {data.languages
-          .map((lang) => `${translateLanguage(lang, t)} ${lang.toUpperCase()}`)
-          .join(', ')}
-      </BasicBlock>
-
-      <BasicBlock title={t('terminologies-used')}>
-        {data.terminologies.length > 0
-          ? data.terminologies.map((terminology, idx) => (
-              <div key={`model-terminologies-${idx}`}>
-                <ExternalLink
-                  href={terminology.url}
-                  labelNewWindow={`${t('link-opens-new-window-external')} ${
-                    terminology.url
-                  }`}
-                >
-                  {terminology.title}
-                </ExternalLink>
-                <br />
-                {terminology.description}
-              </div>
-            ))
-          : t('not-added')}
-      </BasicBlock>
-      <BasicBlock title={t('reference-data-used')}>
-        {data.referenceData.length > 0
-          ? data.referenceData.map((reference, idx) => (
-              <div key={`model-data-references-${idx}`}>
-                <ExternalLink
-                  href={reference.url}
-                  labelNewWindow={`${t('link-opens-new-window-external')} ${
-                    reference.url
-                  }`}
-                >
-                  {reference.title}
-                </ExternalLink>
-                <br />
-                {reference.description}
-              </div>
-            ))
-          : t('not-added')}
-      </BasicBlock>
-      <BasicBlock title={t('data-vocabularies-used')}>
-        {data.dataVocabularies.length > 0
-          ? data.dataVocabularies.map((vocab, idx) => (
-              <div key={`model-data-references-${idx}`}>
-                <ExternalLink
-                  href={vocab.url}
-                  labelNewWindow={`${t('link-opens-new-window-external')} ${
-                    vocab.url
-                  }`}
-                >
-                  {vocab.title}
-                </ExternalLink>
-              </div>
-            ))
-          : t('not-added')}
-      </BasicBlock>
-      <BasicBlock title={t('links')}>
-        <ModelInfoListWrapper>
-          {data.links.length > 0 ? (
-            data.links.map((link, idx) => (
-              <div key={`model-link-${idx}`}>
-                <ExternalLink
-                  href={link.url}
-                  labelNewWindow={`${t('link-opens-new-window-external')} ${
-                    link.url
-                  }`}
-                >
-                  {link.title}
-                </ExternalLink>
-                <br />
-                {link.description}
-              </div>
-            ))
+        </BasicBlock>
+        <BasicBlock title={t('description')}>
+          {data.description.length > 0 ? (
+            <MultilingualBlock
+              data={data.description.sort((a, b) =>
+                compareLocales(a.lang, b.lang)
+              )}
+            />
           ) : (
-            <div>{t('not-added')}</div>
+            t('not-added')
           )}
-        </ModelInfoListWrapper>
-      </BasicBlock>
+        </BasicBlock>
+        <BasicBlock title={t('prefix')}>{data.prefix}</BasicBlock>
+        <BasicBlock title={t('model-uri')}>{data.uri}</BasicBlock>
+        <BasicBlock title={t('information-domains')}>
+          {data.isPartOf.join(', ')}
+        </BasicBlock>
+        <BasicBlock title={t('model-languages')}>
+          {data.languages
+            .map(
+              (lang) => `${translateLanguage(lang, t)} ${lang.toUpperCase()}`
+            )
+            .join(', ')}
+        </BasicBlock>
 
-      <ExpanderGroup closeAllText="" openAllText="" showToggleAllButton={false}>
-        <Expander>
-          <ExpanderTitleButton>{t('usage-from-other')}</ExpanderTitleButton>
-        </Expander>
-      </ExpanderGroup>
+        <BasicBlock title={t('terminologies-used')}>
+          {data.terminologies.length > 0
+            ? data.terminologies.map((terminology, idx) => (
+                <div key={`model-terminologies-${idx}`}>
+                  <ExternalLink
+                    href={terminology.url}
+                    labelNewWindow={`${t('link-opens-new-window-external')} ${
+                      terminology.url
+                    }`}
+                  >
+                    {terminology.title}
+                  </ExternalLink>
+                  <br />
+                  {terminology.description}
+                </div>
+              ))
+            : t('not-added')}
+        </BasicBlock>
+        <BasicBlock title={t('reference-data-used')}>
+          {data.referenceData.length > 0
+            ? data.referenceData.map((reference, idx) => (
+                <div key={`model-data-references-${idx}`}>
+                  <ExternalLink
+                    href={reference.url}
+                    labelNewWindow={`${t('link-opens-new-window-external')} ${
+                      reference.url
+                    }`}
+                  >
+                    {reference.title}
+                  </ExternalLink>
+                  <br />
+                  {reference.description}
+                </div>
+              ))
+            : t('not-added')}
+        </BasicBlock>
+        <BasicBlock title={t('data-vocabularies-used')}>
+          {data.dataVocabularies.length > 0
+            ? data.dataVocabularies.map((vocab, idx) => (
+                <div key={`model-data-references-${idx}`}>
+                  <ExternalLink
+                    href={vocab.url}
+                    labelNewWindow={`${t('link-opens-new-window-external')} ${
+                      vocab.url
+                    }`}
+                  >
+                    {vocab.title}
+                  </ExternalLink>
+                </div>
+              ))
+            : t('not-added')}
+        </BasicBlock>
+        <BasicBlock title={t('links')}>
+          <ModelInfoListWrapper>
+            {data.links.length > 0 ? (
+              data.links.map((link, idx) => (
+                <div key={`model-link-${idx}`}>
+                  <ExternalLink
+                    href={link.url}
+                    labelNewWindow={`${t('link-opens-new-window-external')} ${
+                      link.url
+                    }`}
+                  >
+                    {link.title}
+                  </ExternalLink>
+                  <br />
+                  {link.description}
+                </div>
+              ))
+            ) : (
+              <div>{t('not-added')}</div>
+            )}
+          </ModelInfoListWrapper>
+        </BasicBlock>
 
-      <Separator isLarge />
-
-      <BasicBlock title={t('contributors')}>
-        {data.organizations.join(', ')}
-      </BasicBlock>
-
-      <BasicBlock title={t('feedback')}>
-        <ExternalLink
-          href={`mailto:${data.contact}?subject=${data.title}`}
-          labelNewWindow=""
+        <ExpanderGroup
+          closeAllText=""
+          openAllText=""
+          showToggleAllButton={false}
         >
-          {data.contact}
-        </ExternalLink>
-      </BasicBlock>
+          <Expander>
+            <ExpanderTitleButton>{t('usage-from-other')}</ExpanderTitleButton>
+          </Expander>
+        </ExpanderGroup>
 
-      <BasicBlock title={t('created')}>
-        <FormattedDate date={data.created} />
-      </BasicBlock>
-    </ModelInfoWrapper>
+        <Separator isLarge />
+
+        <BasicBlock title={t('contributors')}>
+          {data.organizations.join(', ')}
+        </BasicBlock>
+        <BasicBlock title={t('feedback')}>
+          <ExternalLink
+            href={`mailto:${data.contact}?subject=${getLanguageVersion({
+              data: data.title.reduce(
+                (acc, curr) => ({ ...acc, [curr.lang]: curr.value }),
+                {}
+              ),
+              lang: i18n.language,
+            })}`}
+            labelNewWindow=""
+          >
+            {data.contact}
+          </ExternalLink>
+        </BasicBlock>
+
+        <BasicBlock title={t('created')}>
+          <FormattedDate date={data.created} />
+        </BasicBlock>
+      </ModelInfoWrapper>
+    </>
   );
 }

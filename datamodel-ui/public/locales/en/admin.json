@@ -117,6 +117,7 @@
   "select-information-description-languages": "Select languages for information description",
   "select-information-domains-for-data-model": "Select information domains for data model",
   "status": "Status",
+  "status-all": "All statuses",
   "statuses-available": "Statuses available",
   "still-unknown": "Still unknown",
   "terminologies-available": "Terminologies available",

@@ -3,12 +3,15 @@ import { ContentWrapper, ModelFlow } from './model.styles';
 import ModelInfoView from './model-info-view';
 import SearchView from './search-view';
 import ClassView from './class-view';
+import { useTranslation } from 'next-i18next';
 
 interface ModelProps {
   modelId: string;
 }
 
 export default function Model({ modelId }: ModelProps) {
+  const { t } = useTranslation('common');
+
   return (
     <div
       style={{
@@ -68,33 +71,38 @@ export default function Model({ modelId }: ModelProps) {
               {
                 id: 'search',
                 icon: 'search',
-                buttonLabel: 'Hae',
+                buttonLabel: t('search-variant'),
                 component: <SearchView />,
+              },
+              {
+                id: 'graph-small',
+                icon: 'applicationProfile',
+                buttonLabel: t('graph'),
               },
               {
                 id: 'info',
                 icon: 'info',
-                buttonLabel: 'Tiedot',
+                buttonLabel: t('details'),
                 component: <ModelInfoView />,
               },
               {
                 id: 'classes',
                 icon: 'chatHeart',
-                buttonLabel: 'Luokat',
+                buttonLabel: t('classes'),
                 component: <ClassView modelId={modelId} />,
               },
               {
                 id: 'attributes',
                 icon: 'history',
-                buttonLabel: 'Attribuutit',
-                buttonLabelSm: 'Attr.',
+                buttonLabel: t('attributes'),
+                buttonLabelSm: t('attributes-abbreviation'),
                 component: <></>,
               },
               {
                 id: 'associations',
                 icon: 'swapVertical',
-                buttonLabel: 'Assosisaatiot',
-                buttonLabelSm: 'Assos.',
+                buttonLabel: t('associations'),
+                buttonLabelSm: t('associations-abbreviation'),
                 component: <></>,
               },
             ]}

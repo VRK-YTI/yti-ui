@@ -31,12 +31,12 @@ export const ContentWrapper = styled.div`
   width: 100%;
 `;
 
-export const ModelInfoWrapper = styled.div`
-  width: 100%;
+export const ModelInfoWrapper = styled.div<{ $height?: number }>`
+  width: calc(inherit - 30px);
+  max-width: inherit;
 
-  h2 {
-    font-size: 18px !important;
-  }
+  padding: 15px;
+  padding-top: ${(props) => (props.$height ?? 0) + 15}px;
 `;
 
 export const ModelInfoListWrapper = styled.div`
@@ -74,7 +74,7 @@ export const TooltipWrapper = styled(Block)`
       props.theme.suomifi.colors.whiteBase} !important;
     padding: 2px !important;
     position: absolute !important;
-    right: 56px;
+    right: 15px;
     width: min-content;
     height: min-content;
     z-index: 2;
@@ -108,4 +108,25 @@ export const TooltipWrapper = styled(Block)`
 export const FullwidthSearchInput = styled(SearchInput)`
   width: 100%;
   max-width: 380px;
+`;
+
+export const StaticHeaderWrapper = styled.div`
+  width: inherit;
+  max-width: inherit;
+  position: fixed;
+  background: ${(props) => props.theme.suomifi.colors.whiteBase};
+  z-index: 2;
+  height: min-content;
+
+  h2 {
+    font-size: 18px !important;
+  }
+
+  > div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: ${(props) => props.theme.suomifi.spacing.s};
+    padding-bottom: 0;
+  }
 `;

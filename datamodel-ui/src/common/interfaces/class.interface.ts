@@ -2,7 +2,7 @@ import { Status } from './status.interface';
 
 export interface ClassType {
   label: { [key: string]: string };
-  comment?: string;
+  editorialNote?: string;
   status: Status;
   equivalentClass: string[];
   subClassOf: string[];
@@ -13,7 +13,7 @@ export interface ClassType {
 
 export const initialClass: ClassType = {
   label: {},
-  comment: '',
+  editorialNote: '',
   status: 'DRAFT',
   equivalentClass: [],
   subClassOf: [],

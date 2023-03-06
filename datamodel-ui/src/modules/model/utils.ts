@@ -9,7 +9,7 @@ export function internalClassToClassForm(
   const label = languages.reduce((acc, lang) => ({ ...acc, [lang]: '' }), {});
 
   return {
-    comment: '',
+    editorialNote: '',
     concept: {},
     equivalentClass: [],
     identifier: '',
@@ -33,7 +33,7 @@ export function internalClassToClassForm(
 // TODO: Need to add equivalentClass, subClassOf and subject after backend is ready
 export function classFormToClass(data: ClassFormType): ClassType {
   return {
-    comment: data.comment,
+    editorialNote: data.editorialNote,
     equivalentClass: [],
     identifier: data.identifier,
     label: data.label,

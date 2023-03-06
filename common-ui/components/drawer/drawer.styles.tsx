@@ -99,8 +99,9 @@ export const DrawerButtonGroup = styled.div<{ $isSmall: boolean }>`
       }
       `
       : `
-  > *:not(:last-child) {
-    border-bottom: 3px solid ${props.theme.suomifi.colors.whiteBase};
+  > button {
+    border-top: 1px solid ${props.theme.suomifi.colors.whiteBase} !important;
+    border-bottom: 1px solid ${props.theme.suomifi.colors.whiteBase} !important;
   }
   `}
 `;
@@ -155,8 +156,10 @@ export const DrawerButton = styled(Button)<{
 }>`
   height: ${(props) => resolve(props.$breakpoint, 'auto', '50px', '85px')};
   width: ${(props) => resolve(props.$breakpoint, 'auto', '50px', '100px')};
+  min-height: ${(props) => resolve(props.$breakpoint, 'auto', '50px', '85px')};
+  min-width: ${(props) => resolve(props.$breakpoint, 'auto', '50px', '100px')};
   text-transform: uppercase;
-  font-weight: 400;
+  font-weight: ${(props) => (props.$active ? '600' : '400')};
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -199,7 +202,7 @@ export const DrawerButton = styled(Button)<{
       props.$breakpoint !== 'small' && props.$active
         ? props.theme.suomifi.colors.blackBase
         : 'inherit'};
-    width: 20px !important;
+    width: 24px !important;
     height: auto !important;
     margin: 0 !important;
   }
