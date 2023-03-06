@@ -335,7 +335,11 @@ export default function ClassView({ modelId }: ClassView) {
           </BasicBlock>
 
           <BasicBlock title={t('additional-information')}>
-            {data.editorialNote ?? t('no-comment')}
+            {getLanguageVersion({
+              data: data.note,
+              lang: i18n.language,
+              appendLocale: true,
+            })}
           </BasicBlock>
 
           <div style={{ marginTop: '20px' }}>
@@ -369,8 +373,8 @@ export default function ClassView({ modelId }: ClassView) {
           <div>
             <BasicBlock title={t('created')}>Päiväys</BasicBlock>
 
-            <BasicBlock title={t('editor-comment')}>
-              {getLanguageVersion({ data: data.note, lang: i18n.language })}
+            <BasicBlock title={t('editorial-note')}>
+              {data.editorialNote ?? t('no-editorial-note')}
             </BasicBlock>
           </div>
         </ModelInfoWrapper>
