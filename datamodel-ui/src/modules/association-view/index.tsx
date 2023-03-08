@@ -91,6 +91,6 @@ export default function AttributeView() {
       return <></>;
     }
 
-    return <CommonForm handleReturn={handleFormReturn} />;
+    return <CommonForm handleReturn={handleFormReturn} type={'association'} />;
   }
 }

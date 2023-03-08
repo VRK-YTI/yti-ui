@@ -73,3 +73,44 @@ export function translateLanguage(language: string, t: TFunction) {
       return language;
   }
 }
+
+export function translateCommonForm(
+  part: string,
+  type: 'association' | 'attribute',
+  t: TFunction
+) {
+  switch (part) {
+    case 'name':
+      return type === 'association'
+        ? t('common-form.associations-name', { ns: 'admin' })
+        : t('common-form.attributes-name', { ns: 'admin' });
+    case 'identifier':
+      return type === 'association'
+        ? t('common-form.associations-identifier', { ns: 'admin' })
+        : t('common-form.attributes-identifier', { ns: 'admin' });
+    case 'upper':
+      return type === 'association'
+        ? t('common-form.upper-associations', { ns: 'admin' })
+        : t('common-form.upper-attributes', { ns: 'admin' });
+    case 'add-upper':
+      return type === 'association'
+        ? t('common-form.add-upper-associations', { ns: 'admin' })
+        : t('common-form.add-upper-attributes', { ns: 'admin' });
+    case 'equivalent':
+      return type === 'association'
+        ? t('common-form.equivalent-associations', { ns: 'admin' })
+        : t('common-form.equivalent-attributes', { ns: 'admin' });
+    case 'add-equivalent':
+      return type === 'association'
+        ? t('common-form.add-equivalent-associations', { ns: 'admin' })
+        : t('common-form.add-equivalent-attributes', { ns: 'admin' });
+    case 'note':
+      return type === 'association'
+        ? t('common-form.associations-note', { ns: 'admin' })
+        : t('common-form.attributes-note', { ns: 'admin' });
+    case 'editorial-note':
+      return t('common-form.editorial-note', { ns: 'admin' });
+    default:
+      return '';
+  }
+}

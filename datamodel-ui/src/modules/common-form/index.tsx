@@ -16,12 +16,14 @@ import { FormWrapper } from './common-form.styles';
 import InlineListBlock from '@app/common/components/inline-list-block';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
+import { translateCommonForm } from '@app/common/utils/translation-helpers';
 
 interface AttributeFormProps {
   handleReturn: () => void;
+  type: 'association' | 'attribute';
 }
 
-export default function CommonForm({ handleReturn }: AttributeFormProps) {
+export default function CommonForm({ handleReturn, type }: AttributeFormProps) {
   const { t } = useTranslation('admin');
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
@@ -49,7 +51,7 @@ export default function CommonForm({ handleReturn }: AttributeFormProps) {
           </Button>
         </div>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <Text variant="bold">Attribuutin nimi</Text>
+          <Text variant="bold">{translateCommonForm('name', type, t)}</Text>
 
           <div>
             <Button style={{ marginRight: '15px' }}>{t('save')}</Button>
@@ -69,33 +71,35 @@ export default function CommonForm({ handleReturn }: AttributeFormProps) {
               <TextInput
                 key={`label-${lang}`}
                 className="wide-text"
-                labelText={`Attribuutin nimi, ${lang}`}
+                labelText={`${translateCommonForm('name', type, t)}, ${lang}`}
                 value={''}
                 onChange={(e) => setData({})}
               />
             ))}
           </LanguageVersionedWrapper>
 
-          <TextInput labelText={'Attribuutin yksilöivä tunnus'} />
+          <TextInput labelText={translateCommonForm('identifier', type, t)} />
 
           <InlineListBlock
-            label="Yläattribuutit"
+            label={translateCommonForm('upper', type, t)}
             items={[
               { id: '1', label: 'testi1' },
               { id: '2', label: 'testi2' },
             ]}
             button={
               <Button variant="secondary" icon="plus">
-                Lisää yläattribuutti
+                {translateCommonForm('add-upper', type, t)}
               </Button>
             }
           />
 
           <InlineListBlock
-            label="Vastaavat attribuutit"
+            label={translateCommonForm('equivalent', type, t)}
             items={[]}
             button={
-              <Button variant="secondary">Lisää vastaava attribuutti</Button>
+              <Button variant="secondary">
+                {translateCommonForm('add-equivalent', type, t)}
+              </Button>
             }
           />
 
@@ -113,7 +117,7 @@ export default function CommonForm({ handleReturn }: AttributeFormProps) {
             {languages.map((lang) => (
               <Textarea
                 key={`label-${lang}`}
-                labelText={`Attribuutin lisätiedot, ${lang}`}
+                labelText={`${translateCommonForm('note', type, t)}, ${lang}`}
                 value={''}
                 onChange={(e) => setData({})}
                 optionalText={t('optional')}
@@ -123,7 +127,7 @@ export default function CommonForm({ handleReturn }: AttributeFormProps) {
           </LanguageVersionedWrapper>
 
           <Textarea
-            labelText={'Muokkaajan kommentti'}
+            labelText={translateCommonForm('editorial-note', type, t)}
             optionalText={t('optional')}
             className="wide-text"
           />
