@@ -7,7 +7,7 @@ import {
 } from 'suomifi-ui-components';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import MultiColumnSearch from '@app/common/components/multi-column-search';
-import { LargeModal } from './attribute-modal.styles';
+import { LargeModal } from './association-modal.styles';
 import { InternalClassesSearchParams } from '@app/common/components/search-internal-classes/search-internal-classes.slice';
 import { useTranslation } from 'next-i18next';
 
@@ -47,7 +47,7 @@ export default function AttributeModal({
         icon={buttonIcon ? 'plus' : undefined}
         onClick={() => setVisible(true)}
       >
-        {t('add-attribute')}
+        {t('add-association')}
       </Button>
       <LargeModal
         appElementId="__next"
@@ -55,9 +55,9 @@ export default function AttributeModal({
         variant={isSmall ? 'smallScreen' : 'default'}
       >
         <ModalContent>
-          <ModalTitle>{t('add-attribute')}</ModalTitle>
+          <ModalTitle>{t('add-association')}</ModalTitle>
           <MultiColumnSearch
-            primaryColumnName={t('attribute-name')}
+            primaryColumnName={t('association-name')}
             results={[]}
             selectedId={selectedId}
             setSelectedId={setSelectedId}

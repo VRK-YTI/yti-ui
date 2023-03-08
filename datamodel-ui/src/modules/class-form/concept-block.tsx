@@ -45,10 +45,12 @@ export default function ConceptBlock({
   >(concept);
   const [terminologyOptions] = useState([
     {
-      labelText:
-        t('terminologies-linked-to-data-model') +
-        'Tietomallin linkitetyt sanastot',
+      labelText: t('terminologies-linked-to-data-model'),
       uniqueItemId: 'linked',
+    },
+    {
+      labelText: 'Kaikki sanastot',
+      uniqueItemId: 'all',
     },
   ]);
 

@@ -124,6 +124,7 @@ export default function ClassModal({ handleFollowUp }: ClassModalProps) {
         <ModalContent>
           <ModalTitle>{t('add-class')}</ModalTitle>
           <MultiColumnSearch
+            primaryColumnName={t('class-name')}
             results={resultsFormatted}
             selectedId={selectedId}
             setSelectedId={setSelectedId}

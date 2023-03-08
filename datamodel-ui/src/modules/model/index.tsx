@@ -2,7 +2,9 @@ import Drawer from '@app/common/components/model-drawer';
 import { ContentWrapper, ModelFlow } from './model.styles';
 import ModelInfoView from './model-info-view';
 import SearchView from './search-view';
-import ClassView from './class-view';
+import ClassView from '../class-view/class-view';
+import AttributeView from '../attribute-view';
+import AssociationView from '../association-view';
 import { useTranslation } from 'next-i18next';
 
 interface ModelProps {
@@ -96,14 +98,14 @@ export default function Model({ modelId }: ModelProps) {
                 icon: 'history',
                 buttonLabel: t('attributes'),
                 buttonLabelSm: t('attributes-abbreviation'),
-                component: <></>,
+                component: <AttributeView />,
               },
               {
                 id: 'associations',
                 icon: 'swapVertical',
                 buttonLabel: t('associations'),
                 buttonLabelSm: t('associations-abbreviation'),
-                component: <></>,
+                component: <AssociationView />,
               },
             ]}
           />

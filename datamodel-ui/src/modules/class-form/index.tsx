@@ -13,11 +13,7 @@ import {
   Tooltip,
 } from 'suomifi-ui-components';
 import Separator from 'yti-common-ui/separator';
-import InlineList from '@app/common/components/inline-list';
-import {
-  ClassFormWrapper,
-  LanguageVersionedWrapper,
-} from './class-form.styles';
+import { LanguageVersionedWrapper } from './class-form.styles';
 import AttributeModal from '../attribute-modal';
 import { useTranslation } from 'next-i18next';
 import { Status } from '@app/common/interfaces/status.interface';
@@ -30,8 +26,10 @@ import {
   translateClassFormErrors,
   translateStatus,
 } from '@app/common/utils/translation-helpers';
-import { StaticHeaderWrapper } from '../model/model.styles';
 import { useEffect, useRef, useState } from 'react';
+import StaticHeader from 'yti-common-ui/drawer/static-header';
+import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
+import InlineListBlock from '@app/common/components/inline-list-block';
 
 export interface ClassFormProps {
   handleReturn: () => void;
@@ -75,7 +73,7 @@ export default function ClassForm({
 
   return (
     <>
-      <StaticHeaderWrapper ref={ref}>
+      <StaticHeader ref={ref}>
         <div>
           <Button
             icon="arrowLeft"
@@ -101,7 +99,7 @@ export default function ClassForm({
           </div>
         </div>
 
-        {userPosted && (
+        {userPosted ? (
           <div>
             <FormFooterAlert
               labelText={t('missing-information-title', { ns: 'admin' })}
@@ -110,10 +108,12 @@ export default function ClassForm({
                 .map((err) => translateClassFormErrors(err[0], t))}
             />
           </div>
+        ) : (
+          <></>
         )}
-      </StaticHeaderWrapper>
+      </StaticHeader>
 
-      <ClassFormWrapper $height={headerHeight}>
+      <DrawerContent height={headerHeight} spaced>
         <ConceptBlock
           concept={
             data.equivalentClass.length > 0
@@ -155,6 +155,7 @@ export default function ClassForm({
                 })
               }
               status={userPosted && errors.label ? 'error' : 'default'}
+              className="fullwidth"
             />
           ))}
         </LanguageVersionedWrapper>
@@ -177,26 +178,26 @@ export default function ClassForm({
           }
         />
 
-        <div className="spread-content">
-          <Label>{t('upper-classes')}</Label>
-          <InlineList
-            items={
-              data.subClassOf.length > 0
-                ? data.subClassOf.map((s) => ({
-                    label: s.label,
-                    id: s.identifier,
-                  }))
-                : []
-            }
-            handleRemoval={handleSubClassOfRemoval}
-          />
-          <Button variant="secondary">{t('add-upper-class')}</Button>
-        </div>
+        <InlineListBlock
+          button={<Button variant="secondary">{t('add-upper-class')}</Button>}
+          items={
+            data.subClassOf.length > 0
+              ? data.subClassOf.map((s) => ({
+                  label: s.label,
+                  id: s.identifier,
+                }))
+              : []
+          }
+          label={t('upper-classes')}
+        />
 
-        <div className="spread-content">
-          <Label>{t('corresponding-classes')}</Label>
-          <Button variant="secondary">{t('add-corresponding-class')}</Button>
-        </div>
+        <InlineListBlock
+          button={
+            <Button variant="secondary">{t('add-corresponding-class')}</Button>
+          }
+          items={[]}
+          label={t('corresponding-classes')}
+        />
 
         <div>
           <Dropdown
@@ -225,6 +226,7 @@ export default function ClassForm({
                   note: { ...data.note, [lang]: e.target.value },
                 })
               }
+              className="fullwidth"
             />
           ))}
         </LanguageVersionedWrapper>
@@ -235,11 +237,24 @@ export default function ClassForm({
           <Heading variant="h3">{t('attributes')}</Heading>
         </div>
 
-        <div className="spread-content">
-          <Label>{t('attributes-added-to-class', { count: 0 })}</Label>
-          <AttributeModal />
-        </div>
+        <InlineListBlock
+          items={[]}
+          label={t('attributes-added-to-class', { count: 0 })}
+          button={
+            <AttributeModal
+              buttonTranslations={{
+                useSelected: t('use-as-is'),
+              }}
+              handleFollowUp={() => null}
+            />
+          }
+        />
 
+        {/* TODO:
+         * Change this use InlineListBlock possibly
+         * after it's been decided whether all attributes are
+         * listed together
+         */}
         <div className="spread-content">
           <Label>
             {t('attributes-inherited-from-upper-classes', {
@@ -270,11 +285,17 @@ export default function ClassForm({
           <Heading variant="h3">{t('associations')}</Heading>
         </div>
 
-        <div className="spread-content">
-          <Label>{t('associations-added-to-class', { count: 0 })}</Label>
-          <Button variant="secondary">{t('add-association')}</Button>
-        </div>
+        <InlineListBlock
+          items={[]}
+          label={t('associations-added-to-class', { count: 0 })}
+          button={<Button variant="secondary">{t('add-association')}</Button>}
+        />
 
+        {/* TODO:
+         * Change this use InlineListBlock possibly
+         * after it's been decided whether all assocations are
+         * listed together
+         */}
         <div className="spread-content">
           <Label>
             {t('associations-inherited-from-upper-classes', { count: 0 })}
@@ -289,8 +310,9 @@ export default function ClassForm({
           optionalText={t('optional')}
           defaultValue={data.editorialNote}
           onChange={(e) => setData({ ...data, editorialNote: e.target.value })}
+          className="fullwidth"
         />
-      </ClassFormWrapper>
+      </DrawerContent>
     </>
   );
 }

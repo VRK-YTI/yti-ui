@@ -47,6 +47,7 @@ export interface ResultType {
 }
 
 interface MultiColumnSearchProps {
+  primaryColumnName: string;
   results: ResultType[];
   selectedId?: string;
   setSelectedId: (value: string) => void;
@@ -56,6 +57,7 @@ interface MultiColumnSearchProps {
 }
 
 export default function MultiColumnSearch({
+  primaryColumnName,
   results,
   selectedId,
   setSelectedId,
@@ -214,7 +216,7 @@ export default function MultiColumnSearch({
         <tbody>
           <tr>
             <td>
-              <Text variant="bold">{t('class-name')}</Text>
+              <Text variant="bold">{primaryColumnName}</Text>
             </td>
             <td>
               <Text variant="bold">{t('data-model')}</Text>
