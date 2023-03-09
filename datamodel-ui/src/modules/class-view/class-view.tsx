@@ -35,7 +35,7 @@ import {
   classFormToClass,
   internalClassToClassForm,
   validateClassForm,
-} from '../model/utils';
+} from './utils';
 import DrawerItemList from '@app/common/components/drawer-item-list';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';

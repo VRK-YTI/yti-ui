@@ -16,7 +16,15 @@ import { FormWrapper } from './common-form.styles';
 import InlineListBlock from '@app/common/components/inline-list-block';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
-import { translateCommonForm } from '@app/common/utils/translation-helpers';
+import {
+  translateCommonForm,
+  translateCommonFormErrors,
+} from '@app/common/utils/translation-helpers';
+import { initialAssociation } from '@app/common/interfaces/association-form.interface';
+import { initialAttribute } from '@app/common/interfaces/attribute-form.interface';
+import { Status } from '@app/common/interfaces/status.interface';
+import validateForm from './validate-form';
+import FormFooterAlert from 'yti-common-ui/form-footer-alert';
 
 interface AttributeFormProps {
   handleReturn: () => void;
@@ -28,14 +36,47 @@ export default function CommonForm({ handleReturn, type }: AttributeFormProps) {
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
   const [languages] = useState(['fi']);
-  const [data, setData] = useState({});
+  const [data, setData] = useState(
+    type === 'association' ? initialAssociation : initialAttribute
+  );
+  const [userPosted, setUserPosted] = useState(false);
+  const [errors, setErrors] = useState(validateForm(data));
   const statuses = statusList;
 
   useEffect(() => {
     if (ref.current) {
       setHeaderHeight(ref.current.clientHeight);
     }
-  }, [ref]);
+
+    if (
+      ref.current &&
+      userPosted &&
+      Object.values(errors).filter((val) => val).length > 0
+    ) {
+      setHeaderHeight(ref.current.clientHeight);
+    }
+  }, [ref, errors, userPosted]);
+
+  const handleSubmit = () => {
+    if (!userPosted) {
+      setUserPosted(true);
+    }
+
+    const errors = validateForm(data);
+    setErrors(errors);
+
+    if (Object.values(errors).filter((val) => val).length > 0) {
+      return;
+    }
+  };
+
+  const handleUpdate = (value: typeof data) => {
+    if (userPosted && Object.values(errors).filter((val) => val).length > 0) {
+      setErrors(validateForm(value));
+    }
+
+    setData(value);
+  };
 
   return (
     <>
@@ -54,12 +95,29 @@ export default function CommonForm({ handleReturn, type }: AttributeFormProps) {
           <Text variant="bold">{translateCommonForm('name', type, t)}</Text>
 
           <div>
-            <Button style={{ marginRight: '15px' }}>{t('save')}</Button>
+            <Button
+              onClick={() => handleSubmit()}
+              style={{ marginRight: '15px' }}
+            >
+              {t('save')}
+            </Button>
             <Button variant="secondary" onClick={() => handleReturn()}>
               {t('cancel-variant')}
             </Button>
           </div>
         </div>
+        {userPosted ? (
+          <div>
+            <FormFooterAlert
+              labelText={t('missing-information-title')}
+              alerts={Object.entries(errors)
+                .filter((e) => e[1])
+                .map((e) => translateCommonFormErrors(e[0], type, t))}
+            />
+          </div>
+        ) : (
+          <></>
+        )}
       </StaticHeader>
 
       <DrawerContent height={headerHeight}>
@@ -72,13 +130,29 @@ export default function CommonForm({ handleReturn, type }: AttributeFormProps) {
                 key={`label-${lang}`}
                 className="wide-text"
                 labelText={`${translateCommonForm('name', type, t)}, ${lang}`}
-                value={''}
-                onChange={(e) => setData({})}
+                defaultValue={data.label[lang] ?? ''}
+                onChange={(e) =>
+                  handleUpdate({
+                    ...data,
+                    label: { ...data.label, [lang]: e?.toString() ?? '' },
+                  })
+                }
+                status={userPosted && errors.label ? 'error' : 'default'}
               />
             ))}
           </LanguageVersionedWrapper>
 
-          <TextInput labelText={translateCommonForm('identifier', type, t)} />
+          <TextInput
+            labelText={translateCommonForm('identifier', type, t)}
+            defaultValue={data.identifier}
+            onChange={(e) =>
+              handleUpdate({
+                ...data,
+                identifier: e?.toString() ?? '',
+              })
+            }
+            status={userPosted && errors.identifier ? 'error' : 'default'}
+          />
 
           <InlineListBlock
             label={translateCommonForm('upper', type, t)}
@@ -104,7 +178,11 @@ export default function CommonForm({ handleReturn, type }: AttributeFormProps) {
           />
 
           <div>
-            <Dropdown labelText="Tila" defaultValue="DRAFT">
+            <Dropdown
+              labelText={t('status')}
+              defaultValue="DRAFT"
+              onChange={(e) => handleUpdate({ ...data, status: e as Status })}
+            >
               {statuses.map((status) => (
                 <DropdownItem key={`status-${status}`} value={status}>
                   {translateStatus(status, t)}
@@ -118,8 +196,13 @@ export default function CommonForm({ handleReturn, type }: AttributeFormProps) {
               <Textarea
                 key={`label-${lang}`}
                 labelText={`${translateCommonForm('note', type, t)}, ${lang}`}
-                value={''}
-                onChange={(e) => setData({})}
+                defaultValue={data.note[lang] ?? ''}
+                onChange={(e) =>
+                  handleUpdate({
+                    ...data,
+                    note: { ...data.note, [lang]: e.target.value ?? '' },
+                  })
+                }
                 optionalText={t('optional')}
                 className="wide-text"
               />
@@ -129,6 +212,10 @@ export default function CommonForm({ handleReturn, type }: AttributeFormProps) {
           <Textarea
             labelText={translateCommonForm('editorial-note', type, t)}
             optionalText={t('optional')}
+            defaultValue={data.editorialNote}
+            onChange={(e) =>
+              handleUpdate({ ...data, editorialNote: e.target.value ?? '' })
+            }
             className="wide-text"
           />
         </FormWrapper>

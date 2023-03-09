@@ -19,7 +19,7 @@ import { useTranslation } from 'next-i18next';
 import { Status } from '@app/common/interfaces/status.interface';
 import ConceptBlock from './concept-block';
 import { ClassFormType } from '@app/common/interfaces/class-form.interface';
-import { ClassFormErrors } from '../model/utils';
+import { ClassFormErrors } from '../class-view/utils';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
 import { statusList } from 'yti-common-ui/utils/status-list';
 import {
@@ -102,7 +102,7 @@ export default function ClassForm({
         {userPosted ? (
           <div>
             <FormFooterAlert
-              labelText={t('missing-information-title', { ns: 'admin' })}
+              labelText={t('missing-information-title')}
               alerts={Object.entries(errors)
                 .filter((err) => err[1])
                 .map((err) => translateClassFormErrors(err[0], t))}

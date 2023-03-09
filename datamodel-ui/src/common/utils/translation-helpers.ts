@@ -94,16 +94,16 @@ export function translateCommonForm(
         : t('common-form.upper-attributes', { ns: 'admin' });
     case 'add-upper':
       return type === 'association'
-        ? t('common-form.add-upper-associations', { ns: 'admin' })
-        : t('common-form.add-upper-attributes', { ns: 'admin' });
+        ? t('common-form.add-upper-association', { ns: 'admin' })
+        : t('common-form.add-upper-attribute', { ns: 'admin' });
     case 'equivalent':
       return type === 'association'
         ? t('common-form.equivalent-associations', { ns: 'admin' })
         : t('common-form.equivalent-attributes', { ns: 'admin' });
     case 'add-equivalent':
       return type === 'association'
-        ? t('common-form.add-equivalent-associations', { ns: 'admin' })
-        : t('common-form.add-equivalent-attributes', { ns: 'admin' });
+        ? t('common-form.add-equivalent-association', { ns: 'admin' })
+        : t('common-form.add-equivalent-attribute', { ns: 'admin' });
     case 'note':
       return type === 'association'
         ? t('common-form.associations-note', { ns: 'admin' })
@@ -112,5 +112,26 @@ export function translateCommonForm(
       return t('common-form.editorial-note', { ns: 'admin' });
     default:
       return '';
+  }
+}
+
+export function translateCommonFormErrors(
+  error: string,
+  type: 'association' | 'attribute',
+  t: TFunction
+) {
+  switch (error) {
+    case 'label':
+      return type === 'association'
+        ? t('association-missing-label', { ns: 'admin' })
+        : t('attribute-missing-label', { ns: 'admin' });
+    case 'identifier':
+      return type === 'association'
+        ? t('association-missing-identifier', { ns: 'admin' })
+        : t('attribute-missing-identifier', { ns: 'admin' });
+    default:
+      return type === 'association'
+        ? t('association-missing-general', { ns: 'admin' })
+        : t('attribute-missing-general', { ns: 'admin' });
   }
 }
