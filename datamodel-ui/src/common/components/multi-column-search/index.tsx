@@ -13,7 +13,6 @@ import {
   SingleSelectData,
   Text,
 } from 'suomifi-ui-components';
-import { InternalClassesSearchParams } from '../search-internal-classes/search-internal-classes.slice';
 import {
   ResultsTable,
   SearchToolsBlock,
@@ -23,6 +22,7 @@ import { statusList } from 'yti-common-ui/utils/status-list';
 import { useGetServiceCategoriesQuery } from '../service-categories/service-categories.slice';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { isEqual } from 'lodash';
+import { InternalResourcesSearchParams } from '../search-internal-resources/search-internal-resources.slice';
 
 export interface ResultType {
   target: {
@@ -51,8 +51,8 @@ interface MultiColumnSearchProps {
   results: ResultType[];
   selectedId?: string;
   setSelectedId: (value: string) => void;
-  searchParams: InternalClassesSearchParams;
-  setSearchParams: (value: InternalClassesSearchParams) => void;
+  searchParams: InternalResourcesSearchParams;
+  setSearchParams: (value: InternalResourcesSearchParams) => void;
   languageVersioned?: boolean;
 }
 
@@ -126,8 +126,8 @@ export default function MultiColumnSearch({
   };
 
   const handleSearchChange = (
-    key: keyof InternalClassesSearchParams,
-    value: typeof searchParams[keyof InternalClassesSearchParams]
+    key: keyof InternalResourcesSearchParams,
+    value: typeof searchParams[keyof InternalResourcesSearchParams]
   ) => {
     if ((key === 'groups' || key === 'status') && isEqual(value, ['-1'])) {
       setSearchParams({ ...searchParams, [key]: [] });

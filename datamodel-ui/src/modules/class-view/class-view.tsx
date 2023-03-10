@@ -210,6 +210,7 @@ export default function ClassView({ modelId }: ClassView) {
                   lang: i18n.language,
                 }),
                 subtitle: item.identifier,
+                onClick: () => null,
               }))}
             />
             // <div style={{ display: 'flex', flexDirection: 'column' }}>

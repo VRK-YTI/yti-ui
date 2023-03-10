@@ -25,13 +25,19 @@ import { initialAttribute } from '@app/common/interfaces/attribute-form.interfac
 import { Status } from '@app/common/interfaces/status.interface';
 import validateForm from './validate-form';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
+import { usePutResourceMutation } from '@app/common/components/resource/resource.slice';
 
 interface AttributeFormProps {
   handleReturn: () => void;
   type: 'association' | 'attribute';
+  modelId: string;
 }
 
-export default function CommonForm({ handleReturn, type }: AttributeFormProps) {
+export default function CommonForm({
+  handleReturn,
+  type,
+  modelId,
+}: AttributeFormProps) {
   const { t } = useTranslation('admin');
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
@@ -41,6 +47,7 @@ export default function CommonForm({ handleReturn, type }: AttributeFormProps) {
   );
   const [userPosted, setUserPosted] = useState(false);
   const [errors, setErrors] = useState(validateForm(data));
+  const [putResource, result] = usePutResourceMutation();
   const statuses = statusList;
 
   useEffect(() => {
@@ -68,6 +75,11 @@ export default function CommonForm({ handleReturn, type }: AttributeFormProps) {
     if (Object.values(errors).filter((val) => val).length > 0) {
       return;
     }
+
+    putResource({
+      modelId: modelId,
+      data: { ...data, type: type.toUpperCase() },
+    });
   };
 
   const handleUpdate = (value: typeof data) => {
@@ -156,10 +168,7 @@ export default function CommonForm({ handleReturn, type }: AttributeFormProps) {
 
           <InlineListBlock
             label={translateCommonForm('upper', type, t)}
-            items={[
-              { id: '1', label: 'testi1' },
-              { id: '2', label: 'testi2' },
-            ]}
+            items={[]}
             button={
               <Button variant="secondary" icon="plus">
                 {translateCommonForm('add-upper', type, t)}

@@ -7,7 +7,7 @@ import AttributeModal from '../attribute-modal';
 import CommonForm from '../common-form';
 import { ViewBlock } from './attribute-view.styles';
 
-export default function AttributeView() {
+export default function AttributeView({ modelId }: { modelId: string }) {
   const [view, setView] = useState('listing');
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
@@ -69,14 +69,17 @@ export default function AttributeView() {
                 {
                   label: 'Elinkaaren vaihe',
                   subtitle: 'jhs210:elinkaari',
+                  onClick: () => null,
                 },
                 {
                   label: 'Energialuokka',
                   subtitle: 'jhs210:energialuokka',
+                  onClick: () => null,
                 },
                 {
                   label: 'Kerrosala',
                   subtitle: 'jhs210:kerrosala',
+                  onClick: () => null,
                 },
               ]}
             />
@@ -91,6 +94,12 @@ export default function AttributeView() {
       return <></>;
     }
 
-    return <CommonForm handleReturn={handleFormReturn} type="attribute" />;
+    return (
+      <CommonForm
+        handleReturn={handleFormReturn}
+        type="attribute"
+        modelId={modelId}
+      />
+    );
   }
 }

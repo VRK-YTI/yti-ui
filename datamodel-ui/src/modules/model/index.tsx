@@ -98,14 +98,14 @@ export default function Model({ modelId }: ModelProps) {
                 icon: 'history',
                 buttonLabel: t('attributes'),
                 buttonLabelSm: t('attributes-abbreviation'),
-                component: <AttributeView />,
+                component: <AttributeView modelId={modelId} />,
               },
               {
                 id: 'associations',
                 icon: 'swapVertical',
                 buttonLabel: t('associations'),
                 buttonLabelSm: t('associations-abbreviation'),
-                component: <AssociationView />,
+                component: <AssociationView modelId={modelId} />,
               },
             ]}
           />

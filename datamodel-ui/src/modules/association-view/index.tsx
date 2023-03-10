@@ -5,9 +5,10 @@ import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import AssociationModal from '../association-modal';
 import CommonForm from '../common-form';
+import CommonView from '../common-view';
 import { ViewBlock } from './association-view.styles';
 
-export default function AttributeView() {
+export default function AssociationView({ modelId }: { modelId: string }) {
   const [view, setView] = useState('listing');
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
@@ -26,10 +27,15 @@ export default function AttributeView() {
     setView('listing');
   };
 
+  const handleShowAttribute = () => {
+    setView('association');
+  };
+
   return (
     <>
       {renderListing()}
       {renderForm()}
+      {renderAssociation()}
     </>
   );
 
@@ -69,14 +75,17 @@ export default function AttributeView() {
                 {
                   label: 'Liitetään kohteella',
                   subtitle: 'jhs210:liitos',
+                  onClick: handleShowAttribute,
                 },
                 {
                   label: 'Rakennuskohteen omistaja',
                   subtitle: 'jhs210:rakomista',
+                  onClick: handleShowAttribute,
                 },
                 {
                   label: 'Rakennuskohteen osoite',
                   subtitle: 'jhs210:rakosoite',
+                  onClick: handleShowAttribute,
                 },
               ]}
             />
@@ -91,6 +100,20 @@ export default function AttributeView() {
       return <></>;
     }
 
-    return <CommonForm handleReturn={handleFormReturn} type={'association'} />;
+    return (
+      <CommonForm
+        handleReturn={handleFormReturn}
+        type={'association'}
+        modelId={modelId}
+      />
+    );
+  }
+
+  function renderAssociation() {
+    if (view !== 'association') {
+      return <></>;
+    }
+
+    return <CommonView type="association" handleReturn={handleFormReturn} />;
   }
 }

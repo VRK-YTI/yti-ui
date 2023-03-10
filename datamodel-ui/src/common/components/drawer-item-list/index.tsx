@@ -9,17 +9,30 @@ const ListWrapper = styled.div`
 const ListItem = styled.div`
   font-size: ${(props) => props.theme.suomifi.typography.bodyTextSmall};
 
+  &:hover {
+    background-color: ${(props) => props.theme.suomifi.colors.highlightBase};
+    color: ${(props) => props.theme.suomifi.colors.whiteBase};
+    border-radius: 2px;
+    cursor: pointer;
+  }
+
+  padding: 5px;
+  margin: 0 -5px;
+
   div:first-child {
     font-weight: 600;
     margin-bottom: 5px;
   }
 `;
 
+interface DrawerItem {
+  label: string;
+  subtitle: string;
+  onClick: () => void;
+}
+
 interface DrawerItemListProps {
-  items?: {
-    label: string;
-    subtitle: string;
-  }[];
+  items?: DrawerItem[];
 }
 
 export default function DrawerItemList({ items }: DrawerItemListProps) {
@@ -30,7 +43,12 @@ export default function DrawerItemList({ items }: DrawerItemListProps) {
   return (
     <ListWrapper>
       {items.map((item) => (
-        <ListItem key={`modal-list-item-${item.subtitle}`}>
+        <ListItem
+          onClick={() => item.onClick()}
+          key={`modal-list-item-${item.subtitle}`}
+          tabIndex={0}
+          onKeyDown={(e) => e.key === 'Enter' && item.onClick()}
+        >
           <div>{item.label}</div>
           <div>{item.subtitle}</div>
         </ListItem>
