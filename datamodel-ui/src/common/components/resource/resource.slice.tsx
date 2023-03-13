@@ -1,6 +1,8 @@
 import { HYDRATE } from 'next-redux-wrapper';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
+import { AssociationFormType } from '@app/common/interfaces/association-form.interface';
+import { AttributeFormType } from '@app/common/interfaces/attribute-form.interface';
 
 export const resourceApi = createApi({
   reducerPath: 'resourceApi',
@@ -15,7 +17,13 @@ export const resourceApi = createApi({
     }
   },
   endpoints: (builder) => ({
-    putResource: builder.mutation<any, object>({
+    putResource: builder.mutation<
+      null,
+      {
+        modelId: string;
+        data: AssociationFormType | AttributeFormType;
+      }
+    >({
       query: (value) => ({
         url: `/resource/${value.modelId}`,
         method: 'PUT',

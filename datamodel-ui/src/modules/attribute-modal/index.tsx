@@ -26,7 +26,7 @@ interface AttributeModal {
     useSelected: string;
     createNew?: string;
   };
-  handleFollowUp: () => void;
+  handleFollowUp: (value?: { label: string; uri: string }) => void;
   buttonIcon?: boolean;
 }
 
@@ -63,6 +63,26 @@ export default function AttributeModal({
     }
 
     searchInternalResources(obj ?? searchParams);
+  };
+
+  const handleSubmit = () => {
+    if (!selectedId || selectedId === '' || !result.data) {
+      handleFollowUp();
+      return;
+    }
+
+    const selectedObj = result.data.responseObjects.find(
+      (obj) => obj.identifier === selectedId
+    );
+
+    selectedObj
+      ? handleFollowUp({
+          label: `${selectedObj.namespace.split('/').pop()?.replace('#', '')}:${
+            selectedObj.identifier
+          }`,
+          uri: selectedObj.id,
+        })
+      : handleFollowUp();
   };
 
   const getLinkLabel = (ns: string, id: string) => {
@@ -125,7 +145,7 @@ export default function AttributeModal({
           />
         </ModalContent>
         <ModalFooter>
-          <Button disabled={selectedId === ''} onClick={() => handleFollowUp()}>
+          <Button disabled={selectedId === ''} onClick={() => handleSubmit()}>
             {buttonTranslations.useSelected}
           </Button>
 
@@ -133,7 +153,7 @@ export default function AttributeModal({
             <Button
               variant="secondary"
               icon="plus"
-              onClick={() => handleFollowUp()}
+              onClick={() => handleSubmit()}
             >
               {buttonTranslations.createNew}
             </Button>

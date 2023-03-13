@@ -1,4 +1,5 @@
 import DrawerItemList from '@app/common/components/drawer-item-list';
+import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { useEffect, useRef, useState } from 'react';
 import { SearchInput, Text } from 'suomifi-ui-components';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
@@ -12,6 +13,10 @@ export default function AssociationView({ modelId }: { modelId: string }) {
   const [view, setView] = useState('listing');
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
+  const [initialSubResourceOf, setInitialSubResourceOf] = useState<{
+    label: string;
+    uri: string;
+  }>();
 
   useEffect(() => {
     if (ref.current) {
@@ -19,7 +24,11 @@ export default function AssociationView({ modelId }: { modelId: string }) {
     }
   }, [ref]);
 
-  const handleFollowUp = () => {
+  const handleFollowUp = (value?: { label: string; uri: string }) => {
+    if (value) {
+      setInitialSubResourceOf(value);
+    }
+
     setView('form');
   };
 
@@ -103,8 +112,9 @@ export default function AssociationView({ modelId }: { modelId: string }) {
     return (
       <CommonForm
         handleReturn={handleFormReturn}
-        type={'association'}
+        type={ResourceType.ASSOCIATION}
         modelId={modelId}
+        initialSubResourceOf={initialSubResourceOf}
       />
     );
   }

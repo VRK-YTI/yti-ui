@@ -1,3 +1,4 @@
+import { ResourceType } from './resource-type.interface';
 import { Status } from './status.interface';
 
 export interface AssociationFormType {
@@ -9,6 +10,7 @@ export interface AssociationFormType {
   subject: string;
   identifier: string;
   note: { [key: string]: string };
+  type: ResourceType;
 }
 
 export const initialAssociation: AssociationFormType = {
@@ -20,4 +22,5 @@ export const initialAssociation: AssociationFormType = {
   subject: '',
   identifier: '',
   note: {},
+  type: ResourceType.ASSOCIATION,
 };
