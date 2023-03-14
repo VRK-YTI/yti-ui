@@ -219,7 +219,7 @@ export default function generateConcept({
   let externalTerms =
     data.basicInformation.relationalInfo.matchInOther?.map((match) => {
       const initialTerm = initialValue?.references.exactMatch?.find(
-        (m) => m.properties?.targetId?.[0].value === match.id
+        (m) => m.id === match.id
       );
       const id = initialTerm?.id ?? v4();
 
@@ -278,7 +278,7 @@ export default function generateConcept({
         ...data.basicInformation.relationalInfo.relatedConceptInOther.map(
           (related) => {
             const initialTerm = initialValue?.references.relatedMatch?.find(
-              (m) => m.properties?.targetId?.[0].value === related.id
+              (m) => m.id === related.id
             );
             const id = initialTerm?.id ?? v4();
 
@@ -343,7 +343,7 @@ export default function generateConcept({
         ...externalTerms,
         ...data.basicInformation.relationalInfo.closeMatch.map((match) => {
           const initialTerm = initialValue?.references.closeMatch?.find(
-            (m) => m.properties?.targetId?.[0].value === match.id
+            (m) => m.id === match.id
           );
           const id = initialTerm?.id ?? v4();
 
@@ -717,7 +717,7 @@ export default function generateConcept({
 
   let initialInOtherIds: string[] = initialValue
     ? initialValue.references.exactMatch
-        ?.map((match) => match.properties.targetId?.[0].value ?? '')
+        ?.map((match) => match.id ?? '')
         .filter((val) => val) ?? []
     : [];
 
@@ -725,7 +725,7 @@ export default function generateConcept({
     ? [
         ...initialInOtherIds,
         ...(initialValue.references.relatedMatch
-          ?.map((match) => match.properties.targetId?.[0].value ?? '')
+          ?.map((match) => match.id ?? '')
           .filter((val) => val) ?? []),
       ]
     : initialInOtherIds;
@@ -734,7 +734,7 @@ export default function generateConcept({
     ? [
         ...initialInOtherIds,
         ...(initialValue.references.closeMatch
-          ?.map((match) => match.properties.targetId?.[0].value ?? '')
+          ?.map((match) => match.id ?? '')
           .filter((val) => val) ?? []),
       ]
     : initialInOtherIds;
