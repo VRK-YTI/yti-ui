@@ -309,7 +309,20 @@ export default function ModelForm({
     if (!editMode) {
       return <></>;
     }
-    return <AddBlock />;
+    return (
+      <AddBlock
+        data={formData}
+        locale={i18n.language}
+        setTerminologies={(removed) =>
+          setFormData({
+            ...formData,
+            terminologies: formData.terminologies.filter(
+              (t) => t.uri !== removed
+            ),
+          })
+        }
+      />
+    );
   }
 
   function renderContact() {

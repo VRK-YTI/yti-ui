@@ -31,5 +31,6 @@ export default function generatePayload(
     groups: data.serviceCategories.map((s) => s.uniqueItemId),
     internalNamespaces: [],
     externalNamespaces: [],
+    terminologies: data.terminologies.map((t) => t.uri),
   };
 }

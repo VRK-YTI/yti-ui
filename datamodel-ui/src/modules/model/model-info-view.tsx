@@ -108,6 +108,7 @@ export default function ModelInfoView() {
           getIsPartOfWithId(modelInfo, serviceCategories, i18n.language) ?? [],
         status: modelInfo?.status ?? 'DRAFT',
         type: modelInfo?.type ?? 'PROFILE',
+        terminologies: modelInfo.terminologies ?? [],
       });
     }
   }, [modelInfo, serviceCategories, organizations, t, i18n.language]);
@@ -223,22 +224,24 @@ export default function ModelInfoView() {
         </BasicBlock>
 
         <BasicBlock title={t('terminologies-used')}>
-          {data.terminologies.length > 0
-            ? data.terminologies.map((terminology, idx) => (
-                <div key={`model-terminologies-${idx}`}>
+          {data.terminologies.length > 0 ? (
+            <ModelInfoListWrapper>
+              {data.terminologies.map((terminology, idx) => (
+                <li key={`model-terminologies-${idx}`}>
                   <ExternalLink
                     href={terminology.url}
                     labelNewWindow={`${t('link-opens-new-window-external')} ${
                       terminology.url
                     }`}
                   >
-                    {terminology.title}
+                    {terminology.label}
                   </ExternalLink>
-                  <br />
-                  {terminology.description}
-                </div>
-              ))
-            : t('not-added')}
+                </li>
+              ))}
+            </ModelInfoListWrapper>
+          ) : (
+            t('not-added')
+          )}
         </BasicBlock>
         <BasicBlock title={t('reference-data-used')}>
           {data.referenceData.length > 0
@@ -275,10 +278,10 @@ export default function ModelInfoView() {
             : t('not-added')}
         </BasicBlock>
         <BasicBlock title={t('links')}>
-          <ModelInfoListWrapper>
-            {data.links.length > 0 ? (
-              data.links.map((link, idx) => (
-                <div key={`model-link-${idx}`}>
+          {data.links.length > 0 ? (
+            <ModelInfoListWrapper>
+              {data.links.map((link, idx) => (
+                <li key={`model-link-${idx}`}>
                   <ExternalLink
                     href={link.url}
                     labelNewWindow={`${t('link-opens-new-window-external')} ${
@@ -289,12 +292,12 @@ export default function ModelInfoView() {
                   </ExternalLink>
                   <br />
                   {link.description}
-                </div>
-              ))
-            ) : (
-              <div>{t('not-added')}</div>
-            )}
-          </ModelInfoListWrapper>
+                </li>
+              ))}{' '}
+            </ModelInfoListWrapper>
+          ) : (
+            <div>{t('not-added')}</div>
+          )}
         </BasicBlock>
 
         <ExpanderGroup
