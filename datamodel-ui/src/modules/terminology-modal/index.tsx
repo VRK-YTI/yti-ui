@@ -41,8 +41,10 @@ export default function TerminologyModal() {
   const { isSmall } = useBreakpoints();
   const [visible, setVisible] = useState(false);
   const [initialSelected] = useState([]);
+  const [selected, setSelected] = useState<
+    { id: string; title: string; uri: string }[]
+  >([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [selected, setSelected] = useState<{ id: string; title: string }[]>([]);
   const {
     data: serviceCategoriesResult,
     isSuccess: serviceCategoriesIsSuccess,
@@ -90,7 +92,8 @@ export default function TerminologyModal() {
         data: terminologies.find((result) => result.id === id)?.label,
         lang: i18n.language,
       }) ?? '';
-    setSelected([...selected, { id: id, title: title }]);
+    const uri = terminologies.find((result) => result.id === id)?.uri ?? '';
+    setSelected([...selected, { id: id, title: title, uri: uri }]);
   };
 
   const handleChipClick = (id: string) => {
@@ -240,8 +243,8 @@ export default function TerminologyModal() {
         </SearchResultCount>
 
         <SearchResultsBlock>
-          {terminologies.map((result, idx) => (
-            <SearchResult key={`terminology-result-${idx}`}>
+          {terminologies.map((result) => (
+            <SearchResult key={`terminology-result-${result.id}`}>
               <div>
                 <Checkbox
                   checked={selected.map((s) => s.id).includes(result.id)}
