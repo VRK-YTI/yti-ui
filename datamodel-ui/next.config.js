@@ -85,6 +85,10 @@ module.exports = () => {
             source: '/datamodel-api/:path*',
             destination: 'http://localhost:9004/datamodel-api/:path*',
           },
+          {
+            source: '/terminology-api/:path*',
+            destination: 'http://localhost:9103/terminology-api/:path*',
+          },
         ];
       },
     };
@@ -100,6 +104,11 @@ module.exports = () => {
           {
             source: '/datamodel-api/:path*',
             destination: 'http://yti-datamodel-api:9004/datamodel-api/:path*',
+          },
+          {
+            source: '/terminology-api/:path*',
+            destination:
+              'http://yti-terminology-api:9103/terminology-api/:path*',
           },
         ];
       },

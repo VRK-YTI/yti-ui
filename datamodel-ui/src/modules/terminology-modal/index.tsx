@@ -1,8 +1,14 @@
-import { Status } from '@app/common/interfaces/status.interface';
+import { useGetServiceCategoriesQuery } from '@app/common/components/service-categories/service-categories.slice';
+import {
+  TerminologySearchParams,
+  useGetTerminologiesMutation,
+} from '@app/common/components/terminology-search/search-terminology.slice';
+import { Terminology } from '@app/common/interfaces/terminology.interface';
+import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { translateStatus } from '@app/common/utils/translation-helpers';
 import { isEqual } from 'lodash';
 import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   Button,
   Checkbox,
@@ -14,9 +20,11 @@ import {
   ModalTitle,
   SearchInput,
   SingleSelect,
+  SingleSelectData,
   Text,
 } from 'suomifi-ui-components';
 import { useBreakpoints } from 'yti-common-ui/media-query';
+import { DetachedPagination } from 'yti-common-ui/pagination';
 import SanitizedTextContent from 'yti-common-ui/sanitized-text-content';
 import {
   SearchBlock,
@@ -28,30 +36,50 @@ import {
   StatusChip,
 } from './terminology-modal.styles';
 
-type TerminologyResult = {
-  id: string;
-  title: string;
-  languages: string[];
-  informationDomain: string[];
-  status: Status;
-  description?: string;
-  uri: string;
-};
-
 export default function TerminologyModal() {
-  const { t } = useTranslation('admin');
+  const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const [visible, setVisible] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedDomain, setSelectedDomain] = useState<string | null>();
-  const [infoDomains] = useState([]);
   const [initialSelected] = useState([]);
-  const [selected, setSelected] = useState<{ id: string; title: string }[]>([]);
-  const [searchResults, setSearchResults] = useState<TerminologyResult[]>([]);
+  const [selected, setSelected] = useState<
+    { id: string; title: string; uri: string }[]
+  >([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const {
+    data: serviceCategoriesResult,
+    isSuccess: serviceCategoriesIsSuccess,
+  } = useGetServiceCategoriesQuery(i18n.language);
 
-  const handleSearchTermChange = (value: string) => {
-    setSearchTerm(value);
-  };
+  const [searchParams, setSearchParams] = useState<TerminologySearchParams>({
+    query: '',
+    groups: [],
+    pageFrom: 0,
+  });
+  const [searchTerminologies, results] = useGetTerminologiesMutation();
+  const [terminologies, setTerminologies] = useState<Terminology[]>([]);
+
+  const serviceCategories: SingleSelectData[] = useMemo(() => {
+    if (!serviceCategoriesIsSuccess) {
+      return [];
+    }
+
+    const returnValue = [
+      {
+        labelText: t('information-domains-all'),
+        uniqueItemId: '-1',
+      },
+    ];
+
+    return returnValue.concat(
+      serviceCategoriesResult.map((result) => ({
+        labelText: getLanguageVersion({
+          data: result.label,
+          lang: i18n.language,
+        }),
+        uniqueItemId: result.identifier,
+      }))
+    );
+  }, [serviceCategoriesResult, serviceCategoriesIsSuccess, t, i18n.language]);
 
   const handleCheckboxClick = (id: string) => {
     if (selected.some((s) => s.id === id)) {
@@ -59,17 +87,58 @@ export default function TerminologyModal() {
       return;
     }
 
-    const title = searchResults.find((result) => result.id === id)?.title ?? '';
-    setSelected([...selected, { id: id, title: title }]);
+    const title =
+      getLanguageVersion({
+        data: terminologies.find((result) => result.id === id)?.label,
+        lang: i18n.language,
+      }) ?? '';
+    const uri = terminologies.find((result) => result.id === id)?.uri ?? '';
+    setSelected([...selected, { id: id, title: title, uri: uri }]);
   };
 
   const handleChipClick = (id: string) => {
     setSelected(selected.filter((s) => s.id !== id));
   };
 
+  const handleSearch = (obj?: TerminologySearchParams) => {
+    if (obj) {
+      setSearchParams(obj);
+    }
+
+    searchTerminologies(obj ?? searchParams);
+  };
+
+  useEffect(() => {
+    if (results.isSuccess) {
+      setTerminologies(results.data.terminologies);
+    }
+  }, [results]);
+
+  const handleSearchChange = (
+    key: keyof TerminologySearchParams,
+    value: typeof searchParams[keyof TerminologySearchParams]
+  ) => {
+    console.log(value);
+    if (key === 'groups' && isEqual(value, ['-1'])) {
+      setSearchParams({ ...searchParams, [key]: [], ['pageFrom']: 0 });
+      setCurrentPage(1);
+      return;
+    }
+    setSearchParams({ ...searchParams, ['pageFrom']: 0, [key]: value });
+    setCurrentPage(1);
+  };
+
+  useEffect(() => {
+    handleSearch(searchParams);
+  }, [searchParams]);
+
   const handleClose = () => {
-    setSearchTerm('');
-    setSelectedDomain(null);
+    setCurrentPage(1);
+    setSearchParams({
+      query: '',
+      groups: [],
+      pageFrom: 0,
+    });
     setSelected([]);
     setVisible(false);
   };
@@ -122,9 +191,9 @@ export default function TerminologyModal() {
             labelText={t('search-for-terminology')}
             clearButtonLabel={t('clear-all-selections')}
             searchButtonLabel={t('search')}
-            defaultValue={searchTerm}
-            onBlur={(e) => handleSearchTermChange(e.target.value)}
-            onSearch={(e) => handleSearchTermChange(e ? e.toString() : '')}
+            defaultValue={searchParams.query}
+            onBlur={(e) => handleSearchChange('query', e?.target.value ?? '')}
+            onSearch={(e) => handleSearchChange('query', e ?? '')}
             debounce={500}
           />
 
@@ -135,8 +204,16 @@ export default function TerminologyModal() {
             itemAdditionHelpText=""
             ariaOptionsAvailableText={t('information-domains-available')}
             clearButtonLabel={t('clear-all-selections')}
-            items={infoDomains}
-            onItemSelect={(e) => setSelectedDomain(e)}
+            items={serviceCategories}
+            defaultSelectedItem={serviceCategories.find(
+              (category) => category.uniqueItemId === '-1'
+            )}
+            onItemSelect={(e) =>
+              handleSearchChange(
+                'groups',
+                e !== null && e !== '-1' ? [e] : ['-1']
+              )
+            }
           />
         </SearchBlock>
 
@@ -154,21 +231,20 @@ export default function TerminologyModal() {
   }
 
   function renderResults() {
-    if (searchResults.length < 1) {
-      return <Text>{t('add-refrence-to-terminologies-description')}</Text>;
-    }
-
     return (
       <div>
+        <Text>{t('add-refrence-to-terminologies-description')}</Text>
         <SearchResultCount>
           <Text variant="bold">
-            {t('terminology-counts', { count: searchResults.length })}
+            {t('terminology-counts', {
+              count: results.data?.totalHitCount ?? 0,
+            })}
           </Text>
         </SearchResultCount>
 
         <SearchResultsBlock>
-          {searchResults.map((result, idx) => (
-            <SearchResult key={`terminology-result-${idx}`}>
+          {terminologies.map((result) => (
+            <SearchResult key={`terminology-result-${result.id}`}>
               <div>
                 <Checkbox
                   checked={selected.map((s) => s.id).includes(result.id)}
@@ -177,11 +253,16 @@ export default function TerminologyModal() {
               </div>
 
               <div>
-                <div>{renderHighlighted(result.title)}</div>
+                <div>
+                  {renderHighlighted(
+                    getLanguageVersion({
+                      data: result.label,
+                      lang: i18n.language,
+                    })
+                  )}
+                </div>
 
                 <SearchResultSubTitle>
-                  <span>{result.languages.join(', ')}</span>
-                  <span>{result.informationDomain.join(', ')}</span>
                   <span>
                     <StatusChip $isValid={result.status === 'VALID'}>
                       {translateStatus(result.status, t)}
@@ -191,7 +272,12 @@ export default function TerminologyModal() {
 
                 <div className="result-description">
                   {result.description
-                    ? renderHighlighted(result.description)
+                    ? renderHighlighted(
+                        getLanguageVersion({
+                          data: result.description,
+                          lang: i18n.language,
+                        })
+                      )
                     : t('no-description', { ns: 'common' })}
                 </div>
 
@@ -204,15 +290,24 @@ export default function TerminologyModal() {
             </SearchResult>
           ))}
         </SearchResultsBlock>
+        <DetachedPagination
+          currentPage={currentPage}
+          maxPages={Math.ceil((results.data?.totalHitCount ?? 0) / 10)}
+          maxTotal={10}
+          setCurrentPage={(number) => {
+            handleSearchChange('pageFrom', (number - 1) * 10);
+            setCurrentPage(number);
+          }}
+        />
       </div>
     );
   }
 
   function renderHighlighted(text: string) {
     if (
-      searchTerm === '' ||
-      (searchTerm !== '' &&
-        !text.toLowerCase().includes(searchTerm.toLowerCase()))
+      searchParams.query === '' ||
+      (searchParams.query !== '' &&
+        !text.toLowerCase().includes(searchParams.query.toLowerCase()))
     ) {
       return text;
     }
@@ -221,19 +316,21 @@ export default function TerminologyModal() {
   }
 
   function getHighlighted(text: string): string {
-    if (!text.toLowerCase().includes(searchTerm.toLowerCase())) {
+    if (!text.toLowerCase().includes(searchParams.query.toLowerCase())) {
       return text;
     }
 
-    if (text.toLowerCase().indexOf(searchTerm.toLowerCase()) === 0) {
+    if (text.toLowerCase().indexOf(searchParams.query.toLowerCase()) === 0) {
       return `<span class="highlighted-content">${text.substring(
         0,
-        searchTerm.length
-      )}</span>${getHighlighted(text.substring(searchTerm.length))}`;
+        searchParams.query.length
+      )}</span>${getHighlighted(text.substring(searchParams.query.length))}`;
     }
 
-    const indexOfTerm = text.toLowerCase().indexOf(searchTerm.toLowerCase());
-    const endOfTerm = indexOfTerm + searchTerm.length;
+    const indexOfTerm = text
+      .toLowerCase()
+      .indexOf(searchParams.query.toLowerCase());
+    const endOfTerm = indexOfTerm + searchParams.query.length;
 
     return `${text.substring(
       0,
