@@ -8,6 +8,7 @@ import {
   Dropdown,
   DropdownItem,
   Label,
+  MultiSelectData,
   RadioButton,
   RadioButtonGroup,
   Text,
