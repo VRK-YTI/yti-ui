@@ -31,14 +31,6 @@ export const ContentWrapper = styled.div`
   width: 100%;
 `;
 
-export const ModelInfoWrapper = styled.div<{ $height?: number }>`
-  width: calc(inherit - 30px);
-  max-width: inherit;
-
-  padding: 15px;
-  padding-top: ${(props) => (props.$height ?? 0) + 15}px;
-`;
-
 export const ModelInfoListWrapper = styled.div`
   > * {
     margin-bottom: ${(props) => props.theme.suomifi.spacing.s};

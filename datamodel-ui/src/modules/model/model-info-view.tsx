@@ -8,7 +8,7 @@ import {
   ExpanderGroup,
   ExpanderTitleButton,
   ExternalLink,
-  Heading,
+  Text,
   Tooltip,
 } from 'suomifi-ui-components';
 import { BasicBlock, MultilingualBlock } from 'yti-common-ui/block';
@@ -29,12 +29,7 @@ import {
   getTitles,
   getUri,
 } from '@app/common/utils/get-value';
-import {
-  ModelInfoListWrapper,
-  ModelInfoWrapper,
-  StaticHeaderWrapper,
-  TooltipWrapper,
-} from './model.styles';
+import { ModelInfoListWrapper, TooltipWrapper } from './model.styles';
 import { translateLanguage } from '@app/common/utils/translation-helpers';
 import { compareLocales } from '@app/common/utils/compare-locals';
 import Separator from 'yti-common-ui/separator';
@@ -45,6 +40,8 @@ import { ModelFormType } from '@app/common/interfaces/model-form.interface';
 import ModelEditView from './model-edit-view';
 import AsFileModal from '../as-file-modal';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
+import StaticHeader from 'yti-common-ui/drawer/static-header';
+import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 
 export default function ModelInfoView() {
   const { t, i18n } = useTranslation('common');
@@ -132,7 +129,7 @@ export default function ModelInfoView() {
   }, [ref]);
 
   if (!modelInfo || !data) {
-    return <ModelInfoWrapper />;
+    return <DrawerContent />;
   }
 
   if (showEditView && formData && organizations && serviceCategories) {
@@ -149,9 +146,9 @@ export default function ModelInfoView() {
 
   return (
     <>
-      <StaticHeaderWrapper ref={ref}>
-        <div>
-          <Heading variant="h2">{t('details')}</Heading>
+      <StaticHeader ref={ref}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <Text variant="bold">{t('details')}</Text>
           <div>
             <Button
               variant="secondary"
@@ -193,9 +190,9 @@ export default function ModelInfoView() {
             </TooltipWrapper>
           </div>
         </div>
-      </StaticHeaderWrapper>
+      </StaticHeader>
 
-      <ModelInfoWrapper $height={headerHeight}>
+      <DrawerContent height={headerHeight}>
         <BasicBlock title={t('name')}>
           <MultilingualBlock
             data={data.title.sort((a, b) => compareLocales(a.lang, b.lang))}
@@ -333,7 +330,7 @@ export default function ModelInfoView() {
         <BasicBlock title={t('created')}>
           <FormattedDate date={data.created} />
         </BasicBlock>
-      </ModelInfoWrapper>
+      </DrawerContent>
     </>
   );
 }

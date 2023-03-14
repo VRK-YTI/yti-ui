@@ -15,10 +15,11 @@ import {
 import { useTranslation } from 'next-i18next';
 import { useEffect, useRef, useState } from 'react';
 import { Button, Heading } from 'suomifi-ui-components';
+import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
+import StaticHeader from 'yti-common-ui/drawer/static-header';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
 import ModelForm from '../model-form';
 import generatePayload from './generate-payload';
-import { ModelInfoWrapper, StaticHeaderWrapper } from './model.styles';
 import { FormUpdateErrors, validateFormUpdate } from './validate-form-update';
 
 interface ModelEditViewProps {
@@ -114,7 +115,7 @@ export default function ModelEditView({
 
   return (
     <>
-      <StaticHeaderWrapper ref={ref}>
+      <StaticHeader ref={ref}>
         <div>
           <Heading variant="h2">{t('details', { ns: 'common' })}</Heading>
           <div>
@@ -135,9 +136,9 @@ export default function ModelEditView({
             alerts={getErrors(errors)}
           />
         </div>
-      </StaticHeaderWrapper>
+      </StaticHeader>
 
-      <ModelInfoWrapper $height={headerHeight}>
+      <DrawerContent height={headerHeight}>
         <ModelForm
           formData={formData}
           setFormData={setFormData}
@@ -145,7 +146,7 @@ export default function ModelEditView({
           editMode={true}
           errors={userPosted ? errors : undefined}
         />
-      </ModelInfoWrapper>
+      </DrawerContent>
     </>
   );
 

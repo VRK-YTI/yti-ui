@@ -9,7 +9,7 @@ import { useBreakpoints } from 'yti-common-ui/media-query';
 import MultiColumnSearch, {
   ResultType,
 } from '@app/common/components/multi-column-search';
-import { LargeModal } from './attribute-modal.styles';
+import { LargeModal } from './association-modal.styles';
 import { useTranslation } from 'next-i18next';
 import {
   InternalResourcesSearchParams,
@@ -49,7 +49,7 @@ export default function AttributeModal({
       sortLang: i18n.language,
       pageSize: 50,
       pageFrom: 0,
-      resourceTypes: [ResourceType.ATTRIBUTE],
+      resourceTypes: [ResourceType.ASSOCIATION],
     });
 
   const handleOpen = () => {
@@ -125,7 +125,7 @@ export default function AttributeModal({
         icon={buttonIcon ? 'plus' : undefined}
         onClick={() => handleOpen()}
       >
-        {t('add-attribute')}
+        {t('add-association')}
       </Button>
       <LargeModal
         appElementId="__next"
@@ -133,9 +133,9 @@ export default function AttributeModal({
         variant={isSmall ? 'smallScreen' : 'default'}
       >
         <ModalContent>
-          <ModalTitle>{t('add-attribute')}</ModalTitle>
+          <ModalTitle>{t('add-association')}</ModalTitle>
           <MultiColumnSearch
-            primaryColumnName={t('attribute-name')}
+            primaryColumnName={t('association-name')}
             results={resultsFormatted}
             selectedId={selectedId}
             setSelectedId={setSelectedId}

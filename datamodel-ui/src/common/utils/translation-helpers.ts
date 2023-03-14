@@ -1,4 +1,5 @@
 import { TFunction } from 'next-i18next';
+import { ResourceType } from '../interfaces/resource-type.interface';
 import { Type } from '../interfaces/type.interface';
 
 export function translateModelType(type: Type, t: TFunction) {
@@ -71,5 +72,67 @@ export function translateLanguage(language: string, t: TFunction) {
       return t('languages.sv', { ns: 'common' });
     default:
       return language;
+  }
+}
+
+export function translateCommonForm(
+  part: string,
+  type: ResourceType.ASSOCIATION | ResourceType.ATTRIBUTE,
+  t: TFunction
+) {
+  switch (part) {
+    case 'name':
+      return type === ResourceType.ASSOCIATION
+        ? t('common-form.associations-name', { ns: 'admin' })
+        : t('common-form.attributes-name', { ns: 'admin' });
+    case 'identifier':
+      return type === ResourceType.ASSOCIATION
+        ? t('common-form.associations-identifier', { ns: 'admin' })
+        : t('common-form.attributes-identifier', { ns: 'admin' });
+    case 'upper':
+      return type === ResourceType.ASSOCIATION
+        ? t('common-form.upper-associations', { ns: 'admin' })
+        : t('common-form.upper-attributes', { ns: 'admin' });
+    case 'add-upper':
+      return type === ResourceType.ASSOCIATION
+        ? t('common-form.add-upper-association', { ns: 'admin' })
+        : t('common-form.add-upper-attribute', { ns: 'admin' });
+    case 'equivalent':
+      return type === ResourceType.ASSOCIATION
+        ? t('common-form.equivalent-associations', { ns: 'admin' })
+        : t('common-form.equivalent-attributes', { ns: 'admin' });
+    case 'add-equivalent':
+      return type === ResourceType.ASSOCIATION
+        ? t('common-form.add-equivalent-association', { ns: 'admin' })
+        : t('common-form.add-equivalent-attribute', { ns: 'admin' });
+    case 'note':
+      return type === ResourceType.ASSOCIATION
+        ? t('common-form.associations-note', { ns: 'admin' })
+        : t('common-form.attributes-note', { ns: 'admin' });
+    case 'editorial-note':
+      return t('common-form.editorial-note', { ns: 'admin' });
+    default:
+      return '';
+  }
+}
+
+export function translateCommonFormErrors(
+  error: string,
+  type: ResourceType.ASSOCIATION | ResourceType.ATTRIBUTE,
+  t: TFunction
+) {
+  switch (error) {
+    case 'label':
+      return type === ResourceType.ASSOCIATION
+        ? t('association-missing-label', { ns: 'admin' })
+        : t('attribute-missing-label', { ns: 'admin' });
+    case 'identifier':
+      return type === ResourceType.ASSOCIATION
+        ? t('association-missing-identifier', { ns: 'admin' })
+        : t('attribute-missing-identifier', { ns: 'admin' });
+    default:
+      return type === ResourceType.ASSOCIATION
+        ? t('association-missing-general', { ns: 'admin' })
+        : t('attribute-missing-general', { ns: 'admin' });
   }
 }
