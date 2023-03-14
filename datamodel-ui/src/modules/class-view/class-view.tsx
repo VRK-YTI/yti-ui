@@ -210,22 +210,10 @@ export default function ClassView({ modelId }: ClassView) {
                   lang: i18n.language,
                 }),
                 subtitle: item.identifier,
-                onClick: () => null,
+                onClick: () =>
+                  getClass({ modelId: modelId, classId: item.identifier }),
               }))}
             />
-            // <div style={{ display: 'flex', flexDirection: 'column' }}>
-            //   {mockClassList.map((c) => (
-            //     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
-            //     <div
-            //       key={c.identifier}
-            //       onClick={() =>
-            //         getClass({ modelId: modelId, classId: c.identifier })
-            //       }
-            //     >
-            //       {c.label.fi}
-            //     </div>
-            //   ))}
-            // </div>
           )}
         </DrawerContent>
       </>

@@ -247,8 +247,8 @@ export default function CommonForm({
   function getInitialData(): AssociationFormType | AttributeFormType {
     if (!initialSubResourceOf) {
       return type === ResourceType.ASSOCIATION
-        ? initialAssociation
-        : initialAttribute;
+        ? { ...initialAssociation, subResourceOf: ['owl:TopObjectProperty'] }
+        : { ...initialAttribute, subResourceOf: ['owl:topDataProperty'] };
     }
 
     return type === ResourceType.ASSOCIATION

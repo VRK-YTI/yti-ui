@@ -1,3 +1,4 @@
+import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { useEffect, useRef, useState } from 'react';
 import {
   Button,
@@ -16,7 +17,7 @@ import Separator from 'yti-common-ui/separator';
 import { StatusChip } from 'yti-common-ui/title/title.styles';
 
 interface CommonViewProps {
-  type: 'association' | 'attribute';
+  type: ResourceType.ASSOCIATION | ResourceType.ATTRIBUTE;
   handleReturn: () => void;
 }
 

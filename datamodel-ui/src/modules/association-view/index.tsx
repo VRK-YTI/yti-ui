@@ -1,5 +1,6 @@
 import DrawerItemList from '@app/common/components/drawer-item-list';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
+import { useTranslation } from 'next-i18next';
 import { useEffect, useRef, useState } from 'react';
 import { SearchInput, Text } from 'suomifi-ui-components';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
@@ -10,6 +11,7 @@ import CommonView from '../common-view';
 import { ViewBlock } from './association-view.styles';
 
 export default function AssociationView({ modelId }: { modelId: string }) {
+  const { t } = useTranslation('common');
   const [view, setView] = useState('listing');
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
@@ -36,7 +38,7 @@ export default function AssociationView({ modelId }: { modelId: string }) {
     setView('listing');
   };
 
-  const handleShowAttribute = () => {
+  const handleShowAssociation = () => {
     setView('association');
   };
 
@@ -57,11 +59,15 @@ export default function AssociationView({ modelId }: { modelId: string }) {
       <>
         <StaticHeader ref={ref}>
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <Text variant="bold">0 Assosiaatiota</Text>
+            <Text variant="bold">
+              {t('association-count-title', { count: 3 })}
+            </Text>
             <AssociationModal
               buttonTranslations={{
-                useSelected: 'Luo valitulle ala-assosiaatio',
-                createNew: 'Luo uusi assosiaatio',
+                useSelected: t('create-new-sub-association-for-selected', {
+                  ns: 'admin',
+                }),
+                createNew: t('create-new-association', { ns: 'admin' }),
               }}
               buttonIcon
               handleFollowUp={handleFollowUp}
@@ -84,17 +90,17 @@ export default function AssociationView({ modelId }: { modelId: string }) {
                 {
                   label: 'Liitetään kohteella',
                   subtitle: 'jhs210:liitos',
-                  onClick: handleShowAttribute,
+                  onClick: handleShowAssociation,
                 },
                 {
                   label: 'Rakennuskohteen omistaja',
                   subtitle: 'jhs210:rakomista',
-                  onClick: handleShowAttribute,
+                  onClick: handleShowAssociation,
                 },
                 {
                   label: 'Rakennuskohteen osoite',
                   subtitle: 'jhs210:rakosoite',
-                  onClick: handleShowAttribute,
+                  onClick: handleShowAssociation,
                 },
               ]}
             />
@@ -124,6 +130,11 @@ export default function AssociationView({ modelId }: { modelId: string }) {
       return <></>;
     }
 
-    return <CommonView type="association" handleReturn={handleFormReturn} />;
+    return (
+      <CommonView
+        type={ResourceType.ASSOCIATION}
+        handleReturn={handleFormReturn}
+      />
+    );
   }
 }
