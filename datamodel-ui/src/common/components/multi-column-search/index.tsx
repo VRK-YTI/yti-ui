@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 import {
   translateLanguage,
   translateStatus,
@@ -122,7 +123,7 @@ export default function MultiColumnSearch({
   }, [serviceCategoriesResult, serviceCategoriesIsSuccess, t, i18n.language]);
 
   const handleRadioButtonClick = (id: string) => {
-    setSelectedId(id);
+    setSelectedId(selectedId === id ? '' : id);
   };
 
   const handleSearchChange = (
@@ -232,11 +233,18 @@ export default function MultiColumnSearch({
           {results.map((result) => (
             <tr key={`result-${result.target.identifier}`}>
               <td className="td-with-radio-button">
-                <div>
+                <div
+                  onMouseDown={() =>
+                    handleRadioButtonClick(result.target.identifier)
+                  }
+                  onKeyDown={(e) =>
+                    e.key === 'Enter' &&
+                    handleRadioButtonClick(result.target.identifier)
+                  }
+                >
                   <RadioButton
                     value={result.target.identifier}
                     checked={result.target.identifier === selectedId}
-                    onChange={(e) => handleRadioButtonClick(e.target.value)}
                   />
                 </div>
                 <div>

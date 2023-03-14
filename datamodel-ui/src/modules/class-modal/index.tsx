@@ -30,7 +30,7 @@ export default function ClassModal({ handleFollowUp }: ClassModalProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const [visible, setVisible] = useState(false);
-  const [selectedId, setSelectedId] = useState<undefined | string>();
+  const [selectedId, setSelectedId] = useState('');
   const [resultsFormatted, setResultsFormatted] = useState<ResultType[]>([]);
   const [searchInternalResources, result] = useGetInternalResourcesMutation();
   const [searchParams, setSearchParams] =
@@ -50,7 +50,7 @@ export default function ClassModal({ handleFollowUp }: ClassModalProps) {
   };
 
   const handleClose = () => {
-    setSelectedId(undefined);
+    setSelectedId('');
     setSearchParams({
       query: '',
       status: ['VALID'],
@@ -135,10 +135,14 @@ export default function ClassModal({ handleFollowUp }: ClassModalProps) {
           />
         </ModalContent>
         <ModalFooter>
-          <Button disabled={!selectedId} onClick={() => handleSubmit()}>
+          <Button disabled={selectedId === ''} onClick={() => handleSubmit()}>
             {t('create-subclass-for-selected')}
           </Button>
-          <Button icon="plus" onClick={() => handleFollowUp()}>
+          <Button
+            icon="plus"
+            disabled={selectedId !== ''}
+            onClick={() => handleFollowUp()}
+          >
             {t('create-new-class')}
           </Button>
           <Button variant="secondaryNoBorder" onClick={() => handleClose()}>

@@ -153,6 +153,7 @@ export default function AttributeModal({
             <Button
               variant="secondary"
               icon="plus"
+              disabled={selectedId !== ''}
               onClick={() => handleSubmit()}
             >
               {buttonTranslations.createNew}
