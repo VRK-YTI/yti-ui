@@ -3,7 +3,7 @@ import { StaticChip } from 'suomifi-ui-components';
 
 export const SearchToolsBlock = styled.div`
   width: 100%;
-  max-width: 1800px;
+  max-width: 1300px;
   display: flex;
   gap: 10px;
   margin-bottom: 15px;
@@ -18,8 +18,21 @@ export const SearchToolsBlock = styled.div`
     max-width: 100% !important;
   }
 
-  .fi-single-select {
-    max-width: 250px;
+  .fi-single-select,
+  .fi-dropdown {
+    max-width: min-content;
+  }
+
+  .fi-dropdown_button {
+    min-width: 135px !important;
+  }
+
+  .data-model-picker {
+    span {
+      min-width: 240px !important;
+      max-width: 330px !important;
+      white-space: nowrap !important;
+    }
   }
 `;
 

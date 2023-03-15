@@ -6,6 +6,8 @@ import {
 import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
 import {
+  Dropdown,
+  DropdownItem,
   ExternalLink,
   Icon,
   RadioButton,
@@ -74,7 +76,11 @@ export default function MultiColumnSearch({
   const [dataModelType] = useState<SingleSelectData[]>([
     {
       labelText: t('data-models-added-to-this-model'),
-      uniqueItemId: 'this',
+      uniqueItemId: 'self',
+    },
+    {
+      labelText: 'Kaikki tietomallit',
+      uniqueItemId: 'all',
     },
   ]);
   const [languages] = useState<SingleSelectData[]>([
@@ -130,8 +136,13 @@ export default function MultiColumnSearch({
     key: keyof InternalResourcesSearchParams,
     value: typeof searchParams[keyof InternalResourcesSearchParams]
   ) => {
-    if ((key === 'groups' || key === 'status') && isEqual(value, ['-1'])) {
+    if (key === 'groups' && isEqual(value, ['-1'])) {
       setSearchParams({ ...searchParams, [key]: [] });
+      return;
+    }
+
+    if (key === 'status' && isEqual(value, '-1')) {
+      setSearchParams({ ...searchParams, [key]: undefined });
       return;
     }
     setSearchParams({ ...searchParams, [key]: value });
@@ -150,17 +161,19 @@ export default function MultiColumnSearch({
           onChange={(e) => handleSearchChange('query', e?.toString() ?? '')}
           debounce={300}
         />
-        <SingleSelect
-          className="wider"
+
+        <Dropdown
+          className="data-model-picker"
           labelText={t('data-model')}
-          itemAdditionHelpText=""
-          ariaOptionsAvailableText={t('data-models-available')}
-          clearButtonLabel={t('clear-selection')}
-          defaultSelectedItem={dataModelType.find(
-            (type) => type.uniqueItemId === 'this'
-          )}
-          items={dataModelType}
-        />
+          defaultValue="self"
+        >
+          {dataModelType.map((type) => (
+            <DropdownItem key={type.uniqueItemId} value={type.uniqueItemId}>
+              {type.labelText}
+            </DropdownItem>
+          ))}
+        </Dropdown>
+
         <SingleSelect
           labelText={t('information-domain')}
           itemAdditionHelpText=""
@@ -182,34 +195,34 @@ export default function MultiColumnSearch({
           )}
           items={serviceCategories}
         />
-        <SingleSelect
+
+        <Dropdown
           labelText={t('status')}
-          itemAdditionHelpText=""
-          ariaOptionsAvailableText={t('statuses-available')}
-          clearButtonLabel={t('clear-selection')}
-          selectedItem={
-            searchParams.status && searchParams.status.length > 0
-              ? statuses.find(
-                  (status) => status.uniqueItemId === searchParams.status?.[0]
-                )
-              : statuses.find((status) => status.uniqueItemId === '-1')
-          }
-          items={statuses}
-          onItemSelect={(e) =>
-            handleSearchChange('status', e !== null ? [e] : [])
-          }
-        />
+          defaultValue={'VALID'}
+          onChange={(e) => handleSearchChange('status', e)}
+        >
+          {statuses.map((status) => (
+            <DropdownItem key={status.uniqueItemId} value={status.uniqueItemId}>
+              {status.labelText}
+            </DropdownItem>
+          ))}
+        </Dropdown>
+
         {languageVersioned && (
-          <SingleSelect
+          <Dropdown
             labelText={t('content-language')}
-            itemAdditionHelpText=""
-            ariaOptionsAvailableText={t('content-languages-available')}
-            clearButtonLabel={t('clear-selection')}
-            defaultSelectedItem={languages.find(
-              (lang) => lang.uniqueItemId === i18n.language ?? 'fi'
-            )}
-            items={languages}
-          />
+            defaultValue={
+              languages.find(
+                (lang) => lang.uniqueItemId === i18n.language ?? 'fi'
+              )?.uniqueItemId ?? 'fi'
+            }
+          >
+            {languages.map((lang) => (
+              <DropdownItem key={lang.uniqueItemId} value={lang.uniqueItemId}>
+                {lang.labelText}
+              </DropdownItem>
+            ))}
+          </Dropdown>
         )}
       </SearchToolsBlock>
 
