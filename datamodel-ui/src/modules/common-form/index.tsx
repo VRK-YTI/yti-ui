@@ -237,6 +237,7 @@ export default function CommonForm({
             onChange={(e) =>
               handleUpdate({ ...data, editorialNote: e.target.value ?? '' })
             }
+            hintText={t('editor-comment-hint')}
             className="wide-text"
           />
         </FormWrapper>

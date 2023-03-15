@@ -308,6 +308,7 @@ export default function ClassForm({
         <Textarea
           labelText={t('editor-comment')}
           optionalText={t('optional')}
+          hintText={t('editor-comment-hint')}
           defaultValue={data.editorialNote}
           onChange={(e) => setData({ ...data, editorialNote: e.target.value })}
           className="fullwidth"

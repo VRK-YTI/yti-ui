@@ -93,6 +93,7 @@
   "description": "Kuvaus",
   "edit": "Muokkaa",
   "editor-comment": "Muokkaajan kommentti",
+  "editor-comment-hint": "Kommentti näkyy vain tietomallin muokkaajille.",
   "email": "Sähköposti",
   "error-prefix-invalid": "Etuliitteen sallitut merkit ovat a-z, 0-9, alaviiva ja väliviiva",
   "error-prefix-taken": "Tunnus on käytössä",

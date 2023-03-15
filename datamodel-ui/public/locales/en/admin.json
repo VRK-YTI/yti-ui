@@ -93,6 +93,7 @@
   "description": "Description",
   "edit": "Edit",
   "editor-comment": "Editor comment",
+  "editor-comment-hint": "Comment is only visible to editors of this data model.",
   "email": "Email",
   "error-prefix-invalid": "Allowed characters for prefix are a-z, 0-9, underscore and dash",
   "error-prefix-taken": "Prefix in use",
