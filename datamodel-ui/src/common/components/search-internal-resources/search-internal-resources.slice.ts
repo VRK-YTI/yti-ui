@@ -26,7 +26,7 @@ function createUrl(obj: InternalResourcesSearchParams): string {
   }
 
   if (obj.status && obj.status.length > 0) {
-    baseQuery = baseQuery.concat(`&status=${obj.status}`);
+    baseQuery = baseQuery.concat(`&status=${obj.status.join(',')}`);
   }
 
   if (obj.groups && obj.groups.length > 0) {

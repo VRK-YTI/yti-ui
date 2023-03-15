@@ -1,8 +1,5 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import {
-  translateLanguage,
-  translateStatus,
-} from '@app/common/utils/translation-helpers';
+import { translateLanguage } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
 import {
@@ -21,11 +18,11 @@ import {
   SearchToolsBlock,
   StatusChip,
 } from './multi-column-search.styles';
-import { statusList } from 'yti-common-ui/utils/status-list';
 import { useGetServiceCategoriesQuery } from '../service-categories/service-categories.slice';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { isEqual } from 'lodash';
 import { InternalResourcesSearchParams } from '../search-internal-resources/search-internal-resources.slice';
+import { Status } from 'yti-common-ui/interfaces/status.interface';
 
 export interface ResultType {
   target: {
@@ -89,21 +86,20 @@ export default function MultiColumnSearch({
     { labelText: translateLanguage('en', t), uniqueItemId: 'en' },
   ]);
 
-  const statuses: SingleSelectData[] = useMemo(() => {
-    const returnValue = [
-      {
-        labelText: t('status-all'),
-        uniqueItemId: '-1',
-      },
-    ];
-
-    return returnValue.concat(
-      statusList.map((status) => ({
-        labelText: translateStatus(status, t),
-        uniqueItemId: status,
-      }))
-    );
-  }, [t]);
+  const statuses: SingleSelectData[] = [
+    {
+      labelText: t('status-all'),
+      uniqueItemId: '-1',
+    },
+    {
+      labelText: t('statuses-in-use'),
+      uniqueItemId: 'in-use',
+    },
+    {
+      labelText: t('statuses-not-in-use'),
+      uniqueItemId: 'not-in-use',
+    },
+  ];
 
   const serviceCategories: SingleSelectData[] = useMemo(() => {
     if (!serviceCategoriesIsSuccess) {
@@ -141,10 +137,22 @@ export default function MultiColumnSearch({
       return;
     }
 
-    if (key === 'status' && isEqual(value, '-1')) {
-      setSearchParams({ ...searchParams, [key]: undefined });
+    if (key === 'status') {
+      const setStatuses =
+        value !== '-1'
+          ? value === 'in-use'
+            ? (['VALID', 'DRAFT'] as Status[])
+            : (['INCOMPLETE', 'INVALID', 'RETIRED', 'SUPERSEDED'] as Status[])
+          : [];
+
+      setSearchParams({
+        ...searchParams,
+        [key]: setStatuses,
+      });
+
       return;
     }
+
     setSearchParams({ ...searchParams, [key]: value });
   };
 
@@ -198,8 +206,9 @@ export default function MultiColumnSearch({
 
         <Dropdown
           labelText={t('status')}
-          defaultValue={'VALID'}
+          defaultValue={'in-use'}
           onChange={(e) => handleSearchChange('status', e)}
+          className="status-picker"
         >
           {statuses.map((status) => (
             <DropdownItem key={status.uniqueItemId} value={status.uniqueItemId}>

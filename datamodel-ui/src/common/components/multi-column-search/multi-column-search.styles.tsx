@@ -27,6 +27,13 @@ export const SearchToolsBlock = styled.div`
     min-width: 135px !important;
   }
 
+  .status-picker {
+    span {
+      min-width: 150px !important;
+      white-space: nowrap !important;
+    }
+  }
+
   .data-model-picker {
     span {
       min-width: 240px !important;
