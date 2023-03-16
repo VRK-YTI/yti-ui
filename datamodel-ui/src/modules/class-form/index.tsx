@@ -155,7 +155,7 @@ export default function ClassForm({
                 })
               }
               status={userPosted && errors.label ? 'error' : 'default'}
-              className="fullwidth"
+              fullWidth
             />
           ))}
         </LanguageVersionedWrapper>
@@ -226,7 +226,7 @@ export default function ClassForm({
                   note: { ...data.note, [lang]: e.target.value },
                 })
               }
-              className="fullwidth"
+              fullWidth
             />
           ))}
         </LanguageVersionedWrapper>
@@ -310,7 +310,7 @@ export default function ClassForm({
           optionalText={t('optional')}
           defaultValue={data.editorialNote}
           onChange={(e) => setData({ ...data, editorialNote: e.target.value })}
-          className="fullwidth"
+          fullWidth
         />
       </DrawerContent>
     </>
