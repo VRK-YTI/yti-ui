@@ -38,6 +38,7 @@ import {
 import DrawerItemList from '@app/common/components/drawer-item-list';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
+import HasPermission from '@app/common/utils/has-permission';
 
 interface ClassView {
   modelId: string;
@@ -57,6 +58,7 @@ export default function ClassView({ modelId, languages }: ClassView) {
   const [getClass, getClassResult] = useGetClassMutMutation();
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
+  const hasPermission = HasPermission({ actions: ['ADMIN_CLASS'] });
 
   const mockClassList: ClassType[] = [
     {
@@ -177,7 +179,9 @@ export default function ClassView({ modelId, languages }: ClassView) {
             <Text variant="bold">
               {t('classes', { count: mockClassList.length })}
             </Text>
-            <ClassModal handleFollowUp={handleFollowUpAction} />
+            {hasPermission && (
+              <ClassModal handleFollowUp={handleFollowUpAction} />
+            )}
           </div>
         </StaticHeader>
 
@@ -262,20 +266,28 @@ export default function ClassView({ modelId, languages }: ClassView) {
                   open={showTooltip}
                   onCloseButtonClick={() => setShowTooltip(false)}
                 >
-                  <Button variant="secondaryNoBorder">
-                    {t('edit', { ns: 'admin' })}
-                  </Button>
-                  <Separator />
+                  {hasPermission && (
+                    <>
+                      <Button variant="secondaryNoBorder">
+                        {t('edit', { ns: 'admin' })}
+                      </Button>
+                      <Separator />
+                    </>
+                  )}
                   <Button variant="secondaryNoBorder">
                     {t('show-as-file')}
                   </Button>
                   <Button variant="secondaryNoBorder">
                     {t('download-as-file')}
                   </Button>
-                  <Separator />
-                  <Button variant="secondaryNoBorder">
-                    {t('remove', { ns: 'admin' })}
-                  </Button>
+                  {hasPermission && (
+                    <>
+                      <Separator />
+                      <Button variant="secondaryNoBorder">
+                        {t('remove', { ns: 'admin' })}
+                      </Button>
+                    </>
+                  )}
                 </Tooltip>
               </TooltipWrapper>
             </div>

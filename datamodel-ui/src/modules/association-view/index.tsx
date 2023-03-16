@@ -1,5 +1,6 @@
 import DrawerItemList from '@app/common/components/drawer-item-list';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
+import HasPermission from '@app/common/utils/has-permission';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useRef, useState } from 'react';
 import { SearchInput, Text } from 'suomifi-ui-components';
@@ -21,6 +22,7 @@ export default function AssociationView({
   const [view, setView] = useState('listing');
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
+  const hasPermission = HasPermission({ actions: ['CREATE_ASSOCIATION'] });
   const [initialSubResourceOf, setInitialSubResourceOf] = useState<{
     label: string;
     uri: string;
@@ -68,16 +70,18 @@ export default function AssociationView({
             <Text variant="bold">
               {t('association-count-title', { count: 3 })}
             </Text>
-            <AssociationModal
-              buttonTranslations={{
-                useSelected: t('create-new-sub-association-for-selected', {
-                  ns: 'admin',
-                }),
-                createNew: t('create-new-association', { ns: 'admin' }),
-              }}
-              buttonIcon
-              handleFollowUp={handleFollowUp}
-            />
+            {hasPermission && (
+              <AssociationModal
+                buttonTranslations={{
+                  useSelected: t('create-new-sub-association-for-selected', {
+                    ns: 'admin',
+                  }),
+                  createNew: t('create-new-association', { ns: 'admin' }),
+                }}
+                buttonIcon
+                handleFollowUp={handleFollowUp}
+              />
+            )}
           </div>
         </StaticHeader>
 

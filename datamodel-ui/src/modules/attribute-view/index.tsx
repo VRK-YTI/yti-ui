@@ -1,5 +1,6 @@
 import DrawerItemList from '@app/common/components/drawer-item-list';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
+import HasPermission from '@app/common/utils/has-permission';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useRef, useState } from 'react';
 import { SearchInput, Text } from 'suomifi-ui-components';
@@ -21,6 +22,7 @@ export default function AttributeView({
   const [view, setView] = useState('listing');
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
+  const hasPermission = HasPermission({ actions: ['CREATE_ATTRIBUTE'] });
   const [initialSubResourceOf, setInitialSubResourceOf] = useState<{
     label: string;
     uri: string;
@@ -68,16 +70,18 @@ export default function AttributeView({
             <Text variant="bold">
               {t('attribute-count-title', { count: 3 })}
             </Text>
-            <AttributeModal
-              buttonTranslations={{
-                useSelected: t('create-new-sub-attribute-for-selected', {
-                  ns: 'admin',
-                }),
-                createNew: t('create-new-attribute', { ns: 'admin' }),
-              }}
-              buttonIcon
-              handleFollowUp={handleFollowUp}
-            />
+            {hasPermission && (
+              <AttributeModal
+                buttonTranslations={{
+                  useSelected: t('create-new-sub-attribute-for-selected', {
+                    ns: 'admin',
+                  }),
+                  createNew: t('create-new-attribute', { ns: 'admin' }),
+                }}
+                buttonIcon
+                handleFollowUp={handleFollowUp}
+              />
+            )}
           </div>
         </StaticHeader>
 

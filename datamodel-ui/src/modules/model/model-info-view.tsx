@@ -42,6 +42,7 @@ import AsFileModal from '../as-file-modal';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
+import HasPermission from '@app/common/utils/has-permission';
 
 export default function ModelInfoView() {
   const { t, i18n } = useTranslation('common');
@@ -54,6 +55,7 @@ export default function ModelInfoView() {
   const [formData, setFormData] = useState<ModelFormType | undefined>();
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
+  const hasPermission = HasPermission({ actions: ['ADMIN_DATA_MODEL'] });
   const { data: modelInfo, refetch } = useGetModelQuery(modelId);
   const { data: serviceCategories } = useGetServiceCategoriesQuery(
     i18n.language ?? 'fi'
@@ -164,28 +166,34 @@ export default function ModelInfoView() {
                 open={showTooltip}
                 onCloseButtonClick={() => setShowTooltip(false)}
               >
-                <Button
-                  variant="secondaryNoBorder"
-                  onClick={() => handleEditViewItemClick(setShowEditView)}
-                  disabled={!formData}
-                >
-                  {t('edit', { ns: 'admin' })}
-                </Button>
+                {hasPermission && (
+                  <Button
+                    variant="secondaryNoBorder"
+                    onClick={() => handleEditViewItemClick(setShowEditView)}
+                    disabled={!formData}
+                  >
+                    {t('edit', { ns: 'admin' })}
+                  </Button>
+                )}
                 <AsFileModal type="show" />
                 <AsFileModal type="download" />
-                <Button variant="secondaryNoBorder">
-                  {t('update-models-resources-statuses', { ns: 'admin' })}
-                </Button>
-                <Button variant="secondaryNoBorder">
-                  {t('create-copy-from-model', { ns: 'admin' })}
-                </Button>
-                <Button variant="secondaryNoBorder">
-                  {t('add-email-subscription')}
-                </Button>
-                <hr />
-                <Button variant="secondaryNoBorder">
-                  {t('remove', { ns: 'admin' })}
-                </Button>
+                {hasPermission && (
+                  <>
+                    <Button variant="secondaryNoBorder">
+                      {t('update-models-resources-statuses', { ns: 'admin' })}
+                    </Button>
+                    <Button variant="secondaryNoBorder">
+                      {t('create-copy-from-model', { ns: 'admin' })}
+                    </Button>
+                    <Button variant="secondaryNoBorder">
+                      {t('add-email-subscription')}
+                    </Button>
+                    <hr />
+                    <Button variant="secondaryNoBorder">
+                      {t('remove', { ns: 'admin' })}
+                    </Button>
+                  </>
+                )}
               </Tooltip>
             </TooltipWrapper>
           </div>

@@ -23,9 +23,15 @@ export default function BreadcrumbLink({
 
   return (
     <Link href={url} passHref>
-      <SuomiFiBreadcrumbLink current={current} className="breadcrumb-link">
-        {children}
-      </SuomiFiBreadcrumbLink>
+      <div>
+        <SuomiFiBreadcrumbLink
+          href="/"
+          current={current}
+          className="breadcrumb-link"
+        >
+          {children}
+        </SuomiFiBreadcrumbLink>
+      </div>
     </Link>
   );
 }

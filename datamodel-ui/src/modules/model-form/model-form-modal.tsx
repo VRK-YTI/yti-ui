@@ -1,9 +1,5 @@
-import {
-  selectLogin,
-  useGetAuthenticatedUserMutMutation,
-} from '@app/common/components/login/login.slice';
+import { useGetAuthenticatedUserMutMutation } from '@app/common/components/login/login.slice';
 import { useCallback, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import {
   Button,
   InlineAlert,
@@ -27,6 +23,7 @@ import generatePayload from './generate-payload';
 import { usePutModelMutation } from '@app/common/components/model/model.slice';
 import getApiError from '@app/common/utils/getApiErrors';
 import { useRouter } from 'next/router';
+import HasPermission from '@app/common/utils/has-permission';
 
 interface ModelFormModalProps {
   refetch: () => void;
@@ -37,7 +34,6 @@ export default function ModelFormModal({ refetch }: ModelFormModalProps) {
   const { isSmall } = useBreakpoints();
   const router = useRouter();
   const [visible, setVisible] = useState(false);
-  const user = useSelector(selectLogin());
   const [modelFormInitialData] = useState(useInitialModelForm());
   const [formData, setFormData] = useState(modelFormInitialData);
   const [errors, setErrors] = useState<FormErrors>();
@@ -92,7 +88,7 @@ export default function ModelFormModal({ refetch }: ModelFormModalProps) {
     setErrors(errors);
   }, [userPosted, formData]);
 
-  if (user.anonymous) {
+  if (!HasPermission({ actions: ['CREATE_DATA_MODEL'] })) {
     return null;
   }
 

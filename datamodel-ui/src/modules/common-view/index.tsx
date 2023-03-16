@@ -1,4 +1,5 @@
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
+import HasPermission from '@app/common/utils/has-permission';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useRef, useState } from 'react';
 import {
@@ -28,6 +29,9 @@ export default function CommonView({ type, handleReturn }: CommonViewProps) {
   const { t } = useTranslation('common');
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
+  const hasPermission = HasPermission({
+    actions: ['ADMIN_ASSOCIATION', 'ADMIN_ATTRIBUTE'],
+  });
   const [showTooltip, setShowTooltip] = useState(false);
 
   useEffect(() => {
@@ -54,32 +58,34 @@ export default function CommonView({ type, handleReturn }: CommonViewProps) {
             <Text variant="bold">Rakennuskohteen omistaja</Text>
             <StatusChip>LUONNOS</StatusChip>
           </div>
-          <div>
-            <Button
-              variant="secondary"
-              iconRight="menu"
-              style={{ height: 'min-content' }}
-              onClick={() => setShowTooltip(!showTooltip)}
-            >
-              Toiminnot
-            </Button>
-            <TooltipWrapper>
-              <Tooltip
-                ariaCloseButtonLabelText=""
-                ariaToggleButtonLabelText=""
-                open={showTooltip}
-                onCloseButtonClick={() => setShowTooltip(false)}
+          {hasPermission && (
+            <div>
+              <Button
+                variant="secondary"
+                iconRight="menu"
+                style={{ height: 'min-content' }}
+                onClick={() => setShowTooltip(!showTooltip)}
               >
-                <Button variant="secondaryNoBorder">
-                  {t('edit', { ns: 'admin' })}
-                </Button>
-                <Separator />
-                <Button variant="secondaryNoBorder">
-                  {t('remove', { ns: 'admin' })}
-                </Button>
-              </Tooltip>
-            </TooltipWrapper>
-          </div>
+                Toiminnot
+              </Button>
+              <TooltipWrapper>
+                <Tooltip
+                  ariaCloseButtonLabelText=""
+                  ariaToggleButtonLabelText=""
+                  open={showTooltip}
+                  onCloseButtonClick={() => setShowTooltip(false)}
+                >
+                  <Button variant="secondaryNoBorder">
+                    {t('edit', { ns: 'admin' })}
+                  </Button>
+                  <Separator />
+                  <Button variant="secondaryNoBorder">
+                    {t('remove', { ns: 'admin' })}
+                  </Button>
+                </Tooltip>
+              </TooltipWrapper>
+            </div>
+          )}
         </div>
       </StaticHeader>
 
