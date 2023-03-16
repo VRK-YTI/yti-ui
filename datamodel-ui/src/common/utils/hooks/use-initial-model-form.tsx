@@ -33,5 +33,6 @@ export function useInitialModelForm(): ModelFormType {
     prefix: '',
     serviceCategories: [],
     type: 'profile' as ModelFormType['type'],
+    terminologies: [],
   };
 }

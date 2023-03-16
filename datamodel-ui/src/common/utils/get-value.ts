@@ -4,7 +4,7 @@ import {
   LangObject,
   ModelType,
   ReferenceData,
-  Terminology,
+  ModelTerminology,
 } from '../interfaces/model.interface';
 import { Organization } from '../interfaces/organizations.interface';
 import { ServiceCategory } from '../interfaces/service-categories.interface';

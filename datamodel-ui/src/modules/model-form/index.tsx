@@ -313,11 +313,17 @@ export default function ModelForm({
       <AddBlock
         data={formData}
         locale={i18n.language}
-        setTerminologies={(removed) =>
+        setTerminologies={(terminologies) =>
+          setFormData({
+            ...formData,
+            terminologies,
+          })
+        }
+        removeTerminology={(removed) =>
           setFormData({
             ...formData,
             terminologies: formData.terminologies.filter(
-              (t) => t.uri !== removed
+              (t) => removed !== t.uri
             ),
           })
         }

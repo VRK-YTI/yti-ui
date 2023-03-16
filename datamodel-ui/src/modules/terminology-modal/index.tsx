@@ -3,6 +3,7 @@ import {
   TerminologySearchParams,
   useGetTerminologiesMutation,
 } from '@app/common/components/terminology-search/search-terminology.slice';
+import { ModelTerminology } from '@app/common/interfaces/model.interface';
 import { Terminology } from '@app/common/interfaces/terminology.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { translateStatus } from '@app/common/utils/translation-helpers';
@@ -36,14 +37,17 @@ import {
   StatusChip,
 } from './terminology-modal.styles';
 
-export default function TerminologyModal() {
+export default function TerminologyModal({
+  addedTerminologies,
+  setFormData,
+}: {
+  addedTerminologies: ModelTerminology[];
+  setFormData: (t: ModelTerminology[]) => void;
+}) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const [visible, setVisible] = useState(false);
-  const [initialSelected] = useState([]);
-  const [selected, setSelected] = useState<
-    { id: string; title: string; uri: string }[]
-  >([]);
+  const [selected, setSelected] = useState<ModelTerminology[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const {
     data: serviceCategoriesResult,
@@ -81,23 +85,18 @@ export default function TerminologyModal() {
     );
   }, [serviceCategoriesResult, serviceCategoriesIsSuccess, t, i18n.language]);
 
-  const handleCheckboxClick = (id: string) => {
-    if (selected.some((s) => s.id === id)) {
-      setSelected(selected.filter((s) => s.id !== id));
+  const handleCheckboxClick = (uri: string) => {
+    if (selected.some((s) => s.uri === uri)) {
+      setSelected(selected.filter((s) => s.uri !== uri));
       return;
     }
 
-    const title =
-      getLanguageVersion({
-        data: terminologies.find((result) => result.id === id)?.label,
-        lang: i18n.language,
-      }) ?? '';
-    const uri = terminologies.find((result) => result.id === id)?.uri ?? '';
-    setSelected([...selected, { id: id, title: title, uri: uri }]);
+    const terminology = terminologies.find((result) => result.uri === uri);
+    setSelected([...selected, { label: terminology?.label ?? {}, uri }]);
   };
 
-  const handleChipClick = (id: string) => {
-    setSelected(selected.filter((s) => s.id !== id));
+  const handleChipClick = (uri: string) => {
+    setSelected(selected.filter((s) => s.uri !== uri));
   };
 
   const handleSearch = (obj?: TerminologySearchParams) => {
@@ -114,11 +113,14 @@ export default function TerminologyModal() {
     }
   }, [results]);
 
+  useEffect(() => {
+    setSelected(addedTerminologies);
+  }, [visible]);
+
   const handleSearchChange = (
     key: keyof TerminologySearchParams,
     value: typeof searchParams[keyof TerminologySearchParams]
   ) => {
-    console.log(value);
     if (key === 'groups' && isEqual(value, ['-1'])) {
       setSearchParams({ ...searchParams, [key]: [], ['pageFrom']: 0 });
       setCurrentPage(1);
@@ -144,6 +146,7 @@ export default function TerminologyModal() {
   };
 
   const handleSubmit = () => {
+    setFormData(selected);
     handleClose();
   };
 
@@ -170,7 +173,7 @@ export default function TerminologyModal() {
         </ModalContent>
         <ModalFooter>
           <Button
-            disabled={isEqual(initialSelected, selected)}
+            disabled={selected.length === 0 && addedTerminologies.length === 0}
             onClick={() => handleSubmit()}
           >
             {t('add-selected')}
@@ -220,8 +223,12 @@ export default function TerminologyModal() {
         {selected.length > 0 && (
           <SelectedChipBlock>
             {selected.map((s) => (
-              <Chip key={s.id} removable onClick={() => handleChipClick(s.id)}>
-                {s.title}
+              <Chip
+                key={s.uri}
+                removable
+                onClick={() => handleChipClick(s.uri)}
+              >
+                {s.label[i18n.language]}
               </Chip>
             ))}
           </SelectedChipBlock>
@@ -247,8 +254,8 @@ export default function TerminologyModal() {
             <SearchResult key={`terminology-result-${result.id}`}>
               <div>
                 <Checkbox
-                  checked={selected.map((s) => s.id).includes(result.id)}
-                  onClick={() => handleCheckboxClick(result.id)}
+                  checked={selected.map((s) => s.uri).includes(result.uri)}
+                  onClick={() => handleCheckboxClick(result.uri)}
                 />
               </div>
 

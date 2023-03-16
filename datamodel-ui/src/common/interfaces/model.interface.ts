@@ -12,7 +12,7 @@ export interface ModelType {
   contact: string;
   internalNamespaces: [];
   externalNamespaces: [];
-  terminologies: Terminology[];
+  terminologies: ModelTerminology[];
   created: string;
   modified: string;
 }
@@ -39,7 +39,7 @@ export interface Link {
   title: LangObject;
 }
 
-export interface Terminology {
+export interface ModelTerminology {
   uri: string;
   label: { [key: string]: string };
 }

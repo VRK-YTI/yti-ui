@@ -1,4 +1,5 @@
 import { ModelFormType } from '@app/common/interfaces/model-form.interface';
+import { ModelTerminology } from '@app/common/interfaces/model.interface';
 import { useTranslation } from 'next-i18next';
 import { Button, ExternalLink, Label } from 'suomifi-ui-components';
 import { LanguageBlock } from 'yti-common-ui/form/language-selector.styles';
@@ -8,11 +9,13 @@ import { AddBlockWrapper } from './model-form.styles';
 export default function AddBlock({
   data,
   locale,
+  removeTerminology,
   setTerminologies,
 }: {
   data: ModelFormType;
   locale: string;
-  setTerminologies: (t: string) => void;
+  removeTerminology: (t: string) => void;
+  setTerminologies: (t: ModelTerminology[]) => void;
 }) {
   const { t } = useTranslation('admin');
 
@@ -25,9 +28,7 @@ export default function AddBlock({
       {data.terminologies.map((terminology) => (
         <LanguageBlock key={terminology.uri} padding="m">
           <>
-            <span>
-              {locale} {terminology.label[locale]}
-            </span>
+            <span>{terminology.label[locale]}</span>
             <br />
 
             <ExternalLink href={terminology.uri} labelNewWindow="">
@@ -36,14 +37,17 @@ export default function AddBlock({
             <Button
               variant="secondaryNoBorder"
               icon="remove"
-              onClick={() => setTerminologies(terminology.uri)}
+              onClick={() => removeTerminology(terminology.uri)}
             >
-              Poista
+              {t('remove')}
             </Button>
           </>
         </LanguageBlock>
       ))}
-      <TerminologyModal />
+      <TerminologyModal
+        setFormData={setTerminologies}
+        addedTerminologies={data.terminologies}
+      />
 
       <Label htmlFor="codes" optionalText={t('optional')}>
         {t('reference-data-in-use')}
