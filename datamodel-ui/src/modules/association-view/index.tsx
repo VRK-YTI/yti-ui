@@ -10,7 +10,13 @@ import CommonForm from '../common-form';
 import CommonView from '../common-view';
 import { ViewBlock } from './association-view.styles';
 
-export default function AssociationView({ modelId }: { modelId: string }) {
+export default function AssociationView({
+  modelId,
+  languages,
+}: {
+  modelId: string;
+  languages: string[];
+}) {
   const { t } = useTranslation('common');
   const [view, setView] = useState('listing');
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -121,6 +127,7 @@ export default function AssociationView({ modelId }: { modelId: string }) {
         type={ResourceType.ASSOCIATION}
         modelId={modelId}
         initialSubResourceOf={initialSubResourceOf}
+        languages={languages}
       />
     );
   }

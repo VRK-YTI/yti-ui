@@ -6,6 +6,8 @@ import ClassView from '../class-view/class-view';
 import AttributeView from '../attribute-view';
 import AssociationView from '../association-view';
 import { useTranslation } from 'next-i18next';
+import { useGetModelQuery } from '@app/common/components/model/model.slice';
+import { useMemo } from 'react';
 
 interface ModelProps {
   modelId: string;
@@ -13,6 +15,15 @@ interface ModelProps {
 
 export default function Model({ modelId }: ModelProps) {
   const { t } = useTranslation('common');
+  const { data: modelInfo } = useGetModelQuery(modelId);
+
+  const languages: string[] = useMemo(() => {
+    if (!modelInfo) {
+      return [];
+    }
+
+    return modelInfo.languages;
+  }, [modelInfo]);
 
   return (
     <div
@@ -91,21 +102,27 @@ export default function Model({ modelId }: ModelProps) {
                 id: 'classes',
                 icon: 'chatHeart',
                 buttonLabel: t('classes'),
-                component: <ClassView modelId={modelId} />,
+                component: (
+                  <ClassView modelId={modelId} languages={languages} />
+                ),
               },
               {
                 id: 'attributes',
                 icon: 'history',
                 buttonLabel: t('attributes'),
                 buttonLabelSm: t('attributes-abbreviation'),
-                component: <AttributeView modelId={modelId} />,
+                component: (
+                  <AttributeView modelId={modelId} languages={languages} />
+                ),
               },
               {
                 id: 'associations',
                 icon: 'swapVertical',
                 buttonLabel: t('associations'),
                 buttonLabelSm: t('associations-abbreviation'),
-                component: <AssociationView modelId={modelId} />,
+                component: (
+                  <AssociationView modelId={modelId} languages={languages} />
+                ),
               },
             ]}
           />

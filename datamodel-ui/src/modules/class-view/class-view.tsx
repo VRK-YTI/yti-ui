@@ -2,7 +2,6 @@ import {
   useGetClassMutMutation,
   usePutClassMutation,
 } from '@app/common/components/class/class.slice';
-import { useGetModelQuery } from '@app/common/components/model/model.slice';
 import {
   ClassFormType,
   initialClassForm,
@@ -11,7 +10,7 @@ import { ClassType } from '@app/common/interfaces/class.interface';
 import { InternalClass } from '@app/common/interfaces/internal-class.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { useTranslation } from 'next-i18next';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Button,
   Expander,
@@ -42,11 +41,11 @@ import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 
 interface ClassView {
   modelId: string;
+  languages: string[];
 }
 
-export default function ClassView({ modelId }: ClassView) {
+export default function ClassView({ modelId, languages }: ClassView) {
   const { t, i18n } = useTranslation('common');
-  const { data: modelInfo } = useGetModelQuery(modelId);
   const [formData, setFormData] = useState<ClassFormType>(initialClassForm);
   const [formErrors, setFormErrors] = useState<ClassFormErrors>(
     validateClassForm(formData)
@@ -58,14 +57,6 @@ export default function ClassView({ modelId }: ClassView) {
   const [getClass, getClassResult] = useGetClassMutMutation();
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
-
-  const languages: string[] = useMemo(() => {
-    if (!modelInfo) {
-      return [];
-    }
-
-    return modelInfo.languages;
-  }, [modelInfo]);
 
   const mockClassList: ClassType[] = [
     {
