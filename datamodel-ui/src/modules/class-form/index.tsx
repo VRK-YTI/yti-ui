@@ -179,7 +179,9 @@ export default function ClassForm({
         />
 
         <InlineListBlock
-          button={<Button variant="secondary">{t('add-upper-class')}</Button>}
+          addNewComponent={
+            <Button variant="secondary">{t('add-upper-class')}</Button>
+          }
           items={
             data.subClassOf.length > 0
               ? data.subClassOf.map((s) => ({
@@ -189,14 +191,16 @@ export default function ClassForm({
               : []
           }
           label={t('upper-classes')}
+          handleRemoval={() => null}
         />
 
         <InlineListBlock
-          button={
+          addNewComponent={
             <Button variant="secondary">{t('add-corresponding-class')}</Button>
           }
           items={[]}
           label={t('corresponding-classes')}
+          handleRemoval={() => null}
         />
 
         <div>
@@ -240,7 +244,7 @@ export default function ClassForm({
         <InlineListBlock
           items={[]}
           label={t('attributes-added-to-class', { count: 0 })}
-          button={
+          addNewComponent={
             <AttributeModal
               buttonTranslations={{
                 useSelected: t('use-as-is'),
@@ -248,6 +252,7 @@ export default function ClassForm({
               handleFollowUp={() => null}
             />
           }
+          handleRemoval={() => null}
         />
 
         {/* TODO:

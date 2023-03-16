@@ -319,14 +319,6 @@ export default function ModelForm({
             terminologies,
           })
         }
-        removeTerminology={(removed) =>
-          setFormData({
-            ...formData,
-            terminologies: formData.terminologies.filter(
-              (t) => removed !== t.uri
-            ),
-          })
-        }
       />
     );
   }
