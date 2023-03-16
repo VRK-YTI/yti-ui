@@ -293,7 +293,10 @@ export default function ClassForm({
         <InlineListBlock
           items={[]}
           label={t('associations-added-to-class', { count: 0 })}
-          button={<Button variant="secondary">{t('add-association')}</Button>}
+          addNewComponent={
+            <Button variant="secondary">{t('add-association')}</Button>
+          }
+          handleRemoval={() => null}
         />
 
         {/* TODO:

@@ -192,7 +192,7 @@ export default function CommonForm({
           <InlineListBlock
             label={translateCommonForm('equivalent', type, t)}
             items={[]}
-            button={
+            addNewComponent={
               <Button variant="secondary">
                 {translateCommonForm('add-equivalent', type, t)}
               </Button>
