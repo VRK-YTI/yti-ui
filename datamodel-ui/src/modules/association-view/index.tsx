@@ -107,6 +107,7 @@ export default function AssociationView({ modelId }: { modelId: string }) {
               }}
               buttonIcon
               handleFollowUp={handleFollowUp}
+              modelId={modelId}
             />
           </div>
         </StaticHeader>

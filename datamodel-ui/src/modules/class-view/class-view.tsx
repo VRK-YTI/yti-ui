@@ -253,6 +253,7 @@ export default function ClassView({ modelId }: ClassView) {
         languages={languages}
         errors={formErrors}
         userPosted={userPosted}
+        modelId={modelId}
       />
     );
   }

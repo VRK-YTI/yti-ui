@@ -39,6 +39,7 @@ export interface ClassFormProps {
   languages: string[];
   errors: ClassFormErrors;
   userPosted: boolean;
+  modelId: string;
 }
 
 export default function ClassForm({
@@ -49,6 +50,7 @@ export default function ClassForm({
   languages,
   errors,
   userPosted,
+  modelId,
 }: ClassFormProps) {
   const { t } = useTranslation('admin');
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -246,6 +248,7 @@ export default function ClassForm({
                 useSelected: t('use-as-is'),
               }}
               handleFollowUp={() => null}
+              modelId={modelId}
             />
           }
         />

@@ -107,6 +107,7 @@ export default function AttributeView({ modelId }: { modelId: string }) {
               }}
               buttonIcon
               handleFollowUp={handleFollowUp}
+              modelId={modelId}
             />
           </div>
         </StaticHeader>
