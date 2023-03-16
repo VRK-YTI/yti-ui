@@ -18,7 +18,7 @@ export default function InlineList({ items, handleRemoval }: InlineListProps) {
   }
 
   return (
-    <List>
+    <List className="inline-list">
       {items.map((item) => (
         <ListItem key={item.id}>
           <ExternalLink

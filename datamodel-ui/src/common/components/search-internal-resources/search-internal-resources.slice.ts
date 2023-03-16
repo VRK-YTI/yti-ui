@@ -3,9 +3,11 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
 import { Status } from '@app/common/interfaces/status.interface';
 import { SearchInternalClasses } from '@app/common/interfaces/search-internal-classes.interface';
+import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 
-export interface InternalClassesSearchParams {
+export interface InternalResourcesSearchParams {
   query: string;
+  resourceTypes: ResourceType[];
   status?: Status[];
   groups?: string[];
   fromAddedNamespaces?: string;
@@ -14,8 +16,8 @@ export interface InternalClassesSearchParams {
   pageFrom?: number;
 }
 
-function createUrl(obj: InternalClassesSearchParams): string {
-  let baseQuery = `/frontend/searchInternalClasses?query=${
+function createUrl(obj: InternalResourcesSearchParams): string {
+  let baseQuery = `/frontend/searchInternalResources?query=${
     obj.query
   }&pageSize=${obj.pageSize ?? 50}&pageFrom=${obj.pageFrom ?? 0}`;
 
@@ -37,22 +39,28 @@ function createUrl(obj: InternalClassesSearchParams): string {
     );
   }
 
+  if (obj.resourceTypes) {
+    baseQuery = baseQuery.concat(
+      `&resourceTypes=${obj.resourceTypes.join(',')}`
+    );
+  }
+
   return baseQuery;
 }
 
-export const searchInternalClassesApi = createApi({
-  reducerPath: 'searchInternalClassesApi',
+export const searchInternalResourcesApi = createApi({
+  reducerPath: 'searchInternalResourcesApi',
   baseQuery: getDatamodelApiBaseQuery(),
-  tagTypes: ['internalClasses'],
+  tagTypes: ['internalResources'],
   extractRehydrationInfo(action, { reducerPath }) {
     if (action.type === HYDRATE) {
       return action.payload[reducerPath];
     }
   },
   endpoints: (builder) => ({
-    getInternalClasses: builder.mutation<
+    getInternalResources: builder.mutation<
       SearchInternalClasses,
-      InternalClassesSearchParams
+      InternalResourcesSearchParams
     >({
       query: (object) => ({
         url: createUrl(object),
@@ -62,9 +70,9 @@ export const searchInternalClassesApi = createApi({
   }),
 });
 
-export const { getInternalClasses } = searchInternalClassesApi.endpoints;
+export const { getInternalResources } = searchInternalResourcesApi.endpoints;
 
 export const {
-  useGetInternalClassesMutation,
+  useGetInternalResourcesMutation,
   util: { getRunningQueriesThunk },
-} = searchInternalClassesApi;
+} = searchInternalResourcesApi;

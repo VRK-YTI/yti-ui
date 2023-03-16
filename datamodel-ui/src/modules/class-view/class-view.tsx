@@ -20,6 +20,7 @@ import {
   HintText,
   Label,
   Link,
+  SearchInput,
   Text,
   Tooltip,
 } from 'suomifi-ui-components';
@@ -28,18 +29,16 @@ import { StatusChip } from '@app/common/components/multi-column-search/multi-col
 import Separator from 'yti-common-ui/separator';
 import ClassForm from '../class-form';
 import ClassModal from '../class-modal';
-import {
-  FullwidthSearchInput,
-  ModelInfoWrapper,
-  StaticHeaderWrapper,
-  TooltipWrapper,
-} from './model.styles';
+import { TooltipWrapper } from '../model/model.styles';
 import {
   ClassFormErrors,
   classFormToClass,
   internalClassToClassForm,
   validateClassForm,
 } from './utils';
+import DrawerItemList from '@app/common/components/drawer-item-list';
+import StaticHeader from 'yti-common-ui/drawer/static-header';
+import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 
 interface ClassView {
   modelId: string;
@@ -182,40 +181,41 @@ export default function ClassView({ modelId }: ClassView) {
 
     return (
       <>
-        <StaticHeaderWrapper ref={ref}>
+        <StaticHeader ref={ref}>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <Text variant="bold">
               {t('classes', { count: mockClassList.length })}
             </Text>
             <ClassModal handleFollowUp={handleFollowUpAction} />
           </div>
-        </StaticHeaderWrapper>
+        </StaticHeader>
 
-        <ModelInfoWrapper $height={headerHeight}>
-          <FullwidthSearchInput
+        <DrawerContent height={headerHeight} spaced>
+          <SearchInput
             labelText=""
             clearButtonLabel=""
             searchButtonLabel=""
             labelMode="hidden"
+            className="fullwidth"
           />
           {mockClassList.length < 1 ? (
-            <Text>Tietomallissa ei ole vielä yhtään luokkaa.</Text>
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              {mockClassList.map((c) => (
-                // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
-                <div
-                  key={c.identifier}
-                  onClick={() =>
-                    getClass({ modelId: modelId, classId: c.identifier })
-                  }
-                >
-                  {c.label.fi}
-                </div>
-              ))}
+            <div>
+              <Text>Tietomallissa ei ole vielä yhtään luokkaa.</Text>
             </div>
+          ) : (
+            <DrawerItemList
+              items={mockClassList.map((item) => ({
+                label: getLanguageVersion({
+                  data: item.label,
+                  lang: i18n.language,
+                }),
+                subtitle: item.identifier,
+                onClick: () =>
+                  getClass({ modelId: modelId, classId: item.identifier }),
+              }))}
+            />
           )}
-        </ModelInfoWrapper>
+        </DrawerContent>
       </>
     );
   }
@@ -246,7 +246,7 @@ export default function ClassView({ modelId }: ClassView) {
 
     return (
       <>
-        <StaticHeaderWrapper ref={ref}>
+        <StaticHeader ref={ref}>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <Button
               variant="secondaryNoBorder"
@@ -289,9 +289,9 @@ export default function ClassView({ modelId }: ClassView) {
               </TooltipWrapper>
             </div>
           </div>
-        </StaticHeaderWrapper>
+        </StaticHeader>
 
-        <ModelInfoWrapper $height={headerHeight}>
+        <DrawerContent height={headerHeight}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
             <Text variant="bold">
               {getLanguageVersion({ data: data.label, lang: i18n.language })}
@@ -377,7 +377,7 @@ export default function ClassView({ modelId }: ClassView) {
               {data.editorialNote ?? t('no-editorial-note')}
             </BasicBlock>
           </div>
-        </ModelInfoWrapper>
+        </DrawerContent>
       </>
     );
   }
