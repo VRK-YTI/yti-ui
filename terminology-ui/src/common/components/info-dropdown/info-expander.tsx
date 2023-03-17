@@ -68,7 +68,9 @@ export default function InfoExpander({ data }: InfoExpanderProps) {
     return null;
   }
 
-  const contact = getPropertyValue({ property: data.properties.contact });
+  const contact = getPropertyValue({
+    property: data.properties.contact,
+  }).trim();
 
   const handleDownloadClick = async () => {
     const result = await axios.get(
