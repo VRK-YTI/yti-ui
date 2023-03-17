@@ -21,7 +21,7 @@ import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
 import format from 'yti-common-ui/formatted-date/format';
 import { Locale } from 'yti-common-ui/locale-chooser/use-locales';
 
-interface AttributeModal {
+interface AssociationModalProps {
   buttonTranslations: {
     useSelected: string;
     createNew?: string;
@@ -30,11 +30,11 @@ interface AttributeModal {
   buttonIcon?: boolean;
 }
 
-export default function AttributeModal({
+export default function AssociationModal({
   buttonTranslations,
   handleFollowUp,
   buttonIcon,
-}: AttributeModal) {
+}: AssociationModalProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const [visible, setVisible] = useState(false);
