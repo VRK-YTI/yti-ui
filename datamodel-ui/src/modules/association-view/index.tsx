@@ -1,5 +1,5 @@
 import DrawerItemList from '@app/common/components/drawer-item-list';
-import { useQueryInternalResourcesQueryQuery } from '@app/common/components/search-internal-resources/search-internal-resources.slice';
+import { useQueryInternalResourcesQuery } from '@app/common/components/search-internal-resources/search-internal-resources.slice';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import HasPermission from '@app/common/utils/has-permission';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
@@ -31,7 +31,7 @@ export default function AssociationView({
     label: string;
     uri: string;
   }>();
-  const { data } = useQueryInternalResourcesQueryQuery({
+  const { data } = useQueryInternalResourcesQuery({
     query: query ?? '',
     limitToDataModel: modelId,
     pageSize: 20,

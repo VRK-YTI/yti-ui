@@ -38,7 +38,7 @@ import DrawerItemList from '@app/common/components/drawer-item-list';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import HasPermission from '@app/common/utils/has-permission';
-import { useQueryInternalResourcesQueryQuery } from '@app/common/components/search-internal-resources/search-internal-resources.slice';
+import { useQueryInternalResourcesQuery } from '@app/common/components/search-internal-resources/search-internal-resources.slice';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { DetachedPagination } from 'yti-common-ui/pagination';
 
@@ -63,7 +63,7 @@ export default function ClassView({ modelId, languages }: ClassView) {
   const [query, setQuery] = useState('');
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
-  const { data } = useQueryInternalResourcesQueryQuery({
+  const { data } = useQueryInternalResourcesQuery({
     query: query ?? '',
     limitToDataModel: modelId,
     pageSize: 20,

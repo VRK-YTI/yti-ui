@@ -22,7 +22,7 @@ import {
   getRunningQueriesThunk as getOrgQueriesThunk,
 } from '@app/common/components/organizations/organizations.slice';
 import {
-  queryInternalResourcesQuery,
+  queryInternalResources,
   getRunningQueriesThunk as getInternalResourcesRunningQueriesThunk,
 } from '@app/common/components/search-internal-resources/search-internal-resources.slice';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
@@ -68,7 +68,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
     store.dispatch(getServiceCategories.initiate(locale ?? 'fi'));
     store.dispatch(getOrganizations.initiate(locale ?? 'fi'));
     store.dispatch(
-      queryInternalResourcesQuery.initiate({
+      queryInternalResources.initiate({
         query: '',
         limitToDataModel: modelId,
         pageSize: 20,
@@ -77,7 +77,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
       })
     );
     store.dispatch(
-      queryInternalResourcesQuery.initiate({
+      queryInternalResources.initiate({
         query: '',
         limitToDataModel: modelId,
         pageSize: 20,
@@ -86,7 +86,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
       })
     );
     store.dispatch(
-      queryInternalResourcesQuery.initiate({
+      queryInternalResources.initiate({
         query: '',
         limitToDataModel: modelId,
         pageSize: 20,
