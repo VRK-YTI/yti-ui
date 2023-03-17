@@ -78,7 +78,7 @@ export default function MultiColumnSearch({
       uniqueItemId: 'this',
     },
     {
-      labelText: 'Kaikki tietomallit',
+      labelText: t('datamodels-all', { ns: 'common' }),
       uniqueItemId: 'all',
     },
   ]);
