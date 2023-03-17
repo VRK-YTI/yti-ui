@@ -34,8 +34,6 @@ import { translateLanguage } from '@app/common/utils/translation-helpers';
 import { compareLocales } from '@app/common/utils/compare-locals';
 import Separator from 'yti-common-ui/separator';
 import FormattedDate from 'yti-common-ui/formatted-date';
-import { useGetServiceCategoriesQuery } from '@app/common/components/service-categories/service-categories.slice';
-import { useGetOrganizationsQuery } from '@app/common/components/organizations/organizations.slice';
 import { ModelFormType } from '@app/common/interfaces/model-form.interface';
 import ModelEditView from './model-edit-view';
 import AsFileModal from '../as-file-modal';
@@ -55,12 +53,6 @@ export default function ModelInfoView() {
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
   const { data: modelInfo, refetch } = useGetModelQuery(modelId);
-  const { data: serviceCategories } = useGetServiceCategoriesQuery(
-    i18n.language ?? 'fi'
-  );
-  const { data: organizations } = useGetOrganizationsQuery(
-    i18n.language ?? 'fi'
-  );
 
   const data = useMemo(() => {
     if (!modelInfo) {
@@ -72,20 +64,20 @@ export default function ModelInfoView() {
       description: getComments(modelInfo),
       prefix: getBaseModelPrefix(modelInfo),
       uri: getUri(modelInfo),
-      isPartOf: getIsPartOf(modelInfo, serviceCategories, i18n.language),
+      isPartOf: getIsPartOf(modelInfo, i18n.language),
       languages: getLanguages(modelInfo),
       terminologies: getTerminology(modelInfo, i18n.language),
       referenceData: getReferenceData(modelInfo, i18n.language),
       dataVocabularies: getDataVocabularies(modelInfo, i18n.language),
       links: getLink(modelInfo),
-      organizations: getOrganizations(modelInfo, organizations, i18n.language),
+      organizations: getOrganizations(modelInfo, i18n.language),
       contact: getContact(modelInfo),
       created: getCreated(modelInfo),
     };
-  }, [modelInfo, i18n.language, organizations, serviceCategories]);
+  }, [modelInfo, i18n.language]);
 
   useEffect(() => {
-    if (modelInfo && serviceCategories && organizations) {
+    if (modelInfo) {
       setFormData({
         contact: '',
         languages:
@@ -101,16 +93,14 @@ export default function ModelInfoView() {
               )?.[1] ?? '',
             selected: true,
           })) ?? [],
-        organizations:
-          getOrganizationsWithId(modelInfo, organizations, i18n.language) ?? [],
+        organizations: getOrganizationsWithId(modelInfo, i18n.language) ?? [],
         prefix: modelInfo?.prefix ?? '',
-        serviceCategories:
-          getIsPartOfWithId(modelInfo, serviceCategories, i18n.language) ?? [],
+        serviceCategories: getIsPartOfWithId(modelInfo, i18n.language) ?? [],
         status: modelInfo?.status ?? 'DRAFT',
         type: modelInfo?.type ?? 'PROFILE',
       });
     }
-  }, [modelInfo, serviceCategories, organizations, t, i18n.language]);
+  }, [modelInfo, t, i18n.language]);
 
   const handleSuccess = () => {
     refetch();
@@ -132,12 +122,10 @@ export default function ModelInfoView() {
     return <DrawerContent />;
   }
 
-  if (showEditView && formData && organizations && serviceCategories) {
+  if (showEditView && formData) {
     return (
       <ModelEditView
         model={modelInfo}
-        organizations={organizations}
-        serviceCategories={serviceCategories}
         setShow={setShowEditView}
         handleSuccess={handleSuccess}
       />
