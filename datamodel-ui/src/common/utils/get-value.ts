@@ -4,7 +4,7 @@ import {
   LangObject,
   ModelType,
   ReferenceData,
-  Terminology,
+  ModelTerminology,
 } from '../interfaces/model.interface';
 import { Organization } from '../interfaces/organizations.interface';
 import { ServiceCategory } from '../interfaces/service-categories.interface';
@@ -20,14 +20,6 @@ export function getDataVocabulariesInfo(
   }
 
   return [...data.externalNamespaces, ...data.internalNamespaces];
-}
-
-function getTerminologyInfo(data?: ModelType): Terminology[] {
-  if (!data) {
-    return [];
-  }
-
-  return [];
 }
 
 function getReferenceDataInfo(data?: ModelType): ReferenceData[] {
@@ -244,23 +236,17 @@ export function getTerminology(
   data?: ModelType,
   lang?: string
 ): {
-  description: string;
-  title: string;
+  label: string;
   url: string;
 }[] {
   if (!data) {
     return [];
   }
 
-  const terminologies = getTerminologyInfo(data);
-
-  return terminologies?.map((terminology) => {
-    return {
-      description: '',
-      title: '',
-      url: '',
-    };
-  });
+  return data.terminologies?.map((terminology) => ({
+    label: terminology.label[lang ?? 'fi'],
+    url: terminology.uri,
+  }));
 }
 
 export function getReferenceData(

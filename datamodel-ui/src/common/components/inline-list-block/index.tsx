@@ -7,27 +7,38 @@ const InlineListBlockWrapper = styled.div`
   .inline-list {
     margin-bottom: ${(props) => props.theme.suomifi.spacing.xs};
   }
+  margin-bottom: ${(props) => props.theme.suomifi.spacing.s};
 `;
 
 interface InlineListBlockProps {
   label: string;
+  optionalText?: string;
   items: {
     id: string;
     label: string;
   }[];
-  button: React.ReactElement;
+  addNewComponent: React.ReactElement;
+  labelRow?: boolean;
+  handleRemoval: (id: string) => void;
 }
 
 export default function InlineListBlock({
   label,
+  optionalText,
   items,
-  button,
+  addNewComponent,
+  handleRemoval,
+  labelRow,
 }: InlineListBlockProps) {
   return (
     <InlineListBlockWrapper>
-      <Label>{label}</Label>
-      <InlineList handleRemoval={() => null} items={items} />
-      {button}
+      <Label optionalText={optionalText}>{label}</Label>
+      <InlineList
+        labelRow={labelRow}
+        handleRemoval={handleRemoval}
+        items={items}
+      />
+      {addNewComponent}
     </InlineListBlockWrapper>
   );
 }

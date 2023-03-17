@@ -182,21 +182,23 @@ export default function CommonForm({
               id: resource,
               label: resource,
             }))}
-            button={
+            addNewComponent={
               <Button variant="secondary" icon="plus">
                 {translateCommonForm('add-upper', type, t)}
               </Button>
             }
+            handleRemoval={() => null}
           />
 
           <InlineListBlock
             label={translateCommonForm('equivalent', type, t)}
             items={[]}
-            button={
+            addNewComponent={
               <Button variant="secondary">
                 {translateCommonForm('add-equivalent', type, t)}
               </Button>
             }
+            handleRemoval={() => null}
           />
 
           <div>

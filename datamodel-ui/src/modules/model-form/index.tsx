@@ -309,7 +309,18 @@ export default function ModelForm({
     if (!editMode) {
       return <></>;
     }
-    return <AddBlock />;
+    return (
+      <AddBlock
+        data={formData}
+        locale={i18n.language}
+        setTerminologies={(terminologies) =>
+          setFormData({
+            ...formData,
+            terminologies,
+          })
+        }
+      />
+    );
   }
 
   function renderContact() {

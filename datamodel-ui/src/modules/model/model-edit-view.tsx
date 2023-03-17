@@ -63,6 +63,7 @@ export default function ModelEditView({
       getIsPartOfWithId(model, serviceCategories, i18n.language) ?? [],
     status: model.status ?? 'DRAFT',
     type: model.type ?? 'PROFILE',
+    terminologies: model.terminologies ?? [],
   });
 
   useEffect(() => {

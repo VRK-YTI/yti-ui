@@ -12,6 +12,7 @@ export interface ModelType {
   contact: string;
   internalNamespaces: [];
   externalNamespaces: [];
+  terminologies: ModelTerminology[];
   created: string;
   modified: string;
 }
@@ -38,12 +39,9 @@ export interface Link {
   title: LangObject;
 }
 
-export interface Terminology {
-  id: string;
-  type: string;
-  modified: string;
-  prefLabel: LangObject | LangObject[];
-  versionInfo: Status;
+export interface ModelTerminology {
+  uri: string;
+  label: { [key: string]: string };
 }
 
 export interface ReferenceData {
@@ -80,4 +78,5 @@ export interface ModelUpdatePayload {
   // Namespaces need better typing
   internalNamespaces: string[];
   externalNamespaces: string[];
+  terminologies: string[];
 }

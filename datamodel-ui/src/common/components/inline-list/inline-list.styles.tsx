@@ -5,14 +5,15 @@ export const List = styled.div`
   flex-direction: column;
   width: 100%;
   max-width: 100%;
-
-  border: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
-  border-bottom: none;
+  > div:not(:last-child) {
+    margin-bottom: ${(props) => props.theme.suomifi.spacing.s};
+  }
 `;
 
 export const ListItem = styled.div`
+  border: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
+
   background-color: ${(props) => props.theme.suomifi.colors.highlightLight4};
-  border-bottom: 1px solid ${(props) => props.theme.suomifi.colors.depthLight1};
   display: flex;
   justify-content: space-between;
   align-items: center;

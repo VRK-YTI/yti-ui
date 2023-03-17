@@ -31,9 +31,18 @@ export const ContentWrapper = styled.div`
   width: 100%;
 `;
 
-export const ModelInfoListWrapper = styled.div`
-  > * {
-    margin-bottom: ${(props) => props.theme.suomifi.spacing.s};
+export const ModelInfoListWrapper = styled.ul`
+  margin-top: ${(props) => props.theme.suomifi.spacing.xxs};
+  margin-bottom: ${(props) => props.theme.suomifi.spacing.xxs};
+  list-style-type: none;
+
+  > li::marker {
+    content: '• ';
+    color: ${(props) => props.theme.suomifi.colors.highlightLight1};
+  }
+
+  > li a {
+    margin-left: ${(props) => props.theme.suomifi.spacing.xxs};
   }
 `;
 
