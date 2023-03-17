@@ -39,6 +39,7 @@ interface AttributeFormProps {
   type: ResourceType.ASSOCIATION | ResourceType.ATTRIBUTE;
   modelId: string;
   initialSubResourceOf?: { label: string; uri: string };
+  languages: string[];
 }
 
 export default function CommonForm({
@@ -46,11 +47,11 @@ export default function CommonForm({
   type,
   modelId,
   initialSubResourceOf,
+  languages,
 }: AttributeFormProps) {
   const { t } = useTranslation('admin');
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
-  const [languages] = useState(['fi']);
   const [data, setData] = useState(getInitialData());
   const [userPosted, setUserPosted] = useState(false);
   const [errors, setErrors] = useState(validateForm(data));
@@ -237,6 +238,7 @@ export default function CommonForm({
             onChange={(e) =>
               handleUpdate({ ...data, editorialNote: e.target.value ?? '' })
             }
+            hintText={t('editor-comment-hint')}
             className="wide-text"
           />
         </FormWrapper>

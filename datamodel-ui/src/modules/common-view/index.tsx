@@ -1,4 +1,6 @@
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
+import HasPermission from '@app/common/utils/has-permission';
+import { useTranslation } from 'next-i18next';
 import { useEffect, useRef, useState } from 'react';
 import {
   Button,
@@ -9,12 +11,14 @@ import {
   HintText,
   Link,
   Text,
+  Tooltip,
 } from 'suomifi-ui-components';
 import { BasicBlock } from 'yti-common-ui/block';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import Separator from 'yti-common-ui/separator';
 import { StatusChip } from 'yti-common-ui/title/title.styles';
+import { TooltipWrapper } from '../model/model.styles';
 
 interface CommonViewProps {
   type: ResourceType.ASSOCIATION | ResourceType.ATTRIBUTE;
@@ -22,8 +26,13 @@ interface CommonViewProps {
 }
 
 export default function CommonView({ type, handleReturn }: CommonViewProps) {
+  const { t } = useTranslation('common');
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
+  const hasPermission = HasPermission({
+    actions: ['ADMIN_ASSOCIATION', 'ADMIN_ATTRIBUTE'],
+  });
+  const [showTooltip, setShowTooltip] = useState(false);
 
   useEffect(() => {
     if (ref.current) {
@@ -49,13 +58,34 @@ export default function CommonView({ type, handleReturn }: CommonViewProps) {
             <Text variant="bold">Rakennuskohteen omistaja</Text>
             <StatusChip>LUONNOS</StatusChip>
           </div>
-          <Button
-            variant="secondary"
-            iconRight="menu"
-            style={{ height: 'min-content' }}
-          >
-            Toiminnot
-          </Button>
+          {hasPermission && (
+            <div>
+              <Button
+                variant="secondary"
+                iconRight="menu"
+                style={{ height: 'min-content' }}
+                onClick={() => setShowTooltip(!showTooltip)}
+              >
+                {t('actions')}
+              </Button>
+              <TooltipWrapper>
+                <Tooltip
+                  ariaCloseButtonLabelText=""
+                  ariaToggleButtonLabelText=""
+                  open={showTooltip}
+                  onCloseButtonClick={() => setShowTooltip(false)}
+                >
+                  <Button variant="secondaryNoBorder">
+                    {t('edit', { ns: 'admin' })}
+                  </Button>
+                  <Separator />
+                  <Button variant="secondaryNoBorder">
+                    {t('remove', { ns: 'admin' })}
+                  </Button>
+                </Tooltip>
+              </TooltipWrapper>
+            </div>
+          )}
         </div>
       </StaticHeader>
 

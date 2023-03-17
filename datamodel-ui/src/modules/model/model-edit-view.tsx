@@ -46,7 +46,7 @@ export default function ModelEditView({
   const [formData, setFormData] = useState<ModelFormType>({
     contact: '',
     languages:
-      model.languages.map((lang) => ({
+      ['fi', 'sv', 'en'].map((lang) => ({
         labelText: translateLanguage(lang, t),
         uniqueItemId: lang,
         title:
@@ -54,7 +54,7 @@ export default function ModelEditView({
         description:
           Object.entries(model.description).find((d) => d[0] === lang)?.[1] ??
           '',
-        selected: true,
+        selected: model.languages.includes(lang),
       })) ?? [],
     organizations:
       getOrganizationsWithId(model, organizations, i18n.language) ?? [],

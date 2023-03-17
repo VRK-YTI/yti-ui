@@ -1,9 +1,7 @@
 import DrawerItemList from '@app/common/components/drawer-item-list';
-import {
-  InternalResourcesSearchParams,
-  useGetInternalResourcesMutation,
-} from '@app/common/components/search-internal-resources/search-internal-resources.slice';
+import { useQueryInternalResourcesQuery } from '@app/common/components/search-internal-resources/search-internal-resources.slice';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
+import HasPermission from '@app/common/utils/has-permission';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useRef, useState } from 'react';
@@ -15,18 +13,31 @@ import AttributeModal from '../attribute-modal';
 import CommonForm from '../common-form';
 import CommonView from '../common-view';
 
-export default function AttributeView({ modelId }: { modelId: string }) {
+export default function AttributeView({
+  modelId,
+  languages,
+}: {
+  modelId: string;
+  languages: string[];
+}) {
   const { t, i18n } = useTranslation('common');
   const [view, setView] = useState('listing');
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
-  const [searchInternalResources, result] = useGetInternalResourcesMutation();
+  const hasPermission = HasPermission({ actions: ['CREATE_ATTRIBUTE'] });
   const [currentPage, setCurrentPage] = useState(1);
   const [query, setQuery] = useState('');
   const [initialSubResourceOf, setInitialSubResourceOf] = useState<{
     label: string;
     uri: string;
   }>();
+  const { data } = useQueryInternalResourcesQuery({
+    query: query ?? '',
+    limitToDataModel: modelId,
+    pageSize: 20,
+    pageFrom: (currentPage - 1) * 20,
+    resourceTypes: [ResourceType.ATTRIBUTE],
+  });
 
   useEffect(() => {
     if (ref.current) {
@@ -44,29 +55,8 @@ export default function AttributeView({ modelId }: { modelId: string }) {
 
   const handleQueryChange = (query: string) => {
     setQuery(query);
-    setCurrentPage(0);
+    setCurrentPage(1);
   };
-
-  useEffect(() => {
-    handleSearch();
-  }, [query]);
-
-  const handleSearch = (pageFrom?: number) => {
-    const searchParams: InternalResourcesSearchParams = {
-      query: query ?? '',
-      limitToDataModel: modelId,
-      pageSize: 20,
-      pageFrom: pageFrom ?? 0,
-      resourceTypes: [ResourceType.ATTRIBUTE],
-    };
-    searchInternalResources(searchParams);
-  };
-
-  useEffect(() => {
-    if (view === 'listing') {
-      handleSearch();
-    }
-  }, [view]);
 
   const handleFormReturn = () => {
     setView('listing');
@@ -95,20 +85,22 @@ export default function AttributeView({ modelId }: { modelId: string }) {
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <Text variant="bold">
               {t('attribute-count-title', {
-                count: result.data?.totalHitCount ?? 0,
+                count: data?.totalHitCount ?? 0,
               })}
             </Text>
-            <AttributeModal
-              buttonTranslations={{
-                useSelected: t('create-new-sub-attribute-for-selected', {
-                  ns: 'admin',
-                }),
-                createNew: t('create-new-attribute', { ns: 'admin' }),
-              }}
-              buttonIcon
-              handleFollowUp={handleFollowUp}
-              modelId={modelId}
-            />
+            {hasPermission && (
+              <AttributeModal
+                buttonTranslations={{
+                  useSelected: t('create-new-sub-attribute-for-selected', {
+                    ns: 'admin',
+                  }),
+                  createNew: t('create-new-attribute', { ns: 'admin' }),
+                }}
+                buttonIcon
+                handleFollowUp={handleFollowUp}
+                modelId={modelId}
+              />
+            )}
           </div>
         </StaticHeader>
 
@@ -119,18 +111,15 @@ export default function AttributeView({ modelId }: { modelId: string }) {
             searchButtonLabel={t('search')}
             labelMode="hidden"
             fullWidth
-            onBlur={(e) => handleQueryChange(e?.target.value ?? '')}
-            onSearch={(e) => {
-              handleQueryChange((e as string) ?? '');
-            }}
+            onChange={(e) => handleQueryChange(e?.toString() ?? '')}
             debounce={500}
           />
 
-          {!result.data || result.data?.totalHitCount < 1 ? (
+          {!data || data?.totalHitCount < 1 ? (
             <Text>{t('datamodel-no-attributes')}</Text>
           ) : (
             <DrawerItemList
-              items={result.data.responseObjects.map((item) => ({
+              items={data.responseObjects.map((item) => ({
                 label: getLanguageVersion({
                   data: item.label,
                   lang: i18n.language,
@@ -142,12 +131,9 @@ export default function AttributeView({ modelId }: { modelId: string }) {
           )}
           <DetachedPagination
             currentPage={currentPage}
-            maxPages={Math.ceil((result.data?.totalHitCount ?? 0) / 20)}
+            maxPages={Math.ceil((data?.totalHitCount ?? 0) / 20)}
             maxTotal={20}
-            setCurrentPage={(number) => {
-              setCurrentPage(number);
-              handleSearch((number - 1) * 20);
-            }}
+            setCurrentPage={(number) => setCurrentPage(number)}
           />
         </DrawerContent>
       </>
@@ -165,6 +151,7 @@ export default function AttributeView({ modelId }: { modelId: string }) {
         type={ResourceType.ATTRIBUTE}
         modelId={modelId}
         initialSubResourceOf={initialSubResourceOf}
+        languages={languages}
       />
     );
   }

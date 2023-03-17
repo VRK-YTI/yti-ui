@@ -21,7 +21,7 @@ import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
 import format from 'yti-common-ui/formatted-date/format';
 import { Locale } from 'yti-common-ui/locale-chooser/use-locales';
 
-interface AttributeModalProps {
+interface AssociationModalProps {
   buttonTranslations: {
     useSelected: string;
     createNew?: string;
@@ -31,12 +31,12 @@ interface AttributeModalProps {
   modelId: string;
 }
 
-export default function AttributeModal({
+export default function AssociationModal({
   buttonTranslations,
   handleFollowUp,
   buttonIcon,
   modelId,
-}: AttributeModalProps) {
+}: AssociationModalProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const [visible, setVisible] = useState(false);
@@ -46,7 +46,7 @@ export default function AttributeModal({
   const [searchParams, setSearchParams] =
     useState<InternalResourcesSearchParams>({
       query: '',
-      status: ['VALID'],
+      status: ['VALID', 'DRAFT'],
       groups: [],
       sortLang: i18n.language,
       pageSize: 50,
@@ -57,6 +57,19 @@ export default function AttributeModal({
   const handleOpen = () => {
     setVisible(true);
     handleSearch();
+  };
+
+  const handleClose = () => {
+    setSearchParams({
+      query: '',
+      status: ['VALID', 'DRAFT'],
+      groups: [],
+      sortLang: i18n.language,
+      pageSize: 50,
+      pageFrom: 0,
+      resourceTypes: [ResourceType.ASSOCIATION],
+    });
+    setVisible(false);
   };
 
   const handleSearch = (obj?: InternalResourcesSearchParams) => {
@@ -156,13 +169,14 @@ export default function AttributeModal({
             <Button
               variant="secondary"
               icon="plus"
+              disabled={selectedId !== ''}
               onClick={() => handleSubmit()}
             >
               {buttonTranslations.createNew}
             </Button>
           )}
 
-          <Button variant="secondaryNoBorder" onClick={() => setVisible(false)}>
+          <Button variant="secondaryNoBorder" onClick={() => handleClose()}>
             {t('cancel-variant')}
           </Button>
         </ModalFooter>

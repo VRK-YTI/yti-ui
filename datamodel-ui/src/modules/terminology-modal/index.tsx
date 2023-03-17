@@ -118,7 +118,6 @@ export default function TerminologyModal() {
     key: keyof TerminologySearchParams,
     value: typeof searchParams[keyof TerminologySearchParams]
   ) => {
-    console.log(value);
     if (key === 'groups' && isEqual(value, ['-1'])) {
       setSearchParams({ ...searchParams, [key]: [], ['pageFrom']: 0 });
       setCurrentPage(1);

@@ -20,6 +20,10 @@ import {
 } from '@app/common/components/search-models/search-models.slice';
 import { initialUrlState } from 'yti-common-ui/utils/hooks/use-url-state';
 import PageHead from 'yti-common-ui/page-head';
+import {
+  getCount,
+  getRunningQueriesThunk as getCountRunningQueriesThunk,
+} from '@app/common/components/counts/counts.slice';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -96,12 +100,14 @@ export const getServerSideProps = createCommonGetServerSideProps(
     store.dispatch(
       getSearchModels.initiate({ urlState, lang: locale ?? 'fi' })
     );
+    store.dispatch(getCount.initiate());
 
     await Promise.all(
       store.dispatch(getServiceCategoriesRunningQueriesThunk())
     );
     await Promise.all(store.dispatch(getOrganizationsRunningQueriesThunk()));
     await Promise.all(store.dispatch(getSearchModelsRunningQueriesThunk()));
+    await Promise.all(store.dispatch(getCountRunningQueriesThunk()));
 
     return {};
   }

@@ -21,6 +21,11 @@ import {
   getOrganizations,
   getRunningQueriesThunk as getOrgQueriesThunk,
 } from '@app/common/components/organizations/organizations.slice';
+import {
+  queryInternalResources,
+  getRunningQueriesThunk as getInternalResourcesRunningQueriesThunk,
+} from '@app/common/components/search-internal-resources/search-internal-resources.slice';
+import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -62,10 +67,40 @@ export const getServerSideProps = createCommonGetServerSideProps(
     store.dispatch(getModel.initiate(modelId));
     store.dispatch(getServiceCategories.initiate(locale ?? 'fi'));
     store.dispatch(getOrganizations.initiate(locale ?? 'fi'));
+    store.dispatch(
+      queryInternalResources.initiate({
+        query: '',
+        limitToDataModel: modelId,
+        pageSize: 20,
+        pageFrom: 0,
+        resourceTypes: [ResourceType.CLASS],
+      })
+    );
+    store.dispatch(
+      queryInternalResources.initiate({
+        query: '',
+        limitToDataModel: modelId,
+        pageSize: 20,
+        pageFrom: 0,
+        resourceTypes: [ResourceType.ASSOCIATION],
+      })
+    );
+    store.dispatch(
+      queryInternalResources.initiate({
+        query: '',
+        limitToDataModel: modelId,
+        pageSize: 20,
+        pageFrom: 0,
+        resourceTypes: [ResourceType.ATTRIBUTE],
+      })
+    );
 
     await Promise.all(store.dispatch(getRunningQueriesThunk()));
     await Promise.all(store.dispatch(getServiceQueriesThunk()));
     await Promise.all(store.dispatch(getOrgQueriesThunk()));
+    await Promise.all(
+      store.dispatch(getInternalResourcesRunningQueriesThunk())
+    );
 
     return {
       props: {

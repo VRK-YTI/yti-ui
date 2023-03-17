@@ -1,10 +1,10 @@
-import {
-  translateLanguage,
-  translateStatus,
-} from '@app/common/utils/translation-helpers';
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+import { translateLanguage } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
 import {
+  Dropdown,
+  DropdownItem,
   ExternalLink,
   Icon,
   RadioButton,
@@ -18,11 +18,11 @@ import {
   SearchToolsBlock,
   StatusChip,
 } from './multi-column-search.styles';
-import { statusList } from 'yti-common-ui/utils/status-list';
 import { useGetServiceCategoriesQuery } from '../service-categories/service-categories.slice';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { isEqual } from 'lodash';
 import { InternalResourcesSearchParams } from '../search-internal-resources/search-internal-resources.slice';
+import { Status } from 'yti-common-ui/interfaces/status.interface';
 
 export interface ResultType {
   target: {
@@ -75,7 +75,7 @@ export default function MultiColumnSearch({
   const [dataModelType] = useState<SingleSelectData[]>([
     {
       labelText: t('data-models-added-to-this-model'),
-      uniqueItemId: 'this',
+      uniqueItemId: 'self',
     },
     {
       labelText: t('datamodels-all', { ns: 'common' }),
@@ -88,21 +88,20 @@ export default function MultiColumnSearch({
     { labelText: translateLanguage('en', t), uniqueItemId: 'en' },
   ]);
 
-  const statuses: SingleSelectData[] = useMemo(() => {
-    const returnValue = [
-      {
-        labelText: t('status-all'),
-        uniqueItemId: '-1',
-      },
-    ];
-
-    return returnValue.concat(
-      statusList.map((status) => ({
-        labelText: translateStatus(status, t),
-        uniqueItemId: status,
-      }))
-    );
-  }, [t]);
+  const statuses: SingleSelectData[] = [
+    {
+      labelText: t('status-all'),
+      uniqueItemId: '-1',
+    },
+    {
+      labelText: t('statuses-in-use'),
+      uniqueItemId: 'in-use',
+    },
+    {
+      labelText: t('statuses-not-in-use'),
+      uniqueItemId: 'not-in-use',
+    },
+  ];
 
   const serviceCategories: SingleSelectData[] = useMemo(() => {
     if (!serviceCategoriesIsSuccess) {
@@ -128,7 +127,7 @@ export default function MultiColumnSearch({
   }, [serviceCategoriesResult, serviceCategoriesIsSuccess, t, i18n.language]);
 
   const handleRadioButtonClick = (id: string) => {
-    setSelectedId(id);
+    setSelectedId(selectedId === id ? '' : id);
   };
 
   const handleAvailableDataModelsChange = (value: string | null) => {
@@ -151,10 +150,27 @@ export default function MultiColumnSearch({
     key: keyof InternalResourcesSearchParams,
     value: typeof searchParams[keyof InternalResourcesSearchParams]
   ) => {
-    if ((key === 'groups' || key === 'status') && isEqual(value, ['-1'])) {
+    if (key === 'groups' && isEqual(value, ['-1'])) {
       setSearchParams({ ...searchParams, [key]: [] });
       return;
     }
+
+    if (key === 'status') {
+      const setStatuses =
+        value !== '-1'
+          ? value === 'in-use'
+            ? (['VALID', 'DRAFT'] as Status[])
+            : (['INCOMPLETE', 'INVALID', 'RETIRED', 'SUPERSEDED'] as Status[])
+          : [];
+
+      setSearchParams({
+        ...searchParams,
+        [key]: setStatuses,
+      });
+
+      return;
+    }
+
     setSearchParams({ ...searchParams, [key]: value });
   };
 
@@ -171,20 +187,22 @@ export default function MultiColumnSearch({
           onChange={(e) => handleSearchChange('query', e?.toString() ?? '')}
           debounce={300}
         />
-        <SingleSelect
-          className="wider"
+
+        <Dropdown
+          className="data-model-picker"
           labelText={t('data-model')}
-          itemAdditionHelpText=""
-          ariaOptionsAvailableText={t('data-models-available')}
-          clearButtonLabel={t('clear-selection')}
-          defaultSelectedItem={dataModelType.find(
-            (type) => type.uniqueItemId === 'this'
-          )}
-          items={dataModelType}
-          onItemSelect={(item) => {
+          defaultValue="self"
+          onChange={(item) => {
             handleAvailableDataModelsChange(item);
           }}
-        />
+        >
+          {dataModelType.map((type) => (
+            <DropdownItem key={type.uniqueItemId} value={type.uniqueItemId}>
+              {type.labelText}
+            </DropdownItem>
+          ))}
+        </Dropdown>
+
         <SingleSelect
           labelText={t('information-domain')}
           itemAdditionHelpText=""
@@ -206,34 +224,35 @@ export default function MultiColumnSearch({
           )}
           items={serviceCategories}
         />
-        <SingleSelect
+
+        <Dropdown
           labelText={t('status')}
-          itemAdditionHelpText=""
-          ariaOptionsAvailableText={t('statuses-available')}
-          clearButtonLabel={t('clear-selection')}
-          selectedItem={
-            searchParams.status && searchParams.status.length > 0
-              ? statuses.find(
-                  (status) => status.uniqueItemId === searchParams.status?.[0]
-                )
-              : statuses.find((status) => status.uniqueItemId === '-1')
-          }
-          items={statuses}
-          onItemSelect={(e) =>
-            handleSearchChange('status', e !== null ? [e] : [])
-          }
-        />
+          defaultValue={'in-use'}
+          onChange={(e) => handleSearchChange('status', e)}
+          className="status-picker"
+        >
+          {statuses.map((status) => (
+            <DropdownItem key={status.uniqueItemId} value={status.uniqueItemId}>
+              {status.labelText}
+            </DropdownItem>
+          ))}
+        </Dropdown>
+
         {languageVersioned && (
-          <SingleSelect
+          <Dropdown
             labelText={t('content-language')}
-            itemAdditionHelpText=""
-            ariaOptionsAvailableText={t('content-languages-available')}
-            clearButtonLabel={t('clear-selection')}
-            defaultSelectedItem={languages.find(
-              (lang) => lang.uniqueItemId === i18n.language ?? 'fi'
-            )}
-            items={languages}
-          />
+            defaultValue={
+              languages.find(
+                (lang) => lang.uniqueItemId === i18n.language ?? 'fi'
+              )?.uniqueItemId ?? 'fi'
+            }
+          >
+            {languages.map((lang) => (
+              <DropdownItem key={lang.uniqueItemId} value={lang.uniqueItemId}>
+                {lang.labelText}
+              </DropdownItem>
+            ))}
+          </Dropdown>
         )}
       </SearchToolsBlock>
 
@@ -257,11 +276,18 @@ export default function MultiColumnSearch({
           {results.map((result) => (
             <tr key={`result-${result.target.identifier}`}>
               <td className="td-with-radio-button">
-                <div>
+                <div
+                  onMouseDown={() =>
+                    handleRadioButtonClick(result.target.identifier)
+                  }
+                  onKeyDown={(e) =>
+                    e.key === 'Enter' &&
+                    handleRadioButtonClick(result.target.identifier)
+                  }
+                >
                   <RadioButton
                     value={result.target.identifier}
                     checked={result.target.identifier === selectedId}
-                    onChange={(e) => handleRadioButtonClick(e.target.value)}
                   />
                 </div>
                 <div>
