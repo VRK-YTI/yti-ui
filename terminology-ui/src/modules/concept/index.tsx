@@ -68,7 +68,9 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
   });
   const status =
     getPropertyValue({ property: concept?.properties.status }) || 'DRAFT';
-  const email = getPropertyValue({ property: terminology?.properties.contact });
+  const email = getPropertyValue({
+    property: terminology?.properties.contact,
+  }).trim();
 
   useEffect(() => {
     if (concept) {
