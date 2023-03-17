@@ -2513,6 +2513,7 @@ export const extensiveDataExpected = {
             fi: 'testi',
             en: 'test',
           },
+          targetId: '7b179ea2-b28c-497e-9e81-6ff254235ea1',
         },
       ],
       narrowerConcept: [
@@ -2550,6 +2551,7 @@ export const extensiveDataExpected = {
             fi: 'testi',
             en: 'test',
           },
+          targetId: '7b179ea2-b28c-497e-9e81-6ff254235ea1',
         },
       ],
       closeMatch: [
@@ -2563,6 +2565,7 @@ export const extensiveDataExpected = {
             fi: 'testi',
             en: 'test',
           },
+          targetId: '7b179ea2-b28c-497e-9e81-6ff254235ea1',
         },
       ],
     },
