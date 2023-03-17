@@ -54,6 +54,7 @@ interface MultiColumnSearchProps {
   searchParams: InternalResourcesSearchParams;
   setSearchParams: (value: InternalResourcesSearchParams) => void;
   languageVersioned?: boolean;
+  modelId: string;
 }
 
 export default function MultiColumnSearch({
@@ -64,6 +65,7 @@ export default function MultiColumnSearch({
   searchParams,
   setSearchParams,
   languageVersioned,
+  modelId,
 }: MultiColumnSearchProps) {
   const { t, i18n } = useTranslation('admin');
   const {
@@ -74,6 +76,10 @@ export default function MultiColumnSearch({
     {
       labelText: t('data-models-added-to-this-model'),
       uniqueItemId: 'this',
+    },
+    {
+      labelText: t('datamodels-all', { ns: 'common' }),
+      uniqueItemId: 'all',
     },
   ]);
   const [languages] = useState<SingleSelectData[]>([
@@ -125,6 +131,22 @@ export default function MultiColumnSearch({
     setSelectedId(id);
   };
 
+  const handleAvailableDataModelsChange = (value: string | null) => {
+    if (value === 'this') {
+      setSearchParams({
+        ...searchParams,
+        ['limitToDataModel']: modelId,
+        ['fromAddedNamespaces']: true,
+      });
+    } else {
+      setSearchParams({
+        ...searchParams,
+        ['limitToDataModel']: '',
+        ['fromAddedNamespaces']: false,
+      });
+    }
+  };
+
   const handleSearchChange = (
     key: keyof InternalResourcesSearchParams,
     value: typeof searchParams[keyof InternalResourcesSearchParams]
@@ -159,6 +181,9 @@ export default function MultiColumnSearch({
             (type) => type.uniqueItemId === 'this'
           )}
           items={dataModelType}
+          onItemSelect={(item) => {
+            handleAvailableDataModelsChange(item);
+          }}
         />
         <SingleSelect
           labelText={t('information-domain')}
