@@ -28,12 +28,14 @@ interface AssociationModalProps {
   };
   handleFollowUp: (value?: { label: string; uri: string }) => void;
   buttonIcon?: boolean;
+  modelId: string;
 }
 
 export default function AssociationModal({
   buttonTranslations,
   handleFollowUp,
   buttonIcon,
+  modelId,
 }: AssociationModalProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -142,6 +144,7 @@ export default function AssociationModal({
             searchParams={searchParams}
             setSearchParams={handleSearch}
             languageVersioned
+            modelId={modelId}
           />
         </ModalContent>
         <ModalFooter>

@@ -1,15 +1,20 @@
 import DrawerItemList from '@app/common/components/drawer-item-list';
+import {
+  InternalResourcesSearchParams,
+  useGetInternalResourcesMutation,
+} from '@app/common/components/search-internal-resources/search-internal-resources.slice';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import HasPermission from '@app/common/utils/has-permission';
+import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useRef, useState } from 'react';
 import { SearchInput, Text } from 'suomifi-ui-components';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
+import { DetachedPagination } from 'yti-common-ui/pagination';
 import AssociationModal from '../association-modal';
 import CommonForm from '../common-form';
 import CommonView from '../common-view';
-import { ViewBlock } from './association-view.styles';
 
 export default function AssociationView({
   modelId,
@@ -18,11 +23,14 @@ export default function AssociationView({
   modelId: string;
   languages: string[];
 }) {
-  const { t } = useTranslation('common');
+  const { t, i18n } = useTranslation('common');
   const [view, setView] = useState('listing');
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
   const hasPermission = HasPermission({ actions: ['CREATE_ASSOCIATION'] });
+  const [searchInternalResources, result] = useGetInternalResourcesMutation();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [query, setQuery] = useState('');
   const [initialSubResourceOf, setInitialSubResourceOf] = useState<{
     label: string;
     uri: string;
@@ -46,9 +54,35 @@ export default function AssociationView({
     setView('listing');
   };
 
+  const handleQueryChange = (query: string) => {
+    setQuery(query);
+    setCurrentPage(0);
+  };
+
+  useEffect(() => {
+    handleSearch();
+  }, [query]);
+
   const handleShowAssociation = () => {
     setView('association');
   };
+
+  const handleSearch = (pageFrom?: number) => {
+    const searchParams: InternalResourcesSearchParams = {
+      query: query ?? '',
+      limitToDataModel: modelId,
+      pageSize: 20,
+      pageFrom: pageFrom ?? 0,
+      resourceTypes: [ResourceType.ASSOCIATION],
+    };
+    searchInternalResources(searchParams);
+  };
+
+  useEffect(() => {
+    if (view === 'listing') {
+      handleSearch();
+    }
+  }, [view]);
 
   return (
     <>
@@ -68,7 +102,9 @@ export default function AssociationView({
         <StaticHeader ref={ref}>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <Text variant="bold">
-              {t('association-count-title', { count: 3 })}
+              {t('association-count-title', {
+                count: result.data?.totalHitCount ?? 0,
+              })}
             </Text>
             {hasPermission && (
               <AssociationModal
@@ -80,41 +116,48 @@ export default function AssociationView({
                 }}
                 buttonIcon
                 handleFollowUp={handleFollowUp}
+                modelId={modelId}
               />
             )}
           </div>
         </StaticHeader>
 
-        <DrawerContent height={headerHeight}>
-          <ViewBlock>
-            <SearchInput
-              labelText=""
-              clearButtonLabel=""
-              searchButtonLabel=""
-              labelMode="hidden"
-              className="fullwidth"
-            />
+        <DrawerContent height={headerHeight} spaced>
+          <SearchInput
+            labelText=""
+            clearButtonLabel={t('clear-all-selections', { ns: 'admin' })}
+            searchButtonLabel={t('search')}
+            labelMode="hidden"
+            fullWidth
+            onBlur={(e) => handleQueryChange(e?.target.value ?? '')}
+            onSearch={(e) => {
+              handleQueryChange((e as string) ?? '');
+            }}
+          />
 
+          {!result.data || result.data?.totalHitCount < 1 ? (
+            <Text>{t('datamodel-no-association')}</Text>
+          ) : (
             <DrawerItemList
-              items={[
-                {
-                  label: 'Liitetään kohteella',
-                  subtitle: 'jhs210:liitos',
-                  onClick: handleShowAssociation,
-                },
-                {
-                  label: 'Rakennuskohteen omistaja',
-                  subtitle: 'jhs210:rakomista',
-                  onClick: handleShowAssociation,
-                },
-                {
-                  label: 'Rakennuskohteen osoite',
-                  subtitle: 'jhs210:rakosoite',
-                  onClick: handleShowAssociation,
-                },
-              ]}
+              items={result.data.responseObjects.map((item) => ({
+                label: getLanguageVersion({
+                  data: item.label,
+                  lang: i18n.language,
+                }),
+                subtitle: `${modelId}:${item.identifier}`,
+                onClick: handleShowAssociation,
+              }))}
             />
-          </ViewBlock>
+          )}
+          <DetachedPagination
+            currentPage={currentPage}
+            maxPages={Math.ceil((result.data?.totalHitCount ?? 0) / 20)}
+            maxTotal={20}
+            setCurrentPage={(number) => {
+              setCurrentPage(number);
+              handleSearch((number - 1) * 20);
+            }}
+          />
         </DrawerContent>
       </>
     );

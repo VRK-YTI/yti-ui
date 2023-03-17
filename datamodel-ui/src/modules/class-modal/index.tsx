@@ -23,10 +23,14 @@ import {
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 
 export interface ClassModalProps {
+  modelId: string;
   handleFollowUp: (value?: InternalClass) => void;
 }
 
-export default function ClassModal({ handleFollowUp }: ClassModalProps) {
+export default function ClassModal({
+  modelId,
+  handleFollowUp,
+}: ClassModalProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const [visible, setVisible] = useState(false);
@@ -41,6 +45,8 @@ export default function ClassModal({ handleFollowUp }: ClassModalProps) {
       sortLang: i18n.language,
       pageSize: 50,
       pageFrom: 0,
+      limitToDataModel: modelId,
+      fromAddedNamespaces: true,
       resourceTypes: [ResourceType.CLASS],
     });
 
@@ -132,6 +138,7 @@ export default function ClassModal({ handleFollowUp }: ClassModalProps) {
             setSelectedId={setSelectedId}
             searchParams={searchParams}
             setSearchParams={handleSearch}
+            modelId={modelId}
           />
         </ModalContent>
         <ModalFooter>

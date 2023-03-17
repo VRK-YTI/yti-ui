@@ -10,7 +10,8 @@ export interface InternalResourcesSearchParams {
   resourceTypes: ResourceType[];
   status?: Status[];
   groups?: string[];
-  fromAddedNamespaces?: string;
+  fromAddedNamespaces?: boolean;
+  limitToDataModel?: string;
   sortLang?: string;
   pageSize?: number;
   pageFrom?: number;
@@ -31,6 +32,12 @@ function createUrl(obj: InternalResourcesSearchParams): string {
 
   if (obj.groups && obj.groups.length > 0) {
     baseQuery = baseQuery.concat(`&groups=${obj.groups.join(',')}`);
+  }
+
+  if (obj.limitToDataModel) {
+    baseQuery = baseQuery.concat(
+      `&limitToDataModel=http://uri.suomi.fi/datamodel/ns/${obj.limitToDataModel}`
+    );
   }
 
   if (obj.fromAddedNamespaces) {

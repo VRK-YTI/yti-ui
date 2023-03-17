@@ -21,20 +21,22 @@ import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
 import format from 'yti-common-ui/formatted-date/format';
 import { Locale } from 'yti-common-ui/locale-chooser/use-locales';
 
-interface AttributeModal {
+interface AttributeModalProps {
   buttonTranslations: {
     useSelected: string;
     createNew?: string;
   };
   handleFollowUp: (value?: { label: string; uri: string }) => void;
   buttonIcon?: boolean;
+  modelId: string;
 }
 
 export default function AttributeModal({
   buttonTranslations,
   handleFollowUp,
   buttonIcon,
-}: AttributeModal) {
+  modelId,
+}: AttributeModalProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const [visible, setVisible] = useState(false);
@@ -142,6 +144,7 @@ export default function AttributeModal({
             searchParams={searchParams}
             setSearchParams={handleSearch}
             languageVersioned
+            modelId={modelId}
           />
         </ModalContent>
         <ModalFooter>

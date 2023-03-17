@@ -39,6 +39,7 @@ export interface ClassFormProps {
   languages: string[];
   errors: ClassFormErrors;
   userPosted: boolean;
+  modelId: string;
 }
 
 export default function ClassForm({
@@ -49,6 +50,7 @@ export default function ClassForm({
   languages,
   errors,
   userPosted,
+  modelId,
 }: ClassFormProps) {
   const { t } = useTranslation('admin');
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -155,7 +157,7 @@ export default function ClassForm({
                 })
               }
               status={userPosted && errors.label ? 'error' : 'default'}
-              className="fullwidth"
+              fullWidth
             />
           ))}
         </LanguageVersionedWrapper>
@@ -226,7 +228,7 @@ export default function ClassForm({
                   note: { ...data.note, [lang]: e.target.value },
                 })
               }
-              className="fullwidth"
+              fullWidth
             />
           ))}
         </LanguageVersionedWrapper>
@@ -246,6 +248,7 @@ export default function ClassForm({
                 useSelected: t('use-as-is'),
               }}
               handleFollowUp={() => null}
+              modelId={modelId}
             />
           }
         />
@@ -311,7 +314,7 @@ export default function ClassForm({
           hintText={t('editor-comment-hint')}
           defaultValue={data.editorialNote}
           onChange={(e) => setData({ ...data, editorialNote: e.target.value })}
-          className="fullwidth"
+          fullWidth
         />
       </DrawerContent>
     </>

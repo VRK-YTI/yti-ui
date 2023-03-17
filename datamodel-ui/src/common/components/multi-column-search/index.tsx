@@ -54,6 +54,7 @@ interface MultiColumnSearchProps {
   searchParams: InternalResourcesSearchParams;
   setSearchParams: (value: InternalResourcesSearchParams) => void;
   languageVersioned?: boolean;
+  modelId: string;
 }
 
 export default function MultiColumnSearch({
@@ -64,6 +65,7 @@ export default function MultiColumnSearch({
   searchParams,
   setSearchParams,
   languageVersioned,
+  modelId,
 }: MultiColumnSearchProps) {
   const { t, i18n } = useTranslation('admin');
   const {
@@ -76,7 +78,7 @@ export default function MultiColumnSearch({
       uniqueItemId: 'self',
     },
     {
-      labelText: 'Kaikki tietomallit',
+      labelText: t('datamodels-all', { ns: 'common' }),
       uniqueItemId: 'all',
     },
   ]);
@@ -128,6 +130,22 @@ export default function MultiColumnSearch({
     setSelectedId(selectedId === id ? '' : id);
   };
 
+  const handleAvailableDataModelsChange = (value: string | null) => {
+    if (value === 'this') {
+      setSearchParams({
+        ...searchParams,
+        ['limitToDataModel']: modelId,
+        ['fromAddedNamespaces']: true,
+      });
+    } else {
+      setSearchParams({
+        ...searchParams,
+        ['limitToDataModel']: '',
+        ['fromAddedNamespaces']: false,
+      });
+    }
+  };
+
   const handleSearchChange = (
     key: keyof InternalResourcesSearchParams,
     value: typeof searchParams[keyof InternalResourcesSearchParams]
@@ -174,6 +192,9 @@ export default function MultiColumnSearch({
           className="data-model-picker"
           labelText={t('data-model')}
           defaultValue="self"
+          onChange={(item) => {
+            handleAvailableDataModelsChange(item);
+          }}
         >
           {dataModelType.map((type) => (
             <DropdownItem key={type.uniqueItemId} value={type.uniqueItemId}>
