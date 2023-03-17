@@ -40,7 +40,7 @@ export default function ClassModal({
   const [searchParams, setSearchParams] =
     useState<InternalResourcesSearchParams>({
       query: '',
-      status: ['VALID'],
+      status: ['VALID', 'DRAFT'],
       groups: [],
       sortLang: i18n.language,
       pageSize: 50,
@@ -59,7 +59,7 @@ export default function ClassModal({
     setSelectedId('');
     setSearchParams({
       query: '',
-      status: ['VALID'],
+      status: ['VALID', 'DRAFT'],
       groups: [],
       sortLang: i18n.language,
       pageSize: 50,

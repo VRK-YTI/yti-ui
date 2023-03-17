@@ -46,7 +46,7 @@ export default function AttributeModal({
   const [searchParams, setSearchParams] =
     useState<InternalResourcesSearchParams>({
       query: '',
-      status: ['VALID'],
+      status: ['VALID', 'DRAFT'],
       groups: [],
       sortLang: i18n.language,
       pageSize: 50,
@@ -57,6 +57,19 @@ export default function AttributeModal({
   const handleOpen = () => {
     setVisible(true);
     handleSearch();
+  };
+
+  const handleClose = () => {
+    setSearchParams({
+      query: '',
+      status: ['VALID', 'DRAFT'],
+      groups: [],
+      sortLang: i18n.language,
+      pageSize: 50,
+      pageFrom: 0,
+      resourceTypes: [ResourceType.ATTRIBUTE],
+    });
+    setVisible(false);
   };
 
   const handleSearch = (obj?: InternalResourcesSearchParams) => {
@@ -163,7 +176,7 @@ export default function AttributeModal({
             </Button>
           )}
 
-          <Button variant="secondaryNoBorder" onClick={() => setVisible(false)}>
+          <Button variant="secondaryNoBorder" onClick={() => handleClose()}>
             {t('cancel-variant')}
           </Button>
         </ModalFooter>

@@ -1,8 +1,5 @@
 import DrawerItemList from '@app/common/components/drawer-item-list';
-import {
-  InternalResourcesSearchParams,
-  useGetInternalResourcesMutation,
-} from '@app/common/components/search-internal-resources/search-internal-resources.slice';
+import { useQueryInternalResourcesQueryQuery } from '@app/common/components/search-internal-resources/search-internal-resources.slice';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import HasPermission from '@app/common/utils/has-permission';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
@@ -28,13 +25,19 @@ export default function AttributeView({
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
   const hasPermission = HasPermission({ actions: ['CREATE_ATTRIBUTE'] });
-  const [searchInternalResources, result] = useGetInternalResourcesMutation();
   const [currentPage, setCurrentPage] = useState(1);
   const [query, setQuery] = useState('');
   const [initialSubResourceOf, setInitialSubResourceOf] = useState<{
     label: string;
     uri: string;
   }>();
+  const { data } = useQueryInternalResourcesQueryQuery({
+    query: query ?? '',
+    limitToDataModel: modelId,
+    pageSize: 20,
+    pageFrom: (currentPage - 1) * 20,
+    resourceTypes: [ResourceType.ATTRIBUTE],
+  });
 
   useEffect(() => {
     if (ref.current) {
@@ -52,29 +55,8 @@ export default function AttributeView({
 
   const handleQueryChange = (query: string) => {
     setQuery(query);
-    setCurrentPage(0);
+    setCurrentPage(1);
   };
-
-  useEffect(() => {
-    handleSearch();
-  }, [query]);
-
-  const handleSearch = (pageFrom?: number) => {
-    const searchParams: InternalResourcesSearchParams = {
-      query: query ?? '',
-      limitToDataModel: modelId,
-      pageSize: 20,
-      pageFrom: pageFrom ?? 0,
-      resourceTypes: [ResourceType.ATTRIBUTE],
-    };
-    searchInternalResources(searchParams);
-  };
-
-  useEffect(() => {
-    if (view === 'listing') {
-      handleSearch();
-    }
-  }, [view]);
 
   const handleFormReturn = () => {
     setView('listing');
@@ -103,7 +85,7 @@ export default function AttributeView({
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <Text variant="bold">
               {t('attribute-count-title', {
-                count: result.data?.totalHitCount ?? 0,
+                count: data?.totalHitCount ?? 0,
               })}
             </Text>
             {hasPermission && (
@@ -129,18 +111,15 @@ export default function AttributeView({
             searchButtonLabel={t('search')}
             labelMode="hidden"
             fullWidth
-            onBlur={(e) => handleQueryChange(e?.target.value ?? '')}
-            onSearch={(e) => {
-              handleQueryChange((e as string) ?? '');
-            }}
+            onChange={(e) => handleQueryChange(e?.toString() ?? '')}
             debounce={500}
           />
 
-          {!result.data || result.data?.totalHitCount < 1 ? (
+          {!data || data?.totalHitCount < 1 ? (
             <Text>{t('datamodel-no-attributes')}</Text>
           ) : (
             <DrawerItemList
-              items={result.data.responseObjects.map((item) => ({
+              items={data.responseObjects.map((item) => ({
                 label: getLanguageVersion({
                   data: item.label,
                   lang: i18n.language,
@@ -152,12 +131,9 @@ export default function AttributeView({
           )}
           <DetachedPagination
             currentPage={currentPage}
-            maxPages={Math.ceil((result.data?.totalHitCount ?? 0) / 20)}
+            maxPages={Math.ceil((data?.totalHitCount ?? 0) / 20)}
             maxTotal={20}
-            setCurrentPage={(number) => {
-              setCurrentPage(number);
-              handleSearch((number - 1) * 20);
-            }}
+            setCurrentPage={(number) => setCurrentPage(number)}
           />
         </DrawerContent>
       </>

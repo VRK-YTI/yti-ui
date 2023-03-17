@@ -74,12 +74,23 @@ export const searchInternalResourcesApi = createApi({
         method: 'GET',
       }),
     }),
+    queryInternalResourcesQuery: builder.query<
+      SearchInternalClasses,
+      InternalResourcesSearchParams
+    >({
+      query: (object) => ({
+        url: createUrl(object),
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
-export const { getInternalResources } = searchInternalResourcesApi.endpoints;
+export const { getInternalResources, queryInternalResourcesQuery } =
+  searchInternalResourcesApi.endpoints;
 
 export const {
   useGetInternalResourcesMutation,
+  useQueryInternalResourcesQueryQuery,
   util: { getRunningQueriesThunk },
 } = searchInternalResourcesApi;

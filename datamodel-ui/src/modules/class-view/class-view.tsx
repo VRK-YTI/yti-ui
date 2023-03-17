@@ -38,10 +38,7 @@ import DrawerItemList from '@app/common/components/drawer-item-list';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import HasPermission from '@app/common/utils/has-permission';
-import {
-  InternalResourcesSearchParams,
-  useGetInternalResourcesMutation,
-} from '@app/common/components/search-internal-resources/search-internal-resources.slice';
+import { useQueryInternalResourcesQueryQuery } from '@app/common/components/search-internal-resources/search-internal-resources.slice';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { DetachedPagination } from 'yti-common-ui/pagination';
 
@@ -52,6 +49,7 @@ interface ClassView {
 
 export default function ClassView({ modelId, languages }: ClassView) {
   const { t, i18n } = useTranslation('common');
+  const hasPermission = HasPermission({ actions: ['ADMIN_CLASS'] });
   const [formData, setFormData] = useState<ClassFormType>(initialClassForm);
   const [formErrors, setFormErrors] = useState<ClassFormErrors>(
     validateClassForm(formData)
@@ -61,38 +59,22 @@ export default function ClassView({ modelId, languages }: ClassView) {
   const [view, setView] = useState<'listing' | 'class' | 'form'>('listing');
   const [putClass, putClassResult] = usePutClassMutation();
   const [getClass, getClassResult] = useGetClassMutMutation();
-  const [searchInternalResources, result] = useGetInternalResourcesMutation();
   const [currentPage, setCurrentPage] = useState(1);
   const [query, setQuery] = useState('');
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
-  const hasPermission = HasPermission({ actions: ['ADMIN_CLASS'] });
+  const { data } = useQueryInternalResourcesQueryQuery({
+    query: query ?? '',
+    limitToDataModel: modelId,
+    pageSize: 20,
+    pageFrom: (currentPage - 1) * 20,
+    resourceTypes: [ResourceType.CLASS],
+  });
 
   const handleQueryChange = (query: string) => {
     setQuery(query);
-    setCurrentPage(0);
+    setCurrentPage(1);
   };
-
-  useEffect(() => {
-    handleSearch();
-  }, [query]);
-
-  const handleSearch = (pageFrom?: number) => {
-    const searchParams: InternalResourcesSearchParams = {
-      query: query ?? '',
-      limitToDataModel: modelId,
-      pageSize: 20,
-      pageFrom: pageFrom ?? 0,
-      resourceTypes: [ResourceType.CLASS],
-    };
-    searchInternalResources(searchParams);
-  };
-
-  useEffect(() => {
-    if (view === 'listing') {
-      handleSearch();
-    }
-  }, [view]);
 
   const handleFollowUpAction = (value?: InternalClass) => {
     setView('form');
@@ -181,7 +163,7 @@ export default function ClassView({ modelId, languages }: ClassView) {
         <StaticHeader ref={ref}>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <Text variant="bold">
-              {t('classes', { count: result.data?.totalHitCount ?? 0 })}
+              {t('classes', { count: data?.totalHitCount ?? 0 })}
             </Text>
             {hasPermission && (
               <ClassModal
@@ -199,17 +181,14 @@ export default function ClassView({ modelId, languages }: ClassView) {
             searchButtonLabel={t('search')}
             labelMode="hidden"
             fullWidth
-            onBlur={(e) => handleQueryChange(e?.target.value ?? '')}
-            onSearch={(e) => {
-              handleQueryChange((e as string) ?? '');
-            }}
+            onChange={(e) => handleQueryChange(e?.toString() ?? '')}
             debounce={500}
           />
-          {!result.data || result.data?.totalHitCount < 1 ? (
+          {!data || data?.totalHitCount < 1 ? (
             <Text>{t('datamodel-no-classes')}</Text>
           ) : (
             <DrawerItemList
-              items={result.data.responseObjects.map((item) => ({
+              items={data.responseObjects.map((item) => ({
                 label: getLanguageVersion({
                   data: item.label,
                   lang: i18n.language,
@@ -222,12 +201,9 @@ export default function ClassView({ modelId, languages }: ClassView) {
           )}
           <DetachedPagination
             currentPage={currentPage}
-            maxPages={Math.ceil((result.data?.totalHitCount ?? 0) / 20)}
+            maxPages={Math.ceil((data?.totalHitCount ?? 0) / 20)}
             maxTotal={20}
-            setCurrentPage={(number) => {
-              setCurrentPage(number);
-              handleSearch((number - 1) * 20);
-            }}
+            setCurrentPage={(number) => setCurrentPage(number)}
           />
         </DrawerContent>
       </>

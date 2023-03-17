@@ -66,7 +66,7 @@ export default function CommonView({ type, handleReturn }: CommonViewProps) {
                 style={{ height: 'min-content' }}
                 onClick={() => setShowTooltip(!showTooltip)}
               >
-                Toiminnot
+                {t('actions')}
               </Button>
               <TooltipWrapper>
                 <Tooltip
