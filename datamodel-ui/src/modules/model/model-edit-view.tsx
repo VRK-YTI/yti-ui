@@ -1,8 +1,6 @@
 import { usePostModelMutation } from '@app/common/components/model/model.slice';
 import { ModelFormType } from '@app/common/interfaces/model-form.interface';
 import { ModelType } from '@app/common/interfaces/model.interface';
-import { Organization } from '@app/common/interfaces/organizations.interface';
-import { ServiceCategory } from '@app/common/interfaces/service-categories.interface';
 import {
   getIsPartOfWithId,
   getOrganizationsWithId,
@@ -24,16 +22,12 @@ import { FormUpdateErrors, validateFormUpdate } from './validate-form-update';
 
 interface ModelEditViewProps {
   model: ModelType;
-  organizations: Organization[];
-  serviceCategories: ServiceCategory[];
   setShow: (value: boolean) => void;
   handleSuccess: () => void;
 }
 
 export default function ModelEditView({
   model,
-  organizations,
-  serviceCategories,
   setShow,
   handleSuccess,
 }: ModelEditViewProps) {
@@ -56,11 +50,9 @@ export default function ModelEditView({
           '',
         selected: model.languages.includes(lang),
       })) ?? [],
-    organizations:
-      getOrganizationsWithId(model, organizations, i18n.language) ?? [],
+    organizations: getOrganizationsWithId(model, i18n.language) ?? [],
     prefix: model.prefix ?? '',
-    serviceCategories:
-      getIsPartOfWithId(model, serviceCategories, i18n.language) ?? [],
+    serviceCategories: getIsPartOfWithId(model, i18n.language) ?? [],
     status: model.status ?? 'DRAFT',
     type: model.type ?? 'PROFILE',
     terminologies: model.terminologies ?? [],
