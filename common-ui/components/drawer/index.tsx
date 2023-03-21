@@ -8,6 +8,7 @@ import {
   DrawerWrapper,
   ToggleButton,
 } from './drawer.styles';
+import ScrollableButtonMenu from './scrollable-button-menu';
 
 interface SideNavigationProps {
   buttons: React.ReactFragment;
@@ -78,7 +79,8 @@ export default function Drawer({
           <DrawerContent $isSmall={isSmall} $viewOpen={viewOpen}>
             {children}
           </DrawerContent>
-          <DrawerButtonGroup $isSmall={isSmall}>{buttons}</DrawerButtonGroup>
+          {/* <DrawerButtonGroup $isSmall={isSmall}>{buttons}</DrawerButtonGroup> */}
+          <ScrollableButtonMenu buttons={buttons} />
         </div>
       )}
 
