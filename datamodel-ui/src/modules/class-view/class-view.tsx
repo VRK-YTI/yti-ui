@@ -41,13 +41,14 @@ import HasPermission from '@app/common/utils/has-permission';
 import { useQueryInternalResourcesQuery } from '@app/common/components/search-internal-resources/search-internal-resources.slice';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { DetachedPagination } from 'yti-common-ui/pagination';
+import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
 
-interface ClassView {
+interface ClassViewProps {
   modelId: string;
   languages: string[];
 }
 
-export default function ClassView({ modelId, languages }: ClassView) {
+export default function ClassView({ modelId, languages }: ClassViewProps) {
   const { t, i18n } = useTranslation('common');
   const hasPermission = HasPermission({ actions: ['ADMIN_CLASS'] });
   const [formData, setFormData] = useState<ClassFormType>(initialClassForm);
@@ -71,8 +72,8 @@ export default function ClassView({ modelId, languages }: ClassView) {
     resourceTypes: [ResourceType.CLASS],
   });
 
-  const handleQueryChange = (query: string) => {
-    setQuery(query);
+  const handleQueryChange = (value: string) => {
+    setQuery(value);
     setCurrentPage(1);
   };
 
@@ -295,8 +296,8 @@ export default function ClassView({ modelId, languages }: ClassView) {
             <Text variant="bold">
               {getLanguageVersion({ data: data.label, lang: i18n.language })}
             </Text>
-            <StatusChip $isValid={formData.status === 'VALID'}>
-              {data.status}
+            <StatusChip $isValid={data.status === 'VALID'}>
+              {translateStatus(data.status, t)}
             </StatusChip>
           </div>
 

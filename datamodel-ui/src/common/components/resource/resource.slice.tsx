@@ -3,6 +3,7 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
 import { AssociationFormType } from '@app/common/interfaces/association-form.interface';
 import { AttributeFormType } from '@app/common/interfaces/attribute-form.interface';
+import { Resource } from '@app/common/interfaces/resource.interface';
 
 export const resourceApi = createApi({
   reducerPath: 'resourceApi',
@@ -30,12 +31,22 @@ export const resourceApi = createApi({
         data: value.data,
       }),
     }),
+    getResource: builder.mutation<
+      Resource,
+      { modelId: string; resourceIdentifier: string }
+    >({
+      query: (value) => ({
+        url: `/resource/${value.modelId}/${value.resourceIdentifier}`,
+        method: 'GET',
+      }),
+    }),
   }),
 });
 
-export const { putResource } = resourceApi.endpoints;
+export const { putResource, getResource } = resourceApi.endpoints;
 
 export const {
   usePutResourceMutation,
+  useGetResourceMutation,
   util: { getRunningQueriesThunk },
 } = resourceApi;

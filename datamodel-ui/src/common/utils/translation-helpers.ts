@@ -77,10 +77,14 @@ export function translateLanguage(language: string, t: TFunction) {
 
 export function translateCommonForm(
   part: string,
-  type: ResourceType.ASSOCIATION | ResourceType.ATTRIBUTE,
+  type: ResourceType,
   t: TFunction
 ) {
   switch (part) {
+    case 'return':
+      return type === ResourceType.ASSOCIATION
+        ? t('common-view.associations-return', { ns: 'common' })
+        : t('common-view.attributes-return', { ns: 'common' });
     case 'name':
       return type === ResourceType.ASSOCIATION
         ? t('common-form.associations-name', { ns: 'admin' })
@@ -93,6 +97,10 @@ export function translateCommonForm(
       return type === ResourceType.ASSOCIATION
         ? t('common-form.upper-associations', { ns: 'admin' })
         : t('common-form.upper-attributes', { ns: 'admin' });
+    case 'no-upper':
+      return type === ResourceType.ASSOCIATION
+        ? t('common-view.no-upper-associations', { ns: 'common' })
+        : t('common-view.no-upper-attributes', { ns: 'common' });
     case 'add-upper':
       return type === ResourceType.ASSOCIATION
         ? t('common-form.add-upper-association', { ns: 'admin' })
@@ -101,6 +109,10 @@ export function translateCommonForm(
       return type === ResourceType.ASSOCIATION
         ? t('common-form.equivalent-associations', { ns: 'admin' })
         : t('common-form.equivalent-attributes', { ns: 'admin' });
+    case 'no-equivalent':
+      return type === ResourceType.ASSOCIATION
+        ? t('common-view.no-equivalent-associations', { ns: 'common' })
+        : t('common-view.no-equivalent-attributes', { ns: 'common' });
     case 'add-equivalent':
       return type === ResourceType.ASSOCIATION
         ? t('common-form.add-equivalent-association', { ns: 'admin' })
@@ -111,6 +123,14 @@ export function translateCommonForm(
         : t('common-form.attributes-note', { ns: 'admin' });
     case 'editorial-note':
       return t('common-form.editorial-note', { ns: 'admin' });
+    case 'contact':
+      return type === ResourceType.ASSOCIATION
+        ? t('common-view.associations-contact', { ns: 'common' })
+        : t('common-view.attributes-contact', { ns: 'common' });
+    case 'contact-description':
+      return type === ResourceType.ASSOCIATION
+        ? t('common-view.associations-contact-description', { ns: 'common' })
+        : t('common-view.attributes-contact-description', { ns: 'common' });
     default:
       return '';
   }
