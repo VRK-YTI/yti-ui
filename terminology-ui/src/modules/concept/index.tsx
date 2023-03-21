@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import {
   Button,
   ExternalLink,
@@ -40,7 +40,7 @@ import Link from 'next/link';
 import { translateStatus } from '@app/common/utils/translation-helpers';
 import isEmail from 'validator/lib/isEmail';
 import RemovalModal from '@app/common/components/removal-modal';
-import { useGetBlockData } from './utils';
+import { getBlockData } from './utils';
 
 export interface ConceptProps {
   terminologyId: string;
@@ -60,12 +60,15 @@ export default function Concept({ terminologyId, conceptId }: ConceptProps) {
     conceptId,
   });
 
-  const { terms, definitions, notes, examples } = useGetBlockData(concept);
+  const { terms, definitions, notes, examples } = useMemo(() => {
+    return getBlockData(t, concept);
+  }, [concept, t]);
 
   const prefLabel = getPropertyValue({
     property: getProperty('prefLabel', concept?.references.prefLabelXl),
     language: i18n.language,
   });
+
   const status =
     getPropertyValue({ property: concept?.properties.status }) || 'DRAFT';
   const email = getPropertyValue({

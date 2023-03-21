@@ -1,6 +1,6 @@
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import {
   Button,
   Notification,
@@ -35,7 +35,7 @@ import { SubTitle, MainTitle, BadgeBar } from 'yti-common-ui/title-block';
 import HasPermission from '@app/common/utils/has-permission';
 import Link from 'next/link';
 import RemovalModal from '@app/common/components/removal-modal';
-import { useGetBlockData } from './utils';
+import { getBlockData } from './utils';
 
 interface CollectionProps {
   terminologyId: string;
@@ -69,7 +69,9 @@ export default function Collection({
     language: i18n.language,
   });
 
-  const { prefLabels, definitions } = useGetBlockData(collection);
+  const { prefLabels, definitions } = useMemo(() => {
+    return getBlockData(collection);
+  }, [collection]);
 
   useEffect(() => {
     if (collection) {
