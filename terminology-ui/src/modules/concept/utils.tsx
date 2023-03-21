@@ -35,9 +35,10 @@ export function getBlockData(t: TFunction, concept?: Concept) {
     concept.properties.note?.slice().sort((t1, t2) => compareLocales(t1, t2)) ??
     [];
 
-  const examples = concept.properties.example
-    ?.slice()
-    .sort((t1, t2) => compareLocales(t1, t2));
+  const examples =
+    concept.properties.example
+      ?.slice()
+      .sort((t1, t2) => compareLocales(t1, t2)) ?? [];
 
   return { terms, definitions, notes, examples };
 }
