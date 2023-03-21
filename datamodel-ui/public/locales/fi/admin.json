@@ -155,6 +155,7 @@
   "terminology": "Sanasto",
   "terminology-counts_one": "{{count}} sanasto",
   "terminology-counts_other": "{{count}} sanastoa",
+  "unexpected-error-title": "Odottamaton virhe",
   "update-models-resources-statuses": "Muuta tietomallin resurssin tiloja",
   "upper-classes": "Yläluokat",
   "uri-preview": "URI:n esikatselu",

@@ -33,6 +33,10 @@ import validateForm from './validate-form';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
 import { usePutResourceMutation } from '@app/common/components/resource/resource.slice';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
+import {
+  AxiosBaseQueryError,
+  AxiosQueryErrorFields,
+} from 'yti-common-ui/interfaces/axios-base-query.interface';
 
 interface AttributeFormProps {
   handleReturn: () => void;
@@ -94,11 +98,35 @@ export default function CommonForm({
     if (
       ref.current &&
       userPosted &&
-      Object.values(errors).filter((val) => val).length > 0
+      (Object.values(errors).filter((val) => val).length > 0 || result.error)
     ) {
       setHeaderHeight(ref.current.clientHeight);
     }
-  }, [ref, errors, userPosted]);
+  }, [ref, errors, userPosted, result.error]);
+
+  useEffect(() => {
+    if (result.isError && result.error && 'data' in result.error) {
+      const backendErrorFields =
+        (result.error as AxiosQueryErrorFields).data?.details?.map(
+          (d) => d.field
+        ) ?? [];
+
+      if (backendErrorFields.length > 0) {
+        setErrors({
+          identifier: backendErrorFields.includes('identifier'),
+          label: backendErrorFields.includes('label'),
+        });
+        return;
+      }
+
+      if (result.error?.status === 401) {
+        setErrors({
+          ...validateForm(data),
+          unauthorized: true,
+        });
+      }
+    }
+  }, [result.isError, result.error, data]);
 
   return (
     <>
@@ -128,13 +156,22 @@ export default function CommonForm({
             </Button>
           </div>
         </div>
-        {userPosted ? (
+
+        {userPosted &&
+        (Object.values(errors).filter((val) => val).length > 0 ||
+          result.isError) ? (
           <div>
             <FormFooterAlert
-              labelText={t('missing-information-title')}
-              alerts={Object.entries(errors)
-                .filter((e) => e[1])
-                .map((e) => translateCommonFormErrors(e[0], type, t))}
+              labelText={
+                Object.keys(errors).filter(
+                  (key) =>
+                    ['label', 'identifier'].includes(key) &&
+                    errors[key as keyof typeof errors] === true
+                ).length > 0
+                  ? t('missing-information-title')
+                  : t('unexpected-error-title')
+              }
+              alerts={getErrors()}
             />
           </div>
         ) : (
@@ -258,5 +295,33 @@ export default function CommonForm({
     return type === ResourceType.ASSOCIATION
       ? { ...initialAssociation, subResourceOf: [initialSubResourceOf.label] }
       : { ...initialAttribute, subResourceOf: [initialSubResourceOf.label] };
+  }
+
+  function getErrors(): string[] {
+    const translatedErrors = Object.entries(errors)
+      .filter((e) => e[1])
+      .map((e) => translateCommonFormErrors(e[0], type, t));
+
+    if (result.error) {
+      const error = result.error as AxiosBaseQueryError;
+      const errorStatus = error.status ?? '';
+      const errorTitle =
+        error.data &&
+        Object.entries(error.data).filter(
+          (entry) => entry[0] === 'title'
+        )?.[0]?.[1];
+      const errorDetail =
+        error.data &&
+        Object.entries(error.data).filter(
+          (entry) => entry[0] === 'detail'
+        )?.[0]?.[1];
+      const catchedError = `Error ${errorStatus}: ${
+        errorTitle ?? t('unexpected-error-title')
+      } ${errorDetail}`;
+
+      return [...translatedErrors, catchedError];
+    }
+
+    return translatedErrors;
   }
 }

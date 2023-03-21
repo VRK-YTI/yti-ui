@@ -155,6 +155,7 @@
   "terminology": "Terminology",
   "terminology-counts_one": "{{count}} terminology",
   "terminology-counts_other": "{{count}} terminologies",
+  "unexpected-error-title": "Unexpected error",
   "update-models-resources-statuses": "Update model's resources' statuses",
   "upper-classes": "Upper classes",
   "uri-preview": "URI preview",

@@ -130,6 +130,8 @@ export function translateCommonFormErrors(
       return type === ResourceType.ASSOCIATION
         ? t('association-missing-identifier', { ns: 'admin' })
         : t('attribute-missing-identifier', { ns: 'admin' });
+    case 'unauthorized':
+      return t('error-unauthenticated', { ns: 'admin' });
     default:
       return type === ResourceType.ASSOCIATION
         ? t('association-missing-general', { ns: 'admin' })

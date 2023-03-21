@@ -4,6 +4,7 @@ import { AttributeFormType } from '@app/common/interfaces/attribute-form.interfa
 interface CommonFormErrors {
   label: boolean;
   identifier: boolean;
+  unauthorized?: boolean;
 }
 
 export default function validateForm(
