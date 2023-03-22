@@ -219,6 +219,7 @@ export default function generateFormData(
                 terminologyLabel: terminologyLabel
                   ? Object.fromEntries(terminologyLabel)
                   : {},
+                targetId: r.properties.targetId?.[0].value ?? '',
               };
             }
           }) ?? [],
@@ -290,6 +291,7 @@ export default function generateFormData(
                 terminologyLabel: terminologyLabel
                   ? Object.fromEntries(terminologyLabel)
                   : {},
+                targetId: r.properties.targetId?.[0].value ?? '',
               };
             }
           }) ?? [],
@@ -311,6 +313,7 @@ export default function generateFormData(
                 terminologyLabel: terminologyLabel
                   ? Object.fromEntries(terminologyLabel)
                   : {},
+                targetId: m.properties.targetId?.[0].value ?? '',
               };
             }
           }) ?? [],

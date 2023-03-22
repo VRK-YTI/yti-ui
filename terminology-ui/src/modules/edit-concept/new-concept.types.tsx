@@ -58,6 +58,7 @@ export interface RelationInfoType {
   label: { [key: string]: string };
   terminologyId: string;
   terminologyLabel: { [key: string]: string };
+  targetId?: string;
 }
 
 export interface ListType {
