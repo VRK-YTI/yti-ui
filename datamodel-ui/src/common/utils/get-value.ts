@@ -134,7 +134,6 @@ export function getOrganizationsWithId(
   data?: ModelType,
   lang?: string
 ): MultiSelectData[] {
-  console.log(data);
   if (!data || !data.organizations) {
     return [];
   }

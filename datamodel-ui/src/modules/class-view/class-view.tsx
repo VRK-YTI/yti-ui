@@ -1,7 +1,4 @@
-import {
-  useGetClassMutMutation,
-  usePutClassMutation,
-} from '@app/common/components/class/class.slice';
+import { useGetClassMutMutation } from '@app/common/components/class/class.slice';
 import {
   ClassFormType,
   initialClassForm,
@@ -28,12 +25,7 @@ import Separator from 'yti-common-ui/separator';
 import ClassForm from '../class-form';
 import ClassModal from '../class-modal';
 import { TooltipWrapper } from '../model/model.styles';
-import {
-  ClassFormErrors,
-  classFormToClass,
-  internalClassToClassForm,
-  validateClassForm,
-} from './utils';
+import { internalClassToClassForm } from './utils';
 import DrawerItemList from '@app/common/components/drawer-item-list';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
@@ -52,19 +44,14 @@ export default function ClassView({ modelId, languages }: ClassViewProps) {
   const { t, i18n } = useTranslation('common');
   const hasPermission = HasPermission({ actions: ['ADMIN_CLASS'] });
   const [formData, setFormData] = useState<ClassFormType>(initialClassForm);
-  const [formErrors, setFormErrors] = useState<ClassFormErrors>(
-    validateClassForm(formData)
-  );
-  const [userPosted, setUserPosted] = useState(false);
   const [showTooltip, setShowTooltip] = useState(false);
   const [view, setView] = useState<'listing' | 'class' | 'form'>('listing');
-  const [putClass, putClassResult] = usePutClassMutation();
   const [getClass, getClassResult] = useGetClassMutMutation();
   const [currentPage, setCurrentPage] = useState(1);
   const [query, setQuery] = useState('');
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
-  const { data } = useQueryInternalResourcesQuery({
+  const { data, refetch } = useQueryInternalResourcesQuery({
     query: query ?? '',
     limitToDataModel: modelId,
     pageSize: 20,
@@ -90,45 +77,15 @@ export default function ClassView({ modelId, languages }: ClassViewProps) {
     setFormData(internalClassToClassForm(value, languages));
   };
 
-  const handleFormReturn = () => {
+  const handleReturn = () => {
     setView('listing');
-    setUserPosted(false);
-    setFormData(initialClassForm);
-    setFormErrors(validateClassForm(initialClassForm));
+    refetch();
   };
 
-  const setFormDataHandler = (value: ClassFormType) => {
-    if (
-      userPosted &&
-      Object.values(formErrors).filter((val) => val === true).length > 0
-    ) {
-      setFormErrors(validateClassForm(value));
-    }
-
-    setFormData(value);
+  const handleFollowUp = (classId: string) => {
+    getClass({ modelId: modelId, classId: classId });
+    setView('class');
   };
-
-  const handleFormSubmit = () => {
-    if (!userPosted) {
-      setUserPosted(true);
-    }
-
-    const errors = validateClassForm(formData);
-    setFormErrors(errors);
-
-    if (Object.values(errors).filter((val) => val === true).length > 0) {
-      return;
-    }
-
-    const data = classFormToClass(formData);
-    putClass({ modelId: modelId, data: data });
-  };
-
-  useEffect(() => {
-    if (putClassResult.isSuccess) {
-      getClass({ modelId: modelId, classId: formData.identifier });
-    }
-  }, [putClassResult, modelId, formData.identifier, getClass]);
 
   useEffect(() => {
     if (getClassResult.isSuccess) {
@@ -218,13 +175,10 @@ export default function ClassView({ modelId, languages }: ClassViewProps) {
 
     return (
       <ClassForm
-        handleReturn={handleFormReturn}
-        handleSubmit={handleFormSubmit}
-        data={formData}
-        setData={setFormDataHandler}
+        initialData={formData}
+        handleReturn={handleReturn}
+        handleFollowUp={handleFollowUp}
         languages={languages}
-        errors={formErrors}
-        userPosted={userPosted}
         modelId={modelId}
       />
     );
@@ -243,7 +197,7 @@ export default function ClassView({ modelId, languages }: ClassViewProps) {
             <Button
               variant="secondaryNoBorder"
               icon="arrowLeft"
-              onClick={() => setView('listing')}
+              onClick={() => handleReturn()}
               style={{ textTransform: 'uppercase' }}
             >
               {t('back')}
