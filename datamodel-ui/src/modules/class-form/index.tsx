@@ -34,6 +34,10 @@ import StaticHeader from 'yti-common-ui/drawer/static-header';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import InlineListBlock from '@app/common/components/inline-list-block';
 import { usePutClassMutation } from '@app/common/components/class/class.slice';
+import {
+  AxiosBaseQueryError,
+  AxiosQueryErrorFields,
+} from 'yti-common-ui/interfaces/axios-base-query.interface';
 
 export interface ClassFormProps {
   initialData: ClassFormType;
@@ -102,24 +106,46 @@ export default function ClassForm({
       setHeaderHeight(ref.current.clientHeight);
     }
 
-    if (ref.current && Object.values(errors).filter((val) => val).length > 0) {
+    if (
+      ref.current &&
+      (Object.values(errors).filter((val) => val).length > 0 ||
+        putClassResult.isError)
+    ) {
       setHeaderHeight(ref.current.clientHeight);
     }
-  }, [ref, errors]);
+  }, [ref, errors, putClassResult]);
 
   useEffect(() => {
     if (putClassResult.isSuccess) {
       handleFollowUp(data.identifier);
     }
 
-    if (putClassResult.isError) {
-      setErrors({
-        identifier: false,
-        label: false,
-        unauthorized: true,
-      });
+    if (
+      putClassResult.isError &&
+      putClassResult.error &&
+      'data' in putClassResult.error
+    ) {
+      const backendErrorFields =
+        (putClassResult.error as AxiosQueryErrorFields).data?.details?.map(
+          (d) => d.field
+        ) ?? [];
+
+      if (backendErrorFields.length > 0) {
+        setErrors({
+          identifier: backendErrorFields.includes('identifier'),
+          label: backendErrorFields.includes('label'),
+        });
+        return;
+      }
+
+      if (putClassResult.error?.status === 401) {
+        setErrors({
+          ...validateClassForm(data),
+          unauthorized: true,
+        });
+      }
     }
-  }, [putClassResult, data.identifier, handleFollowUp]);
+  }, [putClassResult, data, handleFollowUp]);
 
   return (
     <>
@@ -149,7 +175,9 @@ export default function ClassForm({
           </div>
         </div>
 
-        {userPosted && Object.values(errors).filter((e) => e).length > 0 ? (
+        {userPosted &&
+        (Object.values(errors).filter((e) => e).length > 0 ||
+          putClassResult.isError) ? (
           <div>
             <FormFooterAlert
               labelText={
@@ -161,9 +189,7 @@ export default function ClassForm({
                   ? t('missing-information-title')
                   : t('unexpected-error-title')
               }
-              alerts={Object.entries(errors)
-                .filter((err) => err[1])
-                .map((err) => translateClassFormErrors(err[0], t))}
+              alerts={getErrors()}
             />
           </div>
         ) : (
@@ -385,4 +411,34 @@ export default function ClassForm({
       </DrawerContent>
     </>
   );
+
+  function getErrors(): string[] {
+    const translatedErrors = Object.entries(errors)
+      .filter((e) => e[1])
+      .map((e) => translateClassFormErrors(e[0], t));
+
+    if (putClassResult.error) {
+      const error = putClassResult.error as AxiosBaseQueryError;
+      const errorStatus = error.status ?? '';
+      const errorTitle =
+        error.data &&
+        Object.entries(error.data).filter(
+          (entry) => entry[0] === 'title'
+        )?.[0]?.[1];
+      const errorDetail =
+        error.data &&
+        Object.entries(error.data).filter(
+          (entry) => entry[0] === 'detail'
+        )?.[0]?.[1];
+      const catchedError = `Error ${errorStatus}: ${
+        errorTitle ?? t('unexpected-error-title')
+      } ${errorDetail}`;
+
+      console.log('catchedError', catchedError);
+
+      return [...translatedErrors, catchedError];
+    }
+
+    return translatedErrors;
+  }
 }
