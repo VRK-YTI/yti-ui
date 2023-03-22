@@ -434,8 +434,6 @@ export default function ClassForm({
         errorTitle ?? t('unexpected-error-title')
       } ${errorDetail}`;
 
-      console.log('catchedError', catchedError);
-
       return [...translatedErrors, catchedError];
     }
 
