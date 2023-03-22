@@ -36,6 +36,8 @@ export function translateClassFormErrors(error: string, t: TFunction) {
       return t('class-missing-identifier', { ns: 'admin' });
     case 'label':
       return t('class-missing-language-title', { ns: 'admin' });
+    case 'unauthorized':
+      return t('error-unauthenticated', { ns: 'admin' });
     default:
       return t('class-missing-general', { ns: 'admin' });
   }

@@ -18,8 +18,11 @@ import AttributeModal from '../attribute-modal';
 import { useTranslation } from 'next-i18next';
 import { Status } from '@app/common/interfaces/status.interface';
 import ConceptBlock from './concept-block';
-import { ClassFormType } from '@app/common/interfaces/class-form.interface';
-import { ClassFormErrors } from '../class-view/utils';
+import {
+  ClassFormType,
+  initialClassForm,
+} from '@app/common/interfaces/class-form.interface';
+import { ClassFormErrors, classFormToClass, validateClassForm } from './utils';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
 import { statusList } from 'yti-common-ui/utils/status-list';
 import {
@@ -30,34 +33,65 @@ import { useEffect, useRef, useState } from 'react';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import InlineListBlock from '@app/common/components/inline-list-block';
+import { usePutClassMutation } from '@app/common/components/class/class.slice';
 
 export interface ClassFormProps {
+  initialData: ClassFormType;
   handleReturn: () => void;
-  handleSubmit: () => void;
-  data: ClassFormType;
-  setData: (value: ClassFormType) => void;
+  handleFollowUp: (value: string) => void;
   languages: string[];
-  errors: ClassFormErrors;
-  userPosted: boolean;
   modelId: string;
 }
 
 export default function ClassForm({
+  initialData,
   handleReturn,
-  handleSubmit,
-  data,
-  setData,
+  handleFollowUp,
   languages,
-  errors,
-  userPosted,
   modelId,
 }: ClassFormProps) {
   const { t } = useTranslation('admin');
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
+  const [data, setData] = useState<ClassFormType>(
+    initialData ?? initialClassForm
+  );
+  const [userPosted, setUserPosted] = useState(false);
+  const [errors, setErrors] = useState<ClassFormErrors>(
+    validateClassForm(data)
+  );
+  const [putClass, putClassResult] = usePutClassMutation();
+
+  const handleUpdate = (value: ClassFormType) => {
+    if (
+      userPosted &&
+      Object.values(errors).filter((val) => val === true).length > 0
+    ) {
+      setErrors(validateClassForm(value));
+    }
+
+    setData(value);
+  };
+
+  const handleSubmit = () => {
+    if (!userPosted) {
+      setUserPosted(true);
+    }
+
+    const errors = validateClassForm(data);
+    setErrors(errors);
+
+    if (Object.values(errors).filter((val) => val === true).length > 0) {
+      return;
+    }
+
+    const convertedData = classFormToClass(data);
+
+    putClass({ modelId: modelId, data: convertedData });
+  };
 
   const handleSubClassOfRemoval = (id: string) => {
-    setData({
+    handleUpdate({
       ...data,
       subClassOf: data.subClassOf.filter((s) => s.identifier !== id),
     });
@@ -72,6 +106,20 @@ export default function ClassForm({
       setHeaderHeight(ref.current.clientHeight);
     }
   }, [ref, errors]);
+
+  useEffect(() => {
+    if (putClassResult.isSuccess) {
+      handleFollowUp(data.identifier);
+    }
+
+    if (putClassResult.isError) {
+      setErrors({
+        identifier: false,
+        label: false,
+        unauthorized: true,
+      });
+    }
+  }, [putClassResult, data.identifier, handleFollowUp]);
 
   return (
     <>
@@ -101,10 +149,18 @@ export default function ClassForm({
           </div>
         </div>
 
-        {userPosted ? (
+        {userPosted && Object.values(errors).filter((e) => e).length > 0 ? (
           <div>
             <FormFooterAlert
-              labelText={t('missing-information-title')}
+              labelText={
+                Object.keys(errors).filter(
+                  (key) =>
+                    ['label', 'identifier'].includes(key) &&
+                    errors[key as keyof typeof errors] === true
+                ).length > 0
+                  ? t('missing-information-title')
+                  : t('unexpected-error-title')
+              }
               alerts={Object.entries(errors)
                 .filter((err) => err[1])
                 .map((err) => translateClassFormErrors(err[0], t))}
@@ -136,7 +192,7 @@ export default function ClassForm({
                 )
               : undefined;
 
-            setData({
+            handleUpdate({
               ...data,
               equivalentClass: value ? [value] : [],
               label: label ? label : data.label,
@@ -151,7 +207,7 @@ export default function ClassForm({
               labelText={`${t('class-name')}, ${lang}`}
               value={data.label[lang] ?? ''}
               onChange={(e) =>
-                setData({
+                handleUpdate({
                   ...data,
                   label: { ...data.label, [lang]: e?.toString() ?? '' },
                 })
@@ -168,7 +224,7 @@ export default function ClassForm({
           defaultValue={data.identifier}
           status={userPosted && errors.identifier ? 'error' : 'default'}
           onChange={(e) =>
-            setData({ ...data, identifier: e?.toString() ?? '' })
+            handleUpdate({ ...data, identifier: e?.toString() ?? '' })
           }
           tooltipComponent={
             <Tooltip
@@ -209,7 +265,7 @@ export default function ClassForm({
           <Dropdown
             labelText={t('status')}
             defaultValue={data.status}
-            onChange={(e) => setData({ ...data, status: e as Status })}
+            onChange={(e) => handleUpdate({ ...data, status: e as Status })}
           >
             {statusList.map((status) => (
               <DropdownItem key={status} value={status}>
@@ -227,7 +283,7 @@ export default function ClassForm({
               optionalText={t('optional')}
               defaultValue={data.note[lang as keyof typeof data.note]}
               onChange={(e) =>
-                setData({
+                handleUpdate({
                   ...data,
                   note: { ...data.note, [lang]: e.target.value },
                 })
@@ -321,7 +377,9 @@ export default function ClassForm({
           optionalText={t('optional')}
           hintText={t('editor-comment-hint')}
           defaultValue={data.editorialNote}
-          onChange={(e) => setData({ ...data, editorialNote: e.target.value })}
+          onChange={(e) =>
+            handleUpdate({ ...data, editorialNote: e.target.value })
+          }
           fullWidth
         />
       </DrawerContent>
