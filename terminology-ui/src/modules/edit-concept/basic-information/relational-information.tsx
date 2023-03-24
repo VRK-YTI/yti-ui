@@ -134,6 +134,32 @@ export default function RelationalInformation({
           data={expandersData}
           fromOther
         />
+
+        <Separator isLarge />
+
+        <RelationalInformationBlock
+          infoKey={'broadInOther'}
+          title={t('broad-match-in-other')}
+          buttonTitle={t('broad-match-in-other-add')}
+          description={t('broad-match-in-other-description')}
+          chipLabel={t('broad-match-in-other-chip-label')}
+          updateData={updateData}
+          data={expandersData}
+          fromOther
+        />
+
+        <Separator isLarge />
+
+        <RelationalInformationBlock
+          infoKey={'narrowInOther'}
+          title={t('narrow-match-in-other')}
+          buttonTitle={t('narrow-match-in-other-add')}
+          description={t('narrow-match-in-other-description')}
+          chipLabel={t('narrow-match-in-other-chip-label')}
+          updateData={updateData}
+          data={expandersData}
+          fromOther
+        />
       </ExpanderContentFitted>
     </ConceptExpander>
   );

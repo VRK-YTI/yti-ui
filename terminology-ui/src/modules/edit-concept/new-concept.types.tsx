@@ -50,6 +50,8 @@ export interface BasicInfo {
     relatedConceptInOther: RelationInfoType[];
     matchInOther: RelationInfoType[];
     closeMatch: RelationInfoType[];
+    broadInOther: RelationInfoType[];
+    narrowInOther: RelationInfoType[];
   };
 }
 

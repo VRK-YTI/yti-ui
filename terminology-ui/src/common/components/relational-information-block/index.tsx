@@ -62,6 +62,7 @@ export default function RelationalInformationBlock({
             label: concept.label,
             terminologyId: concept.terminology.id,
             terminologyLabel: concept.terminology.label,
+            targetId: concept.id,
           };
         } else {
           return {
@@ -69,6 +70,7 @@ export default function RelationalInformationBlock({
             label: concept.label,
             terminologyId: concept.terminologyId,
             terminologyLabel: concept.terminologyLabel,
+            targetId: concept.id,
           };
         }
       }) ?? [];
