@@ -21,4 +21,5 @@ export interface Resource {
       parentOrganization: string;
     }
   ];
+  uri: string;
 }

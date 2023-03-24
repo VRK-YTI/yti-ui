@@ -12,6 +12,7 @@ import {
   Expander,
   ExpanderGroup,
   ExpanderTitleButton,
+  ExternalLink,
   HintText,
   Label,
   Link,
@@ -34,6 +35,7 @@ import { useQueryInternalResourcesQuery } from '@app/common/components/search-in
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { DetachedPagination } from 'yti-common-ui/pagination';
 import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
+import FormattedDate from 'yti-common-ui/components/formatted-date';
 
 interface ClassViewProps {
   modelId: string;
@@ -256,7 +258,7 @@ export default function ClassView({ modelId, languages }: ClassViewProps) {
           </div>
 
           <BasicBlock title={t('class-identifier')}>
-            {data.identifier}
+            {`${modelId}:${data.identifier}`}
             <Button
               icon="copy"
               variant="secondary"
@@ -277,15 +279,35 @@ export default function ClassView({ modelId, languages }: ClassViewProps) {
           </div>
 
           <BasicBlock title={t('upper-class')}>
-            {data.subClassOf.map((c) => (
-              <Link key={c} href="" style={{ fontSize: '16px' }}>
-                {c.split('/').pop()?.replace('#', ':')}
-              </Link>
-            ))}
+            {!data.subClassOf || data.subClassOf.length === 0 ? (
+              <> {t('no-upper-classes')}</>
+            ) : (
+              <ul style={{ padding: '0', margin: '0', paddingLeft: '20px' }}>
+                {data.subClassOf.map((c) => (
+                  <li key={c}>
+                    <Link key={c} href={c} style={{ fontSize: '16px' }}>
+                      {c.split('/').pop()?.replace('#', ':')}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
           </BasicBlock>
 
           <BasicBlock title={t('equivalent-classes')}>
-            {t('no-equivalent-classes')}
+            {!data.equivalentClass || data.equivalentClass.length === 0 ? (
+              <> {t('no-equivalent-classes')}</>
+            ) : (
+              <ul style={{ padding: '0', margin: '0', paddingLeft: '20px' }}>
+                {data.equivalentClass.map((c) => (
+                  <li key={c}>
+                    <Link key={c} href={c} style={{ fontSize: '16px' }}>
+                      {c.split('/').pop()?.replace('#', ':')}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
           </BasicBlock>
 
           <BasicBlock title={t('additional-information')}>
@@ -324,13 +346,44 @@ export default function ClassView({ modelId, languages }: ClassViewProps) {
 
           <Separator />
 
-          <div>
-            <BasicBlock title={t('created')}>Päiväys</BasicBlock>
+          <BasicBlock title={t('created')}>
+            <FormattedDate date={data.created} />
+          </BasicBlock>
 
-            <BasicBlock title={t('editorial-note')}>
-              {data.editorialNote ?? t('no-editorial-note')}
-            </BasicBlock>
-          </div>
+          <BasicBlock title={t('modified-at')}>
+            <FormattedDate date={data.created} />
+          </BasicBlock>
+
+          <BasicBlock title={t('editorial-note')}>
+            {data.editorialNote ?? t('no-editorial-note')}
+          </BasicBlock>
+
+          <BasicBlock title={t('uri')}>{data.uri}</BasicBlock>
+
+          <Separator />
+
+          <BasicBlock title={t('contributors')}>
+            {data.contributor?.map((contributor) =>
+              getLanguageVersion({
+                data: contributor.label,
+                lang: i18n.language,
+              })
+            )}
+          </BasicBlock>
+          <BasicBlock>
+            {t('class-contact-description')}
+            <ExternalLink
+              href={`mailto:${
+                data.contact ?? 'yhteentoimivuus@dvv.fi'
+              }?subject=${getLanguageVersion({
+                data: data.label,
+                lang: i18n.language,
+              })}`}
+              labelNewWindow=""
+            >
+              {t('class-contact')}
+            </ExternalLink>
+          </BasicBlock>
         </DrawerContent>
       </>
     );
