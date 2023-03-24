@@ -5,7 +5,6 @@ import {
   LangObject,
   ModelType,
   ReferenceData,
-  ModelTerminology,
 } from '../interfaces/model.interface';
 import { Status } from '../interfaces/status.interface';
 import { Type } from '../interfaces/type.interface';

@@ -12,6 +12,7 @@ import { DetachedPagination } from 'yti-common-ui/pagination';
 import AssociationModal from '../association-modal';
 import CommonForm from '../common-form';
 import CommonView from '../common-view';
+import { useGetResourceMutation } from '@app/common/components/resource/resource.slice';
 
 export default function AssociationView({
   modelId,
@@ -27,6 +28,7 @@ export default function AssociationView({
   const hasPermission = HasPermission({ actions: ['CREATE_ASSOCIATION'] });
   const [currentPage, setCurrentPage] = useState(1);
   const [query, setQuery] = useState('');
+  const [getResource, getResourceResult] = useGetResourceMutation();
   const [initialSubResourceOf, setInitialSubResourceOf] = useState<{
     label: string;
     uri: string;
@@ -57,14 +59,21 @@ export default function AssociationView({
     setView('listing');
   };
 
-  const handleQueryChange = (query: string) => {
-    setQuery(query);
+  const handleQueryChange = (value: string) => {
+    setQuery(value);
     setCurrentPage(1);
   };
 
-  const handleShowAssociation = () => {
+  const handleShowAssociation = (id: string) => {
+    getResource({ modelId: modelId, resourceIdentifier: id });
     setView('association');
   };
+
+  useEffect(() => {
+    if (getResourceResult.isSuccess) {
+      setView('association');
+    }
+  }, [getResourceResult]);
 
   return (
     <>
@@ -125,7 +134,7 @@ export default function AssociationView({
                   lang: i18n.language,
                 }),
                 subtitle: `${modelId}:${item.identifier}`,
-                onClick: handleShowAssociation,
+                onClick: () => handleShowAssociation(item.identifier),
               }))}
             />
           )}
@@ -157,12 +166,19 @@ export default function AssociationView({
   }
 
   function renderAssociation() {
-    if (view !== 'association') {
+    if (view !== 'association' || !getResourceResult.isSuccess) {
+      return <></>;
+    }
+
+    const assoc = getResourceResult.data;
+    if (!assoc) {
       return <></>;
     }
 
     return (
       <CommonView
+        data={assoc}
+        modelId={modelId}
         type={ResourceType.ASSOCIATION}
         handleReturn={handleFormReturn}
       />

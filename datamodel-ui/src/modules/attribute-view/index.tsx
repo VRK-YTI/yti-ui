@@ -12,6 +12,7 @@ import { DetachedPagination } from 'yti-common-ui/pagination';
 import AttributeModal from '../attribute-modal';
 import CommonForm from '../common-form';
 import CommonView from '../common-view';
+import { useGetResourceMutation } from '@app/common/components/resource/resource.slice';
 
 export default function AttributeView({
   modelId,
@@ -26,6 +27,7 @@ export default function AttributeView({
   const ref = useRef<HTMLDivElement>(null);
   const hasPermission = HasPermission({ actions: ['CREATE_ATTRIBUTE'] });
   const [currentPage, setCurrentPage] = useState(1);
+  const [getResource, getResourceResult] = useGetResourceMutation();
   const [query, setQuery] = useState('');
   const [initialSubResourceOf, setInitialSubResourceOf] = useState<{
     label: string;
@@ -53,8 +55,8 @@ export default function AttributeView({
     setView('form');
   };
 
-  const handleQueryChange = (query: string) => {
-    setQuery(query);
+  const handleQueryChange = (value: string) => {
+    setQuery(value);
     setCurrentPage(1);
   };
 
@@ -62,7 +64,8 @@ export default function AttributeView({
     setView('listing');
   };
 
-  const handleShowAttribute = () => {
+  const handleShowAttribute = (id: string) => {
+    getResource({ modelId: modelId, resourceIdentifier: id });
     setView('attribute');
   };
 
@@ -125,7 +128,7 @@ export default function AttributeView({
                   lang: i18n.language,
                 }),
                 subtitle: `${modelId}:${item.identifier}`,
-                onClick: handleShowAttribute,
+                onClick: () => handleShowAttribute(item.identifier),
               }))}
             />
           )}
@@ -157,13 +160,20 @@ export default function AttributeView({
   }
 
   function renderAttribute() {
-    if (view !== 'attribute') {
+    if (view !== 'attribute' || !getResourceResult.isSuccess) {
+      return <></>;
+    }
+
+    const assoc = getResourceResult.data;
+    if (!assoc) {
       return <></>;
     }
 
     return (
       <CommonView
-        type={ResourceType.ATTRIBUTE}
+        data={assoc}
+        modelId={modelId}
+        type={ResourceType.ASSOCIATION}
         handleReturn={handleFormReturn}
       />
     );
