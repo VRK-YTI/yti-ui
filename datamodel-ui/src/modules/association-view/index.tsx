@@ -111,9 +111,6 @@ export default function AssociationView({
               />
             )}
           </div>
-        </StaticHeader>
-
-        <DrawerContent height={headerHeight} spaced>
           <SearchInput
             labelText=""
             clearButtonLabel={t('clear-all-selections', { ns: 'admin' })}
@@ -123,7 +120,9 @@ export default function AssociationView({
             onChange={(e) => handleQueryChange(e?.toString() ?? '')}
             debounce={500}
           />
+        </StaticHeader>
 
+        <DrawerContent height={headerHeight} spaced>
           {!data || data?.totalHitCount < 1 ? (
             <Text>{t('datamodel-no-association')}</Text>
           ) : (

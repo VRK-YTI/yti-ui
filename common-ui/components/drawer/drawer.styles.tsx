@@ -49,8 +49,6 @@ export const DrawerContent = styled.div.attrs<{
   $width?: number;
 }>`
   background: ${(props) => props.theme.suomifi.colors.whiteBase};
-  overflow-y: scroll;
-  overflow-x: hidden;
 
   ${(props) =>
     props.$isSmall &&
@@ -67,19 +65,7 @@ export const DrawerContent = styled.div.attrs<{
     height: 100vh;
   `}
 
-  ::-webkit-scrollbar {
-    width: 5px;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: #bdbdbd;
-    border-radius: 10px;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    background: #6e6e6e;
-  }
-
+  /* This is necessary for <DrawerContentWrapper /> to align correctly */
   -webkit-transform: translate3d(0, 0, 0);
 `;
 

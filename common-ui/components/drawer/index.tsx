@@ -81,7 +81,7 @@ export default function Drawer({
         </div>
       )}
 
-      {isSmall && (
+      {isSmall ? (
         <div className="small-screen-wrapper">
           {children && (
             <DrawerContent $isSmall={isSmall} $viewOpen={viewOpen}>
@@ -90,19 +90,21 @@ export default function Drawer({
           )}
           <ScrollableButtonMenu buttons={smallButtons} />
         </div>
+      ) : (
+        <DrawerWrapper $open={open}>
+          {open && (
+            <>
+              <DrawerContent $isSmall={isSmall} $width={width}>
+                {children}
+              </DrawerContent>
+
+              <DrawerButtonGroup $isSmall={isSmall}>
+                {buttons}
+              </DrawerButtonGroup>
+            </>
+          )}
+        </DrawerWrapper>
       )}
-
-      <DrawerWrapper $open={open}>
-        {open && (
-          <>
-            <DrawerContent $isSmall={isSmall} $width={width}>
-              {children}
-            </DrawerContent>
-
-            <DrawerButtonGroup $isSmall={isSmall}>{buttons}</DrawerButtonGroup>
-          </>
-        )}
-      </DrawerWrapper>
     </DrawerContainer>
   );
 }
