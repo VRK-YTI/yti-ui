@@ -11,6 +11,8 @@ const ButtonContainer = styled.div`
   height: 80px !important;
   position: static !important;
   bottom: 0 !important;
+  background: ${(props) => props.theme.suomifi.colors.whiteBase};
+  z-index: 2;
 `;
 
 const ScrollableButtons = styled.div`

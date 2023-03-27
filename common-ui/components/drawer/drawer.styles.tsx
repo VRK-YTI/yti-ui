@@ -54,8 +54,6 @@ export const DrawerContent = styled.div.attrs<{
     props.$isSmall &&
     `
     max-height: 100%;
-    overflow-y: scroll;
-    overflow-x: hidden;
   `}
 
   ${(props) =>
