@@ -671,6 +671,12 @@ export default function generateConcept({
       (related) => related.id
     ),
     ...data.basicInformation.relationalInfo.closeMatch.map((close) => close.id),
+    ...data.basicInformation.relationalInfo.broadInOther.map(
+      (broad) => broad.id
+    ),
+    ...data.basicInformation.relationalInfo.narrowInOther.map(
+      (narrow) => narrow.id
+    ),
   ];
 
   let deleteVal =
@@ -749,7 +755,7 @@ function getExternalReference(
         (m) => m.id === match.id
       );
       const id = initialTerm?.id ?? v4();
-      console.info('match', match);
+
       return {
         code: initialTerm?.code,
         createdBy: initialTerm?.createdBy ?? '',

@@ -349,22 +349,25 @@ function mapExternalConcept(conceptLinks: ConceptLink[] | undefined) {
     return [];
   }
   return conceptLinks.map((link) => {
-    const terminologyLabel = new Map();
-    link.properties.vocabularyLabel?.forEach((l) => {
-      terminologyLabel.set(l.lang, l.value);
-    });
+    const terminologyLabels = link.properties.vocabularyLabel?.reduce(
+      (labels, label) => {
+        labels.set(label.lang, label.value);
+        return labels;
+      },
+      new Map()
+    );
+
+    const conceptLabels = link.properties.prefLabel?.reduce((labels, label) => {
+      labels.set(label.lang, label.value);
+      return labels;
+    }, new Map());
 
     return {
       id: link.id ?? '',
-      label:
-        link.properties?.prefLabel
-          ?.map((l) => {
-            return { [l.lang]: l.value };
-          })
-          .reduce((l) => l) ?? {},
+      label: conceptLabels ? Object.fromEntries(conceptLabels) : {},
       terminologyId: link.properties.targetGraph?.[0].value ?? '',
-      terminologyLabel: terminologyLabel
-        ? Object.fromEntries(terminologyLabel)
+      terminologyLabel: terminologyLabels
+        ? Object.fromEntries(terminologyLabels)
         : {},
       targetId: link.properties.targetId?.[0].value ?? '',
     };

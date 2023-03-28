@@ -61,6 +61,8 @@ describe('generate-concept', () => {
           relatedConceptInOther: [],
           matchInOther: [],
           closeMatch: [],
+          broadInOther: [],
+          narrowInOther: [],
         },
       },
     };
@@ -137,6 +139,8 @@ describe('generate-concept', () => {
           relatedConceptInOther: [],
           matchInOther: [],
           closeMatch: [],
+          broadInOther: [],
+          narrowInOther: [],
         },
       },
     };
@@ -375,6 +379,8 @@ describe('generate-concept', () => {
           relatedConceptInOther: [],
           matchInOther: [],
           closeMatch: [],
+          broadInOther: [],
+          narrowInOther: [],
         },
       },
     };
@@ -598,6 +604,8 @@ describe('generate-concept', () => {
           relatedConceptInOther: [],
           matchInOther: [],
           closeMatch: [],
+          broadInOther: [],
+          narrowInOther: [],
         },
       },
     };
@@ -677,6 +685,8 @@ describe('generate-concept', () => {
           relatedConceptInOther: [],
           matchInOther: [],
           closeMatch: [],
+          broadInOther: [],
+          narrowInOther: [],
         },
       },
     };

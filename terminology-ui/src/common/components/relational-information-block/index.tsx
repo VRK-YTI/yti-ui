@@ -62,7 +62,6 @@ export default function RelationalInformationBlock({
             label: concept.label,
             terminologyId: concept.terminology.id,
             terminologyLabel: concept.terminology.label,
-            targetId: concept.id,
           };
         } else {
           return {
@@ -70,7 +69,10 @@ export default function RelationalInformationBlock({
             label: concept.label,
             terminologyId: concept.terminologyId,
             terminologyLabel: concept.terminologyLabel,
-            targetId: concept.id,
+            targetId:
+              'targetId' in concept
+                ? (concept as RelationInfoType).targetId
+                : concept.id,
           };
         }
       }) ?? [];
@@ -226,6 +228,10 @@ function ManageRelationalInfoModal({
         'terminology' in concept
           ? concept.terminology.label
           : concept.terminologyLabel,
+      targetId:
+        'targetId' in concept
+          ? (concept as RelationInfoType).targetId
+          : concept.id,
     }));
     setSelectedConcepts(choseWithoutHtml);
     handleClose();
