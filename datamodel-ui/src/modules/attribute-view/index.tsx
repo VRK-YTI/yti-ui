@@ -35,7 +35,7 @@ export default function AttributeView({
   const [currentPage, setCurrentPage] = useState(1);
   const [getResource, getResourceResult] = useGetResourceMutation();
   const [query, setQuery] = useState('');
-  const { data } = useQueryInternalResourcesQuery({
+  const { data, refetch } = useQueryInternalResourcesQuery({
     query: query ?? '',
     limitToDataModel: modelId,
     pageSize: 20,
@@ -67,6 +67,11 @@ export default function AttributeView({
   const handleShowAttribute = (id: string) => {
     getResource({ modelId: modelId, resourceIdentifier: id });
     setView('attribute');
+  };
+
+  const handleFormFollowUp = (id: string) => {
+    handleShowAttribute(id);
+    refetch();
   };
 
   return (
@@ -151,6 +156,7 @@ export default function AttributeView({
     return (
       <CommonForm
         handleReturn={handleFormReturn}
+        handleFollowUp={handleFormFollowUp}
         type={ResourceType.ATTRIBUTE}
         modelId={modelId}
         languages={languages}

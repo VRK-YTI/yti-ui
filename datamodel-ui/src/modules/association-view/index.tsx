@@ -35,7 +35,7 @@ export default function AssociationView({
   const [currentPage, setCurrentPage] = useState(1);
   const [query, setQuery] = useState('');
   const [getResource, getResourceResult] = useGetResourceMutation();
-  const { data } = useQueryInternalResourcesQuery({
+  const { data, refetch } = useQueryInternalResourcesQuery({
     query: query ?? '',
     limitToDataModel: modelId,
     pageSize: 20,
@@ -67,6 +67,11 @@ export default function AssociationView({
   const handleShowAssociation = (id: string) => {
     getResource({ modelId: modelId, resourceIdentifier: id });
     setView('association');
+  };
+
+  const handleFormFollowUp = (id: string) => {
+    handleShowAssociation(id);
+    refetch();
   };
 
   useEffect(() => {
@@ -157,6 +162,7 @@ export default function AssociationView({
     return (
       <CommonForm
         handleReturn={handleFormReturn}
+        handleFollowUp={handleFormFollowUp}
         type={ResourceType.ASSOCIATION}
         modelId={modelId}
         languages={languages}

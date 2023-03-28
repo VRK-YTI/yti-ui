@@ -24,7 +24,6 @@ import { Status } from '@app/common/interfaces/status.interface';
 import validateForm from './validate-form';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
 import {
-  initializeResource,
   selectResource,
   setResource,
   usePutResourceMutation,
@@ -37,8 +36,9 @@ import {
 import { useStoreDispatch } from '@app/store';
 import { useSelector } from 'react-redux';
 
-interface AttributeFormProps {
+interface CommonFormProps {
   handleReturn: () => void;
+  handleFollowUp: (id: string) => void;
   type: ResourceType.ASSOCIATION | ResourceType.ATTRIBUTE;
   modelId: string;
   languages: string[];
@@ -46,10 +46,11 @@ interface AttributeFormProps {
 
 export default function CommonForm({
   handleReturn,
+  handleFollowUp,
   type,
   modelId,
   languages,
-}: AttributeFormProps) {
+}: CommonFormProps) {
   const { t } = useTranslation('admin');
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
@@ -125,6 +126,12 @@ export default function CommonForm({
       }
     }
   }, [result.isError, result.error, data]);
+
+  useEffect(() => {
+    if (result.isSuccess) {
+      handleFollowUp(data.identifier);
+    }
+  }, [result.isSuccess, handleFollowUp, data.identifier]);
 
   return (
     <>
