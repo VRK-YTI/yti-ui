@@ -20,29 +20,27 @@ import {
   translateCommonForm,
   translateCommonFormErrors,
 } from '@app/common/utils/translation-helpers';
-import {
-  AssociationFormType,
-  initialAssociation,
-} from '@app/common/interfaces/association-form.interface';
-import {
-  AttributeFormType,
-  initialAttribute,
-} from '@app/common/interfaces/attribute-form.interface';
 import { Status } from '@app/common/interfaces/status.interface';
 import validateForm from './validate-form';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
-import { usePutResourceMutation } from '@app/common/components/resource/resource.slice';
+import {
+  initializeResource,
+  selectResource,
+  setResource,
+  usePutResourceMutation,
+} from '@app/common/components/resource/resource.slice';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import {
   AxiosBaseQueryError,
   AxiosQueryErrorFields,
 } from 'yti-common-ui/interfaces/axios-base-query.interface';
+import { useStoreDispatch } from '@app/store';
+import { useSelector } from 'react-redux';
 
 interface AttributeFormProps {
   handleReturn: () => void;
   type: ResourceType.ASSOCIATION | ResourceType.ATTRIBUTE;
   modelId: string;
-  initialSubResourceOf?: { label: string; uri: string };
   languages: string[];
 }
 
@@ -50,13 +48,13 @@ export default function CommonForm({
   handleReturn,
   type,
   modelId,
-  initialSubResourceOf,
   languages,
 }: AttributeFormProps) {
   const { t } = useTranslation('admin');
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
-  const [data, setData] = useState(getInitialData());
+  const dispatch = useStoreDispatch();
+  const data = useSelector(selectResource());
   const [userPosted, setUserPosted] = useState(false);
   const [errors, setErrors] = useState(validateForm(data));
   const [putResource, result] = usePutResourceMutation();
@@ -87,7 +85,7 @@ export default function CommonForm({
       setErrors(validateForm(value));
     }
 
-    setData(value);
+    dispatch(setResource(value));
   };
 
   useEffect(() => {
@@ -284,18 +282,6 @@ export default function CommonForm({
       </DrawerContent>
     </>
   );
-
-  function getInitialData(): AssociationFormType | AttributeFormType {
-    if (!initialSubResourceOf) {
-      return type === ResourceType.ASSOCIATION
-        ? { ...initialAssociation, subResourceOf: ['owl:TopObjectProperty'] }
-        : { ...initialAttribute, subResourceOf: ['owl:topDataProperty'] };
-    }
-
-    return type === ResourceType.ASSOCIATION
-      ? { ...initialAssociation, subResourceOf: [initialSubResourceOf.label] }
-      : { ...initialAttribute, subResourceOf: [initialSubResourceOf.label] };
-  }
 
   function getErrors(): string[] {
     const translatedErrors = Object.entries(errors)

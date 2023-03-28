@@ -1,8 +1,9 @@
-import { useGetClassMutMutation } from '@app/common/components/class/class.slice';
 import {
-  ClassFormType,
-  initialClassForm,
-} from '@app/common/interfaces/class-form.interface';
+  resetClass,
+  setClass,
+  useGetClassMutMutation,
+} from '@app/common/components/class/class.slice';
+import { initialClassForm } from '@app/common/interfaces/class-form.interface';
 import { InternalClass } from '@app/common/interfaces/internal-class.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { useTranslation } from 'next-i18next';
@@ -34,6 +35,7 @@ import { useQueryInternalResourcesQuery } from '@app/common/components/search-in
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { DetachedPagination } from 'yti-common-ui/pagination';
 import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
+import { useStoreDispatch } from '@app/store';
 
 interface ClassViewProps {
   modelId: string;
@@ -43,7 +45,6 @@ interface ClassViewProps {
 export default function ClassView({ modelId, languages }: ClassViewProps) {
   const { t, i18n } = useTranslation('common');
   const hasPermission = HasPermission({ actions: ['ADMIN_CLASS'] });
-  const [formData, setFormData] = useState<ClassFormType>(initialClassForm);
   const [showTooltip, setShowTooltip] = useState(false);
   const [view, setView] = useState<'listing' | 'class' | 'form'>('listing');
   const [getClass, getClassResult] = useGetClassMutMutation();
@@ -51,6 +52,7 @@ export default function ClassView({ modelId, languages }: ClassViewProps) {
   const [query, setQuery] = useState('');
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
+  const dispatch = useStoreDispatch();
   const { data, refetch } = useQueryInternalResourcesQuery({
     query: query ?? '',
     limitToDataModel: modelId,
@@ -70,15 +72,16 @@ export default function ClassView({ modelId, languages }: ClassViewProps) {
     if (!value) {
       const initialData = initialClassForm;
       const label = Object.fromEntries(languages.map((lang) => [lang, '']));
-      setFormData({ ...initialData, label: label });
+      dispatch(setClass({ ...initialData, label: label }));
       return;
     }
 
-    setFormData(internalClassToClassForm(value, languages));
+    dispatch(setClass(internalClassToClassForm(value, languages)));
   };
 
   const handleReturn = () => {
     setView('listing');
+    dispatch(resetClass());
     refetch();
   };
 
@@ -175,7 +178,6 @@ export default function ClassView({ modelId, languages }: ClassViewProps) {
 
     return (
       <ClassForm
-        initialData={formData}
         handleReturn={handleReturn}
         handleFollowUp={handleFollowUp}
         languages={languages}

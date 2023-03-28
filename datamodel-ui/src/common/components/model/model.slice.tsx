@@ -8,9 +8,9 @@ import {
 } from '@app/common/interfaces/model.interface';
 
 export const modelApi = createApi({
-  reducerPath: 'model',
+  reducerPath: 'modelApi',
   baseQuery: getDatamodelApiBaseQuery(),
-  tagTypes: ['model'],
+  tagTypes: ['modelApi'],
   extractRehydrationInfo(action, { reducerPath }) {
     if (action.type === HYDRATE) {
       return action.payload[reducerPath];

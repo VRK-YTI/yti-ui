@@ -9,9 +9,12 @@ import { searchModelsApi } from '@app/common/components/search-models/search-mod
 import { fakeableUsersApi } from '@app/common/components/fakeable-users/fakeable-users.slice';
 import { prefixApi } from '@app/common/components/prefix';
 import { modelApi } from '@app/common/components/model/model.slice';
-import { classApi } from '@app/common/components/class/class.slice';
+import { classApi, classSlice } from '@app/common/components/class/class.slice';
 import { searchInternalResourcesApi } from '@app/common/components/search-internal-resources/search-internal-resources.slice';
-import { resourceApi } from '@app/common/components/resource/resource.slice';
+import {
+  resourceApi,
+  resourceSlice,
+} from '@app/common/components/resource/resource.slice';
 import { searchTerminologyApi } from '@app/common/components/terminology-search/search-terminology.slice';
 import { countApi } from '@app/common/components/counts/counts.slice';
 
@@ -30,9 +33,11 @@ export function makeStore(ctx: NextIronContext) {
       [prefixApi.reducerPath]: prefixApi.reducer,
       [modelApi.reducerPath]: modelApi.reducer,
       [classApi.reducerPath]: classApi.reducer,
+      [classSlice.name]: classSlice.reducer,
       [searchInternalResourcesApi.reducerPath]:
         searchInternalResourcesApi.reducer,
       [resourceApi.reducerPath]: resourceApi.reducer,
+      [resourceSlice.name]: resourceSlice.reducer,
       [searchTerminologyApi.reducerPath]: searchTerminologyApi.reducer,
       [countApi.reducerPath]: countApi.reducer,
     },
