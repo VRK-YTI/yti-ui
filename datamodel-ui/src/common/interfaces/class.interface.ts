@@ -8,16 +8,16 @@ export interface ClassType {
   subClassOf: string[];
   subject: string;
   identifier: string;
+  created: string;
+  modified: string;
+  contributor: [
+    {
+      id: string;
+      label: { [key: string]: string };
+      parentOrganization: string;
+    }
+  ];
+  contact?: string;
   note: { [key: string]: string };
+  uri: string;
 }
-
-export const initialClass: ClassType = {
-  label: {},
-  editorialNote: '',
-  status: 'DRAFT',
-  equivalentClass: [],
-  subClassOf: [],
-  subject: '',
-  identifier: '',
-  note: {},
-};

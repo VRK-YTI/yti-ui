@@ -194,12 +194,7 @@ export default function CommonView({
           {data.editorialNote ?? t('no-editorial-note')}
         </BasicBlock>
 
-        <BasicBlock title={t('uri')}>
-          {
-            //TODO this should be retrieved from the backend when it is added
-            `http://uri.suomi.fi/datamodel/ns/${modelId}#${data.identifier}`
-          }
-        </BasicBlock>
+        <BasicBlock title={t('uri')}>{data.uri}</BasicBlock>
         <Separator />
 
         <BasicBlock title={t('contributors')}>
@@ -213,7 +208,9 @@ export default function CommonView({
         <BasicBlock>
           {translateCommonForm('contact-description', data.type, t)}
           <ExternalLink
-            href={`mailto:${data.contact}?subject=${getLanguageVersion({
+            href={`mailto:${
+              data.contact ?? 'yhteentoimivuus@dvv.fi'
+            }?subject=${getLanguageVersion({
               data: data.label,
               lang: i18n.language,
             })}`}
