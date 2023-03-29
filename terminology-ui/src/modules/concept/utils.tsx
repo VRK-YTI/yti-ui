@@ -10,19 +10,19 @@ export function getBlockData(t: TFunction, concept?: Concept) {
   const terms = [
     ...(concept.references.prefLabelXl ?? []).map((term) => ({
       term,
-      type: t('field-terms-preferred'),
+      type: t('field-terms-preferred', { ns: 'concept' }),
     })),
     ...(concept.references.altLabelXl ?? []).map((term) => ({
       term,
-      type: t('field-terms-alternative'),
+      type: t('field-terms-alternative', { ns: 'concept' }),
     })),
     ...(concept.references.notRecommendedSynonym ?? []).map((term) => ({
       term,
-      type: t('field-terms-non-recommended'),
+      type: t('field-terms-non-recommended', { ns: 'concept' }),
     })),
     ...(concept.references.hiddenTerm ?? []).map((term) => ({
       term,
-      type: t('field-terms-hidden'),
+      type: t('field-terms-hidden', { ns: 'concept' }),
     })),
   ].sort((t1, t2) => compareLocales(t1, t2));
 

@@ -1,3 +1,4 @@
+import { ConceptLink } from '@app/common/interfaces/concept-link.interface';
 import { Concept } from '@app/common/interfaces/concept.interface';
 import { Term } from '@app/common/interfaces/term.interface';
 import { Property } from '@app/common/interfaces/termed-data-types.interface';
@@ -65,6 +66,8 @@ export default function generateFormData(
           relatedConceptInOther: [],
           matchInOther: [],
           closeMatch: [],
+          broadInOther: [],
+          narrowInOther: [],
         },
       },
     };
@@ -199,30 +202,6 @@ export default function generateFormData(
               };
             }
           }) ?? [],
-        matchInOther:
-          conceptData.references.exactMatch?.map((r) => {
-            const terminologyLabel = new Map();
-            r.properties.vocabularyLabel?.forEach((l) => {
-              terminologyLabel.set(l.lang, l.value);
-            });
-
-            {
-              return {
-                id: r.id ?? '',
-                label:
-                  r.properties?.prefLabel
-                    ?.map((l) => {
-                      return { [l.lang]: l.value };
-                    })
-                    .reduce((l) => l) ?? {},
-                terminologyId: r.properties.targetGraph?.[0].value ?? '',
-                terminologyLabel: terminologyLabel
-                  ? Object.fromEntries(terminologyLabel)
-                  : {},
-                targetId: r.properties.targetId?.[0].value ?? '',
-              };
-            }
-          }) ?? [],
         narrowerConcept:
           conceptData.references?.narrower?.map((narrow) => {
             {
@@ -273,50 +252,13 @@ export default function generateFormData(
               };
             }
           }) ?? [],
-        relatedConceptInOther:
-          conceptData.references.relatedMatch?.map((r) => {
-            const terminologyLabel = new Map();
-            r.properties.vocabularyLabel?.forEach((l) => {
-              terminologyLabel.set(l.lang, l.value);
-            });
-
-            {
-              return {
-                id: r.id ?? '',
-                label:
-                  r.properties?.prefLabel
-                    ?.map((l) => ({ [l.lang]: l.value }))
-                    .reduce((l) => l) ?? {},
-                terminologyId: r.properties.targetGraph?.[0].value ?? '',
-                terminologyLabel: terminologyLabel
-                  ? Object.fromEntries(terminologyLabel)
-                  : {},
-                targetId: r.properties.targetId?.[0].value ?? '',
-              };
-            }
-          }) ?? [],
-        closeMatch:
-          conceptData.references.closeMatch?.map((m) => {
-            const terminologyLabel = new Map();
-            m.properties.vocabularyLabel?.forEach((l) => {
-              terminologyLabel.set(l.lang, l.value);
-            });
-
-            {
-              return {
-                id: m.id ?? '',
-                label:
-                  m.properties.prefLabel
-                    ?.map((l) => ({ [l.lang]: l.value }))
-                    .reduce((l) => l) ?? {},
-                terminologyId: m.properties.targetGraph?.[0].value ?? '',
-                terminologyLabel: terminologyLabel
-                  ? Object.fromEntries(terminologyLabel)
-                  : {},
-                targetId: m.properties.targetId?.[0].value ?? '',
-              };
-            }
-          }) ?? [],
+        matchInOther: mapExternalConcept(conceptData.references.exactMatch),
+        relatedConceptInOther: mapExternalConcept(
+          conceptData.references.relatedMatch
+        ),
+        closeMatch: mapExternalConcept(conceptData.references.closeMatch),
+        broadInOther: mapExternalConcept(conceptData.references.broadMatch),
+        narrowInOther: mapExternalConcept(conceptData.references.narrowMatch),
       },
       status: conceptData.properties.status?.[0].value ?? 'DRAFT',
       subject: conceptData.properties.subjectArea?.[0].value ?? '',
@@ -400,4 +342,34 @@ export default function generateFormData(
     ...retVal,
     terms: terms,
   };
+}
+
+function mapExternalConcept(conceptLinks: ConceptLink[] | undefined) {
+  if (!conceptLinks) {
+    return [];
+  }
+  return conceptLinks.map((link) => {
+    const terminologyLabels = link.properties.vocabularyLabel?.reduce(
+      (labels, label) => {
+        labels.set(label.lang, label.value);
+        return labels;
+      },
+      new Map()
+    );
+
+    const conceptLabels = link.properties.prefLabel?.reduce((labels, label) => {
+      labels.set(label.lang, label.value);
+      return labels;
+    }, new Map());
+
+    return {
+      id: link.id ?? '',
+      label: conceptLabels ? Object.fromEntries(conceptLabels) : {},
+      terminologyId: link.properties.targetGraph?.[0].value ?? '',
+      terminologyLabel: terminologyLabels
+        ? Object.fromEntries(terminologyLabels)
+        : {},
+      targetId: link.properties.targetId?.[0].value ?? '',
+    };
+  });
 }
