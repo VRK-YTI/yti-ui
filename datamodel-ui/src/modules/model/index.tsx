@@ -36,7 +36,7 @@ export default function Model({ modelId }: ModelProps) {
       }}
     >
       <ContentWrapper>
-        <Graph>
+        <Graph modelId={modelId}>
           <Drawer
             views={[
               {

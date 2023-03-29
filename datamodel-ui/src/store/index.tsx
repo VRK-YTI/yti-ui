@@ -17,6 +17,7 @@ import {
 } from '@app/common/components/resource/resource.slice';
 import { searchTerminologyApi } from '@app/common/components/terminology-search/search-terminology.slice';
 import { countApi } from '@app/common/components/counts/counts.slice';
+import { activeSlice } from '@app/common/components/active/active.slice';
 
 // make Context from next-redux-wrapper compatible with next-iron-session
 export type NextIronContext = Context | (Context & { req: NextApiRequest });
@@ -40,6 +41,7 @@ export function makeStore(ctx: NextIronContext) {
       [resourceSlice.name]: resourceSlice.reducer,
       [searchTerminologyApi.reducerPath]: searchTerminologyApi.reducer,
       [countApi.reducerPath]: countApi.reducer,
+      [activeSlice.name]: activeSlice.reducer,
     },
 
     middleware: (getDefaultMiddleware) =>

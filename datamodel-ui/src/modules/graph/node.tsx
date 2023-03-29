@@ -1,9 +1,16 @@
-import { useState } from 'react';
+import {
+  resetActive,
+  selectActive,
+  setActive,
+} from '@app/common/components/active/active.slice';
+import { useStoreDispatch } from '@app/store';
+import { useSelector } from 'react-redux';
 import { Handle, Position } from 'reactflow';
 import { Icon } from 'suomifi-ui-components';
 import { ClassNodeDiv } from './node.styles';
 
 interface ClassNodeProps {
+  id: string;
   data: {
     label: string;
     identifier: string;
@@ -14,18 +21,19 @@ interface ClassNodeProps {
   };
 }
 
-export default function ClassNode({ data }: ClassNodeProps) {
-  const [active, setActive] = useState(false);
+export default function ClassNode({ id, data }: ClassNodeProps) {
+  const dispatch = useStoreDispatch();
+  const actives = useSelector(selectActive());
 
   return (
     <ClassNodeDiv
-      onMouseEnter={() => setActive(true)}
-      onMouseLeave={() => setActive(false)}
-      $highlight={active}
+      onMouseEnter={() => dispatch(setActive([id]))}
+      onMouseLeave={() => dispatch(resetActive())}
+      $highlight={actives.identifiers.includes(id)}
     >
       <Handle type="target" position={Position.Top} id={data.identifier} />
       <div className="node-title">
-        <div>Class node title {data.label}</div>
+        <div>{data.label}</div>
         <Icon icon="chevronDown" />
       </div>
       <Handle type="source" position={Position.Bottom} id={data.identifier} />
