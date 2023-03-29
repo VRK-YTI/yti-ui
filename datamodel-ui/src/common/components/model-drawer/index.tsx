@@ -49,6 +49,14 @@ export default function Drawer({ views }: SideNavigationProps) {
                 {isLarge && view.buttonLabel}
               </DrawerButton>
             ))}
+          smallButtons={views
+            .filter((view) => (isSmall ? true : !view.id.includes('-small')))
+            .map((view) => ({
+              id: view.id,
+              icon: view.icon,
+              label: view.buttonLabel,
+              onClick: () => handleSetActiveView(view.id),
+            }))}
           viewOpen={
             typeof activeView !== 'undefined' &&
             typeof activeView.component !== 'undefined'

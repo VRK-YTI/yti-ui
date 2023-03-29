@@ -35,6 +35,8 @@ export interface Concept extends BaseEntity<'Concept'> {
     related?: Concept[];
     relatedMatch?: ConceptLink[];
     searchTerm?: Term[];
+    broadMatch?: ConceptLink[];
+    narrowMatch?: ConceptLink[];
   };
 
   referrers: {

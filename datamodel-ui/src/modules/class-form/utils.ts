@@ -2,6 +2,7 @@ import { ClassFormType } from '@app/common/interfaces/class-form.interface';
 import { ClassType } from '@app/common/interfaces/class.interface';
 
 // TODO: Need to add equivalentClass, subClassOf and subject after backend is ready
+// TODO this does not really work since we need to get data from backend that cannot be gotten from the form
 export function classFormToClass(data: ClassFormType): ClassType {
   return {
     editorialNote: data.editorialNote,
@@ -12,6 +13,17 @@ export function classFormToClass(data: ClassFormType): ClassType {
     status: data.status,
     subClassOf: [],
     subject: 'http://uri.suomi.fi/terminology/demo',
+    contact: '',
+    created: '',
+    modified: '',
+    contributor: [
+      {
+        id: '',
+        label: {},
+        parentOrganization: '',
+      },
+    ],
+    uri: '',
   };
 }
 

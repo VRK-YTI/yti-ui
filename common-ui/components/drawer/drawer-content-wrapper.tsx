@@ -2,8 +2,10 @@ import styled from 'styled-components';
 import SpacedContent from './spaced-content';
 
 const DrawerContentWrapper = styled.div<{ $height?: number }>`
-  width: calc(inherit - 30px);
+  position: absolute;
+  width: calc(100% - 30px);
   max-width: inherit;
+  height: calc(100% - ${(props) => (props.$height ?? 0) + 15}px);
 
   padding: 15px;
   padding-top: ${(props) => (props.$height ?? 0) + 15}px;
@@ -11,6 +13,24 @@ const DrawerContentWrapper = styled.div<{ $height?: number }>`
   .fullwidth {
     width: 100%;
   }
+
+  overflow-y: scroll;
+  overflow-x: hidden;
+
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #bdbdbd;
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #6e6e6e;
+  }
+
+  -webkit-transform: translate3d(0, 0, 0);
 `;
 
 interface DrawerContentProps {

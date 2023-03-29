@@ -226,6 +226,8 @@ export const conceptWithOneTerm = {
         related: [],
         relatedMatch: [],
         searchTerm: [],
+        broadMatch: [],
+        narrowMatch: [],
       },
       referrers: {},
       type: {
@@ -483,6 +485,8 @@ export const conceptWithOneTermWithInitialData = {
         related: [],
         relatedMatch: [],
         searchTerm: [],
+        broadMatch: [],
+        narrowMatch: [],
       },
       referrers: {},
       type: {
@@ -780,6 +784,8 @@ export const conceptWithInternalRelations = {
         ],
         relatedMatch: [],
         searchTerm: [],
+        broadMatch: [],
+        narrowMatch: [],
       },
       referrers: {},
       type: {
@@ -1481,6 +1487,8 @@ export const differentTerms = {
             },
           },
         ],
+        broadMatch: [],
+        narrowMatch: [],
       },
       referrers: {},
       type: {
@@ -1749,6 +1757,8 @@ export const removeTerm = {
         related: [],
         relatedMatch: [],
         searchTerm: [],
+        broadMatch: [],
+        narrowMatch: [],
       },
       referrers: {},
       type: {
