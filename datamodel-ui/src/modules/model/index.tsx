@@ -99,6 +99,12 @@ export default function Model({ modelId }: ModelProps) {
                 component: <ModelInfoView />,
               },
               {
+                id: 'link',
+                icon: 'attachment',
+                buttonLabel: 'Linkitykset',
+                component: <></>,
+              },
+              {
                 id: 'classes',
                 icon: 'chatHeart',
                 buttonLabel: t('classes'),
