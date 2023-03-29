@@ -36,6 +36,10 @@ import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { DetachedPagination } from 'yti-common-ui/pagination';
 import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
 import { useStoreDispatch } from '@app/store';
+import {
+  resetActive,
+  setActive,
+} from '@app/common/components/active/active.slice';
 
 interface ClassViewProps {
   modelId: string;
@@ -82,12 +86,17 @@ export default function ClassView({ modelId, languages }: ClassViewProps) {
   const handleReturn = () => {
     setView('listing');
     dispatch(resetClass());
+    dispatch(resetActive());
     refetch();
   };
 
   const handleFollowUp = (classId: string) => {
     getClass({ modelId: modelId, classId: classId });
     setView('class');
+  };
+
+  const handleActive = (classId: string) => {
+    dispatch(setActive([classId]));
   };
 
   useEffect(() => {
@@ -155,8 +164,11 @@ export default function ClassView({ modelId, languages }: ClassViewProps) {
                   lang: i18n.language,
                 }),
                 subtitle: `${modelId}:${item.identifier}`,
-                onClick: () =>
-                  getClass({ modelId: modelId, classId: item.identifier }),
+                onClick: () => {
+                  getClass({ modelId: modelId, classId: item.identifier });
+                  handleActive(item.identifier);
+                },
+                onHover: () => handleActive(item.identifier),
               }))}
             />
           )}
@@ -190,6 +202,7 @@ export default function ClassView({ modelId, languages }: ClassViewProps) {
     if (view !== 'class' || !getClassResult.isSuccess) {
       return <></>;
     }
+
     const data = getClassResult.data;
 
     return (

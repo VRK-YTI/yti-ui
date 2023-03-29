@@ -1,6 +1,5 @@
 import { SearchInternalClasses } from '@app/common/interfaces/search-internal-classes.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
-import { NodeTypes } from 'reactflow';
 
 export function generateNodesMock(size?: number) {
   const spread = Math.floor(Math.sqrt(size ?? 3));
