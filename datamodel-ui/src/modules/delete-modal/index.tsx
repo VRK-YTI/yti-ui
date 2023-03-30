@@ -94,7 +94,9 @@ export default function DeleteModal({
 
         <ButtonFooter>
           <Button onClick={() => handleSuccessExit()}>
-            {type === 'model' ? t('return-to-front-page') : t('close')}
+            {type === 'model'
+              ? t('return-to-front-page')
+              : t('close', { ns: 'common' })}
           </Button>
         </ButtonFooter>
       </>
