@@ -43,6 +43,12 @@ export const modelApi = createApi({
         data: value.payload,
       }),
     }),
+    deleteModel: builder.mutation<string, string>({
+      query: (value) => ({
+        url: `/model/${value}`,
+        method: 'DELETE',
+      }),
+    }),
   }),
 });
 
@@ -50,7 +56,9 @@ export const {
   usePutModelMutation,
   useGetModelQuery,
   usePostModelMutation,
+  useDeleteModelMutation,
   util: { getRunningQueriesThunk },
 } = modelApi;
 
-export const { putModel, getModel } = modelApi.endpoints;
+export const { putModel, getModel, postModel, deleteModel } =
+  modelApi.endpoints;

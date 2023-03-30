@@ -35,6 +35,14 @@ export const classApi = createApi({
         method: 'GET',
       }),
     }),
+    deleteClass: builder.mutation<string, { modelId: string; classId: string }>(
+      {
+        query: (value) => ({
+          url: `/class/${value.modelId}/${value.classId}`,
+          method: 'DELETE',
+        }),
+      }
+    ),
   }),
 });
 
@@ -42,6 +50,7 @@ export const {
   usePutClassMutation,
   useGetClassQuery,
   useGetClassMutMutation,
+  useDeleteClassMutation,
   util: { getRunningQueriesThunk },
 } = classApi;
 

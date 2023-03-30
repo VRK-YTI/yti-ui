@@ -33,7 +33,7 @@ export default function AttributeView({
     label: string;
     uri: string;
   }>();
-  const { data } = useQueryInternalResourcesQuery({
+  const { data, refetch } = useQueryInternalResourcesQuery({
     query: query ?? '',
     limitToDataModel: modelId,
     pageSize: 20,
@@ -62,6 +62,7 @@ export default function AttributeView({
 
   const handleFormReturn = () => {
     setView('listing');
+    refetch();
   };
 
   const handleShowAttribute = (id: string) => {
