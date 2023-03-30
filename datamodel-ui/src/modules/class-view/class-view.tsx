@@ -36,6 +36,7 @@ import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { DetachedPagination } from 'yti-common-ui/pagination';
 import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
 import FormattedDate from 'yti-common-ui/components/formatted-date';
+import DeleteModal from '../delete-modal';
 
 interface ClassViewProps {
   modelId: string;
@@ -236,9 +237,16 @@ export default function ClassView({ modelId, languages }: ClassViewProps) {
                   {hasPermission && (
                     <>
                       <Separator />
-                      <Button variant="secondaryNoBorder">
-                        {t('remove', { ns: 'admin' })}
-                      </Button>
+                      <DeleteModal
+                        modelId={modelId}
+                        resourceId={data.identifier}
+                        type="class"
+                        label={getLanguageVersion({
+                          data: data.label,
+                          lang: i18n.language,
+                        })}
+                        onClose={handleReturn}
+                      />
                     </>
                   )}
                 </Tooltip>

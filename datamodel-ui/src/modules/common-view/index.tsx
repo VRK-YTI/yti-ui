@@ -26,6 +26,7 @@ import FormattedDate from 'yti-common-ui/formatted-date';
 import Separator from 'yti-common-ui/separator';
 import { StatusChip } from '@app/common/components/multi-column-search/multi-column-search.styles';
 import { TooltipWrapper } from '../model/model.styles';
+import DeleteModal from '../delete-modal';
 
 interface CommonViewProps {
   data: Resource;
@@ -86,9 +87,18 @@ export default function CommonView({
                     {t('edit', { ns: 'admin' })}
                   </Button>
                   <Separator />
-                  <Button variant="secondaryNoBorder">
-                    {t('remove', { ns: 'admin' })}
-                  </Button>
+                  <DeleteModal
+                    modelId={modelId}
+                    resourceId={data.identifier}
+                    type={
+                      data.type === 'ASSOCIATION' ? 'association' : 'attribute'
+                    }
+                    label={getLanguageVersion({
+                      data: data.label,
+                      lang: i18n.language,
+                    })}
+                    onClose={handleReturn}
+                  />
                 </Tooltip>
               </TooltipWrapper>
             </div>

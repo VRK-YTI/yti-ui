@@ -41,6 +41,7 @@ import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import HasPermission from '@app/common/utils/has-permission';
+import DeleteModal from '../delete-modal';
 
 export default function ModelInfoView() {
   const { t, i18n } = useTranslation('common');
@@ -177,10 +178,15 @@ export default function ModelInfoView() {
                     <Button variant="secondaryNoBorder">
                       {t('add-email-subscription')}
                     </Button>
-                    <hr />
-                    <Button variant="secondaryNoBorder">
-                      {t('remove', { ns: 'admin' })}
-                    </Button>
+                    <Separator />
+                    <DeleteModal
+                      modelId={modelId}
+                      label={getLanguageVersion({
+                        data: modelInfo.label,
+                        lang: i18n.language,
+                      })}
+                      type="model"
+                    />
                   </>
                 )}
               </Tooltip>
