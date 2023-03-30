@@ -13,7 +13,6 @@ interface ClassNodeProps {
   id: string;
   data: {
     label: string;
-    identifier: string;
     resources?: {
       label: string;
       identifier: string;
@@ -24,7 +23,23 @@ interface ClassNodeProps {
 export default function ClassNode({ id, data }: ClassNodeProps) {
   const dispatch = useStoreDispatch();
   const [highlight, setHighlight] = useState(false);
+  const [showAtttributes, setShowAttributes] = useState(false);
   const actives = useSelector(selectActive());
+
+  const mockAttributes = [
+    {
+      identifier: `${id}-attr-1`,
+      label: 'Attribute #1',
+    },
+    {
+      identifier: `${id}-attr-2`,
+      label: 'Attribute #2',
+    },
+    {
+      identifier: `${id}-attr-3`,
+      label: 'Attribute #3',
+    },
+  ];
 
   return (
     <ClassNodeDiv
@@ -33,14 +48,34 @@ export default function ClassNode({ id, data }: ClassNodeProps) {
       onClick={() => dispatch(setActive([id]))}
       $highlight={highlight || actives.identifiers.includes(id)}
     >
-      <Handle type="target" position={Position.Top} id={data.identifier} />
+      <Handle type="target" position={Position.Top} id={id} />
       <div className="node-title">
         <div>{data.label}</div>
-        <Icon icon="chevronDown" />
+        <button onClick={() => setShowAttributes(!showAtttributes)}>
+          <Icon
+            icon={showAtttributes ? 'chevronUp' : 'chevronDown'}
+            variant="secondaryNoBorder"
+          />
+        </button>
       </div>
-      <Handle type="source" position={Position.Bottom} id={data.identifier} />
+      <Handle type="source" position={Position.Bottom} id={id} />
 
-      {data.resources &&
+      {/*
+       * Using mock solution similar to the expected one
+       * found below this piece of code.
+       */}
+
+      {showAtttributes &&
+        mockAttributes.map((child) => (
+          <div
+            key={`${id}-child-${child.identifier}`}
+            className="node-resource"
+          >
+            {child.label}
+          </div>
+        ))}
+
+      {/* {data.resources &&
         data.resources.length > 0 &&
         data.resources.map((child) => (
           <div
@@ -49,7 +84,7 @@ export default function ClassNode({ id, data }: ClassNodeProps) {
           >
             {child.label}
           </div>
-        ))}
+        ))} */}
     </ClassNodeDiv>
   );
 }

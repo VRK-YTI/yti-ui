@@ -40,4 +40,30 @@ export const ClassNodeDiv = styled.div<{ $highlight: boolean }>`
     width: 10px;
     height: 10px;
   }
+
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    background: none;
+    height: 20px;
+    width: 30px;
+
+    svg {
+      padding 0;
+      margin 0;
+      color: ${(props) => props.theme.suomifi.colors.whiteBase};
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    &:active {
+      svg {
+        color: ${(props) => props.theme.suomifi.colors.depthLight1};
+      }
+    }
+  }
 `;

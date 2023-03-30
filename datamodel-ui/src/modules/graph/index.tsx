@@ -8,6 +8,7 @@ import {
   addEdge,
   NodeTypes,
   EdgeTypes,
+  MarkerType,
 } from 'reactflow';
 import { convertToNodes, generateEdgesMock, generateNodesMock } from './utils';
 import Edge from './edge';
@@ -34,7 +35,21 @@ export default function Graph({ modelId, children }: GraphProps) {
   const [edges, setEdges, onEdgesChange] = useEdgesState(generateEdgesMock(25));
 
   const onConnect = useCallback(
-    (params) => setEdges((eds) => addEdge({ ...params }, eds)),
+    (params) => {
+      setEdges((eds) =>
+        addEdge(
+          {
+            ...params,
+            type: 'associationEdge',
+            markerEnd: {
+              type: MarkerType.Arrow,
+            },
+            label: 'Assosiaatio',
+          },
+          eds
+        )
+      );
+    },
     [setEdges]
   );
 

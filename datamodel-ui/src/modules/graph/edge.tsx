@@ -16,6 +16,7 @@ export default function Edge({
   targetX,
   targetY,
   label,
+  markerEnd,
 }: EdgeProps) {
   const dispatch = useStoreDispatch();
   const [edgePath, labelX, labelY] = getSmoothStepPath({
@@ -27,7 +28,12 @@ export default function Edge({
 
   return (
     <>
-      <path id={id} className="react-flow__edge-path" d={edgePath} />
+      <path
+        id={id}
+        className="react-flow__edge-path"
+        d={edgePath}
+        markerEnd={markerEnd}
+      />
       <EdgeLabelRenderer>
         <div
           onMouseEnter={() => dispatch(setActive([source, target]))}
