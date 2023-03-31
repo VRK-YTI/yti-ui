@@ -26,9 +26,11 @@ export const DeleteEdgeButton = styled.button`
     border-bottom: 1px solid
       ${(props) => props.theme.suomifi.colors.depthLight1};
     border-radius: 2px;
+    cursor: pointer;
   }
 
   &:active {
     background: ${(props) => props.theme.suomifi.colors.depthLight2};
+    cursor: pointer;
   }
 `;

@@ -10,7 +10,7 @@ import {
   EdgeTypes,
   MarkerType,
 } from 'reactflow';
-import { convertToNodes, generateEdgesMock, generateNodesMock } from './utils';
+import { convertToNodes } from './utils';
 import Edge from './edge';
 import { useQueryInternalResourcesQuery } from '@app/common/components/search-internal-resources/search-internal-resources.slice';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
@@ -49,7 +49,9 @@ export default function Graph({ modelId, children }: GraphProps) {
             ...params,
             type: 'associationEdge',
             markerEnd: {
-              type: MarkerType.Arrow,
+              type: MarkerType.ArrowClosed,
+              height: 30,
+              width: 30,
             },
             label: 'Assosiaatio',
             data: {

@@ -7,7 +7,7 @@ import {
 } from '@app/common/components/active/active.slice';
 import { useStoreDispatch } from '@app/store';
 import { MouseEvent } from 'react';
-import { EdgeLabelRenderer, getSmoothStepPath, EdgeProps } from 'reactflow';
+import { EdgeLabelRenderer, EdgeProps, getStraightPath } from 'reactflow';
 import { DeleteEdgeButton, EdgeContent } from './edge.styles';
 
 export default function Edge({
@@ -24,7 +24,7 @@ export default function Edge({
   selected,
 }: EdgeProps) {
   const dispatch = useStoreDispatch();
-  const [edgePath, labelX, labelY] = getSmoothStepPath({
+  const [edgePath, labelX, labelY] = getStraightPath({
     sourceX,
     sourceY,
     targetX,
