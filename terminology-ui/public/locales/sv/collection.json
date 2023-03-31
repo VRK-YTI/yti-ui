@@ -15,7 +15,7 @@
   "edit-collection": "Redigera begreppsurvalet",
   "edit-collection-block-title": "Begreppsurvalets funktioner",
   "edit-collection-error": {
-    "prefLabel": ""
+    "prefLabel": "Namnet för begreppsurval måste anges åtminstone på ett språk."
   },
   "enter-collection-description": "Ange en beskrivning",
   "enter-collection-name": "Ange ett namn",
