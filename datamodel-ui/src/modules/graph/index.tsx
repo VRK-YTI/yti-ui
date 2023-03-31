@@ -31,8 +31,15 @@ export default function Graph({ modelId, children }: GraphProps) {
     resourceTypes: [ResourceType.CLASS],
   });
 
-  const [nodes, setNodes, onNodesChange] = useNodesState(generateNodesMock(25));
-  const [edges, setEdges, onEdgesChange] = useEdgesState(generateEdgesMock(25));
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+
+  const deleteEdgeById = useCallback(
+    (id: string) => {
+      setEdges((edges) => edges.filter((edge) => edge.id !== id));
+    },
+    [setEdges]
+  );
 
   const onConnect = useCallback(
     (params) => {
@@ -45,12 +52,16 @@ export default function Graph({ modelId, children }: GraphProps) {
               type: MarkerType.Arrow,
             },
             label: 'Assosiaatio',
+            data: {
+              ...params.data,
+              handleDelete: deleteEdgeById,
+            },
           },
           eds
         )
       );
     },
-    [setEdges]
+    [setEdges, deleteEdgeById]
   );
 
   useEffect(() => {

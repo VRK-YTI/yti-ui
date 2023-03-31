@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/mouse-events-have-key-events */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import {
@@ -5,10 +6,13 @@ import {
   setActive,
 } from '@app/common/components/active/active.slice';
 import { useStoreDispatch } from '@app/store';
+import { MouseEvent } from 'react';
 import { EdgeLabelRenderer, getSmoothStepPath, EdgeProps } from 'reactflow';
+import { DeleteEdgeButton, EdgeContent } from './edge.styles';
 
 export default function Edge({
   id,
+  data,
   source,
   sourceX,
   sourceY,
@@ -17,6 +21,7 @@ export default function Edge({
   targetY,
   label,
   markerEnd,
+  selected,
 }: EdgeProps) {
   const dispatch = useStoreDispatch();
   const [edgePath, labelX, labelY] = getSmoothStepPath({
@@ -25,6 +30,11 @@ export default function Edge({
     targetX,
     targetY,
   });
+
+  const onDeleteClick = (e: MouseEvent<HTMLButtonElement>, id: string) => {
+    e.stopPropagation();
+    data.handleDelete(id);
+  };
 
   return (
     <>
@@ -35,24 +45,21 @@ export default function Edge({
         markerEnd={markerEnd}
       />
       <EdgeLabelRenderer>
-        <div
+        <EdgeContent
           onMouseEnter={() => dispatch(setActive([source, target]))}
           onMouseLeave={() => dispatch(resetActive())}
           style={{
-            pointerEvents: 'all',
-            position: 'absolute',
             transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
-            background: '#FFFFFF',
-            padding: '5px 10px',
-            borderRadius: '2px',
-            border: '1px solid #C8CDD0',
-            fontSize: 16,
-            fontWeight: 400,
           }}
           className="nopan"
         >
-          {label}
-        </div>
+          <div>{label}</div>
+          {selected && (
+            <DeleteEdgeButton onClick={(e) => onDeleteClick(e, id)}>
+              ×
+            </DeleteEdgeButton>
+          )}
+        </EdgeContent>
       </EdgeLabelRenderer>
     </>
   );
