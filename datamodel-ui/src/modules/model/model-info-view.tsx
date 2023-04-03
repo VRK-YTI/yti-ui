@@ -165,8 +165,8 @@ export default function ModelInfoView() {
                     {t('edit', { ns: 'admin' })}
                   </Button>
                 )}
-                <AsFileModal type="show" />
-                <AsFileModal type="download" />
+                <AsFileModal type="show" modelId={modelId} />
+                <AsFileModal type="download" modelId={modelId} />
                 {hasPermission && (
                   <>
                     <Button variant="secondaryNoBorder">
