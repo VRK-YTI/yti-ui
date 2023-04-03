@@ -21,17 +21,14 @@ export default withIronSessionApiRoute(
         mimeType = 'application/ld+json';
     }
 
-    const response = await axios.get(
+    const { status, data: response } = await axios.get(
       `${process.env.DATAMODEL_API_URL}/v2/model/${target}/file`,
       {
         headers: {
           Accept: mimeType,
         },
-        transformResponse: [
-          (data) => {
-            return data;
-          },
-        ],
+        responseType: 'stream',
+        decompress: false,
       }
     );
 
@@ -41,8 +38,8 @@ export default withIronSessionApiRoute(
       res.setHeader('Content-Type', mimeType);
       res.setHeader('Content-Disposition', 'attachment');
     }
-    res.status(200);
-    res.send(response.data);
+    res.status(status);
+    response.pipe(res);
   },
   {
     ...userCookieOptions,
