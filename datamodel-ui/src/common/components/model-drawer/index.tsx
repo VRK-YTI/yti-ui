@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BaseIconKeys } from 'suomifi-ui-components';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import { default as CommonDrawer } from 'yti-common-ui/drawer';
@@ -8,6 +8,13 @@ import {
   DrawerViewContainer,
   ModelPanel,
 } from './model-side-navigation.styles';
+import { useStoreDispatch } from '@app/store';
+import {
+  selectCurrentViewName,
+  selectView,
+  setView,
+} from '../model/model.slice';
+import { useSelector } from 'react-redux';
 
 type ViewType = {
   id: string;
@@ -23,13 +30,26 @@ interface SideNavigationProps {
 
 export default function Drawer({ views }: SideNavigationProps) {
   const { breakpoint, isSmall, isLarge } = useBreakpoints();
+  const dispatch = useStoreDispatch();
+  const currentView = useSelector(selectCurrentViewName());
   const [activeView, setActiveView] = useState<ViewType | undefined>(
     isSmall ? undefined : views?.[0] ?? undefined
   );
 
   const handleSetActiveView = (viewId: string) => {
-    setActiveView(views.find((view) => view.id === viewId));
+    setActiveView(viewId);
+    if (['search', 'links'].includes(viewId)) {
+      dispatch(setView(viewId));
+      return;
+    }
+    dispatch(setView(viewId, viewId === 'info' ? 'info' : 'list'));
   };
+
+  useEffect(() => {
+    if (currentView !== activeView?.id) {
+      setActiveView(views.find((v) => v.id === currentView));
+    }
+  }, [activeView, currentView, views]);
 
   return (
     <ModelPanel position="top-left" $isSmall={isSmall}>

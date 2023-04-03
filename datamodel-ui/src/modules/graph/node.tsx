@@ -1,9 +1,10 @@
 import {
-  selectActive,
-  setActive,
-} from '@app/common/components/active/active.slice';
+  selectHovered,
+  selectSelected,
+  setSelected,
+} from '@app/common/components/model/model.slice';
 import { useStoreDispatch } from '@app/store';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Handle, Position } from 'reactflow';
 import { Icon } from 'suomifi-ui-components';
@@ -18,13 +19,15 @@ interface ClassNodeProps {
       identifier: string;
     }[];
   };
+  selected: boolean;
 }
 
-export default function ClassNode({ id, data }: ClassNodeProps) {
+export default function ClassNode({ id, data, selected }: ClassNodeProps) {
   const dispatch = useStoreDispatch();
-  const [highlight, setHighlight] = useState(false);
+  const globalSelected = useSelector(selectSelected());
+  const globalHover = useSelector(selectHovered());
   const [showAtttributes, setShowAttributes] = useState(false);
-  const actives = useSelector(selectActive());
+  const [hover, setHover] = useState(false);
 
   const mockAttributes = [
     {
@@ -41,12 +44,22 @@ export default function ClassNode({ id, data }: ClassNodeProps) {
     },
   ];
 
+  useEffect(() => {
+    if (selected) {
+      dispatch(setSelected(id, 'classes'));
+    }
+  }, [dispatch, id, selected]);
+
   return (
     <ClassNodeDiv
-      onMouseEnter={() => setHighlight(true)}
-      onMouseLeave={() => setHighlight(false)}
-      onClick={() => dispatch(setActive([id]))}
-      $highlight={highlight || actives.identifiers.includes(id)}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      $highlight={
+        globalSelected.type === 'class' && globalSelected.id !== ''
+          ? globalSelected.id === id
+          : selected
+      }
+      $hover={hover || globalHover.id === id}
     >
       <Handle type="target" position={Position.Top} id={id} />
       <div className="node-title">

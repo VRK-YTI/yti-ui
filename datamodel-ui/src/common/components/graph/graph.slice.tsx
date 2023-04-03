@@ -1,5 +1,5 @@
 import { convertToNodes } from '@app/modules/graph/utils';
-import { AppState, AppThunk } from '@app/store';
+import { AppState } from '@app/store';
 import isHydrate from '@app/store/isHydrate';
 import { createSlice } from '@reduxjs/toolkit';
 import { searchInternalResourcesApi } from '../search-internal-resources/search-internal-resources.slice';

@@ -1,6 +1,6 @@
 import { SearchInternalClasses } from '@app/common/interfaces/search-internal-classes.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
-import { MarkerType } from 'reactflow';
+import { MarkerType, Node } from 'reactflow';
 
 export function generateNodesMock(size?: number) {
   const spread = Math.floor(Math.sqrt(size ?? 3));
@@ -43,7 +43,7 @@ export function generateEdgesMock(maxRange: number) {
   });
 }
 
-export function convertToNodes(data: SearchInternalClasses) {
+export function convertToNodes(data: SearchInternalClasses): Node[] {
   const objects = data.responseObjects;
 
   const size = objects.length;

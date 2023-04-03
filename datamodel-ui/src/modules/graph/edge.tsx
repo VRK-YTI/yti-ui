@@ -1,12 +1,9 @@
 /* eslint-disable jsx-a11y/mouse-events-have-key-events */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import {
-  resetActive,
-  setActive,
-} from '@app/common/components/active/active.slice';
+import { setSelected } from '@app/common/components/model/model.slice';
 import { useStoreDispatch } from '@app/store';
-import { MouseEvent } from 'react';
+import { MouseEvent, useEffect } from 'react';
 import { EdgeLabelRenderer, EdgeProps, getStraightPath } from 'reactflow';
 import { DeleteEdgeButton, EdgeContent } from './edge.styles';
 
@@ -36,6 +33,20 @@ export default function Edge({
     data.handleDelete(id);
   };
 
+  const handleMouseEnter = () => {
+    return;
+  };
+
+  const handleMouseLeave = () => {
+    return;
+  };
+
+  useEffect(() => {
+    if (selected) {
+      dispatch(setSelected(id, 'associations'));
+    }
+  }, [selected, dispatch, id]);
+
   return (
     <>
       <path
@@ -46,8 +57,8 @@ export default function Edge({
       />
       <EdgeLabelRenderer>
         <EdgeContent
-          onMouseEnter={() => dispatch(setActive([source, target]))}
-          onMouseLeave={() => dispatch(resetActive())}
+          onMouseEnter={() => handleMouseEnter()}
+          onMouseLeave={() => handleMouseLeave()}
           style={{
             transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
           }}

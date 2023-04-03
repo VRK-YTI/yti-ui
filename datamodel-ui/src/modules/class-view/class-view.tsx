@@ -37,11 +37,17 @@ import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { DetachedPagination } from 'yti-common-ui/pagination';
 import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
 import { useStoreDispatch } from '@app/store';
-import {
-  resetActive,
-  setActive,
-} from '@app/common/components/active/active.slice';
 import FormattedDate from 'yti-common-ui/components/formatted-date';
+import {
+  resetHovered,
+  resetSelected,
+  selectSelected,
+  selectView,
+  setHovered,
+  setSelected,
+  setView,
+} from '@app/common/components/model/model.slice';
+import { useSelector } from 'react-redux';
 
 interface ClassViewProps {
   modelId: string;
@@ -52,13 +58,15 @@ export default function ClassView({ modelId, languages }: ClassViewProps) {
   const { t, i18n } = useTranslation('common');
   const hasPermission = HasPermission({ actions: ['ADMIN_CLASS'] });
   const [showTooltip, setShowTooltip] = useState(false);
-  const [view, setView] = useState<'listing' | 'class' | 'form'>('listing');
+  // const [view, setView] = useState<'listing' | 'class' | 'form'>('listing');
   const [getClass, getClassResult] = useGetClassMutMutation();
   const [currentPage, setCurrentPage] = useState(1);
   const [query, setQuery] = useState('');
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useStoreDispatch();
+  const globalSelected = useSelector(selectSelected());
+  const view = useSelector(selectView('classes'));
   const { data, refetch } = useQueryInternalResourcesQuery({
     query: query ?? '',
     limitToDataModel: modelId,
@@ -86,26 +94,29 @@ export default function ClassView({ modelId, languages }: ClassViewProps) {
   };
 
   const handleReturn = () => {
-    setView('listing');
+    // setView('listing');
+    dispatch(setView('classes', 'list'));
     dispatch(resetClass());
-    dispatch(resetActive());
+    dispatch(resetSelected());
     refetch();
   };
 
   const handleFollowUp = (classId: string) => {
     getClass({ modelId: modelId, classId: classId });
-    setView('class');
+    // setView('class');
+    dispatch(setView('classes', 'info'));
   };
 
   const handleActive = (classId: string) => {
-    dispatch(setActive([classId]));
+    dispatch(setSelected(classId, 'classes'));
   };
 
   useEffect(() => {
     if (getClassResult.isSuccess) {
-      setView('class');
+      // setView('class');
+      dispatch(setView('classes', 'info'));
     }
-  }, [getClassResult]);
+  }, [getClassResult, dispatch]);
 
   useEffect(() => {
     if (ref.current) {
@@ -117,6 +128,15 @@ export default function ClassView({ modelId, languages }: ClassViewProps) {
     }
   }, [ref, view]);
 
+  useEffect(() => {
+    if (globalSelected.type === 'classes') {
+      console.log('here');
+      getClass({ modelId: modelId, classId: globalSelected.id });
+    }
+  }, [globalSelected, getClass, modelId]);
+
+  console.log('view', view);
+
   return (
     <>
       {renderListing()}
@@ -126,7 +146,7 @@ export default function ClassView({ modelId, languages }: ClassViewProps) {
   );
 
   function renderListing() {
-    if (view !== 'listing') {
+    if (!view.list) {
       return <></>;
     }
 
@@ -170,7 +190,12 @@ export default function ClassView({ modelId, languages }: ClassViewProps) {
                   getClass({ modelId: modelId, classId: item.identifier });
                   handleActive(item.identifier);
                 },
-                onHover: () => handleActive(item.identifier),
+                onMouseEnter: () => {
+                  dispatch(setHovered(item.identifier, 'class'));
+                },
+                onMouseLeave: () => {
+                  dispatch(resetHovered());
+                },
               }))}
             />
           )}
@@ -186,7 +211,7 @@ export default function ClassView({ modelId, languages }: ClassViewProps) {
   }
 
   function renderForm() {
-    if (view !== 'form') {
+    if (!view.edit) {
       return <></>;
     }
 
@@ -201,7 +226,7 @@ export default function ClassView({ modelId, languages }: ClassViewProps) {
   }
 
   function renderClass() {
-    if (view !== 'class' || !getClassResult.isSuccess) {
+    if (!view.info || !getClassResult.isSuccess) {
       return <></>;
     }
 

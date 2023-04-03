@@ -57,7 +57,7 @@ export default function Model({ modelId }: ModelProps) {
                 component: <ModelInfoView />,
               },
               {
-                id: 'link',
+                id: 'links',
                 icon: 'attachment',
                 buttonLabel: 'Linkitykset',
                 component: <></>,

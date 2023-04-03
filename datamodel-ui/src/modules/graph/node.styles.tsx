@@ -1,11 +1,20 @@
 import styled from 'styled-components';
 
-export const ClassNodeDiv = styled.div<{ $highlight: boolean }>`
+export const ClassNodeDiv = styled.div<{
+  $highlight: boolean;
+  $hover: boolean;
+}>`
   display: flex;
   flex-direction: column;
   gap: ${(props) => props.theme.suomifi.spacing.xxs};
   width: 360px;
   padding: 5px;
+
+  ${(props) =>
+    props.$hover &&
+    `
+    background: ${props.theme.suomifi.colors.accentTertiaryDark1};
+  `}
 
   ${(props) =>
     props.$highlight &&
