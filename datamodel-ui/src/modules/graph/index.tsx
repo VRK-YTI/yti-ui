@@ -12,8 +12,7 @@ import {
 } from 'reactflow';
 import { convertToNodes } from './utils';
 import Edge from './edge';
-import { useQueryInternalResourcesQuery } from '@app/common/components/search-internal-resources/search-internal-resources.slice';
-import { ResourceType } from '@app/common/interfaces/resource-type.interface';
+import { useGetVisualizationQuery } from '@app/common/components/visualization/visualization.slice';
 
 interface GraphProps {
   modelId: string;
@@ -23,13 +22,7 @@ interface GraphProps {
 export default function Graph({ modelId, children }: GraphProps) {
   const nodeTypes: NodeTypes = useMemo(() => ({ classNode: ClassNode }), []);
   const edgeTypes: EdgeTypes = useMemo(() => ({ associationEdge: Edge }), []);
-  const { data, isSuccess } = useQueryInternalResourcesQuery({
-    query: '',
-    limitToDataModel: modelId,
-    pageSize: 5000,
-    pageFrom: 0,
-    resourceTypes: [ResourceType.CLASS],
-  });
+  const { data, isSuccess } = useGetVisualizationQuery(modelId);
 
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -68,8 +61,7 @@ export default function Graph({ modelId, children }: GraphProps) {
 
   useEffect(() => {
     if (isSuccess) {
-      const newNodes = convertToNodes(data);
-      setNodes(newNodes);
+      setNodes(convertToNodes(data));
     }
   }, [data, isSuccess, setNodes]);
 

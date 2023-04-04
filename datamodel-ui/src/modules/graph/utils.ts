@@ -1,4 +1,4 @@
-import { SearchInternalClasses } from '@app/common/interfaces/search-internal-classes.interface';
+import { VisualizationType } from '@app/common/interfaces/visualization.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { MarkerType, Node } from 'reactflow';
 
@@ -43,13 +43,15 @@ export function generateEdgesMock(maxRange: number) {
   });
 }
 
-export function convertToNodes(data: SearchInternalClasses): Node[] {
-  const objects = data.responseObjects;
-
-  const size = objects.length;
+export function convertToNodes(data: VisualizationType[]): Node[] {
+  const size = data.length;
   const spread = Math.floor(Math.sqrt(size));
 
-  return objects.map((obj, idx) => ({
+  if (size < 1) {
+    return [];
+  }
+
+  return data.map((obj, idx) => ({
     id: obj.identifier,
     position: { x: 400 * (idx % spread), y: 200 * Math.floor(idx / spread) },
     data: {

@@ -15,7 +15,7 @@ import { useSelector } from 'react-redux';
 type ViewType = {
   id:
     | 'search'
-    | 'graph-small'
+    | 'graph'
     | 'info'
     | 'links'
     | 'classes'
@@ -40,12 +40,7 @@ export default function Drawer({ views }: SideNavigationProps) {
   );
 
   const handleSetActiveView = (viewId: ViewType['id']) => {
-    if (viewId === 'graph-small') {
-      //TODO: Handle graph view in mobile
-      return;
-    }
-
-    if (['search', 'links'].includes(viewId)) {
+    if (['search', 'links', 'graph'].includes(viewId)) {
       dispatch(setView(viewId));
       return;
     }
@@ -64,7 +59,7 @@ export default function Drawer({ views }: SideNavigationProps) {
       <ModelDrawerContainer $isSmall={isSmall}>
         <CommonDrawer
           buttons={views
-            .filter((view) => (isSmall ? true : !view.id.includes('-small')))
+            .filter((view) => (isSmall ? true : !view.id.includes('graph')))
             .map((view) => (
               <DrawerButton
                 key={view.id}
@@ -78,7 +73,7 @@ export default function Drawer({ views }: SideNavigationProps) {
               </DrawerButton>
             ))}
           smallButtons={views
-            .filter((view) => (isSmall ? true : !view.id.includes('-small')))
+            .filter((view) => (isSmall ? true : !view.id.includes('graph')))
             .map((view) => ({
               id: view.id,
               icon: view.icon,

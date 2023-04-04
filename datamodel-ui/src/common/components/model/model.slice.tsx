@@ -68,6 +68,7 @@ export type ViewListItem = {
 interface ViewList {
   search: boolean;
   links: boolean;
+  graph: boolean;
   info: {
     edit: boolean;
     info: boolean;
@@ -79,11 +80,12 @@ interface ViewList {
 
 const initialView: ViewList = {
   search: false,
+  graph: false,
+  links: false,
   info: {
     info: false,
     edit: false,
   },
-  links: false,
   classes: {
     list: false,
     info: false,

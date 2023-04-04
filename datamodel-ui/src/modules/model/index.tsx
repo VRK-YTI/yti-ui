@@ -46,7 +46,7 @@ export default function Model({ modelId }: ModelProps) {
                 component: <SearchView />,
               },
               {
-                id: 'graph-small',
+                id: 'graph',
                 icon: 'applicationProfile',
                 buttonLabel: t('graph'),
               },

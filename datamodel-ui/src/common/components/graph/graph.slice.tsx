@@ -1,8 +1,5 @@
-import { convertToNodes } from '@app/modules/graph/utils';
 import { AppState } from '@app/store';
-import isHydrate from '@app/store/isHydrate';
 import { createSlice } from '@reduxjs/toolkit';
-import { searchInternalResourcesApi } from '../search-internal-resources/search-internal-resources.slice';
 
 const initialGraph = {
   nodes: [],
@@ -25,23 +22,6 @@ export const graphSlice = createSlice({
         edges: action.payload,
       };
     },
-  },
-  extraReducers: (builder) => {
-    builder.addMatcher(
-      searchInternalResourcesApi.endpoints.queryInternalResources
-        .matchFulfilled,
-      (state, action) => {
-        if (action.meta.arg.originalArgs.resourceTypes[0] === 'CLASS') {
-          return {
-            nodes: convertToNodes(action.payload),
-            edges: [],
-          };
-        }
-      }
-    );
-    builder.addMatcher(isHydrate, (_, action) => {
-      return action.payload.graph;
-    });
   },
 });
 
