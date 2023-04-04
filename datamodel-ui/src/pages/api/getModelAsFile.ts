@@ -1,5 +1,5 @@
 import { userCookieOptions } from '@app/common/utils/user-cookie-options';
-import axios from 'axios';
+import axios, { AxiosRequestHeaders } from 'axios';
 import { withIronSessionApiRoute } from 'iron-session/next';
 
 export default withIronSessionApiRoute(
@@ -21,12 +21,23 @@ export default withIronSessionApiRoute(
         mimeType = 'application/ld+json';
     }
 
+    const headers: AxiosRequestHeaders = {
+      Accept: mimeType,
+    };
+
+    const forwardedFor = req.headers['x-forwarded-for'] as string;
+    if (forwardedFor) {
+      headers['x-forwarded-for'] = forwardedFor;
+    }
+    const host = req.headers['host'] as string;
+    if (host) {
+      headers['host'] = host;
+    }
+
     const { status, data: response } = await axios.get(
       `${process.env.DATAMODEL_API_URL}/v2/model/${target}/file`,
       {
-        headers: {
-          Accept: mimeType,
-        },
+        headers: headers,
         responseType: 'stream',
         decompress: false,
       }
