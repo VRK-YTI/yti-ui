@@ -57,7 +57,27 @@ export const {
 
 export const { putModel, getModel } = modelApi.endpoints;
 
-const initialView = {
+// Slice setup below
+
+export type ViewListItem = {
+  edit: boolean;
+  info: boolean;
+  list: boolean;
+};
+
+interface ViewList {
+  search: boolean;
+  links: boolean;
+  info: {
+    edit: boolean;
+    info: boolean;
+  };
+  classes: ViewListItem;
+  attributes: ViewListItem;
+  associations: ViewListItem;
+}
+
+const initialView: ViewList = {
   search: false,
   info: {
     info: false,
@@ -118,7 +138,9 @@ export const modelSlice = createSlice({
           )
             ? true
             : {
-                ...initialView[action.payload.type],
+                ...(initialView[
+                  action.payload.type as keyof typeof initialView
+                ] as object),
                 info: true,
               },
         },
@@ -138,12 +160,17 @@ export const modelSlice = createSlice({
         ...state,
         view: {
           ...initialView,
-          [action.payload.key]: action.payload.subkey
-            ? {
-                ...initialView[action.payload.key as keyof typeof initialView],
-                [action.payload.subkey]: true,
-              }
-            : true,
+          [action.payload.key]:
+            typeof initialView[
+              action.payload.key as keyof typeof initialView
+            ] !== 'boolean' && action.payload.subkey
+              ? {
+                  ...(initialView[
+                    action.payload.key as keyof typeof initialView
+                  ] as object),
+                  [action.payload.subkey]: true,
+                }
+              : true,
         },
       };
     },
@@ -170,10 +197,7 @@ export function selectHovered() {
   return (state: AppState) => state.model.hovered;
 }
 
-export function setHovered(
-  id: string,
-  type: keyof typeof initialView
-): AppThunk {
+export function setHovered(id: string, type: keyof ViewList): AppThunk {
   return (dispatch) => dispatch(modelSlice.actions.setHovered({ id, type }));
 }
 
@@ -182,12 +206,12 @@ export function resetHovered(): AppThunk {
     dispatch(modelSlice.actions.setHovered({ id: '', type: '' }));
 }
 
-export function selectView(key?: keyof typeof initialView) {
-  if (key) {
-    return (state: AppState) => state.model.view[key];
-  }
-
+export function selectViews() {
   return (state: AppState) => state.model.view;
+}
+
+export function selectClassView() {
+  return (state: AppState) => state.model.view.classes;
 }
 
 export function selectCurrentViewName() {
@@ -202,8 +226,8 @@ export function selectCurrentViewName() {
 }
 
 export function setView(
-  key: keyof typeof initialState.view,
-  subkey?: 'list' | 'info' | 'edit'
+  key: keyof ViewList,
+  subkey?: keyof ViewListItem
 ): AppThunk {
   return (dispatch) => dispatch(modelSlice.actions.setView({ key, subkey }));
 }

@@ -9,15 +9,18 @@ import {
   ModelPanel,
 } from './model-side-navigation.styles';
 import { useStoreDispatch } from '@app/store';
-import {
-  selectCurrentViewName,
-  selectView,
-  setView,
-} from '../model/model.slice';
+import { selectCurrentViewName, setView } from '../model/model.slice';
 import { useSelector } from 'react-redux';
 
 type ViewType = {
-  id: string;
+  id:
+    | 'search'
+    | 'graph-small'
+    | 'info'
+    | 'links'
+    | 'classes'
+    | 'attributes'
+    | 'associations';
   icon: BaseIconKeys;
   buttonLabel: string;
   buttonLabelSm?: string;
@@ -36,12 +39,17 @@ export default function Drawer({ views }: SideNavigationProps) {
     isSmall ? undefined : views?.[0] ?? undefined
   );
 
-  const handleSetActiveView = (viewId: string) => {
-    setActiveView(viewId);
+  const handleSetActiveView = (viewId: ViewType['id']) => {
+    if (viewId === 'graph-small') {
+      //TODO: Handle graph view in mobile
+      return;
+    }
+
     if (['search', 'links'].includes(viewId)) {
       dispatch(setView(viewId));
       return;
     }
+
     dispatch(setView(viewId, viewId === 'info' ? 'info' : 'list'));
   };
 
