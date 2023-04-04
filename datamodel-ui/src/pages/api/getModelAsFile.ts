@@ -29,6 +29,10 @@ export default withIronSessionApiRoute(
     if (forwardedFor) {
       headers['x-forwarded-for'] = forwardedFor;
     }
+    const host = req.headers['host'] as string;
+    if (host) {
+      headers['host'] = host;
+    }
 
     const { status, data: response } = await axios.get(
       `${process.env.DATAMODEL_API_URL}/v2/model/${target}/file`,
