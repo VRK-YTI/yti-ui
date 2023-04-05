@@ -13,6 +13,12 @@ import {
 import { convertToNodes } from './utils';
 import Edge from './edge';
 import { useGetVisualizationQuery } from '@app/common/components/visualization/visualization.slice';
+import { useStoreDispatch } from '@app/store';
+import {
+  selectSelected,
+  setSelected,
+} from '@app/common/components/model/model.slice';
+import { useSelector } from 'react-redux';
 
 interface GraphProps {
   modelId: string;
@@ -20,12 +26,15 @@ interface GraphProps {
 }
 
 export default function Graph({ modelId, children }: GraphProps) {
+  const dispatch = useStoreDispatch();
+  const globalSelected = useSelector(selectSelected());
   const nodeTypes: NodeTypes = useMemo(() => ({ classNode: ClassNode }), []);
   const edgeTypes: EdgeTypes = useMemo(() => ({ associationEdge: Edge }), []);
   const { data, isSuccess } = useGetVisualizationQuery(modelId);
-
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+
+  console.log('data', data);
 
   const deleteEdgeById = useCallback(
     (id: string) => {
@@ -34,9 +43,27 @@ export default function Graph({ modelId, children }: GraphProps) {
     [setEdges]
   );
 
+  const onNodeClick = useCallback(
+    (e, node) => {
+      if (globalSelected.id !== node.id) {
+        dispatch(setSelected(node.id, 'classes'));
+      }
+    },
+    [dispatch, globalSelected.id]
+  );
+
+  const onEdgeClick = useCallback(
+    (e, edge) => {
+      if (globalSelected.id !== edge.id) {
+        dispatch(setSelected(edge.id, 'associations'));
+      }
+    },
+    [dispatch, globalSelected.id]
+  );
+
   const onConnect = useCallback(
     (params) => {
-      setEdges((eds) =>
+      setEdges((edges) =>
         addEdge(
           {
             ...params,
@@ -52,7 +79,7 @@ export default function Graph({ modelId, children }: GraphProps) {
               handleDelete: deleteEdgeById,
             },
           },
-          eds
+          edges
         )
       );
     },
@@ -74,6 +101,8 @@ export default function Graph({ modelId, children }: GraphProps) {
       onConnect={onConnect}
       nodeTypes={nodeTypes}
       edgeTypes={edgeTypes}
+      onNodeClick={onNodeClick}
+      onEdgeClick={onEdgeClick}
       fitView
     >
       {children}

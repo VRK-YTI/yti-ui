@@ -76,3 +76,9 @@ export const ClassNodeDiv = styled.div<{
     }
   }
 `;
+
+export const Attribute = styled.div`
+  &:hover {
+    background: ${(props) => props.theme.suomifi.colors.depthLight2};
+  }
+`;

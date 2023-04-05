@@ -106,6 +106,7 @@ export default function ClassView({ modelId, languages }: ClassViewProps) {
 
   const handleActive = (classId: string) => {
     dispatch(setSelected(classId, 'classes'));
+    dispatch(resetHovered());
   };
 
   useEffect(() => {

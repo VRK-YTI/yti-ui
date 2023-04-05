@@ -1,6 +1,10 @@
 import styled from 'styled-components';
 
-export const EdgeContent = styled.div`
+export const EdgeContent = styled.div<{
+  $labelX: number;
+  $labelY: number;
+  $highlight: boolean;
+}>`
   pointer-events: all;
   position: absolute;
   background: #ffffff;
@@ -10,6 +14,15 @@ export const EdgeContent = styled.div`
   fontsize: 16px;
   fontweight: 400;
   paddingright: 20px;
+  transform: translate(-50%, -50%)
+    translate(${(props) => props.$labelX}px, ${(props) => props.$labelY}px);
+
+  ${(props) =>
+    props.$highlight &&
+    `
+    border: 1px solid ${props.theme.suomifi.colors.warningBase};
+    z-index: 2;
+  `}
 `;
 
 export const DeleteEdgeButton = styled.button`

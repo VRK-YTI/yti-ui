@@ -1,11 +1,15 @@
 /* eslint-disable jsx-a11y/mouse-events-have-key-events */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
-import { setSelected } from '@app/common/components/model/model.slice';
-import { useStoreDispatch } from '@app/store';
-import { MouseEvent, useEffect } from 'react';
+import {
+  selectSelected,
+  setSelected,
+} from '@app/common/components/model/model.slice';
+import { MouseEvent } from 'react';
 import { EdgeLabelRenderer, EdgeProps, getStraightPath } from 'reactflow';
 import { DeleteEdgeButton, EdgeContent } from './edge.styles';
+import { useSelector } from 'react-redux';
+import { useStoreDispatch } from '@app/store';
 
 export default function Edge({
   id,
@@ -21,6 +25,7 @@ export default function Edge({
   selected,
 }: EdgeProps) {
   const dispatch = useStoreDispatch();
+  const globalSelected = useSelector(selectSelected());
   const [edgePath, labelX, labelY] = getStraightPath({
     sourceX,
     sourceY,
@@ -31,21 +36,10 @@ export default function Edge({
   const onDeleteClick = (e: MouseEvent<HTMLButtonElement>, id: string) => {
     e.stopPropagation();
     data.handleDelete(id);
-  };
-
-  const handleMouseEnter = () => {
-    return;
-  };
-
-  const handleMouseLeave = () => {
-    return;
-  };
-
-  useEffect(() => {
-    if (selected) {
-      dispatch(setSelected(id, 'associations'));
+    if (globalSelected.id === id) {
+      dispatch(setSelected('', 'associations'));
     }
-  }, [selected, dispatch, id]);
+  };
 
   return (
     <>
@@ -57,12 +51,12 @@ export default function Edge({
       />
       <EdgeLabelRenderer>
         <EdgeContent
-          onMouseEnter={() => handleMouseEnter()}
-          onMouseLeave={() => handleMouseLeave()}
-          style={{
-            transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
-          }}
           className="nopan"
+          $labelX={labelX}
+          $labelY={labelY}
+          $highlight={
+            globalSelected.type === 'associations' && globalSelected.id === id
+          }
         >
           <div>{label}</div>
           {selected && (

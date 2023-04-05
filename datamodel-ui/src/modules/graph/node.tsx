@@ -1,14 +1,12 @@
 import {
   selectHovered,
   selectSelected,
-  setSelected,
 } from '@app/common/components/model/model.slice';
-import { useStoreDispatch } from '@app/store';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Handle, Position } from 'reactflow';
 import { Icon } from 'suomifi-ui-components';
-import { ClassNodeDiv } from './node.styles';
+import { Attribute, ClassNodeDiv } from './node.styles';
 
 interface ClassNodeProps {
   id: string;
@@ -22,11 +20,10 @@ interface ClassNodeProps {
   selected: boolean;
 }
 
-export default function ClassNode({ id, data, selected }: ClassNodeProps) {
-  const dispatch = useStoreDispatch();
+export default function ClassNode({ id, data }: ClassNodeProps) {
   const globalSelected = useSelector(selectSelected());
   const globalHover = useSelector(selectHovered());
-  const [showAtttributes, setShowAttributes] = useState(false);
+  const [showAtttributes, setShowAttributes] = useState(true);
   const [hover, setHover] = useState(false);
 
   const mockAttributes = [
@@ -44,20 +41,14 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
     },
   ];
 
-  useEffect(() => {
-    if (selected) {
-      dispatch(setSelected(id, 'classes'));
-    }
-  }, [dispatch, id, selected]);
-
   return (
     <ClassNodeDiv
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       $highlight={
-        globalSelected.type === 'class' && globalSelected.id !== ''
-          ? globalSelected.id === id
-          : selected
+        globalSelected.type === 'classes' &&
+        globalSelected.id !== '' &&
+        globalSelected.id === id
       }
       $hover={hover || globalHover.id === id}
     >
@@ -73,31 +64,15 @@ export default function ClassNode({ id, data, selected }: ClassNodeProps) {
       </div>
       <Handle type="source" position={Position.Bottom} id={id} />
 
-      {/*
-       * Using mock solution similar to the expected one
-       * found below this piece of code.
-       */}
-
       {showAtttributes &&
         mockAttributes.map((child) => (
-          <div
+          <Attribute
             key={`${id}-child-${child.identifier}`}
             className="node-resource"
           >
             {child.label}
-          </div>
+          </Attribute>
         ))}
-
-      {/* {data.resources &&
-        data.resources.length > 0 &&
-        data.resources.map((child) => (
-          <div
-            key={`${data.identifier}-child-${child.identifier}`}
-            className="node-resource"
-          >
-            {child.label}
-          </div>
-        ))} */}
     </ClassNodeDiv>
   );
 }
