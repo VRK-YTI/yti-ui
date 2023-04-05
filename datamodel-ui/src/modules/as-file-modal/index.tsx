@@ -19,9 +19,14 @@ import {
 interface AsFileModalProps {
   type: 'show' | 'download';
   modelId: string;
+  filename?: string;
 }
 
-export default function AsFileModal({ type, modelId }: AsFileModalProps) {
+export default function AsFileModal({
+  type,
+  modelId,
+  filename,
+}: AsFileModalProps) {
   const { t } = useTranslation('common');
   const { isSmall } = useBreakpoints();
   const [visible, setVisible] = useState(false);
@@ -110,7 +115,7 @@ export default function AsFileModal({ type, modelId }: AsFileModalProps) {
 
         <ButtonFooter>
           <Link
-            href={`/api/getModelAsFile?modelId=${modelId}&fileType=${chosenFileType}`}
+            href={`/api/getModelAsFile?modelId=${modelId}&fileType=${chosenFileType}&filename=${filename}`}
             passHref
           >
             <SuomiLink href="">

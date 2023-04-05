@@ -166,7 +166,14 @@ export default function ModelInfoView() {
                   </Button>
                 )}
                 <AsFileModal type="show" modelId={modelId} />
-                <AsFileModal type="download" modelId={modelId} />
+                <AsFileModal
+                  type="download"
+                  modelId={modelId}
+                  filename={getLanguageVersion({
+                    data: modelInfo.label,
+                    lang: i18n.language,
+                  })}
+                />
                 {hasPermission && (
                   <>
                     <Button variant="secondaryNoBorder">
