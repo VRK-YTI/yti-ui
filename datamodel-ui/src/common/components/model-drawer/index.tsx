@@ -36,7 +36,9 @@ export default function Drawer({ views }: SideNavigationProps) {
   const dispatch = useStoreDispatch();
   const currentView = useSelector(selectCurrentViewName());
   const [activeView, setActiveView] = useState<ViewType | undefined>(
-    isSmall ? undefined : views?.[0] ?? undefined
+    isSmall
+      ? views.find((v) => v.id === 'graph')
+      : views.find((v) => v.id === 'search')
   );
 
   const handleSetActiveView = (viewId: ViewType['id']) => {
@@ -55,7 +57,7 @@ export default function Drawer({ views }: SideNavigationProps) {
   }, [activeView, currentView, views]);
 
   return (
-    <ModelPanel position="top-left" $isSmall={isSmall}>
+    <ModelPanel position="bottom-left" $isSmall={isSmall}>
       <ModelDrawerContainer $isSmall={isSmall}>
         <CommonDrawer
           buttons={views
@@ -84,11 +86,20 @@ export default function Drawer({ views }: SideNavigationProps) {
             typeof activeView !== 'undefined' &&
             typeof activeView.component !== 'undefined'
           }
+          active={currentView}
         >
-          {typeof activeView !== 'undefined' &&
-            typeof activeView.component !== 'undefined' && (
-              <DrawerViewContainer>{activeView.component}</DrawerViewContainer>
+          {/* {typeof activeView !== 'undefined' &&
+            typeof activeView.component !== 'undefined' && ( */}
+          <DrawerViewContainer>
+            {activeView ? (
+              activeView.component
+            ) : (
+              <div style={{ height: '100%', minHeight: '100%' }}>
+                testi123123123
+              </div>
             )}
+          </DrawerViewContainer>
+          {/* )} */}
         </CommonDrawer>
       </ModelDrawerContainer>
     </ModelPanel>

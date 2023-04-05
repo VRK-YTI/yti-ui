@@ -34,8 +34,6 @@ export default function Graph({ modelId, children }: GraphProps) {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
-  console.log('data', data);
-
   const deleteEdgeById = useCallback(
     (id: string) => {
       setEdges((edges) => edges.filter((edge) => edge.id !== id));
