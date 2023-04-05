@@ -27,6 +27,8 @@ import {
   SearchResultWrapper,
   SelectedConceptsGroup,
 } from './concept-block.styles';
+import { useGetConceptsQuery } from '@app/common/components/concept-search/concept-search.slice';
+import SanitizedTextContent from 'yti-common-ui/sanitized-text-content';
 
 interface ConceptBlockProps {
   concept?: ClassFormType['equivalentClass'][0];
@@ -40,6 +42,7 @@ export default function ConceptBlock({
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const [visible, setVisible] = useState(false);
+  const [keyword, setKeyword] = useState('');
   const [selected, setSelected] = useState<
     ClassFormType['equivalentClass'][0] | undefined
   >(concept);
@@ -54,41 +57,9 @@ export default function ConceptBlock({
     },
   ]);
 
-  // TODO: Change this to use API
-  const [data] = useState([
-    {
-      title: {
-        fi: 'Rakennelma',
-        en: 'Structure',
-      },
-      identifier: 'Rakennelma',
-      terminologyLabel: {
-        fi: 'Rakentamisen sanasto',
-      },
-      status: 'VALID',
-      description: {
-        fi: 'Omalla sisäänkäynnillä varustettu rakennuskohde, joka on erillinen, kiinteä tai tarkoitettu paikallaan pidettäväksi ja joka sisältää eri toimintoihin tarkoitettua katettua ja yleensä ulkoseinien tai muista rakennelmista erottavien seinien rajoittamaa tilaa',
-        en: 'English description',
-      },
-      uri: 'http://uri.suomi.fi/rakennelma',
-    },
-    {
-      title: {
-        fi: 'Rakennus',
-        en: 'Building',
-      },
-      identifier: 'Rakennus',
-      terminologyLabel: {
-        fi: 'Rakentamisen sanasto',
-      },
-      status: 'DRAFT',
-      description: {
-        fi: 'Omalla sisäänkäynnillä varustettu rakennuskohde, joka on erillinen, kiinteä tai tarkoitettu paikallaan pidettäväksi ja joka sisältää eri toimintoihin tarkoitettua katettua ja yleensä ulkoseinien tai muista rakennelmista erottavien seinien rajoittamaa tilaa',
-        en: 'English description',
-      },
-      uri: 'http://uri.suomi.fi/rakennus',
-    },
-  ]);
+  const { data } = useGetConceptsQuery({
+    keyword: keyword,
+  });
 
   const handleOpen = () => {
     setVisible(true);
@@ -160,6 +131,8 @@ export default function ConceptBlock({
                 labelText={t('search-concept')}
                 clearButtonLabel={t('clear-selection')}
                 searchButtonLabel={t('search-concept')}
+                onChange={(e) => setKeyword(e?.toString() ?? '')}
+                debounce={300}
               />
               <SingleSelect
                 clearButtonLabel={t('clear-selection')}
@@ -174,66 +147,66 @@ export default function ConceptBlock({
               />
             </SearchBlock>
 
-            {data.length < 1 ? (
+            {!data || data.totalHitCount < 1 ? (
               <Text>{t('search-concept-by-keyword')}</Text>
             ) : (
               <>
                 <Text variant="bold">
-                  {t('concept-counts', { count: data.length })}
+                  {t('concept-counts', { count: data?.totalHitCount })}
                 </Text>
                 <SearchResultWrapper>
-                  {data.map((d, idx) => (
+                  {data.concepts.map((concept, idx) => (
                     <div
                       key={`concept-result-${idx}`}
                       className={
-                        selected?.identifier === d.uri
+                        selected?.identifier === concept.uri
                           ? 'item-wrapper selected'
                           : 'item-wrapper'
                       }
                     >
                       <RadioButton
-                        value={d.uri}
-                        checked={selected?.identifier === d.uri}
+                        value={concept.uri}
+                        checked={selected?.identifier === concept.uri}
                         onChange={() =>
                           handleRadioButtonClick({
-                            label: d.title,
-                            identifier: d.uri,
+                            label: concept.label,
+                            identifier: concept.uri,
                           })
                         }
                       />
                       <div>
                         <Text>
-                          {getLanguageVersion({
-                            data: d.title,
-                            lang: i18n.language,
-                            appendLocale: true,
-                          })}
-                        </Text>
-                        <div className="subtitle">
-                          <Text>
-                            {getLanguageVersion({
-                              data: d.terminologyLabel,
+                          <SanitizedTextContent
+                            text={getLanguageVersion({
+                              data: concept.label,
                               lang: i18n.language,
                               appendLocale: true,
                             })}
-                          </Text>
+                          />
+                        </Text>
+                        <div className="subtitle">
+                          <Text>Sanaston nimi</Text>
                           <StaticChip
-                            className={d.status === 'VALID' ? 'valid' : 'other'}
+                            className={
+                              concept.status === 'VALID' ? 'valid' : 'other'
+                            }
                           >
-                            {translateStatus(d.status, t)}
+                            {translateStatus(concept.status, t)}
                           </StaticChip>
                         </div>
 
                         <Text className="description">
-                          {getLanguageVersion({
-                            data: d.description,
-                            lang: i18n.language,
-                            appendLocale: true,
-                          })}
+                          <SanitizedTextContent
+                            text={getLanguageVersion({
+                              data: concept.definition,
+                              lang: i18n.language,
+                              appendLocale: true,
+                            })}
+                          />
                         </Text>
                         <br />
-                        <ExternalLink href={d.uri} labelNewWindow="">
-                          {d.uri}
+                        <ExternalLink href={concept.uri} labelNewWindow="">
+                          {concept.uri}
                         </ExternalLink>
                       </div>
                     </div>

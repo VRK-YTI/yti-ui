@@ -14,6 +14,7 @@ import { searchInternalResourcesApi } from '@app/common/components/search-intern
 import { resourceApi } from '@app/common/components/resource/resource.slice';
 import { searchTerminologyApi } from '@app/common/components/terminology-search/search-terminology.slice';
 import { countApi } from '@app/common/components/counts/counts.slice';
+import { conceptSearchApi } from '@app/common/components/concept-search/concept-search.slice';
 
 // make Context from next-redux-wrapper compatible with next-iron-session
 export type NextIronContext = Context | (Context & { req: NextApiRequest });
@@ -35,6 +36,7 @@ export function makeStore(ctx: NextIronContext) {
       [resourceApi.reducerPath]: resourceApi.reducer,
       [searchTerminologyApi.reducerPath]: searchTerminologyApi.reducer,
       [countApi.reducerPath]: countApi.reducer,
+      [conceptSearchApi.reducerPath]: conceptSearchApi.reducer,
     },
 
     middleware: (getDefaultMiddleware) =>
@@ -50,7 +52,8 @@ export function makeStore(ctx: NextIronContext) {
         searchInternalResourcesApi.middleware,
         resourceApi.middleware,
         searchTerminologyApi.middleware,
-        countApi.middleware
+        countApi.middleware,
+        conceptSearchApi.middleware
       ),
 
     // Development tools should be available only in development environments
