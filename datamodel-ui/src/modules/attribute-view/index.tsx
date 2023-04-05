@@ -35,6 +35,10 @@ export default function AttributeView({
   const [currentPage, setCurrentPage] = useState(1);
   const [getResource, getResourceResult] = useGetResourceMutation();
   const [query, setQuery] = useState('');
+  const [initialSubResourceOf, setInitialSubResourceOf] = useState<{
+    label: string;
+    uri: string;
+  }>();
   const { data, refetch } = useQueryInternalResourcesQuery({
     query: query ?? '',
     limitToDataModel: modelId,
@@ -62,6 +66,7 @@ export default function AttributeView({
   const handleFormReturn = () => {
     setView('listing');
     dispatch(resetResource());
+    refetch();
   };
 
   const handleShowAttribute = (id: string) => {

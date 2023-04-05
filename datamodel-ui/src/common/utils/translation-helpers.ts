@@ -160,3 +160,105 @@ export function translateCommonFormErrors(
         : t('attribute-missing-general', { ns: 'admin' });
   }
 }
+
+export function translateDeleteModalTitle(
+  type: 'model' | 'class' | 'association' | 'attribute',
+  t: TFunction
+) {
+  switch (type) {
+    case 'model':
+      return t('delete-modal.model-title', { ns: 'admin' });
+    case 'class':
+      return t('delete-modal.class-title', { ns: 'admin' });
+    case 'association':
+      return t('delete-modal.association-title', { ns: 'admin' });
+    case 'attribute':
+      return t('delete-modal.attribute-title', { ns: 'admin' });
+  }
+}
+export function translateDeleteModalDescription(
+  type: 'model' | 'class' | 'association' | 'attribute',
+  t: TFunction,
+  targetName?: string
+) {
+  switch (type) {
+    case 'model':
+      return t('delete-modal.model-description', {
+        ns: 'admin',
+        targetName: targetName,
+      });
+    case 'class':
+      return t('delete-modal.class-description', {
+        ns: 'admin',
+        targetName: targetName,
+      });
+    case 'association':
+      return t('delete-modal.association-description', {
+        ns: 'admin',
+        targetName: targetName,
+      });
+    case 'attribute':
+      return t('delete-modal.attribute-description', {
+        ns: 'admin',
+        targetName: targetName,
+      });
+  }
+}
+
+export function translateDeleteModalSuccess(
+  type: 'model' | 'class' | 'association' | 'attribute',
+  t: TFunction,
+  targetName?: string
+) {
+  switch (type) {
+    case 'model':
+      return t('delete-modal.model-success', {
+        ns: 'admin',
+        targetName: targetName,
+      });
+    case 'class':
+      return t('delete-modal.class-success', {
+        ns: 'admin',
+        targetName: targetName,
+      });
+    case 'association':
+      return t('delete-modal.association-success', {
+        ns: 'admin',
+        targetName: targetName,
+      });
+    case 'attribute':
+      return t('delete-modal.attribute-success', {
+        ns: 'admin',
+        targetName: targetName,
+      });
+  }
+}
+
+export function translateDeleteModalError(
+  type: 'model' | 'class' | 'association' | 'attribute',
+  t: TFunction,
+  targetName?: string
+) {
+  switch (type) {
+    case 'model':
+      return t('delete-modal.model-error', {
+        ns: 'admin',
+        targetName: targetName,
+      });
+    case 'class':
+      return t('delete-modal.class-error', {
+        ns: 'admin',
+        targetName: targetName,
+      });
+    case 'association':
+      return t('delete-modal.association-error', {
+        ns: 'admin',
+        targetName: targetName,
+      });
+    case 'attribute':
+      return t('delete-modal.attribute-error', {
+        ns: 'admin',
+        targetName: targetName,
+      });
+  }
+}

@@ -44,6 +44,7 @@ import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import HasPermission from '@app/common/utils/has-permission';
+import DeleteModal from '../delete-modal';
 import { useStoreDispatch } from '@app/store';
 
 export default function ModelInfoView() {
@@ -170,8 +171,15 @@ export default function ModelInfoView() {
                     {t('edit', { ns: 'admin' })}
                   </Button>
                 )}
-                <AsFileModal type="show" />
-                <AsFileModal type="download" />
+                <AsFileModal type="show" modelId={modelId} />
+                <AsFileModal
+                  type="download"
+                  modelId={modelId}
+                  filename={getLanguageVersion({
+                    data: modelInfo.label,
+                    lang: i18n.language,
+                  })}
+                />
                 {hasPermission && (
                   <>
                     <Button variant="secondaryNoBorder">
@@ -183,10 +191,15 @@ export default function ModelInfoView() {
                     <Button variant="secondaryNoBorder">
                       {t('add-email-subscription')}
                     </Button>
-                    <hr />
-                    <Button variant="secondaryNoBorder">
-                      {t('remove', { ns: 'admin' })}
-                    </Button>
+                    <Separator />
+                    <DeleteModal
+                      modelId={modelId}
+                      label={getLanguageVersion({
+                        data: modelInfo.label,
+                        lang: i18n.language,
+                      })}
+                      type="model"
+                    />
                   </>
                 )}
               </Tooltip>

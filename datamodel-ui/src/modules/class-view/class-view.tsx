@@ -38,6 +38,7 @@ import { DetachedPagination } from 'yti-common-ui/pagination';
 import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
 import { useStoreDispatch } from '@app/store';
 import FormattedDate from 'yti-common-ui/components/formatted-date';
+import DeleteModal from '../delete-modal';
 import {
   resetHovered,
   resetSelected,
@@ -267,12 +268,19 @@ export default function ClassView({ modelId, languages }: ClassViewProps) {
                   <Button variant="secondaryNoBorder">
                     {t('download-as-file')}
                   </Button>
-                  {hasPermission && (
+                  {hasPermission && data && (
                     <>
                       <Separator />
-                      <Button variant="secondaryNoBorder">
-                        {t('remove', { ns: 'admin' })}
-                      </Button>
+                      <DeleteModal
+                        modelId={modelId}
+                        resourceId={data.identifier}
+                        type="class"
+                        label={getLanguageVersion({
+                          data: data.label,
+                          lang: i18n.language,
+                        })}
+                        onClose={handleReturn}
+                      />
                     </>
                   )}
                 </Tooltip>

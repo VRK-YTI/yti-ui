@@ -49,6 +49,15 @@ export const resourceApi = createApi({
         method: 'GET',
       }),
     }),
+    deleteResource: builder.mutation<
+      string,
+      { modelId: string; resourceId: string }
+    >({
+      query: (value) => ({
+        url: `/resource/${value.modelId}/${value.resourceId}`,
+        method: 'DELETE',
+      }),
+    }),
   }),
 });
 
@@ -112,5 +121,6 @@ export const { putResource, getResource } = resourceApi.endpoints;
 export const {
   usePutResourceMutation,
   useGetResourceMutation,
+  useDeleteResourceMutation,
   util: { getRunningQueriesThunk },
 } = resourceApi;
