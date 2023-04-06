@@ -1,7 +1,7 @@
 import { Status } from './status.interface';
 
 export interface ClassFormType {
-  comment: string;
+  editorialNote: string;
   concept: object;
   equivalentClass: {
     label: { [key: string]: string };
@@ -21,7 +21,7 @@ export interface ClassFormType {
 }
 
 export const initialClassForm: ClassFormType = {
-  comment: '',
+  editorialNote: '',
   concept: {},
   equivalentClass: [],
   identifier: '',

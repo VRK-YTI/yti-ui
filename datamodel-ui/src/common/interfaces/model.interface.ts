@@ -7,27 +7,26 @@ export interface ModelType {
   label: { [key: string]: string };
   description: { [key: string]: string };
   languages: string[];
-  organizations: string[];
-  groups: string[];
+  organizations: Organization[];
+  groups: Group[];
   contact: string;
   internalNamespaces: [];
   externalNamespaces: [];
+  terminologies: ModelTerminology[];
   created: string;
   modified: string;
 }
 
 export interface Group {
   id: string;
-  type: string;
   identifier: string;
-  label: LangObject[];
+  label: { [key: string]: string };
 }
 
 export interface Organization {
   id: string;
-  type: string;
-  parentOrganization: string;
-  prefLabel: LangObject[];
+  parentOrganization?: string;
+  label: { [key: string]: string };
 }
 
 // Note: This might need a more descriptive name
@@ -38,12 +37,9 @@ export interface Link {
   title: LangObject;
 }
 
-export interface Terminology {
-  id: string;
-  type: string;
-  modified: string;
-  prefLabel: LangObject | LangObject[];
-  versionInfo: Status;
+export interface ModelTerminology {
+  uri: string;
+  label: { [key: string]: string };
 }
 
 export interface ReferenceData {
@@ -80,4 +76,5 @@ export interface ModelUpdatePayload {
   // Namespaces need better typing
   internalNamespaces: string[];
   externalNamespaces: string[];
+  terminologies: string[];
 }

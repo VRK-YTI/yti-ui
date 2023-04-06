@@ -2,13 +2,29 @@ import Drawer from '@app/common/components/model-drawer';
 import { ContentWrapper, ModelFlow } from './model.styles';
 import ModelInfoView from './model-info-view';
 import SearchView from './search-view';
-import ClassView from './class-view';
+import ClassView from '../class-view/class-view';
+import AttributeView from '../attribute-view';
+import AssociationView from '../association-view';
+import { useTranslation } from 'next-i18next';
+import { useGetModelQuery } from '@app/common/components/model/model.slice';
+import { useMemo } from 'react';
 
 interface ModelProps {
   modelId: string;
 }
 
 export default function Model({ modelId }: ModelProps) {
+  const { t } = useTranslation('common');
+  const { data: modelInfo } = useGetModelQuery(modelId);
+
+  const languages: string[] = useMemo(() => {
+    if (!modelInfo) {
+      return [];
+    }
+
+    return modelInfo.languages;
+  }, [modelInfo]);
+
   return (
     <div
       style={{
@@ -68,34 +84,51 @@ export default function Model({ modelId }: ModelProps) {
               {
                 id: 'search',
                 icon: 'search',
-                buttonLabel: 'Hae',
+                buttonLabel: t('search-variant'),
                 component: <SearchView />,
+              },
+              {
+                id: 'graph-small',
+                icon: 'applicationProfile',
+                buttonLabel: t('graph'),
               },
               {
                 id: 'info',
                 icon: 'info',
-                buttonLabel: 'Tiedot',
+                buttonLabel: t('details'),
                 component: <ModelInfoView />,
+              },
+              {
+                id: 'link',
+                icon: 'attachment',
+                buttonLabel: 'Linkitykset',
+                component: <></>,
               },
               {
                 id: 'classes',
                 icon: 'chatHeart',
-                buttonLabel: 'Luokat',
-                component: <ClassView modelId={modelId} />,
+                buttonLabel: t('classes'),
+                component: (
+                  <ClassView modelId={modelId} languages={languages} />
+                ),
               },
               {
                 id: 'attributes',
                 icon: 'history',
-                buttonLabel: 'Attribuutit',
-                buttonLabelSm: 'Attr.',
-                component: <></>,
+                buttonLabel: t('attributes'),
+                buttonLabelSm: t('attributes-abbreviation'),
+                component: (
+                  <AttributeView modelId={modelId} languages={languages} />
+                ),
               },
               {
                 id: 'associations',
                 icon: 'swapVertical',
-                buttonLabel: 'Assosisaatiot',
-                buttonLabelSm: 'Assos.',
-                component: <></>,
+                buttonLabel: t('associations'),
+                buttonLabelSm: t('associations-abbreviation'),
+                component: (
+                  <AssociationView modelId={modelId} languages={languages} />
+                ),
               },
             ]}
           />

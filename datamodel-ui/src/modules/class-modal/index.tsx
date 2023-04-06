@@ -1,7 +1,3 @@
-import {
-  InternalClassesSearchParams,
-  useGetInternalClassesMutation,
-} from '@app/common/components/search-internal-classes/search-internal-classes.slice';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { translateStatus } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
@@ -18,30 +14,41 @@ import MultiColumnSearch, {
 } from '@app/common/components/multi-column-search';
 import { LargeModal } from './class-modal.styles';
 import format from 'yti-common-ui/formatted-date/format';
-import { Locale } from 'yti-common-ui//locale-chooser/use-locales';
+import { Locale } from 'yti-common-ui/locale-chooser/use-locales';
 import { InternalClass } from '@app/common/interfaces/internal-class.interface';
+import {
+  InternalResourcesSearchParams,
+  useGetInternalResourcesMutation,
+} from '@app/common/components/search-internal-resources/search-internal-resources.slice';
+import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 
 export interface ClassModalProps {
+  modelId: string;
   handleFollowUp: (value?: InternalClass) => void;
 }
 
-export default function ClassModal({ handleFollowUp }: ClassModalProps) {
+export default function ClassModal({
+  modelId,
+  handleFollowUp,
+}: ClassModalProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
   const [visible, setVisible] = useState(false);
-  const [selectedId, setSelectedId] = useState<undefined | string>();
+  const [selectedId, setSelectedId] = useState('');
   const [resultsFormatted, setResultsFormatted] = useState<ResultType[]>([]);
-  const [searchInternalClasses, result] = useGetInternalClassesMutation();
-  const [searchParams, setSearchParams] = useState<InternalClassesSearchParams>(
-    {
+  const [searchInternalResources, result] = useGetInternalResourcesMutation();
+  const [searchParams, setSearchParams] =
+    useState<InternalResourcesSearchParams>({
       query: '',
-      status: ['VALID'],
+      status: ['VALID', 'DRAFT'],
       groups: [],
       sortLang: i18n.language,
       pageSize: 50,
       pageFrom: 0,
-    }
-  );
+      limitToDataModel: modelId,
+      fromAddedNamespaces: true,
+      resourceTypes: [ResourceType.CLASS],
+    });
 
   const handleOpen = () => {
     setVisible(true);
@@ -49,24 +56,25 @@ export default function ClassModal({ handleFollowUp }: ClassModalProps) {
   };
 
   const handleClose = () => {
-    setSelectedId(undefined);
+    setSelectedId('');
     setSearchParams({
       query: '',
-      status: ['VALID'],
+      status: ['VALID', 'DRAFT'],
       groups: [],
       sortLang: i18n.language,
       pageSize: 50,
       pageFrom: 0,
+      resourceTypes: [ResourceType.CLASS],
     });
     setVisible(false);
   };
 
-  const handleSearch = (obj?: InternalClassesSearchParams) => {
+  const handleSearch = (obj?: InternalResourcesSearchParams) => {
     if (obj) {
       setSearchParams(obj);
     }
 
-    searchInternalClasses(obj ?? searchParams);
+    searchInternalResources(obj ?? searchParams);
   };
 
   const handleSubmit = () => {
@@ -124,18 +132,24 @@ export default function ClassModal({ handleFollowUp }: ClassModalProps) {
         <ModalContent>
           <ModalTitle>{t('add-class')}</ModalTitle>
           <MultiColumnSearch
+            primaryColumnName={t('class-name')}
             results={resultsFormatted}
             selectedId={selectedId}
             setSelectedId={setSelectedId}
             searchParams={searchParams}
             setSearchParams={handleSearch}
+            modelId={modelId}
           />
         </ModalContent>
         <ModalFooter>
-          <Button disabled={!selectedId} onClick={() => handleSubmit()}>
+          <Button disabled={selectedId === ''} onClick={() => handleSubmit()}>
             {t('create-subclass-for-selected')}
           </Button>
-          <Button icon="plus" onClick={() => handleFollowUp()}>
+          <Button
+            icon="plus"
+            disabled={selectedId !== ''}
+            onClick={() => handleFollowUp()}
+          >
             {t('create-new-class')}
           </Button>
           <Button variant="secondaryNoBorder" onClick={() => handleClose()}>

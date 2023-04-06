@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import { ExternalLink, Button } from 'suomifi-ui-components';
+import { ExternalLink, Button, Text } from 'suomifi-ui-components';
 import { List, ListItem } from './inline-list.styles';
 
 export interface InlineListProps {
@@ -8,9 +8,14 @@ export interface InlineListProps {
     id: string;
   }[];
   handleRemoval: (value: string) => void;
+  labelRow?: boolean;
 }
 
-export default function InlineList({ items, handleRemoval }: InlineListProps) {
+export default function InlineList({
+  items,
+  handleRemoval,
+  labelRow,
+}: InlineListProps) {
   const { t } = useTranslation('admin');
 
   if (items.length < 1) {
@@ -18,17 +23,31 @@ export default function InlineList({ items, handleRemoval }: InlineListProps) {
   }
 
   return (
-    <List>
+    <List className="inline-list">
       {items.map((item) => (
         <ListItem key={item.id}>
-          <ExternalLink
-            href={item.id}
-            labelNewWindow={t('link-opens-new-window-external', {
-              ns: 'common',
-            })}
-          >
-            {item.label}
-          </ExternalLink>
+          {labelRow ? (
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <Text>{item.label}</Text>
+              <ExternalLink
+                href={item.id}
+                labelNewWindow={t('link-opens-new-window-external', {
+                  ns: 'common',
+                })}
+              >
+                {item.id}
+              </ExternalLink>
+            </div>
+          ) : (
+            <ExternalLink
+              href={item.id}
+              labelNewWindow={t('link-opens-new-window-external', {
+                ns: 'common',
+              })}
+            >
+              {item.label}
+            </ExternalLink>
+          )}
           <Button
             variant="secondaryNoBorder"
             icon="remove"

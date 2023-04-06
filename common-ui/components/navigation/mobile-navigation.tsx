@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import React from 'react';
 import { useTranslation } from 'next-i18next';
-import { Dropdown, DropdownItem, Link, Text } from 'suomifi-ui-components';
+import { Link, Text } from 'suomifi-ui-components';
 import LoginButtons from '../authentication-panel/login-buttons';
 import MobileImpersonateWrapper from '../impersonate/mobile-impersonate-wrapper';
 import MobileLocaleChooser from '../locale-chooser/mobile-locale-chooser';
@@ -25,19 +25,6 @@ export default function MobileNavigation({
   return (
     <>
       <LoginButtons handleLoginModalClick={handleLoginModalClick} />
-
-      <div
-        style={{
-          margin: '-20px 0 20px 15px',
-          width: '100% !important',
-          zIndex: '-1',
-        }}
-      >
-        <Dropdown labelText="" defaultValue="en">
-          <DropdownItem value="fi">Sisältö suomeksi (FI)</DropdownItem>
-          <DropdownItem value="en">Content in English (EN)</DropdownItem>
-        </Dropdown>
-      </div>
 
       <MobileMenuSection>
         <MobileMenuItem $active={router.pathname === '/'}>

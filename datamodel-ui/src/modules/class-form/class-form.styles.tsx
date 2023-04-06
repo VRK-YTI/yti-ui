@@ -1,6 +1,9 @@
 import styled from 'styled-components';
 
-export const ClassFormWrapper = styled.div`
+export const ClassFormWrapper = styled.div<{ $height?: number }>`
+  padding: ${(props) => props.theme.suomifi.spacing.s};
+  padding-top: ${(props) => props.$height}px;
+
   > div {
     margin-bottom: ${(props) => props.theme.suomifi.spacing.m};
   }

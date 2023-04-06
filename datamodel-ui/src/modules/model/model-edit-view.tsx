@@ -1,8 +1,6 @@
 import { usePostModelMutation } from '@app/common/components/model/model.slice';
 import { ModelFormType } from '@app/common/interfaces/model-form.interface';
 import { ModelType } from '@app/common/interfaces/model.interface';
-import { Organization } from '@app/common/interfaces/organizations.interface';
-import { ServiceCategory } from '@app/common/interfaces/service-categories.interface';
 import {
   getIsPartOfWithId,
   getOrganizationsWithId,
@@ -13,37 +11,36 @@ import {
   translateModelFormErrors,
 } from '@app/common/utils/translation-helpers';
 import { useTranslation } from 'next-i18next';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button, Heading } from 'suomifi-ui-components';
+import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
+import StaticHeader from 'yti-common-ui/drawer/static-header';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
 import ModelForm from '../model-form';
 import generatePayload from './generate-payload';
-import { ModelInfoWrapper } from './model.styles';
 import { FormUpdateErrors, validateFormUpdate } from './validate-form-update';
 
 interface ModelEditViewProps {
   model: ModelType;
-  organizations: Organization[];
-  serviceCategories: ServiceCategory[];
   setShow: (value: boolean) => void;
   handleSuccess: () => void;
 }
 
 export default function ModelEditView({
   model,
-  organizations,
-  serviceCategories,
   setShow,
   handleSuccess,
 }: ModelEditViewProps) {
   const { t, i18n } = useTranslation('admin');
   const [errors, setErrors] = useState<FormUpdateErrors>();
   const [userPosted, setUserPosted] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const [headerHeight, setHeaderHeight] = useState(0);
   const [postModel, result] = usePostModelMutation();
   const [formData, setFormData] = useState<ModelFormType>({
     contact: '',
     languages:
-      model.languages.map((lang) => ({
+      ['fi', 'sv', 'en'].map((lang) => ({
         labelText: translateLanguage(lang, t),
         uniqueItemId: lang,
         title:
@@ -51,15 +48,14 @@ export default function ModelEditView({
         description:
           Object.entries(model.description).find((d) => d[0] === lang)?.[1] ??
           '',
-        selected: true,
+        selected: model.languages.includes(lang),
       })) ?? [],
-    organizations:
-      getOrganizationsWithId(model, organizations, i18n.language) ?? [],
+    organizations: getOrganizationsWithId(model, i18n.language) ?? [],
     prefix: model.prefix ?? '',
-    serviceCategories:
-      getIsPartOfWithId(model, serviceCategories, i18n.language) ?? [],
+    serviceCategories: getIsPartOfWithId(model, i18n.language) ?? [],
     status: model.status ?? 'DRAFT',
     type: model.type ?? 'PROFILE',
+    terminologies: model.terminologies ?? [],
   });
 
   useEffect(() => {
@@ -76,6 +72,20 @@ export default function ModelEditView({
     const errors = validateFormUpdate(formData);
     setErrors(errors);
   }, [userPosted, formData]);
+
+  useEffect(() => {
+    if (ref.current) {
+      setHeaderHeight(ref.current.clientHeight);
+    }
+
+    if (
+      ref.current &&
+      ((errors && Object.values(errors).filter((val) => val).length > 0) ||
+        result.isError)
+    ) {
+      setHeaderHeight(ref.current.clientHeight);
+    }
+  }, [ref, errors, result]);
 
   const handleSubmit = () => {
     setUserPosted(true);
@@ -97,43 +107,40 @@ export default function ModelEditView({
   };
 
   return (
-    <ModelInfoWrapper>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          marginBottom: '20px',
-        }}
-      >
-        <Heading variant="h2">{t('details', { ns: 'common' })}</Heading>
+    <>
+      <StaticHeader ref={ref}>
         <div>
-          <Button onClick={() => handleSubmit()}>{t('save')}</Button>
-          <Button
-            variant="secondary"
-            style={{ marginLeft: '10px' }}
-            onClick={() => setShow(false)}
-          >
-            {t('cancel-variant')}
-          </Button>
+          <Heading variant="h2">{t('details', { ns: 'common' })}</Heading>
+          <div>
+            <Button onClick={() => handleSubmit()}>{t('save')}</Button>
+            <Button
+              variant="secondary"
+              style={{ marginLeft: '10px' }}
+              onClick={() => setShow(false)}
+            >
+              {t('cancel-variant')}
+            </Button>
+          </div>
         </div>
-      </div>
 
-      <div style={{ marginBottom: '20px' }}>
-        <FormFooterAlert
-          labelText={t('missing-information-title', { ns: 'admin' })}
-          alerts={getErrors(errors)}
+        <div>
+          <FormFooterAlert
+            labelText={t('missing-information-title', { ns: 'admin' })}
+            alerts={getErrors(errors)}
+          />
+        </div>
+      </StaticHeader>
+
+      <DrawerContent height={headerHeight}>
+        <ModelForm
+          formData={formData}
+          setFormData={setFormData}
+          userPosted={userPosted}
+          editMode={true}
+          errors={userPosted ? errors : undefined}
         />
-      </div>
-
-      <ModelForm
-        formData={formData}
-        setFormData={setFormData}
-        userPosted={userPosted}
-        editMode={true}
-        errors={userPosted ? errors : undefined}
-      />
-    </ModelInfoWrapper>
+      </DrawerContent>
+    </>
   );
 
   function getErrors(errors?: FormUpdateErrors): string[] | undefined {

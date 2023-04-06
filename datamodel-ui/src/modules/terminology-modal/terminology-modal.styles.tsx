@@ -61,8 +61,7 @@ export const SearchResult = styled.div`
   display: flex;
   flex-direction: row;
 
-  padding: ${(props) => props.theme.suomifi.spacing.xs}
-    ${(props) => props.theme.suomifi.spacing.s};
+  padding: ${(props) => props.theme.suomifi.spacing.xs};
   border-bottom: 1px solid ${(props) => props.theme.suomifi.colors.depthDark3};
 
   div:last-child {
@@ -85,7 +84,7 @@ export const SearchResult = styled.div`
   }
 
   .highlighted-content {
-    background-color: ${(props) => props.theme.suomifi.colors.warningBase};
+    background-color: rgba(250, 175, 0, 0.5);
   }
 `;
 

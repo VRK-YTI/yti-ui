@@ -11,7 +11,7 @@ export interface InformationDomainFilterProps {
   domains: InformationDomain[];
   title: string;
   isModal?: boolean;
-  counts: { [key: string]: number };
+  counts?: { [key: string]: number };
 }
 
 export default function InformationDomainFilter({
@@ -30,7 +30,7 @@ export default function InformationDomainFilter({
         value: id,
         label: (
           <>
-            {name} ({counts[id] ?? 0} {t('vocabulary-filter-items')})
+            {name} ({counts?.[id] ?? 0} {t('vocabulary-filter-items')})
           </>
         ),
       }))}

@@ -43,4 +43,26 @@ export type AxiosBaseQueryError =
           message: string;
         };
       };
-    };
+    }
+  | {
+      status: number;
+      data: {
+        status: number;
+        title: string;
+        type: string;
+        detail: string;
+        instance: string;
+      };
+    }
+  | AxiosQueryErrorFields;
+
+export type AxiosQueryErrorFields = {
+  status: number;
+  data: {
+    details: {
+      field: string;
+      rejectedValue: string;
+      message: string;
+    }[];
+  };
+};

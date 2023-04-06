@@ -1,6 +1,13 @@
 import { useTranslation } from 'next-i18next';
+import Link from 'next/link';
 import { useState } from 'react';
-import { Button, ModalTitle, RadioButton, Text } from 'suomifi-ui-components';
+import {
+  Link as SuomiLink,
+  Button,
+  ModalTitle,
+  RadioButton,
+  Text,
+} from 'suomifi-ui-components';
 import { useBreakpoints } from 'yti-common-ui/media-query';
 import {
   ButtonFooter,
@@ -11,20 +18,24 @@ import {
 
 interface AsFileModalProps {
   type: 'show' | 'download';
+  modelId: string;
+  filename?: string;
 }
 
-export default function AsFileModal({ type }: AsFileModalProps) {
+export default function AsFileModal({
+  type,
+  modelId,
+  filename,
+}: AsFileModalProps) {
   const { t } = useTranslation('common');
   const { isSmall } = useBreakpoints();
   const [visible, setVisible] = useState(false);
-  const fileTypes = ['JSON-LD', 'RDF', 'XML', 'Turtle', 'OpenAPI'];
+  const fileTypes = ['JSON-LD', 'RDF', 'Turtle' /*'XML', 'OpenAPI'*/];
+  const [chosenFileType, setChosenFileType] = useState('JSON-LD');
 
   const handleClose = () => {
     setVisible(false);
-  };
-
-  const handleSubmit = () => {
-    handleClose();
+    setChosenFileType('JSON-LD');
   };
 
   return (
@@ -54,6 +65,7 @@ export default function AsFileModal({ type }: AsFileModalProps) {
             labelText=""
             defaultValue="JSON-LD"
             name="file-types-radio-button-group"
+            onChange={setChosenFileType}
           >
             {fileTypes.map((type) => (
               <RadioButton key={`file-type-radio-button-${type}`} value={type}>
@@ -64,7 +76,15 @@ export default function AsFileModal({ type }: AsFileModalProps) {
         </div>
 
         <ButtonFooter>
-          <Button onClick={() => handleSubmit()}>{t('show')}</Button>
+          <Link
+            href={`/api/getModelAsFile?modelId=${modelId}&fileType=${chosenFileType}&raw=true`}
+            passHref
+            download
+          >
+            <SuomiLink target="_blank" href="">
+              <Button>{t('show')}</Button>
+            </SuomiLink>
+          </Link>
           <Button variant="secondary" onClick={() => handleClose()}>
             {t('site-cancel')}
           </Button>
@@ -83,6 +103,7 @@ export default function AsFileModal({ type }: AsFileModalProps) {
             labelText=""
             name="file-types-radio-button-group"
             defaultValue="JSON-LD"
+            onChange={setChosenFileType}
           >
             {fileTypes.map((type) => (
               <RadioButton key={`file-type-radio-button-${type}`} value={type}>
@@ -93,7 +114,14 @@ export default function AsFileModal({ type }: AsFileModalProps) {
         </div>
 
         <ButtonFooter>
-          <Button onClick={() => handleSubmit()}>{t('download')}</Button>
+          <Link
+            href={`/api/getModelAsFile?modelId=${modelId}&fileType=${chosenFileType}&filename=${filename}`}
+            passHref
+          >
+            <SuomiLink href="">
+              <Button>{t('download')}</Button>
+            </SuomiLink>
+          </Link>
           <Button variant="secondary" onClick={() => handleClose()}>
             {t('site-cancel')}
           </Button>

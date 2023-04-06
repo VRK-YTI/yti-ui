@@ -1,3 +1,4 @@
+import { useGetCountQuery } from '@app/common/components/counts/counts.slice';
 import { Organization } from '@app/common/interfaces/organizations.interface';
 import { ServiceCategory } from '@app/common/interfaces/service-categories.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
@@ -32,6 +33,7 @@ export default function FrontPageFilter({
   languages,
 }: FrontPageFilterProps) {
   const { t, i18n } = useTranslation('common');
+  const { data: counts } = useGetCountQuery();
 
   if (!organizations || !serviceCategories) {
     return <></>;
@@ -71,11 +73,15 @@ export default function FrontPageFilter({
         items={[
           {
             value: 'library',
-            label: t('library-with-count', { count: 0 }),
+            label: t('library-with-count', {
+              count: counts?.counts.types.LIBRARY ?? 0,
+            }),
           },
           {
             value: 'profile',
-            label: t('profile-with-count', { count: 0 }),
+            label: t('profile-with-count', {
+              count: counts?.counts.types.PROFILE ?? 0,
+            }),
           },
         ]}
         isModal={isModal}
@@ -118,7 +124,7 @@ export default function FrontPageFilter({
             appendLocale: true,
           }),
         }))}
-        counts={{}}
+        counts={counts?.counts.groups}
         isModal={isModal}
       />
     </Filter>
