@@ -12,7 +12,12 @@ import { DetachedPagination } from 'yti-common-ui/pagination';
 import AssociationModal from '../association-modal';
 import CommonForm from '../common-form';
 import CommonView from '../common-view';
-import { useGetResourceMutation } from '@app/common/components/resource/resource.slice';
+import {
+  initializeResource,
+  resetResource,
+  useGetResourceMutation,
+} from '@app/common/components/resource/resource.slice';
+import { useStoreDispatch } from '@app/store';
 
 export default function AssociationView({
   modelId,
@@ -25,15 +30,12 @@ export default function AssociationView({
   const [view, setView] = useState('listing');
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
+  const dispatch = useStoreDispatch();
   const hasPermission = HasPermission({ actions: ['CREATE_ASSOCIATION'] });
   const [currentPage, setCurrentPage] = useState(1);
   const [query, setQuery] = useState('');
   const [getResource, getResourceResult] = useGetResourceMutation();
-  const [initialSubResourceOf, setInitialSubResourceOf] = useState<{
-    label: string;
-    uri: string;
-  }>();
-  const { data } = useQueryInternalResourcesQuery({
+  const { data, refetch } = useQueryInternalResourcesQuery({
     query: query ?? '',
     limitToDataModel: modelId,
     pageSize: 20,
@@ -48,15 +50,13 @@ export default function AssociationView({
   }, [ref]);
 
   const handleFollowUp = (value?: { label: string; uri: string }) => {
-    if (value) {
-      setInitialSubResourceOf(value);
-    }
-
+    dispatch(initializeResource(ResourceType.ASSOCIATION, value?.label));
     setView('form');
   };
 
   const handleFormReturn = () => {
     setView('listing');
+    dispatch(resetResource());
   };
 
   const handleQueryChange = (value: string) => {
@@ -67,6 +67,11 @@ export default function AssociationView({
   const handleShowAssociation = (id: string) => {
     getResource({ modelId: modelId, resourceIdentifier: id });
     setView('association');
+  };
+
+  const handleFormFollowUp = (id: string) => {
+    handleShowAssociation(id);
+    refetch();
   };
 
   useEffect(() => {
@@ -156,9 +161,9 @@ export default function AssociationView({
     return (
       <CommonForm
         handleReturn={handleFormReturn}
+        handleFollowUp={handleFormFollowUp}
         type={ResourceType.ASSOCIATION}
         modelId={modelId}
-        initialSubResourceOf={initialSubResourceOf}
         languages={languages}
       />
     );

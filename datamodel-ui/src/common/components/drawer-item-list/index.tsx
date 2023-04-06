@@ -29,6 +29,8 @@ interface DrawerItem {
   label: string;
   subtitle: string;
   onClick: () => void;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
 }
 
 interface DrawerItemListProps {
@@ -45,6 +47,8 @@ export default function DrawerItemList({ items }: DrawerItemListProps) {
       {items.map((item) => (
         <ListItem
           onClick={() => item.onClick()}
+          onMouseEnter={() => item.onMouseEnter && item.onMouseEnter()}
+          onMouseLeave={() => item.onMouseLeave && item.onMouseLeave()}
           key={`modal-list-item-${item.subtitle}`}
           tabIndex={0}
           onKeyDown={(e) => e.key === 'Enter' && item.onClick()}

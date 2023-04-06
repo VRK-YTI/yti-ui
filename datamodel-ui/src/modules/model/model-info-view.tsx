@@ -1,4 +1,7 @@
-import { useGetModelQuery } from '@app/common/components/model/model.slice';
+import {
+  setView,
+  useGetModelQuery,
+} from '@app/common/components/model/model.slice';
 import { useTranslation } from 'next-i18next';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -42,9 +45,11 @@ import StaticHeader from 'yti-common-ui/drawer/static-header';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import HasPermission from '@app/common/utils/has-permission';
 import DeleteModal from '../delete-modal';
+import { useStoreDispatch } from '@app/store';
 
 export default function ModelInfoView() {
   const { t, i18n } = useTranslation('common');
+  const dispatch = useStoreDispatch();
   const { query } = useRouter();
   const [modelId] = useState(
     Array.isArray(query.modelId) ? query.modelId[0] : query.modelId ?? ''
@@ -113,6 +118,7 @@ export default function ModelInfoView() {
 
   const handleEditViewItemClick = (setItem: (value: boolean) => void) => {
     setItem(true);
+    dispatch(setView('info', 'edit'));
     setShowTooltip(false);
   };
 
