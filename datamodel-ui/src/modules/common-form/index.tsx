@@ -37,6 +37,8 @@ import {
   AxiosBaseQueryError,
   AxiosQueryErrorFields,
 } from 'yti-common-ui/interfaces/axios-base-query.interface';
+import { BasicBlock } from 'yti-common-ui/block';
+import ClassModal from '../class-modal';
 
 interface AttributeFormProps {
   handleReturn: () => void;
@@ -88,6 +90,10 @@ export default function CommonForm({
     }
 
     setData(value);
+  };
+
+  const handleFollowUp = () => {
+    return;
   };
 
   useEffect(() => {
@@ -212,6 +218,71 @@ export default function CommonForm({
             }
             status={userPosted && errors.identifier ? 'error' : 'default'}
           />
+
+          {type === ResourceType.ATTRIBUTE && (
+            <>
+              <BasicBlock title="Tietotyyppi">
+                Literaali (rdfs:Literal)
+              </BasicBlock>
+
+              <BasicBlock
+                title={
+                  <>
+                    Luokka (rdfs:domain)
+                    <span style={{ fontWeight: 400 }}>{` (${t(
+                      'optional'
+                    )})`}</span>
+                  </>
+                }
+              >
+                <ClassModal
+                  handleFollowUp={handleFollowUp}
+                  modelId={modelId}
+                  modalButtonLabel="Valitse luokka"
+                  mode="select"
+                />
+              </BasicBlock>
+            </>
+          )}
+
+          {type === ResourceType.ASSOCIATION && (
+            <>
+              <BasicBlock
+                title={
+                  <>
+                    Lähdeluokka
+                    <span style={{ fontWeight: 400 }}>{` (${t(
+                      'optional'
+                    )})`}</span>
+                  </>
+                }
+              >
+                <ClassModal
+                  handleFollowUp={handleFollowUp}
+                  modelId={modelId}
+                  modalButtonLabel="Valitse luokka"
+                  mode="select"
+                />
+              </BasicBlock>
+              <BasicBlock
+                title={
+                  <>
+                    Kohdeluokka
+                    <span style={{ fontWeight: 400 }}>{` (${t(
+                      'optional'
+                    )})`}</span>
+                  </>
+                }
+              >
+                <ClassModal
+                  handleFollowUp={handleFollowUp}
+                  modelId={modelId}
+                  modalButtonLabel="Valitse luokka"
+                  mode="select"
+                />
+              </BasicBlock>
+            </>
+          )}
 
           <InlineListBlock
             label={translateCommonForm('upper', type, t)}
