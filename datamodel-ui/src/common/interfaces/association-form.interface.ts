@@ -5,7 +5,10 @@ export interface AssociationFormType {
   label: { [key: string]: string };
   editorialNote?: string;
   status: Status;
-  equivalentResource: string[];
+  equivalentResource: {
+    label: { [key: string]: string };
+    identifier: string;
+  }[];
   subResourceOf: string[];
   subject: string;
   identifier: string;

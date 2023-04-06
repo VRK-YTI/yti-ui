@@ -8,7 +8,7 @@ import {
   Textarea,
   TextInput,
 } from 'suomifi-ui-components';
-import ConceptBlock from '../class-form/concept-block';
+import ConceptBlock from '../concept-block';
 import { LanguageVersionedWrapper } from '../class-form/class-form.styles';
 import { statusList } from 'yti-common-ui/utils/status-list';
 import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
@@ -90,6 +90,34 @@ export default function CommonForm({
     setData(value);
   };
 
+  const handleSetConcept = (
+    value?:
+      | AttributeFormType['equivalentResource'][0]
+      | AssociationFormType['equivalentResource'][0]
+  ) => {
+    const label = value
+      ? Object.fromEntries(
+          Object.entries(data.label)
+            .map((obj) => {
+              if (value.label[obj[0]] != null) {
+                return [[obj[0]], value.label[obj[0]]];
+              }
+              return [[obj[0]], data.label[obj[0]]];
+            })
+            .filter(
+              (obj) =>
+                data.label[Array.isArray(obj[0]) ? obj[0][0] : obj[0]] === ''
+            )
+        )
+      : undefined;
+
+    handleUpdate({
+      ...data,
+      equivalentResource: value ? [value] : [],
+      label: label ? { ...data.label, ...label } : data.label,
+    });
+  };
+
   useEffect(() => {
     if (ref.current) {
       setHeaderHeight(ref.current.clientHeight);
@@ -142,7 +170,10 @@ export default function CommonForm({
           </Button>
         </div>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <Text variant="bold">{translateCommonForm('name', type, t)}</Text>
+          <Text variant="bold">
+            {Object.entries(data.label).find((l) => l[1] !== '')?.[1] ??
+              translateCommonForm('name', type, t)}
+          </Text>
 
           <div>
             <Button
@@ -181,7 +212,14 @@ export default function CommonForm({
 
       <DrawerContent height={headerHeight}>
         <FormWrapper>
-          <ConceptBlock setConcept={() => null} />
+          <ConceptBlock
+            concept={
+              data.equivalentResource.length > 0
+                ? data.equivalentResource[0]
+                : undefined
+            }
+            setConcept={handleSetConcept}
+          />
 
           <LanguageVersionedWrapper>
             {languages.map((lang) => (
@@ -189,7 +227,7 @@ export default function CommonForm({
                 key={`label-${lang}`}
                 className="wide-text"
                 labelText={`${translateCommonForm('name', type, t)}, ${lang}`}
-                defaultValue={data.label[lang] ?? ''}
+                value={data.label[lang] ?? ''}
                 onChange={(e) =>
                   handleUpdate({
                     ...data,
@@ -286,15 +324,33 @@ export default function CommonForm({
   );
 
   function getInitialData(): AssociationFormType | AttributeFormType {
+    const label = Object.fromEntries(languages.map((lang) => [lang, '']));
+
     if (!initialSubResourceOf) {
       return type === ResourceType.ASSOCIATION
-        ? { ...initialAssociation, subResourceOf: ['owl:TopObjectProperty'] }
-        : { ...initialAttribute, subResourceOf: ['owl:topDataProperty'] };
+        ? {
+            ...initialAssociation,
+            label: label,
+            subResourceOf: ['owl:TopObjectProperty'],
+          }
+        : {
+            ...initialAttribute,
+            label: label,
+            subResourceOf: ['owl:topDataProperty'],
+          };
     }
 
     return type === ResourceType.ASSOCIATION
-      ? { ...initialAssociation, subResourceOf: [initialSubResourceOf.label] }
-      : { ...initialAttribute, subResourceOf: [initialSubResourceOf.label] };
+      ? {
+          ...initialAssociation,
+          label: label,
+          subResourceOf: [initialSubResourceOf.label],
+        }
+      : {
+          ...initialAttribute,
+          label: label,
+          subResourceOf: [initialSubResourceOf.label],
+        };
   }
 
   function getErrors(): string[] {

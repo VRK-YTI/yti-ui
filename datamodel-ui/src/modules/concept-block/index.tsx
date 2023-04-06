@@ -71,6 +71,7 @@ export default function ConceptBlock({
   const handleClose = () => {
     setSelected(undefined);
     setVisible(false);
+    setKeyword('');
   };
 
   const handleRadioButtonClick = (
