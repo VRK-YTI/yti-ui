@@ -45,6 +45,7 @@ export interface ClassFormProps {
   handleFollowUp: (value: string) => void;
   languages: string[];
   modelId: string;
+  terminologies: string[];
 }
 
 export default function ClassForm({
@@ -53,6 +54,7 @@ export default function ClassForm({
   handleFollowUp,
   languages,
   modelId,
+  terminologies,
 }: ClassFormProps) {
   const { t } = useTranslation('admin');
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -229,6 +231,7 @@ export default function ClassForm({
               : undefined
           }
           setConcept={handleSetConcept}
+          terminologies={terminologies}
         />
 
         <LanguageVersionedWrapper>

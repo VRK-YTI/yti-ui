@@ -44,6 +44,7 @@ interface AttributeFormProps {
   modelId: string;
   initialSubResourceOf?: { label: string; uri: string };
   languages: string[];
+  terminologies: string[];
 }
 
 export default function CommonForm({
@@ -52,6 +53,7 @@ export default function CommonForm({
   modelId,
   initialSubResourceOf,
   languages,
+  terminologies,
 }: AttributeFormProps) {
   const { t } = useTranslation('admin');
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -219,6 +221,7 @@ export default function CommonForm({
                 : undefined
             }
             setConcept={handleSetConcept}
+            terminologies={terminologies}
           />
 
           <LanguageVersionedWrapper>

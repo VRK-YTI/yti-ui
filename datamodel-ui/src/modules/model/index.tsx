@@ -109,7 +109,13 @@ export default function Model({ modelId }: ModelProps) {
                 icon: 'chatHeart',
                 buttonLabel: t('classes'),
                 component: (
-                  <ClassView modelId={modelId} languages={languages} />
+                  <ClassView
+                    modelId={modelId}
+                    languages={languages}
+                    terminologies={
+                      modelInfo?.terminologies.map((t) => t.uri) ?? []
+                    }
+                  />
                 ),
               },
               {
@@ -118,7 +124,13 @@ export default function Model({ modelId }: ModelProps) {
                 buttonLabel: t('attributes'),
                 buttonLabelSm: t('attributes-abbreviation'),
                 component: (
-                  <AttributeView modelId={modelId} languages={languages} />
+                  <AttributeView
+                    modelId={modelId}
+                    languages={languages}
+                    terminologies={
+                      modelInfo?.terminologies.map((t) => t.uri) ?? []
+                    }
+                  />
                 ),
               },
               {
@@ -127,7 +139,13 @@ export default function Model({ modelId }: ModelProps) {
                 buttonLabel: t('associations'),
                 buttonLabelSm: t('associations-abbreviation'),
                 component: (
-                  <AssociationView modelId={modelId} languages={languages} />
+                  <AssociationView
+                    modelId={modelId}
+                    languages={languages}
+                    terminologies={
+                      modelInfo?.terminologies.map((t) => t.uri) ?? []
+                    }
+                  />
                 ),
               },
             ]}

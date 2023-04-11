@@ -21,22 +21,28 @@ export const conceptSearchApi = createApi({
       },
       {
         keyword: string;
+        terminologies: string[];
         lang?: string;
         internal?: boolean;
+        highlight?: boolean;
       }
     >({
       query: (data) => ({
         url: '/v1/frontend/searchConcept',
         method: 'POST',
         data: {
-          highlight: true,
+          highlight: data.highlight ?? true,
           pageFrom: 0,
           pageSize: 5000,
           query: data.keyword,
           sortDirection: 'ASC',
           sortLanguage: data.lang ?? 'fi',
           status: [],
-          terminologyId: ['118fddf4-7196-4c6c-8629-eff8ee613b7a'],
+          terminologyId: [],
+          terminologyUri: data.terminologies ?? [],
+          options: {
+            operationMode: 'NO_INCOMPLETE',
+          },
         },
       }),
     }),

@@ -41,9 +41,14 @@ import DeleteModal from '../delete-modal';
 interface ClassViewProps {
   modelId: string;
   languages: string[];
+  terminologies: string[];
 }
 
-export default function ClassView({ modelId, languages }: ClassViewProps) {
+export default function ClassView({
+  modelId,
+  languages,
+  terminologies,
+}: ClassViewProps) {
   const { t, i18n } = useTranslation('common');
   const hasPermission = HasPermission({ actions: ['ADMIN_CLASS'] });
   const [formData, setFormData] = useState<ClassFormType>(initialClassForm);
@@ -183,6 +188,7 @@ export default function ClassView({ modelId, languages }: ClassViewProps) {
         handleFollowUp={handleFollowUp}
         languages={languages}
         modelId={modelId}
+        terminologies={terminologies}
       />
     );
   }

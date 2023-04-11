@@ -17,9 +17,11 @@ import { useGetResourceMutation } from '@app/common/components/resource/resource
 export default function AttributeView({
   modelId,
   languages,
+  terminologies,
 }: {
   modelId: string;
   languages: string[];
+  terminologies: string[];
 }) {
   const { t, i18n } = useTranslation('common');
   const [view, setView] = useState('listing');
@@ -156,6 +158,7 @@ export default function AttributeView({
         modelId={modelId}
         initialSubResourceOf={initialSubResourceOf}
         languages={languages}
+        terminologies={terminologies}
       />
     );
   }

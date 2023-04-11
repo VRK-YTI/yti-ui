@@ -77,4 +77,16 @@ export const SearchResultWrapper = styled.div`
       background-color: ${(props) => props.theme.suomifi.colors.depthDark2};
     }
   }
+
+  .description {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .highlighted-content {
+    background-color: rgba(250, 175, 0, 0.5);
+  }
 `;

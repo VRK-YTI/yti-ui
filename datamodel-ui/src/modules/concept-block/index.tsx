@@ -33,11 +33,13 @@ import SanitizedTextContent from 'yti-common-ui/sanitized-text-content';
 interface ConceptBlockProps {
   concept?: ClassFormType['equivalentClass'][0];
   setConcept: (value: ClassFormType['equivalentClass'][0] | undefined) => void;
+  terminologies: string[];
 }
 
 export default function ConceptBlock({
   concept,
   setConcept,
+  terminologies,
 }: ConceptBlockProps) {
   const { t, i18n } = useTranslation('admin');
   const { isSmall } = useBreakpoints();
@@ -56,9 +58,15 @@ export default function ConceptBlock({
       uniqueItemId: 'all',
     },
   ]);
+  const [selectedOption, setSelectedOption] = useState(
+    terminologyOptions.find((o) => o.uniqueItemId === 'linked')
+  );
 
   const { data } = useGetConceptsQuery({
     keyword: keyword,
+    terminologies:
+      selectedOption?.uniqueItemId === 'linked' ? terminologies : [],
+    highlight: false,
   });
 
   const handleOpen = () => {
@@ -72,6 +80,9 @@ export default function ConceptBlock({
     setSelected(undefined);
     setVisible(false);
     setKeyword('');
+    setSelectedOption(
+      terminologyOptions.find((o) => o.uniqueItemId === 'linked')
+    );
   };
 
   const handleRadioButtonClick = (
@@ -141,10 +152,17 @@ export default function ConceptBlock({
                 noItemsText={t('no-terminologies-available')}
                 ariaOptionsAvailableText={t('terminologies-available')}
                 allowItemAddition={false}
-                defaultSelectedItem={terminologyOptions.find(
-                  (o) => o.uniqueItemId === 'linked'
-                )}
+                selectedItem={selectedOption}
                 items={terminologyOptions}
+                onItemSelectionChange={(e) =>
+                  setSelectedOption(
+                    e
+                      ? e
+                      : terminologyOptions.find(
+                          (o) => o.uniqueItemId === 'linked'
+                        )
+                  )
+                }
               />
             </SearchBlock>
 
@@ -160,14 +178,20 @@ export default function ConceptBlock({
                     <div
                       key={`concept-result-${idx}`}
                       className={
+                        typeof concept.uri !== 'undefined' &&
                         selected?.identifier === concept.uri
                           ? 'item-wrapper selected'
                           : 'item-wrapper'
                       }
                     >
                       <RadioButton
-                        value={concept.uri}
-                        checked={selected?.identifier === concept.uri}
+                        value={concept.uri ?? ''}
+                        checked={
+                          typeof concept.uri !== 'undefined' &&
+                          selected?.identifier === concept.uri
+                            ? true
+                            : false
+                        }
                         onChange={() =>
                           handleRadioButtonClick({
                             label: concept.label,
@@ -177,16 +201,22 @@ export default function ConceptBlock({
                       />
                       <div>
                         <Text>
-                          <SanitizedTextContent
-                            text={getLanguageVersion({
+                          {renderHighlighted(
+                            getLanguageVersion({
                               data: concept.label,
                               lang: i18n.language,
                               appendLocale: true,
-                            })}
-                          />
+                            })
+                          )}
                         </Text>
                         <div className="subtitle">
-                          <Text>Sanaston nimi</Text>
+                          <Text>
+                            {getLanguageVersion({
+                              data: concept.terminology.label,
+                              lang: i18n.language,
+                              appendLocale: true,
+                            })}
+                          </Text>
                           <StaticChip
                             className={
                               concept.status === 'VALID' ? 'valid' : 'other'
@@ -205,7 +235,7 @@ export default function ConceptBlock({
                             })}
                           />
                         </Text>
-                        <br />
+
                         <ExternalLink href={concept.uri} labelNewWindow="">
                           {concept.uri}
                         </ExternalLink>
@@ -229,4 +259,39 @@ export default function ConceptBlock({
       </BasicBlock>
     </>
   );
+
+  function renderHighlighted(text: string) {
+    if (
+      keyword === '' ||
+      (keyword !== '' && !text.toLowerCase().includes(keyword.toLowerCase()))
+    ) {
+      return <SanitizedTextContent text={text} />;
+    }
+
+    return <SanitizedTextContent text={getHighlighted(text)} />;
+  }
+
+  function getHighlighted(text: string): string {
+    if (!text.toLowerCase().includes(keyword.toLowerCase())) {
+      return text;
+    }
+
+    if (text.toLowerCase().indexOf(keyword.toLowerCase()) === 0) {
+      return `<span class="highlighted-content">${text.substring(
+        0,
+        keyword.length
+      )}</span>${getHighlighted(text.substring(keyword.length))}`;
+    }
+
+    const indexOfTerm = text.toLowerCase().indexOf(keyword.toLowerCase());
+    const endOfTerm = indexOfTerm + keyword.length;
+
+    return `${text.substring(
+      0,
+      indexOfTerm
+    )}<span class="highlighted-content">${text.substring(
+      indexOfTerm,
+      endOfTerm
+    )}</span>${getHighlighted(text.substring(endOfTerm))}`;
+  }
 }
