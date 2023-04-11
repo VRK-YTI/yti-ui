@@ -37,7 +37,6 @@ import {
   AxiosBaseQueryError,
   AxiosQueryErrorFields,
 } from 'yti-common-ui/interfaces/axios-base-query.interface';
-import { BasicBlock } from 'yti-common-ui/block';
 import ClassModal from '../class-modal';
 
 interface AttributeFormProps {
@@ -221,66 +220,54 @@ export default function CommonForm({
 
           {type === ResourceType.ATTRIBUTE && (
             <>
-              <BasicBlock title="Tietotyyppi">
-                Literaali (rdfs:Literal)
-              </BasicBlock>
-
-              <BasicBlock
-                title={
-                  <>
-                    Luokka (rdfs:domain)
-                    <span style={{ fontWeight: 400 }}>{` (${t(
-                      'optional'
-                    )})`}</span>
-                  </>
+              <InlineListBlock
+                addNewComponent={
+                  <ClassModal
+                    handleFollowUp={handleFollowUp}
+                    modelId={modelId}
+                    modalButtonLabel="Valitse luokka"
+                    mode="select"
+                  />
                 }
-              >
-                <ClassModal
-                  handleFollowUp={handleFollowUp}
-                  modelId={modelId}
-                  modalButtonLabel="Valitse luokka"
-                  mode="select"
-                />
-              </BasicBlock>
+                handleRemoval={() => console.log('TODO removal')}
+                items={[]}
+                label="Literaali (rdfs:Literal)"
+                optionalText={t('optional')}
+              />
             </>
           )}
 
           {type === ResourceType.ASSOCIATION && (
             <>
-              <BasicBlock
-                title={
-                  <>
-                    Lähdeluokka
-                    <span style={{ fontWeight: 400 }}>{` (${t(
-                      'optional'
-                    )})`}</span>
-                  </>
+              <InlineListBlock
+                addNewComponent={
+                  <ClassModal
+                    handleFollowUp={handleFollowUp}
+                    modelId={modelId}
+                    modalButtonLabel="Valitse luokka"
+                    mode="select"
+                  />
                 }
-              >
-                <ClassModal
-                  handleFollowUp={handleFollowUp}
-                  modelId={modelId}
-                  modalButtonLabel="Valitse luokka"
-                  mode="select"
-                />
-              </BasicBlock>
-              <BasicBlock
-                title={
-                  <>
-                    Kohdeluokka
-                    <span style={{ fontWeight: 400 }}>{` (${t(
-                      'optional'
-                    )})`}</span>
-                  </>
+                handleRemoval={() => console.log('TODO removal')}
+                items={[]}
+                label="Lähdeluokka"
+                optionalText={t('optional')}
+              />
+
+              <InlineListBlock
+                addNewComponent={
+                  <ClassModal
+                    handleFollowUp={handleFollowUp}
+                    modelId={modelId}
+                    modalButtonLabel="Valitse luokka"
+                    mode="select"
+                  />
                 }
-              >
-                <ClassModal
-                  handleFollowUp={handleFollowUp}
-                  modelId={modelId}
-                  modalButtonLabel="Valitse luokka"
-                  mode="select"
-                />
-              </BasicBlock>
+                handleRemoval={() => console.log('TODO removal')}
+                items={[]}
+                label="Kohdeluokka"
+                optionalText={t('optional')}
+              />
             </>
           )}
 
