@@ -38,6 +38,9 @@ import {
   AxiosQueryErrorFields,
 } from 'yti-common-ui/interfaces/axios-base-query.interface';
 import ClassModal from '../class-modal';
+import { BasicBlock } from 'yti-common-ui/block';
+import { InternalClass } from '@app/common/interfaces/internal-class.interface';
+import { getLanguageVersion } from '@app/common/utils/get-language-version';
 
 interface AttributeFormProps {
   handleReturn: () => void;
@@ -54,7 +57,7 @@ export default function CommonForm({
   initialSubResourceOf,
   languages,
 }: AttributeFormProps) {
-  const { t } = useTranslation('admin');
+  const { t, i18n } = useTranslation('admin');
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
   const [data, setData] = useState(getInitialData());
@@ -91,8 +94,46 @@ export default function CommonForm({
     setData(value);
   };
 
-  const handleFollowUp = () => {
-    return;
+  const handleDomainFollowUp = (value?: InternalClass) => {
+    if (!value) {
+      setData({ ...data, domain: value });
+      return;
+    }
+
+    setData({
+      ...data,
+      domain: {
+        id: value.id,
+        label: getLanguageVersion({
+          data: value.label,
+          lang: i18n.language,
+          appendLocale: true,
+        }),
+      },
+    });
+  };
+
+  const handleRangeFollowUp = (value?: InternalClass) => {
+    if (type === ResourceType.ATTRIBUTE) {
+      return;
+    }
+
+    if (!value) {
+      setData({ ...data, range: value });
+      return;
+    }
+
+    setData({
+      ...data,
+      range: {
+        id: value.id,
+        label: getLanguageVersion({
+          data: value.label,
+          lang: i18n.language,
+          appendLocale: true,
+        }),
+      },
+    });
   };
 
   useEffect(() => {
@@ -220,18 +261,22 @@ export default function CommonForm({
 
           {type === ResourceType.ATTRIBUTE && (
             <>
+              <BasicBlock title="Tietotyyppi">
+                Literaali (rdfs:Literal)
+              </BasicBlock>
+
               <InlineListBlock
                 addNewComponent={
                   <ClassModal
-                    handleFollowUp={handleFollowUp}
+                    handleFollowUp={handleDomainFollowUp}
                     modelId={modelId}
                     modalButtonLabel="Valitse luokka"
                     mode="select"
                   />
                 }
                 handleRemoval={() => console.log('TODO removal')}
-                items={[]}
-                label="Literaali (rdfs:Literal)"
+                items={data.domain ? [data.domain] : []}
+                label="Luokka (rdfs:domain)"
                 optionalText={t('optional')}
               />
             </>
@@ -242,14 +287,14 @@ export default function CommonForm({
               <InlineListBlock
                 addNewComponent={
                   <ClassModal
-                    handleFollowUp={handleFollowUp}
+                    handleFollowUp={handleDomainFollowUp}
                     modelId={modelId}
                     modalButtonLabel="Valitse luokka"
                     mode="select"
                   />
                 }
                 handleRemoval={() => console.log('TODO removal')}
-                items={[]}
+                items={data.domain ? [data.domain] : []}
                 label="Lähdeluokka"
                 optionalText={t('optional')}
               />
@@ -257,14 +302,18 @@ export default function CommonForm({
               <InlineListBlock
                 addNewComponent={
                   <ClassModal
-                    handleFollowUp={handleFollowUp}
+                    handleFollowUp={handleRangeFollowUp}
                     modelId={modelId}
                     modalButtonLabel="Valitse luokka"
                     mode="select"
                   />
                 }
                 handleRemoval={() => console.log('TODO removal')}
-                items={[]}
+                items={
+                  data.range && typeof data.range !== 'string'
+                    ? [data.range]
+                    : []
+                }
                 label="Kohdeluokka"
                 optionalText={t('optional')}
               />

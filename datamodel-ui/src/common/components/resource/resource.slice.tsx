@@ -4,6 +4,7 @@ import { getDatamodelApiBaseQuery } from '@app/store/api-base-query';
 import { AssociationFormType } from '@app/common/interfaces/association-form.interface';
 import { AttributeFormType } from '@app/common/interfaces/attribute-form.interface';
 import { Resource } from '@app/common/interfaces/resource.interface';
+import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 
 export const resourceApi = createApi({
   reducerPath: 'resourceApi',
@@ -28,7 +29,18 @@ export const resourceApi = createApi({
       query: (value) => ({
         url: `/resource/${value.modelId}`,
         method: 'PUT',
-        data: value.data,
+        data:
+          value.data.type === ResourceType.ATTRIBUTE
+            ? {
+                ...value.data,
+                domain: value.data.domain ? value.data.domain.id : '',
+                resource: 'rdfs:Literal',
+              }
+            : {
+                ...value.data,
+                domain: value.data.domain ? value.data.domain.id : '',
+                range: value.data.range ? value.data.range.id : '',
+              },
       }),
     }),
     getResource: builder.mutation<
