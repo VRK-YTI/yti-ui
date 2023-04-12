@@ -182,7 +182,7 @@ export default function ClassModal({
                 disabled={selectedId === ''}
                 onClick={() => handleSubmit()}
               >
-                Valitse luokka
+                {modalButtonLabel}
               </Button>
               <Button variant="secondaryNoBorder" onClick={() => handleClose()}>
                 {t('cancel-variant')}

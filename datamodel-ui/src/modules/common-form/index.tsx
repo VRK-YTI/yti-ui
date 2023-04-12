@@ -261,8 +261,8 @@ export default function CommonForm({
 
           {type === ResourceType.ATTRIBUTE && (
             <>
-              <BasicBlock title="Tietotyyppi">
-                Literaali (rdfs:Literal)
+              <BasicBlock title={t('range')}>
+                {t('literal')} (rdfs:Literal)
               </BasicBlock>
 
               <InlineListBlock
@@ -270,13 +270,13 @@ export default function CommonForm({
                   <ClassModal
                     handleFollowUp={handleDomainFollowUp}
                     modelId={modelId}
-                    modalButtonLabel="Valitse luokka"
+                    modalButtonLabel={t('select-class')}
                     mode="select"
                   />
                 }
                 handleRemoval={() => console.log('TODO removal')}
                 items={data.domain ? [data.domain] : []}
-                label="Luokka (rdfs:domain)"
+                label={`${t('class')} (rdfs:domain)`}
                 optionalText={t('optional')}
               />
             </>
@@ -289,13 +289,13 @@ export default function CommonForm({
                   <ClassModal
                     handleFollowUp={handleDomainFollowUp}
                     modelId={modelId}
-                    modalButtonLabel="Valitse luokka"
+                    modalButtonLabel={t('select-class')}
                     mode="select"
                   />
                 }
                 handleRemoval={() => console.log('TODO removal')}
                 items={data.domain ? [data.domain] : []}
-                label="Lähdeluokka"
+                label={t('source-class')}
                 optionalText={t('optional')}
               />
 
@@ -304,7 +304,7 @@ export default function CommonForm({
                   <ClassModal
                     handleFollowUp={handleRangeFollowUp}
                     modelId={modelId}
-                    modalButtonLabel="Valitse luokka"
+                    modalButtonLabel={t('select-class')}
                     mode="select"
                   />
                 }
@@ -314,7 +314,7 @@ export default function CommonForm({
                     ? [data.range]
                     : []
                 }
-                label="Kohdeluokka"
+                label={t('target-class')}
                 optionalText={t('optional')}
               />
             </>
