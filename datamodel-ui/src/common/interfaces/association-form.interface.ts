@@ -4,6 +4,12 @@ import { Status } from './status.interface';
 export interface AssociationFormType {
   label: { [key: string]: string };
   editorialNote?: string;
+  concept:
+    | {
+        label: { [key: string]: string };
+        identifier: string;
+      }
+    | {};
   status: Status;
   equivalentResource: {
     label: { [key: string]: string };
@@ -19,6 +25,7 @@ export interface AssociationFormType {
 export const initialAssociation: AssociationFormType = {
   label: {},
   editorialNote: '',
+  concept: {},
   status: 'DRAFT',
   equivalentResource: [],
   subResourceOf: [],

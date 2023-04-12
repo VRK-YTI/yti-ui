@@ -31,8 +31,8 @@ import { useGetConceptsQuery } from '@app/common/components/concept-search/conce
 import SanitizedTextContent from 'yti-common-ui/sanitized-text-content';
 
 interface ConceptBlockProps {
-  concept?: ClassFormType['equivalentClass'][0];
-  setConcept: (value: ClassFormType['equivalentClass'][0] | undefined) => void;
+  concept?: ClassFormType['concept'];
+  setConcept: (value: ClassFormType['concept'] | undefined) => void;
   terminologies: string[];
 }
 
@@ -46,7 +46,7 @@ export default function ConceptBlock({
   const [visible, setVisible] = useState(false);
   const [keyword, setKeyword] = useState('');
   const [selected, setSelected] = useState<
-    ClassFormType['equivalentClass'][0] | undefined
+    ClassFormType['concept'] | undefined
   >(concept);
   const [terminologyOptions] = useState([
     {
@@ -93,7 +93,7 @@ export default function ConceptBlock({
 
   const handleSubmit = () => {
     setConcept(selected);
-    handleClose();
+    setVisible(false);
   };
 
   return (
@@ -113,10 +113,11 @@ export default function ConceptBlock({
               <ExpanderTitleButton>
                 {t('concept-definition')}
                 <HintText>
-                  {getLanguageVersion({
-                    data: concept.label,
-                    lang: i18n.language,
-                  })}
+                  {'label' in concept &&
+                    getLanguageVersion({
+                      data: concept.label,
+                      lang: i18n.language,
+                    })}
                 </HintText>
               </ExpanderTitleButton>
             </Expander>
@@ -179,6 +180,8 @@ export default function ConceptBlock({
                       key={`concept-result-${idx}`}
                       className={
                         typeof concept.uri !== 'undefined' &&
+                        selected &&
+                        'identifier' in selected &&
                         selected?.identifier === concept.uri
                           ? 'item-wrapper selected'
                           : 'item-wrapper'
@@ -188,6 +191,8 @@ export default function ConceptBlock({
                         value={concept.uri ?? ''}
                         checked={
                           typeof concept.uri !== 'undefined' &&
+                          selected &&
+                          'identifier' in selected &&
                           selected?.identifier === concept.uri
                             ? true
                             : false

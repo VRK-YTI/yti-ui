@@ -93,29 +93,28 @@ export default function CommonForm({
   };
 
   const handleSetConcept = (
-    value?:
-      | AttributeFormType['equivalentResource'][0]
-      | AssociationFormType['equivalentResource'][0]
+    value?: AttributeFormType['concept'] | AssociationFormType['concept']
   ) => {
-    const label = value
-      ? Object.fromEntries(
-          Object.entries(data.label)
-            .map((obj) => {
-              if (value.label[obj[0]] != null) {
-                return [[obj[0]], value.label[obj[0]]];
-              }
-              return [[obj[0]], data.label[obj[0]]];
-            })
-            .filter(
-              (obj) =>
-                data.label[Array.isArray(obj[0]) ? obj[0][0] : obj[0]] === ''
-            )
-        )
-      : undefined;
+    const label =
+      value && 'label' in value
+        ? Object.fromEntries(
+            Object.entries(data.label)
+              .map((obj) => {
+                if (value.label[obj[0]] != null) {
+                  return [[obj[0]], value.label[obj[0]]];
+                }
+                return [[obj[0]], data.label[obj[0]]];
+              })
+              .filter(
+                (obj) =>
+                  data.label[Array.isArray(obj[0]) ? obj[0][0] : obj[0]] === ''
+              )
+          )
+        : undefined;
 
     handleUpdate({
       ...data,
-      equivalentResource: value ? [value] : [],
+      concept: value ? value : {},
       label: label ? { ...data.label, ...label } : data.label,
     });
   };
@@ -215,11 +214,7 @@ export default function CommonForm({
       <DrawerContent height={headerHeight}>
         <FormWrapper>
           <ConceptBlock
-            concept={
-              data.equivalentResource.length > 0
-                ? data.equivalentResource[0]
-                : undefined
-            }
+            concept={data.concept}
             setConcept={handleSetConcept}
             terminologies={terminologies}
           />

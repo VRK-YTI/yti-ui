@@ -2,7 +2,12 @@ import { Status } from './status.interface';
 
 export interface ClassFormType {
   editorialNote: string;
-  concept: object;
+  concept:
+    | {
+        label: { [key: string]: string };
+        identifier: string;
+      }
+    | {};
   equivalentClass: {
     label: { [key: string]: string };
     identifier: string;

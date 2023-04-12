@@ -96,26 +96,27 @@ export default function ClassForm({
     putClass({ modelId: modelId, data: convertedData });
   };
 
-  const handleSetConcept = (value?: ClassFormType['equivalentClass'][0]) => {
-    const label = value
-      ? Object.fromEntries(
-          Object.entries(data.label)
-            .map((obj) => {
-              if (value.label[obj[0]] != null) {
-                return [[obj[0]], value.label[obj[0]]];
-              }
-              return [[obj[0]], data.label[obj[0]]];
-            })
-            .filter(
-              (obj) =>
-                data.label[Array.isArray(obj[0]) ? obj[0][0] : obj[0]] === ''
-            )
-        )
-      : undefined;
+  const handleSetConcept = (value?: ClassFormType['concept']) => {
+    const label =
+      value && 'label' in value
+        ? Object.fromEntries(
+            Object.entries(data.label)
+              .map((obj) => {
+                if (value.label[obj[0]] != null) {
+                  return [[obj[0]], value.label[obj[0]]];
+                }
+                return [[obj[0]], data.label[obj[0]]];
+              })
+              .filter(
+                (obj) =>
+                  data.label[Array.isArray(obj[0]) ? obj[0][0] : obj[0]] === ''
+              )
+          )
+        : undefined;
 
     handleUpdate({
       ...data,
-      equivalentClass: value ? [value] : [],
+      concept: value ? value : {},
       label: label ? { ...data.label, ...label } : data.label,
     });
   };
@@ -225,11 +226,7 @@ export default function ClassForm({
 
       <DrawerContent height={headerHeight} spaced>
         <ConceptBlock
-          concept={
-            data.equivalentClass.length > 0
-              ? data.equivalentClass[0]
-              : undefined
-          }
+          concept={data.concept}
           setConcept={handleSetConcept}
           terminologies={terminologies}
         />
