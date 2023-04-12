@@ -12,7 +12,12 @@ import { DetachedPagination } from 'yti-common-ui/pagination';
 import AttributeModal from '../attribute-modal';
 import CommonForm from '../common-form';
 import CommonView from '../common-view';
-import { useGetResourceMutation } from '@app/common/components/resource/resource.slice';
+import {
+  initializeResource,
+  resetResource,
+  useGetResourceMutation,
+} from '@app/common/components/resource/resource.slice';
+import { useStoreDispatch } from '@app/store';
 
 export default function AttributeView({
   modelId,
@@ -25,6 +30,7 @@ export default function AttributeView({
   const [view, setView] = useState('listing');
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
+  const dispatch = useStoreDispatch();
   const hasPermission = HasPermission({ actions: ['CREATE_ATTRIBUTE'] });
   const [currentPage, setCurrentPage] = useState(1);
   const [getResource, getResourceResult] = useGetResourceMutation();
@@ -48,10 +54,7 @@ export default function AttributeView({
   }, [ref]);
 
   const handleFollowUp = (value?: { label: string; uri: string }) => {
-    if (value) {
-      setInitialSubResourceOf(value);
-    }
-
+    dispatch(initializeResource(ResourceType.ATTRIBUTE, value?.label));
     setView('form');
   };
 
@@ -62,12 +65,18 @@ export default function AttributeView({
 
   const handleFormReturn = () => {
     setView('listing');
+    dispatch(resetResource());
     refetch();
   };
 
   const handleShowAttribute = (id: string) => {
     getResource({ modelId: modelId, resourceIdentifier: id });
     setView('attribute');
+  };
+
+  const handleFormFollowUp = (id: string) => {
+    handleShowAttribute(id);
+    refetch();
   };
 
   return (
@@ -152,9 +161,9 @@ export default function AttributeView({
     return (
       <CommonForm
         handleReturn={handleFormReturn}
+        handleFollowUp={handleFormFollowUp}
         type={ResourceType.ATTRIBUTE}
         modelId={modelId}
-        initialSubResourceOf={initialSubResourceOf}
         languages={languages}
       />
     );

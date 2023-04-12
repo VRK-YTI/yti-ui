@@ -1,8 +1,9 @@
-import { useGetClassMutMutation } from '@app/common/components/class/class.slice';
 import {
-  ClassFormType,
-  initialClassForm,
-} from '@app/common/interfaces/class-form.interface';
+  resetClass,
+  setClass,
+  useGetClassMutMutation,
+} from '@app/common/components/class/class.slice';
+import { initialClassForm } from '@app/common/interfaces/class-form.interface';
 import { InternalClass } from '@app/common/interfaces/internal-class.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { useTranslation } from 'next-i18next';
@@ -35,8 +36,19 @@ import { useQueryInternalResourcesQuery } from '@app/common/components/search-in
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { DetachedPagination } from 'yti-common-ui/pagination';
 import { translateStatus } from 'yti-common-ui/utils/translation-helpers';
+import { useStoreDispatch } from '@app/store';
 import FormattedDate from 'yti-common-ui/components/formatted-date';
 import DeleteModal from '../delete-modal';
+import {
+  resetHovered,
+  resetSelected,
+  selectClassView,
+  selectSelected,
+  setHovered,
+  setSelected,
+  setView,
+} from '@app/common/components/model/model.slice';
+import { useSelector } from 'react-redux';
 
 interface ClassViewProps {
   modelId: string;
@@ -46,14 +58,15 @@ interface ClassViewProps {
 export default function ClassView({ modelId, languages }: ClassViewProps) {
   const { t, i18n } = useTranslation('common');
   const hasPermission = HasPermission({ actions: ['ADMIN_CLASS'] });
-  const [formData, setFormData] = useState<ClassFormType>(initialClassForm);
   const [showTooltip, setShowTooltip] = useState(false);
-  const [view, setView] = useState<'listing' | 'class' | 'form'>('listing');
   const [getClass, getClassResult] = useGetClassMutMutation();
   const [currentPage, setCurrentPage] = useState(1);
   const [query, setQuery] = useState('');
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
+  const dispatch = useStoreDispatch();
+  const globalSelected = useSelector(selectSelected());
+  const view = useSelector(selectClassView());
   const { data, refetch } = useQueryInternalResourcesQuery({
     query: query ?? '',
     limitToDataModel: modelId,
@@ -68,43 +81,56 @@ export default function ClassView({ modelId, languages }: ClassViewProps) {
   };
 
   const handleFollowUpAction = (value?: InternalClass) => {
-    setView('form');
-
     if (!value) {
       const initialData = initialClassForm;
       const label = Object.fromEntries(languages.map((lang) => [lang, '']));
-      setFormData({ ...initialData, label: label });
+      dispatch(setClass({ ...initialData, label: label }));
+      dispatch(setView('classes', 'edit'));
       return;
     }
 
-    setFormData(internalClassToClassForm(value, languages));
+    dispatch(setClass(internalClassToClassForm(value, languages)));
+    dispatch(setView('classes', 'edit'));
   };
 
   const handleReturn = () => {
-    setView('listing');
+    dispatch(resetSelected());
+    dispatch(resetClass());
+    dispatch(setView('classes', 'list'));
     refetch();
   };
 
   const handleFollowUp = (classId: string) => {
     getClass({ modelId: modelId, classId: classId });
-    setView('class');
+    dispatch(setView('classes', 'info'));
+  };
+
+  const handleActive = (classId: string) => {
+    dispatch(setSelected(classId, 'classes'));
+    dispatch(resetHovered());
   };
 
   useEffect(() => {
     if (getClassResult.isSuccess) {
-      setView('class');
+      dispatch(setView('classes', 'info'));
     }
-  }, [getClassResult]);
+  }, [getClassResult, dispatch]);
 
   useEffect(() => {
     if (ref.current) {
       setHeaderHeight(ref.current.clientHeight);
     }
 
-    if (ref.current && ['listing', 'class'].includes(view)) {
+    if (ref.current && Object.values(view).filter((val) => val).length > 0) {
       setHeaderHeight(ref.current.clientHeight);
     }
   }, [ref, view]);
+
+  useEffect(() => {
+    if (globalSelected.type === 'classes') {
+      getClass({ modelId: modelId, classId: globalSelected.id });
+    }
+  }, [globalSelected, getClass, modelId]);
 
   return (
     <>
@@ -115,7 +141,7 @@ export default function ClassView({ modelId, languages }: ClassViewProps) {
   );
 
   function renderListing() {
-    if (view !== 'listing') {
+    if (!view.list) {
       return <></>;
     }
 
@@ -155,8 +181,16 @@ export default function ClassView({ modelId, languages }: ClassViewProps) {
                   lang: i18n.language,
                 }),
                 subtitle: `${modelId}:${item.identifier}`,
-                onClick: () =>
-                  getClass({ modelId: modelId, classId: item.identifier }),
+                onClick: () => {
+                  getClass({ modelId: modelId, classId: item.identifier });
+                  handleActive(item.identifier);
+                },
+                onMouseEnter: () => {
+                  dispatch(setHovered(item.identifier, 'classes'));
+                },
+                onMouseLeave: () => {
+                  dispatch(resetHovered());
+                },
               }))}
             />
           )}
@@ -172,13 +206,12 @@ export default function ClassView({ modelId, languages }: ClassViewProps) {
   }
 
   function renderForm() {
-    if (view !== 'form') {
+    if (!view.edit) {
       return <></>;
     }
 
     return (
       <ClassForm
-        initialData={formData}
         handleReturn={handleReturn}
         handleFollowUp={handleFollowUp}
         languages={languages}
@@ -188,9 +221,10 @@ export default function ClassView({ modelId, languages }: ClassViewProps) {
   }
 
   function renderClass() {
-    if (view !== 'class' || !getClassResult.isSuccess) {
+    if (!view.info) {
       return <></>;
     }
+
     const data = getClassResult.data;
 
     return (
@@ -234,7 +268,7 @@ export default function ClassView({ modelId, languages }: ClassViewProps) {
                   <Button variant="secondaryNoBorder">
                     {t('download-as-file')}
                   </Button>
-                  {hasPermission && (
+                  {hasPermission && data && (
                     <>
                       <Separator />
                       <DeleteModal
@@ -255,144 +289,148 @@ export default function ClassView({ modelId, languages }: ClassViewProps) {
           </div>
         </StaticHeader>
 
-        <DrawerContent height={headerHeight}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            <Text variant="bold">
-              {getLanguageVersion({ data: data.label, lang: i18n.language })}
-            </Text>
-            <StatusChip $isValid={data.status === 'VALID'}>
-              {translateStatus(data.status, t)}
-            </StatusChip>
-          </div>
-
-          <BasicBlock title={t('class-identifier')}>
-            {`${modelId}:${data.identifier}`}
-            <Button
-              icon="copy"
-              variant="secondary"
-              style={{ width: 'min-content', whiteSpace: 'nowrap' }}
-              onClick={() => navigator.clipboard.writeText(data.identifier)}
+        {getClassResult.isSuccess && data && (
+          <DrawerContent height={headerHeight}>
+            <div
+              style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}
             >
-              {t('copy-to-clipboard')}
-            </Button>
-          </BasicBlock>
+              <Text variant="bold">
+                {getLanguageVersion({ data: data.label, lang: i18n.language })}
+              </Text>
+              <StatusChip $isValid={data.status === 'VALID'}>
+                {translateStatus(data.status, t)}
+              </StatusChip>
+            </div>
 
-          <div style={{ marginTop: '20px' }}>
-            <Expander>
-              <ExpanderTitleButton>
-                {t('concept-definition')}
-                <HintText>{t('interval')}</HintText>
-              </ExpanderTitleButton>
-            </Expander>
-          </div>
+            <BasicBlock title={t('class-identifier')}>
+              {`${modelId}:${data.identifier}`}
+              <Button
+                icon="copy"
+                variant="secondary"
+                style={{ width: 'min-content', whiteSpace: 'nowrap' }}
+                onClick={() => navigator.clipboard.writeText(data.identifier)}
+              >
+                {t('copy-to-clipboard')}
+              </Button>
+            </BasicBlock>
 
-          <BasicBlock title={t('upper-class')}>
-            {!data.subClassOf || data.subClassOf.length === 0 ? (
-              <> {t('no-upper-classes')}</>
-            ) : (
-              <ul style={{ padding: '0', margin: '0', paddingLeft: '20px' }}>
-                {data.subClassOf.map((c) => (
-                  <li key={c}>
-                    <Link key={c} href={c} style={{ fontSize: '16px' }}>
-                      {c.split('/').pop()?.replace('#', ':')}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </BasicBlock>
-
-          <BasicBlock title={t('equivalent-classes')}>
-            {!data.equivalentClass || data.equivalentClass.length === 0 ? (
-              <> {t('no-equivalent-classes')}</>
-            ) : (
-              <ul style={{ padding: '0', margin: '0', paddingLeft: '20px' }}>
-                {data.equivalentClass.map((c) => (
-                  <li key={c}>
-                    <Link key={c} href={c} style={{ fontSize: '16px' }}>
-                      {c.split('/').pop()?.replace('#', ':')}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </BasicBlock>
-
-          <BasicBlock title={t('additional-information')}>
-            {getLanguageVersion({
-              data: data.note,
-              lang: i18n.language,
-              appendLocale: true,
-            })}
-          </BasicBlock>
-
-          <div style={{ marginTop: '20px' }}>
-            <Label style={{ marginBottom: '10px' }}>
-              {t('attributes', { count: 2 })}
-            </Label>
-            <ExpanderGroup
-              closeAllText=""
-              openAllText=""
-              showToggleAllButton={false}
-            >
+            <div style={{ marginTop: '20px' }}>
               <Expander>
-                <ExpanderTitleButton>Attribuutti #1</ExpanderTitleButton>
+                <ExpanderTitleButton>
+                  {t('concept-definition')}
+                  <HintText>{t('interval')}</HintText>
+                </ExpanderTitleButton>
               </Expander>
-              <Expander>
-                <ExpanderTitleButton>Attribuutti #2</ExpanderTitleButton>
-              </Expander>
-            </ExpanderGroup>
-          </div>
+            </div>
 
-          <BasicBlock title={t('associations', { count: 0 })}>
-            {t('no-assocations')}
-          </BasicBlock>
+            <BasicBlock title={t('upper-class')}>
+              {!data.subClassOf || data.subClassOf.length === 0 ? (
+                <> {t('no-upper-classes')}</>
+              ) : (
+                <ul style={{ padding: '0', margin: '0', paddingLeft: '20px' }}>
+                  {data.subClassOf.map((c) => (
+                    <li key={c}>
+                      <Link key={c} href={c} style={{ fontSize: '16px' }}>
+                        {c.split('/').pop()?.replace('#', ':')}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </BasicBlock>
 
-          <BasicBlock title={t('references-from-other-components')}>
-            {t('no-references')}
-          </BasicBlock>
+            <BasicBlock title={t('equivalent-classes')}>
+              {!data.equivalentClass || data.equivalentClass.length === 0 ? (
+                <> {t('no-equivalent-classes')}</>
+              ) : (
+                <ul style={{ padding: '0', margin: '0', paddingLeft: '20px' }}>
+                  {data.equivalentClass.map((c) => (
+                    <li key={c}>
+                      <Link key={c} href={c} style={{ fontSize: '16px' }}>
+                        {c.split('/').pop()?.replace('#', ':')}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </BasicBlock>
 
-          <Separator />
-
-          <BasicBlock title={t('created')}>
-            <FormattedDate date={data.created} />
-          </BasicBlock>
-
-          <BasicBlock title={t('modified-at')}>
-            <FormattedDate date={data.created} />
-          </BasicBlock>
-
-          <BasicBlock title={t('editorial-note')}>
-            {data.editorialNote ?? t('no-editorial-note')}
-          </BasicBlock>
-
-          <BasicBlock title={t('uri')}>{data.uri}</BasicBlock>
-
-          <Separator />
-
-          <BasicBlock title={t('contributors')}>
-            {data.contributor?.map((contributor) =>
-              getLanguageVersion({
-                data: contributor.label,
+            <BasicBlock title={t('additional-information')}>
+              {getLanguageVersion({
+                data: data.note,
                 lang: i18n.language,
-              })
-            )}
-          </BasicBlock>
-          <BasicBlock>
-            {t('class-contact-description')}
-            <ExternalLink
-              href={`mailto:${
-                data.contact ?? 'yhteentoimivuus@dvv.fi'
-              }?subject=${getLanguageVersion({
-                data: data.label,
-                lang: i18n.language,
-              })}`}
-              labelNewWindow=""
-            >
-              {t('class-contact')}
-            </ExternalLink>
-          </BasicBlock>
-        </DrawerContent>
+                appendLocale: true,
+              })}
+            </BasicBlock>
+
+            <div style={{ marginTop: '20px' }}>
+              <Label style={{ marginBottom: '10px' }}>
+                {t('attributes', { count: 2 })}
+              </Label>
+              <ExpanderGroup
+                closeAllText=""
+                openAllText=""
+                showToggleAllButton={false}
+              >
+                <Expander>
+                  <ExpanderTitleButton>Attribuutti #1</ExpanderTitleButton>
+                </Expander>
+                <Expander>
+                  <ExpanderTitleButton>Attribuutti #2</ExpanderTitleButton>
+                </Expander>
+              </ExpanderGroup>
+            </div>
+
+            <BasicBlock title={t('associations', { count: 0 })}>
+              {t('no-assocations')}
+            </BasicBlock>
+
+            <BasicBlock title={t('references-from-other-components')}>
+              {t('no-references')}
+            </BasicBlock>
+
+            <Separator />
+
+            <BasicBlock title={t('created')}>
+              <FormattedDate date={data.created} />
+            </BasicBlock>
+
+            <BasicBlock title={t('modified-at')}>
+              <FormattedDate date={data.created} />
+            </BasicBlock>
+
+            <BasicBlock title={t('editorial-note')}>
+              {data.editorialNote ?? t('no-editorial-note')}
+            </BasicBlock>
+
+            <BasicBlock title={t('uri')}>{data.uri}</BasicBlock>
+
+            <Separator />
+
+            <BasicBlock title={t('contributors')}>
+              {data.contributor?.map((contributor) =>
+                getLanguageVersion({
+                  data: contributor.label,
+                  lang: i18n.language,
+                })
+              )}
+            </BasicBlock>
+            <BasicBlock>
+              {t('class-contact-description')}
+              <ExternalLink
+                href={`mailto:${
+                  data.contact ?? 'yhteentoimivuus@dvv.fi'
+                }?subject=${getLanguageVersion({
+                  data: data.label,
+                  lang: i18n.language,
+                })}`}
+                labelNewWindow=""
+              >
+                {t('class-contact')}
+              </ExternalLink>
+            </BasicBlock>
+          </DrawerContent>
+        )}
       </>
     );
   }

@@ -41,6 +41,7 @@ const ScrollableButtons = styled.div`
 
 export default function ScrollableButtonMenu({
   buttons,
+  active,
 }: {
   buttons: {
     id: string;
@@ -48,11 +49,29 @@ export default function ScrollableButtonMenu({
     label: string;
     onClick: () => void;
   }[];
+  active?: string;
 }) {
   const [currentRef, setCurrentRef] = useState<HTMLButtonElement | null>();
   const bRef = useRef<{
     [key: number]: HTMLButtonElement;
   }>({});
+
+  useEffect(() => {
+    if (active) {
+      const currentNumberIdx = buttons.findIndex(
+        (button) => currentRef && button.id === currentRef.id
+      );
+
+      const activeIdx = buttons.findIndex((button) => button.id === active);
+
+      if (currentNumberIdx !== activeIdx) {
+        const newRef = bRef.current[activeIdx];
+        setCurrentRef(newRef);
+        setRef(newRef);
+        buttons.find((button) => button.id === newRef.id)?.onClick();
+      }
+    }
+  }, [active, buttons, currentRef]);
 
   const handleClick = (id: string) => {
     const newRef = Object.values(bRef.current).find((curr) => curr.id === id);
