@@ -134,7 +134,7 @@ export default function ConceptBlock({
           appElementId="__next"
           visible={visible}
           variant={isSmall ? 'smallScreen' : 'default'}
-          onEscKeyDown={() => setVisible(false)}
+          onEscKeyDown={() => handleClose()}
         >
           <ModalContent>
             <ModalTitle>{t('select-concept')}</ModalTitle>
@@ -227,13 +227,13 @@ export default function ConceptBlock({
                         </div>
 
                         <Text className="description">
-                          <SanitizedTextContent
-                            text={getLanguageVersion({
+                          {renderHighlighted(
+                            getLanguageVersion({
                               data: concept.definition,
                               lang: i18n.language,
                               appendLocale: true,
-                            })}
-                          />
+                            })
+                          )}
                         </Text>
 
                         <ExternalLink href={concept.uri} labelNewWindow="">
@@ -273,6 +273,15 @@ export default function ConceptBlock({
 
   function getHighlighted(text: string): string {
     if (!text.toLowerCase().includes(keyword.toLowerCase())) {
+      return text;
+    }
+
+    if (
+      (text.includes('<a') || text.includes('</a')) &&
+      text.includes('>') &&
+      (text.indexOf('<a') < text.indexOf('>') ||
+        text.indexOf('</a') < text.indexOf('>'))
+    ) {
       return text;
     }
 
