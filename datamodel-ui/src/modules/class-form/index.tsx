@@ -18,10 +18,7 @@ import AttributeModal from '../attribute-modal';
 import { useTranslation } from 'next-i18next';
 import { Status } from '@app/common/interfaces/status.interface';
 import ConceptBlock from '../concept-block';
-import {
-  ClassFormType,
-  initialClassForm,
-} from '@app/common/interfaces/class-form.interface';
+import { ClassFormType } from '@app/common/interfaces/class-form.interface';
 import { ClassFormErrors, classFormToClass, validateClassForm } from './utils';
 import FormFooterAlert from 'yti-common-ui/form-footer-alert';
 import { statusList } from 'yti-common-ui/utils/status-list';
@@ -33,14 +30,19 @@ import { useEffect, useRef, useState } from 'react';
 import StaticHeader from 'yti-common-ui/drawer/static-header';
 import DrawerContent from 'yti-common-ui/drawer/drawer-content-wrapper';
 import InlineListBlock from '@app/common/components/inline-list-block';
-import { usePutClassMutation } from '@app/common/components/class/class.slice';
+import {
+  selectClass,
+  setClass,
+  usePutClassMutation,
+} from '@app/common/components/class/class.slice';
 import {
   AxiosBaseQueryError,
   AxiosQueryErrorFields,
 } from 'yti-common-ui/interfaces/axios-base-query.interface';
+import { useSelector } from 'react-redux';
+import { useStoreDispatch } from '@app/store';
 
 export interface ClassFormProps {
-  initialData: ClassFormType;
   handleReturn: () => void;
   handleFollowUp: (value: string) => void;
   languages: string[];
@@ -49,7 +51,6 @@ export interface ClassFormProps {
 }
 
 export default function ClassForm({
-  initialData,
   handleReturn,
   handleFollowUp,
   languages,
@@ -59,9 +60,8 @@ export default function ClassForm({
   const { t } = useTranslation('admin');
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
-  const [data, setData] = useState<ClassFormType>(
-    initialData ?? initialClassForm
-  );
+  const dispatch = useStoreDispatch();
+  const data = useSelector(selectClass());
   const [userPosted, setUserPosted] = useState(false);
   const [errors, setErrors] = useState<ClassFormErrors>(
     validateClassForm(data)
@@ -75,8 +75,7 @@ export default function ClassForm({
     ) {
       setErrors(validateClassForm(value));
     }
-
-    setData(value);
+    dispatch(setClass(value));
   };
 
   const handleSubmit = () => {

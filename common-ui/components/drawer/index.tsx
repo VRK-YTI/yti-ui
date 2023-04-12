@@ -19,6 +19,7 @@ interface SideNavigationProps {
     onClick: () => void;
   }[];
   viewOpen?: boolean;
+  active?: string;
   children: React.ReactFragment;
 }
 
@@ -26,6 +27,7 @@ export default function Drawer({
   buttons,
   smallButtons,
   viewOpen,
+  active,
   children,
 }: SideNavigationProps) {
   const { isSmall } = useBreakpoints();
@@ -88,7 +90,7 @@ export default function Drawer({
               {children}
             </DrawerContent>
           )}
-          <ScrollableButtonMenu buttons={smallButtons} />
+          <ScrollableButtonMenu buttons={smallButtons} active={active} />
         </div>
       ) : (
         <DrawerWrapper $open={open}>

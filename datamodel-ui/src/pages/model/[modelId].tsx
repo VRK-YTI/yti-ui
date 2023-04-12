@@ -26,6 +26,10 @@ import {
   getRunningQueriesThunk as getInternalResourcesRunningQueriesThunk,
 } from '@app/common/components/search-internal-resources/search-internal-resources.slice';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
+import {
+  getVisualization,
+  getRunningQueriesThunk as getVisualizationRunningQueriesThunk,
+} from '@app/common/components/visualization/visualization.slice';
 
 interface IndexPageProps extends CommonContextState {
   _netI18Next: SSRConfig;
@@ -94,6 +98,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
         resourceTypes: [ResourceType.ATTRIBUTE],
       })
     );
+    store.dispatch(getVisualization.initiate(modelId));
 
     await Promise.all(store.dispatch(getRunningQueriesThunk()));
     await Promise.all(store.dispatch(getServiceQueriesThunk()));
@@ -101,6 +106,7 @@ export const getServerSideProps = createCommonGetServerSideProps(
     await Promise.all(
       store.dispatch(getInternalResourcesRunningQueriesThunk())
     );
+    await Promise.all(store.dispatch(getVisualizationRunningQueriesThunk()));
 
     return {
       props: {
