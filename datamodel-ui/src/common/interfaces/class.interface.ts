@@ -7,7 +7,7 @@ export interface ClassType {
   status: Status;
   equivalentClass: string[];
   subClassOf: string[];
-  subject: ConceptType;
+  subject?: ConceptType;
   identifier: string;
   created: string;
   modified: string;
