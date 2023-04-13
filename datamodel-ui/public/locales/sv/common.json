@@ -41,7 +41,9 @@
     "no-upper-associations": "",
     "no-upper-attributes": ""
   },
-  "concept-definition": "",
+  "concept": "",
+  "concept-not-added": "",
+  "concept-status": "",
   "contributors": "",
   "copy-to-clipboard": "",
   "created": "",
@@ -91,7 +93,6 @@
   "impersonate-user": "",
   "information-domains": "",
   "interoperability-logo-title": "",
-  "interval": "",
   "jump-to-page": "",
   "languages": {
     "en": "",
@@ -175,6 +176,7 @@
     "valid": ""
   },
   "terminologies-used": "",
+  "terminology": "",
   "terminology-footer-accessibility": "",
   "terminology-footer-feedback": "",
   "terminology-footer-information-security": "",
