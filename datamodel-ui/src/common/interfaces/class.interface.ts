@@ -1,3 +1,4 @@
+import { ConceptType } from './concept-interface';
 import { Status } from './status.interface';
 
 export interface ClassType {
@@ -6,7 +7,7 @@ export interface ClassType {
   status: Status;
   equivalentClass: string[];
   subClassOf: string[];
-  subject: string;
+  subject?: ConceptType;
   identifier: string;
   created: string;
   modified: string;

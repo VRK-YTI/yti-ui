@@ -12,7 +12,7 @@ export function classFormToClass(data: ClassFormType): ClassType {
     note: data.note,
     status: data.status,
     subClassOf: [],
-    subject: 'http://uri.suomi.fi/terminology/demo',
+    subject: data.concept,
     contact: '',
     created: '',
     modified: '',

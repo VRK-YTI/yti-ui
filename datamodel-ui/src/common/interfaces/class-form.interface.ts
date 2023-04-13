@@ -1,8 +1,9 @@
+import { ConceptType } from './concept-interface';
 import { Status } from './status.interface';
 
 export interface ClassFormType {
   editorialNote: string;
-  concept: object;
+  concept?: ConceptType;
   equivalentClass: {
     label: { [key: string]: string };
     identifier: string;
@@ -22,7 +23,6 @@ export interface ClassFormType {
 
 export const initialClassForm: ClassFormType = {
   editorialNote: '',
-  concept: {},
   equivalentClass: [],
   identifier: '',
   label: {},
