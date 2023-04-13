@@ -227,8 +227,6 @@ export default function ClassView({ modelId, languages }: ClassViewProps) {
 
     const data = getClassResult.data;
 
-    console.log('data', data);
-
     return (
       <>
         <StaticHeader ref={ref}>
