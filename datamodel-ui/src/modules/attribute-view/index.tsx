@@ -35,10 +35,6 @@ export default function AttributeView({
   const [currentPage, setCurrentPage] = useState(1);
   const [getResource, getResourceResult] = useGetResourceMutation();
   const [query, setQuery] = useState('');
-  const [initialSubResourceOf, setInitialSubResourceOf] = useState<{
-    label: string;
-    uri: string;
-  }>();
   const { data, refetch } = useQueryInternalResourcesQuery({
     query: query ?? '',
     limitToDataModel: modelId,
@@ -183,7 +179,6 @@ export default function AttributeView({
       <CommonView
         data={assoc}
         modelId={modelId}
-        type={ResourceType.ASSOCIATION}
         handleReturn={handleFormReturn}
       />
     );

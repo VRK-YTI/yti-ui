@@ -31,7 +31,6 @@ import DeleteModal from '../delete-modal';
 interface CommonViewProps {
   data: Resource;
   modelId: string;
-  type: ResourceType.ASSOCIATION | ResourceType.ATTRIBUTE;
   handleReturn: () => void;
 }
 

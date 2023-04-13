@@ -57,6 +57,7 @@ export default function AssociationView({
   const handleFormReturn = () => {
     setView('listing');
     dispatch(resetResource());
+    refetch();
   };
 
   const handleQueryChange = (value: string) => {
@@ -183,7 +184,6 @@ export default function AssociationView({
       <CommonView
         data={assoc}
         modelId={modelId}
-        type={ResourceType.ASSOCIATION}
         handleReturn={handleFormReturn}
       />
     );
