@@ -28,7 +28,6 @@ import ConceptView from '../concept-view';
 interface CommonViewProps {
   data: Resource;
   modelId: string;
-  type: ResourceType.ASSOCIATION | ResourceType.ATTRIBUTE;
   handleReturn: () => void;
 }
 
