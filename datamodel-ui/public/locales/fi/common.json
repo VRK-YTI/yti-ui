@@ -41,6 +41,7 @@
     "no-upper-associations": "Ei yläassosiaatioita",
     "no-upper-attributes": "Ei yläattribuutteja"
   },
+  "concept": "Käsite",
   "concept-definition": "Käsitteen määritelmä",
   "contributors": "Sisällöntuottajat",
   "copy-to-clipboard": "Kopioi leikepöydälle",
@@ -114,6 +115,7 @@
   "navigation-open": "Avaa navigaatio",
   "next-page": "Seuraava sivu",
   "no-assocations": "Ei assosiaatioita",
+  "no-attributes": "Ei attribuutteja",
   "no-contributors": "Ei sisällöntuottajia",
   "no-description": "Ei annettu kuvausta",
   "no-editorial-note": "Ei muokkajaan kommenttia",

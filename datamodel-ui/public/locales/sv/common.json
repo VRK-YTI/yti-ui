@@ -41,6 +41,7 @@
     "no-upper-associations": "",
     "no-upper-attributes": ""
   },
+  "concept": "",
   "concept-definition": "",
   "contributors": "",
   "copy-to-clipboard": "",
@@ -114,6 +115,7 @@
   "navigation-open": "",
   "next-page": "",
   "no-assocations": "",
+  "no-attributes": "",
   "no-contributors": "",
   "no-description": "",
   "no-editorial-note": "",
