@@ -9,7 +9,6 @@ export function internalClassToClassForm(
 
   return {
     editorialNote: '',
-    concept: {},
     equivalentClass: [],
     identifier: '',
     label: label,

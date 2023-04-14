@@ -1,4 +1,3 @@
-import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 import { Resource } from '@app/common/interfaces/resource.interface';
 import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import HasPermission from '@app/common/utils/has-permission';
@@ -20,7 +19,6 @@ import CommonViewContent from './common-view-content';
 interface CommonViewProps {
   data: Resource;
   modelId: string;
-  type: ResourceType.ASSOCIATION | ResourceType.ATTRIBUTE;
   handleReturn: () => void;
 }
 

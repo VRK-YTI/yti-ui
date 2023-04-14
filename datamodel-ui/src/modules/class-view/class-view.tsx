@@ -10,11 +10,8 @@ import { useTranslation } from 'next-i18next';
 import { useEffect, useRef, useState } from 'react';
 import {
   Button,
-  Expander,
   ExpanderGroup,
-  ExpanderTitleButton,
   ExternalLink,
-  HintText,
   Link,
   SearchInput,
   Text,
@@ -49,6 +46,7 @@ import {
 } from '@app/common/components/model/model.slice';
 import { useSelector } from 'react-redux';
 import ResourceInfo from './resource-info';
+import ConceptView from '../concept-view';
 
 interface ClassViewProps {
   modelId: string;
@@ -302,6 +300,10 @@ export default function ClassView({ modelId, languages }: ClassViewProps) {
               </StatusChip>
             </div>
 
+            <BasicBlock title={t('concept')}>
+              <ConceptView data={data.subject} />
+            </BasicBlock>
+
             <BasicBlock title={t('class-identifier')}>
               {`${modelId}:${data.identifier}`}
               <Button
@@ -313,15 +315,6 @@ export default function ClassView({ modelId, languages }: ClassViewProps) {
                 {t('copy-to-clipboard')}
               </Button>
             </BasicBlock>
-
-            <div style={{ marginTop: '20px' }}>
-              <Expander>
-                <ExpanderTitleButton>
-                  {t('concept-definition')}
-                  <HintText>{t('interval')}</HintText>
-                </ExpanderTitleButton>
-              </Expander>
-            </div>
 
             <BasicBlock title={t('upper-class')}>
               {!data.subClassOf || data.subClassOf.length === 0 ? (

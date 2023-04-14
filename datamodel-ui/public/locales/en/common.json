@@ -42,7 +42,8 @@
     "no-upper-attributes": "No upper attributes"
   },
   "concept": "Concept",
-  "concept-definition": "Concept definition",
+  "concept-not-added": "No concept",
+  "concept-status": "Concept status",
   "contributors": "Contributors",
   "copy-to-clipboard": "Copy to clipboard",
   "created": "Created",
@@ -92,7 +93,6 @@
   "impersonate-user": "Impersonate user",
   "information-domains": "Information domains",
   "interoperability-logo-title": "Interoperability platform logo",
-  "interval": "Interval",
   "jump-to-page": "Jump to page",
   "languages": {
     "en": "English",
@@ -177,6 +177,7 @@
     "valid": "Valid"
   },
   "terminologies-used": "Terminologies used",
+  "terminology": "Terminology",
   "terminology-footer-accessibility": "Accessibility",
   "terminology-footer-feedback": "Feedback",
   "terminology-footer-information-security": "Information privacy",
