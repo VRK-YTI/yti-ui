@@ -108,14 +108,10 @@ export default function ConceptBlock({
           >
             <Expander>
               <ExpanderTitleButton>
-                {t('concept-definition')}
-                <HintText>
-                  {'label' in concept &&
-                    getLanguageVersion({
-                      data: concept.label,
-                      lang: i18n.language,
-                    })}
-                </HintText>
+                {getLanguageVersion({
+                  data: concept.label,
+                  lang: i18n.language,
+                })}
               </ExpanderTitleButton>
             </Expander>
           </SelectedConceptsGroup>
