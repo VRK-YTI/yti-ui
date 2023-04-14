@@ -52,7 +52,18 @@ export const resourceApi = createApi({
       query: (value) => ({
         url: `/resource/${value.modelId}`,
         method: 'PUT',
-        data: convertToPUT(value.data),
+        data:
+          value.data.type === ResourceType.ATTRIBUTE
+            ? {
+                ...convertToPUT(value.data),
+                domain: value.data.domain ? value.data.domain.id : '',
+                range: '',
+              }
+            : {
+                ...convertToPUT(value.data),
+                domain: value.data.domain ? value.data.domain.id : '',
+                range: value.data.range ? value.data.range.id : '',
+              },
       }),
     }),
     getResource: builder.mutation<

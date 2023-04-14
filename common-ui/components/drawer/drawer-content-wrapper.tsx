@@ -5,7 +5,7 @@ const DrawerContentWrapper = styled.div<{ $height?: number }>`
   position: absolute;
   width: calc(100% - 30px);
   max-width: inherit;
-  height: calc(100% - ${(props) => (props.$height ?? 0) + 15}px);
+  height: calc(100% - ${(props) => (props.$height ?? 0) + 30}px);
 
   padding: 15px;
   padding-top: ${(props) => (props.$height ?? 0) + 15}px;

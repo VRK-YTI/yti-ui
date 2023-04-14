@@ -33,6 +33,10 @@ import {
   AxiosBaseQueryError,
   AxiosQueryErrorFields,
 } from 'yti-common-ui/interfaces/axios-base-query.interface';
+import ClassModal from '../class-modal';
+import { BasicBlock } from 'yti-common-ui/block';
+import { InternalClass } from '@app/common/interfaces/internal-class.interface';
+import { getLanguageVersion } from '@app/common/utils/get-language-version';
 import { useStoreDispatch } from '@app/store';
 import { useSelector } from 'react-redux';
 import { ConceptType } from '@app/common/interfaces/concept-interface';
@@ -54,7 +58,7 @@ export default function CommonForm({
   languages,
   terminologies,
 }: CommonFormProps) {
-  const { t } = useTranslation('admin');
+  const { t, i18n } = useTranslation('admin');
   const [headerHeight, setHeaderHeight] = useState(0);
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useStoreDispatch();
@@ -114,6 +118,48 @@ export default function CommonForm({
       ...data,
       concept: value ? value : undefined,
       label: label ? { ...data.label, ...label } : data.label,
+    });
+  };
+
+  const handleDomainFollowUp = (value?: InternalClass) => {
+    if (!value) {
+      handleUpdate({ ...data, domain: value });
+      return;
+    }
+
+    handleUpdate({
+      ...data,
+      domain: {
+        id: value.id,
+        label: getLanguageVersion({
+          data: value.label,
+          lang: i18n.language,
+          appendLocale: true,
+        }),
+      },
+    });
+  };
+
+  const handleRangeFollowUp = (value?: InternalClass) => {
+    if (type === ResourceType.ATTRIBUTE) {
+      return;
+    }
+
+    if (!value) {
+      handleUpdate({ ...data, range: value });
+      return;
+    }
+
+    handleUpdate({
+      ...data,
+      range: {
+        id: value.id,
+        label: getLanguageVersion({
+          data: value.label,
+          lang: i18n.language,
+          appendLocale: true,
+        }),
+      },
     });
   };
 
@@ -255,6 +301,67 @@ export default function CommonForm({
             }
             status={userPosted && errors.identifier ? 'error' : 'default'}
           />
+
+          {type === ResourceType.ATTRIBUTE && (
+            <>
+              <BasicBlock title={t('range')}>
+                {t('literal')} (rdfs:Literal)
+              </BasicBlock>
+
+              <InlineListBlock
+                addNewComponent={
+                  <ClassModal
+                    handleFollowUp={handleDomainFollowUp}
+                    modelId={modelId}
+                    modalButtonLabel={t('select-class')}
+                    mode="select"
+                  />
+                }
+                handleRemoval={() => console.log('TODO removal')}
+                items={data.domain ? [data.domain] : []}
+                label={`${t('class')} (rdfs:domain)`}
+                optionalText={t('optional')}
+              />
+            </>
+          )}
+
+          {type === ResourceType.ASSOCIATION && (
+            <>
+              <InlineListBlock
+                addNewComponent={
+                  <ClassModal
+                    handleFollowUp={handleDomainFollowUp}
+                    modelId={modelId}
+                    modalButtonLabel={t('select-class')}
+                    mode="select"
+                  />
+                }
+                handleRemoval={() => console.log('TODO removal')}
+                items={data.domain ? [data.domain] : []}
+                label={t('source-class')}
+                optionalText={t('optional')}
+              />
+
+              <InlineListBlock
+                addNewComponent={
+                  <ClassModal
+                    handleFollowUp={handleRangeFollowUp}
+                    modelId={modelId}
+                    modalButtonLabel={t('select-class')}
+                    mode="select"
+                  />
+                }
+                handleRemoval={() => console.log('TODO removal')}
+                items={
+                  data.range && typeof data.range !== 'string'
+                    ? [data.range]
+                    : []
+                }
+                label={t('target-class')}
+                optionalText={t('optional')}
+              />
+            </>
+          )}
 
           <InlineListBlock
             label={translateCommonForm('upper', type, t)}

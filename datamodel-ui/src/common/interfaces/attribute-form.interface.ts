@@ -15,6 +15,14 @@ export interface AttributeFormType {
   identifier: string;
   note: { [key: string]: string };
   type: ResourceType;
+  domain?: {
+    id: string;
+    label: string;
+  };
+  range?: {
+    id: string;
+    label: string;
+  };
 }
 
 export const initialAttribute: AttributeFormType = {
@@ -27,4 +35,6 @@ export const initialAttribute: AttributeFormType = {
   identifier: '',
   note: {},
   type: ResourceType.ATTRIBUTE,
+  domain: undefined,
+  range: undefined,
 };

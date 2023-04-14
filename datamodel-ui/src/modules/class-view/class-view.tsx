@@ -10,11 +10,8 @@ import { useTranslation } from 'next-i18next';
 import { useEffect, useRef, useState } from 'react';
 import {
   Button,
-  Expander,
   ExpanderGroup,
-  ExpanderTitleButton,
   ExternalLink,
-  Label,
   Link,
   SearchInput,
   Text,
@@ -48,6 +45,7 @@ import {
   setView,
 } from '@app/common/components/model/model.slice';
 import { useSelector } from 'react-redux';
+import ResourceInfo from './resource-info';
 import ConceptView from '../concept-view';
 
 interface ClassViewProps {
@@ -364,26 +362,52 @@ export default function ClassView({
               })}
             </BasicBlock>
 
-            <div style={{ marginTop: '20px' }}>
-              <Label style={{ marginBottom: '10px' }}>
-                {t('attributes', { count: 2 })}
-              </Label>
-              <ExpanderGroup
-                closeAllText=""
-                openAllText=""
-                showToggleAllButton={false}
-              >
-                <Expander>
-                  <ExpanderTitleButton>Attribuutti #1</ExpanderTitleButton>
-                </Expander>
-                <Expander>
-                  <ExpanderTitleButton>Attribuutti #2</ExpanderTitleButton>
-                </Expander>
-              </ExpanderGroup>
-            </div>
+            <BasicBlock
+              title={t('attributes', { count: data.attribute?.length ?? 0 })}
+            >
+              {data.attribute && data.attribute.length > 0 ? (
+                <ExpanderGroup
+                  closeAllText=""
+                  openAllText=""
+                  showToggleAllButton={false}
+                >
+                  {data.attribute.map((attr) => (
+                    <ResourceInfo
+                      key={`${data.identifier}-attr-${attr.identifier}`}
+                      data={attr}
+                      modelId={modelId}
+                      type={ResourceType.ATTRIBUTE}
+                    />
+                  ))}
+                </ExpanderGroup>
+              ) : (
+                t('no-attributes')
+              )}
+            </BasicBlock>
 
-            <BasicBlock title={t('associations', { count: 0 })}>
-              {t('no-assocations')}
+            <BasicBlock
+              title={t('associations', {
+                count: data.association?.length ?? 0,
+              })}
+            >
+              {data.association && data.association.length > 0 ? (
+                <ExpanderGroup
+                  closeAllText=""
+                  openAllText=""
+                  showToggleAllButton={false}
+                >
+                  {data.association.map((assoc) => (
+                    <ResourceInfo
+                      key={`${data.identifier}-attr-${assoc.identifier}`}
+                      data={assoc}
+                      modelId={modelId}
+                      type={ResourceType.ASSOCIATION}
+                    />
+                  ))}
+                </ExpanderGroup>
+              ) : (
+                t('no-assocations')
+              )}
             </BasicBlock>
 
             <BasicBlock title={t('references-from-other-components')}>

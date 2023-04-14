@@ -15,6 +15,14 @@ export interface AssociationFormType {
   identifier: string;
   note: { [key: string]: string };
   type: ResourceType;
+  domain?: {
+    id: string;
+    label: string;
+  };
+  range?: {
+    id: string;
+    label: string;
+  };
 }
 
 export const initialAssociation: AssociationFormType = {
@@ -27,4 +35,6 @@ export const initialAssociation: AssociationFormType = {
   identifier: '',
   note: {},
   type: ResourceType.ASSOCIATION,
+  domain: undefined,
+  range: undefined,
 };
