@@ -37,7 +37,18 @@ export const resourceApi = createApi({
       query: (value) => ({
         url: `/resource/${value.modelId}`,
         method: 'PUT',
-        data: value.data,
+        data:
+          value.data.type === ResourceType.ATTRIBUTE
+            ? {
+                ...value.data,
+                domain: value.data.domain ? value.data.domain.id : '',
+                resource: 'rdfs:Literal',
+              }
+            : {
+                ...value.data,
+                domain: value.data.domain ? value.data.domain.id : '',
+                range: value.data.range ? value.data.range.id : '',
+              },
       }),
     }),
     getResource: builder.mutation<
