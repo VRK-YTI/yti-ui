@@ -91,9 +91,7 @@ export default function ClassForm({
       return;
     }
 
-    const convertedData = classFormToClass(data);
-
-    putClass({ modelId: modelId, data: convertedData });
+    putClass({ modelId: modelId, data: data });
   };
 
   const handleSetConcept = (value?: ConceptType) => {
@@ -152,10 +150,13 @@ export default function ClassForm({
       putClassResult.error &&
       'data' in putClassResult.error
     ) {
-      const backendErrorFields =
-        (putClassResult.error as AxiosQueryErrorFields).data?.details?.map(
-          (d) => d.field
-        ) ?? [];
+      const backendErrorFields = Array.isArray(
+        (putClassResult.error as AxiosQueryErrorFields).data?.details
+      )
+        ? (putClassResult.error as AxiosQueryErrorFields).data.details.map(
+            (d) => d.field
+          )
+        : [];
 
       if (backendErrorFields.length > 0) {
         setErrors({

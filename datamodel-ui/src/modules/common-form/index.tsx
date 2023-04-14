@@ -35,8 +35,6 @@ import {
 } from 'yti-common-ui/interfaces/axios-base-query.interface';
 import { useStoreDispatch } from '@app/store';
 import { useSelector } from 'react-redux';
-import { AttributeFormType } from '@app/common/interfaces/attribute-form.interface';
-import { AssociationFormType } from '@app/common/interfaces/association-form.interface';
 import { ConceptType } from '@app/common/interfaces/concept-interface';
 
 interface CommonFormProps {
@@ -135,10 +133,13 @@ export default function CommonForm({
 
   useEffect(() => {
     if (result.isError && result.error && 'data' in result.error) {
-      const backendErrorFields =
-        (result.error as AxiosQueryErrorFields).data?.details?.map(
-          (d) => d.field
-        ) ?? [];
+      const backendErrorFields = Array.isArray(
+        (result.error as AxiosQueryErrorFields).data?.details
+      )
+        ? (result.error as AxiosQueryErrorFields).data?.details?.map(
+            (d) => d.field
+          )
+        : [];
 
       if (backendErrorFields.length > 0) {
         setErrors({

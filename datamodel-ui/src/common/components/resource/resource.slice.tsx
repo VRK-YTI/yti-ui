@@ -14,6 +14,21 @@ import { createSlice } from '@reduxjs/toolkit';
 import { AppState, AppThunk } from '@app/store';
 import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 
+function convertToPUT(data: AssociationFormType | AttributeFormType): object {
+  if (!data.concept) {
+    return data;
+  }
+
+  const retVal = {
+    ...data,
+    subject: data.concept.conceptURI,
+  };
+
+  delete retVal['concept'];
+
+  return retVal;
+}
+
 export const resourceApi = createApi({
   reducerPath: 'resourceApi',
   baseQuery: getDatamodelApiBaseQuery((headers) => ({
@@ -37,7 +52,7 @@ export const resourceApi = createApi({
       query: (value) => ({
         url: `/resource/${value.modelId}`,
         method: 'PUT',
-        data: value.data,
+        data: convertToPUT(value.data),
       }),
     }),
     getResource: builder.mutation<

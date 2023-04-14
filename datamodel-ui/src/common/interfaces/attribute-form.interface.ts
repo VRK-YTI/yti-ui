@@ -12,7 +12,6 @@ export interface AttributeFormType {
     identifier: string;
   }[];
   subResourceOf: string[];
-  subject: string;
   identifier: string;
   note: { [key: string]: string };
   type: ResourceType;
@@ -25,7 +24,6 @@ export const initialAttribute: AttributeFormType = {
   status: 'DRAFT',
   equivalentResource: [],
   subResourceOf: [],
-  subject: '',
   identifier: '',
   note: {},
   type: ResourceType.ATTRIBUTE,
