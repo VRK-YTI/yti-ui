@@ -52,7 +52,9 @@ export default function AssociationView({
   }, [ref]);
 
   const handleFollowUp = (value?: { label: string; uri: string }) => {
-    dispatch(initializeResource(ResourceType.ASSOCIATION, value?.label));
+    dispatch(
+      initializeResource(ResourceType.ASSOCIATION, languages, value?.label)
+    );
     setView('form');
   };
 

@@ -41,6 +41,7 @@ import {
 } from 'yti-common-ui/interfaces/axios-base-query.interface';
 import { useSelector } from 'react-redux';
 import { useStoreDispatch } from '@app/store';
+import { ConceptType } from '@app/common/interfaces/concept-interface';
 
 export interface ClassFormProps {
   handleReturn: () => void;
@@ -95,7 +96,7 @@ export default function ClassForm({
     putClass({ modelId: modelId, data: convertedData });
   };
 
-  const handleSetConcept = (value?: ClassFormType['concept']) => {
+  const handleSetConcept = (value?: ConceptType) => {
     const label =
       value && 'label' in value
         ? Object.fromEntries(
@@ -115,7 +116,7 @@ export default function ClassForm({
 
     handleUpdate({
       ...data,
-      concept: value ? value : {},
+      concept: value ? value : undefined,
       label: label ? { ...data.label, ...label } : data.label,
     });
   };

@@ -1,15 +1,11 @@
+import { ConceptType } from './concept-interface';
 import { ResourceType } from './resource-type.interface';
 import { Status } from './status.interface';
 
 export interface AttributeFormType {
   label: { [key: string]: string };
   editorialNote?: string;
-  concept:
-    | {
-        label: { [key: string]: string };
-        identifier: string;
-      }
-    | {};
+  concept?: ConceptType;
   status: Status;
   equivalentResource: {
     label: { [key: string]: string };
@@ -25,7 +21,7 @@ export interface AttributeFormType {
 export const initialAttribute: AttributeFormType = {
   label: {},
   editorialNote: '',
-  concept: {},
+  concept: undefined,
   status: 'DRAFT',
   equivalentResource: [],
   subResourceOf: [],

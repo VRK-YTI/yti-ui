@@ -37,10 +37,6 @@ export default function AttributeView({
   const [currentPage, setCurrentPage] = useState(1);
   const [getResource, getResourceResult] = useGetResourceMutation();
   const [query, setQuery] = useState('');
-  const [initialSubResourceOf, setInitialSubResourceOf] = useState<{
-    label: string;
-    uri: string;
-  }>();
   const { data, refetch } = useQueryInternalResourcesQuery({
     query: query ?? '',
     limitToDataModel: modelId,
@@ -56,7 +52,9 @@ export default function AttributeView({
   }, [ref]);
 
   const handleFollowUp = (value?: { label: string; uri: string }) => {
-    dispatch(initializeResource(ResourceType.ATTRIBUTE, value?.label));
+    dispatch(
+      initializeResource(ResourceType.ATTRIBUTE, languages, value?.label)
+    );
     setView('form');
   };
 

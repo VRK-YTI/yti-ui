@@ -10,11 +10,7 @@ import { useTranslation } from 'next-i18next';
 import { useEffect, useRef, useState } from 'react';
 import {
   Button,
-  Expander,
-  ExpanderGroup,
-  ExpanderTitleButton,
   ExternalLink,
-  HintText,
   Link,
   Text,
   Tooltip,
@@ -27,6 +23,7 @@ import Separator from 'yti-common-ui/separator';
 import { StatusChip } from '@app/common/components/multi-column-search/multi-column-search.styles';
 import { TooltipWrapper } from '../model/model.styles';
 import DeleteModal from '../delete-modal';
+import ConceptView from '../concept-view';
 
 interface CommonViewProps {
   data: Resource;
@@ -120,18 +117,9 @@ export default function CommonView({
       </StaticHeader>
 
       <DrawerContent height={headerHeight}>
-        <ExpanderGroup
-          closeAllText=""
-          openAllText=""
-          showToggleAllButton={false}
-        >
-          <Expander>
-            <ExpanderTitleButton>
-              Käsitteen määritelmä
-              <HintText>Rakennuskohteen omistaja</HintText>
-            </ExpanderTitleButton>
-          </Expander>
-        </ExpanderGroup>
+        <BasicBlock title={t('concept')}>
+          <ConceptView data={data.subject} />
+        </BasicBlock>
 
         <BasicBlock title={translateCommonForm('identifier', data.type, t)}>
           {`${modelId}:${data.identifier}`}

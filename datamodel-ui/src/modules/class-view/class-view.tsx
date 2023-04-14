@@ -14,7 +14,6 @@ import {
   ExpanderGroup,
   ExpanderTitleButton,
   ExternalLink,
-  HintText,
   Label,
   Link,
   SearchInput,
@@ -49,6 +48,7 @@ import {
   setView,
 } from '@app/common/components/model/model.slice';
 import { useSelector } from 'react-redux';
+import ConceptView from '../concept-view';
 
 interface ClassViewProps {
   modelId: string;
@@ -308,6 +308,10 @@ export default function ClassView({
               </StatusChip>
             </div>
 
+            <BasicBlock title={t('concept')}>
+              <ConceptView data={data.subject} />
+            </BasicBlock>
+
             <BasicBlock title={t('class-identifier')}>
               {`${modelId}:${data.identifier}`}
               <Button
@@ -319,15 +323,6 @@ export default function ClassView({
                 {t('copy-to-clipboard')}
               </Button>
             </BasicBlock>
-
-            <div style={{ marginTop: '20px' }}>
-              <Expander>
-                <ExpanderTitleButton>
-                  {t('concept-definition')}
-                  <HintText>{t('interval')}</HintText>
-                </ExpanderTitleButton>
-              </Expander>
-            </div>
 
             <BasicBlock title={t('upper-class')}>
               {!data.subClassOf || data.subClassOf.length === 0 ? (

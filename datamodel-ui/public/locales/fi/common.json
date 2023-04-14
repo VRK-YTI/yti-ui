@@ -41,7 +41,9 @@
     "no-upper-associations": "Ei yläassosiaatioita",
     "no-upper-attributes": "Ei yläattribuutteja"
   },
-  "concept-definition": "Käsitteen määritelmä",
+  "concept": "Käsite",
+  "concept-not-added": "Ei käsitettä",
+  "concept-status": "Käsitteen tila",
   "contributors": "Sisällöntuottajat",
   "copy-to-clipboard": "Kopioi leikepöydälle",
   "created": "Luotu",
@@ -91,7 +93,6 @@
   "impersonate-user": "Esiinny käyttäjänä",
   "information-domains": "Tietoalueet",
   "interoperability-logo-title": "",
-  "interval": "Aikaväli",
   "jump-to-page": "Siirry sivulle",
   "languages": {
     "en": "englanti",
@@ -175,6 +176,7 @@
     "valid": "Voimassa oleva"
   },
   "terminologies-used": "Käytetyt sanastot",
+  "terminology": "Sanasto",
   "terminology-footer-accessibility": "Saavutettavuus",
   "terminology-footer-feedback": "Anna palautetta",
   "terminology-footer-information-security": "Tietosuoja",

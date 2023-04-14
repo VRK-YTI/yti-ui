@@ -37,6 +37,7 @@ import { useStoreDispatch } from '@app/store';
 import { useSelector } from 'react-redux';
 import { AttributeFormType } from '@app/common/interfaces/attribute-form.interface';
 import { AssociationFormType } from '@app/common/interfaces/association-form.interface';
+import { ConceptType } from '@app/common/interfaces/concept-interface';
 
 interface CommonFormProps {
   handleReturn: () => void;
@@ -93,9 +94,7 @@ export default function CommonForm({
     dispatch(setResource(value));
   };
 
-  const handleSetConcept = (
-    value?: AttributeFormType['concept'] | AssociationFormType['concept']
-  ) => {
+  const handleSetConcept = (value?: ConceptType) => {
     const label =
       value && 'label' in value
         ? Object.fromEntries(
@@ -115,7 +114,7 @@ export default function CommonForm({
 
     handleUpdate({
       ...data,
-      concept: value ? value : {},
+      concept: value ? value : undefined,
       label: label ? { ...data.label, ...label } : data.label,
     });
   };

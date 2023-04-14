@@ -29,10 +29,11 @@ import {
 } from './concept-block.styles';
 import { useGetConceptsQuery } from '@app/common/components/concept-search/concept-search.slice';
 import SanitizedTextContent from 'yti-common-ui/sanitized-text-content';
+import { ConceptType } from '@app/common/interfaces/concept-interface';
 
 interface ConceptBlockProps {
-  concept?: ClassFormType['concept'];
-  setConcept: (value: ClassFormType['concept'] | undefined) => void;
+  concept?: ConceptType;
+  setConcept: (value: ConceptType | undefined) => void;
   terminologies: string[];
 }
 
@@ -45,9 +46,7 @@ export default function ConceptBlock({
   const { isSmall } = useBreakpoints();
   const [visible, setVisible] = useState(false);
   const [keyword, setKeyword] = useState('');
-  const [selected, setSelected] = useState<
-    ClassFormType['concept'] | undefined
-  >(concept);
+  const [selected, setSelected] = useState<ConceptType | undefined>(concept);
   const [terminologyOptions] = useState([
     {
       labelText: t('terminologies-linked-to-data-model'),
@@ -85,9 +84,7 @@ export default function ConceptBlock({
     );
   };
 
-  const handleRadioButtonClick = (
-    value: ClassFormType['equivalentClass'][0]
-  ) => {
+  const handleRadioButtonClick = (value: ClassFormType['concept']) => {
     setSelected(value);
   };
 
@@ -175,32 +172,34 @@ export default function ConceptBlock({
                   {t('concept-counts', { count: data?.totalHitCount })}
                 </Text>
                 <SearchResultWrapper>
-                  {data.concepts.map((concept, idx) => (
+                  {data.concepts.map((c, idx) => (
                     <div
                       key={`concept-result-${idx}`}
                       className={
-                        typeof concept.uri !== 'undefined' &&
+                        typeof c.uri !== 'undefined' &&
                         selected &&
                         'identifier' in selected &&
-                        selected?.identifier === concept.uri
+                        selected?.identifier === c.uri
                           ? 'item-wrapper selected'
                           : 'item-wrapper'
                       }
                     >
                       <RadioButton
-                        value={concept.uri ?? ''}
+                        value={c.uri ?? ''}
                         checked={
-                          typeof concept.uri !== 'undefined' &&
+                          typeof c.uri !== 'undefined' &&
                           selected &&
-                          'identifier' in selected &&
-                          selected?.identifier === concept.uri
+                          selected?.conceptURI === c.uri
                             ? true
                             : false
                         }
                         onChange={() =>
                           handleRadioButtonClick({
-                            label: concept.label,
-                            identifier: concept.uri,
+                            label: c.label,
+                            conceptURI: c.uri,
+                            definition: c.definition,
+                            status: c.status,
+                            terminology: c.terminology,
                           })
                         }
                       />
@@ -208,7 +207,7 @@ export default function ConceptBlock({
                         <Text>
                           {renderHighlighted(
                             getLanguageVersion({
-                              data: concept.label,
+                              data: c.label,
                               lang: i18n.language,
                               appendLocale: true,
                             })
@@ -217,32 +216,30 @@ export default function ConceptBlock({
                         <div className="subtitle">
                           <Text>
                             {getLanguageVersion({
-                              data: concept.terminology.label,
+                              data: c.terminology.label,
                               lang: i18n.language,
                               appendLocale: true,
                             })}
                           </Text>
                           <StaticChip
-                            className={
-                              concept.status === 'VALID' ? 'valid' : 'other'
-                            }
+                            className={c.status === 'VALID' ? 'valid' : 'other'}
                           >
-                            {translateStatus(concept.status, t)}
+                            {translateStatus(c.status, t)}
                           </StaticChip>
                         </div>
 
                         <Text className="description">
                           {renderHighlighted(
                             getLanguageVersion({
-                              data: concept.definition,
+                              data: c.definition,
                               lang: i18n.language,
                               appendLocale: true,
                             })
                           )}
                         </Text>
 
-                        <ExternalLink href={concept.uri} labelNewWindow="">
-                          {concept.uri}
+                        <ExternalLink href={c.uri} labelNewWindow="">
+                          {c.uri}
                         </ExternalLink>
                       </div>
                     </div>

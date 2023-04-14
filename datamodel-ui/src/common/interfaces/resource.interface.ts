@@ -1,3 +1,4 @@
+import { ConceptType } from './concept-interface';
 import { ResourceType } from './resource-type.interface';
 import { Status } from './status.interface';
 
@@ -8,7 +9,7 @@ export interface Resource {
   status: Status;
   subResourceOf: string[];
   equivalentResource: string[];
-  subject?: string;
+  subject?: ConceptType;
   identifier: string;
   note: { [key: string]: string };
   modified: string;

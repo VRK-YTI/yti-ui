@@ -1,3 +1,5 @@
+import { Status } from './status.interface';
+
 export interface Concept {
   broader?: string[];
   definition: {
@@ -8,7 +10,7 @@ export interface Concept {
     [key: string]: string;
   };
   modified: string;
-  status: string;
+  status: Status;
   terminology: {
     id: string;
     label: {
