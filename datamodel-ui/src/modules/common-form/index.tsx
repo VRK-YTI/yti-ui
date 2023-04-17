@@ -151,10 +151,13 @@ export default function CommonForm({
 
   useEffect(() => {
     if (result.isError && result.error && 'data' in result.error) {
-      const backendErrorFields =
-        (result.error as AxiosQueryErrorFields).data?.details?.map(
-          (d) => d.field
-        ) ?? [];
+      const backendErrorFields = Array.isArray(
+        (result.error as AxiosQueryErrorFields).data?.details
+      )
+        ? (result.error as AxiosQueryErrorFields).data?.details?.map(
+            (d) => d.field
+          )
+        : [];
 
       if (backendErrorFields.length > 0) {
         setErrors({

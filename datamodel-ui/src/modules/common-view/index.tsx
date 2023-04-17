@@ -15,16 +15,19 @@ import { StatusChip } from '@app/common/components/multi-column-search/multi-col
 import { TooltipWrapper } from '../model/model.styles';
 import DeleteModal from '../delete-modal';
 import CommonViewContent from './common-view-content';
+import { ResourceType } from '@app/common/interfaces/resource-type.interface';
 
 interface CommonViewProps {
   data: Resource;
   modelId: string;
+  type: ResourceType;
   handleReturn: () => void;
 }
 
 export default function CommonView({
   data,
   modelId,
+  type,
   handleReturn,
 }: CommonViewProps) {
   const { t, i18n } = useTranslation('common');
@@ -107,7 +110,7 @@ export default function CommonView({
       </StaticHeader>
 
       <DrawerContent height={headerHeight}>
-        <CommonViewContent modelId={modelId} data={data} />
+        <CommonViewContent modelId={modelId} data={data} type={type} />
       </DrawerContent>
     </>
   );

@@ -179,6 +179,7 @@ export default function AttributeView({
       <CommonView
         data={assoc}
         modelId={modelId}
+        type={ResourceType.ATTRIBUTE}
         handleReturn={handleFormReturn}
       />
     );
